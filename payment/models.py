@@ -1,8 +1,16 @@
 from django.db import models
 
 
-class PaymentSource(models.Model):
-    order = models.ForeignKey('core.Order', related_name='payment_sources')
+class Source(models.Model):
+    """
+    A source of payment for an order.  
+    
+    This is normally a credit card which has been pre-authed
+    for the order amount, but some applications will allow orders to be paid for using multiple
+    sources such as cheque, credit accounts, gift cards.  Each payment source will have its own
+    entry.
+    """
+    order = models.ForeignKey('order.Order', related_name='sources')
     type = models.CharField(max_length=128)
     initial_amount = models.IntegerField()
     balance = models.IntegerField()
@@ -15,8 +23,14 @@ class PaymentSource(models.Model):
         return description
     
     
-class PaymentSourceTransaction(models.Model):
-    source = models.ForeignKey('payment.PaymentSource', related_name='transactions')
+class Transaction(models.Model):
+    """
+    A transaction for payment sources which need a secondary 'transaction' to take the money
+    
+    This applies mainly to credit card sources which can be a pre-auth for the money.  A 'complete'
+    needs to be run later to debit the money from the account.
+    """
+    source = models.ForeignKey('payment.Source', related_name='transactions')
     type = models.CharField(max_length=128, blank=True)
     delta_amount = models.FloatField()
     reference = models.CharField(max_length=128)
