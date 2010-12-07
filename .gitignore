@@ -1,0 +1,8 @@
+*.pyc
+local_settings.py
+fixtures/*
+assets/designs/*
+*.swp
+.project
+.pydevproject
+.settings
