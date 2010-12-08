@@ -1,11 +1,12 @@
 from django.db import models
-from django.contrib.auth import User
+from django.contrib.auth.models import User
 
 class Order(models.Model):
     """
     An order
     """
     customer = models.ForeignKey(User, related_name='orders')
+    total_incl_tax = models.FloatField()
     
     
     def __unicode__(self):
@@ -15,16 +16,16 @@ class Order(models.Model):
         return description
 
     
-class Batch(models.Model):
-    order = models.ForeignKey('order.Order')
-    partner = models.CharField(max_length=255)
-    delivery_method = models.CharField(max_length=128)
-    # Not all batches are actually delivered (such as downloads)
-    delivery_address = models.ForeignKey('order.Address', null=True, blank=True)
-    # Whether the batch should be dispatched in one go, or as they become available
-    dispatch_option = models.CharField(max_length=128, null=True, blank=True)
-
-
-class BatchLine(models.Model):
-    batch = models.ForeignKey('order.Batch')
+#class Batch(models.Model):
+#    order = models.ForeignKey('order.Order')
+#    partner = models.CharField(max_length=255)
+#    delivery_method = models.CharField(max_length=128)
+#    # Not all batches are actually delivered (such as downloads)
+#    delivery_address = models.ForeignKey('order.Address', null=True, blank=True)
+#    # Whether the batch should be dispatched in one go, or as they become available
+#    dispatch_option = models.CharField(max_length=128, null=True, blank=True)
+#
+#
+#class BatchLine(models.Model):
+#    batch = models.ForeignKey('order.Batch')
     

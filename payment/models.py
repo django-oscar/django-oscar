@@ -1,4 +1,6 @@
+from django.contrib.auth.models import User
 from django.db import models
+from django.utils.translation import ugettext as _
 
 
 class Source(models.Model):
@@ -25,7 +27,7 @@ class Source(models.Model):
     
 class Transaction(models.Model):
     """
-    A transaction for payment sources which need a secondary 'transaction' to take the money
+    A transaction for payment sources which need a secondary 'transaction' to actually take the money
     
     This applies mainly to credit card sources which can be a pre-auth for the money.  A 'complete'
     needs to be run later to debit the money from the account.

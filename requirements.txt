@@ -1,6 +1,7 @@
 Django==1.2.3
 MySQL-python==1.2.3
 South==0.7.3
+django-extensions==0.5
+ipython==0.10.1
 wsgiref==0.1.2
 yolk==0.4.1
-django_extensions==0.5
