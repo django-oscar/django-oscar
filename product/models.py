@@ -1,7 +1,7 @@
 from django.db import models
 
 class AttributeType(models.Model):
-    """Defines a product atrribute type"""
+    """Defines a product attribute type"""
     name = models.CharField(max_length = 128)
 
     def __unicode__(self):
@@ -11,10 +11,20 @@ class AttributeType(models.Model):
 class Type(models.Model):
     """Defines a product type"""
     name = models.CharField(max_length = 128)
-    attribute_types = models.ManyToManyField('product.AttributeType')
+    attribute_types = models.ManyToManyField('product.AttributeType', through = 'product.AtrributeTypeMembership')
 
     def __unicode__(self):
         return self.name
+
+class AtrributeTypeMembership(models.Model):
+    RELATIONSHIP_CHOICES = (
+        ('optional', 'optional'),
+        ('required', 'required'),
+    )
+    type = models.ForeignKey('product.Type')
+    attribute_Type = models.ForeignKey('product.AttributeType')
+    relation_type = models.CharField(max_length = 16, choices = RELATIONSHIP_CHOICES, default = 'optional')
+    
 
 class Item(models.Model):
     """The base product object"""
