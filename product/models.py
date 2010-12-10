@@ -20,10 +20,14 @@ class AttributeTypeMembership(models.Model):
     RELATIONSHIP_CHOICES = (
         ('optional', 'optional'),
         ('required', 'required'),
+        ('required_basket', 'required for purchase'),
     )
     type = models.ForeignKey('product.Type')
-    attribute_Type = models.ForeignKey('product.AttributeType')
+    attribute_type = models.ForeignKey('product.AttributeType')
     relation_type = models.CharField(max_length = 16, choices = RELATIONSHIP_CHOICES, default = 'optional')
+    
+    def __unicode__(self):
+        return "%s -> %s (%s)" % (self.type.name, self.attribute_type.name, self.relation_type)
     
 
 class Item(models.Model):
