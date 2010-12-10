@@ -1,4 +1,4 @@
-# Django settings for peterson project.
+# Django settings for oscar project.
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -75,7 +75,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
-ROOT_URLCONF = 'peterson.urls'
+ROOT_URLCONF = 'urls'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".

@@ -1,8 +1,8 @@
-from product.models import AttributeType
-from product.models import Type
-from product.models import Item
-from product.models import Attribute
-from product.models import AttributeTypeMembership
+from oscar.product.models import AttributeType
+from oscar.product.models import Type
+from oscar.product.models import Item
+from oscar.product.models import Attribute
+from oscar.product.models import AttributeTypeMembership
 from django.contrib import admin
 
 class AttributeInline(admin.TabularInline):
