@@ -37,7 +37,7 @@ class Item(models.Model):
     partner_id = models.CharField(max_length = 32)
     type = models.ForeignKey('product.Type')
     date_available = models.DateField()
-    date_created = models.DateTimeField()
+    date_created = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
         return self.name
