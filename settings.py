@@ -92,8 +92,8 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django_extensions',
     'south',
-    'payment',
-    'order',
+    'oscar.payment',
+    'oscar.order',
 )
 
 # Local overrides

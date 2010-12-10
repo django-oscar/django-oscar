@@ -10,12 +10,12 @@ class Basket(models.Model):
     OPEN, MERGED, SUBMITTED = ("Open", "Merged", "Submitted")
     STATUS_CHOICES = (
         (OPEN, _("Open - currently active")),
-        (APPROVED, _("Merged - superceded by another basket")),
-        (REJECTED, _("Submitted - has been ordered at the checkout")),
+        (MERGED, _("Merged - superceded by another basket")),
+        (SUBMITTED, _("Submitted - has been ordered at the checkout")),
     )
     
     owner = models.ForeignKey(User, related_name='baskets')
-    status = models.CharField(default=OPEN, choices=STATUS_CHOICES)
+    status = models.CharField(max_length=128, default=OPEN, choices=STATUS_CHOICES)
     created_date = models.DateTimeField(auto_now_add=True)
     
     
