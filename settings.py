@@ -95,6 +95,8 @@ INSTALLED_APPS = (
     'oscar.payment',
     'oscar.order',
     'oscar.product',
+    'oscar.basket',
+    'oscar.offer',
 )
 
 # Local overrides

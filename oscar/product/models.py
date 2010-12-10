@@ -16,6 +16,7 @@ class Type(models.Model):
     def __unicode__(self):
         return self.name
 
+
 class AttributeTypeMembership(models.Model):
     RELATIONSHIP_CHOICES = (
         ('optional', 'optional'),
@@ -60,6 +61,7 @@ class Item(models.Model):
                 required_attribute_names.remove(attribute.attribute_type.name)
 
         return 0 == len(required_attribute_names)
+
 
 class Attribute(models.Model):
     """An individual product attribute"""
