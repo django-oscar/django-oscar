@@ -2,6 +2,7 @@ from product.models import AttributeType
 from product.models import Type
 from product.models import Item
 from product.models import Attribute
+from product.models import AttributeTypeMembership
 from django.contrib import admin
 
 class AttributeInline(admin.TabularInline):
@@ -13,6 +14,7 @@ class ItemAdmin(admin.ModelAdmin):
 
 
 admin.site.register(AttributeType)
+admin.site.register(AttributeTypeMembership)
 admin.site.register(Type)
 admin.site.register(Item, ItemAdmin)
 admin.site.register(Attribute)
