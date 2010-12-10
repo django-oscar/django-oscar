@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import ugettext as _
 
+
 class ConditionalOffer(models.Model):
     name = models.CharField(max_length=128)
     description = models.TextField(blank=True)
@@ -13,6 +14,7 @@ class ConditionalOffer(models.Model):
     priority = models.IntegerField()
     created_date = models.DateTimeField(auto_now_add=True)
 
+
 class Condition(models.Model):
     COUNT, VALUE = ("Count", "Value")
     TYPE_CHOICES = (
@@ -22,6 +24,7 @@ class Condition(models.Model):
     range = models.ForeignKey('offer.Range')
     type = models.CharField(max_length=128, choices=TYPE_CHOICES)
     value = models.FloatField()
+
 
 class Benefit(models.Model):
     PERCENTAGE, FIXED = ("Percentage", "Absolute")
@@ -33,8 +36,13 @@ class Benefit(models.Model):
     type = models.CharField(max_length=128, choices=TYPE_CHOICES)
     value = models.FloatField()
 
+
 class Range(models.Model):
     name = models.CharField(max_length=128)
+    includes_all_products = models.BooleanField(default=False)
+    included_products = models.ManyToManyField('product.Item', related_name='includes')
+    excluded_products = models.ManyToManyField('product.Item', related_name='excludes')
+
 
 class Voucher(models.Model):
     """
