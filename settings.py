@@ -92,6 +92,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django_extensions',
     'south',
+    'oscar',
     'oscar.payment',
     'oscar.order',
     'oscar.product',
