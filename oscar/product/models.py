@@ -1,43 +1,61 @@
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
 
 class AttributeType(models.Model):
-    """Defines a product attribute type"""
-    name = models.CharField(max_length = 128)
+    """Defines an item attribute type"""
+    name = models.CharField(_('name'), max_length=128)
+
+    class Meta:
+        ordering = ['name']
 
     def __unicode__(self):
         return self.name
 
 
-class Type(models.Model):
-    """Defines a product type"""
-    name = models.CharField(max_length = 128)
-    attribute_types = models.ManyToManyField('product.AttributeType', through = 'product.AttributeTypeMembership')
+class ItemType(models.Model):
+    """Defines an item type"""
+    name = models.CharField(_('name'), max_length=128)
+    attribute_types = models.ManyToManyField('product.AttributeType', 
+                                        through='product.AttributeTypeMembership',
+                                        verbose_name=_('attribute types'))
+
+    class Meta:
+        ordering = ['name']
 
     def __unicode__(self):
         return self.name
 
 
 class AttributeTypeMembership(models.Model):
+    REL_OPTIONAL = 'optional'
+    REL_REQUIRED = 'required'
+    REL_REQUIRED_BASKET = 'required_basket'
     RELATIONSHIP_CHOICES = (
-        ('optional', 'optional'),
-        ('required', 'required'),
-        ('required_basket', 'required for purchase'),
+        (REL_OPTIONAL, _('optional')),
+        (REL_REQUIRED, _('required')),
+        (REL_REQUIRED_BASKET, _('required for purchase')),
     )
-    type = models.ForeignKey('product.Type')
+    product_type = models.ForeignKey('product.ItemType')
     attribute_type = models.ForeignKey('product.AttributeType')
-    relation_type = models.CharField(max_length = 16, choices = RELATIONSHIP_CHOICES, default = 'optional')
+    relation_type = models.CharField(max_length=16, choices=RELATIONSHIP_CHOICES, 
+                                        default=REL_OPTIONAL)
     
     def __unicode__(self):
-        return "%s -> %s (%s)" % (self.type.name, self.attribute_type.name, self.relation_type)
+        return u"%s -> %s (%s)" % (self.item_type.name, self.attribute_type.name, 
+                                  self.relation_type)
     
 
 class Item(models.Model):
     """The base product object"""
-    name = models.CharField(max_length = 128)
-    partner_id = models.CharField(max_length = 32)
-    type = models.ForeignKey('product.Type')
-    date_available = models.DateField()
-    date_created = models.DateTimeField()
+    name = models.CharField(_('name'), max_length=255)
+    partner_id = models.CharField(_('partner ID'), max_length=32)
+    item_type = models.ForeignKey('product.ItemType', verbose_name=_('item type'))
+    date_available = models.DateTimeField(_('date available'))
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-date_created']
 
     def __unicode__(self):
         return self.name
@@ -51,10 +69,13 @@ class Item(models.Model):
 
         Returns:
             A boolean if the product is valid
+
+        #TODISCUSS: When is this run? Is it not possible to cache it on
+        the model during save? This is beastly and needs rewriting. #TODO
         """
-        required_attribute_names = []
-        for attribute_type in self.type.attribute_types.filter(attributetypemembership__relation_type = 'required'):
-            required_attribute_names.append(attribute_type.name)
+        required_attribute_names = self.item_type.attribute_types\
+                .filter(attributetypemembership__relation_type=AttributeTypeMembership.REL_REQUIRED)\
+                .values_list('name', flat=True)
 
         for attribute in self.attribute_set.all():
             if attribute.attribute_type.name in required_attribute_names:
@@ -65,13 +86,17 @@ class Item(models.Model):
 
 class Attribute(models.Model):
     """An individual product attribute"""
-    attribute_type = models.ForeignKey('product.AttributeType')
-    product = models.ForeignKey('product.Item')
-    value = models.CharField(max_length = 256)
+    attribute_type = models.ForeignKey('product.AttributeType', 
+                                        verbose_name=_('attribute type'))
+    product = models.ForeignKey('product.Item', verbose_name=_('product'))
+    value = models.CharField(_('value'), max_length=255)
 
 
 class StockRecord(models.Model):
     """A stock keeping record"""
-    product = models.ForeignKey('product.Item')
-    price_excl_tax = models.FloatField()
-    tax = models.FloatField()
+    # TODISCUSS: Stock control is massive, I believe it should 
+    # be in a seperate app.
+    product = models.ForeignKey('product.Item', verbose_name=_('product'))
+    price_excl_tax = models.DecimalField(_('price exc. VAT'), max_digits=10, 
+                                        decimal_places=2)
+    tax = models.DecimalField(_('tax'), max_digits=10, decimal_places=2)
