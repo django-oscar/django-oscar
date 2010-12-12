@@ -25,9 +25,9 @@ class AttributeTypeMembership(models.Model):
     )
     type=models.ForeignKey('product.Type')
     # Some attributes like clothes sizes need to be displayed in a set order (eg: S,M,L,XL)
-    display_order=models.IntegerField(default=0)
-    attribute_type=models.ForeignKey('product.AttributeType')
-    relation_type=models.CharField(max_length=16, choices=RELATIONSHIP_CHOICES, default='optional')
+    display_order = models.IntegerField(default=0)
+    attribute_type = models.ForeignKey('product.AttributeType')
+    relation_type = models.CharField(max_length=16, choices=RELATIONSHIP_CHOICES, default='optional')
     
     def __unicode__(self):
         return "%s -> %s (%s)" % (self.type.name, self.attribute_type.name, self.relation_type)
@@ -35,11 +35,11 @@ class AttributeTypeMembership(models.Model):
 
 class Item(models.Model):
     """The base product object"""
-    name=models.CharField(max_length=128)
-    partner_id=models.CharField(max_length=32)
-    type=models.ForeignKey('product.Type')
-    date_available=models.DateField()
-    date_created=models.DateTimeField()
+    name = models.CharField(max_length=128)
+    partner_id = models.CharField(max_length=32)
+    type = models.ForeignKey('product.Type')
+    date_available = models.DateField()
+    date_created = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
         return self.name
