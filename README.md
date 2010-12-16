@@ -12,6 +12,9 @@ sudo pip install virtualenv virtualenvwrapper
 
 echo "source /usr/local/bin/virtualenvwrapper.sh" >> ~/.bashrc
 
+Reload bash with the following command:
+~/.bashrc
+
 Do the following from your workspace folder:
     mkdir oscar
 	cd oscar
