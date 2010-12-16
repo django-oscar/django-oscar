@@ -1,5 +1,5 @@
 from oscar.product.models import AttributeType
-from oscar.product.models import Type
+from oscar.product.models import ItemType
 from oscar.product.models import Item
 from oscar.product.models import Attribute
 from oscar.product.models import AttributeTypeMembership
@@ -15,6 +15,6 @@ class ItemAdmin(admin.ModelAdmin):
 
 admin.site.register(AttributeType)
 admin.site.register(AttributeTypeMembership)
-admin.site.register(Type)
+admin.site.register(ItemType)
 admin.site.register(Item, ItemAdmin)
 admin.site.register(Attribute)
