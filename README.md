@@ -4,11 +4,20 @@ Named after Oscar Peterson (http://en.wikipedia.org/wiki/Oscar_Peterson), oscar 
 of Taoshop (a product from Tangent Labs).  It's fairly experimental at the moment.
 
 ## Installation
+sudo apt-get install python-setuptools
+
+sudo easy_install pip
+
+sudo pip install virtualenv virtualenvwrapper
+
+echo "source /usr/local/bin/virtualenvwrapper.sh" >> ~/.bashrc
+
 Do the following from your workspace folder:
     mkdir oscar
 	cd oscar
     mkvirtualenv --no-site-packages oscar
 After checking out your fork, install all dependencies:
+	workon oscar
 	pip install -r requirements.txt
 
 ## Aims of project
