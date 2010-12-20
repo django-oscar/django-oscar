@@ -93,11 +93,12 @@ INSTALLED_APPS = (
     'django_extensions',
     'south',
     'oscar',
-    'oscar.payment',
     'oscar.order',
     'oscar.product',
     'oscar.basket',
     'oscar.offer',
+    # Overriding payment models
+    'sampleapp.payment',
 )
 
 # Local overrides
