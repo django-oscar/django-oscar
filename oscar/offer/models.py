@@ -27,15 +27,27 @@ class Condition(models.Model):
     
     def is_satisfied(self, basket):
         """
-        Determines whether a given basket meets this condition
+        Determines whether a given basket meets this condition.  This is
+        stubbed in this top-class object.  The subclassing proxies are
+        responsible for implementing it correctly.
         """
-        if self.type == COUNT:
-            return self.range.filter_basket(basket).num_items >= self.value
-        elif self.type == VALUE:
-            return self.range.filter_basket(basket).value >= self.value
-        else:
-            return False
+        return False
+
+class CountCondition(Condition):
+
+    class Meta:
+        proxy = True
+
+    def is_satisfied(self, basket):
+        return self.range.filter_basket(basket).num_items >= self.value
         
+class ValueCondition(Condition):
+
+    class Meta:
+        proxy = True
+
+    def is_satisfied(self, basket):
+        return self.range.filter_basket(basket).value >= self.value
 
 class Benefit(models.Model):
     PERCENTAGE, FIXED = ("Percentage", "Absolute")
