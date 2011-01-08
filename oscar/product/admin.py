@@ -9,7 +9,7 @@ class AttributeInline(admin.TabularInline):
     model = Attribute
 
 class ItemAdmin(admin.ModelAdmin):
-    list_display = ('name', 'partner_id', 'date_available', 'date_created', 'is_valid')
+    list_display = ('title', 'item_type', 'date_created', 'has_required_attributes')
     inlines = [AttributeInline]
 
 

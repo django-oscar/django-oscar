@@ -24,12 +24,12 @@ class AbstractOrder(models.Model):
 
 class AbstractBatch(models.Model):
     """
-    A batch
+    A batch of items from a single fulfillment partner
     
     This is a set of order lines which are fulfilled by a single partner
     """
     order = models.ForeignKey('order.Order')
-    partner = models.ForeignKey('product.Partner')
+    partner = models.ForeignKey('stock.Partner')
     delivery_method = models.CharField(_("Delivery method"), max_length=128)
     # Not all batches are actually delivered (such as downloads)
     delivery_address = models.ForeignKey('order.DeliveryAddress', null=True, blank=True)

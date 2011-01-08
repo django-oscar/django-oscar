@@ -1,7 +1,22 @@
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
 
 class AbstractAddress(models.Model):
-    title = models.CharField(max_length=64, blank=True, null=True)
+    """
+    Core address object
+    
+    This is normally subclassed and extended to provide models for 
+    delivery and billing addresses.
+    """
+    MR, MISS, MRS, MS, DR = ('Dr', 'Miss', 'Mrs', 'Ms', 'Dr')
+    TITLE_CHOICES = (
+        (MR, _("Mr")),
+        (MISS, _("Miss")),
+        (MRS, _("Mrs")),
+        (MS, _("Ms")),
+        (DR, _("Dr")),
+    )
+    title = models.CharField(max_length=64, choices=TITLE_CHOICES, blank=True, null=True)
     first_name = models.CharField(max_length=255, blank=True, null=True)
     last_name = models.CharField(max_length=255)
     line1 = models.CharField(max_length=255)
