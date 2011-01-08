@@ -8,6 +8,7 @@ class AbstractOrder(models.Model):
     An order
     """
     number = models.IntegerField(_("Order number"))
+    basket = models.ForeignKey('basket.Basket')
     customer = models.ForeignKey(User, related_name='orders')
     billing_address = models.ForeignKey('order.BillingAddress')
     # Totals
