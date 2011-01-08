@@ -36,9 +36,15 @@ class AbstractBatch(models.Model):
     # Whether the batch should be dispatched in one go, or as they become available
     dispatch_option = models.CharField(max_length=128, null=True, blank=True)
     
+    def num_items(self):
+        return len(self.items.all())
+    
     class Meta:
         abstract = True
         verbose_name_plural = _("Batches")
+    
+    def __unicode__(self):
+        return "%s batch for order #%d" % (self.partner.name, self.order.number)
         
         
 class AbstractBatchItem(models.Model):
@@ -48,7 +54,7 @@ class AbstractBatchItem(models.Model):
     Not using a line model as it's difficult to capture and payment 
     information when it splits across a line.
     """
-    batch = models.ForeignKey('order.Batch')
+    batch = models.ForeignKey('order.Batch', related_name='items')
     product = models.ForeignKey('product.Item')
     # Partner information
     partner_reference = models.CharField(max_length=128, blank=True, null=True,
@@ -79,7 +85,7 @@ class AbstractBatchItem(models.Model):
         'Dispatched',
         'Returned'
     )
-    SHIPPING_CHOICES= (
+    SHIPPING_CHOICES = (
         (ON_HOLD, _("On hold")),
         (PENDING_SUBMISSION, _("Pending submission")),
         (SUBMITTED, _("Submitted")),
@@ -87,7 +93,7 @@ class AbstractBatchItem(models.Model):
         (DISPATCHED, _("Dispatched")),
         (RETURNED, _("Returned")),
     )
-    shipping_status = models.CharField(max_length=255, choices=SHIPPING_CHOICES)
+    shipping_status = models.CharField(max_length=255, choices=SHIPPING_CHOICES, default=PENDING_SUBMISSION)
     # Various dates
     date_paid = models.DateTimeField(blank=True, null=True)
     date_cancelled = models.DateTimeField(blank=True, null=True)
