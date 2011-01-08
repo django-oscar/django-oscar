@@ -1,20 +1,14 @@
-from oscar.product.models import AttributeType
-from oscar.product.models import ItemType
-from oscar.product.models import Item
-from oscar.product.models import Attribute
-from oscar.product.models import AttributeTypeMembership
 from django.contrib import admin
+from oscar.product.models import *
 
 class AttributeInline(admin.TabularInline):
-    model = Attribute
+    model = ItemAttributeValue
 
 class ItemAdmin(admin.ModelAdmin):
-    list_display = ('title', 'item_type', 'date_created', 'has_required_attributes')
+    list_display = ('title', 'item_type', 'is_canonical', 'get_attribute_summary', 'date_created')
     inlines = [AttributeInline]
 
-
-admin.site.register(AttributeType)
-admin.site.register(AttributeTypeMembership)
 admin.site.register(ItemType)
 admin.site.register(Item, ItemAdmin)
-admin.site.register(Attribute)
+admin.site.register(AttributeType)
+admin.site.register(ItemAttributeValue)
