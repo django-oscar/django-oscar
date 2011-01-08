@@ -1,15 +1,14 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-class Partner(models.Model):
+class AbstractPartner(models.Model):
     """
     A fulfillment partner
     """
     name = models.CharField(max_length=255)
     
     class Meta:
-        #abstract = True
-        pass
+        abstract = True
 
 
 class AttributeType(models.Model):

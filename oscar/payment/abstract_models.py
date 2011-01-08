@@ -38,7 +38,7 @@ class AbstractTransaction(models.Model):
     type = models.CharField(max_length=128, blank=True)
     delta_amount = models.FloatField()
     reference = models.CharField(max_length=128)
-    transaction_date = models.DateField()
+    date_created = models.DateField()
     
     class Meta:
         abstract = True

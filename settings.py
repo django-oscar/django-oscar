@@ -96,9 +96,11 @@ INSTALLED_APPS = (
     'oscar.order',
     'oscar.product',
     'oscar.basket',
+    'oscar.payment',
     'oscar.offer',
-    # Overriding payment models
-    'sampleapp.payment',
+    'oscar.address',
+    # To use an alternative app to one of oscar's core ones,
+    # add it here (eg replace oscar.payment with sampleapp.payment)
 )
 
 # Local overrides
