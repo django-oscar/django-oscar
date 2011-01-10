@@ -1,3 +1,5 @@
+import zlib
+
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import ugettext as _
@@ -25,6 +27,19 @@ class AbstractLine(models.Model):
     product = models.ForeignKey('product.Item')
     quantity = models.PositiveIntegerField(default=1)
     
+    def get_hash(self):
+        """
+        Need a line hash as lines are stored as separate items
+        when persisted as an order.  The line ID helps distinguish
+        between two items which are variants of the same product and
+        so should not be treated as the same line.
+        
+        This is a hash of the line attributes.
+        """
+        attribute_string = "_".join([attribute.get_hash() for attributes in self.attributes])
+        return zlib.crc32(attribute_string)
+        
+    
     class Meta:
         abstract = True
     
@@ -32,6 +47,9 @@ class AbstractLineAttribute(models.Model):
     line = models.ForeignKey('basket.Line', related_name='attributes')
     type = models.CharField(max_length=128)
     value = models.CharField(max_length=255)    
+    
+    def get_hash(self):
+        return zlib.crc32(self.type + self.value)
     
     class Meta:
         abstract = True

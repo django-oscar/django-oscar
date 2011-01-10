@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
-
 class AbstractOrder(models.Model):
     """
     An order
@@ -21,7 +20,6 @@ class AbstractOrder(models.Model):
     
     def __unicode__(self):
         return "#%d (customer: %s, amount: %.2f)" % (self.number, self.customer.username, self.total_incl_tax)
-
 
 class AbstractBatch(models.Model):
     """
@@ -47,7 +45,6 @@ class AbstractBatch(models.Model):
     def __unicode__(self):
         return "%s batch for order #%d" % (self.partner.name, self.order.number)
         
-        
 class AbstractBatchItem(models.Model):
     """
     A item within a batch.
@@ -56,6 +53,9 @@ class AbstractBatchItem(models.Model):
     information when it splits across a line.
     """
     batch = models.ForeignKey('order.Batch', related_name='items')
+    # As all order items are stored in their own row, this ID is used to 
+    # determine which are part of the same line.
+    line_id = models.CharField(max_length=128)
     product = models.ForeignKey('product.Item')
     # Partner information
     partner_reference = models.CharField(max_length=128, blank=True, null=True,
@@ -105,3 +105,14 @@ class AbstractBatchItem(models.Model):
     class Meta:
         abstract = True
         verbose_name_plural = _("Batch items")
+        
+class AbstractBatchItemAttribute(models.Model):
+    """
+    An attribute of a batch item.
+    """
+    batch_item = models.ForeignKey('order.BatchItem', related_name='attributes')
+    type = models.CharField(max_length=128)
+    value = models.CharField(max_length=255)    
+    
+    class Meta:
+        abstract = True
