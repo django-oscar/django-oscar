@@ -3,7 +3,7 @@ Vanilla implementation of order models
 """
 from django.db import models
 
-from oscar.order.abstract_models import AbstractOrder, AbstractBatch, AbstractBatchItem
+from oscar.order.abstract_models import *
 from oscar.address.abstract_models import AbstractAddress, AbstractDeliveryAddress, AbstractBillingAddress
 
 class Order(AbstractOrder):

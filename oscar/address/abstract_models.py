@@ -45,7 +45,7 @@ class AbstractDeliveryAddress(AbstractAddress):
     """
     Delivery address 
     """
-    phone_number = models.CharField(blank=True, null=True)
+    phone_number = models.CharField(max_length=32, blank=True, null=True)
     notes = models.TextField(blank=True, null=True) 
     
     class Meta:

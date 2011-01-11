@@ -1,23 +1,17 @@
-"""
-This file demonstrates two different styles of tests (one doctest and one
-unittest). These will both pass when you run "manage.py test".
+import unittest
 
-Replace these with more appropriate tests for your application.
-"""
+from django.test.utils import setup_test_environment
+setup_test_environment()
 
 from django.test import TestCase
+from oscar.basket.models import * 
 
-class SimpleTest(TestCase):
-    def test_basic_addition(self):
-        """
-        Tests that 1 + 1 always equals 2.
-        """
-        self.failUnlessEqual(1 + 1, 2)
+class BasketTest(unittest.TestCase):
+    def test_empty_baskets_have_zero_lines(self):
+        b = Basket()
+        self.assertTrue(b.get_num_lines() == 0)
 
-__test__ = {"doctest": """
-Another way to test that 1 + 1 is equal to 2.
-
->>> 1 + 1 == 2
-True
-"""}
-
+if __name__ == '__main__':
+    from django.test.utils import setup_test_environment
+    setup_test_environment()
+    unittest.main()

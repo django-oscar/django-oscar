@@ -102,6 +102,7 @@ INSTALLED_APPS = (
     'oscar.stock',
     # To use an alternative app to one of oscar's core ones,
     # add it here (eg replace oscar.payment with sampleapp.payment)
+    'test_extensions',
 )
 
 # Local overrides

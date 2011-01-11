@@ -19,6 +19,18 @@ class AbstractBasket(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_merged = models.DateTimeField(null=True, blank=True)
     
+    def is_empty(self):
+        return self.get_num_lines() == 0
+    
+    def get_num_lines(self):
+        """
+        Returns number of lines within this basket
+        """
+        return len(self.lines.all())
+    
+    def get_num_items(self):
+        return reduce(lambda num,line: num+line.quantity, self.lines)
+    
     class Meta:
         abstract = True
     
