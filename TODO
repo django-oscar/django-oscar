@@ -2,3 +2,6 @@ Fields to write:
 - Postcode field
 - Currency field
 - Country field for addresses
+
+Sample shop:
+- How to have the admin site reflect your local models

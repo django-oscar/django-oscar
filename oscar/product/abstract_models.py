@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-class AbstractItemType(models.Model):
+class AbstractItemClass(models.Model):
     """
     Defines an item type (equivqlent to Taoshop's MediaType).
     """
@@ -29,7 +29,7 @@ class AbstractItem(models.Model):
     parent = models.ForeignKey('self', blank=True, null=True)
     title = models.CharField(_('name'), max_length=255)
     description = models.TextField(_('description'), blank=True, null=True)
-    item_type = models.ForeignKey('product.ItemType', verbose_name=_('item type'))
+    item_class = models.ForeignKey('product.ItemClass', verbose_name=_('item type'))
     attribute_types = models.ManyToManyField('product.AttributeType', through='ItemAttributeValue')
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
