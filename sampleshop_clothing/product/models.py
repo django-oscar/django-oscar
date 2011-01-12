@@ -3,7 +3,7 @@ Clothes shop product models
 """
 from oscar.product.abstract_models import *
 
-class ItemType(AbstractItemType):
+class ItemClass(AbstractItemClass):
     pass
 
 class Item(AbstractItem):

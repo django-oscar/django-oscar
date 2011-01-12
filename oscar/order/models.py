@@ -18,9 +18,15 @@ class DeliveryAddress(AbstractDeliveryAddress):
 class BillingAddress(AbstractBillingAddress):
     pass
     
-class BatchItem(AbstractBatchItem):
+class BatchLine(AbstractBatchLine):
     pass
 
-class BatchItemAttribute(AbstractBatchItemAttribute):
+class BatchLineEvent(AbstractBatchLineEvent):
+    pass
+
+class BatchLineEventType(AbstractBatchLineEventType):
+    pass
+
+class BatchLineAttribute(AbstractBatchLineAttribute):
     pass
     

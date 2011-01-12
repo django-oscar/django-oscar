@@ -36,4 +36,7 @@ class AbstractStockRecord(models.Model):
         abstract = True
         
     def __unicode__(self):
-        return "%s (%s): %s" % (self.partner.name, self.partner_reference, self.product.title)
+        if self.partner_reference:
+            return "%s (%s): %s" % (self.partner.name, self.partner_reference, self.product.title)
+        else:
+            return "%s: %s" % (self.partner.name, self.product.title)

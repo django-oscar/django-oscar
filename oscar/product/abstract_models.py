@@ -29,7 +29,7 @@ class AbstractItem(models.Model):
     parent = models.ForeignKey('self', blank=True, null=True)
     title = models.CharField(_('name'), max_length=255)
     description = models.TextField(_('description'), blank=True, null=True)
-    item_class = models.ForeignKey('product.ItemClass', verbose_name=_('item type'))
+    item_class = models.ForeignKey('product.ItemClass', verbose_name=_('item class'))
     attribute_types = models.ManyToManyField('product.AttributeType', through='ItemAttributeValue')
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)

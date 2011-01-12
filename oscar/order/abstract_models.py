@@ -36,7 +36,7 @@ class AbstractBatch(models.Model):
     dispatch_option = models.CharField(max_length=128, null=True, blank=True)
     
     def num_items(self):
-        return len(self.items.all())
+        return len(self.lines.all())
     
     class Meta:
         abstract = True
@@ -45,74 +45,80 @@ class AbstractBatch(models.Model):
     def __unicode__(self):
         return "%s batch for order #%d" % (self.partner.name, self.order.number)
         
-class AbstractBatchItem(models.Model):
+class AbstractBatchLine(models.Model):
     """
-    A item within a batch.
+    A line within a batch.
     
     Not using a line model as it's difficult to capture and payment 
     information when it splits across a line.
     """
-    batch = models.ForeignKey('order.Batch', related_name='items')
+    batch = models.ForeignKey('order.Batch', related_name='lines')
     # As all order items are stored in their own row, this ID is used to 
     # determine which are part of the same line.
     line_id = models.CharField(max_length=128)
     product = models.ForeignKey('product.Item')
+    quantity = models.PositiveIntegerField(default=1)
+    # Price information
+    line_price_incl_tax = models.DecimalField(decimal_places=2, max_digits=12)
+    line_price_excl_tax = models.DecimalField(decimal_places=2, max_digits=12)
+    unit_price_incl_tax = models.DecimalField(decimal_places=2, max_digits=12)
+    unit_price_excl_tax = models.DecimalField(decimal_places=2, max_digits=12)
+    delivery_incl_tax = models.DecimalField(decimal_places=2, max_digits=12)
+    delivery_excl_tax = models.DecimalField(decimal_places=2, max_digits=12)
     # Partner information
     partner_reference = models.CharField(max_length=128, blank=True, null=True,
         help_text=_("This is the item number that the partner uses within their system"))
     partner_notes = models.TextField(blank=True, null=True)
-    # Price information
-    price_incl_tax = models.DecimalField(decimal_places=2, max_digits=12)
-    price_excl_tax = models.DecimalField(decimal_places=2, max_digits=12)
-    delivery_incl_tax = models.DecimalField(decimal_places=2, max_digits=12)
-    delivery_excl_tax = models.DecimalField(decimal_places=2, max_digits=12)
-    # Payment status
-    OUTSTANDING, PAID, FAILED = ('Outstanding', 'Paid', 'Failed')
-    PAYMENT_CHOICES = (
-        (OUTSTANDING, _("Not paid for yet")),
-        (PAID, _("Payment received")),
-        (FAILED, _("Payment failed")),
-    )
-    payment_status = models.CharField(max_length=255, 
-        choices=PAYMENT_CHOICES, 
-        default=OUTSTANDING)
-    # Shipping status
-    # @todo Make this set of choices configurable per project
-    ON_HOLD, PENDING_SUBMISSION, SUBMITTED, ACKNOWLEDGED, DISPATCHED, RETURNED = (
-        'On hold',
-        'Pending submission',
-        'Submitted',
-        'Acknowledged',
-        'Dispatched',
-        'Returned'
-    )
-    SHIPPING_CHOICES = (
-        (ON_HOLD, _("On hold")),
-        (PENDING_SUBMISSION, _("Pending submission")),
-        (SUBMITTED, _("Submitted")),
-        (ACKNOWLEDGED, _("Acknowledged by partner")),
-        (DISPATCHED, _("Dispatched")),
-        (RETURNED, _("Returned")),
-    )
-    shipping_status = models.CharField(max_length=255, choices=SHIPPING_CHOICES, default=PENDING_SUBMISSION)
-    # Various dates
-    date_paid = models.DateTimeField(blank=True, null=True)
-    date_cancelled = models.DateTimeField(blank=True, null=True)
-    date_dispatched = models.DateField(blank=True, null=True)
-    date_returned = models.DateTimeField(blank=True, null=True)
-    date_refunded = models.DateTimeField(blank=True, null=True)
     
     class Meta:
         abstract = True
-        verbose_name_plural = _("Batch items")
+        verbose_name_plural = _("Batch lines")
         
-class AbstractBatchItemAttribute(models.Model):
+    def __unicode__(self):
+        return "Product '%s', quantity '%s'" % (self.product, self.quantity)
+    
+class AbstractBatchLineEvent(models.Model):    
     """
-    An attribute of a batch item.
+    An event is something which happens to a line such as
+    payment being taken for 2 items, or 1 item being dispatched.
     """
-    batch_item = models.ForeignKey('order.BatchItem', related_name='attributes')
+    line = models.ForeignKey('order.BatchLine')
+    quantity = models.PositiveIntegerField(default=1)
+    event_type = models.ForeignKey('order.BatchLineEventType')
+    notes = models.TextField(blank=True, null=True)
+    date = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        abstract = True
+        verbose_name_plural = _("Batch line events")
+        
+    def __unicode__(self):
+        return "Order #%d, batch #%d, line %d: %d items %s" % (
+            self.line.batch.order.number, self.line.batch.id, self.line.line_id, self.quantity, self.event_type)
+
+class AbstractBatchLineEventType(models.Model):
+    """ 
+    Event types: eg Paid, Cancelled, Dispatched, Returned
+    """
+    name = models.CharField(max_length=128)
+    
+    class Meta:
+        abstract = True
+        verbose_name_plural = _("Batch line event types")
+        
+    def __unicode__(self):
+        return self.name
+        
+class AbstractBatchLineAttribute(models.Model):
+    """
+    An attribute of a batch line.
+    """
+    line = models.ForeignKey('order.BatchLine', related_name='attributes')
     type = models.CharField(max_length=128)
     value = models.CharField(max_length=255)    
     
     class Meta:
         abstract = True
+        
+    def __unicode__(self):
+        return "%s = %s" % (self.type, self.value)

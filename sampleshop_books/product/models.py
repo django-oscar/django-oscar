@@ -4,7 +4,7 @@ Bookshop product models
 from django.db import models
 from oscar.product.abstract_models import *
 
-class ItemType(AbstractItemType):
+class ItemClass(AbstractItemClass):
     pass
 
 class Item(AbstractItem):

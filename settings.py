@@ -96,7 +96,7 @@ INSTALLED_APPS = (
     # Apps from oscar
     'oscar',
     'oscar.order',
-    #'oscar.product',
+    'oscar.product',
     'oscar.basket',
     'oscar.payment',
     'oscar.offer',
@@ -105,7 +105,7 @@ INSTALLED_APPS = (
     'oscar.image',
     # To use an alternative app to one of oscar's core ones,
     # add it here (eg replace oscar.payment with sampleapp.payment)
-    'sampleshop_clothing.product'
+    #'sampleshop_clothing.product'
 )
 
 # Local overrides
