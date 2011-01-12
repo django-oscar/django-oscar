@@ -50,7 +50,8 @@ There is a shortcut script for dropping all of oscar's apps and rerunning `syncd
     ./reset_oscar_tables.sh
     
 Run tests using:
-    ./manage.py test oscar
+    ./run_tests.sh
+This specifies a sqlite3 database to use for testing and filters out the useless output.
     
 You can also use the functionality from (django-test-extensions)[https://github.com/garethr/django-test-extensions/] which 
 is one of the installed app	

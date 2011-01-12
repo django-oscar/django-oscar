@@ -93,7 +93,7 @@ class AbstractBatchLineEvent(models.Model):
         verbose_name_plural = _("Batch line events")
         
     def __unicode__(self):
-        return "Order #%d, batch #%d, line %d: %d items %s" % (
+        return "Order #%d, batch #%d, line %s: %d items %s" % (
             self.line.batch.order.number, self.line.batch.id, self.line.line_id, self.quantity, self.event_type)
 
 class AbstractBatchLineEventType(models.Model):

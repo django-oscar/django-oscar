@@ -30,7 +30,7 @@ class AbstractStockRecord(models.Model):
     price_incl_tax = models.DecimalField(decimal_places=2, max_digits=12)
     price_excl_tax = models.DecimalField(decimal_places=2, max_digits=12)
     num_in_stock = models.IntegerField()
-    num_allocated = models.IntegerField()
+    num_allocated = models.IntegerField(default=0)
     
     class Meta:
         abstract = True

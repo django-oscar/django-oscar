@@ -1,17 +1,18 @@
 """
-Abstract models for the product images app
+Abstract models for product images
 """
 
 from django.db import models
 from django.utils.translation import ugettext as _
-
 
 class AbstractImage(models.Model):
     """
     An image of a product  
     """
     product = models.ForeignKey('product.Item', related_name='images')
-    path = models.ImageField(upload_to='product-images/%Y/%m/')
+    # Namespacing path with app name to avoid clashes with other apps
+    path_to_original = models.ImageField(upload_to='product-images/%Y/%m/')
+    path_to_thumbnail = models.ImageField(upload_to='product-images/%Y/%m/')
     # Use display_order to determine which is the "primary" image
     display_order = models.PositiveIntegerField()
     date_created = models.DateTimeField(auto_now_add=True)
