@@ -5,3 +5,7 @@ Fields to write:
 
 Sample shop:
 - How to have the admin site reflect your local models
+- Allow admin to be customised for your local project - can we inherit from oscar admin and add stuff?
+
+Products:
+- How to temporarily disable products so they aren't visible

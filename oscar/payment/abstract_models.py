@@ -2,7 +2,6 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import ugettext as _
 
-
 class AbstractSource(models.Model):
     """
     A source of payment for an order.  
@@ -13,9 +12,9 @@ class AbstractSource(models.Model):
     entry.
     """
     order = models.ForeignKey('order.Order', related_name='sources')
-    type = models.CharField(max_length=128)
-    initial_amount = models.IntegerField()
-    balance = models.IntegerField()
+    type = models.ForeignKey('payment.SourceType')
+    initial_amount = models.DecimalField(decimal_places=2, max_digits=12)
+    balance = models.DecimalField(decimal_places=2, max_digits=12)
     reference = models.CharField(max_length=128, blank=True, null=True)
     
     class Meta:
@@ -27,6 +26,18 @@ class AbstractSource(models.Model):
             description += " (reference: %s)" % self.reference
         return description
     
+class AbstractSourceType(models.Model):
+    """
+    A type of payment source (eg Bankcard, Business account, Gift card)
+    """
+    name = models.CharField(max_length=128)
+
+    class Meta:
+        abstract = True
+
+    def __unicode__(self):
+        return self.name
+
 class AbstractTransaction(models.Model):
     """
     A transaction for payment sources which need a secondary 'transaction' to actually take the money
