@@ -9,3 +9,6 @@ Sample shop:
 
 Products:
 - How to temporarily disable products so they aren't visible
+
+Misc:
+- How to make model field choices configurable per project

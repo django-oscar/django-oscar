@@ -1,3 +1,6 @@
+"""
+Core address objects
+"""
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -34,7 +37,10 @@ class AbstractAddress(models.Model):
         abstract = True
         
     def get_salutation(self):
-        return "%s %s %s" % (self.title, self.first_name, self.last_name)    
+        """
+        Returns the salutation
+        """
+        return " ".join([part for part in [self.title, self.first_name, self.last_name] if part])
         
     def __unicode__(self):
         parts = (self.get_salutation(), self.line1, self.line2, self.line3, self.line4,

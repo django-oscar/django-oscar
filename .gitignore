@@ -1,7 +1,7 @@
 *.pyc
 local_settings.py
 fixtures/*
-assets/designs/*
+product-images/*
 *.swp
 .project
 .pydevproject

@@ -21,6 +21,9 @@ class BillingAddress(AbstractBillingAddress):
 class BatchLine(AbstractBatchLine):
     pass
 
+class BatchLinePrice(AbstractBatchLinePrice):
+    pass
+
 class BatchLineEvent(AbstractBatchLineEvent):
     pass
 

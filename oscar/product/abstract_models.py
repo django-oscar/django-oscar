@@ -29,11 +29,12 @@ class AbstractItem(models.Model):
     # No canonical product should have a stock record as they cannot be bought.
     parent = models.ForeignKey('self', blank=True, null=True, 
         help_text="""Only choose a parent product if this is a 'variant' of a canonical product.  For example 
-                     if this is a size 4 of a particular t-shirt.  Leave blank if there is only one version of this
-                     product""")
-    title = models.CharField(_('name'), max_length=255)
+                     if this is a size 4 of a particular t-shirt.  Leave blank if this is a CANONICAL PRODUCT (ie 
+                     there is only one version of this product).""")
+    title = models.CharField(_('title'), max_length=255)
     description = models.TextField(_('description'), blank=True, null=True)
-    item_class = models.ForeignKey('product.ItemClass', verbose_name=_('item class'))
+    item_class = models.ForeignKey('product.ItemClass', verbose_name=_('item class'),
+        help_text="""Choose what type of product this is""")
     attribute_types = models.ManyToManyField('product.AttributeType', through='ItemAttributeValue')
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)

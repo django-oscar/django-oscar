@@ -8,7 +8,7 @@ class AbstractBasket(models.Model):
     """
     Basket object
     """
-    # Baskets can be anonymously owned
+    # Baskets can be anonymously owned (which are then merged
     owner = models.ForeignKey(User, related_name='baskets', null=True)
     OPEN, MERGED, SUBMITTED = ("Open", "Merged", "Submitted")
     STATUS_CHOICES = (
@@ -19,6 +19,7 @@ class AbstractBasket(models.Model):
     status = models.CharField(max_length=128, default=OPEN, choices=STATUS_CHOICES)
     date_created = models.DateTimeField(auto_now_add=True)
     date_merged = models.DateTimeField(null=True, blank=True)
+    date_submitted = models.DateTimeField(null=True, blank=True)
     
     class Meta:
         abstract = True
@@ -74,6 +75,9 @@ class AbstractLine(models.Model):
         return "%s, Product '%s', quantity %d" % (self.basket, self.product, self.quantity)
     
 class AbstractLineAttribute(models.Model):
+    """
+    An attribute of a basket line
+    """
     line = models.ForeignKey('basket.Line', related_name='attributes')
     type = models.CharField(max_length=128)
     value = models.CharField(max_length=255)    

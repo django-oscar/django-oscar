@@ -10,9 +10,13 @@ class AbstractOrder(models.Model):
     basket = models.ForeignKey('basket.Basket')
     customer = models.ForeignKey(User, related_name='orders')
     billing_address = models.ForeignKey('order.BillingAddress')
-    # Totals
+    # Total price looks like it could be calculated by adding up the
+    # prices of the associated batches, but in some circumstances extra
+    # order-level charges are added and so we need to store it separately
     total_incl_tax = models.DecimalField(decimal_places=2, max_digits=12)
+    total_excl_tax = models.DecimalField(decimal_places=2, max_digits=12)
     delivery_incl_tax = models.DecimalField(decimal_places=2, max_digits=12)
+    delivery_excl_tax = models.DecimalField(decimal_places=2, max_digits=12)
     date_placed = models.DateTimeField(auto_now_add=True)
     
     class Meta:
@@ -35,7 +39,7 @@ class AbstractBatch(models.Model):
     # Whether the batch should be dispatched in one go, or as they become available
     dispatch_option = models.CharField(max_length=128, null=True, blank=True)
     
-    def num_items(self):
+    def get_num_items(self):
         return len(self.lines.all())
     
     class Meta:
@@ -58,13 +62,11 @@ class AbstractBatchLine(models.Model):
     line_id = models.CharField(max_length=128)
     product = models.ForeignKey('product.Item')
     quantity = models.PositiveIntegerField(default=1)
-    # Price information
+    # Price information (these fields are actually redundant as the information
+    # can be calculated from the BatchLinePrice models
     line_price_incl_tax = models.DecimalField(decimal_places=2, max_digits=12)
     line_price_excl_tax = models.DecimalField(decimal_places=2, max_digits=12)
-    unit_price_incl_tax = models.DecimalField(decimal_places=2, max_digits=12)
-    unit_price_excl_tax = models.DecimalField(decimal_places=2, max_digits=12)
-    delivery_incl_tax = models.DecimalField(decimal_places=2, max_digits=12)
-    delivery_excl_tax = models.DecimalField(decimal_places=2, max_digits=12)
+    
     # Partner information
     partner_reference = models.CharField(max_length=128, blank=True, null=True,
         help_text=_("This is the item number that the partner uses within their system"))
@@ -77,12 +79,27 @@ class AbstractBatchLine(models.Model):
     def __unicode__(self):
         return "Product '%s', quantity '%s'" % (self.product, self.quantity)
     
+class AbstractBatchLinePrice(models.Model):
+    """
+    For tracking the prices paid for each unit within a line.
+    
+    This is necessary as offers can lead to units within a line 
+    having different prices.  For example, one product may be sold at
+    50% off as it's part of an offer while the remainder are full price.
+    """
+    line = models.ForeignKey('order.BatchLine', related_name='prices')
+    quantity = models.PositiveIntegerField(default=1)
+    price_incl_tax = models.DecimalField(decimal_places=2, max_digits=12)
+    price_excl_tax = models.DecimalField(decimal_places=2, max_digits=12)
+    delivery_incl_tax = models.DecimalField(decimal_places=2, max_digits=12, default=0)
+    delivery_excl_tax = models.DecimalField(decimal_places=2, max_digits=12, default=0)
+    
 class AbstractBatchLineEvent(models.Model):    
     """
     An event is something which happens to a line such as
     payment being taken for 2 items, or 1 item being dispatched.
     """
-    line = models.ForeignKey('order.BatchLine')
+    line = models.ForeignKey('order.BatchLine', related_name='events')
     quantity = models.PositiveIntegerField(default=1)
     event_type = models.ForeignKey('order.BatchLineEventType')
     notes = models.TextField(blank=True, null=True)
