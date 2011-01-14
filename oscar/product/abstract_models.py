@@ -31,7 +31,8 @@ class AbstractItem(models.Model):
         help_text="""Only choose a parent product if this is a 'variant' of a canonical product.  For example 
                      if this is a size 4 of a particular t-shirt.  Leave blank if this is a CANONICAL PRODUCT (ie 
                      there is only one version of this product).""")
-    title = models.CharField(_('title'), max_length=255)
+    # Title is mandatory for canonical products but optional for child products
+    title = models.CharField(_('title'), max_length=255, blank=True, null=True)
     description = models.TextField(_('description'), blank=True, null=True)
     item_class = models.ForeignKey('product.ItemClass', verbose_name=_('item class'),
         help_text="""Choose what type of product this is""")
@@ -51,6 +52,12 @@ class AbstractItem(models.Model):
 
     def __unicode__(self):
         return self.title
+    
+    def save(self, *args, **kwargs):
+        if self.is_canonical() and not self.title:
+            from django.core.exceptions import ValidationError
+            raise ValidationError("Canonical products must have a title")
+        super(AbstractItem, self).save(*args, **kwargs)
 
 class AbstractAttributeType(models.Model):
     """

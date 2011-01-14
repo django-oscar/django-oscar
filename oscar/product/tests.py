@@ -1,23 +1,21 @@
-"""
-This file demonstrates two different styles of tests (one doctest and one
-unittest). These will both pass when you run "manage.py test".
-
-Replace these with more appropriate tests for your application.
-"""
+import unittest
 
 from django.test import TestCase
+from django.core.exceptions import ValidationError
 
-class SimpleTest(TestCase):
-    def test_basic_addition(self):
-        """
-        Tests that 1 + 1 always equals 2.
-        """
-        self.failUnlessEqual(1 + 1, 2)
+from oscar.product.models import Item, ItemClass
+from oscar.stock.models import Partner, StockRecord
 
-__test__ = {"doctest": """
-Another way to test that 1 + 1 is equal to 2.
-
->>> 1 + 1 == 2
-True
-"""}
-
+class ItemTest(unittest.TestCase):
+    
+    def setUp(self):
+        self.item_class = ItemClass.objects.create(name='Clothing')
+    
+    def test_non_canonical_products_dont_need_titles(self):
+        cp = Item.objects.create(title="Canonical product", item_class=self.item_class)
+        p = Item.objects.create(parent=cp, item_class=self.item_class)
+        self.assertEquals('', p.title)
+        
+    def test_canonical_products_must_have_titles(self):
+        self.assertRaises(ValidationError, Item.objects.create, item_class=self.item_class)
+        
