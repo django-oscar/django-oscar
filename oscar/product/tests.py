@@ -21,11 +21,20 @@ class CanonicalItemTests(ItemTests):
         
 class NonCanonicalItemTests(ItemTests):
     
+    def setUp(self):
+        super(NonCanonicalItemTests, self).setUp()
+        self.canonical = Item.objects.create(title="Canonical product", item_class=self.item_class)
+    
     def test_non_canonical_products_dont_need_titles(self):
-        cp = Item.objects.create(title="Canonical product", item_class=self.item_class)
-        p = Item.objects.create(parent=cp, item_class=self.item_class)
-        self.assertEquals(None, p.title)
+        p = Item.objects.create(parent=self.canonical, item_class=self.item_class)
         
     def test_non_canonical_products_dont_need_a_product_class(self):
-        cp = Item.objects.create(title="Canonical product", item_class=self.item_class)
-        p = Item.objects.create(parent=cp)
+        p = Item.objects.create(parent=self.canonical)
+        
+    def test_non_canonical_products_inherit_canonical_titles(self):
+        p = Item.objects.create(parent=self.canonical, item_class=self.item_class)
+        self.assertEquals("Canonical product", p.title)
+        
+    def test_non_canonical_products_inherit_product_class(self):
+        p = Item.objects.create(parent=self.canonical)
+        self.assertEquals("Clothing", p.item_class.name)

@@ -53,6 +53,26 @@ class AbstractItem(models.Model):
     def get_attribute_summary(self):
         return ", ".join([attribute.__unicode__() for attribute in self.attributes.all()])
 
+    # Set title as a property so we can forward the method call to the parent product
+    def _get_title(self):
+        title = self.__dict__.setdefault('title', '')
+        if not title and self.parent_id:
+            title = self.parent.title
+        return title
+    def _set_title(self, title):
+        self.__dict__['title'] = title
+    title = property(_get_title, _set_title)
+    
+    # Set item_class as a property so we can forward the method call to the parent product
+    def _get_item_class(self):
+        item_class = self.__dict__.setdefault('item_class', None)
+        if not item_class and self.parent_id:
+            item_class = self.parent.item_class
+        return item_class
+    def _set_item_class(self, item_class):
+        self.__dict__['item_class'] = item_class
+    item_class = property(_get_item_class, _set_item_class)
+
     class Meta:
         abstract = True
         ordering = ['-date_created']
