@@ -1,5 +1,9 @@
+"""
+Models of products
+"""
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+
 
 class AbstractItemClass(models.Model):
     """
@@ -15,6 +19,7 @@ class AbstractItemClass(models.Model):
     def __unicode__(self):
         return self.name
 
+
 class AbstractItem(models.Model):
     """
     The base product object
@@ -25,20 +30,22 @@ class AbstractItem(models.Model):
     # 
     # For example, a canonical product would have a title like "Green fleece" while its 
     # children would be "Green fleece - size L".
-    #
+    
+    # Universal product code
+    upc = models.CharField(max_length=64, blank=True)
     # No canonical product should have a stock record as they cannot be bought.
-    parent = models.ForeignKey('self', blank=True, null=True, 
+    parent = models.ForeignKey('self', null=True, blank=True,
         help_text="""Only choose a parent product if this is a 'variant' of a canonical product.  For example 
                      if this is a size 4 of a particular t-shirt.  Leave blank if this is a CANONICAL PRODUCT (ie 
                      there is only one version of this product).""")
     # Title is mandatory for canonical products but optional for child products
     title = models.CharField(_('title'), max_length=255, blank=True, null=True)
     description = models.TextField(_('description'), blank=True, null=True)
-    item_class = models.ForeignKey('product.ItemClass', verbose_name=_('item class'),
+    item_class = models.ForeignKey('product.ItemClass', verbose_name=_('item class'), null=True,
         help_text="""Choose what type of product this is""")
     attribute_types = models.ManyToManyField('product.AttributeType', through='ItemAttributeValue')
     date_created = models.DateTimeField(auto_now_add=True)
-    date_updated = models.DateTimeField(auto_now=True)
+    date_updated = models.DateTimeField(auto_now=True, null=True, default=None)
 
     def is_canonical(self):
         return self.parent == None
@@ -59,11 +66,13 @@ class AbstractItem(models.Model):
             raise ValidationError("Canonical products must have a title")
         super(AbstractItem, self).save(*args, **kwargs)
 
+
 class AbstractAttributeType(models.Model):
     """
     Defines an attribute. (Eg. size)
     """
     type = models.CharField(_('type'), max_length=128)
+    has_choices = models.BooleanField(default=False)
 
     class Meta:
         abstract = True
@@ -71,6 +80,21 @@ class AbstractAttributeType(models.Model):
 
     def __unicode__(self):
         return self.type
+
+
+class AbstractAttributeValueOption(models.Model):
+    """
+    Defines an attribute value choice (Eg: S,M,L,XL for a size attribute type)
+    """
+    type = models.ForeignKey('product.AttributeType', related_name='options')
+    value = models.CharField(max_length=255)
+
+    class Meta:
+        abstract = True
+
+    def __unicode__(self):
+        return "%s = %s" % (self.type, self.value)
+
 
 class AbstractItemAttributeValue(models.Model):
     """

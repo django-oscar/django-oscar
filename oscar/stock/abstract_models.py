@@ -3,6 +3,7 @@ Models for the stock and fulfillment components of an project
 """
 from django.db import models
 
+
 class AbstractPartner(models.Model):
     """
     Fulfillment partner
@@ -16,6 +17,7 @@ class AbstractPartner(models.Model):
     def __unicode__(self):
         return self.name
 
+
 class AbstractStockRecord(models.Model):
     """
     A basic stock record.
@@ -26,9 +28,16 @@ class AbstractStockRecord(models.Model):
     """
     product = models.OneToOneField('product.Item')
     partner = models.ForeignKey('stock.Partner')
-    partner_reference = models.CharField(max_length=128, blank=True, null=True)
-    price_incl_tax = models.DecimalField(decimal_places=2, max_digits=12)
+    partner_reference = models.CharField(max_length=128, blank=True)
+    
+    # Price info:
+    # We deliberately don't store tax information to allow each project
+    # to subclass this model and put its own fields for convey tax.
+    price_currency = models.CharField(max_length=12, default='GBP')
     price_excl_tax = models.DecimalField(decimal_places=2, max_digits=12)
+    price_retail_excl_tax = models.DecimalField(decimal_places=2, max_digits=12)
+    
+    # Stock level information
     num_in_stock = models.IntegerField()
     num_allocated = models.IntegerField(default=0)
     

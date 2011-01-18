@@ -57,9 +57,6 @@ class AbstractBatchLine(models.Model):
     information when it splits across a line.
     """
     batch = models.ForeignKey('order.Batch', related_name='lines')
-    # As all order items are stored in their own row, this ID is used to 
-    # determine which are part of the same line.
-    line_id = models.CharField(max_length=128)
     product = models.ForeignKey('product.Item')
     quantity = models.PositiveIntegerField(default=1)
     # Price information (these fields are actually redundant as the information

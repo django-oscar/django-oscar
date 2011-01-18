@@ -22,16 +22,16 @@ class AbstractAddress(models.Model):
         (MS, _("Ms")),
         (DR, _("Dr")),
     )
-    title = models.CharField(max_length=64, choices=TITLE_CHOICES, blank=True, null=True)
-    first_name = models.CharField(max_length=255, blank=True, null=True)
+    title = models.CharField(max_length=64, choices=TITLE_CHOICES, blank=True)
+    first_name = models.CharField(max_length=255, blank=True)
     last_name = models.CharField(max_length=255)
     line1 = models.CharField(max_length=255)
-    line2 = models.CharField(max_length=255, blank=True, null=True)
-    line3 = models.CharField(max_length=255, blank=True, null=True)
-    line4 = models.CharField(max_length=255, blank=True, null=True)
+    line2 = models.CharField(max_length=255, blank=True)
+    line3 = models.CharField(max_length=255, blank=True)
+    line4 = models.CharField(max_length=255, blank=True)
     postcode = models.CharField(max_length=64)
     # @todo: Create a country model to use as a foreign key
-    country = models.CharField(max_length=255, blank=True, null=True)
+    country = models.CharField(max_length=255, blank=True)
     
     class Meta:
         abstract = True
