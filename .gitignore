@@ -6,3 +6,4 @@ product-images/*
 .project
 .pydevproject
 .settings
+django_oscar.egg-info/
