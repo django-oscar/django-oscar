@@ -19,6 +19,7 @@ more work up front in terms of creating the right set of models but leads
 ultimately to a much cleaner and coherent system.
 
 ## Installation for developers
+
 Set up `virtualenv` if you haven't already done so:
 	sudo apt-get install python-setuptools
 	sudo easy_install pip
@@ -37,20 +38,30 @@ After checking out your fork, install all dependencies:
 	workon oscar
 	pip install -r requirements.txt
 
+Now install oscar within your virtual env
+    python setup.py develop
+
 Now create a `local_settings.py` file which contains details of your local database
 that you want to use for development.  Be sure to create two databases: one for development
 and one for running the unit tests (prefix `test_` on the normal db name).
 
-Create your database:
-    ./manage.py syncdb
-	
 ## Developing
 
-There is a shortcut script for dropping all of oscar's apps and rerunning `syncdb`
-    ./reset_oscar_tables.sh
+Developing oscar normally involves working on a django project which uses oscar
+as a installed app.  There are several such projects within the `examples` folder - the 
+`defaultshop` project does not customise oscar at all and uses everything in its 
+default format.
+
+Each example shop has its own `manage.py` executable which you can use to create 
+your database:
+    ./manage.py syncdb
+	
+There is a shortcut script for dropping all of a projects's apps and rerunning `syncdb` in
+the `examples` folder - you need to specify which project to act on:
+    ./recreate_project_tables.sh defaultshop
     
-Run tests using:
-    ./run_tests.sh
+There is a similar script for running tests:
+    ./run_tests.sh defaultshop
 This specifies a sqlite3 database to use for testing and filters out the useless output.
     
 You can also use the functionality from [django-test-extensions](https://github.com/garethr/django-test-extensions/) which 
