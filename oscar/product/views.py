@@ -14,3 +14,6 @@ def item(request, product_id):
     """
     item = get_object_or_404(Item, pk=product_id)
     return render_to_response('item.html', locals())
+
+def all(request):
+    return render_to_response('browse-all.html', locals())
