@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import ugettext as _
 
+
 class AbstractBasket(models.Model):
     """
     Basket object
@@ -16,7 +17,7 @@ class AbstractBasket(models.Model):
         (MERGED, _("Merged - superceded by another basket")),
         (SUBMITTED, _("Submitted - has been ordered at the checkout")),
     )
-    status = models.CharField(max_length=128, default=OPEN, choices=STATUS_CHOICES)
+    status = models.CharField(_("Status"), max_length=128, default=OPEN, choices=STATUS_CHOICES)
     date_created = models.DateTimeField(auto_now_add=True)
     date_merged = models.DateTimeField(null=True, blank=True)
     date_submitted = models.DateTimeField(null=True, blank=True)
@@ -46,7 +47,8 @@ class AbstractBasket(models.Model):
         return reduce(lambda num,line: num+line.quantity, self.lines.all(), 0)
     
     def __unicode__(self):
-        return "%s basket (owner: %s)" % (self.status, self.owner)
+        return u"%s basket (owner: %s)" % (self.status, self.owner)
+    
     
 class AbstractLine(models.Model):
     """
@@ -72,15 +74,16 @@ class AbstractLine(models.Model):
         abstract = True
         
     def __unicode__(self):
-        return "%s, Product '%s', quantity %d" % (self.basket, self.product, self.quantity)
+        return u"%s, Product '%s', quantity %d" % (self.basket, self.product, self.quantity)
+    
     
 class AbstractLineAttribute(models.Model):
     """
     An attribute of a basket line
     """
     line = models.ForeignKey('basket.Line', related_name='attributes')
-    type = models.CharField(max_length=128)
-    value = models.CharField(max_length=255)    
+    type = models.CharField(_("Type"), max_length=128)
+    value = models.CharField(_("Value"), max_length=255)    
     
     def get_hash(self):
         return zlib.crc32(self.type + self.value)

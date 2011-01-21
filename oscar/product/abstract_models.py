@@ -32,46 +32,44 @@ class AbstractItem(models.Model):
     # children would be "Green fleece - size L".
     
     # Universal product code
-    upc = models.CharField(max_length=64, blank=True)
+    upc = models.CharField(max_length=64, blank=True, null=True)
     # No canonical product should have a stock record as they cannot be bought.
-    parent = models.ForeignKey('self', null=True, blank=True,
+    parent = models.ForeignKey('self', null=True, blank=True, related_name='children',
         help_text="""Only choose a parent product if this is a 'variant' of a canonical product.  For example 
                      if this is a size 4 of a particular t-shirt.  Leave blank if this is a CANONICAL PRODUCT (ie 
                      there is only one version of this product).""")
     # Title is mandatory for canonical products but optional for child products
-    title = models.CharField(_('title'), max_length=255, blank=True, null=True)
-    description = models.TextField(_('description'), blank=True, null=True)
+    title = models.CharField(_('Title'), max_length=255, blank=True, null=True)
+    description = models.TextField(_('Description'), blank=True, null=True)
     item_class = models.ForeignKey('product.ItemClass', verbose_name=_('item class'), null=True,
         help_text="""Choose what type of product this is""")
     attribute_types = models.ManyToManyField('product.AttributeType', through='ItemAttributeValue')
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True, null=True, default=None)
 
-    def is_canonical(self):
+    def is_top_level(self):
         return self.parent == None
+    
+    def is_group(self):
+        return self.is_top_level() and self.children.count() > 0
+    
+    def is_variant(self):
+        return not self.is_top_level()
 
     def get_attribute_summary(self):
         return ", ".join([attribute.__unicode__() for attribute in self.attributes.all()])
 
-    # Set title as a property so we can forward the method call to the parent product
-    def _get_title(self):
+    def get_title(self):
         title = self.__dict__.setdefault('title', '')
         if not title and self.parent_id:
             title = self.parent.title
         return title
-    def _set_title(self, title):
-        self.__dict__['title'] = title
-    title = property(_get_title, _set_title)
     
-    # Set item_class as a property so we can forward the method call to the parent product
-    def _get_item_class(self):
+    def get_item_class(self):
         item_class = self.__dict__.setdefault('item_class', None)
         if not item_class and self.parent_id:
             item_class = self.parent.item_class
         return item_class
-    def _set_item_class(self, item_class):
-        self.__dict__['item_class'] = item_class
-    item_class = property(_get_item_class, _set_item_class)
 
     class Meta:
         abstract = True
