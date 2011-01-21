@@ -79,7 +79,7 @@ class AbstractItem(models.Model):
         return self.title
     
     def save(self, *args, **kwargs):
-        if self.is_canonical() and not self.title:
+        if self.is_top_level() and not self.title:
             from django.core.exceptions import ValidationError
             raise ValidationError("Canonical products must have a title")
         super(AbstractItem, self).save(*args, **kwargs)
