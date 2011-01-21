@@ -34,7 +34,7 @@ class AbstractItem(models.Model):
     # Universal product code
     upc = models.CharField(max_length=64, blank=True, null=True)
     # No canonical product should have a stock record as they cannot be bought.
-    parent = models.ForeignKey('self', null=True, blank=True,
+    parent = models.ForeignKey('self', null=True, blank=True, related_name='children',
         help_text="""Only choose a parent product if this is a 'variant' of a canonical product.  For example 
                      if this is a size 4 of a particular t-shirt.  Leave blank if this is a CANONICAL PRODUCT (ie 
                      there is only one version of this product).""")
@@ -47,8 +47,14 @@ class AbstractItem(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True, null=True, default=None)
 
-    def is_canonical(self):
+    def is_top_level(self):
         return self.parent == None
+    
+    def is_group(self):
+        return self.is_top_level() and self.children.count() > 0
+    
+    def is_variant(self):
+        return not self.is_top_level()
 
     def get_attribute_summary(self):
         return ", ".join([attribute.__unicode__() for attribute in self.attributes.all()])

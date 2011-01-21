@@ -1,0 +1,19 @@
+<h1>{{item.get_title}}</h1>
+<table>
+    <caption>Product details</caption>
+    <tr>
+        <th>UPC</th><td>{{item.upc}}</td>
+    </tr>
+    <tr>
+        <th>Product class</th><td>{{item.product_class.name}}</td>
+    </tr>
+    <tr>
+        <th>Price (excl. tax)</th><td>{{item.stockrecord.price_excl_tax}}</td>
+    </tr>
+    <tr>
+        <th>Product type</th>
+        <td>{% if item.is_group %}Product group{% else %}Stand-alone{% endif %}
+        
+        </td>
+    </tr>
+</table>
