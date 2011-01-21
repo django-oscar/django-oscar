@@ -22,16 +22,16 @@ class AbstractAddress(models.Model):
         (MS, _("Ms")),
         (DR, _("Dr")),
     )
-    title = models.CharField(max_length=64, choices=TITLE_CHOICES, blank=True)
-    first_name = models.CharField(max_length=255, blank=True)
-    last_name = models.CharField(max_length=255)
-    line1 = models.CharField(max_length=255)
-    line2 = models.CharField(max_length=255, blank=True)
-    line3 = models.CharField(max_length=255, blank=True)
-    line4 = models.CharField(max_length=255, blank=True)
-    postcode = models.CharField(max_length=64)
+    title = models.CharField(_("Title"), max_length=64, choices=TITLE_CHOICES, blank=True)
+    first_name = models.CharField(_("First name"), max_length=255, blank=True)
+    last_name = models.CharField(_("Last name"), max_length=255)
+    line1 = models.CharField(_("First line of address"), max_length=255)
+    line2 = models.CharField(_("Second line of address"), max_length=255, blank=True)
+    line3 = models.CharField(_("City"), max_length=255, blank=True)
+    line4 = models.CharField(_("State/County"), max_length=255, blank=True)
+    postcode = models.CharField(_("Post/Zip-code"), max_length=64)
     # @todo: Create a country model to use as a foreign key
-    country = models.CharField(max_length=255, blank=True)
+    country = models.CharField(_("Country"), max_length=255, blank=True)
     
     class Meta:
         abstract = True
@@ -45,7 +45,7 @@ class AbstractAddress(models.Model):
     def __unicode__(self):
         parts = (self.get_salutation(), self.line1, self.line2, self.line3, self.line4,
                  self.postcode, self.country)
-        return ", ".join([part for part in parts if part])
+        return u", ".join([part for part in parts if part])
 
 class AbstractDeliveryAddress(AbstractAddress):
     """

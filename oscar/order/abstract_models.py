@@ -6,17 +6,17 @@ class AbstractOrder(models.Model):
     """
     An order
     """
-    number = models.IntegerField(_("Order number"))
+    number = models.PositiveIntegerField(_("Order number"))
     basket = models.ForeignKey('basket.Basket')
     customer = models.ForeignKey(User, related_name='orders')
     billing_address = models.ForeignKey('order.BillingAddress')
     # Total price looks like it could be calculated by adding up the
     # prices of the associated batches, but in some circumstances extra
     # order-level charges are added and so we need to store it separately
-    total_incl_tax = models.DecimalField(decimal_places=2, max_digits=12)
-    total_excl_tax = models.DecimalField(decimal_places=2, max_digits=12)
-    delivery_incl_tax = models.DecimalField(decimal_places=2, max_digits=12)
-    delivery_excl_tax = models.DecimalField(decimal_places=2, max_digits=12)
+    total_incl_tax = models.DecimalField(_("Order total (inc. tax)"), decimal_places=2, max_digits=12)
+    total_excl_tax = models.DecimalField(_("Order total (excl. tax)"), decimal_places=2, max_digits=12)
+    shipping_incl_tax = models.DecimalField(_("Shipping charge (inc. tax)"), decimal_places=2, max_digits=12)
+    shipping_excl_tax = models.DecimalField(_("Shipping charge (excl. tax)"), decimal_places=2, max_digits=12)
     date_placed = models.DateTimeField(auto_now_add=True)
     
     class Meta:
@@ -37,7 +37,7 @@ class AbstractBatch(models.Model):
     # Not all batches are actually delivered (such as downloads)
     delivery_address = models.ForeignKey('order.DeliveryAddress', null=True, blank=True)
     # Whether the batch should be dispatched in one go, or as they become available
-    dispatch_option = models.CharField(max_length=128, null=True, blank=True)
+    dispatch_option = models.CharField(_("Dispatch option"), max_length=128, null=True, blank=True)
     
     def get_num_items(self):
         return len(self.lines.all())
@@ -65,7 +65,7 @@ class AbstractBatchLine(models.Model):
     line_price_excl_tax = models.DecimalField(decimal_places=2, max_digits=12)
     
     # Partner information
-    partner_reference = models.CharField(max_length=128, blank=True, null=True,
+    partner_reference = models.CharField(_("Partner reference"), max_length=128, blank=True, null=True,
         help_text=_("This is the item number that the partner uses within their system"))
     partner_notes = models.TextField(blank=True, null=True)
     
@@ -74,7 +74,8 @@ class AbstractBatchLine(models.Model):
         verbose_name_plural = _("Batch lines")
         
     def __unicode__(self):
-        return "Product '%s', quantity '%s'" % (self.product, self.quantity)
+        return u"Product '%s', quantity '%s'" % (self.product, self.quantity)
+    
     
 class AbstractBatchLinePrice(models.Model):
     """
@@ -91,6 +92,13 @@ class AbstractBatchLinePrice(models.Model):
     delivery_incl_tax = models.DecimalField(decimal_places=2, max_digits=12, default=0)
     delivery_excl_tax = models.DecimalField(decimal_places=2, max_digits=12, default=0)
     
+    class Meta:
+        abstract = True
+        
+    def __unicode__(self):
+        return u"Line '%s' (quantity %d) price %s" % (self.line, self.quantity, self.price_incl_tax)
+    
+    
 class AbstractBatchLineEvent(models.Model):    
     """
     An event is something which happens to a line such as
@@ -99,7 +107,8 @@ class AbstractBatchLineEvent(models.Model):
     line = models.ForeignKey('order.BatchLine', related_name='events')
     quantity = models.PositiveIntegerField(default=1)
     event_type = models.ForeignKey('order.BatchLineEventType')
-    notes = models.TextField(blank=True, null=True)
+    notes = models.TextField(_("Event notes"), blank=True, null=True,
+        help_text="This could be the dispatch reference, or a tracking number")
     date = models.DateTimeField(auto_now_add=True)
     
     class Meta:
@@ -107,8 +116,9 @@ class AbstractBatchLineEvent(models.Model):
         verbose_name_plural = _("Batch line events")
         
     def __unicode__(self):
-        return "Order #%d, batch #%d, line %s: %d items %s" % (
+        return u"Order #%d, batch #%d, line %s: %d items %s" % (
             self.line.batch.order.number, self.line.batch.id, self.line.line_id, self.quantity, self.event_type)
+
 
 class AbstractBatchLineEventType(models.Model):
     """ 
@@ -123,13 +133,14 @@ class AbstractBatchLineEventType(models.Model):
     def __unicode__(self):
         return self.name
         
+        
 class AbstractBatchLineAttribute(models.Model):
     """
     An attribute of a batch line.
     """
     line = models.ForeignKey('order.BatchLine', related_name='attributes')
-    type = models.CharField(max_length=128)
-    value = models.CharField(max_length=255)    
+    type = models.CharField(_("Type"), max_length=128)
+    value = models.CharField(_("Value"), max_length=255)    
     
     class Meta:
         abstract = True
