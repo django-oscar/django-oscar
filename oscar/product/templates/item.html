@@ -28,5 +28,12 @@
         </td>
     </tr>
 </table>
+
+<form action="/shop/basket/add-item/" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Add to basket" />
+</form>
+
 {% endblock content %}
 
