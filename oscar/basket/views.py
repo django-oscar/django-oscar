@@ -81,5 +81,6 @@ def index(request):
         basket = _get_user_basket(request)
         if not basket:
             basket = Basket()
+            
         response = render_to_response('basket.html', locals(), context_instance=RequestContext(request))
     return response

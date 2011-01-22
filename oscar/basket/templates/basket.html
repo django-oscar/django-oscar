@@ -26,9 +26,11 @@ Your basket is currently empty.
         <td>{{ line.get_line_price }}</td>
     </tr>
     {% endfor %}
-
+    <tr>
+        <td colspan="3">Total</td>
+        <td>{{ basket.get_total }}</td>
+    </tr>
 </table>
-
 
 {% endif %}
 

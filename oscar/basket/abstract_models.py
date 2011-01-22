@@ -1,6 +1,9 @@
+from decimal import Decimal
+
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import ugettext as _
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class AbstractBasket(models.Model):
@@ -34,8 +37,14 @@ class AbstractBasket(models.Model):
             line = self.lines.get(product=item)
             line.quantity += quantity
             line.save()
-        except Line.DoesNotExist:
+        except ObjectDoesNotExist:
             self.lines.create(basket=self, product=item, quantity=quantity)
+    
+    def get_total(self):
+        total = Decimal('0.00')
+        for line in self.lines.all():
+            total = total + line.get_line_price()
+        return total
     
     def get_num_lines(self):
         """
