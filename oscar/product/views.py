@@ -14,7 +14,7 @@ def item(request, product_id):
     Single product page
     """
     item = get_object_or_404(Item, pk=product_id)
-    form = AddToBasketForm({'product_id': product_id})
+    form = AddToBasketForm({'product_id': product_id, 'quantity': 1})
     return render_to_response('item.html', locals(), context_instance=RequestContext(request))
 
 def all(request):

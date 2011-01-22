@@ -27,7 +27,10 @@ def _get_user_basket(request):
             basket_id = request.COOKIES[COOKIE_KEY_ID]
             basket_hash = request.COOKIES[COOKIE_KEY_HASH]
             if basket_hash == _get_basket_hash(basket_id):
-                b = Basket.objects.get(pk=request.COOKIES[COOKIE_KEY_ID])
+                try:
+                    b = Basket.objects.get(pk=basket_id)
+                except Basket.DoesNotExist, e:
+                    b = None
     return b    
 
 def _get_or_create_basket(request, response):
@@ -51,7 +54,7 @@ def _get_basket_hash(id):
     Create a hash of the basket ID using the SECRET_KEY
     variable defined in settings.py as a salt.
     """
-    return zlib.crc32(str(id)+settings.SECRET_KEY)
+    return str(zlib.crc32(str(id)+settings.SECRET_KEY))
 
 def index(request):
     """ 
@@ -60,6 +63,7 @@ def index(request):
     if request.method == 'POST': 
         form = AddToBasketForm(request.POST)
         if not form.is_valid():
+            # @todo Handle form errors in the add-to-basket form
             return HttpResponseBadRequest("Unable to add your item to the basket")
         try:
             # We create the response object early as the basket creation
@@ -67,7 +71,7 @@ def index(request):
             response = HttpResponseRedirect('/shop/basket/')
             product = Item.objects.get(pk=form.cleaned_data['product_id'])
             basket = _get_or_create_basket(request, response)
-            basket.add_product(product)
+            basket.add_product(product, form.cleaned_data['quantity'])
         except Item.DoesNotExist, e:
             response = HttpResponseBadRequest("Unable to find the requested item to add to your basket")
         except Basket.DoesNotExist, e:

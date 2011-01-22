@@ -6,7 +6,31 @@
 
 
 {% block content %}
-basket to appear here
+
+{% if basket.is_empty %}
+Your basket is currently empty.
+{% else %}
+
+<table>
+    <tr>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Unit price</th>
+        <th>Line price</th>
+    </tr>
+    {% for line in basket.lines.all %}
+    <tr>
+        <td><a href="{% url oscar-product-item line.product.id %}">{{ line.product }}</a></td>
+        <td>{{ line.quantity }}</td>
+        <td>{{ line.get_unit_price }}</td>
+        <td>{{ line.get_line_price }}</td>
+    </tr>
+    {% endfor %}
+
+</table>
+
+
+{% endif %}
 
 {% endblock content %}
 
