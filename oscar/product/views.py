@@ -14,8 +14,6 @@ def item(request, product_id, template_file='item.html'):
     Single product page
     """
     item = get_object_or_404(Item, pk=product_id)
-#    a = attributes = item.attributes.all()
-#    assert False
     form = AddToBasketForm({'product_id': product_id, 'quantity': 1})
     return render_to_response(template_file, locals(), context_instance=RequestContext(request))
 

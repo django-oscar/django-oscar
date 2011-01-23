@@ -29,7 +29,7 @@
     </tr>
     {% for attribute in item.attributes.all %}
     <tr>
-        <th>{{ attribute.attribute.type }}</th>
+        <th>{{ attribute.type.name }}</th>
         <th>{{ attribute.value }}</th>
     </tr>
     {% endfor %}

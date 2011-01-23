@@ -148,4 +148,4 @@ class AbstractItemAttributeValue(models.Model):
         abstract = True
         
     def __unicode__(self):
-        return "%s: %s" % (self.attribute.type, self.value)
+        return "%s: %s" % (self.type.name, self.value)

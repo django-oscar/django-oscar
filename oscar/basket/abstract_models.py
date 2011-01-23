@@ -34,6 +34,7 @@ class AbstractBasket(models.Model):
         abstract = True
     
     # Custom manager for searching open baskets only
+    objects = models.Manager()
     open = OpenBasketManager()
     
     def is_empty(self):
