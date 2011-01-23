@@ -28,7 +28,7 @@ def _get_user_basket(request):
             basket_hash = request.COOKIES[COOKIE_KEY_HASH]
             if basket_hash == _get_basket_hash(basket_id):
                 try:
-                    b = Basket.objects.get(pk=basket_id)
+                    b = Basket.open.get(pk=basket_id)
                 except Basket.DoesNotExist, e:
                     b = None
     return b    

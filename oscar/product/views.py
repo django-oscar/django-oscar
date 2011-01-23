@@ -9,13 +9,15 @@ from django.core.urlresolvers import reverse
 from oscar.product.models import Item
 from oscar.basket.forms import AddToBasketForm
 
-def item(request, product_id):
+def item(request, product_id, template_file='item.html'):
     """ 
     Single product page
     """
     item = get_object_or_404(Item, pk=product_id)
+#    a = attributes = item.attributes.all()
+#    assert False
     form = AddToBasketForm({'product_id': product_id, 'quantity': 1})
-    return render_to_response('item.html', locals(), context_instance=RequestContext(request))
+    return render_to_response(template_file, locals(), context_instance=RequestContext(request))
 
-def all(request):
-    return render_to_response('browse-all.html', locals())
+def all(request, template_file='browse-all.html'):
+    return render_to_response(template_file, locals())

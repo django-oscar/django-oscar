@@ -23,10 +23,16 @@
     </tr>
     <tr>
         <th>Product type</th>
-        <td>{% if item.is_group %}Product group{% else %}Stand-alone{% endif %}
-        
+        <td>
+        {% if item.is_group %}Product group{% else %}{% if item.is_variant %}Variant{% else %}Stand-alone{% endif %}{% endif %}
         </td>
     </tr>
+    {% for attribute in item.attributes.all %}
+    <tr>
+        <th>{{ attribute.attribute.type }}</th>
+        <th>{{ attribute.value }}</th>
+    </tr>
+    {% endfor %}
 </table>
 
 <form action="/shop/basket/add-item/" method="post">

@@ -5,6 +5,14 @@ from django.db import models
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ObjectDoesNotExist
 
+# Basket statuses
+OPEN, MERGED, SUBMITTED = ("Open", "Merged", "Submitted")
+
+
+class OpenBasketManager(models.Manager):
+    def get_query_set(self):
+        return super(OpenBasketManager, self).get_query_set().filter(status=OPEN)
+
 
 class AbstractBasket(models.Model):
     """
@@ -12,7 +20,6 @@ class AbstractBasket(models.Model):
     """
     # Baskets can be anonymously owned (which are then merged
     owner = models.ForeignKey(User, related_name='baskets', null=True)
-    OPEN, MERGED, SUBMITTED = ("Open", "Merged", "Submitted")
     STATUS_CHOICES = (
         (OPEN, _("Open - currently active")),
         (MERGED, _("Merged - superceded by another basket")),
@@ -25,6 +32,9 @@ class AbstractBasket(models.Model):
     
     class Meta:
         abstract = True
+    
+    # Custom manager for searching open baskets only
+    open = OpenBasketManager()
     
     def is_empty(self):
         return self.get_num_lines() == 0
