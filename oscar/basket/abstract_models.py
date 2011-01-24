@@ -37,6 +37,24 @@ class AbstractBasket(models.Model):
     objects = models.Manager()
     open = OpenBasketManager()
     
+    def merge(self, basket):
+        """
+        Merges another basket with this one
+        """
+        for line_to_merge in basket.lines.all():
+            # Check if the current basket has a matching line and update
+            # the quantity.
+            try:
+                line = self.lines.get(line_reference=line_to_merge.line_reference)
+                line.quantity += line_to_merge.quantity
+                line.save()
+                line_to_merge.delete()
+            except ObjectDoesNotExist:
+                line_to_merge.basket = self
+                line_to_merge.save()
+        basket.status = MERGED
+        basket.save()
+    
     def is_empty(self):
         return self.get_num_lines() == 0
     
@@ -81,7 +99,7 @@ class AbstractLine(models.Model):
     # This is to determine which products belong to the same line
     # We can't just use product.id as you can have customised products
     # which should be treated as separate lines.
-    line_reference = models.CharField(max_length=128)
+    line_reference = models.CharField(max_length=128, db_index=True)
     product = models.ForeignKey('product.Item')
     quantity = models.PositiveIntegerField(default=1)
     

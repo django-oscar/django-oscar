@@ -48,10 +48,21 @@ def _get_anon_user_basket(request):
 
 def _get_or_create_basket(request, response):
     """
-    Loads or creates a basket object
+    Loads or creates a basket object.
     """
+    anon_basket = _get_anon_user_basket(request)
     if request.user.is_authenticated():
-        b,_ = basket_models.Basket.open.get_or_create(owner=request.user)
+        try:
+            user_basket = basket_models.Basket.open.get(owner=request.user)
+            if anon_basket:
+                # If signed in user also has a cookie basket, we merge them and 
+                # delete the cookies
+                user_basket.merge(anon_basket)
+                response.delete_cookie(COOKIE_KEY_ID)
+                response.delete_cookie(COOKIE_KEY_HASH)
+        except basket_models.Basket.DoesNotExist:
+            user_basket = basket_models.Basket.open.create(owner=request.user)
+        b = user_basket
     else:
         b = _get_anon_user_basket(request)
         if not b:
