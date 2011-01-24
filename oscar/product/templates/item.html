@@ -35,11 +35,27 @@
     {% endfor %}
 </table>
 
+{% if item.is_group %}
+    <form action="/shop/basket/add-item/" method="post">
+    {% csrf_token %}
+    <select name="product_id">
+    {% for variant in item.variants.all %}
+        <option value="{{ variant.id }}">{{ variant }}</option>
+    {% endfor %}
+    </select>
+    Quantity: <input type="text" name="quantity" value="1" />
+    <input type="submit" value="Add to basket" />
+    </form>
+{% else %}
+
 <form action="/shop/basket/add-item/" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Add to basket" />
 </form>
+
+{% endif %}
+
 
 {% endblock content %}
 

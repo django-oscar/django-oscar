@@ -6,9 +6,12 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404
 from django.core.urlresolvers import reverse
 
-from oscar.basket.models import Basket
-from oscar.basket.forms import AddToBasketForm
-from oscar.product.models import Item
+from oscar.services import import_module
+
+# Using dynamic app loading
+basket_models = import_module('basket.models', ['Basket'])
+basket_forms = import_module('basket.forms', ['AddToBasketForm'])
+product_models = import_module('product.models', ['Item'])
 
 COOKIE_KEY_ID = 'basket_id'
 COOKIE_KEY_HASH = 'basket_hash'
@@ -28,8 +31,8 @@ def _get_user_basket(request):
             basket_hash = request.COOKIES[COOKIE_KEY_HASH]
             if basket_hash == _get_basket_hash(basket_id):
                 try:
-                    b = Basket.open.get(pk=basket_id)
-                except Basket.DoesNotExist, e:
+                    b = basket_models.Basket.open.get(pk=basket_id)
+                except basket_models.Basket.DoesNotExist, e:
                     b = None
     return b    
 
@@ -44,7 +47,7 @@ def _get_or_create_basket(request, response):
     if not b and not request.user.is_authenticated():
         # No valid basket found so we create a new one and store the id
         # and hash in a cookie
-        b = Basket.objects.create()
+        b = basket_models.Basket.objects.create()
         response.set_cookie(COOKIE_KEY_ID, b.pk, max_age=COOKIE_LIFETIME)
         response.set_cookie(COOKIE_KEY_HASH, _get_basket_hash(b.pk), max_age=COOKIE_LIFETIME)
     return b    
@@ -61,26 +64,26 @@ def index(request):
     Pages should POST to this view to add an item to someone's basket
     """
     if request.method == 'POST': 
-        form = AddToBasketForm(request.POST)
+        form = basket_forms.AddToBasketForm(request.POST)
         if not form.is_valid():
             # @todo Handle form errors in the add-to-basket form
-            return HttpResponseBadRequest("Unable to add your item to the basket")
+            return HttpResponseBadRequest("Unable to add your item to the basket - submission not valid")
         try:
             # We create the response object early as the basket creation
             # may need to set a cookie on it
             response = HttpResponseRedirect('/shop/basket/')
-            product = Item.objects.get(pk=form.cleaned_data['product_id'])
+            product = product_models.Item.objects.get(pk=form.cleaned_data['product_id'])
             basket = _get_or_create_basket(request, response)
             basket.add_product(product, form.cleaned_data['quantity'])
-        except Item.DoesNotExist, e:
+        except product_models.Item.DoesNotExist, e:
             response = HttpResponseBadRequest("Unable to find the requested item to add to your basket")
-        except Basket.DoesNotExist, e:
+        except basket_models.Basket.DoesNotExist, e:
             response = HttpResponseBadRequest("Unable to find your basket") 
     else:
         # Display the visitor's basket
         basket = _get_user_basket(request)
         if not basket:
-            basket = Basket()
+            basket = basket_models.Basket()
             
         response = render_to_response('basket.html', locals(), context_instance=RequestContext(request))
     return response
