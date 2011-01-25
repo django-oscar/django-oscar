@@ -5,6 +5,7 @@ from django.test import TestCase
 from oscar.basket.tests import *
 from oscar.order.tests import *
 from oscar.product.tests import *
+from oscar.stock.tests import *
 
 from oscar.services import import_module, AppNotFoundError
 

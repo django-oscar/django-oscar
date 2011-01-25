@@ -8,7 +8,7 @@ class ItemClass(AbstractItemClass):
 
 class Item(AbstractItem):
     pass
-
+    
 class AttributeType(AbstractAttributeType):
     pass
 

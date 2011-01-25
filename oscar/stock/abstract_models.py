@@ -34,15 +34,29 @@ class AbstractStockRecord(models.Model):
     # We deliberately don't store tax information to allow each project
     # to subclass this model and put its own fields for convey tax.
     price_currency = models.CharField(max_length=12, default='GBP')
+    # This is the base price for calculations
     price_excl_tax = models.DecimalField(decimal_places=2, max_digits=12)
-    price_retail_excl_tax = models.DecimalField(decimal_places=2, max_digits=12)
     
     # Stock level information
-    num_in_stock = models.IntegerField()
+    num_in_stock = models.IntegerField(default=0)
     num_allocated = models.IntegerField(default=0)
     
     class Meta:
         abstract = True
+        
+    # Price retrieval methods - these default to no tax being applicable
+    # These are intended to be overridden.    
+    def get_price_incl_tax(self):
+        return self.get_price_excl_tax()
+    
+    def get_price_excl_tax(self):
+        return self.price_excl_tax
+    
+    def get_price_tax(self):
+        return 0
+    
+    def get_rrp(self):
+        return self.get_price_incl_tax()    
         
     def __unicode__(self):
         if self.partner_reference:

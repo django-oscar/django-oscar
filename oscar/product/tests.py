@@ -17,7 +17,6 @@ class TopLevelItemTests(ItemTests):
     
     def test_top_level_products_must_have_titles(self):
         self.assertRaises(ValidationError, Item.objects.create, item_class=self.item_class)
-  
         
 class VariantItemTests(ItemTests):
     

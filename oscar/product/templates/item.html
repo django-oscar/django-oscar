@@ -15,7 +15,13 @@
         <th>Product class</th><td>{{item.product_class.name}}</td>
     </tr>
     <tr>
-        <th>Price (excl. tax)</th><td>{{item.stockrecord.price_excl_tax}}</td>
+        <th>Price (excl. tax)</th><td>{{item.stockrecord.get_price_incl_tax}}</td>
+    </tr>
+    <tr>
+        <th>Price (incl. tax)</th><td>{{item.stockrecord.get_price_excl_tax}}</td>
+    </tr>
+    <tr>
+        <th>RRP</th><td>{{item.stockrecord.price_excl_tax}}</td>
     </tr>
     <tr>
         <th>Number in stock</th>
