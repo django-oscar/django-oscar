@@ -80,8 +80,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.admin',
     'django_extensions',
+    'shop.product',
     # Apps from oscar
-    'oscar',
     'oscar.order',
     #'oscar.product',
     'oscar.basket',
@@ -92,7 +92,6 @@ INSTALLED_APPS = (
     'oscar.image',
     # To use an alternative app to one of oscar's core ones,
     # add it here (eg replace oscar.payment with sampleapp.payment)
-    'product'
 )
 
 # Local overrides
