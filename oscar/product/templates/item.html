@@ -1,4 +1,11 @@
-<h1>{{item.get_title}}</h1>
+{% extends "layout.html" %}
+
+{% block header %}
+<h2>{{item.get_title}}</h2>
+{% endblock header %}
+
+
+{% block content %}
 <table>
     <caption>Product details</caption>
     <tr>
@@ -11,9 +18,44 @@
         <th>Price (excl. tax)</th><td>{{item.stockrecord.price_excl_tax}}</td>
     </tr>
     <tr>
+        <th>Number in stock</th>
+        <td>{{item.stockrecord.num_in_stock}}</td>
+    </tr>
+    <tr>
         <th>Product type</th>
-        <td>{% if item.is_group %}Product group{% else %}Stand-alone{% endif %}
-        
+        <td>
+        {% if item.is_group %}Product group{% else %}{% if item.is_variant %}Variant{% else %}Stand-alone{% endif %}{% endif %}
         </td>
     </tr>
+    {% for attribute in item.attributes.all %}
+    <tr>
+        <th>{{ attribute.type.name }}</th>
+        <th>{{ attribute.value }}</th>
+    </tr>
+    {% endfor %}
 </table>
+
+{% if item.is_group %}
+    <form action="/shop/basket/add-item/" method="post">
+    {% csrf_token %}
+    <select name="product_id">
+    {% for variant in item.variants.all %}
+        <option value="{{ variant.id }}">{{ variant }}</option>
+    {% endfor %}
+    </select>
+    Quantity: <input type="text" name="quantity" value="1" />
+    <input type="submit" value="Add to basket" />
+    </form>
+{% else %}
+
+<form action="/shop/basket/" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Add to basket" />
+</form>
+
+{% endif %}
+
+
+{% endblock content %}
+

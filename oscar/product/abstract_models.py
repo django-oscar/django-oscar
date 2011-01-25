@@ -1,8 +1,20 @@
 """
 Models of products
 """
+import re
+
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+
+
+def _convert_to_underscores(str):
+    """
+    For converting a string in CamelCase or normal text with spaces
+    to the normal underscored variety
+    """
+    without_whitespace = re.sub('\s*', '', str)
+    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', without_whitespace)
+    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
 
 
 class AbstractItemClass(models.Model):
@@ -34,7 +46,7 @@ class AbstractItem(models.Model):
     # Universal product code
     upc = models.CharField(max_length=64, blank=True, null=True)
     # No canonical product should have a stock record as they cannot be bought.
-    parent = models.ForeignKey('self', null=True, blank=True, related_name='children',
+    parent = models.ForeignKey('self', null=True, blank=True, related_name='variants',
         help_text="""Only choose a parent product if this is a 'variant' of a canonical product.  For example 
                      if this is a size 4 of a particular t-shirt.  Leave blank if this is a CANONICAL PRODUCT (ie 
                      there is only one version of this product).""")
@@ -51,7 +63,7 @@ class AbstractItem(models.Model):
         return self.parent == None
     
     def is_group(self):
-        return self.is_top_level() and self.children.count() > 0
+        return self.is_top_level() and self.variants.count() > 0
     
     def is_variant(self):
         return not self.is_top_level()
@@ -76,10 +88,12 @@ class AbstractItem(models.Model):
         ordering = ['-date_created']
 
     def __unicode__(self):
-        return self.title
+        if self.is_variant():
+            return "%s (%s)" % (self.get_title(), self.get_attribute_summary())
+        return self.get_title()
     
     def save(self, *args, **kwargs):
-        if self.is_canonical() and not self.title:
+        if self.is_top_level() and not self.title:
             from django.core.exceptions import ValidationError
             raise ValidationError("Canonical products must have a title")
         super(AbstractItem, self).save(*args, **kwargs)
@@ -89,16 +103,22 @@ class AbstractAttributeType(models.Model):
     """
     Defines an attribute. (Eg. size)
     """
-    type = models.CharField(_('type'), max_length=128)
+    code = models.CharField(_('code'), max_length=128)
+    name = models.CharField(_('name'), max_length=128)
     has_choices = models.BooleanField(default=False)
 
     class Meta:
         abstract = True
-        ordering = ['type']
+        ordering = ['code']
 
     def __unicode__(self):
         return self.type
 
+    def save(self, *args, **kwargs):
+        if not self.code:
+            self.code = _convert_to_underscores(self.name)
+        super(AbstractAttributeType, self).save(*args, **kwargs)
+        
 
 class AbstractAttributeValueOption(models.Model):
     """
@@ -121,11 +141,11 @@ class AbstractItemAttributeValue(models.Model):
     Eg: size = L
     """
     product = models.ForeignKey('product.Item', related_name='attributes')
-    attribute = models.ForeignKey('product.AttributeType')
+    type = models.ForeignKey('product.AttributeType')
     value = models.CharField(max_length=255)
     
     class Meta:
         abstract = True
         
     def __unicode__(self):
-        return "%s: %s" % (self.attribute.type, self.value)
+        return "%s: %s" % (self.type.name, self.value)
