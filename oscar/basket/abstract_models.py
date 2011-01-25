@@ -69,11 +69,20 @@ class AbstractBasket(models.Model):
         except ObjectDoesNotExist:
             self.lines.create(basket=self, product=item, quantity=quantity)
     
-    def get_total(self):
+    def _get_total(self, linemethod):
         total = Decimal('0.00')
         for line in self.lines.all():
-            total = total + line.get_line_price()
+            total += getattr(line, linemethod)()
         return total
+    
+    def get_total_excl_tax(self):
+        return self._get_total('get_line_price_excl_tax')
+    
+    def get_total_tax(self):
+        return self._get_total('get_line_tax')
+    
+    def get_total_incl_tax(self):
+        return self._get_total('get_line_price_incl_tax')
     
     def get_num_lines(self):
         """
@@ -98,24 +107,39 @@ class AbstractLine(models.Model):
     basket = models.ForeignKey('basket.Basket', related_name='lines')
     # This is to determine which products belong to the same line
     # We can't just use product.id as you can have customised products
-    # which should be treated as separate lines.
+    # which should be treated as separate lines.  This should be URL
+    # friendly as it is included in the path for certain views.
     line_reference = models.CharField(max_length=128, db_index=True)
     product = models.ForeignKey('product.Item')
     quantity = models.PositiveIntegerField(default=1)
     
-    def get_unit_price(self):
+    def _call_stockrecord_method(self, method):
         if not self.product.stockrecord:
             return None
         else:
-            return self.product.stockrecord.price_excl_tax
+            return getattr(self.product.stockrecord, method)()
     
-    def get_line_price(self):
-        if not self.product.stockrecord:
-            return None
-        else:
-            return self.quantity * self.product.stockrecord.price_excl_tax
+    def get_unit_price_excl_tax(self):
+        return self._call_stockrecord_method('get_price_excl_tax')
+    
+    def get_unit_tax(self):
+        return self._call_stockrecord_method('get_price_tax')
+    
+    def get_unit_price_incl_tax(self):
+        return self._call_stockrecord_method('get_price_incl_tax')
+    
+    def get_line_price_excl_tax(self):
+       return self.quantity * self.get_unit_price_excl_tax()
+        
+    def get_line_tax(self):
+        return self.quantity * self.get_unit_tax()
+    
+    def get_line_price_incl_tax(self):
+        return self.quantity * self.get_unit_price_incl_tax()
     
     def save(self, *args, **kwargs):
+        if self.quantity == 0:
+            return self.delete(*args, **kwargs)
         if not self.line_reference:
             # If no line reference explicitly set, then use the product ID
             self.line_reference = self.product.id

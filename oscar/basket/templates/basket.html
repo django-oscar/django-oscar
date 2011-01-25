@@ -15,20 +15,42 @@ Your basket is currently empty.
     <tr>
         <th>Product</th>
         <th>Quantity</th>
-        <th>Unit price</th>
-        <th>Line price</th>
+        <th>Unit price excl tax</th>
+        <th>Unit price tax</th>
+        <th>Line price excl tax</th>
+        <th>Line price incl tax</th>
     </tr>
     {% for line in basket.lines.all %}
     <tr>
         <td><a href="{% url oscar-product-item line.product.id %}">{{ line.product }}</a></td>
-        <td>{{ line.quantity }}</td>
-        <td>{{ line.get_unit_price }}</td>
-        <td>{{ line.get_line_price }}</td>
+        <td>
+            <form action="/shop/basket/line/{{ line.line_reference }}/" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="decrement-quantity" value="1" />
+                <input type="submit" value="Deduct from quantity" />
+            </form>
+            {{ line.quantity }}
+            <form action="/shop/basket/line/{{ line.line_reference }}/" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="increment-quantity" value="1" />
+                <input type="submit" value="Add to quantity" />
+            </form>
+            <form action="/shop/basket/line/{{ line.line_reference }}/" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="delete" value="1" />
+                <input type="submit" value="Delete" />
+            </form>
+        </td>
+        <td>{{ line.get_unit_price_excl_tax|floatformat:2 }}</td>
+        <td>{{ line.get_unit_tax|floatformat:2 }}</td>
+        <td>{{ line.get_line_price_excl_tax|floatformat:2 }}</td>
+        <td>{{ line.get_line_price_incl_tax|floatformat:2 }}</td>
     </tr>
     {% endfor %}
     <tr>
-        <td colspan="3">Total</td>
-        <td>{{ basket.get_total }}</td>
+        <td colspan="4">Total</td>
+        <td>{{ basket.get_total_excl_tax|floatformat:2 }}</td>
+        <td>{{ basket.get_total_incl_tax|floatformat:2 }}</td>
     </tr>
 </table>
 

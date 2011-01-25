@@ -6,8 +6,6 @@ import re
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.services import get_price_calculator
-
 def _convert_to_underscores(str):
     """
     For converting a string in CamelCase or normal text with spaces
