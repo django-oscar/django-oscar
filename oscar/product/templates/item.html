@@ -42,7 +42,7 @@
 </table>
 
 {% if item.is_group %}
-    <form action="/shop/basket/add-item/" method="post">
+    <form action="/shop/basket/" method="post">
     {% csrf_token %}
     <select name="product_id">
     {% for variant in item.variants.all %}

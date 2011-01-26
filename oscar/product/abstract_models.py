@@ -31,6 +31,11 @@ class AbstractItemClass(models.Model):
         return self.name
 
 
+class BrowsableItemManager(models.Manager):
+    def get_query_set(self):
+        return super(BrowsableItemManager, self).get_query_set().filter(parent=None)
+
+
 class AbstractItem(models.Model):
     """
     The base product object
@@ -57,6 +62,9 @@ class AbstractItem(models.Model):
     attribute_types = models.ManyToManyField('product.AttributeType', through='ItemAttributeValue')
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True, null=True, default=None)
+
+    objects = models.Manager()
+    browsable = BrowsableItemManager()
 
     def is_top_level(self):
         return self.parent == None

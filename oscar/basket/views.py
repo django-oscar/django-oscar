@@ -115,7 +115,7 @@ def line(request, line_reference):
     For requests that alter a basket line.
     
     This can take a few different "action" names such as increment-quantity,
-    decrement-quantity and delete.
+    decrement-quantity, set-quantity and delete.
     """
     response = HttpResponseRedirect(reverse('oscar-basket'))
     if request.method == 'POST': 
@@ -126,6 +126,8 @@ def line(request, line_reference):
                 line.quantity += int(request.POST['increment-quantity'])
             elif request.POST.has_key('decrement-quantity'):
                 line.quantity -= int(request.POST['decrement-quantity'])
+            elif request.POST.has_key('set-quantity'):
+                line.quantity = int(request.POST['set-quantity'])
             elif request.POST.has_key('delete'):
                 line.quantity = 0
             line.save()    

@@ -1,23 +1,40 @@
-<h1>{{item.get_title}}</h1>
-<table>
-    <caption>Product details</caption>
-    <tr>
-        <th>UPC</th><td>{{item.upc}}</td>
-    </tr>
-    <tr>
-        <th>Product class</th><td>{{item.product_class.name}}</td>
-    </tr>
-    <tr>
-        <th>Price (excl. tax)</th><td>{{item.stockrecord.price_excl_tax}}</td>
-    </tr>
-    <tr>
-        <th>Number in stock</th>
-        <td>{{item.stockrecord.num_in_stock}}</td>
-    </tr>
-    <tr>
-        <th>Product type</th>
-        <td>{% if item.is_group %}Product group{% else %}Stand-alone{% endif %}
-        
-        </td>
-    </tr>
-</table>
+{% extends "layout.html" %}
+
+{% block header %}
+<h2>Browse all products</h2>
+{% endblock header %}
+
+
+{% block content %}
+
+<ol>
+{% for product in products.object_list %}
+<li>
+    <a href="{% url oscar-product-item product.id %}">{{ product.get_title }}</a><br/>
+    {% if product.stockrecord %} 
+        &pound;{{ product.stockrecord.get_price_incl_tax }}
+    {% else %}
+        Not available
+    {% endif %}    
+</li>
+{% endfor %}
+</ol>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if products.has_previous %}
+            <a href="?page={{ products.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ products.number }} of {{ products.paginator.num_pages }}.
+        </span>
+
+        {% if products.has_next %}
+            <a href="?page={{ products.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+</div>
+
+{% endblock content %}
+
