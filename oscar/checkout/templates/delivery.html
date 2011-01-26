@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+{% block header %}
+<h2>Checkout</h2>
+{% endblock header %}
+
+
+{% block content %}
+<form action="/shop/checkout/" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Save delivery address" />
+</form>
+
+
+{% endblock content %}
+
