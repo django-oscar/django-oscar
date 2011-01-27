@@ -10,7 +10,7 @@ from oscar.services import import_module
 product_models = import_module('product.models', ['Item'])
 basket_forms = import_module('basket.forms', ['AddToBasketForm'])
 
-def item(request, product_id, template_file='item.html'):
+def item(request, product_id, template_file='product/item.html'):
     """ 
     Single product page
     """
@@ -18,7 +18,7 @@ def item(request, product_id, template_file='item.html'):
     form = basket_forms.AddToBasketForm({'product_id': product_id, 'quantity': 1})
     return render_to_response(template_file, locals(), context_instance=RequestContext(request))
 
-def all(request, template_file='browse-all.html', results_per_page=20):
+def all(request, template_file='product/browse-all.html', results_per_page=20):
     product_list = product_models.Item.browsable.all()
     paginator = Paginator(product_list, results_per_page)
     

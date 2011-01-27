@@ -66,16 +66,19 @@ class AbstractItem(models.Model):
     objects = models.Manager()
     browsable = BrowsableItemManager()
 
+    @property
     def is_top_level(self):
         return self.parent == None
     
+    @property
     def is_group(self):
-        return self.is_top_level() and self.variants.count() > 0
+        return self.is_top_level and self.variants.count() > 0
     
+    @property
     def is_variant(self):
-        return not self.is_top_level()
+        return not self.is_top_level
 
-    def get_attribute_summary(self):
+    def attribute_summary(self):
         return ", ".join([attribute.__unicode__() for attribute in self.attributes.all()])
 
     def get_title(self):
@@ -95,8 +98,8 @@ class AbstractItem(models.Model):
         ordering = ['-date_created']
 
     def __unicode__(self):
-        if self.is_variant():
-            return "%s (%s)" % (self.get_title(), self.get_attribute_summary())
+        if self.is_variant:
+            return "%s (%s)" % (self.get_title(), self.attribute_summary())
         return self.get_title()
     
     def save(self, *args, **kwargs):

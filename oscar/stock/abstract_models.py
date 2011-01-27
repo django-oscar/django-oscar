@@ -45,18 +45,15 @@ class AbstractStockRecord(models.Model):
         abstract = True
         
     # Price retrieval methods - these default to no tax being applicable
-    # These are intended to be overridden.    
-    def get_price_incl_tax(self):
-        return self.get_price_excl_tax()
+    # These are intended to be overridden.   
     
-    def get_price_excl_tax(self):
+    @property 
+    def price_incl_tax(self):
         return self.price_excl_tax
     
-    def get_price_tax(self):
+    @property 
+    def price_tax(self):
         return 0
-    
-    def get_rrp(self):
-        return self.get_price_incl_tax()    
         
     def __unicode__(self):
         if self.partner_reference:

@@ -27,13 +27,17 @@ Your basket is currently empty.
             <form action="/shop/basket/line/{{ line.line_reference }}/" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="decrement-quantity" value="1" />
-                <input type="submit" value="Deduct from quantity" />
+                <input type="submit" value="-" />
             </form>
-            {{ line.quantity }}
+            <form action="/shop/basket/line/{{ line.line_reference }}/" method="post">
+                {% csrf_token %}
+                <input type="text" name="set-quantity" value="{{ line.quantity }}" />
+                <input type="submit" value="Set" />
+            </form> 
             <form action="/shop/basket/line/{{ line.line_reference }}/" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="increment-quantity" value="1" />
-                <input type="submit" value="Add to quantity" />
+                <input type="submit" value="+" />
             </form>
             <form action="/shop/basket/line/{{ line.line_reference }}/" method="post">
                 {% csrf_token %}
@@ -41,18 +45,23 @@ Your basket is currently empty.
                 <input type="submit" value="Delete" />
             </form>
         </td>
-        <td>{{ line.get_unit_price_excl_tax|floatformat:2 }}</td>
-        <td>{{ line.get_unit_tax|floatformat:2 }}</td>
-        <td>{{ line.get_line_price_excl_tax|floatformat:2 }}</td>
-        <td>{{ line.get_line_price_incl_tax|floatformat:2 }}</td>
+        <td>{{ line.unit_price_excl_tax|floatformat:2 }}</td>
+        <td>{{ line.unit_tax|floatformat:2 }}</td>
+        <td>{{ line.line_price_excl_tax|floatformat:2 }}</td>
+        <td>{{ line.line_price_incl_tax|floatformat:2 }}</td>
     </tr>
     {% endfor %}
     <tr>
         <td colspan="4">Total</td>
-        <td>{{ basket.get_total_excl_tax|floatformat:2 }}</td>
-        <td>{{ basket.get_total_incl_tax|floatformat:2 }}</td>
+        <td>{{ basket.total_excl_tax|floatformat:2 }}</td>
+        <td>{{ basket.total_incl_tax|floatformat:2 }}</td>
     </tr>
 </table>
+<form action="/shop/basket/" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="flush" value="1" />
+    <input type="submit" value="Empty basket" />
+</form>
 
 {% endif %}
 

@@ -37,6 +37,10 @@ class AbstractBasket(models.Model):
     objects = models.Manager()
     open = OpenBasketManager()
     
+    # ============    
+    # Manipulation
+    # ============
+    
     def merge(self, basket):
         """
         Merges another basket with this one
@@ -55,9 +59,6 @@ class AbstractBasket(models.Model):
         basket.status = MERGED
         basket.save()
     
-    def is_empty(self):
-        return self.get_num_lines() == 0
-    
     def add_product(self, item, quantity=1):
         """
         Convenience method for adding products to a basket
@@ -69,35 +70,49 @@ class AbstractBasket(models.Model):
         except ObjectDoesNotExist:
             self.lines.create(basket=self, product=item, quantity=quantity)
     
-    def _get_total(self, linemethod):
-        total = Decimal('0.00')
-        for line in self.lines.all():
-            total += getattr(line, linemethod)()
-        return total
+    # ==========
+    # Properties
+    # ==========
     
-    def get_total_excl_tax(self):
-        return self._get_total('get_line_price_excl_tax')
+    @property
+    def is_empty(self):
+        return self.num_lines() == 0
     
-    def get_total_tax(self):
-        return self._get_total('get_line_tax')
+    @property
+    def total_excl_tax(self):
+        return self._get_total('line_price_excl_tax')
     
-    def get_total_incl_tax(self):
-        return self._get_total('get_line_price_incl_tax')
+    @property
+    def total_tax(self):
+        return self._get_total('line_tax')
     
-    def get_num_lines(self):
-        """
-        Returns number of lines within this basket
-        """
+    @property
+    def total_incl_tax(self):
+        return self._get_total('line_price_incl_tax')
+    
+    @property
+    def num_lines(self):
         return self.lines.all().count()
     
-    def get_num_items(self):
+    @property
+    def num_items(self):
         """
         Returns the number of items in the basket
         """
         return reduce(lambda num,line: num+line.quantity, self.lines.all(), 0)
     
+    def _get_total(self, property):
+        """
+        For executing a named method on each line of the basket
+        and returning the total.
+        """
+        total = Decimal('0.00')
+        for line in self.lines.all():
+            total += getattr(line, property)
+        return total
+    
     def __unicode__(self):
-        return u"%s basket (owner: %s, lines: %d)" % (self.status, self.owner, self.get_num_lines())
+        return u"%s basket (owner: %s, lines: %d)" % (self.status, self.owner, self.num_lines)
     
     
 class AbstractLine(models.Model):
@@ -113,29 +128,35 @@ class AbstractLine(models.Model):
     product = models.ForeignKey('product.Item')
     quantity = models.PositiveIntegerField(default=1)
     
-    def _call_stockrecord_method(self, method):
+    def _get_stockrecord_property(self, property):
         if not self.product.stockrecord:
             return None
         else:
-            return getattr(self.product.stockrecord, method)()
+            return getattr(self.product.stockrecord, property)
     
-    def get_unit_price_excl_tax(self):
-        return self._call_stockrecord_method('get_price_excl_tax')
+    @property
+    def unit_price_excl_tax(self):
+        return self._get_stockrecord_property('price_excl_tax')
     
-    def get_unit_tax(self):
-        return self._call_stockrecord_method('get_price_tax')
+    @property
+    def unit_tax(self):
+        return self._get_stockrecord_property('price_tax')
     
-    def get_unit_price_incl_tax(self):
-        return self._call_stockrecord_method('get_price_incl_tax')
+    @property
+    def unit_price_incl_tax(self):
+        return self._get_stockrecord_property('price_incl_tax')
     
-    def get_line_price_excl_tax(self):
-       return self.quantity * self.get_unit_price_excl_tax()
-        
-    def get_line_tax(self):
-        return self.quantity * self.get_unit_tax()
+    @property
+    def line_price_excl_tax(self):
+       return self.quantity * self.unit_price_excl_tax
+       
+    @property    
+    def line_tax(self):
+        return self.quantity * self.unit_tax
     
-    def get_line_price_incl_tax(self):
-        return self.quantity * self.get_unit_price_incl_tax()
+    @property
+    def line_price_incl_tax(self):
+        return self.quantity * self.unit_price_incl_tax
     
     def save(self, *args, **kwargs):
         if self.quantity == 0:
