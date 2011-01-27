@@ -8,7 +8,7 @@
 {% block content %}
 
 {% if basket.is_empty %}
-Your basket is currently empty.
+Your basket is currently empty - go and <a href="/shop/product/">buy something</a>!
 {% else %}
 
 <table>
@@ -24,22 +24,22 @@ Your basket is currently empty.
     <tr>
         <td><a href="{% url oscar-product-item line.product.id %}">{{ line.product }}</a></td>
         <td>
-            <form action="/shop/basket/line/{{ line.line_reference }}/" method="post">
+            <form action="{% url oscar-basket-line line.line_reference %}" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="decrement-quantity" value="1" />
                 <input type="submit" value="-" />
             </form>
-            <form action="/shop/basket/line/{{ line.line_reference }}/" method="post">
+            <form action="{% url oscar-basket-line line.line_reference %}" method="post">
                 {% csrf_token %}
                 <input type="text" name="set-quantity" value="{{ line.quantity }}" />
                 <input type="submit" value="Set" />
             </form> 
-            <form action="/shop/basket/line/{{ line.line_reference }}/" method="post">
+            <form action="{% url oscar-basket-line line.line_reference %}" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="increment-quantity" value="1" />
                 <input type="submit" value="+" />
             </form>
-            <form action="/shop/basket/line/{{ line.line_reference }}/" method="post">
+            <form action="{% url oscar-basket-line line.line_reference %}" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="delete" value="1" />
                 <input type="submit" value="Delete" />
@@ -59,7 +59,7 @@ Your basket is currently empty.
 </table>
 <form action="/shop/basket/" method="post">
     {% csrf_token %}
-    <input type="hidden" name="flush" value="1" />
+    <input type="hidden" name="action" value="flush" />
     <input type="submit" value="Empty basket" />
 </form>
 

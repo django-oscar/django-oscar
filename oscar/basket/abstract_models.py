@@ -5,13 +5,10 @@ from django.db import models
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ObjectDoesNotExist
 
+from oscar.basket.managers import OpenBasketManager
+
 # Basket statuses
 OPEN, MERGED, SUBMITTED = ("Open", "Merged", "Submitted")
-
-
-class OpenBasketManager(models.Manager):
-    def get_query_set(self):
-        return super(OpenBasketManager, self).get_query_set().filter(status=OPEN)
 
 
 class AbstractBasket(models.Model):
@@ -59,6 +56,9 @@ class AbstractBasket(models.Model):
         basket.status = MERGED
         basket.save()
     
+    def flush(self):
+        self.lines.all().delete()
+    
     def add_product(self, item, quantity=1):
         """
         Convenience method for adding products to a basket
@@ -76,7 +76,7 @@ class AbstractBasket(models.Model):
     
     @property
     def is_empty(self):
-        return self.num_lines() == 0
+        return self.num_lines == 0
     
     @property
     def total_excl_tax(self):

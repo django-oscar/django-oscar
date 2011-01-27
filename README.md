@@ -1,8 +1,16 @@
-# Oscar - Flexible e-commerce on Django
+# Django-Oscar - Flexible e-commerce on Django
 
-Named after Oscar Peterson (http://en.wikipedia.org/wiki/Oscar_Peterson), oscar is a Django implementation
-of Taoshop (a product from Tangent Labs).  It's fairly experimental at the moment.  It aims to be
-a flexible ecommerce application, built
+Named after [Oscar Peterson](http://en.wikipedia.org/wiki/Oscar_Peterson),
+django-oscar is a flexible ecommerce platform, structured to allow accurate
+domain models to be constructed.  It is not supposed to be a framework that can
+be downloaded and fully set up by adjusting a configuration file: there will always
+be some developer work required to make sure the models match those from your
+domain.  This isn't a one-size-fits-all solution.
+
+However, a small amount of work up front in determine the right models for your
+shop can really pay off in terms of building a high-quality application that
+is a pleasure to work with and maintain.
+
 
 ## Aims of project
 
@@ -18,7 +26,17 @@ the fields are meaningful within the ecommerce domain.  In general, this means
 more work up front in terms of creating the right set of models but leads
 ultimately to a much cleaner and coherent system.
 
-## Installation for developers
+## Installation
+
+We recommend using a virtualenv but that is up to you.  Installl django-oscar using
+pip
+    pip install -e git+git://github.com/codeinthehole/django-oscar.git#egg=django-oscar
+
+### Modelling your domain
+
+Now configure your models.  	
+
+## Installation for django-oscar developers
 
 Set up `virtualenv` if you haven't already done so:
 	sudo apt-get install python-setuptools
@@ -33,19 +51,23 @@ Do the following from your workspace folder:
     mkdir oscar
 	cd oscar
     mkvirtualenv --no-site-packages oscar
-    
-After checking out your fork, install all dependencies:
 	workon oscar
+    
+After checking out your fork, install the latest version of Django (currenty a beta of 1.3)
+    wget http://www.djangoproject.com/download/1.3-beta-1/tarball/
+	pip install Django-1.3-beta-1.tar.gz
+
+Install all packages from the requirements file:
 	pip install -r requirements.txt
 
-Now install oscar within your virtual env
+Install oscar in development mode within your virtual env
     python setup.py develop
 
 Now create a `local_settings.py` file which contains details of your local database
 that you want to use for development.  Be sure to create two databases: one for development
 and one for running the unit tests (prefix `test_` on the normal db name).
 
-## Developing
+### Developing
 
 Developing oscar normally involves working on a django project which uses oscar
 as a installed app.  There are several such projects within the `examples` folder - the 

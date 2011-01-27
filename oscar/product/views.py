@@ -15,7 +15,7 @@ def item(request, product_id, template_file='product/item.html'):
     Single product page
     """
     item = get_object_or_404(product_models.Item, pk=product_id)
-    form = basket_forms.AddToBasketForm({'product_id': product_id, 'quantity': 1})
+    form = basket_forms.AddToBasketForm({'product_id': product_id, 'quantity': 1, 'action': 'add'})
     return render_to_response(template_file, locals(), context_instance=RequestContext(request))
 
 def all(request, template_file='product/browse-all.html', results_per_page=20):

@@ -43,6 +43,7 @@
 
 {% if item.is_group %}
     <form action="/shop/basket/" method="post">
+    <input type="hidden" name="action" value="add" />
     {% csrf_token %}
     <select name="product_id">
     {% for variant in item.variants.all %}

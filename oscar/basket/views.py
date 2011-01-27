@@ -17,21 +17,28 @@ def index(request, template_file='basket/summary.html'):
     Pages should POST to this view to add an item to someone's basket
     """
     if request.method == 'POST': 
-        form = basket_forms.AddToBasketForm(request.POST)
-        if not form.is_valid():
-            # @todo Handle form errors in the add-to-basket form
-            return HttpResponseBadRequest("Unable to add your item to the basket - submission not valid")
+        response = HttpResponseRedirect(reverse('oscar-basket'))
+        
+        # Load basket to act on
         try:
-            # We create the response object early as the basket creation
-            # may need to set a cookie on it
-            response = HttpResponseRedirect(reverse('oscar-basket'))
-            product = product_models.Item.objects.get(pk=form.cleaned_data['product_id'])
             basket = basket_factory.get_or_create_basket(request, response)
-            basket.add_product(product, form.cleaned_data['quantity'])
-        except product_models.Item.DoesNotExist, e:
-            response = HttpResponseBadRequest("Unable to find the requested item to add to your basket")
         except basket_models.Basket.DoesNotExist, e:
-            response = HttpResponseBadRequest("Unable to find your basket") 
+            # Suspicous request as the user's basket could not be found
+            return Http404("Unable to find your basket") 
+        
+        # All updates to a basket must specify the action to take
+        if not request.POST.has_key('action'):
+            return Http404("You must specify a valid action") 
+        
+        if request.POST['action'] == 'flush':
+            basket.flush()
+        elif request.POST['action'] == 'add':
+            form = basket_forms.AddToBasketForm(request.POST)
+            if not form.is_valid():
+                # @todo Handle form errors in the add-to-basket form
+                return HttpResponseBadRequest("Unable to add your item to the basket - submission not valid")
+            product = get_object_or_404(product_models.Item.objects, pk=form.cleaned_data['product_id'])
+            basket.add_product(product, form.cleaned_data['quantity'])
     else:
         # Display the visitor's basket
         basket = basket_factory.get_basket(request)
@@ -57,8 +64,9 @@ def line(request, line_reference):
                 line.quantity += int(request.POST['increment-quantity'])
             elif request.POST.has_key('decrement-quantity'):
                 line.quantity -= int(request.POST['decrement-quantity'])
-            elif request.POST.has_key('set-quantity'):
-                line.quantity = int(request.POST['set-quantity'])
+            elif request.POST.has_key('set-quantity') and request.POST['set-quantity'].isdigit():
+                if int(request.POST['set-quantity']) >= 0:
+                    line.quantity = int(request.POST['set-quantity'])
             elif request.POST.has_key('delete'):
                 line.quantity = 0
             line.save()    
