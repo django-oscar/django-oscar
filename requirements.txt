@@ -1,11 +1,7 @@
-BeautifulSoup==3.2.0
-Django==1.2.3
 MySQL-python==1.2.3
 PIL==1.1.7
-South==0.7.3
 coverage==3.4
 django-extensions==0.5
-django-test-extensions==0.9
 ipdb==0.2
 ipython==0.10.1
 python-memcached==1.46

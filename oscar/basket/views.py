@@ -9,7 +9,8 @@ from oscar.services import import_module
 # Using dynamic loading
 basket_models = import_module('basket.models', ['Basket', 'Line', 'InvalidBasketLineError'])
 basket_forms = import_module('basket.forms', ['AddToBasketForm'])
-basket_factory = import_module('basket.factory', ['get_or_create_basket', 'get_basket', 'get_or_create_saved_basket', 'get_saved_basket'])
+basket_factory = import_module('basket.factory', ['get_or_create_open_basket', 'get_open_basket', 
+                                                  'get_or_create_saved_basket', 'get_saved_basket'])
 product_models = import_module('product.models', ['Item'])
 
 class BasketView(object):
@@ -27,7 +28,7 @@ class BasketView(object):
             # basket summary page
             response = HttpResponseRedirect(reverse('oscar-basket'))
             try:
-                basket = basket_factory.get_or_create_basket(request, response)
+                basket = basket_factory.get_or_create_open_basket(request, response)
                 
                 # We look for a method of the form do_... which can handle
                 # the requested action
@@ -40,7 +41,7 @@ class BasketView(object):
             except basket_models.InvalidBasketLineError, e:
                 messages.error(request, str(e))
         elif request.method == 'GET':
-            basket = basket_factory.get_basket(request)
+            basket = basket_factory.get_open_basket(request)
             saved_basket = basket_factory.get_saved_basket(request)
             if not basket:
                 basket = basket_models.Basket()
@@ -80,7 +81,7 @@ class LineView(object):
         # which has an 'action' parameter
         if request.method == 'POST' or 'action' in request.POST:
             try:
-                basket = basket_factory.get_basket(request)
+                basket = basket_factory.get_open_basket(request)
                 line = basket.lines.get(line_reference=line_reference)
                 
                 # We look for a method of the form do_... which can handle
@@ -178,7 +179,7 @@ class SavedLineView(object):
         return 0        
             
     def do_move_to_basket(self, line):
-        real_basket = basket_factory.get_or_create_basket(self.request, self.response)
+        real_basket = basket_factory.get_or_create_open_basket(self.request, self.response)
         real_basket.add_line(line)
         msg = "'%s' has been moved back to your basket" % line.product
         messages.info(self.request, msg)

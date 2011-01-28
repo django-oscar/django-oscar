@@ -116,7 +116,7 @@ class AbstractItem(models.Model):
         return self.get_title()
     
     def get_absolute_url(self):
-        args = {'item_class_slug': self.item_class.slug, 
+        args = {'item_class_slug': self.get_item_class().slug, 
                 'item_slug': self.slug,
                 'item_id': self.id}
         return reverse('oscar-product-item', kwargs=args)
