@@ -173,7 +173,6 @@ class AbstractLine(models.Model):
     def __unicode__(self):
         return u"%s, Product '%s', quantity %d" % (self.basket, self.product, self.quantity)
     
-    
 class AbstractLineAttribute(models.Model):
     """
     An attribute of a basket line
