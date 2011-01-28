@@ -122,9 +122,9 @@ class AbstractLine(models.Model):
     basket = models.ForeignKey('basket.Basket', related_name='lines')
     # This is to determine which products belong to the same line
     # We can't just use product.id as you can have customised products
-    # which should be treated as separate lines.  This should be URL
-    # friendly as it is included in the path for certain views.
-    line_reference = models.CharField(max_length=128, db_index=True)
+    # which should be treated as separate lines.  Set as a 
+    # SlugField as it is included in the path for certain views.
+    line_reference = models.SlugField(max_length=128, db_index=True)
     product = models.ForeignKey('product.Item')
     quantity = models.PositiveIntegerField(default=1)
     

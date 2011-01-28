@@ -5,6 +5,8 @@ import re
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.template.defaultfilters import slugify
+
 
 def _convert_to_underscores(str):
     """
@@ -21,11 +23,17 @@ class AbstractItemClass(models.Model):
     Defines an item type (equivqlent to Taoshop's MediaType).
     """
     name = models.CharField(_('name'), max_length=128)
+    slug = models.SlugField(max_length=128)
 
     class Meta:
         abstract = True
         ordering = ['name']
         verbose_name_plural = "Item classes"
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug= slugify(self.name)
+        super(AbstractItemClass, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return self.name
@@ -56,6 +64,7 @@ class AbstractItem(models.Model):
                      there is only one version of this product).""")
     # Title is mandatory for canonical products but optional for child products
     title = models.CharField(_('Title'), max_length=255, blank=True, null=True)
+    slug = models.SlugField(max_length=255)
     description = models.TextField(_('Description'), blank=True, null=True)
     item_class = models.ForeignKey('product.ItemClass', verbose_name=_('item class'), null=True,
         help_text="""Choose what type of product this is""")
@@ -103,9 +112,11 @@ class AbstractItem(models.Model):
         return self.get_title()
     
     def save(self, *args, **kwargs):
-        if self.is_top_level() and not self.title:
+        if self.is_top_level and not self.title:
             from django.core.exceptions import ValidationError
             raise ValidationError("Canonical products must have a title")
+        if not self.slug:
+            self.slug = slugify(self.get_title())
         super(AbstractItem, self).save(*args, **kwargs)
 
 

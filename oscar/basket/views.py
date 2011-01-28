@@ -1,7 +1,8 @@
 from django.http import HttpResponse, Http404, HttpResponseRedirect, HttpResponseBadRequest
 from django.template import RequestContext
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response, get_object_or_404, render
 from django.core.urlresolvers import reverse
+from django.contrib import messages
 
 from oscar.services import import_module
 
@@ -32,6 +33,7 @@ def index(request, template_file='basket/summary.html'):
         
         if request.POST['action'] == 'flush':
             basket.flush()
+            messages.info(request, "Your basket has been emptied")
         elif request.POST['action'] == 'add':
             form = basket_forms.AddToBasketForm(request.POST)
             if not form.is_valid():
@@ -39,13 +41,15 @@ def index(request, template_file='basket/summary.html'):
                 return HttpResponseBadRequest("Unable to add your item to the basket - submission not valid")
             product = get_object_or_404(product_models.Item.objects, pk=form.cleaned_data['product_id'])
             basket.add_product(product, form.cleaned_data['quantity'])
+            messages.info(request, "'%s' (quantity %d) has been added to your basket" %
+                          (product.get_title(), form.cleaned_data['quantity']))
     else:
         # Display the visitor's basket
         basket = basket_factory.get_basket(request)
         if not basket:
             basket = basket_models.Basket()
             
-        response = render_to_response(template_file, locals(), context_instance=RequestContext(request))
+        response = render(request, template_file, locals(), context_instance=RequestContext(request))
     return response
 
 def line(request, line_reference):
@@ -62,13 +66,20 @@ def line(request, line_reference):
             line = basket.lines.get(line_reference=line_reference)
             if request.POST.has_key('increment-quantity'):
                 line.quantity += int(request.POST['increment-quantity'])
+                messages.info(request, "The quantity of '%s' has been increased by %d" %
+                              (line.product, int(request.POST['increment-quantity'])))
             elif request.POST.has_key('decrement-quantity'):
                 line.quantity -= int(request.POST['decrement-quantity'])
+                messages.info(request, "The quantity of '%s' has been decreased by %d" % 
+                              (line.product, int(request.POST['decrement-quantity'])))
             elif request.POST.has_key('set-quantity') and request.POST['set-quantity'].isdigit():
                 if int(request.POST['set-quantity']) >= 0:
                     line.quantity = int(request.POST['set-quantity'])
+                    messages.info(request, "The quantity of '%s' has been set to %d" %
+                              (line.product, int(request.POST['set-quantity'])))
             elif request.POST.has_key('delete'):
                 line.quantity = 0
+                messages.info(request, "'%s' has been removed from your basket" % line.product)
             line.save()    
         except basket_models.Line.DoesNotExist:
             response = Http404("Unable to find a line with reference %s in your basket" % line_reference)     
