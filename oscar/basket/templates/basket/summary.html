@@ -34,22 +34,25 @@ Your basket is currently empty - go and <a href="/shop/product/">buy something</
         <td>
             <form action="{% url oscar-basket-line line.line_reference %}" method="post">
                 {% csrf_token %}
-                <input type="hidden" name="decrement-quantity" value="1" />
+                <input type="hidden" name="action" value="decrement_quantity" />
+                <input type="hidden" name="quantity" value="1" />
                 <input type="submit" value="-" />
             </form>
             <form action="{% url oscar-basket-line line.line_reference %}" method="post">
                 {% csrf_token %}
-                <input type="text" name="set-quantity" value="{{ line.quantity }}" />
+                <input type="hidden" name="action" value="set_quantity" />
+                <input type="text" name="quantity" value="{{ line.quantity }}" />
                 <input type="submit" value="Set" />
             </form> 
             <form action="{% url oscar-basket-line line.line_reference %}" method="post">
                 {% csrf_token %}
-                <input type="hidden" name="increment-quantity" value="1" />
+                <input type="hidden" name="action" value="increment_quantity"/>
+                <input type="hidden" name="quantity" value="1" />
                 <input type="submit" value="+" />
             </form>
             <form action="{% url oscar-basket-line line.line_reference %}" method="post">
                 {% csrf_token %}
-                <input type="hidden" name="delete" value="1" />
+                <input type="hidden" name="action" value="delete" />
                 <input type="submit" value="Delete" />
             </form>
         </td>

@@ -53,39 +53,65 @@ def index(request, template_file='basket/summary.html'):
     return response
 
 
-def line(request, line_reference):
-    """
-    For requests that alter a basket line.
+class LineView(object):
     
-    This can take a few different "action" names such as increment-quantity,
-    decrement-quantity, set-quantity and delete.
-    """
-    response = HttpResponseRedirect(reverse('oscar-basket'))
-    if request.method == 'POST': 
-        try:
-            basket = basket_factory.get_basket(request)
-            line = basket.lines.get(line_reference=line_reference)
-            if request.POST.has_key('increment-quantity'):
-                line.quantity += int(request.POST['increment-quantity'])
-                msg = "The quantity of '%s' has been increased by %d" % (line.product, 
-                                                                         int(request.POST['increment-quantity']))
-            elif request.POST.has_key('decrement-quantity'):
-                line.quantity -= int(request.POST['decrement-quantity'])
-                msg = "The quantity of '%s' has been decreased by %d" % (line.product, 
-                                                                         int(request.POST['decrement-quantity']))
-            elif request.POST.has_key('set-quantity') and request.POST['set-quantity'].isdigit():
-                if int(request.POST['set-quantity']) >= 0:
-                    line.quantity = int(request.POST['set-quantity'])
-                    msg = "The quantity of '%s' has been set to %d" % (line.product, int(request.POST['set-quantity']))
-            elif request.POST.has_key('delete'):
-                line.quantity = 0
-                msg = "'%s' has been removed from your basket" % line.product
-            line.save()    
-            messages.info(request, msg)
-        except basket_models.Line.DoesNotExist:
-            messages.error(request, "Unable to find a line with reference %s in your basket" % line_reference)
-        except basket_models.Basket.DoesNotExist:
-            messages.error(request, "You don't have a basket to adjust the lines of")
-        except basket_models.InvalidBasketLineError, e:
-            messages.error(request, str(e))
-    return response
+    def __call__(self, request, line_reference):
+        self.request = request
+        
+        # Whatever happens, the response is a redirect back to the 
+        # basket summary page
+        response = HttpResponseRedirect(reverse('oscar-basket'))
+        
+        # All modifications to a line must come via a POST request 
+        # which has an 'action' parameter
+        if request.method == 'POST' or 'action' in request.POST:
+            try:
+                basket = basket_factory.get_basket(request)
+                line = basket.lines.get(line_reference=line_reference)
+                
+                # We look for a method of the form do_... which can handle
+                # the requested action
+                callback = getattr(self, "do_%s" % request.POST['action'].lower())(line)
+                
+            except basket_models.Basket.DoesNotExist:
+                messages.error(request, "You don't have a basket to adjust the lines of")
+            except basket_models.Line.DoesNotExist:
+                messages.error(request, "Unable to find a line with reference %s in your basket" % line_reference)
+            except AttributeError:
+                messages.error(request, "Invalid basket action")
+            except basket_models.InvalidBasketLineError, e:
+                messages.error(request, str(e))
+        else:
+            messages.error(request, "Invalid request")
+        return response
+        
+    def _get_quantity(self):
+        if 'quantity' in self.request.POST:
+            return int(self.request.POST['quantity'])
+        return 0        
+            
+    def do_increment_quantity(self, line):
+        q = self._get_quantity()
+        line.quantity += q
+        line.save()    
+        msg = "The quantity of '%s' has been increased by %d" % (line.product, q)
+        messages.info(self.request, msg)
+        
+    def do_decrement_quantity(self, line):
+        q = self._get_quantity()
+        line.quantity -= q
+        line.save()    
+        msg = "The quantity of '%s' has been decreased by %d" % (line.product, q)
+        messages.info(self.request, msg)
+        
+    def do_set_quantity(self, line):
+        q = self._get_quantity()
+        line.quantity = q
+        line.save()    
+        msg = "The quantity of '%s' has been set to %d" % (line.product, q)
+        messages.info(self.request, msg)
+        
+    def do_delete(self, line):
+        line.delete()
+        msg = "'%s' has been removed from your basket" % line.product
+        messages.warn(self.request, msg)
