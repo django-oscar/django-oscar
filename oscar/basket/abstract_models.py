@@ -5,10 +5,10 @@ from django.db import models
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ObjectDoesNotExist
 
-from oscar.basket.managers import OpenBasketManager
+from oscar.basket.managers import OpenBasketManager, SavedBasketManager
 
 # Basket statuses
-OPEN, MERGED, SUBMITTED = ("Open", "Merged", "Submitted")
+OPEN, MERGED, SAVED, SUBMITTED = ("Open", "Merged", "Saved", "Submitted")
 
 
 class AbstractBasket(models.Model):
@@ -20,6 +20,7 @@ class AbstractBasket(models.Model):
     STATUS_CHOICES = (
         (OPEN, _("Open - currently active")),
         (MERGED, _("Merged - superceded by another basket")),
+        (SAVED, _("Saved - for items to be purchased later")),
         (SUBMITTED, _("Submitted - has been ordered at the checkout")),
     )
     status = models.CharField(_("Status"), max_length=128, default=OPEN, choices=STATUS_CHOICES)
@@ -33,6 +34,7 @@ class AbstractBasket(models.Model):
     # Custom manager for searching open baskets only
     objects = models.Manager()
     open = OpenBasketManager()
+    saved = SavedBasketManager()
     
     # ============    
     # Manipulation
@@ -69,6 +71,13 @@ class AbstractBasket(models.Model):
             line.save()
         except ObjectDoesNotExist:
             self.lines.create(basket=self, product=item, quantity=quantity)
+    
+    def add_line(self, line):
+        """
+        For adding a line from another basket to this one
+        """
+        line.basket = self
+        line.save()
     
     # ==========
     # Properties
