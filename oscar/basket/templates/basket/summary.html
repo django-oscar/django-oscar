@@ -30,7 +30,7 @@ Your basket is currently empty - go and <a href="/shop/product/">buy something</
     </tr>
     {% for line in basket.lines.all %}
     <tr>
-        <td><a href="{% url oscar-product-item line.product.id %}">{{ line.product }}</a></td>
+        <td><a href="{{ line.product.get_absolute_url }}">{{ line.product }}</a></td>
         <td>
             <form action="{% url oscar-basket-line line.line_reference %}" method="post">
                 {% csrf_token %}

@@ -12,7 +12,7 @@
         <th>UPC</th><td>{{item.upc}}</td>
     </tr>
     <tr>
-        <th>Product class</th><td>{{item.product_class.name}}</td>
+        <th>Product class</th><td><a href="{{ item.item_class.get_absolute_url }}">{{item.item_class.name}}</a></td>
     </tr>
     <tr>
         <th>Price (excl. tax)</th><td>{{item.stockrecord.price_incl_tax}}</td>

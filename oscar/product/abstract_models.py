@@ -6,6 +6,7 @@ import re
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.template.defaultfilters import slugify
+from django.core.urlresolvers import reverse
 
 
 def _convert_to_underscores(str):
@@ -34,6 +35,9 @@ class AbstractItemClass(models.Model):
         if not self.slug:
             self.slug= slugify(self.name)
         super(AbstractItemClass, self).save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('oscar-product-item-class', kwargs={'item_class_slug': self.slug})
 
     def __unicode__(self):
         return self.name
@@ -110,6 +114,12 @@ class AbstractItem(models.Model):
         if self.is_variant:
             return "%s (%s)" % (self.get_title(), self.attribute_summary())
         return self.get_title()
+    
+    def get_absolute_url(self):
+        args = {'item_class_slug': self.item_class.slug, 
+                'item_slug': self.slug,
+                'item_id': self.id}
+        return reverse('oscar-product-item', kwargs=args)
     
     def save(self, *args, **kwargs):
         if self.is_top_level and not self.title:

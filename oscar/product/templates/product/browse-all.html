@@ -10,9 +10,9 @@
 <ol>
 {% for product in products.object_list %}
 <li>
-    <a href="{% url oscar-product-item product.id %}">{{ product.get_title }}</a><br/>
+    <a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a><br/>
     {% if product.stockrecord %} 
-        &pound;{{ product.stockrecord.get_price_incl_tax }}
+        &pound;{{ product.stockrecord.price_incl_tax }}
     {% else %}
         Not available
     {% endif %}    
