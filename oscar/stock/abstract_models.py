@@ -2,6 +2,7 @@
 Models for the stock and fulfillment components of an project
 """
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
 
 
 class AbstractPartner(models.Model):
@@ -50,7 +51,7 @@ class AbstractStockRecord(models.Model):
     @property
     def availability(self):
         if self.num_in_stock:
-            return _("In stock")
+            return _("In stock (%d available)" % self.num_in_stock)
         return _("Out of stock")
     
     @property 

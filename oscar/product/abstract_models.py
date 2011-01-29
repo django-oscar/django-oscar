@@ -101,10 +101,11 @@ class AbstractItem(models.Model):
         return title
     
     def get_item_class(self):
-        item_class = self.__dict__.setdefault('item_class', None)
-        if not item_class and self.parent_id:
-            item_class = self.parent.item_class
-        return item_class
+        if self.item_class:
+            return self.item_class
+        if self.parent.item_class:
+            return self.parent.item_class
+        return None
 
     class Meta:
         abstract = True

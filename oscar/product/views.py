@@ -10,6 +10,7 @@ from oscar.services import import_module
 product_models = import_module('product.models', ['Item', 'ItemClass'])
 basket_forms = import_module('basket.forms', ['AddToBasketForm'])
 
+
 def item(request, item_class_slug, item_slug, item_id, template_file='product/item.html'):
     """ 
     Single product page
@@ -17,6 +18,7 @@ def item(request, item_class_slug, item_slug, item_id, template_file='product/it
     item = get_object_or_404(product_models.Item, pk=item_id)
     form = basket_forms.AddToBasketForm({'product_id': item_id, 'quantity': 1, 'action': 'add'})
     return render_to_response(template_file, locals(), context_instance=RequestContext(request))
+
 
 def item_class(request, item_class_slug, template_file='product/browse-all.html', results_per_page=20):
     item_class = get_object_or_404(product_models.ItemClass, slug=item_class_slug)
@@ -35,8 +37,15 @@ def item_class(request, item_class_slug, template_file='product/browse-all.html'
     
     return render_to_response(template_file, locals())
 
-def all(request, template_file='product/browse-all.html', results_per_page=20):
-    product_list = product_models.Item.browsable.all()
+
+def all(request, template_file='product/browse.html', results_per_page=20):
+    if 'q' in request.GET and request.GET['q']:
+        query = request.GET['q'].strip()
+        product_list = product_models.Item.browsable.filter(title__icontains=query)
+        summary = "Products matching '%s'" % query
+    else:
+        product_list = product_models.Item.browsable.all()
+        summary = "All products"
     paginator = Paginator(product_list, results_per_page)
     
     # Make sure page request is an int. If not, deliver first page.
