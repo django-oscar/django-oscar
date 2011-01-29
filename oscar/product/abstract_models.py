@@ -8,13 +8,14 @@ from django.utils.translation import ugettext_lazy as _
 from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse
 
+from oscar.product.managers import BrowsableItemManager
 
 def _convert_to_underscores(str):
     """
     For converting a string in CamelCase or normal text with spaces
     to the normal underscored variety
     """
-    without_whitespace = re.sub('\s*', '', str)
+    without_whitespace = re.sub('\s*', '_', str.strip())
     s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', without_whitespace)
     return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
 
@@ -24,7 +25,8 @@ class AbstractItemClass(models.Model):
     Defines an item type (equivqlent to Taoshop's MediaType).
     """
     name = models.CharField(_('name'), max_length=128)
-    slug = models.SlugField(max_length=128)
+    slug = models.SlugField(max_length=128, unique=True)
+    options = models.ManyToManyField('product.Option')
 
     class Meta:
         abstract = True
@@ -43,11 +45,6 @@ class AbstractItemClass(models.Model):
         return self.name
 
 
-class BrowsableItemManager(models.Manager):
-    def get_query_set(self):
-        return super(BrowsableItemManager, self).get_query_set().filter(parent=None)
-
-
 class AbstractItem(models.Model):
     """
     The base product object
@@ -60,7 +57,9 @@ class AbstractItem(models.Model):
     # children would be "Green fleece - size L".
     
     # Universal product code
-    upc = models.CharField(max_length=64, blank=True, null=True)
+    upc = models.CharField(_("UPC"), max_length=64, blank=True, null=True,
+        help_text="""Universal Product Code (UPC) is an identifier for a product which is 
+                     not specific to a particular supplier.  Eg an ISBN for a book.""")
     # No canonical product should have a stock record as they cannot be bought.
     parent = models.ForeignKey('self', null=True, blank=True, related_name='variants',
         help_text="""Only choose a parent product if this is a 'variant' of a canonical product.  For example 
@@ -73,6 +72,7 @@ class AbstractItem(models.Model):
     item_class = models.ForeignKey('product.ItemClass', verbose_name=_('item class'), null=True,
         help_text="""Choose what type of product this is""")
     attribute_types = models.ManyToManyField('product.AttributeType', through='ItemAttributeValue')
+    options = models.ManyToManyField('product.Option')
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True, null=True, default=None)
 
@@ -143,7 +143,7 @@ class AbstractAttributeType(models.Model):
         ordering = ['code']
 
     def __unicode__(self):
-        return self.type
+        return self.name
 
     def save(self, *args, **kwargs):
         if not self.code:
@@ -162,7 +162,7 @@ class AbstractAttributeValueOption(models.Model):
         abstract = True
 
     def __unicode__(self):
-        return "%s = %s" % (self.type, self.value)
+        return u"%s = %s" % (self.type, self.value)
 
 
 class AbstractItemAttributeValue(models.Model):
@@ -179,4 +179,34 @@ class AbstractItemAttributeValue(models.Model):
         abstract = True
         
     def __unicode__(self):
-        return "%s: %s" % (self.type.name, self.value)
+        return u"%s: %s" % (self.type.name, self.value)
+    
+    
+class AbstractOption(models.Model):
+    """
+    An option that can be selected for a particular item when the product
+    is added to the basket.  Eg a message for a SMS message.  This is not
+    the same as an attribute as options do not have a fixed value for 
+    a particular item - options, they need to be specified by the customer.
+    """
+    code = models.CharField(_('code'), max_length=128)
+    name = models.CharField(_('name'), max_length=128)
+    
+    REQUIRED, OPTIONAL = ('Required', 'Optional')
+    TYPE_CHOICES = (
+        (REQUIRED, _("Required - a value for this option must be specified")),
+        (OPTIONAL, _("Optional - a value for this option can be omitted")),
+    )
+    type = models.CharField(_("Status"), max_length=128, default=REQUIRED, choices=TYPE_CHOICES)
+    
+    class Meta:
+        abstract = True
+        
+    def __unicode__(self):
+        return self.name
+    
+    def save(self, *args, **kwargs):
+        if not self.code:
+            self.code = _convert_to_underscores(self.name)
+        super(AbstractOption, self).save(*args, **kwargs)
+    

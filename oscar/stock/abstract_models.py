@@ -47,6 +47,12 @@ class AbstractStockRecord(models.Model):
     # Price retrieval methods - these default to no tax being applicable
     # These are intended to be overridden.   
     
+    @property
+    def availability(self):
+        if self.num_in_stock:
+            return _("In stock")
+        return _("Out of stock")
+    
     @property 
     def price_incl_tax(self):
         return self.price_excl_tax

@@ -12,7 +12,8 @@
 <li>
     <a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a><br/>
     {% if product.stockrecord %} 
-        &pound;{{ product.stockrecord.price_incl_tax }}
+        &pound;{{ product.stockrecord.price_incl_tax }}<br/>
+        {{ product.stockrecord.availability }}
     {% else %}
         Not available
     {% endif %}    

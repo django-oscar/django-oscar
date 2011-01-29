@@ -17,3 +17,6 @@ class AttributeValueOption(AbstractAttributeValueOption):
 
 class ItemAttributeValue(AbstractItemAttributeValue):
     pass
+
+class Option(AbstractOption):
+    pass
