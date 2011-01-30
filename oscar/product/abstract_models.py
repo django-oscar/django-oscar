@@ -7,6 +7,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse
+from django.core.exceptions import ObjectDoesNotExist
 
 from oscar.product.managers import BrowsableItemManager
 
@@ -15,7 +16,7 @@ def _convert_to_underscores(str):
     For converting a string in CamelCase or normal text with spaces
     to the normal underscored variety
     """
-    without_whitespace = re.sub('\s*', '_', str.strip())
+    without_whitespace = re.sub('\s+', '_', str.strip())
     s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', without_whitespace)
     return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
 
@@ -26,7 +27,7 @@ class AbstractItemClass(models.Model):
     """
     name = models.CharField(_('name'), max_length=128)
     slug = models.SlugField(max_length=128, unique=True)
-    options = models.ManyToManyField('product.Option')
+    options = models.ManyToManyField('product.Option', blank=True)
 
     class Meta:
         abstract = True
@@ -72,12 +73,14 @@ class AbstractItem(models.Model):
     item_class = models.ForeignKey('product.ItemClass', verbose_name=_('item class'), null=True,
         help_text="""Choose what type of product this is""")
     attribute_types = models.ManyToManyField('product.AttributeType', through='ItemAttributeValue')
-    options = models.ManyToManyField('product.Option')
+    options = models.ManyToManyField('product.Option', blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True, null=True, default=None)
 
     objects = models.Manager()
     browsable = BrowsableItemManager()
+
+    # Properties
 
     @property
     def is_top_level(self):
@@ -90,6 +93,22 @@ class AbstractItem(models.Model):
     @property
     def is_variant(self):
         return not self.is_top_level
+
+    @property
+    def min_variant_price_incl_tax(self):
+        return self._min_variant_price('price_incl_tax')
+    
+    @property
+    def min_variant_price_excl_tax(self):
+        return self._min_variant_price('price_excl_tax')
+
+    @property
+    def has_stockrecord(self):
+        try:
+            sr = self.stockrecord
+            return True
+        except ObjectDoesNotExist:
+            return False
 
     def attribute_summary(self):
         return ", ".join([attribute.__unicode__() for attribute in self.attributes.all()])
@@ -106,6 +125,18 @@ class AbstractItem(models.Model):
         if self.parent.item_class:
             return self.parent.item_class
         return None
+
+    # Helpers
+    
+    def _min_variant_price(self, property):
+        prices = []
+        for variant in self.variants.all():
+            if variant.has_stockrecord:
+                prices.append(getattr(variant.stockrecord, property))
+        if not prices:
+            return None
+        prices.sort()
+        return prices[0]
 
     class Meta:
         abstract = True

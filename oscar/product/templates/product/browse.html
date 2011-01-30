@@ -7,15 +7,21 @@
 
 {% block content %}
 
+{% if products.count %}
+
 <ol>
-{% for product in products.object_list %}
+{% for product in products %}
 <li>
     <a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a><br/>
-    {% if product.stockrecord %} 
-        &pound;{{ product.stockrecord.price_incl_tax }}<br/>
-        {{ product.stockrecord.availability }}
+    {% if product.is_group %}
+        From &pound;{{ product.min_variant_price_incl_tax }}
     {% else %}
-        Not available
+        {% if product.has_stockrecord %} 
+            &pound;{{ product.stockrecord.price_incl_tax }}<br/>
+            {{ product.stockrecord.availability }}
+        {% else %}
+            Not available    
+        {% endif %}
     {% endif %}    
 </li>
 {% endfor %}
@@ -23,19 +29,26 @@
 
 <div class="pagination">
     <span class="step-links">
-        {% if products.has_previous %}
-            <a href="?page={{ products.previous_page_number }}">previous</a>
+    
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
         {% endif %}
 
         <span class="current">
-            Page {{ products.number }} of {{ products.paginator.num_pages }}.
+            Page {{ page_obj.number }} of {{ paginator.num_pages }}.
         </span>
 
-        {% if products.has_next %}
-            <a href="?page={{ products.next_page_number }}">next</a>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
         {% endif %}
     </span>
 </div>
+
+{% else %}
+
+<p>No products found.</p>
+
+{% endif %}
 
 {% endblock content %}
 

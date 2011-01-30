@@ -1,4 +1,5 @@
 from decimal import Decimal
+import zlib
 
 from django.contrib.auth.models import User
 from django.db import models
@@ -61,23 +62,39 @@ class AbstractBasket(models.Model):
     def flush(self):
         self.lines.all().delete()
     
-    def add_product(self, item, quantity=1):
+    def add_product(self, item, quantity=1, options=[]):
         """
         Convenience method for adding products to a basket
         """
+        line_ref = self._get_line_reference(item, options)
         try:
-            line = self.lines.get(product=item)
+            line = self.lines.get(line_reference=line_ref)
             line.quantity += quantity
             line.save()
         except ObjectDoesNotExist:
-            self.lines.create(basket=self, product=item, quantity=quantity)
+            line = self.lines.create(basket=self, line_reference=line_ref, product=item, quantity=quantity)
+            for option_dict in options:
+                o =line.attributes.create(line=line, option=option_dict['option'], value=option_dict['value'])
     
     def add_line(self, line):
         """
         For adding a line from another basket to this one
         """
-        line.basket = self
-        line.save()
+        try:
+            # Line already exists - bump its quantity and delete the old
+            existing_line = self.lines.get(line_reference=line.line_reference)
+            existing_line.quantity += line.quantity
+            existing_line.save()
+            line.delete()
+        except ObjectDoesNotExist:
+            # Line does not already exist - reassign its basket
+            line.basket = self
+            line.save()
+    
+    def _get_line_reference(self, item, options):
+        if not options:
+            return item.id
+        return "%d_%s" % (item.id, zlib.crc32(str(options)))
     
     # ==========
     # Properties
@@ -167,6 +184,16 @@ class AbstractLine(models.Model):
     def line_price_incl_tax(self):
         return self.quantity * self.unit_price_incl_tax
     
+    @property
+    def description(self):
+        d = str(self.product)
+        ops = []
+        for attribute in self.attributes.all():
+            ops.append("%s = '%s'" % (attribute.option.name, attribute.value))
+        if ops:
+            d = "%s (%s)" % (d, ", ".join(ops))
+        return d
+    
     def save(self, *args, **kwargs):
         if self.quantity == 0:
             return self.delete(*args, **kwargs)
@@ -187,11 +214,8 @@ class AbstractLineAttribute(models.Model):
     An attribute of a basket line
     """
     line = models.ForeignKey('basket.Line', related_name='attributes')
-    type = models.CharField(_("Type"), max_length=128)
+    option = models.ForeignKey('product.option')
     value = models.CharField(_("Value"), max_length=255)    
-    
-    def get_hash(self):
-        return zlib.crc32(self.type + self.value)
     
     class Meta:
         abstract = True

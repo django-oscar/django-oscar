@@ -1,62 +1,73 @@
 from django.conf import settings
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.template import Context, loader, RequestContext
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
+from django.views.generic import ListView, DetailView
 
 from oscar.services import import_module
 
 product_models = import_module('product.models', ['Item', 'ItemClass'])
-basket_forms = import_module('basket.forms', ['AddToBasketForm'])
+basket_forms = import_module('basket.forms', ['FormFactory'])
 
 
-def item(request, item_class_slug, item_slug, item_id, template_file='product/item.html'):
-    """ 
-    Single product page
+class ItemDetailView(DetailView):
     """
-    item = get_object_or_404(product_models.Item, pk=item_id)
-    form = basket_forms.AddToBasketForm({'product_id': item_id, 'quantity': 1, 'action': 'add'})
-    return render_to_response(template_file, locals(), context_instance=RequestContext(request))
-
-
-def item_class(request, item_class_slug, template_file='product/browse-all.html', results_per_page=20):
-    item_class = get_object_or_404(product_models.ItemClass, slug=item_class_slug)
-    product_list = product_models.Item.browsable.filter(item_class=item_class)
-    paginator = Paginator(product_list, results_per_page)
+    View a single product.
+    """
+    template_name = "product/item.html"
     
-    # Make sure page request is an int. If not, deliver first page.
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
-    try:
-        products = paginator.page(page)
-    except (EmptyPage, InvalidPage):
-        products = paginator.page(paginator.num_pages)
+    def get_object(self):
+        return get_object_or_404(product_models.Item, pk=self.kwargs['item_id'])
     
-    return render_to_response(template_file, locals())
+    def get_context_data(self, **kwargs):
+        context = super(ItemDetailView, self).get_context_data(**kwargs)
+        
+        # Add add-to-basket form for this product
+        factory = basket_forms.FormFactory()
+        context['form'] = factory.create(self.object)
+        
+        return context
 
 
-def all(request, template_file='product/browse.html', results_per_page=20):
-    if 'q' in request.GET and request.GET['q']:
-        query = request.GET['q'].strip()
-        product_list = product_models.Item.browsable.filter(title__icontains=query)
-        summary = "Products matching '%s'" % query
-    else:
-        product_list = product_models.Item.browsable.all()
-        summary = "All products"
-    paginator = Paginator(product_list, results_per_page)
-    
-    # Make sure page request is an int. If not, deliver first page.
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
-    try:
-        products = paginator.page(page)
-    except (EmptyPage, InvalidPage):
-        products = paginator.page(paginator.num_pages)
-    
-    return render_to_response(template_file, locals())
+class ItemClassListView(ListView):
+    """
+    View products filtered by item-class.
+    """
+    context_object_name = "products"
+    template_name = 'product/browse.html'
+    paginate_by = 20
 
+    def get_queryset(self):
+        item_class = get_object_or_404(product_models.ItemClass, slug=self.kwargs['item_class_slug'])
+        return product_models.Item.browsable.filter(item_class=item_class)
+
+
+class ProductListView(ListView):
+
+    context_object_name = "products"
+    template_name = 'product/browse.html'
+    paginate_by = 20
+
+    def get_search_query(self):
+        q = None
+        if 'q' in self.request.GET and self.request.GET['q']:
+            q = self.request.GET['q'].strip()
+        return q
+
+    def get_queryset(self):
+        q = self.get_search_query()
+        if q:
+            return product_models.Item.browsable.filter(title__icontains=q)
+        else:
+            return product_models.Item.browsable.all()
+        
+    def get_context_data(self, **kwargs):
+        context = super(ProductListView, self).get_context_data(**kwargs)
+        q = self.get_search_query()
+        if not q:
+            context['summary'] = 'All products'
+        else:
+            context['summary'] = "Products matching '%s'" % q
+        return context

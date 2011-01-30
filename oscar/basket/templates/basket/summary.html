@@ -31,7 +31,7 @@ Your basket is currently empty - go and <a href="/shop/product/">buy something</
     </tr>
     {% for line in basket.lines.all %}
     <tr>
-        <td><a href="{{ line.product.get_absolute_url }}">{{ line.product }}</a></td>
+        <td><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></td>
         <td>
             <form action="{% url oscar-basket-line line.line_reference %}" method="post">
                 {% csrf_token %}
@@ -96,7 +96,7 @@ Your basket is currently empty - go and <a href="/shop/product/">buy something</
     </tr>
     {% for line in saved_basket.lines.all %}
     <tr>
-        <td><a href="{{ line.product.get_absolute_url }}">{{ line.product }}</a></td>
+        <td><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></td>
         <td>
             <form action="{% url oscar-saved-basket-line line.line_reference %}" method="post">
                 {% csrf_token %}

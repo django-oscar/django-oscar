@@ -39,7 +39,10 @@ def get_saved_basket(request):
 def _get_basket(request, cookie_key, manager):
     b = None
     if request.user.is_authenticated():
-        b = manager.get(owner=request.user)
+        try:
+            b = manager.get(owner=request.user)
+        except basket_models.Basket.DoesNotExist, e:
+            pass
     else:
         b = _get_cookie_basket(request, cookie_key, manager)
     return b    
@@ -61,7 +64,7 @@ def _get_or_create_cookie_basket(request, response, cookie_key, manager):
         # new one and store the id and hash in a cookie.
         basket = manager.create()
         cookie = "%s_%s" % (basket.id, _get_basket_hash(basket.id))
-        response.set_cookie(cookie_key, cookie, max_age=COOKIE_LIFETIME)
+        response.set_cookie(cookie_key, cookie, max_age=COOKIE_LIFETIME, httponly=True)
     else:
         basket = anon_basket
     return basket 
@@ -78,6 +81,8 @@ def _get_cookie_basket(request, cookie_key, manager):
                 b = manager.get(pk=basket_id)
             except basket_models.Basket.DoesNotExist, e:
                 b = None
+        else:
+            response.delete_cookie(cookie_key)
     return b  
 
 def _get_basket_hash(id):

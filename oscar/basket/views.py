@@ -8,7 +8,7 @@ from oscar.services import import_module
 
 # Using dynamic loading
 basket_models = import_module('basket.models', ['Basket', 'Line', 'InvalidBasketLineError'])
-basket_forms = import_module('basket.forms', ['AddToBasketForm'])
+basket_forms = import_module('basket.forms', ['FormFactory'])
 basket_factory = import_module('basket.factory', ['get_or_create_open_basket', 'get_open_basket', 
                                                   'get_or_create_saved_basket', 'get_saved_basket'])
 product_models = import_module('product.models', ['Item'])
@@ -55,14 +55,21 @@ class BasketView(object):
         messages.info(self.request, "Your basket has been emptied")
         
     def do_add(self, basket):
-        form = basket_forms.AddToBasketForm(self.request.POST)
+        item = get_object_or_404(product_models.Item.objects, pk=self.request.POST['product_id'])
+        factory = basket_forms.FormFactory()
+        form = factory.create(item, self.request.POST)
         if not form.is_valid():
-            messages.error("Unable to add your item to the basket - submission not valid")
+            # @todo Put form errors in session and redirect back to product page
+            messages.error(self.request, "Unable to add your item to the basket - submission not valid")
         else:
-            product = get_object_or_404(product_models.Item.objects, pk=form.cleaned_data['product_id'])
-            basket.add_product(product, form.cleaned_data['quantity'])
+            # Extract product options from POST
+            options = []
+            for option in item.options.all():
+                if option.code in form.cleaned_data:
+                    options.append({'option': option, 'value': form.cleaned_data[option.code]})
+            basket.add_product(item, form.cleaned_data['quantity'], options)
             messages.info(self.request, "'%s' (quantity %d) has been added to your basket" %
-                          (product.get_title(), form.cleaned_data['quantity']))
+                          (item.get_title(), form.cleaned_data['quantity']))
  
 
 class LineView(object):
