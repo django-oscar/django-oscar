@@ -140,7 +140,7 @@ class LineView(object):
         
     def do_save_for_later(self, line):
         saved_basket = basket_factory.get_or_create_saved_basket(self.request, self.response)
-        saved_basket.add_line(line)
+        saved_basket.merge_line(line)
         msg = "'%s' has been saved for later" % line.product
         messages.info(self.request, msg)
         
@@ -187,7 +187,7 @@ class SavedLineView(object):
             
     def do_move_to_basket(self, line):
         real_basket = basket_factory.get_or_create_open_basket(self.request, self.response)
-        real_basket.add_line(line)
+        real_basket.merge_line(line)
         msg = "'%s' has been moved back to your basket" % line.product
         messages.info(self.request, msg)
         

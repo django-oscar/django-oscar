@@ -32,39 +32,29 @@ class AbstractBasket(models.Model):
     class Meta:
         abstract = True
     
-    # Custom manager for searching open baskets only
     objects = models.Manager()
     open = OpenBasketManager()
     saved = SavedBasketManager()
+    
+    def __unicode__(self):
+        return u"%s basket (owner: %s, lines: %d)" % (self.status, self.owner, self.num_lines)
     
     # ============    
     # Manipulation
     # ============
     
-    def merge(self, basket):
-        """
-        Merges another basket with this one
-        """
-        for line_to_merge in basket.lines.all():
-            # Check if the current basket has a matching line and update
-            # the quantity.
-            try:
-                line = self.lines.get(line_reference=line_to_merge.line_reference)
-                line.quantity += line_to_merge.quantity
-                line.save()
-                line_to_merge.delete()
-            except ObjectDoesNotExist:
-                line_to_merge.basket = self
-                line_to_merge.save()
-        basket.status = MERGED
-        basket.save()
-    
     def flush(self):
+        """
+        Remove all lines from basket.
+        """
         self.lines.all().delete()
     
     def add_product(self, item, quantity=1, options=[]):
         """
         Convenience method for adding products to a basket
+        
+        The 'options' list should contains dicts with keys 'option' and 'value'
+        which link the relevant product.Option model and value respectively.
         """
         line_ref = self._get_line_reference(item, options)
         try:
@@ -76,9 +66,11 @@ class AbstractBasket(models.Model):
             for option_dict in options:
                 o =line.attributes.create(line=line, option=option_dict['option'], value=option_dict['value'])
     
-    def add_line(self, line):
+    def merge_line(self, line):
         """
-        For adding a line from another basket to this one
+        For transferring a line from another basket to this one.
+        
+        This is used with the "Saved" basket functionality.
         """
         try:
             # Line already exists - bump its quantity and delete the old
@@ -91,10 +83,33 @@ class AbstractBasket(models.Model):
             line.basket = self
             line.save()
     
+    def merge(self, basket):
+        """
+        Merges another basket with this one
+        """
+        for line_to_merge in basket.lines.all():
+            self.merge_line(line_to_merge)
+        basket.status = MERGED
+        basket.save()
+    
+    # =======
+    # Helpers
+    # =======
+    
     def _get_line_reference(self, item, options):
         if not options:
             return item.id
         return "%d_%s" % (item.id, zlib.crc32(str(options)))
+    
+    def _get_total(self, property):
+        """
+        For executing a named method on each line of the basket
+        and returning the total.
+        """
+        total = Decimal('0.00')
+        for line in self.lines.all():
+            total += getattr(line, property)
+        return total
     
     # ==========
     # Properties
@@ -122,23 +137,7 @@ class AbstractBasket(models.Model):
     
     @property
     def num_items(self):
-        """
-        Returns the number of items in the basket
-        """
         return reduce(lambda num,line: num+line.quantity, self.lines.all(), 0)
-    
-    def _get_total(self, property):
-        """
-        For executing a named method on each line of the basket
-        and returning the total.
-        """
-        total = Decimal('0.00')
-        for line in self.lines.all():
-            total += getattr(line, property)
-        return total
-    
-    def __unicode__(self):
-        return u"%s basket (owner: %s, lines: %d)" % (self.status, self.owner, self.num_lines)
     
     
 class AbstractLine(models.Model):
@@ -154,11 +153,34 @@ class AbstractLine(models.Model):
     product = models.ForeignKey('product.Item')
     quantity = models.PositiveIntegerField(default=1)
     
+    class Meta:
+        abstract = True
+        unique_together = ("basket", "line_reference")
+        
+    def __unicode__(self):
+        return u"%s, Product '%s', quantity %d" % (self.basket, self.product, self.quantity)
+    
+    def save(self, *args, **kwargs):
+        if self.quantity == 0:
+            return self.delete(*args, **kwargs)
+        if not self.line_reference:
+            # If no line reference explicitly set, then use the product ID
+            self.line_reference = self.product.id
+        super(AbstractLine, self).save(*args, **kwargs)
+    
+    # =======
+    # Helpers
+    # =======
+    
     def _get_stockrecord_property(self, property):
         if not self.product.stockrecord:
             return None
         else:
             return getattr(self.product.stockrecord, property)
+    
+    # ==========
+    # Properties
+    # ==========   
     
     @property
     def unit_price_excl_tax(self):
@@ -194,20 +216,6 @@ class AbstractLine(models.Model):
             d = "%s (%s)" % (d, ", ".join(ops))
         return d
     
-    def save(self, *args, **kwargs):
-        if self.quantity == 0:
-            return self.delete(*args, **kwargs)
-        if not self.line_reference:
-            # If no line reference explicitly set, then use the product ID
-            self.line_reference = self.product.id
-        super(AbstractLine, self).save(*args, **kwargs)
-    
-    class Meta:
-        abstract = True
-        unique_together = ("basket", "line_reference")
-        
-    def __unicode__(self):
-        return u"%s, Product '%s', quantity %d" % (self.basket, self.product, self.quantity)
     
 class AbstractLineAttribute(models.Model):
     """
@@ -220,3 +228,4 @@ class AbstractLineAttribute(models.Model):
     class Meta:
         abstract = True
     
+
