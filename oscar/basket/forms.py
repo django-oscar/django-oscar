@@ -13,6 +13,7 @@ class FormFactory(object):
         return self._create_product_form(item)
 
     def _create_group_product_form(self, item):
+        # @todo create product group form
         pass
     
     def _create_product_form(self, item):

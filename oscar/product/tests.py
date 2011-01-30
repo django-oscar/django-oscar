@@ -10,13 +10,14 @@ from oscar.stock.models import Partner, StockRecord
 class ItemTests(unittest.TestCase):
 
     def setUp(self):
-        self.item_class = ItemClass.objects.create(name='Clothing')
+        self.item_class,_ = ItemClass.objects.get_or_create(name='Clothing')
    
 
 class TopLevelItemTests(ItemTests):
     
     def test_top_level_products_must_have_titles(self):
         self.assertRaises(ValidationError, Item.objects.create, item_class=self.item_class)
+        
         
 class VariantItemTests(ItemTests):
     

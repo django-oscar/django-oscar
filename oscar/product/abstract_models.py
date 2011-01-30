@@ -68,7 +68,7 @@ class AbstractItem(models.Model):
                      there is only one version of this product).""")
     # Title is mandatory for canonical products but optional for child products
     title = models.CharField(_('Title'), max_length=255, blank=True, null=True)
-    slug = models.SlugField(max_length=255)
+    slug = models.SlugField(max_length=255, unique=False)
     description = models.TextField(_('Description'), blank=True, null=True)
     item_class = models.ForeignKey('product.ItemClass', verbose_name=_('item class'), null=True,
         help_text="""Choose what type of product this is""")

@@ -1,29 +1,30 @@
 from django.db import models
 
-from oscar.basket.abstract_models import OPEN, SAVED
-
 
 class OpenBasketManager(models.Manager):
+    status_filter = "Open"
+    
     """
     For searching/creating OPEN baskets only.
     """
     def get_query_set(self):
-        return super(OpenBasketManager, self).get_query_set().filter(status=OPEN)
+        return super(OpenBasketManager, self).get_query_set().filter(status=self.status_filter)
     
     def get_or_create(self, **kwargs):
-        return self.get_query_set().get_or_create(status=OPEN, **kwargs)
+        return self.get_query_set().get_or_create(status=self.status_filter, **kwargs)
 
     
 class SavedBasketManager(models.Manager):
     """
     For searching/creating SAVED baskets only.
     """
+    status_filter = "Saved"
     
     def get_query_set(self):
-        return super(SavedBasketManager, self).get_query_set().filter(status=SAVED)
+        return super(SavedBasketManager, self).get_query_set().filter(status=self.status_filter)
     
     def create(self, **kwargs):
-        return self.get_query_set().create(status=SAVED, **kwargs)
+        return self.get_query_set().create(status=self.status_filter, **kwargs)
     
     def get_or_create(self, **kwargs):
-        return self.get_query_set().get_or_create(status=SAVED, **kwargs)
+        return self.get_query_set().get_or_create(status=self.status_filter, **kwargs)
