@@ -20,15 +20,15 @@ class BasketView(object):
     
     def __call__(self, request, template_file='basket/summary.html'):
         self.request = request
+        # Whatever happens, the response is a redirect back to the 
+        # basket summary page
+        self.response = HttpResponseRedirect(reverse('oscar-basket'))
         
         # All modifications to a line must come via a POST request 
         # which has an 'action' parameter
         if request.method == 'POST' or 'action' in request.POST:
-            # Whatever happens, the response is a redirect back to the 
-            # basket summary page
-            response = HttpResponseRedirect(reverse('oscar-basket'))
             try:
-                basket = basket_factory.get_or_create_open_basket(request, response)
+                basket = basket_factory.get_or_create_open_basket(request, self.response)
                 
                 # We look for a method of the form do_... which can handle
                 # the requested action
@@ -48,7 +48,7 @@ class BasketView(object):
             response = render(request, template_file, locals())
         else:
             messages.error(request, "Invalid request")
-        return response
+        return self.response
     
     def do_flush(self, basket):
         basket.flush()
@@ -59,7 +59,7 @@ class BasketView(object):
         factory = basket_forms.FormFactory()
         form = factory.create(item, self.request.POST)
         if not form.is_valid():
-            # @todo Put form errors in session and redirect back to product page
+            self.response = HttpResponseRedirect(item.get_absolute_url())
             messages.error(self.request, "Unable to add your item to the basket - submission not valid")
         else:
             # Extract product options from POST
