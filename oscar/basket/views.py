@@ -45,7 +45,7 @@ class BasketView(object):
             saved_basket = basket_factory.get_saved_basket(request)
             if not basket:
                 basket = basket_models.Basket()
-            response = render(request, template_file, locals())
+            self.response = render(request, template_file, locals())
         else:
             messages.error(request, "Invalid request")
         return self.response

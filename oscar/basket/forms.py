@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django import forms
 
 
@@ -7,31 +8,36 @@ class FormFactory(object):
         """
         For dynamically creating add-to-basket forms for a given product
         """
-        self.values = values
-        if item.is_group:
-            return self._create_group_product_form(item)
-        return self._create_product_form(item)
-
-    def _create_group_product_form(self, item):
-        # @todo create product group form
-        pass
-    
-    def _create_product_form(self, item):
-        # See http://www.b-list.org/weblog/2008/nov/09/dynamic-forms/ for 
-        # advice on how this works.
         self.fields = {'action': forms.CharField(widget=forms.HiddenInput(), initial='add'),
                        'product_id': forms.IntegerField(widget=forms.HiddenInput(), min_value=1),
                        'quantity': forms.IntegerField(min_value=1)}
+        self.values = values
         if not self.values:
             self.values = {'action': 'add', 
                            'product_id': item.id, 
                            'quantity': 1}
-            
-        for option in item.options.all():
-            self._add_option_field(item, option)
-            
+        if item.is_group:
+            self._create_group_product_fields(item)
+        else:
+            self._create_product_fields(item)
+
         form_class = type('AddToBasketForm', (forms.BaseForm,), {'base_fields': self.fields})
         return form_class(self.values)
+
+    def _create_group_product_fields(self, item):
+        choices = []
+        for variant in item.variants.all():
+            if variant.has_stockrecord:
+                summary = u"%s (%s) - £%.2f" % (variant.get_title(), variant.attribute_summary(), 
+                                               variant.stockrecord.price_incl_tax)
+                choices.append((variant.id, summary))
+        self.fields['product_id'] = forms.ChoiceField(choices=tuple(choices))
+    
+    def _create_product_fields(self, item):
+        # See http://www.b-list.org/weblog/2008/nov/09/dynamic-forms/ for 
+        # advice on how this works.
+        for option in item.options.all():
+            self._add_option_field(item, option)
     
     def _add_option_field(self, item, option):
         """
