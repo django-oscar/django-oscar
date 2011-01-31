@@ -3,9 +3,9 @@
 Named after [Oscar Peterson](http://en.wikipedia.org/wiki/Oscar_Peterson),
 django-oscar is a flexible ecommerce platform, structured to allow accurate
 domain models to be constructed.  It is not supposed to be a framework that can
-be downloaded and fully set up by adjusting a configuration file: there will always
+be downloaded and fully set up by simply adjusting a configuration file: there will always
 be some developer work required to make sure the models match those from your
-domain.  This isn't a one-size-fits-all solution.
+domain - this is the nature of domain modelling.
 
 However, a small amount of work up front in determine the right models for your
 shop can really pay off in terms of building a high-quality application that
@@ -25,6 +25,35 @@ this is unwieldy and ugly.  A more elegant solution is to have models where all
 the fields are meaningful within the ecommerce domain.  In general, this means
 more work up front in terms of creating the right set of models but leads
 ultimately to a much cleaner and coherent system.
+
+## Core design decisions
+
+The central aim of django-oscar is to be a flexible app, that can be customised (rather than 
+configured) to suit the domain at hand.  This is acheived in several ways:
+
+* **All core models are abstract.**  In each sub-app, there is an `abstract_models.py` file which
+defines abstract super-classes for every core model.  There is also an accompanying `models.py` file which provides
+a vanilla concrete implementation of each model.  The apps are structured this way so that
+any model can be subclassed and extended.  You would do this by creating an app in your project with
+the same top-level app label as the one you want to modify (eg `myshop.product` to modify `oscar.product`).
+You can then create a models.py file which imports from the corresponding abstract models file but
+your concrete implementations can add new fields and methods.  For example, in a clothes shop, you might
+want your core `product.Item` model to support fields for `Label`.  
+
+* **Little use of the [Entity-Attribute-Value](http://en.wikipedia.org/wiki/Entity-attribute-value_model) pattern**. 
+This technique of subclassing and extending
+models avoids an over-reliance on the using the EAV pattern which is commonly used to store data and meta-data about 
+domain objects.  
+
+* **Classes are loaded generically.**  To enable sub-apps to be overridden, oscar classes are loading generically
+using a special `import_module` function.  This looks at the `INSTALLED_APPS` tuple to determine the appropriate
+app to load a class from.
+
+* **All core views are class-based.**  This enables any view to be subclassed and extended within your project.
+
+* **Any template can be overridden by a local version**  This is a simple technique relying on the fact
+that the template loader can be configured to look in your project first for oscar templates.
+
 
 ## Installation
 
@@ -67,13 +96,16 @@ Do the following from your workspace folder:
 	workon oscar
     
 After checking out your fork, install the latest version of Django (currenty a beta of 1.3)
+
     wget http://www.djangoproject.com/download/1.3-beta-1/tarball/
 	pip install Django-1.3-beta-1.tar.gz
 
-Install all packages from the requirements file:
+Install all packages from the requirements file
+
 	pip install -r requirements.txt
 
 Install oscar in development mode within your virtual env
+
     python setup.py develop
 
 Now create a `local_settings.py` file which contains details of your local database
@@ -89,14 +121,18 @@ default format.
 
 Each example shop has its own `manage.py` executable which you can use to create 
 your database:
+
     ./manage.py syncdb
 	
 There is a shortcut script for dropping all of a projects's apps and rerunning `syncdb` in
 the `examples` folder - you need to specify which project to act on:
+
     ./recreate_project_tables.sh defaultshop
     
 There is a similar script for running tests:
+
     ./run_tests.sh defaultshop
+    
 This specifies a sqlite3 database to use for testing and filters out the useless output.
     
 You can also use the functionality from [django-test-extensions](https://github.com/garethr/django-test-extensions/) which 
