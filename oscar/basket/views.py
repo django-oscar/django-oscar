@@ -6,50 +6,88 @@ from django.contrib import messages
 
 from oscar.services import import_module
 
-# Using dynamic loading
 basket_models = import_module('basket.models', ['Basket', 'Line', 'InvalidBasketLineError'])
 basket_forms = import_module('basket.forms', ['FormFactory'])
 basket_factory = import_module('basket.factory', ['get_or_create_open_basket', 'get_open_basket', 
                                                   'get_or_create_saved_basket', 'get_saved_basket'])
 product_models = import_module('product.models', ['Item'])
 
-class BasketView(object):
+
+class ModelView(object):
     """
-    Class-based view for the Basket model
-    """
+    A generic view for models which can recieve GET and POST requests
     
-    def __call__(self, request, template_file='basket/summary.html'):
-        self.request = request
-        # Whatever happens, the response is a redirect back to the 
-        # basket summary page
-        self.response = HttpResponseRedirect(reverse('oscar-basket'))
+    The __init__ method of subclasses should set the default response 
+    variable.
+    """
+    template_file = None
+    response = None
         
-        # All modifications to a line must come via a POST request 
-        # which has an 'action' parameter
-        if request.method == 'POST' or 'action' in request.POST:
-            try:
-                basket = basket_factory.get_or_create_open_basket(request, self.response)
-                
-                # We look for a method of the form do_... which can handle
-                # the requested action
-                callback = getattr(self, "do_%s" % request.POST['action'].lower())(basket)
-                
-            except basket_models.Basket.DoesNotExist:
-                messages.error(request, "Unable to find your basket")
-            except AttributeError:
-                messages.error(request, "Invalid basket action")
-            except basket_models.InvalidBasketLineError, e:
-                messages.error(request, str(e))
-        elif request.method == 'GET':
-            basket = basket_factory.get_open_basket(request)
-            saved_basket = basket_factory.get_saved_basket(request)
-            if not basket:
-                basket = basket_models.Basket()
-            self.response = render(request, template_file, locals())
-        else:
-            messages.error(request, "Invalid request")
+    def __call__(self, request, *args, **kwargs):
+        
+        self.request = request
+        self.args = args
+        self.kwargs = kwargs
+        
+        try:
+            method_name = "handle_%s" % request.method.upper()
+            getattr(self, method_name)()
+        except AttributeError:
+            # This class doesn't implement this HTTP method
+            messages.error(request, "Invalid action")
         return self.response
+        
+    def handle_GET(self):
+        """
+        Default implementation of model view is to do nothing.
+        """ 
+        pass
     
+    def handle_POST(self):
+        """
+        Handle a POST request to this resource.
+        
+        This will forward on request to a method of form "do_%s" where the
+        second part needs to be specified as an "action" name within the
+        request.
+        
+        If you don't want to handle POSTs this way, just override this method
+        """
+        if 'action' in self.request.POST:
+            model = self.get_model()
+            getattr(self, "do_%s" % self.request.POST['action'].lower())(model)
+            
+    def get_model(self):
+        """
+        Responsible for loading the model that is being acted on
+        """
+        pass
+    
+        
+class BasketView(ModelView):
+    template_file = 'basket/summary.html'
+    
+    def __init__(self):
+        self.response = HttpResponseRedirect(reverse('oscar-basket'))
+    
+    def get_model(self):
+        return basket_factory.get_or_create_open_basket(self.request, self.response)
+    
+    def handle_GET(self):
+        basket = basket_factory.get_open_basket(self.request)
+        saved_basket = basket_factory.get_saved_basket(self.request)
+        if not basket:
+            basket = basket_models.Basket()
+        self.response = render(self.request, self.template_file, locals())
+        
+    def handle_POST(self):
+        try:
+            super(BasketView, self).handle_POST()
+        except basket_models.Basket.DoesNotExist:
+            messages.error(request, "Unable to find your basket")
+        except basket_models.InvalidBasketLineError, e:
+            messages.error(request, str(e))
+            
     def do_flush(self, basket):
         basket.flush()
         messages.info(self.request, "Your basket has been emptied")
@@ -72,41 +110,25 @@ class BasketView(object):
                           (item.get_title(), form.cleaned_data['quantity']))
  
 
-class LineView(object):
-    """
-    Class-based view for the basket Line model
-    """
+class LineView(ModelView):
     
-    def __call__(self, request, line_reference):
-        self.request = request
-        
-        # Whatever happens, the response is a redirect back to the 
-        # basket summary page
+    def __init__(self):
         self.response = HttpResponseRedirect(reverse('oscar-basket'))
+    
+    def get_model(self):
+        basket = basket_factory.get_open_basket(self.request)
+        return basket.lines.get(line_reference=self.kwargs['line_reference'])
         
-        # All modifications to a line must come via a POST request 
-        # which has an 'action' parameter
-        if request.method == 'POST' or 'action' in request.POST:
-            try:
-                basket = basket_factory.get_open_basket(request)
-                line = basket.lines.get(line_reference=line_reference)
-                
-                # We look for a method of the form do_... which can handle
-                # the requested action
-                callback = getattr(self, "do_%s" % request.POST['action'].lower())(line)
-                
-            except basket_models.Basket.DoesNotExist:
+    def handle_POST(self):
+        try:
+            super(LineView, self).handle_POST()
+        except basket_models.Basket.DoesNotExist:
                 messages.error(request, "You don't have a basket to adjust the lines of")
-            except basket_models.Line.DoesNotExist:
-                messages.error(request, "Unable to find a line with reference %s in your basket" % line_reference)
-            except AttributeError:
-                messages.error(request, "Invalid basket action")
-            except basket_models.InvalidBasketLineError, e:
-                messages.error(request, str(e))
-        else:
-            messages.error(request, "Invalid request")
-        return self.response
-        
+        except basket_models.Line.DoesNotExist:
+            messages.error(request, "Unable to find a line with reference %s in your basket" % self.kwargs['line_reference'])
+        except basket_models.InvalidBasketLineError, e:
+            messages.error(request, str(e))
+            
     def _get_quantity(self):
         if 'quantity' in self.request.POST:
             return int(self.request.POST['quantity'])
@@ -144,42 +166,26 @@ class LineView(object):
         msg = "'%s' has been saved for later" % line.product
         messages.info(self.request, msg)
         
-        
-class SavedLineView(object):
-    """
-    Class-based view for the basket Line model within a saved basket
-    """
+       
+class SavedLineView(ModelView):
     
-    def __call__(self, request, line_reference):
-        self.request = request
-        
-        # Whatever happens, the response is a redirect back to the 
-        # basket summary page
+    def __init__(self):
         self.response = HttpResponseRedirect(reverse('oscar-basket'))
+    
+    def get_model(self):
+        basket = basket_factory.get_saved_basket(self.request)
+        return basket.lines.get(line_reference=self.kwargs['line_reference'])
         
-        # All modifications to a line must come via a POST request 
-        # which has an 'action' parameter
-        if request.method == 'POST' or 'action' in request.POST:
-            try:
-                basket = basket_factory.get_saved_basket(request)
-                line = basket.lines.get(line_reference=line_reference)
-                
-                # We look for a method of the form do_... which can handle
-                # the requested action
-                callback = getattr(self, "do_%s" % request.POST['action'].lower())(line)
-                
-            except basket_models.Basket.DoesNotExist:
+    def handle_POST(self):
+        try:
+            super(SavedLineView, self).handle_POST()
+        except basket_models.Basket.DoesNotExist:
                 messages.error(request, "You don't have a basket to adjust the lines of")
-            except basket_models.Line.DoesNotExist:
-                messages.error(request, "Unable to find a line with reference %s in your basket" % line_reference)
-            except AttributeError:
-                messages.error(request, "Invalid basket action")
-            except basket_models.InvalidBasketLineError, e:
-                messages.error(request, str(e))
-        else:
-            messages.error(request, "Invalid request")
-        return self.response
-        
+        except basket_models.Line.DoesNotExist:
+            messages.error(request, "Unable to find a line with reference %s in your basket" % self.kwargs['line_reference'])
+        except basket_models.InvalidBasketLineError, e:
+            messages.error(request, str(e))   
+            
     def _get_quantity(self):
         if 'quantity' in self.request.POST:
             return int(self.request.POST['quantity'])
