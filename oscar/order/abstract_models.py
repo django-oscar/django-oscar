@@ -9,14 +9,15 @@ class AbstractOrder(models.Model):
     number = models.PositiveIntegerField(_("Order number"))
     basket = models.ForeignKey('basket.Basket')
     customer = models.ForeignKey(User, related_name='orders')
-    billing_address = models.ForeignKey('order.BillingAddress')
+    # Billing address is not always required (eg paying by gift card)
+    billing_address = models.ForeignKey('order.BillingAddress', null=True, blank=True)
     # Total price looks like it could be calculated by adding up the
     # prices of the associated batches, but in some circumstances extra
     # order-level charges are added and so we need to store it separately
     total_incl_tax = models.DecimalField(_("Order total (inc. tax)"), decimal_places=2, max_digits=12)
     total_excl_tax = models.DecimalField(_("Order total (excl. tax)"), decimal_places=2, max_digits=12)
-    shipping_incl_tax = models.DecimalField(_("Shipping charge (inc. tax)"), decimal_places=2, max_digits=12)
-    shipping_excl_tax = models.DecimalField(_("Shipping charge (excl. tax)"), decimal_places=2, max_digits=12)
+    shipping_incl_tax = models.DecimalField(_("Shipping charge (inc. tax)"), decimal_places=2, max_digits=12, default=0)
+    shipping_excl_tax = models.DecimalField(_("Shipping charge (excl. tax)"), decimal_places=2, max_digits=12, default=0)
     date_placed = models.DateTimeField(auto_now_add=True)
     
     class Meta:

@@ -10,3 +10,4 @@ class DeliveryAddressForm(ModelForm):
     class Meta:
         model = order_models.DeliveryAddress
         exclude = ('user',)
+
