@@ -4,6 +4,7 @@ Core address objects
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+
 class AbstractAddress(models.Model):
     """
     Core address object
@@ -11,7 +12,6 @@ class AbstractAddress(models.Model):
     This is normally subclassed and extended to provide models for 
     delivery and billing addresses.
     """
-
     # @todo: Need a way of making these choice lists configurable 
     # per project
     MR, MISS, MRS, MS, DR = ('Dr', 'Miss', 'Mrs', 'Ms', 'Dr')
@@ -22,6 +22,8 @@ class AbstractAddress(models.Model):
         (MS, _("Ms")),
         (DR, _("Dr")),
     )
+    # User is optional as this address could belong to an anonymous customer
+    user = models.ForeignKey('auth.User', null=True, blank=True)
     title = models.CharField(_("Title"), max_length=64, choices=TITLE_CHOICES, blank=True)
     first_name = models.CharField(_("First name"), max_length=255, blank=True)
     last_name = models.CharField(_("Last name"), max_length=255)
@@ -47,6 +49,7 @@ class AbstractAddress(models.Model):
                  self.postcode, self.country)
         return u", ".join([part for part in parts if part])
 
+
 class AbstractDeliveryAddress(AbstractAddress):
     """
     Delivery address 
@@ -57,6 +60,7 @@ class AbstractDeliveryAddress(AbstractAddress):
     class Meta:
         abstract = True
         verbose_name_plural = "Delivery addresses"
+
 
 class AbstractBillingAddress(AbstractAddress):
     """

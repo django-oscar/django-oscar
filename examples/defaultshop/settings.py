@@ -105,6 +105,8 @@ INSTALLED_APPS = (
     'oscar.image',
 )
 
+APPEND_SLASH = True
+
 # Local overrides
 try:
     from local_settings import *

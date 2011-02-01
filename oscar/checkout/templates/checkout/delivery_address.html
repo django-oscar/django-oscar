@@ -6,7 +6,7 @@
 
 
 {% block content %}
-<form action="/shop/checkout/" method="post">
+<form action="{% url oscar-checkout-delivery-address %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Save delivery address" />

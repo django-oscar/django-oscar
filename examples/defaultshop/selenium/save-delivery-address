@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://127.0.0.1:8000/" />
+<title>save-delivery-address</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">save-delivery-address</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/shop/checkout/delivery_address/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id_first_name</td>
+	<td>David</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id_last_name</td>
+	<td>Winterbottom</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id_line1</td>
+	<td>73B Woodhouse Road</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id_line3</td>
+	<td>London</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id_postcode</td>
+	<td>N12 9ET</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id_country</td>
+	<td>UK</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Save delivery address']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='frame-140490395410768']/pre</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='frame-35413392']/pre[1]/img[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//input[@type='text']</td>
+	<td>dump()</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//input[@type='text']</td>
+	<td>dump(addr)</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=buy something</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Tetley's Fleece</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id_product_id</td>
+	<td>label=Tetley's Fleece (CanBePersonalised: N, Gender: L, Size: 18) - £8.50</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id_quantity</td>
+	<td>10</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Add to basket']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Checkout</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
