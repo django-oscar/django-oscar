@@ -70,4 +70,5 @@ class ProductListView(ListView):
             context['summary'] = 'All products'
         else:
             context['summary'] = "Products matching '%s'" % q
+            context['search_term'] = q
         return context

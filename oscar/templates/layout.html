@@ -4,6 +4,11 @@
     <div id="container">
         <div id="header">
             <h1>Oscar // Flexible e-commerce for Django</h1>
+            <form method="get" action="{% url oscar-products %}">
+                <label id="search_input">Search all products:</label>
+                <input type="text" name="q" id="search_input" value="{{ search_term }}"/>
+                <input type="submit" value="Go!" /> 
+            </form>
             {% block header %}
             {% endblock %}
         </div>

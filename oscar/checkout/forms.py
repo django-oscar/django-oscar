@@ -6,5 +6,7 @@ order_models = import_module('order.models', ['DeliveryAddress'])
 
 
 class DeliveryAddressForm(ModelForm):
+    
     class Meta:
         model = order_models.DeliveryAddress
+        exclude = ('user',)

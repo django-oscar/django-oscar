@@ -38,6 +38,14 @@ class AbstractAddress(models.Model):
     class Meta:
         abstract = True
         
+    def active_address_fields(self):
+        """
+        Returns the non-empty components of the adddress, but merging the
+        title, first_name and last_name into a single line.
+        """
+        return filter(lambda x: x, [self.get_salutation(), self.line1, self.line2, self.line3,
+                                    self.line4, self.postcode, self.country])
+        
     def get_salutation(self):
         """
         Returns the salutation
