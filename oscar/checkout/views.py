@@ -82,12 +82,13 @@ def preview(request):
     basket = basket_factory.get_open_basket(request)
     
     # Load address data into a blank address model
-    addr_data = request.session.get('delivery_address')
-    delivery_addr = order_models.DeliveryAddress(**addr_data)
+    addr_data = request.session.get('delivery_address', False)
+    if addr_data:
+        delivery_addr = order_models.DeliveryAddress(**addr_data)
     
     # Calculate order total
     calc = OrderTotalCalculator(request)
-    order_total = calc.order_total(basket)
+    order_total = calc.order_total_incl_tax(basket)
     
     return render(request, 'checkout/preview.html', locals())
 
@@ -96,11 +97,11 @@ def submit(request):
     """
     Do several things then redirect to the thank-you page
     """
-    
     # Save the delivery address
-    addr_data = request.session.get('delivery_address')
-    delivery_addr = order_models.DeliveryAddress(**addr_data)
-    delivery_addr.save()
+    addr_data = request.session.get('delivery_address', False)
+    if addr_data:
+        delivery_addr = order_models.DeliveryAddress(**addr_data)
+        delivery_addr.save()
     
     # Save the order model
     calc = OrderTotalCalculator(request)
