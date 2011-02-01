@@ -70,6 +70,13 @@ class ProgressChecker(object):
             # has been completed. 
             complete_steps.append(url_name)
             request.session['checkout_complete_steps'] = complete_steps
+            
+    def all_steps_complete(self):
+        """
+        Order has been submitted - clear the completed steps from 
+        the session.
+        """
+        request.session['checkout_complete_steps'] = []
 
 def prev_steps_must_be_complete(view_fn):
     """
@@ -181,6 +188,7 @@ def submit(request):
     order = order_models.Order(**order_data).save()
     
     # @todo Save order id in session so thank-you page can load it
+    ProgressChecker().all_steps_complete()
     return HttpResponseRedirect(reverse('oscar-checkout-thank-you'))
 
 
