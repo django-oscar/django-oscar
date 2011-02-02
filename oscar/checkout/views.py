@@ -233,6 +233,8 @@ def submit(request):
     order = order_models.Order(**order_data).save()
     
     # @todo set basket as submitted
+    basket.set_as_submitted()
+    
     # @todo unset all session data
     co_data.flush()
     

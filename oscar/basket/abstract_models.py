@@ -94,6 +94,14 @@ class AbstractBasket(models.Model):
         basket.date_merged = datetime.datetime.now()
         basket.save()
     
+    def set_as_submitted(self):
+        """
+        Mark this basket as submitted.
+        """
+        self.status = SUBMITTED
+        self.date_submitted = datetime.datetime.now()
+        self.save()
+    
     # =======
     # Helpers
     # =======
