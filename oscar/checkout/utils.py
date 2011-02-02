@@ -14,16 +14,18 @@ class ProgressChecker(object):
                       'oscar-checkout-preview',
                       'oscar-checkout-submit',]
     
-    def are_previous_steps_complete(self, request, url_name):
+    def are_previous_steps_complete(self, request):
         """
         Checks whether the previous checkout steps have been completed.
         
         This uses the URL-name and the class-level list of required
         steps.
         """
-        complete_steps = request.session.get('checkout_complete_steps', [])
+        # Extract the URL name from the path
+        match = resolve(request.path)
+        complete_steps = self._get_completed_steps(request)
         try:
-            current_step_index = self.urls_for_steps.index(url_name)
+            current_step_index = self.urls_for_steps.index(match.url_name)
             last_completed_step_index = len(complete_steps) - 1
             return current_step_index <= last_completed_step_index + 1 
         except ValueError:
@@ -32,19 +34,16 @@ class ProgressChecker(object):
         except IndexError:
             # No complete steps - only allowed to be on first page
             return current_step_index == 0
-        
-    def step_complete(self, request):
+            
+    def get_next_step(self, request):
         """
-        Record a checkout step as complete.
-        """
-        match = resolve(request.path)
-        url_name = match.url_name
-        complete_steps = request.session.get('checkout_complete_steps', [])
-        if not url_name in complete_steps:
-            # Only add name if this is the first time the step 
-            # has been completed. 
-            complete_steps.append(url_name)
-            request.session['checkout_complete_steps'] = complete_steps
+        Returns the next incomplete step of the checkout.
+        """ 
+        completed_steps = self._get_completed_steps(request)
+        if len(completed_steps):
+            return self.urls_for_steps[len(completed_steps)]  
+        else: 
+            return self.urls_for_steps[0]
             
     def all_steps_complete(self, request):
         """
@@ -52,3 +51,6 @@ class ProgressChecker(object):
         the session.
         """
         request.session['checkout_complete_steps'] = []
+        
+    def _get_completed_steps(self, request):
+        return request.session.get('checkout_complete_steps', [])

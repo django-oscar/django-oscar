@@ -2,6 +2,7 @@ from django.utils import unittest
 from django.test.client import Client
 from django.core.urlresolvers import reverse
 
+from oscar.checkout.utils import ProgressChecker
         
 class CheckoutViewsTest(unittest.TestCase):
     

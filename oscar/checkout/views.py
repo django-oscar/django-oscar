@@ -22,15 +22,15 @@ def prev_steps_must_be_complete(view_fn):
     Decorator fn for checking that previous steps of the checkout
     are complete.
     
-    The URL-names are stored in the session
+    The completed steps (identified by URL-names) are stored in the session.
+    If this fails, then we redirect to the next uncompleted step.
     """
     def _view_wrapper(request, *args, **kwargs):
         checker = checkout_utils.ProgressChecker()
-        # Extract the URL name from the path
-        match = resolve(request.path)
-        if not checker.are_previous_steps_complete(request, match.url_name):
-            messages.error(request, "You must complete the previous steps before this one")
-            return HttpResponseRedirect(reverse('oscar-checkout-index'))
+        if not checker.are_previous_steps_complete(request):
+            messages.error(request, "You must complete this step of the checkout first")
+            url_name = checker.get_next_step(request)
+            return HttpResponseRedirect(reverse(url_name))
         return view_fn(request,*args, **kwargs)
     return _view_wrapper
 
