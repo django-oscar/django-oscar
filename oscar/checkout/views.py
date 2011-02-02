@@ -47,7 +47,7 @@ def index(request):
     """
     Need to check here if the user is ready to start the checkout
     """
-    return HttpResponseRedirect(reverse('oscar-checkout-delivery-address'))
+    return render(request, 'checkout/gateway.html', locals())
 
 
 def delivery_address(request):
@@ -68,6 +68,14 @@ def delivery_address(request):
             form = checkout_forms.DeliveryAddressForm(request.session['delivery_address'])
         else:
             form = checkout_forms.DeliveryAddressForm()
+    
+    # Add in extra template bindings
+    basket = basket_factory.get_open_basket(request)
+    calc = checkout_calculators.OrderTotalCalculator(request)
+    order_total = calc.order_total_incl_tax(basket)
+    delivery_total_excl_tax = 0
+    delivery_total_incl_tax = 0
+    
     return render(request, 'checkout/delivery_address.html', locals())
     
 @prev_steps_must_be_complete    

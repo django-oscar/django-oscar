@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block header %}
+<h2>Checkout / Gateway</h2>
+{% endblock header %}
+
+
+{% block content %}
+
+<dl>
+    <dt>
+        <a href="">Register</a> or <a href="">log-in</a>
+    </dt>
+    <dl>
+        <p>Logging in now will give you access to your address book and ensure your
+           order is viewable in your order history.</p>
+    </dl>
+    <dt>
+        <a href="{% url oscar-checkout-delivery-address %}">Checkout anonymously</a>
+    </dt>
+    <dl>
+        <p>You can checkout without signing in or registering.  You will be given the opportunity to 
+           register when checkout is complete.</p>
+    </dl>
+</ol>
+
+
+{% endblock content %}
+

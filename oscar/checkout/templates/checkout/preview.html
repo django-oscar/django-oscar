@@ -7,7 +7,41 @@
 
 {% block content %}
 
-<h3>Order contents</h3>
+<h3>Delivery address</h3>
+<hr />
+<table>
+    <tr>
+        <th>Address</th>
+        <td>
+            {% for field in delivery_addr.active_address_fields %}
+            {{ field }}<br/>
+            {% endfor %}
+        </td>
+    </tr>
+    {% if delivery_addr.phone_number %}
+    <tr>
+        <th>Concact number</th>
+        <td>delivery_addr.phone_number</td>
+    </tr>
+    {% endif %}
+    {% if delivery_addr.notes %}
+    <tr>
+        <th>Delivery notes</th>
+        <td>delivery_addr.notes</td>
+    </tr>
+    {% endif %} 
+</table>
+<a href="{% url oscar-checkout-delivery-address %}">Edit this address</a>
+
+<h3>Delivery method</h3>
+<hr />
+
+<h3>Payment</h3>
+<hr />
+
+<h3>Your order</h3>
+<hr />
+
 <table>
     <tr>
         <th>Product</th>
@@ -34,34 +68,16 @@
         <td>{{ basket.total_excl_tax|floatformat:2 }}</td>
         <td>{{ basket.total_incl_tax|floatformat:2 }}</td>
     </tr>
+    <tr>
+        <td colspan="5">Delivery charge</td>
+        <td>{{ delivery_total_excl_tax|floatformat:2 }}</td>
+        <td>{{ delivery_total_incl_tax|floatformat:2 }}</td>
+    </tr>
+    <tr>
+        <td colspan="6">Order total</td>
+        <td>{{ order_total|floatformat:2 }}</td>
+    </tr>
 </table>
-
-<h3>Delivery</h3>
-<table>
-    <tr>
-        <th>Address</th>
-        <td>
-            {% for field in delivery_addr.active_address_fields %}
-            {{ field }}<br/>
-            {% endfor %}
-        </td>
-    </tr>
-    {% if delivery_addr.phone_number %}
-    <tr>
-        <th>Concact number</th>
-        <td>delivery_addr.phone_number</td>
-    </tr>
-    {% endif %}
-    {% if delivery_addr.notes %}
-    <tr>
-        <th>Delivery notes</th>
-        <td>delivery_addr.notes</td>
-    </tr>
-    {% endif %} 
-</table>
-
-<h3>Order total</h3>
-&pound;{{ order_total }}
 
 <form method="post" action="{% url oscar-checkout-submit %}" />
     {% csrf_token %}

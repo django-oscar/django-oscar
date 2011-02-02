@@ -1,3 +1,5 @@
+from django.core.urlresolvers import resolve
+
 
 class ProgressChecker(object):
     """
