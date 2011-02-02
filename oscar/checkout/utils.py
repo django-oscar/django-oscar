@@ -11,7 +11,8 @@ class ProgressChecker(object):
     urls_for_steps = ['oscar-checkout-delivery-address',
                       'oscar-checkout-delivery-method',
                       'oscar-checkout-payment',
-                      'oscar-checkout-preview']
+                      'oscar-checkout-preview',
+                      'oscar-checkout-submit',]
     
     def are_previous_steps_complete(self, request, url_name):
         """
@@ -45,7 +46,7 @@ class ProgressChecker(object):
             complete_steps.append(url_name)
             request.session['checkout_complete_steps'] = complete_steps
             
-    def all_steps_complete(self):
+    def all_steps_complete(self, request):
         """
         Order has been submitted - clear the completed steps from 
         the session.

@@ -83,6 +83,7 @@
     {% csrf_token %}
     <input type="submit" value="Place order!" />
 </form>
+<a href="{% url oscar-basket %}">Edit order contents</a>
 
 
 {% endblock content %}

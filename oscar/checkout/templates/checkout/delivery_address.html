@@ -11,7 +11,8 @@
 <form action="{% url oscar-checkout-delivery-address %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Save delivery address" />
+    <p><label><input type="checkbox" id="save_as_default" name="save_as_default"/>Save as default delivery address</label></p>
+    <p><input type="submit" value="Save delivery address" /></p>
 </form>
 
 <h3>Delivery method</h3>

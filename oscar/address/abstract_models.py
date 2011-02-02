@@ -23,7 +23,6 @@ class AbstractAddress(models.Model):
         (DR, _("Dr")),
     )
     # User is optional as this address could belong to an anonymous customer
-    user = models.ForeignKey('auth.User', null=True, blank=True)
     title = models.CharField(_("Title"), max_length=64, choices=TITLE_CHOICES, blank=True)
     first_name = models.CharField(_("First name"), max_length=255, blank=True)
     last_name = models.CharField(_("Last name"), max_length=255)
@@ -68,6 +67,24 @@ class AbstractDeliveryAddress(AbstractAddress):
     class Meta:
         abstract = True
         verbose_name_plural = "Delivery addresses"
+        
+        
+class AbstractUserAddress(AbstractDeliveryAddress):
+    """
+    A user address which forms an "AddressBook".
+    
+    We use a separate model to delivery and billing (even though there will be
+    some data duplication) because we don't want delivery/billing addresses changed
+    or deleted once an order has been placed.  By having a separate model, we allow
+    users  
+    """
+    user = models.ForeignKey('auth.User', related_name='addresses')
+    is_primary = models.BooleanField(max_length=32, default=False)
+    date_created = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        abstract = True
+        verbose_name_plural = "User addresses"
 
 
 class AbstractBillingAddress(AbstractAddress):

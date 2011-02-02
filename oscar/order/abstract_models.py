@@ -8,7 +8,8 @@ class AbstractOrder(models.Model):
     """
     number = models.PositiveIntegerField(_("Order number"))
     basket = models.ForeignKey('basket.Basket')
-    customer = models.ForeignKey(User, related_name='orders')
+    # Orders can be anonymous so we don't always have a customer ID
+    customer = models.ForeignKey(User, related_name='orders', null=True, blank=True)
     # Billing address is not always required (eg paying by gift card)
     billing_address = models.ForeignKey('order.BillingAddress', null=True, blank=True)
     # Total price looks like it could be calculated by adding up the
@@ -22,6 +23,11 @@ class AbstractOrder(models.Model):
     
     class Meta:
         abstract = True
+    
+    def save(self, *args, **kwargs):
+        if not self.number:
+            self.number= self.basket.id
+        super(AbstractOrder, self).save(*args, **kwargs)
     
     def __unicode__(self):
         return "#%d (customer: %s, amount: %.2f)" % (self.number, self.customer.username, self.total_incl_tax)

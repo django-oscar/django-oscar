@@ -15,7 +15,7 @@ checkout_forms = import_module('checkout.forms', ['DeliveryAddressForm'])
 checkout_calculators = import_module('checkout.calculators', ['OrderTotalCalculator'])
 checkout_utils = import_module('checkout.utils', ['ProgressChecker'])
 order_models = import_module('order.models', ['DeliveryAddress', 'Order'])
-
+address_models = import_module('address.models', ['UserAddress'])
 
 def prev_steps_must_be_complete(view_fn):
     """
@@ -47,6 +47,8 @@ def index(request):
     """
     Need to check here if the user is ready to start the checkout
     """
+    if request.user.is_authenticated():
+        return HttpResponseRedirect(reverse('oscar-checkout-delivery-address'))
     return render(request, 'checkout/gateway.html', locals())
 
 
@@ -56,10 +58,11 @@ def delivery_address(request):
         if form.is_valid():
             # Address data is valid - store in session and redirect to next step.
             clean_data = form.clean()
-            if request.user.is_authenticated():
-                # Set the user foreign key is user is authenticated
-                clean_data['user_id'] = request.user.id 
             request.session['delivery_address'] = clean_data
+            
+            # Also record whether this address should be the default delivery address
+            if 'save_as_default' in request.POST and request.POST['save_as_default'] == 'on':
+                request.session['save_as_default'] = True
             
             mark_step_as_complete(request)
             return HttpResponseRedirect(reverse('oscar-checkout-delivery-method'))
@@ -120,11 +123,21 @@ def submit(request):
     """
     Do several things then redirect to the thank-you page
     """
-    # Save the delivery address
+    # Save the address data
     addr_data = request.session.get('delivery_address', False)
     if addr_data:
+        # Delivery address
         delivery_addr = order_models.DeliveryAddress(**addr_data)
         delivery_addr.save()
+        
+        # User address
+        if request.user.is_authenticated():
+            addr_data['user_id'] = request.user.id
+            user_addr = address_models.UserAddress(**addr_data)
+            is_default = request.session.get('save_as_default', False)
+            if is_default:
+                user_addr.is_primary = True 
+            user_addr.save()
     
     # Save the order model
     calc = checkout_calculators.OrderTotalCalculator(request)
@@ -136,8 +149,10 @@ def submit(request):
                   'shipping_excl_tax': 0,}
     order = order_models.Order(**order_data).save()
     
+    # @todo set basket as submitted
+    
     # @todo Save order id in session so thank-you page can load it
-    checkout_utils.ProgressChecker().all_steps_complete()
+    checkout_utils.ProgressChecker().all_steps_complete(request)
     return HttpResponseRedirect(reverse('oscar-checkout-thank-you'))
 
 
