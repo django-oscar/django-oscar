@@ -37,6 +37,23 @@ class AbstractAddress(models.Model):
     class Meta:
         abstract = True
         
+    def save(self, *args, **kwargs):
+        # Ensure postcodes are always uppercase
+        if self.postcode:
+            self.postcode = self.postcode.upper()
+        super(AbstractAddress, self).save(*args, **kwargs)    
+        
+    def summary(self):
+        return ", ".join(self.active_address_fields())    
+        
+    def populate_alternative_model(self, address_model):
+        ## Copy across all matching fields apart from id
+        destination_field_names = list(address_model._meta.get_all_field_names())
+        for field_name in self._meta.get_all_field_names():
+            if field_name in destination_field_names and field_name != 'id':
+                setattr(address_model, field_name, getattr(self, field_name))
+                
+        
     def active_address_fields(self):
         """
         Returns the non-empty components of the adddress, but merging the

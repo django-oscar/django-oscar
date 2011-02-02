@@ -1,5 +1,6 @@
 from decimal import Decimal
 import zlib
+import datetime
 
 from django.contrib.auth.models import User
 from django.db import models
@@ -90,6 +91,7 @@ class AbstractBasket(models.Model):
         for line_to_merge in basket.lines.all():
             self.merge_line(line_to_merge)
         basket.status = MERGED
+        basket.date_merged = datetime.datetime.now()
         basket.save()
     
     # =======

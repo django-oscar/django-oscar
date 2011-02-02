@@ -9,7 +9,7 @@ class AbstractOrder(models.Model):
     number = models.PositiveIntegerField(_("Order number"))
     basket = models.ForeignKey('basket.Basket')
     # Orders can be anonymous so we don't always have a customer ID
-    customer = models.ForeignKey(User, related_name='orders', null=True, blank=True)
+    user = models.ForeignKey(User, related_name='orders', null=True, blank=True)
     # Billing address is not always required (eg paying by gift card)
     billing_address = models.ForeignKey('order.BillingAddress', null=True, blank=True)
     # Total price looks like it could be calculated by adding up the

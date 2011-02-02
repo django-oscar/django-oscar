@@ -10,6 +10,8 @@ COOKIE_KEY_OPEN_BASKET = 'oscar_open_basket'
 COOKIE_KEY_SAVED_BASKET = 'oscar_saved_basket'
 COOKIE_LIFETIME = 7*24*60*60
 
+# @todo put all functions into a class
+
 def get_or_create_open_basket(request, response):
     """
     Loads or creates a normal basket for the current user

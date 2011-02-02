@@ -22,10 +22,10 @@ class ProgressChecker(object):
         steps.
         """
         # Extract the URL name from the path
-        match = resolve(request.path)
         complete_steps = self._get_completed_steps(request)
         try:
-            current_step_index = self.urls_for_steps.index(match.url_name)
+            url_name = self._get_url_name(request)
+            current_step_index = self.urls_for_steps.index(url_name)
             last_completed_step_index = len(complete_steps) - 1
             return current_step_index <= last_completed_step_index + 1 
         except ValueError:
@@ -34,6 +34,18 @@ class ProgressChecker(object):
         except IndexError:
             # No complete steps - only allowed to be on first page
             return current_step_index == 0
+            
+    def step_complete(self, request):
+        """
+        Record a checkout step as complete.
+        """
+        url_name = self._get_url_name(request)
+        complete_steps = self._get_completed_steps(request)
+        if not url_name in complete_steps:
+            # Only add name if this is the first time the step 
+            # has been completed. 
+            complete_steps.append(url_name)
+            request.session['checkout_complete_steps'] = complete_steps 
             
     def get_next_step(self, request):
         """
@@ -51,6 +63,9 @@ class ProgressChecker(object):
         the session.
         """
         request.session['checkout_complete_steps'] = []
+        
+    def _get_url_name(self, request):    
+        return resolve(request.path).url_name
         
     def _get_completed_steps(self, request):
         return request.session.get('checkout_complete_steps', [])

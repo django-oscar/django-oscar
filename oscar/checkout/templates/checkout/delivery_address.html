@@ -8,6 +8,25 @@
 {% block content %}
 <h3>Delivery address</h3>
 <hr />
+
+{% if addresses %}
+<h4>Choose a delivery address</h4>
+<ul>
+    {% for address in addresses %}
+    <li>
+        <form action="{% url oscar-checkout-delivery-address %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="address_id" value="{{ address.id }}" />
+            {{ address.summary }}
+            <input type="submit" value="Delivery to this address" />
+        </form>
+    </li>
+    {% endfor %}
+</ul>
+</form>
+{% endif %}
+    
+<h4>Enter a delivery address</h4>
 <form action="{% url oscar-checkout-delivery-address %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
