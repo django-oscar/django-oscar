@@ -52,9 +52,3 @@ class BasketViewsTest(unittest.TestCase):
                        'quantity': 1}
         response = self.client.post(url, post_params)
         self.assertTrue('oscar_open_basket' in response.cookies)
-        
-        
-if __name__ == '__main__':
-    from django.test.utils import setup_test_environment
-    setup_test_environment()
-    unittest.main()
