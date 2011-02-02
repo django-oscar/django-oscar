@@ -12,71 +12,10 @@ from oscar.services import import_module
 basket_factory = import_module('basket.factory', ['get_or_create_open_basket', 'get_open_basket', 
                                                   'get_or_create_saved_basket', 'get_saved_basket'])
 checkout_forms = import_module('checkout.forms', ['DeliveryAddressForm'])
+checkout_calculators = import_module('checkout.calculators', ['OrderTotalCalculator'])
+checkout_utils = import_module('checkout.utils', ['ProgressChecker'])
 order_models = import_module('order.models', ['DeliveryAddress', 'Order'])
 
-# @todo move to own module
-class OrderTotalCalculator(object):
-    
-    def __init__(self, request):
-        # We store a reference to the request as the total may 
-        # depend on the user or the other checkout data in the session.
-        # Further, it is very likely that it will as delivery method
-        # always changes the order total.
-        self.request = request
-    
-    def order_total_incl_tax(self, basket):
-        # Default to returning the total including tax - use
-        # the request.user object if you want to not charge tax
-        # to particular customers.
-        return basket.total_incl_tax
-    
-    def order_total_excl_tax(self, basket):
-        return basket.total_excl_tax
-
-class ProgressChecker(object):
-    urls_for_steps = ['oscar-checkout-delivery-address',
-                      'oscar-checkout-delivery-method',
-                      'oscar-checkout-payment',
-                      'oscar-checkout-preview']
-    
-    def are_previous_steps_complete(self, request, url_name):
-        """
-        Checks whether the previous checkout steps have been completed.
-        
-        This uses the URL-name and the class-level list of required
-        steps.
-        """
-        complete_steps = request.session.get('checkout_complete_steps', [])
-        try:
-            current_step_index = self.urls_for_steps.index(url_name)
-            last_completed_step_index = len(complete_steps) - 1
-            return current_step_index <= last_completed_step_index + 1 
-        except ValueError:
-            # Can't find current step index - must be manipulation
-            return False
-        except IndexError:
-            # No complete steps - only allowed to be on first page
-            return current_step_index == 0
-        
-    def step_complete(self, request):
-        """
-        Record a checkout step as complete.
-        """
-        match = resolve(request.path)
-        url_name = match.url_name
-        complete_steps = request.session.get('checkout_complete_steps', [])
-        if not url_name in complete_steps:
-            # Only add name if this is the first time the step 
-            # has been completed. 
-            complete_steps.append(url_name)
-            request.session['checkout_complete_steps'] = complete_steps
-            
-    def all_steps_complete(self):
-        """
-        Order has been submitted - clear the completed steps from 
-        the session.
-        """
-        request.session['checkout_complete_steps'] = []
 
 def prev_steps_must_be_complete(view_fn):
     """
@@ -86,7 +25,7 @@ def prev_steps_must_be_complete(view_fn):
     The URL-names are stored in the session
     """
     def _view_wrapper(request, *args, **kwargs):
-        checker = ProgressChecker()
+        checker = checkout_utils.ProgressChecker()
         # Extract the URL name from the path
         match = resolve(request.path)
         if not checker.are_previous_steps_complete(request, match.url_name):
@@ -95,12 +34,14 @@ def prev_steps_must_be_complete(view_fn):
         return view_fn(request,*args, **kwargs)
     return _view_wrapper
 
+
 def mark_step_as_complete(request):
     """ 
     Convenience function for marking a checkout page
     as complete.
     """
-    ProgressChecker().step_complete(request)
+    checkout_utils.ProgressChecker().step_complete(request)
+
 
 def index(request):
     """
@@ -160,7 +101,7 @@ def preview(request):
         delivery_addr = order_models.DeliveryAddress(**addr_data)
     
     # Calculate order total
-    calc = OrderTotalCalculator(request)
+    calc = checkout_calculators.OrderTotalCalculator(request)
     order_total = calc.order_total_incl_tax(basket)
     
     mark_step_as_complete(request)
@@ -178,7 +119,7 @@ def submit(request):
         delivery_addr.save()
     
     # Save the order model
-    calc = OrderTotalCalculator(request)
+    calc = checkout_calculators.OrderTotalCalculator(request)
     basket = basket_factory.get_open_basket(request)
     order_data = {'basket': basket,
                   'total_incl_tax': calc.order_total_incl_tax(basket),
@@ -188,7 +129,7 @@ def submit(request):
     order = order_models.Order(**order_data).save()
     
     # @todo Save order id in session so thank-you page can load it
-    ProgressChecker().all_steps_complete()
+    checkout_utils.ProgressChecker().all_steps_complete()
     return HttpResponseRedirect(reverse('oscar-checkout-thank-you'))
 
 
