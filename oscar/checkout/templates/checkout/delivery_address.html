@@ -14,11 +14,18 @@
 <ul>
     {% for address in addresses %}
     <li>
+    {{ address.summary }}
         <form action="{% url oscar-checkout-delivery-address %}" method="post">
             {% csrf_token %}
+            <input type="hidden" name="action" value="deliver_to" />
             <input type="hidden" name="address_id" value="{{ address.id }}" />
-            {{ address.summary }}
             <input type="submit" value="Delivery to this address" />
+        </form>
+        <form action="{% url oscar-checkout-delivery-address %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="delete" />
+            <input type="hidden" name="address_id" value="{{ address.id }}" />
+            <input type="submit" value="Delete from address book" />
         </form>
     </li>
     {% endfor %}

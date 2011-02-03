@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 from django.forms import ModelForm
 from django.contrib import messages
 from django.core.urlresolvers import resolve
+from django.core.exceptions import ObjectDoesNotExist
 
 from oscar.services import import_module
 
@@ -99,6 +100,17 @@ def mark_step_as_complete(request):
     """
     checkout_utils.ProgressChecker().step_complete(request)
 
+def basket_required(view_fn):
+    def _view_wrapper(request, *args, **kwargs):
+        basket = basket_factory.get_open_basket(request)
+        if not basket:
+            messages.error(request, "You must add some products to your basket before checking out")
+            return HttpResponseRedirect(reverse('oscar-basket'))
+        return view_fn(request, *args, **kwargs)
+    return _view_wrapper
+
+
+
 
 def index(request):
     """
@@ -108,16 +120,24 @@ def index(request):
         return HttpResponseRedirect(reverse('oscar-checkout-delivery-address'))
     return render(request, 'checkout/gateway.html', locals())
 
-
+@basket_required
 def delivery_address(request):
+    """
+    Handle the selection of a delivery address.
+    """
     co_data = CheckoutSessionData(request)
     if request.method == 'POST':
         if request.user.is_authenticated and 'address_id' in request.POST:
-            # User has selected a previous address to deliver to
             address = address_models.UserAddress.objects.get(pk=request.POST['address_id'])
-            co_data.deliver_to_user_address(address)
-            mark_step_as_complete(request)
-            return HttpResponseRedirect(reverse('oscar-checkout-delivery-method'))
+            if 'action' in request.POST and request.POST['action'] == 'deliver_to':
+                # User has selected a previous address to deliver to
+                co_data.deliver_to_user_address(address)
+                mark_step_as_complete(request)
+                return HttpResponseRedirect(reverse('oscar-checkout-delivery-method'))
+            elif 'action' in request.POST and request.POST['action'] == 'delete':
+                address.delete()
+                messages.info(request, "Address deleted from your address book")
+                return HttpResponseRedirect(reverse('oscar-checkout-delivery-method'))
         else:
             form = checkout_forms.DeliveryAddressForm(request.POST)
             if form.is_valid():
@@ -147,6 +167,7 @@ def delivery_address(request):
         addresses = address_models.UserAddress.objects.filter(user=request.user)
     
     return render(request, 'checkout/delivery_address.html', locals())
+    
     
 @prev_steps_must_be_complete    
 def delivery_method(request):
@@ -207,9 +228,13 @@ def submit(request):
         if request.user.is_authenticated():
             addr_data['user_id'] = request.user.id
             user_addr = address_models.UserAddress(**addr_data)
-            if co_data.should_new_address_be_default():
-                user_addr.is_primary = True 
-            user_addr.save()
+            # Check that this address isn't already in the db
+            try:
+                duplicate_addr = address_models.UserAddress.objects.get(hash=user_addr.generate_hash())
+            except ObjectDoesNotExist:
+                if co_data.should_new_address_be_default():
+                    user_addr.is_primary = True 
+                user_addr.save()
             
     addr_id = co_data.user_address_id()
     if addr_id:

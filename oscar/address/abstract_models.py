@@ -1,6 +1,8 @@
 """
 Core address objects
 """
+import zlib
+
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -59,10 +61,10 @@ class AbstractAddress(models.Model):
         Returns the non-empty components of the adddress, but merging the
         title, first_name and last_name into a single line.
         """
-        return filter(lambda x: x, [self.get_salutation(), self.line1, self.line2, self.line3,
+        return filter(lambda x: x, [self.salutation(), self.line1, self.line2, self.line3,
                                     self.line4, self.postcode, self.country])
         
-    def get_salutation(self):
+    def salutation(self):
         """
         Returns the salutation
         """
@@ -97,7 +99,17 @@ class AbstractUserAddress(AbstractDeliveryAddress):
     """
     user = models.ForeignKey('auth.User', related_name='addresses')
     is_primary = models.BooleanField(max_length=32, default=False)
+    hash = models.CharField(max_length=255, db_index=True)
     date_created = models.DateTimeField(auto_now_add=True)
+    
+    def generate_hash(self):
+        return zlib.crc32(self.summary())
+    
+    def save(self, *args, **kwargs):
+        # Save a hash of the address fields so we can check whether two 
+        # addresses are the same to avoid saving duplicates
+        self.hash = self.generate_hash()
+        super(AbstractUserAddress, self).save(*args, **kwargs)  
     
     class Meta:
         abstract = True
