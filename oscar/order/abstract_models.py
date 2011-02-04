@@ -21,6 +21,14 @@ class AbstractOrder(models.Model):
     shipping_excl_tax = models.DecimalField(_("Shipping charge (excl. tax)"), decimal_places=2, max_digits=12, default=0)
     date_placed = models.DateTimeField(auto_now_add=True)
     
+    @property
+    def basket_total_incl_tax(self):
+        return self.total_incl_tax - self.shipping_incl_tax
+    
+    @property
+    def basket_total_excl_tax(self):
+        return self.total_excl_tax - self.shipping_excl_tax
+    
     class Meta:
         abstract = True
     
@@ -39,7 +47,7 @@ class AbstractBatch(models.Model):
     
     This is a set of order lines which are fulfilled by a single partner
     """
-    order = models.ForeignKey('order.Order')
+    order = models.ForeignKey('order.Order', related_name="batches")
     partner = models.ForeignKey('stock.Partner')
     # Not all batches are actually shipped (such as downloads)
     shipping_address = models.ForeignKey('order.ShippingAddress', null=True, blank=True)
@@ -75,6 +83,16 @@ class AbstractBatchLine(models.Model):
     partner_reference = models.CharField(_("Partner reference"), max_length=128, blank=True, null=True,
         help_text=_("This is the item number that the partner uses within their system"))
     partner_notes = models.TextField(blank=True, null=True)
+    
+    @property
+    def description(self):
+        d = str(self.product)
+        ops = []
+        for attribute in self.attributes.all():
+            ops.append("%s = '%s'" % (attribute.option.name, attribute.value))
+        if ops:
+            d = "%s (%s)" % (d, ", ".join(ops))
+        return d
     
     class Meta:
         abstract = True

@@ -14,63 +14,9 @@ basket_factory = import_module('basket.factory', ['get_or_create_open_basket', '
                                                   'get_or_create_saved_basket', 'get_saved_basket'])
 checkout_forms = import_module('checkout.forms', ['ShippingAddressForm'])
 checkout_calculators = import_module('checkout.calculators', ['OrderTotalCalculator'])
-checkout_utils = import_module('checkout.utils', ['ProgressChecker'])
+checkout_utils = import_module('checkout.utils', ['ProgressChecker', 'CheckoutSessionData'])
 order_models = import_module('order.models', ['ShippingAddress', 'Order', 'Batch', 'BatchLine', 'BatchLinePrice'])
 address_models = import_module('address.models', ['UserAddress'])
-
-class CheckoutSessionData(object):
-    """
-    Class responsible for marshalling all the checkout session data.
-    """
-    session_key = 'checkout_data'
-    
-    def __init__(self, request):
-        self.request = request
-        if self.session_key not in self.request.session:
-            self.request.session[self.session_key] = {}
-    
-    def _check_namespace(self, namespace):
-        if namespace not in self.request.session[self.session_key]:
-            self.request.session[self.session_key][namespace] = {}
-          
-    def _get(self, namespace, key):
-        self._check_namespace(namespace)
-        if key in self.request.session[self.session_key][namespace]:
-            return self.request.session[self.session_key][namespace][key]
-        return None
-            
-    def _set(self, namespace, key, value):
-        self._check_namespace(namespace)
-        self.request.session[self.session_key][namespace][key] = value
-        self.request.session.modified = True
-        
-    def _unset(self, namespace, key):
-        self._check_namespace(namespace)
-        if key in self.request.session[self.session_key][namespace]:
-            del self.request.session[self.session_key][namespace][key]
-            self.request.session.modified = True
-            
-    def flush(self):
-        self.request.session[self.session_key] = {}
-        
-    # Shipping methods    
-        
-    def ship_to_user_address(self, address):
-        self._set('shipping', 'user_address_id', address.id)
-        self._unset('shipping', 'new_address_fields')
-        self._unset('shipping', 'is_default')
-        
-    def ship_to_new_address(self, address_fields, is_default=False):
-        self._set('shipping', 'new_address_fields', address_fields)
-        self._set('shipping', 'is_default', is_default)
-        self._unset('shipping', 'user_address_id')
-        
-    def new_address_fields(self):
-        return self._get('shipping', 'new_address_fields')
-        
-    def user_address_id(self):
-        return self._get('shipping', 'user_address_id')
-        
 
 def prev_steps_must_be_complete(view_fn):
     """
@@ -89,7 +35,6 @@ def prev_steps_must_be_complete(view_fn):
         return view_fn(request, *args, **kwargs)
     return _view_wrapper
 
-
 def mark_step_as_complete(request):
     """ 
     Convenience function for marking a checkout page
@@ -107,8 +52,6 @@ def basket_required(view_fn):
     return _view_wrapper
 
 
-
-
 def index(request):
     """
     Need to check here if the user is ready to start the checkout
@@ -122,7 +65,7 @@ def shipping_address(request):
     """
     Handle the selection of a shipping address.
     """
-    co_data = CheckoutSessionData(request)
+    co_data = checkout_utils.CheckoutSessionData(request)
     if request.method == 'POST':
         if request.user.is_authenticated and 'address_id' in request.POST:
             address = address_models.UserAddress.objects.get(pk=request.POST['address_id'])
@@ -189,7 +132,7 @@ def preview(request):
     """
     Show a preview of the order
     """
-    co_data = CheckoutSessionData(request)
+    co_data = checkout_utils.CheckoutSessionData(request)
     basket = basket_factory.get_open_basket(request)
     
     # Load address data into a blank address model
@@ -209,33 +152,53 @@ def preview(request):
 
 
 class SubmitView(object):
+    """
+    Class for submitting an order.
+    
+    The class is deliberately split into fine-grained method, responsible for only one
+    thing.  This is to make it easier to subclass and override just one component of
+    functionality.
+    
+    Note that the order models support shipping to multiple addresses but the default
+    implementation assumes only one.  To change this, override the _get_shipping_address_for_line
+    method.
+    """
     
     def __call__(self, request):
         
         # Set up the instance variables that are needed to place an order
         self.request = request
-        self.co_data = CheckoutSessionData(request)
+        self.co_data = checkout_utils.CheckoutSessionData(request)
         self.basket = basket_factory.get_open_basket(request)
         
         # All the heavy lifting happens here
-        self._place_order()
+        order = self._place_order()
         
         # Now, reset the states of the basket and checkout 
         self.basket.set_as_submitted()
         self.co_data.flush()
         checkout_utils.ProgressChecker().all_steps_complete(request)
         
-        # @todo Save order id in session so thank-you page can load it
+        # Save order id in session so thank-you page can load it
+        self.request.session['checkout_order_id'] = order.id
         
         return HttpResponseRedirect(reverse('oscar-checkout-thank-you'))
         
     def _place_order(self):
+        """
+        Placing an order involves creating all the relevant models based on the
+        basket and session data.
+        """
         order = self._create_order_model()
         for line in self.basket.lines.all():
             batch = self._get_or_create_batch_for_line(order, line)
             self._create_line_model(order, batch, line)
+        return order
         
     def _create_order_model(self):
+        """
+        Creates an order model.
+        """
         calc = checkout_calculators.OrderTotalCalculator(self.request)
         order_data = {'basket': self.basket,
                       'total_incl_tax': calc.order_total_incl_tax(self.basket),
@@ -289,7 +252,6 @@ class SubmitView(object):
             self.shipping_addr = addr
         return addr
             
-        
     def _create_shipping_address_from_form_fields(self, addr_data):
         shipping_addr = order_models.ShippingAddress(**addr_data)
         shipping_addr.save() 
@@ -323,4 +285,8 @@ class SubmitView(object):
 
 
 def thank_you(request):
+    
+    order = order_models.Order.objects.get(pk=request.session['checkout_order_id'])
+    #del request.session['checkout_order_id']
+    
     return render(request, 'checkout/thank_you.html', locals())

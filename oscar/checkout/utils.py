@@ -69,3 +69,57 @@ class ProgressChecker(object):
         
     def _get_completed_steps(self, request):
         return request.session.get('checkout_complete_steps', [])
+    
+
+class CheckoutSessionData(object):
+    """
+    Class responsible for marshalling all the checkout session data.
+    """
+    session_key = 'checkout_data'
+    
+    def __init__(self, request):
+        self.request = request
+        if self.session_key not in self.request.session:
+            self.request.session[self.session_key] = {}
+    
+    def _check_namespace(self, namespace):
+        if namespace not in self.request.session[self.session_key]:
+            self.request.session[self.session_key][namespace] = {}
+          
+    def _get(self, namespace, key):
+        self._check_namespace(namespace)
+        if key in self.request.session[self.session_key][namespace]:
+            return self.request.session[self.session_key][namespace][key]
+        return None
+            
+    def _set(self, namespace, key, value):
+        self._check_namespace(namespace)
+        self.request.session[self.session_key][namespace][key] = value
+        self.request.session.modified = True
+        
+    def _unset(self, namespace, key):
+        self._check_namespace(namespace)
+        if key in self.request.session[self.session_key][namespace]:
+            del self.request.session[self.session_key][namespace][key]
+            self.request.session.modified = True
+            
+    def flush(self):
+        self.request.session[self.session_key] = {}
+        
+    # Shipping methods    
+        
+    def ship_to_user_address(self, address):
+        self._set('shipping', 'user_address_id', address.id)
+        self._unset('shipping', 'new_address_fields')
+        self._unset('shipping', 'is_default')
+        
+    def ship_to_new_address(self, address_fields, is_default=False):
+        self._set('shipping', 'new_address_fields', address_fields)
+        self._set('shipping', 'is_default', is_default)
+        self._unset('shipping', 'user_address_id')
+        
+    def new_address_fields(self):
+        return self._get('shipping', 'new_address_fields')
+        
+    def user_address_id(self):
+        return self._get('shipping', 'user_address_id')
