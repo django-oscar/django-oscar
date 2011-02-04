@@ -34,7 +34,7 @@ django_cursor.execute("TRUNCATE TABLE product_attributevalueoption")
 django_cursor.execute("TRUNCATE TABLE product_itemattributevalue")
 django_cursor.execute("TRUNCATE TABLE stock_stockrecord")
 
-cursor.execute("SELECT * FROM Brd_ProductsCanonical WHERE Partner = 'Prolog' limit 10")
+cursor.execute("SELECT * FROM Brd_ProductsCanonical WHERE Partner = 'Prolog' limit 100")
 for row in cursor.fetchall():
     print "Creating canonical product %s" % (row['ProductCode'],)
     pclass,_ = ItemClass.objects.get_or_create(name=row['MediaType'])

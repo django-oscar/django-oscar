@@ -72,9 +72,12 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    #'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
 )
+
+INTERNAL_IPS = ('127.0.0.1',)
 
 ROOT_URLCONF = 'urls'
 
@@ -91,12 +94,14 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.admin',
+    # External apps
     'django_extensions',
-    'test_extensions',
+    #'debug_toolbar',
     # Apps from oscar
     'oscar',
     'oscar.order',
     'oscar.checkout',
+    'oscar.order_management',
     'oscar.product',
     'oscar.basket',
     'oscar.payment',

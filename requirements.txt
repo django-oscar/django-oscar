@@ -1,9 +1,17 @@
+BeautifulSoup==3.2.0
+Django==1.3-beta-1
 MySQL-python==1.2.3
 PIL==1.1.7
+Pygments==1.4
+Werkzeug==0.6.2
 coverage==3.4
+django-debug-toolbar==0.8.4
 django-extensions==0.5
+-e git+git@github.com:codeinthehole/django-oscar.git@667691cb02a788721cbd4af0316013e3971c49ef#egg=django_oscar-0.1-py2.6-dev
+django-test-extensions==0.9.1
 ipdb==0.2
 ipython==0.10.1
+python-keyczar==0.6b
 python-memcached==1.46
 wsgiref==0.1.2
 yolk==0.4.1
