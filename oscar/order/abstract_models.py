@@ -6,7 +6,7 @@ class AbstractOrder(models.Model):
     """
     An order
     """
-    number = models.PositiveIntegerField(_("Order number"))
+    number = models.PositiveIntegerField(_("Order number"), db_index=True)
     basket = models.ForeignKey('basket.Basket')
     # Orders can be anonymous so we don't always have a customer ID
     user = models.ForeignKey(User, related_name='orders', null=True, blank=True)
@@ -20,6 +20,12 @@ class AbstractOrder(models.Model):
     shipping_incl_tax = models.DecimalField(_("Shipping charge (inc. tax)"), decimal_places=2, max_digits=12, default=0)
     shipping_excl_tax = models.DecimalField(_("Shipping charge (excl. tax)"), decimal_places=2, max_digits=12, default=0)
     date_placed = models.DateTimeField(auto_now_add=True)
+    
+    def shipping_address(self):
+        batches = self.batches.all()
+        if len(batches) > 0:
+            return batches[0].shipping_address
+        return None
     
     @property
     def basket_total_incl_tax(self):
@@ -38,7 +44,7 @@ class AbstractOrder(models.Model):
         super(AbstractOrder, self).save(*args, **kwargs)
     
     def __unicode__(self):
-        return "#%d (customer: %s, amount: %.2f)" % (self.number, self.customer.username, self.total_incl_tax)
+        return u"#%s (amount: %.2f)" % (self.number, self.total_incl_tax)
 
 
 class AbstractBatch(models.Model):
