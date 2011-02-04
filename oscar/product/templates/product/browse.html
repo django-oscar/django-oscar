@@ -27,6 +27,7 @@
 {% endfor %}
 </ol>
 
+{% if page_obj %}
 <div class="pagination">
     <span class="step-links">
     
@@ -43,6 +44,7 @@
         {% endif %}
     </span>
 </div>
+{% endif %}
 
 {% else %}
 

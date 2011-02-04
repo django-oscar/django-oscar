@@ -286,7 +286,10 @@ class SubmitView(object):
 
 def thank_you(request):
     
-    order = order_models.Order.objects.get(pk=request.session['checkout_order_id'])
-    #del request.session['checkout_order_id']
+    try:
+        order = order_models.Order.objects.get(pk=request.session['checkout_order_id'])
+        del request.session['checkout_order_id']
+    except ObjectDoesNotExist:
+        return HttpResponseRedirect(reverse('oscar-checkout-index'))
     
     return render(request, 'checkout/thank_you.html', locals())
