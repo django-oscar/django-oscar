@@ -12,10 +12,10 @@ from oscar.services import import_module
 
 basket_factory = import_module('basket.factory', ['get_or_create_open_basket', 'get_open_basket', 
                                                   'get_or_create_saved_basket', 'get_saved_basket'])
-checkout_forms = import_module('checkout.forms', ['DeliveryAddressForm'])
+checkout_forms = import_module('checkout.forms', ['ShippingAddressForm'])
 checkout_calculators = import_module('checkout.calculators', ['OrderTotalCalculator'])
 checkout_utils = import_module('checkout.utils', ['ProgressChecker'])
-order_models = import_module('order.models', ['DeliveryAddress', 'Order'])
+order_models = import_module('order.models', ['ShippingAddress', 'Order', 'Batch', 'BatchLine', 'BatchLinePrice'])
 address_models = import_module('address.models', ['UserAddress'])
 
 class CheckoutSessionData(object):
@@ -53,26 +53,23 @@ class CheckoutSessionData(object):
     def flush(self):
         self.request.session[self.session_key] = {}
         
-    # Delivery methods    
+    # Shipping methods    
         
-    def deliver_to_user_address(self, address):
-        self._set('delivery', 'user_address_id', address.id)
-        self._unset('delivery', 'new_address_fields')
-        self._unset('delivery', 'is_default')
+    def ship_to_user_address(self, address):
+        self._set('shipping', 'user_address_id', address.id)
+        self._unset('shipping', 'new_address_fields')
+        self._unset('shipping', 'is_default')
         
-    def deliver_to_new_address(self, address_fields, is_default=False):
-        self._set('delivery', 'new_address_fields', address_fields)
-        self._set('delivery', 'is_default', is_default)
-        self._unset('delivery', 'user_address_id')
+    def ship_to_new_address(self, address_fields, is_default=False):
+        self._set('shipping', 'new_address_fields', address_fields)
+        self._set('shipping', 'is_default', is_default)
+        self._unset('shipping', 'user_address_id')
         
     def new_address_fields(self):
-        return self._get('delivery', 'new_address_fields')
+        return self._get('shipping', 'new_address_fields')
         
     def user_address_id(self):
-        return self._get('delivery', 'user_address_id')
-    
-    def should_new_address_be_default(self):
-        return self._get('delivery', 'is_default') == True
+        return self._get('shipping', 'user_address_id')
         
 
 def prev_steps_must_be_complete(view_fn):
@@ -117,62 +114,62 @@ def index(request):
     Need to check here if the user is ready to start the checkout
     """
     if request.user.is_authenticated():
-        return HttpResponseRedirect(reverse('oscar-checkout-delivery-address'))
+        return HttpResponseRedirect(reverse('oscar-checkout-shipping-address'))
     return render(request, 'checkout/gateway.html', locals())
 
 @basket_required
-def delivery_address(request):
+def shipping_address(request):
     """
-    Handle the selection of a delivery address.
+    Handle the selection of a shipping address.
     """
     co_data = CheckoutSessionData(request)
     if request.method == 'POST':
         if request.user.is_authenticated and 'address_id' in request.POST:
             address = address_models.UserAddress.objects.get(pk=request.POST['address_id'])
-            if 'action' in request.POST and request.POST['action'] == 'deliver_to':
-                # User has selected a previous address to deliver to
-                co_data.deliver_to_user_address(address)
+            if 'action' in request.POST and request.POST['action'] == 'ship_to':
+                # User has selected a previous address to ship to
+                co_data.ship_to_user_address(address)
                 mark_step_as_complete(request)
-                return HttpResponseRedirect(reverse('oscar-checkout-delivery-method'))
+                return HttpResponseRedirect(reverse('oscar-checkout-shipping-method'))
             elif 'action' in request.POST and request.POST['action'] == 'delete':
                 address.delete()
                 messages.info(request, "Address deleted from your address book")
-                return HttpResponseRedirect(reverse('oscar-checkout-delivery-method'))
+                return HttpResponseRedirect(reverse('oscar-checkout-shipping-method'))
         else:
-            form = checkout_forms.DeliveryAddressForm(request.POST)
+            form = checkout_forms.ShippingAddressForm(request.POST)
             if form.is_valid():
                 # Address data is valid - store in session and redirect to next step.
                 is_default = False
                 if 'save_as_default' in request.POST and request.POST['save_as_default'] == 'on':
                     is_default = True
-                co_data.deliver_to_new_address(form.clean(), is_default)
+                co_data.ship_to_new_address(form.clean(), is_default)
                 mark_step_as_complete(request)
-                return HttpResponseRedirect(reverse('oscar-checkout-delivery-method'))
+                return HttpResponseRedirect(reverse('oscar-checkout-shipping-method'))
     else:
         addr_fields = co_data.new_address_fields()
         if addr_fields:
-            form = checkout_forms.DeliveryAddressForm(addr_fields)
+            form = checkout_forms.ShippingAddressForm(addr_fields)
         else:
-            form = checkout_forms.DeliveryAddressForm()
+            form = checkout_forms.ShippingAddressForm()
     
     # Add in extra template bindings
     basket = basket_factory.get_open_basket(request)
     calc = checkout_calculators.OrderTotalCalculator(request)
     order_total = calc.order_total_incl_tax(basket)
-    delivery_total_excl_tax = 0
-    delivery_total_incl_tax = 0
+    shipping_total_excl_tax = 0
+    shipping_total_incl_tax = 0
     
     # Look up address book data
     if request.user.is_authenticated():
         addresses = address_models.UserAddress.objects.filter(user=request.user)
     
-    return render(request, 'checkout/delivery_address.html', locals())
+    return render(request, 'checkout/shipping_address.html', locals())
     
     
 @prev_steps_must_be_complete    
-def delivery_method(request):
+def shipping_method(request):
     """
-    Delivery methods are domain-specific and so need implementing in a 
+    Shipping methods are domain-specific and so need implementing in a 
     subclass of this class.
     """
     mark_step_as_complete(request)
@@ -198,10 +195,10 @@ def preview(request):
     # Load address data into a blank address model
     addr_data = co_data.new_address_fields()
     if addr_data:
-        delivery_addr = order_models.DeliveryAddress(**addr_data)
+        shipping_addr = order_models.ShippingAddress(**addr_data)
     addr_id = co_data.user_address_id()
     if addr_id:
-        delivery_addr = address_models.UserAddress.objects.get(pk=addr_id)
+        shipping_addr = address_models.UserAddress.objects.get(pk=addr_id)
     
     # Calculate order total
     calc = checkout_calculators.OrderTotalCalculator(request)
@@ -210,62 +207,119 @@ def preview(request):
     mark_step_as_complete(request)
     return render(request, 'checkout/preview.html', locals())
 
-@prev_steps_must_be_complete
-def submit(request):
-    """
-    Do several things then redirect to the thank-you page
-    """
-    co_data = CheckoutSessionData(request)
+
+class SubmitView(object):
     
-    # Save the address data
-    addr_data = co_data.new_address_fields()
-    if addr_data:
-        # A new delivery address has been entered
-        delivery_addr = order_models.DeliveryAddress(**addr_data)
-        delivery_addr.save()
+    def __call__(self, request):
         
-        # Save a new user address
-        if request.user.is_authenticated():
-            addr_data['user_id'] = request.user.id
+        # Set up the instance variables that are needed to place an order
+        self.request = request
+        self.co_data = CheckoutSessionData(request)
+        self.basket = basket_factory.get_open_basket(request)
+        
+        # All the heavy lifting happens here
+        self._place_order()
+        
+        # Now, reset the states of the basket and checkout 
+        self.basket.set_as_submitted()
+        self.co_data.flush()
+        checkout_utils.ProgressChecker().all_steps_complete(request)
+        
+        # @todo Save order id in session so thank-you page can load it
+        
+        return HttpResponseRedirect(reverse('oscar-checkout-thank-you'))
+        
+    def _place_order(self):
+        order = self._create_order_model()
+        for line in self.basket.lines.all():
+            batch = self._get_or_create_batch_for_line(order, line)
+            self._create_line_model(order, batch, line)
+        
+    def _create_order_model(self):
+        calc = checkout_calculators.OrderTotalCalculator(self.request)
+        order_data = {'basket': self.basket,
+                      'total_incl_tax': calc.order_total_incl_tax(self.basket),
+                      'total_excl_tax': calc.order_total_excl_tax(self.basket),
+                      'shipping_incl_tax': 0,
+                      'shipping_excl_tax': 0,}
+        if self.request.user.is_authenticated():
+            order_data['user_id'] = self.request.user.id
+        order = order_models.Order(**order_data)
+        order.save()
+        return order
+    
+    def _create_line_model(self, order, batch, line):
+        batch_line = order_models.BatchLine.objects.create(batch=batch, 
+                                                           product=line.product, 
+                                                           quantity=line.quantity, 
+                                                           line_price_excl_tax=line.line_price_excl_tax, 
+                                                           line_price_incl_tax=line.line_price_incl_tax)
+        order_models.BatchLinePrice.objects.create(line=batch_line, quantity=line.quantity, 
+                                                   price_incl_tax=line.unit_price_incl_tax,
+                                                   price_excl_tax=line.unit_price_excl_tax)
+    
+    def _get_or_create_batch_for_line(self, order, line):
+         partner = self._get_partner_for_product(line.product)
+         shipping_addr = self._get_shipping_address_for_line(line)
+         batch,_ = order_models.Batch.objects.get_or_create(order=order, partner=partner, shipping_address=shipping_addr)
+         return batch
+                
+    def _get_partner_for_product(self, product):
+        if product.has_stockrecord:
+            return product.stockrecord.partner
+        raise AttributeError("No partner found for product '%s'" % product)
+
+    def _get_shipping_address_for_line(self, line):
+        try:
+            addr = self.shipping_addr
+        except AttributeError:
+            # No cached version - create a shipping address
+            addr_data = self.co_data.new_address_fields()
+            addr_id = self.co_data.user_address_id()
+            if addr_data:
+                addr = self._create_shipping_address_from_form_fields(addr_data)
+                self._create_user_address(addr_data)
+            elif addr_id:
+                addr = self._create_shipping_address_from_user_address(addr_id)
+            else:
+                raise AttributeError("No shipping address data found")
+            
+            # Cache it as our default behaviour is to have only one
+            # shipping address per order.
+            self.shipping_addr = addr
+        return addr
+            
+        
+    def _create_shipping_address_from_form_fields(self, addr_data):
+        shipping_addr = order_models.ShippingAddress(**addr_data)
+        shipping_addr.save() 
+        return shipping_addr
+    
+    def _create_user_address(self, addr_data):
+        """
+        For signed-in users, we create a user address model which will go 
+        into their address book.
+        """
+        if self.request.user.is_authenticated():
+            addr_data['user_id'] = self.request.user.id
             user_addr = address_models.UserAddress(**addr_data)
-            # Check that this address isn't already in the db
+            # Check that this address isn't already in the db as we don't want
+            # to fill up the customer address book with duplicate addresses
             try:
                 duplicate_addr = address_models.UserAddress.objects.get(hash=user_addr.generate_hash())
             except ObjectDoesNotExist:
-                if co_data.should_new_address_be_default():
-                    user_addr.is_primary = True 
                 user_addr.save()
-            
-    addr_id = co_data.user_address_id()
-    if addr_id:
-        # A previously used address has been selected.  We need to convert it
-        # to a delivery address and save it
+    
+    def _create_shipping_address_from_user_address(self, addr_id):
         address = address_models.UserAddress.objects.get(pk=addr_id)
-        delivery_addr = order_models.DeliveryAddress()
-        address.populate_alternative_model(delivery_addr)
-        delivery_addr.save()
-    
-    # Save the order model
-    calc = checkout_calculators.OrderTotalCalculator(request)
-    basket = basket_factory.get_open_basket(request)
-    order_data = {'basket': basket,
-                  'total_incl_tax': calc.order_total_incl_tax(basket),
-                  'total_excl_tax': calc.order_total_excl_tax(basket),
-                  'shipping_incl_tax': 0,
-                  'shipping_excl_tax': 0,}
-    if request.user.is_authenticated():
-        order_data['user_id'] = request.user.id
-    order = order_models.Order(**order_data).save()
-    
-    # @todo set basket as submitted
-    basket.set_as_submitted()
-    
-    # @todo unset all session data
-    co_data.flush()
-    
-    # @todo Save order id in session so thank-you page can load it
-    checkout_utils.ProgressChecker().all_steps_complete(request)
-    return HttpResponseRedirect(reverse('oscar-checkout-thank-you'))
+        # Increment the number of orders to help determine popularity of orders 
+        address.num_orders += 1
+        address.save()
+        
+        shipping_addr = order_models.ShippingAddress()
+        address.populate_alternative_model(shipping_addr)
+        shipping_addr.save()
+        return shipping_addr
 
 
 def thank_you(request):

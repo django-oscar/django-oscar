@@ -37,7 +37,6 @@ def import_module(mod_name, classes=[]):
                 # Passing classes to __import__ here does not actually filter out the 
                 # classes, we need to iterate through and assign them individually.
                 mod = new_module(real_app)
-                print real_app
                 imported_mod = __import__(real_app, fromlist=classes)
                 for classname in classes:
                     mod.__setattr__(classname, getattr(imported_mod, classname))

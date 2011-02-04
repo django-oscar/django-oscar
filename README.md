@@ -140,5 +140,6 @@ is one of the installed app
 
 Look in the TODO file for things to hack on...
     
-
+### Conventions
+* URLs use hyphens not underscores
 

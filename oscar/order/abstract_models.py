@@ -32,6 +32,7 @@ class AbstractOrder(models.Model):
     def __unicode__(self):
         return "#%d (customer: %s, amount: %.2f)" % (self.number, self.customer.username, self.total_incl_tax)
 
+
 class AbstractBatch(models.Model):
     """
     A batch of items from a single fulfillment partner
@@ -40,11 +41,9 @@ class AbstractBatch(models.Model):
     """
     order = models.ForeignKey('order.Order')
     partner = models.ForeignKey('stock.Partner')
-    delivery_method = models.CharField(_("Delivery method"), max_length=128)
-    # Not all batches are actually delivered (such as downloads)
-    delivery_address = models.ForeignKey('order.DeliveryAddress', null=True, blank=True)
-    # Whether the batch should be dispatched in one go, or as they become available
-    dispatch_option = models.CharField(_("Dispatch option"), max_length=128, null=True, blank=True)
+    # Not all batches are actually shipped (such as downloads)
+    shipping_address = models.ForeignKey('order.ShippingAddress', null=True, blank=True)
+    shipping_method = models.CharField(_("Shipping method"), max_length=128, null=True, blank=True)
     
     def get_num_items(self):
         return len(self.lines.all())
@@ -55,6 +54,7 @@ class AbstractBatch(models.Model):
     
     def __unicode__(self):
         return "%s batch for order #%d" % (self.partner.name, self.order.number)
+        
         
 class AbstractBatchLine(models.Model):
     """
@@ -96,8 +96,8 @@ class AbstractBatchLinePrice(models.Model):
     quantity = models.PositiveIntegerField(default=1)
     price_incl_tax = models.DecimalField(decimal_places=2, max_digits=12)
     price_excl_tax = models.DecimalField(decimal_places=2, max_digits=12)
-    delivery_incl_tax = models.DecimalField(decimal_places=2, max_digits=12, default=0)
-    delivery_excl_tax = models.DecimalField(decimal_places=2, max_digits=12, default=0)
+    shipping_incl_tax = models.DecimalField(decimal_places=2, max_digits=12, default=0)
+    shipping_excl_tax = models.DecimalField(decimal_places=2, max_digits=12, default=0)
     
     class Meta:
         abstract = True

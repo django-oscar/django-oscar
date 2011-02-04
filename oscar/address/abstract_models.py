@@ -12,7 +12,7 @@ class AbstractAddress(models.Model):
     Core address object
     
     This is normally subclassed and extended to provide models for 
-    delivery and billing addresses.
+    shipping and billing addresses.
     """
     # @todo: Need a way of making these choice lists configurable 
     # per project
@@ -71,40 +71,45 @@ class AbstractAddress(models.Model):
         return " ".join([part for part in [self.title, self.first_name, self.last_name] if part])
         
     def __unicode__(self):
-        parts = (self.get_salutation(), self.line1, self.line2, self.line3, self.line4,
+        parts = (self.salutation(), self.line1, self.line2, self.line3, self.line4,
                  self.postcode, self.country)
         return u", ".join([part for part in parts if part])
 
 
-class AbstractDeliveryAddress(AbstractAddress):
-    """
-    Delivery address 
+class AbstractShippingAddress(AbstractAddress):
+    u"""
+    Shipping address 
     """
     phone_number = models.CharField(max_length=32, blank=True, null=True)
     notes = models.TextField(blank=True, null=True) 
     
     class Meta:
         abstract = True
-        verbose_name_plural = "Delivery addresses"
+        verbose_name_plural = "shipping addresses"
         
         
-class AbstractUserAddress(AbstractDeliveryAddress):
-    """
+class AbstractUserAddress(AbstractShippingAddress):
+    u"""
     A user address which forms an "AddressBook".
     
-    We use a separate model to delivery and billing (even though there will be
-    some data duplication) because we don't want delivery/billing addresses changed
+    We use a separate model to shipping and billing (even though there will be
+    some data duplication) because we don't want shipping/billing addresses changed
     or deleted once an order has been placed.  By having a separate model, we allow
     users  
     """
     user = models.ForeignKey('auth.User', related_name='addresses')
-    is_primary = models.BooleanField(max_length=32, default=False)
+    
+    # We keep track of the number of times an address has been used
+    # as a shipping address so we can show the most popular ones 
+    # first at the checkout.
+    num_orders = models.PositiveIntegerField(default=0)
     hash = models.CharField(max_length=255, db_index=True)
     date_created = models.DateTimeField(auto_now_add=True)
     
     def generate_hash(self):
-        return zlib.crc32(self.summary())
-    
+        # We use an uppercase version of the summary
+        return zlib.crc32(self.summary().strip().upper())
+
     def save(self, *args, **kwargs):
         # Save a hash of the address fields so we can check whether two 
         # addresses are the same to avoid saving duplicates
@@ -114,6 +119,7 @@ class AbstractUserAddress(AbstractDeliveryAddress):
     class Meta:
         abstract = True
         verbose_name_plural = "User addresses"
+        ordering = ['-num_orders']
 
 
 class AbstractBillingAddress(AbstractAddress):

@@ -2,12 +2,12 @@ from django.forms import ModelForm
 
 from oscar.services import import_module
 
-order_models = import_module('order.models', ['DeliveryAddress'])
+order_models = import_module('order.models', ['ShippingAddress'])
 
 
-class DeliveryAddressForm(ModelForm):
+class ShippingAddressForm(ModelForm):
     
     class Meta:
-        model = order_models.DeliveryAddress
+        model = order_models.ShippingAddress
         exclude = ('user',)
 

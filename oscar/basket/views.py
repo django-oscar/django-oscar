@@ -84,9 +84,9 @@ class BasketView(ModelView):
         try:
             super(BasketView, self).handle_POST()
         except basket_models.Basket.DoesNotExist:
-            messages.error(request, "Unable to find your basket")
+            messages.error(self.request, "Unable to find your basket")
         except basket_models.InvalidBasketLineError, e:
-            messages.error(request, str(e))
+            messages.error(self.request, str(e))
             
     def do_flush(self, basket):
         basket.flush()
@@ -123,11 +123,11 @@ class LineView(ModelView):
         try:
             super(LineView, self).handle_POST()
         except basket_models.Basket.DoesNotExist:
-                messages.error(request, "You don't have a basket to adjust the lines of")
+                messages.error(self.request, "You don't have a basket to adjust the lines of")
         except basket_models.Line.DoesNotExist:
-            messages.error(request, "Unable to find a line with reference %s in your basket" % self.kwargs['line_reference'])
+            messages.error(self.request, "Unable to find a line with reference %s in your basket" % self.kwargs['line_reference'])
         except basket_models.InvalidBasketLineError, e:
-            messages.error(request, str(e))
+            messages.error(self.request, str(e))
             
     def _get_quantity(self):
         if 'quantity' in self.request.POST:

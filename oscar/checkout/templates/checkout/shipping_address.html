@@ -6,22 +6,22 @@
 
 
 {% block content %}
-<h3>Delivery address</h3>
+<h3>Shipping address</h3>
 <hr />
 
 {% if addresses %}
-<h4>Choose a delivery address</h4>
+<h4>Choose a shipping address</h4>
 <ul>
     {% for address in addresses %}
     <li>
     {{ address.summary }}
-        <form action="{% url oscar-checkout-delivery-address %}" method="post">
+        <form action="{% url oscar-checkout-shipping-address %}" method="post">
             {% csrf_token %}
-            <input type="hidden" name="action" value="deliver_to" />
+            <input type="hidden" name="action" value="ship_to" />
             <input type="hidden" name="address_id" value="{{ address.id }}" />
-            <input type="submit" value="Delivery to this address" />
+            <input type="submit" value="Ship to this address" />
         </form>
-        <form action="{% url oscar-checkout-delivery-address %}" method="post">
+        <form action="{% url oscar-checkout-shipping-address %}" method="post">
             {% csrf_token %}
             <input type="hidden" name="action" value="delete" />
             <input type="hidden" name="address_id" value="{{ address.id }}" />
@@ -33,15 +33,14 @@
 </form>
 {% endif %}
     
-<h4>Enter a delivery address</h4>
-<form action="{% url oscar-checkout-delivery-address %}" method="post">
+<h4>Enter a shipping address</h4>
+<form action="{% url oscar-checkout-shipping-address %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <p><label><input type="checkbox" id="save_as_default" name="save_as_default"/>Save as default delivery address</label></p>
-    <p><input type="submit" value="Save delivery address" /></p>
+    <p><input type="submit" value="Save shipping address" /></p>
 </form>
 
-<h3>Delivery method</h3>
+<h3>Shipping method</h3>
 <hr />
 
 <h3>Payment</h3>
@@ -77,9 +76,9 @@
         <td>{{ basket.total_incl_tax|floatformat:2 }}</td>
     </tr>
     <tr>
-        <td colspan="5">Delivery charge</td>
-        <td>{{ delivery_total_excl_tax|floatformat:2 }}</td>
-        <td>{{ delivery_total_incl_tax|floatformat:2 }}</td>
+        <td colspan="5">shipping charge</td>
+        <td>{{ shipping_total_excl_tax|floatformat:2 }}</td>
+        <td>{{ shipping_total_incl_tax|floatformat:2 }}</td>
     </tr>
     <tr>
         <td colspan="6">Order total</td>

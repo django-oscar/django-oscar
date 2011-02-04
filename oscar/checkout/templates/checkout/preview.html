@@ -7,33 +7,33 @@
 
 {% block content %}
 
-<h3>Delivery address</h3>
+<h3>Shipping address</h3>
 <hr />
 <table>
     <tr>
         <th>Address</th>
         <td>
-            {% for field in delivery_addr.active_address_fields %}
+            {% for field in shipping_addr.active_address_fields %}
             {{ field }}<br/>
             {% endfor %}
         </td>
     </tr>
-    {% if delivery_addr.phone_number %}
+    {% if shipping_addr.phone_number %}
     <tr>
         <th>Concact number</th>
-        <td>delivery_addr.phone_number</td>
+        <td>shipping_addr.phone_number</td>
     </tr>
     {% endif %}
-    {% if delivery_addr.notes %}
+    {% if shipping_addr.notes %}
     <tr>
-        <th>Delivery notes</th>
-        <td>delivery_addr.notes</td>
+        <th>Shipping notes</th>
+        <td>shipping_addr.notes</td>
     </tr>
     {% endif %} 
 </table>
-<a href="{% url oscar-checkout-delivery-address %}">Change delivery address</a>
+<a href="{% url oscar-checkout-shipping-address %}">Change shipping address</a>
 
-<h3>Delivery method</h3>
+<h3>Shipping method</h3>
 <hr />
 
 <h3>Payment</h3>
@@ -69,9 +69,9 @@
         <td>{{ basket.total_incl_tax|floatformat:2 }}</td>
     </tr>
     <tr>
-        <td colspan="5">Delivery charge</td>
-        <td>{{ delivery_total_excl_tax|floatformat:2 }}</td>
-        <td>{{ delivery_total_incl_tax|floatformat:2 }}</td>
+        <td colspan="5">Shipping charge</td>
+        <td>{{ shipping_total_excl_tax|floatformat:2 }}</td>
+        <td>{{ shipping_total_incl_tax|floatformat:2 }}</td>
     </tr>
     <tr>
         <td colspan="6">Order total</td>

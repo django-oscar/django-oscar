@@ -10,7 +10,7 @@ class OrderTotalCalculator(object):
     def __init__(self, request):
         # We store a reference to the request as the total may 
         # depend on the user or the other checkout data in the session.
-        # Further, it is very likely that it will as delivery method
+        # Further, it is very likely that it will as shipping method
         # always changes the order total.
         self.request = request
     
