@@ -128,38 +128,82 @@ class AbstractBatchLinePrice(models.Model):
         
     def __unicode__(self):
         return u"Line '%s' (quantity %d) price %s" % (self.line, self.quantity, self.price_incl_tax)
-    
-    
-class AbstractBatchLineEvent(models.Model):    
+   
+   
+class AbstractPaymentEvent(models.Model):    
     """
     An event is something which happens to a line such as
     payment being taken for 2 items, or 1 item being dispatched.
     """
-    line = models.ForeignKey('order.BatchLine', related_name='events')
+    line = models.ForeignKey('order.BatchLine', related_name='payment_events')
     quantity = models.PositiveIntegerField(default=1)
-    event_type = models.ForeignKey('order.BatchLineEventType')
-    notes = models.TextField(_("Event notes"), blank=True, null=True,
-        help_text="This could be the dispatch reference, or a tracking number")
+    event_type = models.ForeignKey('order.PaymentEventType')
     date = models.DateTimeField(auto_now_add=True)
     
     class Meta:
         abstract = True
-        verbose_name_plural = _("Batch line events")
+        verbose_name_plural = _("Payment events")
         
     def __unicode__(self):
         return u"Order #%d, batch #%d, line %s: %d items %s" % (
             self.line.batch.order.number, self.line.batch.id, self.line.line_id, self.quantity, self.event_type)
 
 
-class AbstractBatchLineEventType(models.Model):
+class AbstractPaymentEventType(models.Model):
     """ 
-    Event types: eg Paid, Cancelled, Dispatched, Returned
+    Payment events are things like 'OrderPlaced', 'Acknowledged', 'Dispatched', 'Refunded'
     """
-    name = models.CharField(max_length=128)
+    # Code is used in forms
+    code = models.CharField(max_length=128)
+    # Name is the friendly description of an event
+    name = models.CharField(max_length=255)
+    # The normal order in which these shipping events take place
+    order = models.PositiveIntegerField(default=0)
     
     class Meta:
         abstract = True
-        verbose_name_plural = _("Batch line event types")
+        verbose_name_plural = _("Payment event types")
+        
+    def __unicode__(self):
+        return self.name
+
+
+class AbstractShippingEvent(models.Model):    
+    """
+    An event is something which happens to a line such as
+    1 item being dispatched.
+    """
+    line = models.ForeignKey('order.BatchLine', related_name='shipping_events')
+    quantity = models.PositiveIntegerField(default=1)
+    event_type = models.ForeignKey('order.ShippingEventType')
+    notes = models.TextField(_("Event notes"), blank=True, null=True,
+        help_text="This could be the dispatch reference, or a tracking number")
+    date = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        abstract = True
+        verbose_name_plural = _("Shipping events")
+        
+    def __unicode__(self):
+        return u"Order #%d, batch #%d, line %s: %d items %s" % (
+            self.line.batch.order.number, self.line.batch.id, self.line.line_id, self.quantity, self.event_type)
+
+
+class AbstractShippingEventType(models.Model):
+    """ 
+    Shipping events are things like 'OrderPlaced', 'Acknowledged', 'Dispatched', 'Refunded'
+    """
+    # Code is used in forms
+    code = models.CharField(max_length=128)
+    # Name is the friendly description of an event
+    name = models.CharField(max_length=255)
+    # The normal order in which these shipping events take place
+    order = models.PositiveIntegerField(default=0)
+    
+    class Meta:
+        abstract = True
+        verbose_name_plural = _("Shipping event types")
+        ordering = ('order',)
         
     def __unicode__(self):
         return self.name

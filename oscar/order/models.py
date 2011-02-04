@@ -4,7 +4,7 @@ Vanilla implementation of order models
 from django.db import models
 
 from oscar.order.abstract_models import *
-from oscar.address.abstract_models import AbstractAddress, AbstractShippingAddress, AbstractBillingAddress
+from oscar.address.abstract_models import AbstractShippingAddress, AbstractBillingAddress
 
 class Order(AbstractOrder):
     pass
@@ -24,10 +24,16 @@ class BatchLine(AbstractBatchLine):
 class BatchLinePrice(AbstractBatchLinePrice):
     pass
 
-class BatchLineEvent(AbstractBatchLineEvent):
+class ShippingEvent(AbstractShippingEvent):
     pass
 
-class BatchLineEventType(AbstractBatchLineEventType):
+class ShippingEventType(AbstractShippingEventType):
+    pass
+
+class PaymentEvent(AbstractPaymentEvent):
+    pass
+
+class PaymentEventType(AbstractPaymentEventType):
     pass
 
 class BatchLineAttribute(AbstractBatchLineAttribute):

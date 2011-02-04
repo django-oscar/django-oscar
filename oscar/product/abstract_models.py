@@ -84,7 +84,7 @@ class AbstractItem(models.Model):
 
     @property
     def is_top_level(self):
-        return self.parent == None
+        return self.parent_id == None
     
     @property
     def is_group(self):
