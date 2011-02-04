@@ -35,13 +35,6 @@ def prev_steps_must_be_complete(view_fn):
         return view_fn(request, *args, **kwargs)
     return _view_wrapper
 
-def mark_step_as_complete(request):
-    """ 
-    Convenience function for marking a checkout page
-    as complete.
-    """
-    checkout_utils.ProgressChecker().step_complete(request)
-
 def basket_required(view_fn):
     def _view_wrapper(request, *args, **kwargs):
         basket = basket_factory.get_open_basket(request)
@@ -51,14 +44,21 @@ def basket_required(view_fn):
         return view_fn(request, *args, **kwargs)
     return _view_wrapper
 
+def mark_step_as_complete(request):
+    """ 
+    Convenience function for marking a checkout page
+    as complete.
+    """
+    checkout_utils.ProgressChecker().step_complete(request)
 
-def index(request):
-    """
-    Need to check here if the user is ready to start the checkout
-    """
-    if request.user.is_authenticated():
-        return HttpResponseRedirect(reverse('oscar-checkout-shipping-address'))
-    return render(request, 'checkout/gateway.html', locals())
+
+class IndexView(object):
+    template_file = 'checkout/gateway.html'
+    
+    def __call__(self, request):
+        if request.user.is_authenticated():
+            return HttpResponseRedirect(reverse('oscar-checkout-shipping-address'))
+        return render(request, self.template_file, locals())    
 
 @basket_required
 def shipping_address(request):
