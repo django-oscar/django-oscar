@@ -7,6 +7,12 @@ class BatchAdmin(admin.ModelAdmin):
 class BatchLineAdmin(admin.ModelAdmin):
     list_display = ('batch', 'product', 'quantity')
 
+class ShippingEventTypeAdmin(admin.ModelAdmin):
+    exclude = ('code',)
+    
+class PaymentEventTypeAdmin(admin.ModelAdmin):
+    exclude = ('code',)
+
 admin.site.register(Order)
 admin.site.register(BillingAddress)
 admin.site.register(Batch, BatchAdmin)
@@ -14,8 +20,8 @@ admin.site.register(ShippingAddress)
 admin.site.register(BatchLine, BatchLineAdmin)
 admin.site.register(BatchLinePrice)
 admin.site.register(ShippingEvent)
-admin.site.register(ShippingEventType)
+admin.site.register(ShippingEventType, ShippingEventTypeAdmin)
 admin.site.register(PaymentEvent)
-admin.site.register(PaymentEventType)
+admin.site.register(PaymentEventType, PaymentEventTypeAdmin)
 admin.site.register(BatchLineAttribute)
 

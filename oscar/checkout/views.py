@@ -211,15 +211,20 @@ class SubmitView(object):
         order.save()
         return order
     
-    def _create_line_model(self, order, batch, line):
-        batch_line = order_models.BatchLine.objects.create(batch=batch, 
-                                                           product=line.product, 
-                                                           quantity=line.quantity, 
-                                                           line_price_excl_tax=line.line_price_excl_tax, 
-                                                           line_price_incl_tax=line.line_price_incl_tax)
-        order_models.BatchLinePrice.objects.create(line=batch_line, quantity=line.quantity, 
-                                                   price_incl_tax=line.unit_price_incl_tax,
-                                                   price_excl_tax=line.unit_price_excl_tax)
+    def _create_line_model(self, order, batch, basket_line):
+        batch_line = order_models.BatchLine.objects.create(order=order,
+                                                           batch=batch, 
+                                                           product=basket_line.product, 
+                                                           quantity=basket_line.quantity, 
+                                                           line_price_excl_tax=basket_line.line_price_excl_tax, 
+                                                           line_price_incl_tax=basket_line.line_price_incl_tax)
+        self._create_line_price_model(batch_line, basket_line)
+        
+    def _create_line_price_model(self, batch_line, basket_line):
+        order_models.BatchLinePrice.objects.create(line=batch_line, 
+                                                   quantity=batch_line.quantity, 
+                                                   price_incl_tax=basket_line.unit_price_incl_tax,
+                                                   price_excl_tax=basket_line.unit_price_excl_tax)
     
     def _get_or_create_batch_for_line(self, order, line):
          partner = self._get_partner_for_product(line.product)

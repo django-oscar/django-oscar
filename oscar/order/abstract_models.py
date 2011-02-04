@@ -1,6 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
+
+
+
 
 class AbstractOrder(models.Model):
     """
@@ -77,6 +81,7 @@ class AbstractBatchLine(models.Model):
     Not using a line model as it's difficult to capture and payment 
     information when it splits across a line.
     """
+    order = models.ForeignKey('order.Order', related_name='lines')
     batch = models.ForeignKey('order.Batch', related_name='lines')
     product = models.ForeignKey('product.Item')
     quantity = models.PositiveIntegerField(default=1)
@@ -151,7 +156,7 @@ class AbstractPaymentEvent(models.Model):
 
 class AbstractPaymentEventType(models.Model):
     """ 
-    Payment events are things like 'OrderPlaced', 'Acknowledged', 'Dispatched', 'Refunded'
+    Payment events are things like 'Paid', 'Failed', 'Refunded'
     """
     # Code is used in forms
     code = models.CharField(max_length=128)
@@ -160,9 +165,15 @@ class AbstractPaymentEventType(models.Model):
     # The normal order in which these shipping events take place
     order = models.PositiveIntegerField(default=0)
     
+    def save(self, *args, **kwargs):
+        if not self.code:
+            self.code = slugify(self.name)
+        super(AbstractPaymentEventType, self).save(*args, **kwargs)
+    
     class Meta:
         abstract = True
         verbose_name_plural = _("Payment event types")
+        ordering = ('order',)
         
     def __unicode__(self):
         return self.name
@@ -185,8 +196,8 @@ class AbstractShippingEvent(models.Model):
         verbose_name_plural = _("Shipping events")
         
     def __unicode__(self):
-        return u"Order #%d, batch #%d, line %s: %d items %s" % (
-            self.line.batch.order.number, self.line.batch.id, self.line.line_id, self.quantity, self.event_type)
+        return u"Order #%d, line %s: %d items set to '%s'" % (
+            self.line.batch.order.number, self.line.batch.id, self.line.id, self.quantity, self.event_type)
 
 
 class AbstractShippingEventType(models.Model):
@@ -199,6 +210,11 @@ class AbstractShippingEventType(models.Model):
     name = models.CharField(max_length=255)
     # The normal order in which these shipping events take place
     order = models.PositiveIntegerField(default=0)
+    
+    def save(self, *args, **kwargs):
+        if not self.code:
+            self.code = slugify(self.name)
+        super(AbstractShippingEventType, self).save(*args, **kwargs)
     
     class Meta:
         abstract = True

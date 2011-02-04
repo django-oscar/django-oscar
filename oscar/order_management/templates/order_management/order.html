@@ -7,8 +7,12 @@
 
 {% block content %}
 
+<h3>Order contents</h3>
+<form action="{% url oscar-order-management-order order.number %}" method="post">
+{% csrf_token %}
 <table>
     <tr>
+        <th></th>
         <th>Product</th>
         <th>Availability</th>
         <th>Quantity</th>
@@ -18,6 +22,7 @@
     {% for batch in order.batches.all %}
         {% for line in batch.lines.all %}
         <tr>
+            <th><input type="checkbox" name="order_line" value="{{ line.id }}"/></th>
             <td><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></td>
             <td>{{ line.product.stockrecord.availability }}</td>
             <td>{{ line.quantity }}</td>
@@ -27,20 +32,42 @@
         {% endfor %}
     {% endfor %}
     <tr>
-        <td colspan="3">Basket total</td>
+        <th colspan="3">Basket total</th>
         <td>{{ order.basket_total_excl_tax|floatformat:2 }}</td>
         <td>{{ order.basket_total_incl_tax|floatformat:2 }}</td>
     </tr>
     <tr>
-        <td colspan="3">Shipping charge</td>
+        <th colspan="3">Shipping charge</th>
         <td>{{ order.shipping_excl_tax|floatformat:2 }}</td>
         <td>{{ order.shipping_incl_tax|floatformat:2 }}</td>
     </tr>
     <tr>
-        <td colspan="4">Order total</td>
+        <th colspan="4">Order total</th>
         <td>{{ order.total_incl_tax|floatformat:2 }}</td>
     </tr>
 </table>
+
+<p>Update SHIPPING STATUS of selected lines to:
+   <select name="shipping_event">
+       <option value="">[Choose option]</option>
+       {% for type in shipping_options %}
+       <option value="{{ type.code }}">{{type.name}}</option>
+       {% endfor %}
+   </select>  
+   <input type="submit" value="Save" />
+</p>
+<p>Update PAYMENT STATUS of selected lines to:
+    <select name="payment_event">
+        <option value="">[Choose option]</option>
+        {% for type in payment_options %}
+           <option value="{{ type.code }}">{{type.name}}</option>
+        {% endfor %}
+    </select>  
+    <input type="submit" value="Save" />
+</p>
+</form>
+
+
 
 {% endblock content %}
 
