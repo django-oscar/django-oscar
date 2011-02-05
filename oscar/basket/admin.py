@@ -1,5 +1,6 @@
 from django.contrib import admin
-from oscar.basket.models import *
+
+from oscar.basket.models import Basket, Line, LineAttribute
 
 class BasketAdmin(admin.ModelAdmin):
     read_only_fields = ('date_merged', 'date_submitted')

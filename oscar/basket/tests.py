@@ -5,6 +5,7 @@ from django.core.urlresolvers import reverse
 from oscar.basket.models import * 
 from oscar.product.models import Item, ItemClass
 
+
 class BasketModelTest(unittest.TestCase):
     
     def setUp(self):
@@ -31,6 +32,7 @@ class BasketModelTest(unittest.TestCase):
     def test_adding_multiproduct_line_returns_correct_number_of_items(self):
         self.basket.add_product(self.dummy_product, 10)
         self.assertEqual(self.basket.num_items, 10)
+       
         
 class BasketViewsTest(unittest.TestCase):
     

@@ -4,7 +4,7 @@ from django.db.models.signals import pre_save
 from django.core.signals import request_finished
 from django.dispatch import receiver
 
-from oscar.basket.abstract_models import *
+from oscar.basket.abstract_models import AbstractBasket, AbstractLine, AbstractLineAttribute
 
 
 class InvalidBasketLineError(Exception):
@@ -21,11 +21,3 @@ class Line(AbstractLine):
 
 class LineAttribute(AbstractLineAttribute):
     pass
-
-# Example signal handler to enforce stock rules
-@receiver(pre_save, sender=Line)
-def handle_line_save(sender, **kwargs):
-    if 'instance' in kwargs:
-        quantity = int(kwargs['instance'].quantity)
-        if quantity > 4:
-            raise InvalidBasketLineError("You are only allowed to purchase a maximum of 4 of these")

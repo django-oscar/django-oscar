@@ -2,11 +2,11 @@ from django.db import models
 
 
 class OpenBasketManager(models.Manager):
-    status_filter = "Open"
-    
     """
     For searching/creating OPEN baskets only.
     """
+    status_filter = "Open"
+    
     def get_query_set(self):
         return super(OpenBasketManager, self).get_query_set().filter(status=self.status_filter)
     

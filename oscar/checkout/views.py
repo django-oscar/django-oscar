@@ -10,8 +10,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from oscar.services import import_module
 
-basket_factory = import_module('basket.factory', ['get_or_create_open_basket', 'get_open_basket', 
-                                                  'get_or_create_saved_basket', 'get_saved_basket'])
+basket_factory = import_module('basket.factory', ['BasketFactory'])
 checkout_forms = import_module('checkout.forms', ['ShippingAddressForm'])
 checkout_calculators = import_module('checkout.calculators', ['OrderTotalCalculator'])
 checkout_utils = import_module('checkout.utils', ['ProgressChecker', 'CheckoutSessionData'])
@@ -37,7 +36,7 @@ def prev_steps_must_be_complete(view_fn):
 
 def basket_required(view_fn):
     def _view_wrapper(request, *args, **kwargs):
-        basket = basket_factory.get_open_basket(request)
+        basket = basket_factory.BasketFactory().get_open_basket(request)
         if not basket:
             messages.error(request, "You must add some products to your basket before checking out")
             return HttpResponseRedirect(reverse('oscar-basket'))
@@ -96,7 +95,7 @@ def shipping_address(request):
             form = checkout_forms.ShippingAddressForm()
     
     # Add in extra template bindings
-    basket = basket_factory.get_open_basket(request)
+    basket = basket_factory.BasketFactory().get_open_basket(request)
     calc = checkout_calculators.OrderTotalCalculator(request)
     order_total = calc.order_total_incl_tax(basket)
     shipping_total_excl_tax = 0
@@ -133,7 +132,7 @@ def preview(request):
     Show a preview of the order
     """
     co_data = checkout_utils.CheckoutSessionData(request)
-    basket = basket_factory.get_open_basket(request)
+    basket = basket_factory.BasketFactory().get_open_basket(request)
     
     # Load address data into a blank address model
     addr_data = co_data.new_address_fields()
@@ -169,7 +168,7 @@ class SubmitView(object):
         # Set up the instance variables that are needed to place an order
         self.request = request
         self.co_data = checkout_utils.CheckoutSessionData(request)
-        self.basket = basket_factory.get_open_basket(request)
+        self.basket = basket_factory.BasketFactory().get_open_basket(request)
         
         # All the heavy lifting happens here
         order = self._place_order()

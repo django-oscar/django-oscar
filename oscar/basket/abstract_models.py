@@ -14,10 +14,10 @@ OPEN, MERGED, SAVED, SUBMITTED = ("Open", "Merged", "Saved", "Submitted")
 
 
 class AbstractBasket(models.Model):
-    """
+    u"""
     Basket object
     """
-    # Baskets can be anonymously owned (which are then merged
+    # Baskets can be anonymously owned (which are merged if the user signs in)
     owner = models.ForeignKey(User, related_name='baskets', null=True)
     STATUS_CHOICES = (
         (OPEN, _("Open - currently active")),
@@ -45,19 +45,19 @@ class AbstractBasket(models.Model):
     # ============
     
     def flush(self):
-        """
+        u"""
         Remove all lines from basket.
         """
         self.lines.all().delete()
     
     def add_product(self, item, quantity=1, options=[]):
-        """
+        u"""
         Convenience method for adding products to a basket
         
         The 'options' list should contains dicts with keys 'option' and 'value'
-        which link the relevant product.Option model and value respectively.
+        which link the relevant product.Option model and string value respectively.
         """
-        line_ref = self._get_line_reference(item, options)
+        line_ref = self._create_line_reference(item, options)
         try:
             line = self.lines.get(line_reference=line_ref)
             line.quantity += quantity
@@ -65,17 +65,18 @@ class AbstractBasket(models.Model):
         except ObjectDoesNotExist:
             line = self.lines.create(basket=self, line_reference=line_ref, product=item, quantity=quantity)
             for option_dict in options:
-                o =line.attributes.create(line=line, option=option_dict['option'], value=option_dict['value'])
+                line.attributes.create(line=line, option=option_dict['option'], value=option_dict['value'])
     
     def merge_line(self, line):
-        """
+        u"""
         For transferring a line from another basket to this one.
         
         This is used with the "Saved" basket functionality.
         """
         try:
-            # Line already exists - bump its quantity and delete the old
             existing_line = self.lines.get(line_reference=line.line_reference)
+            
+            # Line already exists - bump its quantity and delete the old
             existing_line.quantity += line.quantity
             existing_line.save()
             line.delete()
@@ -85,7 +86,7 @@ class AbstractBasket(models.Model):
             line.save()
     
     def merge(self, basket):
-        """
+        u"""
         Merges another basket with this one
         """
         for line_to_merge in basket.lines.all():
@@ -95,7 +96,7 @@ class AbstractBasket(models.Model):
         basket.save()
     
     def set_as_submitted(self):
-        """
+        u"""
         Mark this basket as submitted.
         """
         self.status = SUBMITTED
@@ -106,13 +107,17 @@ class AbstractBasket(models.Model):
     # Helpers
     # =======
     
-    def _get_line_reference(self, item, options):
+    def _create_line_reference(self, item, options):
+        u"""
+        Returns a reference string for a line based on the item
+        and its options.
+        """
         if not options:
             return item.id
         return "%d_%s" % (item.id, zlib.crc32(str(options)))
     
     def _get_total(self, property):
-        """
+        u"""
         For executing a named method on each line of the basket
         and returning the total.
         """
@@ -151,7 +156,7 @@ class AbstractBasket(models.Model):
     
     
 class AbstractLine(models.Model):
-    """
+    u"""
     A line of a basket (product and a quantity)
     """
     basket = models.ForeignKey('basket.Basket', related_name='lines')
@@ -173,9 +178,6 @@ class AbstractLine(models.Model):
     def save(self, *args, **kwargs):
         if self.quantity == 0:
             return self.delete(*args, **kwargs)
-        if not self.line_reference:
-            # If no line reference explicitly set, then use the product ID
-            self.line_reference = self.product.id
         super(AbstractLine, self).save(*args, **kwargs)
     
     # =======
@@ -228,7 +230,7 @@ class AbstractLine(models.Model):
     
     
 class AbstractLineAttribute(models.Model):
-    """
+    u"""
     An attribute of a basket line
     """
     line = models.ForeignKey('basket.Line', related_name='attributes')

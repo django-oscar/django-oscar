@@ -9,33 +9,33 @@ from oscar.services import import_module
 
 basket_models = import_module('basket.models', ['Basket', 'Line', 'InvalidBasketLineError'])
 basket_forms = import_module('basket.forms', ['FormFactory'])
-basket_factory = import_module('basket.factory', ['get_or_create_open_basket', 'get_open_basket', 
-                                                  'get_or_create_saved_basket', 'get_saved_basket'])
+basket_factory = import_module('basket.factory', ['BasketFactory'])
 product_models = import_module('product.models', ['Item'])
     
         
 class BasketView(ModelView):
+    u"""
+    Class-based view for the basket model.
+    """
     template_file = 'basket/summary.html'
     
     def __init__(self):
         self.response = HttpResponseRedirect(reverse('oscar-basket'))
+        self.factory = basket_factory.BasketFactory()
     
     def get_model(self):
-        return basket_factory.get_or_create_open_basket(self.request, self.response)
+        return self.factory.get_or_create_open_basket(self.request, self.response)
     
     def handle_GET(self, basket):
-        basket = basket_factory.get_open_basket(self.request)
-        saved_basket = basket_factory.get_saved_basket(self.request)
-        if not basket:
-            basket = basket_models.Basket()
+        saved_basket = self.factory.get_saved_basket(self.request)
         self.response = render(self.request, self.template_file, locals())
         
     def handle_POST(self, basket):
         try:
             super(BasketView, self).handle_POST(basket)
-        except basket_models.Basket.DoesNotExist:
-            messages.error(self.request, "Unable to find your basket")
         except basket_models.InvalidBasketLineError, e:
+            # We handle InvalidBasketLineError gracefully as it will be domain logic
+            # which causes this to be thrown (eg. a product out of stock)
             messages.error(self.request, str(e))
             
     def do_flush(self, basket):
@@ -64,14 +64,15 @@ class LineView(ModelView):
     
     def __init__(self):
         self.response = HttpResponseRedirect(reverse('oscar-basket'))
+        self.factory = basket_factory.BasketFactory()
     
     def get_model(self):
-        basket = basket_factory.get_open_basket(self.request)
+        basket = self.factory.get_open_basket(self.request)
         return basket.lines.get(line_reference=self.kwargs['line_reference'])
         
-    def handle_POST(self):
+    def handle_POST(self, line):
         try:
-            super(LineView, self).handle_POST()
+            super(LineView, self).handle_POST(line)
         except basket_models.Basket.DoesNotExist:
                 messages.error(self.request, "You don't have a basket to adjust the lines of")
         except basket_models.Line.DoesNotExist:
@@ -108,10 +109,10 @@ class LineView(ModelView):
     def do_delete(self, line):
         line.delete()
         msg = "'%s' has been removed from your basket" % line.product
-        messages.warn(self.request, msg)
+        messages.info(self.request, msg)
         
     def do_save_for_later(self, line):
-        saved_basket = basket_factory.get_or_create_saved_basket(self.request, self.response)
+        saved_basket = self.factory.get_or_create_saved_basket(self.request, self.response)
         saved_basket.merge_line(line)
         msg = "'%s' has been saved for later" % line.product
         messages.info(self.request, msg)
@@ -121,28 +122,20 @@ class SavedLineView(ModelView):
     
     def __init__(self):
         self.response = HttpResponseRedirect(reverse('oscar-basket'))
+        self.factory = basket_factory.BasketFactory()
     
     def get_model(self):
-        basket = basket_factory.get_saved_basket(self.request)
+        basket = self.factory.get_saved_basket(self.request)
         return basket.lines.get(line_reference=self.kwargs['line_reference'])
         
-    def handle_POST(self):
+    def handle_POST(self, line):
         try:
-            super(SavedLineView, self).handle_POST()
-        except basket_models.Basket.DoesNotExist:
-                messages.error(request, "You don't have a basket to adjust the lines of")
-        except basket_models.Line.DoesNotExist:
-            messages.error(request, "Unable to find a line with reference %s in your basket" % self.kwargs['line_reference'])
+            super(SavedLineView, self).handle_POST(line)
         except basket_models.InvalidBasketLineError, e:
             messages.error(request, str(e))   
             
-    def _get_quantity(self):
-        if 'quantity' in self.request.POST:
-            return int(self.request.POST['quantity'])
-        return 0        
-            
     def do_move_to_basket(self, line):
-        real_basket = basket_factory.get_or_create_open_basket(self.request, self.response)
+        real_basket = self.factory.get_or_create_open_basket(self.request, self.response)
         real_basket.merge_line(line)
         msg = "'%s' has been moved back to your basket" % line.product
         messages.info(self.request, msg)
@@ -151,3 +144,8 @@ class SavedLineView(ModelView):
         line.delete()
         msg = "'%s' has been removed" % line.product
         messages.warn(self.request, msg)
+        
+    def _get_quantity(self):
+        if 'quantity' in self.request.POST:
+            return int(self.request.POST['quantity'])
+        return 0
