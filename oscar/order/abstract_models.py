@@ -51,6 +51,41 @@ class AbstractOrder(models.Model):
         return u"#%s (amount: %.2f)" % (self.number, self.total_incl_tax)
 
 
+class AbstractOrderEvent(models.Model):
+    """
+    An event that happens to the order (rather than to one of its lines)
+    """
+    order = models.ForeignKey('order.Order', related_name="events")
+    type = models.ForeignKey('order.OrderEventType')
+    notes = models.TextField(_("Event notes"), blank=True, null=True)
+    date = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        abstract = True
+    
+    
+class AbstractOrderEventType(models.Model):
+    """ 
+    Order events are things like 'Cancellation', 'NoteAdded', 'ConfirmationEmailSent'
+    """
+    # Code is used in forms
+    code = models.CharField(max_length=128)
+    # Name is the friendly description of an event
+    name = models.CharField(max_length=255)
+    
+    def save(self, *args, **kwargs):
+        if not self.code:
+            self.code = slugify(self.name)
+        super(AbstractOrderEventType, self).save(*args, **kwargs)
+    
+    class Meta:
+        abstract = True
+        verbose_name_plural = _("Order event types")
+        
+    def __unicode__(self):
+        return self.name    
+    
+
 class AbstractBatch(models.Model):
     """
     A batch of items from a single fulfillment partner

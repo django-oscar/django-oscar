@@ -33,6 +33,10 @@ class OrderView(ModelView):
         self.response = render(self.request, self.template_file, locals())
         
     def handle_POST(self, order):
+        self.response = HttpResponseRedirect(reverse('oscar-order-management-order', kwargs={'order_number': order.number}))
+        super(OrderView, self).handle_POST(order)
+        
+    def do_create_event(self, order):
         line_ids = self.request.POST.getlist('order_line')
         lines = order.lines.in_bulk(line_ids)
         
@@ -40,8 +44,7 @@ class OrderView(ModelView):
         if self.request.POST['shipping_event']:
             self.create_shipping_event(order, lines, self.request.POST['shipping_event'])
         elif self.request.POST['payment_event']:
-            self.create_payment_event(order, lines, self.request.POST['payment_event'])
-        self.response = HttpResponseRedirect(reverse('oscar-order-management-order', kwargs={'order_number': order.number}))
+            self.create_payment_event(order, lines, self.request.POST['payment_event'])    
                 
     def create_shipping_event(self, order, lines, type_code):
         event_type = order_models.ShippingEventType.objects.get(code=type_code)

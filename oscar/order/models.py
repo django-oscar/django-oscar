@@ -9,6 +9,12 @@ from oscar.address.abstract_models import AbstractShippingAddress, AbstractBilli
 class Order(AbstractOrder):
     pass
 
+class OrderEvent(AbstractOrderEvent):
+    pass
+
+class OrderEventType(AbstractOrderEventType):
+    pass
+
 class Batch(AbstractBatch):
     pass
 
