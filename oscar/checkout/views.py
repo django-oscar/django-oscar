@@ -14,6 +14,7 @@ basket_factory = import_module('basket.factory', ['BasketFactory'])
 checkout_forms = import_module('checkout.forms', ['ShippingAddressForm'])
 checkout_calculators = import_module('checkout.calculators', ['OrderTotalCalculator'])
 checkout_utils = import_module('checkout.utils', ['ProgressChecker', 'CheckoutSessionData'])
+checkout_signals = import_module('checkout.signals', ['order_placed'])
 order_models = import_module('order.models', ['ShippingAddress', 'Order', 'Batch', 'BatchLine', 'BatchLinePrice'])
 address_models = import_module('address.models', ['UserAddress'])
 
@@ -108,7 +109,6 @@ def shipping_address(request):
     return render(request, 'checkout/shipping_address.html', locals())
     
     
-@prev_steps_must_be_complete    
 def shipping_method(request):
     """
     Shipping methods are domain-specific and so need implementing in a 
@@ -117,7 +117,6 @@ def shipping_method(request):
     mark_step_as_complete(request)
     return HttpResponseRedirect(reverse('oscar-checkout-payment'))
 
-@prev_steps_must_be_complete
 def payment(request):
     """
     Payment methods are domain-specific and so need implementing in a s
@@ -126,7 +125,6 @@ def payment(request):
     mark_step_as_complete(request)
     return HttpResponseRedirect(reverse('oscar-checkout-preview'))
 
-@prev_steps_must_be_complete
 def preview(request):
     """
     Show a preview of the order
@@ -177,6 +175,9 @@ class SubmitView(object):
         self.basket.set_as_submitted()
         self.co_data.flush()
         checkout_utils.ProgressChecker().all_steps_complete(request)
+        
+        # Send signal
+        checkout_signals.order_placed.send_robust(sender=self, order=order)
         
         # Save order id in session so thank-you page can load it
         self.request.session['checkout_order_id'] = order.id

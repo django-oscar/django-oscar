@@ -44,6 +44,12 @@ class AbstractStockRecord(models.Model):
     
     class Meta:
         abstract = True
+    
+    def decrement_num_in_stock(self, delta):
+        if self.num_in_stock >= delta:
+            self.num_in_stock -= delta
+        self.num_allocated += delta
+        self.save()
         
     # Price retrieval methods - these default to no tax being applicable
     # These are intended to be overridden.   
