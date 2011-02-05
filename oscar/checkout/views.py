@@ -218,10 +218,11 @@ class SubmitView(object):
                                                            quantity=basket_line.quantity, 
                                                            line_price_excl_tax=basket_line.line_price_excl_tax, 
                                                            line_price_incl_tax=basket_line.line_price_incl_tax)
-        self._create_line_price_model(batch_line, basket_line)
+        self._create_line_price_models(order, batch_line, basket_line)
         
-    def _create_line_price_model(self, batch_line, basket_line):
-        order_models.BatchLinePrice.objects.create(line=batch_line, 
+    def _create_line_price_models(self, order, batch_line, basket_line):
+        order_models.BatchLinePrice.objects.create(order=order,
+                                                   line=batch_line, 
                                                    quantity=batch_line.quantity, 
                                                    price_incl_tax=basket_line.unit_price_incl_tax,
                                                    price_excl_tax=basket_line.unit_price_excl_tax)

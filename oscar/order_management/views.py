@@ -46,7 +46,7 @@ class OrderView(ModelView):
             # Need to load lines in a way that checks they are from the order 
             lines = order_models.BatchLine.objects.in_bulk(line_ids)
             for line in lines.values():
-                order_models.ShippingEvent.objects.create(line=line, quantity=line.quantity, event_type=event_type)
+                order_models.ShippingEvent.objects.create(order=order, line=line, quantity=line.quantity, event_type=event_type)
         
         
     

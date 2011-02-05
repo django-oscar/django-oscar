@@ -67,6 +67,23 @@
 </p>
 </form>
 
+<h4>Shipping events</h4>
+<table>
+<tr>
+    <th>Line</th>
+    <th>Quantity</th>
+    <th>Event</th>
+    <th>Date</th>
+</tr>
+{% for event in order.shipping_events.all %}
+<tr>
+    <td>{{ event.line }}</td>
+    <td>{{ event.quantity }}</td>
+    <td>{{ event.event_type }}</td>
+    <td>{{ event.date }}</td>
+</tr>
+{% endfor %}
+</table>
 
 
 {% endblock content %}

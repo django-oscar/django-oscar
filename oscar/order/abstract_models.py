@@ -121,6 +121,7 @@ class AbstractBatchLinePrice(models.Model):
     having different prices.  For example, one product may be sold at
     50% off as it's part of an offer while the remainder are full price.
     """
+    order = models.ForeignKey('order.Order', related_name='line_prices')
     line = models.ForeignKey('order.BatchLine', related_name='prices')
     quantity = models.PositiveIntegerField(default=1)
     price_incl_tax = models.DecimalField(decimal_places=2, max_digits=12)
@@ -140,6 +141,7 @@ class AbstractPaymentEvent(models.Model):
     An event is something which happens to a line such as
     payment being taken for 2 items, or 1 item being dispatched.
     """
+    order = models.ForeignKey('order.Order', related_name='payment_events')
     line = models.ForeignKey('order.BatchLine', related_name='payment_events')
     quantity = models.PositiveIntegerField(default=1)
     event_type = models.ForeignKey('order.PaymentEventType')
@@ -184,6 +186,7 @@ class AbstractShippingEvent(models.Model):
     An event is something which happens to a line such as
     1 item being dispatched.
     """
+    order = models.ForeignKey('order.Order', related_name='shipping_events')
     line = models.ForeignKey('order.BatchLine', related_name='shipping_events')
     quantity = models.PositiveIntegerField(default=1)
     event_type = models.ForeignKey('order.ShippingEventType')
@@ -197,7 +200,7 @@ class AbstractShippingEvent(models.Model):
         
     def __unicode__(self):
         return u"Order #%d, line %s: %d items set to '%s'" % (
-            self.line.batch.order.number, self.line.batch.id, self.line.id, self.quantity, self.event_type)
+            self.order.number, self.line.id, self.quantity, self.event_type)
 
 
 class AbstractShippingEventType(models.Model):

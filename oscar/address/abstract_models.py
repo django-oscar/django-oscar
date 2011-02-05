@@ -99,7 +99,7 @@ class AbstractShippingAddress(AbstractAddress):
         verbose_name_plural = "shipping addresses"
         
         
-class AbstractUserAddress(AbstractAddress):
+class AbstractUserAddress(AbstractShippingAddress):
     u"""
     A user address which forms an "AddressBook" for a user.
     
