@@ -9,6 +9,7 @@
 
 <h3>Order contents</h3>
 <form action="{% url oscar-order-management-order order.number %}" method="post">
+<input type="hidden" name="action" value="create_event" />
 {% csrf_token %}
 <table>
     <tr>
@@ -76,6 +77,24 @@
     <th>Date</th>
 </tr>
 {% for event in order.shipping_events.all %}
+<tr>
+    <td>{{ event.line }}</td>
+    <td>{{ event.quantity }}</td>
+    <td>{{ event.event_type }}</td>
+    <td>{{ event.date }}</td>
+</tr>
+{% endfor %}
+</table>
+
+<h4>Payment events</h4>
+<table>
+<tr>
+    <th>Line</th>
+    <th>Quantity</th>
+    <th>Event</th>
+    <th>Date</th>
+</tr>
+{% for event in order.payment_events.all %}
 <tr>
     <td>{{ event.line }}</td>
     <td>{{ event.quantity }}</td>
