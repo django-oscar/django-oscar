@@ -1,11 +1,11 @@
 from django.conf.urls.defaults import *
 
 from oscar.views import class_based_view
-from oscar.checkout.views import IndexView, SubmitView
+from oscar.checkout.views import IndexView, ShippingAddressView, SubmitView
 
 urlpatterns = patterns('oscar.checkout.views',
     url(r'^$', class_based_view(IndexView), name='oscar-checkout-index'),
-    url(r'shipping-address/$', 'shipping_address', name='oscar-checkout-shipping-address'),
+    url(r'shipping-address/$', class_based_view(ShippingAddressView), name='oscar-checkout-shipping-address'),
     url(r'shipping-method/$', 'shipping_method', name='oscar-checkout-shipping-method'),
     url(r'payment/$', 'payment', name='oscar-checkout-payment'),
     url(r'preview/$', 'preview', name='oscar-checkout-preview'),
