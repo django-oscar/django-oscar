@@ -4,8 +4,6 @@ from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
 
 
-
-
 class AbstractOrder(models.Model):
     """
     An order
@@ -51,22 +49,38 @@ class AbstractOrder(models.Model):
         return u"#%s (amount: %.2f)" % (self.number, self.total_incl_tax)
 
 
-class AbstractOrderEvent(models.Model):
+class AbstractOrderNote(models.Model):
     """
-    An event that happens to the order (rather than to one of its lines)
+    A note against an order.
+    """
+    order = models.ForeignKey('order.Order', related_name="notes")
+    user = models.ForeignKey('auth.User')
+    message = models.TextField()
+    date = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        abstract = True
+        
+    def __unicode__(self):
+        return u"'%s' (%s)" % (self.message[0:50], self.user)
+
+
+class AbstractCommunicationEvent(models.Model):
+    """
+    An order-level event involving a communication to the customer, such
+    as an confirmation email being sent.
     """
     order = models.ForeignKey('order.Order', related_name="events")
-    type = models.ForeignKey('order.OrderEventType')
-    notes = models.TextField(_("Event notes"), blank=True, null=True)
+    type = models.ForeignKey('order.CommunicationEventType')
     date = models.DateTimeField(auto_now_add=True)
     
     class Meta:
         abstract = True
     
     
-class AbstractOrderEventType(models.Model):
+class AbstractCommunicationEventType(models.Model):
     """ 
-    Order events are things like 'Cancellation', 'NoteAdded', 'ConfirmationEmailSent'
+    Communication events are things like 'OrderConfirmationEmailSent'
     """
     # Code is used in forms
     code = models.CharField(max_length=128)
@@ -80,7 +94,7 @@ class AbstractOrderEventType(models.Model):
     
     class Meta:
         abstract = True
-        verbose_name_plural = _("Order event types")
+        verbose_name_plural = _("Communication event types")
         
     def __unicode__(self):
         return self.name    

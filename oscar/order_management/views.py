@@ -8,7 +8,7 @@ from django.views.generic import ListView, DetailView
 from oscar.views import ModelView
 from oscar.services import import_module
 order_models = import_module('order.models', ['Order', 'BatchLine', 'ShippingEvent', 'ShippingEventQuantity', 
-                                              'ShippingEventType', 'PaymentEvent', 'PaymentEventType'])
+                                              'ShippingEventType', 'PaymentEvent', 'PaymentEventType', 'OrderNote'])
 
 
 class OrderListView(ListView):
@@ -58,4 +58,13 @@ class OrderView(ModelView):
         for line in lines.values():
             order_models.PaymentEvent.objects.create(order=order, line=line, 
                                                      quantity=line.quantity, event_type=event_type)
+            
+    def do_add_note(self, order):
+        """
+        Save a note against the order.
+        """
+        if self.request.user.is_authenticated():
+            note = order_models.OrderNote(order=order, message=self.request.POST['message'],
+                                          user=self.request.user)
+            note.save()
     

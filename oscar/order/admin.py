@@ -7,7 +7,7 @@ class BatchAdmin(admin.ModelAdmin):
 class BatchLineAdmin(admin.ModelAdmin):
     list_display = ('batch', 'product', 'quantity')
 
-class OrderEventTypeAdmin(admin.ModelAdmin):
+class CommunicationEventTypeAdmin(admin.ModelAdmin):
     exclude = ('code',)
 
 class ShippingEventTypeAdmin(admin.ModelAdmin):
@@ -15,10 +15,19 @@ class ShippingEventTypeAdmin(admin.ModelAdmin):
     
 class PaymentEventTypeAdmin(admin.ModelAdmin):
     exclude = ('code',)
+    
+class OrderNoteAdmin(admin.ModelAdmin):
+    exclude = ('user',)
+    
+    def save_model(self, request, obj, form, change):
+        if not change:
+            obj.user = request.user
+        obj.save()
 
 admin.site.register(Order)
-admin.site.register(OrderEvent)
-admin.site.register(OrderEventType, OrderEventTypeAdmin)
+admin.site.register(OrderNote, OrderNoteAdmin)
+admin.site.register(CommunicationEvent)
+admin.site.register(CommunicationEventType, CommunicationEventTypeAdmin)
 admin.site.register(BillingAddress)
 admin.site.register(Batch, BatchAdmin)
 admin.site.register(ShippingAddress)

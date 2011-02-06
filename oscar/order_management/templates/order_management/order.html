@@ -7,6 +7,30 @@
 
 {% block content %}
 
+<h3>Shipping address</h3>
+<table>
+    <tr>
+        <th>Address</th>
+        <td>
+            {% for field in order.shipping_address.active_address_fields %}
+            {{ field }}<br/>
+            {% endfor %}
+        </td>
+    </tr>
+    {% if order.shipping_address.phone_number %}
+    <tr>
+        <th>Concact number</th>
+        <td>{{ shipping_address.phone_number }}</td>
+    </tr>
+    {% endif %}
+    {% if order.shipping_address.notes %}
+    <tr>
+        <th>Shipping notes</th>
+        <td>{{ shipping_address.notes }}</td>
+    </tr>
+    {% endif %} 
+</table>
+
 <h3>Order contents</h3>
 
 {% for batch in order.batches.all %}
@@ -65,7 +89,8 @@
     </tr>
 </table>
 
-<h4>Shipping events</h4>
+{% if order.shipping_events.count %}
+<h3>Shipping events</h3>
 <table>
 <tr>
     <th>Partner</th>
@@ -82,7 +107,33 @@
 </tr>
 {% endfor %}
 </table>
+{% endif %}
 
+<h3>Order notes</h3>
+
+{% if order.notes.count %}
+<table>
+<tr>
+    <th>Note</th>
+    <th>User</th>
+    <th>Date</th>
+</tr>
+{% for note in order.notes.all %}
+<tr>
+    <td>{{ note.message }}</td>
+    <td>{{ note.user }}</td>
+    <td>{{ note.date }}</td>
+</tr>
+{% endfor %}
+</table>
+{% endif %}
+
+<form method="post" action="{%url oscar-order-management-order order.number %}"/>
+    <input type="hidden" name="action" value="add_note" />
+    <label for="message">Message:</label>
+    <textarea id="message" name="message"></textarea>
+    <input type="submit" value="Add note" />
+</form>
 
 {% endblock content %}
 
