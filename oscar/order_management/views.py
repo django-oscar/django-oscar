@@ -7,7 +7,8 @@ from django.views.generic import ListView, DetailView
 
 from oscar.views import ModelView
 from oscar.services import import_module
-order_models = import_module('order.models', ['Order', 'BatchLine', 'ShippingEvent', 'ShippingEventType', 'PaymentEvent', 'PaymentEventType'])
+order_models = import_module('order.models', ['Order', 'BatchLine', 'ShippingEvent', 'ShippingEventQuantity', 
+                                              'ShippingEventType', 'PaymentEvent', 'PaymentEventType'])
 
 
 class OrderListView(ListView):
@@ -38,19 +39,19 @@ class OrderView(ModelView):
         
     def do_create_event(self, order):
         line_ids = self.request.POST.getlist('order_line')
-        lines = order.lines.in_bulk(line_ids)
+        batch = order.batches.get(id=self.request.POST['batch_id'])
+        lines = batch.lines.in_bulk(line_ids)
         
         # Need to determine what kind of event update this is
         if self.request.POST['shipping_event']:
-            self.create_shipping_event(order, lines, self.request.POST['shipping_event'])
-        elif self.request.POST['payment_event']:
-            self.create_payment_event(order, lines, self.request.POST['payment_event'])    
+            self.create_shipping_event(order, batch, lines, self.request.POST['shipping_event'])
                 
-    def create_shipping_event(self, order, lines, type_code):
+    def create_shipping_event(self, order, batch, lines, type_code):
         event_type = order_models.ShippingEventType.objects.get(code=type_code)
+        event = order_models.ShippingEvent.objects.create(order=order, event_type=event_type, batch=batch)
         for line in lines.values():
-            order_models.ShippingEvent.objects.create(order=order, line=line, 
-                                                      quantity=line.quantity, event_type=event_type)
+            order_models.ShippingEventQuantity.objects.create(event=event, line=line, 
+                                                              quantity=line.quantity)
             
     def create_payment_event(self, order, lines, type_code):
         event_type = order_models.PaymentEventType.objects.get(code=type_code)

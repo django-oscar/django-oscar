@@ -218,12 +218,12 @@ class AbstractPaymentEventType(models.Model):
 
 class AbstractShippingEvent(models.Model):    
     """
-    An event is something which happens to a line such as
+    An event is something which happens to a group of lines such as
     1 item being dispatched.
     """
     order = models.ForeignKey('order.Order', related_name='shipping_events')
-    line = models.ForeignKey('order.BatchLine', related_name='shipping_events')
-    quantity = models.PositiveIntegerField(default=1)
+    batch = models.ForeignKey('order.Batch', related_name='shipping_events')
+    lines = models.ManyToManyField('order.BatchLine', through='ShippingEventQuantity')
     event_type = models.ForeignKey('order.ShippingEventType')
     notes = models.TextField(_("Event notes"), blank=True, null=True,
         help_text="This could be the dispatch reference, or a tracking number")
@@ -236,6 +236,15 @@ class AbstractShippingEvent(models.Model):
     def __unicode__(self):
         return u"Order #%d, line %s: %d items set to '%s'" % (
             self.order.number, self.line.id, self.quantity, self.event_type)
+        
+    def num_affected_lines(self):
+        return self.lines.count()
+
+
+class ShippingEventQuantity(models.Model):
+    event = models.ForeignKey('order.ShippingEvent')
+    line = models.ForeignKey('order.BatchLine')
+    quantity = models.PositiveIntegerField()
 
 
 class AbstractShippingEventType(models.Model):
