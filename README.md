@@ -86,6 +86,9 @@ Set up `virtualenv` if you haven't already done so:
 	sudo pip install virtualenv virtualenvwrapper
 	echo "source /usr/local/bin/virtualenvwrapper.sh" >> ~/.bashrc
 
+Note: Fedora (and possibly other Red Hat based distros) installs virtualenvwrapper.sh in /usr/bin path, so the last line above should read:
+	echo "source /usr/bin/virtualenvwrapper.sh" >> ~/.basrc
+
 Reload bash with the following command:
     ~/.bashrc
 
