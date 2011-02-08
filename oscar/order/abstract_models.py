@@ -149,7 +149,7 @@ class AbstractBatchLine(models.Model):
         d = str(self.product)
         ops = []
         for attribute in self.attributes.all():
-            ops.append("%s = '%s'" % (attribute.option.name, attribute.value))
+            ops.append("%s = '%s'" % (attribute.type, attribute.value))
         if ops:
             d = "%s (%s)" % (d, ", ".join(ops))
         return d
@@ -160,6 +160,21 @@ class AbstractBatchLine(models.Model):
         
     def __unicode__(self):
         return u"Product '%s', quantity '%s'" % (self.product, self.quantity)
+    
+    
+class AbstractBatchLineAttribute(models.Model):
+    """
+    An attribute of a batch line.
+    """
+    line = models.ForeignKey('order.BatchLine', related_name='attributes')
+    type = models.CharField(_("Type"), max_length=128)
+    value = models.CharField(_("Value"), max_length=255)    
+    
+    class Meta:
+        abstract = True
+        
+    def __unicode__(self):
+        return "%s = %s" % (self.type, self.value)
     
     
 class AbstractBatchLinePrice(models.Model):
@@ -286,16 +301,4 @@ class AbstractShippingEventType(models.Model):
         return self.name
         
         
-class AbstractBatchLineAttribute(models.Model):
-    """
-    An attribute of a batch line.
-    """
-    line = models.ForeignKey('order.BatchLine', related_name='attributes')
-    type = models.CharField(_("Type"), max_length=128)
-    value = models.CharField(_("Value"), max_length=255)    
-    
-    class Meta:
-        abstract = True
-        
-    def __unicode__(self):
-        return "%s = %s" % (self.type, self.value)
+

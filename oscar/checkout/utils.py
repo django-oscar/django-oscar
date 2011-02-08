@@ -111,11 +111,9 @@ class CheckoutSessionData(object):
     def ship_to_user_address(self, address):
         self._set('shipping', 'user_address_id', address.id)
         self._unset('shipping', 'new_address_fields')
-        self._unset('shipping', 'is_default')
         
-    def ship_to_new_address(self, address_fields, is_default=False):
+    def ship_to_new_address(self, address_fields):
         self._set('shipping', 'new_address_fields', address_fields)
-        self._set('shipping', 'is_default', is_default)
         self._unset('shipping', 'user_address_id')
         
     def new_address_fields(self):

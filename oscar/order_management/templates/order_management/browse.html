@@ -14,6 +14,7 @@
         <th>Order number</th>
         <th>Total inc tax</th>
         <th>Delivery address</th>
+        <th>Date submitted</th>
         <th></th>
     </tr>
     {% for order in orders %}
@@ -21,6 +22,7 @@
         <td>{{ order.number }}</td>
         <td>{{ order.total_incl_tax }}</td>
         <td>{{ order.shipping_address }}</td>
+        <td>{{ order.date_placed }}</td>
         <td>
             <a href="{% url oscar-order-management-order order.number %}">View</a>
         </td>

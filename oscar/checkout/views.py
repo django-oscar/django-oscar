@@ -16,7 +16,8 @@ checkout_forms = import_module('checkout.forms', ['ShippingAddressForm'])
 checkout_calculators = import_module('checkout.calculators', ['OrderTotalCalculator'])
 checkout_utils = import_module('checkout.utils', ['ProgressChecker', 'CheckoutSessionData'])
 checkout_signals = import_module('checkout.signals', ['order_placed'])
-order_models = import_module('order.models', ['ShippingAddress', 'Order', 'Batch', 'BatchLine', 'BatchLinePrice'])
+order_models = import_module('order.models', ['ShippingAddress', 'Order', 'Batch', 'BatchLine', 
+                                              'BatchLinePrice', 'BatchLineAttribute'])
 address_models = import_module('address.models', ['UserAddress'])
 
 def prev_steps_must_be_complete(view_fn):
@@ -97,10 +98,7 @@ class ShippingAddressView(ModelView):
             form = checkout_forms.ShippingAddressForm(self.request.POST)
             if form.is_valid():
                 # Address data is valid - store in session and redirect to next step.
-                is_default = False
-                if 'save_as_default' in self.request.POST and self.request.POST['save_as_default'] == 'on':
-                    is_default = True
-                self.co_data.ship_to_new_address(form.clean(), is_default)
+                self.co_data.ship_to_new_address(form.clean())
                 mark_step_as_complete(self.request)
                 return HttpResponseRedirect(reverse(get_next_step(self.request)))
             return self.handle_GET(form)
@@ -197,6 +195,8 @@ class SubmitView(object):
         self.co_data = checkout_utils.CheckoutSessionData(request)
         self.basket = basket_factory.BasketFactory().get_open_basket(request)
         
+        # Take payment here
+        
         # All the heavy lifting happens here
         order = self._place_order()
         
@@ -241,6 +241,9 @@ class SubmitView(object):
         return order
     
     def _create_line_model(self, order, batch, basket_line):
+        """
+        Creates the batch line model.
+        """
         batch_line = order_models.BatchLine.objects.create(order=order,
                                                            batch=batch, 
                                                            product=basket_line.product, 
@@ -248,26 +251,47 @@ class SubmitView(object):
                                                            line_price_excl_tax=basket_line.line_price_excl_tax, 
                                                            line_price_incl_tax=basket_line.line_price_incl_tax)
         self._create_line_price_models(order, batch_line, basket_line)
+        self._create_line_attributes(order, batch_line, basket_line)
         
     def _create_line_price_models(self, order, batch_line, basket_line):
+        """
+        Creates the batch line price models
+        """
         order_models.BatchLinePrice.objects.create(order=order,
                                                    line=batch_line, 
                                                    quantity=batch_line.quantity, 
                                                    price_incl_tax=basket_line.unit_price_incl_tax,
                                                    price_excl_tax=basket_line.unit_price_excl_tax)
     
+    def _create_line_attributes(self, order, batch_line, basket_line):
+        """
+        Creates the batch line attributes.
+        """
+        for attr in basket_line.attributes.all():
+            order_models.BatchLineAttribute.objects.create(line=batch_line, type=attr.option.code,
+                                                                   value=attr.value)
+    
     def _get_or_create_batch_for_line(self, order, line):
-         partner = self._get_partner_for_product(line.product)
-         shipping_addr = self._get_shipping_address_for_line(line)
-         batch,_ = order_models.Batch.objects.get_or_create(order=order, partner=partner, shipping_address=shipping_addr)
-         return batch
+        """
+        Returns the batch for a given line, creating it if appropriate.
+        """
+        partner = self._get_partner_for_product(line.product)
+        shipping_addr = self._get_shipping_address_for_line(line)
+        batch,_ = order_models.Batch.objects.get_or_create(order=order, partner=partner, shipping_address=shipping_addr)
+        return batch
                 
     def _get_partner_for_product(self, product):
+        """
+        Returns the partner for a product
+        """
         if product.has_stockrecord:
             return product.stockrecord.partner
         raise AttributeError("No partner found for product '%s'" % product)
 
     def _get_shipping_address_for_line(self, line):
+        """
+        Returns the shipping address for a given line.
+        """
         try:
             addr = self.shipping_addr
         except AttributeError:
@@ -288,6 +312,9 @@ class SubmitView(object):
         return addr
             
     def _create_shipping_address_from_form_fields(self, addr_data):
+        """
+        Creates a shipping address model from the saved form fields
+        """
         shipping_addr = order_models.ShippingAddress(**addr_data)
         shipping_addr.save() 
         return shipping_addr
@@ -308,6 +335,9 @@ class SubmitView(object):
                 user_addr.save()
     
     def _create_shipping_address_from_user_address(self, addr_id):
+        """
+        Creates a shipping address from a user address
+        """
         address = address_models.UserAddress.objects.get(pk=addr_id)
         # Increment the number of orders to help determine popularity of orders 
         address.num_orders += 1
