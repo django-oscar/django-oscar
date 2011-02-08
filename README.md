@@ -127,6 +127,9 @@ Set up `virtualenv` if you haven't already done so:
 	sudo pip install virtualenv virtualenvwrapper
 	echo "source /usr/local/bin/virtualenvwrapper.sh" >> ~/.bashrc
 
+Note: Fedora (and possibly other Red Hat based distros) installs virtualenvwrapper.sh in /usr/bin path, so the last line above should read:
+	echo "source /usr/bin/virtualenvwrapper.sh" >> ~/.basrc
+
 Reload bash with the following command:
     ~/.bashrc
 
@@ -136,7 +139,7 @@ Do the following from your workspace folder:
     mkvirtualenv --no-site-packages oscar
 	workon oscar
     
-After checking out your fork, install the latest version of Django (currenty a beta of 1.3)
+After checking out your fork, install the latest version of Django into your virtualenv (currenty a beta of 1.3)
 
     wget http://www.djangoproject.com/download/1.3-beta-1/tarball/
 	pip install Django-1.3-beta-1.tar.gz
@@ -150,6 +153,10 @@ Install oscar in development mode within your virtual env
 Optionally, install all packages from the requirements file
 
 	pip install -r requirements.txt
+
+Note: In case of gcc crashing and complaining in-between installation process,
+make sure you have appropriate -devel packages installed (ie. mysql-devel) in
+your system.
 
 Now create a `local_settings.py` file which contains details of your local database
 that you want to use for development.  Be sure to create two databases: one for development
