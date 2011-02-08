@@ -1,5 +1,8 @@
 from django.contrib import admin
-from oscar.product.models import *
+
+from oscar.services import import_module
+product_models = import_module('product.models', ['Item', 'ItemClass', 'AttributeType', 
+                                                  'ItemAttributeValue', 'Option'])
 
 class AttributeInline(admin.TabularInline):
     model = ItemAttributeValue
@@ -12,8 +15,8 @@ class ItemAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title",)}
     inlines = [AttributeInline]
 
-admin.site.register(ItemClass, ItemClassAdmin)
-admin.site.register(Item, ItemAdmin)
-admin.site.register(AttributeType)
-admin.site.register(ItemAttributeValue)
-admin.site.register(Option)
+admin.site.register(product_models.ItemClass, ItemClassAdmin)
+admin.site.register(product_models.Item, ItemAdmin)
+admin.site.register(product_models.AttributeType)
+admin.site.register(product_models.ItemAttributeValue)
+admin.site.register(product_models.Option)

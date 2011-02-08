@@ -1,8 +1,10 @@
 from django.contrib import admin
-from oscar.stock.models import *
+
+from oscar.services import import_module
+models = import_module('stock.models', ['Partner', 'StockRecord'])
 
 class StockRecordAdmin(admin.ModelAdmin):
     pass
     
-admin.site.register(Partner)
-admin.site.register(StockRecord, StockRecordAdmin)
+admin.site.register(models.Partner)
+admin.site.register(models.StockRecord, StockRecordAdmin)
