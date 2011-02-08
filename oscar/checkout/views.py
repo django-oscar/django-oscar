@@ -122,43 +122,52 @@ class ShippingAddressView(ModelView):
         
         return render(self.request, 'checkout/shipping_address.html', locals())
     
-def shipping_method(request):
+    
+class ShippingMethodView(object):
     """
     Shipping methods are domain-specific and so need implementing in a 
     subclass of this class.
     """
-    mark_step_as_complete(request)
-    return HttpResponseRedirect(reverse('oscar-checkout-payment'))
+    
+    def __call__(self, request):
+        mark_step_as_complete(request)
+        return HttpResponseRedirect(reverse('oscar-checkout-payment'))
+        
 
-def payment(request):
+class PaymentView(object):
     """
     Payment methods are domain-specific and so need implementing in a s
     subclass of this class.
     """
-    mark_step_as_complete(request)
-    return HttpResponseRedirect(reverse('oscar-checkout-preview'))
+    
+    def __call__(self, request):
+        mark_step_as_complete(request)
+        return HttpResponseRedirect(reverse('oscar-checkout-preview'))
 
-def preview(request):
+
+class OrderPreviewView(object):
     """
-    Show a preview of the order
+    View a preview of the order before submitting.
     """
-    co_data = checkout_utils.CheckoutSessionData(request)
-    basket = basket_factory.BasketFactory().get_open_basket(request)
     
-    # Load address data into a blank address model
-    addr_data = co_data.new_address_fields()
-    if addr_data:
-        shipping_addr = order_models.ShippingAddress(**addr_data)
-    addr_id = co_data.user_address_id()
-    if addr_id:
-        shipping_addr = address_models.UserAddress.objects.get(pk=addr_id)
-    
-    # Calculate order total
-    calc = checkout_calculators.OrderTotalCalculator(request)
-    order_total = calc.order_total_incl_tax(basket)
-    
-    mark_step_as_complete(request)
-    return render(request, 'checkout/preview.html', locals())
+    def __call__(self, request):
+        co_data = checkout_utils.CheckoutSessionData(request)
+        basket = basket_factory.BasketFactory().get_open_basket(request)
+        
+        # Load address data into a blank address model
+        addr_data = co_data.new_address_fields()
+        if addr_data:
+            shipping_addr = order_models.ShippingAddress(**addr_data)
+        addr_id = co_data.user_address_id()
+        if addr_id:
+            shipping_addr = address_models.UserAddress.objects.get(pk=addr_id)
+        
+        # Calculate order total
+        calc = checkout_calculators.OrderTotalCalculator(request)
+        order_total = calc.order_total_incl_tax(basket)
+        
+        mark_step_as_complete(request)
+        return render(request, 'checkout/preview.html', locals())
 
 
 class SubmitView(object):
@@ -303,12 +312,12 @@ class SubmitView(object):
         return shipping_addr
 
 
-def thank_you(request):
+class ThankYouView(object):
     
-    try:
-        order = order_models.Order.objects.get(pk=request.session['checkout_order_id'])
-        del request.session['checkout_order_id']
-    except ObjectDoesNotExist:
-        return HttpResponseRedirect(reverse('oscar-checkout-index'))
-    
-    return render(request, 'checkout/thank_you.html', locals())
+    def __call__(self, request):
+        try:
+            order = order_models.Order.objects.get(pk=request.session['checkout_order_id'])
+            del request.session['checkout_order_id']
+        except KeyError, ObjectDoesNotExist:
+            return HttpResponseRedirect(reverse('oscar-checkout-index'))
+        return render(request, 'checkout/thank_you.html', locals())
