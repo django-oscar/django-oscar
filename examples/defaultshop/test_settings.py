@@ -5,6 +5,9 @@ database to use when running tests.
 Just make sure you run the tests and specify this file:
 > ./manage.py test -settings=test_settings
 """
+import sys
+sys.path.append("../..")
+
 from settings import *
 
 DATABASES = {
