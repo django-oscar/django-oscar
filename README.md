@@ -57,13 +57,52 @@ that the template loader can be configured to look in your project first for osc
 
 ## Installation
 
-We recommend using a virtualenv but that is up to you.  Installl django-oscar using
-pip
+Create new django project
+    django-admin startproject myshop
+
+Create a new virtual env
+    mkvirtualenv --not-site-packages myshop
+
+A nice extension now is to edit your `~/.virtualenv/myshop/bin/postactivate` file to contain
+    cd ~/path/to/myshop
+so that you can simply type `workon myshop` to jump into your project folder with the virtual
+environment set-up.
+
+Install django-oscar using pip 
     pip install -e git+git://github.com/codeinthehole/django-oscar.git#egg=django-oscar
+
+Install the dependencies of oscar [need to fill this part in]
+
+Make the following changes to your `settings.py`:
+
+* Add `'django.middleware.transaction.TransactionMiddleware'` to your `MIDDLEWARE_CLASSES` tuple, making 
+  sure it comes BEFORE `'django.contrib.auth.middleware.AuthenticationMiddleware'`.
+* Uncomment `django.contrib.admin` from `INSTALLED_APPS`
+
+Add the following to your `INSTALLED_APPS`:
+    'oscar',
+    'oscar.order',
+    'oscar.checkout',
+    'oscar.order_management',
+    'oscar.product',
+    'oscar.basket',
+    'oscar.payment',
+    'oscar.offer',
+    'oscar.address',
+    'oscar.stock',
+    'oscar.image',
+    
+Now fill in the normal settings (not related to django-oscar) within `settings.py` - eg `DATABASES`, `TIME_ZONE` etc    
 
 ### Modelling your domain
 
 Now configure your models.
+
+
+### Create database
+
+Final step is to create your database schema:
+    ./manage.py syncdb
 
 
 ### Stock validation

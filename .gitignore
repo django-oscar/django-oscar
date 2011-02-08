@@ -8,3 +8,4 @@ product-images/*
 .settings
 django_oscar.egg-info/
 STORIES
+docs/build/*
