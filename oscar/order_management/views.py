@@ -20,7 +20,7 @@ class OrderListView(ListView):
     def get_queryset(self):
         return order_models.Order.objects.all()
     
-    
+  
 class OrderView(ModelView):
     template_file = "order_management/order.html"
     

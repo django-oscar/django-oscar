@@ -27,22 +27,22 @@ def prev_steps_must_be_complete(view_fn):
     The completed steps (identified by URL-names) are stored in the session.
     If this fails, then we redirect to the next uncompleted step.
     """
-    def _view_wrapper(request, *args, **kwargs):
+    def _view_wrapper(self, request, *args, **kwargs):
         checker = checkout_utils.ProgressChecker()
         if not checker.are_previous_steps_complete(request):
             messages.error(request, "You must complete this step of the checkout first")
             url_name = checker.get_next_step(request)
             return HttpResponseRedirect(reverse(url_name))
-        return view_fn(request, *args, **kwargs)
+        return view_fn(self, request, *args, **kwargs)
     return _view_wrapper
 
 def basket_required(view_fn):
-    def _view_wrapper(request, *args, **kwargs):
+    def _view_wrapper(self, request, *args, **kwargs):
         basket = basket_factory.BasketFactory().get_open_basket(request)
         if not basket:
             messages.error(request, "You must add some products to your basket before checking out")
             return HttpResponseRedirect(reverse('oscar-basket'))
-        return view_fn(request, *args, **kwargs)
+        return view_fn(self, request, *args, **kwargs)
     return _view_wrapper
 
 def mark_step_as_complete(request):
@@ -51,6 +51,9 @@ def mark_step_as_complete(request):
     as complete.
     """
     checkout_utils.ProgressChecker().step_complete(request)
+    
+def get_next_step(request):
+    return checkout_utils.ProgressChecker().get_next_step(request)
 
 
 class IndexView(object):
@@ -64,6 +67,7 @@ class IndexView(object):
 
 class ShippingAddressView(ModelView):
     
+    @basket_required
     def __call__(self, request):
         
         # Set up the instance variables that are needed to place an order
@@ -82,7 +86,7 @@ class ShippingAddressView(ModelView):
                 # User has selected a previous address to ship to
                 self.co_data.ship_to_user_address(address)
                 mark_step_as_complete(self.request)
-                return HttpResponseRedirect(reverse('oscar-checkout-shipping-method'))
+                return HttpResponseRedirect(reverse(get_next_step(self.request)))
             elif 'action' in self.request.POST and self.request.POST['action'] == 'delete':
                 address.delete()
                 messages.info(self.request, "Address deleted from your address book")
@@ -98,7 +102,7 @@ class ShippingAddressView(ModelView):
                     is_default = True
                 self.co_data.ship_to_new_address(form.clean(), is_default)
                 mark_step_as_complete(self.request)
-                return HttpResponseRedirect(reverse('oscar-checkout-shipping-method'))
+                return HttpResponseRedirect(reverse(get_next_step(self.request)))
             return self.handle_GET(form)
         
     def handle_GET(self, form=None):
@@ -129,9 +133,10 @@ class ShippingMethodView(object):
     subclass of this class.
     """
     
+    @prev_steps_must_be_complete
     def __call__(self, request):
         mark_step_as_complete(request)
-        return HttpResponseRedirect(reverse('oscar-checkout-payment'))
+        return HttpResponseRedirect(reverse(get_next_step(request)))
         
 
 class PaymentView(object):
@@ -140,9 +145,10 @@ class PaymentView(object):
     subclass of this class.
     """
     
+    @prev_steps_must_be_complete
     def __call__(self, request):
         mark_step_as_complete(request)
-        return HttpResponseRedirect(reverse('oscar-checkout-preview'))
+        return HttpResponseRedirect(reverse(get_next_step(request)))
 
 
 class OrderPreviewView(object):
@@ -150,6 +156,7 @@ class OrderPreviewView(object):
     View a preview of the order before submitting.
     """
     
+    @prev_steps_must_be_complete
     def __call__(self, request):
         co_data = checkout_utils.CheckoutSessionData(request)
         basket = basket_factory.BasketFactory().get_open_basket(request)

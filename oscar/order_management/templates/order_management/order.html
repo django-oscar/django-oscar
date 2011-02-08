@@ -71,6 +71,7 @@
         </td>
     </tr>
 </table>
+</form
 {% endfor %}
 
 <table>
@@ -129,6 +130,7 @@
 {% endif %}
 
 <form method="post" action="{%url oscar-order-management-order order.number %}"/>
+    {% csrf_token %}
     <input type="hidden" name="action" value="add_note" />
     <label for="message">Message:</label>
     <textarea id="message" name="message"></textarea>
