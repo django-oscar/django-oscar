@@ -3,7 +3,7 @@ from django.contrib import admin
 from oscar.services import import_module
 models = import_module('order.models', ['Order', 'OrderNote', 'CommunicationEvent', 'CommunicationEventType',
                                         'BillingAddress', 'Batch', 'ShippingAddress', 'BatchLine',
-                                        'BatchLinePrice', 'ShippingEvents', 'ShippingEventType', 
+                                        'BatchLinePrice', 'ShippingEvent', 'ShippingEventType', 
                                         'PaymentEvent', 'PaymentEventType', 'BatchLineAttribute'])
 
 class BatchAdmin(admin.ModelAdmin):

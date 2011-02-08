@@ -5,7 +5,7 @@ product_models = import_module('product.models', ['Item', 'ItemClass', 'Attribut
                                                   'ItemAttributeValue', 'Option'])
 
 class AttributeInline(admin.TabularInline):
-    model = ItemAttributeValue
+    model = product_models.ItemAttributeValue
 
 class ItemClassAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
