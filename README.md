@@ -141,6 +141,8 @@ After checking out your fork, install the latest version of Django (currenty a b
     wget http://www.djangoproject.com/download/1.3-beta-1/tarball/
 	pip install Django-1.3-beta-1.tar.gz
 
+Clone this repository to get the latest version of Oscar
+
 Install oscar in development mode within your virtual env
 
     python setup.py develop
