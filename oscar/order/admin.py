@@ -1,5 +1,10 @@
 from django.contrib import admin
-from oscar.order.models import *
+
+from oscar.services import import_module
+models = import_module('order.models', ['Order', 'OrderNote', 'CommunicationEvent', 'CommunicationEventType',
+                                        'BillingAddress', 'Batch', 'ShippingAddress', 'BatchLine',
+                                        'BatchLinePrice', 'ShippingEvents', 'ShippingEventType', 
+                                        'PaymentEvent', 'PaymentEventType', 'BatchLineAttribute'])
 
 class BatchAdmin(admin.ModelAdmin):
     list_display = ('order', 'partner', 'get_num_items', 'shipping_method')
@@ -24,18 +29,18 @@ class OrderNoteAdmin(admin.ModelAdmin):
             obj.user = request.user
         obj.save()
 
-admin.site.register(Order)
-admin.site.register(OrderNote, OrderNoteAdmin)
-admin.site.register(CommunicationEvent)
-admin.site.register(CommunicationEventType, CommunicationEventTypeAdmin)
-admin.site.register(BillingAddress)
-admin.site.register(Batch, BatchAdmin)
-admin.site.register(ShippingAddress)
-admin.site.register(BatchLine, BatchLineAdmin)
-admin.site.register(BatchLinePrice)
-admin.site.register(ShippingEvent)
-admin.site.register(ShippingEventType, ShippingEventTypeAdmin)
-admin.site.register(PaymentEvent)
-admin.site.register(PaymentEventType, PaymentEventTypeAdmin)
-admin.site.register(BatchLineAttribute)
+admin.site.register(models.Order)
+admin.site.register(models.OrderNote, OrderNoteAdmin)
+admin.site.register(models.CommunicationEvent)
+admin.site.register(models.CommunicationEventType, CommunicationEventTypeAdmin)
+admin.site.register(models.BillingAddress)
+admin.site.register(models.Batch, BatchAdmin)
+admin.site.register(models.ShippingAddress)
+admin.site.register(models.BatchLine, BatchLineAdmin)
+admin.site.register(models.BatchLinePrice)
+admin.site.register(models.ShippingEvent)
+admin.site.register(models.ShippingEventType, ShippingEventTypeAdmin)
+admin.site.register(models.PaymentEvent)
+admin.site.register(models.PaymentEventType, PaymentEventTypeAdmin)
+admin.site.register(models.BatchLineAttribute)
 

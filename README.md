@@ -3,9 +3,9 @@
 Named after [Oscar Peterson](http://en.wikipedia.org/wiki/Oscar_Peterson),
 django-oscar is a flexible ecommerce platform, structured to allow accurate
 domain models to be constructed.  It is not supposed to be a framework that can
-be downloaded and fully set up by simply adjusting a configuration file: there will always
-be some developer work required to make sure the models match those from your
-domain - this is the nature of domain modelling.
+be downloaded and fully set up by simply adjusting a configuration file: there
+will always be some developer work required to make sure the models match those
+from your domain - this is the nature of domain modelling.
 
 However, a small amount of work up front in determine the right models for your
 shop can really pay off in terms of building a high-quality application that
@@ -31,16 +31,20 @@ ultimately to a much cleaner and coherent system.
 The central aim of django-oscar is to be a flexible app, that can be customised (rather than 
 configured) to suit the domain at hand.  This is acheived in several ways:
 
-* **All core models are abstract.**  In each sub-app, there is an `abstract_models.py` file which
-defines abstract super-classes for every core model.  There is also an accompanying `models.py` file which provides
-a vanilla concrete implementation of each model.  The apps are structured this way so that
-any model can be subclassed and extended.  You would do this by creating an app in your project with
-the same top-level app label as the one you want to modify (eg `myshop.product` to modify `oscar.product`).
-You can then create a models.py file which imports from the corresponding abstract models file but
-your concrete implementations can add new fields and methods.  For example, in a clothes shop, you might
-want your core `product.Item` model to support fields for `Label`.  
+* **All core models are abstract.**  In each sub-app, there is an
+`abstract_models.py` file which
+defines abstract super-classes for every core model.  There is also an
+accompanying `models.py` file which provides a vanilla concrete implementation
+of each model.  The apps are structured this way so that any model can be
+subclassed and extended.  You would do this by creating an app in your project
+with the same top-level app label as the one you want to modify (eg
+`myshop.product` to modify `oscar.product`).  You can then create a models.py
+file which imports from the corresponding abstract models file but your
+concrete implementations can add new fields and methods.  For example, in a
+clothes shop, you might want your core `product.Item` model to support fields
+for `Label`.  
 
-* **Little use of the [Entity-Attribute-Value](http://en.wikipedia.org/wiki/Entity-attribute-value_model) pattern**. 
+* **Avoidance of the [Entity-Attribute-Value](http://en.wikipedia.org/wiki/Entity-attribute-value_model) pattern**. 
 This technique of subclassing and extending
 models avoids an over-reliance on the using the EAV pattern which is commonly used to store data and meta-data about 
 domain objects.  
@@ -55,28 +59,65 @@ app to load a class from.
 that the template loader can be configured to look in your project first for oscar templates.
 
 
-## Installation
+## Installation for implementers
 
-We recommend using a virtualenv but that is up to you.  Installl django-oscar using
-pip
+First install pip and virtualenv:
+	sudo apt-get install python-setuptools
+	sudo easy_install pip
+	sudo pip install virtualenv virtualenvwrapper
+	echo "source /usr/local/bin/virtualenvwrapper.sh" >> ~/.bashrc
+
+Create new django project
+    cd /path/to/my/workspace
+    django-admin startproject myshop
+
+Create a new virtual env
+    mkvirtualenv --not-site-packages myshop
+
+A nice extension now is to edit your `~/.virtualenv/myshop/bin/postactivate` file to contain
+    cd ~/path/to/myshop
+so that you can simply type `workon myshop` to jump into your project folder with the virtual
+environment set-up.
+
+Install django-oscar using pip 
     pip install -e git+git://github.com/codeinthehole/django-oscar.git#egg=django-oscar
+
+Make the following changes to your `settings.py`:
+
+* Add `'django.middleware.transaction.TransactionMiddleware'` to your `MIDDLEWARE_CLASSES` tuple, making 
+  sure it comes BEFORE `'django.contrib.auth.middleware.AuthenticationMiddleware'`.
+* Uncomment `django.contrib.admin` from `INSTALLED_APPS`
+
+Add the following to your `INSTALLED_APPS`:
+    'oscar',
+    'oscar.order',
+    'oscar.checkout',
+    'oscar.order_management',
+    'oscar.product',
+    'oscar.basket',
+    'oscar.payment',
+    'oscar.offer',
+    'oscar.address',
+    'oscar.stock',
+    'oscar.image',
+    
+Now fill in the normal settings (not related to django-oscar) within `settings.py` - eg `DATABASES`, `TIME_ZONE` etc    
+
+A vanilla install of django-oscar is now ready, you could now finish the process by running 
+    ./manage.py syncdb
+
+However, in reality you will need to start extending the models to match your domain.  It's best to do
+this before creating your initial schema.
 
 ### Modelling your domain
 
 Now configure your models.
 
+### Create database
 
-### Stock validation
+Final step is to create your database schema:
+    ./manage.py syncdb
 
-You can enfore stock validation rules using signals.  You just need to register a listener to 
-the BasketLine pre_save signal that checks the line is valid. For example:
-
-    @receiver(pre_save, sender=Line)
-    def handle_line_save(sender, **kwargs):
-        if 'instance' in kwargs:
-            quantity = int(kwargs['instance'].quantity)
-            if quantity > 4:
-                raise InvalidBasketLineError("You are only allowed to purchase a maximum of 4 of these")
 
 ## Installation for django-oscar developers
 
@@ -85,6 +126,9 @@ Set up `virtualenv` if you haven't already done so:
 	sudo easy_install pip
 	sudo pip install virtualenv virtualenvwrapper
 	echo "source /usr/local/bin/virtualenvwrapper.sh" >> ~/.bashrc
+
+Note: Fedora (and possibly other Red Hat based distros) installs virtualenvwrapper.sh in /usr/bin path, so the last line above should read:
+	echo "source /usr/bin/virtualenvwrapper.sh" >> ~/.basrc
 
 Reload bash with the following command:
     ~/.bashrc
@@ -95,7 +139,7 @@ Do the following from your workspace folder:
     mkvirtualenv --no-site-packages oscar
 	workon oscar
     
-After checking out your fork, install the latest version of Django (currenty a beta of 1.3)
+After checking out your fork, install the latest version of Django into your virtualenv (currenty a beta of 1.3)
 
     wget http://www.djangoproject.com/download/1.3-beta-1/tarball/
 	pip install Django-1.3-beta-1.tar.gz
@@ -109,6 +153,14 @@ Install all packages from the requirements file
 Install oscar in development mode within your virtual env
 
     python setup.py develop
+
+Optionally, install all packages from the requirements file
+
+	pip install -r requirements.txt
+
+Note: In case of gcc crashing and complaining in-between installation process,
+make sure you have appropriate -devel packages installed (ie. mysql-devel) in
+your system.
 
 Now create a `local_settings.py` file which contains details of your local database
 that you want to use for development.  Be sure to create two databases: one for development
@@ -145,3 +197,17 @@ Look in the TODO file for things to hack on...
 ### Conventions
 * URLs use hyphens not underscores
 
+
+## Recipes
+
+### Stock validation
+
+You can enfore stock validation rules using signals.  You just need to register a listener to 
+the BasketLine pre_save signal that checks the line is valid. For example:
+
+    @receiver(pre_save, sender=Line)
+    def handle_line_save(sender, **kwargs):
+        if 'instance' in kwargs:
+            quantity = int(kwargs['instance'].quantity)
+            if quantity > 4:
+                raise InvalidBasketLineError("You are only allowed to purchase a maximum of 4 of these")

@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.core.urlresolvers import resolve
 from django.core.exceptions import ObjectDoesNotExist
 
+from oscar.views import ModelView
 from oscar.services import import_module
 
 basket_factory = import_module('basket.factory', ['BasketFactory'])
@@ -60,54 +61,66 @@ class IndexView(object):
             return HttpResponseRedirect(reverse('oscar-checkout-shipping-address'))
         return render(request, self.template_file, locals())    
 
-@basket_required
-def shipping_address(request):
-    """
-    Handle the selection of a shipping address.
-    """
-    co_data = checkout_utils.CheckoutSessionData(request)
-    if request.method == 'POST':
-        if request.user.is_authenticated and 'address_id' in request.POST:
-            address = address_models.UserAddress.objects.get(pk=request.POST['address_id'])
-            if 'action' in request.POST and request.POST['action'] == 'ship_to':
+
+class ShippingAddressView(ModelView):
+    
+    def __call__(self, request):
+        
+        # Set up the instance variables that are needed to place an order
+        self.request = request
+        self.co_data = checkout_utils.CheckoutSessionData(request)
+        
+        if request.method == 'POST':
+            return self.handle_POST()
+        elif request.method == 'GET':
+            return self.handle_GET()
+    
+    def handle_POST(self):
+        if self.request.user.is_authenticated and 'address_id' in self.request.POST:
+            address = address_models.UserAddress.objects.get(pk=self.request.POST['address_id'])
+            if 'action' in self.request.POST and self.request.POST['action'] == 'ship_to':
                 # User has selected a previous address to ship to
-                co_data.ship_to_user_address(address)
-                mark_step_as_complete(request)
+                self.co_data.ship_to_user_address(address)
+                mark_step_as_complete(self.request)
                 return HttpResponseRedirect(reverse('oscar-checkout-shipping-method'))
-            elif 'action' in request.POST and request.POST['action'] == 'delete':
+            elif 'action' in self.request.POST and self.request.POST['action'] == 'delete':
                 address.delete()
-                messages.info(request, "Address deleted from your address book")
+                messages.info(self.request, "Address deleted from your address book")
                 return HttpResponseRedirect(reverse('oscar-checkout-shipping-method'))
+            else:
+                return HttpResponseBadRequest()
         else:
-            form = checkout_forms.ShippingAddressForm(request.POST)
+            form = checkout_forms.ShippingAddressForm(self.request.POST)
             if form.is_valid():
                 # Address data is valid - store in session and redirect to next step.
                 is_default = False
-                if 'save_as_default' in request.POST and request.POST['save_as_default'] == 'on':
+                if 'save_as_default' in self.request.POST and self.request.POST['save_as_default'] == 'on':
                     is_default = True
-                co_data.ship_to_new_address(form.clean(), is_default)
-                mark_step_as_complete(request)
+                self.co_data.ship_to_new_address(form.clean(), is_default)
+                mark_step_as_complete(self.request)
                 return HttpResponseRedirect(reverse('oscar-checkout-shipping-method'))
-    else:
-        addr_fields = co_data.new_address_fields()
-        if addr_fields:
-            form = checkout_forms.ShippingAddressForm(addr_fields)
-        else:
-            form = checkout_forms.ShippingAddressForm()
+            return self.handle_GET(form)
+        
+    def handle_GET(self, form=None):
+        if not form:
+            addr_fields = self.co_data.new_address_fields()
+            if addr_fields:
+                form = checkout_forms.ShippingAddressForm(addr_fields)
+            else:
+                form = checkout_forms.ShippingAddressForm()
     
-    # Add in extra template bindings
-    basket = basket_factory.BasketFactory().get_open_basket(request)
-    calc = checkout_calculators.OrderTotalCalculator(request)
-    order_total = calc.order_total_incl_tax(basket)
-    shipping_total_excl_tax = 0
-    shipping_total_incl_tax = 0
-    
-    # Look up address book data
-    if request.user.is_authenticated():
-        addresses = address_models.UserAddress.objects.filter(user=request.user)
-    
-    return render(request, 'checkout/shipping_address.html', locals())
-    
+        # Add in extra template bindings
+        basket = basket_factory.BasketFactory().get_open_basket(self.request)
+        calc = checkout_calculators.OrderTotalCalculator(self.request)
+        order_total = calc.order_total_incl_tax(basket)
+        shipping_total_excl_tax = 0
+        shipping_total_incl_tax = 0
+        
+        # Look up address book data
+        if self.request.user.is_authenticated():
+            addresses = address_models.UserAddress.objects.filter(user=self.request.user)
+        
+        return render(self.request, 'checkout/shipping_address.html', locals())
     
 def shipping_method(request):
     """
