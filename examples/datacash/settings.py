@@ -100,7 +100,7 @@ INSTALLED_APPS = (
     # Apps from oscar
     'oscar',
     'oscar.order',
-    'oscar.checkout',
+    'shop.checkout',
     'oscar.order_management',
     'oscar.product',
     'oscar.basket',
