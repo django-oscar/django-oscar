@@ -8,7 +8,9 @@ class AbstractOrder(models.Model):
     """
     An order
     """
-    number = models.PositiveIntegerField(_("Order number"), db_index=True)
+    number = models.CharField(_("Order number"), max_length=128, db_index=True)
+    # We track the site that each order is placed within
+    site = models.ForeignKey('sites.Site')
     basket = models.ForeignKey('basket.Basket')
     # Orders can be anonymous so we don't always have a customer ID
     user = models.ForeignKey(User, related_name='orders', null=True, blank=True)

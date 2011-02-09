@@ -7,6 +7,7 @@ from django.forms import ModelForm
 from django.contrib import messages
 from django.core.urlresolvers import resolve
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.sites.models import Site
 
 from oscar.views import ModelView
 from oscar.services import import_module
@@ -230,6 +231,7 @@ class SubmitView(object):
         """
         calc = checkout_calculators.OrderTotalCalculator(self.request)
         order_data = {'basket': self.basket,
+                      'site': Site.objects.get_current(),
                       'total_incl_tax': calc.order_total_incl_tax(self.basket),
                       'total_excl_tax': calc.order_total_excl_tax(self.basket),
                       'shipping_incl_tax': 0,
