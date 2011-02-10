@@ -34,8 +34,7 @@ class AbstractAddress(models.Model):
     line3 = models.CharField(_("City"), max_length=255, blank=True)
     line4 = models.CharField(_("State/County"), max_length=255, blank=True)
     postcode = models.CharField(_("Post/Zip-code"), max_length=64)
-    # @todo: Create a country model to use as a foreign key
-    country = models.CharField(_("Country"), max_length=255, blank=True)
+    country = models.ForeignKey('address.Country')
     
     class Meta:
         abstract = True
@@ -83,6 +82,32 @@ class AbstractAddress(models.Model):
     def __unicode__(self):
         return self.summary()
 
+
+class AbstractCountry(models.Model):
+    """
+    International Organization for Standardization (ISO) 3166-1 Country list
+    """
+    iso_3166_1_a2 = models.CharField(_('ISO 3166-1 alpha-2'), max_length=2, primary_key=True)
+    iso_3166_1_a3 = models.CharField(_('ISO 3166-1 alpha-3'), max_length=3, null=True)
+    iso_3166_1_numeric = models.PositiveSmallIntegerField(_('ISO 3166-1 numeric'), null=True)
+    name = models.CharField(_('Official name (CAPS)'), max_length=128)
+    printable_name = models.CharField(_('Country name'), max_length=128)
+    
+    is_highlighted = models.BooleanField(default=False)
+    is_shipping_country = models.BooleanField(default=False)
+    
+    class Meta:
+        abstract = True
+        verbose_name = _('Country')
+        verbose_name_plural = _('Countries')
+        ordering = ('-is_highlighted', 'name',)
+            
+    class Admin:
+        list_display = ('printable_name', 'iso_3166',)
+            
+    def __unicode__(self):
+            return self.printable_name
+        
 
 class AbstractShippingAddress(AbstractAddress):
     u"""
