@@ -17,6 +17,9 @@ def import_module(mod_name, classes=[]):
     
     We search the INSTALLED_APPS list to find the appropriate app string and 
     import that.
+    
+    This is very similar to django.db.models.get_model although that is only 
+    for loading models while this method will load any class.
     """
     # Classes must be specified in order for __import__ to work correctly.  It's
     # also a good practice

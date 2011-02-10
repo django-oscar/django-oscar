@@ -1,9 +1,11 @@
 from django.contrib import admin
-from oscar.offer.models import *
 
+from oscar.services import import_module
+models = import_module('offer.models', ['ConditionalOffer', 'Condition', 'Benefit', 'Range',
+                                        'Voucher'])
 
-admin.site.register(ConditionalOffer)
-admin.site.register(Condition)
-admin.site.register(Benefit)
-admin.site.register(Range)
-admin.site.register(Voucher)
+admin.site.register(models.ConditionalOffer)
+admin.site.register(models.Condition)
+admin.site.register(models.Benefit)
+admin.site.register(models.Range)
+admin.site.register(models.Voucher)

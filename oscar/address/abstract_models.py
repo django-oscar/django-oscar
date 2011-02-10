@@ -1,17 +1,21 @@
 """
 Core address objects
 """
+import zlib
+
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-class AbstractAddress(models.Model):
-    """
-    Core address object
-    
-    This is normally subclassed and extended to provide models for 
-    delivery and billing addresses.
-    """
 
+class AbstractAddress(models.Model):
+    u"""
+    Superclass address object
+    
+    This is subclassed and extended to provide models for 
+    user, shipping and billing addresses.
+    
+    The only required fields are last_name, line1 and postcode.
+    """
     # @todo: Need a way of making these choice lists configurable 
     # per project
     MR, MISS, MRS, MS, DR = ('Dr', 'Miss', 'Mrs', 'Ms', 'Dr')
@@ -36,27 +40,104 @@ class AbstractAddress(models.Model):
     class Meta:
         abstract = True
         
-    def get_salutation(self):
+    def save(self, *args, **kwargs):
+        # Ensure postcodes are always uppercase
+        if self.postcode:
+            self.postcode = self.postcode.upper()
+        super(AbstractAddress, self).save(*args, **kwargs)    
+        
+    def summary(self):
+        u"""
+        Returns a single string summary of the address,
+        separating fields using commas.
+        """
+        return u", ".join(self.active_address_fields())    
+        
+    def populate_alternative_model(self, address_model):
+        u"""
+        For populating an address model using the matching fields
+        from this one.
+        
+        This is used to convert a user address to a shipping address
+        as part of the checkout process.
+        """
+        destination_field_names = list(address_model._meta.get_all_field_names())
+        for field_name in self._meta.get_all_field_names():
+            if field_name in destination_field_names and field_name != 'id':
+                setattr(address_model, field_name, getattr(self, field_name))
+                
+    def active_address_fields(self):
+        """
+        Returns the non-empty components of the address, but merging the
+        title, first_name and last_name into a single line.
+        """
+        return filter(lambda x: x, [self.salutation(), self.line1, self.line2, self.line3,
+                                    self.line4, self.postcode, self.country])
+        
+    def salutation(self):
         """
         Returns the salutation
         """
         return " ".join([part for part in [self.title, self.first_name, self.last_name] if part])
         
     def __unicode__(self):
-        parts = (self.get_salutation(), self.line1, self.line2, self.line3, self.line4,
-                 self.postcode, self.country)
-        return u", ".join([part for part in parts if part])
+        return self.summary()
 
-class AbstractDeliveryAddress(AbstractAddress):
-    """
-    Delivery address 
+
+class AbstractShippingAddress(AbstractAddress):
+    u"""
+    Shipping address.
+    
+    A shipping address should not be edited once the order has been placed - 
+    it should be read-only after that. 
     """
     phone_number = models.CharField(max_length=32, blank=True, null=True)
     notes = models.TextField(blank=True, null=True) 
     
     class Meta:
         abstract = True
-        verbose_name_plural = "Delivery addresses"
+        verbose_name_plural = "shipping addresses"
+        
+        
+class AbstractUserAddress(AbstractShippingAddress):
+    u"""
+    A user address which forms an "AddressBook" for a user.
+    
+    We use a separate model to shipping and billing (even though there will be
+    some data duplication) because we don't want shipping/billing addresses changed
+    or deleted once an order has been placed.  By having a separate model, we allow
+    users the ability to add/edit/delete from their address book without affecting
+    orders already placed. 
+    """
+    user = models.ForeignKey('auth.User', related_name='addresses')
+    
+    # We keep track of the number of times an address has been used
+    # as a shipping address so we can show the most popular ones 
+    # first at the checkout.
+    num_orders = models.PositiveIntegerField(default=0)
+    # A hash is kept to try and avoid duplicate addresses being added
+    # to the address book.
+    hash = models.CharField(max_length=255, db_index=True)
+    date_created = models.DateTimeField(auto_now_add=True)
+    
+    def generate_hash(self):
+        u"""
+        Returns a hash of the address summary.
+        """
+        # We use an upper-case version of the summary
+        return zlib.crc32(self.summary().strip().upper())
+
+    def save(self, *args, **kwargs):
+        # Save a hash of the address fields so we can check whether two 
+        # addresses are the same to avoid saving duplicates
+        self.hash = self.generate_hash()
+        super(AbstractUserAddress, self).save(*args, **kwargs)  
+    
+    class Meta:
+        abstract = True
+        verbose_name_plural = "User addresses"
+        ordering = ['-num_orders']
+
 
 class AbstractBillingAddress(AbstractAddress):
     """

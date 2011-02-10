@@ -1,111 +1,151 @@
-import zlib
-
-from django.conf import settings
 from django.http import HttpResponse, Http404, HttpResponseRedirect, HttpResponseBadRequest
 from django.template import RequestContext
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response, get_object_or_404, render
 from django.core.urlresolvers import reverse
+from django.contrib import messages
 
+from oscar.views import ModelView
 from oscar.services import import_module
 
-# Using dynamic app loading
-basket_models = import_module('basket.models', ['Basket'])
-basket_forms = import_module('basket.forms', ['AddToBasketForm'])
+basket_models = import_module('basket.models', ['Basket', 'Line', 'InvalidBasketLineError'])
+basket_forms = import_module('basket.forms', ['FormFactory'])
+basket_factory = import_module('basket.factory', ['BasketFactory'])
 product_models = import_module('product.models', ['Item'])
-
-COOKIE_KEY_ID = 'basket_id'
-COOKIE_KEY_HASH = 'basket_hash'
-COOKIE_LIFETIME = 7*24*60*60
-
-def _get_user_basket(request):
+    
+        
+class BasketView(ModelView):
+    u"""
+    Class-based view for the basket model.
     """
-    Returns the basket for the current user
-    """
-    b = None
-    if request.user.is_authenticated():
-        b = basket_models.Basket.open.get(owner=request.user)
-    else:
-        b = _get_anon_user_basket(request)
-    return b    
-
-def _get_anon_user_basket(request):
-    """
-    Looks for a basket that has its ID stored in the user's cookies
-    """
-    b = None
-    # If user is anonymous, their basket ID (if they have one) will be
-    # stored in a cookie together with a hash which verifies it and prevents
-    # it from being spoofed.
-    if request.COOKIES.has_key(COOKIE_KEY_ID) and request.COOKIES.has_key(COOKIE_KEY_HASH):
-        basket_id = request.COOKIES[COOKIE_KEY_ID]
-        basket_hash = request.COOKIES[COOKIE_KEY_HASH]
-        if basket_hash == _get_basket_hash(basket_id):
-            try:
-                b = basket_models.Basket.open.get(pk=basket_id)
-            except basket_models.Basket.DoesNotExist, e:
-                b = None
-    return b      
-
-def _get_or_create_basket(request, response):
-    """
-    Loads or creates a basket object.
-    """
-    anon_basket = _get_anon_user_basket(request)
-    if request.user.is_authenticated():
+    template_file = 'basket/summary.html'
+    
+    def __init__(self):
+        self.response = HttpResponseRedirect(reverse('oscar-basket'))
+        self.factory = basket_factory.BasketFactory()
+    
+    def get_model(self):
+        return self.factory.get_or_create_open_basket(self.request, self.response)
+    
+    def handle_GET(self, basket):
+        saved_basket = self.factory.get_saved_basket(self.request)
+        self.response = render(self.request, self.template_file, locals())
+        
+    def handle_POST(self, basket):
         try:
-            user_basket = basket_models.Basket.open.get(owner=request.user)
-            if anon_basket:
-                # If signed in user also has a cookie basket, we merge them and 
-                # delete the cookies
-                user_basket.merge(anon_basket)
-                response.delete_cookie(COOKIE_KEY_ID)
-                response.delete_cookie(COOKIE_KEY_HASH)
-        except basket_models.Basket.DoesNotExist:
-            user_basket = basket_models.Basket.open.create(owner=request.user)
-        b = user_basket
-    else:
-        b = _get_anon_user_basket(request)
-        if not b:
-            # No valid basket found so we create a new one and store the id
-            # and hash in a cookie.
-            b = basket_models.Basket.objects.create()
-            response.set_cookie(COOKIE_KEY_ID, b.pk, max_age=COOKIE_LIFETIME)
-            response.set_cookie(COOKIE_KEY_HASH, _get_basket_hash(b.pk), max_age=COOKIE_LIFETIME)
-    return b    
-
-def _get_basket_hash(id):
-    """
-    Create a hash of the basket ID using the SECRET_KEY
-    variable defined in settings.py as a salt.
-    """
-    return str(zlib.crc32(str(id)+settings.SECRET_KEY))
-
-
-def index(request):
-    """ 
-    Pages should POST to this view to add an item to someone's basket
-    """
-    if request.method == 'POST': 
-        form = basket_forms.AddToBasketForm(request.POST)
-        if not form.is_valid():
-            # @todo Handle form errors in the add-to-basket form
-            return HttpResponseBadRequest("Unable to add your item to the basket - submission not valid")
-        try:
-            # We create the response object early as the basket creation
-            # may need to set a cookie on it
-            response = HttpResponseRedirect('/shop/basket/')
-            product = product_models.Item.objects.get(pk=form.cleaned_data['product_id'])
-            basket = _get_or_create_basket(request, response)
-            basket.add_product(product, form.cleaned_data['quantity'])
-        except product_models.Item.DoesNotExist, e:
-            response = HttpResponseBadRequest("Unable to find the requested item to add to your basket")
-        except basket_models.Basket.DoesNotExist, e:
-            response = HttpResponseBadRequest("Unable to find your basket") 
-    else:
-        # Display the visitor's basket
-        basket = _get_user_basket(request)
-        if not basket:
-            basket = basket_models.Basket()
+            super(BasketView, self).handle_POST(basket)
+        except basket_models.InvalidBasketLineError, e:
+            # We handle InvalidBasketLineError gracefully as it will be domain logic
+            # which causes this to be thrown (eg. a product out of stock)
+            messages.error(self.request, str(e))
             
-        response = render_to_response('basket.html', locals(), context_instance=RequestContext(request))
-    return response
+    def do_flush(self, basket):
+        basket.flush()
+        messages.info(self.request, "Your basket has been emptied")
+        
+    def do_add(self, basket):
+        item = get_object_or_404(product_models.Item.objects, pk=self.request.POST['product_id'])
+        factory = basket_forms.FormFactory()
+        form = factory.create(item, self.request.POST)
+        if not form.is_valid():
+            self.response = HttpResponseRedirect(item.get_absolute_url())
+            messages.error(self.request, "Unable to add your item to the basket - submission not valid")
+        else:
+            # Extract product options from POST
+            options = []
+            for option in item.options.all():
+                if option.code in form.cleaned_data:
+                    options.append({'option': option, 'value': form.cleaned_data[option.code]})
+            basket.add_product(item, form.cleaned_data['quantity'], options)
+            messages.info(self.request, "'%s' (quantity %d) has been added to your basket" %
+                          (item.get_title(), form.cleaned_data['quantity']))
+ 
+
+class LineView(ModelView):
+    
+    def __init__(self):
+        self.response = HttpResponseRedirect(reverse('oscar-basket'))
+        self.factory = basket_factory.BasketFactory()
+    
+    def get_model(self):
+        basket = self.factory.get_open_basket(self.request)
+        return basket.lines.get(line_reference=self.kwargs['line_reference'])
+        
+    def handle_POST(self, line):
+        try:
+            super(LineView, self).handle_POST(line)
+        except basket_models.Basket.DoesNotExist:
+                messages.error(self.request, "You don't have a basket to adjust the lines of")
+        except basket_models.Line.DoesNotExist:
+            messages.error(self.request, "Unable to find a line with reference %s in your basket" % self.kwargs['line_reference'])
+        except basket_models.InvalidBasketLineError, e:
+            messages.error(self.request, str(e))
+            
+    def _get_quantity(self):
+        if 'quantity' in self.request.POST:
+            return int(self.request.POST['quantity'])
+        return 0        
+            
+    def do_increment_quantity(self, line):
+        q = self._get_quantity()
+        line.quantity += q
+        line.save()    
+        msg = "The quantity of '%s' has been increased by %d" % (line.product, q)
+        messages.info(self.request, msg)
+        
+    def do_decrement_quantity(self, line):
+        q = self._get_quantity()
+        line.quantity -= q
+        line.save()    
+        msg = "The quantity of '%s' has been decreased by %d" % (line.product, q)
+        messages.info(self.request, msg)
+        
+    def do_set_quantity(self, line):
+        q = self._get_quantity()
+        line.quantity = q
+        line.save()    
+        msg = "The quantity of '%s' has been set to %d" % (line.product, q)
+        messages.info(self.request, msg)
+        
+    def do_delete(self, line):
+        line.delete()
+        msg = "'%s' has been removed from your basket" % line.product
+        messages.info(self.request, msg)
+        
+    def do_save_for_later(self, line):
+        saved_basket = self.factory.get_or_create_saved_basket(self.request, self.response)
+        saved_basket.merge_line(line)
+        msg = "'%s' has been saved for later" % line.product
+        messages.info(self.request, msg)
+        
+       
+class SavedLineView(ModelView):
+    
+    def __init__(self):
+        self.response = HttpResponseRedirect(reverse('oscar-basket'))
+        self.factory = basket_factory.BasketFactory()
+    
+    def get_model(self):
+        basket = self.factory.get_saved_basket(self.request)
+        return basket.lines.get(line_reference=self.kwargs['line_reference'])
+        
+    def handle_POST(self, line):
+        try:
+            super(SavedLineView, self).handle_POST(line)
+        except basket_models.InvalidBasketLineError, e:
+            messages.error(request, str(e))   
+            
+    def do_move_to_basket(self, line):
+        real_basket = self.factory.get_or_create_open_basket(self.request, self.response)
+        real_basket.merge_line(line)
+        msg = "'%s' has been moved back to your basket" % line.product
+        messages.info(self.request, msg)
+        
+    def do_delete(self, line):
+        line.delete()
+        msg = "'%s' has been removed" % line.product
+        messages.warn(self.request, msg)
+        
+    def _get_quantity(self):
+        if 'quantity' in self.request.POST:
+            return int(self.request.POST['quantity'])
+        return 0

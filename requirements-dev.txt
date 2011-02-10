@@ -1,0 +1,7 @@
+Pygments==1.4
+Werkzeug==0.6.2
+django-debug-toolbar==0.8.4
+django-extensions==0.5
+ipdb==0.2
+ipython==0.10.1
+wsgiref==0.1.2

@@ -8,7 +8,7 @@ class ItemClass(AbstractItemClass):
 
 class Item(AbstractItem):
     pass
-
+    
 class AttributeType(AbstractAttributeType):
     pass
 
@@ -16,4 +16,7 @@ class AttributeValueOption(AbstractAttributeValueOption):
     pass
 
 class ItemAttributeValue(AbstractItemAttributeValue):
+    pass
+
+class Option(AbstractOption):
     pass

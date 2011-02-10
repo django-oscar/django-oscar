@@ -4,15 +4,24 @@ Vanilla implementation of order models
 from django.db import models
 
 from oscar.order.abstract_models import *
-from oscar.address.abstract_models import AbstractAddress, AbstractDeliveryAddress, AbstractBillingAddress
+from oscar.address.abstract_models import AbstractShippingAddress, AbstractBillingAddress
 
 class Order(AbstractOrder):
+    pass
+
+class OrderNote(AbstractOrderNote):
+    pass
+
+class CommunicationEvent(AbstractCommunicationEvent):
+    pass
+
+class CommunicationEventType(AbstractCommunicationEventType):
     pass
 
 class Batch(AbstractBatch):
     pass
 
-class DeliveryAddress(AbstractDeliveryAddress):
+class ShippingAddress(AbstractShippingAddress):
     pass
 
 class BillingAddress(AbstractBillingAddress):
@@ -24,10 +33,16 @@ class BatchLine(AbstractBatchLine):
 class BatchLinePrice(AbstractBatchLinePrice):
     pass
 
-class BatchLineEvent(AbstractBatchLineEvent):
+class ShippingEvent(AbstractShippingEvent):
     pass
 
-class BatchLineEventType(AbstractBatchLineEventType):
+class ShippingEventType(AbstractShippingEventType):
+    pass
+
+class PaymentEvent(AbstractPaymentEvent):
+    pass
+
+class PaymentEventType(AbstractPaymentEventType):
     pass
 
 class BatchLineAttribute(AbstractBatchLineAttribute):
