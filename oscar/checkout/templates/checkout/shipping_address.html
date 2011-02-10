@@ -1,5 +1,7 @@
 {% extends "layout.html" %}
 
+{% load currency_filters %}
+
 {% block header %}
 <h2>Checkout</h2>
 {% endblock header %}
@@ -64,25 +66,25 @@
         <td><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></td>
         <td>{{ line.product.stockrecord.availability }}</td>
         <td>{{ line.quantity }}</td>
-        <td>{{ line.unit_price_excl_tax|floatformat:2 }}</td>
-        <td>{{ line.unit_tax|floatformat:2 }}</td>
-        <td>{{ line.line_price_excl_tax|floatformat:2 }}</td>
-        <td>{{ line.line_price_incl_tax|floatformat:2 }}</td>
+        <td>{{ line.unit_price_excl_tax|currency }}</td>
+        <td>{{ line.unit_tax|currency }}</td>
+        <td>{{ line.line_price_excl_tax|currency }}</td>
+        <td>{{ line.line_price_incl_tax|currency }}</td>
     </tr>
     {% endfor %}
     <tr>
         <td colspan="5">Total</td>
-        <td>{{ basket.total_excl_tax|floatformat:2 }}</td>
-        <td>{{ basket.total_incl_tax|floatformat:2 }}</td>
+        <td>{{ basket.total_excl_tax|currency }}</td>
+        <td>{{ basket.total_incl_tax|currency }}</td>
     </tr>
     <tr>
         <td colspan="5">shipping charge</td>
-        <td>{{ shipping_total_excl_tax|floatformat:2 }}</td>
-        <td>{{ shipping_total_incl_tax|floatformat:2 }}</td>
+        <td>{{ shipping_total_excl_tax|currency }}</td>
+        <td>{{ shipping_total_incl_tax|currency }}</td>
     </tr>
     <tr>
         <td colspan="6">Order total</td>
-        <td>{{ order_total|floatformat:2 }}</td>
+        <td>{{ order_total|currency }}</td>
     </tr>
 </table>
 
