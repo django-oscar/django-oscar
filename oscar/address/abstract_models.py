@@ -94,7 +94,7 @@ class AbstractAddress(models.Model):
 
 
 class AbstractCountry(models.Model):
-    """
+    u"""
     International Organization for Standardization (ISO) 3166-1 Country list
     """
     iso_3166_1_a2 = models.CharField(_('ISO 3166-1 alpha-2'), max_length=2, primary_key=True)
@@ -172,7 +172,7 @@ class AbstractUserAddress(AbstractShippingAddress):
 
 
 class AbstractBillingAddress(AbstractAddress):
-    """
+    u"""
     Billing address
     """
     class Meta:
