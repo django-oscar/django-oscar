@@ -40,11 +40,20 @@ class AbstractAddress(models.Model):
         abstract = True
         
     def save(self, *args, **kwargs):
-        # Ensure postcodes are always uppercase
-        if self.postcode:
-            self.postcode = self.postcode.upper()
+        self._clean_fields()
         super(AbstractAddress, self).save(*args, **kwargs)    
         
+    def _clean_fields(self):
+        # Ensure fields are stripped 
+        self.first_name = self.first_name.strip()
+        for field in ['first_name', 'last_name', 'line1', 'line2', 'line3', 'line4', 'postcode']:
+            self.__dict__[field] = self.__dict__[field].strip()
+        
+        # Ensure postcodes are always uppercase
+        if self.postcode:
+            self.postcode = self.postcode.upper()    
+        
+    @property    
     def summary(self):
         u"""
         Returns a single string summary of the address,
@@ -66,12 +75,13 @@ class AbstractAddress(models.Model):
                 setattr(address_model, field_name, getattr(self, field_name))
                 
     def active_address_fields(self):
-        """
+        u"""
         Returns the non-empty components of the address, but merging the
         title, first_name and last_name into a single line.
         """
+        self._clean_fields()
         return filter(lambda x: x, [self.salutation(), self.line1, self.line2, self.line3,
-                                    self.line4, self.postcode, self.country])
+                                    self.line4, self.postcode, self.country.name])
         
     def salutation(self):
         """
@@ -80,7 +90,7 @@ class AbstractAddress(models.Model):
         return " ".join([part for part in [self.title, self.first_name, self.last_name] if part])
         
     def __unicode__(self):
-        return self.summary()
+        return self.summary
 
 
 class AbstractCountry(models.Model):
@@ -102,11 +112,8 @@ class AbstractCountry(models.Model):
         verbose_name_plural = _('Countries')
         ordering = ('-is_highlighted', 'name',)
             
-    class Admin:
-        list_display = ('printable_name', 'iso_3166',)
-            
     def __unicode__(self):
-            return self.printable_name
+        return self.printable_name
         
 
 class AbstractShippingAddress(AbstractAddress):
@@ -150,7 +157,7 @@ class AbstractUserAddress(AbstractShippingAddress):
         Returns a hash of the address summary.
         """
         # We use an upper-case version of the summary
-        return zlib.crc32(self.summary().strip().upper())
+        return zlib.crc32(self.summary.strip().upper())
 
     def save(self, *args, **kwargs):
         # Save a hash of the address fields so we can check whether two 
