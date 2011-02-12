@@ -169,7 +169,10 @@ class AbstractBatchLine(models.Model):
         status_map = self._shipping_event_history()
         events = []    
         for event, quantity in status_map.items():
-            events.append("%s (%d items)" % (event, quantity))    
+            if quantity == self.quantity:
+                events.append(event)    
+            else:
+                events.append("%s (%d/%d items)" % (event, quantity, self.quantity))    
         return ', '.join(events)
     
     def _shipping_event_history(self):
