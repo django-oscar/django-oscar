@@ -3,7 +3,7 @@
 {% load currency_filters %}
 
 {% block header %}
-<h2>Checkout / Preview</h2>
+<h2>Checkout / Shipping Methods</h2>
 {% endblock header %}
 
 
@@ -22,7 +22,7 @@
     </tr>
     {% if shipping_addr.phone_number %}
     <tr>
-        <th>Concact number</th>
+        <th>Contact number</th>
         <td>shipping_addr.phone_number</td>
     </tr>
     {% endif %}
@@ -47,11 +47,19 @@
         </tr>
     <thead>
     <tbody>
+        {% for method in methods %}
         <tr>
             <td>{{ method.name }}</td>
             <td>{{ method.calculate_basket_charge|currency }}</td>
             <td>{{ method.description }}</td>
-            <td></td>
+            <td>
+                <form method="post" action="{% url oscar-checkout-shipping-method %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="method_code" value="{{ method.code }}" />
+                    <input type="submit" value="Use this shipping method" />
+                </form>
+            </td>
+        {% endfor %}
     </tbody>
 </table>
 
@@ -97,13 +105,6 @@
         <td>{{ order_total|currency }}</td>
     </tr>
 </table>
-
-<form method="post" action="{% url oscar-checkout-submit %}" />
-    {% csrf_token %}
-    <input type="submit" value="Place order!" />
-</form>
-<a href="{% url oscar-basket %}">Edit order contents</a>
-
 
 {% endblock content %}
 

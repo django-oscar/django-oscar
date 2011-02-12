@@ -7,6 +7,8 @@ register = template.Library()
 
 @register.filter(name='currency')
 def currency(value):
+    if not value:
+        return ''
     try:
         locale.setlocale(locale.LC_ALL, settings.LOCALE)
     except AttributeError:

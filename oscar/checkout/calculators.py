@@ -14,11 +14,17 @@ class OrderTotalCalculator(object):
         # always changes the order total.
         self.request = request
     
-    def order_total_incl_tax(self, basket):
+    def order_total_incl_tax(self, basket, shipping_method=None):
         # Default to returning the total including tax - use
         # the request.user object if you want to not charge tax
         # to particular customers.  
-        return basket.total_incl_tax
+        total = basket.total_incl_tax
+        if shipping_method:
+            total += shipping_method.calculate_basket_charge()
+        return total
     
-    def order_total_excl_tax(self, basket):
-        return basket.total_excl_tax
+    def order_total_excl_tax(self, basket, shipping_method=None):
+        total = basket.total_excl_tax
+        if shipping_method:
+            total += shipping_method.calculate_basket_charge()
+        return total

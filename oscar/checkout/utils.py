@@ -121,3 +121,9 @@ class CheckoutSessionData(object):
         
     def user_address_id(self):
         return self._get('shipping', 'user_address_id')
+    
+    def use_shipping_method(self, code):
+        self._set('shipping', 'method_code', code)
+        
+    def shipping_method(self):
+        return self._get('shipping', 'method_code')
