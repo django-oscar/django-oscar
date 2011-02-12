@@ -7,4 +7,5 @@ urlpatterns = patterns('',
     (r'basket/', include('oscar.basket.urls')),
     (r'checkout/', include('oscar.checkout.urls')),
     (r'order-management/', include('oscar.order_management.urls')),
+    (r'accounts/', include('oscar.customer.urls')),
 )

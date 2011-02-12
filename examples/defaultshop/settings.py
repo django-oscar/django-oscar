@@ -110,8 +110,10 @@ INSTALLED_APPS = (
     'oscar.address',
     'oscar.stock',
     'oscar.image',
+    'oscar.customer'
 )
 
+LOGIN_REDIRECT_URL = '/shop/accounts/profile/'
 APPEND_SLASH = True
 
 # Local overrides

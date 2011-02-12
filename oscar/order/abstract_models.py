@@ -49,6 +49,7 @@ class AbstractOrder(models.Model):
     
     class Meta:
         abstract = True
+        ordering = ['-date_placed',]
     
     def save(self, *args, **kwargs):
         if not self.number:
@@ -164,6 +165,16 @@ class AbstractBatchLine(models.Model):
             d = "%s (%s)" % (d, ", ".join(ops))
         return d
     
+    def status(self):
+        status = ''
+        # Loop through events in reverse chronological order
+        for event in self.shippingevent_set.all():
+            quantity = event.shippingeventquantity_set.all()[0].quantity
+            if quantity == self.quantity:
+                return event.event_type.name
+            return 'mixed'
+        return status
+    
     class Meta:
         abstract = True
         verbose_name_plural = _("Batch lines")
@@ -271,10 +282,11 @@ class AbstractShippingEvent(models.Model):
     class Meta:
         abstract = True
         verbose_name_plural = _("Shipping events")
+        ordering = ['-date']
         
     def __unicode__(self):
-        return u"Order #%d, line %s: %d items set to '%s'" % (
-            self.order.number, self.line.id, self.quantity, self.event_type)
+        return u"Order #%s, batch %s, type %s" % (
+            self.order.number, self.batch, self.event_type)
         
     def num_affected_lines(self):
         return self.lines.count()
