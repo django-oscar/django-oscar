@@ -1,7 +1,5 @@
 
 
-
-
 class OrderTotalCalculator(object):
     """
     Calculator class for calculating the order total.
@@ -20,11 +18,11 @@ class OrderTotalCalculator(object):
         # to particular customers.  
         total = basket.total_incl_tax
         if shipping_method:
-            total += shipping_method.calculate_basket_charge()
+            total += shipping_method.basket_charge_incl_tax()
         return total
     
     def order_total_excl_tax(self, basket, shipping_method=None):
         total = basket.total_excl_tax
         if shipping_method:
-            total += shipping_method.calculate_basket_charge()
+            total += shipping_method.basket_charge_excl_tax()
         return total

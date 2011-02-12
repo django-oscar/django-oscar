@@ -1,4 +1,5 @@
 import locale
+from decimal import Decimal
 
 from django import template
 from django.conf import settings
@@ -7,8 +8,6 @@ register = template.Library()
 
 @register.filter(name='currency')
 def currency(value):
-    if not value:
-        return ''
     try:
         locale.setlocale(locale.LC_ALL, settings.LOCALE)
     except AttributeError:

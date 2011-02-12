@@ -1,7 +1,5 @@
-"""
-Core address objects
-"""
 import zlib
+from decimal import Decimal
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -16,8 +14,8 @@ class AbstractMethod(models.Model):
     name = models.CharField(_("Name"), max_length=128)
     description = models.TextField(_("Description"), blank=True)
     price_currency = models.CharField(max_length=12, default='GBP')
-    price_per_order = models.DecimalField(decimal_places=2, max_digits=12, default='0.00')
-    price_per_item = models.DecimalField(decimal_places=2, max_digits=12, default='0.00')
+    price_per_order = models.DecimalField(decimal_places=2, max_digits=12, default=Decimal('0.00'))
+    price_per_item = models.DecimalField(decimal_places=2, max_digits=12, default=Decimal('0.00'))
     
     def save(self, *args, **kwargs):
         if not self.code:
@@ -33,8 +31,12 @@ class AbstractMethod(models.Model):
     def set_basket(self, basket):
         self._basket = basket
     
-    def calculate_basket_charge(self):
+    def basket_charge_incl_tax(self):
         charge = self.price_per_order
         for line in self._basket.lines.all():
             charge += line.quantity * self.price_per_item
         return charge
+    
+    def basket_charge_excl_tax(self):
+        # @todo store tax amounts?
+        return self.basket_charge_incl_tax()

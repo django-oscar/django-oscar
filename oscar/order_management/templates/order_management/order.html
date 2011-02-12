@@ -33,6 +33,9 @@
     {% endif %} 
 </table>
 
+<h3>Shipping method</h3>
+<p>{{ order.shipping_method }}</p>
+
 <h3>Order contents</h3>
 
 {% for batch in order.batches.all %}

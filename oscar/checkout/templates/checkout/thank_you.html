@@ -37,7 +37,7 @@
         <td>{{ order.basket_total_incl_tax|currency }}</td>
     </tr>
     <tr>
-        <td colspan="3">Shipping charge</td>
+        <td colspan="3">Shipping charge - {{order.shipping_method}}</td>
         <td>{{ order.shipping_excl_tax|currency }}</td>
         <td>{{ order.shipping_incl_tax|currency }}</td>
     </tr>

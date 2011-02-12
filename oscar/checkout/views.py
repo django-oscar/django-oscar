@@ -147,6 +147,8 @@ class ShippingMethodView(object):
     def handle_GET(self):
         methods = shipping_models.Method.objects.all()
         if not methods.count():
+            # No defined methods - assume delivery is free
+            self.co_data.use_free_shipping()
             mark_step_as_complete(self.request)
             return HttpResponseRedirect(reverse(get_next_step(self.request)))
         
@@ -205,10 +207,11 @@ class OrderPreviewView(object):
             shipping_addr = address_models.UserAddress.objects.get(pk=addr_id)
         
         # Shipping method
-        method_code = co_data.shipping_method()
-        method = shipping_models.Method.objects.get(code=method_code)
+        method = co_data.shipping_method()
         method.set_basket(basket)
-        shipping_total_incl_tax = method.calculate_basket_charge()
+
+        shipping_total_excl_tax = method.basket_charge_excl_tax()
+        shipping_total_incl_tax = method.basket_charge_incl_tax()
         
         # Calculate order total
         calc = checkout_calculators.OrderTotalCalculator(request)
@@ -277,8 +280,8 @@ class SubmitView(object):
                       'site': Site.objects.get_current(),
                       'total_incl_tax': calc.order_total_incl_tax(self.basket, shipping_method),
                       'total_excl_tax': calc.order_total_excl_tax(self.basket, shipping_method),
-                      'shipping_incl_tax': shipping_method.calculate_basket_charge(),
-                      'shipping_excl_tax': shipping_method.calculate_basket_charge(),}
+                      'shipping_incl_tax': shipping_method.basket_charge_incl_tax(),
+                      'shipping_excl_tax': shipping_method.basket_charge_excl_tax(),}
         if self.request.user.is_authenticated():
             order_data['user_id'] = self.request.user.id
         order = order_models.Order(**order_data)
@@ -286,8 +289,7 @@ class SubmitView(object):
         return order
     
     def _get_shipping_method(self):
-        method_code = self.co_data.shipping_method()
-        method = shipping_models.Method.objects.get(code=method_code)
+        method = self.co_data.shipping_method()
         method.set_basket(self.basket)
         return method
     
@@ -329,7 +331,7 @@ class SubmitView(object):
         partner = self._get_partner_for_product(line.product)
         shipping_addr = self._get_shipping_address_for_line(line)
         batch,_ = order_models.Batch.objects.get_or_create(order=order, partner=partner, 
-                                                           shipping_method=shipping_method.code,
+                                                           shipping_method=shipping_method.name,
                                                            shipping_address=shipping_addr)
         return batch
                 
@@ -407,6 +409,8 @@ class ThankYouView(object):
     def __call__(self, request):
         try:
             order = order_models.Order.objects.get(pk=request.session['checkout_order_id'])
+            
+            # Remove order number from session 
             del request.session['checkout_order_id']
         except KeyError, ObjectDoesNotExist:
             return HttpResponseRedirect(reverse('oscar-checkout-index'))

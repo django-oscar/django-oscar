@@ -25,10 +25,18 @@ class AbstractOrder(models.Model):
     shipping_excl_tax = models.DecimalField(_("Shipping charge (excl. tax)"), decimal_places=2, max_digits=12, default=0)
     date_placed = models.DateTimeField(auto_now_add=True)
     
+    @property
     def shipping_address(self):
         batches = self.batches.all()
         if len(batches) > 0:
             return batches[0].shipping_address
+        return None
+    
+    @property
+    def shipping_method(self):
+        batches = self.batches.all()
+        if len(batches) > 0:
+            return batches[0].shipping_method
         return None
     
     @property
@@ -44,7 +52,7 @@ class AbstractOrder(models.Model):
     
     def save(self, *args, **kwargs):
         if not self.number:
-            self.number= self.basket.id
+            self.number = 100000 + self.basket.id
         super(AbstractOrder, self).save(*args, **kwargs)
     
     def __unicode__(self):
@@ -122,7 +130,7 @@ class AbstractBatch(models.Model):
         verbose_name_plural = _("Batches")
     
     def __unicode__(self):
-        return "%s batch for order #%d" % (self.partner.name, self.order.number)
+        return "%s batch for order #%s" % (self.partner.name, self.order.number)
         
         
 class AbstractBatchLine(models.Model):
