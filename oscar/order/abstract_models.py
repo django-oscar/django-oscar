@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
 
-
 class AbstractOrder(models.Model):
     """
     An order
@@ -165,15 +164,26 @@ class AbstractBatchLine(models.Model):
             d = "%s (%s)" % (d, ", ".join(ops))
         return d
     
-    def status(self):
-        status = ''
-        # Loop through events in reverse chronological order
+    @property
+    def shipping_status(self):
+        status_map = self._shipping_event_history()
+        events = []    
+        for event, quantity in status_map.items():
+            events.append("%s (%d items)" % (event, quantity))    
+        return ', '.join(events)
+    
+    def _shipping_event_history(self):
+        """
+        Returns a dict of shipping event name -> quantity that have been
+        through this state
+        """
+        status_map = {}
         for event in self.shippingevent_set.all():
-            quantity = event.shippingeventquantity_set.all()[0].quantity
-            if quantity == self.quantity:
-                return event.event_type.name
-            return 'mixed'
-        return status
+            event_code = event.event_type.name
+            event_quantity = event.shippingeventquantity_set.all()[0].quantity
+            currenty_quantity = status_map.setdefault(event_code, 0)
+            status_map[event_code] += event_quantity
+        return status_map
     
     class Meta:
         abstract = True
