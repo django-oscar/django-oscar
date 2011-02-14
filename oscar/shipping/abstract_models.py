@@ -7,9 +7,7 @@ from django.template.defaultfilters import slugify
 
 
 class AbstractMethod(models.Model):
-    u"""
-    Shipping method
-    """
+    u"""Shipping method"""
     code = models.CharField(max_length=128, unique=True)
     name = models.CharField(_("Name"), max_length=128)
     description = models.TextField(_("Description"), blank=True)

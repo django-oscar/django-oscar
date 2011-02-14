@@ -6,9 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class AbstractPartner(models.Model):
-    """
-    Fulfillment partner
-    """
+    u"""Fulfillment partner"""
     name = models.CharField(max_length=128)
     
     class Meta:
@@ -20,7 +18,7 @@ class AbstractPartner(models.Model):
 
 
 class AbstractStockRecord(models.Model):
-    """
+    u"""
     A basic stock record.
     
     This links a product to a partner, together with price and availability

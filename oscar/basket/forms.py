@@ -3,14 +3,10 @@ from django import forms
 
 
 class FormFactory(object):
-    u"""
-    Factory for creating the "add-to-basket" forms.
-    """
+    u"""Factory for creating the "add-to-basket" forms."""
     
     def create(self, item, values=None):
-        u"""
-        For dynamically creating add-to-basket forms for a given product
-        """
+        u"""For dynamically creating add-to-basket forms for a given product"""
         self.fields = {'action': forms.CharField(widget=forms.HiddenInput(), initial='add'),
                        'product_id': forms.IntegerField(widget=forms.HiddenInput(), min_value=1),
                        'quantity': forms.IntegerField(min_value=1)}
@@ -32,7 +28,7 @@ class FormFactory(object):
 
     def _create_group_product_fields(self, item):
         u"""
-        Adds the fields for a "group"-type product (eg, a parent product with a 
+        Adds the fields for a "group"-type product (eg, a parent product with a
         list of variants.
         """
         choices = []
@@ -44,9 +40,7 @@ class FormFactory(object):
         self.fields['product_id'] = forms.ChoiceField(choices=tuple(choices))
     
     def _create_product_fields(self, item):
-        u"""
-        Add the product option fields.
-        """
+        u"""Add the product option fields."""
         for option in item.options.all():
             self._add_option_field(item, option)
     

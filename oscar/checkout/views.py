@@ -23,7 +23,7 @@ address_models = import_module('address.models', ['UserAddress'])
 shipping_models = import_module('shipping.models', ['Method'])
 
 def prev_steps_must_be_complete(view_fn):
-    """
+    u"""
     Decorator fn for checking that previous steps of the checkout
     are complete.
     
@@ -49,7 +49,7 @@ def basket_required(view_fn):
     return _view_wrapper
 
 def mark_step_as_complete(request):
-    """ 
+    u""" 
     Convenience function for marking a checkout page
     as complete.
     """
@@ -128,7 +128,7 @@ class ShippingAddressView(ModelView):
     
     
 class ShippingMethodView(object):
-    """
+    u"""
     Shipping methods are domain-specific and so need implementing in a 
     subclass of this class.
     """
@@ -177,7 +177,7 @@ class ShippingMethodView(object):
         
 
 class PaymentView(object):
-    """
+    u"""
     Payment methods are domain-specific and so need implementing in a s
     subclass of this class.
     """
@@ -189,9 +189,7 @@ class PaymentView(object):
 
 
 class OrderPreviewView(object):
-    """
-    View a preview of the order before submitting.
-    """
+    u"""View a preview of the order before submitting."""
     
     @prev_steps_must_be_complete
     def __call__(self, request):
@@ -222,7 +220,7 @@ class OrderPreviewView(object):
 
 
 class SubmitView(object):
-    """
+    u"""
     Class for submitting an order.
     
     The class is deliberately split into fine-grained method, responsible for only one
@@ -260,7 +258,7 @@ class SubmitView(object):
         return HttpResponseRedirect(reverse('oscar-checkout-thank-you'))
         
     def _place_order(self):
-        """
+        u"""
         Placing an order involves creating all the relevant models based on the
         basket and session data.
         """
@@ -272,9 +270,7 @@ class SubmitView(object):
         return order
         
     def _create_order_model(self, shipping_method):
-        """
-        Creates an order model.
-        """
+        u"""Creates an order model."""
         calc = checkout_calculators.OrderTotalCalculator(self.request)
         order_data = {'basket': self.basket,
                       'site': Site.objects.get_current(),
@@ -294,9 +290,7 @@ class SubmitView(object):
         return method
     
     def _create_line_model(self, order, batch, basket_line):
-        """
-        Creates the batch line model.
-        """
+        u"""Creates the batch line model."""
         batch_line = order_models.BatchLine.objects.create(order=order,
                                                            batch=batch, 
                                                            product=basket_line.product, 
@@ -307,9 +301,7 @@ class SubmitView(object):
         self._create_line_attributes(order, batch_line, basket_line)
         
     def _create_line_price_models(self, order, batch_line, basket_line):
-        """
-        Creates the batch line price models
-        """
+        u"""Creates the batch line price models"""
         order_models.BatchLinePrice.objects.create(order=order,
                                                    line=batch_line, 
                                                    quantity=batch_line.quantity, 
@@ -317,17 +309,13 @@ class SubmitView(object):
                                                    price_excl_tax=basket_line.unit_price_excl_tax)
     
     def _create_line_attributes(self, order, batch_line, basket_line):
-        """
-        Creates the batch line attributes.
-        """
+        u"""Creates the batch line attributes."""
         for attr in basket_line.attributes.all():
             order_models.BatchLineAttribute.objects.create(line=batch_line, type=attr.option.code,
                                                                    value=attr.value)
     
     def _get_or_create_batch_for_line(self, order, shipping_method, line):
-        """
-        Returns the batch for a given line, creating it if appropriate.
-        """
+        u"""Returns the batch for a given line, creating it if appropriate."""
         partner = self._get_partner_for_product(line.product)
         shipping_addr = self._get_shipping_address_for_line(line)
         batch,_ = order_models.Batch.objects.get_or_create(order=order, partner=partner, 
@@ -336,17 +324,13 @@ class SubmitView(object):
         return batch
                 
     def _get_partner_for_product(self, product):
-        """
-        Returns the partner for a product
-        """
+        u"""Returns the partner for a product"""
         if product.has_stockrecord:
             return product.stockrecord.partner
         raise AttributeError("No partner found for product '%s'" % product)
 
     def _get_shipping_address_for_line(self, line):
-        """
-        Returns the shipping address for a given line.
-        """
+        u"""Returns the shipping address for a given line"""
         try:
             addr = self.shipping_addr
         except AttributeError:
@@ -367,15 +351,13 @@ class SubmitView(object):
         return addr
             
     def _create_shipping_address_from_form_fields(self, addr_data):
-        """
-        Creates a shipping address model from the saved form fields
-        """
+        u"""Creates a shipping address model from the saved form fields"""
         shipping_addr = order_models.ShippingAddress(**addr_data)
         shipping_addr.save() 
         return shipping_addr
     
     def _create_user_address(self, addr_data):
-        """
+        u"""
         For signed-in users, we create a user address model which will go 
         into their address book.
         """
@@ -390,9 +372,7 @@ class SubmitView(object):
                 user_addr.save()
     
     def _create_shipping_address_from_user_address(self, addr_id):
-        """
-        Creates a shipping address from a user address
-        """
+        u"""Creates a shipping address from a user address"""
         address = address_models.UserAddress.objects.get(pk=addr_id)
         # Increment the number of orders to help determine popularity of orders 
         address.num_orders += 1

@@ -9,3 +9,4 @@ product-images/*
 django_oscar.egg-info/
 STORIES
 docs/build/*
+*.*~

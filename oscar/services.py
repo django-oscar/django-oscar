@@ -7,7 +7,7 @@ class AppNotFoundError(Exception):
     pass
 
 def import_module(mod_name, classes=[]):
-    """
+    u"""
     For dynamically importing classes from a module based on the mapping within 
     settings.py
     

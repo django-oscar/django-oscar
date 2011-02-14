@@ -14,9 +14,7 @@ product_models = import_module('product.models', ['Item'])
     
         
 class BasketView(ModelView):
-    u"""
-    Class-based view for the basket model.
-    """
+    u"""Class-based view for the basket model."""
     template_file = 'basket/summary.html'
     
     def __init__(self):
@@ -24,13 +22,16 @@ class BasketView(ModelView):
         self.factory = basket_factory.BasketFactory()
     
     def get_model(self):
+        u"""Return a basket model"""
         return self.factory.get_or_create_open_basket(self.request, self.response)
     
     def handle_GET(self, basket):
+        u"""Handle GET requests against the basket"""
         saved_basket = self.factory.get_saved_basket(self.request)
         self.response = render(self.request, self.template_file, locals())
         
     def handle_POST(self, basket):
+        u"""Handle POST requests against the basket"""
         try:
             super(BasketView, self).handle_POST(basket)
         except basket_models.InvalidBasketLineError, e:
@@ -39,10 +40,12 @@ class BasketView(ModelView):
             messages.error(self.request, str(e))
             
     def do_flush(self, basket):
+        u"""Flush basket content"""
         basket.flush()
         messages.info(self.request, "Your basket has been emptied")
         
     def do_add(self, basket):
+        u"""Added an item to the basket"""
         item = get_object_or_404(product_models.Item.objects, pk=self.request.POST['product_id'])
         factory = basket_forms.FormFactory()
         form = factory.create(item, self.request.POST)
@@ -67,10 +70,12 @@ class LineView(ModelView):
         self.factory = basket_factory.BasketFactory()
     
     def get_model(self):
+        u"""Get basket lines"""
         basket = self.factory.get_open_basket(self.request)
         return basket.lines.get(line_reference=self.kwargs['line_reference'])
         
     def handle_POST(self, line):
+        u"""Handle POST requests against the basket line"""
         try:
             super(LineView, self).handle_POST(line)
         except basket_models.Basket.DoesNotExist:
@@ -81,11 +86,13 @@ class LineView(ModelView):
             messages.error(self.request, str(e))
             
     def _get_quantity(self):
+        u"""Get item quantity"""
         if 'quantity' in self.request.POST:
             return int(self.request.POST['quantity'])
         return 0        
             
     def do_increment_quantity(self, line):
+        u"""Increment item quantity"""
         q = self._get_quantity()
         line.quantity += q
         line.save()    
@@ -93,6 +100,7 @@ class LineView(ModelView):
         messages.info(self.request, msg)
         
     def do_decrement_quantity(self, line):
+        u"""Decrement item quantity"""
         q = self._get_quantity()
         line.quantity -= q
         line.save()    
@@ -100,6 +108,7 @@ class LineView(ModelView):
         messages.info(self.request, msg)
         
     def do_set_quantity(self, line):
+        u"""Set an item quantity"""
         q = self._get_quantity()
         line.quantity = q
         line.save()    
@@ -107,11 +116,13 @@ class LineView(ModelView):
         messages.info(self.request, msg)
         
     def do_delete(self, line):
+        u"""Delete a basket item"""
         line.delete()
         msg = "'%s' has been removed from your basket" % line.product
         messages.info(self.request, msg)
         
     def do_save_for_later(self, line):
+        u"""Save basket for later use"""
         saved_basket = self.factory.get_or_create_saved_basket(self.request, self.response)
         saved_basket.merge_line(line)
         msg = "'%s' has been saved for later" % line.product
@@ -129,23 +140,27 @@ class SavedLineView(ModelView):
         return basket.lines.get(line_reference=self.kwargs['line_reference'])
         
     def handle_POST(self, line):
+        u"""Handle POST requests against a saved line"""
         try:
             super(SavedLineView, self).handle_POST(line)
         except basket_models.InvalidBasketLineError, e:
             messages.error(request, str(e))   
             
     def do_move_to_basket(self, line):
+        u"""Merge line items in to current basket"""
         real_basket = self.factory.get_or_create_open_basket(self.request, self.response)
         real_basket.merge_line(line)
         msg = "'%s' has been moved back to your basket" % line.product
         messages.info(self.request, msg)
         
     def do_delete(self, line):
+        u"""Delete line item"""
         line.delete()
         msg = "'%s' has been removed" % line.product
         messages.warn(self.request, msg)
         
     def _get_quantity(self):
+        u"""Get line item quantity"""
         if 'quantity' in self.request.POST:
             return int(self.request.POST['quantity'])
         return 0

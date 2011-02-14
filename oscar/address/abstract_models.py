@@ -44,7 +44,7 @@ class AbstractAddress(models.Model):
         super(AbstractAddress, self).save(*args, **kwargs)    
         
     def _clean_fields(self):
-        # Ensure fields are stripped 
+        u"""Clean up fields"""
         self.first_name = self.first_name.strip()
         for field in ['first_name', 'last_name', 'line1', 'line2', 'line3', 'line4', 'postcode']:
             self.__dict__[field] = self.__dict__[field].strip()
@@ -84,9 +84,7 @@ class AbstractAddress(models.Model):
                                     self.line4, self.postcode, self.country.name])
         
     def salutation(self):
-        """
-        Returns the salutation
-        """
+        u"""Returns the salutation"""
         return " ".join([part for part in [self.title, self.first_name, self.last_name] if part])
         
     def __unicode__(self):
@@ -94,9 +92,7 @@ class AbstractAddress(models.Model):
 
 
 class AbstractCountry(models.Model):
-    u"""
-    International Organization for Standardization (ISO) 3166-1 Country list
-    """
+    u"""International Organization for Standardization (ISO) 3166-1 Country list"""
     iso_3166_1_a2 = models.CharField(_('ISO 3166-1 alpha-2'), max_length=2, primary_key=True)
     iso_3166_1_a3 = models.CharField(_('ISO 3166-1 alpha-3'), max_length=3, null=True)
     iso_3166_1_numeric = models.PositiveSmallIntegerField(_('ISO 3166-1 numeric'), null=True)
@@ -153,9 +149,7 @@ class AbstractUserAddress(AbstractShippingAddress):
     date_created = models.DateTimeField(auto_now_add=True)
     
     def generate_hash(self):
-        u"""
-        Returns a hash of the address summary.
-        """
+        u"""Returns a hash of the address summary."""
         # We use an upper-case version of the summary
         return zlib.crc32(self.summary.strip().upper())
 
@@ -172,9 +166,7 @@ class AbstractUserAddress(AbstractShippingAddress):
 
 
 class AbstractBillingAddress(AbstractAddress):
-    u"""
-    Billing address
-    """
+    u"""Billing address"""
     class Meta:
         abstract = True
         verbose_name_plural = "Billing addresses"    

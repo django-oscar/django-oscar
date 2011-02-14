@@ -60,9 +60,7 @@ class OrderView(ModelView):
                                                      quantity=line.quantity, event_type=event_type)
             
     def do_add_note(self, order):
-        """
-        Save a note against the order.
-        """
+        u"""Save a note against the order."""
         if self.request.user.is_authenticated():
             note = order_models.OrderNote(order=order, message=self.request.POST['message'],
                                           user=self.request.user)

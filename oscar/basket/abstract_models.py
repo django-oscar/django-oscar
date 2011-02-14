@@ -14,9 +14,7 @@ OPEN, MERGED, SAVED, SUBMITTED = ("Open", "Merged", "Saved", "Submitted")
 
 
 class AbstractBasket(models.Model):
-    u"""
-    Basket object
-    """
+    u"""Basket object"""
     # Baskets can be anonymously owned (which are merged if the user signs in)
     owner = models.ForeignKey(User, related_name='baskets', null=True)
     STATUS_CHOICES = (
@@ -45,9 +43,7 @@ class AbstractBasket(models.Model):
     # ============
     
     def flush(self):
-        u"""
-        Remove all lines from basket.
-        """
+        u"""Remove all lines from basket."""
         self.lines.all().delete()
     
     def add_product(self, item, quantity=1, options=[]):
@@ -86,9 +82,7 @@ class AbstractBasket(models.Model):
             line.save()
     
     def merge(self, basket):
-        u"""
-        Merges another basket with this one
-        """
+        u"""Merges another basket with this one"""
         for line_to_merge in basket.lines.all():
             self.merge_line(line_to_merge)
         basket.status = MERGED
@@ -96,9 +90,7 @@ class AbstractBasket(models.Model):
         basket.save()
     
     def set_as_submitted(self):
-        u"""
-        Mark this basket as submitted.
-        """
+        u"""Mark this basket as submitted."""
         self.status = SUBMITTED
         self.date_submitted = datetime.datetime.now()
         self.save()
@@ -156,9 +148,7 @@ class AbstractBasket(models.Model):
     
     
 class AbstractLine(models.Model):
-    u"""
-    A line of a basket (product and a quantity)
-    """
+    u"""A line of a basket (product and a quantity)"""
     basket = models.ForeignKey('basket.Basket', related_name='lines')
     # This is to determine which products belong to the same line
     # We can't just use product.id as you can have customised products
@@ -230,9 +220,7 @@ class AbstractLine(models.Model):
     
     
 class AbstractLineAttribute(models.Model):
-    u"""
-    An attribute of a basket line
-    """
+    u"""An attribute of a basket line"""
     line = models.ForeignKey('basket.Line', related_name='attributes')
     option = models.ForeignKey('product.option')
     value = models.CharField(_("Value"), max_length=255)    
