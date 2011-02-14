@@ -146,9 +146,16 @@ class ShippingMethodView(object):
     
     def handle_GET(self):
         methods = shipping_models.Method.objects.all()
+        
         if not methods.count():
             # No defined methods - assume delivery is free
             self.co_data.use_free_shipping()
+            mark_step_as_complete(self.request)
+            return HttpResponseRedirect(reverse(get_next_step(self.request)))
+        
+        if methods.count() == 1:
+            # Only one method - set this
+            self.co_data.use_shipping_method(methods[0].code)
             mark_step_as_complete(self.request)
             return HttpResponseRedirect(reverse(get_next_step(self.request)))
         
