@@ -1,5 +1,9 @@
 from django.core.urlresolvers import resolve
 
+from oscar.services import import_module
+
+shipping_models = import_module('shipping.models', ['Method'])
+
 
 class ProgressChecker(object):
     """
@@ -75,36 +79,37 @@ class CheckoutSessionData(object):
     """
     Class responsible for marshalling all the checkout session data.
     """
-    session_key = 'checkout_data'
+    SESSION_KEY = 'checkout_data'
+    FREE_SHIPPING = '__free__'
     
     def __init__(self, request):
         self.request = request
-        if self.session_key not in self.request.session:
-            self.request.session[self.session_key] = {}
+        if self.SESSION_KEY not in self.request.session:
+            self.request.session[self.SESSION_KEY] = {}
     
     def _check_namespace(self, namespace):
-        if namespace not in self.request.session[self.session_key]:
-            self.request.session[self.session_key][namespace] = {}
+        if namespace not in self.request.session[self.SESSION_KEY]:
+            self.request.session[self.SESSION_KEY][namespace] = {}
           
     def _get(self, namespace, key):
         self._check_namespace(namespace)
-        if key in self.request.session[self.session_key][namespace]:
-            return self.request.session[self.session_key][namespace][key]
+        if key in self.request.session[self.SESSION_KEY][namespace]:
+            return self.request.session[self.SESSION_KEY][namespace][key]
         return None
             
     def _set(self, namespace, key, value):
         self._check_namespace(namespace)
-        self.request.session[self.session_key][namespace][key] = value
+        self.request.session[self.SESSION_KEY][namespace][key] = value
         self.request.session.modified = True
         
     def _unset(self, namespace, key):
         self._check_namespace(namespace)
-        if key in self.request.session[self.session_key][namespace]:
-            del self.request.session[self.session_key][namespace][key]
+        if key in self.request.session[self.SESSION_KEY][namespace]:
+            del self.request.session[self.SESSION_KEY][namespace][key]
             self.request.session.modified = True
             
     def flush(self):
-        self.request.session[self.session_key] = {}
+        self.request.session[self.SESSION_KEY] = {}
         
     # Shipping methods    
         
@@ -121,3 +126,21 @@ class CheckoutSessionData(object):
         
     def user_address_id(self):
         return self._get('shipping', 'user_address_id')
+    
+    def use_free_shipping(self):
+        self._set('shipping', 'method_code', '__free__')
+    
+    def use_shipping_method(self, code):
+        self._set('shipping', 'method_code', code)
+        
+    def shipping_method(self):
+        """
+        Returns the shipping method model based on the 
+        data stored in the session.
+        """
+        code = self._get('shipping', 'method_code')
+        if code == self.FREE_SHIPPING:
+            method = shipping_models.Method(name="Standard shipping (Free)", code=self.FREE_SHIPPING)
+        else:
+            method = shipping_models.Method.objects.get(code=code)
+        return method

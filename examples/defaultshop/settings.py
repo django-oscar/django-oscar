@@ -101,6 +101,7 @@ INSTALLED_APPS = (
     'oscar',
     'oscar.order',
     'oscar.checkout',
+    'oscar.shipping',
     'oscar.order_management',
     'oscar.product',
     'oscar.basket',
