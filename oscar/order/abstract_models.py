@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
 
-
 class AbstractOrder(models.Model):
     """
     An order
@@ -49,6 +48,7 @@ class AbstractOrder(models.Model):
     
     class Meta:
         abstract = True
+        ordering = ['-date_placed',]
     
     def save(self, *args, **kwargs):
         if not self.number:
@@ -164,6 +164,30 @@ class AbstractBatchLine(models.Model):
             d = "%s (%s)" % (d, ", ".join(ops))
         return d
     
+    @property
+    def shipping_status(self):
+        status_map = self._shipping_event_history()
+        events = []    
+        for event, quantity in status_map.items():
+            if quantity == self.quantity:
+                events.append(event)    
+            else:
+                events.append("%s (%d/%d items)" % (event, quantity, self.quantity))    
+        return ', '.join(events)
+    
+    def _shipping_event_history(self):
+        """
+        Returns a dict of shipping event name -> quantity that have been
+        through this state
+        """
+        status_map = {}
+        for event in self.shippingevent_set.all():
+            event_code = event.event_type.name
+            event_quantity = event.shippingeventquantity_set.all()[0].quantity
+            currenty_quantity = status_map.setdefault(event_code, 0)
+            status_map[event_code] += event_quantity
+        return status_map
+    
     class Meta:
         abstract = True
         verbose_name_plural = _("Batch lines")
@@ -271,10 +295,11 @@ class AbstractShippingEvent(models.Model):
     class Meta:
         abstract = True
         verbose_name_plural = _("Shipping events")
+        ordering = ['-date']
         
     def __unicode__(self):
-        return u"Order #%d, line %s: %d items set to '%s'" % (
-            self.order.number, self.line.id, self.quantity, self.event_type)
+        return u"Order #%s, batch %s, type %s" % (
+            self.order.number, self.batch, self.event_type)
         
     def num_affected_lines(self):
         return self.lines.count()

@@ -4,6 +4,7 @@ from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.views.generic import ListView, DetailView
+from django.contrib import messages
 
 from oscar.views import ModelView
 from oscar.services import import_module
@@ -41,17 +42,21 @@ class OrderView(ModelView):
         line_ids = self.request.POST.getlist('order_line')
         batch = order.batches.get(id=self.request.POST['batch_id'])
         lines = batch.lines.in_bulk(line_ids)
+        if not len(lines):
+            messages.info(self.request, "Please select some lines")
+            return
         
-        # Need to determine what kind of event update this is
         if self.request.POST['shipping_event']:
-            self.create_shipping_event(order, batch, lines, self.request.POST['shipping_event'])
-                
-    def create_shipping_event(self, order, batch, lines, type_code):
+            event = self.create_shipping_event(order, batch, self.request.POST['shipping_event'])
+            for line in lines.values():
+                event_quantity = self.request.POST['order_line_quantity_%d' % line.id]
+                order_models.ShippingEventQuantity.objects.create(event=event, line=line, 
+                                                                  quantity=event_quantity)
+            
+    def create_shipping_event(self, order, batch, type_code):
         event_type = order_models.ShippingEventType.objects.get(code=type_code)
-        event = order_models.ShippingEvent.objects.create(order=order, event_type=event_type, batch=batch)
-        for line in lines.values():
-            order_models.ShippingEventQuantity.objects.create(event=event, line=line, 
-                                                              quantity=line.quantity)
+        return order_models.ShippingEvent.objects.create(order=order, event_type=event_type, batch=batch)
+        
             
     def create_payment_event(self, order, lines, type_code):
         event_type = order_models.PaymentEventType.objects.get(code=type_code)
