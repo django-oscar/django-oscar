@@ -34,18 +34,26 @@ class AbstractAddress(models.Model):
     line3 = models.CharField(_("City"), max_length=255, blank=True)
     line4 = models.CharField(_("State/County"), max_length=255, blank=True)
     postcode = models.CharField(_("Post/Zip-code"), max_length=64)
-    # @todo: Create a country model to use as a foreign key
-    country = models.CharField(_("Country"), max_length=255, blank=True)
+    country = models.ForeignKey('address.Country')
     
     class Meta:
         abstract = True
         
     def save(self, *args, **kwargs):
-        # Ensure postcodes are always uppercase
-        if self.postcode:
-            self.postcode = self.postcode.upper()
+        self._clean_fields()
         super(AbstractAddress, self).save(*args, **kwargs)    
         
+    def _clean_fields(self):
+        # Ensure fields are stripped 
+        self.first_name = self.first_name.strip()
+        for field in ['first_name', 'last_name', 'line1', 'line2', 'line3', 'line4', 'postcode']:
+            self.__dict__[field] = self.__dict__[field].strip()
+        
+        # Ensure postcodes are always uppercase
+        if self.postcode:
+            self.postcode = self.postcode.upper()    
+        
+    @property    
     def summary(self):
         u"""
         Returns a single string summary of the address,
@@ -67,12 +75,13 @@ class AbstractAddress(models.Model):
                 setattr(address_model, field_name, getattr(self, field_name))
                 
     def active_address_fields(self):
-        """
+        u"""
         Returns the non-empty components of the address, but merging the
         title, first_name and last_name into a single line.
         """
+        self._clean_fields()
         return filter(lambda x: x, [self.salutation(), self.line1, self.line2, self.line3,
-                                    self.line4, self.postcode, self.country])
+                                    self.line4, self.postcode, self.country.name])
         
     def salutation(self):
         """
@@ -81,8 +90,31 @@ class AbstractAddress(models.Model):
         return " ".join([part for part in [self.title, self.first_name, self.last_name] if part])
         
     def __unicode__(self):
-        return self.summary()
+        return self.summary
 
+
+class AbstractCountry(models.Model):
+    u"""
+    International Organization for Standardization (ISO) 3166-1 Country list
+    """
+    iso_3166_1_a2 = models.CharField(_('ISO 3166-1 alpha-2'), max_length=2, primary_key=True)
+    iso_3166_1_a3 = models.CharField(_('ISO 3166-1 alpha-3'), max_length=3, null=True)
+    iso_3166_1_numeric = models.PositiveSmallIntegerField(_('ISO 3166-1 numeric'), null=True)
+    name = models.CharField(_('Official name (CAPS)'), max_length=128)
+    printable_name = models.CharField(_('Country name'), max_length=128)
+    
+    is_highlighted = models.BooleanField(default=False)
+    is_shipping_country = models.BooleanField(default=False)
+    
+    class Meta:
+        abstract = True
+        verbose_name = _('Country')
+        verbose_name_plural = _('Countries')
+        ordering = ('-is_highlighted', 'name',)
+            
+    def __unicode__(self):
+        return self.printable_name
+        
 
 class AbstractShippingAddress(AbstractAddress):
     u"""
@@ -125,7 +157,7 @@ class AbstractUserAddress(AbstractShippingAddress):
         Returns a hash of the address summary.
         """
         # We use an upper-case version of the summary
-        return zlib.crc32(self.summary().strip().upper())
+        return zlib.crc32(self.summary.strip().upper())
 
     def save(self, *args, **kwargs):
         # Save a hash of the address fields so we can check whether two 
@@ -140,7 +172,7 @@ class AbstractUserAddress(AbstractShippingAddress):
 
 
 class AbstractBillingAddress(AbstractAddress):
-    """
+    u"""
     Billing address
     """
     class Meta:
