@@ -1,7 +1,8 @@
 import unittest
 
-from django.test import TestCase
+from django.test import TestCase, Client
 from django.core.exceptions import ValidationError
+from django.core.urlresolvers import reverse
 
 from oscar.product.models import Item, ItemClass
 from oscar.stock.models import Partner, StockRecord
@@ -38,3 +39,19 @@ class VariantItemTests(ItemTests):
     def test_variant_products_inherit_product_class(self):
         p = Item.objects.create(parent=self.parent)
         self.assertEquals("Clothing", p.get_item_class().name)
+        
+
+class SingleProductViewTest(TestCase):
+    fixtures = ['sample-products']
+    
+    def setUp(self):
+        self.client = Client()
+        
+    def test_canonical_urls_are_enforced(self):
+        p = Item.objects.get(id=1)
+        args = {'item_class_slug': p.get_item_class().slug, 
+                'item_slug': 'wrong-slug',
+                'item_id': p.id}
+        wrong_url = reverse('oscar-product-item', kwargs=args)
+        response = self.client.get(wrong_url)
+        self.assertEquals(301, response.status_code)

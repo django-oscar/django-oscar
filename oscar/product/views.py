@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.http import HttpResponse, Http404, HttpResponseRedirect
+from django.http import HttpResponse, Http404, HttpResponsePermanentRedirect, HttpResponseRedirect
 from django.template import Context, loader, RequestContext
 from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse
@@ -17,6 +17,13 @@ class ItemDetailView(DetailView):
     View a single product.
     """
     template_name = "product/item.html"
+    
+    def get(self, request, **kwargs):
+        item = self.get_object()
+        correct_path = item.get_absolute_url() 
+        if correct_path != request.path:
+            return HttpResponsePermanentRedirect(correct_path)
+        return super(ItemDetailView, self).get(request, **kwargs)
     
     def get_object(self):
         return get_object_or_404(product_models.Item, pk=self.kwargs['item_id'])
