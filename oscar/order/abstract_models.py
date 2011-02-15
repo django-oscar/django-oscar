@@ -182,6 +182,15 @@ class AbstractBatchLine(models.Model):
                 events.append("%s (%d/%d items)" % (event, quantity, self.quantity))    
         return ', '.join(events)
     
+    def has_shipping_event_occurred(self, event_type):
+        """
+        Checks whether this line has passed a given shipping event
+        """
+        for name, quantity in self._shipping_event_history().items():
+            if name == event_type.name and quantity == self.quantity:
+                return True
+        return False
+    
     def _shipping_event_history(self):
         """
         Returns a dict of shipping event name -> quantity that have been
@@ -189,10 +198,10 @@ class AbstractBatchLine(models.Model):
         """
         status_map = {}
         for event in self.shippingevent_set.all():
-            event_code = event.event_type.name
+            event_name = event.event_type.name
             event_quantity = event.shippingeventquantity_set.all()[0].quantity
-            currenty_quantity = status_map.setdefault(event_code, 0)
-            status_map[event_code] += event_quantity
+            currenty_quantity = status_map.setdefault(event_name, 0)
+            status_map[event_name] += event_quantity
         return status_map
     
     class Meta:
@@ -320,9 +329,21 @@ class ShippingEventQuantity(models.Model):
     line = models.ForeignKey('order.BatchLine')
     quantity = models.PositiveIntegerField()
 
+    def _check_previous_events_are_complete(self):
+        """
+        Checks whether previous shipping events have passed
+        """
+        previous_events = ShippingEventQuantity.objects.filter(line=self.line, 
+                                                               event__event_type__order__lt=self.event.event_type.order)
+        for event_quantities in previous_events:
+            if event_quantities.quantity < self.quantity:
+                raise ValueError("Invalid quantity (%d) for event type (a previous event has not been fully passed)" % self.quantity)
+
     def save(self, *args, **kwargs):
+        # Default quantity to full quantity of line
         if not self.quantity:
             self.quantity = self.line.quantity
+        self._check_previous_events_are_complete()
         super(ShippingEventQuantity, self).save(*args, **kwargs)
 
 

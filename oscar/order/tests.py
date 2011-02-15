@@ -62,6 +62,33 @@ class BatchLineTest(TestCase):
         expected = "%s (%d/%d items)" % (type.name, 3, self.line.quantity)
         self.assertEquals(expected, self.line.shipping_status) 
         
+    def test_has_passed_shipping_status_after_full_line_event(self):
+        type = ShippingEventType.objects.get(code='order_placed')
+        self.event(type)
+        self.assertTrue(self.line.has_shipping_event_occurred(type)) 
+        
+    def test_has_passed_shipping_status_after_partial_line_event(self):
+        type = ShippingEventType.objects.get(code='order_placed')
+        self.event(type, self.line.quantity - 1)
+        self.assertFalse(self.line.has_shipping_event_occurred(type)) 
+        
+    def test_has_passed_shipping_status_after_multiple_line_event(self):
+        event_types = [ShippingEventType.objects.get(code='order_placed'),
+                        ShippingEventType.objects.get(code='dispatched')]
+        for type in event_types:
+            self.event(type)
+        for type in event_types:
+            self.assertTrue(self.line.has_shipping_event_occurred(type))
+            
+    def test_inconsistent_shipping_status_setting(self):
+        type = ShippingEventType.objects.get(code='order_placed')
+        self.event(type, self.line.quantity - 1)
+        
+        with self.assertRaises(ValueError):
+            # Quantity is higher for second event than first
+            type = ShippingEventType.objects.get(code='dispatched')
+            self.event(type, self.line.quantity)
+        
         
 class ShippingEventQuantityTest(TestCase):
     fixtures = ['sample-order.json']
