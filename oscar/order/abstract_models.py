@@ -156,6 +156,10 @@ class AbstractBatchLine(models.Model):
     
     @property
     def description(self):
+        """
+        Returns a description of this line including details of any 
+        line attributes.
+        """
         d = str(self.product)
         ops = []
         for attribute in self.attributes.all():
@@ -166,6 +170,9 @@ class AbstractBatchLine(models.Model):
     
     @property
     def shipping_status(self):
+        """
+        Returns a string summary of the shipping status of this line
+        """
         status_map = self._shipping_event_history()
         events = []    
         for event, quantity in status_map.items():
@@ -306,9 +313,17 @@ class AbstractShippingEvent(models.Model):
 
 
 class ShippingEventQuantity(models.Model):
+    """
+    A "through" model linking lines to shipping events
+    """
     event = models.ForeignKey('order.ShippingEvent')
     line = models.ForeignKey('order.BatchLine')
     quantity = models.PositiveIntegerField()
+
+    def save(self, *args, **kwargs):
+        if not self.quantity:
+            self.quantity = self.line.quantity
+        super(ShippingEventQuantity, self).save(*args, **kwargs)
 
 
 class AbstractShippingEventType(models.Model):

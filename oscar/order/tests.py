@@ -61,4 +61,20 @@ class BatchLineTest(TestCase):
         self.event(type, 3)
         expected = "%s (%d/%d items)" % (type.name, 3, self.line.quantity)
         self.assertEquals(expected, self.line.shipping_status) 
+        
+        
+class ShippingEventQuantityTest(TestCase):
+    fixtures = ['sample-order.json']
+
+    def setUp(self):
+        self.order = Order.objects.get(number='100002')
+        self.batch = self.order.batches.get(id=1)
+        self.line = self.order.lines.get(id=1)
+
+    def test_quantity_defaults_to_all(self):
+        type = ShippingEventType.objects.get(code='order_placed')
+        event = ShippingEvent.objects.create(order=self.order, batch=self.batch, event_type=type)
+        event_quantity = ShippingEventQuantity.objects.create(event=event, line=self.line)
+        self.assertEquals(self.line.quantity, event_quantity.quantity)
+    
    
