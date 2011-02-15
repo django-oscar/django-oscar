@@ -3,12 +3,13 @@ from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
 
-
 class AbstractOrder(models.Model):
     """
     An order
     """
-    number = models.PositiveIntegerField(_("Order number"), db_index=True)
+    number = models.CharField(_("Order number"), max_length=128, db_index=True)
+    # We track the site that each order is placed within
+    site = models.ForeignKey('sites.Site')
     basket = models.ForeignKey('basket.Basket')
     # Orders can be anonymous so we don't always have a customer ID
     user = models.ForeignKey(User, related_name='orders', null=True, blank=True)
@@ -23,10 +24,18 @@ class AbstractOrder(models.Model):
     shipping_excl_tax = models.DecimalField(_("Shipping charge (excl. tax)"), decimal_places=2, max_digits=12, default=0)
     date_placed = models.DateTimeField(auto_now_add=True)
     
+    @property
     def shipping_address(self):
         batches = self.batches.all()
         if len(batches) > 0:
             return batches[0].shipping_address
+        return None
+    
+    @property
+    def shipping_method(self):
+        batches = self.batches.all()
+        if len(batches) > 0:
+            return batches[0].shipping_method
         return None
     
     @property
@@ -39,10 +48,11 @@ class AbstractOrder(models.Model):
     
     class Meta:
         abstract = True
+        ordering = ['-date_placed',]
     
     def save(self, *args, **kwargs):
         if not self.number:
-            self.number= self.basket.id
+            self.number = 100000 + self.basket.id
         super(AbstractOrder, self).save(*args, **kwargs)
     
     def __unicode__(self):
@@ -120,7 +130,7 @@ class AbstractBatch(models.Model):
         verbose_name_plural = _("Batches")
     
     def __unicode__(self):
-        return "%s batch for order #%d" % (self.partner.name, self.order.number)
+        return "%s batch for order #%s" % (self.partner.name, self.order.number)
         
         
 class AbstractBatchLine(models.Model):
@@ -146,13 +156,53 @@ class AbstractBatchLine(models.Model):
     
     @property
     def description(self):
+        """
+        Returns a description of this line including details of any 
+        line attributes.
+        """
         d = str(self.product)
         ops = []
         for attribute in self.attributes.all():
-            ops.append("%s = '%s'" % (attribute.option.name, attribute.value))
+            ops.append("%s = '%s'" % (attribute.type, attribute.value))
         if ops:
             d = "%s (%s)" % (d, ", ".join(ops))
         return d
+    
+    @property
+    def shipping_status(self):
+        """
+        Returns a string summary of the shipping status of this line
+        """
+        status_map = self._shipping_event_history()
+        events = []    
+        for event, quantity in status_map.items():
+            if quantity == self.quantity:
+                events.append(event)    
+            else:
+                events.append("%s (%d/%d items)" % (event, quantity, self.quantity))    
+        return ', '.join(events)
+    
+    def has_shipping_event_occurred(self, event_type):
+        """
+        Checks whether this line has passed a given shipping event
+        """
+        for name, quantity in self._shipping_event_history().items():
+            if name == event_type.name and quantity == self.quantity:
+                return True
+        return False
+    
+    def _shipping_event_history(self):
+        """
+        Returns a dict of shipping event name -> quantity that have been
+        through this state
+        """
+        status_map = {}
+        for event in self.shippingevent_set.all():
+            event_name = event.event_type.name
+            event_quantity = event.shippingeventquantity_set.all()[0].quantity
+            currenty_quantity = status_map.setdefault(event_name, 0)
+            status_map[event_name] += event_quantity
+        return status_map
     
     class Meta:
         abstract = True
@@ -160,6 +210,21 @@ class AbstractBatchLine(models.Model):
         
     def __unicode__(self):
         return u"Product '%s', quantity '%s'" % (self.product, self.quantity)
+    
+    
+class AbstractBatchLineAttribute(models.Model):
+    """
+    An attribute of a batch line.
+    """
+    line = models.ForeignKey('order.BatchLine', related_name='attributes')
+    type = models.CharField(_("Type"), max_length=128)
+    value = models.CharField(_("Value"), max_length=255)    
+    
+    class Meta:
+        abstract = True
+        
+    def __unicode__(self):
+        return "%s = %s" % (self.type, self.value)
     
     
 class AbstractBatchLinePrice(models.Model):
@@ -246,19 +311,40 @@ class AbstractShippingEvent(models.Model):
     class Meta:
         abstract = True
         verbose_name_plural = _("Shipping events")
+        ordering = ['-date']
         
     def __unicode__(self):
-        return u"Order #%d, line %s: %d items set to '%s'" % (
-            self.order.number, self.line.id, self.quantity, self.event_type)
+        return u"Order #%s, batch %s, type %s" % (
+            self.order.number, self.batch, self.event_type)
         
     def num_affected_lines(self):
         return self.lines.count()
 
 
 class ShippingEventQuantity(models.Model):
+    """
+    A "through" model linking lines to shipping events
+    """
     event = models.ForeignKey('order.ShippingEvent')
     line = models.ForeignKey('order.BatchLine')
     quantity = models.PositiveIntegerField()
+
+    def _check_previous_events_are_complete(self):
+        """
+        Checks whether previous shipping events have passed
+        """
+        previous_events = ShippingEventQuantity.objects.filter(line=self.line, 
+                                                               event__event_type__order__lt=self.event.event_type.order)
+        for event_quantities in previous_events:
+            if event_quantities.quantity < self.quantity:
+                raise ValueError("Invalid quantity (%d) for event type (a previous event has not been fully passed)" % self.quantity)
+
+    def save(self, *args, **kwargs):
+        # Default quantity to full quantity of line
+        if not self.quantity:
+            self.quantity = self.line.quantity
+        self._check_previous_events_are_complete()
+        super(ShippingEventQuantity, self).save(*args, **kwargs)
 
 
 class AbstractShippingEventType(models.Model):
@@ -286,16 +372,4 @@ class AbstractShippingEventType(models.Model):
         return self.name
         
         
-class AbstractBatchLineAttribute(models.Model):
-    """
-    An attribute of a batch line.
-    """
-    line = models.ForeignKey('order.BatchLine', related_name='attributes')
-    type = models.CharField(_("Type"), max_length=128)
-    value = models.CharField(_("Value"), max_length=255)    
-    
-    class Meta:
-        abstract = True
-        
-    def __unicode__(self):
-        return "%s = %s" % (self.type, self.value)
+

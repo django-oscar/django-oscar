@@ -1,7 +1,9 @@
 {% extends "layout.html" %}
 
+{% load currency_filters %}
+
 {% block header %}
-<h2>Checkout / Preview</h2>
+<h2>Checkout / Shipping Methods</h2>
 {% endblock header %}
 
 
@@ -20,7 +22,7 @@
     </tr>
     {% if shipping_addr.phone_number %}
     <tr>
-        <th>Concact number</th>
+        <th>Contact number</th>
         <td>shipping_addr.phone_number</td>
     </tr>
     {% endif %}
@@ -35,6 +37,31 @@
 
 <h3>Shipping method</h3>
 <hr />
+<table>
+    <thead>
+        <tr>
+            <th>Method</th>
+            <th>Cost</th>
+            <th>Description</th>
+            <th></th>
+        </tr>
+    <thead>
+    <tbody>
+        {% for method in methods %}
+        <tr>
+            <td>{{ method.name }}</td>
+            <td>{{ method.basket_charge_incl_tax|currency }}</td>
+            <td>{{ method.description }}</td>
+            <td>
+                <form method="post" action="{% url oscar-checkout-shipping-method %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="method_code" value="{{ method.code }}" />
+                    <input type="submit" value="Use this shipping method" />
+                </form>
+            </td>
+        {% endfor %}
+    </tbody>
+</table>
 
 <h3>Payment</h3>
 <hr />
@@ -57,34 +84,27 @@
         <td><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></td>
         <td>{{ line.product.stockrecord.availability }}</td>
         <td>{{ line.quantity }}</td>
-        <td>{{ line.unit_price_excl_tax|floatformat:2 }}</td>
-        <td>{{ line.unit_tax|floatformat:2 }}</td>
-        <td>{{ line.line_price_excl_tax|floatformat:2 }}</td>
-        <td>{{ line.line_price_incl_tax|floatformat:2 }}</td>
+        <td>{{ line.unit_price_excl_tax|currency }}</td>
+        <td>{{ line.unit_tax|currency }}</td>
+        <td>{{ line.line_price_excl_tax|currency }}</td>
+        <td>{{ line.line_price_incl_tax|currency }}</td>
     </tr>
     {% endfor %}
     <tr>
         <td colspan="5">Total</td>
-        <td>{{ basket.total_excl_tax|floatformat:2 }}</td>
-        <td>{{ basket.total_incl_tax|floatformat:2 }}</td>
+        <td>{{ basket.total_excl_tax|currency }}</td>
+        <td>{{ basket.total_incl_tax|currency }}</td>
     </tr>
     <tr>
         <td colspan="5">Shipping charge</td>
-        <td>{{ shipping_total_excl_tax|floatformat:2 }}</td>
-        <td>{{ shipping_total_incl_tax|floatformat:2 }}</td>
+        <td></td>
+        <td></td>
     </tr>
     <tr>
         <td colspan="6">Order total</td>
-        <td>{{ order_total|floatformat:2 }}</td>
+        <td>{{ order_total|currency }}</td>
     </tr>
 </table>
-
-<form method="post" action="{% url oscar-checkout-submit %}" />
-    {% csrf_token %}
-    <input type="submit" value="Place order!" />
-</form>
-<a href="{% url oscar-basket %}">Edit order contents</a>
-
 
 {% endblock content %}
 

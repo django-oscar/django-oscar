@@ -3,8 +3,12 @@ from django.contrib import admin
 from oscar.services import import_module
 models = import_module('order.models', ['Order', 'OrderNote', 'CommunicationEvent', 'CommunicationEventType',
                                         'BillingAddress', 'Batch', 'ShippingAddress', 'BatchLine',
-                                        'BatchLinePrice', 'ShippingEvents', 'ShippingEventType', 
+                                        'BatchLinePrice', 'ShippingEvent', 'ShippingEventType', 
                                         'PaymentEvent', 'PaymentEventType', 'BatchLineAttribute'])
+
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ('number', 'total_incl_tax', 'site', 'user', 'billing_address', 'date_placed')
+    readonly_fields = ('number', 'total_incl_tax', 'total_excl_tax', 'shipping_incl_tax', 'shipping_excl_tax')
 
 class BatchAdmin(admin.ModelAdmin):
     list_display = ('order', 'partner', 'get_num_items', 'shipping_method')
@@ -29,11 +33,7 @@ class OrderNoteAdmin(admin.ModelAdmin):
             obj.user = request.user
         obj.save()
 
-admin.site.register(models.Order)
-admin.site.register(models.OrderNote, OrderNoteAdmin)
-admin.site.register(models.CommunicationEvent)
-admin.site.register(models.CommunicationEventType, CommunicationEventTypeAdmin)
-admin.site.register(models.BillingAddress)
+admin.site.register(models.Order, OrderAdmin)
 admin.site.register(models.Batch, BatchAdmin)
 admin.site.register(models.ShippingAddress)
 admin.site.register(models.BatchLine, BatchLineAdmin)

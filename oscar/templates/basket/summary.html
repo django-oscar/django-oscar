@@ -1,5 +1,7 @@
 {% extends "layout.html" %}
 
+{% load currency_filters %}
+
 {% block header %}
 <h2>Basket</h2>
 {% endblock header %}
@@ -54,16 +56,16 @@ Your basket is currently empty - go and <a href="/shop/product/">buy something</
                 <input type="submit" value="Save for later" />
             </form>
         </td>
-        <td>{{ line.unit_price_excl_tax|floatformat:2 }}</td>
-        <td>{{ line.unit_tax|floatformat:2 }}</td>
-        <td>{{ line.line_price_excl_tax|floatformat:2 }}</td>
-        <td>{{ line.line_price_incl_tax|floatformat:2 }}</td>
+        <td>{{ line.unit_price_excl_tax|currency }}</td>
+        <td>{{ line.unit_tax|currency }}</td>
+        <td>{{ line.line_price_excl_tax|currency }}</td>
+        <td>{{ line.line_price_incl_tax|currency }}</td>
     </tr>
     {% endfor %}
     <tr>
         <td colspan="4">Total</td>
-        <td>{{ basket.total_excl_tax|floatformat:2 }}</td>
-        <td>{{ basket.total_incl_tax|floatformat:2 }}</td>
+        <td>{{ basket.total_excl_tax|currency }}</td>
+        <td>{{ basket.total_incl_tax|currency }}</td>
     </tr>
 </table>
 <form action="{% url oscar-basket %}" method="post">
@@ -101,10 +103,10 @@ Your basket is currently empty - go and <a href="/shop/product/">buy something</
                 <input type="submit" value="Move to basket" />
             </form>
         </td>
-        <td>{{ line.unit_price_excl_tax|floatformat:2 }}</td>
-        <td>{{ line.unit_tax|floatformat:2 }}</td>
-        <td>{{ line.line_price_excl_tax|floatformat:2 }}</td>
-        <td>{{ line.line_price_incl_tax|floatformat:2 }}</td>
+        <td>{{ line.unit_price_excl_tax|currency }}</td>
+        <td>{{ line.unit_tax|currency }}</td>
+        <td>{{ line.line_price_excl_tax|currency }}</td>
+        <td>{{ line.line_price_incl_tax|currency }}</td>
     </tr>
     {% endfor %}
     
