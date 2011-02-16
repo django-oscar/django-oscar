@@ -99,7 +99,7 @@ class BasketFactory(object):
             basket_id, basket_hash = request.COOKIES[cookie_key].split("_")
             if basket_hash == self._get_basket_hash(basket_id):
                 try:
-                    b = manager.get(pk=basket_id)
+                    b = manager.get(pk=basket_id, owner=None)
                 except basket_models.Basket.DoesNotExist, e:
                     b = None
             else:

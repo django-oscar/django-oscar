@@ -21,15 +21,6 @@ class OrderTest(TestCase):
     def setUp(self):
         self.order = Order.objects.get(number='100002')
 
-    def test_shipping_address_defaults_to_first_batch(self):
-        address = self.order.shipping_address
-        batch = self.order.batches.all()[0]
-        self.assertEquals(batch.shipping_address, address)
-        
-    def test_shipping_method_defaults_to_first_batch(self):
-        batch = self.order.batches.all()[0]
-        self.assertEquals(batch.shipping_method, self.order.shipping_method)
-  
         
 class BatchLineTest(TestCase):
     fixtures = ['sample-order.json']

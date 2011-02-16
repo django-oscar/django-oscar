@@ -11,7 +11,7 @@ class OrderAdmin(admin.ModelAdmin):
     readonly_fields = ('number', 'total_incl_tax', 'total_excl_tax', 'shipping_incl_tax', 'shipping_excl_tax')
 
 class BatchAdmin(admin.ModelAdmin):
-    list_display = ('order', 'partner', 'get_num_items', 'shipping_method')
+    list_display = ('order', 'partner', 'get_num_items')
 
 class BatchLineAdmin(admin.ModelAdmin):
     list_display = ('batch', 'product', 'quantity')

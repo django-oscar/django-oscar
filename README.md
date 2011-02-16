@@ -100,6 +100,8 @@ Add the following to your `INSTALLED_APPS`:
     'oscar.address',
     'oscar.stock',
     'oscar.image',
+    'oscar.shipping',
+    'oscar.customer',
     
 Now fill in the normal settings (not related to django-oscar) within `settings.py` - eg `DATABASES`, `TIME_ZONE` etc    
 

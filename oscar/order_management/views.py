@@ -69,7 +69,11 @@ class OrderView(ModelView):
         Save a note against the order.
         """
         if self.request.user.is_authenticated():
-            note = order_models.OrderNote(order=order, message=self.request.POST['message'],
-                                          user=self.request.user)
-            note.save()
+            message = self.request.POST['message'].strip()
+            if message:
+                messages.info(self.request, "Message added")
+                order_models.OrderNote.objects.create(order=order, message=self.request.POST['message'],
+                                                         user=self.request.user)
+            else:
+                messages.info(self.request, "Please enter a message")
     

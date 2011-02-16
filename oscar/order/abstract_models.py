@@ -20,23 +20,14 @@ class AbstractOrder(models.Model):
     # order-level charges are added and so we need to store it separately
     total_incl_tax = models.DecimalField(_("Order total (inc. tax)"), decimal_places=2, max_digits=12)
     total_excl_tax = models.DecimalField(_("Order total (excl. tax)"), decimal_places=2, max_digits=12)
+    
+    # Shipping details
     shipping_incl_tax = models.DecimalField(_("Shipping charge (inc. tax)"), decimal_places=2, max_digits=12, default=0)
     shipping_excl_tax = models.DecimalField(_("Shipping charge (excl. tax)"), decimal_places=2, max_digits=12, default=0)
+    # Not all batches are actually shipped (such as downloads)
+    shipping_address = models.ForeignKey('order.ShippingAddress', null=True, blank=True)
+    shipping_method = models.CharField(_("Shipping method"), max_length=128, null=True, blank=True)
     date_placed = models.DateTimeField(auto_now_add=True)
-    
-    @property
-    def shipping_address(self):
-        batches = self.batches.all()
-        if len(batches) > 0:
-            return batches[0].shipping_address
-        return None
-    
-    @property
-    def shipping_method(self):
-        batches = self.batches.all()
-        if len(batches) > 0:
-            return batches[0].shipping_method
-        return None
     
     @property
     def basket_total_incl_tax(self):
@@ -118,9 +109,6 @@ class AbstractBatch(models.Model):
     """
     order = models.ForeignKey('order.Order', related_name="batches")
     partner = models.ForeignKey('stock.Partner')
-    # Not all batches are actually shipped (such as downloads)
-    shipping_address = models.ForeignKey('order.ShippingAddress', null=True, blank=True)
-    shipping_method = models.CharField(_("Shipping method"), max_length=128, null=True, blank=True)
     
     def get_num_items(self):
         return len(self.lines.all())
