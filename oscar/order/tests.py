@@ -80,6 +80,14 @@ class BatchLineTest(TestCase):
             type = ShippingEventType.objects.get(code='dispatched')
             self.event(type, self.line.quantity)
         
+    def test_inconsistent_shipping_quantities(self):
+        type = ShippingEventType.objects.get(code='order_placed')
+        self.event(type, self.line.quantity - 1)
+        
+        with self.assertRaises(ValueError):
+            # Total quantity is too high
+            self.event(type, 2)
+        
         
 class ShippingEventQuantityTest(TestCase):
     fixtures = ['sample-order.json']

@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
+from django.db.models import Sum
 
 class AbstractOrder(models.Model):
     """
@@ -162,6 +163,7 @@ class AbstractBatchLine(models.Model):
         Returns a string summary of the shipping status of this line
         """
         status_map = self._shipping_event_history()
+        
         events = []    
         for event, quantity in status_map.items():
             if quantity == self.quantity:
@@ -187,7 +189,7 @@ class AbstractBatchLine(models.Model):
         status_map = {}
         for event in self.shippingevent_set.all():
             event_name = event.event_type.name
-            event_quantity = event.shippingeventquantity_set.all()[0].quantity
+            event_quantity = event.shippingeventquantity_set.get(line=self).quantity
             currenty_quantity = status_map.setdefault(event_name, 0)
             status_map[event_name] += event_quantity
         return status_map
@@ -323,15 +325,26 @@ class ShippingEventQuantity(models.Model):
         """
         previous_events = ShippingEventQuantity.objects.filter(line=self.line, 
                                                                event__event_type__order__lt=self.event.event_type.order)
+        self.quantity = int(self.quantity)
         for event_quantities in previous_events:
             if event_quantities.quantity < self.quantity:
                 raise ValueError("Invalid quantity (%d) for event type (a previous event has not been fully passed)" % self.quantity)
+
+    def _check_new_quantity(self):
+        quantity_row = ShippingEventQuantity.objects.filter(line=self.line, 
+                                                            event__event_type=self.event.event_type).aggregate(Sum('quantity'))
+        previous_quantity = quantity_row['quantity__sum']
+        if previous_quantity == None:
+            previous_quantity = 0
+        if previous_quantity + self.quantity > self.line.quantity:
+            raise ValueError("Invalid quantity (%d) for event type (total exceeds line total)" % self.quantity)                                                        
 
     def save(self, *args, **kwargs):
         # Default quantity to full quantity of line
         if not self.quantity:
             self.quantity = self.line.quantity
         self._check_previous_events_are_complete()
+        self._check_new_quantity()
         super(ShippingEventQuantity, self).save(*args, **kwargs)
 
 
