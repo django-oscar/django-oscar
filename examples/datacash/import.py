@@ -13,11 +13,11 @@ connection = MySQLdb.connect(host='localhost', user='root', passwd='gsiwmm', db=
 cursor = connection.cursor(MySQLdb.cursors.DictCursor)
 
 
-def create_stock_record(product, product_id, partner_ref):
+def create_stock_record(product, partner_type, product_id, partner_ref):
     cursor.execute("SELECT * FROM Brd_ProductStock WHERE ProductId = %s", product_id)
     stock_row = cursor.fetchone()
     if stock_row:
-        partner,_ = Partner.objects.get_or_create(name=stock_row['Partner'])
+        partner,_ = Partner.objects.get_or_create(name="%s (%s)" % (stock_row['Partner'], partner_type))
         price = D(stock_row['Price']) - D(stock_row['PriceSalesTax'])
         print "  - Creating stock record"
         stock_record = StockRecord.objects.create(product=product, partner=partner, partner_reference=partner_ref,
@@ -32,18 +32,19 @@ django_cursor.execute("TRUNCATE TABLE product_item")
 django_cursor.execute("TRUNCATE TABLE product_attributetype")
 django_cursor.execute("TRUNCATE TABLE product_attributevalueoption")
 django_cursor.execute("TRUNCATE TABLE product_itemattributevalue")
+django_cursor.execute("TRUNCATE TABLE stock_partner")
 django_cursor.execute("TRUNCATE TABLE stock_stockrecord")
 
-cursor.execute("SELECT * FROM Brd_ProductsCanonical WHERE Partner = 'Prolog' limit 10")
+cursor.execute("SELECT * FROM Brd_ProductsCanonical WHERE Partner = 'Prolog' LIMIT 120")
 for row in cursor.fetchall():
     print "Creating canonical product %s" % (row['ProductCode'],)
     pclass,_ = ItemClass.objects.get_or_create(name=row['MediaType'])
     p,_ = Item.objects.get_or_create(title=row['Title'], item_class=pclass, upc=row['ProductCode'])
     
-    # Create variant products
     cursor.execute("SELECT * FROM Brd_Products WHERE CanonicalProductId = %s", row['CanonicalProductId'])
     product_rows = cursor.fetchall()
     if len(product_rows) > 1:
+        # Create variant products
         for product_row in product_rows:
             print " - Creating child product %s" % product_row['SourceProductId']
             child_p,_ = Item.objects.get_or_create(parent=p, upc=product_row['SourceProductId'])
@@ -61,10 +62,11 @@ for row in cursor.fetchall():
                     child_p.options.add(option)
                     child_p.save()
             # Stock record for child
-            create_stock_record(child_p, product_row['ProductId'], product_row['SourceProductId'])
+            create_stock_record(child_p, row['FulfillmentType'], product_row['ProductId'], product_row['SourceProductId'])
     else:
+        # Stand-alone product
         product_row = product_rows[0]
-        create_stock_record(p, product_row['ProductId'], product_row['SourceProductId'])
+        create_stock_record(p, row['FulfillmentType'], product_row['ProductId'], product_row['SourceProductId'])
     
 cursor.close()
 print "Finished"

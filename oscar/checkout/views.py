@@ -145,7 +145,8 @@ class ShippingMethodView(object):
             return self.handle_GET()
     
     def handle_GET(self):
-        methods = shipping_models.Method.objects.all()
+        basket = basket_factory.BasketFactory().get_open_basket(self.request)
+        methods = self.get_shipping_methods_for_basket(basket)
         
         if not methods.count():
             # No defined methods - assume delivery is free
@@ -159,7 +160,6 @@ class ShippingMethodView(object):
             mark_step_as_complete(self.request)
             return HttpResponseRedirect(reverse(get_next_step(self.request)))
         
-        basket = basket_factory.BasketFactory().get_open_basket(self.request)
         for method in methods:
             method.set_basket(basket)
         
@@ -175,6 +175,9 @@ class ShippingMethodView(object):
         order_total = calc.order_total_incl_tax(basket)
         
         return render(self.request, 'checkout/shipping_methods.html', locals())
+    
+    def get_shipping_methods_for_basket(self, basket):
+        return shipping_models.Method.objects.all()
     
     def handle_POST(self):
         method_code = self.request.POST['method_code']
