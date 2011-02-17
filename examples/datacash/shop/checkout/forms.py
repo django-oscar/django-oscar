@@ -1,4 +1,4 @@
-from django.forms import ModelForm, CharField
+from django.forms import ModelForm, CharField, HiddenInput
 
 from oscar.checkout.forms import ShippingAddressForm as CoreShippingAddressForm
 from oscar.services import import_module
@@ -15,8 +15,8 @@ class ShippingAddressForm(CoreShippingAddressForm):
     
     class Meta:
         model = order_models.ShippingAddress
-        exclude = ('title', 'user', 'notes', 'country')
+        exclude = ('title', 'user', 'notes')
         
     def set_country_queryset(self):
-        pass
+        self.fields['country'].queryset = address_models.Country.objects.filter(is_shipping_country=True)
 
