@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
+from django.db.models import Sum
 
 class AbstractOrder(models.Model):
     """
@@ -20,23 +21,14 @@ class AbstractOrder(models.Model):
     # order-level charges are added and so we need to store it separately
     total_incl_tax = models.DecimalField(_("Order total (inc. tax)"), decimal_places=2, max_digits=12)
     total_excl_tax = models.DecimalField(_("Order total (excl. tax)"), decimal_places=2, max_digits=12)
+    
+    # Shipping details
     shipping_incl_tax = models.DecimalField(_("Shipping charge (inc. tax)"), decimal_places=2, max_digits=12, default=0)
     shipping_excl_tax = models.DecimalField(_("Shipping charge (excl. tax)"), decimal_places=2, max_digits=12, default=0)
+    # Not all batches are actually shipped (such as downloads)
+    shipping_address = models.ForeignKey('order.ShippingAddress', null=True, blank=True)
+    shipping_method = models.CharField(_("Shipping method"), max_length=128, null=True, blank=True)
     date_placed = models.DateTimeField(auto_now_add=True)
-    
-    @property
-    def shipping_address(self):
-        batches = self.batches.all()
-        if len(batches) > 0:
-            return batches[0].shipping_address
-        return None
-    
-    @property
-    def shipping_method(self):
-        batches = self.batches.all()
-        if len(batches) > 0:
-            return batches[0].shipping_method
-        return None
     
     @property
     def basket_total_incl_tax(self):
@@ -118,9 +110,6 @@ class AbstractBatch(models.Model):
     """
     order = models.ForeignKey('order.Order', related_name="batches")
     partner = models.ForeignKey('stock.Partner')
-    # Not all batches are actually shipped (such as downloads)
-    shipping_address = models.ForeignKey('order.ShippingAddress', null=True, blank=True)
-    shipping_method = models.CharField(_("Shipping method"), max_length=128, null=True, blank=True)
     
     def get_num_items(self):
         return len(self.lines.all())
@@ -174,6 +163,7 @@ class AbstractBatchLine(models.Model):
         Returns a string summary of the shipping status of this line
         """
         status_map = self._shipping_event_history()
+        
         events = []    
         for event, quantity in status_map.items():
             if quantity == self.quantity:
@@ -199,7 +189,7 @@ class AbstractBatchLine(models.Model):
         status_map = {}
         for event in self.shippingevent_set.all():
             event_name = event.event_type.name
-            event_quantity = event.shippingeventquantity_set.all()[0].quantity
+            event_quantity = event.shippingeventquantity_set.get(line=self).quantity
             currenty_quantity = status_map.setdefault(event_name, 0)
             status_map[event_name] += event_quantity
         return status_map
@@ -335,15 +325,26 @@ class ShippingEventQuantity(models.Model):
         """
         previous_events = ShippingEventQuantity.objects.filter(line=self.line, 
                                                                event__event_type__order__lt=self.event.event_type.order)
+        self.quantity = int(self.quantity)
         for event_quantities in previous_events:
             if event_quantities.quantity < self.quantity:
                 raise ValueError("Invalid quantity (%d) for event type (a previous event has not been fully passed)" % self.quantity)
+
+    def _check_new_quantity(self):
+        quantity_row = ShippingEventQuantity.objects.filter(line=self.line, 
+                                                            event__event_type=self.event.event_type).aggregate(Sum('quantity'))
+        previous_quantity = quantity_row['quantity__sum']
+        if previous_quantity == None:
+            previous_quantity = 0
+        if previous_quantity + self.quantity > self.line.quantity:
+            raise ValueError("Invalid quantity (%d) for event type (total exceeds line total)" % self.quantity)                                                        
 
     def save(self, *args, **kwargs):
         # Default quantity to full quantity of line
         if not self.quantity:
             self.quantity = self.line.quantity
         self._check_previous_events_are_complete()
+        self._check_new_quantity()
         super(ShippingEventQuantity, self).save(*args, **kwargs)
 
 

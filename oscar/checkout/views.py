@@ -145,7 +145,8 @@ class ShippingMethodView(object):
             return self.handle_GET()
     
     def handle_GET(self):
-        methods = shipping_models.Method.objects.all()
+        basket = basket_factory.BasketFactory().get_open_basket(self.request)
+        methods = self.get_shipping_methods_for_basket(basket)
         
         if not methods.count():
             # No defined methods - assume delivery is free
@@ -159,7 +160,6 @@ class ShippingMethodView(object):
             mark_step_as_complete(self.request)
             return HttpResponseRedirect(reverse(get_next_step(self.request)))
         
-        basket = basket_factory.BasketFactory().get_open_basket(self.request)
         for method in methods:
             method.set_basket(basket)
         
@@ -175,6 +175,9 @@ class ShippingMethodView(object):
         order_total = calc.order_total_incl_tax(basket)
         
         return render(self.request, 'checkout/shipping_methods.html', locals())
+    
+    def get_shipping_methods_for_basket(self, basket):
+        return shipping_models.Method.objects.all()
     
     def handle_POST(self):
         method_code = self.request.POST['method_code']
@@ -271,24 +274,27 @@ class SubmitView(object):
         Placing an order involves creating all the relevant models based on the
         basket and session data.
         """
-        shipping_method = self._get_shipping_method()     
-        order = self._create_order_model(shipping_method)
+        order = self._create_order_model()
         for line in self.basket.lines.all():
-            batch = self._get_or_create_batch_for_line(order, shipping_method, line)
-            self._create_line_model(order, batch, line)
+            batch = self._get_or_create_batch_for_line(order, line)
+            self._create_line_models(order, batch, line)
         return order
         
-    def _create_order_model(self, shipping_method):
+    def _create_order_model(self):
         """
         Creates an order model.
         """
         calc = checkout_calculators.OrderTotalCalculator(self.request)
+        shipping_method = self._get_shipping_method()
+        shipping_addr = self._get_shipping_address()
         order_data = {'basket': self.basket,
                       'site': Site.objects.get_current(),
                       'total_incl_tax': calc.order_total_incl_tax(self.basket, shipping_method),
                       'total_excl_tax': calc.order_total_excl_tax(self.basket, shipping_method),
                       'shipping_incl_tax': shipping_method.basket_charge_incl_tax(),
-                      'shipping_excl_tax': shipping_method.basket_charge_excl_tax(),}
+                      'shipping_excl_tax': shipping_method.basket_charge_excl_tax(),
+                      'shipping_address': shipping_addr,
+                      'shipping_method': shipping_method.name}
         if self.request.user.is_authenticated():
             order_data['user_id'] = self.request.user.id
         order = order_models.Order(**order_data)
@@ -300,7 +306,7 @@ class SubmitView(object):
         method.set_basket(self.basket)
         return method
     
-    def _create_line_model(self, order, batch, basket_line):
+    def _create_line_models(self, order, batch, basket_line):
         """
         Creates the batch line model.
         """
@@ -331,15 +337,12 @@ class SubmitView(object):
             order_models.BatchLineAttribute.objects.create(line=batch_line, type=attr.option.code,
                                                                    value=attr.value)
     
-    def _get_or_create_batch_for_line(self, order, shipping_method, line):
+    def _get_or_create_batch_for_line(self, order, line):
         """
         Returns the batch for a given line, creating it if appropriate.
         """
         partner = self._get_partner_for_product(line.product)
-        shipping_addr = self._get_shipping_address_for_line(line)
-        batch,_ = order_models.Batch.objects.get_or_create(order=order, partner=partner, 
-                                                           shipping_method=shipping_method.name,
-                                                           shipping_address=shipping_addr)
+        batch,_ = order_models.Batch.objects.get_or_create(order=order, partner=partner)
         return batch
                 
     def _get_partner_for_product(self, product):
@@ -350,27 +353,19 @@ class SubmitView(object):
             return product.stockrecord.partner
         raise AttributeError("No partner found for product '%s'" % product)
 
-    def _get_shipping_address_for_line(self, line):
+    def _get_shipping_address(self):
         """
         Returns the shipping address for a given line.
         """
-        try:
-            addr = self.shipping_addr
-        except AttributeError:
-            # No cached version - create a shipping address
-            addr_data = self.co_data.new_address_fields()
-            addr_id = self.co_data.user_address_id()
-            if addr_data:
-                addr = self._create_shipping_address_from_form_fields(addr_data)
-                self._create_user_address(addr_data)
-            elif addr_id:
-                addr = self._create_shipping_address_from_user_address(addr_id)
-            else:
-                raise AttributeError("No shipping address data found")
-            
-            # Cache it as our default behaviour is to have only one
-            # shipping address per order.
-            self.shipping_addr = addr
+        addr_data = self.co_data.new_address_fields()
+        addr_id = self.co_data.user_address_id()
+        if addr_data:
+            addr = self._create_shipping_address_from_form_fields(addr_data)
+            self._create_user_address(addr_data)
+        elif addr_id:
+            addr = self._create_shipping_address_from_user_address(addr_id)
+        else:
+            raise AttributeError("No shipping address data found")
         return addr
             
     def _create_shipping_address_from_form_fields(self, addr_data):
