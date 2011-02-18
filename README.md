@@ -1,8 +1,8 @@
 # Django-Oscar - Flexible e-commerce on Django
 
 Named after [Oscar Peterson](http://en.wikipedia.org/wiki/Oscar_Peterson),
-django-oscar is a flexible ecommerce platform, structured to allow accurate
-domain models to be constructed.  It is not supposed to be a framework that can
+django-oscar is a flexible ecommerce platform, designed to build domain-driven
+ecommerce sites to be constructed.  It is not supposed to be a framework that can
 be downloaded and fully set up by simply adjusting a configuration file: there
 will always be some developer work required to make sure the models match those
 from your domain - this is the nature of domain modelling.
@@ -16,15 +16,17 @@ is a pleasure to work with and maintain.
 
 * To be a portable Django application that provides ecommerce functionality.  
 * To comprise a set of loosely coupled apps that can be overridden in projects (interdependence is on interfaces only)
-* To allow core objects (eg products, orders) to be extended within a specific project
+* To be highly customisable so any part of the core can be customised.
 
 The central aim is to provide a solid core of an ecommerce project that can be
 extended and customised to suit the domain at hand.  One way to acheive this is
 to have enormous models that have fields for every possible variation; however,
-this is unwieldy and ugly.  A more elegant solution is to have models where all
-the fields are meaningful within the ecommerce domain.  In general, this means
-more work up front in terms of creating the right set of models but leads
-ultimately to a much cleaner and coherent system.
+this is unwieldy and ugly.  
+
+A more elegant solution is to have minimal models where all the fields are meaningful
+within any ecommerce domain.  In general, this means more work up front in
+terms of creating the right set of models but leads ultimately to a much
+cleaner and coherent system.
 
 ## Core design decisions
 
@@ -148,9 +150,12 @@ After checking out your fork, install the latest version of Django into your vir
 
 Clone this repository to get the latest version of Oscar
 
-Install all packages from the requirements file
+Install all packages from the requirements file (optional)
 
-	pip install -r requirements.txt
+	pip install -r requirements-dev.txt
+
+This just provides some useful tooling for developing a django project - the installed
+modules are not mandatory to run oscar.
 
 Install oscar in development mode within your virtual env
 
