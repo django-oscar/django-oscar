@@ -59,6 +59,9 @@ def get_next_step(request):
 
 
 class CheckoutView(object):
+    u"""
+    Top-level superclass for all checkout view classes
+    """
     
     def __init__(self, template_file=None):
         if template_file:
@@ -67,6 +70,10 @@ class CheckoutView(object):
     @basket_required
     @prev_steps_must_be_complete
     def __call__(self, request):
+        u"""
+        We forward request handling to the appropriate method
+        based on the HTTP method.
+        """
         
         # Set up the instance variables that are needed to place an order
         self.request = request
@@ -85,6 +92,13 @@ class CheckoutView(object):
         Default behaviour is to set step as complete and redirect
         to the next step.
         """ 
+        return self.get_success_response()
+    
+    def get_success_response(self):
+        u"""
+        Returns the appropriate redirect response if a checkout
+        step has been successfully passed.
+        """
         mark_step_as_complete(self.request)
         return HttpResponseRedirect(reverse(get_next_step(self.request)))
     
@@ -102,6 +116,7 @@ class IndexView(object):
 
 
 class ShippingAddressView(CheckoutView):
+    template_file = 'checkout/shipping_address.html'
     
     def handle_POST(self):
         if self.request.user.is_authenticated and 'address_id' in self.request.POST:
@@ -109,8 +124,7 @@ class ShippingAddressView(CheckoutView):
             if 'action' in self.request.POST and self.request.POST['action'] == 'ship_to':
                 # User has selected a previous address to ship to
                 self.co_data.ship_to_user_address(address)
-                mark_step_as_complete(self.request)
-                return HttpResponseRedirect(reverse(get_next_step(self.request)))
+                return self.get_success_response()
             elif 'action' in self.request.POST and self.request.POST['action'] == 'delete':
                 address.delete()
                 messages.info(self.request, "Address deleted from your address book")
@@ -122,8 +136,7 @@ class ShippingAddressView(CheckoutView):
             if form.is_valid():
                 # Address data is valid - store in session and redirect to next step.
                 self.co_data.ship_to_new_address(form.clean())
-                mark_step_as_complete(self.request)
-                return HttpResponseRedirect(reverse(get_next_step(self.request)))
+                return self.get_success_response()
             return self.handle_GET(form)
         
     def handle_GET(self, form=None):
@@ -145,7 +158,7 @@ class ShippingAddressView(CheckoutView):
         if self.request.user.is_authenticated():
             addresses = address_models.UserAddress.objects.filter(user=self.request.user)
         
-        return render(self.request, 'checkout/shipping_address.html', locals())
+        return render(self.request, self.template_file, locals())
     
     
 class ShippingMethodView(CheckoutView):
@@ -153,6 +166,7 @@ class ShippingMethodView(CheckoutView):
     Shipping methods are domain-specific and so need implementing in a 
     subclass of this class.
     """
+    template_file = 'checkout/shipping_methods.html';
     
     def handle_GET(self):
         basket = basket_factory.BasketFactory().get_open_basket(self.request)
@@ -161,14 +175,12 @@ class ShippingMethodView(CheckoutView):
         if not methods.count():
             # No defined methods - assume delivery is free
             self.co_data.use_free_shipping()
-            mark_step_as_complete(self.request)
-            return HttpResponseRedirect(reverse(get_next_step(self.request)))
+            return self.get_success_response()
         
         if methods.count() == 1:
             # Only one method - set this
             self.co_data.use_shipping_method(methods[0].code)
-            mark_step_as_complete(self.request)
-            return HttpResponseRedirect(reverse(get_next_step(self.request)))
+            return self.get_success_response()
         
         for method in methods:
             method.set_basket(basket)
@@ -184,7 +196,7 @@ class ShippingMethodView(CheckoutView):
         calc = checkout_calculators.OrderTotalCalculator(self.request)
         order_total = calc.order_total_incl_tax(basket)
         
-        return render(self.request, 'checkout/shipping_methods.html', locals())
+        return render(self.request, self.template_file, locals())
     
     def get_shipping_methods_for_basket(self, basket):
         return shipping_models.Method.objects.all()
@@ -209,6 +221,8 @@ class PaymentMethodView(CheckoutView):
 class OrderPreviewView(CheckoutView):
     u"""View a preview of the order before submitting."""
     
+    template_file = 'checkout/preview.html'
+    
     def handle_GET(self):
         basket = basket_factory.BasketFactory().get_open_basket(self.request)
         
@@ -232,7 +246,7 @@ class OrderPreviewView(CheckoutView):
         order_total = calc.order_total_incl_tax(basket, method)
         
         mark_step_as_complete(self.request)
-        return render(self.request, 'checkout/preview.html', locals())
+        return render(self.request, self.template_file, locals())
 
 
 class PaymentDetailsView(CheckoutView):
