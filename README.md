@@ -148,6 +148,10 @@ After checking out your fork, install the latest version of Django into your vir
 
 Clone this repository to get the latest version of Oscar
 
+Install all packages from the requirements file
+
+	pip install -r requirements.txt
+
 Install oscar in development mode within your virtual env
 
     python setup.py develop
