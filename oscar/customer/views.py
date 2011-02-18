@@ -12,24 +12,29 @@ order_models = import_module('order.models', ['Order'])
 
 @login_required
 def profile(request):
+    u"""Return a customers's profile"""
     # Load last 5 orders as preview
     orders = order_models.Order.objects.filter(user=request.user)[0:5]
     return render(request, 'customer/profile.html', locals())
     
         
 class OrderHistoryView(ListView):
+    u"""Customer order history"""
     context_object_name = "orders"
     template_name = 'customer/order-history.html'
     paginate_by = 20
 
     def get_queryset(self):
+        u"""Return a customer's orders"""
         return order_models.Order.objects.filter(user=self.request.user)
 
 
 class OrderDetailView(ModelView):
+    u"""Customer order details"""
     template_file = "customer/order.html"
     
     def get_model(self):
+        u"""Return an order object or 404"""
         return get_object_or_404(order_models.Order, user=self.request.user, number=self.kwargs['order_number'])
     
     def handle_GET(self, order):
@@ -37,18 +42,22 @@ class OrderDetailView(ModelView):
         
 
 class AddressBookView(ListView):
+    u"""Customer address book"""
     context_object_name = "addresses"
     template_name = 'customer/address-book.html'
     paginate_by = 40
         
     def get_queryset(self):
+        u"""Return a customer's addresses"""
         return address_models.UserAddress.objects.filter(user=self.request.user)
     
     
 class AddressView(ModelView):
+    u"""Customer address view"""
     template_file = "customer/address-form.html"
     
     def get_model(self):
+        u"""Return an address object or a 404"""
         return get_object_or_404(address_models.UserAddress, user=self.request.user, pk=self.kwargs['address_id'])
     
     def handle_GET(self, address):
@@ -56,6 +65,7 @@ class AddressView(ModelView):
         self.response = render(self.request, self.template_file, locals())
         
     def do_save(self, address):
+        u"""Save an address"""
         form = UserAddressForm(self.request.POST, instance=address)
         if form.is_valid():
             a = form.save()
@@ -64,6 +74,7 @@ class AddressView(ModelView):
             self.response = render(self.request, self.template_file, locals())
             
     def do_delete(self, address):
+        u"""Delete an address"""
         address.delete()
         self.response = HttpResponseRedirect(reverse('oscar-customer-address-book'))
             

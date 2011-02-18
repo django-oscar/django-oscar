@@ -44,6 +44,7 @@ class AbstractStockRecord(models.Model):
         abstract = True
     
     def decrement_num_in_stock(self, delta):
+        u"""Decrement an item's stock level"""
         if self.num_in_stock >= delta:
             self.num_in_stock -= delta
         self.num_allocated += delta
@@ -54,16 +55,20 @@ class AbstractStockRecord(models.Model):
     
     @property
     def availability(self):
+        u"""Return an item's availability as a string"""
         if self.num_in_stock:
             return _("In stock (%d available)" % self.num_in_stock)
         return _("Out of stock")
     
     @property 
     def price_incl_tax(self):
+        u"""Return a product's price including tax"""
         return self.price_excl_tax
     
     @property 
     def price_tax(self):
+        u"""Return a product's tax value"""
+        #TODO?
         return 0
         
     def __unicode__(self):

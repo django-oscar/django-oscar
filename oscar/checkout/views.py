@@ -199,6 +199,7 @@ class ShippingMethodView(CheckoutView):
         return render(self.request, self.template_file, locals())
     
     def get_shipping_methods_for_basket(self, basket):
+        u"""Return available shipping methods for a basket"""
         return shipping_models.Method.objects.all()
     
     def handle_POST(self):
@@ -300,7 +301,6 @@ class SubmitView(CheckoutView):
     
     def _place_order(self, basket):
         u"""Writes the order out to the DB"""
-        
         calc = checkout_calculators.OrderTotalCalculator(self.request)
         shipping_address = self._get_shipping_address()
         shipping_method = self._get_shipping_method(basket)
