@@ -98,10 +98,8 @@
     </tr>
 </table>
 
-<form method="post" action="{% url oscar-checkout-submit %}" />
-    {% csrf_token %}
-    <input type="submit" value="Place order!" />
-</form>
+<a href="{% url oscar-checkout-payment-details %}">Place order</a>
+
 <a href="{% url oscar-basket %}">Edit order contents</a>
 
 

@@ -61,7 +61,8 @@ def get_next_step(request):
 class CheckoutView(object):
     
     def __init__(self, template_file=None):
-        template_file = template_file
+        if template_file:
+            self.template_file = template_file
         
     @basket_required
     @prev_steps_must_be_complete
@@ -72,11 +73,18 @@ class CheckoutView(object):
         self.co_data = checkout_utils.CheckoutSessionData(request)
         
         if request.method == 'POST':
-            return self.handle_POST()
+            response = self.handle_POST()
         elif request.method == 'GET':
-            return self.handle_GET()
+            response = self.handle_GET()
+        else:
+            response = HttpResponseBadRequest()
+        return response
     
     def handle_GET(self):
+        u"""
+        Default behaviour is to set step as complete and redirect
+        to the next step.
+        """ 
         mark_step_as_complete(self.request)
         return HttpResponseRedirect(reverse(get_next_step(self.request)))
     
@@ -93,19 +101,7 @@ class IndexView(object):
         return render(request, self.template_file, locals())    
 
 
-class ShippingAddressView(ModelView):
-    
-    @basket_required
-    def __call__(self, request):
-        
-        # Set up the instance variables that are needed to place an order
-        self.request = request
-        self.co_data = checkout_utils.CheckoutSessionData(request)
-        
-        if request.method == 'POST':
-            return self.handle_POST()
-        elif request.method == 'GET':
-            return self.handle_GET()
+class ShippingAddressView(CheckoutView):
     
     def handle_POST(self):
         if self.request.user.is_authenticated and 'address_id' in self.request.POST:
@@ -152,22 +148,11 @@ class ShippingAddressView(ModelView):
         return render(self.request, 'checkout/shipping_address.html', locals())
     
     
-class ShippingMethodView(object):
+class ShippingMethodView(CheckoutView):
     u"""
     Shipping methods are domain-specific and so need implementing in a 
     subclass of this class.
     """
-    
-    @prev_steps_must_be_complete
-    def __call__(self, request):
-        
-        self.request = request
-        self.co_data = checkout_utils.CheckoutSessionData(request)
-        
-        if request.method == 'POST':
-            return self.handle_POST()
-        elif request.method == 'GET':
-            return self.handle_GET()
     
     def handle_GET(self):
         basket = basket_factory.BasketFactory().get_open_basket(self.request)
@@ -211,64 +196,56 @@ class ShippingMethodView(object):
         return HttpResponseRedirect(reverse(get_next_step(self.request)))
         
 
-class PaymentMethodView(object):
+class PaymentMethodView(CheckoutView):
     u"""
     View for a user to choose which payment method(s) they want to use.
     
     This would include setting allocations if payment is to be split
     between multiple sources.
     """
-    @prev_steps_must_be_complete
-    def __call__(self, request):
-        mark_step_as_complete(request)
-        return HttpResponseRedirect(reverse(get_next_step(request)))
+    pass
 
 
-class OrderPreviewView(object):
+class OrderPreviewView(CheckoutView):
     u"""View a preview of the order before submitting."""
     
-    @prev_steps_must_be_complete
-    def __call__(self, request):
-        co_data = checkout_utils.CheckoutSessionData(request)
-        basket = basket_factory.BasketFactory().get_open_basket(request)
+    def handle_GET(self):
+        basket = basket_factory.BasketFactory().get_open_basket(self.request)
         
         # Load address data into a blank address model
-        addr_data = co_data.new_address_fields()
+        addr_data = self.co_data.new_address_fields()
         if addr_data:
             shipping_addr = order_models.ShippingAddress(**addr_data)
-        addr_id = co_data.user_address_id()
+        addr_id = self.co_data.user_address_id()
         if addr_id:
             shipping_addr = address_models.UserAddress.objects.get(pk=addr_id)
         
         # Shipping method
-        method = co_data.shipping_method()
+        method = self.co_data.shipping_method()
         method.set_basket(basket)
 
         shipping_total_excl_tax = method.basket_charge_excl_tax()
         shipping_total_incl_tax = method.basket_charge_incl_tax()
         
         # Calculate order total
-        calc = checkout_calculators.OrderTotalCalculator(request)
+        calc = checkout_calculators.OrderTotalCalculator(self.request)
         order_total = calc.order_total_incl_tax(basket, method)
         
-        mark_step_as_complete(request)
-        return render(request, 'checkout/preview.html', locals())
+        mark_step_as_complete(self.request)
+        return render(self.request, 'checkout/preview.html', locals())
 
 
-class PaymentDetailsView(object):
+class PaymentDetailsView(CheckoutView):
     u"""
     For taking the details of payment.
     
     This has to be the final step before submit as we don't want to store
     payment details in the session.
     """
-    @prev_steps_must_be_complete
-    def __call__(self, request):
-        mark_step_as_complete(request)
-        return HttpResponseRedirect(reverse(get_next_step(request)))
+    pass
 
 
-class SubmitView(object):
+class SubmitView(CheckoutView):
     u"""
     Class for submitting an order.
     
@@ -281,15 +258,14 @@ class SubmitView(object):
     method.
     """
     
-    def __call__(self, request):
+    def handle_GET(self):
+        return self.handle_POST()
+    
+    def handle_POST(self):
         
-        # Set up the instance variables that are needed to place an order
-        self.request = request
-        self.co_data = checkout_utils.CheckoutSessionData(request)
-        self.basket = basket_factory.BasketFactory().get_open_basket(request)
-        
-        self._handle_payment()
-        order = self._place_order()
+        basket = basket_factory.BasketFactory().get_open_basket(self.request)
+        self._handle_payment(basket)
+        order = self._place_order(basket)
         self._reset_checkout()
         
         # Send signal
@@ -299,7 +275,7 @@ class SubmitView(object):
         self.request.session['checkout_order_id'] = order.id
         return HttpResponseRedirect(reverse('oscar-checkout-thank-you'))
     
-    def _handle_payment(self):
+    def _handle_payment(self, basket):
         u"""Handle any payment processing"""
         pass
     
@@ -308,18 +284,19 @@ class SubmitView(object):
         self.co_data.flush()
         checkout_utils.ProgressChecker().all_steps_complete(self.request)
     
-    def _place_order(self):
+    def _place_order(self, basket):
         u"""Writes the order out to the DB"""
+        
         calc = checkout_calculators.OrderTotalCalculator(self.request)
         shipping_address = self._get_shipping_address()
-        shipping_method = self._get_shipping_method()
+        shipping_method = self._get_shipping_method(basket)
         order_creator = order_utils.OrderCreator(calc)
-        return order_creator.place_order(self.request.user, self.basket, shipping_address, shipping_method)
+        return order_creator.place_order(self.request.user, basket, shipping_address, shipping_method)
     
-    def _get_shipping_method(self):
+    def _get_shipping_method(self, basket):
         u"""Returns the shipping method object"""
         method = self.co_data.shipping_method()
-        method.set_basket(self.basket)
+        method.set_basket(basket)
         return method
     
     def _get_shipping_address(self):
