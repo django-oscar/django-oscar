@@ -5,6 +5,7 @@ from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.views.generic import ListView, DetailView
 from django.contrib import messages
+from django.db import transaction
 
 from oscar.views import ModelView
 from oscar.services import import_module
@@ -45,20 +46,20 @@ class OrderView(ModelView):
         if not len(lines):
             messages.info(self.request, "Please select some lines")
             return
-        
-        if self.request.POST['shipping_event']:
-            try:
-                event = self.create_shipping_event(order, batch, self.request.POST['shipping_event'])
-                for line in lines.values():
-                    event_quantity = int(self.request.POST['order_line_quantity_%d' % line.id])
-                    order_models.ShippingEventQuantity.objects.create(event=event, line=line, 
-                                                                      quantity=event_quantity)
-            except AttributeError, e:
-                messages.error(str(e))
+        try:
+            if self.request.POST['shipping_event']:
+                self.create_shipping_event(order, batch, lines)
+        except (AttributeError, ValueError), e:
+            messages.error(self.request, str(e))    
                 
-    def create_shipping_event(self, order, batch, type_code):
-        event_type = order_models.ShippingEventType.objects.get(code=type_code)
-        return order_models.ShippingEvent.objects.create(order=order, event_type=event_type, batch=batch)
+    def create_shipping_event(self, order, batch, lines):
+        with transaction.commit_on_success():
+            event_type = order_models.ShippingEventType.objects.get(code=self.request.POST['shipping_event'])
+            event = order_models.ShippingEvent.objects.create(order=order, event_type=event_type, batch=batch)
+            for line in lines.values():
+                event_quantity = int(self.request.POST['order_line_quantity_%d' % line.id])
+                order_models.ShippingEventQuantity.objects.create(event=event, line=line, 
+                                                                  quantity=event_quantity)
             
     def create_payment_event(self, order, lines, type_code):
         event_type = order_models.PaymentEventType.objects.get(code=type_code)
