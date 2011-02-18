@@ -2,9 +2,7 @@ from django.db import models
 
 
 class OpenBasketManager(models.Manager):
-    """
-    For searching/creating OPEN baskets only.
-    """
+    u"""For searching/creating OPEN baskets only."""
     status_filter = "Open"
     
     def get_query_set(self):
@@ -15,9 +13,7 @@ class OpenBasketManager(models.Manager):
 
     
 class SavedBasketManager(models.Manager):
-    """
-    For searching/creating SAVED baskets only.
-    """
+    u"""For searching/creating SAVED baskets only."""
     status_filter = "Saved"
     
     def get_query_set(self):

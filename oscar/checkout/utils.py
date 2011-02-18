@@ -6,7 +6,7 @@ shipping_models = import_module('shipping.models', ['Method'])
 
 
 class ProgressChecker(object):
-    """
+    u"""
     Class for testing whether the appropriate steps of the checkout
     have been completed.
     """
@@ -19,7 +19,7 @@ class ProgressChecker(object):
                       'oscar-checkout-submit',]
     
     def are_previous_steps_complete(self, request):
-        """
+        u"""
         Checks whether the previous checkout steps have been completed.
         
         This uses the URL-name and the class-level list of required
@@ -40,9 +40,7 @@ class ProgressChecker(object):
             return current_step_index == 0
             
     def step_complete(self, request):
-        """
-        Record a checkout step as complete.
-        """
+        u"""Record a checkout step as complete."""
         url_name = self._get_url_name(request)
         complete_steps = self._get_completed_steps(request)
         if not url_name in complete_steps:
@@ -52,9 +50,7 @@ class ProgressChecker(object):
             request.session['checkout_complete_steps'] = complete_steps 
             
     def get_next_step(self, request):
-        """
-        Returns the next incomplete step of the checkout.
-        """ 
+        u"""Returns the next incomplete step of the checkout."""
         completed_steps = self._get_completed_steps(request)
         if len(completed_steps):
             return self.urls_for_steps[len(completed_steps)]  
@@ -62,7 +58,7 @@ class ProgressChecker(object):
             return self.urls_for_steps[0]
             
     def all_steps_complete(self, request):
-        """
+        u"""
         Order has been submitted - clear the completed steps from 
         the session.
         """
@@ -76,9 +72,7 @@ class ProgressChecker(object):
     
 
 class CheckoutSessionData(object):
-    """
-    Class responsible for marshalling all the checkout session data.
-    """
+    u"""Class responsible for marshalling all the checkout session data."""
     SESSION_KEY = 'checkout_data'
     FREE_SHIPPING = '__free__'
     
@@ -134,7 +128,7 @@ class CheckoutSessionData(object):
         self._set('shipping', 'method_code', code)
         
     def shipping_method(self):
-        """
+        u"""
         Returns the shipping method model based on the 
         data stored in the session.
         """

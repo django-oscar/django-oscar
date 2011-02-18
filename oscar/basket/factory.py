@@ -17,43 +17,32 @@ except AttributeError:
 
 
 class BasketFactory(object):
-    u"""
-    Factory object for loading baskets.
-    """
+    u"""Factory object for loading baskets."""
 
     def get_or_create_open_basket(self, request, response):
-        u"""
-        Loads or creates a normal OPEN basket for the current user (anonymous
+        u"""Loads or creates a normal OPEN basket for the current user (anonymous
         or not).
         """
         return self._get_or_create_cookie_basket(request, response, 
                                                  COOKIE_KEY_OPEN_BASKET, basket_models.Basket.open)
     
     def get_or_create_saved_basket(self, request, response):
-        u"""
-        Loads or creates a "save-for-later" basket for the current user
-        """
+        u"""Loads or creates a "save-for-later" basket for the current user"""
         return self._get_or_create_cookie_basket(request, response, 
                                                  COOKIE_KEY_SAVED_BASKET, basket_models.Basket.saved)
     
     def get_open_basket(self, request):
-        u"""
-        Returns the basket for the current user
-        """
+        u"""Returns the basket for the current user"""
         return self._get_basket(request, COOKIE_KEY_OPEN_BASKET, basket_models.Basket.open)
     
     def get_saved_basket(self, request):
-        u"""
-        Returns the saved basket for the current user
-        """
+        u"""Returns the saved basket for the current user"""
         return self._get_basket(request, COOKIE_KEY_SAVED_BASKET, basket_models.Basket.saved)
     
     # Utility methods
     
     def _get_or_create_cookie_basket(self, request, response, cookie_key, manager):
-        u"""
-        Loads or creates a basket for the current user
-        """
+        u"""Loads or creates a basket for the current user"""
         anon_basket = self._get_cookie_basket(request, cookie_key, manager)
         if request.user.is_authenticated():
             basket, created = manager.get_or_create(owner=request.user)
@@ -74,9 +63,7 @@ class BasketFactory(object):
         return basket 
     
     def _get_basket(self, request, cookie_key, manager):
-        u"""
-        Returns a basket object given a cookie key and manager.
-        """
+        u"""Returns a basket object given a cookie key and manager."""
         b = None
         if request.user.is_authenticated():
             try:
@@ -88,9 +75,7 @@ class BasketFactory(object):
         return b    
         
     def _get_cookie_basket(self, request, cookie_key, manager):
-        u"""
-        Returns a basket based on the cookie key given.
-        """
+        u"""Returns a basket based on the cookie key given."""
         b = None
         # If user is anonymous, their basket ID (if they have one) will be
         # stored in a cookie together with a hash which verifies it and prevents

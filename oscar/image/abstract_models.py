@@ -7,9 +7,7 @@ from django.utils.translation import ugettext as _
 
 
 class AbstractImage(models.Model):
-    """
-    An image of a product  
-    """
+    u"""An image of a product"""
     product = models.ForeignKey('product.Item', related_name='images')
     # Namespacing path with app name to avoid clashes with other apps
     path_to_original = models.ImageField(upload_to='oscar/product-images/%Y/%m/')

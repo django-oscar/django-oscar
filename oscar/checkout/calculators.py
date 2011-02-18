@@ -1,9 +1,7 @@
 
 
 class OrderTotalCalculator(object):
-    """
-    Calculator class for calculating the order total.
-    """
+    u"""Calculator class for calculating the order total."""
     
     def __init__(self, request):
         # We store a reference to the request as the total may 

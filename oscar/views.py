@@ -7,7 +7,7 @@ from django.contrib import messages
 
 
 def class_based_view(class_obj):
-    """
+    u"""
     Simple function that takes a view class and returns a function
     that instantiates a new instance each time it is called.
     
@@ -19,7 +19,7 @@ def class_based_view(class_obj):
 
 
 class ModelView(object):
-    """
+    u"""
     A generic view for models which can recieve GET and POST requests
     
     The __init__ method of subclasses should set the default response 
@@ -41,13 +41,11 @@ class ModelView(object):
         return self.response
         
     def handle_GET(self, model):
-        """
-        Default implementation of model view is to do nothing.
-        """ 
+        u"""Default implementation of model view is to do nothing."""
         pass
     
     def handle_POST(self, model):
-        """
+        u"""
         Handle a POST request to this resource.
         
         This will forward on request to a method of form "do_%s" where the
@@ -60,14 +58,10 @@ class ModelView(object):
             getattr(self, "do_%s" % self.request.POST['action'].lower())(model)
             
     def get_model(self):
-        """
-        Responsible for loading the model that is being acted on
-        """
+        u"""Responsible for loading the model that is being acted on"""
         return None
 
 
 def home(request):
-    """ 
-    Oscar home page
-    """
+    u"""Oscar home page"""
     return render_to_response('home.html', locals())
