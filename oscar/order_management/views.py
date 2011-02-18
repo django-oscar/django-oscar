@@ -14,7 +14,7 @@ order_models = import_module('order.models', ['Order', 'BatchLine', 'ShippingEve
 
 
 class OrderListView(ListView):
-
+    u"""A list of orders"""
     context_object_name = "orders"
     template_name = 'order_management/browse.html'
     paginate_by = 20
@@ -24,9 +24,11 @@ class OrderListView(ListView):
     
   
 class OrderView(ModelView):
+    u"""A detail view of an order"""
     template_file = "order_management/order.html"
     
     def get_model(self):
+        u"""Return an order object or a 404"""
         return get_object_or_404(order_models.Order, number=self.kwargs['order_number'])
     
     def handle_GET(self, order):
@@ -40,6 +42,7 @@ class OrderView(ModelView):
         super(OrderView, self).handle_POST(order)
         
     def do_create_event(self, order):
+        u"""Create an event for an order"""
         line_ids = self.request.POST.getlist('order_line')
         batch = order.batches.get(id=self.request.POST['batch_id'])
         lines = batch.lines.in_bulk(line_ids)
@@ -53,6 +56,7 @@ class OrderView(ModelView):
             messages.error(self.request, str(e))    
                 
     def create_shipping_event(self, order, batch, lines):
+        u"""Create a shipping event for an order"""
         with transaction.commit_on_success():
             event_type = order_models.ShippingEventType.objects.get(code=self.request.POST['shipping_event'])
             event = order_models.ShippingEvent.objects.create(order=order, event_type=event_type, batch=batch)
@@ -62,13 +66,14 @@ class OrderView(ModelView):
                                                                   quantity=event_quantity)
             
     def create_payment_event(self, order, lines, type_code):
+        u"""Create a payment event for an order"""
         event_type = order_models.PaymentEventType.objects.get(code=type_code)
         for line in lines.values():
             order_models.PaymentEvent.objects.create(order=order, line=line, 
                                                      quantity=line.quantity, event_type=event_type)
             
     def do_add_note(self, order):
-        u"""Save a note against the order."""
+        u"""Save a note against an order."""
         if self.request.user.is_authenticated():
             message = self.request.POST['message'].strip()
             if message:

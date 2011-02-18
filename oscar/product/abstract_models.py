@@ -12,7 +12,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from oscar.product.managers import BrowsableItemManager
 
 def _convert_to_underscores(str):
-    """
+    u"""
     For converting a string in CamelCase or normal text with spaces
     to the normal underscored variety
     """
@@ -22,9 +22,7 @@ def _convert_to_underscores(str):
 
 
 class AbstractItemClass(models.Model):
-    """
-    Defines an item type (equivqlent to Taoshop's MediaType).
-    """
+    u"""Defines an item type (equivqlent to Taoshop's MediaType)."""
     name = models.CharField(_('name'), max_length=128)
     slug = models.SlugField(max_length=128, unique=True)
     options = models.ManyToManyField('product.Option', blank=True)
@@ -47,9 +45,7 @@ class AbstractItemClass(models.Model):
 
 
 class AbstractItem(models.Model):
-    """
-    The base product object
-    """
+    u"""The base product object"""
     # If an item has no parent, then it is the "canonical" or abstract version of a product
     # which essentially represents a set of products.  If a product has a parent
     # then it is a specific version of a product.
@@ -84,26 +80,32 @@ class AbstractItem(models.Model):
 
     @property
     def is_top_level(self):
+        u"""Return True if this is a parent product"""
         return self.parent_id == None
     
     @property
     def is_group(self):
+        u"""Return True if this is a top level product and has more than 0 variants"""
         return self.is_top_level and self.variants.count() > 0
     
     @property
     def is_variant(self):
+        u"""Return True if a product is not a top level product"""
         return not self.is_top_level
 
     @property
     def min_variant_price_incl_tax(self):
+        u"""Return minimum variant price including tax"""
         return self._min_variant_price('price_incl_tax')
     
     @property
     def min_variant_price_excl_tax(self):
+        u"""Return minimum variant price excluding tax"""
         return self._min_variant_price('price_excl_tax')
 
     @property
     def has_stockrecord(self):
+        u"""Return True if a product has a stock record, False if not"""
         try:
             sr = self.stockrecord
             return True
@@ -111,15 +113,18 @@ class AbstractItem(models.Model):
             return False
 
     def attribute_summary(self):
+        u"""Return a string of all of a product's attributes"""
         return ", ".join([attribute.__unicode__() for attribute in self.attributes.all()])
 
     def get_title(self):
+        u"""Return a product's title or it's parent's title if it has no title"""
         title = self.__dict__.setdefault('title', '')
         if not title and self.parent_id:
             title = self.parent.title
         return title
     
     def get_item_class(self):
+        u"""Return a product's item class"""
         if self.item_class:
             return self.item_class
         if self.parent.item_class:
@@ -129,6 +134,7 @@ class AbstractItem(models.Model):
     # Helpers
     
     def _min_variant_price(self, property):
+        u"""Return minimum variant price"""
         prices = []
         for variant in self.variants.all():
             if variant.has_stockrecord:
@@ -148,6 +154,7 @@ class AbstractItem(models.Model):
         return self.get_title()
     
     def get_absolute_url(self):
+        u"""Return a product's absolute url"""
         args = {'item_class_slug': self.get_item_class().slug, 
                 'item_slug': self.slug,
                 'item_id': self.id}
@@ -163,9 +170,7 @@ class AbstractItem(models.Model):
 
 
 class AbstractAttributeType(models.Model):
-    """
-    Defines an attribute. (Eg. size)
-    """
+    u"""Defines an attribute. (Eg. size)"""
     code = models.CharField(_('code'), max_length=128)
     name = models.CharField(_('name'), max_length=128)
     has_choices = models.BooleanField(default=False)
@@ -184,9 +189,7 @@ class AbstractAttributeType(models.Model):
         
 
 class AbstractAttributeValueOption(models.Model):
-    """
-    Defines an attribute value choice (Eg: S,M,L,XL for a size attribute type)
-    """
+    u"""Defines an attribute value choice (Eg: S,M,L,XL for a size attribute type)"""
     type = models.ForeignKey('product.AttributeType', related_name='options')
     value = models.CharField(max_length=255)
 
@@ -198,7 +201,7 @@ class AbstractAttributeValueOption(models.Model):
 
 
 class AbstractItemAttributeValue(models.Model):
-    """
+    u"""
     A specific attribute value for an item.
     
     Eg: size = L
@@ -215,7 +218,7 @@ class AbstractItemAttributeValue(models.Model):
     
     
 class AbstractOption(models.Model):
-    """
+    u"""
     An option that can be selected for a particular item when the product
     is added to the basket.  Eg a message for a SMS message.  This is not
     the same as an attribute as options do not have a fixed value for 

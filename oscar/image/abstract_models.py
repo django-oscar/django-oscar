@@ -17,6 +17,7 @@ class AbstractImage(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     
     def is_primary(self):
+        u"""Return bool if image display order is 0"""
         return self.display_order == 0
     
     class Meta:

@@ -124,26 +124,32 @@ class AbstractBasket(models.Model):
     
     @property
     def is_empty(self):
+        u"""Return bool based on basket having 0 lines"""
         return self.num_lines == 0
     
     @property
     def total_excl_tax(self):
+        u"""Return total line price excluding tax"""
         return self._get_total('line_price_excl_tax')
     
     @property
     def total_tax(self):
+        u"""Return total tax for a line"""
         return self._get_total('line_tax')
     
     @property
     def total_incl_tax(self):
+        u"""Return total price for a line including tax"""
         return self._get_total('line_price_incl_tax')
     
     @property
     def num_lines(self):
+        u"""Return number of lines"""
         return self.lines.all().count()
     
     @property
     def num_items(self):
+        u"""Return number of items"""
         return reduce(lambda num,line: num+line.quantity, self.lines.all(), 0)
     
     
@@ -166,6 +172,7 @@ class AbstractLine(models.Model):
         return u"%s, Product '%s', quantity %d" % (self.basket, self.product, self.quantity)
     
     def save(self, *args, **kwargs):
+        u"""Saves a line or deletes if it's quanity is 0"""
         if self.quantity == 0:
             return self.delete(*args, **kwargs)
         super(AbstractLine, self).save(*args, **kwargs)
@@ -186,30 +193,37 @@ class AbstractLine(models.Model):
     
     @property
     def unit_price_excl_tax(self):
+        u"""Return unit price excluding tax"""
         return self._get_stockrecord_property('price_excl_tax')
     
     @property
     def unit_tax(self):
+        u"""Return tax of a unit"""
         return self._get_stockrecord_property('price_tax')
     
     @property
     def unit_price_incl_tax(self):
+        u"""Return unit price including tax"""
         return self._get_stockrecord_property('price_incl_tax')
     
     @property
     def line_price_excl_tax(self):
-       return self.quantity * self.unit_price_excl_tax
+        u"""Return line price excluding tax"""
+        return self.quantity * self.unit_price_excl_tax
        
     @property    
     def line_tax(self):
+        u"""Return line tax"""
         return self.quantity * self.unit_tax
     
     @property
     def line_price_incl_tax(self):
+        u"""Return line price including tax"""
         return self.quantity * self.unit_price_incl_tax
     
     @property
     def description(self):
+        u"""Return product description"""
         d = str(self.product)
         ops = []
         for attribute in self.attributes.all():
