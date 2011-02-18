@@ -58,6 +58,32 @@ def get_next_step(request):
     return checkout_utils.ProgressChecker().get_next_step(request)
 
 
+class CheckoutView(object):
+    
+    def __init__(self, template_file=None):
+        template_file = template_file
+        
+    @basket_required
+    @prev_steps_must_be_complete
+    def __call__(self, request):
+        
+        # Set up the instance variables that are needed to place an order
+        self.request = request
+        self.co_data = checkout_utils.CheckoutSessionData(request)
+        
+        if request.method == 'POST':
+            return self.handle_POST()
+        elif request.method == 'GET':
+            return self.handle_GET()
+    
+    def handle_GET(self):
+        mark_step_as_complete(self.request)
+        return HttpResponseRedirect(reverse(get_next_step(self.request)))
+    
+    def handle_POST(self):
+        pass
+
+
 class IndexView(object):
     template_file = 'checkout/gateway.html'
     
@@ -185,12 +211,13 @@ class ShippingMethodView(object):
         return HttpResponseRedirect(reverse(get_next_step(self.request)))
         
 
-class PaymentView(object):
+class PaymentMethodView(object):
     u"""
-    Payment methods are domain-specific and so need implementing in a s
-    subclass of this class.
-    """
+    View for a user to choose which payment method(s) they want to use.
     
+    This would include setting allocations if payment is to be split
+    between multiple sources.
+    """
     @prev_steps_must_be_complete
     def __call__(self, request):
         mark_step_as_complete(request)
@@ -226,6 +253,19 @@ class OrderPreviewView(object):
         
         mark_step_as_complete(request)
         return render(request, 'checkout/preview.html', locals())
+
+
+class PaymentDetailsView(object):
+    u"""
+    For taking the details of payment.
+    
+    This has to be the final step before submit as we don't want to store
+    payment details in the session.
+    """
+    @prev_steps_must_be_complete
+    def __call__(self, request):
+        mark_step_as_complete(request)
+        return HttpResponseRedirect(reverse(get_next_step(request)))
 
 
 class SubmitView(object):

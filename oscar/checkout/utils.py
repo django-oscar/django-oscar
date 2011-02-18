@@ -14,8 +14,9 @@ class ProgressChecker(object):
     # List of URL names that have to be completed (in this order)
     urls_for_steps = ['oscar-checkout-shipping-address',
                       'oscar-checkout-shipping-method',
-                      'oscar-checkout-payment',
+                      'oscar-checkout-payment-method',
                       'oscar-checkout-preview',
+                      'oscar-checkout-payment-details',
                       'oscar-checkout-submit',]
     
     def are_previous_steps_complete(self, request):
