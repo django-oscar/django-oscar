@@ -11,7 +11,10 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-   intro
+   introduction
+   getting_started
+   recipes
+   contributing
 
 Indices and tables
 ==================
