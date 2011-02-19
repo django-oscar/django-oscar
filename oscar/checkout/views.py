@@ -287,7 +287,6 @@ class SubmitView(CheckoutView):
     
     def _place_order(self, basket):
         u"""Writes the order out to the DB"""
-        
         calc = checkout_calculators.OrderTotalCalculator(self.request)
         shipping_address = self._get_shipping_address()
         shipping_method = self._get_shipping_method(basket)

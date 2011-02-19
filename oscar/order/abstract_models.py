@@ -5,9 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.db.models import Sum
 
 class AbstractOrder(models.Model):
-    """
-    An order
-    """
+    u"""An order"""
     number = models.CharField(_("Order number"), max_length=128, db_index=True)
     # We track the site that each order is placed within
     site = models.ForeignKey('sites.Site')
@@ -32,10 +30,12 @@ class AbstractOrder(models.Model):
     
     @property
     def basket_total_incl_tax(self):
+        u"""Return basket total including tax"""
         return self.total_incl_tax - self.shipping_incl_tax
     
     @property
     def basket_total_excl_tax(self):
+        u"""Return basket total excluding tax"""
         return self.total_excl_tax - self.shipping_excl_tax
     
     class Meta:
@@ -52,9 +52,7 @@ class AbstractOrder(models.Model):
 
 
 class AbstractOrderNote(models.Model):
-    """
-    A note against an order.
-    """
+    u"""A note against an order."""
     order = models.ForeignKey('order.Order', related_name="notes")
     user = models.ForeignKey('auth.User')
     message = models.TextField()
@@ -68,10 +66,9 @@ class AbstractOrderNote(models.Model):
 
 
 class AbstractCommunicationEvent(models.Model):
-    """
+    u"""
     An order-level event involving a communication to the customer, such
-    as an confirmation email being sent.
-    """
+    as an confirmation email being sent."""
     order = models.ForeignKey('order.Order', related_name="events")
     type = models.ForeignKey('order.CommunicationEventType')
     date = models.DateTimeField(auto_now_add=True)
@@ -81,9 +78,7 @@ class AbstractCommunicationEvent(models.Model):
     
     
 class AbstractCommunicationEventType(models.Model):
-    """ 
-    Communication events are things like 'OrderConfirmationEmailSent'
-    """
+    u"""Communication events are things like 'OrderConfirmationEmailSent'"""
     # Code is used in forms
     code = models.CharField(max_length=128)
     # Name is the friendly description of an event
@@ -103,7 +98,7 @@ class AbstractCommunicationEventType(models.Model):
     
 
 class AbstractBatch(models.Model):
-    """
+    u"""
     A batch of items from a single fulfillment partner
     
     This is a set of order lines which are fulfilled by a single partner
@@ -123,7 +118,7 @@ class AbstractBatch(models.Model):
         
         
 class AbstractBatchLine(models.Model):
-    """
+    u"""
     A line within a batch.
     
     Not using a line model as it's difficult to capture and payment 
@@ -145,7 +140,7 @@ class AbstractBatchLine(models.Model):
     
     @property
     def description(self):
-        """
+        u"""
         Returns a description of this line including details of any 
         line attributes.
         """
@@ -159,9 +154,7 @@ class AbstractBatchLine(models.Model):
     
     @property
     def shipping_status(self):
-        """
-        Returns a string summary of the shipping status of this line
-        """
+        u"""Returns a string summary of the shipping status of this line"""
         status_map = self._shipping_event_history()
         
         events = []    
@@ -173,19 +166,16 @@ class AbstractBatchLine(models.Model):
         return ', '.join(events)
     
     def has_shipping_event_occurred(self, event_type):
-        """
-        Checks whether this line has passed a given shipping event
-        """
+        u"""Checks whether this line has passed a given shipping event"""
         for name, quantity in self._shipping_event_history().items():
             if name == event_type.name and quantity == self.quantity:
                 return True
         return False
     
     def _shipping_event_history(self):
-        """
+        u"""
         Returns a dict of shipping event name -> quantity that have been
-        through this state
-        """
+        through this state"""
         status_map = {}
         for event in self.shippingevent_set.all():
             event_name = event.event_type.name
@@ -203,9 +193,7 @@ class AbstractBatchLine(models.Model):
     
     
 class AbstractBatchLineAttribute(models.Model):
-    """
-    An attribute of a batch line.
-    """
+    u"""An attribute of a batch line."""
     line = models.ForeignKey('order.BatchLine', related_name='attributes')
     type = models.CharField(_("Type"), max_length=128)
     value = models.CharField(_("Value"), max_length=255)    
@@ -218,7 +206,7 @@ class AbstractBatchLineAttribute(models.Model):
     
     
 class AbstractBatchLinePrice(models.Model):
-    """
+    u"""
     For tracking the prices paid for each unit within a line.
     
     This is necessary as offers can lead to units within a line 
@@ -241,7 +229,7 @@ class AbstractBatchLinePrice(models.Model):
    
    
 class AbstractPaymentEvent(models.Model):    
-    """
+    u"""
     An event is something which happens to a line such as
     payment being taken for 2 items, or 1 item being dispatched.
     """
@@ -261,9 +249,7 @@ class AbstractPaymentEvent(models.Model):
 
 
 class AbstractPaymentEventType(models.Model):
-    """ 
-    Payment events are things like 'Paid', 'Failed', 'Refunded'
-    """
+    u"""Payment events are things like 'Paid', 'Failed', 'Refunded'"""
     # Code is used in forms
     code = models.CharField(max_length=128)
     # Name is the friendly description of an event
@@ -286,7 +272,7 @@ class AbstractPaymentEventType(models.Model):
 
 
 class AbstractShippingEvent(models.Model):    
-    """
+    u"""
     An event is something which happens to a group of lines such as
     1 item being dispatched.
     """
@@ -312,17 +298,13 @@ class AbstractShippingEvent(models.Model):
 
 
 class ShippingEventQuantity(models.Model):
-    """
-    A "through" model linking lines to shipping events
-    """
+    u"""A "through" model linking lines to shipping events"""
     event = models.ForeignKey('order.ShippingEvent')
     line = models.ForeignKey('order.BatchLine')
     quantity = models.PositiveIntegerField()
 
     def _check_previous_events_are_complete(self):
-        """
-        Checks whether previous shipping events have passed
-        """
+        u"""Checks whether previous shipping events have passed"""
         previous_events = ShippingEventQuantity.objects.filter(line=self.line, 
                                                                event__event_type__order__lt=self.event.event_type.order)
         self.quantity = int(self.quantity)
@@ -349,9 +331,7 @@ class ShippingEventQuantity(models.Model):
 
 
 class AbstractShippingEventType(models.Model):
-    """ 
-    Shipping events are things like 'OrderPlaced', 'Acknowledged', 'Dispatched', 'Refunded'
-    """
+    u"""Shipping events are things like 'OrderPlaced', 'Acknowledged', 'Dispatched', 'Refunded'"""
     # Code is used in forms
     code = models.CharField(max_length=128)
     # Name is the friendly description of an event

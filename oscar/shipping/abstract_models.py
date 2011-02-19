@@ -41,11 +41,13 @@ class AbstractMethod(models.Model, ShippingMethod):
         self._basket = basket
     
     def basket_charge_incl_tax(self):
+        u"""Return basket total including tax"""
         charge = self.price_per_order
         for line in self._basket.lines.all():
             charge += line.quantity * self.price_per_item
         return charge
     
     def basket_charge_excl_tax(self):
+        u"""Return basket total excluding tax"""
         # @todo store tax amounts?
         return self.basket_charge_incl_tax()

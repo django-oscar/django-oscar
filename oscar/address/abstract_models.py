@@ -10,10 +10,10 @@ from django.utils.translation import ugettext_lazy as _
 class AbstractAddress(models.Model):
     u"""
     Superclass address object
-    
+
     This is subclassed and extended to provide models for 
     user, shipping and billing addresses.
-    
+
     The only required fields are last_name, line1 and postcode.
     """
     # @todo: Need a way of making these choice lists configurable 
@@ -38,10 +38,11 @@ class AbstractAddress(models.Model):
     
     class Meta:
         abstract = True
-        
+
     def save(self, *args, **kwargs):
+        u"""Clean fields and save"""
         self._clean_fields()
-        super(AbstractAddress, self).save(*args, **kwargs)    
+        super(AbstractAddress, self).save(*args, **kwargs)
         
     def _clean_fields(self):
         u"""Clean up fields"""
@@ -51,7 +52,7 @@ class AbstractAddress(models.Model):
         
         # Ensure postcodes are always uppercase
         if self.postcode:
-            self.postcode = self.postcode.upper()    
+            self.postcode = self.postcode.upper()
         
     @property    
     def summary(self):
@@ -154,6 +155,7 @@ class AbstractUserAddress(AbstractShippingAddress):
         return zlib.crc32(self.summary.strip().upper())
 
     def save(self, *args, **kwargs):
+        u"""Save a hash of the address fields"""
         # Save a hash of the address fields so we can check whether two 
         # addresses are the same to avoid saving duplicates
         self.hash = self.generate_hash()

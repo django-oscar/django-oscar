@@ -1,6 +1,4 @@
-"""
-Vanilla implementation of order models
-"""
+u"""Vanilla implementation of order models"""
 from django.db import models
 
 from oscar.order.abstract_models import *

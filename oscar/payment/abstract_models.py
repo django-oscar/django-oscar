@@ -3,7 +3,7 @@ from django.db import models
 from django.utils.translation import ugettext as _
 
 class AbstractSource(models.Model):
-    """
+    u"""
     A source of payment for an order.  
     
     This is normally a credit card which has been pre-authed
@@ -27,9 +27,7 @@ class AbstractSource(models.Model):
         return description
     
 class AbstractSourceType(models.Model):
-    """
-    A type of payment source (eg Bankcard, Business account, Gift card)
-    """
+    u"""A type of payment source (eg Bankcard, Business account, Gift card)"""
     name = models.CharField(max_length=128)
 
     class Meta:
@@ -39,7 +37,7 @@ class AbstractSourceType(models.Model):
         return self.name
 
 class AbstractTransaction(models.Model):
-    """
+    u"""
     A transaction for payment sources which need a secondary 'transaction' to actually take the money
     
     This applies mainly to credit card sources which can be a pre-auth for the money.  A 'complete'
