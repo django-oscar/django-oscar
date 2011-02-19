@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.conf import settings
 from django.http import HttpResponse, Http404, HttpResponseRedirect, HttpResponseBadRequest
 from django.template import RequestContext
@@ -19,7 +21,7 @@ checkout_signals = import_module('checkout.signals', ['order_placed'])
 order_models = import_module('order.models', ['Order', 'ShippingAddress'])
 order_utils = import_module('order.utils', ['OrderCreator'])
 address_models = import_module('address.models', ['UserAddress'])
-shipping_models = import_module('shipping.models', ['Method'])
+shipping_repository = import_module('shipping.repository', ['Repository'])
 
 def prev_steps_must_be_complete(view_fn):
     u"""
@@ -78,6 +80,11 @@ class CheckoutView(object):
         # Set up the instance variables that are needed to place an order
         self.request = request
         self.co_data = checkout_utils.CheckoutSessionData(request)
+        self.basket = basket_factory.BasketFactory().get_open_basket(self.request)
+        self.context = {'basket': self.basket,
+                        'order_total': self.get_order_total(),
+                        'shipping_addr': self.get_shipping_address()}
+        self.set_shipping_context()
         
         if request.method == 'POST':
             response = self.handle_POST()
@@ -87,12 +94,34 @@ class CheckoutView(object):
             response = HttpResponseBadRequest()
         return response
     
+    def set_shipping_context(self):
+        method = self.co_data.shipping_method()
+        if method:
+            method.set_basket(self.basket)
+            self.context['method'] = method
+            self.context['shipping_total_excl_tax'] = method.basket_charge_excl_tax()
+            self.context['shipping_total_incl_tax'] = method.basket_charge_incl_tax()
+    
     def handle_GET(self):
         u"""
         Default behaviour is to set step as complete and redirect
         to the next step.
         """ 
         return self.get_success_response()
+    
+    def get_order_total(self):
+        calc = checkout_calculators.OrderTotalCalculator(self.request)
+        return calc.order_total_incl_tax(self.basket)
+    
+    def get_shipping_address(self):
+        # Load address data into a blank address model
+        addr_data = self.co_data.new_address_fields()
+        if addr_data:
+            return order_models.ShippingAddress(**addr_data)
+        addr_id = self.co_data.user_address_id()
+        if addr_id:
+            return address_models.UserAddress.objects.get(pk=addr_id)
+        return None
     
     def get_success_response(self):
         u"""
@@ -146,19 +175,13 @@ class ShippingAddressView(CheckoutView):
                 form = checkout_forms.ShippingAddressForm(addr_fields)
             else:
                 form = checkout_forms.ShippingAddressForm()
+        self.context['form'] = form
     
-        # Add in extra template bindings
-        basket = basket_factory.BasketFactory().get_open_basket(self.request)
-        calc = checkout_calculators.OrderTotalCalculator(self.request)
-        order_total = calc.order_total_incl_tax(basket)
-        shipping_total_excl_tax = 0
-        shipping_total_incl_tax = 0
-        
         # Look up address book data
         if self.request.user.is_authenticated():
-            addresses = address_models.UserAddress.objects.filter(user=self.request.user)
+            self.context['addresses'] = address_models.UserAddress.objects.filter(user=self.request.user)
         
-        return render(self.request, self.template_file, locals())
+        return render(self.request, self.template_file, self.context)
     
     
 class ShippingMethodView(CheckoutView):
@@ -169,37 +192,22 @@ class ShippingMethodView(CheckoutView):
     template_file = 'checkout/shipping_methods.html';
     
     def handle_GET(self):
-        basket = basket_factory.BasketFactory().get_open_basket(self.request)
-        methods = self.get_shipping_methods_for_basket(basket)
-        
-        if not methods.count():
-            # No defined methods - assume delivery is free
-            self.co_data.use_free_shipping()
-            return self.get_success_response()
-        
-        if methods.count() == 1:
-            # Only one method - set this
+        methods = self.get_available_shipping_methods()
+        if len(methods) == 1:
+            # Only one method - set this and redirect onto the next step
             self.co_data.use_shipping_method(methods[0].code)
             return self.get_success_response()
         
-        for method in methods:
-            method.set_basket(basket)
-        
-        # Load address data into a blank address model
-        addr_data = self.co_data.new_address_fields()
-        if addr_data:
-            shipping_addr = order_models.ShippingAddress(**addr_data)
-        addr_id = self.co_data.user_address_id()
-        if addr_id:
-            shipping_addr = address_models.UserAddress.objects.get(pk=addr_id)
-        
-        calc = checkout_calculators.OrderTotalCalculator(self.request)
-        order_total = calc.order_total_incl_tax(basket)
-        
-        return render(self.request, self.template_file, locals())
+        self.context['methods'] = methods
+        return render(self.request, self.template_file, self.context)
     
-    def get_shipping_methods_for_basket(self, basket):
-        return shipping_models.Method.objects.all()
+    def get_available_shipping_methods(self):
+        u"""
+        Returns all applicable shipping method objects
+        for a given basket.
+        """ 
+        repo = shipping_repository.Repository()
+        return repo.get_shipping_methods(self.request.user, self.basket, self.get_shipping_address())
     
     def handle_POST(self):
         method_code = self.request.POST['method_code']
@@ -224,29 +232,9 @@ class OrderPreviewView(CheckoutView):
     template_file = 'checkout/preview.html'
     
     def handle_GET(self):
-        basket = basket_factory.BasketFactory().get_open_basket(self.request)
-        
-        # Load address data into a blank address model
-        addr_data = self.co_data.new_address_fields()
-        if addr_data:
-            shipping_addr = order_models.ShippingAddress(**addr_data)
-        addr_id = self.co_data.user_address_id()
-        if addr_id:
-            shipping_addr = address_models.UserAddress.objects.get(pk=addr_id)
-        
-        # Shipping method
-        method = self.co_data.shipping_method()
-        method.set_basket(basket)
-
-        shipping_total_excl_tax = method.basket_charge_excl_tax()
-        shipping_total_incl_tax = method.basket_charge_incl_tax()
-        
-        # Calculate order total
-        calc = checkout_calculators.OrderTotalCalculator(self.request)
-        order_total = calc.order_total_incl_tax(basket, method)
         
         mark_step_as_complete(self.request)
-        return render(self.request, self.template_file, locals())
+        return render(self.request, self.template_file, self.context)
 
 
 class PaymentDetailsView(CheckoutView):
@@ -277,9 +265,8 @@ class SubmitView(CheckoutView):
     
     def handle_POST(self):
         
-        basket = basket_factory.BasketFactory().get_open_basket(self.request)
-        self._handle_payment(basket)
-        order = self._place_order(basket)
+        self._handle_payment(self.basket)
+        order = self._place_order(self.basket)
         self._reset_checkout()
         
         # Send signal

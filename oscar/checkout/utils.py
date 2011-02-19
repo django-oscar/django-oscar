@@ -2,7 +2,7 @@ from django.core.urlresolvers import resolve
 
 from oscar.services import import_module
 
-shipping_models = import_module('shipping.models', ['Method'])
+shipping_methods = import_module('shipping.repository', ['Repository'])
 
 
 class ProgressChecker(object):
@@ -75,7 +75,6 @@ class ProgressChecker(object):
 class CheckoutSessionData(object):
     u"""Class responsible for marshalling all the checkout session data."""
     SESSION_KEY = 'checkout_data'
-    FREE_SHIPPING = '__free__'
     
     def __init__(self, request):
         self.request = request
@@ -122,9 +121,6 @@ class CheckoutSessionData(object):
     def user_address_id(self):
         return self._get('shipping', 'user_address_id')
     
-    def use_free_shipping(self):
-        self._set('shipping', 'method_code', '__free__')
-    
     def use_shipping_method(self, code):
         self._set('shipping', 'method_code', code)
         
@@ -134,8 +130,7 @@ class CheckoutSessionData(object):
         data stored in the session.
         """
         code = self._get('shipping', 'method_code')
-        if code == self.FREE_SHIPPING:
-            method = shipping_models.Method(name="Standard shipping (Free)", code=self.FREE_SHIPPING)
-        else:
-            method = shipping_models.Method.objects.get(code=code)
-        return method
+        if not code:
+            return None
+        repo = shipping_methods.Repository()
+        return repo.find_by_code(code)

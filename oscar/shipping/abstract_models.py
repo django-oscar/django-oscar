@@ -1,13 +1,24 @@
-import zlib
 from decimal import Decimal
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.template.defaultfilters import slugify
 
+from oscar.shipping.methods import ShippingMethod
 
-class AbstractMethod(models.Model):
-    u"""Shipping method"""
+
+class AbstractMethod(models.Model, ShippingMethod):
+    u"""
+    Standard shipping method
+    
+    This method has two components: 
+    * a charge per order
+    * a charge per item
+    
+    Many sites use shipping logic which fits into this system.  However, for more
+    complex shipping logic, a custom shipping method object will need to be provided
+    that subclasses ShippingMethod.
+    """
     code = models.CharField(max_length=128, unique=True)
     name = models.CharField(_("Name"), max_length=128)
     description = models.TextField(_("Description"), blank=True)

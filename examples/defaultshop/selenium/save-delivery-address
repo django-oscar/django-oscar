@@ -13,7 +13,7 @@
 </thead><tbody>
 <tr>
 	<td>open</td>
-	<td>/shop/checkout/delivery_address/</td>
+	<td>/shop/checkout/shipping-address/</td>
 	<td></td>
 </tr>
 <tr>
@@ -24,7 +24,7 @@
 <tr>
 	<td>type</td>
 	<td>id_last_name</td>
-	<td>Winterbottom</td>
+	<td>Winerbottom</td>
 </tr>
 <tr>
 	<td>type</td>
@@ -39,19 +39,18 @@
 <tr>
 	<td>type</td>
 	<td>id_postcode</td>
-	<td>N12 9ET</td>
+	<td>N12 9et</td>
 </tr>
 <tr>
-	<td>type</td>
+	<td>select</td>
 	<td>id_country</td>
-	<td>UK</td>
+	<td>label=United Kingdom of Great Britain and Northern Ireland</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>//input[@value='Save delivery address']</td>
+	<td>//input[@value='Save shipping address']</td>
 	<td></td>
 </tr>
-
 </tbody></table>
 </body>
 </html>

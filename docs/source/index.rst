@@ -13,6 +13,7 @@ Contents:
 
    introduction
    getting_started
+   web_services
    recipes
    contributing
 
