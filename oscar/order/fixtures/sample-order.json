@@ -102,7 +102,7 @@
         "fields": {
             "code": "order_placed", 
             "name": "Order placed", 
-            "order": 0
+            "sequence_number": 0
         }
     }, 
     {
@@ -111,7 +111,7 @@
         "fields": {
             "code": "dispatched", 
             "name": "Dispatched", 
-            "order": 1
+            "sequence_number": 1
         }
     }, 
     {
@@ -120,7 +120,7 @@
         "fields": {
             "code": "returned", 
             "name": "Returned", 
-            "order": 4
+            "sequence_number": 4
         }
     }, 
     {
@@ -129,7 +129,7 @@
         "fields": {
             "code": "cancelled", 
             "name": "Cancelled", 
-            "order": 10
+            "sequence_number": 10
         }
     }, 
     {
@@ -138,7 +138,7 @@
         "fields": {
             "code": "paid-for", 
             "name": "Paid for", 
-            "order": 0
+            "sequence_number": 0
         }
     }, 
     {
@@ -147,7 +147,7 @@
         "fields": {
             "code": "payment-failed", 
             "name": "Payment failed", 
-            "order": 1
+            "sequence_number": 1
         }
     }, 
     {
@@ -156,7 +156,7 @@
         "fields": {
             "code": "refunded", 
             "name": "Refunded", 
-            "order": 2
+            "sequence_number": 2
         }
     }, 
     {

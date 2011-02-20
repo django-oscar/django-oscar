@@ -87,11 +87,6 @@ class BatchLineTest(TestCase):
         with self.assertRaises(ValueError):
             # Total quantity is too high
             self.event(type, 2)
-            
-    def test_required_shipping_events_must_take_place_before_later_ones(self):
-        with self.assertRaises(ValueError):
-            type = ShippingEventType.objects.get(code='dispatched')
-            self.event(type, self.line.quantity)
         
         
 class ShippingEventQuantityTest(TestCase):

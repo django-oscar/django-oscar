@@ -250,12 +250,11 @@ class AbstractPaymentEvent(models.Model):
 
 class AbstractPaymentEventType(models.Model):
     u"""Payment events are things like 'Paid', 'Failed', 'Refunded'"""
-    # Code is used in forms
-    code = models.CharField(max_length=128)
     # Name is the friendly description of an event
     name = models.CharField(max_length=255)
+    code = models.SlugField(max_length=128)
     # The normal order in which these shipping events take place
-    order = models.PositiveIntegerField(default=0)
+    sequence_number = models.PositiveIntegerField(default=0)
     
     def save(self, *args, **kwargs):
         if not self.code:
@@ -265,7 +264,7 @@ class AbstractPaymentEventType(models.Model):
     class Meta:
         abstract = True
         verbose_name_plural = _("Payment event types")
-        ordering = ('order',)
+        ordering = ('sequence_number',)
         
     def __unicode__(self):
         return self.name
@@ -296,9 +295,6 @@ class AbstractShippingEvent(models.Model):
     def num_affected_lines(self):
         return self.lines.count()
 
-    def save(self, *args, **kwargs):
-        prior_events = AbstractShippingEvent.objects.filter()
-        super(AbstractShippingEvent, self).save(*args, **kwargs)
 
 class ShippingEventQuantity(models.Model):
     u"""A "through" model linking lines to shipping events"""
@@ -309,7 +305,7 @@ class ShippingEventQuantity(models.Model):
     def _check_previous_events_are_complete(self):
         u"""Checks whether previous shipping events have passed"""
         previous_events = ShippingEventQuantity.objects.filter(line=self.line, 
-                                                               event__event_type__order__lt=self.event.event_type.order)
+                                                               event__event_type__sequence_number__lt=self.event.event_type.sequence_number)
         self.quantity = int(self.quantity)
         for event_quantities in previous_events:
             if event_quantities.quantity < self.quantity:
