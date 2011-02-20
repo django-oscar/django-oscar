@@ -2,6 +2,7 @@
 Models of products
 """
 import re
+from itertools import chain
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -69,7 +70,7 @@ class AbstractItem(models.Model):
     item_class = models.ForeignKey('product.ItemClass', verbose_name=_('item class'), null=True,
         help_text="""Choose what type of product this is""")
     attribute_types = models.ManyToManyField('product.AttributeType', through='ItemAttributeValue')
-    options = models.ManyToManyField('product.Option', blank=True)
+    item_options = models.ManyToManyField('product.Option', blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True, null=True, default=None)
 
@@ -77,6 +78,10 @@ class AbstractItem(models.Model):
     browsable = BrowsableItemManager()
 
     # Properties
+
+    @property
+    def options(self):
+        return list(chain(self.item_options.all(), self.get_item_class().options.all()))
 
     @property
     def is_top_level(self):
@@ -224,8 +229,8 @@ class AbstractOption(models.Model):
     the same as an attribute as options do not have a fixed value for 
     a particular item - options, they need to be specified by the customer.
     """
-    code = models.CharField(_('code'), max_length=128)
     name = models.CharField(_('name'), max_length=128)
+    code = models.SlugField(_('code'), max_length=128)
     
     REQUIRED, OPTIONAL = ('Required', 'Optional')
     TYPE_CHOICES = (

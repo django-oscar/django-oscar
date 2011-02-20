@@ -45,7 +45,7 @@ class BasketView(ModelView):
         messages.info(self.request, "Your basket has been emptied")
         
     def do_add(self, basket):
-        u"""Added an item to the basket"""
+        u"""Add an item to the basket"""
         item = get_object_or_404(product_models.Item.objects, pk=self.request.POST['product_id'])
         factory = basket_forms.FormFactory()
         form = factory.create(item, self.request.POST)
@@ -55,7 +55,7 @@ class BasketView(ModelView):
         else:
             # Extract product options from POST
             options = []
-            for option in item.options.all():
+            for option in item.options:
                 if option.code in form.cleaned_data:
                     options.append({'option': option, 'value': form.cleaned_data[option.code]})
             basket.add_product(item, form.cleaned_data['quantity'], options)
