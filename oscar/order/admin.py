@@ -20,6 +20,7 @@ class CommunicationEventTypeAdmin(admin.ModelAdmin):
     exclude = ('code',)
 
 class ShippingEventTypeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'is_required', 'sequence_number')
     exclude = ('code',)
     
 class PaymentEventTypeAdmin(admin.ModelAdmin):

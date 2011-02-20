@@ -219,7 +219,7 @@
             "title": "Carlsberg Waiter Tray (Pack of 5)", 
             "date_updated": "2011-02-16 09:23:03", 
             "upc": "073922", 
-            "options": [], 
+            "item_options": [], 
             "item_class": 1, 
             "date_created": "2011-02-16 09:23:03", 
             "slug": "carlsberg-waiter-tray-pack-of-5"
@@ -234,7 +234,7 @@
             "title": "Tetley's 20oz Toughened Pint Glass (Pack of 24)", 
             "date_updated": "2011-02-16 09:23:03", 
             "upc": "074127", 
-            "options": [], 
+            "item_options": [], 
             "item_class": 1, 
             "date_created": "2011-02-16 09:23:03", 
             "slug": "tetleys-20oz-toughened-pint-glass-pack-of-24"
@@ -249,7 +249,7 @@
             "title": "Tetley's Cask 20oz Toughened Pint Glass (Pack of 24)", 
             "date_updated": "2011-02-16 09:23:03", 
             "upc": "074132", 
-            "options": [], 
+            "item_options": [], 
             "item_class": 1, 
             "date_created": "2011-02-16 09:23:03", 
             "slug": "tetleys-cask-20oz-toughened-pint-glass-pack-of-24"
@@ -264,7 +264,7 @@
             "title": "Carlsberg Bunting - 5m (Pack of 2)", 
             "date_updated": "2011-02-16 09:23:02", 
             "upc": "072174", 
-            "options": [], 
+            "item_options": [], 
             "item_class": 1, 
             "date_created": "2011-02-16 09:23:02", 
             "slug": "carlsberg-bunting-5m-pack-of-2"
@@ -279,7 +279,7 @@
             "title": "Tetley's 22oz Toughened Pint Glass (Pack of 24)", 
             "date_updated": "2011-02-16 09:23:02", 
             "upc": "072261", 
-            "options": [], 
+            "item_options": [], 
             "item_class": 1, 
             "date_created": "2011-02-16 09:23:02", 
             "slug": "tetleys-22oz-toughened-pint-glass-pack-of-24"
@@ -294,7 +294,7 @@
             "title": "Carlsberg Bar Runner (Pack of 2)", 
             "date_updated": "2011-02-16 09:23:02", 
             "upc": "073729", 
-            "options": [], 
+            "item_options": [], 
             "item_class": 1, 
             "date_created": "2011-02-16 09:23:02", 
             "slug": "carlsberg-bar-runner-pack-of-2"
@@ -309,7 +309,7 @@
             "title": "Export Bar Runner (Pack of 2)", 
             "date_updated": "2011-02-16 09:23:02", 
             "upc": "073731", 
-            "options": [], 
+            "item_options": [], 
             "item_class": 1, 
             "date_created": "2011-02-16 09:23:02", 
             "slug": "export-bar-runner-pack-of-2"
@@ -324,7 +324,7 @@
             "title": "Tetley's Bar Runner (Pack of 2)", 
             "date_updated": "2011-02-16 09:23:02", 
             "upc": "073733", 
-            "options": [], 
+            "item_options": [], 
             "item_class": 1, 
             "date_created": "2011-02-16 09:23:02", 
             "slug": "tetleys-bar-runner-pack-of-2"
@@ -339,7 +339,7 @@
             "title": "Carlsberg Staff T-shirt (Pack of 5) ", 
             "date_updated": "2011-02-16 09:23:02", 
             "upc": "073850", 
-            "options": [], 
+            "item_options": [], 
             "item_class": 1, 
             "date_created": "2011-02-16 09:23:02", 
             "slug": "carlsberg-staff-t-shirt-pack-of-5"
@@ -354,7 +354,7 @@
             "title": "Carlsberg Golf Umbrella (Pack of 1)", 
             "date_updated": "2011-02-16 09:23:01", 
             "upc": "071216", 
-            "options": [], 
+            "item_options": [], 
             "item_class": 1, 
             "date_created": "2011-02-16 09:23:01", 
             "slug": "carlsberg-golf-umbrella-pack-of-1"

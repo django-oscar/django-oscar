@@ -296,6 +296,9 @@ class AbstractShippingEvent(models.Model):
     def num_affected_lines(self):
         return self.lines.count()
 
+    def save(self, *args, **kwargs):
+        prior_events = AbstractShippingEvent.objects.filter()
+        super(AbstractShippingEvent, self).save(*args, **kwargs)
 
 class ShippingEventQuantity(models.Model):
     u"""A "through" model linking lines to shipping events"""
@@ -336,8 +339,9 @@ class AbstractShippingEventType(models.Model):
     name = models.CharField(max_length=255)
     # Code is used in forms
     code = models.SlugField(max_length=128)
+    is_required = models.BooleanField(default=True, help_text="This event must be passed before the next shipping event can take place")
     # The normal order in which these shipping events take place
-    order = models.PositiveIntegerField(default=0)
+    sequence_number = models.PositiveIntegerField(default=0)
     
     def save(self, *args, **kwargs):
         if not self.code:
@@ -347,7 +351,7 @@ class AbstractShippingEventType(models.Model):
     class Meta:
         abstract = True
         verbose_name_plural = _("Shipping event types")
-        ordering = ('order',)
+        ordering = ('sequence_number',)
         
     def __unicode__(self):
         return self.name
