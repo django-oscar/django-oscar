@@ -17,7 +17,7 @@ basket_factory = import_module('basket.factory', ['BasketFactory'])
 checkout_forms = import_module('checkout.forms', ['ShippingAddressForm'])
 checkout_calculators = import_module('checkout.calculators', ['OrderTotalCalculator'])
 checkout_utils = import_module('checkout.utils', ['ProgressChecker', 'CheckoutSessionData'])
-checkout_signals = import_module('checkout.signals', ['order_placed'])
+checkout_signals = import_module('checkout.signals', ['order_placed', 'pre_payment', 'post_payment'])
 order_models = import_module('order.models', ['Order', 'ShippingAddress'])
 order_utils = import_module('order.utils', ['OrderCreator'])
 address_models = import_module('address.models', ['UserAddress'])
@@ -265,11 +265,11 @@ class SubmitView(CheckoutView):
     
     def handle_POST(self):
         
+        checkout_signals.pre_payment.send_robust(sender=self, view=self)
         self._handle_payment(self.basket)
+        checkout_signals.post_payment.send_robust(sender=self, view=self)
         order = self._place_order(self.basket)
         self._reset_checkout()
-        
-        # Send signal
         checkout_signals.order_placed.send_robust(sender=self, order=order)
         
         # Save order id in session so thank-you page can load it

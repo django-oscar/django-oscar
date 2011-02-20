@@ -1,5 +1,7 @@
 from django.dispatch import Signal, receiver
 
+pre_payment = Signal(providing_args=["view"])
+post_payment = Signal(providing_args=["view"])
 order_placed = Signal(providing_args=["order"])
 
 @receiver(order_placed)
