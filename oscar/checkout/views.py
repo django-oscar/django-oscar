@@ -81,10 +81,13 @@ class CheckoutView(object):
         self.request = request
         self.co_data = checkout_utils.CheckoutSessionData(request)
         self.basket = basket_factory.BasketFactory().get_open_basket(self.request)
+        
+        # Set up template context that is available to every view
         self.context = {'basket': self.basket,
                         'order_total': self.get_order_total(),
                         'shipping_addr': self.get_shipping_address()}
         self.set_shipping_context()
+        self.set_payment_context()
         
         if request.method == 'POST':
             response = self.handle_POST()
@@ -101,6 +104,11 @@ class CheckoutView(object):
             self.context['method'] = method
             self.context['shipping_total_excl_tax'] = method.basket_charge_excl_tax()
             self.context['shipping_total_incl_tax'] = method.basket_charge_incl_tax()
+            
+    def set_payment_context(self):
+        method = self.co_data.payment_method()
+        if method:
+            self.context['payment_method'] = method
     
     def handle_GET(self):
         u"""
@@ -212,8 +220,7 @@ class ShippingMethodView(CheckoutView):
     def handle_POST(self):
         method_code = self.request.POST['method_code']
         self.co_data.use_shipping_method(method_code)
-        mark_step_as_complete(self.request)
-        return HttpResponseRedirect(reverse(get_next_step(self.request)))
+        return self.get_success_response()
         
 
 class PaymentMethodView(CheckoutView):
@@ -232,7 +239,6 @@ class OrderPreviewView(CheckoutView):
     template_file = 'checkout/preview.html'
     
     def handle_GET(self):
-        
         mark_step_as_complete(self.request)
         return render(self.request, self.template_file, self.context)
 

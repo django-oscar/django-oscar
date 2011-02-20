@@ -81,10 +81,14 @@ INTERNAL_IPS = ('127.0.0.1',)
 
 ROOT_URLCONF = 'urls'
 
+import os
+PROJECT_DIR = os.path.dirname(__file__)
+
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    os.path.join(PROJECT_DIR, "templates"),
 )
 
 INSTALLED_APPS = (
@@ -115,6 +119,7 @@ INSTALLED_APPS = (
 
 LOGIN_REDIRECT_URL = '/shop/accounts/profile/'
 APPEND_SLASH = True
+DEFAULT_CURRENCY = 'GBP'
 
 # Local overrides
 try:

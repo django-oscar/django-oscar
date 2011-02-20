@@ -3,7 +3,7 @@
 {% load currency_filters %}
 
 {% block header %}
-<h2>Checkout / Preview</h2>
+<h2>Checkout / Payment Methods</h2>
 {% endblock header %}
 
 
@@ -22,7 +22,7 @@
     </tr>
     {% if shipping_addr.phone_number %}
     <tr>
-        <th>Concact number</th>
+        <th>Contact number</th>
         <td>shipping_addr.phone_number</td>
     </tr>
     {% endif %}
@@ -52,14 +52,42 @@
             <td>{{ method.basket_charge_incl_tax|currency }}</td>
             <td>{{ method.description }}</td>
             <td></td>
+        </tr>
     </tbody>
 </table>
 
 <h3>Payment</h3>
 <hr />
-{% if payment_method %}
-<p>{{ payment_method }}</p>
-{% endif %}
+<table>
+    <thead>
+        <tr>
+            <th>Method</th>
+            <th></th>
+        </tr>
+    <thead>
+    <tbody>
+        <tr>
+            <td>Cheque</td>
+            <td>
+                <form method="post" action="{% url oscar-checkout-payment-method %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="method_code" value="cheque" />
+                    <input type="submit" value="Pay by cheque" />
+                </form>
+            </td>
+        </tr>
+        <tr>
+            <td>Bankcard</td>
+            <td>
+                <form method="post" action="{% url oscar-checkout-payment-method %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="method_code" value="bankcard" />
+                    <input type="submit" value="Pay by bankcard" />
+                </form>
+            </td>
+        </tr>
+    </tbody>
+</table>
 
 <h3>Your order</h3>
 <hr />
@@ -92,19 +120,14 @@
     </tr>
     <tr>
         <td colspan="5">Shipping charge</td>
-        <td>{{ shipping_total_excl_tax|currency }}</td>
-        <td>{{ shipping_total_incl_tax|currency }}</td>
+        <td></td>
+        <td></td>
     </tr>
     <tr>
         <td colspan="6">Order total</td>
         <td>{{ order_total|currency }}</td>
     </tr>
 </table>
-
-<a href="{% url oscar-checkout-payment-details %}">Place order</a>
-
-<a href="{% url oscar-basket %}">Edit order contents</a>
-
 
 {% endblock content %}
 

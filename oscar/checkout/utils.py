@@ -143,3 +143,12 @@ class CheckoutSessionData(object):
             return None
         repo = shipping_methods.Repository()
         return repo.find_by_code(code)
+    
+    # Payment methods
+    
+    def pay_by(self, method):
+        self._set('payment', 'method', method)
+        
+    def payment_method(self):
+        return self._get('payment', 'method')
+        
