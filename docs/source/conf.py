@@ -215,6 +215,6 @@ man_pages = [
      [u'David Winterbottom'], 1)
 ]
 
-from django-oscar import settings
-from django.core.management import setup_environ
-setup_environ(settings)
+#from django-oscar import settings
+#from django.core.management import setup_environ
+#setup_environ(settings)

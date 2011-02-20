@@ -7,5 +7,5 @@ ecommerce projects.
 .. toctree::
    :maxdepth: 2
 
+   recipes/custom_shipping_logic
    recipes/enforcing_stock_rules
-

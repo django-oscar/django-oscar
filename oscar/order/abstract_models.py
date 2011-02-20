@@ -332,10 +332,10 @@ class ShippingEventQuantity(models.Model):
 
 class AbstractShippingEventType(models.Model):
     u"""Shipping events are things like 'OrderPlaced', 'Acknowledged', 'Dispatched', 'Refunded'"""
-    # Code is used in forms
-    code = models.CharField(max_length=128)
     # Name is the friendly description of an event
     name = models.CharField(max_length=255)
+    # Code is used in forms
+    code = models.SlugField(max_length=128)
     # The normal order in which these shipping events take place
     order = models.PositiveIntegerField(default=0)
     
