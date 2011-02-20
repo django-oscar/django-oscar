@@ -6,6 +6,14 @@
 Welcome to django-oscar's documentation!
 ========================================
 
+django-oscar is a flexible e-commerce platform, designed to build domain-driven
+ecommerce sites, that can handle any requirement.  
+
+It is developed by Tangent Labs, a London-based digital agency and is based on
+their existing Taoshop PHP platform which powers several large-scale ecommerce sites.  
+
+It is still in early development, but a stable release is planned for April 2011.
+
 Contents:
 
 .. toctree::

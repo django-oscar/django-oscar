@@ -10,4 +10,5 @@ However, a small amount of work up front in determine the right models for your
 shop can really pay off in terms of building a high-quality application that
 is a pleasure to work with and maintain.
 
-See the *.rst files within `docs/source` for documentation
+See the *.rst files within `docs/source` for documentation or visit
+[http://readthedocs.org/docs/django-oscar/en/](http://readthedocs.org/docs/django-oscar/en/)
