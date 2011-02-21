@@ -254,8 +254,9 @@ class AbstractPaymentEventType(models.Model):
     code = models.CharField(max_length=128)
     # Name is the friendly description of an event
     name = models.CharField(max_length=255)
+    code = models.SlugField(max_length=128)
     # The normal order in which these shipping events take place
-    order = models.PositiveIntegerField(default=0)
+    sequence_number = models.PositiveIntegerField(default=0)
     
     def save(self, *args, **kwargs):
         if not self.code:
@@ -265,7 +266,7 @@ class AbstractPaymentEventType(models.Model):
     class Meta:
         abstract = True
         verbose_name_plural = _("Payment event types")
-        ordering = ('order',)
+        ordering = ('sequence_number',)
         
     def __unicode__(self):
         return self.name
@@ -306,7 +307,7 @@ class ShippingEventQuantity(models.Model):
     def _check_previous_events_are_complete(self):
         u"""Checks whether previous shipping events have passed"""
         previous_events = ShippingEventQuantity.objects.filter(line=self.line, 
-                                                               event__event_type__order__lt=self.event.event_type.order)
+                                                               event__event_type__sequence_number__lt=self.event.event_type.sequence_number)
         self.quantity = int(self.quantity)
         for event_quantities in previous_events:
             if event_quantities.quantity < self.quantity:
@@ -336,8 +337,11 @@ class AbstractShippingEventType(models.Model):
     code = models.CharField(max_length=128)
     # Name is the friendly description of an event
     name = models.CharField(max_length=255)
+    # Code is used in forms
+    code = models.SlugField(max_length=128)
+    is_required = models.BooleanField(default=True, help_text="This event must be passed before the next shipping event can take place")
     # The normal order in which these shipping events take place
-    order = models.PositiveIntegerField(default=0)
+    sequence_number = models.PositiveIntegerField(default=0)
     
     def save(self, *args, **kwargs):
         if not self.code:
@@ -347,7 +351,7 @@ class AbstractShippingEventType(models.Model):
     class Meta:
         abstract = True
         verbose_name_plural = _("Shipping event types")
-        ordering = ('order',)
+        ordering = ('sequence_number',)
         
     def __unicode__(self):
         return self.name

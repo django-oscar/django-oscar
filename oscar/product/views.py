@@ -30,12 +30,12 @@ class ItemDetailView(DetailView):
     
     def get_context_data(self, **kwargs):
         context = super(ItemDetailView, self).get_context_data(**kwargs)
-        
-        # Add add-to-basket form for this product
-        factory = basket_forms.FormFactory()
-        context['form'] = factory.create(self.object)
-        
+        context['form'] = self.get_add_to_basket_form()
         return context
+    
+    def get_add_to_basket_form(self):
+        factory = basket_forms.FormFactory()
+        return factory.create(self.object)
 
 
 class ItemClassListView(ListView):

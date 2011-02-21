@@ -77,13 +77,15 @@
         <td>{{ basket.total_excl_tax|currency }}</td>
         <td>{{ basket.total_incl_tax|currency }}</td>
     </tr>
+    {% if shipping_total_excl_tax %}
     <tr>
         <td colspan="5">shipping charge</td>
         <td>{{ shipping_total_excl_tax|currency }}</td>
         <td>{{ shipping_total_incl_tax|currency }}</td>
     </tr>
+    {% endif %}
     <tr>
-        <td colspan="6">Order total</td>
+        <td colspan="6">Order total (before shipping)</td>
         <td>{{ order_total|currency }}</td>
     </tr>
 </table>

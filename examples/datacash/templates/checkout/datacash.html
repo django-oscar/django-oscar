@@ -3,7 +3,7 @@
 {% load currency_filters %}
 
 {% block header %}
-<h2>Checkout / Preview</h2>
+<h2>Checkout / Payment details</h2>
 {% endblock header %}
 
 
@@ -22,7 +22,7 @@
     </tr>
     {% if shipping_addr.phone_number %}
     <tr>
-        <th>Concact number</th>
+        <th>Contact number</th>
         <td>shipping_addr.phone_number</td>
     </tr>
     {% endif %}
@@ -52,6 +52,7 @@
             <td>{{ method.basket_charge_incl_tax|currency }}</td>
             <td>{{ method.description }}</td>
             <td></td>
+        </tr>
     </tbody>
 </table>
 
@@ -92,8 +93,8 @@
     </tr>
     <tr>
         <td colspan="5">Shipping charge</td>
-        <td>{{ shipping_total_excl_tax|currency }}</td>
-        <td>{{ shipping_total_incl_tax|currency }}</td>
+        <td></td>
+        <td></td>
     </tr>
     <tr>
         <td colspan="6">Order total</td>
@@ -101,9 +102,9 @@
     </tr>
 </table>
 
-<a href="{% url oscar-checkout-payment-details %}">Place order</a>
+<h3>Payment details</h3>
 
-<a href="{% url oscar-basket %}">Edit order contents</a>
+asdfjaklsdjfkl;
 
 
 {% endblock content %}

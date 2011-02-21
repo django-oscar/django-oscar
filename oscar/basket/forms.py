@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from django import forms
 
 
@@ -41,7 +40,7 @@ class FormFactory(object):
     
     def _create_product_fields(self, item):
         u"""Add the product option fields."""
-        for option in item.options.all():
+        for option in item.options:
             self._add_option_field(item, option)
     
     def _add_option_field(self, item, option):
