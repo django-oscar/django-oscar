@@ -1,23 +1,20 @@
-"""
-This file demonstrates two different styles of tests (one doctest and one
-unittest). These will both pass when you run "manage.py test".
-
-Replace these with more appropriate tests for your application.
-"""
+import datetime
 
 from django.test import TestCase
+from django.contrib.auth.models import User
 
-class SimpleTest(TestCase):
-    def test_basic_addition(self):
-        """
-        Tests that 1 + 1 always equals 2.
-        """
-        self.failUnlessEqual(1 + 1, 2)
+from oscar.payment.models import Bankcard
 
-__test__ = {"doctest": """
-Another way to test that 1 + 1 is equal to 2.
 
->>> 1 + 1 == 2
-True
-"""}
+class BankcardTest(TestCase):
+    
+    def test_get_obfuscated_number(self):
+        bankcard = Bankcard(name="David Winterbottom", number="1000011100000004")
+        self.assertEquals("XXXX-XXXX-XXXX-0004", bankcard._get_obfuscated_number())
+    
+    def test_number_is_anonymised_when_saving(self):
+        user = User.objects.create(username='Dummy user')
+        expiry_date = datetime.date(year=2012, month=02, day=12)
+        bankcard = Bankcard.objects.create(name="David Winterbottom", number="1000011100000004", user=user, expiry_date=expiry_date)
+        self.assertEquals("XXXX-XXXX-XXXX-0004", bankcard.number)
 

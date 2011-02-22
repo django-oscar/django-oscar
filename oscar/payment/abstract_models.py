@@ -26,6 +26,7 @@ class AbstractSource(models.Model):
             description += " (reference: %s)" % self.reference
         return description
     
+    
 class AbstractSourceType(models.Model):
     u"""A type of payment source (eg Bankcard, Business account, Gift card)"""
     name = models.CharField(max_length=128)
@@ -35,6 +36,7 @@ class AbstractSourceType(models.Model):
 
     def __unicode__(self):
         return self.name
+
 
 class AbstractTransaction(models.Model):
     u"""
@@ -55,3 +57,19 @@ class AbstractTransaction(models.Model):
     def __unicode__(self):
         return "Transaction of %.2f" % self.delta_amount
 
+
+class AbstractBankcard(models.Model):
+    user = models.ForeignKey('auth.User', related_name='bankcards')
+    name = models.CharField(max_length=255)
+    number = models.CharField(max_length=32)
+    expiry_date = models.DateField()
+    
+    class Meta:
+        abstract = True
+        
+    def save(self, *args, **kwargs):
+        self.number = self._get_obfuscated_number()
+        super(AbstractBankcard, self).save(*args, **kwargs)    
+        
+    def _get_obfuscated_number(self):
+        return "XXXX-XXXX-XXXX-%s" % self.number[-4:]
