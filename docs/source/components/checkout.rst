@@ -1,6 +1,9 @@
 Checkout
 =======================
 
+Flow
+----
+
 The checkout process comprises the following steps:
 
 1.  **Gateway** - For anonymous users, they are offered the choice of logging in, registering
@@ -25,3 +28,10 @@ The checkout process comprises the following steps:
 7.  **Submission** - The order is placed.
 
 8.  **Thank you** - A summary of the order with any relevant tracking information.
+
+
+Customisation
+-------------
+
+The checkout can be customised in many ways as you can extend and override and class from
+oscar's core using the overriding core classes technique detailed previously.

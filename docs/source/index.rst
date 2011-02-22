@@ -14,6 +14,8 @@ their existing Taoshop PHP platform which powers several large-scale ecommerce s
 
 It is still in early development, but a stable release is planned for April 2011.
 
+The source is on Github: https://github.com/codeinthehole/django-oscar
+
 Contents:
 
 .. toctree::
