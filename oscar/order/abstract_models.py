@@ -277,7 +277,7 @@ class AbstractShippingEvent(models.Model):
 
 class ShippingEventQuantity(models.Model):
     u"""A "through" model linking lines to shipping events"""
-    event = models.ForeignKey('order.ShippingEvent')
+    event = models.ForeignKey('order.ShippingEvent', related_name='line_quantities')
     line = models.ForeignKey('order.Line')
     quantity = models.PositiveIntegerField()
 
@@ -306,6 +306,9 @@ class ShippingEventQuantity(models.Model):
         self._check_previous_events_are_complete()
         self._check_new_quantity()
         super(ShippingEventQuantity, self).save(*args, **kwargs)
+        
+    def __unicode__(self):
+        return "%s - quantity %d" % (self.line.product, self.quantity)
 
 
 class AbstractShippingEventType(models.Model):

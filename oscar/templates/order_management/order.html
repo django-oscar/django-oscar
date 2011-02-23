@@ -100,15 +100,21 @@
 <h3>Shipping events</h3>
 <table>
 <tr>
+    <th>Date</th>
     <th>Event</th>
     <th>Num lines</th>
-    <th>Date</th>
+    <th>Details</th>
 </tr>
 {% for event in order.shipping_events.all %}
 <tr>
+    <td>{{ event.date }}</td>
     <td>{{ event.event_type }}</td>
     <td>{{ event.num_affected_lines }}</td>
-    <td>{{ event.date }}</td>
+    <td>
+        {% for line_quantity in event.line_quantities.all %}
+        {{ line_quantity.line.product }} (quantity: {{ line_quantity.quantity }})<br/>
+        {% endfor %}
+    </td>
 </tr>
 {% endfor %}
 </table>
