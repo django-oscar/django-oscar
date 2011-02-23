@@ -33,7 +33,7 @@ class AbstractStockRecord(models.Model):
     # Price info:
     # We deliberately don't store tax information to allow each project
     # to subclass this model and put its own fields for convey tax.
-    price_currency = models.CharField(max_length=12, default=settings.DEFAULT_CURRENCY)
+    price_currency = models.CharField(max_length=12, default=settings.OSCAR_DEFAULT_CURRENCY)
     # This is the base price for calculations
     price_excl_tax = models.DecimalField(decimal_places=2, max_digits=12)
     

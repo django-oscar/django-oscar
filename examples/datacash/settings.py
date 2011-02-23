@@ -119,7 +119,7 @@ INSTALLED_APPS = (
 
 LOGIN_REDIRECT_URL = '/shop/accounts/profile/'
 APPEND_SLASH = True
-DEFAULT_CURRENCY = 'GBP'
+OSCAR_DEFAULT_CURRENCY = 'GBP'
 
 # Local overrides
 try:

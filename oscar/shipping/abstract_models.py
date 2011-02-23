@@ -23,7 +23,7 @@ class AbstractMethod(models.Model, ShippingMethod):
     code = models.CharField(max_length=128, unique=True)
     name = models.CharField(_("Name"), max_length=128)
     description = models.TextField(_("Description"), blank=True)
-    price_currency = models.CharField(max_length=12, default=settings.DEFAULT_CURRENCY)
+    price_currency = models.CharField(max_length=12, default=settings.OSCAR_DEFAULT_CURRENCY)
     price_per_order = models.DecimalField(decimal_places=2, max_digits=12, default=Decimal('0.00'))
     price_per_item = models.DecimalField(decimal_places=2, max_digits=12, default=Decimal('0.00'))
     
