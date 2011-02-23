@@ -40,8 +40,11 @@ class OrderView(ModelView):
     def handle_POST(self, order):
         self.response = HttpResponseRedirect(reverse('oscar-order-management-order', kwargs={'order_number': order.number}))
         super(OrderView, self).handle_POST(order)
+    
+    def do_create_order_event(self, order):
+        self.create_shipping_event(order, order.lines.all())
         
-    def do_create_event(self, order):
+    def do_create_line_event(self, order):
         u"""Create an event for an order"""
         line_ids = self.request.POST.getlist('order_line')
         lines = order.lines.in_bulk(line_ids)
@@ -50,7 +53,7 @@ class OrderView(ModelView):
             return
         try:
             if self.request.POST['shipping_event']:
-                self.create_shipping_event(order, lines)
+                self.create_shipping_event(order, lines.values())
         except (AttributeError, ValueError), e:
             messages.error(self.request, str(e))    
                 
@@ -59,8 +62,11 @@ class OrderView(ModelView):
         with transaction.commit_on_success():
             event_type = order_models.ShippingEventType.objects.get(code=self.request.POST['shipping_event'])
             event = order_models.ShippingEvent.objects.create(order=order, event_type=event_type)
-            for line in lines.values():
-                event_quantity = int(self.request.POST['order_line_quantity_%d' % line.id])
+            for line in lines:
+                try:
+                    event_quantity = int(self.request.POST['order_line_quantity_%d' % line.id])
+                except KeyError:
+                    event_quantity = line.quantity
                 order_models.ShippingEventQuantity.objects.create(event=event, line=line, 
                                                                   quantity=event_quantity)
             

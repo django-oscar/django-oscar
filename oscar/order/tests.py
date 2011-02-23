@@ -44,7 +44,14 @@ class LineTest(TestCase):
     def test_shipping_status_after_full_line_event(self):
         type = ShippingEventType.objects.get(code='order_placed')
         self.event(type)
-        self.assertEquals(type.name, self.line.shipping_status)     
+        self.assertEquals(type.name, self.line.shipping_status)    
+        
+    def test_shipping_status_after_two_full_line_events(self):
+        type1 = ShippingEventType.objects.get(code='order_placed')
+        self.event(type1)
+        type2 = ShippingEventType.objects.get(code='dispatched')
+        self.event(type2)
+        self.assertEquals(type2.name, self.line.shipping_status) 
         
     def test_shipping_status_after_partial_line_event(self):
         type = ShippingEventType.objects.get(code='order_placed')

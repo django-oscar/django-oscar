@@ -136,33 +136,43 @@ class AbstractLine(models.Model):
     def shipping_status(self):
         u"""Returns a string summary of the shipping status of this line"""
         status_map = self._shipping_event_history()
+        if not status_map:
+            return ''
         
         events = []    
-        for event, quantity in status_map.items():
-            if quantity == self.quantity:
-                events.append(event)    
+        last_complete_event_name = None
+        for event_dict in status_map:
+            if event_dict['quantity'] == self.quantity:
+                events.append(event_dict['name'])
+                last_complete_event_name = event_dict['name']    
             else:
-                events.append("%s (%d/%d items)" % (event, quantity, self.quantity))    
+                events.append("%s (%d/%d items)" % (event_dict['name'], 
+                                                    event_dict['quantity'], self.quantity))
+        
+        if last_complete_event_name == status_map[-1]['name']:
+            return last_complete_event_name
+            
         return ', '.join(events)
     
     def has_shipping_event_occurred(self, event_type):
         u"""Checks whether this line has passed a given shipping event"""
-        for name, quantity in self._shipping_event_history().items():
-            if name == event_type.name and quantity == self.quantity:
+        for event_dict in self._shipping_event_history():
+            if event_dict['name'] == event_type.name and event_dict['quantity'] == self.quantity:
                 return True
         return False
     
     def _shipping_event_history(self):
         u"""
-        Returns a dict of shipping event name -> quantity that have been
-        through this state"""
+        Returns a list of shipping events"""
         status_map = {}
         for event in self.shippingevent_set.all():
             event_name = event.event_type.name
-            event_quantity = event.shippingeventquantity_set.get(line=self).quantity
-            currenty_quantity = status_map.setdefault(event_name, 0)
-            status_map[event_name] += event_quantity
-        return status_map
+            event_quantity = event.line_quantities.get(line=self).quantity
+            if event_name in status_map:
+                status_map[event_name]['quantity'] += event_quantity
+            else:
+                status_map[event_name] = {'name': event_name, 'quantity': event_quantity}
+        return list(status_map.values())
     
     class Meta:
         abstract = True
