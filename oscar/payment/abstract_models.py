@@ -60,6 +60,7 @@ class AbstractTransaction(models.Model):
 
 class AbstractBankcard(models.Model):
     user = models.ForeignKey('auth.User', related_name='bankcards')
+    card_type = models.CharField(max_length=128)
     name = models.CharField(max_length=255)
     number = models.CharField(max_length=32)
     expiry_date = models.DateField()

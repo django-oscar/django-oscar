@@ -36,6 +36,7 @@ def prev_steps_must_be_complete(view_fn):
         if not checker.are_previous_steps_complete(request):
             messages.error(request, "You must complete this step of the checkout first")
             url_name = checker.get_next_step(request)
+            assert False
             return HttpResponseRedirect(reverse(url_name))
         return view_fn(self, request, *args, **kwargs)
     return _view_wrapper
