@@ -16,19 +16,19 @@ class CommunicationEvent(AbstractCommunicationEvent):
 class CommunicationEventType(AbstractCommunicationEventType):
     pass
 
-class Batch(AbstractBatch):
-    pass
-
 class ShippingAddress(AbstractShippingAddress):
     pass
 
 class BillingAddress(AbstractBillingAddress):
     pass
     
-class BatchLine(AbstractBatchLine):
+class Line(AbstractLine):
     pass
 
-class BatchLinePrice(AbstractBatchLinePrice):
+class LinePrice(AbstractLinePrice):
+    pass
+
+class LineAttribute(AbstractLineAttribute):
     pass
 
 class ShippingEvent(AbstractShippingEvent):
@@ -43,6 +43,5 @@ class PaymentEvent(AbstractPaymentEvent):
 class PaymentEventType(AbstractPaymentEventType):
     pass
 
-class BatchLineAttribute(AbstractBatchLineAttribute):
-    pass
+
     

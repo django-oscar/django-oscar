@@ -9,7 +9,7 @@ from django.db import transaction
 
 from oscar.views import ModelView
 from oscar.services import import_module
-order_models = import_module('order.models', ['Order', 'BatchLine', 'ShippingEvent', 'ShippingEventQuantity', 
+order_models = import_module('order.models', ['Order', 'Line', 'ShippingEvent', 'ShippingEventQuantity', 
                                               'ShippingEventType', 'PaymentEvent', 'PaymentEventType', 'OrderNote'])
 
 
@@ -44,22 +44,21 @@ class OrderView(ModelView):
     def do_create_event(self, order):
         u"""Create an event for an order"""
         line_ids = self.request.POST.getlist('order_line')
-        batch = order.batches.get(id=self.request.POST['batch_id'])
-        lines = batch.lines.in_bulk(line_ids)
+        lines = order.lines.in_bulk(line_ids)
         if not len(lines):
             messages.info(self.request, "Please select some lines")
             return
         try:
             if self.request.POST['shipping_event']:
-                self.create_shipping_event(order, batch, lines)
+                self.create_shipping_event(order, lines)
         except (AttributeError, ValueError), e:
             messages.error(self.request, str(e))    
                 
-    def create_shipping_event(self, order, batch, lines):
+    def create_shipping_event(self, order, lines):
         u"""Create a shipping event for an order"""
         with transaction.commit_on_success():
             event_type = order_models.ShippingEventType.objects.get(code=self.request.POST['shipping_event'])
-            event = order_models.ShippingEvent.objects.create(order=order, event_type=event_type, batch=batch)
+            event = order_models.ShippingEvent.objects.create(order=order, event_type=event_type)
             for line in lines.values():
                 event_quantity = int(self.request.POST['order_line_quantity_%d' % line.id])
                 order_models.ShippingEventQuantity.objects.create(event=event, line=line, 

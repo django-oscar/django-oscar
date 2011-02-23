@@ -4,7 +4,7 @@ from django.test import TestCase
 
 from oscar.address.models import Country
 from oscar.basket.models import Basket
-from oscar.order.models import ShippingAddress, Order, Batch, BatchLine, ShippingEvent, ShippingEventType, ShippingEventQuantity
+from oscar.order.models import ShippingAddress, Order, Line, ShippingEvent, ShippingEventType, ShippingEventQuantity
 
 
 class ShippingAddressTest(TestCase):
@@ -22,19 +22,18 @@ class OrderTest(TestCase):
         self.order = Order.objects.get(number='100002')
 
         
-class BatchLineTest(TestCase):
+class LineTest(TestCase):
     fixtures = ['sample-order.json']
 
     def setUp(self):
         self.order = Order.objects.get(number='100002')
-        self.batch = self.order.batches.get(id=1)
         self.line = self.order.lines.get(id=1)
 
     def event(self, type, quantity=None):
         """
         Creates a shipping event for the test line
         """
-        event = ShippingEvent.objects.create(order=self.order, batch=self.batch, event_type=type)
+        event = ShippingEvent.objects.create(order=self.order, event_type=type)
         if quantity == None:
             quantity = self.line.quantity
         event_quantity = ShippingEventQuantity.objects.create(event=event, line=self.line, quantity=quantity)
@@ -94,12 +93,11 @@ class ShippingEventQuantityTest(TestCase):
 
     def setUp(self):
         self.order = Order.objects.get(number='100002')
-        self.batch = self.order.batches.get(id=1)
         self.line = self.order.lines.get(id=1)
 
     def test_quantity_defaults_to_all(self):
         type = ShippingEventType.objects.get(code='order_placed')
-        event = ShippingEvent.objects.create(order=self.order, batch=self.batch, event_type=type)
+        event = ShippingEvent.objects.create(order=self.order, event_type=type)
         event_quantity = ShippingEventQuantity.objects.create(event=event, line=self.line)
         self.assertEquals(self.line.quantity, event_quantity.quantity)
     

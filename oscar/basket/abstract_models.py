@@ -161,7 +161,7 @@ class AbstractLine(models.Model):
     # which should be treated as separate lines.  Set as a 
     # SlugField as it is included in the path for certain views.
     line_reference = models.SlugField(max_length=128, db_index=True)
-    product = models.ForeignKey('product.Item')
+    product = models.ForeignKey('product.Item', related_name='basket_lines')
     quantity = models.PositiveIntegerField(default=1)
     
     class Meta:
