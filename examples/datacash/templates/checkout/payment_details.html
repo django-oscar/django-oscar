@@ -1,0 +1,19 @@
+{% extends "checkout/checkout.html" %}
+
+{% load currency_filters %}
+
+{% block payment_details %}
+<h3>Payment details</h3>
+<h4>Bankcard</h4>
+<form method="post" action="">
+{{ bankcard_form.as_p }}
+</form>
+
+{% endblock payment_details %}
+
+{% block place_order %}
+<hr/>
+<h3>Place your order</h3>
+<a href="{% url oscar-checkout-payment-details %}">Place order</a>
+{% endblock place_order %}
+

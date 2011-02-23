@@ -3,6 +3,7 @@ from django.shortcuts import render
 from oscar.checkout.views import (ShippingMethodView as CoreShippingMethodView, 
                                   PaymentMethodView as CorePaymentMethodView, 
                                   PaymentDetailsView as CorePaymentDetailsView,
+                                  OrderPreviewView as CoreOrderPreviewView,
                                   prev_steps_must_be_complete)
 from oscar.payment.forms import BankcardForm
 from oscar.services import import_module
@@ -32,13 +33,21 @@ class PaymentMethodView(CorePaymentMethodView):
         self.co_data.pay_by(method)
         return self.get_success_response()
     
+    
+class OrderPreviewView(CoreOrderPreviewView):
+    u"""View a preview of the order before submitting."""
+    
+    def handle_GET(self):
+        # Forward straight onto the payment details
+        return self.get_success_response()   
+        
         
 class PaymentDetailsView(CorePaymentMethodView):
-    template_file = 'checkout/datacash.html'
+    template_file = 'checkout/payment_details.html'
     
     def handle_GET(self):
         # Need a billing address form and a bankcard form
-        
+        self.context['bankcard_form'] = BankcardForm()
         
         return render(self.request, self.template_file, self.context)
     

@@ -1,8 +1,13 @@
 from django import forms
 
+from oscar.services import import_module
 
-class BankcardForm(forms.Form):
+payment_models = import_module('payment.models', ['Bankcard'])
+
+
+class BankcardForm(forms.ModelForm):
     
-    number = forms.CharField(max_length=16)
-    name = forms.CharField(max_length=128)
+    class Meta:
+        model = payment_models.Bankcard
+        exclude = ('user', 'partner_reference')
     
