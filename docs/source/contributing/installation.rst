@@ -24,8 +24,8 @@ Do the following from your workspace folder:
     
 After checking out your fork, install the latest version of Django into your virtualenv (currenty a beta of 1.3)::
 
-    wget http://www.djangoproject.com/download/1.3-beta-1/tarball/
-    pip install Django-1.3-beta-1.tar.gz
+    wget http://www.djangoproject.com/download/1.3-beta-1/tarball/ -O Django-latest.tar.gz
+    pip install Django-latest.tar.gz
 
 Clone this repository to get the latest version of Oscar
 
