@@ -64,6 +64,9 @@ class AbstractBankcard(models.Model):
     number = models.CharField(max_length=32)
     expiry_date = models.DateField()
     
+    # For payment partners who are storing the full card details for us
+    partner_reference = models.CharField(max_length=255, null=True, blank=True)
+    
     class Meta:
         abstract = True
         
