@@ -16,7 +16,7 @@ Reload bash with the following command::
 
     ~/.bashrc
 
-Do the following from your workspace folder:
+Do the following from your workspace folder::
 
     mkdir oscar
     cd oscar
