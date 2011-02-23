@@ -6,6 +6,8 @@ from oscar.address.models import Country
 from oscar.basket.models import Basket
 from oscar.order.models import ShippingAddress, Order, Line, ShippingEvent, ShippingEventType, ShippingEventQuantity
 
+ORDER_PLACED = 'order_placed'
+
 
 class ShippingAddressTest(TestCase):
     
@@ -20,6 +22,22 @@ class OrderTest(TestCase):
 
     def setUp(self):
         self.order = Order.objects.get(number='100002')
+        
+    def event(self, type):
+        """
+        Creates an order-level shipping event
+        """
+        type = ShippingEventType.objects.get(code=type)
+        event = ShippingEvent.objects.create(order=self.order, event_type=type)
+        for line in self.order.lines.all():
+            ShippingEventQuantity.objects.create(event=event, line=line)  
+        
+    def test_shipping_status_is_empty_with_no_events(self):
+        self.assertEquals("", self.order.shipping_status)
+
+    def test_shipping_status_after_one_order_level_events(self):
+        self.event(ORDER_PLACED)
+        self.assertEquals("Order placed", self.order.shipping_status)
 
         
 class LineTest(TestCase):

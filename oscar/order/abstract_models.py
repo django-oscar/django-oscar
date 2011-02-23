@@ -1,3 +1,5 @@
+from itertools import chain
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
@@ -38,6 +40,40 @@ class AbstractOrder(models.Model):
         u"""Return basket total excluding tax"""
         return self.total_excl_tax - self.shipping_excl_tax
     
+    @property
+    def shipping_status(self):
+        events = self.shipping_events.all()
+        if not len(events):
+            return ''
+        
+        # Collect all events by event-type
+        map = {}
+        for event in events:
+            event_name = event.event_type.name
+            if event_name not in map:
+                map[event_name] = []
+            map[event_name] = list(chain(map[event_name], event.line_quantities.all()))
+        
+        # Determine last complete event
+        status = _("In progress")
+        for event_name, event_line_quantities in map.items():
+            if self._is_event_complete(event_line_quantities):
+                status = event_name
+        return status
+    
+    def _is_event_complete(self, event_quantites):
+        # Form map of line to quantity
+        map = {}
+        for event_quantity in event_quantites:
+            line_id = event_quantity.line_id
+            map.setdefault(line_id, 0)
+            map[line_id] += event_quantity.quantity
+        
+        for line in self.lines.all():
+            if map[line.id] != line.quantity:
+                return False
+        return True
+    
     class Meta:
         abstract = True
         ordering = ['-date_placed',]
@@ -69,7 +105,7 @@ class AbstractCommunicationEvent(models.Model):
     u"""
     An order-level event involving a communication to the customer, such
     as an confirmation email being sent."""
-    order = models.ForeignKey('order.Order', related_name="events")
+    order = models.ForeignKey('order.Order', related_name="communication_events")
     type = models.ForeignKey('order.CommunicationEventType')
     date = models.DateTimeField(auto_now_add=True)
     
