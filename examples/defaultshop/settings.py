@@ -110,7 +110,8 @@ INSTALLED_APPS = (
     'oscar.address',
     'oscar.stock',
     'oscar.image',
-    'oscar.customer'
+    'oscar.customer',
+    'oscar.catalogue_import',
 )
 
 LOGIN_REDIRECT_URL = '/shop/accounts/profile/'
