@@ -8,6 +8,7 @@ from oscar.order.tests import *
 from oscar.product.tests import *
 from oscar.stock.tests import *
 from oscar.checkout.tests import *
+from oscar.catalogue_import.tests import *
 
 from oscar.services import import_module, AppNotFoundError
 
