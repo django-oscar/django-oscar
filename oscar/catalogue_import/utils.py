@@ -57,6 +57,7 @@ class CatalogueImport(object):
         product_models.Option.objects.all().delete()
         product_models.Partner.objects.all().delete()
         product_models.StockRecord.objects.all().delete()
+        
     def load_csv(self):
         u"""Load the CSV content"""
         csv_reader = CatalogueCsvReader()
