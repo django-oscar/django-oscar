@@ -6,9 +6,8 @@ from oscar.checkout.views import (ShippingMethodView as CoreShippingMethodView,
                                   OrderPreviewView as CoreOrderPreviewView,
                                   SubmitView as CoreSubmitView,
                                   prev_steps_must_be_complete)
-from oscar.payment.forms import BankcardForm
+from oscar.payment.forms import BankcardForm, BillingAddressForm
 from oscar.services import import_module
-
 
 shipping_models = import_module('shipping.models', ['Method'])
     
@@ -50,6 +49,7 @@ class PaymentDetailsView(CorePaymentMethodView):
         
         # Need a billing address form and a bankcard form
         self.context['bankcard_form'] = BankcardForm()
+        self.context['billing_address_form'] = BillingAddressForm()
         
         return render(self.request, self.template_file, self.context)
     

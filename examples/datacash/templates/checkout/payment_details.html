@@ -4,11 +4,15 @@
 
 {% block payment_details %}
 <h3>Payment details</h3>
-<h4>Bankcard</h4>
+
+
 <form method="post" action="{% url oscar-checkout-payment-details %}">
-{% csrf_token %}
-{{ bankcard_form.as_p }}
-<input type="submit" value="Place order" />
+    {% csrf_token %}
+    <h4>Bankcard</h4>
+    {{ bankcard_form.as_p }}
+    <h4>Billing address</h4>
+    {{ billing_address_form.as_p }}
+    <input type="submit" value="Place order" />
 </form>
 
 {% endblock payment_details %}
