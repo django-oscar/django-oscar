@@ -1,7 +1,7 @@
 Contributing
 ============
 
-Make sure you're read http://python.net/~goodger/projects/pycon/2007/idiomatic/handout.html
+Make sure you've read http://python.net/~goodger/projects/pycon/2007/idiomatic/handout.html
 
 Guidelines
 ----------
@@ -13,6 +13,7 @@ Guidelines
 Coding conventions
 ------------------
 
+* Follow the Django conventions (http://docs.djangoproject.com/en/dev/internals/contributing/#coding-style)
 * PEP8 (http://www.python.org/dev/peps/pep-0008/)
 * PEP257 (http://www.python.org/dev/peps/pep-0257/)
 
