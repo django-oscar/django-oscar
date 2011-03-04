@@ -246,32 +246,23 @@ class OrderPreviewView(CheckoutView):
 
 class PaymentDetailsView(CheckoutView):
     u"""
-    For taking the details of payment.
-    
-    This has to be the final step before submit as we don't want to store
-    payment details in the session.
-    """
-    pass
-
-
-class SubmitView(CheckoutView):
-    u"""
-    Class for submitting an order.
+    For taking the details of payment and creating the order
     
     The class is deliberately split into fine-grained method, responsible for only one
     thing.  This is to make it easier to subclass and override just one component of
     functionality.
-    
-    Note that the order models support shipping to multiple addresses but the default
-    implementation assumes only one.  To change this, override the _get_shipping_address_for_line
-    method.
     """
-    
     def handle_GET(self):
         return self.handle_POST()
     
     def handle_POST(self):
-        
+        """
+        This method is designed to be overridden by subclasses which will
+        validate the forms from the payment details page.  If the forms are valid
+        then the method can call _submit()."""
+        return self._submit()
+    
+    def _submit(self):
         checkout_signals.pre_payment.send_robust(sender=self, view=self)
         self._handle_payment(self.basket)
         checkout_signals.post_payment.send_robust(sender=self, view=self)

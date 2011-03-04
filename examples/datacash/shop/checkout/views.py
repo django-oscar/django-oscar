@@ -4,7 +4,6 @@ from oscar.checkout.views import (ShippingMethodView as CoreShippingMethodView,
                                   PaymentMethodView as CorePaymentMethodView, 
                                   PaymentDetailsView as CorePaymentDetailsView,
                                   OrderPreviewView as CoreOrderPreviewView,
-                                  SubmitView as CoreSubmitView,
                                   prev_steps_must_be_complete)
 from oscar.payment.forms import BankcardForm, BillingAddressForm
 from oscar.services import import_module
@@ -46,25 +45,16 @@ class PaymentDetailsView(CorePaymentMethodView):
     template_file = 'checkout/payment_details.html'
     
     def handle_GET(self):
-        
-        # Need a billing address form and a bankcard form
         self.context['bankcard_form'] = BankcardForm()
         self.context['billing_address_form'] = BillingAddressForm()
-        
         return render(self.request, self.template_file, self.context)
     
     def handle_POST(self):
-        assert False
+        bankcard_form = BankcardForm(self.request.POST)
+        billing_addr_form = BillingAddressForm(self.request.POST)
+        if bankcard_form.is_valid() and billing_addr_form.is_valid():
+            return self._submit()
+        self.context['bankcard_form'] = bankcard_form
+        self.context['billing_address_form'] = billing_addr_form
+        return render(self.request, self.template_file, self.context)
         
-
-class SubmitView(CoreSubmitView):
-    
-    def _handle_payment(self, basket):
-        u"""Handle any payment processing"""
-        
-        bankcard_form = BankcardForm(request.POST)
-        if not bankcard_form.is_valid():
-            # Put form into the session and redirect back 
-            self.request.session['bankcard_form'] = bankcard_form
-            
-        assert False

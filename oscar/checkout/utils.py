@@ -16,8 +16,7 @@ class ProgressChecker(object):
                       'oscar-checkout-shipping-method',
                       'oscar-checkout-payment-method',
                       'oscar-checkout-preview',
-                      'oscar-checkout-payment-details',
-                      'oscar-checkout-submit',]
+                      'oscar-checkout-payment-details']
     
     def are_previous_steps_complete(self, request):
         u"""

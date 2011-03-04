@@ -3,6 +3,9 @@
 {% block place_order %}
 <hr/>
 <h3>Place your order</h3>
-<a href="{% url oscar-checkout-payment-details %}">Place order</a>
+<form method="post" action="{% url oscar-checkout-payment-details %}">
+{% csrf_token %}
+<input type="submit" value="Place order" />
+</form>
 {% endblock place_order %}
 
