@@ -19,7 +19,7 @@ checkout_calculators = import_module('checkout.calculators', ['OrderTotalCalcula
 checkout_utils = import_module('checkout.utils', ['ProgressChecker', 'CheckoutSessionData'])
 checkout_signals = import_module('checkout.signals', ['order_placed', 'pre_payment', 'post_payment'])
 order_models = import_module('order.models', ['Order', 'ShippingAddress'])
-order_utils = import_module('order.utils', ['OrderCreator'])
+order_utils = import_module('order.utils', ['OrderNumberGenerator', 'OrderCreator'])
 address_models = import_module('address.models', ['UserAddress'])
 shipping_repository = import_module('shipping.repository', ['Repository'])
 
@@ -252,6 +252,12 @@ class PaymentDetailsView(CheckoutView):
     thing.  This is to make it easier to subclass and override just one component of
     functionality.
     """
+
+    # Any payment sources should be added to this list as part of the
+    # _handle_payment method.  If the order is placed successfully, then
+    # they will be persisted.
+    payment_sources = []
+
     def handle_GET(self):
         return self.handle_POST()
     
@@ -263,10 +269,15 @@ class PaymentDetailsView(CheckoutView):
         return self._submit()
     
     def _submit(self):
+        # We generate the order number first as this will be used
+        # in payment requests (ie before the order model has been 
+        # created).
+        order_number = self._generato_order_number(self.basket)
         checkout_signals.pre_payment.send_robust(sender=self, view=self)
-        self._handle_payment(self.basket)
+        self._handle_payment(self.basket, order_number)
         checkout_signals.post_payment.send_robust(sender=self, view=self)
-        order = self._place_order(self.basket)
+        order = self._place_order(self.basket, order_number)
+        self._save_payment_sources(order)
         self._reset_checkout()
         checkout_signals.order_placed.send_robust(sender=self, order=order)
         
@@ -274,22 +285,43 @@ class PaymentDetailsView(CheckoutView):
         self.request.session['checkout_order_id'] = order.id
         return HttpResponseRedirect(reverse('oscar-checkout-thank-you'))
     
-    def _handle_payment(self, basket):
+    def _generato_order_number(self, basket):
+        generator = order_utils.OrderNumberGenerator()
+        return generator.order_number(basket)
+
+    def _handle_payment(self, basket, order_number):
         u"""Handle any payment processing"""
         pass
+
+    def _save_payment_sources(self, order):
+        u"""
+        Saves any payment sources used in this order.
+        """
+        for source in self.payment_sources:
+            source.order = order
+            source.save()
     
     def _reset_checkout(self):
         u"""Reset any checkout session state"""
         self.co_data.flush()
         checkout_utils.ProgressChecker().all_steps_complete(self.request)
     
-    def _place_order(self, basket):
+    def _place_order(self, basket, order_number):
         u"""Writes the order out to the DB"""
         calc = checkout_calculators.OrderTotalCalculator(self.request)
         shipping_address = self._get_shipping_address()
         shipping_method = self._get_shipping_method(basket)
         order_creator = order_utils.OrderCreator(calc)
-        return order_creator.place_order(self.request.user, basket, shipping_address, shipping_method)
+        return order_creator.place_order(self.request.user, basket, 
+                                         shipping_address, shipping_method, order_number)
+
+    def _get_chargable_total(self, basket):
+        u"""
+        Returns the total amount to take payment for.
+        """
+        calc = checkout_calculators.OrderTotalCalculator(self.request)
+        shipping_method = self._get_shipping_method(basket)
+        return calc.order_total_incl_tax(basket, shipping_method)
     
     def _get_shipping_method(self, basket):
         u"""Returns the shipping method object"""

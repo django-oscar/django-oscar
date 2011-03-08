@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import ugettext as _
@@ -6,22 +8,22 @@ class AbstractSource(models.Model):
     u"""
     A source of payment for an order.  
     
-    This is normally a credit card which has been pre-authed
-    for the order amount, but some applications will allow orders to be paid for using multiple
-    sources such as cheque, credit accounts, gift cards.  Each payment source will have its own
-    entry.
+    This is normally a credit card which has been pre-authed for the order
+    amount, but some applications will allow orders to be paid for using
+    multiple sources such as cheque, credit accounts, gift cards.  Each payment
+    source will have its own entry.
     """
     order = models.ForeignKey('order.Order', related_name='sources')
     type = models.ForeignKey('payment.SourceType')
-    initial_amount = models.DecimalField(decimal_places=2, max_digits=12)
-    balance = models.DecimalField(decimal_places=2, max_digits=12)
+    allocation = models.DecimalField(decimal_places=2, max_digits=12)
+    amount_debited = models.DecimalField(decimal_places=2, max_digits=12, default=Decimal('0.00'))
     reference = models.CharField(max_length=128, blank=True, null=True)
     
     class Meta:
         abstract = True
 
     def __unicode__(self):
-        description = "Payment of %.2f from %s" % (self.initial_amount, self.type)
+        description = "Allocation of %.2f from type %s" % (self.allocation, self.type)
         if self.reference:
             description += " (reference: %s)" % self.reference
         return description
@@ -30,6 +32,8 @@ class AbstractSource(models.Model):
 class AbstractSourceType(models.Model):
     u"""A type of payment source (eg Bankcard, Business account, Gift card)"""
     name = models.CharField(max_length=128)
+    code = models.SlugField(max_length=128, help_text="""This is used within
+        forms to identify this source type""")
 
     class Meta:
         abstract = True
@@ -37,6 +41,11 @@ class AbstractSourceType(models.Model):
     def __unicode__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        if not self.code:
+            self.code = slugify(self.name)
+        super(AbstractSourceType, self).save(*args, **kwargs)
+    
 
 class AbstractTransaction(models.Model):
     u"""

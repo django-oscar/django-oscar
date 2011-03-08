@@ -135,7 +135,7 @@ class BankcardStartingMonthField(BankcardMonthField):
 
     def clean(self, value):
         starting_date = super(BankcardMonthField, self).clean(value)
-        if date.today() < starting_date:
+        if starting_date and date.today() < starting_date:
             raise forms.ValidationError("The starting date you entered is in the future.")
         return starting_date
 
@@ -157,10 +157,10 @@ class BankcardForm(forms.ModelForm):
     
     number = BankcardField(max_length=20, widget=forms.TextInput(attrs={'autocomplete':'off'}), label="Card number")
     name = forms.CharField(max_length=128, label="Name on card")
-    ccv_number = forms.IntegerField(required = True, label = "CCV Number",
+    ccv_number = forms.IntegerField(required=True, label="CCV Number",
         max_value = 9999, widget=forms.TextInput(attrs={'size': '4'}))
-    start_month = BankcardStartingMonthField(label = "Valid from")
-    expiry_month = BankcardExpiryMonthField(required = True, label = "Valid to")
+    start_month = BankcardStartingMonthField(label="Valid from", required=False)
+    expiry_month = BankcardExpiryMonthField(required=True, label = "Valid to")
     
     class Meta:
         model = payment_models.Bankcard

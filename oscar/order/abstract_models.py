@@ -78,11 +78,6 @@ class AbstractOrder(models.Model):
         abstract = True
         ordering = ['-date_placed',]
     
-    def save(self, *args, **kwargs):
-        if not self.number:
-            self.number = 100000 + self.basket.id
-        super(AbstractOrder, self).save(*args, **kwargs)
-    
     def __unicode__(self):
         return u"#%s" % (self.number,)
 
@@ -116,7 +111,7 @@ class AbstractCommunicationEvent(models.Model):
 class AbstractCommunicationEventType(models.Model):
     u"""Communication events are things like 'OrderConfirmationEmailSent'"""
     # Code is used in forms
-    code = models.CharField(max_length=128)
+    code = models.SlugField(max_length=128)
     # Name is the friendly description of an event
     name = models.CharField(max_length=255)
     

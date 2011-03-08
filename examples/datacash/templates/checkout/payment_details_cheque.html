@@ -1,0 +1,17 @@
+{% extends "checkout/checkout.html" %}
+
+{% load currency_filters %}
+
+{% block payment_details %}
+
+<form method="post" action="{% url oscar-checkout-payment-details %}">
+    <h4>Notes</h4>
+    <p>Note that cheques need to be sent to this address - your order 
+    won't be released until the cheque has cleared.</p>
+    {% csrf_token %}
+    <input type="submit" value="Place order" />
+</form>
+
+{% endblock payment_details %}
+
+

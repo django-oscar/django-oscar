@@ -112,7 +112,8 @@
 {% if payment_method %}
 <hr />
 <h3>Payment method</h3>
-<p>{{ payment_method }}</p>
+<p>Method: {{ payment_method }}</p>
+<p><a href="{% url oscar-checkout-payment-method %}">Change payment method</a></p>
 {% endif %}
 {% endblock payment_method %}
 
