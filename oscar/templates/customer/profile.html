@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+
+{% load currency_filters %}
+
+{% block header %}
+<h2>Profile</h2>
+{% endblock header %}
+
+
+{% block content %}
+
+<h3>Order history</h3>
+
+<table>
+    <tr>
+        <th>Order number</th>
+        <th>Total inc tax</th>
+        <th>Date submitted</th>
+        <th></th>
+    </tr>
+    {% for order in orders %}
+    <tr>
+        <td>{{ order.number }}</td>
+        <td>{{ order.total_incl_tax|currency }}</td>
+        <td>{{ order.date_placed }}</td>
+        <td>
+            <a href="{% url oscar-customer-order-view order.number %}">View</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+<p><a href="{% url oscar-customer-order-history %}">View order history</a></p>
+
+
+
+
+
+<h3>Account settings</h3>
+<ul>
+    <li><a href="{% url oscar-customer-address-book %}">Manage address book</a></li>
+    <li><a href="">Change password</a></li>
+</ul>
+
+
+{% endblock content %}
+
+

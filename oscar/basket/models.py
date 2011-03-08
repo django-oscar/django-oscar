@@ -1,32 +1,23 @@
-from django.contrib.auth.models import User
-from django.db import models
-from django.utils.translation import ugettext as _
+from exceptions import Exception
+
+from django.db.models.signals import pre_save
+from django.core.signals import request_finished
+from django.dispatch import receiver
+
+from oscar.basket.abstract_models import AbstractBasket, AbstractLine, AbstractLineAttribute
 
 
-class Basket(models.Model):
-    """
-    Main basket object
-    """
-    OPEN, MERGED, SUBMITTED = ("Open", "Merged", "Submitted")
-    STATUS_CHOICES = (
-        (OPEN, _("Open - currently active")),
-        (MERGED, _("Merged - superceded by another basket")),
-        (SUBMITTED, _("Submitted - has been ordered at the checkout")),
-    )
+class InvalidBasketLineError(Exception):
+    pass
+
+
+class Basket(AbstractBasket):
+    pass
+
     
-    owner = models.ForeignKey(User, related_name='baskets')
-    status = models.CharField(max_length=128, default=OPEN, choices=STATUS_CHOICES)
-    created_date = models.DateTimeField(auto_now_add=True)
-    
-    
-class Line(models.Model):
-    basket = models.ForeignKey('basket.Basket', related_name='lines')
-    product = models.ForeignKey('product.Item')
-    vouchers = models.ManyToManyField('offer.Voucher')
-    
-    
-class LineAttribute(models.Model):
-    line = models.ForeignKey('basket.Line', related_name='attributes')
-    type = models.CharField(max_length=128)
-    value = models.CharField(max_length=255)    
-    
+class Line(AbstractLine):
+    pass
+
+
+class LineAttribute(AbstractLineAttribute):
+    pass

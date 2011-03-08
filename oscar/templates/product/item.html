@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+
+{% load currency_filters %}
+
+{% block header %}
+<h2>{{item.get_title}}</h2>
+{% endblock header %}
+
+
+{% block content %}
+<table>
+    <caption>Product details</caption>
+    <tr>
+        <th>UPC</th><td>{{item.upc}}</td>
+    </tr>
+    <tr>
+        <th>Product class</th><td><a href="{{ item.item_class.get_absolute_url }}">{{item.item_class.name}}</a></td>
+    </tr>
+{% if item.stockrecord %}
+    <tr>
+        <th>Price (excl. tax)</th><td>{{item.stockrecord.price_incl_tax|currency}}</td>
+    </tr>
+    <tr>
+        <th>Price (incl. tax)</th><td>{{item.stockrecord.price_excl_tax|currency}}</td>
+    </tr>
+    <tr>
+        <th>Availability</th>
+        <td>{{ item.stockrecord.availability }}</td>
+    </tr>
+{% endif %}
+    <tr>
+        <th>Product type</th>
+        <td>
+        {% if item.is_group %}Product group{% else %}{% if item.is_variant %}Variant{% else %}Stand-alone{% endif %}{% endif %}
+        </td>
+    </tr>
+    {% for attribute in item.attributes.all %}
+    <tr>
+        <th>{{ attribute.type.name }}</th>
+        <th>{{ attribute.value }}</th>
+    </tr>
+    {% endfor %}
+</table>
+
+{% if item.stockrecord %}
+<form action="{% url oscar-basket %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Add to basket" />
+</form>
+{% endif %}
+
+{% endblock content %}
+

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://127.0.0.1:8000/" />
+<title>save-delivery-address</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">save-delivery-address</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/shop/checkout/shipping-address/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id_first_name</td>
+	<td>David</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id_last_name</td>
+	<td>Winerbottom</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id_line1</td>
+	<td>73B Woodhouse Road</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id_line3</td>
+	<td>London</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id_postcode</td>
+	<td>N12 9et</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id_country</td>
+	<td>label=United Kingdom of Great Britain and Northern Ireland</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Save shipping address']</td>
+	<td></td>
+</tr>
+</tbody></table>
+</body>
+</html>

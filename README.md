@@ -1,26 +1,14 @@
-# Oscar - Ecommerce on Django
+# Django-Oscar - Flexible e-commerce on Django
 
-Named after Oscar Peterson (http://en.wikipedia.org/wiki/Oscar_Peterson), oscar is a Django implementation
-of Taoshop (a product from Tangent Labs).  It's fairly experimental at the moment.
+django-oscar is a flexible ecommerce platform, designed to build domain-driven
+ecommerce sites to be constructed.  It is not supposed to be a framework that can
+be downloaded and fully set up by simply adjusting a configuration file: there
+will always be some developer work required to make sure the models match those
+from your domain - this is the nature of domain modelling.
 
-## Installation
-	sudo apt-get install python-setuptools
-	sudo easy_install pip
-	sudo pip install virtualenv virtualenvwrapper
-	echo "source /usr/local/bin/virtualenvwrapper.sh" >> ~/.bashrc
+However, a small amount of work up front in determine the right models for your
+shop can really pay off in terms of building a high-quality application that
+is a pleasure to work with and maintain.
 
-Reload bash with the following command:
-~/.bashrc
-
-Do the following from your workspace folder:
-    mkdir oscar
-	cd oscar
-    mkvirtualenv --no-site-packages oscar
-After checking out your fork, install all dependencies:
-	workon oscar
-	pip install -r requirements.txt
-
-## Aims of project
-* To be a portable Django application that provides ecommerce functionality.  
-* To comprise a set of loosely coupled apps that can be overridden in projects (interdependence is on interfaces only)
-* To allow core objects (eg products, orders) to be extended within a specific project
+See the *.rst files within `docs/source` for documentation or visit
+[http://readthedocs.org/docs/django-oscar/en/](http://readthedocs.org/docs/django-oscar/en/)

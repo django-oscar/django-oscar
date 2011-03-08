@@ -1,23 +1,27 @@
-"""
-This file demonstrates two different styles of tests (one doctest and one
-unittest). These will both pass when you run "manage.py test".
-
-Replace these with more appropriate tests for your application.
-"""
+import unittest
 
 from django.test import TestCase
 
-class SimpleTest(TestCase):
-    def test_basic_addition(self):
-        """
-        Tests that 1 + 1 always equals 2.
-        """
-        self.failUnlessEqual(1 + 1, 2)
+from oscar.address.tests import *
+from oscar.basket.tests import *
+from oscar.order.tests import *
+from oscar.product.tests import *
+from oscar.stock.tests import *
+from oscar.checkout.tests import *
+from oscar.payment.tests import *
 
-__test__ = {"doctest": """
-Another way to test that 1 + 1 is equal to 2.
+from oscar.services import import_module, AppNotFoundError
 
->>> 1 + 1 == 2
-True
-"""}
+
+class ImportAppTests(unittest.TestCase):
+
+    def test_a_specified_class_is_imported_correctly(self):
+        module = import_module('product.models', ['Item'])
+        self.assertEqual('oscar.product.models', module.__name__)
+        
+    def test_unknown_apps_raise_exception(self):
+        self.assertRaises(AppNotFoundError, import_module, 'banana', ['skin'])
+   
+    def test_no_classes_specified_raise_exception(self):
+        self.assertRaises(ValueError, import_module, 'product.models')
 

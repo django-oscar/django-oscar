@@ -1,20 +1,22 @@
-from oscar.product.models import AttributeType
-from oscar.product.models import ItemType
-from oscar.product.models import Item
-from oscar.product.models import Attribute
-from oscar.product.models import AttributeTypeMembership
 from django.contrib import admin
 
-class AttributeInline(admin.TabularInline):
-    model = Attribute
+from oscar.services import import_module
+product_models = import_module('product.models', ['Item', 'ItemClass', 'AttributeType', 
+                                                  'ItemAttributeValue', 'Option'])
 
+class AttributeInline(admin.TabularInline):
+    model = product_models.ItemAttributeValue
+
+class ItemClassAdmin(admin.ModelAdmin):
+    prepopulated_fields = {"slug": ("name",)}
+    
 class ItemAdmin(admin.ModelAdmin):
-    list_display = ('name', 'partner_id', 'date_available', 'date_created', 'is_valid')
+    list_display = ('get_title', 'upc', 'get_item_class', 'is_top_level', 'is_group', 'is_variant', 'attribute_summary', 'date_created')
+    prepopulated_fields = {"slug": ("title",)}
     inlines = [AttributeInline]
 
-
-admin.site.register(AttributeType)
-admin.site.register(AttributeTypeMembership)
-admin.site.register(ItemType)
-admin.site.register(Item, ItemAdmin)
-admin.site.register(Attribute)
+admin.site.register(product_models.ItemClass, ItemClassAdmin)
+admin.site.register(product_models.Item, ItemAdmin)
+admin.site.register(product_models.AttributeType)
+admin.site.register(product_models.ItemAttributeValue)
+admin.site.register(product_models.Option)

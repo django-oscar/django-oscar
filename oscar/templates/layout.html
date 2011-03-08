@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block layout %}
+    <div id="container">
+        <div id="header">
+            <h1>Oscar // Flexible e-commerce for Django</h1>
+            <form method="get" action="{% url oscar-products %}">
+                <label id="search_input">Search all products:</label>
+                <input type="text" name="q" id="search_input" value="{{ search_term }}"/>
+                <input type="submit" value="Go!" /> 
+            </form>
+            
+            {% if user.is_authenticated %}
+            <a href="">Profile</a>
+            <a href="">Logout</a>
+            {% else %}
+            <a href="">Login</a>
+            {% endif %}
+            
+            {% block header %}
+            {% endblock %}
+        </div>
+        <div id="content">
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% block content %}{% endblock %}
+        </div>
+        <div id="footer">{% block footer %}{% endblock %}</div>
+    </div>
+{% endblock %}

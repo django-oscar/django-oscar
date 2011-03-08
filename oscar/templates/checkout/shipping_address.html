@@ -1,0 +1,37 @@
+{% extends "checkout/checkout.html" %}
+
+
+{% block shipping_address %}
+
+{% if addresses %}
+<h4>Choose a shipping address</h4>
+<ul>
+    {% for address in addresses %}
+    <li>
+        {{ address.summary }}
+        <form action="{% url oscar-checkout-shipping-address %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="ship_to" />
+            <input type="hidden" name="address_id" value="{{ address.id }}" />
+            <input type="submit" value="Ship to this address" />
+        </form>
+        <form action="{% url oscar-checkout-shipping-address %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="delete" />
+            <input type="hidden" name="address_id" value="{{ address.id }}" />
+            <input type="submit" value="Delete from address book" />
+        </form>
+    </li>
+    {% endfor %}
+</ul>
+</form>
+{% endif %}
+    
+<h4>Enter a shipping address</h4>
+<form action="{% url oscar-checkout-shipping-address %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <p><input type="submit" value="Save shipping address" /></p>
+</form>
+
+{% endblock shipping_address %}

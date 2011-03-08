@@ -39,7 +39,13 @@ class CountCondition(Condition):
         proxy = True
 
     def is_satisfied(self, basket):
-        return self.range.filter_basket(basket).num_items >= self.value
+        u"""Determines whether a given basket meets this condition"""
+        if self.type == COUNT:
+            return self.range.filter_basket(basket).num_items >= self.value
+        elif self.type == VALUE:
+            return self.range.filter_basket(basket).value >= self.value
+        else:
+            return False
         
 class ValueCondition(Condition):
 
@@ -71,9 +77,7 @@ class Range(models.Model):
 
 
 class Voucher(models.Model):
-    """
-    A voucher
-    """
+    u"""A voucher"""
     code = models.CharField(max_length=128)
     start_date = models.DateField()
     end_date = models.DateField()

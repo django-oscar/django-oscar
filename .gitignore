@@ -1,8 +1,13 @@
 *.pyc
 local_settings.py
 fixtures/*
-assets/designs/*
+product-images/*
 *.swp
 .project
 .pydevproject
 .settings
+django_oscar.egg-info/
+STORIES
+docs/build/*
+*.*~
+examples/.coverage
