@@ -6,8 +6,17 @@ order_models = import_module('order.models', ['ShippingAddress', 'Order', 'Line'
 
 
 class OrderNumberGenerator(object):
+    u"""
+    Simple object for generating order numbers.
+
+    We need this as the order number is often required for payment
+    which takes place before the order model has been created.
+    """
 
     def order_number(self, basket):
+        u"""
+        Return an order number for a given basket
+        """
         return 100000 + basket.id
 
 
