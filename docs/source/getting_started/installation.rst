@@ -18,7 +18,7 @@ Create a new django project (this assume you have a version of django installed 
 
 Create a new virtual env::
 
-    mkvirtualenv --not-site-packages myshop
+    mkvirtualenv --no-site-packages myshop
 
 A nice extension now is to edit your ``~/.virtualenv/myshop/bin/postactivate`` file to contain::
 
