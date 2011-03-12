@@ -8,7 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 
 class AbstractPartner(models.Model):
     u"""Fulfillment partner"""
-    name = models.CharField(max_length=128)
+    name = models.CharField(max_length=128, unique=True)
     
     class Meta:
         verbose_name_plural = 'Fulfillment partners'

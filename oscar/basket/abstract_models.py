@@ -28,6 +28,8 @@ class AbstractBasket(models.Model):
     date_merged = models.DateTimeField(null=True, blank=True)
     date_submitted = models.DateTimeField(null=True, blank=True)
     
+    discounts = []
+
     class Meta:
         abstract = True
     
@@ -62,6 +64,12 @@ class AbstractBasket(models.Model):
             line = self.lines.create(basket=self, line_reference=line_ref, product=item, quantity=quantity)
             for option_dict in options:
                 line.attributes.create(line=line, option=option_dict['option'], value=option_dict['value'])
+
+    def add_discount(self, amount, description=None):
+        u"""
+        Adds a discount to this basket
+        """
+        self.discounts.append({'description': description, 'amount': amount})
     
     def merge_line(self, line):
         u"""

@@ -62,6 +62,12 @@ Your basket is currently empty - go and <a href="/shop/product/">buy something</
         <td>{{ line.line_price_incl_tax|currency }}</td>
     </tr>
     {% endfor %}
+    {% for discount in basket.discounts %}
+    <tr>
+        <td colspan="5">{{ discount.description }}</td>
+        <td colspan="5">-{{ discount.amount|currency }}</td>
+    </tr>
+    {% endfor %}
     <tr>
         <td colspan="4">Total</td>
         <td>{{ basket.total_excl_tax|currency }}</td>

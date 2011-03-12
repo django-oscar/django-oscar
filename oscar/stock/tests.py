@@ -12,7 +12,7 @@ class StockRecordTests(unittest.TestCase):
     def setUp(self):
         item_class,_ = ItemClass.objects.get_or_create(name='Dummy item class')
         p = Item.objects.create(title="Dummy product", item_class=item_class)
-        partner = Partner.objects.create(name='Dummy partner')
+        partner,_ = Partner.objects.get_or_create(name='Dummy partner')
         self.record = StockRecord.objects.create(product=p, partner_reference='dummy_ref_123', partner=partner,
                                                  price_excl_tax=D('10.00'))
    

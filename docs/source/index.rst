@@ -3,14 +3,18 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to django-oscar's documentation!
-========================================
+django-oscar - Domain-driven e-commerce for Django
+==================================================
 
-django-oscar is a flexible e-commerce platform, designed to build domain-driven
-ecommerce sites, that can handle any requirement.  
+django-oscar is a flexible e-commerce platform for Django, designed to build domain-driven
+ecommerce sites.  It differs from other e-commerce projects in that the core of django-oscar is kept
+quite small but extensible.  Any class within oscar can be subclassed and extended to customise
+the functionality available.  While this means that more work is required up-front to 
+set up the model, form and utility classes, the resulting project should be
+a much better representation of the domain at hand.
 
-It is developed by Tangent Labs, a London-based digital agency and is based on
-their existing Taoshop PHP platform which powers several large-scale ecommerce sites.  
+It is developed by Tangent Labs, a London-based digital agency, and is based on
+their existing Taoshop PHP platform which currently powers several large-scale ecommerce sites.  
 
 It is still in early development, but a stable release is planned for April 2011.
 
@@ -27,6 +31,7 @@ Contents:
    web_services
    recipes
    contributing
+   settings
 
 Indices and tables
 ==================
