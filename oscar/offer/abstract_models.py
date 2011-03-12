@@ -2,13 +2,15 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import ugettext as _
 
+from oscar.offer.managers import ActiveOfferManager
+
 
 class AbstractConditionalOffer(models.Model):
     u"""
     A conditional offer (eg buy 1, get 10% off)
     """
     name = models.CharField(max_length=128)
-    description = models.TextField(blank=True)
+    description = models.TextField(blank=True, null=True)
     condition = models.OneToOneField('offer.Condition')
     benefit = models.OneToOneField('offer.Benefit')
     start_date = models.DateField()
@@ -16,8 +18,17 @@ class AbstractConditionalOffer(models.Model):
     priority = models.IntegerField(default=0)
     date_created = models.DateTimeField(auto_now_add=True)
 
+    objects = models.Manager()
+    active = ActiveOfferManager()
+
     class Meta:
+        ordering = ['priority']
         abstract = True
+        
+    def is_active(self, test_date=None):
+        if not test_date:
+            test_date = datetime.date.today()
+        return self.start_date <= test_date and test_date < self.end_date
         
 
 class AbstractCondition(models.Model):

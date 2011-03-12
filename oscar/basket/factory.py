@@ -4,6 +4,7 @@ from django.conf import settings
 
 from oscar.services import import_module
 basket_models = import_module('basket.models', ['Basket', 'Line'])
+offer_utils = import_module('offer.utils', ['Applicator'])
 
 # Cookie keys
 COOKIE_KEY_OPEN_BASKET = 'oscar_open_basket'
@@ -63,11 +64,11 @@ class BasketFactory(object):
         else:
             # Only the cookie basket found - return it
             basket = anon_basket
-        self._apply_offers_to_basket(basket)
+        self._apply_offers_to_basket(request.user, basket)
         return basket 
     
-    def _apply_offers_to_basket(self, basket):
-        pass
+    def _apply_offers_to_basket(self, user, basket):
+        offer_utils.Applicator().get_discounts(basket)
     
     def _get_basket(self, request, cookie_key, manager):
         u"""Returns a basket object given a cookie key and manager."""

@@ -1,4 +1,5 @@
 from decimal import Decimal
+import datetime
 
 from django.utils import unittest
 from django.test.client import Client
@@ -70,47 +71,81 @@ class PercentageDiscountBenefitTest(OfferTest):
     
     def setUp(self):
         super(PercentageDiscountBenefitTest, self).setUp()
-        self.ben = PercentageDiscountBenefit(range=self.range, type="PercentageDiscount", value=Decimal('15.00'))
+        self.benefit = PercentageDiscountBenefit(range=self.range, type="PercentageDiscount", value=Decimal('15.00'))
         self.item = create_product(price=Decimal('5.00'))
     
     def test_no_discount_for_empty_basket(self):
-        self.assertEquals(Decimal('0.00'), self.ben.apply(self.basket))
+        self.assertEquals(Decimal('0.00'), self.benefit.apply(self.basket))
         
     def test_discount_for_single_item_basket(self):
         self.basket.add_product(self.item, 1)
-        self.assertEquals(Decimal('0.15') * Decimal('5.00'), self.ben.apply(self.basket))
+        self.assertEquals(Decimal('0.15') * Decimal('5.00'), self.benefit.apply(self.basket))
         
     def test_discount_for_multi_item_basket(self):
         self.basket.add_product(self.item, 3)
-        self.assertEquals(Decimal('3') * Decimal('0.15') * Decimal('5.00'), self.ben.apply(self.basket))
+        self.assertEquals(Decimal('3') * Decimal('0.15') * Decimal('5.00'), self.benefit.apply(self.basket))
         
     def test_discount_for_multi_item_basket_with_max_affected_items_set(self):
         self.basket.add_product(self.item, 3)
-        self.ben.max_affected_items = 1
-        self.assertEquals(Decimal('0.15') * Decimal('5.00'), self.ben.apply(self.basket))
+        self.benefit.max_affected_items = 1
+        self.assertEquals(Decimal('0.15') * Decimal('5.00'), self.benefit.apply(self.basket))
+        
+    def test_discount_can_only_be_applied_once(self):
+        self.basket.add_product(self.item, 3)
+        first_discount = self.benefit.apply(self.basket)
+        second_discount = self.benefit.apply(self.basket)
+        self.assertEquals(Decimal('0.00'), second_discount)
+        
+    def test_discount_can_be_applied_several_times_when_max_is_set(self):
+        self.basket.add_product(self.item, 3)
+        self.benefit.max_affected_items = 1
+        for i in range(1, 4):
+            self.assertTrue(self.benefit.apply(self.basket) > 0)
         
         
 class AbsoluteDiscountBenefitTest(OfferTest):
     
     def setUp(self):
         super(AbsoluteDiscountBenefitTest, self).setUp()
-        self.ben = AbsoluteDiscountBenefit(range=self.range, type="Absolute", value=Decimal('10.00'))
+        self.benefit = AbsoluteDiscountBenefit(range=self.range, type="Absolute", value=Decimal('10.00'))
         self.item = create_product(price=Decimal('5.00'))
     
     def test_no_discount_for_empty_basket(self):
-        self.assertEquals(Decimal('0.00'), self.ben.apply(self.basket))
+        self.assertEquals(Decimal('0.00'), self.benefit.apply(self.basket))
         
     def test_discount_for_single_item_basket(self):
         self.basket.add_product(self.item, 1)
-        self.assertEquals(Decimal('5.00'), self.ben.apply(self.basket))
+        self.assertEquals(Decimal('5.00'), self.benefit.apply(self.basket))
         
     def test_discount_for_multi_item_basket(self):
         self.basket.add_product(self.item, 3)
-        self.assertEquals(Decimal('10.00'), self.ben.apply(self.basket))
+        self.assertEquals(Decimal('10.00'), self.benefit.apply(self.basket))
         
     def test_discount_for_multi_item_basket_with_max_affected_items_set(self):
         self.basket.add_product(self.item, 3)
-        self.ben.max_affected_items = 1
-        self.assertEquals(Decimal('5.00'), self.ben.apply(self.basket))
+        self.benefit.max_affected_items = 1
+        self.assertEquals(Decimal('5.00'), self.benefit.apply(self.basket))
         
+    def test_discount_can_only_be_applied_once(self):
+        self.basket.add_product(self.item, 3)
+        first_discount = self.benefit.apply(self.basket)
+        second_discount = self.benefit.apply(self.basket)
+        self.assertEquals(Decimal('5.00'), second_discount)
+        
+    
+class ConditionalOfferTest(unittest.TestCase):
+   
+    def test_is_active(self):
+        start = datetime.date(2011, 01, 01)
+        test = datetime.date(2011, 01, 10)
+        end = datetime.date(2011, 02, 01)
+        offer = ConditionalOffer(start_date=start, end_date=end)
+        self.assertTrue(offer.is_active(test))
+       
+    def test_is_inactive(self):
+        start = datetime.date(2011, 01, 01)
+        test = datetime.date(2011, 03, 10)
+        end = datetime.date(2011, 02, 01)
+        offer = ConditionalOffer(start_date=start, end_date=end)
+        self.assertFalse(offer.is_active(test))
    

@@ -24,7 +24,7 @@ class CountCondition(Condition):
     def is_satisfied(self, basket):
         u"""Determines whether a given basket meets this condition"""
         num_matches = 0
-        for line in basket.lines.all():
+        for line in basket.all_lines():
             if self.range.contains_product(line.product):
                 num_matches += line.quantity
             if num_matches >= self.value:
@@ -44,7 +44,7 @@ class ValueCondition(Condition):
     def is_satisfied(self, basket):
         u"""Determines whether a given basket meets this condition"""
         value_of_matches = Decimal('0.00')
-        for line in basket.lines.all():
+        for line in basket.all_lines():
             if self.range.contains_product(line.product) and line.product.has_stockrecord:
                 price = getattr(line.product.stockrecord, self.price_field)
                 value_of_matches += price * line.quantity
@@ -55,6 +55,12 @@ class ValueCondition(Condition):
 
 class Benefit(AbstractBenefit):
     price_field = 'price_incl_tax'
+    
+    def _effective_max_affected_items(self):
+        max_affected_items = self.max_affected_items
+        if not self.max_affected_items:
+            max_affected_items = 10000
+        return max_affected_items
 
 
 class PercentageDiscountBenefit(Benefit):
@@ -68,18 +74,18 @@ class PercentageDiscountBenefit(Benefit):
     def apply(self, basket):
         discount = Decimal('0.00')
         affected_items = 0
-        max_affected_items = self.max_affected_items
-        if not self.max_affected_items:
-            max_affected_items = 10000
+        max_affected_items = self._effective_max_affected_items()
         
-        for line in basket.lines.all():
+        for line in basket.all_lines():
             if affected_items >= max_affected_items:
                 break
             if self.range.contains_product(line.product) and line.product.has_stockrecord:
-                 price = getattr(line.product.stockrecord, self.price_field)
-                 quantity = min(line.quantity, max_affected_items - affected_items)
-                 discount += self.value/100 * price * quantity
-                 affected_items += quantity
+                price = getattr(line.product.stockrecord, self.price_field)
+                quantity = min(line.quantity_without_discount, 
+                               max_affected_items - affected_items)
+                discount += self.value/100 * price * quantity
+                affected_items += quantity
+                line.discount(discount, quantity)
         return discount
 
 
@@ -94,20 +100,20 @@ class AbsoluteDiscountBenefit(Benefit):
     def apply(self, basket):
         discount = Decimal('0.00')
         affected_items = 0
-        max_affected_items = self.max_affected_items
-        if not self.max_affected_items:
-            max_affected_items = 10000
+        max_affected_items = self._effective_max_affected_items()
         
-        for line in basket.lines.all():
+        for line in basket.all_lines():
             if affected_items >= max_affected_items:
                 break
             if self.range.contains_product(line.product) and line.product.has_stockrecord:
                 price = getattr(line.product.stockrecord, self.price_field)
                 remaining_discount = self.value - discount
-                quantity = min(line.quantity, math.floor(remaining_discount / price), max_affected_items - affected_items)
+                quantity = min(line.quantity_without_discount, 
+                               math.floor(remaining_discount / price), 
+                               max_affected_items - affected_items)
                 discount += price * Decimal(str(quantity))
                 affected_items += quantity
-                 
+                line.discount(discount, quantity)
         return discount
 
 

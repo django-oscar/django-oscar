@@ -28,8 +28,9 @@ class AbstractBasket(models.Model):
     date_merged = models.DateTimeField(null=True, blank=True)
     date_submitted = models.DateTimeField(null=True, blank=True)
     
-    discounts = []
-
+    # Cached queryset of lines
+    _lines = None
+    
     class Meta:
         abstract = True
     
@@ -39,6 +40,11 @@ class AbstractBasket(models.Model):
     
     def __unicode__(self):
         return u"%s basket (owner: %s, lines: %d)" % (self.status, self.owner, self.num_lines)
+    
+    def all_lines(self):
+        if not self._lines:
+            self._lines = self.lines.all()
+        return self._lines    
     
     # ============    
     # Manipulation
@@ -172,6 +178,11 @@ class AbstractLine(models.Model):
     product = models.ForeignKey('product.Item', related_name='basket_lines')
     quantity = models.PositiveIntegerField(default=1)
     
+    # Instance variables used to persist discount information
+    _discount_field = 'price_excl_tax'
+    _discount = Decimal('0.00')
+    _affected_quantity = 0
+    
     class Meta:
         abstract = True
         unique_together = ("basket", "line_reference")
@@ -184,6 +195,10 @@ class AbstractLine(models.Model):
         if self.quantity == 0:
             return self.delete(*args, **kwargs)
         super(AbstractLine, self).save(*args, **kwargs)
+    
+    def discount(self, discount_value, affected_quantity):
+        self._discount += discount_value
+        self._affected_quantity += affected_quantity
     
     # =======
     # Helpers
@@ -198,6 +213,10 @@ class AbstractLine(models.Model):
     # ==========
     # Properties
     # ==========   
+    
+    @property
+    def quantity_without_discount(self):
+        return self.quantity - self._affected_quantity
     
     @property
     def unit_price_excl_tax(self):
