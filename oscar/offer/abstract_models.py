@@ -50,7 +50,11 @@ class AbstractBenefit(models.Model):
     )
     range = models.ForeignKey('offer.Range')
     type = models.CharField(max_length=128, choices=TYPE_CHOICES)
-    value = models.FloatField()
+    value = models.DecimalField(decimal_places=2, max_digits=12)
+    
+    # If this is not set, then there is no upper limit on how many products 
+    # can be discounted by this benefit.
+    max_affected_items = models.PositiveIntegerField(blank=True, null=True)
     
     def apply(self, basket):
         return basket

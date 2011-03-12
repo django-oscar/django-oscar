@@ -18,14 +18,14 @@ def create_product(price=None):
     return item
 
 
-class ConditionTest(unittest.TestCase):
+class OfferTest(unittest.TestCase):
     
     def setUp(self):
         self.range = Range(name="All products", includes_all_products=True)
         self.basket = Basket.objects.create()
 
 
-class CountConditionTest(ConditionTest):
+class CountConditionTest(OfferTest):
     
     def setUp(self):
         super(CountConditionTest, self).setUp()
@@ -43,7 +43,7 @@ class CountConditionTest(ConditionTest):
         self.assertTrue(self.cond.is_satisfied(self.basket))
         
     
-class ValueConditionTest(ConditionTest):
+class ValueConditionTest(OfferTest):
     
     def setUp(self):
         super(ValueConditionTest, self).setUp()
@@ -64,5 +64,53 @@ class ValueConditionTest(ConditionTest):
     def test_greater_than_basket_passes_condition(self):
         self.basket.add_product(self.item, 3)
         self.assertTrue(self.cond.is_satisfied(self.basket)) 
+        
+        
+class PercentageDiscountBenefitTest(OfferTest):
+    
+    def setUp(self):
+        super(PercentageDiscountBenefitTest, self).setUp()
+        self.ben = PercentageDiscountBenefit(range=self.range, type="PercentageDiscount", value=Decimal('15.00'))
+        self.item = create_product(price=Decimal('5.00'))
+    
+    def test_no_discount_for_empty_basket(self):
+        self.assertEquals(Decimal('0.00'), self.ben.apply(self.basket))
+        
+    def test_discount_for_single_item_basket(self):
+        self.basket.add_product(self.item, 1)
+        self.assertEquals(Decimal('0.15') * Decimal('5.00'), self.ben.apply(self.basket))
+        
+    def test_discount_for_multi_item_basket(self):
+        self.basket.add_product(self.item, 3)
+        self.assertEquals(Decimal('3') * Decimal('0.15') * Decimal('5.00'), self.ben.apply(self.basket))
+        
+    def test_discount_for_multi_item_basket_with_max_affected_items_set(self):
+        self.basket.add_product(self.item, 3)
+        self.ben.max_affected_items = 1
+        self.assertEquals(Decimal('0.15') * Decimal('5.00'), self.ben.apply(self.basket))
+        
+        
+class AbsoluteDiscountBenefitTest(OfferTest):
+    
+    def setUp(self):
+        super(AbsoluteDiscountBenefitTest, self).setUp()
+        self.ben = AbsoluteDiscountBenefit(range=self.range, type="Absolute", value=Decimal('10.00'))
+        self.item = create_product(price=Decimal('5.00'))
+    
+    def test_no_discount_for_empty_basket(self):
+        self.assertEquals(Decimal('0.00'), self.ben.apply(self.basket))
+        
+    def test_discount_for_single_item_basket(self):
+        self.basket.add_product(self.item, 1)
+        self.assertEquals(Decimal('5.00'), self.ben.apply(self.basket))
+        
+    def test_discount_for_multi_item_basket(self):
+        self.basket.add_product(self.item, 3)
+        self.assertEquals(Decimal('10.00'), self.ben.apply(self.basket))
+        
+    def test_discount_for_multi_item_basket_with_max_affected_items_set(self):
+        self.basket.add_product(self.item, 3)
+        self.ben.max_affected_items = 1
+        self.assertEquals(Decimal('5.00'), self.ben.apply(self.basket))
         
    
