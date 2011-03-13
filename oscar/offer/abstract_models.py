@@ -15,20 +15,41 @@ class AbstractConditionalOffer(models.Model):
     benefit = models.OneToOneField('offer.Benefit')
     start_date = models.DateField()
     end_date = models.DateField()
-    priority = models.IntegerField(default=0)
+    priority = models.IntegerField(default=0, help_text="The highest priority offers are applied first")
     date_created = models.DateTimeField(auto_now_add=True)
 
     objects = models.Manager()
     active = ActiveOfferManager()
 
     class Meta:
-        ordering = ['priority']
+        ordering = ['-priority']
         abstract = True
+        
+    def __unicode__(self):
+        return self.name    
         
     def is_active(self, test_date=None):
         if not test_date:
             test_date = datetime.date.today()
         return self.start_date <= test_date and test_date < self.end_date
+    
+    def is_condition_satisfied(self, basket):
+        return self._proxy_condition().is_satisfied(basket)
+        
+    def apply_benefit(self, basket):
+        return self._proxy_benefit().apply(basket)    
+        
+    def _proxy_condition(self):
+        u"""
+        Returns the appropriate proxy model for the condition
+        """
+        return self.condition
+    
+    def _proxy_benefit(self):
+        u"""
+        Returns the appropriate proxy model for the benefit
+        """
+        return self.benefit
         
 
 class AbstractCondition(models.Model):
@@ -43,6 +64,11 @@ class AbstractCondition(models.Model):
     
     class Meta:
         abstract = True
+    
+    def __unicode__(self):
+        if self.type == self.COUNT:
+            return u"Basket includes %d item(s) from %s" % (self.value, str(self.range).lower())
+        return u"Basket includes %.2f value from %s" % (self.value, str(self.range).lower())
     
     def is_satisfied(self, basket):
         """
@@ -65,7 +91,16 @@ class AbstractBenefit(models.Model):
     
     # If this is not set, then there is no upper limit on how many products 
     # can be discounted by this benefit.
-    max_affected_items = models.PositiveIntegerField(blank=True, null=True)
+    max_affected_items = models.PositiveIntegerField(blank=True, null=True, help_text="""Set this
+        to prevent the discount consuming all items within the range that are in the basket.""")
+    
+    class Meta:
+        abstract = True
+    
+    def __unicode__(self):
+        if self.type == self.PERCENTAGE:
+            return u"%s%% discount on %s" % (self.value, str(self.range).lower())
+        return u"%.2f discount on %s" % (self.value, str(self.range).lower())
     
     def apply(self, basket):
         return basket
@@ -79,6 +114,9 @@ class AbstractRange(models.Model):
     
     class Meta:
         abstract = True
+        
+    def __unicode__(self):
+        return self.name    
         
     def contains_product(self, product):
         if self.includes_all_products:

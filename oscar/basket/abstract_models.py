@@ -31,6 +31,8 @@ class AbstractBasket(models.Model):
     # Cached queryset of lines
     _lines = None
     
+    discounts = []
+    
     class Meta:
         abstract = True
     
@@ -52,7 +54,7 @@ class AbstractBasket(models.Model):
     
     def flush(self):
         u"""Remove all lines from basket."""
-        self.lines.all().delete()
+        self.lines_all().delete()
     
     def add_product(self, item, quantity=1, options=[]):
         u"""
@@ -71,11 +73,13 @@ class AbstractBasket(models.Model):
             for option_dict in options:
                 line.attributes.create(line=line, option=option_dict['option'], value=option_dict['value'])
 
-    def add_discount(self, amount, description=None):
+    def set_discounts(self, discounts):
         u"""
-        Adds a discount to this basket
+        Sets the discounts that apply to this basket.  
+        
+        This should be a list of dictionaries
         """
-        self.discounts.append({'description': description, 'amount': amount})
+        self.discounts = discounts
     
     def merge_line(self, line):
         u"""
@@ -97,7 +101,7 @@ class AbstractBasket(models.Model):
     
     def merge(self, basket):
         u"""Merges another basket with this one"""
-        for line_to_merge in basket.lines.all():
+        for line_to_merge in basket.all_lines():
             self.merge_line(line_to_merge)
         basket.status = MERGED
         basket.date_merged = datetime.datetime.now()
@@ -128,7 +132,7 @@ class AbstractBasket(models.Model):
         and returning the total.
         """
         total = Decimal('0.00')
-        for line in self.lines.all():
+        for line in self.all_lines():
             total += getattr(line, property)
         return total
     
@@ -144,7 +148,7 @@ class AbstractBasket(models.Model):
     @property
     def total_excl_tax(self):
         u"""Return total line price excluding tax"""
-        return self._get_total('line_price_excl_tax')
+        return self._get_total('line_price_excl_tax_and_discounts')
     
     @property
     def total_tax(self):
@@ -154,17 +158,17 @@ class AbstractBasket(models.Model):
     @property
     def total_incl_tax(self):
         u"""Return total price for a line including tax"""
-        return self._get_total('line_price_incl_tax')
+        return self._get_total('line_price_incl_tax_and_discounts')
     
     @property
     def num_lines(self):
         u"""Return number of lines"""
-        return self.lines.all().count()
+        return self.all_lines().count()
     
     @property
     def num_items(self):
         u"""Return number of items"""
-        return reduce(lambda num,line: num+line.quantity, self.lines.all(), 0)
+        return reduce(lambda num,line: num+line.quantity, self.all_lines(), 0)
     
     
 class AbstractLine(models.Model):
@@ -237,7 +241,12 @@ class AbstractLine(models.Model):
     def line_price_excl_tax(self):
         u"""Return line price excluding tax"""
         return self.quantity * self.unit_price_excl_tax
-       
+    
+    @property
+    def line_price_excl_tax_and_discounts(self):
+        ratio = self.unit_price_excl_tax / self.unit_price_incl_tax
+        return self.line_price_excl_tax - self._discount * ratio
+    
     @property    
     def line_tax(self):
         u"""Return line tax"""
@@ -247,6 +256,10 @@ class AbstractLine(models.Model):
     def line_price_incl_tax(self):
         u"""Return line price including tax"""
         return self.quantity * self.unit_price_incl_tax
+    
+    @property
+    def line_price_incl_tax_and_discounts(self):
+        return self.line_price_incl_tax - self._discount
     
     @property
     def description(self):

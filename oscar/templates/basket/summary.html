@@ -23,7 +23,7 @@ Your basket is currently empty - go and <a href="/shop/product/">buy something</
         <th>Line price excl tax</th>
         <th>Line price incl tax</th>
     </tr>
-    {% for line in basket.lines.all %}
+    {% for line in basket.all_lines %}
     <tr>
         <td><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></td>
         <td>
@@ -64,8 +64,8 @@ Your basket is currently empty - go and <a href="/shop/product/">buy something</
     {% endfor %}
     {% for discount in basket.discounts %}
     <tr>
-        <td colspan="5">{{ discount.description }}</td>
-        <td colspan="5">-{{ discount.amount|currency }}</td>
+        <td colspan="5">{{ discount.name }}</td>
+        <td colspan="5">-{{ discount.discount|currency }}</td>
     </tr>
     {% endfor %}
     <tr>

@@ -5,10 +5,6 @@ from oscar.offer.abstract_models import (AbstractConditionalOffer, AbstractCondi
                                          AbstractBenefit, AbstractRange)
 
 
-class ConditionalOffer(AbstractConditionalOffer):
-    pass
-
-
 class Condition(AbstractCondition):
     pass
 
@@ -116,6 +112,33 @@ class AbsoluteDiscountBenefit(Benefit):
                 line.discount(discount, quantity)
         return discount
 
+
+class ConditionalOffer(AbstractConditionalOffer):
+    
+    def _proxy_condition(self):
+        u"""
+        Returns the appropriate proxy model for the condition
+        """
+        field_dict = self.condition.__dict__
+        del field_dict['_state']
+        if self.condition.type == self.condition.COUNT:
+            return CountCondition(**field_dict)
+        elif self.condition.type == self.condition.VALUE:
+            return ValueCondition(**field_dict)
+        return self.condition
+    
+    def _proxy_benefit(self):
+        u"""
+        Returns the appropriate proxy model for the condition
+        """
+        field_dict = self.benefit.__dict__
+        del field_dict['_state']
+        if self.benefit.type == self.benefit.PERCENTAGE:
+            return PercentageDiscountBenefit(**field_dict)
+        elif self.benefit.type == self.benefit.FIXED:
+            return AbsoluteDiscountBenefit(**field_dict)
+        return self.benefit
+    
 
 class Range(AbstractRange):
     pass

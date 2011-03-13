@@ -68,7 +68,7 @@ class BasketFactory(object):
         return basket 
     
     def _apply_offers_to_basket(self, user, basket):
-        offer_utils.Applicator().get_discounts(basket)
+        offer_utils.Applicator().apply(basket)
     
     def _get_basket(self, request, cookie_key, manager):
         u"""Returns a basket object given a cookie key and manager."""

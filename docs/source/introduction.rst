@@ -3,14 +3,16 @@ Introduction
 
 Named after Oscar Peterson (http://en.wikipedia.org/wiki/Oscar_Peterson),
 django-oscar is a flexible ecommerce platform, designed to build domain-driven
-ecommerce sites to be constructed.  It is not supposed to be a framework that can
+ecommerce sites.  It is not supposed to be a framework that can
 be downloaded and fully set up by simply adjusting a configuration file: there
 will always be some developer work required to make sure the models match those
 from your domain - this is the nature of domain modelling.
 
-However, a small amount of work up front in determine the right models for your
+That said, a small amount of work up front in determine the right models for your
 shop can really pay off in terms of building a high-quality application that
-is a pleasure to work with and maintain.
+is a pleasure to work with and maintain.  It's better to extend core models with fields
+relevant to your domain that attempting to write code so "generic" that is can handle
+any situation.  This generally leads to a confusing mess.
 
 Aims of project
 ---------------
