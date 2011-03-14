@@ -18,7 +18,8 @@ Aims of project
 ---------------
 
 *   To be a portable Django application that provides ecommerce functionality.  
-*   To comprise a set of loosely coupled apps that can be overridden in projects (interdependence is on interfaces only)
+*   To comprise a set of loosely coupled apps that can be overridden in;
+    projects (interdependence is on interfaces only);
 *   To be highly customisable so any part of the core can be customised.
 
 The central aim is to provide a solid core of an ecommerce project that can be
@@ -51,13 +52,14 @@ configured) to suit the domain at hand.  This is acheived in several ways:
     for `Label`.  
 
 *   **Avoidance of the [Entity-Attribute-Value](http://en.wikipedia.org/wiki/Entity-attribute-value_model) pattern**. 
-    This technique of subclassing and extending
-    models avoids an over-reliance on the using the EAV pattern which is commonly used to store data and meta-data about 
-    domain objects.  
+    This technique of subclassing and extending models avoids an over-reliance
+    on the using the EAV pattern which is commonly used to store data and
+    meta-data about domain objects.  
 
-*   **Classes are loaded generically.**  To enable sub-apps to be overridden, oscar classes are loading generically
-    using a special `import_module` function.  This looks at the `INSTALLED_APPS` tuple to determine the appropriate
-    app to load a class from.
+*   **Classes are loaded generically.**  To enable sub-apps to be overridden,
+  oscar classes are loading generically using a special `import_module`
+  function.  This looks at the `INSTALLED_APPS` tuple to determine the
+  appropriate app to load a class from.
 
 *   **All core views are class-based.**  This enables any view to be subclassed and extended within your project.
 

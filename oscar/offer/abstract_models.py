@@ -37,7 +37,14 @@ class AbstractConditionalOffer(models.Model):
         return self._proxy_condition().is_satisfied(basket)
         
     def apply_benefit(self, basket):
-        return self._proxy_benefit().apply(basket)    
+        if not self.is_condition_satisfied(basket):
+            return Decimal('0.00')
+        discount = self._proxy_benefit().apply(basket, self._proxy_condition())
+        if discount > 0:
+            # We need to mark the minimal set of condition products
+            # as being unavailable for future offers.
+            self._proxy_condition().consume_items(basket)
+        return discount    
         
     def _proxy_condition(self):
         u"""
@@ -69,6 +76,9 @@ class AbstractCondition(models.Model):
         if self.type == self.COUNT:
             return u"Basket includes %d item(s) from %s" % (self.value, str(self.range).lower())
         return u"Basket includes %.2f value from %s" % (self.value, str(self.range).lower())
+    
+    def consume_items(self, basket):
+        pass
     
     def is_satisfied(self, basket):
         """
@@ -102,8 +112,8 @@ class AbstractBenefit(models.Model):
             return u"%s%% discount on %s" % (self.value, str(self.range).lower())
         return u"%.2f discount on %s" % (self.value, str(self.range).lower())
     
-    def apply(self, basket):
-        return basket
+    def apply(self, basket, condition=None):
+        return Decimal('0.00')
 
 
 class AbstractRange(models.Model):

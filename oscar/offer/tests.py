@@ -42,6 +42,11 @@ class CountConditionTest(OfferTest):
     def test_greater_quantity_basket_passes_condition(self):
         self.basket.add_product(create_product(), 3)
         self.assertTrue(self.cond.is_satisfied(self.basket))
+
+    def test_consumption(self):
+        self.basket.add_product(create_product(), 3)
+        self.cond.consume_items(self.basket)
+        self.assertEquals(1, self.basket.all_lines()[0].quantity_without_discount)
         
     
 class ValueConditionTest(OfferTest):
@@ -66,6 +71,11 @@ class ValueConditionTest(OfferTest):
         self.basket.add_product(self.item, 3)
         self.assertTrue(self.cond.is_satisfied(self.basket)) 
         
+    def test_consumption(self):
+        self.basket.add_product(self.item, 3)
+        self.cond.consume_items(self.basket)
+        self.assertEquals(1, self.basket.all_lines()[0].quantity_without_discount)
+
         
 class PercentageDiscountBenefitTest(OfferTest):
     

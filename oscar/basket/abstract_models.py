@@ -173,6 +173,7 @@ class AbstractBasket(models.Model):
     
 class AbstractLine(models.Model):
     u"""A line of a basket (product and a quantity)"""
+
     basket = models.ForeignKey('basket.Basket', related_name='lines')
     # This is to determine which products belong to the same line
     # We can't just use product.id as you can have customised products
@@ -203,7 +204,10 @@ class AbstractLine(models.Model):
     def discount(self, discount_value, affected_quantity):
         self._discount += discount_value
         self._affected_quantity += affected_quantity
-    
+        
+    def consume(self, quantity):
+        self._affected_quantity += quantity
+
     # =======
     # Helpers
     # =======

@@ -26,6 +26,19 @@ class CountCondition(Condition):
             if num_matches >= self.value:
                 return True
         return False
+    
+    def consume_items(self, basket):
+        u"""
+        Marks items within the basket lines as consumed so they
+        can't be reused in other offers.
+        """
+        num_consumed = 0
+        for line in basket.all_lines():
+            if self.range.contains_product(line.product):
+                quantity_to_consume = min(line.quantity_without_discount, self.value - num_consumed)
+                line.consume(quantity_to_consume)
+            if num_consumed == self.value:
+                return
         
         
 class ValueCondition(Condition):
@@ -47,6 +60,22 @@ class ValueCondition(Condition):
             if value_of_matches >= self.value:
                 return True
         return False
+    
+    def consume_items(self, basket):
+        u"""
+        Marks items within the basket lines as consumed so they
+        can't be reused in other offers.
+        """
+        value_of_matches = Decimal('0.00')
+        for line in basket.all_lines():
+            if self.range.contains_product(line.product) and line.product.has_stockrecord:
+                price = getattr(line.product.stockrecord, self.price_field)
+                quantity_to_consume = min(line.quantity_without_discount, 
+                                          math.floor((self.value - value_of_matches)/price))
+                value_of_matches += price * int(quantity_to_consume)
+                line.consume(quantity_to_consume)
+            if value_of_matches >= self.value:
+                return
 
 
 class Benefit(AbstractBenefit):
@@ -67,7 +96,7 @@ class PercentageDiscountBenefit(Benefit):
     class Meta:
         proxy = True
 
-    def apply(self, basket):
+    def apply(self, basket, condition=None):
         discount = Decimal('0.00')
         affected_items = 0
         max_affected_items = self._effective_max_affected_items()
@@ -93,7 +122,7 @@ class AbsoluteDiscountBenefit(Benefit):
     class Meta:
         proxy = True
 
-    def apply(self, basket):
+    def apply(self, basket, condition=None):
         discount = Decimal('0.00')
         affected_items = 0
         max_affected_items = self._effective_max_affected_items()
