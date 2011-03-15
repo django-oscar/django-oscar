@@ -22,6 +22,7 @@ Contents:
    :maxdepth: 2
 
    introduction
+   ecommerce_domain
    getting_started
    components
    web_services
