@@ -6,6 +6,7 @@ from django.test.client import Client
 from oscar.shipping.methods import FreeShipping, FixedPriceShipping
 from oscar.shipping.models import OrderAndItemLevelChargeMethod
 from oscar.basket.models import Basket
+from oscar.utils import create_product
 
 class FreeShippingTest(unittest.TestCase):
     
@@ -35,8 +36,18 @@ class OrderAndItemLevelChargeMethodTest(unittest.TestCase):
     
     def setUp(self):
         self.method = OrderAndItemLevelChargeMethod(price_per_order=D('5.00'), price_per_item=D('1.00'))
-        self.basket = Basket()
+        self.basket = Basket.objects.create()
         self.method.set_basket(self.basket)
     
     def test_order_level_charge_for_empty_basket(self):
         self.assertEquals(D('5.00'), self.method.basket_charge_incl_tax())
+        
+    def test_single_item_basket(self):
+        p = create_product()
+        self.basket.add_product(p)
+        self.assertEquals(D('5.00') + D('1.00'), self.method.basket_charge_incl_tax())
+        
+    def test_multi_item_basket(self):
+        p = create_product()
+        self.basket.add_product(p, 7)
+        self.assertEquals(D('5.00') + 7*D('1.00'), self.method.basket_charge_incl_tax())

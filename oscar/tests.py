@@ -13,7 +13,6 @@ from oscar.shipping.tests import *
 
 from oscar.services import import_module, AppNotFoundError
 
-
 class ImportAppTests(unittest.TestCase):
 
     def test_a_specified_class_is_imported_correctly(self):
