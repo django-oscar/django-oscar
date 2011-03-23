@@ -14,8 +14,6 @@ Products:
 - Introduce UPC field to product models
 
 Stock:
-- Store currency against stock row
-- Store RRP price
 - Maybe create another VatableStockRow model which is abstract but a subclass of StockRecord
   which handles UK scenarios
 - Create some tax calculators

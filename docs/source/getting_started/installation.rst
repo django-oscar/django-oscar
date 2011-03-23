@@ -11,37 +11,33 @@ Install pip and virtualenv (if you haven't already)::
     sudo pip install virtualenv virtualenvwrapper
     echo "source /usr/local/bin/virtualenvwrapper.sh" >> ~/.bashrc
 
-Create a new django project (this assume you have a version of django installed in your global site-packages)::
-
-    cd /path/to/my/workspace
-    django-admin startproject myshop
-
 Create a new virtual env::
 
-    mkvirtualenv --no-site-packages myshop
-
-A nice extension now is to edit your ``~/.virtualenv/myshop/bin/postactivate`` file to contain::
-
-    cd ~/path/to/myshop
+    mkvirtualenv --no-site-packages $PROJECTNAME
     
-so that you can simply type ``workon myshop`` to jump into your project folder with the virtual
-environment set-up.
-
-Install ``django-oscar``
-------------------------
-
-Install django-oscar using pip::
- 
+Install oscar and its dependencies::    
+    
     pip install -e git+git://github.com/codeinthehole/django-oscar.git#egg=django-oscar
+    
+This will install Django and a few other packages.  Now create the project    
+    
+    cd /path/to/my/workspace
+    django-admin.py startproject $PROJECTNAME
 
-Make the following changes to your ``settings.py``:
+A nice extension now is to edit your ``~/.virtualenv/$PROJECTNAME/bin/postactivate`` file to contain::
+
+    cd ~/path/to/my/workspace/$PROJECTNAME
+    
+so that you can simply type ``workon $PROJECTNAME`` to jump into your project folder with the virtual
+environment set-up.
 
 Configure settings
 ------------------
 
 * Add ``'django.middleware.transaction.TransactionMiddleware'`` to your ``MIDDLEWARE_CLASSES`` tuple, making 
   sure it comes BEFORE ``'django.contrib.auth.middleware.AuthenticationMiddleware'``.
-* Uncomment ``django.contrib.admin`` from ``INSTALLED_APPS``
+  
+* Uncomment ``django.contrib.admin`` from ``INSTALLED_APPS``.
 
 Add the following to your `INSTALLED_APPS`::
 
