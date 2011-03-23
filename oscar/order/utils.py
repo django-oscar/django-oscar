@@ -21,6 +21,9 @@ class OrderNumberGenerator(object):
 
 
 class OrderCreator(object):
+    u"""
+    Places the order by writing out the various models
+    """
     
     def __init__(self, order_total_calculator):
         self.order_total_calculator = order_total_calculator
@@ -34,7 +37,7 @@ class OrderCreator(object):
             generator = OrderNumberGenerator()
             order_number = generator.order_number(basket)
         order = self._create_order_model(user, basket, shipping_address, shipping_method, order_number)
-        for line in basket.lines.all():
+        for line in basket.all_lines():
             self._create_line_models(order, line)
         basket.set_as_submitted()
         return order
@@ -69,18 +72,20 @@ class OrderCreator(object):
                                                       partner=self._get_partner_for_product(basket_line.product),
                                                       product=basket_line.product, 
                                                       quantity=basket_line.quantity, 
-                                                      line_price_excl_tax=basket_line.line_price_excl_tax, 
-                                                      line_price_incl_tax=basket_line.line_price_incl_tax)
+                                                      line_price_excl_tax=basket_line.line_price_excl_tax_and_discounts, 
+                                                      line_price_incl_tax=basket_line.line_price_incl_tax_and_discounts)
         self._create_line_price_models(order, order_line, basket_line)
         self._create_line_attributes(order, order_line, basket_line)
         
     def _create_line_price_models(self, order, order_line, basket_line):
         u"""Creates the batch line price models"""
-        order_models.LinePrice.objects.create(order=order,
-                                                   line=order_line, 
-                                                   quantity=order_line.quantity, 
-                                                   price_incl_tax=basket_line.unit_price_incl_tax,
-                                                   price_excl_tax=basket_line.unit_price_excl_tax)
+        breakdown = basket_line.get_price_breakdown()
+        for price_incl_tax, price_excl_tax, quantity in breakdown:
+            order_models.LinePrice.objects.create(order=order,
+                                                  line=order_line, 
+                                                  quantity=quantity, 
+                                                  price_incl_tax=price_incl_tax,
+                                                  price_excl_tax=price_excl_tax)
     
     def _create_line_attributes(self, order, order_line, basket_line):
         u"""Creates the batch line attributes."""

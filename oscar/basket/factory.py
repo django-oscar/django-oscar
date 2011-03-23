@@ -80,6 +80,8 @@ class BasketFactory(object):
                 pass
         else:
             b = self._get_cookie_basket(request, cookie_key, manager)
+        if b:
+            self._apply_offers_to_basket(request.user, b)
         return b    
         
     def _get_cookie_basket(self, request, cookie_key, manager):

@@ -33,6 +33,12 @@
         <td>{{ line.line_price_incl_tax|currency }}</td>
     </tr>
     {% endfor %}
+    {% for discount in basket.discounts %}
+    <tr>
+        <td colspan="6">{{ discount.name }}</td>
+        <td colspan="6">-{{ discount.discount|currency }}</td>
+    </tr>
+    {% endfor %}
     <tr>
         <td colspan="5">Total</td>
         <td>{{ basket.total_excl_tax|currency }}</td>

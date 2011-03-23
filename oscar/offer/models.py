@@ -149,7 +149,8 @@ class ConditionalOffer(AbstractConditionalOffer):
         Returns the appropriate proxy model for the condition
         """
         field_dict = self.condition.__dict__
-        del field_dict['_state']
+        if '_state' in field_dict:
+            del field_dict['_state']
         if self.condition.type == self.condition.COUNT:
             return CountCondition(**field_dict)
         elif self.condition.type == self.condition.VALUE:
@@ -161,7 +162,8 @@ class ConditionalOffer(AbstractConditionalOffer):
         Returns the appropriate proxy model for the condition
         """
         field_dict = self.benefit.__dict__
-        del field_dict['_state']
+        if '_state' in field_dict:
+            del field_dict['_state']
         if self.benefit.type == self.benefit.PERCENTAGE:
             return PercentageDiscountBenefit(**field_dict)
         elif self.benefit.type == self.benefit.FIXED:

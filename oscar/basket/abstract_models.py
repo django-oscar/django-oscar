@@ -200,6 +200,10 @@ class AbstractLine(models.Model):
         if self.quantity == 0:
             return self.delete(*args, **kwargs)
         super(AbstractLine, self).save(*args, **kwargs)
+
+    # =============
+    # Offer methods
+    # =============
     
     def discount(self, discount_value, affected_quantity):
         self._discount += discount_value
@@ -207,6 +211,26 @@ class AbstractLine(models.Model):
         
     def consume(self, quantity):
         self._affected_quantity += quantity
+        
+    def get_price_breakdown(self):
+        u"""
+        Returns a breakdown of line prices after discounts have 
+        been applied.
+        """
+        prices = []
+        if not self.has_discount:
+            prices.append((self.unit_price_incl_tax, self.unit_price_excl_tax, self.quantity))
+        else:
+            # Need to split the discount among the affected quantity 
+            # of products.
+            item_incl_tax_discount = self._discount / self._affected_quantity
+            item_excl_tax_discount = item_incl_tax_discount * self._tax_ratio
+            prices.append((self.unit_price_incl_tax - item_incl_tax_discount, 
+                           self.unit_price_excl_tax - item_excl_tax_discount,
+                           self._affected_quantity))
+            if self.quantity_without_discount:
+                prices.append((self.unit_price_incl_tax, self.unit_price_excl_tax, self.quantity_without_discount))
+        return prices
 
     # =======
     # Helpers
@@ -218,13 +242,25 @@ class AbstractLine(models.Model):
         else:
             return getattr(self.product.stockrecord, property)
     
+    @property
+    def _tax_ratio(self):
+        return self.unit_price_excl_tax / self.unit_price_incl_tax
+    
     # ==========
     # Properties
     # ==========   
     
     @property
+    def has_discount(self):
+        return self.quantity > self.quantity_without_discount 
+    
+    @property
     def quantity_without_discount(self):
         return self.quantity - self._affected_quantity
+    
+    @property
+    def discount_value(self):
+        return self._discount
     
     @property
     def unit_price_excl_tax(self):
@@ -248,8 +284,7 @@ class AbstractLine(models.Model):
     
     @property
     def line_price_excl_tax_and_discounts(self):
-        ratio = self.unit_price_excl_tax / self.unit_price_incl_tax
-        return self.line_price_excl_tax - self._discount * ratio
+        return self.line_price_excl_tax - self._discount * self._tax_ratio
     
     @property    
     def line_tax(self):
