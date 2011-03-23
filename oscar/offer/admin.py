@@ -7,7 +7,7 @@ class ConditionAdmin(admin.ModelAdmin):
     list_display = ('type', 'value', 'range')
 
 class BenefitAdmin(admin.ModelAdmin):
-    list_display = ('type', 'value', 'range')
+    list_display = ('__unicode__', 'type', 'value', 'range')
     
 class ConditionalOfferAdmin(admin.ModelAdmin):
     list_display = ('name', 'start_date', 'end_date', 'condition', 'benefit')

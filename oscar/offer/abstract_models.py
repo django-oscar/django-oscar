@@ -111,8 +111,14 @@ class AbstractBenefit(models.Model):
     
     def __unicode__(self):
         if self.type == self.PERCENTAGE:
-            return u"%s%% discount on %s" % (self.value, str(self.range).lower())
-        return u"%.2f discount on %s" % (self.value, str(self.range).lower())
+            desc = u"%s%% discount on %s" % (self.value, str(self.range).lower())
+        else:
+            desc = u"%.2f discount on %s" % (self.value, str(self.range).lower())
+        if self.max_affected_items == 1:
+            desc += u" (max 1 item)"
+        elif self.max_affected_items > 1:
+            desc += u" (max %d items)" % self.max_affected_items
+        return desc
     
     def apply(self, basket, condition=None):
         return Decimal('0.00')
