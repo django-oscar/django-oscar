@@ -11,11 +11,11 @@ from oscar.services import import_module
 shipping_models = import_module('shipping.models', ['Method'])
 payment_models = import_module('payment.models', ['Source', 'SourceType'])
     
+    
 class ShippingMethodView(CoreShippingMethodView):
     
     def get_available_shipping_methods(self):
         codes = ['royal-mail-first-class']
-        # Only allow parcel force if dropship products are include
         for line in self.basket.lines.all():
             if line.product.stockrecord.partner_id == 2:
                 codes.append('parcel-force')

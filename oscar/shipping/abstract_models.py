@@ -8,7 +8,7 @@ from django.conf import settings
 from oscar.shipping.methods import ShippingMethod
 
 
-class AbstractMethod(models.Model, ShippingMethod):
+class AbstractOrderAndItemLevelChargeMethod(models.Model, ShippingMethod):
     u"""
     Standard shipping method
     
@@ -27,6 +27,8 @@ class AbstractMethod(models.Model, ShippingMethod):
     price_per_order = models.DecimalField(decimal_places=2, max_digits=12, default=Decimal('0.00'))
     price_per_item = models.DecimalField(decimal_places=2, max_digits=12, default=Decimal('0.00'))
     
+    _basket = None
+    
     def save(self, *args, **kwargs):
         if not self.code:
             self.code = slugify(self.name)
@@ -42,13 +44,18 @@ class AbstractMethod(models.Model, ShippingMethod):
         self._basket = basket
     
     def basket_charge_incl_tax(self):
-        u"""Return basket total including tax"""
+        u"""
+        Return basket total including tax
+        """
         charge = self.price_per_order
         for line in self._basket.lines.all():
             charge += line.quantity * self.price_per_item
         return charge
     
     def basket_charge_excl_tax(self):
-        u"""Return basket total excluding tax"""
-        # @todo store tax amounts?
+        u"""
+        Return basket total excluding tax.  
+        
+        Default implementation assumes shipping is tax free.
+        """
         return self.basket_charge_incl_tax()

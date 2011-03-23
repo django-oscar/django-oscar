@@ -10,9 +10,9 @@ from oscar.stock.tests import *
 from oscar.checkout.tests import *
 from oscar.payment.tests import *
 from oscar.offer.tests import *
+from oscar.shipping.tests import *
 
 from oscar.services import import_module, AppNotFoundError
-
 
 class ImportAppTests(unittest.TestCase):
 

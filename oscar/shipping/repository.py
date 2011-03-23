@@ -1,7 +1,7 @@
 from oscar.shipping.methods import FreeShipping
 from oscar.services import import_module
 
-shipping_models = import_module('shipping.models', ['Method'])
+shipping_models = import_module('shipping.models', ['OrderAndItemLevelChargeMethod'])
 
 
 class Repository(object):
@@ -19,7 +19,7 @@ class Repository(object):
         this behaviour can easily be overridden by subclassing this class
         and overriding this method.
         """ 
-        methods = shipping_models.Method.objects.all()
+        methods = shipping_models.OrderAndItemLevelChargeMethod.objects.all()
         if not methods.count():
             return [FreeShipping()]
         
@@ -33,4 +33,4 @@ class Repository(object):
         """
         if code == FreeShipping.code:
             return FreeShipping()
-        return shipping_models.Method.objects.get(code=code)          
+        return shipping_models.OrderAndItemLevelChargeMethod.objects.get(code=code)          
