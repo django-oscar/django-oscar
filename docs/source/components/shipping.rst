@@ -78,6 +78,6 @@ Simple really - follow these steps:
 
 1. Subclass ``oscar.shipping.methods.ShippingMethod`` and implement
    the methods ``basket_charge_incl_tax`` and ``basket_charge_excl_tax`` for calculating shipping costs.
-2  Override the default ``shipping.repository.Repository`` class and implement your domain logic
+2. Override the default ``shipping.repository.Repository`` class and implement your domain logic
    for determining which shipping methods are returned based on the user, basket and shipping address
    passed in.
