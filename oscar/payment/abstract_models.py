@@ -30,7 +30,12 @@ class AbstractSource(models.Model):
     
     
 class AbstractSourceType(models.Model):
-    u"""A type of payment source (eg Bankcard, Business account, Gift card)"""
+    u"""
+    A type of payment source.
+    
+    This could be an external partner like PayPal or DataCash,
+    or an internal source such as a managed account.i
+    """
     name = models.CharField(max_length=128)
     code = models.SlugField(max_length=128, help_text="""This is used within
         forms to identify this source type""")
