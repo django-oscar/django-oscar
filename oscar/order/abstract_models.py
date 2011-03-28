@@ -324,16 +324,16 @@ class ShippingEventQuantity(models.Model):
 
     def _check_previous_events_are_complete(self):
         u"""Checks whether previous shipping events have passed"""
-        previous_events = ShippingEventQuantity.objects.filter(line=self.line, 
-                                                               event__event_type__sequence_number__lt=self.event.event_type.sequence_number)
+        previous_events = ShippingEventQuantity._default_manager.filter(line=self.line, 
+                                                                        event__event_type__sequence_number__lt=self.event.event_type.sequence_number)
         self.quantity = int(self.quantity)
         for event_quantities in previous_events:
             if event_quantities.quantity < self.quantity:
                 raise ValueError("Invalid quantity (%d) for event type (a previous event has not been fully passed)" % self.quantity)
 
     def _check_new_quantity(self):
-        quantity_row = ShippingEventQuantity.objects.filter(line=self.line, 
-                                                            event__event_type=self.event.event_type).aggregate(Sum('quantity'))
+        quantity_row = ShippingEventQuantity._default_manager.filter(line=self.line, 
+                                                                     event__event_type=self.event.event_type).aggregate(Sum('quantity'))
         previous_quantity = quantity_row['quantity__sum']
         if previous_quantity == None:
             previous_quantity = 0

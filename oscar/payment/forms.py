@@ -175,7 +175,7 @@ class BillingAddressForm(forms.ModelForm):
         self.set_country_queryset() 
         
     def set_country_queryset(self):    
-        self.fields['country'].queryset = address_models.Country.objects.all()
+        self.fields['country'].queryset = address_models.Country._default_manager.all()
     
     class Meta:
         model = order_models.BillingAddress

@@ -13,7 +13,7 @@ class ShippingAddressForm(ModelForm):
         self.set_country_queryset() 
         
     def set_country_queryset(self):    
-        self.fields['country'].queryset = address_models.Country.objects.filter(is_shipping_country=True)
+        self.fields['country'].queryset = address_models.Country._default_manager.filter(is_shipping_country=True)
     
     class Meta:
         model = order_models.ShippingAddress

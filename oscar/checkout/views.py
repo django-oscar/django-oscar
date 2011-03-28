@@ -129,7 +129,7 @@ class CheckoutView(object):
             return order_models.ShippingAddress(**addr_data)
         addr_id = self.co_data.user_address_id()
         if addr_id:
-            return address_models.UserAddress.objects.get(pk=addr_id)
+            return address_models.UserAddress._default_manager.get(pk=addr_id)
         return None
     
     def get_success_response(self):
@@ -158,7 +158,7 @@ class ShippingAddressView(CheckoutView):
     
     def handle_POST(self):
         if self.request.user.is_authenticated and 'address_id' in self.request.POST:
-            address = address_models.UserAddress.objects.get(pk=self.request.POST['address_id'])
+            address = address_models.UserAddress._default_manager.get(pk=self.request.POST['address_id'])
             if 'action' in self.request.POST and self.request.POST['action'] == 'ship_to':
                 # User has selected a previous address to ship to
                 self.co_data.ship_to_user_address(address)
@@ -188,7 +188,7 @@ class ShippingAddressView(CheckoutView):
     
         # Look up address book data
         if self.request.user.is_authenticated():
-            self.context['addresses'] = address_models.UserAddress.objects.filter(user=self.request.user)
+            self.context['addresses'] = address_models.UserAddress._default_manager.filter(user=self.request.user)
         
         return render(self.request, self.template_file, self.context)
     
@@ -359,13 +359,13 @@ class PaymentDetailsView(CheckoutView):
             # Check that this address isn't already in the db as we don't want
             # to fill up the customer address book with duplicate addresses
             try:
-                duplicate_addr = address_models.UserAddress.objects.get(hash=user_addr.generate_hash())
+                duplicate_addr = address_models.UserAddress._default_manager.get(hash=user_addr.generate_hash())
             except ObjectDoesNotExist:
                 user_addr.save()
     
     def _create_shipping_address_from_user_address(self, addr_id):
         u"""Creates a shipping address from a user address"""
-        address = address_models.UserAddress.objects.get(pk=addr_id)
+        address = address_models.UserAddress._default_manager.get(pk=addr_id)
         # Increment the number of orders to help determine popularity of orders 
         address.num_orders += 1
         address.save()
@@ -380,7 +380,7 @@ class ThankYouView(object):
     
     def __call__(self, request):
         try:
-            order = order_models.Order.objects.get(pk=request.session['checkout_order_id'])
+            order = order_models.Order._default_manager.get(pk=request.session['checkout_order_id'])
             
             # Remove order number from session 
             del request.session['checkout_order_id']

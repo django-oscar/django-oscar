@@ -20,7 +20,7 @@ class OrderListView(ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        return order_models.Order.objects.all()
+        return order_models.Order._default_manager.all()
     
   
 class OrderView(ModelView):
@@ -32,8 +32,8 @@ class OrderView(ModelView):
         return get_object_or_404(order_models.Order, number=self.kwargs['order_number'])
     
     def handle_GET(self, order):
-        shipping_options = order_models.ShippingEventType.objects.all()
-        payment_options = order_models.PaymentEventType.objects.all()
+        shipping_options = order_models.ShippingEventType._default_manager.all()
+        payment_options = order_models.PaymentEventType._default_manager.all()
         
         self.response = render(self.request, self.template_file, locals())
         
@@ -60,21 +60,21 @@ class OrderView(ModelView):
     def create_shipping_event(self, order, lines):
         u"""Create a shipping event for an order"""
         with transaction.commit_on_success():
-            event_type = order_models.ShippingEventType.objects.get(code=self.request.POST['shipping_event'])
-            event = order_models.ShippingEvent.objects.create(order=order, event_type=event_type)
+            event_type = order_models.ShippingEventType._default_manager.get(code=self.request.POST['shipping_event'])
+            event = order_models.ShippingEvent._default_manager.create(order=order, event_type=event_type)
             for line in lines:
                 try:
                     event_quantity = int(self.request.POST['order_line_quantity_%d' % line.id])
                 except KeyError:
                     event_quantity = line.quantity
-                order_models.ShippingEventQuantity.objects.create(event=event, line=line, 
+                order_models.ShippingEventQuantity._default_manager.create(event=event, line=line, 
                                                                   quantity=event_quantity)
             
     def create_payment_event(self, order, lines, type_code):
         u"""Create a payment event for an order"""
-        event_type = order_models.PaymentEventType.objects.get(code=type_code)
+        event_type = order_models.PaymentEventType._default_manager.get(code=type_code)
         for line in lines.values():
-            order_models.PaymentEvent.objects.create(order=order, line=line, 
+            order_models.PaymentEvent._default_manager.create(order=order, line=line, 
                                                      quantity=line.quantity, event_type=event_type)
             
     def do_add_note(self, order):
@@ -83,7 +83,7 @@ class OrderView(ModelView):
             message = self.request.POST['message'].strip()
             if message:
                 messages.info(self.request, "Message added")
-                order_models.OrderNote.objects.create(order=order, message=self.request.POST['message'],
+                order_models.OrderNote._default_manager.create(order=order, message=self.request.POST['message'],
                                                          user=self.request.user)
             else:
                 messages.info(self.request, "Please enter a message")
