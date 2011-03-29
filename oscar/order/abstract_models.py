@@ -144,6 +144,10 @@ class AbstractLine(models.Model):
     line_price_incl_tax = models.DecimalField(decimal_places=2, max_digits=12)
     line_price_excl_tax = models.DecimalField(decimal_places=2, max_digits=12)
     
+    # Cost price (the price charged by the fulfilment partner for this product).  This
+    # is useful for audit and financial reporting.
+    cost_price = models.DecimalField(decimal_places=2, max_digits=12, blank=True, null=True)
+    
     # Partner information
     partner_reference = models.CharField(_("Partner reference"), max_length=128, blank=True, null=True,
         help_text=_("This is the item number that the partner uses within their system"))
