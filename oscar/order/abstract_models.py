@@ -136,9 +136,16 @@ class AbstractLine(models.Model):
     information when it splits across a line.
     """
     order = models.ForeignKey('order.Order', related_name='lines')
+    
+    # We store the partner and their SKU for cases where the product has been
+    # deleted from the catalogue.
     partner = models.ForeignKey('stock.Partner', related_name='order_lines')
-    product = models.ForeignKey('product.Item')
+    partner_reference = models.CharField(_("Partner reference"), max_length=128, blank=True, null=True)
+    
+    # We don't want any hard links between orders and the products table
+    product = models.ForeignKey('product.Item', on_delete=models.SET_NULL, null=True)
     quantity = models.PositiveIntegerField(default=1)
+    
     # Price information (these fields are actually redundant as the information
     # can be calculated from the LinePrice models
     line_price_incl_tax = models.DecimalField(decimal_places=2, max_digits=12)
@@ -149,9 +156,9 @@ class AbstractLine(models.Model):
     cost_price = models.DecimalField(decimal_places=2, max_digits=12, blank=True, null=True)
     
     # Partner information
-    partner_reference = models.CharField(_("Partner reference"), max_length=128, blank=True, null=True,
+    partner_line_reference = models.CharField(_("Partner reference"), max_length=128, blank=True, null=True,
         help_text=_("This is the item number that the partner uses within their system"))
-    partner_notes = models.TextField(blank=True, null=True)
+    partner_line_notes = models.TextField(blank=True, null=True)
     
     @property
     def description(self):
