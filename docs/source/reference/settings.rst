@@ -23,9 +23,9 @@ OSCAR_BASKET_COOKIE_LIFETIME
 
 Default: 604800 (1 week in seconds)
 
-The time to live for the basket cookie.
+The time to live for the basket cookie in seconds
 
-Deprecated Settings
+Deprecated settings
 ===================
 
 There are currently no deprecated settings in oscar

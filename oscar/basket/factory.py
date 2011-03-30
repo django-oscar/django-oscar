@@ -11,7 +11,7 @@ COOKIE_KEY_SAVED_BASKET = 'oscar_saved_basket'
 
 try:
     # The lifetime for the basket cookie can be set in settings.py
-    COOKIE_LIFETIME = settings.BASKET_COOKIE_LIFETIME
+    COOKIE_LIFETIME = settings.OSCAR_BASKET_COOKIE_LIFETIME
 except AttributeError: 
     COOKIE_LIFETIME = 7*24*60*60
 
