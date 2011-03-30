@@ -145,6 +145,32 @@ class AbsoluteDiscountBenefitTest(OfferTest):
         second_discount = self.benefit.apply(self.basket)
         self.assertEquals(Decimal('5.00'), second_discount)
         
+        
+class MultibuyDiscountBenefitTest(OfferTest):
+    
+    def setUp(self):
+        super(MultibuyDiscountBenefitTest, self).setUp()
+        self.benefit = MultibuyDiscountBenefit(range=self.range, type="Multibuy", value=1)
+        self.item = create_product(price=Decimal('5.00'))
+    
+    def test_no_discount_for_empty_basket(self):
+        self.assertEquals(Decimal('0.00'), self.benefit.apply(self.basket))
+        
+    def test_discount_for_single_item_basket(self):
+        self.basket.add_product(self.item, 1)
+        self.assertEquals(Decimal('5.00'), self.benefit.apply(self.basket)) 
+        
+    def test_discount_for_multi_item_basket(self):
+        self.basket.add_product(self.item, 3)
+        self.assertEquals(Decimal('5.00'), self.benefit.apply(self.basket))   
+        
+    def test_discount_consumes_item(self):
+        self.basket.add_product(self.item, 1)
+        first_discount = self.benefit.apply(self.basket)
+        self.assertEquals(Decimal('5.00'), first_discount)
+        second_discount = self.benefit.apply(self.basket)
+        self.assertEquals(Decimal('0.00'), second_discount)
+        
     
 class ConditionalOfferTest(unittest.TestCase):
    
@@ -161,4 +187,7 @@ class ConditionalOfferTest(unittest.TestCase):
         end = datetime.date(2011, 02, 01)
         offer = ConditionalOffer(start_date=start, end_date=end)
         self.assertFalse(offer.is_active(test))
+        
+    
+    
    

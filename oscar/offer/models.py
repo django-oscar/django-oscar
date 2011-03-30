@@ -77,6 +77,9 @@ class ValueCondition(Condition):
             if value_of_matches >= self.value:
                 return
 
+# ========
+# Benefits
+# ========
 
 class Benefit(AbstractBenefit):
     price_field = 'price_incl_tax'
@@ -140,6 +143,30 @@ class AbsoluteDiscountBenefit(Benefit):
                 affected_items += quantity
                 line.discount(discount, quantity)
         return discount
+
+
+class MultibuyDiscountBenefit(Benefit):
+    
+    class Meta:
+        proxy = True
+    
+    def apply(self, basket, condition=True):
+        # We want cheapest item not in an offer and that becomes the discount
+        discount = Decimal('0.00')
+        line = self._get_cheapest_line(basket)
+        if line:
+            discount = getattr(line.product.stockrecord, self.price_field)
+            line.discount(discount, 1)
+        return discount
+    
+    def _get_cheapest_line(self, basket):
+        min_price = Decimal('10000.00')
+        cheapest_line = None
+        for line in basket.all_lines():
+            if line.quantity_without_discount > 0 and getattr(line.product.stockrecord, self.price_field) < min_price:
+                min_price = getattr(line.product.stockrecord, self.price_field)
+                cheapest_line = line
+        return cheapest_line
 
 
 class ConditionalOffer(AbstractConditionalOffer):

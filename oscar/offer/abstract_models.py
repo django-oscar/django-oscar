@@ -92,10 +92,11 @@ class AbstractCondition(models.Model):
     
 
 class AbstractBenefit(models.Model):
-    PERCENTAGE, FIXED = ("Percentage", "Absolute")
+    PERCENTAGE, FIXED, MULTIBUY = ("Percentage", "Absolute", "Multibuy")
     TYPE_CHOICES = (
         (PERCENTAGE, _("Discount is a % of the product's value")),
         (FIXED, _("Discount is a fixed amount off the product's value")),
+        (MULTIBUY, _("Discount is to give the cheapest product for free"))
     )
     range = models.ForeignKey('offer.Range')
     type = models.CharField(max_length=128, choices=TYPE_CHOICES)
