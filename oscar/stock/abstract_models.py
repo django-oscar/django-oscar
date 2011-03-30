@@ -37,6 +37,9 @@ class AbstractStockRecord(models.Model):
     # This is the base price for calculations
     price_excl_tax = models.DecimalField(decimal_places=2, max_digits=12)
     
+    # Cost price is optional as not all partner supply it
+    cost_price = models.DecimalField(decimal_places=2, max_digits=12, blank=True, null=True)
+    
     # Stock level information
     num_in_stock = models.IntegerField(default=0)
     num_allocated = models.IntegerField(default=0)

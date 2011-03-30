@@ -19,7 +19,7 @@ class Repository(object):
         this behaviour can easily be overridden by subclassing this class
         and overriding this method.
         """ 
-        methods = shipping_models.OrderAndItemLevelChargeMethod.objects.all()
+        methods = shipping_models.OrderAndItemLevelChargeMethod._default_manager.all()
         if not methods.count():
             return [FreeShipping()]
         
@@ -33,4 +33,4 @@ class Repository(object):
         """
         if code == FreeShipping.code:
             return FreeShipping()
-        return shipping_models.OrderAndItemLevelChargeMethod.objects.get(code=code)          
+        return shipping_models.OrderAndItemLevelChargeMethod._default_manager.get(code=code)          

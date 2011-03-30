@@ -136,18 +136,29 @@ class AbstractLine(models.Model):
     information when it splits across a line.
     """
     order = models.ForeignKey('order.Order', related_name='lines')
+    
+    # We store the partner and their SKU for cases where the product has been
+    # deleted from the catalogue.
     partner = models.ForeignKey('stock.Partner', related_name='order_lines')
-    product = models.ForeignKey('product.Item')
+    partner_reference = models.CharField(_("Partner reference"), max_length=128, blank=True, null=True)
+    
+    # We don't want any hard links between orders and the products table
+    product = models.ForeignKey('product.Item', on_delete=models.SET_NULL, null=True)
     quantity = models.PositiveIntegerField(default=1)
+    
     # Price information (these fields are actually redundant as the information
     # can be calculated from the LinePrice models
     line_price_incl_tax = models.DecimalField(decimal_places=2, max_digits=12)
     line_price_excl_tax = models.DecimalField(decimal_places=2, max_digits=12)
     
+    # Cost price (the price charged by the fulfilment partner for this product).  This
+    # is useful for audit and financial reporting.
+    cost_price = models.DecimalField(decimal_places=2, max_digits=12, blank=True, null=True)
+    
     # Partner information
-    partner_reference = models.CharField(_("Partner reference"), max_length=128, blank=True, null=True,
+    partner_line_reference = models.CharField(_("Partner reference"), max_length=128, blank=True, null=True,
         help_text=_("This is the item number that the partner uses within their system"))
-    partner_notes = models.TextField(blank=True, null=True)
+    partner_line_notes = models.TextField(blank=True, null=True)
     
     @property
     def description(self):
@@ -324,16 +335,16 @@ class ShippingEventQuantity(models.Model):
 
     def _check_previous_events_are_complete(self):
         u"""Checks whether previous shipping events have passed"""
-        previous_events = ShippingEventQuantity.objects.filter(line=self.line, 
-                                                               event__event_type__sequence_number__lt=self.event.event_type.sequence_number)
+        previous_events = ShippingEventQuantity._default_manager.filter(line=self.line, 
+                                                                        event__event_type__sequence_number__lt=self.event.event_type.sequence_number)
         self.quantity = int(self.quantity)
         for event_quantities in previous_events:
             if event_quantities.quantity < self.quantity:
                 raise ValueError("Invalid quantity (%d) for event type (a previous event has not been fully passed)" % self.quantity)
 
     def _check_new_quantity(self):
-        quantity_row = ShippingEventQuantity.objects.filter(line=self.line, 
-                                                            event__event_type=self.event.event_type).aggregate(Sum('quantity'))
+        quantity_row = ShippingEventQuantity._default_manager.filter(line=self.line, 
+                                                                     event__event_type=self.event.event_type).aggregate(Sum('quantity'))
         previous_quantity = quantity_row['quantity__sum']
         if previous_quantity == None:
             previous_quantity = 0

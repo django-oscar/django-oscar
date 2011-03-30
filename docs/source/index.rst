@@ -32,7 +32,7 @@ Contents:
    web_services
    recipes
    contributing
-   settings
+   reference
 
 Indices and tables
 ==================

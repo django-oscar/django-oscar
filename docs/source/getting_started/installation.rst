@@ -63,3 +63,15 @@ A vanilla install of django-oscar is now ready, you could now finish the process
 
 However, in reality you will need to start extending the models to match your domain.  It's best to do
 this before creating your initial schema.
+
+Configure urls
+--------------
+
+Oscar comes with a number of urls and views out of the box.  These are
+recommendations rather than a requirement but you easily use them in your
+e-commerce site by adding the oscar urls to your projects local ``urls.py``
+
+    (r'^', include('oscar.urls')),
+
+This will bring in all of oscar's defined urls. Of course you can pull in the
+urls for the individual apps if you prefer or simply define your own

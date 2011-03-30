@@ -10,12 +10,6 @@ Guidelines
 * Pull requests will be rejected if sufficient tests aren't provided
 * Please updated the documentation when altering behaviour or introducing new features 
 
-Coding conventions
-------------------
-
-* Follow the Django conventions (http://docs.djangoproject.com/en/dev/internals/contributing/#coding-style)
-* PEP8 (http://www.python.org/dev/peps/pep-0008/)
-* PEP257 (http://www.python.org/dev/peps/pep-0257/)
 
 Contents:
 
@@ -24,3 +18,4 @@ Contents:
 
    contributing/installation
    contributing/testing
+   contributing/conventions

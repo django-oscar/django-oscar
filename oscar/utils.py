@@ -6,9 +6,9 @@ def create_product(price=None):
     Helper method for creating products that are used in 
     tests.
     """
-    ic,_ = ItemClass.objects.get_or_create(name="Dummy item class")
-    item = Item.objects.create(title="Dummy product", item_class=ic)
+    ic,_ = ItemClass._default_manager.get_or_create(name="Dummy item class")
+    item = Item._default_manager.create(title="Dummy product", item_class=ic)
     if price:
-        partner,_ = Partner.objects.get_or_create(name="Dummy partner")
-        sr = StockRecord.objects.create(product=item, partner=partner, price_excl_tax=price)
+        partner,_ = Partner._default_manager.get_or_create(name="Dummy partner")
+        sr = StockRecord._default_manager.create(product=item, partner=partner, price_excl_tax=price)
     return item
