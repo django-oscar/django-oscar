@@ -28,6 +28,7 @@ Contents:
    web_services
    recipes
    contributing
+   reference
 
 Indices and tables
 ==================
