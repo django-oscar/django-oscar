@@ -134,7 +134,8 @@ class AbsoluteDiscountBenefit(Benefit):
                 price = getattr(line.product.stockrecord, self.price_field)
                 remaining_discount = self.value - discount
                 quantity = min(line.quantity_without_discount, 
-                               max_affected_items - affected_items)
+                               max_affected_items - affected_items,
+                               math.floor(remaining_discount / price))
                 discount += price * Decimal(str(quantity))
                 affected_items += quantity
                 line.discount(discount, quantity)

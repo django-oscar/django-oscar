@@ -137,8 +137,11 @@ class AbsoluteDiscountBenefitTest(OfferTest):
         self.assertEquals(Decimal('5.00'), self.benefit.apply(self.basket))
         
     def test_discount_can_only_be_applied_once(self):
+        # Add 3 items to make total 15.00
         self.basket.add_product(self.item, 3)
         first_discount = self.benefit.apply(self.basket)
+        self.assertEquals(Decimal('10.00'), first_discount)
+        
         second_discount = self.benefit.apply(self.basket)
         self.assertEquals(Decimal('5.00'), second_discount)
         
