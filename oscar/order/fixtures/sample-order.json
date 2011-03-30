@@ -39,7 +39,7 @@
         "model": "order.line", 
         "fields": {
 			"partner": 1,
-            "partner_notes": null, 
+            "partner_line_notes": null, 
             "product": 8, 
             "line_price_excl_tax": "69.90", 
             "partner_reference": null, 
@@ -53,7 +53,7 @@
         "model": "order.line", 
         "fields": {
 			"partner": 1,
-            "partner_notes": null, 
+            "partner_line_notes": null, 
             "product": 9, 
             "line_price_excl_tax": "68.80", 
             "partner_reference": null, 
