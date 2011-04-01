@@ -68,6 +68,7 @@ class OrderCreator(object):
         order_line = order_models.Line(order=order,
                                       partner=self._get_partner_for_product(basket_line.product),
                                       product=basket_line.product, 
+                                      title=basket_line.product.get_title(),
                                       quantity=basket_line.quantity, 
                                       line_price_excl_tax=basket_line.line_price_excl_tax, 
                                       line_price_incl_tax=basket_line.line_price_incl_tax)
