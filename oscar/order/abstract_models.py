@@ -16,6 +16,7 @@ class AbstractOrder(models.Model):
     user = models.ForeignKey(User, related_name='orders', null=True, blank=True)
     # Billing address is not always required (eg paying by gift card)
     billing_address = models.ForeignKey('order.BillingAddress', null=True, blank=True)
+    
     # Total price looks like it could be calculated by adding up the
     # prices of the associated lines, but in some circumstances extra
     # order-level charges are added and so we need to store it separately
@@ -41,6 +42,20 @@ class AbstractOrder(models.Model):
     def basket_total_excl_tax(self):
         u"""Return basket total excluding tax"""
         return self.total_excl_tax - self.shipping_excl_tax
+    
+    @property
+    def num_lines(self):
+        return self.lines.count()
+    
+    @property
+    def num_items(self):
+        u"""
+        Returns the number of items in this order.
+        """
+        num_items = 0
+        for line in self.lines.all():
+            num_items += line.quantity
+        return num_items
     
     @property
     def shipping_status(self):

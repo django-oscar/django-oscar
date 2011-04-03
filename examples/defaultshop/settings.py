@@ -103,6 +103,7 @@ INSTALLED_APPS = (
     #'debug_toolbar',
     # Apps from oscar
     'oscar',
+    'oscar.analytics',
     'oscar.order',
     'oscar.checkout',
     'oscar.shipping',

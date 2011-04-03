@@ -18,9 +18,6 @@ Stock:
   which handles UK scenarios
 - Create some tax calculators
 
-Orders:
-- Delivery calculators
-
 Basket:
 - Required attributes
 

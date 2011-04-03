@@ -9,24 +9,37 @@ from django.views.generic import ListView, DetailView
 from oscar.services import import_module
 
 product_models = import_module('product.models', ['Item', 'ItemClass'])
+product_signals = import_module('product.signals', ['product_viewed'])
 basket_forms = import_module('basket.forms', ['FormFactory'])
 
 
 class ItemDetailView(DetailView):
     u"""View a single product."""
     template_name = "product/item.html"
+    _item = None
     
     def get(self, request, **kwargs):
-        u"""Return a product's detail or a 404"""
+        u"""
+        Ensures that the correct URL is used
+        """
         item = self.get_object()
         correct_path = item.get_absolute_url() 
         if correct_path != request.path:
             return HttpResponsePermanentRedirect(correct_path)
+        
+        # Send signal to record the view of this product
+        product_signals.product_viewed.send(sender=self, product=item, user=self.request.user)
+        
         return super(ItemDetailView, self).get(request, **kwargs)
     
     def get_object(self):
-        u"""Return a product object or a 404"""
-        return get_object_or_404(product_models.Item, pk=self.kwargs['item_id'])
+        u"""
+        Return a product object or a 404.
+        
+        We cache the object as this method gets called twice."""
+        if not self._item:
+            self._item = get_object_or_404(product_models.Item, pk=self.kwargs['item_id'])
+        return self._item
     
     def get_context_data(self, **kwargs):
         context = super(ItemDetailView, self).get_context_data(**kwargs)
