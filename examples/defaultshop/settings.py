@@ -71,6 +71,11 @@ TEMPLATE_LOADERS = (
 #     'django.template.loaders.eggs.Loader',
 )
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'oscar.marketing.context_processors.banners',
+    'django.contrib.auth.context_processors.auth',
+)
+
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -115,7 +120,8 @@ INSTALLED_APPS = (
     'oscar.address',
     'oscar.stock',
     'oscar.image',
-    'oscar.customer'
+    'oscar.customer',
+    'oscar.marketing',
 )
 
 LOGIN_REDIRECT_URL = '/shop/accounts/profile/'

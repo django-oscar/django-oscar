@@ -17,10 +17,19 @@
             <a href="">Login</a>
             {% endif %}
             
+            {% if banner %}
+                {% if banner.has_link %}
+                    <a href="{{ banner.link_url }}" title="{{ banner.name }}"><img src="{{ banner.image.url }}" alt="{{ banner.name }}" /></a>
+                {% else %}
+                    <img src="{{ banner.image.url }}" alt="{{ banner.name }}" />
+                {% endif %}
+            {% endif %}
+            
             {% block header %}
             {% endblock %}
         </div>
         <div id="content">
+        
         {% if messages %}
         <ul class="messages">
             {% for message in messages %}
