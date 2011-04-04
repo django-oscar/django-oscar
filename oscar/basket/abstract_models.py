@@ -16,7 +16,7 @@ OPEN, MERGED, SAVED, SUBMITTED = ("Open", "Merged", "Saved", "Submitted")
 class AbstractBasket(models.Model):
     u"""Basket object"""
     # Baskets can be anonymously owned (which are merged if the user signs in)
-    owner = models.ForeignKey(User, related_name='baskets', null=True)
+    owner = models.ForeignKey('auth.User', related_name='baskets', null=True)
     STATUS_CHOICES = (
         (OPEN, _("Open - currently active")),
         (MERGED, _("Merged - superceded by another basket")),
@@ -180,6 +180,7 @@ class AbstractLine(models.Model):
     # which should be treated as separate lines.  Set as a 
     # SlugField as it is included in the path for certain views.
     line_reference = models.SlugField(max_length=128, db_index=True)
+    
     product = models.ForeignKey('product.Item', related_name='basket_lines')
     quantity = models.PositiveIntegerField(default=1)
     

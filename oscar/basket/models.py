@@ -1,6 +1,5 @@
 from exceptions import Exception
 
-from django.db.models.signals import pre_save
 from django.core.signals import request_finished
 from django.dispatch import receiver
 

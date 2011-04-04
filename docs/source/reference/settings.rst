@@ -25,6 +25,21 @@ Default: 604800 (1 week in seconds)
 
 The time to live for the basket cookie in seconds
 
+OSCAR_FULLSIZE_IMAGE_FOLDER
+---------------------------
+
+Default: images/products-fullsize/%Y/%m/ 
+
+The path for uploading fullsize images to.
+
+OSCAR_THUMBS_IMAGE_FOLDER
+---------------------------
+
+Default: images/products-thumbs/%Y/%m/ 
+
+The path for uploading fullsize thumbnails to.
+
+
 Deprecated settings
 ===================
 

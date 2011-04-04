@@ -1,4 +1,6 @@
 from django.conf.urls.defaults import *
+from django.conf import settings
+
 from oscar.views import home
 
 urlpatterns = patterns('',
@@ -9,3 +11,9 @@ urlpatterns = patterns('',
     (r'accounts/', include('oscar.customer.urls')),
     (r'^$', home),     
 )
+
+if settings.DEBUG:
+    urlpatterns += patterns('django.views.static',
+        url(r'^media/(?P<path>.*)$', 'serve', 
+            {'document_root': settings.MEDIA_ROOT}),
+    )

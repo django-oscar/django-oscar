@@ -10,6 +10,7 @@ from oscar.services import import_module
 basket_models = import_module('basket.models', ['Basket', 'Line', 'InvalidBasketLineError'])
 basket_forms = import_module('basket.forms', ['FormFactory'])
 basket_factory = import_module('basket.factory', ['BasketFactory'])
+basket_signals = import_module('basket.signals', ['basket_addition'])
 product_models = import_module('product.models', ['Item'])
     
         
@@ -47,6 +48,12 @@ class BasketView(ModelView):
     def do_add(self, basket):
         u"""Add an item to the basket"""
         item = get_object_or_404(product_models.Item.objects, pk=self.request.POST['product_id'])
+        
+        # Send signal so analytics can track this event.  Note that be emitting
+        # the signal here, we do not track quantity changes to a product - only
+        # the initial "add".
+        basket_signals.basket_addition.send(sender=self, product=item, user=self.request.user)
+        
         factory = basket_forms.FormFactory()
         form = factory.create(item, self.request.POST)
         if not form.is_valid():

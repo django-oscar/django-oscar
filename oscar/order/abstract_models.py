@@ -16,16 +16,19 @@ class AbstractOrder(models.Model):
     user = models.ForeignKey(User, related_name='orders', null=True, blank=True)
     # Billing address is not always required (eg paying by gift card)
     billing_address = models.ForeignKey('order.BillingAddress', null=True, blank=True)
+    
     # Total price looks like it could be calculated by adding up the
     # prices of the associated lines, but in some circumstances extra
     # order-level charges are added and so we need to store it separately
     total_incl_tax = models.DecimalField(_("Order total (inc. tax)"), decimal_places=2, max_digits=12)
     total_excl_tax = models.DecimalField(_("Order total (excl. tax)"), decimal_places=2, max_digits=12)
     
-    # Shipping details
+    # Shipping charges
     shipping_incl_tax = models.DecimalField(_("Shipping charge (inc. tax)"), decimal_places=2, max_digits=12, default=0)
     shipping_excl_tax = models.DecimalField(_("Shipping charge (excl. tax)"), decimal_places=2, max_digits=12, default=0)
-    # Not all lines are actually shipped (such as downloads)
+    
+    # Not all lines are actually shipped (such as downloads), hence shipping address
+    # is not mandatory.
     shipping_address = models.ForeignKey('order.ShippingAddress', null=True, blank=True)
     shipping_method = models.CharField(_("Shipping method"), max_length=128, null=True, blank=True)
     date_placed = models.DateTimeField(auto_now_add=True)
@@ -39,6 +42,20 @@ class AbstractOrder(models.Model):
     def basket_total_excl_tax(self):
         u"""Return basket total excluding tax"""
         return self.total_excl_tax - self.shipping_excl_tax
+    
+    @property
+    def num_lines(self):
+        return self.lines.count()
+    
+    @property
+    def num_items(self):
+        u"""
+        Returns the number of items in this order.
+        """
+        num_items = 0
+        for line in self.lines.all():
+            num_items += line.quantity
+        return num_items
     
     @property
     def shipping_status(self):
@@ -137,10 +154,11 @@ class AbstractLine(models.Model):
     """
     order = models.ForeignKey('order.Order', related_name='lines')
     
-    # We store the partner and their SKU for cases where the product has been
+    # We store the partner, their SKU and the title for cases where the product has been
     # deleted from the catalogue.
     partner = models.ForeignKey('stock.Partner', related_name='order_lines')
     partner_reference = models.CharField(_("Partner reference"), max_length=128, blank=True, null=True)
+    title = models.CharField(_("Title"), max_length=255)
     
     # We don't want any hard links between orders and the products table
     product = models.ForeignKey('product.Item', on_delete=models.SET_NULL, null=True)
@@ -202,6 +220,10 @@ class AbstractLine(models.Model):
             if event_dict['name'] == event_type.name and event_dict['quantity'] == self.quantity:
                 return True
         return False
+    
+    @property
+    def is_product_deleted(self):
+        return self.product == None
     
     def _shipping_event_history(self):
         u"""

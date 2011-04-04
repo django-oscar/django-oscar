@@ -16,7 +16,7 @@
             "is_required": true, 
             "code": "dispatched", 
             "name": "Dispatched", 
-            "sequence_number": 1
+            "sequence_number": 2
         }
     }, 
     {
@@ -26,7 +26,7 @@
             "is_required": false, 
             "code": "returned", 
             "name": "Returned", 
-            "sequence_number": 4
+            "sequence_number": 5
         }
     }, 
     {
@@ -37,6 +37,16 @@
             "code": "cancelled", 
             "name": "Cancelled", 
             "sequence_number": 10
+        }
+    }, 
+    {
+        "pk": 5, 
+        "model": "order.shippingeventtype", 
+        "fields": {
+            "is_required": false, 
+            "code": "acknowledged", 
+            "name": "Acknowledged", 
+            "sequence_number": 1
         }
     }, 
     {

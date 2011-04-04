@@ -58,7 +58,13 @@
             <input type="input" size="4" name="order_line_quantity_{{ line.id}}" value="{{ line.quantity }}" />
         </th>
         <td>{{ line.partner }}</td>
-        <td><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></td>
+        <td>
+            {% if line.is_product_deleted %}
+                {{ line.title }} [Deleted]
+            {% else %}
+                <a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a>
+            {% endif %}
+        </td>
         <td>{{ line.quantity }}</td>
         <td>{{ line.line_price_excl_tax|currency }}</td>
         <td>{{ line.line_price_incl_tax|currency }}</td>

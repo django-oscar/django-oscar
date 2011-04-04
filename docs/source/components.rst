@@ -11,3 +11,4 @@ Contents:
 
    components/checkout
    components/shipping
+   components/analytics

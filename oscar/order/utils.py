@@ -3,7 +3,7 @@ from django.contrib.sites.models import Site
 from oscar.services import import_module
 order_models = import_module('order.models', ['ShippingAddress', 'Order', 'Line', 
                                               'LinePrice', 'LineAttribute'])
-
+order_signals = import_module('order.signals', ['order_placed'])
 
 class OrderNumberGenerator(object):
     u"""
@@ -39,7 +39,12 @@ class OrderCreator(object):
         order = self._create_order_model(user, basket, shipping_address, shipping_method, order_number)
         for line in basket.all_lines():
             self._create_line_models(order, line)
+        
         basket.set_as_submitted()
+        
+        # Send signal for analytics to pick up
+        order_signals.order_placed.send(sender=self, order=order, user=user)
+        
         return order
         
     def _create_order_model(self, user, basket, shipping_address, shipping_method, order_number):
@@ -71,6 +76,7 @@ class OrderCreator(object):
         order_line = order_models.Line(order=order,
                                       partner=self._get_partner_for_product(basket_line.product),
                                       product=basket_line.product, 
+                                      title=basket_line.product.get_title(),
                                       quantity=basket_line.quantity, 
                                       line_price_excl_tax=basket_line.line_price_excl_tax_and_discounts, 
                                       line_price_incl_tax=basket_line.line_price_incl_tax_and_discounts)
