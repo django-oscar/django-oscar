@@ -158,7 +158,7 @@ class BankcardForm(forms.ModelForm):
     number = BankcardField(max_length=20, widget=forms.TextInput(attrs={'autocomplete':'off'}), label="Card number")
     name = forms.CharField(max_length=128, label="Name on card")
     ccv_number = forms.IntegerField(required=True, label="CCV Number",
-        max_value = 9999, widget=forms.TextInput(attrs={'size': '4'}))
+        max_value = 99999, widget=forms.TextInput(attrs={'size': '5'}))
     start_month = BankcardStartingMonthField(label="Valid from", required=False)
     expiry_month = BankcardExpiryMonthField(required=True, label = "Valid to")
     
