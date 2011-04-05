@@ -17,10 +17,30 @@
             <a href="">Login</a>
             {% endif %}
             
+            {% if banner %}
+                {% if banner.has_link %}
+                    <a href="{{ banner.link_url }}" title="{{ banner.name }}"><img src="{{ banner.image.url }}" alt="{{ banner.name }}" /></a>
+                {% else %}
+                    <img src="{{ banner.image.url }}" alt="{{ banner.name }}" />
+                {% endif %}
+            {% endif %}
+            
+            {% if pods %}
+                {% for pod in pods %}
+                    {% if pod.has_link %}
+                        <a href="{{ pod.link_url }}" title="{{ pod.name }}"><img src="{{ pod.image.url }}" alt="{{ pod.name }}" /></a>
+                    {% else %}
+                        <img src="{{ pod.image.url }}" alt="{{ pod.name }}" />
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            <a href="/admin/marketing/pod/add/?page_url={{ url_path }}" >Add a pod to this page</a>
+            
             {% block header %}
             {% endblock %}
         </div>
         <div id="content">
+        
         {% if messages %}
         <ul class="messages">
             {% for message in messages %}
