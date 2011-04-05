@@ -25,6 +25,16 @@
                 {% endif %}
             {% endif %}
             
+            {% if pods %}
+                {% for pod in pods %}
+                    {% if pod.has_link %}
+                        <a href="{{ pod.link_url }}" title="{{ pod.name }}"><img src="{{ pod.image.url }}" alt="{{ pod.name }}" /></a>
+                    {% else %}
+                        <img src="{{ pod.image.url }}" alt="{{ pod.name }}" />
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            
             {% block header %}
             {% endblock %}
         </div>

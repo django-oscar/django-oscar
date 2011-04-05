@@ -1,7 +1,10 @@
 """
-Vanilla product models
+Vanilla marketing models
 """
-from oscar.marketing.abstract_models import AbstractBanner
+from oscar.marketing.abstract_models import AbstractBanner, AbstractPod
 
 class Banner(AbstractBanner):
+    pass
+
+class Pod(AbstractPod):
     pass
