@@ -195,6 +195,8 @@ class ConditionalOffer(AbstractConditionalOffer):
             return PercentageDiscountBenefit(**field_dict)
         elif self.benefit.type == self.benefit.FIXED:
             return AbsoluteDiscountBenefit(**field_dict)
+        elif self.benefit.type == self.benefit.MULTIBUY:
+            return MultibuyDiscountBenefit(**field_dict)
         return self.benefit
     
 

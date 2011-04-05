@@ -39,6 +39,9 @@ class AbstractConditionalOffer(models.Model):
         return self._proxy_condition().is_satisfied(basket)
         
     def apply_benefit(self, basket):
+        u"""
+        Applies the benefit to the given basket and returns the discount.
+        """
         if not self.is_condition_satisfied(basket):
             return Decimal('0.00')
         discount = self._proxy_benefit().apply(basket, self._proxy_condition())
@@ -113,6 +116,8 @@ class AbstractBenefit(models.Model):
     def __unicode__(self):
         if self.type == self.PERCENTAGE:
             desc = u"%s%% discount on %s" % (self.value, str(self.range).lower())
+        elif self.type == self.MULTIBUY:
+            desc = u"Cheapest product is free from %s" % str(self.range)
         else:
             desc = u"%.2f discount on %s" % (self.value, str(self.range).lower())
         if self.max_affected_items == 1:

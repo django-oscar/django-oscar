@@ -64,11 +64,11 @@ class BasketFactory(object):
         else:
             # Only the cookie basket found - return it
             basket = anon_basket
-        self._apply_offers_to_basket(request.user, basket)
+        self._apply_offers_to_basket(request, basket)
         return basket 
     
-    def _apply_offers_to_basket(self, user, basket):
-        offer_utils.Applicator().apply(basket)
+    def _apply_offers_to_basket(self, request, basket):
+        offer_utils.Applicator().apply(request, basket)
     
     def _get_basket(self, request, cookie_key, manager):
         u"""Returns a basket object given a cookie key and manager."""
@@ -81,7 +81,7 @@ class BasketFactory(object):
         else:
             b = self._get_cookie_basket(request, cookie_key, manager)
         if b:
-            self._apply_offers_to_basket(request.user, b)
+            self._apply_offers_to_basket(request, b)
         return b    
         
     def _get_cookie_basket(self, request, cookie_key, manager):

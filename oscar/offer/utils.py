@@ -1,15 +1,21 @@
 from decimal import Decimal
+from itertools import chain
 
 from oscar.services import import_module
 offer_models = import_module('offer.models', ['ConditionalOffer'])
 
+
 class Applicator(object):
+    u"""
+    For applying offers to a basket.
+    """
     
-    def apply(self, basket):
+    def apply(self, request, basket):
         u"""
-        Applies all relevant offers to the given basket.
+        Applies all relevant offers to the given basket.  The user is passed 
+        too as sometimes the available offers are dependent on the user
         """
-        offers = self._get_offers(basket)
+        offers = self._get_offers(request, basket)
         discounts = {}
         for offer in offers:
             # For each offer, we keep trying to apply it until the
@@ -30,9 +36,13 @@ class Applicator(object):
         # rendered in templates
         basket.set_discounts(list(discounts.values()))
     
-    def _get_offers(self, basket):
+    def _get_offers(self, request, basket):
         u"""
         Returns all offers to apply to the basket.
+        
+        This method should be subclassed and extended to provide more sophisticated
+        behavoiur.  For instance, you could load extra offers based on the session or
+        the user type.
         """
         return offer_models.ConditionalOffer.active.all()
         
