@@ -14,6 +14,7 @@ except AttributeError:
 
 LEFT, RIGHT = ('Left', 'Right')
 
+
 class AbstractBanner(models.Model):
     u"""
     A banner image linked to a particular page.
