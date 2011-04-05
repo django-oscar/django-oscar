@@ -32,6 +32,24 @@ def bankcard_type(number):
             return VISA
     return None
 
+def luhn(card_number):
+    card_number = str(card_number)
+    sum = 0
+    num_digits = len(card_number)
+    odd_even = num_digits & 1
+
+    for i in range(0, num_digits):
+        digit = int(card_number[i])
+
+        if not (( i & 1 ) ^ odd_even ):
+            digit = digit * 2
+        if digit > 9:
+            digit = digit - 9
+
+        sum = sum + digit
+
+    return ( (sum % 10) == 0 )
+
 
 class BankcardField(forms.CharField):
 
@@ -41,7 +59,7 @@ class BankcardField(forms.CharField):
         non_decimal = re.compile(r'\D+')
         value = non_decimal.sub('', value.strip())    
            
-        if value and (len(value) < 13 or len(value) > 16):
+        if value and not luhn(value):
             raise forms.ValidationError("Please enter a valid credit card number.")
         return super(BankcardField, self).clean(value)
 
@@ -158,7 +176,7 @@ class BankcardForm(forms.ModelForm):
     number = BankcardField(max_length=20, widget=forms.TextInput(attrs={'autocomplete':'off'}), label="Card number")
     name = forms.CharField(max_length=128, label="Name on card")
     ccv_number = forms.IntegerField(required=True, label="CCV Number",
-        max_value = 9999, widget=forms.TextInput(attrs={'size': '4'}))
+        max_value = 99999, widget=forms.TextInput(attrs={'size': '5'}))
     start_month = BankcardStartingMonthField(label="Valid from", required=False)
     expiry_month = BankcardExpiryMonthField(required=True, label = "Valid to")
     
