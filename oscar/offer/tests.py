@@ -19,10 +19,34 @@ def create_product(price=None):
     return item
 
 
+class RangeTest(unittest.TestCase):
+    
+    def setUp(self):
+        self.prod = create_product()
+    
+    def test_all_products_range(self):
+        range = Range.objects.create(name="All products", includes_all_products=True)
+        self.assertTrue(range.contains_product(self.prod))
+        
+    def test_empty_list(self):
+        range = Range.objects.create(name="All products")
+        self.assertFalse(range.contains_product(self.prod))
+        
+    def test_whitelisting(self):
+        range = Range.objects.create(name="All products")
+        range.included_products.add(self.prod)
+        self.assertTrue(range.contains_product(self.prod))
+        
+    def test_blacklisting(self):
+        range = Range.objects.create(name="All products", includes_all_products=True)
+        range.excluded_products.add(self.prod)
+        self.assertFalse(range.contains_product(self.prod))
+
+
 class OfferTest(unittest.TestCase):
     
     def setUp(self):
-        self.range = Range(name="All products", includes_all_products=True)
+        self.range = Range.objects.create(name="All products", includes_all_products=True)
         self.basket = Basket.objects.create()
 
 

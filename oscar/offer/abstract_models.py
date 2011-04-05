@@ -131,6 +131,9 @@ class AbstractBenefit(models.Model):
 
 
 class AbstractRange(models.Model):
+    u"""
+    Represents a range of products that can be used within an offer
+    """
     name = models.CharField(max_length=128)
     includes_all_products = models.BooleanField(default=False)
     included_products = models.ManyToManyField('product.Item', related_name='includes', blank=True)
@@ -143,6 +146,20 @@ class AbstractRange(models.Model):
         return self.name    
         
     def contains_product(self, product):
+        excluded_product_ids = self._excluded_product_ids()
+        if product.id in excluded_product_ids:
+            return False
         if self.includes_all_products:
             return True
-        return False
+        included_product_ids = self._included_product_ids()
+        return product.id in included_product_ids
+    
+    def _included_product_ids(self):
+        results = self.included_products.values('id')
+        return [row['id'] for row in results]
+    
+    def _excluded_product_ids(self):
+        results = self.excluded_products.values('id')
+        return [row['id'] for row in results]
+        
+        
