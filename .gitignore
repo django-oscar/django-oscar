@@ -11,3 +11,4 @@ STORIES
 docs/build/*
 *.*~
 examples/.coverage
+assets/*
