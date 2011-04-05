@@ -59,7 +59,7 @@ class BankcardField(forms.CharField):
         non_decimal = re.compile(r'\D+')
         value = non_decimal.sub('', value.strip())    
            
-        if value and luhn(value):
+        if value and not luhn(value):
             raise forms.ValidationError("Please enter a valid credit card number.")
         return super(BankcardField, self).clean(value)
 
