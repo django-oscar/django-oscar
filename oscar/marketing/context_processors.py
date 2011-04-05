@@ -5,9 +5,14 @@ from oscar.services import import_module
 marketing_models = import_module('marketing.models', ['Banner', 'Pod'])
 
 
-def banners(request):
-    bindings = {}
-    
+def marketing(request):
+    u"""
+    For adding bindings for banners and pods to the template
+    context.
+    """
+    bindings = {
+        'url_path': request.path
+    }
     
     # Look for a banner
     try:

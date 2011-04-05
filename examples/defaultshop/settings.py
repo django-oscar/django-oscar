@@ -72,9 +72,15 @@ TEMPLATE_LOADERS = (
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
-    'oscar.marketing.context_processors.banners',
-    'django.contrib.auth.context_processors.auth',
-)
+    "django.contrib.auth.context_processors.auth",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.media",
+    "django.core.context_processors.static",
+    "django.contrib.messages.context_processors.messages",
+    # Oscar specific
+    'oscar.marketing.context_processors.marketing',
+) 
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
