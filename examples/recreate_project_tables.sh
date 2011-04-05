@@ -14,7 +14,7 @@ then
 fi
 echo "Recreating all tables in $PROJECT_FOLDER"
 echo "Dropping tables"
-$MANAGE_COMMAND sqlclear analytics payment offer shipping order basket stock image address product | \
+$MANAGE_COMMAND sqlclear marketing analytics payment offer shipping order basket stock image address product | \
 	awk 'BEGIN {print "set foreign_key_checks=0;"} {print $0}' | \
     $MANAGE_COMMAND dbshell && \
     $MANAGE_COMMAND syncdb

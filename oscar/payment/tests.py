@@ -4,7 +4,7 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 
 from oscar.payment.models import Bankcard
-from oscar.payment.forms import bankcard_type, VISA, MASTERCARD, AMEX, DISCOVER, BankcardField
+from oscar.payment.forms import bankcard_type, VISA, MASTERCARD, AMEX, DISCOVER, BankcardNumberField, luhn
 
 
 class BankcardTest(TestCase):
@@ -35,11 +35,32 @@ class BankcardTypeTest(TestCase):
                 self.assertEquals(type, bankcard_type(n), "%s is a %s" % (n, type))
         
 
-class BankcardFieldType(TestCase):
+class BankcardNumberFieldTest(TestCase):
     
     def setUp(self):
-        self.f = BankcardField()
+        self.f = BankcardNumberField()
         
     def test_spaces_are_stipped(self):
         self.assertEquals('4111111111111111', self.f.clean('  4111 1111 1111 1111'))
         
+
+class LuhnTest(TestCase):
+    
+    valid_numbers = ['4111111111111111',
+                     '5500000000000004',
+                     '6011000000000004',
+                     '340000000000009']
+    
+    # Tweaked versions of above valid numbers
+    invalid_numbers = ['4111111111111110',
+                     '5500000000000009',
+                     '6011000000000000',
+                     '340000000000005']
+    
+    def test_valid_numbers_pass(self):
+        for number in self.valid_numbers:
+            self.assertTrue(luhn(number))
+            
+    def test_invalid_numbers_fail(self):
+        for number in self.invalid_numbers:
+            self.assertFalse(luhn(number))
