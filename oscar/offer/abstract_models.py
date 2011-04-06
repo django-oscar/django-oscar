@@ -13,10 +13,35 @@ class AbstractConditionalOffer(models.Model):
     """
     name = models.CharField(max_length=128)
     description = models.TextField(blank=True, null=True)
+
+    # Offers come in a few different types:
+    # (a) Offers that are available to all customers on the site.  Eg a 
+    #     3-for-2 offer.
+    # (b) Offers that are linked to a voucher, and only become available once
+    #     that voucher has been applied to the basket
+    # (c) Offers that are linked to a user.  Eg, all students get 10% off.  The code
+    #     to apply this offer needs to be coded
+    # (d) Session offers - these are temporarily available to a user after some trigger 
+    #     event.  Eg, users coming from some affiliate site get 10% off.     
+    SITE, VOUCHER, USER, SESSION = ("Site", "Voucher", "User", "Session")
+    TYPE_CHOICES = (
+        (SITE, "Site offer - available to all users"),
+        (VOUCHER, "Voucher offer - only available after entering the appropriate voucher code"),
+        (USER, "User offer - available to certain types of user"),
+        (SESSION, "Session offer - temporary offer, available for a user for the duration of their session"),
+    )
+    offer_type = modelsCharField(_("Type"), choices=TYPE_CHOICES, default=SITE)
+
     condition = models.OneToOneField('offer.Condition')
     benefit = models.OneToOneField('offer.Benefit')
-    start_date = models.DateField()
-    end_date = models.DateField()
+
+    # Range of availability.  Note that if this is a voucher offer, then these
+    # dates are ignored and only the dates from the voucher are used to determine 
+    # availability.
+    start_date = models.DateField(blank=True, null=True)
+    end_date = models.DateField(blank=True, null=True)
+
+    # Some complicated situations require offers to be applied in a set order.
     priority = models.IntegerField(default=0, help_text="The highest priority offers are applied first")
     date_created = models.DateTimeField(auto_now_add=True)
 
@@ -134,7 +159,7 @@ class AbstractRange(models.Model):
     u"""
     Represents a range of products that can be used within an offer
     """
-    name = models.CharField(max_length=128)
+    name = models.CharField(_("Name"), max_length=128)
     includes_all_products = models.BooleanField(default=False)
     included_products = models.ManyToManyField('product.Item', related_name='includes', blank=True)
     excluded_products = models.ManyToManyField('product.Item', related_name='excludes', blank=True)
@@ -163,3 +188,52 @@ class AbstractRange(models.Model):
         return [row['id'] for row in results]
         
         
+class AbstractVoucher(models.Model):
+    u"""
+    A voucher.  This is simply a link to a collection of offers
+    """
+    name = models.CharField(_("Name"), max_length=128)
+    code = models.CharField(_("Code"), max_length=128)
+
+    SINGLE_USE, MULTI_USE, ONCE_PER_CUSTOMER = ('Single use', 'Multi-use', 'Once per customer')
+    USAGE_CHOICES = (
+        (SINGLE_USE, "Can only be used by one customer"),
+        (MULTI_USE, "Can only be used any number of times"),
+        (ONCE_PER_CUSTOMER, "Can be used once by each customer"),
+    )
+    usage = models.CharField(_("Usage"), max_length=128, choices=USAGE_CHOICES, default=MULTI_USE)
+
+    start_date = models.DateField()
+    end_date = models.DateField()
+
+    # Some vouchers can give free shipping
+    free_shipping = models.BooleanField(default=False)
+    date_created = models.DateField(auto_now_add=True)
+
+    class Meta:
+        abstract = True
+
+    def __unicode__(self):
+        return self.name
+
+    def is_active(self, test_date=None):
+        if not test_date:
+            test_date = datetime.date.today()
+        return self.start_date <= test_date and test_date < self.end_date
+
+
+class AbstractVoucherApplication(models.Model):
+    u"""
+    For tracking how often a voucher has been used
+    """
+    voucher = models.ForeignKey('offer.Voucher', related_name="applications")
+    # It is possible for an anonymous user to apply a voucher so we need to allow
+    # the user to be nullable
+    user = models.ForeignKey('auth.User', blank=True, null=True)
+    date_created = models.DateField(auto_now_add=True)
+
+    class Meta:
+        abstract = True
+
+
+

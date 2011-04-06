@@ -213,5 +213,21 @@ class ConditionalOfferTest(unittest.TestCase):
         self.assertFalse(offer.is_active(test))
         
     
+class VoucherTest(unittest.TestCase):
+    
+    def test_is_active(self):
+        start = datetime.date(2011, 01, 01)
+        test = datetime.date(2011, 01, 10)
+        end = datetime.date(2011, 02, 01)
+        voucher = Voucher(start_date=start, end_date=end)
+        self.assertTrue(voucher.is_active(test))
+
+    def test_is_inactive(self):
+        start = datetime.date(2011, 01, 01)
+        test = datetime.date(2011, 03, 10)
+        end = datetime.date(2011, 02, 01)
+        voucher = Voucher(start_date=start, end_date=end)
+        self.assertFalse(voucher.is_active(test))
+
     
    
