@@ -12,9 +12,12 @@ Reviews and voting
 
 Create a new ``oscar.reviews`` app which provides reviews and voting functionality. 
 
-* Only signed in users can review
 * Each product can have reviews attached to it.  Each review has a title, a body and a score from 1-5.
-* Reviews must be approved before they are live
+* Signed in users can always submit reviews, anonymous users can only submit reviews if a setting 
+  ``OSCAR_ALLOW_ANON_REVIEWS`` is set to true - it should default to false.
+* If anon users can submit reviews, then we require their name, email address and an (optional) URL.
+* By default, reviews must be approved before they are live.  However, if a setting ``OSCAR_MODERATE_REVIEWS``
+  is set to false, then they don't need moderation.
 * The product page should have a review form on it, any errors in the submission will be shown on the same product page
 * The product page will show the most recent 5 reviews with a link to browse all reviews for that product.
 * The URL for browsing a products offers should be the normal product URL with /reviews appended at the end
