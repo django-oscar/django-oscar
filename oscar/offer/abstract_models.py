@@ -191,6 +191,11 @@ class AbstractRange(models.Model):
 class AbstractVoucher(models.Model):
     u"""
     A voucher.  This is simply a link to a collection of offers
+
+    Note that there are three possible "usage" models:
+    (a) Single use
+    (b) Multi-use
+    (c) Once per customer
     """
     name = models.CharField(_("Name"), max_length=128)
     code = models.CharField(_("Code"), max_length=128)
@@ -217,9 +222,27 @@ class AbstractVoucher(models.Model):
         return self.name
 
     def is_active(self, test_date=None):
+        u"""
+        Tests whether this voucher is currently active.
+        """
         if not test_date:
             test_date = datetime.date.today()
         return self.start_date <= test_date and test_date < self.end_date
+
+    def is_available_to_user(self, user=None):
+        u"""
+        Tests whether this voucher is available to the passed user.
+        """
+        if self.usage == SINGLE_USE:
+            return self.applications.count() == 0
+        elif self.usage == MULTI_USE:
+            return True
+        elif self.usage == ONCE_PER_CUSTOMER::
+            if not user.is_authenticated():
+                return False
+            else:
+                return self.applications.filter(voucher=self, user=user).count() == 0
+        return False
 
 
 class AbstractVoucherApplication(models.Model):
