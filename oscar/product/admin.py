@@ -17,9 +17,12 @@ class ItemAdmin(admin.ModelAdmin):
     
 class AttributeTypeAdmin(admin.ModelAdmin):
     prepopulated_fields = {"code": ("name",)}
+    
+class OptionAdmin(admin.ModelAdmin):
+    prepopulated_fields = {"code": ("name",)}
 
 admin.site.register(product_models.ItemClass, ItemClassAdmin)
 admin.site.register(product_models.Item, ItemAdmin)
 admin.site.register(product_models.AttributeType, AttributeTypeAdmin)
 admin.site.register(product_models.ItemAttributeValue)
-admin.site.register(product_models.Option)
+admin.site.register(product_models.Option, OptionAdmin)
