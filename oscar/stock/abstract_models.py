@@ -8,7 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 
 class AbstractPartner(models.Model):
     u"""Fulfillment partner"""
-    name = models.CharField(max_length=128)
+    name = models.CharField(max_length=128, unique=True)
     
     class Meta:
         verbose_name_plural = 'Fulfillment partners'
@@ -33,9 +33,12 @@ class AbstractStockRecord(models.Model):
     # Price info:
     # We deliberately don't store tax information to allow each project
     # to subclass this model and put its own fields for convey tax.
-    price_currency = models.CharField(max_length=12, default=settings.DEFAULT_CURRENCY)
+    price_currency = models.CharField(max_length=12, default=settings.OSCAR_DEFAULT_CURRENCY)
     # This is the base price for calculations
     price_excl_tax = models.DecimalField(decimal_places=2, max_digits=12)
+    
+    # Cost price is optional as not all partner supply it
+    cost_price = models.DecimalField(decimal_places=2, max_digits=12, blank=True, null=True)
     
     # Stock level information
     num_in_stock = models.IntegerField(default=0)

@@ -19,14 +19,6 @@
     }, 
     {
         "pk": 1, 
-        "model": "order.batch", 
-        "fields": {
-            "partner": 1, 
-            "order": 1
-        }
-    }, 
-    {
-        "pk": 1, 
         "model": "order.shippingaddress", 
         "fields": {
             "phone_number": "", 
@@ -44,35 +36,35 @@
     }, 
     {
         "pk": 1, 
-        "model": "order.batchline", 
+        "model": "order.line", 
         "fields": {
-            "partner_notes": null, 
+			"partner": 1,
+            "partner_line_notes": null, 
             "product": 8, 
             "line_price_excl_tax": "69.90", 
             "partner_reference": null, 
             "line_price_incl_tax": "69.90", 
-            "batch": 1, 
             "order": 1, 
             "quantity": 10
         }
     }, 
     {
         "pk": 2, 
-        "model": "order.batchline", 
+        "model": "order.line", 
         "fields": {
-            "partner_notes": null, 
+			"partner": 1,
+            "partner_line_notes": null, 
             "product": 9, 
             "line_price_excl_tax": "68.80", 
             "partner_reference": null, 
             "line_price_incl_tax": "68.80", 
-            "batch": 1, 
             "order": 1, 
             "quantity": 5
         }
     }, 
     {
         "pk": 1, 
-        "model": "order.batchlineprice", 
+        "model": "order.lineprice", 
         "fields": {
             "price_incl_tax": "6.99", 
             "shipping_incl_tax": "0.00", 
@@ -85,7 +77,7 @@
     }, 
     {
         "pk": 2, 
-        "model": "order.batchlineprice", 
+        "model": "order.lineprice", 
         "fields": {
             "price_incl_tax": "13.76", 
             "shipping_incl_tax": "0.00", 

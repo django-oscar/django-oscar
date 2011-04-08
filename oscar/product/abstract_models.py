@@ -176,8 +176,8 @@ class AbstractItem(models.Model):
 
 class AbstractAttributeType(models.Model):
     u"""Defines an attribute. (Eg. size)"""
-    code = models.CharField(_('code'), max_length=128)
     name = models.CharField(_('name'), max_length=128)
+    code = models.SlugField(_('code'), max_length=128)
     has_choices = models.BooleanField(default=False)
 
     class Meta:
@@ -207,7 +207,9 @@ class AbstractAttributeValueOption(models.Model):
 
 class AbstractItemAttributeValue(models.Model):
     u"""
-    A specific attribute value for an item.
+    The "through" model for the m2m relationship between product.Item
+    and product.AttributeType.  This specifies the value of the attribute
+    for a particular product.
     
     Eg: size = L
     """

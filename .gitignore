@@ -10,3 +10,5 @@ django_oscar.egg-info/
 STORIES
 docs/build/*
 *.*~
+examples/.coverage
+assets/*

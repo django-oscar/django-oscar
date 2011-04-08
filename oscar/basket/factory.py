@@ -4,6 +4,7 @@ from django.conf import settings
 
 from oscar.services import import_module
 basket_models = import_module('basket.models', ['Basket', 'Line'])
+offer_utils = import_module('offer.utils', ['Applicator'])
 
 # Cookie keys
 COOKIE_KEY_OPEN_BASKET = 'oscar_open_basket'
@@ -11,7 +12,7 @@ COOKIE_KEY_SAVED_BASKET = 'oscar_saved_basket'
 
 try:
     # The lifetime for the basket cookie can be set in settings.py
-    COOKIE_LIFETIME = settings.BASKET_COOKIE_LIFETIME
+    COOKIE_LIFETIME = settings.OSCAR_BASKET_COOKIE_LIFETIME
 except AttributeError: 
     COOKIE_LIFETIME = 7*24*60*60
 
@@ -42,7 +43,10 @@ class BasketFactory(object):
     # Utility methods
     
     def _get_or_create_cookie_basket(self, request, response, cookie_key, manager):
-        u"""Loads or creates a basket for the current user"""
+        u"""
+        Loads or creates a basket for the current user.  Any offers are also
+        applied to the basket before it is returned.
+        """
         anon_basket = self._get_cookie_basket(request, cookie_key, manager)
         if request.user.is_authenticated():
             basket, created = manager.get_or_create(owner=request.user)
@@ -60,7 +64,11 @@ class BasketFactory(object):
         else:
             # Only the cookie basket found - return it
             basket = anon_basket
+        self._apply_offers_to_basket(request, basket)
         return basket 
+    
+    def _apply_offers_to_basket(self, request, basket):
+        offer_utils.Applicator().apply(request, basket)
     
     def _get_basket(self, request, cookie_key, manager):
         u"""Returns a basket object given a cookie key and manager."""
@@ -72,6 +80,8 @@ class BasketFactory(object):
                 pass
         else:
             b = self._get_cookie_basket(request, cookie_key, manager)
+        if b:
+            self._apply_offers_to_basket(request, b)
         return b    
         
     def _get_cookie_basket(self, request, cookie_key, manager):

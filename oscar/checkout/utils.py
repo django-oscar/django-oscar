@@ -16,8 +16,7 @@ class ProgressChecker(object):
                       'oscar-checkout-shipping-method',
                       'oscar-checkout-payment-method',
                       'oscar-checkout-preview',
-                      'oscar-checkout-payment-details',
-                      'oscar-checkout-submit',]
+                      'oscar-checkout-payment-details']
     
     def are_previous_steps_complete(self, request):
         u"""
@@ -52,11 +51,9 @@ class ProgressChecker(object):
             
     def get_next_step(self, request):
         u"""Returns the next incomplete step of the checkout."""
-        completed_steps = self._get_completed_steps(request)
-        if len(completed_steps):
-            return self.urls_for_steps[len(completed_steps)]  
-        else: 
-            return self.urls_for_steps[0]
+        url_name = self._get_url_name(request)
+        current_step_index = self.urls_for_steps.index(url_name)
+        return self.urls_for_steps[current_step_index+1]
             
     def all_steps_complete(self, request):
         u"""

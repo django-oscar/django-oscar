@@ -43,7 +43,7 @@ def import_module(module_label, classes=[]):
                     local_module_name = "%s.%s" % (installed_app_parts[0], module_label)
                     try:
                         imported_local_mod = __import__(local_module_name, fromlist=classes)
-                    except ImportError:
+                    except ImportError, e:
                         # Module doesn't exist, fall back to oscar core
                         return _import_classes_from_module("oscar.%s" % module_label, classes)
                     

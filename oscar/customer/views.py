@@ -14,7 +14,7 @@ order_models = import_module('order.models', ['Order'])
 def profile(request):
     u"""Return a customers's profile"""
     # Load last 5 orders as preview
-    orders = order_models.Order.objects.filter(user=request.user)[0:5]
+    orders = order_models.Order._default_manager.filter(user=request.user)[0:5]
     return render(request, 'customer/profile.html', locals())
     
         
@@ -26,7 +26,7 @@ class OrderHistoryView(ListView):
 
     def get_queryset(self):
         u"""Return a customer's orders"""
-        return order_models.Order.objects.filter(user=self.request.user)
+        return order_models.Order._default_manager.filter(user=self.request.user)
 
 
 class OrderDetailView(ModelView):
@@ -49,7 +49,7 @@ class AddressBookView(ListView):
         
     def get_queryset(self):
         u"""Return a customer's addresses"""
-        return address_models.UserAddress.objects.filter(user=self.request.user)
+        return address_models.UserAddress._default_manager.filter(user=self.request.user)
     
     
 class AddressView(ModelView):

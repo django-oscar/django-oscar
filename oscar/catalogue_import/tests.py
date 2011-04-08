@@ -4,7 +4,7 @@ from oscar.services import import_module
 catalogue_exception = import_module('catalogue_import.exceptions', ['CatalogueImportException'])
 
 class FileArgumentTest(TestCase):
-    
+
     def test_sending_no_file_argument(self):
         catalogue_import = import_module('catalogue_import.utils', ['CatalogueImport'])
         importer = catalogue_import.CatalogueImport()

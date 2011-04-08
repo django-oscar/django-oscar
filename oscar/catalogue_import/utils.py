@@ -1,6 +1,8 @@
 import os
 import csv
+import sys
 from oscar.services import import_module
+from oscar.catalogue_import.csv_types import Simple
 
 
 catalogue_exception = import_module('catalogue_import.exceptions', ['CatalogueImportException'])
@@ -11,20 +13,8 @@ class CatalogueImport(object):
     u"""A catalogue importer object"""
     
     csv_types = {
-                 'simple': {'fields': [
-                               [product_models.Item, 'upc'],
-                               [product_models.Item, 'title'],
-                               [product_models.Item, 'description'],
-                               [product_models.ItemClass, 'name'],
-                               [stock_models.StockRecord, 'partner'],
-                               [stock_models.StockRecord, 'partner_reference'],
-                               [stock_models.StockRecord, 'price_excl_tax'],
-                               [stock_models.StockRecord, 'num_in_stock'],
-                           ],
-                           'copy_fields': [
-                               [[stock_models.StockRecord, 'partner'], [stock_models.Partner, 'name']],
-                           ]}
-                 }
+        'simple': Simple,
+    }
     flush = False
     item = []
     
@@ -32,6 +22,10 @@ class CatalogueImport(object):
         u"""Handles the actual import process"""
         if self.file is None:
             raise catalogue_exception.CatalogueImportException("You need to pass a file argument")
+        try:
+            self.mapper = self.csv_types[self.csv_type]()
+        except:
+            raise catalogue_exception.CatalogueImportException("Unable to load CSV mapper: %s" % (csv_type))
         self.catalogue_import_file = CatalogueImportFile()
         self.catalogue_import_file.file = self.file
         self.test_file()
@@ -39,8 +33,6 @@ class CatalogueImport(object):
             self.flush()
         self.csv_content = self.load_csv()
         self.iterate()
-        for line in self.item:
-            print line
     
     def test_file(self):
         u"""Run various tests on the file before import can happen"""
@@ -65,23 +57,53 @@ class CatalogueImport(object):
 
     def iterate(self):
         u"""Iterate over rows, creating a complete list item"""
-        self.mapper = self.csv_types[self.csv_type]
         for row in self.csv_content:
             mapped_row = self.map(row)
+            print mapped_row
+            print 
+            self.item = [] # Create a new list, 'just in-case'
             for item in mapped_row:
-                self.current_item = item
-                self.item.append(self.current_item)
-                self.merge()
+                print item
+                self.current_item = item # Map to current_item, again 'just in-case'
+                self.item.append(item) # Finally append to current mapped item, again 'just in-case'
+            print
+            print self.item
+            print 
+            print self.mapper.model_fields
+            print
+            self.create()
+            print 'new row'
+            sys.exit()
+            
+    def create(self):
+        model_objects = []
+        for model, fields in self.mapper.model_fields:
+            print model
+            model_object = model()
+            model_objects.append({'name': model, 'object': model_object})
+            for field in fields:
+                for column in self.item:
+                    if column[0]['model'] == model and column[0]['field'] == field:
+                        print "%s = %s" % (field, column[1])
+                        print dir(model_object)
+                        vars(model_object)[field] = column[1]
+        self.save(model_objects)
+        
+    def save(self, objects):
+        for model in self.mapper.order:
+            for save_object in objects:
+                if save_object['name'] == model:
+                    for fk in self.mapper.fk:
+                        if fk['to'] == model:
+                            vars(save_object['object'])[fk['as']] = vars()[fk['as']]
+                    save_object['object'].save()
+                    for fk in self.mapper.fk:
+                        if fk['from'] == model:
+                            vars()[fk['as']] = save_object['object']
 
     def map(self, row):
         u"""Map CSV row against format"""
-        return zip(self.mapper['fields'], row)
-        
-    def merge(self):
-        u"""Locate and merge data from copy field origin to destination"""
-        for origin, destination in self.mapper['copy_fields']:
-            if origin == self.current_item[0]:
-                self.item.append([destination, self.current_item[1]])
+        return zip(self.mapper.fields, row)
 
         
 class CatalogueImportFile(object):

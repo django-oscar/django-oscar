@@ -13,5 +13,6 @@ then
 	printf "$MANAGE_COMMAND cannot be found\n"
 fi
 echo "Running all tests in $PROJECT_FOLDER"
-time $MANAGE_COMMAND test oscar --settings=test_settings -v 1 --failfast | \
+time coverage run $MANAGE_COMMAND test oscar --settings=test_settings -v 1 --failfast | \
 	grep -v "^\(Installing\|Creating\)"
+

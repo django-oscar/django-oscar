@@ -1,7 +1,7 @@
 Contributing
 ============
 
-Make sure you're read http://python.net/~goodger/projects/pycon/2007/idiomatic/handout.html
+Make sure you've read http://python.net/~goodger/projects/pycon/2007/idiomatic/handout.html
 
 Guidelines
 ----------
@@ -10,11 +10,6 @@ Guidelines
 * Pull requests will be rejected if sufficient tests aren't provided
 * Please updated the documentation when altering behaviour or introducing new features 
 
-Coding conventions
-------------------
-
-* PEP8 (http://www.python.org/dev/peps/pep-0008/)
-* PEP257 (http://www.python.org/dev/peps/pep-0257/)
 
 Contents:
 
@@ -23,3 +18,4 @@ Contents:
 
    contributing/installation
    contributing/testing
+   contributing/conventions

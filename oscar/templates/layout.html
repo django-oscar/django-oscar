@@ -17,10 +17,17 @@
             <a href="">Login</a>
             {% endif %}
             
+            {% for banner in banners %}
+                {{ banner.get_banner_html|safe }}
+            {% endfor %}
+
+            <a href="/admin/promotions/pagepromotion/add/?page_url={{ url_path }}" >Add a promotion to this page</a>
+            
             {% block header %}
             {% endblock %}
         </div>
         <div id="content">
+        
         {% if messages %}
         <ul class="messages">
             {% for message in messages %}

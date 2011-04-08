@@ -10,7 +10,7 @@ order_models = import_module('order.models', ['ShippingAddress'])
 class ShippingAddressForm(CoreShippingAddressForm):
     
     # Overriding form widgets (and labels)
-    line4 = CharField(label='County')
+    line4 = CharField(label='County', required=False)
     postcode = CharField(label='Postcode')
     
     class Meta:

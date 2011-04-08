@@ -8,6 +8,14 @@
 
 
 {% block content %}
+<div class="images">
+    {% for image in item.images.all %}
+    <img src="{{ image.fullsize_url }}" title="{{ item.get_title }}" />
+    <div class="caption">{{ image.caption }}</div>
+    {% endfor %}
+</div>
+
+
 <table>
     <caption>Product details</caption>
     <tr>

@@ -3,20 +3,23 @@ Introduction
 
 Named after Oscar Peterson (http://en.wikipedia.org/wiki/Oscar_Peterson),
 django-oscar is a flexible ecommerce platform, designed to build domain-driven
-ecommerce sites to be constructed.  It is not supposed to be a framework that can
+ecommerce sites.  It is not supposed to be a framework that can
 be downloaded and fully set up by simply adjusting a configuration file: there
 will always be some developer work required to make sure the models match those
 from your domain - this is the nature of domain modelling.
 
-However, a small amount of work up front in determine the right models for your
+That said, a small amount of work up front in determine the right models for your
 shop can really pay off in terms of building a high-quality application that
-is a pleasure to work with and maintain.
+is a pleasure to work with and maintain.  It's better to extend core models with fields
+relevant to your domain that attempting to write code so "generic" that is can handle
+any situation.  This generally leads to a confusing mess.
 
 Aims of project
 ---------------
 
 *   To be a portable Django application that provides ecommerce functionality.  
-*   To comprise a set of loosely coupled apps that can be overridden in projects (interdependence is on interfaces only)
+*   To comprise a set of loosely coupled apps that can be overridden in;
+    projects (interdependence is on interfaces only);
 *   To be highly customisable so any part of the core can be customised.
 
 The central aim is to provide a solid core of an ecommerce project that can be
@@ -49,13 +52,14 @@ configured) to suit the domain at hand.  This is acheived in several ways:
     for `Label`.  
 
 *   **Avoidance of the [Entity-Attribute-Value](http://en.wikipedia.org/wiki/Entity-attribute-value_model) pattern**. 
-    This technique of subclassing and extending
-    models avoids an over-reliance on the using the EAV pattern which is commonly used to store data and meta-data about 
-    domain objects.  
+    This technique of subclassing and extending models avoids an over-reliance
+    on the using the EAV pattern which is commonly used to store data and
+    meta-data about domain objects.  
 
-*   **Classes are loaded generically.**  To enable sub-apps to be overridden, oscar classes are loading generically
-    using a special `import_module` function.  This looks at the `INSTALLED_APPS` tuple to determine the appropriate
-    app to load a class from.
+*   **Classes are loaded generically.**  To enable sub-apps to be overridden,
+  oscar classes are loading generically using a special `import_module`
+  function.  This looks at the `INSTALLED_APPS` tuple to determine the
+  appropriate app to load a class from.
 
 *   **All core views are class-based.**  This enables any view to be subclassed and extended within your project.
 

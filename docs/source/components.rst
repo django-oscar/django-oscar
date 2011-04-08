@@ -1,3 +1,4 @@
+==========
 Components
 ==========
 
@@ -9,3 +10,5 @@ Contents:
    :maxdepth: 2
 
    components/checkout
+   components/shipping
+   components/analytics

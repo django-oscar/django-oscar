@@ -38,28 +38,33 @@
 
 <h3>Order contents</h3>
 
-{% for batch in order.batches.all %}
 <form action="{% url oscar-order-management-order order.number %}" method="post">
 {% csrf_token %}
-<input type="hidden" name="batch_id" value="{{ batch.id }}" />
-<input type="hidden" name="action" value="create_event" />
+<input type="hidden" name="action" value="create_line_event" />
 <table>
-    <caption>Partner: {{batch.partner}}</caption>
     <tr>
         <th></th>
+        <th>Partner</th>
         <th>Product</th>
         <th>Quantity</th>
         <th>Line price excl tax</th>
         <th>Line price incl tax</th>
         <th>Shipping status</th>
     </tr>
-    {% for line in batch.lines.all %}
+    {% for line in order.lines.all %}
     <tr>
         <th>
             <input type="checkbox" name="order_line" value="{{ line.id }}"/>
             <input type="input" size="4" name="order_line_quantity_{{ line.id}}" value="{{ line.quantity }}" />
         </th>
-        <td><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></td>
+        <td>{{ line.partner }}</td>
+        <td>
+            {% if line.is_product_deleted %}
+                {{ line.title }} [Deleted]
+            {% else %}
+                <a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a>
+            {% endif %}
+        </td>
         <td>{{ line.quantity }}</td>
         <td>{{ line.line_price_excl_tax|currency }}</td>
         <td>{{ line.line_price_incl_tax|currency }}</td>
@@ -80,7 +85,20 @@
     </tr>
 </table>
 </form
-{% endfor %}
+
+<form action="{% url oscar-order-management-order order.number %}" method="post">
+{% csrf_token %}
+<input type="hidden" name="action" value="create_order_event" />
+Set entire order to:
+<select name="shipping_event">
+    <option value="">[Choose option]</option>
+    {% for type in shipping_options %}
+    <option value="{{ type.code }}">{{type.name}}</option>
+    {% endfor %}
+</select>  
+<input type="submit" value="Save" />
+</form>
+
 
 <table>
     <caption>Totals</caption>
@@ -102,17 +120,21 @@
 <h3>Shipping events</h3>
 <table>
 <tr>
-    <th>Partner</th>
+    <th>Date</th>
     <th>Event</th>
     <th>Num lines</th>
-    <th>Date</th>
+    <th>Details</th>
 </tr>
 {% for event in order.shipping_events.all %}
 <tr>
-    <td>{{ event.batch.partner }}</td>
+    <td>{{ event.date }}</td>
     <td>{{ event.event_type }}</td>
     <td>{{ event.num_affected_lines }}</td>
-    <td>{{ event.date }}</td>
+    <td>
+        {% for line_quantity in event.line_quantities.all %}
+        {{ line_quantity.line.product }} (quantity: {{ line_quantity.quantity }})<br/>
+        {% endfor %}
+    </td>
 </tr>
 {% endfor %}
 </table>
