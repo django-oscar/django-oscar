@@ -81,7 +81,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.static",
     "django.contrib.messages.context_processors.messages",
     # Oscar specific
-    'oscar.marketing.context_processors.marketing',
+    #'oscar.marketing.context_processors.marketing',
 ) 
 
 MIDDLEWARE_CLASSES = (
@@ -155,7 +155,7 @@ INSTALLED_APPS = (
     'oscar.stock',
     'oscar.image',
     'oscar.customer',
-    'oscar.marketing',
+    'oscar.promotions',
 )
 
 LOGIN_REDIRECT_URL = '/shop/accounts/profile/'
