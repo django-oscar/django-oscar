@@ -57,12 +57,22 @@
 </form>
 {% endif %}
 
-
 {% if item.related_items.count %}
 <div class="products">
     <h4>Related items</h4>
     <ul>
     {% for product in item.related_items.all %}
+        <li><a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a>
+    {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+{% if item.recommended_items.count %}
+<div class="products">
+    <h4>Recommended items</h4>
+    <ul>
+    {% for product in item.recommended_items.all %}
         <li><a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a>
     {% endfor %}
     </ul>

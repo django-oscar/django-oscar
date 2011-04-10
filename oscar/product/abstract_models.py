@@ -193,7 +193,6 @@ class ProductRecommendation(models.Model):
     u"""
     'Through' model for product recommendations
     """
-    
     primary = models.ForeignKey('product.Item', related_name='primary_recommendations')
     recommendation = models.ForeignKey('product.Item')
     ranking = models.PositiveSmallIntegerField(default=0)
