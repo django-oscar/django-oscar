@@ -6,8 +6,8 @@ PROJECT_DIR = os.path.dirname(__file__)
 location = lambda x: os.path.join(os.path.dirname(os.path.realpath(__file__)), x)
 
 DEBUG = True
-TEMPLATE_DEBUG = DEBUG
-SQL_DEBUG = DEBUG
+TEMPLATE_DEBUG = True
+SQL_DEBUG = True
 
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
@@ -81,7 +81,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.static",
     "django.contrib.messages.context_processors.messages",
     # Oscar specific
-    'oscar.marketing.context_processors.marketing',
+    'oscar.promotions.context_processors.promotions',
 ) 
 
 MIDDLEWARE_CLASSES = (
@@ -143,6 +143,7 @@ INSTALLED_APPS = (
     # Apps from oscar
     'oscar',
     'oscar.analytics',
+    'oscar.discount',
     'oscar.order',
     'oscar.checkout',
     'oscar.shipping',
@@ -155,7 +156,7 @@ INSTALLED_APPS = (
     'oscar.stock',
     'oscar.image',
     'oscar.customer',
-    'oscar.marketing',
+    'oscar.promotions',
 )
 
 LOGIN_REDIRECT_URL = '/shop/accounts/profile/'

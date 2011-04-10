@@ -12,3 +12,4 @@ docs/build/*
 *.*~
 examples/.coverage
 assets/*
+examples/defaultshop/assets/*

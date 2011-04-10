@@ -4,7 +4,7 @@ Features
 
 Below is a list of required features for oscar, together with a brief spec for
 what they should implement.  If you're looking for something to do, please have a
-go at one of the below.
+go at one of the below and send a note to the mailing list to avoid duplication.
 
 
 Reviews and voting
@@ -12,9 +12,12 @@ Reviews and voting
 
 Create a new ``oscar.reviews`` app which provides reviews and voting functionality. 
 
-* Only signed in users can review
 * Each product can have reviews attached to it.  Each review has a title, a body and a score from 1-5.
-* Reviews must be approved before they are live
+* Signed in users can always submit reviews, anonymous users can only submit reviews if a setting 
+  ``OSCAR_ALLOW_ANON_REVIEWS`` is set to true - it should default to false.
+* If anon users can submit reviews, then we require their name, email address and an (optional) URL.
+* By default, reviews must be approved before they are live.  However, if a setting ``OSCAR_MODERATE_REVIEWS``
+  is set to false, then they don't need moderation.
 * The product page should have a review form on it, any errors in the submission will be shown on the same product page
 * The product page will show the most recent 5 reviews with a link to browse all reviews for that product.
 * The URL for browsing a products offers should be the normal product URL with /reviews appended at the end
@@ -91,5 +94,69 @@ Pods, banners and merchandising blocks need to link to either an external URL or
 one (eg /fiction-books/).  The current URLField only supports external ones.  Write a new type 
 of field class that allows internal URLs too. 
 
+
+Fixed discount offers
+---------------------
+
+These are simply a name, description, discount type, discount value and a list of products.
+The types could be final-price, % or absolute amount.  Each of these will apply a discount
+to the final selling price of a product.
+
+* We needs the models to capture this data.
+* Each offer needs a "apply" method which will look through its products and apply the discount
+  to the appropriate stock row
+* The admin suite should have this link within its list view for offers
+
+
+Product adjustments
+-------------------
+
+Need models to capture an adjustment to a product which will override the data coming
+from a feed, or add an additional attribute to a product.
+
+* An adjustment links to a product and sets a new value for a field.
+* The adjustment has a start and end date for when it is applicable
+* It should be possible to add an attribute to a product 
+
+
+Search / Haystack integration
+-----------------------------
+
+It would be good to work out a basic Solr schema for default integration
+
+
+Customer services
+-----------------
+
+Extend the ``oscar.order_management`` app to support an advanced search for orders, 
+where you can search by:
+
+* Order number
+* Shipping address
+* Billing address
+* Customer name
+
+
+Recently viewed items
+---------------------
+
+Create functionality for a user's recently viewed items to be recorded.  I think this
+is in one of the Django ecommerce books, so check there first.
+
+This basically involves using the session to store a fixed-size queue of product IDs.
+Create a simple template tag that renders the list onto the page, you'll need to allow
+a custom tempalte to be specified as part of this.
+
+Make the number of products in the history configurable from ``settings.py``
+
+
+Product recommendations
+-----------------------
+
+Write a ``manage.py`` command that populates the product recommendation models
+based on the data within order history.  Just follow the rules for "customers who
+bought x, bought y"
+
+Create a service that takes in a basket, and returns the a set of recommended products
 
   

@@ -27,6 +27,9 @@ class AbstractOrderAndItemLevelChargeMethod(models.Model, ShippingMethod):
     price_per_order = models.DecimalField(decimal_places=2, max_digits=12, default=Decimal('0.00'))
     price_per_item = models.DecimalField(decimal_places=2, max_digits=12, default=Decimal('0.00'))
     
+    # If basket value is above this threshold, then shipping is free
+    free_shipping_threshold = models.DecimalField(decimal_places=2, max_digits=12, null=True)
+    
     _basket = None
     
     def save(self, *args, **kwargs):
@@ -47,6 +50,9 @@ class AbstractOrderAndItemLevelChargeMethod(models.Model, ShippingMethod):
         u"""
         Return basket total including tax
         """
+        if self.free_shipping_threshold != None and self._basket.total_incl_tax >= self.free_shipping_threshold:
+            return Decimal('0.00')
+        
         charge = self.price_per_order
         for line in self._basket.lines.all():
             charge += line.quantity * self.price_per_item

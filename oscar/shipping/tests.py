@@ -51,3 +51,40 @@ class OrderAndItemLevelChargeMethodTest(unittest.TestCase):
         p = create_product()
         self.basket.add_product(p, 7)
         self.assertEquals(D('5.00') + 7*D('1.00'), self.method.basket_charge_incl_tax())
+
+class ZeroFreeShippingThresholdTest(unittest.TestCase):
+    
+    def setUp(self):
+        self.method = OrderAndItemLevelChargeMethod(price_per_order=D('10.00'), free_shipping_threshold=D('0.00'))
+        self.basket = Basket.objects.create()
+        self.method.set_basket(self.basket)
+    
+    def test_free_shipping_with_empty_basket(self):
+        self.assertEquals(D('0.00'), self.method.basket_charge_incl_tax())
+        
+    def test_free_shipping_with_nonempty_basket(self):
+        p = create_product(D('5.00'))
+        self.basket.add_product(p)
+        self.assertEquals(D('0.00'), self.method.basket_charge_incl_tax())
+
+class NonZeroFreeShippingThresholdTest(unittest.TestCase):
+    
+    def setUp(self):
+        self.method = OrderAndItemLevelChargeMethod(price_per_order=D('10.00'), free_shipping_threshold=D('20.00'))
+        self.basket = Basket.objects.create()
+        self.method.set_basket(self.basket)
+        
+    def test_basket_below_threshold(self):
+        p = create_product(D('5.00'))
+        self.basket.add_product(p)
+        self.assertEquals(D('10.00'), self.method.basket_charge_incl_tax())
+        
+    def test_basket_on_threshold(self):
+        p = create_product(D('5.00'))
+        self.basket.add_product(p, 4)
+        self.assertEquals(D('0.00'), self.method.basket_charge_incl_tax())
+        
+    def test_basket_above_threshold(self):
+        p = create_product(D('5.00'))
+        self.basket.add_product(p, 8)
+        self.assertEquals(D('0.00'), self.method.basket_charge_incl_tax())

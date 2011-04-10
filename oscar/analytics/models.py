@@ -1,9 +1,10 @@
 from django.dispatch import receiver
 
-from oscar.analytics.abstract_models import AbstractProductRecord, AbstractUserRecord
+from oscar.analytics.abstract_models import (AbstractProductRecord, AbstractUserRecord,
+                                             AbstractUserProductView, AbstractUserSearch)
 from oscar.services import import_module
 
-product_signals = import_module('product.signals', ['product_viewed'])
+product_signals = import_module('product.signals', ['product_viewed', 'product_search'])
 basket_signals = import_module('basket.signals', ['basket_addition'])
 order_signals = import_module('order.signals', ['order_placed'])
 
@@ -11,6 +12,12 @@ class ProductRecord(AbstractProductRecord):
     pass
 
 class UserRecord(AbstractUserRecord):
+    pass
+
+class UserProductView(AbstractUserProductView):
+    pass
+
+class UserSearch(AbstractUserSearch):
     pass
 
 # Helpers
@@ -22,9 +29,13 @@ def _record_product_view(product):
     
 def _record_user_product_view(user, product):
     if user.is_authenticated():
+        # Update user record
         record,_ = UserRecord.objects.get_or_create(user=user)
         record.num_product_views += 1
         record.save()
+        
+        # Add user product view record
+        UserProductView.objects.create(product=product, user=user)
         
 def _record_basket_addition(product):
     record,_ = ProductRecord.objects.get_or_create(product=product)
@@ -53,12 +64,20 @@ def _record_user_order(user, order):
         record.date_last_order = order.date_placed
         record.save()
 
+def _record_user_product_search(user, query):
+    if user.is_authenticated():
+        UserSearch._default_manager.create(user=user, query=query)
+
 # Receivers
 
 @receiver(product_signals.product_viewed)
 def receive_product_view(sender, product, user, **kwargs):
     _record_product_view(product)
     _record_user_product_view(user, product)
+    
+@receiver(product_signals.product_search)
+def receive_product_search(sender, query, user, **kwargs):
+    _record_user_product_search(user, query)
     
 @receiver(basket_signals.basket_addition)
 def receive_basket_addition(sender, product, user, **kwargs):
