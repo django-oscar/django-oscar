@@ -3,6 +3,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404, render
 from django.core.urlresolvers import reverse
 from django.contrib import messages
+from django.core.exceptions import ObjectDoesNotExist
 
 from oscar.views import ModelView
 from oscar.services import import_module
@@ -12,6 +13,7 @@ basket_forms = import_module('basket.forms', ['FormFactory'])
 basket_factory = import_module('basket.factory', ['BasketFactory'])
 basket_signals = import_module('basket.signals', ['basket_addition'])
 product_models = import_module('product.models', ['Item'])
+offer_models = import_module('offer.models', ['Voucher'])
     
         
 class BasketView(ModelView):
@@ -68,6 +70,16 @@ class BasketView(ModelView):
             basket.add_product(item, form.cleaned_data['quantity'], options)
             messages.info(self.request, "'%s' (quantity %d) has been added to your basket" %
                           (item.get_title(), form.cleaned_data['quantity']))
+    
+    def do_add_voucher(self, basket):
+        code = self.request.POST['code']
+        try:
+            voucher = offer_models.Voucher._default_manager.get(code=code)
+            basket.vouchers.add(voucher)
+            basket.save()
+            messages.info(self.request, "Voucher '%s' added to basket" % voucher.code)
+        except ObjectDoesNotExist:
+            messages.error(self.request, "No voucher found with code '%s'" % code)
  
 
 class LineView(ModelView):

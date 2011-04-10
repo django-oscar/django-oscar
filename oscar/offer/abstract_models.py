@@ -30,7 +30,7 @@ class AbstractConditionalOffer(models.Model):
         (USER, "User offer - available to certain types of user"),
         (SESSION, "Session offer - temporary offer, available for a user for the duration of their session"),
     )
-    offer_type = modelsCharField(_("Type"), choices=TYPE_CHOICES, default=SITE)
+    offer_type = models.CharField(_("Type"), choices=TYPE_CHOICES, default=SITE, max_length=128)
 
     condition = models.OneToOneField('offer.Condition')
     benefit = models.OneToOneField('offer.Benefit')
@@ -197,8 +197,10 @@ class AbstractVoucher(models.Model):
     (b) Multi-use
     (c) Once per customer
     """
-    name = models.CharField(_("Name"), max_length=128)
-    code = models.CharField(_("Code"), max_length=128)
+    name = models.CharField(_("Name"), max_length=128,
+        help_text="""This will be shown in the checkout and basket once the voucher is entered""")
+    code = models.CharField(_("Code"), max_length=128, db_index=True, unique=True,
+        help_text="""Case insensitive / No spaces allowed""")
 
     SINGLE_USE, MULTI_USE, ONCE_PER_CUSTOMER = ('Single use', 'Multi-use', 'Once per customer')
     USAGE_CHOICES = (
@@ -214,6 +216,11 @@ class AbstractVoucher(models.Model):
     # Some vouchers can give free shipping
     free_shipping = models.BooleanField(default=False)
     date_created = models.DateField(auto_now_add=True)
+
+    # Summary information
+    num_basket_additions = models.PositiveIntegerField(default=0)
+    num_orders = models.PositiveIntegerField(default=0)
+    total_discount = models.DecimalField(decimal_places=2, max_digits=12, default=Decimal('0.00'))
 
     class Meta:
         abstract = True
@@ -237,7 +244,7 @@ class AbstractVoucher(models.Model):
             return self.applications.count() == 0
         elif self.usage == MULTI_USE:
             return True
-        elif self.usage == ONCE_PER_CUSTOMER::
+        elif self.usage == ONCE_PER_CUSTOMER:
             if not user.is_authenticated():
                 return False
             else:

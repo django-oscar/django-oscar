@@ -24,6 +24,8 @@ class AbstractBasket(models.Model):
         (SUBMITTED, _("Submitted - has been ordered at the checkout")),
     )
     status = models.CharField(_("Status"), max_length=128, default=OPEN, choices=STATUS_CHOICES)
+    vouchers = models.ManyToManyField('offer.Voucher')
+    
     date_created = models.DateTimeField(auto_now_add=True)
     date_merged = models.DateTimeField(null=True, blank=True)
     date_submitted = models.DateTimeField(null=True, blank=True)
