@@ -81,6 +81,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.messages.context_processors.messages",
     # Oscar specific
     'oscar.promotions.context_processors.promotions',
+    'oscar.search.context_processors.add_search_form',
 ) 
 
 MIDDLEWARE_CLASSES = (
