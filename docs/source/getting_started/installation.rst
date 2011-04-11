@@ -19,7 +19,7 @@ Install oscar and its dependencies::
     
     pip install -e git+git://github.com/codeinthehole/django-oscar.git#egg=django-oscar
     
-This will install Django and a few other packages.  Now create the project    
+This will install Django and a few other packages.  Now create the project::
     
     cd /path/to/my/workspace
     django-admin.py startproject $PROJECTNAME
@@ -70,7 +70,7 @@ Configure urls
 
 Oscar comes with a number of urls and views out of the box.  These are
 recommendations rather than a requirement but you easily use them in your
-e-commerce site by adding the oscar urls to your projects local ``urls.py``
+e-commerce site by adding the oscar urls to your projects local ``urls.py``::
 
     (r'^', include('oscar.urls')),
 
