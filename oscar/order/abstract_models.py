@@ -31,7 +31,9 @@ class AbstractOrder(models.Model):
     # is not mandatory.
     shipping_address = models.ForeignKey('order.ShippingAddress', null=True, blank=True)
     shipping_method = models.CharField(_("Shipping method"), max_length=128, null=True, blank=True)
-    date_placed = models.DateTimeField(auto_now_add=True)
+    
+    # Index added to this field for reporting
+    date_placed = models.DateTimeField(auto_now_add=True, db_index=True)
     
     @property
     def basket_total_incl_tax(self):
