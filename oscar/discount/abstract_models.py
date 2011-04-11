@@ -1,8 +1,9 @@
-from decimal import Decimal
+from decimal import Decimal, ROUND_UP
 
 from django.db import models
 from django.utils.translation import ugettext as _
 
+ABSOLUTE_DISCOUNT, PERCENTAGE_DISCOUNT, FINAL_PRICE = "Absolute", "Percentage", "Final price"
 
 class AbstractDiscountOffer(models.Model):
     u"""
@@ -15,8 +16,6 @@ class AbstractDiscountOffer(models.Model):
     end_date = models.DateField()
     
     products = models.ManyToManyField('product.Item')
-    
-    ABSOLUTE_DISCOUNT, PERCENTAGE_DISCOUNT, FINAL_PRICE = "Absolute", "Percentage", "Final price"
     TYPE_CHOICES = (
         (ABSOLUTE_DISCOUNT, _("An absolute amount of discount off the site price")),
         (PERCENTAGE_DISCOUNT, _("A percentage discount off the site price")),
@@ -36,6 +35,9 @@ class AbstractDiscountOffer(models.Model):
         return self.name    
         
     def is_active(self, test_date=None):
+        u"""
+        Tests whether this offer is currently active or not.
+        """
         if not test_date:
             test_date = datetime.date.today()
         return self.start_date <= test_date and test_date < self.end_date
@@ -67,11 +69,13 @@ class AbstractDiscountOffer(models.Model):
         Returns the discounted price
         """
         current_price = product.stockrecord.price_excl_tax
-        if self.discount_type == self.ABSOLUTE_DISCOUNT:
-            return max(Decimal('0.00'), current_price - self.discount_value)
-        elif self.discount_type == self.PERCENTAGE_DISCOUNT:
-            return current_price * (1 - self.discount_value) / 100
-        return self.discount_value 
+        if self.discount_type == ABSOLUTE_DISCOUNT:
+            price = max(Decimal('0.00'), current_price - self.discount_value)
+        elif self.discount_type == PERCENTAGE_DISCOUNT:
+            price = current_price * (1 - self.discount_value/100)
+        else:
+            price = self.discount_value
+        return price.quantize(Decimal('.01'))
                 
 
         
