@@ -14,9 +14,14 @@ class AbstractProductRecord(models.Model):
     """
     
     product = models.OneToOneField('product.Item')
+    
+    # Data used for generating a score
     num_views = models.PositiveIntegerField(default=0)
     num_basket_additions = models.PositiveIntegerField(default=0)
     num_purchases = models.PositiveIntegerField(default=0, db_index=True)
+    
+    # Product score - used within search
+    score = models.DecimalField(decimal_places=2, max_digits=12, default=Decimal('0.00'))
     
     class Meta:
         abstract = True
