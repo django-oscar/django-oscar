@@ -1,0 +1,1 @@
+import oscar.search.search_indexes

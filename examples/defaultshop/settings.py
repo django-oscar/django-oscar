@@ -1,7 +1,6 @@
 import os
 
 # Django settings for oscar project.
-
 PROJECT_DIR = os.path.dirname(__file__)
 location = lambda x: os.path.join(os.path.dirname(os.path.realpath(__file__)), x)
 
@@ -139,10 +138,12 @@ INSTALLED_APPS = (
     'django.contrib.flatpages',
     # External apps
     'django_extensions',
+    'haystack',
     #'debug_toolbar',
     # Apps from oscar
     'oscar',
     'oscar.analytics',
+    'oscar.discount',
     'oscar.order',
     'oscar.checkout',
     'oscar.shipping',
@@ -156,6 +157,7 @@ INSTALLED_APPS = (
     'oscar.image',
     'oscar.customer',
     'oscar.promotions',
+    'oscar.search',
 )
 
 LOGIN_REDIRECT_URL = '/shop/accounts/profile/'
@@ -163,6 +165,11 @@ APPEND_SLASH = True
 
 # Oscar settings
 OSCAR_DEFAULT_CURRENCY = 'GBP'
+
+# Haystack settings
+HAYSTACK_SITECONF = 'oscar.search_sites'
+HAYSTACK_SEARCH_ENGINE = 'solr'
+HAYSTACK_SOLR_URL = 'http://127.0.0.1:8080/solr'
 
 # Local overrides
 try:

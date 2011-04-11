@@ -172,12 +172,13 @@ class AbstractItem(models.Model):
             return "%s (%s)" % (self.get_title(), self.attribute_summary())
         return self.get_title()
     
+    @models.permalink
     def get_absolute_url(self):
         u"""Return a product's absolute url"""
-        args = {'item_class_slug': self.get_item_class().slug, 
-                'item_slug': self.slug,
-                'item_id': self.id}
-        return reverse('oscar-product-item', kwargs=args)
+        return ('oscar-product-item', (), {
+            'item_class_slug': self.get_item_class().slug, 
+            'item_slug': self.slug,
+            'item_id': self.id})
     
     def save(self, *args, **kwargs):
         if self.is_top_level and not self.title:
@@ -192,7 +193,6 @@ class ProductRecommendation(models.Model):
     u"""
     'Through' model for product recommendations
     """
-    
     primary = models.ForeignKey('product.Item', related_name='primary_recommendations')
     recommendation = models.ForeignKey('product.Item')
     ranking = models.PositiveSmallIntegerField(default=0)

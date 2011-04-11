@@ -12,3 +12,4 @@ Contents:
    components/checkout
    components/shipping
    components/analytics
+   components/promotions
