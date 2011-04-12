@@ -121,7 +121,7 @@ class AbstractShippingAddress(AbstractAddress):
     it should be read-only after that. 
     """
     phone_number = models.CharField(max_length=32, blank=True, null=True)
-    notes = models.TextField(blank=True, null=True) 
+    notes = models.TextField(blank=True, null=True, help_text="""Shipping notes""")
     
     class Meta:
         abstract = True
@@ -140,10 +140,14 @@ class AbstractUserAddress(AbstractShippingAddress):
     """
     user = models.ForeignKey('auth.User', related_name='addresses')
     
+    # Customers can set which is their default billing address
+    default_for_billing = models.BooleanField(default=False)
+    
     # We keep track of the number of times an address has been used
     # as a shipping address so we can show the most popular ones 
     # first at the checkout.
     num_orders = models.PositiveIntegerField(default=0)
+    
     # A hash is kept to try and avoid duplicate addresses being added
     # to the address book.
     hash = models.CharField(max_length=255, db_index=True)

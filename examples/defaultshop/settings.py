@@ -143,6 +143,7 @@ INSTALLED_APPS = (
     # Apps from oscar
     'oscar',
     'oscar.analytics',
+    'oscar.discount',
     'oscar.order',
     'oscar.checkout',
     'oscar.shipping',

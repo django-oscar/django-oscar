@@ -14,13 +14,21 @@ class AbstractProductRecord(models.Model):
     """
     
     product = models.OneToOneField('product.Item')
+    
+    # Data used for generating a score
     num_views = models.PositiveIntegerField(default=0)
     num_basket_additions = models.PositiveIntegerField(default=0)
     num_purchases = models.PositiveIntegerField(default=0, db_index=True)
     
+    # Product score - used within search
+    score = models.DecimalField(decimal_places=2, max_digits=12, default=Decimal('0.00'))
+    
     class Meta:
         abstract = True
         ordering = ['-num_purchases']
+        
+    def __unicode__(self):
+        return u"Record for '%s'" % self.product
         
 
 class AbstractUserRecord(models.Model):
@@ -44,4 +52,33 @@ class AbstractUserRecord(models.Model):
     class Meta:
         abstract = True
         
+        
+class AbstractUserProductView(models.Model):
+    
+     user = models.ForeignKey('auth.User')
+     product = models.ForeignKey('product.Item')
+     date_created = models.DateTimeField(auto_now_add=True)
+     
+     class Meta:
+         abstract = True
+         
+     def __unicode__(self):
+         return u"%s viewed '%s'" % (self.user, self.product)
+             
+
+class AbstractUserSearch(models.Model):
+    
+     user = models.ForeignKey('auth.User')
+     query = models.CharField(_("Search term"), max_length=255, db_index=True)
+     date_created = models.DateTimeField(auto_now_add=True)
+     
+     class Meta:
+         abstract = True
+         verbose_name_plural = "User search queries"
+         
+     def __unicode__(self):
+         return u"%s searched for '%s'" % (self.user, self.query)
+     
+         
+
     

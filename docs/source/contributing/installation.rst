@@ -25,10 +25,7 @@ Do the following from your workspace folder::
     
 After checking out your fork, install the latest version of Django into your virtualenv (currenty a beta of 1.3)::
 
-    wget http://www.djangoproject.com/download/1.3-beta-1/tarball/ -O Django-latest.tar.gz
-    pip install Django-latest.tar.gz
-
-Clone this repository to get the latest version of Oscar
+    pip install django
 
 Install all packages from the requirements file (optional)::
 
@@ -40,10 +37,6 @@ modules are not mandatory to run oscar.
 Install oscar in development mode within your virtual env::
 
     python setup.py develop
-
-Optionally, install all packages from the requirements file::
-
-    pip install -r requirements.txt
 
 Note: In case of gcc crashing and complaining in-between installation process,
 make sure you have appropriate -devel packages installed (ie. mysql-devel) in
