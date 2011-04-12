@@ -96,6 +96,9 @@ class AbstractOrder(models.Model):
     class Meta:
         abstract = True
         ordering = ['-date_placed',]
+        permissions = (
+            ("can_view", "Can view orders (eg for reporting)"),
+        )
     
     def __unicode__(self):
         return u"#%s" % (self.number,)

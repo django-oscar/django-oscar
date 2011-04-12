@@ -2,12 +2,16 @@ from datetime import date, datetime
 
 from django import forms
 
+from oscar.services import import_module
+report_utils = import_module('reports.utils', ['get_report_generators'])
+
 class ReportForm(forms.Form):
     
-    # @todo Make this dynamic
-    type_choices = (
-        ('orders', 'Orders'),
-    )
+    generators = report_utils.get_report_generators()
+    
+    type_choices = []
+    for generator in generators:
+        type_choices.append((generator.code, generator.description))
     report_type = forms.ChoiceField(widget=forms.Select(), choices=type_choices)
     start_date = forms.DateField(widget=forms.widgets.DateInput(format="%d/%m/%Y"))
     end_date = forms.DateField(widget=forms.widgets.DateInput(format="%d/%m/%Y"))
