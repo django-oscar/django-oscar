@@ -6,6 +6,12 @@ import json
 import settings
 
 class Suggestions(View):
+    u"""
+    Auto suggest view
+
+    Returns the suggestions in JSON format (especially suited for consumption by
+    jQuery autocomplete)
+    """
 
     suggest_limit = getattr(settings, 'OSCAR_SEARCH_SUGGEST_LIMIT', 10)
 
@@ -42,7 +48,9 @@ class Suggestions(View):
         return json.dumps(context)
 
 class MultiFacetedSearchView(FacetedSearchView):
-
+    u"""
+    Search view for multifaceted searches
+    """
     template = 'search/results.html'
 
     def __name__(self):
@@ -59,7 +67,7 @@ class MultiFacetedSearchView(FacetedSearchView):
             for f in self.form.cleaned_data['selected_facets'].split("|"):
                 facet = f.split(":")
                 extra['facets_applied'].append({
-                    'facet': facet[0][:-6],
+                    'facet': facet[0][:-6], # removing the _exact suffix that haystack uses for some reason
                     'value' : facet[1].strip('"')
                 })
         return extra

@@ -1,1 +1,1 @@
-import oscar.search.search_indexes
+import oscar.search_sites

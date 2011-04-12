@@ -131,6 +131,14 @@ class AbstractItem(models.Model):
         except ObjectDoesNotExist:
             return False
 
+    @property
+    def score(self):
+        try:
+            pr = self.productrecord
+            return pr.score
+        except ObjectDoesNotExist:
+            return 0
+
     def attribute_summary(self):
         u"""Return a string of all of a product's attributes"""
         return ", ".join([attribute.__unicode__() for attribute in self.attributes.all()])
