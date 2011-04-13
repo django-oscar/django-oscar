@@ -1,18 +1,18 @@
+import json
+
 from django.dispatch import receiver
 from django.conf import settings
 
 from oscar.services import import_module
-
-import json
-
 product_signals = import_module('product.signals', ['product_viewed'])
-max_products = settings.OSCAR_RECENTLY_VIEWED_PRODUCTS
+
+MAX_PRODUCTS = getattr(settings, 'OSCAR_RECENTLY_VIEWED_PRODUCTS', 5)
 
 # Helpers
 
 def get_recently_viewed_product_ids(request):
     u"""
-    The list of ids of the last products browsed by the user
+    Returns the list of ids of the last products browsed by the user
     
     Limited to the max number defined in settings.py
     under OSCAR_RECENTLY_VIEWED_PRODUCTS.
@@ -22,7 +22,7 @@ def get_recently_viewed_product_ids(request):
         try:
             product_ids = _get_list_from_json_string(request.COOKIES['oscar_recently_viewed_products'])
         except ValueError:
-            # This can occure if something messes up the cookie
+            # This can occur if something messes up the cookie
             pass
     return product_ids
 
@@ -35,11 +35,9 @@ def _update_recently_viewed_products(product, request, response):
     if product.id in product_ids:
         product_ids.remove(product.id)
     product_ids.append(product.id)
-    if (len(product_ids) > max_products):
-        assert False
-        del product_ids[max_products:]
+    if (len(product_ids) > MAX_PRODUCTS):
+        del product_ids[MAX_PRODUCTS:]
     response.set_cookie('oscar_recently_viewed_products', _get_json_string_from_list(product_ids))
-    return
 
 def _get_list_from_json_string(cookie_value):
     u""" Simple function to convert lists to json """
