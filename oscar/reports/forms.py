@@ -3,11 +3,11 @@ from datetime import date, datetime
 from django import forms
 
 from oscar.services import import_module
-report_utils = import_module('reports.utils', ['get_report_generators'])
+report_utils = import_module('reports.utils', ['GeneratorRepository'])
 
 class ReportForm(forms.Form):
     
-    generators = report_utils.get_report_generators()
+    generators = report_utils.GeneratorRepository().get_report_generators()
     
     type_choices = []
     for generator in generators:

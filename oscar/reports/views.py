@@ -3,7 +3,7 @@ from django.shortcuts import render
 
 from oscar.services import import_module
 report_forms = import_module('reports.forms', ['ReportForm'])
-report_utils = import_module('reports.utils', ['get_generator'])
+report_utils = import_module('reports.utils', ['GeneratorRepository'])
 
 def dashboard(request):
     if 'report_type' in request.GET:
@@ -24,7 +24,9 @@ def dashboard(request):
 
 def _get_generator(form):
     code = form.cleaned_data['report_type']
-    generator_cls = report_utils.get_generator(code)
+
+    repo = report_utils.GeneratorRepository()
+    generator_cls = repo.get_generator(code)
     if not generator_cls:
         raise Http404
     return generator_cls(start_date=form.cleaned_data['start_date'], 

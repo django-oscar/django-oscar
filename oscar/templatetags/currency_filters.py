@@ -14,4 +14,7 @@ def currency(value):
     except AttributeError:
         locale.setlocale(locale.LC_ALL, '')
     loc = locale.localeconv()
-    return locale.currency(value, loc['currency_symbol'], grouping=True)
+    try:
+        return locale.currency(value, loc['currency_symbol'], grouping=True)
+    except TypeError:
+        return ''

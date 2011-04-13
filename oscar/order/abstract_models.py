@@ -183,6 +183,10 @@ class AbstractLine(models.Model):
         help_text=_("This is the item number that the partner uses within their system"))
     partner_line_notes = models.TextField(blank=True, null=True)
     
+    # Estimated dispatch date - should be set at order time
+    est_dispatch_date = models.DateField(blank=True, null=True)
+    
+    
     @property
     def description(self):
         u"""
