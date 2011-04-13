@@ -9,7 +9,7 @@ from django.views.generic import ListView, DetailView
 from oscar.services import import_module
 
 product_models = import_module('product.models', ['Item', 'ItemClass'])
-product_signals = import_module('product.signals', ['product_viewed'])
+product_signals = import_module('product.signals', ['product_viewed', 'product_search'])
 basket_forms = import_module('basket.forms', ['FormFactory'])
 history_helpers = import_module('customer.history_helpers', ['receive_product_view'])
 
@@ -80,6 +80,9 @@ class ProductListView(ListView):
         u"""Return a set of prodcuts"""
         q = self.get_search_query()
         if q:
+            # Send signal to record the view of this product
+            product_signals.product_search.send(sender=self, query=q, user=self.request.user)
+            
             return product_models.Item.browsable.filter(title__icontains=q)
         else:
             return product_models.Item.browsable.all()

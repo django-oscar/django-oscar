@@ -58,19 +58,33 @@ class AbstractItem(models.Model):
     upc = models.CharField(_("UPC"), max_length=64, blank=True, null=True,
         help_text="""Universal Product Code (UPC) is an identifier for a product which is 
                      not specific to a particular supplier.  Eg an ISBN for a book.""")
+    
     # No canonical product should have a stock record as they cannot be bought.
     parent = models.ForeignKey('self', null=True, blank=True, related_name='variants',
         help_text="""Only choose a parent product if this is a 'variant' of a canonical product.  For example 
                      if this is a size 4 of a particular t-shirt.  Leave blank if this is a CANONICAL PRODUCT (ie 
                      there is only one version of this product).""")
+    
     # Title is mandatory for canonical products but optional for child products
     title = models.CharField(_('Title'), max_length=255, blank=True, null=True)
     slug = models.SlugField(max_length=255, unique=False)
     description = models.TextField(_('Description'), blank=True, null=True)
     item_class = models.ForeignKey('product.ItemClass', verbose_name=_('item class'), null=True,
         help_text="""Choose what type of product this is""")
-    attribute_types = models.ManyToManyField('product.AttributeType', through='ItemAttributeValue')
-    item_options = models.ManyToManyField('product.Option', blank=True)
+    attribute_types = models.ManyToManyField('product.AttributeType', through='ItemAttributeValue',
+        help_text="""An attribute type is something that this product MUST have, such as a size""")
+    item_options = models.ManyToManyField('product.Option', blank=True, 
+        help_text="""Options are values that can be associated with a item when it is added to 
+                     a customer's basket.  This could be something like a personalised message to be
+                     printed on a T-shirt.<br/>""")
+    
+    related_items = models.ManyToManyField('product.Item', related_name='relations', blank=True, help_text="""Related 
+        items are things like different formats of the same book.  Grouping them together allows
+        better linking betwen products on the site.<br/>""")
+    
+    # Recommended products
+    recommended_items = models.ManyToManyField('product.Item', through='ProductRecommendation', blank=True)
+    
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True, null=True, default=None)
 
@@ -158,12 +172,13 @@ class AbstractItem(models.Model):
             return "%s (%s)" % (self.get_title(), self.attribute_summary())
         return self.get_title()
     
+    @models.permalink
     def get_absolute_url(self):
         u"""Return a product's absolute url"""
-        args = {'item_class_slug': self.get_item_class().slug, 
-                'item_slug': self.slug,
-                'item_id': self.id}
-        return reverse('oscar-product-item', kwargs=args)
+        return ('oscar-product-item', (), {
+            'item_class_slug': self.get_item_class().slug, 
+            'item_slug': self.slug,
+            'item_id': self.id})
     
     def save(self, *args, **kwargs):
         if self.is_top_level and not self.title:
@@ -172,6 +187,15 @@ class AbstractItem(models.Model):
         if not self.slug:
             self.slug = slugify(self.get_title())
         super(AbstractItem, self).save(*args, **kwargs)
+
+
+class ProductRecommendation(models.Model):
+    u"""
+    'Through' model for product recommendations
+    """
+    primary = models.ForeignKey('product.Item', related_name='primary_recommendations')
+    recommendation = models.ForeignKey('product.Item')
+    ranking = models.PositiveSmallIntegerField(default=0)
 
 
 class AbstractAttributeType(models.Model):
@@ -227,8 +251,12 @@ class AbstractItemAttributeValue(models.Model):
 class AbstractOption(models.Model):
     u"""
     An option that can be selected for a particular item when the product
-    is added to the basket.  Eg a message for a SMS message.  This is not
-    the same as an attribute as options do not have a fixed value for 
+    is added to the basket.  
+    
+    Eg a list ID for an SMS message send, or a personalised message to 
+    print on a T-shirt.  
+    
+    This is not the same as an attribute as options do not have a fixed value for 
     a particular item - options, they need to be specified by the customer.
     """
     name = models.CharField(_('name'), max_length=128)
@@ -251,4 +279,6 @@ class AbstractOption(models.Model):
         if not self.code:
             self.code = _convert_to_underscores(self.name)
         super(AbstractOption, self).save(*args, **kwargs)
+    
+
     

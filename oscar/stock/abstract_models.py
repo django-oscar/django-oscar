@@ -1,6 +1,5 @@
-"""
-Models for the stock and fulfillment components of an project
-"""
+import datetime
+
 from django.conf import settings
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -34,7 +33,10 @@ class AbstractStockRecord(models.Model):
     # We deliberately don't store tax information to allow each project
     # to subclass this model and put its own fields for convey tax.
     price_currency = models.CharField(max_length=12, default=settings.OSCAR_DEFAULT_CURRENCY)
-    # This is the base price for calculations
+    
+    # This is the base price for calculations - tax should be applied 
+    # by the appropriate method.  We don't store it here as its calculation is 
+    # highly domain-specific.
     price_excl_tax = models.DecimalField(decimal_places=2, max_digits=12)
     
     # Cost price is optional as not all partner supply it
@@ -54,6 +56,17 @@ class AbstractStockRecord(models.Model):
         self.num_allocated += delta
         self.save()
         
+    def set_discount_price(self, price):
+        u"""
+        A setter method for setting a new price.  
+        
+        This is called from within the "discount" app, which is responsible
+        for applying fixed-discount offers to products.  We use a setter method
+        so that this behaviour can be customised in projects.
+        """
+        self.price_excl_tax = price
+        self.save()
+        
     # Price retrieval methods - these default to no tax being applicable
     # These are intended to be overridden.   
     
@@ -64,6 +77,17 @@ class AbstractStockRecord(models.Model):
             return _("In stock (%d available)" % self.num_in_stock)
         return _("Out of stock")
     
+    @property
+    def dispatch_date(self):
+        u"""
+        Returns the estimated dispatch date for a line
+        """
+        if self.num_in_stock:
+            # Assume next day for in-stock items
+            return datetime.date.today() + datetime.timedelta(days=1)
+        # Assume one week for out-of-stock items
+        return datetime.date.today() + datetime.timedelta(days=7)
+    
     @property 
     def price_incl_tax(self):
         u"""Return a product's price including tax"""
@@ -72,7 +96,6 @@ class AbstractStockRecord(models.Model):
     @property 
     def price_tax(self):
         u"""Return a product's tax value"""
-        #TODO?
         return 0
         
     def __unicode__(self):
