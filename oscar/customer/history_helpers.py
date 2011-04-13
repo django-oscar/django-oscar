@@ -1,5 +1,6 @@
 from django.dispatch import receiver
 from django.conf import settings
+
 from oscar.services import import_module
 
 import json
@@ -17,9 +18,9 @@ def get_recently_viewed_product_ids(request):
     under OSCAR_RECENTLY_VIEWED_PRODUCTS.
     """
     product_ids = [];
-    if (request.COOKIES.has_key('recently_viewed_products')):
+    if (request.COOKIES.has_key('oscar_recently_viewed_products')):
         try:
-            product_ids = _get_list_from_json_string(request.COOKIES['recently_viewed_products'])
+            product_ids = _get_list_from_json_string(request.COOKIES['oscar_recently_viewed_products'])
         except ValueError:
             # This can occure if something messes up the cookie
             pass
@@ -37,7 +38,7 @@ def _update_recently_viewed_products(product, request, response):
     if (len(product_ids) > max_products):
         assert False
         del product_ids[max_products:]
-    response.set_cookie('recently_viewed_products', _get_json_string_from_list(product_ids))
+    response.set_cookie('oscar_recently_viewed_products', _get_json_string_from_list(product_ids))
     return
 
 def _get_list_from_json_string(cookie_value):
