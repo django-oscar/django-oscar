@@ -27,4 +27,4 @@ class ReportGenerator(object):
         u"""
         Checks whether this report is available to this user
         """
-        return True
+        return user.is_staff
