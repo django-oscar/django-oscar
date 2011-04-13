@@ -3,7 +3,8 @@ from exceptions import Exception
 from django.core.signals import request_finished
 from django.dispatch import receiver
 
-from oscar.basket.abstract_models import AbstractBasket, AbstractLine, AbstractLineAttribute
+from oscar.basket.abstract_models import (AbstractBasket, AbstractLine, AbstractLineAttribute,
+                                          OPEN, MERGED, SAVED, SUBMITTED)
 
 
 class InvalidBasketLineError(Exception):

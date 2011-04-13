@@ -1,6 +1,5 @@
-"""
-Models for the stock and fulfillment components of an project
-"""
+import datetime
+
 from django.conf import settings
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -77,6 +76,17 @@ class AbstractStockRecord(models.Model):
         if self.num_in_stock:
             return _("In stock (%d available)" % self.num_in_stock)
         return _("Out of stock")
+    
+    @property
+    def dispatch_date(self):
+        u"""
+        Returns the estimated dispatch date for a line
+        """
+        if self.num_in_stock:
+            # Assume next day for in-stock items
+            return datetime.date.today() + datetime.timedelta(days=1)
+        # Assume one week for out-of-stock items
+        return datetime.date.today() + datetime.timedelta(days=7)
     
     @property 
     def price_incl_tax(self):
