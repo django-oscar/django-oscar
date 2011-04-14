@@ -44,10 +44,17 @@ class AbstractConditionalOffer(models.Model):
 
     # Some complicated situations require offers to be applied in a set order.
     priority = models.IntegerField(default=0, help_text="The highest priority offers are applied first")
+
+    # We track some information on usage
+    total_discount = models.DecimalField(decimal_places=2, max_digits=12, default=Decimal('0.00'))
+    
     date_created = models.DateTimeField(auto_now_add=True)
 
     objects = models.Manager()
     active = ActiveOfferManager()
+
+    # We need to track the voucher that this offer came from (if it is a voucher offer)
+    _voucher = None
 
     class Meta:
         ordering = ['-priority']
@@ -76,6 +83,12 @@ class AbstractConditionalOffer(models.Model):
             # as being unavailable for future offers.
             self._proxy_condition().consume_items(basket)
         return discount    
+        
+    def set_voucher(self, voucher):
+        self._voucher = voucher
+        
+    def get_voucher(self):
+        return self._voucher        
         
     def _proxy_condition(self):
         u"""
@@ -247,17 +260,31 @@ class AbstractVoucher(models.Model):
     def is_available_to_user(self, user=None):
         u"""
         Tests whether this voucher is available to the passed user.
+        
+        Returns a tuple of a boolean for whether it is successulf, and a message
         """
+        is_available, message = False, ''
         if self.usage == self.SINGLE_USE:
-            return self.applications.count() == 0
+            is_available = self.applications.count() == 0
+            if not is_available:
+                message = "This voucher has already been used"
         elif self.usage == self.MULTI_USE:
-            return True
+            is_available = True
         elif self.usage == self.ONCE_PER_CUSTOMER:
             if not user.is_authenticated():
-                return False
+                is_available = False
+                message = "This voucher is only available to signed in users"
             else:
-                return self.applications.filter(voucher=self, user=user).count() == 0
-        return False
+                is_available = self.applications.filter(voucher=self, user=user).count() == 0
+                if not is_available:
+                    message = "You have already used this voucher in a previous order"
+        return is_available, message
+    
+    def record_usage(self, user):
+        u"""
+        Records a usage of this voucher in an order.
+        """
+        self.applications.create(voucher=self, user=user)
 
 
 class AbstractVoucherApplication(models.Model):
@@ -272,6 +299,9 @@ class AbstractVoucherApplication(models.Model):
 
     class Meta:
         abstract = True
+        
+    def __unicode__(self):
+        return u"'%s' used by '%s'" % (self.voucher, self.user)
 
 
 

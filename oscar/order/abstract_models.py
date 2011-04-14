@@ -174,6 +174,10 @@ class AbstractLine(models.Model):
     line_price_incl_tax = models.DecimalField(decimal_places=2, max_digits=12)
     line_price_excl_tax = models.DecimalField(decimal_places=2, max_digits=12)
     
+    # Price information before discounts are applied
+    line_price_before_discounts_incl_tax = models.DecimalField(decimal_places=2, max_digits=12)
+    line_price_before_discounts_excl_tax = models.DecimalField(decimal_places=2, max_digits=12)
+    
     # Cost price (the price charged by the fulfilment partner for this product).  This
     # is useful for audit and financial reporting.
     cost_price = models.DecimalField(decimal_places=2, max_digits=12, blank=True, null=True)
@@ -418,4 +422,13 @@ class AbstractShippingEventType(models.Model):
         return self.name
         
         
-
+class AbstractOrderDiscount(models.Model):
+    
+    order = models.ForeignKey('order.Order', related_name="discounts")
+    offer = models.ForeignKey('offer.ConditionalOffer', null=True, on_delete=models.SET_NULL)
+    voucher = models.ForeignKey('offer.Voucher', related_name="discount_vouchers", null=True, on_delete=models.SET_NULL)
+    voucher_code = models.CharField(_("Code"), max_length=128, db_index=True)
+    amount = models.DecimalField(decimal_places=2, max_digits=12, default=0)
+    
+    class Meta:
+        abstract = True

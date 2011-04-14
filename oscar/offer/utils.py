@@ -13,7 +13,7 @@ class Applicator(object):
     def apply(self, request, basket):
         u"""
         Applies all relevant offers to the given basket.  The user is passed 
-        too as sometimes the available offers are dependent on the user
+        too as sometimes the available offers are dependent on the user.
         """
         offers = self.get_offers(request, basket)
         discounts = {}
@@ -25,13 +25,15 @@ class Applicator(object):
                 if discount > 0:
                     if offer.id not in discounts:
                         discounts[offer.id] = {'name': offer.name,
+                                               'offer': offer,
+                                               'voucher': offer.get_voucher(),
                                                'freq': 0,
                                                'discount': Decimal('0.00')} 
                     discounts[offer.id]['discount'] += discount
                     discounts[offer.id]['freq'] += 1
                 else:
                     break
-                
+               
         # Store this list of discounts with the basket so it can be 
         # rendered in templates
         basket.set_discounts(list(discounts.values()))
@@ -63,7 +65,10 @@ class Applicator(object):
         offers = []
         for voucher in basket.vouchers.all():
             if voucher.is_active() and voucher.is_available_to_user(user):
-                offers = list(chain(offers, voucher.offers.all()))
+                basket_offers = voucher.offers.all()
+                for offer in basket_offers:
+                    offer.set_voucher(voucher)
+                offers = list(chain(offers, basket_offers))
         return offers
     
     def get_user_offers(self, user):

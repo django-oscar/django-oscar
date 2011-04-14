@@ -210,3 +210,6 @@ class Voucher(AbstractVoucher):
 
 class VoucherApplication(AbstractVoucherApplication):
     pass
+
+# We need to import receivers at the bottom of this script
+from oscar.offer.receivers import receive_basket_voucher_change

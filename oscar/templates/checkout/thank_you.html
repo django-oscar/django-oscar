@@ -25,8 +25,17 @@
         <td><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></td>
         <td>{{ line.est_dispatch_date }}</td>
         <td>{{ line.quantity }}</td>
-        <td>{{ line.line_price_excl_tax|currency }}</td>
-        <td>{{ line.line_price_incl_tax|currency }}</td>
+        <td>{{ line.line_price_before_discounts_excl_tax|currency }}</td>
+        <td>{{ line.line_price_before_discounts_incl_tax|currency }}</td>
+    </tr>
+    {% endfor %}
+    {% for discount in order.discounts.all %}
+    <tr>
+        <td>{{ discount.offer }}</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>- {{ discount.amount|currency }}</td>
     </tr>
     {% endfor %}
     <tr>

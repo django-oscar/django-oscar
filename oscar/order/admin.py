@@ -4,7 +4,7 @@ from oscar.services import import_module
 models = import_module('order.models', ['Order', 'OrderNote', 'CommunicationEvent', 'CommunicationEventType',
                                         'BillingAddress', 'ShippingAddress', 'Line',
                                         'LinePrice', 'ShippingEvent', 'ShippingEventType', 
-                                        'PaymentEvent', 'PaymentEventType', 'LineAttribute'])
+                                        'PaymentEvent', 'PaymentEventType', 'LineAttribute', 'OrderDiscount'])
 
 class OrderAdmin(admin.ModelAdmin):
     list_display = ('number', 'total_incl_tax', 'site', 'user', 'billing_address', 'date_placed')
@@ -33,6 +33,10 @@ class OrderNoteAdmin(admin.ModelAdmin):
         if not change:
             obj.user = request.user
         obj.save()
+        
+class OrderDiscountAdmin(admin.ModelAdmin):
+    readonly_fields = ('order' ,'offer', 'voucher', 'voucher_code', 'amount')
+    list_display = ('order' ,'offer', 'voucher', 'voucher_code', 'amount')
 
 admin.site.register(models.Order, OrderAdmin)
 admin.site.register(models.ShippingAddress)
@@ -43,4 +47,5 @@ admin.site.register(models.ShippingEventType, ShippingEventTypeAdmin)
 admin.site.register(models.PaymentEvent)
 admin.site.register(models.PaymentEventType, PaymentEventTypeAdmin)
 admin.site.register(models.LineAttribute)
+admin.site.register(models.OrderDiscount, OrderDiscountAdmin)
 

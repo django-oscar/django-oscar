@@ -264,7 +264,7 @@ class ThankYouView(object):
             
             # Remove order number from session to ensure that the thank-you page is only 
             # viewable once.
-            del request.session['checkout_order_id']
+            #del request.session['checkout_order_id']
         except KeyError, ObjectDoesNotExist:
             return HttpResponseRedirect(reverse('oscar-checkout-index'))
         return render(request, 'checkout/thank_you.html', locals())

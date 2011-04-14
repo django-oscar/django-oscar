@@ -44,6 +44,8 @@
             "line_price_excl_tax": "69.90", 
             "partner_reference": null, 
             "line_price_incl_tax": "69.90", 
+            "line_price_before_discounts_incl_tax": "69.90", 
+            "line_price_before_discounts_excl_tax": "69.90", 
             "order": 1, 
             "quantity": 10
         }
@@ -58,6 +60,8 @@
             "line_price_excl_tax": "68.80", 
             "partner_reference": null, 
             "line_price_incl_tax": "68.80", 
+            "line_price_before_discounts_incl_tax": "68.80", 
+            "line_price_before_discounts_excl_tax": "68.80", 
             "order": 1, 
             "quantity": 5
         }

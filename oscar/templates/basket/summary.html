@@ -89,7 +89,7 @@ Your basket is currently empty - go and <a href="{% url oscar-products %}">buy s
     <li>
         <form action="{% url oscar-basket %}" method="POST">
             {% csrf_token %}
-            {{ voucher.code }}
+            {{ voucher.name }} ({{ voucher.code }})
             <input type="hidden" name="action" value="remove_voucher" />
             <input type="hidden" name="voucher_code" value="{{ voucher.code }}" />
             <input type="submit" value="Remove" />

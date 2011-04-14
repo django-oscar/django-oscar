@@ -1,6 +1,16 @@
 [
     {
         "pk": 1, 
+        "model": "offer.range", 
+        "fields": {
+            "includes_all_products": true, 
+            "excluded_products": [], 
+            "name": "Whole site", 
+            "included_products": []
+        }
+    }, 
+    {
+        "pk": 1, 
         "model": "offer.condition", 
         "fields": {
             "range": 1, 
@@ -31,16 +41,6 @@
             "start_date": null, 
             "condition": 1, 
             "description": ""
-        }
-    }, 
-    {
-        "pk": 1, 
-        "model": "offer.range", 
-        "fields": {
-            "includes_all_products": true, 
-            "excluded_products": [], 
-            "name": "Whole site", 
-            "included_products": []
         }
     }, 
     {
