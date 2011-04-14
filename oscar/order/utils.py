@@ -82,6 +82,7 @@ class OrderCreator(object):
                                       line_price_incl_tax=basket_line.line_price_incl_tax_and_discounts)
         if basket_line.product.has_stockrecord:
             order_line.partner_reference = basket_line.product.stockrecord.partner_reference
+            order_line.dispatch_date = basket_line.product.stockrecord.dispatch_date
         order_line.save()
         self._create_line_price_models(order, order_line, basket_line)
         self._create_line_attributes(order, order_line, basket_line)

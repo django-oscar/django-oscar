@@ -10,6 +10,7 @@ urlpatterns = patterns('',
     (r'order-management/', include('oscar.order_management.urls')),
     (r'accounts/', include('oscar.customer.urls')),
     (r'promotions/', include('oscar.promotions.urls')),
+    (r'reports/', include('oscar.reports.urls')),
     (r'^$', home),     
 )
 

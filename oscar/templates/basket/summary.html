@@ -10,7 +10,7 @@
 {% block content %}
 
 {% if basket.is_empty %}
-Your basket is currently empty - go and <a href="/shop/product/">buy something</a>!
+Your basket is currently empty - go and <a href="{% url oscar-products %}">buy something</a>!
 {% else %}
 
 <h3>To buy now</h3>

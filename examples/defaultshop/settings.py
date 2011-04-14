@@ -75,6 +75,7 @@ TEMPLATE_LOADERS = (
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.auth.context_processors.auth",
+    "django.core.context_processors.request",
     "django.core.context_processors.debug",
     "django.core.context_processors.i18n",
     "django.core.context_processors.media",
@@ -157,6 +158,7 @@ INSTALLED_APPS = (
     'oscar.image',
     'oscar.customer',
     'oscar.promotions',
+    'oscar.reports',
 )
 
 LOGIN_REDIRECT_URL = '/shop/accounts/profile/'
@@ -164,6 +166,9 @@ APPEND_SLASH = True
 
 # Oscar settings
 OSCAR_DEFAULT_CURRENCY = 'GBP'
+
+# Max number of products to keep on the user's history
+OSCAR_RECENTLY_VIEWED_PRODUCTS = 4
 
 # Local overrides
 try:
