@@ -8,15 +8,7 @@ from oscar.offer.models import *
 from oscar.basket.models import Basket
 from oscar.product.models import Item, ItemClass
 from oscar.stock.models import Partner, StockRecord
-
-
-def create_product(price=None):
-    ic,_ = ItemClass.objects.get_or_create(name='Dummy class')
-    item = Item.objects.create(title='Dummy product', item_class=ic)
-    if price:
-        partner,_ = Partner.objects.get_or_create(name="Dummy partner")
-        sr = StockRecord.objects.create(product=item, partner=partner, price_excl_tax=price)
-    return item
+from oscar.test_helpers import create_product
 
 
 class RangeTest(unittest.TestCase):

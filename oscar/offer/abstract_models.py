@@ -215,15 +215,17 @@ class AbstractVoucher(models.Model):
 
     # Some vouchers can give free shipping
     free_shipping = models.BooleanField(default=False)
-    date_created = models.DateField(auto_now_add=True)
 
     # Summary information
     num_basket_additions = models.PositiveIntegerField(default=0)
     num_orders = models.PositiveIntegerField(default=0)
     total_discount = models.DecimalField(decimal_places=2, max_digits=12, default=Decimal('0.00'))
+    
+    date_created = models.DateField(auto_now_add=True)
 
     class Meta:
         abstract = True
+        get_latest_by = 'date_created'
 
     def __unicode__(self):
         return self.name

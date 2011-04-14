@@ -12,6 +12,7 @@ class BenefitAdmin(admin.ModelAdmin):
     
 class VoucherAdmin(admin.ModelAdmin):
     list_display = ('name', 'code', 'usage', 'num_basket_additions', 'num_orders', 'total_discount')    
+    readonly_fields = ('num_basket_additions', 'num_orders', 'total_discount')
     
 class ConditionalOfferAdmin(admin.ModelAdmin):
     list_display = ('name', 'offer_type', 'start_date', 'end_date', 'condition', 'benefit')

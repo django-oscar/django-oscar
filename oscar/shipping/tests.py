@@ -6,7 +6,7 @@ from django.test.client import Client
 from oscar.shipping.methods import FreeShipping, FixedPriceShipping
 from oscar.shipping.models import OrderAndItemLevelChargeMethod
 from oscar.basket.models import Basket
-from oscar.utils import create_product
+from oscar.test_helpers import create_product
 
 class FreeShippingTest(unittest.TestCase):
     

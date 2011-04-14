@@ -5,7 +5,7 @@
         "fields": {
             "range": 1, 
             "type": "Count", 
-            "value": "1.00"
+            "value": "3.00"
         }
     }, 
     {
@@ -13,22 +13,22 @@
         "model": "offer.benefit", 
         "fields": {
             "range": 1, 
-            "type": "Percentage", 
+            "type": "Multibuy", 
             "max_affected_items": null, 
-            "value": "50.00"
+            "value": "1.00"
         }
     }, 
     {
         "pk": 1, 
         "model": "offer.conditionaloffer", 
         "fields": {
-            "name": "Sample voucher offer", 
-            "end_date": "2011-06-30", 
+            "name": "3 for 2 ", 
+            "end_date": null, 
             "priority": 0, 
             "benefit": 1, 
-            "date_created": "2011-04-10 23:40:00", 
+            "date_created": "2011-04-14 19:29:04", 
             "offer_type": "Voucher", 
-            "start_date": "2011-04-10", 
+            "start_date": null, 
             "condition": 1, 
             "description": ""
         }
@@ -48,15 +48,15 @@
         "model": "offer.voucher", 
         "fields": {
             "free_shipping": false, 
-            "code": "testing", 
-            "name": "Sample voucher", 
-            "end_date": "2011-09-30", 
+            "code": "BOOM", 
+            "name": "Multibuy voucher", 
+            "end_date": "2011-04-30", 
             "num_orders": 0, 
             "num_basket_additions": 0, 
             "total_discount": "0.00", 
-            "usage": "Once per customer", 
-            "date_created": "2011-04-10", 
-            "start_date": "2011-04-10"
+            "usage": "Multi-use", 
+            "date_created": "2011-04-14", 
+            "start_date": "2011-04-14"
         }
     }
 ]
