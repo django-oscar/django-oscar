@@ -5,7 +5,7 @@
         "fields": {
             "range": 1, 
             "type": "Count", 
-            "value": "3.00"
+            "value": "1.00"
         }
     }, 
     {
@@ -13,20 +13,20 @@
         "model": "offer.benefit", 
         "fields": {
             "range": 1, 
-            "type": "Multibuy", 
+            "type": "Percentage", 
             "max_affected_items": null, 
-            "value": "1.00"
+            "value": "25.00"
         }
     }, 
     {
         "pk": 1, 
         "model": "offer.conditionaloffer", 
         "fields": {
-            "name": "3 for 2 ", 
+            "name": "Voucher offer", 
             "end_date": null, 
             "priority": 0, 
             "benefit": 1, 
-            "date_created": "2011-04-14 19:29:04", 
+            "date_created": "2011-04-14 19:42:25", 
             "offer_type": "Voucher", 
             "start_date": null, 
             "condition": 1, 
@@ -49,12 +49,15 @@
         "fields": {
             "free_shipping": false, 
             "code": "BOOM", 
-            "name": "Multibuy voucher", 
-            "end_date": "2011-04-30", 
+            "name": "Oscar voucher", 
+            "end_date": "2011-04-28", 
             "num_orders": 0, 
+            "offers": [
+                1
+            ], 
             "num_basket_additions": 0, 
             "total_discount": "0.00", 
-            "usage": "Multi-use", 
+            "usage": "Once per customer", 
             "date_created": "2011-04-14", 
             "start_date": "2011-04-14"
         }

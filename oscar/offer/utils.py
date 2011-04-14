@@ -45,7 +45,7 @@ class Applicator(object):
         the user type.
         """
         site_offers = self.get_site_offers()
-        basket_offers = self.get_basket_offers(basket)
+        basket_offers = self.get_basket_offers(basket, request.user)
         user_offers = self.get_user_offers(request.user)
         session_offers = self.get_session_offers(request)
         
@@ -57,10 +57,14 @@ class Applicator(object):
         """
         return offer_models.ConditionalOffer.active.all()
     
-    def get_basket_offers(self, basket):
+    def get_basket_offers(self, basket, user):
         u"""
         Returns basket-linked offers such as those associated with a voucher code"""
-        return []
+        offers = []
+        for voucher in basket.vouchers.all():
+            if voucher.is_active() and voucher.is_available_to_user(user):
+                offers = list(chain(offers, voucher.offers.all()))
+        return offers
     
     def get_user_offers(self, user):
         u"""

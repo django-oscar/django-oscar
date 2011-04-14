@@ -1,4 +1,5 @@
 from decimal import Decimal
+import datetime
 
 from django.contrib.auth.models import User
 from django.db import models
@@ -201,6 +202,7 @@ class AbstractVoucher(models.Model):
         help_text="""This will be shown in the checkout and basket once the voucher is entered""")
     code = models.CharField(_("Code"), max_length=128, db_index=True, unique=True,
         help_text="""Case insensitive / No spaces allowed""")
+    offers = models.ManyToManyField('offer.ConditionalOFfer', related_name='vouchers')
 
     SINGLE_USE, MULTI_USE, ONCE_PER_CUSTOMER = ('Single use', 'Multi-use', 'Once per customer')
     USAGE_CHOICES = (
@@ -230,6 +232,10 @@ class AbstractVoucher(models.Model):
     def __unicode__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        self.code = self.code.upper()
+        super(AbstractVoucher, self).save(*args, **kwargs)
+
     def is_active(self, test_date=None):
         u"""
         Tests whether this voucher is currently active.
@@ -242,11 +248,11 @@ class AbstractVoucher(models.Model):
         u"""
         Tests whether this voucher is available to the passed user.
         """
-        if self.usage == SINGLE_USE:
+        if self.usage == self.SINGLE_USE:
             return self.applications.count() == 0
-        elif self.usage == MULTI_USE:
+        elif self.usage == self.MULTI_USE:
             return True
-        elif self.usage == ONCE_PER_CUSTOMER:
+        elif self.usage == self.ONCE_PER_CUSTOMER:
             if not user.is_authenticated():
                 return False
             else:

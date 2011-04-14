@@ -72,12 +72,22 @@ class BasketView(ModelView):
                           (item.get_title(), form.cleaned_data['quantity']))
     
     def do_add_voucher(self, basket):
-        code = self.request.POST['code']
+        code = self.request.POST['voucher_code']
         try:
             voucher = offer_models.Voucher._default_manager.get(code=code)
             basket.vouchers.add(voucher)
             basket.save()
             messages.info(self.request, "Voucher '%s' added to basket" % voucher.code)
+        except ObjectDoesNotExist:
+            messages.error(self.request, "No voucher found with code '%s'" % code)
+            
+    def do_remove_voucher(self, basket):
+        code = self.request.POST['voucher_code']
+        try:
+            voucher = basket.vouchers.get(code=code)
+            basket.vouchers.remove(voucher)
+            basket.save()
+            messages.info(self.request, "Voucher '%s' removed from basket" % voucher.code)
         except ObjectDoesNotExist:
             messages.error(self.request, "No voucher found with code '%s'" % code)
  
