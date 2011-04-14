@@ -228,9 +228,6 @@ class AbstractVoucher(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
 
-    # Some vouchers can give free shipping
-    free_shipping = models.BooleanField(default=False)
-
     # Summary information
     num_basket_additions = models.PositiveIntegerField(default=0)
     num_orders = models.PositiveIntegerField(default=0)

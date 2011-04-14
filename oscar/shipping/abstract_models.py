@@ -35,7 +35,7 @@ class AbstractOrderAndItemLevelChargeMethod(models.Model, ShippingMethod):
     def save(self, *args, **kwargs):
         if not self.code:
             self.code = slugify(self.name)
-        super(AbstractMethod, self).save(*args, **kwargs)
+        super(AbstractOrderAndItemLevelChargeMethod, self).save(*args, **kwargs)
     
     class Meta:
         abstract = True
