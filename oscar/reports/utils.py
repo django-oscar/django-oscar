@@ -2,7 +2,7 @@ from oscar.services import import_module
 order_reports = import_module('order.reports', ['OrderReportGenerator'])
 analytics_reports = import_module('analytics.reports', ['ProductReportGenerator', 'UserReportGenerator'])
 basket_reports = import_module('basket.reports', ['OpenBasketReportGenerator', 'SubmittedBasketReportGenerator'])     
-
+offer_reports = import_module('offer.reports', ['VoucherReportGenerator']) 
 
 class GeneratorRepository(object):
     
@@ -10,7 +10,8 @@ class GeneratorRepository(object):
                   analytics_reports.ProductReportGenerator,
                   analytics_reports.UserReportGenerator,
                   basket_reports.OpenBasketReportGenerator,
-                  basket_reports.SubmittedBasketReportGenerator,]
+                  basket_reports.SubmittedBasketReportGenerator,
+                  offer_reports.VoucherReportGenerator,]
 
     def get_report_generators(self):
         return self.generators
