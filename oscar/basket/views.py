@@ -75,6 +75,13 @@ class BasketView(ModelView):
         code = self.request.POST['voucher_code']
         try:
             voucher = offer_models.Voucher._default_manager.get(code=code)
+            if not voucher.is_active():
+                messages.error(self.request, "The '%s' voucher has expired" % voucher.code)
+                return
+            if not voucher.is_available_to_user(self.request.user):
+                messages.error(self.request, "The '%s' voucher has already been used" % voucher.code)
+                return
+            
             basket.vouchers.add(voucher)
             basket.save()
             messages.info(self.request, "Voucher '%s' added to basket" % voucher.code)
