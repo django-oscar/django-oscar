@@ -42,6 +42,38 @@ class CountCondition(Condition):
                 return
         
         
+class CoverageCondition(Condition):
+    u"""
+    An offer condition dependent on the NUMBER of matching items from the basket.
+    """
+
+    class Meta:
+        proxy = True
+
+    def is_satisfied(self, basket):
+        u"""Determines whether a given basket meets this condition"""
+        covered_ids = []
+        for line in basket.all_lines():
+            if self.range.contains_product(line.product) and line.product.id not in covered_ids:
+                covered_ids.append(line.product.id)
+            if len(covered_ids) >= self.value:
+                return True
+        return False
+    
+    def consume_items(self, basket):
+        u"""
+        Marks items within the basket lines as consumed so they
+        can't be reused in other offers.
+        """
+        covered_ids = []
+        for line in basket.all_lines():
+            if self.range.contains_product(line.product) and line.product.id not in covered_ids:
+                line.consume(1)
+                covered_ids.append(line.product.id)
+            if len(covered_ids) >= self.value:
+                return
+        
+        
 class ValueCondition(Condition):
     u"""
     An offer condition dependent on the VALUE of matching items from the basket.

@@ -92,6 +92,42 @@ class ValueConditionTest(OfferTest):
         self.cond.consume_items(self.basket)
         self.assertEquals(1, self.basket.all_lines()[0].quantity_without_discount)
 
+      
+class CoverageConditionTest(unittest.TestCase):
+    
+    def setUp(self):
+        self.products = [create_product(), create_product()]
+        self.range = Range.objects.create(name="All products")
+        for product in self.products:
+            self.range.included_products.add(product)
+            self.range.included_products.add(product)
+            
+        self.basket = Basket.objects.create()
+        self.cond = CoverageCondition(range=self.range, type="Coverage", value=2)
+    
+    def test_empty_basket_fails(self):
+        self.assertFalse(self.cond.is_satisfied(self.basket))
+        
+    def test_single_item_fails(self):
+        self.basket.add_product(self.products[0])
+        self.assertFalse(self.cond.is_satisfied(self.basket))
+        
+    def test_duplicate_item_fails(self):
+        self.basket.add_product(self.products[0])
+        self.basket.add_product(self.products[0])
+        self.assertFalse(self.cond.is_satisfied(self.basket))  
+        
+    def test_covering_items_pass(self):
+        self.basket.add_product(self.products[0])
+        self.basket.add_product(self.products[1])
+        self.assertTrue(self.cond.is_satisfied(self.basket))
+        
+    def test_covering_items_are_consumed(self):
+        self.basket.add_product(self.products[0])
+        self.basket.add_product(self.products[1])
+        self.cond.consume_items(self.basket)
+        self.assertEquals(0, self.basket.num_items_without_discount)
+        
         
 class PercentageDiscountBenefitTest(OfferTest):
     
