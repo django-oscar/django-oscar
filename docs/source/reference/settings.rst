@@ -32,6 +32,7 @@ Default: images/products-fullsize/%Y/%m/
 
 The path for uploading images to.
 
+<<<<<<< HEAD
 OSCAR_RECENTLY_VIEWED_PRODUCTS
 ------------------------------
 
@@ -39,6 +40,15 @@ Default: 5
 
 The number of recently viewed products to store
 
+=======
+OSCAR_SEARCH_SUGGEST_LIMIT
+--------------------------
+
+Default: 10
+
+The number of suggestions that the search 'suggest' function should return
+at maximum
+>>>>>>> 4dda300db8bad449a1cb40bb4c1441d0088e0a80
 
 
 Deprecated settings

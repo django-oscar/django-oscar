@@ -12,4 +12,10 @@ docs/build/*
 *.*~
 examples/.coverage
 assets/*
+nbproject
 examples/defaultshop/assets/*
+oscar/bin
+oscar/include
+oscar/lib
+oscar/src
+oscar/share

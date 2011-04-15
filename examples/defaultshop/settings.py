@@ -1,7 +1,6 @@
 import os
 
 # Django settings for oscar project.
-
 PROJECT_DIR = os.path.dirname(__file__)
 location = lambda x: os.path.join(os.path.dirname(os.path.realpath(__file__)), x)
 
@@ -83,6 +82,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.messages.context_processors.messages",
     # Oscar specific
     'oscar.promotions.context_processors.promotions',
+    'oscar.search.context_processors.add_search_form',
 ) 
 
 MIDDLEWARE_CLASSES = (
@@ -140,6 +140,7 @@ INSTALLED_APPS = (
     'django.contrib.flatpages',
     # External apps
     'django_extensions',
+    'haystack',
     #'debug_toolbar',
     # Apps from oscar
     'oscar',
@@ -159,6 +160,7 @@ INSTALLED_APPS = (
     'oscar.customer',
     'oscar.promotions',
     'oscar.reports',
+    'oscar.search',
 )
 
 LOGIN_REDIRECT_URL = '/shop/accounts/profile/'
@@ -169,6 +171,11 @@ OSCAR_DEFAULT_CURRENCY = 'GBP'
 
 # Max number of products to keep on the user's history
 OSCAR_RECENTLY_VIEWED_PRODUCTS = 4
+
+# Haystack settings
+HAYSTACK_SITECONF = 'oscar.search_sites'
+HAYSTACK_SEARCH_ENGINE = 'solr'
+HAYSTACK_SOLR_URL = 'http://127.0.0.1:8080/solr'
 
 # Local overrides
 try:
