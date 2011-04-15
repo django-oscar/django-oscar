@@ -1,0 +1,20 @@
+[
+    {
+        "pk": 1, 
+        "model": "product.attributetype", 
+        "fields": {
+            "code": "html-meta-description", 
+            "name": "HTML meta description", 
+            "has_choices": false
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "product.attributetype", 
+        "fields": {
+            "code": "html-meta-keywords", 
+            "name": "HTML meta keywords", 
+            "has_choices": false
+        }
+    }
+]
