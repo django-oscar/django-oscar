@@ -104,10 +104,11 @@ class AbstractConditionalOffer(models.Model):
         
 
 class AbstractCondition(models.Model):
-    COUNT, VALUE = ("Count", "Value")
+    COUNT, VALUE, COVERAGE = ("Count", "Value", "Coverage")
     TYPE_CHOICES = (
         (COUNT, _("Depends on number of items in basket that are in condition range")),
         (VALUE, _("Depends on value of items in basket that are in condition range")),
+        (COVERAGE, _("Needs to contain a set number of DISTINCT items from the condition range"))
     )
     range = models.ForeignKey('offer.Range')
     type = models.CharField(max_length=128, choices=TYPE_CHOICES)

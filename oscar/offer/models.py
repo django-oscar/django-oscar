@@ -178,6 +178,19 @@ class AbsoluteDiscountBenefit(Benefit):
         return discount
 
 
+class FixedPriceBenefit(Benefit):
+    u"""
+    An offer benefit that gives the items in the condition for a 
+    fixed price.  This is useful for "bundle" offers.
+    """
+
+    class Meta:
+        proxy = True
+
+    def apply(self, basket, condition=None):
+        pass
+
+
 class MultibuyDiscountBenefit(Benefit):
     
     class Meta:
@@ -215,6 +228,8 @@ class ConditionalOffer(AbstractConditionalOffer):
             return CountCondition(**field_dict)
         elif self.condition.type == self.condition.VALUE:
             return ValueCondition(**field_dict)
+        elif self.condition.type == self.condition.COVERAGE:
+            return CoverageCondition(**field_dict)
         return self.condition
     
     def _proxy_benefit(self):
@@ -239,6 +254,7 @@ class Range(AbstractRange):
 
 class Voucher(AbstractVoucher):
     pass
+
 
 class VoucherApplication(AbstractVoucherApplication):
     pass
