@@ -18,7 +18,7 @@ class VoucherAdmin(admin.ModelAdmin):
             'fields': ('name', 'code', 'usage', 'start_date', 'end_date')
         }),
         ('Benefit', {
-            'fields': ('offers', 'free_shipping')
+            'fields': ('offers',)
         }),
         ('Usage', {
             'fields': ('num_basket_additions', 'num_orders', 'total_discount')
@@ -27,8 +27,8 @@ class VoucherAdmin(admin.ModelAdmin):
     )
     
 class VoucherApplicationAdmin(admin.ModelAdmin):
-    list_display = ('voucher', 'user', 'date_created')
-    readonly_fields = ('voucher', 'user')        
+    list_display = ('voucher', 'user', 'order', 'date_created')
+    readonly_fields = ('voucher', 'user', 'order')        
     
 class ConditionalOfferAdmin(admin.ModelAdmin):
     list_display = ('name', 'offer_type', 'start_date', 'end_date', 'condition', 'benefit', 'total_discount')

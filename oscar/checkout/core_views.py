@@ -123,7 +123,12 @@ class CheckoutView(object):
             return order_models.ShippingAddress(**addr_data)
         addr_id = self.co_data.user_address_id()
         if addr_id:
-            return address_models.UserAddress._default_manager.get(pk=addr_id)
+            try:
+                return address_models.UserAddress._default_manager.get(pk=addr_id)
+            except address_models.UserAddress.DoesNotExist:
+                # This can happen if you reset all your tables and you still have
+                # session data that refers to addresses that no longer exist
+                pass
         return None
     
     def get_success_response(self):

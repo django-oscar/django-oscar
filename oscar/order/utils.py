@@ -120,6 +120,9 @@ class OrderCreator(object):
         order_discount.save()
         
     def _record_voucher_usage(self, order, voucher, user):
-        voucher.record_usage(user)
+        u"""
+        Updates the models that care about this voucher.
+        """
+        voucher.record_usage(order, user)
         voucher.num_orders += 1
         voucher.save()

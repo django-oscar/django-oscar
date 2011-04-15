@@ -47,7 +47,6 @@
         "pk": 1, 
         "model": "offer.voucher", 
         "fields": {
-            "free_shipping": false, 
             "code": "BOOM", 
             "name": "Oscar voucher", 
             "end_date": "2011-04-28", 

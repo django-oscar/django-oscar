@@ -432,3 +432,8 @@ class AbstractOrderDiscount(models.Model):
     
     class Meta:
         abstract = True
+        
+    def description(self):
+        if self.voucher_code:
+            return self.voucher_code
+        return self.offer.name

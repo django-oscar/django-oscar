@@ -7,6 +7,7 @@ from django.utils.translation import ugettext as _
 
 from oscar.offer.managers import ActiveOfferManager
 
+SITE, VOUCHER, USER, SESSION = ("Site", "Voucher", "User", "Session")
 
 class AbstractConditionalOffer(models.Model):
     u"""
@@ -24,7 +25,6 @@ class AbstractConditionalOffer(models.Model):
     #     to apply this offer needs to be coded
     # (d) Session offers - these are temporarily available to a user after some trigger 
     #     event.  Eg, users coming from some affiliate site get 10% off.     
-    SITE, VOUCHER, USER, SESSION = ("Site", "Voucher", "User", "Session")
     TYPE_CHOICES = (
         (SITE, "Site offer - available to all users"),
         (VOUCHER, "Voucher offer - only available after entering the appropriate voucher code"),
@@ -33,8 +33,8 @@ class AbstractConditionalOffer(models.Model):
     )
     offer_type = models.CharField(_("Type"), choices=TYPE_CHOICES, default=SITE, max_length=128)
 
-    condition = models.OneToOneField('offer.Condition')
-    benefit = models.OneToOneField('offer.Benefit')
+    condition = models.ForeignKey('offer.Condition')
+    benefit = models.ForeignKey('offer.Benefit')
 
     # Range of availability.  Note that if this is a voucher offer, then these
     # dates are ignored and only the dates from the voucher are used to determine 
@@ -215,7 +215,8 @@ class AbstractVoucher(models.Model):
         help_text="""This will be shown in the checkout and basket once the voucher is entered""")
     code = models.CharField(_("Code"), max_length=128, db_index=True, unique=True,
         help_text="""Case insensitive / No spaces allowed""")
-    offers = models.ManyToManyField('offer.ConditionalOFfer', related_name='vouchers')
+    offers = models.ManyToManyField('offer.ConditionalOFfer', related_name='vouchers', 
+                                    limit_choices_to={'offer_type': VOUCHER})
 
     SINGLE_USE, MULTI_USE, ONCE_PER_CUSTOMER = ('Single use', 'Multi-use', 'Once per customer')
     USAGE_CHOICES = (
@@ -277,11 +278,11 @@ class AbstractVoucher(models.Model):
                     message = "You have already used this voucher in a previous order"
         return is_available, message
     
-    def record_usage(self, user):
+    def record_usage(self, order, user):
         u"""
         Records a usage of this voucher in an order.
         """
-        self.applications.create(voucher=self, user=user)
+        self.applications.create(voucher=self, order=order, user=user)
 
 
 class AbstractVoucherApplication(models.Model):
@@ -292,6 +293,7 @@ class AbstractVoucherApplication(models.Model):
     # It is possible for an anonymous user to apply a voucher so we need to allow
     # the user to be nullable
     user = models.ForeignKey('auth.User', blank=True, null=True)
+    order = models.ForeignKey('order.Order')
     date_created = models.DateField(auto_now_add=True)
 
     class Meta:
