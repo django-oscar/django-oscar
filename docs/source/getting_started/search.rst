@@ -25,13 +25,13 @@ Configuring Solr
 
     $ ./manage.py build_solr_schema > schema.xml
 
-2. copy ``schema.xml`` over existing solr ``schema.xml``::
+2. Copy ``schema.xml`` over existing solr ``schema.xml``::
 
-    $ cp schema.xml /etc/solr/conf/schema.xml
+    $ sudo mv schema.xml /etc/solr/conf/schema.xml
 
 3. Enable the ``More Like This`` request handler::
 
-    $ vim /etc/solr/conf/solrconfig.xml
+    $ sudo vim /etc/solr/conf/solrconfig.xml
 
 4. Add the following somewhere before the final closing tag::
 
@@ -43,7 +43,7 @@ Configuring Solr
 
 5. Restart tomcat::
 
-    $ /etc/init.d/tomcat6 restart
+    $ sudo /etc/init.d/tomcat6 restart
 
 6. Rebuild the complete index::
 

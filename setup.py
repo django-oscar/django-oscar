@@ -8,10 +8,11 @@ setup(name='django-oscar',
       author_email="david.winterbottom@tangentlabs.co.uk",
       package_dir={'': '.'},
       install_requires=['Django==1.3',
-          'MySQL-python==1.2.3',
-          'PIL==1.1.7',
-          'django-haystack>=1.2'],
+          'MySQL-python>=1.2.3',
+          'PIL>=1.1.7',
+          'pysolr>=2.0.13',
+          'django-haystack==1.2.0-beta'],
       dependency_links = [
-          'https://github.com/toastdriven/django-haystack.git#egg=django-haystack-1.2'
+          'https://github.com/toastdriven/django-haystack/tarball/master#egg=django-haystack-1.2.0-beta'
           ]
       )
