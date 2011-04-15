@@ -14,7 +14,9 @@ class OpenBasketReportGenerator(report_classes.ReportGenerator):
     def generate(self, response):
         writer = csv.writer(response)
         header_row = ['User ID',
-                      'User',
+                      'Username',
+                      'Name',
+                      'Email',
                       'Basket status',
                       'Num lines',
                       'Num items',
@@ -26,9 +28,15 @@ class OpenBasketReportGenerator(report_classes.ReportGenerator):
         
         baskets = basket_models.Basket._default_manager.filter(status=basket_models.OPEN)
         for basket in baskets:
-            row = [basket.owner_id, basket.owner, basket.status, basket.num_lines,
-                   basket.num_items, basket.total_incl_tax, 
-                   basket.date_created, basket.time_since_creation]
+            if basket.owner:
+                row = [basket.owner_id, basket.owner.username, basket.owner.get_full_name(). basket.owner.email,
+                       basket.status, basket.num_lines,
+                       basket.num_items, basket.total_incl_tax, 
+                       basket.date_created, basket.time_since_creation]
+            else:
+                row = [basket.owner_id, None, None, None, basket.status, basket.num_lines,
+                       basket.num_items, basket.total_incl_tax, 
+                       basket.date_created, basket.time_since_creation]
             writer.writerow(row)
 
 
