@@ -10,11 +10,8 @@ offer_utils = import_module('offer.utils', ['Applicator'])
 COOKIE_KEY_OPEN_BASKET = 'oscar_open_basket'
 COOKIE_KEY_SAVED_BASKET = 'oscar_saved_basket'
 
-try:
     # The lifetime for the basket cookie can be set in settings.py
-    COOKIE_LIFETIME = settings.OSCAR_BASKET_COOKIE_LIFETIME
-except AttributeError: 
-    COOKIE_LIFETIME = 7*24*60*60
+COOKIE_LIFETIME = getattr(settings, 'settings.OSCAR_BASKET_COOKIE_LIFETIME', 7*24*60*60)
 
 
 class BasketFactory(object):
