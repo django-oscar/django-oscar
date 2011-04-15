@@ -8,15 +8,7 @@ from oscar.offer.models import *
 from oscar.basket.models import Basket
 from oscar.product.models import Item, ItemClass
 from oscar.stock.models import Partner, StockRecord
-
-
-def create_product(price=None):
-    ic,_ = ItemClass.objects.get_or_create(name='Dummy class')
-    item = Item.objects.create(title='Dummy product', item_class=ic)
-    if price:
-        partner,_ = Partner.objects.get_or_create(name="Dummy partner")
-        sr = StockRecord.objects.create(product=item, partner=partner, price_excl_tax=price)
-    return item
+from oscar.test_helpers import create_product
 
 
 class RangeTest(unittest.TestCase):
@@ -213,5 +205,29 @@ class ConditionalOfferTest(unittest.TestCase):
         self.assertFalse(offer.is_active(test))
         
     
+class VoucherTest(unittest.TestCase):
+    
+    def test_is_active(self):
+        start = datetime.date(2011, 01, 01)
+        test = datetime.date(2011, 01, 10)
+        end = datetime.date(2011, 02, 01)
+        voucher = Voucher(start_date=start, end_date=end)
+        self.assertTrue(voucher.is_active(test))
+
+    def test_is_inactive(self):
+        start = datetime.date(2011, 01, 01)
+        test = datetime.date(2011, 03, 10)
+        end = datetime.date(2011, 02, 01)
+        voucher = Voucher(start_date=start, end_date=end)
+        self.assertFalse(voucher.is_active(test))
+        
+    def test_codes_are_saved_as_uppercase(self):
+        start = datetime.date(2011, 01, 01)
+        end = datetime.date(2011, 02, 01)
+        voucher = Voucher(name="Dummy voucher", code="lowercase", start_date=start, end_date=end)
+        voucher.save()
+        self.assertEquals("LOWERCASE", voucher.code)
+        
+
     
    

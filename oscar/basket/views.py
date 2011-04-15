@@ -3,6 +3,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404, render
 from django.core.urlresolvers import reverse
 from django.contrib import messages
+from django.core.exceptions import ObjectDoesNotExist
 
 from oscar.views import ModelView
 from oscar.services import import_module
@@ -12,6 +13,7 @@ basket_forms = import_module('basket.forms', ['FormFactory'])
 basket_factory = import_module('basket.factory', ['BasketFactory'])
 basket_signals = import_module('basket.signals', ['basket_addition'])
 product_models = import_module('product.models', ['Item'])
+offer_models = import_module('offer.models', ['Voucher'])
     
         
 class BasketView(ModelView):
@@ -68,6 +70,42 @@ class BasketView(ModelView):
             basket.add_product(item, form.cleaned_data['quantity'], options)
             messages.info(self.request, "'%s' (quantity %d) has been added to your basket" %
                           (item.get_title(), form.cleaned_data['quantity']))
+    
+    def do_add_voucher(self, basket):
+        code = self.request.POST['voucher_code']
+        # First check if the voucher is already in the basket
+        try:
+            voucher = basket.vouchers.get(code=code)
+            messages.error(self.request, "You have already added the '%s' voucher to your basket" % voucher.code)
+            return
+        except ObjectDoesNotExist:    
+            pass
+        
+        try:
+            voucher = offer_models.Voucher._default_manager.get(code=code)
+            if not voucher.is_active():
+                messages.error(self.request, "The '%s' voucher has expired" % voucher.code)
+                return
+            is_available, message = voucher.is_available_to_user(self.request.user)
+            if not is_available:
+                messages.error(self.request, message)
+                return
+            
+            basket.vouchers.add(voucher)
+            basket.save()
+            messages.info(self.request, "Voucher '%s' added to basket" % voucher.code)
+        except ObjectDoesNotExist:
+            messages.error(self.request, "No voucher found with code '%s'" % code)
+            
+    def do_remove_voucher(self, basket):
+        code = self.request.POST['voucher_code']
+        try:
+            voucher = basket.vouchers.get(code=code)
+            basket.vouchers.remove(voucher)
+            basket.save()
+            messages.info(self.request, "Voucher '%s' removed from basket" % voucher.code)
+        except ObjectDoesNotExist:
+            messages.error(self.request, "No voucher found with code '%s'" % code)
  
 
 class LineView(ModelView):

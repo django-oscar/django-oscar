@@ -2,7 +2,8 @@ from decimal import Decimal
 import math
 
 from oscar.offer.abstract_models import (AbstractConditionalOffer, AbstractCondition,
-                                         AbstractBenefit, AbstractRange)
+                                         AbstractBenefit, AbstractRange, AbstractVoucher,
+                                         AbstractVoucherApplication)
 
 
 class Condition(AbstractCondition):
@@ -202,3 +203,13 @@ class ConditionalOffer(AbstractConditionalOffer):
 
 class Range(AbstractRange):
     pass
+
+
+class Voucher(AbstractVoucher):
+    pass
+
+class VoucherApplication(AbstractVoucherApplication):
+    pass
+
+# We need to import receivers at the bottom of this script
+from oscar.offer.receivers import receive_basket_voucher_change

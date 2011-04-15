@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block layout %}
+    <div id="container">
+        <div id="header">
+            <h1>Oscar // Flexible e-commerce for Django</h1>
+            {% block header %}{% endblock header %}
+        </div>
+        <div id="content">
+            {% block content %}{% endblock %}
+        </div>
+        <div id="footer">{% block footer %}{% endblock %}</div>
+    </div>
+{% endblock %}

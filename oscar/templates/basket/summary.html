@@ -74,12 +74,36 @@ Your basket is currently empty - go and <a href="{% url oscar-products %}">buy s
         <td>{{ basket.total_incl_tax|currency }}</td>
     </tr>
 </table>
+
+<form action="{% url oscar-basket %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="add_voucher" />
+    <label for="voucher_code">Code</label>
+    <input type="text" name="voucher_code" id="voucher_code" />
+    <input type="submit" value="Add voucher" />
+</form>
+
+<h4>Basket vouchers</h4>
+<ul>
+{% for voucher in basket.vouchers.all %}
+    <li>
+        <form action="{% url oscar-basket %}" method="POST">
+            {% csrf_token %}
+            {{ voucher.name }} ({{ voucher.code }})
+            <input type="hidden" name="action" value="remove_voucher" />
+            <input type="hidden" name="voucher_code" value="{{ voucher.code }}" />
+            <input type="submit" value="Remove" />
+        </form>
+    </li>
+{% endfor %}
+</ul>
+
 <form action="{% url oscar-basket %}" method="post">
     {% csrf_token %}
     <input type="hidden" name="action" value="flush" />
     <input type="submit" value="Empty basket" />
 </form>
-<a href="/shop/checkout/">Checkout</a>
+<a href="{% url oscar-checkout-index %}">Checkout</a>
 
 {% endif %}
 

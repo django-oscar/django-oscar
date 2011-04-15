@@ -43,5 +43,8 @@ class PaymentEvent(AbstractPaymentEvent):
 class PaymentEventType(AbstractPaymentEventType):
     pass
 
+class OrderDiscount(AbstractOrderDiscount):
+    pass
+
 
     

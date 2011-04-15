@@ -31,7 +31,9 @@ class AbstractOrder(models.Model):
     # is not mandatory.
     shipping_address = models.ForeignKey('order.ShippingAddress', null=True, blank=True)
     shipping_method = models.CharField(_("Shipping method"), max_length=128, null=True, blank=True)
-    date_placed = models.DateTimeField(auto_now_add=True)
+    
+    # Index added to this field for reporting
+    date_placed = models.DateTimeField(auto_now_add=True, db_index=True)
     
     @property
     def basket_total_incl_tax(self):
@@ -94,6 +96,9 @@ class AbstractOrder(models.Model):
     class Meta:
         abstract = True
         ordering = ['-date_placed',]
+        permissions = (
+            ("can_view", "Can view orders (eg for reporting)"),
+        )
     
     def __unicode__(self):
         return u"#%s" % (self.number,)
@@ -169,6 +174,10 @@ class AbstractLine(models.Model):
     line_price_incl_tax = models.DecimalField(decimal_places=2, max_digits=12)
     line_price_excl_tax = models.DecimalField(decimal_places=2, max_digits=12)
     
+    # Price information before discounts are applied
+    line_price_before_discounts_incl_tax = models.DecimalField(decimal_places=2, max_digits=12)
+    line_price_before_discounts_excl_tax = models.DecimalField(decimal_places=2, max_digits=12)
+    
     # Cost price (the price charged by the fulfilment partner for this product).  This
     # is useful for audit and financial reporting.
     cost_price = models.DecimalField(decimal_places=2, max_digits=12, blank=True, null=True)
@@ -177,6 +186,10 @@ class AbstractLine(models.Model):
     partner_line_reference = models.CharField(_("Partner reference"), max_length=128, blank=True, null=True,
         help_text=_("This is the item number that the partner uses within their system"))
     partner_line_notes = models.TextField(blank=True, null=True)
+    
+    # Estimated dispatch date - should be set at order time
+    est_dispatch_date = models.DateField(blank=True, null=True)
+    
     
     @property
     def description(self):
@@ -413,4 +426,13 @@ class AbstractShippingEventType(models.Model):
         return self.name
         
         
-
+class AbstractOrderDiscount(models.Model):
+    
+    order = models.ForeignKey('order.Order', related_name="discounts")
+    offer = models.ForeignKey('offer.ConditionalOffer', null=True, on_delete=models.SET_NULL)
+    voucher = models.ForeignKey('offer.Voucher', related_name="discount_vouchers", null=True, on_delete=models.SET_NULL)
+    voucher_code = models.CharField(_("Code"), max_length=128, db_index=True)
+    amount = models.DecimalField(decimal_places=2, max_digits=12, default=0)
+    
+    class Meta:
+        abstract = True

@@ -1,0 +1,22 @@
+{% load currency_filters %}
+
+{% if products %}
+<h4>Products you recently viewed</h4>
+<ul>
+{% for product in products %}
+<li>
+    <a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a><br/>
+    {% if product.is_group %}
+        From {{ product.min_variant_price_incl_tax|currency }}
+    {% else %}
+        {% if product.has_stockrecord %} 
+            {{ product.stockrecord.price_incl_tax|currency }}<br/>
+            {{ product.stockrecord.availability }}
+        {% else %}
+            Not available    
+        {% endif %}
+    {% endif %}    
+</li>
+{% endfor %}
+</ul>
+{% endif %}

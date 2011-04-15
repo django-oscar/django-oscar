@@ -15,18 +15,27 @@
 <table>
     <tr>
         <th>Product</th>
-        <th>Availability</th>
+        <th>Estimated dispatch date</th>
         <th>Quantity</th>
         <th>Line price excl tax</th>
         <th>Line price incl tax</th>
     </tr>
-    {% for batch in order.lines.all %}
+    {% for line in order.lines.all %}
     <tr>
         <td><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></td>
-        <td>{{ line.product.stockrecord.availability }}</td>
+        <td>{{ line.est_dispatch_date }}</td>
         <td>{{ line.quantity }}</td>
-        <td>{{ line.line_price_excl_tax|currency }}</td>
-        <td>{{ line.line_price_incl_tax|currency }}</td>
+        <td>{{ line.line_price_before_discounts_excl_tax|currency }}</td>
+        <td>{{ line.line_price_before_discounts_incl_tax|currency }}</td>
+    </tr>
+    {% endfor %}
+    {% for discount in order.discounts.all %}
+    <tr>
+        <td>{{ discount.offer }}</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>- {{ discount.amount|currency }}</td>
     </tr>
     {% endfor %}
     <tr>
@@ -44,6 +53,6 @@
         <td>{{ order.total_incl_tax|currency }}</td>
     </tr>
 </table>
-
+ 
 {% endblock content %}
 

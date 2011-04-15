@@ -11,6 +11,7 @@ from oscar.services import import_module
 product_models = import_module('product.models', ['Item', 'ItemClass'])
 product_signals = import_module('product.signals', ['product_viewed', 'product_search'])
 basket_forms = import_module('basket.forms', ['FormFactory'])
+history_helpers = import_module('customer.history_helpers', ['receive_product_view'])
 
 
 class ItemDetailView(DetailView):
@@ -27,10 +28,11 @@ class ItemDetailView(DetailView):
         if correct_path != request.path:
             return HttpResponsePermanentRedirect(correct_path)
         
-        # Send signal to record the view of this product
-        product_signals.product_viewed.send(sender=self, product=item, user=self.request.user)
+        response = super(ItemDetailView, self).get(request, **kwargs)
         
-        return super(ItemDetailView, self).get(request, **kwargs)
+        # Send signal to record the view of this product
+        product_signals.product_viewed.send(sender=self, product=item, user=request.user, request=request, response=response)
+        return response;
     
     def get_object(self):
         u"""
@@ -43,14 +45,13 @@ class ItemDetailView(DetailView):
     
     def get_context_data(self, **kwargs):
         context = super(ItemDetailView, self).get_context_data(**kwargs)
-        context['form'] = self.get_add_to_basket_form()
+        context['basket_form'] = self.get_add_to_basket_form()
         return context
     
     def get_add_to_basket_form(self):
         factory = basket_forms.FormFactory()
         return factory.create(self.object)
-
-
+    
 class ItemClassListView(ListView):
     u"""View products filtered by item-class."""
     context_object_name = "products"

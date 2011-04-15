@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 
 {% load currency_filters %}
+{% load history_tags %}
 
 {% block header %}
 <h2>{{item.get_title}}</h2>
@@ -52,10 +53,12 @@
 {% if item.stockrecord %}
 <form action="{% url oscar-basket %}" method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ basket_form.as_p }}
     <input type="submit" value="Add to basket" />
 </form>
 {% endif %}
+
+{% recently_viewed_products %}
 
 {% if item.related_items.count %}
 <div class="products">
@@ -78,7 +81,6 @@
     </ul>
 </div>
 {% endif %}
-
 
 {% endblock content %}
 

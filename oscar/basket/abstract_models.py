@@ -24,6 +24,8 @@ class AbstractBasket(models.Model):
         (SUBMITTED, _("Submitted - has been ordered at the checkout")),
     )
     status = models.CharField(_("Status"), max_length=128, default=OPEN, choices=STATUS_CHOICES)
+    vouchers = models.ManyToManyField('offer.Voucher')
+    
     date_created = models.DateTimeField(auto_now_add=True)
     date_merged = models.DateTimeField(null=True, blank=True)
     date_submitted = models.DateTimeField(null=True, blank=True)
@@ -170,6 +172,17 @@ class AbstractBasket(models.Model):
         u"""Return number of items"""
         return reduce(lambda num,line: num+line.quantity, self.all_lines(), 0)
     
+    @property
+    def time_before_submit(self):
+        if not self.date_submitted:
+            return None
+        return self.date_submitted - self.date_created
+    
+    @property
+    def time_since_creation(self, test_datetime=None):
+        if not test_datetime:
+            test_datetime = datetime.datetime.now()
+        return test_datetime - self.date_created
     
 class AbstractLine(models.Model):
     u"""A line of a basket (product and a quantity)"""
