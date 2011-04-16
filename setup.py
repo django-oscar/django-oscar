@@ -9,5 +9,6 @@ setup(name='django-oscar',
       package_dir={'': '.'},
       install_requires=['Django==1.3',
                 'MySQL-python==1.2.3',
-                'PIL==1.1.7']    
+                'PIL==1.1.7',
+				'django-haystack==1.1.0']    
       )
