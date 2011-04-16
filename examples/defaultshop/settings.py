@@ -135,12 +135,13 @@ LOGGING = {
         'file': {
              'level': 'INFO',
              'class': 'logging.FileHandler',
-             'filename': '/tmp/oscar.log'
+             'filename': '/tmp/oscar.log',
+             'formatter': 'verbose'
         },
         'mail_admins': {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler',
-        }
+        },
     },
     'loggers': {
         'django': {
@@ -154,12 +155,12 @@ LOGGING = {
             'propagate': False,
         },
         'oscar.checkout': {
-            'handlers':['console', 'file'],
+            'handlers': ['console', 'file'],
             'propagate': True,
             'level':'INFO',
         },
         'django.db.backends': {
-            'handlers':['console'],
+            'handlers':['null'],
             'propagate': False,
             'level':'DEBUG',
         },
