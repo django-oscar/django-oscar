@@ -17,8 +17,11 @@ It is developed by Tangent Labs, a London-based digital agency, and is based on
 their existing Taoshop PHP platform which currently powers several large-scale ecommerce sites.  
 
 It is still in early development, but a stable release is planned for early summer 2011.
+The source is on Github: https://github.com/tangentlabs/django-oscar
 
-The source is on Github: https://github.com/codeinthehole/django-oscar
+
+
+
 
 Contents:
 
