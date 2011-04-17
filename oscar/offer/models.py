@@ -66,12 +66,15 @@ class CoverageCondition(Condition):
         can't be reused in other offers.
         """
         covered_ids = []
+        value = Decimal('0.00')
         for line in basket.all_lines():
             if self.range.contains_product(line.product) and line.product.id not in covered_ids:
                 line.consume(1)
                 covered_ids.append(line.product.id)
+                value += line.unit_price_incl_tax
             if len(covered_ids) >= self.value:
-                return
+                return value
+        return value
         
         
 class ValueCondition(Condition):
@@ -182,13 +185,15 @@ class FixedPriceBenefit(Benefit):
     u"""
     An offer benefit that gives the items in the condition for a 
     fixed price.  This is useful for "bundle" offers.
+    
+    Note that we ignore the benefit range here and only give a fixed price
+    for the products in the condition range.
     """
-
     class Meta:
         proxy = True
 
     def apply(self, basket, condition=None):
-        pass
+        return max(condition.consume_items(basket) - self.value, Decimal('0.00'))
 
 
 class MultibuyDiscountBenefit(Benefit):

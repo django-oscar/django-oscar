@@ -96,7 +96,7 @@ class ValueConditionTest(OfferTest):
 class CoverageConditionTest(unittest.TestCase):
     
     def setUp(self):
-        self.products = [create_product(), create_product()]
+        self.products = [create_product(Decimal('5.00')), create_product(Decimal('10.00'))]
         self.range = Range.objects.create(name="All products")
         for product in self.products:
             self.range.included_products.add(product)
@@ -222,6 +222,42 @@ class MultibuyDiscountBenefitTest(OfferTest):
         self.assertEquals(Decimal('5.00'), first_discount)
         second_discount = self.benefit.apply(self.basket)
         self.assertEquals(Decimal('0.00'), second_discount)
+        
+        
+class FixedPriceBenefitTest(OfferTest):
+    
+    def setUp(self):
+        super(FixedPriceBenefitTest, self).setUp()
+        self.benefit = FixedPriceBenefit(range=self.range, type="FixedPrice", value=Decimal('10.00'))
+        
+    def test_correct_discount_is_returned(self):
+        products = [create_product(Decimal('8.00')), create_product(Decimal('4.00'))]
+        range = Range.objects.create(name="Dummy range")
+        for product in products:
+            range.included_products.add(product)
+            range.included_products.add(product)
+            
+        basket = Basket.objects.create()
+        [basket.add_product(p) for p in products]
+        
+        condition = CoverageCondition(range=range, type="Coverage", value=2)
+        discount = self.benefit.apply(basket, condition)
+        self.assertEquals(Decimal('2.00'), discount)   
+        
+    def test_no_discount_is_returned_when_value_is_greater_than_product_total(self):
+        products = [create_product(Decimal('4.00')), create_product(Decimal('4.00'))]
+        range = Range.objects.create(name="Dummy range")
+        for product in products:
+            range.included_products.add(product)
+            range.included_products.add(product)
+            
+        basket = Basket.objects.create()
+        [basket.add_product(p) for p in products]
+        
+        condition = CoverageCondition(range=range, type="Coverage", value=2)
+        discount = self.benefit.apply(basket, condition)
+        self.assertEquals(Decimal('0.00'), discount) 
+         
         
     
 class ConditionalOfferTest(unittest.TestCase):
