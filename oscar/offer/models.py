@@ -54,6 +54,8 @@ class CoverageCondition(Condition):
         u"""Determines whether a given basket meets this condition"""
         covered_ids = []
         for line in basket.all_lines():
+            if not line.is_available_for_discount:
+                continue
             if self.range.contains_product(line.product) and line.product.id not in covered_ids:
                 covered_ids.append(line.product.id)
             if len(covered_ids) >= self.value:
@@ -66,10 +68,18 @@ class CoverageCondition(Condition):
         can't be reused in other offers.
         """
         covered_ids = []
-        value = Decimal('0.00')
         for line in basket.all_lines():
             if self.range.contains_product(line.product) and line.product.id not in covered_ids:
                 line.consume(1)
+                covered_ids.append(line.product.id)
+            if len(covered_ids) >= self.value:
+                return
+    
+    def get_value_of_satisfying_items(self, basket):
+        covered_ids = []
+        value = Decimal('0.00')
+        for line in basket.all_lines():
+            if self.range.contains_product(line.product) and line.product.id not in covered_ids:
                 covered_ids.append(line.product.id)
                 value += line.unit_price_incl_tax
             if len(covered_ids) >= self.value:
@@ -121,9 +131,10 @@ class Benefit(AbstractBenefit):
     price_field = 'price_incl_tax'
     
     def _effective_max_affected_items(self):
-        max_affected_items = self.max_affected_items
         if not self.max_affected_items:
             max_affected_items = 10000
+        else:
+            max_affected_items = self.max_affected_items
         return max_affected_items
 
 
@@ -150,6 +161,8 @@ class PercentageDiscountBenefit(Benefit):
                 discount += self.value/100 * price * quantity
                 affected_items += quantity
                 line.discount(discount, quantity)
+        if discount > 0 and condition:
+            condition.consume_items(basket)  
         return discount
 
 
@@ -178,6 +191,8 @@ class AbsoluteDiscountBenefit(Benefit):
                 discount += price * Decimal(str(quantity))
                 affected_items += quantity
                 line.discount(discount, quantity)
+        if discount > 0 and condition:
+            condition.consume_items(basket)          
         return discount
 
 
@@ -193,7 +208,21 @@ class FixedPriceBenefit(Benefit):
         proxy = True
 
     def apply(self, basket, condition=None):
-        return max(condition.consume_items(basket) - self.value, Decimal('0.00'))
+        covered_lines = []
+        product_total = Decimal('0.00')
+        for line in basket.all_lines():
+            if condition.range.contains_product(line.product) and line not in covered_lines:
+                covered_lines.append(line)
+                product_total += line.unit_price_incl_tax
+            if len(covered_lines) >= condition.value:
+                break
+        discount = max(product_total - self.value, Decimal('0.00'))
+        
+        # Apply discount weighted by original value of line
+        for line in covered_lines:
+            line_discount = (line.unit_price_incl_tax / product_total) * discount 
+            line.discount(line_discount.quantize(Decimal('.01')), 1)
+        return discount 
 
 
 class MultibuyDiscountBenefit(Benefit):
@@ -201,13 +230,15 @@ class MultibuyDiscountBenefit(Benefit):
     class Meta:
         proxy = True
     
-    def apply(self, basket, condition=True):
+    def apply(self, basket, condition=None):
         # We want cheapest item not in an offer and that becomes the discount
         discount = Decimal('0.00')
         line = self._get_cheapest_line(basket)
         if line:
             discount = getattr(line.product.stockrecord, self.price_field)
             line.discount(discount, 1)
+        if discount > 0 and condition:
+            condition.consume_items(basket)    
         return discount
     
     def _get_cheapest_line(self, basket):
@@ -250,6 +281,8 @@ class ConditionalOffer(AbstractConditionalOffer):
             return AbsoluteDiscountBenefit(**field_dict)
         elif self.benefit.type == self.benefit.MULTIBUY:
             return MultibuyDiscountBenefit(**field_dict)
+        elif self.benefit.type == self.benefit.FIXED_PRICE:
+            return FixedPriceBenefit(**field_dict)
         return self.benefit
     
 

@@ -15,7 +15,7 @@ class Applicator(object):
         Applies all relevant offers to the given basket.  The user is passed 
         too as sometimes the available offers are dependent on the user.
         """
-        offers = self.get_offers(request, basket)
+        offers = self.get_offers(request, basket) 
         discounts = {}
         for offer in offers:
             # For each offer, we keep trying to apply it until the
@@ -33,7 +33,7 @@ class Applicator(object):
                     discounts[offer.id]['freq'] += 1
                 else:
                     break
-               
+                
         # Store this list of discounts with the basket so it can be 
         # rendered in templates
         basket.set_discounts(list(discounts.values()))

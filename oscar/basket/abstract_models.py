@@ -282,6 +282,10 @@ class AbstractLine(models.Model):
         return self.quantity - self._affected_quantity
     
     @property
+    def is_available_for_discount(self):
+        return self.quantity_without_discount > 0
+    
+    @property
     def discount_value(self):
         return self._discount
     

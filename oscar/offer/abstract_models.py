@@ -4,6 +4,7 @@ import datetime
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import ugettext as _
+from django.core.exceptions import ValidationError
 
 from oscar.offer.managers import ActiveOfferManager
 
@@ -77,12 +78,7 @@ class AbstractConditionalOffer(models.Model):
         """
         if not self.is_condition_satisfied(basket):
             return Decimal('0.00')
-        discount = self._proxy_benefit().apply(basket, self._proxy_condition())
-        if discount > 0:
-            # We need to mark the minimal set of condition products
-            # as being unavailable for future offers.
-            self._proxy_condition().consume_items(basket)
-        return discount    
+        return self._proxy_benefit().apply(basket, self._proxy_condition())
         
     def set_voucher(self, voucher):
         self._voucher = voucher
@@ -120,6 +116,8 @@ class AbstractCondition(models.Model):
     def __unicode__(self):
         if self.type == self.COUNT:
             return u"Basket includes %d item(s) from %s" % (self.value, str(self.range).lower())
+        elif self.type == self.COVERAGE:
+            return u"Basket includes %d distinct products from %s" % (self.value, str(self.range).lower())
         return u"Basket includes %.2f value from %s" % (self.value, str(self.range).lower())
     
     def consume_items(self, basket):
@@ -135,13 +133,14 @@ class AbstractCondition(models.Model):
     
 
 class AbstractBenefit(models.Model):
-    PERCENTAGE, FIXED, MULTIBUY = ("Percentage", "Absolute", "Multibuy")
+    PERCENTAGE, FIXED, MULTIBUY, FIXED_PRICE = ("Percentage", "Absolute", "Multibuy", "Fixed price")
     TYPE_CHOICES = (
         (PERCENTAGE, _("Discount is a % of the product's value")),
         (FIXED, _("Discount is a fixed amount off the product's value")),
-        (MULTIBUY, _("Discount is to give the cheapest product for free"))
+        (MULTIBUY, _("Discount is to give the cheapest product for free")),
+        (FIXED_PRICE, _("Get the products that meet the condition for a fixed price")),
     )
-    range = models.ForeignKey('offer.Range')
+    range = models.ForeignKey('offer.Range', null=True, blank=True)
     type = models.CharField(max_length=128, choices=TYPE_CHOICES)
     value = models.DecimalField(decimal_places=2, max_digits=12)
     
@@ -158,6 +157,8 @@ class AbstractBenefit(models.Model):
             desc = u"%s%% discount on %s" % (self.value, str(self.range).lower())
         elif self.type == self.MULTIBUY:
             desc = u"Cheapest product is free from %s" % str(self.range)
+        elif self.type == self.FIXED_PRICE:
+            desc = u"The products that meet the condition are sold for %s" % self.value
         else:
             desc = u"%.2f discount on %s" % (self.value, str(self.range).lower())
         if self.max_affected_items == 1:
@@ -168,6 +169,11 @@ class AbstractBenefit(models.Model):
     
     def apply(self, basket, condition=None):
         return Decimal('0.00')
+    
+    def clean(self):
+        # All benefits need a range apart from FIXED_PRICE
+        if self.type != self.FIXED_PRICE and not self.range:
+            raise ValidationError("Benefits of type %s need a range" % self.type)
 
 
 class AbstractRange(models.Model):
