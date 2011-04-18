@@ -11,6 +11,6 @@ for field_name, field in ProductIndex.fields.items():
         sqs.facet(field_name)
 
 urlpatterns = patterns('search.views',
-    url(r'^suggest/$', Suggestions.as_view(), name='search.suggest'),
-    url(r'^$', MultiFacetedSearchView(form_class=MultiFacetedSearchForm, searchqueryset=sqs), name='search.results'),
+    url(r'^suggest/$', Suggestions.as_view(), name='oscar-search-suggest'),
+    url(r'^$', MultiFacetedSearchView(form_class=MultiFacetedSearchForm, searchqueryset=sqs), name='oscar-search'),
 )

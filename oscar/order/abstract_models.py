@@ -33,7 +33,7 @@ class AbstractOrder(models.Model):
     shipping_method = models.CharField(_("Shipping method"), max_length=128, null=True, blank=True)
     
     # Use this field to indicate that an order is on hold / awaiting payment
-    status = models.CharField(_("Status"), null=True, blank=True)
+    status = models.CharField(_("Status"), max_length=100, null=True, blank=True)
     
     # Index added to this field for reporting
     date_placed = models.DateTimeField(auto_now_add=True, db_index=True)

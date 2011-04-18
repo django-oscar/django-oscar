@@ -1,7 +1,7 @@
 from django import forms
-from haystack.forms import FacetedSearchForm
 from django.utils.translation import ugettext_lazy as _
 from django.forms.widgets import Input
+from haystack.forms import FacetedSearchForm
 
 
 class SearchInput(Input):
@@ -12,6 +12,7 @@ class SearchInput(Input):
     back to using the default "text" type
     '''
     input_type = 'search'
+
 
 class MultiFacetedSearchForm(FacetedSearchForm):
     '''

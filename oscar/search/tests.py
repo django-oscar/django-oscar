@@ -16,7 +16,7 @@ class SuggestViewTest(TestCase):
         management.call_command('update_index', verbosity=0) #silenced
 
     def test_term_in_fixtures_found(self):
-        url = reverse('search.suggest')
+        url = reverse('oscar-search-suggest')
         response = self.client.get(url, {'query_term': 'Pint'})
         self.assertEquals(200, response.status_code)
         self.assertTrue('Pint' in response.content) #ensuring we actually find a result in the response
@@ -33,7 +33,7 @@ class MultiFacetedSearchViewTest(TestCase):
         management.call_command('update_index', verbosity=0) #silenced
 
     def test_with_query(self):
-        url = reverse('search.results')
+        url = reverse('oscar-search')
         response = self.client.get(url, {'q': 'Pint'})
         self.assertEquals(200, response.status_code)
         self.assertTrue('value="Pint"' in response.content) #ensuring query field is set

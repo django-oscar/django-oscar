@@ -1,6 +1,6 @@
 from oscar.search.forms import MultiFacetedSearchForm
 
-def add_search_form(request):
+def search_form(request):
     '''
     Ensures that the search form is available site wide
     '''
