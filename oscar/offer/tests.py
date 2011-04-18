@@ -20,6 +20,11 @@ class RangeTest(unittest.TestCase):
         range = Range.objects.create(name="All products", includes_all_products=True)
         self.assertTrue(range.contains_product(self.prod))
         
+    def test_all_products_range_with_exception(self):
+        range = Range.objects.create(name="All products", includes_all_products=True)
+        range.excluded_products.add(self.prod)
+        self.assertFalse(range.contains_product(self.prod))
+        
     def test_empty_list(self):
         range = Range.objects.create(name="All products")
         self.assertFalse(range.contains_product(self.prod))
@@ -31,6 +36,17 @@ class RangeTest(unittest.TestCase):
         
     def test_blacklisting(self):
         range = Range.objects.create(name="All products", includes_all_products=True)
+        range.excluded_products.add(self.prod)
+        self.assertFalse(range.contains_product(self.prod))
+        
+    def test_included_classes(self):
+        range = Range.objects.create(name="All products", includes_all_products=False)
+        range.classes.add(self.prod.item_class)
+        self.assertTrue(range.contains_product(self.prod))
+        
+    def test_included_class_with_exception(self):
+        range = Range.objects.create(name="All products", includes_all_products=False)
+        range.classes.add(self.prod.item_class)
         range.excluded_products.add(self.prod)
         self.assertFalse(range.contains_product(self.prod))
 

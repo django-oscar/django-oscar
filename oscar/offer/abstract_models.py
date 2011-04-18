@@ -184,6 +184,11 @@ class AbstractRange(models.Model):
     includes_all_products = models.BooleanField(default=False)
     included_products = models.ManyToManyField('product.Item', related_name='includes', blank=True)
     excluded_products = models.ManyToManyField('product.Item', related_name='excludes', blank=True)
+    classes = models.ManyToManyField('product.ItemClass', related_name='classes', blank=True)
+    
+    __included_product_ids = None
+    __excluded_product_ids = None
+    __class_ids = None
     
     class Meta:
         abstract = True
@@ -197,16 +202,25 @@ class AbstractRange(models.Model):
             return False
         if self.includes_all_products:
             return True
+        if product.item_class_id in self._class_ids():
+            return True    
         included_product_ids = self._included_product_ids()
         return product.id in included_product_ids
     
     def _included_product_ids(self):
-        results = self.included_products.values('id')
-        return [row['id'] for row in results]
+        if None == self.__included_product_ids:
+            self.__included_product_ids = [row['id'] for row in self.included_products.values('id')]
+        return self.__included_product_ids
     
     def _excluded_product_ids(self):
-        results = self.excluded_products.values('id')
-        return [row['id'] for row in results]
+        if None == self.__excluded_product_ids:
+            self.__excluded_product_ids = [row['id'] for row in self.excluded_products.values('id')]
+        return self.__excluded_product_ids
+    
+    def _class_ids(self):
+        if None == self.__class_ids:
+            self.__class_ids = [row['id'] for row in self.classes.values('id')]
+        return self.__class_ids
         
         
 class AbstractVoucher(models.Model):
