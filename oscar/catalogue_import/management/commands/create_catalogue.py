@@ -44,7 +44,7 @@ class Command(BaseCommand):
         importer = catalogue_import.CatalogueImport()
         importer.flush = options.get('flush')
         importer.csv_type = options.get('csv_type')
-        importer.file = options.get('filename')
+        importer.afile = options.get('filename')
         try:
             importer.handle()
         except catalogue_exception.CatalogueImportException as e:
