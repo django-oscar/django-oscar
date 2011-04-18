@@ -5,7 +5,7 @@ from oscar.services import import_module
 
 
 catalogue_exception = import_module('catalogue_import.exceptions', ['CatalogueImportException'])
-product_models = import_module('product.models', ['ItemClass', 'Item', 'AttributeType', 'ItemAttributeValue', 'Option'])
+product_models = import_module('product.models', ['ItemClass', 'Item'])
 stock_models = import_module('stock.models', ['Partner', 'StockRecord'])
 
 class CatalogueImport(object):
@@ -16,10 +16,10 @@ class CatalogueImport(object):
     
     def handle(self):
         u"""Handles the actual import process"""
-        if self.file is None:
+        if self.afile is None:
             raise catalogue_exception.CatalogueImportException("You need to pass a file argument")
         self.catalogue_import_file = CatalogueImportFile()
-        self.catalogue_import_file.file = self.file
+        self.catalogue_import_file.afile = self.afile
         self.test_file()
         if self.flush is True:
             self.flushdb()
@@ -45,7 +45,7 @@ class CatalogueImport(object):
     def load_csv(self):
         u"""Load the CSV content"""
         csv_reader = CatalogueCsvReader()
-        return csv_reader.get_csv_contents(self.file)
+        return csv_reader.get_csv_contents(self.afile)
     
     def iterate(self):
         u"""Iterate over rows, creating a complete list item"""
@@ -82,26 +82,26 @@ class CatalogueImportFile(object):
     
     def file_exists(self):
         u"""Check whether a file exists"""
-        if not os.path.exists(self.file):
-            raise catalogue_exception.CatalogueImportException("%s does not exist" % (self.file))
+        if not os.path.exists(self.afile):
+            raise catalogue_exception.CatalogueImportException("%s does not exist" % (self.afile))
         
     def is_file(self):
         u"""Check whether file is actually a file type"""
-        if not os.path.isfile(self.file):
-            raise catalogue_exception.CatalogueImportException("%s is not a file" % (self.file))
+        if not os.path.isfile(self.afile):
+            raise catalogue_exception.CatalogueImportException("%s is not a file" % (self.afile))
         
     def file_is_readable(self):
         u"""Check file is readable"""
         try:
-            f = open(self.file, 'r')
+            f = open(self.afile, 'r')
             f.close()
         except:
-            raise catalogue_exception.CatalogueImportException("%s is not readable" % (self.file))
+            raise catalogue_exception.CatalogueImportException("%s is not readable" % (self.afile))
         
         
 class CatalogueCsvReader(object):
     u"""A catalogue csv reader"""
     
-    def get_csv_contents(self, file):
+    def get_csv_contents(self, afile):
         u"""Return CSV reader object of file"""
-        return csv.reader(open(file,'rb'), delimiter=',', quotechar='"')
+        return csv.reader(open(afile,'rb'), delimiter=',', quotechar='"')
