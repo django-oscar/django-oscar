@@ -17,10 +17,10 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '',                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
+        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'oscar-defaultshop',                      # Or path to database file if using sqlite3.
+        'USER': 'root',                      # Not used with sqlite3.
+        'PASSWORD': 't123',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
@@ -81,7 +81,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.static",
     "django.contrib.messages.context_processors.messages",
     # Oscar specific
-    'oscar.marketing.context_processors.marketing',
+    #'oscar.marketing.context_processors.promotions',
 ) 
 
 MIDDLEWARE_CLASSES = (
@@ -137,15 +137,14 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.admin',
     'django.contrib.flatpages',
+    'django.contrib.comments',
     # External apps
     'django_extensions',
     #'debug_toolbar',
     # Apps from oscar
     'oscar',
-    'oscar.analytics',
     'oscar.order',
     'oscar.checkout',
-    'oscar.shipping',
     'oscar.order_management',
     'oscar.product',
     'oscar.basket',
@@ -154,8 +153,10 @@ INSTALLED_APPS = (
     'oscar.address',
     'oscar.stock',
     'oscar.image',
+    'oscar.shipping',
     'oscar.customer',
-    'oscar.marketing',
+    'oscar.reviews',
+    #'oscar.my_comments_app',
 )
 
 LOGIN_REDIRECT_URL = '/shop/accounts/profile/'
@@ -163,6 +164,12 @@ APPEND_SLASH = True
 
 # Oscar settings
 OSCAR_DEFAULT_CURRENCY = 'GBP'
+
+# Oscar.reviews settings
+#COMMENTS_APP = 'oscar.my_comments_app'
+
+OSCAR_ALLOW_ANON_REVIEWS = False
+OSCAR_MODERATE_REVIEWS = False
 
 # Local overrides
 try:

@@ -5,6 +5,6 @@ from django.views.generic.simple import redirect_to
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    (r'^admin/', include(admin.site.urls)),
+    (r'^admin/', include(admin.site.urls)), 
     (r'', include('oscar.urls')),
 )

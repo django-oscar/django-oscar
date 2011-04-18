@@ -5,8 +5,11 @@ from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.views.generic import ListView, DetailView
+from django.db.models import Avg
 
 from oscar.services import import_module
+from oscar.reviews.models import ProductReview
+from oscar.reviews.forms import ProductReviewForm
 
 product_models = import_module('product.models', ['Item', 'ItemClass'])
 product_signals = import_module('product.signals', ['product_viewed'])
@@ -44,7 +47,17 @@ class ItemDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(ItemDetailView, self).get_context_data(**kwargs)
         context['form'] = self.get_add_to_basket_form()
+        context['reviews'] = self.get_product_review()
+        context['avg_score'] = self.get_avg_review()        
         return context
+    
+    def get_product_review(self):        
+        return ProductReview.objects.filter(approved=True)
+    
+    def get_avg_review(self):
+        avg = ProductReview.objects.aggregate(Avg('score'))
+        return avg['score__avg']
+        
     
     def get_add_to_basket_form(self):
         factory = basket_forms.FormFactory()
@@ -76,7 +89,7 @@ class ProductListView(ListView):
         return q
 
     def get_queryset(self):
-        u"""Return a set of prodcuts"""
+        u"""Return a set of products"""
         q = self.get_search_query()
         if q:
             return product_models.Item.browsable.filter(title__icontains=q)
@@ -92,3 +105,6 @@ class ProductListView(ListView):
             context['summary'] = "Products matching '%s'" % q
             context['search_term'] = q
         return context
+
+
+    
