@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.http import HttpResponse, Http404, HttpResponseRedirect
+from django.http import HttpResponse, Http404, HttpResponseRedirect, HttpResponseBadRequest
 from django.template import Context, loader, RequestContext
 from django.shortcuts import render
 from django.core.urlresolvers import reverse
@@ -36,7 +36,10 @@ class ModelView(object):
         
         method_name = "handle_%s" % request.method.upper()
         model = self.get_model()
-        getattr(self, method_name)(model)
+        try:
+            getattr(self, method_name)(model)
+        except AttributeError:
+            return HttpResponseBadRequest()
         
         return self.response
         

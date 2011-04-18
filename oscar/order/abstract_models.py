@@ -262,6 +262,7 @@ class AbstractLine(models.Model):
 class AbstractLineAttribute(models.Model):
     u"""An attribute of a line."""
     line = models.ForeignKey('order.Line', related_name='attributes')
+    option = models.ForeignKey('product.Option', null=True, on_delete=models.SET_NULL, related_name="line_attributes")
     type = models.CharField(_("Type"), max_length=128)
     value = models.CharField(_("Value"), max_length=255)    
     
