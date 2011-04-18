@@ -3,12 +3,15 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
+from django.contrib import messages
 
 from oscar.address.forms import UserAddressForm
 from oscar.views import ModelView
 from oscar.services import import_module
 address_models = import_module('address.models', ['UserAddress'])
-order_models = import_module('order.models', ['Order'])
+order_models = import_module('order.models', ['Order', 'Line'])
+basket_models = import_module('basket.models', ['Basket'])
+basket_factory = import_module('basket.factory', ['BasketFactory'])
 
 @login_required
 def profile(request):
@@ -39,6 +42,37 @@ class OrderDetailView(ModelView):
     
     def handle_GET(self, order):
         self.response = render(self.request, self.template_file, locals())
+        
+        
+class OrderLineView(ModelView):
+    u"""Customer order line"""
+    
+    def get_model(self):
+        u"""Return an order object or 404"""
+        order = get_object_or_404(order_models.Order, user=self.request.user, number=self.kwargs['order_number'])
+        return order.lines.get(id=self.kwargs['line_id'])
+    
+    def handle_GET(self, line):
+        return HttpResponseRedirect(reverse('oscar-customer-order-view', kwargs={'order_number': line.order.number}))
+    
+    def handle_POST(self, line):
+        self.response = HttpResponseRedirect(reverse('oscar-customer-order-view', kwargs={'order_number': line.order.number}))
+        super(OrderLineView, self).handle_POST(line)
+    
+    def do_reorder(self, line):
+        # Get basket
+        basket = basket_factory.BasketFactory().get_or_create_open_basket(self.request, self.response)
+        if not line.product:
+            return
+        
+        # Convert line attributes into basket options
+        options = []
+        for attribute in line.attributes.all():
+            if attribute.option:
+                options.append({'option': attribute.option, 'value': attribute.value})
+        basket.add_product(line.product, 1, options)
+        messages.info(self.request, "Line reordered")
+        self.response = HttpResponseRedirect(reverse('oscar-basket'))
         
 
 class AddressBookView(ListView):

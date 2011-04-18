@@ -4,6 +4,7 @@ import datetime
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import ugettext as _
+from django.core.exceptions import ValidationError
 
 from oscar.offer.managers import ActiveOfferManager
 
@@ -77,12 +78,7 @@ class AbstractConditionalOffer(models.Model):
         """
         if not self.is_condition_satisfied(basket):
             return Decimal('0.00')
-        discount = self._proxy_benefit().apply(basket, self._proxy_condition())
-        if discount > 0:
-            # We need to mark the minimal set of condition products
-            # as being unavailable for future offers.
-            self._proxy_condition().consume_items(basket)
-        return discount    
+        return self._proxy_benefit().apply(basket, self._proxy_condition())
         
     def set_voucher(self, voucher):
         self._voucher = voucher
@@ -104,10 +100,11 @@ class AbstractConditionalOffer(models.Model):
         
 
 class AbstractCondition(models.Model):
-    COUNT, VALUE = ("Count", "Value")
+    COUNT, VALUE, COVERAGE = ("Count", "Value", "Coverage")
     TYPE_CHOICES = (
         (COUNT, _("Depends on number of items in basket that are in condition range")),
         (VALUE, _("Depends on value of items in basket that are in condition range")),
+        (COVERAGE, _("Needs to contain a set number of DISTINCT items from the condition range"))
     )
     range = models.ForeignKey('offer.Range')
     type = models.CharField(max_length=128, choices=TYPE_CHOICES)
@@ -119,6 +116,8 @@ class AbstractCondition(models.Model):
     def __unicode__(self):
         if self.type == self.COUNT:
             return u"Basket includes %d item(s) from %s" % (self.value, str(self.range).lower())
+        elif self.type == self.COVERAGE:
+            return u"Basket includes %d distinct products from %s" % (self.value, str(self.range).lower())
         return u"Basket includes %.2f value from %s" % (self.value, str(self.range).lower())
     
     def consume_items(self, basket):
@@ -134,13 +133,14 @@ class AbstractCondition(models.Model):
     
 
 class AbstractBenefit(models.Model):
-    PERCENTAGE, FIXED, MULTIBUY = ("Percentage", "Absolute", "Multibuy")
+    PERCENTAGE, FIXED, MULTIBUY, FIXED_PRICE = ("Percentage", "Absolute", "Multibuy", "Fixed price")
     TYPE_CHOICES = (
         (PERCENTAGE, _("Discount is a % of the product's value")),
         (FIXED, _("Discount is a fixed amount off the product's value")),
-        (MULTIBUY, _("Discount is to give the cheapest product for free"))
+        (MULTIBUY, _("Discount is to give the cheapest product for free")),
+        (FIXED_PRICE, _("Get the products that meet the condition for a fixed price")),
     )
-    range = models.ForeignKey('offer.Range')
+    range = models.ForeignKey('offer.Range', null=True, blank=True)
     type = models.CharField(max_length=128, choices=TYPE_CHOICES)
     value = models.DecimalField(decimal_places=2, max_digits=12)
     
@@ -157,6 +157,8 @@ class AbstractBenefit(models.Model):
             desc = u"%s%% discount on %s" % (self.value, str(self.range).lower())
         elif self.type == self.MULTIBUY:
             desc = u"Cheapest product is free from %s" % str(self.range)
+        elif self.type == self.FIXED_PRICE:
+            desc = u"The products that meet the condition are sold for %s" % self.value
         else:
             desc = u"%.2f discount on %s" % (self.value, str(self.range).lower())
         if self.max_affected_items == 1:
@@ -167,6 +169,11 @@ class AbstractBenefit(models.Model):
     
     def apply(self, basket, condition=None):
         return Decimal('0.00')
+    
+    def clean(self):
+        # All benefits need a range apart from FIXED_PRICE
+        if self.type != self.FIXED_PRICE and not self.range:
+            raise ValidationError("Benefits of type %s need a range" % self.type)
 
 
 class AbstractRange(models.Model):
@@ -177,6 +184,11 @@ class AbstractRange(models.Model):
     includes_all_products = models.BooleanField(default=False)
     included_products = models.ManyToManyField('product.Item', related_name='includes', blank=True)
     excluded_products = models.ManyToManyField('product.Item', related_name='excludes', blank=True)
+    classes = models.ManyToManyField('product.ItemClass', related_name='classes', blank=True)
+    
+    __included_product_ids = None
+    __excluded_product_ids = None
+    __class_ids = None
     
     class Meta:
         abstract = True
@@ -190,16 +202,25 @@ class AbstractRange(models.Model):
             return False
         if self.includes_all_products:
             return True
+        if product.item_class_id in self._class_ids():
+            return True    
         included_product_ids = self._included_product_ids()
         return product.id in included_product_ids
     
     def _included_product_ids(self):
-        results = self.included_products.values('id')
-        return [row['id'] for row in results]
+        if None == self.__included_product_ids:
+            self.__included_product_ids = [row['id'] for row in self.included_products.values('id')]
+        return self.__included_product_ids
     
     def _excluded_product_ids(self):
-        results = self.excluded_products.values('id')
-        return [row['id'] for row in results]
+        if None == self.__excluded_product_ids:
+            self.__excluded_product_ids = [row['id'] for row in self.excluded_products.values('id')]
+        return self.__excluded_product_ids
+    
+    def _class_ids(self):
+        if None == self.__class_ids:
+            self.__class_ids = [row['id'] for row in self.classes.values('id')]
+        return self.__class_ids
         
         
 class AbstractVoucher(models.Model):

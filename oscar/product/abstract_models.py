@@ -55,7 +55,7 @@ class AbstractItem(models.Model):
     # children would be "Green fleece - size L".
     
     # Universal product code
-    upc = models.CharField(_("UPC"), max_length=64, blank=True, null=True,
+    upc = models.CharField(_("UPC"), max_length=64, blank=True, null=True, db_index=True,
         help_text="""Universal Product Code (UPC) is an identifier for a product which is 
                      not specific to a particular supplier.  Eg an ISBN for a book.""")
     

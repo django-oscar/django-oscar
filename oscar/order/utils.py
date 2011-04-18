@@ -106,8 +106,10 @@ class OrderCreator(object):
     def _create_line_attributes(self, order, order_line, basket_line):
         u"""Creates the batch line attributes."""
         for attr in basket_line.attributes.all():
-            order_models.LineAttribute._default_manager.create(line=order_line, type=attr.option.code,
-                                                      value=attr.value)
+            order_models.LineAttribute._default_manager.create(line=order_line,
+                                                               option=attr.option, 
+                                                               type=attr.option.code,
+                                                               value=attr.value)
             
     def _create_discount_model(self, order, discount):
         u"""

@@ -173,6 +173,14 @@ class AbstractBasket(models.Model):
         return reduce(lambda num,line: num+line.quantity, self.all_lines(), 0)
     
     @property
+    def num_items_without_discount(self):
+        u"""Return number of items"""
+        num = 0
+        for line in self.all_lines():
+            num += line.quantity_without_discount
+        return num
+    
+    @property
     def time_before_submit(self):
         if not self.date_submitted:
             return None
@@ -183,6 +191,7 @@ class AbstractBasket(models.Model):
         if not test_datetime:
             test_datetime = datetime.datetime.now()
         return test_datetime - self.date_created
+    
     
 class AbstractLine(models.Model):
     u"""A line of a basket (product and a quantity)"""
@@ -271,6 +280,10 @@ class AbstractLine(models.Model):
     @property
     def quantity_without_discount(self):
         return self.quantity - self._affected_quantity
+    
+    @property
+    def is_available_for_discount(self):
+        return self.quantity_without_discount > 0
     
     @property
     def discount_value(self):

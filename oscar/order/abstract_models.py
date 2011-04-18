@@ -32,6 +32,9 @@ class AbstractOrder(models.Model):
     shipping_address = models.ForeignKey('order.ShippingAddress', null=True, blank=True)
     shipping_method = models.CharField(_("Shipping method"), max_length=128, null=True, blank=True)
     
+    # Use this field to indicate that an order is on hold / awaiting payment
+    status = models.CharField(_("Status"), null=True, blank=True)
+    
     # Index added to this field for reporting
     date_placed = models.DateTimeField(auto_now_add=True, db_index=True)
     
@@ -262,6 +265,7 @@ class AbstractLine(models.Model):
 class AbstractLineAttribute(models.Model):
     u"""An attribute of a line."""
     line = models.ForeignKey('order.Line', related_name='attributes')
+    option = models.ForeignKey('product.Option', null=True, on_delete=models.SET_NULL, related_name="line_attributes")
     type = models.CharField(_("Type"), max_length=128)
     value = models.CharField(_("Value"), max_length=255)    
     

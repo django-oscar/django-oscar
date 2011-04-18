@@ -1,8 +1,11 @@
+=======================
 Installing django-oscar
 =======================
 
 Environment
 -----------
+
+This section is optional but recommended.
 
 Install pip and virtualenv (if you haven't already)::
 
@@ -14,15 +17,6 @@ Install pip and virtualenv (if you haven't already)::
 Create a new virtual env::
 
     mkvirtualenv --no-site-packages $PROJECTNAME
-    
-Install oscar and its dependencies::    
-    
-    pip install -e git+git://github.com/codeinthehole/django-oscar.git#egg=django-oscar
-    
-This will install Django and a few other packages.  Now create the project::
-    
-    cd /path/to/my/workspace
-    django-admin.py startproject $PROJECTNAME
 
 A nice extension now is to edit your ``~/.virtualenv/$PROJECTNAME/bin/postactivate`` file to contain::
 
@@ -31,8 +25,30 @@ A nice extension now is to edit your ``~/.virtualenv/$PROJECTNAME/bin/postactiva
 so that you can simply type ``workon $PROJECTNAME`` to jump into your project folder with the virtual
 environment set-up.
 
-Configure settings
-------------------
+Installation
+------------
+    
+Install oscar and its dependencies::    
+    
+    pip install -e git+git://github.com/tangentlabs/django-oscar.git#egg=django-oscar
+    
+You will also need to install the appropriate python module for your database of choice.
+If you are using MySQL, then run the following::
+
+    pip install MySQL-python
+
+Also, depending on your search backend for haystack, you'll need to install further 
+packages::
+
+    pip install pysolr
+
+Now create the project::
+    
+    cd /path/to/my/workspace
+    django-admin.py startproject $PROJECTNAME
+
+Configure ``settings.py``
+-------------------------
 
 * Add ``'django.middleware.transaction.TransactionMiddleware'`` to your ``MIDDLEWARE_CLASSES`` tuple, making 
   sure it comes BEFORE ``'django.contrib.auth.middleware.AuthenticationMiddleware'``.
@@ -65,7 +81,7 @@ A vanilla install of django-oscar is now ready, you could now finish the process
 However, in reality you will need to start extending the models to match your domain.  It's best to do
 this before creating your initial schema.
 
-Configure urls
+Configure URLs
 --------------
 
 Oscar comes with a number of urls and views out of the box.  These are

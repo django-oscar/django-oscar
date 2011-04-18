@@ -1,4 +1,5 @@
 from decimal import Decimal
+import logging
 
 from django.conf import settings
 from django.http import HttpResponse, Http404, HttpResponseRedirect, HttpResponseBadRequest
@@ -9,6 +10,7 @@ from django.forms import ModelForm
 from django.contrib import messages
 from django.core.urlresolvers import resolve
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils.translation import ugettext as _
 
 from oscar.views import ModelView
 from oscar.services import import_module
@@ -23,6 +25,9 @@ order_models = import_module('order.models', ['Order', 'ShippingAddress'])
 order_utils = import_module('order.utils', ['OrderNumberGenerator', 'OrderCreator'])
 address_models = import_module('address.models', ['UserAddress'])
 shipping_repository = import_module('shipping.repository', ['Repository'])
+
+
+logger = logging.getLogger('oscar.checkout')
 
 
 class IndexView(object):
@@ -153,7 +158,9 @@ class PaymentDetailsView(checkout_views.CheckoutView):
         # We generate the order number first as this will be used
         # in payment requests (ie before the order model has been 
         # created).
-        order_number = self._generato_order_number(self.basket)
+        order_number = self._generate_order_number(self.basket)
+        logger.info(_("Submitting order #%s" % order_number))
+        
         checkout_signals.pre_payment.send_robust(sender=self, view=self)
         self._handle_payment(self.basket, order_number)
         checkout_signals.post_payment.send_robust(sender=self, view=self)
@@ -161,11 +168,13 @@ class PaymentDetailsView(checkout_views.CheckoutView):
         self._save_payment_sources(order)
         self._reset_checkout()
         
+        logger.info(_("Order #%s submitted successfully" % order_number))
+        
         # Save order id in session so thank-you page can load it
         self.request.session['checkout_order_id'] = order.id
         return HttpResponseRedirect(reverse('oscar-checkout-thank-you'))
     
-    def _generato_order_number(self, basket):
+    def _generate_order_number(self, basket):
         generator = order_utils.OrderNumberGenerator()
         return generator.order_number(basket)
 
