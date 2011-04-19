@@ -13,6 +13,7 @@ from oscar.offer.tests import *
 from oscar.shipping.tests import *
 from oscar.customer.tests import *
 from oscar.discount.tests import *
+from oscar.promotions.tests import *
 
 from oscar.services import import_module, AppNotFoundError
 
