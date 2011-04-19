@@ -5,5 +5,5 @@ from oscar.reviews.models import ProductReview
 
 class ProductReviewForm(ModelForm):    
     class Meta:
-        model = ProductReview()
+        model = ProductReview
         fields = ('title', 'score', 'body')

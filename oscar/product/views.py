@@ -1,11 +1,12 @@
 from django.conf import settings
 from django.http import HttpResponse, Http404, HttpResponsePermanentRedirect, HttpResponseRedirect
 from django.template import Context, loader, RequestContext
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, render_to_response
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.views.generic import ListView, DetailView
 from django.db.models import Avg
+from django.forms.models import modelformset_factory
 
 from oscar.services import import_module
 from oscar.reviews.models import ProductReview
@@ -106,5 +107,30 @@ class ProductListView(ListView):
             context['search_term'] = q
         return context
 
-
-    
+class ItemReviewView(object):
+    u"""
+    A separate product review page
+    """
+        
+    def __call__(self, request, *args, **kwargs):
+        
+        self.request = request
+        self.args = args
+        self.kwargs = kwargs
+        
+        template_name = "reviews/add_review.html"
+        
+        ReviewFormSet = modelformset_factory(ProductReview)
+        if request.method == 'POST':
+            formset = ReviewFormSet(request.POST, request.FILES)
+            if formset.is_valid():
+                formset.save()
+            # do something.
+        else:
+            formset = ReviewFormSet()
+        
+        return render_to_response(template_name, {
+                    "formset": formset,
+                    })
+        
+        
