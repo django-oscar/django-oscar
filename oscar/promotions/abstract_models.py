@@ -2,15 +2,17 @@ from django.db import models
 from django.conf import settings
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
+from django.core.exceptions import ValidationError
 
 BANNER_FOLDER = getattr(settings, 'OSCAR_BANNER_FOLDER', 'images/promotions/banners')
 POD_FOLDER = getattr(settings, 'OSCAR_POD_FOLDER', 'images/promotions/pods')
 
-BANNER, LEFT_POD, RIGHT_POD = ('Banner', 'Left pod', 'Right pod')
+BANNER, LEFT_POD, RIGHT_POD, RAW_HTML = ('Banner', 'Left pod', 'Right pod', 'Raw HTML')
 POSITION_CHOICES = (
     (BANNER, _("Banner")),
     (LEFT_POD, _("Pod on left-hand side of page")),
     (RIGHT_POD, _("Pod on right-hand side of page")),
+    (RAW_HTML, _("Raw HTML"))
 )
 
 class AbstractPromotion(models.Model):
@@ -33,6 +35,9 @@ class AbstractPromotion(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
 
     _proxy_link_url = None
+    
+    image_html_template = '<img src="%s" alt="%s" />'
+    link_html = '<a href="%s">%s</a>'
 
     class Meta:
         abstract = True
@@ -44,10 +49,10 @@ class AbstractPromotion(models.Model):
             return self.name
         return "%s (%s)" % (self.name, self.link_url)   
         
-    def save(self, *args, **kwargs):
-        # @todo check that at least one of the three content fields is set
-        super(AbstractPromotion, self).save(*args, **kwargs)
-    
+    def clean(self):
+        if not self.banner_image and not self.pod_image and not self.raw_html:
+            raise ValidationError("A promotion must have one of a banner image, pod image or raw HTML")    
+        
     def set_proxy_link(self, url):
         self._proxy_link_url = url    
         
@@ -65,13 +70,17 @@ class AbstractPromotion(models.Model):
         return self.raw_html
 
     def _get_html(self, image_field):
+        u"""
+        Returns the appropriate HTML for an image field
+        """
         if self.raw_html:
             return self.raw_html
         try:
             image = getattr(self, image_field)
+            image_html = self.image_html_template % (image.url, self.name)
             if self.link_url and self._proxy_link_url:
-                return '<a href="%s"><img src="%s" alt="%s" /></a>' % (self._proxy_link_url, image.url, self.name)
-            return '<img src="%s" alt="%s" />' % (image.url, self.name)
+                return self.link_html % (self._proxy_link_url, image_html)
+            return image_html
         except AttributeError:
             return ''
 
