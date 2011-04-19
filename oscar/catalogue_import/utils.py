@@ -1,6 +1,7 @@
 import os
 import csv
 import sys
+from decimal import Decimal as D
 from oscar.services import import_module
 
 
@@ -36,9 +37,6 @@ class CatalogueImport(object):
         u"""Flush out product and stock models"""
         product_models.ItemClass.objects.all().delete()
         product_models.Item.objects.all().delete()
-        product_models.AttributeType.objects.all().delete()
-        product_models.ItemAttributeValue.objects.all().delete()
-        product_models.Option.objects.all().delete()
         stock_models.Partner.objects.all().delete()
         stock_models.StockRecord.objects.all().delete()
         
@@ -72,7 +70,7 @@ class CatalogueImport(object):
             saved_stock.product = saved_item
             saved_stock.partner = saved_partner
             saved_stock.partner_reference = partner_reference
-            saved_stock.price_excl_tax = price_excl_tax
+            saved_stock.price_excl_tax = D(price_excl_tax)
             saved_stock.num_in_stock = num_in_stock
             saved_stock.save()
  

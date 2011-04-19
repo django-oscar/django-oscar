@@ -7,7 +7,7 @@ from oscar.services import import_module
 LOGGING_LEVEL = logging.INFO
 LOGGING_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 
-log = logging.getLogger('catalogue_import')
+log = logging.getLogger('oscar.catalogue_import')
 formatter = logging.Formatter(LOGGING_FORMAT)
 stream = logging.StreamHandler(sys.stderr)
 stream.setLevel(logging.INFO)
@@ -25,12 +25,6 @@ class Command(BaseCommand):
             dest='flush',
             default=False,
             help='Flush tables before importing'),
-        make_option('--csv-type',
-            type='string',
-            dest='csv_type',
-            nargs=1,
-            default='simple',
-            help='CSV content type'),
         make_option('--file',
             type='string',
             dest='filename',
@@ -43,7 +37,6 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         importer = catalogue_import.CatalogueImport()
         importer.flush = options.get('flush')
-        importer.csv_type = options.get('csv_type')
         importer.afile = options.get('filename')
         try:
             importer.handle()

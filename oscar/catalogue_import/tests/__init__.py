@@ -1,4 +1,5 @@
 import os
+from decimal import Decimal as D
 from django.test import TestCase
 from oscar.services import import_module
 
@@ -111,3 +112,38 @@ class PartnerRefenceExistsTest(TestCase):
         partner_reference = "SKU999"
         stock_record = stock_models.StockRecord.objects.get(partner_reference=partner_reference)
         self.assertEqual(stock_record.partner_reference, partner_reference)
+        
+class FlushTest(TestCase):
+    
+    item_class = "hotpants"
+    product_upc = "KURA9"
+    
+    def setup(self):
+        item_class, _ = product_models.ItemClass.objects.get_or_create(name=self.item_class)
+        
+        item = product_models.Item()
+        item.upc = self.product_upc
+        item.title = "Test item"
+        item.description = "Hello there"
+        item.item_class = item_class
+        item.save()
+        
+        partner, _ = stock_models.Partner.objects.get_or_create(name="Kura")
+        
+        stock = stock_models.StockRecord()
+        stock.product = item
+        stock.partner = partner
+        stock.partner_reference = "09090"
+        stock.price_excl_tax = D('10.00')
+        stock.num_in_stock = 5
+        stock.save()
+    
+    def test_flush(self):
+        self.setup()
+        catalogue_import = import_module('catalogue_import.utils', ['CatalogueImport'])
+        importer = catalogue_import.CatalogueImport()
+        importer.afile = TEST_CSV
+        importer.flush = True
+        importer.handle()
+        with self.assertRaises(product_models.Item.DoesNotExist):
+            product_models.Item.objects.get(upc=self.product_upc)
