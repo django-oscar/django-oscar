@@ -178,6 +178,7 @@ INSTALLED_APPS = (
     'django.contrib.flatpages',
     # External apps
     'django_extensions',
+    'pyzen',
     #'debug_toolbar',
     # Apps from oscar
     'oscar',
