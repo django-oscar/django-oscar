@@ -6,11 +6,11 @@ from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.views.generic import ListView, DetailView
 from django.db.models import Avg
-from django.forms.models import modelformset_factory
+from django.views.decorators.csrf import csrf_protect
 
 from oscar.services import import_module
 from oscar.reviews.models import ProductReview
-from oscar.reviews.forms import ProductReviewForm
+from oscar.reviews.forms import ProductReviewForm, make_review_form
 
 product_models = import_module('product.models', ['Item', 'ItemClass'])
 product_signals = import_module('product.signals', ['product_viewed'])
@@ -111,26 +111,28 @@ class ItemReviewView(object):
     u"""
     A separate product review page
     """
-        
-    def __call__(self, request, *args, **kwargs):
-        
+  
+    def __call__(self, request, *args, **kwargs):        
         self.request = request
         self.args = args
         self.kwargs = kwargs
+                
+        item = get_object_or_404(product_models.Item, pk=self.kwargs['item_id'])  
+        #print kwargs
         
         template_name = "reviews/add_review.html"
-        
-        ReviewFormSet = modelformset_factory(ProductReview)
-        if request.method == 'POST':
-            formset = ReviewFormSet(request.POST, request.FILES)
-            if formset.is_valid():
-                formset.save()
+        #pf = ProductReviewForm()                
+        if self.request.method == 'POST':        
+            form = make_review_form(self.request.user)            
+            #if form.is_valid():
+            #    form.save()
             # do something.
-        else:
-            formset = ReviewFormSet()
+        else:            
+            form = make_review_form(self.request.user)
         
-        return render_to_response(template_name, {
-                    "formset": formset,
+        return render(self.request, template_name, {
+                    "item" : item,
+                    "review_form": form,
                     })
         
         

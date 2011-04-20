@@ -8,6 +8,7 @@ from django.utils.translation import gettext as _
 from oscar.product.models import Item
 
 
+
 class AbstractProductReview(models.Model):
     u"""
     Superclass ProductReview
@@ -22,10 +23,13 @@ class AbstractProductReview(models.Model):
         ('5', 5)
     )
     product = models.ForeignKey('product.Item', related_name='product')
-    title = models.CharField(_("Title"), max_length=64)
-    body = models.TextField(_("Body"), max_length=300, blank=True)
+    title = models.CharField(_("Title"), max_length=100)
+    body = models.TextField(_("Comment"), max_length=300, blank=True)
     score = models.CharField(_("Score"), max_length=1, choices=SCORE_CHOICES, blank=True)
-    approved = models.BooleanField(default=False)
+    approved = models.BooleanField(default=False)    
+    name = models.CharField(_("Name"), max_length=100, null=True)
+    email = models.EmailField(_("Email"), null=True)
+    url = models.URLField(_("URL"), null=True, blank=True)
     
     class Meta:
         abstract = True
