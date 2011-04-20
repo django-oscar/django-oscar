@@ -5,8 +5,8 @@ from django.core.management import setup_environ
 import settings as app_settings
 setup_environ(app_settings)
 
-from oscar.product.models import ItemClass, Item, AttributeType, ItemAttributeValue, Option
-from oscar.stock.models import Partner, StockRecord
+from oscar.apps.product.models import ItemClass, Item, AttributeType, ItemAttributeValue, Option
+from oscar.apps.stock.models import Partner, StockRecord
 from django.db import connection as django_connection
 
 connection = MySQLdb.connect(host='localhost', user='root', passwd='gsiwmm', db='CWDM_app_production_copy')
