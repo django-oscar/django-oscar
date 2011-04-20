@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from oscar.services import import_module
+from oscar.core.loading import import_module
 models = import_module('order.models', ['Order', 'OrderNote', 'CommunicationEvent', 'CommunicationEventType',
                                         'BillingAddress', 'ShippingAddress', 'Line',
                                         'LinePrice', 'ShippingEvent', 'ShippingEventType', 

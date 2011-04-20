@@ -1,7 +1,7 @@
 from django.dispatch import receiver
 from django.db.models.signals import m2m_changed, post_save
 
-from oscar.services import import_module
+from oscar.core.loading import import_module
 offer_models = import_module('offer.models', ['Voucher'])
 order_models = import_module('order.models', ['OrderDiscount'])
 

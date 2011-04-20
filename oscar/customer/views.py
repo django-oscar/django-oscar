@@ -6,8 +6,8 @@ from django.http import HttpResponseRedirect
 from django.contrib import messages
 
 from oscar.address.forms import UserAddressForm
-from oscar.views import ModelView
-from oscar.services import import_module
+from oscar.view.generic import ModelView
+from oscar.core.loading import import_module
 address_models = import_module('address.models', ['UserAddress'])
 order_models = import_module('order.models', ['Order', 'Line'])
 basket_models = import_module('basket.models', ['Basket'])

@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseForbidden, Http404
 from django.shortcuts import render
 
-from oscar.services import import_module
+from oscar.core.loading import import_module
 report_forms = import_module('reports.forms', ['ReportForm'])
 report_utils = import_module('reports.utils', ['GeneratorRepository'])
 

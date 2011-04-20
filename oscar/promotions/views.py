@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
 
-from oscar.services import import_module
+from oscar.core.loading import import_module
 
 promotions_models = import_module('promotions.models', ['PagePromotion', 'KeywordPromotion'])
 

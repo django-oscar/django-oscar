@@ -12,8 +12,8 @@ from django.core.urlresolvers import resolve
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext as _
 
-from oscar.views import ModelView
-from oscar.services import import_module
+from oscar.view.generic import ModelView
+from oscar.core.loading import import_module
 
 basket_factory = import_module('basket.factory', ['BasketFactory'])
 checkout_forms = import_module('checkout.forms', ['ShippingAddressForm'])

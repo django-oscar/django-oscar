@@ -1,6 +1,6 @@
 from django.core.urlresolvers import resolve
 
-from oscar.services import import_module
+from oscar.core.loading import import_module
 
 shipping_methods = import_module('shipping.repository', ['Repository'])
 

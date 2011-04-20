@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from oscar.services import import_module
+from oscar.core.loading import import_module
 product_models = import_module('product.models', ['Item', 'ItemClass', 'AttributeType', 
                                                   'ItemAttributeValue', 'Option', 'ProductRecommendation'])
 

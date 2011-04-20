@@ -3,7 +3,7 @@ from itertools import chain
 from django.core.exceptions import ObjectDoesNotExist
 
 from oscar.promotions.abstract_models import BANNER, LEFT_POD, RIGHT_POD
-from oscar.services import import_module
+from oscar.core.loading import import_module
 
 promotion_models = import_module('promotions.models', ['PagePromotion', 'KeywordPromotion'])
 

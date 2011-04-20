@@ -1,6 +1,6 @@
 import csv
 
-from oscar.services import import_module
+from oscar.core.loading import import_module
 report_classes = import_module('reports.reports', ['ReportGenerator'])
 offer_models = import_module('offer.models', ['Voucher', 'ConditionalOffer'])
 

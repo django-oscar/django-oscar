@@ -2,7 +2,7 @@ from django.http import HttpResponse, Http404, HttpResponseRedirect, HttpRespons
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 
-from oscar.services import import_module
+from oscar.core.loading import import_module
 basket_factory = import_module('basket.factory', ['BasketFactory'])
 checkout_calculators = import_module('checkout.calculators', ['OrderTotalCalculator'])
 order_models = import_module('order.models', ['Order', 'ShippingAddress'])

@@ -2,7 +2,7 @@ import zlib
 
 from django.conf import settings
 
-from oscar.services import import_module
+from oscar.core.loading import import_module
 basket_models = import_module('basket.models', ['Basket', 'Line'])
 offer_utils = import_module('offer.utils', ['Applicator'])
 

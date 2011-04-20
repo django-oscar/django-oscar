@@ -1,4 +1,4 @@
-from oscar.services import import_module
+from oscar.core.loading import import_module
 order_reports = import_module('order.reports', ['OrderReportGenerator'])
 analytics_reports = import_module('analytics.reports', ['ProductReportGenerator', 'UserReportGenerator'])
 basket_reports = import_module('basket.reports', ['OpenBasketReportGenerator', 'SubmittedBasketReportGenerator'])     

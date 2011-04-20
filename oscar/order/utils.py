@@ -1,6 +1,6 @@
 from django.contrib.sites.models import Site
 
-from oscar.services import import_module
+from oscar.core.loading import import_module
 order_models = import_module('order.models', ['ShippingAddress', 'Order', 'Line', 
                                               'LinePrice', 'LineAttribute', 'OrderDiscount'])
 order_signals = import_module('order.signals', ['order_placed'])

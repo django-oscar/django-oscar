@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.forms import ModelForm
 
-from oscar.services import import_module
+from oscar.core.loading import import_module
 address_models = import_module('address.models', ['UserAddress'])
 
 

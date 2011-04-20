@@ -1,5 +1,5 @@
 from oscar.shipping.methods import FreeShipping
-from oscar.services import import_module
+from oscar.core.loading import import_module
 
 shipping_models = import_module('shipping.models', ['OrderAndItemLevelChargeMethod'])
 

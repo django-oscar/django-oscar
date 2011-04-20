@@ -1,6 +1,6 @@
 from django import template
 
-from oscar.services import import_module
+from oscar.core.loading import import_module
 product_models = import_module('product.models', ['Item', 'ItemClass'])
 history_helpers = import_module('customer.history_helpers', ['get_recently_viewed_product_ids'])
 

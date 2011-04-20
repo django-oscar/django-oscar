@@ -7,8 +7,8 @@ from django.views.generic import ListView, DetailView
 from django.contrib import messages
 from django.db import transaction
 
-from oscar.views import ModelView
-from oscar.services import import_module
+from oscar.view.generic import ModelView
+from oscar.core.loading import import_module
 order_models = import_module('order.models', ['Order', 'Line', 'ShippingEvent', 'ShippingEventQuantity', 
                                               'ShippingEventType', 'PaymentEvent', 'PaymentEventType', 'OrderNote'])
 

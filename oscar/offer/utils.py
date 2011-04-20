@@ -1,7 +1,7 @@
 from decimal import Decimal
 from itertools import chain
 
-from oscar.services import import_module
+from oscar.core.loading import import_module
 offer_models = import_module('offer.models', ['ConditionalOffer'])
 
 

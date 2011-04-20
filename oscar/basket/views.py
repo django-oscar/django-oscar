@@ -5,8 +5,8 @@ from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 
-from oscar.views import ModelView
-from oscar.services import import_module
+from oscar.view.generic import ModelView
+from oscar.core.loading import import_module
 
 basket_models = import_module('basket.models', ['Basket', 'Line', 'InvalidBasketLineError'])
 basket_forms = import_module('basket.forms', ['FormFactory'])

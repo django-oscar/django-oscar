@@ -2,7 +2,7 @@ from django.dispatch import receiver
 
 from oscar.analytics.abstract_models import (AbstractProductRecord, AbstractUserRecord,
                                              AbstractUserProductView, AbstractUserSearch)
-from oscar.services import import_module
+from oscar.core.loading import import_module
 
 product_signals = import_module('product.signals', ['product_viewed', 'product_search'])
 basket_signals = import_module('basket.signals', ['basket_addition'])

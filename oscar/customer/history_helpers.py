@@ -3,7 +3,7 @@ import json
 from django.dispatch import receiver
 from django.conf import settings
 
-from oscar.services import import_module
+from oscar.core.loading import import_module
 product_signals = import_module('product.signals', ['product_viewed'])
 
 MAX_PRODUCTS = getattr(settings, 'OSCAR_RECENTLY_VIEWED_PRODUCTS', 5)
