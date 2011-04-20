@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpRequest
 
 from oscar.customer.history_helpers import get_recently_viewed_product_ids
-from oscar.test_helpers import create_product
+from oscar.test.helpers import create_product
 
 class HistoryHelpersTest(unittest.TestCase):
     

@@ -8,7 +8,7 @@ from oscar.offer.models import *
 from oscar.basket.models import Basket
 from oscar.product.models import Item, ItemClass
 from oscar.stock.models import Partner, StockRecord
-from oscar.test_helpers import create_product
+from oscar.test.helpers import create_product
 
 
 class RangeTest(unittest.TestCase):

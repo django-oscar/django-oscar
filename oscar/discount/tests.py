@@ -3,7 +3,7 @@ import datetime
 
 from django.utils import unittest
 
-from oscar.test_helpers import create_product
+from oscar.test.helpers import create_product
 from oscar.discount.models import DiscountOffer, PERCENTAGE_DISCOUNT, ABSOLUTE_DISCOUNT, FINAL_PRICE 
 
 
