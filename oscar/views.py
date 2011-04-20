@@ -6,18 +6,6 @@ from django.core.urlresolvers import reverse
 from django.contrib import messages
 
 
-def class_based_view(class_obj):
-    u"""
-    Simple function that takes a view class and returns a function
-    that instantiates a new instance each time it is called.
-    
-    This is used urls.py files when using class-based views.
-    """
-    def _instantiate_view_class(request, *args, **kwargs):
-        return class_obj()(request, *args, **kwargs)
-    return _instantiate_view_class
-
-
 class ModelView(object):
     u"""
     A generic view for models which can recieve GET and POST requests

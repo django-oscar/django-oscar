@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import *
 from django.contrib.auth.decorators import login_required
 
-from oscar.views import class_based_view
+from oscar.core.decorators import class_based_view
 from oscar.customer.views import OrderHistoryView, OrderDetailView, OrderLineView, AddressBookView, AddressView
 
 urlpatterns = patterns('django.contrib.auth.views',

@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import *
 from django.contrib.admin.views.decorators import staff_member_required
 
-from oscar.views import class_based_view
+from oscar.core.decorators import class_based_view
 from oscar.order_management.views import OrderListView, OrderView
 
 urlpatterns = patterns('oscar.order_management.views',
