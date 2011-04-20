@@ -33,24 +33,25 @@ def import_module(module_label, classes=[]):
     # we take the first component to find within the INSTALLED_APPS list.
     app_name = module_label.split(".")[0]
     for installed_app in settings.INSTALLED_APPS:
-        installed_app_parts = installed_app.split(".")
+        base_package = installed_app.split(".")[0]
+        module_name = installed_app.split(".").pop()
         try: 
             # We search the second component of the installed apps
-            if app_name == installed_app_parts[1]:
-                if installed_app_parts[0] == 'oscar':
+            if app_name == module_name:
+                if base_package == 'oscar':
                     # Using core module explicitly
-                    return _import_classes_from_module("oscar.%s" % module_label, classes)
+                    return _import_classes_from_module("oscar.apps.%s" % module_label, classes)
                 else:
                     # Using local override - check that requested module exists
-                    local_module_name = "%s.%s" % (installed_app_parts[0], module_label)
+                    local_app = "%s.%s" % (base_package, module_label)
                     try:
-                        imported_local_mod = __import__(local_module_name, fromlist=classes)
+                        imported_local_mod = __import__(local_app, fromlist=classes)
                     except ImportError, e:
                         # Module doesn't exist, fall back to oscar core
-                        return _import_classes_from_module("oscar.%s" % module_label, classes)
+                        return _import_classes_from_module("oscar.apps.%s" % module_label, classes)
                     
-                    module = new_module(local_module_name)
-                    imported_oscar_mod = __import__("oscar.%s" % module_label, fromlist=classes)
+                    module = new_module(local_app)
+                    imported_oscar_mod = __import__("oscar.apps.%s" % module_label, fromlist=classes)
                     for classname in classes:
                         if hasattr(imported_local_mod, classname):
                             module.__setattr__(classname, getattr(imported_local_mod, classname))

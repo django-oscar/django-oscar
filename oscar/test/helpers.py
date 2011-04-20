@@ -1,5 +1,5 @@
-from oscar.product.models import ItemClass, Item
-from oscar.stock.models import Partner, StockRecord
+from oscar.apps.product.models import ItemClass, Item
+from oscar.apps.stock.models import Partner, StockRecord
 
 def create_product(price=None):
     u"""
