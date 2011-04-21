@@ -6,15 +6,16 @@ from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.views.generic import ListView, DetailView
 from django.db.models import Avg
-from django.views.decorators.csrf import csrf_protect
+from django.core.exceptions import ObjectDoesNotExist
 
 from oscar.services import import_module
 from oscar.reviews.models import ProductReview
-from oscar.reviews.forms import ProductReviewForm, make_review_form
+from oscar.reviews.forms import make_review_form, ProductReviewForm
 
 product_models = import_module('product.models', ['Item', 'ItemClass'])
 product_signals = import_module('product.signals', ['product_viewed'])
 basket_forms = import_module('basket.forms', ['FormFactory'])
+review_models = import_module('reviews.models', ['ProductReview'])
 
 
 class ItemDetailView(DetailView):
@@ -112,24 +113,37 @@ class ItemReviewView(object):
     A separate product review page
     """
   
+    def _is_review_done(self):
+        """
+        Check if the user already reviewed this product
+        """                
+        try:
+            review = review_models.ProductReview.objects.get(product=self.kwargs['item_id'], user=self.request.user)
+            return True
+        except ObjectDoesNotExist:                
+            return False
+  
     def __call__(self, request, *args, **kwargs):        
         self.request = request
         self.args = args
         self.kwargs = kwargs
-                
-        item = get_object_or_404(product_models.Item, pk=self.kwargs['item_id'])  
-        #print kwargs
-        
+        # get the product                
+        item = get_object_or_404(product_models.Item, pk=self.kwargs['item_id'])          
+        if self._is_review_done():
+            return HttpResponsePermanentRedirect(item.get_absolute_url()) # should change
+                                     
         template_name = "reviews/add_review.html"
-        #pf = ProductReviewForm()                
+                        
         if self.request.method == 'POST':        
-            form = make_review_form(self.request.user)            
-            #if form.is_valid():
-            #    form.save()
-            # do something.
+            form = make_review_form(self.request.user, self.request.POST)
+            print form                      
+            if form.is_valid():
+                review = ProductReview(product=item, user=self.request.user)
+                rform = ProductReviewForm(self.request.POST, instance=review)
+                rform.save()                                                   
         else:            
             form = make_review_form(self.request.user)
-        
+          
         return render(self.request, template_name, {
                     "item" : item,
                     "review_form": form,

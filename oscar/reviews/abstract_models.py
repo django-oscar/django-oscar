@@ -23,6 +23,7 @@ class AbstractProductReview(models.Model):
         ('5', 5)
     )
     product = models.ForeignKey('product.Item', related_name='product')
+    user = models.ForeignKey('auth.User', related_name='review')
     title = models.CharField(_("Title"), max_length=100)
     body = models.TextField(_("Comment"), max_length=300, blank=True)
     score = models.CharField(_("Score"), max_length=1, choices=SCORE_CHOICES, blank=True)
