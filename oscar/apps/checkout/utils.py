@@ -126,6 +126,10 @@ class CheckoutSessionData(object):
         u"""Get user address id from session"""
         return self._get('shipping', 'user_address_id')
     
+    def use_free_shipping(self):
+        u"""Set "free shipping" code to session"""
+        self._set('shipping', 'method_code', '__free__')
+    
     def use_shipping_method(self, code):
         u"""Set shipping method code to session"""
         self._set('shipping', 'method_code', code)

@@ -321,6 +321,8 @@ class AbstractPaymentEvent(models.Model):
 
 class AbstractPaymentEventType(models.Model):
     u"""Payment events are things like 'Paid', 'Failed', 'Refunded'"""
+    # Code is used in forms
+    code = models.CharField(max_length=128)
     # Name is the friendly description of an event
     name = models.CharField(max_length=255)
     code = models.SlugField(max_length=128)
@@ -404,6 +406,8 @@ class ShippingEventQuantity(models.Model):
 
 class AbstractShippingEventType(models.Model):
     u"""Shipping events are things like 'OrderPlaced', 'Acknowledged', 'Dispatched', 'Refunded'"""
+    # Code is used in forms
+    code = models.CharField(max_length=128)
     # Name is the friendly description of an event
     name = models.CharField(max_length=255)
     # Code is used in forms

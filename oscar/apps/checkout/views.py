@@ -96,6 +96,10 @@ class ShippingMethodView(checkout_views.CheckoutView):
         self.context['methods'] = methods
         return render(self.request, self.template_file, self.context)
     
+    def get_shipping_methods_for_basket(self, basket):
+        u"""Return available shipping methods for a basket"""
+        return shipping_models.Method.objects.all()
+
     def get_available_shipping_methods(self):
         u"""
         Returns all applicable shipping method objects
