@@ -1,17 +1,20 @@
 from django.conf.urls.defaults import *
 from haystack.query import SearchQuerySet
 
-from oscar.apps.search.views import Suggestions, MultiFacetedSearchView
-from oscar.apps.search.forms import MultiFacetedSearchForm
-from oscar.apps.search.search_indexes import ProductIndex
+from oscar.core.loading import import_module
+search_views = import_module('search.views', ['Suggestions', 'MultiFacetedSearchView'])
+search_forms = import_module('search.forms', ['MultiFacetedSearchForm'])
+search_indexes = import_module('search.search_indexes', ['ProductIndex'])
+
 
 sqs = SearchQuerySet()
-for field_name, field in ProductIndex.fields.items():
+for field_name, field in search_indexes.ProductIndex.fields.items():
     if field.faceted is True:
-        #ensure we facet the results set by the defined facetable fields
+        # Ensure we facet the results set by the defined facetable fields
         sqs.facet(field_name)
 
-urlpatterns = patterns('search.views',
-    url(r'^suggest/$', Suggestions.as_view(), name='oscar-search-suggest'),
-    url(r'^$', MultiFacetedSearchView(form_class=MultiFacetedSearchForm, searchqueryset=sqs), name='oscar-search'),
+urlpatterns = patterns('search.apps.views',
+    url(r'^suggest/$', search_views.Suggestions.as_view(), name='oscar-search-suggest'),
+    url(r'^$', search_views.MultiFacetedSearchView(form_class=search_forms.MultiFacetedSearchForm, 
+        searchqueryset=sqs), name='oscar-search'),
 )

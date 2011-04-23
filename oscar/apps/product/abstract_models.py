@@ -86,6 +86,8 @@ class AbstractItem(models.Model):
     recommended_items = models.ManyToManyField('product.Item', through='ProductRecommendation', blank=True)
     
     date_created = models.DateTimeField(auto_now_add=True)
+
+    # This field is used by Haystack to reindex search
     date_updated = models.DateTimeField(auto_now=True, null=True, default=None)
 
     objects = models.Manager()

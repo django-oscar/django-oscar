@@ -1,9 +1,13 @@
 from haystack import site
+
 from oscar.apps.search.abstract_indexes import AbstractProductIndex
-from oscar.apps.product.models import Item
+from oscar.core.loading import import_module
+product_models = import_module('product.models', ['Item'])
+
 
 class ProductIndex(AbstractProductIndex):
     pass
 
-site.register(Item, ProductIndex)
+
+site.register(product_models.Item, ProductIndex)
 

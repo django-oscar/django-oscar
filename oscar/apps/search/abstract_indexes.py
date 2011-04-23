@@ -1,5 +1,8 @@
 from haystack.indexes import *
-from oscar.apps.product.models import Item
+
+from oscar.core.loading import import_module
+product_models = import_module('product.models', ['Item'])
+
 
 class AbstractProductIndex(SearchIndex):
     u"""
@@ -19,7 +22,7 @@ class AbstractProductIndex(SearchIndex):
 
         Orders by the most recently updated so that new objects are indexed first
         """
-        return Item.objects.order_by('-date_updated')
+        return product_models.Item.objects.order_by('-date_updated')
 
     def get_updated_field(self):
         u"""

@@ -2,7 +2,11 @@
 {% load currency_filters %}
 
 {% block content %}
-<h2>Search</h2>
+<h2>Search for '{{ query }}'</h2>
+
+{% if suggestion %}
+Did you mean <a href="{% url oscar-search %}?q={{ suggestion }}">{{ suggestion }}</a>?
+{% endif %}
 
 <ol>
 {% for result in page.object_list %}

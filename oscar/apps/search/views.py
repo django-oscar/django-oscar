@@ -59,7 +59,7 @@ class MultiFacetedSearchView(FacetedSearchView):
     """
     template = 'search/results.html'
 
-    def __call__(self, request):
+    def __call__(self, request, *args, **kwargs):
         """
         Generates the actual response to the search.
         
@@ -74,7 +74,7 @@ class MultiFacetedSearchView(FacetedSearchView):
         except product_models.Item.DoesNotExist:
             pass
         
-        return super(MultiFacetedSearchView, self)(*args, **kwargs)
+        return super(MultiFacetedSearchView, self).__call__(request, *args, **kwargs)
 
     def __name__(self):
         return "MultiFacetedSearchView"
