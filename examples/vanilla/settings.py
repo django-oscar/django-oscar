@@ -81,8 +81,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.static",
     "django.contrib.messages.context_processors.messages",
     # Oscar specific
-    'oscar.promotions.context_processors.promotions',
-    'oscar.search.context_processors.search_form',
+    'oscar.apps.search.context_processors.search_form',
+    'oscar.apps.promotions.context_processors.promotions',
 ) 
 
 MIDDLEWARE_CLASSES = (
@@ -182,23 +182,23 @@ INSTALLED_APPS = (
     #'debug_toolbar',
     # Apps from oscar
     'oscar',
-    'oscar.analytics',
-    'oscar.discount',
-    'oscar.order',
-    'oscar.checkout',
-    'oscar.shipping',
-    'oscar.order_management',
-    'oscar.product',
-    'oscar.basket',
-    'oscar.payment',
-    'oscar.offer',
-    'oscar.address',
-    'oscar.stock',
-    'oscar.image',
-    'oscar.customer',
-    'oscar.promotions',
-    'oscar.reports',
-    'oscar.search',
+    'oscar.apps.analytics',
+    'oscar.apps.discount',
+    'oscar.apps.order',
+    'oscar.apps.checkout',
+    'oscar.apps.shipping',
+    'oscar.apps.order_management',
+    'oscar.apps.product',
+    'oscar.apps.basket',
+    'oscar.apps.payment',
+    'oscar.apps.offer',
+    'oscar.apps.address',
+    'oscar.apps.stock',
+    'oscar.apps.image',
+    'oscar.apps.customer',
+    'oscar.apps.promotions',
+    'oscar.apps.reports',
+    'oscar.apps.search',
 )
 
 LOGIN_REDIRECT_URL = '/shop/accounts/profile/'

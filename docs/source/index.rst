@@ -3,8 +3,9 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-django-oscar - Domain-driven e-commerce for Django
-==================================================
+=============================================
+Welcome to the documentation for django-oscar
+=============================================
 
 django-oscar is a flexible e-commerce platform for Django, designed to build domain-driven
 ecommerce sites.  It differs from other e-commerce projects in that the core of django-oscar is kept
@@ -19,11 +20,17 @@ their existing Taoshop PHP platform which currently powers several large-scale e
 It is still in early development, but a stable release is planned for early summer 2011.
 The source is on Github: https://github.com/tangentlabs/django-oscar
 
+Getting started:
+
+.. toctree::
+    :maxdepth: 2
+    :numbered:
+
+    contributing
+    getting_started
 
 
-
-
-Contents:
+Full contents:
 
 .. toctree::
    :maxdepth: 2

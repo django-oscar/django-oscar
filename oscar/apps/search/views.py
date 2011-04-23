@@ -1,0 +1,96 @@
+import json
+import settings
+
+from django.http import HttpResponse, HttpResponseRedirect
+from django.views.generic.base import View
+from haystack.query import SearchQuerySet
+from haystack.views import FacetedSearchView
+
+from oscar.core.loading import import_module
+product_models = import_module('product.models', ['Item'])
+
+
+class Suggestions(View):
+    u"""
+    Auto suggest view
+
+    Returns the suggestions in JSON format (especially suited for consumption by
+    jQuery autocomplete)
+    """
+
+    suggest_limit = getattr(settings, 'OSCAR_SEARCH_SUGGEST_LIMIT', 10)
+
+    def get(self, request):
+        context = self.get_context_data()
+        return self.render_to_response(context)
+
+    def get_context_data(self):
+        '''
+        Creates a list of suggestions
+        '''
+        query_term = self.request.GET['query_term'];
+        query_set = SearchQuerySet().filter(text__contains=query_term)[:self.suggest_limit]
+        context = []
+        for item in query_set:
+            context.append({
+                'label': item.object.title,
+                'url':  item.object.get_absolute_url(),
+            })
+        return context
+
+    def render_to_response(self, context):
+        "Returns a JSON response containing 'context' as payload"
+        return self.get_json_response(self.convert_context_to_json(context))
+
+    def get_json_response(self, content, **httpresponse_kwargs):
+        "Construct an `HttpResponse` object."
+        return HttpResponse(content,
+                                 content_type='application/json',
+                                 **httpresponse_kwargs)
+
+    def convert_context_to_json(self, context):
+        "Convert the context into a JSON object"
+        return json.dumps(context)
+
+
+class MultiFacetedSearchView(FacetedSearchView):
+    u"""
+    Search view for multifaceted searches
+    """
+    template = 'search/results.html'
+
+    def __call__(self, request):
+        """
+        Generates the actual response to the search.
+        
+        Relies on internal, overridable methods to construct the response.
+        """
+        
+        # Look for UPC match
+        query = request.GET['q'].strip()
+        try:
+            item = product_models.Item._default_manager.get(upc=query)
+            return HttpResponseRedirect(item.get_absolute_url())
+        except product_models.Item.DoesNotExist:
+            pass
+        
+        return super(MultiFacetedSearchView, self)(*args, **kwargs)
+
+    def __name__(self):
+        return "MultiFacetedSearchView"
+
+    def extra_context(self):
+        '''
+        Adds details about the facets applied
+        '''
+        extra = super(MultiFacetedSearchView, self).extra_context()
+
+        if hasattr(self.form, 'cleaned_data') and self.form.cleaned_data['selected_facets']:
+            extra['facets_applied'] = []
+            for f in self.form.cleaned_data['selected_facets'].split("|"):
+                facet = f.split(":")
+                extra['facets_applied'].append({
+                    'facet': facet[0][:-6], # removing the _exact suffix that haystack uses for some reason
+                    'value' : facet[1].strip('"')
+                })
+        return extra

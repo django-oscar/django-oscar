@@ -9,3 +9,4 @@ flake8==0.8
 -e git+https://github.com/toastdriven/django-haystack.git@master#egg=django-haystack
 pysolr==2.0.13
 BeautifulSoup==3.2.0
+PyZen==0.3.1
