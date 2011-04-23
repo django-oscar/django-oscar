@@ -6,3 +6,4 @@ ipdb==0.2
 ipython==0.10.1
 wsgiref==0.1.2
 flake8==0.8
+PyZen==0.3.1
