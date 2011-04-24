@@ -1,8 +1,21 @@
+import httplib
+
 from django.utils import unittest
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import resolve
+from django.test import Client
 
 from oscar.apps.promotions.models import * 
+
+class HomepageTest(unittest.TestCase):
+
+    def setUp(self):
+        self.client = Client()
+
+    def test_homepage(self):
+        response = self.client.get("/")
+        self.assertEquals(httplib.OK, response.status_code)
+
 
 
 class PromotionTest(unittest.TestCase):

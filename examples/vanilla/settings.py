@@ -199,6 +199,7 @@ INSTALLED_APPS = (
     'oscar.apps.promotions',
     'oscar.apps.reports',
     'oscar.apps.search',
+    'pyzen',
 )
 
 LOGIN_REDIRECT_URL = '/shop/accounts/profile/'

@@ -1,8 +1,6 @@
 from django.conf.urls.defaults import *
 from django.conf import settings
 
-from oscar.views import home
-
 urlpatterns = patterns('',
     (r'product/', include('oscar.apps.product.urls')),
     (r'basket/', include('oscar.apps.basket.urls')),
@@ -12,7 +10,7 @@ urlpatterns = patterns('',
     (r'promotions/', include('oscar.apps.promotions.urls')),
     (r'reports/', include('oscar.apps.reports.urls')),
     (r'search/', include('oscar.apps.search.urls')),
-    (r'^$', home),     
+    (r'^$', include('oscar.apps.promotions.urls')),     
 )
 
 if settings.DEBUG:
