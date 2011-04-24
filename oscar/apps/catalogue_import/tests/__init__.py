@@ -9,7 +9,7 @@ product_models = import_module('product.models', ['ItemClass', 'Item'])
 stock_models = import_module('stock.models', ['Partner', 'StockRecord'])
 
 
-TEST_CSV = os.path.join(os.path.dirname(__file__), 'test.csv')
+TEST_CSV = os.path.join(os.path.dirname(__file__), '../fixtures/test.csv')
 
 def setup():
     catalogue_import = import_module('catalogue_import.utils', ['CatalogueImport'])
