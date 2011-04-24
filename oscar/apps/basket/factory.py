@@ -6,12 +6,10 @@ from oscar.core.loading import import_module
 basket_models = import_module('basket.models', ['Basket', 'Line'])
 offer_utils = import_module('offer.utils', ['Applicator'])
 
-# Cookie keys
-COOKIE_KEY_OPEN_BASKET = 'oscar_open_basket'
-COOKIE_KEY_SAVED_BASKET = 'oscar_saved_basket'
-
-    # The lifetime for the basket cookie can be set in settings.py
-COOKIE_LIFETIME = getattr(settings, 'settings.OSCAR_BASKET_COOKIE_LIFETIME', 7*24*60*60)
+# Basket settings
+COOKIE_KEY_OPEN_BASKET = settings.OSCAR_BASKET_COOKIE_OPEN
+COOKIE_KEY_SAVED_BASKET = settings.OSCAR_BASKET_COOKIE_SAVED
+COOKIE_LIFETIME = settings.OSCAR_BASKET_COOKIE_LIFETIME
 
 
 class BasketFactory(object):

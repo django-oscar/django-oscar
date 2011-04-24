@@ -4,8 +4,8 @@ from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ValidationError
 
-BANNER_FOLDER = getattr(settings, 'OSCAR_BANNER_FOLDER', 'images/promotions/banners')
-POD_FOLDER = getattr(settings, 'OSCAR_POD_FOLDER', 'images/promotions/pods')
+BANNER_FOLDER = settings.OSCAR_BANNER_FOLDER
+POD_FOLDER = settings.OSCAR_POD_FOLDER
 
 BANNER, LEFT_POD, RIGHT_POD, RAW_HTML = ('Banner', 'Left pod', 'Right pod', 'Raw HTML')
 POSITION_CHOICES = (

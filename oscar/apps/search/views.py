@@ -18,7 +18,7 @@ class Suggestions(View):
     jQuery autocomplete)
     """
 
-    suggest_limit = getattr(settings, 'OSCAR_SEARCH_SUGGEST_LIMIT', 10)
+    suggest_limit = settings.OSCAR_SEARCH_SUGGEST_LIMIT
 
     def get(self, request):
         context = self.get_context_data()
