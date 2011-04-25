@@ -205,11 +205,7 @@ INSTALLED_APPS = (
 LOGIN_REDIRECT_URL = '/shop/accounts/profile/'
 APPEND_SLASH = True
 
-# Oscar settings
 OSCAR_DEFAULT_CURRENCY = 'GBP'
-
-# Max number of products to keep on the user's history
-OSCAR_RECENTLY_VIEWED_PRODUCTS = 4
 
 # Haystack settings
 HAYSTACK_SITECONF = 'oscar.search_sites'

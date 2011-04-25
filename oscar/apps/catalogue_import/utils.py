@@ -9,7 +9,7 @@ catalogue_exception = import_module('catalogue_import.exceptions', ['CatalogueIm
 product_models = import_module('product.models', ['ItemClass', 'Item'])
 stock_models = import_module('stock.models', ['Partner', 'StockRecord'])
 
-class CatalogueImport(object):
+class Importer(object):
     u"""A catalogue importer object"""
     
     flush = False
