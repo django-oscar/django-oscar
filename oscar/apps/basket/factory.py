@@ -3,8 +3,8 @@ import zlib
 from django.conf import settings
 
 from oscar.core.loading import import_module
-basket_models = import_module('basket.models', ['Basket', 'Line'])
-offer_utils = import_module('offer.utils', ['Applicator'])
+import_module('basket.models', ['Basket', 'Line'], locals())
+import_module('offer.utils', ['Applicator'], locals())
 
 # Basket settings
 COOKIE_KEY_OPEN_BASKET = settings.OSCAR_BASKET_COOKIE_OPEN
@@ -20,20 +20,20 @@ class BasketFactory(object):
         or not).
         """
         return self._get_or_create_cookie_basket(request, response, 
-                                                 COOKIE_KEY_OPEN_BASKET, basket_models.Basket.open)
+                                                 COOKIE_KEY_OPEN_BASKET, Basket.open)
     
     def get_or_create_saved_basket(self, request, response):
         u"""Loads or creates a "save-for-later" basket for the current user"""
         return self._get_or_create_cookie_basket(request, response, 
-                                                 COOKIE_KEY_SAVED_BASKET, basket_models.Basket.saved)
+                                                 COOKIE_KEY_SAVED_BASKET, Basket.saved)
     
     def get_open_basket(self, request, response):
         u"""Returns the basket for the current user"""
-        return self._get_basket(request, response, COOKIE_KEY_OPEN_BASKET, basket_models.Basket.open)
+        return self._get_basket(request, response, COOKIE_KEY_OPEN_BASKET, Basket.open)
     
     def get_saved_basket(self, request, response):
         u"""Returns the saved basket for the current user"""
-        return self._get_basket(request, response, COOKIE_KEY_SAVED_BASKET, basket_models.Basket.saved)
+        return self._get_basket(request, response, COOKIE_KEY_SAVED_BASKET, Basket.saved)
     
     # Utility methods
     
@@ -63,7 +63,7 @@ class BasketFactory(object):
         return basket 
     
     def _apply_offers_to_basket(self, request, basket):
-        offer_utils.Applicator().apply(request, basket)
+        Applicator().apply(request, basket)
     
     def _get_basket(self, request, response, cookie_key, manager):
         u"""Returns a basket object given a cookie key and manager."""
@@ -71,7 +71,7 @@ class BasketFactory(object):
         if request.user.is_authenticated():
             try:
                 b = manager.get(owner=request.user)
-            except basket_models.Basket.DoesNotExist:
+            except Basket.DoesNotExist:
                 pass
         else:
             b = self._get_cookie_basket(request, response, cookie_key, manager)
@@ -90,7 +90,7 @@ class BasketFactory(object):
             if basket_hash == self._get_basket_hash(basket_id):
                 try:
                     b = manager.get(pk=basket_id, owner=None)
-                except basket_models.Basket.DoesNotExist:
+                except Basket.DoesNotExist:
                     b = None
             else:
                 response.delete_cookie(cookie_key)

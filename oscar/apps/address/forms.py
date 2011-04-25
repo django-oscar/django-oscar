@@ -2,12 +2,12 @@
 from django.forms import ModelForm
 
 from oscar.core.loading import import_module
-address_models = import_module('address.models', ['UserAddress'])
+import_module('address.models', ['UserAddress'], locals())
 
 
 class UserAddressForm(ModelForm):
 
     class Meta:
-        model = address_models.UserAddress
+        model = UserAddress
         exclude = ('user', 'num_orders', 'hash')
     
