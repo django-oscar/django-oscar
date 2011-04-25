@@ -2,7 +2,6 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 
 from oscar.apps.address.models import Country, UserAddress
-from oscar.apps.basket.models import Basket
 from oscar.apps.order.models import ShippingAddress
 
 

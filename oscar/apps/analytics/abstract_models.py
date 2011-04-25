@@ -1,6 +1,5 @@
 from decimal import Decimal
 
-from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import ugettext as _
 
@@ -74,7 +73,7 @@ class AbstractUserSearch(models.Model):
      
      class Meta:
          abstract = True
-         verbose_name_plural = "User search queries"
+         verbose_name_plural = _("User search queries")
          
      def __unicode__(self):
          return u"%s searched for '%s'" % (self.user, self.query)

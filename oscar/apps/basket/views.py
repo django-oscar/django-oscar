@@ -1,6 +1,5 @@
-from django.http import HttpResponse, Http404, HttpResponseRedirect, HttpResponseBadRequest
-from django.template import RequestContext
-from django.shortcuts import render_to_response, get_object_or_404, render
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
@@ -30,7 +29,7 @@ class BasketView(ModelView):
     
     def handle_GET(self, basket):
         u"""Handle GET requests against the basket"""
-        saved_basket = self.factory.get_saved_basket(self.request)
+        saved_basket = self.factory.get_saved_basket(self.request, self.response)
         self.response = render(self.request, self.template_file, locals())
         
     def handle_POST(self, basket):
@@ -116,7 +115,7 @@ class LineView(ModelView):
     
     def get_model(self):
         u"""Get basket lines"""
-        basket = self.factory.get_open_basket(self.request)
+        basket = self.factory.get_open_basket(self.request, self.response)
         return basket.lines.get(line_reference=self.kwargs['line_reference'])
         
     def handle_POST(self, line):
@@ -181,7 +180,7 @@ class SavedLineView(ModelView):
         self.factory = basket_factory.BasketFactory()
     
     def get_model(self):
-        basket = self.factory.get_saved_basket(self.request)
+        basket = self.factory.get_saved_basket(self.request, self.response)
         return basket.lines.get(line_reference=self.kwargs['line_reference'])
         
     def handle_POST(self, line):
@@ -189,7 +188,7 @@ class SavedLineView(ModelView):
         try:
             super(SavedLineView, self).handle_POST(line)
         except basket_models.InvalidBasketLineError, e:
-            messages.error(request, str(e))   
+            messages.error(self.request, str(e))   
             
     def do_move_to_basket(self, line):
         u"""Merge line items in to current basket"""

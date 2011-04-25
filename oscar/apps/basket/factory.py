@@ -27,13 +27,13 @@ class BasketFactory(object):
         return self._get_or_create_cookie_basket(request, response, 
                                                  COOKIE_KEY_SAVED_BASKET, basket_models.Basket.saved)
     
-    def get_open_basket(self, request):
+    def get_open_basket(self, request, response):
         u"""Returns the basket for the current user"""
-        return self._get_basket(request, COOKIE_KEY_OPEN_BASKET, basket_models.Basket.open)
+        return self._get_basket(request, response, COOKIE_KEY_OPEN_BASKET, basket_models.Basket.open)
     
-    def get_saved_basket(self, request):
+    def get_saved_basket(self, request, response):
         u"""Returns the saved basket for the current user"""
-        return self._get_basket(request, COOKIE_KEY_SAVED_BASKET, basket_models.Basket.saved)
+        return self._get_basket(request, response, COOKIE_KEY_SAVED_BASKET, basket_models.Basket.saved)
     
     # Utility methods
     
@@ -42,7 +42,7 @@ class BasketFactory(object):
         Loads or creates a basket for the current user.  Any offers are also
         applied to the basket before it is returned.
         """
-        anon_basket = self._get_cookie_basket(request, cookie_key, manager)
+        anon_basket = self._get_cookie_basket(request, response, cookie_key, manager)
         if request.user.is_authenticated():
             basket, created = manager.get_or_create(owner=request.user)
             if anon_basket:
@@ -65,21 +65,21 @@ class BasketFactory(object):
     def _apply_offers_to_basket(self, request, basket):
         offer_utils.Applicator().apply(request, basket)
     
-    def _get_basket(self, request, cookie_key, manager):
+    def _get_basket(self, request, response, cookie_key, manager):
         u"""Returns a basket object given a cookie key and manager."""
         b = None
         if request.user.is_authenticated():
             try:
                 b = manager.get(owner=request.user)
-            except basket_models.Basket.DoesNotExist, e:
+            except basket_models.Basket.DoesNotExist:
                 pass
         else:
-            b = self._get_cookie_basket(request, cookie_key, manager)
+            b = self._get_cookie_basket(request, response, cookie_key, manager)
         if b:
             self._apply_offers_to_basket(request, b)
         return b    
         
-    def _get_cookie_basket(self, request, cookie_key, manager):
+    def _get_cookie_basket(self, request, response, cookie_key, manager):
         u"""Returns a basket based on the cookie key given."""
         b = None
         # If user is anonymous, their basket ID (if they have one) will be
@@ -90,7 +90,7 @@ class BasketFactory(object):
             if basket_hash == self._get_basket_hash(basket_id):
                 try:
                     b = manager.get(pk=basket_id, owner=None)
-                except basket_models.Basket.DoesNotExist, e:
+                except basket_models.Basket.DoesNotExist:
                     b = None
             else:
                 response.delete_cookie(cookie_key)
