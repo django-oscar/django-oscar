@@ -8,19 +8,11 @@ from oscar.core.loading import import_module
 import_module('catalogue_import.utils', ['Importer'], locals())
 import_module('catalogue_import.exceptions', ['CatalogueImportException'], locals())
 
-LOGGING_LEVEL = logging.INFO
-LOGGING_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-
-log = logging.getLogger('oscar.apps.catalogue_import')
-formatter = logging.Formatter(LOGGING_FORMAT)
-stream = logging.StreamHandler(sys.stderr)
-stream.setLevel(logging.INFO)
-stream.setFormatter(formatter)
-log.addHandler(stream)
-log.setLevel(LOGGING_LEVEL)
-
 
 class Command(BaseCommand):
+    
+    args = '/path/to/file1.csv /path/to/file2.csv ...'
+    help = 'For creating product catalogues based on a CSV file'
     
     option_list = BaseCommand.option_list + (
         make_option('--flush',
@@ -28,24 +20,30 @@ class Command(BaseCommand):
             dest='flush',
             default=False,
             help='Flush tables before importing'),
-        make_option('--file',
-            type='string',
-            dest='filename',
-            nargs=1,
-            default=None,
-            help='/path/to/file'),
+        make_option('--delimiter',
+            dest='delimiter',
+            default=",",
+            help='Delimiter used within CSV file(s)'),
         )
 
     def handle(self, *args, **options):
-        importer = Importer()
-        importer.flush = options.get('flush')
-        importer.afile = options.get('filename')
-        try:
-            importer.handle()
-        except CatalogueImportException as e:
-            self.error(e)
+        logger = self._get_logger()
+        logger.info("Starting catalogue import")
+        importer = Importer(logger, delimiter=options.get('delimiter'), flush=options.get('flush'))
+        for file_path in args:
+            logger.info(" - Importing records from '%s'" % file_path)
+            try:
+                importer.handle(file_path)
+            except CatalogueImportException, e:
+                raise CommandError(str(e))
             
-    def error(self, message):
-        log.error(message)
-        sys.exit(0)
+    def _get_logger(self):
+        logger = logging.getLogger('oscar.apps.catalogue_import')
+        stream = logging.StreamHandler(self.stdout)
+        logger.addHandler(stream)
+        logger.setLevel(logging.DEBUG)
+        return logger
+        
+        
+        
             

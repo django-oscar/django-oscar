@@ -5,106 +5,115 @@ from decimal import Decimal as D
 
 from oscar.core.loading import import_module
 
-catalogue_exception = import_module('catalogue_import.exceptions', ['CatalogueImportException'])
-product_models = import_module('product.models', ['ItemClass', 'Item'])
-stock_models = import_module('stock.models', ['Partner', 'StockRecord'])
+import_module('catalogue_import.exceptions', ['CatalogueImportException'], locals())
+import_module('product.models', ['ItemClass', 'Item'], locals())
+import_module('stock.models', ['Partner', 'StockRecord'], locals())
+
 
 class Importer(object):
     u"""A catalogue importer object"""
     
-    flush = False
-    item = []
+    _flush = False
     
-    def handle(self):
+    def __init__(self, logger, delimiter=",", flush=False):
+        self.logger = logger
+        self._delimiter = delimiter
+        self._flush = flush
+        if flush:
+            self.logger.info(" - Flushing product data before import")
+    
+    def handle(self, file_path=None):
         u"""Handles the actual import process"""
-        if self.afile is None:
-            raise catalogue_exception.CatalogueImportException("You need to pass a file argument")
-        self.catalogue_import_file = CatalogueImportFile()
-        self.catalogue_import_file.afile = self.afile
-        self.test_file()
-        if self.flush is True:
-            self.flushdb()
-        self.csv_content = self.load_csv()
-        self.iterate()
-    
-    def test_file(self):
-        u"""Run various tests on the file before import can happen"""
-        self.catalogue_import_file.file_exists()
-        self.catalogue_import_file.is_file()
-        self.catalogue_import_file.file_is_readable()
+        if not file_path:
+            raise CatalogueImportException("No file path supplied")
         
-    def flushdb(self):
+        if self._flush is True:
+            self._flush_product_data()
+        Validator().validate(file_path)
+        self._import(file_path)
+        
+    def _flush_product_data(self):
         u"""Flush out product and stock models"""
-        product_models.ItemClass.objects.all().delete()
-        product_models.Item.objects.all().delete()
-        stock_models.Partner.objects.all().delete()
-        stock_models.StockRecord.objects.all().delete()
-        
-    def load_csv(self):
-        u"""Load the CSV content"""
-        csv_reader = CatalogueCsvReader()
-        return csv_reader.get_csv_contents(self.afile)
+        ItemClass.objects.all().delete()
+        Item.objects.all().delete()
+        Partner.objects.all().delete()
+        StockRecord.objects.all().delete()
+
+    def _import(self, file_path):
+        u"""Imports given file"""
+        stats = {'new_items': 0,
+                 'updated_items': 0
+                 }
+        for row in csv.reader(open(file_path,'rb'), delimiter=self._delimiter, quotechar='"'):
+            self._import_row(row, stats)
+        msg = "\tNew items: %d\n\tUpdated items: %d" % (stats['new_items'], stats['updated_items'])
+        self.logger.info(msg)
     
-    def iterate(self):
-        u"""Iterate over rows, creating a complete list item"""
-        for row in self.csv_content:
-            upc, title, description, item_class, partner_name, partner_reference, price_excl_tax, num_in_stock = row
+    def _import_row(self, row, stats):
+        item = self._create_item(*row[:4], stats=stats)
+        if len(row) == 8:
+            # With stock data
+            self._create_stockrecord(item, *row[4:8], stats=stats)
             
-            # Ignore any entries that are NULL
-            if description == 'NULL':
-                description = ''
-            
-            saved_item_class, _ = product_models.ItemClass.objects.get_or_create(name=item_class)
-            try:
-                saved_item = product_models.Item.objects.get(upc=upc)
-            except product_models.Item.DoesNotExist:
-                saved_item = product_models.Item()
-            saved_item.upc = upc
-            saved_item.title = title
-            saved_item.description = description
-            saved_item.item_class = saved_item_class
-            saved_item.save()
-            
-            saved_partner, _ = stock_models.Partner.objects.get_or_create(name=partner_name)
-            
-            try:
-                saved_stock, _ = stock_models.StockRecord.objects.get(partner_reference=partner_reference)
-            except stock_models.StockRecord.DoesNotExist:
-                saved_stock = stock_models.StockRecord()
-            
-            saved_stock.product = saved_item
-            saved_stock.partner = saved_partner
-            saved_stock.partner_reference = partner_reference
-            saved_stock.price_excl_tax = D(price_excl_tax)
-            saved_stock.num_in_stock = num_in_stock
-            saved_stock.save()
- 
+    def _create_item(self, upc, title, description, item_class, stats):
+        # Ignore any entries that are NULL
+        if description == 'NULL':
+            description = ''
         
-class CatalogueImportFile(object):
+        # Create item class and item
+        item_class,_ = ItemClass.objects.get_or_create(name=item_class)
+        try:
+            item = Item.objects.get(upc=upc)
+            stats['updated_items'] += 1
+        except Item.DoesNotExist:
+            item = Item()
+            stats['new_items'] += 1
+        item.upc = upc
+        item.title = title
+        item.description = description
+        item.item_class = item_class
+        item.save()
+        return item
+        
+    def _create_stockrecord(self, item, partner_name, partner_reference, price_excl_tax, num_in_stock, stats):            
+        # Create partner and stock record
+        partner, _ = Partner.objects.get_or_create(name=partner_name)
+        try:
+            stock = StockRecord.objects.get(partner_reference=partner_reference)
+        except StockRecord.DoesNotExist:
+            stock = StockRecord()
+        
+        stock.product = item
+        stock.partner = partner
+        stock.partner_reference = partner_reference
+        stock.price_excl_tax = D(price_excl_tax)
+        stock.num_in_stock = num_in_stock
+        stock.save()
+        
+        
+class Validator(object):
     u"""A catalogue importer file object"""
     
-    def file_exists(self):
+    def validate(self, file_path):
+        self._exists(file_path)
+        self._is_file(file_path)
+        self._is_readable(file_path)
+    
+    def _exists(self, file_path):
         u"""Check whether a file exists"""
-        if not os.path.exists(self.afile):
-            raise catalogue_exception.CatalogueImportException("%s does not exist" % (self.afile))
+        if not os.path.exists(file_path):
+            raise CatalogueImportException("%s does not exist" % (file_path))
         
-    def is_file(self):
+    def _is_file(self, file_path):
         u"""Check whether file is actually a file type"""
-        if not os.path.isfile(self.afile):
-            raise catalogue_exception.CatalogueImportException("%s is not a file" % (self.afile))
+        if not os.path.isfile(file_path):
+            raise CatalogueImportException("%s is not a file" % (file_path))
         
-    def file_is_readable(self):
+    def _is_readable(self, file_path):
         u"""Check file is readable"""
         try:
-            f = open(self.afile, 'r')
+            f = open(file_path, 'r')
             f.close()
         except:
-            raise catalogue_exception.CatalogueImportException("%s is not readable" % (self.afile))
+            raise CatalogueImportException("%s is not readable" % (file_path))
         
-        
-class CatalogueCsvReader(object):
-    u"""A catalogue csv reader"""
-    
-    def get_csv_contents(self, afile):
-        u"""Return CSV reader object of file"""
-        return csv.reader(open(afile,'rb'), delimiter=',', quotechar='"')
