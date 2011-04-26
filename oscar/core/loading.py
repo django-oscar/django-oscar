@@ -30,10 +30,10 @@ def import_module(module_label, classes=[], namespace=None):
     
     # Arguments will be things like 'product.models' and so we
     # we take the first component to find within the INSTALLED_APPS list.
-    app_name = module_label.split(".")[0]
+    app_name = module_label.rsplit(".", 1)[0] 
     for installed_app in settings.INSTALLED_APPS:
         base_package = installed_app.split(".")[0]
-        module_name = installed_app.split(".").pop()
+        module_name = installed_app.split(".", 2).pop() # strip oscar.apps
         try: 
             # We search the second component of the installed apps
             if app_name == module_name:
