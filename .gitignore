@@ -19,3 +19,4 @@ oscar/include
 oscar/lib
 oscar/src
 oscar/share
+.~lock.*
