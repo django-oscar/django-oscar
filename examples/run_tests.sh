@@ -15,3 +15,4 @@ fi
 echo "Running all tests in $PROJECT_FOLDER"
 time $MANAGE_COMMAND test oscar --settings=test_settings -v 1 --failfast | \
 	grep -v "^\(Installing\|Creating\)"
+

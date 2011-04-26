@@ -4,23 +4,30 @@
     <div id="container">
         <div id="header">
             <h1>Oscar // Flexible e-commerce for Django</h1>
-            <form method="get" action="{% url oscar-products %}">
-                <label id="search_input">Search all products:</label>
-                <input type="text" name="q" id="search_input" value="{{ search_term }}"/>
+            
+            <form method="get" action="{% url oscar-search %}">
+                {{ search_form.as_p }}
                 <input type="submit" value="Go!" /> 
             </form>
             
             {% if user.is_authenticated %}
-            <a href="">Profile</a>
-            <a href="">Logout</a>
+                <a href="{% url oscar-customer-profile %}">Profile</a>
+                <a href="">Logout</a>
             {% else %}
-            <a href="">Login</a>
+                <a href="">Login</a>
             {% endif %}
+            
+            {% for banner in banners %}
+                {{ banner.get_banner_html|safe }}
+            {% endfor %}
+
+            <a href="/admin/promotions/pagepromotion/add/?page_url={{ url_path }}" >Add a promotion to this page</a>
             
             {% block header %}
             {% endblock %}
         </div>
         <div id="content">
+        
         {% if messages %}
         <ul class="messages">
             {% for message in messages %}

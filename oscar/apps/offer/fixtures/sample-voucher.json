@@ -1,0 +1,64 @@
+[
+    {
+        "pk": 1, 
+        "model": "offer.range", 
+        "fields": {
+            "includes_all_products": true, 
+            "excluded_products": [], 
+            "name": "Whole site", 
+            "included_products": []
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "offer.condition", 
+        "fields": {
+            "range": 1, 
+            "type": "Count", 
+            "value": "1.00"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "offer.benefit", 
+        "fields": {
+            "range": 1, 
+            "type": "Percentage", 
+            "max_affected_items": null, 
+            "value": "25.00"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "offer.conditionaloffer", 
+        "fields": {
+            "name": "Voucher offer", 
+            "end_date": null, 
+            "priority": 0, 
+            "benefit": 1, 
+            "date_created": "2011-04-14 19:42:25", 
+            "offer_type": "Voucher", 
+            "start_date": null, 
+            "condition": 1, 
+            "description": ""
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "offer.voucher", 
+        "fields": {
+            "code": "BOOM", 
+            "name": "Oscar voucher", 
+            "end_date": "2011-04-28", 
+            "num_orders": 0, 
+            "offers": [
+                1
+            ], 
+            "num_basket_additions": 0, 
+            "total_discount": "0.00", 
+            "usage": "Once per customer", 
+            "date_created": "2011-04-14", 
+            "start_date": "2011-04-14"
+        }
+    }
+]

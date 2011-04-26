@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 
 {% load currency_filters %}
+{% load history_tags %}
 
 {% block header %}
 <h2>{{item.get_title}}</h2>
@@ -8,6 +9,13 @@
 
 
 {% block content %}
+<div class="images">
+    {% for image in item.images.all %}
+    <img src="{{ image.fullsize_url }}" title="{{ item.get_title }}" />
+    <div class="caption">{{ image.caption }}</div>
+    {% endfor %}
+</div>
+
 <table>
     <caption>Product details</caption>
     <tr>
@@ -45,9 +53,33 @@
 {% if item.stockrecord %}
 <form action="{% url oscar-basket %}" method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ basket_form.as_p }}
     <input type="submit" value="Add to basket" />
 </form>
+{% endif %}
+
+{% recently_viewed_products %}
+
+{% if item.related_items.count %}
+<div class="products">
+    <h4>Related items</h4>
+    <ul>
+    {% for product in item.related_items.all %}
+        <li><a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a>
+    {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+{% if item.recommended_items.count %}
+<div class="products">
+    <h4>Recommended items</h4>
+    <ul>
+    {% for product in item.recommended_items.all %}
+        <li><a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a>
+    {% endfor %}
+    </ul>
+</div>
 {% endif %}
 
 {% endblock content %}
