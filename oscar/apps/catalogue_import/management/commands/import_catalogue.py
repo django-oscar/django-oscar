@@ -28,6 +28,9 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         logger = self._get_logger()
+        if not args:
+            raise CommandError("Please select a CSV file to import")
+        
         logger.info("Starting catalogue import")
         importer = Importer(logger, delimiter=options.get('delimiter'), flush=options.get('flush'))
         for file_path in args:

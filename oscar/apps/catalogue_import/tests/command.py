@@ -63,6 +63,9 @@ class ImportSmokeTest(TestCase):
             ItemClass.objects.get(name="Book")
         except Item.DoesNotExist:
             self.fail()  
+            
+    def test_only_one_class_is_created(self):
+        self.assertEquals(1, ItemClass.objects.all().count())
     
     def test_item_is_created(self):
         try:
