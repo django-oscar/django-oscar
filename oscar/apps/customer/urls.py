@@ -2,7 +2,9 @@ from django.conf.urls.defaults import *
 from django.contrib.auth.decorators import login_required
 
 from oscar.core.decorators import class_based_view
-from oscar.apps.customer.views import OrderHistoryView, OrderDetailView, OrderLineView, AddressBookView, AddressView
+from oscar.core.loading import import_module
+import_module('customer.views', ['OrderHistoryView', 'OrderDetailView', 'OrderLineView',
+                                 'AddressBookView', 'AddressView'], locals())
 
 urlpatterns = patterns('django.contrib.auth.views',
     url(r'^login/$', 'login', {'template_name': 'admin/login.html'}, name='oscar-customer-login'),
