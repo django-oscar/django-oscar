@@ -200,12 +200,16 @@ INSTALLED_APPS = (
     'oscar.apps.reports',
     'oscar.apps.search',
     'oscar.apps.catalogue_import',
+    'pyzen',
 )
 
 LOGIN_REDIRECT_URL = '/shop/accounts/profile/'
 APPEND_SLASH = True
 
 OSCAR_DEFAULT_CURRENCY = 'GBP'
+
+from oscar.defaults import *
+
 
 # Haystack settings
 HAYSTACK_SITECONF = 'oscar.search_sites'

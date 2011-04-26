@@ -10,7 +10,7 @@ from oscar.test.helpers import create_product
 
 
 TEST_CSV = os.path.join(os.path.dirname(__file__), '../fixtures/sample.csv')
-
+TEST_BOOKS_CSV = os.path.join(os.path.dirname(__file__), '../fixtures/books-small.csv')
 
 class CommandEdgeCasesTest(TestCase):
 
@@ -27,11 +27,33 @@ class CommandEdgeCasesTest(TestCase):
         with self.assertRaises(CatalogueImportException):
             self.importer.handle()
 
-
     def test_importing_nonexistant_file_raises_exception(self):
         self.importer.afile = "/tmp/catalogue-import.zgvsfsdfsd"
         with self.assertRaises(CatalogueImportException):
             self.importer.handle()
+
+
+class ImportBooksFileTest(TestCase):
+    
+    def setUp(self):
+        self.importer = Importer()
+        self.importer.afile = TEST_BOOKS_CSV
+        self.importer.handle()
+        
+    def test_all_rows_are_imported(self):
+        self.assertEquals(10, Item.objects.all().count())
+        
+    def test_null_fields_are_skipped(self):
+        item = Item.objects.get(upc='9780115531446')
+        self.assertEquals("", item.description)
+        
+    def test_price_is_imported(self):
+        item = Item.objects.get(upc='9780115531446')
+        self.assertEquals(D('10.32'), item.stockrecord.price_excl_tax)
+        
+    def test_num_in_stock_is_imported(self):
+        item = Item.objects.get(upc='9780115531446')
+        self.assertEquals(6, item.stockrecord.num_in_stock)
 
 
 class ImportSmokeTest(TestCase):

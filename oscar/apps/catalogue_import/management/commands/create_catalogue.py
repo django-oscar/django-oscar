@@ -4,9 +4,9 @@ from optparse import make_option
 
 from django.core.management.base import BaseCommand, CommandError
 
-from oscar.services import import_module
-catalogue_import = import_module('catalogue_import.utils', ['Importer'])
-catalogue_exception = import_module('catalogue_import.exceptions', ['CatalogueImportException'])
+from oscar.core.loading import import_module
+import_module('catalogue_import.utils', ['Importer'], locals())
+import_module('catalogue_import.exceptions', ['CatalogueImportException'], locals())
 
 LOGGING_LEVEL = logging.INFO
 LOGGING_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
@@ -21,6 +21,7 @@ log.setLevel(LOGGING_LEVEL)
 
 
 class Command(BaseCommand):
+    
     option_list = BaseCommand.option_list + (
         make_option('--flush',
             action='store_true',
@@ -35,14 +36,13 @@ class Command(BaseCommand):
             help='/path/to/file'),
         )
 
-
     def handle(self, *args, **options):
-        importer = catalogue_import.Importer()
+        importer = Importer()
         importer.flush = options.get('flush')
         importer.afile = options.get('filename')
         try:
             importer.handle()
-        except catalogue_exception.CatalogueImportException as e:
+        except CatalogueImportException as e:
             self.error(e)
             
     def error(self, message):

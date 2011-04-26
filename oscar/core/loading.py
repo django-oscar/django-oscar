@@ -8,10 +8,9 @@ class AppNotFoundError(Exception):
     pass
 
 
-def import_module(module_label, classes=[]):
+def import_module(module_label, classes=[], namespace=None):
     u"""
-    For dynamically importing classes from a module based on the mapping within 
-    settings.py
+    For dynamically importing classes from a module.
     
     Eg. calling import_module('product.models') will search INSTALLED_APPS for
     the relevant product app (default is 'oscar.product') and then import the
@@ -40,7 +39,7 @@ def import_module(module_label, classes=[]):
             if app_name == module_name:
                 if base_package == 'oscar':
                     # Using core module explicitly
-                    return _import_classes_from_module("oscar.apps.%s" % module_label, classes)
+                    return _import_classes_from_module("oscar.apps.%s" % module_label, classes, namespace)
                 else:
                     # Using local override - check that requested module exists
                     local_app = "%s.%s" % (base_package, module_label)
@@ -48,7 +47,7 @@ def import_module(module_label, classes=[]):
                         imported_local_mod = __import__(local_app, fromlist=classes)
                     except ImportError, e:
                         # Module doesn't exist, fall back to oscar core
-                        return _import_classes_from_module("oscar.apps.%s" % module_label, classes)
+                        return _import_classes_from_module("oscar.apps.%s" % module_label, classes, namespace)
                     
                     module = new_module(local_app)
                     imported_oscar_mod = __import__("oscar.apps.%s" % module_label, fromlist=classes)
@@ -63,9 +62,14 @@ def import_module(module_label, classes=[]):
     raise AppNotFoundError("Unable to find an app matching %s in INSTALLED_APPS" % (app_name,))
     
     
-def _import_classes_from_module(module_name, classes):
-    module = new_module(module_name)   
+def _import_classes_from_module(module_name, classes, namespace):
     imported_module = __import__(module_name, fromlist=classes)
+    if namespace:
+        for classname in classes:
+            namespace[classname] = getattr(imported_module, classname)
+        return 
+    
+    module = new_module(module_name)   
     for classname in classes:
-        module.__setattr__(classname, getattr(imported_module, classname)) 
+        setattr(module, classname, getattr(imported_module, classname))
     return module

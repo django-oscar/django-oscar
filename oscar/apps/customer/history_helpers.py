@@ -6,7 +6,7 @@ from django.conf import settings
 from oscar.core.loading import import_module
 product_signals = import_module('product.signals', ['product_viewed'])
 
-MAX_PRODUCTS = getattr(settings, 'OSCAR_RECENTLY_VIEWED_PRODUCTS', 5)
+MAX_PRODUCTS = settings.OSCAR_RECENTLY_VIEWED_PRODUCTS
 
 # Helpers
 

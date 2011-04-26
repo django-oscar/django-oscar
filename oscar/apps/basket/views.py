@@ -1,6 +1,5 @@
-from django.http import HttpResponse, Http404, HttpResponseRedirect, HttpResponseBadRequest
-from django.template import RequestContext
-from django.shortcuts import render_to_response, get_object_or_404, render
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
@@ -8,12 +7,12 @@ from django.core.exceptions import ObjectDoesNotExist
 from oscar.view.generic import ModelView
 from oscar.core.loading import import_module
 
-basket_models = import_module('basket.models', ['Basket', 'Line', 'InvalidBasketLineError'])
-basket_forms = import_module('basket.forms', ['FormFactory'])
-basket_factory = import_module('basket.factory', ['BasketFactory'])
-basket_signals = import_module('basket.signals', ['basket_addition'])
-product_models = import_module('product.models', ['Item'])
-offer_models = import_module('offer.models', ['Voucher'])
+import_module('basket.models', ['Basket', 'Line', 'InvalidBasketLineError'], locals())
+import_module('basket.forms', ['FormFactory'], locals())
+import_module('basket.factory', ['BasketFactory'], locals())
+import_module('basket.signals', ['basket_addition'], locals())
+import_module('product.models', ['Item'], locals())
+import_module('offer.models', ['Voucher'], locals())
     
         
 class BasketView(ModelView):
@@ -22,7 +21,7 @@ class BasketView(ModelView):
     
     def __init__(self):
         self.response = HttpResponseRedirect(reverse('oscar-basket'))
-        self.factory = basket_factory.BasketFactory()
+        self.factory = BasketFactory()
     
     def get_model(self):
         u"""Return a basket model"""
@@ -30,14 +29,14 @@ class BasketView(ModelView):
     
     def handle_GET(self, basket):
         u"""Handle GET requests against the basket"""
-        saved_basket = self.factory.get_saved_basket(self.request)
+        saved_basket = self.factory.get_saved_basket(self.request, self.response)
         self.response = render(self.request, self.template_file, locals())
         
     def handle_POST(self, basket):
         u"""Handle POST requests against the basket"""
         try:
             super(BasketView, self).handle_POST(basket)
-        except basket_models.InvalidBasketLineError, e:
+        except InvalidBasketLineError, e:
             # We handle InvalidBasketLineError gracefully as it will be domain logic
             # which causes this to be thrown (eg. a product out of stock)
             messages.error(self.request, str(e))
@@ -49,14 +48,14 @@ class BasketView(ModelView):
         
     def do_add(self, basket):
         u"""Add an item to the basket"""
-        item = get_object_or_404(product_models.Item.objects, pk=self.request.POST['product_id'])
+        item = get_object_or_404(Item.objects, pk=self.request.POST['product_id'])
         
         # Send signal so analytics can track this event.  Note that be emitting
         # the signal here, we do not track quantity changes to a product - only
         # the initial "add".
-        basket_signals.basket_addition.send(sender=self, product=item, user=self.request.user)
+        basket_addition.send(sender=self, product=item, user=self.request.user)
         
-        factory = basket_forms.FormFactory()
+        factory = FormFactory()
         form = factory.create(item, self.request.POST)
         if not form.is_valid():
             self.response = HttpResponseRedirect(item.get_absolute_url())
@@ -82,7 +81,7 @@ class BasketView(ModelView):
             pass
         
         try:
-            voucher = offer_models.Voucher._default_manager.get(code=code)
+            voucher = Voucher._default_manager.get(code=code)
             if not voucher.is_active():
                 messages.error(self.request, "The '%s' voucher has expired" % voucher.code)
                 return
@@ -112,22 +111,22 @@ class LineView(ModelView):
     
     def __init__(self):
         self.response = HttpResponseRedirect(reverse('oscar-basket'))
-        self.factory = basket_factory.BasketFactory()
+        self.factory = BasketFactory()
     
     def get_model(self):
         u"""Get basket lines"""
-        basket = self.factory.get_open_basket(self.request)
+        basket = self.factory.get_open_basket(self.request, self.response)
         return basket.lines.get(line_reference=self.kwargs['line_reference'])
         
     def handle_POST(self, line):
         u"""Handle POST requests against the basket line"""
         try:
             super(LineView, self).handle_POST(line)
-        except basket_models.Basket.DoesNotExist:
+        except Basket.DoesNotExist:
                 messages.error(self.request, "You don't have a basket to adjust the lines of")
-        except basket_models.Line.DoesNotExist:
+        except Line.DoesNotExist:
             messages.error(self.request, "Unable to find a line with reference %s in your basket" % self.kwargs['line_reference'])
-        except basket_models.InvalidBasketLineError, e:
+        except InvalidBasketLineError, e:
             messages.error(self.request, str(e))
             
     def _get_quantity(self):
@@ -178,18 +177,18 @@ class SavedLineView(ModelView):
     
     def __init__(self):
         self.response = HttpResponseRedirect(reverse('oscar-basket'))
-        self.factory = basket_factory.BasketFactory()
+        self.factory = BasketFactory()
     
     def get_model(self):
-        basket = self.factory.get_saved_basket(self.request)
+        basket = self.factory.get_saved_basket(self.request, self.response)
         return basket.lines.get(line_reference=self.kwargs['line_reference'])
         
     def handle_POST(self, line):
         u"""Handle POST requests against a saved line"""
         try:
             super(SavedLineView, self).handle_POST(line)
-        except basket_models.InvalidBasketLineError, e:
-            messages.error(request, str(e))   
+        except InvalidBasketLineError, e:
+            messages.error(self.request, str(e))   
             
     def do_move_to_basket(self, line):
         u"""Merge line items in to current basket"""

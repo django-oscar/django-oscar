@@ -1,11 +1,11 @@
 import csv
 
 from oscar.core.loading import import_module
-report_classes = import_module('reports.reports', ['ReportGenerator'])
-basket_models = import_module('basket.models', ['Basket', 'OPEN', 'SUBMITTED'])
+import_module('reports.reports', ['ReportGenerator'], locals())
+import_module('basket.models', ['Basket', 'OPEN', 'SUBMITTED'], locals())
 
 
-class OpenBasketReportGenerator(report_classes.ReportGenerator):
+class OpenBasketReportGenerator(ReportGenerator):
     
     filename_template = 'open-baskets-%s-%s.csv'
     code = 'open_baskets'
@@ -26,7 +26,7 @@ class OpenBasketReportGenerator(report_classes.ReportGenerator):
                      ]
         writer.writerow(header_row)
         
-        baskets = basket_models.Basket._default_manager.filter(status=basket_models.OPEN)
+        baskets = Basket._default_manager.filter(status=basket_models.OPEN)
         for basket in baskets:
             if basket.owner:
                 row = [basket.owner_id, basket.owner.username, basket.owner.get_full_name(). basket.owner.email,
@@ -40,7 +40,7 @@ class OpenBasketReportGenerator(report_classes.ReportGenerator):
             writer.writerow(row)
 
 
-class SubmittedBasketReportGenerator(report_classes.ReportGenerator):
+class SubmittedBasketReportGenerator(ReportGenerator):
     
     filename_template = 'submitted_baskets-%s-%s.csv'
     code = 'submitted_baskets'
@@ -58,7 +58,7 @@ class SubmittedBasketReportGenerator(report_classes.ReportGenerator):
                      ]
         writer.writerow(header_row)
         
-        baskets = basket_models.Basket._default_manager.filter(status=basket_models.SUBMITTED)
+        baskets = Basket._default_manager.filter(status=basket_models.SUBMITTED)
         for basket in baskets:
             row = [basket.owner_id, basket.owner, basket.status, basket.num_lines,
                    basket.num_items, basket.total_incl_tax, 

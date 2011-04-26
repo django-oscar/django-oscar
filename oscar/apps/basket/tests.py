@@ -2,18 +2,15 @@ from django.utils import unittest
 from django.test.client import Client
 from django.core.urlresolvers import reverse
 
-from oscar.apps.basket.models import * 
-from oscar.apps.product.models import Item, ItemClass
+from oscar.apps.basket.models import Basket, Line 
+from oscar.test.helpers import create_product
 
 
 class BasketModelTest(unittest.TestCase):
     
     def setUp(self):
         self.basket = Basket.objects.create()
-        
-        # Create a dummy product
-        ic,_ = ItemClass.objects.get_or_create(name='Dummy class')
-        self.dummy_product = Item.objects.create(title='Dummy product', item_class=ic)
+        self.dummy_product = create_product()
     
     def test_empty_baskets_have_zero_lines(self):
         self.assertTrue(Basket().num_lines == 0)
@@ -22,7 +19,7 @@ class BasketModelTest(unittest.TestCase):
         self.assertTrue(Basket().is_empty)
         
     def test_basket_have_with_one_line(self):
-        line = Line.objects.create(basket=self.basket, product=self.dummy_product)
+        Line.objects.create(basket=self.basket, product=self.dummy_product)
         self.assertTrue(self.basket.num_lines == 1)
         
     def test_add_product_creates_line(self):
@@ -46,8 +43,7 @@ class BasketViewsTest(unittest.TestCase):
         self.assertEquals(0, response.context['basket'].num_lines)
         
     def test_anonymous_add_to_basket_creates_cookie(self):
-        ic,_ = ItemClass.objects.get_or_create(name='Dummy class')
-        dummy_product = Item.objects.create(title='Dummy product', item_class=ic)
+        dummy_product = create_product()
         url = reverse('oscar-basket')
         post_params = {'product_id': dummy_product.id,
                        'action': 'add',

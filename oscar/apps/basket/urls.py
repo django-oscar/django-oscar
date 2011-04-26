@@ -1,6 +1,7 @@
 from django.conf.urls.defaults import *
 
-from oscar.apps.basket.views import BasketView, LineView, SavedLineView
+from oscar.core.loading import import_module
+import_module('basket.views', ['BasketView', 'LineView', 'SavedLineView'], locals())
 
 def line_view(request, *args, **kwargs):
     return LineView()(request, *args, **kwargs)

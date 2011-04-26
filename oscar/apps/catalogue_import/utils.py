@@ -49,6 +49,11 @@ class Importer(object):
         u"""Iterate over rows, creating a complete list item"""
         for row in self.csv_content:
             upc, title, description, item_class, partner_name, partner_reference, price_excl_tax, num_in_stock = row
+            
+            # Ignore any entries that are NULL
+            if description == 'NULL':
+                description = ''
+            
             saved_item_class, _ = product_models.ItemClass.objects.get_or_create(name=item_class)
             try:
                 saved_item = product_models.Item.objects.get(upc=upc)
