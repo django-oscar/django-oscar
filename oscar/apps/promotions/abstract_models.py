@@ -139,10 +139,11 @@ class AbstractMerchandisingBlock(models.Model):
     
     title = models.CharField(_("Title"), max_length=255)
     description = models.TextField(null=True, blank=True)
-    COUNTDOWN, LIST = ('Countdown', 'List')
+    COUNTDOWN, LIST, SINGLE_PRODUCT = ('Countdown', 'List', 'SingleProduct')
     TYPE_CHOICES = (
         (COUNTDOWN, _("Countdown")),
         (LIST, _("List")),
+        (SINGLE_PRODUCT, _("Single product"))
     )
     type = models.CharField(_("Type"), choices=TYPE_CHOICES, max_length=100)
     products = models.ManyToManyField('product.Item', null=True)
