@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load currency_filters %}
+
 {% block layout %}
     <div id="container">
         <div id="header">
@@ -28,14 +30,41 @@
         </div>
         <div id="content">
         
-        {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-        {% block content %}{% endblock %}
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            
+            {% for linked_block in merchandising_blocks %}
+                {% if linked_block.block.type == 'Countdown' %}
+                <div>
+                    <h3>{{ linked_block.block.title }}</h3>
+                    <p>{{ linked_block.block.description }}</p>
+                    <ol>
+                    {% for product in linked_block.block.products.all %}
+                    <li>
+                        <a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a><br/>
+                        {% if product.is_group %}
+                            From {{ product.min_variant_price_incl_tax|currency }}
+                        {% else %}
+                            {% if product.has_stockrecord %} 
+                                {{ product.stockrecord.price_incl_tax|currency }}<br/>
+                                {{ product.stockrecord.availability }}
+                            {% else %}
+                                Not available    
+                            {% endif %}
+                        {% endif %}    
+                    </li>
+                    {% endfor %}
+                    </ol>
+                </div>
+                {% endif %}
+            {% endfor %} 
+            
+            {% block content %}{% endblock %}
         </div>
         <div id="footer">{% block footer %}{% endblock %}</div>
     </div>

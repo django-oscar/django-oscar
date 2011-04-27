@@ -4,8 +4,8 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from oscar.apps.promotions.abstract_models import BANNER, LEFT_POD, RIGHT_POD
 from oscar.core.loading import import_module
-
-promotion_models = import_module('promotions.models', ['PagePromotion', 'KeywordPromotion'])
+import_module('promotions.models', ['PagePromotion', 'KeywordPromotion', 
+                                    'PageMerchandisingBlock', 'KeywordMerchandisingBlock'], locals())
 
 
 def promotions(request):
@@ -16,16 +16,32 @@ def promotions(request):
     bindings = {
         'url_path': request.path
     }
-    promotions = promotion_models.PagePromotion._default_manager.select_related().filter(page_url=request.path)
+    promotions = PagePromotion._default_manager.select_related().filter(page_url=request.path)
 
     if 'q' in request.GET:
-        keyword_promotions = promotion_models.KeywordPromotion._default_manager.select_related().filter(keyword=request.GET['q'])
+        keyword_promotions = KeywordPromotion._default_manager.select_related().filter(keyword=request.GET['q'])
         if keyword_promotions.count() > 0:
             promotions = list(chain(promotions, keyword_promotions))
 
     bindings['banners'], bindings['left_pods'], bindings['right_pods'] = _split_by_position(promotions)
 
     return bindings
+
+def merchandising_blocks(request):
+    bindings = {
+        'url_path': request.path
+    }
+    blocks = PageMerchandisingBlock._default_manager.select_related().filter(page_url=request.path)
+
+    if 'q' in request.GET:
+        keyword_blocks = KeywordMerchandisingBlock._default_manager.select_related().filter(keyword=request.GET['q'])
+        if keyword_blocks.count() > 0:
+            blocks = list(chain(blocks, keyword_blocks))
+
+    bindings['merchandising_blocks'] = blocks
+
+    return bindings
+
 
 def _split_by_position(linked_promotions):
     # We split the queries into 3 sets based on the position field
