@@ -23,25 +23,15 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        logger = self._get_logger()
-        logger.info("Starting image import...")
-
         if len(args) != 1:
-            raise CommandError('Command requires a path to a single folder')        
+            raise CommandError('Command requires a path to a single folder') 
+        
+        logger = self._get_logger()
+        logger.info("Starting image import...")       
         
         dirname = args[0]
-        
-        all_files = [f for f in os.listdir(dirname) if os.path.isfile(os.path.join(dirname,f))]
-        
         importer = Importer(logger, field=options.get('filename'))
-        
-        for f in all_files:
-            ext = os.path.splitext(f)[1]
-            if ext in ['.jpeg','.jpg','.gif','.png']:
-                try:
-                    importer.handle(f,dirname)
-                except ImageImportException, e:
-                    raise CommandError(str(e))
+        importer.handle(dirname)
             
     def _get_logger(self):
         logger = logging.getLogger('oscar.apps.image')

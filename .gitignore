@@ -13,7 +13,7 @@ docs/build/*
 examples/.coverage
 assets/*
 nbproject
-examples/defaultshop/assets/*
+examples/vanilla/assets/*
 oscar/bin
 oscar/include
 oscar/lib
