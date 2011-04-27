@@ -83,6 +83,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     # Oscar specific
     'oscar.apps.search.context_processors.search_form',
     'oscar.apps.promotions.context_processors.promotions',
+    'oscar.apps.promotions.context_processors.merchandising_blocks',
 ) 
 
 MIDDLEWARE_CLASSES = (

@@ -44,14 +44,17 @@ class Importer(object):
         stats = {'new_items': 0,
                  'updated_items': 0
                  }
+        row_number = 0
         for row in csv.reader(open(file_path,'rb'), delimiter=self._delimiter, quotechar='"', escapechar='\\'):
-            self._import_row(row, stats)
+            row_number += 1
+            self._import_row(row_number, row, stats)
         msg = "\tNew items: %d\n\tUpdated items: %d" % (stats['new_items'], stats['updated_items'])
         self.logger.info(msg)
     
-    def _import_row(self, row, stats):
-        if len(row) != 4 or len(row) != 8:
-            self.logger.error("Problem")
+    def _import_row(self, row_number, row, stats):
+        if len(row) != 4 and len(row) != 8:
+            self.logger.error("Row number %d has an invalid number of fields, skipping..." % row_number)
+            return
         item = self._create_item(*row[:4], stats=stats)
         if len(row) == 8:
             # With stock data

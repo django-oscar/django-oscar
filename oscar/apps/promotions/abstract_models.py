@@ -136,6 +136,64 @@ class AbstractKeywordPromotion(LinkedPromotion):
 
     def get_link(self):
         return reverse('oscar-keyword-promotion-click', kwargs={'keyword_promotion_id': self.id})
-
+    
+    
+class AbstractMerchandisingBlock(models.Model):
+    
+    title = models.CharField(_("Title"), max_length=255)
+    description = models.TextField(null=True, blank=True)
+    COUNTDOWN, LIST = ('Countdown', 'List')
+    TYPE_CHOICES = (
+        (COUNTDOWN, _("Countdown")),
+        (LIST, _("List")),
+    )
+    type = models.CharField(_("Type"), choices=TYPE_CHOICES, max_length=100)
+    products = models.ManyToManyField('product.Item', null=True)
+    date_created = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        abstract = True
+        
+    def __unicode__(self):
+        return self.title    
+        
+    @property
+    def num_products(self):
+        return self.products.all().count()
     
 
+class LinkedMerchanisingBlock(models.Model):
+
+    block = models.ForeignKey('promotions.MerchandisingBlock')
+    display_order = models.PositiveIntegerField(default=0)
+    date_created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        abstract = True
+
+
+class AbstractPageMerchandisingBlock(LinkedMerchanisingBlock):
+    u"""
+    A promotion embedded on a particular page.
+    """
+    page_url = models.CharField(_('URL'), max_length=128, db_index=True)
+
+    class Meta:
+        abstract = True
+
+    def __unicode__(self):
+        return u"%s on %s" % (self.block, self.page_url)
+    
+    
+class AbstractKeywordMerchandisingBlock(LinkedMerchanisingBlock):
+    u"""
+    A promotion linked to a specific keyword.
+
+    This can be used on a search results page to show promotions
+    linked to a particular keyword.
+    """
+
+    keyword = models.CharField(_("Keyword"), max_length=200)
+
+    class Meta:
+        abstract = True
