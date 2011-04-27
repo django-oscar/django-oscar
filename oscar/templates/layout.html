@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% load currency_filters %}
+{% load promotions %}
 
 {% block layout %}
     <div id="container">
@@ -39,30 +40,8 @@
             {% endif %}
             
             {% for linked_block in merchandising_blocks %}
-                {% if linked_block.block.type == 'Countdown' %}
-                <div>
-                    <h3>{{ linked_block.block.title }}</h3>
-                    <p>{{ linked_block.block.description }}</p>
-                    <ol>
-                    {% for product in linked_block.block.products.all %}
-                    <li>
-                        <a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a><br/>
-                        {% if product.is_group %}
-                            From {{ product.min_variant_price_incl_tax|currency }}
-                        {% else %}
-                            {% if product.has_stockrecord %} 
-                                {{ product.stockrecord.price_incl_tax|currency }}<br/>
-                                {{ product.stockrecord.availability }}
-                            {% else %}
-                                Not available    
-                            {% endif %}
-                        {% endif %}    
-                    </li>
-                    {% endfor %}
-                    </ol>
-                </div>
-                {% endif %}
-            {% endfor %} 
+                {% render_merchandising_block linked_block %}
+            {% endfor %}
             
             {% block content %}{% endblock %}
         </div>

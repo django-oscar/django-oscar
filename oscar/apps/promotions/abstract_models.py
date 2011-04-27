@@ -161,6 +161,10 @@ class AbstractMerchandisingBlock(models.Model):
     def num_products(self):
         return self.products.all().count()
     
+    @property
+    def template_file(self):
+        return 'promotions/block_%s.html' % self.type.lower()
+    
 
 class LinkedMerchanisingBlock(models.Model):
 
