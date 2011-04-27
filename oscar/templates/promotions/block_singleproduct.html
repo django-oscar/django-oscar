@@ -1,0 +1,26 @@
+{% load currency_filters %}
+
+<table>
+    <tr>
+        <th colspan="2">{{ block.title }}</th>
+    </tr>
+    {% for product in block.products.all|slice:'1' %}
+    <tr>
+        <td>
+        <a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a><br/>
+        {% if product.is_group %}
+            From {{ product.min_variant_price_incl_tax|currency }}
+        {% else %}
+            {% if product.has_stockrecord %} 
+                {{ product.stockrecord.price_incl_tax|currency }}<br/>
+                {{ product.stockrecord.availability }}
+            {% else %}
+                Not available    
+            {% endif %}
+        {% endif %}   
+        </td>
+        <td>{{ block.description|safe }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
