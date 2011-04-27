@@ -4,6 +4,8 @@ from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ValidationError
 
+from oscar.core.fields import ExtendedURLField
+
 BANNER_FOLDER = settings.OSCAR_BANNER_FOLDER
 POD_FOLDER = settings.OSCAR_POD_FOLDER
 
@@ -15,6 +17,7 @@ POSITION_CHOICES = (
     (RAW_HTML, _("Raw HTML"))
 )
 
+
 class AbstractPromotion(models.Model):
     u"""
     A promotion model.
@@ -24,7 +27,7 @@ class AbstractPromotion(models.Model):
 
     """
     name = models.CharField(_("Name"), max_length=128)
-    link_url = models.URLField(blank=True, null=True, help_text="""This is 
+    link_url = ExtendedURLField(blank=True, null=True, help_text="""This is 
         where this promotion links to""")
 
     # Three ways of supplying the content

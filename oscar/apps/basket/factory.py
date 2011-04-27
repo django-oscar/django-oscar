@@ -27,9 +27,9 @@ class BasketFactory(object):
         return self._get_or_create_cookie_basket(request, response, 
                                                  COOKIE_KEY_SAVED_BASKET, Basket.saved)
     
-    def get_open_basket(self, request, response):
+    def get_open_basket(self, request):
         u"""Returns the basket for the current user"""
-        return self._get_basket(request, response, COOKIE_KEY_OPEN_BASKET, Basket.open)
+        return self._get_basket(request, None, COOKIE_KEY_OPEN_BASKET, Basket.open)
     
     def get_saved_basket(self, request, response):
         u"""Returns the saved basket for the current user"""
@@ -92,7 +92,9 @@ class BasketFactory(object):
                     b = manager.get(pk=basket_id, owner=None)
                 except Basket.DoesNotExist:
                     b = None
-            else:
+            elif response:
+                # Not all methods are able to pass the response so this doesn't
+                # always happen.
                 response.delete_cookie(cookie_key)
         return b      
     

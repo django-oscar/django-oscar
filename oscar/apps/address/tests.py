@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.contrib.auth.models import User
 from django.test import TestCase
 
@@ -60,4 +62,9 @@ class UserAddressTest(TestCase):
         a2 = UserAddress(first_name=" Terry", last_name='   Barrington', line1="  75 Smith Road  ", postcode="N4 8ty", 
                          country=self.country, user=self.user)
         self.assertEquals(a1.generate_hash(), a2.generate_hash())
+        
+    def test_hashing_with_utf8(self):
+        a = UserAddress(first_name=u"\u0141ukasz Smith", last_name=u'Smith', line1=u"75 Smith Road", postcode=u"n4 8ty", 
+                        country=self.country, user=self.user)
+        hash = a.active_address_fields()
            
