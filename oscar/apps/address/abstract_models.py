@@ -156,14 +156,14 @@ class AbstractUserAddress(AbstractShippingAddress):
     def generate_hash(self):
         u"""Returns a hash of the address summary."""
         # We use an upper-case version of the summary
-        return zlib.crc32(self.summary.strip().upper())
+        return zlib.crc32(self.summary.strip().upper().encode('UTF8'))
 
     def save(self, *args, **kwargs):
         u"""Save a hash of the address fields"""
         # Save a hash of the address fields so we can check whether two 
         # addresses are the same to avoid saving duplicates
         self.hash = self.generate_hash()
-        super(AbstractUserAddress, self).save(*args, **kwargs)  
+        super(AbstractUserAddress, self).save(*args, **kwargs)
     
     class Meta:
         abstract = True
