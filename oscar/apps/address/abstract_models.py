@@ -156,7 +156,7 @@ class AbstractUserAddress(AbstractShippingAddress):
     def generate_hash(self):
         u"""Returns a hash of the address summary."""
         # We use an upper-case version of the summary
-        return zlib.crc32(self.summary.strip().upper())
+        return zlib.crc32(self.summary.strip().upper().encode('UTF8'))
 
     def save(self, *args, **kwargs):
         u"""Save a hash of the address fields"""
