@@ -86,7 +86,7 @@ class AbstractAddress(models.Model):
         
     def salutation(self):
         u"""Returns the salutation"""
-        return " ".join([part for part in [self.title, self.first_name, self.last_name] if part])
+        return u" ".join([part for part in [self.title, self.first_name, self.last_name] if part])
         
     def __unicode__(self):
         return self.summary
