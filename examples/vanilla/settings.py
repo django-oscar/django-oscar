@@ -200,6 +200,7 @@ INSTALLED_APPS = (
     'oscar.apps.reports',
     'oscar.apps.search',
     'oscar.apps.catalogue_import',
+    'oscar.apps.product_adjustments',
     'pyzen',
 )
 
