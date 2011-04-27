@@ -43,7 +43,8 @@ class ExtendedURLField(models.CharField):
         """
         try:
             value = self.fix_local_url(value)
-            resolve(value)
+            if self.verify_exists:
+                resolve(value)
             self.is_local_url = True
         except Http404:
             raise ValidationError('Specified page does not exist')
