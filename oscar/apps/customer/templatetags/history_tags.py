@@ -17,5 +17,5 @@ def recently_viewed_products(context):
     
     # Reordering as the id order gets messed up in the query
     product_ids.reverse()
-    products = [product_dict[id] for id in product_ids]
+    products = [product_dict[id] for id in product_ids if id in product_dict]
     return {'products': products}
