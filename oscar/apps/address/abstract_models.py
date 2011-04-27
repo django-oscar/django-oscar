@@ -163,7 +163,7 @@ class AbstractUserAddress(AbstractShippingAddress):
         # Save a hash of the address fields so we can check whether two 
         # addresses are the same to avoid saving duplicates
         self.hash = self.generate_hash()
-        super(AbstractUserAddress, self).save(*args, **kwargs)  
+        super(AbstractUserAddress, self).save(*args, **kwargs)
     
     class Meta:
         abstract = True
