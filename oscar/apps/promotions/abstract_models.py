@@ -109,7 +109,7 @@ class AbstractPagePromotion(LinkedPromotion):
     u"""
     A promotion embedded on a particular page.
     """
-    page_url = models.CharField(_('URL'), max_length=128, db_index=True)
+    page_url = ExtendedURLField(max_length=128, db_index=True)
 
     class Meta:
         abstract = True
@@ -181,7 +181,7 @@ class AbstractPageMerchandisingBlock(LinkedMerchanisingBlock):
     u"""
     A promotion embedded on a particular page.
     """
-    page_url = models.CharField(_('URL'), max_length=128, db_index=True)
+    page_url = ExtendedURLField(max_length=128, db_index=True)
 
     class Meta:
         abstract = True
