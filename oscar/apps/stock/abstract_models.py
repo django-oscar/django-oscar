@@ -29,7 +29,7 @@ class AbstractStockRecord(models.Model):
     """
     product = models.OneToOneField('product.Item')
     partner = models.ForeignKey('stock.Partner')
-    partner_reference = models.CharField(max_length=128, blank=True)
+    partner_sku = models.CharField(_("Partner SKU"), max_length=128, blank=True)
     
     # Price info:
     # We deliberately don't store tax information to allow each project
@@ -95,7 +95,7 @@ class AbstractStockRecord(models.Model):
         return 0
         
     def __unicode__(self):
-        if self.partner_reference:
-            return "%s (%s): %s" % (self.partner.name, self.partner_reference, self.product.title)
+        if self.partner_sku:
+            return "%s (%s): %s" % (self.partner.name, self.partner_sku, self.product.title)
         else:
             return "%s: %s" % (self.partner.name, self.product.title)

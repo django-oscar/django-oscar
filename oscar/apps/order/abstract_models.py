@@ -165,7 +165,7 @@ class AbstractLine(models.Model):
     # We store the partner, their SKU and the title for cases where the product has been
     # deleted from the catalogue.
     partner = models.ForeignKey('stock.Partner', related_name='order_lines')
-    partner_reference = models.CharField(_("Partner reference"), max_length=128, blank=True, null=True)
+    partner_sku = models.CharField(_("Partner SKU"), max_length=128, blank=True, null=True)
     title = models.CharField(_("Title"), max_length=255)
     
     # We don't want any hard links between orders and the products table

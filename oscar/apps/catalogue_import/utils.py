@@ -80,17 +80,17 @@ class Importer(object):
         item.save()
         return item
         
-    def _create_stockrecord(self, item, partner_name, partner_reference, price_excl_tax, num_in_stock, stats):            
+    def _create_stockrecord(self, item, partner_name, partner_sku, price_excl_tax, num_in_stock, stats):            
         # Create partner and stock record
         partner, _ = Partner.objects.get_or_create(name=partner_name)
         try:
-            stock = StockRecord.objects.get(partner_reference=partner_reference)
+            stock = StockRecord.objects.get(partner_sku=partner_sku)
         except StockRecord.DoesNotExist:
             stock = StockRecord()
         
         stock.product = item
         stock.partner = partner
-        stock.partner_reference = partner_reference
+        stock.partner_sku = partner_sku
         stock.price_excl_tax = D(price_excl_tax)
         stock.num_in_stock = num_in_stock
         stock.save()
