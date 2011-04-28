@@ -4,6 +4,8 @@ from django.conf import settings
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+from oscar.apps.stock.wrappers import get_partner_wrapper, DefaultWrapper
+
 
 class AbstractPartner(models.Model):
     u"""Fulfillment partner"""
@@ -73,20 +75,14 @@ class AbstractStockRecord(models.Model):
     @property
     def availability(self):
         u"""Return an item's availability as a string"""
-        if self.num_in_stock:
-            return _("In stock (%d available)" % self.num_in_stock)
-        return _("Out of stock")
+        return get_partner_wrapper(self.partner.name).availability(self)
     
     @property
     def dispatch_date(self):
         u"""
         Returns the estimated dispatch date for a line
         """
-        if self.num_in_stock:
-            # Assume next day for in-stock items
-            return datetime.date.today() + datetime.timedelta(days=1)
-        # Assume one week for out-of-stock items
-        return datetime.date.today() + datetime.timedelta(days=7)
+        return get_partner_wrapper(self.partner.name).dispatch_date(self)
     
     @property 
     def price_incl_tax(self):

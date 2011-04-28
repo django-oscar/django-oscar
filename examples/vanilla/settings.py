@@ -207,10 +207,8 @@ INSTALLED_APPS = (
 LOGIN_REDIRECT_URL = '/shop/accounts/profile/'
 APPEND_SLASH = True
 
-OSCAR_DEFAULT_CURRENCY = 'GBP'
-
+# Oscar settings
 from oscar.defaults import *
-
 
 # Haystack settings
 HAYSTACK_SITECONF = 'oscar.search_sites'
