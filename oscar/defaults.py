@@ -16,3 +16,5 @@ OSCAR_POD_FOLDER = 'images/promotions/pods'
 
 # Search settings
 OSCAR_SEARCH_SUGGEST_LIMIT = 10
+
+OSCAR_PARTNER_WRAPPERS = {}
