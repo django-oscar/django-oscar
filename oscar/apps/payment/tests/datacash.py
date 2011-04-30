@@ -7,9 +7,9 @@ from django.test import TestCase
 from oscar.apps.payment.datacash.utils import Gateway
 
 
-class AuthTransactionTests(TestCase):
+class TransactionMixin(object):
     
-    def setUp(self):
+    def init_gateway(self):
         self.gateway = Gateway(client="DUMMY", password="123456")
         self.transport = mock.Mock()
         self.gateway.do_request = self.transport
@@ -22,6 +22,12 @@ class AuthTransactionTests(TestCase):
             self.assertEquals(value, tag.firstChild.data)
         except IndexError:
             self.fail("Tag '%s' not found\n%s" % (tag_name, request_xml))
+    
+    def make_request(self, **kwargs):
+        """
+        Needs to be implemented by subclass.
+        """
+        pass
             
     def assertXmlTagAttributeValue(self, tag_name, attribute, value):
         request_xml = self.transport.call_args[0][0]
@@ -32,51 +38,171 @@ class AuthTransactionTests(TestCase):
         except IndexError:
             self.fail("Tag '%s' not found\n%s" % (tagName, request_xml))
     
-    def make_auth_request(self):
-        self.gateway.auth(card_number='1000010000000007', 
-                          start_date='01/10',
-                          expiry_date='01/12',
-                          issue_number='03',
-                          merchant_reference='123123',
-                          currency='GBP',
-                          amount=D('12.99'))
-    
-    def test_auth_includes_credentials(self):
-        self.make_auth_request()
+    def test_request_includes_credentials(self):
+        self.make_request()
         self.assertTrue(self.transport.called)
         self.assertXmlTagValue('client', 'DUMMY')
         self.assertXmlTagValue('password', '123456')
+
+
+class InitialTransactionMixin(TransactionMixin):
+    
+    def test_request_includes_merchant_reference(self):   
+        self.make_request()
+        self.assertXmlTagValue('merchantreference', '123123')
         
-    def test_auth_includes_card_details(self):   
-        self.make_auth_request()
+    def test_request_includes_amount_and_currency(self):   
+        self.make_request()
+        self.assertXmlTagValue('amount', '12.99')
+        self.assertXmlTagAttributeValue('amount', 'currency', 'GBP')
+        
+    def test_request_can_include_authcode(self):
+        self.make_request(auth_code='334455')    
+        self.assertXmlTagValue('authcode', '334455')
+    
+    def test_request_includes_card_details(self):   
+        self.make_request(start_date='01/10')
         self.assertXmlTagValue('pan', '1000010000000007')
         self.assertXmlTagValue('startdate', '01/10')
         self.assertXmlTagValue('expirydate', '01/12')
         
-    def test_auth_includes_merchant_reference(self):   
-        self.make_auth_request()
-        self.assertXmlTagValue('merchantreference', '123123')
+    def test_request_can_include_issue_number(self):
+        self.make_request(issue_number='03')    
+        self.assertXmlTagValue('issuenumber', '03')    
         
-    def test_auth_includes_amount_and_currency(self):   
-        self.make_auth_request()
-        self.assertXmlTagValue('amount', '12.99')
-        self.assertXmlTagAttributeValue('amount', 'currency', 'GBP')
-        
-    def test_auth_includes_method(self):
-        self.make_auth_request()    
-        self.assertXmlTagValue('method', 'auth')
-    
+    def test_request_can_include_authcode(self):
+        self.make_request(auth_code='334455')    
+        self.assertXmlTagValue('authcode', '334455')
 
-class HistoricTransactionTests(TestCase):
+
+class AuthTransactionTests(TestCase, InitialTransactionMixin):
     
     def setUp(self):
-        self.gateway = Gateway(client="DUMMY", password="123456")
-
-    def test_cancel(self):
-        self.gateway.auth
-        
-    def test_fulfil(self):
-        pass
+        self.init_gateway()
     
-    def test_txn_refund(self):
-        pass
+    def make_request(self, **kwargs):
+        self.gateway.auth(card_number='1000010000000007', 
+                          expiry_date='01/12',
+                          merchant_reference='123123',
+                          currency='GBP',
+                          amount=D('12.99'),
+                          **kwargs)
+        
+    def test_request_includes_method(self):
+        self.make_request()    
+        self.assertXmlTagValue('method', 'auth')
+    
+    
+class PreTransactionTests(TestCase, InitialTransactionMixin):
+    
+    def setUp(self):
+        self.init_gateway()
+    
+    def make_request(self, **kwargs):
+        self.gateway.pre(card_number='1000010000000007', 
+                         expiry_date='01/12',
+                         merchant_reference='123123',
+                         currency='GBP',
+                         amount=D('12.99'),
+                         **kwargs)    
+        
+    def test_request_includes_method(self):
+        self.make_request()    
+        self.assertXmlTagValue('method', 'pre')
+        
+        
+class RefundTransactionTests(TestCase, InitialTransactionMixin):
+    
+    def setUp(self):
+        self.init_gateway()
+    
+    def make_request(self, **kwargs):
+        self.gateway.refund(card_number='1000010000000007', 
+                            expiry_date='01/12',
+                            merchant_reference='123123',
+                            currency='GBP',
+                            amount=D('12.99'),
+                            **kwargs)    
+        
+    def test_request_includes_method(self):
+        self.make_request()    
+        self.assertXmlTagValue('method', 'refund')
+    
+    
+class ErpTransactionTests(TestCase, InitialTransactionMixin):
+    
+    def setUp(self):
+        self.init_gateway()
+    
+    def make_request(self, **kwargs):
+        self.gateway.erp(card_number='1000010000000007', 
+                         expiry_date='01/12',
+                         merchant_reference='123123',
+                         currency='GBP',
+                         amount=D('12.99'),
+                         **kwargs)    
+        
+    def test_request_includes_method(self):
+        self.make_request()    
+        self.assertXmlTagValue('method', 'erp')    
+    
+    
+class CancelTransactionTests(TestCase, TransactionMixin):
+    
+    def setUp(self):
+        self.init_gateway()
+    
+    def make_request(self, **kwargs):
+        self.gateway.cancel(txn_reference='12312333444')
+        
+    def test_request_includes_method(self):
+        self.make_request()    
+        self.assertXmlTagValue('method', 'cancel') 
+        
+    def test_request_includes_reference(self):
+        self.make_request()    
+        self.assertXmlTagValue('reference', '12312333444') 
+        
+        
+class FulfilTransactionTests(TestCase, TransactionMixin):
+    
+    def setUp(self):
+        self.init_gateway()
+    
+    def make_request(self, **kwargs):
+        self.gateway.fulfil(currency='GBP',
+                            amount=D('12.99'),
+                            txn_reference='12312333444',
+                            auth_code='123444')
+        
+    def test_request_includes_method(self):
+        self.make_request()    
+        self.assertXmlTagValue('method', 'fulfil')   
+        
+    def test_request_includes_reference(self):
+        self.make_request()    
+        self.assertXmlTagValue('reference', '12312333444') 
+        
+    def test_request_includes_authcode(self):
+        self.make_request()    
+        self.assertXmlTagValue('authcode', '123444') 
+        
+        
+class TxnRefundTransactionTests(TestCase, TransactionMixin):
+    
+    def setUp(self):
+        self.init_gateway()
+    
+    def make_request(self, **kwargs):
+        self.gateway.txn_refund(currency='GBP',
+                                amount=D('12.99'),
+                                txn_reference='12312333444')
+        
+    def test_request_includes_method(self):
+        self.make_request()    
+        self.assertXmlTagValue('method', 'txn_refund')   
+        
+    def test_request_includes_reference(self):
+        self.make_request()    
+        self.assertXmlTagValue('reference', '12312333444') 
+    
