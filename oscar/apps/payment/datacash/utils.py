@@ -1,5 +1,5 @@
 import datetime
-from xml.dom.minidom import Document
+from xml.dom.minidom import Document, parseString
 
 from django.conf import settings
 
@@ -11,6 +11,7 @@ class Gateway(object):
         self._password = password
 
     def do_request(self, request_xml):
+        # Need to fillin HTTP request here
         pass
 
     def _initial_transaction(self, method_name, **kwargs):
@@ -61,9 +62,12 @@ class Gateway(object):
                 self._create_element(doc, txn_details, 'merchantreference', kwargs['merchant_reference'])
             self._create_element(doc, txn_details, 'amount', str(kwargs['amount']), {'currency': kwargs['currency']})
         
-        self.do_request(doc.toxml())
+        return self.do_request(doc.toxml())
 
     def _create_element(self, doc, parent, tag, value=None, attributes=None):
+        """
+        Creates an XML element
+        """
         ele = doc.createElement(tag)
         parent.appendChild(ele)
         if value:
@@ -72,6 +76,10 @@ class Gateway(object):
         if attributes:
             [ele.setAttribute(k, v) for k,v in attributes.items()]
         return ele
+    
+    def _get_element_text(self, doc, tag):
+        ele = doc.getElementsByTagName(tag)[0]
+        return ele.firstChild.data
 
     def auth(self, **kwargs):
         """
@@ -80,7 +88,13 @@ class Gateway(object):
         
         Note that currency should be ISO 4217 Alphabetic format.
         """ 
-        return self._initial_transaction('auth', **kwargs)
+        response_xml = self._initial_transaction('auth', **kwargs)
+        doc = parseString(response_xml)
+        response = {'status': self._get_element_text(doc, 'status'),
+                    'datacash_reference': self._get_element_text(doc, 'datacash_reference'),
+                    'merchant_reference': self._get_element_text(doc, 'merchantreference')}
+        return response
+        
         
     def pre(self, **kwargs):
         """
