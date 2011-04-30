@@ -46,16 +46,27 @@ def import_module(module_label, classes=[], namespace=None):
                     try:
                         imported_local_mod = __import__(local_app, fromlist=classes)
                     except ImportError, e:
-                        # Module doesn't exist, fall back to oscar core
-                        return _import_classes_from_module("oscar.apps.%s" % module_label, classes, namespace)
+                        # Module doesn't exist, fall back to oscar core.  This can be tricky
+                        # as if the overriding module has an import error, it will get picked up
+                        # here.
+                        if str(e).startswith("No module named"):
+                            return _import_classes_from_module("oscar.apps.%s" % module_label, classes, namespace)
+                        raise e
                     
+                    # Found overriding module, merging custom classes with core
                     module = new_module(local_app)
                     imported_oscar_mod = __import__("oscar.apps.%s" % module_label, fromlist=classes)
                     for classname in classes:
                         if hasattr(imported_local_mod, classname):
-                            module.__setattr__(classname, getattr(imported_local_mod, classname))
+                            if namespace:
+                                namespace[classname] = getattr(imported_local_mod, classname)
+                            else:
+                                module.__setattr__(classname, getattr(imported_local_mod, classname))
                         else:
-                            module.__setattr__(classname, getattr(imported_oscar_mod, classname))
+                            if namespace:
+                                namespace[classname] = getattr(imported_oscar_mod, classname)
+                            else:
+                                module.__setattr__(classname, getattr(imported_oscar_mod, classname))
                 return module
         except IndexError:
             pass
