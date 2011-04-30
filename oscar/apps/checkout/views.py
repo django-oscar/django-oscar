@@ -125,7 +125,9 @@ class PaymentMethodView(checkout_views.CheckoutView):
 
 
 class OrderPreviewView(checkout_views.CheckoutView):
-    u"""View a preview of the order before submitting."""
+    """
+    View a preview of the order before submitting.
+    """
     
     template_file = 'checkout/preview.html'
     
@@ -149,25 +151,31 @@ class PaymentDetailsView(checkout_views.CheckoutView):
     payment_sources = []
 
     def handle_GET(self):
+        """
+        This method needs to be overridden if there are any payment details
+        to be taken from the user, such as a bankcard.
+        """
         return self.handle_POST()
     
     def handle_POST(self):
         """
         This method is designed to be overridden by subclasses which will
         validate the forms from the payment details page.  If the forms are valid
-        then the method can call _submit()."""
-        return self._submit()
+        then the method can call submit()."""
+        return self.submit()
     
-    def _submit(self):
+    def submit(self):
         # We generate the order number first as this will be used
         # in payment requests (ie before the order model has been 
         # created).
         order_number = self._generate_order_number(self.basket)
         logger.info(_("Submitting order #%s" % order_number))
         
+        # Payment handling
         checkout_signals.pre_payment.send_robust(sender=self, view=self)
         self._handle_payment(self.basket, order_number)
         checkout_signals.post_payment.send_robust(sender=self, view=self)
+        
         order = self._place_order(self.basket, order_number)
         self._save_payment_sources(order)
         self._reset_checkout()
@@ -207,14 +215,6 @@ class PaymentDetailsView(checkout_views.CheckoutView):
         order_creator = order_utils.OrderCreator(calc)
         return order_creator.place_order(self.request.user, basket, 
                                          shipping_address, shipping_method, order_number)
-
-    def _get_chargable_total(self, basket):
-        u"""
-        Returns the total amount to take payment for.
-        """
-        calc = checkout_calculators.OrderTotalCalculator(self.request)
-        shipping_method = self._get_shipping_method(basket)
-        return calc.order_total_incl_tax(basket, shipping_method)
     
     def _get_shipping_method(self, basket):
         u"""Returns the shipping method object"""
@@ -270,6 +270,9 @@ class PaymentDetailsView(checkout_views.CheckoutView):
 
 
 class ThankYouView(object):
+    """
+    Displays the 'thank you' page which summarises the order just submitted.
+    """
     
     def __call__(self, request):
         try:
