@@ -1,0 +1,2 @@
+class InvalidBankcardException(Exception):
+    pass
