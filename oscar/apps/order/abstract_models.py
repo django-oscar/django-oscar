@@ -305,8 +305,7 @@ class AbstractPaymentEvent(models.Model):
     payment being taken for 2 items, or 1 item being dispatched.
     """
     order = models.ForeignKey('order.Order', related_name='payment_events')
-    line = models.ForeignKey('order.Line', related_name='payment_events')
-    quantity = models.PositiveIntegerField(default=1)
+    lines = models.ManyToManyField('order.Line', through='PaymentEventQuantity')
     event_type = models.ForeignKey('order.PaymentEventType')
     date = models.DateTimeField(auto_now_add=True)
     
@@ -320,13 +319,11 @@ class AbstractPaymentEvent(models.Model):
 
 
 class AbstractPaymentEventType(models.Model):
-    u"""Payment events are things like 'Paid', 'Failed', 'Refunded'"""
-    # Code is used in forms
-    code = models.CharField(max_length=128)
-    # Name is the friendly description of an event
-    name = models.CharField(max_length=255)
+    """
+    Payment events are things like 'Paid', 'Failed', 'Refunded'
+    """
+    name = models.CharField(max_length=128)
     code = models.SlugField(max_length=128)
-    # The normal order in which these shipping events take place
     sequence_number = models.PositiveIntegerField(default=0)
     
     def save(self, *args, **kwargs):
@@ -341,6 +338,13 @@ class AbstractPaymentEventType(models.Model):
         
     def __unicode__(self):
         return self.name
+
+
+class PaymentEventQuantity(models.Model):
+    u"""A "through" model linking lines to payment events"""
+    event = models.ForeignKey('order.PaymentEvent', related_name='line_quantities')
+    line = models.ForeignKey('order.Line')
+    quantity = models.PositiveIntegerField()
 
 
 class AbstractShippingEvent(models.Model):    

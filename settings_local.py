@@ -16,5 +16,5 @@ GOOGLE_CHECKOUT_URL = 'https://sandbox.google.com/checkout/api/checkout/v2/merch
 
 # Datacash
 DATACASH_URL = 'https://testserver.datacash.com/Transaction'         
-DATACASH_USERNAME = '99002051'
+DATACASH_CLIENT = '99002051'
 DATACASH_PASSWORD = 'Ys4ePPgDHQmn'

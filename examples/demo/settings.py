@@ -202,6 +202,7 @@ INSTALLED_APPS = (
     'oscar.apps.reports',
     'oscar.apps.search',
     'oscar.apps.catalogue_import',
+    'oscar.apps.payment.datacash',
     'pyzen',
 )
 
@@ -219,7 +220,7 @@ HAYSTACK_INCLUDE_SPELLING = True
 
 # Local overrides
 try:
-    from local_settings import *
+    from settings_local import *
     DATABASES['default']['NAME'] = "oscar_demo"
 except ImportError:
     pass

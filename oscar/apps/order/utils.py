@@ -25,10 +25,8 @@ class OrderCreator(object):
     Places the order by writing out the various models
     """
     
-    def __init__(self, order_total_calculator):
-        self.order_total_calculator = order_total_calculator
-    
-    def place_order(self, user, basket, shipping_address, shipping_method, order_number=None):
+    def place_order(self, user, basket, shipping_address, shipping_method, 
+                      total_incl_tax, total_excl_tax, order_number=None):
         u"""
         Placing an order involves creating all the relevant models based on the
         basket and session data.
@@ -36,7 +34,9 @@ class OrderCreator(object):
         if not order_number:
             generator = OrderNumberGenerator()
             order_number = generator.order_number(basket)
-        order = self._create_order_model(user, basket, shipping_address, shipping_method, order_number)
+        order = self._create_order_model(user, basket, shipping_address, 
+                                         shipping_method, total_incl_tax, 
+                                         total_excl_tax, order_number)
         for line in basket.all_lines():
             self._create_line_models(order, line)
         for discount in basket.discounts:
@@ -51,14 +51,14 @@ class OrderCreator(object):
         
         return order
         
-    def _create_order_model(self, user, basket, shipping_address, shipping_method, order_number):
+    def _create_order_model(self, user, basket, shipping_address, shipping_method, 
+                               total_incl_tax, total_excl_tax, order_number):
         u"""Creates an order model."""
-        calc = self.order_total_calculator
         order_data = {'basket': basket,
                       'number': order_number,
                       'site': Site._default_manager.get_current(),
-                      'total_incl_tax': calc.order_total_incl_tax(basket, shipping_method),
-                      'total_excl_tax': calc.order_total_excl_tax(basket, shipping_method),
+                      'total_incl_tax': total_incl_tax,
+                      'total_excl_tax': total_excl_tax,
                       'shipping_address': shipping_address,
                       'shipping_incl_tax': shipping_method.basket_charge_incl_tax(),
                       'shipping_excl_tax': shipping_method.basket_charge_excl_tax(),

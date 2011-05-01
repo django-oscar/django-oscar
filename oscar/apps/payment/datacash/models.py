@@ -1,7 +1,7 @@
-u"""Vanilla implementation of Datacash models"""
 from django.db import models
 
-from oscar.apps.datacash.abstract_models import Transaction
+from oscar.apps.payment.datacash.abstract_models import AbstractOrderTransaction
 
-class Transaction(AbstractTransaction):
+
+class OrderTransaction(AbstractOrderTransaction):
     pass

@@ -2,6 +2,10 @@ import datetime
 from xml.dom.minidom import Document, parseString
 
 from django.conf import settings
+from django.db import transaction
+
+from oscar.core.loading import import_module
+import_module('payment.datacash.models', ['OrderTransaction'], locals())
 
 
 class Gateway(object):
@@ -12,7 +16,25 @@ class Gateway(object):
 
     def do_request(self, request_xml):
         # Need to fill in HTTP request here
-        pass
+        response_xml = """<?xml version="1.0" encoding="UTF-8" ?>
+<Response>
+    <CardTxn>
+        <authcode>060642</authcode>
+        <card_scheme>Switch</card_scheme>
+        <country>United Kingdom</country>
+        <issuer>HSBC</issuer>
+    </CardTxn>
+    <datacash_reference>3000000088888888</datacash_reference>
+    <merchantreference>1000001</merchantreference>
+    <mode>LIVE</mode>
+    <reason>ACCEPTED</reason>
+    <status>1</status>
+    <time>1071567305</time>
+</Response>"""
+
+        # Save response XML
+        self._last_response_xml = response_xml
+        return response_xml
 
     def _build_request_xml(self, method_name, **kwargs):
         """
@@ -62,6 +84,9 @@ class Gateway(object):
                 self._create_element(doc, txn_details, 'merchantreference', kwargs['merchant_reference'])
             self._create_element(doc, txn_details, 'amount', str(kwargs['amount']), {'currency': kwargs['currency']})
         
+        # Save XML for later retrieval
+        self._last_request_xml = doc.toxml()
+        
         return self.do_request(doc.toxml())
 
     def _create_element(self, doc, parent, tag, value=None, attributes=None):
@@ -91,6 +116,8 @@ class Gateway(object):
             for tag, key in extra_elements.items():
                 response[key] = self._get_element_text(doc, tag)
         return response
+
+    # API
 
     def auth(self, **kwargs):
         """
@@ -138,24 +165,49 @@ class Gateway(object):
         response_xml = self._build_request_xml('txn_refund', **kwargs)
         return self._build_response_dict(response_xml)
     
+    def last_request_xml(self):
+        return self._last_request_xml
+    
+    def last_response_xml(self):
+        return self._last_response_xml
+    
     def _check_kwargs(self, kwargs, required_keys):
         for key in required_keys:
             if key not in kwargs:
                 raise RuntimeError('You must provide a "%s" argument' % key)
 
 
-class Adapter(object):
+class Facade(object):
     """
     Responsible for dealing with oscar objects
     """
     
     def __init__(self):
-        self.gateway = Gateway(settings.OSCAR_DATACASH_CLIENT, settings.OSCAR_DATACASH_PASSWORD)
+        self.gateway = Gateway(settings.DATACASH_CLIENT, settings.DATACASH_PASSWORD)
     
-    def auth(self, order_number, amount, bankcard, billing_address):
-        response = self.gateway.auth(pan=bankcard.pan,
-                                     expiry_date=bankcard.expiry_date,
-                                     merchant_reference=self.generate_merchant_reference(order_number))
+    def debit(self, order_number, amount, bankcard, billing_address=None):
+        with transaction.commit_on_success():
+            response = self.gateway.auth(card_number=bankcard.card_number,
+                                         expiry_date=bankcard.expiry_date,
+                                         amount=amount,
+                                         currency='GBP',
+                                         merchant_reference=self.generate_merchant_reference(order_number))
+            
+            # Create transaction model irrespective of whether transaction was successful or not
+            txn = OrderTransaction(order_number=order_number,
+                              method='auth',
+                              datacash_ref=response['datacash_reference'],
+                              merchant_ref=response['merchant_reference'],
+                              amount=amount,
+                              auth_code=response['auth_code'],
+                              status=int(response['status']),
+                              reason=response['reason'],
+                              request_xml=self.gateway.last_request_xml(),
+                              response_xml=self.gateway.last_response_xml())
+            txn.save()
+        
+        # Throw exception if appropriate
+        return response['datacash_reference']
         
     def generate_merchant_reference(self, order_number):
         return '%s_%s' % (order_number, datetime.datetime.now().microsecond)

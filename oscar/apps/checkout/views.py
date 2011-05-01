@@ -171,12 +171,21 @@ class PaymentDetailsView(checkout_views.CheckoutView):
         order_number = self._generate_order_number(self.basket)
         logger.info(_("Submitting order #%s" % order_number))
         
-        # Payment handling
+        # Calculate totals
+        calc = checkout_calculators.OrderTotalCalculator(self.request)
+        shipping_method = self._get_shipping_method(self.basket)
+        total_incl_tax = calc.order_total_incl_tax(self.basket, shipping_method)
+        total_excl_tax = calc.order_total_excl_tax(self.basket, shipping_method)
+        
+        # Handle payment.  Any payment problems should be handled by the 
+        # _handle_payment method raise an exception, which should be caught
+        # within handle_POST and the appropriate forms redisplayed.
         checkout_signals.pre_payment.send_robust(sender=self, view=self)
-        self._handle_payment(self.basket, order_number)
+        self._handle_payment(order_number, total_incl_tax)
         checkout_signals.post_payment.send_robust(sender=self, view=self)
         
-        order = self._place_order(self.basket, order_number)
+        # Everything is ok, we place the order and save the payment details 
+        order = self._place_order(self.basket, order_number, total_incl_tax, total_excl_tax)
         self._save_payment_sources(order)
         self._reset_checkout()
         
@@ -190,13 +199,21 @@ class PaymentDetailsView(checkout_views.CheckoutView):
         generator = order_utils.OrderNumberGenerator()
         return generator.order_number(basket)
 
-    def _handle_payment(self, basket, order_number):
-        u"""Handle any payment processing"""
+    def _handle_payment(self, order_number, total):
+        """
+        Handle any payment processing.  
+        
+        This method is designed to be overridden within your project.  The
+        default is to do nothing.
+        """
         pass
 
     def _save_payment_sources(self, order):
         u"""
         Saves any payment sources used in this order.
+        
+        When the payment sources are created, the order model does not exist and 
+        so they need to have it set before saving.
         """
         for source in self.payment_sources:
             source.order = order
@@ -207,14 +224,18 @@ class PaymentDetailsView(checkout_views.CheckoutView):
         self.co_data.flush()
         checkout_utils.ProgressChecker().all_steps_complete(self.request)
     
-    def _place_order(self, basket, order_number):
+    def _place_order(self, basket, order_number, total_incl_tax, total_excl_tax):
         u"""Writes the order out to the DB"""
-        calc = checkout_calculators.OrderTotalCalculator(self.request)
-        shipping_address = self._get_shipping_address()
+        shipping_address = self._create_shipping_address()
         shipping_method = self._get_shipping_method(basket)
-        order_creator = order_utils.OrderCreator(calc)
-        return order_creator.place_order(self.request.user, basket, 
-                                         shipping_address, shipping_method, order_number)
+        order_creator = order_utils.OrderCreator()
+        return order_creator.place_order(self.request.user, 
+                                         basket, 
+                                         shipping_address, 
+                                         shipping_method, 
+                                         total_incl_tax,
+                                         total_excl_tax,
+                                         order_number)
     
     def _get_shipping_method(self, basket):
         u"""Returns the shipping method object"""
@@ -223,6 +244,15 @@ class PaymentDetailsView(checkout_views.CheckoutView):
         return method
     
     def _get_shipping_address(self):
+        addr_data = self.co_data.new_address_fields()
+        addr_id = self.co_data.user_address_id()
+        if addr_data:
+            addr = order_models.ShippingAddress(**addr_data)
+        elif addr_id:
+            addr = address_models.UserAddress._default_manager.get(pk=addr_id)
+        return addr
+    
+    def _create_shipping_address(self):
         u"""Returns the shipping address"""
         addr_data = self.co_data.new_address_fields()
         addr_id = self.co_data.user_address_id()
