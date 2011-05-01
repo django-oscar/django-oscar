@@ -11,10 +11,10 @@ class Gateway(object):
         self._password = password
 
     def do_request(self, request_xml):
-        # Need to fillin HTTP request here
+        # Need to fill in HTTP request here
         pass
 
-    def _initial_transaction(self, method_name, **kwargs):
+    def _build_request_xml(self, method_name, **kwargs):
         """
         Builds the XML for a 'initial' transaction
         """
@@ -81,6 +81,17 @@ class Gateway(object):
         ele = doc.getElementsByTagName(tag)[0]
         return ele.firstChild.data
 
+    def _build_response_dict(self, response_xml, extra_elements=None):
+        doc = parseString(response_xml)
+        response = {'status': self._get_element_text(doc, 'status'),
+                    'datacash_reference': self._get_element_text(doc, 'datacash_reference'),
+                    'merchant_reference': self._get_element_text(doc, 'merchantreference'),
+                    'reason': self._get_element_text(doc, 'reason')}
+        if extra_elements:
+            for tag, key in extra_elements.items():
+                response[key] = self._get_element_text(doc, tag)
+        return response
+
     def auth(self, **kwargs):
         """
         Performs an 'auth' request, which is to debit the money immediately
@@ -88,37 +99,49 @@ class Gateway(object):
         
         Note that currency should be ISO 4217 Alphabetic format.
         """ 
-        response_xml = self._initial_transaction('auth', **kwargs)
-        doc = parseString(response_xml)
-        response = {'status': self._get_element_text(doc, 'status'),
-                    'datacash_reference': self._get_element_text(doc, 'datacash_reference'),
-                    'merchant_reference': self._get_element_text(doc, 'merchantreference')}
-        return response
-        
+        self._check_kwargs(kwargs, ['amount', 'currency', 'card_number', 'expiry_date', 'merchant_reference'])
+        response_xml = self._build_request_xml('auth', **kwargs)
+        return self._build_response_dict(response_xml, {'authcode': 'auth_code'})
         
     def pre(self, **kwargs):
         """
         Performs an 'pre' request, which is to ring-fence the requested money
         so it can be fulfilled at a later time.
         """ 
-        return self._initial_transaction('pre', **kwargs)
+        self._check_kwargs(kwargs, ['amount', 'currency', 'card_number', 'expiry_date', 'merchant_reference'])
+        response_xml = self._build_request_xml('pre', **kwargs)
+        return self._build_response_dict(response_xml, {'authcode': 'auth_code'})
 
     def refund(self, **kwargs):
-        return self._initial_transaction('refund', **kwargs)
+        self._check_kwargs(kwargs, ['amount', 'currency', 'card_number', 'expiry_date', 'merchant_reference'])
+        response_xml = self._build_request_xml('refund', **kwargs)
+        return self._build_response_dict(response_xml, {'authcode': 'auth_code'})
         
     def erp(self, **kwargs):
-        return self._initial_transaction('erp', **kwargs)
+        self._check_kwargs(kwargs, ['amount', 'currency', 'card_number', 'expiry_date', 'merchant_reference'])
+        response_xml = self._build_request_xml('erp', **kwargs)
+        return self._build_response_dict(response_xml, {'authcode': 'auth_code'})
         
     # "Historic" transaction types    
         
     def cancel(self, txn_reference): 
-        return self._initial_transaction('cancel', txn_reference=txn_reference)
+        response_xml = self._build_request_xml('cancel', txn_reference=txn_reference)
+        return self._build_response_dict(response_xml)
     
     def fulfil(self, **kwargs):
-        return self._initial_transaction('fulfil', **kwargs) 
+        self._check_kwargs(kwargs, ['amount', 'currency', 'txn_reference', 'auth_code'])
+        response_xml = self._build_request_xml('fulfil', **kwargs)
+        return self._build_response_dict(response_xml)
     
     def txn_refund(self, **kwargs):
-        return self._initial_transaction('txn_refund', **kwargs) 
+        self._check_kwargs(kwargs, ['amount', 'currency', 'txn_reference'])
+        response_xml = self._build_request_xml('txn_refund', **kwargs)
+        return self._build_response_dict(response_xml)
+    
+    def _check_kwargs(self, kwargs, required_keys):
+        for key in required_keys:
+            if key not in kwargs:
+                raise RuntimeError('You must provide a "%s" argument' % key)
 
 
 class Adapter(object):
