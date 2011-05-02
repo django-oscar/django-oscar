@@ -115,7 +115,7 @@ class LineView(ModelView):
     
     def get_model(self):
         u"""Get basket lines"""
-        basket = self.factory.get_open_basket(self.request, self.response)
+        basket = self.factory.get_open_basket(self.request)
         return basket.lines.get(line_reference=self.kwargs['line_reference'])
         
     def handle_POST(self, line):

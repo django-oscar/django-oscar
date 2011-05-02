@@ -22,18 +22,20 @@ class Gateway(object):
         # Need to fill in HTTP request here
         response_xml = """<?xml version="1.0" encoding="UTF-8" ?>
 <Response>
-    <CardTxn>
-        <authcode>DECLINED</authcode>
-        <card_scheme>Mastercard</card_scheme>
-        <country>United Kingdom</country>
-    </CardTxn>
-    <datacash_reference>4400200045583767</datacash_reference>
-    <merchantreference>AA004630</merchantreference>
-    <mode>TEST</mode>
-    <reason>DECLINED</reason>
-    <status>7</status>
-<time>1169223906</time>
+<CardTxn>
+<authcode>060642</authcode>
+<card_scheme>Switch</card_scheme>
+<country>United Kingdom</country>
+<issuer>HSBC</issuer>
+</CardTxn>
+<datacash_reference>3000000088888888</datacash_reference>
+<merchantreference>1000001</merchantreference>
+<mode>LIVE</mode>
+<reason>ACCEPTED</reason>
+<status>1</status>
+<time>1071567305</time>
 </Response>
+
 """
 
         # Save response XML

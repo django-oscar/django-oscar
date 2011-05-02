@@ -36,10 +36,10 @@ class PaymentDetailsView(CorePaymentDetailsView):
     template_file = 'checkout/payment_details.html'
     
     def handle_GET(self):
-        if self._is_cheque_payment():
+        if self.is_cheque_payment():
             self.template_file = 'checkout/payment_details_cheque.html'
         else:
-            shipping_addr = self._get_shipping_address()
+            shipping_addr = self.get_shipping_address()
             card_values = {'name': shipping_addr.name()}
             self.context['bankcard_form'] = BankcardForm(initial=card_values)
             addr_values = {'first_name': shipping_addr.first_name,
@@ -48,7 +48,7 @@ class PaymentDetailsView(CorePaymentDetailsView):
         return render(self.request, self.template_file, self.context)
     
     def handle_POST(self):
-        if self._is_cheque_payment():
+        if self.is_cheque_payment():
             return self.submit()
         try:    
             self.bankcard_form = BankcardForm(self.request.POST)
@@ -62,23 +62,23 @@ class PaymentDetailsView(CorePaymentDetailsView):
         self.context['billing_address_form'] = self.billing_addr_form
         return render(self.request, self.template_file, self.context)
 
-    def _handle_payment(self, order_number, total):
-        if self._is_cheque_payment():
-            self._handle_cheque_payment(total)
+    def handle_payment(self, order_number, total):
+        if self.is_cheque_payment():
+            self.handle_cheque_payment(total)
         else:    
-            self._handle_bankcard_payment(order_number, total)
+            self.handle_bankcard_payment(order_number, total)
 
-    def _is_cheque_payment(self):
+    def is_cheque_payment(self):
         payment_method = self.co_data.payment_method()
         return payment_method == 'cheque'
 
-    def _handle_cheque_payment(self):
+    def handle_cheque_payment(self):
         # Nothing to do except create a payment source
         type = SourceType.objects.get(code='cheque')
         source = Source(type=type, allocation=total)
         self.payment_sources.append(source)
 
-    def _handle_bankcard_payment(self, order_number, total):
+    def handle_bankcard_payment(self, order_number, total):
         # Handle payment problems with an exception
         # Make payment submission - handle response from DC
         # - could be an iframe open
@@ -100,17 +100,17 @@ class PaymentDetailsView(CorePaymentDetailsView):
                reference=reference)
         self.payment_sources.append(source)
 
-    def _place_order(self, basket, order_number, total_incl_tax, total_excl_tax):
-        order = super(PaymentDetailsView, self)._place_order(basket, order_number, total_incl_tax, total_excl_tax)
-        if self._is_cheque_payment():
+    def place_order(self, basket, order_number, total_incl_tax, total_excl_tax):
+        order = super(PaymentDetailsView, self).place_order(basket, order_number, total_incl_tax, total_excl_tax)
+        if self.is_cheque_payment():
             # Set order status as on hold
             pass
         return order
     
-    def _create_billing_address(self):
+    def create_billing_address(self):
         return self.billing_addr_form.save()
         
-    def _save_payment_events(self, order):
+    def save_payment_events(self, order):
         event_type,_ = PaymentEventType.objects.get_or_create(code="paid-for")
         event = PaymentEvent.objects.create(order=order, event_type=event_type)
         for line in order.lines.all():
