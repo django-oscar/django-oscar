@@ -186,7 +186,6 @@ class PaymentDetailsView(CheckoutView):
         # Everything is ok, we place the order and save the payment details 
         order = self.place_order(self.basket, order_number, total_incl_tax, total_excl_tax)
         self.save_payment_details(order)
-        
         self.reset_checkout()
         
         logger.info(_("Order #%s submitted successfully" % order_number))

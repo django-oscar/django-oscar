@@ -197,6 +197,7 @@ class BankcardForm(forms.ModelForm):
         kwargs = {
             'card_number': self.cleaned_data['number'],
             'expiry_date': self.cleaned_data['expiry_month'].strftime("%m/%y"),
+            'ccv': self.cleaned_data['ccv_number'],
         }
         if self.cleaned_data['start_month']:
             kwargs['start_date'] = self.cleaned_data['start_month'].strftime("%m/%y")

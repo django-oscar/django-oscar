@@ -14,9 +14,12 @@ ACCEPTED, DECLINED = '1', '7'
 
 class Gateway(object):
 
-    def __init__(self, client, password):
+    def __init__(self, client, password, cv2avs=False):
         self._client = client
         self._password = password
+        
+        # Fraud settings
+        self._cv2avs = cv2avs
 
     def do_request(self, request_xml):
         # Need to fill in HTTP request here
@@ -74,6 +77,10 @@ class Gateway(object):
           
             if 'auth_code' in kwargs:
                 self._create_element(doc, card, 'authcode', kwargs['auth_code'])
+                
+            if self._cv2avs:
+                cv2avs = self._create_element(doc, card, 'Cv2Avs')
+                self._create_element(doc, cv2avs, 'cv2', kwargs['ccv'])
         
         # HistoricTxn
         if 'txn_reference' in kwargs:
@@ -197,7 +204,8 @@ class Facade(object):
                                          expiry_date=bankcard.expiry_date,
                                          amount=amount,
                                          currency='GBP',
-                                         merchant_reference=self.generate_merchant_reference(order_number))
+                                         merchant_reference=self.generate_merchant_reference(order_number),
+                                         ccv=bankcard.ccv)
             
             # Create transaction model irrespective of whether transaction was successful or not
             txn = OrderTransaction.objects.create(order_number=order_number,

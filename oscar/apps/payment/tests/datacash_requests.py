@@ -9,8 +9,8 @@ from oscar.apps.payment.datacash.utils import Gateway
 
 class TransactionMixin(object):
     
-    def init_gateway(self):
-        self.gateway = Gateway(client="DUMMY", password="123456")
+    def init_gateway(self, **kwargs):
+        self.gateway = Gateway(client="DUMMY", password="123456", **kwargs)
         self.transport = mock.Mock()
         self.gateway.do_request = self.transport
         
@@ -223,4 +223,22 @@ class TxnRefundTransactionTests(TestCase, TransactionMixin):
     def test_request_includes_reference(self):
         self.make_request()    
         self.assertXmlTagValue('reference', '12312333444') 
+        
+        
+class Av2CVsTests(TestCase, TransactionMixin):
+    
+    def setUp(self):
+        self.init_gateway(cv2avs=True)
+    
+    def make_request(self, **kwargs):
+        self.gateway.auth(card_number='1000010000000007', 
+                          expiry_date='01/12',
+                          merchant_reference='123123',
+                          currency='GBP',
+                          amount=D('12.99'),
+                          ccv='234')
+        
+    def test_ccv_element_in_request(self):
+        self.make_request()
+        self.assertXmlTagValue('cv2', '234') 
     
