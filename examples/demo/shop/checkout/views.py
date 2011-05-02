@@ -72,9 +72,9 @@ class PaymentDetailsView(CorePaymentDetailsView):
         payment_method = self.co_data.payment_method()
         return payment_method == 'cheque'
 
-    def handle_cheque_payment(self):
+    def handle_cheque_payment(self, total):
         # Nothing to do except create a payment source
-        type = SourceType.objects.get(code='cheque')
+        type,_ = SourceType.objects.get_or_create(name="Cheque")
         source = Source(type=type, allocation=total)
         self.payment_sources.append(source)
 
@@ -103,11 +103,13 @@ class PaymentDetailsView(CorePaymentDetailsView):
     def place_order(self, basket, order_number, total_incl_tax, total_excl_tax):
         order = super(PaymentDetailsView, self).place_order(basket, order_number, total_incl_tax, total_excl_tax)
         if self.is_cheque_payment():
-            # Set order status as on hold
-            pass
+            order.status = "Awaiting cheque"
+            order.save()
         return order
     
     def create_billing_address(self):
+        if not hasattr(self, 'billing_addr_form'):
+            return None
         return self.billing_addr_form.save()
         
     def save_payment_events(self, order):

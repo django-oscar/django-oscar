@@ -79,8 +79,7 @@ class Gateway(object):
                 self._create_element(doc, card, 'authcode', kwargs['auth_code'])
                 
             if self._cv2avs:
-                cv2avs = self._create_element(doc, card, 'Cv2Avs')
-                self._create_element(doc, cv2avs, 'cv2', kwargs['ccv'])
+                self._add_cv2avs_elements(doc, card, kwargs) 
         
         # HistoricTxn
         if 'txn_reference' in kwargs:
@@ -101,6 +100,11 @@ class Gateway(object):
         self._last_request_xml = doc.toxml()
         
         return self.do_request(doc.toxml())
+
+    def _add_cv2avs_elements(self, doc, card, kwargs):
+        cv2avs = self._create_element(doc, card, 'Cv2Avs')
+        if 'ccv' in kwargs:
+            self._create_element(doc, cv2avs, 'cv2', kwargs['ccv'])
 
     def _create_element(self, doc, parent, tag, value=None, attributes=None):
         """
