@@ -2,7 +2,7 @@ from django.core.urlresolvers import resolve
 
 from oscar.core.loading import import_module
 
-shipping_methods = import_module('shipping.repository', ['Repository'])
+import_module('shipping.repository', ['Repository'], locals())
 
 
 class ProgressChecker(object):
@@ -142,8 +142,7 @@ class CheckoutSessionData(object):
         code = self._get('shipping', 'method_code')
         if not code:
             return None
-        repo = shipping_methods.Repository()
-        return repo.find_by_code(code)
+        return Repository().find_by_code(code)
     
     # Payment methods
     

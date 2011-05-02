@@ -3,11 +3,11 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 
 from oscar.core.loading import import_module
-basket_factory = import_module('basket.factory', ['BasketFactory'])
-checkout_calculators = import_module('checkout.calculators', ['OrderTotalCalculator'])
-order_models = import_module('order.models', ['Order', 'ShippingAddress'])
-checkout_utils = import_module('checkout.utils', ['ProgressChecker', 'CheckoutSessionData'])
-address_models = import_module('address.models', ['UserAddress'])
+import_module('basket.factory', ['BasketFactory'], locals())
+import_module('checkout.calculators', ['OrderTotalCalculator'], locals())
+import_module('order.models', ['Order', 'ShippingAddress'], locals())
+import_module('checkout.utils', ['ProgressChecker', 'CheckoutSessionData'], locals())
+import_module('address.models', ['UserAddress'], locals())
 
 def prev_steps_must_be_complete(view_fn):
     u"""
@@ -18,7 +18,7 @@ def prev_steps_must_be_complete(view_fn):
     If this fails, then we redirect to the next uncompleted step.
     """
     def _view_wrapper(self, request, *args, **kwargs):
-        checker = checkout_utils.ProgressChecker()
+        checker = ProgressChecker()
         if not checker.are_previous_steps_complete(request):
             messages.error(request, "You must complete this step of the checkout first")
             url_name = checker.get_next_step(request)
@@ -28,7 +28,7 @@ def prev_steps_must_be_complete(view_fn):
 
 def basket_required(view_fn):
     def _view_wrapper(self, request, *args, **kwargs):
-        basket = basket_factory.BasketFactory().get_open_basket(request)
+        basket = BasketFactory().get_open_basket(request)
         if not basket:
             messages.error(request, "You must add some products to your basket before checking out")
             return HttpResponseRedirect(reverse('oscar-basket'))
@@ -40,17 +40,17 @@ def mark_step_as_complete(request):
     Convenience function for marking a checkout page
     as complete.
     """
-    checkout_utils.ProgressChecker().step_complete(request)
+    ProgressChecker().step_complete(request)
     
 def mark_step_as_complete(request):
     u""" 
     Convenience function for marking a checkout page
     as complete.
     """
-    checkout_utils.ProgressChecker().step_complete(request)
+    ProgressChecker().step_complete(request)
     
 def get_next_step(request):
-    return checkout_utils.ProgressChecker().get_next_step(request)    
+    return ProgressChecker().get_next_step(request)    
     
 
 class CheckoutView(object):
@@ -72,8 +72,8 @@ class CheckoutView(object):
         
         # Set up the instance variables that are needed to place an order
         self.request = request
-        self.co_data = checkout_utils.CheckoutSessionData(request)
-        self.basket = basket_factory.BasketFactory().get_open_basket(self.request)
+        self.co_data = CheckoutSessionData(request)
+        self.basket = BasketFactory().get_open_basket(self.request)
         
         # Set up template context that is available to every view
         method = self.co_data.shipping_method()
@@ -113,19 +113,19 @@ class CheckoutView(object):
         return self.get_success_response()
     
     def get_order_total(self, shipping_method):
-        calc = checkout_calculators.OrderTotalCalculator(self.request)
+        calc = OrderTotalCalculator(self.request)
         return calc.order_total_incl_tax(self.basket, shipping_method)
     
     def get_shipping_address(self):
         # Load address data into a blank address model
         addr_data = self.co_data.new_address_fields()
         if addr_data:
-            return order_models.ShippingAddress(**addr_data)
+            return ShippingAddress(**addr_data)
         addr_id = self.co_data.user_address_id()
         if addr_id:
             try:
-                return address_models.UserAddress._default_manager.get(pk=addr_id)
-            except address_models.UserAddress.DoesNotExist:
+                return UserAddress._default_manager.get(pk=addr_id)
+            except UserAddress.DoesNotExist:
                 # This can happen if you reset all your tables and you still have
                 # session data that refers to addresses that no longer exist
                 pass
