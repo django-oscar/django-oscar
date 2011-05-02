@@ -1,2 +1,2 @@
-class InvalidBankcardException(Exception):
+class TransactionDeclinedException(Exception):
     pass

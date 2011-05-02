@@ -7,7 +7,7 @@ from oscar.apps.payment.forms import BankcardForm, BillingAddressForm
 from oscar.apps.shipping.methods import ShippingMethod
 from oscar.core.loading import import_module
 import_module('payment.models', ['Source', 'SourceType'], locals())
-import_module('payment.exceptions', ['InvalidBankcardException'], locals())
+import_module('payment.exceptions', ['TransactionDeclinedException'], locals())
 import_module('payment.utils', ['Bankcard'], locals())    
 import_module('payment.datacash.utils', ['Gateway', 'Facade'], locals())
 import_module('order.models', ['PaymentEvent', 'PaymentEventType', 'PaymentEventQuantity'], locals())
@@ -55,7 +55,7 @@ class PaymentDetailsView(CorePaymentDetailsView):
             self.billing_addr_form = BillingAddressForm(self.request.POST)
             if self.bankcard_form.is_valid() and self.billing_addr_form.is_valid():
                 return self.submit()
-        except InvalidBankcardException, e:
+        except TransactionDeclinedException, e:
             self.context['payment_error'] = str(e)
         
         self.context['bankcard_form'] = self.bankcard_form
@@ -88,7 +88,7 @@ class PaymentDetailsView(CorePaymentDetailsView):
         # Create bankcard object
         bankcard = self.bankcard_form.get_bankcard_obj()
         
-        # Handle new card submission (get card_details from self.bankcard)
+        # Handle new card submission 
         dc_facade = Facade()
         reference = dc_facade.debit(order_number, total, bankcard)
         

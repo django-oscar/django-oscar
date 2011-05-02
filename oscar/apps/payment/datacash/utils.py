@@ -3,10 +3,14 @@ from xml.dom.minidom import Document, parseString
 
 from django.conf import settings
 from django.db import transaction
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import import_module
 import_module('payment.datacash.models', ['OrderTransaction'], locals())
+import_module('payment.exceptions', ['TransactionDeclinedException'], locals())
 
+# Status codes
+ACCEPTED, DECLINED = '1', '7'
 
 class Gateway(object):
 
@@ -19,18 +23,18 @@ class Gateway(object):
         response_xml = """<?xml version="1.0" encoding="UTF-8" ?>
 <Response>
     <CardTxn>
-        <authcode>060642</authcode>
-        <card_scheme>Switch</card_scheme>
+        <authcode>DECLINED</authcode>
+        <card_scheme>Mastercard</card_scheme>
         <country>United Kingdom</country>
-        <issuer>HSBC</issuer>
     </CardTxn>
-    <datacash_reference>3000000088888888</datacash_reference>
-    <merchantreference>1000001</merchantreference>
-    <mode>LIVE</mode>
-    <reason>ACCEPTED</reason>
-    <status>1</status>
-    <time>1071567305</time>
-</Response>"""
+    <datacash_reference>4400200045583767</datacash_reference>
+    <merchantreference>AA004630</merchantreference>
+    <mode>TEST</mode>
+    <reason>DECLINED</reason>
+    <status>7</status>
+<time>1169223906</time>
+</Response>
+"""
 
         # Save response XML
         self._last_response_xml = response_xml
@@ -185,29 +189,29 @@ class Facade(object):
     def __init__(self):
         self.gateway = Gateway(settings.DATACASH_CLIENT, settings.DATACASH_PASSWORD)
     
-    @transaction.commit_on_success
     def debit(self, order_number, amount, bankcard, billing_address=None):
-        response = self.gateway.auth(card_number=bankcard.card_number,
-                                     expiry_date=bankcard.expiry_date,
-                                     amount=amount,
-                                     currency='GBP',
-                                     merchant_reference=self.generate_merchant_reference(order_number))
+        with transaction.commit_on_success():
+            response = self.gateway.auth(card_number=bankcard.card_number,
+                                         expiry_date=bankcard.expiry_date,
+                                         amount=amount,
+                                         currency='GBP',
+                                         merchant_reference=self.generate_merchant_reference(order_number))
+            
+            # Create transaction model irrespective of whether transaction was successful or not
+            txn = OrderTransaction.objects.create(order_number=order_number,
+                                                  method='auth',
+                                                  datacash_ref=response['datacash_reference'],
+                                                  merchant_ref=response['merchant_reference'],
+                                                  amount=amount,
+                                                  auth_code=response['auth_code'],
+                                                  status=int(response['status']),
+                                                  reason=response['reason'],
+                                                  request_xml=self.gateway.last_request_xml(),
+                                                  response_xml=self.gateway.last_response_xml())
         
-        # Create transaction model irrespective of whether transaction was successful or not
-        txn = OrderTransaction(order_number=order_number,
-                          method='auth',
-                          datacash_ref=response['datacash_reference'],
-                          merchant_ref=response['merchant_reference'],
-                          amount=amount,
-                          auth_code=response['auth_code'],
-                          status=int(response['status']),
-                          reason=response['reason'],
-                          request_xml=self.gateway.last_request_xml(),
-                          response_xml=self.gateway.last_response_xml())
-        txn.save()
-        
-        # Throw exception if appropriate
-        
+        # Test if response is successful
+        if response['status'] == DECLINED:
+            raise TransactionDeclinedException("Your bank declined this transaction, please check your details and try again")
         
         return response['datacash_reference']
         
