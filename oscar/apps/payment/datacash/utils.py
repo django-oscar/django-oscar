@@ -185,28 +185,30 @@ class Facade(object):
     def __init__(self):
         self.gateway = Gateway(settings.DATACASH_CLIENT, settings.DATACASH_PASSWORD)
     
+    @transaction.commit_on_success
     def debit(self, order_number, amount, bankcard, billing_address=None):
-        with transaction.commit_on_success():
-            response = self.gateway.auth(card_number=bankcard.card_number,
-                                         expiry_date=bankcard.expiry_date,
-                                         amount=amount,
-                                         currency='GBP',
-                                         merchant_reference=self.generate_merchant_reference(order_number))
-            
-            # Create transaction model irrespective of whether transaction was successful or not
-            txn = OrderTransaction(order_number=order_number,
-                              method='auth',
-                              datacash_ref=response['datacash_reference'],
-                              merchant_ref=response['merchant_reference'],
-                              amount=amount,
-                              auth_code=response['auth_code'],
-                              status=int(response['status']),
-                              reason=response['reason'],
-                              request_xml=self.gateway.last_request_xml(),
-                              response_xml=self.gateway.last_response_xml())
-            txn.save()
+        response = self.gateway.auth(card_number=bankcard.card_number,
+                                     expiry_date=bankcard.expiry_date,
+                                     amount=amount,
+                                     currency='GBP',
+                                     merchant_reference=self.generate_merchant_reference(order_number))
+        
+        # Create transaction model irrespective of whether transaction was successful or not
+        txn = OrderTransaction(order_number=order_number,
+                          method='auth',
+                          datacash_ref=response['datacash_reference'],
+                          merchant_ref=response['merchant_reference'],
+                          amount=amount,
+                          auth_code=response['auth_code'],
+                          status=int(response['status']),
+                          reason=response['reason'],
+                          request_xml=self.gateway.last_request_xml(),
+                          response_xml=self.gateway.last_response_xml())
+        txn.save()
         
         # Throw exception if appropriate
+        
+        
         return response['datacash_reference']
         
     def generate_merchant_reference(self, order_number):

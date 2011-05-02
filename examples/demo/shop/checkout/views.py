@@ -10,6 +10,7 @@ import_module('payment.models', ['Source', 'SourceType'], locals())
 import_module('payment.exceptions', ['InvalidBankcardException'], locals())
 import_module('payment.utils', ['Bankcard'], locals())    
 import_module('payment.datacash.utils', ['Gateway', 'Facade'], locals())
+import_module('order.models', ['PaymentEvent', 'PaymentEventType', 'PaymentEventQuantity'], locals())
     
 class PaymentMethodView(CorePaymentMethodView):
     template_file = 'checkout/payment_method.html'
@@ -91,16 +92,13 @@ class PaymentDetailsView(CorePaymentDetailsView):
         dc_facade = Facade()
         reference = dc_facade.debit(order_number, total, bankcard)
         
-        # Create payment source
+        # Create payment source (but don't save just yet)
         type,_ = SourceType.objects.get_or_create(name='DataCash', code='datacash')
         source = Source(type=type,
                allocation=total,
                amount_debited=total,
                reference=reference)
         self.payment_sources.append(source)
-        
-        # Create payment event
-        
 
     def _place_order(self, basket, order_number, total_incl_tax, total_excl_tax):
         order = super(PaymentDetailsView, self)._place_order(basket, order_number, total_incl_tax, total_excl_tax)
@@ -108,3 +106,14 @@ class PaymentDetailsView(CorePaymentDetailsView):
             # Set order status as on hold
             pass
         return order
+    
+    def _create_billing_address(self):
+        return self.billing_addr_form.save()
+        
+    def _save_payment_events(self, order):
+        event_type,_ = PaymentEventType.objects.get_or_create(code="paid-for")
+        event = PaymentEvent.objects.create(order=order, event_type=event_type)
+        for line in order.lines.all():
+            line_qty = PaymentEventQuantity.objects.create(event=event, 
+                                                           line=line,
+                                                           quantity=line.quantity)

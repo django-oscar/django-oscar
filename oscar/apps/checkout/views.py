@@ -186,7 +186,8 @@ class PaymentDetailsView(checkout_views.CheckoutView):
         
         # Everything is ok, we place the order and save the payment details 
         order = self._place_order(self.basket, order_number, total_incl_tax, total_excl_tax)
-        self._save_payment_sources(order)
+        self._save_payment_details(order)
+        
         self._reset_checkout()
         
         logger.info(_("Order #%s submitted successfully" % order_number))
@@ -205,6 +206,26 @@ class PaymentDetailsView(checkout_views.CheckoutView):
         
         This method is designed to be overridden within your project.  The
         default is to do nothing.
+        """
+        pass
+
+    def _save_payment_details(self, order):
+        """
+        Saves all payment-related details. This could include a billing 
+        address, payment sources and any order payment events.
+        """
+        self._save_payment_events(order)
+        self._save_payment_sources(order)
+
+    def _create_billing_address(self):
+        """
+        Saves any relevant billing data (eg a billing address).
+        """
+        return None
+    
+    def _save_payment_events(self, order):
+        """
+        Saves any relevant payment events for this order
         """
         pass
 
@@ -228,11 +249,13 @@ class PaymentDetailsView(checkout_views.CheckoutView):
         u"""Writes the order out to the DB"""
         shipping_address = self._create_shipping_address()
         shipping_method = self._get_shipping_method(basket)
+        billing_address = self._create_billing_address()
         order_creator = order_utils.OrderCreator()
         return order_creator.place_order(self.request.user, 
                                          basket, 
                                          shipping_address, 
                                          shipping_method, 
+                                         billing_address,
                                          total_incl_tax,
                                          total_excl_tax,
                                          order_number)

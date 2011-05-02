@@ -11,7 +11,7 @@ class AbstractOrder(models.Model):
     number = models.CharField(_("Order number"), max_length=128, db_index=True)
     # We track the site that each order is placed within
     site = models.ForeignKey('sites.Site')
-    basket = models.ForeignKey('basket.Basket')
+    basket = models.ForeignKey('basket.Basket', null=True, blank=True)
     # Orders can be anonymous so we don't always have a customer ID
     user = models.ForeignKey(User, related_name='orders', null=True, blank=True)
     # Billing address is not always required (eg paying by gift card)
@@ -299,23 +299,7 @@ class AbstractLinePrice(models.Model):
         return u"Line '%s' (quantity %d) price %s" % (self.line, self.quantity, self.price_incl_tax)
    
    
-class AbstractPaymentEvent(models.Model):    
-    u"""
-    An event is something which happens to a line such as
-    payment being taken for 2 items, or 1 item being dispatched.
-    """
-    order = models.ForeignKey('order.Order', related_name='payment_events')
-    lines = models.ManyToManyField('order.Line', through='PaymentEventQuantity')
-    event_type = models.ForeignKey('order.PaymentEventType')
-    date = models.DateTimeField(auto_now_add=True)
-    
-    class Meta:
-        abstract = True
-        verbose_name_plural = _("Payment events")
-        
-    def __unicode__(self):
-        return u"Order #%d, line %s: %d items %s" % (
-            self.line.order.number, self.line.line_id, self.quantity, self.event_type)
+# PAYMENT EVENTS   
 
 
 class AbstractPaymentEventType(models.Model):
@@ -338,6 +322,25 @@ class AbstractPaymentEventType(models.Model):
         
     def __unicode__(self):
         return self.name
+   
+   
+class AbstractPaymentEvent(models.Model):    
+    u"""
+    An event is something which happens to a line such as
+    payment being taken for 2 items, or 1 item being dispatched.
+    """
+    order = models.ForeignKey('order.Order', related_name='payment_events')
+    lines = models.ManyToManyField('order.Line', through='PaymentEventQuantity')
+    event_type = models.ForeignKey('order.PaymentEventType')
+    date = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        abstract = True
+        verbose_name_plural = _("Payment events")
+        
+    def __unicode__(self):
+        return u"Order #%d, line %s: %d items %s" % (
+            self.line.order.number, self.line.line_id, self.quantity, self.event_type)
 
 
 class PaymentEventQuantity(models.Model):
