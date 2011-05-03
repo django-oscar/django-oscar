@@ -218,6 +218,6 @@ HAYSTACK_INCLUDE_SPELLING = True
 
 # Local overrides
 try:
-    from local_settings import *
+    from settings_local import *
 except ImportError:
     pass
