@@ -46,6 +46,18 @@ Now create a `local_settings.py` file which contains details of your local datab
 that you want to use for development.  Be sure to create two databases: one for development
 and one for running the unit tests (prefix `test_` on the normal db name).
 
+Install sample data
+-------------------
+
+Oscar ships with sample data for a simple bookshop.  Load the product data and images using the
+following commands::
+
+    cd examples/vanilla
+    ./manage.py import_catalogue ../sample-data/books.csv
+    ./manage.py import_images ../sample-data/book-images/
+    ./manage.py update_index
+
+
 Developing
 ----------
 
