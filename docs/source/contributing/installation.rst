@@ -23,7 +23,7 @@ Do the following from your workspace folder::
     mkvirtualenv --no-site-packages oscar
     workon oscar
     
-After checking out your fork, install the latest version of Django into your virtualenv (currenty a beta of 1.3)::
+After checking out your fork, install the latest version of Django into your virtualenv (currently 1.3)::
 
     pip install django
 
