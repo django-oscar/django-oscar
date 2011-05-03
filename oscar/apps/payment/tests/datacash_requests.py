@@ -54,7 +54,7 @@ class TransactionMixin(object):
             tag = doc.getElementsByTagName(tag_name)[0]
             self.assertEquals(value, tag.attributes[attribute].value)
         except IndexError:
-            self.fail("Tag '%s' not found\n%s" % (tagName, request_xml))
+            self.fail("Tag '%s' not found\n%s" % (tag_name, request_xml))
     
     def test_request_includes_credentials(self):
         self.make_request()
@@ -87,10 +87,6 @@ class InitialTransactionMixin(TransactionMixin):
     def test_request_can_include_issue_number(self):
         self.make_request(issue_number='03')    
         self.assertXmlTagValue('issuenumber', '03')    
-        
-    def test_request_can_include_authcode(self):
-        self.make_request(auth_code='334455')    
-        self.assertXmlTagValue('authcode', '334455')
 
 
 class AuthTransactionTests(TestCase, InitialTransactionMixin):

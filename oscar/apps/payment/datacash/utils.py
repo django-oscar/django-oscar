@@ -1,5 +1,6 @@
 import datetime
 from xml.dom.minidom import Document, parseString
+import httplib, urllib
 
 from django.conf import settings
 from django.db import transaction
@@ -7,40 +8,34 @@ from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import import_module
 import_module('payment.datacash.models', ['OrderTransaction'], locals())
-import_module('payment.exceptions', ['TransactionDeclinedException'], locals())
+import_module('payment.exceptions', ['TransactionDeclinedException', 'GatewayException'], locals())
 
 # Status codes
 ACCEPTED, DECLINED = '1', '7'
 
+
 class Gateway(object):
 
-    def __init__(self, client, password, cv2avs=False):
+    def __init__(self, client, password, host, cv2avs=False):
         self._client = client
         self._password = password
+        self._host = host
         
         # Fraud settings
         self._cv2avs = cv2avs
 
     def do_request(self, request_xml):
         # Need to fill in HTTP request here
-        response_xml = """<?xml version="1.0" encoding="UTF-8" ?>
-<Response>
-<CardTxn>
-<authcode>060642</authcode>
-<card_scheme>Switch</card_scheme>
-<country>United Kingdom</country>
-<issuer>HSBC</issuer>
-</CardTxn>
-<datacash_reference>3000000088888888</datacash_reference>
-<merchantreference>1000001</merchantreference>
-<mode>LIVE</mode>
-<reason>ACCEPTED</reason>
-<status>1</status>
-<time>1071567305</time>
-</Response>
-
-"""
-
+        conn = httplib.HTTPSConnection(self._host, 443, timeout=30)
+        headers = {"Content-type": "application/xml",
+                   "Accept": ""}
+        conn.request("POST", "/Transaction", request_xml, headers)
+        response = conn.getresponse()
+        response_xml = response.read()
+        if response.status != httplib.OK:
+            raise GatewayException("Unable to communicate with payment gateway (code: %s, response: %s)" % (response.status, response_xml))
+        conn.close()
+        
         # Save response XML
         self._last_response_xml = response_xml
         return response_xml
@@ -120,12 +115,15 @@ class Gateway(object):
         return ele
     
     def _get_element_text(self, doc, tag):
-        ele = doc.getElementsByTagName(tag)[0]
+        try:
+            ele = doc.getElementsByTagName(tag)[0]
+        except IndexError:
+            return None
         return ele.firstChild.data
 
     def _build_response_dict(self, response_xml, extra_elements=None):
         doc = parseString(response_xml)
-        response = {'status': self._get_element_text(doc, 'status'),
+        response = {'status': int(self._get_element_text(doc, 'status')),
                     'datacash_reference': self._get_element_text(doc, 'datacash_reference'),
                     'merchant_reference': self._get_element_text(doc, 'merchantreference'),
                     'reason': self._get_element_text(doc, 'reason')}
@@ -200,7 +198,7 @@ class Facade(object):
     """
     
     def __init__(self):
-        self.gateway = Gateway(settings.DATACASH_CLIENT, settings.DATACASH_PASSWORD)
+        self.gateway = Gateway(settings.DATACASH_CLIENT, settings.DATACASH_PASSWORD, settings.DATACASH_HOST)
     
     def debit(self, order_number, amount, bankcard, billing_address=None):
         with transaction.commit_on_success():

@@ -1,7 +1,6 @@
-from decimal import Decimal
+import re
 
 from django.db import models
-from django.utils.translation import ugettext as _
 
 
 class AbstractOrderTransaction(models.Model):
@@ -29,3 +28,9 @@ class AbstractOrderTransaction(models.Model):
     
     class Meta:
         abstract = True
+        
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            reg_ex = re.compile(r'\d{12}')
+            self.request_xml = reg_ex.sub('XXXXXXXXXXXX', self.request_xml)
+        super(AbstractOrderTransaction, self).save(*args, **kwargs)

@@ -55,19 +55,6 @@ class AuthResponseHandlingTests(TestCase):
         self.assertEquals('060642', response['auth_code'])
         self.assertEquals('ACCEPTED', response['reason'])
         
-    def test_success_pre_response(self):
-        self.gateway.do_request.return_value = self.success_response_xml
-        response = self.gateway.refund(card_number='1000010000000007', 
-                                     expiry_date='01/12',
-                                     merchant_reference='1000001',
-                                     currency='GBP',
-                                     amount=D('12.99'))
-        self.assertEquals('1', response['status'])
-        self.assertEquals('3000000088888888', response['datacash_reference'])
-        self.assertEquals('1000001', response['merchant_reference'])
-        self.assertEquals('060642', response['auth_code'])
-        self.assertEquals('ACCEPTED', response['reason'])
-        
     def test_declined_auth_response(self):
         response_xml = """<?xml version="1.0" encoding="UTF-8" ?>
 <Response>

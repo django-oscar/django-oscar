@@ -12,6 +12,7 @@ import_module('payment.utils', ['Bankcard'], locals())
 import_module('payment.datacash.utils', ['Gateway', 'Facade'], locals())
 import_module('order.models', ['PaymentEvent', 'PaymentEventType', 'PaymentEventQuantity'], locals())
     
+    
 class PaymentMethodView(CorePaymentMethodView):
     template_file = 'checkout/payment_method.html'
     
