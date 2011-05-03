@@ -1,9 +1,9 @@
 from django.contrib.sites.models import Site
 
 from oscar.core.loading import import_module
-order_models = import_module('order.models', ['ShippingAddress', 'Order', 'Line', 
-                                              'LinePrice', 'LineAttribute', 'OrderDiscount'])
-order_signals = import_module('order.signals', ['order_placed'])
+import_module('order.models', ['ShippingAddress', 'Order', 'Line', 
+                                              'LinePrice', 'LineAttribute', 'OrderDiscount'], locals())
+import_module('order.signals', ['order_placed'], locals())
 
 class OrderNumberGenerator(object):
     u"""
@@ -65,7 +65,7 @@ class OrderCreator(object):
                       'shipping_method': shipping_method.name}
         if user.is_authenticated():
             order_data['user_id'] = user.id
-        order = order_models.Order(**order_data)
+        order = Order(**order_data)
         order.save()
         return order
     
@@ -97,7 +97,7 @@ class OrderCreator(object):
         u"""Creates the batch line price models"""
         breakdown = basket_line.get_price_breakdown()
         for price_incl_tax, price_excl_tax, quantity in breakdown:
-            order_models.LinePrice._default_manager.create(order=order,
+            LinePrice._default_manager.create(order=order,
                                                   line=order_line, 
                                                   quantity=quantity, 
                                                   price_incl_tax=price_incl_tax,
@@ -106,7 +106,7 @@ class OrderCreator(object):
     def _create_line_attributes(self, order, order_line, basket_line):
         u"""Creates the batch line attributes."""
         for attr in basket_line.attributes.all():
-            order_models.LineAttribute._default_manager.create(line=order_line,
+            LineAttribute._default_manager.create(line=order_line,
                                                                option=attr.option, 
                                                                type=attr.option.code,
                                                                value=attr.value)
@@ -115,7 +115,7 @@ class OrderCreator(object):
         u"""
         Creates an order discount model for each discount attached to the basket.
         """
-        order_discount = order_models.OrderDiscount(order=order, offer=discount['offer'], amount=discount['discount'])
+        order_discount = OrderDiscount(order=order, offer=discount['offer'], amount=discount['discount'])
         if discount['voucher']:
             order_discount.voucher = discount['voucher']
             order_discount.voucher_code = discount['voucher'].code

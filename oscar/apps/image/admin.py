@@ -1,5 +1,6 @@
 from django.contrib import admin
 
-from oscar.apps.image.models import *
+from oscar.core.loading import import_module
+import_module('image.models', ['Image'], locals())
 
 admin.site.register(Image)

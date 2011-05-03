@@ -1,11 +1,11 @@
 import csv
 
 from oscar.core.loading import import_module
-report_classes = import_module('reports.reports', ['ReportGenerator'])
-offer_models = import_module('offer.models', ['Voucher', 'ConditionalOffer'])
+import_module('reports.reports', ['ReportGenerator'], locals())
+import_module('offer.models', ['Voucher', 'ConditionalOffer'], locals())
 
 
-class VoucherReportGenerator(report_classes.ReportGenerator):
+class VoucherReportGenerator(ReportGenerator):
     
     filename_template = 'voucher-performance.csv'
     code = 'vouchers'
@@ -20,7 +20,7 @@ class VoucherReportGenerator(report_classes.ReportGenerator):
                      ]
         writer.writerow(header_row)
         
-        vouchers = offer_models.Voucher._default_manager.all()
+        vouchers = Voucher._default_manager.all()
         for voucher in vouchers:
             row = [voucher.code, voucher.num_basket_additions, voucher.num_orders, voucher.total_discount]
             writer.writerow(row)
@@ -29,7 +29,7 @@ class VoucherReportGenerator(report_classes.ReportGenerator):
         return self.filename_template
     
     
-class OfferReportGenerator(report_classes.ReportGenerator):
+class OfferReportGenerator(ReportGenerator):
     
     filename_template = 'conditional-offer-performance.csv'
     code = 'conditional-offers'
@@ -42,7 +42,7 @@ class OfferReportGenerator(report_classes.ReportGenerator):
                      ]
         writer.writerow(header_row)
         
-        for offer in offer_models.ConditionalOffer._default_manager.all():
+        for offer in ConditionalOffer._default_manager.all():
             row = [offer, offer.total_discount]
             writer.writerow(row)
 

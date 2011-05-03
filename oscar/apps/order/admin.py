@@ -1,10 +1,10 @@
 from django.contrib import admin
 
 from oscar.core.loading import import_module
-models = import_module('order.models', ['Order', 'OrderNote', 'CommunicationEvent', 'CommunicationEventType',
+import_module('order.models', ['Order', 'OrderNote', 'CommunicationEvent', 'CommunicationEventType',
                                         'BillingAddress', 'ShippingAddress', 'Line',
                                         'LinePrice', 'ShippingEvent', 'ShippingEventType', 
-                                        'PaymentEvent', 'PaymentEventType', 'LineAttribute', 'OrderDiscount'])
+                                        'PaymentEvent', 'PaymentEventType', 'LineAttribute', 'OrderDiscount'], locals())
 
 class OrderAdmin(admin.ModelAdmin):
     list_display = ('number', 'total_incl_tax', 'site', 'user', 'billing_address', 'date_placed')
@@ -38,14 +38,14 @@ class OrderDiscountAdmin(admin.ModelAdmin):
     readonly_fields = ('order' ,'offer', 'voucher', 'voucher_code', 'amount')
     list_display = ('order' ,'offer', 'voucher', 'voucher_code', 'amount')
 
-admin.site.register(models.Order, OrderAdmin)
-admin.site.register(models.ShippingAddress)
-admin.site.register(models.Line, LineAdmin)
-admin.site.register(models.LinePrice, LinePriceAdmin)
-admin.site.register(models.ShippingEvent)
-admin.site.register(models.ShippingEventType, ShippingEventTypeAdmin)
-admin.site.register(models.PaymentEvent)
-admin.site.register(models.PaymentEventType, PaymentEventTypeAdmin)
-admin.site.register(models.LineAttribute)
-admin.site.register(models.OrderDiscount, OrderDiscountAdmin)
+admin.site.register(Order, OrderAdmin)
+admin.site.register(ShippingAddress)
+admin.site.register(Line, LineAdmin)
+admin.site.register(LinePrice, LinePriceAdmin)
+admin.site.register(ShippingEvent)
+admin.site.register(ShippingEventType, ShippingEventTypeAdmin)
+admin.site.register(PaymentEvent)
+admin.site.register(PaymentEventType, PaymentEventTypeAdmin)
+admin.site.register(LineAttribute)
+admin.site.register(OrderDiscount, OrderDiscountAdmin)
 
