@@ -1,18 +1,18 @@
 import csv
 
 from oscar.core.loading import import_module
-report_classes = import_module('reports.reports', ['ReportGenerator'])
-order_models = import_module('order.models', ['Order'])
+import_module('reports.reports', ['ReportGenerator'], locals())
+import_module('order.models', ['Order'], locals())
 
 
-class OrderReportGenerator(report_classes.ReportGenerator):
+class OrderReportGenerator(ReportGenerator):
     
     filename_template = 'orders-%s-to-%s.csv'
     code = 'order_report'
     description = "Orders placed"
     
     def generate(self, response):
-        orders = order_models.Order._default_manager.filter(
+        orders = Order._default_manager.filter(
             date_placed__gte=self.start_date
         ).filter(date_placed__lt=self.end_date)
         

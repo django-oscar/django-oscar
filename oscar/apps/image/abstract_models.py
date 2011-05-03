@@ -6,10 +6,7 @@ from django.db import models
 from django.utils.translation import ugettext as _
 from django.conf import settings
 
-try:
-    FOLDER = settings.OSCAR_IMAGE_FOLDER
-except AttributeError: 
-    FOLDER = 'images/products/%Y/%m/'
+FOLDER = settings.OSCAR_IMAGE_FOLDER
 
 class AbstractImage(models.Model):
     u"""An image of a product"""

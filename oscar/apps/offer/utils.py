@@ -2,7 +2,7 @@ from decimal import Decimal
 from itertools import chain
 
 from oscar.core.loading import import_module
-offer_models = import_module('offer.models', ['ConditionalOffer'])
+import_module('offer.models', ['ConditionalOffer'], locals())
 
 
 class Applicator(object):
@@ -57,7 +57,7 @@ class Applicator(object):
         u"""
         Returns site offers that are available to all users
         """
-        return offer_models.ConditionalOffer.active.all()
+        return ConditionalOffer.active.all()
     
     def get_basket_offers(self, basket, user):
         u"""

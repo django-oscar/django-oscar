@@ -6,6 +6,7 @@ from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
 from django.db.models import Sum
 
+
 class AbstractOrder(models.Model):
     u"""An order"""
     number = models.CharField(_("Order number"), max_length=128, db_index=True)
