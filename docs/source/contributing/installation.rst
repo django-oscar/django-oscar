@@ -10,7 +10,7 @@ Set up `virtualenv` if you haven't already done so::
 
 Note: Fedora (and possibly other Red Hat based distros) installs virtualenvwrapper.sh in /usr/bin path, so the last line above should read::
 
-    echo "source /usr/bin/virtualenvwrapper.sh" >> ~/.basrc
+    echo "source /usr/bin/virtualenvwrapper.sh" >> ~/.bashrc
 
 Reload bash with the following command::
 
