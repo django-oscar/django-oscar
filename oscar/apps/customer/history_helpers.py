@@ -4,7 +4,7 @@ from django.dispatch import receiver
 from django.conf import settings
 
 from oscar.core.loading import import_module
-product_signals = import_module('product.signals', ['product_viewed'])
+import_module('product.signals', ['product_viewed'], locals())
 
 MAX_PRODUCTS = settings.OSCAR_RECENTLY_VIEWED_PRODUCTS
 
@@ -50,7 +50,7 @@ def _get_json_string_from_list(list):
 
 # Receivers
 
-@receiver(product_signals.product_viewed)
+@receiver(product_viewed)
 def receive_product_view(sender, product, user, request, response, **kwargs):
     u"""
     Receiver to handle viewing single product pages
