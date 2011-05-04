@@ -26,7 +26,7 @@ class AuthResponseHandlingTests(TestCase):
 </Response>"""
     
     def setUp(self):
-        self.gateway = Gateway(client="DUMMY", password="123456")
+        self.gateway = Gateway(client="DUMMY", password="123456", host="dummyhost.com",)
         self.gateway.do_request = mock.Mock()
     
     def test_success_auth_response(self):
@@ -36,7 +36,7 @@ class AuthResponseHandlingTests(TestCase):
                                      merchant_reference='1000001',
                                      currency='GBP',
                                      amount=D('12.99'))
-        self.assertEquals('1', response['status'])
+        self.assertEquals(1, response['status'])
         self.assertEquals('3000000088888888', response['datacash_reference'])
         self.assertEquals('1000001', response['merchant_reference'])
         self.assertEquals('060642', response['auth_code'])
@@ -49,7 +49,7 @@ class AuthResponseHandlingTests(TestCase):
                                      merchant_reference='1000001',
                                      currency='GBP',
                                      amount=D('12.99'))
-        self.assertEquals('1', response['status'])
+        self.assertEquals(1, response['status'])
         self.assertEquals('3000000088888888', response['datacash_reference'])
         self.assertEquals('1000001', response['merchant_reference'])
         self.assertEquals('060642', response['auth_code'])
@@ -76,7 +76,7 @@ class AuthResponseHandlingTests(TestCase):
                                      merchant_reference='1000001',
                                      currency='GBP',
                                      amount=D('12.99'))
-        self.assertEquals('7', response['status'])
+        self.assertEquals(7, response['status'])
         self.assertEquals('4400200045583767', response['datacash_reference'])
         self.assertEquals('AA004630', response['merchant_reference'])
         self.assertEquals('DECLINED', response['auth_code'])
@@ -94,7 +94,7 @@ class AuthResponseHandlingTests(TestCase):
 </Response>"""
         self.gateway.do_request.return_value = response_xml
         response = self.gateway.cancel(txn_reference='4900200000000001')
-        self.assertEquals('1', response['status'])
+        self.assertEquals(1, response['status'])
         self.assertEquals('4900200000000001', response['datacash_reference'])
         self.assertEquals('4900200000000001', response['merchant_reference'])
         self.assertEquals('CANCELLED OK', response['reason'])
@@ -116,7 +116,7 @@ class AuthResponseHandlingTests(TestCase):
                                      currency='GBP',
                                      amount=D('12.99'),
                                      auth_code='asdf')
-        self.assertEquals('1', response['status'])
+        self.assertEquals(1, response['status'])
         self.assertEquals('3900200000000001', response['datacash_reference'])
         self.assertEquals('3900200000000001', response['merchant_reference'])
         self.assertEquals('FULFILLED OK', response['reason'])

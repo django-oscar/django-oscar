@@ -10,7 +10,7 @@ from oscar.apps.payment.datacash.utils import Gateway
 class TransactionMixin(object):
     
     def init_gateway(self, **kwargs):
-        self.gateway = Gateway(client="DUMMY", password="123456", **kwargs)
+        self.gateway = Gateway(client="DUMMY", password="123456", host="dummyhost.com", **kwargs)
         self.transport = mock.Mock()
         self.gateway.do_request = self.transport
         
