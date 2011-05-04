@@ -9,9 +9,21 @@ class AbstractPartner(models.Model):
     u"""Fulfillment partner"""
     name = models.CharField(max_length=128, unique=True)
     
+    # A partner can have users assigned to it.  These can be used
+    # to provide authentication for webservices etc.
+    users = models.ManyToManyField('auth.User', releatd_name="partners", null=True)
+    
     class Meta:
         verbose_name_plural = 'Fulfillment partners'
         abstract = True
+        permissions = (
+            ("can_edit_stock_records", "Can edit stock records"),
+            ("can_view_stock_records", "Can view stock records"),
+            ("can_edit_product_range", "Can edit product range"),
+            ("can_view_product_range", "Can view product range"),
+            ("can_edit_order_lines", "Can edit order lines"),
+            ("can_view_order_lines", "Can view order lines"),
+        )
         
     def __unicode__(self):
         return self.name
