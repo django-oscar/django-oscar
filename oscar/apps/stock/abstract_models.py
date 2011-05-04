@@ -1,10 +1,8 @@
-import datetime
-
 from django.conf import settings
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.apps.stock.wrappers import get_partner_wrapper, DefaultWrapper
+from oscar.apps.stock.wrappers import get_partner_wrapper
 
 
 class AbstractPartner(models.Model):
