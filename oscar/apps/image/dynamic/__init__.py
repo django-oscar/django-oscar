@@ -1,18 +1,35 @@
 import sys, os, math, datetime
-import Image, ImageEnhance, ImageOps, ImageChops
+import Image
 import cStringIO
 from wsgiref.util import request_uri, application_uri
+
+from oscar.apps.image.dynamic.mods import AutotrimMod, CropMod, ResizeMod
+from oscar.apps.image.dynamic.cache import NullCache, DiskCache
 
 try:
     import cStringIO as StringIO
 except:
     import StringIO
 
+class ResizerConfigurationException(Exception ):
+    pass
+
 class ResizerSyntaxException(Exception):
     pass
 
 class ResizerFormatException(Exception):
     pass
+
+def get_class( kls ):
+    try:
+        parts = kls.split('.')
+        module = ".".join(parts[:-1])
+        m = __import__( module )
+        for comp in parts[1:]:
+            m = getattr(m, comp)            
+        return m
+    except (ImportError, AttributeError), e:
+        raise ResizerConfigurationException('Error importing class "%s"' % kls)
 
 def error404(path, start_response):
     """ Returns an error 404 with text giving the requested URL. """
@@ -33,147 +50,6 @@ def error500(path, e, start_response):
     start_response(status, response_headers)
 
     return [output]
-
-class BaseModification(object):
-    
-    def __init__(self,image,params):
-        self._params = params
-        self._image = image
-    
-    def apply(self):
-        pass
-
-class AutotrimMod(BaseModification):
-    def apply(self):
-        param_keys = self._params.keys()
-        
-        if ('width' in param_keys or 'height' in param_keys) and not 'crop' in param_keys:
-            bg = Image.new(self._image.mode, self._image.size, (255,255,255,255))
-            diff = ImageChops.difference(self._image, bg)
-            bbox = diff.getbbox()
-
-            return self._image.crop(bbox)
-        return self._image
-                    
-class CropMod(BaseModification):
-    def apply(self):
-        if 'crop' in self._params.keys():
-            crop = self._params['crop']
-            bounds = tuple(int(x) for x in crop.split(','))
-            return self._image.crop(bounds)
-        return self._image
-
-class ResizeMod(BaseModification):
-    def apply(self):
-        param_keys = self._params.keys()
-        
-        if 'width' in param_keys or 'height' in param_keys:
-            w = self._params.get('width',None)
-            h = self._params.get('height',None)
-            
-            target_w = float(w) if w else None
-            target_h = float(h) if h else None
-            
-            source_w, source_h = [float(v) for v in self._image.size]
-            
-            scale = 1.0
-            
-            if target_w:
-                temp_scale = target_w / source_w
-                if temp_scale < scale:
-                    scale = temp_scale
-            if target_h:
-                temp_scale = target_h / source_h
-                if temp_scale < scale:
-                    scale = temp_scale
-                    
-            if scale < 1.0:
-                new_size = (int(round(source_w * scale)),
-                            int(round(source_h * scale)))
-                self._image = self._image.resize(new_size,Image.ANTIALIAS)
-            
-            new_w = int(target_w if target_w else self._image.size[0])
-            new_h = int(target_h if target_h else self._image.size[1])
-            
-            bg = Image.new(self._image.mode, (new_w,new_h), (255,255,255,255))
-            
-            left = int(math.floor(float(new_w - self._image.size[0])/2))
-            top = int(math.floor(float(new_h-self._image.size[1])/2))
-            
-            bg.paste(self._image, (left, top))
-                
-            return bg
-        return self._image
-    
-class BaseCache(object):
-    
-    def __init__(self,path,config):
-        self._path = path
-        self._config = config
-    
-    def check(self, path):
-        return False
-    
-    def write(self, data):
-        pass
-    
-    def read(self):
-        pass
-
-class DiskCache(BaseCache):
-    
-    def _create_folders(self):
-        """
-        Create the disk cache path so that the cached image can be stored in the
-        same hierarchy as the original images.
-        """
-        paths = self._path.split(os.path.sep)
-        paths.pop() # Remove file from path
-        path = os.path.join(self._config['cache_root'],*paths)
-        
-        if not os.path.isdir(path):
-            os.makedirs(path)
-                
-    def _cache_path(self):
-        return os.path.join(self._config['cache_root'],self._path)
-                
-    def check(self,path):
-        """
-        Checks the disk cache for an already processed image. If it exists then
-        we'll check it's timestamp against the original image to make sure it's
-        newer (and therefore valid). Also creates the folder hierarchy in the cache
-        for the cached image if it doesn't find it there itself.
-        """        
-        self._create_folders()
-
-        cache = self._cache_path()
-        
-        original_time = os.path.getmtime(path)
-
-        if os.path.exists(cache):
-            cache_time = os.path.getmtime(cache)
-        else:
-            # Cached image does not exist
-            return False
-
-        if original_time > cache_time:
-            # Cached image is out of date
-            return False
-        else:
-            return True
-                
-    def write(self, data):        
-        path = self._cache_path()
-        f = open(path, 'w')
-        f.write(data)
-        f.close()
-    
-    def read(self):
-        f = open(self._cache_path(), "r")
-        data = f.read()
-        f.close()
-
-        return data
 
 class ImageModifier(object):
     """
@@ -206,6 +82,14 @@ class ImageModifier(object):
     quality = 80
     
     def __init__(self, url, config):
+        
+        if config.get('installed_mods'):
+            mod_overrides = []
+            
+            for v in config['installed_mods']:
+                mod_overrides.append(get_class(v))
+            self.installed_modifications = tuple(mod_overrides)        
+        
         self._url = url
         self._image_root = config['asset_root']
         self._process_path()
@@ -255,14 +139,17 @@ class ImageModifier(object):
     def generate_image(self):
         source = Image.open(self.source_path())
         
-        # Iterate over the installed modifications and apply them to the image
-        for mod in self.installed_modifications:
-            source = mod(source,self._params).apply()
-            
         if (self._params['type'] == 'png'):
             source = source.convert("RGBA")
         else:
-            source = source.convert("RGB")
+            source = source.convert("RGB")        
+
+        # Iterate over the installed modifications and apply them to the image
+        for mod in self.installed_modifications:
+            
+            print mod(source,self._params)
+            
+            source = mod(source,self._params).apply()
 
         output = StringIO.StringIO()
         
@@ -309,6 +196,8 @@ class BaseImageHandler(object):
             return error404(path, start_response)
         path = path[1:]
 
+        if config.get('cache_backend'):
+            self.cache = get_class(config['cache_backend'])
         try: 
             c = self.cache(path,config)
             m = self.modifier(path,config)
@@ -330,7 +219,9 @@ class DjangoImageHandler(BaseImageHandler):
         
         environ = request.META.copy()
 
-        environ['MEDIA_CONFIG'] = settings.DYNAMIC_MEDIA_CONFIG
+        config = settings.DYNAMIC_MEDIA_CONFIG
+
+        environ['MEDIA_CONFIG'] = config
         environ['PATH_INFO'] = environ['PATH_INFO'][len(settings.DYNAMIC_URL_PREFIX)+1:]
 
         django_response = HttpResponse()
