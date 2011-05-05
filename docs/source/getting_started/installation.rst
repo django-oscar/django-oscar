@@ -51,11 +51,9 @@ Configure ``settings.py``
 -------------------------
 
 * Add ``'django.middleware.transaction.TransactionMiddleware'`` to your ``MIDDLEWARE_CLASSES`` tuple, making 
-  sure it comes BEFORE ``'django.contrib.auth.middleware.AuthenticationMiddleware'``.
+  sure it comes AFTER ``'django.contrib.auth.middleware.AuthenticationMiddleware'``.
   
-* Uncomment ``django.contrib.admin`` from ``INSTALLED_APPS``.
-
-Add the following to your `INSTALLED_APPS`::
+* Add the following to your `INSTALLED_APPS`::
 
     'oscar',
     'oscar.order',
@@ -71,6 +69,23 @@ Add the following to your `INSTALLED_APPS`::
     'oscar.shipping',
     'oscar.customer',
     'oscar.search',
+    
+* Add these to ``TEMPLATE_CONTECT_PROCESSORS``::
+
+    'oscar.apps.search.context_processors.search_form',
+    'oscar.apps.promotions.context_processors.promotions',
+    'oscar.apps.promotions.context_processors.merchandising_blocks',    
+    
+* Import default settings::
+
+    from oscar.defaults import *
+    
+* If using Solr, configure it::
+
+    HAYSTACK_SITECONF = 'oscar.search_sites'
+    HAYSTACK_SEARCH_ENGINE = 'solr'
+    HAYSTACK_SOLR_URL = 'http://127.0.0.1:8080/solr'
+    HAYSTACK_INCLUDE_SPELLING = True
     
 Now fill in the normal settings (not related to django-oscar) within ``settings.py`` - eg ``DATABASES``, ``TIME_ZONE`` etc    
 
