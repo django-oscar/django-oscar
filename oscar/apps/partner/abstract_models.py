@@ -2,7 +2,7 @@ from django.conf import settings
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.apps.stock.wrappers import get_partner_wrapper
+from oscar.apps.partner.wrappers import get_partner_wrapper
 
 
 class AbstractPartner(models.Model):
@@ -38,7 +38,7 @@ class AbstractStockRecord(models.Model):
     fields such as lead_time, report_code, min_quantity.
     """
     product = models.OneToOneField('product.Item')
-    partner = models.ForeignKey('stock.Partner')
+    partner = models.ForeignKey('partner.Partner')
     partner_sku = models.CharField(_("Partner SKU"), max_length=128, blank=True)
     
     # Price info:

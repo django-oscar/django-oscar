@@ -1,4 +1,5 @@
-from oscar.apps.stock.abstract_models import *
+from oscar.apps.partner.abstract_models import *
+
 
 class Partner(AbstractPartner):
     pass

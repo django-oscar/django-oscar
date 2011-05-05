@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 
 from oscar.apps.product.models import Item, ItemClass
-from oscar.apps.stock.models import Partner, StockRecord
+from oscar.apps.partner.models import Partner, StockRecord
 
 
 class ItemTests(unittest.TestCase):

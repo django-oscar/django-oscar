@@ -39,10 +39,12 @@
         "model": "order.line", 
         "fields": {
 			"partner": 1,
+			"partner_name": "test partner",
+			"partner_sku": "123",
             "partner_line_notes": null, 
+			"title": "test",
             "product": 8, 
             "line_price_excl_tax": "69.90", 
-            "partner_sku": null, 
             "line_price_incl_tax": "69.90", 
             "line_price_before_discounts_incl_tax": "69.90", 
             "line_price_before_discounts_excl_tax": "69.90", 
@@ -55,10 +57,12 @@
         "model": "order.line", 
         "fields": {
 			"partner": 1,
+			"partner_name": "test partner",
+			"partner_sku": "1234",
             "partner_line_notes": null, 
+			"title": "test",
             "product": 9, 
             "line_price_excl_tax": "68.80", 
-            "partner_sku": null, 
             "line_price_incl_tax": "68.80", 
             "line_price_before_discounts_incl_tax": "68.80", 
             "line_price_before_discounts_excl_tax": "68.80", 
@@ -358,14 +362,14 @@
     }, 
     {
         "pk": 1, 
-        "model": "stock.partner", 
+        "model": "partner.partner", 
         "fields": {
             "name": "Prolog"
         }
     }, 
     {
         "pk": 1, 
-        "model": "stock.stockrecord", 
+        "model": "partner.stockrecord", 
         "fields": {
             "price_currency": "GBP", 
             "product": 1, 
@@ -378,7 +382,7 @@
     }, 
     {
         "pk": 2, 
-        "model": "stock.stockrecord", 
+        "model": "partner.stockrecord", 
         "fields": {
             "price_currency": "GBP", 
             "product": 2, 
@@ -391,7 +395,7 @@
     }, 
     {
         "pk": 3, 
-        "model": "stock.stockrecord", 
+        "model": "partner.stockrecord", 
         "fields": {
             "price_currency": "GBP", 
             "product": 3, 
@@ -404,7 +408,7 @@
     }, 
     {
         "pk": 4, 
-        "model": "stock.stockrecord", 
+        "model": "partner.stockrecord", 
         "fields": {
             "price_currency": "GBP", 
             "product": 4, 
@@ -417,7 +421,7 @@
     }, 
     {
         "pk": 5, 
-        "model": "stock.stockrecord", 
+        "model": "partner.stockrecord", 
         "fields": {
             "price_currency": "GBP", 
             "product": 5, 
@@ -430,7 +434,7 @@
     }, 
     {
         "pk": 6, 
-        "model": "stock.stockrecord", 
+        "model": "partner.stockrecord", 
         "fields": {
             "price_currency": "GBP", 
             "product": 6, 
@@ -443,7 +447,7 @@
     }, 
     {
         "pk": 7, 
-        "model": "stock.stockrecord", 
+        "model": "partner.stockrecord", 
         "fields": {
             "price_currency": "GBP", 
             "product": 7, 
@@ -456,7 +460,7 @@
     }, 
     {
         "pk": 8, 
-        "model": "stock.stockrecord", 
+        "model": "partner.stockrecord", 
         "fields": {
             "price_currency": "GBP", 
             "product": 8, 
@@ -469,7 +473,7 @@
     }, 
     {
         "pk": 9, 
-        "model": "stock.stockrecord", 
+        "model": "partner.stockrecord", 
         "fields": {
             "price_currency": "GBP", 
             "product": 9, 
@@ -482,7 +486,7 @@
     }, 
     {
         "pk": 10, 
-        "model": "stock.stockrecord", 
+        "model": "partner.stockrecord", 
         "fields": {
             "price_currency": "GBP", 
             "product": 10, 

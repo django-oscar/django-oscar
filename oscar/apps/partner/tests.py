@@ -6,7 +6,7 @@ from django.utils import unittest
 from django.core.exceptions import ValidationError
 
 from oscar.apps.product.models import Item, ItemClass
-from oscar.apps.stock.models import Partner, StockRecord
+from oscar.apps.partner.models import Partner, StockRecord
 from oscar.test.helpers import create_product
 
 class DummyWrapper(object):
@@ -55,7 +55,7 @@ class CustomWrapperTests(unittest.TestCase):
     def setUp(self):
         self._old_setting = settings.OSCAR_PARTNER_WRAPPERS
         settings.OSCAR_PARTNER_WRAPPERS = {
-            'Acme': 'oscar.apps.stock.tests.DummyWrapper'                                
+            'Acme': 'oscar.apps.partner.tests.DummyWrapper'                                
         }
         
     def tearDown(self):

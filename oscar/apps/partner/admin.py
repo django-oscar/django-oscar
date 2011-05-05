@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from oscar.core.loading import import_module
-models = import_module('stock.models', ['Partner', 'StockRecord'])
+models = import_module('partner.models', ['Partner', 'StockRecord'])
 
 class StockRecordAdmin(admin.ModelAdmin):
     list_display = ('product', 'partner', 'partner_sku', 'price_excl_tax', 'cost_price', 'num_in_stock')

@@ -166,7 +166,7 @@ class AbstractLine(models.Model):
     # We store the partner, their SKU and the title for cases where the product has been
     # deleted from the catalogue.  We also store the partner name in case the partner
     # gets deleted at a later date.
-    partner = models.ForeignKey('stock.Partner', related_name='order_lines', blank=True, null=True, on_delete=models.SET_NULL)
+    partner = models.ForeignKey('partner.Partner', related_name='order_lines', blank=True, null=True, on_delete=models.SET_NULL)
     partner_name = models.CharField(_("Partner name"), max_length=128)
     partner_sku = models.CharField(_("Partner SKU"), max_length=128)
     title = models.CharField(_("Title"), max_length=255)
@@ -183,7 +183,6 @@ class AbstractLine(models.Model):
     # Price information before discounts are applied
     line_price_before_discounts_incl_tax = models.DecimalField(decimal_places=2, max_digits=12)
     line_price_before_discounts_excl_tax = models.DecimalField(decimal_places=2, max_digits=12)
-    
 
     # REPORTING FIELDS        
     # Cost price (the price charged by the fulfilment partner for this product).

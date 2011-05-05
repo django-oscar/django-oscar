@@ -194,7 +194,7 @@ INSTALLED_APPS = (
     'oscar.apps.payment',
     'oscar.apps.offer',
     'oscar.apps.address',
-    'oscar.apps.stock',
+    'oscar.apps.partner',
     'oscar.apps.image',
     'oscar.apps.customer',
     'oscar.apps.promotions',
