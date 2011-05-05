@@ -41,24 +41,35 @@ class Importer(object):
         if len(row) != 3:
             self.logger.error("Row number %d has an invalid number of fields, skipping..." % row_number)
             return
-        self._create_stockrecord(*row[:3], row_number=row_number, stats=stats)
+        self._update_stockrecord(*row[:3], row_number=row_number, stats=stats)
     
-    def _create_stockrecord(self, partner_sku, price_excl_tax, num_in_stock, row_number, stats):
-        
+    def _update_stockrecord(self, partner_sku, price_excl_tax, num_in_stock, row_number, stats):
         try:         
             stock = StockRecord.objects.get(partner=self._partner, partner_sku=partner_sku)
         except StockRecord.DoesNotExist:
             self.logger.error("\t - Row %d: StockRecord for partner '%s' and sku '%s' does not exist, skipping..." % (row_number, self._partner, partner_sku))
             return
         
-        stock.price_excl_tax = D(price_excl_tax)
-        stock.num_in_stock = num_in_stock
-        stock.save()
+        price_changed = False
+        stock_changed = False
         
-        msg = "  - %d: Partner SKU %s price set to %s, stock set to %s" % (row_number,partner_sku,price_excl_tax,num_in_stock)
-        self.logger.info(msg)
+        if stock.price_excl_tax != D(price_excl_tax):
+            stock.price_excl_tax = D(price_excl_tax)
+            price_changed = True
+        if stock.num_in_stock != int(num_in_stock):
+            stock.num_in_stock = num_in_stock
+            stock_changed = True
         
-        stats['updated_items'] += 1
+        if price_changed or stock_changed:
+            stock.save()
+            
+            msg = " SKU %s:" % (partner_sku)
+            if price_changed:
+                msg += '\n - Price set to %s' % (price_excl_tax)
+            if stock_changed:
+                msg += '\n - Stock set to %s' % num_in_stock
+            self.logger.info(msg)            
+            stats['updated_items'] += 1
         
 class Validator(object):
     def validate(self, file_path):
