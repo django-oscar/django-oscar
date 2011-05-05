@@ -6,8 +6,10 @@ from django.core.exceptions import ValidationError
 
 from oscar.core.fields import ExtendedURLField
 
+# Settings-controlled stuff
 BANNER_FOLDER = settings.OSCAR_BANNER_FOLDER
 POD_FOLDER = settings.OSCAR_POD_FOLDER
+BLOCK_TYPES = settings.OSCAR_PROMOTION_MERCHANDISING_BLOCK_TYPES
 
 BANNER, LEFT_POD, RIGHT_POD, RAW_HTML = ('Banner', 'Left pod', 'Right pod', 'Raw HTML')
 POSITION_CHOICES = (
@@ -142,14 +144,8 @@ class AbstractMerchandisingBlock(models.Model):
     
     title = models.CharField(_("Title"), max_length=255)
     description = models.TextField(null=True, blank=True)
-    COUNTDOWN, LIST, SINGLE_PRODUCT = ('Countdown', 'List', 'SingleProduct')
-    TYPE_CHOICES = (
-        (COUNTDOWN, _("Countdown")),
-        (LIST, _("List")),
-        (SINGLE_PRODUCT, _("Single product"))
-    )
-    type = models.CharField(_("Type"), choices=TYPE_CHOICES, max_length=100)
-    products = models.ManyToManyField('product.Item', null=True)
+    type = models.CharField(_("Type"), choices=BLOCK_TYPES, max_length=100)
+    products = models.ManyToManyField('product.Item', blank=True, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
     
     class Meta:
@@ -158,13 +154,27 @@ class AbstractMerchandisingBlock(models.Model):
     def __unicode__(self):
         return self.title    
         
+    def template_context(self):
+        """
+        Returns dynamically generated HTML that isn't product related.
+        
+        This can be used for novel forms of block.
+        """
+        method = 'template_context_%s' % self.type.lower()
+        if hasattr(self, method):
+            return getattr(self, method)()
+        return {}
+        
+    def template_context_search(self):
+        return {'test': 'asdfasdfasdf'}    
+        
     @property
     def num_products(self):
         return self.products.all().count()
     
     @property
     def template_file(self):
-        return 'promotions/block_%s.html' % self.type.lower()
+        return 'oscar/promotions/block_%s.html' % self.type.lower()
     
 
 class LinkedMerchanisingBlock(models.Model):

@@ -31,7 +31,7 @@ logger = logging.getLogger('oscar.checkout')
 
 
 class IndexView(object):
-    template_file = 'checkout/gateway.html'
+    template_file = 'oscar/checkout/gateway.html'
     
     def __call__(self, request):
         if request.user.is_authenticated():
@@ -40,7 +40,7 @@ class IndexView(object):
 
 
 class ShippingAddressView(checkout_views.CheckoutView):
-    template_file = 'checkout/shipping_address.html'
+    template_file = 'oscar/checkout/shipping_address.html'
     
     def handle_POST(self):
         if self.request.user.is_authenticated and 'address_id' in self.request.POST:
@@ -84,7 +84,7 @@ class ShippingMethodView(checkout_views.CheckoutView):
     Shipping methods are domain-specific and so need implementing in a 
     subclass of this class.
     """
-    template_file = 'checkout/shipping_methods.html';
+    template_file = 'oscar/checkout/shipping_methods.html';
     
     def handle_GET(self):
         methods = self.get_available_shipping_methods()
@@ -127,7 +127,7 @@ class PaymentMethodView(checkout_views.CheckoutView):
 class OrderPreviewView(checkout_views.CheckoutView):
     u"""View a preview of the order before submitting."""
     
-    template_file = 'checkout/preview.html'
+    template_file = 'oscar/checkout/preview.html'
     
     def handle_GET(self):
         checkout_views.mark_step_as_complete(self.request)
@@ -252,7 +252,7 @@ class PaymentDetailsView(checkout_views.CheckoutView):
             # Check that this address isn't already in the db as we don't want
             # to fill up the customer address book with duplicate addresses
             try:
-                duplicate_addr = address_models.UserAddress._default_manager.get(hash=user_addr.generate_hash())
+                address_models.UserAddress._default_manager.get(hash=user_addr.generate_hash())
             except ObjectDoesNotExist:
                 user_addr.save()
     
@@ -280,4 +280,4 @@ class ThankYouView(object):
             del request.session['checkout_order_id']
         except KeyError, ObjectDoesNotExist:
             return HttpResponseRedirect(reverse('oscar-checkout-index'))
-        return render(request, 'checkout/thank_you.html', locals())
+        return render(request, 'oscar/checkout/thank_you.html', locals())

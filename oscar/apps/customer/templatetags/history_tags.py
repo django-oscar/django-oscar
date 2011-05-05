@@ -6,7 +6,7 @@ history_helpers = import_module('customer.history_helpers', ['get_recently_viewe
 
 register = template.Library()
 
-@register.inclusion_tag('customer/history/recently-viewed-products.html', takes_context=True)
+@register.inclusion_tag('oscar/customer/history/recently-viewed-products.html', takes_context=True)
 def recently_viewed_products(context):
     u"""
     Inclusion tag listing the most recently viewed products

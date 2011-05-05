@@ -19,7 +19,7 @@ def dashboard(request):
             return response
     else:
         form = report_forms.ReportForm()
-    return render(request, 'reports/dashboard.html', locals())
+    return render(request, 'oscar/reports/dashboard.html', locals())
 
 
 def _get_generator(form):

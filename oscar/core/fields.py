@@ -43,6 +43,7 @@ class ExtendedURLField(models.CharField):
         """
         try:
             value = self.fix_local_url(value)
+            
             if self.verify_exists:
                 resolve(value)
             self.is_local_url = True
@@ -53,5 +54,7 @@ class ExtendedURLField(models.CharField):
         u"""
         Puts preceding and trailing slashes to local URL name 
         """
-        return '/' + value.strip('/') + '/'
+        if value != '/': 
+            value = '/' + value.strip('/') + '/' 
+        return value
     

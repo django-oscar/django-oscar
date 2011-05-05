@@ -18,3 +18,11 @@ OSCAR_POD_FOLDER = 'images/promotions/pods'
 OSCAR_SEARCH_SUGGEST_LIMIT = 10
 
 OSCAR_PARTNER_WRAPPERS = {}
+
+# Promotions
+COUNTDOWN, LIST, SINGLE_PRODUCT = ('Countdown', 'List', 'SingleProduct')
+OSCAR_PROMOTION_MERCHANDISING_BLOCK_TYPES = (
+    (COUNTDOWN, "Countdown"),
+    (LIST, "List"),
+    (SINGLE_PRODUCT, "Single product"),
+)   
