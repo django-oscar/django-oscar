@@ -11,7 +11,7 @@ class AbstractPartner(models.Model):
     
     # A partner can have users assigned to it.  These can be used
     # to provide authentication for webservices etc.
-    users = models.ManyToManyField('auth.User', releatd_name="partners", null=True)
+    users = models.ManyToManyField('auth.User', related_name="partners", null=True)
     
     class Meta:
         verbose_name_plural = 'Fulfillment partners'
