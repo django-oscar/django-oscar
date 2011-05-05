@@ -12,7 +12,9 @@
 <div class="images">
     {% for image in item.images.all %}
     <img src="{{ image.fullsize_url }}" title="{{ item.get_title }}" />
-    <div class="caption">{{ image.caption }}</div>
+    {% if image.caption %}
+        <div class="caption">{{ image.caption }}</div>
+    {% endif %}
     {% endfor %}
 </div>
 

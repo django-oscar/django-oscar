@@ -1,19 +1,29 @@
-import datetime
-
 from django.conf import settings
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.apps.stock.wrappers import get_partner_wrapper, DefaultWrapper
+from oscar.apps.stock.wrappers import get_partner_wrapper
 
 
 class AbstractPartner(models.Model):
     u"""Fulfillment partner"""
     name = models.CharField(max_length=128, unique=True)
     
+    # A partner can have users assigned to it.  These can be used
+    # to provide authentication for webservices etc.
+    users = models.ManyToManyField('auth.User', releatd_name="partners", null=True)
+    
     class Meta:
         verbose_name_plural = 'Fulfillment partners'
         abstract = True
+        permissions = (
+            ("can_edit_stock_records", "Can edit stock records"),
+            ("can_view_stock_records", "Can view stock records"),
+            ("can_edit_product_range", "Can edit product range"),
+            ("can_view_product_range", "Can view product range"),
+            ("can_edit_order_lines", "Can edit order lines"),
+            ("can_view_order_lines", "Can view order lines"),
+        )
         
     def __unicode__(self):
         return self.name
@@ -29,7 +39,7 @@ class AbstractStockRecord(models.Model):
     """
     product = models.OneToOneField('product.Item')
     partner = models.ForeignKey('stock.Partner')
-    partner_reference = models.CharField(max_length=128, blank=True)
+    partner_sku = models.CharField(_("Partner SKU"), max_length=128, blank=True)
     
     # Price info:
     # We deliberately don't store tax information to allow each project
@@ -95,7 +105,7 @@ class AbstractStockRecord(models.Model):
         return 0
         
     def __unicode__(self):
-        if self.partner_reference:
-            return "%s (%s): %s" % (self.partner.name, self.partner_reference, self.product.title)
+        if self.partner_sku:
+            return "%s (%s): %s" % (self.partner.name, self.partner_sku, self.product.title)
         else:
             return "%s: %s" % (self.partner.name, self.product.title)

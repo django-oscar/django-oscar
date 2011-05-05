@@ -42,7 +42,7 @@
             "partner_line_notes": null, 
             "product": 8, 
             "line_price_excl_tax": "69.90", 
-            "partner_reference": null, 
+            "partner_sku": null, 
             "line_price_incl_tax": "69.90", 
             "line_price_before_discounts_incl_tax": "69.90", 
             "line_price_before_discounts_excl_tax": "69.90", 
@@ -58,7 +58,7 @@
             "partner_line_notes": null, 
             "product": 9, 
             "line_price_excl_tax": "68.80", 
-            "partner_reference": null, 
+            "partner_sku": null, 
             "line_price_incl_tax": "68.80", 
             "line_price_before_discounts_incl_tax": "68.80", 
             "line_price_before_discounts_excl_tax": "68.80", 
@@ -370,7 +370,7 @@
             "price_currency": "GBP", 
             "product": 1, 
             "num_allocated": 0, 
-            "partner_reference": "071216", 
+            "partner_sku": "071216", 
             "num_in_stock": 0, 
             "partner": 1, 
             "price_excl_tax": "14.00"
@@ -383,7 +383,7 @@
             "price_currency": "GBP", 
             "product": 2, 
             "num_allocated": 0, 
-            "partner_reference": "072174", 
+            "partner_sku": "072174", 
             "num_in_stock": 127, 
             "partner": 1, 
             "price_excl_tax": "7.32"
@@ -396,7 +396,7 @@
             "price_currency": "GBP", 
             "product": 3, 
             "num_allocated": 0, 
-            "partner_reference": "072261", 
+            "partner_sku": "072261", 
             "num_in_stock": 662, 
             "partner": 1, 
             "price_excl_tax": "13.82"
@@ -409,7 +409,7 @@
             "price_currency": "GBP", 
             "product": 4, 
             "num_allocated": 0, 
-            "partner_reference": "073729", 
+            "partner_sku": "073729", 
             "num_in_stock": 54, 
             "partner": 1, 
             "price_excl_tax": "8.00"
@@ -422,7 +422,7 @@
             "price_currency": "GBP", 
             "product": 5, 
             "num_allocated": 0, 
-            "partner_reference": "073731", 
+            "partner_sku": "073731", 
             "num_in_stock": 391, 
             "partner": 1, 
             "price_excl_tax": "8.00"
@@ -435,7 +435,7 @@
             "price_currency": "GBP", 
             "product": 6, 
             "num_allocated": 0, 
-            "partner_reference": "073733", 
+            "partner_sku": "073733", 
             "num_in_stock": 221, 
             "partner": 1, 
             "price_excl_tax": "8.00"
@@ -448,7 +448,7 @@
             "price_currency": "GBP", 
             "product": 7, 
             "num_allocated": 0, 
-            "partner_reference": "073850", 
+            "partner_sku": "073850", 
             "num_in_stock": 95, 
             "partner": 1, 
             "price_excl_tax": "13.90"
@@ -461,7 +461,7 @@
             "price_currency": "GBP", 
             "product": 8, 
             "num_allocated": 10, 
-            "partner_reference": "073922", 
+            "partner_sku": "073922", 
             "num_in_stock": 143, 
             "partner": 1, 
             "price_excl_tax": "6.99"
@@ -474,7 +474,7 @@
             "price_currency": "GBP", 
             "product": 9, 
             "num_allocated": 5, 
-            "partner_reference": "074127", 
+            "partner_sku": "074127", 
             "num_in_stock": 649, 
             "partner": 1, 
             "price_excl_tax": "13.76"
@@ -487,7 +487,7 @@
             "price_currency": "GBP", 
             "product": 10, 
             "num_allocated": 0, 
-            "partner_reference": "074132", 
+            "partner_sku": "074132", 
             "num_in_stock": 43, 
             "partner": 1, 
             "price_excl_tax": "16.06"

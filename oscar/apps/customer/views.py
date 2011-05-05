@@ -8,16 +8,16 @@ from django.contrib import messages
 from oscar.apps.address.forms import UserAddressForm
 from oscar.view.generic import ModelView
 from oscar.core.loading import import_module
-address_models = import_module('address.models', ['UserAddress'])
-order_models = import_module('order.models', ['Order', 'Line'])
-basket_models = import_module('basket.models', ['Basket'])
-basket_factory = import_module('basket.factory', ['BasketFactory'])
+import_module('address.models', ['UserAddress'], locals())
+import_module('order.models', ['Order', 'Line'], locals())
+import_module('basket.models', ['Basket'], locals())
+import_module('basket.factory', ['BasketFactory'], locals())
 
 @login_required
 def profile(request):
     u"""Return a customers's profile"""
     # Load last 5 orders as preview
-    orders = order_models.Order._default_manager.filter(user=request.user)[0:5]
+    orders = Order._default_manager.filter(user=request.user)[0:5]
     return render(request, 'customer/profile.html', locals())
     
         
@@ -29,7 +29,7 @@ class OrderHistoryView(ListView):
 
     def get_queryset(self):
         u"""Return a customer's orders"""
-        return order_models.Order._default_manager.filter(user=self.request.user)
+        return Order._default_manager.filter(user=self.request.user)
 
 
 class OrderDetailView(ModelView):
@@ -38,7 +38,7 @@ class OrderDetailView(ModelView):
     
     def get_model(self):
         u"""Return an order object or 404"""
-        return get_object_or_404(order_models.Order, user=self.request.user, number=self.kwargs['order_number'])
+        return get_object_or_404(Order, user=self.request.user, number=self.kwargs['order_number'])
     
     def handle_GET(self, order):
         self.response = render(self.request, self.template_file, locals())
@@ -49,7 +49,7 @@ class OrderLineView(ModelView):
     
     def get_model(self):
         u"""Return an order object or 404"""
-        order = get_object_or_404(order_models.Order, user=self.request.user, number=self.kwargs['order_number'])
+        order = get_object_or_404(Order, user=self.request.user, number=self.kwargs['order_number'])
         return order.lines.get(id=self.kwargs['line_id'])
     
     def handle_GET(self, line):
@@ -61,7 +61,7 @@ class OrderLineView(ModelView):
     
     def do_reorder(self, line):
         # Get basket
-        basket = basket_factory.BasketFactory().get_or_create_open_basket(self.request, self.response)
+        basket = BasketFactory().get_or_create_open_basket(self.request, self.response)
         if not line.product:
             return
         
@@ -83,7 +83,7 @@ class AddressBookView(ListView):
         
     def get_queryset(self):
         u"""Return a customer's addresses"""
-        return address_models.UserAddress._default_manager.filter(user=self.request.user)
+        return UserAddress._default_manager.filter(user=self.request.user)
     
     
 class AddressView(ModelView):
@@ -92,7 +92,7 @@ class AddressView(ModelView):
     
     def get_model(self):
         u"""Return an address object or a 404"""
-        return get_object_or_404(address_models.UserAddress, user=self.request.user, pk=self.kwargs['address_id'])
+        return get_object_or_404(UserAddress, user=self.request.user, pk=self.kwargs['address_id'])
     
     def handle_GET(self, address):
         form = UserAddressForm(instance=address)

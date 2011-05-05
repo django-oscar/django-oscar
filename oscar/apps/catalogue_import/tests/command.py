@@ -84,7 +84,7 @@ class ImportSmokeTest(TestCase):
     
     def test_stockrecord_is_created(self):
         try:
-            StockRecord.objects.get(partner_reference="9780115531446")
+            StockRecord.objects.get(partner_sku="9780115531446")
         except Item.DoesNotExist:
             self.fail()      
         
