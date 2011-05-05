@@ -88,7 +88,7 @@ class AbstractItem(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
 
     # This field is used by Haystack to reindex search
-    date_updated = models.DateTimeField(auto_now=True, null=True, default=None)
+    date_updated = models.DateTimeField(auto_now=True, db_index=True)
 
     objects = models.Manager()
     browsable = BrowsableItemManager()

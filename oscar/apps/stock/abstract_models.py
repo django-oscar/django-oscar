@@ -11,7 +11,7 @@ class AbstractPartner(models.Model):
     
     # A partner can have users assigned to it.  These can be used
     # to provide authentication for webservices etc.
-    users = models.ManyToManyField('auth.User', releatd_name="partners", null=True)
+    users = models.ManyToManyField('auth.User', related_name="partners", null=True)
     
     class Meta:
         verbose_name_plural = 'Fulfillment partners'
@@ -48,28 +48,38 @@ class AbstractStockRecord(models.Model):
     
     # This is the base price for calculations - tax should be applied 
     # by the appropriate method.  We don't store it here as its calculation is 
-    # highly domain-specific.
-    price_excl_tax = models.DecimalField(decimal_places=2, max_digits=12)
+    # highly domain-specific.  It is NULLable because some items don't have a fixed
+    # price.
+    price_excl_tax = models.DecimalField(decimal_places=2, max_digits=12, blank=True, null=True)
+    
+    # Retail price for this item
+    price_retail = models.DecimalField(decimal_places=2, max_digits=12, blank=True, null=True)
     
     # Cost price is optional as not all partner supply it
     cost_price = models.DecimalField(decimal_places=2, max_digits=12, blank=True, null=True)
     
     # Stock level information
-    num_in_stock = models.IntegerField(default=0)
-    num_allocated = models.IntegerField(default=0)
+    num_in_stock = models.IntegerField(default=0, blank=True, null=True)
+    num_allocated = models.IntegerField(default=0, blank=True, null=True)
+    
+    # Date information
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_updated = models.DateTimeField(auto_now=True, db_index=True)
     
     class Meta:
         abstract = True
     
     def decrement_num_in_stock(self, delta):
-        u"""Decrement an item's stock level"""
+        """
+        Decrement an item's stock level
+        """
         if self.num_in_stock >= delta:
             self.num_in_stock -= delta
         self.num_allocated += delta
         self.save()
         
     def set_discount_price(self, price):
-        u"""
+        """
         A setter method for setting a new price.  
         
         This is called from within the "discount" app, which is responsible
@@ -96,14 +106,20 @@ class AbstractStockRecord(models.Model):
     
     @property 
     def price_incl_tax(self):
-        u"""Return a product's price including tax"""
-        return self.price_excl_tax
+        """
+        Return a product's price including tax.
+        
+        This defaults to the price_excl_tax as tax calculations are 
+        domain specific.  This class needs to be subclassed and tax logic
+        added to this method.
+        """
+        return self.price_excl_tax + self.price_tax
     
     @property 
     def price_tax(self):
         u"""Return a product's tax value"""
         return 0
-        
+    
     def __unicode__(self):
         if self.partner_sku:
             return "%s (%s): %s" % (self.partner.name, self.partner_sku, self.product.title)

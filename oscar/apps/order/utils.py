@@ -2,8 +2,9 @@ from django.contrib.sites.models import Site
 
 from oscar.core.loading import import_module
 import_module('order.models', ['ShippingAddress', 'Order', 'Line', 
-                                              'LinePrice', 'LineAttribute', 'OrderDiscount'], locals())
+                               'LinePrice', 'LineAttribute', 'OrderDiscount'], locals())
 import_module('order.signals', ['order_placed'], locals())
+
 
 class OrderNumberGenerator(object):
     u"""
@@ -47,7 +48,7 @@ class OrderCreator(object):
         basket.set_as_submitted()
         
         # Send signal for analytics to pick up
-        order_signals.order_placed.send(sender=self, order=order, user=user)
+        order_placed.send(sender=self, order=order, user=user)
         
         return order
         
@@ -77,18 +78,29 @@ class OrderCreator(object):
     
     def _create_line_models(self, order, basket_line):
         u"""Creates the batch line model."""
-        order_line = order_models.Line(order=order,
-                                      partner=self._get_partner_for_product(basket_line.product),
-                                      product=basket_line.product, 
-                                      title=basket_line.product.get_title(),
-                                      quantity=basket_line.quantity, 
-                                      line_price_excl_tax=basket_line.line_price_excl_tax_and_discounts, 
-                                      line_price_incl_tax=basket_line.line_price_incl_tax_and_discounts,
-                                      line_price_before_discounts_excl_tax=basket_line.line_price_excl_tax,
-                                      line_price_before_discounts_incl_tax=basket_line.line_price_incl_tax,)
-        if basket_line.product.has_stockrecord:
-            order_line.partner_sku = basket_line.product.stockrecord.partner_sku
-            order_line.est_dispatch_date = basket_line.product.stockrecord.dispatch_date
+        partner = self._get_partner_for_product(basket_line.product)
+        stockrecord = basket_line.product.stockrecord
+        order_line = Line(order=order,
+                          # Partner details
+                          partner=partner,
+                          partner_name=partner.name,
+                          partner_sku=stockrecord.partner_sku,
+                          # Product details
+                          product=basket_line.product, 
+                          title=basket_line.product.get_title(),
+                          quantity=basket_line.quantity,
+                          # Price details 
+                          line_price_excl_tax=basket_line.line_price_excl_tax_and_discounts, 
+                          line_price_incl_tax=basket_line.line_price_incl_tax_and_discounts,
+                          line_price_before_discounts_excl_tax=basket_line.line_price_excl_tax,
+                          line_price_before_discounts_incl_tax=basket_line.line_price_incl_tax,
+                          # Reporting details
+                          unit_cost_price = stockrecord.cost_price,
+                          unit_site_price = stockrecord.price_incl_tax,
+                          unit_retail_price = stockrecord.price_retail,
+                          # Shipping details
+                          est_dispatch_date = basket_line.product.stockrecord.dispatch_date
+                          )
         order_line.save()
         self._create_line_price_models(order, order_line, basket_line)
         self._create_line_attributes(order, order_line, basket_line)
@@ -98,18 +110,18 @@ class OrderCreator(object):
         breakdown = basket_line.get_price_breakdown()
         for price_incl_tax, price_excl_tax, quantity in breakdown:
             LinePrice._default_manager.create(order=order,
-                                                  line=order_line, 
-                                                  quantity=quantity, 
-                                                  price_incl_tax=price_incl_tax,
-                                                  price_excl_tax=price_excl_tax)
+                                              line=order_line, 
+                                              quantity=quantity, 
+                                              price_incl_tax=price_incl_tax,
+                                              price_excl_tax=price_excl_tax)
     
     def _create_line_attributes(self, order, order_line, basket_line):
         u"""Creates the batch line attributes."""
         for attr in basket_line.attributes.all():
             LineAttribute._default_manager.create(line=order_line,
-                                                               option=attr.option, 
-                                                               type=attr.option.code,
-                                                               value=attr.value)
+                                                   option=attr.option, 
+                                                   type=attr.option.code,
+                                                   value=attr.value)
             
     def _create_discount_model(self, order, discount):
         u"""
