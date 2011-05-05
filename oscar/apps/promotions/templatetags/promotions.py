@@ -10,7 +10,7 @@ class MerchandisingBlockNode(Node):
     
     def render(self, context):
         linked_block = self.linked_block.resolve(context)
-        template = select_template([linked_block.block.template_file, 'promotions/block_default.html'])
+        template = select_template([linked_block.block.template_file, 'oscar/promotions/block_default.html'])
         context = Context({'block': linked_block.block})
         return template.render(context)
  

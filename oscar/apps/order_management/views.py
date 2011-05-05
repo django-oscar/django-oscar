@@ -16,7 +16,7 @@ import_module('order.models', ['Order', 'Line', 'ShippingEvent', 'ShippingEventQ
 class OrderListView(ListView):
     u"""A list of orders"""
     context_object_name = "orders"
-    template_name = 'order_management/browse.html'
+    template_name = 'oscar/order_management/browse.html'
     paginate_by = 20
 
     def get_queryset(self):
@@ -25,7 +25,7 @@ class OrderListView(ListView):
   
 class OrderView(ModelView):
     u"""A detail view of an order"""
-    template_file = "order_management/order.html"
+    template_file = "oscar/order_management/order.html"
     
     def get_model(self):
         u"""Return an order object or a 404"""

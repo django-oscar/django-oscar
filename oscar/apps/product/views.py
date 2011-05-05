@@ -16,7 +16,7 @@ history_helpers = import_module('customer.history_helpers', ['receive_product_vi
 
 class ItemDetailView(DetailView):
     u"""View a single product."""
-    template_name = "product/item.html"
+    template_name = "oscar/product/item.html"
     _item = None
     
     def get(self, request, **kwargs):
@@ -55,7 +55,7 @@ class ItemDetailView(DetailView):
 class ItemClassListView(ListView):
     u"""View products filtered by item-class."""
     context_object_name = "products"
-    template_name = 'product/browse.html'
+    template_name = 'oscar/product/browse.html'
     paginate_by = 20
 
     def get_queryset(self):
@@ -66,7 +66,7 @@ class ItemClassListView(ListView):
 class ProductListView(ListView):
     u"""A list of products"""
     context_object_name = "products"
-    template_name = 'product/browse.html'
+    template_name = 'oscar/product/browse.html'
     paginate_by = 20
 
     def get_search_query(self):

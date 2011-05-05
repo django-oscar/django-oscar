@@ -164,7 +164,7 @@ class AbstractMerchandisingBlock(models.Model):
     
     @property
     def template_file(self):
-        return 'promotions/block_%s.html' % self.type.lower()
+        return 'oscar/promotions/block_%s.html' % self.type.lower()
     
 
 class LinkedMerchanisingBlock(models.Model):

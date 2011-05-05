@@ -18,13 +18,13 @@ def profile(request):
     u"""Return a customers's profile"""
     # Load last 5 orders as preview
     orders = Order._default_manager.filter(user=request.user)[0:5]
-    return render(request, 'customer/profile.html', locals())
+    return render(request, 'oscar/customer/profile.html', locals())
     
         
 class OrderHistoryView(ListView):
     u"""Customer order history"""
     context_object_name = "orders"
-    template_name = 'customer/order-history.html'
+    template_name = 'oscar/customer/order-history.html'
     paginate_by = 20
 
     def get_queryset(self):
@@ -34,7 +34,7 @@ class OrderHistoryView(ListView):
 
 class OrderDetailView(ModelView):
     u"""Customer order details"""
-    template_file = "customer/order.html"
+    template_file = "oscar/customer/order.html"
     
     def get_model(self):
         u"""Return an order object or 404"""
@@ -78,7 +78,7 @@ class OrderLineView(ModelView):
 class AddressBookView(ListView):
     u"""Customer address book"""
     context_object_name = "addresses"
-    template_name = 'customer/address-book.html'
+    template_name = 'oscar/customer/address-book.html'
     paginate_by = 40
         
     def get_queryset(self):
@@ -88,7 +88,7 @@ class AddressBookView(ListView):
     
 class AddressView(ModelView):
     u"""Customer address view"""
-    template_file = "customer/address-form.html"
+    template_file = "oscar/customer/address-form.html"
     
     def get_model(self):
         u"""Return an address object or a 404"""

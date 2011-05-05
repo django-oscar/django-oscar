@@ -11,7 +11,7 @@ class HomeView(object):
     View for the homepage.
     """
 
-    template_file = 'home.html'
+    template_file = 'oscar/home.html'
 
     def __call__(self, request, *args, **kwargs):
         return render(request, self.template_file)
