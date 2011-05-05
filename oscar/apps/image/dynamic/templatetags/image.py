@@ -17,7 +17,6 @@ def do_dynamic_image_url(parser, token):
         params = tokens[2:]
     else:
         params = []
-        tag_name, format_string = token.split_contents()
     return DynamicImageNode(image, params)
 
 
@@ -30,7 +29,7 @@ class DynamicImageNode(template.Node):
             try:
                 bits = p.split('=')
                 self.params[bits[0]] = template.Variable(bits[1])
-            except IndexError, e:
+            except IndexError:
                 raise template.TemplateSyntaxError("image tag parameters must be of form key=value, you used '%s'" % p)
 
     def render(self, context):
@@ -39,29 +38,30 @@ class DynamicImageNode(template.Node):
         else:
             path = self.image
 
-        host = settings.DYNAMIC_MEDIA_URL
+        host = getattr(settings,'DYNAMIC_MEDIA_URL', None)
 
-        params = []
+        if host:
+            params = []
 
-        ext = path[path.rfind('.') + 1:]
-        ext_changed = False
-
-        for key, v in self.params.iteritems():
-            value = v.resolve(context)
-
-            if key == u'format':
-                ext = value
-                ext_changed = True
+            ext = path[path.rfind('.') + 1:]
+            ext_changed = False
+    
+            for key, v in self.params.iteritems():
+                value = v.resolve(context)
+    
+                if key == u'format':
+                    ext = value
+                    ext_changed = True
+                else:
+                    params.append('%s-%s' % (key, value))
+    
+            if len(params) > 0:
+                suffix = '_'.join(params)
+                path = '.'.join((path, suffix, ext))
             else:
-                params.append('%s-%s' % (key, value))
-
-        if len(params) > 0:
-            suffix = '_'.join(params)
-            path = '.'.join((path, suffix, ext))
-        else:
-            if ext_changed:
-                path = '.'.join((path, ext))
-
-        return host + path
+                if ext_changed:
+                    path = '.'.join((path, ext))
+    
+            return host + path
 
 register.tag('image', do_dynamic_image_url)
