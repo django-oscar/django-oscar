@@ -46,8 +46,8 @@ class Importer(object):
                 except IdenticalImageException:
                     self.logger.warning(" - Identical image already exists for %s='%s', skipping" % (self._field, lookup_value))
                     stats['num_skipped'] += 1
-                except IOError:
-                    raise ImageImportException('%s is not a valid image' % filename)    
+                except IOError, e:
+                    raise ImageImportException('%s is not a valid image (%s)' % (filename, e))    
                     stats['num_invalid'] += 1
                 except FieldError, e:
                     raise ImageImportException(e)
@@ -113,8 +113,12 @@ class Importer(object):
         next_index = 0
         for existing in item.images.all():
             next_index = existing.display_order + 1
-            if new_data == existing.original.read():
-                raise IdenticalImageException()
+            try:
+                if new_data == existing.original.read():
+                    raise IdenticalImageException()
+            except IOError:
+                # File probably doesn't exist
+                existing.delete()
             
         new_file = File(open(file_path))
         im = Image(product=item, display_order=next_index)
