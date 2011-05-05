@@ -164,9 +164,11 @@ class AbstractLine(models.Model):
     order = models.ForeignKey('order.Order', related_name='lines')
     
     # We store the partner, their SKU and the title for cases where the product has been
-    # deleted from the catalogue.
-    partner = models.ForeignKey('stock.Partner', related_name='order_lines')
-    partner_sku = models.CharField(_("Partner SKU"), max_length=128, blank=True, null=True)
+    # deleted from the catalogue.  We also store the partner name in case the partner
+    # gets deleted at a later date.
+    partner = models.ForeignKey('partner.Partner', related_name='order_lines', blank=True, null=True, on_delete=models.SET_NULL)
+    partner_name = models.CharField(_("Partner name"), max_length=128)
+    partner_sku = models.CharField(_("Partner SKU"), max_length=128)
     title = models.CharField(_("Title"), max_length=255)
     
     # We don't want any hard links between orders and the products table
@@ -181,10 +183,14 @@ class AbstractLine(models.Model):
     # Price information before discounts are applied
     line_price_before_discounts_incl_tax = models.DecimalField(decimal_places=2, max_digits=12)
     line_price_before_discounts_excl_tax = models.DecimalField(decimal_places=2, max_digits=12)
-    
-    # Cost price (the price charged by the fulfilment partner for this product).  This
-    # is useful for audit and financial reporting.
-    cost_price = models.DecimalField(decimal_places=2, max_digits=12, blank=True, null=True)
+
+    # REPORTING FIELDS        
+    # Cost price (the price charged by the fulfilment partner for this product).
+    unit_cost_price = models.DecimalField(decimal_places=2, max_digits=12, blank=True, null=True)
+    # Normal site price for item (without discounts)
+    unit_site_price = models.DecimalField(decimal_places=2, max_digits=12, blank=True, null=True)
+    # Retail price at time of purchase
+    unit_retail_price = models.DecimalField(decimal_places=2, max_digits=12, blank=True, null=True)
     
     # Partner information
     partner_line_reference = models.CharField(_("Partner reference"), max_length=128, blank=True, null=True,
@@ -193,7 +199,6 @@ class AbstractLine(models.Model):
     
     # Estimated dispatch date - should be set at order time
     est_dispatch_date = models.DateField(blank=True, null=True)
-    
     
     @property
     def description(self):

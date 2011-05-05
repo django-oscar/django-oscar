@@ -6,7 +6,7 @@ import logging
 from oscar.apps.catalogue_import.utils import Importer
 from oscar.apps.catalogue_import.exceptions import CatalogueImportException
 from oscar.apps.product.models import ItemClass, Item
-from oscar.apps.stock.models import Partner, StockRecord
+from oscar.apps.partner.models import Partner, StockRecord
 from oscar.test.helpers import create_product
 
 TEST_BOOKS_CSV = os.path.join(os.path.dirname(__file__), '../fixtures/books-small.csv')

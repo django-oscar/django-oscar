@@ -7,7 +7,7 @@ from oscar.core.loading import import_module
 
 import_module('catalogue_import.exceptions', ['CatalogueImportException'], locals())
 import_module('product.models', ['ItemClass', 'Item'], locals())
-import_module('stock.models', ['Partner', 'StockRecord'], locals())
+import_module('partner.models', ['Partner', 'StockRecord'], locals())
 
 
 class Importer(object):
