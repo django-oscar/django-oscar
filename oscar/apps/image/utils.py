@@ -1,11 +1,17 @@
 import os
+import zlib
+import tarfile
+import zipfile
+import tempfile
+import shutil
+
 from PIL import Image as PImage
 
 from django.core.files import File
 from django.core.exceptions import FieldError
 
 from oscar.core.loading import import_module
-import_module('image.exceptions', ['ImageImportException', 'IdenticalImageException'], locals())
+import_module('image.exceptions', ['ImageImportException', 'IdenticalImageException', 'InvalidImageArchive'], locals())
 import_module('product.models', ['Item'], locals())
 import_module('image.models', ['Image'], locals())
 
@@ -24,35 +30,76 @@ class Importer(object):
             'num_skipped': 0,
             'num_invalid': 0         
         }
-        for filename in self._get_image_files(dirname):
-            try:
-                lookup_value = self._get_lookup_value_from_filename(filename)
-                self._process_image(dirname, filename, lookup_value)
-                stats['num_processed'] += 1
-            except Item.MultipleObjectsReturned:
-                self.logger.warning("Multiple products matching %s='%s', skipping" % (self._field, lookup_value))
-                stats['num_skipped'] += 1
-            except Item.DoesNotExist:
-                self.logger.warning("No item matching %s='%s'" % (self._field, lookup_value))
-                stats['num_skipped'] += 1
-            except IdenticalImageException:
-                self.logger.warning(" - Identical image already exists for %s='%s', skipping" % (self._field, lookup_value))
-                stats['num_skipped'] += 1
-            except IOError:
-                raise ImageImportException('%s is not a valid image' % filename)    
-                stats['num_invalid'] += 1
-            except FieldError, e:
-                raise ImageImportException(e)
-                self._process_image(dirname, filename)
+        image_dir, filenames = self._get_image_files(dirname)
+        if image_dir:
+            for filename in filenames:
+                try:
+                    lookup_value = self._get_lookup_value_from_filename(filename)
+                    self._process_image(image_dir, filename, lookup_value)
+                    stats['num_processed'] += 1
+                except Item.MultipleObjectsReturned:
+                    self.logger.warning("Multiple products matching %s='%s', skipping" % (self._field, lookup_value))
+                    stats['num_skipped'] += 1
+                except Item.DoesNotExist:
+                    self.logger.warning("No item matching %s='%s'" % (self._field, lookup_value))
+                    stats['num_skipped'] += 1
+                except IdenticalImageException:
+                    self.logger.warning(" - Identical image already exists for %s='%s', skipping" % (self._field, lookup_value))
+                    stats['num_skipped'] += 1
+                except IOError:
+                    raise ImageImportException('%s is not a valid image' % filename)    
+                    stats['num_invalid'] += 1
+                except FieldError, e:
+                    raise ImageImportException(e)
+                    self._process_image(image_dir, filename)
+            if image_dir != dirname:
+                shutil.rmtree(image_dir)
+        else:
+            raise InvalidImageArchive('%s is not a valid image archive' % dirname)
         self.logger.info("Finished image import: %(num_processed)d imported, %(num_skipped)d skipped" % stats)
         
     def _get_image_files(self, dirname):
         filenames = []
-        for filename in os.listdir(dirname):
-            ext = os.path.splitext(filename)[1]
-            if os.path.isfile(os.path.join(dirname, filename)) and ext in self.allowed_extensions:
-                filenames.append(filename)
-        return filenames
+        image_dir = self._extract_images(dirname)
+        if image_dir:
+            for filename in os.listdir(image_dir):
+                ext = os.path.splitext(filename)[1]
+                if os.path.isfile(os.path.join(image_dir, filename)) and ext in self.allowed_extensions:
+                    filenames.append(filename)
+        return image_dir, filenames
+
+    def _extract_images(self, dirname):
+        '''
+        Returns path to directory containing images in dirname if successful.
+        Returns empty string if dirname does not exist, or could not be opened.
+        Assumes that if dirname is a directory, then it contains images.
+        If dirname is an archive (tar/zip file) then the path returned is to a 
+        temporary directory that should be deleted when no longer required.
+        '''
+        if os.path.isdir(dirname):
+            return dirname        
+
+        ext = os.path.splitext(dirname)[1]
+        if ext in ['.gz', '.tar']:
+            image_dir = tempfile.mkdtemp()
+            try:
+                tar_file = tarfile.open(dirname)
+                tar_file.extractall(image_dir)
+                tar_file.close()
+                return image_dir
+            except (tarfile.TarError, zlib.error):
+                return ""
+        elif ext == '.zip':
+            image_dir = tempfile.mkdtemp()
+            try:
+                zip_file = zipfile.ZipFile(dirname)
+                zip_file.extractall(image_dir) 
+                zip_file.close()               
+                return image_dir
+            except (zlib.error, zipfile.BadZipfile, zipfile.LargeZipFile):
+                return ""
+        # unknown archive - perhaps this should be treated differently
+        return ""
                 
     def _process_image(self, dirname, filename, lookup_value):
         file_path = os.path.join(dirname, filename)
