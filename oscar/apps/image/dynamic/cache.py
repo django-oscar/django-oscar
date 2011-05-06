@@ -86,7 +86,7 @@ class DiskCache(BaseCache):
         about the file, rather than the actual file content
         """
         size = os.path.getsize(self._cache_path())
-        return (self._cache_path(), size)
+        return (self._path, size)
 
     def read(self):
         f = open(self._cache_path(), "r")

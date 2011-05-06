@@ -1,7 +1,8 @@
 from oscar.apps.image.dynamic.exceptions import ResizerConfigurationException
 
 class BaseResponse(object):
-    def __init__(self,mime_type,cache,start_response):
+    def __init__(self,config,mime_type,cache,start_response):
+        self.config = config
         self.mime_type = mime_type
         self.cache = cache
         self.start_response = start_response
@@ -37,33 +38,19 @@ class NginxSendfileResponse(BaseResponse):
         if not hasattr(self.cache, 'file_info'):
             msg = "Cache doesn't implements the method 'file_info'"
             raise ResizerConfigurationException(msg)
+        if not self.config.get('nginx_sendfile_path',None):
+            msg = 'Must provide nginx_sendfile_path in configuration'
+            raise ResizerConfigurationException(msg)
 
-        print 'moooo'
-        
         status = '200 OK'
         
         filename, content_length = self.cache.file_info()
+        
+        filename = self.config['nginx_sendfile_path'] + filename
         
         response_headers = [('Content-Type', self.mime_type),
                             ('Content-Length', content_length),
                             ('X-Accel-Redirect', filename)]
-        
-        self.start_response(status, response_headers)
-        return ['']
-    
-class ApacheSendfileResponse(BaseResponse):
-    def build_response(self):
-        if not hasattr(self.cache, 'file_info'):
-            msg = "ApacheSendfileResponse requires a cache that implements the method 'file_data'"
-            raise ResizerConfigurationException(msg)
-        
-        status = '200 OK'
-        
-        filename, content_length = self.cache.file_info()
-        
-        response_headers = [('Content-Type', self.mime_type),
-                            ('Content-Length', content_length),
-                            ('X-Sendfile', filename)]
         
         self.start_response(status, response_headers)
         return ['']

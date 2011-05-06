@@ -196,7 +196,7 @@ class BaseImageHandler(object):
             if not c.check(m.source_path()):
                 data = m.generate_image()
                 c.write(data)
-            return self.response_backend(m.get_mime_type(),c,start_response).build_response()
+            return self.response_backend(config, m.get_mime_type(),c,start_response).build_response()
         except Exception, e:
             return error404(path, start_response)
 
