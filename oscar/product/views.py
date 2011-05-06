@@ -1,3 +1,5 @@
+from random import randint
+from sys import maxint
 from django.conf import settings
 from django.http import HttpResponse, Http404, HttpResponsePermanentRedirect, HttpResponseRedirect
 from django.template import Context, loader, RequestContext
@@ -7,6 +9,8 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.views.generic import ListView, DetailView
 from django.db.models import Avg
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib import messages
+from django.contrib.auth.models import User
 
 from oscar.services import import_module
 from oscar.reviews.models import ProductReview
@@ -53,11 +57,17 @@ class ItemDetailView(DetailView):
         context['avg_score'] = self.get_avg_review()        
         return context
     
-    def get_product_review(self):        
-        return ProductReview.objects.filter(approved=True)
+    def get_product_review(self):
+        if settings.OSCAR_MODERATE_REVIEWS:        
+            return ProductReview.objects.filter(approved=True)
+        else:
+            return ProductReview.objects.all()
     
     def get_avg_review(self):
-        avg = ProductReview.objects.aggregate(Avg('score'))
+        if settings.OSCAR_MODERATE_REVIEWS:        
+            avg = ProductReview.objects.filter(approved=True).aggregate(Avg('score'))
+        else:
+            avg = ProductReview.objects.aggregate(Avg('score'))
         return avg['score__avg']
         
     
@@ -118,29 +128,53 @@ class ItemReviewView(object):
         Check if the user already reviewed this product
         """                
         try:
-            review = review_models.ProductReview.objects.get(product=self.kwargs['item_id'], user=self.request.user)
+            review = review_models.ProductReview.objects.get(product=self.kwargs['item_id'], user=self.request.user.id)
             return True
         except ObjectDoesNotExist:                
             return False
+  
+    def get_anon_user(self):
+        username = str(randint(0, maxint))
+        u = User(username=username, first_name='Anonymous', last_name='User')
+        u.set_unusable_password()
+        u.save()        
+        u.username = u.id
+        u.save() 
+        return u 
+  
   
     def __call__(self, request, *args, **kwargs):        
         self.request = request
         self.args = args
         self.kwargs = kwargs
+        self.user = self.request.user
         # get the product                
         item = get_object_or_404(product_models.Item, pk=self.kwargs['item_id'])          
         if self._is_review_done():
-            return HttpResponsePermanentRedirect(item.get_absolute_url()) # should change
+            messages.info(self.request, "Your have already reviewed this product!")
+            url = item.get_absolute_url()             
+            return HttpResponsePermanentRedirect(url) 
                                      
         template_name = "reviews/add_review.html"
                         
         if self.request.method == 'POST':        
-            form = make_review_form(self.request.user, self.request.POST)
+            form = make_review_form(self.user, self.request.POST)
             print form                      
             if form.is_valid():
-                review = ProductReview(product=item, user=self.request.user)
+                if self.user.is_authenticated():
+                    review = ProductReview(product=item, user=self.request.user)
+                elif settings.OSCAR_ALLOW_ANON_REVIEWS:
+                    # create an anonymous user and log them in?
+                    u = self.get_anon_user()
+                    review = ProductReview(product=item, user=u)
+                else:
+                    messages.info(self.request, "Please login to submit a review!")
+                    return HttpResponsePermanentRedirect(item.get_absolute_url())
+                
                 rform = ProductReviewForm(self.request.POST, instance=review)
-                rform.save()                                                   
+                rform.save()
+                messages.info(self.request, "Your review has been submitted successfully!")
+                return HttpResponsePermanentRedirect(item.get_absolute_url())                                                   
         else:            
             form = make_review_form(self.request.user)
           

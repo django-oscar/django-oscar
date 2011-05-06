@@ -28,8 +28,8 @@ class AbstractProductReview(models.Model):
     body = models.TextField(_("Comment"), max_length=300, blank=True)
     score = models.CharField(_("Score"), max_length=1, choices=SCORE_CHOICES, blank=True)
     approved = models.BooleanField(default=False)    
-    name = models.CharField(_("Name"), max_length=100, null=True)
-    email = models.EmailField(_("Email"), null=True)
+    name = models.CharField(_("Name"), max_length=100, null=True, blank=True)
+    email = models.EmailField(_("Email"), null=True, blank=True)
     url = models.URLField(_("URL"), null=True, blank=True)
     
     class Meta:

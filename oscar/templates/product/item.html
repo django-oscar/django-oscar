@@ -48,6 +48,9 @@
         <th>{{ attribute.value }}</th>
     </tr>
     {% endfor %}
+     <tr>
+        <td><a href="{{ item.get_absolute_url }}add-review/"> Add a review</a></td>
+    </tr>
 </table>
 
 {% if item.stockrecord %}
@@ -61,16 +64,17 @@
 
 {% block product_review %}
 
-{% if avg_score %}
-<h3> Product Reviews </h3>
-<h4> Average score: {{ avg_score|floatformat:1  }} / 5.0 </h4>
-{% endif %}
+{% if reviews %}
+	{% if avg_score %}
+		<h3> Product Reviews </h3>
+		<h4> Average score: {{ avg_score|floatformat:1  }} / 5.0 </h4>
+	{% endif %}
 	{% for review in reviews|slice:":5" %}		
 		<h4> {{ forloop.counter}}. {{ review.title }} </h4>
 		<p> Score: {{ review.score|floatformat:1 }} / 5.0</p>
 		<p> Comments: {{ review.body }}</p>
 	{% endfor %}
-
+{% endif %}
 {% endblock product_review %}
 
 {% endblock content %}
