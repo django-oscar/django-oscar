@@ -15,9 +15,7 @@ class DirectResponse(BaseResponse):
     """
     def build_response(self):
         """
-        Serves the (now) cached image off the disc. It is assumed that the file
-        actually exists as it's non-existence should have been picked up while
-        checking to see if the cached version is valid.
+        Serves the cached image directly.
         """
         status = '200 OK'
 
