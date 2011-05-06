@@ -80,10 +80,7 @@ class ImageModifier(object):
 
     def __init__(self, url, config):
         if config.get('installed_mods'):
-            mod_overrides = []
-            for v in config['installed_mods']:
-                mod_overrides.append(get_class(v))
-            self.installed_modifications = tuple(mod_overrides)
+            self.installed_modifications = config['installed_mods']
 
         self._url = url
         self._image_root = config['asset_root']
@@ -186,6 +183,11 @@ class BaseImageHandler(object):
             self.cache = get_class(config['cache_backend'])
         if config.get('response_backend'):
             self.response_backend = get_class(config['response_backend'])
+        if config.get('installed_mods'):
+            mod_overrides = []
+            for v in config['installed_mods']:
+                mod_overrides.append(get_class(v))
+            config.installed_mods = tuple(mod_overrides)            
             
         try:
             c = self.cache(path, config)
