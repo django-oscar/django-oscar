@@ -169,7 +169,7 @@ OSCAR_DEFAULT_CURRENCY = 'GBP'
 #COMMENTS_APP = 'oscar.my_comments_app'
 
 OSCAR_ALLOW_ANON_REVIEWS = True
-OSCAR_MODERATE_REVIEWS = False
+OSCAR_MODERATE_REVIEWS = True
 
 # Local overrides
 try:
