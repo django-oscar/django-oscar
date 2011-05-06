@@ -16,12 +16,11 @@ POSITION_CHOICES = (
     (BANNER, _("Banner")),
     (LEFT_POD, _("Pod on left-hand side of page")),
     (RIGHT_POD, _("Pod on right-hand side of page")),
-    (RAW_HTML, _("Raw HTML"))
 )
 
 
 class AbstractPromotion(models.Model):
-    u"""
+    """
     A promotion model.
 
     This is effectively a link for directing users to different parts of the site.
@@ -34,8 +33,7 @@ class AbstractPromotion(models.Model):
 
     # Three ways of supplying the content
     banner_image = models.ImageField(upload_to=BANNER_FOLDER, blank=True, null=True)
-    pod_image = models.ImageField(upload_to=BANNER_FOLDER, blank=True, null=True)
-    raw_html = models.TextField(blank=True, null=True)
+    pod_image = models.ImageField(upload_to=POD_FOLDER, blank=True, null=True)
 
     date_created = models.DateTimeField(auto_now_add=True)
 
@@ -70,9 +68,6 @@ class AbstractPromotion(models.Model):
 
     def get_pod_html(self):
         return self._get_html('pod_image')
-
-    def get_raw_html(self):
-        return self.raw_html
 
     def _get_html(self, image_field):
         u"""
@@ -145,7 +140,7 @@ class AbstractMerchandisingBlock(models.Model):
     title = models.CharField(_("Title"), max_length=255)
     description = models.TextField(null=True, blank=True)
     type = models.CharField(_("Type"), choices=BLOCK_TYPES, max_length=100)
-    products = models.ManyToManyField('product.Item', blank=True, null=True)
+    products = models.ManyToManyField('product.Item', through='MerchandisingBlockProduct', blank=True, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
     
     class Meta:
@@ -154,7 +149,7 @@ class AbstractMerchandisingBlock(models.Model):
     def __unicode__(self):
         return self.title    
         
-    def template_context(self):
+    def template_context(self, *args, **kwargs):
         """
         Returns dynamically generated HTML that isn't product related.
         
@@ -162,11 +157,27 @@ class AbstractMerchandisingBlock(models.Model):
         """
         method = 'template_context_%s' % self.type.lower()
         if hasattr(self, method):
-            return getattr(self, method)()
+            return getattr(self, method)(*args, **kwargs)
         return {}
-        
-    def template_context_search(self):
-        return {'test': 'asdfasdfasdf'}    
+    
+    def template_context_tabbedblock(self, *args, **kwargs):
+        # Split into groups
+        groups = {}
+        match = 0
+        counter = 0
+        for blockproduct in MerchandisingBlockProduct.objects.filter(block=self):
+            if blockproduct.group not in groups:
+                groups[blockproduct.group] = {'name': blockproduct.group,
+                                              'products': []}
+                if match and blockproduct.group == match:
+                    groups[blockproduct.group]['is_visible'] = True
+                elif not match and counter == 0:
+                    groups[blockproduct.group]['is_visible'] = True
+                else:
+                    groups[blockproduct.group]['is_visible'] = False
+            groups[blockproduct.group]['products'].append(blockproduct.product)
+            counter += 1
+        return {'groups': groups.values()}  
         
     @property
     def num_products(self):
@@ -176,6 +187,19 @@ class AbstractMerchandisingBlock(models.Model):
     def template_file(self):
         return 'oscar/promotions/block_%s.html' % self.type.lower()
     
+    
+class MerchandisingBlockProduct(models.Model):
+    
+    block = models.ForeignKey('promotions.MerchandisingBlock')
+    product = models.ForeignKey('product.Item')
+    group = models.CharField(_("Product group/tab"), max_length=128, null=True)
+    
+    def __unicode__(self):
+        return u"%s - %s (%s)" % (self.block, self.product, self.group)
+    
+    class Meta:
+        ordering = ('group',)
+
 
 class LinkedMerchanisingBlock(models.Model):
 

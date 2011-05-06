@@ -3,7 +3,8 @@ Vanilla promotion models
 """
 from oscar.apps.promotions.abstract_models import (AbstractPromotion, AbstractPagePromotion, AbstractKeywordPromotion,
                                                    BANNER, LEFT_POD, RIGHT_POD, RAW_HTML, 
-                                                   AbstractMerchandisingBlock, AbstractPageMerchandisingBlock, AbstractKeywordMerchandisingBlock)
+                                                   AbstractMerchandisingBlock, AbstractPageMerchandisingBlock, 
+                                                   AbstractKeywordMerchandisingBlock, MerchandisingBlockProduct)
 
 
 class Promotion(AbstractPromotion):
