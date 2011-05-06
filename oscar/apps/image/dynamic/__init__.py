@@ -1,31 +1,20 @@
-from oscar.apps.image.dynamic.cache import NullCache, DiskCache
+from oscar.apps.image.dynamic.cache import DiskCache
+from oscar.apps.image.dynamic.exceptions import ResizerConfigurationException, \
+    ResizerSyntaxException, ResizerFormatException
 from oscar.apps.image.dynamic.mods import AutotrimMod, CropMod, ResizeMod
+from oscar.apps.image.dynamic.response_backends import DirectResponse
 from wsgiref.util import request_uri, application_uri
 import Image
 import cStringIO
-import sys
-import os
-import math
 import datetime
-
+import math
+import os
+import sys
 
 try:
     import cStringIO as StringIO
 except:
     import StringIO
-
-
-class ResizerConfigurationException(Exception):
-    pass
-
-
-class ResizerSyntaxException(Exception):
-    pass
-
-
-class ResizerFormatException(Exception):
-    pass
-
 
 def get_class(kls):
     try:
@@ -90,7 +79,6 @@ class ImageModifier(object):
     quality = 80
 
     def __init__(self, url, config):
-
         if config.get('installed_mods'):
             mod_overrides = []
             for v in config['installed_mods']:
@@ -133,8 +121,7 @@ class ImageModifier(object):
                 self._params = dict(
                     [(x.split("-")[0], x.split("-")[1]) for x in param_parts])
                 self._params['type'] = parts[3]
-
-            except IndexError, e:
+            except IndexError:
                 raise ResizerSyntaxException("Invalid filename syntax")
         else:
             raise ResizerSyntaxException("Invalid filename syntax")
@@ -168,6 +155,9 @@ class ImageModifier(object):
 
     def get_type(self):
         return self.output_formats[self._params['type']]
+    
+    def get_mime_type(self):
+        return self.get_type()[1]
 
 
 class BaseImageHandler(object):
@@ -178,20 +168,10 @@ class BaseImageHandler(object):
     """
     modifier = ImageModifier
     cache = DiskCache
-
-    def build_response(self, data, modifier, start_response):
-        """
-        Serves the (now) cached image off the disc. It is assumed that the file
-        actually exists as it's non-existence should have been picked up while
-        checking to see if the cached version is valid.
-        """
-        status = '200 OK'
-
-        response_headers = [('Content-type', modifier.get_type()[1]),
-                            ('Content-Length', str(len(data)))]
-        start_response(status, response_headers)
-
-        return [data]
+    response_backend = DirectResponse
+    
+    def build_sendfile_response(self, metadata, modifier, start_response):
+        pass
 
     def __call__(self, environ, start_response):
         path = environ.get('PATH_INFO')
@@ -204,6 +184,9 @@ class BaseImageHandler(object):
 
         if config.get('cache_backend'):
             self.cache = get_class(config['cache_backend'])
+        if config.get('response_backend'):
+            self.response_backend = get_class(config['response_backend'])
+            
         try:
             c = self.cache(path, config)
             m = self.modifier(path, config)
@@ -213,7 +196,7 @@ class BaseImageHandler(object):
             if not c.check(m.source_path()):
                 data = m.generate_image()
                 c.write(data)
-            return self.build_response(c.read(), m, start_response)
+            return self.response_backend(m.get_mime_type(),c,start_response).build_response()
         except Exception, e:
             return error404(path, start_response)
 
@@ -235,7 +218,7 @@ class DjangoImageHandler(BaseImageHandler):
         django_response = HttpResponse()
 
         def start_response(status, headers):
-            status, reason = status.split(' ', 1)
+            status = status.split(' ', 1)[0]
             django_response.status_code = int(status)
             for header, value in headers:
                 django_response[header] = value

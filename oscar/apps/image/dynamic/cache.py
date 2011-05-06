@@ -79,6 +79,14 @@ class DiskCache(BaseCache):
         f = open(path, 'w')
         f.write(data)
         f.close()
+        
+    def file_info(self):
+        """
+        If we're using X-Sendfile or X-Accel-Redirect we want to return info
+        about the file, rather than the actual file content
+        """
+        size = os.path.getsize(self._cache_path())
+        return (self._cache_path(), size)
 
     def read(self):
         f = open(self._cache_path(), "r")
