@@ -20,9 +20,10 @@ OSCAR_SEARCH_SUGGEST_LIMIT = 10
 OSCAR_PARTNER_WRAPPERS = {}
 
 # Promotions
-COUNTDOWN, LIST, SINGLE_PRODUCT = ('Countdown', 'List', 'SingleProduct')
+COUNTDOWN, LIST, SINGLE_PRODUCT, TABBED_BLOCK = ('Countdown', 'List', 'SingleProduct', 'TabbedBlock')
 OSCAR_PROMOTION_MERCHANDISING_BLOCK_TYPES = (
-    (COUNTDOWN, "Countdown"),
-    (LIST, "List"),
+    (COUNTDOWN, "Vertical list"),
+    (LIST, "Horizontal list"),
+    (TABBED_BLOCK, "Tabbed block"),
     (SINGLE_PRODUCT, "Single product"),
 )   
