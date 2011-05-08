@@ -5,7 +5,7 @@ from oscar.core.loading import import_module
 
 import_module('checkout.views', ['IndexView', 'ShippingAddressView',
                                  'ShippingMethodView', 'PaymentMethodView', 'OrderPreviewView',
-                                'PaymentDetailsView', 'ThankYouView'], locals())
+                                 'PaymentDetailsView', 'ThankYouView'], locals())
 
 urlpatterns = patterns('oscar.checkout.views',
     url(r'^$', class_based_view(IndexView), name='oscar-checkout-index'),

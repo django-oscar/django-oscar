@@ -29,7 +29,7 @@ class BasketView(ModelView):
     
     def handle_GET(self, basket):
         u"""Handle GET requests against the basket"""
-        saved_basket = self.factory.get_saved_basket(self.request, self.response)
+        saved_basket = self.factory.get_saved_basket(self.request)
         self.response = render(self.request, self.template_file, locals())
         
     def handle_POST(self, basket):
