@@ -53,7 +53,7 @@ class AbstractPromotion(models.Model):
         return "%s (%s)" % (self.name, self.link_url)   
         
     def clean(self):
-        if not self.banner_image and not self.pod_image and not self.raw_html:
+        if not self.banner_image and not self.pod_image:
             raise ValidationError("A promotion must have one of a banner image, pod image or raw HTML")    
         
     def set_proxy_link(self, url):
@@ -73,8 +73,6 @@ class AbstractPromotion(models.Model):
         u"""
         Returns the appropriate HTML for an image field
         """
-        if self.raw_html:
-            return self.raw_html
         try:
             image = getattr(self, image_field)
             image_html = self.image_html_template % (image.url, self.name)
