@@ -19,7 +19,8 @@ class StockImporter(object):
         try:
             self._partner = Partner.objects.get(name=partner)
         except Partner.DoesNotExist:
-            raise ImportException("Partner named '%s' does not exist" % partner)
+            name_list = ", ".join([d['name'] for d in Partner.objects.values('name')])
+            raise ImportException("Partner named '%s' does not exist (existing partners: %s)" % (partner, name_list))
     
     def handle(self, file_path=None):
         u"""Handles the actual import process"""

@@ -7,7 +7,7 @@ from django.core.management.base import BaseCommand, CommandError
 
 from oscar.core.loading import import_module
 import_module('partner.utils', ['StockImporter'], locals())
-import_module('partner.exceptions', ['StockImportException'], locals())
+import_module('partner.exceptions', ['ImportException'], locals())
 
 
 class Command(BaseCommand):
@@ -33,7 +33,7 @@ class Command(BaseCommand):
             logger.info("Starting stock import")
             logger.info(" - Importing records from '%s'" % args[1])
             importer.handle(args[1])
-        except StockImportException, e:
+        except ImportException, e:
             raise CommandError(str(e))
             
     def _get_logger(self):
