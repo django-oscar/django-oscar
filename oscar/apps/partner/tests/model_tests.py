@@ -9,6 +9,7 @@ from oscar.apps.product.models import Item, ItemClass
 from oscar.apps.partner.models import Partner, StockRecord
 from oscar.test.helpers import create_product
 
+
 class DummyWrapper(object):
     
     def availability(self, stockrecord):
@@ -49,6 +50,7 @@ class DefaultWrapperTests(unittest.TestCase):
         product = create_product(price=D('10.00'), partner="Acme", num_in_stock=0)  
         date = datetime.date.today() + datetime.timedelta(days=7)
         self.assertEquals(date, product.stockrecord.dispatch_date)
+    
     
 class CustomWrapperTests(unittest.TestCase):    
 

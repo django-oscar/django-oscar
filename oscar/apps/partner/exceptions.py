@@ -1,2 +1,2 @@
-class StockImportException(Exception):
+class ImportException(Exception):
     pass
