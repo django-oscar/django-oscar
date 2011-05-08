@@ -21,7 +21,7 @@ class StockImporter(object):
         except Partner.DoesNotExist:
             name_list = ", ".join([d['name'] for d in Partner.objects.values('name')])
             raise ImportException("Partner named '%s' does not exist (existing partners: %s)" % (partner, name_list))
-    
+        
     def handle(self, file_path=None):
         u"""Handles the actual import process"""
         if not file_path:
@@ -98,10 +98,9 @@ class CatalogueImporter(object):
         u"""Handles the actual import process"""
         if not file_path:
             raise ImportException("No file path supplied")
-        
+        Validator().validate(file_path)
         if self._flush is True:
             self._flush_product_data()
-        Validator().validate(file_path)
         self._import(file_path)
         
     def _flush_product_data(self):
@@ -169,6 +168,7 @@ class CatalogueImporter(object):
     
         
 class Validator(object):
+    
     def validate(self, file_path):
         self._exists(file_path)
         self._is_file(file_path)
