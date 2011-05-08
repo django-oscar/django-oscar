@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 
 {% load currency_filters %}
+{% load thumbnail %}
 
 {% block header %}
 <h2>{{ summary }}</h2>
@@ -14,6 +15,14 @@
 <ol>
 {% for product in products %}
 <li>
+    {% for image in product.images.all %}
+        {% if forloop.first %}
+            {% thumbnail image.original "100" crop="center" as im %}
+                <a href="{{ product.get_absolute_url }}"><img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"></a>
+            {% endthumbnail %}
+        {% endif %}
+    {% endfor %}
+
     <a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a><br/>
     {% if product.is_group %}
         From {{ product.min_variant_price_incl_tax|currency }}

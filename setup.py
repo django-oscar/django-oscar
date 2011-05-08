@@ -9,5 +9,6 @@ setup(name='django-oscar',
       package_dir={'': '.'},
       install_requires=['Django>=1.3',
           'PIL>=1.1.7',
-          'django-haystack>=1.2.0'],
+          'django-haystack>=1.2.0',
+          'sorl-thumbnail==11.05.1'],
       )

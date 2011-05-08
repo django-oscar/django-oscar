@@ -2,6 +2,7 @@
 
 {% load currency_filters %}
 {% load history_tags %}
+{% load thumbnail %}
 
 {% block header %}
 <h2>{{item.get_title}}</h2>
@@ -11,7 +12,9 @@
 {% block content %}
 <div class="images">
     {% for image in item.images.all %}
-    <img src="{{ image.fullsize_url }}" title="{{ item.get_title }}" />
+    {% thumbnail image.original "200" crop="center" as im %}
+        <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+    {% endthumbnail %}
     {% if image.caption %}
         <div class="caption">{{ image.caption }}</div>
     {% endif %}

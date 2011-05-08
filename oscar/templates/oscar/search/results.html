@@ -1,5 +1,6 @@
 {% extends 'layout.html' %}
 {% load currency_filters %}
+{% load thumbnail %}
 
 {% block content %}
 <h2>Search for '{{ query }}'</h2>
@@ -11,6 +12,13 @@ Did you mean <a href="{% url oscar-search %}?q={{ suggestion }}">{{ suggestion }
 <ol>
 {% for result in page.object_list %}
 <li>
+    {% for image in result.object.images.all %}
+        {% if forloop.first %}
+            {% thumbnail image.original "100" crop="center" as im %}
+                <a href="{{ result.object.get_absolute_url }}"><img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"></a>
+            {% endthumbnail %}
+        {% endif %}
+    {% endfor %}
     <a href="{{ result.object.get_absolute_url }}">{{ result.object.get_title }}</a><br/>
     {% if result.object.is_group %}
         From {{ result.object.min_variant_price_incl_tax|currency }}

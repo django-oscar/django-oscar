@@ -5,6 +5,7 @@ Abstract models for product images
 from django.db import models
 from django.utils.translation import ugettext as _
 from django.conf import settings
+from sorl.thumbnail import ImageField
 
 FOLDER = settings.OSCAR_IMAGE_FOLDER
 
@@ -12,7 +13,7 @@ class AbstractImage(models.Model):
     u"""An image of a product"""
     product = models.ForeignKey('product.Item', related_name='images')
     
-    original = models.ImageField(upload_to=FOLDER)
+    original = ImageField(upload_to=FOLDER)
     caption = models.CharField(_("Caption"), max_length=200, blank=True, null=True)
     
     # Use display_order to determine which is the "primary" image
