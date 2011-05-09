@@ -1,8 +1,8 @@
-from oscar.apps.image.dynamic.cache import DiskCache
-from oscar.apps.image.dynamic.exceptions import ResizerConfigurationException, \
+from oscar.apps.dynamic_images.cache import DiskCache
+from oscar.apps.dynamic_images.exceptions import ResizerConfigurationException, \
     ResizerSyntaxException, ResizerFormatException
-from oscar.apps.image.dynamic.mods import AutotrimMod, CropMod, ResizeMod
-from oscar.apps.image.dynamic.response_backends import DirectResponse
+from oscar.apps.dynamic_images.mods import AutotrimMod, CropMod, ResizeMod
+from oscar.apps.dynamic_images.response_backends import DirectResponse
 from wsgiref.util import request_uri, application_uri
 import Image
 import cStringIO
@@ -10,6 +10,7 @@ import datetime
 import math
 import os
 import sys
+import re
 
 try:
     import cStringIO as StringIO
@@ -77,6 +78,9 @@ class ImageModifier(object):
     )
 
     quality = 80
+    
+    process_check = re.compile(r'^(?P<filename>.+?)\.(?P<params>[a-z0-9]+-[a-z0-9]+(.+?)*)\.(?P<type>[a-z0-9]+)$').search
+    convert_check = re.compile(r'^(?P<filename>.+?)\.to\.(?P<type>[a-z0-9]+)$').search
 
     def __init__(self, url, config):
         if config.get('installed_mods'):
@@ -92,36 +96,44 @@ class ImageModifier(object):
 
         Valid syntax:
         - /path/to/image.ext (serve image unchanged)
-        - /path/to/image.ext.newext (change format of image)
+        - /path/to/image.ext.to.newext (change format of image)
         - /path/to/image.ext.options-string.newext (change format and modify
           image)
 
         Format of options string is:
         key1-value1_key2-value2_key3-value3
         """
-        parts = self._url.split('.')
-
-        length = len(parts)
-
-        if length == 2:
-            self.source_filename = self._url
-            self._params = dict(type=parts[1])
-        elif length == 3:
-            self.source_filename = ".".join((parts[0], parts[1]))
-            self._params = dict(type=parts[2])
-        elif length == 4:
-            self.source_filename = ".".join((parts[0], parts[1]))
-
-            param_parts = parts[2].split('_')
-
+        path, name = os.path.split(self._url)
+        
+        p_result = self.process_check(name)
+        c_result = self.convert_check(name)
+        
+        if p_result:
+            filename = p_result.group('filename')
+            type = p_result.group('type')            
+            params = p_result.group('params')
+            
+            param_parts = params.split('_')
+            
             try:
-                self._params = dict(
+                params = dict(
                     [(x.split("-")[0], x.split("-")[1]) for x in param_parts])
-                self._params['type'] = parts[3]
             except IndexError:
-                raise ResizerSyntaxException("Invalid filename syntax")
+                raise ResizerSyntaxException("Invalid filename syntax")            
+        elif c_result:
+            filename = c_result.group('filename')            
+            type = c_result.group('type')
+            params = {}
         else:
-            raise ResizerSyntaxException("Invalid filename syntax")
+            filename = self._url
+            type = os.path.splitext(name)[1][1:]
+
+            params = {}
+        
+        params['type'] = type
+        
+        self._params = params
+        self.source_filename = os.path.join(path,filename)
 
         if self._params['type'] not in self.output_formats:
             raise ResizerFormatException("Invalid output format")
