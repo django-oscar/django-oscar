@@ -3,7 +3,9 @@ Core product reviews
 """
 from django.db import models
 from django.contrib.auth.models import User
+from django.template.defaultfilters import slugify
 from django.utils.translation import gettext as _
+from django.core.urlresolvers import reverse
 
 from oscar.product.models import Item
 
@@ -23,24 +25,38 @@ class AbstractProductReview(models.Model):
         ('5', 5)
     )
     product = models.ForeignKey('product.Item', related_name='product')
-    user = models.ForeignKey('auth.User', related_name='review')
+    user = models.ForeignKey('auth.User', related_name='review', null=True)
+    # anonymous users
+    name = models.CharField(_("Name"), max_length=100, null=True, blank=True)
+    email = models.EmailField(_("Email"), null=True, blank=True)
+    url = models.URLField(_("URL"), null=True, blank=True)
+    # real review stuffs
     title = models.CharField(_("Title"), max_length=100)
     body = models.TextField(_("Comment"), max_length=300, blank=True)
     score = models.CharField(_("Score"), max_length=1, choices=SCORE_CHOICES, blank=True)
     approved = models.BooleanField(default=False)    
-    name = models.CharField(_("Name"), max_length=100, null=True, blank=True)
-    email = models.EmailField(_("Email"), null=True, blank=True)
-    url = models.URLField(_("URL"), null=True, blank=True)
+    slug = models.SlugField(max_length=128, unique=True) 
     
     class Meta:
         abstract = True
         ordering = ['approved']
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug= slugify(self.name)
+        super(AbstractProductReview, self).save(*args, **kwargs)
+    
         
     def get_absolute_url(self):
-        return reverse('oscar-product-review-class', kwargs={'review_class_slug': self.slug})
+        return reverse('oscar-product-review', 
+                       kwargs={'review_id': self.id,
+                               'item_class_slug': str(self.product.item_class),
+                               'item_slug': self.product.slug, 
+                                'item_id': str(self.product.id)})
 
     def __unicode__(self):
         return self.title
+
 
 class AbstractVote(models.Model):
     u"""
@@ -49,8 +65,8 @@ class AbstractVote(models.Model):
     """    
     user = models.ForeignKey('auth.User', related_name='vote', null=True, blank=True)
     review = models.ForeignKey('reviews.ProductReview', related_name='review')
-    up = models.IntegerField(blank=True)
-    down = models.IntegerField(blank=True)
+    up = models.IntegerField(_("Yes"), blank=True)
+    down = models.IntegerField(_("No"), blank=True)
     
     class Meta:
         abstract = True

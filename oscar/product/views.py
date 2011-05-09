@@ -13,8 +13,8 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 
 from oscar.services import import_module
-from oscar.reviews.models import ProductReview
-from oscar.reviews.forms import make_review_form, ProductReviewForm
+from oscar.reviews.models import ProductReview, Vote
+from oscar.reviews.forms import make_review_form, make_voting_form, ProductReviewForm
 
 product_models = import_module('product.models', ['Item', 'ItemClass'])
 product_signals = import_module('product.signals', ['product_viewed'])
@@ -54,7 +54,10 @@ class ItemDetailView(DetailView):
         context = super(ItemDetailView, self).get_context_data(**kwargs)
         context['form'] = self.get_add_to_basket_form()
         context['reviews'] = self.get_product_review()
-        context['avg_score'] = self.get_avg_review()        
+        context['avg_score'] = self.get_avg_review()
+        context['review_votes'] = self.get_review_votes()
+        context['up_vote_form'] = self.get_voting_form('up', self.request.POST)
+        context['down_vote_form'] = self.get_voting_form('down', self.request.POST)        
         return context
     
     def get_product_review(self):
@@ -74,6 +77,19 @@ class ItemDetailView(DetailView):
     def get_add_to_basket_form(self):
         factory = basket_forms.FormFactory()
         return factory.create(self.object)
+
+    def get_review_votes(self):
+        return Vote.objects.all()
+
+    def get_voting_form(self, choice, values):       
+        if self.request.method == 'POST':            
+            if self.request.POST['upvote']:
+               print "Got up vote"
+            elif self.request.POST['downvote']:
+               print "got down vote"
+        else:
+           voting_form = make_voting_form(choice, values)
+        return voting_form
 
 
 class ItemClassListView(ListView):
@@ -124,7 +140,7 @@ class ItemReviewView(object):
     """
   
     def _is_review_done(self):
-        """
+        u"""
         Check if the user already reviewed this product
         """                
         try:
@@ -132,17 +148,7 @@ class ItemReviewView(object):
             return True
         except ObjectDoesNotExist:                
             return False
-  
-    def get_anon_user(self):
-        username = str(randint(0, maxint))
-        u = User(username=username, first_name='Anonymous', last_name='User')
-        u.set_unusable_password()
-        u.save()        
-        u.username = u.id
-        u.save() 
-        return u 
-  
-  
+    
     def __call__(self, request, *args, **kwargs):        
         self.request = request
         self.args = args
@@ -158,15 +164,12 @@ class ItemReviewView(object):
         template_name = "reviews/add_review.html"
                         
         if self.request.method == 'POST':        
-            form = make_review_form(self.user, self.request.POST)
-            print form                      
-            if form.is_valid():
+            review_form = make_review_form(self.user, self.request.POST)            
+            if review_form.is_valid():
                 if self.user.is_authenticated():
-                    review = ProductReview(product=item, user=self.request.user)
-                elif settings.OSCAR_ALLOW_ANON_REVIEWS:
-                    # create an anonymous user and log them in?
-                    u = self.get_anon_user()
-                    review = ProductReview(product=item, user=u)
+                    review = ProductReview(product=item, user=self.request.user)                   
+                elif settings.OSCAR_ALLOW_ANON_REVIEWS:                    
+                    review = ProductReview(product=item, user=None)
                 else:
                     messages.info(self.request, "Please login to submit a review!")
                     return HttpResponsePermanentRedirect(item.get_absolute_url())
@@ -176,11 +179,63 @@ class ItemReviewView(object):
                 messages.info(self.request, "Your review has been submitted successfully!")
                 return HttpResponsePermanentRedirect(item.get_absolute_url())                                                   
         else:            
-            form = make_review_form(self.request.user)
-          
+            review_form = make_review_form(self.request.user)
+        
         return render(self.request, template_name, {
                     "item" : item,
-                    "review_form": form,
+                    "review_form": review_form,
                     })
-        
-        
+
+class ReviewDetailView(DetailView):
+    u"""
+    Places each review on its own page
+    """
+    template_name = "reviews/review.html"
+    _review = None
+    
+    def get(self, request, **kwargs):
+        u"""
+        Ensures that the correct URL is used
+        """
+        # get the product review                
+        review = self.get_object()
+        correct_path = review.get_absolute_url() 
+        if correct_path != request.path:
+            return HttpResponsePermanentRedirect(correct_path)        
+        return super(ReviewDetailView, self).get(request, **kwargs)
+    
+    def get_object(self):
+        u"""
+        Return a review object or a 404.
+        """
+        try:            
+            self._review = review_models.ProductReview.objects.get(pk=self.kwargs['review_id'])
+            return self._review
+        except ObjectDoesNotExist:                
+            raise
+    
+    def get_context_data(self, **kwargs):
+        context = super(ReviewDetailView, self).get_context_data(**kwargs)        
+        context['review'] = self.get_object()
+        return context
+    
+class ReviewListView(ListView):
+    u"""A list of reviews for a particular product"""    
+    context_object_name = "reviews"
+    model = ProductReview
+    template_name = 'reviews/reviews.html'
+    paginate_by = 20
+     
+    def get_queryset(self):
+        self.objects = review_models.ProductReview.objects.filter(product=self.kwargs['item_id'])
+        return self.objects 
+     
+    def get_context_data(self, **kwargs):
+        context = super(ReviewListView, self).get_context_data(**kwargs)
+        item = get_object_or_404(product_models.Item, pk=self.kwargs['item_id'])    
+        context['item'] = item
+        context['avg_score'] = self.objects.aggregate(Avg('score'))           
+        return context
+    
+
+         

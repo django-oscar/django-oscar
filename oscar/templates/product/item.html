@@ -73,6 +73,19 @@
 		<h4> {{ forloop.counter}}. {{ review.title }} </h4>
 		<p> Score: {{ review.score|floatformat:1 }} / 5.0</p>
 		<p> Comments: {{ review.body }}</p>
+		
+		<h4> Was this review helpful to you? </h4>
+		<form action="" method="post">
+    		{% csrf_token %}
+    		{{ up_vote_form }}    		
+    		<input type="submit" value="Yes" />
+		</form>
+		<form action="" method="post">
+    		{% csrf_token %}
+    		{{ down_vote_form }}    		    		
+    		<input type="submit" value="No" />
+		</form>
+				
 	{% endfor %}
 {% endif %}
 {% endblock product_review %}
