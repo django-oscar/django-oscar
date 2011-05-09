@@ -6,11 +6,12 @@ When building an e-commerce site, there are several components whose
 implementation is strongly domain-specific.  That is, every site will have
 different requirements for how such a component should operate.  As such, these components
 cannot easily be modelled using a generic system - no configurable system will be able
-to accurately capture the domain-specific behaviour required.  
+to accurately capture all the domain-specific behaviour required.  
 
 The design philosophy of oscar is to not make a decision for you here, but to
 provide the environment where any domain logic can be implemented, no matter
-how complex.
+how complex.  This is achieved through the use of subclassable objects that can 
+be tailored to your domain. 
 
 This document lists the components which will require implementation according to the
 domain:

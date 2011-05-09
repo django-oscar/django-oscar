@@ -37,7 +37,7 @@ class PromotionTest(unittest.TestCase):
 class PagePromotionTest(unittest.TestCase):
     
     def setUp(self):
-        self.promotion = Promotion.objects.create(name='Dummy', raw_html='', link_url='http://www.example.com')
+        self.promotion = Promotion.objects.create(name='Dummy', link_url='http://www.example.com')
         self.page_prom = PagePromotion.objects.create(promotion=self.promotion,
                                                       position=RAW_HTML,
                                                       page_url='/')
@@ -58,7 +58,7 @@ class PagePromotionTest(unittest.TestCase):
 class KeywordPromotionTest(unittest.TestCase):
     
     def setUp(self):
-        self.promotion = Promotion.objects.create(name='Dummy', raw_html='', link_url='http://www.example.com')
+        self.promotion = Promotion.objects.create(name='Dummy', link_url='http://www.example.com')
         self.kw_prom = KeywordPromotion.objects.create(promotion=self.promotion,
                                                        position=RAW_HTML,
                                                        keyword='cheese')

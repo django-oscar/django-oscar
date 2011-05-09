@@ -37,6 +37,7 @@ Full contents:
 
    introduction
    ecommerce_domain
+   design_decisions
    getting_started
    components
    web_services

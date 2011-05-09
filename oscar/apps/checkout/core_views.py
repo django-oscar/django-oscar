@@ -42,13 +42,6 @@ def mark_step_as_complete(request):
     """
     checkout_utils.ProgressChecker().step_complete(request)
     
-def mark_step_as_complete(request):
-    u""" 
-    Convenience function for marking a checkout page
-    as complete.
-    """
-    checkout_utils.ProgressChecker().step_complete(request)
-    
 def get_next_step(request):
     return checkout_utils.ProgressChecker().get_next_step(request)    
     
