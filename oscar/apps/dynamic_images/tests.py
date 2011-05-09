@@ -137,6 +137,3 @@ class ImageModTestCase(unittest.TestCase):
         
         self.assertEquals(im.size, (200, 200))
         self.assertEquals(self.image.size, (1535, 1800))
-        
-        
-        
