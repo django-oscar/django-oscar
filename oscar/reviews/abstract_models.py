@@ -10,7 +10,6 @@ from django.core.urlresolvers import reverse
 from oscar.product.models import Item
 
 
-
 class AbstractProductReview(models.Model):
     u"""
     Superclass ProductReview
@@ -35,18 +34,13 @@ class AbstractProductReview(models.Model):
     body = models.TextField(_("Comment"), max_length=300, blank=True)
     score = models.CharField(_("Score"), max_length=1, choices=SCORE_CHOICES, blank=True)
     approved = models.BooleanField(default=False)    
-    slug = models.SlugField(max_length=128, unique=True) 
+    slug = models.SlugField(max_length=128, unique=True)
+    date_created = models.DateTimeField(auto_now_add=True)
     
     class Meta:
         abstract = True
         ordering = ['approved']
-    
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug= slugify(self.name)
-        super(AbstractProductReview, self).save(*args, **kwargs)
-    
-        
+                
     def get_absolute_url(self):
         return reverse('oscar-product-review', 
                        kwargs={'review_id': self.id,
@@ -67,6 +61,7 @@ class AbstractVote(models.Model):
     review = models.ForeignKey('reviews.ProductReview', related_name='review')
     up = models.IntegerField(_("Yes"), blank=True)
     down = models.IntegerField(_("No"), blank=True)
+    date_created = models.DateTimeField(auto_now_add=True)
     
     class Meta:
         abstract = True

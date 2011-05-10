@@ -32,6 +32,5 @@ def make_voting_form(choice, values):
     if choice == 'up':
         form = UpVoteForm(values)
     elif choice == 'down':
-        form = DownVoteForm(values)
-    print form        
+        form = DownVoteForm(values)      
     return form
