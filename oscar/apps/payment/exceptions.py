@@ -1,6 +1,14 @@
-class TransactionDeclinedException(Exception):
+class PaymentException(Exception):
     pass
 
 
-class GatewayException(Exception):
+class TransactionDeclinedException(PaymentException):
+    pass
+
+
+class GatewayException(PaymentException):
+    pass
+
+
+class InvalidGatewayRequestException(PaymentException):
     pass

@@ -5,13 +5,15 @@ import httplib, urllib
 from django.conf import settings
 from django.db import transaction
 from django.utils.translation import ugettext_lazy as _
+from django.core.mail import mail_admins
 
 from oscar.core.loading import import_module
 import_module('payment.datacash.models', ['OrderTransaction'], locals())
-import_module('payment.exceptions', ['TransactionDeclinedException', 'GatewayException'], locals())
+import_module('payment.exceptions', ['TransactionDeclinedException', 'GatewayException', 
+                                     'InvalidGatewayRequestException'], locals())
 
 # Status codes
-ACCEPTED, DECLINED = '1', '7'
+ACCEPTED, DECLINED, INVALID_CREDENTIALS = '1', '7', '10'
 
 
 class Gateway(object):
@@ -222,6 +224,13 @@ class Facade(object):
                                                   response_xml=self.gateway.last_response_xml())
         
         # Test if response is successful
+        if response['status'] == INVALID_CREDENTIALS:
+            # This needs to notify the administrators straight away
+            import pprint
+            msg = "Order #%s:\n%s" % (order_number, pprint.pprint(response))
+            mail_admins("Datacash credentials are not valid", msg)
+            raise InvalidGatewayRequestException("Unable to communicate with payment gateway, please try again later")
+        
         if response['status'] == DECLINED:
             raise TransactionDeclinedException("Your bank declined this transaction, please check your details and try again")
         
