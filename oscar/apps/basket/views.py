@@ -1,3 +1,5 @@
+import re
+
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.core.urlresolvers import reverse
@@ -105,6 +107,18 @@ class BasketView(ModelView):
             messages.info(self.request, "Voucher '%s' removed from basket" % voucher.code)
         except ObjectDoesNotExist:
             messages.error(self.request, "No voucher found with code '%s'" % code)
+            
+    def do_bulk_load(self, basket):
+        num_additions = 0
+        num_not_found = 0
+        for sku in re.findall(r"[\d -]{5,}", self.request.POST['source_text']):
+            try:
+                item = Item.objects.get(upc=sku)
+                basket.add_product(item)
+                num_additions += 1
+            except Item.DoesNotExist:
+                num_not_found += 1
+        messages.info(self.request, "Added %d items to your basket (%d missing)" % (num_additions, num_not_found))
  
 
 class LineView(ModelView):
