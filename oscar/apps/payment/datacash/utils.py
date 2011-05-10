@@ -202,7 +202,7 @@ class Facade(object):
     def __init__(self):
         self.gateway = Gateway(settings.DATACASH_CLIENT, settings.DATACASH_PASSWORD, settings.DATACASH_HOST)
     
-    def debit(self, order_number, amount, bankcard, billing_address=None):
+    def debit(self, order_number, amount, bankcard, basket, billing_address=None):
         with transaction.commit_on_success():
             response = self.gateway.auth(card_number=bankcard.card_number,
                                          expiry_date=bankcard.expiry_date,
@@ -213,6 +213,7 @@ class Facade(object):
             
             # Create transaction model irrespective of whether transaction was successful or not
             txn = OrderTransaction.objects.create(order_number=order_number,
+                                                  basket=basket,
                                                   method='auth',
                                                   datacash_ref=response['datacash_reference'],
                                                   merchant_ref=response['merchant_reference'],

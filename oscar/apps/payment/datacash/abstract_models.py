@@ -5,6 +5,9 @@ from django.db import models
 
 class AbstractOrderTransaction(models.Model):
     
+    # We track link with basket for audit
+    basket = models.ForeignKey('basket.Basket', null=True)
+    
     # Note we don't use a foreign key as the order hasn't been created
     # by the time the transaction takes place
     order_number = models.CharField(max_length=128, db_index=True)

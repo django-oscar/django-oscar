@@ -91,7 +91,7 @@ class PaymentDetailsView(CorePaymentDetailsView):
         
         # Handle new card submission 
         dc_facade = Facade()
-        reference = dc_facade.debit(order_number, total, bankcard)
+        reference = dc_facade.debit(order_number, total, bankcard, self.basket)
         
         # Create payment source (but don't save just yet)
         type,_ = SourceType.objects.get_or_create(name='DataCash', code='datacash')
