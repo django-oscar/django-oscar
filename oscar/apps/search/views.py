@@ -3,6 +3,7 @@ import json
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic.base import View
 from django.conf import settings
+from django.template.response import TemplateResponse
 from haystack.query import SearchQuerySet
 from haystack.views import FacetedSearchView
 
@@ -45,8 +46,8 @@ class Suggestions(View):
     def get_json_response(self, content, **httpresponse_kwargs):
         "Construct an `HttpResponse` object."
         return HttpResponse(content,
-                                 content_type='application/json',
-                                 **httpresponse_kwargs)
+                            content_type='application/json',
+                            **httpresponse_kwargs)
 
     def convert_context_to_json(self, context):
         "Convert the context into a JSON object"

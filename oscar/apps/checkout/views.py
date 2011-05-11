@@ -4,13 +4,14 @@ import logging
 from django.conf import settings
 from django.http import HttpResponse, Http404, HttpResponseRedirect, HttpResponseBadRequest
 from django.template import RequestContext
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.forms import ModelForm
 from django.contrib import messages
 from django.core.urlresolvers import resolve
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext as _
+from django.template.response import TemplateResponse
 
 from oscar.view.generic import ModelView
 from oscar.core.loading import import_module
@@ -35,7 +36,7 @@ class IndexView(object):
     def __call__(self, request):
         if request.user.is_authenticated():
             return HttpResponseRedirect(reverse('oscar-checkout-shipping-address'))
-        return render(request, self.template_file, locals())    
+        return TemplateResponse(request, self.template_file)    
 
 
 class ShippingAddressView(CheckoutView):
@@ -75,7 +76,7 @@ class ShippingAddressView(CheckoutView):
         if self.request.user.is_authenticated():
             self.context['addresses'] = UserAddress._default_manager.filter(user=self.request.user)
         
-        return render(self.request, self.template_file, self.context)
+        return TemplateResponse(self.request, self.template_file, self.context)
     
     
 class ShippingMethodView(CheckoutView):
@@ -93,7 +94,7 @@ class ShippingMethodView(CheckoutView):
             return self.get_success_response()
         
         self.context['methods'] = methods
-        return render(self.request, self.template_file, self.context)
+        return TemplateResponse(self.request, self.template_file, self.context)
     
     def get_shipping_methods_for_basket(self, basket):
         u"""Return available shipping methods for a basket"""
@@ -132,7 +133,7 @@ class OrderPreviewView(CheckoutView):
     
     def handle_GET(self):
         mark_step_as_complete(self.request)
-        return render(self.request, self.template_file, self.context)
+        return TemplateResponse(self.request, self.template_file, self.context)
 
 
 class PaymentDetailsView(CheckoutView):
@@ -333,4 +334,4 @@ class ThankYouView(object):
             del request.session['checkout_order_id']
         except KeyError, ObjectDoesNotExist:
             return HttpResponseRedirect(reverse('oscar-checkout-index'))
-        return render(request, 'oscar/checkout/thank_you.html', locals())
+        return TemplateResponse(request, 'oscar/checkout/thank_you.html', locals())

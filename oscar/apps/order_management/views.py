@@ -1,6 +1,6 @@
 from django.http import HttpResponseRedirect
 from django.template import Context, loader, RequestContext
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.views.generic import ListView, DetailView
@@ -29,13 +29,13 @@ class OrderView(ModelView):
     
     def get_model(self):
         u"""Return an order object or a 404"""
-        return get_object_or_404(order_models.Order, number=self.kwargs['order_number'])
+        return get_object_or_404(Order, number=self.kwargs['order_number'])
     
     def handle_GET(self, order):
         shipping_options = ShippingEventType._default_manager.all()
         payment_options = PaymentEventType._default_manager.all()
-        
-        self.response = render(self.request, self.template_file, locals())
+        self.response = TemplateResponse(self.request, self.template_file, {'shipping_options': shipping_options,
+                                                                            'payment_options': payment_options})
         
     def handle_POST(self, order):
         self.response = HttpResponseRedirect(reverse('oscar-order-management-order', kwargs={'order_number': order.number}))

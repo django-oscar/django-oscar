@@ -1,10 +1,11 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.utils.translation import ugettext as _
+from django.template.response import TemplateResponse
 
 from oscar.apps.address.forms import UserAddressForm
 from oscar.view.generic import ModelView
@@ -19,7 +20,7 @@ def profile(request):
     u"""Return a customers's profile"""
     # Load last 5 orders as preview
     orders = Order._default_manager.filter(user=request.user)[0:5]
-    return render(request, 'oscar/customer/profile.html', locals())
+    return TemplateResponse(request, 'oscar/customer/profile.html', {'orders': orders})
     
         
 class OrderHistoryView(ListView):
@@ -42,7 +43,7 @@ class OrderDetailView(ModelView):
         return get_object_or_404(Order, user=self.request.user, number=self.kwargs['order_number'])
     
     def handle_GET(self, order):
-        self.response = render(self.request, self.template_file, locals())
+        self.response = TemplateResponse(self.request, self.template_file, {'order': order})
         
         
 class OrderLineView(ModelView):
@@ -101,7 +102,7 @@ class AddressView(ModelView):
     
     def handle_GET(self, address):
         form = UserAddressForm(instance=address)
-        self.response = render(self.request, self.template_file, locals())
+        self.response = TemplateResponse(self.request, self.template_file, {'form': form})
         
     def do_save(self, address):
         u"""Save an address"""
@@ -110,7 +111,7 @@ class AddressView(ModelView):
             a = form.save()
             self.response = HttpResponseRedirect(reverse('oscar-customer-address-book'))
         else:
-            self.response = render(self.request, self.template_file, locals())
+            self.response = TemplateResponse(self.request, self.template_file, {'form': form})
             
     def do_delete(self, address):
         u"""Delete an address"""
