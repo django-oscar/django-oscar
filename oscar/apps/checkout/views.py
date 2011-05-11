@@ -334,4 +334,4 @@ class ThankYouView(object):
             del request.session['checkout_order_id']
         except KeyError, ObjectDoesNotExist:
             return HttpResponseRedirect(reverse('oscar-checkout-index'))
-        return TemplateResponse(request, 'oscar/checkout/thank_you.html', locals())
+        return TemplateResponse(request, 'oscar/checkout/thank_you.html', {'order': order})
