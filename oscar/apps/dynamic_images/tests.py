@@ -130,10 +130,26 @@ class ImageModTestCase(unittest.TestCase):
         self.assertEquals(self.image.size, (1535, 1800))
         
     def test_resize(self):
-        params = dict(width=200, height=200)
-        
-        mod = ResizeMod(self.image, params)
+        mod = ResizeMod(self.image, dict(width=200, height=200))
         im = mod.apply()
         
         self.assertEquals(im.size, (200, 200))
-        self.assertEquals(self.image.size, (1535, 1800))
+        self.assertEquals(self.image.size, (1535, 1800))  # Mod shouldn't change original
+        
+    def test_resize_rounding(self):
+        mod = ResizeMod(self.image, dict(width=200))
+        im = mod.apply()        
+        
+        self.assertEquals(im.size, (200, 235)) # Check scaling rounds up
+        
+        mod = ResizeMod(self.image, dict(height=200))
+        im = mod.apply()
+        
+        self.assertEquals(im.size, (171, 200))
+        
+    def test_crop(self):
+        mod = CropMod(self.image, dict(crop='50,25,200,200'))
+        im = mod.apply()
+        
+        self.assertEquals(im.size, (150, 175))
+        self.assertEquals(self.image.size, (1535, 1800))  # Mod shouldn't change original
