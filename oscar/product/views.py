@@ -13,6 +13,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 
 from oscar.services import import_module
+from oscar.views import ModelView
 from oscar.reviews.models import ProductReview, Vote
 from oscar.reviews.forms import make_review_form, make_voting_form, ProductReviewForm
 
@@ -237,5 +238,26 @@ class ReviewListView(ListView):
         context['avg_score'] = self.objects.aggregate(Avg('score'))           
         return context
     
-
-         
+class ReviewVoteView(ModelView, ItemDetailView):
+    u"""Processes voting of product reviews
+    """
+    template_file = "reviews/review.html"
+    
+    def get(self, request, **kwargs):
+        return super(ItemDetailView, self).get(request, **kwargs)
+    
+    def handle_GET(self, request):
+        print self.kwargs['GET']        
+        if 'action' in self.request.GET and self.request.GET['action']:
+            self.vote = self.request.GET['action'].strip()
+        messages.info(self.request, "Thanks for your rating!")        
+        self.response = render(self.request, self.template_file, locals())
+    
+    def get_conext_data(self, **kwargs):
+        context = super(ReviewListView, self).get_context_data(**kwargs)
+        item = get_object_or_404(product_models.Item, pk=self.kwargs['item_id'])    
+        context['item'] = item
+        context['avg_score'] = self.objects.aggregate(Avg('score'))
+        context['vote'] = self.vote           
+        return context
+        
