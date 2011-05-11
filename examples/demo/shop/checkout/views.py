@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.template.response import TemplateResponse
 
 from oscar.apps.checkout.views import (PaymentMethodView as CorePaymentMethodView, 
                                   PaymentDetailsView as CorePaymentDetailsView,
@@ -17,7 +17,7 @@ class PaymentMethodView(CorePaymentMethodView):
     template_file = 'checkout/payment_method.html'
     
     def handle_GET(self):
-        return render(self.request, self.template_file, self.context)
+        return TemplateResponse(self.request, self.template_file, self.context)
     
     def handle_POST(self):
         method = self.request.POST['method_code']
@@ -46,7 +46,7 @@ class PaymentDetailsView(CorePaymentDetailsView):
             addr_values = {'first_name': shipping_addr.first_name,
                            'last_name': shipping_addr.last_name,}
             self.context['billing_address_form'] = BillingAddressForm(initial=addr_values)
-        return render(self.request, self.template_file, self.context)
+        return TemplateResponse(self.request, self.template_file, self.context)
     
     def handle_POST(self):
         if self.is_cheque_payment():
@@ -61,7 +61,7 @@ class PaymentDetailsView(CorePaymentDetailsView):
         
         self.context['bankcard_form'] = self.bankcard_form
         self.context['billing_address_form'] = self.billing_addr_form
-        return render(self.request, self.template_file, self.context)
+        return TemplateResponse(self.request, self.template_file, self.context)
 
     def handle_payment(self, order_number, total):
         if self.is_cheque_payment():

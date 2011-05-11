@@ -1,5 +1,6 @@
 from django.http import HttpResponseRedirect, Http404
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404
+from django.template.response import TemplateResponse
 
 from oscar.core.loading import import_module
 
@@ -14,7 +15,7 @@ class HomeView(object):
     template_file = 'oscar/home.html'
 
     def __call__(self, request, *args, **kwargs):
-        return render(request, self.template_file)
+        return TemplateResponse(request, self.template_file)
 
 
 def page_promotion_click(request, page_promotion_id):

@@ -1,10 +1,11 @@
 import re
 
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
+from django.template.response import TemplateResponse
 
 from oscar.view.generic import ModelView
 from oscar.core.loading import import_module
@@ -32,7 +33,8 @@ class BasketView(ModelView):
     def handle_GET(self, basket):
         u"""Handle GET requests against the basket"""
         saved_basket = self.factory.get_saved_basket(self.request)
-        self.response = render(self.request, self.template_file, locals())
+        self.response = TemplateResponse(self.request, self.template_file, {'basket': basket,
+                                                                            'saved_basket': saved_basket})
         
     def handle_POST(self, basket):
         u"""Handle POST requests against the basket"""

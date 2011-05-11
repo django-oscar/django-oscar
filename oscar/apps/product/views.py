@@ -1,10 +1,11 @@
 from django.conf import settings
 from django.http import HttpResponse, Http404, HttpResponsePermanentRedirect, HttpResponseRedirect
 from django.template import Context, loader, RequestContext
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.views.generic import ListView, DetailView
+from django.template.response import TemplateResponse
 
 from oscar.core.loading import import_module
 
