@@ -1,6 +1,7 @@
 import zlib
 
 from django.conf import settings
+from django.core.exceptions import SuspiciousOperation
 
 from oscar.core.loading import import_module
 import_module('basket.models', ['Basket', 'Line'], locals())
@@ -13,38 +14,43 @@ COOKIE_LIFETIME = settings.OSCAR_BASKET_COOKIE_LIFETIME
 
 
 class BasketFactory(object):
-    u"""Factory object for loading baskets."""
+    """
+    Factory object for loading baskets.
+    """
 
     def get_or_create_open_basket(self, request, response):
-        u"""Loads or creates a normal OPEN basket for the current user (anonymous
+        """
+        Loads or creates a normal OPEN basket for the current user (anonymous
         or not).
         """
-        return self._get_or_create_cookie_basket(request, response, 
-                                                 COOKIE_KEY_OPEN_BASKET, Basket.open)
+        return self._get_or_create_basket(request, response, 
+                                          cookie_key=COOKIE_KEY_OPEN_BASKET, 
+                                          manager=Basket.open)
     
     def get_or_create_saved_basket(self, request, response):
         u"""Loads or creates a "save-for-later" basket for the current user"""
-        return self._get_or_create_cookie_basket(request, response, 
-                                                 COOKIE_KEY_SAVED_BASKET, Basket.saved)
+        return self._get_or_create_basket(request, response, 
+                                          cookie_key=COOKIE_KEY_SAVED_BASKET, 
+                                          manager=Basket.saved)
     
     def get_open_basket(self, request):
         u"""Returns the basket for the current user"""
-        return self._get_basket(request, None, COOKIE_KEY_OPEN_BASKET, Basket.open)
+        return self._get_basket(request, COOKIE_KEY_OPEN_BASKET, Basket.open)
     
-    def get_saved_basket(self, request, response):
+    def get_saved_basket(self, request):
         u"""Returns the saved basket for the current user"""
-        return self._get_basket(request, response, COOKIE_KEY_SAVED_BASKET, Basket.saved)
+        return self._get_basket(request, COOKIE_KEY_SAVED_BASKET, Basket.saved)
     
     # Utility methods
     
-    def _get_or_create_cookie_basket(self, request, response, cookie_key, manager):
+    def _get_or_create_basket(self, request, response, cookie_key, manager):
         u"""
         Loads or creates a basket for the current user.  Any offers are also
         applied to the basket before it is returned.
         """
-        anon_basket = self._get_cookie_basket(request, response, cookie_key, manager)
+        anon_basket = self._get_cookie_basket(request, cookie_key, manager)
         if request.user.is_authenticated():
-            basket, created = manager.get_or_create(owner=request.user)
+            basket, _ = manager.get_or_create(owner=request.user)
             if anon_basket:
                 # If signed in user also has a cookie basket, we merge them and 
                 # delete the cookies
@@ -65,38 +71,38 @@ class BasketFactory(object):
     def _apply_offers_to_basket(self, request, basket):
         Applicator().apply(request, basket)
     
-    def _get_basket(self, request, response, cookie_key, manager):
+    def _get_basket(self, request, cookie_key, manager):
         u"""Returns a basket object given a cookie key and manager."""
-        b = None
         if request.user.is_authenticated():
             try:
-                b = manager.get(owner=request.user)
+                basket = manager.get(owner=request.user)
             except Basket.DoesNotExist:
-                pass
+                basket = None
         else:
-            b = self._get_cookie_basket(request, response, cookie_key, manager)
-        if b:
-            self._apply_offers_to_basket(request, b)
-        return b    
+            basket = self._get_cookie_basket(request, cookie_key, manager)
+        if basket:
+            self._apply_offers_to_basket(request, basket)
+        return basket    
         
-    def _get_cookie_basket(self, request, response, cookie_key, manager):
-        u"""Returns a basket based on the cookie key given."""
-        b = None
-        # If user is anonymous, their basket ID (if they have one) will be
-        # stored in a cookie together with a hash which verifies it and prevents
-        # it from being spoofed.
+    def _get_cookie_basket(self, request, cookie_key, manager):
+        """
+        Returns a basket based on the cookie key given.
+    
+        If user is anonymous, their basket ID (if they have one) will be
+        stored in a cookie together with a hash which verifies it and prevents
+        it from being spoofed.
+        """
+        basket = None
         if cookie_key in request.COOKIES:
             basket_id, basket_hash = request.COOKIES[cookie_key].split("_")
             if basket_hash == self._get_basket_hash(basket_id):
                 try:
-                    b = manager.get(pk=basket_id, owner=None)
+                    basket = manager.get(pk=basket_id, owner=None)
                 except Basket.DoesNotExist:
-                    b = None
-            elif response:
-                # Not all methods are able to pass the response so this doesn't
-                # always happen.
-                response.delete_cookie(cookie_key)
-        return b      
+                    basket = None
+            else:
+                raise SuspiciousOperation("Basket hash does not validate")
+        return basket      
     
     def _get_basket_hash(self, id):
         u"""

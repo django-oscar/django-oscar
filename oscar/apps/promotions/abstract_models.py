@@ -31,7 +31,6 @@ class AbstractPromotion(models.Model):
     link_url = ExtendedURLField(blank=True, null=True, help_text="""This is 
         where this promotion links to""")
 
-    # Three ways of supplying the content
     banner_image = models.ImageField(upload_to=BANNER_FOLDER, blank=True, null=True)
     pod_image = models.ImageField(upload_to=POD_FOLDER, blank=True, null=True)
 
@@ -139,6 +138,7 @@ class AbstractMerchandisingBlock(models.Model):
     description = models.TextField(null=True, blank=True)
     type = models.CharField(_("Type"), choices=BLOCK_TYPES, max_length=100)
     products = models.ManyToManyField('product.Item', through='MerchandisingBlockProduct', blank=True, null=True)
+    link_url = ExtendedURLField(max_length=128, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
     
     class Meta:
@@ -190,7 +190,7 @@ class MerchandisingBlockProduct(models.Model):
     
     block = models.ForeignKey('promotions.MerchandisingBlock')
     product = models.ForeignKey('product.Item')
-    group = models.CharField(_("Product group/tab"), max_length=128, null=True)
+    group = models.CharField(_("Product group/tab"), max_length=128, blank=True, null=True)
     
     def __unicode__(self):
         return u"%s - %s (%s)" % (self.block, self.product, self.group)

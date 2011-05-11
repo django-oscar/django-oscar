@@ -6,7 +6,7 @@
 {% block layout %}
     <div id="container">
         <div id="header">
-            <h1><a href="/">Oscar // Flexible e-commerce for Django</a></h1>
+            <h1><a href="{% url oscar-home %}">Oscar // Flexible e-commerce for Django</a></h1>
             
             <form method="get" action="{% url oscar-search %}">
                 {{ search_form.as_p }}
@@ -24,7 +24,10 @@
                 {{ banner.get_banner_html|safe }}
             {% endfor %}
 
-            <a href="/admin/promotions/pagepromotion/add/?page_url={{ url_path }}" >Add a promotion to this page</a>
+            Add a:
+            <a href="/admin/promotions/pagepromotion/add/?page_url={{ url_path }}" >promotion</a> /
+            <a href="/admin/promotions/pagemerchandisingblock/add/?page_url={{ url_path }}" >merchandising block</a>
+            to this page.
             
             {% block header %}
             {% endblock %}

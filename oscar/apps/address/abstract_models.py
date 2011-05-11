@@ -88,6 +88,12 @@ class AbstractAddress(models.Model):
         u"""Returns the salutation"""
         return u" ".join([part for part in [self.title, self.first_name, self.last_name] if part])
         
+    def name(self):
+        """
+        Returns the full name
+        """
+        return u" ".join([part for part in [self.first_name, self.last_name] if part])    
+        
     def __unicode__(self):
         return self.summary
 

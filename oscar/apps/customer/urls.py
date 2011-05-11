@@ -11,7 +11,7 @@ urlpatterns = patterns('django.contrib.auth.views',
     url(r'^logout/$', 'login', name='oscar-customer-logout'),
 )
 
-urlpatterns = patterns('oscar.apps.customer.views',
+urlpatterns += patterns('oscar.apps.customer.views',
     url(r'^profile/$', 'profile', name='oscar-customer-profile'),
     url(r'^order-history/$', OrderHistoryView.as_view(), name='oscar-customer-order-history'),
     url(r'^order/(?P<order_number>[\w-]*)/$', login_required(class_based_view(OrderDetailView)), name='oscar-customer-order-view'),

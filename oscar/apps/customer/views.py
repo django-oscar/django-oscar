@@ -4,6 +4,7 @@ from django.views.generic import ListView
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.contrib import messages
+from django.utils.translation import ugettext as _
 
 from oscar.apps.address.forms import UserAddressForm
 from oscar.view.generic import ModelView
@@ -60,10 +61,14 @@ class OrderLineView(ModelView):
         super(OrderLineView, self).handle_POST(line)
     
     def do_reorder(self, line):
-        # Get basket
-        basket = BasketFactory().get_or_create_open_basket(self.request, self.response)
         if not line.product:
+            messages.info(self.request, _("This product is no longer available for re-order"))
             return
+        
+        # We need to pass response to the get_or_create... method
+        # as a new basket might need to be created
+        self.response = HttpResponseRedirect(reverse('oscar-basket'))
+        basket = basket_factory.BasketFactory().get_or_create_open_basket(self.request, self.response)
         
         # Convert line attributes into basket options
         options = []
@@ -72,7 +77,7 @@ class OrderLineView(ModelView):
                 options.append({'option': attribute.option, 'value': attribute.value})
         basket.add_product(line.product, 1, options)
         messages.info(self.request, "Line reordered")
-        self.response = HttpResponseRedirect(reverse('oscar-basket'))
+        
         
 
 class AddressBookView(ListView):

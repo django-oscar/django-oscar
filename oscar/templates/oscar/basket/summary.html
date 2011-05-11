@@ -17,6 +17,7 @@ Your basket is currently empty - go and <a href="{% url oscar-products %}">buy s
 <table>
     <tr>
         <th>Product</th>
+        <th>Availability</th>
         <th>Quantity</th>
         <th>Unit price excl tax</th>
         <th>Unit price tax</th>
@@ -26,6 +27,7 @@ Your basket is currently empty - go and <a href="{% url oscar-products %}">buy s
     {% for line in basket.all_lines %}
     <tr>
         <td><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></td>
+        <td>{{ line.product.stockrecord.availability }}</td>
         <td>
             <form action="{% url oscar-basket-line line.line_reference %}" method="post">
                 {% csrf_token %}
@@ -64,12 +66,12 @@ Your basket is currently empty - go and <a href="{% url oscar-products %}">buy s
     {% endfor %}
     {% for discount in basket.discounts %}
     <tr>
-        <td colspan="5">{{ discount.name }}</td>
-        <td colspan="5">-{{ discount.discount|currency }}</td>
+        <td colspan="6">{{ discount.name }}</td>
+        <td colspan="6">-{{ discount.discount|currency }}</td>
     </tr>
     {% endfor %}
     <tr>
-        <td colspan="4">Total</td>
+        <td colspan="5">Total</td>
         <td>{{ basket.total_excl_tax|currency }}</td>
         <td>{{ basket.total_incl_tax|currency }}</td>
     </tr>
@@ -106,6 +108,14 @@ Your basket is currently empty - go and <a href="{% url oscar-products %}">buy s
 <a href="{% url oscar-checkout-index %}">Checkout</a>
 
 {% endif %}
+
+<form action="{% url oscar-basket %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="bulk_load" />
+    <label for="source_text">Enter block of text containing SKUs</label>
+    <textarea name="source_text" rows="5" cols="50" id="source_text"></textarea>
+    <input type="submit" value="Add items to basket" />
+</form>
 
 {% if saved_basket and not saved_basket.is_empty %}
 
