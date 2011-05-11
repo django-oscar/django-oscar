@@ -41,8 +41,17 @@ class AbstractProductReview(models.Model):
         abstract = True
         ordering = ['approved']
                 
+    @models.permalink
     def get_absolute_url(self):
         return reverse('oscar-product-review', 
+                       kwargs={'review_id': self.id,
+                               'item_class_slug': str(self.product.item_class),
+                               'item_slug': self.product.slug, 
+                                'item_id': str(self.product.id)})
+    
+    @models.permalink
+    def get_vote_url(self):
+        return reverse('oscar-vote-review', 
                        kwargs={'review_id': self.id,
                                'item_class_slug': str(self.product.item_class),
                                'item_slug': self.product.slug, 

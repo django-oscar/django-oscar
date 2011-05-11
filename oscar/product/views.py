@@ -261,3 +261,7 @@ class ReviewVoteView(ModelView, ItemDetailView):
         context['vote'] = self.vote           
         return context
         
+def simple_view(request, item_class_slug, item_slug, item_id, review_id):
+    print request.GET
+    template_file = "reviews/review.html"
+    return render(request, template_file, {})
