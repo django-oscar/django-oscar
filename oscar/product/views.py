@@ -20,7 +20,7 @@ from oscar.reviews.forms import make_review_form, make_voting_form, ProductRevie
 product_models = import_module('product.models', ['Item', 'ItemClass'])
 product_signals = import_module('product.signals', ['product_viewed'])
 basket_forms = import_module('basket.forms', ['FormFactory'])
-review_models = import_module('reviews.models', ['ProductReview'])
+review_models = import_module('reviews.models', ['ProductReview', 'Vote'])
 
 
 class ItemDetailView(DetailView):
@@ -135,7 +135,7 @@ class ProductListView(ListView):
             context['search_term'] = q
         return context
 
-class ItemReviewView(object):
+class ProductReviewView(object):
     u"""
     A separate product review page
     """
@@ -187,7 +187,7 @@ class ItemReviewView(object):
                     "review_form": review_form,
                     })
 
-class ReviewDetailView(DetailView):
+class ProductReviewDetailView(DetailView):
     u"""
     Places each review on its own page
     """
@@ -220,7 +220,7 @@ class ReviewDetailView(DetailView):
         context['review'] = self.get_object()
         return context
     
-class ReviewListView(ListView):
+class ProductReviewListView(ListView):
     u"""A list of reviews for a particular product"""    
     context_object_name = "reviews"
     model = ProductReview
@@ -238,30 +238,51 @@ class ReviewListView(ListView):
         context['avg_score'] = self.objects.aggregate(Avg('score'))           
         return context
     
-class ReviewVoteView(ModelView, ItemDetailView):
+class ProductReviewVoteView(object):
     u"""Processes voting of product reviews
     """
-    template_file = "reviews/review.html"
+    def _is_vote_done(self):
+        u"""
+        Check if the user already reviewed this product
+        """                
+        try:
+            vote = review_models.Vote.objects.get(review=self.kwargs['review_id'])
+            if vote:
+                return True
+        except ObjectDoesNotExist:                
+            return False
     
-    def get(self, request, **kwargs):
-        return super(ItemDetailView, self).get(request, **kwargs)
-    
-    def handle_GET(self, request):
-        print self.kwargs['GET']        
-        if 'action' in self.request.GET and self.request.GET['action']:
-            self.vote = self.request.GET['action'].strip()
-        messages.info(self.request, "Thanks for your rating!")        
-        self.response = render(self.request, self.template_file, locals())
-    
-    def get_conext_data(self, **kwargs):
-        context = super(ReviewListView, self).get_context_data(**kwargs)
-        item = get_object_or_404(product_models.Item, pk=self.kwargs['item_id'])    
-        context['item'] = item
-        context['avg_score'] = self.objects.aggregate(Avg('score'))
-        context['vote'] = self.vote           
-        return context
+    def __call__(self, request, *args, **kwargs):        
+        self.request = request
+        self.args = args
+        self.kwargs = kwargs
+        template_name = "product/item.html"
+        print self.request.user.id    
+        # get the product                
+        item = get_object_or_404(product_models.Item, pk=self.kwargs['item_id'])
+        review = get_object_or_404(review_models.ProductReview, pk=self.kwargs['review_id'])
+        if self.request.method == 'GET':
+            if self._is_vote_done():
+                messages.info(self.request, "Your have already voted for this product!")         
+                return HttpResponsePermanentRedirect(item.get_absolute_url()) 
+            else:                                
+                vote = Vote.objects.get_or_create(review=review)
+                vote.user = User(id=self.request.user.id, name=self.request.user.name)
+                if self.request.GET['action'] == 'voteup':
+                    vote.up = 1
+                elif self.request.GET['action'] == 'votedown':
+                    vote.down = 1
+                vote.save()
+                messages.info(self.request, "Your vote has been submitted successfully!")
+                return HttpResponsePermanentRedirect(item.get_absolute_url())                                                   
+        reviews = review_models.ProductReviews.objects.get(product=self.kwargs['item_id'])
+        return render(self.request, template_name, {
+                    "item" : item,
+                    "reviews": reviews,
+                    })
+
         
 def simple_view(request, item_class_slug, item_slug, item_id, review_id):
-    print request.GET
+    print request.GET['action']
     template_file = "reviews/review.html"
     return render(request, template_file, {})

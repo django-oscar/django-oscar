@@ -49,14 +49,13 @@ class AbstractProductReview(models.Model):
                                'item_slug': self.product.slug, 
                                 'item_id': str(self.product.id)})
     
-    @models.permalink
-    def get_vote_url(self):
+    def get_vote_url(self):                
         return reverse('oscar-vote-review', 
                        kwargs={'review_id': self.id,
                                'item_class_slug': str(self.product.item_class),
                                'item_slug': self.product.slug, 
                                 'item_id': str(self.product.id)})
-
+        
     def __unicode__(self):
         return self.title
 
@@ -68,8 +67,8 @@ class AbstractVote(models.Model):
     """    
     user = models.ForeignKey('auth.User', related_name='vote', null=True, blank=True)
     review = models.ForeignKey('reviews.ProductReview', related_name='review')
-    up = models.IntegerField(_("Yes"), blank=True)
-    down = models.IntegerField(_("No"), blank=True)
+    up = models.IntegerField(_("Yes"), blank=True, default=0)
+    down = models.IntegerField(_("No"), blank=True, default=0)
     date_created = models.DateTimeField(auto_now_add=True)
     
     class Meta:

@@ -1,4 +1,6 @@
-import os
+import os, sys
+sys.path.append('/home/fsarker/.virtualenvs/oscar-writefaruq/include/django-debug-toolbar')
+
 
 # Django settings for oscar project.
 
@@ -92,7 +94,8 @@ MIDDLEWARE_CLASSES = (
     #'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
-    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware'
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+    #'debug_toolbar.middleware.DebugToolbarMiddleware'
 )
 
 INTERNAL_IPS = ('127.0.0.1',)
@@ -157,6 +160,7 @@ INSTALLED_APPS = (
     'oscar.customer',
     'oscar.reviews',
     #'oscar.my_comments_app',
+    #'debug_toolbar',
 )
 
 LOGIN_REDIRECT_URL = '/shop/accounts/profile/'

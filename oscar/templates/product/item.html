@@ -82,7 +82,7 @@
                 <input type="hidden" name="action" id="action_id" value="voteup"/>
                 <input type="submit" value="Yes" /> 
             </form>
-		<form method="get" action="{% url oscar-vote-review item.item_class.slug,item.slug,item.id|stringformat:"s",review.id|stringformat:"s" %}">                
+		<form method="get" action="{{ review.get_vote_url }}">                
                 <input type="hidden" name="action" id="action_id" value="votedown"/>
                 <input type="submit" value="No" /> 
             </form>
