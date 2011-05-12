@@ -257,20 +257,21 @@ class ProductReviewVoteView(object):
         self.args = args
         self.kwargs = kwargs
         template_name = "product/item.html"
-        print self.request.user.id    
+        print self.request.user   
         # get the product                
         item = get_object_or_404(product_models.Item, pk=self.kwargs['item_id'])
-        review = get_object_or_404(review_models.ProductReview, pk=self.kwargs['review_id'])
-        if self.request.method == 'GET':
+        review = get_object_or_404(review_models.ProductReview, pk=self.kwargs['review_id'], user=self.request.user)
+        if self.request.method == 'POST':
             if self._is_vote_done():
                 messages.info(self.request, "Your have already voted for this product!")         
                 return HttpResponsePermanentRedirect(item.get_absolute_url()) 
             else:                                
-                vote = Vote.objects.get_or_create(review=review)
-                vote.user = User(id=self.request.user.id, name=self.request.user.name)
-                if self.request.GET['action'] == 'voteup':
+                vote = Vote.objects.create(review=review, user=self.request.user)
+                print vote
+                #assert False                
+                if self.request.POST['action'] == 'voteup':
                     vote.up = 1
-                elif self.request.GET['action'] == 'votedown':
+                elif self.request.POST['action'] == 'votedown':
                     vote.down = 1
                 vote.save()
                 messages.info(self.request, "Your vote has been submitted successfully!")
@@ -280,9 +281,3 @@ class ProductReviewVoteView(object):
                     "item" : item,
                     "reviews": reviews,
                     })
-
-        
-def simple_view(request, item_class_slug, item_slug, item_id, review_id):
-    print request.GET['action']
-    template_file = "reviews/review.html"
-    return render(request, template_file, {})

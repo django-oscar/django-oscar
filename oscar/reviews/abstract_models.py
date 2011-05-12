@@ -67,14 +67,14 @@ class AbstractVote(models.Model):
     """    
     user = models.ForeignKey('auth.User', related_name='vote', null=True, blank=True)
     review = models.ForeignKey('reviews.ProductReview', related_name='review')
-    up = models.IntegerField(_("Yes"), blank=True, default=0)
-    down = models.IntegerField(_("No"), blank=True, default=0)
+    up = models.IntegerField(_("VoteUp"), blank=True, default=0)
+    down = models.IntegerField(_("VoteDown"), blank=True, default=0)
     date_created = models.DateTimeField(auto_now_add=True)
     
     class Meta:
         abstract = True
         ordering = ['up']
-
+        
     def __unicode__(self):
-        return self.user.name
+        return self.review.title
  

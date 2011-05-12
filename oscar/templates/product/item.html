@@ -78,14 +78,16 @@
 		<h4> You have added {{ vote }} for this product</h4>
 		{% endif %}	
 		<h4> Was this review helpful to you? </h4>
-		<form method="get" action="{{ review.get_vote_url }}">                
-                <input type="hidden" name="action" id="action_id" value="voteup"/>
-                <input type="submit" value="Yes" /> 
-            </form>
-		<form method="get" action="{{ review.get_vote_url }}">                
-                <input type="hidden" name="action" id="action_id" value="votedown"/>
-                <input type="submit" value="No" /> 
-            </form>
+		<form  action="{{ review.get_vote_url }}" method="post">
+			{% csrf_token %}               
+            <input type="hidden" name="action" id="action_id" value="voteup"/>
+            <input type="submit" value="Yes" /> 
+        </form>
+		<form  action="{{ review.get_vote_url }}" method="post">
+			{% csrf_token %}                
+            <input type="hidden" name="action" id="action_id" value="votedown"/>
+            <input type="submit" value="No" /> 
+        </form>
 	{% endif %}			
 	{% endfor %}
 {% endif %}
