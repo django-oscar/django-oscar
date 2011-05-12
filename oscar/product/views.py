@@ -15,7 +15,7 @@ from django.contrib.auth.models import User
 from oscar.services import import_module
 from oscar.views import ModelView
 from oscar.reviews.models import ProductReview, Vote
-from oscar.reviews.forms import make_review_form, make_voting_form, ProductReviewForm
+from oscar.reviews.forms import make_review_form, ProductReviewForm
 
 product_models = import_module('product.models', ['Item', 'ItemClass'])
 product_signals = import_module('product.signals', ['product_viewed'])
@@ -56,9 +56,7 @@ class ItemDetailView(DetailView):
         context['form'] = self.get_add_to_basket_form()
         context['reviews'] = self.get_product_review()
         context['avg_score'] = self.get_avg_review()
-        context['review_votes'] = self.get_review_votes()
-        context['up_vote_form'] = self.get_voting_form('up', self.request.POST)
-        context['down_vote_form'] = self.get_voting_form('down', self.request.POST)        
+        context['review_votes'] = self.get_review_votes()       
         return context
     
     def get_product_review(self):
@@ -81,17 +79,6 @@ class ItemDetailView(DetailView):
 
     def get_review_votes(self):
         return Vote.objects.all()
-
-    def get_voting_form(self, choice, values):       
-        if self.request.method == 'POST':            
-            if self.request.POST['upvote']:
-               print "Got up vote"
-            elif self.request.POST['downvote']:
-               print "got down vote"
-        else:
-           voting_form = make_voting_form(choice, values)
-        return voting_form
-
 
 class ItemClassListView(ListView):
     u"""View products filtered by item-class."""

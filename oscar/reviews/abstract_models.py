@@ -2,13 +2,8 @@
 Core product reviews
 """
 from django.db import models
-from django.contrib.auth.models import User
-from django.template.defaultfilters import slugify
 from django.utils.translation import gettext as _
 from django.core.urlresolvers import reverse
-
-from oscar.product.models import Item
-
 
 class AbstractProductReview(models.Model):
     u"""
@@ -33,14 +28,13 @@ class AbstractProductReview(models.Model):
     title = models.CharField(_("Title"), max_length=100)
     body = models.TextField(_("Comment"), max_length=300, blank=True)
     score = models.CharField(_("Score"), max_length=1, choices=SCORE_CHOICES, blank=True)
-    approved = models.BooleanField(default=False)    
-    slug = models.SlugField(max_length=128, unique=True)
+    approved = models.BooleanField(default=False)
     date_created = models.DateTimeField(auto_now_add=True)
-    
+
     class Meta:
         abstract = True
         ordering = ['approved']
-                
+
     @models.permalink
     def get_absolute_url(self):
         return reverse('oscar-product-review', 
@@ -48,14 +42,14 @@ class AbstractProductReview(models.Model):
                                'item_class_slug': str(self.product.item_class),
                                'item_slug': self.product.slug, 
                                 'item_id': str(self.product.id)})
-    
+
     def get_vote_url(self):                
         return reverse('oscar-vote-review', 
                        kwargs={'review_id': self.id,
                                'item_class_slug': str(self.product.item_class),
                                'item_slug': self.product.slug, 
                                 'item_id': str(self.product.id)})
-        
+
     def __unicode__(self):
         return self.title
 
@@ -76,5 +70,4 @@ class AbstractVote(models.Model):
         ordering = ['up']
         
     def __unicode__(self):
-        return self.review.title
- 
+        return self.review.title 
