@@ -24,7 +24,7 @@
         <td>{{ order.total_incl_tax|currency }}</td>
         <td>{{ order.date_placed }}</td>
         <td>
-            <a href="{% url oscar-customer-order-view order.number %}">View order details</a>
+            <a href="{% url customer:order order.number %}">View order details</a>
         </td>
     </tr>
     {% endfor %}

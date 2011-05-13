@@ -24,12 +24,12 @@
         <td>{{ order.total_incl_tax|currency }}</td>
         <td>{{ order.date_placed }}</td>
         <td>
-            <a href="{% url oscar-customer-order-view order.number %}">View</a>
+            <a href="{% url customer:order order.number %}">View</a>
         </td>
     </tr>
     {% endfor %}
 </table>
-<p><a href="{% url oscar-customer-order-history %}">View order history</a></p>
+<p><a href="{% url customer:order-list %}">View order history</a></p>
 
 
 
@@ -37,7 +37,7 @@
 
 <h3>Account settings</h3>
 <ul>
-    <li><a href="{% url oscar-customer-address-book %}">Manage address book</a></li>
+    <li><a href="{% url customer:address-list %}">Manage address book</a></li>
     <li><a href="">Change password</a></li>
 </ul>
 

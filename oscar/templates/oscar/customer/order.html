@@ -58,7 +58,7 @@
         <td>{{ line.line_price_before_discounts_incl_tax|currency }}</td>
         <td>{{ line.shipping_status }}</td>
         <td>
-            <form action="{% url oscar-customer-order-line order.number line.id %}" method="POST">
+            <form action="{% url customer:order-line order.number line.id %}" method="POST">
                 {% csrf_token %}
                 <input type="hidden" name="action" value="reorder" />
                 <input type="submit" value="Re-order" />

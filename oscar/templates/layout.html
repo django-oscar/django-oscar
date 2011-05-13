@@ -14,7 +14,7 @@
             </form>
             
             {% if user.is_authenticated %}
-                <a href="{% url oscar-customer-profile %}">Profile</a>
+                <a href="{% url customer:summary %}">Profile</a>
                 <a href="">Logout</a>
             {% else %}
                 <a href="">Login</a>

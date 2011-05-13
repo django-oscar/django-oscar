@@ -9,11 +9,11 @@
 
 {% block content %}
 
-<h3>Edit address</h3>
+<h3>Confirm address deletion</h3>
 <form action="." method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Save address" />
+    <input type="submit" value="Delete address" />
 </form>
 
 {% endblock content %}
