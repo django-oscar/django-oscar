@@ -38,8 +38,9 @@ class AbstractItemClass(models.Model):
             self.slug= slugify(self.name)
         super(AbstractItemClass, self).save(*args, **kwargs)
 
+    @models.permalink
     def get_absolute_url(self):
-        return reverse('oscar-product-item-class', kwargs={'item_class_slug': self.slug})
+        return ('products:class-list', (), {'item_class_slug': self.slug})
 
     def __unicode__(self):
         return self.name
@@ -185,7 +186,7 @@ class AbstractItem(models.Model):
     @models.permalink
     def get_absolute_url(self):
         u"""Return a product's absolute url"""
-        return ('oscar-product-item', (), {
+        return ('products:detail', (), {
             'item_class_slug': self.get_item_class().slug, 
             'item_slug': self.slug,
             'item_id': self.id})
