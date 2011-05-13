@@ -13,6 +13,11 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext as _
 from django.template.response import TemplateResponse
 
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+
+from django.views.generic import TemplateView
+
 from oscar.view.generic import ModelView
 from oscar.core.loading import import_module
 
@@ -28,15 +33,14 @@ import_module('address.models', ['UserAddress'], locals())
 import_module('shipping.repository', ['Repository'], locals())
 
 logger = logging.getLogger('oscar.checkout')
-
-
-class IndexView(object):
-    template_file = 'oscar/checkout/gateway.html'
     
-    def __call__(self, request):
+class IndexView(TemplateView):
+    template_name = 'oscar/checkout/gateway.html'
+    
+    def get(self, request, *args, **kwargs):
         if request.user.is_authenticated():
             return HttpResponseRedirect(reverse('oscar-checkout-shipping-address'))
-        return TemplateResponse(request, self.template_file)    
+        return super(IndexView, self).get(request, *args, **kwargs)
 
 
 class ShippingAddressView(CheckoutView):
@@ -303,7 +307,7 @@ class PaymentDetailsView(CheckoutView):
             # Check that this address isn't already in the db as we don't want
             # to fill up the customer address book with duplicate addresses
             try:
-                address_models.UserAddress._default_manager.get(hash=user_addr.generate_hash())
+                UserAddress._default_manager.get(hash=user_addr.generate_hash())
             except ObjectDoesNotExist:
                 user_addr.save()
     

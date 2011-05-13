@@ -8,7 +8,7 @@ import_module('checkout.views', ['IndexView', 'ShippingAddressView',
                                  'PaymentDetailsView', 'ThankYouView'], locals())
 
 urlpatterns = patterns('oscar.checkout.views',
-    url(r'^$', class_based_view(IndexView), name='oscar-checkout-index'),
+    url(r'^$', IndexView.as_view(), name='oscar-checkout-index'),
     url(r'shipping-address/$', class_based_view(ShippingAddressView), name='oscar-checkout-shipping-address'),
     url(r'shipping-method/$', class_based_view(ShippingMethodView), name='oscar-checkout-shipping-method'),
     url(r'payment-method/$', class_based_view(PaymentMethodView), name='oscar-checkout-payment-method'),

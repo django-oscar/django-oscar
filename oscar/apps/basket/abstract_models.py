@@ -341,7 +341,7 @@ class AbstractLine(models.Model):
 class AbstractLineAttribute(models.Model):
     u"""An attribute of a basket line"""
     line = models.ForeignKey('basket.Line', related_name='attributes')
-    option = models.ForeignKey('product.option')
+    option = models.ForeignKey('product.Option')
     value = models.CharField(_("Value"), max_length=255)    
     
     class Meta:
