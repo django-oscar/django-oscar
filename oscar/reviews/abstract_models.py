@@ -27,7 +27,7 @@ class AbstractProductReview(models.Model):
     # real review stuffs
     title = models.CharField(_("Title"), max_length=100)
     body = models.TextField(_("Comment"), max_length=300, blank=True)
-    score = models.CharField(_("Score"), max_length=1, choices=SCORE_CHOICES, blank=True)
+    score = models.CharField(_("Score"), max_length=1, choices=SCORE_CHOICES)
     approved = models.BooleanField(default=False)
     date_created = models.DateTimeField(auto_now_add=True)
 
@@ -53,6 +53,13 @@ class AbstractProductReview(models.Model):
     def __unicode__(self):
         return self.title
 
+    def save(self, *args, **kwargs):
+        if not self.title:
+            from django.core.exceptions import ValidationError
+            raise ValidationError("Review must have a title")
+        super(AbstractProductReview, self).save(*args, **kwargs)
+
+
 
 class AbstractVote(models.Model):
     u"""
@@ -61,8 +68,8 @@ class AbstractVote(models.Model):
     """    
     user = models.ForeignKey('auth.User', related_name='vote', null=True, blank=True)
     review = models.ForeignKey('reviews.ProductReview', related_name='review')
-    up = models.IntegerField(_("VoteUp"), blank=True, default=0)
-    down = models.IntegerField(_("VoteDown"), blank=True, default=0)
+    up = models.IntegerField(_("VoteUp"))
+    down = models.IntegerField(_("VoteDown"))
     date_created = models.DateTimeField(auto_now_add=True)
     
     class Meta:
@@ -71,3 +78,9 @@ class AbstractVote(models.Model):
         
     def __unicode__(self):
         return self.review.title 
+    
+    def save(self, *args, **kwargs):
+        if (not self.up) or (not self.down):
+            from django.core.exceptions import ValidationError
+            raise ValidationError("Votes should be either up or down")
+        super(AbstractVote, self).save(*args, **kwargs)

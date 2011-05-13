@@ -161,6 +161,7 @@ INSTALLED_APPS = (
     'oscar.reviews',
     #'oscar.my_comments_app',
     #'debug_toolbar',
+    'pyzen'
 )
 
 LOGIN_REDIRECT_URL = '/shop/accounts/profile/'
