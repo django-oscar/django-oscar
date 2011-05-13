@@ -73,14 +73,14 @@
     </tr>
     {% if shipping_addr.phone_number %}
     <tr>
-        <th>Concact number</th>
-        <td>shipping_addr.phone_number</td>
+        <th>Contact number</th>
+        <td>{{ shipping_addr.phone_number }}</td>
     </tr>
     {% endif %}
     {% if shipping_addr.notes %}
     <tr>
         <th>Shipping notes</th>
-        <td>shipping_addr.notes</td>
+        <td>{{ shipping_addr.notes }}</td>
     </tr>
     {% endif %} 
 </table>
