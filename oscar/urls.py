@@ -1,8 +1,10 @@
 from django.conf.urls.defaults import *
 from django.conf import settings
 
+from oscar.apps.product import application as products_app
+
 urlpatterns = patterns('',
-    (r'product/', include('oscar.apps.product.urls')),
+    (r'products/', include(products_app.urls)),
     (r'basket/', include('oscar.apps.basket.urls')),
     (r'checkout/', include('oscar.apps.checkout.urls')),
     (r'order-management/', include('oscar.apps.order_management.urls')),

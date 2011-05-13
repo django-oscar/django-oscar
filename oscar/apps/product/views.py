@@ -9,11 +9,14 @@ from django.template.response import TemplateResponse
 
 from oscar.core.loading import import_module
 
-product_models = import_module('product.models', ['Item', 'ItemClass'])
 product_signals = import_module('product.signals', ['product_viewed', 'product_search'])
 basket_forms = import_module('basket.forms', ['FormFactory'])
 history_helpers = import_module('customer.history_helpers', ['receive_product_view'])
 
+from django.db.models import get_model
+
+item_model = get_model('product','item')
+item_class_model = get_model('product', 'itemclass')
 
 class ItemDetailView(DetailView):
     u"""View a single product."""
@@ -41,7 +44,7 @@ class ItemDetailView(DetailView):
         
         We cache the object as this method gets called twice."""
         if not self._item:
-            self._item = get_object_or_404(product_models.Item, pk=self.kwargs['item_id'])
+            self._item = get_object_or_404(item_model, pk=self.kwargs['item_id'])
         return self._item
     
     def get_context_data(self, **kwargs):
@@ -60,8 +63,8 @@ class ItemClassListView(ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        item_class = get_object_or_404(product_models.ItemClass, slug=self.kwargs['item_class_slug'])
-        return product_models.Item.browsable.filter(item_class=item_class)
+        item_class = get_object_or_404(item_class_model, slug=self.kwargs['item_class_slug'])
+        return item_model.browsable.filter(item_class=item_class)
 
 
 class ProductListView(ListView):
@@ -84,9 +87,9 @@ class ProductListView(ListView):
             # Send signal to record the view of this product
             product_signals.product_search.send(sender=self, query=q, user=self.request.user)
             
-            return product_models.Item.browsable.filter(title__icontains=q)
+            return item_model.browsable.filter(title__icontains=q)
         else:
-            return product_models.Item.browsable.all()
+            return item_model.browsable.all()
         
     def get_context_data(self, **kwargs):
         context = super(ProductListView, self).get_context_data(**kwargs)
