@@ -17,7 +17,7 @@ history_helpers = import_module('customer.history_helpers', ['receive_product_vi
 
 class ItemDetailView(DetailView):
     u"""View a single product."""
-    template_name = "oscar/product/item.html"
+    template_folder = "oscar/product"
     _item = None
     
     def get(self, request, **kwargs):
@@ -34,6 +34,23 @@ class ItemDetailView(DetailView):
         # Send signal to record the view of this product
         product_signals.product_viewed.send(sender=self, product=item, user=request.user, request=request, response=response)
         return response;
+    
+    def get_template_names(self):
+        """
+        Returns a list of possible templates.
+        
+        We try 2 options before defaulting to oscar/product/detail.html:
+        1). detail-for-upc-<upc>.html
+        2). detail-for-class-<classname>.html
+        
+        This allows alternative templates to be provided for a per-product
+        and a per-item-class basis.
+        """    
+        product = self.get_object()
+        names = ['%s/detail-for-upc-%s.html' % (self.template_folder, product.upc), 
+                 '%s/detail-for-class-%s.html' % (self.template_folder, product.item_class.name.lower()),
+                 '%s/detail.html' % (self.template_folder)]
+        return names
     
     def get_object(self):
         u"""
