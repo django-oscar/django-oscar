@@ -1,5 +1,41 @@
 [
     {
+        "pk": 7, 
+        "model": "reviews.productreview", 
+        "fields": {
+            "body": "I rate it 5", 
+            "product": 1, 
+            "name": "Anon31", 
+            "title": "That's a nice product", 
+            "url": "", 
+            "approved": true, 
+            "down_votes": 0, 
+            "up_votes": 4, 
+            "score": "5", 
+            "user": null, 
+            "date_created": "2011-05-16 10:37:52", 
+            "email": "a@bcd.com"
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "reviews.productreview", 
+        "fields": {
+            "body": "Test review says the product is good", 
+            "product": 1, 
+            "name": "", 
+            "title": "Test review 1", 
+            "url": "", 
+            "approved": true, 
+            "down_votes": 0, 
+            "up_votes": 1, 
+            "score": "4", 
+            "user": 1, 
+            "date_created": "2011-05-16 10:28:27", 
+            "email": ""
+        }
+    }, 
+    {
         "pk": 4, 
         "model": "reviews.productreview", 
         "fields": {
@@ -9,6 +45,8 @@
             "title": "Anon review 1", 
             "url": "", 
             "approved": false, 
+            "down_votes": 0, 
+            "up_votes": 1, 
             "score": "2", 
             "user": null, 
             "date_created": "2011-05-16 10:29:23", 
@@ -25,42 +63,12 @@
             "title": "Anon review 2", 
             "url": "", 
             "approved": false, 
+            "down_votes": 0, 
+            "up_votes": 1, 
             "score": "3", 
             "user": null, 
             "date_created": "2011-05-16 10:36:03", 
             "email": "axxx@b.com"
-        }
-    }, 
-    {
-        "pk": 8, 
-        "model": "reviews.productreview", 
-        "fields": {
-            "body": "I don't know it much", 
-            "product": 1, 
-            "name": "Unknown", 
-            "title": "Unknown review", 
-            "url": "", 
-            "approved": false, 
-            "score": "1", 
-            "user": null, 
-            "date_created": "2011-05-16 10:39:41", 
-            "email": "unknown@bbbb.com"
-        }
-    }, 
-    {
-        "pk": 3, 
-        "model": "reviews.productreview", 
-        "fields": {
-            "body": "Test review says the product is good", 
-            "product": 1, 
-            "name": "", 
-            "title": "Test review 1", 
-            "url": "", 
-            "approved": true, 
-            "score": "4", 
-            "user": 1, 
-            "date_created": "2011-05-16 10:28:27", 
-            "email": ""
         }
     }, 
     {
@@ -73,6 +81,8 @@
             "title": "another review ", 
             "url": "", 
             "approved": true, 
+            "down_votes": 1, 
+            "up_votes": 0, 
             "score": "3", 
             "user": null, 
             "date_created": "2011-05-16 10:30:12", 
@@ -80,83 +90,30 @@
         }
     }, 
     {
-        "pk": 7, 
+        "pk": 8, 
         "model": "reviews.productreview", 
         "fields": {
-            "body": "I rate it 5", 
+            "body": "I don't know it much", 
             "product": 1, 
-            "name": "Anon31", 
-            "title": "That's a nice product", 
+            "name": "Unknown", 
+            "title": "Unknown review", 
             "url": "", 
-            "approved": true, 
-            "score": "5", 
+            "approved": false, 
+            "down_votes": 0, 
+            "up_votes": 0, 
+            "score": "1", 
             "user": null, 
-            "date_created": "2011-05-16 10:37:52", 
-            "email": "a@bcd.com"
+            "date_created": "2011-05-16 10:39:41", 
+            "email": "unknown@bbbb.com"
         }
     }, 
     {
-        "pk": 6, 
-        "model": "reviews.vote", 
-        "fields": {
-            "down": 1, 
-            "date_created": "2011-05-16 11:07:14", 
-            "review": 4, 
-            "user": 1, 
-            "up": 0
-        }
-    }, 
-    {
-        "pk": 7, 
-        "model": "reviews.vote", 
-        "fields": {
-            "down": 1, 
-            "date_created": "2011-05-16 11:13:49", 
-            "review": 6, 
-            "user": 1, 
-            "up": 0
-        }
-    }, 
-    {
-        "pk": 8, 
-        "model": "reviews.vote", 
-        "fields": {
-            "down": 1, 
-            "date_created": "2011-05-16 11:14:22", 
-            "review": 5, 
-            "user": 1, 
-            "up": 0
-        }
-    }, 
-    {
-        "pk": 9, 
-        "model": "reviews.vote", 
-        "fields": {
-            "down": 1, 
-            "date_created": "2011-05-16 11:14:41", 
-            "review": 8, 
-            "user": 1, 
-            "up": 0
-        }
-    }, 
-    {
-        "pk": 3, 
+        "pk": 42, 
         "model": "reviews.vote", 
         "fields": {
             "down": 0, 
-            "date_created": "2011-05-16 10:59:42", 
+            "date_created": "2011-05-16 17:14:22", 
             "review": 7, 
-            "user": 1, 
-            "up": 1
-        }
-    }, 
-    {
-        "pk": 5, 
-        "model": "reviews.vote", 
-        "fields": {
-            "down": 0, 
-            "date_created": "2011-05-16 11:02:54", 
-            "review": 3, 
             "user": 1, 
             "up": 1
         }

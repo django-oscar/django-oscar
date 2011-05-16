@@ -225,52 +225,6 @@ class ProductReviewListView(ListView):
         context['avg_score'] = self.objects.aggregate(Avg('score'))           
         return context
     
-#class ProductReviewVoteView(ModelView):
-#    u"""Processes voting of product reviews
-#    """
-#    
-#    def __call_(self):
-#        self.item = get_object_or_404('product_models.Item', pk=self.kwargs['item_id'])
-#        self.review = get_object_or_404('review_models.ProductReview', pk=self.kwargs['review_id'])
-#        self.vote = Vote.objects.create(review=self.review, user=self.request.user)
-#        self.template_name =  "product/item.html"    
-#        super(ProductReviewVoteView, self).__call__(*args, **kwargs)
-#    
-#     action functions    
-#    def do_voteup(self, model=None):                    
-#        if not self._is_vote_done():
-#            self.vote.up = 1                    
-#            self.vote.review.up_votes += vote.up
-#            self._save_vote()                    
-#            
-#    def do_votedown(self, model=None):                
-#        if not self._is_vote_done():                          
-#            self.vote.down = 1                    
-#            self.vote.review.down_votes += vote.down
-#            self._save_vote()                    
-#
-#    def _save_vote(self, vote):
-#        self.vote.save()
-#        self.review.save()
-#        messages.info(self.request, "Your vote has been submitted successfully!")
-#
-#    def _create_response(self):
-#        self.reviews = review_models.ProductReviews.approved_only.get(product=self.kwargs['item_id'])
-#        return render(self.request, template_name, {
-#                    "item" : self.item,
-#                    "reviews": self.reviews,
-#                    })
-#    
-#    def _is_vote_done(self):
-#        u"""
-#        Check if the user already reviewed this product
-#        """                
-#        try:
-#            vote = review_models.Vote.objects.get(review=self.kwargs['review_id'])
-#            if vote:
-#                return True
-#        except ObjectDoesNotExist:                
-#            return False
 
 class ProductReviewVoteView(ModelView):
     u"""Processes voting of product reviews
