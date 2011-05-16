@@ -4,8 +4,8 @@ from oscar.reviews.models import ProductReview, Vote
 
 
 class ProductReviewAdmin(admin.ModelAdmin):    
-    list_display = ('title', 'score', 'approved', 'date_created')
-    read_only = ('title', 'body', 'score')
+    list_display = ('title', 'score', 'approved', 'date_created', 'up_votes', 'down_votes')
+    read_only = ('title', 'body', 'score', 'up_votes', 'down_votes')
 
     
 class VoteAdmin(admin.ModelAdmin):

@@ -3,7 +3,7 @@ from django.db import models
 
 class ApprovedReviewsManager(models.Manager):
     def get_query_set(self):
-        return super(ApprovedReviewsManager, self).get_query_set().filter(approved=True)
+        return super(ApprovedReviewsManager, self).get_query_set().filter(approved=True).order_by('-up_votes')
 
 
 class RecentReviewsManager(models.Manager):

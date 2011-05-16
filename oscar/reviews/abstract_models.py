@@ -32,8 +32,8 @@ class AbstractProductReview(models.Model):
     score = models.CharField(_("Score"), max_length=1, choices=SCORE_CHOICES)
     approved = models.BooleanField(default=False)
     date_created = models.DateTimeField(auto_now_add=True)
-    #up_votes = models.IntegerField(_("UpVotes"), null=True, blank=True, editable=False)
-    #down_votes = models.IntegerField(_("DownVotes"), null=True, blank=True, editable=False)
+    up_votes = models.IntegerField(_("UpVotes"), default=0, blank=True)
+    down_votes = models.IntegerField(_("DownVotes"), default=0, blank=True)
         
     # mangers
     objects = models.Manager()
@@ -43,7 +43,7 @@ class AbstractProductReview(models.Model):
 
     class Meta:
         abstract = True
-        ordering = ['approved']
+        ordering = ['-up_votes']
 
     @models.permalink
     def get_absolute_url(self):
@@ -88,8 +88,8 @@ class AbstractVote(models.Model):
     """    
     user = models.ForeignKey('auth.User', related_name='vote')
     review = models.ForeignKey('reviews.ProductReview', related_name='review')
-    up = models.IntegerField(_("VoteUp"), null=True, blank=True)
-    down = models.IntegerField(_("VoteDown"), null=True, blank=True)
+    up = models.IntegerField(_("VoteUp"), blank=True, default=0)
+    down = models.IntegerField(_("VoteDown"), blank=True, default=0)
     date_created = models.DateTimeField(auto_now_add=True)
     
     objects = models.Manager()
@@ -100,11 +100,5 @@ class AbstractVote(models.Model):
                         
     def __unicode__(self):
         return self.review.title 
-    
-    def save(self, *args, **kwargs):
-        if not (self.up or self.down):
-            from django.core.exceptions import ValidationError
-            raise ValidationError("Votes should be either up or down")
-        super(AbstractVote, self).save(*args, **kwargs)
 
  
