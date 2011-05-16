@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 
-{% load currency_filters %}
+{% load currency_filters basket_tags %}
+
 
 {% block header %}
 <h2>{{ summary }}</h2>
@@ -21,6 +22,15 @@
         {% if product.has_stockrecord %} 
             {{ product.stockrecord.price_incl_tax|currency }}<br/>
             {{ product.stockrecord.availability }}
+
+			{% comment %}{% basket_form product as form %}
+			
+			<form action="{% url oscar-basket %}" method="post">
+			    {% csrf_token %}
+			    {{ form.as_p }}
+			    <input type="submit" value="Add to basket" />
+			</form>{% endcomment %}
+			
         {% else %}
             Not available    
         {% endif %}

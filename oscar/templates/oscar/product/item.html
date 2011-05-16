@@ -2,6 +2,7 @@
 
 {% load currency_filters %}
 {% load history_tags %}
+{% load basket_tags %}
 
 {% block header %}
 <h2>{{item.get_title}}</h2>
@@ -53,9 +54,12 @@
 </table>
 
 {% if item.stockrecord %}
+
+{% basket_form item as form %}
+
 <form action="{% url oscar-basket %}" method="post">
     {% csrf_token %}
-    {{ basket_form.as_p }}
+    {{ form.as_p }}
     <input type="submit" value="Add to basket" />
 </form>
 {% endif %}
