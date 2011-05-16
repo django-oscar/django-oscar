@@ -4,6 +4,8 @@ from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.views.generic import ListView, DetailView
+
+from django.template.response import TemplateResponse
 from django.contrib import messages
 from django.db import transaction
 
@@ -34,7 +36,8 @@ class OrderView(ModelView):
     def handle_GET(self, order):
         shipping_options = ShippingEventType._default_manager.all()
         payment_options = PaymentEventType._default_manager.all()
-        self.response = TemplateResponse(self.request, self.template_file, {'shipping_options': shipping_options,
+        self.response = TemplateResponse(self.request, self.template_file, {'order': self.get_model(),
+                                                                            'shipping_options': shipping_options,
                                                                             'payment_options': payment_options})
         
     def handle_POST(self, order):
