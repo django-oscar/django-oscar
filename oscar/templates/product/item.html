@@ -72,7 +72,8 @@
 	{% for review in reviews|slice:":5" %}		
 		<h4> {{ forloop.counter}}. {{ review.title }} </h4>
 		<p> Score: {{ review.score|floatformat:1 }} / 5.0</p>
-		<p> Comments: {{ review.body }}</p>
+		<p> Comments: {{ review.body }}</p>		
+		<p> Votes: {{ review.count_votes }}</p>
 	{% if user.is_authenticated %}
 		{% if vote %}
 		<h4> You have added {{ vote }} for this product</h4>

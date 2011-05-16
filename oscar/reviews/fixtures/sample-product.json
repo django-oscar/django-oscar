@@ -1,0 +1,44 @@
+[
+    {
+        "pk": 1, 
+        "model": "product.itemclass", 
+        "fields": {
+            "options": [], 
+            "name": "books", 
+            "slug": "books"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "product.item", 
+        "fields": {
+            "description": "", 
+            "parent": null, 
+            "title": "The Definitive Guide To Django: Web Development Done Right 2nd Edition", 
+            "date_updated": "2011-04-18 15:14:38", 
+            "upc": "", 
+            "item_class": 1, 
+            "item_options": [], 
+            "date_created": "2011-04-18 15:14:38", 
+            "slug": "definitive-guide-django-web-development-done-right-2nd-edition"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "product.attributetype", 
+        "fields": {
+            "code": "price", 
+            "name": "price", 
+            "has_choices": false
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "product.itemattributevalue", 
+        "fields": {
+            "product": 1, 
+            "type": 1, 
+            "value": "25"
+        }
+    }
+]

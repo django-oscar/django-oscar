@@ -61,13 +61,13 @@ class ItemDetailView(DetailView):
     
     def get_product_review(self):
         if settings.OSCAR_MODERATE_REVIEWS:        
-            return ProductReview.objects.filter(approved=True)
+            return ProductReview.approved_only.all()
         else:
             return ProductReview.objects.all()
     
     def get_avg_review(self):
         if settings.OSCAR_MODERATE_REVIEWS:        
-            avg = ProductReview.objects.filter(approved=True).aggregate(Avg('score'))
+            avg = ProductReview.approved_only.aggregate(Avg('score'))
         else:
             avg = ProductReview.objects.aggregate(Avg('score'))
         return avg['score__avg']
@@ -243,11 +243,10 @@ class ProductReviewVoteView(object):
         self.request = request
         self.args = args
         self.kwargs = kwargs
-        template_name = "product/item.html"
-        print self.request.user   
-        # get the product                
+        template_name = "product/item.html" 
+        # get the product                    
         item = get_object_or_404(product_models.Item, pk=self.kwargs['item_id'])
-        review = get_object_or_404(review_models.ProductReview, pk=self.kwargs['review_id'], user=self.request.user)
+        review = get_object_or_404(review_models.ProductReview, pk=self.kwargs['review_id'])
         if self.request.method == 'POST':
             if self._is_vote_done():
                 messages.info(self.request, "Your have already voted for this product!")         
@@ -263,7 +262,7 @@ class ProductReviewVoteView(object):
                 vote.save()
                 messages.info(self.request, "Your vote has been submitted successfully!")
                 return HttpResponsePermanentRedirect(item.get_absolute_url())                                                   
-        reviews = review_models.ProductReviews.objects.get(product=self.kwargs['item_id'])
+        reviews = review_models.ProductReviews.approved_only.get(product=self.kwargs['item_id'])
         return render(self.request, template_name, {
                     "item" : item,
                     "reviews": reviews,

@@ -1,0 +1,16 @@
+from django.db import models
+
+
+class ApprovedReviewsManager(models.Manager):
+    def get_query_set(self):
+        return super(ApprovedReviewsManager, self).get_query_set().filter(approved=True)
+
+
+class RecentReviewsManager(models.Manager):
+    def get_query_set(self):
+        return super(RecentReviewsManager, self).get_query_set().filter(approved=True).order_by('date_created')
+
+
+class TopScoredReviewsManager(models.Manager):
+    def get_query_set(self):
+        return super(RecentReviewsManager, self).get_query_set().filter(approved=True).order_by('score')    
