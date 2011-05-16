@@ -2,7 +2,6 @@ import unittest
 
 from django.test import TestCase, Client
 from django.core.exceptions import ValidationError
-from django.core.urlresolvers import reverse
 
 from oscar.product.models import Item, ItemClass
 from oscar.reviews.models import ProductReview, Vote

@@ -133,7 +133,8 @@ class ProductReviewView(object):
         """                
         try:
             review = review_models.ProductReview.objects.get(product=self.kwargs['item_id'], user=self.request.user.id)
-            return True
+            if review:
+                return True
         except ObjectDoesNotExist:                
             return False
     
