@@ -39,7 +39,7 @@ class VariantItemTests(ItemTests):
     def test_variant_products_inherit_product_class(self):
         p = Item.objects.create(parent=self.parent)
         self.assertEquals("Clothing", p.get_item_class().name)
-        
+
 
 class SingleProductViewTest(TestCase):
     fixtures = ['sample-products']
@@ -51,7 +51,7 @@ class SingleProductViewTest(TestCase):
         p = Item.objects.get(id=1)
         args = {'item_class_slug': p.get_item_class().slug, 
                 'item_slug': 'wrong-slug',
-                'item_id': p.id}
-        wrong_url = reverse('oscar-product-item', kwargs=args)
+                'pk': p.id}
+        wrong_url = reverse('products:detail', kwargs=args)
         response = self.client.get(wrong_url)
         self.assertEquals(301, response.status_code)

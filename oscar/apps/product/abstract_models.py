@@ -189,7 +189,7 @@ class AbstractItem(models.Model):
         return ('products:detail', (), {
             'item_class_slug': self.get_item_class().slug, 
             'item_slug': self.slug,
-            'item_id': self.id})
+            'pk': self.id})
     
     def save(self, *args, **kwargs):
         if self.is_top_level and not self.title:
