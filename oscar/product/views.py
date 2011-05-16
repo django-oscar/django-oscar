@@ -133,8 +133,7 @@ class ProductReviewView(object):
         """                
         try:
             review = review_models.ProductReview.objects.get(product=self.kwargs['item_id'], user=self.request.user.id)
-            if review:
-                return True
+            return True
         except ObjectDoesNotExist:                
             return False
     
@@ -225,9 +224,9 @@ class ProductReviewListView(ListView):
         context['item'] = item
         context['avg_score'] = self.objects.aggregate(Avg('score'))           
         return context
-    
 
-class ProductReviewVoteView(ModelView):
+
+class ProductReviewVoteView(object):
     u"""Processes voting of product reviews
     """
     
