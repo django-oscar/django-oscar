@@ -32,7 +32,6 @@ class TopLevelProductReviewTests(ProductReviewTests):
                            user=None, title="Anonymous review", score=3)
         
 
-
 class TopLevelProductReviewVoteTests(ProductReviewTests):
     
     def setUp(self):
@@ -103,10 +102,4 @@ class ProductReviewVotingActionTests(TestCase):
         reviews = ProductReview.top_voted.all()
         new_rank = list(reviews.values_list('id', flat=True)).index(review_id)
         self.failUnless(new_rank < old_rank)
-
-    
-    
-    
-    
-    
-    
+   
