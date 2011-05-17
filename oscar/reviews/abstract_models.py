@@ -4,8 +4,10 @@ Core product reviews
 from django.db import models
 from django.utils.translation import gettext as _
 from django.core.urlresolvers import reverse
+from django.core.exceptions import ValidationError
 
-from oscar.reviews.managers import ApprovedReviewsManager, RecentReviewsManager, TopScoredReviewsManager
+from oscar.reviews.managers import ApprovedReviewsManager, RecentReviewsManager,\
+ TopScoredReviewsManager, TopVotedReviewsManager
 
 class AbstractProductReview(models.Model):
     u"""
@@ -40,6 +42,7 @@ class AbstractProductReview(models.Model):
     approved_only = ApprovedReviewsManager()
     recent = RecentReviewsManager()
     top_scored = TopScoredReviewsManager()
+    top_voted = TopVotedReviewsManager()
 
     class Meta:
         abstract = True
@@ -64,13 +67,11 @@ class AbstractProductReview(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
-        if not self.title:
-            from django.core.exceptions import ValidationError
+        if not (self.title and self.score):
             raise ValidationError("Review must have a title")
         if not self.user: # anonymous review
             if not (self.name and self.email):
-                from django.core.exceptions import ValidationError
-                raise ValidationError("Review must have a name and an email")
+                raise ValidationError("Anonymous review must have a name and an email")
         super(AbstractProductReview, self).save(*args, **kwargs)
      
     # helpers
@@ -97,8 +98,18 @@ class AbstractVote(models.Model):
     class Meta:
         abstract = True
         ordering = ['up']
+        unique_together = (('user', 'review'),)
                         
     def __unicode__(self):
         return self.review.title 
 
+    def save(self, *args, **kwargs):
+        # check user log-in        
+        if not self.user.is_authenticated():
+                raise ValidationError("Only logged-in users can vote!")
+        if self.up or self.down: # process votes
+            self.review.up_votes += self.up
+            self.review.down_votes += self.down
+            self.review.save()
+        super(AbstractVote, self).save(*args, **kwargs)
  

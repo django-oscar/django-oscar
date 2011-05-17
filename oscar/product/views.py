@@ -259,12 +259,9 @@ class ProductReviewVoteView(object):
                 vote = Vote.objects.create(review=review, user=self.request.user)                        
                 if self.request.POST['action'] == 'voteup':
                     vote.up = 1                    
-                    vote.review.up_votes += vote.up                    
                 elif self.request.POST['action'] == 'votedown':
                     vote.down = 1
-                    vote.review.down_votes += vote.down
                 vote.save()
-                review.save()
                 messages.info(self.request, "Your vote has been submitted successfully!")
                 return HttpResponsePermanentRedirect(item.get_absolute_url())                                                   
         reviews = review_models.ProductReviews.approved_only.get(product=self.kwargs['item_id'])
