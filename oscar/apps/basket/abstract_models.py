@@ -4,12 +4,14 @@ import datetime
 
 from django.db import models
 from django.utils.translation import ugettext as _
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 
 from oscar.apps.basket.managers import OpenBasketManager, SavedBasketManager
 
 # Basket statuses
-OPEN, MERGED, SAVED, SUBMITTED = ("Open", "Merged", "Saved", "Submitted")
+# - Frozen is for when a basket is in the process of being submitted
+#   and we need to prevent any changes to it.
+OPEN, MERGED, SAVED, FROZEN, SUBMITTED = ("Open", "Merged", "Saved", "Frozen", "Submitted")
 
 
 class AbstractBasket(models.Model):
@@ -20,6 +22,7 @@ class AbstractBasket(models.Model):
         (OPEN, _("Open - currently active")),
         (MERGED, _("Merged - superceded by another basket")),
         (SAVED, _("Saved - for items to be purchased later")),
+        (FROZEN, _("Frozen - the basket cannot be modified")),
         (SUBMITTED, _("Submitted - has been ordered at the checkout")),
     )
     status = models.CharField(_("Status"), max_length=128, default=OPEN, choices=STATUS_CHOICES)
@@ -221,6 +224,8 @@ class AbstractLine(models.Model):
     
     def save(self, *args, **kwargs):
         u"""Saves a line or deletes if it's quanity is 0"""
+        if self.basket.status not in (OPEN, SAVED):
+            raise PermissionDenied("You cannot modify a %s basket" % self.basket.status.lower())
         if self.quantity == 0:
             return self.delete(*args, **kwargs)
         super(AbstractLine, self).save(*args, **kwargs)
