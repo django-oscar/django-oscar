@@ -12,7 +12,6 @@ from oscar.core.loading import import_module
 
 import_module('basket.models', ['Basket', 'Line', 'InvalidBasketLineError'], locals())
 import_module('basket.forms', ['FormFactory'], locals())
-import_module('basket.factory', ['BasketFactory'], locals())
 import_module('basket.signals', ['basket_addition'], locals())
 import_module('product.models', ['Item'], locals())
 import_module('offer.models', ['Voucher'], locals())
