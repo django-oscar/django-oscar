@@ -28,7 +28,7 @@ class BasketView(ModelView):
     
     def get_model(self):
         u"""Return a basket model"""
-        return self.factory.get_or_create_open_basket(self.request, self.response)
+        return self.request.basket
     
     def handle_GET(self, basket):
         u"""Handle GET requests against the basket"""
@@ -71,6 +71,7 @@ class BasketView(ModelView):
                 if option.code in form.cleaned_data:
                     options.append({'option': option, 'value': form.cleaned_data[option.code]})
             basket.add_product(item, form.cleaned_data['quantity'], options)
+            
             messages.info(self.request, "'%s' (quantity %d) has been added to your basket" %
                           (item.get_title(), form.cleaned_data['quantity']))
     
@@ -127,12 +128,12 @@ class LineView(ModelView):
     
     def __init__(self):
         self.response = HttpResponseRedirect(reverse('oscar-basket'))
-        self.factory = BasketFactory()
     
     def get_model(self):
-        u"""Get basket lines"""
-        basket = self.factory.get_open_basket(self.request)
-        return basket.lines.get(line_reference=self.kwargs['line_reference'])
+        """
+        Returns the basket line in question
+        """
+        return self.request.basket.lines.get(line_reference=self.kwargs['line_reference'])
         
     def handle_POST(self, line):
         u"""Handle POST requests against the basket line"""

@@ -16,7 +16,6 @@ from django.template.response import TemplateResponse
 from oscar.view.generic import ModelView
 from oscar.core.loading import import_module
 
-import_module('basket.factory', ['BasketFactory'], locals())
 import_module('checkout.forms', ['ShippingAddressForm'], locals())
 import_module('checkout.calculators', ['OrderTotalCalculator'], locals())
 import_module('checkout.utils', ['ProgressChecker', 'CheckoutSessionData'], locals())

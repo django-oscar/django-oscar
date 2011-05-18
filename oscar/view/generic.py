@@ -22,7 +22,7 @@ class ModelView(object):
         try:
             getattr(self, method_name)(model)
         except AttributeError:
-            return HttpResponseBadRequest()
+            return HttpResponseBadRequest("Unable to load model")
         
         return self.response
         

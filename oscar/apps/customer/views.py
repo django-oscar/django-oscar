@@ -13,7 +13,6 @@ from oscar.core.loading import import_module
 import_module('address.models', ['UserAddress'], locals())
 import_module('order.models', ['Order', 'Line'], locals())
 import_module('basket.models', ['Basket'], locals())
-import_module('basket.factory', ['BasketFactory'], locals())
 
 @login_required
 def profile(request):
@@ -69,7 +68,7 @@ class OrderLineView(ModelView):
         # We need to pass response to the get_or_create... method
         # as a new basket might need to be created
         self.response = HttpResponseRedirect(reverse('oscar-basket'))
-        basket = basket_factory.BasketFactory().get_or_create_open_basket(self.request, self.response)
+        basket = request.basket
         
         # Convert line attributes into basket options
         options = []
@@ -108,7 +107,7 @@ class AddressView(ModelView):
         u"""Save an address"""
         form = UserAddressForm(self.request.POST, instance=address)
         if form.is_valid():
-            a = form.save()
+            form.save()
             self.response = HttpResponseRedirect(reverse('oscar-customer-address-book'))
         else:
             self.response = TemplateResponse(self.request, self.template_file, {'form': form})
