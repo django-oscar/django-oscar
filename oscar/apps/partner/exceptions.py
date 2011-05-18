@@ -1,0 +1,2 @@
+class StockImportException(Exception):
+    pass
