@@ -21,8 +21,8 @@ class ModelView(object):
         model = self.get_model()
         try:
             getattr(self, method_name)(model)
-        except AttributeError:
-            return HttpResponseBadRequest("Unable to load model")
+        except AttributeError, e:
+            return HttpResponseBadRequest("Unable to load model (%s)" % e)
         
         return self.response
         
