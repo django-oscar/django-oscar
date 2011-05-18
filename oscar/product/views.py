@@ -212,14 +212,14 @@ class ProductReviewListView(ListView):
     context_object_name = "reviews"
     model = ProductReview
     template_name = 'reviews/reviews.html'
-    paginate_by = 20
+    paginate_by = 3
      
     def get_queryset(self):
         self.objects = review_models.ProductReview.objects.filter(product=self.kwargs['item_id'])
         return self.objects 
      
     def get_context_data(self, **kwargs):
-        context = super(ReviewListView, self).get_context_data(**kwargs)
+        context = super(ProductReviewListView, self).get_context_data(**kwargs)
         item = get_object_or_404(product_models.Item, pk=self.kwargs['item_id'])    
         context['item'] = item
         context['avg_score'] = self.objects.aggregate(Avg('score'))           
