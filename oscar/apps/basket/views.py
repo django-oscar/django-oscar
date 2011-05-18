@@ -1,15 +1,17 @@
+import re
+
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
+from django.template.response import TemplateResponse
 
 from oscar.view.generic import ModelView
 from oscar.core.loading import import_module
 
 import_module('basket.models', ['Basket', 'Line', 'InvalidBasketLineError'], locals())
 import_module('basket.forms', ['FormFactory'], locals())
-import_module('basket.factory', ['BasketFactory'], locals())
 import_module('basket.signals', ['basket_addition'], locals())
 import_module('product.models', ['Item'], locals())
 import_module('offer.models', ['Voucher'], locals())
@@ -21,16 +23,21 @@ class BasketView(ModelView):
     
     def __init__(self):
         self.response = HttpResponseRedirect(reverse('oscar-basket'))
-        self.factory = BasketFactory()
     
     def get_model(self):
         u"""Return a basket model"""
-        return self.factory.get_or_create_open_basket(self.request, self.response)
+        return self.request.basket
     
     def handle_GET(self, basket):
         u"""Handle GET requests against the basket"""
-        saved_basket = self.factory.get_saved_basket(self.request, self.response)
-        self.response = render(self.request, self.template_file, locals())
+        saved_basket = None
+        if self.request.user.is_authenticated():
+            try:
+                saved_basket = Basket.saved.get(owner=self.request.user)
+            except Basket.DoesNotExist:
+                saved_basket = None
+        self.response = TemplateResponse(self.request, self.template_file, {'basket': basket,
+                                                                            'saved_basket': saved_basket})
         
     def handle_POST(self, basket):
         u"""Handle POST requests against the basket"""
@@ -67,6 +74,7 @@ class BasketView(ModelView):
                 if option.code in form.cleaned_data:
                     options.append({'option': option, 'value': form.cleaned_data[option.code]})
             basket.add_product(item, form.cleaned_data['quantity'], options)
+            
             messages.info(self.request, "'%s' (quantity %d) has been added to your basket" %
                           (item.get_title(), form.cleaned_data['quantity']))
     
@@ -105,18 +113,30 @@ class BasketView(ModelView):
             messages.info(self.request, "Voucher '%s' removed from basket" % voucher.code)
         except ObjectDoesNotExist:
             messages.error(self.request, "No voucher found with code '%s'" % code)
+            
+    def do_bulk_load(self, basket):
+        num_additions = 0
+        num_not_found = 0
+        for sku in re.findall(r"[\d -]{5,}", self.request.POST['source_text']):
+            try:
+                item = Item.objects.get(upc=sku)
+                basket.add_product(item)
+                num_additions += 1
+            except Item.DoesNotExist:
+                num_not_found += 1
+        messages.info(self.request, "Added %d items to your basket (%d missing)" % (num_additions, num_not_found))
  
 
 class LineView(ModelView):
     
     def __init__(self):
         self.response = HttpResponseRedirect(reverse('oscar-basket'))
-        self.factory = BasketFactory()
     
     def get_model(self):
-        u"""Get basket lines"""
-        basket = self.factory.get_open_basket(self.request)
-        return basket.lines.get(line_reference=self.kwargs['line_reference'])
+        """
+        Returns the basket line in question
+        """
+        return self.request.basket.lines.get(line_reference=self.kwargs['line_reference'])
         
     def handle_POST(self, line):
         u"""Handle POST requests against the basket line"""
@@ -167,7 +187,10 @@ class LineView(ModelView):
         
     def do_save_for_later(self, line):
         u"""Save basket for later use"""
-        saved_basket = self.factory.get_or_create_saved_basket(self.request, self.response)
+        if not self.request.user.is_authenticated():
+            messages.error(self.request, "Only signed in users can save basket lines")
+            return
+        saved_basket, _ = Basket.saved.get_or_create(owner=self.request.user)
         saved_basket.merge_line(line)
         msg = "'%s' has been saved for later" % line.product
         messages.info(self.request, msg)
@@ -177,10 +200,9 @@ class SavedLineView(ModelView):
     
     def __init__(self):
         self.response = HttpResponseRedirect(reverse('oscar-basket'))
-        self.factory = BasketFactory()
     
     def get_model(self):
-        basket = self.factory.get_saved_basket(self.request, self.response)
+        basket = Basket.saved.get(owner=self.request.user)
         return basket.lines.get(line_reference=self.kwargs['line_reference'])
         
     def handle_POST(self, line):
@@ -192,7 +214,7 @@ class SavedLineView(ModelView):
             
     def do_move_to_basket(self, line):
         u"""Merge line items in to current basket"""
-        real_basket = self.factory.get_or_create_open_basket(self.request, self.response)
+        real_basket = self.request.basket
         real_basket.merge_line(line)
         msg = "'%s' has been moved back to your basket" % line.product
         messages.info(self.request, msg)

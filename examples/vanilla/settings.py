@@ -94,7 +94,8 @@ MIDDLEWARE_CLASSES = (
     #'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
-    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware'
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+    'oscar.apps.basket.middleware.BasketMiddleware'
 )
 
 INTERNAL_IPS = ('127.0.0.1',)
@@ -192,6 +193,7 @@ INSTALLED_APPS = (
     'oscar.apps.product',
     'oscar.apps.basket',
     'oscar.apps.payment',
+    'oscar.apps.payment.datacash',
     'oscar.apps.offer',
     'oscar.apps.address',
     'oscar.apps.partner',

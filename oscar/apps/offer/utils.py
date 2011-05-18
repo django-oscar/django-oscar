@@ -63,6 +63,9 @@ class Applicator(object):
         u"""
         Returns basket-linked offers such as those associated with a voucher code"""
         offers = []
+        if not basket.id:
+            return offers
+        
         for voucher in basket.vouchers.all():
             if voucher.is_active() and voucher.is_available_to_user(user):
                 basket_offers = voucher.offers.all()

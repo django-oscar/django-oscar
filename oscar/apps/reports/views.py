@@ -1,5 +1,5 @@
 from django.http import HttpResponse, HttpResponseForbidden, Http404
-from django.shortcuts import render
+from django.template.response import TemplateResponse
 
 from oscar.core.loading import import_module
 report_forms = import_module('reports.forms', ['ReportForm'])
@@ -19,7 +19,7 @@ def dashboard(request):
             return response
     else:
         form = report_forms.ReportForm()
-    return render(request, 'oscar/reports/dashboard.html', locals())
+    return TemplateResponse(request, 'oscar/reports/dashboard.html', {'form': form})
 
 
 def _get_generator(form):

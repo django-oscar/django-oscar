@@ -4,7 +4,8 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 
 from oscar.apps.payment.models import Bankcard
-from oscar.apps.payment.forms import bankcard_type, VISA, MASTERCARD, AMEX, DISCOVER, BankcardNumberField, luhn
+from oscar.apps.payment.forms import (bankcard_type, VISA, MASTERCARD, AMEX, DISCOVER, 
+                                      BankcardNumberField, BankcardExpiryMonthField, luhn)
 
 
 class BankcardTest(TestCase):
@@ -64,3 +65,5 @@ class LuhnTest(TestCase):
     def test_invalid_numbers_fail(self):
         for number in self.invalid_numbers:
             self.assertFalse(luhn(number))
+    
+    

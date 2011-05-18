@@ -37,7 +37,7 @@ class AbstractStockRecord(models.Model):
     information.  Most projects will need to subclass this object to add custom
     fields such as lead_time, report_code, min_quantity.
     """
-    product = models.OneToOneField('product.Item')
+    product = models.OneToOneField('product.Item', related_name="stockrecord")
     partner = models.ForeignKey('partner.Partner')
     partner_sku = models.CharField(_("Partner SKU"), max_length=128, blank=True)
     
