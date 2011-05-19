@@ -256,11 +256,11 @@ class ProductReviewVoteView(object):
                 messages.info(self.request, "Your have already voted for this product!")         
                 return HttpResponsePermanentRedirect(item.get_absolute_url()) 
             else:                                
-                vote = Vote.objects.create(review=review, user=self.request.user)                        
+                vote = Vote.objects.create(review=review, user=self.request.user, choice=0)                        
                 if self.request.POST['action'] == 'voteup':
-                    vote.up = 1                    
+                    vote.choice = 1                    
                 elif self.request.POST['action'] == 'votedown':
-                    vote.down = 1
+                    vote.choice = -1
                 vote.save()
                 messages.info(self.request, "Your vote has been submitted successfully!")
                 return HttpResponsePermanentRedirect(item.get_absolute_url())                                                   

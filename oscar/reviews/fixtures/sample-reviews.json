@@ -1,121 +1,48 @@
 [
     {
-        "pk": 7, 
+        "pk": 1, 
         "model": "reviews.productreview", 
         "fields": {
-            "body": "I rate it 5", 
+            "body": "zxfzxv,xcn\r\nczxv.nbxcv.b,\r\nzxv.b xcv.", 
             "product": 1, 
-            "name": "Anon31", 
-            "title": "That's a nice product", 
+            "name": "", 
+            "title": "Test review 2", 
             "url": "", 
             "approved": true, 
-            "down_votes": 0, 
-            "up_votes": 4, 
-            "score": "5", 
-            "user": null, 
-            "date_created": "2011-05-16 10:37:52", 
-            "email": "a@bcd.com"
+            "score": "4", 
+            "user": 1, 
+            "date_created": "2011-05-19 18:00:48", 
+            "delta_votes": 1, 
+            "email": "", 
+            "total_votes": 2
         }
     }, 
     {
-        "pk": 3, 
+        "pk": 2, 
         "model": "reviews.productreview", 
         "fields": {
-            "body": "Test review says the product is good", 
+            "body": "zxfzxv,xcn\r\nczxv.nbxcv.b,\r\nzxv.b xcv.", 
             "product": 1, 
             "name": "", 
             "title": "Test review 1", 
             "url": "", 
-            "approved": true, 
-            "down_votes": 0, 
-            "up_votes": 1, 
+            "approved": false, 
             "score": "4", 
             "user": 1, 
-            "date_created": "2011-05-16 10:28:27", 
-            "email": ""
+            "date_created": "2011-05-19 18:00:48", 
+            "delta_votes": 0, 
+            "email": "", 
+            "total_votes": 2
         }
     }, 
     {
-        "pk": 4, 
-        "model": "reviews.productreview", 
-        "fields": {
-            "body": "we don't know much about this product", 
-            "product": 1, 
-            "name": "Anon1", 
-            "title": "Anon review 1", 
-            "url": "", 
-            "approved": false, 
-            "down_votes": 0, 
-            "up_votes": 1, 
-            "score": "2", 
-            "user": null, 
-            "date_created": "2011-05-16 10:29:23", 
-            "email": "a@b.com"
-        }
-    }, 
-    {
-        "pk": 6, 
-        "model": "reviews.productreview", 
-        "fields": {
-            "body": "why put all info", 
-            "product": 1, 
-            "name": "Anon2", 
-            "title": "Anon review 2", 
-            "url": "", 
-            "approved": false, 
-            "down_votes": 0, 
-            "up_votes": 1, 
-            "score": "3", 
-            "user": null, 
-            "date_created": "2011-05-16 10:36:03", 
-            "email": "axxx@b.com"
-        }
-    }, 
-    {
-        "pk": 5, 
-        "model": "reviews.productreview", 
-        "fields": {
-            "body": "Our view is OK", 
-            "product": 1, 
-            "name": "another", 
-            "title": "another review ", 
-            "url": "", 
-            "approved": true, 
-            "down_votes": 1, 
-            "up_votes": 0, 
-            "score": "3", 
-            "user": null, 
-            "date_created": "2011-05-16 10:30:12", 
-            "email": "another@b.com"
-        }
-    }, 
-    {
-        "pk": 8, 
-        "model": "reviews.productreview", 
-        "fields": {
-            "body": "I don't know it much", 
-            "product": 1, 
-            "name": "Unknown", 
-            "title": "Unknown review", 
-            "url": "", 
-            "approved": false, 
-            "down_votes": 0, 
-            "up_votes": 0, 
-            "score": "1", 
-            "user": null, 
-            "date_created": "2011-05-16 10:39:41", 
-            "email": "unknown@bbbb.com"
-        }
-    }, 
-    {
-        "pk": 42, 
+        "pk": 1, 
         "model": "reviews.vote", 
         "fields": {
-            "down": 0, 
-            "date_created": "2011-05-16 17:14:22", 
-            "review": 7, 
+            "date_created": "2011-05-19 18:03:09", 
+            "review": 1, 
             "user": 1, 
-            "up": 1
+            "choice": 1
         }
     }
 ]

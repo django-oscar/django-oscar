@@ -34,8 +34,10 @@ class AbstractProductReview(models.Model):
     score = models.CharField(_("Score"), max_length=1, choices=SCORE_CHOICES)
     approved = models.BooleanField(default=False)
     date_created = models.DateTimeField(auto_now_add=True)
-    up_votes = models.IntegerField(_("UpVotes"), default=0, blank=True)
-    down_votes = models.IntegerField(_("DownVotes"), default=0, blank=True)
+    # vote statistics
+    total_votes = models.IntegerField(_("Total Votes"), default=0, blank=True) # upvotes + down votes
+    delta_votes = models.IntegerField(_("Delta Votes"), default=0, blank=True) # upvotes - down votes
+    
         
     # mangers
     objects = models.Manager()
@@ -46,7 +48,7 @@ class AbstractProductReview(models.Model):
 
     class Meta:
         abstract = True
-        ordering = ['-up_votes']
+        ordering = ['-delta_votes']
 
     def get_absolute_url(self):
         args = {'review_id': self.id,
@@ -78,18 +80,18 @@ class AbstractVote(models.Model):
     u"""
     Records user ratings
     Each user can vote only once    
-    """    
+    """
+    VOTE_CHOICES = (("Yes", 1), ("No", -1), ("Empty", 0))    
     user = models.ForeignKey('auth.User', related_name='vote')
     review = models.ForeignKey('reviews.ProductReview', related_name='review')
-    up = models.IntegerField(_("VoteUp"), blank=True, default=0)
-    down = models.IntegerField(_("VoteDown"), blank=True, default=0)
+    choice = models.SmallIntegerField(choices=VOTE_CHOICES)
     date_created = models.DateTimeField(auto_now_add=True)
     
     objects = models.Manager()
         
     class Meta:
         abstract = True
-        ordering = ['up']
+        ordering = ['-date_created']
         unique_together = (('user', 'review'),)
                         
     def __unicode__(self):
@@ -99,9 +101,13 @@ class AbstractVote(models.Model):
         # check user log-in        
         if not self.user.is_authenticated():
                 raise ValidationError("Only logged-in users can vote!")
-        if self.up or self.down: # process votes
-            self.review.up_votes += self.up
-            self.review.down_votes += self.down
-            self.review.save()
+        if self.choice == None:
+            raise ValidationError("Votes must have a choice (Yes/No)")
+        if self.choice == 0: # empty vote
+            return
+        else:
+            self.review.total_votes +=1
+            self.review.delta_votes += self.choice
+            self.review.save()            
         super(AbstractVote, self).save(*args, **kwargs)
  

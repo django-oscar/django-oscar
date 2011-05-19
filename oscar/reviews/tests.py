@@ -39,12 +39,16 @@ class TopLevelProductReviewVoteTests(ProductReviewTests):
     def setUp(self):
         super(TopLevelProductReviewVoteTests, self).setUp()
     
+    def test_top_level_vote_must_have_choice(self):
+        self.assertRaises(ValidationError, Vote.objects.create, review=self.review,\
+                           user=self.user)    
+    
     def test_try_vote_without_login(self):        
-        self.assertRaises(ValueError, Vote.objects.create, review=self.review, user=self.anon_user)
+        self.assertRaises(ValueError, Vote.objects.create, review=self.review, choice =-1, user=self.anon_user)
     
     def test_try_vote_more_than_once(self):
-        vote1 = Vote.objects.create(review=self.review, user=self.user, up=1)         
-        self.assertRaises(IntegrityError, Vote.objects.create, review=self.review, user=self.user)
+        vote1 = Vote.objects.create(review=self.review, user=self.user, choice=1)         
+        self.assertRaises(IntegrityError, Vote.objects.create, review=self.review, choice=-1, user=self.user)
         
     
 class SingleProductReviewViewTest(ProductReviewTests, TestCase):
@@ -133,14 +137,14 @@ class ProductReviewVotingActionTests(TestCase):
         self.review = self.reviews.reverse()[0]
         self.assertTrue(self.review)
         review_id = self.review.id
-        old_votes = self.review.up_votes
+        old_votes = self.review.total_votes
         old_rank = list(self.reviews.values_list('id', flat=True)).index(review_id)       
         # vote up
         for i in xrange(self.voters):
-            vote = Vote.objects.create(review=self.review, user=self.users[i], up=1)
+            vote = Vote.objects.create(review=self.review, user=self.users[i], choice=1)
             self.assertTrue(vote)
         # test vote count
-        self.failUnlessEqual(self.review.up_votes, (self.voters + old_votes))
+        self.failUnlessEqual(self.review.total_votes, (self.voters + old_votes))
         # test rank
         reviews = ProductReview.top_voted.all()
         new_rank = list(reviews.values_list('id', flat=True)).index(review_id)

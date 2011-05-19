@@ -17,5 +17,5 @@ class TopScoredReviewsManager(models.Manager):
     
 class TopVotedReviewsManager(models.Manager):
     def get_query_set(self):
-        return super(TopVotedReviewsManager, self).get_query_set().filter(approved=True).order_by('-up_votes')
+        return super(TopVotedReviewsManager, self).get_query_set().filter(approved=True).order_by('-delta_votes')
    
