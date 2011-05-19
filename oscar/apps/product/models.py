@@ -26,3 +26,8 @@ class ItemAttributeValue(AbstractItemAttributeValue):
 
 class Option(AbstractOption):
     pass
+
+
+class ProductImage(AbstractProductImage):
+    pass
+

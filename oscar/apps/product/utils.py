@@ -11,9 +11,9 @@ from django.core.files import File
 from django.core.exceptions import FieldError
 
 from oscar.core.loading import import_module
-import_module('image.exceptions', ['ImageImportException', 'IdenticalImageException', 'InvalidImageArchive'], locals())
+import_module('product.exceptions', ['ImageImportException', 'IdenticalImageException', 'InvalidImageArchive'], locals())
 import_module('product.models', ['Item'], locals())
-import_module('image.models', ['Image'], locals())
+import_module('product.models', ['Image'], locals())
 
 
 class Importer(object):

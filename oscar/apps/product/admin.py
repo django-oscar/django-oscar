@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from oscar.core.loading import import_module
 product_models = import_module('product.models', ['Item', 'ItemClass', 'AttributeType', 
-                                                  'ItemAttributeValue', 'Option', 'ProductRecommendation'])
+                                                  'ItemAttributeValue', 'Option', 'ProductRecommendation', 'ProductImage'])
 
 class AttributeInline(admin.TabularInline):
     model = product_models.ItemAttributeValue
@@ -30,3 +30,4 @@ admin.site.register(product_models.Item, ItemAdmin)
 admin.site.register(product_models.AttributeType, AttributeTypeAdmin)
 admin.site.register(product_models.ItemAttributeValue)
 admin.site.register(product_models.Option, OptionAdmin)
+admin.site.register(product_models.ProductImage)

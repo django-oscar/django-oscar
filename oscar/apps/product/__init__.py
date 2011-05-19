@@ -1,6 +1,6 @@
-from django.conf.urls.defaults import patterns, url, include        
 from oscar.core.application import Application
 from oscar.apps.product.views import ItemDetailView, ItemClassListView, ProductListView
+from django.conf.urls.defaults import patterns, url, include
 
 
 class ProductApplication(Application):
