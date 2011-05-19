@@ -48,13 +48,12 @@ class AbstractProductReview(models.Model):
         abstract = True
         ordering = ['-up_votes']
 
-    @models.permalink
     def get_absolute_url(self):
-        return reverse('oscar-product-review', 
-                       kwargs={'review_id': self.id,
-                               'item_class_slug': str(self.product.item_class),
-                               'item_slug': self.product.slug, 
-                                'item_id': str(self.product.id)})
+        args = {'review_id': self.id,
+                'item_class_slug': self.product.get_item_class().slug, 
+                'item_slug': self.product.slug,
+                'item_id': self.product.id}
+        return reverse('oscar-product-review',  kwargs=args)
 
     def get_vote_url(self):                
         return reverse('oscar-vote-review', 
@@ -73,14 +72,7 @@ class AbstractProductReview(models.Model):
             if not (self.name and self.email):
                 raise ValidationError("Anonymous review must have a name and an email")
         super(AbstractProductReview, self).save(*args, **kwargs)
-     
-    # helpers
-    def count_votes(self, votes):
-        u"""
-        Get the number of votes for this review
-        """
-        return votes.objects.filter(review=self.id).count()
-                     
+                          
 
 class AbstractVote(models.Model):
     u"""

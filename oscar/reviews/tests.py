@@ -1,10 +1,12 @@
-import unittest
 from random import randint
 from sys import maxint
 from django.test import TestCase, Client
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User, AnonymousUser
 from django.db import IntegrityError
+from django.core.urlresolvers import reverse
+from django.utils import unittest
+from django.test import TestCase
 
 from oscar.product.models import Item, ItemClass
 from oscar.reviews.models import ProductReview, Vote
@@ -19,7 +21,7 @@ class ProductReviewTests(unittest.TestCase):
         self.item_class,_ = ItemClass.objects.get_or_create(name='Books')
         self.item,_ = Item.objects.get_or_create(title='Django Book v2', item_class=self.item_class)
         self.review,_ = ProductReview.objects.get_or_create(title='Django Book v2 Review',\
-                            product=self.item, user=self.user, score=3)
+                            product=self.item, user=self.user, score=3, approved=True)
 
 class TopLevelProductReviewTests(ProductReviewTests):
     
@@ -45,20 +47,41 @@ class TopLevelProductReviewVoteTests(ProductReviewTests):
         self.assertRaises(IntegrityError, Vote.objects.create, review=self.review, user=self.user)
         
     
-class SingleProductReviewViewTest(ProductReviewTests):
+class SingleProductReviewViewTest(ProductReviewTests, TestCase):
     u"""
     Each product has reviews attached to it
-    """
-    fixtures = ['sample-products, sample-reviews']
-    
+    """    
     def setUp(self):
         self.client = Client()
-    
+        super(SingleProductReviewViewTest, self).setUp()   
+        self.kwargs = {'item_class_slug': self.item.get_item_class().slug, 
+                'item_slug': self.item.slug,
+                'item_id': str(self.item.id)}
+        
     def test_each_product_has_review(self):
-        pass
+        url = reverse('oscar-product-item', kwargs=self.kwargs)
+        response = self.client.get(url)
+        self.assertEquals(200, response.status_code)
     
-    def test_each_review_has_own_page(self):
-        pass
+    def test_user_can_add_product_review(self):
+        url = reverse('oscar-product-review-add', kwargs=self.kwargs)
+        self.client.login(username='testuser', password='secret')
+        response = self.client.get(url)
+        self.assertEquals(200, response.status_code)
+        # check necessary review fields for logged in user
+        self.assertContains(response, 'title')
+        self.assertContains(response, 'score')
+        # check additional fields for anonymous user
+        self.client.login(username=None)
+        response = self.client.get(url)        
+        self.assertContains(response, 'name')
+        self.assertContains(response, 'email')
+        
+    def test_each_review_has_own_page(self): ## FIXME: broken for reverse
+        self.kwargs['review_id'] = self.review.id
+        url = reverse('oscar-product-review', kwargs=self.kwargs)
+        response = self.client.get(url)
+        self.assertEquals(200, response.status_code)
     
     def test_product_page_shows_correct_avg_score(self):
         pass
@@ -68,6 +91,25 @@ class SingleProductReviewViewTest(ProductReviewTests):
         Based on settings.OSCAR_MODERATE_REVIEWS 
         """
         pass
+
+class SingleProductReviewVoteViewTest(ProductReviewTests, TestCase):
+    u"""
+    Each product review can be voted up or down
+    """ 
+    def setUp(self):
+        self.client = Client()
+        super(SingleProductReviewVoteViewTest, self).setUp()   
+        self.kwargs = {'item_class_slug': self.item.get_item_class().slug, 
+                'item_slug': self.item.slug,
+                'item_id': self.item.id,
+                'review_id': self.review.id}
+        
+    def test_vote_up_product_review(self):
+        url = reverse('oscar-vote-review', kwargs=self.kwargs)
+        self.client.login(username='testuser', password='secret')
+        response = self.client.get(url)
+        self.assertEquals(200, response.status_code)
+    
 
 class ProductReviewVotingActionTests(TestCase):
     u"""

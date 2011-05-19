@@ -61,7 +61,7 @@ class ItemDetailView(DetailView):
     
     def get_product_review(self):
         if settings.OSCAR_MODERATE_REVIEWS:        
-            return ProductReview.approved_only.all()
+            return ProductReview.top_voted.all()
         else:
             return ProductReview.objects.all()
     
@@ -174,6 +174,7 @@ class ProductReviewView(object):
                     "review_form": review_form,
                     })
 
+
 class ProductReviewDetailView(DetailView):
     u"""
     Places each review on its own page
@@ -186,24 +187,24 @@ class ProductReviewDetailView(DetailView):
         Ensures that the correct URL is used
         """
         # get the product review                
-        review = self.get_object()
-        correct_path = review.get_absolute_url() 
+        review = self.get_object()        
+        correct_path = review.get_absolute_url()
         if correct_path != request.path:
             return HttpResponsePermanentRedirect(correct_path)        
-        return super(ReviewDetailView, self).get(request, **kwargs)
+        return super(ProductReviewDetailView, self).get(request, **kwargs)
     
     def get_object(self):
         u"""
-        Return a review object or a 404.
+        Return a review object
         """
         try:            
-            self._review = review_models.ProductReview.objects.get(pk=self.kwargs['review_id'])
+            self._review = review_models.ProductReview.objects.get(pk=self.kwargs['review_id'])            
             return self._review
         except ObjectDoesNotExist:                
             raise
     
     def get_context_data(self, **kwargs):
-        context = super(ReviewDetailView, self).get_context_data(**kwargs)        
+        context = super(ProductReviewDetailView, self).get_context_data(**kwargs)        
         context['review'] = self.get_object()
         return context
     
@@ -264,7 +265,7 @@ class ProductReviewVoteView(object):
                 vote.save()
                 messages.info(self.request, "Your vote has been submitted successfully!")
                 return HttpResponsePermanentRedirect(item.get_absolute_url())                                                   
-        reviews = review_models.ProductReviews.approved_only.get(product=self.kwargs['item_id'])
+        reviews = review_models.ProductReview.approved_only.filter(product=self.kwargs['item_id'])
         return render(self.request, template_name, {
                     "item" : item,
                     "reviews": reviews,
