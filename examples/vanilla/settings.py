@@ -91,7 +91,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    #'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware'
@@ -178,9 +178,9 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.flatpages',
     # External apps
-    'django_extensions',
+    #'django_extensions',
     'haystack',
-    #'debug_toolbar',
+    'debug_toolbar',
     # Apps from oscar
     'oscar',
     'oscar.apps.analytics',
@@ -196,13 +196,13 @@ INSTALLED_APPS = (
     'oscar.apps.offer',
     'oscar.apps.address',
     'oscar.apps.partner',
-    'oscar.apps.image',
+    #'oscar.apps.dynamic_images',
     'oscar.apps.customer',
     'oscar.apps.promotions',
     'oscar.apps.reports',
     'oscar.apps.search',
     'oscar.apps.catalogue_import',
-    'pyzen',
+    #'pyzen',
 )
 
 LOGIN_REDIRECT_URL = '/shop/accounts/profile/'
