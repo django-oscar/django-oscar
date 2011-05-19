@@ -126,7 +126,6 @@ class ProductReviewView(object):
     u"""
     A separate product review page
     """
-  
     def _is_review_done(self):
         u"""
         Check if the user already reviewed this product
@@ -143,8 +142,8 @@ class ProductReviewView(object):
         self.kwargs = kwargs
         self.user = self.request.user
         # get the product                
-        item = get_object_or_404(product_models.Item, pk=self.kwargs['item_id'])          
-        if self._is_review_done():
+        item = get_object_or_404(product_models.Item, pk=self.kwargs['item_id'])                
+        if self._is_review_done():            
             messages.info(self.request, "Your have already reviewed this product!")
             url = item.get_absolute_url()             
             return HttpResponsePermanentRedirect(url) 
@@ -270,3 +269,4 @@ class ProductReviewVoteView(object):
                     "item" : item,
                     "reviews": reviews,
                     })
+

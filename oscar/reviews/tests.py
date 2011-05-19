@@ -92,6 +92,7 @@ class SingleProductReviewViewTest(ProductReviewTests, TestCase):
         """
         pass
 
+
 class SingleProductReviewVoteViewTest(ProductReviewTests, TestCase):
     u"""
     Each product review can be voted up or down
