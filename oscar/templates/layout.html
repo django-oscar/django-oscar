@@ -29,6 +29,9 @@
             <a href="/admin/promotions/pagemerchandisingblock/add/?page_url={{ url_path }}" >merchandising block</a>
             to this page.
             
+            Basket total: {{ basket.total_incl_tax|currency }}
+            <a href="{% url oscar-basket %}">View basket</a>
+            
             {% block header %}
             {% endblock %}
         </div>

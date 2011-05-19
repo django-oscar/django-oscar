@@ -21,7 +21,6 @@ from django.views.generic import TemplateView
 from oscar.view.generic import ModelView
 from oscar.core.loading import import_module
 
-import_module('basket.factory', ['BasketFactory'], locals())
 import_module('checkout.forms', ['ShippingAddressForm'], locals())
 import_module('checkout.calculators', ['OrderTotalCalculator'], locals())
 import_module('checkout.utils', ['ProgressChecker', 'CheckoutSessionData'], locals())
@@ -338,4 +337,4 @@ class ThankYouView(object):
             del request.session['checkout_order_id']
         except KeyError, ObjectDoesNotExist:
             return HttpResponseRedirect(reverse('oscar-checkout-index'))
-        return TemplateResponse(request, 'oscar/checkout/thank_you.html', locals())
+        return TemplateResponse(request, 'oscar/checkout/thank_you.html', {'order': order})

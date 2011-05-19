@@ -3,7 +3,7 @@ Special settings file for use when testing.  This specifies a SQLite
 database to use when running tests.
 
 Just make sure you run the tests and specify this file:
-> ./manage.py test -settings=test_settings
+> ./manage.py test --settings=test_settings
 """
 import sys
 sys.path.append("../..")

@@ -3,7 +3,6 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 
 from oscar.core.loading import import_module
-import_module('basket.factory', ['BasketFactory'], locals())
 import_module('checkout.calculators', ['OrderTotalCalculator'], locals())
 import_module('order.models', ['Order', 'ShippingAddress'], locals())
 import_module('checkout.utils', ['ProgressChecker', 'CheckoutSessionData'], locals())
@@ -28,8 +27,7 @@ def prev_steps_must_be_complete(view_fn):
 
 def basket_required(view_fn):
     def _view_wrapper(self, request, *args, **kwargs):
-        basket = BasketFactory().get_open_basket(request)
-        if not basket:
+        if request.basket.is_empty:
             messages.error(request, "You must add some products to your basket before checking out")
             return HttpResponseRedirect(reverse('oscar-basket'))
         return view_fn(self, request, *args, **kwargs)
@@ -66,7 +64,7 @@ class CheckoutView(object):
         # Set up the instance variables that are needed to place an order
         self.request = request
         self.co_data = CheckoutSessionData(request)
-        self.basket = BasketFactory().get_open_basket(self.request)
+        self.basket = request.basket
         
         # Set up template context that is available to every view
         method = self.co_data.shipping_method()

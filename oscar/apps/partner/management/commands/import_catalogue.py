@@ -5,8 +5,8 @@ from optparse import make_option
 from django.core.management.base import BaseCommand, CommandError
 
 from oscar.core.loading import import_module
-import_module('catalogue_import.utils', ['Importer'], locals())
-import_module('catalogue_import.exceptions', ['CatalogueImportException'], locals())
+import_module('partner.utils', ['CatalogueImporter'], locals())
+import_module('partner.exceptions', ['CatalogueImportException'], locals())
 
 
 class Command(BaseCommand):
@@ -32,7 +32,7 @@ class Command(BaseCommand):
             raise CommandError("Please select a CSV file to import")
         
         logger.info("Starting catalogue import")
-        importer = Importer(logger, delimiter=options.get('delimiter'), flush=options.get('flush'))
+        importer = CatalogueImporter(logger, delimiter=options.get('delimiter'), flush=options.get('flush'))
         for file_path in args:
             logger.info(" - Importing records from '%s'" % file_path)
             try:

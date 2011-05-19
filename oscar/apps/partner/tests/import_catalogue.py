@@ -3,8 +3,8 @@ from decimal import Decimal as D
 from django.test import TestCase
 import logging
 
-from oscar.apps.catalogue_import.utils import Importer
-from oscar.apps.catalogue_import.exceptions import CatalogueImportException
+from oscar.apps.partner.utils import CatalogueImporter
+from oscar.apps.partner.exceptions import ImportException
 from oscar.apps.product.models import ItemClass, Item
 from oscar.apps.partner.models import Partner, StockRecord
 from oscar.test.helpers import create_product
@@ -23,21 +23,21 @@ logger.addHandler(NullHandler())
 class CommandEdgeCasesTest(TestCase):
 
     def setUp(self):
-        self.importer = Importer(logger)
+        self.importer = CatalogueImporter(logger)
 
     def test_sending_no_file_argument_raises_exception(self):
         self.importer.afile = None
-        with self.assertRaises(CatalogueImportException):
+        with self.assertRaises(ImportException):
             self.importer.handle()
 
     def test_sending_directory_as_file_raises_exception(self):
         self.importer.afile = "/tmp"
-        with self.assertRaises(CatalogueImportException):
+        with self.assertRaises(ImportException):
             self.importer.handle()
 
     def test_importing_nonexistant_file_raises_exception(self):
         self.importer.afile = "/tmp/catalogue-import.zgvsfsdfsd"
-        with self.assertRaises(CatalogueImportException):
+        with self.assertRaises(ImportException):
             self.importer.handle()
 
 
@@ -51,7 +51,7 @@ class ImportSmokeTest(TestCase):
     
     
     def setUp(self):
-        self.importer = Importer(logger)
+        self.importer = CatalogueImporter(logger)
         self.importer.handle(TEST_BOOKS_CSV)
         self.item = Item.objects.get(upc='9780115531446')
         
@@ -101,7 +101,7 @@ class ImportSmokeTest(TestCase):
 class ImportSemicolonDelimitedFileTest(TestCase):
     
     def setUp(self):
-        self.importer = Importer(logger, delimiter=";")
+        self.importer = CatalogueImporter(logger, delimiter=";")
         
     def test_import(self):
         self.importer.handle(TEST_BOOKS_SEMICOLON_CSV)
@@ -110,7 +110,7 @@ class ImportSemicolonDelimitedFileTest(TestCase):
 class ImportWithFlushTest(TestCase):
     
     def setUp(self):
-        self.importer = Importer(logger, flush=True)
+        self.importer = CatalogueImporter(logger, flush=True)
 
     def test_items_are_flushed_by_importer(self):
         upc = "0000000000000"

@@ -52,11 +52,13 @@ Your basket is currently empty - go and <a href="{% url products:list %}">buy so
                 <input type="hidden" name="action" value="delete" />
                 <input type="submit" value="Delete" />
             </form>
+            {% if user.is_authenticated %}
             <form action="{% url oscar-basket-line line.line_reference %}" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="action" value="save_for_later" />
                 <input type="submit" value="Save for later" />
             </form>
+            {% endif %}
         </td>
         <td>{{ line.unit_price_excl_tax|currency }}</td>
         <td>{{ line.unit_tax|currency }}</td>

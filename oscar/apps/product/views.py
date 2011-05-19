@@ -17,22 +17,43 @@ item_class_model = get_model('product', 'itemclass')
 
 
 class ItemDetailView(DetailView):
-    template_name = "oscar/product/item.html"
+    #template_name = "oscar/product/item.html"
     model = item_model
     view_signal = product_viewed
+    template_folder = "oscar/product"
+    _item = None
     
     def get(self, request, **kwargs):
-        # super call sets self.object for us
-        response = super(ItemDetailView, self).get(request, **kwargs)
-        correct_path = self.object.get_absolute_url()
-        
-        # Ensures that the correct URL is used
+        u"""
+        Ensures that the correct URL is used
+        """
+        item = self.get_object()
+        correct_path = item.get_absolute_url() 
         if correct_path != request.path:
             return HttpResponsePermanentRedirect(correct_path)
+        response = super(ItemDetailView, self).get(request, **kwargs)
         
         # Send signal to record the view of this product
         self.view_signal.send(sender=self, product=self.object, user=request.user, request=request, response=response)
         return response;
+
+    
+    def get_template_names(self):
+        """
+        Returns a list of possible templates.
+        
+        We try 2 options before defaulting to oscar/product/detail.html:
+        1). detail-for-upc-<upc>.html
+        2). detail-for-class-<classname>.html
+        
+        This allows alternative templates to be provided for a per-product
+        and a per-item-class basis.
+        """    
+        product = self.get_object()
+        names = ['%s/detail-for-upc-%s.html' % (self.template_folder, product.upc), 
+                 '%s/detail-for-class-%s.html' % (self.template_folder, product.item_class.name.lower()),
+                 '%s/detail.html' % (self.template_folder)]
+        return names
 
 
 class ItemClassListView(ListView):
