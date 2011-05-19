@@ -170,6 +170,11 @@ class PaymentDetailsView(CheckoutView):
         order_number = self.generate_order_number(self.basket)
         logger.info(_("Submitting order #%s" % order_number))
         
+        # We freeze the basket to prevent it being modified once the payment
+        # process has started.  If your payment fails, then the basket will
+        # need to be "unfrozen".
+        self.basket.freeze()
+        
         # Calculate totals
         calc = OrderTotalCalculator(self.request)
         shipping_method = self.get_shipping_method(self.basket)
@@ -302,7 +307,7 @@ class PaymentDetailsView(CheckoutView):
             # Check that this address isn't already in the db as we don't want
             # to fill up the customer address book with duplicate addresses
             try:
-                address_models.UserAddress._default_manager.get(hash=user_addr.generate_hash())
+                UserAddress._default_manager.get(hash=user_addr.generate_hash())
             except ObjectDoesNotExist:
                 user_addr.save()
     

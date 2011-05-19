@@ -6,6 +6,7 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.views.generic import ListView, DetailView
 from django.contrib import messages
 from django.db import transaction
+from django.template.response import TemplateResponse
 
 from oscar.view.generic import ModelView
 from oscar.core.loading import import_module
@@ -34,7 +35,8 @@ class OrderView(ModelView):
     def handle_GET(self, order):
         shipping_options = ShippingEventType._default_manager.all()
         payment_options = PaymentEventType._default_manager.all()
-        self.response = TemplateResponse(self.request, self.template_file, {'shipping_options': shipping_options,
+        self.response = TemplateResponse(self.request, self.template_file, {'order': order,
+                                                                            'shipping_options': shipping_options,
                                                                             'payment_options': payment_options})
         
     def handle_POST(self, order):

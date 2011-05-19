@@ -58,6 +58,8 @@ class AbstractBasket(models.Model):
     
     def flush(self):
         u"""Remove all lines from basket."""
+        if self.status == FROZEN:
+            raise PermissionDenied("A frozen basket cannot be flushed")
         self.lines_all().delete()
     
     def add_product(self, item, quantity=1, options=[]):
@@ -106,12 +108,21 @@ class AbstractBasket(models.Model):
             line.save()
     
     def merge(self, basket):
-        u"""Merges another basket with this one"""
+        """
+        Merges another basket with this one.
+        """
         for line_to_merge in basket.all_lines():
             self.merge_line(line_to_merge)
         basket.status = MERGED
         basket.date_merged = datetime.datetime.now()
         basket.save()
+    
+    def freeze(self):
+        """
+        Freezes the basket so it cannot be modified.
+        """
+        self.status = FROZEN
+        self.save()
     
     def set_as_submitted(self):
         u"""Mark this basket as submitted."""
