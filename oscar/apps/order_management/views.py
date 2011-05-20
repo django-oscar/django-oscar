@@ -1,17 +1,20 @@
 from django.http import HttpResponseRedirect
 from django.template import Context, loader, RequestContext
+from django.template.response import TemplateResponse
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.views.generic import ListView, DetailView
 from django.contrib import messages
 from django.db import transaction
+from django.db.models import Q
+import operator
 
 from oscar.view.generic import ModelView
 from oscar.core.loading import import_module
 import_module('order.models', ['Order', 'Line', 'ShippingEvent', 'ShippingEventQuantity', 
                                'ShippingEventType', 'PaymentEvent', 'PaymentEventType', 'OrderNote'], locals())
-
+import_module('order_management.forms', ['SimpleSearch', 'AdvancedSearch'], locals())
 
 class OrderListView(ListView):
     u"""A list of orders"""
@@ -20,8 +23,34 @@ class OrderListView(ListView):
     paginate_by = 20
 
     def get_queryset(self):
+        if 'number' in self.request.GET and self.request.GET['number'].strip():
+            q = self.request.GET['number'].strip()
+            q_list = []
+            
+            q_list.append(Q(number__icontains=q))
+            q_list.append(Q(user__first_name__icontains=q))
+            q_list.append(Q(user__last_name__icontains=q))
+            q_list.append(Q(user__email__icontains=q))
+            
+            q_list.append(Q(shipping_address__line1__icontains=q))
+            q_list.append(Q(shipping_address__line2__icontains=q))
+            q_list.append(Q(shipping_address__line3__icontains=q))
+            q_list.append(Q(shipping_address__line4__icontains=q))
+            q_list.append(Q(shipping_address__postcode__icontains=q))
+            
+            q_list.append(Q(billing_address__line1__icontains=q))
+            q_list.append(Q(billing_address__line2__icontains=q))
+            q_list.append(Q(billing_address__line3__icontains=q))
+            q_list.append(Q(billing_address__line4__icontains=q))
+            q_list.append(Q(billing_address__postcode__icontains=q))
+            
+            return Order._default_manager.filter(reduce(operator.or_, q_list))
         return Order._default_manager.all()
     
+    def get_context_data(self, **kwargs):
+        context = super(OrderListView, self).get_context_data(**kwargs)
+        context['order_simple_search_form'] = SimpleSearch(self.request.GET)
+        return context
   
 class OrderView(ModelView):
     u"""A detail view of an order"""

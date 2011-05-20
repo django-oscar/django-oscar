@@ -5,10 +5,12 @@
 {% block header %}
 <h2>Order management</h2>
 {% endblock header %}
-
-
 {% block content %}
-
+<form method="get" action="{% url oscar-order-management-list %}">
+    {{ order_simple_search_form.as_p }}
+    <input type="submit" nane="simple_search" value="Search" />
+    {{ order_advanced_search_form.as_p }}
+</form>
 {% if orders.count %}
 
 <table>
@@ -59,4 +61,3 @@
 {% endif %}
 
 {% endblock content %}
-
