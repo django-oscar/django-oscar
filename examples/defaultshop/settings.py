@@ -1,5 +1,5 @@
-import os, sys
-sys.path.append('/home/fsarker/.virtualenvs/oscar-writefaruq/include/django-debug-toolbar')
+import os
+
 
 
 # Django settings for oscar project.
@@ -20,9 +20,9 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'oscar-defaultshop',                      # Or path to database file if using sqlite3.
-        'USER': 'root',                      # Not used with sqlite3.
-        'PASSWORD': 't123',                  # Not used with sqlite3.
+        'NAME': '',                      # Or path to database file if using sqlite3.
+        'USER': '',                      # Not used with sqlite3.
+        'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
@@ -140,10 +140,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.admin',
     'django.contrib.flatpages',
-    'django.contrib.comments',
     # External apps
     'django_extensions',
-    #'debug_toolbar',
     # Apps from oscar
     'oscar',
     'oscar.order',
@@ -159,9 +157,6 @@ INSTALLED_APPS = (
     'oscar.shipping',
     'oscar.customer',
     'oscar.reviews',
-    #'oscar.my_comments_app',
-    'debug_toolbar',
-    'pyzen'
 )
 
 LOGIN_REDIRECT_URL = '/shop/accounts/profile/'
@@ -171,8 +166,6 @@ APPEND_SLASH = True
 OSCAR_DEFAULT_CURRENCY = 'GBP'
 
 # Oscar.reviews settings
-#COMMENTS_APP = 'oscar.my_comments_app'
-
 OSCAR_ALLOW_ANON_REVIEWS = True
 OSCAR_MODERATE_REVIEWS = False
 
