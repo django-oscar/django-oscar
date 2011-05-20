@@ -8,12 +8,12 @@ class ApprovedReviewsManager(models.Manager):
 
 class RecentReviewsManager(models.Manager):
     def get_query_set(self):
-        return super(RecentReviewsManager, self).get_query_set().filter(approved=True).order_by('date_created')
+        return super(RecentReviewsManager, self).get_query_set().filter(approved=True).order_by('-date_created')
 
 
 class TopScoredReviewsManager(models.Manager):
     def get_query_set(self):
-        return super(RecentReviewsManager, self).get_query_set().filter(approved=True).order_by('score')
+        return super(TopScoredReviewsManager, self).get_query_set().filter(approved=True).order_by('-score')
     
 class TopVotedReviewsManager(models.Manager):
     def get_query_set(self):

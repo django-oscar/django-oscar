@@ -215,7 +215,13 @@ class ProductReviewListView(ListView):
     paginate_by = 3
      
     def get_queryset(self):
-        self.objects = review_models.ProductReview.objects.filter(product=self.kwargs['item_id'])
+        if 'sort_by' in self.request.GET:
+            if self.request.GET['sort_by'] == 'score':
+                 self.objects = review_models.ProductReview.top_scored.filter(product=self.kwargs['item_id'])
+            elif self.request.GET['sort_by'] == 'recency':
+                 self.objects = review_models.ProductReview.recent.filter(product=self.kwargs['item_id'])
+        else:
+            self.objects = review_models.ProductReview.objects.filter(product=self.kwargs['item_id'])
         return self.objects 
      
     def get_context_data(self, **kwargs):
