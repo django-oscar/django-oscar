@@ -65,6 +65,7 @@ class BasketView(ModelView):
         factory = FormFactory()
         form = factory.create(item, self.request.POST)
         if not form.is_valid():
+            print form.errors
             self.response = HttpResponseRedirect(item.get_absolute_url())
             messages.error(self.request, "Unable to add your item to the basket - submission not valid")
         else:
