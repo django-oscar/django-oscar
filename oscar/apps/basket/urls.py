@@ -7,6 +7,6 @@ import_module('basket.views', ['BasketView', 'LineView', 'SavedLineView'], local
 urlpatterns = patterns('oscar.basket.views',
     url(r'^line/(?P<line_reference>[\w-]+)/$', class_based_view(LineView), name='oscar-basket-line'),
     url(r'^saved-line/(?P<line_reference>[\w-]+)/$', class_based_view(SavedLineView), name='oscar-saved-basket-line'),
-    url(r'^$', class_based_view(BasketView), name='oscar-basket'),
+    url(r'^$', BasketView.as_view(), name='oscar-basket'),
 )
 

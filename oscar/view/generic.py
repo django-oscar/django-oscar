@@ -1,13 +1,26 @@
-from django.http import HttpResponseBadRequest
 
-
-class ModelView(object):
+class PostActionMixin(object):
     u"""
     A generic view for models which can recieve GET and POST requests
     
     The __init__ method of subclasses should set the default response 
     variable.
     """
+        
+    def post(self, request, *args, **kwargs):
+        
+        if 'action' in self.request.POST:
+            model = self.get_object()
+            getattr(self, "do_%s" % self.request.POST['action'].lower())(model)
+            return self.response
+        
+
+class ModelView(object):
+    u"""
+A generic view for models which can recieve GET and POST requests
+The __init__ method of subclasses should set the default response
+variable.
+"""
     template_file = None
     response = None
         
@@ -32,14 +45,12 @@ class ModelView(object):
     
     def handle_POST(self, model):
         u"""
-        Handle a POST request to this resource.
-        
-        This will forward on request to a method of form "do_%s" where the
-        second part needs to be specified as an "action" name within the
-        request.
-        
-        If you don't want to handle POSTs this way, just override this method
-        """
+Handle a POST request to this resource.
+This will forward on request to a method of form "do_%s" where the
+second part needs to be specified as an "action" name within the
+request.
+If you don't want to handle POSTs this way, just override this method
+"""
         if 'action' in self.request.POST:
             getattr(self, "do_%s" % self.request.POST['action'].lower())(model)
             

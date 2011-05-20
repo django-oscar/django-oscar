@@ -6,8 +6,9 @@ from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.template.response import TemplateResponse
+from django.views.generic import DetailView
 
-from oscar.view.generic import ModelView
+from oscar.view.generic import PostActionMixin, ModelView
 from oscar.core.loading import import_module
 
 import_module('basket.models', ['Basket', 'Line', 'InvalidBasketLineError'], locals())
@@ -17,36 +18,26 @@ import_module('product.models', ['Item'], locals())
 import_module('offer.models', ['Voucher'], locals())
     
         
-class BasketView(ModelView):
+class BasketView(DetailView, PostActionMixin):
     u"""Class-based view for the basket model."""
-    template_file = 'oscar/basket/summary.html'
+    template_name = 'oscar/basket/summary.html'
+    context_object_name = 'basket'
     
     def __init__(self):
         self.response = HttpResponseRedirect(reverse('oscar-basket'))
     
-    def get_model(self):
+    def get_object(self):
         u"""Return a basket model"""
         return self.request.basket
     
-    def handle_GET(self, basket):
-        u"""Handle GET requests against the basket"""
-        saved_basket = None
+    def get_context_data(self, **kwargs):
+        context = super(BasketView, self).get_context_data(**kwargs)
         if self.request.user.is_authenticated():
             try:
-                saved_basket = Basket.saved.get(owner=self.request.user)
+                context['saved_basket'] = Basket.saved.get(owner=self.request.user)
             except Basket.DoesNotExist:
-                saved_basket = None
-        self.response = TemplateResponse(self.request, self.template_file, {'basket': basket,
-                                                                            'saved_basket': saved_basket})
-        
-    def handle_POST(self, basket):
-        u"""Handle POST requests against the basket"""
-        try:
-            super(BasketView, self).handle_POST(basket)
-        except InvalidBasketLineError, e:
-            # We handle InvalidBasketLineError gracefully as it will be domain logic
-            # which causes this to be thrown (eg. a product out of stock)
-            messages.error(self.request, str(e))
+                pass
+        return context
             
     def do_flush(self, basket):
         u"""Flush basket content"""
