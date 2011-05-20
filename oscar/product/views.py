@@ -1,19 +1,12 @@
-from random import randint
-from sys import maxint
 from django.conf import settings
-from django.http import HttpResponse, Http404, HttpResponsePermanentRedirect, HttpResponseRedirect
-from django.template import Context, loader, RequestContext
-from django.shortcuts import render, get_object_or_404, render_to_response
-from django.core.urlresolvers import reverse
-from django.core.paginator import Paginator, InvalidPage, EmptyPage
+from django.http import HttpResponsePermanentRedirect
+from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView
 from django.db.models import Avg
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
-from django.contrib.auth.models import User
 
 from oscar.services import import_module
-from oscar.views import ModelView
 from oscar.reviews.models import ProductReview, Vote
 from oscar.reviews.forms import make_review_form, ProductReviewForm
 
@@ -132,7 +125,8 @@ class ProductReviewView(object):
         """                
         try:
             review = review_models.ProductReview.objects.get(product=self.kwargs['item_id'], user=self.request.user.id)
-            return True
+            if review:
+                return True
         except ObjectDoesNotExist:                
             return False
     

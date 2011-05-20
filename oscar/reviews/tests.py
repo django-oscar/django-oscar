@@ -6,7 +6,6 @@ from django.contrib.auth.models import User, AnonymousUser
 from django.db import IntegrityError
 from django.core.urlresolvers import reverse
 from django.utils import unittest
-from django.test import TestCase
 
 from oscar.product.models import Item, ItemClass
 from oscar.reviews.models import ProductReview, Vote
@@ -15,7 +14,7 @@ from oscar.reviews.models import ProductReview, Vote
 class ProductReviewTests(unittest.TestCase):
 
     def setUp(self):
-        username = str(randint(0, maxint))  
+        username = str(randint(0, maxint))
         self.user = User.objects.create_user(username, '%s@users.com'%username, '%spass123'%username)
         self.anon_user = AnonymousUser()
         self.item_class,_ = ItemClass.objects.get_or_create(name='Books')
@@ -23,42 +22,44 @@ class ProductReviewTests(unittest.TestCase):
         self.review,_ = ProductReview.objects.get_or_create(title='Django Book v2 Review',\
                             product=self.item, user=self.user, score=3, approved=True)
 
+
 class TopLevelProductReviewTests(ProductReviewTests):
-    
+
     def test_top_level_reviews_must_have_titles_and_scores(self):
         self.assertRaises(ValidationError, ProductReview.objects.create, product=self.item,\
                            user=self.user)
-    
+
     def test_top_level_anonymous_reviews_must_have_names_and_emails(self):
         self.assertRaises(ValidationError, ProductReview.objects.create, product=self.item,\
                            user=None, title="Anonymous review", score=3)
-        
+
 
 class TopLevelProductReviewVoteTests(ProductReviewTests):
-    
+
     def setUp(self):
         super(TopLevelProductReviewVoteTests, self).setUp()
-    
+
     def test_top_level_vote_must_have_choice(self):
         self.assertRaises(ValidationError, Vote.objects.create, review=self.review,\
-                           user=self.user)    
-    
-    def test_try_vote_without_login(self):        
+                           user=self.user)
+
+    def test_try_vote_without_login(self):
         self.assertRaises(ValueError, Vote.objects.create, review=self.review, choice =-1, user=self.anon_user)
-    
+
     def test_try_vote_more_than_once(self):
-        vote1 = Vote.objects.create(review=self.review, user=self.user, choice=1)         
+        vote1 = Vote.objects.create(review=self.review, user=self.user, choice=1)
+        self.assertTrue(vote1)
         self.assertRaises(IntegrityError, Vote.objects.create, review=self.review, choice=-1, user=self.user)
-        
-    
+
+
 class SingleProductReviewViewTest(ProductReviewTests, TestCase):
     u"""
     Each product has reviews attached to it
-    """    
+    """
     def setUp(self):
         self.client = Client()
-        super(SingleProductReviewViewTest, self).setUp()   
-        self.kwargs = {'item_class_slug': self.item.get_item_class().slug, 
+        super(SingleProductReviewViewTest, self).setUp()
+        self.kwargs = {'item_class_slug': self.item.get_item_class().slug,
                 'item_slug': self.item.slug,
                 'item_id': str(self.item.id)}
         
@@ -77,13 +78,13 @@ class SingleProductReviewViewTest(ProductReviewTests, TestCase):
         self.assertContains(response, 'score')
         # check additional fields for anonymous user
         self.client.login(username=None)
-        response = self.client.get(url)        
+        response = self.client.get(url)
         self.assertContains(response, 'name')
         self.assertContains(response, 'email')
         
-    def test_each_review_has_own_page(self): ## FIXME: broken for reverse
+    def test_each_review_has_own_page(self):  # FIXME: broken for reverse
         self.kwargs['review_id'] = self.review.id
-        url = reverse('oscar-product-review', kwargs=self.kwargs)
+        url = reverse('oscar-product-review', kwargs = self.kwargs)
         response = self.client.get(url)
         self.assertEquals(200, response.status_code)
     
@@ -92,7 +93,7 @@ class SingleProductReviewViewTest(ProductReviewTests, TestCase):
     
     def test_product_page_shows_eligible_reviews(self):
         u"""
-        Based on settings.OSCAR_MODERATE_REVIEWS 
+        Based on settings.OSCAR_MODERATE_REVIEWS
         """
         pass
 
@@ -100,7 +101,7 @@ class SingleProductReviewViewTest(ProductReviewTests, TestCase):
 class SingleProductReviewVoteViewTest(ProductReviewTests, TestCase):
     u"""
     Each product review can be voted up or down
-    """ 
+    """
     def setUp(self):
         self.client = Client()
         super(SingleProductReviewVoteViewTest, self).setUp()   
@@ -149,4 +150,3 @@ class ProductReviewVotingActionTests(TestCase):
         reviews = ProductReview.top_voted.all()
         new_rank = list(reviews.values_list('id', flat=True)).index(review_id)
         self.failUnless(new_rank < old_rank)
-   
