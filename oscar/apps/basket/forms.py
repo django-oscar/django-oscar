@@ -1,4 +1,15 @@
 from django import forms
+from django.db.models import get_model
+
+basketline_model = get_model('basket', 'line')
+basket_model = get_model('basket', 'basket')
+
+class BasketLineForm(forms.ModelForm):
+    save_for_later = forms.BooleanField(initial=False,required=False)
+    
+    class Meta:
+        model = basketline_model
+        exclude = ('basket', 'product', 'line_reference', )
 
 
 class FormFactory(object):

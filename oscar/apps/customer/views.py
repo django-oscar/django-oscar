@@ -9,9 +9,6 @@ from django.template.response import TemplateResponse
 
 from oscar.apps.address.forms import UserAddressForm
 from oscar.view.generic import ModelView
-from oscar.core.loading import import_module
-
-import_module('basket.factory', ['BasketFactory'], locals())
 
 from django.db.models import get_model
 
@@ -86,7 +83,7 @@ class OrderLineView(ModelView):
         # We need to pass response to the get_or_create... method
         # as a new basket might need to be created
         self.response = HttpResponseRedirect(reverse('oscar-basket'))
-        basket = BasketFactory().get_or_create_open_basket(self.request, self.response)
+        basket = request.basket
         
         # Convert line attributes into basket options
         options = []

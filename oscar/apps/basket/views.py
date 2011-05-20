@@ -10,13 +10,51 @@ from django.template.response import TemplateResponse
 from oscar.view.generic import ModelView
 from oscar.core.loading import import_module
 
+from django.db.models import get_model
+
 import_module('basket.models', ['Basket', 'Line', 'InvalidBasketLineError'], locals())
 import_module('basket.forms', ['FormFactory'], locals())
 import_module('basket.signals', ['basket_addition'], locals())
 import_module('product.models', ['Item'], locals())
 import_module('offer.models', ['Voucher'], locals())
     
-        
+from extra_views import ModelFormsetView
+from oscar.apps.basket.forms import BasketLineForm
+
+
+class NewBasketView(ModelFormsetView):
+    model = get_model('basket', 'line')
+    form_class = BasketLineForm
+    basket_model = get_model('basket', 'basket')
+    template_name = 'oscar/basket/newsummary.html'
+    extra = 0
+    
+    def get_context_data(self, **kwargs):
+        context = super(NewBasketView, self).get_context_data(**kwargs)
+        if self.request.user.is_authenticated():
+            try:
+                saved_basket = self.basket_model.saved.get(owner=self.request.user)
+            except self.basket_model.DoesNotExist:
+                saved_basket = None
+            context['saved_basket'] = saved_basket
+        return context
+    
+    def get_queryset(self):
+        return self.request.basket.lines.all()
+    
+    def formset_valid(self, formset):
+        for form in formset:
+            if form.cleaned_data['save_for_later']:
+                instance = form.instance
+                if not self.request.user.is_authenticated():
+                    messages.error(self.request, "Only signed in users can save basket lines")
+                else:
+                    saved_basket, _ = get_model('basket','basket').saved.get_or_create(owner=self.request.user)
+                    saved_basket.merge_line(instance)
+                    messages.info(self.request, "'%s' has been saved for later" % instance.product)
+        return super(NewBasketView, self).formset_valid(formset)
+
+
 class BasketView(ModelView):
     u"""Class-based view for the basket model."""
     template_file = 'oscar/basket/summary.html'
