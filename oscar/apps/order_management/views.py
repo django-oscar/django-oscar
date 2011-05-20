@@ -23,7 +23,7 @@ class OrderListView(ListView):
     u"""A list of orders"""
     context_object_name = "orders"
     template_name = 'oscar/order_management/browse.html'
-    paginate_by = 1
+    paginate_by = 20
 
     def get_queryset(self):
         if 'search_query' in self.request.GET and self.request.GET['search_query'].strip():
