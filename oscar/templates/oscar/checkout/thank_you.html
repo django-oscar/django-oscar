@@ -9,9 +9,25 @@
 
 {% block content %}
 
-<h3>Thank you </h3>
-<p>Your order has been placed - your order number is {{order.number}}</p>
+<h3>Order confirmation</h3>
+<p>Your order has been placed - your order number is <strong>{{order.number}}</strong></p>
+<p>Please make a note of this reference or print this page and quote it in any communication
+with us regarding your order.</p>
 
+<h4>Shipping</h4>
+<p>Your order will be delivered to:</p>
+<div>
+    {% for line in order.shipping_address.active_address_fields %}
+    {{ line }}<br/>
+    {% endfor %}
+</div>
+
+<h4>Payment</h4>
+{% for source in order.sources.all %}
+{{ source }}
+{% endfor %}
+
+<h4>Order details</h4>
 <table>
     <tr>
         <th>Product</th>
@@ -53,6 +69,8 @@
         <td>{{ order.total_incl_tax|currency }}</td>
     </tr>
 </table>
+ 
+ 
  
 {% endblock content %}
 

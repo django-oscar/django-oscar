@@ -1,2 +1,0 @@
-class CatalogueImportException(Exception):
-    pass

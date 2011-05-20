@@ -1,9 +1,11 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.contrib import messages
+from django.utils.translation import ugettext as _
+from django.template.response import TemplateResponse
 
 from oscar.apps.address.forms import UserAddressForm
 from oscar.view.generic import ModelView
@@ -11,14 +13,13 @@ from oscar.core.loading import import_module
 import_module('address.models', ['UserAddress'], locals())
 import_module('order.models', ['Order', 'Line'], locals())
 import_module('basket.models', ['Basket'], locals())
-import_module('basket.factory', ['BasketFactory'], locals())
 
 @login_required
 def profile(request):
     u"""Return a customers's profile"""
     # Load last 5 orders as preview
     orders = Order._default_manager.filter(user=request.user)[0:5]
-    return render(request, 'oscar/customer/profile.html', locals())
+    return TemplateResponse(request, 'oscar/customer/profile.html', {'orders': orders})
     
         
 class OrderHistoryView(ListView):
@@ -41,7 +42,7 @@ class OrderDetailView(ModelView):
         return get_object_or_404(Order, user=self.request.user, number=self.kwargs['order_number'])
     
     def handle_GET(self, order):
-        self.response = render(self.request, self.template_file, locals())
+        self.response = TemplateResponse(self.request, self.template_file, {'order': order})
         
         
 class OrderLineView(ModelView):
@@ -60,10 +61,14 @@ class OrderLineView(ModelView):
         super(OrderLineView, self).handle_POST(line)
     
     def do_reorder(self, line):
-        # Get basket
-        basket = BasketFactory().get_or_create_open_basket(self.request, self.response)
         if not line.product:
+            messages.info(self.request, _("This product is no longer available for re-order"))
             return
+        
+        # We need to pass response to the get_or_create... method
+        # as a new basket might need to be created
+        self.response = HttpResponseRedirect(reverse('oscar-basket'))
+        basket = request.basket
         
         # Convert line attributes into basket options
         options = []
@@ -72,7 +77,7 @@ class OrderLineView(ModelView):
                 options.append({'option': attribute.option, 'value': attribute.value})
         basket.add_product(line.product, 1, options)
         messages.info(self.request, "Line reordered")
-        self.response = HttpResponseRedirect(reverse('oscar-basket'))
+        
         
 
 class AddressBookView(ListView):
@@ -96,16 +101,16 @@ class AddressView(ModelView):
     
     def handle_GET(self, address):
         form = UserAddressForm(instance=address)
-        self.response = render(self.request, self.template_file, locals())
+        self.response = TemplateResponse(self.request, self.template_file, {'form': form})
         
     def do_save(self, address):
         u"""Save an address"""
         form = UserAddressForm(self.request.POST, instance=address)
         if form.is_valid():
-            a = form.save()
+            form.save()
             self.response = HttpResponseRedirect(reverse('oscar-customer-address-book'))
         else:
-            self.response = render(self.request, self.template_file, locals())
+            self.response = TemplateResponse(self.request, self.template_file, {'form': form})
             
     def do_delete(self, address):
         u"""Delete an address"""

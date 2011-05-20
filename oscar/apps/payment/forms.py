@@ -9,6 +9,7 @@ from oscar.core.loading import import_module
 address_models = import_module('address.models', ['Country'])
 order_models = import_module('order.models', ['BillingAddress'])
 payment_models = import_module('payment.models', ['Bankcard'])
+import_module('payment.utils', ['Bankcard'], locals())
 
 VISA, MASTERCARD, AMEX, MAESTRO, DISCOVER = ('Visa', 'Mastercard', 'American Express', 'Maestro', 'Discover')
 
@@ -188,6 +189,19 @@ class BankcardForm(forms.ModelForm):
         model = payment_models.Bankcard
         exclude = ('user', 'partner_reference')
         fields = ('number', 'name', 'start_month', 'expiry_month', 'ccv_number')
+        
+    def get_bankcard_obj(self):
+        """
+        Returns a Bankcard object for use in payment processing.
+        """
+        kwargs = {
+            'card_number': self.cleaned_data['number'],
+            'expiry_date': self.cleaned_data['expiry_month'].strftime("%m/%y"),
+            'ccv': self.cleaned_data['ccv_number'],
+        }
+        if self.cleaned_data['start_month']:
+            kwargs['start_date'] = self.cleaned_data['start_month'].strftime("%m/%y")
+        return Bankcard(**kwargs)
     
 
 class BillingAddressForm(forms.ModelForm):
