@@ -10,6 +10,11 @@
 {% block content %}
 
 <h3>Order history</h3>
+{% if not orders %}
+
+<p>You haven't placed any orders yet.</p>
+
+{% else %}
 
 <table>
     <tr>
@@ -30,6 +35,7 @@
     {% endfor %}
 </table>
 <p><a href="{% url oscar-customer-order-history %}">View order history</a></p>
+{% endif %}
 
 
 

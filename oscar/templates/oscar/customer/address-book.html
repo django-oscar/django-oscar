@@ -10,24 +10,37 @@
 {% block content %}
 
 {% if addresses %}
-<ul>
+<table>
+    <tr>
+        <th>Address</th>
+        <th>Is default billing address?</th>
+    </tr>
     {% for address in addresses %}
-    <li>
-        {{ address.summary }}
-        <a href="{% url oscar-customer-address address.id %}">Edit</a> | 
-        <form action="{% url oscar-customer-address address.id %}" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="action" value="delete" />
-            <input type="submit" value="Delete" />
-        </form>
-    </li>
+    <tr>
+        <td>{{ address.summary }}</td>
+        <td>{{ address.default_for_billing }}</td>
+        <td>
+            <a href="{% url oscar-customer-address address.id %}">Edit</a> 
+            <form action="{% url oscar-customer-address address.id %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="default_billing_address" />
+                <input type="submit" value="Set as default billing address" />
+            </form>
+            
+            <form action="{% url oscar-customer-address address.id %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="delete" />
+                <input type="submit" value="Delete" />
+            </form>
+        </td>
+    </tr>
     {% endfor %}
-</ul>
+</table>
 {% else %}
 There are no addresses in your address book.
 {% endif %}
 
-{% if page_obj %}
+{% if page_obj and paginator.num_pages > 1%}
 <div class="pagination">
     <span class="step-links">
     

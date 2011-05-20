@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 
 {% load currency_filters %}
+{% load thumbnail %}
 
 {% block header %}
 <h2>Order #{{ order.number }}</h2>
@@ -41,6 +42,7 @@
 {% csrf_token %}
 <table>
     <tr>
+        <th></th>
         <th>Product</th>
         <th>Availability</th>
         <th>Quantity</th>
@@ -51,6 +53,13 @@
     </tr>
     {% for line in order.lines.all %}
     <tr>
+        <td>
+            {% for image in line.product.images.all %}
+                {% thumbnail image.original "100" crop="center" as im %}
+                    <a href="{{ line.product.get_absolute_url }}"><img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"></a>
+                {% endthumbnail %}
+            {% endfor %}
+        </td>
         <td><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></td>
         <td>{{ line.product.stockrecord.availability }}</td>
         <td>{{ line.quantity }}</td>

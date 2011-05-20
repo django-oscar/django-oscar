@@ -68,7 +68,7 @@ class OrderLineView(ModelView):
         # We need to pass response to the get_or_create... method
         # as a new basket might need to be created
         self.response = HttpResponseRedirect(reverse('oscar-basket'))
-        basket = request.basket
+        basket = self.request.basket
         
         # Convert line attributes into basket options
         options = []
@@ -92,19 +92,26 @@ class AddressBookView(ListView):
     
     
 class AddressView(ModelView):
-    u"""Customer address view"""
+    """
+    Customer address view
+    """
     template_file = "oscar/customer/address-form.html"
     
     def get_model(self):
-        u"""Return an address object or a 404"""
+        """
+        Return an address object or a 404
+        """
         return get_object_or_404(UserAddress, user=self.request.user, pk=self.kwargs['address_id'])
     
     def handle_GET(self, address):
         form = UserAddressForm(instance=address)
-        self.response = TemplateResponse(self.request, self.template_file, {'form': form})
+        self.response = TemplateResponse(self.request, self.template_file, {'form': form,
+                                                                            'address': address})
         
     def do_save(self, address):
-        u"""Save an address"""
+        """
+        Save an address
+        """
         form = UserAddressForm(self.request.POST, instance=address)
         if form.is_valid():
             form.save()
@@ -113,7 +120,15 @@ class AddressView(ModelView):
             self.response = TemplateResponse(self.request, self.template_file, {'form': form})
             
     def do_delete(self, address):
-        u"""Delete an address"""
+        """
+        Delete an address
+        """
         address.delete()
         self.response = HttpResponseRedirect(reverse('oscar-customer-address-book'))
-            
+        
+    def do_default_billing_address(self, address):
+        UserAddress.objects.filter(user=self.request.user).update(default_for_billing=False)
+        address.default_for_billing = True
+        address.save()
+        self.response = HttpResponseRedirect(reverse('oscar-customer-address-book'))
+        
