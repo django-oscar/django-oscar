@@ -78,6 +78,13 @@ class AbstractStockRecord(models.Model):
         self.num_allocated += delta
         self.save()
         
+    def allocate(self, quantity):
+        """
+        Decrement an item's stock allocation.
+        """
+        self.num_allocated += quantity
+        self.save()
+        
     def set_discount_price(self, price):
         """
         A setter method for setting a new price.  
