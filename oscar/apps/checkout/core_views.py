@@ -3,47 +3,13 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 
 from oscar.core.loading import import_module
+from oscar.apps.checkout.decorators import prev_steps_must_be_complete, basket_required
 import_module('checkout.calculators', ['OrderTotalCalculator'], locals())
 import_module('order.models', ['Order', 'ShippingAddress'], locals())
 import_module('checkout.utils', ['ProgressChecker', 'CheckoutSessionData'], locals())
 import_module('address.models', ['UserAddress'], locals())
 
-def prev_steps_must_be_complete(view_fn):
-    u"""
-    Decorator fn for checking that previous steps of the checkout
-    are complete.
     
-    The completed steps (identified by URL-names) are stored in the session.
-    If this fails, then we redirect to the next uncompleted step.
-    """
-    def _view_wrapper(self, request, *args, **kwargs):
-        checker = ProgressChecker()
-        if not checker.are_previous_steps_complete(request):
-            messages.error(request, "You must complete this step of the checkout first")
-            url_name = checker.get_next_step(request)
-            return HttpResponseRedirect(reverse(url_name))
-        return view_fn(self, request, *args, **kwargs)
-    return _view_wrapper
-
-def basket_required(view_fn):
-    def _view_wrapper(self, request, *args, **kwargs):
-        if request.basket.is_empty:
-            messages.error(request, "You must add some products to your basket before checking out")
-            return HttpResponseRedirect(reverse('oscar-basket'))
-        return view_fn(self, request, *args, **kwargs)
-    return _view_wrapper
-
-def mark_step_as_complete(request):
-    u""" 
-    Convenience function for marking a checkout page
-    as complete.
-    """
-    ProgressChecker().step_complete(request)
-    
-def get_next_step(request):
-    return ProgressChecker().get_next_step(request)    
-    
-
 class CheckoutView(object):
     u"""
     Top-level superclass for all checkout view classes
@@ -127,8 +93,18 @@ class CheckoutView(object):
         Returns the appropriate redirect response if a checkout
         step has been successfully passed.
         """
-        mark_step_as_complete(self.request)
-        return HttpResponseRedirect(reverse(get_next_step(self.request)))
+        self.mark_step_as_complete(self.request)
+        return HttpResponseRedirect(reverse(self.get_next_step(self.request)))
+    
+    def mark_step_as_complete(self, request):
+        """ 
+        Convenience function for marking a checkout page
+        as complete.
+        """
+        ProgressChecker().step_complete(request)
+    
+    def get_next_step(self, request):
+        return ProgressChecker().get_next_step(request)    
     
     def handle_POST(self):
         pass

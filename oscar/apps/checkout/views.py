@@ -20,7 +20,7 @@ import_module('checkout.forms', ['ShippingAddressForm'], locals())
 import_module('checkout.calculators', ['OrderTotalCalculator'], locals())
 import_module('checkout.utils', ['ProgressChecker', 'CheckoutSessionData'], locals())
 import_module('checkout.signals', ['pre_payment', 'post_payment'], locals())
-import_module('checkout.core_views', ['CheckoutView', 'mark_step_as_complete'], locals())
+import_module('checkout.core_views', ['CheckoutView'], locals())
 import_module('order.models', ['Order', 'ShippingAddress'], locals())
 import_module('order.utils', ['OrderNumberGenerator', 'OrderCreator'], locals())
 import_module('address.models', ['UserAddress'], locals())
@@ -131,7 +131,7 @@ class OrderPreviewView(CheckoutView):
     template_file = 'oscar/checkout/preview.html'
     
     def handle_GET(self):
-        mark_step_as_complete(self.request)
+        self.mark_step_as_complete(self.request)
         return TemplateResponse(self.request, self.template_file, self.context)
 
 
