@@ -5,7 +5,7 @@ from oscar.core.loading import import_module
 
 class SimpleSearch(forms.Form):
     
-    CHOICES=(('number', 'Order number'), ('shipping_address', 'Shipping address'),
+    CHOICES=(('shipping_address', 'Shipping address'),
              ('billing_address', 'Billing address'), ('customer', 'Customer'))
     
     search_query = forms.CharField(max_length=64, label="Search for", required=True)
