@@ -3,13 +3,48 @@ from django.db.models import get_model
 
 basketline_model = get_model('basket', 'line')
 basket_model = get_model('basket', 'basket')
+voucher_model = get_model('offers', 'voucher')
+
 
 class BasketLineForm(forms.ModelForm):
-    save_for_later = forms.BooleanField(initial=False,required=False)
+    save_for_later = forms.BooleanField(initial=False, required=False)
     
     class Meta:
         model = basketline_model
         exclude = ('basket', 'product', 'line_reference', )
+        
+class SavedLineForm(forms.ModelForm):
+    move_to_basket = forms.BooleanField(initial=False, required=False)
+    
+    class Meta:
+        model = basketline_model
+        exclude = ('basket', 'product', 'line_reference', 'quantity', )
+
+
+class BasketVoucherForm(forms.ModelForm):
+    code = forms.CharField(max_length=128)
+    
+    def __init__(self, basket=None, user=None, *args, **kwargs):
+        self.basket = basket
+        self.user = user
+        return super(BasketVoucherForm, self).__init__(*args,**kwargs)
+    
+    def clean_code(self):
+        data = self.cleaned_data['code']
+        
+        try:
+            voucher = voucher_model._default_manager.get(code=data)
+        except voucher_model.DoesNotExist:
+            raise forms.ValidationError("The code '%s' you entered is not valid." % data)
+        if voucher in self.basket.vouchers:
+            raise forms.ValidationError("The voucher '%s' is already in your basket" % voucher.code)
+        if not voucher.is_active():
+            raise forms.ValidationError("The '%s' voucher has expired" % voucher.code)
+        is_available, message = voucher.is_available_to_user(self.request.user)
+        if not is_available:
+            raise forms.ValidationError(message)
+        
+        return voucher
 
 
 class FormFactory(object):

@@ -1,0 +1,95 @@
+{% extends "layout.html" %}
+
+{% load currency_filters %}
+
+{% block header %}
+<h2>Basket</h2>
+{% endblock header %}
+
+
+{% block content %}
+
+<form action="." method="post">
+	
+	{% csrf_token %}
+	
+	{{ formset.management_form }}
+	
+	<table>
+		<thead>
+			<tr>
+				<th>Product</th>
+				<th>Availability</th>
+				<th>Quantity</th>
+				<th>Unit Price Excl. Tax</th>
+				<th>Tax</th>
+				<th>Line Price Excl. Tax</th>
+				<th>Line Price Incl. Tax</th>
+				<th>Save for later&hellip;</th>				
+			</tr>
+		</thead>
+		<tbody>
+			{% for form in formset %}
+			<tr>
+				<td>{{ form.id }}<a href="{{ form.instance.get_absolute_url }}">{{ form.instance.description }}</a></td>
+				<td>{{ form.instance.stockrecord.availability }}</td>
+				<td>{{ form.quantity }}</td>
+		        <td>{{ form.instance.unit_price_excl_tax|currency }}</td>
+		        <td>{{ form.instance.unit_tax|currency }}</td>
+		        <td>{{ form.instance.line_price_excl_tax|currency }}</td>
+		        <td>{{ form.instance.line_price_incl_tax|currency }}</td>
+				<td>{{ form.save_for_later }}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	
+
+	<input type="submit" value="Save Changes" />
+
+</form>
+
+{% if saved_formset %}
+
+<h3>To buy later</h3>
+
+<form action="{% url oscar-basket-saved %}" method="post">
+	
+	{% csrf_token %}
+	
+	{{ saved_formset.management_form }}
+	
+	<table>
+		<thead>
+			<tr>
+				<th>Product</th>
+				<th>Unit Price Excl. Tax</th>
+				<th>Tax</th>
+				<th>Line Price Excl. Tax</th>
+				<th>Line Price Incl. Tax</th>
+				<th>Move to basket&hellip;</th>				
+			</tr>
+		</thead>
+		<tbody>
+			{% for form in saved_formset %}
+			<tr>
+				<td>{{ form.id }}<a href="{{ form.instance.get_absolute_url }}">{{ form.instance.description }}</a></td>
+		        <td>{{ form.instance.unit_price_excl_tax|currency }}</td>
+		        <td>{{ form.instance.unit_tax|currency }}</td>
+		        <td>{{ form.instance.line_price_excl_tax|currency }}</td>
+		        <td>{{ form.instance.line_price_incl_tax|currency }}</td>
+				<td>{{ form.move_to_basket }}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	
+
+	<input type="submit" value="Save Changes" />
+
+</form>
+
+{% endif %}
+
+{% endblock content %}
+
