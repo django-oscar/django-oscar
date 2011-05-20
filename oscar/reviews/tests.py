@@ -123,8 +123,8 @@ class ProductReviewVotingActionTests(TestCase):
     fixtures = ['sample-product', 'sample-reviews']    
     
     def setUp(self):
-        # reviews sorted by votes
-        self.reviews = ProductReview.top_voted.all()        
+        # get reviews
+        self.reviews = ProductReview.objects.all()       
         # dummy voters
         self.voters = 10        
         self.users = []
@@ -133,12 +133,12 @@ class ProductReviewVotingActionTests(TestCase):
             self.users.append(u)        
     
     def test_upvote_can_boost_up_review(self):
-        # get a review which has lowest vote
-        self.review = self.reviews.reverse()[0]
-        self.assertTrue(self.review)
+        # get a review
+        old_rank = 1
+        self.assertTrue(self.reviews)
+        self.review = self.reviews[old_rank]        
         review_id = self.review.id
         old_votes = self.review.total_votes
-        old_rank = list(self.reviews.values_list('id', flat=True)).index(review_id)       
         # vote up
         for i in xrange(self.voters):
             vote = Vote.objects.create(review=self.review, user=self.users[i], choice=1)
