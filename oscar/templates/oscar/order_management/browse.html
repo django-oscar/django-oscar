@@ -9,7 +9,6 @@
 <form method="get" action="{% url oscar-order-management-list %}">
     {{ order_simple_search_form.as_p }}
     <input type="submit" nane="simple_search" value="Search" />
-    {{ order_advanced_search_form.as_p }}
 </form>
 {% if orders.count %}
 
@@ -18,6 +17,9 @@
         <th>Order number</th>
         <th>Total inc tax</th>
         <th>Shipping status</th>
+        <th>Customer</th>
+        <th>Shipping address</th>
+        <th>Billing address</th>
         <th>Date submitted</th>
         <th></th>
     </tr>
@@ -26,6 +28,9 @@
         <td>{{ order.number }}</td>
         <td>{{ order.total_incl_tax|currency }}</td>
         <td>{{ order.shipping_status }}</td>
+        <td>{{ order.user }}</td>
+        <td>{{ order.shipping_address }}</td>
+        <td>{{ order.billing_address }}</td>
         <td>{{ order.date_placed }}</td>
         <td>
             <a href="{% url oscar-order-management-order order.number %}">View</a>
@@ -40,7 +45,7 @@
     <span class="step-links">
     
         {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            <a href="?page={{ page_obj.previous_page_number }}{{ search_params }}">previous</a>
         {% endif %}
 
         <span class="current">
@@ -48,7 +53,7 @@
         </span>
 
         {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.next_page_number }}{{ search_params }}">next</a>
         {% endif %}
     </span>
 </div>
