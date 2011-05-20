@@ -74,9 +74,9 @@
 		<h4> {{ forloop.counter}}. {{ review.title }} </h4>
 		<p> Score: {{ review.score|floatformat:1 }} / 5.0</p>
 		<p> Comments: {{ review.body }}</p>		
-		p> Date created: {{ review.date_created }}</p>			
+		<p> Date created: {{ review.date_created }}</p>			
 	{% if review.total_votes %}
-		<h5> {{ review.delta_votes }} out of {{ review.total_votes }} customers found this review useful.</h5>
+		<h5> {{ review.get_upvotes }} out of {{ review.total_votes }} customers found this review useful.</h5>
 	{% endif %}
 	{% if user.is_authenticated %}		
 		<h4> Was this review helpful to you? </h4>

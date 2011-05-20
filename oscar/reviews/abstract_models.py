@@ -75,13 +75,16 @@ class AbstractProductReview(models.Model):
                 raise ValidationError("Anonymous review must have a name and an email")
         super(AbstractProductReview, self).save(*args, **kwargs)
                           
+    def get_upvotes(self):
+        "returns the total yes votes"
+        return int((self.total_votes + self.delta_votes)/2)
 
 class AbstractVote(models.Model):
     u"""
     Records user ratings
     Each user can vote only once    
     """
-    VOTE_CHOICES = (("Yes", 1), ("No", -1), ("Empty", 0))    
+    VOTE_CHOICES = ((1, 1), (-1, -1), (0, 0))    
     user = models.ForeignKey('auth.User', related_name='vote')
     review = models.ForeignKey('reviews.ProductReview', related_name='review')
     choice = models.SmallIntegerField(choices=VOTE_CHOICES)
