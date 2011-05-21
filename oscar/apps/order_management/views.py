@@ -11,10 +11,10 @@ from django.views.generic import ListView, DetailView
 from django.contrib import messages
 from django.db import transaction
 from django.db.models import Q
-from oscar.view.generic import ModelView
-from oscar.core.loading import import_module
 from django.contrib.comments.views.moderation import delete
 
+from oscar.core.loading import import_module
+from oscar.view.generic import PostActionMixin
 import_module('order.models', ['Order', 'Line', 'ShippingEvent', 'ShippingEventQuantity', 
                                'ShippingEventType', 'PaymentEvent', 'PaymentEventType', 'OrderNote'], locals())
 import_module('order_management.forms', ['SimpleSearch'], locals())
@@ -66,24 +66,26 @@ class OrderListView(ListView):
             response = HttpResponseRedirect(reverse('oscar-order-management-order', kwargs={'order_number': self.object_list[0].number}))
         return response
         
-class OrderView(ModelView):
+        
+class OrderView(DetailView, PostActionMixin):
     u"""A detail view of an order"""
-    template_file = "oscar/order_management/order.html"
+    template_name = "oscar/order_management/order.html"
+    context_object_name = 'order'
     
-    def get_model(self):
+    def get_object(self):
         u"""Return an order object or a 404"""
         return get_object_or_404(Order, number=self.kwargs['order_number'])
     
-    def handle_GET(self, order):
-        shipping_options = ShippingEventType._default_manager.all()
-        payment_options = PaymentEventType._default_manager.all()
-        self.response = TemplateResponse(self.request, self.template_file, {'order': order,
-                                                                            'shipping_options': shipping_options,
-                                                                            'payment_options': payment_options})
-        
-    def handle_POST(self, order):
+    def get_context_data(self, **kwargs):
+        context = super(OrderView, self).get_context_data(**kwargs)
+        context['shipping_options'] = ShippingEventType._default_manager.all()
+        context['payment_options'] = PaymentEventType._default_manager.all()
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        order = self.get_object()
         self.response = HttpResponseRedirect(reverse('oscar-order-management-order', kwargs={'order_number': order.number}))
-        super(OrderView, self).handle_POST(order)
+        return super(OrderView, self).post(request, *args, **kwargs)
     
     def do_create_order_event(self, order):
         self.create_shipping_event(order, order.lines.all())

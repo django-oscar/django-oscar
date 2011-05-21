@@ -1,14 +1,14 @@
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.utils.translation import ugettext as _
 from django.template.response import TemplateResponse
 
+from oscar.view.generic import PostActionMixin
 from oscar.apps.address.forms import UserAddressForm
-from oscar.view.generic import ModelView
 from oscar.core.loading import import_module
 import_module('address.models', ['UserAddress'], locals())
 import_module('order.models', ['Order', 'Line'], locals())
@@ -33,32 +33,23 @@ class OrderHistoryView(ListView):
         return Order._default_manager.filter(user=self.request.user)
 
 
-class OrderDetailView(ModelView):
+class OrderDetailView(DetailView):
     u"""Customer order details"""
-    template_file = "oscar/customer/order.html"
+    template_name = "oscar/customer/order.html"
+    context_object_name = 'order'
     
-    def get_model(self):
+    def get_object(self):
         u"""Return an order object or 404"""
         return get_object_or_404(Order, user=self.request.user, number=self.kwargs['order_number'])
-    
-    def handle_GET(self, order):
-        self.response = TemplateResponse(self.request, self.template_file, {'order': order})
         
         
-class OrderLineView(ModelView):
+class OrderLineView(DetailView, PostActionMixin):
     u"""Customer order line"""
     
-    def get_model(self):
+    def get_object(self):
         u"""Return an order object or 404"""
         order = get_object_or_404(Order, user=self.request.user, number=self.kwargs['order_number'])
         return order.lines.get(id=self.kwargs['line_id'])
-    
-    def handle_GET(self, line):
-        return HttpResponseRedirect(reverse('oscar-customer-order-view', kwargs={'order_number': line.order.number}))
-    
-    def handle_POST(self, line):
-        self.response = HttpResponseRedirect(reverse('oscar-customer-order-view', kwargs={'order_number': line.order.number}))
-        super(OrderLineView, self).handle_POST(line)
     
     def do_reorder(self, line):
         if not line.product:
@@ -91,11 +82,12 @@ class AddressBookView(ListView):
         return UserAddress._default_manager.filter(user=self.request.user)
     
     
-class AddressView(ModelView):
+class AddressView(DetailView, PostActionMixin):
     """
     Customer address view
     """
-    template_file = "oscar/customer/address-form.html"
+    template_name = "oscar/customer/address-form.html"
+    context_object_name = 'address'
     
     def get_model(self):
         """
@@ -103,10 +95,10 @@ class AddressView(ModelView):
         """
         return get_object_or_404(UserAddress, user=self.request.user, pk=self.kwargs['address_id'])
     
-    def handle_GET(self, address):
-        form = UserAddressForm(instance=address)
-        self.response = TemplateResponse(self.request, self.template_file, {'form': form,
-                                                                            'address': address})
+    def get_context_data(self, **kwargs):
+        context = super(AddressView, self).get_context_data(**kwargs)
+        context['form'] = UserAddressForm(instance=self.object)
+        return context
         
     def do_save(self, address):
         """

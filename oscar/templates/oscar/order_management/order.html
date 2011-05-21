@@ -84,19 +84,19 @@
         </td>
     </tr>
 </table>
-</form
+</form>
 
 <form action="{% url oscar-order-management-order order.number %}" method="post">
-{% csrf_token %}
-<input type="hidden" name="action" value="create_order_event" />
-Set entire order to:
-<select name="shipping_event">
-    <option value="">[Choose option]</option>
-    {% for type in shipping_options %}
-    <option value="{{ type.code }}">{{type.name}}</option>
-    {% endfor %}
-</select>  
-<input type="submit" value="Save" />
+    {% csrf_token %}
+    <input type="hidden" name="action" value="create_order_event" />
+    Set entire order to:
+    <select name="shipping_event">
+        <option value="">[Choose option]</option>
+        {% for type in shipping_options %}
+        <option value="{{ type.code }}">{{type.name}}</option>
+        {% endfor %}
+    </select>  
+    <input type="submit" value="Save" />
 </form>
 
 

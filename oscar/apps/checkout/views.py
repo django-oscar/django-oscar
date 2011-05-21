@@ -13,7 +13,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext as _
 from django.template.response import TemplateResponse
 
-from oscar.view.generic import ModelView
 from oscar.core.loading import import_module
 
 import_module('checkout.forms', ['ShippingAddressForm'], locals())

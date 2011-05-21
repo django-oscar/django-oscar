@@ -8,7 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.template.response import TemplateResponse
 from django.views.generic import DetailView
 
-from oscar.view.generic import PostActionMixin, ModelView
+from oscar.view.generic import PostActionMixin
 from oscar.core.loading import import_module
 
 import_module('basket.models', ['Basket', 'Line', 'InvalidBasketLineError'], locals())
@@ -119,29 +119,29 @@ class BasketView(DetailView, PostActionMixin):
         messages.info(self.request, "Added %d items to your basket (%d missing)" % (num_additions, num_not_found))
  
 
-class LineView(ModelView):
+class LineView(DetailView, PostActionMixin):
     
-    def __init__(self):
+    def __init__(self, **kwargs):
+        super(LineView, self).__init__(**kwargs)
         self.response = HttpResponseRedirect(reverse('oscar-basket'))
     
-    def get_model(self):
+    def get_object(self):
         """
         Returns the basket line in question
         """
         return self.request.basket.lines.get(line_reference=self.kwargs['line_reference'])
         
-    def handle_POST(self, line):
+    def post(self, request, *args, **kwargs):
         u"""Handle POST requests against the basket line"""
         try:
-            super(LineView, self).handle_POST(line)
-        except Basket.DoesNotExist:
-                messages.error(self.request, "You don't have a basket to adjust the lines of")
+            return super(LineView, self).post(request, *args, **kwargs)
         except Line.DoesNotExist:
             messages.error(self.request, "Unable to find a line with reference %s in your basket" % self.kwargs['line_reference'])
         except InvalidBasketLineError, e:
             messages.error(self.request, str(e))
+        return self.response
             
-    def _get_quantity(self):
+    def get_quantity(self):
         u"""Get item quantity"""
         if 'quantity' in self.request.POST:
             return int(self.request.POST['quantity'])
@@ -149,7 +149,7 @@ class LineView(ModelView):
             
     def do_increment_quantity(self, line):
         u"""Increment item quantity"""
-        q = self._get_quantity()
+        q = self.get_quantity()
         line.quantity += q
         line.save()    
         msg = "The quantity of '%s' has been increased by %d" % (line.product, q)
@@ -157,7 +157,7 @@ class LineView(ModelView):
         
     def do_decrement_quantity(self, line):
         u"""Decrement item quantity"""
-        q = self._get_quantity()
+        q = self.get_quantity()
         line.quantity -= q
         line.save()    
         msg = "The quantity of '%s' has been decreased by %d" % (line.product, q)
@@ -165,7 +165,7 @@ class LineView(ModelView):
         
     def do_set_quantity(self, line):
         u"""Set an item quantity"""
-        q = self._get_quantity()
+        q = self.get_quantity()
         line.quantity = q
         line.save()    
         msg = "The quantity of '%s' has been set to %d" % (line.product, q)
@@ -188,21 +188,14 @@ class LineView(ModelView):
         messages.info(self.request, msg)
         
        
-class SavedLineView(ModelView):
+class SavedLineView(DetailView, PostActionMixin):
     
     def __init__(self):
         self.response = HttpResponseRedirect(reverse('oscar-basket'))
     
-    def get_model(self):
+    def get_object(self):
         basket = Basket.saved.get(owner=self.request.user)
         return basket.lines.get(line_reference=self.kwargs['line_reference'])
-        
-    def handle_POST(self, line):
-        u"""Handle POST requests against a saved line"""
-        try:
-            super(SavedLineView, self).handle_POST(line)
-        except InvalidBasketLineError, e:
-            messages.error(self.request, str(e))   
             
     def do_move_to_basket(self, line):
         u"""Merge line items in to current basket"""
@@ -217,7 +210,7 @@ class SavedLineView(ModelView):
         msg = "'%s' has been removed" % line.product
         messages.warn(self.request, msg)
         
-    def _get_quantity(self):
+    def get_quantity(self):
         u"""Get line item quantity"""
         if 'quantity' in self.request.POST:
             return int(self.request.POST['quantity'])
