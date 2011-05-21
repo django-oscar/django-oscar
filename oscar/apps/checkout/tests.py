@@ -9,6 +9,8 @@ from oscar.test.helpers import create_product
         
 class CheckoutViewsTest(unittest.TestCase):
     
+    fixtures = ['example-shipping-charges.json']
+    
     def setUp(self):
         self.client = Client()
     

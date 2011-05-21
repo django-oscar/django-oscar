@@ -32,17 +32,9 @@ class OrderListView(ListView):
             search_by = self.request.GET.getlist('search_by')
             if search_by:
                 if 'billing_address' in search_by:
-                    q_list.append(Q(billing_address__line1__icontains=q))
-                    q_list.append(Q(billing_address__line2__icontains=q))
-                    q_list.append(Q(billing_address__line3__icontains=q))
-                    q_list.append(Q(billing_address__line4__icontains=q))
-                    q_list.append(Q(billing_address__postcode__icontains=q))
+                    q_list.append(Q(billing_address__search_text__icontains=q))
                 if 'shipping_address' in search_by:
-                    q_list.append(Q(shipping_address__line1__icontains=q))
-                    q_list.append(Q(shipping_address__line2__icontains=q))
-                    q_list.append(Q(shipping_address__line3__icontains=q))
-                    q_list.append(Q(shipping_address__line4__icontains=q))
-                    q_list.append(Q(shipping_address__postcode__icontains=q))
+                    q_list.append(Q(shipping_address__search_text__icontains=q))
                 if 'customer' in search_by:
                     q_list.append(Q(number__icontains=q))
                     q_list.append(Q(user__first_name__icontains=q))
@@ -62,8 +54,6 @@ class OrderListView(ListView):
     
     def get(self, request, *args, **kwargs):
         response = super(OrderListView, self).get(request, *args, **kwargs)
-        if self.object_list.count() == 1:
-            response = HttpResponseRedirect(reverse('oscar-order-management-order', kwargs={'order_number': self.object_list[0].number}))
         return response
         
         
