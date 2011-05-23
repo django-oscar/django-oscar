@@ -1,4 +1,4 @@
-from oscar.apps.reviews.abstract_models import AbstractProductReview, AbstractVote
+from oscar.apps.product.reviews.abstract_models import AbstractProductReview, AbstractVote
 
 
 class ProductReview(AbstractProductReview):
