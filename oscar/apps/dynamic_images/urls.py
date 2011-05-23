@@ -1,5 +1,5 @@
 from django.conf.urls.defaults import *
-from oscar.apps.image.dynamic import DjangoImageHandler
+from oscar.apps.dynamic_images import DjangoImageHandler
 
 resizer = DjangoImageHandler()
 

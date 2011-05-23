@@ -1,4 +1,4 @@
-from oscar.apps.image.dynamic.exceptions import ResizerConfigurationException
+from oscar.apps.dynamic_images.exceptions import ResizerConfigurationException
 
 class BaseResponse(object):
     def __init__(self,config,mime_type,cache,start_response):

@@ -60,7 +60,11 @@ class DynamicImageNode(template.Node):
                 path = '.'.join((path, suffix, ext))
             else:
                 if ext_changed:
-                    path = '.'.join((path, ext))
+                    if params:
+                        path = '.'.join((path, ext))
+                    else:
+                        path = '.'.join((path, 'to', ext))
+
     
             return host + path
 
