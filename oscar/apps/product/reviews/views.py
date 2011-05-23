@@ -39,6 +39,17 @@ class CreateProductReviewView(CreateView):
     template_name = "oscar/reviews/add_review.html"
     model = ProductReview
     
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated():
+            product = self.get_product()
+            try:
+                ProductReview.objects.get(user=request.user, product=product)
+                messages.info(self.request, "You have already reviewed this product!")
+                return HttpResponseRedirect(product.get_absolute_url()) 
+            except ProductReview.DoesNotExist:
+                pass
+        return super(CreateProductReviewView, self).get(request, *args, **kwargs)        
+    
     def get_context_data(self, **kwargs):
         context = super(CreateProductReviewView, self).get_context_data(**kwargs)
         context['item'] = self.get_product()
@@ -80,7 +91,7 @@ class ProductReviewDetailView(DetailView, PostActionMixin):
     
     def vote_on_review(self, review, delta):
         user = self.request.user
-        self.response = HttpResponseRedirect(review.get_absolute_url())
+        self.response = HttpResponseRedirect(review.product.get_absolute_url())
         if review.user == user:
             messages.info(self.request, "You cannot vote on your own reviews!")
         else:

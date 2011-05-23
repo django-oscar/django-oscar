@@ -96,7 +96,7 @@
     	<h3> Product Reviews </h3>
     	<h4> Average score: {{ avg_score|floatformat:1  }} / 5.0 </h4>
     	{% for review in reviews|slice:":5" %}		
-    		<h4> {{ forloop.counter}}. {{ review.title }} </h4>
+    		<h4> {{ forloop.counter}}. {{ review.title }} by {{ review.user.username }} </h4>
     		<p> Score: {{ review.score|floatformat:1 }} / 5.0</p>
     		<p> Comments: {{ review.body|truncatewords:50 }}</p>		
     		<p> Date created: {{ review.date_created }}</p>

@@ -59,6 +59,7 @@ class AbstractProductReview(models.Model):
     class Meta:
         abstract = True
         ordering = ['-delta_votes']
+        unique_together = (('product', 'user'),)
 
     @models.permalink
     def get_absolute_url(self):
