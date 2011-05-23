@@ -26,4 +26,8 @@ OSCAR_PROMOTION_MERCHANDISING_BLOCK_TYPES = (
     (LIST, "Horizontal list"),
     (TABBED_BLOCK, "Tabbed block"),
     (SINGLE_PRODUCT, "Single product"),
-)   
+)
+
+# Reviews
+OSCAR_ALLOW_ANON_REVIEWS = True
+OSCAR_MODERATE_REVIEWS = False
