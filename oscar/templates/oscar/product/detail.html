@@ -52,6 +52,10 @@
         <th>{{ attribute.type.name }}</th>
         <th>{{ attribute.value }}</th>
     </tr>
+    <tr>
+        <td><a href="{{ item.get_absolute_url }}add-review/"> Add a review</a></td>
+        <td><a href="{{ item.get_absolute_url }}reviews/"> See all reviews</a></td>
+    </tr>
     {% endfor %}
 </table>
 
@@ -86,6 +90,42 @@
     </ul>
 </div>
 {% endif %}
+
+{% block product_review %}
+
+{% if reviews %}
+	{% if avg_score %}
+		<h3> Product Reviews </h3>
+		<h4> Average score: {{ avg_score|floatformat:1  }} / 5.0 </h4>
+	{% endif %}
+	{% for review in reviews|slice:":5" %}		
+		<h4> {{ forloop.counter}}. {{ review.title }} </h4>
+		<p> Score: {{ review.score|floatformat:1 }} / 5.0</p>
+		<p> Comments: {{ review.body|truncatewords:50 }}</p>		
+		<p> Date created: {{ review.date_created }}</p>
+		<a href="{{ review.get_absolute_url }}"> View full review</a>			
+	{% if review.total_votes %}
+		<h5> {{ review.get_upvotes }} out of {{ review.total_votes }} customers found this review useful.</h5>
+	{% endif %}
+	{% if user.is_anonymous %}
+		<h5> Please log-in to rate this review.</h5>
+	{% endif %}	
+	{% if user.is_authenticated %}		
+		<h4> Was this review helpful to you? </h4>
+		<form  action="{{ review.get_vote_url }}" method="post">
+			{% csrf_token %}               
+            <input type="hidden" name="action" id="action_id" value="voteup"/>
+            <input type="submit" value="Yes" /> 
+        </form>
+		<form  action="{{ review.get_vote_url }}" method="post">
+			{% csrf_token %}                
+            <input type="hidden" name="action" id="action_id" value="votedown"/>
+            <input type="submit" value="No" /> 
+        </form>
+	{% endif %}			
+	{% endfor %}
+{% endif %}
+{% endblock product_review %}
 
 {% endblock content %}
 

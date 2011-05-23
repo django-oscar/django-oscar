@@ -1,0 +1,45 @@
+{% extends "oscar/product/detail.html" %}
+
+{% block product_review %}
+{% if reviews %}
+	{% if avg_score %}
+		<h3> All Product Reviews ({{ reviews.count }}) </h3>
+		<h4> Sort by: </h4>
+		<form  action="{{ request.get_full_path }}" method="get">
+			{% csrf_token %}
+            <select name="sort_by">
+            	<option value="score"> Score </option>
+            	<option value="recency"> Recency </option>
+            	<input type="submit" value="Go" /> 
+            </select>            
+        </form>
+		<h4> Average score: {{ avg_score|floatformat:1  }} / 5.0 </h4>
+	{% endif %}
+	{% for review in reviews  %}		
+		<h4> {{ forloop.counter}}. {{ review.title }} </h4>
+		<p> Score: {{ review.score|floatformat:1 }} / 5.0</p>
+		<p> Comments: {{ review.body }}</p>
+		<p> Date created: {{ review.date_created }}</p>		
+	{% endfor %}
+	
+{% if page_obj %}
+<div class="pagination">
+    <span class="step-links">
+    
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Next</a>
+        {% endif %}
+    </span>
+</div>
+{% endif %}
+							
+{% endif %}
+{% endblock %}
