@@ -9,6 +9,7 @@ from django.template.response import TemplateResponse
 from django.db.models import Avg
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
+from django.forms import ModelForm, CharField, EmailField
 
 from oscar.view.generic import PostActionMixin
 from oscar.core.loading import import_module
@@ -17,17 +18,45 @@ import_module('basket.forms', ['FormFactory'], locals())
 import_module('product.reviews.models', ['ProductReview', 'Vote'], locals())
 
 
+class ProductReviewForm(ModelForm):
+    
+    class Meta:
+        model = ProductReview
+        fields = ('title', 'score', 'body')
+
+
+def make_review_form(user, values=None):
+    form = ProductReviewForm()
+    fields = form.fields
+    if not user.is_authenticated():
+        fields['name'] = CharField(max_length=100)
+        fields['email'] = EmailField()
+        fields['url'] = CharField(max_length=100, required=False)
+    return type('ProductReviewForm', (BaseForm,), {'base_fields': fields})
+
+
 class CreateProductReviewView(CreateView):
     template_name = "oscar/reviews/add_review.html"
     model = ProductReview
     
     def get_context_data(self, **kwargs):
         context = super(CreateProductReviewView, self).get_context_data(**kwargs)
-        context['item'] = get_object_or_404(Item, pk=self.kwargs['item_id'])
+        context['item'] = self.get_product()
         return context
     
-    def _get_form_class(self):
-        return make_review_form(self.request.user)
+    def get_product(self):
+        return get_object_or_404(Item, pk=self.kwargs['item_id'])
+    
+    def get_form_class(self):
+        return ProductReviewForm
+    
+    def get_form_kwargs(self):
+        kwargs = super(CreateProductReviewView, self).get_form_kwargs()
+        review = ProductReview(product=self.get_product())
+        if self.request.user.is_authenticated():
+            review.user = self.request.user
+        kwargs['instance'] = review
+        return kwargs
 
 
 class ProductReviewDetailView(DetailView, PostActionMixin):
