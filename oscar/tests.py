@@ -10,5 +10,6 @@ from oscar.apps.shipping.tests import *
 from oscar.apps.customer.tests import *
 from oscar.apps.discount.tests import *
 from oscar.apps.promotions.tests import *
+from oscar.apps.product.reviews.tests import *
 
 from oscar.core.tests import *
