@@ -75,6 +75,10 @@ class AbstractProductReview(models.Model):
     def save(self, *args, **kwargs):
         if not self.user and not (self.name and self.email):  
             raise ValidationError("Anonymous review must have a name and an email")
+        if not self.title:
+            raise ValidationError("Reviews must have a title")
+        if self.score is None:
+            raise ValidationError("Reviews must have a score")
         super(AbstractProductReview, self).save(*args, **kwargs)
 
     def has_votes(self):
