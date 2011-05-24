@@ -64,7 +64,7 @@ class ItemClassListView(ListView):
 
     def get_queryset(self):
         item_class = get_object_or_404(item_class_model, slug=self.kwargs['item_class_slug'])
-        return item_model.browsable.filter(item_class=item_class)
+        return item_model.browsable.filter(item_class=item_class).select_related('stockrecord')
 
 class ProductListView(ListView):
     u"""A list of products"""
@@ -87,9 +87,9 @@ class ProductListView(ListView):
             # Send signal to record the view of this product
             self.search_signal.send(sender=self, query=q, user=self.request.user)
             
-            return item_model.browsable.filter(title__icontains=q)
+            return item_model.browsable.filter(title__icontains=q).select_related('stockrecord')
         else:
-            return item_model.browsable.all()
+            return item_model.browsable.all().select_related('stockrecord')
         
     def get_context_data(self, **kwargs):
         context = super(ProductListView, self).get_context_data(**kwargs)
