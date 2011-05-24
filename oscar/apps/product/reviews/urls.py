@@ -6,7 +6,7 @@ import_module('product.reviews.views', ['CreateProductReviewView', 'ProductRevie
                                         'ProductReviewListView'], locals())  
 
 urlpatterns = patterns('oscar.product.reviews.views',
-    url(r'(?P<pk>\d+)/$', ProductReviewDetailView.as_view(), name='oscar-product-review'),
-    url(r'add/$', CreateProductReviewView.as_view(), name='oscar-product-review-add'),
-    url(r'all/$', ProductReviewListView.as_view(), name='oscar-product-reviews'),
+    url(r'^(?P<pk>\d+)/$', ProductReviewDetailView.as_view(), name='review-detail'),
+    url(r'^add/$', CreateProductReviewView.as_view(), name='review-add'),
+    url(r'^$', ProductReviewListView.as_view(), name='review-list'),
 )

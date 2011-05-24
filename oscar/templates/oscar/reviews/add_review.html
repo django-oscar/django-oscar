@@ -3,7 +3,7 @@
 {% block product_review %}
 
     <h4>Leave a product review</h4>
-    <form method="post" action="{% url oscar-product-review-add item.item_class.slug item.slug item.id %}">
+    <form method="post" action=".">
         {% csrf_token %}
         {{ form.as_p }}
         <input type="submit" value="Submit" /> or 

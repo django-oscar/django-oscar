@@ -64,50 +64,53 @@
 
 {% if item.stockrecord %}
 
-{% basket_form item as form %}
+{% basket_form item as basket_form %}
 
 <form action="{% url oscar-basket %}" method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ basket_form.as_p }}
     <input type="submit" value="Add to basket" />
 </form>
 {% endif %}
 
 {% block product_review %}
 
-    {% if reviews %}
-    	<h3>Reviews of {{ item.title }}</h3>
-        <p>Read customer reviews on this product. If you have read this book, why not post your own
-           review?</p>
-        <p><a href="{% url oscar-product-review-add item.item_class.slug item.slug item.id %}">Add a review</a></p>
-        <div>
-            {% for review in reviews|slice:":3" %}
-                <div class="review">
-                    <h4>{{ review.title }} ({{ review.score }}/5)</h4>
-                    <h5>Reviewed by {{ review.get_reviewer_name }}</h5>
-                    <p>{{ review.date_created }}<p>
-                    <p>{{ review.body|linebreaks }}</p>
-                    <p><a href="{{ review.get_absolute_url }}">Permalink</a>
-                    {% if user.is_authenticated %}
-                        <form action="{{ review.get_absolute_url }}" method="post">
-                            {% csrf_token %}               
-                            <input type="hidden" name="action" value="vote_up"/>
-                            <input type="submit" value="I agree" /> 
-                        </form>
-                        <form  action="{{ review.get_absolute_url }}" method="post">
-                            {% csrf_token %}                
-                            <input type="hidden" name="action" value="vote_down"/>
-                            <input type="submit" value="I disagree" /> 
-                        </form>
-                    {% endif %}
-                    {% if review.has_votes %}
-                        <p>{{ review.num_up_votes }} customer{{ review.num_up_votes|pluralize }} agreed.</p>
-                    {% endif %}
-                </div>
-            {% endfor %}
-            <p><a href="{% url oscar-product-reviews item.item_class.slug item.slug item.id %}">See all reviews</a>.</p>
-        </div>
-    {% endif %}
+<h3>Reviews of {{ item.title }}</h3>
+<p>Read customer reviews on this product. If you have read this book, why not post your own
+   review?</p>
+<p><a href="{% url products:review-add item.item_class.slug item.slug item.id %}">Add a review</a></p>
+
+{% with item.reviews.all as reviews %}
+{% if reviews %}
+    <div>
+        {% for review in reviews|slice:":3" %}
+            <div class="review">
+                <h4>{{ review.title }} ({{ review.score }}/5)</h4>
+                <h5>Reviewed by {{ review.get_reviewer_name }}</h5>
+                <p>{{ review.date_created }}<p>
+                <p>{{ review.body|linebreaks }}</p>
+                <p><a href="{{ review.get_absolute_url }}">Permalink</a>
+                {% if user.is_authenticated %}
+                    <form action="{{ review.get_absolute_url }}" method="post">
+                        {% csrf_token %}               
+                        <input type="hidden" name="action" value="vote_up"/>
+                        <input type="submit" value="I agree" /> 
+                    </form>
+                    <form  action="{{ review.get_absolute_url }}" method="post">
+                        {% csrf_token %}                
+                        <input type="hidden" name="action" value="vote_down"/>
+                        <input type="submit" value="I disagree" /> 
+                    </form>
+                {% endif %}
+                {% if review.has_votes %}
+                    <p>{{ review.num_up_votes }} customer{{ review.num_up_votes|pluralize }} agreed.</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <p><a href="{% url products:review-list item.item_class.slug item.slug item.id %}">See all reviews</a>.</p>
+    </div>
+{% endif %}
+{% endwith %}
 
 {% endblock product_review %}
 

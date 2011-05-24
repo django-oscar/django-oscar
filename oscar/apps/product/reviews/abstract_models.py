@@ -24,7 +24,7 @@ class AbstractProductReview(models.Model):
     """
     
     # Note we keep the review even if the product is deleted
-    product = models.ForeignKey('product.Item', related_name='product', null=True, on_delete=models.SET_NULL)
+    product = models.ForeignKey('product.Item', related_name='reviews', null=True, on_delete=models.SET_NULL)
     
     SCORE_CHOICES = tuple([(x, x) for x in range(0, 6)])
     score = models.SmallIntegerField(_("Score"), choices=SCORE_CHOICES)
@@ -63,7 +63,7 @@ class AbstractProductReview(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('oscar-product-review', (), {
+        return ('products:review-detail', (), {
             'item_class_slug': self.product.get_item_class().slug,
             'item_slug': self.product.slug,
             'item_id': self.product.id,
