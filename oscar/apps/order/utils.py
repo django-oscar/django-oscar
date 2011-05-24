@@ -40,6 +40,7 @@ class OrderCreator(object):
                                          total_excl_tax, order_number)
         for line in basket.all_lines():
             self._create_line_models(order, line)
+            self._update_stock_records(line)
         for discount in basket.discounts:
             self._create_discount_model(order, discount)
         for voucher in basket.vouchers.all():
@@ -106,6 +107,9 @@ class OrderCreator(object):
         order_line.save()
         self._create_line_price_models(order, order_line, basket_line)
         self._create_line_attributes(order, order_line, basket_line)
+        
+    def _update_stock_records(self, line):
+        line.product.stockrecord.allocate(line.quantity)    
         
     def _create_line_price_models(self, order, order_line, basket_line):
         u"""Creates the batch line price models"""

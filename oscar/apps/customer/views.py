@@ -5,10 +5,8 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.utils.translation import ugettext as _
-from django.template.response import TemplateResponse
-
 from oscar.apps.address.forms import UserAddressForm
-from oscar.view.generic import ModelView
+from oscar.view.generic import PostActionMixin
 
 from django.db.models import get_model
 
@@ -49,31 +47,17 @@ class OrderDetailView(DetailView):
     
     def get_template_names(self):
         return ["oscar/customer/order.html"]    
-    
-    def get_queryset(self):
-        return self.model._default_manager.filter(user=self.request.user)
-    
-    def get_object(self):
-        try:
-            return self.get_queryset().get(number=self.kwargs['order_number'])
-        except self.model.DoesNotExist:
-            raise Http404()
 
-        
-class OrderLineView(ModelView):
+    def get_object(self):
+        return get_object_or_404(order_model, user=self.request.user, number=self.kwargs['order_number'])
+
+class OrderLineView(DetailView, PostActionMixin):
     u"""Customer order line"""
     
-    def get_model(self):
+    def get_object(self):
         u"""Return an order object or 404"""
         order = get_object_or_404(order_model, user=self.request.user, number=self.kwargs['order_number'])
         return order.lines.get(id=self.kwargs['line_id'])
-    
-    def handle_GET(self, line):
-        return HttpResponseRedirect(reverse('customer:order', kwargs={'order_number': line.order.number}))
-    
-    def handle_POST(self, line):
-        self.response = HttpResponseRedirect(reverse('customer:order', kwargs={'order_number': line.order.number}))
-        super(OrderLineView, self).handle_POST(line)
     
     def do_reorder(self, line):
         if not line.product:
@@ -91,8 +75,7 @@ class OrderLineView(ModelView):
             if attribute.option:
                 options.append({'option': attribute.option, 'value': attribute.value})
         basket.add_product(line.product, 1, options)
-        messages.info(self.request, "Line reordered")
-        
+        messages.info(self.request, "Line reordered")  
 
 class AddressListView(ListView):
     u"""Customer address book"""

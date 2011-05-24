@@ -15,7 +15,7 @@ class BasketView(ModelFormsetView):
     extra = 0
     
     def get_context_data(self, **kwargs):
-        context = super(NewBasketView, self).get_context_data(**kwargs)
+        context = super(BasketView, self).get_context_data(**kwargs)
         if self.request.user.is_authenticated():
             try:
                 saved_basket = self.basket_model.saved.get(owner=self.request.user)
@@ -38,7 +38,7 @@ class BasketView(ModelFormsetView):
                     saved_basket, _ = get_model('basket','basket').saved.get_or_create(owner=self.request.user)
                     saved_basket.merge_line(instance)
                     messages.info(self.request, "'%s' has been saved for later" % instance.product)
-        return super(NewBasketView, self).formset_valid(formset)
+        return super(BasketView, self).formset_valid(formset)
 
 
 class SavedBasketView(ModelFormsetView):

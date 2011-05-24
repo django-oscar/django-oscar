@@ -17,5 +17,5 @@ class ShippingAddressForm(ModelForm):
     
     class Meta:
         model = ShippingAddress
-        exclude = ('user',)
+        exclude = ('user', 'search_text')
 

@@ -1,6 +1,8 @@
 from decimal import Decimal
 import logging
 
+from django.views.generic import TemplateView
+
 from django.conf import settings
 from django.http import HttpResponse, Http404, HttpResponseRedirect, HttpResponseBadRequest
 from django.template import RequestContext
@@ -13,33 +15,28 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext as _
 from django.template.response import TemplateResponse
 
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
-
-from django.views.generic import TemplateView
-
-from oscar.view.generic import ModelView
 from oscar.core.loading import import_module
 
 import_module('checkout.forms', ['ShippingAddressForm'], locals())
 import_module('checkout.calculators', ['OrderTotalCalculator'], locals())
 import_module('checkout.utils', ['ProgressChecker', 'CheckoutSessionData'], locals())
 import_module('checkout.signals', ['pre_payment', 'post_payment'], locals())
-import_module('checkout.core_views', ['CheckoutView', 'mark_step_as_complete'], locals())
+import_module('checkout.core_views', ['CheckoutView'], locals())
 import_module('order.models', ['Order', 'ShippingAddress'], locals())
 import_module('order.utils', ['OrderNumberGenerator', 'OrderCreator'], locals())
 import_module('address.models', ['UserAddress'], locals())
 import_module('shipping.repository', ['Repository'], locals())
 
 logger = logging.getLogger('oscar.checkout')
-    
+
+
 class IndexView(TemplateView):
     template_name = 'oscar/checkout/gateway.html'
     
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated():
             return HttpResponseRedirect(reverse('oscar-checkout-shipping-address'))
-        return super(IndexView, self).get(request, *args, **kwargs)
+        return super(IndexView, self).get(request, *args, **kwargs)  
 
 
 class ShippingAddressView(CheckoutView):
@@ -135,7 +132,7 @@ class OrderPreviewView(CheckoutView):
     template_file = 'oscar/checkout/preview.html'
     
     def handle_GET(self):
-        mark_step_as_complete(self.request)
+        self.mark_step_as_complete(self.request)
         return TemplateResponse(self.request, self.template_file, self.context)
 
 
@@ -173,6 +170,11 @@ class PaymentDetailsView(CheckoutView):
         # created).
         order_number = self.generate_order_number(self.basket)
         logger.info(_("Submitting order #%s" % order_number))
+        
+        # We freeze the basket to prevent it being modified once the payment
+        # process has started.  If your payment fails, then the basket will
+        # need to be "unfrozen".
+        self.basket.freeze()
         
         # Calculate totals
         calc = OrderTotalCalculator(self.request)

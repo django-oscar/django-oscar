@@ -18,6 +18,7 @@ class KeywordPromotionAdmin(admin.ModelAdmin):
   
 class MerchandisingBlockProductline(admin.TabularInline):
     model = MerchandisingBlockProduct
+    raw_id_fields = ("product",)
     extra = 1    
     
 class MerchandisingBlockAdmin(admin.ModelAdmin):

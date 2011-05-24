@@ -36,12 +36,20 @@ class AbstractAddress(models.Model):
     postcode = models.CharField(_("Post/Zip-code"), max_length=64)
     country = models.ForeignKey('address.Country')
     
+    # A field only used for searching addresses - this contains all the relevant fields
+    search_text = models.CharField(_("Search text"), max_length=1000)
+    
     class Meta:
         abstract = True
 
     def save(self, *args, **kwargs):
-        u"""Clean fields and save"""
         self._clean_fields()
+        
+        # Updated the search_text
+        search_fields = filter(lambda x: x, [self.first_name, self.last_name, 
+                                      self.line1, self.line2, self.line3, self.line4, 
+                                      self.postcode, self.country.name]) 
+        self.search_text = ' '.join(search_fields) 
         super(AbstractAddress, self).save(*args, **kwargs)
         
     def _clean_fields(self):
@@ -179,6 +187,7 @@ class AbstractUserAddress(AbstractShippingAddress):
 
 class AbstractBillingAddress(AbstractAddress):
     u"""Billing address"""
+    
     class Meta:
         abstract = True
         verbose_name_plural = "Billing addresses"    

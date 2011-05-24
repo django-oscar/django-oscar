@@ -1,5 +1,9 @@
+import operator
+from urllib import urlencode
+
 from django.http import HttpResponseRedirect
 from django.template import Context, loader, RequestContext
+from django.template.response import TemplateResponse
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
@@ -8,11 +12,14 @@ from django.views.generic import ListView, DetailView
 from django.template.response import TemplateResponse
 from django.contrib import messages
 from django.db import transaction
+from django.db.models import Q
+from django.contrib.comments.views.moderation import delete
 
-from oscar.view.generic import ModelView
 from oscar.core.loading import import_module
+from oscar.view.generic import PostActionMixin
 import_module('order.models', ['Order', 'Line', 'ShippingEvent', 'ShippingEventQuantity', 
                                'ShippingEventType', 'PaymentEvent', 'PaymentEventType', 'OrderNote'], locals())
+import_module('order_management.forms', ['SimpleSearch'], locals())
 
 
 class OrderListView(ListView):
@@ -22,28 +29,57 @@ class OrderListView(ListView):
     paginate_by = 20
 
     def get_queryset(self):
+        if 'search_query' in self.request.GET and self.request.GET['search_query'].strip():
+            q = self.request.GET['search_query'].strip()
+            q_list = [Q(number__icontains=q)]
+            search_by = self.request.GET.getlist('search_by')
+            if search_by:
+                if 'billing_address' in search_by:
+                    q_list.append(Q(billing_address__search_text__icontains=q))
+                if 'shipping_address' in search_by:
+                    q_list.append(Q(shipping_address__search_text__icontains=q))
+                if 'customer' in search_by:
+                    q_list.append(Q(number__icontains=q))
+                    q_list.append(Q(user__first_name__icontains=q))
+                    q_list.append(Q(user__last_name__icontains=q))
+                    q_list.append(Q(user__email__icontains=q))
+            return Order._default_manager.filter(reduce(operator.or_, q_list))
         return Order._default_manager.all()
     
-  
-class OrderView(ModelView):
-    u"""A detail view of an order"""
-    template_file = "oscar/order_management/order.html"
+    def get_context_data(self, **kwargs):
+        context = super(OrderListView, self).get_context_data(**kwargs)
+        search_params = self.request.GET.copy()
+        if 'page' in search_params:
+            del(search_params['page'])
+        context['search_params'] = '&' + search_params.urlencode()
+        context['order_simple_search_form'] = SimpleSearch(self.request.GET)
+        return context
     
-    def get_model(self):
+    def get(self, request, *args, **kwargs):
+        response = super(OrderListView, self).get(request, *args, **kwargs)
+        return response
+        
+        
+class OrderView(DetailView, PostActionMixin):
+    u"""A detail view of an order"""
+    template_name = "oscar/order_management/order.html"
+    context_object_name = 'order'
+    
+    def get_object(self):
         u"""Return an order object or a 404"""
         return get_object_or_404(Order, number=self.kwargs['order_number'])
     
-    def handle_GET(self, order):
-        shipping_options = ShippingEventType._default_manager.all()
-        payment_options = PaymentEventType._default_manager.all()
-        self.response = TemplateResponse(self.request, self.template_file, {'order': self.get_model(),
-                                                                            'shipping_options': shipping_options,
-                                                                            'payment_options': payment_options})
-        
-    def handle_POST(self, order):
+    def get_context_data(self, **kwargs):
+        context = super(OrderView, self).get_context_data(**kwargs)
+        context['shipping_options'] = ShippingEventType._default_manager.all()
+        context['payment_options'] = PaymentEventType._default_manager.all()
+        return context
+      
+    def post(self, request, *args, **kwargs):
+        order = self.get_object()
         self.response = HttpResponseRedirect(reverse('oscar-order-management-order', kwargs={'order_number': order.number}))
-        super(OrderView, self).handle_POST(order)
-    
+        return super(OrderView, self).post(request, *args, **kwargs)
+   
     def do_create_order_event(self, order):
         self.create_shipping_event(order, order.lines.all())
         

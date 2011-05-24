@@ -1,7 +1,6 @@
 {% extends "layout.html" %}
 
-{% load currency_filters basket_tags %}
-
+{% load currency_filters %}
 
 {% block header %}
 <h2>{{ summary }}</h2>
@@ -15,6 +14,10 @@
 <ol>
 {% for product in products %}
 <li>
+    {% with product.images.all as image %}
+         <a href="{{ product.get_absolute_url }}"><img src="{{ im.url }}" width="100" height="100"></a>
+    {% endwith %}
+
     <a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a><br/>
     {% if product.is_group %}
         From {{ product.min_variant_price_incl_tax|currency }}
@@ -22,15 +25,6 @@
         {% if product.has_stockrecord %} 
             {{ product.stockrecord.price_incl_tax|currency }}<br/>
             {{ product.stockrecord.availability }}
-
-			{% comment %}{% basket_form product as form %}
-			
-			<form action="{% url oscar-basket %}" method="post">
-			    {% csrf_token %}
-			    {{ form.as_p }}
-			    <input type="submit" value="Add to basket" />
-			</form>{% endcomment %}
-			
         {% else %}
             Not available    
         {% endif %}

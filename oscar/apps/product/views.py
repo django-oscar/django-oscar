@@ -1,13 +1,7 @@
-from django.conf import settings
-from django.http import HttpResponse, Http404, HttpResponsePermanentRedirect, HttpResponseRedirect
-from django.template import Context, loader, RequestContext
+from django.http import HttpResponsePermanentRedirect
 from django.shortcuts import get_object_or_404
-from django.core.urlresolvers import reverse
-from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.views.generic import ListView, DetailView
-from django.template.response import TemplateResponse
 
-from oscar.core.loading import import_module
 from oscar.apps.product.signals import product_viewed, product_search
 
 from django.db.models import get_model
@@ -34,7 +28,7 @@ class ItemDetailView(DetailView):
         response = super(ItemDetailView, self).get(request, **kwargs)
         
         # Send signal to record the view of this product
-        self.view_signal.send(sender=self, product=self.object, user=request.user, request=request, response=response)
+        self.view_signal.send(sender=self, product=item, user=request.user, request=request, response=response)
         return response;
 
     
@@ -55,7 +49,7 @@ class ItemDetailView(DetailView):
                  '%s/detail.html' % (self.template_folder)]
         return names
 
-
+    
 class ItemClassListView(ListView):
     u"""View products filtered by item-class."""
     context_object_name = "products"
@@ -64,7 +58,8 @@ class ItemClassListView(ListView):
 
     def get_queryset(self):
         item_class = get_object_or_404(item_class_model, slug=self.kwargs['item_class_slug'])
-        return item_model.browsable.filter(item_class=item_class).select_related('stockrecord')
+        return item_model.browsable.filter(item_class=item_class)
+
 
 class ProductListView(ListView):
     u"""A list of products"""
@@ -86,10 +81,9 @@ class ProductListView(ListView):
         if q:
             # Send signal to record the view of this product
             self.search_signal.send(sender=self, query=q, user=self.request.user)
-            
-            return item_model.browsable.filter(title__icontains=q).select_related('stockrecord')
+            return item_model.browsable.filter(title__icontains=q)
         else:
-            return item_model.browsable.all().select_related('stockrecord')
+            return item_model.Item.browsable.all()
         
     def get_context_data(self, **kwargs):
         context = super(ProductListView, self).get_context_data(**kwargs)

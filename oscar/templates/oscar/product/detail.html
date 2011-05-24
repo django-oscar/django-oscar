@@ -5,14 +5,14 @@
 {% load basket_tags %}
 
 {% block header %}
-<h2>{{item.get_title}}</h2>
+<h2>{{ item.get_title }}</h2>
 {% endblock header %}
 
 
 {% block content %}
 <div class="images">
     {% for image in item.images.all %}
-    <img src="{{ image.fullsize_url }}" title="{{ item.get_title }}" />
+        <img src="{{ imageurl }}" width="200" height="200">
     {% if image.caption %}
         <div class="caption">{{ image.caption }}</div>
     {% endif %}
@@ -27,7 +27,7 @@
     <tr>
         <th>Product class</th><td><a href="{{ item.item_class.get_absolute_url }}">{{item.item_class.name}}</a></td>
     </tr>
-{% if item.stockrecord %}
+    {% if item.stockrecord %}
     <tr>
         <th>Price (excl. tax)</th><td>{{item.stockrecord.price_incl_tax|currency}}</td>
     </tr>
@@ -38,7 +38,7 @@
         <th>Availability</th>
         <td>{{ item.stockrecord.availability }}</td>
     </tr>
-{% endif %}
+    {% endif %}
     <tr>
         <th>Product type</th>
         <td>
@@ -48,9 +48,18 @@
     {% for attribute in item.attributes.all %}
     <tr>
         <th>{{ attribute.type.name }}</th>
-        <th>{{ attribute.value }}</th>
+        <td>{{ attribute.value }}</td>
     </tr>
     {% endfor %}
+    <tr>
+        <th>Num reviews</th>
+        <td>{{ reviews.count }}</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+    </tr>
+    
 </table>
 
 {% if item.stockrecord %}
@@ -64,7 +73,43 @@
 </form>
 {% endif %}
 
-{% recently_viewed_products %}
+{% block product_review %}
+
+    {% if reviews %}
+    	<h3>Reviews of {{ item.title }}</h3>
+        <p>Read customer reviews on this product. If you have read this book, why not post your own
+           review?</p>
+        <p><a href="{% url oscar-product-review-add item.item_class.slug item.slug item.id %}">Add a review</a></p>
+        <div>
+            {% for review in reviews|slice:":3" %}
+                <div class="review">
+                    <h4>{{ review.title }} ({{ review.score }}/5)</h4>
+                    <h5>Reviewed by {{ review.get_reviewer_name }}</h5>
+                    <p>{{ review.date_created }}<p>
+                    <p>{{ review.body|linebreaks }}</p>
+                    <p><a href="{{ review.get_absolute_url }}">Permalink</a>
+                    {% if user.is_authenticated %}
+                        <form action="{{ review.get_absolute_url }}" method="post">
+                            {% csrf_token %}               
+                            <input type="hidden" name="action" value="vote_up"/>
+                            <input type="submit" value="I agree" /> 
+                        </form>
+                        <form  action="{{ review.get_absolute_url }}" method="post">
+                            {% csrf_token %}                
+                            <input type="hidden" name="action" value="vote_down"/>
+                            <input type="submit" value="I disagree" /> 
+                        </form>
+                    {% endif %}
+                    {% if review.has_votes %}
+                        <p>{{ review.num_up_votes }} customer{{ review.num_up_votes|pluralize }} agreed.</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <p><a href="{% url oscar-product-reviews item.item_class.slug item.slug item.id %}">See all reviews</a>.</p>
+        </div>
+    {% endif %}
+
+{% endblock product_review %}
 
 {% if item.related_items.count %}
 <div class="products">
@@ -87,6 +132,8 @@
     </ul>
 </div>
 {% endif %}
+
+{% recently_viewed_products %}
 
 {% endblock content %}
 
