@@ -7,7 +7,7 @@ from oscar.apps.basket.forms import BasketLineForm, SavedLineForm
 from django.forms.models import modelformset_factory
 
 
-class NewBasketView(ModelFormsetView):
+class BasketView(ModelFormsetView):
     model = get_model('basket', 'line')
     form_class = BasketLineForm
     basket_model = get_model('basket', 'basket')
