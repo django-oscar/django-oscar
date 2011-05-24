@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.views.generic import ListView, DetailView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.contrib import messages
@@ -83,7 +83,7 @@ class OrderLineView(ModelView):
         # We need to pass response to the get_or_create... method
         # as a new basket might need to be created
         self.response = HttpResponseRedirect(reverse('oscar-basket'))
-        basket = request.basket
+        basket = self.request.basket
         
         # Convert line attributes into basket options
         options = []
@@ -105,18 +105,32 @@ class AddressListView(ListView):
         return user_address_model._default_manager.filter(user=self.request.user)
 
 
+class AddressCreateView(CreateView):
+    form_class = UserAddressForm
+    mode = user_address_model
+    
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.user = self.request.user
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_template_names(self):
+        return ["oscar/customer/address-create.html"]
+
+    def get_success_url(self):
+        return reverse('customer:address-list')
+
+
 class AddressUpdateView(UpdateView):
     form_class = UserAddressForm
     model = user_address_model
     
     def get_template_names(self):
-        return ["oscar/customer/address-form.html"]       
-    
-    def get_form_class(self):
-        return self.form_class
+        return ["oscar/customer/address-form.html"]
     
     def get_success_url(self):
-        return reverse('customer:address', kwargs={'pk': self.get_object().pk })
+        return reverse('customer:address-detail', kwargs={'pk': self.get_object().pk })
 
 
 class AddressDeleteView(DeleteView):

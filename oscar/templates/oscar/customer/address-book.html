@@ -14,7 +14,7 @@
     {% for address in addresses %}
     <li>
         {{ address.summary }}
-        <a href="{% url customer:address address.id %}">Edit</a> | 
+        <a href="{% url customer:address-detail address.id %}">Edit</a> | 
 		<a href="{% url customer:address-delete address.id %}">Delete</a>
     </li>
     {% endfor %}
@@ -22,6 +22,8 @@
 {% else %}
 There are no addresses in your address book.
 {% endif %}
+
+<p><a href="{% url customer:address-create %}">Add a New Address</a></p>
 
 {% if page_obj %}
 <div class="pagination">
