@@ -64,12 +64,14 @@
     
 </table>
 
-{% if item.stockrecord %}
-<form action="{% url oscar-basket %}" method="post">
-    {% csrf_token %}
-    {{ basket_form.as_p }}
-    <input type="submit" value="Add to basket" />
-</form>
+{% if basket_form %}
+    {% if item.stockrecord %}
+    <form action="{% url oscar-basket %}" method="post">
+        {% csrf_token %}
+        {{ basket_form.as_p }}
+        <input type="submit" value="Add to basket" />
+    </form>
+    {% endif %}
 {% endif %}
 
 {% block product_review %}
@@ -82,10 +84,11 @@
         <div>
             {% for review in reviews|slice:":3" %}
                 <div class="review">
-                    <h4>{{ review.title }}</h4>
+                    <h4>{{ review.title }} ({{ review.score }}/5)</h4>
                     <h5>Reviewed by {{ review.get_reviewer_name }}</h5>
                     <p>{{ review.date_created }}<p>
                     <p>{{ review.body|linebreaks }}</p>
+                    <p><a href="{{ review.get_absolute_url }}">Permalink</a>
                     {% if user.is_authenticated %}
                         <form action="{{ review.get_absolute_url }}" method="post">
                             {% csrf_token %}               
@@ -99,7 +102,7 @@
                         </form>
                     {% endif %}
                     {% if review.has_votes %}
-                        <p>{{ review.num_up_votes }} customers agreed.</p>
+                        <p>{{ review.num_up_votes }} customer{{ review.num_up_votes|pluralize }} agreed.</p>
                     {% endif %}
                 </div>
             {% endfor %}
