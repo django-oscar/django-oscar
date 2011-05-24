@@ -9,30 +9,14 @@ from django.template.response import TemplateResponse
 from django.db.models import Avg
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
-from django.forms import ModelForm, CharField, EmailField
+from django.forms import ModelForm, CharField, EmailField, BaseForm, URLField
 
 from oscar.view.generic import PostActionMixin
 from oscar.core.loading import import_module
 import_module('product.models', ['Item', 'ItemClass'], locals())
 import_module('basket.forms', ['FormFactory'], locals())
 import_module('product.reviews.models', ['ProductReview', 'Vote'], locals())
-
-
-class ProductReviewForm(ModelForm):
-    
-    class Meta:
-        model = ProductReview
-        fields = ('title', 'score', 'body')
-
-
-def make_review_form(user, values=None):
-    form = ProductReviewForm()
-    fields = form.fields
-    if not user.is_authenticated():
-        fields['name'] = CharField(max_length=100)
-        fields['email'] = EmailField()
-        fields['url'] = CharField(max_length=100, required=False)
-    return type('ProductReviewForm', (BaseForm,), {'base_fields': fields})
+import_module('product.reviews.forms', ['SignedInUserProductReviewForm', 'AnonymousUserProductReviewForm'], locals())
 
 
 class CreateProductReviewView(CreateView):
@@ -59,7 +43,9 @@ class CreateProductReviewView(CreateView):
         return get_object_or_404(Item, pk=self.kwargs['item_id'])
     
     def get_form_class(self):
-        return ProductReviewForm
+        if not self.request.user.is_authenticated():
+            return AnonymousUserProductReviewForm
+        return SignedInUserProductReviewForm
     
     def get_form_kwargs(self):
         kwargs = super(CreateProductReviewView, self).get_form_kwargs()
@@ -68,6 +54,9 @@ class CreateProductReviewView(CreateView):
             review.user = self.request.user
         kwargs['instance'] = review
         return kwargs
+    
+    def get_success_url(self):
+        return self.object.product.get_absolute_url()
 
 
 class ProductReviewDetailView(DetailView, PostActionMixin):

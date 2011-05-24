@@ -6,7 +6,8 @@
     <form method="post" action="{% url oscar-product-review-add item.item_class.slug item.slug item.id %}">
         {% csrf_token %}
         {{ form.as_p }}
-        <input type="submit" value="Submit" /> 
+        <input type="submit" value="Submit" /> or 
+        <a href="{{ item.get_absolute_url }}">Cancel</a>
     </form>
 
 {% endblock %}

@@ -93,6 +93,12 @@ class AbstractProductReview(models.Model):
         self.total_votes += 1
         self.delta_votes += vote.delta
         self.save()
+        
+    def get_reviewer_name(self):
+        if self.user:
+            return self.user.username
+        else:
+            return self.name
 
 
 class AbstractVote(models.Model):

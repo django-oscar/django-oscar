@@ -1,23 +1,23 @@
 from django.forms import BaseForm, ModelForm, CharField, EmailField
 
-from oscar.apps.product.reviews.models import ProductReview
+from oscar.core.loading import import_module
+import_module('product.reviews.models', ['ProductReview'], locals())
 
 
-class ProductReviewForm(ModelForm):
+class SignedInUserProductReviewForm(ModelForm):
     
     class Meta:
         model = ProductReview
         fields = ('title', 'score', 'body')
+        
+        
+class AnonymousUserProductReviewForm(ModelForm):
+    
+    name = CharField(required=True)
+    email = EmailField(required=True)
+    
+    class Meta:
+        model = ProductReview
+        fields = ('title', 'score', 'body', 'name', 'email', 'homepage')
 
-    def __init__(self, *args, **kwargs):
-        super(ProductReviewForm, self).__init__(*args, **kwargs)
 
-
-def make_review_form(user, values=None):
-    form = ProductReviewForm()
-    fields = form.fields
-    if not user.is_authenticated():
-        fields['name'] = CharField(max_length=100)
-        fields['email'] = EmailField()
-        fields['url'] = CharField(max_length=100, required=False)
-    return type('ProductReviewForm', (BaseForm,), {'base_fields': fields})

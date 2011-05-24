@@ -50,12 +50,16 @@
     {% for attribute in item.attributes.all %}
     <tr>
         <th>{{ attribute.type.name }}</th>
-        <th>{{ attribute.value }}</th>
+        <td>{{ attribute.value }}</td>
     </tr>
     {% endfor %}
     <tr>
-        <td><a href="{% url oscar-product-review-add item.item_class.slug item.slug item.id %}">Add a review</a></td>
-        <td><a href="{% url oscar-product-reviews item.item_class.slug item.slug item.id %}">See all reviews</a></td>
+        <th>Num reviews</th>
+        <td>{{ reviews.count }}</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
     </tr>
     
 </table>
@@ -67,6 +71,43 @@
     <input type="submit" value="Add to basket" />
 </form>
 {% endif %}
+
+{% block product_review %}
+
+    {% if reviews %}
+    	<h3>Reviews of {{ item.title }}</h3>
+        <p>Read customer reviews on this product. If you have read this book, why not post your own
+           review?</p>
+        <p><a href="{% url oscar-product-review-add item.item_class.slug item.slug item.id %}">Add a review</a></p>
+        <div>
+            {% for review in reviews|slice:":3" %}
+                <div class="review">
+                    <h4>{{ review.title }}</h4>
+                    <h5>Reviewed by {{ review.get_reviewer_name }}</h5>
+                    <p>{{ review.date_created }}<p>
+                    <p>{{ review.body|linebreaks }}</p>
+                    {% if user.is_authenticated %}
+                        <form action="{{ review.get_absolute_url }}" method="post">
+                            {% csrf_token %}               
+                            <input type="hidden" name="action" value="vote_up"/>
+                            <input type="submit" value="I agree" /> 
+                        </form>
+                        <form  action="{{ review.get_absolute_url }}" method="post">
+                            {% csrf_token %}                
+                            <input type="hidden" name="action" value="vote_down"/>
+                            <input type="submit" value="I disagree" /> 
+                        </form>
+                    {% endif %}
+                    {% if review.has_votes %}
+                        <p>{{ review.num_up_votes }} customers agreed.</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <p><a href="{% url oscar-product-reviews item.item_class.slug item.slug item.id %}">See all reviews</a>.</p>
+        </div>
+    {% endif %}
+
+{% endblock product_review %}
 
 {% if item.related_items.count %}
 <div class="products">
@@ -89,38 +130,6 @@
     </ul>
 </div>
 {% endif %}
-
-{% block product_review %}
-
-    {% if reviews %}
-    	<h3> Product Reviews </h3>
-    	<h4> Average score: {{ avg_score|floatformat:1  }} / 5.0 </h4>
-    	{% for review in reviews|slice:":5" %}		
-    		<h4> {{ forloop.counter}}. {{ review.title }} by {{ review.user.username }} </h4>
-    		<p> Score: {{ review.score|floatformat:1 }} / 5.0</p>
-    		<p> Comments: {{ review.body|truncatewords:50 }}</p>		
-    		<p> Date created: {{ review.date_created }}</p>
-    		<a href="{{ review.get_absolute_url }}">View full review</a>			
-            {% if review.has_votes %}
-            	<h5> {{ review.num_up_votes }} out of {{ review.total_votes }} customers found this review useful.</h5>
-            {% endif %}
-            {% if user.is_authenticated %}
-        		<h4>Was this review helpful to you?</h4>
-        		<form action="{{ review.get_absolute_url }}" method="post">
-        			{% csrf_token %}               
-                    <input type="hidden" name="action" value="vote_up"/>
-                    <input type="submit" value="Yes" /> 
-                </form>
-        		<form  action="{{ review.get_absolute_url }}" method="post">
-        			{% csrf_token %}                
-                    <input type="hidden" name="action" value="vote_down"/>
-                    <input type="submit" value="No" /> 
-                </form>
-    	    {% endif %}			
-    	{% endfor %}
-    {% endif %}
-
-{% endblock product_review %}
 
 {% recently_viewed_products %}
 

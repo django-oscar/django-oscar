@@ -69,7 +69,6 @@ class ItemDetailView(DetailView):
         context = super(ItemDetailView, self).get_context_data(**kwargs)
         context['basket_form'] = self.get_add_to_basket_form()
         context['reviews'] = self.get_reviews()
-        context['avg_score'] = self.get_avg_review_score()
         return context
     
     def get_add_to_basket_form(self):
@@ -79,9 +78,6 @@ class ItemDetailView(DetailView):
     def get_reviews(self):
         return ProductReview.approved.filter(product=self.get_object())
     
-    def get_avg_review_score(self):
-        return ProductReview.approved.aggregate(Avg('score'))['score__avg']
-
     
 class ItemClassListView(ListView):
     u"""View products filtered by item-class."""
