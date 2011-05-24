@@ -209,6 +209,7 @@ INSTALLED_APPS = (
     'oscar.apps.reports',
     'oscar.apps.search',
     'oscar.apps.product.reviews',
+    'oscar.apps.payment.datacash',
     'pyzen',
     'sorl.thumbnail',
 )
