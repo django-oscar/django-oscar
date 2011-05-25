@@ -13,8 +13,10 @@ def currency(value):
         locale.setlocale(locale.LC_ALL, settings.LOCALE)
     except AttributeError:
         locale.setlocale(locale.LC_ALL, '')
-    loc = locale.localeconv()
+        
+    # We allow the currency symbol to be overridden    
     try:
-        return locale.currency(value, loc['currency_symbol'], grouping=True)
-    except TypeError:
-        return ''
+        symbol = settings.CURRENCY_SYMBOL
+        return "%s%s" % (symbol, locale.format("%.2f", value, grouping=True)) 
+    except AttributeError:
+        return locale.currency(value, symbol=True, grouping=True)

@@ -1,4 +1,8 @@
+# -*- coding: utf-8 -*-
 import os
+
+LOCALE = 'en_IN.UTF-8'
+CURRENCY_SYMBOL = '₹'
 
 # Django settings for oscar project.
 PROJECT_DIR = os.path.dirname(__file__)
