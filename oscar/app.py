@@ -1,12 +1,12 @@
 from django.conf.urls.defaults import patterns, url, include
 from oscar.core.application import Application
-from oscar.apps.product import application as products_app
+from oscar.apps.product import application as product_app
 from oscar.apps.customer import application as customer_app
 
 
 class Shop(Application):
     name = None
-    product_app = products_app
+    product_app = product_app
     customer_app = customer_app
     
     def get_urls(self):

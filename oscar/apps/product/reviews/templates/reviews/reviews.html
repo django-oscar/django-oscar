@@ -2,8 +2,11 @@
 
 {% block product_review %}
 
+<h3>All Reviews of {{ item.title }}</h3>
+<p>Read customer reviews on this product. If you have read this book, why not post your own review?</p>
+<p><a href="{% url products:reviews:add item_class_slug=item.item_class.slug item_slug=item.slug item_pk=item.id %}">Add a review</a></p>
+
 {% if reviews %}
-	<h3>All reviews of {{ item.title }} ({{ reviews.count }}) </h3>
 	<h4> Sort by: </h4>
 	<form action="{{ request.get_full_path }}" method="get">
         <select name="sort_by">

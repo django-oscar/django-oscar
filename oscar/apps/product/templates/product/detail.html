@@ -78,7 +78,8 @@
 <h3>Reviews of {{ item.title }}</h3>
 <p>Read customer reviews on this product. If you have read this book, why not post your own
    review?</p>
-<p><a href="{% url products:reviews:add item.item_class.slug item.slug item.id %}">Add a review</a></p>
+<p><a href="{% url products:reviews-add item_class_slug=item.item_class.slug item_slug=item.slug item_pk=item.id %}">Add a review</a></p>
+
 
 {% with item.reviews.all as reviews %}
 {% if reviews %}
@@ -107,7 +108,7 @@
                 {% endif %}
             </div>
         {% endfor %}
-        <p><a href="{% url products:reviews:list item.item_class.slug item.slug item.id %}">See all reviews</a>.</p>
+        <p><a href="{% url products:reviews-list item.item_class.slug item.slug item.id %}">See all reviews</a>.</p>
     </div>
 {% endif %}
 {% endwith %}

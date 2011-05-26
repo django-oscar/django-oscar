@@ -14,7 +14,7 @@ class ItemDetailView(DetailView):
     #template_name = "oscar/product/item.html"
     model = item_model
     view_signal = product_viewed
-    template_folder = "oscar/product"
+    template_folder = "product"
     _item = None
     
     def get(self, request, **kwargs):
@@ -53,7 +53,7 @@ class ItemDetailView(DetailView):
 class ItemClassListView(ListView):
     u"""View products filtered by item-class."""
     context_object_name = "products"
-    template_name = 'oscar/product/browse.html'
+    template_name = 'product/browse.html'
     paginate_by = 20
 
     def get_queryset(self):
@@ -64,7 +64,7 @@ class ItemClassListView(ListView):
 class ProductListView(ListView):
     u"""A list of products"""
     context_object_name = "products"
-    template_name = 'oscar/product/browse.html'
+    template_name = 'product/browse.html'
     paginate_by = 20
     search_signal = product_search
 
@@ -83,7 +83,7 @@ class ProductListView(ListView):
             self.search_signal.send(sender=self, query=q, user=self.request.user)
             return item_model.browsable.filter(title__icontains=q)
         else:
-            return item_model.Item.browsable.all()
+            return item_model.browsable.all()
         
     def get_context_data(self, **kwargs):
         context = super(ProductListView, self).get_context_data(**kwargs)
