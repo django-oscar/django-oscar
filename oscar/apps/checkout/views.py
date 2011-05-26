@@ -25,6 +25,7 @@ import_module('order.models', ['Order', 'ShippingAddress', 'CommunicationEventTy
 import_module('order.utils', ['OrderNumberGenerator', 'OrderCreator'], locals())
 import_module('address.models', ['UserAddress'], locals())
 import_module('shipping.repository', ['Repository'], locals())
+import_module('customer.models', ['Email'], locals())
 
 logger = logging.getLogger('oscar.checkout')
 
@@ -326,10 +327,13 @@ class PaymentDetailsView(CheckoutView):
         if self.request.user.is_authenticated():
             # Send email
             logger.info(_("Order #%s: sending confirmation email" % order.number))
-            email = EmailMessage(subject='Subject', body='Body', to=[self.request.user.email])
+            email = EmailMessage('Subject', 'Body', to=[self.request.user.email])
             email.send()
             
             # If user is signed in, save email in history
+            Email._default_manager.create(user=self.request.user, 
+                                          subject=email.subject,
+                                          body_text=email.body)
             
         # Create order communication event
         self.create_order_placed_event(order)
