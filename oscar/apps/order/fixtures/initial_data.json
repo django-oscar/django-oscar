@@ -3,8 +3,10 @@
         "pk": 1, 
         "model": "order.communicationeventtype", 
         "fields": {
+            "email_subject_template": "Oscar: Order confirmation for order #{{ order.number }} ", 
             "code": "order-placed", 
-            "name": "Order placed"
+            "name": "Order placed", 
+            "email_body_template": "{% load currency_filters %}\r\nThanks for your order.\r\n\r\nContents:\r\n\r\n{% for line in order.lines.all %}\r\n{{ line.description }} (quantity: {{ line.quantity }}) - {{ line.line_price_before_discounts_incl_tax|currency }}\r\n{% endfor %}\r\n\r\n"
         }
-    } 
+    }   
 ]
