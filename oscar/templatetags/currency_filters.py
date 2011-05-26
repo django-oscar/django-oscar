@@ -17,6 +17,9 @@ def currency(value):
     # We allow the currency symbol to be overridden    
     try:
         symbol = settings.CURRENCY_SYMBOL
-        return "%s%s" % (symbol, locale.format("%.2f", value, grouping=True)) 
+        try:
+            return "%s%s" % (symbol, locale.format("%.2f", value, grouping=True))
+        except TypeError:
+            return '' 
     except AttributeError:
         return locale.currency(value, symbol=True, grouping=True)
