@@ -9,7 +9,7 @@ import_module('customer.views', ['OrderHistoryView', 'OrderDetailView', 'OrderLi
 
 urlpatterns = patterns('django.contrib.auth.views',
     url(r'^login/$', 'login', {'template_name': 'admin/login.html'}, name='oscar-customer-login'),
-    url(r'^logout/$', 'login', name='oscar-customer-logout'),
+    url(r'^logout/$', 'logout', name='oscar-customer-logout'),
 )
 
 urlpatterns += patterns('oscar.apps.customer.views',

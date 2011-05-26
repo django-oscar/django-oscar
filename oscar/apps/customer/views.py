@@ -24,6 +24,7 @@ def profile(request):
     return TemplateResponse(request, 'oscar/customer/profile.html', {'orders': orders,
                                                                      'emails': emails})
     
+    
 class EmailHistoryView(ListView):
     """Customer email history"""
     context_object_name = "emails"
