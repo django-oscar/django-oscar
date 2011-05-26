@@ -13,14 +13,37 @@ from oscar.core.loading import import_module
 import_module('address.models', ['UserAddress'], locals())
 import_module('order.models', ['Order', 'Line'], locals())
 import_module('basket.models', ['Basket'], locals())
+import_module('customer.models', ['Email'], locals())
 
 @login_required
 def profile(request):
     u"""Return a customers's profile"""
     # Load last 5 orders as preview
     orders = Order._default_manager.filter(user=request.user)[0:5]
-    return TemplateResponse(request, 'oscar/customer/profile.html', {'orders': orders})
+    emails  = Email._default_manager.filter(user=request.user)[0:5]
+    return TemplateResponse(request, 'oscar/customer/profile.html', {'orders': orders,
+                                                                     'emails': emails})
     
+class EmailHistoryView(ListView):
+    """Customer email history"""
+    context_object_name = "emails"
+    template_name = 'oscar/customer/email-history.html'
+    paginate_by = 20
+
+    def get_queryset(self):
+        u"""Return a customer's orders"""
+        return Email._default_manager.filter(user=self.request.user)
+
+
+class EmailDetailView(DetailView):
+    u"""Customer order details"""
+    template_name = "oscar/customer/email.html"
+    context_object_name = 'email'
+    
+    def get_object(self):
+        u"""Return an order object or 404"""
+        return get_object_or_404(Email, user=self.request.user, id=self.kwargs['email_id'])
+
         
 class OrderHistoryView(ListView):
     u"""Customer order history"""
@@ -68,7 +91,6 @@ class OrderLineView(DetailView, PostActionMixin):
                 options.append({'option': attribute.option, 'value': attribute.value})
         basket.add_product(line.product, 1, options)
         messages.info(self.request, "Line reordered")
-        
         
 
 class AddressBookView(ListView):

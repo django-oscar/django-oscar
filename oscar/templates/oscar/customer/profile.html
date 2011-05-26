@@ -9,6 +9,12 @@
 
 {% block content %}
 
+<h3>Account settings</h3>
+<ul>
+    <li><a href="{% url oscar-customer-address-book %}">Manage address book</a></li>
+    <li><a href="">Change password</a></li>
+</ul>
+
 <h3>Order history</h3>
 {% if not orders %}
 
@@ -37,15 +43,37 @@
 <p><a href="{% url oscar-customer-order-history %}">View order history</a></p>
 {% endif %}
 
+<h3>Email history</h3>
+{% if not emails %}
+
+<p>You haven't been sent any emails yet.</p>
+
+{% else %}
+
+<table>
+    <tr>
+        <th>Date sent</th>
+        <th>Subject</th>
+        <th></th>
+    </tr>
+    {% for email in emails %}
+    <tr>
+        <td>{{ email.date_sent }}</td>
+        <td>{{ email.subject }}</td>
+        <td>
+            <a href="{% url oscar-customer-email-view email.id %}">View</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+<p><a href="{% url oscar-customer-email-history %}">View email history</a></p>
+{% endif %}
 
 
 
 
-<h3>Account settings</h3>
-<ul>
-    <li><a href="{% url oscar-customer-address-book %}">Manage address book</a></li>
-    <li><a href="">Change password</a></li>
-</ul>
+
+
 
 
 {% endblock content %}

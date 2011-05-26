@@ -15,9 +15,9 @@
             
             {% if user.is_authenticated %}
                 <a href="{% url oscar-customer-profile %}">Profile</a>
-                <a href="">Logout</a>
+                <a href="{% url oscar-customer-logout %}">Logout</a>
             {% else %}
-                <a href="">Login</a>
+                <a href="{% url oscar-customer-login %}">Login</a>
             {% endif %}
             
             {% for banner in banners %}
