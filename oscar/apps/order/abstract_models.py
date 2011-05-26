@@ -132,6 +132,9 @@ class AbstractCommunicationEvent(models.Model):
     
     class Meta:
         abstract = True
+        
+    def __unicode__(self):
+        return u"'%s' event for order #%s" % (self.type.name, self.order.number)
     
     
 class AbstractCommunicationEventType(models.Model):
@@ -144,7 +147,7 @@ class AbstractCommunicationEventType(models.Model):
     def save(self, *args, **kwargs):
         if not self.code:
             self.code = slugify(self.name)
-        super(AbstractOrderEventType, self).save(*args, **kwargs)
+        super(AbstractCommunicationEventType, self).save(*args, **kwargs)
     
     class Meta:
         abstract = True

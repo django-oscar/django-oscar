@@ -15,6 +15,7 @@ SQL_DEBUG = True
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
 )
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 MANAGERS = ADMINS
 
