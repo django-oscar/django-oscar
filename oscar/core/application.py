@@ -1,3 +1,5 @@
+from django.conf.urls.defaults import patterns
+
 class Application(object):
     name = None
     
@@ -10,7 +12,7 @@ class Application(object):
         u"""
         Return the url patterns for this app, MUST be implemented in the subclass
         """
-        pass
+        return patterns('')
     
     @property
     def urls(self):
