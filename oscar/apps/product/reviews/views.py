@@ -6,8 +6,8 @@ from django.contrib import messages
 
 from oscar.view.generic import PostActionMixin
 from oscar.apps.product.reviews.forms import SignedInUserProductReviewForm, AnonymousUserProductReviewForm
-
 from django.db.models import get_model
+
 
 class CreateProductReviewView(CreateView):
     template_name = "reviews/add_review.html"
@@ -50,6 +50,17 @@ class CreateProductReviewView(CreateView):
     
     def get_success_url(self):
         return self.object.product.get_absolute_url()
+    
+class CreateReviewCompleteView(DetailView):
+    template_name = "reviews/add_review_complete.html"
+    context_object_name = 'review'
+    model = get_model('reviews', 'productreview')
+    product_model = get_model('product', 'item')
+    
+    def get_context_data(self, **kwargs):
+        context = super(ProductReviewDetailView, self).get_context_data(**kwargs)
+        context['item'] = get_object_or_404(self.product_model, pk=self.kwargs['item_id'])
+        return context    
 
 
 class ProductReviewDetailView(DetailView, PostActionMixin):

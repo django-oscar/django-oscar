@@ -1,30 +1,45 @@
 from oscar.core.application import Application
-from oscar.apps.product.views import ItemDetailView, ItemClassListView, ProductListView
+from oscar.apps.product.views import ItemDetailView, ProductListView
 from django.conf.urls.defaults import patterns, url, include
 from oscar.apps.product.reviews import application as reviews_app
 
-class ProductApplication(Application):
+class BaseProductApplication(Application):
     name = 'products'
     detail_view = ItemDetailView
-    class_list_view = ItemClassListView
     list_view = ProductListView
-    reviews_app = reviews_app    
-
+    
     def get_urls(self):
-        urlpatterns = patterns('',
-            url(r'^$', self.list_view.as_view(), name='list'),
-            url(r'^(?P<item_class_slug>[\w-]+)/$', self.class_list_view.as_view(), name='class-list'),            
-            url(r'^(?P<item_class_slug>[\w-]+)/(?P<item_slug>[\w-]*)-(?P<pk>\d+)/$', self.detail_view.as_view(), name='detail'),
-            url(r'^(?P<item_class_slug>[\w-]+)/(?P<item_slug>[\w-]*)-(?P<item_pk>\d+)/reviews/', include(self.reviews_app.urls)), 
+        urlpatterns = super(BaseProductApplication, self).get_urls()        
+        urlpatterns += patterns('',
+            url(r'^$', self.list_view.as_view(), name='list'),       
+            url(r'^(?P<item_slug>[\w-]*)-(?P<pk>\d+)/$', self.detail_view.as_view(), name='detail'),
         )
         return urlpatterns
 
-class ProductWithReviewsApplication(ProductApplication):
+class ReviewsApplication(Application):
+    reviews_app = reviews_app    
+    
     def get_urls(self):
-        urlpatterns = super(ProductWithReviewsApplication, self).get_urls()
-        mypatterns = patterns('',
-            
+        urlpatterns = super(ReviewsApplication, self).get_urls()
+        urlpatterns += patterns('',
+            url(r'^(?P<item_slug>[\w-]*)-(?P<item_pk>\d+)/reviews/', include(self.reviews_app.urls)),
         )
-        return urlpatterns + mypatterns 
+        return urlpatterns
+    
+
+class NavigationApplication(Application):
+    backend = None
+    
+    def get_urls(self):
+        urlpatterns = super(NavigationApplication, self).get_urls()
+        urlpatterns += patterns('',
+            url(r'^', include(self.backend.urls))
+        )
+        return urlpatterns
+    
+class ProductApplication(BaseProductApplication, ReviewsApplication, NavigationApplication):
+    """
+    Composite class combining Products with Reviews
+    """
 
 application = ProductApplication()

@@ -39,10 +39,6 @@ class AbstractItemClass(models.Model):
             self.slug= slugify(self.name)
         super(AbstractItemClass, self).save(*args, **kwargs)
 
-    @models.permalink
-    def get_absolute_url(self):
-        return ('products:class-list', (), {'item_class_slug': self.slug})
-
     def __unicode__(self):
         return self.name
 
@@ -130,7 +126,7 @@ class AbstractItem(models.Model):
     def has_stockrecord(self):
         u"""Return True if a product has a stock record, False if not"""
         try:
-            sr = self.stockrecord
+            self.stockrecord
             return True
         except ObjectDoesNotExist:
             return False
@@ -188,7 +184,6 @@ class AbstractItem(models.Model):
     def get_absolute_url(self):
         u"""Return a product's absolute url"""
         return ('products:detail', (), {
-            'item_class_slug': self.get_item_class().slug, 
             'item_slug': self.slug,
             'pk': self.id})
     

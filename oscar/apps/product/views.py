@@ -49,17 +49,6 @@ class ItemDetailView(DetailView):
                  '%s/detail.html' % (self.template_folder)]
         return names
 
-    
-class ItemClassListView(ListView):
-    u"""View products filtered by item-class."""
-    context_object_name = "products"
-    template_name = 'product/browse.html'
-    paginate_by = 20
-
-    def get_queryset(self):
-        item_class = get_object_or_404(item_class_model, slug=self.kwargs['item_class_slug'])
-        return item_model.browsable.filter(item_class=item_class)
-
 
 class ProductListView(ListView):
     u"""A list of products"""
