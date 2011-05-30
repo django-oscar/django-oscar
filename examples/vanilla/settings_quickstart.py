@@ -1,6 +1,5 @@
 import os
 
-# Django settings for oscar project.
 PROJECT_DIR = os.path.dirname(__file__)
 location = lambda x: os.path.join(os.path.dirname(os.path.realpath(__file__)), x)
 
@@ -17,21 +16,16 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.', # Make sure you're using InnoDB
-        'NAME': 'oscar_vanilla',     
-        'USER': '',                           # Set these details in settings_local.py
-        'PASSWORD': '',                       # "
+        'ENGINE': 'django.db.backends.sqlite3', 
+        'NAME': '/tmp/oscar_vanilla',     
+        'USER': '',                           
+        'PASSWORD': '',                      
         'HOST': '',                     
         'PORT': '',                      
     }
 }
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': '127.0.0.1:11211',
-    }
-}
+
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -77,7 +71,6 @@ SECRET_KEY = '$)a7n&o80u!6y5t-+jrd3)3!%vh&shg$wqpjpxc!ar&p#!)n1a'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -99,10 +92,10 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    #'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+    # Oscar specific
     'oscar.apps.basket.middleware.BasketMiddleware'
 )
 
@@ -165,7 +158,7 @@ LOGGING = {
             'propagate': False,
         },
         'oscar.checkout': {
-            'handlers': ['console', 'file'],
+            'handlers': ['console'],
             'propagate': True,
             'level':'INFO',
         },
@@ -186,10 +179,9 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.admin',
     'django.contrib.flatpages',
-    # External apps
-    'django_extensions',
+    # External dependencies
     'haystack',
-    #'debug_toolbar',
+    'sorl.thumbnail',
     # Apps from oscar
     'oscar',
     'oscar.apps.analytics',
@@ -211,11 +203,9 @@ INSTALLED_APPS = (
     'oscar.apps.search',
     'oscar.apps.product.reviews',
     'oscar.apps.payment.datacash',
-    'pyzen',
-    'sorl.thumbnail',
 )
 
-LOGIN_REDIRECT_URL = '/shop/accounts/profile/'
+LOGIN_REDIRECT_URL = '/accounts/profile/'
 APPEND_SLASH = True
 
 # Oscar settings
@@ -223,12 +213,4 @@ from oscar.defaults import *
 
 # Haystack settings
 HAYSTACK_SITECONF = 'oscar.search_sites'
-HAYSTACK_SEARCH_ENGINE = 'solr'
-HAYSTACK_SOLR_URL = 'http://127.0.0.1:8080/solr'
-HAYSTACK_INCLUDE_SPELLING = True
-
-# Local overrides
-try:
-    from settings_local import *
-except ImportError:
-    pass
+HAYSTACK_SEARCH_ENGINE = 'dummy'
