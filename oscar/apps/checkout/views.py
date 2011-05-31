@@ -38,6 +38,9 @@ class IndexView(TemplateView):
         if self.request.user.is_authenticated():
             return HttpResponseRedirect(reverse('oscar-checkout-shipping-address'))
         return super(IndexView, self).get(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs):
+        return {'is_anon_checkout_allowed': getattr(settings, 'OSCAR_ALLOW_ANON_CHECKOUT', False)}
 
 
 class ShippingAddressView(CheckoutView):
