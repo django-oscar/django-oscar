@@ -14,6 +14,7 @@ order_model = get_model('order', 'Order')
 order_line_model = get_model('order', 'Line')
 basket_model = get_model('basket', 'Basket')
 user_address_model = get_model('address', 'UserAddress')
+email_model = get_model('customer', 'email')
 
 
 class AccountSummaryView(ListView):
@@ -26,6 +27,27 @@ class AccountSummaryView(ListView):
     def get_queryset(self):
         u"""Return a customer's orders"""
         return self.model._default_manager.filter(user=self.request.user)[0:5]
+
+    
+class EmailHistoryView(ListView):
+    """Customer email history"""
+    context_object_name = "emails"
+    template_name = 'oscar/customer/email-history.html'
+    paginate_by = 20
+
+    def get_queryset(self):
+        u"""Return a customer's orders"""
+        return email_model._default_manager.filter(user=self.request.user)
+
+
+class EmailDetailView(DetailView):
+    u"""Customer order details"""
+    template_name = "oscar/customer/email.html"
+    context_object_name = 'email'
+    
+    def get_object(self):
+        u"""Return an order object or 404"""
+        return get_object_or_404(email_model, user=self.request.user, id=self.kwargs['email_id'])
 
 
 class OrderHistoryView(ListView):
@@ -42,14 +64,14 @@ class OrderHistoryView(ListView):
 
 class OrderDetailView(DetailView):
     u"""Customer order details"""
-    
     model = order_model
     
     def get_template_names(self):
         return ["oscar/customer/order.html"]    
 
     def get_object(self):
-        return get_object_or_404(order_model, user=self.request.user, number=self.kwargs['order_number'])
+        return get_object_or_404(self.model, user=self.request.user, number=self.kwargs['order_number'])
+
 
 class OrderLineView(DetailView, PostActionMixin):
     u"""Customer order line"""
@@ -76,6 +98,7 @@ class OrderLineView(DetailView, PostActionMixin):
                 options.append({'option': attribute.option, 'value': attribute.value})
         basket.add_product(line.product, 1, options)
         messages.info(self.request, "Line reordered")  
+
 
 class AddressListView(ListView):
     u"""Customer address book"""

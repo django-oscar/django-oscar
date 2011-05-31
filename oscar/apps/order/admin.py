@@ -48,4 +48,7 @@ admin.site.register(PaymentEvent)
 admin.site.register(PaymentEventType, PaymentEventTypeAdmin)
 admin.site.register(LineAttribute)
 admin.site.register(OrderDiscount, OrderDiscountAdmin)
+admin.site.register(CommunicationEventType, CommunicationEventTypeAdmin)
+admin.site.register(CommunicationEvent)
+
 

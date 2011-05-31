@@ -1,15 +1,12 @@
-Django-Oscar - Flexible e-commerce on Django
-============================================
+Django-Oscar - Flexible e-commerce on Django 1.3
+================================================
 
-django-oscar is a flexible ecommerce platform, designed to build domain-driven
-ecommerce sites to be constructed.  It is not supposed to be a framework that can
-be downloaded and fully set up by simply adjusting a configuration file: there
-will always be some developer work required to make sure the models match those
-from your domain - this is the nature of domain modelling.
+django-oscar is a ecommerce framework for Django 1.3 for building domain-driven
+ecommerce sites.  It is structured in way that lets any part of the core
+ecommerce functionality be customised to suit the needs of your project.    
 
-However, a small amount of work up front in determine the right models for your
-shop can really pay off in terms of building a high-quality application that
-is a pleasure to work with and maintain.
+It is currently in vigorous early development, but should stabilise over the
+summer of 2011.
 
-See the ``*.rst`` files within ``docs/source`` for documentation or visit
-http://django-oscar.readthedocs.org/en/latest/
+Browse the ``*.rst`` files within ``docs/source`` for documentation or visit
+http://django-oscar.readthedocs.org/en/latest/ for HTML versions.

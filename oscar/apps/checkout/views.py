@@ -14,6 +14,7 @@ from django.core.urlresolvers import resolve
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext as _
 from django.template.response import TemplateResponse
+from django.core.mail import EmailMessage
 
 from oscar.core.loading import import_module
 
@@ -22,10 +23,11 @@ import_module('checkout.calculators', ['OrderTotalCalculator'], locals())
 import_module('checkout.utils', ['ProgressChecker', 'CheckoutSessionData'], locals())
 import_module('checkout.signals', ['pre_payment', 'post_payment'], locals())
 import_module('checkout.core_views', ['CheckoutView'], locals())
-import_module('order.models', ['Order', 'ShippingAddress'], locals())
+import_module('order.models', ['Order', 'ShippingAddress', 'CommunicationEventType', 'CommunicationEvent'], locals())
 import_module('order.utils', ['OrderNumberGenerator', 'OrderCreator'], locals())
 import_module('address.models', ['UserAddress'], locals())
 import_module('shipping.repository', ['Repository'], locals())
+import_module('customer.models', ['Email'], locals())
 
 logger = logging.getLogger('oscar.checkout')
 
@@ -95,10 +97,6 @@ class ShippingMethodView(CheckoutView):
         
         self.context['methods'] = methods
         return TemplateResponse(self.request, self.template_file, self.context)
-    
-    def get_shipping_methods_for_basket(self, basket):
-        u"""Return available shipping methods for a basket"""
-        return shipping_models.Method.objects.all()
 
     def get_available_shipping_methods(self):
         u"""
@@ -169,7 +167,7 @@ class PaymentDetailsView(CheckoutView):
         # in payment requests (ie before the order model has been 
         # created).
         order_number = self.generate_order_number(self.basket)
-        logger.info(_("Submitting order #%s" % order_number))
+        logger.info(_("Order #%s: beginning submission process" % order_number))
         
         # We freeze the basket to prevent it being modified once the payment
         # process has started.  If your payment fails, then the basket will
@@ -194,7 +192,10 @@ class PaymentDetailsView(CheckoutView):
         self.save_payment_details(order)
         self.reset_checkout()
         
-        logger.info(_("Order #%s submitted successfully" % order_number))
+        logger.info(_("Order #%s: submitted successfully" % order_number))
+        
+        # Send confirmation message (normally an email)
+        self.send_confirmation_message(order)
         
         # Save order id in session so thank-you page can load it
         self.request.session['checkout_order_id'] = order.id
@@ -323,7 +324,31 @@ class PaymentDetailsView(CheckoutView):
         address.populate_alternative_model(shipping_addr)
         shipping_addr.save()
         return shipping_addr
-
+    
+    def send_confirmation_message(self, order):
+        # Create order communication event
+        try:
+            event_type = CommunicationEventType._default_manager.get(code='order-placed')
+        except CommunicationEventType.DoesNotExist:
+            logger.error(_("Order #%s: unable to find 'order_placed' comms event" % order.number))
+        else:
+            if self.request.user.is_authenticated() and event_type.has_email_templates():
+                logger.info(_("Order #%s: sending confirmation email" % order.number))
+                
+                # Send the email
+                subject = event_type.get_email_subject_for_order(order)
+                body = event_type.get_email_body_for_order(order)
+                email = EmailMessage(subject, body, to=[self.request.user.email])
+                email.send()
+                
+                # Record email against user for their email history
+                Email._default_manager.create(user=self.request.user, 
+                                              subject=email.subject,
+                                              body_text=email.body)
+                
+                # Record communication event against order
+                CommunicationEvent._default_manager.create(order=order, type=event_type)
+        
 
 class ThankYouView(object):
     """

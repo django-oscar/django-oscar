@@ -1,6 +1,5 @@
 import os
 
-# Django settings for oscar project.
 PROJECT_DIR = os.path.dirname(__file__)
 location = lambda x: os.path.join(os.path.dirname(os.path.realpath(__file__)), x)
 
@@ -17,14 +16,16 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '',                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'ENGINE': 'django.db.backends.sqlite3', 
+        'NAME': '/tmp/oscar_vanilla',     
+        'USER': '',                           
+        'PASSWORD': '',                      
+        'HOST': '',                     
+        'PORT': '',                      
     }
 }
+
+
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -70,7 +71,6 @@ SECRET_KEY = '$)a7n&o80u!6y5t-+jrd3)3!%vh&shg$wqpjpxc!ar&p#!)n1a'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -92,11 +92,11 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
-    'oscar.apps.basket.middleware.BasketMiddleware',
+    # Oscar specific
+    'oscar.apps.basket.middleware.BasketMiddleware'
 )
 
 INTERNAL_IPS = ('127.0.0.1',)
@@ -158,7 +158,7 @@ LOGGING = {
             'propagate': False,
         },
         'oscar.checkout': {
-            'handlers': ['console', 'file'],
+            'handlers': ['console'],
             'propagate': True,
             'level':'INFO',
         },
@@ -179,10 +179,9 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.admin',
     'django.contrib.flatpages',
-    # External apps
-    #'django_extensions',
+    # External dependencies
     'haystack',
-    'debug_toolbar',
+    'sorl.thumbnail',
     # Apps from oscar
     'oscar',
     'oscar.apps.analytics',
@@ -192,22 +191,21 @@ INSTALLED_APPS = (
     'oscar.apps.shipping',
     'oscar.apps.order_management',
     'oscar.apps.product',
-    'oscar.apps.product.reviews',
     'oscar.apps.basket',
     'oscar.apps.payment',
-    'oscar.apps.payment.datacash',
     'oscar.apps.offer',
     'oscar.apps.address',
     'oscar.apps.partner',
-    #'oscar.apps.dynamic_images',
+    'oscar.apps.image',
     'oscar.apps.customer',
     'oscar.apps.promotions',
     'oscar.apps.reports',
     'oscar.apps.search',
-    #'pyzen',
+    'oscar.apps.product.reviews',
+    'oscar.apps.payment.datacash',
 )
 
-LOGIN_REDIRECT_URL = '/shop/accounts/profile/'
+LOGIN_REDIRECT_URL = '/accounts/profile/'
 APPEND_SLASH = True
 
 # Oscar settings
@@ -215,12 +213,4 @@ from oscar.defaults import *
 
 # Haystack settings
 HAYSTACK_SITECONF = 'oscar.search_sites'
-HAYSTACK_SEARCH_ENGINE = 'solr'
-HAYSTACK_SOLR_URL = 'http://127.0.0.1:8080/solr'
-HAYSTACK_INCLUDE_SPELLING = True
-
-# Local overrides
-try:
-    from settings_local import *
-except ImportError:
-    pass
+HAYSTACK_SEARCH_ENGINE = 'dummy'

@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
 from django.db.models import Sum
-
+from django.template import Template, Context
 
 class AbstractOrder(models.Model):
     u"""An order"""
@@ -132,6 +132,9 @@ class AbstractCommunicationEvent(models.Model):
     
     class Meta:
         abstract = True
+        
+    def __unicode__(self):
+        return u"'%s' event for order #%s" % (self.type.name, self.order.number)
     
     
 class AbstractCommunicationEventType(models.Model):
@@ -141,10 +144,14 @@ class AbstractCommunicationEventType(models.Model):
     # Name is the friendly description of an event
     name = models.CharField(max_length=255)
     
+    # Template content for emails
+    email_subject_template = models.CharField(max_length=255, blank=True)
+    email_body_template = models.TextField(blank=True, null=True)
+    
     def save(self, *args, **kwargs):
         if not self.code:
             self.code = slugify(self.name)
-        super(AbstractOrderEventType, self).save(*args, **kwargs)
+        super(AbstractCommunicationEventType, self).save(*args, **kwargs)
     
     class Meta:
         abstract = True
@@ -152,6 +159,20 @@ class AbstractCommunicationEventType(models.Model):
         
     def __unicode__(self):
         return self.name    
+    
+    def has_email_templates(self):
+        return self.email_subject_template and self.email_body_template
+    
+    def get_email_subject_for_order(self, order, **kwargs):
+        return self._merge_template_with_context(self.email_subject_template, order, **kwargs)
+    
+    def get_email_body_for_order(self, order, **kwargs):
+        return self._merge_template_with_context(self.email_body_template, order, **kwargs)
+    
+    def _merge_template_with_context(self, template, order, **kwargs):
+        ctx = {'order': order}
+        ctx.update(**kwargs)
+        return Template(template).render(Context(ctx))
         
         
 class AbstractLine(models.Model):
