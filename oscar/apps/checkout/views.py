@@ -92,7 +92,6 @@ class ShippingMethodView(CheckoutView):
             # Only one method - set this and redirect onto the next step
             self.co_data.use_shipping_method(methods[0].code)
             return self.get_success_response()
-        
         self.context['methods'] = methods
         return TemplateResponse(self.request, self.template_file, self.context)
 

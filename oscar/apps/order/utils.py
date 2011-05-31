@@ -70,8 +70,22 @@ class OrderCreator(object):
         if user.is_authenticated():
             order_data['user_id'] = user.id
         order = Order(**order_data)
+        
+        # Set order status based on the current fields
+        status = self.get_status(order)
+        if status:
+            order.status = status
+        
         order.save()
         return order
+    
+    def get_status(self, order):
+        """
+        Determines the status of the order (if one is required)
+        
+        Override this method to set custom statuses
+        """
+        return None
     
     def _get_partner_for_product(self, product):
         u"""Returns the partner for a product"""
