@@ -14,6 +14,6 @@ urlpatterns = patterns('oscar.checkout.views',
     url(r'payment-method/$', class_based_view(PaymentMethodView), name='oscar-checkout-payment-method'),
     url(r'preview/$', class_based_view(OrderPreviewView), name='oscar-checkout-preview'),
     url(r'payment-details/$', class_based_view(PaymentDetailsView), name='oscar-checkout-payment-details'),
-    url(r'thank-you/$', class_based_view(ThankYouView), name='oscar-checkout-thank-you'),
+    url(r'thank-you/$', ThankYouView.as_view(), name='oscar-checkout-thank-you'),
 )
 

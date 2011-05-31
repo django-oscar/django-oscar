@@ -13,6 +13,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext as _
 from django.template.response import TemplateResponse
 from django.core.mail import EmailMessage
+from django.views.generic import DetailView
 
 from oscar.core.loading import import_module
 
@@ -352,18 +353,16 @@ class PaymentDetailsView(CheckoutView):
                 CommunicationEvent._default_manager.create(order=order, type=event_type)
         
 
-class ThankYouView(object):
+class ThankYouView(DetailView):
     """
     Displays the 'thank you' page which summarises the order just submitted.
     """
+    template_name = 'oscar/checkout/thank_you.html'
+    context_object_name = 'order'
     
-    def __call__(self, request):
-        try:
-            order = Order._default_manager.get(pk=request.session['checkout_order_id'])
-            
-            # Remove order number from session to ensure that the thank-you page is only 
-            # viewable once.
-            del request.session['checkout_order_id']
-        except KeyError, ObjectDoesNotExist:
-            return HttpResponseRedirect(reverse('oscar-checkout-index'))
-        return TemplateResponse(request, 'oscar/checkout/thank_you.html', {'order': order})
+    def get_object(self):
+        order = get_object_or_404(Order, pk=self.request.session['checkout_order_id'])
+        # Remove order number from session to ensure that the thank-you page is only 
+        # viewable once.
+        del self.request.session['checkout_order_id']
+        return order
