@@ -13,7 +13,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext as _
 from django.template.response import TemplateResponse
 from django.core.mail import EmailMessage
-from django.views.generic import DetailView
+from django.views.generic import DetailView, TemplateView
 
 from oscar.core.loading import import_module
 
@@ -31,13 +31,13 @@ import_module('customer.models', ['Email'], locals())
 logger = logging.getLogger('oscar.checkout')
 
 
-class IndexView(object):
-    template_file = 'oscar/checkout/gateway.html'
+class IndexView(TemplateView):
+    template_name = 'oscar/checkout/gateway.html'
     
-    def __call__(self, request):
-        if request.user.is_authenticated():
+    def get(self, request, *args, **kwargs):
+        if self.request.user.is_authenticated():
             return HttpResponseRedirect(reverse('oscar-checkout-shipping-address'))
-        return TemplateResponse(request, self.template_file)    
+        return super(IndexView, self).get(request, *args, **kwargs)
 
 
 class ShippingAddressView(CheckoutView):
