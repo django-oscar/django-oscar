@@ -252,6 +252,7 @@ class PaymentDetailsView(CheckoutView):
         shipping_address = self.create_shipping_address()
         shipping_method = self.get_shipping_method(basket)
         billing_address = self.create_billing_address()
+        status = self.get_initial_order_status(basket)
         return OrderCreator().place_order(self.request.user, 
                                          basket, 
                                          shipping_address, 
@@ -259,7 +260,11 @@ class PaymentDetailsView(CheckoutView):
                                          billing_address,
                                          total_incl_tax,
                                          total_excl_tax,
-                                         order_number)
+                                         order_number,
+                                         status)
+    
+    def get_initial_order_status(self, basket):
+        return None
     
     def get_shipping_method(self, basket):
         u"""Returns the shipping method object"""
