@@ -15,11 +15,12 @@ def currency(value):
         locale.setlocale(locale.LC_ALL, '')
         
     # We allow the currency symbol to be overridden    
+    symbol = getattr(settings, 'CURRENCY_SYMBOL', None)
     try:
-        symbol = settings.CURRENCY_SYMBOL
-        try:
+        if symbol:
             return "%s%s" % (symbol, locale.format("%.2f", value, grouping=True))
-        except TypeError:
-            return '' 
-    except AttributeError:
-        return locale.currency(value, symbol=True, grouping=True)
+        else:
+            return locale.currency(value, symbol=True, grouping=True)
+    except TypeError:
+        return '' 
+        
