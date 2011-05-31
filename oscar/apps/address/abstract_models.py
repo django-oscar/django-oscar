@@ -29,10 +29,14 @@ class AbstractAddress(models.Model):
     title = models.CharField(_("Title"), max_length=64, choices=TITLE_CHOICES, blank=True)
     first_name = models.CharField(_("First name"), max_length=255, blank=True)
     last_name = models.CharField(_("Last name"), max_length=255)
+    
+    # We use quite a few lines of an address as they are often quite long and 
+    # it's easier to just hide the unnecessary ones than add extra ones.
     line1 = models.CharField(_("First line of address"), max_length=255)
     line2 = models.CharField(_("Second line of address"), max_length=255, blank=True)
-    line3 = models.CharField(_("City"), max_length=255, blank=True)
-    line4 = models.CharField(_("State/County"), max_length=255, blank=True)
+    line3 = models.CharField(_("Third line of address"), max_length=255, blank=True)
+    line4 = models.CharField(_("City"), max_length=255, blank=True)
+    state = models.CharField(_("State/County"), max_length=255, blank=True)
     postcode = models.CharField(_("Post/Zip-code"), max_length=64)
     country = models.ForeignKey('address.Country')
     
