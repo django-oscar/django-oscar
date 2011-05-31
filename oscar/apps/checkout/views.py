@@ -159,7 +159,7 @@ class PaymentDetailsView(CheckoutView):
         then the method can call submit()."""
         return self.submit()
     
-    def submit(self):
+    def submit(self, **kwargs):
         # We generate the order number first as this will be used
         # in payment requests (ie before the order model has been 
         # created).
@@ -181,7 +181,7 @@ class PaymentDetailsView(CheckoutView):
         # _handle_payment method raise an exception, which should be caught
         # within handle_POST and the appropriate forms redisplayed.
         pre_payment.send_robust(sender=self, view=self)
-        self.handle_payment(order_number, total_incl_tax)
+        self.handle_payment(order_number, total_incl_tax, **kwargs)
         post_payment.send_robust(sender=self, view=self)
         
         # Everything is ok, we place the order and save the payment details 
@@ -202,7 +202,7 @@ class PaymentDetailsView(CheckoutView):
         generator = OrderNumberGenerator()
         return generator.order_number(basket)
 
-    def handle_payment(self, order_number, total):
+    def handle_payment(self, order_number, total, **kwargs):
         """
         Handle any payment processing.  
         
