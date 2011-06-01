@@ -1,6 +1,7 @@
 import datetime
 from xml.dom.minidom import Document, parseString
-import httplib, urllib
+import httplib
+import urllib
 
 from django.conf import settings
 from django.db import transaction
