@@ -65,8 +65,8 @@ class AbstractProductReview(models.Model):
     def get_absolute_url(self):
         return ('products:reviews-detail', (), {
             'item_slug': self.product.slug,
-            'item_id': self.product.id,
-            'review_pk': self.id})
+            'item_pk': self.product.id,
+            'pk': self.id})
 
     def __unicode__(self):
         return self.title

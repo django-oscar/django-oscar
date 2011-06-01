@@ -1,7 +1,8 @@
 from django.conf.urls.defaults import patterns, url, include
 from django.contrib.auth.decorators import login_required
 from oscar.apps.customer.views import AccountSummaryView, OrderHistoryView, \
-    OrderHistoryView, OrderDetailView, OrderLineView, AddressListView, AddressCreateView, AddressUpdateView, AddressDeleteView
+    OrderDetailView, OrderLineView, AddressListView, AddressCreateView, \
+    AddressUpdateView, AddressDeleteView, EmailHistoryView, EmailDetailView
 from oscar.core.application import Application
 
 class CustomerApplication(Application):
@@ -13,12 +14,14 @@ class CustomerApplication(Application):
     address_list_view = AddressListView
     address_create_view = AddressCreateView
     address_update_view = AddressUpdateView
-    address_delete_view = AddressDeleteView 
+    address_delete_view = AddressDeleteView
+    email_list_view = EmailHistoryView
+    email_detail_view = EmailDetailView
 
     def get_urls(self):
         urlpatterns = patterns('django.contrib.auth.views',
             url(r'^login/$', 'login', {'template_name': 'admin/login.html'}, name='login'),
-            url(r'^logout/$', 'login', name='logout'),
+            url(r'^logout/$', 'logout', name='logout'),
         )
         
         urlpatterns += patterns('',
@@ -27,10 +30,12 @@ class CustomerApplication(Application):
             url(r'^orders/(?P<order_number>[\w-]*)/$', login_required(self.order_detail_view.as_view()), name='order'),
             url(r'^orders/(?P<order_number>[\w-]*)/(?P<line_id>\w+)$', login_required(self.order_line_view), name='order-line'),
             url(r'^addresses/$', login_required(self.address_list_view.as_view()), name='address-list'),
-            url(r'^addresses/add/$', login_required(self.address_create_view.as_view()), name='address-create'),            
+            url(r'^addresses/add/$', login_required(self.address_create_view.as_view()), name='address-create'),
             url(r'^addresses/(?P<pk>\d+)/$', login_required(self.address_update_view.as_view()), name='address-detail'),
-            url(r'^addresses/(?P<pk>\d+)/delete/$', login_required(self.address_delete_view.as_view()), name='address-delete'),            
-        )
+            url(r'^addresses/(?P<pk>\d+)/delete/$', login_required(self.address_delete_view.as_view()), name='address-delete'),
+            url(r'^emails/$', login_required(self.email_list_view.as_view()), name='email-list'),
+            url(r'^emails/(?P<email_id>\d+)/$', login_required(self.email_detail_view.as_view()), name='email-detail'),
+            )
         return urlpatterns
 
 application = CustomerApplication()

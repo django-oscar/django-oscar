@@ -37,7 +37,7 @@ class NavigationApplication(Application):
         )
         return urlpatterns
     
-class ProductApplication(BaseProductApplication, ReviewsApplication, NavigationApplication):
+class ProductApplication(BaseProductApplication, ReviewsApplication):
     """
     Composite class combining Products with Reviews
     """

@@ -92,19 +92,20 @@
                 <p>{{ review.body|linebreaks }}</p>
                 <p><a href="{{ review.get_absolute_url }}">Permalink</a>
                 {% if user.is_authenticated %}
+                	Was this review helpful to you?
                     <form action="{{ review.get_absolute_url }}" method="post">
                         {% csrf_token %}               
                         <input type="hidden" name="action" value="vote_up"/>
-                        <input type="submit" value="I agree" /> 
-                    </form>
+                        <input type="submit" value="Yes" /> 
+                    </form> / 
                     <form  action="{{ review.get_absolute_url }}" method="post">
                         {% csrf_token %}                
                         <input type="hidden" name="action" value="vote_down"/>
-                        <input type="submit" value="I disagree" /> 
+                        <input type="submit" value="No" /> 
                     </form>
                 {% endif %}
                 {% if review.has_votes %}
-                    <p>{{ review.num_up_votes }} customer{{ review.num_up_votes|pluralize }} agreed.</p>
+                    <p>{{ review.num_up_votes }} customer{{ review.num_up_votes|pluralize }} found this review helpful.</p>
                 {% endif %}
             </div>
         {% endfor %}
@@ -120,7 +121,7 @@
     <h4>Related items</h4>
     <ul>
     {% for product in item.related_items.all %}
-        <li><a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a>
+        <li><a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a></li>
     {% endfor %}
     </ul>
 </div>
@@ -131,7 +132,7 @@
     <h4>Recommended items</h4>
     <ul>
     {% for product in item.recommended_items.all %}
-        <li><a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a>
+        <li><a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a></li>
     {% endfor %}
     </ul>
 </div>

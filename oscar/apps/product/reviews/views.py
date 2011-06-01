@@ -50,7 +50,8 @@ class CreateProductReviewView(CreateView):
     
     def get_success_url(self):
         return self.object.product.get_absolute_url()
-    
+
+
 class CreateReviewCompleteView(DetailView):
     template_name = "reviews/add_review_complete.html"
     context_object_name = 'review'
@@ -59,7 +60,7 @@ class CreateReviewCompleteView(DetailView):
     
     def get_context_data(self, **kwargs):
         context = super(ProductReviewDetailView, self).get_context_data(**kwargs)
-        context['item'] = get_object_or_404(self.product_model, pk=self.kwargs['item_id'])
+        context['item'] = get_object_or_404(self.product_model, pk=self.kwargs['item_pk'])
         return context    
 
 
@@ -75,7 +76,7 @@ class ProductReviewDetailView(DetailView, PostActionMixin):
     
     def get_context_data(self, **kwargs):
         context = super(ProductReviewDetailView, self).get_context_data(**kwargs)
-        context['item'] = get_object_or_404(self.product_model, pk=self.kwargs['item_id'])
+        context['item'] = get_object_or_404(self.product_model, pk=self.kwargs['item_pk'])
         return context
     
     def do_vote_up(self, review):
