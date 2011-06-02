@@ -138,7 +138,7 @@ class AbstractMerchandisingBlock(models.Model):
     description = models.TextField(null=True, blank=True)
     type = models.CharField(_("Type"), choices=BLOCK_TYPES, max_length=100)
     products = models.ManyToManyField('product.Item', through='MerchandisingBlockProduct', blank=True, null=True)
-    link_url = ExtendedURLField(max_length=128, null=True)
+    link_url = ExtendedURLField(max_length=128, blank=True, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
     
     class Meta:
