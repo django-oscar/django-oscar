@@ -8,7 +8,7 @@
 
 {% if reviews %}
 	<h4> Sort by: </h4>
-	<form action="{{ request.get_full_path }}" method="get">
+	<form action="." method="get">
         <select name="sort_by">
         	<option value="score">Score</option>
         	<option value="recency">Recency</option>
