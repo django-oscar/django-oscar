@@ -4,7 +4,7 @@
 
 <h3>All Reviews of {{ item.title }}</h3>
 <p>Read customer reviews on this product. If you have read this book, why not post your own review?</p>
-<p><a href="{% url products:reviews:add item_class_slug=item.item_class.slug item_slug=item.slug item_pk=item.id %}">Add a review</a></p>
+<p><a href="{% url products:reviews-add item_slug=item.slug item_pk=item.id %}">Add a review</a></p>
 
 {% if reviews %}
 	<h4> Sort by: </h4>
@@ -23,18 +23,9 @@
             <p>{{ review.date_created }}<p>
             <p>{{ review.body|linebreaks }}</p>
             <p><a href="{{ review.get_absolute_url }}">Permalink</a>
-            {% if user.is_authenticated %}
-                <form action="{{ review.get_absolute_url }}" method="post">
-                    {% csrf_token %}               
-                    <input type="hidden" name="action" value="vote_up"/>
-                    <input type="submit" value="I agree" /> 
-                </form>
-                <form  action="{{ review.get_absolute_url }}" method="post">
-                    {% csrf_token %}                
-                    <input type="hidden" name="action" value="vote_down"/>
-                    <input type="submit" value="I disagree" /> 
-                </form>
-            {% endif %}
+            
+			{% include 'reviews/_vote_bit.html' %}
+	
             {% if review.has_votes %}
                 <p>{{ review.num_up_votes }} customers agreed.</p>
             {% endif %}

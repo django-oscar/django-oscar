@@ -91,19 +91,9 @@
                 <p>{{ review.date_created }}<p>
                 <p>{{ review.body|linebreaks }}</p>
                 <p><a href="{{ review.get_absolute_url }}">Permalink</a>
-                {% if user.is_authenticated %}
-                	Was this review helpful to you?
-                    <form action="{{ review.get_absolute_url }}" method="post">
-                        {% csrf_token %}               
-                        <input type="hidden" name="action" value="vote_up"/>
-                        <input type="submit" value="Yes" /> 
-                    </form> / 
-                    <form  action="{{ review.get_absolute_url }}" method="post">
-                        {% csrf_token %}                
-                        <input type="hidden" name="action" value="vote_down"/>
-                        <input type="submit" value="No" /> 
-                    </form>
-                {% endif %}
+                
+				{% include 'reviews/_vote_bit.html' %}
+
                 {% if review.has_votes %}
                     <p>{{ review.num_up_votes }} customer{{ review.num_up_votes|pluralize }} found this review helpful.</p>
                 {% endif %}

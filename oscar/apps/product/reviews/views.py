@@ -3,9 +3,7 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView
 from django.db.models import Avg
 from django.contrib import messages
-
-from oscar.view.generic import PostActionMixin
-from oscar.apps.product.reviews.forms import SignedInUserProductReviewForm, AnonymousUserProductReviewForm
+from oscar.apps.product.reviews.forms import SignedInUserProductReviewForm, AnonymousUserProductReviewForm, VoteForm
 from django.db.models import get_model
 
 
@@ -64,7 +62,7 @@ class CreateReviewCompleteView(DetailView):
         return context    
 
 
-class ProductReviewDetailView(DetailView, PostActionMixin):
+class ProductReviewDetailView(DetailView):
     """
     Places each review on its own page
     """
@@ -79,24 +77,20 @@ class ProductReviewDetailView(DetailView, PostActionMixin):
         context['item'] = get_object_or_404(self.product_model, pk=self.kwargs['item_pk'])
         return context
     
-    def do_vote_up(self, review):
-        return self.vote_on_review(review, self.vote_model.UP)
-    
-    def do_vote_down(self, review):
-        return self.vote_on_review(review, self.vote_model.DOWN)   
-    
-    def vote_on_review(self, review, delta):
-        user = self.request.user
-        self.response = HttpResponseRedirect(review.product.get_absolute_url())
-        if review.user == user:
-            messages.info(self.request, "You cannot vote on your own reviews!")
+    def post(self, request, *args, **kwargs ):
+        review = self.get_object()
+        try:
+            vote = self.vote_model.objects.get(user=request.user, review=review)
+        except self.vote_model.DoesNotExist:
+            vote = self.vote_model(user=request.user, review=review)
+        form = VoteForm(request.POST,instance=vote)
+
+        if form.is_valid():
+            form.save()
+            messages.info(request, "Thanks for voting!")
         else:
-            try:
-                self.vote_model.objects.get(review=review, user=user)
-                messages.info(self.request, "You have already voted on this review!") 
-            except self.vote_model.DoesNotExist:
-                self.vote_model.objects.create(review=review, user=user, delta=delta)
-                messages.info(self.request, "Thanks for voting!")   
+            messages.info(request, "We couldn't process your vote")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER',review.get_absolute_url()))
 
     
 class ProductReviewListView(ListView):

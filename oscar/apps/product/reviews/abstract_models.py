@@ -4,6 +4,8 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import ValidationError
 from django.conf import settings
 
+from django.db.models import Sum, Count
+
 from oscar.apps.product.reviews.managers import (ApprovedReviewsManager, RecentReviewsManager, 
                                                  TopScoredReviewsManager, TopVotedReviewsManager)
 
@@ -91,10 +93,11 @@ class AbstractProductReview(models.Model):
         """Returns the total down votes"""
         return int((self.total_votes - self.delta_votes) / 2)
 
-    def update_totals(self, vote):
+    def update_totals(self):
         """Updates total and delta votes"""
-        self.total_votes += 1
-        self.delta_votes += vote.delta
+        result = self.votes.aggregate(score=Sum('delta'),total_votes=Count('id'))
+        self.total_votes = result['total_votes'] or 0
+        self.delta_votes = result['score'] or 0
         self.save()
         
     def get_reviewer_name(self):
@@ -132,5 +135,5 @@ class AbstractVote(models.Model):
         u"""
         Validates model and raises error if validation fails
         """
-        self.review.update_totals(self)
+        self.review.update_totals()
         super(AbstractVote, self).save(*args, **kwargs)
