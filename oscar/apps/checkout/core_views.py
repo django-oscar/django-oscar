@@ -31,18 +31,11 @@ class CheckoutView(object):
         self.request = request
         self.co_data = CheckoutSessionData(request)
         self.basket = request.basket
-        
+
         # Set up template context that is available to every view
-        method = self.co_data.shipping_method()
-        if method:
-            method.set_basket(self.basket)
+        self.set_template_context(self.basket)
         
-        self.context = {'basket': self.basket,
-                        'order_total': self.get_order_total(method),
-                        'shipping_addr': self.get_shipping_address()}
-        self.set_shipping_context(method)
-        self.set_payment_context()
-        
+        # Forward method
         if request.method == 'POST':
             response = self.handle_POST()
         elif request.method == 'GET':
@@ -50,6 +43,16 @@ class CheckoutView(object):
         else:
             response = HttpResponseBadRequest()
         return response
+    
+    def set_template_context(self, basket):
+        method = self.co_data.shipping_method()
+        if method:
+            method.set_basket(basket)
+        self.context = {'basket': basket,
+                        'order_total': self.get_order_totals(basket)[0],
+                        'shipping_addr': self.get_shipping_address()}
+        self.set_shipping_context(method)
+        self.set_payment_context()
     
     def set_shipping_context(self, method):
         if method:
@@ -69,9 +72,15 @@ class CheckoutView(object):
         """ 
         return self.get_success_response()
     
-    def get_order_total(self, shipping_method):
+    def get_order_totals(self, basket):
+        """
+        Returns the total for the order with and without tax (as a tuple)
+        """
         calc = OrderTotalCalculator(self.request)
-        return calc.order_total_incl_tax(self.basket, shipping_method)
+        shipping_method = self.get_shipping_method(basket)
+        total_incl_tax = calc.order_total_incl_tax(basket, shipping_method)
+        total_excl_tax = calc.order_total_excl_tax(basket, shipping_method)
+        return total_incl_tax, total_excl_tax
     
     def get_shipping_address(self):
         # Load address data into a blank address model
@@ -87,6 +96,13 @@ class CheckoutView(object):
                 # session data that refers to addresses that no longer exist
                 pass
         return None
+    
+    def get_shipping_method(self, basket):
+        u"""Returns the shipping method object"""
+        method = self.co_data.shipping_method()
+        if method:
+            method.set_basket(basket)
+        return method
     
     def get_success_response(self):
         u"""

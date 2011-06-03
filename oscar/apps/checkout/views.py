@@ -161,13 +161,13 @@ class PaymentDetailsView(CheckoutView):
         This method is designed to be overridden by subclasses which will
         validate the forms from the payment details page.  If the forms are valid
         then the method can call submit()."""
-        return self.submit()
+        return self.submit(self.basket)
     
-    def submit(self, **kwargs):
+    def submit(self, basket, **kwargs):
         # We generate the order number first as this will be used
         # in payment requests (ie before the order model has been 
         # created).
-        order_number = self.generate_order_number(self.basket)
+        order_number = self.generate_order_number(basket)
         logger.info(_("Order #%s: beginning submission process" % order_number))
         
         # We freeze the basket to prevent it being modified once the payment
@@ -175,14 +175,14 @@ class PaymentDetailsView(CheckoutView):
         # need to be "unfrozen".  We also store the basket ID in the session
         # so the it can be retrieved by multistage checkout processes.
         self.basket.freeze()
-        self.request.session['checkout_basket_id'] = self.basket.id
+        self.request.session['checkout_basket_id'] = basket.id
         
         # Handle payment.  Any payment problems should be handled by the 
         # handle_payment method raise an exception, which should be caught
         # within handle_POST and the appropriate forms redisplayed.
         try:
             pre_payment.send_robust(sender=self, view=self)
-            total_incl_tax, total_excl_tax = self.get_order_totals(self.basket)
+            total_incl_tax, total_excl_tax = self.get_order_totals(basket)
             self.handle_payment(order_number, total_incl_tax, **kwargs)
             post_payment.send_robust(sender=self, view=self)
         except RedirectRequiredException, e:
@@ -198,18 +198,17 @@ class PaymentDetailsView(CheckoutView):
             return self.handle_GET(error="A problem occured processing payment.")
         else:
             # If all is ok with payment, place order
-            return self.place_order(order_number, self.basket, total_incl_tax, total_excl_tax)
+            return self.place_order(order_number, basket, total_incl_tax, total_excl_tax)
     
-    def get_order_totals(self, basket):
+    def restore_frozen_basket(self):
         """
-        Returns the total for the order with and without tax (as a tuple)
+        Restores a frozen basket as the sole OPEN basket
         """
-        calc = OrderTotalCalculator(self.request)
-        shipping_method = self.get_shipping_method(basket)
-        total_incl_tax = calc.order_total_incl_tax(basket, shipping_method)
-        total_excl_tax = calc.order_total_excl_tax(basket, shipping_method)
-        return total_incl_tax, total_excl_tax
-        
+        self.request.basket.delete()
+        fzn_basket = Basket._default_manager.get(pk=self.request.session['checkout_basket_id'])
+        fzn_basket.unfreeze()
+        self.set_template_context(fzn_basket)
+    
     def place_order(self, order_number, basket, total_incl_tax=None, total_excl_tax=None): 
         """
         Place the order
@@ -302,12 +301,6 @@ class PaymentDetailsView(CheckoutView):
     
     def get_initial_order_status(self, basket):
         return None
-    
-    def get_shipping_method(self, basket):
-        u"""Returns the shipping method object"""
-        method = self.co_data.shipping_method()
-        method.set_basket(basket)
-        return method
     
     def get_shipping_address(self):
         addr_data = self.co_data.new_address_fields()
