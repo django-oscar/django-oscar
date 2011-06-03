@@ -206,8 +206,8 @@ class PaymentDetailsView(CheckoutView):
         Restores a frozen basket as the sole OPEN basket
         """
         fzn_basket = Basket._default_manager.get(pk=self.request.session['checkout_basket_id'])
-        fzn_basket.unfreeze()
-        fzn_basket.merge(request.basket)
+        fzn_basket.thaw()
+        fzn_basket.merge(self.request.basket)
         self.set_template_context(fzn_basket)
     
     def place_order(self, order_number, basket, total_incl_tax=None, total_excl_tax=None): 
