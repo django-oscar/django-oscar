@@ -175,21 +175,33 @@ class PaymentDetailsView(CheckoutView):
         # need to be "unfrozen".
         self.basket.freeze()
         
-        # Calculate totals
+        # Handle payment.  Any payment problems should be handled by the 
+        # handle_payment method raise an exception, which should be caught
+        # within handle_POST and the appropriate forms redisplayed.
+        pre_payment.send_robust(sender=self, view=self)
+        total_incl_tax, total_excl_tax = self.get_order_totals()
+        self.handle_payment(order_number, total_incl_tax, **kwargs)
+        post_payment.send_robust(sender=self, view=self)
+        
+        # If all is ok with payment, place order
+        return self.place_order(order_number, total_incl_tax, total_excl_tax)
+    
+    def get_order_totals(self):
+        """
+        Returns the total for the order with and without tax (as a tuple)
+        """
         calc = OrderTotalCalculator(self.request)
         shipping_method = self.get_shipping_method(self.basket)
         total_incl_tax = calc.order_total_incl_tax(self.basket, shipping_method)
         total_excl_tax = calc.order_total_excl_tax(self.basket, shipping_method)
+        return total_incl_tax, total_excl_tax
         
-        # Handle payment.  Any payment problems should be handled by the 
-        # _handle_payment method raise an exception, which should be caught
-        # within handle_POST and the appropriate forms redisplayed.
-        pre_payment.send_robust(sender=self, view=self)
-        self.handle_payment(order_number, total_incl_tax, **kwargs)
-        post_payment.send_robust(sender=self, view=self)
+    def place_order(self, order_number, total_incl_tax=None, total_excl_tax=None):    
         
-        # Everything is ok, we place the order and save the payment details 
-        order = self.place_order(self.basket, order_number, total_incl_tax, total_excl_tax)
+        if total_incl_tax is None or total_excl_tax is None:
+            total_incl_tax, total_excl_tax = self.get_order_totals()
+        
+        order = self.create_order_models(self.basket, order_number, total_incl_tax, total_excl_tax)
         self.save_payment_details(order)
         self.reset_checkout()
         
@@ -251,7 +263,7 @@ class PaymentDetailsView(CheckoutView):
         self.co_data.flush()
         ProgressChecker().all_steps_complete(self.request)
     
-    def place_order(self, basket, order_number, total_incl_tax, total_excl_tax):
+    def create_order_models(self, basket, order_number, total_incl_tax, total_excl_tax):
         u"""Writes the order out to the DB"""
         shipping_address = self.create_shipping_address()
         shipping_method = self.get_shipping_method(basket)
