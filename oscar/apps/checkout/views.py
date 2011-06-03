@@ -16,7 +16,6 @@ from django.core.mail import EmailMessage
 from django.views.generic import DetailView, TemplateView
 
 from oscar.core.loading import import_module
-
 import_module('checkout.forms', ['ShippingAddressForm'], locals())
 import_module('checkout.calculators', ['OrderTotalCalculator'], locals())
 import_module('checkout.utils', ['ProgressChecker', 'CheckoutSessionData'], locals())
@@ -27,6 +26,7 @@ import_module('order.utils', ['OrderNumberGenerator', 'OrderCreator'], locals())
 import_module('address.models', ['UserAddress'], locals())
 import_module('shipping.repository', ['Repository'], locals())
 import_module('customer.models', ['Email'], locals())
+import_module('payment.exceptions', ['RedirectRequiredException', 'UnableToTakePaymentException', 'PaymentException'], locals())
 
 logger = logging.getLogger('oscar.checkout')
 
@@ -178,13 +178,25 @@ class PaymentDetailsView(CheckoutView):
         # Handle payment.  Any payment problems should be handled by the 
         # handle_payment method raise an exception, which should be caught
         # within handle_POST and the appropriate forms redisplayed.
-        pre_payment.send_robust(sender=self, view=self)
-        total_incl_tax, total_excl_tax = self.get_order_totals()
-        self.handle_payment(order_number, total_incl_tax, **kwargs)
-        post_payment.send_robust(sender=self, view=self)
-        
-        # If all is ok with payment, place order
-        return self.place_order(order_number, total_incl_tax, total_excl_tax)
+        try:
+            pre_payment.send_robust(sender=self, view=self)
+            total_incl_tax, total_excl_tax = self.get_order_totals()
+            self.handle_payment(order_number, total_incl_tax, **kwargs)
+            post_payment.send_robust(sender=self, view=self)
+        except RedirectRequiredException, e:
+            # Redirect required (eg PayPal, 3DS)
+            return HttpResponseRedirect(e.url)
+        except UnableToTakePaymentException, e:
+            # Something went wrong with payment, need to show
+            # error to the user.  This type of exception is supposed
+            # to set a friendly error message.
+            return self.handle_GET(error=e.message)
+        except PaymentException:
+            # Something went wrong which wasn't anticipated.
+            return self.handle_GET(error="A problem occured processing payment.")
+        else:
+            # If all is ok with payment, place order
+            return self.place_order(order_number, total_incl_tax, total_excl_tax)
     
     def get_order_totals(self):
         """
@@ -376,8 +388,4 @@ class ThankYouView(DetailView):
     context_object_name = 'order'
     
     def get_object(self):
-        order = get_object_or_404(Order, pk=self.request.session['checkout_order_id'])
-        # Remove order number from session to ensure that the thank-you page is only 
-        # viewable once.
-        del self.request.session['checkout_order_id']
-        return order
+        return Order._default_manager.get(pk=self.request.session['checkout_order_id'])
