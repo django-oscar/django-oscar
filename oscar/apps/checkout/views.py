@@ -27,6 +27,7 @@ import_module('address.models', ['UserAddress'], locals())
 import_module('shipping.repository', ['Repository'], locals())
 import_module('customer.models', ['Email'], locals())
 import_module('payment.exceptions', ['RedirectRequiredException', 'UnableToTakePaymentException', 'PaymentException'], locals())
+import_module('basket.models', ['Basket'], locals())
 
 logger = logging.getLogger('oscar.checkout')
 
@@ -204,9 +205,9 @@ class PaymentDetailsView(CheckoutView):
         """
         Restores a frozen basket as the sole OPEN basket
         """
-        self.request.basket.delete()
         fzn_basket = Basket._default_manager.get(pk=self.request.session['checkout_basket_id'])
         fzn_basket.unfreeze()
+        fzn_basket.merge(request.basket)
         self.set_template_context(fzn_basket)
     
     def place_order(self, order_number, basket, total_incl_tax=None, total_excl_tax=None): 
