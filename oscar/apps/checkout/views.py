@@ -172,15 +172,17 @@ class PaymentDetailsView(CheckoutView):
         
         # We freeze the basket to prevent it being modified once the payment
         # process has started.  If your payment fails, then the basket will
-        # need to be "unfrozen".
+        # need to be "unfrozen".  We also store the basket ID in the session
+        # so the it can be retrieved by multistage checkout processes.
         self.basket.freeze()
+        self.request.session['checkout_basket_id'] = self.basket.id
         
         # Handle payment.  Any payment problems should be handled by the 
         # handle_payment method raise an exception, which should be caught
         # within handle_POST and the appropriate forms redisplayed.
         try:
             pre_payment.send_robust(sender=self, view=self)
-            total_incl_tax, total_excl_tax = self.get_order_totals()
+            total_incl_tax, total_excl_tax = self.get_order_totals(self.basket)
             self.handle_payment(order_number, total_incl_tax, **kwargs)
             post_payment.send_robust(sender=self, view=self)
         except RedirectRequiredException, e:
@@ -196,24 +198,30 @@ class PaymentDetailsView(CheckoutView):
             return self.handle_GET(error="A problem occured processing payment.")
         else:
             # If all is ok with payment, place order
-            return self.place_order(order_number, total_incl_tax, total_excl_tax)
+            return self.place_order(order_number, self.basket, total_incl_tax, total_excl_tax)
     
-    def get_order_totals(self):
+    def get_order_totals(self, basket):
         """
         Returns the total for the order with and without tax (as a tuple)
         """
         calc = OrderTotalCalculator(self.request)
-        shipping_method = self.get_shipping_method(self.basket)
-        total_incl_tax = calc.order_total_incl_tax(self.basket, shipping_method)
-        total_excl_tax = calc.order_total_excl_tax(self.basket, shipping_method)
+        shipping_method = self.get_shipping_method(basket)
+        total_incl_tax = calc.order_total_incl_tax(basket, shipping_method)
+        total_excl_tax = calc.order_total_excl_tax(basket, shipping_method)
         return total_incl_tax, total_excl_tax
         
-    def place_order(self, order_number, total_incl_tax=None, total_excl_tax=None):    
+    def place_order(self, order_number, basket, total_incl_tax=None, total_excl_tax=None): 
+        """
+        Place the order
         
+        We deliberately pass the basket in here as the one tied to the request
+        isn't necessarily the correct one to use in placing the order.  This can
+        happen when a basket gets frozen.
+        """   
         if total_incl_tax is None or total_excl_tax is None:
-            total_incl_tax, total_excl_tax = self.get_order_totals()
+            total_incl_tax, total_excl_tax = self.get_order_totals(basket)
         
-        order = self.create_order_models(self.basket, order_number, total_incl_tax, total_excl_tax)
+        order = self.create_order_models(basket, order_number, total_incl_tax, total_excl_tax)
         self.save_payment_details(order)
         self.reset_checkout()
         
@@ -273,6 +281,7 @@ class PaymentDetailsView(CheckoutView):
     def reset_checkout(self):
         u"""Reset any checkout session state"""
         self.co_data.flush()
+        self.request.session['checkout_basket_id'] = None
         ProgressChecker().all_steps_complete(self.request)
     
     def create_order_models(self, basket, order_number, total_incl_tax, total_excl_tax):

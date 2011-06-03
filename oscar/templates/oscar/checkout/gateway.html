@@ -9,7 +9,7 @@
     {% if is_anon_checkout_allowed %}
         <dl>
             <dt>
-                <a href="">Register</a> or <a href="{% url oscar-customer-login %}">log-in</a>
+                <a href="">Register</a> or <a href="{% url oscar-customer-login %}?url={% url oscar-checkout-index %}">log-in</a>
             </dt>
             <dd>
                 <p>Logging in now will give you access to your address book and ensure your
@@ -24,7 +24,7 @@
             </dd>
         </dl>
     {% else %}
-        <p>You must <a href="">register</a> or <a href="{% url oscar-customer-login %}">log-in</a> before you can checkout.</p>
+        <p>You must <a href="">register</a> or <a href="{% url oscar-customer-login %}?url={% url oscar-checkout-index %}">log-in</a> before you can checkout.</p>
     {% endif %}
 {% endblock content %}
 
