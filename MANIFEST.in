@@ -1,0 +1,7 @@
+include AUTHORS
+include LICENSE
+include README.rst
+include MANIFEST.in
+recursive-include docs/source *.rst
+recursive-include oscar *
+recursive-include examples *
