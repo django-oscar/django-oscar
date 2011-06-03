@@ -18,7 +18,7 @@ class AbstractSource(models.Model):
     order = models.ForeignKey('order.Order', related_name='sources')
     type = models.ForeignKey('payment.SourceType')
     currency = models.CharField(max_length=12, default=settings.OSCAR_DEFAULT_CURRENCY)
-    allocation = models.DecimalField(decimal_places=2, max_digits=12)
+    amount_allocated = models.DecimalField(decimal_places=2, max_digits=12)
     amount_debited = models.DecimalField(decimal_places=2, max_digits=12, default=Decimal('0.00'))
     reference = models.CharField(max_length=128, blank=True, null=True)
     
@@ -30,6 +30,9 @@ class AbstractSource(models.Model):
         if self.reference:
             description += " (reference: %s)" % self.reference
         return description
+    
+    def balance(self):
+        return self.amount_allocated - self.amount_debited
     
     
 class AbstractSourceType(models.Model):
