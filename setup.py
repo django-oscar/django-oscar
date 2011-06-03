@@ -19,5 +19,5 @@ setup(name='django-oscar',
                    'Intended Audience :: Developers',
                    'License :: OSI Approved :: BSD License',
                    'Operating System :: Unix',
-                   'Programming Language :: Python',
+                   'Programming Language :: Python']
       )
