@@ -37,14 +37,14 @@ class BasketViewsTest(unittest.TestCase):
         self.client = Client()
     
     def test_empty_basket_view(self):
-        url = reverse('oscar-basket')
+        url = reverse('basket')
         response = self.client.get(url)
         self.assertEquals(200, response.status_code)
         self.assertEquals(0, response.context['basket'].num_lines)
         
     def test_anonymous_add_to_basket_creates_cookie(self):
         dummy_product = create_product()
-        url = reverse('oscar-basket')
+        url = reverse('basket-add')
         post_params = {'product_id': dummy_product.id,
                        'action': 'add',
                        'quantity': 1}

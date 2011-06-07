@@ -1,9 +1,7 @@
 from django import template
 from django.db.models import get_model
 
-from oscar.core.loading import import_module
-basket_forms = import_module('basket.forms', ['FormFactory'])
-
+from oscar.apps.basket.forms import AddToBasketForm
 register = template.Library()
 product_model = get_model('product','item')
 
@@ -32,6 +30,8 @@ class BasketFormNode(template.Node):
             return ''
         
         if isinstance(product, product_model):
-            factory = basket_forms.FormFactory()
-            context[self.form_var] = factory.create(product)
+            initial = {
+                'product_id': product.id,
+            }
+            context[self.form_var] = AddToBasketForm(instance=product,initial=initial)
         return ''

@@ -66,7 +66,7 @@
 
 {% basket_form item as basket_form %}
 
-<form action="{% url oscar-basket %}" method="post">
+<form action="{% url basket-add %}" method="post">
     {% csrf_token %}
     {{ basket_form.as_p }}
     <input type="submit" value="Add to basket" />

@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% load currency_filters %}
+
+{% block header %}
+<h2>Saved Basket</h2>
+{% endblock header %}
+
+
+{% block content %}
+
+{% for item in saved_items %}
+<p>{{ item }}</p>
+{% endfor %}
+
+
+{% endblock content %}
+

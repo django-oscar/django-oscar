@@ -25,38 +25,74 @@
 				<th>Tax</th>
 				<th>Line Price Excl. Tax</th>
 				<th>Line Price Incl. Tax</th>
-				<th>Save for later&hellip;</th>				
+				<th>Save for later&hellip;</th>
+				<th>Delete?</th>				
 			</tr>
 		</thead>
 		<tbody>
 			{% for form in formset %}
 			<tr>
-				<td>{{ form.id }}<a href="{{ form.instance.get_absolute_url }}">{{ form.instance.description }}</a></td>
-				<td>{{ form.instance.stockrecord.availability }}</td>
+				<td>{{ form.id }}<a href="{{ form.instance.product.get_absolute_url }}">{{ form.instance.description }}</a></td>
+				<td>{{ form.instance.product.stockrecord.availability }}</td>
 				<td>{{ form.quantity }}</td>
 		        <td>{{ form.instance.unit_price_excl_tax|currency }}</td>
 		        <td>{{ form.instance.unit_tax|currency }}</td>
 		        <td>{{ form.instance.line_price_excl_tax|currency }}</td>
 		        <td>{{ form.instance.line_price_incl_tax|currency }}</td>
 				<td>{{ form.save_for_later }}</td>
+				<td>{{ form.DELETE }}</td>
 			</tr>
 			{% endfor %}
+			{% for discount in basket.discounts %}
+		    <tr>
+		        <td colspan="6">{{ discount.name }}</td>
+		        <td colspan="3">-{{ discount.discount|currency }}</td>
+		    </tr>
+		    {% endfor %}
+		    <tr>
+		        <td colspan="5">Total</td>
+		        <td>{{ request.basket.total_excl_tax|currency }}</td>
+		        <td colspan="3">{{ basket.total_incl_tax|currency }}</td>
+		    </tr>
 		</tbody>
 	</table>
 	
 
-	<input type="submit" value="Save Changes" />
+	<input type="submit" value="Apply Changes" />
 
 </form>
+
+<h4>Basket vouchers</h4>
+<ul>
+{% for voucher in basket.vouchers.all %}
+    <li>
+        <form action="." method="POST">
+            {% csrf_token %}
+            {{ voucher.name }} ({{ voucher.code }})
+            <input type="hidden" name="action" value="remove_voucher" />
+            <input type="hidden" name="voucher_code" value="{{ voucher.code }}" />
+            <input type="submit" value="Remove" />
+        </form>
+    </li>
+{% endfor %}
+</ul>
+
+<form action="{% url basket-vouchers-add %}" method="post">
+    {% csrf_token %}
+	{{ voucher_form }}
+    <input type="submit" value="Add voucher" />
+</form>
+
 
 {% if saved_formset %}
 
 <h3>To buy later</h3>
 
-<form action="{% url oscar-basket-saved %}" method="post">
+<form action="." method="post">
 	
 	{% csrf_token %}
 	
+
 	{{ saved_formset.management_form }}
 	
 	<table>
@@ -73,7 +109,7 @@
 		<tbody>
 			{% for form in saved_formset %}
 			<tr>
-				<td>{{ form.id }}<a href="{{ form.instance.get_absolute_url }}">{{ form.instance.description }}</a></td>
+				<td>{{ form.id }}<a href="{{ form.instance.product.get_absolute_url }}">{{ form.instance.description }}</a></td>
 		        <td>{{ form.instance.unit_price_excl_tax|currency }}</td>
 		        <td>{{ form.instance.unit_tax|currency }}</td>
 		        <td>{{ form.instance.line_price_excl_tax|currency }}</td>
@@ -83,9 +119,10 @@
 			{% endfor %}
 		</tbody>
 	</table>
+
 	
 
-	<input type="submit" value="Save Changes" />
+	<input type="submit" value="Apply Changes" />
 
 </form>
 
