@@ -15,10 +15,8 @@
             <input type="hidden" name="address_id" value="{{ address.id }}" />
             <input type="submit" value="Ship to this address" />
         </form>
-        <form action="{% url oscar-checkout-shipping-address %}" method="post">
+        <form action="{% url oscar-checkout-shipping-address-delete address.id %}" method="post">
             {% csrf_token %}
-            <input type="hidden" name="action" value="delete" />
-            <input type="hidden" name="address_id" value="{{ address.id }}" />
             <input type="submit" value="Delete from address book" />
         </form>
     </li>
@@ -33,5 +31,7 @@
     {{ form.as_p }}
     <p><input type="submit" value="Save shipping address" /></p>
 </form>
+
+<p><a href="{% url oscar-checkout-user-address-create %}">Add a new address to your address book</a>.</p>
 
 {% endblock shipping_address %}

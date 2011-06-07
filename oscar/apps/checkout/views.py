@@ -13,7 +13,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext as _
 from django.template.response import TemplateResponse
 from django.core.mail import EmailMessage
-from django.views.generic import DetailView, TemplateView
+from django.views.generic import DetailView, TemplateView, FormView, DeleteView, UpdateView, CreateView
 
 from oscar.core.loading import import_module
 import_module('checkout.forms', ['ShippingAddressForm'], locals())
@@ -29,10 +29,17 @@ import_module('customer.models', ['Email'], locals())
 import_module('payment.exceptions', ['RedirectRequiredException', 'UnableToTakePaymentException', 'PaymentException'], locals())
 import_module('basket.models', ['Basket'], locals())
 
+from oscar.apps.address.forms import UserAddressForm
+
 logger = logging.getLogger('oscar.checkout')
 
 
 class IndexView(TemplateView):
+    """
+    First page of the checkout.  If the user is signed in then we forward
+    straight onto the next step.  Otherwise, we provide options to login, register and
+    (if the option is enabled) proceed anonymously.
+    """
     template_name = 'oscar/checkout/gateway.html'
     
     def get(self, request, *args, **kwargs):
@@ -43,16 +50,36 @@ class IndexView(TemplateView):
     def get_context_data(self, **kwargs):
         return {'is_anon_checkout_allowed': getattr(settings, 'OSCAR_ALLOW_ANON_CHECKOUT', False)}
 
+# ================
+# SHIPPING ADDRESS
+# ================
 
-class ShippingAddressView(CheckoutView):
-    template_file = 'oscar/checkout/shipping_address.html'
+class ShippingAddressView(FormView):
+    """
+    View for determining the shipping address for checkout.
+    """
     
-    def handle_POST(self):
+    template_name = 'oscar/checkout/shipping_address.html'
+    form_class = ShippingAddressForm
+    
+    def get_initial(self):
+        co_data = CheckoutSessionData(self.request)
+        return co_data.new_address_fields()
+    
+    def get_context_data(self, **kwargs):
+        if self.request.user.is_authenticated():
+            # Look up address book data
+            kwargs['addresses'] = UserAddress._default_manager.filter(user=self.request.user)
+        return kwargs
+    
+    def post(self, request, *args, **kwargs):
+        # Check if a shipping address was selected directly (eg no form was filled in)
         if self.request.user.is_authenticated and 'address_id' in self.request.POST:
             address = UserAddress._default_manager.get(pk=self.request.POST['address_id'])
             if 'action' in self.request.POST and self.request.POST['action'] == 'ship_to':
                 # User has selected a previous address to ship to
-                self.co_data.ship_to_user_address(address)
+                co_data = CheckoutSessionData(self.request)
+                co_data.ship_to_user_address(address)
                 return self.get_success_response()
             elif 'action' in self.request.POST and self.request.POST['action'] == 'delete':
                 address.delete()
@@ -61,28 +88,55 @@ class ShippingAddressView(CheckoutView):
             else:
                 return HttpResponseBadRequest()
         else:
-            form = ShippingAddressForm(self.request.POST)
-            if form.is_valid():
-                # Address data is valid - store in session and redirect to next step.
-                self.co_data.ship_to_new_address(form.clean())
-                return self.get_success_response()
-            return self.handle_GET(form)
-        
-    def handle_GET(self, form=None):
-        if not form:
-            addr_fields = self.co_data.new_address_fields()
-            if addr_fields:
-                form = ShippingAddressForm(addr_fields)
-            else:
-                form = ShippingAddressForm()
-        self.context['form'] = form
+            return super(ShippingAddressView, self).post(request, *args, **kwargs)
     
-        # Look up address book data
-        if self.request.user.is_authenticated():
-            self.context['addresses'] = UserAddress._default_manager.filter(user=self.request.user)
-        
-        return TemplateResponse(self.request, self.template_file, self.context)
+    def form_valid(self, form):
+        co_data = CheckoutSessionData(self.request)
+        co_data.ship_to_new_address(form.clean())
+        return super(ShippingAddressView, self).form_valid(form)
     
+    def get_success_url(self):
+        return reverse('oscar-checkout-shipping-method')
+    
+    
+class UserAddressDeleteView(DeleteView):
+    """
+    Standard generic view for deleting a shipping address.
+    """
+    model = UserAddressForm
+    
+    def get_success_url(self):
+        messages.info(self.request, _("Address deleted"))
+        return reverse('oscar-checkout-shipping-address')
+    
+
+class UserAddressCreateView(CreateView):
+    """
+    Standard generic view for adding a shipping address
+    """
+    template_name = 'oscar/checkout/user_address_form.html'
+    form_class = UserAddressForm
+    
+    def get_success_url(self):
+        messages.info(self.request, _("Address saved"))
+        return reverse('oscar-checkout-shipping-address')
+    
+    
+class UserAddressUpdateView(UpdateView):
+    """
+    Standard generic view for adding a shipping address
+    """
+    template_name = 'oscar/checkout/user_address_form.html'
+    form_class = UserAddressForm
+    
+    def get_success_url(self):
+        messages.info(self.request, _("Address saved"))
+        return reverse('oscar-checkout-shipping-address')
+    
+    
+# ===============    
+# Shipping method
+# ===============    
     
 class ShippingMethodView(CheckoutView):
     u"""

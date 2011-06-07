@@ -2,14 +2,18 @@ from django.conf.urls.defaults import *
 
 from oscar.core.decorators import class_based_view
 from oscar.core.loading import import_module
-
-import_module('checkout.views', ['IndexView', 'ShippingAddressView',
-                                 'ShippingMethodView', 'PaymentMethodView', 'OrderPreviewView',
+import_module('checkout.views', ['IndexView', 'ShippingAddressView', 'UserAddressDeleteView', 'UserAddressCreateView', 
+                                 'UserAddressUpdateView', 'ShippingMethodView', 'PaymentMethodView', 'OrderPreviewView',
                                  'PaymentDetailsView', 'ThankYouView'], locals())
 
 urlpatterns = patterns('oscar.checkout.views',
     url(r'^$', IndexView.as_view(), name='oscar-checkout-index'),
-    url(r'shipping-address/$', class_based_view(ShippingAddressView), name='oscar-checkout-shipping-address'),
+    # Shipping/user address views
+    url(r'shipping-address/$', ShippingAddressView.as_view(), name='oscar-checkout-shipping-address'),
+    url(r'user-address/create/$', UserAddressCreateView.as_view(), name='oscar-checkout-user-address-create'),
+    url(r'user-address/edit/(?P<pk>\d+)/$', UserAddressUpdateView.as_view(), name='oscar-checkout-user-address-update'),
+    url(r'user-address/delete/(?P<pk>\d+)/$', UserAddressDeleteView.as_view(), name='oscar-checkout-user-address-delete'),
+    # Shipping method views
     url(r'shipping-method/$', class_based_view(ShippingMethodView), name='oscar-checkout-shipping-method'),
     url(r'payment-method/$', class_based_view(PaymentMethodView), name='oscar-checkout-payment-method'),
     url(r'preview/$', class_based_view(OrderPreviewView), name='oscar-checkout-preview'),
