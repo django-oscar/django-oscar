@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.utils.translation import ugettext as _
 from oscar.apps.address.forms import UserAddressForm
-from oscar.view.generic import PostActionMixin
+from oscar.views.generic import PostActionMixin
 
 from django.db.models import get_model
 
