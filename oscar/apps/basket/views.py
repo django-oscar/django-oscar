@@ -8,7 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.template.response import TemplateResponse
 from django.views.generic import DetailView
 
-from oscar.view.generic import PostActionMixin
+from oscar.views.generic import PostActionMixin
 from oscar.core.loading import import_module
 
 import_module('basket.models', ['Basket', 'Line', 'InvalidBasketLineError'], locals())

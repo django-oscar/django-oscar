@@ -14,7 +14,7 @@ from django.db.models import Q
 from django.contrib.comments.views.moderation import delete
 
 from oscar.core.loading import import_module
-from oscar.view.generic import PostActionMixin
+from oscar.views.generic import PostActionMixin
 import_module('order.models', ['Order', 'Line', 'ShippingEvent', 'ShippingEventQuantity', 
                                'ShippingEventType', 'PaymentEvent', 'PaymentEventType', 'OrderNote'], locals())
 import_module('order_management.forms', ['SimpleSearch'], locals())

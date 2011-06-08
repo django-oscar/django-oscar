@@ -11,7 +11,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
 from django.forms import ModelForm, CharField, EmailField, BaseForm, URLField
 
-from oscar.view.generic import PostActionMixin
+from oscar.views.generic import PostActionMixin
 from oscar.core.loading import import_module
 import_module('product.models', ['Item', 'ItemClass'], locals())
 import_module('basket.forms', ['FormFactory'], locals())

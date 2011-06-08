@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.utils.translation import ugettext as _
 from django.template.response import TemplateResponse
 
-from oscar.view.generic import PostActionMixin
+from oscar.views.generic import PostActionMixin
 from oscar.apps.address.forms import UserAddressForm
 from oscar.core.loading import import_module
 import_module('address.models', ['UserAddress'], locals())
