@@ -4,7 +4,7 @@ from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ValidationError
 
-from oscar.core.fields import ExtendedURLField
+from oscar.forms.fields import ExtendedURLField
 
 # Settings-controlled stuff
 BANNER_FOLDER = settings.OSCAR_BANNER_FOLDER
