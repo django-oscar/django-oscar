@@ -1,18 +1,19 @@
 from decimal import Decimal as D
 
-from django.utils import unittest
+from django.test import TestCase
 from django.test.client import Client
 from django.core.urlresolvers import reverse
 
 from oscar.test.helpers import create_product
 
         
-class CheckoutViewsTest(unittest.TestCase):
+class CheckoutViewsTest(TestCase):
     
     fixtures = ['example-shipping-charges.json']
     
     def setUp(self):
         self.client = Client()
+        super(CheckoutViewsTest, self).setUp()
     
     def test_anonymous_checkout(self):
         

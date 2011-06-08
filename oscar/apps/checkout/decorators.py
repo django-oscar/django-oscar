@@ -23,13 +23,17 @@ def prev_steps_must_be_complete(view_fn):
         return view_fn(self, request, *args, **kwargs)
     return _view_wrapper
 
+
 def basket_required(view_fn):
     """
     Decorator for checking that the user has a non-empty basket
+    or has a frozen one in the session
     """
     def _view_wrapper(self, request, *args, **kwargs):
-        if request.basket.is_empty:
+        if request.basket.is_empty and not 'checkout_basket_id' in request.session:
             messages.error(request, "You must add some products to your basket before checking out")
             return HttpResponseRedirect(reverse('oscar-basket'))
         return view_fn(self, request, *args, **kwargs)
     return _view_wrapper
+
+

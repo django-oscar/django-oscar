@@ -1,6 +1,3 @@
-"""
-Core address objects
-"""
 import zlib
 
 from django.db import models
@@ -8,7 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class AbstractAddress(models.Model):
-    u"""
+    """
     Superclass address object
 
     This is subclassed and extended to provide models for 
@@ -29,10 +26,14 @@ class AbstractAddress(models.Model):
     title = models.CharField(_("Title"), max_length=64, choices=TITLE_CHOICES, blank=True)
     first_name = models.CharField(_("First name"), max_length=255, blank=True)
     last_name = models.CharField(_("Last name"), max_length=255)
+    
+    # We use quite a few lines of an address as they are often quite long and 
+    # it's easier to just hide the unnecessary ones than add extra ones.
     line1 = models.CharField(_("First line of address"), max_length=255)
     line2 = models.CharField(_("Second line of address"), max_length=255, blank=True)
-    line3 = models.CharField(_("City"), max_length=255, blank=True)
-    line4 = models.CharField(_("State/County"), max_length=255, blank=True)
+    line3 = models.CharField(_("Third line of address"), max_length=255, blank=True)
+    line4 = models.CharField(_("City"), max_length=255, blank=True)
+    state = models.CharField(_("State/County"), max_length=255, blank=True)
     postcode = models.CharField(_("Post/Zip-code"), max_length=64)
     country = models.ForeignKey('address.Country')
     
@@ -44,16 +45,13 @@ class AbstractAddress(models.Model):
 
     def save(self, *args, **kwargs):
         self._clean_fields()
-        
-        # Updated the search_text
-        search_fields = filter(lambda x: x, [self.first_name, self.last_name, 
-                                      self.line1, self.line2, self.line3, self.line4, 
-                                      self.postcode, self.country.name]) 
-        self.search_text = ' '.join(search_fields) 
+        self._update_search_text()
         super(AbstractAddress, self).save(*args, **kwargs)
         
     def _clean_fields(self):
-        u"""Clean up fields"""
+        """
+        Clean up fields
+        """
         self.first_name = self.first_name.strip()
         for field in ['first_name', 'last_name', 'line1', 'line2', 'line3', 'line4', 'postcode']:
             self.__dict__[field] = self.__dict__[field].strip()
@@ -61,17 +59,23 @@ class AbstractAddress(models.Model):
         # Ensure postcodes are always uppercase
         if self.postcode:
             self.postcode = self.postcode.upper()
+            
+    def _update_search_text(self):
+        search_fields = filter(lambda x: x, [self.first_name, self.last_name, 
+                                             self.line1, self.line2, self.line3, self.line4, self.state,
+                                             self.postcode, self.country.name]) 
+        self.search_text = ' '.join(search_fields) 
         
     @property    
     def summary(self):
-        u"""
+        """
         Returns a single string summary of the address,
         separating fields using commas.
         """
         return u", ".join(self.active_address_fields())    
         
     def populate_alternative_model(self, address_model):
-        u"""
+        """
         For populating an address model using the matching fields
         from this one.
         
@@ -107,15 +111,17 @@ class AbstractAddress(models.Model):
 
 
 class AbstractCountry(models.Model):
-    u"""International Organization for Standardization (ISO) 3166-1 Country list"""
+    """
+    International Organization for Standardization (ISO) 3166-1 Country list.
+    """
     iso_3166_1_a2 = models.CharField(_('ISO 3166-1 alpha-2'), max_length=2, primary_key=True)
-    iso_3166_1_a3 = models.CharField(_('ISO 3166-1 alpha-3'), max_length=3, null=True)
-    iso_3166_1_numeric = models.PositiveSmallIntegerField(_('ISO 3166-1 numeric'), null=True)
+    iso_3166_1_a3 = models.CharField(_('ISO 3166-1 alpha-3'), max_length=3, null=True, db_index=True)
+    iso_3166_1_numeric = models.PositiveSmallIntegerField(_('ISO 3166-1 numeric'), null=True, db_index=True)
     name = models.CharField(_('Official name (CAPS)'), max_length=128)
     printable_name = models.CharField(_('Country name'), max_length=128)
     
-    is_highlighted = models.BooleanField(default=False)
-    is_shipping_country = models.BooleanField(default=False)
+    is_highlighted = models.BooleanField(default=False, db_index=True)
+    is_shipping_country = models.BooleanField(default=False, db_index=True)
     
     class Meta:
         abstract = True
@@ -143,7 +149,7 @@ class AbstractShippingAddress(AbstractAddress):
         
         
 class AbstractUserAddress(AbstractShippingAddress):
-    u"""
+    """
     A user address which forms an "AddressBook" for a user.
     
     We use a separate model to shipping and billing (even though there will be
@@ -154,8 +160,9 @@ class AbstractUserAddress(AbstractShippingAddress):
     """
     user = models.ForeignKey('auth.User', related_name='addresses')
     
-    # Customers can set which is their default billing address
-    default_for_billing = models.BooleanField(default=False)
+    # Customers can set defaults
+    is_default_for_shipping = models.BooleanField(default=False)
+    is_default_for_billing = models.BooleanField(default=False)
     
     # We keep track of the number of times an address has been used
     # as a shipping address so we can show the most popular ones 
@@ -186,7 +193,6 @@ class AbstractUserAddress(AbstractShippingAddress):
 
 
 class AbstractBillingAddress(AbstractAddress):
-    u"""Billing address"""
     
     class Meta:
         abstract = True

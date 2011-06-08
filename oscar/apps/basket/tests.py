@@ -3,7 +3,16 @@ from django.test.client import Client
 from django.core.urlresolvers import reverse
 
 from oscar.apps.basket.models import Basket, Line 
-from oscar.test.helpers import create_product
+from oscar.test.helpers import create_product, TwillTestCase
+
+
+class ViewTest(TwillTestCase):
+
+    def test_for_smoke(self):
+        self.visit('oscar-basket')
+        self.assertResponseCodeIs(200)
+        self.assertPageContains('Basket')
+        self.assertPageTitleMatches('Oscar')
 
 
 class BasketModelTest(unittest.TestCase):

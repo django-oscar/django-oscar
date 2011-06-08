@@ -27,7 +27,7 @@ class OrderCreator(object):
     """
     
     def place_order(self, user, basket, shipping_address, shipping_method, 
-                      billing_address, total_incl_tax, total_excl_tax, order_number=None):
+                      billing_address, total_incl_tax, total_excl_tax, order_number=None, status=None):
         u"""
         Placing an order involves creating all the relevant models based on the
         basket and session data.
@@ -37,7 +37,7 @@ class OrderCreator(object):
             order_number = generator.order_number(basket)
         order = self._create_order_model(user, basket, shipping_address, 
                                          shipping_method, billing_address, total_incl_tax, 
-                                         total_excl_tax, order_number)
+                                         total_excl_tax, order_number, status)
         for line in basket.all_lines():
             self._create_line_models(order, line)
             self._update_stock_records(line)
@@ -54,7 +54,7 @@ class OrderCreator(object):
         return order
         
     def _create_order_model(self, user, basket, shipping_address, shipping_method, 
-                               billing_address, total_incl_tax, total_excl_tax, order_number):
+                               billing_address, total_incl_tax, total_excl_tax, order_number, status):
         u"""Creates an order model."""
         order_data = {'basket': basket,
                       'number': order_number,
@@ -69,6 +69,8 @@ class OrderCreator(object):
             order_data['billing_address'] = billing_address
         if user.is_authenticated():
             order_data['user_id'] = user.id
+        if status:
+            order_data['status'] = status
         order = Order(**order_data)
         order.save()
         return order

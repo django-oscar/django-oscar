@@ -1,12 +1,13 @@
 from decimal import Decimal
 
-from django.contrib.auth.models import User
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext as _
+from django.conf import settings
+
 
 class AbstractSource(models.Model):
-    u"""
+    """
     A source of payment for an order.  
     
     This is normally a credit card which has been pre-authed for the order
@@ -16,7 +17,8 @@ class AbstractSource(models.Model):
     """
     order = models.ForeignKey('order.Order', related_name='sources')
     type = models.ForeignKey('payment.SourceType')
-    allocation = models.DecimalField(decimal_places=2, max_digits=12)
+    currency = models.CharField(max_length=12, default=settings.OSCAR_DEFAULT_CURRENCY)
+    amount_allocated = models.DecimalField(decimal_places=2, max_digits=12)
     amount_debited = models.DecimalField(decimal_places=2, max_digits=12, default=Decimal('0.00'))
     reference = models.CharField(max_length=128, blank=True, null=True)
     
@@ -24,22 +26,25 @@ class AbstractSource(models.Model):
         abstract = True
 
     def __unicode__(self):
-        description = "Allocation of %.2f from type %s" % (self.allocation, self.type)
+        description = "Allocation of %.2f from type %s" % (self.amount_allocated, self.type)
         if self.reference:
             description += " (reference: %s)" % self.reference
         return description
     
+    def balance(self):
+        return self.amount_allocated - self.amount_debited
+    
     
 class AbstractSourceType(models.Model):
-    u"""
+    """
     A type of payment source.
     
     This could be an external partner like PayPal or DataCash,
     or an internal source such as a managed account.i
     """
     name = models.CharField(max_length=128)
-    code = models.SlugField(max_length=128, help_text="""This is used within
-        forms to identify this source type""")
+    code = models.SlugField(max_length=128, help_text=_("""This is used within
+        forms to identify this source type"""))
 
     class Meta:
         abstract = True
@@ -54,7 +59,7 @@ class AbstractSourceType(models.Model):
     
 
 class AbstractTransaction(models.Model):
-    u"""
+    """
     A transaction for payment sources which need a secondary 'transaction' to actually take the money
     
     This applies mainly to credit card sources which can be a pre-auth for the money.  A 'complete'
@@ -91,4 +96,4 @@ class AbstractBankcard(models.Model):
         super(AbstractBankcard, self).save(*args, **kwargs)    
         
     def _get_obfuscated_number(self):
-        return "XXXX-XXXX-XXXX-%s" % self.number[-4:]
+        return u"XXXX-XXXX-XXXX-%s" % self.number[-4:]

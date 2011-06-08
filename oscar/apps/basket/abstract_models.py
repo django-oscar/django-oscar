@@ -123,6 +123,13 @@ class AbstractBasket(models.Model):
         """
         self.status = FROZEN
         self.save()
+        
+    def thaw(self):
+        """
+        Unfreezes a basket so it can be modified again
+        """
+        self.status = OPEN
+        self.save()    
     
     def set_as_submitted(self):
         u"""Mark this basket as submitted."""

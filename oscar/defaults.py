@@ -17,6 +17,10 @@ OSCAR_POD_FOLDER = 'images/promotions/pods'
 # Search settings
 OSCAR_SEARCH_SUGGEST_LIMIT = 10
 
+# Checkout
+OSCAR_ALLOW_ANON_CHECKOUT = False
+
+# Partners
 OSCAR_PARTNER_WRAPPERS = {}
 
 # Promotions
