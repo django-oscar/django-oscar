@@ -56,7 +56,7 @@
         <td>{{ order_total|currency }}</td>
     </tr>
 </table>
-<a href="{% url oscar-basket %}">Edit order contents</a>
+<a href="{% url basket:summary %}">Edit order contents</a>
 {% endblock order_contents %}
 
 <hr />
