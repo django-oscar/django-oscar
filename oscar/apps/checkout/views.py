@@ -24,13 +24,14 @@ import_module('checkout.core_views', ['CheckoutView'], locals())
 import_module('order.models', ['Order', 'ShippingAddress', 'CommunicationEventType', 'CommunicationEvent'], locals())
 import_module('order.utils', ['OrderNumberGenerator', 'OrderCreator'], locals())
 import_module('address.models', ['UserAddress'], locals())
+import_module('address.forms', ['UserAddressForm'], locals())
 import_module('shipping.repository', ['Repository'], locals())
 import_module('customer.models', ['Email'], locals())
-import_module('payment.exceptions', ['RedirectRequiredException', 'UnableToTakePaymentException', 'PaymentException'], locals())
+import_module('payment.exceptions', ['RedirectRequiredException', 'UnableToTakePaymentException', 
+                                     'PaymentException'], locals())
 import_module('basket.models', ['Basket'], locals())
 
-from oscar.apps.address.forms import UserAddressForm
-
+# Standard logger for checkout events
 logger = logging.getLogger('oscar.checkout')
 
 
@@ -49,6 +50,7 @@ class IndexView(TemplateView):
     
     def get_context_data(self, **kwargs):
         return {'is_anon_checkout_allowed': getattr(settings, 'OSCAR_ALLOW_ANON_CHECKOUT', False)}
+
 
 # ================
 # SHIPPING ADDRESS
@@ -110,9 +112,9 @@ class ShippingAddressView(FormView):
 
 class UserAddressCreateView(CreateView):
     """
-    Standard generic view for adding a USER address to the user's addressbook.
+    Add a USER address to the user's addressbook.
 
-    This is not the same as creating a shipping address, although if used for the order,
+    This is not the same as creating a SHIPPING Address, although if used for the order,
     it will be converted into a shipping address at submission-time.
     """
     template_name = 'oscar/checkout/user_address_form.html'
@@ -127,17 +129,17 @@ class UserAddressCreateView(CreateView):
         self.object = form.save(commit=False)
         self.object.user = self.request.user
         self.object.save()
-        return HttpResponseRedirect(self.get_success_url())
+        return self.get_success_response()
 
-    def get_success_url(self):
+    def get_success_response(self):
         messages.info(self.request, _("Address saved"))
         # We redirect back to the shipping address page
-        return reverse('oscar-checkout-shipping-address')
+        return HttpResponseRedirect(reverse('oscar-checkout-shipping-address'))
     
     
 class UserAddressUpdateView(UpdateView):
     """
-    Standard generic view for adding a shipping address
+    Update a user address
     """
     template_name = 'oscar/checkout/user_address_form.html'
     form_class = UserAddressForm
@@ -157,7 +159,7 @@ class UserAddressUpdateView(UpdateView):
     
 class UserAddressDeleteView(DeleteView):
     """
-    Standard generic view for deleting a shipping address.
+    Delete an address from a user's addressbook.
     """
 
     def get_queryset(self):
@@ -172,38 +174,68 @@ class UserAddressDeleteView(DeleteView):
 # Shipping method
 # ===============    
     
-class ShippingMethodView(CheckoutView):
-    u"""
+
+class CheckoutSessionMixin(object):
+
+    def get_shipping_address(self):
+        # Load address data into a blank address model
+        co_data = CheckoutSessionData(self.request)
+        addr_data = co_data.new_address_fields()
+        if addr_data:
+            return ShippingAddress(**addr_data)
+        addr_id = co_data.user_address_id()
+        if addr_id:
+            try:
+                return UserAddress._default_manager.get(pk=addr_id)
+            except UserAddress.DoesNotExist:
+                # This can happen if you reset all your tables and you still have
+                # session data that refers to addresses that no longer exist
+                pass
+        return None
+
+
+class ShippingMethodView(TemplateView, CheckoutSessionMixin):
+    """
     Shipping methods are domain-specific and so need implementing in a 
     subclass of this class.
     """
-    template_file = 'oscar/checkout/shipping_methods.html';
+    template_name = 'oscar/checkout/shipping_methods.html';
     
-    def handle_GET(self):
-        methods = self.get_available_shipping_methods()
-        if len(methods) == 1:
-            # Only one method - set this and redirect onto the next step
-            self.co_data.use_shipping_method(methods[0].code)
+    def get(self, request, *args, **kwargs):
+        self._methods = self.get_available_shipping_methods()
+        if len(self._methods) == 1:
+            # Only one shipping method - set this and redirect onto the next step
+            co_data = CheckoutSessionData(self.request)
+            co_data.use_shipping_method(self._methods[0].code)
             return self.get_success_response()
-        self.context['methods'] = methods
-        return TemplateResponse(self.request, self.template_file, self.context)
+        return super(ShippingMethodView, self).get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        kwargs = super(ShippingMethodView, self).get_context_data(self, **kwargs)
+        kwargs['methods'] = self._methods
+        return kwargs
 
     def get_available_shipping_methods(self):
-        u"""
+        """
         Returns all applicable shipping method objects
         for a given basket.
         """ 
         repo = Repository()
-        return repo.get_shipping_methods(self.request.user, self.basket, self.get_shipping_address())
+        return repo.get_shipping_methods(self.request.user, self.request.basket, 
+                                         self.get_shipping_address())
     
-    def handle_POST(self):
-        method_code = self.request.POST['method_code']
-        self.co_data.use_shipping_method(method_code)
+    def post(self, request, *args, **kwargs):
+        method_code = request.POST['method_code']
+        co_data = CheckoutSessionData()
+        co_data.use_shipping_method(method_code)
         return self.get_success_response()
         
+    def get_success_response(self):
+        return HttpResponseRedirect(reverse('oscar-checkout-payment-method'))
+
 
 class PaymentMethodView(CheckoutView):
-    u"""
+    """
     View for a user to choose which payment method(s) they want to use.
     
     This would include setting allocations if payment is to be split
@@ -225,7 +257,7 @@ class OrderPreviewView(CheckoutView):
 
 
 class PaymentDetailsView(CheckoutView):
-    u"""
+    """
     For taking the details of payment and creating the order
     
     The class is deliberately split into fine-grained method, responsible for only one
@@ -356,7 +388,7 @@ class PaymentDetailsView(CheckoutView):
         pass
 
     def save_payment_sources(self, order):
-        u"""
+        """
         Saves any payment sources used in this order.
         
         When the payment sources are created, the order model does not exist and 
@@ -367,13 +399,13 @@ class PaymentDetailsView(CheckoutView):
             source.save()
     
     def reset_checkout(self):
-        u"""Reset any checkout session state"""
+        """Reset any checkout session state"""
         self.co_data.flush()
         self.request.session['checkout_basket_id'] = None
         ProgressChecker().all_steps_complete(self.request)
     
     def create_order_models(self, basket, order_number, total_incl_tax, total_excl_tax):
-        u"""Writes the order out to the DB"""
+        """Writes the order out to the DB"""
         shipping_address = self.create_shipping_address()
         shipping_method = self.get_shipping_method(basket)
         billing_address = self.create_billing_address()
@@ -401,7 +433,7 @@ class PaymentDetailsView(CheckoutView):
         return addr
     
     def create_shipping_address(self):
-        u"""Returns the shipping address"""
+        """Returns the shipping address"""
         addr_data = self.co_data.new_address_fields()
         addr_id = self.co_data.user_address_id()
         if addr_data:
@@ -414,13 +446,13 @@ class PaymentDetailsView(CheckoutView):
         return addr
     
     def create_shipping_address_from_form_fields(self, addr_data):
-        u"""Creates a shipping address model from the saved form fields"""
+        """Creates a shipping address model from the saved form fields"""
         shipping_addr = ShippingAddress(**addr_data)
         shipping_addr.save() 
         return shipping_addr
     
     def create_user_address(self, addr_data):
-        u"""
+        """
         For signed-in users, we create a user address model which will go 
         into their address book.
         """
@@ -435,7 +467,7 @@ class PaymentDetailsView(CheckoutView):
                 user_addr.save()
     
     def create_shipping_address_from_user_address(self, addr_id):
-        u"""Creates a shipping address from a user address"""
+        """Creates a shipping address from a user address"""
         address = UserAddress._default_manager.get(pk=addr_id)
         # Increment the number of orders to help determine popularity of orders 
         address.num_orders += 1

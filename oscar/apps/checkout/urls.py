@@ -14,7 +14,8 @@ urlpatterns = patterns('oscar.checkout.views',
     url(r'user-address/edit/(?P<pk>\d+)/$', UserAddressUpdateView.as_view(), name='oscar-checkout-user-address-update'),
     url(r'user-address/delete/(?P<pk>\d+)/$', UserAddressDeleteView.as_view(), name='oscar-checkout-user-address-delete'),
     # Shipping method views
-    url(r'shipping-method/$', class_based_view(ShippingMethodView), name='oscar-checkout-shipping-method'),
+    url(r'shipping-method/$', ShippingMethodView.as_view(), name='oscar-checkout-shipping-method'),
+    # Payment method views
     url(r'payment-method/$', class_based_view(PaymentMethodView), name='oscar-checkout-payment-method'),
     url(r'preview/$', class_based_view(OrderPreviewView), name='oscar-checkout-preview'),
     url(r'payment-details/$', class_based_view(PaymentDetailsView), name='oscar-checkout-payment-details'),
