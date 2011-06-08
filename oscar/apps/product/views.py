@@ -10,7 +10,7 @@ from django.db.models import Avg
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
 
-from oscar.view.generic import PostActionMixin
+from oscar.views.generic import PostActionMixin
 from oscar.core.loading import import_module
 import_module('product.models', ['Item', 'ItemClass'], locals())
 import_module('product.signals', ['product_viewed', 'product_search'], locals())

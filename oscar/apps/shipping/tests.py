@@ -7,6 +7,7 @@ from oscar.apps.shipping.methods import FreeShipping, FixedPriceShipping
 from oscar.apps.shipping.models import OrderAndItemLevelChargeMethod
 from oscar.apps.basket.models import Basket
 from oscar.test.helpers import create_product
+from oscar.test.decorators import dataProvider
 
 class FreeShippingTest(unittest.TestCase):
     
@@ -16,6 +17,7 @@ class FreeShippingTest(unittest.TestCase):
         method.set_basket(basket)
         self.assertEquals(D('0.00'), method.basket_charge_incl_tax())
         self.assertEquals(D('0.00'), method.basket_charge_excl_tax())
+        
         
 class FixedPriceShippingTest(unittest.TestCase):        
     
@@ -31,6 +33,19 @@ class FixedPriceShippingTest(unittest.TestCase):
         basket = Basket()
         method.set_basket(basket)
         self.assertEquals(D('10.00'), method.basket_charge_excl_tax())
+        
+    shipping_values = lambda: [('1.00',), 
+                               ('5.00',), 
+                               ('10.00',), 
+                               ('12.00',)]    
+        
+    @dataProvider(shipping_values)    
+    def test_different_values(self, value):
+        method = FixedPriceShipping(D(value))
+        basket = Basket()
+        method.set_basket(basket)
+        self.assertEquals(D(value), method.basket_charge_excl_tax())
+        
         
 class OrderAndItemLevelChargeMethodTest(unittest.TestCase):
     
@@ -52,6 +67,7 @@ class OrderAndItemLevelChargeMethodTest(unittest.TestCase):
         self.basket.add_product(p, 7)
         self.assertEquals(D('5.00') + 7*D('1.00'), self.method.basket_charge_incl_tax())
 
+
 class ZeroFreeShippingThresholdTest(unittest.TestCase):
     
     def setUp(self):
@@ -66,6 +82,7 @@ class ZeroFreeShippingThresholdTest(unittest.TestCase):
         p = create_product(D('5.00'))
         self.basket.add_product(p)
         self.assertEquals(D('0.00'), self.method.basket_charge_incl_tax())
+
 
 class NonZeroFreeShippingThresholdTest(unittest.TestCase):
     

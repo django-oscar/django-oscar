@@ -1,11 +1,16 @@
 from setuptools import setup
 
+from oscar import get_version
+
+version = get_version()
+
 setup(name='django-oscar',
-      version='0.1.0',
+      version=version.replace(' ', '-'),
       url='https://github.com/tangentlabs/django-oscar',
       author="Tangent Labs",
       author_email="david.winterbottom@tangentlabs.co.uk",
       description="A domain-driven ecommerce framework for Django 1.3",
+      long_description=open('README.rst').read(),
       license='LICENSE',
       package_dir={'': '.'},
       install_requires=['Django>=1.3',

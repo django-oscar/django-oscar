@@ -13,3 +13,4 @@ from oscar.apps.promotions.tests import *
 from oscar.apps.product.reviews.tests import *
 
 from oscar.core.tests import *
+from oscar.core.logging.tests import *
