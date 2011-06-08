@@ -1,9 +1,10 @@
 def dataProvider(fn_data_provider):
     """
     Data provider decorator, allows another callable to provide the data for the test.  
-    This is a nice feature from PHPUnit which is very useful.
+    This is a nice feature from PHPUnit which is very useful.  Am sticking with the JUnit style
+    naming as unittest does this already.
     
-    Implementation basd on http://melp.nl/2011/02/phpunit-style-dataprovider-in-python-unit-test/#more-525
+    Implementation based on http://melp.nl/2011/02/phpunit-style-dataprovider-in-python-unit-test/#more-525
     """
     def test_decorator(test_method):
         def execute_test_method_with_each_data_set(self):
