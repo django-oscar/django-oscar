@@ -66,7 +66,7 @@
 
 {% basket_form item as basket_form %}
 
-<form action="{% url basket-add %}" method="post">
+<form action="{% url basket:add %}" method="post">
     {% csrf_token %}
     {{ basket_form.as_p }}
     <input type="submit" value="Add to basket" />
@@ -75,7 +75,7 @@
 
 {% block product_review %}
 
-<h3>Reviews of {{ item.title }}</h3>
+<h2>Customer Reviews</h2>
 <p>Read customer reviews on this product. If you have read this book, why not post your own
    review?</p>
 <p><a href="{% url products:reviews-add item.slug item.id %}">Add a review</a></p>

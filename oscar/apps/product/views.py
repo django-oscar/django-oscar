@@ -1,5 +1,4 @@
 from django.http import HttpResponsePermanentRedirect
-from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView
 
 from oscar.apps.product.signals import product_viewed, product_search
@@ -7,7 +6,6 @@ from oscar.apps.product.signals import product_viewed, product_search
 from django.db.models import get_model
 
 item_model = get_model('product','item')
-item_class_model = get_model('product', 'itemclass')
 
 
 class ItemDetailView(DetailView):
