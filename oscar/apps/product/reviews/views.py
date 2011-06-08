@@ -6,8 +6,10 @@ from django.contrib import messages
 from oscar.apps.product.reviews.forms import SignedInUserProductReviewForm, AnonymousUserProductReviewForm, VoteForm
 from django.db.models import get_model
 
+vote_model = get_model('reviews', 'vote')
 
-class CreateProductReviewView(CreateView):
+
+class CreateProductReview(CreateView):
     template_name = "reviews/add_review.html"
     model = get_model('reviews', 'productreview')
     product_model = get_model('product', 'item')
@@ -23,10 +25,10 @@ class CreateProductReviewView(CreateView):
                 return HttpResponseRedirect(product.get_absolute_url()) 
             except self.model.DoesNotExist:
                 pass
-        return super(CreateProductReviewView, self).get(request, *args, **kwargs)        
+        return super(CreateProductReview, self).get(request, *args, **kwargs)        
     
     def get_context_data(self, **kwargs):
-        context = super(CreateProductReviewView, self).get_context_data(**kwargs)
+        context = super(CreateProductReview, self).get_context_data(**kwargs)
         context['item'] = self.get_product()
         return context
     
@@ -39,7 +41,7 @@ class CreateProductReviewView(CreateView):
         return self.review_form
     
     def get_form_kwargs(self):
-        kwargs = super(CreateProductReviewView, self).get_form_kwargs()
+        kwargs = super(CreateProductReview, self).get_form_kwargs()
         review = self.model(product=self.get_product())
         if self.request.user.is_authenticated():
             review.user = self.request.user
@@ -50,30 +52,31 @@ class CreateProductReviewView(CreateView):
         return self.object.product.get_absolute_url()
 
 
-class CreateReviewCompleteView(DetailView):
+class CreateProductReviewComplete(DetailView):
     template_name = "reviews/add_review_complete.html"
     context_object_name = 'review'
     model = get_model('reviews', 'productreview')
     product_model = get_model('product', 'item')
     
     def get_context_data(self, **kwargs):
-        context = super(ProductReviewDetailView, self).get_context_data(**kwargs)
+        context = super(CreateProductReviewComplete, self).get_context_data(**kwargs)
         context['item'] = get_object_or_404(self.product_model, pk=self.kwargs['item_pk'])
         return context    
 
 
-class ProductReviewDetailView(DetailView):
+class ProductReviewDetail(DetailView):
     """
     Places each review on its own page
     """
+    
     template_name = "reviews/review.html"
     context_object_name = 'review'
     model = get_model('reviews', 'productreview')
     product_model = get_model('product', 'item')
-    vote_model = get_model('reviews', 'vote')
+    vote_model = vote_model
     
     def get_context_data(self, **kwargs):
-        context = super(ProductReviewDetailView, self).get_context_data(**kwargs)
+        context = super(ProductReviewDetail, self).get_context_data(**kwargs)
         context['item'] = get_object_or_404(self.product_model, pk=self.kwargs['item_pk'])
         return context
     
@@ -93,7 +96,7 @@ class ProductReviewDetailView(DetailView):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER',review.get_absolute_url()))
 
     
-class ProductReviewListView(ListView):
+class ProductReviewList(ListView):
     u"""A list of reviews for a particular product
     * The review browsing page allows reviews to be sorted by score, or recency.
     """    
@@ -110,7 +113,7 @@ class ProductReviewListView(ListView):
         return qs.order_by('-date_created')
      
     def get_context_data(self, **kwargs):
-        context = super(ProductReviewListView, self).get_context_data(**kwargs)
+        context = super(ProductReviewList, self).get_context_data(**kwargs)
         context['item'] = get_object_or_404(self.product_model, pk=self.kwargs['item_pk'])  
         context['avg_score'] = self.object_list.aggregate(Avg('score'))           
         return context
