@@ -1,18 +1,20 @@
 from django.conf.urls.defaults import patterns, url, include
 from oscar.core.application import Application
-from oscar.apps.product import application as product_app
-from oscar.apps.customer import application as customer_app
+from oscar.apps.product.app import application as product_app
+from oscar.apps.customer.app import application as customer_app
+from oscar.apps.basket.app import application as basket_app
 
 
 class Shop(Application):
     name = None
     product_app = product_app
     customer_app = customer_app
+    basket_app = basket_app
     
     def get_urls(self):
         urlpatterns = patterns('',
             (r'products/', include(self.product_app.urls)),
-            (r'basket/', include('oscar.apps.basket.urls')),
+            (r'basket/', include(self.basket_app.urls)),
             (r'checkout/', include('oscar.apps.checkout.urls')),
             (r'order-management/', include('oscar.apps.order_management.urls')),
             (r'accounts/', include(self.customer_app.urls)),

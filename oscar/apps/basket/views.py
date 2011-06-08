@@ -5,19 +5,33 @@ from django.http import HttpResponseRedirect, Http404
 from django.views.generic import ListView, FormView
 from extra_views import ModelFormsetView
 from oscar.apps.basket.forms import BasketLineForm, AddToBasketForm, \
-    BasketVoucherForm
-
+    BasketVoucherForm, SavedLineForm
+from django.forms.models import modelformset_factory
 
 class BasketView(ModelFormsetView):
     model = get_model('basket', 'line')
+    basket_model = get_model('basket', 'basket')
     form_class = BasketLineForm
     extra = 0
     can_delete = True
     template_name='basket/basket.html'
     
+
+    def get_queryset(self):
+        return self.request.basket.lines.all()
+    
     def get_context_data(self, **kwargs):
         context = super(BasketView, self).get_context_data(**kwargs)
         context['voucher_form'] = BasketVoucherForm()
+        
+        try:
+            saved_basket = self.basket_model.saved.get(owner=self.request.user)
+            saved_queryset = saved_basket.lines.all().select_related('product', 'product__stockrecord')
+            SavedFormset = modelformset_factory(self.model, form=SavedLineForm, extra=0, can_delete=True)
+            formset = SavedFormset(queryset=saved_queryset)
+            context['saved_formset'] = formset
+        except self.basket_model.DoesNotExist:
+            pass
         return context
 
     def formset_valid(self, formset):
@@ -34,9 +48,8 @@ class BasketView(ModelFormsetView):
                     needs_auth = True
         if needs_auth:
             messages.error(self.request, "You can't save an item for later if you're not logged in!")     
-        
-        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER',reverse('basket')))
-    
+        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER',reverse('basket:summary')))
+
     def formset_invalid(self, formset):
         messages.info(self.request, "There was a problem updating your basket, please check that all quantities are numbers")
 
@@ -49,7 +62,7 @@ class BasketAddView(FormView):
     product_model = get_model('product', 'item')
     
     def get(self, request, *args, **kwargs):
-        return HttpResponseRedirect(reverse('basket'))
+        return HttpResponseRedirect(reverse('basket:summary'))
     
     def get_form_kwargs(self): 
         kwargs = super(BasketAddView, self).get_form_kwargs()
@@ -69,10 +82,10 @@ class BasketAddView(FormView):
         self.request.basket.add_product(form.instance, form.cleaned_data['quantity'], options)
         messages.info(self.request, "'%s' (quantity %d) has been added to your basket" %
                       (form.instance.get_title(), form.cleaned_data['quantity']))
-        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER',reverse('basket')))
+        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER',reverse('basket:summary')))
     
     def form_invalid(self, form):
-        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER',reverse('basket')))
+        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER',reverse('basket:summary')))
 
 
 class VoucherView(ListView):
@@ -89,7 +102,7 @@ class VoucherAddView(FormView):
     voucher_model = get_model('offer', 'voucher')
     
     def get(self, request, *args, **kwargs):
-        return HttpResponseRedirect(reverse('basket'))
+        return HttpResponseRedirect(reverse('basket:summary'))
     
     def _check_voucher(self, code):
         try:
@@ -116,25 +129,40 @@ class VoucherAddView(FormView):
     def form_valid(self, form):
         code = form.cleaned_data['code']
         self._check_voucher(code)
-        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER', reverse('basket')))
-    
+        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER', reverse('basket:summary')))
+
     def form_invalid(self, form):
-        return HttpResponseRedirect(reverse('basket'))
+        return HttpResponseRedirect(reverse('basket:summary'))
 
 
-class SavedView(ListView):
-    template_name = 'basket/saved_list.html'
-    context_object_name = "saved_items" 
+class SavedView(ModelFormsetView):
+    model = get_model('basket', 'line')
     basket_model = get_model('basket', 'basket')
-    allow_empty = True
-    paginate_by = 20
-     
+    form_class = SavedLineForm
+    extra = 0
+    can_delete = True
+
+    def get(self, request, *args, **kwargs):
+        return HttpResponseRedirect(reverse('basket:summary'))
+
     def get_queryset(self):
         try:
             saved_basket = self.basket_model.saved.get(owner=self.request.user)
             return saved_basket.lines.all().select_related('product', 'product__stockrecord')
         except self.basket_model.DoesNotExist:
             return []
+
+    def formset_valid(self, formset):
+        for form in formset:
+            if form.cleaned_data['move_to_basket']:
+                msg = "'%s' has been moved back to your basket" % form.instance.product
+                messages.info(self.request, msg)                
+                real_basket = self.request.basket
+                real_basket.merge_line(form.instance)
+        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER',reverse('basket:summary')))
+    
+    def formset_invalid(self, formset):
+        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER',reverse('basket:summary')))
 
 
 #    def do_remove_voucher(self, basket):

@@ -10,11 +10,10 @@
 {% block content %}
 
 <form action="." method="post">
-	
 	{% csrf_token %}
 	
 	{{ formset.management_form }}
-	
+
 	<table>
 		<thead>
 			<tr>
@@ -62,6 +61,7 @@
 
 </form>
 
+{% if basket.pk %}
 <h4>Basket vouchers</h4>
 <ul>
 {% for voucher in basket.vouchers.all %}
@@ -76,8 +76,9 @@
     </li>
 {% endfor %}
 </ul>
+{% endif %}
 
-<form action="{% url basket-vouchers-add %}" method="post">
+<form action="{% url basket:vouchers-add %}" method="post">
     {% csrf_token %}
 	{{ voucher_form }}
     <input type="submit" value="Add voucher" />
@@ -88,11 +89,9 @@
 
 <h3>To buy later</h3>
 
-<form action="." method="post">
-	
+<form action="{% url basket:saved %}" method="post">
 	{% csrf_token %}
 	
-
 	{{ saved_formset.management_form }}
 	
 	<table>
@@ -103,7 +102,8 @@
 				<th>Tax</th>
 				<th>Line Price Excl. Tax</th>
 				<th>Line Price Incl. Tax</th>
-				<th>Move to basket&hellip;</th>				
+				<th>Move to basket&hellip;</th>			
+				<th>Delete?</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -115,6 +115,7 @@
 		        <td>{{ form.instance.line_price_excl_tax|currency }}</td>
 		        <td>{{ form.instance.line_price_incl_tax|currency }}</td>
 				<td>{{ form.move_to_basket }}</td>
+				<td>{{ form.DELETE }}</td>
 			</tr>
 			{% endfor %}
 		</tbody>
