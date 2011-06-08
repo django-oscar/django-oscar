@@ -54,9 +54,18 @@ class IndexView(TemplateView):
 # SHIPPING ADDRESS
 # ================
 
+
 class ShippingAddressView(FormView):
     """
-    View for determining the shipping address for checkout.
+    Determine the shipping address for the order.
+    
+    The default behaviour is to display a list of addresses from the users's
+    address book, from which the user can choose one to be their shipping address.
+    They can add/edit/delete these USER addresses.  This address will be
+    automatically converted into a SHIPPING address when the user checks out.
+    
+    Alternatively, the user can enter a SHIPPING address directly which will be
+    saved in the session and saved as a model when the order is sucessfully submitted.
     """
     
     template_name = 'oscar/checkout/shipping_address.html'
@@ -95,30 +104,34 @@ class ShippingAddressView(FormView):
         co_data.ship_to_new_address(form.clean())
         return super(ShippingAddressView, self).form_valid(form)
     
-    def get_success_url(self):
-        return reverse('oscar-checkout-shipping-method')
-    
-    
-class UserAddressDeleteView(DeleteView):
-    """
-    Standard generic view for deleting a shipping address.
-    """
-    model = UserAddressForm
-    
-    def get_success_url(self):
-        messages.info(self.request, _("Address deleted"))
-        return reverse('oscar-checkout-shipping-address')
+    def get_success_response(self):
+        return HttpResponseRedirect(reverse('oscar-checkout-shipping-method'))
     
 
 class UserAddressCreateView(CreateView):
     """
-    Standard generic view for adding a shipping address
+    Standard generic view for adding a USER address to the user's addressbook.
+
+    This is not the same as creating a shipping address, although if used for the order,
+    it will be converted into a shipping address at submission-time.
     """
     template_name = 'oscar/checkout/user_address_form.html'
     form_class = UserAddressForm
+
+    def get_context_data(self, **kwargs):
+        kwargs = super(UserAddressCreateView, self).get_context_data(**kwargs)
+        kwargs['form_url'] = reverse('oscar-checkout-user-address-create')
+        return kwargs
     
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.user = self.request.user
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
+
     def get_success_url(self):
         messages.info(self.request, _("Address saved"))
+        # We redirect back to the shipping address page
         return reverse('oscar-checkout-shipping-address')
     
     
@@ -129,11 +142,32 @@ class UserAddressUpdateView(UpdateView):
     template_name = 'oscar/checkout/user_address_form.html'
     form_class = UserAddressForm
     
+    def get_queryset(self):
+        return UserAddress._default_manager.filter(user=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        kwargs = super(UserAddressUpdateView, self).get_context_data(**kwargs)
+        kwargs['form_url'] = reverse('oscar-checkout-user-address-update', args=(str(kwargs['object'].id)))
+        return kwargs
+
     def get_success_url(self):
         messages.info(self.request, _("Address saved"))
         return reverse('oscar-checkout-shipping-address')
     
     
+class UserAddressDeleteView(DeleteView):
+    """
+    Standard generic view for deleting a shipping address.
+    """
+
+    def get_queryset(self):
+        return UserAddress._default_manager.filter(user=self.request.user)
+    
+    def get_success_url(self):
+        messages.info(self.request, _("Address deleted"))
+        return reverse('oscar-checkout-shipping-address')
+    
+
 # ===============    
 # Shipping method
 # ===============    
