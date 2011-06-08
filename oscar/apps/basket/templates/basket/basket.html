@@ -9,6 +9,8 @@
 
 {% block content %}
 
+{% if request.basket.lines.count %}
+
 <form action="." method="post">
 	{% csrf_token %}
 	
@@ -61,7 +63,15 @@
 
 </form>
 
-{% if basket.pk %}
+<a href="{% url oscar-checkout-index %}">Checkout</a>
+
+{% else %}
+
+<p>Your basket is empty, you should probably add some items to buy.</p>
+
+{% endif %}
+
+{% if request.basket.pk %}
 <h4>Basket vouchers</h4>
 <ul>
 {% for voucher in basket.vouchers.all %}
