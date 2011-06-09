@@ -18,7 +18,7 @@
         <td>{{ email.date_sent }}</td>
         <td>{{ email.subject }}</td>
         <td>
-            <a href="{% url oscar-customer-email-view email.id %}">View</a>
+            <a href="{% url customer:email-detail email.id %}">View</a>
         </td>
     </tr>
     {% endfor %}
@@ -43,7 +43,7 @@
     </span>
 </div>
 
-<p><a href="{% url oscar-customer-profile %}">Return to profile</a></p>
+<p><a href="{% url customer:summary %}">Return to profile</a></p>
 
 {% endif %}
 

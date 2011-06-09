@@ -20,7 +20,7 @@ email_model = get_model('customer', 'email')
 class AccountSummaryView(ListView):
     u"""Customer order history"""
     context_object_name = "orders"
-    template_name = 'oscar/customer/profile.html'
+    template_name = 'customer/profile.html'
     paginate_by = 20
     model = order_model
 
@@ -32,7 +32,7 @@ class AccountSummaryView(ListView):
 class EmailHistoryView(ListView):
     """Customer email history"""
     context_object_name = "emails"
-    template_name = 'oscar/customer/email-history.html'
+    template_name = 'customer/email-history.html'
     paginate_by = 20
 
     def get_queryset(self):
@@ -42,7 +42,7 @@ class EmailHistoryView(ListView):
 
 class EmailDetailView(DetailView):
     u"""Customer order details"""
-    template_name = "oscar/customer/email.html"
+    template_name = "customer/email.html"
     context_object_name = 'email'
     
     def get_object(self):
@@ -53,7 +53,7 @@ class EmailDetailView(DetailView):
 class OrderHistoryView(ListView):
     u"""Customer order history"""
     context_object_name = "orders"
-    template_name = 'oscar/customer/order-history.html'
+    template_name = 'customer/order-history.html'
     paginate_by = 20
     model = order_model
 
@@ -67,7 +67,7 @@ class OrderDetailView(DetailView):
     model = order_model
     
     def get_template_names(self):
-        return ["oscar/customer/order.html"]    
+        return ["customer/order.html"]    
 
     def get_object(self):
         return get_object_or_404(self.model, user=self.request.user, number=self.kwargs['order_number'])
@@ -103,7 +103,7 @@ class OrderLineView(DetailView, PostActionMixin):
 class AddressListView(ListView):
     u"""Customer address book"""
     context_object_name = "addresses"
-    template_name = 'oscar/customer/address-book.html'
+    template_name = 'customer/address-book.html'
     paginate_by = 40
         
     def get_queryset(self):
@@ -122,7 +122,7 @@ class AddressCreateView(CreateView):
         return HttpResponseRedirect(self.get_success_url())
 
     def get_template_names(self):
-        return ["oscar/customer/address-create.html"]
+        return ["customer/address-create.html"]
 
     def get_success_url(self):
         return reverse('customer:address-list')
@@ -133,7 +133,7 @@ class AddressUpdateView(UpdateView):
     model = user_address_model
     
     def get_template_names(self):
-        return ["oscar/customer/address-form.html"]
+        return ["customer/address-form.html"]
     
     def get_success_url(self):
         return reverse('customer:address-detail', kwargs={'pk': self.get_object().pk })
@@ -146,4 +146,4 @@ class AddressDeleteView(DeleteView):
         return reverse('customer:address-list')    
     
     def get_template_names(self):
-        return ["oscar/customer/address-delete.html"]
+        return ["customer/address-delete.html"]

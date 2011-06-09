@@ -17,7 +17,7 @@
     {{ form.as_p }}
     <input type="submit" value="Save address" />
     or
-    <a href="{% url oscar-customer-address-book %}">Cancel and return to address book</a>
+    <a href="{% url customer:address-list %}">Cancel and return to address book</a>
 </form>
 
 {% endblock content %}
