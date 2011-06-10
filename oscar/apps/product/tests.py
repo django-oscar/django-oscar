@@ -3,7 +3,42 @@ import unittest
 from django.test import TestCase, Client
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
+from oscar.apps.product.models import Item, ItemClass, Category
 
+from oscar.apps.product.utils import breadcrumbs_to_category
+
+class CategoryTests(unittest.TestCase):
+    
+    def test_create_category_root(self):
+        trail = 'Books'
+        category = breadcrumbs_to_category(trail)
+        self.assertIsNotNone(category)
+        self.assertEquals(category.name, 'Books')
+        self.assertEquals(category.slug, 'books')      
+    
+    def test_subcategory(self):
+        trail = 'Books > Science-Fiction'
+        category = breadcrumbs_to_category(trail)
+        
+        self.assertIsNotNone(category)
+        self.assertEquals(category.name, 'Science-Fiction')
+        self.assertEquals(category.get_depth(), 2)
+        self.assertEquals(category.get_parent().name, 'Books')
+        self.assertEquals(2, Category.objects.count())
+        self.assertEquals(category.slug, 'books/science-fiction')
+        
+    def test_subsubcategory(self):
+        trail = 'Books > Science-Fiction > Star Trek'
+        breadcrumbs_to_category(trail)
+        trail = 'Books > Factual > Popular Science'
+        category = breadcrumbs_to_category(trail)        
+        
+        self.assertIsNotNone(category)
+        self.assertEquals(category.name, 'Popular Science')
+        self.assertEquals(category.get_depth(), 3)
+        self.assertEquals(category.get_parent().name, 'Factual')        
+        self.assertEquals(5, Category.objects.count())
+        self.assertEquals(category.slug, 'books/factual/popular-science', )        
 
 
 class ItemTests(unittest.TestCase):

@@ -10,6 +10,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.template.defaultfilters import slugify
 from django.core.exceptions import ObjectDoesNotExist
 
+from treebeard.mp_tree import MP_Node
+
 from oscar.apps.product.managers import BrowsableItemManager
 
 def _convert_to_underscores(str):
@@ -40,6 +42,53 @@ class AbstractItemClass(models.Model):
 
     def __unicode__(self):
         return self.name
+
+
+class AbstractCategory(MP_Node):
+    name = models.CharField(max_length=255, db_index=True)
+    slug = models.SlugField(max_length=1024)
+    
+    def __unicode__(self):
+        return self.name
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            parent = self.get_parent()
+            slug = slugify(self.name)
+            if parent:
+                self.slug = '%s/%s' % (parent.slug, slug)
+            else:
+                self.slug = slug
+        super(AbstractCategory, self).save(*args, **kwargs)
+        
+    def get_ancestors(self, include_self=True):
+        ancestors = list(super(AbstractCategory, self).get_ancestors())
+        if include_self:
+            ancestors.append(self)
+        return ancestors
+    
+    @models.permalink
+    def get_absolute_url(self):
+        u"""Return a product's absolute url"""
+        return ('products:category', (), {
+            'category_slug': self.slug })
+        
+    
+    class Meta:
+        abstract = True
+        ordering = ['name']
+        verbose_name_plural = 'Categories'
+        verbose_name = 'Category'
+
+
+class AbstractItemCategory(models.Model):
+    item = models.ForeignKey('product.Item')
+    category = models.ForeignKey('product.Category')
+    canonical = models.BooleanField(default=False, db_index=True)
+    
+    class Meta:
+        abstract = True
+        ordering = ['-canonical']
 
 
 class AbstractItem(models.Model):
@@ -86,6 +135,8 @@ class AbstractItem(models.Model):
 
     # This field is used by Haystack to reindex search
     date_updated = models.DateTimeField(auto_now=True, db_index=True)
+    
+    categories = models.ManyToManyField('product.Category', through='ItemCategory')
 
     objects = models.Manager()
     browsable = BrowsableItemManager()
@@ -137,6 +188,13 @@ class AbstractItem(models.Model):
             return pr.score
         except ObjectDoesNotExist:
             return 0
+
+    def add_category_from_breadcrumbs(self, breadcrumb):
+        from oscar.apps.product.utils import breadcrumbs_to_category
+        category = breadcrumbs_to_category(breadcrumb)
+        
+        temp = models.get_model('product', 'itemcategory')(category=category, item=self)
+        temp.save()
 
     def attribute_summary(self):
         u"""Return a string of all of a product's attributes"""

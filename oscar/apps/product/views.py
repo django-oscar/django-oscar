@@ -1,12 +1,11 @@
-from django.http import HttpResponsePermanentRedirect
+from django.http import HttpResponsePermanentRedirect, Http404
 from django.views.generic import ListView, DetailView
-
 from oscar.apps.product.signals import product_viewed, product_search
 
 from django.db.models import get_model
 
 item_model = get_model('product','item')
-
+category_model = get_model('product', 'category')
 
 class ItemDetailView(DetailView):
     #template_name = "oscar/product/item.html"
@@ -47,6 +46,36 @@ class ItemDetailView(DetailView):
                  '%s/detail.html' % (self.template_folder)]
         return names
 
+
+class CategoryView(ListView):
+    u"""A list of products"""
+    context_object_name = "products"
+    template_name = 'product/browse.html'
+    paginate_by = 20
+    
+    def get_categories(self):
+        slug = self.kwargs['category_slug']
+        try:
+            category = category_model.objects.get(slug=slug)
+        except category_model.DoesNotExist:
+            raise Http404()
+        categories = list(category.get_descendants())
+        categories.append(category)
+        return categories
+    
+    def get_context_data(self, **kwargs):
+        context = super(CategoryView, self).get_context_data(**kwargs)
+
+        categories = self.get_categories()
+
+        context['categories'] = categories
+        context['category'] = categories[-1]
+        context['summary'] = categories[-1].name
+        return context    
+
+    def get_queryset(self):
+        return item_model.browsable.filter(categories__in=self.get_categories()).distinct()
+        
 
 class ProductListView(ListView):
     u"""A list of products"""

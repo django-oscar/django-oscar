@@ -73,6 +73,15 @@
 </form>
 {% endif %}
 
+<h2>Categories</h2>
+{% for category in item.categories.all %}
+<p>
+{% for c in category.get_ancestors %}
+{% if not forloop.first %} > {% endif %}<a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
+{% endfor %}
+</p>
+{% endfor %}
+
 {% block product_review %}
 
 <h2>Customer Reviews</h2>

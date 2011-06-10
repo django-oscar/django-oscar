@@ -14,8 +14,32 @@ from django.db.models import get_model
 
 from oscar.core.loading import import_module
 import_module('product.exceptions', ['ImageImportException', 'IdenticalImageException', 'InvalidImageArchive'], locals())
+
+Category = get_model('product', 'category')
 Item = get_model('product', 'item')
 ProductImage = get_model('product', 'productimage')
+
+def create_categories(bits):
+    if len(bits) == 1:
+        # Get or create root node
+        try:
+            root = Category.objects.get(depth=1,name=bits[0])
+        except Category.DoesNotExist:
+            root = Category.add_root(name=bits[0])
+        return [root]
+    else:
+        parents = create_categories(bits[:-1])
+        try:
+            child = parents[-1].get_children().get(name=bits[-1])
+        except Category.DoesNotExist:
+            child = parents[-1].add_child(name=bits[-1])
+        parents.append(child)
+        return parents
+
+def breadcrumbs_to_category(breadcrumbs, separator='>'):
+    bits = [x.strip() for x in breadcrumbs.split(separator)]
+    categories = create_categories(bits)
+    return categories[-1]
 
 
 class Importer(object):
