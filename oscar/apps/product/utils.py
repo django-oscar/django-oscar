@@ -10,10 +10,12 @@ from PIL import Image as PImage
 from django.core.files import File
 from django.core.exceptions import FieldError
 
+from django.db.models import get_model
+
 from oscar.core.loading import import_module
 import_module('product.exceptions', ['ImageImportException', 'IdenticalImageException', 'InvalidImageArchive'], locals())
-import_module('product.models', ['Item'], locals())
-import_module('product.models', ['Image'], locals())
+Item = get_model('product', 'item')
+ProductImage = get_model('product', 'productimage')
 
 
 class Importer(object):
@@ -121,7 +123,7 @@ class Importer(object):
                 existing.delete()
             
         new_file = File(open(file_path))
-        im = Image(product=item, display_order=next_index)
+        im = ProductImage(product=item, display_order=next_index)
         im.original.save(filename, new_file, save=False)
         im.save()
         self.logger.info(' - Image added to "%s"' % item)

@@ -8,7 +8,6 @@ from django.db import models
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from django.template.defaultfilters import slugify
-from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 
 from oscar.apps.product.managers import BrowsableItemManager

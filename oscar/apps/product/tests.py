@@ -4,8 +4,6 @@ from django.test import TestCase, Client
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 
-from oscar.apps.product.models import Item, ItemClass
-from oscar.apps.partner.models import Partner, StockRecord
 
 
 class ItemTests(unittest.TestCase):
@@ -49,8 +47,7 @@ class SingleProductViewTest(TestCase):
         
     def test_canonical_urls_are_enforced(self):
         p = Item.objects.get(id=1)
-        args = {'item_class_slug': p.get_item_class().slug, 
-                'item_slug': 'wrong-slug',
+        args = {'item_slug': 'wrong-slug',
                 'pk': p.id}
         wrong_url = reverse('products:detail', kwargs=args)
         response = self.client.get(wrong_url)
