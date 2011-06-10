@@ -69,7 +69,6 @@ class AbstractCategory(MP_Node):
     
     @models.permalink
     def get_absolute_url(self):
-        u"""Return a product's absolute url"""
         return ('products:category', (), {
             'category_slug': self.slug })
         
