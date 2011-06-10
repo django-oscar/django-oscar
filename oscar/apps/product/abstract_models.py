@@ -60,19 +60,18 @@ class AbstractCategory(MP_Node):
             else:
                 self.slug = slug
         super(AbstractCategory, self).save(*args, **kwargs)
-        
+
     def get_ancestors(self, include_self=True):
         ancestors = list(super(AbstractCategory, self).get_ancestors())
         if include_self:
             ancestors.append(self)
         return ancestors
-    
+
     @models.permalink
     def get_absolute_url(self):
         return ('products:category', (), {
             'category_slug': self.slug })
-        
-    
+
     class Meta:
         abstract = True
         ordering = ['name']
@@ -83,11 +82,11 @@ class AbstractCategory(MP_Node):
 class AbstractItemCategory(models.Model):
     item = models.ForeignKey('product.Item')
     category = models.ForeignKey('product.Category')
-    canonical = models.BooleanField(default=False, db_index=True)
+    is_canonical = models.BooleanField(default=False, db_index=True)
     
     class Meta:
         abstract = True
-        ordering = ['-canonical']
+        ordering = ['-is_canonical']
 
 
 class AbstractItem(models.Model):
