@@ -321,11 +321,15 @@ class PaymentDetailsView(CheckoutView):
             # If all is ok with payment, place order
             return self.place_order(order_number, basket, total_incl_tax, total_excl_tax)
     
+    def get_submitted_basket(self):
+        return Basket._default_manager.get(pk=self.request.session['checkout_basket_id'])
+    
     def restore_frozen_basket(self):
         """
-        Restores a frozen basket as the sole OPEN basket
+        Restores a frozen basket as the sole OPEN basket.  Note that this also merges
+        in any new products that have been added to a basket that has been created while payment.
         """
-        fzn_basket = Basket._default_manager.get(pk=self.request.session['checkout_basket_id'])
+        fzn_basket = self.get_submitted_basket()
         fzn_basket.thaw()
         fzn_basket.merge(self.request.basket)
         self.set_template_context(fzn_basket)
