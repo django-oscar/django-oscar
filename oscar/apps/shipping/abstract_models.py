@@ -28,7 +28,7 @@ class AbstractOrderAndItemLevelChargeMethod(models.Model, ShippingMethod):
     price_per_item = models.DecimalField(decimal_places=2, max_digits=12, default=Decimal('0.00'))
     
     # If basket value is above this threshold, then shipping is free
-    free_shipping_threshold = models.DecimalField(decimal_places=2, max_digits=12, null=True)
+    free_shipping_threshold = models.DecimalField(decimal_places=2, max_digits=12, blank=True, null=True)
     
     _basket = None
     

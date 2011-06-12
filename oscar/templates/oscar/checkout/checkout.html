@@ -53,7 +53,7 @@
     {% endif %}
     <tr>
         <td colspan="6">Order total</td>
-        <td>{{ order_total|currency }}</td>
+        <td>{{ order_total_incl_tax|currency }}</td>
     </tr>
 </table>
 <a href="{% url oscar-basket %}">Edit order contents</a>

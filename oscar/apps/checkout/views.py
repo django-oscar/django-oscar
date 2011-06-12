@@ -18,16 +18,14 @@ from django.views.generic import DetailView, TemplateView, FormView, DeleteView,
 from oscar.core.loading import import_module
 import_module('checkout.forms', ['ShippingAddressForm'], locals())
 import_module('checkout.calculators', ['OrderTotalCalculator'], locals())
-import_module('checkout.utils', ['ProgressChecker', 'CheckoutSessionData'], locals())
+import_module('checkout.utils', ['CheckoutSessionData'], locals())
 import_module('checkout.signals', ['pre_payment', 'post_payment'], locals())
-import_module('checkout.core_views', ['CheckoutView'], locals())
 import_module('order.models', ['Order', 'ShippingAddress', 'CommunicationEventType', 'CommunicationEvent'], locals())
 import_module('order.utils', ['OrderNumberGenerator', 'OrderCreator'], locals())
 import_module('address.models', ['UserAddress'], locals())
 import_module('address.forms', ['UserAddressForm'], locals())
 import_module('shipping.repository', ['Repository'], locals())
 import_module('customer.models', ['Email'], locals())
-from oscar.apps.checkout.utils import CheckoutSessionData
 import_module('payment.exceptions', ['RedirectRequiredException', 'UnableToTakePaymentException', 
                                      'PaymentException'], locals())
 import_module('basket.models', ['Basket'], locals())
@@ -178,6 +176,10 @@ class UserAddressDeleteView(DeleteView):
 
 class CheckoutSessionMixin(object):
 
+    def dispatch(self, request, *args, **kwargs):
+        self.checkout_session = CheckoutSessionData(request)
+        return super(CheckoutSessionMixin, self).dispatch(request, *args, **kwargs)
+
     def get_shipping_address(self):
         """
         Return the current shipping address for this checkout session.
@@ -186,12 +188,11 @@ class CheckoutSessionMixin(object):
         pre-populated (not saved), or a UserAddress model which will 
         need converting into a ShippingAddress model at submission
         """
-        co_data = CheckoutSessionData(self.request)
-        addr_data = co_data.new_address_fields()
+        addr_data = self.checkout_session.new_address_fields()
         if addr_data:
             # Load address data into a blank address model
             return ShippingAddress(**addr_data)
-        addr_id = co_data.user_address_id()
+        addr_id = self.checkout_session.user_address_id()
         if addr_id:
             try:
                 return UserAddress._default_manager.get(pk=addr_id)
@@ -202,12 +203,10 @@ class CheckoutSessionMixin(object):
         return None
     
     def use_shipping_method(self, method_code):
-        co_data = CheckoutSessionData(self.request)
-        co_data.use_shipping_method(method_code)
+        self.checkout_session.use_shipping_method(method_code)
         
     def get_shipping_method(self, basket=None):
-        co_data = CheckoutSessionData(self.request)
-        method = co_data.shipping_method()
+        method = self.checkout_session.shipping_method()
         if method:
             if not basket:
                 basket = self.request.basket
@@ -227,12 +226,25 @@ class CheckoutSessionMixin(object):
         total_excl_tax = calc.order_total_excl_tax(basket, shipping_method)
         return total_incl_tax, total_excl_tax
     
-    def flush_checkout_session(self):
-        co_data = CheckoutSessionData(self.request)
-        co_data.flush()
+    def get_context_data(self, **kwargs):
+        """
+        Assign common template variables to the context.
+        """
+        ctx = super(CheckoutSessionMixin, self).get_context_data(**kwargs)
+        ctx['shipping_address'] = self.get_shipping_address()
         
+        method = self.get_shipping_method()
+        if method:
+            ctx['shipping_method'] = method
+            ctx['shipping_total_excl_tax'] = method.basket_charge_excl_tax()
+            ctx['shipping_total_incl_tax'] = method.basket_charge_incl_tax()
+            
+        ctx['order_total_incl_tax'], ctx['order_total_excl_tax'] = self.get_order_totals()
+        
+        return ctx
 
-class ShippingMethodView(TemplateView, CheckoutSessionMixin):
+
+class ShippingMethodView(CheckoutSessionMixin, TemplateView):
     """
     Shipping methods are domain-specific and so need implementing in a 
     subclass of this class.
@@ -250,7 +262,7 @@ class ShippingMethodView(TemplateView, CheckoutSessionMixin):
         return super(ShippingMethodView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        kwargs = super(ShippingMethodView, self).get_context_data(self, **kwargs)
+        kwargs = super(ShippingMethodView, self).get_context_data(**kwargs)
         kwargs['methods'] = self._methods
         return kwargs
 
@@ -272,7 +284,7 @@ class ShippingMethodView(TemplateView, CheckoutSessionMixin):
         return HttpResponseRedirect(reverse('oscar-checkout-payment-method'))
 
 
-class PaymentMethodView(TemplateView, CheckoutSessionMixin):
+class PaymentMethodView(CheckoutSessionMixin, TemplateView):
     """
     View for a user to choose which payment method(s) they want to use.
     
@@ -287,26 +299,14 @@ class PaymentMethodView(TemplateView, CheckoutSessionMixin):
         return HttpResponseRedirect(reverse('oscar-checkout-preview'))
 
 
-class OrderPreviewView(TemplateView, CheckoutSessionMixin):
+class OrderPreviewView(CheckoutSessionMixin, TemplateView):
     """
     View a preview of the order before submitting.
     """
     template_name = 'oscar/checkout/preview.html'
-    
-    def get_context_data(self, **kwargs):
-        ctx = super(OrderPreviewView, self).get_context_data(**kwargs)
-        ctx['shipping_address'] = self.get_shipping_address()
-        
-        method = self.get_shipping_method()
-        ctx['shipping_method'] = method
-        ctx['shipping_total_excl_tax'] = method.basket_charge_excl_tax()
-        ctx['shipping_total_incl_tax'] = method.basket_charge_incl_tax()
-        ctx['order_total_incl_tax'], ctx['order_total_excl_tax'] = self.get_order_totals()
-        
-        return ctx
 
 
-class PaymentDetailsView(TemplateView, CheckoutSessionMixin):
+class PaymentDetailsView(CheckoutSessionMixin, TemplateView):
     """
     For taking the details of payment and creating the order
     
@@ -314,7 +314,6 @@ class PaymentDetailsView(TemplateView, CheckoutSessionMixin):
     thing.  This is to make it easier to subclass and override just one component of
     functionality.
     """
-    template_name = 'oscar/checkout/payment-details.html'
 
     # Any payment sources should be added to this list as part of the
     # _handle_payment method.  If the order is placed successfully, then
@@ -448,9 +447,8 @@ class PaymentDetailsView(TemplateView, CheckoutSessionMixin):
     
     def reset_checkout(self):
         """Reset any checkout session state"""
-        self.flush_checkout_session()
+        self.checkout_session.flush()
         self.request.session['checkout_basket_id'] = None
-        ProgressChecker().all_steps_complete(self.request)
     
     def create_order_models(self, basket, order_number, total_incl_tax, total_excl_tax):
         """Writes the order out to the DB"""
@@ -472,10 +470,19 @@ class PaymentDetailsView(TemplateView, CheckoutSessionMixin):
         return None
     
     def create_shipping_address(self):
-        """Returns the shipping address"""
-        co_data = CheckoutSessionData(self.request)
-        addr_data = co_data.new_address_fields()
-        addr_id = co_data.user_address_id()
+        """
+        Create and returns the shipping address for the current order.
+        
+        If the shipping address was entered manually, then we simply
+        write out a ShippingAddress model with the appropriate form data.  If
+        the user is authenticated, then we create a UserAddress from this data
+        too so it can be re-used in the future. 
+        
+        If the shipping address was selected from the user's address book,
+        then we convert the UserAddress to a ShippingAddress.
+        """
+        addr_data = self.checkout_session.new_address_fields()
+        addr_id = self.checkout_session.user_address_id()
         if addr_data:
             addr = self.create_shipping_address_from_form_fields(addr_data)
             self.create_user_address(addr_data)
