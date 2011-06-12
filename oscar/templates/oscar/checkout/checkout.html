@@ -40,7 +40,7 @@
     </tr>
     {% endfor %}
     <tr>
-        <td colspan="5">Total</td>
+        <td colspan="5">Basket total</td>
         <td>{{ basket.total_excl_tax|currency }}</td>
         <td>{{ basket.total_incl_tax|currency }}</td>
     </tr>
@@ -66,21 +66,21 @@
     <tr>
         <th>Address</th>
         <td>
-            {% for field in shipping_addr.active_address_fields %}
-            {{ field }}<br/>
+            {% for field in shipping_address.active_address_fields %}
+                {{ field }}<br/>
             {% endfor %}
         </td>
     </tr>
-    {% if shipping_addr.phone_number %}
+    {% if shipping_address.phone_number %}
     <tr>
         <th>Concact number</th>
-        <td>shipping_addr.phone_number</td>
+        <td>shipping_address.phone_number</td>
     </tr>
     {% endif %}
-    {% if shipping_addr.notes %}
+    {% if shipping_address.notes %}
     <tr>
         <th>Shipping notes</th>
-        <td>shipping_addr.notes</td>
+        <td>shipping_address.notes</td>
     </tr>
     {% endif %} 
 </table>
@@ -91,7 +91,7 @@
 <h3>Shipping method</h3>
 {% block shipping_method %}
 
-{% if method %}
+{% if shipping_method %}
 <table>
     <thead>
         <tr>
@@ -103,9 +103,9 @@
     <thead>
     <tbody>
         <tr>
-            <td>{{ method.name }}</td>
-            <td>{{ method.basket_charge_incl_tax|currency }}</td>
-            <td>{{ method.description }}</td>
+            <td>{{ shipping_method.name }}</td>
+            <td>{{ shipping_method.basket_charge_incl_tax|currency }}</td>
+            <td>{{ shipping_method.description }}</td>
             <td></td>
     </tbody>
 </table>

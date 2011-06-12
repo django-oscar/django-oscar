@@ -16,9 +16,9 @@ urlpatterns = patterns('oscar.checkout.views',
     # Shipping method views
     url(r'shipping-method/$', ShippingMethodView.as_view(), name='oscar-checkout-shipping-method'),
     # Payment method views
-    url(r'payment-method/$', class_based_view(PaymentMethodView), name='oscar-checkout-payment-method'),
-    url(r'preview/$', class_based_view(OrderPreviewView), name='oscar-checkout-preview'),
-    url(r'payment-details/$', class_based_view(PaymentDetailsView), name='oscar-checkout-payment-details'),
+    url(r'payment-method/$', PaymentMethodView.as_view(), name='oscar-checkout-payment-method'),
+    url(r'preview/$', OrderPreviewView.as_view(), name='oscar-checkout-preview'),
+    url(r'payment-details/$', PaymentDetailsView.as_view(), name='oscar-checkout-payment-details'),
     url(r'thank-you/$', ThankYouView.as_view(), name='oscar-checkout-thank-you'),
 )
 
