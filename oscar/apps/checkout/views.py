@@ -51,12 +51,82 @@ class IndexView(TemplateView):
         return {'is_anon_checkout_allowed': getattr(settings, 'OSCAR_ALLOW_ANON_CHECKOUT', False)}
 
 
+class CheckoutSessionMixin(object):
+    """
+    Mixin to provide common functionality shared between checkout views.
+    """    
+
+    def dispatch(self, request, *args, **kwargs):
+        self.checkout_session = CheckoutSessionData(request)
+        return super(CheckoutSessionMixin, self).dispatch(request, *args, **kwargs)
+
+    def get_shipping_address(self):
+        """
+        Return the current shipping address for this checkout session.
+        
+        This could either be a ShippingAddress model which has been
+        pre-populated (not saved), or a UserAddress model which will 
+        need converting into a ShippingAddress model at submission
+        """
+        addr_data = self.checkout_session.new_address_fields()
+        if addr_data:
+            # Load address data into a blank address model
+            return ShippingAddress(**addr_data)
+        addr_id = self.checkout_session.user_address_id()
+        if addr_id:
+            try:
+                return UserAddress._default_manager.get(pk=addr_id)
+            except UserAddress.DoesNotExist:
+                # This can happen if you reset all your tables and you still have
+                # session data that refers to addresses that no longer exist
+                pass
+        return None
+        
+    def get_shipping_method(self, basket=None):
+        method = self.checkout_session.shipping_method()
+        if method:
+            if not basket:
+                basket = self.request.basket
+            method.set_basket(basket)
+        return method
+    
+    def get_order_totals(self, basket=None, shipping_method=None):
+        """
+        Returns the total for the order with and without tax (as a tuple)
+        """
+        calc = OrderTotalCalculator(self.request)
+        if not basket:
+            basket = self.request.basket
+        if not shipping_method:
+            shipping_method = self.get_shipping_method(basket)
+        total_incl_tax = calc.order_total_incl_tax(basket, shipping_method)
+        total_excl_tax = calc.order_total_excl_tax(basket, shipping_method)
+        return total_incl_tax, total_excl_tax
+    
+    def get_context_data(self, **kwargs):
+        """
+        Assign common template variables to the context.
+        """
+        ctx = super(CheckoutSessionMixin, self).get_context_data(**kwargs)
+        ctx['shipping_address'] = self.get_shipping_address()
+        
+        method = self.get_shipping_method()
+        if method:
+            ctx['shipping_method'] = method
+            ctx['shipping_total_excl_tax'] = method.basket_charge_excl_tax()
+            ctx['shipping_total_incl_tax'] = method.basket_charge_incl_tax()
+            
+        ctx['order_total_incl_tax'], ctx['order_total_excl_tax'] = self.get_order_totals()
+        
+        return ctx
+
+
 # ================
 # SHIPPING ADDRESS
 # ================
 
 
-class ShippingAddressView(FormView):
+class ShippingAddressView(CheckoutSessionMixin, FormView):
     """
     Determine the shipping address for the order.
     
@@ -73,8 +143,7 @@ class ShippingAddressView(FormView):
     form_class = ShippingAddressForm
     
     def get_initial(self):
-        co_data = CheckoutSessionData(self.request)
-        return co_data.new_address_fields()
+        return self.checkout_session.new_address_fields()
     
     def get_context_data(self, **kwargs):
         if self.request.user.is_authenticated():
@@ -88,8 +157,7 @@ class ShippingAddressView(FormView):
             address = UserAddress._default_manager.get(pk=self.request.POST['address_id'])
             if 'action' in self.request.POST and self.request.POST['action'] == 'ship_to':
                 # User has selected a previous address to ship to
-                co_data = CheckoutSessionData(self.request)
-                co_data.ship_to_user_address(address)
+                self.checkout_session.ship_to_user_address(address)
                 return self.get_success_response()
             elif 'action' in self.request.POST and self.request.POST['action'] == 'delete':
                 address.delete()
@@ -101,8 +169,7 @@ class ShippingAddressView(FormView):
             return super(ShippingAddressView, self).post(request, *args, **kwargs)
     
     def form_valid(self, form):
-        co_data = CheckoutSessionData(self.request)
-        co_data.ship_to_new_address(form.clean())
+        self.checkout_session.ship_to_new_address(form.clean())
         return super(ShippingAddressView, self).form_valid(form)
     
     def get_success_response(self):
@@ -174,76 +241,6 @@ class UserAddressDeleteView(DeleteView):
 # ===============    
     
 
-class CheckoutSessionMixin(object):
-
-    def dispatch(self, request, *args, **kwargs):
-        self.checkout_session = CheckoutSessionData(request)
-        return super(CheckoutSessionMixin, self).dispatch(request, *args, **kwargs)
-
-    def get_shipping_address(self):
-        """
-        Return the current shipping address for this checkout session.
-        
-        This could either be a ShippingAddress model which has been
-        pre-populated (not saved), or a UserAddress model which will 
-        need converting into a ShippingAddress model at submission
-        """
-        addr_data = self.checkout_session.new_address_fields()
-        if addr_data:
-            # Load address data into a blank address model
-            return ShippingAddress(**addr_data)
-        addr_id = self.checkout_session.user_address_id()
-        if addr_id:
-            try:
-                return UserAddress._default_manager.get(pk=addr_id)
-            except UserAddress.DoesNotExist:
-                # This can happen if you reset all your tables and you still have
-                # session data that refers to addresses that no longer exist
-                pass
-        return None
-    
-    def use_shipping_method(self, method_code):
-        self.checkout_session.use_shipping_method(method_code)
-        
-    def get_shipping_method(self, basket=None):
-        method = self.checkout_session.shipping_method()
-        if method:
-            if not basket:
-                basket = self.request.basket
-            method.set_basket(basket)
-        return method
-    
-    def get_order_totals(self, basket=None, shipping_method=None):
-        """
-        Returns the total for the order with and without tax (as a tuple)
-        """
-        calc = OrderTotalCalculator(self.request)
-        if not basket:
-            basket = self.request.basket
-        if not shipping_method:
-            shipping_method = self.get_shipping_method(basket)
-        total_incl_tax = calc.order_total_incl_tax(basket, shipping_method)
-        total_excl_tax = calc.order_total_excl_tax(basket, shipping_method)
-        return total_incl_tax, total_excl_tax
-    
-    def get_context_data(self, **kwargs):
-        """
-        Assign common template variables to the context.
-        """
-        ctx = super(CheckoutSessionMixin, self).get_context_data(**kwargs)
-        ctx['shipping_address'] = self.get_shipping_address()
-        
-        method = self.get_shipping_method()
-        if method:
-            ctx['shipping_method'] = method
-            ctx['shipping_total_excl_tax'] = method.basket_charge_excl_tax()
-            ctx['shipping_total_incl_tax'] = method.basket_charge_incl_tax()
-            
-        ctx['order_total_incl_tax'], ctx['order_total_excl_tax'] = self.get_order_totals()
-        
-        return ctx
-
-
 class ShippingMethodView(CheckoutSessionMixin, TemplateView):
     """
     Shipping methods are domain-specific and so need implementing in a 
@@ -257,7 +254,7 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
         self._methods = self.get_available_shipping_methods()
         if len(self._methods) == 1:
             # Only one shipping method - set this and redirect onto the next step
-            self.use_shipping_method(self._methods[0].code)
+            self.checkout_session.use_shipping_method(self._methods[0].code)
             return self.get_success_response()
         return super(ShippingMethodView, self).get(request, *args, **kwargs)
 
@@ -277,7 +274,7 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
     
     def post(self, request, *args, **kwargs):
         method_code = request.POST['method_code']
-        self.use_shipping_method(method_code)
+        self.checkout_session.use_shipping_method(method_code)
         return self.get_success_response()
         
     def get_success_response(self):
