@@ -339,7 +339,7 @@ class PaymentDetailsView(CheckoutSessionMixin, TemplateView):
         # need to be "unfrozen".  We also store the basket ID in the session
         # so the it can be retrieved by multistage checkout processes.
         basket.freeze()
-        self.request.session['checkout_basket_id'] = basket.id
+        self.checkout_session.set_submitted_basket(basket)
         
         # Handle payment.  Any payment problems should be handled by the 
         # handle_payment method raise an exception, which should be caught
@@ -365,7 +365,8 @@ class PaymentDetailsView(CheckoutSessionMixin, TemplateView):
             return self.place_order(order_number, basket, total_incl_tax, total_excl_tax)
     
     def get_submitted_basket(self):
-        return Basket._default_manager.get(pk=self.request.session['checkout_basket_id'])
+        basket_id = self.checkout_session.get_submitted_basket_id()
+        return Basket._default_manager.get(pk=basket_id)
     
     def restore_frozen_basket(self):
         """
@@ -448,7 +449,6 @@ class PaymentDetailsView(CheckoutSessionMixin, TemplateView):
     def reset_checkout(self):
         """Reset any checkout session state"""
         self.checkout_session.flush()
-        self.request.session['checkout_basket_id'] = None
     
     def create_order_models(self, basket, order_number, total_incl_tax, total_excl_tax):
         """Writes the order out to the DB"""

@@ -1,7 +1,6 @@
 from django.core.urlresolvers import resolve
 
 from oscar.core.loading import import_module
-
 import_module('shipping.repository', ['Repository'], locals())
 
 
@@ -42,7 +41,7 @@ class CheckoutSessionData(object):
         u"""Delete session key"""
         self.request.session[self.SESSION_KEY] = {}
         
-    # Shipping methods    
+    # Shipping addresses    
         
     def ship_to_user_address(self, address):
         u"""Set existing shipping address id to session and unset address fields from session"""
@@ -61,6 +60,8 @@ class CheckoutSessionData(object):
     def user_address_id(self):
         u"""Get user address id from session"""
         return self._get('shipping', 'user_address_id')
+    
+    # Shipping methods
     
     def use_free_shipping(self):
         u"""Set "free shipping" code to session"""
@@ -87,4 +88,12 @@ class CheckoutSessionData(object):
         
     def payment_method(self):
         return self._get('payment', 'method')
+    
+    # Submission methods
+    
+    def set_submitted_basket(self, basket):
+        self._set('submission', 'basket_id', basket.id)
+        
+    def get_submitted_basket_id(self):
+        self._get('submission', 'basket_id')
         
