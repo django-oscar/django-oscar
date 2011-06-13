@@ -8,6 +8,8 @@ from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.views.generic import ListView, DetailView
+
+from django.template.response import TemplateResponse
 from django.contrib import messages
 from django.db import transaction
 from django.db.models import Q
@@ -18,6 +20,7 @@ from oscar.views.generic import PostActionMixin
 import_module('order.models', ['Order', 'Line', 'ShippingEvent', 'ShippingEventQuantity', 
                                'ShippingEventType', 'PaymentEvent', 'PaymentEventType', 'OrderNote'], locals())
 import_module('order_management.forms', ['SimpleSearch'], locals())
+
 
 class OrderListView(ListView):
     u"""A list of orders"""
@@ -71,12 +74,12 @@ class OrderView(DetailView, PostActionMixin):
         context['shipping_options'] = ShippingEventType._default_manager.all()
         context['payment_options'] = PaymentEventType._default_manager.all()
         return context
-    
+      
     def post(self, request, *args, **kwargs):
         order = self.get_object()
         self.response = HttpResponseRedirect(reverse('oscar-order-management-order', kwargs={'order_number': order.number}))
         return super(OrderView, self).post(request, *args, **kwargs)
-    
+   
     def do_create_order_event(self, order):
         self.create_shipping_event(order, order.lines.all())
         

@@ -6,7 +6,7 @@
 {% block layout %}
     <div id="container">
         <div id="header">
-            <h1><a href="{% url oscar-home %}">Oscar // Flexible e-commerce for Django</a></h1>
+            <p><a href="{% url home %}">Oscar // Flexible e-commerce for Django</a></p>
             
             <form method="get" action="{% url oscar-search %}">
                 {{ search_form.as_p }}
@@ -14,10 +14,10 @@
             </form>
             
             {% if user.is_authenticated %}
-                <a href="{% url oscar-customer-profile %}">Profile</a>
-                <a href="{% url oscar-customer-logout %}">Logout</a>
+                <a href="{% url customer:summary %}">Profile</a>
+                <a href="{% url customer:logout %}">Logout</a>
             {% else %}
-                <a href="{% url oscar-customer-login %}">Login</a>
+                <a href="{% url customer:login %}">Login</a>
             {% endif %}
             
             {% for banner in banners %}
@@ -30,7 +30,7 @@
             to this page.
             
             Basket total: {{ basket.total_incl_tax|currency }}
-            <a href="{% url oscar-basket %}">View basket</a>
+            <a href="{% url basket:summary %}">View basket</a>
             
             {% block header %}
             {% endblock %}

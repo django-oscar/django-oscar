@@ -31,18 +31,13 @@ import_module('basket.models', ['Basket'], locals())
 
 logger = logging.getLogger('oscar.checkout')
 
+from oscar.apps.customer.views import AccountAuthView
 
-class IndexView(TemplateView):
+class IndexView(AccountAuthView):
     template_name = 'oscar/checkout/gateway.html'
     
-    def get(self, request, *args, **kwargs):
-        if self.request.user.is_authenticated():
-            return HttpResponseRedirect(reverse('oscar-checkout-shipping-address'))
-        return super(IndexView, self).get(request, *args, **kwargs)
-    
-    def get_context_data(self, **kwargs):
-        return {'is_anon_checkout_allowed': getattr(settings, 'OSCAR_ALLOW_ANON_CHECKOUT', False)}
-
+    def get_logged_in_redirect(self):
+        return reverse('oscar-checkout-shipping-address')
 
 class ShippingAddressView(CheckoutView):
     template_file = 'oscar/checkout/shipping_address.html'

@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% load currency_filters %}
+{% load thumbnail %}
+
+{% block header %}
+<h2>Email: #{{ email.subject }}</h2>
+{% endblock header %}
+
+
+{% block content %}
+
+<table>
+    <tr>
+        <th>Date sent</th>
+        <td>{{ email.date_sent }}</td>
+    </tr>
+    <tr>
+        <th>Subject</th>
+        <td>{{ email.subject }}</td>
+    </tr>
+    <tr>
+        <th>Body</th>
+        <td>{{ email.body_text }}</td>
+    </tr>
+</table>
+
+<p><a href="{% url customer:email-list %}">Return to email history</a></p>
+
+{% endblock content %}
+

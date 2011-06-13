@@ -1,7 +1,5 @@
 from django.contrib import admin
+from django.db.models import get_model
 
-from oscar.core.loading import import_module
-import_module('address.models', ['UserAddress', 'Country'], locals())
-
-admin.site.register(UserAddress)
-admin.site.register(Country)
+admin.site.register(get_model('address', 'useraddress'))
+admin.site.register(get_model('address', 'country'))
