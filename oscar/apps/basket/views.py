@@ -50,10 +50,11 @@ class BasketView(ModelFormsetView):
                     needs_auth = True
         if needs_auth:
             messages.error(self.request, "You can't save an item for later if you're not logged in!")     
-        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER',reverse('basket:summary')))
+        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER', reverse('basket:summary')))
 
     def formset_invalid(self, formset):
         messages.info(self.request, "There was a problem updating your basket, please check that all quantities are numbers")
+        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER', reverse('basket:summary')))
 
 
 class BasketAddView(FormView):
