@@ -13,8 +13,7 @@ setup(name='django-oscar',
       long_description=open('README.rst').read(),
       license='LICENSE',
       package_dir={'': '.'},
-      install_requires=['Django>=1.3',
-          'PIL>=1.1.7',
+      install_requires=[
           'django-haystack>=1.2.0',
           'sorl-thumbnail>=11.05.1'],
       # See http://pypi.python.org/pypi?%3Aaction=list_classifiers
