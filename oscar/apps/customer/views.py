@@ -1,12 +1,19 @@
+import urlparse
+
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.utils.translation import ugettext as _
 from oscar.apps.address.forms import UserAddressForm
 from oscar.views.generic import PostActionMixin
+from oscar.apps.customer.forms import EmailAuthenticationForm, EmailUserCreationForm
+from django.contrib.auth import authenticate
+from django.contrib.auth import login as auth_login
+
+from django.conf import settings
 
 from django.db.models import get_model
 
@@ -27,6 +34,60 @@ class AccountSummaryView(ListView):
     def get_queryset(self):
         u"""Return a customer's orders"""
         return self.model._default_manager.filter(user=self.request.user)[0:5]
+    
+    
+class AccountAuthView(TemplateView):
+    template_name = 'customer/login_registration.html'
+    redirect_field_name = 'next'
+    login_prefix = 'login'
+    registration_prefix = 'registration'
+    
+    def get_context_data(self, *args, **kwargs):
+        context = super(AccountAuthView, self).get_context_data(*args, **kwargs)
+        redirect_to = self.request.REQUEST.get(self.redirect_field_name, '')
+        context[self.redirect_field_name] = redirect_to
+        context['login_form'] = EmailAuthenticationForm(prefix=self.login_prefix)
+        context['registration_form'] = EmailUserCreationForm(prefix=self.registration_prefix)        
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(*args, **kwargs)
+
+        self.request.session.set_test_cookie()
+        return self.render_to_response(context)
+    
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data(*args, **kwargs)
+        redirect_to = context.get(self.redirect_field_name)
+
+        netloc = urlparse.urlparse(redirect_to)[1]
+        if not redirect_to:
+            redirect_to = settings.LOGIN_REDIRECT_URL
+        elif netloc and netloc != request.get_host():
+            redirect_to = settings.LOGIN_REDIRECT_URL
+        
+        if u'login_submit' in self.request.POST:
+            login_form = EmailAuthenticationForm(prefix=self.login_prefix, data=request.POST)            
+            if login_form.is_valid():
+                auth_login(request, login_form.get_user())
+                if request.session.test_cookie_worked():
+                    request.session.delete_test_cookie()
+                return HttpResponseRedirect(redirect_to)
+            context['login_form'] = login_form
+
+        if u'registration_submit' in self.request.POST:
+            registration_form = EmailUserCreationForm(prefix=self.registration_prefix, data=request.POST)
+            context['registration_form'] = registration_form
+            if registration_form.is_valid():
+                user = registration_form.save()
+                authenticate(username=user.email, password=registration_form.cleaned_data['password2'])
+                auth_login(self.request, user)
+                if self.request.session.test_cookie_worked():
+                    self.request.session.delete_test_cookie()                
+                return HttpResponseRedirect(redirect_to)
+        
+        self.request.session.set_test_cookie()
+        return self.render_to_response(context)
 
     
 class EmailHistoryView(ListView):

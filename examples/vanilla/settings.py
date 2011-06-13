@@ -207,7 +207,12 @@ INSTALLED_APPS = (
     #'pyzen',
 )
 
-LOGIN_REDIRECT_URL = '/shop/accounts/profile/'
+AUTHENTICATION_BACKENDS = (
+    'oscar.apps.customer.auth_backends.Emailbackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+LOGIN_REDIRECT_URL = '/accounts/'
 APPEND_SLASH = True
 
 # Oscar settings
