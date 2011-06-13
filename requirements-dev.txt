@@ -10,4 +10,4 @@ pysolr==2.0.13
 PyZen==0.3.1
 mock==0.7.0
 twill==0.9
--e git+https://AndrewIngram@github.com/AndrewIngram/django-extra-views.git#egg=django-extra-views
+-e git://github.com/AndrewIngram/django-extra-views.git@b2290b2ca1bc5ee4c08af2b7a9f268d48d3cefd7#egg=django_extra_views-0.1.0-py2.6-dev

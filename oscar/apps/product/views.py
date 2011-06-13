@@ -1,14 +1,14 @@
 from django.http import HttpResponsePermanentRedirect, Http404
 from django.views.generic import ListView, DetailView
-from oscar.apps.product.signals import product_viewed, product_search
-
 from django.db.models import get_model
+
+from oscar.apps.product.signals import product_viewed, product_search
 
 item_model = get_model('product','item')
 category_model = get_model('product', 'category')
 
+
 class ItemDetailView(DetailView):
-    #template_name = "oscar/product/item.html"
     model = item_model
     view_signal = product_viewed
     template_folder = "product"
@@ -28,12 +28,11 @@ class ItemDetailView(DetailView):
         self.view_signal.send(sender=self, product=item, user=request.user, request=request, response=response)
         return response;
 
-    
     def get_template_names(self):
         """
         Returns a list of possible templates.
         
-        We try 2 options before defaulting to oscar/product/detail.html:
+        We try 2 options before defaulting to product/detail.html:
         1). detail-for-upc-<upc>.html
         2). detail-for-class-<classname>.html
         

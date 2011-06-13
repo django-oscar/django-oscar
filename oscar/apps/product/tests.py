@@ -1,13 +1,13 @@
-import unittest
 
 from django.test import TestCase, Client
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
-from oscar.apps.product.models import Item, ItemClass, Category
 
+from oscar.apps.product.models import Item, ItemClass, Category
 from oscar.apps.product.utils import breadcrumbs_to_category
 
-class CategoryTests(unittest.TestCase):
+
+class CategoryTests(TestCase):
     
     def test_create_category_root(self):
         trail = 'Books'
@@ -41,7 +41,7 @@ class CategoryTests(unittest.TestCase):
         self.assertEquals(category.slug, 'books/factual/popular-science', )        
 
 
-class ItemTests(unittest.TestCase):
+class ItemTests(TestCase):
 
     def setUp(self):
         self.item_class,_ = ItemClass.objects.get_or_create(name='Clothing')

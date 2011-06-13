@@ -6,15 +6,14 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.utils.translation import ugettext as _
+from django.contrib.auth import authenticate
+from django.contrib.auth import login as auth_login
+from django.conf import settings
+from django.db.models import get_model
+
 from oscar.apps.address.forms import UserAddressForm
 from oscar.views.generic import PostActionMixin
 from oscar.apps.customer.forms import EmailAuthenticationForm, EmailUserCreationForm
-from django.contrib.auth import authenticate
-from django.contrib.auth import login as auth_login
-
-from django.conf import settings
-
-from django.db.models import get_model
 
 order_model = get_model('order', 'Order')
 order_line_model = get_model('order', 'Line')
@@ -24,14 +23,14 @@ email_model = get_model('customer', 'email')
 
 
 class AccountSummaryView(ListView):
-    u"""Customer order history"""
+    """Customer order history"""
     context_object_name = "orders"
     template_name = 'customer/profile.html'
     paginate_by = 20
     model = order_model
 
     def get_queryset(self):
-        u"""Return a customer's orders"""
+        """Return a customer's orders"""
         return self.model._default_manager.filter(user=self.request.user)[0:5]
     
     
@@ -106,34 +105,34 @@ class EmailHistoryView(ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        u"""Return a customer's orders"""
+        """Return a customer's orders"""
         return email_model._default_manager.filter(user=self.request.user)
 
 
 class EmailDetailView(DetailView):
-    u"""Customer order details"""
+    """Customer order details"""
     template_name = "customer/email.html"
     context_object_name = 'email'
     
     def get_object(self):
-        u"""Return an order object or 404"""
+        """Return an order object or 404"""
         return get_object_or_404(email_model, user=self.request.user, id=self.kwargs['email_id'])
 
 
 class OrderHistoryView(ListView):
-    u"""Customer order history"""
+    """Customer order history"""
     context_object_name = "orders"
     template_name = 'customer/order-history.html'
     paginate_by = 20
     model = order_model
 
     def get_queryset(self):
-        u"""Return a customer's orders"""
+        """Return a customer's orders"""
         return self.model._default_manager.filter(user=self.request.user)
 
 
 class OrderDetailView(DetailView):
-    u"""Customer order details"""
+    """Customer order details"""
     model = order_model
     
     def get_template_names(self):
@@ -144,10 +143,10 @@ class OrderDetailView(DetailView):
 
 
 class OrderLineView(DetailView, PostActionMixin):
-    u"""Customer order line"""
+    """Customer order line"""
     
     def get_object(self):
-        u"""Return an order object or 404"""
+        """Return an order object or 404"""
         order = get_object_or_404(order_model, user=self.request.user, number=self.kwargs['order_number'])
         return order.lines.get(id=self.kwargs['line_id'])
     
@@ -171,13 +170,13 @@ class OrderLineView(DetailView, PostActionMixin):
 
 
 class AddressListView(ListView):
-    u"""Customer address book"""
+    """Customer address book"""
     context_object_name = "addresses"
     template_name = 'customer/address-book.html'
     paginate_by = 40
         
     def get_queryset(self):
-        u"""Return a customer's addresses"""
+        """Return a customer's addresses"""
         return user_address_model._default_manager.filter(user=self.request.user)
 
 

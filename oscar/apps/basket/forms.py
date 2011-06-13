@@ -4,6 +4,7 @@ from django.db.models import get_model
 basketline_model = get_model('basket', 'line')
 basket_model = get_model('basket', 'basket')
 
+
 class BasketLineForm(forms.ModelForm):
     save_for_later = forms.BooleanField(initial=False, required=False)
     
@@ -26,9 +27,19 @@ class BasketVoucherForm(forms.Form):
     def __init__(self, *args, **kwargs):
         return super(BasketVoucherForm, self).__init__(*args,**kwargs)
 
+
 class AddToBasketForm(forms.Form):
     product_id = forms.IntegerField(widget=forms.HiddenInput(), min_value=1)
     quantity = forms.IntegerField(initial=1, min_value=1)
+    
+    def __init__(self, instance, *args, **kwargs):
+        super(AddToBasketForm, self).__init__(*args, **kwargs)
+        self.instance = instance
+        if instance:
+            if instance.is_group:
+                self._create_group_product_fields(instance)
+            else:
+                self._create_product_fields(instance)
     
     def _create_group_product_fields(self, item):
         u"""
@@ -57,11 +68,4 @@ class AddToBasketForm(forms.Form):
         """
         self.fields[option.code] = forms.CharField()    
     
-    def __init__(self, instance, *args, **kwargs):
-        self.instance = instance
-        if instance:
-            if instance.is_group:
-                self._create_group_product_fields(instance)
-            else:
-                self._create_product_fields(instance)
-        super(AddToBasketForm, self).__init__(*args, **kwargs)
+

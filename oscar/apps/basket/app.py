@@ -1,6 +1,8 @@
 from django.conf.urls.defaults import patterns, url
+
 from oscar.apps.basket.views import BasketView, SavedView, VoucherView, VoucherAddView, BasketAddView
 from oscar.core.application import Application
+
 
 class BasketApplication(Application):
     name = 'basket'

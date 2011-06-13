@@ -93,7 +93,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    #'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
@@ -181,7 +181,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.flatpages',
     # External apps
-    #'django_extensions',
+    'django_extensions',
     'haystack',
     'debug_toolbar',
     # Apps from oscar
@@ -205,7 +205,7 @@ INSTALLED_APPS = (
     'oscar.apps.promotions',
     'oscar.apps.reports',
     'oscar.apps.search',
-    #'pyzen',
+    'pyzen',
 )
 
 AUTHENTICATION_BACKENDS = (

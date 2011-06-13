@@ -1,5 +1,6 @@
 from django.conf.urls.defaults import patterns, url
 from django.contrib.auth.decorators import login_required
+
 from oscar.apps.customer.views import AccountSummaryView, OrderHistoryView, \
     OrderDetailView, OrderLineView, AddressListView, AddressCreateView, \
     AddressUpdateView, AddressDeleteView, EmailHistoryView, EmailDetailView, \

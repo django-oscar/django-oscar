@@ -3,20 +3,21 @@ from django.core.urlresolvers import reverse
 from django.db.models import get_model
 from django.http import HttpResponseRedirect, Http404
 from django.views.generic import ListView, FormView
+from django.forms.models import modelformset_factory
+
 from extra_views import ModelFormsetView
 from oscar.apps.basket.forms import BasketLineForm, AddToBasketForm, \
     BasketVoucherForm, SavedLineForm
-from django.forms.models import modelformset_factory
+
 
 class BasketView(ModelFormsetView):
-    model = get_model('basket', 'line')
-    basket_model = get_model('basket', 'basket')
+    model = get_model('basket', 'Line')
+    basket_model = get_model('basket', 'Basket')
     form_class = BasketLineForm
     extra = 0
     can_delete = True
     template_name='basket/basket.html'
     
-
     def get_queryset(self):
         return self.request.basket.lines.all()
     
@@ -160,10 +161,10 @@ class SavedView(ModelFormsetView):
                 messages.info(self.request, msg)                
                 real_basket = self.request.basket
                 real_basket.merge_line(form.instance)
-        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER',reverse('basket:summary')))
+        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER', reverse('basket:summary')))
     
     def formset_invalid(self, formset):
-        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER',reverse('basket:summary')))
+        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER', reverse('basket:summary')))
 
 
 #    def do_remove_voucher(self, basket):
