@@ -24,14 +24,15 @@ class BasketView(ModelFormsetView):
         context = super(BasketView, self).get_context_data(**kwargs)
         context['voucher_form'] = BasketVoucherForm()
         
-        try:
-            saved_basket = self.basket_model.saved.get(owner=self.request.user)
-            saved_queryset = saved_basket.lines.all().select_related('product', 'product__stockrecord')
-            SavedFormset = modelformset_factory(self.model, form=SavedLineForm, extra=0, can_delete=True)
-            formset = SavedFormset(queryset=saved_queryset)
-            context['saved_formset'] = formset
-        except self.basket_model.DoesNotExist:
-            pass
+        if self.request.user.is_authenticated():
+            try:
+                saved_basket = self.basket_model.saved.get(owner=self.request.user)
+                saved_queryset = saved_basket.lines.all().select_related('product', 'product__stockrecord')
+                SavedFormset = modelformset_factory(self.model, form=SavedLineForm, extra=0, can_delete=True)
+                formset = SavedFormset(queryset=saved_queryset)
+                context['saved_formset'] = formset
+            except self.basket_model.DoesNotExist:
+                pass
         return context
 
     def formset_valid(self, formset):
