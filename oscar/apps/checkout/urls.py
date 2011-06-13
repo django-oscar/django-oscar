@@ -1,6 +1,5 @@
 from django.conf.urls.defaults import *
 
-from oscar.core.decorators import class_based_view
 from oscar.core.loading import import_module
 import_module('checkout.views', ['IndexView', 'ShippingAddressView', 'UserAddressDeleteView', 'UserAddressCreateView', 
                                  'UserAddressUpdateView', 'ShippingMethodView', 'PaymentMethodView', 'OrderPreviewView',

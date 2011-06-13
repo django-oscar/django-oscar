@@ -2,7 +2,6 @@ from django.conf.urls.defaults import *
 from django.contrib.auth.decorators import login_required
 from django.views.generic.simple import redirect_to
 
-from oscar.core.decorators import class_based_view
 from oscar.core.loading import import_module
 import_module('customer.views', ['OrderHistoryView', 'OrderDetailView', 'OrderLineView',
                                  'AddressBookView', 'AddressView', 'EmailHistoryView', 'EmailDetailView'], locals())
