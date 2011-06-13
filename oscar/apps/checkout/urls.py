@@ -9,11 +9,10 @@ import_module('checkout.views', ['IndexView', 'ShippingAddressView',
 
 urlpatterns = patterns('oscar.checkout.views',
     url(r'^$', IndexView.as_view(), name='oscar-checkout-index'),
-    url(r'shipping-address/$', class_based_view(ShippingAddressView), name='oscar-checkout-shipping-address'),
-    url(r'shipping-method/$', class_based_view(ShippingMethodView), name='oscar-checkout-shipping-method'),
-    url(r'payment-method/$', class_based_view(PaymentMethodView), name='oscar-checkout-payment-method'),
-    url(r'preview/$', class_based_view(OrderPreviewView), name='oscar-checkout-preview'),
-    url(r'payment-details/$', class_based_view(PaymentDetailsView), name='oscar-checkout-payment-details'),
-    url(r'thank-you/$', ThankYouView.as_view(), name='oscar-checkout-thank-you'),
+    url(r'^shipping-address/$', class_based_view(ShippingAddressView), name='oscar-checkout-shipping-address'),
+    url(r'^shipping-method/$', class_based_view(ShippingMethodView), name='oscar-checkout-shipping-method'),
+    url(r'^payment-method/$', class_based_view(PaymentMethodView), name='oscar-checkout-payment-method'),
+    url(r'^preview/$', class_based_view(OrderPreviewView), name='oscar-checkout-preview'),
+    url(r'^payment-details/$', class_based_view(PaymentDetailsView), name='oscar-checkout-payment-details'),
+    url(r'^thank-you/$', ThankYouView.as_view(), name='oscar-checkout-thank-you'),
 )
-

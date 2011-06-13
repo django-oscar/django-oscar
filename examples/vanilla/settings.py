@@ -85,6 +85,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'oscar.apps.search.context_processors.search_form',
     'oscar.apps.promotions.context_processors.promotions',
     'oscar.apps.promotions.context_processors.merchandising_blocks',
+    'oscar.apps.checkout.context_processors.checkout',
 ) 
 
 MIDDLEWARE_CLASSES = (
@@ -217,6 +218,8 @@ APPEND_SLASH = True
 
 # Oscar settings
 from oscar.defaults import *
+
+OSCAR_ALLOW_ANON_CHECKOUT = True
 
 # Haystack settings
 HAYSTACK_SITECONF = 'oscar.search_sites'

@@ -11,7 +11,7 @@
 
 <h2>Log In</h2>
 
-<form action="." method="post" />
+<form action="{{ request.get_full_path }}" method="post" />
 
 {% csrf_token %}
 
@@ -23,7 +23,7 @@
 
 <h2>or Register Now</h2>
 
-<form action="." method="post" />
+<form action="{{ request.get_full_path }}" method="post" />
 
 {% csrf_token %}
 

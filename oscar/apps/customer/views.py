@@ -1,7 +1,6 @@
 import urlparse
 
 from django.shortcuts import get_object_or_404
-from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
@@ -42,6 +41,9 @@ class AccountAuthView(TemplateView):
     login_prefix = 'login'
     registration_prefix = 'registration'
     
+    def get_logged_in_redirect(self):
+        return reverse('customer:summary')
+    
     def get_context_data(self, *args, **kwargs):
         context = super(AccountAuthView, self).get_context_data(*args, **kwargs)
         redirect_to = self.request.REQUEST.get(self.redirect_field_name, '')
@@ -49,22 +51,29 @@ class AccountAuthView(TemplateView):
         context['login_form'] = EmailAuthenticationForm(prefix=self.login_prefix)
         context['registration_form'] = EmailUserCreationForm(prefix=self.registration_prefix)        
         return context
+    
+    def check_redirect(self, context):
+        redirect_to = context.get(self.redirect_field_name)
+        
+        netloc = urlparse.urlparse(redirect_to)[1]
+        if not redirect_to:
+            redirect_to = settings.LOGIN_REDIRECT_URL
+        elif netloc and netloc != self.request.get_host():
+            redirect_to = settings.LOGIN_REDIRECT_URL
+        return redirect_to
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(*args, **kwargs)
+        
+        if request.user.is_authenticated():
+            return HttpResponseRedirect(self.get_logged_in_redirect())
 
         self.request.session.set_test_cookie()
         return self.render_to_response(context)
     
     def post(self, request, *args, **kwargs):
         context = self.get_context_data(*args, **kwargs)
-        redirect_to = context.get(self.redirect_field_name)
-
-        netloc = urlparse.urlparse(redirect_to)[1]
-        if not redirect_to:
-            redirect_to = settings.LOGIN_REDIRECT_URL
-        elif netloc and netloc != request.get_host():
-            redirect_to = settings.LOGIN_REDIRECT_URL
+        redirect_to = self.check_redirect(context)
         
         if u'login_submit' in self.request.POST:
             login_form = EmailAuthenticationForm(prefix=self.login_prefix, data=request.POST)            
