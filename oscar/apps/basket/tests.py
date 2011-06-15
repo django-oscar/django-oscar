@@ -9,7 +9,7 @@ from oscar.test.helpers import create_product, TwillTestCase
 class ViewTest(TwillTestCase):
 
     def test_for_smoke(self):
-        self.visit('oscar-basket')
+        self.visit('basket:summary')
         self.assertResponseCodeIs(200)
         self.assertPageContains('Basket')
         self.assertPageTitleMatches('Oscar')
@@ -46,14 +46,14 @@ class BasketViewsTest(unittest.TestCase):
         self.client = Client()
     
     def test_empty_basket_view(self):
-        url = reverse('oscar-basket')
+        url = reverse('basket:summary')
         response = self.client.get(url)
         self.assertEquals(200, response.status_code)
         self.assertEquals(0, response.context['basket'].num_lines)
         
     def test_anonymous_add_to_basket_creates_cookie(self):
         dummy_product = create_product()
-        url = reverse('oscar-basket')
+        url = reverse('basket:add')
         post_params = {'product_id': dummy_product.id,
                        'action': 'add',
                        'quantity': 1}

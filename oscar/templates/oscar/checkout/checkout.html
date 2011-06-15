@@ -56,7 +56,7 @@
         <td>{{ order_total_incl_tax|currency }}</td>
     </tr>
 </table>
-<a href="{% url oscar-basket %}">Edit order contents</a>
+<a href="{% url basket:summary %}">Edit order contents</a>
 {% endblock order_contents %}
 
 <hr />
@@ -73,14 +73,14 @@
     </tr>
     {% if shipping_address.phone_number %}
     <tr>
-        <th>Concact number</th>
-        <td>shipping_address.phone_number</td>
+        <th>Contact number</th>
+        <td>{{ shipping_addr.phone_number }}</td>
     </tr>
     {% endif %}
     {% if shipping_address.notes %}
     <tr>
         <th>Shipping notes</th>
-        <td>shipping_address.notes</td>
+        <td>{{ shipping_addr.notes }}</td>
     </tr>
     {% endif %} 
 </table>

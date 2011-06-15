@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+
+{% load currency_filters %}
+
+{% block header %}
+<h1>{{ summary }}</h1>
+{% endblock header %}
+
+
+{% block content %}
+
+{% if products.count %}
+
+<ol>
+{% for product in products %}
+<li>
+    {% with product.images.all as image %}
+         <a href="{{ product.get_absolute_url }}"><img src="{{ im.url }}" width="100" height="100"></a>
+    {% endwith %}
+
+    <a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a><br/>
+    {% if product.is_group %}
+        From {{ product.min_variant_price_incl_tax|currency }}
+    {% else %}
+        {% if product.has_stockrecord %} 
+            {{ product.stockrecord.price_incl_tax|currency }}<br/>
+            {{ product.stockrecord.availability }}
+        {% else %}
+            Not available    
+        {% endif %}
+    {% endif %}    
+</li>
+{% endfor %}
+</ol>
+
+{% if page_obj %}
+<div class="pagination">
+    <span class="step-links">
+    
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+</div>
+{% endif %}
+
+{% else %}
+
+<p>No products found.</p>
+
+{% endif %}
+
+{% endblock content %}
+

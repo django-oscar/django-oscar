@@ -33,8 +33,10 @@ import_module('basket.models', ['Basket'], locals())
 # Standard logger for checkout events
 logger = logging.getLogger('oscar.checkout')
 
+from oscar.apps.customer.views import AccountAuthView
 
-class IndexView(TemplateView):
+
+class IndexView(AccountAuthView):
     """
     First page of the checkout.  If the user is signed in then we forward
     straight onto the next step.  Otherwise, we provide options to login, register and
@@ -42,13 +44,8 @@ class IndexView(TemplateView):
     """
     template_name = 'oscar/checkout/gateway.html'
     
-    def get(self, request, *args, **kwargs):
-        if self.request.user.is_authenticated():
-            return HttpResponseRedirect(reverse('oscar-checkout-shipping-address'))
-        return super(IndexView, self).get(request, *args, **kwargs)
-    
-    def get_context_data(self, **kwargs):
-        return {'is_anon_checkout_allowed': getattr(settings, 'OSCAR_ALLOW_ANON_CHECKOUT', False)}
+    def get_logged_in_redirect(self):
+        return reverse('oscar-checkout-shipping-address')
 
 
 class CheckoutSessionMixin(object):
@@ -158,7 +155,7 @@ class ShippingAddressView(CheckoutSessionMixin, FormView):
             if 'action' in self.request.POST and self.request.POST['action'] == 'ship_to':
                 # User has selected a previous address to ship to
                 self.checkout_session.ship_to_user_address(address)
-                return self.get_success_response()
+                return HttpResponseRedirect(self.get_success_response())
             elif 'action' in self.request.POST and self.request.POST['action'] == 'delete':
                 address.delete()
                 messages.info(self.request, "Address deleted from your address book")
@@ -172,8 +169,8 @@ class ShippingAddressView(CheckoutSessionMixin, FormView):
         self.checkout_session.ship_to_new_address(form.clean())
         return super(ShippingAddressView, self).form_valid(form)
     
-    def get_success_response(self):
-        return HttpResponseRedirect(reverse('oscar-checkout-shipping-method'))
+    def get_success_url(self):
+        return reverse('oscar-checkout-shipping-method')
     
 
 class UserAddressCreateView(CreateView):

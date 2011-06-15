@@ -15,6 +15,7 @@ setup(name='django-oscar',
       package_dir={'': '.'},
       install_requires=[
           'django-haystack>=1.2.0',
+          'django-treebeard>=1.6.1'
           'sorl-thumbnail>=11.05.1'],
       # See http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=['Development Status :: 3 - Alpha',

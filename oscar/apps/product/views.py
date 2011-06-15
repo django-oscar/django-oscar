@@ -1,27 +1,17 @@
-from django.conf import settings
-from django.http import HttpResponse, Http404, HttpResponsePermanentRedirect, HttpResponseRedirect
-from django.template import Context, loader, RequestContext
-from django.shortcuts import get_object_or_404, render
-from django.core.urlresolvers import reverse
-from django.core.paginator import Paginator, InvalidPage, EmptyPage
-from django.views.generic import ListView, DetailView, CreateView
-from django.template.response import TemplateResponse
-from django.db.models import Avg
-from django.core.exceptions import ObjectDoesNotExist
-from django.contrib import messages
+from django.http import HttpResponsePermanentRedirect, Http404
+from django.views.generic import ListView, DetailView
+from django.db.models import get_model
 
-from oscar.views.generic import PostActionMixin
-from oscar.core.loading import import_module
-import_module('product.models', ['Item', 'ItemClass'], locals())
-import_module('product.signals', ['product_viewed', 'product_search'], locals())
-import_module('basket.forms', ['FormFactory'], locals())
-import_module('customer.history_helpers', ['receive_product_view'], locals())
-import_module('product.reviews.models', ['ProductReview', 'Vote'], locals())
+from oscar.apps.product.signals import product_viewed, product_search
+
+item_model = get_model('product','item')
+category_model = get_model('product', 'category')
 
 
 class ItemDetailView(DetailView):
-    u"""View a single product."""
-    template_folder = "oscar/product"
+    model = item_model
+    view_signal = product_viewed
+    template_folder = "product"
     _item = None
     
     def get(self, request, **kwargs):
@@ -32,18 +22,17 @@ class ItemDetailView(DetailView):
         correct_path = item.get_absolute_url() 
         if correct_path != request.path:
             return HttpResponsePermanentRedirect(correct_path)
-        
         response = super(ItemDetailView, self).get(request, **kwargs)
         
         # Send signal to record the view of this product
-        product_viewed.send(sender=self, product=item, user=request.user, request=request, response=response)
+        self.view_signal.send(sender=self, product=item, user=request.user, request=request, response=response)
         return response;
-    
+
     def get_template_names(self):
         """
         Returns a list of possible templates.
         
-        We try 2 options before defaulting to oscar/product/detail.html:
+        We try 2 options before defaulting to product/detail.html:
         1). detail-for-upc-<upc>.html
         2). detail-for-class-<classname>.html
         
@@ -55,46 +44,44 @@ class ItemDetailView(DetailView):
                  '%s/detail-for-class-%s.html' % (self.template_folder, product.item_class.name.lower()),
                  '%s/detail.html' % (self.template_folder)]
         return names
+
+
+class CategoryView(ListView):
+    u"""A list of products"""
+    context_object_name = "products"
+    template_name = 'product/browse.html'
+    paginate_by = 20
     
-    def get_object(self):
-        u"""
-        Return a product object or a 404.
-        
-        We cache the object as this method gets called twice."""
-        if not self._item:
-            self._item = get_object_or_404(Item, pk=self.kwargs['item_id'])
-        return self._item
+    def get_categories(self):
+        slug = self.kwargs['category_slug']
+        try:
+            category = category_model.objects.get(slug=slug)
+        except category_model.DoesNotExist:
+            raise Http404()
+        categories = list(category.get_descendants())
+        categories.append(category)
+        return categories
     
     def get_context_data(self, **kwargs):
-        context = super(ItemDetailView, self).get_context_data(**kwargs)
-        context['basket_form'] = self.get_add_to_basket_form()
-        context['reviews'] = self.get_reviews()
-        return context
-    
-    def get_add_to_basket_form(self):
-        factory = FormFactory()
-        return factory.create(self.object)
-    
-    def get_reviews(self):
-        return ProductReview.approved.filter(product=self.get_object())
-    
-    
-class ItemClassListView(ListView):
-    u"""View products filtered by item-class."""
-    context_object_name = "products"
-    template_name = 'oscar/product/browse.html'
-    paginate_by = 20
+        context = super(CategoryView, self).get_context_data(**kwargs)
+
+        categories = self.get_categories()
+
+        context['categories'] = categories
+        context['category'] = categories[-1]
+        context['summary'] = categories[-1].name
+        return context    
 
     def get_queryset(self):
-        item_class = get_object_or_404(ItemClass, slug=self.kwargs['item_class_slug'])
-        return Item.browsable.filter(item_class=item_class)
-
+        return item_model.browsable.filter(categories__in=self.get_categories()).distinct()
+        
 
 class ProductListView(ListView):
     u"""A list of products"""
     context_object_name = "products"
-    template_name = 'oscar/product/browse.html'
+    template_name = 'product/browse.html'
     paginate_by = 20
+    search_signal = product_search
 
     def get_search_query(self):
         u"""Return a search query from GET"""
@@ -104,15 +91,14 @@ class ProductListView(ListView):
         return q
 
     def get_queryset(self):
-        u"""Return a set of prodcuts"""
+        u"""Return a set of products"""
         q = self.get_search_query()
         if q:
             # Send signal to record the view of this product
-            product_search.send(sender=self, query=q, user=self.request.user)
-            
-            return Item.browsable.filter(title__icontains=q)
+            self.search_signal.send(sender=self, query=q, user=self.request.user)
+            return item_model.browsable.filter(title__icontains=q)
         else:
-            return Item.browsable.all()
+            return item_model.browsable.all()
         
     def get_context_data(self, **kwargs):
         context = super(ProductListView, self).get_context_data(**kwargs)

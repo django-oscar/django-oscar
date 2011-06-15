@@ -20,4 +20,3 @@ urlpatterns = patterns('oscar.checkout.views',
     url(r'payment-details/$', PaymentDetailsView.as_view(), name='oscar-checkout-payment-details'),
     url(r'thank-you/$', ThankYouView.as_view(), name='oscar-checkout-thank-you'),
 )
-

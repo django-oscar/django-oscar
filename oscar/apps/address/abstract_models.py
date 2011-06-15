@@ -15,7 +15,7 @@ class AbstractAddress(models.Model):
     """
     # @todo: Need a way of making these choice lists configurable 
     # per project
-    MR, MISS, MRS, MS, DR = ('Dr', 'Miss', 'Mrs', 'Ms', 'Dr')
+    MR, MISS, MRS, MS, DR = ('Mr', 'Miss', 'Mrs', 'Ms', 'Dr')
     TITLE_CHOICES = (
         (MR, _("Mr")),
         (MISS, _("Miss")),

@@ -1,14 +1,47 @@
-import unittest
 
 from django.test import TestCase, Client
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 
-from oscar.apps.product.models import Item, ItemClass
-from oscar.apps.partner.models import Partner, StockRecord
+from oscar.apps.product.models import Item, ItemClass, Category
+from oscar.apps.product.utils import breadcrumbs_to_category
 
 
-class ItemTests(unittest.TestCase):
+class CategoryTests(TestCase):
+    
+    def test_create_category_root(self):
+        trail = 'Books'
+        category = breadcrumbs_to_category(trail)
+        self.assertIsNotNone(category)
+        self.assertEquals(category.name, 'Books')
+        self.assertEquals(category.slug, 'books')      
+    
+    def test_subcategory(self):
+        trail = 'Books > Science-Fiction'
+        category = breadcrumbs_to_category(trail)
+        
+        self.assertIsNotNone(category)
+        self.assertEquals(category.name, 'Science-Fiction')
+        self.assertEquals(category.get_depth(), 2)
+        self.assertEquals(category.get_parent().name, 'Books')
+        self.assertEquals(2, Category.objects.count())
+        self.assertEquals(category.slug, 'books/science-fiction')
+        
+    def test_subsubcategory(self):
+        trail = 'Books > Science-Fiction > Star Trek'
+        breadcrumbs_to_category(trail)
+        trail = 'Books > Factual > Popular Science'
+        category = breadcrumbs_to_category(trail)        
+        
+        self.assertIsNotNone(category)
+        self.assertEquals(category.name, 'Popular Science')
+        self.assertEquals(category.get_depth(), 3)
+        self.assertEquals(category.get_parent().name, 'Factual')        
+        self.assertEquals(5, Category.objects.count())
+        self.assertEquals(category.slug, 'books/factual/popular-science', )        
+
+
+class ItemTests(TestCase):
 
     def setUp(self):
         self.item_class,_ = ItemClass.objects.get_or_create(name='Clothing')
@@ -39,7 +72,7 @@ class VariantItemTests(ItemTests):
     def test_variant_products_inherit_product_class(self):
         p = Item.objects.create(parent=self.parent)
         self.assertEquals("Clothing", p.get_item_class().name)
-        
+
 
 class SingleProductViewTest(TestCase):
     fixtures = ['sample-products']
@@ -49,9 +82,8 @@ class SingleProductViewTest(TestCase):
         
     def test_canonical_urls_are_enforced(self):
         p = Item.objects.get(id=1)
-        args = {'item_class_slug': p.get_item_class().slug, 
-                'item_slug': 'wrong-slug',
-                'item_id': p.id}
-        wrong_url = reverse('oscar-product-item', kwargs=args)
+        args = {'item_slug': 'wrong-slug',
+                'pk': p.id}
+        wrong_url = reverse('products:detail', kwargs=args)
         response = self.client.get(wrong_url)
         self.assertEquals(301, response.status_code)
