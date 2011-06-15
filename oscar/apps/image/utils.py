@@ -11,7 +11,7 @@ from django.core.files import File
 from django.core.exceptions import FieldError
 
 from oscar.core.loading import import_module
-import_module('image.exceptions', ['ImageImportException', 'IdenticalImageException', 'InvalidImageArchive'], locals())
+import_module('image.exceptions', ['ImageImportError', 'IdenticalImageError', 'InvalidImageArchive'], locals())
 import_module('product.models', ['Item'], locals())
 import_module('image.models', ['Image'], locals())
 
@@ -43,14 +43,14 @@ class Importer(object):
                 except Item.DoesNotExist:
                     self.logger.warning("No item matching %s='%s'" % (self._field, lookup_value))
                     stats['num_skipped'] += 1
-                except IdenticalImageException:
+                except IdenticalImageError:
                     self.logger.warning(" - Identical image already exists for %s='%s', skipping" % (self._field, lookup_value))
                     stats['num_skipped'] += 1
                 except IOError, e:
-                    raise ImageImportException('%s is not a valid image (%s)' % (filename, e))    
+                    raise ImageImportError('%s is not a valid image (%s)' % (filename, e))    
                     stats['num_invalid'] += 1
                 except FieldError, e:
-                    raise ImageImportException(e)
+                    raise ImageImportError(e)
                     self._process_image(image_dir, filename)
             if image_dir != dirname:
                 shutil.rmtree(image_dir)
@@ -115,7 +115,7 @@ class Importer(object):
             next_index = existing.display_order + 1
             try:
                 if new_data == existing.original.read():
-                    raise IdenticalImageException()
+                    raise IdenticalImageError()
             except IOError:
                 # File probably doesn't exist
                 existing.delete()

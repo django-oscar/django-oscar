@@ -1,4 +1,4 @@
-from oscar.apps.image.dynamic.exceptions import ResizerConfigurationException
+from oscar.apps.image.dynamic.exceptions import ResizerConfigurationError
 
 class BaseResponse(object):
     def __init__(self,config,mime_type,cache,start_response):
@@ -37,10 +37,10 @@ class NginxSendfileResponse(BaseResponse):
     def build_response(self):
         if not hasattr(self.cache, 'file_info'):
             msg = "Cache doesn't implements the method 'file_info'"
-            raise ResizerConfigurationException(msg)
+            raise ResizerConfigurationError(msg)
         if not self.config.get('nginx_sendfile_path',None):
             msg = 'Must provide nginx_sendfile_path in configuration'
-            raise ResizerConfigurationException(msg)
+            raise ResizerConfigurationError(msg)
 
         status = '200 OK'
         

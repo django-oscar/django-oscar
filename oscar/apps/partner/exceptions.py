@@ -1,5 +1,6 @@
-class ImportException(Exception):
+class ImportError(Exception):
     pass
 
-class CatalogueImportException(Exception):
+
+class CatalogueImportError(Exception):
     pass

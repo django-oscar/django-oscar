@@ -1,8 +1,10 @@
-class ImageImportException(Exception):
+class ImageImportError(Exception):
     pass
 
-class IdenticalImageException(Exception):
+
+class IdenticalImageError(Exception):
     pass
+
 
 class InvalidImageArchive(Exception):
     pass    

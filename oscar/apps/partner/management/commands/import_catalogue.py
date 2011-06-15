@@ -6,7 +6,7 @@ from django.core.management.base import BaseCommand, CommandError
 
 from oscar.core.loading import import_module
 import_module('partner.utils', ['CatalogueImporter'], locals())
-import_module('partner.exceptions', ['CatalogueImportException'], locals())
+import_module('partner.exceptions', ['CatalogueImportError'], locals())
 
 
 class Command(BaseCommand):
@@ -37,7 +37,7 @@ class Command(BaseCommand):
             logger.info(" - Importing records from '%s'" % file_path)
             try:
                 importer.handle(file_path)
-            except CatalogueImportException, e:
+            except CatalogueImportError, e:
                 raise CommandError(str(e))
             
     def _get_logger(self):

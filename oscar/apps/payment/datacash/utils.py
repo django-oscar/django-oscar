@@ -10,8 +10,8 @@ from django.core.mail import mail_admins
 
 from oscar.core.loading import import_module
 import_module('payment.datacash.models', ['OrderTransaction'], locals())
-import_module('payment.exceptions', ['TransactionDeclinedException', 'GatewayException', 
-                                     'InvalidGatewayRequestException'], locals())
+import_module('payment.exceptions', ['TransactionDeclined', 'GatewayError', 
+                                     'InvalidGatewayRequestError'], locals())
 
 # Status codes
 ACCEPTED, DECLINED, INVALID_CREDENTIALS = '1', '7', '10'
@@ -36,7 +36,7 @@ class Gateway(object):
         response = conn.getresponse()
         response_xml = response.read()
         if response.status != httplib.OK:
-            raise GatewayException("Unable to communicate with payment gateway (code: %s, response: %s)" % (response.status, response_xml))
+            raise GatewayError("Unable to communicate with payment gateway (code: %s, response: %s)" % (response.status, response_xml))
         conn.close()
         
         # Save response XML
@@ -231,10 +231,10 @@ class Facade(object):
             import pprint
             msg = "Order #%s:\n%s" % (order_number, pprint.pprint(response))
             mail_admins("Datacash credentials are not valid", msg)
-            raise InvalidGatewayRequestException("Unable to communicate with payment gateway, please try again later")
+            raise InvalidGatewayRequestError("Unable to communicate with payment gateway, please try again later")
         
         if response['status'] == DECLINED:
-            raise TransactionDeclinedException("Your bank declined this transaction, please check your details and try again")
+            raise TransactionDeclined("Your bank declined this transaction, please check your details and try again")
         
         return response['datacash_reference']
         

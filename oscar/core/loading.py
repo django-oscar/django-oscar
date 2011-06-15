@@ -1,4 +1,3 @@
-from exceptions import Exception
 from imp import new_module
 
 from django.conf import settings

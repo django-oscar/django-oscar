@@ -26,8 +26,8 @@ import_module('address.models', ['UserAddress'], locals())
 import_module('address.forms', ['UserAddressForm'], locals())
 import_module('shipping.repository', ['Repository'], locals())
 import_module('customer.models', ['Email'], locals())
-import_module('payment.exceptions', ['RedirectRequiredException', 'UnableToTakePaymentException', 
-                                     'PaymentException'], locals())
+import_module('payment.exceptions', ['RedirectRequired', 'UnableToTakePayment', 
+                                     'PaymentError'], locals())
 import_module('basket.models', ['Basket'], locals())
 
 # Standard logger for checkout events
@@ -346,15 +346,15 @@ class PaymentDetailsView(CheckoutSessionMixin, TemplateView):
             total_incl_tax, total_excl_tax = self.get_order_totals(basket)
             self.handle_payment(order_number, total_incl_tax, **kwargs)
             post_payment.send_robust(sender=self, view=self)
-        except RedirectRequiredException, e:
+        except RedirectRequired, e:
             # Redirect required (eg PayPal, 3DS)
             return HttpResponseRedirect(e.url)
-        except UnableToTakePaymentException, e:
+        except UnableToTakePayment, e:
             # Something went wrong with payment, need to show
             # error to the user.  This type of exception is supposed
             # to set a friendly error message.
             return self.handle_GET(error=e.message)
-        except PaymentException:
+        except PaymentError:
             # Something went wrong which wasn't anticipated.
             return self.handle_GET(error="A problem occured processing payment.")
         else:

@@ -1,6 +1,6 @@
 from oscar.apps.image.dynamic.cache import DiskCache
-from oscar.apps.image.dynamic.exceptions import ResizerConfigurationException, \
-    ResizerSyntaxException, ResizerFormatException
+from oscar.apps.image.dynamic.exceptions import ResizerConfigurationError, \
+    ResizerSyntaxError, ResizerFormatError
 from oscar.apps.image.dynamic.mods import AutotrimMod, CropMod, ResizeMod
 from oscar.apps.image.dynamic.response_backends import DirectResponse
 from wsgiref.util import request_uri, application_uri
@@ -25,7 +25,7 @@ def get_class(kls):
             m = getattr(m, comp)
         return m
     except (ImportError, AttributeError), e:
-        raise ResizerConfigurationException('Error importing class "%s"' % kls)
+        raise ResizerConfigurationError('Error importing class "%s"' % kls)
 
 
 def error404(path, start_response):
@@ -119,12 +119,12 @@ class ImageModifier(object):
                     [(x.split("-")[0], x.split("-")[1]) for x in param_parts])
                 self._params['type'] = parts[3]
             except IndexError:
-                raise ResizerSyntaxException("Invalid filename syntax")
+                raise ResizerSyntaxError("Invalid filename syntax")
         else:
-            raise ResizerSyntaxException("Invalid filename syntax")
+            raise ResizerSyntaxError("Invalid filename syntax")
 
         if self._params['type'] not in self.output_formats:
-            raise ResizerFormatException("Invalid output format")
+            raise ResizerFormatError("Invalid output format")
 
     def source_path(self):
         return os.path.join(self._image_root, self.source_filename)
@@ -192,7 +192,7 @@ class BaseImageHandler(object):
         try:
             c = self.cache(path, config)
             m = self.modifier(path, config)
-        except (ResizerSyntaxException, ResizerFormatException), e:
+        except (ResizerSyntaxError, ResizerFormatError), e:
             return error500(path, e, start_response)
         try:
             if not c.check(m.source_path()):

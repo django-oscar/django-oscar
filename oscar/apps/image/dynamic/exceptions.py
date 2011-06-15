@@ -1,10 +1,10 @@
-class ResizerConfigurationException(Exception):
+class ResizerConfigurationError(Exception):
     pass
 
 
-class ResizerSyntaxException(Exception):
+class ResizerSyntaxError(Exception):
     pass
 
 
-class ResizerFormatException(Exception):
+class ResizerFormatError(Exception):
     pass

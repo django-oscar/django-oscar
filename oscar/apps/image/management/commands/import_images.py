@@ -7,7 +7,6 @@ from django.core.management.base import BaseCommand, CommandError
 
 from oscar.core.loading import import_module
 import_module('image.utils', ['Importer'], locals())
-import_module('image.exceptions', ['ImageImportException'], locals())
 
 
 class Command(BaseCommand):
