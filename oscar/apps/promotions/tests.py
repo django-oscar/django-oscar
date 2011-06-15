@@ -7,6 +7,7 @@ from django.test import Client
 
 from oscar.apps.promotions.models import * 
 
+
 class HomepageTest(unittest.TestCase):
 
     def setUp(self):
@@ -15,7 +16,6 @@ class HomepageTest(unittest.TestCase):
     def test_homepage(self):
         response = self.client.get("/")
         self.assertEquals(httplib.OK, response.status_code)
-
 
 
 class PromotionTest(unittest.TestCase):
@@ -52,7 +52,7 @@ class PagePromotionTest(unittest.TestCase):
     def test_get_link(self):
         link = self.page_prom.get_link()
         match = resolve(link)
-        self.assertEquals('oscar-page-promotion-click', match.url_name)
+        self.assertEquals('page-click', match.url_name)
 
 
 class KeywordPromotionTest(unittest.TestCase):
@@ -73,5 +73,5 @@ class KeywordPromotionTest(unittest.TestCase):
     def test_get_link(self):
         link = self.kw_prom.get_link()
         match = resolve(link)
-        self.assertEquals('oscar-keyword-promotion-click', match.url_name)
+        self.assertEquals('keyword-click', match.url_name)
         

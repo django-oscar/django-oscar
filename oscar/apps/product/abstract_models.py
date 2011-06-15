@@ -14,22 +14,14 @@ from treebeard.mp_tree import MP_Node
 from oscar.apps.product.managers import BrowsableItemManager
 
 
-def _convert_to_underscores(str):
-    u"""
-    For converting a string in CamelCase or normal text with spaces
-    to the normal underscored variety
-    """
-    without_whitespace = re.sub('\s+', '_', str.strip())
-    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', without_whitespace)
-    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
-
-
 class AbstractItemClass(models.Model):
     """
     Defines an item type (equivqlent to Taoshop's MediaType).
     """
     name = models.CharField(_('name'), max_length=128)
     slug = models.SlugField(max_length=128, unique=True)
+    
+    # These are the options (set by the user when they add to basket) for this item class
     options = models.ManyToManyField('product.Option', blank=True)
 
     class Meta:
@@ -48,7 +40,7 @@ class AbstractItemClass(models.Model):
 
 class AbstractCategory(MP_Node):
     name = models.CharField(max_length=255, db_index=True)
-    slug = models.SlugField(max_length=1024)
+    slug = models.SlugField(max_length=1024, db_index=False)
     
     def __unicode__(self):
         return self.name
@@ -268,8 +260,11 @@ class ProductRecommendation(models.Model):
 
 class AbstractAttributeType(models.Model):
     u"""Defines an attribute. (Eg. size)"""
+    
+    item_class = models.ForeignKey('product.ItemClass', related_name='attributes', blank=True, null=True)
     name = models.CharField(_('name'), max_length=128)
     code = models.SlugField(_('code'), max_length=128)
+        
     has_choices = models.BooleanField(default=False)
 
     class Meta:
@@ -281,7 +276,7 @@ class AbstractAttributeType(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.code:
-            self.code = _convert_to_underscores(self.name)
+            self.code = slugify(self.name)
         super(AbstractAttributeType, self).save(*args, **kwargs)
         
 
@@ -345,7 +340,7 @@ class AbstractOption(models.Model):
     
     def save(self, *args, **kwargs):
         if not self.code:
-            self.code = _convert_to_underscores(self.name)
+            self.code = slugify(self.name)
         super(AbstractOption, self).save(*args, **kwargs)
 
 

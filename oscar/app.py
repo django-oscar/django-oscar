@@ -32,7 +32,7 @@ class Shop(Application):
             (r'accounts/', include(self.customer_app.urls)),
             (r'reports/', include(self.reports_app.urls)),
             (r'search/', include(self.search_app.urls)),
-            (r'^$', include(self.promotions_app.urls)),             
+            (r'', include(self.promotions_app.urls)),             
         )
         return urlpatterns
     

@@ -112,7 +112,7 @@ class AbstractPagePromotion(LinkedPromotion):
         return u"%s on %s" % (self.promotion, self.page_url)
     
     def get_link(self):
-        return reverse('oscar-page-promotion-click', kwargs={'page_promotion_id': self.id})
+        return reverse('promotions:page-click', kwargs={'page_promotion_id': self.id})
         
     
 class AbstractKeywordPromotion(LinkedPromotion):
@@ -129,7 +129,7 @@ class AbstractKeywordPromotion(LinkedPromotion):
         abstract = True
 
     def get_link(self):
-        return reverse('oscar-keyword-promotion-click', kwargs={'keyword_promotion_id': self.id})
+        return reverse('promotions:keyword-click', kwargs={'keyword_promotion_id': self.id})
     
     
 class AbstractMerchandisingBlock(models.Model):
