@@ -25,7 +25,9 @@ def _convert_to_underscores(str):
 
 
 class AbstractItemClass(models.Model):
-    u"""Defines an item type (equivqlent to Taoshop's MediaType)."""
+    """
+    Defines an item type (equivqlent to Taoshop's MediaType).
+    """
     name = models.CharField(_('name'), max_length=128)
     slug = models.SlugField(max_length=128, unique=True)
     options = models.ManyToManyField('product.Option', blank=True)

@@ -31,7 +31,7 @@ class CustomerApplication(Application):
             url(r'^login/$', self.login_view.as_view(), name='login'),
             url(r'^orders/$', login_required(self.order_history_view.as_view()), name='order-list'),
             url(r'^orders/(?P<order_number>[\w-]*)/$', login_required(self.order_detail_view.as_view()), name='order'),
-            url(r'^orders/(?P<order_number>[\w-]*)/(?P<line_id>\w+)$', login_required(self.order_line_view), name='order-line'),
+            url(r'^orders/(?P<order_number>[\w-]*)/(?P<line_id>\w+)$', login_required(self.order_line_view.as_view()), name='order-line'),
             url(r'^addresses/$', login_required(self.address_list_view.as_view()), name='address-list'),
             url(r'^addresses/add/$', login_required(self.address_create_view.as_view()), name='address-create'),
             url(r'^addresses/(?P<pk>\d+)/$', login_required(self.address_update_view.as_view()), name='address-detail'),

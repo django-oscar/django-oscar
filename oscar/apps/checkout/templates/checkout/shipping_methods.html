@@ -19,7 +19,7 @@
             <td>{{ method.basket_charge_incl_tax|currency }}</td>
             <td>{{ method.description }}</td>
             <td>
-                <form method="post" action="{% url oscar-checkout-shipping-method %}">
+                <form method="post" action="{% url checkout:shipping-method %}">
                     {% csrf_token %}
                     <input type="hidden" name="method_code" value="{{ method.code }}" />
                     <input type="submit" value="Use this shipping method" />

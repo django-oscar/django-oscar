@@ -45,7 +45,7 @@ class IndexView(AccountAuthView):
     template_name = 'checkout/gateway.html'
     
     def get_logged_in_redirect(self):
-        return reverse('oscar-checkout-shipping-address')
+        return reverse('checkout:shipping-address')
 
 
 class CheckoutSessionMixin(object):
@@ -159,7 +159,7 @@ class ShippingAddressView(CheckoutSessionMixin, FormView):
             elif 'action' in self.request.POST and self.request.POST['action'] == 'delete':
                 address.delete()
                 messages.info(self.request, "Address deleted from your address book")
-                return HttpResponseRedirect(reverse('oscar-checkout-shipping-method'))
+                return HttpResponseRedirect(reverse('checkout:shipping-method'))
             else:
                 return HttpResponseBadRequest()
         else:
@@ -170,7 +170,7 @@ class ShippingAddressView(CheckoutSessionMixin, FormView):
         return super(ShippingAddressView, self).form_valid(form)
     
     def get_success_url(self):
-        return reverse('oscar-checkout-shipping-method')
+        return reverse('checkout:shipping-method')
     
 
 class UserAddressCreateView(CreateView):
@@ -185,7 +185,7 @@ class UserAddressCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         kwargs = super(UserAddressCreateView, self).get_context_data(**kwargs)
-        kwargs['form_url'] = reverse('oscar-checkout-user-address-create')
+        kwargs['form_url'] = reverse('checkout:user-address-create')
         return kwargs
     
     def form_valid(self, form):
@@ -197,7 +197,7 @@ class UserAddressCreateView(CreateView):
     def get_success_response(self):
         messages.info(self.request, _("Address saved"))
         # We redirect back to the shipping address page
-        return HttpResponseRedirect(reverse('oscar-checkout-shipping-address'))
+        return HttpResponseRedirect(reverse('checkout:shipping-address'))
     
     
 class UserAddressUpdateView(UpdateView):
@@ -212,12 +212,12 @@ class UserAddressUpdateView(UpdateView):
 
     def get_context_data(self, **kwargs):
         kwargs = super(UserAddressUpdateView, self).get_context_data(**kwargs)
-        kwargs['form_url'] = reverse('oscar-checkout-user-address-update', args=(str(kwargs['object'].id)))
+        kwargs['form_url'] = reverse('checkout:user-address-update', args=(str(kwargs['object'].id)))
         return kwargs
 
     def get_success_url(self):
         messages.info(self.request, _("Address saved"))
-        return reverse('oscar-checkout-shipping-address')
+        return reverse('checkout:shipping-address')
     
     
 class UserAddressDeleteView(DeleteView):
@@ -230,7 +230,7 @@ class UserAddressDeleteView(DeleteView):
     
     def get_success_url(self):
         messages.info(self.request, _("Address deleted"))
-        return reverse('oscar-checkout-shipping-address')
+        return reverse('checkout:shipping-address')
     
 
 # ===============    
@@ -275,7 +275,7 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
         return self.get_success_response()
         
     def get_success_response(self):
-        return HttpResponseRedirect(reverse('oscar-checkout-payment-method'))
+        return HttpResponseRedirect(reverse('checkout:payment-method'))
 
 
 class PaymentMethodView(CheckoutSessionMixin, TemplateView):
@@ -290,7 +290,7 @@ class PaymentMethodView(CheckoutSessionMixin, TemplateView):
         return self.get_success_response()
     
     def get_success_response(self):
-        return HttpResponseRedirect(reverse('oscar-checkout-preview'))
+        return HttpResponseRedirect(reverse('checkout:preview'))
 
 
 class OrderPreviewView(CheckoutSessionMixin, TemplateView):
@@ -394,7 +394,7 @@ class PaymentDetailsView(CheckoutSessionMixin, TemplateView):
         
         # Save order id in session so thank-you page can load it
         self.request.session['checkout_order_id'] = order.id
-        return HttpResponseRedirect(reverse('oscar-checkout-thank-you'))
+        return HttpResponseRedirect(reverse('checkout:thank-you'))
     
     def generate_order_number(self, basket):
         generator = OrderNumberGenerator()

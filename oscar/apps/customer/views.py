@@ -157,7 +157,7 @@ class OrderLineView(DetailView, PostActionMixin):
         
         # We need to pass response to the get_or_create... method
         # as a new basket might need to be created
-        self.response = HttpResponseRedirect(reverse('oscar-basket'))
+        self.response = HttpResponseRedirect(reverse('basket:summary'))
         basket = self.request.basket
         
         # Convert line attributes into basket options

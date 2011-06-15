@@ -11,7 +11,7 @@
 
 <h2>Log In</h2>
 
-<form action="{{ request.get_full_path }}?next={% url oscar-checkout-shipping-address %}" method="post" />
+<form action="{{ request.get_full_path }}?next={% url checkout:shipping-address %}" method="post" />
 
 {% csrf_token %}
 
@@ -25,7 +25,7 @@
 
 <p>Logging in now will give you access to your address book and ensure your order is viewable in your order history.</p>
 
-<form action="{{ request.get_full_path }}?next={% url oscar-checkout-shipping-address %}" method="post" />
+<form action="{{ request.get_full_path }}?next={% url checkout:shipping-address %}" method="post" />
 
 {% csrf_token %}
 
@@ -41,7 +41,7 @@
 
 <p>You can checkout without signing in.  You will be given the opportunity to register when checkout is complete.</p>
 
-<p><a href="{% url oscar-checkout-shipping-address %}">Checkout anonymously</a></p>
+<p><a href="{% url checkout:shipping-address %}">Checkout anonymously</a></p>
 {% endif %}
 
 {% endblock content %}

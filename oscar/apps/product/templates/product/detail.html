@@ -25,7 +25,7 @@
         <th>UPC</th><td>{{item.upc}}</td>
     </tr>
     <tr>
-        <th>Product class</th><td><a href="{{ item.item_class.get_absolute_url }}">{{item.item_class.name}}</a></td>
+        <th>Product class</th><td>{{item.item_class.name}}</td>
     </tr>
     {% if item.stockrecord %}
     <tr>
