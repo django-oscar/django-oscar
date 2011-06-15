@@ -1,4 +1,4 @@
-{% extends "layout_admin.html" %}
+{% extends "layout.html" %}
 
 {% load currency_filters %}
 
@@ -9,7 +9,7 @@
 
 {% block content %}
 
-<form method="GET" action="{% url oscar-report-dashboard %}">
+<form method="GET" action="{% url reports:dashboard %}">
 
     {{ form.as_p }} 
     <input type="submit" value="Generate report" />

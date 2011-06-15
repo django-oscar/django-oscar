@@ -11,7 +11,7 @@ from oscar.core.loading import import_module
 product_models = import_module('product.models', ['Item'])
 
 
-class Suggestions(View):
+class SuggestionsView(View):
     u"""
     Auto suggest view
 

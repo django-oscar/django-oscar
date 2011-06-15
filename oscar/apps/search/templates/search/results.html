@@ -7,7 +7,7 @@
 <h2>Search for '{{ query }}'</h2>
 
 {% if suggestion %}
-Did you mean <a href="{% url oscar-search %}?q={{ suggestion }}">{{ suggestion }}</a>?
+Did you mean <a href="{% url search:search %}?q={{ suggestion }}">{{ suggestion }}</a>?
 {% endif %}
 
 

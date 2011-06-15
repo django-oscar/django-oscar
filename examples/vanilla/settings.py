@@ -207,6 +207,7 @@ INSTALLED_APPS = (
     'oscar.apps.reports',
     'oscar.apps.search',
     'pyzen',
+    'sorl.thumbnail',
 )
 
 AUTHENTICATION_BACKENDS = (
