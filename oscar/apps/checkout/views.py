@@ -42,7 +42,7 @@ class IndexView(AccountAuthView):
     straight onto the next step.  Otherwise, we provide options to login, register and
     (if the option is enabled) proceed anonymously.
     """
-    template_name = 'oscar/checkout/gateway.html'
+    template_name = 'checkout/gateway.html'
     
     def get_logged_in_redirect(self):
         return reverse('oscar-checkout-shipping-address')
@@ -136,7 +136,7 @@ class ShippingAddressView(CheckoutSessionMixin, FormView):
     saved in the session and saved as a model when the order is sucessfully submitted.
     """
     
-    template_name = 'oscar/checkout/shipping_address.html'
+    template_name = 'checkout/shipping_address.html'
     form_class = ShippingAddressForm
     
     def get_initial(self):
@@ -155,7 +155,7 @@ class ShippingAddressView(CheckoutSessionMixin, FormView):
             if 'action' in self.request.POST and self.request.POST['action'] == 'ship_to':
                 # User has selected a previous address to ship to
                 self.checkout_session.ship_to_user_address(address)
-                return HttpResponseRedirect(self.get_success_response())
+                return HttpResponseRedirect(self.get_success_url())
             elif 'action' in self.request.POST and self.request.POST['action'] == 'delete':
                 address.delete()
                 messages.info(self.request, "Address deleted from your address book")
@@ -180,7 +180,7 @@ class UserAddressCreateView(CreateView):
     This is not the same as creating a SHIPPING Address, although if used for the order,
     it will be converted into a shipping address at submission-time.
     """
-    template_name = 'oscar/checkout/user_address_form.html'
+    template_name = 'checkout/user_address_form.html'
     form_class = UserAddressForm
 
     def get_context_data(self, **kwargs):
@@ -204,7 +204,7 @@ class UserAddressUpdateView(UpdateView):
     """
     Update a user address
     """
-    template_name = 'oscar/checkout/user_address_form.html'
+    template_name = 'checkout/user_address_form.html'
     form_class = UserAddressForm
     
     def get_queryset(self):
@@ -243,7 +243,7 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
     Shipping methods are domain-specific and so need implementing in a 
     subclass of this class.
     """
-    template_name = 'oscar/checkout/shipping_methods.html';
+    template_name = 'checkout/shipping_methods.html';
     
     def get(self, request, *args, **kwargs):
         # Save shipping methods as instance var as we need them both here
@@ -297,7 +297,7 @@ class OrderPreviewView(CheckoutSessionMixin, TemplateView):
     """
     View a preview of the order before submitting.
     """
-    template_name = 'oscar/checkout/preview.html'
+    template_name = 'checkout/preview.html'
 
 
 class PaymentDetailsView(CheckoutSessionMixin, TemplateView):
@@ -548,7 +548,7 @@ class ThankYouView(DetailView):
     """
     Displays the 'thank you' page which summarises the order just submitted.
     """
-    template_name = 'oscar/checkout/thank_you.html'
+    template_name = 'checkout/thank_you.html'
     context_object_name = 'order'
     
     def get_object(self):

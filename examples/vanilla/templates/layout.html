@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% load currency_filters %}
+{% load promotions %}
+
+{% block layout %}
+    <div id="container">
+        <div id="header">
+            <p><a href="{% url home %}">Oscar // Flexible e-commerce for Django</a></p>
+            
+            <form method="get" action="{% url oscar-search %}">
+                {{ search_form.as_p }}
+                <input type="submit" value="Go!" /> 
+            </form>
+            
+            {% if user.is_authenticated %}
+                <a href="{% url customer:summary %}">Profile</a>
+                <a href="{% url customer:logout %}">Logout</a>
+            {% else %}
+                <a href="{% url customer:login %}">Login</a>
+            {% endif %}
+            
+            {% for banner in banners %}
+                {{ banner.get_banner_html|safe }}
+            {% endfor %}
+
+            Add a:
+            <a href="/admin/promotions/pagepromotion/add/?page_url={{ url_path }}" >promotion</a> /
+            <a href="/admin/promotions/pagemerchandisingblock/add/?page_url={{ url_path }}" >merchandising block</a>
+            to this page.
+            
+            Basket total: {{ basket.total_incl_tax|currency }}
+            <a href="{% url basket:summary %}">View basket</a>
+            
+            {% block header %}
+            {% endblock %}
+        </div>
+        <div id="content">
+        
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            
+            {% for linked_block in merchandising_blocks %}
+                {% render_merchandising_block linked_block %}
+            {% endfor %}
+            
+            {% block content %}{% endblock %}
+        </div>
+        <div id="footer">{% block footer %}{% endblock %}</div>
+    </div>
+{% endblock %}

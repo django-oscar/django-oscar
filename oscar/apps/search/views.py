@@ -58,7 +58,7 @@ class MultiFacetedSearchView(FacetedSearchView):
     u"""
     Search view for multifaceted searches
     """
-    template = 'oscar/search/results.html'
+    template = 'search/results.html'
 
     def __call__(self, request, *args, **kwargs):
         """

@@ -183,7 +183,7 @@ class AbstractMerchandisingBlock(models.Model):
     
     @property
     def template_file(self):
-        return 'oscar/promotions/block_%s.html' % self.type.lower()
+        return 'promotions/block_%s.html' % self.type.lower()
     
     
 class MerchandisingBlockProduct(models.Model):

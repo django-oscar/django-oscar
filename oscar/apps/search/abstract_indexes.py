@@ -9,7 +9,7 @@ class AbstractProductIndex(SearchIndex):
     Base class for products solr index definition.  Overide by creating your
     own copy of oscar.search_indexes.py
     """
-    text = EdgeNgramField(document=True, use_template=True, template_name='oscar/search/indexes/product/item_text.txt')
+    text = EdgeNgramField(document=True, use_template=True, template_name='search/indexes/product/item_text.txt')
     title = EdgeNgramField(model_attr='title')
     upc = CharField(model_attr="upc")
     score = FloatField(model_attr="score")

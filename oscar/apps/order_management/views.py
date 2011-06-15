@@ -25,7 +25,7 @@ import_module('order_management.forms', ['SimpleSearch'], locals())
 class OrderListView(ListView):
     u"""A list of orders"""
     context_object_name = "orders"
-    template_name = 'oscar/order_management/browse.html'
+    template_name = 'order_management/browse.html'
     paginate_by = 20
 
     def get_queryset(self):
@@ -62,7 +62,7 @@ class OrderListView(ListView):
         
 class OrderView(DetailView, PostActionMixin):
     u"""A detail view of an order"""
-    template_name = "oscar/order_management/order.html"
+    template_name = "order_management/order.html"
     context_object_name = 'order'
     
     def get_object(self):

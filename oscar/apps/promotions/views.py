@@ -8,7 +8,7 @@ promotions_models = import_module('promotions.models', ['PagePromotion', 'Keywor
 
 
 class HomeView(TemplateView):
-    template_name = 'oscar/home.html'
+    template_name = 'promotions/home.html'
 
 
 def page_promotion_click(request, page_promotion_id):
