@@ -6,7 +6,7 @@
 {% block layout %}
     <div id="container">
         <div id="header">
-            <p><a href="{% url home %}">Oscar // Flexible e-commerce for Django</a></p>
+            <p><a href="{% url promotions:home %}">Oscar // Flexible e-commerce for Django</a></p>
             
             <form method="get" action="{% url oscar-search %}">
                 {{ search_form.as_p }}
