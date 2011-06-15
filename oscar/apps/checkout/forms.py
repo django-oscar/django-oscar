@@ -1,6 +1,7 @@
 from django.forms import ModelForm
 from django.db.models import get_model
 
+
 class ShippingAddressForm(ModelForm):
     
     def __init__(self, *args, **kwargs):

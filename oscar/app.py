@@ -6,6 +6,7 @@ from oscar.apps.customer.app import application as customer_app
 from oscar.apps.basket.app import application as basket_app
 from oscar.apps.checkout.app import application as checkout_app
 from oscar.apps.promotions.app import application as promotions_app
+from oscar.apps.order_management.app import application as order_management_app
 
 
 class Shop(Application):
@@ -15,13 +16,14 @@ class Shop(Application):
     basket_app = basket_app
     checkout_app = checkout_app
     promotions_app = promotions_app
+    order_management_app = order_management_app
     
     def get_urls(self):
         urlpatterns = patterns('',
             (r'products/', include(self.product_app.urls)),
             (r'basket/', include(self.basket_app.urls)),
             (r'checkout/', include(self.checkout_app.urls)),
-            (r'order-management/', include('oscar.apps.order_management.urls')),
+            (r'order-management/', include(self.order_management_app.urls)),
             (r'accounts/', include(self.customer_app.urls)),
             (r'reports/', include('oscar.apps.reports.urls')),
             (r'search/', include('oscar.apps.search.urls')),

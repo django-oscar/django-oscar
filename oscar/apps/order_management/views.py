@@ -60,7 +60,7 @@ class OrderListView(ListView):
         return response
         
         
-class OrderView(DetailView, PostActionMixin):
+class OrderDetailView(DetailView, PostActionMixin):
     u"""A detail view of an order"""
     template_name = "order_management/order.html"
     context_object_name = 'order'
@@ -70,7 +70,7 @@ class OrderView(DetailView, PostActionMixin):
         return get_object_or_404(Order, number=self.kwargs['order_number'])
     
     def get_context_data(self, **kwargs):
-        context = super(OrderView, self).get_context_data(**kwargs)
+        context = super(OrderDetailView, self).get_context_data(**kwargs)
         context['shipping_options'] = ShippingEventType._default_manager.all()
         context['payment_options'] = PaymentEventType._default_manager.all()
         return context
@@ -78,7 +78,7 @@ class OrderView(DetailView, PostActionMixin):
     def post(self, request, *args, **kwargs):
         order = self.get_object()
         self.response = HttpResponseRedirect(reverse('oscar-order-management-order', kwargs={'order_number': order.number}))
-        return super(OrderView, self).post(request, *args, **kwargs)
+        return super(OrderDetailView, self).post(request, *args, **kwargs)
    
     def do_create_order_event(self, order):
         self.create_shipping_event(order, order.lines.all())

@@ -38,7 +38,7 @@
 
 <h3>Order contents</h3>
 
-<form action="{% url oscar-order-management-order order.number %}" method="post">
+<form action="{% url order-management:detail order.number %}" method="post">
 {% csrf_token %}
 <input type="hidden" name="action" value="create_line_event" />
 <table>
@@ -86,7 +86,7 @@
 </table>
 </form>
 
-<form action="{% url oscar-order-management-order order.number %}" method="post">
+<form action="{% url order-management:detail order.number %}" method="post">
     {% csrf_token %}
     <input type="hidden" name="action" value="create_order_event" />
     Set entire order to:
@@ -159,7 +159,7 @@
 </table>
 {% endif %}
 
-<form method="post" action="{%url oscar-order-management-order order.number %}"/>
+<form method="post" action="{%url order-management:detail order.number %}"/>
     {% csrf_token %}
     <input type="hidden" name="action" value="add_note" />
     <label for="message">Message:</label>

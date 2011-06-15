@@ -17,12 +17,12 @@ class CheckoutSessionData(object):
         if namespace not in self.request.session[self.SESSION_KEY]:
             self.request.session[self.SESSION_KEY][namespace] = {}
           
-    def _get(self, namespace, key):
+    def _get(self, namespace, key, default=None):
         u"""Return session value or None"""
         self._check_namespace(namespace)
         if key in self.request.session[self.SESSION_KEY][namespace]:
             return self.request.session[self.SESSION_KEY][namespace][key]
-        return None
+        return default
             
     def _set(self, namespace, key, value):
         u"""Set session value"""
@@ -88,6 +88,12 @@ class CheckoutSessionData(object):
         
     def payment_method(self):
         return self._get('payment', 'method')
+    
+    def billing_address_same_as_shipping(self):
+        self._set('payment', 'billing_address_same_as_shipping', True)
+        
+    def is_billing_address_same_as_shipping(self):
+        return self._get('payment', 'billing_address_same_as_shipping', False)
     
     # Submission methods
     
