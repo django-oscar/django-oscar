@@ -6,8 +6,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.utils.translation import ugettext as _
-from django.contrib.auth import authenticate
-from django.contrib.auth import login as auth_login
+from django.contrib.auth import authenticate, login as auth_login
 from django.conf import settings
 from django.db.models import get_model
 
@@ -88,7 +87,7 @@ class AccountAuthView(TemplateView):
             context['registration_form'] = registration_form
             if registration_form.is_valid():
                 user = registration_form.save()
-                authenticate(username=user.email, password=registration_form.cleaned_data['password2'])
+                user = authenticate(username=user.email, password=registration_form.cleaned_data['password1'])
                 auth_login(self.request, user)
                 if self.request.session.test_cookie_worked():
                     self.request.session.delete_test_cookie()                
