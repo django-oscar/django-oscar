@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+
+{% load currency_filters %}
+
+{% block header %}
+<h2>Address book</h2>
+{% endblock header %}
+
+
+{% block content %}
+
+{% if addresses %}
+<ul>
+    {% for address in addresses %}
+    <li>
+        {{ address.summary }}
+        <a href="{% url customer:address-detail address.id %}">Edit</a> | 
+		<a href="{% url customer:address-delete address.id %}">Delete</a>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+There are no addresses in your address book.
+{% endif %}
+
+<p><a href="{% url customer:address-create %}">Add a New Address</a></p>
+
+{% if page_obj %}
+<div class="pagination">
+    <span class="step-links">
+    
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+</div>
+{% endif %}
+
+{% endblock content %}
+

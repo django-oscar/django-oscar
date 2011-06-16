@@ -1,4 +1,3 @@
-from exceptions import Exception
 from imp import new_module
 
 from django.conf import settings
@@ -8,7 +7,7 @@ class AppNotFoundError(Exception):
     pass
 
 
-def import_module(module_label, classes=[], namespace=None):
+def import_module(module_label, classes, namespace=None):
     u"""
     For dynamically importing classes from a module.
     
@@ -30,10 +29,10 @@ def import_module(module_label, classes=[], namespace=None):
     
     # Arguments will be things like 'product.models' and so we
     # we take the first component to find within the INSTALLED_APPS list.
-    app_name = module_label.split(".")[0]
+    app_name = module_label.rsplit(".", 1)[0] 
     for installed_app in settings.INSTALLED_APPS:
         base_package = installed_app.split(".")[0]
-        module_name = installed_app.split(".").pop()
+        module_name = installed_app.split(".", 2).pop() # strip oscar.apps
         try: 
             # We search the second component of the installed apps
             if app_name == module_name:
@@ -46,16 +45,27 @@ def import_module(module_label, classes=[], namespace=None):
                     try:
                         imported_local_mod = __import__(local_app, fromlist=classes)
                     except ImportError, e:
-                        # Module doesn't exist, fall back to oscar core
-                        return _import_classes_from_module("oscar.apps.%s" % module_label, classes, namespace)
+                        # Module doesn't exist, fall back to oscar core.  This can be tricky
+                        # as if the overriding module has an import error, it will get picked up
+                        # here.
+                        if str(e).startswith("No module named"):
+                            return _import_classes_from_module("oscar.apps.%s" % module_label, classes, namespace)
+                        raise e
                     
+                    # Found overriding module, merging custom classes with core
                     module = new_module(local_app)
                     imported_oscar_mod = __import__("oscar.apps.%s" % module_label, fromlist=classes)
                     for classname in classes:
                         if hasattr(imported_local_mod, classname):
-                            module.__setattr__(classname, getattr(imported_local_mod, classname))
+                            if namespace:
+                                namespace[classname] = getattr(imported_local_mod, classname)
+                            else:
+                                module.__setattr__(classname, getattr(imported_local_mod, classname))
                         else:
-                            module.__setattr__(classname, getattr(imported_oscar_mod, classname))
+                            if namespace:
+                                namespace[classname] = getattr(imported_oscar_mod, classname)
+                            else:
+                                module.__setattr__(classname, getattr(imported_oscar_mod, classname))
                 return module
         except IndexError:
             pass

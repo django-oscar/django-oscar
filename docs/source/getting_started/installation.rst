@@ -51,26 +51,47 @@ Configure ``settings.py``
 -------------------------
 
 * Add ``'django.middleware.transaction.TransactionMiddleware'`` to your ``MIDDLEWARE_CLASSES`` tuple, making 
-  sure it comes BEFORE ``'django.contrib.auth.middleware.AuthenticationMiddleware'``.
+  sure it comes AFTER ``'django.contrib.auth.middleware.AuthenticationMiddleware'``.
   
-* Uncomment ``django.contrib.admin`` from ``INSTALLED_APPS``.
+* Add the following to your `INSTALLED_APPS`::
 
-Add the following to your `INSTALLED_APPS`::
-
+    'haystack',
     'oscar',
-    'oscar.order',
-    'oscar.checkout',
-    'oscar.order_management',
-    'oscar.product',
-    'oscar.basket',
-    'oscar.payment',
-    'oscar.offer',
-    'oscar.address',
-    'oscar.stock',
-    'oscar.image',
-    'oscar.shipping',
-    'oscar.customer',
-    'oscar.search',
+    'oscar.apps.analytics',
+    'oscar.apps.discount',
+    'oscar.apps.order',
+    'oscar.apps.checkout',
+    'oscar.apps.shipping',
+    'oscar.apps.order_management',
+    'oscar.apps.product',
+    'oscar.apps.basket',
+    'oscar.apps.payment',
+    'oscar.apps.offer',
+    'oscar.apps.address',
+    'oscar.apps.partner',
+    'oscar.apps.image',
+    'oscar.apps.customer',
+    'oscar.apps.promotions',
+    'oscar.apps.reports',
+    'oscar.apps.search',
+    'oscar.apps.catalogue_import',
+    
+* Add these to ``TEMPLATE_CONTECT_PROCESSORS``::
+
+    'oscar.apps.search.context_processors.search_form',
+    'oscar.apps.promotions.context_processors.promotions',
+    'oscar.apps.promotions.context_processors.merchandising_blocks',    
+    
+* Import default settings::
+
+    from oscar.defaults import *
+    
+* If using Solr, configure it::
+
+    HAYSTACK_SITECONF = 'oscar.search_sites'
+    HAYSTACK_SEARCH_ENGINE = 'solr'
+    HAYSTACK_SOLR_URL = 'http://127.0.0.1:8080/solr'
+    HAYSTACK_INCLUDE_SPELLING = True
     
 Now fill in the normal settings (not related to django-oscar) within ``settings.py`` - eg ``DATABASES``, ``TIME_ZONE`` etc    
 

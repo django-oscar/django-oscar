@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+
+{% load currency_filters %}
+
+{% block header %}
+<h2>Address book</h2>
+{% endblock header %}
+
+
+{% block content %}
+
+<h3>Confirm address deletion</h3>
+<form action="." method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Delete address" />
+</form>
+
+{% endblock content %}
+

@@ -1,5 +1,3 @@
-from exceptions import Exception
-
 from oscar.apps.basket.abstract_models import (AbstractBasket, AbstractLine, AbstractLineAttribute,
                                                OPEN, MERGED, SAVED, SUBMITTED)
 

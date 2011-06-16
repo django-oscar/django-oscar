@@ -8,6 +8,14 @@ class ItemClass(AbstractItemClass):
     pass
 
 
+class Category(AbstractCategory):
+    pass
+
+
+class ItemCategory(AbstractItemCategory):
+    pass
+
+
 class Item(AbstractItem):
     pass
     
@@ -26,3 +34,8 @@ class ItemAttributeValue(AbstractItemAttributeValue):
 
 class Option(AbstractOption):
     pass
+
+
+class ProductImage(AbstractProductImage):
+    pass
+

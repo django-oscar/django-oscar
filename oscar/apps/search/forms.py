@@ -25,7 +25,7 @@ class MultiFacetedSearchForm(FacetedSearchForm):
         Overriding the search method to allow for multiple facets
         '''
         sqs = super(FacetedSearchForm, self).search().order_by('-score')
-        if hasattr(self, 'cleaned_data') and self.cleaned_data['selected_facets']:
+        if hasattr(self, 'cleaned_data') and 'selected_facets' in self.cleaned_data:
             for f in self.cleaned_data['selected_facets'].split("|"):
                 sqs = sqs.narrow(f)
         return sqs

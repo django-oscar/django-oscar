@@ -1,0 +1,171 @@
+{% extends "layout.html" %}
+
+{% load currency_filters %}
+
+{% block header %}
+<h2>Order #{{ order.number }}</h2>
+{% endblock header %}
+
+
+{% block content %}
+
+<h3>Shipping address</h3>
+<table>
+    <tr>
+        <th>Address</th>
+        <td>
+            {% for field in order.shipping_address.active_address_fields %}
+            {{ field }}<br/>
+            {% endfor %}
+        </td>
+    </tr>
+    {% if order.shipping_address.phone_number %}
+    <tr>
+        <th>Concact number</th>
+        <td>{{ shipping_address.phone_number }}</td>
+    </tr>
+    {% endif %}
+    {% if order.shipping_address.notes %}
+    <tr>
+        <th>Shipping notes</th>
+        <td>{{ shipping_address.notes }}</td>
+    </tr>
+    {% endif %} 
+</table>
+
+<h3>Shipping method</h3>
+<p>{{ order.shipping_method }}</p>
+
+<h3>Order contents</h3>
+
+<form action="{% url order-management:detail order.number %}" method="post">
+{% csrf_token %}
+<input type="hidden" name="action" value="create_line_event" />
+<table>
+    <tr>
+        <th></th>
+        <th>Partner</th>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Line price excl tax</th>
+        <th>Line price incl tax</th>
+        <th>Shipping status</th>
+    </tr>
+    {% for line in order.lines.all %}
+    <tr>
+        <th>
+            <input type="checkbox" name="order_line" value="{{ line.id }}"/>
+            <input type="input" size="4" name="order_line_quantity_{{ line.id}}" value="{{ line.quantity }}" />
+        </th>
+        <td>{{ line.partner }}</td>
+        <td>
+            {% if line.is_product_deleted %}
+                {{ line.title }} [Deleted]
+            {% else %}
+                <a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a>
+            {% endif %}
+        </td>
+        <td>{{ line.quantity }}</td>
+        <td>{{ line.line_price_excl_tax|currency }}</td>
+        <td>{{ line.line_price_incl_tax|currency }}</td>
+        <td>{{ line.shipping_status }}</td>
+    </tr>
+    {% endfor %}
+    <tr>
+        <td colspan="6">
+        Set selected lines to:
+        <select name="shipping_event">
+            <option value="">[Choose option]</option>
+            {% for type in shipping_options %}
+            <option value="{{ type.code }}">{{type.name}}</option>
+            {% endfor %}
+        </select>  
+        <input type="submit" value="Save" />
+        </td>
+    </tr>
+</table>
+</form>
+
+<form action="{% url order-management:detail order.number %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="create_order_event" />
+    Set entire order to:
+    <select name="shipping_event">
+        <option value="">[Choose option]</option>
+        {% for type in shipping_options %}
+        <option value="{{ type.code }}">{{type.name}}</option>
+        {% endfor %}
+    </select>  
+    <input type="submit" value="Save" />
+</form>
+
+
+<table>
+    <caption>Totals</caption>
+    <tr>
+        <th>Basket total (inc. tax)</th>
+        <td>{{ order.basket_total_incl_tax|currency }}</td>
+    </tr>
+    <tr>
+        <th>Shipping charge (inc. tax)</th>
+        <td>{{ order.shipping_incl_tax|currency }}</td>
+    </tr>
+    <tr>
+        <th>Order total</th>
+        <td>{{ order.total_incl_tax|currency }}</td>
+    </tr>
+</table>
+
+{% if order.shipping_events.count %}
+<h3>Shipping events</h3>
+<table>
+<tr>
+    <th>Date</th>
+    <th>Event</th>
+    <th>Num lines</th>
+    <th>Details</th>
+</tr>
+{% for event in order.shipping_events.all %}
+<tr>
+    <td>{{ event.date }}</td>
+    <td>{{ event.event_type }}</td>
+    <td>{{ event.num_affected_lines }}</td>
+    <td>
+        {% for line_quantity in event.line_quantities.all %}
+        {{ line_quantity.line.product }} (quantity: {{ line_quantity.quantity }})<br/>
+        {% endfor %}
+    </td>
+</tr>
+{% endfor %}
+</table>
+{% endif %}
+
+<h3>Order notes</h3>
+
+{% if order.notes.count %}
+<table>
+<tr>
+    <th>Note</th>
+    <th>User</th>
+    <th>Date</th>
+</tr>
+{% for note in order.notes.all %}
+<tr>
+    <td>{{ note.message }}</td>
+    <td>{{ note.user }}</td>
+    <td>{{ note.date }}</td>
+</tr>
+{% endfor %}
+</table>
+{% endif %}
+
+<form method="post" action="{%url order-management:detail order.number %}"/>
+    {% csrf_token %}
+    <input type="hidden" name="action" value="add_note" />
+    <label for="message">Message:</label>
+    <textarea id="message" name="message"></textarea>
+    <input type="submit" value="Add note" />
+</form>
+
+{% endblock content %}
+

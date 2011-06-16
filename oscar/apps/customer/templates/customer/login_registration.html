@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% load currency_filters %}
+
+{% block header %}
+<h1>Login / Register</h1>
+{% endblock header %}
+
+
+{% block content %}
+
+<h2>Log In</h2>
+
+<form action="{{ request.get_full_path }}" method="post" />
+
+{% csrf_token %}
+
+{{ login_form }}
+
+<input name="login_submit" type="submit" value="Log In" />
+
+</form>
+
+<h2>or Register Now</h2>
+
+<form action="{{ request.get_full_path }}" method="post" />
+
+{% csrf_token %}
+
+{{ registration_form }}
+
+<input name="registration_submit" type="submit" value="Register" />
+
+</form>
+
+
+{% endblock content %}

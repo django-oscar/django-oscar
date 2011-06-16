@@ -1,0 +1,134 @@
+{% extends "layout.html" %}
+
+{% load currency_filters %}
+
+{% block header %}
+<h2>Checkout</h2>
+{% endblock header %}
+
+
+{% block content %}
+
+<hr />
+<h3>Order contents</h3>
+{% block order_contents %}
+<table>
+    <tr>
+        <th>Product</th>
+        <th>Availability</th>
+        <th>Quantity</th>
+        <th>Unit price excl tax</th>
+        <th>Unit price tax</th>
+        <th>Line price excl tax</th>
+        <th>Line price incl tax</th>
+    </tr>
+    {% for line in basket.lines.all %}
+    <tr>
+        <td><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></td>
+        <td>{{ line.product.stockrecord.availability }}</td>
+        <td>{{ line.quantity }}</td>
+        <td>{{ line.unit_price_excl_tax|currency }}</td>
+        <td>{{ line.unit_tax|currency }}</td>
+        <td>{{ line.line_price_excl_tax|currency }}</td>
+        <td>{{ line.line_price_incl_tax|currency }}</td>
+    </tr>
+    {% endfor %}
+    {% for discount in basket.discounts %}
+    <tr>
+        <td colspan="6">{{ discount.name }}</td>
+        <td colspan="6">-{{ discount.discount|currency }}</td>
+    </tr>
+    {% endfor %}
+    <tr>
+        <td colspan="5">Basket total</td>
+        <td>{{ basket.total_excl_tax|currency }}</td>
+        <td>{{ basket.total_incl_tax|currency }}</td>
+    </tr>
+    {% if shipping_total_excl_tax %}
+    <tr>
+        <td colspan="5">Shipping charge</td>
+        <td>{{ shipping_total_excl_tax|currency }}</td>
+        <td>{{ shipping_total_incl_tax|currency }}</td>
+    </tr>
+    {% endif %}
+    <tr>
+        <td colspan="6">Order total</td>
+        <td>{{ order_total_incl_tax|currency }}</td>
+    </tr>
+</table>
+<a href="{% url basket:summary %}">Edit order contents</a>
+{% endblock order_contents %}
+
+<hr />
+<h3>Shipping address</h3>
+{% block shipping_address %}
+<table>
+    <tr>
+        <th>Address</th>
+        <td>
+            {% for field in shipping_address.active_address_fields %}
+                {{ field }}<br/>
+            {% endfor %}
+        </td>
+    </tr>
+    {% if shipping_address.phone_number %}
+    <tr>
+        <th>Contact number</th>
+        <td>{{ shipping_addr.phone_number }}</td>
+    </tr>
+    {% endif %}
+    {% if shipping_address.notes %}
+    <tr>
+        <th>Shipping notes</th>
+        <td>{{ shipping_addr.notes }}</td>
+    </tr>
+    {% endif %} 
+</table>
+<a href="{% url checkout:shipping-address %}">Change shipping address</a>
+{% endblock shipping_address %}
+
+<hr />
+<h3>Shipping method</h3>
+{% block shipping_method %}
+
+{% if shipping_method %}
+<table>
+    <thead>
+        <tr>
+            <th>Method</th>
+            <th>Cost</th>
+            <th>Description</th>
+            <th></th>
+        </tr>
+    <thead>
+    <tbody>
+        <tr>
+            <td>{{ shipping_method.name }}</td>
+            <td>{{ shipping_method.basket_charge_incl_tax|currency }}</td>
+            <td>{{ shipping_method.description }}</td>
+            <td></td>
+    </tbody>
+</table>
+{% endif %}
+
+{% endblock shipping_method %}
+
+
+{% block payment_method %}
+{% if payment_method %}
+<hr />
+<h3>Payment method</h3>
+<p>Method: {{ payment_method }}</p>
+<p><a href="{% url oscar-checkout-payment-method %}">Change payment method</a></p>
+{% endif %}
+{% endblock payment_method %}
+
+{% block payment_details %}
+{% endblock payment_details %}
+
+{% block place_order %}
+{% endblock place_order %}
+
+
+{% endblock content %}
+

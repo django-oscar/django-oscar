@@ -6,7 +6,8 @@ ipdb==0.2
 ipython==0.10.1
 wsgiref==0.1.2
 flake8==0.8
--e git+https://github.com/toastdriven/django-haystack.git@master#egg=django-haystack
 pysolr==2.0.13
-BeautifulSoup==3.2.0
 PyZen==0.3.1
+mock==0.7.0
+twill==0.9
+-e git://github.com/AndrewIngram/django-extra-views.git@0f10416082c174275836a37141ce797b6caa2896#egg=django_extra_views-0.1.0-py2.6-dev

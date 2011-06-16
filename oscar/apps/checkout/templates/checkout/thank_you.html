@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+
+{% load currency_filters %}
+
+{% block header %}
+<h2>Checkout / Thank you</h2>
+{% endblock header %}
+
+
+{% block content %}
+
+<h3>Order confirmation</h3>
+<p>Your order has been placed - your order number is <strong>{{order.number}}</strong></p>
+<p>Please make a note of this reference or print this page and quote it in any communication
+with us regarding your order.</p>
+
+<h4>Shipping</h4>
+<p>Your order will be delivered to:</p>
+<div>
+    {% for line in order.shipping_address.active_address_fields %}
+    {{ line }}<br/>
+    {% endfor %}
+</div>
+
+<h4>Payment</h4>
+{% for source in order.sources.all %}
+{{ source }}
+{% endfor %}
+
+<h4>Order details</h4>
+<table>
+    <tr>
+        <th>Product</th>
+        <th>Estimated dispatch date</th>
+        <th>Quantity</th>
+        <th>Line price excl tax</th>
+        <th>Line price incl tax</th>
+    </tr>
+    {% for line in order.lines.all %}
+    <tr>
+        <td><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></td>
+        <td>{{ line.est_dispatch_date }}</td>
+        <td>{{ line.quantity }}</td>
+        <td>{{ line.line_price_before_discounts_excl_tax|currency }}</td>
+        <td>{{ line.line_price_before_discounts_incl_tax|currency }}</td>
+    </tr>
+    {% endfor %}
+    {% for discount in order.discounts.all %}
+    <tr>
+        <td>{{ discount.offer }}</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>- {{ discount.amount|currency }}</td>
+    </tr>
+    {% endfor %}
+    <tr>
+        <td colspan="3">Basket total</td>
+        <td>{{ order.basket_total_excl_tax|currency }}</td>
+        <td>{{ order.basket_total_incl_tax|currency }}</td>
+    </tr>
+    <tr>
+        <td colspan="3">Shipping charge - {{order.shipping_method}}</td>
+        <td>{{ order.shipping_excl_tax|currency }}</td>
+        <td>{{ order.shipping_incl_tax|currency }}</td>
+    </tr>
+    <tr>
+        <td colspan="4">Order total</td>
+        <td>{{ order.total_incl_tax|currency }}</td>
+    </tr>
+</table>
+ 
+ 
+ 
+{% endblock content %}
+

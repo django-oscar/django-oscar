@@ -1,0 +1,39 @@
+{% extends "checkout/checkout.html" %}
+
+{% block shipping_address %}
+
+{% if addresses %}
+<h4>Choose a shipping address from your address book</h4>
+<ul>
+	{% for address in addresses %}
+	<li>
+	{{ address.summary }}
+	<form action="{% url checkout:shipping-address %}" method="post">
+		{% csrf_token %}
+		<input type="hidden" name="action" value="ship_to" />
+		<input type="hidden" name="address_id" value="{{ address.id }}" />
+		<input type="submit" value="Ship to this address" />
+	</form>
+	<a href="{% url checkout:user-address-update address.id %}">Edit this address</a>
+	<form action="{% url checkout:user-address-delete address.id %}" method="post">
+		{% csrf_token %}
+		<input type="submit" value="Delete from address book" />
+	</form>
+	</li>
+	{% endfor %}
+</ul>
+</form>
+{% endif %}
+{% if request.user.is_authenticated %}
+<p><a href="{% url checkout:user-address-create %}">Add a new address to your address book</a>.</p>
+{% endif %}
+
+<h4>Enter a shipping address</h4>
+<form action="{% url checkout:shipping-address %}" method="post">
+	{% csrf_token %}
+	{{ form.as_p }}
+	<p><input type="submit" value="Save shipping address" /></p>
+</form>
+
+
+{% endblock shipping_address %}

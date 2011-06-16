@@ -5,13 +5,15 @@ from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
 from django.db.models import Sum
+from django.template import Template, Context
+
 
 class AbstractOrder(models.Model):
     u"""An order"""
     number = models.CharField(_("Order number"), max_length=128, db_index=True)
     # We track the site that each order is placed within
     site = models.ForeignKey('sites.Site')
-    basket = models.ForeignKey('basket.Basket')
+    basket = models.ForeignKey('basket.Basket', null=True, blank=True)
     # Orders can be anonymous so we don't always have a customer ID
     user = models.ForeignKey(User, related_name='orders', null=True, blank=True)
     # Billing address is not always required (eg paying by gift card)
@@ -131,6 +133,9 @@ class AbstractCommunicationEvent(models.Model):
     
     class Meta:
         abstract = True
+        
+    def __unicode__(self):
+        return u"'%s' event for order #%s" % (self.type.name, self.order.number)
     
     
 class AbstractCommunicationEventType(models.Model):
@@ -140,10 +145,17 @@ class AbstractCommunicationEventType(models.Model):
     # Name is the friendly description of an event
     name = models.CharField(max_length=255)
     
+    # Template content for emails
+    email_subject_template = models.CharField(max_length=255, blank=True)
+    email_body_template = models.TextField(blank=True, null=True)
+    
+    # Template content for SMS messages
+    sms_template = models.CharField(max_length=170, blank=True)
+    
     def save(self, *args, **kwargs):
         if not self.code:
             self.code = slugify(self.name)
-        super(AbstractOrderEventType, self).save(*args, **kwargs)
+        super(AbstractCommunicationEventType, self).save(*args, **kwargs)
     
     class Meta:
         abstract = True
@@ -151,6 +163,20 @@ class AbstractCommunicationEventType(models.Model):
         
     def __unicode__(self):
         return self.name    
+    
+    def has_email_templates(self):
+        return self.email_subject_template and self.email_body_template
+    
+    def get_email_subject_for_order(self, order, **kwargs):
+        return self._merge_template_with_context(self.email_subject_template, order, **kwargs)
+    
+    def get_email_body_for_order(self, order, **kwargs):
+        return self._merge_template_with_context(self.email_body_template, order, **kwargs)
+    
+    def _merge_template_with_context(self, template, order, **kwargs):
+        ctx = {'order': order}
+        ctx.update(**kwargs)
+        return Template(template).render(Context(ctx))
         
         
 class AbstractLine(models.Model):
@@ -163,9 +189,11 @@ class AbstractLine(models.Model):
     order = models.ForeignKey('order.Order', related_name='lines')
     
     # We store the partner, their SKU and the title for cases where the product has been
-    # deleted from the catalogue.
-    partner = models.ForeignKey('stock.Partner', related_name='order_lines')
-    partner_reference = models.CharField(_("Partner reference"), max_length=128, blank=True, null=True)
+    # deleted from the catalogue.  We also store the partner name in case the partner
+    # gets deleted at a later date.
+    partner = models.ForeignKey('partner.Partner', related_name='order_lines', blank=True, null=True, on_delete=models.SET_NULL)
+    partner_name = models.CharField(_("Partner name"), max_length=128)
+    partner_sku = models.CharField(_("Partner SKU"), max_length=128)
     title = models.CharField(_("Title"), max_length=255)
     
     # We don't want any hard links between orders and the products table
@@ -180,10 +208,14 @@ class AbstractLine(models.Model):
     # Price information before discounts are applied
     line_price_before_discounts_incl_tax = models.DecimalField(decimal_places=2, max_digits=12)
     line_price_before_discounts_excl_tax = models.DecimalField(decimal_places=2, max_digits=12)
-    
-    # Cost price (the price charged by the fulfilment partner for this product).  This
-    # is useful for audit and financial reporting.
-    cost_price = models.DecimalField(decimal_places=2, max_digits=12, blank=True, null=True)
+
+    # REPORTING FIELDS        
+    # Cost price (the price charged by the fulfilment partner for this product).
+    unit_cost_price = models.DecimalField(decimal_places=2, max_digits=12, blank=True, null=True)
+    # Normal site price for item (without discounts)
+    unit_site_price = models.DecimalField(decimal_places=2, max_digits=12, blank=True, null=True)
+    # Retail price at time of purchase
+    unit_retail_price = models.DecimalField(decimal_places=2, max_digits=12, blank=True, null=True)
     
     # Partner information
     partner_line_reference = models.CharField(_("Partner reference"), max_length=128, blank=True, null=True,
@@ -192,7 +224,6 @@ class AbstractLine(models.Model):
     
     # Estimated dispatch date - should be set at order time
     est_dispatch_date = models.DateField(blank=True, null=True)
-    
     
     @property
     def description(self):
@@ -299,34 +330,15 @@ class AbstractLinePrice(models.Model):
         return u"Line '%s' (quantity %d) price %s" % (self.line, self.quantity, self.price_incl_tax)
    
    
-class AbstractPaymentEvent(models.Model):    
-    u"""
-    An event is something which happens to a line such as
-    payment being taken for 2 items, or 1 item being dispatched.
-    """
-    order = models.ForeignKey('order.Order', related_name='payment_events')
-    line = models.ForeignKey('order.Line', related_name='payment_events')
-    quantity = models.PositiveIntegerField(default=1)
-    event_type = models.ForeignKey('order.PaymentEventType')
-    date = models.DateTimeField(auto_now_add=True)
-    
-    class Meta:
-        abstract = True
-        verbose_name_plural = _("Payment events")
-        
-    def __unicode__(self):
-        return u"Order #%d, line %s: %d items %s" % (
-            self.line.order.number, self.line.line_id, self.quantity, self.event_type)
+# PAYMENT EVENTS   
 
 
 class AbstractPaymentEventType(models.Model):
-    u"""Payment events are things like 'Paid', 'Failed', 'Refunded'"""
-    # Code is used in forms
-    code = models.CharField(max_length=128)
-    # Name is the friendly description of an event
-    name = models.CharField(max_length=255)
+    """
+    Payment events are things like 'Paid', 'Failed', 'Refunded'
+    """
+    name = models.CharField(max_length=128)
     code = models.SlugField(max_length=128)
-    # The normal order in which these shipping events take place
     sequence_number = models.PositiveIntegerField(default=0)
     
     def save(self, *args, **kwargs):
@@ -341,6 +353,32 @@ class AbstractPaymentEventType(models.Model):
         
     def __unicode__(self):
         return self.name
+   
+   
+class AbstractPaymentEvent(models.Model):    
+    u"""
+    An event is something which happens to a line such as
+    payment being taken for 2 items, or 1 item being dispatched.
+    """
+    order = models.ForeignKey('order.Order', related_name='payment_events')
+    lines = models.ManyToManyField('order.Line', through='PaymentEventQuantity')
+    event_type = models.ForeignKey('order.PaymentEventType')
+    date = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        abstract = True
+        verbose_name_plural = _("Payment events")
+        
+    def __unicode__(self):
+        return u"Order #%d, line %s: %d items %s" % (
+            self.line.order.number, self.line.line_id, self.quantity, self.event_type)
+
+
+class PaymentEventQuantity(models.Model):
+    u"""A "through" model linking lines to payment events"""
+    event = models.ForeignKey('order.PaymentEvent', related_name='line_quantities')
+    line = models.ForeignKey('order.Line')
+    quantity = models.PositiveIntegerField()
 
 
 class AbstractShippingEvent(models.Model):    

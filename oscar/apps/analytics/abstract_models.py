@@ -54,30 +54,26 @@ class AbstractUserRecord(models.Model):
         
 class AbstractUserProductView(models.Model):
     
-     user = models.ForeignKey('auth.User')
-     product = models.ForeignKey('product.Item')
-     date_created = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey('auth.User')
+    product = models.ForeignKey('product.Item')
+    date_created = models.DateTimeField(auto_now_add=True)
      
-     class Meta:
-         abstract = True
-         
-     def __unicode__(self):
-         return u"%s viewed '%s'" % (self.user, self.product)
+    class Meta:
+        abstract = True
+        
+    def __unicode__(self):
+        return u"%s viewed '%s'" % (self.user, self.product)
              
 
 class AbstractUserSearch(models.Model):
     
-     user = models.ForeignKey('auth.User')
-     query = models.CharField(_("Search term"), max_length=255, db_index=True)
-     date_created = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey('auth.User')
+    query = models.CharField(_("Search term"), max_length=255, db_index=True)
+    date_created = models.DateTimeField(auto_now_add=True)
      
-     class Meta:
-         abstract = True
-         verbose_name_plural = _("User search queries")
-         
-     def __unicode__(self):
-         return u"%s searched for '%s'" % (self.user, self.query)
-     
-         
-
-    
+    class Meta:
+        abstract = True
+        verbose_name_plural = _("User search queries")
+        
+    def __unicode__(self):
+        return u"%s searched for '%s'" % (self.user, self.query)

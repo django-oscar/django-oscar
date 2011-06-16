@@ -1,79 +1,12 @@
 [
     {
         "pk": 1, 
-        "model": "order.shippingeventtype", 
+        "model": "order.communicationeventtype", 
         "fields": {
-            "is_required": true, 
-            "code": "order_placed", 
+            "email_subject_template": "Oscar: Order confirmation for order #{{ order.number }} ", 
+            "code": "order-placed", 
             "name": "Order placed", 
-            "sequence_number": 0
+            "email_body_template": "{% load currency_filters %}\r\nThanks for your order.\r\n\r\nContents:\r\n\r\n{% for line in order.lines.all %}\r\n{{ line.description }} (quantity: {{ line.quantity }}) - {{ line.line_price_before_discounts_incl_tax|currency }}\r\n{% endfor %}\r\n\r\n"
         }
-    }, 
-    {
-        "pk": 2, 
-        "model": "order.shippingeventtype", 
-        "fields": {
-            "is_required": true, 
-            "code": "dispatched", 
-            "name": "Dispatched", 
-            "sequence_number": 2
-        }
-    }, 
-    {
-        "pk": 4, 
-        "model": "order.shippingeventtype", 
-        "fields": {
-            "is_required": false, 
-            "code": "returned", 
-            "name": "Returned", 
-            "sequence_number": 5
-        }
-    }, 
-    {
-        "pk": 3, 
-        "model": "order.shippingeventtype", 
-        "fields": {
-            "is_required": false, 
-            "code": "cancelled", 
-            "name": "Cancelled", 
-            "sequence_number": 10
-        }
-    }, 
-    {
-        "pk": 5, 
-        "model": "order.shippingeventtype", 
-        "fields": {
-            "is_required": false, 
-            "code": "acknowledged", 
-            "name": "Acknowledged", 
-            "sequence_number": 1
-        }
-    }, 
-    {
-        "pk": 1, 
-        "model": "order.paymenteventtype", 
-        "fields": {
-            "code": "paid-for", 
-            "name": "Paid for", 
-            "sequence_number": 0
-        }
-    }, 
-    {
-        "pk": 2, 
-        "model": "order.paymenteventtype", 
-        "fields": {
-            "code": "payment-failed", 
-            "name": "Payment failed", 
-            "sequence_number": 1
-        }
-    }, 
-    {
-        "pk": 3, 
-        "model": "order.paymenteventtype", 
-        "fields": {
-            "code": "refunded", 
-            "name": "Refunded", 
-            "sequence_number": 2
-        }
-    }
+    }   
 ]

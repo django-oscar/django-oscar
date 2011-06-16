@@ -12,7 +12,4 @@ class ImportAppTests(unittest.TestCase):
         
     def test_unknown_apps_raise_exception(self):
         self.assertRaises(AppNotFoundError, import_module, 'banana', ['skin'])
-   
-    def test_no_classes_specified_raise_exception(self):
-        self.assertRaises(ValueError, import_module, 'product.models')
 

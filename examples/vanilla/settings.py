@@ -11,6 +11,7 @@ SQL_DEBUG = True
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
 )
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 MANAGERS = ADMINS
 
@@ -83,6 +84,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     # Oscar specific
     'oscar.apps.search.context_processors.search_form',
     'oscar.apps.promotions.context_processors.promotions',
+    'oscar.apps.promotions.context_processors.merchandising_blocks',
+    'oscar.apps.checkout.context_processors.checkout',
 ) 
 
 MIDDLEWARE_CLASSES = (
@@ -93,7 +96,8 @@ MIDDLEWARE_CLASSES = (
     #'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
-    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware'
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+    'oscar.apps.basket.middleware.BasketMiddleware',
 )
 
 INTERNAL_IPS = ('127.0.0.1',)
@@ -104,6 +108,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    location('templates')
 )
 
 # A sample logging configuration. The only tangible logging
@@ -179,7 +184,7 @@ INSTALLED_APPS = (
     # External apps
     'django_extensions',
     'haystack',
-    #'debug_toolbar',
+    'debug_toolbar',
     # Apps from oscar
     'oscar',
     'oscar.apps.analytics',
@@ -189,12 +194,14 @@ INSTALLED_APPS = (
     'oscar.apps.shipping',
     'oscar.apps.order_management',
     'oscar.apps.product',
+    'oscar.apps.product.reviews',
     'oscar.apps.basket',
     'oscar.apps.payment',
+    'oscar.apps.payment.datacash',
     'oscar.apps.offer',
     'oscar.apps.address',
-    'oscar.apps.stock',
-    'oscar.apps.image',
+    'oscar.apps.partner',
+    #'oscar.apps.dynamic_images',
     'oscar.apps.customer',
     'oscar.apps.promotions',
     'oscar.apps.reports',
@@ -202,15 +209,21 @@ INSTALLED_APPS = (
     'oscar.apps.catalogue_import',
     'oscar.apps.product_adjustments',
     'pyzen',
+    'sorl.thumbnail',
 )
 
-LOGIN_REDIRECT_URL = '/shop/accounts/profile/'
+AUTHENTICATION_BACKENDS = (
+    'oscar.apps.customer.auth_backends.Emailbackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+LOGIN_REDIRECT_URL = '/accounts/'
 APPEND_SLASH = True
 
-OSCAR_DEFAULT_CURRENCY = 'GBP'
-
+# Oscar settings
 from oscar.defaults import *
 
+OSCAR_ALLOW_ANON_CHECKOUT = True
 
 # Haystack settings
 HAYSTACK_SITECONF = 'oscar.search_sites'
@@ -220,6 +233,6 @@ HAYSTACK_INCLUDE_SPELLING = True
 
 # Local overrides
 try:
-    from local_settings import *
+    from settings_local import *
 except ImportError:
     pass

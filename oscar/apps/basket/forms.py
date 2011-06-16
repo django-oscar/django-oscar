@@ -1,30 +1,46 @@
 from django import forms
+from django.db.models import get_model
+
+basketline_model = get_model('basket', 'line')
+basket_model = get_model('basket', 'basket')
 
 
-class FormFactory(object):
-    u"""Factory for creating the "add-to-basket" forms."""
+class BasketLineForm(forms.ModelForm):
+    save_for_later = forms.BooleanField(initial=False, required=False)
     
-    def create(self, item, values=None):
-        u"""For dynamically creating add-to-basket forms for a given product"""
-        self.fields = {'action': forms.CharField(widget=forms.HiddenInput(), initial='add'),
-                       'product_id': forms.IntegerField(widget=forms.HiddenInput(), min_value=1),
-                       'quantity': forms.IntegerField(min_value=1)}
-        self.values = values
-        if not self.values:
-            self.values = {'action': 'add', 
-                           'product_id': item.id, 
-                           'quantity': 1}
-        if item.is_group:
-            self._create_group_product_fields(item)
-        else:
-            self._create_product_fields(item)
+    class Meta:
+        model = basketline_model
+        exclude = ('basket', 'product', 'line_reference', )
 
-        # See http://www.b-list.org/weblog/2008/nov/09/dynamic-forms/ for 
-        # advice on how this works.
-        form_class = type('AddToBasketForm', (forms.BaseForm,), {'base_fields': self.fields})
-        
-        return form_class(self.values)
 
+class SavedLineForm(forms.ModelForm):
+    move_to_basket = forms.BooleanField(initial=False, required=False)
+    
+    class Meta:
+        model = basketline_model
+        exclude = ('basket', 'product', 'line_reference', 'quantity', )
+
+
+class BasketVoucherForm(forms.Form):
+    code = forms.CharField(max_length=128)
+    
+    def __init__(self, *args, **kwargs):
+        return super(BasketVoucherForm, self).__init__(*args,**kwargs)
+
+
+class AddToBasketForm(forms.Form):
+    product_id = forms.IntegerField(widget=forms.HiddenInput(), min_value=1)
+    quantity = forms.IntegerField(initial=1, min_value=1)
+    
+    def __init__(self, instance, *args, **kwargs):
+        super(AddToBasketForm, self).__init__(*args, **kwargs)
+        self.instance = instance
+        if instance:
+            if instance.is_group:
+                self._create_group_product_fields(instance)
+            else:
+                self._create_product_fields(instance)
+    
     def _create_group_product_fields(self, item):
         u"""
         Adds the fields for a "group"-type product (eg, a parent product with a
@@ -50,7 +66,6 @@ class FormFactory(object):
         This is designed to be overridden so that specific widgets can be used for 
         certain types of options.
         """
-        self.fields[option.code] = forms.CharField()
+        self.fields[option.code] = forms.CharField()    
     
 
-    

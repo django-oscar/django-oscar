@@ -16,5 +16,5 @@ for field_name, field in ProductIndex.fields.items():
 urlpatterns = patterns('search.apps.views',
     url(r'^suggest/$', Suggestions.as_view(), name='oscar-search-suggest'),
     url(r'^$', MultiFacetedSearchView(form_class=MultiFacetedSearchForm, 
-        searchqueryset=sqs), name='oscar-search'),
+                                      searchqueryset=sqs), name='oscar-search'),
 )

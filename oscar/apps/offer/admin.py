@@ -1,8 +1,8 @@
 from django.contrib import admin
 
 from oscar.core.loading import import_module
-models = import_module('offer.models', ['ConditionalOffer', 'Condition', 'Benefit', 'Range',
-                                        'Voucher', 'VoucherApplication'])
+import_module('offer.models', ['ConditionalOffer', 'Condition', 'Benefit', 'Range',
+                                        'Voucher', 'VoucherApplication'], locals())
 
 class ConditionAdmin(admin.ModelAdmin):
     list_display = ('type', 'value', 'range')
@@ -43,9 +43,9 @@ class ConditionalOfferAdmin(admin.ModelAdmin):
         }),
     )
 
-admin.site.register(models.ConditionalOffer, ConditionalOfferAdmin)
-admin.site.register(models.Condition, ConditionAdmin)
-admin.site.register(models.Benefit, BenefitAdmin)
-admin.site.register(models.Range)
-admin.site.register(models.Voucher, VoucherAdmin)
-admin.site.register(models.VoucherApplication, VoucherApplicationAdmin)
+admin.site.register(ConditionalOffer, ConditionalOfferAdmin)
+admin.site.register(Condition, ConditionAdmin)
+admin.site.register(Benefit, BenefitAdmin)
+admin.site.register(Range)
+admin.site.register(Voucher, VoucherAdmin)
+admin.site.register(VoucherApplication, VoucherApplicationAdmin)

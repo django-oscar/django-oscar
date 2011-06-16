@@ -16,3 +16,22 @@ OSCAR_POD_FOLDER = 'images/promotions/pods'
 
 # Search settings
 OSCAR_SEARCH_SUGGEST_LIMIT = 10
+
+# Checkout
+OSCAR_ALLOW_ANON_CHECKOUT = False
+
+# Partners
+OSCAR_PARTNER_WRAPPERS = {}
+
+# Promotions
+COUNTDOWN, LIST, SINGLE_PRODUCT, TABBED_BLOCK = ('Countdown', 'List', 'SingleProduct', 'TabbedBlock')
+OSCAR_PROMOTION_MERCHANDISING_BLOCK_TYPES = (
+    (COUNTDOWN, "Vertical list"),
+    (LIST, "Horizontal list"),
+    (TABBED_BLOCK, "Tabbed block"),
+    (SINGLE_PRODUCT, "Single product"),
+)
+
+# Reviews
+OSCAR_ALLOW_ANON_REVIEWS = True
+OSCAR_MODERATE_REVIEWS = False

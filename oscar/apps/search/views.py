@@ -1,8 +1,9 @@
 import json
-import settings
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic.base import View
+from django.conf import settings
+from django.template.response import TemplateResponse
 from haystack.query import SearchQuerySet
 from haystack.views import FacetedSearchView
 
@@ -10,7 +11,7 @@ from oscar.core.loading import import_module
 product_models = import_module('product.models', ['Item'])
 
 
-class Suggestions(View):
+class SuggestionsView(View):
     u"""
     Auto suggest view
 
@@ -45,8 +46,8 @@ class Suggestions(View):
     def get_json_response(self, content, **httpresponse_kwargs):
         "Construct an `HttpResponse` object."
         return HttpResponse(content,
-                                 content_type='application/json',
-                                 **httpresponse_kwargs)
+                            content_type='application/json',
+                            **httpresponse_kwargs)
 
     def convert_context_to_json(self, context):
         "Convert the context into a JSON object"
@@ -85,7 +86,7 @@ class MultiFacetedSearchView(FacetedSearchView):
         '''
         extra = super(MultiFacetedSearchView, self).extra_context()
 
-        if hasattr(self.form, 'cleaned_data') and self.form.cleaned_data['selected_facets']:
+        if hasattr(self.form, 'cleaned_data') and 'selected_facets' in self.form.cleaned_data:
             extra['facets_applied'] = []
             for f in self.form.cleaned_data['selected_facets'].split("|"):
                 facet = f.split(":")

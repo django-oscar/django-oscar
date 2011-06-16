@@ -7,6 +7,7 @@ from django.test import Client
 
 from oscar.apps.promotions.models import * 
 
+
 class HomepageTest(unittest.TestCase):
 
     def setUp(self):
@@ -15,7 +16,6 @@ class HomepageTest(unittest.TestCase):
     def test_homepage(self):
         response = self.client.get("/")
         self.assertEquals(httplib.OK, response.status_code)
-
 
 
 class PromotionTest(unittest.TestCase):
@@ -37,7 +37,7 @@ class PromotionTest(unittest.TestCase):
 class PagePromotionTest(unittest.TestCase):
     
     def setUp(self):
-        self.promotion = Promotion.objects.create(name='Dummy', raw_html='', link_url='http://www.example.com')
+        self.promotion = Promotion.objects.create(name='Dummy', link_url='http://www.example.com')
         self.page_prom = PagePromotion.objects.create(promotion=self.promotion,
                                                       position=RAW_HTML,
                                                       page_url='/')
@@ -52,13 +52,13 @@ class PagePromotionTest(unittest.TestCase):
     def test_get_link(self):
         link = self.page_prom.get_link()
         match = resolve(link)
-        self.assertEquals('oscar-page-promotion-click', match.url_name)
+        self.assertEquals('page-click', match.url_name)
 
 
 class KeywordPromotionTest(unittest.TestCase):
     
     def setUp(self):
-        self.promotion = Promotion.objects.create(name='Dummy', raw_html='', link_url='http://www.example.com')
+        self.promotion = Promotion.objects.create(name='Dummy', link_url='http://www.example.com')
         self.kw_prom = KeywordPromotion.objects.create(promotion=self.promotion,
                                                        position=RAW_HTML,
                                                        keyword='cheese')
@@ -73,5 +73,5 @@ class KeywordPromotionTest(unittest.TestCase):
     def test_get_link(self):
         link = self.kw_prom.get_link()
         match = resolve(link)
-        self.assertEquals('oscar-keyword-promotion-click', match.url_name)
+        self.assertEquals('keyword-click', match.url_name)
         

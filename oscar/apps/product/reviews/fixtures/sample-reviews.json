@@ -1,0 +1,57 @@
+[
+    {
+        "pk": 2, 
+        "model": "reviews.productreview", 
+        "fields": {
+            "body": "Test review 1 says product is good", 
+            "product": 1, 
+            "name": "", 
+            "title": "Test review 1", 
+            "homepage": "", 
+            "status": 1, 
+            "score": "4", 
+            "user": 1, 
+            "date_created": "2011-05-19 18:00:48", 
+            "delta_votes": 1, 
+            "email": "", 
+            "total_votes": 1
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "reviews.productreview", 
+        "fields": {
+            "body": "anon says we don't know about this product", 
+            "product": 1, 
+            "name": "Anon2", 
+            "title": "Anon review 2", 
+            "homepage": "", 
+            "status": 1, 
+            "score": "3", 
+            "user": null, 
+            "date_created": "2011-05-20 10:51:54", 
+            "delta_votes": 0, 
+            "email": "axxx@b.com", 
+            "total_votes": 0
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "reviews.productreview", 
+        "fields": {
+            "body": "we rate it 5", 
+            "product": 1, 
+            "name": "Anon1", 
+            "title": "another review", 
+            "homepage": "", 
+            "status": 1, 
+            "score": "5", 
+            "user": null, 
+            "date_created": "2011-05-20 10:10:46", 
+            "delta_votes": -1, 
+            "email": "a@bcd.com", 
+            "total_votes": 1
+        }
+    } 
+    
+]

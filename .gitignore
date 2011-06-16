@@ -1,5 +1,6 @@
 *.pyc
 local_settings.py
+settings_local.py
 fixtures/*
 product-images/*
 *.swp
@@ -13,9 +14,10 @@ docs/build/*
 examples/.coverage
 assets/*
 nbproject
-examples/defaultshop/assets/*
+examples/vanilla/assets/*
 oscar/bin
 oscar/include
 oscar/lib
 oscar/src
 oscar/share
+.~lock.*
