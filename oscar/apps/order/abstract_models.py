@@ -7,6 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.db.models import Sum
 from django.template import Template, Context
 
+
 class AbstractOrder(models.Model):
     u"""An order"""
     number = models.CharField(_("Order number"), max_length=128, db_index=True)
@@ -147,6 +148,9 @@ class AbstractCommunicationEventType(models.Model):
     # Template content for emails
     email_subject_template = models.CharField(max_length=255, blank=True)
     email_body_template = models.TextField(blank=True, null=True)
+    
+    # Template content for SMS messages
+    sms_template = models.CharField(max_length=170, blank=True)
     
     def save(self, *args, **kwargs):
         if not self.code:

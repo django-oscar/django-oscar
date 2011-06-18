@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+
+{% load currency_filters %}
+
+{% block header %}
+<h2>Order history</h2>
+{% endblock header %}
+
+
+{% block content %}
+
+<h3>Order history</h3>
+
+<table>
+    <tr>
+        <th>Order number</th>
+        <th>Total inc tax</th>
+        <th>Date submitted</th>
+        <th></th>
+    </tr>
+    {% for order in orders %}
+    <tr>
+        <td>{{ order.number }}</td>
+        <td>{{ order.total_incl_tax|currency }}</td>
+        <td>{{ order.date_placed }}</td>
+        <td>
+            <a href="{% url customer:order order.number %}">View order details</a>
+        </td>
+    </tr>
+    {% endfor %}
+
+</table>
+
+{% if page_obj %}
+<div class="pagination">
+    <span class="step-links">
+    
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+</div>
+{% endif %}
+
+{% endblock content %}
+

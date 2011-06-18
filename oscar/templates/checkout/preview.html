@@ -1,0 +1,11 @@
+{% extends "checkout/checkout.html" %}
+
+{% block place_order %}
+<hr/>
+<h3>Place your order</h3>
+<form method="post" action="{% url checkout:payment-details %}">
+{% csrf_token %}
+<input type="submit" value="Place order" />
+</form>
+{% endblock place_order %}
+

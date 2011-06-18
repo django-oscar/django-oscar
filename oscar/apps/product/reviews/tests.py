@@ -56,17 +56,20 @@ class SingleProductReviewViewTest(ProductReviewTests, TestCase):
     def setUp(self):
         self.client = Client()
         super(SingleProductReviewViewTest, self).setUp()
-        self.kwargs = {'item_class_slug': self.item.get_item_class().slug,
+        self.kwargs = {
                 'item_slug': self.item.slug,
-                'item_id': str(self.item.id)}
+                'pk': str(self.item.id)}
         
     def test_each_product_has_review(self):
-        url = reverse('oscar-product-item', kwargs=self.kwargs)
+        url = reverse('products:detail', kwargs=self.kwargs)
         response = self.client.get(url)
         self.assertEquals(200, response.status_code)
     
     def test_user_can_add_product_review(self):
-        url = reverse('oscar-product-review-add', kwargs=self.kwargs)
+        kwargs = {
+                'item_slug': self.item.slug,
+                'item_pk': str(self.item.id)}
+        url = reverse('products:reviews-add', kwargs=kwargs)
         self.client.login(username='testuser', password='secret')
         response = self.client.get(url)
         self.assertEquals(200, response.status_code)

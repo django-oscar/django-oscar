@@ -1,0 +1,12 @@
+{% if user.is_authenticated %}
+    <form action="{{ review.get_absolute_url }}" method="post">
+        {% csrf_token %}               
+        <input type="hidden" name="delta" value="1"/>
+        <input type="submit" value="I agree" /> 
+    </form>
+    <form  action="{{ review.get_absolute_url }}" method="post">
+        {% csrf_token %}                
+        <input type="hidden" name="delta" value="-1"/>
+        <input type="submit" value="I disagree" /> 
+    </form>
+{% endif %}

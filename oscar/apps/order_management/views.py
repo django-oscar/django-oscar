@@ -8,6 +8,8 @@ from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.views.generic import ListView, DetailView
+
+from django.template.response import TemplateResponse
 from django.contrib import messages
 from django.db import transaction
 from django.db.models import Q
@@ -19,10 +21,11 @@ import_module('order.models', ['Order', 'Line', 'ShippingEvent', 'ShippingEventQ
                                'ShippingEventType', 'PaymentEvent', 'PaymentEventType', 'OrderNote'], locals())
 import_module('order_management.forms', ['SimpleSearch'], locals())
 
+
 class OrderListView(ListView):
     u"""A list of orders"""
     context_object_name = "orders"
-    template_name = 'oscar/order_management/browse.html'
+    template_name = 'order_management/browse.html'
     paginate_by = 20
 
     def get_queryset(self):
@@ -57,9 +60,9 @@ class OrderListView(ListView):
         return response
         
         
-class OrderView(DetailView, PostActionMixin):
+class OrderDetailView(DetailView, PostActionMixin):
     u"""A detail view of an order"""
-    template_name = "oscar/order_management/order.html"
+    template_name = "order_management/order.html"
     context_object_name = 'order'
     
     def get_object(self):
@@ -67,16 +70,16 @@ class OrderView(DetailView, PostActionMixin):
         return get_object_or_404(Order, number=self.kwargs['order_number'])
     
     def get_context_data(self, **kwargs):
-        context = super(OrderView, self).get_context_data(**kwargs)
+        context = super(OrderDetailView, self).get_context_data(**kwargs)
         context['shipping_options'] = ShippingEventType._default_manager.all()
         context['payment_options'] = PaymentEventType._default_manager.all()
         return context
-    
+      
     def post(self, request, *args, **kwargs):
         order = self.get_object()
         self.response = HttpResponseRedirect(reverse('oscar-order-management-order', kwargs={'order_number': order.number}))
-        return super(OrderView, self).post(request, *args, **kwargs)
-    
+        return super(OrderDetailView, self).post(request, *args, **kwargs)
+   
     def do_create_order_event(self, order):
         self.create_shipping_event(order, order.lines.all())
         

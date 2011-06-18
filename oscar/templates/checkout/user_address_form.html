@@ -1,0 +1,13 @@
+{% extends "checkout/checkout.html" %}
+
+
+{% block shipping_address %}
+
+<h4>Enter an address for your addressbook</h4>
+<form action="{{ form_url }}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <p><input type="submit" value="Save address" /></p>
+</form>
+
+{% endblock shipping_address %}

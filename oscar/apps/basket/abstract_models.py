@@ -15,7 +15,7 @@ OPEN, MERGED, SAVED, FROZEN, SUBMITTED = ("Open", "Merged", "Saved", "Frozen", "
 
 
 class AbstractBasket(models.Model):
-    u"""Basket object"""
+    """Basket object"""
     # Baskets can be anonymously owned (which are merged if the user signs in)
     owner = models.ForeignKey('auth.User', related_name='baskets', null=True)
     STATUS_CHOICES = (
@@ -57,13 +57,13 @@ class AbstractBasket(models.Model):
     # ============
     
     def flush(self):
-        u"""Remove all lines from basket."""
+        """Remove all lines from basket."""
         if self.status == FROZEN:
             raise PermissionDenied("A frozen basket cannot be flushed")
         self.lines_all().delete()
     
     def add_product(self, item, quantity=1, options=[]):
-        u"""
+        """
         Convenience method for adding products to a basket
         
         The 'options' list should contains dicts with keys 'option' and 'value'
@@ -82,7 +82,7 @@ class AbstractBasket(models.Model):
                 line.attributes.create(line=line, option=option_dict['option'], value=option_dict['value'])
 
     def set_discounts(self, discounts):
-        u"""
+        """
         Sets the discounts that apply to this basket.  
         
         This should be a list of dictionaries
@@ -90,7 +90,7 @@ class AbstractBasket(models.Model):
         self.discounts = discounts
     
     def merge_line(self, line):
-        u"""
+        """
         For transferring a line from another basket to this one.
         
         This is used with the "Saved" basket functionality.
@@ -132,7 +132,7 @@ class AbstractBasket(models.Model):
         self.save()    
     
     def set_as_submitted(self):
-        u"""Mark this basket as submitted."""
+        """Mark this basket as submitted."""
         self.status = SUBMITTED
         self.date_submitted = datetime.datetime.now()
         self.save()
@@ -142,7 +142,7 @@ class AbstractBasket(models.Model):
     # =======
     
     def _create_line_reference(self, item, options):
-        u"""
+        """
         Returns a reference string for a line based on the item
         and its options.
         """
@@ -151,7 +151,7 @@ class AbstractBasket(models.Model):
         return "%d_%s" % (item.id, zlib.crc32(str(options)))
     
     def _get_total(self, property):
-        u"""
+        """
         For executing a named method on each line of the basket
         and returning the total.
         """
@@ -166,37 +166,37 @@ class AbstractBasket(models.Model):
     
     @property
     def is_empty(self):
-        u"""Return bool based on basket having 0 lines"""
+        """Return bool based on basket having 0 lines"""
         return self.num_lines == 0
     
     @property
     def total_excl_tax(self):
-        u"""Return total line price excluding tax"""
+        """Return total line price excluding tax"""
         return self._get_total('line_price_excl_tax_and_discounts')
     
     @property
     def total_tax(self):
-        u"""Return total tax for a line"""
+        """Return total tax for a line"""
         return self._get_total('line_tax')
     
     @property
     def total_incl_tax(self):
-        u"""Return total price for a line including tax"""
+        """Return total price for a line including tax"""
         return self._get_total('line_price_incl_tax_and_discounts')
     
     @property
     def num_lines(self):
-        u"""Return number of lines"""
+        """Return number of lines"""
         return self.all_lines().count()
     
     @property
     def num_items(self):
-        u"""Return number of items"""
+        """Return number of items"""
         return reduce(lambda num,line: num+line.quantity, self.all_lines(), 0)
     
     @property
     def num_items_without_discount(self):
-        u"""Return number of items"""
+        """Return number of items"""
         num = 0
         for line in self.all_lines():
             num += line.quantity_without_discount
@@ -216,7 +216,7 @@ class AbstractBasket(models.Model):
     
     
 class AbstractLine(models.Model):
-    u"""A line of a basket (product and a quantity)"""
+    """A line of a basket (product and a quantity)"""
 
     basket = models.ForeignKey('basket.Basket', related_name='lines')
     # This is to determine which products belong to the same line
@@ -241,7 +241,7 @@ class AbstractLine(models.Model):
         return u"%s, Product '%s', quantity %d" % (self.basket, self.product, self.quantity)
     
     def save(self, *args, **kwargs):
-        u"""Saves a line or deletes if it's quanity is 0"""
+        """Saves a line or deletes if it's quanity is 0"""
         if self.basket.status not in (OPEN, SAVED):
             raise PermissionDenied("You cannot modify a %s basket" % self.basket.status.lower())
         if self.quantity == 0:
@@ -260,7 +260,7 @@ class AbstractLine(models.Model):
         self._affected_quantity += quantity
         
     def get_price_breakdown(self):
-        u"""
+        """
         Returns a breakdown of line prices after discounts have 
         been applied.
         """
@@ -315,22 +315,22 @@ class AbstractLine(models.Model):
     
     @property
     def unit_price_excl_tax(self):
-        u"""Return unit price excluding tax"""
+        """Return unit price excluding tax"""
         return self._get_stockrecord_property('price_excl_tax')
     
     @property
     def unit_tax(self):
-        u"""Return tax of a unit"""
+        """Return tax of a unit"""
         return self._get_stockrecord_property('price_tax')
     
     @property
     def unit_price_incl_tax(self):
-        u"""Return unit price including tax"""
+        """Return unit price including tax"""
         return self._get_stockrecord_property('price_incl_tax')
     
     @property
     def line_price_excl_tax(self):
-        u"""Return line price excluding tax"""
+        """Return line price excluding tax"""
         return self.quantity * self.unit_price_excl_tax
     
     @property
@@ -339,12 +339,12 @@ class AbstractLine(models.Model):
     
     @property    
     def line_tax(self):
-        u"""Return line tax"""
+        """Return line tax"""
         return self.quantity * self.unit_tax
     
     @property
     def line_price_incl_tax(self):
-        u"""Return line price including tax"""
+        """Return line price including tax"""
         return self.quantity * self.unit_price_incl_tax
     
     @property
@@ -353,7 +353,7 @@ class AbstractLine(models.Model):
     
     @property
     def description(self):
-        u"""Return product description"""
+        """Return product description"""
         d = str(self.product)
         ops = []
         for attribute in self.attributes.all():
@@ -364,9 +364,9 @@ class AbstractLine(models.Model):
     
     
 class AbstractLineAttribute(models.Model):
-    u"""An attribute of a basket line"""
+    """An attribute of a basket line"""
     line = models.ForeignKey('basket.Line', related_name='attributes')
-    option = models.ForeignKey('product.option')
+    option = models.ForeignKey('product.Option')
     value = models.CharField(_("Value"), max_length=255)    
     
     class Meta:

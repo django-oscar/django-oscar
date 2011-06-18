@@ -1,0 +1,32 @@
+{% extends "checkout/checkout.html" %}
+
+{% load currency_filters %}
+
+{% block shipping_method %}
+<table>
+    <thead>
+        <tr>
+            <th>Method</th>
+            <th>Cost</th>
+            <th>Description</th>
+            <th></th>
+        </tr>
+    <thead>
+    <tbody>
+        {% for method in methods %}
+        <tr>
+            <td>{{ method.name }}</td>
+            <td>{{ method.basket_charge_incl_tax|currency }}</td>
+            <td>{{ method.description }}</td>
+            <td>
+                <form method="post" action="{% url checkout:shipping-method %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="method_code" value="{{ method.code }}" />
+                    <input type="submit" value="Use this shipping method" />
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock shipping_method %}

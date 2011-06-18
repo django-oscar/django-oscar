@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% load currency_filters %}
+
+{% block header %}
+<h2>Address book</h2>
+{% endblock header %}
+
+
+{% block content %}
+
+<h3>Add address</h3>
+<form action="." method="post">
+    {% csrf_token %}
+
+	<input type="hidden" name="test" value="v1" />
+	<input type="hidden" name="test" value="v2" />	
+
+    {{ form.as_p }}
+    <input type="submit" value="Save address" />
+</form>
+
+{% endblock content %}
+

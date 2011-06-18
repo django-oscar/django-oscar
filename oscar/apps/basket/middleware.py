@@ -3,10 +3,12 @@ import zlib
 from django.conf import settings
 from django.core.exceptions import SuspiciousOperation
 
+from django.db.models import get_model
+
 from oscar.core.loading import import_module
-import_module('basket.models', ['Basket'], locals())
 import_module('offer.utils', ['Applicator'], locals())
 
+basket_model = get_model('basket', 'basket')
 
 class BasketMiddleware(object):
     
@@ -14,14 +16,14 @@ class BasketMiddleware(object):
     
     def process_request(self, request):
         
-        manager = Basket.open
+        manager = basket_model.open
         cookie_basket = self.get_cookie_basket(settings.OSCAR_BASKET_COOKIE_OPEN, 
                                                request, manager)
         if request.user.is_authenticated():
             # Signed-in user: if they have a cookie basket too, it means
             # that they have just signed in and we need to merge their cookie
             # basket into their user basket, then delete the cookie
-            basket, _ = Basket.open.get_or_create(owner=request.user)
+            basket, _ = manager.get_or_create(owner=request.user)
             if cookie_basket:
                 basket.merge(cookie_basket)
                 self.cookies_to_delete.append(settings.OSCAR_BASKET_COOKIE_OPEN)
@@ -31,7 +33,7 @@ class BasketMiddleware(object):
         else:
             # Anonymous user with no basket - we don't save the basket until
             # we need to.
-            basket = Basket()
+            basket = basket_model()
             
         # Assign basket object to request
         self.apply_offers_to_basket(request, basket)   
@@ -71,8 +73,8 @@ class BasketMiddleware(object):
             basket_id, basket_hash = request.COOKIES[cookie_key].split("_")
             if basket_hash == self.get_basket_hash(basket_id):
                 try:
-                    basket = Basket.objects.get(pk=basket_id, owner=None)
-                except Basket.DoesNotExist:
+                    basket = basket_model.objects.get(pk=basket_id, owner=None)
+                except basket_model.DoesNotExist:
                     self.cookies_to_delete.append(cookie_key)
             else:
                 self.cookies_to_delete.append(cookie_key)

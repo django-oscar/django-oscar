@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+
+{% load currency_filters %}
+
+{% block header %}
+<h1>Checkout / Gateway</h1>
+{% endblock header %}
+
+
+{% block content %}
+
+<h2>Log In</h2>
+
+<form action="{{ request.get_full_path }}?next={% url checkout:shipping-address %}" method="post" />
+
+{% csrf_token %}
+
+{{ login_form }}
+
+<input name="login_submit" type="submit" value="Log In" />
+
+</form>
+
+<h2>Register Now</h2>
+
+<p>Logging in now will give you access to your address book and ensure your order is viewable in your order history.</p>
+
+<form action="{{ request.get_full_path }}?next={% url checkout:shipping-address %}" method="post" />
+
+{% csrf_token %}
+
+{{ registration_form }}
+
+<input name="registration_submit" type="submit" value="Register" />
+
+</form>
+
+{% if anon_checkout_allowed %}
+
+<h2>Checkout Anonymously</h2>
+
+<p>You can checkout without signing in.  You will be given the opportunity to register when checkout is complete.</p>
+
+<p><a href="{% url checkout:shipping-address %}">Checkout anonymously</a></p>
+{% endif %}
+
+{% endblock content %}

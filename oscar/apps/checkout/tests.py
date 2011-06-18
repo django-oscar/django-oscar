@@ -19,7 +19,7 @@ class CheckoutViewsTest(TestCase):
         
         # Add a product to the basket
         p = create_product(price=D('10.00'))
-        response = self.client.post(reverse('oscar-basket'), {'action': 'add', 
+        response = self.client.post(reverse('basket:add'), {'action': 'add', 
                                                               'product_id': str(p.id),
                                                               'quantity': 1})
         self.assertEqual(302, response.status_code)

@@ -1,0 +1,95 @@
+{% extends "layout.html" %}
+
+{% load currency_filters %}
+
+{% block header %}
+<h2>Order #{{ order.number }}</h2>
+{% endblock header %}
+
+
+{% block content %}
+
+<h3>Shipping address</h3>
+<table>
+    <tr>
+        <th>Address</th>
+        <td>
+            {% for field in order.shipping_address.active_address_fields %}
+            {{ field }}<br/>
+            {% endfor %}
+        </td>
+    </tr>
+    {% if order.shipping_address.phone_number %}
+    <tr>
+        <th>Contact number</th>
+        <td>{{ shipping_address.phone_number }}</td>
+    </tr>
+    {% endif %}
+    {% if order.shipping_address.notes %}
+    <tr>
+        <th>Shipping notes</th>
+        <td>{{ shipping_address.notes }}</td>
+    </tr>
+    {% endif %} 
+</table>
+
+<h3>Shipping method</h3>
+<p>{{ order.shipping_method }}</p>
+
+<h3>Order contents</h3>
+
+{% csrf_token %}
+<table>
+    <tr>
+        <th>Product</th>
+        <th>Availability</th>
+        <th>Quantity</th>
+        <th>Line price excl tax</th>
+        <th>Line price incl tax</th>
+        <th>Status</th>
+        <th></th>
+    </tr>
+    {% for line in order.lines.all %}
+    <tr>
+        <td><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></td>
+        <td>{{ line.product.stockrecord.availability }}</td>
+        <td>{{ line.quantity }}</td>
+        <td>{{ line.line_price_before_discounts_excl_tax|currency }}</td>
+        <td>{{ line.line_price_before_discounts_incl_tax|currency }}</td>
+        <td>{{ line.shipping_status }}</td>
+        <td>
+            <form action="{% url customer:order-line order.number line.id %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="reorder" />
+                <input type="submit" value="Re-order" />
+            </form>
+            <a href="{% url products:reviews-add line.product.slug line.product.id %}">Write a review</a>
+        </td>
+    </tr>
+    {% endfor %}
+    {% for discount in order.discounts.all %}
+    <tr>
+        <td colspan="4">{{ discount.description }}</td>
+        <td>-{{ discount.amount|currency }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<table>
+    <caption>Totals</caption>
+    <tr>
+        <th>Basket total (inc. tax)</th>
+        <td>{{ order.basket_total_incl_tax|currency }}</td>
+    </tr>
+    <tr>
+        <th>Shipping charge (inc. tax)</th>
+        <td>{{ order.shipping_incl_tax|currency }}</td>
+    </tr>
+    <tr>
+        <th>Order total</th>
+        <td>{{ order.total_incl_tax|currency }}</td>
+    </tr>
+</table>
+
+{% endblock content %}
+

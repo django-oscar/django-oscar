@@ -1,0 +1,58 @@
+{% extends "product/detail.html" %}
+
+{% block product_review %}
+
+<h3>All Reviews of {{ item.title }}</h3>
+<p>Read customer reviews on this product. If you have read this book, why not post your own review?</p>
+<p><a href="{% url products:reviews-add item_slug=item.slug item_pk=item.id %}">Add a review</a></p>
+
+{% if reviews %}
+	<h4> Sort by: </h4>
+	<form action="." method="get">
+        <select name="sort_by">
+        	<option value="score">Score</option>
+        	<option value="recency">Recency</option>
+        </select>
+        <input type="submit" value="Go" />             
+    </form>
+    
+	{% for review in reviews %}
+        <div class="review">
+            <h4>{{ review.title }} ({{ review.score }}/5)</h4>
+            <h5>Reviewed by {{ review.get_reviewer_name }}</h5>
+            <p>{{ review.date_created }}<p>
+            <p>{{ review.body|linebreaks }}</p>
+            <p><a href="{{ review.get_absolute_url }}">Permalink</a>
+            
+			{% include 'reviews/_vote_bit.html' %}
+	
+            {% if review.has_votes %}
+                <p>{{ review.num_up_votes }} customers agreed.</p>
+            {% endif %}
+        </div>
+    {% endfor %}
+	
+    {% if page_obj %}
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+            {% endif %}
+            {% if paginator.num_pages > 1 %}    
+            <span class="current">
+                Page {{ page_obj.number }} of {{ paginator.num_pages }}.
+            </span>
+            {% endif %}
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Next</a>
+            {% endif %}
+        </span>
+    </div>
+    {% endif %}
+		
+{% else %}
+
+<p>This product does not have any reviews yet.</p>        
+        					
+{% endif %}
+{% endblock %}

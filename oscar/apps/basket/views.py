@@ -1,87 +1,126 @@
-import re
-
-from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
-from django.core.urlresolvers import reverse
 from django.contrib import messages
-from django.core.exceptions import ObjectDoesNotExist
-from django.template.response import TemplateResponse
-from django.views.generic import DetailView
+from django.core.urlresolvers import reverse
+from django.db.models import get_model
+from django.http import HttpResponseRedirect, Http404
+from django.views.generic import ListView, FormView
+from django.forms.models import modelformset_factory
 
-from oscar.views.generic import PostActionMixin
-from oscar.core.loading import import_module
+from extra_views import ModelFormSetView
+from oscar.apps.basket.forms import BasketLineForm, AddToBasketForm, \
+    BasketVoucherForm, SavedLineForm
 
-import_module('basket.models', ['Basket', 'Line', 'InvalidBasketLineError'], locals())
-import_module('basket.forms', ['FormFactory'], locals())
-import_module('basket.signals', ['basket_addition'], locals())
-import_module('product.models', ['Item'], locals())
-import_module('offer.models', ['Voucher'], locals())
+
+class BasketView(ModelFormSetView):
+    model = get_model('basket', 'Line')
+    basket_model = get_model('basket', 'Basket')
+    form_class = BasketLineForm
+    extra = 0
+    can_delete = True
+    template_name='basket/basket.html'
     
-        
-class BasketView(DetailView, PostActionMixin):
-    u"""Class-based view for the basket model."""
-    template_name = 'oscar/basket/summary.html'
-    context_object_name = 'basket'
-    
-    def __init__(self):
-        self.response = HttpResponseRedirect(reverse('oscar-basket'))
-    
-    def get_object(self):
-        u"""Return a basket model"""
-        return self.request.basket
+    def get_queryset(self):
+        return self.request.basket.lines.all()
     
     def get_context_data(self, **kwargs):
         context = super(BasketView, self).get_context_data(**kwargs)
+        context['voucher_form'] = BasketVoucherForm()
+        
         if self.request.user.is_authenticated():
             try:
-                context['saved_basket'] = Basket.saved.get(owner=self.request.user)
-            except Basket.DoesNotExist:
+                saved_basket = self.basket_model.saved.get(owner=self.request.user)
+                saved_queryset = saved_basket.lines.all().select_related('product', 'product__stockrecord')
+                SavedFormset = modelformset_factory(self.model, form=SavedLineForm, extra=0, can_delete=True)
+                formset = SavedFormset(queryset=saved_queryset)
+                context['saved_formset'] = formset
+            except self.basket_model.DoesNotExist:
                 pass
         return context
-            
-    def do_flush(self, basket):
-        u"""Flush basket content"""
-        basket.flush()
-        messages.info(self.request, "Your basket has been emptied")
-        
-    def do_add(self, basket):
-        u"""Add an item to the basket"""
-        item = get_object_or_404(Item.objects, pk=self.request.POST['product_id'])
-        
-        # Send signal so analytics can track this event.  Note that be emitting
-        # the signal here, we do not track quantity changes to a product - only
-        # the initial "add".
-        basket_addition.send(sender=self, product=item, user=self.request.user)
-        
-        factory = FormFactory()
-        form = factory.create(item, self.request.POST)
-        if not form.is_valid():
-            print form.errors
-            self.response = HttpResponseRedirect(item.get_absolute_url())
-            messages.error(self.request, "Unable to add your item to the basket - submission not valid")
-        else:
-            # Extract product options from POST
-            options = []
-            for option in item.options:
-                if option.code in form.cleaned_data:
-                    options.append({'option': option, 'value': form.cleaned_data[option.code]})
-            basket.add_product(item, form.cleaned_data['quantity'], options)
-            
-            messages.info(self.request, "'%s' (quantity %d) has been added to your basket" %
-                          (item.get_title(), form.cleaned_data['quantity']))
     
-    def do_add_voucher(self, basket):
-        code = self.request.POST['voucher_code']
-        # First check if the voucher is already in the basket
+    def get_success_url(self):
+        return self.request.META.get('HTTP_REFERER', reverse('basket:summary'))
+
+    def formset_valid(self, formset):
+        needs_auth = False
+        for form in formset:
+            if form.cleaned_data['save_for_later']:
+                instance = form.instance
+                if self.request.user.is_authenticated():
+                    saved_basket, _ = get_model('basket','basket').saved.get_or_create(owner=self.request.user)
+                    saved_basket.merge_line(instance)
+                    messages.info(self.request, "'%s' has been saved for later" % instance.product)   
+                else:
+                    needs_auth = True
+        if needs_auth:
+            messages.error(self.request, "You can't save an item for later if you're not logged in!")     
+        return super(BasketView, self).formset_valid(formset)
+
+    def formset_invalid(self, formset):
+        messages.info(self.request, "There was a problem updating your basket, please check that all quantities are numbers")
+        return super(BasketView, self).formset_invalid(formset)
+
+
+class BasketAddView(FormView):
+    u"""
+    Handles the add-to-basket operation, shouldn't be accessed via GET because there's nothing sensible to render.
+    """
+    form_class = AddToBasketForm
+    product_model = get_model('product', 'item')
+    
+    def get(self, request, *args, **kwargs):
+        return HttpResponseRedirect(reverse('basket:summary'))
+    
+    def get_form_kwargs(self): 
+        kwargs = super(BasketAddView, self).get_form_kwargs()
+        
         try:
-            voucher = basket.vouchers.get(code=code)
+            product = self.product_model.objects.get(pk=self.request.POST['product_id'])
+        except self.product_model.DoesNotExist:
+            raise Http404()
+        kwargs['instance'] = product
+        return kwargs
+    
+    def get_success_url(self):
+        return self.request.META.get('HTTP_REFERER',reverse('basket:summary'))
+
+    def form_valid(self, form):
+        options = []
+        for option in form.instance.options:
+            if option.code in form.cleaned_data:
+                options.append({'option': option, 'value': form.cleaned_data[option.code]})
+        self.request.basket.add_product(form.instance, form.cleaned_data['quantity'], options)
+        messages.info(self.request, "'%s' (quantity %d) has been added to your basket" %
+                      (form.instance.get_title(), form.cleaned_data['quantity']))
+        return super(BasketAddView, self).form_valid(form)
+    
+    def form_invalid(self, form):
+        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER',reverse('basket:summary')))
+
+
+class VoucherView(ListView):
+    model = get_model('offer', 'voucher')
+    can_delete = True
+    extra = 0
+    
+    def get_queryset(self):
+        self.request.basket.vouchers.all()
+
+
+class VoucherAddView(FormView):
+    form_class = BasketVoucherForm
+    voucher_model = get_model('offer', 'voucher')
+    
+    def get(self, request, *args, **kwargs):
+        return HttpResponseRedirect(reverse('basket:summary'))
+    
+    def _check_voucher(self, code):
+        try:
+            voucher = self.request.basket.vouchers.get(code=code)
             messages.error(self.request, "You have already added the '%s' voucher to your basket" % voucher.code)
             return
-        except ObjectDoesNotExist:    
+        except self.voucher_model.DoesNotExist:    
             pass
-        
         try:
-            voucher = Voucher._default_manager.get(code=code)
+            voucher = self.voucher_model._default_manager.get(code=code)
             if not voucher.is_active():
                 messages.error(self.request, "The '%s' voucher has expired" % voucher.code)
                 return
@@ -89,129 +128,73 @@ class BasketView(DetailView, PostActionMixin):
             if not is_available:
                 messages.error(self.request, message)
                 return
-            
-            basket.vouchers.add(voucher)
-            basket.save()
+            self.request.basket.vouchers.add(voucher)
+            self.request.basket.save()
             messages.info(self.request, "Voucher '%s' added to basket" % voucher.code)
-        except ObjectDoesNotExist:
+        except self.voucher_model.DoesNotExist:
             messages.error(self.request, "No voucher found with code '%s'" % code)
-            
-    def do_remove_voucher(self, basket):
-        code = self.request.POST['voucher_code']
-        try:
-            voucher = basket.vouchers.get(code=code)
-            basket.vouchers.remove(voucher)
-            basket.save()
-            messages.info(self.request, "Voucher '%s' removed from basket" % voucher.code)
-        except ObjectDoesNotExist:
-            messages.error(self.request, "No voucher found with code '%s'" % code)
-            
-    def do_bulk_load(self, basket):
-        num_additions = 0
-        num_not_found = 0
-        for sku in re.findall(r"[\d -]{5,}", self.request.POST['source_text']):
-            try:
-                item = Item.objects.get(upc=sku)
-                basket.add_product(item)
-                num_additions += 1
-            except Item.DoesNotExist:
-                num_not_found += 1
-        messages.info(self.request, "Added %d items to your basket (%d missing)" % (num_additions, num_not_found))
- 
+    
+    def form_valid(self, form):
+        code = form.cleaned_data['code']
+        self._check_voucher(code)
+        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER', reverse('basket:summary')))
 
-class LineView(DetailView, PostActionMixin):
-    
-    def __init__(self, **kwargs):
-        super(LineView, self).__init__(**kwargs)
-        self.response = HttpResponseRedirect(reverse('oscar-basket'))
-    
-    def get_object(self):
-        """
-        Returns the basket line in question
-        """
-        return self.request.basket.lines.get(line_reference=self.kwargs['line_reference'])
-        
-    def post(self, request, *args, **kwargs):
-        u"""Handle POST requests against the basket line"""
+    def form_invalid(self, form):
+        return HttpResponseRedirect(reverse('basket:summary'))
+
+
+class SavedView(ModelFormSetView):
+    model = get_model('basket', 'line')
+    basket_model = get_model('basket', 'basket')
+    form_class = SavedLineForm
+    extra = 0
+    can_delete = True
+
+    def get(self, request, *args, **kwargs):
+        return HttpResponseRedirect(reverse('basket:summary'))
+
+    def get_queryset(self):
         try:
-            return super(LineView, self).post(request, *args, **kwargs)
-        except Line.DoesNotExist:
-            messages.error(self.request, "Unable to find a line with reference %s in your basket" % self.kwargs['line_reference'])
-        except InvalidBasketLineError, e:
-            messages.error(self.request, str(e))
-        return self.response
-            
-    def get_quantity(self):
-        u"""Get item quantity"""
-        if 'quantity' in self.request.POST:
-            return int(self.request.POST['quantity'])
-        return 0        
-            
-    def do_increment_quantity(self, line):
-        u"""Increment item quantity"""
-        q = self.get_quantity()
-        line.quantity += q
-        line.save()    
-        msg = "The quantity of '%s' has been increased by %d" % (line.product, q)
-        messages.info(self.request, msg)
+            saved_basket = self.basket_model.saved.get(owner=self.request.user)
+            return saved_basket.lines.all().select_related('product', 'product__stockrecord')
+        except self.basket_model.DoesNotExist:
+            return []
         
-    def do_decrement_quantity(self, line):
-        u"""Decrement item quantity"""
-        q = self.get_quantity()
-        line.quantity -= q
-        line.save()    
-        msg = "The quantity of '%s' has been decreased by %d" % (line.product, q)
-        messages.info(self.request, msg)
-        
-    def do_set_quantity(self, line):
-        u"""Set an item quantity"""
-        q = self.get_quantity()
-        line.quantity = q
-        line.save()    
-        msg = "The quantity of '%s' has been set to %d" % (line.product, q)
-        messages.info(self.request, msg)
-        
-    def do_delete(self, line):
-        u"""Delete a basket item"""
-        line.delete()
-        msg = "'%s' has been removed from your basket" % line.product
-        messages.info(self.request, msg)
-        
-    def do_save_for_later(self, line):
-        u"""Save basket for later use"""
-        if not self.request.user.is_authenticated():
-            messages.error(self.request, "Only signed in users can save basket lines")
-            return
-        saved_basket, _ = Basket.saved.get_or_create(owner=self.request.user)
-        saved_basket.merge_line(line)
-        msg = "'%s' has been saved for later" % line.product
-        messages.info(self.request, msg)
-        
-       
-class SavedLineView(DetailView, PostActionMixin):
-    
-    def __init__(self):
-        self.response = HttpResponseRedirect(reverse('oscar-basket'))
-    
-    def get_object(self):
-        basket = Basket.saved.get(owner=self.request.user)
-        return basket.lines.get(line_reference=self.kwargs['line_reference'])
-            
-    def do_move_to_basket(self, line):
-        u"""Merge line items in to current basket"""
-        real_basket = self.request.basket
-        real_basket.merge_line(line)
-        msg = "'%s' has been moved back to your basket" % line.product
-        messages.info(self.request, msg)
-        
-    def do_delete(self, line):
-        u"""Delete line item"""
-        line.delete()
-        msg = "'%s' has been removed" % line.product
-        messages.warn(self.request, msg)
-        
-    def get_quantity(self):
-        u"""Get line item quantity"""
-        if 'quantity' in self.request.POST:
-            return int(self.request.POST['quantity'])
-        return 0
+    def get_success_url(self):
+        return self.request.META.get('HTTP_REFERER', reverse('basket:summary'))
+
+    def formset_valid(self, formset):
+        for form in formset:
+            if form.cleaned_data['move_to_basket']:
+                msg = "'%s' has been moved back to your basket" % form.instance.product
+                messages.info(self.request, msg)                
+                real_basket = self.request.basket
+                real_basket.merge_line(form.instance)
+        return super(SavedView, self).formset_valid(formset)
+
+    def formset_invalid(self, formset):
+        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER', reverse('basket:summary')))
+
+
+#    def do_remove_voucher(self, basket):
+#        code = self.request.POST['voucher_code']
+#        try:
+#            voucher = basket.vouchers.get(code=code)
+#            basket.vouchers.remove(voucher)
+#            basket.save()
+#            messages.info(self.request, "Voucher '%s' removed from basket" % voucher.code)
+#        except ObjectDoesNotExist:
+#            messages.error(self.request, "No voucher found with code '%s'" % code)
+#            
+#    def do_bulk_load(self, basket):
+#        num_additions = 0
+#        num_not_found = 0
+#        for sku in re.findall(r"[\d -]{5,}", self.request.POST['source_text']):
+#            try:
+#                item = Item.objects.get(upc=sku)
+#                basket.add_product(item)
+#                num_additions += 1
+#            except Item.DoesNotExist:
+#                num_not_found += 1
+#        messages.info(self.request, "Added %d items to your basket (%d missing)" % (num_additions, num_not_found))
+#

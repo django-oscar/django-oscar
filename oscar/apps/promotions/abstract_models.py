@@ -242,13 +242,6 @@ class AbstractPromotion(models.Model):
         except AttributeError:
             return ''
 
-
-
-
-
-
-    
-    
 class AbstractMerchandisingBlock(models.Model):
     
     title = models.CharField(_("Title"), max_length=255)
@@ -300,7 +293,7 @@ class AbstractMerchandisingBlock(models.Model):
     
     @property
     def template_file(self):
-        return 'oscar/promotions/block_%s.html' % self.type.lower()
+        return 'promotions/block_%s.html' % self.type.lower()
     
     
 class MerchandisingBlockProduct(models.Model):

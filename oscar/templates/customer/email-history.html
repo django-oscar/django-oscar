@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+
+{% block header %}
+<h2>Email history</h2>
+{% endblock header %}
+
+
+{% block content %}
+
+<table>
+    <tr>
+        <th>Date sent</th>
+        <th>Subject</th>
+        <th></th>
+    </tr>
+    {% for email in emails %}
+    <tr>
+        <td>{{ email.date_sent }}</td>
+        <td>{{ email.subject }}</td>
+        <td>
+            <a href="{% url customer:email-detail email.id %}">View</a>
+        </td>
+    </tr>
+    {% endfor %}
+
+</table>
+
+{% if page_obj %}
+<div class="pagination">
+    <span class="step-links">
+    
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+</div>
+
+<p><a href="{% url customer:summary %}">Return to profile</a></p>
+
+{% endif %}
+
+{% endblock content %}
+

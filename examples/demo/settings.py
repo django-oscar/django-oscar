@@ -190,7 +190,7 @@ INSTALLED_APPS = (
     'shop.checkout',
     'oscar.apps.shipping',
     'oscar.apps.order_management',
-    'oscar.apps.product',
+    'shop.product', # Override
     'oscar.apps.partner',
     'oscar.apps.basket',
     'oscar.apps.payment',

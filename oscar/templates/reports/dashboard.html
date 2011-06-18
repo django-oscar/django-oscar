@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% load currency_filters %}
+
+{% block header %}
+<h2>Reporting dashboard</h2>
+{% endblock header %}
+
+
+{% block content %}
+
+<form method="GET" action="{% url reports:dashboard %}">
+
+    {{ form.as_p }} 
+    <input type="submit" value="Generate report" />
+</form>
+
+{% endblock content %}
+

@@ -1,0 +1,62 @@
+{% extends 'layout.html' %}
+{% load currency_filters %}
+{% load thumbnail %}
+
+{% block content %}
+
+<h2>Search for '{{ query }}'</h2>
+
+{% if suggestion %}
+Did you mean <a href="{% url search:search %}?q={{ suggestion }}">{{ suggestion }}</a>?
+{% endif %}
+
+
+{% if page.object_list %}
+    <ol>
+    {% for result in page.object_list %}
+    <li>
+        {% for image in result.object.images.all %}
+            {% if forloop.first %}
+                {% thumbnail image.original "100" crop="center" as im %}
+                    <a href="{{ result.object.get_absolute_url }}"><img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"></a>
+                {% endthumbnail %}
+            {% endif %}
+        {% endfor %}
+        <a href="{{ result.object.get_absolute_url }}">{{ result.object.get_title }}</a><br/>
+        {% if result.object.is_group %}
+            From {{ result.object.min_variant_price_incl_tax|currency }}
+        {% else %}
+            {% if result.object.has_stockrecord %} 
+                {{ result.object.stockrecord.price_incl_tax|currency }}<br/>
+                {{ result.object.stockrecord.availability }}
+            {% else %}
+                Not available    
+            {% endif %}
+        {% endif %}    
+    </li>
+    {% endfor %}
+    </ol>
+{% else %}
+    No search results found.
+{% endif %}
+
+{% if page_obj %}
+<div class="pagination">
+    <span class="step-links">
+    
+        {% if page_obj.has_previous %}
+            <a href="?q={{ query }}&page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?q={{ query }}&page={{ page_obj.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+</div>
+{% endif %}
+
+{% endblock %}

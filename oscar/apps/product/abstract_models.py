@@ -5,27 +5,23 @@ import re
 from itertools import chain
 
 from django.db import models
+from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from django.template.defaultfilters import slugify
-from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
+from treebeard.mp_tree import MP_Node
 
 from oscar.apps.product.managers import BrowsableItemManager
 
-def _convert_to_underscores(str):
-    u"""
-    For converting a string in CamelCase or normal text with spaces
-    to the normal underscored variety
-    """
-    without_whitespace = re.sub('\s+', '_', str.strip())
-    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', without_whitespace)
-    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
-
 
 class AbstractItemClass(models.Model):
-    u"""Defines an item type (equivqlent to Taoshop's MediaType)."""
+    """
+    Defines an item type (equivqlent to Taoshop's MediaType).
+    """
     name = models.CharField(_('name'), max_length=128)
     slug = models.SlugField(max_length=128, unique=True)
+    
+    # These are the options (set by the user when they add to basket) for this item class
     options = models.ManyToManyField('product.Option', blank=True)
 
     class Meta:
@@ -38,11 +34,57 @@ class AbstractItemClass(models.Model):
             self.slug= slugify(self.name)
         super(AbstractItemClass, self).save(*args, **kwargs)
 
-    def get_absolute_url(self):
-        return reverse('oscar-product-item-class', kwargs={'item_class_slug': self.slug})
-
     def __unicode__(self):
         return self.name
+
+
+class AbstractCategory(MP_Node):
+    name = models.CharField(max_length=255, db_index=True)
+    slug = models.SlugField(max_length=1024, db_index=False)
+    
+    def __unicode__(self):
+        return self.name
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            parent = self.get_parent()
+            slug = slugify(self.name)
+            if parent:
+                self.slug = '%s/%s' % (parent.slug, slug)
+            else:
+                self.slug = slug
+        super(AbstractCategory, self).save(*args, **kwargs)
+
+    def get_ancestors(self, include_self=True):
+        ancestors = list(super(AbstractCategory, self).get_ancestors())
+        if include_self:
+            ancestors.append(self)
+        return ancestors
+
+    @models.permalink
+    def get_absolute_url(self):
+        return ('products:category', (), {
+            'category_slug': self.slug })
+
+    class Meta:
+        abstract = True
+        ordering = ['name']
+        verbose_name_plural = 'Categories'
+        verbose_name = 'Category'
+
+
+class AbstractItemCategory(models.Model):
+    """
+    Joining model between items and categories.
+    """
+    item = models.ForeignKey('product.Item')
+    category = models.ForeignKey('product.Category')
+    is_canonical = models.BooleanField(default=False, db_index=True)
+    
+    class Meta:
+        abstract = True
+        ordering = ['-is_canonical']
+        verbose_name_plural = 'Categories'
 
 
 class AbstractItem(models.Model):
@@ -89,6 +131,8 @@ class AbstractItem(models.Model):
 
     # This field is used by Haystack to reindex search
     date_updated = models.DateTimeField(auto_now=True, db_index=True)
+    
+    categories = models.ManyToManyField('product.Category', through='ItemCategory')
 
     objects = models.Manager()
     browsable = BrowsableItemManager()
@@ -128,7 +172,7 @@ class AbstractItem(models.Model):
     def has_stockrecord(self):
         u"""Return True if a product has a stock record, False if not"""
         try:
-            sr = self.stockrecord
+            self.stockrecord
             return True
         except ObjectDoesNotExist:
             return False
@@ -140,6 +184,13 @@ class AbstractItem(models.Model):
             return pr.score
         except ObjectDoesNotExist:
             return 0
+
+    def add_category_from_breadcrumbs(self, breadcrumb):
+        from oscar.apps.product.utils import breadcrumbs_to_category
+        category = breadcrumbs_to_category(breadcrumb)
+        
+        temp = models.get_model('product', 'itemcategory')(category=category, item=self)
+        temp.save()
 
     def attribute_summary(self):
         u"""Return a string of all of a product's attributes"""
@@ -185,10 +236,9 @@ class AbstractItem(models.Model):
     @models.permalink
     def get_absolute_url(self):
         u"""Return a product's absolute url"""
-        return ('oscar-product-item', (), {
-            'item_class_slug': self.get_item_class().slug, 
+        return ('products:detail', (), {
             'item_slug': self.slug,
-            'item_id': self.id})
+            'pk': self.id})
     
     def save(self, *args, **kwargs):
         if self.is_top_level and not self.title:
@@ -210,8 +260,11 @@ class ProductRecommendation(models.Model):
 
 class AbstractAttributeType(models.Model):
     u"""Defines an attribute. (Eg. size)"""
+    
+    item_class = models.ForeignKey('product.ItemClass', related_name='attributes', blank=True, null=True)
     name = models.CharField(_('name'), max_length=128)
     code = models.SlugField(_('code'), max_length=128)
+        
     has_choices = models.BooleanField(default=False)
 
     class Meta:
@@ -223,7 +276,7 @@ class AbstractAttributeType(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.code:
-            self.code = _convert_to_underscores(self.name)
+            self.code = slugify(self.name)
         super(AbstractAttributeType, self).save(*args, **kwargs)
         
 
@@ -287,8 +340,45 @@ class AbstractOption(models.Model):
     
     def save(self, *args, **kwargs):
         if not self.code:
-            self.code = _convert_to_underscores(self.name)
+            self.code = slugify(self.name)
         super(AbstractOption, self).save(*args, **kwargs)
-    
 
+
+class AbstractProductImage(models.Model):
+    u"""An image of a product"""
+    product = models.ForeignKey('product.Item', related_name='images')
     
+    original = models.ImageField(upload_to=settings.OSCAR_IMAGE_FOLDER)
+    caption = models.CharField(_("Caption"), max_length=200, blank=True, null=True)
+    
+    # Use display_order to determine which is the "primary" image
+    display_order = models.PositiveIntegerField(default=0, help_text="""An image with a display order of
+       zero will be the primary image for a product""")
+    date_created = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        abstract = True
+        unique_together = ("product", "display_order")
+        ordering = ["display_order"]
+
+    def __unicode__(self):
+        return u"Image of '%s'" % self.product
+
+    def is_primary(self):
+        u"""Return bool if image display order is 0"""
+        return self.display_order == 0
+
+    def resized_image_url(self, width=None, height=None, **kwargs):
+        return self.original.url
+
+    def fullsize_url(self):
+        u"""
+        Returns the URL path for this image.  This is intended
+        to be overridden in subclasses that want to serve
+        images in a specific way.
+        """
+        return self.resized_image_url()
+    
+    def thumbnail_url(self):
+        return self.resized_image_url()
+

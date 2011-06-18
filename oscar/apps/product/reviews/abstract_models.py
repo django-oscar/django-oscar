@@ -4,6 +4,8 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import ValidationError
 from django.conf import settings
 
+from django.db.models import Sum, Count
+
 from oscar.apps.product.reviews.managers import (ApprovedReviewsManager, RecentReviewsManager, 
                                                  TopScoredReviewsManager, TopVotedReviewsManager)
 
@@ -24,7 +26,7 @@ class AbstractProductReview(models.Model):
     """
     
     # Note we keep the review even if the product is deleted
-    product = models.ForeignKey('product.Item', related_name='product', null=True, on_delete=models.SET_NULL)
+    product = models.ForeignKey('product.Item', related_name='reviews', null=True, on_delete=models.SET_NULL)
     
     SCORE_CHOICES = tuple([(x, x) for x in range(0, 6)])
     score = models.SmallIntegerField(_("Score"), choices=SCORE_CHOICES)
@@ -63,10 +65,9 @@ class AbstractProductReview(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('oscar-product-review', (), {
-            'item_class_slug': self.product.get_item_class().slug,
+        return ('products:reviews-detail', (), {
             'item_slug': self.product.slug,
-            'item_id': self.product.id,
+            'item_pk': self.product.id,
             'pk': self.id})
 
     def __unicode__(self):
@@ -92,10 +93,11 @@ class AbstractProductReview(models.Model):
         """Returns the total down votes"""
         return int((self.total_votes - self.delta_votes) / 2)
 
-    def update_totals(self, vote):
+    def update_totals(self):
         """Updates total and delta votes"""
-        self.total_votes += 1
-        self.delta_votes += vote.delta
+        result = self.votes.aggregate(score=Sum('delta'),total_votes=Count('id'))
+        self.total_votes = result['total_votes'] or 0
+        self.delta_votes = result['score'] or 0
         self.save()
         
     def get_reviewer_name(self):
@@ -133,5 +135,5 @@ class AbstractVote(models.Model):
         u"""
         Validates model and raises error if validation fails
         """
-        self.review.update_totals(self)
+        self.review.update_totals()
         super(AbstractVote, self).save(*args, **kwargs)

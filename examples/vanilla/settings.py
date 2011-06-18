@@ -17,19 +17,12 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.', # Make sure you're using InnoDB
-        'NAME': 'oscar_vanilla',     
-        'USER': '',                           # Set these details in settings_local.py
-        'PASSWORD': '',                       # "
-        'HOST': '',                     
-        'PORT': '',                      
-    }
-}
-
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': '127.0.0.1:11211',
+        'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': '',                      # Or path to database file if using sqlite3.
+        'USER': '',                      # Not used with sqlite3.
+        'PASSWORD': '',                  # Not used with sqlite3.
+        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
 
@@ -92,6 +85,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'oscar.apps.search.context_processors.search_form',
     'oscar.apps.promotions.context_processors.promotions',
     'oscar.apps.promotions.context_processors.merchandising_blocks',
+    'oscar.apps.checkout.context_processors.checkout',
 ) 
 
 MIDDLEWARE_CLASSES = (
@@ -103,7 +97,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
-    'oscar.apps.basket.middleware.BasketMiddleware'
+    'oscar.apps.basket.middleware.BasketMiddleware',
 )
 
 INTERNAL_IPS = ('127.0.0.1',)
@@ -114,6 +108,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    location('templates')
 )
 
 # A sample logging configuration. The only tangible logging
@@ -189,7 +184,7 @@ INSTALLED_APPS = (
     # External apps
     'django_extensions',
     'haystack',
-    #'debug_toolbar',
+    'debug_toolbar',
     # Apps from oscar
     'oscar',
     'oscar.apps.analytics',
@@ -199,27 +194,34 @@ INSTALLED_APPS = (
     'oscar.apps.shipping',
     'oscar.apps.order_management',
     'oscar.apps.product',
+    'oscar.apps.product.reviews',
     'oscar.apps.basket',
     'oscar.apps.payment',
+    'oscar.apps.payment.datacash',
     'oscar.apps.offer',
     'oscar.apps.address',
     'oscar.apps.partner',
-    'oscar.apps.image',
+    #'oscar.apps.dynamic_images',
     'oscar.apps.customer',
     'oscar.apps.promotions',
     'oscar.apps.reports',
     'oscar.apps.search',
-    'oscar.apps.product.reviews',
-    'oscar.apps.payment.datacash',
     'pyzen',
     'sorl.thumbnail',
 )
 
-LOGIN_REDIRECT_URL = '/shop/accounts/profile/'
+AUTHENTICATION_BACKENDS = (
+    'oscar.apps.customer.auth_backends.Emailbackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+LOGIN_REDIRECT_URL = '/accounts/'
 APPEND_SLASH = True
 
 # Oscar settings
 from oscar.defaults import *
+
+OSCAR_ALLOW_ANON_CHECKOUT = True
 
 # Haystack settings
 HAYSTACK_SITECONF = 'oscar.search_sites'

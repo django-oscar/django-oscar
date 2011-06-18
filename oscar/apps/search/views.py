@@ -11,7 +11,7 @@ from oscar.core.loading import import_module
 product_models = import_module('product.models', ['Item'])
 
 
-class Suggestions(View):
+class SuggestionsView(View):
     u"""
     Auto suggest view
 
@@ -58,7 +58,7 @@ class MultiFacetedSearchView(FacetedSearchView):
     u"""
     Search view for multifaceted searches
     """
-    template = 'oscar/search/results.html'
+    template = 'search/results.html'
 
     def __call__(self, request, *args, **kwargs):
         """
