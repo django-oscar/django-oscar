@@ -83,8 +83,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.messages.context_processors.messages",
     # Oscar specific
     'oscar.apps.search.context_processors.search_form',
-    'oscar.apps.promotions.context_processors.promotions',
-    'oscar.apps.promotions.context_processors.merchandising_blocks',
+    #'oscar.apps.promotions.context_processors.promotions',
+    #'oscar.apps.promotions.context_processors.merchandising_blocks',
     'oscar.apps.checkout.context_processors.checkout',
 ) 
 
