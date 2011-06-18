@@ -13,27 +13,28 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext as _
 from django.template.response import TemplateResponse
 from django.core.mail import EmailMessage
-from django.views.generic import DetailView, TemplateView, FormView, DeleteView, UpdateView, CreateView
+from django.views.generic import DetailView, TemplateView, FormView, \
+                                 DeleteView, UpdateView, CreateView
 
 from oscar.core.loading import import_module
 import_module('checkout.forms', ['ShippingAddressForm'], locals())
 import_module('checkout.calculators', ['OrderTotalCalculator'], locals())
 import_module('checkout.utils', ['CheckoutSessionData'], locals())
 import_module('checkout.signals', ['pre_payment', 'post_payment'], locals())
-import_module('order.models', ['Order', 'ShippingAddress', 'CommunicationEventType', 'CommunicationEvent'], locals())
+import_module('order.models', ['Order', 'ShippingAddress', 'CommunicationEventType', 
+                               'CommunicationEvent'], locals())
 import_module('order.utils', ['OrderNumberGenerator', 'OrderCreator'], locals())
 import_module('address.models', ['UserAddress'], locals())
 import_module('address.forms', ['UserAddressForm'], locals())
 import_module('shipping.repository', ['Repository'], locals())
 import_module('customer.models', ['Email'], locals())
+import_module('customer.views', ['AccountAuthView'], locals())
 import_module('payment.exceptions', ['RedirectRequired', 'UnableToTakePayment', 
                                      'PaymentError'], locals())
 import_module('basket.models', ['Basket'], locals())
 
 # Standard logger for checkout events
 logger = logging.getLogger('oscar.checkout')
-
-from oscar.apps.customer.views import AccountAuthView
 
 
 class IndexView(AccountAuthView):
@@ -240,8 +241,15 @@ class UserAddressDeleteView(DeleteView):
 
 class ShippingMethodView(CheckoutSessionMixin, TemplateView):
     """
-    Shipping methods are domain-specific and so need implementing in a 
-    subclass of this class.
+    View for allowing a user to choose a shipping method.
+    
+    Shipping methods are largely domain-specific and so this view
+    will commonly need to be subclassed and customised.
+    
+    The default behaviour is to load all the available shipping methods
+    using the shipping Repository.  If there is only 1, then it is 
+    automatically selected.  Otherwise, a page is rendered where
+    the user can choose the appropriate one.
     """
     template_name = 'checkout/shipping_methods.html';
     
@@ -266,11 +274,16 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
         for a given basket.
         """ 
         repo = Repository()
+        # Shipping methods can depend on the user, the contents of the basket
+        # and the shipping address.  I haven't come across a scenario that doesn't
+        # fit this system.
         return repo.get_shipping_methods(self.request.user, self.request.basket, 
                                          self.get_shipping_address())
     
     def post(self, request, *args, **kwargs):
         method_code = request.POST['method_code']
+        # Save the code for the chosen shipping method in the session
+        # and continue to the next step.
         self.checkout_session.use_shipping_method(method_code)
         return self.get_success_response()
         
@@ -298,15 +311,20 @@ class OrderPreviewView(CheckoutSessionMixin, TemplateView):
     View a preview of the order before submitting.
     """
     template_name = 'checkout/preview.html'
+    
+    def get_success_response(self):
+        return HttpResponseRedirect(reverse('checkout:payment-details'))
 
 
 class PaymentDetailsView(CheckoutSessionMixin, TemplateView):
     """
     For taking the details of payment and creating the order
     
-    The class is deliberately split into fine-grained method, responsible for only one
+    The class is deliberately split into fine-grained methods, responsible for only one
     thing.  This is to make it easier to subclass and override just one component of
     functionality.
+    
+    Almost all projects will need to subclass and customise this class.
     """
 
     # Any payment sources should be added to this list as part of the
@@ -322,6 +340,17 @@ class PaymentDetailsView(CheckoutSessionMixin, TemplateView):
         return self.submit(request.basket, **kwargs)
     
     def submit(self, basket, **kwargs):
+        """
+        Submit a basket for order placement.
+        
+        The process runs as follows:
+         * Generate an order number
+         * Freeze the basket so it cannot be modified any more.
+         * Attempt to take payment for the order
+           - If payment is successful, place the order
+           - If a redirect is required(eg PayPal, 3DSecure), redirect
+           - If payment is unsuccessful, show an appropriate error message
+        """
         # We generate the order number first as this will be used
         # in payment requests (ie before the order model has been 
         # created).
@@ -345,17 +374,21 @@ class PaymentDetailsView(CheckoutSessionMixin, TemplateView):
             post_payment.send_robust(sender=self, view=self)
         except RedirectRequired, e:
             # Redirect required (eg PayPal, 3DS)
+            logger.info(_("Order #%s: redirecting to %s" % (order_number, e.url)))
             return HttpResponseRedirect(e.url)
         except UnableToTakePayment, e:
             # Something went wrong with payment, need to show
             # error to the user.  This type of exception is supposed
             # to set a friendly error message.
-            return self.handle_GET(error=e.message)
-        except PaymentError:
+            logger.info(_("Order #%s: unable to take payment (%s)" % (order_number, e.message)))
+            return self.render_to_response(self.get_context_data(error=e.message))
+        except PaymentError, e:
             # Something went wrong which wasn't anticipated.
-            return self.handle_GET(error="A problem occured processing payment.")
+            logger.error(_("Order #%s: payment error (%s)" % (order_number, e)))
+            return self.render_to_response(self.get_context_data(error="A problem occurred processing payment."))
         else:
             # If all is ok with payment, place order
+            logger.error(_("Order #%s: payment successful, placing order" % order_number))
             return self.place_order(order_number, basket, total_incl_tax, total_excl_tax)
     
     def get_submitted_basket(self):
@@ -370,11 +403,11 @@ class PaymentDetailsView(CheckoutSessionMixin, TemplateView):
         fzn_basket = self.get_submitted_basket()
         fzn_basket.thaw()
         fzn_basket.merge(self.request.basket)
-        self.set_template_context(fzn_basket)
+        self.request.basket = fzn_basket
     
     def place_order(self, order_number, basket, total_incl_tax=None, total_excl_tax=None): 
         """
-        Place the order
+        Place the order into the database.
         
         We deliberately pass the basket in here as the one tied to the request
         isn't necessarily the correct one to use in placing the order.  This can
@@ -387,10 +420,10 @@ class PaymentDetailsView(CheckoutSessionMixin, TemplateView):
         self.save_payment_details(order)
         self.reset_checkout()
         
-        logger.info(_("Order #%s: submitted successfully" % order_number))
-        
         # Send confirmation message (normally an email)
         self.send_confirmation_message(order)
+        
+        logger.info(_("Order #%s: submission complete" % order_number))
         
         # Save order id in session so thank-you page can load it
         self.request.session['checkout_order_id'] = order.id
