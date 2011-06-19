@@ -17,14 +17,26 @@ POD_FOLDER = settings.OSCAR_POD_FOLDER
 
 
 class Promotion(models.Model):
+    """
+    Abstract base promotion that defines the interface
+    that subclasses must implement.
+    """
+    _proxy_link_url = None
     
     class Meta:
         abstract = True
+
+    def set_proxy_link(self, url):
+        self._proxy_link_url = url 
     
     def template_name(self):
-        pass
+        """
+        Returns the template to use to render this
+        promotion.
+        """
+        return 'promotions/%s.html' % self.__class__.__name__.lower()
     
-    def template_context(self):
+    def template_context(self, *args, **kwargs):
         return {}
 
 
@@ -52,7 +64,7 @@ class Pod(Promotion):
         return self.name
 
 
-class AbstractProductList(models.Model):
+class AbstractProductList(Promotion):
     """
     Abstract superclass for promotions which are essentially a list
     of products.
@@ -153,7 +165,7 @@ class PagePromotion(LinkedPromotion):
         return u"%s on %s" % (self.content_object, self.page_url)
     
     def get_link(self):
-        return reverse('oscar-page-promotion-click', kwargs={'page_promotion_id': self.id})
+        return reverse('promotions:page-click', kwargs={'page_promotion_id': self.id})
         
     
 class KeywordPromotion(LinkedPromotion):
@@ -167,7 +179,7 @@ class KeywordPromotion(LinkedPromotion):
     keyword = models.CharField(_("Keyword"), max_length=200)
 
     def get_link(self):
-        return reverse('oscar-keyword-promotion-click', kwargs={'keyword_promotion_id': self.id})
+        return reverse('promotions:keyword-click', kwargs={'keyword_promotion_id': self.id})
 
 
 

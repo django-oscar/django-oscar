@@ -3,19 +3,19 @@ from django.template.loader import select_template
      
 register = Library()
      
-class MerchandisingBlockNode(Node):
-    def __init__(self, linked_block):
-        self.linked_block = Variable(linked_block)
+     
+class PromotionNode(Node):
+    def __init__(self, promotion):
+        self.promotion = Variable(promotion)
     
     def render(self, context):
-        linked_block = self.linked_block.resolve(context)
-        template = select_template([linked_block.block.template_file, 'promotions/block_default.html'])
-        args = dict(block=linked_block.block, **linked_block.block.template_context(request=context['request']))
-        context = Context(args)
-        return template.render(context)
+        promotion = self.promotion.resolve(context)
+        template = select_template([promotion.template_name(), 'promotions/default.html'])
+        args = dict(promotion=promotion, **promotion.template_context(request=context['request']))
+        return template.render(Context(args))
  
-def get_block_html(parser, token):
-    _, linked_block = token.split_contents()
-    return MerchandisingBlockNode(linked_block)
+def get_promotion_html(parser, token):
+    _, promotion = token.split_contents()
+    return PromotionNode(promotion)
 
-register.tag('render_merchandising_block', get_block_html)
+register.tag('render_promotion', get_promotion_html)

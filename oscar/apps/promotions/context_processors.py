@@ -2,55 +2,43 @@ from itertools import chain
 
 from django.core.exceptions import ObjectDoesNotExist
 
+from oscar.apps.promotions.models import PagePromotion
 
-#def promotions(request):
-#    u"""
-#    For adding bindings for banners and pods to the template
-#    context.
-#    """
-#    bindings = {
-#        'url_path': request.path
-#    }
-#    promotions = PagePromotion._default_manager.select_related().filter(page_url=request.path)
-#
-#    if 'q' in request.GET:
-#        keyword_promotions = KeywordPromotion._default_manager.select_related().filter(keyword=request.GET['q'])
-#        if keyword_promotions.count() > 0:
-#            promotions = list(chain(promotions, keyword_promotions))
-#
-#    bindings['banners'], bindings['left_pods'], bindings['right_pods'] = _split_by_position(promotions)
-#
-#    return bindings
-#
-#def merchandising_blocks(request):
-#    bindings = {
-#        'url_path': request.path
-#    }
-#    blocks = PageMerchandisingBlock._default_manager.select_related().filter(page_url=request.path)
-#
-#    if 'q' in request.GET:
-#        keyword_blocks = KeywordMerchandisingBlock._default_manager.select_related().filter(keyword=request.GET['q'])
-#        if keyword_blocks.count() > 0:
-#            blocks = list(chain(blocks, keyword_blocks))
-#
-#    bindings['merchandising_blocks'] = blocks
-#
-#    return bindings
-#
-#
-#def _split_by_position(linked_promotions):
-#    # We split the queries into 3 sets based on the position field
-#    banners, left_pods, right_pods = [], [], []
-#    for linked_promotion in linked_promotions:
-#        promotion = linked_promotion.promotion
-#        if linked_promotion.position == BANNER:
-#            banners.append(promotion)
-#        elif linked_promotion.position == LEFT_POD:
-#            left_pods.append(promotion)
-#        elif linked_promotion.position == RIGHT_POD:
-#            right_pods.append(promotion)
-#        promotion.set_proxy_link(linked_promotion.get_link())    
-#    return banners, left_pods, right_pods        
+
+def promotions(request):
+    """
+    For adding bindings for banners and pods to the template
+    context.
+    """
+    context = {
+        'url_path': request.path
+    }
+    # @todo need caching here / and order bt
+    promotions = PagePromotion._default_manager.select_related().filter(page_url=request.path)
+
+    if 'q' in request.GET:
+        keyword_promotions = KeywordPromotion._default_manager.select_related().filter(keyword=request.GET['q'])
+        if keyword_promotions.count() > 0:
+            promotions = list(chain(promotions, keyword_promotions))
+
+    # Split the promotions into separate lists for each position, and 
+    # add them to the template bindings
+    _split_by_position(promotions, context)
+
+    return context
+
+def _split_by_position(linked_promotions, context):
+    """
+    Split the list of promotions into separate lists, grouping
+    by position, and write these lists to the context dict.
+    """
+    for linked_promotion in linked_promotions:
+        key = 'promotions_%s' % linked_promotion.position.lower()
+        if key not in context:
+            context[key] = []
+        context[key].append(linked_promotion.content_object)
+        linked_promotion.content_object.set_proxy_link(linked_promotion.get_link())
+      
 
 
         
