@@ -55,7 +55,9 @@ class OrderCreator(object):
         
     def _create_order_model(self, user, basket, shipping_address, shipping_method, 
                                billing_address, total_incl_tax, total_excl_tax, order_number, status):
-        u"""Creates an order model."""
+        """
+        Creates an order model.
+        """
         order_data = {'basket': basket,
                       'number': order_number,
                       'site': Site._default_manager.get_current(),

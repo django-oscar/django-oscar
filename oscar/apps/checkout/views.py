@@ -16,6 +16,7 @@ from django.core.mail import EmailMessage
 from django.views.generic import DetailView, TemplateView, FormView, \
                                  DeleteView, UpdateView, CreateView
 
+from oscar.apps.shipping.methods import FreeShipping
 from oscar.core.loading import import_module
 import_module('checkout.forms', ['ShippingAddressForm'], locals())
 import_module('checkout.calculators', ['OrderTotalCalculator'], locals())
@@ -86,6 +87,8 @@ class CheckoutSessionMixin(object):
             if not basket:
                 basket = self.request.basket
             method.set_basket(basket)
+        else:
+            method = FreeShipping()
         return method
     
     def get_order_totals(self, basket=None, shipping_method=None):
