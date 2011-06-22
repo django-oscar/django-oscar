@@ -53,13 +53,18 @@ class CheckoutSessionData(object):
         self._set('shipping', 'new_address_fields', address_fields)
         self._unset('shipping', 'user_address_id')
         
-    def new_address_fields(self):
+    def new_shipping_address_fields(self):
         u"""Get shipping address fields from session"""
         return self._get('shipping', 'new_address_fields')
         
     def user_address_id(self):
         u"""Get user address id from session"""
         return self._get('shipping', 'user_address_id')
+    
+    def ship_to_new_address(self, address_fields):
+        u"""Set new shipping address details to session and unset shipping address id"""
+        self._set('shipping', 'new_address_fields', address_fields)
+        self._unset('shipping', 'user_address_id')
     
     # Shipping methods
     
@@ -81,6 +86,23 @@ class CheckoutSessionData(object):
             return None
         return Repository().find_by_code(code)
     
+    # Billing address fields
+    
+    def bill_to_new_address(self, fields):
+        self._set('billing', 'new_address_fields', address_fields)
+    
+    def new_billing_address_fields(self):
+        """
+        Store fields for a billing address
+        """
+        return self._get('billing', 'new_address_fields')
+    
+    def billing_address_same_as_shipping(self):
+        self._set('payment', 'billing_address_same_as_shipping', True)
+        
+    def is_billing_address_same_as_shipping(self):
+        return self._get('payment', 'billing_address_same_as_shipping', False)
+    
     # Payment methods
     
     def pay_by(self, method):
@@ -89,13 +111,13 @@ class CheckoutSessionData(object):
     def payment_method(self):
         return self._get('payment', 'method')
     
-    def billing_address_same_as_shipping(self):
-        self._set('payment', 'billing_address_same_as_shipping', True)
-        
-    def is_billing_address_same_as_shipping(self):
-        return self._get('payment', 'billing_address_same_as_shipping', False)
-    
     # Submission methods
+    
+    def set_order_number(self, order_number):
+        self._set('submission', 'order_number', order_number)
+        
+    def get_order_number(self, order_number):
+        self._get('submission', 'order_number')    
     
     def set_submitted_basket(self, basket):
         self._set('submission', 'basket_id', basket.id)

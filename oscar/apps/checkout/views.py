@@ -67,7 +67,7 @@ class CheckoutSessionMixin(object):
         pre-populated (not saved), or a UserAddress model which will 
         need converting into a ShippingAddress model at submission
         """
-        addr_data = self.checkout_session.new_address_fields()
+        addr_data = self.checkout_session.new_shipping_address_fields()
         if addr_data:
             # Load address data into a blank address model
             return ShippingAddress(**addr_data)
@@ -144,7 +144,7 @@ class ShippingAddressView(CheckoutSessionMixin, FormView):
     form_class = ShippingAddressForm
     
     def get_initial(self):
-        return self.checkout_session.new_address_fields()
+        return self.checkout_session.new_shipping_address_fields()
     
     def get_context_data(self, **kwargs):
         if self.request.user.is_authenticated():
@@ -356,8 +356,11 @@ class PaymentDetailsView(CheckoutSessionMixin, TemplateView):
         """
         # We generate the order number first as this will be used
         # in payment requests (ie before the order model has been 
-        # created).
+        # created).  We also save it in the session for multi-stage
+        # checkouts (eg where we redirect to a 3rd party site and place
+        # the order on a different request).
         order_number = self.generate_order_number(basket)
+        self.checkout_session.set_order_number(order_number)
         logger.info(_("Order #%s: beginning submission process" % order_number))
         
         # We freeze the basket to prevent it being modified once the payment
@@ -383,8 +386,8 @@ class PaymentDetailsView(CheckoutSessionMixin, TemplateView):
             # Something went wrong with payment, need to show
             # error to the user.  This type of exception is supposed
             # to set a friendly error message.
-            logger.info(_("Order #%s: unable to take payment (%s)" % (order_number, e.message)))
-            return self.render_to_response(self.get_context_data(error=e.message))
+            logger.info(_("Order #%s: unable to take payment (%s)" % (order_number, e)))
+            return self.render_to_response(self.get_context_data(error=str(e)))
         except PaymentError, e:
             # Something went wrong which wasn't anticipated.
             logger.error(_("Order #%s: payment error (%s)" % (order_number, e)))
@@ -453,7 +456,7 @@ class PaymentDetailsView(CheckoutSessionMixin, TemplateView):
         self.save_payment_events(order)
         self.save_payment_sources(order)
 
-    def create_billing_address(self):
+    def create_billing_address(self, shipping_address=None):
         """
         Saves any relevant billing data (eg a billing address).
         """
@@ -484,7 +487,7 @@ class PaymentDetailsView(CheckoutSessionMixin, TemplateView):
         """Writes the order out to the DB"""
         shipping_address = self.create_shipping_address()
         shipping_method = self.get_shipping_method(basket)
-        billing_address = self.create_billing_address()
+        billing_address = self.create_billing_address(shipping_address)
         status = self.get_initial_order_status(basket)
         return OrderCreator().place_order(self.request.user, 
                                          basket, 
@@ -511,7 +514,7 @@ class PaymentDetailsView(CheckoutSessionMixin, TemplateView):
         If the shipping address was selected from the user's address book,
         then we convert the UserAddress to a ShippingAddress.
         """
-        addr_data = self.checkout_session.new_address_fields()
+        addr_data = self.checkout_session.new_shipping_address_fields()
         addr_id = self.checkout_session.user_address_id()
         if addr_data:
             addr = self.create_shipping_address_from_form_fields(addr_data)
