@@ -88,16 +88,23 @@ class CheckoutSessionData(object):
     
     # Billing address fields
     
-    def bill_to_new_address(self, fields):
+    def bill_to_new_address(self, address_fields):
+        """
+        Store address fields for a billing address.
+        """
         self._set('billing', 'new_address_fields', address_fields)
     
     def new_billing_address_fields(self):
         """
-        Store fields for a billing address
+        Return fields for a billing address
         """
         return self._get('billing', 'new_address_fields')
     
     def billing_address_same_as_shipping(self):
+        """
+        Record fact that the billing address is to be the same as
+        the shipping address.
+        """
         self._set('payment', 'billing_address_same_as_shipping', True)
         
     def is_billing_address_same_as_shipping(self):
