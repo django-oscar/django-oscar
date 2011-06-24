@@ -411,7 +411,7 @@ class PaymentDetailsView(CheckoutSessionMixin, TemplateView):
         fzn_basket.merge(self.request.basket)
         self.request.basket = fzn_basket
     
-    def place_order(self, order_number, basket, total_incl_tax=None, total_excl_tax=None): 
+    def place_order(self, order_number, basket, total_incl_tax=None, total_excl_tax=None, status=None): 
         """
         Place the order into the database.
         
@@ -422,7 +422,7 @@ class PaymentDetailsView(CheckoutSessionMixin, TemplateView):
         if total_incl_tax is None or total_excl_tax is None:
             total_incl_tax, total_excl_tax = self.get_order_totals(basket)
         
-        order = self.create_order_models(basket, order_number, total_incl_tax, total_excl_tax)
+        order = self.create_order_models(basket, order_number, total_incl_tax, total_excl_tax, status)
         self.save_payment_details(order)
         self.reset_checkout()
         
@@ -483,12 +483,13 @@ class PaymentDetailsView(CheckoutSessionMixin, TemplateView):
         """Reset any checkout session state"""
         self.checkout_session.flush()
     
-    def create_order_models(self, basket, order_number, total_incl_tax, total_excl_tax):
+    def create_order_models(self, basket, order_number, total_incl_tax, total_excl_tax, status):
         """Writes the order out to the DB"""
         shipping_address = self.create_shipping_address()
         shipping_method = self.get_shipping_method(basket)
         billing_address = self.create_billing_address(shipping_address)
-        status = self.get_initial_order_status(basket)
+        if not status:
+            status = self.get_initial_order_status(basket)
         return OrderCreator().place_order(self.request.user, 
                                          basket, 
                                          shipping_address, 
