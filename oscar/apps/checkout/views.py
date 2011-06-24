@@ -395,7 +395,42 @@ class PaymentDetailsView(CheckoutSessionMixin, TemplateView):
         else:
             # If all is ok with payment, place order
             logger.error(_("Order #%s: payment successful, placing order" % order_number))
-            return self.place_order(order_number, basket, total_incl_tax, total_excl_tax)
+            return self.handle_order_placement(order_number, basket, total_incl_tax, total_excl_tax)
+    
+    def generate_order_number(self, basket):
+        generator = OrderNumberGenerator()
+        return generator.order_number(basket)
+    
+    def handle_payment(self, order_number, total, **kwargs):
+        """
+        Handle any payment processing.  
+        
+        This method is designed to be overridden within your project.  The
+        default is to do nothing.
+        """
+        pass
+    
+    def handle_order_placement(self, order_number, basket, total_incl_tax, total_excl_tax): 
+        """
+        Place the order into the database and return the appropriate HTTP response
+        
+        We deliberately pass the basket in here as the one tied to the request
+        isn't necessarily the correct one to use in placing the order.  This can
+        happen when a basket gets frozen.
+        """   
+        # Write out all order and payment models
+        order = self.place_order(basket, order_number, total_incl_tax, total_excl_tax, status)
+        
+        # Send confirmation message (normally an email)
+        self.send_confirmation_message(order)
+        logger.info(_("Order #%s: submission complete" % order_number))
+        
+        # Flush all session data
+        self.reset_checkout()
+        
+        # Save order id in session so thank-you page can load it
+        self.request.session['checkout_order_id'] = order.id
+        return HttpResponseRedirect(reverse('checkout:thank-you'))
     
     def get_submitted_basket(self):
         basket_id = self.checkout_session.get_submitted_basket_id()
@@ -410,44 +445,30 @@ class PaymentDetailsView(CheckoutSessionMixin, TemplateView):
         fzn_basket.thaw()
         fzn_basket.merge(self.request.basket)
         self.request.basket = fzn_basket
+
+    def reset_checkout(self):
+        """Reset any checkout session state"""
+        self.checkout_session.flush()
     
-    def place_order(self, order_number, basket, total_incl_tax=None, total_excl_tax=None, status=None): 
-        """
-        Place the order into the database.
-        
-        We deliberately pass the basket in here as the one tied to the request
-        isn't necessarily the correct one to use in placing the order.  This can
-        happen when a basket gets frozen.
-        """   
-        if total_incl_tax is None or total_excl_tax is None:
-            total_incl_tax, total_excl_tax = self.get_order_totals(basket)
-        
-        order = self.create_order_models(basket, order_number, total_incl_tax, total_excl_tax, status)
+    def create_order_models(self, basket, order_number, total_incl_tax, total_excl_tax, status=None):
+        """Writes the order out to the DB"""
+        shipping_address = self.create_shipping_address()
+        shipping_method = self.get_shipping_method(basket)
+        billing_address = self.create_billing_address(shipping_address)
+        if not status:
+            status = self.get_initial_order_status(basket)
+        order = OrderCreator().place_order(self.request.user, 
+                                         basket, 
+                                         shipping_address, 
+                                         shipping_method, 
+                                         billing_address,
+                                         total_incl_tax,
+                                         total_excl_tax,
+                                         order_number,
+                                         status)
         self.save_payment_details(order)
-        self.reset_checkout()
-        
-        # Send confirmation message (normally an email)
-        self.send_confirmation_message(order)
-        
-        logger.info(_("Order #%s: submission complete" % order_number))
-        
-        # Save order id in session so thank-you page can load it
-        self.request.session['checkout_order_id'] = order.id
-        return HttpResponseRedirect(reverse('checkout:thank-you'))
+        return order
     
-    def generate_order_number(self, basket):
-        generator = OrderNumberGenerator()
-        return generator.order_number(basket)
-
-    def handle_payment(self, order_number, total, **kwargs):
-        """
-        Handle any payment processing.  
-        
-        This method is designed to be overridden within your project.  The
-        default is to do nothing.
-        """
-        pass
-
     def save_payment_details(self, order):
         """
         Saves all payment-related details. This could include a billing 
@@ -478,27 +499,6 @@ class PaymentDetailsView(CheckoutSessionMixin, TemplateView):
         for source in self.payment_sources:
             source.order = order
             source.save()
-    
-    def reset_checkout(self):
-        """Reset any checkout session state"""
-        self.checkout_session.flush()
-    
-    def create_order_models(self, basket, order_number, total_incl_tax, total_excl_tax, status):
-        """Writes the order out to the DB"""
-        shipping_address = self.create_shipping_address()
-        shipping_method = self.get_shipping_method(basket)
-        billing_address = self.create_billing_address(shipping_address)
-        if not status:
-            status = self.get_initial_order_status(basket)
-        return OrderCreator().place_order(self.request.user, 
-                                         basket, 
-                                         shipping_address, 
-                                         shipping_method, 
-                                         billing_address,
-                                         total_incl_tax,
-                                         total_excl_tax,
-                                         order_number,
-                                         status)
     
     def get_initial_order_status(self, basket):
         return None
