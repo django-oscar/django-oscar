@@ -14,6 +14,18 @@ class InvalidGatewayRequestError(PaymentError):
     pass
 
 
+class InsufficientPaymentSources(PaymentError):
+    """
+    Exception for when a user attempts to checkout without
+    specifying enough payment sources to cover the entire order 
+    total. 
+    
+    Eg. When selecting an allocation off a giftcard but not specifying
+        a bankcard to take the remainder from.
+    """
+    pass
+
+
 class RedirectRequired(PaymentError):
     """
     Exception to be used when payment processsing requires a redirect

@@ -22,6 +22,10 @@ class AbstractSource(models.Model):
     amount_debited = models.DecimalField(decimal_places=2, max_digits=12, default=Decimal('0.00'))
     reference = models.CharField(max_length=128, blank=True, null=True)
     
+    # A dictionary of submission data that is stored as part of the
+    # checkout process.
+    submission_data = {}
+    
     class Meta:
         abstract = True
 
