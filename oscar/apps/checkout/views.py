@@ -395,7 +395,7 @@ class PaymentDetailsView(CheckoutSessionMixin, TemplateView):
         else:
             # If all is ok with payment, place order
             logger.error(_("Order #%s: payment successful, placing order" % order_number))
-            return self.handle_order_placement(order_number, basket, total_incl_tax, total_excl_tax)
+            return self.handle_order_placement(order_number, basket, total_incl_tax, total_excl_tax, **kwargs)
     
     def generate_order_number(self, basket):
         generator = OrderNumberGenerator()
@@ -410,7 +410,7 @@ class PaymentDetailsView(CheckoutSessionMixin, TemplateView):
         """
         pass
     
-    def handle_order_placement(self, order_number, basket, total_incl_tax, total_excl_tax): 
+    def handle_order_placement(self, order_number, basket, total_incl_tax, total_excl_tax, **kwargs): 
         """
         Place the order into the database and return the appropriate HTTP response
         
@@ -419,7 +419,7 @@ class PaymentDetailsView(CheckoutSessionMixin, TemplateView):
         happen when a basket gets frozen.
         """   
         # Write out all order and payment models
-        order = self.place_order(basket, order_number, total_incl_tax, total_excl_tax, status)
+        order = self.place_order(basket, order_number, total_incl_tax, total_excl_tax, **kwargs)
         
         # Send confirmation message (normally an email)
         self.send_confirmation_message(order)
@@ -432,31 +432,17 @@ class PaymentDetailsView(CheckoutSessionMixin, TemplateView):
         self.request.session['checkout_order_id'] = order.id
         return HttpResponseRedirect(reverse('checkout:thank-you'))
     
-    def get_submitted_basket(self):
-        basket_id = self.checkout_session.get_submitted_basket_id()
-        return Basket._default_manager.get(pk=basket_id)
-    
-    def restore_frozen_basket(self):
+    def place_order(self, basket, order_number, total_incl_tax, total_excl_tax, **kwargs):
         """
-        Restores a frozen basket as the sole OPEN basket.  Note that this also merges
-        in any new products that have been added to a basket that has been created while payment.
+        Writes the order out to the DB including the payment models
         """
-        fzn_basket = self.get_submitted_basket()
-        fzn_basket.thaw()
-        fzn_basket.merge(self.request.basket)
-        self.request.basket = fzn_basket
-
-    def reset_checkout(self):
-        """Reset any checkout session state"""
-        self.checkout_session.flush()
-    
-    def create_order_models(self, basket, order_number, total_incl_tax, total_excl_tax, status=None):
-        """Writes the order out to the DB"""
         shipping_address = self.create_shipping_address()
         shipping_method = self.get_shipping_method(basket)
         billing_address = self.create_billing_address(shipping_address)
-        if not status:
+        if 'status' not in kwargs:
             status = self.get_initial_order_status(basket)
+        else:
+            status = kwargs['status']
         order = OrderCreator().place_order(self.request.user, 
                                          basket, 
                                          shipping_address, 
@@ -468,40 +454,6 @@ class PaymentDetailsView(CheckoutSessionMixin, TemplateView):
                                          status)
         self.save_payment_details(order)
         return order
-    
-    def save_payment_details(self, order):
-        """
-        Saves all payment-related details. This could include a billing 
-        address, payment sources and any order payment events.
-        """
-        self.save_payment_events(order)
-        self.save_payment_sources(order)
-
-    def create_billing_address(self, shipping_address=None):
-        """
-        Saves any relevant billing data (eg a billing address).
-        """
-        return None
-    
-    def save_payment_events(self, order):
-        """
-        Saves any relevant payment events for this order
-        """
-        pass
-
-    def save_payment_sources(self, order):
-        """
-        Saves any payment sources used in this order.
-        
-        When the payment sources are created, the order model does not exist and 
-        so they need to have it set before saving.
-        """
-        for source in self.payment_sources:
-            source.order = order
-            source.save()
-    
-    def get_initial_order_status(self, basket):
-        return None
     
     def create_shipping_address(self):
         """
@@ -558,6 +510,58 @@ class PaymentDetailsView(CheckoutSessionMixin, TemplateView):
         address.populate_alternative_model(shipping_addr)
         shipping_addr.save()
         return shipping_addr
+    
+    def create_billing_address(self, shipping_address=None):
+        """
+        Saves any relevant billing data (eg a billing address).
+        """
+        return None
+    
+    def save_payment_details(self, order):
+        """
+        Saves all payment-related details. This could include a billing 
+        address, payment sources and any order payment events.
+        """
+        self.save_payment_events(order)
+        self.save_payment_sources(order)
+    
+    def save_payment_events(self, order):
+        """
+        Saves any relevant payment events for this order
+        """
+        pass
+
+    def save_payment_sources(self, order):
+        """
+        Saves any payment sources used in this order.
+        
+        When the payment sources are created, the order model does not exist and 
+        so they need to have it set before saving.
+        """
+        for source in self.payment_sources:
+            source.order = order
+            source.save()
+    
+    def get_initial_order_status(self, basket):
+        return None
+        
+    def get_submitted_basket(self):
+        basket_id = self.checkout_session.get_submitted_basket_id()
+        return Basket._default_manager.get(pk=basket_id)
+    
+    def restore_frozen_basket(self):
+        """
+        Restores a frozen basket as the sole OPEN basket.  Note that this also merges
+        in any new products that have been added to a basket that has been created while payment.
+        """
+        fzn_basket = self.get_submitted_basket()
+        fzn_basket.thaw()
+        fzn_basket.merge(self.request.basket)
+        self.request.basket = fzn_basket
+
+    def reset_checkout(self):
+        """Reset any checkout session state"""
+        self.checkout_session.flush()
     
     def send_confirmation_message(self, order):
         # Create order communication event
