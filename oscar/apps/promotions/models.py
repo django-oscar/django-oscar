@@ -6,8 +6,11 @@ from django.core.exceptions import ValidationError
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
+from django.db.models import get_model
 
 from oscar.forms.fields import ExtendedURLField
+
+Item = get_model('product', 'Item')
 
 # Different model types for each type of promotion
 
@@ -43,6 +46,12 @@ class RawHTML(AbstractPromotion):
     name = models.CharField(_("Name"), max_length=128)
     body = models.TextField(_("HTML"))
     date_created = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        verbose_name_plural = 'Raw HTML'
+        
+    def __unicode__(self):
+        return self.name
 
 
 class Image(AbstractPromotion):
@@ -69,7 +78,7 @@ class MultiImage(AbstractPromotion):
     rotating banners.
     """
     name = models.CharField(_("Name"), max_length=128)
-    tabs = models.ManyToManyField('promotions.Image', null=True, blank=True)
+    images = models.ManyToManyField('promotions.Image', null=True, blank=True)
     
     def __unicode__(self):
         return self.name
@@ -119,6 +128,9 @@ class AutomaticProductList(AbstractProductList):
     )
     method = models.CharField(max_length=128, choices=METHOD_CHOICES)
     num_products = models.PositiveSmallIntegerField(default=4)  
+    
+    def get_products(self):
+        return Item.objects.all().order_by('-date_created')[:self.num_products]
 
 
 class OrderedProductList(models.Model):
@@ -133,6 +145,7 @@ class OrderedProductList(models.Model):
 
 class TabbedBlock(AbstractPromotion):
 
+    name = models.CharField(_("Title"), max_length=255)
     tabs = models.ManyToManyField('promotions.HandPickedProductList', through='OrderedProductList', null=True, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
     
