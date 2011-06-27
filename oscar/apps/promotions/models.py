@@ -9,14 +9,10 @@ from django.contrib.contenttypes.models import ContentType
 
 from oscar.forms.fields import ExtendedURLField
 
-# Settings-controlled stuff
-BANNER_FOLDER = settings.OSCAR_BANNER_FOLDER
-POD_FOLDER = settings.OSCAR_POD_FOLDER
-
 # Different model types for each type of promotion
 
 
-class Promotion(models.Model):
+class AbstractPromotion(models.Model):
     """
     Abstract base promotion that defines the interface
     that subclasses must implement.
@@ -40,36 +36,50 @@ class Promotion(models.Model):
         return {}
 
 
-class Banner(Promotion):
+class RawHTML(AbstractPromotion):
+    """
+    Simple promotion - just raw HTML
+    """
+    name = models.CharField(_("Name"), max_length=128)
+    body = models.TextField(_("HTML"))
+    date_created = models.DateTimeField(auto_now_add=True)
+
+
+class Image(AbstractPromotion):
+    """
+    An image promotion is simply a named image which has an optional 
+    link to another part of the site (or another site).
     
+    This can be used to model both banners and pods.
+    """
     name = models.CharField(_("Name"), max_length=128)
     link_url = ExtendedURLField(blank=True, null=True, help_text="""This is 
         where this promotion links to""")
-    image = models.ImageField(upload_to=BANNER_FOLDER, blank=True, null=True)
+    image = models.ImageField(upload_to=settings.OSCAR_PROMOTION_FOLDER, blank=True, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
     
     def __unicode__(self):
         return self.name
     
-
-class Pod(Promotion):
     
+class MultiImage(AbstractPromotion):
+    """
+    A multi-image promotion is simply a collection of image promotions
+    that are rendered in a specific way.  This models things like 
+    rotating banners.
+    """
     name = models.CharField(_("Name"), max_length=128)
-    link_url = ExtendedURLField(blank=True, null=True, help_text="""This is 
-        where this promotion links to""")
-    image = models.ImageField(upload_to=BANNER_FOLDER, blank=True, null=True)
-    date_created = models.DateTimeField(auto_now_add=True)
+    tabs = models.ManyToManyField('promotions.Image', null=True, blank=True)
     
     def __unicode__(self):
         return self.name
 
 
-class AbstractProductList(Promotion):
+class AbstractProductList(AbstractPromotion):
     """
     Abstract superclass for promotions which are essentially a list
     of products.
     """
-    
     name = models.CharField(_("Title"), max_length=255)
     description = models.TextField(null=True, blank=True)
     link_url = ExtendedURLField(blank=True, null=True)
@@ -83,7 +93,10 @@ class AbstractProductList(Promotion):
         
  
 class HandPickedProductList(AbstractProductList):
-    
+    """
+    A hand-picked product list is a list of manually selected
+    products.
+    """
     products = models.ManyToManyField('product.Item', through='OrderedProduct', blank=True, null=True)
     
 
@@ -118,20 +131,13 @@ class OrderedProductList(models.Model):
         ordering = ('display_order',)
 
 
-class TabbedBlock(Promotion):
+class TabbedBlock(AbstractPromotion):
 
     tabs = models.ManyToManyField('promotions.HandPickedProductList', through='OrderedProductList', null=True, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
     
     
 # Linking models
-
-TOP, LEFT, RIGHT = ('Top', 'Left', 'Right')
-POSITION_CHOICES = (
-    (TOP, _("Top of page")),
-    (LEFT, _("Left-hand sidebar")),
-    (RIGHT, _("Right-hand sidebar")),
-)
 
 
 class LinkedPromotion(models.Model):
@@ -141,7 +147,7 @@ class LinkedPromotion(models.Model):
     object_id = models.PositiveIntegerField()
     content_object = generic.GenericForeignKey('content_type', 'object_id')
     
-    position = models.CharField(_("Position"), max_length=100, help_text="Position on page", choices=POSITION_CHOICES)
+    position = models.CharField(_("Position"), max_length=100, help_text="Position on page")
     display_order = models.PositiveIntegerField(default=0)
     clicks = models.PositiveIntegerField(default=0)
     date_created = models.DateTimeField(auto_now_add=True)

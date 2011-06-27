@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from oscar.apps.promotions.models import Banner, Pod, HandPickedProductList, OrderedProduct, AutomaticProductList, TabbedBlock, \
+from oscar.apps.promotions.models import Image, MultiImage, RawHTML, HandPickedProductList, OrderedProduct, AutomaticProductList, TabbedBlock, \
                                   PagePromotion, KeywordPromotion
 
 
@@ -25,8 +25,9 @@ class KeywordPromotionAdmin(admin.ModelAdmin):
     readonly_fields = ['clicks']
 
 
-admin.site.register(Banner)
-admin.site.register(Pod)
+admin.site.register(Image)
+admin.site.register(MultiImage)
+admin.site.register(RawHTML)
 admin.site.register(HandPickedProductList, HandPickedProductListAdmin)
 admin.site.register(AutomaticProductList)
 admin.site.register(TabbedBlock)

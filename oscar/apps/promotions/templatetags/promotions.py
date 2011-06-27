@@ -6,10 +6,10 @@ register = Library()
      
 class PromotionNode(Node):
     def __init__(self, promotion):
-        self.promotion = Variable(promotion)
+        self.promotion_var = Variable(promotion)
     
     def render(self, context):
-        promotion = self.promotion.resolve(context)
+        promotion = self.promotion_var.resolve(context)
         template = select_template([promotion.template_name(), 'promotions/default.html'])
         args = dict(promotion=promotion, **promotion.template_context(request=context['request']))
         return template.render(Context(args))

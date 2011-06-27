@@ -63,6 +63,7 @@ MEDIA_URL = '/media/'
 # Examples: "http://foo.com/media/", "/media/".
 ADMIN_MEDIA_PREFIX = '/media/admin/'
 
+
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '$)a7n&o80u!6y5t-+jrd3)3!%vh&shg$wqpjpxc!ar&p#!)n1a'
 
@@ -180,10 +181,11 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.admin',
     'django.contrib.flatpages',
+    'django.contrib.staticfiles',
     # External apps
     'django_extensions',
     'haystack',
-    'debug_toolbar',
+    #'debug_toolbar',
     # Apps from oscar
     'oscar',
     'oscar.apps.analytics',

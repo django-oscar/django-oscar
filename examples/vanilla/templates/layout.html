@@ -20,11 +20,6 @@
                 <a href="{% url customer:login %}">Login</a>
             {% endif %}
             
-            Add a:
-            <a href="/admin/promotions/pagepromotion/add/?page_url={{ url_path }}" >promotion</a> /
-            <a href="/admin/promotions/pagemerchandisingblock/add/?page_url={{ url_path }}" >merchandising block</a>
-            to this page.
-            
             Basket total: {{ basket.total_incl_tax|currency }}
             <a href="{% url basket:summary %}">View basket</a>
             
@@ -42,9 +37,9 @@
             {% endif %}
             
             <div id="promotions">
-            {% for promotion in promotions_top %}
-                {% render_promotion promotion %}
-            {% endfor %}
+                {% for promotion in promotions_page %}
+                    {% render_promotion promotion %}
+                {% endfor %}
             </div>
             
             {% block content %}{% endblock %}

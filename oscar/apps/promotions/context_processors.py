@@ -10,16 +10,18 @@ def promotions(request):
     For adding bindings for banners and pods to the template
     context.
     """
-    context = {
-        'url_path': request.path
-    }
+    
     # @todo need caching here / and order bt
     promotions = PagePromotion._default_manager.select_related().filter(page_url=request.path)
 
-    if 'q' in request.GET:
-        keyword_promotions = KeywordPromotion._default_manager.select_related().filter(keyword=request.GET['q'])
-        if keyword_promotions.count() > 0:
-            promotions = list(chain(promotions, keyword_promotions))
+#    if 'q' in request.GET:
+#        keyword_promotions = KeywordPromotion._default_manager.select_related().filter(keyword=request.GET['q'])
+#        if keyword_promotions.count() > 0:
+#            promotions = list(chain(promotions, keyword_promotions))
+
+    context = {
+        'url_path': request.path
+    }
 
     # Split the promotions into separate lists for each position, and 
     # add them to the template bindings
