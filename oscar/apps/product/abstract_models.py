@@ -261,7 +261,7 @@ class ProductRecommendation(models.Model):
 class AbstractAttributeType(models.Model):
     u"""Defines an attribute. (Eg. size)"""
     
-    item_class = models.ForeignKey('product.ItemClass', related_name='attributes', blank=True, null=True)
+    item_class = models.ForeignKey('product.ItemClass', related_name='attribute_types', blank=True, null=True)
     name = models.CharField(_('name'), max_length=128)
     code = models.SlugField(_('code'), max_length=128)
         
