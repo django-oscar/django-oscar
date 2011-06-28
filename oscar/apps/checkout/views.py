@@ -351,7 +351,7 @@ class PaymentDetailsView(CheckoutSessionMixin, TemplateView):
          * Freeze the basket so it cannot be modified any more.
          * Attempt to take payment for the order
            - If payment is successful, place the order
-           - If a redirect is required(eg PayPal, 3DSecure), redirect
+           - If a redirect is required (eg PayPal, 3DSecure), redirect
            - If payment is unsuccessful, show an appropriate error message
         """
         # We generate the order number first as this will be used
@@ -360,7 +360,6 @@ class PaymentDetailsView(CheckoutSessionMixin, TemplateView):
         # checkouts (eg where we redirect to a 3rd party site and place
         # the order on a different request).
         order_number = self.generate_order_number(basket)
-        self.checkout_session.set_order_number(order_number)
         logger.info(_("Order #%s: beginning submission process" % order_number))
         
         # We freeze the basket to prevent it being modified once the payment
@@ -399,7 +398,9 @@ class PaymentDetailsView(CheckoutSessionMixin, TemplateView):
     
     def generate_order_number(self, basket):
         generator = OrderNumberGenerator()
-        return generator.order_number(basket)
+        order_number = generator.order_number(basket)
+        self.checkout_session.set_order_number(order_number)
+        return order_number
     
     def handle_payment(self, order_number, total, **kwargs):
         """
