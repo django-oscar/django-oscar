@@ -11,7 +11,7 @@ sqs = SearchQuerySet()
 for field_name, field in ProductIndex.fields.items():
     if field.faceted is True:
         # Ensure we facet the results set by the defined facetable fields
-        sqs.facet(field_name)
+        sqs = sqs.facet(field_name)
 
 urlpatterns = patterns('search.apps.views',
     url(r'^suggest/$', Suggestions.as_view(), name='oscar-search-suggest'),
