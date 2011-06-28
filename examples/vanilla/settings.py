@@ -64,7 +64,6 @@ MEDIA_URL = '/media/'
 ADMIN_MEDIA_PREFIX = '/media/admin/'
 
 STATIC_URL = '/static/'
-#STATIC_ROOT = location('public/static/')
 STATICFILES_DIRS = (location('static/'),)
 
 # Make this unique, and don't share it with anybody.
@@ -88,7 +87,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     # Oscar specific
     'oscar.apps.search.context_processors.search_form',
     'oscar.apps.promotions.context_processors.promotions',
-    'oscar.apps.promotions.context_processors.merchandising_blocks',
     'oscar.apps.checkout.context_processors.checkout',
 ) 
 
@@ -189,7 +187,7 @@ INSTALLED_APPS = (
     # External apps
     'django_extensions',
     'haystack',
-    'debug_toolbar',
+    #'debug_toolbar',
     # Apps from oscar
     'oscar',
     'oscar.apps.analytics',

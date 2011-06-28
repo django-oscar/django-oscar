@@ -127,6 +127,9 @@ class AbstractItem(models.Model):
     # Recommended products
     recommended_items = models.ManyToManyField('product.Item', through='ProductRecommendation', blank=True)
     
+    # Product score
+    score = models.FloatField(default=0.00, db_index=True)
+    
     date_created = models.DateTimeField(auto_now_add=True)
 
     # This field is used by Haystack to reindex search
@@ -176,14 +179,6 @@ class AbstractItem(models.Model):
             return True
         except ObjectDoesNotExist:
             return False
-
-    @property
-    def score(self):
-        try:
-            pr = self.productrecord
-            return pr.score
-        except ObjectDoesNotExist:
-            return 0
 
     def add_category_from_breadcrumbs(self, breadcrumb):
         from oscar.apps.product.utils import breadcrumbs_to_category

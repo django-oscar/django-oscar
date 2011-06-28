@@ -5,7 +5,8 @@
         "fields": {
             "code": "html-meta-description", 
             "name": "HTML meta description", 
-            "has_choices": false
+            "has_choices": false,
+            "item_class": null
         }
     }, 
     {
@@ -14,7 +15,8 @@
         "fields": {
             "code": "html-meta-keywords", 
             "name": "HTML meta keywords", 
-            "has_choices": false
+            "has_choices": false,
+            "item_class": null
         }
     }
 ]

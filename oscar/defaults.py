@@ -11,8 +11,7 @@ OSCAR_RECENTLY_VIEWED_PRODUCTS = 4
 
 # Image paths
 OSCAR_IMAGE_FOLDER = 'images/products/%Y/%m/'
-OSCAR_BANNER_FOLDER = 'images/promotions/banners'
-OSCAR_POD_FOLDER = 'images/promotions/pods'
+OSCAR_PROMOTION_FOLDER = 'images/promotions/'
 
 # Search settings
 OSCAR_SEARCH_SUGGEST_LIMIT = 10

@@ -20,7 +20,7 @@ class AbstractProductRecord(models.Model):
     num_purchases = models.PositiveIntegerField(default=0, db_index=True)
     
     # Product score - used within search
-    score = models.DecimalField(decimal_places=2, max_digits=12, default=Decimal('0.00'))
+    score = models.FloatField(default=0.00)
     
     class Meta:
         abstract = True
