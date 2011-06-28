@@ -11,8 +11,8 @@ class HandPickedProductListAdmin(admin.ModelAdmin):
     inlines = [OrderProductInline]
 
 class PagePromotionAdmin(admin.ModelAdmin):
-    list_display = ['page_url', 'content_object', 'position', 'clicks']
-    readonly_fields = ['clicks']
+    list_display = ['page_url', 'content_object', 'position']
+    exclude = ['clicks']
     
     def get_form(self, request, obj=None, **kwargs):
         form = super(PagePromotionAdmin,self).get_form(request, obj, **kwargs)

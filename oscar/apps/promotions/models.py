@@ -20,13 +20,8 @@ class AbstractPromotion(models.Model):
     Abstract base promotion that defines the interface
     that subclasses must implement.
     """
-    _proxy_link_url = None
-    
     class Meta:
         abstract = True
-
-    def set_proxy_link(self, url):
-        self._proxy_link_url = url 
     
     def template_name(self):
         """
@@ -130,6 +125,8 @@ class AutomaticProductList(AbstractProductList):
     num_products = models.PositiveSmallIntegerField(default=4)  
     
     def get_products(self):
+        if self.method == self.BESTSELLING:
+            return Item.objects.all().order_by('-score')[:self.num_products]
         return Item.objects.all().order_by('-date_created')[:self.num_products]
 
 

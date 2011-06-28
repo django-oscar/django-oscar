@@ -42,7 +42,6 @@ def _split_by_position(linked_promotions, context):
         if key not in context:
             context[key] = []
         context[key].append(linked_promotion.content_object)
-        linked_promotion.content_object.set_proxy_link(linked_promotion.get_link())
       
 
 
