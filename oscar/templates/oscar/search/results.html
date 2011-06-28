@@ -17,7 +17,7 @@ Did you mean <a href="{% url oscar-search %}?q={{ suggestion }}">{{ suggestion }
             {% if facets.fields.item_class %}
                 <dt>Type</dt>
                 {% for item_class in facets.fields.item_class|slice:":5" %}
-                    <dd><a href="{{ request.get_full_path }}&amp;selected_facets=item_class:{{ author.0|urlencode }}">{{ item_class.0 }}</a> ({{ item_class.1 }})</dd>
+                    <dd><a href="{{ request.get_full_path }}&amp;selected_facets=item_class:{{ item_class.0|urlencode }}">{{ item_class.0 }}</a> ({{ item_class.1 }})</dd>
                 {% endfor %}
             {% else %}
                 <p>No type facets.</p>
