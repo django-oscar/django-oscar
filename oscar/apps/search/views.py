@@ -25,9 +25,7 @@ class Suggestions(View):
         return self.render_to_response(context)
 
     def get_context_data(self):
-        '''
-        Creates a list of suggestions
-        '''
+        """Creates a list of suggestions"""
         query_term = self.request.GET['query_term'];
         query_set = SearchQuerySet().filter(text__contains=query_term)[:self.suggest_limit]
         context = []
@@ -39,11 +37,11 @@ class Suggestions(View):
         return context
 
     def render_to_response(self, context):
-        "Returns a JSON response containing 'context' as payload"
+        """Returns a JSON response containing 'context' as payload"""
         return self.get_json_response(self.convert_context_to_json(context))
 
     def get_json_response(self, content, **httpresponse_kwargs):
-        "Construct an `HttpResponse` object."
+        """Construct an `HttpResponse` object."""
         return HttpResponse(content,
                                  content_type='application/json',
                                  **httpresponse_kwargs)
@@ -80,9 +78,7 @@ class MultiFacetedSearchView(FacetedSearchView):
         return "MultiFacetedSearchView"
 
     def extra_context(self):
-        '''
-        Adds details about the facets applied
-        '''
+        """Adds details about the facets applied"""
         extra = super(MultiFacetedSearchView, self).extra_context()
 
         if hasattr(self.form, 'cleaned_data') and 'selected_facets' in self.form.cleaned_data:

@@ -1,7 +1,7 @@
 from haystack.indexes import *
 
 from oscar.core.loading import import_module
-product_models = import_module('product.models', ['Item'])
+product_models = import_module('product.models', ['Item', 'ItemClass'])
 
 
 class AbstractProductIndex(SearchIndex):
@@ -12,6 +12,7 @@ class AbstractProductIndex(SearchIndex):
     text = EdgeNgramField(document=True, use_template=True, template_name='oscar/search/indexes/product/item_text.txt')
     title = EdgeNgramField(model_attr='title')
     upc = CharField(model_attr="upc")
+    item_class = CharField(model_attr="item_class", faceted=True)
     score = FloatField(model_attr="score")
     date_created = DateTimeField(model_attr='date_created')
     date_updated = DateTimeField(model_attr='date_updated')
