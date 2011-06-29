@@ -124,11 +124,11 @@ class CheckoutSessionData(object):
         self._set('submission', 'order_number', order_number)
         
     def get_order_number(self, order_number):
-        self._get('submission', 'order_number')    
+        return self._get('submission', 'order_number')    
     
     def set_submitted_basket(self, basket):
         self._set('submission', 'basket_id', basket.id)
         
     def get_submitted_basket_id(self):
-        self._get('submission', 'basket_id')
+        return self._get('submission', 'basket_id')
         
