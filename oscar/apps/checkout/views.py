@@ -420,7 +420,7 @@ class PaymentDetailsView(CheckoutSessionMixin, TemplateView):
         happen when a basket gets frozen.
         """   
         # Write out all order and payment models
-        order = self.place_order(basket, order_number, total_incl_tax, total_excl_tax, **kwargs)
+        order = self.place_order(order_number, basket, total_incl_tax, total_excl_tax, **kwargs)
         
         # Send confirmation message (normally an email)
         self.send_confirmation_message(order)
@@ -433,7 +433,7 @@ class PaymentDetailsView(CheckoutSessionMixin, TemplateView):
         self.request.session['checkout_order_id'] = order.id
         return HttpResponseRedirect(reverse('checkout:thank-you'))
     
-    def place_order(self, basket, order_number, total_incl_tax, total_excl_tax, **kwargs):
+    def place_order(self, order_number, basket, total_incl_tax, total_excl_tax, **kwargs):
         """
         Writes the order out to the DB including the payment models
         """
