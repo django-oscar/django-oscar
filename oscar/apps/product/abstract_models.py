@@ -12,6 +12,17 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from oscar.apps.product.managers import BrowsableItemManager
 
+PRICE_RANGES = (
+    (0, 'FREE'),
+    (10, '0.01-10'),
+    (20, '10-20'),
+    (30, '20-30'),
+    (40, '30-40'),
+    (50, '40-50'),
+)
+
+PRICE_RANGE_MAX = '50+'
+
 def _convert_to_underscores(str):
     u"""
     For converting a string in CamelCase or normal text with spaces
@@ -140,6 +151,13 @@ class AbstractItem(models.Model):
             return pr.score
         except ObjectDoesNotExist:
             return 0
+        
+    @property
+    def price_range(self):
+        for price_range in PRICE_RANGES:
+            if self.stockrecord.price_incl_tax < price_range[0]:
+                return price_range[1]
+        return PRICE_RANGE_MAX
 
     def attribute_summary(self):
         u"""Return a string of all of a product's attributes"""

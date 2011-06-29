@@ -12,15 +12,27 @@ Did you mean <a href="{% url oscar-search %}?q={{ suggestion }}">{{ suggestion }
     <!-- Begin faceting. -->
     <h2>By type</h2>
     <div>
-        <dl>
+        <ul>
             {% if facets.fields.item_class %}
                 {% for item_class in facets.fields.item_class|slice:":5" %}
-                    <dd><a href="{{ request.get_full_path }}&amp;selected_facets=item_class:{{ item_class.0|urlencode }}">{{ item_class.0 }}</a> ({{ item_class.1 }})</dd>
+                    <li><a href="{{ request.get_full_path }}&amp;selected_facets=item_class:{{ item_class.0|urlencode }}">{{ item_class.0 }}</a> ({{ item_class.1 }})</li>
                 {% endfor %}
             {% else %}
                 <p>No type facets.</p>
             {% endif %}
-        </dl>
+        </ul>
+    </div>
+    <h2>Price range</h2>
+    <div>
+        <ul>
+            {% if facets.fields.price_range %}
+                {% for price_range in facets.fields.price_range|slice:":5" %}
+                    <li><a href="{{ request.get_full_path }}&amp;selected_facets=price_range:{{ item_class.0|urlencode }}">{{ price_range.0 }}</a> ({{ price_range.1 }})</li>
+                {% endfor %}
+            {% else %}
+                <p>No type facets.</p>
+            {% endif %}
+        </ul>
     </div>
     <!-- End faceting -->
 {% endif %}

@@ -13,6 +13,7 @@ class AbstractProductIndex(SearchIndex):
     title = EdgeNgramField(model_attr='title')
     upc = CharField(model_attr="upc")
     item_class = CharField(model_attr="item_class", faceted=True)
+    price_range = CharField(model_attr="price_range", faceted=True)
     score = FloatField(model_attr="score")
     date_created = DateTimeField(model_attr='date_created')
     date_updated = DateTimeField(model_attr='date_updated')
