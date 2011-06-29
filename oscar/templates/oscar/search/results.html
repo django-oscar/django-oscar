@@ -27,7 +27,7 @@ Did you mean <a href="{% url oscar-search %}?q={{ suggestion }}">{{ suggestion }
         <ul>
             {% if facets.fields.price_range %}
                 {% for price_range in facets.fields.price_range|slice:":5" %}
-                    <li><a href="{{ request.get_full_path }}&amp;selected_facets=price_range:{{ item_class.0|urlencode }}">{{ price_range.0 }}</a> ({{ price_range.1 }})</li>
+                    <li><a href="{{ request.get_full_path }}&amp;selected_facets=price_range:{{ price_range.0|urlencode }}">{{ price_range.0 }}</a> ({{ price_range.1 }})</li>
                 {% endfor %}
             {% else %}
                 <p>No type facets.</p>

@@ -19,6 +19,7 @@ class MultiFacetedSearchForm(FacetedSearchForm):
     An extension of the regular faceted search form to alow for multiple facets
     """
     q = forms.CharField(required=False, label=_('Search'), widget=SearchInput({"placeholder": _('Search')}))
+    selected_facets = forms.CharField(required=False, widget=forms.HiddenInput())
     
     def search(self):
         """

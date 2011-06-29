@@ -25,4 +25,17 @@ OSCAR_PROMOTION_MERCHANDISING_BLOCK_TYPES = (
     (COUNTDOWN, "Countdown"),
     (LIST, "List"),
     (SINGLE_PRODUCT, "Single product"),
-)   
+)
+
+
+
+PRICE_RANGES = (
+    (0, 'FREE'),
+    (10, '0.01-10'),
+    (20, '10-20'),
+    (30, '20-30'),
+    (40, '30-40'),
+    (50, '40-50'),
+)
+
+PRICE_RANGE_MAX = '50+'

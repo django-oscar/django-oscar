@@ -9,19 +9,9 @@ from django.utils.translation import ugettext_lazy as _
 from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
+from django.conf import settings
 
 from oscar.apps.product.managers import BrowsableItemManager
-
-PRICE_RANGES = (
-    (0, 'FREE'),
-    (10, '0.01-10'),
-    (20, '10-20'),
-    (30, '20-30'),
-    (40, '30-40'),
-    (50, '40-50'),
-)
-
-PRICE_RANGE_MAX = '50+'
 
 def _convert_to_underscores(str):
     u"""
@@ -154,10 +144,10 @@ class AbstractItem(models.Model):
         
     @property
     def price_range(self):
-        for price_range in PRICE_RANGES:
+        for price_range in settings.PRICE_RANGES:
             if self.stockrecord.price_incl_tax < price_range[0]:
                 return price_range[1]
-        return PRICE_RANGE_MAX
+        return settings.PRICE_RANGE_MAX
 
     def attribute_summary(self):
         u"""Return a string of all of a product's attributes"""
