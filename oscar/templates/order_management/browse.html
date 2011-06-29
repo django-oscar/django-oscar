@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% load currency_filters %}
-
+{% load pagination_filters %}
 {% block header %}
 <h2>Order management</h2>
 {% endblock header %}
@@ -39,13 +39,12 @@
     {% endfor %}
 
 </table>
-
 {% if page_obj %}
 <div class="pagination">
     <span class="step-links">
-    
+        
         {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}{{ search_params }}">previous</a>
+            <a href="?{{ request|change_page:page_obj.previous_page_number }}">previous</a>
         {% endif %}
 
         <span class="current">
@@ -53,7 +52,7 @@
         </span>
 
         {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}{{ search_params }}">next</a>
+            <a href="?{{ request|change_page:page_obj.next_page_number }}">next</a>
         {% endif %}
     </span>
 </div>
