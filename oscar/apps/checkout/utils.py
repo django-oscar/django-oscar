@@ -123,7 +123,7 @@ class CheckoutSessionData(object):
     def set_order_number(self, order_number):
         self._set('submission', 'order_number', order_number)
         
-    def get_order_number(self, order_number):
+    def get_order_number(self):
         return self._get('submission', 'order_number')    
     
     def set_submitted_basket(self, basket):
