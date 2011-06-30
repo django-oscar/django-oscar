@@ -11,8 +11,8 @@ from oscar.apps.promotions.models import *
 class PromotionTest(TestCase):
 
     def test_default_template_name(self):
-        promotion = Banner.objects.create(name="dummy banner")
-        self.assertEqual('promotions/banner.html', promotion.template_name())
+        promotion = Image.objects.create(name="dummy banner")
+        self.assertEqual('promotions/image.html', promotion.template_name())
 
 
 
