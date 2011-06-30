@@ -46,8 +46,6 @@ class OrderCreator(object):
         for voucher in basket.vouchers.all():
             self._record_voucher_usage(order, voucher, user)
         
-        basket.set_as_submitted()
-        
         # Send signal for analytics to pick up
         order_placed.send(sender=self, order=order, user=user)
         

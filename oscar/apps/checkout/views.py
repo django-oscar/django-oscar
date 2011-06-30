@@ -421,13 +421,18 @@ class PaymentDetailsView(CheckoutSessionMixin, TemplateView):
         """   
         # Write out all order and payment models
         order = self.place_order(order_number, basket, total_incl_tax, total_excl_tax, **kwargs)
+        basket.set_as_submitted()
+        return self.handle_successful_order(order, basket)
         
+    def handle_successful_order(self, order):  
+        """
+        Handle the various steps required after an order has been successfully placed.
+        """  
         # Send confirmation message (normally an email)
         self.send_confirmation_message(order)
-        logger.info(_("Order #%s: submission complete" % order_number))
         
         # Flush all session data
-        self.reset_checkout()
+        self.checkout_session.flush()
         
         # Save order id in session so thank-you page can load it
         self.request.session['checkout_order_id'] = order.id
@@ -517,7 +522,7 @@ class PaymentDetailsView(CheckoutSessionMixin, TemplateView):
         Saves any relevant billing data (eg a billing address).
         """
         return None
-    
+
     def save_payment_details(self, order):
         """
         Saves all payment-related details. This could include a billing 
@@ -560,10 +565,6 @@ class PaymentDetailsView(CheckoutSessionMixin, TemplateView):
         fzn_basket.merge(self.request.basket)
         self.request.basket = fzn_basket
 
-    def reset_checkout(self):
-        """Reset any checkout session state"""
-        self.checkout_session.flush()
-    
     def send_confirmation_message(self, order):
         # Create order communication event
         try:
