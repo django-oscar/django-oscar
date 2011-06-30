@@ -319,97 +319,14 @@ class OrderPreviewView(CheckoutSessionMixin, TemplateView):
         return HttpResponseRedirect(reverse('checkout:payment-details'))
 
 
-class PaymentDetailsView(CheckoutSessionMixin, TemplateView):
+class OrderPlacementMixin(CheckoutSessionMixin):
     """
-    For taking the details of payment and creating the order
-    
-    The class is deliberately split into fine-grained methods, responsible for only one
-    thing.  This is to make it easier to subclass and override just one component of
-    functionality.
-    
-    Almost all projects will need to subclass and customise this class.
+    Mixin for providing functionality for placing orders.
     """
-
     # Any payment sources should be added to this list as part of the
     # _handle_payment method.  If the order is placed successfully, then
     # they will be persisted.
     payment_sources = []
-    
-    def post(self, request, *args, **kwargs):
-        """
-        This method is designed to be overridden by subclasses which will
-        validate the forms from the payment details page.  If the forms are valid
-        then the method can call submit()."""
-        return self.submit(request.basket, **kwargs)
-    
-    def submit(self, basket, **kwargs):
-        """
-        Submit a basket for order placement.
-        
-        The process runs as follows:
-         * Generate an order number
-         * Freeze the basket so it cannot be modified any more.
-         * Attempt to take payment for the order
-           - If payment is successful, place the order
-           - If a redirect is required (eg PayPal, 3DSecure), redirect
-           - If payment is unsuccessful, show an appropriate error message
-        """
-        # We generate the order number first as this will be used
-        # in payment requests (ie before the order model has been 
-        # created).  We also save it in the session for multi-stage
-        # checkouts (eg where we redirect to a 3rd party site and place
-        # the order on a different request).
-        order_number = self.generate_order_number(basket)
-        logger.info(_("Order #%s: beginning submission process" % order_number))
-        
-        # We freeze the basket to prevent it being modified once the payment
-        # process has started.  If your payment fails, then the basket will
-        # need to be "unfrozen".  We also store the basket ID in the session
-        # so the it can be retrieved by multistage checkout processes.
-        basket.freeze()
-        self.checkout_session.set_submitted_basket(basket)
-        
-        # Handle payment.  Any payment problems should be handled by the 
-        # handle_payment method raise an exception, which should be caught
-        # within handle_POST and the appropriate forms redisplayed.
-        try:
-            pre_payment.send_robust(sender=self, view=self)
-            total_incl_tax, total_excl_tax = self.get_order_totals(basket)
-            self.handle_payment(order_number, total_incl_tax, **kwargs)
-            post_payment.send_robust(sender=self, view=self)
-        except RedirectRequired, e:
-            # Redirect required (eg PayPal, 3DS)
-            logger.info(_("Order #%s: redirecting to %s" % (order_number, e.url)))
-            return HttpResponseRedirect(e.url)
-        except UnableToTakePayment, e:
-            # Something went wrong with payment, need to show
-            # error to the user.  This type of exception is supposed
-            # to set a friendly error message.
-            logger.info(_("Order #%s: unable to take payment (%s)" % (order_number, e)))
-            return self.render_to_response(self.get_context_data(error=str(e)))
-        except PaymentError, e:
-            # Something went wrong which wasn't anticipated.
-            logger.error(_("Order #%s: payment error (%s)" % (order_number, e)))
-            return self.render_to_response(self.get_context_data(error="A problem occurred processing payment."))
-        else:
-            # If all is ok with payment, place order
-            logger.error(_("Order #%s: payment successful, placing order" % order_number))
-            return self.handle_order_placement(order_number, basket, total_incl_tax, total_excl_tax, **kwargs)
-    
-    def generate_order_number(self, basket):
-        generator = OrderNumberGenerator()
-        order_number = generator.order_number(basket)
-        self.checkout_session.set_order_number(order_number)
-        return order_number
-    
-    def handle_payment(self, order_number, total, **kwargs):
-        """
-        Handle any payment processing.  
-        
-        This method is designed to be overridden within your project.  The
-        default is to do nothing.
-        """
-        pass
     
     def handle_order_placement(self, order_number, basket, total_incl_tax, total_excl_tax, **kwargs): 
         """
@@ -422,7 +339,7 @@ class PaymentDetailsView(CheckoutSessionMixin, TemplateView):
         # Write out all order and payment models
         order = self.place_order(order_number, basket, total_incl_tax, total_excl_tax, **kwargs)
         basket.set_as_submitted()
-        return self.handle_successful_order(order, basket)
+        return self.handle_successful_order(order)
         
     def handle_successful_order(self, order):  
         """
@@ -588,6 +505,94 @@ class PaymentDetailsView(CheckoutSessionMixin, TemplateView):
                 
                 # Record communication event against order
                 CommunicationEvent._default_manager.create(order=order, type=event_type)
+
+
+class PaymentDetailsView(OrderPlacementMixin, TemplateView):
+    """
+    For taking the details of payment and creating the order
+    
+    The class is deliberately split into fine-grained methods, responsible for only one
+    thing.  This is to make it easier to subclass and override just one component of
+    functionality.
+    
+    Almost all projects will need to subclass and customise this class.
+    """
+    
+    def post(self, request, *args, **kwargs):
+        """
+        This method is designed to be overridden by subclasses which will
+        validate the forms from the payment details page.  If the forms are valid
+        then the method can call submit()."""
+        return self.submit(request.basket, **kwargs)
+    
+    def submit(self, basket, **kwargs):
+        """
+        Submit a basket for order placement.
+        
+        The process runs as follows:
+         * Generate an order number
+         * Freeze the basket so it cannot be modified any more.
+         * Attempt to take payment for the order
+           - If payment is successful, place the order
+           - If a redirect is required (eg PayPal, 3DSecure), redirect
+           - If payment is unsuccessful, show an appropriate error message
+        """
+        # We generate the order number first as this will be used
+        # in payment requests (ie before the order model has been 
+        # created).  We also save it in the session for multi-stage
+        # checkouts (eg where we redirect to a 3rd party site and place
+        # the order on a different request).
+        order_number = self.generate_order_number(basket)
+        logger.info(_("Order #%s: beginning submission process" % order_number))
+        
+        # We freeze the basket to prevent it being modified once the payment
+        # process has started.  If your payment fails, then the basket will
+        # need to be "unfrozen".  We also store the basket ID in the session
+        # so the it can be retrieved by multistage checkout processes.
+        basket.freeze()
+        self.checkout_session.set_submitted_basket(basket)
+        
+        # Handle payment.  Any payment problems should be handled by the 
+        # handle_payment method raise an exception, which should be caught
+        # within handle_POST and the appropriate forms redisplayed.
+        try:
+            pre_payment.send_robust(sender=self, view=self)
+            total_incl_tax, total_excl_tax = self.get_order_totals(basket)
+            self.handle_payment(order_number, total_incl_tax, **kwargs)
+            post_payment.send_robust(sender=self, view=self)
+        except RedirectRequired, e:
+            # Redirect required (eg PayPal, 3DS)
+            logger.info(_("Order #%s: redirecting to %s" % (order_number, e.url)))
+            return HttpResponseRedirect(e.url)
+        except UnableToTakePayment, e:
+            # Something went wrong with payment, need to show
+            # error to the user.  This type of exception is supposed
+            # to set a friendly error message.
+            logger.info(_("Order #%s: unable to take payment (%s)" % (order_number, e)))
+            return self.render_to_response(self.get_context_data(error=str(e)))
+        except PaymentError, e:
+            # Something went wrong which wasn't anticipated.
+            logger.error(_("Order #%s: payment error (%s)" % (order_number, e)))
+            return self.render_to_response(self.get_context_data(error="A problem occurred processing payment."))
+        else:
+            # If all is ok with payment, place order
+            logger.error(_("Order #%s: payment successful, placing order" % order_number))
+            return self.handle_order_placement(order_number, basket, total_incl_tax, total_excl_tax, **kwargs)
+    
+    def generate_order_number(self, basket):
+        generator = OrderNumberGenerator()
+        order_number = generator.order_number(basket)
+        self.checkout_session.set_order_number(order_number)
+        return order_number
+    
+    def handle_payment(self, order_number, total, **kwargs):
+        """
+        Handle any payment processing.  
+        
+        This method is designed to be overridden within your project.  The
+        default is to do nothing.
+        """
+        pass
         
 
 class ThankYouView(DetailView):
