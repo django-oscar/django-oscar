@@ -14,9 +14,14 @@ setup(name='django-oscar',
       license='LICENSE',
       package_dir={'': '.'},
       install_requires=[
+          'django-extra-views',
           'django-haystack>=1.2.0',
           'django-treebeard>=1.6.1',
-          'sorl-thumbnail>=11.05.1'],
+          'sorl-thumbnail>=11.05.1',
+          ],
+      dependency_links = [
+          'http://github.com/AndrewIngram/django-extra-views/tarball/master#egg=django-extra-views-0.1.0',
+      ],
       # See http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=['Development Status :: 3 - Alpha',
                    'Environment :: Web Environment',
