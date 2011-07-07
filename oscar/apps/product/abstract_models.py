@@ -225,7 +225,7 @@ class AbstractItem(models.Model):
 
     def __unicode__(self):
         if self.is_variant:
-            return "%s (%s)" % (self.get_title(), self.attribute_summary())
+            return u"%s (%s)" % (self.get_title(), self.attribute_summary())
         return self.get_title()
     
     @models.permalink
