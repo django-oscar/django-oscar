@@ -10,6 +10,7 @@ from oscar.apps.offer.managers import ActiveOfferManager
 
 SITE, VOUCHER, USER, SESSION = ("Site", "Voucher", "User", "Session")
 
+
 class AbstractConditionalOffer(models.Model):
     u"""
     A conditional offer (eg buy 1, get 10% off)
@@ -185,6 +186,7 @@ class AbstractRange(models.Model):
     included_products = models.ManyToManyField('product.Item', related_name='includes', blank=True)
     excluded_products = models.ManyToManyField('product.Item', related_name='excludes', blank=True)
     classes = models.ManyToManyField('product.ItemClass', related_name='classes', blank=True)
+    categories = models.ManyToManyField('product.Category', related_name='categories', blank=True)
     
     __included_product_ids = None
     __excluded_product_ids = None
