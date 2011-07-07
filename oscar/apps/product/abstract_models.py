@@ -40,7 +40,7 @@ class AbstractItemClass(models.Model):
 
 class AbstractCategory(MP_Node):
     name = models.CharField(max_length=255, db_index=True)
-    slug = models.SlugField(max_length=1024, db_index=False)
+    slug = models.SlugField(max_length=1024, db_index=True)
     
     def __unicode__(self):
         return self.name
