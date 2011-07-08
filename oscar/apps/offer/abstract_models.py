@@ -183,10 +183,10 @@ class AbstractRange(models.Model):
     """
     name = models.CharField(_("Name"), max_length=128)
     includes_all_products = models.BooleanField(default=False)
-    included_products = models.ManyToManyField('product.Item', related_name='includes', blank=True)
-    excluded_products = models.ManyToManyField('product.Item', related_name='excludes', blank=True)
-    classes = models.ManyToManyField('product.ItemClass', related_name='classes', blank=True)
-    categories = models.ManyToManyField('product.Category', related_name='categories', blank=True)
+    included_products = models.ManyToManyField('catalogue.Product', related_name='includes', blank=True)
+    excluded_products = models.ManyToManyField('catalogue.Product', related_name='excludes', blank=True)
+    classes = models.ManyToManyField('catalogue.ProductClass', related_name='classes', blank=True)
+    categories = models.ManyToManyField('catalogue.Category', related_name='categories', blank=True)
     
     __included_product_ids = None
     __excluded_product_ids = None
@@ -204,7 +204,7 @@ class AbstractRange(models.Model):
             return False
         if self.includes_all_products:
             return True
-        if product.item_class_id in self._class_ids():
+        if product.product_class_id in self._class_ids():
             return True    
         included_product_ids = self._included_product_ids()
         return product.id in included_product_ids

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from oscar.apps.product.reviews.models import ProductReview, Vote
+from oscar.apps.catalogue.reviews.models import ProductReview, Vote
 
 
 class ProductReviewAdmin(admin.ModelAdmin):

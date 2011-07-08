@@ -4,7 +4,7 @@ from django.dispatch import receiver
 from django.conf import settings
 
 from oscar.core.loading import import_module
-import_module('product.signals', ['product_viewed'], locals())
+import_module('catalogue.signals', ['product_viewed'], locals())
 
 MAX_PRODUCTS = settings.OSCAR_RECENTLY_VIEWED_PRODUCTS
 

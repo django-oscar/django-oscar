@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import patterns, url, include
 
 from oscar.core.application import Application
-from oscar.apps.product.app import application as product_app
+from oscar.apps.catalogue.app import application as product_app
 from oscar.apps.customer.app import application as customer_app
 from oscar.apps.basket.app import application as basket_app
 from oscar.apps.checkout.app import application as checkout_app

@@ -64,7 +64,7 @@ class BasketAddView(FormView):
     Handles the add-to-basket operation, shouldn't be accessed via GET because there's nothing sensible to render.
     """
     form_class = AddToBasketForm
-    product_model = get_model('product', 'item')
+    product_model = get_model('catalogue', 'product')
     
     def get(self, request, *args, **kwargs):
         return HttpResponseRedirect(reverse('basket:summary'))
@@ -191,10 +191,10 @@ class SavedView(ModelFormSetView):
 #        num_not_found = 0
 #        for sku in re.findall(r"[\d -]{5,}", self.request.POST['source_text']):
 #            try:
-#                item = Item.objects.get(upc=sku)
+#                item = Product.objects.get(upc=sku)
 #                basket.add_product(item)
 #                num_additions += 1
-#            except Item.DoesNotExist:
+#            except Product.DoesNotExist:
 #                num_not_found += 1
 #        messages.info(self.request, "Added %d items to your basket (%d missing)" % (num_additions, num_not_found))
 #

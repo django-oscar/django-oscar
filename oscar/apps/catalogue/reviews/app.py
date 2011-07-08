@@ -1,6 +1,6 @@
 from oscar.core.application import Application
 from django.conf.urls.defaults import patterns, url, include
-from oscar.apps.product.reviews.views import ProductReviewDetail, CreateProductReview, CreateProductReviewComplete, ProductReviewList 
+from oscar.apps.catalogue.reviews.views import ProductReviewDetail, CreateProductReview, CreateProductReviewComplete, ProductReviewList 
 
 class ProductReviewsApplication(Application):
     name = None

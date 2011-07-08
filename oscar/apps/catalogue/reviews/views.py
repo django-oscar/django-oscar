@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView
 from django.db.models import Avg
 from django.contrib import messages
-from oscar.apps.product.reviews.forms import SignedInUserProductReviewForm, AnonymousUserProductReviewForm, VoteForm
+from oscar.apps.catalogue.reviews.forms import SignedInUserProductReviewForm, AnonymousUserProductReviewForm, VoteForm
 from django.db.models import get_model
 
 vote_model = get_model('reviews', 'vote')
@@ -12,7 +12,7 @@ vote_model = get_model('reviews', 'vote')
 class CreateProductReview(CreateView):
     template_name = "reviews/add_review.html"
     model = get_model('reviews', 'productreview')
-    product_model = get_model('product', 'item')
+    product_model = get_model('catalogue', 'product')
     review_form = SignedInUserProductReviewForm
     anonymous_review_form = AnonymousUserProductReviewForm
     

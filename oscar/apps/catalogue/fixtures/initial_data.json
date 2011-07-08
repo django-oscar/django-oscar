@@ -1,22 +1,22 @@
 [
     {
         "pk": 1, 
-        "model": "product.attributetype", 
+        "model": "catalogue.attributetype", 
         "fields": {
             "code": "html-meta-description", 
             "name": "HTML meta description", 
             "has_choices": false,
-            "item_class": null
+            "product_class": null
         }
     }, 
     {
         "pk": 2, 
-        "model": "product.attributetype", 
+        "model": "catalogue.attributetype", 
         "fields": {
             "code": "html-meta-keywords", 
             "name": "HTML meta keywords", 
             "has_choices": false,
-            "item_class": null
+            "product_class": null
         }
     }
 ]

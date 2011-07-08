@@ -2,7 +2,7 @@ from django import template
 from django.db.models import get_model
 
 register = template.Library()
-Category = get_model('product','category')
+Category = get_model('catalogue','category')
 
 @register.tag(name="category_tree")
 def do_category_list(parse, token):

@@ -25,7 +25,7 @@
         <th>UPC</th><td>{{item.upc}}</td>
     </tr>
     <tr>
-        <th>Product class</th><td>{{item.item_class.name}}</td>
+        <th>Product class</th><td>{{item.product_class.name}}</td>
     </tr>
     {% if item.stockrecord %}
     <tr>
@@ -87,7 +87,7 @@
 <h2>Customer Reviews</h2>
 <p>Read customer reviews on this product. If you have read this book, why not post your own
    review?</p>
-<p><a href="{% url products:reviews-add item.slug item.id %}">Add a review</a></p>
+<p><a href="{% url catalogue:reviews-add item.slug item.id %}">Add a review</a></p>
 
 
 {% with item.reviews.all as reviews %}
@@ -108,7 +108,7 @@
                 {% endif %}
             </div>
         {% endfor %}
-        <p><a href="{% url products:reviews-list item.slug item.id %}">See all reviews</a>.</p>
+        <p><a href="{% url catalogue:reviews-list item.slug item.id %}">See all reviews</a>.</p>
     </div>
 {% endif %}
 {% endwith %}

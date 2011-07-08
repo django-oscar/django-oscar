@@ -225,7 +225,7 @@ class AbstractLine(models.Model):
     # SlugField as it is included in the path for certain views.
     line_reference = models.SlugField(max_length=128, db_index=True)
     
-    product = models.ForeignKey('product.Item', related_name='basket_lines')
+    product = models.ForeignKey('catalogue.Product', related_name='basket_lines')
     quantity = models.PositiveIntegerField(default=1)
     
     # Instance variables used to persist discount information
@@ -366,7 +366,7 @@ class AbstractLine(models.Model):
 class AbstractLineAttribute(models.Model):
     """An attribute of a basket line"""
     line = models.ForeignKey('basket.Line', related_name='attributes')
-    option = models.ForeignKey('product.Option')
+    option = models.ForeignKey('catalogue.Option')
     value = models.CharField(_("Value"), max_length=255)    
     
     class Meta:

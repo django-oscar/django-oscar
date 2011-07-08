@@ -15,7 +15,7 @@ class AbstractDiscountOffer(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     
-    products = models.ManyToManyField('product.Item')
+    products = models.ManyToManyField('catalogue.Product')
     TYPE_CHOICES = (
         (ABSOLUTE_DISCOUNT, _("An absolute amount of discount off the site price")),
         (PERCENTAGE_DISCOUNT, _("A percentage discount off the site price")),

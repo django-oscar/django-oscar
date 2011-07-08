@@ -8,7 +8,7 @@ from django.db import IntegrityError
 from django.core.urlresolvers import reverse
 from django.utils import unittest
 
-from oscar.apps.product.reviews.models import ProductReview, Vote
+from oscar.apps.catalogue.reviews.models import ProductReview, Vote
 from oscar.test.helpers import create_product
 
 
@@ -61,7 +61,7 @@ class SingleProductReviewViewTest(ProductReviewTests, TestCase):
                 'pk': str(self.item.id)}
         
     def test_each_product_has_review(self):
-        url = reverse('products:detail', kwargs=self.kwargs)
+        url = reverse('catalogue:detail', kwargs=self.kwargs)
         response = self.client.get(url)
         self.assertEquals(200, response.status_code)
     
@@ -69,7 +69,7 @@ class SingleProductReviewViewTest(ProductReviewTests, TestCase):
         kwargs = {
                 'item_slug': self.item.slug,
                 'item_pk': str(self.item.id)}
-        url = reverse('products:reviews-add', kwargs=kwargs)
+        url = reverse('catalogue:reviews-add', kwargs=kwargs)
         self.client.login(username='testuser', password='secret')
         response = self.client.get(url)
         self.assertEquals(200, response.status_code)

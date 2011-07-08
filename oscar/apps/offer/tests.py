@@ -6,7 +6,7 @@ from django.test.client import Client
 
 from oscar.apps.offer.models import * 
 from oscar.apps.basket.models import Basket
-from oscar.apps.product.models import Item, ItemClass
+from oscar.apps.catalogue.models import Product, ProductClass
 from oscar.apps.partner.models import Partner, StockRecord
 from oscar.test.helpers import create_product
 
@@ -41,12 +41,12 @@ class RangeTest(unittest.TestCase):
         
     def test_included_classes(self):
         range = Range.objects.create(name="All products", includes_all_products=False)
-        range.classes.add(self.prod.item_class)
+        range.classes.add(self.prod.product_class)
         self.assertTrue(range.contains_product(self.prod))
         
     def test_included_class_with_exception(self):
         range = Range.objects.create(name="All products", includes_all_products=False)
-        range.classes.add(self.prod.item_class)
+        range.classes.add(self.prod.product_class)
         range.excluded_products.add(self.prod)
         self.assertFalse(range.contains_product(self.prod))
 

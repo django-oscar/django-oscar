@@ -6,7 +6,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.db import connection, transaction
 
 from oscar.apps.analytics.models import ProductRecord
-from oscar.apps.product.models import Item
+from oscar.apps.catalogue.models import Item
 
 
 class Command(BaseCommand):
@@ -26,7 +26,7 @@ class Command(BaseCommand):
         logger.info("Updating product table")
         sql = '''UPDATE `%s` product, `%s` analytics
                  SET product.score = analytics.score
-                 WHERE product.id = analytics.product_id''' % (Item._meta.db_table, ProductRecord._meta.db_table)
+                 WHERE product.id = analytics.product_id''' % (Product._meta.db_table, ProductRecord._meta.db_table)
         cursor.execute(sql)
         
         transaction.commit_unless_managed()
