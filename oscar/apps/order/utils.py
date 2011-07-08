@@ -35,11 +35,11 @@ class OrderCreator(object):
         if not order_number:
             generator = OrderNumberGenerator()
             order_number = generator.order_number(basket)
-        order = self._create_order_model(user, basket, shipping_address, 
+        order = self.create_order_model(user, basket, shipping_address, 
                                          shipping_method, billing_address, total_incl_tax, 
                                          total_excl_tax, order_number, status)
         for line in basket.all_lines():
-            self._create_line_models(order, line)
+            self.create_line_models(order, line)
             self._update_stock_records(line)
         for discount in basket.discounts:
             self._create_discount_model(order, discount)
@@ -51,8 +51,8 @@ class OrderCreator(object):
         
         return order
         
-    def _create_order_model(self, user, basket, shipping_address, shipping_method, 
-                               billing_address, total_incl_tax, total_excl_tax, order_number, status):
+    def create_order_model(self, user, basket, shipping_address, shipping_method, 
+                               billing_address, total_incl_tax, total_excl_tax, order_number, status, extra_order_fields=None):
         """
         Creates an order model.
         """
@@ -71,42 +71,51 @@ class OrderCreator(object):
             order_data['user_id'] = user.id
         if status:
             order_data['status'] = status
+        if extra_order_fields:
+            order_data.update(extra_order_fields)
         order = Order(**order_data)
         order.save()
         return order
     
-    def _get_partner_for_product(self, product):
+    def get_partner_for_product(self, product):
         u"""Returns the partner for a product"""
         if product.has_stockrecord:
             return product.stockrecord.partner
         raise AttributeError("No partner found for product '%s'" % product)
     
-    def _create_line_models(self, order, basket_line):
-        u"""Creates the batch line model."""
-        partner = self._get_partner_for_product(basket_line.product)
+    def create_line_models(self, order, basket_line, extra_line_fields=None):
+        """
+        Creates the batch line model.
+        
+        You can set extra fields by passing a dictionary as the extra_line_fields value
+        """
+        partner = self.get_partner_for_product(basket_line.product)
         stockrecord = basket_line.product.stockrecord
-        order_line = Line(order=order,
-                          # Partner details
-                          partner=partner,
-                          partner_name=partner.name,
-                          partner_sku=stockrecord.partner_sku,
-                          # Product details
-                          product=basket_line.product, 
-                          title=basket_line.product.get_title(),
-                          quantity=basket_line.quantity,
-                          # Price details 
-                          line_price_excl_tax=basket_line.line_price_excl_tax_and_discounts, 
-                          line_price_incl_tax=basket_line.line_price_incl_tax_and_discounts,
-                          line_price_before_discounts_excl_tax=basket_line.line_price_excl_tax,
-                          line_price_before_discounts_incl_tax=basket_line.line_price_incl_tax,
-                          # Reporting details
-                          unit_cost_price = stockrecord.cost_price,
-                          unit_site_price = stockrecord.price_incl_tax,
-                          unit_retail_price = stockrecord.price_retail,
-                          # Shipping details
-                          est_dispatch_date = basket_line.product.stockrecord.dispatch_date
-                          )
-        order_line.save()
+        line_data = {'order': order,
+                      # Partner details
+                      'partner': partner,
+                      'partner_name': partner.name,
+                      'partner_sku': stockrecord.partner_sku,
+                      # Product details
+                      'product': basket_line.product, 
+                      'title': basket_line.product.get_title(),
+                      'quantity': basket_line.quantity,
+                      # Price details 
+                      'line_price_excl_tax': basket_line.line_price_excl_tax_and_discounts, 
+                      'line_price_incl_tax': basket_line.line_price_incl_tax_and_discounts,
+                      'line_price_before_discounts_excl_tax': basket_line.line_price_excl_tax,
+                      'line_price_before_discounts_incl_tax': basket_line.line_price_incl_tax,
+                      # Reporting details
+                      'unit_cost_price': stockrecord.cost_price,
+                      'unit_site_price':  stockrecord.price_incl_tax,
+                      'unit_retail_price':  stockrecord.price_retail,
+                      # Shipping details
+                      'est_dispatch_date':  basket_line.product.stockrecord.dispatch_date
+                     }
+        if extra_line_fields:
+            line_data.update(extra_line_fields)
+        
+        order_line = Line._default_manager.create(**line_data)
         self._create_line_price_models(order, order_line, basket_line)
         self._create_line_attributes(order, order_line, basket_line)
         
