@@ -16,7 +16,8 @@ from oscar.apps.catalogue.managers import BrowsableProductManager
 
 class AbstractProductClass(models.Model):
     """
-    Defines an item type (equivqlent to Taoshop's MediaType).
+    Defines the options and attributes for a group of products, e.g. Books, DVDs and Toys.
+    Not necessarily equivalent to top-level categories but usually will be.
     """
     name = models.CharField(_('name'), max_length=128)
     slug = models.SlugField(max_length=128, unique=True)
@@ -39,8 +40,12 @@ class AbstractProductClass(models.Model):
 
 
 class AbstractCategory(MP_Node):
+    """
+    Category hierarchy, top-level nodes represent departments. Uses django-treebeard.
+    """
     name = models.CharField(max_length=255, db_index=True)
-    slug = models.SlugField(max_length=1024, db_index=True)
+    slug = models.SlugField(max_length=1024, db_index=True, editable=False)
+    full_name = models.CharField(max_length=1024, db_index=True, editable=False)    
     
     def __unicode__(self):
         return self.name
@@ -51,8 +56,10 @@ class AbstractCategory(MP_Node):
             slug = slugify(self.name)
             if parent:
                 self.slug = '%s/%s' % (parent.slug, slug)
+                self.full_name = '%s > %s' % (parent.full_name, self.name)
             else:
                 self.slug = slug
+                self.full_name = self.name
         super(AbstractCategory, self).save(*args, **kwargs)
 
     def get_ancestors(self, include_self=True):
@@ -85,6 +92,57 @@ class AbstractProductCategory(models.Model):
         abstract = True
         ordering = ['-is_canonical']
         verbose_name_plural = 'Categories'
+        
+
+class AbstractContributorRole(models.Model):
+    """
+    A role that may be performed by a contributor to a product, eg Author, Actor, Director.
+    """
+    name = models.CharField(max_length=50)
+    name_plural = models.CharField(max_length=50)
+    slug = models.SlugField()
+    
+    def __unicode__(self):
+        return self.name
+    
+    class Meta:
+        abstract = True
+        
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super(AbstractContributorRole, self).save(*args, **kwargs) 
+
+
+class AbstractContributor(models.Model):
+    """
+    Represents a person or business that has contributed to a product in some way. eg an author.
+    """
+    name = models.CharField(_("Name"), max_length=255)
+    slug = models.SlugField(max_length=255, unique=False)
+
+    def __unicode__(self):
+        return self.name
+    
+    class Meta:
+        abstract = True
+        
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super(AbstractContributor, self).save(*args, **kwargs)
+
+
+class AbstractProductContributor(models.Model):
+    item = models.ForeignKey('catalogue.Product')
+    contributor = models.ForeignKey('catalogue.Contributor')
+    role = models.ForeignKey('catalogue.ContributorRole')
+    
+    def __unicode__(self):
+        return '%s <- %s - %s' % (self.item, self.role, self.contributor)
+    
+    class Meta:
+        abstract = True
 
 
 class AbstractProduct(models.Model):
