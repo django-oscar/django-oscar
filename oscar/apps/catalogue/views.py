@@ -4,34 +4,34 @@ from django.db.models import get_model
 
 from oscar.apps.catalogue.signals import product_viewed, product_search
 
-item_model = get_model('catalogue','product')
+product_model = get_model('catalogue','product')
 category_model = get_model('catalogue', 'category')
 
 
-class ItemDetailView(DetailView):
-    context_object_name = 'item'
-    model = item_model
+class ProductDetailView(DetailView):
+    context_object_name = 'product'
+    model = product_model
     view_signal = product_viewed
     template_folder = "catalogue"
-    _item = None
+    _product = None
     
     def get_object(self):
-        if not self._item:
-            self._item = super(ItemDetailView, self).get_object()
-        return self._item
+        if not self._product:
+            self._product = super(ProductDetailView, self).get_object()
+        return self._product
     
     def get(self, request, **kwargs):
         u"""
         Ensures that the correct URL is used
         """
-        item = self.get_object()
-        correct_path = item.get_absolute_url() 
+        product = self.get_object()
+        correct_path = product.get_absolute_url() 
         if correct_path != request.path:
             return HttpResponsePermanentRedirect(correct_path)
-        response = super(ItemDetailView, self).get(request, **kwargs)
+        response = super(ProductDetailView, self).get(request, **kwargs)
         
         # Send signal to record the view of this product
-        self.view_signal.send(sender=self, product=item, user=request.user, request=request, response=response)
+        self.view_signal.send(sender=self, product=product, user=request.user, request=request, response=response)
         return response;
 
     def get_template_names(self):
@@ -52,7 +52,7 @@ class ItemDetailView(DetailView):
         return names
 
 
-class CategoryView(ListView):
+class ProductCategoryView(ListView):
     u"""A list of products"""
     context_object_name = "products"
     template_name = 'catalogue/browse.html'
@@ -69,7 +69,7 @@ class CategoryView(ListView):
         return categories
     
     def get_context_data(self, **kwargs):
-        context = super(CategoryView, self).get_context_data(**kwargs)
+        context = super(ProductCategoryView, self).get_context_data(**kwargs)
 
         categories = self.get_categories()
 
@@ -79,8 +79,8 @@ class CategoryView(ListView):
         return context    
 
     def get_queryset(self):
-        return item_model.browsable.filter(categories__in=self.get_categories()).distinct()
-        
+        return product_model.browsable.filter(categories__in=self.get_categories()).distinct()
+
 
 class ProductListView(ListView):
     u"""A list of products"""
@@ -102,9 +102,9 @@ class ProductListView(ListView):
         if q:
             # Send signal to record the view of this product
             self.search_signal.send(sender=self, query=q, user=self.request.user)
-            return item_model.browsable.filter(title__icontains=q)
+            return product_model.browsable.filter(title__icontains=q)
         else:
-            return item_model.browsable.all()
+            return product_model.browsable.all()
         
     def get_context_data(self, **kwargs):
         context = super(ProductListView, self).get_context_data(**kwargs)

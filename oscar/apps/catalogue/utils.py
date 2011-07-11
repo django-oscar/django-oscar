@@ -14,7 +14,7 @@ from oscar.core.loading import import_module
 import_module('catalogue.exceptions', ['ImageImportError', 'IdenticalImageError', 'InvalidImageArchive'], locals())
 
 Category = get_model('catalogue', 'category')
-Item = get_model('catalogue', 'product')
+Product = get_model('catalogue', 'product')
 ProductImage = get_model('catalogue', 'productimage')
 
 
