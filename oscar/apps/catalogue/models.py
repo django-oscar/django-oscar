@@ -18,6 +18,18 @@ class ProductCategory(AbstractProductCategory):
 
 class Product(AbstractProduct):
     pass
+
+
+class ContributorRole(AbstractContributorRole):
+    pass
+
+
+class Contributor(AbstractContributor):
+    pass
+
+
+class ProductContributor(AbstractProductContributor):
+    pass
     
     
 class AttributeType(AbstractAttributeType):
