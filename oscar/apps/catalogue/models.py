@@ -1,10 +1,10 @@
 """
 Vanilla product models
 """
-from oscar.apps.product.abstract_models import *
+from oscar.apps.catalogue.abstract_models import *
 
 
-class ItemClass(AbstractItemClass):
+class ProductClass(AbstractProductClass):
     pass
 
 
@@ -12,11 +12,11 @@ class Category(AbstractCategory):
     pass
 
 
-class ItemCategory(AbstractItemCategory):
+class ProductCategory(AbstractProductCategory):
     pass
 
 
-class Item(AbstractItem):
+class Product(AbstractProduct):
     pass
     
     
@@ -28,7 +28,7 @@ class AttributeValueOption(AbstractAttributeValueOption):
     pass
 
 
-class ItemAttributeValue(AbstractItemAttributeValue):
+class ProductAttributeValue(AbstractProductAttributeValue):
     pass
 
 

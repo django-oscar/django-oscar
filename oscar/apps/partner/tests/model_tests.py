@@ -5,7 +5,7 @@ from django.conf import settings
 from django.utils import unittest
 from django.core.exceptions import ValidationError
 
-from oscar.apps.product.models import Item, ItemClass
+from oscar.apps.catalogue.models import Product, ProductClass
 from oscar.apps.partner.models import Partner, StockRecord
 from oscar.test.helpers import create_product
 

@@ -6,7 +6,7 @@ from optparse import make_option
 from django.core.management.base import BaseCommand, CommandError
 
 from oscar.core.loading import import_module
-import_module('product.utils', ['Importer'], locals())
+import_module('catalogue.utils', ['Importer'], locals())
 
 
 class Command(BaseCommand):

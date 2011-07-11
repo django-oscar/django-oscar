@@ -203,7 +203,7 @@
     }, 
     {
         "pk": 1, 
-        "model": "product.itemclass", 
+        "model": "catalogue.productclass", 
         "fields": {
             "options": [], 
             "name": "DryGoods", 
@@ -212,150 +212,150 @@
     }, 
     {
         "pk": 8, 
-        "model": "product.item", 
+        "model": "catalogue.product", 
         "fields": {
             "description": null, 
             "parent": null, 
             "title": "Carlsberg Waiter Tray (Pack of 5)", 
             "date_updated": "2011-02-16 09:23:03", 
             "upc": "073922", 
-            "item_options": [], 
-            "item_class": 1, 
+            "product_options": [], 
+            "product_class": 1, 
             "date_created": "2011-02-16 09:23:03", 
             "slug": "carlsberg-waiter-tray-pack-of-5"
         }
     }, 
     {
         "pk": 9, 
-        "model": "product.item", 
+        "model": "catalogue.product", 
         "fields": {
             "description": null, 
             "parent": null, 
             "title": "Tetley's 20oz Toughened Pint Glass (Pack of 24)", 
             "date_updated": "2011-02-16 09:23:03", 
             "upc": "074127", 
-            "item_options": [], 
-            "item_class": 1, 
+            "product_options": [], 
+            "product_class": 1, 
             "date_created": "2011-02-16 09:23:03", 
             "slug": "tetleys-20oz-toughened-pint-glass-pack-of-24"
         }
     }, 
     {
         "pk": 10, 
-        "model": "product.item", 
+        "model": "catalogue.product", 
         "fields": {
             "description": null, 
             "parent": null, 
             "title": "Tetley's Cask 20oz Toughened Pint Glass (Pack of 24)", 
             "date_updated": "2011-02-16 09:23:03", 
             "upc": "074132", 
-            "item_options": [], 
-            "item_class": 1, 
+            "product_options": [], 
+            "product_class": 1, 
             "date_created": "2011-02-16 09:23:03", 
             "slug": "tetleys-cask-20oz-toughened-pint-glass-pack-of-24"
         }
     }, 
     {
         "pk": 2, 
-        "model": "product.item", 
+        "model": "catalogue.product", 
         "fields": {
             "description": null, 
             "parent": null, 
             "title": "Carlsberg Bunting - 5m (Pack of 2)", 
             "date_updated": "2011-02-16 09:23:02", 
             "upc": "072174", 
-            "item_options": [], 
-            "item_class": 1, 
+            "product_options": [], 
+            "product_class": 1, 
             "date_created": "2011-02-16 09:23:02", 
             "slug": "carlsberg-bunting-5m-pack-of-2"
         }
     }, 
     {
         "pk": 3, 
-        "model": "product.item", 
+        "model": "catalogue.product", 
         "fields": {
             "description": null, 
             "parent": null, 
             "title": "Tetley's 22oz Toughened Pint Glass (Pack of 24)", 
             "date_updated": "2011-02-16 09:23:02", 
             "upc": "072261", 
-            "item_options": [], 
-            "item_class": 1, 
+            "product_options": [], 
+            "product_class": 1, 
             "date_created": "2011-02-16 09:23:02", 
             "slug": "tetleys-22oz-toughened-pint-glass-pack-of-24"
         }
     }, 
     {
         "pk": 4, 
-        "model": "product.item", 
+        "model": "catalogue.product", 
         "fields": {
             "description": null, 
             "parent": null, 
             "title": "Carlsberg Bar Runner (Pack of 2)", 
             "date_updated": "2011-02-16 09:23:02", 
             "upc": "073729", 
-            "item_options": [], 
-            "item_class": 1, 
+            "product_options": [], 
+            "product_class": 1, 
             "date_created": "2011-02-16 09:23:02", 
             "slug": "carlsberg-bar-runner-pack-of-2"
         }
     }, 
     {
         "pk": 5, 
-        "model": "product.item", 
+        "model": "catalogue.product", 
         "fields": {
             "description": null, 
             "parent": null, 
             "title": "Export Bar Runner (Pack of 2)", 
             "date_updated": "2011-02-16 09:23:02", 
             "upc": "073731", 
-            "item_options": [], 
-            "item_class": 1, 
+            "product_options": [], 
+            "product_class": 1, 
             "date_created": "2011-02-16 09:23:02", 
             "slug": "export-bar-runner-pack-of-2"
         }
     }, 
     {
         "pk": 6, 
-        "model": "product.item", 
+        "model": "catalogue.product", 
         "fields": {
             "description": null, 
             "parent": null, 
             "title": "Tetley's Bar Runner (Pack of 2)", 
             "date_updated": "2011-02-16 09:23:02", 
             "upc": "073733", 
-            "item_options": [], 
-            "item_class": 1, 
+            "product_options": [], 
+            "product_class": 1, 
             "date_created": "2011-02-16 09:23:02", 
             "slug": "tetleys-bar-runner-pack-of-2"
         }
     }, 
     {
         "pk": 7, 
-        "model": "product.item", 
+        "model": "catalogue.product", 
         "fields": {
             "description": null, 
             "parent": null, 
             "title": "Carlsberg Staff T-shirt (Pack of 5) ", 
             "date_updated": "2011-02-16 09:23:02", 
             "upc": "073850", 
-            "item_options": [], 
-            "item_class": 1, 
+            "product_options": [], 
+            "product_class": 1, 
             "date_created": "2011-02-16 09:23:02", 
             "slug": "carlsberg-staff-t-shirt-pack-of-5"
         }
     }, 
     {
         "pk": 1, 
-        "model": "product.item", 
+        "model": "catalogue.product", 
         "fields": {
             "description": null, 
             "parent": null, 
             "title": "Carlsberg Golf Umbrella (Pack of 1)", 
             "date_updated": "2011-02-16 09:23:01", 
             "upc": "071216", 
-            "item_options": [], 
-            "item_class": 1, 
+            "product_options": [], 
+            "product_class": 1, 
             "date_created": "2011-02-16 09:23:01", 
             "slug": "carlsberg-golf-umbrella-pack-of-1"
         }

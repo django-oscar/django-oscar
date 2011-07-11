@@ -11,10 +11,10 @@ from django.template.defaultfilters import slugify
 from django.core.exceptions import ObjectDoesNotExist
 from treebeard.mp_tree import MP_Node
 
-from oscar.apps.product.managers import BrowsableItemManager
+from oscar.apps.catalogue.managers import BrowsableProductManager
 
 
-class AbstractItemClass(models.Model):
+class AbstractProductClass(models.Model):
     """
     Defines an item type (equivqlent to Taoshop's MediaType).
     """
@@ -22,17 +22,17 @@ class AbstractItemClass(models.Model):
     slug = models.SlugField(max_length=128, unique=True)
     
     # These are the options (set by the user when they add to basket) for this item class
-    options = models.ManyToManyField('product.Option', blank=True)
+    options = models.ManyToManyField('catalogue.Option', blank=True)
 
     class Meta:
         abstract = True
         ordering = ['name']
-        verbose_name_plural = "Item classes"
+        verbose_name_plural = "Product classes"
 
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug= slugify(self.name)
-        super(AbstractItemClass, self).save(*args, **kwargs)
+        super(AbstractProductClass, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return self.name
@@ -40,7 +40,7 @@ class AbstractItemClass(models.Model):
 
 class AbstractCategory(MP_Node):
     name = models.CharField(max_length=255, db_index=True)
-    slug = models.SlugField(max_length=1024, db_index=False)
+    slug = models.SlugField(max_length=1024, db_index=True)
     
     def __unicode__(self):
         return self.name
@@ -63,8 +63,8 @@ class AbstractCategory(MP_Node):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('products:category', (), {
-            'category_slug': self.slug })
+        return ('catalogue:category', (), {
+                'category_slug': self.slug })
 
     class Meta:
         abstract = True
@@ -73,12 +73,12 @@ class AbstractCategory(MP_Node):
         verbose_name = 'Category'
 
 
-class AbstractItemCategory(models.Model):
+class AbstractProductCategory(models.Model):
     """
-    Joining model between items and categories.
+    Joining model between products and categories.
     """
-    item = models.ForeignKey('product.Item')
-    category = models.ForeignKey('product.Category')
+    product = models.ForeignKey('catalogue.Product')
+    category = models.ForeignKey('catalogue.Category')
     is_canonical = models.BooleanField(default=False, db_index=True)
     
     class Meta:
@@ -87,11 +87,13 @@ class AbstractItemCategory(models.Model):
         verbose_name_plural = 'Categories'
 
 
-class AbstractItem(models.Model):
-    u"""The base product object"""
+class AbstractProduct(models.Model):
+    """
+    The base product object
+    """
     # If an item has no parent, then it is the "canonical" or abstract version of a product
     # which essentially represents a set of products.  If a product has a parent
-    # then it is a specific version of a product.
+    # then it is a specific version of a catalogue.
     # 
     # For example, a canonical product would have a title like "Green fleece" while its 
     # children would be "Green fleece - size L".
@@ -103,7 +105,7 @@ class AbstractItem(models.Model):
     
     # No canonical product should have a stock record as they cannot be bought.
     parent = models.ForeignKey('self', null=True, blank=True, related_name='variants',
-        help_text="""Only choose a parent product if this is a 'variant' of a canonical product.  For example 
+        help_text="""Only choose a parent product if this is a 'variant' of a canonical catalogue.  For example 
                      if this is a size 4 of a particular t-shirt.  Leave blank if this is a CANONICAL PRODUCT (ie 
                      there is only one version of this product).""")
     
@@ -111,21 +113,21 @@ class AbstractItem(models.Model):
     title = models.CharField(_('Title'), max_length=255, blank=True, null=True)
     slug = models.SlugField(max_length=255, unique=False)
     description = models.TextField(_('Description'), blank=True, null=True)
-    item_class = models.ForeignKey('product.ItemClass', verbose_name=_('item class'), null=True,
+    product_class = models.ForeignKey('catalogue.ProductClass', verbose_name=_('product class'), null=True,
         help_text="""Choose what type of product this is""")
-    attribute_types = models.ManyToManyField('product.AttributeType', through='ItemAttributeValue',
+    attribute_types = models.ManyToManyField('catalogue.AttributeType', through='ProductAttributeValue',
         help_text="""An attribute type is something that this product MUST have, such as a size""")
-    item_options = models.ManyToManyField('product.Option', blank=True, 
+    product_options = models.ManyToManyField('catalogue.Option', blank=True, 
         help_text="""Options are values that can be associated with a item when it is added to 
                      a customer's basket.  This could be something like a personalised message to be
                      printed on a T-shirt.<br/>""")
     
-    related_items = models.ManyToManyField('product.Item', related_name='relations', blank=True, help_text="""Related 
+    related_products = models.ManyToManyField('catalogue.Product', related_name='relations', blank=True, help_text="""Related 
         items are things like different formats of the same book.  Grouping them together allows
         better linking betwen products on the site.<br/>""")
     
     # Recommended products
-    recommended_items = models.ManyToManyField('product.Item', through='ProductRecommendation', blank=True)
+    recommended_products = models.ManyToManyField('catalogue.Product', through='ProductRecommendation', blank=True)
     
     # Product score
     score = models.FloatField(default=0.00, db_index=True)
@@ -135,16 +137,16 @@ class AbstractItem(models.Model):
     # This field is used by Haystack to reindex search
     date_updated = models.DateTimeField(auto_now=True, db_index=True)
     
-    categories = models.ManyToManyField('product.Category', through='ItemCategory')
+    categories = models.ManyToManyField('catalogue.Category', through='ProductCategory')
 
     objects = models.Manager()
-    browsable = BrowsableItemManager()
+    browsable = BrowsableProductManager()
 
     # Properties
 
     @property
     def options(self):
-        return list(chain(self.item_options.all(), self.get_item_class().options.all()))
+        return list(chain(self.product_options.all(), self.get_product_class().options.all()))
 
     @property
     def is_top_level(self):
@@ -181,10 +183,10 @@ class AbstractItem(models.Model):
             return False
 
     def add_category_from_breadcrumbs(self, breadcrumb):
-        from oscar.apps.product.utils import breadcrumbs_to_category
+        from oscar.apps.catalogue.utils import breadcrumbs_to_category
         category = breadcrumbs_to_category(breadcrumb)
         
-        temp = models.get_model('product', 'itemcategory')(category=category, item=self)
+        temp = models.get_model('product', 'productcategory')(category=category, product=self)
         temp.save()
 
     def attribute_summary(self):
@@ -198,12 +200,12 @@ class AbstractItem(models.Model):
             title = self.parent.title
         return title
     
-    def get_item_class(self):
+    def get_product_class(self):
         u"""Return a product's item class"""
-        if self.item_class:
-            return self.item_class
-        if self.parent.item_class:
-            return self.parent.item_class
+        if self.product_class:
+            return self.product_class
+        if self.parent.product_class:
+            return self.parent.product_class
         return None
 
     # Helpers
@@ -225,13 +227,13 @@ class AbstractItem(models.Model):
 
     def __unicode__(self):
         if self.is_variant:
-            return "%s (%s)" % (self.get_title(), self.attribute_summary())
+            return u"%s (%s)" % (self.get_title(), self.attribute_summary())
         return self.get_title()
     
     @models.permalink
     def get_absolute_url(self):
         u"""Return a product's absolute url"""
-        return ('products:detail', (), {
+        return ('catalogue:detail', (), {
             'item_slug': self.slug,
             'pk': self.id})
     
@@ -241,22 +243,22 @@ class AbstractItem(models.Model):
             raise ValidationError("Canonical products must have a title")
         if not self.slug:
             self.slug = slugify(self.get_title())
-        super(AbstractItem, self).save(*args, **kwargs)
+        super(AbstractProduct, self).save(*args, **kwargs)
 
 
 class ProductRecommendation(models.Model):
     u"""
     'Through' model for product recommendations
     """
-    primary = models.ForeignKey('product.Item', related_name='primary_recommendations')
-    recommendation = models.ForeignKey('product.Item')
+    primary = models.ForeignKey('catalogue.Product', related_name='primary_recommendations')
+    recommendation = models.ForeignKey('catalogue.Product')
     ranking = models.PositiveSmallIntegerField(default=0)
 
 
 class AbstractAttributeType(models.Model):
     u"""Defines an attribute. (Eg. size)"""
     
-    item_class = models.ForeignKey('product.ItemClass', related_name='attributes', blank=True, null=True)
+    product_class = models.ForeignKey('catalogue.ProductClass', related_name='attributes', blank=True, null=True)
     name = models.CharField(_('name'), max_length=128)
     code = models.SlugField(_('code'), max_length=128)
         
@@ -277,7 +279,7 @@ class AbstractAttributeType(models.Model):
 
 class AbstractAttributeValueOption(models.Model):
     u"""Defines an attribute value choice (Eg: S,M,L,XL for a size attribute type)"""
-    type = models.ForeignKey('product.AttributeType', related_name='options')
+    type = models.ForeignKey('catalogue.AttributeType', related_name='options')
     value = models.CharField(max_length=255)
 
     class Meta:
@@ -287,16 +289,16 @@ class AbstractAttributeValueOption(models.Model):
         return u"%s = %s" % (self.type, self.value)
 
 
-class AbstractItemAttributeValue(models.Model):
+class AbstractProductAttributeValue(models.Model):
     u"""
-    The "through" model for the m2m relationship between product.Item
-    and product.AttributeType.  This specifies the value of the attribute
-    for a particular product.
+    The "through" model for the m2m relationship between catalogue.Item
+    and catalogue.AttributeType.  This specifies the value of the attribute
+    for a particular catalogue.
     
     Eg: size = L
     """
-    product = models.ForeignKey('product.Item', related_name='attributes')
-    type = models.ForeignKey('product.AttributeType')
+    product = models.ForeignKey('catalogue.Product', related_name='attributes')
+    type = models.ForeignKey('catalogue.AttributeType')
     value = models.CharField(max_length=255)
     
     class Meta:
@@ -341,7 +343,7 @@ class AbstractOption(models.Model):
 
 class AbstractProductImage(models.Model):
     u"""An image of a product"""
-    product = models.ForeignKey('product.Item', related_name='images')
+    product = models.ForeignKey('catalogue.Product', related_name='images')
     
     original = models.ImageField(upload_to=settings.OSCAR_IMAGE_FOLDER)
     caption = models.CharField(_("Caption"), max_length=200, blank=True, null=True)

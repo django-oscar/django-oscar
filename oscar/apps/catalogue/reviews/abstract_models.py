@@ -6,7 +6,7 @@ from django.conf import settings
 
 from django.db.models import Sum, Count
 
-from oscar.apps.product.reviews.managers import (ApprovedReviewsManager, RecentReviewsManager, 
+from oscar.apps.catalogue.reviews.managers import (ApprovedReviewsManager, RecentReviewsManager, 
                                                  TopScoredReviewsManager, TopVotedReviewsManager)
 
 
@@ -26,7 +26,7 @@ class AbstractProductReview(models.Model):
     """
     
     # Note we keep the review even if the product is deleted
-    product = models.ForeignKey('product.Item', related_name='reviews', null=True, on_delete=models.SET_NULL)
+    product = models.ForeignKey('catalogue.Product', related_name='reviews', null=True, on_delete=models.SET_NULL)
     
     SCORE_CHOICES = tuple([(x, x) for x in range(0, 6)])
     score = models.SmallIntegerField(_("Score"), choices=SCORE_CHOICES)

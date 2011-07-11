@@ -11,11 +11,11 @@ from django.core.exceptions import FieldError
 from django.db.models import get_model
 
 from oscar.core.loading import import_module
-import_module('product.exceptions', ['ImageImportError', 'IdenticalImageError', 'InvalidImageArchive'], locals())
+import_module('catalogue.exceptions', ['ImageImportError', 'IdenticalImageError', 'InvalidImageArchive'], locals())
 
-Category = get_model('product', 'category')
-Item = get_model('product', 'item')
-ProductImage = get_model('product', 'productimage')
+Category = get_model('catalogue', 'category')
+Item = get_model('catalogue', 'product')
+ProductImage = get_model('catalogue', 'productimage')
 
 
 def create_categories(bits):
@@ -62,10 +62,10 @@ class Importer(object):
                     lookup_value = self._get_lookup_value_from_filename(filename)
                     self._process_image(image_dir, filename, lookup_value)
                     stats['num_processed'] += 1
-                except Item.MultipleObjectsReturned:
+                except Product.MultipleObjectsReturned:
                     self.logger.warning("Multiple products matching %s='%s', skipping" % (self._field, lookup_value))
                     stats['num_skipped'] += 1
-                except Item.DoesNotExist:
+                except Product.DoesNotExist:
                     self.logger.warning("No item matching %s='%s'" % (self._field, lookup_value))
                     stats['num_skipped'] += 1
                 except IdenticalImageError:
@@ -132,7 +132,7 @@ class Importer(object):
         trial_image.verify()
         
         kwargs = {self._field: lookup_value}
-        item = Item._default_manager.get(**kwargs)
+        item = Product._default_manager.get(**kwargs)
         
         new_data = open(file_path).read()
         next_index = 0
@@ -153,7 +153,7 @@ class Importer(object):
         
     def _fetch_item(self, filename):
         kwargs = {self._field: self._get_lookup_value_from_filename(filename)}
-        return Item._default_manager.get(**kwargs)
+        return Product._default_manager.get(**kwargs)
     
     def _get_lookup_value_from_filename(self, filename):
         return os.path.splitext(filename)[0]

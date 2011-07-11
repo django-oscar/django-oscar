@@ -190,7 +190,7 @@ INSTALLED_APPS = (
     'oscar.apps.checkout',
     'oscar.apps.shipping',
     'oscar.apps.order_management',
-    'oscar.apps.product',
+    'oscar.apps.catalogue',
     'oscar.apps.basket',
     'oscar.apps.payment',
     'oscar.apps.offer',
@@ -201,7 +201,7 @@ INSTALLED_APPS = (
     'oscar.apps.promotions',
     'oscar.apps.reports',
     'oscar.apps.search',
-    'oscar.apps.product.reviews',
+    'oscar.apps.catalogue.reviews',
     'oscar.apps.payment.datacash',
 )
 

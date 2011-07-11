@@ -101,13 +101,13 @@ class HandPickedProductList(AbstractProductList):
     A hand-picked product list is a list of manually selected
     products.
     """
-    products = models.ManyToManyField('product.Item', through='OrderedProduct', blank=True, null=True)
+    products = models.ManyToManyField('catalogue.Product', through='OrderedProduct', blank=True, null=True)
     
 
 class OrderedProduct(models.Model):
     
     list = models.ForeignKey('promotions.HandPickedProductList')
-    product = models.ForeignKey('product.Item')
+    product = models.ForeignKey('catalogue.Product')
     display_order = models.PositiveIntegerField(default=0)
     
     class Meta:
@@ -126,8 +126,8 @@ class AutomaticProductList(AbstractProductList):
     
     def get_products(self):
         if self.method == self.BESTSELLING:
-            return Item.objects.all().order_by('-score')[:self.num_products]
-        return Item.objects.all().order_by('-date_created')[:self.num_products]
+            return Product.objects.all().order_by('-score')[:self.num_products]
+        return Product.objects.all().order_by('-date_created')[:self.num_products]
 
 
 class OrderedProductList(models.Model):
@@ -196,9 +196,3 @@ class KeywordPromotion(LinkedPromotion):
 
     def get_link(self):
         return reverse('promotions:keyword-click', kwargs={'keyword_promotion_id': self.id})
-
-
-
-
-
-

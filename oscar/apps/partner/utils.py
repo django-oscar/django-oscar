@@ -7,7 +7,7 @@ from oscar.core.loading import import_module
 
 import_module('partner.exceptions', ['ImportError'], locals())
 import_module('partner.models', ['Partner', 'StockRecord'], locals())
-import_module('product.models', ['ItemClass', 'Item'], locals())
+import_module('catalogue.models', ['ProductClass', 'Product'], locals())
 
 
 class StockImporter(object):
@@ -105,8 +105,8 @@ class CatalogueImporter(object):
         
     def _flush_product_data(self):
         u"""Flush out product and stock models"""
-        ItemClass.objects.all().delete()
-        Item.objects.all().delete()
+        ProductClass.objects.all().delete()
+        Product.objects.all().delete()
         Partner.objects.all().delete()
         StockRecord.objects.all().delete()
 
@@ -131,23 +131,23 @@ class CatalogueImporter(object):
             # With stock data
             self._create_stockrecord(item, *row[4:8], stats=stats)
             
-    def _create_item(self, upc, title, description, item_class, stats):
+    def _create_item(self, upc, title, description, product_class, stats):
         # Ignore any entries that are NULL
         if description == 'NULL':
             description = ''
         
         # Create item class and item
-        item_class,_ = ItemClass.objects.get_or_create(name=item_class)
+        product_class,_ = ProductClass.objects.get_or_create(name=product_class)
         try:
-            item = Item.objects.get(upc=upc)
+            item = Product.objects.get(upc=upc)
             stats['updated_items'] += 1
-        except Item.DoesNotExist:
-            item = Item()
+        except Product.DoesNotExist:
+            item = Product()
             stats['new_items'] += 1
         item.upc = upc
         item.title = title
         item.description = description
-        item.item_class = item_class
+        item.product_class = product_class
         item.save()
         return item
         

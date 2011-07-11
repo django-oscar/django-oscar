@@ -1,12 +1,12 @@
 from django.conf.urls.defaults import patterns, url, include
 
 from oscar.core.application import Application
-from oscar.apps.product.views import ItemDetailView, ProductListView, CategoryView
-from oscar.apps.product.reviews.app import application as reviews_app
+from oscar.apps.catalogue.views import ItemDetailView, ProductListView, CategoryView
+from oscar.apps.catalogue.reviews.app import application as reviews_app
 
 
 class BaseProductApplication(Application):
-    name = 'products'
+    name = 'catalogue'
     detail_view = ItemDetailView
     list_view = ProductListView
     category_view = CategoryView

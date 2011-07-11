@@ -2,17 +2,23 @@ from django.http import HttpResponsePermanentRedirect, Http404
 from django.views.generic import ListView, DetailView
 from django.db.models import get_model
 
-from oscar.apps.product.signals import product_viewed, product_search
+from oscar.apps.catalogue.signals import product_viewed, product_search
 
-item_model = get_model('product','item')
-category_model = get_model('product', 'category')
+item_model = get_model('catalogue','product')
+category_model = get_model('catalogue', 'category')
 
 
 class ItemDetailView(DetailView):
+    context_object_name = 'item'
     model = item_model
     view_signal = product_viewed
-    template_folder = "product"
+    template_folder = "catalogue"
     _item = None
+    
+    def get_object(self):
+        if not self._item:
+            self._item = super(ItemDetailView, self).get_object()
+        return self._item
     
     def get(self, request, **kwargs):
         u"""
@@ -32,7 +38,7 @@ class ItemDetailView(DetailView):
         """
         Returns a list of possible templates.
         
-        We try 2 options before defaulting to product/detail.html:
+        We try 2 options before defaulting to catalogue/detail.html:
         1). detail-for-upc-<upc>.html
         2). detail-for-class-<classname>.html
         
@@ -41,7 +47,7 @@ class ItemDetailView(DetailView):
         """    
         product = self.get_object()
         names = ['%s/detail-for-upc-%s.html' % (self.template_folder, product.upc), 
-                 '%s/detail-for-class-%s.html' % (self.template_folder, product.item_class.name.lower()),
+                 '%s/detail-for-class-%s.html' % (self.template_folder, product.product_class.name.lower()),
                  '%s/detail.html' % (self.template_folder)]
         return names
 
@@ -49,7 +55,7 @@ class ItemDetailView(DetailView):
 class CategoryView(ListView):
     u"""A list of products"""
     context_object_name = "products"
-    template_name = 'product/browse.html'
+    template_name = 'catalogue/browse.html'
     paginate_by = 20
     
     def get_categories(self):
@@ -79,7 +85,7 @@ class CategoryView(ListView):
 class ProductListView(ListView):
     u"""A list of products"""
     context_object_name = "products"
-    template_name = 'product/browse.html'
+    template_name = 'catalogue/browse.html'
     paginate_by = 20
     search_signal = product_search
 

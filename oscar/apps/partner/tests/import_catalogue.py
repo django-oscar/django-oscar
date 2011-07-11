@@ -5,7 +5,7 @@ import logging
 
 from oscar.apps.partner.utils import CatalogueImporter
 from oscar.apps.partner.exceptions import ImportError
-from oscar.apps.product.models import ItemClass, Item
+from oscar.apps.catalogue.models import ProductClass, Product
 from oscar.apps.partner.models import Partner, StockRecord
 from oscar.test.helpers import create_product
 
@@ -53,24 +53,24 @@ class ImportSmokeTest(TestCase):
     def setUp(self):
         self.importer = CatalogueImporter(logger)
         self.importer.handle(TEST_BOOKS_CSV)
-        self.item = Item.objects.get(upc='9780115531446')
+        self.item = Product.objects.get(upc='9780115531446')
         
     def test_all_rows_are_imported(self):
-        self.assertEquals(10, Item.objects.all().count())
+        self.assertEquals(10, Product.objects.all().count())
         
     def test_class_is_created(self):
         try:
-            ItemClass.objects.get(name="Book")
-        except Item.DoesNotExist:
+            ProductClass.objects.get(name="Book")
+        except Product.DoesNotExist:
             self.fail()  
             
     def test_only_one_class_is_created(self):
-        self.assertEquals(1, ItemClass.objects.all().count())
+        self.assertEquals(1, ProductClass.objects.all().count())
     
     def test_item_is_created(self):
         try:
-            Item.objects.get(upc="9780115531446")
-        except Item.DoesNotExist:
+            Product.objects.get(upc="9780115531446")
+        except Product.DoesNotExist:
             self.fail()         
     
     def test_title_is_imported(self):
@@ -79,13 +79,13 @@ class ImportSmokeTest(TestCase):
     def test_partner_is_created(self):
         try:
             Partner.objects.get(name="Gardners")
-        except Item.DoesNotExist:
+        except Product.DoesNotExist:
             self.fail() 
     
     def test_stockrecord_is_created(self):
         try:
             StockRecord.objects.get(partner_sku="9780115531446")
-        except Item.DoesNotExist:
+        except Product.DoesNotExist:
             self.fail()      
         
     def test_null_fields_are_skipped(self):
@@ -118,6 +118,6 @@ class ImportWithFlushTest(TestCase):
         
         self.importer.handle(TEST_BOOKS_CSV)
         
-        with self.assertRaises(Item.DoesNotExist):
-            Item.objects.get(upc=upc)
+        with self.assertRaises(Product.DoesNotExist):
+            Product.objects.get(upc=upc)
    
