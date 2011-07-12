@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils.translation import gettext as _
-from django.core.urlresolvers import reverse
 from django.core.exceptions import ValidationError
 from django.conf import settings
 

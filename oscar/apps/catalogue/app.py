@@ -1,20 +1,20 @@
 from django.conf.urls.defaults import patterns, url, include
 
 from oscar.core.application import Application
-from oscar.apps.catalogue.views import ItemDetailView, ProductListView, CategoryView
+from oscar.apps.catalogue.views import ProductDetailView, ProductListView, ProductCategoryView
 from oscar.apps.catalogue.reviews.app import application as reviews_app
 
 
-class BaseProductApplication(Application):
+class BaseCatalogueApplication(Application):
     name = 'catalogue'
-    detail_view = ItemDetailView
-    list_view = ProductListView
-    category_view = CategoryView
+    detail_view = ProductDetailView
+    index_view = ProductListView
+    category_view = ProductCategoryView
     
     def get_urls(self):
-        urlpatterns = super(BaseProductApplication, self).get_urls()        
+        urlpatterns = super(BaseCatalogueApplication, self).get_urls()        
         urlpatterns += patterns('',
-            url(r'^$', self.list_view.as_view(), name='list'),       
+            url(r'^$', self.index_view.as_view(), name='index'),       
             url(r'^(?P<item_slug>[\w-]*)-(?P<pk>\d+)/$', self.detail_view.as_view(), name='detail'),
             url(r'^(?P<category_slug>[\w-]+(/[\w-]+)*)/$', self.category_view.as_view(), name='category')
         )
@@ -30,22 +30,11 @@ class ReviewsApplication(Application):
             url(r'^(?P<item_slug>[\w-]*)-(?P<item_pk>\d+)/reviews/', include(self.reviews_app.urls)),
         )
         return urlpatterns
-    
-
-class NavigationApplication(Application):
-    backend = None
-    
-    def get_urls(self):
-        urlpatterns = super(NavigationApplication, self).get_urls()
-        urlpatterns += patterns('',
-            url(r'^', include(self.backend.urls))
-        )
-        return urlpatterns
 
 
-class ProductApplication(BaseProductApplication, ReviewsApplication):
+class CatalogueApplication(BaseCatalogueApplication, ReviewsApplication):
     """
     Composite class combining Products with Reviews
     """
 
-application = ProductApplication()
+application = CatalogueApplication()
