@@ -303,6 +303,7 @@ class AbstractProductAttributeValue(models.Model):
     
     class Meta:
         abstract = True
+        unique_together = ['product', 'type']
         
     def __unicode__(self):
         return u"%s: %s" % (self.type.name, self.value)

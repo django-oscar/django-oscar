@@ -7,7 +7,7 @@ from django.conf import settings
 from django.db.models import Sum, Count
 
 from oscar.apps.catalogue.reviews.managers import (ApprovedReviewsManager, RecentReviewsManager, 
-                                                 TopScoredReviewsManager, TopVotedReviewsManager)
+                                                   TopScoredReviewsManager, TopVotedReviewsManager)
 
 
 class AbstractProductReview(models.Model):
