@@ -79,6 +79,17 @@ class MultiImage(AbstractPromotion):
         return self.name
 
 
+class SingleProduct(AbstractPromotion):
+    
+    name = models.CharField(_("Name"), max_length=128)
+    product = models.ForeignKey('catalogue.Product')
+    description = models.TextField(_("Description"), null=True, blank=True)
+    date_created = models.DateTimeField(auto_now_add=True)
+    
+    def __unicode__(self):
+        return self.name
+    
+
 class AbstractProductList(AbstractPromotion):
     """
     Abstract superclass for promotions which are essentially a list
