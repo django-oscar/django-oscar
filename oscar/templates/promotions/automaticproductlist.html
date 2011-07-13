@@ -1,0 +1,27 @@
+{% load currency_filters %}
+
+<h2>{{ promotion.name }}</h2>
+
+<p>{{ promotion.description }}</p>
+
+<ol>
+{% for product in promotion.get_products %}
+<li>
+    <a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a><br/>
+    {% if product.is_group %}
+        From {{ product.min_variant_price_incl_tax|currency }}
+    {% else %}
+        {% if product.has_stockrecord %} 
+            {{ product.stockrecord.price_incl_tax|currency }}<br/>
+            {{ product.stockrecord.availability }}
+        {% else %}
+            Not available    
+        {% endif %}
+    {% endif %}    
+</li>
+{% endfor %}
+</ol>
+
+{% if block.link_url %}
+    <a href="{{ block.link_url }}">See more</a>
+{% endif %}

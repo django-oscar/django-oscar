@@ -48,7 +48,7 @@ configured) to suit the domain at hand.  This is acheived in several ways:
     `myshop.product` to modify `oscar.product`).  You can then create a models.py
     file which imports from the corresponding abstract models file but your
     concrete implementations can add new fields and methods.  For example, in a
-    clothes shop, you might want your core `product.Item` model to support fields
+    clothes shop, you might want your core `catalogue.Product` model to support fields
     for `Label`.  
 
 *   **Avoidance of the [Entity-Attribute-Value](http://en.wikipedia.org/wiki/Entity-attribute-value_model) pattern**. 

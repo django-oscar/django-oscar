@@ -37,7 +37,7 @@ class AbstractStockRecord(models.Model):
     information.  Most projects will need to subclass this object to add custom
     fields such as lead_time, report_code, min_quantity.
     """
-    product = models.OneToOneField('product.Item', related_name="stockrecord")
+    product = models.OneToOneField('catalogue.Product', related_name="stockrecord")
     partner = models.ForeignKey('partner.Partner')
     partner_sku = models.CharField(_("Partner SKU"), max_length=128, blank=True)
     
@@ -98,6 +98,13 @@ class AbstractStockRecord(models.Model):
         
     # Price retrieval methods - these default to no tax being applicable
     # These are intended to be overridden.   
+    
+    @property
+    def is_available_to_buy(self):
+        """
+        Return whether this stockrecord allows the product to be purchased
+        """
+        return get_partner_wrapper(self.partner.name).is_available_to_buy(self)
     
     @property
     def availability(self):

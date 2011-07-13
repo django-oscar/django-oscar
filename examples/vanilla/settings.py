@@ -63,6 +63,9 @@ MEDIA_URL = '/media/'
 # Examples: "http://foo.com/media/", "/media/".
 ADMIN_MEDIA_PREFIX = '/media/admin/'
 
+STATIC_URL = '/static/'
+STATICFILES_DIRS = (location('static/'),)
+
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '$)a7n&o80u!6y5t-+jrd3)3!%vh&shg$wqpjpxc!ar&p#!)n1a'
 
@@ -84,7 +87,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     # Oscar specific
     'oscar.apps.search.context_processors.search_form',
     'oscar.apps.promotions.context_processors.promotions',
-    'oscar.apps.promotions.context_processors.merchandising_blocks',
     'oscar.apps.checkout.context_processors.checkout',
 ) 
 
@@ -181,10 +183,11 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.admin',
     'django.contrib.flatpages',
+    'django.contrib.staticfiles',
     # External apps
     'django_extensions',
     'haystack',
-    'debug_toolbar',
+    #'debug_toolbar',
     # Apps from oscar
     'oscar',
     'oscar.apps.analytics',
@@ -193,8 +196,8 @@ INSTALLED_APPS = (
     'oscar.apps.checkout',
     'oscar.apps.shipping',
     'oscar.apps.order_management',
-    'oscar.apps.product',
-    'oscar.apps.product.reviews',
+    'oscar.apps.catalogue',
+    'oscar.apps.catalogue.reviews',
     'oscar.apps.basket',
     'oscar.apps.payment',
     'oscar.apps.payment.datacash',

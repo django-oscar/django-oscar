@@ -12,7 +12,7 @@ class AbstractProductRecord(models.Model):
     products.
     """
     
-    product = models.OneToOneField('product.Item')
+    product = models.OneToOneField('catalogue.Product')
     
     # Data used for generating a score
     num_views = models.PositiveIntegerField(default=0)
@@ -20,7 +20,7 @@ class AbstractProductRecord(models.Model):
     num_purchases = models.PositiveIntegerField(default=0, db_index=True)
     
     # Product score - used within search
-    score = models.DecimalField(decimal_places=2, max_digits=12, default=Decimal('0.00'))
+    score = models.FloatField(default=0.00)
     
     class Meta:
         abstract = True
@@ -55,7 +55,7 @@ class AbstractUserRecord(models.Model):
 class AbstractUserProductView(models.Model):
     
     user = models.ForeignKey('auth.User')
-    product = models.ForeignKey('product.Item')
+    product = models.ForeignKey('catalogue.Product')
     date_created = models.DateTimeField(auto_now_add=True)
      
     class Meta:

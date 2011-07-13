@@ -1,0 +1,13 @@
+{% extends "catalogue/detail.html" %}
+
+{% block product_review %}
+
+    <h4>Leave a product review</h4>
+    <form method="post" action=".">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Submit" /> or 
+        <a href="{{ item.get_absolute_url }}">Cancel</a>
+    </form>
+
+{% endblock %}

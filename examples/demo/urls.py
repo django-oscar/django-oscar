@@ -4,7 +4,7 @@ from django.views.generic.simple import redirect_to
 
 from django.conf import settings
 from oscar.app import Shop
-from oscar.apps.product import ProductApplication
+from oscar.apps.catalogue import ProductApplication
 from shop.product.views import MyItemDetailView
 
 admin.autodiscover()

@@ -2,7 +2,7 @@ from django.dispatch import receiver
 
 from oscar.core.loading import import_module
 import_module('analytics.models', ['UserRecord', 'ProductRecord', 'UserProductView'], locals())
-import_module('product.signals', ['product_viewed', 'product_search'], locals())
+import_module('catalogue.signals', ['product_viewed', 'product_search'], locals())
 import_module('basket.signals', ['basket_addition'], locals())
 import_module('order.signals', ['order_placed'], locals())
 

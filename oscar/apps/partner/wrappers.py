@@ -24,6 +24,9 @@ class DefaultWrapper(object):
     Default stockrecord wrapper
     """
     
+    def is_available_to_buy(self, stockrecord):
+        return stockrecord.num_in_stock > 0
+    
     def availability(self, stockrecord):
         if stockrecord.num_in_stock > 0:
             return _("In stock (%d available)" % stockrecord.num_in_stock)

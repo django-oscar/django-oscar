@@ -1,0 +1,143 @@
+{% extends "layout.html" %}
+
+{% load currency_filters %}
+{% load history_tags %}
+{% load basket_tags %}
+
+{% block header %}
+    <h1>{{ product.get_title }}</h1>
+{% endblock header %}
+
+
+{% block content %}
+<div class="images">
+    {% for image in product.images.all %}
+        <img src="{{ imageurl }}" width="200" height="200">
+        {% if image.caption %}
+            <div class="caption">{{ image.caption }}</div>
+        {% endif %}
+    {% endfor %}
+</div>
+
+<table>
+    <caption>Product details</caption>
+    <tr>
+        <th>UPC</th><td>{{ product.upc }}</td>
+    </tr>
+    <tr>
+        <th>Product class</th><td>{{ product.product_class.name }}</td>
+    </tr>
+    {% if product.stockrecord %}
+    <tr>
+        <th>Price (excl. tax)</th><td>{{ product.stockrecord.price_incl_tax|currency }}</td>
+    </tr>
+    <tr>
+        <th>Price (incl. tax)</th><td>{{ product.stockrecord.price_excl_tax|currency }}</td>
+    </tr>
+    <tr>
+        <th>Availability</th>
+        <td>{{ product.stockrecord.availability }}</td>
+    </tr>
+    {% endif %}
+    <tr>
+        <th>Product type</th>
+        <td>
+        {% if product.is_group %}Product group{% else %}{% if product.is_variant %}Variant{% else %}Stand-alone{% endif %}{% endif %}
+        </td>
+    </tr>
+    {% for attribute in product.attributes.all %}
+    <tr>
+        <th>{{ attribute.type.name }}</th>
+        <td>{{ attribute.value }}</td>
+    </tr>
+    {% endfor %}
+    <tr>
+        <th>Num reviews</th>
+        <td>{{ reviews.count }}</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+    </tr>
+    
+</table>
+
+{% if product.stockrecord %}
+
+{% basket_form product as basket_form %}
+
+<form action="{% url basket:add %}" method="post">
+    {% csrf_token %}
+    {{ basket_form.as_p }}
+    <input type="submit" value="Add to basket" />
+</form>
+{% endif %}
+
+<h2>Categories</h2>
+{% for category in product.categories.all %}
+<p>
+{% for c in category.get_ancestors %}
+{% if not forloop.first %} > {% endif %}<a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
+{% endfor %}
+</p>
+{% endfor %}
+
+{% block product_review %}
+
+<h2>Customer Reviews</h2>
+<p>Read customer reviews on this product. If you have read this book, why not post your own
+   review?</p>
+<p><a href="{% url catalogue:reviews-add product.slug product.id %}">Add a review</a></p>
+
+
+{% with product.reviews.all as reviews %}
+{% if reviews %}
+    <div>
+        {% for review in reviews|slice:":3" %}
+            <div class="review">
+                <h4>{{ review.title }} ({{ review.score }}/5)</h4>
+                <h5>Reviewed by {{ review.get_reviewer_name }}</h5>
+                <p>{{ review.date_created }}<p>
+                <p>{{ review.body|linebreaks }}</p>
+                <p><a href="{{ review.get_absolute_url }}">Permalink</a>
+                
+				{% include 'reviews/_vote_bit.html' %}
+
+                {% if review.has_votes %}
+                    <p>{{ review.num_up_votes }} customer{{ review.num_up_votes|pluralize }} found this review helpful.</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <p><a href="{% url catalogue:reviews-list product.slug product.id %}">See all reviews</a>.</p>
+    </div>
+{% endif %}
+{% endwith %}
+
+{% endblock product_review %}
+
+{% if product.related_items.count %}
+<div class="products">
+    <h4>Related items</h4>
+    <ul>
+    {% for product in product.related_items.all %}
+        <li><a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a></li>
+    {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+{% if product.recommended_items.count %}
+<div class="products">
+    <h4>Recommended items</h4>
+    <ul>
+    {% for product in product.recommended_items.all %}
+        <li><a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a></li>
+    {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+{% recently_viewed_products %}
+
+{% endblock content %}
+

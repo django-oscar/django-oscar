@@ -11,7 +11,7 @@ def import_module(module_label, classes, namespace=None):
     u"""
     For dynamically importing classes from a module.
     
-    Eg. calling import_module('product.models') will search INSTALLED_APPS for
+    Eg. calling import_module('catalogue.models') will search INSTALLED_APPS for
     the relevant product app (default is 'oscar.product') and then import the
     classes from there.  If the class can't be found in the overriding module, 
     then we attempt to import it from within oscar.  
@@ -27,7 +27,7 @@ def import_module(module_label, classes, namespace=None):
     if not classes:
         raise ValueError("You must specify the classes to import")
     
-    # Arguments will be things like 'product.models' and so we
+    # Arguments will be things like 'catalogue.models' and so we
     # we take the first component to find within the INSTALLED_APPS list.
     app_name = module_label.rsplit(".", 1)[0] 
     for installed_app in settings.INSTALLED_APPS:

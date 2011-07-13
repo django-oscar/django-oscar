@@ -1,0 +1,44 @@
+[
+    {
+        "pk": 1, 
+        "model": "product.itemclass", 
+        "fields": {
+            "options": [], 
+            "name": "books", 
+            "slug": "books"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "product.item", 
+        "fields": {
+            "description": "", 
+            "parent": null, 
+            "title": "The Django Book v2", 
+            "date_updated": "2011-05-19 17:33:27", 
+            "upc": "978-1430219361", 
+            "product_class": 1, 
+            "product_options": [], 
+            "date_created": "2011-05-19 17:32:37", 
+            "slug": "books"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "product.attributetype", 
+        "fields": {
+            "code": "price", 
+            "name": "price", 
+            "has_choices": false
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "product.itemattributevalue", 
+        "fields": {
+            "product": 1, 
+            "type": 1, 
+            "value": "25"
+        }
+    }
+]

@@ -197,7 +197,7 @@ class AbstractLine(models.Model):
     title = models.CharField(_("Title"), max_length=255)
     
     # We don't want any hard links between orders and the products table
-    product = models.ForeignKey('product.Item', on_delete=models.SET_NULL, null=True)
+    product = models.ForeignKey('catalogue.Product', on_delete=models.SET_NULL, null=True)
     quantity = models.PositiveIntegerField(default=1)
     
     # Price information (these fields are actually redundant as the information
@@ -296,7 +296,7 @@ class AbstractLine(models.Model):
 class AbstractLineAttribute(models.Model):
     u"""An attribute of a line."""
     line = models.ForeignKey('order.Line', related_name='attributes')
-    option = models.ForeignKey('product.Option', null=True, on_delete=models.SET_NULL, related_name="line_attributes")
+    option = models.ForeignKey('catalogue.Option', null=True, on_delete=models.SET_NULL, related_name="line_attributes")
     type = models.CharField(_("Type"), max_length=128)
     value = models.CharField(_("Value"), max_length=255)    
     

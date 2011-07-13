@@ -82,8 +82,8 @@ class AbstractAddress(models.Model):
         This is used to convert a user address to a shipping address
         as part of the checkout process.
         """
-        destination_field_names = list(address_model._meta.get_all_field_names())
-        for field_name in self._meta.get_all_field_names():
+        destination_field_names = [field.name for field in address_model._meta.fields]
+        for field_name in [field.name for field in self._meta.fields]:
             if field_name in destination_field_names and field_name != 'id':
                 setattr(address_model, field_name, getattr(self, field_name))
                 
@@ -93,8 +93,11 @@ class AbstractAddress(models.Model):
         title, first_name and last_name into a single line.
         """
         self._clean_fields()
-        return filter(lambda x: x, [self.salutation(), self.line1, self.line2, self.line3,
-                                    self.line4, self.postcode, self.country.name])
+        fields = filter(lambda x: x, [self.salutation(), self.line1, self.line2, self.line3,
+                                    self.line4, self.postcode])
+        if self.country:
+            fields.append(self.country.name)
+        return fields
         
     def salutation(self):
         u"""Returns the salutation"""

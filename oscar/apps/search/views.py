@@ -8,7 +8,7 @@ from haystack.query import SearchQuerySet
 from haystack.views import FacetedSearchView
 
 from oscar.core.loading import import_module
-product_models = import_module('product.models', ['Item'])
+product_models = import_module('catalogue.models', ['Product'])
 
 
 class SuggestionsView(View):
@@ -70,9 +70,9 @@ class MultiFacetedSearchView(FacetedSearchView):
         # Look for UPC match
         query = request.GET['q'].strip()
         try:
-            item = product_models.Item._default_manager.get(upc=query)
+            item = product_models.Product._default_manager.get(upc=query)
             return HttpResponseRedirect(item.get_absolute_url())
-        except product_models.Item.DoesNotExist:
+        except product_models.Product.DoesNotExist:
             pass
         
         return super(MultiFacetedSearchView, self).__call__(request, *args, **kwargs)

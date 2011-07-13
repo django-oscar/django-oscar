@@ -3,7 +3,7 @@ from django.db.models import get_model
 
 from oscar.apps.basket.forms import AddToBasketForm
 register = template.Library()
-product_model = get_model('product','item')
+product_model = get_model('catalogue', 'product')
 
 @register.tag(name="basket_form")
 def do_basket_form(parse, token):
