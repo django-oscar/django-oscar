@@ -100,6 +100,13 @@ class AbstractStockRecord(models.Model):
     # These are intended to be overridden.   
     
     @property
+    def is_available_to_buy(self):
+        """
+        Return whether this stockrecord allows the product to be purchased
+        """
+        return get_partner_wrapper(self.partner.name).is_available_to_buy(self)
+    
+    @property
     def availability(self):
         u"""Return an item's availability as a string"""
         return get_partner_wrapper(self.partner.name).availability(self)

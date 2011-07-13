@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from oscar.apps.promotions.models import Image, MultiImage, RawHTML, HandPickedProductList, OrderedProduct, AutomaticProductList, TabbedBlock, \
-                                  PagePromotion, KeywordPromotion
+                                  PagePromotion, KeywordPromotion, SingleProduct
 
 
 class OrderProductInline(admin.TabularInline):
@@ -33,5 +33,6 @@ admin.site.register(AutomaticProductList)
 admin.site.register(TabbedBlock)
 admin.site.register(PagePromotion, PagePromotionAdmin)
 admin.site.register(KeywordPromotion, KeywordPromotionAdmin)
+admin.site.register(SingleProduct)
 
 
