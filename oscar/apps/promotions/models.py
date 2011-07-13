@@ -57,6 +57,10 @@ class KeywordPromotion(LinkedPromotion):
     """
 
     keyword = models.CharField(_("Keyword"), max_length=200)
+    
+    # We allow an additional filter which will let search query matches
+    # be restricted to different parts of the site.
+    filter = models.CharField(_("Filter"), max_length=200, blank=True, null=True)
 
     def get_link(self):
         return reverse('promotions:keyword-click', kwargs={'keyword_promotion_id': self.id})
