@@ -16,7 +16,7 @@ class AbstractProductIndex(SearchIndex):
     date_created = DateTimeField(model_attr='date_created')
     date_updated = DateTimeField(model_attr='date_updated')
 
-    def get_queryset(self):
+    def index_queryset(self):
         """
         Used when the entire index for model is updated.
 
