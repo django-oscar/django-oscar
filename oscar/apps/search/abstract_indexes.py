@@ -10,8 +10,8 @@ class AbstractProductIndex(SearchIndex):
     own copy of oscar.search_indexes.py
     """
     text = EdgeNgramField(document=True, use_template=True, template_name='search/indexes/product/item_text.txt')
-    title = EdgeNgramField(model_attr='title')
-    upc = CharField(model_attr="upc")
+    title = EdgeNgramField(model_attr='title', null=True)
+    upc = CharField(model_attr="upc", null=True)
     score = FloatField(model_attr="score")
     date_created = DateTimeField(model_attr='date_created')
     date_updated = DateTimeField(model_attr='date_updated')
