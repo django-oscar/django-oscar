@@ -1,3 +1,5 @@
+from decimal import Decimal as D
+
 from django.utils import unittest
 from django.test.client import Client
 from django.core.urlresolvers import reverse
@@ -52,7 +54,7 @@ class BasketViewsTest(unittest.TestCase):
         self.assertEquals(0, response.context['basket'].num_lines)
         
     def test_anonymous_add_to_basket_creates_cookie(self):
-        dummy_product = create_product()
+        dummy_product = create_product(price=D('10.00'))
         url = reverse('basket:add')
         post_params = {'product_id': dummy_product.id,
                        'action': 'add',
