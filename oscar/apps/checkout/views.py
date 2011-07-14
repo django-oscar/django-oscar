@@ -485,7 +485,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
     def send_confirmation_message(self, order):
         # Create order communication event
         try:
-            event_type = CommunicationEventType._default_manager.get(code='order-placed')
+            event_type = CommunicationEventType._default_manager.get(code='ORDER_PLACED')
         except CommunicationEventType.DoesNotExist:
             logger.error(_("Order #%s: unable to find 'order_placed' comms event" % order.number))
         else:
