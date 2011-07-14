@@ -17,7 +17,7 @@ class PromotionsApplication(Application):
                 self.record_click_view.as_view(model=PagePromotion), name='page-click'),
             url(r'keyword-redirect/(?P<keyword_promotion_id>\d+)/$', 
                 self.record_click_view.as_view(model=KeywordPromotion), name='keyword-click'),
-            url(r'^$', HomeView.as_view(), name='home'),
+            url(r'^$', self.home_view.as_view(), name='home'),
         )
         return urlpatterns
 
