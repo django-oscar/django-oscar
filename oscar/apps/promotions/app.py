@@ -21,5 +21,4 @@ class PromotionsApplication(Application):
         )
         return urlpatterns
 
-
 application = PromotionsApplication()
