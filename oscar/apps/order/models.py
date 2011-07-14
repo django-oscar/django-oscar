@@ -13,9 +13,6 @@ class OrderNote(AbstractOrderNote):
 class CommunicationEvent(AbstractCommunicationEvent):
     pass
 
-class CommunicationEventType(AbstractCommunicationEventType):
-    pass
-
 class ShippingAddress(AbstractShippingAddress):
     pass
 

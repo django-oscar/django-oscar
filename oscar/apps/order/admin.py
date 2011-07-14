@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from oscar.core.loading import import_module
-import_module('order.models', ['Order', 'OrderNote', 'CommunicationEvent', 'CommunicationEventType',
+import_module('order.models', ['Order', 'OrderNote', 'CommunicationEvent', 
                                         'BillingAddress', 'ShippingAddress', 'Line',
                                         'LinePrice', 'ShippingEvent', 'ShippingEventType', 
                                         'PaymentEvent', 'PaymentEventType', 'LineAttribute', 'OrderDiscount'], locals())
@@ -15,9 +15,6 @@ class LineAdmin(admin.ModelAdmin):
 
 class LinePriceAdmin(admin.ModelAdmin):
     list_display = ('order', 'line', 'price_incl_tax', 'quantity')
-
-class CommunicationEventTypeAdmin(admin.ModelAdmin):
-    exclude = ('code',)
 
 class ShippingEventTypeAdmin(admin.ModelAdmin):
     list_display = ('name', 'is_required', 'sequence_number')
@@ -48,7 +45,6 @@ admin.site.register(PaymentEvent)
 admin.site.register(PaymentEventType, PaymentEventTypeAdmin)
 admin.site.register(LineAttribute)
 admin.site.register(OrderDiscount, OrderDiscountAdmin)
-admin.site.register(CommunicationEventType, CommunicationEventTypeAdmin)
 admin.site.register(CommunicationEvent)
 
 
