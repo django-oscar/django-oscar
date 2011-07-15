@@ -40,5 +40,8 @@ class DefaultWrapper(object):
         # Assume one week for out-of-stock items
         return datetime.date.today() + datetime.timedelta(days=7)
     
+    def lead_time(self, stockrecord):
+        return 1
+    
     def calculate_tax(self, stockrecord):
         return D('0.00')

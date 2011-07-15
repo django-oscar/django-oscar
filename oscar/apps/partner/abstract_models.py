@@ -118,6 +118,10 @@ class AbstractStockRecord(models.Model):
         """
         return get_partner_wrapper(self.partner.name).dispatch_date(self)
     
+    @property
+    def lead_time(self):
+        return get_partner_wrapper(self.partner.name).lead_time(self)
+    
     @property 
     def price_incl_tax(self):
         """
