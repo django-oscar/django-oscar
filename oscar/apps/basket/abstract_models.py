@@ -181,7 +181,30 @@ class AbstractBasket(models.Model):
     
     @property
     def total_incl_tax(self):
-        """Return total price for a line including tax"""
+        """
+        Return total price inclusive of tax and discounts
+        """
+        return self._get_total('line_price_incl_tax_and_discounts')
+    
+    @property
+    def total_incl_tax_excl_discounts(self):
+        """
+        Return total price inclusive of tax but exclusive discounts
+        """
+        return self._get_total('line_price_incl_tax')
+    
+    @property
+    def total_excl_tax_excl_discounts(self):
+        """
+        Return total price excluding tax and discounts
+        """
+        return self._get_total('line_price_excl_tax')
+    
+    @property
+    def total_incl_tax(self):
+        """
+        Return total price inclusive of tax and discounts
+        x"""
         return self._get_total('line_price_incl_tax_and_discounts')
     
     @property
