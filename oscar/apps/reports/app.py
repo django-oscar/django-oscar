@@ -10,10 +10,11 @@ class ReportsApplication(Application):
     name = 'reports'
     
     dashboard_view = DashboardView
+    decorator = staff_member_required
 
     def get_urls(self):
         urlpatterns = patterns('',
-            url(r'^$', self.dashboard_view.as_view(), name='dashboard'),
+            url(r'^$', self.decorator(self.dashboard_view.as_view()), name='dashboard'),
         )
         return urlpatterns
 
