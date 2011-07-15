@@ -27,7 +27,7 @@ class OpenBasketReportGenerator(ReportGenerator):
                      ]
         writer.writerow(header_row)
         
-        baskets = Basket._default_manager.filter(status=basket_models.OPEN)
+        baskets = Basket._default_manager.filter(status=Basket.OPEN)
         for basket in baskets:
             if basket.owner:
                 row = [basket.owner_id, basket.owner.username, basket.owner.get_full_name(). basket.owner.email,
@@ -59,7 +59,7 @@ class SubmittedBasketReportGenerator(ReportGenerator):
                      ]
         writer.writerow(header_row)
         
-        baskets = Basket._default_manager.filter(status=basket_models.SUBMITTED)
+        baskets = Basket._default_manager.filter(status=Basket.SUBMITTED)
         for basket in baskets:
             row = [basket.owner_id, basket.owner, basket.status, basket.num_lines,
                    basket.num_items, basket.total_incl_tax, 

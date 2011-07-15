@@ -13,8 +13,8 @@ class ReportForm(forms.Form):
     for generator in generators:
         type_choices.append((generator.code, generator.description))
     report_type = forms.ChoiceField(widget=forms.Select(), choices=type_choices)
-    start_date = forms.DateField(widget=forms.widgets.DateInput(format="%d/%m/%Y"))
-    end_date = forms.DateField(widget=forms.widgets.DateInput(format="%d/%m/%Y"))
+    start_date = forms.DateField(widget=forms.widgets.DateInput(format="%d/%m/%Y"), help_text='Format dd/mm/YYYY')
+    end_date = forms.DateField(widget=forms.widgets.DateInput(format="%d/%m/%Y"), help_text='Format dd/mm/YYYY')
     
     def clean(self):
         if 'start_date' in self.cleaned_data and 'end_date' in self.cleaned_data and self.cleaned_data['start_date'] > self.cleaned_data['end_date']:
