@@ -13,7 +13,7 @@ class ReportsApplication(Application):
 
     def get_urls(self):
         urlpatterns = patterns('',
-            url(r'^$', self.dashboard_view.as_view(), name='dashboard'),
+            url(r'^$', staff_member_required(self.dashboard_view.as_view()), name='dashboard'),
         )
         return urlpatterns
 

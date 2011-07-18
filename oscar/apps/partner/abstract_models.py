@@ -118,6 +118,10 @@ class AbstractStockRecord(models.Model):
         """
         return get_partner_wrapper(self.partner.name).dispatch_date(self)
     
+    @property
+    def lead_time(self):
+        return get_partner_wrapper(self.partner.name).lead_time(self)
+    
     @property 
     def price_incl_tax(self):
         """
@@ -132,7 +136,7 @@ class AbstractStockRecord(models.Model):
     @property 
     def price_tax(self):
         u"""Return a product's tax value"""
-        return 0
+        return get_partner_wrapper(self.partner.name).calculate_tax(self)
     
     def __unicode__(self):
         if self.partner_sku:

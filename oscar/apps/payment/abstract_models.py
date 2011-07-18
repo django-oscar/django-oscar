@@ -20,6 +20,7 @@ class AbstractSource(models.Model):
     currency = models.CharField(max_length=12, default=settings.OSCAR_DEFAULT_CURRENCY)
     amount_allocated = models.DecimalField(decimal_places=2, max_digits=12)
     amount_debited = models.DecimalField(decimal_places=2, max_digits=12, default=Decimal('0.00'))
+    amount_refunded = models.DecimalField(decimal_places=2, max_digits=12, default=Decimal('0.00'))
     reference = models.CharField(max_length=128, blank=True, null=True)
     
     # A dictionary of submission data that is stored as part of the
@@ -36,7 +37,7 @@ class AbstractSource(models.Model):
         return description
     
     def balance(self):
-        return self.amount_allocated - self.amount_debited
+        return self.amount_allocated - self.amount_debited + self.amount_refunded
     
     
 class AbstractSourceType(models.Model):
@@ -73,6 +74,7 @@ class AbstractTransaction(models.Model):
     type = models.CharField(max_length=128, blank=True)
     delta_amount = models.FloatField()
     reference = models.CharField(max_length=128)
+    status = models.CharField(max_length=128, null=True)
     date_created = models.DateField()
     
     class Meta:

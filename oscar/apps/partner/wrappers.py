@@ -1,4 +1,5 @@
 import datetime
+from decimal import Decimal as D
 
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
@@ -38,3 +39,9 @@ class DefaultWrapper(object):
             return datetime.date.today() + datetime.timedelta(days=1)
         # Assume one week for out-of-stock items
         return datetime.date.today() + datetime.timedelta(days=7)
+    
+    def lead_time(self, stockrecord):
+        return 1
+    
+    def calculate_tax(self, stockrecord):
+        return D('0.00')

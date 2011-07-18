@@ -181,6 +181,9 @@ class AbstractLine(models.Model):
         help_text=_("This is the item number that the partner uses within their system"))
     partner_line_notes = models.TextField(blank=True, null=True)
     
+    # Partners often want to assign some status to each line.
+    status = models.CharField(_("Status"), max_length=255, null=True, blank=True)
+    
     # Estimated dispatch date - should be set at order time
     est_dispatch_date = models.DateField(blank=True, null=True)
     
