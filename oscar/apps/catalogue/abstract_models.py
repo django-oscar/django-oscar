@@ -292,7 +292,7 @@ class AbstractProduct(models.Model):
     def get_absolute_url(self):
         u"""Return a product's absolute url"""
         return ('catalogue:detail', (), {
-            'item_slug': self.slug,
+            'product_slug': self.slug,
             'pk': self.id})
     
     def save(self, *args, **kwargs):
