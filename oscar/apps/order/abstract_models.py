@@ -124,11 +124,11 @@ class AbstractOrderNote(models.Model):
 
 
 class AbstractCommunicationEvent(models.Model):
-    u"""
+    """
     An order-level event involving a communication to the customer, such
     as an confirmation email being sent."""
     order = models.ForeignKey('order.Order', related_name="communication_events")
-    type = models.ForeignKey('order.CommunicationEventType')
+    type = models.ForeignKey('customer.CommunicationEventType')
     date = models.DateTimeField(auto_now_add=True)
     
     class Meta:
@@ -137,47 +137,6 @@ class AbstractCommunicationEvent(models.Model):
     def __unicode__(self):
         return u"'%s' event for order #%s" % (self.type.name, self.order.number)
     
-    
-class AbstractCommunicationEventType(models.Model):
-    u"""Communication events are things like 'OrderConfirmationEmailSent'"""
-    # Code is used in forms
-    code = models.SlugField(max_length=128)
-    # Name is the friendly description of an event
-    name = models.CharField(max_length=255)
-    
-    # Template content for emails
-    email_subject_template = models.CharField(max_length=255, blank=True)
-    email_body_template = models.TextField(blank=True, null=True)
-    
-    # Template content for SMS messages
-    sms_template = models.CharField(max_length=170, blank=True)
-    
-    def save(self, *args, **kwargs):
-        if not self.code:
-            self.code = slugify(self.name)
-        super(AbstractCommunicationEventType, self).save(*args, **kwargs)
-    
-    class Meta:
-        abstract = True
-        verbose_name_plural = _("Communication event types")
-        
-    def __unicode__(self):
-        return self.name    
-    
-    def has_email_templates(self):
-        return self.email_subject_template and self.email_body_template
-    
-    def get_email_subject_for_order(self, order, **kwargs):
-        return self._merge_template_with_context(self.email_subject_template, order, **kwargs)
-    
-    def get_email_body_for_order(self, order, **kwargs):
-        return self._merge_template_with_context(self.email_body_template, order, **kwargs)
-    
-    def _merge_template_with_context(self, template, order, **kwargs):
-        ctx = {'order': order}
-        ctx.update(**kwargs)
-        return Template(template).render(Context(ctx))
-        
         
 class AbstractLine(models.Model):
     u"""
@@ -221,6 +180,9 @@ class AbstractLine(models.Model):
     partner_line_reference = models.CharField(_("Partner reference"), max_length=128, blank=True, null=True,
         help_text=_("This is the item number that the partner uses within their system"))
     partner_line_notes = models.TextField(blank=True, null=True)
+    
+    # Partners often want to assign some status to each line.
+    status = models.CharField(_("Status"), max_length=255, null=True, blank=True)
     
     # Estimated dispatch date - should be set at order time
     est_dispatch_date = models.DateField(blank=True, null=True)

@@ -60,8 +60,9 @@ class BasketView(ModelFormSetView):
 
 
 class BasketAddView(FormView):
-    u"""
-    Handles the add-to-basket operation, shouldn't be accessed via GET because there's nothing sensible to render.
+    """
+    Handles the add-to-basket operation, shouldn't be accessed via 
+    GET because there's nothing sensible to render.
     """
     form_class = AddToBasketForm
     product_model = get_model('catalogue', 'product')
@@ -80,7 +81,7 @@ class BasketAddView(FormView):
         return kwargs
     
     def get_success_url(self):
-        return self.request.META.get('HTTP_REFERER',reverse('basket:summary'))
+        return self.request.META.get('HTTP_REFERER', reverse('basket:summary'))
 
     def form_valid(self, form):
         options = []
@@ -93,6 +94,10 @@ class BasketAddView(FormView):
         return super(BasketAddView, self).form_valid(form)
     
     def form_invalid(self, form):
+        msgs = []
+        for error in form.errors.values():
+            msgs.append(error.as_text()) 
+        messages.error(self.request, ",".join(msgs))
         return HttpResponseRedirect(self.request.META.get('HTTP_REFERER',reverse('basket:summary')))
 
 

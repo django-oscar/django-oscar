@@ -3,6 +3,7 @@ from django.db.models import get_model
 
 basketline_model = get_model('basket', 'line')
 basket_model = get_model('basket', 'basket')
+Product = get_model('catalogue', 'product')
 
 
 class BasketLineForm(forms.ModelForm):
@@ -40,6 +41,13 @@ class AddToBasketForm(forms.Form):
                 self._create_group_product_fields(instance)
             else:
                 self._create_product_fields(instance)
+    
+    def clean_product_id(self):
+        id = self.cleaned_data['product_id']
+        product = Product.objects.get(id=id)
+        if not product.has_stockrecord or not product.stockrecord.is_available_to_buy:
+            raise forms.ValidationError("This product is not available for purchase")
+        return id
     
     def _create_group_product_fields(self, item):
         u"""

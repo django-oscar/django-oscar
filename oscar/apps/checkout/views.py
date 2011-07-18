@@ -22,13 +22,13 @@ import_module('checkout.forms', ['ShippingAddressForm'], locals())
 import_module('checkout.calculators', ['OrderTotalCalculator'], locals())
 import_module('checkout.utils', ['CheckoutSessionData'], locals())
 import_module('checkout.signals', ['pre_payment', 'post_payment'], locals())
-import_module('order.models', ['Order', 'ShippingAddress', 'CommunicationEventType', 
+import_module('order.models', ['Order', 'ShippingAddress',
                                'CommunicationEvent'], locals())
 import_module('order.utils', ['OrderNumberGenerator', 'OrderCreator'], locals())
 import_module('address.models', ['UserAddress'], locals())
 import_module('address.forms', ['UserAddressForm'], locals())
 import_module('shipping.repository', ['Repository'], locals())
-import_module('customer.models', ['Email'], locals())
+import_module('customer.models', ['Email', 'CommunicationEventType'], locals())
 import_module('customer.views', ['AccountAuthView'], locals())
 import_module('payment.exceptions', ['RedirectRequired', 'UnableToTakePayment', 
                                      'PaymentError'], locals())
@@ -485,7 +485,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
     def send_confirmation_message(self, order):
         # Create order communication event
         try:
-            event_type = CommunicationEventType._default_manager.get(code='order-placed')
+            event_type = CommunicationEventType._default_manager.get(code='ORDER_PLACED')
         except CommunicationEventType.DoesNotExist:
             logger.error(_("Order #%s: unable to find 'order_placed' comms event" % order.number))
         else:
@@ -603,4 +603,15 @@ class ThankYouView(DetailView):
     context_object_name = 'order'
     
     def get_object(self):
-        return Order._default_manager.get(pk=self.request.session['checkout_order_id'])
+        # We allow superusers to force an order thankyou page for testing
+        order = None
+        if self.request.user.is_superuser():
+            if 'order_number' in self.request.GET:
+                order = Order._default_manager.get(number=self.request.GET['order_number'])
+            elif 'order_id' in self.request.GET:
+                order = Order._default_manager.get(id=self.request.GET['orderid'])
+        
+        if not order:
+            order = Order._default_manager.get(pk=self.request.session['checkout_order_id'])
+        
+        return order
