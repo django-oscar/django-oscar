@@ -1,4 +1,5 @@
 from haystack import site
+from haystack.exceptions import AlreadyRegistered
 
 from oscar.apps.search.abstract_indexes import AbstractProductIndex
 from oscar.core.loading import import_module
@@ -9,5 +10,10 @@ class ProductIndex(AbstractProductIndex):
     pass
 
 
-site.register(product_models.Product, ProductIndex)
+try:
+    site.register(product_models.Product, ProductIndex)
+except AlreadyRegistered:
+    # If already registered, it means that a different search app is being
+    # used to search products.
+    pass
 
