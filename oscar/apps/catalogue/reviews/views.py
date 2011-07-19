@@ -29,11 +29,11 @@ class CreateProductReview(CreateView):
     
     def get_context_data(self, **kwargs):
         context = super(CreateProductReview, self).get_context_data(**kwargs)
-        context['item'] = self.get_product()
+        context['product'] = self.get_product()
         return context
     
     def get_product(self):
-        return get_object_or_404(self.product_model, pk=self.kwargs['item_pk'])
+        return get_object_or_404(self.product_model, pk=self.kwargs['product_pk'])
     
     def get_form_class(self):
         if not self.request.user.is_authenticated():
@@ -56,11 +56,11 @@ class CreateProductReviewComplete(DetailView):
     template_name = "reviews/add_review_complete.html"
     context_object_name = 'review'
     model = get_model('reviews', 'productreview')
-    product_model = get_model('product', 'item')
+    product_model = get_model('catalogue', 'product')
     
     def get_context_data(self, **kwargs):
         context = super(CreateProductReviewComplete, self).get_context_data(**kwargs)
-        context['item'] = get_object_or_404(self.product_model, pk=self.kwargs['item_pk'])
+        context['product'] = get_object_or_404(self.product_model, pk=self.kwargs['product_pk'])
         return context    
 
 
@@ -72,12 +72,12 @@ class ProductReviewDetail(DetailView):
     template_name = "reviews/review.html"
     context_object_name = 'review'
     model = get_model('reviews', 'productreview')
-    product_model = get_model('product', 'item')
+    product_model = get_model('catalogue', 'product')
     vote_model = vote_model
     
     def get_context_data(self, **kwargs):
         context = super(ProductReviewDetail, self).get_context_data(**kwargs)
-        context['item'] = get_object_or_404(self.product_model, pk=self.kwargs['item_pk'])
+        context['product'] = get_object_or_404(self.product_model, pk=self.kwargs['product_pk'])
         return context
     
     def post(self, request, *args, **kwargs ):
@@ -103,17 +103,17 @@ class ProductReviewList(ListView):
     template_name = 'reviews/reviews.html'
     context_object_name = "reviews"
     model = get_model('reviews', 'productreview')
-    product_model = get_model('product', 'item')    
+    product_model = get_model('catalogue', 'product')    
     paginate_by = 20
      
     def get_queryset(self):
-        qs = self.model.approved.filter(product=self.kwargs['item_pk'])
+        qs = self.model.approved.filter(product=self.kwargs['product_pk'])
         if 'sort_by' in self.request.GET and self.request.GET['sort_by'] == 'score':
             return qs.order_by('-score')
         return qs.order_by('-date_created')
      
     def get_context_data(self, **kwargs):
         context = super(ProductReviewList, self).get_context_data(**kwargs)
-        context['item'] = get_object_or_404(self.product_model, pk=self.kwargs['item_pk'])  
+        context['product'] = get_object_or_404(self.product_model, pk=self.kwargs['product_pk'])  
         context['avg_score'] = self.object_list.aggregate(Avg('score'))           
         return context

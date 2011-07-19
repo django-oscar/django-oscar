@@ -82,7 +82,7 @@ class SingleProductViewTest(TestCase):
         
     def test_canonical_urls_are_enforced(self):
         p = Product.objects.get(id=1)
-        args = {'item_slug': 'wrong-slug',
+        args = {'product_slug': 'wrong-slug',
                 'pk': p.id}
         wrong_url = reverse('catalogue:detail', kwargs=args)
         response = self.client.get(wrong_url)
