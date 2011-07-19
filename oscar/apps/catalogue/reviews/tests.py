@@ -20,18 +20,18 @@ class ProductReviewTests(unittest.TestCase):
         username = str(randint(0, maxint))
         self.user = User.objects.create_user(username, '%s@users.com'%username, '%spass123'%username)
         self.anon_user = AnonymousUser()
-        self.item = create_product()
-        self.review = ProductReview.objects.create(product=self.item,
+        self.product = create_product()
+        self.review = ProductReview.objects.create(product=self.product,
                                                    title="Dummy review",
                                                    score=3,
                                                    user=self.user)
 
     def test_top_level_reviews_must_have_titles_and_scores(self):
-        self.assertRaises(ValidationError, ProductReview.objects.create, product=self.item,
+        self.assertRaises(ValidationError, ProductReview.objects.create, product=self.product,
                           user=self.user)
 
     def test_top_level_anonymous_reviews_must_have_names_and_emails(self):
-        self.assertRaises(ValidationError, ProductReview.objects.create, product=self.item,
+        self.assertRaises(ValidationError, ProductReview.objects.create, product=self.product,
                           user=None, title="Anonymous review", score=3)
 
 
@@ -57,8 +57,8 @@ class SingleProductReviewViewTest(ProductReviewTests, TestCase):
         self.client = Client()
         super(SingleProductReviewViewTest, self).setUp()
         self.kwargs = {
-                'item_slug': self.item.slug,
-                'pk': str(self.item.id)}
+                'product_slug': self.product.slug,
+                'pk': str(self.product.id)}
         
     def test_each_product_has_review(self):
         url = reverse('catalogue:detail', kwargs=self.kwargs)
@@ -67,8 +67,8 @@ class SingleProductReviewViewTest(ProductReviewTests, TestCase):
     
     def test_user_can_add_product_review(self):
         kwargs = {
-                'item_slug': self.item.slug,
-                'item_pk': str(self.item.id)}
+                'product_slug': self.product.slug,
+                'product_pk': str(self.product.id)}
         url = reverse('catalogue:reviews-add', kwargs=kwargs)
         self.client.login(username='testuser', password='secret')
         response = self.client.get(url)
