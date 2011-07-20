@@ -107,6 +107,13 @@ class AbstractStockRecord(models.Model):
         return get_partner_wrapper(self.partner.name).is_available_to_buy(self)
     
     @property
+    def net_stock_level(self):
+        """
+        Return the effective number in stock
+        """ 
+        return self.num_in_stock - self.num_allocated
+    
+    @property
     def availability(self):
         u"""Return an item's availability as a string"""
         return get_partner_wrapper(self.partner.name).availability(self)
