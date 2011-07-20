@@ -65,8 +65,8 @@ class AbstractProductReview(models.Model):
     @models.permalink
     def get_absolute_url(self):
         return ('products:reviews-detail', (), {
-            'item_slug': self.product.slug,
-            'item_pk': self.product.id,
+            'product_slug': self.product.slug,
+            'product_pk': self.product.id,
             'pk': self.id})
 
     def __unicode__(self):
