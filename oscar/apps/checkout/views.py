@@ -605,7 +605,7 @@ class ThankYouView(DetailView):
     def get_object(self):
         # We allow superusers to force an order thankyou page for testing
         order = None
-        if self.request.user.is_superuser():
+        if self.request.user.is_superuser:
             if 'order_number' in self.request.GET:
                 order = Order._default_manager.get(number=self.request.GET['order_number'])
             elif 'order_id' in self.request.GET:
