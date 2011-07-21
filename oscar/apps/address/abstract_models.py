@@ -52,7 +52,6 @@ class AbstractAddress(models.Model):
         """
         Clean up fields
         """
-        self.first_name = self.first_name.strip()
         for field in ['first_name', 'last_name', 'line1', 'line2', 'line3', 'line4', 'postcode']:
             if self.__dict__[field]:
                self.__dict__[field] = self.__dict__[field].strip()
