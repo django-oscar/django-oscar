@@ -88,6 +88,7 @@ class CheckoutSessionMixin(object):
                 basket = self.request.basket
             method.set_basket(basket)
         else:
+            # We default to using free shipping
             method = FreeShipping()
         return method
     
