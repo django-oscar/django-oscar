@@ -1,4 +1,5 @@
 from django.forms import fields
+from django.core.validators import URL_VALIDATOR_USER_AGENT
 
 from oscar.core import validators
 
@@ -9,7 +10,7 @@ class ExtendedURLField(fields.URLField):
     """
 
     def __init__(self, max_length=None, min_length=None, verify_exists=False,
-            validator_user_agent=validators.URL_VALIDATOR_USER_AGENT, *args, **kwargs):
+            validator_user_agent=URL_VALIDATOR_USER_AGENT, *args, **kwargs):
         # intentionally skip one step when calling super()
         super(fields.URLField, self).__init__(max_length, min_length, *args,
                                        **kwargs)
