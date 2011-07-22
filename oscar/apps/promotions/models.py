@@ -2,12 +2,11 @@ from django.db import models
 from django.conf import settings
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
-from django.core.exceptions import ValidationError
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.db.models import get_model
 
-from oscar.forms.fields import ExtendedURLField
+from oscar.models.fields import ExtendedURLField
 
 Item = get_model('product', 'Item')
 
