@@ -150,6 +150,7 @@ class MultiImage(AbstractPromotion):
     _type = 'Multi-image'
     name = models.CharField(_("Name"), max_length=128)
     images = models.ManyToManyField('promotions.Image', null=True, blank=True)
+    date_created = models.DateTimeField(auto_now_add=True)
     
     def __unicode__(self):
         return self.name

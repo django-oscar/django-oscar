@@ -4,6 +4,7 @@ from django.core.urlresolvers import resolve
 from django.db import models
 from django.http import Http404
 
+
 class ExtendedURLField(models.CharField):
     u"""
     Custom field similar to URLField type field, however also accepting 

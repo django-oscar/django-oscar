@@ -29,11 +29,15 @@ class AttributeTypeAdmin(admin.ModelAdmin):
     
 class OptionAdmin(admin.ModelAdmin):
     exclude = ['code']
+    
+class ProductAttributeValueAdmin(admin.ModelAdmin):
+    list_display = ('product', 'type', 'value')
+    
 
 admin.site.register(product_models.ProductClass, ProductClassAdmin)
 admin.site.register(product_models.Product, ProductAdmin)
 admin.site.register(product_models.AttributeType, AttributeTypeAdmin)
-admin.site.register(product_models.ProductAttributeValue)
+admin.site.register(product_models.ProductAttributeValue, ProductAttributeValueAdmin)
 admin.site.register(product_models.Option, OptionAdmin)
 admin.site.register(product_models.ProductImage)
 admin.site.register(product_models.Category)
