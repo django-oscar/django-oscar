@@ -14,8 +14,9 @@ class PromotionNode(Node):
         promotion = self.promotion_var.resolve(context)
         template = select_template([promotion.template_name(), 'promotions/default.html'])
         args = dict(promotion=promotion, 
-                    **promotion.template_context(request=context['request'])
-                    context_instance=RequestContext(context['request']))
+                    context_instance=RequestContext(context['request']),
+                    **promotion.template_context(request=context['request']))
+                    
         return template.render(Context(args))
  
 def get_promotion_html(parser, token):
