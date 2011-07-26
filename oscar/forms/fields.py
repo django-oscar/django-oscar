@@ -17,3 +17,10 @@ class ExtendedURLField(fields.URLField):
         validator = validators.ExtendedURLValidator(verify_exists=verify_exists,
                                                     validator_user_agent=validator_user_agent)
         self.validators.append(validator)
+        
+    def to_python(self, value):
+        # We need to avoid having 'http' inserted at the start of
+        # every value
+        if value.startswith('/'):
+            return value
+        return super(ExtendedURLField, self).to_python(value)
