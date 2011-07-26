@@ -30,6 +30,7 @@ import_module('address.forms', ['UserAddressForm'], locals())
 import_module('shipping.repository', ['Repository'], locals())
 import_module('customer.models', ['Email', 'CommunicationEventType'], locals())
 import_module('customer.views', ['AccountAuthView'], locals())
+import_module('customer.utils', ['Dispatcher'], locals())
 import_module('payment.exceptions', ['RedirectRequired', 'UnableToTakePayment', 
                                      'PaymentError'], locals())
 import_module('basket.models', ['Basket'], locals())
@@ -490,22 +491,8 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         except CommunicationEventType.DoesNotExist:
             logger.error(_("Order #%s: unable to find 'order_placed' comms event" % order.number))
         else:
-            if self.request.user.is_authenticated() and event_type.has_email_templates():
-                logger.info(_("Order #%s: sending confirmation email" % order.number))
-                
-                # Send the email
-                subject = event_type.get_email_subject_for_order(order)
-                body = event_type.get_email_body_for_order(order)
-                email = EmailMessage(subject, body, to=[self.request.user.email])
-                email.send()
-                
-                # Record email against user for their email history
-                Email._default_manager.create(user=self.request.user, 
-                                              subject=email.subject,
-                                              body_text=email.body)
-                
-                # Record communication event against order
-                CommunicationEvent._default_manager.create(order=order, type=event_type)
+            dispatcher = Dispatcher(logger)
+            dispatcher.dispatch_order_message(order, event_type)
 
 
 class PaymentDetailsView(OrderPlacementMixin, TemplateView):

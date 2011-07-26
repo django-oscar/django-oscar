@@ -33,10 +33,10 @@ class AbstractCommunicationEventType(models.Model):
     # Template content for emails
     email_subject_template = models.CharField(max_length=255, blank=True)
     email_body_template = models.TextField(blank=True, null=True)
-    email_body_html_template = models.TextField(blank=True, null=True)
+    email_body_html_template = models.TextField(blank=True, null=True, help_text="HTML template")
     
     # Template content for SMS messages
-    sms_template = models.CharField(max_length=170, blank=True)
+    sms_template = models.CharField(max_length=170, blank=True, help_text="SMS template")
     
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
@@ -50,6 +50,9 @@ class AbstractCommunicationEventType(models.Model):
     
     def has_email_templates(self):
         return self.email_subject_template and self.email_body_template
+    
+    def has_sms_template(self):
+        return bool(self.sms_template)
     
     def get_email_subject_for_order(self, order, **kwargs):
         return self._merge_template_with_context(self.email_subject_template, order, **kwargs)

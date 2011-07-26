@@ -94,7 +94,7 @@ class AbstractAddress(models.Model):
         """
         self._clean_fields()
         fields = filter(lambda x: x, [self.salutation(), self.line1, self.line2, self.line3,
-                                    self.line4, self.postcode])
+                                      self.line4, self.postcode])
         if self.country:
             fields.append(self.country.name)
         return fields
