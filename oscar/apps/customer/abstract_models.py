@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.template import Template, Context
 
 
 class AbstractEmail(models.Model):

@@ -40,10 +40,13 @@ class Dispatcher(object):
         if not user.email:
             self.logger.warning(" - Unable to send email as user has no email address")
             return    
-        email = EmailMessage(event_type.get_email_subject_for_order(order),
-                             event_type.get_email_body_for_order(order), 
-                             to=[user.email])
+        email = self.get_email_message(user.email, order, event_type)
         email.send()
+        
+    def get_email_message(self, to_address, order, event_type):
+        return EmailMessage(event_type.get_email_subject_for_order(order),
+                            event_type.get_email_body_for_order(order), 
+                            to=[to_address])
         
     def send_order_sms(self, user, order, event_type):
         raise NotImplementedError
