@@ -492,7 +492,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             logger.error(_("Order #%s: unable to find 'order_placed' comms event" % order.number))
         else:
             dispatcher = Dispatcher(logger)
-            dispatcher.dispatch_order_message(order, event_type)
+            dispatcher.dispatch_order_message(order.user, order, event_type)
 
 
 class PaymentDetailsView(OrderPlacementMixin, TemplateView):
