@@ -219,12 +219,10 @@ class AutomaticProductList(AbstractProductList):
         return Product.objects.all().order_by('-date_created')[:self.num_products]
 
 
-class OrderedProductList(models.Model):
-    
+class OrderedProductList(HandPickedProductList):
     tabbed_block = models.ForeignKey('promotions.TabbedBlock')
-    list = models.ForeignKey('promotions.HandPickedProductList')
     display_order = models.PositiveIntegerField(default=0)
-    
+
     class Meta:
         ordering = ('display_order',)
 
