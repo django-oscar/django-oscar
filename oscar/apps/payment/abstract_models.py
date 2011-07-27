@@ -31,7 +31,7 @@ class AbstractSource(models.Model):
         abstract = True
 
     def __unicode__(self):
-        description = "Allocation of %.2f from type %s" % (self.amount_allocated, self.type)
+        description = "Allocation of %.2f from type %s" % (self.amount_allocated, self.source_type)
         if self.reference:
             description += " (reference: %s)" % self.reference
         return description

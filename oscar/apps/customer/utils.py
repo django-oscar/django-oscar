@@ -1,7 +1,8 @@
 from django.core.mail import EmailMessage
 
 from oscar.core.loading import import_module
-import_module('order.models', ['CommunicationEvent', 'Email'], locals())
+import_module('order.models', ['CommunicationEvent',], locals())
+import_module('customer.models', ['Email'], locals())
 
 
 class Dispatcher(object):
