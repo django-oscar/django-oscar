@@ -93,7 +93,7 @@ class CheckoutSessionMixin(object):
             method = FreeShipping()
         return method
     
-    def get_order_totals(self, basket=None, shipping_method=None):
+    def get_order_totals(self, basket=None, shipping_method=None, **kwargs):
         """
         Returns the total for the order with and without tax (as a tuple)
         """
@@ -102,8 +102,8 @@ class CheckoutSessionMixin(object):
             basket = self.request.basket
         if not shipping_method:
             shipping_method = self.get_shipping_method(basket)
-        total_incl_tax = calc.order_total_incl_tax(basket, shipping_method)
-        total_excl_tax = calc.order_total_excl_tax(basket, shipping_method)
+        total_incl_tax = calc.order_total_incl_tax(basket, shipping_method, **kwargs)
+        total_excl_tax = calc.order_total_excl_tax(basket, shipping_method, **kwargs)
         return total_incl_tax, total_excl_tax
     
     def get_context_data(self, **kwargs):
