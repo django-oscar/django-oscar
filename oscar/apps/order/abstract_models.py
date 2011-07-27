@@ -110,9 +110,21 @@ class AbstractOrder(models.Model):
 
 
 class AbstractOrderNote(models.Model):
-    u"""A note against an order."""
+    """
+    A note against an order.
+    
+    This are often used for audit purposes too.  IE, whenever an admin
+    makes a change to an order, we create a note to record what happened.
+    """
     order = models.ForeignKey('order.Order', related_name="notes")
-    user = models.ForeignKey('auth.User')
+    
+    # These are sometimes programatically generated so don't need a 
+    # user everytime
+    user = models.ForeignKey('auth.User', null=True)
+    
+    # We allow notes to be classified although this isn't always needed
+    note_type = models.CharField(max_length=128, null=True)
+    
     message = models.TextField()
     date = models.DateTimeField(auto_now_add=True)
     

@@ -1,5 +1,7 @@
 from django.template import Library, Node, Variable, Context
 from django.template.loader import select_template
+from django.template import RequestContext
+
      
 register = Library()
      
@@ -11,8 +13,10 @@ class PromotionNode(Node):
     def render(self, context):
         promotion = self.promotion_var.resolve(context)
         template = select_template([promotion.template_name(), 'promotions/default.html'])
-        args = dict(promotion=promotion, **promotion.template_context(request=context['request']))
-        return template.render(Context(args))
+        args = {'promotion': promotion}
+        args.update(**promotion.template_context(request=context['request']))
+        ctx = RequestContext(context['request'], args)
+        return template.render(ctx)
  
 def get_promotion_html(parser, token):
     _, promotion = token.split_contents()
