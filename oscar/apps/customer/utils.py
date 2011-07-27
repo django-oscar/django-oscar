@@ -1,7 +1,7 @@
 from django.core.mail import EmailMessage
 
 from oscar.core.loading import import_module
-import_module('order.models', ['CommunicationEvent'], locals())
+import_module('order.models', ['CommunicationEvent', 'Email'], locals())
 
 
 class Dispatcher(object):
@@ -26,12 +26,6 @@ class Dispatcher(object):
         # Record communication event against the order    
         CommunicationEvent._default_manager.create(order=order, type=event_type)
         
-        # Is user is signed in, record the event for audit
-        if user.is_authenticated():
-            Email._default_manager.create(user=self.request.user, 
-                                  subject=email.subject,
-                                  body_text=email.body)
-            
     def send_order_email(self, user, order, event_type):
         
         if not event_type.has_email_templates():    
@@ -42,6 +36,12 @@ class Dispatcher(object):
             return    
         email = self.get_email_message(user.email, order, event_type)
         email.send()
+        
+        # Is user is signed in, record the event for audit
+        if user.is_authenticated():
+            Email._default_manager.create(user=user, 
+                                          subject=email.subject,
+                                          body_text=email.body)
         
     def get_email_message(self, to_address, order, event_type):
         return EmailMessage(event_type.get_email_subject_for_order(order),

@@ -556,10 +556,12 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             # Something went wrong with payment, need to show
             # error to the user.  This type of exception is supposed
             # to set a friendly error message.
+            self.restore_frozen_basket()
             logger.info(_("Order #%s: unable to take payment (%s)" % (order_number, e)))
             return self.render_to_response(self.get_context_data(error=str(e)))
         except PaymentError, e:
             # Something went wrong which wasn't anticipated.
+            self.restore_frozen_basket()
             logger.error(_("Order #%s: payment error (%s)" % (order_number, e)))
             return self.render_to_response(self.get_context_data(error="A problem occurred processing payment."))
         else:
