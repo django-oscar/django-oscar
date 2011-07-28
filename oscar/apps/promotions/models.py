@@ -191,6 +191,8 @@ class HandPickedProductList(AbstractProductList):
     _type = 'Product list'
     products = models.ManyToManyField('catalogue.Product', through='OrderedProduct', blank=True, null=True)
     
+    def get_products(self):
+        return self.products.all().order_by('%s.display_order'%OrderedProduct._meta.db_table)
 
 class OrderedProduct(models.Model):
     
