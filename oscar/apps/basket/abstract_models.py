@@ -62,13 +62,15 @@ class AbstractBasket(models.Model):
             raise PermissionDenied("A frozen basket cannot be flushed")
         self.lines_all().delete()
     
-    def add_product(self, item, quantity=1, options=[]):
+    def add_product(self, item, quantity=1, options=None):
         """
         Convenience method for adding products to a basket
         
         The 'options' list should contains dicts with keys 'option' and 'value'
         which link the relevant product.Option model and string value respectively.
         """
+        if options is None:
+            options = []
         if not self.id:
             self.save()
         line_ref = self._create_line_reference(item, options)
