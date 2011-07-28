@@ -208,6 +208,7 @@ class Range(models.Model):
     included_products = models.ManyToManyField('catalogue.Product', related_name='includes', blank=True)
     excluded_products = models.ManyToManyField('catalogue.Product', related_name='excludes', blank=True)
     classes = models.ManyToManyField('catalogue.ProductClass', related_name='classes', blank=True)
+    included_categories = models.ManyToManyField('catalogue.Category', related_name='includes', blank=True)
     
     __included_product_ids = None
     __excluded_product_ids = None
