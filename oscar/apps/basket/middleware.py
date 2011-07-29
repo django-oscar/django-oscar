@@ -70,7 +70,10 @@ class BasketMiddleware(object):
         """
         basket = None
         if cookie_key in request.COOKIES:
-            basket_id, basket_hash = request.COOKIES[cookie_key].split("_")
+            parts = request.COOKIES[cookie_key].split("_")
+            if len(parts) != 2:
+                return basket
+            basket_id, basket_hash = parts
             if basket_hash == self.get_basket_hash(basket_id):
                 try:
                     basket = basket_model.objects.get(pk=basket_id, owner=None)
