@@ -32,15 +32,27 @@ class ProductContributor(AbstractProductContributor):
     pass
     
     
-class AttributeType(AbstractAttributeType):
-    pass
-
-
-class AttributeValueOption(AbstractAttributeValueOption):
+class ProductAttribute(AbstractProductAttribute):
     pass
 
 
 class ProductAttributeValue(AbstractProductAttributeValue):
+    pass
+
+
+class AttributeOptionGroup(AbstractAttributeOptionGroup):
+    pass
+
+
+class AttributeOption(AbstractAttributeOption):
+    pass
+
+
+class AttributeEntity(AbstractAttributeEntity):
+    pass
+
+
+class AttributeEntityType(AbstractAttributeEntityType):
     pass
 
 
