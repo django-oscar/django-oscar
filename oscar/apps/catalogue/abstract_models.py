@@ -173,8 +173,8 @@ class AbstractProduct(models.Model):
     description = models.TextField(_('Description'), blank=True, null=True)
     product_class = models.ForeignKey('catalogue.ProductClass', verbose_name=_('product class'), null=True,
         help_text="""Choose what type of product this is""")
-    attribute_types = models.ManyToManyField('catalogue.AttributeType', through='ProductAttributeValue',
-        help_text="""An attribute type is something that this product MUST have, such as a size""")
+    attributes = models.ManyToManyField('catalogue.ProductAttribute', through='ProductAttributeValue',
+        help_text="""A product attribute is something that this product MUST have, such as a size, as specified by its class""")
     product_options = models.ManyToManyField('catalogue.Option', blank=True, 
         help_text="""Options are values that can be associated with a item when it is added to 
                      a customer's basket.  This could be something like a personalised message to be
@@ -313,17 +313,31 @@ class ProductRecommendation(models.Model):
     ranking = models.PositiveSmallIntegerField(default=0)
 
 
-class AbstractAttributeType(models.Model):
-    u"""Defines an attribute. (Eg. size)"""
-    
+_OSCAR_ATTRIBUTE_TYPES = (
+    ("text", "Text"), 
+    ("integer", "Integer"),
+    ("boolean", "Boolean"), 
+    ("float", "Float"), 
+    ("richtext", "Rich Text"), 
+    ("date", "Date"), 
+    ("option", "Option"),
+    ("entity", "Entity"),
+    )
+
+class AbstractProductAttribute(models.Model):
+    """
+    Defines an attribute for a product class. (For example, number_of_pages for a 'book' class)
+    """
     product_class = models.ForeignKey('catalogue.ProductClass', related_name='attributes', blank=True, null=True)
     name = models.CharField(_('name'), max_length=128)
     code = models.SlugField(_('code'), max_length=128)
-        
-    has_choices = models.BooleanField(default=False)
+    type = models.CharField(choices=_OSCAR_ATTRIBUTE_TYPES, default=_OSCAR_ATTRIBUTE_TYPES[0][0], max_length=20)
+    option_group = models.ForeignKey('catalogue.AttributeOptionGroup', blank=True, null=True, help_text='Select an option group if using type "Option"')
+    entity_type = models.ForeignKey('catalogue.AttributeEntityType', blank=True, null=True, help_text='Select an entity type if using type "Entity"')
+    required = models.BooleanField(default=False)
 
     class Meta:
-        abstract = True
+        abstract = True 
         ordering = ['code']
 
     def __unicode__(self):
@@ -332,39 +346,123 @@ class AbstractAttributeType(models.Model):
     def save(self, *args, **kwargs):
         if not self.code:
             self.code = slugify(self.name)
-        super(AbstractAttributeType, self).save(*args, **kwargs)
+        super(AbstractProductAttribute, self).save(*args, **kwargs)
         
-
-class AbstractAttributeValueOption(models.Model):
-    u"""Defines an attribute value choice (Eg: S,M,L,XL for a size attribute type)"""
-    type = models.ForeignKey('catalogue.AttributeType', related_name='options')
-    value = models.CharField(max_length=255)
-
-    class Meta:
-        abstract = True
-
-    def __unicode__(self):
-        return u"%s = %s" % (self.type, self.value)
+    def is_value_valid(self, value):
+        """
+        Check whether the passed value is valid for this attribute
+        """
+        if self.type == 'option':
+            valid_values = self.option_group.options.values_list('option', flat=True)
+            return value in valid_values
+        return True
 
 
 class AbstractProductAttributeValue(models.Model):
-    u"""
-    The "through" model for the m2m relationship between catalogue.Item
-    and catalogue.AttributeType.  This specifies the value of the attribute
-    for a particular catalogue.
-    
-    Eg: size = L
     """
-    product = models.ForeignKey('catalogue.Product', related_name='attributes')
-    type = models.ForeignKey('catalogue.AttributeType')
-    value = models.CharField(max_length=255)
+    The "through" model for the m2m relationship between catalogue.Product
+    and catalogue.ProductAttribute.  
+    This specifies the value of the attribute for a particular product
+    
+    For example: number_of_pages = 295
+    """
+    attribute = models.ForeignKey('catalogue.ProductAttribute')
+    product = models.ForeignKey('catalogue.Product')
+    value_text = models.CharField(max_length=255, blank=True, null=True)
+    value_integer = models.IntegerField(blank=True, null=True)
+    value_boolean = models.BooleanField(blank=True)
+    value_float = models.FloatField(blank=True, null=True)
+    value_richtext = models.TextField(blank=True, null=True)
+    value_date = models.DateField(blank=True, null=True)
+    value_option = models.ForeignKey('catalogue.AttributeOption', blank=True, null=True)
+    value_entity = models.ForeignKey('catalogue.AttributeEntity', blank=True, null=True)
+    
+    def _get_value(self):
+        return getattr(self, 'value_%s' % self.attribute.type)
+    
+    def _set_value(self, new_value):
+        if self.attribute.type == 'option' and isinstance(new_value, str):
+            # Need to look up instance of AttributeOption
+            new_value = self.attribute.option_group.options.get(option=new_value)
+        setattr(self, 'value_%s' % self.attribute.type, new_value)
+    
+    value = property(_get_value, _set_value)
+    
+    class Meta:
+        abstract = True 
+        
+    def __unicode__(self):
+        return u"%s: %s" % (self.attribute.name, self.value)
+    
+    
+class AbstractAttributeOptionGroup(models.Model):
+    """
+    Defines a group of options that collectively may be used as an 
+    attribute type
+    For example, Language
+    """
+    name = models.CharField(max_length=128)
+    
+    def __unicode__(self):
+        return self.name
     
     class Meta:
         abstract = True
-        unique_together = ['product', 'type']
-        
+
+
+class AbstractAttributeOption(models.Model):
+    """
+    Provides an option within an option group for an attribute type
+    Examples: In a Language group, English, Greek, French
+    """
+    group = models.ForeignKey('catalogue.AttributeOptionGroup', related_name='options')
+    option = models.CharField(max_length=255)
+    
     def __unicode__(self):
-        return u"%s: %s" % (self.type.name, self.value)
+        return self.option
+    
+    class Meta:
+        abstract = True
+    
+    
+class AbstractAttributeEntity(models.Model):
+    """
+    Provides an attribute type to enable relationships with other models
+    """
+    name = models.CharField(_("Name"), max_length=255)
+    slug = models.SlugField(max_length=255, unique=False, blank=True)
+    type = models.ForeignKey('catalogue.AttributeEntityType', related_name='entities')
+
+    def __unicode__(self):
+        return self.name
+    
+    class Meta:
+        abstract = True
+        verbose_name_plural = 'Attribute entities'
+        
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super(AbstractAttributeEntity, self).save(*args, **kwargs)
+
+
+class AbstractAttributeEntityType(models.Model):
+    """
+    Provides the name of the model involved in an entity relationship
+    """
+    name = models.CharField(_("Name"), max_length=255)
+    slug = models.SlugField(max_length=255, unique=False, blank=True)
+    
+    def __unicode__(self):
+        return self.name
+        
+    class Meta:
+        abstract = True
+        
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super(AbstractAttributeEntityType, self).save(*args, **kwargs)
     
     
 class AbstractOption(models.Model):
