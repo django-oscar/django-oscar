@@ -13,6 +13,17 @@ from treebeard.mp_tree import MP_Node
 
 from oscar.apps.catalogue.managers import BrowsableProductManager
 
+class ProductAttributeContainer(object):
+    
+    def __init__(self, product):
+        self.product = product
+        
+    def validate_attributes(self):
+        pass
+    
+    def save(self):
+        pass
+
 
 class AbstractProductClass(models.Model):
     """
