@@ -194,8 +194,6 @@ class HandPickedProductList(AbstractProductList):
     def get_products(self):
         return self.products.all().order_by('%s.display_order' % OrderedProduct._meta.db_table)
     
-    def get_products(self):
-        return self.products.all().order_by('%s.display_order'%OrderedProduct._meta.db_table)
 
 class OrderedProduct(models.Model):
     
@@ -239,4 +237,5 @@ class TabbedBlock(AbstractPromotion):
     tabs = models.ManyToManyField('promotions.HandPickedProductList', through='OrderedProductList', null=True, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
     
-    
+    def get_tabs(self):
+        return self.tabs.all().order_by('%s.display_order' % OrderedProductList._meta.db_table)
