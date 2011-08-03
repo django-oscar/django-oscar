@@ -325,7 +325,7 @@ class ProductAttributesContainer(object):
     def __init__(self, product):
         self.product = product
         
-    def __getattr_(self, name):
+    def __getattr__(self, name):
         if not name.startswith('_'):
             try:
                 attribute = self.get_attribute_by_code(name)
@@ -356,7 +356,7 @@ class ProductAttributesContainer(object):
                                              'err': e})
         
     def get_values(self):
-        return self.product.attributes.all()
+        return self.product.productattributevalue_set.all()
     
     def get_value_by_attribute(self, attribute):
         return self.get_values().get(attribute=attribute)    
