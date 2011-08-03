@@ -6,6 +6,7 @@ from itertools import chain
 from datetime import datetime, date
 
 from django.db import models
+from django.core.validators import RegexValidator
 from django.db.models import get_model
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -351,7 +352,7 @@ class ProductAttributesContainer(object):
                     attribute.validate_value(value)
                 except ValidationError, e:
                     raise ValidationError(_(u"%(attr)s attribute %(err)s") % \
-                                            {'attr': attribute.slug,
+                                            {'attr': attribute.code,
                                              'err': e})
         
     def get_values(self):
@@ -394,7 +395,7 @@ class AbstractProductAttribute(models.Model):
     """
     product_class = models.ForeignKey('catalogue.ProductClass', related_name='attributes', blank=True, null=True)
     name = models.CharField(_('name'), max_length=128)
-    code = models.SlugField(_('code'), max_length=128)
+    code = models.SlugField(_('code'), max_length=128, validators=[RegexValidator(regex=r'^[a-zA-Z_][0-9a-zA-Z_]*$', message="Code must match ^[a-zA-Z_][0-9a-zA-Z_]*$")])
     type = models.CharField(choices=TYPE_CHOICES, default=TYPE_CHOICES[0][0], max_length=20)
     option_group = models.ForeignKey('catalogue.AttributeOptionGroup', blank=True, null=True, help_text='Select an option group if using type "Option"')
     entity_type = models.ForeignKey('catalogue.AttributeEntityType', blank=True, null=True, help_text='Select an entity type if using type "Entity"')
@@ -408,33 +409,35 @@ class AbstractProductAttribute(models.Model):
         if not (type(value) == unicode or type(value) == str):
             raise ValidationError(_(u"Must be str or unicode"))
 
-    def validate_float(self, value):
+    def _validate_float(self, value):
         try:
             float(value)
         except ValueError:
             raise ValidationError(_(u"Must be a float"))
 
-    def validate_int(self, value):
+    def _validate_int(self, value):
         try:
             int(value)
         except ValueError:
             raise ValidationError(_(u"Must be an integer"))
 
-    def validate_date(self, value):
+    def _validate_date(self, value):
         if not (isinstance(value, datetime) or isinstance(value, date)):
             raise ValidationError(_(u"Must be a date or datetime"))
 
-    def validate_bool(self, value):
+    def _validate_bool(self, value):
         if not type(value) == bool:
             raise ValidationError(_(u"Must be a boolean"))
 
-    def validate_entity(self, value):
+    def _validate_entity(self, value):
         if not isinstance(value, get_model('catalogue', 'AttributeEntity')):
-            raise ValidationError(_(u"Must be a django model object instance"))
+            raise ValidationError(_(u"Must be an AttributeEntity model object instance"))
         if not value.pk:
             raise ValidationError(_(u"Model has not been saved yet"))
+        if value.type != self.entity_type:
+            raise ValidationError(_(u"Entity must be of type %s" % self.entity_type.name))
 
-    def validate_option(self, value):
+    def _validate_option(self, value):
         if not isinstance(value, get_model('catalogue', 'AttributeOption')):
             raise ValidationError(_(u"Must be an AttributeOption model object instance"))
         if not value.pk:
@@ -448,31 +451,40 @@ class AbstractProductAttribute(models.Model):
 
     def get_validator(self):
         DATATYPE_VALIDATORS = {
-            'text': self.validate_text,
-            'integer': self.validate_int,
-            'boolean': self.validate_bool,
-            'float': self.validate_float,
-            'richtext': self.validate_text,
-            'date': self.validate_date,
-            'entity': self.validate_entity,
-            'option': self.validate_option,
+            'text': self._validate_text,
+            'integer': self._validate_int,
+            'boolean': self._validate_bool,
+            'float': self._validate_float,
+            'richtext': self._validate_text,
+            'date': self._validate_date,
+            'entity': self._validate_entity,
+            'option': self._validate_option,
         }
 
-        return DATATYPE_VALIDATORS[self.datatype]     
+        return DATATYPE_VALIDATORS[self.type]     
 
     def __unicode__(self):
         return self.name
 
     def save(self, *args, **kwargs):
-        if not self.code:
-            self.code = slugify(self.name)
         super(AbstractProductAttribute, self).save(*args, **kwargs)
         
     def save_value(self, product, value):
-        pass
+        try:
+            value_obj = product.productattributevalue_set.get(attribute=self)
+        except get_model('catalogue', 'ProductAttributeValue').DoesNotExist:
+            if value == None or value == '':
+                return
+            value_obj = get_model('catalogue', 'ProductAttributeValue').objects.create(product=product, attribute=self)
+        if value == None or value == '':
+            value_obj.delete()
+            return
+        if value != value_obj.value:
+            value_obj.value = value
+            value_obj.save()
     
     def validate_value(self, value):
-        self.get_validator()(self, value)
+        self.get_validator()(value)
         
     def is_value_valid(self, value):
         """
