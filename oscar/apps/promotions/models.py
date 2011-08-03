@@ -114,7 +114,9 @@ class RawHTML(AbstractPromotion):
     name = models.CharField(_("Name"), max_length=128)
     body = models.TextField(_("HTML"))
     date_created = models.DateTimeField(auto_now_add=True)
-    
+    keywords = generic.GenericRelation(KeywordPromotion)
+    pages = generic.GenericRelation(PagePromotion)
+
     class Meta:
         verbose_name_plural = 'Raw HTML'
         
@@ -161,6 +163,8 @@ class SingleProduct(AbstractPromotion):
     product = models.ForeignKey('catalogue.Product')
     description = models.TextField(_("Description"), null=True, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
+    keywords = generic.GenericRelation(KeywordPromotion)
+    pages = generic.GenericRelation(PagePromotion)
     
     def __unicode__(self):
         return self.name
@@ -190,6 +194,8 @@ class HandPickedProductList(AbstractProductList):
     """
     _type = 'Product list'
     products = models.ManyToManyField('catalogue.Product', through='OrderedProduct', blank=True, null=True)
+    keywords = generic.GenericRelation(KeywordPromotion)
+    pages = generic.GenericRelation(PagePromotion)
 
     def get_products(self):
         return self.products.all().order_by('%s.display_order' % OrderedProduct._meta.db_table)
@@ -215,6 +221,8 @@ class AutomaticProductList(AbstractProductList):
     )
     method = models.CharField(max_length=128, choices=METHOD_CHOICES)
     num_products = models.PositiveSmallIntegerField(default=4)  
+    keywords = generic.GenericRelation(KeywordPromotion)
+    pages = generic.GenericRelation(PagePromotion)
     
     def get_products(self):
         if self.method == self.BESTSELLING:
@@ -236,6 +244,8 @@ class TabbedBlock(AbstractPromotion):
     name = models.CharField(_("Title"), max_length=255)
     tabs = models.ManyToManyField('promotions.HandPickedProductList', through='OrderedProductList', null=True, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
+    keywords = generic.GenericRelation(KeywordPromotion)
+    pages = generic.GenericRelation(PagePromotion)
     
     def get_tabs(self):
         return self.tabs.all().order_by('%s.display_order' % OrderedProductList._meta.db_table)
