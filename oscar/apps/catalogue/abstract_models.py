@@ -3,9 +3,13 @@ Models of products
 """
 import re
 from itertools import chain
+from datetime import datetime, date
 
 from django.db import models
+from django.core.validators import RegexValidator
+from django.db.models import get_model
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from django.template.defaultfilters import slugify
 from django.core.exceptions import ObjectDoesNotExist
@@ -13,6 +17,7 @@ from treebeard.mp_tree import MP_Node
 
 from oscar.apps.catalogue.managers import BrowsableProductManager
 
+ENABLE_ATTRIBUTE_BINDING = getattr(settings, 'OSCAR_ENABLE_ATTRIBUTE_BINDING', False)
 
 class AbstractProductClass(models.Model):
     """
@@ -294,14 +299,28 @@ class AbstractProduct(models.Model):
         return ('catalogue:detail', (), {
             'product_slug': self.slug,
             'pk': self.id})
+        
+    def __init__(self, *args, **kwargs):
+        super(AbstractProduct, self).__init__(*args, **kwargs)
+        if ENABLE_ATTRIBUTE_BINDING:
+            self.attr = ProductAttributesContainer(product=self)
     
     def save(self, *args, **kwargs):
         if self.is_top_level and not self.title:
-            from django.core.exceptions import ValidationError
             raise ValidationError("Canonical products must have a title")
         if not self.slug:
             self.slug = slugify(self.get_title())
+        
+        # Validate attributes if necessary
+        if ENABLE_ATTRIBUTE_BINDING:
+            self.attr.validate_attributes()
+            
+        # Save product
         super(AbstractProduct, self).save(*args, **kwargs)
+        
+        # Finally, save attributes
+        if ENABLE_ATTRIBUTE_BINDING:
+            self.attr.save()
 
 
 class ProductRecommendation(models.Model):
@@ -313,25 +332,88 @@ class ProductRecommendation(models.Model):
     ranking = models.PositiveSmallIntegerField(default=0)
 
 
-_OSCAR_ATTRIBUTE_TYPES = (
-    ("text", "Text"), 
-    ("integer", "Integer"),
-    ("boolean", "Boolean"), 
-    ("float", "Float"), 
-    ("richtext", "Rich Text"), 
-    ("date", "Date"), 
-    ("option", "Option"),
-    ("entity", "Entity"),
-    )
+class ProductAttributesContainer(object):
+    """
+    Stolen liberally from django-eav, but simplified to be product-specific
+    """
+    
+    def __init__(self, product):
+        self.product = product
+        self.initialised = False
+
+    def __getattr__(self, name):
+        if not name.startswith('_') and not self.initialised:
+            values = list(self.get_values().select_related('attribute'))
+            result = None
+            for v in values:
+                setattr(self, v.attribute.code, v.value)
+                if v.attribute.code == name:
+                    result = v.value
+            self.initialised = True
+            if result:
+                return result
+        raise AttributeError((_(u"%(obj)s has no attribute named " \
+                                       u"'%(attr)s'") % \
+                                     {'obj': self.product.product_class, 'attr': name}))
+        
+    def validate_attributes(self):
+        for attribute in self.get_all_attributes():
+            value = getattr(self, attribute.code, None)
+            if value is None:
+                if attribute.required:
+                    raise ValidationError(_(u"%(attr)s attribute cannot " \
+                                            u"be blank") % \
+                                            {'attr': attribute.code})
+            else:
+                try:
+                    attribute.validate_value(value)
+                except ValidationError, e:
+                    raise ValidationError(_(u"%(attr)s attribute %(err)s") % \
+                                            {'attr': attribute.code,
+                                             'err': e})
+        
+    def get_values(self):
+        return self.product.productattributevalue_set.all()
+    
+    def get_value_by_attribute(self, attribute):
+        return self.get_values().get(attribute=attribute)    
+    
+    def get_all_attributes(self):
+        return self.product.product_class.attributes.all()
+    
+    def get_attribute_by_code(self, code):
+        return self.get_all_attributes().get(code=code)
+    
+    def __iter__(self):
+        return iter(self.get_values())
+    
+    def save(self):
+        for attribute in self.get_all_attributes():
+            if hasattr(self, attribute.code):
+                value = getattr(self, attribute.code)
+                attribute.save_value(self.product, value)
+
 
 class AbstractProductAttribute(models.Model):
+    
+    TYPE_CHOICES = (
+        ("text", "Text"), 
+        ("integer", "Integer"),
+        ("boolean", "True / False"), 
+        ("float", "Float"), 
+        ("richtext", "Rich Text"), 
+        ("date", "Date"), 
+        ("option", "Option"),
+        ("entity", "Entity"),
+    )
+    
     """
     Defines an attribute for a product class. (For example, number_of_pages for a 'book' class)
     """
     product_class = models.ForeignKey('catalogue.ProductClass', related_name='attributes', blank=True, null=True)
     name = models.CharField(_('name'), max_length=128)
-    code = models.SlugField(_('code'), max_length=128)
-    type = models.CharField(choices=_OSCAR_ATTRIBUTE_TYPES, default=_OSCAR_ATTRIBUTE_TYPES[0][0], max_length=20)
+    code = models.SlugField(_('code'), max_length=128, validators=[RegexValidator(regex=r'^[a-zA-Z_][0-9a-zA-Z_]*$', message="Code must match ^[a-zA-Z_][0-9a-zA-Z_]*$")])
+    type = models.CharField(choices=TYPE_CHOICES, default=TYPE_CHOICES[0][0], max_length=20)
     option_group = models.ForeignKey('catalogue.AttributeOptionGroup', blank=True, null=True, help_text='Select an option group if using type "Option"')
     entity_type = models.ForeignKey('catalogue.AttributeEntityType', blank=True, null=True, help_text='Select an entity type if using type "Entity"')
     required = models.BooleanField(default=False)
@@ -340,13 +422,86 @@ class AbstractProductAttribute(models.Model):
         abstract = True 
         ordering = ['code']
 
+    def _validate_text(self, value):
+        if not (type(value) == unicode or type(value) == str):
+            raise ValidationError(_(u"Must be str or unicode"))
+
+    def _validate_float(self, value):
+        try:
+            float(value)
+        except ValueError:
+            raise ValidationError(_(u"Must be a float"))
+
+    def _validate_int(self, value):
+        try:
+            int(value)
+        except ValueError:
+            raise ValidationError(_(u"Must be an integer"))
+
+    def _validate_date(self, value):
+        if not (isinstance(value, datetime) or isinstance(value, date)):
+            raise ValidationError(_(u"Must be a date or datetime"))
+
+    def _validate_bool(self, value):
+        if not type(value) == bool:
+            raise ValidationError(_(u"Must be a boolean"))
+
+    def _validate_entity(self, value):
+        if not isinstance(value, get_model('catalogue', 'AttributeEntity')):
+            raise ValidationError(_(u"Must be an AttributeEntity model object instance"))
+        if not value.pk:
+            raise ValidationError(_(u"Model has not been saved yet"))
+        if value.type != self.entity_type:
+            raise ValidationError(_(u"Entity must be of type %s" % self.entity_type.name))
+
+    def _validate_option(self, value):
+        if not isinstance(value, get_model('catalogue', 'AttributeOption')):
+            raise ValidationError(_(u"Must be an AttributeOption model object instance"))
+        if not value.pk:
+            raise ValidationError(_(u"AttributeOption has not been saved yet"))
+        valid_values = self.option_group.options.values_list('option', flat=True)
+        if value not in valid_values:
+            raise ValidationError(_(u"%(enum)s is not a valid choice "
+                                        u"for %(attr)s") % \
+                                       {'enum': value, 'attr': self})        
+
+
+    def get_validator(self):
+        DATATYPE_VALIDATORS = {
+            'text': self._validate_text,
+            'integer': self._validate_int,
+            'boolean': self._validate_bool,
+            'float': self._validate_float,
+            'richtext': self._validate_text,
+            'date': self._validate_date,
+            'entity': self._validate_entity,
+            'option': self._validate_option,
+        }
+
+        return DATATYPE_VALIDATORS[self.type]     
+
     def __unicode__(self):
         return self.name
 
     def save(self, *args, **kwargs):
-        if not self.code:
-            self.code = slugify(self.name)
         super(AbstractProductAttribute, self).save(*args, **kwargs)
+        
+    def save_value(self, product, value):
+        try:
+            value_obj = product.productattributevalue_set.get(attribute=self)
+        except get_model('catalogue', 'ProductAttributeValue').DoesNotExist:
+            if value == None or value == '':
+                return
+            value_obj = get_model('catalogue', 'ProductAttributeValue').objects.create(product=product, attribute=self)
+        if value == None or value == '':
+            value_obj.delete()
+            return
+        if value != value_obj.value:
+            value_obj.value = value
+            value_obj.save()
+    
+    def validate_value(self, value):
+        self.get_validator()(value)
         
     def is_value_valid(self, value):
         """
