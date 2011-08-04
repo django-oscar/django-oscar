@@ -188,7 +188,7 @@ class Benefit(models.Model):
     
     def clean(self):
         # All benefits need a range apart from FIXED_PRICE
-        if self.type != self.FIXED_PRICE and not self.range:
+        if self.type and self.type != self.FIXED_PRICE and not self.range:
             raise ValidationError("Benefits of type %s need a range" % self.type)
         
     def _effective_max_affected_items(self):
