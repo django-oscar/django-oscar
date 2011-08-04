@@ -17,6 +17,7 @@ from treebeard.mp_tree import MP_Node
 
 from oscar.apps.catalogue.managers import BrowsableProductManager
 
+ENABLE_ATTRIBUTE_BINDING = getattr(settings, 'OSCAR_ENABLE_ATTRIBUTE_BINDING', False)
 
 class AbstractProductClass(models.Model):
     """
@@ -298,14 +299,28 @@ class AbstractProduct(models.Model):
         return ('catalogue:detail', (), {
             'product_slug': self.slug,
             'pk': self.id})
+        
+    def __init__(self, *args, **kwargs):
+        super(AbstractProduct, self).__init__(*args, **kwargs)
+        if ENABLE_ATTRIBUTE_BINDING:
+            self.attr = ProductAttributesContainer(product=self)
     
     def save(self, *args, **kwargs):
         if self.is_top_level and not self.title:
-            from django.core.exceptions import ValidationError
             raise ValidationError("Canonical products must have a title")
         if not self.slug:
             self.slug = slugify(self.get_title())
+        
+        # Validate attributes if necessary
+        if ENABLE_ATTRIBUTE_BINDING:
+            self.attr.validate_attributes()
+            
+        # Save product
         super(AbstractProduct, self).save(*args, **kwargs)
+        
+        # Finally, save attributes
+        if ENABLE_ATTRIBUTE_BINDING:
+            self.attr.save()
 
 
 class ProductRecommendation(models.Model):
