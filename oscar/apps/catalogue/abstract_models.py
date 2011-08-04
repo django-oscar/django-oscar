@@ -340,20 +340,6 @@ class ProductAttributesContainer(object):
         raise AttributeError((_(u"%(obj)s has no attribute named " \
                                        u"'%(attr)s'") % \
                                      {'obj': self.product.product_class, 'attr': name}))
-
-#    def __getattr__(self, name):
-#        if not name.startswith('_'):
-#            try:
-#                attribute = self.get_attribute_by_code(name)
-#            except get_model('catalogue', 'ProductAttribute').DoesNotExist:
-#                raise AttributeError(_(u"%(obj)s has no attribute named " \
-#                                       u"'%(attr)s'") % \
-#                                     {'obj': self.product.product_class, 'attr': name})
-#            try:
-#                return self.get_value_by_attribute(attribute).value
-#            except get_model('catalogue', 'ProductAttributeValue').DoesNotExist:
-#                return None
-#        return getattr(super(ProductAttributesContainer, self), name)
         
     def validate_attributes(self):
         for attribute in self.get_all_attributes():
