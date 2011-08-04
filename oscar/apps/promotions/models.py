@@ -135,7 +135,7 @@ class Image(AbstractPromotion):
     name = models.CharField(_("Name"), max_length=128)
     link_url = ExtendedURLField(blank=True, null=True, help_text="""This is 
         where this promotion links to""")
-    image = models.ImageField(upload_to=settings.OSCAR_PROMOTION_FOLDER, blank=True, null=True)
+    image = models.ImageField(upload_to=settings.OSCAR_PROMOTION_FOLDER)
     date_created = models.DateTimeField(auto_now_add=True)
     
     def __unicode__(self):
