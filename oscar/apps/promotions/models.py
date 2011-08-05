@@ -137,6 +137,8 @@ class Image(AbstractPromotion):
         where this promotion links to""")
     image = models.ImageField(upload_to=settings.OSCAR_PROMOTION_FOLDER)
     date_created = models.DateTimeField(auto_now_add=True)
+    keywords = generic.GenericRelation(KeywordPromotion)
+    pages = generic.GenericRelation(PagePromotion)
     
     def __unicode__(self):
         return self.name
@@ -152,6 +154,8 @@ class MultiImage(AbstractPromotion):
     name = models.CharField(_("Name"), max_length=128)
     images = models.ManyToManyField('promotions.Image', null=True, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
+    keywords = generic.GenericRelation(KeywordPromotion)
+    pages = generic.GenericRelation(PagePromotion)
     
     def __unicode__(self):
         return self.name
