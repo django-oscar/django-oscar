@@ -6,6 +6,27 @@ from django.utils.translation import ugettext as _
 from django.conf import settings
 
 
+class Transaction(models.Model):
+    """
+    A transaction for payment sources which need a secondary 'transaction' to actually take the money
+    
+    This applies mainly to credit card sources which can be a pre-auth for the money.  A 'complete'
+    needs to be run later to debit the money from the account.
+    """
+    source = models.ForeignKey('payment.Source', related_name='transactions')
+    
+    # We define some sample types
+    DEBIT, REFUND = 'Debit', 'Refund'
+    txn_type = models.CharField(max_length=128, blank=True)
+    amount = models.DecimalField(decimal_places=2, max_digits=12)
+    reference = models.CharField(max_length=128, null=True)
+    status = models.CharField(max_length=128, null=True)
+    date_created = models.DateField(auto_now_add=True)
+    
+    def __unicode__(self):
+        return "%s of %.2f" % (self.txn_type, self.amount)
+
+
 class AbstractSource(models.Model):
     """
     A source of payment for an order.  
@@ -39,6 +60,32 @@ class AbstractSource(models.Model):
     def balance(self):
         return self.amount_allocated - self.amount_debited + self.amount_refunded
     
+    def debit(self, amount=None, reference=None, status=None):
+        """
+        Convenience method for recording debits against this source
+        """
+        if amount is None:
+            amount = self.balance()
+        self.amount_debited += amount
+        self.save()
+        Transaction.objects.create(source=self,
+                                   txn_type=Transaction.DEBIT,
+                                   amount=amount,
+                                   reference=reference,
+                                   status=status)
+        
+    def refund(self, amount, reference=None, status=None):
+        """
+        Convenience method for recording refunds against this source
+        """
+        self.amount_refunded += amount
+        self.save()
+        Transaction.objects.create(source=self,
+                                   txn_type=Transaction.REFUND,
+                                   amount=amount,
+                                   reference=reference,
+                                   status=status)
+    
     @property
     def amount_available_for_refund(self):
         """
@@ -70,25 +117,7 @@ class AbstractSourceType(models.Model):
         super(AbstractSourceType, self).save(*args, **kwargs)
     
 
-class AbstractTransaction(models.Model):
-    """
-    A transaction for payment sources which need a secondary 'transaction' to actually take the money
-    
-    This applies mainly to credit card sources which can be a pre-auth for the money.  A 'complete'
-    needs to be run later to debit the money from the account.
-    """
-    source = models.ForeignKey('payment.Source', related_name='transactions')
-    type = models.CharField(max_length=128, blank=True)
-    delta_amount = models.FloatField()
-    reference = models.CharField(max_length=128)
-    status = models.CharField(max_length=128, null=True)
-    date_created = models.DateField()
-    
-    class Meta:
-        abstract = True
 
-    def __unicode__(self):
-        return "Transaction of %.2f" % self.delta_amount
 
 
 class AbstractBankcard(models.Model):

@@ -9,10 +9,6 @@ class SourceType(AbstractSourceType):
     pass
 
 
-class Transaction(AbstractTransaction):
-    pass
-
-
 class Bankcard(AbstractBankcard):
     pass
 
