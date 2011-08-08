@@ -8,6 +8,9 @@ from django.db.models import get_model
 
 from oscar.models.fields import ExtendedURLField
 
+from oscar.core.loading import import_module
+catalogue_models = import_module('catalogue.models', ['Product',])
+
 Item = get_model('product', 'Item')
 
 # Linking models
@@ -235,7 +238,8 @@ class AutomaticProductList(AbstractProductList):
 
 
 class OrderedProductList(HandPickedProductList):
-    tabbed_block = models.ForeignKey('promotions.TabbedBlock')
+    tabbed_block = models.ForeignKey('promotions.TabbedBlock',
+                                     related_name='tabs')
     display_order = models.PositiveIntegerField(default=0)
 
     class Meta:
@@ -246,10 +250,7 @@ class TabbedBlock(AbstractPromotion):
 
     _type = 'Tabbed block'
     name = models.CharField(_("Title"), max_length=255)
-    tabs = models.ManyToManyField('promotions.HandPickedProductList', through='OrderedProductList', null=True, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
     keywords = generic.GenericRelation(KeywordPromotion)
     pages = generic.GenericRelation(PagePromotion)
-    
-    def get_tabs(self):
-        return self.tabs.all().order_by('%s.display_order' % OrderedProductList._meta.db_table)
+
