@@ -95,7 +95,7 @@ class BankcardMonthField(forms.MultiValueField):
         
         # Allow the number of years to be specified
         if 'num_years' in kwargs:
-            self.num_years = kwargs
+            self.num_years = kwargs['num_years']
             del kwargs['num_years']
         
         errors = self.default_error_messages.copy()
