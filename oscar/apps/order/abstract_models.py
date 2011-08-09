@@ -227,13 +227,13 @@ class AbstractLine(models.Model):
         Returns a description of this line including details of any 
         line attributes.
         """
-        d = str(self.product)
+        desc = self.title
         ops = []
         for attribute in self.attributes.all():
             ops.append("%s = '%s'" % (attribute.type, attribute.value))
         if ops:
-            d = "%s (%s)" % (d, ", ".join(ops))
-        return d
+            desc = "%s (%s)" % (desc, ", ".join(ops))
+        return desc
     
     @property
     def discount_incl_tax(self):
