@@ -149,6 +149,7 @@ class ShippingAddressView(CheckoutSessionMixin, FormView):
         return self.checkout_session.new_shipping_address_fields()
     
     def get_context_data(self, **kwargs):
+        kwargs = super(ShippingAddressView, self).get_context_data(**kwargs)
         if self.request.user.is_authenticated():
             # Look up address book data
             kwargs['addresses'] = UserAddress._default_manager.filter(user=self.request.user)
