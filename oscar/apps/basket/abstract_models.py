@@ -312,7 +312,10 @@ class AbstractLine(models.Model):
         if not self.product.stockrecord:
             return None
         else:
-            return getattr(self.product.stockrecord, property)
+            attr = getattr(self.product.stockrecord, property)
+            if attr is None:
+                attr = Decimal('0.00')
+            return attr
     
     @property
     def _tax_ratio(self):

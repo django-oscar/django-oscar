@@ -1,3 +1,5 @@
+from decimal import Decimal as D
+
 from django.conf import settings
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -138,11 +140,15 @@ class AbstractStockRecord(models.Model):
         domain specific.  This class needs to be subclassed and tax logic
         added to this method.
         """
+        if self.price_excl_tax is None:
+            return D('0.00')
         return self.price_excl_tax + self.price_tax
     
     @property 
     def price_tax(self):
-        u"""Return a product's tax value"""
+        """
+        Return a product's tax value
+        """
         return get_partner_wrapper(self.partner.name).calculate_tax(self)
     
     def __unicode__(self):
