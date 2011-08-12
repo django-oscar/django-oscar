@@ -144,6 +144,7 @@ class AbstractOrderNote(models.Model):
     user = models.ForeignKey('auth.User', null=True)
     
     # We allow notes to be classified although this isn't always needed
+    INFO, WARNING, ERROR = 'Info', 'Warning', 'Error'
     note_type = models.CharField(max_length=128, null=True)
     
     message = models.TextField()

@@ -155,7 +155,10 @@ class AbstractShippingAddress(AbstractAddress):
         """
         Return the order linked to this shipping address
         """
-        return self.order_set.all()[0]
+        orders = self.order_set.all()
+        if not orders:
+            return None
+        return orders[0]
         
         
 class AbstractUserAddress(AbstractShippingAddress):
@@ -206,4 +209,14 @@ class AbstractBillingAddress(AbstractAddress):
     
     class Meta:
         abstract = True
-        verbose_name_plural = "Billing addresses"    
+        verbose_name_plural = "Billing addresses"   
+        
+    @property    
+    def order(self):
+        """
+        Return the order linked to this shipping address
+        """
+        orders = self.order_set.all()
+        if not orders:
+            return None
+        return orders[0] 
