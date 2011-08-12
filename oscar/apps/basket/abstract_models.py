@@ -159,7 +159,11 @@ class AbstractBasket(models.Model):
         """
         total = Decimal('0.00')
         for line in self.all_lines():
-            total += getattr(line, property)
+            try:
+                total += getattr(line, property)
+            except ObjectDoesNotExist:
+                # Handle situation where the product may have been deleted
+                pass
         return total
     
     # ==========
@@ -319,6 +323,8 @@ class AbstractLine(models.Model):
     
     @property
     def _tax_ratio(self):
+        if not self.unit_price_incl_tax:
+            return 0 
         return self.unit_price_excl_tax / self.unit_price_incl_tax
     
     # ==========
