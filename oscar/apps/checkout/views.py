@@ -152,8 +152,11 @@ class ShippingAddressView(CheckoutSessionMixin, FormView):
         kwargs = super(ShippingAddressView, self).get_context_data(**kwargs)
         if self.request.user.is_authenticated():
             # Look up address book data
-            kwargs['addresses'] = UserAddress._default_manager.filter(user=self.request.user)
+            kwargs['addresses'] = self.get_available_addresses()
         return kwargs
+    
+    def get_available_addresses(self):
+        return UserAddress._default_manager.filter(user=self.request.user)
     
     def post(self, request, *args, **kwargs):
         # Check if a shipping address was selected directly (eg no form was filled in)
@@ -180,7 +183,7 @@ class ShippingAddressView(CheckoutSessionMixin, FormView):
         return reverse('checkout:shipping-method')
     
 
-class UserAddressCreateView(CreateView):
+class UserAddressCreateView(CheckoutSessionMixin, CreateView):
     """
     Add a USER address to the user's addressbook.
 
@@ -207,7 +210,7 @@ class UserAddressCreateView(CreateView):
         return HttpResponseRedirect(reverse('checkout:shipping-address'))
     
     
-class UserAddressUpdateView(UpdateView):
+class UserAddressUpdateView(CheckoutSessionMixin, UpdateView):
     """
     Update a user address
     """
@@ -227,7 +230,7 @@ class UserAddressUpdateView(UpdateView):
         return reverse('checkout:shipping-address')
     
     
-class UserAddressDeleteView(DeleteView):
+class UserAddressDeleteView(CheckoutSessionMixin, DeleteView):
     """
     Delete an address from a user's addressbook.
     """
