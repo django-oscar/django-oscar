@@ -7,6 +7,7 @@ from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.utils.translation import ugettext as _
 from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.sites.models import get_current_site
 from django.conf import settings
 from django.db.models import get_model
 
@@ -19,7 +20,7 @@ order_line_model = get_model('order', 'Line')
 basket_model = get_model('basket', 'Basket')
 user_address_model = get_model('address', 'UserAddress')
 email_model = get_model('customer', 'email')
-
+communicationtype_model = get_model('customer', 'communicationeventtype')
 
 class AccountSummaryView(ListView):
     """Customer order history"""
@@ -59,6 +60,27 @@ class AccountAuthView(TemplateView):
         elif netloc and netloc != self.request.get_host():
             redirect_to = settings.LOGIN_REDIRECT_URL
         return redirect_to
+    
+    def send_registration_email(self, user):
+        from django.core.mail import send_mail
+        from django.template import Context, Template
+        
+        from_email = settings.OSCAR_FROM_EMAIL
+
+        current_site = get_current_site(self.request)
+        site_name = current_site.name
+        domain = current_site.domain
+
+        c = {
+            'email': user.email,
+            'domain': domain,
+            'site_name': site_name,
+            'user': user,
+        }
+        
+        rendered = communicationtype_model.objects.get_and_render('REGISTRATION', c)
+        
+        send_mail(rendered['subject'], rendered['body'], from_email, [user.email])  
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(*args, **kwargs)
@@ -87,6 +109,10 @@ class AccountAuthView(TemplateView):
             context['registration_form'] = registration_form
             if registration_form.is_valid():
                 user = registration_form.save()
+                
+                if getattr(settings, 'OSCAR_SEND_REGISTRATION_EMAIL', True):
+                    self.send_registration_email(user)
+                
                 user = authenticate(username=user.email, password=registration_form.cleaned_data['password1'])
                 auth_login(self.request, user)
                 if self.request.session.test_cookie_worked():
