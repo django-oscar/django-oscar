@@ -2,11 +2,11 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.template import Template, Context
 
+from oscar.apps.customer.managers import CommunicationTypeManager
 
 class AbstractEmail(models.Model):
     """
     This is a record of all emails sent to a customer.
-    
     Normally, we only record order-related emails.
     """
     user = models.ForeignKey('auth.User', related_name='emails')
@@ -14,14 +14,14 @@ class AbstractEmail(models.Model):
     body_text = models.TextField()
     body_html = models.TextField(blank=True, null=True)
     date_sent = models.DateTimeField(auto_now_add=True)
-    
+
     class Meta:
         abstract = True
-        
+
     def __unicode__(self):
         return u"Email to %s with subject '%s'" % (self.user.username, self.subject)
-    
-    
+
+
 class AbstractCommunicationEventType(models.Model):
     
     # Code used for looking up this event programmatically.
@@ -41,6 +41,8 @@ class AbstractCommunicationEventType(models.Model):
     
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
+    
+    objects = CommunicationTypeManager()
     
     class Meta:
         abstract = True
