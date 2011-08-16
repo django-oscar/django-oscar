@@ -203,7 +203,7 @@ class Range(models.Model):
     u"""
     Represents a range of products that can be used within an offer
     """
-    name = models.CharField(_("Name"), max_length=128)
+    name = models.CharField(_("Name"), max_length=128, unique=True)
     includes_all_products = models.BooleanField(default=False)
     included_products = models.ManyToManyField('catalogue.Product', related_name='includes', blank=True)
     excluded_products = models.ManyToManyField('catalogue.Product', related_name='excludes', blank=True)
