@@ -9,6 +9,7 @@ from django.utils.translation import ugettext as _
 from django.core.exceptions import ValidationError
 
 from oscar.apps.offer.managers import ActiveOfferManager
+from oscar.models.fields import PositiveDecimalField
 
 SITE, VOUCHER, USER, SESSION = ("Site", "Voucher", "User", "Session")
 
@@ -129,8 +130,8 @@ class Condition(models.Model):
     )
     range = models.ForeignKey('offer.Range')
     type = models.CharField(max_length=128, choices=TYPE_CHOICES)
-    value = models.DecimalField(decimal_places=2, max_digits=12)
-    
+    value = PositiveDecimalField(decimal_places=2, max_digits=12)
+
     def __unicode__(self):
         if self.type == self.COUNT:
             return u"Basket includes %d item(s) from %s" % (self.value, str(self.range).lower())
@@ -160,10 +161,10 @@ class Benefit(models.Model):
     )
     range = models.ForeignKey('offer.Range', null=True, blank=True)
     type = models.CharField(max_length=128, choices=TYPE_CHOICES)
-    value = models.DecimalField(decimal_places=2, max_digits=12)
-    
+    value = PositiveDecimalField(decimal_places=2, max_digits=12)
+
     price_field = 'price_incl_tax'
-    
+
     # If this is not set, then there is no upper limit on how many products 
     # can be discounted by this benefit.
     max_affected_items = models.PositiveIntegerField(blank=True, null=True, help_text="""Set this
