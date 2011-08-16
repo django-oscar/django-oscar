@@ -245,7 +245,9 @@ class AbstractBasket(models.Model):
     
     
 class AbstractLine(models.Model):
-    """A line of a basket (product and a quantity)"""
+    """
+    A line of a basket (product and a quantity)
+    """
 
     basket = models.ForeignKey('basket.Basket', related_name='lines')
     # This is to determine which products belong to the same line
@@ -256,6 +258,9 @@ class AbstractLine(models.Model):
     
     product = models.ForeignKey('catalogue.Product', related_name='basket_lines')
     quantity = models.PositiveIntegerField(default=1)
+    
+    # Track date of first addition
+    date_created = models.DateTimeField(auto_now_add=True)
     
     # Instance variables used to persist discount information
     _discount_field = 'price_excl_tax'
