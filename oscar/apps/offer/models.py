@@ -3,6 +3,7 @@ import math
 import datetime
 
 from django.contrib.auth.models import User
+from django.core import exceptions
 from django.db import models
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ValidationError
@@ -213,6 +214,10 @@ class Range(models.Model):
     __included_product_ids = None
     __excluded_product_ids = None
     __class_ids = None
+
+    def clean(self):
+        if self.date_start and self.date_end and self.date_start > self.date_end:
+            raise exceptions.ValidationError('End date should be later than start date')
     
     def __unicode__(self):
         return self.name    
