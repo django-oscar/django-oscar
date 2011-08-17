@@ -1,4 +1,4 @@
-from django.db.models.fields import CharField
+from django.db.models.fields import CharField, DecimalField
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.core import validators
@@ -20,3 +20,8 @@ class ExtendedURLField(CharField):
         }
         defaults.update(kwargs)
         return super(ExtendedURLField, self).formfield(**defaults)
+
+
+class PositiveDecimalField(DecimalField):
+    def formfield(self, **kwargs):
+        return super(PositiveDecimalField, self).formfield(min_value=0)

@@ -9,6 +9,7 @@ from django.utils.translation import ugettext as _
 from django.core.exceptions import ValidationError
 
 from oscar.apps.offer.managers import ActiveOfferManager
+from oscar.models.fields import PositiveDecimalField
 
 SITE, VOUCHER, USER, SESSION = ("Site", "Voucher", "User", "Session")
 
@@ -64,6 +65,10 @@ class ConditionalOffer(models.Model):
         
     def __unicode__(self):
         return self.name    
+
+    def clean(self):
+        if self.start_date and self.end_date and self.start_date > self.end_date:
+            raise exceptions.ValidationError('End date should be later than start date')
         
     def is_active(self, test_date=None):
         if not test_date:
@@ -129,8 +134,8 @@ class Condition(models.Model):
     )
     range = models.ForeignKey('offer.Range')
     type = models.CharField(max_length=128, choices=TYPE_CHOICES)
-    value = models.DecimalField(decimal_places=2, max_digits=12)
-    
+    value = PositiveDecimalField(decimal_places=2, max_digits=12)
+
     def __unicode__(self):
         if self.type == self.COUNT:
             return u"Basket includes %d item(s) from %s" % (self.value, str(self.range).lower())
@@ -160,10 +165,10 @@ class Benefit(models.Model):
     )
     range = models.ForeignKey('offer.Range', null=True, blank=True)
     type = models.CharField(max_length=128, choices=TYPE_CHOICES)
-    value = models.DecimalField(decimal_places=2, max_digits=12)
-    
+    value = PositiveDecimalField(decimal_places=2, max_digits=12)
+
     price_field = 'price_incl_tax'
-    
+
     # If this is not set, then there is no upper limit on how many products 
     # can be discounted by this benefit.
     max_affected_items = models.PositiveIntegerField(blank=True, null=True, help_text="""Set this
@@ -215,10 +220,6 @@ class Range(models.Model):
     __excluded_product_ids = None
     __class_ids = None
 
-    def clean(self):
-        if self.date_start and self.date_end and self.date_start > self.date_end:
-            raise exceptions.ValidationError('End date should be later than start date')
-    
     def __unicode__(self):
         return self.name    
         
@@ -288,6 +289,10 @@ class Voucher(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    def clean(self):
+        if self.start_date and self.end_date and self.start_date > self.end_date:
+            raise exceptions.ValidationError('End date should be later than start date')
 
     def save(self, *args, **kwargs):
         self.code = self.code.upper()
