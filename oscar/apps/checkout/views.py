@@ -222,7 +222,7 @@ class UserAddressUpdateView(CheckoutSessionMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         kwargs = super(UserAddressUpdateView, self).get_context_data(**kwargs)
-        kwargs['form_url'] = reverse('checkout:user-address-update', args=(str(kwargs['object'].id)))
+        kwargs['form_url'] = reverse('checkout:user-address-update', args=(str(kwargs['object'].id),))
         return kwargs
 
     def get_success_url(self):
