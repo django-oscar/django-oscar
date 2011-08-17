@@ -65,6 +65,10 @@ class ConditionalOffer(models.Model):
         
     def __unicode__(self):
         return self.name    
+
+    def clean(self):
+        if self.start_date and self.end_date and self.start_date > self.end_date:
+            raise exceptions.ValidationError('End date should be later than start date')
         
     def is_active(self, test_date=None):
         if not test_date:
