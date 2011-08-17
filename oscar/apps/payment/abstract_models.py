@@ -39,9 +39,13 @@ class AbstractSource(models.Model):
     order = models.ForeignKey('order.Order', related_name='sources')
     source_type = models.ForeignKey('payment.SourceType')
     currency = models.CharField(max_length=12, default=settings.OSCAR_DEFAULT_CURRENCY)
+    
+    # Track the various amounts associated with this source
     amount_allocated = models.DecimalField(decimal_places=2, max_digits=12)
     amount_debited = models.DecimalField(decimal_places=2, max_digits=12, default=Decimal('0.00'))
     amount_refunded = models.DecimalField(decimal_places=2, max_digits=12, default=Decimal('0.00'))
+    
+    # Reference number for this payment source
     reference = models.CharField(max_length=128, blank=True, null=True)
     
     # A dictionary of submission data that is stored as part of the
@@ -116,9 +120,6 @@ class AbstractSourceType(models.Model):
             self.code = slugify(self.name)
         super(AbstractSourceType, self).save(*args, **kwargs)
     
-
-
-
 
 class AbstractBankcard(models.Model):
     user = models.ForeignKey('auth.User', related_name='bankcards')

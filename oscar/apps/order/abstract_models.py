@@ -361,7 +361,7 @@ class AbstractPaymentEventType(models.Model):
    
    
 class AbstractPaymentEvent(models.Model):    
-    u"""
+    """
     An event is something which happens to a line such as
     payment being taken for 2 items, or 1 item being dispatched.
     """
@@ -380,7 +380,9 @@ class AbstractPaymentEvent(models.Model):
 
 
 class PaymentEventQuantity(models.Model):
-    u"""A "through" model linking lines to payment events"""
+    """
+    A "through" model linking lines to payment events
+    """
     event = models.ForeignKey('order.PaymentEvent', related_name='line_quantities')
     line = models.ForeignKey('order.Line')
     quantity = models.PositiveIntegerField()
