@@ -216,10 +216,6 @@ class Range(models.Model):
     __excluded_product_ids = None
     __class_ids = None
 
-    def clean(self):
-        if self.date_start and self.date_end and self.date_start > self.date_end:
-            raise exceptions.ValidationError('End date should be later than start date')
-    
     def __unicode__(self):
         return self.name    
         
@@ -289,6 +285,10 @@ class Voucher(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    def clean(self):
+        if self.start_date and self.end_date and self.start_date > self.end_date:
+            raise exceptions.ValidationError('End date should be later than start date')
 
     def save(self, *args, **kwargs):
         self.code = self.code.upper()
