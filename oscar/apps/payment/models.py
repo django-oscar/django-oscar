@@ -54,7 +54,7 @@ class Source(models.Model):
     
     # A dictionary of submission data that is stored as part of the
     # checkout process.
-    submission_data = {}
+    submission_data = None
     
     # We keep a list of deferred transactions that are only actually saved when 
     # the source is saved for the first time
@@ -75,7 +75,7 @@ class Source(models.Model):
     def balance(self):
         return self.amount_allocated - self.amount_debited + self.amount_refunded
     
-    def create_deferred_transaction(self, txn_type, amount, reference, status):
+    def create_deferred_transaction(self, txn_type, amount, reference=None, status=None):
         """
         Register the data for a transaction that can't be created yet due to FK
         constraints.  This happens at checkout where create an payment source and a
