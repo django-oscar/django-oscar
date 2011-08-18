@@ -69,7 +69,7 @@ class Source(models.Model):
     def save(self, *args, **kwargs):
         super(Source, self).save(*args, **kwargs)
         if self.deferred_txns:
-            for txn in deferred_txns:
+            for txn in self.deferred_txns:
                 self._create_transaction(*txn)
     
     def balance(self):
