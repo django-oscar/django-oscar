@@ -332,7 +332,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
     # Any payment sources should be added to this list as part of the
     # _handle_payment method.  If the order is placed successfully, then
     # they will be persisted.
-    payment_sources = []
+    _payment_sources = None
     
     def handle_order_placement(self, order_number, basket, total_incl_tax, total_excl_tax, **kwargs): 
         """
@@ -346,6 +346,11 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         order = self.place_order(order_number, basket, total_incl_tax, total_excl_tax, **kwargs)
         basket.set_as_submitted()
         return self.handle_successful_order(order)
+        
+    def add_payment_source(self, source):
+        if self._payment_sources is None:
+            self._payment_sources = []
+        self._payment_sources.append(source)  
         
     def handle_successful_order(self, order):  
         """
