@@ -472,7 +472,9 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         When the payment sources are created, the order model does not exist and 
         so they need to have it set before saving.
         """
-        for source in self.payment_sources:
+        if not self._payment_sources:
+            return
+        for source in self._payment_sources:
             source.order = order
             source.save()
     
