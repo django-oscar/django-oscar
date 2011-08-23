@@ -488,7 +488,7 @@ class PercentageDiscountBenefit(Benefit):
                 price = getattr(line.product.stockrecord, self.price_field)
                 quantity = min(line.quantity_without_discount, 
                                max_affected_items - affected_items)
-                discount += self.value/100 * price * Decimal(str(quantity))
+                discount += self.value/100 * price * int(quantity)
                 affected_items += quantity
                 line.discount(discount, quantity)
         if discount > 0 and condition:
@@ -518,7 +518,7 @@ class AbsoluteDiscountBenefit(Benefit):
                 quantity = min(line.quantity_without_discount, 
                                max_affected_items - affected_items,
                                math.floor(remaining_discount / price))
-                discount += price * Decimal(str(quantity))
+                discount += price * int(quantity)
                 affected_items += quantity
                 line.discount(discount, quantity)
         if discount > 0 and condition:
