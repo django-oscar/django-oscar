@@ -1,5 +1,3 @@
-import os
-
 from django.test.client import Client
 from django.test import TestCase
 from django.http import HttpRequest
