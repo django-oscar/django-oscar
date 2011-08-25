@@ -46,7 +46,7 @@ class AbstractCommunicationEventType(models.Model):
     
     objects = CommunicationTypeManager()
     
-    # Templates
+    # File templates
     email_subject_template_file = 'customer/emails/commtype_%s_subject.txt'
     email_body_template_file = 'customer/emails/commtype_%s_body.txt'
     email_body_html_template_file = 'customer/emails/commtype_%s_body.html'
@@ -56,11 +56,13 @@ class AbstractCommunicationEventType(models.Model):
         abstract = True
         verbose_name_plural = _("Communication event types")
 
-    @property
-    def has_email_templates(self):
-        return self.email_subject_template and (self.email_body_template or self.email_body_html_template)
-
     def get_messages(self, ctx=None):
+        """
+        Return a dict of templates with the context merged in
+
+        We look first at the field templates but fail over to 
+        a set of file templates.  
+        """
         if ctx is None:
             ctx = {}
         code = self.code.lower()
@@ -83,6 +85,10 @@ class AbstractCommunicationEventType(models.Model):
         messages = {}
         for name, template in templates.items():
             messages[name] = template.render(Context(ctx)) if template else ''
+
+        # Ensure the email subject doesn't contain any newlines
+        templates['subject'] = templates['subject'].replace("\n", "")
+
         return messages
         
     def __unicode__(self):

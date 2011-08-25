@@ -3,6 +3,7 @@ import sys
 from optparse import make_option
 
 from django.core.management.base import BaseCommand, CommandError
+from django.contrib.auth.models import User
 
 from oscar.core.loading import import_module
 import_module('order.models', ['Order'], locals())
@@ -30,12 +31,13 @@ class Command(BaseCommand):
         except CommunicationEventType.DoesNotExist:
             raise CommandError("No event type found with code %s" % args[0])
         
+        messages = event_type.get_messages({'order': order})
         dispatcher = Dispatcher(logger)
-        email = dispatcher.get_email_message('user@example.com', order, event_type)
+        user = User(username='dummy', email='user@example.com')
+        email = dispatcher.send_email_messages(user, messages)
         
         print "Subject: %s\nBody:\n\n%s"% (email.subject, email.body)
         
-            
     def _get_logger(self):
         logger = logging.getLogger(__name__)
         stream = logging.StreamHandler(self.stdout)
