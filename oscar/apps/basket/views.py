@@ -4,6 +4,7 @@ from django.db.models import get_model
 from django.http import HttpResponseRedirect, Http404
 from django.views.generic import ListView, FormView
 from django.forms.models import modelformset_factory
+from django.utils.translation import ugettext_lazy as _
 
 from extra_views import ModelFormSetView
 from oscar.apps.basket.forms import BasketLineForm, AddToBasketForm, \
@@ -43,19 +44,22 @@ class BasketView(ModelFormSetView):
         needs_auth = False
         for form in formset:
             if form.cleaned_data['save_for_later']:
-                instance = form.instance
+                line = form.instance
                 if self.request.user.is_authenticated():
-                    saved_basket, _ = get_model('basket','basket').saved.get_or_create(owner=self.request.user)
-                    saved_basket.merge_line(instance)
-                    messages.info(self.request, "'%s' has been saved for later" % instance.product)   
+                    self.move_line_to_saved_basket(line)
+                    messages.info(self.request, _("'%(title)s' has been saved for later" % {'title': line.product}))   
                 else:
                     needs_auth = True
         if needs_auth:
             messages.error(self.request, "You can't save an item for later if you're not logged in!")     
         return super(BasketView, self).formset_valid(formset)
 
+    def move_line_to_saved_basket(self, line):
+        saved_basket, _ = get_model('basket', 'basket').saved.get_or_create(owner=self.request.user)
+        saved_basket.merge_line(line)
+
     def formset_invalid(self, formset):
-        messages.info(self.request, "There was a problem updating your basket, please check that all quantities are numbers")
+        messages.info(self.request, _("There was a problem updating your basket, please check that all quantities are numbers"))
         return super(BasketView, self).formset_invalid(formset)
 
 
@@ -89,8 +93,9 @@ class BasketAddView(FormView):
             if option.code in form.cleaned_data:
                 options.append({'option': option, 'value': form.cleaned_data[option.code]})
         self.request.basket.add_product(form.instance, form.cleaned_data['quantity'], options)
-        messages.info(self.request, "'%s' (quantity %d) has been added to your basket" %
-                      (form.instance.get_title(), form.cleaned_data['quantity']))
+        messages.info(self.request, _("'%(title)s' (quantity %(quantity)d) has been added to your basket" %
+                {'title': form.instance.get_title(), 
+                 'quantity': form.cleaned_data['quantity']}))
         return super(BasketAddView, self).form_valid(form)
     
     def form_invalid(self, form):

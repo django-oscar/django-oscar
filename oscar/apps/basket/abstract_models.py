@@ -99,15 +99,15 @@ class AbstractBasket(models.Model):
         """
         try:
             existing_line = self.lines.get(line_reference=line.line_reference)
-            
-            # Line already exists - bump its quantity and delete the old
-            existing_line.quantity += line.quantity
-            existing_line.save()
-            line.delete()
         except ObjectDoesNotExist:
             # Line does not already exist - reassign its basket
             line.basket = self
             line.save()
+        else:
+            # Line already exists - bump its quantity and delete the old
+            existing_line.quantity += line.quantity
+            existing_line.save()
+            line.delete()
     
     def merge(self, basket):
         """

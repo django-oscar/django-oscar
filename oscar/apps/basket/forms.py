@@ -48,9 +48,9 @@ class AddToBasketForm(forms.Form):
         if not product.has_stockrecord or not product.stockrecord.is_available_to_buy:
             raise forms.ValidationError("This product is not available for purchase")
         return id
-    
+
     def _create_group_product_fields(self, item):
-        u"""
+        """
         Adds the fields for a "group"-type product (eg, a parent product with a
         list of variants.
         """
