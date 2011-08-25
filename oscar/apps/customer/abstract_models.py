@@ -1,8 +1,10 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from django.template import Template, Context
+from django.template import Template, Context, TemplateDoesNotExist
+from django.template.loader import get_template
 
 from oscar.apps.customer.managers import CommunicationTypeManager
+
 
 class AbstractEmail(models.Model):
     """
@@ -44,27 +46,45 @@ class AbstractCommunicationEventType(models.Model):
     
     objects = CommunicationTypeManager()
     
+    # Templates
+    email_subject_template_file = 'customer/emails/commtype_%s_subject.txt'
+    email_body_template_file = 'customer/emails/commtype_%s_body.txt'
+    email_body_html_template_file = 'customer/emails/commtype_%s_body.html'
+    sms_template_file = 'customer/sms/commtype_%s_body.txt'
+    
     class Meta:
         abstract = True
         verbose_name_plural = _("Communication event types")
+
+    @property
+    def has_email_templates(self):
+        return self.email_subject_template and (self.email_body_template or self.email_body_html_template)
+
+    def get_messages(self, ctx=None):
+        if ctx is None:
+            ctx = {}
+        code = self.code.lower()
+        # Build a dict of message name to Template instance
+        templates = {'subject': 'email_subject_template',
+                     'body': 'email_body_template',
+                     'html': 'email_body_html_template',
+                     'sms': 'sms_template'}
+        for name, attr_name in templates.items():
+            field = getattr(self, attr_name, None)
+            if field:
+                templates[name] = Template(field)
+            else:
+                template_name = getattr(self, "%s_file" % attr_name) % code
+                try:
+                    templates[name] = get_template(template_name)
+                except TemplateDoesNotExist:
+                    templates[name] = None
+        
+        messages = {}
+        for name, template in templates.items():
+            messages[name] = template.render(Context(ctx)) if template else ''
+        return messages
         
     def __unicode__(self):
         return self.name    
-    
-    def has_email_templates(self):
-        return self.email_subject_template and self.email_body_template
-    
-    def has_sms_template(self):
-        return bool(self.sms_template)
-    
-    def get_email_subject_for_order(self, order, **kwargs):
-        return self._merge_template_with_context(self.email_subject_template, order, **kwargs)
-    
-    def get_email_body_for_order(self, order, **kwargs):
-        return self._merge_template_with_context(self.email_body_template, order, **kwargs)
-    
-    def _merge_template_with_context(self, template, order, **kwargs):
-        ctx = {'order': order}
-        ctx.update(**kwargs)
-        return Template(template).render(Context(ctx))
     

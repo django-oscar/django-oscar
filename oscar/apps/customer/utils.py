@@ -10,12 +10,9 @@ class Dispatcher(object):
     def __init__(self, logger):
         self.logger = logger
     
-    def dispatch_order_message(self, user, order, event_type):
+    def dispatch_message(self, user, messages):
         """
-        Sends an order-related message.
-        
-        - order : the order instance
-        - event_type : a customer.EventType instance
+        Send messages
         """
         if event_type.has_email_templates():
             self.logger.info("Order #%s: sending %s emails" % (order.number, event_type))

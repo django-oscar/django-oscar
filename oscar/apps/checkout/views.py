@@ -496,14 +496,24 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         self.request.basket = fzn_basket
 
     def send_confirmation_message(self, order):
-        # Create order communication event
+        code = 'ORDER_PLACED'
+        ctx = {'order': order}
         try:
-            event_type = CommunicationEventType._default_manager.get(code='ORDER_PLACED')
+            event_type = CommunicationEventType.objects.get(code=code)
         except CommunicationEventType.DoesNotExist:
-            logger.error(_("Order #%s: unable to find 'order_placed' comms event" % order.number))
+            # No event in database, attempt to find templates for this type
+            messages = CommunicationEventType.objects.get_and_render(code, ctx)
         else:
+            # Create order event
+            CommunicationEvent._default_manager.create(order=order, type=event_type)
+            messages = event_type.get_messages(ctx)
+
+        if messages:      
+            self.logger.info("Order #%s - sending %s messages", order.number, code)  
             dispatcher = Dispatcher(logger)
-            dispatcher.dispatch_order_message(order.user, order, event_type)
+            dispatcher.dispatch_messages(order.user, messages)
+        else:
+            self.logger.warning("Order #%s - no %s communication event type", order.number, code)
 
 
 class PaymentDetailsView(OrderPlacementMixin, TemplateView):
