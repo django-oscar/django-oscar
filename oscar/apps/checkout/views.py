@@ -509,11 +509,11 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             messages = event_type.get_messages(ctx)
 
         if messages:      
-            self.logger.info("Order #%s - sending %s messages", order.number, code)  
+            logger.info("Order #%s - sending %s messages", order.number, code)  
             dispatcher = Dispatcher(logger)
             dispatcher.dispatch_messages(order.user, messages)
         else:
-            self.logger.warning("Order #%s - no %s communication event type", order.number, code)
+            logger.warning("Order #%s - no %s communication event type", order.number, code)
 
 
 class PaymentDetailsView(OrderPlacementMixin, TemplateView):
