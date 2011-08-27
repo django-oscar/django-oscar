@@ -398,7 +398,7 @@ class AbstractLine(models.Model):
         for attribute in self.attributes.all():
             ops.append("%s = '%s'" % (attribute.option.name, attribute.value))
         if ops:
-            d = "%s (%s)" % (d, ", ".join(ops))
+            d = "%s (%s)" % (d.decode('utf-8'), ", ".join(ops))
         return d
     
     
