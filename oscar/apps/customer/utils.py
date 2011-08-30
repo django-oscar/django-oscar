@@ -10,6 +10,11 @@ class Dispatcher(object):
     def __init__(self, logger):
         self.logger = logger
     
+    def dispatch_order_messages(self, order, messages, event_type):
+        self.dispatch_messages(order.user, messages)
+        # Create order comms event for audit
+        CommunicationEvent._default_manager.create(order=order, type=event_type)
+    
     def dispatch_messages(self, user, messages):
         """
         Send messages
@@ -18,7 +23,7 @@ class Dispatcher(object):
             self.send_email_messages(user, messages)
         if messages['sms']:
             self.send_text_message(user, messages['sms'])
-
+                                   
     def send_email_messages(self, user, messages):
         if not user.email:
             self.logger.warning("Unable to send email messages as user #%d has no email address", user.id)
@@ -44,6 +49,6 @@ class Dispatcher(object):
                                           body_text=email.body,
                                           body_html=messages['html'])
         
-    def send_order_sms(self, user, order, event_type):
+    def send_text_message(self, user, event_type):
         raise NotImplementedError
         

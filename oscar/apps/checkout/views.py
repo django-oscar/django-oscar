@@ -511,7 +511,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         if messages:      
             logger.info("Order #%s - sending %s messages", order.number, code)  
             dispatcher = Dispatcher(logger)
-            dispatcher.dispatch_messages(order.user, messages)
+            dispatcher.dispatch_order_messages(order, messages, event_type)
         else:
             logger.warning("Order #%s - no %s communication event type", order.number, code)
 

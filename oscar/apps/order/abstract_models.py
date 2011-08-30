@@ -160,7 +160,8 @@ class AbstractOrderNote(models.Model):
 class AbstractCommunicationEvent(models.Model):
     """
     An order-level event involving a communication to the customer, such
-    as an confirmation email being sent."""
+    as an confirmation email being sent.
+    """
     order = models.ForeignKey('order.Order', related_name="communication_events")
     type = models.ForeignKey('customer.CommunicationEventType')
     date = models.DateTimeField(auto_now_add=True)
