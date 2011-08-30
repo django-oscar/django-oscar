@@ -503,11 +503,11 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         except CommunicationEventType.DoesNotExist:
             # No event in database, attempt to find templates for this type
             messages = CommunicationEventType.objects.get_and_render(code, ctx)
+            event_type = None
         else:
             # Create order event
             CommunicationEvent._default_manager.create(order=order, type=event_type)
             messages = event_type.get_messages(ctx)
-            event_type = None
 
         if messages:      
             logger.info("Order #%s - sending %s messages", order.number, code)  
