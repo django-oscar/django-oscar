@@ -48,7 +48,7 @@ class BasketView(ModelFormSetView):
                 line = form.instance
                 if self.request.user.is_authenticated():
                     self.move_line_to_saved_basket(line)
-                    messages.info(self.request, _("'%(title)s' has been saved for later" % {'title': line.product}))   
+                    messages.info(self.request, _(u"'%(title)s' has been saved for later" % {'title': line.product}))   
                 else:
                     needs_auth = True
         if needs_auth:
@@ -95,7 +95,7 @@ class BasketAddView(FormView):
             if option.code in form.cleaned_data:
                 options.append({'option': option, 'value': form.cleaned_data[option.code]})
         self.request.basket.add_product(form.instance, form.cleaned_data['quantity'], options)
-        messages.info(self.request, _("'%(title)s' (quantity %(quantity)d) has been added to your basket" %
+        messages.info(self.request, _(u"'%(title)s' (quantity %(quantity)d) has been added to your basket" %
                 {'title': form.instance.get_title(), 
                  'quantity': form.cleaned_data['quantity']}))
         
