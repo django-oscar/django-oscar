@@ -259,6 +259,7 @@ class AbstractLine(models.Model):
     _discount_field = 'price_excl_tax'
     _discount = Decimal('0.00')
     _affected_quantity = 0
+    _charge_tax = True
     
     class Meta:
         abstract = True
@@ -275,6 +276,9 @@ class AbstractLine(models.Model):
             return self.delete(*args, **kwargs)
         super(AbstractLine, self).save(*args, **kwargs)
 
+    def set_as_tax_exempt(self):
+        self._charge_tax = False
+    
     # =============
     # Offer methods
     # =============
@@ -353,11 +357,15 @@ class AbstractLine(models.Model):
     @property
     def unit_tax(self):
         """Return tax of a unit"""
+        if not self._charge_tax:
+            return Decimal('0.00')
         return self._get_stockrecord_property('price_tax')
     
     @property
     def unit_price_incl_tax(self):
         """Return unit price including tax"""
+        if not self._charge_tax:
+            return self.unit_price_excl_tax
         return self._get_stockrecord_property('price_incl_tax')
     
     @property
