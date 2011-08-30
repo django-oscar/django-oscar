@@ -13,7 +13,8 @@ class Dispatcher(object):
     def dispatch_order_messages(self, order, messages, event_type):
         self.dispatch_messages(order.user, messages)
         # Create order comms event for audit
-        CommunicationEvent._default_manager.create(order=order, type=event_type)
+        if event_type:
+            CommunicationEvent._default_manager.create(order=order, type=event_type)
     
     def dispatch_messages(self, user, messages):
         """
