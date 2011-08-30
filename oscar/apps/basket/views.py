@@ -9,6 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 from extra_views import ModelFormSetView
 from oscar.apps.basket.forms import BasketLineForm, AddToBasketForm, \
     BasketVoucherForm, SavedLineForm
+from oscar.apps.basket.signals import basket_addition
 
 
 class BasketView(ModelFormSetView):
@@ -70,6 +71,7 @@ class BasketAddView(FormView):
     """
     form_class = AddToBasketForm
     product_model = get_model('catalogue', 'product')
+    add_signal = basket_addition
     
     def get(self, request, *args, **kwargs):
         return HttpResponseRedirect(reverse('basket:summary'))
@@ -96,6 +98,10 @@ class BasketAddView(FormView):
         messages.info(self.request, _("'%(title)s' (quantity %(quantity)d) has been added to your basket" %
                 {'title': form.instance.get_title(), 
                  'quantity': form.cleaned_data['quantity']}))
+        
+        # Send signal for basket addition
+        self.add_signal.send(sender=self, product=form.instance, user=self.request.user)
+        
         return super(BasketAddView, self).form_valid(form)
     
     def form_invalid(self, form):

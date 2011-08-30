@@ -21,8 +21,8 @@ class ProductDetailView(DetailView):
         return self._product
     
     def get(self, request, **kwargs):
-        u"""
-        Ensures that the correct URL is used
+        """
+        Ensure that the correct URL is used
         """
         product = self.get_object()
         correct_path = product.get_absolute_url() 
@@ -36,7 +36,7 @@ class ProductDetailView(DetailView):
 
     def get_template_names(self):
         """
-        Returns a list of possible templates.
+        Return a list of possible templates.
         
         We try 2 options before defaulting to catalogue/detail.html:
         1). detail-for-upc-<upc>.html
