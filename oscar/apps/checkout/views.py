@@ -509,7 +509,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             CommunicationEvent._default_manager.create(order=order, type=event_type)
             messages = event_type.get_messages(ctx)
 
-        if messages:      
+        if messages and messages['body']:      
             logger.info("Order #%s - sending %s messages", order.number, code)  
             dispatcher = Dispatcher(logger)
             dispatcher.dispatch_order_messages(order, messages, event_type)
