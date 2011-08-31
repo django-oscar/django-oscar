@@ -76,11 +76,9 @@
 <ul>
 {% for voucher in basket.vouchers.all %}
     <li>
-        <form action="." method="POST">
+        <form action="{% url basket:vouchers-remove voucher.id %}" method="POST">
             {% csrf_token %}
             {{ voucher.name }} ({{ voucher.code }})
-            <input type="hidden" name="action" value="remove_voucher" />
-            <input type="hidden" name="voucher_code" value="{{ voucher.code }}" />
             <input type="submit" value="Remove" />
         </form>
     </li>

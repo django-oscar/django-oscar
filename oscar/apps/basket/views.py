@@ -2,9 +2,10 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.db.models import get_model
 from django.http import HttpResponseRedirect, Http404
-from django.views.generic import ListView, FormView
+from django.views.generic import ListView, FormView, View
 from django.forms.models import modelformset_factory
 from django.utils.translation import ugettext_lazy as _
+from django.core.exceptions import ObjectDoesNotExist
 
 from extra_views import ModelFormSetView
 from oscar.apps.basket.forms import BasketLineForm, AddToBasketForm, \
@@ -157,6 +158,25 @@ class VoucherAddView(FormView):
 
     def form_invalid(self, form):
         return HttpResponseRedirect(reverse('basket:summary'))
+    
+
+class VoucherRemoveView(View):
+    voucher_model = get_model('offer', 'voucher')
+    
+    def get(self, request, *args, **kwargs):
+        return HttpResponseRedirect(reverse('basket:summary'))
+    
+    def post(self, request, *args, **kwargs):
+        voucher_id = kwargs.pop('pk')
+        try:
+            voucher = request.basket.vouchers.get(id=voucher_id)
+        except ObjectDoesNotExist:
+            messages.error(request, "No voucher found with id '%d'" % voucher_id)
+        else:
+            request.basket.vouchers.remove(voucher)
+            request.basket.save()
+            messages.info(request, "Voucher '%s' removed from basket" % voucher.code)
+        return HttpResponseRedirect(reverse('basket:summary'))
 
 
 class SavedView(ModelFormSetView):
@@ -192,16 +212,7 @@ class SavedView(ModelFormSetView):
         return HttpResponseRedirect(self.request.META.get('HTTP_REFERER', reverse('basket:summary')))
 
 
-#    def do_remove_voucher(self, basket):
-#        code = self.request.POST['voucher_code']
-#        try:
-#            voucher = basket.vouchers.get(code=code)
-#            basket.vouchers.remove(voucher)
-#            basket.save()
-#            messages.info(self.request, "Voucher '%s' removed from basket" % voucher.code)
-#        except ObjectDoesNotExist:
-#            messages.error(self.request, "No voucher found with code '%s'" % code)
-#            
+
 #    def do_bulk_load(self, basket):
 #        num_additions = 0
 #        num_not_found = 0

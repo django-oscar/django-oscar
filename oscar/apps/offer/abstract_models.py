@@ -41,8 +41,8 @@ class AbstractConditionalOffer(models.Model):
     # Range of availability.  Note that if this is a voucher offer, then these
     # dates are ignored and only the dates from the voucher are used to determine 
     # availability.
-    start_date = models.DateField(blank=True, null=True)
-    end_date = models.DateField(blank=True, null=True)
+    start_date = models.DateField(blank=True, null=True, help_text=_("Voucher is available on this date"))
+    end_date = models.DateField(blank=True, null=True, help_text=_("Voucher is available up to but not including this date"))
 
     # Some complicated situations require offers to be applied in a set order.
     priority = models.IntegerField(default=0, help_text="The highest priority offers are applied first")
