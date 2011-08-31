@@ -256,7 +256,6 @@ class AbstractLine(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     
     # Instance variables used to persist discount information
-    _discount_field = 'price_excl_tax'
     _discount = Decimal('0.00')
     _affected_quantity = 0
     _charge_tax = True
@@ -282,6 +281,13 @@ class AbstractLine(models.Model):
     # =============
     # Offer methods
     # =============
+    
+    def clear_discount(self):
+        """
+        Remove any discounts from this line.
+        """
+        self._discount = Decimal('0.00')
+        self._affected_quantity = 0
     
     def discount(self, discount_value, affected_quantity):
         self._discount += discount_value
@@ -355,18 +361,18 @@ class AbstractLine(models.Model):
         return self._get_stockrecord_property('price_excl_tax')
     
     @property
-    def unit_tax(self):
-        """Return tax of a unit"""
-        if not self._charge_tax:
-            return Decimal('0.00')
-        return self._get_stockrecord_property('price_tax')
-    
-    @property
     def unit_price_incl_tax(self):
         """Return unit price including tax"""
         if not self._charge_tax:
             return self.unit_price_excl_tax
         return self._get_stockrecord_property('price_incl_tax')
+
+    @property
+    def unit_tax(self):
+        """Return tax of a unit"""
+        if not self._charge_tax:
+            return Decimal('0.00')
+        return self._get_stockrecord_property('price_tax')
     
     @property
     def line_price_excl_tax(self):
