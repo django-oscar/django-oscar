@@ -75,6 +75,7 @@ class AbstractStockRecord(models.Model):
         """
         Decrement an item's stock level
         """
+        self.num_in_stock = int(self.num_in_stock)
         if self.num_in_stock >= delta:
             self.num_in_stock -= delta
         self.num_allocated += delta
@@ -84,6 +85,7 @@ class AbstractStockRecord(models.Model):
         """
         Decrement an item's stock allocation.
         """
+        self.num_allocated = int(self.num_allocated)
         self.num_allocated += quantity
         self.save()
         
