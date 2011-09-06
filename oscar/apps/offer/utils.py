@@ -6,7 +6,7 @@ import_module('offer.models', ['ConditionalOffer'], locals())
 
 
 class Applicator(object):
-    u"""
+    """
     For applying offers to a basket.
     """
     
@@ -39,7 +39,7 @@ class Applicator(object):
         basket.set_discounts(list(discounts.values()))
     
     def get_offers(self, request, basket):
-        u"""
+        """
         Returns all offers to apply to the basket.
         
         This method should be subclassed and extended to provide more sophisticated

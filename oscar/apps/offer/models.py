@@ -2,20 +2,19 @@ from decimal import Decimal
 import math
 import datetime
 
-from django.contrib.auth.models import User
 from django.core import exceptions
 from django.db import models
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ValidationError
 
-from oscar.apps.offer.abstract_models import AbstractVoucher
 from oscar.apps.offer.managers import ActiveOfferManager
 from oscar.models.fields import PositiveDecimalField
 
 SITE, VOUCHER, USER, SESSION = ("Site", "Voucher", "User", "Session")
 
+
 class ConditionalOffer(models.Model):
-    u"""
+    """
     A conditional offer (eg buy 1, get 10% off)
     """
     name = models.CharField(max_length=128)
@@ -250,25 +249,6 @@ class Range(models.Model):
             self.__class_ids = [row['id'] for row in self.classes.values('id')]
         return self.__class_ids
         
-        
-class Voucher(AbstractVoucher):
-    pass
-
-
-class VoucherApplication(models.Model):
-    u"""
-    For tracking how often a voucher has been used
-    """
-    voucher = models.ForeignKey('offer.Voucher', related_name="applications")
-    # It is possible for an anonymous user to apply a voucher so we need to allow
-    # the user to be nullable
-    user = models.ForeignKey('auth.User', blank=True, null=True)
-    order = models.ForeignKey('order.Order')
-    date_created = models.DateField(auto_now_add=True)
-
-    def __unicode__(self):
-        return u"'%s' used by '%s'" % (self.voucher, self.user)
-
 
 class CountCondition(Condition):
     u"""

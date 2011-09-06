@@ -114,7 +114,7 @@ class BasketAddView(FormView):
 
 
 class VoucherView(ListView):
-    model = get_model('offer', 'voucher')
+    model = get_model('voucher', 'voucher')
     can_delete = True
     extra = 0
     
@@ -124,7 +124,7 @@ class VoucherView(ListView):
 
 class VoucherAddView(FormView):
     form_class = BasketVoucherForm
-    voucher_model = get_model('offer', 'voucher')
+    voucher_model = get_model('voucher', 'voucher')
     
     def get(self, request, *args, **kwargs):
         return HttpResponseRedirect(reverse('basket:summary'))
@@ -161,7 +161,7 @@ class VoucherAddView(FormView):
     
 
 class VoucherRemoveView(View):
-    voucher_model = get_model('offer', 'voucher')
+    voucher_model = get_model('voucher', 'voucher')
     
     def get(self, request, *args, **kwargs):
         return HttpResponseRedirect(reverse('basket:summary'))

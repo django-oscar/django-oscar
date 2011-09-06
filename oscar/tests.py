@@ -11,6 +11,7 @@ from oscar.apps.customer.tests import *
 from oscar.apps.discount.tests import *
 from oscar.apps.promotions.tests import *
 from oscar.apps.catalogue.reviews.tests import *
+from oscar.apps.voucher.tests import *
 
 from oscar.core.tests import *
 from oscar.core.logging.tests import *

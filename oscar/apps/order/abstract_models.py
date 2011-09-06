@@ -485,7 +485,7 @@ class AbstractOrderDiscount(models.Model):
     """
     order = models.ForeignKey('order.Order', related_name="discounts")
     offer = models.ForeignKey('offer.ConditionalOffer', null=True, on_delete=models.SET_NULL)
-    voucher = models.ForeignKey('offer.Voucher', related_name="discount_vouchers", null=True, on_delete=models.SET_NULL)
+    voucher = models.ForeignKey('voucher.Voucher', related_name="discount_vouchers", null=True, on_delete=models.SET_NULL)
     voucher_code = models.CharField(_("Code"), max_length=128, db_index=True, null=True)
     amount = models.DecimalField(decimal_places=2, max_digits=12, default=0)
     
