@@ -16,6 +16,12 @@ class Applicator(object):
         too as sometimes the available offers are dependent on the user.
         """
         offers = self.get_offers(request, basket) 
+        discounts = self.get_basket_discounts(basket, offers)
+        # Store this list of discounts with the basket so it can be 
+        # rendered in templates
+        basket.set_discounts(list(discounts.values()))
+        
+    def get_basket_discounts(self, basket, offers):    
         discounts = {}
         for offer in offers:
             # For each offer, we keep trying to apply it until the
@@ -33,10 +39,7 @@ class Applicator(object):
                     discounts[offer.id]['freq'] += 1
                 else:
                     break
-                
-        # Store this list of discounts with the basket so it can be 
-        # rendered in templates
-        basket.set_discounts(list(discounts.values()))
+        return discounts
     
     def get_offers(self, request, basket):
         """
@@ -51,7 +54,7 @@ class Applicator(object):
         user_offers = self.get_user_offers(request.user)
         session_offers = self.get_session_offers(request)
         
-        return list(chain(site_offers, basket_offers, user_offers, session_offers))
+        return list(chain(session_offers, basket_offers, user_offers, site_offers))
         
     def get_site_offers(self):
         u"""
