@@ -19,7 +19,7 @@ class AbstractVoucher(models.Model):
         help_text=_("""This will be shown in the checkout and basket once the voucher is entered"""))
     code = models.CharField(_("Code"), max_length=128, db_index=True, unique=True,
         help_text=_("""Case insensitive / No spaces allowed"""))
-    offers = models.ManyToManyField('offer.ConditionalOFfer', related_name='vouchers', 
+    offers = models.ManyToManyField('offer.ConditionalOffer', related_name='vouchers', 
                                     limit_choices_to={'offer_type': "Voucher"})
 
     SINGLE_USE, MULTI_USE, ONCE_PER_CUSTOMER = ('Single use', 'Multi-use', 'Once per customer')
