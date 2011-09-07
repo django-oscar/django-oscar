@@ -4,7 +4,7 @@
 
 <h3>All Reviews of {{ item.title }}</h3>
 <p>Read customer reviews on this product. If you have read this book, why not post your own review?</p>
-<p><a href="{% url products:reviews-add item_slug=item.slug item_pk=item.id %}">Add a review</a></p>
+<p><a href="{% url catalogue:reviews-add item_slug=item.slug item_pk=item.id %}">Add a review</a></p>
 
 {% if reviews %}
 	<h4> Sort by: </h4>

@@ -24,9 +24,9 @@ class AbstractVoucher(models.Model):
 
     SINGLE_USE, MULTI_USE, ONCE_PER_CUSTOMER = ('Single use', 'Multi-use', 'Once per customer')
     USAGE_CHOICES = (
-        (SINGLE_USE, _("Can only be used by one customer")),
-        (MULTI_USE, _("Can only be used any number of times")),
-        (ONCE_PER_CUSTOMER, _("Can be used once by each customer")),
+        (SINGLE_USE, _("Can be used once by one customer")),
+        (MULTI_USE, _("Can be used multiple times by multiple customers")),
+        (ONCE_PER_CUSTOMER, _("Can only be used once per customer")),
     )
     usage = models.CharField(_("Usage"), max_length=128, choices=USAGE_CHOICES, default=MULTI_USE)
 
