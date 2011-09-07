@@ -7,7 +7,7 @@ import_module('order.signals', ['order_placed'], locals())
 
 
 class OrderNumberGenerator(object):
-    u"""
+    """
     Simple object for generating order numbers.
 
     We need this as the order number is often required for payment
@@ -22,7 +22,7 @@ class OrderNumberGenerator(object):
 
 
 class OrderCreator(object):
-    u"""
+    """
     Places the order by writing out the various models
     """
     
@@ -107,8 +107,8 @@ class OrderCreator(object):
                       'line_price_before_discounts_incl_tax': basket_line.line_price_incl_tax,
                       # Reporting details
                       'unit_cost_price': stockrecord.cost_price,
-                      'unit_site_price':  stockrecord.price_incl_tax,
-                      'unit_retail_price':  stockrecord.price_retail,
+                      'unit_site_price': basket_line.unit_price_incl_tax,
+                      'unit_retail_price': stockrecord.price_retail,
                       # Shipping details
                       'est_dispatch_date':  basket_line.product.stockrecord.dispatch_date
                      }
