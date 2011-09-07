@@ -54,7 +54,7 @@ class IndexView(AccountAuthView):
 class CheckoutSessionMixin(object):
     """
     Mixin to provide common functionality shared between checkout views.
-    """    
+    """   
 
     def dispatch(self, request, *args, **kwargs):
         self.checkout_session = CheckoutSessionData(request)
@@ -333,6 +333,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
     # _handle_payment method.  If the order is placed successfully, then
     # they will be persisted.
     _payment_sources = None
+    communication_type_code = 'ORDER_PLACED' 
     
     def handle_order_placement(self, order_number, basket, total_incl_tax, total_excl_tax, **kwargs): 
         """
@@ -496,7 +497,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         self.request.basket = fzn_basket
 
     def send_confirmation_message(self, order):
-        code = 'ORDER_PLACED'
+        code = self.communication_type_code
         ctx = {'order': order}
         try:
             event_type = CommunicationEventType.objects.get(code=code)
