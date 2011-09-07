@@ -420,7 +420,8 @@ class AbsoluteDiscountBenefit(Benefit):
                 quantity = min(line.quantity_without_discount, 
                                max_affected_items - affected_items,
                                math.floor(remaining_discount / price))
-                discount += price * int(quantity)
+                quantity = int(quantity)
+                discount += price * quantity
                 affected_items += quantity
                 line.discount(discount, quantity)
         if discount > 0 and condition:

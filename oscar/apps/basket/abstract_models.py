@@ -15,7 +15,9 @@ OPEN, MERGED, SAVED, FROZEN, SUBMITTED = ("Open", "Merged", "Saved", "Frozen", "
 
 
 class AbstractBasket(models.Model):
-    """Basket object"""
+    """
+    Basket object
+    """
     # Baskets can be anonymously owned (which are merged if the user signs in)
     owner = models.ForeignKey('auth.User', related_name='baskets', null=True)
     STATUS_CHOICES = (
