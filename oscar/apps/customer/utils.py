@@ -51,5 +51,5 @@ class Dispatcher(object):
                                           body_html=messages['html'])
         
     def send_text_message(self, user, event_type):
-        raise NotImplementedError
+        raise NotImplementedError()
         

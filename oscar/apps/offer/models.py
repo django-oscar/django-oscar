@@ -413,6 +413,9 @@ class AbsoluteDiscountBenefit(Benefit):
                 break
             if self.range.contains_product(line.product) and line.product.has_stockrecord:
                 price = getattr(line.product.stockrecord, self.price_field)
+                if not price:
+                    # Avoid zero price products
+                    continue
                 remaining_discount = self.value - discount
                 quantity = min(line.quantity_without_discount, 
                                max_affected_items - affected_items,
@@ -426,7 +429,7 @@ class AbsoluteDiscountBenefit(Benefit):
 
 
 class FixedPriceBenefit(Benefit):
-    u"""
+    """
     An offer benefit that gives the items in the condition for a 
     fixed price.  This is useful for "bundle" offers.
     
@@ -446,6 +449,9 @@ class FixedPriceBenefit(Benefit):
             if len(covered_lines) >= condition.value:
                 break
         discount = max(product_total - self.value, Decimal('0.00'))
+        
+        if not discount:
+            return discount
         
         # Apply discount weighted by original value of line
         for line in covered_lines:
