@@ -2,7 +2,7 @@ from itertools import chain
 
 from django.core.exceptions import ObjectDoesNotExist
 
-from oscar.apps.promotions.models import PagePromotion
+from oscar.apps.promotions.models import PagePromotion, KeywordPromotion
 
 
 def promotions(request):
@@ -10,17 +10,15 @@ def promotions(request):
     For adding bindings for banners and pods to the template
     context.
     """
-    
     # @todo need caching here
     promotions = PagePromotion._default_manager.select_related() \
                                                .filter(page_url=request.path) \
                                                .order_by('display_order')
-                                               
 
-#    if 'q' in request.GET:
-#        keyword_promotions = KeywordPromotion._default_manager.select_related().filter(keyword=request.GET['q'])
-#        if keyword_promotions.count() > 0:
-#            promotions = list(chain(promotions, keyword_promotions))
+    if 'q' in request.GET:
+        keyword_promotions = KeywordPromotion._default_manager.select_related().filter(keyword=request.GET['q'])
+        if keyword_promotions.count() > 0:
+            promotions = list(chain(promotions, keyword_promotions))
 
     context = {
         'url_path': request.path
