@@ -97,5 +97,11 @@ class AbstractCommunicationEventType(models.Model):
         return messages
         
     def __unicode__(self):
-        return self.name    
+        return self.name   
+    
+    def is_order_related(self):
+        return self.category == self.ORDER_RELATED
+    
+    def is_user_related(self):
+        return self.category == self.USER_RELATED 
     
