@@ -573,14 +573,14 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             post_payment.send_robust(sender=self, view=self)
         except RedirectRequired, e:
             # Redirect required (eg PayPal, 3DS)
-            logger.info(_("Order #%s: redirecting to %s" % (order_number, e.url)))
+            logger.info(_("Order #%s: redirecting to %s",  order_number, e.url))
             return HttpResponseRedirect(e.url)
         except UnableToTakePayment, e:
             # Something went wrong with payment, need to show
             # error to the user.  This type of exception is supposed
             # to set a friendly error message.
             self.restore_frozen_basket()
-            logger.info(_("Order #%s: unable to take payment (%s)" % (order_number, e)))
+            logger.warning(_("Order #%s: unable to take payment (%s)", order_number, e))
             return self.render_to_response(self.get_context_data(error=str(e)))
         except PaymentError, e:
             # Something went wrong which wasn't anticipated.
@@ -589,7 +589,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             return self.render_to_response(self.get_context_data(error="A problem occurred processing payment."))
         else:
             # If all is ok with payment, place order
-            logger.error(_("Order #%s: payment successful, placing order" % order_number))
+            logger.info(_("Order #%s: payment successful, placing order", order_number))
             return self.handle_order_placement(order_number, basket, total_incl_tax, total_excl_tax, **kwargs)
     
     def generate_order_number(self, basket):

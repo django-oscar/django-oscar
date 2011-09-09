@@ -14,6 +14,8 @@ from django.db.models import get_model
 from oscar.apps.address.forms import UserAddressForm
 from oscar.views.generic import PostActionMixin
 from oscar.apps.customer.forms import EmailAuthenticationForm, EmailUserCreationForm
+from oscar.core.loading import import_module
+import_module('customer.utils', ['Dispatcher'], locals())
 
 order_model = get_model('order', 'Order')
 order_line_model = get_model('order', 'Line')
@@ -21,6 +23,7 @@ basket_model = get_model('basket', 'Basket')
 user_address_model = get_model('address', 'UserAddress')
 email_model = get_model('customer', 'email')
 communicationtype_model = get_model('customer', 'communicationeventtype')
+
 
 class AccountSummaryView(ListView):
     """Customer order history"""
@@ -39,6 +42,7 @@ class AccountAuthView(TemplateView):
     redirect_field_name = 'next'
     login_prefix = 'login'
     registration_prefix = 'registration'
+    communication_type_code = 'REGISTRATION'
     
     def get_logged_in_redirect(self):
         return reverse('customer:summary')
@@ -62,26 +66,22 @@ class AccountAuthView(TemplateView):
         return redirect_to
     
     def send_registration_email(self, user):
-        from django.core.mail import send_mail
-        from django.template import Context, Template
-        
-        from_email = settings.OSCAR_FROM_EMAIL
+        code = self.communication_type_code
+        ctx = {'user': user,
+               'site': get_current_site(self.request)}
+        try:
+            event_type = communicationtype_model.objects.get(code=code)
+        except communicationtype_model.DoesNotExist:
+            # No event in database, attempt to find templates for this type
+            messages = communicationtype_model.objects.get_and_render(code, ctx)
+        else:
+            # Create order event
+            messages = event_type.get_messages(ctx)
 
-        current_site = get_current_site(self.request)
-        site_name = current_site.name
-        domain = current_site.domain
-
-        c = {
-            'email': user.email,
-            'domain': domain,
-            'site_name': site_name,
-            'user': user,
-        }
-        
-        rendered = communicationtype_model.objects.get_and_render('REGISTRATION', c)
-        
-        send_mail(rendered['subject'], rendered['body'], from_email, [user.email])  
-
+        if messages and messages['body']:      
+            dispatcher = Dispatcher()
+            dispatcher.dispatch_messages(messages)
+    
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(*args, **kwargs)
         

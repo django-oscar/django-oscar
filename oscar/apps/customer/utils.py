@@ -1,3 +1,5 @@
+import logging
+
 from django.core.mail import EmailMessage, EmailMultiAlternatives
 
 from oscar.core.loading import import_module
@@ -7,7 +9,9 @@ import_module('customer.models', ['Email'], locals())
 
 class Dispatcher(object):
 
-    def __init__(self, logger):
+    def __init__(self, logger=None):
+        if not logger:
+            logger = logging.getLogger(__name__)
         self.logger = logger
     
     def dispatch_order_messages(self, order, messages, event_type):
