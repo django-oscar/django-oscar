@@ -3,8 +3,24 @@ from decimal import Decimal as D
 from django.conf import settings
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.utils.importlib import import_module as django_import_module
 
-from oscar.apps.partner.wrappers import get_partner_wrapper
+from oscar.core.loading import import_module
+import_module('partner.wrappers', ['DefaultWrapper'], locals())
+
+
+def get_partner_wrapper(test_partner):
+    """
+    Returns the appropriate partner wrapper given the partner name
+    """
+    for partner, class_str in settings.OSCAR_PARTNER_WRAPPERS.items():
+        if partner == test_partner:
+            bits = class_str.split('.')
+            class_name = bits.pop()
+            module_str = '.'.join(bits)
+            module = django_import_module(module_str)
+            return getattr(module, class_name)()
+    return DefaultWrapper()
 
 
 class AbstractPartner(models.Model):
