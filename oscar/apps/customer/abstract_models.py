@@ -33,6 +33,11 @@ class AbstractCommunicationEventType(models.Model):
     # Name is the friendly description of an event for use in the admin
     name = models.CharField(max_length=255)
     
+    # We allow communication types to be categorised
+    ORDER_RELATED = 'Order related'
+    USER_RELATED = 'User related'
+    category = models.CharField(max_length=255, default=ORDER_RELATED)
+    
     # Template content for emails
     email_subject_template = models.CharField(max_length=255, blank=True)
     email_body_template = models.TextField(blank=True, null=True)

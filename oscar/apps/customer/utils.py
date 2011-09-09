@@ -14,14 +14,14 @@ class Dispatcher(object):
             logger = logging.getLogger(__name__)
         self.logger = logger
 
+    # Public API methods
 
     def dispatch_direct_messages(self, recipient, messages):
         """
-        Dispatch one-off messages to explicitly specified recipient(s)
+        Dispatch one-off messages to explicitly specified recipient(s).
         """
         if messages['subject'] and messages['body']:
             self.send_email_messages(recipient, messages)
-    
     
     def dispatch_order_messages(self, order, messages, event_type):
         """
@@ -33,16 +33,16 @@ class Dispatcher(object):
         if event_type:
             CommunicationEvent._default_manager.create(order=order, type=event_type)
     
-    
-    def dispatch_messages(self, user, messages):
+    def dispatch_user_messages(self, user, messages):
         """
-        Send messages
+        Send messages to a site user
         """
         if messages['subject'] and messages['body']:
             self.send_user_email_messages(user, messages)
         if messages['sms']:
             self.send_text_message(user, messages['sms'])
-            
+    
+    # Internal
     
     def send_user_email_messages(self, user, messages):
         """
@@ -60,7 +60,6 @@ class Dispatcher(object):
                                           subject=email.subject,
                                           body_text=email.body,
                                           body_html=messages['html'])
-                                   
     
     def send_email_messages(self, recipient, messages):
         """

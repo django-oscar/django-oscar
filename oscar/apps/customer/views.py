@@ -80,7 +80,7 @@ class AccountAuthView(TemplateView):
 
         if messages and messages['body']:      
             dispatcher = Dispatcher()
-            dispatcher.dispatch_messages(messages)
+            dispatcher.dispatch_user_messages(messages)
     
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(*args, **kwargs)
