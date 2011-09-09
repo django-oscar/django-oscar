@@ -202,6 +202,32 @@ class AbstractBasket(models.Model):
         return self._get_total('line_price_incl_tax')
     
     @property
+    def total_discount(self):
+        return self._get_total('discount_value')
+    
+    @property
+    def offer_discounts(self):
+        """
+        Return discounts from non-voucher sources.
+        """
+        offer_discounts = []
+        for discount in self.discounts:
+            if not discount['voucher']:
+                offer_discounts.append(discount)
+        return offer_discounts
+    
+    @property
+    def voucher_discounts(self):
+        """
+        Return discounts from vouchers
+        """
+        voucher_discounts = []
+        for discount in self.discounts:
+            if discount['voucher']:
+                voucher_discounts.append(discount)
+        return voucher_discounts
+    
+    @property
     def total_excl_tax_excl_discounts(self):
         """
         Return total price excluding tax and discounts
