@@ -15,7 +15,7 @@ class OrderNumberGenerator(object):
     """
 
     def order_number(self, basket):
-        u"""
+        """
         Return an order number for a given basket
         """
         return 100000 + basket.id
@@ -27,8 +27,9 @@ class OrderCreator(object):
     """
     
     def place_order(self, user, basket, shipping_address, shipping_method, 
-                      billing_address, total_incl_tax, total_excl_tax, order_number=None, status=None):
-        u"""
+                    billing_address, total_incl_tax, total_excl_tax, 
+                    order_number=None, status=None, **kwargs):
+        """
         Placing an order involves creating all the relevant models based on the
         basket and session data.
         """
@@ -36,8 +37,8 @@ class OrderCreator(object):
             generator = OrderNumberGenerator()
             order_number = generator.order_number(basket)
         order = self.create_order_model(user, basket, shipping_address, 
-                                         shipping_method, billing_address, total_incl_tax, 
-                                         total_excl_tax, order_number, status)
+                                        shipping_method, billing_address, total_incl_tax, 
+                                        total_excl_tax, order_number, status, **kwargs)
         for line in basket.all_lines():
             self.create_line_models(order, line)
             self._update_stock_records(line)
@@ -52,7 +53,8 @@ class OrderCreator(object):
         return order
         
     def create_order_model(self, user, basket, shipping_address, shipping_method, 
-                               billing_address, total_incl_tax, total_excl_tax, order_number, status, extra_order_fields=None):
+                           billing_address, total_incl_tax, total_excl_tax, 
+                           order_number, status, **extra_order_fields):
         """
         Creates an order model.
         """
@@ -78,14 +80,16 @@ class OrderCreator(object):
         return order
     
     def get_partner_for_product(self, product):
-        u"""Returns the partner for a product"""
+        """
+        Return the partner for a product
+        """
         if product.has_stockrecord:
             return product.stockrecord.partner
         raise AttributeError("No partner found for product '%s'" % product)
     
     def create_line_models(self, order, basket_line, extra_line_fields=None):
         """
-        Creates the batch line model.
+        Create the batch line model.
         
         You can set extra fields by passing a dictionary as the extra_line_fields value
         """
@@ -123,7 +127,9 @@ class OrderCreator(object):
         line.product.stockrecord.allocate(line.quantity)    
         
     def _create_line_price_models(self, order, order_line, basket_line):
-        u"""Creates the batch line price models"""
+        """
+        Creates the batch line price models
+        """
         breakdown = basket_line.get_price_breakdown()
         for price_incl_tax, price_excl_tax, quantity in breakdown:
             LinePrice._default_manager.create(order=order,
@@ -133,7 +139,9 @@ class OrderCreator(object):
                                               price_excl_tax=price_excl_tax)
     
     def _create_line_attributes(self, order, order_line, basket_line):
-        u"""Creates the batch line attributes."""
+        """
+        Creates the batch line attributes.
+        """
         for attr in basket_line.attributes.all():
             LineAttribute._default_manager.create(line=order_line,
                                                    option=attr.option, 
@@ -141,7 +149,7 @@ class OrderCreator(object):
                                                    value=attr.value)
             
     def _create_discount_model(self, order, discount):
-        u"""
+        """
         Creates an order discount model for each discount attached to the basket.
         """
         order_discount = OrderDiscount(order=order, offer=discount['offer'], amount=discount['discount'])
@@ -151,7 +159,7 @@ class OrderCreator(object):
         order_discount.save()
         
     def _record_voucher_usage(self, order, voucher, user):
-        u"""
+        """
         Updates the models that care about this voucher.
         """
         voucher.record_usage(order, user)
