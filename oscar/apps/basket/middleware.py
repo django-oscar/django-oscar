@@ -22,7 +22,14 @@ class BasketMiddleware(object):
             # Signed-in user: if they have a cookie basket too, it means
             # that they have just signed in and we need to merge their cookie
             # basket into their user basket, then delete the cookie
-            basket, _ = manager.get_or_create(owner=request.user)
+            try:
+                basket, _ = manager.get_or_create(owner=request.user)
+            except basket_model.MultipleObjectsReturned:
+                # Not sure quite how we end up here with multiple baskets
+                # We delete them and create a fresh one
+                manager.filter(owner=request.user).delete()
+                basket = manager.create(owner=request.user)
+                
             if cookie_basket:
                 basket.merge(cookie_basket)
                 self.cookies_to_delete.append(settings.OSCAR_BASKET_COOKIE_OPEN)
