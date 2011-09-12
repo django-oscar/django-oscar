@@ -4,6 +4,24 @@ from itertools import chain
 from oscar.core.loading import import_module
 import_module('offer.models', ['ConditionalOffer'], locals())
 
+# This needs hooking into the offer application system.
+class Discount(object):
+    
+    def __init__(self, offer):
+        self.offer = offer
+        self.discount = Decimal('0.00')
+        self.frequency = 0
+        
+    def discount(self, discount):
+        self.discount += discount
+        self.frequency += 1
+        
+    def is_voucher_discount(self):
+        return bool(self.offer.get_voucher())
+
+    def get_voucher(self):
+        return self.offer.get_voucher()
+
 
 class Applicator(object):
     """
@@ -11,9 +29,10 @@ class Applicator(object):
     """
     
     def apply(self, request, basket):
-        u"""
-        Applies all relevant offers to the given basket.  The user is passed 
-        too as sometimes the available offers are dependent on the user.
+        """
+        Apply all relevant offers to the given basket.  The request and user is passed 
+        too as sometimes the available offers are dependent on the user (eg session-based
+        offers).
         """
         offers = self.get_offers(request, basket) 
         discounts = self.get_basket_discounts(basket, offers)
@@ -43,7 +62,7 @@ class Applicator(object):
     
     def get_offers(self, request, basket):
         """
-        Returns all offers to apply to the basket.
+        Return all offers to apply to the basket.
         
         This method should be subclassed and extended to provide more sophisticated
         behaviour.  For instance, you could load extra offers based on the session or
@@ -58,13 +77,13 @@ class Applicator(object):
         
     def get_site_offers(self):
         u"""
-        Returns site offers that are available to all users
+        Return site offers that are available to all users
         """
-        return ConditionalOffer.active.all()
+        return ConditionalOffer.active.filter(offer_type=ConditionalOffer.SITE)
     
     def get_basket_offers(self, basket, user):
-        u"""
-        Returns basket-linked offers such as those associated with a voucher code"""
+        """
+        Return basket-linked offers such as those associated with a voucher code"""
         offers = []
         if not basket.id:
             return offers
