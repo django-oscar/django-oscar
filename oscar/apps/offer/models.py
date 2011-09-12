@@ -251,7 +251,7 @@ class Range(models.Model):
         
 
 class CountCondition(Condition):
-    u"""
+    """
     An offer condition dependent on the NUMBER of matching items from the basket.
     """
 
@@ -259,17 +259,19 @@ class CountCondition(Condition):
         proxy = True
 
     def is_satisfied(self, basket):
-        u"""Determines whether a given basket meets this condition"""
+        """
+        Determines whether a given basket meets this condition
+        """
         num_matches = 0
         for line in basket.all_lines():
-            if self.range.contains_product(line.product):
-                num_matches += line.quantity
+            if self.range.contains_product(line.product) and line.quantity_without_discount > 0:
+                num_matches += line.quantity_without_discount
             if num_matches >= self.value:
                 return True
         return False
     
     def consume_items(self, basket):
-        u"""
+        """
         Marks items within the basket lines as consumed so they
         can't be reused in other offers.
         """
@@ -472,7 +474,9 @@ class MultibuyDiscountBenefit(Benefit):
         line = self._get_cheapest_line(basket)
         if line:
             discount = getattr(line.product.stockrecord, self.price_field)
-            line.discount(discount, 1)
+            # We deliberately don't consume the line here so 
+            # as it will be consumed by the condition.
+            line.discount(discount, 0)
         if discount > 0 and condition:
             condition.consume_items(basket)    
         return discount
