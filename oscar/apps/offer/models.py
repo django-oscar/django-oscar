@@ -372,7 +372,7 @@ class ValueCondition(Condition):
 # ========
 
 class PercentageDiscountBenefit(Benefit):
-    u"""
+    """
     An offer benefit that gives a percentage discount
     """
 
@@ -391,9 +391,11 @@ class PercentageDiscountBenefit(Benefit):
                 price = getattr(line.product.stockrecord, self.price_field)
                 quantity = min(line.quantity_without_discount, 
                                max_affected_items - affected_items)
-                discount += self.value/100 * price * int(quantity)
+                line_discount = self.value/100 * price * int(quantity)
+                line.discount(line_discount, quantity)
                 affected_items += quantity
-                line.discount(discount, quantity)
+                discount += line_discount
+                
         if discount > 0 and condition:
             condition.consume_items(basket)  
         return discount
