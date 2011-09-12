@@ -50,6 +50,12 @@ class AbstractBasket(models.Model):
         return u"%s basket (owner: %s, lines: %d)" % (self.status, self.owner, self.num_lines)
     
     def all_lines(self):
+        """
+        Return a cached set of basket lines.
+        
+        This is important for offers as they alter the line models and you don't
+        want to reload them from the DB.
+        """
         if not self._lines:
             self._lines = self.lines.all()
         return self._lines    
@@ -63,6 +69,7 @@ class AbstractBasket(models.Model):
         if self.status == FROZEN:
             raise PermissionDenied("A frozen basket cannot be flushed")
         self.lines_all().delete()
+        self._lines = None
     
     def add_product(self, item, quantity=1, options=None):
         """
@@ -78,12 +85,14 @@ class AbstractBasket(models.Model):
         line_ref = self._create_line_reference(item, options)
         try:
             line = self.lines.get(line_reference=line_ref)
-            line.quantity += quantity
-            line.save()
         except ObjectDoesNotExist:
             line = self.lines.create(basket=self, line_reference=line_ref, product=item, quantity=quantity)
             for option_dict in options:
                 line.attributes.create(line=line, option=option_dict['option'], value=option_dict['value'])
+        else:
+            line.quantity += quantity
+            line.save()
+            self._lines = None
 
     def set_discounts(self, discounts):
         """
@@ -120,6 +129,7 @@ class AbstractBasket(models.Model):
         basket.status = MERGED
         basket.date_merged = datetime.datetime.now()
         basket.save()
+        self._lines = None
     
     def freeze(self):
         """
