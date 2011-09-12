@@ -8,7 +8,7 @@ from django.utils.translation import ugettext as _
 from django.core.exceptions import ValidationError
 
 from oscar.apps.offer.managers import ActiveOfferManager
-from oscar.models.fields import PositiveDecimalField
+from oscar.models.fields import PositiveDecimalField, ExtendedURLField
 
 SITE, VOUCHER, USER, SESSION = ("Site", "Voucher", "User", "Session")
 
@@ -56,6 +56,8 @@ class ConditionalOffer(models.Model):
 
     objects = models.Manager()
     active = ActiveOfferManager()
+
+    redirect_url = ExtendedURLField(_('URL redirect (optional)'), blank=True)
 
     # We need to track the voucher that this offer came from (if it is a voucher offer)
     _voucher = None
