@@ -79,7 +79,7 @@ class Applicator(object):
         u"""
         Return site offers that are available to all users
         """
-        return ConditionalOffer.active.filter(offer_type=ConditionalOffer.SITE)
+        return ConditionalOffer.active.filter(offer_type="Site")
     
     def get_basket_offers(self, basket, user):
         """
