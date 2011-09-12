@@ -386,7 +386,8 @@ class OrderPlacementMixin(CheckoutSessionMixin):
                                          total_incl_tax,
                                          total_excl_tax,
                                          order_number,
-                                         status)
+                                         status,
+                                         **kwargs)
         self.save_payment_details(order)
         return order
     
