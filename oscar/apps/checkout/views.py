@@ -377,7 +377,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         if 'status' not in kwargs:
             status = self.get_initial_order_status(basket)
         else:
-            status = kwargs['status']
+            status = kwargs.pop('status')
         order = OrderCreator().place_order(self.request.user, 
                                          basket, 
                                          shipping_address, 
