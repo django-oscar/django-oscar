@@ -300,10 +300,9 @@ class CountCondition(Condition):
         
         
 class CoverageCondition(Condition):
-    u"""
+    """
     An offer condition dependent on the NUMBER of matching items from the basket.
     """
-
     class Meta:
         proxy = True
 
@@ -320,7 +319,7 @@ class CoverageCondition(Condition):
         return False
     
     def consume_items(self, basket):
-        u"""
+        """
         Marks items within the basket lines as consumed so they
         can't be reused in other offers.
         """
@@ -447,6 +446,7 @@ class AbsoluteDiscountBenefit(Benefit):
                 # Update loop vars
                 affected_items += quantity_affected
                 remaining_discount -= line_discount
+                discount += line_discount
         if discount > 0 and condition:
             condition.consume_items(basket)
             
