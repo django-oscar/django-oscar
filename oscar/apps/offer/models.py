@@ -402,7 +402,7 @@ class PercentageDiscountBenefit(Benefit):
 
 
 class AbsoluteDiscountBenefit(Benefit):
-    u"""
+    """
     An offer benefit that gives an absolute discount
     """
 
@@ -423,15 +423,20 @@ class AbsoluteDiscountBenefit(Benefit):
                     # Avoid zero price products
                     continue
                 remaining_discount = self.value - discount
-                quantity = min(line.quantity_without_discount, 
-                               max_affected_items - affected_items,
-                               math.floor(remaining_discount / price))
-                quantity = int(quantity)
-                discount += price * quantity
-                affected_items += quantity
-                line.discount(discount, quantity)
+                quantity_affected = int(min(line.quantity_without_discount, 
+                                        max_affected_items - affected_items,
+                                        math.ceil(remaining_discount / price)))
+                
+                # Update line with discounts
+                line_discount = min(remaining_discount, quantity_affected * price)
+                line.discount(line_discount, quantity_affected)
+                
+                # Update loop vars
+                affected_items += quantity_affected
+                remaining_discount -= line_discount
         if discount > 0 and condition:
-            condition.consume_items(basket)          
+            condition.consume_items(basket)
+            
         return discount
 
 
