@@ -208,7 +208,7 @@ class Benefit(models.Model):
 
 
 class Range(models.Model):
-    u"""
+    """
     Represents a range of products that can be used within an offer
     """
     name = models.CharField(_("Name"), max_length=128, unique=True)
@@ -226,15 +226,28 @@ class Range(models.Model):
         return self.name    
         
     def contains_product(self, product):
+        """
+        Check whether the passed product is part of this range
+        """
+        # We look for shortcircuit checks first before
+        # the tests that require more database queries.
         excluded_product_ids = self._excluded_product_ids()
         if product.id in excluded_product_ids:
             return False
         if self.includes_all_products:
             return True
         if product.product_class_id in self._class_ids():
-            return True    
+            return True   
         included_product_ids = self._included_product_ids()
-        return product.id in included_product_ids
+        if product.id in included_product_ids:
+            return True
+        test_categories = self.included_categories.all() 
+        if test_categories:
+            for category in product.categories.all():
+                for test_category in test_categories:
+                    if category == test_category or category.is_descendant_of(test_category):
+                        return True
+        return False
     
     def _included_product_ids(self):
         if None == self.__included_product_ids:
