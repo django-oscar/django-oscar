@@ -41,11 +41,11 @@ class OrderCreator(object):
                                         total_excl_tax, order_number, status, **kwargs)
         for line in basket.all_lines():
             self.create_line_models(order, line)
-            self._update_stock_records(line)
+            self.update_stock_records(line)
         for discount in basket.discounts:
-            self._create_discount_model(order, discount)
+            self.create_discount_model(order, discount)
         for voucher in basket.vouchers.all():
-            self._record_voucher_usage(order, voucher, user)
+            self.record_voucher_usage(order, voucher, user)
         
         # Send signal for analytics to pick up
         order_placed.send(sender=self, order=order, user=user)
@@ -120,13 +120,13 @@ class OrderCreator(object):
             line_data.update(extra_line_fields)
         
         order_line = Line._default_manager.create(**line_data)
-        self._create_line_price_models(order, order_line, basket_line)
-        self._create_line_attributes(order, order_line, basket_line)
+        self.create_line_price_models(order, order_line, basket_line)
+        self.create_line_attributes(order, order_line, basket_line)
         
-    def _update_stock_records(self, line):
+    def update_stock_records(self, line):
         line.product.stockrecord.allocate(line.quantity)    
         
-    def _create_line_price_models(self, order, order_line, basket_line):
+    def create_line_price_models(self, order, order_line, basket_line):
         """
         Creates the batch line price models
         """
@@ -138,7 +138,7 @@ class OrderCreator(object):
                                               price_incl_tax=price_incl_tax,
                                               price_excl_tax=price_excl_tax)
     
-    def _create_line_attributes(self, order, order_line, basket_line):
+    def create_line_attributes(self, order, order_line, basket_line):
         """
         Creates the batch line attributes.
         """
@@ -148,7 +148,7 @@ class OrderCreator(object):
                                                    type=attr.option.code,
                                                    value=attr.value)
             
-    def _create_discount_model(self, order, discount):
+    def create_discount_model(self, order, discount):
         """
         Creates an order discount model for each discount attached to the basket.
         """
@@ -158,7 +158,7 @@ class OrderCreator(object):
             order_discount.voucher_code = discount['voucher'].code
         order_discount.save()
         
-    def _record_voucher_usage(self, order, voucher, user):
+    def record_voucher_usage(self, order, voucher, user):
         """
         Updates the models that care about this voucher.
         """
