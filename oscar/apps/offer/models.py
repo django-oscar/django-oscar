@@ -167,7 +167,8 @@ class Benefit(models.Model):
     )
     range = models.ForeignKey('offer.Range', null=True, blank=True)
     type = models.CharField(max_length=128, choices=TYPE_CHOICES)
-    value = PositiveDecimalField(decimal_places=2, max_digits=12)
+    value = PositiveDecimalField(decimal_places=2, max_digits=12,
+                                 null=True, blank=True)
 
     price_field = 'price_incl_tax'
 
@@ -198,7 +199,9 @@ class Benefit(models.Model):
         # All benefits need a range apart from FIXED_PRICE
         if self.type and self.type != self.FIXED_PRICE and not self.range:
             raise ValidationError("Benefits of type %s need a range" % self.type)
-        
+        if self.type and self.type != self.MULTIBUY and self.value is None:
+            raise ValidationError("Benefits of type %s need a value" % self.type)
+
     def _effective_max_affected_items(self):
         if not self.max_affected_items:
             max_affected_items = 10000

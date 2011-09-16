@@ -134,5 +134,5 @@ class AbstractVote(models.Model):
         u"""
         Validates model and raises error if validation fails
         """
-        self.review.update_totals()
         super(AbstractVote, self).save(*args, **kwargs)
+        self.review.update_totals()        
