@@ -27,7 +27,7 @@ class Dispatcher(object):
         """
         Dispatch order-related messages to the customer
         """
-        self.dispatch_messages(order.user, messages)
+        self.dispatch_user_messages(order.user, messages)
             
         # Create order comms event for audit
         if event_type:
@@ -79,7 +79,6 @@ class Dispatcher(object):
         email.send()
         
         return email
-    
         
     def send_text_message(self, user, event_type):
         raise NotImplementedError
