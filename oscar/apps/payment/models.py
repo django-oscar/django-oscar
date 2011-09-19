@@ -143,7 +143,7 @@ class SourceType(models.Model):
     def save(self, *args, **kwargs):
         if not self.code:
             self.code = slugify(self.name)
-        super(AbstractSourceType, self).save(*args, **kwargs)
+        super(SourceType, self).save(*args, **kwargs)
     
 
 class Bankcard(models.Model):
