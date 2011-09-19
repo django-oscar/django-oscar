@@ -347,7 +347,7 @@ class CoverageCondition(Condition):
         
         
 class ValueCondition(Condition):
-    u"""
+    """
     An offer condition dependent on the VALUE of matching items from the basket.
     """
     price_field = 'price_incl_tax'
@@ -356,7 +356,7 @@ class ValueCondition(Condition):
         proxy = True
 
     def is_satisfied(self, basket):
-        u"""Determines whether a given basket meets this condition"""
+        """Determines whether a given basket meets this condition"""
         value_of_matches = Decimal('0.00')
         for line in basket.all_lines():
             if self.range.contains_product(line.product) and line.product.has_stockrecord:
@@ -367,7 +367,7 @@ class ValueCondition(Condition):
         return False
     
     def consume_items(self, basket):
-        u"""
+        """
         Marks items within the basket lines as consumed so they
         can't be reused in other offers.
         """
@@ -375,6 +375,8 @@ class ValueCondition(Condition):
         for line in basket.all_lines():
             if self.range.contains_product(line.product) and line.product.has_stockrecord:
                 price = getattr(line.product.stockrecord, self.price_field)
+                if not price:
+                    continue
                 quantity_to_consume = min(line.quantity_without_discount, 
                                           math.floor((self.value - value_of_matches)/price))
                 value_of_matches += price * int(quantity_to_consume)
