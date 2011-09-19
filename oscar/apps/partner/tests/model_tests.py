@@ -3,11 +3,9 @@ import datetime
 
 from django.conf import settings
 from django.utils import unittest
-from django.core.exceptions import ValidationError
 
-from oscar.apps.catalogue.models import Product, ProductClass
-from oscar.apps.partner.models import Partner, StockRecord
 from oscar.test.helpers import create_product
+from oscar.apps.partner.models import StockRecord
 
 
 class DummyWrapper(object):
@@ -22,14 +20,21 @@ class DummyWrapper(object):
 class StockRecordTests(unittest.TestCase):
 
     def setUp(self):
-        self.product = create_product(price=D('10.00'))
+        self.product = create_product(price=D('10.00'), num_in_stock=10)
    
     def test_get_price_incl_tax_defaults_to_no_tax(self):
         self.assertEquals(D('10.00'), self.product.stockrecord.price_incl_tax)
         
     def test_get_price_excl_tax_returns_correct_value(self):
         self.assertEquals(D('10.00'), self.product.stockrecord.price_excl_tax)
-
+        
+    def test_net_stock_level_with_no_allocation(self):
+        self.assertEquals(10, self.product.stockrecord.net_stock_level)
+        
+    def test_net_stock_level_with_allocation(self):
+        self.product.stockrecord.allocate(5)
+        self.assertEquals(10-5, self.product.stockrecord.net_stock_level)    
+        
 
 class DefaultWrapperTests(unittest.TestCase):
     

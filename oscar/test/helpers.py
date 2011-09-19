@@ -11,7 +11,7 @@ from oscar.apps.partner.models import Partner, StockRecord
 
 def create_product(price=None, title="Dummy title", product_class="Dummy item class", 
                      partner="Dummy partner", upc="dummy_101", num_in_stock=10):
-    u"""
+    """
     Helper method for creating products that are used in tests.
     """
     ic,_ = ProductClass._default_manager.get_or_create(name=product_class)

@@ -48,7 +48,7 @@ class AbstractPartner(models.Model):
 
 
 class AbstractStockRecord(models.Model):
-    u"""
+    """
     A basic stock record.
     
     This links a product to a partner, together with price and availability
@@ -131,6 +131,10 @@ class AbstractStockRecord(models.Model):
         """
         Return the effective number in stock
         """ 
+        if self.num_in_stock is None:
+            return 0
+        if self.num_allocated is None:
+            return self.num_in_stock
         return self.num_in_stock - self.num_allocated
     
     @property
