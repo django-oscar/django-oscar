@@ -1,6 +1,7 @@
 import logging
 
 from django.core.mail import EmailMessage, EmailMultiAlternatives
+from django.conf import settings
 
 from oscar.core.loading import import_module
 import_module('order.models', ['CommunicationEvent',], locals())
@@ -65,15 +66,22 @@ class Dispatcher(object):
         """
         Plain email sending to the specified recipient
         """
+        if hasattr(settings, 'OSCAR_FROM_EMAIL'):
+            from_email = settings.OSCAR_FROM_EMAIL
+        else:
+            from_email = None
+            
         # Determine whether we are sending a HTML version too
         if messages['html']:
             email = EmailMultiAlternatives(messages['subject'],
                                            messages['body'],
+                                           from_email=from_email,
                                            to=[recipient])
             email.attach_alternative(messages['html'], "text/html")
         else:
             email = EmailMessage(messages['subject'],
                                  messages['body'],
+                                 from_email=from_email,
                                  to=[recipient])
         self.logger.info("Sending email to %s" % recipient)
         email.send()
