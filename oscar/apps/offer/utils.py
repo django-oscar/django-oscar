@@ -1,8 +1,12 @@
 from decimal import Decimal
 from itertools import chain
+import logging
 
 from oscar.core.loading import import_module
 import_module('offer.models', ['ConditionalOffer'], locals())
+
+logger = logging.getLogger('oscar.offers')
+
 
 # This needs hooking into the offer application system.
 class Discount(object):
@@ -35,6 +39,7 @@ class Applicator(object):
         offers).
         """
         offers = self.get_offers(request, basket) 
+        logger.debug("Found %d offers to apply to basket %d", len(offers), basket.id)
         discounts = self.get_basket_discounts(basket, offers)
         # Store this list of discounts with the basket so it can be 
         # rendered in templates
@@ -47,6 +52,7 @@ class Applicator(object):
             # discount is 0
             while True:
                 discount = offer.apply_benefit(basket)
+                logger.debug("Found discount %.2f from offer %d", discount, offer.id)
                 if discount > 0:
                     if offer.id not in discounts:
                         discounts[offer.id] = {'name': offer.name,
@@ -58,6 +64,8 @@ class Applicator(object):
                     discounts[offer.id]['freq'] += 1
                 else:
                     break
+        
+        logger.debug("Finished applying offers to basket %d", basket.id)
         return discounts
     
     def get_offers(self, request, basket):
@@ -76,7 +84,7 @@ class Applicator(object):
         return list(chain(session_offers, basket_offers, user_offers, site_offers))
         
     def get_site_offers(self):
-        u"""
+        """
         Return site offers that are available to all users
         """
         return ConditionalOffer.active.filter(offer_type="Site")
@@ -97,7 +105,7 @@ class Applicator(object):
         return offers
     
     def get_user_offers(self, user):
-        u"""
+        """
         Returns offers linked to this particular user.  
         
         Eg: student users might get 25% off
@@ -105,7 +113,7 @@ class Applicator(object):
         return []
     
     def get_session_offers(self, request):
-        u"""
+        """
         Returns temporary offers linked to the current session.
         
         Eg: visitors coming from an affiliate site get a 10% discount
