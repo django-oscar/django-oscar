@@ -9,18 +9,21 @@ from oscar.core.loading import import_module
 import_module('partner.wrappers', ['DefaultWrapper'], locals())
 
 
-def get_partner_wrapper(test_partner):
+# Cache the partners for quicklookups
+default_wrapper = DefaultWrapper()
+partner_wrappers = {}
+for partner, class_str in settings.OSCAR_PARTNER_WRAPPERS.items():
+    bits = class_str.split('.')
+    class_name = bits.pop()
+    module_str = '.'.join(bits)
+    module = django_import_module(module_str)
+    partner_wrappers[partner] = getattr(module, class_name)()
+
+def get_partner_wrapper(partner_name):
     """
     Returns the appropriate partner wrapper given the partner name
     """
-    for partner, class_str in settings.OSCAR_PARTNER_WRAPPERS.items():
-        if partner == test_partner:
-            bits = class_str.split('.')
-            class_name = bits.pop()
-            module_str = '.'.join(bits)
-            module = django_import_module(module_str)
-            return getattr(module, class_name)()
-    return DefaultWrapper()
+    return partner_wrappers.get(partner_name, default_wrapper)
 
 
 class AbstractPartner(models.Model):
