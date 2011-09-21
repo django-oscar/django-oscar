@@ -42,7 +42,7 @@ class OrderCreator(object):
         for line in basket.all_lines():
             self.create_line_models(order, line)
             self.update_stock_records(line)
-        for discount in basket.discounts:
+        for discount in basket.get_discounts():
             self.create_discount_model(order, discount)
         for voucher in basket.vouchers.all():
             self.record_voucher_usage(order, voucher, user)
