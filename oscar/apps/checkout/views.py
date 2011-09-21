@@ -494,7 +494,8 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         """
         fzn_basket = self.get_submitted_basket()
         fzn_basket.thaw()
-        fzn_basket.merge(self.request.basket)
+        if self.request.basket.id != fzn_basket.id:
+            fzn_basket.merge(self.request.basket)
         self.request.basket = fzn_basket
 
     def send_confirmation_message(self, order):
@@ -555,7 +556,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         # checkouts (eg where we redirect to a 3rd party site and place
         # the order on a different request).
         order_number = self.generate_order_number(basket)
-        logger.info("Order #%s: beginning submission process", order_number)
+        logger.info("Order #%s: beginning submission process for basket %d", (order_number, basket.id))
         
         # We freeze the basket to prevent it being modified once the payment
         # process has started.  If your payment fails, then the basket will
@@ -580,13 +581,13 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             # Something went wrong with payment, need to show
             # error to the user.  This type of exception is supposed
             # to set a friendly error message.
+            logger.warning("Order #%s: unable to take payment (%s) - restoring basket", order_number, e)
             self.restore_frozen_basket()
-            logger.warning("Order #%s: unable to take payment (%s)", order_number, e)
             return self.render_to_response(self.get_context_data(error=str(e)))
         except PaymentError, e:
             # Something went wrong which wasn't anticipated.
-            self.restore_frozen_basket()
             logger.error("Order #%s: payment error (%s)", order_number, e)
+            self.restore_frozen_basket()
             return self.render_to_response(self.get_context_data(error="A problem occurred processing payment."))
         else:
             # If all is ok with payment, place order
