@@ -11,6 +11,8 @@ from extra_views import ModelFormSetView
 from oscar.apps.basket.forms import BasketLineForm, AddToBasketForm, \
     BasketVoucherForm, SavedLineForm
 from oscar.apps.basket.signals import basket_addition
+from oscar.core.loading import import_module
+import_module('offer.utils', ['Applicator'], locals())
 
 
 class BasketView(ModelFormSetView):
@@ -129,31 +131,46 @@ class VoucherAddView(FormView):
     def get(self, request, *args, **kwargs):
         return HttpResponseRedirect(reverse('basket:summary'))
     
-    def _check_voucher(self, code):
-        try:
-            voucher = self.request.basket.vouchers.get(code=code)
-            messages.error(self.request, "You have already added the '%s' voucher to your basket" % voucher.code)
+    def apply_voucher_to_basket(self, voucher):
+        if not voucher.is_active():
+            messages.error(self.request, _("The '%(code)s' voucher has expired" % {'code': voucher.code}))
             return
-        except self.voucher_model.DoesNotExist:    
-            pass
-        try:
-            voucher = self.voucher_model._default_manager.get(code=code)
-            if not voucher.is_active():
-                messages.error(self.request, "The '%s' voucher has expired" % voucher.code)
-                return
-            is_available, message = voucher.is_available_to_user(self.request.user)
-            if not is_available:
-                messages.error(self.request, message)
-                return
-            self.request.basket.vouchers.add(voucher)
-            self.request.basket.save()
-            messages.info(self.request, "Voucher '%s' added to basket" % voucher.code)
-        except self.voucher_model.DoesNotExist:
-            messages.error(self.request, "No voucher found with code '%s'" % code)
+        
+        is_available, message = voucher.is_available_to_user(self.request.user)
+        if not is_available:
+            messages.error(self.request, message)
+            return
+        
+        self.request.basket.vouchers.add(voucher)
+        
+        # Recalculate discounts to see if the voucher gives any
+        discounts_before = self.request.basket.get_discounts()
+        Applicator().apply(self.request, self.request.basket)
+        discounts_after = self.request.basket.get_discounts()
+        
+        # Look for discounts from this new voucher
+        found_discount = False
+        for discount in discounts_after:
+            if discount['voucher'] and discount['voucher'] == voucher:
+                found_discount = True
+                break
+        if not found_discount:
+            messages.warning(self.request, _("Your basket does not qualify for a voucher discount"))
+            self.request.basket.vouchers.remove(voucher)
+        else:
+            messages.info(self.request, _("Voucher '%(code)s' added to basket" % {'code': voucher.code}))
     
     def form_valid(self, form):
         code = form.cleaned_data['code']
-        self._check_voucher(code)
+        if self.request.basket.contains_voucher(code):
+            messages.error(self.request, _("You have already added the '%(code)s' voucher to your basket" % {'code': code}))
+        else:
+            try:
+                voucher = self.voucher_model._default_manager.get(code=code)
+            except self.voucher_model.DoesNotExist:
+                messages.error(self.request, _("No voucher found with code '%s'" % {'code': code}))
+            else:        
+                self.apply_voucher_to_basket(voucher)
         return HttpResponseRedirect(self.request.META.get('HTTP_REFERER', reverse('basket:summary')))
 
     def form_invalid(self, form):

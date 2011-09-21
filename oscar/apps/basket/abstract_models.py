@@ -37,7 +37,8 @@ class AbstractBasket(models.Model):
     # Cached queryset of lines
     _lines = None
     
-    discounts = []
+    # Dictionary of discounts
+    discounts = None
     
     class Meta:
         abstract = True
@@ -93,6 +94,11 @@ class AbstractBasket(models.Model):
             line.quantity += quantity
             line.save()
             self._lines = None
+
+    def get_discounts(self):
+        if self.discounts is None:
+            self.discounts = []
+        return self.discounts
 
     def set_discounts(self, discounts):
         """
@@ -274,6 +280,16 @@ class AbstractBasket(models.Model):
             test_datetime = datetime.datetime.now()
         return test_datetime - self.date_created
     
+    def contains_voucher(self, code):
+        """
+        Test whether the basket contains a voucher with a given code
+        """
+        try:
+            self.vouchers.get(code=code)
+        except ObjectDoesNotExist:    
+            return False
+        else:
+            return True
     
 class AbstractLine(models.Model):
     """
