@@ -345,10 +345,10 @@ class AbstractLine(models.Model):
     
     def discount(self, discount_value, affected_quantity):
         self._discount += discount_value
-        self._affected_quantity += affected_quantity
+        self._affected_quantity += int(affected_quantity)
         
     def consume(self, quantity):
-        self._affected_quantity += quantity
+        self._affected_quantity += int(quantity)
         
     def get_price_breakdown(self):
         """
@@ -361,7 +361,7 @@ class AbstractLine(models.Model):
         else:
             # Need to split the discount among the affected quantity 
             # of products.
-            item_incl_tax_discount = self._discount / self._affected_quantity
+            item_incl_tax_discount = self._discount / int(self._affected_quantity)
             item_excl_tax_discount = item_incl_tax_discount * self._tax_ratio
             prices.append((self.unit_price_incl_tax - item_incl_tax_discount, 
                            self.unit_price_excl_tax - item_excl_tax_discount,
