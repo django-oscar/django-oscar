@@ -168,7 +168,7 @@ class VoucherAddView(FormView):
             try:
                 voucher = self.voucher_model._default_manager.get(code=code)
             except self.voucher_model.DoesNotExist:
-                messages.error(self.request, _("No voucher found with code '%s'" % {'code': code}))
+                messages.error(self.request, _("No voucher found with code '%(code)s'" % {'code': code}))
             else:        
                 self.apply_voucher_to_basket(voucher)
         return HttpResponseRedirect(self.request.META.get('HTTP_REFERER', reverse('basket:summary')))
