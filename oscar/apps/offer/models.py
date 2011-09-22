@@ -1,4 +1,4 @@
-from decimal import Decimal
+from decimal import Decimal, ROUND_DOWN
 import math
 import datetime
 
@@ -6,6 +6,7 @@ from django.core import exceptions
 from django.db import models
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ValidationError
+from django.conf import settings
 
 from oscar.apps.offer.managers import ActiveOfferManager
 from oscar.models.fields import PositiveDecimalField, ExtendedURLField
@@ -201,6 +202,14 @@ class Benefit(models.Model):
             raise ValidationError("Benefits of type %s need a range" % self.type)
         if self.type and self.type != self.MULTIBUY and self.value is None:
             raise ValidationError("Benefits of type %s need a value" % self.type)
+
+    def round(self, amount):
+        """
+        Apply rounding to discount amount
+        """
+        if hasattr(settings, 'OSCAR_OFFER_ROUNDING_FUNCTION'):
+            return settings.OSCAR_OFFER_ROUNDING_FUNCTION(amount)
+        return amount.quantize(Decimal('.01'), ROUND_DOWN)
 
     def _effective_max_affected_items(self):
         if not self.max_affected_items:
@@ -408,7 +417,7 @@ class PercentageDiscountBenefit(Benefit):
                 price = getattr(line.product.stockrecord, self.price_field)
                 quantity = min(line.quantity_without_discount, 
                                max_affected_items - affected_items)
-                line_discount = self.value/100 * price * int(quantity)
+                line_discount = self.round(self.value/100 * price * int(quantity))
                 line.discount(line_discount, quantity)
                 affected_items += quantity
                 discount += line_discount
@@ -445,7 +454,7 @@ class AbsoluteDiscountBenefit(Benefit):
                                         math.ceil(remaining_discount / price)))
                 
                 # Update line with discounts
-                line_discount = min(remaining_discount, quantity_affected * price)
+                line_discount = self.round(min(remaining_discount, quantity_affected * price))
                 line.discount(line_discount, quantity_affected)
                 
                 # Update loop vars
@@ -493,7 +502,7 @@ class FixedPriceBenefit(Benefit):
         
         # Apply discount weighted by original value of line
         for line, quantity in covered_lines:
-            line_discount = discount * (line.unit_price_incl_tax * quantity) / product_total  
+            line_discount = self.round(discount * (line.unit_price_incl_tax * quantity) / product_total)  
             line.discount(line_discount.quantize(Decimal('.01')), quantity)
         return discount 
 
@@ -508,7 +517,7 @@ class MultibuyDiscountBenefit(Benefit):
         discount = Decimal('0.00')
         line = self._get_cheapest_line(basket)
         if line:
-            discount = getattr(line.product.stockrecord, self.price_field)
+            discount = self.round(getattr(line.product.stockrecord, self.price_field))
             # We deliberately don't consume the line here so 
             # as it will be consumed by the condition.
             line.discount(discount, 0)
