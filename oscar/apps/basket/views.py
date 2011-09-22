@@ -184,7 +184,7 @@ class VoucherRemoveView(View):
         return HttpResponseRedirect(reverse('basket:summary'))
     
     def post(self, request, *args, **kwargs):
-        voucher_id = kwargs.pop('pk')
+        voucher_id = int(kwargs.pop('pk'))
         try:
             voucher = request.basket.vouchers.get(id=voucher_id)
         except ObjectDoesNotExist:
