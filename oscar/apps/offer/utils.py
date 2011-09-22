@@ -8,6 +8,9 @@ import_module('offer.models', ['ConditionalOffer'], locals())
 logger = logging.getLogger('oscar.offers')
 
 
+class OfferApplicationError(Exception):
+    pass
+
 # This needs hooking into the offer application system.
 class Discount(object):
     
@@ -31,6 +34,7 @@ class Applicator(object):
     """
     For applying offers to a basket.
     """
+    max_applications = 50
     
     def apply(self, request, basket):
         """
@@ -50,9 +54,11 @@ class Applicator(object):
         for offer in offers:
             # For each offer, we keep trying to apply it until the
             # discount is 0
+            applications = 0
             while True:
                 discount = offer.apply_benefit(basket)
-                logger.debug("Found discount %.2f from offer %d", discount, offer.id)
+                applications += 1
+                logger.debug("Found discount %.2f for basket %d from offer %d", discount, basket.id, offer.id)
                 if discount > 0:
                     if offer.id not in discounts:
                         discounts[offer.id] = {'name': offer.name,
@@ -64,6 +70,8 @@ class Applicator(object):
                     discounts[offer.id]['freq'] += 1
                 else:
                     break
+                if applications > self.max_applications:
+                    raise OfferApplicationError("Exceeded %d applications for offer %d on basket %d" % (self.max_applications, offer.id, basket.id))
         
         logger.debug("Finished applying offers to basket %d", basket.id)
         return discounts

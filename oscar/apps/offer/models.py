@@ -465,18 +465,26 @@ class FixedPriceBenefit(Benefit):
     
     Note that we ignore the benefit range here and only give a fixed price
     for the products in the condition range.
+    
+    The condition should be a count condition
     """
     class Meta:
         proxy = True
 
     def apply(self, basket, condition=None):
+        num_covered = 0
+        num_permitted = int(condition.value)
         covered_lines = []
         product_total = Decimal('0.00')
         for line in basket.all_lines():
-            if condition.range.contains_product(line.product) and line not in covered_lines:
-                covered_lines.append(line)
-                product_total += line.unit_price_incl_tax
-            if len(covered_lines) >= condition.value:
+            if condition.range.contains_product(line.product) and line.quantity_without_discount > 0:
+                # Line is available - determine quantity to consume and 
+                # record the total of the consumed products
+                quantity = min(line.quantity_without_discount, num_permitted)
+                num_covered += quantity
+                product_total += quantity*line.unit_price_incl_tax
+                covered_lines.append((line, quantity))
+            if num_covered >= num_permitted:
                 break
         discount = max(product_total - self.value, Decimal('0.00'))
         
@@ -484,9 +492,9 @@ class FixedPriceBenefit(Benefit):
             return discount
         
         # Apply discount weighted by original value of line
-        for line in covered_lines:
-            line_discount = (line.unit_price_incl_tax / product_total) * discount 
-            line.discount(line_discount.quantize(Decimal('.01')), 1)
+        for line, quantity in covered_lines:
+            line_discount = discount * (line.unit_price_incl_tax * quantity) / product_total  
+            line.discount(line_discount.quantize(Decimal('.01')), quantity)
         return discount 
 
 
