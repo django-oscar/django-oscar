@@ -108,6 +108,13 @@ class AbstractBasket(models.Model):
         """
         self.discounts = discounts
     
+    def remove_discounts(self):
+        """
+        Remove any discounts so they get recalculated
+        """
+        self.discoumts = []
+        self._lines = None
+    
     def merge_line(self, line):
         """
         For transferring a line from another basket to this one.

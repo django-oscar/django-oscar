@@ -145,6 +145,7 @@ class VoucherAddView(FormView):
         
         # Recalculate discounts to see if the voucher gives any
         discounts_before = self.request.basket.get_discounts()
+        self.request.basket.remove_discounts()
         Applicator().apply(self.request, self.request.basket)
         discounts_after = self.request.basket.get_discounts()
         
