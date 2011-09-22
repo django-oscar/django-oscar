@@ -234,7 +234,7 @@ class AbstractBasket(models.Model):
         Return discounts from non-voucher sources.
         """
         offer_discounts = []
-        for discount in self.discounts:
+        for discount in self.get_discounts():
             if not discount['voucher']:
                 offer_discounts.append(discount)
         return offer_discounts
@@ -245,7 +245,7 @@ class AbstractBasket(models.Model):
         Return discounts from vouchers
         """
         voucher_discounts = []
-        for discount in self.discounts:
+        for discount in self.get_discounts():
             if discount['voucher']:
                 voucher_discounts.append(discount)
         return voucher_discounts
