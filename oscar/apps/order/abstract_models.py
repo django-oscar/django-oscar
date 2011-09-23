@@ -174,7 +174,7 @@ class AbstractCommunicationEvent(models.Model):
     
         
 class AbstractLine(models.Model):
-    u"""
+    """
     A order line (basically a product and a quantity)
     
     Not using a line model as it's difficult to capture and payment 
@@ -207,7 +207,8 @@ class AbstractLine(models.Model):
     # Cost price (the price charged by the fulfilment partner for this product).
     unit_cost_price = models.DecimalField(decimal_places=2, max_digits=12, blank=True, null=True)
     # Normal site price for item (without discounts)
-    unit_site_price = models.DecimalField(decimal_places=2, max_digits=12, blank=True, null=True)
+    unit_price_incl_tax = models.DecimalField(decimal_places=2, max_digits=12, blank=True, null=True)
+    unit_price_excl_tax = models.DecimalField(decimal_places=2, max_digits=12, blank=True, null=True)
     # Retail price at time of purchase
     unit_retail_price = models.DecimalField(decimal_places=2, max_digits=12, blank=True, null=True)
     
@@ -225,7 +226,7 @@ class AbstractLine(models.Model):
     
     @property
     def description(self):
-        u"""
+        """
         Returns a description of this line including details of any 
         line attributes.
         """

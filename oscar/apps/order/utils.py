@@ -111,7 +111,8 @@ class OrderCreator(object):
                       'line_price_before_discounts_incl_tax': basket_line.line_price_incl_tax,
                       # Reporting details
                       'unit_cost_price': stockrecord.cost_price,
-                      'unit_site_price': basket_line.unit_price_incl_tax,
+                      'unit_price_incl_tax': basket_line.unit_price_incl_tax,
+                      'unit_price_excl_tax': basket_line.unit_price_excl_tax,
                       'unit_retail_price': stockrecord.price_retail,
                       # Shipping details
                       'est_dispatch_date':  basket_line.product.stockrecord.dispatch_date
