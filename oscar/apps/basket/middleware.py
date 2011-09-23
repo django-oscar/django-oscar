@@ -11,11 +11,9 @@ basket_model = get_model('basket', 'basket')
 
 class BasketMiddleware(object):
     
-    def __init__(self):
-        self.cookies_to_delete = []
-    
     def process_request(self, request):
         
+        self.cookies_to_delete = []
         manager = basket_model.open
         cookie_basket = self.get_cookie_basket(settings.OSCAR_BASKET_COOKIE_OPEN, 
                                                request, manager)
