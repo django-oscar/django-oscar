@@ -47,8 +47,9 @@ class BasketMiddleware(object):
     def process_response(self, request, response):
         
         # Delete any surplus cookies
-        for cookie_key in self.cookies_to_delete:
-            response.delete_cookie(cookie_key)
+        if hasattr(self, 'cookies_to_delete'):
+            for cookie_key in self.cookies_to_delete:
+                response.delete_cookie(cookie_key)
             
         # If a basket has had products added to it, but the user is anonymous
         # then we need to assign it to a cookie
