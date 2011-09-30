@@ -33,12 +33,7 @@ class AbstractBasket(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_merged = models.DateTimeField(null=True, blank=True)
     date_submitted = models.DateTimeField(null=True, blank=True)
-    
-    # Cached queryset of lines
-    _lines = None
-    
-    # Dictionary of discounts
-    discounts = None
+
     
     class Meta:
         abstract = True
@@ -46,6 +41,11 @@ class AbstractBasket(models.Model):
     objects = models.Manager()
     open = OpenBasketManager()
     saved = SavedBasketManager()
+
+    def __init__(self, *args, **kwargs):
+        super(AbstractBasket, self).__init__(*args, **kwargs)
+        self._lines = None  # Cached queryset of lines
+        self.discounts = None  # Dictionary of discounts
     
     def __unicode__(self):
         return u"%s basket (owner: %s, lines: %d)" % (self.status, self.owner, self.num_lines)
@@ -57,7 +57,7 @@ class AbstractBasket(models.Model):
         This is important for offers as they alter the line models and you don't
         want to reload them from the DB.
         """
-        if not self._lines:
+        if self._lines is None:
             self._lines = self.lines.all()
         return self._lines    
     
@@ -112,7 +112,7 @@ class AbstractBasket(models.Model):
         """
         Remove any discounts so they get recalculated
         """
-        self.discoumts = []
+        self.discounts = []
         self._lines = None
     
     def merge_line(self, line):
