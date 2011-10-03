@@ -226,6 +226,10 @@ class AddressUpdateView(UpdateView):
     form_class = UserAddressForm
     model = user_address_model
     
+    def get_queryset(self):
+        """Return a customer's addresses"""
+        return user_address_model._default_manager.filter(user=self.request.user)    
+
     def get_template_names(self):
         return ["customer/address-form.html"]
     
@@ -235,7 +239,11 @@ class AddressUpdateView(UpdateView):
 
 class AddressDeleteView(DeleteView):
     model = user_address_model
-    
+
+    def get_queryset(self):
+        """Return a customer's addresses"""
+        return user_address_model._default_manager.filter(user=self.request.user)        
+
     def get_success_url(self):
         return reverse('customer:address-list')    
     
