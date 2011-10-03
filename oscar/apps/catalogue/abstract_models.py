@@ -144,7 +144,7 @@ class AbstractProductContributor(models.Model):
     role = models.ForeignKey('catalogue.ContributorRole')
     
     def __unicode__(self):
-        return '%s <- %s - %s' % (self.item, self.role, self.contributor)
+        return '%s <- %s - %s' % (self.product, self.role, self.contributor)
     
     class Meta:
         abstract = True
