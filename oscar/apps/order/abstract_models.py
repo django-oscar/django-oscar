@@ -46,13 +46,33 @@ class AbstractOrder(models.Model):
     
     @property
     def basket_total_incl_tax(self):
-        u"""Return basket total including tax"""
+        """
+        Return basket total including tax
+        """
         return self.total_incl_tax - self.shipping_incl_tax
     
     @property
     def basket_total_excl_tax(self):
-        u"""Return basket total excluding tax"""
+        """
+        Return basket total excluding tax
+        """
         return self.total_excl_tax - self.shipping_excl_tax
+    
+    @property
+    def total_before_discounts_incl_tax(self):
+        total = D('0.00')
+        for line in self.lines.all():
+            total += line.line_price_before_discounts_incl_tax
+        total += self.shipping_incl_tax
+        return total
+    
+    @property
+    def total_before_discounts_excl_tax(self):
+        total = D('0.00')
+        for line in self.lines.all():
+            total += line.line_price_before_discounts_excl_tax
+        total += self.shipping_excl_tax
+        return total
     
     @property
     def total_discount_incl_tax(self):

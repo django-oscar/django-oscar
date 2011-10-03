@@ -71,6 +71,7 @@ class Applicator(object):
                 else:
                     break
                 if applications > self.max_applications:
+                    logger.error("Exceeded %d applications for offer %d on basket %d", self.max_applications, offer.id, basket.id)
                     raise OfferApplicationError("Exceeded %d applications for offer %d on basket %d" % (self.max_applications, offer.id, basket.id))
         
         logger.debug("Finished applying offers to basket %d", basket.id)
