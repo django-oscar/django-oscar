@@ -14,9 +14,15 @@ class BasketMiddleware(object):
     def process_request(self, request):
         
         self.cookies_to_delete = []
+        basket = self.get_basket(request)
+        self.apply_offers_to_basket(request, basket)   
+        request.basket = basket
+    
+    def get_basket(self, request):  
         manager = basket_model.open
         cookie_basket = self.get_cookie_basket(settings.OSCAR_BASKET_COOKIE_OPEN, 
                                                request, manager)
+        
         if request.user.is_authenticated():
             # Signed-in user: if they have a cookie basket too, it means
             # that they have just signed in and we need to merge their cookie
@@ -25,12 +31,14 @@ class BasketMiddleware(object):
                 basket, _ = manager.get_or_create(owner=request.user)
             except basket_model.MultipleObjectsReturned:
                 # Not sure quite how we end up here with multiple baskets
-                # We delete them and create a fresh one
-                manager.filter(owner=request.user).delete()
-                basket = manager.create(owner=request.user)
+                # We merge any  them and create a fresh one
+                old_baskets = list(manager.filter(owner=request.user))
+                basket = old_baskets[0]
+                for other_basket in old_baskets[1:]:
+                    self.merge_baskets(basket, other_basket)
                 
             if cookie_basket:
-                basket.merge(cookie_basket)
+                self.merge_baskets(basket, cookie_basket)
                 self.cookies_to_delete.append(settings.OSCAR_BASKET_COOKIE_OPEN)
         elif cookie_basket:
             # Anonymous user with a basket tied to the cookie
@@ -38,11 +46,16 @@ class BasketMiddleware(object):
         else:
             # Anonymous user with no basket - we don't save the basket until
             # we need to.
-            basket = basket_model()
+            basket = basket_model() 
+        return basket 
             
-        # Assign basket object to request
-        self.apply_offers_to_basket(request, basket)   
-        request.basket = basket
+    def merge_baskets(self, master, slave):
+        """
+        Merge one basket into another.
+        
+        This is its own method to allow it to be overridden
+        """
+        master.merge(slave)    
         
     def process_response(self, request, response):
         
