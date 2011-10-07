@@ -36,12 +36,13 @@ def _split_by_position(linked_promotions, context):
     by position, and write these lists to the context dict.
     """
     for linked_promotion in linked_promotions:
-        if not linked_promotion.content_object:
+        promotion = linked_promotion.content_object
+        if not promotion:
             continue
         key = 'promotions_%s' % linked_promotion.position.lower()
         if key not in context:
             context[key] = []
-        context[key].append(linked_promotion.content_object)
+        context[key].append(promotion)
       
 
 

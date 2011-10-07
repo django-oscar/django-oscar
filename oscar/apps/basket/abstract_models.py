@@ -33,7 +33,6 @@ class AbstractBasket(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_merged = models.DateTimeField(null=True, blank=True)
     date_submitted = models.DateTimeField(null=True, blank=True)
-
     
     class Meta:
         abstract = True
