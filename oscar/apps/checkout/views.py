@@ -492,11 +492,17 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         Restores a frozen basket as the sole OPEN basket.  Note that this also merges
         in any new products that have been added to a basket that has been created while payment.
         """
-        fzn_basket = self.get_submitted_basket()
-        fzn_basket.thaw()
-        if self.request.basket.id != fzn_basket.id:
-            fzn_basket.merge(self.request.basket)
-        self.request.basket = fzn_basket
+        try:
+            fzn_basket = self.get_submitted_basket()
+        except Basket.DoesNotExist:
+            # Strange place.  The previous basket stored in the session does
+            # not exist.
+            pass
+        else:
+            fzn_basket.thaw()
+            if self.request.basket.id != fzn_basket.id:
+                fzn_basket.merge(self.request.basket)
+                self.request.basket = fzn_basket
 
     def send_confirmation_message(self, order):
         code = self.communication_type_code
