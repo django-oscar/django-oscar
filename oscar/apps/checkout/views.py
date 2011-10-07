@@ -636,8 +636,7 @@ class ThankYouView(DetailView):
             if 'checkout_order_id' in self.request.session:
                 order = Order._default_manager.get(pk=self.request.session['checkout_order_id'])
             else:
-                # This is a strange place to be
-                messages.error(self.request, _("No order found to show thank-you page for"))
-                return HttpResponseRedirect(reverse('checkout:payment-details'))    
+                logger.error("No order found with session id %s", self.request.session['checkout_order_id'])
+                raise Http404(_("No order found"))
         
         return order
