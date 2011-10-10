@@ -354,7 +354,8 @@ class AbstractLine(models.Model):
         self._affected_quantity += int(affected_quantity)
         
     def consume(self, quantity):
-        self._affected_quantity += int(quantity)
+        inc = max(self.quantity - self._affected_quantity - quantity, 0)
+        self._affected_quantity += inc
         
     def get_price_breakdown(self):
         """
@@ -382,7 +383,7 @@ class AbstractLine(models.Model):
     
     def _get_stockrecord_property(self, property):
         if not self.product.stockrecord:
-            return None
+            return Decimal('0.00')
         else:
             attr = getattr(self.product.stockrecord, property)
             if attr is None:
