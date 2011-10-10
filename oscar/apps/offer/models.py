@@ -319,7 +319,9 @@ class CoverageCondition(Condition):
         proxy = True
 
     def is_satisfied(self, basket):
-        u"""Determines whether a given basket meets this condition"""
+        """
+        Determines whether a given basket meets this condition
+        """
         covered_ids = []
         for line in basket.all_lines():
             if not line.is_available_for_discount:
