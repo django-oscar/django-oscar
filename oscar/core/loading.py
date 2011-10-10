@@ -1,9 +1,6 @@
 from imp import new_module
-import logging
 
 from django.conf import settings
-
-logger = logging.getLogger(__name__)
 
 
 class AppNotFoundError(Exception):
@@ -48,8 +45,6 @@ def import_module(module_label, classes, namespace=None):
                     try:
                         imported_local_mod = __import__(local_app, fromlist=classes)
                     except ImportError, e:
-                        logger.debug("Unable to load %s", local_app)
-                        logger.exception(e)
                         # Module doesn't exist, fall back to oscar core.  This can be tricky
                         # as if the overriding module has an import error, it will get picked up
                         # here.
