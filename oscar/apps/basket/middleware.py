@@ -12,7 +12,6 @@ basket_model = get_model('basket', 'basket')
 class BasketMiddleware(object):
     
     def process_request(self, request):
-        
         self.cookies_to_delete = []
         basket = self.get_basket(request)
         self.apply_offers_to_basket(request, basket)   

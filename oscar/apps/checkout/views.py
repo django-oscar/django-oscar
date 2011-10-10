@@ -562,7 +562,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         # checkouts (eg where we redirect to a 3rd party site and place
         # the order on a different request).
         order_number = self.generate_order_number(basket)
-        logger.info("Order #%s: beginning submission process for basket %d", (order_number, basket.id))
+        logger.info("Order #%s: beginning submission process for basket %d", order_number, basket.id)
         
         # We freeze the basket to prevent it being modified once the payment
         # process has started.  If your payment fails, then the basket will
