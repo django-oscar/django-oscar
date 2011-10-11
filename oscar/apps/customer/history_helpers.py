@@ -36,7 +36,7 @@ def _update_recently_viewed_products(product, request, response):
         product_ids.remove(product.id)
     product_ids.append(product.id)
     if (len(product_ids) > MAX_PRODUCTS):
-        del product_ids[MAX_PRODUCTS:]
+        product_ids = product_ids[len(product_ids)-MAX_PRODUCTS:]
     response.set_cookie('oscar_recently_viewed_products', _get_json_string_from_list(product_ids))
 
 def _get_list_from_json_string(cookie_value):
