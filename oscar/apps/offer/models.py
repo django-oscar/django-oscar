@@ -389,7 +389,7 @@ class ValueCondition(Condition):
                 if not price:
                     continue
                 quantity_to_consume = min(line.quantity_without_discount, 
-                                          math.floor((self.value - value_of_matches)/price))
+                                          math.ceil((self.value - value_of_matches)/price))
                 value_of_matches += price * int(quantity_to_consume)
                 line.consume(quantity_to_consume)
             if value_of_matches >= self.value:

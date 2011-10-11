@@ -354,7 +354,10 @@ class AbstractLine(models.Model):
         self._affected_quantity += int(affected_quantity)
         
     def consume(self, quantity):
-        inc = max(self.quantity - self._affected_quantity - quantity, 0)
+        if quantity > self.quantity - self._affected_quantity:
+            inc = self.quantity - self._affected_quantity
+        else:
+            inc = quantity
         self._affected_quantity += inc
         
     def get_price_breakdown(self):

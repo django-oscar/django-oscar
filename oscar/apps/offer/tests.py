@@ -88,8 +88,9 @@ class CountConditionTest(OfferTest):
 class ValueConditionTest(OfferTest):
     def setUp(self):
         super(ValueConditionTest, self).setUp()
-        self.cond = ValueCondition(range=self.range, type="Count", value=Decimal('10.00'))
+        self.cond = ValueCondition(range=self.range, type="Value", value=Decimal('10.00'))
         self.item = create_product(price=Decimal('5.00'))
+        self.expensive_item = create_product(price=Decimal('15.00'))
     
     def test_empty_basket_fails_condition(self):
         self.assertFalse(self.cond.is_satisfied(self.basket))
@@ -110,6 +111,11 @@ class ValueConditionTest(OfferTest):
         self.basket.add_product(self.item, 3)
         self.cond.consume_items(self.basket)
         self.assertEquals(1, self.basket.all_lines()[0].quantity_without_discount)
+
+    def test_consumption_with_high_value_product(self):
+        self.basket.add_product(self.expensive_item, 1)
+        self.cond.consume_items(self.basket)
+        self.assertEquals(0, self.basket.all_lines()[0].quantity_without_discount)
 
       
 class CoverageConditionTest(TestCase):
