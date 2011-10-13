@@ -370,9 +370,9 @@ class ValueCondition(Condition):
         """Determines whether a given basket meets this condition"""
         value_of_matches = Decimal('0.00')
         for line in basket.all_lines():
-            if self.range.contains_product(line.product) and line.product.has_stockrecord:
+            if self.range.contains_product(line.product) and line.product.has_stockrecord and line.quantity_without_discount > 0:
                 price = getattr(line.product.stockrecord, self.price_field)
-                value_of_matches += price * line.quantity
+                value_of_matches += price * line.quantity_without_discount
             if value_of_matches >= self.value:
                 return True
         return False
@@ -531,9 +531,10 @@ class MultibuyDiscountBenefit(Benefit):
         min_price = Decimal('10000.00')
         cheapest_line = None
         for line in basket.all_lines():
-            if line.quantity_without_discount > 0 and getattr(line.product.stockrecord, self.price_field) < min_price:
-                min_price = getattr(line.product.stockrecord, self.price_field)
-                cheapest_line = line
+            if self.range.contains_product(line.product):
+                if line.quantity_without_discount > 0 and getattr(line.product.stockrecord, self.price_field) < min_price:
+                    min_price = getattr(line.product.stockrecord, self.price_field)
+                    cheapest_line = line
         return cheapest_line
 
 # We need to import receivers at the bottom of this script

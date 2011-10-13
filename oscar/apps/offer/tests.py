@@ -116,6 +116,12 @@ class ValueConditionTest(OfferTest):
         self.basket.add_product(self.expensive_item, 1)
         self.cond.consume_items(self.basket)
         self.assertEquals(0, self.basket.all_lines()[0].quantity_without_discount)
+        
+    def test_is_consumed_respects_quantity_consumed(self):
+        self.basket.add_product(self.expensive_item, 1)
+        self.assertTrue(self.cond.is_satisfied(self.basket))
+        self.cond.consume_items(self.basket)
+        self.assertFalse(self.cond.is_satisfied(self.basket))
 
       
 class CoverageConditionTest(TestCase):
