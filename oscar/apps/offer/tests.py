@@ -247,12 +247,24 @@ class MultibuyDiscountBenefitTest(OfferTest):
         self.basket.add_product(self.item, 3)
         self.assertEquals(Decimal('5.00'), self.benefit.apply(self.basket))   
         
-    def test_discount_does_not_consume_item(self):
+    def test_discount_does_not_consume_item_if_in_condition_range(self):
         self.basket.add_product(self.item, 1)
         first_discount = self.benefit.apply(self.basket)
         self.assertEquals(Decimal('5.00'), first_discount)
         second_discount = self.benefit.apply(self.basket)
         self.assertEquals(Decimal('5.00'), second_discount)
+        
+    def test_product_does_consume_item_if_not_in_condition_range(self):
+        # Set up condition using a different range from benefit
+        range = Range.objects.create(name="Small range")
+        other_product = create_product(price=Decimal('15.00'))
+        range.included_products.add(other_product)
+        cond = ValueCondition(range=range, type="Value", value=Decimal('10.00'))
+        
+        self.basket.add_product(self.item, 1)
+        self.benefit.apply(self.basket, cond)
+        line = self.basket.all_lines()[0]
+        self.assertEqual(line.quantity_without_discount, 0)
         
         
 class FixedPriceBenefitTest(OfferTest):

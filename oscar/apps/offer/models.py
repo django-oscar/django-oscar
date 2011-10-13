@@ -326,8 +326,9 @@ class CoverageCondition(Condition):
         for line in basket.all_lines():
             if not line.is_available_for_discount:
                 continue
-            if self.range.contains_product(line.product) and line.product.id not in covered_ids:
-                covered_ids.append(line.product.id)
+            product = line.product
+            if self.range.contains_product(product) and product.id not in covered_ids:
+                covered_ids.append(product.id)
             if len(covered_ids) >= self.value:
                 return True
         return False
@@ -339,9 +340,10 @@ class CoverageCondition(Condition):
         """
         covered_ids = []
         for line in basket.all_lines():
-            if self.range.contains_product(line.product) and line.product.id not in covered_ids:
+            product = line.product
+            if self.range.contains_product(product) and product.id not in covered_ids:
                 line.consume(1)
-                covered_ids.append(line.product.id)
+                covered_ids.append(product.id)
             if len(covered_ids) >= self.value:
                 return
     
@@ -370,8 +372,9 @@ class ValueCondition(Condition):
         """Determines whether a given basket meets this condition"""
         value_of_matches = Decimal('0.00')
         for line in basket.all_lines():
-            if self.range.contains_product(line.product) and line.product.has_stockrecord and line.quantity_without_discount > 0:
-                price = getattr(line.product.stockrecord, self.price_field)
+            product = line.product
+            if self.range.contains_product(product) and product.has_stockrecord and line.quantity_without_discount > 0:
+                price = getattr(product.stockrecord, self.price_field)
                 value_of_matches += price * line.quantity_without_discount
             if value_of_matches >= self.value:
                 return True
@@ -384,8 +387,9 @@ class ValueCondition(Condition):
         """
         value_of_matches = Decimal('0.00')
         for line in basket.all_lines():
-            if self.range.contains_product(line.product) and line.product.has_stockrecord:
-                price = getattr(line.product.stockrecord, self.price_field)
+            product = line.product
+            if self.range.contains_product(product) and line.product.has_stockrecord:
+                price = getattr(product.stockrecord, self.price_field)
                 if not price:
                     continue
                 quantity_to_consume = min(line.quantity_without_discount, 
@@ -415,8 +419,9 @@ class PercentageDiscountBenefit(Benefit):
         for line in basket.all_lines():
             if affected_items >= max_affected_items:
                 break
-            if self.range.contains_product(line.product) and line.product.has_stockrecord:
-                price = getattr(line.product.stockrecord, self.price_field)
+            product = line.product
+            if self.range.contains_product(product) and product.has_stockrecord:
+                price = getattr(product.stockrecord, self.price_field)
                 quantity = min(line.quantity_without_discount, 
                                max_affected_items - affected_items)
                 line_discount = self.round(self.value/100 * price * int(quantity))
@@ -445,8 +450,9 @@ class AbsoluteDiscountBenefit(Benefit):
         for line in basket.all_lines():
             if affected_items >= max_affected_items:
                 break
-            if self.range.contains_product(line.product) and line.product.has_stockrecord:
-                price = getattr(line.product.stockrecord, self.price_field)
+            product = line.product
+            if self.range.contains_product(product) and product.has_stockrecord:
+                price = getattr(product.stockrecord, self.price_field)
                 if not price:
                     # Avoid zero price products
                     continue
@@ -488,7 +494,8 @@ class FixedPriceBenefit(Benefit):
         covered_lines = []
         product_total = Decimal('0.00')
         for line in basket.all_lines():
-            if condition.range.contains_product(line.product) and line.quantity_without_discount > 0:
+            product = line.product
+            if condition.range.contains_product(product) and line.quantity_without_discount > 0:
                 # Line is available - determine quantity to consume and 
                 # record the total of the consumed products
                 quantity = min(line.quantity_without_discount, num_permitted)
@@ -519,10 +526,14 @@ class MultibuyDiscountBenefit(Benefit):
         discount = Decimal('0.00')
         line = self._get_cheapest_line(basket)
         if line:
-            discount = self.round(getattr(line.product.stockrecord, self.price_field))
-            # We deliberately don't consume the line here so 
-            # as it will be consumed by the condition.
-            line.discount(discount, 0)
+            product = line.product
+            discount = self.round(getattr(product.stockrecord, self.price_field))
+            if condition and not condition.range.contains_product(product):
+                line.discount(discount, 1)
+            else:
+                # We deliberately don't consume the line here so 
+                # as it will be consumed by the condition.
+                line.discount(discount, 0)
         if discount > 0 and condition:
             condition.consume_items(basket)    
         return discount
@@ -531,9 +542,10 @@ class MultibuyDiscountBenefit(Benefit):
         min_price = Decimal('10000.00')
         cheapest_line = None
         for line in basket.all_lines():
-            if self.range.contains_product(line.product):
-                if line.quantity_without_discount > 0 and getattr(line.product.stockrecord, self.price_field) < min_price:
-                    min_price = getattr(line.product.stockrecord, self.price_field)
+            product = line.product
+            if self.range.contains_product(product):
+                if line.quantity_without_discount > 0 and getattr(product.stockrecord, self.price_field) < min_price:
+                    min_price = getattr(product.stockrecord, self.price_field)
                     cheapest_line = line
         return cheapest_line
 
