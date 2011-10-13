@@ -48,6 +48,10 @@ class AbstractAddress(models.Model):
         self._update_search_text()
         super(AbstractAddress, self).save(*args, **kwargs)
         
+    @property    
+    def city(self):
+        return self.line4     
+        
     def _clean_fields(self):
         """
         Clean up fields

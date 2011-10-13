@@ -67,4 +67,9 @@ class UserAddressTest(TestCase):
         a = UserAddress(first_name=u"\u0141ukasz Smith", last_name=u'Smith', line1=u"75 Smith Road", postcode=u"n4 8ty", 
                         country=self.country, user=self.user)
         hash = a.active_address_fields()
+        
+    def test_city_is_alias_of_line4(self):
+        a = UserAddress.objects.create(last_name='Barrington', line1="75 Smith Road", line4="London", postcode="n4 8ty", 
+                                       country=self.country, user=self.user)
+        self.assertEqual('London', a.city)
            
