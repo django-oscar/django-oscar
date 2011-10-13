@@ -92,6 +92,10 @@ class AbstractOrder(models.Model):
         return discount
     
     @property
+    def total_tax(self):
+        return self.total_incl_tax - self.total_excl_tax
+    
+    @property
     def num_lines(self):
         return self.lines.count()
     
