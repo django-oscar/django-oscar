@@ -636,7 +636,6 @@ class ThankYouView(DetailView):
             if 'checkout_order_id' in self.request.session:
                 order = Order._default_manager.get(pk=self.request.session['checkout_order_id'])
             else:
-                logger.error("No order found with session id %s", self.request.session['checkout_order_id'])
                 raise Http404(_("No order found"))
         
         return order
