@@ -539,10 +539,12 @@ class MultibuyDiscountBenefit(Benefit):
         return discount
     
     def _get_cheapest_line(self, basket):
-        min_price = Decimal('10000.00')
+        min_price = Decimal('100000.00')
         cheapest_line = None
         for line in basket.all_lines():
             product = line.product
+            if not product.has_stockrecord:
+                return None
             if self.range.contains_product(product):
                 if line.quantity_without_discount > 0 and getattr(product.stockrecord, self.price_field) < min_price:
                     min_price = getattr(product.stockrecord, self.price_field)
