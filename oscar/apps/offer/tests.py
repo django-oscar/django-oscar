@@ -128,7 +128,7 @@ class CoverageConditionTest(TestCase):
     
     def setUp(self):
         self.products = [create_product(Decimal('5.00')), create_product(Decimal('10.00'))]
-        self.range = Range.objects.create(name="All products")
+        self.range = Range.objects.create(name="Some products")
         for product in self.products:
             self.range.included_products.add(product)
             self.range.included_products.add(product)
@@ -158,6 +158,25 @@ class CoverageConditionTest(TestCase):
         self.basket.add_product(self.products[1])
         self.cond.consume_items(self.basket)
         self.assertEquals(0, self.basket.num_items_without_discount)
+        
+    def test_consumed_items_checks_affected_items(self):
+        # Create new offer
+        range = Range.objects.create(name="All products", includes_all_products=True)
+        cond = CoverageCondition(range=range, type="Coverage", value=2)
+        
+        # Get 4 distinct products in the basket
+        self.products.extend([create_product(Decimal('15.00')), create_product(Decimal('20.00'))])
+
+        for product in self.products:        
+            self.basket.add_product(product)
+        
+        self.assertTrue(cond.is_satisfied(self.basket))    
+        cond.consume_items(self.basket)
+        self.assertEquals(2, self.basket.num_items_without_discount) 
+        
+        self.assertTrue(cond.is_satisfied(self.basket))    
+        cond.consume_items(self.basket)
+        self.assertEquals(0, self.basket.num_items_without_discount) 
         
         
 class PercentageDiscountBenefitTest(OfferTest):

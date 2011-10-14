@@ -341,7 +341,7 @@ class CoverageCondition(Condition):
         covered_ids = []
         for line in basket.all_lines():
             product = line.product
-            if self.range.contains_product(product) and product.id not in covered_ids:
+            if line.is_available_for_discount and self.range.contains_product(product) and product.id not in covered_ids:
                 line.consume(1)
                 covered_ids.append(product.id)
             if len(covered_ids) >= self.value:
