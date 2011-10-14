@@ -358,7 +358,7 @@ class AbstractLine(models.Model):
             inc = self.quantity - self._affected_quantity
         else:
             inc = quantity
-        self._affected_quantity += inc
+        self._affected_quantity += int(inc)
         
     def get_price_breakdown(self):
         """
@@ -409,7 +409,7 @@ class AbstractLine(models.Model):
     
     @property
     def quantity_without_discount(self):
-        return self.quantity - self._affected_quantity
+        return int(self.quantity - self._affected_quantity)
     
     @property
     def is_available_for_discount(self):

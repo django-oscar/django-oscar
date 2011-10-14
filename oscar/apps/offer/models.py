@@ -375,7 +375,7 @@ class ValueCondition(Condition):
             product = line.product
             if self.range.contains_product(product) and product.has_stockrecord and line.quantity_without_discount > 0:
                 price = getattr(product.stockrecord, self.price_field)
-                value_of_matches += price * line.quantity_without_discount
+                value_of_matches += price * int(line.quantity_without_discount)
             if value_of_matches >= self.value:
                 return True
         return False
