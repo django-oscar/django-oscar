@@ -92,7 +92,7 @@ class AbstractBasket(models.Model):
         else:
             line.quantity += quantity
             line.save()
-            self._lines = None
+        self._lines = None
 
     def get_discounts(self):
         if self.discounts is None:
