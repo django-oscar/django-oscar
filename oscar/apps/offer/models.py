@@ -202,6 +202,8 @@ class Benefit(models.Model):
             raise ValidationError("Benefits of type %s need a range" % self.type)
         if self.type and self.type != self.MULTIBUY and self.value is None:
             raise ValidationError("Benefits of type %s need a value" % self.type)
+        if self.type and self.type == 'Percentage' and self.value > 100:
+            raise ValidationError("Percentage benefit value can't be greater than 100")
 
     def round(self, amount):
         """
