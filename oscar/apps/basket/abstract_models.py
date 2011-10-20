@@ -166,7 +166,7 @@ class AbstractBasket(models.Model):
         
     def set_as_tax_exempt(self):
         self.exempt_from_tax = True
-        for line in self.lines.all():
+        for line in self.all_lines():
             line.set_as_tax_exempt()
     
     # =======
