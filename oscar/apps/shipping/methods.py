@@ -8,6 +8,9 @@ class ShippingMethod(object):
     name = 'Default shipping'
     description = ''
     
+    def __init__(self):
+        self.exempt_from_tax = False
+    
     def set_basket(self, basket):
         self.basket = basket
     
