@@ -45,6 +45,7 @@ class AbstractBasket(models.Model):
         super(AbstractBasket, self).__init__(*args, **kwargs)
         self._lines = None  # Cached queryset of lines
         self.discounts = None  # Dictionary of discounts
+        self.exempt_from_tax = False
     
     def __unicode__(self):
         return u"%s basket (owner: %s, lines: %d)" % (self.status, self.owner, self.num_lines)
@@ -162,6 +163,11 @@ class AbstractBasket(models.Model):
         self.status = SUBMITTED
         self.date_submitted = datetime.datetime.now()
         self.save()
+        
+    def set_as_tax_exempt(self):
+        self.exempt_from_tax = True
+        for line in self.lines.all():
+            line.set_as_tax_exempt()
     
     # =======
     # Helpers
