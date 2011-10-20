@@ -197,13 +197,16 @@ class Benefit(models.Model):
         return Decimal('0.00')
     
     def clean(self):
+        if self.value is None:
+            if not self.type:
+                raise ValidationError("Benefit requires a value")
+            elif self.type != self.MULTIBUY:
+                raise ValidationError("Benefits of type %s need a value" % self.type)
+        elif self.value > 100 and self.type == 'Percentage':
+            raise ValidationError("Percentage benefit value can't be greater than 100")
         # All benefits need a range apart from FIXED_PRICE
         if self.type and self.type != self.FIXED_PRICE and not self.range:
             raise ValidationError("Benefits of type %s need a range" % self.type)
-        if self.type and self.type != self.MULTIBUY and self.value is None:
-            raise ValidationError("Benefits of type %s need a value" % self.type)
-        if self.type and self.type == 'Percentage' and self.value > 100:
-            raise ValidationError("Percentage benefit value can't be greater than 100")
 
     def round(self, amount):
         """
