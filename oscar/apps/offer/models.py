@@ -141,10 +141,10 @@ class Condition(models.Model):
 
     def __unicode__(self):
         if self.type == self.COUNT:
-            return u"Basket includes %d item(s) from %s" % (self.value, str(self.range).lower())
+            return u"Basket includes %d item(s) from %s" % (self.value, unicode(self.range).lower())
         elif self.type == self.COVERAGE:
-            return u"Basket includes %d distinct products from %s" % (self.value, str(self.range).lower())
-        return u"Basket includes %.2f value from %s" % (self.value, str(self.range).lower())
+            return u"Basket includes %d distinct products from %s" % (self.value, unicode(self.range).lower())
+        return u"Basket includes %d value from %s" % (self.value, unicode(self.range).lower())
     
     def consume_items(self, basket):
         pass
@@ -180,13 +180,13 @@ class Benefit(models.Model):
     
     def __unicode__(self):
         if self.type == self.PERCENTAGE:
-            desc = u"%s%% discount on %s" % (self.value, str(self.range).lower())
+            desc = u"%s%% discount on %s" % (self.value, unicode(self.range).lower())
         elif self.type == self.MULTIBUY:
-            desc = u"Cheapest product is free from %s" % str(self.range)
+            desc = u"Cheapest product is free from %s" % unicode(self.range).lower()
         elif self.type == self.FIXED_PRICE:
             desc = u"The products that meet the condition are sold for %s" % self.value
         else:
-            desc = u"%.2f discount on %s" % (self.value, str(self.range).lower())
+            desc = u"%.2f discount on %s" % (self.value, unicode(self.range).lower())
         if self.max_affected_items == 1:
             desc += u" (max 1 item)"
         elif self.max_affected_items > 1:
@@ -312,6 +312,7 @@ class CountCondition(Condition):
             if self.range.contains_product(line.product):
                 quantity_to_consume = min(line.quantity_without_discount, self.value - num_consumed)
                 line.consume(quantity_to_consume)
+                num_consumed += quantity_to_consume
             if num_consumed == self.value:
                 return
         
