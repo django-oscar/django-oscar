@@ -302,20 +302,21 @@ class CountCondition(Condition):
                 return True
         return False
     
-    def consume_items(self, basket, lines=None):
+    def consume_items(self, basket, lines=None, value=None):
         """
         Marks items within the basket lines as consumed so they
         can't be reused in other offers.
         """
         lines = lines or basket.all_lines()
         consumed_products = []
+        value = self.value if value is None else value
         for line in lines:
             if self.range.contains_product(line.product):
                 quantity_to_consume = min(line.quantity_without_discount,
-                                          self.value - len(consumed_products))
+                                          value - len(consumed_products))
                 line.consume(quantity_to_consume)
                 consumed_products.extend((line.product,)*int(quantity_to_consume))
-            if len(consumed_products) == self.value:
+            if len(consumed_products) == value:
                 break
         return consumed_products
         
@@ -342,20 +343,21 @@ class CoverageCondition(Condition):
                 return True
         return False
     
-    def consume_items(self, basket, lines=None):
+    def consume_items(self, basket, lines=None, value=None):
         """
         Marks items within the basket lines as consumed so they
         can't be reused in other offers.
         """
         lines = lines or basket.all_lines()
         consumed_products = []
+        value = self.value if value is None else value
         for line in basket.all_lines():
             product = line.product
             if (line.is_available_for_discount and self.range.contains_product(product)
                 and product not in consumed_products):
                 line.consume(1)
                 consumed_products.append(line.product)
-            if len(consumed_products) >= self.value:
+            if len(consumed_products) >= value:
                 break
         return consumed_products
     
@@ -392,7 +394,7 @@ class ValueCondition(Condition):
                 return True
         return False
     
-    def consume_items(self, basket, lines=None):
+    def consume_items(self, basket, lines=None, value=None):
         """
         Marks items within the basket lines as consumed so they
         can't be reused in other offers.
@@ -400,6 +402,7 @@ class ValueCondition(Condition):
         value_of_matches = Decimal('0.00')
         lines = lines or basket.all_lines()
         consumed_products = []
+        value = self.value if value is None else value
         for line in basket.all_lines():
             product = line.product
             if self.range.contains_product(product) and line.product.has_stockrecord:
@@ -407,12 +410,12 @@ class ValueCondition(Condition):
                 if not price:
                     continue
                 quantity_to_consume = min(line.quantity_without_discount,
-                                          int(((self.value - value_of_matches)/price).quantize(Decimal(1),
+                                          int(((value - value_of_matches)/price).quantize(Decimal(1),
                                                                                               ROUND_UP)))
                 value_of_matches += price * quantity_to_consume
                 line.consume(quantity_to_consume)
                 consumed_products.extend((line.product,)*int(quantity_to_consume))
-            if value_of_matches >= self.value:
+            if value_of_matches >= value:
                 break
         return consumed_products
 
@@ -544,27 +547,20 @@ class MultibuyDiscountBenefit(Benefit):
         if not benefit_lines:
             return self.round(Decimal('0.00'))
 
-        line_price_getter = lambda line: getattr(line.product.stockrecord, self.price_field)
-        # We want best choice for customer to be consistent
+        line_price_getter = lambda line: getattr(line.product.stockrecord,
+                                                 self.price_field)
         line = min(benefit_lines, key=line_price_getter)
 
         if condition:
-            if condition.range.contains_product(line.product):
-                # put min value on the beginig of sorted consumed products
-                compare =  lambda l1, l2: (int(l2 == line) or
-                                           cmp(line_price_getter(l2),
-                                               line_price_getter(l1)))
-            else:
-                compare = lambda l1, l2: cmp(line_price_getter(l2),
-                                             line_price_getter(l1))
-
+            compare = lambda l1, l2: cmp(line_price_getter(l2),
+                                         line_price_getter(l1))
             sorted_lines = sorted(basket.all_lines(), compare)
-            consumed_products = set(condition.consume_items(basket, lines=sorted_lines))
-
-            if line.product in consumed_products:
-                line.discount(line_price_getter(line), 0)
+            line.discount(line_price_getter(line), 1)
+            if condition.range.contains_product(line.product):
+                condition.consume_items(basket, lines=sorted_lines,
+                                        value=condition.value-1)
             else:
-                line.discount(line_price_getter(line), 1)
+                condition.consume_items(basket, lines=sorted_lines)
         else:
             line.discount(line_price_getter(line), 0)
         return self.round(line_price_getter(line))

@@ -340,17 +340,52 @@ class MultibuyDiscountBenefitTest(OfferTest):
 
         self.assertTrue(condition.is_satisfied(self.basket))
         # consume 4 and 7
-        third_discount = self.benefit.apply(self.basket, condition=condition)
-        self.assertEquals(Decimal('4.00'), third_discount)
+        fourth_discount = self.benefit.apply(self.basket, condition=condition)
+        self.assertEquals(Decimal('4.00'), fourth_discount)
 
         self.assertTrue(condition.is_satisfied(self.basket))
         # consume 5 and 6
-        third_discount = self.benefit.apply(self.basket, condition=condition)
-        self.assertEquals(Decimal('5.00'), third_discount)
+        fifth_discount = self.benefit.apply(self.basket, condition=condition)
+        self.assertEquals(Decimal('5.00'), fifth_discount)
 
         # end of items (one not discounted item in basket)
         self.assertFalse(condition.is_satisfied(self.basket))
 
+    def test_condition_consumes_most_expensive_lines_first_when_products_are_repeated(self):
+        for i in range(5, 0, -1):
+            product = create_product(price=Decimal(i), title='%i'%i, upc='upc_%i' % i)
+            self.basket.add_product(product, 2)
+
+        condition = CountCondition(range=self.range, type="Count", value=2)
+
+        # initial basket: [(1, 1), (2, 2), (3, 3), (4, 4), (5, 5)]
+        self.assertTrue(condition.is_satisfied(self.basket))
+        # consume 1 and 5
+        first_discount = self.benefit.apply(self.basket, condition=condition)
+        self.assertEquals(Decimal('1.00'), first_discount)
+
+        self.assertTrue(condition.is_satisfied(self.basket))
+        # consume 1 and 5
+        second_discount = self.benefit.apply(self.basket, condition=condition)
+        self.assertEquals(Decimal('1.00'), second_discount)
+
+        self.assertTrue(condition.is_satisfied(self.basket))
+        # consume 2 and 4
+        third_discount = self.benefit.apply(self.basket, condition=condition)
+        self.assertEquals(Decimal('2.00'), third_discount)
+
+        self.assertTrue(condition.is_satisfied(self.basket))
+        # consume 2 and 4
+        third_discount = self.benefit.apply(self.basket, condition=condition)
+        self.assertEquals(Decimal('2.00'), third_discount)
+
+        self.assertTrue(condition.is_satisfied(self.basket))
+        # consume 3 and 3
+        third_discount = self.benefit.apply(self.basket, condition=condition)
+        self.assertEquals(Decimal('3.00'), third_discount)
+
+        # end of items (one not discounted item in basket)
+        self.assertFalse(condition.is_satisfied(self.basket))
 
 class FixedPriceBenefitTest(OfferTest):
     
