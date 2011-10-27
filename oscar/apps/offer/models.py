@@ -314,7 +314,7 @@ class CountCondition(Condition):
                 quantity_to_consume = min(line.quantity_without_discount,
                                           self.value - len(consumed_products))
                 line.consume(quantity_to_consume)
-                consumed_products.extend((line.product,)*quantity_to_consume)
+                consumed_products.extend((line.product,)*int(quantity_to_consume))
             if len(consumed_products) == self.value:
                 break
         return consumed_products
@@ -411,7 +411,7 @@ class ValueCondition(Condition):
                                                                                               ROUND_UP)))
                 value_of_matches += price * quantity_to_consume
                 line.consume(quantity_to_consume)
-                consumed_products.extend((line.product,)*quantity_to_consume)
+                consumed_products.extend((line.product,)*int(quantity_to_consume))
             if value_of_matches >= self.value:
                 break
         return consumed_products
@@ -546,16 +546,22 @@ class MultibuyDiscountBenefit(Benefit):
 
         line_price_getter = lambda line: getattr(line.product.stockrecord, self.price_field)
         # We want best choice for customer to be consistent
-        line = max(benefit_lines, key=line_price_getter)
+        line = min(benefit_lines, key=line_price_getter)
 
         if condition:
-            sorted_lines = sorted(basket.all_lines(), lambda l1, l2: cmp(line_price_getter(l2),
-                                                                         line_price_getter(l1)))
+            if condition.range.contains_product(line.product):
+                # put min value on the beginig of sorted consumed products
+                compare =  lambda l1, l2: (int(l2 == line) or
+                                           cmp(line_price_getter(l2),
+                                               line_price_getter(l1)))
+            else:
+                compare = lambda l1, l2: cmp(line_price_getter(l2),
+                                             line_price_getter(l1))
+
+            sorted_lines = sorted(basket.all_lines(), compare)
             consumed_products = set(condition.consume_items(basket, lines=sorted_lines))
 
-            if condition.range.contains_product(line.product):
-                line = min([l for l in benefit_lines if l.product in consumed_products],
-                           key=lambda l: line_price_getter(l))
+            if line.product in consumed_products:
                 line.discount(line_price_getter(line), 0)
             else:
                 line.discount(line_price_getter(line), 1)
