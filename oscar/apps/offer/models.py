@@ -398,6 +398,9 @@ class ValueCondition(Condition):
         """
         Marks items within the basket lines as consumed so they
         can't be reused in other offers.
+        
+        We allow lines to be passed in as sometimes we want them sorted
+        in a specific order.
         """
         value_of_matches = Decimal('0.00')
         lines = lines or basket.all_lines()
