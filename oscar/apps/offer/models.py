@@ -186,7 +186,7 @@ class Benefit(models.Model):
         elif self.type == self.FIXED_PRICE:
             desc = u"The products that meet the condition are sold for %s" % self.value
         else:
-            desc = u"%.2f discount on %s" % (self.value, str(self.range).lower())
+            desc = u"%.2f discount on %s" % (float(self.value), str(self.range).lower())
         if self.max_affected_items == 1:
             desc += u" (max 1 item)"
         elif self.max_affected_items > 1:
