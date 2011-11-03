@@ -60,6 +60,9 @@ class AbstractStockRecord(models.Model):
     """
     product = models.OneToOneField('catalogue.Product', related_name="stockrecord")
     partner = models.ForeignKey('partner.Partner')
+    
+    # The fulfilment partner will often have their own SKU for a product, which
+    # we store here.
     partner_sku = models.CharField(_("Partner SKU"), max_length=128, blank=True)
     
     # Price info:
@@ -81,6 +84,10 @@ class AbstractStockRecord(models.Model):
     
     # Stock level information
     num_in_stock = models.IntegerField(default=0, blank=True, null=True)
+    
+    # The amount of stock allocated to orders but not fed back to the master
+    # stock system.  A typical stock update process will set the num_in_stock
+    # variable to a new value and reset num_allocated to zero
     num_allocated = models.IntegerField(default=0, blank=True, null=True)
     
     # Date information
@@ -90,19 +97,12 @@ class AbstractStockRecord(models.Model):
     class Meta:
         abstract = True
     
-    def decrement_num_in_stock(self, delta):
-        """
-        Decrement an item's stock level
-        """
-        self.num_in_stock = int(self.num_in_stock)
-        if self.num_in_stock >= delta:
-            self.num_in_stock -= delta
-        self.num_allocated += delta
-        self.save()
-        
     def allocate(self, quantity):
         """
-        Decrement an item's stock allocation.
+        Record a stock allocation.
+        
+        We don't alter the num_in_stock variable as it is assumed that this
+        will be set by a batch "stock update" process.
         """
         self.num_allocated = int(self.num_allocated)
         self.num_allocated += quantity
@@ -142,13 +142,15 @@ class AbstractStockRecord(models.Model):
     
     @property
     def availability(self):
-        u"""Return an item's availability as a string"""
+        """
+        Return an item's availability as a string
+        """
         return get_partner_wrapper(self.partner.name).availability(self)
     
     @property
     def dispatch_date(self):
-        u"""
-        Returns the estimated dispatch date for a line
+        """
+        Return the estimated dispatch date for a line
         """
         return get_partner_wrapper(self.partner.name).dispatch_date(self)
     
