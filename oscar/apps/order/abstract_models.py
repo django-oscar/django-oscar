@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
 from django.db.models import Sum
-from django.template import Template, Context
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class AbstractOrder(models.Model):
@@ -321,7 +321,12 @@ class AbstractLine(models.Model):
         verbose_name_plural = _("Order lines")
         
     def __unicode__(self):
-        return u"Product '%s', quantity '%s'" % (self.product, self.quantity)
+        try:
+            title = self.product.title
+        except ObjectDoesNotExist:
+            title = '<missing product>'
+        
+        return u"Product '%s', quantity '%s'" % (title, self.quantity)
     
     
 class AbstractLineAttribute(models.Model):
