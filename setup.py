@@ -1,17 +1,24 @@
+"""
+Installation script:
+
+To release a new version to PyPi:
+- Ensure the version is correctly set in oscar.__init__.py
+- Run: python setup.py sdist upload
+"""
+
 from setuptools import setup
 
 from oscar import get_version
 
-version = get_version()
-
 setup(name='django-oscar',
-      version=version.replace(' ', '-'),
+      version=get_version().replace(' ', '-'),
       url='https://github.com/tangentlabs/django-oscar',
       author="Tangent Labs",
       author_email="david.winterbottom@tangentlabs.co.uk",
       description="A domain-driven e-commerce framework for Django 1.3+",
       long_description=open('README.rst').read(),
       license='BSD',
+      platforms=['linux'],
       packages=['oscar',
                 'oscar.apps',
                 'oscar.apps.address',
@@ -50,7 +57,8 @@ setup(name='django-oscar',
                 'oscar.forms',
                 'oscar.templatetags',
                 'oscar.test',
-                'oscar.views',],
+                'oscar.views',
+                'oscar.models',],
       package_data={'oscar': ['templates/basket/*.html',
                               'templates/catalogue/*.html',
                               'templates/checkout/*.html',
@@ -81,8 +89,7 @@ setup(name='django-oscar',
           'http://github.com/AndrewIngram/django-extra-views/tarball/master#egg=django-extra-views-0.1.0',
       ],
       # See http://pypi.python.org/pypi?%3Aaction=list_classifiers
-      classifiers=['Development Status :: 3 - Alpha',
-                   'Environment :: Web Environment',
+      classifiers=['Environment :: Web Environment',
                    'Framework :: Django',
                    'Intended Audience :: Developers',
                    'License :: OSI Approved :: BSD License',
