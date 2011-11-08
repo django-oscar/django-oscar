@@ -21,3 +21,4 @@ oscar/lib
 oscar/src
 oscar/share
 .~lock.*
+dist/
