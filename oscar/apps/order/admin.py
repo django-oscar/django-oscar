@@ -35,7 +35,7 @@ class OrderNoteAdmin(admin.ModelAdmin):
 class OrderDiscountAdmin(admin.ModelAdmin):
     readonly_fields = ('order' ,'offer', 'voucher', 'voucher_code', 'amount')
     list_display = ('order' ,'offer', 'voucher', 'voucher_code', 'amount')
-
+    
 admin.site.register(Order, OrderAdmin)
 admin.site.register(ShippingAddress)
 admin.site.register(Line, LineAdmin)
