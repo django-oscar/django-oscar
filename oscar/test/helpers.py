@@ -10,7 +10,7 @@ from oscar.apps.catalogue.models import ProductClass, Product
 from oscar.apps.partner.models import Partner, StockRecord
 
 def create_product(price=None, title="Dummy title", product_class="Dummy item class", 
-                     partner="Dummy partner", upc="dummy_101", num_in_stock=10):
+                   partner="Dummy partner", upc="dummy_101", num_in_stock=10):
     """
     Helper method for creating products that are used in tests.
     """

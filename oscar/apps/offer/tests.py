@@ -350,7 +350,7 @@ class MultibuyDiscountBenefitTest(OfferTest):
 
         # end of items (one not discounted item in basket)
         self.assertFalse(condition.is_satisfied(self.basket))
-
+        
     def test_condition_consumes_most_expensive_lines_first_when_products_are_repeated(self):
         for i in range(5, 0, -1):
             product = create_product(price=Decimal(i), title='%i'%i, upc='upc_%i' % i)
@@ -386,6 +386,13 @@ class MultibuyDiscountBenefitTest(OfferTest):
 
         # end of items (one not discounted item in basket)
         self.assertFalse(condition.is_satisfied(self.basket))
+    
+    def test_products_with_no_stockrecord_are_handled_ok(self):
+        self.basket.add_product(self.item, 3)
+        self.basket.add_product(create_product())
+        condition = CountCondition(range=self.range, type="Count", value=3)
+        self.benefit.apply(self.basket, condition)
+        
 
 class FixedPriceBenefitTest(OfferTest):
     

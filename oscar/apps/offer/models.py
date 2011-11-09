@@ -550,23 +550,26 @@ class MultibuyDiscountBenefit(Benefit):
         if not benefit_lines:
             return self.round(Decimal('0.00'))
 
+        # Determine cheapest line to give for free
         line_price_getter = lambda line: getattr(line.product.stockrecord,
                                                  self.price_field)
-        line = min(benefit_lines, key=line_price_getter)
+        free_line = min(benefit_lines, key=line_price_getter)
+        discount = line_price_getter(free_line)
 
         if condition:
             compare = lambda l1, l2: cmp(line_price_getter(l2),
                                          line_price_getter(l1))
-            sorted_lines = sorted(basket.all_lines(), compare)
-            line.discount(line_price_getter(line), 1)
+            lines_with_price = [line for line in basket.all_lines() if line.product.has_stockrecord]
+            sorted_lines = sorted(lines_with_price, compare)
+            free_line.discount(discount, 1)
             if condition.range.contains_product(line.product):
                 condition.consume_items(basket, lines=sorted_lines,
                                         value=condition.value-1)
             else:
                 condition.consume_items(basket, lines=sorted_lines)
         else:
-            line.discount(line_price_getter(line), 0)
-        return self.round(line_price_getter(line))
+            free_line.discount(discount, 0)
+        return self.round(discount)
 
 
 # We need to import receivers at the bottom of this script
