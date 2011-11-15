@@ -214,8 +214,9 @@ class AbstractLine(models.Model):
     partner_sku = models.CharField(_("Partner SKU"), max_length=128)
     title = models.CharField(_("Title"), max_length=255)
     
-    # We don't want any hard links between orders and the products table
-    product = models.ForeignKey('catalogue.Product', on_delete=models.SET_NULL, null=True)
+    # We don't want any hard links between orders and the products table so we allow
+    # this link to be NULLable.
+    product = models.ForeignKey('catalogue.Product', on_delete=models.SET_NULL, blank=True, null=True)
     quantity = models.PositiveIntegerField(default=1)
     
     # Price information (these fields are actually redundant as the information
