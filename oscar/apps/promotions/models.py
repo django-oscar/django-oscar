@@ -117,6 +117,10 @@ class RawHTML(AbstractPromotion):
     """
     _type = 'Raw HTML'
     name = models.CharField(_("Name"), max_length=128)
+    
+    # Used to determine how to render the promotion (eg
+    # if a different width container is required).
+    display_type = models.CharField(_("Display type"), max_length=128, blank=True, null=True)
     body = models.TextField(_("HTML"))
     date_created = models.DateTimeField(auto_now_add=True)
 
