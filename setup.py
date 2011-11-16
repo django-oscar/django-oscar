@@ -7,6 +7,7 @@ To release a new version to PyPi:
 """
 
 from setuptools import setup
+from setuptools import find_packages
 
 from oscar import get_version
 
@@ -28,6 +29,7 @@ setup(name='django-oscar',
                 'oscar.apps.basket',
                 'oscar.apps.basket.templatetags',
                 'oscar.apps.catalogue',
+                'oscar.apps.catalogue.templatetags',
                 'oscar.apps.catalogue.management',
                 'oscar.apps.catalogue.management.commands',
                 'oscar.apps.catalogue.reviews',
