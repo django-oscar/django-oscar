@@ -27,6 +27,18 @@ class BasketVoucherForm(forms.Form):
     
     def __init__(self, *args, **kwargs):
         return super(BasketVoucherForm, self).__init__(*args,**kwargs)
+        
+
+class ProductSelectionForm(forms.Form):
+    product_id = forms.IntegerField(min_value=1)
+    
+    def clean_product_id(self):
+        id = self.cleaned_data['product_id']
+
+        try:
+            return Product.objects.get(pk=id)
+        except Product.DoesNotExist:
+            raise forms.ValidationError("This product is not available for purchase")
 
 
 class AddToBasketForm(forms.Form):
