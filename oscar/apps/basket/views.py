@@ -9,7 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from extra_views import ModelFormSetView
 from oscar.apps.basket.forms import BasketLineForm, AddToBasketForm, \
-    BasketVoucherForm, SavedLineForm
+    BasketVoucherForm, SavedLineForm, ProductSelectionForm
 from oscar.apps.basket.signals import basket_addition
 from oscar.core.loading import import_module
 import_module('offer.utils', ['Applicator'], locals())
@@ -73,6 +73,7 @@ class BasketAddView(FormView):
     GET because there's nothing sensible to render.
     """
     form_class = AddToBasketForm
+    product_select_form_class = ProductSelectionForm
     product_model = get_model('catalogue', 'product')
     add_signal = basket_addition
     
@@ -81,12 +82,12 @@ class BasketAddView(FormView):
     
     def get_form_kwargs(self): 
         kwargs = super(BasketAddView, self).get_form_kwargs()
-        
-        try:
-            product = self.product_model.objects.get(pk=self.request.POST['product_id'])
-        except self.product_model.DoesNotExist:
-            raise Http404()
-        kwargs['instance'] = product
+        product_select_form = self.product_select_form_class(self.request.POST)
+
+        if product_select_form.is_valid():
+            kwargs['instance'] = product_select_form.cleaned_data['product_id']
+        else:
+             raise Http404()
         return kwargs
     
     def get_success_url(self):
