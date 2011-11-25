@@ -407,8 +407,7 @@ class AbstractPaymentEvent(models.Model):
         verbose_name_plural = _("Payment events")
         
     def __unicode__(self):
-        return u"Order #%d, line %s: %d items %s" % (
-            self.line.order.number, self.line.line_id, self.quantity, self.event_type)
+        return u"Payment event for order #%d" % self.order
 
 
 class PaymentEventQuantity(models.Model):
