@@ -1,5 +1,6 @@
 from django import forms
 from django.db.models import get_model
+from django.utils.translation import gettext_lazy as _
 
 basketline_model = get_model('basket', 'line')
 basket_model = get_model('basket', 'basket')
@@ -38,7 +39,7 @@ class ProductSelectionForm(forms.Form):
         try:
             return Product.objects.get(pk=id)
         except Product.DoesNotExist:
-            raise forms.ValidationError("This product is not available for purchase")
+            raise forms.ValidationError(_("This product is not available for purchase"))
 
 
 class AddToBasketForm(forms.Form):
@@ -58,7 +59,7 @@ class AddToBasketForm(forms.Form):
         id = self.cleaned_data['product_id']
         product = Product.objects.get(id=id)
         if not product.has_stockrecord or not product.stockrecord.is_available_to_buy:
-            raise forms.ValidationError("This product is not available for purchase")
+            raise forms.ValidationError(_("This product is not available for purchase"))
         return id
 
     def _create_group_product_fields(self, item):
