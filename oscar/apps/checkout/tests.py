@@ -1,4 +1,5 @@
 from decimal import Decimal as D
+import httplib
 
 from django.test import TestCase
 from django.test.client import Client
@@ -14,6 +15,14 @@ class CheckoutViewsTest(TestCase):
     def setUp(self):
         self.client = Client()
         super(CheckoutViewsTest, self).setUp()
+    
+    def test_user_address_views_require_a_login(self):
+        urls = [reverse('checkout:user-address-create'),
+                reverse('checkout:user-address-update', kwargs={'pk': 1}),
+                reverse('checkout:user-address-delete', kwargs={'pk': 1}),]
+        for url in urls:
+            response = self.client.get(url)
+            self.assertEqual(httplib.FOUND, response.status_code)
     
     def _test_anonymous_checkout(self):
         

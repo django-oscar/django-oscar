@@ -1,4 +1,5 @@
 from django.conf.urls.defaults import patterns, url
+from django.contrib.auth.decorators import login_required
 
 from oscar.core.application import Application
 from oscar.apps.checkout.views import IndexView, ShippingAddressView, UserAddressDeleteView, UserAddressCreateView, \
@@ -25,9 +26,9 @@ class CheckoutApplication(Application):
             url(r'^$', self.index_view.as_view(), name='index'),
             # Shipping/user address views
             url(r'shipping-address/$', self.shipping_address_view.as_view(), name='shipping-address'),
-            url(r'user-address/create/$', self.user_address_create_view.as_view(), name='user-address-create'),
-            url(r'user-address/edit/(?P<pk>\d+)/$', self.user_address_update_view.as_view(), name='user-address-update'),
-            url(r'user-address/delete/(?P<pk>\d+)/$', self.user_address_delete_view.as_view(), name='user-address-delete'),
+            url(r'user-address/create/$', login_required(self.user_address_create_view.as_view()), name='user-address-create'),
+            url(r'user-address/edit/(?P<pk>\d+)/$', login_required(self.user_address_update_view.as_view()), name='user-address-update'),
+            url(r'user-address/delete/(?P<pk>\d+)/$', login_required(self.user_address_delete_view.as_view()), name='user-address-delete'),
             # Shipping method views
             url(r'shipping-method/$', self.shipping_method_view.as_view(), name='shipping-method'),
             # Payment method views
