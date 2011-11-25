@@ -34,7 +34,7 @@ class Applicator(object):
     """
     For applying offers to a basket.
     """
-    max_applications = 50
+    max_applications = 10000
     
     def apply(self, request, basket):
         """
