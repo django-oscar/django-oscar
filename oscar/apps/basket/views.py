@@ -164,6 +164,8 @@ class VoucherAddView(FormView):
     
     def form_valid(self, form):
         code = form.cleaned_data['code']
+        if not self.request.basket.id:
+            return HttpResponseRedirect(self.request.META.get('HTTP_REFERER', reverse('basket:summary')))
         if self.request.basket.contains_voucher(code):
             messages.error(self.request, _("You have already added the '%(code)s' voucher to your basket" % {'code': code}))
         else:
@@ -187,6 +189,10 @@ class VoucherRemoveView(View):
     
     def post(self, request, *args, **kwargs):
         voucher_id = int(kwargs.pop('pk'))
+        if not request.basket.id:
+            # Hacking attempt - the basket must be saved for it to have
+            # a voucher in it.
+            return HttpResponseRedirect(reverse('basket:summary'))
         try:
             voucher = request.basket.vouchers.get(id=voucher_id)
         except ObjectDoesNotExist:
