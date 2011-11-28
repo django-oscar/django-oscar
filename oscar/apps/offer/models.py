@@ -533,6 +533,20 @@ class FixedPriceBenefit(Benefit):
             return discount
         
         # Apply discount weighted by original value of line
+        discount_applied = Decimal('0.00')
+        last_line = covered_lines[-1][0]
+        for line, quantity in covered_lines:
+            if line == last_line:
+                # If last line, we just take the difference to ensure that
+                # a rounding doesn't lead to an off-by-one error
+                line_discount = discount - discount_applied
+            else:
+                line_discount = self.round(discount * (line.unit_price_incl_tax * quantity) / product_total)
+            line.discount(line_discount, quantity)
+            discount_applied += line_discount
+        return discount 
+        
+        # Apply discount weighted by original value of line
         for line, quantity in covered_lines:
             line_discount = self.round(discount * (line.unit_price_incl_tax * quantity) / product_total)  
             line.discount(line_discount.quantize(Decimal('.01')), quantity)
