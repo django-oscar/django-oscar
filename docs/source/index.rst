@@ -20,12 +20,15 @@ The source is on Github: https://github.com/tangentlabs/django-oscar - all contr
 Quick start
 ===========
 
-We can do this quickly.  Create a virtualenv and install django-oscar::
+We can do this quickly.  Create a virtualenv using virtualenvwrapper and install django-oscar::
 
     mkvirtualenv --no-site-packages vanilla
-    pip install -e git+git://github.com/tangentlabs/django-oscar.git#egg=django-oscar
+    pip install django django-oscar
 
 Take a copy of the example vanilla site, and copy the quickstart settings into place::
+
+    cdsitepackages
+    cp -r 
 
     cp -r ~/.virtualenvs/myshop/lib/python2.6/site-packages/src/examples/vanilla/ /tmp/vanilla
     cd /tmp/vanilla
