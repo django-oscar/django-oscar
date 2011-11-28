@@ -11,6 +11,7 @@ logger = logging.getLogger('oscar.offers')
 class OfferApplicationError(Exception):
     pass
 
+
 # This needs hooking into the offer application system.
 class Discount(object):
     
