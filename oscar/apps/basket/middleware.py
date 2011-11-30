@@ -108,4 +108,4 @@ class BasketMiddleware(object):
             Applicator().apply(request, basket)
     
     def get_basket_hash(self, basket_id):
-        return str(zlib.crc32(str(id)+settings.SECRET_KEY))
+        return str(zlib.crc32(str(basket_id)+settings.SECRET_KEY))
