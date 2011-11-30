@@ -426,7 +426,47 @@ class FixedPriceBenefitTest(OfferTest):
         condition = CoverageCondition(range=range, type="Coverage", value=2)
         discount = self.benefit.apply(basket, condition)
         self.assertEquals(Decimal('0.00'), discount) 
-         
+        
+    def test_discount_when_more_products_than_required(self):
+        products = [create_product(Decimal('4.00')), 
+                    create_product(Decimal('8.00')),
+                    create_product(Decimal('12.00'))]
+        
+        # Create range that includes the products
+        range = Range.objects.create(name="Dummy range")
+        for product in products:
+            range.included_products.add(product)
+        condition = CoverageCondition(range=range, type="Coverage", value=3)
+            
+        # Create basket that satisfies condition but with one extra product    
+        basket = Basket.objects.create()
+        [basket.add_product(p) for p in products]
+        basket.add_product(products[0])
+        
+        benefit = FixedPriceBenefit(range=range, type="FixedPrice", value=Decimal('20.00'))
+        discount = benefit.apply(basket, condition)
+        self.assertEquals(Decimal('4.00'), discount) 
+        
+    def test_discount_when_applied_twice(self):
+        products = [create_product(Decimal('4.00')), 
+                    create_product(Decimal('8.00')),
+                    create_product(Decimal('12.00'))]
+        
+        # Create range that includes the products
+        range = Range.objects.create(name="Dummy range")
+        for product in products:
+            range.included_products.add(product)
+        condition = CoverageCondition(range=range, type="Coverage", value=3)
+            
+        # Create basket that satisfies condition but with one extra product    
+        basket = Basket.objects.create()
+        [basket.add_product(p, 2) for p in products]
+        
+        benefit = FixedPriceBenefit(range=range, type="FixedPrice", value=Decimal('20.00'))
+        first_discount = benefit.apply(basket, condition)
+        self.assertEquals(Decimal('4.00'), first_discount) 
+        second_discount = benefit.apply(basket, condition)
+        self.assertEquals(Decimal('4.00'), second_discount) 
         
     
 class ConditionalOfferTest(TestCase):

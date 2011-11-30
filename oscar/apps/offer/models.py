@@ -521,7 +521,10 @@ class FixedPriceBenefit(Benefit):
             if condition.range.contains_product(product) and line.quantity_without_discount > 0:
                 # Line is available - determine quantity to consume and 
                 # record the total of the consumed products
-                quantity = min(line.quantity_without_discount, num_permitted)
+                if isinstance(condition, CoverageCondition):
+                    quantity = 1
+                else:
+                    quantity = min(line.quantity_without_discount, num_permitted)
                 num_covered += quantity
                 product_total += quantity*line.unit_price_incl_tax
                 covered_lines.append((line, quantity))
