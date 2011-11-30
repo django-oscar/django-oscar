@@ -27,7 +27,7 @@ def get_recently_viewed_product_ids(request):
     return product_ids
 
 def _update_recently_viewed_products(product, request, response):
-    u"""
+    """
     Updates the cookies that store the recently viewed products
     removing possible duplicates.
     """
@@ -37,14 +37,16 @@ def _update_recently_viewed_products(product, request, response):
     product_ids.append(product.id)
     if (len(product_ids) > MAX_PRODUCTS):
         product_ids = product_ids[len(product_ids)-MAX_PRODUCTS:]
-    response.set_cookie('oscar_recently_viewed_products', _get_json_string_from_list(product_ids))
+    response.set_cookie('oscar_recently_viewed_products', 
+                        _get_json_string_from_list(product_ids),
+                        httponly=True)
 
 def _get_list_from_json_string(cookie_value):
     u""" Simple function to convert lists to json """
     return json.loads(cookie_value)
 
 def _get_json_string_from_list(list):
-    u""" Simple function to convert json to a python list """
+    """ Simple function to convert json to a python list """
     return json.dumps(list)
 
 
@@ -52,7 +54,7 @@ def _get_json_string_from_list(list):
 
 @receiver(product_viewed)
 def receive_product_view(sender, product, user, request, response, **kwargs):
-    u"""
+    """
     Receiver to handle viewing single product pages
     
     Requires the request and response objects due to dependence on cookies
