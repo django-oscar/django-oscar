@@ -61,11 +61,6 @@ class CheckoutSessionData(object):
         u"""Get user address id from session"""
         return self._get('shipping', 'user_address_id')
     
-    def ship_to_new_address(self, address_fields):
-        u"""Set new shipping address details to session and unset shipping address id"""
-        self._set('shipping', 'new_address_fields', address_fields)
-        self._unset('shipping', 'user_address_id')
-    
     # Shipping methods
     
     def use_free_shipping(self):
