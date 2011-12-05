@@ -8,12 +8,11 @@ from django.db.models import get_model
 
 from oscar.models.fields import ExtendedURLField
 
-from oscar.core.loading import import_module
-catalogue_models = import_module('catalogue.models', ['Product',])
-
+Product = get_model('catalogue', 'Product')
 Item = get_model('product', 'Item')
 
-# Linking models
+
+# Linking models - these link promotions to content (eg pages, or keywords)
 
 
 class LinkedPromotion(models.Model):
@@ -183,6 +182,7 @@ class AbstractProductList(AbstractPromotion):
     name = models.CharField(_("Title"), max_length=255)
     description = models.TextField(null=True, blank=True)
     link_url = ExtendedURLField(blank=True, null=True)
+    link_text = models.CharField(_("Link text"), max_length=255, blank=True, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
     
     class Meta:
