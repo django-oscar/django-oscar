@@ -248,6 +248,10 @@ class Range(models.Model):
         """
         # We look for shortcircuit checks first before
         # the tests that require more database queries.
+
+        if settings.OSCAR_OFFER_BLACKLIST_PRODUCT and \
+            settings.OSCAR_OFFER_BLACKLIST_PRODUCT(product):
+            return False
         excluded_product_ids = self._excluded_product_ids()
         if product.id in excluded_product_ids:
             return False

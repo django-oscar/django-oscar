@@ -38,3 +38,7 @@ OSCAR_MODERATE_REVIEWS = False
 # Registration
 OSCAR_SEND_REGISTRATION_EMAIL = True
 OSCAR_FROM_EMAIL = 'oscar@example.com'
+
+# Offers
+OSCAR_OFFER_BLACKLIST_PRODUCT = None
+

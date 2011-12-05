@@ -12,44 +12,69 @@ from oscar.apps.basket.models import Basket
 from oscar.test.helpers import create_product
 
 
-class RangeTest(TestCase):
+class WholeSiteRangeWithGlobalBlacklistTest(TestCase):
+
+    def setUp(self):
+        self.range = Range.objects.create(name="All products", includes_all_products=True)
+
+    def tearDown(self):
+        settings.OSCAR_OFFER_BLACKLIST_PRODUCT = None
+
+    def test_blacklisting_prevents_products_being_in_range(self):
+        settings.OSCAR_OFFER_BLACKLIST_PRODUCT = lambda p: True
+        prod = create_product()
+        self.assertFalse(self.range.contains_product(prod))
+
+    def test_blacklisting_can_use_product_class(self):
+        settings.OSCAR_OFFER_BLACKLIST_PRODUCT = lambda p: p.product_class.name == 'giftcard'
+        prod = create_product(product_class="giftcard")
+        self.assertFalse(self.range.contains_product(prod))
+
+    def test_blacklisting_doesnt_exlude_everything(self):
+        settings.OSCAR_OFFER_BLACKLIST_PRODUCT = lambda p: p.product_class.name == 'giftcard'
+        prod = create_product(product_class="book")
+        self.assertTrue(self.range.contains_product(prod))
+
+
+class WholeSiteRangeTest(TestCase):
     
     def setUp(self):
+        self.range = Range.objects.create(name="All products", includes_all_products=True)
         self.prod = create_product()
     
     def test_all_products_range(self):
-        range = Range.objects.create(name="All products", includes_all_products=True)
-        self.assertTrue(range.contains_product(self.prod))
+        self.assertTrue(self.range.contains_product(self.prod))
         
     def test_all_products_range_with_exception(self):
-        range = Range.objects.create(name="All products", includes_all_products=True)
-        range.excluded_products.add(self.prod)
-        self.assertFalse(range.contains_product(self.prod))
-        
-    def test_empty_list(self):
-        range = Range.objects.create(name="All products")
-        self.assertFalse(range.contains_product(self.prod))
+        self.range.excluded_products.add(self.prod)
+        self.assertFalse(self.range.contains_product(self.prod))
         
     def test_whitelisting(self):
-        range = Range.objects.create(name="All products")
-        range.included_products.add(self.prod)
-        self.assertTrue(range.contains_product(self.prod))
+        self.range.included_products.add(self.prod)
+        self.assertTrue(self.range.contains_product(self.prod))
         
     def test_blacklisting(self):
-        range = Range.objects.create(name="All products", includes_all_products=True)
-        range.excluded_products.add(self.prod)
-        self.assertFalse(range.contains_product(self.prod))
+        self.range.excluded_products.add(self.prod)
+        self.assertFalse(self.range.contains_product(self.prod))
+        
+
+class PartialRangeTest(TestCase):
+    
+    def setUp(self):
+        self.range = Range.objects.create(name="All products", includes_all_products=False)
+        self.prod = create_product()
+
+    def test_empty_list(self):
+        self.assertFalse(self.range.contains_product(self.prod))
         
     def test_included_classes(self):
-        range = Range.objects.create(name="All products", includes_all_products=False)
-        range.classes.add(self.prod.product_class)
-        self.assertTrue(range.contains_product(self.prod))
+        self.range.classes.add(self.prod.product_class)
+        self.assertTrue(self.range.contains_product(self.prod))
         
     def test_included_class_with_exception(self):
-        range = Range.objects.create(name="All products", includes_all_products=False)
-        range.classes.add(self.prod.product_class)
-        range.excluded_products.add(self.prod)
-        self.assertFalse(range.contains_product(self.prod))
+        self.range.classes.add(self.prod.product_class)
+        self.range.excluded_products.add(self.prod)
+        self.assertFalse(self.range.contains_product(self.prod))
 
 
 class OfferTest(TestCase):
