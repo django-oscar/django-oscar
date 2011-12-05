@@ -84,7 +84,7 @@ setup(name='django-oscar',
                     'oscar.apps.search': ['fixtures/*'],
                     'oscar.apps.shipping': ['fixtures/*'],},
       install_requires=[
-          'django-extra-views==0.1.0',
+          'django-extra-views>=0.1.0',
           'django-haystack>=1.2.0',
           'django-treebeard>=1.6.1',
           'sorl-thumbnail>=11.05.1',
