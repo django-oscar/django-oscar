@@ -424,6 +424,26 @@ class FixedPriceBenefitTest(OfferTest):
         super(FixedPriceBenefitTest, self).setUp()
         self.benefit = FixedPriceBenefit(range=self.range, type="FixedPrice", value=Decimal('10.00'))
         
+    def test_correct_discount_for_count_condition(self):
+        products = [create_product(Decimal('7.00')), 
+                    create_product(Decimal('8.00')),
+                    create_product(Decimal('12.00'))]
+        
+        # Create range that includes the products
+        range = Range.objects.create(name="Dummy range")
+        for product in products:
+            range.included_products.add(product)
+        condition = CountCondition(range=range, type="Count", value=3)
+            
+        # Create basket that satisfies condition but with one extra product    
+        basket = Basket.objects.create()
+        [basket.add_product(p, 2) for p in products]
+        
+        benefit = FixedPriceBenefit(range=range, type="FixedPrice", value=Decimal('20.00'))
+        self.assertEquals(Decimal('2.00'), benefit.apply(basket, condition))
+        self.assertEquals(Decimal('12.00'), benefit.apply(basket, condition)) 
+        self.assertEquals(Decimal('0.00'), benefit.apply(basket, condition))
+
     def test_correct_discount_is_returned(self):
         products = [create_product(Decimal('8.00')), create_product(Decimal('4.00'))]
         range = Range.objects.create(name="Dummy range")

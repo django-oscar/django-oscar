@@ -528,7 +528,7 @@ class FixedPriceBenefit(Benefit):
                 if isinstance(condition, CoverageCondition):
                     quantity = 1
                 else:
-                    quantity = min(line.quantity_without_discount, num_permitted)
+                    quantity = min(line.quantity_without_discount, num_permitted - num_covered)
                 num_covered += quantity
                 product_total += quantity*line.unit_price_incl_tax
                 covered_lines.append((line, quantity))
