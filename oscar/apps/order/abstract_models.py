@@ -322,11 +322,10 @@ class AbstractLine(models.Model):
         verbose_name_plural = _("Order lines")
         
     def __unicode__(self):
-        try:
+        if self.product:
             title = self.product.title
-        except ObjectDoesNotExist:
+        else:
             title = '<missing product>'
-        
         return u"Product '%s', quantity '%s'" % (title, self.quantity)
     
     
