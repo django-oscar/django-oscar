@@ -59,6 +59,7 @@ class BasketViewsTest(TestCase):
         response = self.client.post(url, post_params)
         self.assertTrue('oscar_open_basket' in response.cookies)
 
+
 class BasketThresholdTest(TestCase):
 
     def setUp(self):
