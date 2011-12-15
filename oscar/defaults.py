@@ -42,3 +42,5 @@ OSCAR_FROM_EMAIL = 'oscar@example.com'
 # Offers
 OSCAR_OFFER_BLACKLIST_PRODUCT = None
 
+# Max total number of items in basket
+OSCAR_MAX_BASKET_QUANTITY_THRESHOLD = None
