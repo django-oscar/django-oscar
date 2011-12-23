@@ -117,15 +117,6 @@ class BasketAddView(FormView):
         return HttpResponseRedirect(self.request.META.get('HTTP_REFERER',reverse('basket:summary')))
 
 
-class VoucherView(ListView):
-    model = get_model('voucher', 'voucher')
-    can_delete = True
-    extra = 0
-
-    def get_queryset(self):
-        self.request.basket.vouchers.all()
-
-
 class VoucherAddView(FormView):
     form_class = BasketVoucherForm
     voucher_model = get_model('voucher', 'voucher')
