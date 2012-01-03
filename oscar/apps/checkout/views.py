@@ -327,23 +327,24 @@ class OrderPreviewView(CheckoutSessionMixin, TemplateView):
 
 class OrderPlacementMixin(CheckoutSessionMixin):
     """
-    Mixin for providing functionality for placing orders.
+    Mixin which provides functionality for placing orders.
     """
     # Any payment sources should be added to this list as part of the
     # _handle_payment method.  If the order is placed successfully, then
     # they will be persisted.
     _payment_sources = None
+
+    # Default code for the email to send after successful checkout
     communication_type_code = 'ORDER_PLACED' 
     
     def handle_order_placement(self, order_number, basket, total_incl_tax, total_excl_tax, **kwargs): 
         """
-        Place the order into the database and return the appropriate HTTP response
+        Write out the order models and return the appropriate HTTP response
         
         We deliberately pass the basket in here as the one tied to the request
         isn't necessarily the correct one to use in placing the order.  This can
         happen when a basket gets frozen.
         """   
-        # Write out all order and payment models
         order = self.place_order(order_number, basket, total_incl_tax, total_excl_tax, **kwargs)
         basket.set_as_submitted()
         return self.handle_successful_order(order)
@@ -356,6 +357,9 @@ class OrderPlacementMixin(CheckoutSessionMixin):
     def handle_successful_order(self, order):  
         """
         Handle the various steps required after an order has been successfully placed.
+
+        Override this view if you want to perform custom actions when an
+        order is submitted.
         """  
         # Send confirmation message (normally an email)
         self.send_confirmation_message(order)
@@ -365,6 +369,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         
         # Save order id in session so thank-you page can load it
         self.request.session['checkout_order_id'] = order.id
+
         return HttpResponseRedirect(reverse('checkout:thank-you'))
     
     def place_order(self, order_number, basket, total_incl_tax, total_excl_tax, **kwargs):
