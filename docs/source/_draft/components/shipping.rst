@@ -52,7 +52,7 @@ the checkout.  If more than one, then each available method is displayed so the
 customer can choose.
 
 Default behaviour 
-----------------
+-----------------
 Oscar ships with a simple model for calculating shipping based on a charge per
 order, and a charge per item.  This is the ``OrderAndItemLevelChargeMethod``
 class and is configured by setting the two charges used for the calculation.

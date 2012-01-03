@@ -1,5 +1,6 @@
-Shipping
-========
+===========================
+How to set shipping charges
+===========================
 
 By default, you can configure shipping by using the built-in ShippingMethod models.  These
 support shipping charges that are calculated using an order- and item-level charge.

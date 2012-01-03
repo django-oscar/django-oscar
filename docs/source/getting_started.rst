@@ -1,14 +1,22 @@
+===============
 Getting started
 ===============
 
-There are several steps involved to setting up your ecommerce project:
+Install using::
 
-.. toctree::
-   :maxdepth: 2
+    pip install django-oscar
 
-   getting_started/installation
-   getting_started/search
-   getting_started/customising_models
-   getting_started/overriding_core_classes
-   getting_started/create_product_catalogue
+Demo shop
+---------
+
+If you just want to have a play around, do the following:
+
+Real shop
+---------
+
+Unfortunately, setting up an e-commerce store is never trivial and there
+are several further steps you will want to follow:
+
+* :doc:`recipes/how_to_customise_models`
+* :doc:`recipes/how_to_override_a_core_class`
 
