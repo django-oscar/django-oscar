@@ -96,26 +96,26 @@ class OrderCreator(object):
         partner = self.get_partner_for_product(basket_line.product)
         stockrecord = basket_line.product.stockrecord
         line_data = {'order': order,
-                      # Partner details
-                      'partner': partner,
-                      'partner_name': partner.name,
-                      'partner_sku': stockrecord.partner_sku,
-                      # Product details
-                      'product': basket_line.product, 
-                      'title': basket_line.product.get_title(),
-                      'quantity': basket_line.quantity,
-                      # Price details 
-                      'line_price_excl_tax': basket_line.line_price_excl_tax_and_discounts, 
-                      'line_price_incl_tax': basket_line.line_price_incl_tax_and_discounts,
-                      'line_price_before_discounts_excl_tax': basket_line.line_price_excl_tax,
-                      'line_price_before_discounts_incl_tax': basket_line.line_price_incl_tax,
-                      # Reporting details
-                      'unit_cost_price': stockrecord.cost_price,
-                      'unit_price_incl_tax': basket_line.unit_price_incl_tax,
-                      'unit_price_excl_tax': basket_line.unit_price_excl_tax,
-                      'unit_retail_price': stockrecord.price_retail,
-                      # Shipping details
-                      'est_dispatch_date':  basket_line.product.stockrecord.dispatch_date
+                     # Partner details
+                     'partner': partner,
+                     'partner_name': partner.name,
+                     'partner_sku': stockrecord.partner_sku,
+                     # Product details
+                     'product': basket_line.product, 
+                     'title': basket_line.product.get_title(),
+                     'quantity': basket_line.quantity,
+                     # Price details 
+                     'line_price_excl_tax': basket_line.line_price_excl_tax_and_discounts, 
+                     'line_price_incl_tax': basket_line.line_price_incl_tax_and_discounts,
+                     'line_price_before_discounts_excl_tax': basket_line.line_price_excl_tax,
+                     'line_price_before_discounts_incl_tax': basket_line.line_price_incl_tax,
+                     # Reporting details
+                     'unit_cost_price': stockrecord.cost_price,
+                     'unit_price_incl_tax': basket_line.unit_price_incl_tax,
+                     'unit_price_excl_tax': basket_line.unit_price_excl_tax,
+                     'unit_retail_price': stockrecord.price_retail,
+                     # Shipping details
+                     'est_dispatch_date':  basket_line.product.stockrecord.dispatch_date
                      }
         if extra_line_fields:
             line_data.update(extra_line_fields)
@@ -123,10 +123,23 @@ class OrderCreator(object):
         order_line = Line._default_manager.create(**line_data)
         self.create_line_price_models(order, order_line, basket_line)
         self.create_line_attributes(order, order_line, basket_line)
+        self.create_additional_line_models(order, order_line, basket_line)
+
+        return order_line
         
     def update_stock_records(self, line):
         line.product.stockrecord.allocate(line.quantity)    
         
+    def create_additional_line_models(self, order, order_line, basket_line):
+        """
+        Empty method designed to be overridden.
+
+        Some applications require additional information about lines, this 
+        method provides a clean place to create additional models that 
+        relate to a given line.
+        """
+        pass
+
     def create_line_price_models(self, order, order_line, basket_line):
         """
         Creates the batch line price models
@@ -145,9 +158,9 @@ class OrderCreator(object):
         """
         for attr in basket_line.attributes.all():
             LineAttribute._default_manager.create(line=order_line,
-                                                   option=attr.option, 
-                                                   type=attr.option.code,
-                                                   value=attr.value)
+                                                  option=attr.option, 
+                                                  type=attr.option.code,
+                                                  value=attr.value)
             
     def create_discount_model(self, order, discount):
         """
