@@ -11,6 +11,22 @@ Product = get_model('catalogue', 'product')
 class BasketLineForm(forms.ModelForm):
     save_for_later = forms.BooleanField(initial=False, required=False)
 
+    def clean_quantity(self):
+        qty = self.cleaned_data['quantity']
+        basket_threshold = settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD
+        if basket_threshold:
+            total_basket_quantity = self.basket.num_items
+            max_allowed = basket_threshold - total_basket_quantity
+            if qty > max_allowed:
+                raise forms.ValidationError(
+                    _("Due to technical limitations we are not able to ship"
+                      " more than %(threshold)d items in one order. Your basket"
+                      " currently has %(basket)d items.") % {
+                            'threshold': basket_threshold,
+                            'basket': total_basket_quantity,
+                    })
+        return qty
+
     class Meta:
         model = basketline_model
         exclude = ('basket', 'product', 'line_reference', )
