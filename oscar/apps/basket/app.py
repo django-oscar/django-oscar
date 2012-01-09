@@ -21,6 +21,6 @@ class BasketApplication(Application):
             url(r'^vouchers/(?P<pk>\d+)/remove/$', self.remove_voucher_view.as_view(), name='vouchers-remove'),     
             url(r'^saved/$', self.saved_view.as_view(), name='saved'),
         )
-        return urlpatterns
+        return self.post_process_urls(urlpatterns)
 
 application = BasketApplication()

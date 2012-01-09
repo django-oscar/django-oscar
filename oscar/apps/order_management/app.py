@@ -16,6 +16,7 @@ class OrderManagementApplication(Application):
             url(r'^$', staff_member_required(self.list_view.as_view()), name='list'),
             url(r'^order/(?P<order_number>[\w-]*)/$', staff_member_required(self.detail_view.as_view()), name='detail'),
         )
-        return urlpatterns
+        return self.post_process_urls(urlpatterns)
+
 
 application = OrderManagementApplication()

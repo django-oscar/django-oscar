@@ -19,6 +19,7 @@ class PromotionsApplication(Application):
                 self.record_click_view.as_view(model=KeywordPromotion), name='keyword-click'),
             url(r'^$', self.home_view.as_view(), name='home'),
         )
-        return urlpatterns
+        return self.post_process_urls(urlpatterns)
+
 
 application = PromotionsApplication()

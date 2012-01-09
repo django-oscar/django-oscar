@@ -15,6 +15,7 @@ class ReportsApplication(Application):
         urlpatterns = patterns('',
             url(r'^$', staff_member_required(self.dashboard_view.as_view()), name='dashboard'),
         )
-        return urlpatterns
+        return self.post_process_urls(urlpatterns)
+
 
 application = ReportsApplication()

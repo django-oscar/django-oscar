@@ -3,16 +3,34 @@ import httplib
 
 from django.test import TestCase
 from django.test.client import Client
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, clear_url_caches
+from django.conf import settings
 
 from oscar.test.helpers import create_product
 
-        
-class CheckoutViewsTest(TestCase):
+
+class AnonCheckoutTests(TestCase):
+
+    def setUp(self):
+        clear_url_caches()
+        self.client = Client()
+        settings.OSCAR_ALLOW_ANON_CHECKOUT = True
+
+    def tearDown(self):
+        settings.OSCAR_ALLOW_ANON_CHECKOUT = False
+
+    def _test_shipping_address_does_require_login(self):
+        # Disabled until I can work out how to reload the URL config between tests
+        url = reverse('checkout:shipping-address')
+        response = self.client.get(url)
+        self.assertEquals(httplib.OK, response.status_code)
     
+
+class CheckoutViewsTest(TestCase):
     fixtures = ['example-shipping-charges.json']
     
     def setUp(self):
+        clear_url_caches()
         self.client = Client()
         super(CheckoutViewsTest, self).setUp()
     
@@ -23,43 +41,20 @@ class CheckoutViewsTest(TestCase):
         for url in urls:
             response = self.client.get(url)
             self.assertEqual(httplib.FOUND, response.status_code)
-    
-    def _test_anonymous_checkout(self):
-        
-        # Add a product to the basket
-        p = create_product(price=D('10.00'))
-        response = self.client.post(reverse('basket:add'), {'action': 'add', 
-                                                              'product_id': str(p.id),
-                                                              'quantity': 1})
-        self.assertEqual(302, response.status_code)
-        
-        # Submit shipping address
-        response = self.client.post(reverse('oscar-checkout-shipping-address'), 
-                                    {'last_name': 'Smith',
-                                     'line1': '1 Portland Street',
-                                     'postcode': 'N12 9ET',
-                                     'country': 'GB'})
-        self.assertEqual(302, response.status_code)
-        
-        # Choose shipping method
-        response = self.client.post(reverse('oscar-checkout-shipping-method'),
-                                    {'method_code': 'royal-mail-first-class'})
-        self.assertEqual(302, response.status_code)
-        
-        # Shipping method
-        response = self.client.get(reverse('oscar-checkout-payment-method'))
-        self.assertEqual(302, response.status_code)
-        
-        # View preview
-        response = self.client.get(reverse('oscar-checkout-preview'))
-        self.assertEqual(302, response.status_code)
-        
-        # Submit
-        response = self.client.post(reverse('oscar-checkout-payment-details'), {})
-        self.assertEqual(302, response.status_code)
-        
-        
-        
-        
-        
-        
+
+    def test_anon_checkout_disabled_by_default(self):
+        self.assertFalse(settings.OSCAR_ALLOW_ANON_CHECKOUT)
+
+    def test_index_does_not_require_login(self):
+        url = reverse('checkout:index')
+        response = self.client.get(url)
+        self.assertEquals(httplib.OK, response.status_code)
+
+    def test_core_checkout_requires_login(self):
+        urls = [reverse('checkout:shipping-address'),
+                reverse('checkout:payment-method'),
+                reverse('checkout:shipping-method'),
+                reverse('checkout:payment-details')]
+        for url in urls:
+            response = self.client.get(url)
+            self.assertEquals(httplib.FOUND, response.status_code)

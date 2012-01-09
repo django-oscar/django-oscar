@@ -26,6 +26,7 @@ class SearchApplication(Application):
             url(r'^$', self.search_view(form_class=MultiFacetedSearchForm, 
                                         searchqueryset=sqs), name='search'),
         )
-        return urlpatterns
+        return self.post_process_urls(urlpatterns)
+
 
 application = SearchApplication()

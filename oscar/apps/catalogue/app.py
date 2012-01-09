@@ -18,7 +18,7 @@ class BaseCatalogueApplication(Application):
             url(r'^(?P<product_slug>[\w-]*)-(?P<pk>\d+)/$', self.detail_view.as_view(), name='detail'),
             url(r'^(?P<category_slug>[\w-]+(/[\w-]+)*)/$', self.category_view.as_view(), name='category')
         )
-        return urlpatterns
+        return self.post_process_urls(urlpatterns)
 
 
 class ReviewsApplication(Application):
@@ -29,7 +29,7 @@ class ReviewsApplication(Application):
         urlpatterns += patterns('',
             url(r'^(?P<product_slug>[\w-]*)-(?P<product_pk>\d+)/reviews/', include(self.reviews_app.urls)),
         )
-        return urlpatterns
+        return self.post_process_urls(urlpatterns)
 
 
 class CatalogueApplication(BaseCatalogueApplication, ReviewsApplication):

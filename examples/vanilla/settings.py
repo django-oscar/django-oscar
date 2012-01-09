@@ -225,8 +225,6 @@ APPEND_SLASH = True
 # Oscar settings
 from oscar.defaults import *
 
-OSCAR_ALLOW_ANON_CHECKOUT = True
-
 # Haystack settings
 HAYSTACK_SITECONF = 'oscar.search_sites'
 HAYSTACK_SEARCH_ENGINE = 'solr'

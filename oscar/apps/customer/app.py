@@ -39,6 +39,6 @@ class CustomerApplication(Application):
             url(r'^emails/$', login_required(self.email_list_view.as_view()), name='email-list'),
             url(r'^emails/(?P<email_id>\d+)/$', login_required(self.email_detail_view.as_view()), name='email-detail'),
             )
-        return urlpatterns
+        return self.post_process_urls(urlpatterns)
 
 application = CustomerApplication()
