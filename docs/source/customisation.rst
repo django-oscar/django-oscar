@@ -57,15 +57,11 @@ tries to load the ``Item`` class, it will load the one from your local project.
 All views are class-based
 -------------------------
 
-This enables any view to be subclassed and extended within your project.
+This enables any view to be subclassed and extended within your project.  
 
 Templates can be overridden
 ---------------------------
 
-This is a simple technique relying on the fact that the template loader can be
-configured to look in your project first for oscar templates.
-
-
-Oscar's is designed to be open to customisation wherever possible.  There are two
-main ways in which this is acheived.
-
+This is a common technique relying on the fact that the template loader can be
+configured to look in your project first for templates, before it uses the defaults
+from oscar.

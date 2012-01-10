@@ -14,7 +14,7 @@ Available settings
 OSCAR_DEFAULT_CURRENCY
 ----------------------
 
-Default: None (This is a required field)
+Default: ``None`` (This is a required field)
 
 This should be the symbol of the currency you wish Oscar to use by default.
 
@@ -28,7 +28,7 @@ The time to live for the basket cookie in seconds
 OSCAR_IMAGE_FOLDER
 ------------------
 
-Default: images/products/%Y/%m/ 
+Default: ``images/products/%Y/%m/``
 
 The path for uploading images to.
 
