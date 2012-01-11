@@ -15,7 +15,7 @@ class BasketLineForm(forms.ModelForm):
         qty = self.cleaned_data['quantity']
         basket_threshold = settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD
         if basket_threshold:
-            total_basket_quantity = self.basket.num_items
+            total_basket_quantity = self.instance.basket.num_items
             max_allowed = basket_threshold - total_basket_quantity
             if qty > max_allowed:
                 raise forms.ValidationError(
