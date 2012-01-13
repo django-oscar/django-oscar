@@ -85,7 +85,7 @@ def run_tests():
     sys.path.insert(0, parent)
 
     # Run tests
-    test_runner = DjangoTestSuiteRunner(verbosity=2)
+    test_runner = DjangoTestSuiteRunner(verbosity=1)
     failures = test_runner.run_tests(['oscar'])
     sys.exit(failures)
 
