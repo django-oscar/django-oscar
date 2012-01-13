@@ -4,21 +4,24 @@ from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 
 from oscar.apps.catalogue.models import Product, ProductClass, Category
-from oscar.apps.catalogue.utils import breadcrumbs_to_category
+from oscar.apps.catalogue.categories import create_from_breadcrumbs
 
 
 class CategoryTests(TestCase):
+
+    def setUp(self):
+        Category.objects.all().delete()
     
-    def test_create_category_root(self):
+    def test_creating_category_root(self):
         trail = 'Books'
-        category = breadcrumbs_to_category(trail)
+        category = create_from_breadcrumbs(trail)
         self.assertIsNotNone(category)
         self.assertEquals(category.name, 'Books')
         self.assertEquals(category.slug, 'books')      
     
-    def test_subcategory(self):
+    def test_creating_parent_and_child_categories(self):
         trail = 'Books > Science-Fiction'
-        category = breadcrumbs_to_category(trail)
+        category = create_from_breadcrumbs(trail)
         
         self.assertIsNotNone(category)
         self.assertEquals(category.name, 'Science-Fiction')
@@ -27,11 +30,11 @@ class CategoryTests(TestCase):
         self.assertEquals(2, Category.objects.count())
         self.assertEquals(category.slug, 'books/science-fiction')
         
-    def test_subsubcategory(self):
+    def test_creating_multiple_categories(self):
         trail = 'Books > Science-Fiction > Star Trek'
-        breadcrumbs_to_category(trail)
+        create_from_breadcrumbs(trail)
         trail = 'Books > Factual > Popular Science'
-        category = breadcrumbs_to_category(trail)        
+        category = create_from_breadcrumbs(trail)        
         
         self.assertIsNotNone(category)
         self.assertEquals(category.name, 'Popular Science')
@@ -40,6 +43,10 @@ class CategoryTests(TestCase):
         self.assertEquals(5, Category.objects.count())
         self.assertEquals(category.slug, 'books/factual/popular-science', )        
 
+    def test_alternative_separator_can_be_used(self):
+        trail = 'Food|Cheese|Blue'
+        create_from_breadcrumbs(trail, separator='|')
+        self.assertEquals(3, len(Category.objects.all()))
 
 class ItemTests(TestCase):
 

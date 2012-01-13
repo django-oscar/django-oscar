@@ -10,6 +10,11 @@ Customisation
 * :doc:`recipes/how_to_customise_models`
 * :doc:`recipes/how_to_override_a_core_class`
 
+Catalogue
+---------
+
+* :doc:`recipes/how_to_create_categories.rst`
+
 Checkout
 --------
 
