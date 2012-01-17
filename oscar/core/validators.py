@@ -32,5 +32,5 @@ class ExtendedURLValidator(validators.URLValidator):
         Puts preceding and trailing slashes to local URL name
         """
         if value != '/':
-            value = '/' + value.strip('/') + '/'
+            value = '/' + value.lstrip('/')
         return value

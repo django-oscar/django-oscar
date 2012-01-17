@@ -569,11 +569,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         order_number = self.generate_order_number(basket)
         logger.info("Order #%s: beginning submission process for basket %d", order_number, basket.id)
         
-        # We freeze the basket to prevent it being modified once the payment
-        # process has started.  If your payment fails, then the basket will
-        # need to be "unfrozen".  We also store the basket ID in the session
-        # so the it can be retrieved by multistage checkout processes.
-        basket.freeze()
+        self.freeze_basket(basket)
         self.checkout_session.set_submitted_basket(basket)
         
         # Handle payment.  Any payment problems should be handled by the 
@@ -612,6 +608,13 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         order_number = generator.order_number(basket)
         self.checkout_session.set_order_number(order_number)
         return order_number
+
+    def freeze_basket(self, basket):
+        # We freeze the basket to prevent it being modified once the payment
+        # process has started.  If your payment fails, then the basket will
+        # need to be "unfrozen".  We also store the basket ID in the session
+        # so the it can be retrieved by multistage checkout processes.
+        basket.freeze()
     
     def handle_payment(self, order_number, total, **kwargs):
         """

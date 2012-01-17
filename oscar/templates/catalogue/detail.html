@@ -64,7 +64,7 @@
 
 {% if product.stockrecord %}
 
-{% basket_form product as basket_form %}
+{% basket_form basket product as basket_form %}
 
 <form action="{% url basket:add %}" method="post">
     {% csrf_token %}
