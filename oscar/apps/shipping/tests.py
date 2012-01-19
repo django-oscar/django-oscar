@@ -9,14 +9,24 @@ from oscar.apps.basket.models import Basket
 from oscar.test.helpers import create_product
 from oscar.test.decorators import dataProvider
 
+
 class FreeShippingTest(unittest.TestCase):
+
+    def setUp(self):
+        self.method = FreeShipping()
     
-    def test_shipping_is_free(self):
-        method = FreeShipping()
+    def test_shipping_is_free_for_empty_basket(self):
         basket = Basket()
-        method.set_basket(basket)
-        self.assertEquals(D('0.00'), method.basket_charge_incl_tax())
-        self.assertEquals(D('0.00'), method.basket_charge_excl_tax())
+        self.method.set_basket(basket)
+        self.assertEquals(D('0.00'), self.method.basket_charge_incl_tax())
+        self.assertEquals(D('0.00'), self.method.basket_charge_excl_tax())
+
+    def test_shipping_is_free_for_nonempty_basket(self):
+        basket = Basket()
+        basket.add_product(create_product())
+        self.method.set_basket(basket)
+        self.assertEquals(D('0.00'), self.method.basket_charge_incl_tax())
+        self.assertEquals(D('0.00'), self.method.basket_charge_excl_tax())
         
         
 class FixedPriceShippingTest(unittest.TestCase):        

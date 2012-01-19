@@ -5,11 +5,11 @@ from django.utils.translation import ugettext_lazy as _
 from django.template.defaultfilters import slugify
 from django.conf import settings
 
-from oscar.apps.shipping.methods import ShippingMethod
+from oscar.apps.shipping.base import ShippingMethod
 
 
 class AbstractOrderAndItemLevelChargeMethod(models.Model, ShippingMethod):
-    u"""
+    """
     Standard shipping method
     
     This method has two components: 
@@ -47,7 +47,7 @@ class AbstractOrderAndItemLevelChargeMethod(models.Model, ShippingMethod):
         self._basket = basket
     
     def basket_charge_incl_tax(self):
-        u"""
+        """
         Return basket total including tax
         """
         if self.free_shipping_threshold != None and self._basket.total_incl_tax >= self.free_shipping_threshold:
@@ -59,7 +59,7 @@ class AbstractOrderAndItemLevelChargeMethod(models.Model, ShippingMethod):
         return charge
     
     def basket_charge_excl_tax(self):
-        u"""
+        """
         Return basket total excluding tax.  
         
         Default implementation assumes shipping is tax free.

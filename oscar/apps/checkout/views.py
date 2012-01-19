@@ -282,15 +282,24 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
         Returns all applicable shipping method objects
         for a given basket.
         """ 
-        repo = Repository()
         # Shipping methods can depend on the user, the contents of the basket
         # and the shipping address.  I haven't come across a scenario that doesn't
         # fit this system.
+        repo = Repository()
         return repo.get_shipping_methods(self.request.user, self.request.basket, 
                                          self.get_shipping_address())
     
     def post(self, request, *args, **kwargs):
-        method_code = request.POST['method_code']
+        # Need to check that this code is valid for this user
+        method_code = request.POST.get('method_code', None)
+        is_valid = False
+        for method in self.get_available_shipping_methods():
+            if method.code == method_code:
+                is_valid = True
+        if not is_valid:
+            messages.error(request, _("Your submitted shipping method is not permitted"))
+            return HttpResponseRedirect(reverse('checkout:shipping-method'))
+
         # Save the code for the chosen shipping method in the session
         # and continue to the next step.
         self.checkout_session.use_shipping_method(method_code)
@@ -299,6 +308,10 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
     def get_success_response(self):
         return HttpResponseRedirect(reverse('checkout:payment-method'))
 
+
+# ======================================
+# Payment method, preview and submission
+# ======================================
 
 class PaymentMethodView(CheckoutSessionMixin, TemplateView):
     """

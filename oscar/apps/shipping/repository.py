@@ -4,14 +4,14 @@ shipping_models = import_module('shipping.models', ['OrderAndItemLevelChargeMeth
 
 
 class Repository(object):
-    u"""
+    """
     Repository class responsible for returning ShippingMethod
-    objects
+    objects for a given user, basket etc
     """
     
-    def get_shipping_methods(self, user, basket, shipping_addr):
-        u"""
-        Returns all applicable shipping method objects
+    def get_shipping_methods(self, user, basket, shipping_addr, **kwargs):
+        """
+        Return a list of all applicable shipping method objects
         for a given basket.
         
         We default to returning the Method models that have been defined but
@@ -27,8 +27,8 @@ class Repository(object):
         return methods
 
     def find_by_code(self, code):
-        u"""
-        Returns the appropriate Method object for the given code
+        """
+        Return the appropriate Method object for the given code
         """
         if code == FreeShipping.code:
             return FreeShipping()
