@@ -556,6 +556,11 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
            - If a redirect is required (eg PayPal, 3DSecure), redirect
            - If payment is unsuccessful, show an appropriate error message
         """
+        # First check that basket isn't empty
+        if basket.is_empty:
+            messages.error(self.request, _("This order cannot be submitted as the basket is empty"))
+            return HttpResponseRedirect(self.request.META['HTTP_REFERER'])
+
         # We generate the order number first as this will be used
         # in payment requests (ie before the order model has been 
         # created).  We also save it in the session for multi-stage
@@ -619,7 +624,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         default is to do nothing.
         """
         pass
-        
+
 
 class ThankYouView(DetailView):
     """
