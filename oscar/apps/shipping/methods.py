@@ -1,4 +1,4 @@
-from decimal import Decimal
+from decimal import Decimal as D
 
 from oscar.apps.shipping.base import ShippingMethod
 from oscar.apps.shipping.models import OrderAndItemLevelChargeMethod
@@ -12,10 +12,10 @@ class FreeShipping(ShippingMethod):
     name = 'Free shipping'
     
     def basket_charge_incl_tax(self):
-        return Decimal('0.00')
+        return D('0.00')
     
     def basket_charge_excl_tax(self):
-        return Decimal('0.00')
+        return D('0.00')
     
 
 class FixedPriceShipping(ShippingMethod):
@@ -34,3 +34,14 @@ class FixedPriceShipping(ShippingMethod):
     def basket_charge_excl_tax(self):
         return self.charge_excl_tax
 
+
+class WeightBasedChargesMethod(ShippingMethod):
+
+    def __init__(self, code):
+        self.code = code
+
+    def basket_charge_incl_tax(self):
+        return D('0.00')
+    
+    def basket_charge_excl_tax(self):
+        return D('0.00')

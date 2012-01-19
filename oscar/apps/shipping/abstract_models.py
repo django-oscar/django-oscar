@@ -50,7 +50,8 @@ class AbstractOrderAndItemLevelChargeMethod(models.Model, ShippingMethod):
         """
         Return basket total including tax
         """
-        if self.free_shipping_threshold != None and self._basket.total_incl_tax >= self.free_shipping_threshold:
+        if self.free_shipping_threshold != None and \
+                self._basket.total_incl_tax >= self.free_shipping_threshold:
             return Decimal('0.00')
         
         charge = self.price_per_order
