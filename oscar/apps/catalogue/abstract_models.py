@@ -19,6 +19,7 @@ from oscar.apps.catalogue.managers import BrowsableProductManager
 
 ENABLE_ATTRIBUTE_BINDING = getattr(settings, 'OSCAR_ENABLE_ATTRIBUTE_BINDING', False)
 
+
 class AbstractProductClass(models.Model):
     """
     Defines the options and attributes for a group of products, e.g. Books, DVDs and Toys.
@@ -49,6 +50,8 @@ class AbstractCategory(MP_Node):
     Category hierarchy, top-level nodes represent departments. Uses django-treebeard.
     """
     name = models.CharField(max_length=255, db_index=True)
+    description = models.TextField(blank=True, null=True)
+    image = models.ImageField(upload_to='categories', blank=True, null=True)
     slug = models.SlugField(max_length=1024, db_index=True, editable=False)
     full_name = models.CharField(max_length=1024, db_index=True, editable=False)    
     
