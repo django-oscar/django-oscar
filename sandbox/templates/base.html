@@ -6,7 +6,8 @@
         <meta name="created" content='{% now "jS M Y h:i" %}' />
         <meta name="description" content="{% block description %}{% endblock %}" />
         <meta name="keywords" content="{% block keywords %}{% endblock %}" />
-        <link rel="stylesheet" href="{{ STATIC_URL }}css/base/screen.css" />
+        <link rel="shortcut icon" href="{{ STATIC_URL }}favicon.ico" />
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/screen.css" />
         {% block extra_head %}{% endblock %}
     </head>
     <body id="{% block body_id %}default{% endblock %}" class="{% block body_class %}default{% endblock %}">
