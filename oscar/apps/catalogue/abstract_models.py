@@ -179,6 +179,9 @@ class AbstractProduct(models.Model):
     title = models.CharField(_('Title'), max_length=255, blank=True, null=True)
     slug = models.SlugField(max_length=255, unique=False)
     description = models.TextField(_('Description'), blank=True, null=True)
+
+    # Use this field to indicate if the product is inactive or awaiting approval
+    status = models.CharField(_('Status'), max_length=128, blank=True, null=True, db_index=True)
     product_class = models.ForeignKey('catalogue.ProductClass', verbose_name=_('product class'), null=True,
         help_text="""Choose what type of product this is""")
     attributes = models.ManyToManyField('catalogue.ProductAttribute', through='ProductAttributeValue',
