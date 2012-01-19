@@ -70,6 +70,7 @@ minimum, you'll have to consider the following questions:
 Much of the documentation for oscar is organised as recipes that explain
 how to solve questions such as those above:
 
+* :doc:`recipes/how_to_customise_an_app`
 * :doc:`recipes/how_to_customise_models`
 * :doc:`recipes/how_to_override_a_core_class`
 
