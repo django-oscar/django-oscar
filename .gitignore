@@ -23,4 +23,4 @@ oscar/share
 .~lock.*
 dist/
 *.DS_Store
-sandbox/.sqlite
+sandbox/*.sqlite
