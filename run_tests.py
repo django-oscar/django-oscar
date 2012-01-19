@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import sys
 import os
+from optparse import OptionParser
 
 from django.conf import settings, global_settings
 
@@ -79,15 +80,19 @@ if not settings.configured:
 from django.test.simple import DjangoTestSuiteRunner
 
 
-def run_tests():
+def run_tests(*test_args):
     # Modify path
     parent = os.path.dirname(os.path.abspath(__file__))
     sys.path.insert(0, parent)
 
     # Run tests
     test_runner = DjangoTestSuiteRunner(verbosity=1)
-    failures = test_runner.run_tests(['oscar'])
+    if not test_args:
+        test_args = ['oscar']
+    failures = test_runner.run_tests(test_args)
     sys.exit(failures)
 
 if __name__ == '__main__':
-    run_tests()
+    parser = OptionParser()
+    (options, args) = parser.parse_args()
+    run_tests(*args)
