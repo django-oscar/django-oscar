@@ -98,7 +98,7 @@ class WeightBand(models.Model):
         Return the weight band for a given weight
         """
         bands = WeightBand.objects.filter(method_code=method_code, 
-                upper_limit__gte=weight).order_by('upper_limit')
+                upper_limit__gte=D(weight)).order_by('upper_limit')
         if not bands.count():
             # No band for this weight
             return None
