@@ -6,7 +6,7 @@ from django.template.defaultfilters import slugify
 from django.conf import settings
 
 
-class OrderAndItemLevelChargeMethod(models.Model):
+class OrderAndItemCharges(models.Model):
     """
     Standard shipping method
     

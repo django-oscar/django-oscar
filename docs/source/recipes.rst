@@ -19,7 +19,7 @@ Catalogue
 Checkout
 --------
 
-* :doc:`recipes/custom_shipping_logic`
+* :doc:`recipes/how_to_configure_shipping`
 * :doc:`recipes/enforcing_stock_rules`
 
 Lots more to come!

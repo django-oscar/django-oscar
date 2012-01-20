@@ -1,4 +1,4 @@
-from oscar.apps.shipping.methods import FreeShipping, OrderAndItemLevelChargeMethod
+from oscar.apps.shipping.methods import Free
 
 
 class Repository(object):
@@ -16,7 +16,7 @@ class Repository(object):
         this behaviour can easily be overridden by subclassing this class
         and overriding this method.
         """ 
-        methods = [FreeShipping()]
+        methods = [Free()]
         for method in methods:
             method.set_basket(basket)
         return methods
@@ -25,6 +25,6 @@ class Repository(object):
         """
         Return the appropriate Method object for the given code
         """
-        if code == FreeShipping.code:
-            return FreeShipping()
+        if code == Free.code:
+            return Free()
         return None

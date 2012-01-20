@@ -4,8 +4,8 @@ from django.utils import unittest
 from django.test.client import Client
 from django.contrib.auth.models import User
 
-from oscar.apps.shipping.methods import FreeShipping, FixedPriceShipping, WeightBasedChargesMethod
-from oscar.apps.shipping.models import OrderAndItemLevelChargeMethod, WeightBand
+from oscar.apps.shipping.methods import Free, FixedPrice, WeightBased
+from oscar.apps.shipping.models import OrderAndItemCharges, WeightBand
 from oscar.apps.shipping.repository import Repository
 from oscar.apps.shipping import Scales
 from oscar.apps.basket.models import Basket
@@ -13,10 +13,10 @@ from oscar.test.helpers import create_product
 from oscar.test.decorators import dataProvider
 
 
-class FreeShippingTest(unittest.TestCase):
+class FreeTest(unittest.TestCase):
 
     def setUp(self):
-        self.method = FreeShipping()
+        self.method = Free()
     
     def test_shipping_is_free_for_empty_basket(self):
         basket = Basket()
@@ -32,17 +32,17 @@ class FreeShippingTest(unittest.TestCase):
         self.assertEquals(D('0.00'), self.method.basket_charge_excl_tax())
         
         
-class FixedPriceShippingTest(unittest.TestCase):        
+class FixedPriceTest(unittest.TestCase):        
     
     def test_fixed_price_shipping_charges_for_empty_basket(self):
-        method = FixedPriceShipping(D('10.00'), D('10.00'))
+        method = FixedPrice(D('10.00'), D('10.00'))
         basket = Basket()
         method.set_basket(basket)
         self.assertEquals(D('10.00'), method.basket_charge_incl_tax())
         self.assertEquals(D('10.00'), method.basket_charge_excl_tax())
         
     def test_fixed_price_shipping_assumes_no_tax(self):
-        method = FixedPriceShipping(D('10.00'))
+        method = FixedPrice(D('10.00'))
         basket = Basket()
         method.set_basket(basket)
         self.assertEquals(D('10.00'), method.basket_charge_excl_tax())
@@ -54,16 +54,16 @@ class FixedPriceShippingTest(unittest.TestCase):
         
     @dataProvider(shipping_values)    
     def test_different_values(self, value):
-        method = FixedPriceShipping(D(value))
+        method = FixedPrice(D(value))
         basket = Basket()
         method.set_basket(basket)
         self.assertEquals(D(value), method.basket_charge_excl_tax())
         
         
-class OrderAndItemLevelChargeMethodTests(unittest.TestCase):
+class OrderAndItemChargesTests(unittest.TestCase):
     
     def setUp(self):
-        self.method = OrderAndItemLevelChargeMethod(price_per_order=D('5.00'), price_per_item=D('1.00'))
+        self.method = OrderAndItemCharges(price_per_order=D('5.00'), price_per_item=D('1.00'))
         self.basket = Basket.objects.create()
         self.method.set_basket(self.basket)
     
@@ -81,10 +81,10 @@ class OrderAndItemLevelChargeMethodTests(unittest.TestCase):
         self.assertEquals(D('5.00') + 7*D('1.00'), self.method.basket_charge_incl_tax())
 
 
-class ZeroFreeShippingThresholdTest(unittest.TestCase):
+class ZeroFreeThresholdTest(unittest.TestCase):
     
     def setUp(self):
-        self.method = OrderAndItemLevelChargeMethod(price_per_order=D('10.00'), free_shipping_threshold=D('0.00'))
+        self.method = OrderAndItemCharges(price_per_order=D('10.00'), free_shipping_threshold=D('0.00'))
         self.basket = Basket.objects.create()
         self.method.set_basket(self.basket)
     
@@ -97,10 +97,10 @@ class ZeroFreeShippingThresholdTest(unittest.TestCase):
         self.assertEquals(D('0.00'), self.method.basket_charge_incl_tax())
 
 
-class NonZeroFreeShippingThresholdTest(unittest.TestCase):
+class NonZeroFreeThresholdTest(unittest.TestCase):
     
     def setUp(self):
-        self.method = OrderAndItemLevelChargeMethod(price_per_order=D('10.00'), free_shipping_threshold=D('20.00'))
+        self.method = OrderAndItemCharges(price_per_order=D('10.00'), free_shipping_threshold=D('20.00'))
         self.basket = Basket.objects.create()
         self.method.set_basket(self.basket)
         
@@ -123,7 +123,7 @@ class NonZeroFreeShippingThresholdTest(unittest.TestCase):
 class WeightBasedShippingTests(unittest.TestCase):
 
     def test_no_bands_leads_to_zero_charges(self):
-        method = WeightBasedChargesMethod('dummy')
+        method = WeightBased('dummy')
         basket = Basket.objects.create()
         method.set_basket(basket)
 
@@ -133,7 +133,7 @@ class WeightBasedShippingTests(unittest.TestCase):
     def test_lower_band_basket(self):
         WeightBand.objects.create(method_code='standard', upper_limit=1, charge=D('4.00'))
         WeightBand.objects.create(method_code='standard', upper_limit=3, charge=D('12.00'))
-        method = WeightBasedChargesMethod('standard')
+        method = WeightBased('standard')
 
         basket = Basket.objects.create()
         basket.add_product(create_product(attributes={'weight': 0.5}))
@@ -144,7 +144,7 @@ class WeightBasedShippingTests(unittest.TestCase):
     def test_inner_band_basket(self):
         WeightBand.objects.create(method_code='standard', upper_limit=1, charge=D('4.00'))
         WeightBand.objects.create(method_code='standard', upper_limit=3, charge=D('12.00'))
-        method = WeightBasedChargesMethod('standard')
+        method = WeightBased('standard')
 
         basket = Basket.objects.create()
         basket.add_product(create_product(attributes={'weight': 0.5}))
@@ -156,7 +156,7 @@ class WeightBasedShippingTests(unittest.TestCase):
     def test_outer_band_basket(self):
         WeightBand.objects.create(method_code='standard', upper_limit=1, charge=D('4.00'))
         WeightBand.objects.create(method_code='standard', upper_limit=3, charge=D('12.00'))
-        method = WeightBasedChargesMethod('standard', upper_charge=D('30.00'))
+        method = WeightBased('standard', upper_charge=D('30.00'))
 
         basket = Basket.objects.create()
         basket.add_product(create_product(attributes={'weight': 10.5}))
@@ -260,5 +260,5 @@ class RepositoryTests(unittest.TestCase):
         user, basket = User(), Basket()
         methods = self.repo.get_shipping_methods(user, basket)
         self.assertEqual(1, len(methods))
-        self.assertTrue(isinstance(methods[0], FreeShipping))
+        self.assertTrue(isinstance(methods[0], Free))
 

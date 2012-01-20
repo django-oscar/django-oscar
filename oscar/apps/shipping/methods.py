@@ -1,11 +1,11 @@
 from decimal import Decimal as D
 
 from oscar.apps.shipping.base import ShippingMethod
-from oscar.apps.shipping.models import OrderAndItemLevelChargeMethod, WeightBand
+from oscar.apps.shipping.models import OrderAndItemCharges, WeightBand
 from oscar.apps.shipping import Scales
 
 
-class FreeShipping(ShippingMethod):
+class Free(ShippingMethod):
     """
     Simple method for free shipping
     """
@@ -19,7 +19,7 @@ class FreeShipping(ShippingMethod):
         return D('0.00')
     
 
-class FixedPriceShipping(ShippingMethod):
+class FixedPrice(ShippingMethod):
     code = 'fixed-price-shipping'
     name = 'Fixed price shipping'
     
@@ -36,7 +36,7 @@ class FixedPriceShipping(ShippingMethod):
         return self.charge_excl_tax
 
 
-class WeightBasedChargesMethod(ShippingMethod):
+class WeightBased(ShippingMethod):
 
     def __init__(self, code, weight_attribute='weight', upper_charge=None):
         self.code = code
