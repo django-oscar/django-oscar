@@ -90,7 +90,7 @@ class CheckoutSessionMixin(object):
             method.set_basket(basket)
         else:
             # We default to using free shipping
-            method = FreeShipping()
+            method = Free()
         return method
     
     def get_order_totals(self, basket=None, shipping_method=None, **kwargs):
@@ -176,6 +176,7 @@ class ShippingAddressView(CheckoutSessionMixin, FormView):
             return super(ShippingAddressView, self).post(request, *args, **kwargs)
     
     def form_valid(self, form):
+        # Store the address details in the session and redirect to next step
         self.checkout_session.ship_to_new_address(form.clean())
         return super(ShippingAddressView, self).form_valid(form)
     

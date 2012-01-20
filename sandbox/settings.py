@@ -95,7 +95,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    #'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
@@ -187,7 +187,7 @@ INSTALLED_APPS = (
     # External apps
     'django_extensions',
     'haystack',
-    #'debug_toolbar',
+    'debug_toolbar',
     # Apps from oscar
     'oscar',
     'oscar.apps.analytics',
@@ -222,11 +222,15 @@ AUTHENTICATION_BACKENDS = (
 LOGIN_REDIRECT_URL = '/accounts/'
 APPEND_SLASH = True
 
-# Oscar settings
-from oscar.defaults import *
-
 # Haystack settings
 HAYSTACK_SITECONF = 'oscar.search_sites'
 HAYSTACK_SEARCH_ENGINE = 'solr'
 HAYSTACK_SOLR_URL = 'http://127.0.0.1:8080/solr'
 HAYSTACK_INCLUDE_SPELLING = True
+
+# Oscar settings
+from oscar.defaults import *
+
+OSCAR_ALLOW_ANON_CHECKOUT = True
+
+

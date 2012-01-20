@@ -3,7 +3,7 @@ class OrderTotalCalculator(object):
     Calculator class for calculating the order total.
     """
     
-    def __init__(self, request):
+    def __init__(self, request=None):
         # We store a reference to the request as the total may 
         # depend on the user or the other checkout data in the session.
         # Further, it is very likely that it will as shipping method

@@ -13,11 +13,11 @@
 
 <form action="{{ request.get_full_path }}?next={% url checkout:shipping-address %}" method="post" />
 
-{% csrf_token %}
+	{% csrf_token %}
 
-{{ login_form }}
+	{{ login_form }}
 
-<input name="login_submit" type="submit" value="Log In" />
+	<input name="login_submit" type="submit" value="Log In" />
 
 </form>
 
@@ -26,13 +26,9 @@
 <p>Logging in now will give you access to your address book and ensure your order is viewable in your order history.</p>
 
 <form action="{{ request.get_full_path }}?next={% url checkout:shipping-address %}" method="post" />
-
-{% csrf_token %}
-
-{{ registration_form }}
-
-<input name="registration_submit" type="submit" value="Register" />
-
+	{% csrf_token %}
+	{{ registration_form }}
+	<input name="registration_submit" type="submit" value="Register" />
 </form>
 
 {% if anon_checkout_allowed %}
@@ -40,7 +36,6 @@
 <h2>Checkout Anonymously</h2>
 
 <p>You can checkout without signing in.  You will be given the opportunity to register when checkout is complete.</p>
-
 <p><a href="{% url checkout:shipping-address %}">Checkout anonymously</a></p>
 {% endif %}
 

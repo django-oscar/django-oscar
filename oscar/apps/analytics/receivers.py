@@ -96,4 +96,5 @@ def receive_basket_addition(sender, product, user, **kwargs):
 @receiver(order_placed)
 def receive_order_placed(sender, order, user, **kwargs):
     _record_products_in_order(order)
-    _record_user_order(user, order)
+    if user:
+        _record_user_order(user, order)

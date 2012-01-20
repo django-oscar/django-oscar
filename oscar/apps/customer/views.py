@@ -3,7 +3,7 @@ import urlparse
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.contrib import messages
 from django.utils.translation import ugettext as _
 from django.contrib.auth import authenticate, login as auth_login
@@ -249,3 +249,18 @@ class AddressDeleteView(DeleteView):
     
     def get_template_names(self):
         return ["customer/address-delete.html"]
+
+
+class AnonymousOrderDetailView(DetailView):
+
+    model = order_model
+    
+    def get_template_names(self):
+        return ["customer/anon-order.html"]    
+
+    def get_object(self):
+        order = get_object_or_404(self.model, user=None, number=self.kwargs['order_number'])
+        if self.kwargs['hash'] != order.verification_hash():
+            raise Http404()
+
+        return order

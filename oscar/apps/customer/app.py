@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from oscar.apps.customer.views import AccountSummaryView, OrderHistoryView, \
     OrderDetailView, OrderLineView, AddressListView, AddressCreateView, \
     AddressUpdateView, AddressDeleteView, EmailHistoryView, EmailDetailView, \
-    AccountAuthView
+    AccountAuthView, AnonymousOrderDetailView
 from oscar.core.application import Application
 
 class CustomerApplication(Application):
@@ -12,6 +12,7 @@ class CustomerApplication(Application):
     summary_view = AccountSummaryView
     order_history_view = OrderHistoryView
     order_detail_view = OrderDetailView
+    anon_order_detail_view = AnonymousOrderDetailView
     order_line_view = OrderLineView
     address_list_view = AddressListView
     address_create_view = AddressCreateView
@@ -30,6 +31,7 @@ class CustomerApplication(Application):
             url(r'^$', login_required(self.summary_view.as_view()), name='summary'),
             url(r'^login/$', self.login_view.as_view(), name='login'),
             url(r'^orders/$', login_required(self.order_history_view.as_view()), name='order-list'),
+            url(r'^order-status/(?P<order_number>[\w-]*)/(?P<hash>\w+)/$', self.anon_order_detail_view.as_view(), name='anon-order'),
             url(r'^orders/(?P<order_number>[\w-]*)/$', login_required(self.order_detail_view.as_view()), name='order'),
             url(r'^orders/(?P<order_number>[\w-]*)/(?P<line_id>\d+)$', login_required(self.order_line_view.as_view()), name='order-line'),
             url(r'^addresses/$', login_required(self.address_list_view.as_view()), name='address-list'),

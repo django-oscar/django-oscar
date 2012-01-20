@@ -1,10 +1,16 @@
+import httplib
+from decimal import Decimal as D
+
 from django.test.client import Client
 from django.test import TestCase
 from django.http import HttpRequest
+from django.core.urlresolvers import reverse
 
 from oscar.apps.customer.models import CommunicationEventType
+from oscar.apps.basket.models import Basket
 from oscar.apps.customer.history_helpers import get_recently_viewed_product_ids
-from oscar.test.helpers import create_product
+from oscar.test.helpers import create_product, create_order
+
 
 class HistoryHelpersTest(TestCase):
     
@@ -24,7 +30,6 @@ class HistoryHelpersTest(TestCase):
 
 
 class CommunicationTypeTest(TestCase):
-    
     keys = ('body', 'html', 'sms', 'subject')
     
     def test_no_templates_returns_empty_string(self):
@@ -39,3 +44,25 @@ class CommunicationTypeTest(TestCase):
         messages = et.get_messages(ctx)
         self.assertEqual('Hello world', messages['subject'])
 
+
+class AnonOrderDetail(TestCase):
+
+    def setUp(self):
+        self.client = Client()
+
+    def test_404_received_for_unknown_order(self):
+        response = self.client.get(reverse('customer:anon-order', kwargs={'order_number': 1000,
+            'hash': '1231231232'}))
+        self.assertEqual(httplib.NOT_FOUND, response.status_code)
+
+    def test_200_received_for_order_with_correct_hash(self):
+        order = create_order()
+        response = self.client.get(reverse('customer:anon-order', kwargs={'order_number': order.number,
+            'hash': order.verification_hash()}))
+        self.assertEqual(httplib.OK, response.status_code)
+
+    def test_404_received_for_order_with_incorrect_hash(self):
+        order = create_order()
+        response = self.client.get(reverse('customer:anon-order', kwargs={'order_number': order.number,
+            'hash': 'bad'}))
+        self.assertEqual(httplib.NOT_FOUND, response.status_code)
