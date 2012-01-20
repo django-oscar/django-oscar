@@ -1,10 +1,13 @@
 from decimal import Decimal
+import hashlib
 
 from django.test import TestCase
+from django.conf import settings
 
 from oscar.apps.address.models import Country
 from oscar.apps.basket.models import Basket
 from oscar.apps.order.models import ShippingAddress, Order, Line, ShippingEvent, ShippingEventType, ShippingEventQuantity
+from oscar.test.helpers import create_order
 
 ORDER_PLACED = 'order_placed'
 
@@ -38,6 +41,11 @@ class OrderTest(TestCase):
     def test_shipping_status_after_one_order_level_events(self):
         self.event(ORDER_PLACED)
         self.assertEquals("Order placed", self.order.shipping_status)
+
+    def test_order_hash_generation(self):
+        order = create_order()
+        expected = hashlib.md5("%s%s" % (order.number, settings.SECRET_KEY)).hexdigest()
+        self.assertEqual(expected, order.verification_hash())
 
         
 class LineTest(TestCase):

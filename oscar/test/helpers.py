@@ -1,13 +1,19 @@
 import twill
 from StringIO import StringIO
+from decimal import Decimal as D
 
 from django.test import TestCase
 from django.core.servers.basehttp import AdminMediaHandler
 from django.core.handlers.wsgi import WSGIHandler
 from django.core.urlresolvers import reverse
 
+from oscar.apps.basket.models import Basket
 from oscar.apps.catalogue.models import ProductClass, Product, ProductAttribute, ProductAttributeValue
+from oscar.apps.checkout.calculators import OrderTotalCalculator
+from oscar.apps.order.utils import OrderCreator
 from oscar.apps.partner.models import Partner, StockRecord
+from oscar.apps.shipping.methods import Free
+
 
 def create_product(price=None, title="Dummy title", product_class="Dummy item class", 
         partner="Dummy partner", upc="dummy_101", num_in_stock=10, attributes=None):
@@ -26,6 +32,34 @@ def create_product(price=None, title="Dummy title", product_class="Dummy item cl
             ProductAttributeValue.objects.create(product=item, attribute=attr, value=value)
 
     return item
+
+
+def create_order(basket=None, user=None, shipping_address=None, shipping_method=None,
+        billing_address=None, total_incl_tax=None, total_excl_tax=None):
+    """
+    Helper method for creating an order for testing
+    """
+    if not basket:
+        basket = Basket.objects.create()
+        basket.add_product(create_product(price=D('10.00')))
+    if not basket.id:
+        basket.save()
+    if shipping_method is None:
+        shipping_method = Free()
+    if total_incl_tax is None or total_excl_tax is None:
+        calc = OrderTotalCalculator()
+        total_incl_tax = calc.order_total_incl_tax(basket, shipping_method)
+        total_excl_tax = calc.order_total_excl_tax(basket, shipping_method)
+    order = OrderCreator().place_order(
+            user=user,
+            basket=basket,
+            shipping_address=shipping_address,
+            shipping_method=shipping_method,
+            billing_address=billing_address,
+            total_incl_tax=total_incl_tax,
+            total_excl_tax=total_excl_tax,
+            )
+    return order
 
 
 class TwillTestCase(TestCase):

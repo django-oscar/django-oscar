@@ -63,13 +63,14 @@ class OrderCreator(object):
                       'site': Site._default_manager.get_current(),
                       'total_incl_tax': total_incl_tax,
                       'total_excl_tax': total_excl_tax,
-                      'shipping_address': shipping_address,
                       'shipping_incl_tax': shipping_method.basket_charge_incl_tax(),
                       'shipping_excl_tax': shipping_method.basket_charge_excl_tax(),
                       'shipping_method': shipping_method.name}
+        if shipping_address:
+            order_data['shipping_address'] = shipping_address
         if billing_address:
             order_data['billing_address'] = billing_address
-        if user.is_authenticated():
+        if user and user.is_authenticated():
             order_data['user_id'] = user.id
         if status:
             order_data['status'] = status
