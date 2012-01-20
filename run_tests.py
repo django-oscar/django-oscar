@@ -31,7 +31,6 @@ if not settings.configured:
                 'oscar.apps.order',
                 'oscar.apps.checkout',
                 'oscar.apps.shipping',
-                'oscar.apps.order_management',
                 'oscar.apps.catalogue',
                 'oscar.apps.catalogue.reviews',
                 'oscar.apps.basket',
@@ -45,6 +44,7 @@ if not settings.configured:
                 'oscar.apps.reports',
                 'oscar.apps.search',
                 'oscar.apps.voucher',
+                'oscar.apps.dashboard',
                 ],
             TEMPLATE_CONTEXT_PROCESSORS=(
                 "django.contrib.auth.context_processors.auth",
