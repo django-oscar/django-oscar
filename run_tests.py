@@ -35,7 +35,6 @@ if not settings.configured:
                 'oscar.apps.catalogue.reviews',
                 'oscar.apps.basket',
                 'oscar.apps.payment',
-                'oscar.apps.payment.datacash',
                 'oscar.apps.offer',
                 'oscar.apps.address',
                 'oscar.apps.partner',
