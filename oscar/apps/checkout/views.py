@@ -16,7 +16,7 @@ from django.core.mail import EmailMessage
 from django.views.generic import DetailView, TemplateView, FormView, \
                                  DeleteView, UpdateView, CreateView
 
-from oscar.apps.shipping.methods import FreeShipping
+from oscar.apps.shipping.methods import Free
 from oscar.core.loading import import_module
 import_module('checkout.forms', ['ShippingAddressForm'], locals())
 import_module('checkout.calculators', ['OrderTotalCalculator'], locals())
