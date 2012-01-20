@@ -285,9 +285,8 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
         # Shipping methods can depend on the user, the contents of the basket
         # and the shipping address.  I haven't come across a scenario that doesn't
         # fit this system.
-        repo = Repository()
-        return repo.get_shipping_methods(self.request.user, self.request.basket, 
-                                         self.get_shipping_address())
+        return Repository().get_shipping_methods(self.request.user, self.request.basket, 
+                                                 self.get_shipping_address())
     
     def post(self, request, *args, **kwargs):
         # Need to check that this code is valid for this user

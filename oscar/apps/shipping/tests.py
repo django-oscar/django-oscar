@@ -2,9 +2,11 @@ from decimal import Decimal as D
 
 from django.utils import unittest
 from django.test.client import Client
+from django.contrib.auth.models import User
 
 from oscar.apps.shipping.methods import FreeShipping, FixedPriceShipping, WeightBasedChargesMethod
 from oscar.apps.shipping.models import OrderAndItemLevelChargeMethod, WeightBand
+from oscar.apps.shipping.repository import Repository
 from oscar.apps.shipping import Scales
 from oscar.apps.basket.models import Basket
 from oscar.test.helpers import create_product
@@ -247,3 +249,16 @@ class WeightBandTests(unittest.TestCase):
         WeightBand.objects.create(method_code='express', upper_limit=2, charge=D('8.00'))
         WeightBand.objects.create(method_code='standard', upper_limit=3, charge=D('12.00'))
         self.assertEqual(D('12.00'), WeightBand.get_band_for_weight('standard', 2.5).charge)
+
+
+class RepositoryTests(unittest.TestCase):
+
+    def setUp(self):
+        self.repo = Repository()
+
+    def test_default_method_is_free(self):
+        user, basket = User(), Basket()
+        methods = self.repo.get_shipping_methods(user, basket)
+        self.assertEqual(1, len(methods))
+        self.assertTrue(isinstance(methods[0], FreeShipping))
+

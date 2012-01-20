@@ -1,6 +1,4 @@
-from oscar.apps.shipping.methods import FreeShipping
-from oscar.core.loading import import_module
-shipping_models = import_module('shipping.models', ['OrderAndItemLevelChargeMethod'])
+from oscar.apps.shipping.methods import FreeShipping, OrderAndItemLevelChargeMethod
 
 
 class Repository(object):
@@ -9,7 +7,7 @@ class Repository(object):
     objects for a given user, basket etc
     """
     
-    def get_shipping_methods(self, user, basket, shipping_addr, **kwargs):
+    def get_shipping_methods(self, user, basket, shipping_addr=None, **kwargs):
         """
         Return a list of all applicable shipping method objects
         for a given basket.
@@ -18,10 +16,7 @@ class Repository(object):
         this behaviour can easily be overridden by subclassing this class
         and overriding this method.
         """ 
-        methods = shipping_models.OrderAndItemLevelChargeMethod._default_manager.all()
-        if not methods.count():
-            return [FreeShipping()]
-        
+        methods = [FreeShipping()]
         for method in methods:
             method.set_basket(basket)
         return methods
@@ -32,4 +27,4 @@ class Repository(object):
         """
         if code == FreeShipping.code:
             return FreeShipping()
-        return shipping_models.OrderAndItemLevelChargeMethod._default_manager.get(code=code)          
+        return None

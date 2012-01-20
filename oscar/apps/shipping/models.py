@@ -5,11 +5,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.template.defaultfilters import slugify
 from django.conf import settings
 
-from oscar.apps.shipping.abstract_models import AbstractOrderAndItemLevelChargeMethod
-from oscar.apps.shipping.base import ShippingMethod
 
-
-class OrderAndItemLevelChargeMethod(models.Model, ShippingMethod):
+class OrderAndItemLevelChargeMethod(models.Model):
     """
     Standard shipping method
     
@@ -37,9 +34,6 @@ class OrderAndItemLevelChargeMethod(models.Model, ShippingMethod):
         if not self.code:
             self.code = slugify(self.name)
         super(AbstractOrderAndItemLevelChargeMethod, self).save(*args, **kwargs)
-    
-    class Meta:
-        abstract = True
         
     def __unicode__(self):
         return self.name
