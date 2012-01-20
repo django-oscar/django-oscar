@@ -5,6 +5,7 @@ from django.test.client import Client
 
 from oscar.apps.shipping.methods import FreeShipping, FixedPriceShipping, WeightBasedChargesMethod
 from oscar.apps.shipping.models import OrderAndItemLevelChargeMethod, WeightBand
+from oscar.apps.shipping import Scales
 from oscar.apps.basket.models import Basket
 from oscar.test.helpers import create_product
 from oscar.test.decorators import dataProvider
@@ -123,11 +124,51 @@ class WeightBasedShippingTests(unittest.TestCase):
         method = WeightBasedChargesMethod('dummy')
         basket = Basket.objects.create()
         method.set_basket(basket)
+
         self.assertEquals(D('0.00'), method.basket_charge_incl_tax())
         self.assertEquals(D('0.00'), method.basket_charge_excl_tax())
 
-    def test_single_band(self):
-        pass
+    def _test_single_band(self):
+        WeightBand.objects.create(method_code='standard', upper_limit=1, charge=D('4.00'))
+        WeightBand.objects.create(method_code='standard', upper_limit=3, charge=D('12.00'))
+        method = WeightBasedChargesMethod('standard')
+
+        basket = Basket.objects.create()
+        product = get_product
+        method.set_basket(basket)
+
+
+class ScalesTests(unittest.TestCase):
+
+    def test_simple_weight_calculation(self):
+        scales = Scales(attribute='weight')
+        p = create_product(attributes={'weight': 1})
+        self.assertEqual(1, scales.weigh_product(p))
+
+    def test_default_weight_is_used_when_attribute_is_missing(self):
+        scales = Scales(attribute='weight', default_weight=0.5)
+        p = create_product()
+        self.assertEqual(0.5, scales.weigh_product(p))
+
+    def test_exception_is_raised_when_attribute_is_missing(self):
+        scales = Scales(attribute='weight')
+        p = create_product()
+        with self.assertRaises(ValueError):
+            scales.weigh_product(p)
+
+    def test_weight_calculation_of_empty_basket(self):
+        basket = Basket()
+
+        scales = Scales(attribute='weight')
+        self.assertEquals(0, scales.weigh_basket(basket))
+
+    def test_weight_calculation_of_basket(self):
+        basket = Basket()
+        basket.add_product(create_product(attributes={'weight': 1}))
+        basket.add_product(create_product(attributes={'weight': 2}))
+
+        scales = Scales(attribute='weight')
+        self.assertEquals(1+2, scales.weigh_basket(basket))
 
 
 class WeightBandTests(unittest.TestCase):

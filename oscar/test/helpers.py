@@ -6,11 +6,11 @@ from django.core.servers.basehttp import AdminMediaHandler
 from django.core.handlers.wsgi import WSGIHandler
 from django.core.urlresolvers import reverse
 
-from oscar.apps.catalogue.models import ProductClass, Product
+from oscar.apps.catalogue.models import ProductClass, Product, ProductAttribute, ProductAttributeValue
 from oscar.apps.partner.models import Partner, StockRecord
 
 def create_product(price=None, title="Dummy title", product_class="Dummy item class", 
-                   partner="Dummy partner", upc="dummy_101", num_in_stock=10):
+        partner="Dummy partner", upc="dummy_101", num_in_stock=10, attributes=None):
     """
     Helper method for creating products that are used in tests.
     """
@@ -20,6 +20,11 @@ def create_product(price=None, title="Dummy title", product_class="Dummy item cl
         partner,_ = Partner._default_manager.get_or_create(name=partner)
         sr = StockRecord._default_manager.create(product=item, partner=partner, 
                                                  price_excl_tax=price, num_in_stock=num_in_stock)
+    if attributes:
+        for key, value in attributes.items():
+            attr,_ = ProductAttribute.objects.get_or_create(name=key)
+            ProductAttributeValue.objects.create(product=item, attribute=attr, value=value)
+
     return item
 
 

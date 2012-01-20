@@ -471,7 +471,6 @@ class AbstractProductAttribute(models.Model):
                                         u"for %(attr)s") % \
                                        {'enum': value, 'attr': self})        
 
-
     def get_validator(self):
         DATATYPE_VALIDATORS = {
             'text': self._validate_text,
@@ -528,7 +527,7 @@ class AbstractProductAttributeValue(models.Model):
     For example: number_of_pages = 295
     """
     attribute = models.ForeignKey('catalogue.ProductAttribute')
-    product = models.ForeignKey('catalogue.Product')
+    product = models.ForeignKey('catalogue.Product', related_name='attribute_values')
     value_text = models.CharField(max_length=255, blank=True, null=True)
     value_integer = models.IntegerField(blank=True, null=True)
     value_boolean = models.BooleanField(blank=True)
