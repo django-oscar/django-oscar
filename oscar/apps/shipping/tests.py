@@ -128,14 +128,39 @@ class WeightBasedShippingTests(unittest.TestCase):
         self.assertEquals(D('0.00'), method.basket_charge_incl_tax())
         self.assertEquals(D('0.00'), method.basket_charge_excl_tax())
 
-    def _test_single_band(self):
+    def test_lower_band_basket(self):
         WeightBand.objects.create(method_code='standard', upper_limit=1, charge=D('4.00'))
         WeightBand.objects.create(method_code='standard', upper_limit=3, charge=D('12.00'))
         method = WeightBasedChargesMethod('standard')
 
         basket = Basket.objects.create()
-        product = get_product
+        basket.add_product(create_product(attributes={'weight': 0.5}))
         method.set_basket(basket)
+
+        self.assertEqual(D('4.00'), method.basket_charge_incl_tax())
+
+    def test_inner_band_basket(self):
+        WeightBand.objects.create(method_code='standard', upper_limit=1, charge=D('4.00'))
+        WeightBand.objects.create(method_code='standard', upper_limit=3, charge=D('12.00'))
+        method = WeightBasedChargesMethod('standard')
+
+        basket = Basket.objects.create()
+        basket.add_product(create_product(attributes={'weight': 0.5}))
+        basket.add_product(create_product(attributes={'weight': 1}))
+        method.set_basket(basket)
+
+        self.assertEqual(D('12.00'), method.basket_charge_incl_tax())
+
+    def test_outer_band_basket(self):
+        WeightBand.objects.create(method_code='standard', upper_limit=1, charge=D('4.00'))
+        WeightBand.objects.create(method_code='standard', upper_limit=3, charge=D('12.00'))
+        method = WeightBasedChargesMethod('standard', upper_charge=D('30.00'))
+
+        basket = Basket.objects.create()
+        basket.add_product(create_product(attributes={'weight': 10.5}))
+        method.set_basket(basket)
+
+        self.assertEqual(D('30.00'), method.basket_charge_incl_tax())
 
 
 class ScalesTests(unittest.TestCase):
