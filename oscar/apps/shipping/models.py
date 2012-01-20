@@ -70,8 +70,7 @@ class WeightBand(models.Model):
     Represents a weight band which are used by the WeightBasedShipping method.
     """
     method_code = models.CharField(max_length=64, db_index=True)
-    upper_limit = models.DecimalField(decimal_places=2, max_digits=12,
-                                      help_text=_("""Enter upper limit of this weight band in Kg"""))
+    upper_limit = models.FloatField(help_text=_("""Enter upper limit of this weight band in Kg"""))
     charge = models.DecimalField(decimal_places=2, max_digits=12)
     
     @property
@@ -98,7 +97,7 @@ class WeightBand(models.Model):
         Return the weight band for a given weight
         """
         bands = WeightBand.objects.filter(method_code=method_code, 
-                upper_limit__gte=D(weight)).order_by('upper_limit')
+                upper_limit__gte=weight).order_by('upper_limit')
         if not bands.count():
             # No band for this weight
             return None
