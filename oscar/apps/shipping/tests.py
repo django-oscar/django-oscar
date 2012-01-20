@@ -136,24 +136,48 @@ class WeightBandTests(unittest.TestCase):
         WeightBand.objects.all().delete()
 
     def test_get_band_for_lower_weight(self):
-        band = WeightBand.objects.create(upper_limit=1, charge=D('4.00'))
-        fetched_band = WeightBand.get_band_for_weight(0.5)
+        band = WeightBand.objects.create(method_code='standard', upper_limit=1, charge=D('4.00'))
+        fetched_band = WeightBand.get_band_for_weight('standard', 0.5)
         self.assertEqual(band.id, fetched_band.id)
 
     def test_get_band_for_higher_weight(self):
-        band = WeightBand.objects.create(upper_limit=1, charge=D('4.00'))
-        fetched_band = WeightBand.get_band_for_weight(1.5)
+        band = WeightBand.objects.create(method_code='standard', upper_limit=1, charge=D('4.00'))
+        fetched_band = WeightBand.get_band_for_weight('standard', 1.5)
         self.assertIsNone(fetched_band)
 
     def test_get_band_for_matching_weight(self):
-        band = WeightBand.objects.create(upper_limit=1, charge=D('4.00'))
-        fetched_band = WeightBand.get_band_for_weight(1)
+        band = WeightBand.objects.create(method_code='standard', upper_limit=1, charge=D('4.00'))
+        fetched_band = WeightBand.get_band_for_weight('standard', 1)
         self.assertEqual(band.id, fetched_band.id)
 
-    def test_get_band_for_series_of_bands(self):
+    def test_weight_to_is_upper_bound(self):
+        band = WeightBand.objects.create(method_code='standard', upper_limit=1, charge=D('4.00'))
+        self.assertEqual(1, band.weight_to)
+
+    def test_weight_from_for_single_band(self):
+        band = WeightBand.objects.create(method_code='standard', upper_limit=1, charge=D('4.00'))
+        self.assertEqual(0, band.weight_from)
+
+    def test_weight_from_for_multiple_bands(self):
         WeightBand.objects.create(upper_limit=1, charge=D('4.00'))
-        WeightBand.objects.create(upper_limit=2, charge=D('8.00'))
-        WeightBand.objects.create(upper_limit=3, charge=D('12.00'))
-        self.assertEqual(D('4.00'), WeightBand.get_band_for_weight(0.5).charge)
-        self.assertEqual(D('8.00'), WeightBand.get_band_for_weight(1.5).charge)
-        self.assertEqual(D('12.00'), WeightBand.get_band_for_weight(2.5).charge)
+        band = WeightBand.objects.create(method_code='standard', upper_limit=2, charge=D('8.00'))
+        self.assertEqual(1, band.weight_from)
+
+    def test_weight_from_for_multiple_bands(self):
+        WeightBand.objects.create(method_code='standard', upper_limit=1, charge=D('4.00'))
+        band = WeightBand.objects.create(method_code='express', upper_limit=2, charge=D('8.00'))
+        self.assertEqual(0, band.weight_from)
+
+    def test_get_band_for_series_of_bands(self):
+        WeightBand.objects.create(method_code='standard', upper_limit=1, charge=D('4.00'))
+        WeightBand.objects.create(method_code='standard', upper_limit=2, charge=D('8.00'))
+        WeightBand.objects.create(method_code='standard', upper_limit=3, charge=D('12.00'))
+        self.assertEqual(D('4.00'), WeightBand.get_band_for_weight('standard', 0.5).charge)
+        self.assertEqual(D('8.00'), WeightBand.get_band_for_weight('standard', 1.5).charge)
+        self.assertEqual(D('12.00'), WeightBand.get_band_for_weight('standard', 2.5).charge)
+
+    def test_get_band_for_series_of_bands_from_different_methods(self):
+        WeightBand.objects.create(method_code='standard', upper_limit=1, charge=D('4.00'))
+        WeightBand.objects.create(method_code='express', upper_limit=2, charge=D('8.00'))
+        WeightBand.objects.create(method_code='standard', upper_limit=3, charge=D('12.00'))
+        self.assertEqual(D('12.00'), WeightBand.get_band_for_weight('standard', 2.5).charge)
