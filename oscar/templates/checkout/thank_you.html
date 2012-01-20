@@ -70,7 +70,11 @@ with us regarding your order.</p>
     </tr>
 </table>
  
- 
+{% if not order.user %}
+<h4>Tracking your order</h4>
+<p>You can track the status of your order at the following URL:</p>
+<p><a href="{% url customer:anon-order order.number order.verification_hash %}"> {% url customer:anon-order order.number order.verification_hash %}</a></p>
+{% endif %}
  
 {% endblock content %}
 
