@@ -1,13 +1,16 @@
-from decimal import Decimal
+from decimal import Decimal as D
 import hashlib
 
 from django.test import TestCase
 from django.conf import settings
+from mock import Mock
 
 from oscar.apps.address.models import Country
 from oscar.apps.basket.models import Basket
 from oscar.apps.order.models import ShippingAddress, Order, Line, ShippingEvent, ShippingEventType, ShippingEventQuantity
-from oscar.test.helpers import create_order
+from oscar.test.helpers import create_order, create_product
+from oscar.apps.order.utils import OrderCreator
+from oscar.apps.shipping.methods import Free
 
 ORDER_PLACED = 'order_placed'
 
@@ -135,3 +138,53 @@ class ShippingEventQuantityTest(TestCase):
         self.assertEquals(self.line.quantity, event_quantity.quantity)
     
    
+class OrderCreatorTests(TestCase):
+
+    def setUp(self):
+        self.creator = OrderCreator()
+        self.basket = Basket.objects.create()
+
+    def tearDown(self):
+        Order.objects.all().delete()
+
+    def test_exception_raised_when_empty_basket_passed(self):
+        with self.assertRaises(ValueError):
+            self.creator.place_order(basket=self.basket)
+
+    def test_order_models_are_created(self):
+        self.basket.add_product(create_product(price=D('12.00')))
+        self.creator.place_order(basket=self.basket, order_number='1234')
+        order = Order.objects.get(number='1234')
+        lines = order.lines.all()
+        self.assertEqual(1, len(lines))
+
+    def test_status_is_saved_if_passed(self):
+        self.basket.add_product(create_product(price=D('12.00')))
+        self.creator.place_order(basket=self.basket, order_number='1234', status='Active')
+        order = Order.objects.get(number='1234')
+        self.assertEqual('Active', order.status)
+
+    def test_shipping_is_free_by_default(self):
+        self.basket.add_product(create_product(price=D('12.00')))
+        self.creator.place_order(basket=self.basket, order_number='1234')
+        order = Order.objects.get(number='1234')
+        self.assertEqual(order.total_incl_tax, self.basket.total_incl_tax)
+        self.assertEqual(order.total_excl_tax, self.basket.total_excl_tax)
+
+    def test_basket_totals_are_used_by_default(self):
+        self.basket.add_product(create_product(price=D('12.00')))
+        method = Mock()
+        method.basket_charge_incl_tax = Mock(return_value=D('2.00'))
+        method.basket_charge_excl_tax = Mock(return_value=D('2.00'))
+
+        self.creator.place_order(basket=self.basket, order_number='1234', shipping_method=method)
+        order = Order.objects.get(number='1234')
+        self.assertEqual(order.total_incl_tax, self.basket.total_incl_tax + D('2.00'))
+        self.assertEqual(order.total_excl_tax, self.basket.total_excl_tax + D('2.00'))
+        
+    def test_exception_raised_if_duplicate_number_passed(self):
+        self.basket.add_product(create_product(price=D('12.00')))
+        self.creator.place_order(basket=self.basket, order_number='1234')
+        with self.assertRaises(ValueError):
+            self.creator.place_order(basket=self.basket, order_number='1234')
+

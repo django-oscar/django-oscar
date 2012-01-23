@@ -396,16 +396,16 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             status = self.get_initial_order_status(basket)
         else:
             status = kwargs.pop('status')
-        order = OrderCreator().place_order(self.request.user, 
-                                         basket, 
-                                         shipping_address, 
-                                         shipping_method, 
-                                         billing_address,
-                                         total_incl_tax,
-                                         total_excl_tax,
-                                         order_number,
-                                         status,
-                                         **kwargs)
+        order = OrderCreator().place_order(basket=basket, 
+                                           total_incl_tax=total_incl_tax,
+                                           total_excl_tax=total_excl_tax,
+                                           user=self.request.user, 
+                                           shipping_method=shipping_method, 
+                                           shipping_address=shipping_address, 
+                                           billing_address=billing_address,
+                                           order_number=order_number,
+                                           status=status,
+                                           **kwargs)
         self.save_payment_details(order)
         return order
     
