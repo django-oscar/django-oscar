@@ -10,12 +10,14 @@ class DashboardApplication(Application):
     name = 'dashboard'
     
     index_view = views.IndexView
-    orders_view = views.OrderListView
+    order_list_view = views.OrderListView
+    order_detail_view = views.OrderDetailView
 
     def get_urls(self):
         urlpatterns = patterns('',
             url(r'^$', self.index_view.as_view(), name='index'),
-            url(r'^orders/$', self.orders_view.as_view(), name='orders'),
+            url(r'^orders/$', self.order_list_view.as_view(), name='orders'),
+            url(r'^orders/(?P<number>[-\w]+)/$', self.order_detail_view.as_view(), name='order'),
         )
         return self.post_process_urls(urlpatterns)
 

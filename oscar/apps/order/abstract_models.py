@@ -103,7 +103,7 @@ class AbstractOrder(models.Model):
     
     @property
     def num_items(self):
-        u"""
+        """
         Returns the number of items in this order.
         """
         num_items = 0

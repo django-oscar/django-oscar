@@ -49,7 +49,7 @@
         <td>{{ order.shipping_address }}</td>
         <td>{{ order.billing_address }}</td>
         <td>
-            <a href="">View</a>
+            <a href="{% url dashboard:order order.number %}">View</a>
         </td>
     </tr>
     {% endfor %}

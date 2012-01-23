@@ -1,16 +1,18 @@
 import csv
 
-from django.views.generic import TemplateView, ListView
 from django.contrib import messages
-from django.utils.datastructures import SortedDict
-from django.template.defaultfilters import date as format_date
+from django.core.urlresolvers import reverse
 from django.db.models.loading import get_model
 from django.http import HttpResponse, HttpResponseRedirect
-from django.core.urlresolvers import reverse
+from django.shortcuts import get_object_or_404
+from django.template.defaultfilters import date as format_date
+from django.utils.datastructures import SortedDict
+from django.views.generic import TemplateView, ListView, DetailView
 
 from oscar.apps.dashboard.forms import OrderSearchForm
 
 Order = get_model('order', 'Order')
+Line = get_model('order', 'Line')
 
 
 class IndexView(TemplateView):
@@ -26,6 +28,16 @@ class OrderListView(ListView):
     paginate_by = 25
     description = ''
     actions = ('download_selected_orders',)
+
+    def get(self, request, *args, **kwargs):
+        if 'order_number' in request.GET:
+            try:
+                order = Order.objects.get(number=request.GET['order_number'])
+            except Order.DoesNotExist:
+                pass
+            else:
+                return HttpResponseRedirect(reverse('dashboard:order', kwargs={'number': order.number}))
+        return super(OrderListView, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
         """
@@ -164,3 +176,52 @@ class OrderListView(ListView):
             encoded_values = [unicode(value).encode('utf8') for value in row.values()]
             writer.writerow(encoded_values)
         return response
+
+
+class OrderDetailView(DetailView):
+    model = Order
+    context_object_name = 'order'
+    template_name = 'dashboard/orders/order_detail.html'
+    order_actions = ()
+    line_actions = ('change_line_statuses',)
+
+    def get_object(self):
+        return get_object_or_404(self.model, number=self.kwargs['number'])
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        order = self.object
+
+        # Look for line-level action
+        line_action = request.POST.get('line-action', '').lower()
+        if line_action:
+            if line_action not in self.line_actions:
+                messages.error(self.request, "Invalid action")
+                return self.reload_page_response()
+            else:
+                line_ids = request.POST.getlist('selected_line')
+                lines = order.lines.filter(id__in=line_ids)
+                if lines.count() == 0:
+                    messages.error(self.request, "You must select some lines to act on")
+                    return self.reload_page_response()
+                return getattr(self, line_action)(request, order, lines)
+
+        messages.error(request, "No valid action submitted")
+        return self.reload_page_response()
+
+    def reload_page_response(self):
+        return HttpResponseRedirect(reverse('dashboard:order', kwargs={'number': self.object.number}))
+
+    def change_line_statuses(self, request, order, lines):
+        new_status = request.POST['new_status'].strip()
+        if not new_status:
+            messages.error(request, "The new status '%s' is not valid" % new_status)
+            return self.reload_page_response()
+        for line in lines:
+            messages.info(request, "Line %d changed from '%s' to '%s'" % (
+                line.id, line.status, new_status))
+            line.status = new_status
+            line.save()
+        return self.reload_page_response()
+
+
