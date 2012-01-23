@@ -161,11 +161,19 @@ Order {{ order.number }}
 
 <p>With selected lines:</p>
 <ul>
-    <li><label><input type="radio" name="line-action" value="change_line_statuses" /> Change status to</label>
+    <li><label><input type="radio" name="line_action" value="change_line_statuses" /> Change status to</label>
     <input type="text" name="new_status" /> 
     </li>
 </ul>
 <input type="submit" value="Go!" />
+</form>
+
+<h2>Actions</h2>
+<form action="." method="post">
+    {% csrf_token %}
+    <input type="hidden" name="order_action" value="change_order_status" />
+    Change order status to <input type="text" name="new_status" />
+    <input type="submit" value="Go!" />
 </form>
 
 <h2>Notes</h2>

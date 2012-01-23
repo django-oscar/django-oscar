@@ -182,7 +182,7 @@ class OrderDetailView(DetailView):
     model = Order
     context_object_name = 'order'
     template_name = 'dashboard/orders/order_detail.html'
-    order_actions = ()
+    order_actions = ('change_order_status',)
     line_actions = ('change_line_statuses',)
 
     def get_object(self):
@@ -192,8 +192,17 @@ class OrderDetailView(DetailView):
         self.object = self.get_object()
         order = self.object
 
+        # Look for order-level action
+        order_action = request.POST.get('order_action', '').lower()
+        if order_action:
+            if order_action not in self.order_actions:
+                messages.error(self.request, "Invalid action")
+                return self.reload_page_response()
+            else:
+                return getattr(self, order_action)(request, order)
+
         # Look for line-level action
-        line_action = request.POST.get('line-action', '').lower()
+        line_action = request.POST.get('line_action', '').lower()
         if line_action:
             if line_action not in self.line_actions:
                 messages.error(self.request, "Invalid action")
@@ -211,6 +220,17 @@ class OrderDetailView(DetailView):
 
     def reload_page_response(self):
         return HttpResponseRedirect(reverse('dashboard:order', kwargs={'number': self.object.number}))
+
+    def change_order_status(self, request, order):
+        new_status = request.POST['new_status'].strip()
+        if not new_status:
+            messages.error(request, "The new status '%s' is not valid" % new_status)
+            return self.reload_page_response()
+        messages.info(request, "Order status changed from '%s' to '%s'" % (
+            order.status, new_status))
+        order.status = new_status
+        order.save()
+        return self.reload_page_response()
 
     def change_line_statuses(self, request, order, lines):
         new_status = request.POST['new_status'].strip()
