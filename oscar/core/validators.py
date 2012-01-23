@@ -33,4 +33,10 @@ class ExtendedURLValidator(validators.URLValidator):
         """
         if value != '/':
             value = '/' + value.lstrip('/')
+
+        q_index = value.find('?')
+
+        if q_index:
+            value = value[:q_index]
+
         return value
