@@ -227,6 +227,10 @@ HAYSTACK_SEARCH_ENGINE = 'solr'
 HAYSTACK_SOLR_URL = 'http://127.0.0.1:8080/solr'
 HAYSTACK_INCLUDE_SPELLING = True
 
+DEBUG_TOOLBAR_CONFIG = {
+    'INTERCEPT_REDIRECTS': False
+}
+
 # Oscar settings
 from oscar.defaults import *
 
