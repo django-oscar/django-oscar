@@ -177,5 +177,43 @@ Order {{ order.number }}
 </form>
 
 <h2>Notes</h2>
+{% with notes=order.notes.all %}
+{% if notes %}
+<table>
+	<tr>
+		<th>Date</th>
+		<th>User</th>
+		<th>Type</th>
+		<th>Message</th>
+		<th></th>
+	</tr>
+	{% for note in notes %}
+	<tr>
+		<td>{{ note.date }}</td>
+		<td>{{ note.user }}</td>
+		<td>{{ note.note_type }}</td>
+		<td>{{ note.message|linebreaks }}</td>
+		<td>
+			<a href="{% url dashboard:order-detail-note order.number note.id %}">Edit</a> |
+			<form action="." method="post">
+				{% csrf_token %}
+				<input type="hidden" name="order_action" value="delete_note" />
+				<input type="hidden" name="note_id" value="{{ note.id }}" />
+				<input type="submit" value="Delete" />
+			</form>
+		</td>
+	</tr>
+	{% endfor %}
+</table>
+{% endif %}
+{% endwith %}
+
+<form action=".?note={{ note_id }}" method="post">
+	{% csrf_token %}
+	<input type="hidden" value="save_note" name="order_action" />
+	{{ note_form.as_p }}
+	<input type="submit" value="Save note" />
+</form>
 
 {% endblock content %}
+

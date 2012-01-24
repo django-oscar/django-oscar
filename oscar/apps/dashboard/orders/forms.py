@@ -1,4 +1,7 @@
 from django import forms
+from django.db.models.loading import get_model
+
+OrderNote = get_model('order', 'OrderNote')
 
 
 class OrderSearchForm(forms.Form):
@@ -20,3 +23,10 @@ class OrderSearchForm(forms.Form):
                       ('csv', 'CSV'),)
     response_format = forms.ChoiceField(widget=forms.RadioSelect, 
             choices=format_choices, initial='html', label="Get results as")
+
+
+class OrderNoteForm(forms.ModelForm):
+
+    class Meta:
+        model = OrderNote
+        exclude = ('order', 'user', 'note_type')

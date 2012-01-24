@@ -2,6 +2,7 @@ import csv
 
 from django.contrib import messages
 from django.core.urlresolvers import reverse
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.loading import get_model
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
@@ -9,9 +10,10 @@ from django.template.defaultfilters import date as format_date
 from django.utils.datastructures import SortedDict
 from django.views.generic import TemplateView, ListView, DetailView
 
-from oscar.apps.dashboard.orders.forms import OrderSearchForm
+from oscar.apps.dashboard.orders import forms
 
 Order = get_model('order', 'Order')
+OrderNote = get_model('order', 'OrderNote')
 Line = get_model('order', 'Line')
 
 
@@ -19,7 +21,7 @@ class OrderListView(ListView):
     model = Order
     context_object_name = 'orders'
     template_name = 'dashboard/orders/order_list.html'
-    form_class = OrderSearchForm
+    form_class = forms.OrderSearchForm
     base_description = 'All orders'
     paginate_by = 25
     description = ''
@@ -178,11 +180,27 @@ class OrderDetailView(DetailView):
     model = Order
     context_object_name = 'order'
     template_name = 'dashboard/orders/order_detail.html'
-    order_actions = ('change_order_status',)
+    order_actions = ('save_note', 'delete_note', 'change_order_status',)
     line_actions = ('change_line_statuses',)
 
     def get_object(self):
         return get_object_or_404(self.model, number=self.kwargs['number'])
+    
+    def get_context_data(self, **kwargs):
+        ctx = super(OrderDetailView, self).get_context_data(**kwargs)
+        ctx['note_form'] = self.get_order_note_form()
+        return ctx
+
+    def get_order_note_form(self):
+        post_data = None
+        kwargs = {}
+        if self.request.method == 'POST':
+            post_data = self.request.POST
+        note_id = self.kwargs.get('note_id', None)
+        if note_id:
+            note = get_object_or_404(OrderNote, order=self.object, id=note_id)
+            kwargs['instance'] = note
+        return forms.OrderNoteForm(post_data, **kwargs)
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -217,6 +235,29 @@ class OrderDetailView(DetailView):
     def reload_page_response(self):
         return HttpResponseRedirect(reverse('dashboard:order-detail', kwargs={'number': self.object.number}))
 
+    def save_note(self, request, order):
+        form = self.get_order_note_form()
+        success_msg = "Note saved"
+        if form.is_valid():
+            note = form.save(commit=False)
+            note.user = request.user
+            note.order = order
+            note.save()
+            messages.success(self.request, success_msg)
+            return self.reload_page_response()
+        ctx = self.get_context_data(note_form=form)
+        return self.render_to_response(ctx)
+
+    def delete_note(self, request, order):
+        try:
+            note = order.notes.get(id=request.POST.get('note_id', None))
+        except ObjectDoesNotExist:
+            messages.error(request, "Note cannot be deleted")
+        else:
+            messages.info(request, "Note deleted")
+            note.delete()
+        return self.reload_page_response()
+
     def change_order_status(self, request, order):
         new_status = request.POST['new_status'].strip()
         if not new_status:
@@ -239,5 +280,3 @@ class OrderDetailView(DetailView):
             line.status = new_status
             line.save()
         return self.reload_page_response()
-
-
