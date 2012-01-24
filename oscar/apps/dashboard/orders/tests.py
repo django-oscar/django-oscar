@@ -29,7 +29,8 @@ class OrderDetailTests(ClientTestCase):
     is_staff = True
 
     def setUp(self):
-        self.order = create_order()
+        Order.pipeline = {'A': ('B', 'C')}
+        self.order = create_order(status='A')
         self.url = reverse('dashboard:order-detail', kwargs={'number': self.order.number})
         super(OrderDetailTests, self).setUp()
 
@@ -42,14 +43,14 @@ class OrderDetailTests(ClientTestCase):
 
     def test_order_status_change(self):
         params = {'order_action': 'change_order_status',
-                  'new_status': 'testing'}
+                  'new_status': 'B'}
         response = self.client.post(self.url, params)
         self.assertIsRedirect(response)
-        self.assertEqual('testing', self.fetch_order().status)
+        self.assertEqual('B', self.fetch_order().status)
 
     def test_order_status_change_creates_system_note(self):
         params = {'order_action': 'change_order_status',
-                  'new_status': 'testing'}
+                  'new_status': 'B'}
         response = self.client.post(self.url, params)
         notes = self.order.notes.all()
         self.assertEqual(1, len(notes))

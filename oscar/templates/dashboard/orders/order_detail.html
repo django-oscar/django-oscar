@@ -162,19 +162,35 @@ Order {{ order.number }}
 <p>With selected lines:</p>
 <ul>
     <li><label><input type="radio" name="line_action" value="change_line_statuses" /> Change status to</label>
-    <input type="text" name="new_status" /> 
+	<select name="new_status">
+		<option value=""> -- choose new status -- </option>
+		{% for status in line_statuses %}
+		<option>{{ status }}</option>
+		{% endfor %}
+	</select>
     </li>
 </ul>
 <input type="submit" value="Go!" />
 </form>
 
 <h2>Actions</h2>
+{% with statuses=order.available_statuses %}
+{% if statuses %}
 <form action="." method="post">
     {% csrf_token %}
     <input type="hidden" name="order_action" value="change_order_status" />
-    Change order status to <input type="text" name="new_status" />
+	Change order status to:
+	<select name="new_status">
+		{% for status in statuses %}
+		<option>{{ status }}</option>
+		{% endfor %}
+	</select>
     <input type="submit" value="Go!" />
 </form>
+{% else %}
+<p>No further status changes are permitted.</p>
+{% endif %}
+{% endwith%}
 
 <h2>Notes</h2>
 {% with notes=order.notes.all %}

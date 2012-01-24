@@ -10,6 +10,7 @@ from oscar.apps.address.models import Country
 from oscar.apps.basket.models import Basket
 from oscar.apps.order.models import ShippingAddress, Order, Line, \
         ShippingEvent, ShippingEventType, ShippingEventQuantity, OrderNote
+from oscar.apps.order.exceptions import InvalidOrderStatus, InvalidLineStatus
 from oscar.test.helpers import create_order, create_product
 from oscar.apps.order.utils import OrderCreator
 from oscar.apps.shipping.methods import Free
@@ -25,7 +26,7 @@ class ShippingAddressTest(TestCase):
         self.assertEquals("Barrington", a.salutation())
     
 
-class OrderTest(TestCase):
+class OrderTests(TestCase):
     fixtures = ['sample-order.json']
 
     def setUp(self):
@@ -53,6 +54,48 @@ class OrderTest(TestCase):
         self.assertEqual(expected, order.verification_hash())
 
 
+class OrderStatusPipelineTests(TestCase):
+
+    def setUp(self):
+        Order.pipeline = {'PENDING': ('SHIPPED', 'CANCELLED'),
+                          'SHIPPED': ('COMPLETE',)}
+        Order.cascade = {'SHIPPED': 'SHIPPED'}
+
+    def test_available_statuses_for_pending(self):
+        self.order = create_order(status='PENDING')
+        self.assertEqual(('SHIPPED', 'CANCELLED'),
+                         self.order.available_statuses())
+
+    def test_available_statuses_for_shipped_order(self):
+        self.order = create_order(status='SHIPPED')
+        self.assertEqual(('COMPLETE',), self.order.available_statuses())
+
+    def test_no_statuses_available_for_no_status(self):
+        self.order = create_order()
+        self.assertEqual((), self.order.available_statuses())
+
+    def test_set_status_respects_pipeline(self):
+        self.order = create_order(status='SHIPPED')
+        with self.assertRaises(InvalidOrderStatus):
+            self.order.set_status('PENDING')
+
+    def test_set_status_does_nothing_for_same_status(self):
+        self.order = create_order(status='PENDING')
+        self.order.set_status('PENDING')
+        self.assertEqual('PENDING', self.order.status)
+
+    def test_set_status_works(self):
+        self.order = create_order(status='PENDING')
+        self.order.set_status('SHIPPED')
+        self.assertEqual('SHIPPED', self.order.status)
+
+    def test_cascading_status_change(self):
+        self.order = create_order(status='PENDING')
+        self.order.set_status('SHIPPED')
+        for line in self.order.lines.all():
+            self.assertEqual('SHIPPED', line.status)
+
+
 class OrderNoteTests(TestCase):
 
     def setUp(self):
@@ -72,9 +115,6 @@ class OrderNoteTests(TestCase):
         self.assertTrue(note.is_editable())
         time.sleep(2)
         self.assertFalse(note.is_editable())
-
-
-
 
         
 class LineTest(TestCase):
@@ -149,7 +189,32 @@ class LineTest(TestCase):
             # Total quantity is too high
             self.event(type, 2)
         
+
+class LineStatusTests(TestCase):
+
+    def setUp(self):
+        Line.pipeline = {'A': ('B', 'C'),
+                         'B': ('C',)}
+        self.order = create_order()
+        self.line = self.order.lines.all()[0]
+        self.line.status = 'A'
+        self.line.save()
+
+    def test_all_statuses_class_method(self):
+        self.assertEqual(set(('B', 'C')), Line.all_statuses())
+
+    def test_invalid_status_set_raises_exception(self):
+        with self.assertRaises(InvalidLineStatus):
+            self.line.set_status('D')
+
+    def test_set_status_changes_status(self):
+        self.line.set_status('C')
+        self.assertEqual('C', self.line.status)
+
+    def test_setting_same_status_does_nothing(self):
+        self.line.set_status('A')
         
+
 class ShippingEventQuantityTest(TestCase):
     fixtures = ['sample-order.json']
 

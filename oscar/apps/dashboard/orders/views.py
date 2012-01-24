@@ -189,6 +189,7 @@ class OrderDetailView(DetailView):
     def get_context_data(self, **kwargs):
         ctx = super(OrderDetailView, self).get_context_data(**kwargs)
         ctx['note_form'] = self.get_order_note_form()
+        ctx['line_statuses'] = Line.all_statuses()
         return ctx
 
     def get_order_note_form(self):
@@ -263,6 +264,9 @@ class OrderDetailView(DetailView):
         if not new_status:
             messages.error(request, "The new status '%s' is not valid" % new_status)
             return self.reload_page_response()
+        if not new_status in order.available_statuses():
+            messages.error(request, "The new status '%s' is not valid for this order" % new_status)
+            return self.reload_page_response()
         msg = "Order status changed from '%s' to '%s'" % (order.status, new_status)
         messages.info(request, msg)
         order.notes.create(user=request.user, message=msg,
@@ -276,13 +280,21 @@ class OrderDetailView(DetailView):
         if not new_status:
             messages.error(request, "The new status '%s' is not valid" % new_status)
             return self.reload_page_response()
+        errors = []
+        for line in lines:
+            if new_status not in line.available_statuses():
+                errors.append("'%s' is not a valid new status for line %d" % (
+                    new_status, line.id))
+        if errors:
+            messages.error(request, "\n".join(errors))
+            return self.reload_page_response()
+
         msgs = []
         for line in lines:
             msg = "Status of line %d changed from '%s' to '%s'" % (
                 line.id, line.status, new_status)
             msgs.append(msg)
-            line.status = new_status
-            line.save()
+            line.set_status(new_status)
         message = "\n".join(msgs)
         messages.info(request, message)
         order.notes.create(user=request.user, message=message,

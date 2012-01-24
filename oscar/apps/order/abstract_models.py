@@ -11,12 +11,13 @@ from django.db.models import Sum
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 
+from oscar.apps.order.exceptions import InvalidOrderStatus, InvalidLineStatus
+
 
 class AbstractOrder(models.Model):
     """
     The main order model
     """
-    
     number = models.CharField(_("Order number"), max_length=128, db_index=True)
     # We track the site that each order is placed within
     site = models.ForeignKey('sites.Site')
@@ -46,6 +47,26 @@ class AbstractOrder(models.Model):
     
     # Index added to this field for reporting
     date_placed = models.DateTimeField(auto_now_add=True, db_index=True)
+
+    # Dict of available status changes
+    pipeline = {}
+    cascade = {}
+
+    def available_statuses(self):
+        return self.pipeline.get(self.status, ())
+
+    def set_status(self, new_status):
+        if new_status == self.status:
+            return
+        if new_status not in self.available_statuses():
+            raise InvalidOrderStatus("'%s' is not a valid status for order %s (currency status: '%s')" %
+                                     (new_status, self.number, self.status))
+        self.status = new_status
+        if new_status in self.cascade:
+            for line in self.lines.all():
+                line.status = self.cascade[self.status]
+                line.save()
+        self.save()
     
     @property
     def basket_total_incl_tax(self):
@@ -261,6 +282,24 @@ class AbstractLine(models.Model):
     
     # Estimated dispatch date - should be set at order time
     est_dispatch_date = models.DateField(blank=True, null=True)
+
+    pipeline = {}
+
+    @classmethod
+    def all_statuses(cls):
+        return set(chain(*cls.pipeline.values()))
+
+    def available_statuses(self):
+        return self.pipeline.get(self.status, ())
+
+    def set_status(self, new_status):
+        if new_status == self.status:
+            return
+        if new_status not in self.available_statuses():
+            raise InvalidLineStatus("'%s' is not a valid status (current status: '%s')" % (
+                new_status, self.status))
+        self.status = new_status
+        self.save()
     
     @property
     def description(self):
