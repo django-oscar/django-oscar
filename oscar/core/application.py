@@ -24,6 +24,8 @@ class Application(object):
         could override this method to do anything you want.
         """
         for pattern in urlpatterns:
+            if not hasattr(pattern, '_callback'):
+                continue
             # Look for a custom decorator
             decorator = self.get_url_decorator(pattern)
             if decorator:

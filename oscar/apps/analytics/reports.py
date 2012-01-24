@@ -1,7 +1,7 @@
 import csv
 
 from oscar.core.loading import import_module
-report_classes = import_module('reports.reports', ['ReportGenerator'])
+report_classes = import_module('dashboard.reports.reports', ['ReportGenerator'])
 analytics_models = import_module('analytics.models', ['ProductRecord', 'UserRecord'])
 
 

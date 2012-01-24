@@ -1,5 +1,5 @@
 class ReportGenerator(object):
-    u"""
+    """
     Top-level class that needs to be subclassed to provide a 
     report generator.
     """

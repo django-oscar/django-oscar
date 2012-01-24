@@ -8,6 +8,8 @@ from django.contrib.auth.models import User
 from oscar.test.helpers import create_order
 from oscar.apps.dashboard.forms import OrderSearchForm
 
+from oscar.apps.dashboard.reports.tests import *
+
 
 class ViewTests(TestCase):
 
