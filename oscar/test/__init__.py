@@ -5,7 +5,7 @@ from django.test.client import Client
 from django.contrib.auth.models import User
 
 
-class ViewsTestCase(TestCase):
+class ClientTestCase(TestCase):
     username = 'dummyuser'
     email = 'dummyuser@example.com'
     password = 'staffpassword'
