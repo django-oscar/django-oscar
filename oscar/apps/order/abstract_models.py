@@ -1,6 +1,7 @@
 from itertools import chain
 from decimal import Decimal as D
 import hashlib
+import datetime
 
 from django.db import models
 from django.contrib.auth.models import User
@@ -173,17 +174,24 @@ class AbstractOrderNote(models.Model):
     user = models.ForeignKey('auth.User', null=True)
     
     # We allow notes to be classified although this isn't always needed
-    INFO, WARNING, ERROR = 'Info', 'Warning', 'Error'
+    INFO, WARNING, ERROR, SYSTEM = 'Info', 'Warning', 'Error', 'System'
     note_type = models.CharField(max_length=128, null=True)
     
     message = models.TextField()
     date = models.DateTimeField(auto_now_add=True)
+
+    editable_lifetime = 300
     
     class Meta:
         abstract = True
         
     def __unicode__(self):
         return u"'%s' (%s)" % (self.message[0:50], self.user)
+
+    def is_editable(self):
+        if self.note_type == self.SYSTEM:
+            return False
+        return (datetime.datetime.now() - self.date).seconds < self.editable_lifetime
 
 
 class AbstractCommunicationEvent(models.Model):

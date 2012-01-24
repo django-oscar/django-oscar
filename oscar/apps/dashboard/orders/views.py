@@ -263,8 +263,10 @@ class OrderDetailView(DetailView):
         if not new_status:
             messages.error(request, "The new status '%s' is not valid" % new_status)
             return self.reload_page_response()
-        messages.info(request, "Order status changed from '%s' to '%s'" % (
-            order.status, new_status))
+        msg = "Order status changed from '%s' to '%s'" % (order.status, new_status)
+        messages.info(request, msg)
+        order.notes.create(user=request.user, message=msg,
+                           note_type=OrderNote.SYSTEM)
         order.status = new_status
         order.save()
         return self.reload_page_response()
@@ -274,9 +276,15 @@ class OrderDetailView(DetailView):
         if not new_status:
             messages.error(request, "The new status '%s' is not valid" % new_status)
             return self.reload_page_response()
+        msgs = []
         for line in lines:
-            messages.info(request, "Line %d changed from '%s' to '%s'" % (
-                line.id, line.status, new_status))
+            msg = "Status of line %d changed from '%s' to '%s'" % (
+                line.id, line.status, new_status)
+            msgs.append(msg)
             line.status = new_status
             line.save()
+        message = "\n".join(msgs)
+        messages.info(request, message)
+        order.notes.create(user=request.user, message=message,
+                           note_type=OrderNote.SYSTEM)
         return self.reload_page_response()

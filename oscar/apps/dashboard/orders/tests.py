@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from oscar.test import ClientTestCase
 from oscar.test.helpers import create_order
 from oscar.apps.dashboard.orders.forms import OrderSearchForm
+from oscar.apps.order.models import Order, OrderNote
 
 
 class OrderListTests(ClientTestCase):
@@ -27,9 +28,31 @@ class OrderListTests(ClientTestCase):
 class OrderDetailTests(ClientTestCase):
     is_staff = True
 
+    def setUp(self):
+        self.order = create_order()
+        self.url = reverse('dashboard:order-detail', kwargs={'number': self.order.number})
+        super(OrderDetailTests, self).setUp()
+
+    def fetch_order(self):
+        return Order.objects.get(number=self.order.number)
+
     def test_order_detail_page_contains_order(self):
-        order = create_order()
-        url = reverse('dashboard:order-detail', kwargs={'number': order.number})
-        response = self.client.get(url)
+        response = self.client.get(self.url)
         self.assertTrue('order' in response.context)
+
+    def test_order_status_change(self):
+        params = {'order_action': 'change_order_status',
+                  'new_status': 'testing'}
+        response = self.client.post(self.url, params)
+        self.assertIsRedirect(response)
+        self.assertEqual('testing', self.fetch_order().status)
+
+    def test_order_status_change_creates_system_note(self):
+        params = {'order_action': 'change_order_status',
+                  'new_status': 'testing'}
+        response = self.client.post(self.url, params)
+        notes = self.order.notes.all()
+        self.assertEqual(1, len(notes))
+        self.assertEqual(OrderNote.SYSTEM, notes[0].note_type)
+
 

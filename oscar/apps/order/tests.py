@@ -1,5 +1,6 @@
 from decimal import Decimal as D
 import hashlib
+import time
 
 from django.test import TestCase
 from django.conf import settings
@@ -7,7 +8,8 @@ from mock import Mock
 
 from oscar.apps.address.models import Country
 from oscar.apps.basket.models import Basket
-from oscar.apps.order.models import ShippingAddress, Order, Line, ShippingEvent, ShippingEventType, ShippingEventQuantity
+from oscar.apps.order.models import ShippingAddress, Order, Line, \
+        ShippingEvent, ShippingEventType, ShippingEventQuantity, OrderNote
 from oscar.test.helpers import create_order, create_product
 from oscar.apps.order.utils import OrderCreator
 from oscar.apps.shipping.methods import Free
@@ -49,6 +51,30 @@ class OrderTest(TestCase):
         order = create_order()
         expected = hashlib.md5("%s%s" % (order.number, settings.SECRET_KEY)).hexdigest()
         self.assertEqual(expected, order.verification_hash())
+
+
+class OrderNoteTests(TestCase):
+
+    def setUp(self):
+        self.order = create_order()
+
+    def test_system_notes_are_not_editable(self):
+        note = self.order.notes.create(note_type=OrderNote.SYSTEM, message='test')
+        self.assertFalse(note.is_editable())
+
+    def test_non_system_notes_are_editable(self):
+        note = self.order.notes.create(message='test')
+        self.assertTrue(note.is_editable())
+
+    def test_notes_are_not_editable_after_timeout(self):
+        OrderNote.editable_lifetime = 1
+        note = self.order.notes.create(message='test')
+        self.assertTrue(note.is_editable())
+        time.sleep(2)
+        self.assertFalse(note.is_editable())
+
+
+
 
         
 class LineTest(TestCase):

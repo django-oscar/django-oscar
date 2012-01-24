@@ -194,6 +194,7 @@ Order {{ order.number }}
 		<td>{{ note.note_type }}</td>
 		<td>{{ note.message|linebreaks }}</td>
 		<td>
+			{% if note.is_editable %}
 			<a href="{% url dashboard:order-detail-note order.number note.id %}">Edit</a> |
 			<form action="." method="post">
 				{% csrf_token %}
@@ -201,6 +202,7 @@ Order {{ order.number }}
 				<input type="hidden" name="note_id" value="{{ note.id }}" />
 				<input type="submit" value="Delete" />
 			</form>
+			{% endif %}
 		</td>
 	</tr>
 	{% endfor %}
