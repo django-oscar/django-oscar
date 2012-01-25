@@ -522,7 +522,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
                 fzn_basket.merge(self.request.basket)
                 self.request.basket = fzn_basket
 
-    def send_confirmation_message(self, order):
+    def send_confirmation_message(self, order, **kwargs):
         code = self.communication_type_code
         ctx = {'order': order}
         try:
@@ -539,7 +539,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         if messages and messages['body']:      
             logger.info("Order #%s - sending %s messages", order.number, code)  
             dispatcher = Dispatcher(logger)
-            dispatcher.dispatch_order_messages(order, messages, event_type)
+            dispatcher.dispatch_order_messages(order, messages, event_type, **kwargs)
         else:
             logger.warning("Order #%s - no %s communication event type", order.number, code)
 

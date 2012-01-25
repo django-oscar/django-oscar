@@ -24,11 +24,17 @@ class Dispatcher(object):
         if messages['subject'] and messages['body']:
             self.send_email_messages(recipient, messages)
     
-    def dispatch_order_messages(self, order, messages, event_type):
+    def dispatch_order_messages(self, order, messages, event_type, **kwargs):
         """
         Dispatch order-related messages to the customer
         """
-        self.dispatch_user_messages(order.user, messages)
+        if order.is_anonymous:
+            if 'email_address' in kwargs:
+                self.send_email_messages(kwargs['email_address'], messages)
+            else:
+                return
+        else:
+            self.dispatch_user_messages(order.user, messages)
             
         # Create order comms event for audit
         if event_type:
