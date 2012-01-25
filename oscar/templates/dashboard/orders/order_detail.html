@@ -138,7 +138,7 @@ Order {{ order.number }}
         <td>{{ line.line_price_before_discounts_incl_tax|currency }}</td>
         <td>{{ line.line_price_incl_tax|currency }}</td>
         <td>
-            <a href="">Edit</a>
+			<a href="{% url dashboard:order-line-detail order.number line.id %}">Edit</a>
         </td>
     </tr>
     {% endfor %}

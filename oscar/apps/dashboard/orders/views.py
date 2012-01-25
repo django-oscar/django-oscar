@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.loading import get_model
 from django.db.models import Sum, Count
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
 from django.template.defaultfilters import date as format_date
 from django.utils.datastructures import SortedDict
@@ -325,3 +325,20 @@ class OrderDetailView(DetailView):
         order.notes.create(user=request.user, message=message,
                            note_type=OrderNote.SYSTEM)
         return self.reload_page_response()
+
+
+class LineDetailView(DetailView):
+    model = Line
+    context_object_name = 'line'
+    template_name = 'dashboard/orders/line_detail.html'
+
+    def get_object(self, queryset=None):
+        try:
+            return self.model.objects.get(pk=self.kwargs['line_id'])
+        except self.model.DoesNotExist:
+            raise Http404()
+
+    def get_context_data(self, **kwargs):
+        ctx = super(LineDetailView, self).get_context_data(**kwargs)
+        ctx['order'] = self.object.order
+        return ctx

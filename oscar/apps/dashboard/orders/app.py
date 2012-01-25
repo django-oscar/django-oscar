@@ -9,6 +9,7 @@ class OrdersDashboardApplication(Application):
     name = None
     order_list_view = views.OrderListView
     order_detail_view = views.OrderDetailView
+    line_detail_view = views.LineDetailView
     order_summary_view = views.OrderSummaryView
 
     def get_urls(self):
@@ -20,6 +21,8 @@ class OrdersDashboardApplication(Application):
                 self.order_detail_view.as_view(), name='order-detail'),
             url(r'^(?P<number>[-\w]+)/notes/(?P<note_id>\d+)/$',
                 self.order_detail_view.as_view(), name='order-detail-note'),
+            url(r'^(?P<number>[-\w]+)/lines/(?P<line_id>\d+)/$',
+                self.line_detail_view.as_view(), name='order-line-detail'),
         )
         return self.post_process_urls(urlpatterns)
 

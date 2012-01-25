@@ -21,6 +21,7 @@ class OrderSummaryTests(ClientTestCase):
         self.assertInContext(response, 'total_lines')
         self.assertInContext(response, 'total_revenue')
 
+
 class OrderListTests(ClientTestCase):
     is_staff = True
 
@@ -65,5 +66,24 @@ class OrderDetailTests(ClientTestCase):
         notes = self.order.notes.all()
         self.assertEqual(1, len(notes))
         self.assertEqual(OrderNote.SYSTEM, notes[0].note_type)
+
+
+class LineDetailTests(ClientTestCase):
+    is_staff = True
+
+    def setUp(self):
+        self.order = create_order()
+        self.line = self.order.lines.all()[0]
+        self.url = reverse('dashboard:order-line-detail', kwargs={'number': self.order.number,
+                                                                  'line_id': self.line.id})
+        super(LineDetailTests, self).setUp()
+
+    def test_line_detail_page_exists(self):
+        response = self.client.get(self.url)
+        self.assertIsOk(response)
+
+    def test_line_in_context(self):
+        response = self.client.get(self.url)
+        self.assertInContext(response, 'line')
 
 
