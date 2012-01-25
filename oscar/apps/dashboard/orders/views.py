@@ -12,10 +12,14 @@ from django.utils.datastructures import SortedDict
 from django.views.generic import TemplateView, ListView, DetailView
 
 from oscar.apps.dashboard.orders import forms
+from oscar.core.loading import import_module
 
 Order = get_model('order', 'Order')
 OrderNote = get_model('order', 'OrderNote')
 Line = get_model('order', 'Line')
+ShippingEventType = get_model('order', 'ShippingEventType')
+
+processing = import_module('order.processing', ['EventHandler'])
 
 
 class OrderSummaryView(TemplateView):
@@ -206,7 +210,7 @@ class OrderDetailView(DetailView):
     context_object_name = 'order'
     template_name = 'dashboard/orders/order_detail.html'
     order_actions = ('save_note', 'delete_note', 'change_order_status',)
-    line_actions = ('change_line_statuses',)
+    line_actions = ('change_line_statuses', 'create_shipping_event')
 
     def get_object(self):
         return get_object_or_404(self.model, number=self.kwargs['number'])
@@ -215,6 +219,7 @@ class OrderDetailView(DetailView):
         ctx = super(OrderDetailView, self).get_context_data(**kwargs)
         ctx['note_form'] = self.get_order_note_form()
         ctx['line_statuses'] = Line.all_statuses()
+        ctx['shipping_event_types'] = ShippingEventType.objects.all()
         return ctx
 
     def get_order_note_form(self):
@@ -249,11 +254,12 @@ class OrderDetailView(DetailView):
                 return self.reload_page_response()
             else:
                 line_ids = request.POST.getlist('selected_line')
+                line_quantities = request.POST.getlist('selected_line_qty')
                 lines = order.lines.filter(id__in=line_ids)
                 if lines.count() == 0:
                     messages.error(self.request, "You must select some lines to act on")
                     return self.reload_page_response()
-                return getattr(self, line_action)(request, order, lines)
+                return getattr(self, line_action)(request, order, lines, line_quantities)
 
         messages.error(request, "No valid action submitted")
         return self.reload_page_response()
@@ -300,7 +306,7 @@ class OrderDetailView(DetailView):
         order.save()
         return self.reload_page_response()
 
-    def change_line_statuses(self, request, order, lines):
+    def change_line_statuses(self, request, order, lines, quantities):
         new_status = request.POST['new_status'].strip()
         if not new_status:
             messages.error(request, "The new status '%s' is not valid" % new_status)
@@ -324,6 +330,19 @@ class OrderDetailView(DetailView):
         messages.info(request, message)
         order.notes.create(user=request.user, message=message,
                            note_type=OrderNote.SYSTEM)
+        return self.reload_page_response()
+
+    def create_shipping_event(self, request, order, lines, quantities):
+        code = request.POST['shipping_event_type']
+        try:
+            event_type = ShippingEventType._default_manager.get(code=code)
+        except ShippingEventType.DoesNotExist:
+            messages.error(request, "The event type '%s' is not valid" % code)
+            return self.reload_page_response()
+
+        processing.EventHandler().handle_shipping_event(order, event_type, lines, quantities)
+
+        messages.info(request, "Shipping event created")
         return self.reload_page_response()
 
 

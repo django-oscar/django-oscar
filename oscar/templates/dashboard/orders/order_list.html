@@ -31,7 +31,7 @@
         <th>Total inc tax</th>
         <th>Date of purchase</th>
         <th>Number of items</th>
-        <th>Shipping status</th>
+        <th>Status</th>
         <th>Customer</th>
         <th>Shipping address</th>
         <th>Billing address</th>
@@ -44,7 +44,7 @@
         <td>{{ order.total_incl_tax|currency }}</td>
 		<td>{{ order.date_placed }}</td>
 		<td>{{ order.num_items }}</td>
-        <td>{{ order.shipping_status }}</td>
+        <td>{{ order.status }}</td>
         <td>{{ order.user|default:"Anonymous" }}</td>
         <td>{{ order.shipping_address }}</td>
         <td>{{ order.billing_address }}</td>

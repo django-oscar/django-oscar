@@ -49,8 +49,12 @@ class AbstractOrder(models.Model):
     date_placed = models.DateTimeField(auto_now_add=True, db_index=True)
 
     # Dict of available status changes
-    pipeline = {}
-    cascade = {}
+    pipeline = getattr(settings,  'OSCAR_ORDER_STATUS_PIPELINE', {})
+    cascade = getattr(settings,  'OSCAR_ORDER_STATUS_CASCADE', {})
+
+    @classmethod
+    def all_statuses(cls):
+        return cls.pipeline.keys()
 
     def available_statuses(self):
         return self.pipeline.get(self.status, ())
@@ -283,11 +287,11 @@ class AbstractLine(models.Model):
     # Estimated dispatch date - should be set at order time
     est_dispatch_date = models.DateField(blank=True, null=True)
 
-    pipeline = {}
+    pipeline = getattr(settings,  'OSCAR_LINE_STATUS_PIPELINE', {})
 
     @classmethod
     def all_statuses(cls):
-        return set(chain(*cls.pipeline.values()))
+        return cls.pipeline.keys()
 
     def available_statuses(self):
         return self.pipeline.get(self.status, ())
@@ -470,8 +474,11 @@ class PaymentEventQuantity(models.Model):
     quantity = models.PositiveIntegerField()
 
 
+# SHIPPING EVENTS
+
+
 class AbstractShippingEvent(models.Model):    
-    u"""
+    """
     An event is something which happens to a group of lines such as
     1 item being dispatched.
     """
@@ -496,7 +503,7 @@ class AbstractShippingEvent(models.Model):
 
 
 class ShippingEventQuantity(models.Model):
-    u"""A "through" model linking lines to shipping events"""
+    """A "through" model linking lines to shipping events"""
     event = models.ForeignKey('order.ShippingEvent', related_name='line_quantities')
     line = models.ForeignKey('order.Line')
     quantity = models.PositiveIntegerField()
@@ -532,9 +539,9 @@ class ShippingEventQuantity(models.Model):
 
 
 class AbstractShippingEventType(models.Model):
-    u"""Shipping events are things like 'OrderPlaced', 'Acknowledged', 'Dispatched', 'Refunded'"""
-    # Code is used in forms
-    code = models.CharField(max_length=128)
+    """
+    Shipping events are things like 'OrderPlaced', 'Acknowledged', 'Dispatched', 'Refunded'
+    """
     # Name is the friendly description of an event
     name = models.CharField(max_length=255)
     # Code is used in forms

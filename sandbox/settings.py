@@ -235,5 +235,10 @@ DEBUG_TOOLBAR_CONFIG = {
 from oscar.defaults import *
 
 OSCAR_ALLOW_ANON_CHECKOUT = True
-
-
+OSCAR_INITIAL_ORDER_STATUS = 'Pending'
+OSCAR_INITIAL_LINE_STATUS = 'Pending'
+OSCAR_ORDER_STATUS_PIPELINE = {
+    'Pending': ('Being processed', 'Cancelled',),
+    'Being processed': ('Processed', 'Cancelled',),
+    'Cancelled': (),
+}

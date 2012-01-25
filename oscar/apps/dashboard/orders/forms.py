@@ -1,6 +1,7 @@
 from django import forms
 from django.db.models.loading import get_model
 
+Order= get_model('order', 'Order')
 OrderNote = get_model('order', 'OrderNote')
 
 
@@ -10,7 +11,8 @@ class OrderSearchForm(forms.Form):
     product_title = forms.CharField(required=False, label="Product name")
     product_id = forms.CharField(required=False, label="Product ID")
 
-    status = forms.CharField(required=False, label="Shipping status")
+    status_choices = (('', '---------'),) + tuple([(v,v) for v in Order.all_statuses()])
+    status = forms.ChoiceField(choices=status_choices, label="Status", required=False)
 
     date_formats = ('%d/%m/%Y',)
     date_from = forms.DateField(required=False, label="Date from", input_formats=date_formats)

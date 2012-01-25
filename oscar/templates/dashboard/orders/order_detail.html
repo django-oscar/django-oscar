@@ -118,23 +118,30 @@ Order {{ order.number }}
 <table>
     <tr>
         <th>Select</th>
+        <th>ID</th>
         <th>Product</th>
         <th>Status</th>
         <th>Supplier</th>
         <th>Supplier SKU</th>
         <th>Est. delivery date</th>
+		<th>Quantity</th>
         <th>Price (after discounts)</th>
         <th>Price (before discounts)</th>
         <th>Actions</th>
     </tr>
     {% for line in order.lines.all %}
     <tr>
-        <td><input type="checkbox" name="selected_line" value="{{ line.id }}" /></td>
+		<td>
+			<input type="checkbox" name="selected_line" value="{{ line.id }}" />
+			<input type="text" name="selected_line_qty" value="{{ line.quantity }}" size="2" />
+		</td>
+        <td>{{ line.id }}</td>
         <td>{{ line.title }}</td>
         <td>{{ line.status|default:"-" }}</td>
         <td>{{ line.partner_name }}</td>
         <td>{{ line.partner_sku }}</td>
         <td>{{ line.est_dispatch_date }}</td>
+        <td>{{ line.quantity }}</td>
         <td>{{ line.line_price_before_discounts_incl_tax|currency }}</td>
         <td>{{ line.line_price_incl_tax|currency }}</td>
         <td>
@@ -143,17 +150,17 @@ Order {{ order.number }}
     </tr>
     {% endfor %}
     <tr>
-        <td colspan="6"></td>
+        <td colspan="8"></td>
         <td>Discount</td>
         <td>{{ order.total_discount_incl_tax|currency }}</td>
     </tr>
     <tr>
-        <td colspan="6"></td>
+        <td colspan="8"></td>
         <td>Shipping charge</td>
         <td>{{ order.shipping_incl_tax|currency }}</td>
     </tr>
     <tr>
-        <td colspan="6"></td>
+        <td colspan="8"></td>
         <td>Total</td>
         <td>{{ order.total_incl_tax|currency }}</td>
     </tr>
@@ -169,6 +176,16 @@ Order {{ order.number }}
 		{% endfor %}
 	</select>
     </li>
+	<li><label><input type="radio" name="line_action" value="create_shipping_event" /> Create shipping event</label>
+	<select name="shipping_event_type">
+		<option value=""> -- choose event type -- </option>
+		{% for event_type in shipping_event_types %}
+		<option value="{{ event_type.code }}">{{ event_type.name }}</option>
+		{% endfor %}
+	</select>
+
+	</li>
+
 </ul>
 <input type="submit" value="Go!" />
 </form>
@@ -191,6 +208,37 @@ Order {{ order.number }}
 <p>No further status changes are permitted.</p>
 {% endif %}
 {% endwith%}
+
+<h2>Shipping Events</h2>
+{% with events=order.shipping_events.all %}
+{% if events %}
+<table>
+	<tr>
+		<th>Date</th>
+		<th>Event</th>
+		<th>Lines</th>
+	</tr>
+	{% for event in events %}
+	{% with line_qtys=event.line_quantities.all %}
+	<tr>
+		<td rowspan="{{ line_qtys|length }}">{{ event.date }}</td>
+		<td rowspan="{{ line_qtys|length }}">{{ event.event_type.name }}</td>
+		<td>
+			<table>
+				{% for line_qty in event.line_quantities.all %}
+				<tr>
+					<td>Product: {{ line_qty.line.title }}</td>
+					<td>Quantity: {{ line_qty.quantity }}</td>
+				</tr>
+				{% endfor %}
+			</table>
+		<td>
+	</tr>
+	{% endwith %}
+	{% endfor %}
+</table>
+{% endif %}
+{% endwith %}
 
 <h2>Notes</h2>
 {% with notes=order.notes.all %}

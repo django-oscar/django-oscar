@@ -9,11 +9,13 @@ from mock import Mock
 from oscar.apps.address.models import Country
 from oscar.apps.basket.models import Basket
 from oscar.apps.order.models import ShippingAddress, Order, Line, \
-        ShippingEvent, ShippingEventType, ShippingEventQuantity, OrderNote
+        ShippingEvent, ShippingEventType, ShippingEventQuantity, OrderNote, \
+        ShippingEventType
 from oscar.apps.order.exceptions import InvalidOrderStatus, InvalidLineStatus
 from oscar.test.helpers import create_order, create_product
 from oscar.apps.order.utils import OrderCreator
 from oscar.apps.shipping.methods import Free
+from oscar.apps.order.processing import EventHandler
 from oscar.test import patch_settings
 
 ORDER_PLACED = 'order_placed'
@@ -61,6 +63,10 @@ class OrderStatusPipelineTests(TestCase):
         Order.pipeline = {'PENDING': ('SHIPPED', 'CANCELLED'),
                           'SHIPPED': ('COMPLETE',)}
         Order.cascade = {'SHIPPED': 'SHIPPED'}
+
+    def tearDown(self):
+        Order.pipeline = {}
+        Order.cascade = {}
 
     def test_available_statuses_for_pending(self):
         self.order = create_order(status='PENDING')
@@ -202,7 +208,7 @@ class LineStatusTests(TestCase):
         self.line.save()
 
     def test_all_statuses_class_method(self):
-        self.assertEqual(set(('B', 'C')), Line.all_statuses())
+        self.assertEqual(['A', 'B'], Line.all_statuses())
 
     def test_invalid_status_set_raises_exception(self):
         with self.assertRaises(InvalidLineStatus):
@@ -295,3 +301,19 @@ class OrderCreatorTests(TestCase):
         line = order.lines.all()[0]
         self.assertEqual('A', line.status)
 
+
+class EventHandlerTests(TestCase):
+
+    def setUp(self):
+        self.order = create_order()
+        self.handler = EventHandler()
+        self.e_type = ShippingEventType.objects.create(name='Shipped')
+
+    def test_shipping_handler_creates_event(self):
+        self.handler.handle_shipping_event(self.order, self.e_type, 
+                                           self.order.lines.all(), [1])
+
+        events = self.order.shipping_events.all()
+        self.assertEqual(1, len(events))
+        event = events[0]
+        self.assertEqual('Shipped', event.event_type.name)
