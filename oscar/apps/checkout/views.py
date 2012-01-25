@@ -16,7 +16,7 @@ from django.core.mail import EmailMessage
 from django.views.generic import DetailView, TemplateView, FormView, \
                                  DeleteView, UpdateView, CreateView
 
-from oscar.apps.shipping.methods import Free
+from oscar.apps.shipping.methods import FreeShipping
 from oscar.core.loading import import_module
 import_module('checkout.forms', ['ShippingAddressForm'], locals())
 import_module('checkout.calculators', ['OrderTotalCalculator'], locals())
@@ -90,7 +90,7 @@ class CheckoutSessionMixin(object):
             method.set_basket(basket)
         else:
             # We default to using free shipping
-            method = Free()
+            method = FreeShipping()
         return method
     
     def get_order_totals(self, basket=None, shipping_method=None, **kwargs):
@@ -176,7 +176,6 @@ class ShippingAddressView(CheckoutSessionMixin, FormView):
             return super(ShippingAddressView, self).post(request, *args, **kwargs)
     
     def form_valid(self, form):
-        # Store the address details in the session and redirect to next step
         self.checkout_session.ship_to_new_address(form.clean())
         return super(ShippingAddressView, self).form_valid(form)
     
@@ -283,23 +282,15 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
         Returns all applicable shipping method objects
         for a given basket.
         """ 
+        repo = Repository()
         # Shipping methods can depend on the user, the contents of the basket
         # and the shipping address.  I haven't come across a scenario that doesn't
         # fit this system.
-        return Repository().get_shipping_methods(self.request.user, self.request.basket, 
-                                                 self.get_shipping_address())
+        return repo.get_shipping_methods(self.request.user, self.request.basket, 
+                                         self.get_shipping_address())
     
     def post(self, request, *args, **kwargs):
-        # Need to check that this code is valid for this user
-        method_code = request.POST.get('method_code', None)
-        is_valid = False
-        for method in self.get_available_shipping_methods():
-            if method.code == method_code:
-                is_valid = True
-        if not is_valid:
-            messages.error(request, _("Your submitted shipping method is not permitted"))
-            return HttpResponseRedirect(reverse('checkout:shipping-method'))
-
+        method_code = request.POST['method_code']
         # Save the code for the chosen shipping method in the session
         # and continue to the next step.
         self.checkout_session.use_shipping_method(method_code)
@@ -308,10 +299,6 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
     def get_success_response(self):
         return HttpResponseRedirect(reverse('checkout:payment-method'))
 
-
-# ======================================
-# Payment method, preview and submission
-# ======================================
 
 class PaymentMethodView(CheckoutSessionMixin, TemplateView):
     """
@@ -522,7 +509,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
                 fzn_basket.merge(self.request.basket)
                 self.request.basket = fzn_basket
 
-    def send_confirmation_message(self, order):
+    def send_confirmation_message(self, order, **kwargs):
         code = self.communication_type_code
         ctx = {'order': order}
         try:
@@ -539,7 +526,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         if messages and messages['body']:      
             logger.info("Order #%s - sending %s messages", order.number, code)  
             dispatcher = Dispatcher(logger)
-            dispatcher.dispatch_order_messages(order, messages, event_type)
+            dispatcher.dispatch_order_messages(order, messages, event_type, **kwargs)
         else:
             logger.warning("Order #%s - no %s communication event type", order.number, code)
 
@@ -574,11 +561,6 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
            - If a redirect is required (eg PayPal, 3DSecure), redirect
            - If payment is unsuccessful, show an appropriate error message
         """
-        # First check that basket isn't empty
-        if basket.is_empty:
-            messages.error(self.request, _("This order cannot be submitted as the basket is empty"))
-            return HttpResponseRedirect(self.request.META['HTTP_REFERER'])
-
         # We generate the order number first as this will be used
         # in payment requests (ie before the order model has been 
         # created).  We also save it in the session for multi-stage
@@ -587,7 +569,11 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         order_number = self.generate_order_number(basket)
         logger.info("Order #%s: beginning submission process for basket %d", order_number, basket.id)
         
-        self.freeze_basket(basket)
+        # We freeze the basket to prevent it being modified once the payment
+        # process has started.  If your payment fails, then the basket will
+        # need to be "unfrozen".  We also store the basket ID in the session
+        # so the it can be retrieved by multistage checkout processes.
+        basket.freeze()
         self.checkout_session.set_submitted_basket(basket)
         
         # Handle payment.  Any payment problems should be handled by the 
@@ -626,13 +612,6 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         order_number = generator.order_number(basket)
         self.checkout_session.set_order_number(order_number)
         return order_number
-
-    def freeze_basket(self, basket):
-        # We freeze the basket to prevent it being modified once the payment
-        # process has started.  If your payment fails, then the basket will
-        # need to be "unfrozen".  We also store the basket ID in the session
-        # so the it can be retrieved by multistage checkout processes.
-        basket.freeze()
     
     def handle_payment(self, order_number, total, **kwargs):
         """
@@ -642,7 +621,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         default is to do nothing.
         """
         pass
-
+        
 
 class ThankYouView(DetailView):
     """

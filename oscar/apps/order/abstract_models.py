@@ -1,6 +1,5 @@
 from itertools import chain
 from decimal import Decimal as D
-import hashlib
 
 from django.db import models
 from django.contrib.auth.models import User
@@ -8,7 +7,6 @@ from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
 from django.db.models import Sum
 from django.core.exceptions import ObjectDoesNotExist
-from django.conf import settings
 
 
 class AbstractOrder(models.Model):
@@ -45,6 +43,10 @@ class AbstractOrder(models.Model):
     
     # Index added to this field for reporting
     date_placed = models.DateTimeField(auto_now_add=True, db_index=True)
+    
+    @property
+    def is_anonymous(self):
+        return self.user is None
     
     @property
     def basket_total_incl_tax(self):
@@ -154,9 +156,6 @@ class AbstractOrder(models.Model):
     
     def __unicode__(self):
         return u"#%s" % (self.number,)
-
-    def verification_hash(self):
-        return hashlib.md5('%s%s' % (self.number, settings.SECRET_KEY)).hexdigest()
 
 
 class AbstractOrderNote(models.Model):
