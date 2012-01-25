@@ -12,6 +12,29 @@ sites to complex B2B sites rich in domain-specific business logic.
 
 .. _`Read the docs`: http://django-oscar.readthedocs.org/en/latest/
 
+Quick start
+-----------
+
+After forking, do the following::
+
+    mkvirtualenv oscar
+    git clone git@github.com/<username>/django-oscar.git
+    cd django-oscar
+    python setup.py develop
+    pip install -r testing-reqs.txt
+
+You can run the test suite using::
+
+    ./run-tests.py
+
+You can browse a "sandbox" shop by doing the following::
+
+    cd sandbox
+    ./manage.py syncdb --noinput
+    ./manage.py import_catalogue data/books-catalogue.csv
+    ./manage.py import_images data/book-images.tar.gz
+    ./manage.py runserver
+
 Credits
 -------
 

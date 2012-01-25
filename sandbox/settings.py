@@ -224,9 +224,7 @@ APPEND_SLASH = True
 
 # Haystack settings
 HAYSTACK_SITECONF = 'oscar.search_sites'
-HAYSTACK_SEARCH_ENGINE = 'solr'
-HAYSTACK_SOLR_URL = 'http://127.0.0.1:8080/solr'
-HAYSTACK_INCLUDE_SPELLING = True
+HAYSTACK_SEARCH_ENGINE = 'dummy'
 
 # Oscar settings
 from oscar.defaults import *
