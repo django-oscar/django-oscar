@@ -14,6 +14,7 @@ from oscar.apps.order.exceptions import InvalidOrderStatus, InvalidLineStatus
 from oscar.test.helpers import create_order, create_product
 from oscar.apps.order.utils import OrderCreator
 from oscar.apps.shipping.methods import Free
+from oscar.test import patch_settings
 
 ORDER_PLACED = 'order_placed'
 
@@ -278,4 +279,19 @@ class OrderCreatorTests(TestCase):
         self.creator.place_order(basket=self.basket, order_number='1234')
         with self.assertRaises(ValueError):
             self.creator.place_order(basket=self.basket, order_number='1234')
+
+    def test_default_order_status_comes_from_settings(self):
+        self.basket.add_product(create_product(price=D('12.00')))
+        with patch_settings(OSCAR_INITIAL_ORDER_STATUS='A'):
+            self.creator.place_order(basket=self.basket, order_number='1234')
+        order = Order.objects.get(number='1234')
+        self.assertEqual('A', order.status)
+
+    def test_default_line_status_comes_from_settings(self):
+        self.basket.add_product(create_product(price=D('12.00')))
+        with patch_settings(OSCAR_INITIAL_LINE_STATUS='A'):
+            self.creator.place_order(basket=self.basket, order_number='1234')
+        order = Order.objects.get(number='1234')
+        line = order.lines.all()[0]
+        self.assertEqual('A', line.status)
 

@@ -1,4 +1,5 @@
 from django.contrib.sites.models import Site
+from django.conf import settings
 
 from oscar.apps.shipping.methods import Free
 from oscar.core.loading import import_module
@@ -46,6 +47,8 @@ class OrderCreator(object):
         if not order_number:
             generator = OrderNumberGenerator()
             order_number = generator.order_number(basket)
+        if not status and hasattr(settings, 'OSCAR_INITIAL_ORDER_STATUS'):
+            status = getattr(settings, 'OSCAR_INITIAL_ORDER_STATUS')
         try:
             Order._default_manager.get(number=order_number)
         except Order.DoesNotExist:
@@ -136,6 +139,10 @@ class OrderCreator(object):
                      # Shipping details
                      'est_dispatch_date':  basket_line.product.stockrecord.dispatch_date
                      }
+        extra_line_fields = extra_line_fields or {}
+        if hasattr(settings, 'OSCAR_INITIAL_LINE_STATUS'):
+            if not (extra_line_fields and 'status' in extra_line_fields):
+                extra_line_fields['status'] = getattr(settings, 'OSCAR_INITIAL_LINE_STATUS')
         if extra_line_fields:
             line_data.update(extra_line_fields)
         

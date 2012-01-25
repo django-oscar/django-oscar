@@ -325,7 +325,7 @@ class AbstractLine(models.Model):
     
     @property
     def shipping_status(self):
-        u"""Returns a string summary of the shipping status of this line"""
+        """Returns a string summary of the shipping status of this line"""
         status_map = self._shipping_event_history()
         if not status_map:
             return ''
