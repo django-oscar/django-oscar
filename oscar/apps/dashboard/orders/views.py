@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.loading import get_model
+from django.db.models import Sum, Count
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.template.defaultfilters import date as format_date
@@ -15,6 +16,19 @@ from oscar.apps.dashboard.orders import forms
 Order = get_model('order', 'Order')
 OrderNote = get_model('order', 'OrderNote')
 Line = get_model('order', 'Line')
+
+
+class OrderSummaryView(TemplateView):
+    template_name = 'dashboard/orders/summary.html'
+
+    def get_context_data(self, **kwargs):
+        status_breakdown = Order.objects.order_by('status').values('status').annotate(freq=Count('id'))
+
+        return {'total_orders': Order.objects.all().count(),
+                'total_lines': Line.objects.all().count(),
+                'total_revenue': Order.objects.all().aggregate(Sum('total_incl_tax'))['total_incl_tax__sum'],
+                'order_status_breakdown': status_breakdown, 
+               }
 
 
 class OrderListView(ListView):
@@ -44,6 +58,17 @@ class OrderListView(ListView):
         """
         queryset = self.model.objects.all().order_by('-date_placed')
         self.description = self.base_description
+
+        # Look for shortcut query filters
+        if 'order_status' in self.request.GET:
+            self.form = self.form_class()
+            status = self.request.GET['order_status']
+            if status.lower() == 'none':
+                self.description = "Orders without an order status"
+                status = None
+            else:
+                self.description = "Orders with status '%s'" % status
+            return self.model.objects.filter(status=status)
 
         if 'order_number' not in self.request.GET:
             self.form = self.form_class()

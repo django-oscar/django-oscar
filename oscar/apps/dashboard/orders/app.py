@@ -9,10 +9,13 @@ class OrdersDashboardApplication(Application):
     name = None
     order_list_view = views.OrderListView
     order_detail_view = views.OrderDetailView
+    order_summary_view = views.OrderSummaryView
 
     def get_urls(self):
         urlpatterns = patterns('',
             url(r'^$', self.order_list_view.as_view(), name='order-list'),
+            url(r'^summary/$', self.order_summary_view.as_view(),
+                name='order-summary'),
             url(r'^(?P<number>[-\w]+)/$',
                 self.order_detail_view.as_view(), name='order-detail'),
             url(r'^(?P<number>[-\w]+)/notes/(?P<note_id>\d+)/$',
