@@ -47,6 +47,10 @@ class AbstractOrder(models.Model):
     date_placed = models.DateTimeField(auto_now_add=True, db_index=True)
     
     @property
+    def is_anonymous(self):
+        return self.user is None
+    
+    @property
     def basket_total_incl_tax(self):
         """
         Return basket total including tax
