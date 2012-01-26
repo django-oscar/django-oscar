@@ -1,7 +1,7 @@
-
 from django.test import TestCase, Client
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
+from django.conf import settings
 
 from oscar.apps.catalogue.models import Product, ProductClass, Category
 from oscar.apps.catalogue.categories import create_from_breadcrumbs
@@ -48,22 +48,40 @@ class CategoryTests(TestCase):
         create_from_breadcrumbs(trail, separator='|')
         self.assertEquals(3, len(Category.objects.all()))
 
-class ItemTests(TestCase):
+
+class ProductTests(TestCase):
 
     def setUp(self):
         self.product_class,_ = ProductClass.objects.get_or_create(name='Clothing')
+
+
+class ProductCreationTests(ProductTests):
+
+    def setUp(self):
+        super(ProductCreationTests, self).setUp()
+        Product.ENABLE_ATTRIBUTE_BINDING = True
+
+    def tearDown(self):
+        Product.ENABLE_ATTRIBUTE_BINDING = False
+
+    def test_create_products_with_attributes(self):
+        product = Product(upc='1234',
+                          product_class=self.product_class,
+                          title='testing')
+        product.attr.num_pages = 100
+        product.save()
    
 
-class TopLevelItemTests(ItemTests):
+class TopLevelProductTests(ProductTests):
     
     def test_top_level_products_must_have_titles(self):
         self.assertRaises(ValidationError, Product.objects.create, product_class=self.product_class)
         
         
-class VariantItemTests(ItemTests):
+class VariantProductTests(ProductTests):
     
     def setUp(self):
-        super(VariantItemTests, self).setUp()
+        super(VariantProductTests, self).setUp()
         self.parent = Product.objects.create(title="Parent product", product_class=self.product_class)
     
     def test_variant_products_dont_need_titles(self):

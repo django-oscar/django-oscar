@@ -17,7 +17,6 @@ from treebeard.mp_tree import MP_Node
 
 from oscar.apps.catalogue.managers import BrowsableProductManager
 
-ENABLE_ATTRIBUTE_BINDING = getattr(settings, 'OSCAR_ENABLE_ATTRIBUTE_BINDING', False)
 
 
 class AbstractProductClass(models.Model):
@@ -211,6 +210,8 @@ class AbstractProduct(models.Model):
     objects = models.Manager()
     browsable = BrowsableProductManager()
 
+    ENABLE_ATTRIBUTE_BINDING = getattr(settings, 'OSCAR_ENABLE_ATTRIBUTE_BINDING', False)
+
     # Properties
 
     @property
@@ -308,7 +309,7 @@ class AbstractProduct(models.Model):
         
     def __init__(self, *args, **kwargs):
         super(AbstractProduct, self).__init__(*args, **kwargs)
-        if ENABLE_ATTRIBUTE_BINDING:
+        if self.ENABLE_ATTRIBUTE_BINDING:
             self.attr = ProductAttributesContainer(product=self)
     
     def save(self, *args, **kwargs):
@@ -318,14 +319,14 @@ class AbstractProduct(models.Model):
             self.slug = slugify(self.get_title())
         
         # Validate attributes if necessary
-        if ENABLE_ATTRIBUTE_BINDING:
+        if self.ENABLE_ATTRIBUTE_BINDING:
             self.attr.validate_attributes()
             
         # Save product
         super(AbstractProduct, self).save(*args, **kwargs)
         
         # Finally, save attributes
-        if ENABLE_ATTRIBUTE_BINDING:
+        if self.ENABLE_ATTRIBUTE_BINDING:
             self.attr.save()
 
 
