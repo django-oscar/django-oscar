@@ -13,6 +13,7 @@ ORDER_PLACED = 'order_placed'
 
 
 class ShippingAddressTest(TestCase):
+    fixtures = ['countries.json']
     
     def test_titleless_salutation_is_stripped(self):
         country = Country.objects.get(iso_3166_1_a2='GB')

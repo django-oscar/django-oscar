@@ -8,6 +8,7 @@ from oscar.apps.order.models import ShippingAddress
 
 
 class UserAddressTest(TestCase):
+    fixtures = ['countries.json']
     
     def setUp(self):
         self.user = User.objects.create(username='dummy_user')
