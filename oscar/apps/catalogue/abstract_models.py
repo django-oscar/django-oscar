@@ -331,7 +331,7 @@ class AbstractProduct(models.Model):
 
 
 class ProductRecommendation(models.Model):
-    u"""
+    """
     'Through' model for product recommendations
     """
     primary = models.ForeignKey('catalogue.Product', related_name='primary_recommendations')
@@ -380,7 +380,7 @@ class ProductAttributesContainer(object):
                                              'err': e})
         
     def get_values(self):
-        return self.product.productattributevalue_set.all()
+        return self.product.attribute_values.all()
     
     def get_value_by_attribute(self, attribute):
         return self.get_values().get(attribute=attribute)    
@@ -494,7 +494,7 @@ class AbstractProductAttribute(models.Model):
         
     def save_value(self, product, value):
         try:
-            value_obj = product.productattributevalue_set.get(attribute=self)
+            value_obj = product.attribute_values.get(attribute=self)
         except get_model('catalogue', 'ProductAttributeValue').DoesNotExist:
             if value == None or value == '':
                 return

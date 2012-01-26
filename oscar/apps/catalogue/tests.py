@@ -3,7 +3,8 @@ from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.conf import settings
 
-from oscar.apps.catalogue.models import Product, ProductClass, Category
+from oscar.apps.catalogue.models import Product, ProductClass, Category, \
+        ProductAttribute
 from oscar.apps.catalogue.categories import create_from_breadcrumbs
 
 
@@ -59,6 +60,10 @@ class ProductCreationTests(ProductTests):
 
     def setUp(self):
         super(ProductCreationTests, self).setUp()
+        ProductAttribute.objects.create(product_class=self.product_class,
+                                        name='Number of pages',
+                                        code='num_pages',
+                                        type='integer')
         Product.ENABLE_ATTRIBUTE_BINDING = True
 
     def tearDown(self):
