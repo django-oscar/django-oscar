@@ -44,8 +44,8 @@ You can browse a "sandbox" shop by doing the following::
 
     cd sandbox
     ./manage.py syncdb --noinput
-    ./manage.py import_catalogue data/books-catalogue.csv
-    ./manage.py import_images data/book-images.tar.gz
+    ./manage.py oscar_import_catalogue data/books-catalogue.csv
+    ./manage.py oscar_import_images data/book-images.tar.gz
     ./manage.py runserver
 
 Contributors
