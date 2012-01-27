@@ -1,3 +1,4 @@
+baseurl: /django-oscar/
 markdown: rdiscount
 pygments: true
 paginate: 10
