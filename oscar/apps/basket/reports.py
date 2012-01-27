@@ -1,8 +1,7 @@
 import csv
-from oscar.apps.reports.reports import ReportGenerator
 
 from oscar.core.loading import import_module
-import_module('reports.reports', ['ReportGenerator'], locals())
+import_module('dashboard.reports.reports', ['ReportGenerator'], locals())
 import_module('basket.models', ['Basket', 'OPEN', 'SUBMITTED'], locals())
 
 

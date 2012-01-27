@@ -2,6 +2,7 @@ from oscar.core.application import Application
 from django.conf.urls.defaults import patterns, url, include
 from oscar.apps.catalogue.reviews.views import ProductReviewDetail, CreateProductReview, CreateProductReviewComplete, ProductReviewList 
 
+
 class ProductReviewsApplication(Application):
     name = None
     detail_view = ProductReviewDetail
@@ -17,5 +18,6 @@ class ProductReviewsApplication(Application):
             url(r'^$', self.list_view.as_view(), name='reviews-list'),
         )
         return urlpatterns
+
 
 application = ProductReviewsApplication()

@@ -3,7 +3,7 @@ from datetime import date, datetime
 from django import forms
 
 from oscar.core.loading import import_module
-report_utils = import_module('reports.utils', ['GeneratorRepository'])
+report_utils = import_module('dashboard.reports.utils', ['GeneratorRepository'])
 
 class ReportForm(forms.Form):
     

@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+{% load currency_filters %}
+
+{% block title %}
+Order {{ order.number }} - Line #{{ line.id }}
+{% endblock %}
+
+{% block header %}
+<h2>Order {{ order.number }} - Line #{{ line.id }}</h2>
+{% endblock header %}
+
+{% block content %}
+
+<h2>Product details</h2>
+<table>
+    <tr>
+		<th>Title</th><td>{{ line.title }}</td>
+    </tr>
+    <tr>
+		<th>Quantity</th><td>{{ line.quantity }}</td>
+    </tr>
+</table>
+
+<h2>Partner details</h2>
+<table>
+    <tr>
+		<th>Status</th><td>{{ line.status|default:"-" }}</td>
+    </tr>
+    <tr>
+		<th>Partner</th><td>{{ line.partner_name }}</td>
+    </tr>
+    <tr>
+		<th>Partner SKU</th><td>{{ line.partner_sku }}</td>
+    </tr>
+</table>
+
+<h2>Shipping details</h2>
+<table>
+	<tr>
+		<th>Partner reference number</th><td>{{ line.partner_line_reference|default:"-" }}</td>
+	</tr>
+	<tr>
+		<th>Partner notes</th><td>{{ line.partner_line_notes|default:"-" }}</td>
+	</tr>
+	<tr>
+		<th>Estimate dispatch date</th><td>{{ line.est_dispatch_date }}</td>
+	</tr>
+</table>
+
+{% endblock content %}
+

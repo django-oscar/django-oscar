@@ -1,0 +1,13 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<h1>Dashboard</h1>
+<p>What do you want to do?</p>
+<ul>
+    <li><a href="{% url dashboard:order-summary %}">See statistics</a></li>
+    <li><a href="{% url dashboard:order-list %}">Manage orders</a></li>
+	<li><a href="{% url dashboard:reports-index %}">View reports</a></li>
+</ul>
+
+{% endblock %}

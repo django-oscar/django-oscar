@@ -1,7 +1,7 @@
 import csv
 
 from oscar.core.loading import import_module
-import_module('reports.reports', ['ReportGenerator'], locals())
+import_module('dashboard.reports.reports', ['ReportGenerator'], locals())
 import_module('order.models', ['Order'], locals())
 
 

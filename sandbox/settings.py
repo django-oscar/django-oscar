@@ -195,7 +195,6 @@ INSTALLED_APPS = (
     'oscar.apps.order',
     'oscar.apps.checkout',
     'oscar.apps.shipping',
-    'oscar.apps.order_management',
     'oscar.apps.catalogue',
     'oscar.apps.catalogue.reviews',
     'oscar.apps.basket',
@@ -204,12 +203,12 @@ INSTALLED_APPS = (
     'oscar.apps.offer',
     'oscar.apps.address',
     'oscar.apps.partner',
-    #'oscar.apps.dynamic_images',
     'oscar.apps.customer',
     'oscar.apps.promotions',
-    'oscar.apps.reports',
     'oscar.apps.search',
     'oscar.apps.voucher',
+    'oscar.apps.dashboard',
+    'oscar.apps.dashboard.reports',
     'pyzen',
     'sorl.thumbnail',
 )
@@ -226,9 +225,18 @@ APPEND_SLASH = True
 HAYSTACK_SITECONF = 'oscar.search_sites'
 HAYSTACK_SEARCH_ENGINE = 'dummy'
 
+DEBUG_TOOLBAR_CONFIG = {
+    'INTERCEPT_REDIRECTS': False
+}
+
 # Oscar settings
 from oscar.defaults import *
 
 OSCAR_ALLOW_ANON_CHECKOUT = True
-
-
+OSCAR_INITIAL_ORDER_STATUS = 'Pending'
+OSCAR_INITIAL_LINE_STATUS = 'Pending'
+OSCAR_ORDER_STATUS_PIPELINE = {
+    'Pending': ('Being processed', 'Cancelled',),
+    'Being processed': ('Processed', 'Cancelled',),
+    'Cancelled': (),
+}
