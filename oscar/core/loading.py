@@ -7,6 +7,67 @@ class AppNotFoundError(Exception):
     pass
 
 
+def get_classes(module_label, classnames):
+    app_module_path = _get_app_module_path(module_label)
+    if not app_module_path:
+        raise ValueError("No app found matching '%s'" % module_label)
+
+    # Check if app is in oscar
+    if app_module_path.split('.')[0] == 'oscar':
+        # Using core oscar class
+        module_path = 'oscar.apps.%s' % module_label
+        imported_module = __import__(module_path, fromlist=classnames)
+        klasses = []
+        for classname in classnames:
+            klasses.append(getattr(imported_module, classname))
+        return klasses
+
+    # App must be local - check if module is in local app (it could be in
+    # oscar's)
+
+
+
+    base_package = app_module_path.split(".")[0]
+    module_name = app_module_path.split(".", 2).pop() # strip oscar.apps
+    print app_module_path, base_package, module_name
+
+def old():
+
+
+    # Arguments will be things like 'catalogue.models' and so we
+    # we take the first component to find within the INSTALLED_APPS list.
+
+        # Is app in oscar?
+    if base_package == 'oscar':
+        module_path = 'oscar.apps.%s' % module_label
+        return _import_classes_from_module(module_path, classes, namespace)
+
+    # App must be local - is module in app?
+    local_app = "%s.%s" % (base_package, module_label)
+    try:
+        imported_local_mod = __import__(local_app, fromlist=classes)
+    except ImportError, e:
+        # Module doesn't exist, fall back to oscar core.  This can be tricky
+        # as if the overriding module has an import error, it will get picked up
+        # here.
+        if str(e).startswith("No module named"):
+            module_path = "oscar.apps.%s" % module_label
+            return _import_classes_from_module(module_path, classes, namespace)
+        raise e
+
+        # Module found in local app
+
+
+def _get_app_module_path(module_label):
+    app_name = module_label.rsplit(".", 1)[0] 
+    for installed_app in settings.INSTALLED_APPS:
+        base_package = installed_app.split(".")[0]
+        module_name = installed_app.split(".", 2).pop() # strip oscar.apps
+        if app_name == module_name:
+            return installed_app
+    return None
+
+
 def import_module(module_label, classes, namespace=None):
     u"""
     For dynamically importing classes from a module.
