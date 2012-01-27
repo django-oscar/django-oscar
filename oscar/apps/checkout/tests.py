@@ -27,7 +27,6 @@ class AnonCheckoutTests(TestCase):
     
 
 class CheckoutViewsTest(TestCase):
-    fixtures = ['example-shipping-charges.json']
     
     def setUp(self):
         clear_url_caches()

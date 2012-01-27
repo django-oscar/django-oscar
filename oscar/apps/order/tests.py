@@ -1,4 +1,4 @@
-from decimal import Decimal
+from decimal import Decimal as D
 import hashlib
 
 from django.test import TestCase
@@ -7,7 +7,7 @@ from django.conf import settings
 from oscar.apps.address.models import Country
 from oscar.apps.basket.models import Basket
 from oscar.apps.order.models import ShippingAddress, Order, Line, ShippingEvent, ShippingEventType, ShippingEventQuantity
-from oscar.test.helpers import create_order
+from oscar.test.helpers import create_order, create_product
 
 ORDER_PLACED = 'order_placed'
 
@@ -22,16 +22,17 @@ class ShippingAddressTest(TestCase):
     
 
 class OrderTest(TestCase):
-    fixtures = ['sample-order.json']
 
     def setUp(self):
-        self.order = Order.objects.get(number='100002')
+        self.order = create_order(number='100002')
+        self.order_placed,_ = ShippingEventType.objects.get_or_create(code='order_placed', 
+                                                                      name='Order placed')
         
     def event(self, type):
         """
         Creates an order-level shipping event
         """
-        type = ShippingEventType.objects.get(code=type)
+        type = self.order_placed
         event = ShippingEvent.objects.create(order=self.order, event_type=type)
         for line in self.order.lines.all():
             ShippingEventQuantity.objects.create(event=event, line=line)  
@@ -50,11 +51,16 @@ class OrderTest(TestCase):
 
         
 class LineTest(TestCase):
-    fixtures = ['sample-order.json']
 
     def setUp(self):
-        self.order = Order.objects.get(number='100002')
-        self.line = self.order.lines.get(id=1)
+        basket = Basket()
+        basket.add_product(create_product(price=D('10.00')), 4)
+        self.order = create_order(number='100002', basket=basket)
+        self.line = self.order.lines.all()[0]
+        self.order_placed,_ = ShippingEventType.objects.get_or_create(code='order_placed', 
+                                                                      name='Order placed')
+        self.dispatched,_ = ShippingEventType.objects.get_or_create(code='dispatched', 
+                                                                    name='Dispatched')
 
     def event(self, type, quantity=None):
         """
@@ -69,30 +75,29 @@ class LineTest(TestCase):
         self.assertEquals('', self.line.shipping_status)
         
     def test_shipping_status_after_full_line_event(self):
-        type = ShippingEventType.objects.get(code='order_placed')
-        self.event(type)
-        self.assertEquals(type.name, self.line.shipping_status)    
+        self.event(self.order_placed)
+        self.assertEquals(self.order_placed.name, self.line.shipping_status)    
         
     def test_shipping_status_after_two_full_line_events(self):
-        type1 = ShippingEventType.objects.get(code='order_placed')
+        type1 = self.order_placed
         self.event(type1)
-        type2 = ShippingEventType.objects.get(code='dispatched')
+        type2 = self.dispatched
         self.event(type2)
         self.assertEquals(type2.name, self.line.shipping_status) 
         
     def test_shipping_status_after_partial_line_event(self):
-        type = ShippingEventType.objects.get(code='order_placed')
+        type = self.order_placed
         self.event(type, 3)
         expected = "%s (%d/%d items)" % (type.name, 3, self.line.quantity)
         self.assertEquals(expected, self.line.shipping_status) 
         
     def test_has_passed_shipping_status_after_full_line_event(self):
-        type = ShippingEventType.objects.get(code='order_placed')
+        type = self.order_placed
         self.event(type)
         self.assertTrue(self.line.has_shipping_event_occurred(type)) 
         
     def test_has_passed_shipping_status_after_partial_line_event(self):
-        type = ShippingEventType.objects.get(code='order_placed')
+        type = self.order_placed
         self.event(type, self.line.quantity - 1)
         self.assertFalse(self.line.has_shipping_event_occurred(type)) 
         
@@ -105,12 +110,10 @@ class LineTest(TestCase):
             self.assertTrue(self.line.has_shipping_event_occurred(type))
             
     def test_inconsistent_shipping_status_setting(self):
-        type = ShippingEventType.objects.get(code='order_placed')
+        type = self.order_placed
         self.event(type, self.line.quantity - 1)
         
         with self.assertRaises(ValueError):
-            # Quantity is higher for second event than first
-            type = ShippingEventType.objects.get(code='dispatched')
             self.event(type, self.line.quantity)
         
     def test_inconsistent_shipping_quantities(self):
@@ -123,14 +126,17 @@ class LineTest(TestCase):
         
         
 class ShippingEventQuantityTest(TestCase):
-    fixtures = ['sample-order.json']
 
     def setUp(self):
-        self.order = Order.objects.get(number='100002')
-        self.line = self.order.lines.get(id=1)
+        basket = Basket()
+        basket.add_product(create_product(price=D('10.00')), 4)
+        self.order = create_order(number='100002', basket=basket)
+        self.line = self.order.lines.all()[0]
+        self.order_placed,_ = ShippingEventType.objects.get_or_create(code='order_placed', 
+                                                                      name='Order placed')
 
     def test_quantity_defaults_to_all(self):
-        type = ShippingEventType.objects.get(code='order_placed')
+        type = self.order_placed
         event = ShippingEvent.objects.create(order=self.order, event_type=type)
         event_quantity = ShippingEventQuantity.objects.create(event=event, line=self.line)
         self.assertEquals(self.line.quantity, event_quantity.quantity)

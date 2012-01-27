@@ -34,7 +34,7 @@ def create_product(price=None, title="Dummy title", product_class="Dummy item cl
     return item
 
 
-def create_order(basket=None, user=None, shipping_address=None, shipping_method=None,
+def create_order(number=None, basket=None, user=None, shipping_address=None, shipping_method=None,
         billing_address=None, total_incl_tax=None, total_excl_tax=None):
     """
     Helper method for creating an order for testing
@@ -51,6 +51,7 @@ def create_order(basket=None, user=None, shipping_address=None, shipping_method=
         total_incl_tax = calc.order_total_incl_tax(basket, shipping_method)
         total_excl_tax = calc.order_total_excl_tax(basket, shipping_method)
     order = OrderCreator().place_order(
+            order_number=number,
             user=user,
             basket=basket,
             shipping_address=shipping_address,
