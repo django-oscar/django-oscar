@@ -73,6 +73,7 @@ if not settings.configured:
             SITE_ID=1,
             HAYSTACK_SEARCH_ENGINE='dummy',
             HAYSTACK_SITECONF = 'oscar.search_sites',
+            APPEND_SLASH=True,
             **oscar_settings
         )
 

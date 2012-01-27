@@ -36,7 +36,7 @@ class ExtendedURLValidator(validators.URLValidator):
 
         q_index = value.find('?')
 
-        if q_index:
+        if q_index > 0:
             value = value[:q_index]
 
         return value
