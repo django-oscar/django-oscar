@@ -4,22 +4,22 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.loading import get_model
-from django.db.models import Sum, Count
+from django.db.models import Sum, Count, fields
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
 from django.template.defaultfilters import date as format_date
 from django.utils.datastructures import SortedDict
-from django.views.generic import TemplateView, ListView, DetailView
+from django.views.generic import TemplateView, ListView, DetailView, UpdateView
 
 from oscar.apps.dashboard.orders import forms
-from oscar.core.loading import import_module
+from oscar.core.loading import get_class
 
 Order = get_model('order', 'Order')
 OrderNote = get_model('order', 'OrderNote')
+ShippingAddress = get_model('order', 'ShippingAddress')
 Line = get_model('order', 'Line')
 ShippingEventType = get_model('order', 'ShippingEventType')
-
-processing = import_module('order.processing', ['EventHandler'])
+EventHandler = get_class('order.processing', 'EventHandler')
 
 
 class OrderSummaryView(TemplateView):
@@ -340,7 +340,7 @@ class OrderDetailView(DetailView):
             messages.error(request, "The event type '%s' is not valid" % code)
             return self.reload_page_response()
 
-        processing.EventHandler().handle_shipping_event(order, event_type, lines, quantities)
+        EventHandler().handle_shipping_event(order, event_type, lines, quantities)
 
         messages.info(request, "Shipping event created")
         return self.reload_page_response()
@@ -361,3 +361,53 @@ class LineDetailView(DetailView):
         ctx = super(LineDetailView, self).get_context_data(**kwargs)
         ctx['order'] = self.object.order
         return ctx
+
+
+def get_changes_between_models(model1, model2, excludes = []):
+    changes = {}
+    for field in model1._meta.fields:
+        if not (isinstance(field, (fields.AutoField, fields.related.RelatedField))
+                or field.name in excludes):
+            if field.value_from_object(model1) != field.value_from_object(model2):
+                changes[field.verbose_name] = (field.value_from_object(model1),
+                                                   field.value_from_object(model2))
+    return changes
+
+def get_change_summary(model1, model2):
+    """
+    Generate a summary of the changes between two address models
+    """
+    changes = get_changes_between_models(model1, model2, ['search_text'])
+    change_descriptions = []
+    for field, delta in changes.items():
+        change_descriptions.append(u"%s changed from '%s' to '%s'" % (field, delta[0], delta[1]))
+    return "\n".join(change_descriptions)
+
+
+class ShippingAddressUpdateView(UpdateView):
+    model = ShippingAddress
+    context_object_name = 'address'
+    template_name = 'dashboard/orders/shippingaddress_form.html'
+    form_class = forms.ShippingAddressForm
+
+    def get_object(self):
+        return get_object_or_404(self.model, order__number=self.kwargs['number'])
+
+    def get_context_data(self, **kwargs):
+        ctx = super(ShippingAddressUpdateView, self).get_context_data(**kwargs)
+        ctx['order'] = self.object.order
+        return ctx
+
+    def form_valid(self, form):
+        old_address = ShippingAddress.objects.get(id=self.object.id)
+        response = super(ShippingAddressUpdateView, self).form_valid(form)
+        changes = get_change_summary(old_address, self.object)
+        if changes:
+            msg = "Delivery address updated:\n%s" % changes
+            self.object.order.notes.create(user=self.request.user, message=msg,
+                                        note_type=OrderNote.SYSTEM)
+        return response
+
+    def get_success_url(self):
+        messages.info(self.request, "Delivery address updated")
+        return reverse('dashboard:order-detail', kwargs={'number': self.object.order.number,})

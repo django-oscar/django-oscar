@@ -3,6 +3,7 @@ from django.db.models.loading import get_model
 
 Order= get_model('order', 'Order')
 OrderNote = get_model('order', 'OrderNote')
+ShippingAddress = get_model('order', 'ShippingAddress')
 
 
 class OrderSearchForm(forms.Form):
@@ -32,3 +33,10 @@ class OrderNoteForm(forms.ModelForm):
     class Meta:
         model = OrderNote
         exclude = ('order', 'user', 'note_type')
+
+
+class ShippingAddressForm(forms.ModelForm):
+
+    class Meta:
+        model = ShippingAddress
+        exclude = ('search_text',)

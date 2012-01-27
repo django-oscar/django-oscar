@@ -89,6 +89,7 @@ Order {{ order.number }}
 {{ field }}<br/>
 {% endfor %}
 </p>
+<p><a href="{% url dashboard:order-shipping-address order.number %}">Edit shipping address</a></p>
 {% endif %}
 
 <h2>Discounts</h2>
