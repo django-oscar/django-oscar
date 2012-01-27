@@ -1,13 +1,22 @@
 from decimal import Decimal as D
 import hashlib
+import time
 
 from django.test import TestCase
 from django.conf import settings
+from mock import Mock
 
 from oscar.apps.address.models import Country
 from oscar.apps.basket.models import Basket
-from oscar.apps.order.models import ShippingAddress, Order, Line, ShippingEvent, ShippingEventType, ShippingEventQuantity
+from oscar.apps.order.models import ShippingAddress, Order, Line, \
+        ShippingEvent, ShippingEventType, ShippingEventQuantity, OrderNote, \
+        ShippingEventType
+from oscar.apps.order.exceptions import InvalidOrderStatus, InvalidLineStatus
 from oscar.test.helpers import create_order, create_product
+from oscar.apps.order.utils import OrderCreator
+from oscar.apps.shipping.methods import Free
+from oscar.apps.order.processing import EventHandler
+from oscar.test import patch_settings
 
 ORDER_PLACED = 'order_placed'
 
@@ -27,6 +36,9 @@ class OrderTest(TestCase):
         self.order = create_order(number='100002')
         self.order_placed,_ = ShippingEventType.objects.get_or_create(code='order_placed', 
                                                                       name='Order placed')
+
+    def tearDown(self):
+        Order.objects.all().delete()
         
     def event(self, type):
         """
@@ -45,9 +57,75 @@ class OrderTest(TestCase):
         self.assertEquals("Order placed", self.order.shipping_status)
 
     def test_order_hash_generation(self):
-        order = create_order()
-        expected = hashlib.md5("%s%s" % (order.number, settings.SECRET_KEY)).hexdigest()
-        self.assertEqual(expected, order.verification_hash())
+        expected = hashlib.md5("%s%s" % (self.order.number, settings.SECRET_KEY)).hexdigest()
+        self.assertEqual(expected, self.order.verification_hash())
+
+
+class OrderStatusPipelineTests(TestCase):
+
+    def setUp(self):
+        Order.pipeline = {'PENDING': ('SHIPPED', 'CANCELLED'),
+                          'SHIPPED': ('COMPLETE',)}
+        Order.cascade = {'SHIPPED': 'SHIPPED'}
+
+    def tearDown(self):
+        Order.pipeline = {}
+        Order.cascade = {}
+
+    def test_available_statuses_for_pending(self):
+        self.order = create_order(status='PENDING')
+        self.assertEqual(('SHIPPED', 'CANCELLED'),
+                         self.order.available_statuses())
+
+    def test_available_statuses_for_shipped_order(self):
+        self.order = create_order(status='SHIPPED')
+        self.assertEqual(('COMPLETE',), self.order.available_statuses())
+
+    def test_no_statuses_available_for_no_status(self):
+        self.order = create_order()
+        self.assertEqual((), self.order.available_statuses())
+
+    def test_set_status_respects_pipeline(self):
+        self.order = create_order(status='SHIPPED')
+        with self.assertRaises(InvalidOrderStatus):
+            self.order.set_status('PENDING')
+
+    def test_set_status_does_nothing_for_same_status(self):
+        self.order = create_order(status='PENDING')
+        self.order.set_status('PENDING')
+        self.assertEqual('PENDING', self.order.status)
+
+    def test_set_status_works(self):
+        self.order = create_order(status='PENDING')
+        self.order.set_status('SHIPPED')
+        self.assertEqual('SHIPPED', self.order.status)
+
+    def test_cascading_status_change(self):
+        self.order = create_order(status='PENDING')
+        self.order.set_status('SHIPPED')
+        for line in self.order.lines.all():
+            self.assertEqual('SHIPPED', line.status)
+
+
+class OrderNoteTests(TestCase):
+
+    def setUp(self):
+        self.order = create_order()
+
+    def test_system_notes_are_not_editable(self):
+        note = self.order.notes.create(note_type=OrderNote.SYSTEM, message='test')
+        self.assertFalse(note.is_editable())
+
+    def test_non_system_notes_are_editable(self):
+        note = self.order.notes.create(message='test')
+        self.assertTrue(note.is_editable())
+
+    def test_notes_are_not_editable_after_timeout(self):
+        OrderNote.editable_lifetime = 1
+        note = self.order.notes.create(message='test')
+        self.assertTrue(note.is_editable())
+        time.sleep(2)
+        self.assertFalse(note.is_editable())
 
         
 class LineTest(TestCase):
@@ -124,7 +202,32 @@ class LineTest(TestCase):
             # Total quantity is too high
             self.event(type, 2)
         
+
+class LineStatusTests(TestCase):
+
+    def setUp(self):
+        Line.pipeline = {'A': ('B', 'C'),
+                         'B': ('C',)}
+        self.order = create_order()
+        self.line = self.order.lines.all()[0]
+        self.line.status = 'A'
+        self.line.save()
+
+    def test_all_statuses_class_method(self):
+        self.assertEqual(['A', 'B'], Line.all_statuses())
+
+    def test_invalid_status_set_raises_exception(self):
+        with self.assertRaises(InvalidLineStatus):
+            self.line.set_status('D')
+
+    def test_set_status_changes_status(self):
+        self.line.set_status('C')
+        self.assertEqual('C', self.line.status)
+
+    def test_setting_same_status_does_nothing(self):
+        self.line.set_status('A')
         
+
 class ShippingEventQuantityTest(TestCase):
 
     def setUp(self):
@@ -142,3 +245,84 @@ class ShippingEventQuantityTest(TestCase):
         self.assertEquals(self.line.quantity, event_quantity.quantity)
     
    
+class OrderCreatorTests(TestCase):
+
+    def setUp(self):
+        self.creator = OrderCreator()
+        self.basket = Basket.objects.create()
+
+    def tearDown(self):
+        Order.objects.all().delete()
+
+    def test_exception_raised_when_empty_basket_passed(self):
+        with self.assertRaises(ValueError):
+            self.creator.place_order(basket=self.basket)
+
+    def test_order_models_are_created(self):
+        self.basket.add_product(create_product(price=D('12.00')))
+        self.creator.place_order(basket=self.basket, order_number='1234')
+        order = Order.objects.get(number='1234')
+        lines = order.lines.all()
+        self.assertEqual(1, len(lines))
+
+    def test_status_is_saved_if_passed(self):
+        self.basket.add_product(create_product(price=D('12.00')))
+        self.creator.place_order(basket=self.basket, order_number='1234', status='Active')
+        order = Order.objects.get(number='1234')
+        self.assertEqual('Active', order.status)
+
+    def test_shipping_is_free_by_default(self):
+        self.basket.add_product(create_product(price=D('12.00')))
+        self.creator.place_order(basket=self.basket, order_number='1234')
+        order = Order.objects.get(number='1234')
+        self.assertEqual(order.total_incl_tax, self.basket.total_incl_tax)
+        self.assertEqual(order.total_excl_tax, self.basket.total_excl_tax)
+
+    def test_basket_totals_are_used_by_default(self):
+        self.basket.add_product(create_product(price=D('12.00')))
+        method = Mock()
+        method.basket_charge_incl_tax = Mock(return_value=D('2.00'))
+        method.basket_charge_excl_tax = Mock(return_value=D('2.00'))
+
+        self.creator.place_order(basket=self.basket, order_number='1234', shipping_method=method)
+        order = Order.objects.get(number='1234')
+        self.assertEqual(order.total_incl_tax, self.basket.total_incl_tax + D('2.00'))
+        self.assertEqual(order.total_excl_tax, self.basket.total_excl_tax + D('2.00'))
+        
+    def test_exception_raised_if_duplicate_number_passed(self):
+        self.basket.add_product(create_product(price=D('12.00')))
+        self.creator.place_order(basket=self.basket, order_number='1234')
+        with self.assertRaises(ValueError):
+            self.creator.place_order(basket=self.basket, order_number='1234')
+
+    def test_default_order_status_comes_from_settings(self):
+        self.basket.add_product(create_product(price=D('12.00')))
+        with patch_settings(OSCAR_INITIAL_ORDER_STATUS='A'):
+            self.creator.place_order(basket=self.basket, order_number='1234')
+        order = Order.objects.get(number='1234')
+        self.assertEqual('A', order.status)
+
+    def test_default_line_status_comes_from_settings(self):
+        self.basket.add_product(create_product(price=D('12.00')))
+        with patch_settings(OSCAR_INITIAL_LINE_STATUS='A'):
+            self.creator.place_order(basket=self.basket, order_number='1234')
+        order = Order.objects.get(number='1234')
+        line = order.lines.all()[0]
+        self.assertEqual('A', line.status)
+
+
+class EventHandlerTests(TestCase):
+
+    def setUp(self):
+        self.order = create_order()
+        self.handler = EventHandler()
+        self.e_type = ShippingEventType.objects.create(name='Shipped')
+
+    def test_shipping_handler_creates_event(self):
+        self.handler.handle_shipping_event(self.order, self.e_type, 
+                                           self.order.lines.all(), [1])
+
+        events = self.order.shipping_events.all()
+        self.assertEqual(1, len(events))
+        event = events[0]
+        self.assertEqual('Shipped', event.event_type.name)

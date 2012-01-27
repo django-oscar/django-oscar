@@ -13,6 +13,7 @@ from oscar.apps.promotions.tests import *
 from oscar.apps.catalogue.reviews.tests import *
 from oscar.apps.voucher.tests import *
 from oscar.apps.partner.tests import *
+from oscar.apps.dashboard.tests import *
 
 from oscar.core.tests import *
 from oscar.core.logging.tests import *

@@ -3,12 +3,12 @@ from django.template.response import TemplateResponse
 from django.views.generic import TemplateView
 
 from oscar.core.loading import import_module
-report_forms = import_module('reports.forms', ['ReportForm'])
-report_utils = import_module('reports.utils', ['GeneratorRepository'])
+report_forms = import_module('dashboard.reports.forms', ['ReportForm'])
+report_utils = import_module('dashboard.reports.utils', ['GeneratorRepository'])
 
 
-class DashboardView(TemplateView):
-    template_name = 'reports/dashboard.html'
+class IndexView(TemplateView):
+    template_name = 'dashboard/reports/index.html'
     
     def get(self, request, *args, **kwargs):
         if 'report_type' in request.GET:
@@ -33,6 +33,6 @@ def _get_generator(form):
     repo = report_utils.GeneratorRepository()
     generator_cls = repo.get_generator(code)
     if not generator_cls:
-        raise Http404
+        raise Http404()
     return generator_cls(start_date=form.cleaned_data['start_date'], 
                          end_date=form.cleaned_data['end_date'])

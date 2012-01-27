@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% load currency_filters %}
+
+{% block header %}
+<h2>Order summary</h2>
+{% endblock header %}
+
+{% block content %}
+
+<table>
+	<caption>Global stats</caption>
+	<tr>
+		<th>Total orders</th>
+		<td>{{ total_orders }}</td>
+	</tr>
+	<tr>
+		<th>Total lines</th>
+		<td>{{ total_lines }}</td>
+	</tr>
+	<tr>
+		<th>Total revenue</th>
+		<td>{{ total_revenue|currency }}</td>
+	</tr>
+</table>
+
+<table>
+	<caption>Order status breakdown</caption>
+	<tr>
+		<th>Status</th>
+		<th>Frequency</th>
+	</tr>
+	{% for dict in order_status_breakdown %}
+	<tr>
+		<td><a href="{% url dashboard:order-list %}?order_status={{ dict.status }}">{{ dict.status }}</a></td>
+		<td>{{ dict.freq }}</td>
+	</tr>
+	{% endfor %}
+</table>
+
+{% endblock content %}

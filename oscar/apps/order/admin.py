@@ -37,6 +37,7 @@ class OrderDiscountAdmin(admin.ModelAdmin):
     list_display = ('order' ,'offer', 'voucher', 'voucher_code', 'amount')
     
 admin.site.register(Order, OrderAdmin)
+admin.site.register(OrderNote, OrderNoteAdmin)
 admin.site.register(ShippingAddress)
 admin.site.register(Line, LineAdmin)
 admin.site.register(LinePrice, LinePriceAdmin)

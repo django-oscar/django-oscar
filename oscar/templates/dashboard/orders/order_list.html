@@ -5,39 +5,54 @@
 {% block header %}
 <h2>Order management</h2>
 {% endblock header %}
-{% block content %}
-<form method="get" action="{% url order-management:list %}">
-    {{ order_simple_search_form.as_p }}
-    <input type="submit" nane="simple_search" value="Search" />
-</form>
-{% if orders.count %}
 
+{% block content %}
+
+<h2>Search orders</h2>
+<form action="." method="get">
+	<table>
+		{{ form.as_table }}
+		<tr>
+			<th></th>
+			<td>
+				<input type="submit" value="Go!" />
+			</td>
+	</table>
+</form>
+
+<h2>{{ queryset_description }}</h2>
+{% if orders.count %}
+<form action="." method="post">
+    {% csrf_token %}
 <table>
     <tr>
+        <th></th>
         <th>Order number</th>
         <th>Total inc tax</th>
-        <th>Shipping status</th>
+        <th>Date of purchase</th>
+        <th>Number of items</th>
+        <th>Status</th>
         <th>Customer</th>
         <th>Shipping address</th>
         <th>Billing address</th>
-        <th>Date submitted</th>
         <th></th>
     </tr>
     {% for order in orders %}
     <tr>
+        <td><input type="checkbox" name="selected_order" class="selected_order" value="{{ order.id }}"/>
         <td>{{ order.number }}</td>
         <td>{{ order.total_incl_tax|currency }}</td>
-        <td>{{ order.shipping_status }}</td>
-        <td>{{ order.user }}</td>
+		<td>{{ order.date_placed }}</td>
+		<td>{{ order.num_items }}</td>
+        <td>{{ order.status }}</td>
+        <td>{{ order.user|default:"Anonymous" }}</td>
         <td>{{ order.shipping_address }}</td>
         <td>{{ order.billing_address }}</td>
-        <td>{{ order.date_placed }}</td>
         <td>
-            <a href="{% url order-management:detail order.number %}">View</a>
+            <a href="{% url dashboard:order-detail order.number %}">View</a>
         </td>
     </tr>
     {% endfor %}
-
 </table>
 
 {% if page_obj %}
@@ -58,6 +73,14 @@
     </span>
 </div>
 {% endif %}
+
+<p>With selected orders:</p>
+<ul>
+    <li><label><input type="radio" name="action" value="download_selected_orders" /> Download as CSV</label></li>
+</ul>
+<input type="submit" value="Go!" />
+
+</form>
 
 {% else %}
 

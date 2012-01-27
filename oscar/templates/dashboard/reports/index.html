@@ -9,7 +9,7 @@
 
 {% block content %}
 
-<form method="GET" action="{% url reports:dashboard %}">
+<form method="GET" action="{% url dashboard:reports-index %}">
 
     {{ form.as_p }} 
     <input type="submit" value="Generate report" />

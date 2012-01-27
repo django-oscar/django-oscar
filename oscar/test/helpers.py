@@ -35,7 +35,7 @@ def create_product(price=None, title="Dummy title", product_class="Dummy item cl
 
 
 def create_order(number=None, basket=None, user=None, shipping_address=None, shipping_method=None,
-        billing_address=None, total_incl_tax=None, total_excl_tax=None):
+        billing_address=None, total_incl_tax=None, total_excl_tax=None, **kwargs):
     """
     Helper method for creating an order for testing
     """
@@ -59,6 +59,7 @@ def create_order(number=None, basket=None, user=None, shipping_address=None, shi
             billing_address=billing_address,
             total_incl_tax=total_incl_tax,
             total_excl_tax=total_excl_tax,
+            **kwargs
             )
     return order
 

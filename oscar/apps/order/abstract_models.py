@@ -1,6 +1,7 @@
 from itertools import chain
 from decimal import Decimal as D
 import hashlib
+import datetime
 
 from django.db import models
 from django.contrib.auth.models import User
@@ -10,12 +11,13 @@ from django.db.models import Sum
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 
+from oscar.apps.order.exceptions import InvalidOrderStatus, InvalidLineStatus
+
 
 class AbstractOrder(models.Model):
     """
     The main order model
     """
-    
     number = models.CharField(_("Order number"), max_length=128, db_index=True)
     # We track the site that each order is placed within
     site = models.ForeignKey('sites.Site')
@@ -45,6 +47,30 @@ class AbstractOrder(models.Model):
     
     # Index added to this field for reporting
     date_placed = models.DateTimeField(auto_now_add=True, db_index=True)
+
+    # Dict of available status changes
+    pipeline = getattr(settings,  'OSCAR_ORDER_STATUS_PIPELINE', {})
+    cascade = getattr(settings,  'OSCAR_ORDER_STATUS_CASCADE', {})
+
+    @classmethod
+    def all_statuses(cls):
+        return cls.pipeline.keys()
+
+    def available_statuses(self):
+        return self.pipeline.get(self.status, ())
+
+    def set_status(self, new_status):
+        if new_status == self.status:
+            return
+        if new_status not in self.available_statuses():
+            raise InvalidOrderStatus("'%s' is not a valid status for order %s (currency status: '%s')" %
+                                     (new_status, self.number, self.status))
+        self.status = new_status
+        if new_status in self.cascade:
+            for line in self.lines.all():
+                line.status = self.cascade[self.status]
+                line.save()
+        self.save()
     
     @property
     def is_anonymous(self):
@@ -107,7 +133,7 @@ class AbstractOrder(models.Model):
     
     @property
     def num_items(self):
-        u"""
+        """
         Returns the number of items in this order.
         """
         num_items = 0
@@ -177,17 +203,24 @@ class AbstractOrderNote(models.Model):
     user = models.ForeignKey('auth.User', null=True)
     
     # We allow notes to be classified although this isn't always needed
-    INFO, WARNING, ERROR = 'Info', 'Warning', 'Error'
+    INFO, WARNING, ERROR, SYSTEM = 'Info', 'Warning', 'Error', 'System'
     note_type = models.CharField(max_length=128, null=True)
     
     message = models.TextField()
     date = models.DateTimeField(auto_now_add=True)
+
+    editable_lifetime = 300
     
     class Meta:
         abstract = True
         
     def __unicode__(self):
         return u"'%s' (%s)" % (self.message[0:50], self.user)
+
+    def is_editable(self):
+        if self.note_type == self.SYSTEM:
+            return False
+        return (datetime.datetime.now() - self.date).seconds < self.editable_lifetime
 
 
 class AbstractCommunicationEvent(models.Model):
@@ -257,6 +290,24 @@ class AbstractLine(models.Model):
     
     # Estimated dispatch date - should be set at order time
     est_dispatch_date = models.DateField(blank=True, null=True)
+
+    pipeline = getattr(settings,  'OSCAR_LINE_STATUS_PIPELINE', {})
+
+    @classmethod
+    def all_statuses(cls):
+        return cls.pipeline.keys()
+
+    def available_statuses(self):
+        return self.pipeline.get(self.status, ())
+
+    def set_status(self, new_status):
+        if new_status == self.status:
+            return
+        if new_status not in self.available_statuses():
+            raise InvalidLineStatus("'%s' is not a valid status (current status: '%s')" % (
+                new_status, self.status))
+        self.status = new_status
+        self.save()
     
     @property
     def description(self):
@@ -282,7 +333,7 @@ class AbstractLine(models.Model):
     
     @property
     def shipping_status(self):
-        u"""Returns a string summary of the shipping status of this line"""
+        """Returns a string summary of the shipping status of this line"""
         status_map = self._shipping_event_history()
         if not status_map:
             return ''
@@ -415,7 +466,7 @@ class AbstractPaymentEvent(models.Model):
         verbose_name_plural = _("Payment events")
         
     def __unicode__(self):
-        return u"Payment event for order #%d" % self.order
+        return u"Payment event for order %s" % self.order
 
 
 class PaymentEventQuantity(models.Model):
@@ -427,8 +478,11 @@ class PaymentEventQuantity(models.Model):
     quantity = models.PositiveIntegerField()
 
 
+# SHIPPING EVENTS
+
+
 class AbstractShippingEvent(models.Model):    
-    u"""
+    """
     An event is something which happens to a group of lines such as
     1 item being dispatched.
     """
@@ -453,7 +507,7 @@ class AbstractShippingEvent(models.Model):
 
 
 class ShippingEventQuantity(models.Model):
-    u"""A "through" model linking lines to shipping events"""
+    """A "through" model linking lines to shipping events"""
     event = models.ForeignKey('order.ShippingEvent', related_name='line_quantities')
     line = models.ForeignKey('order.Line')
     quantity = models.PositiveIntegerField()
@@ -489,9 +543,9 @@ class ShippingEventQuantity(models.Model):
 
 
 class AbstractShippingEventType(models.Model):
-    u"""Shipping events are things like 'OrderPlaced', 'Acknowledged', 'Dispatched', 'Refunded'"""
-    # Code is used in forms
-    code = models.CharField(max_length=128)
+    """
+    Shipping events are things like 'OrderPlaced', 'Acknowledged', 'Dispatched', 'Refunded'
+    """
     # Name is the friendly description of an event
     name = models.CharField(max_length=255)
     # Code is used in forms

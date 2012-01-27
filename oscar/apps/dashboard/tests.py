@@ -1,0 +1,25 @@
+from django.core.urlresolvers import reverse
+
+from oscar.apps.dashboard.orders.tests import *
+from oscar.apps.dashboard.reports.tests import *
+from oscar.test import ClientTestCase
+
+
+class AnonymousUserTests(ClientTestCase):
+
+    def test_login_form_is_displayed_for_anon_user(self):
+        response = self.client.get(reverse('dashboard:index'))
+        self.assertTrue('Username' in response.content)
+
+
+class DashboardViewTests(ClientTestCase):
+    is_staff = True
+
+    def test_dashboard_index_is_for_staff_only(self):
+        urls = ('dashboard:index',
+                'dashboard:order-list',)
+        for name in urls:
+            response = self.client.get(reverse(name))
+            self.assertTrue('Username' not in response.content)
+
+
