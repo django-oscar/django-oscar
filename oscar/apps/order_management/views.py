@@ -48,10 +48,6 @@ class OrderListView(ListView):
     
     def get_context_data(self, **kwargs):
         context = super(OrderListView, self).get_context_data(**kwargs)
-        search_params = self.request.GET.copy()
-        if 'page' in search_params:
-            del(search_params['page'])
-        context['search_params'] = '&' + search_params.urlencode()
         context['order_simple_search_form'] = SimpleSearch(self.request.GET)
         return context
     

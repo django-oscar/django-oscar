@@ -1,7 +1,5 @@
 from django import forms
 from django.forms.widgets import CheckboxSelectMultiple
-from oscar.core.loading import import_module
-
 
 class SimpleSearch(forms.Form):
     
