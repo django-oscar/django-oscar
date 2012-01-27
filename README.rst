@@ -37,8 +37,8 @@ After forking, do the following::
     pip install -r testing-reqs.txt
 
 You can run the test suite using::
-
-    ./run-tests.py
+        
+    ./run_tests.py
 
 You can browse a "sandbox" shop by doing the following::
 
