@@ -49,6 +49,7 @@ def get_classes(module_label, classnames):
 
     return _pluck_classes([imported_local_module, imported_oscar_module], classnames)
 
+
 def _pluck_classes(modules, classnames):
     klasses = []
     for classname in classnames:
@@ -57,6 +58,7 @@ def _pluck_classes(modules, classnames):
                 klasses.append(getattr(module, classname))
                 break
     return klasses
+
 
 def _get_app_module_path(module_label):
     app_name = module_label.rsplit(".", 1)[0] 

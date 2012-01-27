@@ -29,6 +29,10 @@ class ClassLoadingTests(TestCase):
         Product = get_class('catalogue.models', 'Product')
         self.assertEqual('oscar.apps.catalogue.models', Product.__module__)
 
+    def test_loading_oscar_class_from_dashboard_subapp(self):
+        ReportForm = get_class('dashboard.reports.forms', 'ReportForm')
+        self.assertEqual('oscar.apps.dashboard.reports.forms', ReportForm.__module__)
+
     def test_bad_appname_raises_exception(self):
         with self.assertRaises(AppNotFoundError):
             Product, Category = get_classes('fridge.models', ('Product', 'Category'))
@@ -60,7 +64,6 @@ class ClassLoadingWithLocalOverrideTests(TestCase):
             (Free, FixedPrice) = get_classes('shipping.methods', ('Free', 'FixedPrice'))
             self.assertEqual('tests.shipping.methods', Free.__module__)
             self.assertEqual('oscar.apps.shipping.methods', FixedPrice.__module__)
-
 
 
 class ValidatorTests(TestCase):
