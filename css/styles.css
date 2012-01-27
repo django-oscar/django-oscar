@@ -1,0 +1,435 @@
+/*
+	Name: Django Oscar
+	Date: January 2012
+	Description: Information website for Django Oscar public website
+	Version: 1.0
+	Author: Oliver Randell
+*/
+
+/* Imports */
+@import url("reset.css");
+@import url(http://fonts.googleapis.com/css?family=Ubuntu);
+@import url(http://fonts.googleapis.com/css?family=Ubuntu:700);
+@import url(http://fonts.googleapis.com/css?family=Droid+Sans);
+@import url(http://fonts.googleapis.com/css?family=Droid+Sans:700);
+@import url("snowcone.css");
+
+/*** Global ***/
+
+
+/*** Body ***/
+
+body {
+	background: url("../img/bgd.jpg") repeat-x 0 0 #f9f6ef;
+	color: #6f6e6b;
+	clear: both;
+	font-size: 100%;
+	font-family: 'Droid Sans', Helvetica, Arial, sans-serif;
+	font-weight: 400;
+	line-height: 1.5;
+	margin: 0;
+	padding: 0;
+	text-align: left;
+}
+
+/*** Headings ***/
+
+h3, h4, h5, h6 {
+	font-weight: 400;
+	line-height: 1.1;
+	margin-bottom: .8em;
+	font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
+}
+
+section h1 {
+	font-weight: bold;
+	color: #46433a;
+	font-size: 1.4em;
+	margin-bottom: 1em;
+}
+
+h2 {
+	color: #46433a;
+	font-size: 1.2em;
+	font-weight: 700;
+	margin-bottom: 0.8em;
+}
+
+h2.entry_title {
+	font-weight: bold;
+	font-size: 1.4em;
+	color: #ce534c;
+	margin-bottom: 0.2em;
+}
+
+/*** Anchors ***/
+
+a {
+	outline: 0;
+}
+
+a img {
+	border: 0;
+	text-decoration: none;
+}
+
+a:link, a:visited {
+	color: #ce534c;
+	padding: 0 1px;
+	text-decoration: none;
+}
+
+/*** Paragraphs ***/
+
+p {
+	margin-bottom: 1.143em;
+	width: 644px;
+}
+
+*p:last-child {
+	margin-bottom: 0;
+}
+
+p .synopsis {
+	font-size: 1.52em;
+	color: #555;
+	line-height: 1.2;
+}
+
+strong, b {
+	font-weight: bold;
+}
+
+em, i {
+	font-style: italic;
+}
+
+/*** Lists ***/
+
+ul {
+	list-style: none;
+	margin: 1em 0 1.5em 1.5em;
+}
+
+ol {
+	list-style: none;
+}
+
+
+/*** HTML5 tags ***/
+
+header, section, footer, aside, nav, article, figure {
+	display: block;
+}
+
+section,
+footer div {
+	clear: both;
+	margin: 0 auto;
+	position: relative;
+	width: 896px;
+}
+
+footer {
+	background: #000;
+	float: left;
+	margin-top: 2em;
+	padding-top: 8px;
+	position: relative;
+	width: 100%;
+	padding-bottom: 4em;
+}
+
+footer hr {
+	background: none;
+	border: none;
+	border-top: 1px dashed #ce534e;
+	margin: 0;
+	padding: 0;
+}
+
+footer hr:before {
+	display: none;
+}
+
+/*** Layout ***/
+
+.body {
+	float: left;
+	position: relative;
+	margin-top: -82px;
+	padding-top: 82px;
+}
+
+hr {
+	border: none;
+    border-bottom: 2px dotted #ead2cd;
+	clear: both;
+	display: block;
+    height: 25px;
+    margin: 1em 0 3em;
+}
+
+hr:before {
+	content: url("../img/scissors.png");
+	position: absolute;
+	bottom: 1.8em;
+	left: 28px;
+}
+
+.ribbon {
+	/*background: url("../img/ribbon.gif") no-repeat 0 0 scroll transparent;*/
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+
+.ribbon {
+	/*background: url("../img/ribbon.png") no-repeat 0 0 scroll transparent;*/
+}
+
+.ribbon a {
+	margin: 0;
+	padding: 0;
+}
+
+#page_content {
+	padding-top: 8em;
+}
+
+/*** Header ***/
+
+header {
+	margin: 0 auto;
+	position: relative;
+	width: 896px;
+}
+
+header h1 {
+	/*background: url("../img/shopping_cart.png") no-repeat 56% 0 scroll transparent;*/
+	font-size: 2.4em;
+	line-height: .7;
+	font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
+	font-weight: 700;
+	color: #5eaba6;
+	text-shadow: 1px 1px 1px 1px #fff;
+	margin-top: 110px;
+	width: 500px;
+	display: block;
+	float: left;
+	position: relative;
+	padding: 0;
+}
+
+header h1 strong {
+	font-family: 'UbuntuRegular', Helvetica, Arial, sans-serif;
+	font-size: 0.53em;
+	font-weight: 300;
+	color: #8c7f60;
+	text-shadow: 1px 1px 1px #fff;
+/*	letter-spacing: 0.03em;*/
+}
+
+header .snowcone {
+	color: #ce534c;
+}
+
+/*** Main Nav ***/
+
+#nav {
+	background: url("../img/nav_bgd.jpg") repeat-x 0 0 #4a473e;
+	font-size: 1.134em;
+	height: 52px;
+	line-height: 20px;
+	margin: 0 auto;
+	padding: 0;
+	text-align: center;
+	width: 100%;
+	position: absolute;
+	top: 200px;
+	left: 0;
+	z-index: 9;
+}
+
+#nav.fixed {
+	position: fixed;
+	top: 0;
+}
+
+#nav ul {
+	list-style: none;
+	margin: 0 auto;
+	width: 896px;
+}
+
+#nav li {
+	float: left;
+	display: inline;
+	margin: 0;
+}
+
+#nav a:link,
+#nav a:visited {
+	color: #fff;
+	display: inline-block;
+	height: 16px;
+	padding: 18px 1.2em;
+	text-decoration: none;
+}
+
+#nav a:hover,
+#nav a:active,
+#nav li.active a,
+#nav .selected a:link,
+#nav .selected a:visited {
+	background: #ce534c;
+	color: #fff;
+	text-shadow: 1px 1px 1px #000;
+}
+
+#nav ul li .snowcone {
+	font-size: 1.2em;
+	color: #fff;
+}
+
+/*** Featured ***/
+
+header .featured {
+	/*background: #68b9b3;*/
+	background: url("../img/featured_bgd.png") no-repeat 0 0 scroll transparent;
+	position: absolute;
+	top: 0;
+	height: 166px;
+	right: 120px;
+	width: 186px;
+	padding: 0 8px 0;
+}
+
+header .featured ul {
+	border-left: 1px dashed #000;
+	border-right: 1px dashed #000;
+	font-family: 'UbuntuMedium', helvetica, arial, sans-serif;
+	margin: 0;
+	padding: 0;
+	width: 168px;
+	height: 150px;
+}
+
+header .featured ul li {
+	background: url("../img/star.png") no-repeat 10px 6px transparent;
+	text-align: center;
+	margin-top: 6px;
+	padding-left: 12px;
+}
+
+header .featured ul li a {
+	color: #fff;
+}
+
+code {
+	font-family: 'courier', helvetica, arial, sans-serif;
+}
+
+code.block {
+	padding: 1.5em;
+	background: url("../img/bgd.jpg") no-repeat 0 0 #020202;
+	border: 3px solid #64b6b0;
+	color: #fff;
+	margin: 1em 0 1.143em;
+	font-size: 0.88em;
+	line-height: 1.8;
+	width: auto;
+	display: block;
+	white-space: pre;
+	overflow-y: auto;
+}
+
+.hentry {
+	margin-top: 2em;
+}
+
+#posts_list {
+	margin: 0 0 1.5em 0;
+}
+
+.entry_content p {
+	margin-top: 0.8em;
+	width: auto;
+}
+
+.published,
+.author {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 1em;
+}
+
+.author {
+	font-size: 0.8em;
+}
+
+a.btn {
+	background: #f7f3eb;
+	background: -moz-linear-gradient(top,  #f7f3eb 0%, #e5e1d8 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f7f3eb), color-stop(100%,#e5e1d8));
+	background: -webkit-linear-gradient(top,  #f7f3eb 0%,#e5e1d8 100%);
+	background: -o-linear-gradient(top,  #f7f3eb 0%,#e5e1d8 100%);
+	background: -ms-linear-gradient(top,  #f7f3eb 0%,#e5e1d8 100%);
+	background: linear-gradient(top,  #f7f3eb 0%,#e5e1d8 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7f3eb', endColorstr='#e5e1d8',GradientType=0 );
+	display: inline-block;
+	padding: 4px 20px;
+	color: #88816e;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-moz-box-shadow: 0 1px 3px rgba(0,0,0,0.6);
+	-webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.6);
+	text-shadow: -1px 1px 1px #fff;
+	border: 1px solid #dfdbd2;
+	position: relative;
+	cursor: pointer;
+}
+
+a.btn:hover {
+	background: #e5e1d8;
+	background: -moz-linear-gradient(top,  #e5e1d8 0%, #f7f3eb 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#e5e1d8), color-stop(100%,#f7f3eb));
+	background: -webkit-linear-gradient(top,  #e5e1d8 0%,#f7f3eb 100%);
+	background: -o-linear-gradient(top,  #e5e1d8 0%,#f7f3eb 100%);
+	background: -ms-linear-gradient(top,  #e5e1d8 0%,#f7f3eb 100%);
+	background: linear-gradient(top,  #e5e1d8 0%,#f7f3eb 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e5e1d8', endColorstr='#f7f3eb',GradientType=0 );
+}
+
+.snowcone {
+	font-family: 'SnowconeRegular', sans-serif;
+	color: #88816e;
+	text-shadow: -1px 1px 1px #fff;
+}
+
+/*** Start of Footer ***/
+
+p.footer {
+	color: #fff;
+	display: inline-block;
+	font-size: 0.8em;
+	margin: 0 0 4em;
+	position: relative;
+	width: auto;
+}
+
+p.footer_logo {
+	display: inline-block;
+	float: right;
+	width: auto;
+}
+
+p.footer_logo a {
+	color: #b5b5b5;
+	font-size: 2em;
+	font-family: arial;
+	text-align: right;
+	text-transform: uppercase;
+	padding: 0;
+	line-height: .8;
+	font-weight: bold;
+}
