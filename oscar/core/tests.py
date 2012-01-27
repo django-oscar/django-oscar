@@ -36,3 +36,11 @@ class ValidatorTests(unittest.TestCase):
         
         with self.assertRaises(ValidationError):
             v('/invalid/?q=test')  # Query strings shouldn't affect validation
+
+        try:
+            v('products/')
+        except ValidationError:
+            self.fail('ExtendedURLValidator raised ValidationError unexpectedly!')
+            
+        with self.assertRaises(ValidationError):
+            v('/products')  # Missing the / is bad          
