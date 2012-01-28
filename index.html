@@ -1,10 +1,102 @@
-<html>
-	<head>
-		<title>django-oscar - Domain-driven e-commerce for Django</title>
-	</head>
-	<body>
-		<h1>django-oscar</h1>
-		<h2>Domain-driven e-commerce for Django</h2>
-		<p>More details soon...</p>
-	</body>
-</html>
+---
+layout: default
+title: Django Oscar Public Website
+---
+<section id="synopsis" class="body">
+<p><span class="synopsis">Django-Oscar is a domain-driven ecommerce framework for Django 1.3. 
+It's designed to have you up and running in minutes, 
+with a modular structure that allows you to customise your ecommerce sites with ease.</span></p>
+<p>Django-Oscar is developed by London-based digital agency, <a href="http://www.tangentlabs.co.uk/">Tangent Labs</a>,
+	who have a long history of developing successful large-scale ecommerce platforms.</p>
+	<p>While it's still in early development, a stable release will arrive soon.</p>
+	<hr />
+</section>
+
+<section id="installation" class="body">
+	<h1>Installation</h1>
+	We can do this quickly. Create a virtualenv and install django-oscar:
+		<code class="block">mkvirtualenv --no-site-packages vanilla
+pip install -e
+git+git://github.com/tangentlabs/django-oscar.git#egg=django-oscar</code>
+	Take a copy of the example vanilla site, and copy the quickstart settings into place:
+	<code class="block">cp -r ~/.virtualenvs/myshop/lib/python2.6/site-packages/src/examples/vanilla/ /tmp/vanilla
+cd /tmp/vanilla
+cp settings_quickstart.py settings.py</code>
+	Import the sample products and images:
+	<code class="block">python manage.py import_catalogue
+~/.virtualenvs/myshop/src/django-oscar/examples/sample-data/books-catalogue.csv
+			
+python manage.py import_images
+~/.virtualenvs/myshop/src/django-oscar/examples/sample-data/book-images.tar.gz</code>
+		<hr />
+</section>
+
+<section id="quick_try" class="body">
+	<h1>Quick Try</h1>
+	<h2>Installing Django-Oscar</h2>
+	Install oscar and its dependencies:
+	<code class="block">pip install -e pip install -e
+git+git://github.com/tangentlabs/django-oscar.git#egg=django-oscar</code>
+	You will also need to install the appropriate python module for your database of choice. If you are using MySQL, then run the following:
+	<code class="block">pip install MySQL-python</code>
+	<hr />
+</section>
+
+<section id="community" class="body">
+	<h1>Community</h1>
+	<!--
+	<h2>Headline 2</h2>
+	Links to mailing list, issue tracker, IRC
+	-->
+	<p>More details soon&hellip;</p>
+	<hr />
+</section>
+
+<section id="news" class="body">
+	<h1>News</h1>
+	<ol id="posts_list" class="hfeed">
+	    {% if site.posts %}
+	    {% for post in site.posts %}
+        	<li>
+        		<article class="hentry">
+        			<header>
+        				<h2 class="entry_title">
+        				    <a href="{{ site.baseurl }}{{ post.url }}" rel="bookmark" title="Permalink to this {Article_header}">{{ post.title }}</a>
+        			    </h2>
+        			</header>
+        			<abbr class="published" title="{{ post.date }}">{{ post.date | date_to_string }}</abbr>
+        			<!--
+        			<address class="vcard author">
+        				Posted by <a class="author" href="#">{author}</a>
+        			</address>
+        			-->
+        			<div class="entry_content">
+        				<p>{{ post.content | strip_html | truncatewords:"30" }} <a href="{{ site.baseurl }}{{ post.url }}">Read More &raquo;</a></p>
+        			</div>
+        		</article>
+        	</li>
+        {% endfor %}
+        {% endif %}
+	</ol>
+	<hr />
+</section>
+
+<section id="contributing" class="body">
+	<h1>Contributing</h1>
+	<!--
+	<h2>Headline 2</h2>
+	Some details on how to contribute (eg running the tests)
+	-->
+	<p>More details soon&hellip;</p>
+	<hr />
+
+</section>
+
+<section id="about" class="body">
+	<h1>About</h1>
+	<!--
+	<h2>Headline 2</h2>
+	Credits, background etc
+	-->
+	<p>More details soon&hellip;</p>
+</section>

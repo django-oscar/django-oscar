@@ -1,0 +1,54 @@
+@font-face {
+    font-family: 'DroidSansRegular';
+    src: url('../fonts/Droid_Sans/DroidSans-webfont.eot');
+    src: url('../fonts/Droid_Sans/DroidSans-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/Droid_Sans/DroidSans-webfont.woff') format('woff'),
+         url('../fonts/Droid_Sans/DroidSans-webfont.ttf') format('truetype'),
+         url('../fonts/Droid_Sans/DroidSans-webfont.svg#DroidSansRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'DroidSansBold';
+    src: url('../fonts/Droid_Sans/DroidSans-Bold-webfont.eot');
+    src: url('../fonts/Droid_Sans/DroidSans-Bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/Droid_Sans/DroidSans-Bold-webfont.woff') format('woff'),
+         url('../fonts/Droid_Sans/DroidSans-Bold-webfont.ttf') format('truetype'),
+         url('../fonts/Droid_Sans/DroidSans-Bold-webfont.svg#DroidSansBold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'UbuntuRegular';
+    src: url('../fonts/Ubuntu/Ubuntu-R-webfont.eot');
+    src: url('../fonts/Ubuntu/Ubuntu-R-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/Ubuntu/Ubuntu-R-webfont.woff') format('woff'),
+         url('../fonts/Ubuntu/Ubuntu-R-webfont.ttf') format('truetype'),
+         url('../fonts/Ubuntu/Ubuntu-R-webfont.svg#UbuntuRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'UbuntuBold';
+    src: url('../fonts/Ubuntu/Ubuntu-B-webfont.eot');
+    src: url('../fonts/Ubuntu/Ubuntu-B-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/Ubuntu/Ubuntu-B-webfont.woff') format('woff'),
+         url('../fonts/Ubuntu/Ubuntu-B-webfont.ttf') format('truetype'),
+         url('../fonts/Ubuntu/Ubuntu-B-webfont.svg#UbuntuBold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'UbuntuMedium';
+    src: url('../fonts/Ubuntu/Ubuntu-M-webfont.eot');
+    src: url('../fonts/Ubuntu/Ubuntu-M-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/Ubuntu/Ubuntu-M-webfont.woff') format('woff'),
+         url('../fonts/Ubuntu/Ubuntu-M-webfont.ttf') format('truetype'),
+         url('../fonts/Ubuntu/Ubuntu-M-webfont.svg#UbuntuMedium') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
