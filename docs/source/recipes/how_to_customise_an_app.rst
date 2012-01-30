@@ -2,9 +2,26 @@
 How to customise an app
 =======================
 
-A core part of how oscar can be customised is to create a local version of one of
-oscar's apps so that it can be customised.  The way this is done involves a few steps, 
-which are detailed here.
+A core part of how oscar can be customised is to create a local version of one
+of oscar's apps so that it can be modified and extended.  Creating a local
+version of an app allows customisation of any of the classes within the
+corresponding app in oscar.
+
+The way this is done involves a few steps, which are detailed here.
+
+Method
+======
+
+1. Create an app within your project with the same "app label" as an app in oscar.  Eg,
+   to create a local version of ``oscar.apps.order``, create something like ``myproject.order``.
+
+2. Ensure the ``models.py`` in your local app imports all the models from oscar's version::
+
+   # models.py
+   from oscar.apps.order.models import *
+
+3. Replace oscar's version of the app with your new version in ``INSTALLED_APPS``.
+
 
 Worked example
 ==============
