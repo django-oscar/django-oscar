@@ -26,4 +26,4 @@ if (window.addEventListener){
   window.attachEvent('onscroll', handleScroll);
 }
 
-$.scrollTo( '#section', 800, {easing:'elasout'} );
+// $.scrollTo( '#section', 800, {easing:'elasout'} );

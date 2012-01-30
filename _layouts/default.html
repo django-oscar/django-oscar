@@ -4,6 +4,10 @@
 	<meta charset="utf-8" />
 	<title>{{ page.title }}</title>
 	<link rel="stylesheet" href="{{ site.baseurl }}/css/styles.css" type="text/css" />
+	<script type="text/javascript" src="{{ site.baseurl }}/js/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="{{ site.baseurl }}/js/smooth.pack.js"></script>
+    <script type="text/javascript" src="{{ site.baseurl }}/js/scrollspy.js"></script>
+    <script type="text/javascript" src="{{ site.baseurl }}/js/fixed_nav.js"></script>
 
 <!--[if IE]>
 <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
@@ -52,15 +56,9 @@
     </footer>
 
 </body>
-		
-<script type="text/javascript" src="{{ site.baseurl }}/js/jquery-1.7.1.min.js"></script>
-<script type="text/javascript" src="{{ site.baseurl }}/js/fixed_nav.js"></script>
-<script type="text/javascript" src="{{ site.baseurl }}/js/smooth.pack.js"></script>
-<script type="text/javascript" src="{{ site.baseurl }}/js/scrollspy.js"></script>
 <script>
 $(document).ready(function () {
 		$('body > .topbar').scrollSpy();
 	});
 </script>
-			
 </html>
