@@ -54,30 +54,33 @@ git+git://github.com/tangentlabs/django-oscar.git#egg=django-oscar</code>
 
 <section id="news" class="body">
 	<h1>News</h1>
+    {% if site.posts != empty %}
 	<ol id="posts_list" class="hfeed">
-	    {% if site.posts %}
 	    {% for post in site.posts %}
-        	<li>
-        		<article class="hentry">
-        			<header>
-        				<h2 class="entry_title">
-        				    <a href="{{ site.baseurl }}{{ post.url }}" rel="bookmark" title="Permalink to this {Article_header}">{{ post.title }}</a>
-        			    </h2>
-        			</header>
-        			<abbr class="published" title="{{ post.date }}">{{ post.date | date_to_string }}</abbr>
-        			<!--
-        			<address class="vcard author">
-        				Posted by <a class="author" href="#">{author}</a>
-        			</address>
-        			-->
-        			<div class="entry_content">
-        				<p>{{ post.content | strip_html | truncatewords:"30" }} <a href="{{ site.baseurl }}{{ post.url }}">Read More &raquo;</a></p>
-        			</div>
-        		</article>
-        	</li>
+        {% capture post_url %}{{ site.baseurl }}{{ post.url }}{% endcapture %}
+    	<li>
+    		<article class="hentry">
+    			<header>
+    				<h2 class="entry_title">
+    				    <a href="{{ post_url }}" rel="bookmark" title="Permalink to {{ post.title }}">{{ post.title }}</a>
+    			    </h2>
+    			</header>
+    			<abbr class="published" title="{{ post.date }}">{{ post.date | date_to_string }}</abbr>
+    			<!--
+    			<address class="vcard author">
+    				Posted by <a class="author" href="#">{author}</a>
+    			</address>
+    			-->
+    			<div class="entry_content">
+    				<p>{{ post.content | strip_html | truncatewords:"30" }} <a href="{{ post_url }}">Read More &raquo;</a></p>
+    			</div>
+    		</article>
+    	</li>
         {% endfor %}
-        {% endif %}
 	</ol>
+    {% else %}
+    <p>More details soon&hellip;</p>
+    {% endif %}
 	<hr />
 </section>
 
