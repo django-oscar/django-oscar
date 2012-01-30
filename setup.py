@@ -15,7 +15,7 @@ from oscar import get_version
 setup(name='django-oscar',
       version=get_version().replace(' ', '-'),
       url='https://github.com/tangentlabs/django-oscar',
-      author="Tangent Labs",
+      author="David Winterbottom",
       author_email="david.winterbottom@tangentlabs.co.uk",
       description="A domain-driven e-commerce framework for Django 1.3+",
       long_description=open('README.rst').read(),
