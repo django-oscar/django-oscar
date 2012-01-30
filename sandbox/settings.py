@@ -209,6 +209,8 @@ INSTALLED_APPS = (
     'oscar.apps.voucher',
     'oscar.apps.dashboard',
     'oscar.apps.dashboard.reports',
+    'oscar.apps.dashboard.users',
+    'oscar.apps.dashboard.orders',
     'pyzen',
     'sorl.thumbnail',
 )

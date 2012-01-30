@@ -1,14 +1,17 @@
 import httplib
+from django_dynamic_fixture import new, get, F
 
 from django.test import TestCase
 from django.test.client import Client
-from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
+from django.template import Template, Context
 
 from oscar.test import ClientTestCase
 from oscar.test.helpers import create_order
-from oscar.apps.dashboard.orders.forms import OrderSearchForm
 from oscar.apps.order.models import Order, OrderNote
+from oscar.apps.dashboard.orders.forms import OrderSearchForm
+from oscar.apps.dashboard.orders.templatetags.user_orders import get_num_user_orders
 
 
 class OrderSummaryTests(ClientTestCase):
@@ -87,3 +90,15 @@ class LineDetailTests(ClientTestCase):
         self.assertInContext(response, 'line')
 
 
+class TemplateTagTests(TestCase):
+    def test_get_num_orders(self):
+        user = get(User)
+        for i in range(1, 4):
+            get(Order, user=user)
+        out = Template(
+            "{% load user_orders %}"
+            "{% num_orders user %}"
+        ).render(Context({
+            'user': user
+        }))
+        self.assertEquals(out, "3")

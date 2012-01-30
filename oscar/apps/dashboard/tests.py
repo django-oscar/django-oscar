@@ -1,7 +1,10 @@
 from django.core.urlresolvers import reverse
+from django.test import TestCase
 
 from oscar.apps.dashboard.orders.tests import *
 from oscar.apps.dashboard.reports.tests import *
+from oscar.apps.dashboard.users.tests import *
+
 from oscar.test import ClientTestCase
 
 
@@ -17,9 +20,8 @@ class DashboardViewTests(ClientTestCase):
 
     def test_dashboard_index_is_for_staff_only(self):
         urls = ('dashboard:index',
-                'dashboard:order-list',)
+                'dashboard:order-list',
+                'dashboard:users-index',)
         for name in urls:
             response = self.client.get(reverse(name))
-            self.assertTrue('Username' not in response.content)
-
-
+            self.assertTrue('Username' not in response.context)
