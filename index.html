@@ -1,54 +1,102 @@
 ---
 layout: default
-title: Django Oscar Public Website
+title: django-oscar - Domain-driven e-commerce for Django
 ---
 <section id="synopsis" class="body">
-<p><span class="synopsis">Django-Oscar is a domain-driven ecommerce framework for Django 1.3. 
-It's designed to have you up and running in minutes, 
-with a modular structure that allows you to customise your ecommerce sites with ease.</span></p>
-<p>Django-Oscar is developed by London-based digital agency, <a href="http://www.tangentlabs.co.uk/">Tangent Labs</a>,
-	who have a long history of developing successful large-scale ecommerce platforms.</p>
-	<p>While it's still in early development, a stable release will arrive soon.</p>
+<p><span class="synopsis">Django-Oscar is an e-commerce framework for <a href="https://www.djangoproject.com/">Django</a>, designed
+	to support <a href="http://en.wikipedia.org/wiki/Domain-driven_design">domain-driven design</a>.</span></p>
+	</span></p>
+
+	<p>Oscar was built from the ground up to make very few assumptions about
+	your domain, allowing virtually any part of the framework to be extended
+	and customised.  In this way, your domain can be accurately modelled -
+	complex business rules can be captured in an elegant and cohesive way.</p>
+
+	<p>For a developer, the key features are:</p>
+	<ul>
+		<li>An extensible core - any class can be overridden, replaced and extended.  This is 
+		the key feature that allows any domain to be captured accurately in the codebase - no work-arounds!</li>
+		<li>A well-designed set of models built on the experience of many e-commerce projects, both large and small.</li>
+		<li><a href="http://django-oscar.readthedocs.org/">Comprehensive documentation</a> including recipes for solving common problems.</li>
+		<li>Extensive test suite.</li>
+	</ul>
+
+	<p>The core of oscar is deliberately kept lean.  The key features that oscar ships with are:</p>
+	<ul>
+		<li>A range of merchandising blocks for promoting your products throughout your site.  This 
+		can easily be added to or extended.</li>
+		<li>Highly sophisticated offers and vouchers system, supporting virtually any offer type
+		you can think of.</li>
+		<li>A comprehensive dashboard for managing products, orders, offers, vouchers and merchandising.</li>
+		<li>Support for split-payment orders, complicated order fulfilment pipelines, anonymous checkout.</li>
+	</ul>
+
+	<p>The key feature of oscar is that it is easy to extend and implement your business rules
+	in a clean, cohesive way.  For example, here are a few of the requirements that have been 
+	developed on top of oscar:</p>
+
+	<ul>
+		<li>A checkout that allows a single order to be paid by up to 9 different payment sources, using multiple
+			payment partners.</li>
+		<li>Sales representatives are able to place orders on behalf of their customers, using
+		    allocated budgets, managed within the system</li>
+		<li>Integration with a series of SAP webservices to provide catalogue and inventory updates</li>
+		<li>Handling of a catalogue of around 15 million products, with stock provided by a range of
+			international partners.  Stock and biblio updates happening continuous using a Celery-driven backend.</li>
+		<li>Sophisticated access-control rules governing which customers can see which products.</li>
+	</ul>
+
+	<p>Django-Oscar was created by <a href="http://codeinthehole.com">David Winterbottom</a> (<a
+		href="https://twitter.com/codeinthehole">@codeinthehole</a>), and is
+	developed and maintained by <a href="http://www.tangentlabs.co.uk/">Tangent Labs</a>, 
+	a London-based digital agency.  It is used in production around the world to sell products
+	from beer mats to iPads.</p>
 	<hr />
 </section>
 
-<section id="installation" class="body">
-	<h1>Installation</h1>
-	We can do this quickly. Create a virtualenv and install django-oscar:
-		<code class="block">mkvirtualenv --no-site-packages vanilla
-pip install -e
-git+git://github.com/tangentlabs/django-oscar.git#egg=django-oscar</code>
-	Take a copy of the example vanilla site, and copy the quickstart settings into place:
-	<code class="block">cp -r ~/.virtualenvs/myshop/lib/python2.6/site-packages/src/examples/vanilla/ /tmp/vanilla
-cd /tmp/vanilla
-cp settings_quickstart.py settings.py</code>
-	Import the sample products and images:
-	<code class="block">python manage.py import_catalogue
-~/.virtualenvs/myshop/src/django-oscar/examples/sample-data/books-catalogue.csv
-			
-python manage.py import_images
-~/.virtualenvs/myshop/src/django-oscar/examples/sample-data/book-images.tar.gz</code>
-		<hr />
-</section>
-
-<section id="quick_try" class="body">
-	<h1>Quick Try</h1>
-	<h2>Installing Django-Oscar</h2>
-	Install oscar and its dependencies:
-	<code class="block">pip install -e pip install -e
-git+git://github.com/tangentlabs/django-oscar.git#egg=django-oscar</code>
-	You will also need to install the appropriate python module for your database of choice. If you are using MySQL, then run the following:
-	<code class="block">pip install MySQL-python</code>
+<section id="takeapeak" class="body">
+	<h1>Take a peak</h1>
+	<p>Oscar ships with a sample shop that you can have up and running in
+	two minutes.</p>
+	
+	<p>1. Create a virtual environment and install oscar:</p>
+	<code class="block">mkvirtualenv oscar
+git clone git://github.com/tangentlabs/django-oscar.git
+cd django-oscar
+python setup.py develop</code>
+	<p>We use the version from Github rather than PyPi as the official package doesn't 
+	contain the templates and sample data used in the sample shop.</p>
+    <p>2. Create the database (defaults to using SQLite) and import sample products and images.</p>
+    <code class="block">cd sandbox
+./manage.py syncdb --noinput
+./manage.py oscar_import_catalogue data/books-catalogue.csv
+./manage.py oscar_import_images data/book-images.tar.gz</code>
+	<p>Now run Django's server:
+	<code class="block">./manage.py runserver</code>
+	<p>and you can browse the shop at <a href="http://127.0.0.1:8000">http://127.0.0.1:8000</a></p>
+	<p>The sample shop is vanilla install of oscar - nothing is extended or customised - what you see
+	is just the core functionality.  Hence many domain-specific features, such as shipping charges
+	and payment methods, are not specified.  For a real project with its own business logic, oscar
+	makes it easy to extend and customise its core to meet the requirements of your domain.
 	<hr />
 </section>
 
-<section id="community" class="body">
-	<h1>Community</h1>
-	<!--
-	<h2>Headline 2</h2>
-	Links to mailing list, issue tracker, IRC
-	-->
-	<p>More details soon&hellip;</p>
+<section id="divein" class="body">
+	<h1>Dive in</h1>
+	<p>To use oscar on a real project, it's best to install from PyPi</p>
+	<code class="block">pip install django-oscar</code>
+	<p>and use the guides in the <a href="http://django-oscar.readthedocs.org/">documentation</a> on how to customise oscar to suit
+	your domain.</p>
+	<hr />
+</section>
+
+<section id="extensions" class="body">
+	<h1>Extensions</h1>
+	<p>The following libraries complement and extend oscar:</p>
+	<ul>
+		<li><a href="https://github.com/tangentlabs/django-oscar-datacash">django-oscar-datacash</a> - integration with the payment gateway, DataCash</li>
+	</ul>
+	<p>More to come soon!</p>
 	<hr />
 </section>
 
@@ -78,25 +126,32 @@ git+git://github.com/tangentlabs/django-oscar.git#egg=django-oscar</code>
         {% endfor %}
         {% endif %}
 	</ol>
+	<p>For micro-updates, follow <a href=https://twitter.com/codeinthehole">@codeinthehole</a> on twitter.  
+	Mailing list and IRC to come.</p>
+	<hr />
+</section>
+
+<section id="roadmap" class="body">
+	<h1>Roadmap</h1>
+	<p>We're currently working the following features:</p>
+	<ul>
+		<li>A comprehensive dashboard including product, offer, order and content management.</li>
+		<li>A new extension, django-oscar-bootstrap - A Vagrant-backed project which provides a fully set 
+		up virtual machine, ready to run a django-oscar site.</li>
+	</ul>
 	<hr />
 </section>
 
 <section id="contributing" class="body">
 	<h1>Contributing</h1>
-	<!--
-	<h2>Headline 2</h2>
-	Some details on how to contribute (eg running the tests)
-	-->
-	<p>More details soon&hellip;</p>
-	<hr />
-
+	<p>First install oscar as <a href="#takeapeak">specified above</a>.  You then need to install the 
+	testing requirements.
+	<code class="block">pip install -r testing-reqs.txt</code>
+	<p>The test suite can be run using:</p>
+	<code class="block">./run_tests.py</code>
+	<p>To report an issue, use the <a href="https://github.com/tangentlabs/django-oscar/issues">issue tracker</a></p> 
 </section>
 
-<section id="about" class="body">
-	<h1>About</h1>
-	<!--
-	<h2>Headline 2</h2>
-	Credits, background etc
-	-->
-	<p>More details soon&hellip;</p>
-</section>
+
+
+
