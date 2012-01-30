@@ -4,6 +4,10 @@
 	<meta charset="utf-8" />
 	<title>{{ page.title }}</title>
 	<link rel="stylesheet" href="{{ site.baseurl }}/css/styles.css" type="text/css" />
+	<script type="text/javascript" src="{{ site.baseurl }}/js/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="{{ site.baseurl }}/js/smooth.pack.js"></script>
+    <script type="text/javascript" src="{{ site.baseurl }}/js/scrollspy.js"></script>
+    <script type="text/javascript" src="{{ site.baseurl }}/js/fixed_nav.js"></script>
 
 <!--[if IE]>
 <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
@@ -24,14 +28,18 @@
     </header>
     <div id="nav" class="topbar" data-scrollspy="scrollspy">
     	<ul>
-    		<li><a href="{{ site.baseurl }}/#home"><span class="snowcone">H</span></a></li>
-    		<li><a href="{{ site.baseurl }}/#synopsis">Synopsis</a></li>
-    		<li><a href="{{ site.baseurl }}/#installation">Installation</a></li>
-    		<li><a href="{{ site.baseurl }}/#quick_try">Quick try</a></li>
-    		<li><a href="{{ site.baseurl }}/#community">Community</a></li>
-    		<li><a href="{{ site.baseurl }}/#news">News</a></li>
-    		<li><a href="{{ site.baseurl }}/#contributing">Contributing</a></li>
-    		<li><a href="{{ site.baseurl }}/#about">About</a></li>
+	        {% capture base_url %}{{ site.baseurl }}/{% endcapture %}
+    	    {%  if page.url contains 'index.html' %}
+         	    {% assign base_url = '' %}
+    		{% endif %}
+    		<li><a href="{{ base_url }}#home"><span class="snowcone">H</span></a></li>
+    		<li><a href="{{ base_url }}#synopsis">Synopsis</a></li>
+    		<li><a href="{{ base_url }}#installation">Installation</a></li>
+    		<li><a href="{{ base_url }}#quick_try">Quick try</a></li>
+    		<li><a href="{{ base_url }}#community">Community</a></li>
+    		<li><a href="{{ base_url }}#news">News</a></li>
+    		<li><a href="{{ base_url }}#contributing">Contributing</a></li>
+    		<li><a href="{{ base_url }}#about">About</a></li>
     	</ul>
     </div>
     <section id="page_content">
@@ -48,15 +56,9 @@
     </footer>
 
 </body>
-		
-<script type="text/javascript" src="{{ site.baseurl }}/js/jquery-1.7.1.min.js"></script>
-<script type="text/javascript" src="{{ site.baseurl }}/js/fixed_nav.js"></script>
-<script type="text/javascript" src="{{ site.baseurl }}/js/smooth.pack.js"></script>
-<script type="text/javascript" src="{{ site.baseurl }}/js/scrollspy.js"></script>
 <script>
 $(document).ready(function () {
 		$('body > .topbar').scrollSpy();
 	});
 </script>
-			
 </html>
