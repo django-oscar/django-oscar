@@ -12,6 +12,7 @@
 @import url(http://fonts.googleapis.com/css?family=Ubuntu:700);
 @import url(http://fonts.googleapis.com/css?family=Droid+Sans);
 @import url(http://fonts.googleapis.com/css?family=Droid+Sans:700);
+@import url(http://fonts.googleapis.com/css?family=Droid+Sans+Mono);
 @import url("snowcone.css");
 
 /*** Global ***/
@@ -327,7 +328,7 @@ header .featured ul li a {
 }
 
 code {
-	font-family: 'courier', helvetica, arial, sans-serif;
+	font-family: 'Droid Sans Mono', helvetica, arial, sans-serif;
 }
 
 code.block {
