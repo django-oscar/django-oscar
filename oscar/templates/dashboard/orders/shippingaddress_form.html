@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% load currency_filters %}
+
+{% block title %}
+Order {{ order.number }}
+{% endblock %}
+
+{% block header %}
+    <h2>Order {{ order.number }} / Shipping address</h2>
+{% endblock header %}
+
+{% block content %}
+
+<h2>Edit shipping address</h2>
+
+<form action="." method="post">
+	<table>
+		{% csrf_token %}
+		{{ form.as_table }}
+		<tr>
+			<th></th>
+			<td><input type="submit" value="Update address" />
+				or <a href="{% url dashboard:order-detail order.number %}">cancel</a></td>
+		</tr>
+	</table>
+</form>
+
+{% endblock content %}
+

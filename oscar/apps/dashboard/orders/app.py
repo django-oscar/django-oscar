@@ -9,6 +9,7 @@ class OrdersDashboardApplication(Application):
     name = None
     order_list_view = views.OrderListView
     order_detail_view = views.OrderDetailView
+    shipping_address_view = views.ShippingAddressUpdateView
     line_detail_view = views.LineDetailView
     order_summary_view = views.OrderSummaryView
 
@@ -23,6 +24,8 @@ class OrdersDashboardApplication(Application):
                 self.order_detail_view.as_view(), name='order-detail-note'),
             url(r'^(?P<number>[-\w]+)/lines/(?P<line_id>\d+)/$',
                 self.line_detail_view.as_view(), name='order-line-detail'),
+            url(r'^(?P<number>[-\w]+)/shipping-address/$',
+                self.shipping_address_view.as_view(), name='order-shipping-address'),
         )
         return self.post_process_urls(urlpatterns)
 

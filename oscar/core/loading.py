@@ -7,79 +7,79 @@ class AppNotFoundError(Exception):
     pass
 
 
-def import_module(module_label, classes, namespace=None):
-    u"""
+def get_class(module_label, classname):
+    return get_classes(module_label, [classname])[0]
+
+
+def get_classes(module_label, classnames):
+    """
     For dynamically importing classes from a module.
     
-    Eg. calling import_module('catalogue.models') will search INSTALLED_APPS for
-    the relevant product app (default is 'oscar.product') and then import the
-    classes from there.  If the class can't be found in the overriding module, 
-    then we attempt to import it from within oscar.  
-    
-    We search the INSTALLED_APPS list to find the appropriate app string and 
-    import that.
+    Eg. calling get_classes('catalogue.models', ['Product']) will search
+    INSTALLED_APPS for the relevant product app (default is
+    'oscar.apps.catalogue') and then import the classes from there.  If the
+    class can't be found in the overriding module, then we attempt to import it
+    from within oscar.  
     
     This is very similar to django.db.models.get_model although that is only 
     for loading models while this method will load any class.
     """
-    # Classes must be specified in order for __import__ to work correctly.  It's
-    # also a good practice
-    if not classes:
-        raise ValueError("You must specify the classes to import")
-    
-    # Arguments will be things like 'catalogue.models' and so we
-    # we take the first component to find within the INSTALLED_APPS list.
+    app_module_path = _get_app_module_path(module_label)
+    if not app_module_path:
+        raise AppNotFoundError("No app found matching '%s'" % module_label)
+
+    # Check if app is in oscar
+    if app_module_path.split('.')[0] == 'oscar':
+        # Using core oscar class
+        module_path = 'oscar.apps.%s' % module_label
+        imported_module = __import__(module_path, fromlist=classnames)
+        return _pluck_classes([imported_module], classnames)
+
+    # App must be local - check if module is in local app (it could be in
+    # oscar's)
+    base_package = app_module_path.split(".")[0]
+    local_app = "%s.%s" % (base_package, module_label)
+    try:
+        imported_local_module = __import__(local_app, fromlist=classnames)
+    except ImportError:
+        # Module not in local app
+        imported_local_module = {}
+    oscar_app = "oscar.apps.%s" % module_label
+    imported_oscar_module = __import__(oscar_app, fromlist=classnames)
+
+    return _pluck_classes([imported_local_module, imported_oscar_module], classnames)
+
+
+def _pluck_classes(modules, classnames):
+    klasses = []
+    for classname in classnames:
+        for module in modules:
+            if hasattr(module, classname):
+                klasses.append(getattr(module, classname))
+                break
+    return klasses
+
+
+def _get_app_module_path(module_label):
     app_name = module_label.rsplit(".", 1)[0] 
     for installed_app in settings.INSTALLED_APPS:
         base_package = installed_app.split(".")[0]
         module_name = installed_app.split(".", 2).pop() # strip oscar.apps
-        try: 
-            # We search the second component of the installed apps
-            if app_name == module_name:
-                if base_package == 'oscar':
-                    # Using core module explicitly
-                    return _import_classes_from_module("oscar.apps.%s" % module_label, classes, namespace)
-                else:
-                    # Using local override - check that requested module exists
-                    local_app = "%s.%s" % (base_package, module_label)
-                    try:
-                        imported_local_mod = __import__(local_app, fromlist=classes)
-                    except ImportError, e:
-                        # Module doesn't exist, fall back to oscar core.  This can be tricky
-                        # as if the overriding module has an import error, it will get picked up
-                        # here.
-                        if str(e).startswith("No module named"):
-                            return _import_classes_from_module("oscar.apps.%s" % module_label, classes, namespace)
-                        raise e
-                    
-                    # Found overriding module, merging custom classes with core
-                    module = new_module(local_app)
-                    imported_oscar_mod = __import__("oscar.apps.%s" % module_label, fromlist=classes)
-                    for classname in classes:
-                        if hasattr(imported_local_mod, classname):
-                            if namespace:
-                                namespace[classname] = getattr(imported_local_mod, classname)
-                            else:
-                                module.__setattr__(classname, getattr(imported_local_mod, classname))
-                        else:
-                            if namespace:
-                                namespace[classname] = getattr(imported_oscar_mod, classname)
-                            else:
-                                module.__setattr__(classname, getattr(imported_oscar_mod, classname))
-                return module
-        except IndexError:
-            pass
-    raise AppNotFoundError("Unable to find an app matching %s in INSTALLED_APPS" % (app_name,))
-    
-    
-def _import_classes_from_module(module_name, classes, namespace):
-    imported_module = __import__(module_name, fromlist=classes)
+        if app_name == module_name:
+            return installed_app
+    return None
+
+
+def import_module(module_label, classes, namespace=None):
+    """
+    This is the deprecated old way of loading modules
+    """
+    klasses = get_classes(module_label, classes)
     if namespace:
-        for classname in classes:
-            namespace[classname] = getattr(imported_module, classname)
-        return 
-    
-    module = new_module(module_name)   
-    for classname in classes:
-        setattr(module, classname, getattr(imported_module, classname))
-    return module
+        for classname, klass in zip(classes, klasses):
+            namespace[classname] = klass
+    else:
+        module = new_module("oscar.apps.%s" % module_label)   
+        for classname, klass in zip(classes, klasses):
+            setattr(module, classname, klass)
+        return module
