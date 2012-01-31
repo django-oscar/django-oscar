@@ -82,12 +82,14 @@ a:link, a:visited {
 
 /*** Paragraphs ***/
 
-p {
+p,
+body ul li {
 	margin-bottom: 1.143em;
 	width: 644px;
 }
 
-*p:last-child {
+*p:last-child,
+body ul li:last-child {
 	margin-bottom: 0;
 }
 
@@ -115,7 +117,6 @@ ul {
 ol {
 	list-style: none;
 }
-
 
 /*** HTML5 tags ***/
 
@@ -239,7 +240,7 @@ header .snowcone {
 
 #nav {
 	background: url("../img/nav_bgd.jpg") repeat-x 0 0 #4a473e;
-	font-size: 1.134em;
+	font-size: 1.09em;
 	height: 52px;
 	line-height: 20px;
 	margin: 0 auto;
@@ -274,7 +275,7 @@ header .snowcone {
 	color: #fff;
 	display: inline-block;
 	height: 16px;
-	padding: 18px 1.2em;
+	padding: 18px 1em;
 	text-decoration: none;
 }
 
