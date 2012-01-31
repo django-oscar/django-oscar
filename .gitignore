@@ -24,4 +24,6 @@ oscar/share
 dist/
 *.DS_Store
 sandbox/*.sqlite
+sandbox/assets/*
+.idea
 TODO

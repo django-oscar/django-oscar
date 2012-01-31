@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% load currency_filters %}
 
 {% block title %}
     User {{ user.username }}
@@ -9,5 +10,42 @@
 {% endblock header %}
 
 {% block content %}
-
+<div id="user_details">
+    <ul>
+        <li>Email: {{ user.email }}</li>
+        <li>First name: {{ user.first_name }}</li>
+        <li>Last name: {{ user.last_name }}</li>
+        <li>This user is <strong>{% if user.is_active %}active{% else %}inactive{% endif %}</strong></li>
+        {% if user.is_superuser %}
+        <li><strong>Superuser</strong></li>
+        {% endif %}
+    </ul>
+</div>
+<div id="user_orders">
+    <h3>Orders</h3>
+    {% if user.orders.count %}
+     <table>
+         <tr>
+             <th>Order Number</th>
+             <th>Num items</th>
+             <th>Total value</th>
+             <th>Date placed</th>
+             <th>Status</th>
+             <th></th>
+         </tr>
+         {% for order in user.orders.all %}
+         <tr>
+             <td>{{ order.number }}</td>
+             <td>{{ order.num_items }}</td>
+             <td>{{ order.basket_total_incl_tax|currency }}</td>
+             <td>{{ order.date_placed|date:"d/m/y H:s" }}</td>
+             <td>{{ order.status }}</td>
+             <td><a href="{% url dashboard:order-detail order.number %}">Details</a></td>
+         </tr>
+         {% endfor %}
+     </table>
+    {% else %}
+        <p>This user has not placed any orders yet.</p>
+    {% endif %}
+</div>
 {% endblock content %}
