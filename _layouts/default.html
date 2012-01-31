@@ -32,13 +32,13 @@
     	    {% if page.url contains 'index.html' %}
          	    {% assign base_url = '' %}
     		{% endif %}
-    		<li><a href="{{ site.baseurl }}/#home"><span class="snowcone">H</span></a></li>
-    		<li><a href="{{ site.baseurl }}/#takeapeak">Take a peak</a></li>
-    		<li><a href="{{ site.baseurl }}/#divein">Dive in</a></li>
-    		<li><a href="{{ site.baseurl }}/#extensions">Extensions</a></li>
-    		<li><a href="{{ site.baseurl }}/#news">News</a></li>
-    		<li><a href="{{ site.baseurl }}/#roadma">Roadmap</a></li>
-    		<li><a href="{{ site.baseurl }}/#contributing">Contributing</a></li>
+    		<li><a href="{{ base_url }}#home"><span class="snowcone">H</span></a></li>
+    		<li><a href="{{ base_url }}#takeapeek">Take a peek</a></li>
+    		<li><a href="{{ base_url }}#divein">Dive in</a></li>
+    		<li><a href="{{ base_url }}#extensions">Extensions</a></li>
+    		<li><a href="{{ base_url }}#news">News</a></li>
+    		<li><a href="{{ base_url }}#roadmap">Roadmap</a></li>
+    		<li><a href="{{ base_url }}#contributing">Contributing</a></li>
     		<li><a href="http://django-oscar.readthedocs.org/en/latest/">Docs</a></li>
     		<li><a href="http://github.com/tangentlabs/django-oscar">Source</a></li>
     	</ul>
