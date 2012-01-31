@@ -332,7 +332,7 @@ code {
 	font-family: 'Droid Sans Mono', helvetica, arial, sans-serif;
 }
 
-code.block {
+code.block, pre code {
 	padding: 1.5em;
 	background: url("../img/bgd.jpg") no-repeat 0 0 #020202;
 	border: 3px solid #64b6b0;

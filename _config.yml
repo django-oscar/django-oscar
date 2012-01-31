@@ -1,3 +1,4 @@
+auto: true
 baseurl: /django-oscar
 markdown: rdiscount
 pygments: true
