@@ -4,15 +4,16 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.loading import get_model
-from django.db.models import Sum, Count, fields
+from django.db.models import Sum, Count, fields, Q
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
 from django.template.defaultfilters import date as format_date
 from django.utils.datastructures import SortedDict
 from django.views.generic import TemplateView, ListView, DetailView, UpdateView
 
-from oscar.apps.dashboard.orders import forms
 from oscar.core.loading import get_class
+from oscar.apps.dashboard.orders import forms
+from oscar.apps.dashboard.views import BulkEditMixin
 
 Order = get_model('order', 'Order')
 OrderNote = get_model('order', 'OrderNote')
@@ -35,7 +36,7 @@ class OrderSummaryView(TemplateView):
                }
 
 
-class OrderListView(ListView):
+class OrderListView(ListView, BulkEditMixin):
     model = Order
     context_object_name = 'orders'
     template_name = 'dashboard/orders/order_list.html'
@@ -44,6 +45,7 @@ class OrderListView(ListView):
     paginate_by = 25
     description = ''
     actions = ('download_selected_orders',)
+    current_view = 'dashboard:order-list'
 
     def get(self, request, *args, **kwargs):
         if 'order_number' in request.GET:
@@ -151,20 +153,6 @@ class OrderListView(ListView):
         if self.is_csv_download():
             return self.download_selected_orders(self.request, context['object_list'])
         return super(OrderListView, self).render_to_response(context)
-
-    def post(self, request, *args, **kwargs):
-        action = request.POST.get('action', '').lower()
-        if action not in self.actions:
-            messages.error(self.request, "Invalid action")
-            return HttpResponseRedirect(reverse('dashboard:order-list'))
-        order_ids = request.POST.getlist('selected_order')
-        if not order_ids:
-            messages.error(self.request, "You need to select some orders")
-            return HttpResponseRedirect(reverse('dashboard:order-list'))
-
-        raw_orders = Order.objects.in_bulk(order_ids)
-        orders = (raw_orders[int(id)] for id in order_ids)
-        return getattr(self, action)(request, orders)
 
     def download_selected_orders(self, request, orders):
         response = HttpResponse(mimetype='text/csv')
