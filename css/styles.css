@@ -244,7 +244,7 @@ header .snowcone {
 
 #nav {
 	background: url("../img/nav_bgd.jpg") repeat-x 0 0 #4a473e;
-	font-size: 1.09em;
+	font-size: 1.13em;
 	height: 52px;
 	line-height: 20px;
 	margin: 0 auto;
@@ -279,7 +279,7 @@ header .snowcone {
 	color: #fff;
 	display: inline-block;
 	height: 16px;
-	padding: 18px 1em;
+	padding: 18px 1.6em;
 	text-decoration: none;
 }
 
@@ -300,35 +300,31 @@ header .snowcone {
 
 /*** Featured ***/
 
-header .featured {
-	/*background: #68b9b3;*/
-	background: url("../img/featured_bgd.png") no-repeat 0 0 scroll transparent;
+.featured {
+	background: url("../img/featured_bgd.png") no-repeat 0 0 transparent;
 	position: absolute;
 	top: 0;
-	height: 166px;
 	right: 120px;
 	width: 186px;
-	padding: 0 8px 0;
+	height: 128px;
+	text-align: center;
+	color: #555;
 }
 
-header .featured ul {
-	border-left: 1px dashed #000;
-	border-right: 1px dashed #000;
+.featured ul {
 	font-family: 'UbuntuMedium', helvetica, arial, sans-serif;
 	margin: 0;
 	padding: 0;
-	width: 168px;
-	height: 150px;
 }
 
-header .featured ul li {
-	background: url("../img/star.png") no-repeat 10px 6px transparent;
-	text-align: center;
+.featured ul li {
+	background: url("../img/star.png") no-repeat 18px 6px transparent;
+	text-align: left;
 	margin-top: 6px;
-	padding-left: 12px;
+	padding-left: 35px;
 }
 
-header .featured ul li a {
+.featured ul li a {
 	color: #fff;
 }
 
