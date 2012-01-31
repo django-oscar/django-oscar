@@ -5,6 +5,10 @@ from optparse import OptionParser
 
 import tests.config
 
+from south.modelsinspector import add_introspection_rules
+add_introspection_rules([], ["^oscar\.models\.fields\.ExtendedURLField$"])
+add_introspection_rules([], ["^oscar\.models\.fields\.PositiveDecimalField$"])
+
 
 def create_migration(app_label, **kwargs):
     from south.management.commands.schemamigration import Command
@@ -19,4 +23,5 @@ if __name__ == '__main__':
     parser.add_option('-a', '--auto', dest='auto',
                       action='store_true', default=False)
     (options, args) = parser.parse_args()
-    create_migration(args[0], **options)
+    create_migration(args[0], initial=options.initial, auto=options.auto)
+
