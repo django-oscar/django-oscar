@@ -30,7 +30,7 @@ Order {{ order.number }}
 <table>
     <tr>
         <th>Username</th>
-        <td>{{ order.user.username }}</td>
+        <td><a href="{% url dashboard:user-detail order.user.id %}">{{ order.user.username }}</a></td>
     </tr>
     <tr>
         <th>Name</th>

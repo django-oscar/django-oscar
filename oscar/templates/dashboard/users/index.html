@@ -45,7 +45,7 @@
 		<td>{{ user.last_name }}</td>
         <td>{{ user.is_active }}</td>
         <td>{{ user.is_staff }}</td>
-        <td>{{ user.date_joined }}</td>
+        <td>{{ user.date_joined|date:"d/m/y H:s" }}</td>
         <td>{% num_orders user %}</td>
         <td>
             <a href="{% url dashboard:user-detail user.id %}">View</a>
