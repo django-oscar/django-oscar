@@ -11,3 +11,4 @@ ipdb==0.2
 ipython==0.10.1
 mock==0.7.0
 twill==0.9
+South==0.7.3
