@@ -83,13 +83,13 @@ a:link, a:visited {
 /*** Paragraphs ***/
 
 p,
-body ul li {
+.body ul li {
 	margin-bottom: 1.143em;
 	width: 644px;
 }
 
 *p:last-child,
-body ul li:last-child {
+.body ul li:last-child {
 	margin-bottom: 0;
 }
 
@@ -116,6 +116,10 @@ ul {
 
 ol {
 	list-style: none;
+}
+
+.body ul li {
+	list-style-type: disc;
 }
 
 /*** HTML5 tags ***/
