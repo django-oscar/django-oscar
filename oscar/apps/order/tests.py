@@ -128,7 +128,7 @@ class OrderNoteTests(TestCase):
         self.assertFalse(note.is_editable())
 
         
-class LineTest(TestCase):
+class LineTests(TestCase):
 
     def setUp(self):
         basket = Basket()
@@ -148,6 +148,13 @@ class LineTest(TestCase):
         if quantity == None:
             quantity = self.line.quantity
         event_quantity = ShippingEventQuantity.objects.create(event=event, line=self.line, quantity=quantity)
+
+    def test_shipping_event_history(self):
+        self.event(self.order_placed, 3)
+        self.event(self.dispatched, 1)
+        history = self.line.shipping_event_breakdown()
+        self.assertEqual(3, history['Order placed']['quantity'])
+        self.assertEqual(1, history['Dispatched']['quantity'])
 
     def test_shipping_status_is_empty_to_start_with(self):
         self.assertEquals('', self.line.shipping_status)
@@ -177,16 +184,16 @@ class LineTest(TestCase):
     def test_has_passed_shipping_status_after_partial_line_event(self):
         type = self.order_placed
         self.event(type, self.line.quantity - 1)
-        self.assertFalse(self.line.has_shipping_event_occurred(type)) 
+        self.assertFalse(self.line.has_shipping_event_occurred(type), 1)
         
     def test_has_passed_shipping_status_after_multiple_line_event(self):
         event_types = [ShippingEventType.objects.get(code='order_placed'),
-                        ShippingEventType.objects.get(code='dispatched')]
+                       ShippingEventType.objects.get(code='dispatched')]
         for type in event_types:
             self.event(type)
         for type in event_types:
             self.assertTrue(self.line.has_shipping_event_occurred(type))
-            
+
     def test_inconsistent_shipping_status_setting(self):
         type = self.order_placed
         self.event(type, self.line.quantity - 1)

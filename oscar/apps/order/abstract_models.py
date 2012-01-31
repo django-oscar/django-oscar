@@ -229,7 +229,7 @@ class AbstractCommunicationEvent(models.Model):
     as an confirmation email being sent.
     """
     order = models.ForeignKey('order.Order', related_name="communication_events")
-    type = models.ForeignKey('customer.CommunicationEventType')
+    event_type = models.ForeignKey('customer.CommunicationEventType')
     date = models.DateTimeField(auto_now_add=True)
     
     class Meta:
@@ -334,13 +334,13 @@ class AbstractLine(models.Model):
     @property
     def shipping_status(self):
         """Returns a string summary of the shipping status of this line"""
-        status_map = self._shipping_event_history()
+        status_map = self.shipping_event_breakdown()
         if not status_map:
             return ''
         
         events = []    
         last_complete_event_name = None
-        for event_dict in status_map:
+        for event_dict in status_map.values():
             if event_dict['quantity'] == self.quantity:
                 events.append(event_dict['name'])
                 last_complete_event_name = event_dict['name']    
@@ -348,34 +348,42 @@ class AbstractLine(models.Model):
                 events.append("%s (%d/%d items)" % (event_dict['name'], 
                                                     event_dict['quantity'], self.quantity))
         
-        if last_complete_event_name == status_map[-1]['name']:
+        if last_complete_event_name == status_map.values()[-1]['name']:
             return last_complete_event_name
             
         return ', '.join(events)
     
-    def has_shipping_event_occurred(self, event_type):
-        u"""Checks whether this line has passed a given shipping event"""
-        for event_dict in self._shipping_event_history():
-            if event_dict['name'] == event_type.name and event_dict['quantity'] == self.quantity:
+    def has_shipping_event_occurred(self, event_type, quantity=None):
+        """
+        Check whether this line has passed a given shipping event
+        """
+        if not quantity:
+            quantity = self.quantity
+        for name, event_dict in self.shipping_event_breakdown().items():
+            if name == event_type.name and event_dict['quantity'] == self.quantity:
                 return True
         return False
     
     @property
     def is_product_deleted(self):
         return self.product == None
-    
-    def _shipping_event_history(self):
-        u"""
-        Returns a list of shipping events"""
+
+    def shipping_event_breakdown(self):
+        """
+        Returns a dict of shipping events that this line has been through
+        """
         status_map = {}
         for event in self.shippingevent_set.all():
-            event_name = event.event_type.name
+            event_type = event.event_type
+            event_name = event_type.name
             event_quantity = event.line_quantities.get(line=self).quantity
             if event_name in status_map:
                 status_map[event_name]['quantity'] += event_quantity
             else:
-                status_map[event_name] = {'name': event_name, 'quantity': event_quantity}
-        return list(status_map.values())
+                status_map[event_name] = {'name': event_name,
+                                          'event_type': event.event_type,
+                                          'quantity': event_quantity}
+        return status_map
     
     class Meta:
         abstract = True

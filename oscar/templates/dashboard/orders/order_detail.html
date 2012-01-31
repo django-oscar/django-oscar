@@ -119,13 +119,12 @@ Order {{ order.number }}
 <table>
     <tr>
         <th>Select</th>
-        <th>ID</th>
+        <th>Quantity</th>
         <th>Product</th>
         <th>Status</th>
         <th>Supplier</th>
         <th>Supplier SKU</th>
         <th>Est. delivery date</th>
-		<th>Quantity</th>
         <th>Price (after discounts)</th>
         <th>Price (before discounts)</th>
         <th>Actions</th>
@@ -136,13 +135,12 @@ Order {{ order.number }}
 			<input type="checkbox" name="selected_line" value="{{ line.id }}" />
 			<input type="text" name="selected_line_qty" value="{{ line.quantity }}" size="2" />
 		</td>
-        <td>{{ line.id }}</td>
+        <td>{{ line.quantity }}</td>
         <td>{{ line.title }}</td>
         <td>{{ line.status|default:"-" }}</td>
         <td>{{ line.partner_name }}</td>
         <td>{{ line.partner_sku }}</td>
         <td>{{ line.est_dispatch_date }}</td>
-        <td>{{ line.quantity }}</td>
         <td>{{ line.line_price_before_discounts_incl_tax|currency }}</td>
         <td>{{ line.line_price_incl_tax|currency }}</td>
         <td>
@@ -151,17 +149,17 @@ Order {{ order.number }}
     </tr>
     {% endfor %}
     <tr>
-        <td colspan="8"></td>
+        <td colspan="7"></td>
         <td>Discount</td>
         <td>{{ order.total_discount_incl_tax|currency }}</td>
     </tr>
     <tr>
-        <td colspan="8"></td>
+        <td colspan="7"></td>
         <td>Shipping charge</td>
         <td>{{ order.shipping_incl_tax|currency }}</td>
     </tr>
     <tr>
-        <td colspan="8"></td>
+        <td colspan="7"></td>
         <td>Total</td>
         <td>{{ order.total_incl_tax|currency }}</td>
     </tr>
@@ -238,6 +236,8 @@ Order {{ order.number }}
 	{% endwith %}
 	{% endfor %}
 </table>
+{% else %}
+<p>No shipping events.</p>
 {% endif %}
 {% endwith %}
 
