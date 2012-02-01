@@ -39,4 +39,4 @@ class EventHandler(object):
         order.communication_events.create(event_type=event_type)
 
     def create_note(self, order, message, note_type='System'):
-        order.notes.create(message=message)
+        order.notes.create(message=message, note_type=note_type)
