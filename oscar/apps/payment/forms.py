@@ -188,8 +188,8 @@ class BankcardForm(forms.ModelForm):
     
     number = BankcardNumberField(max_length=20, widget=forms.TextInput(attrs={'autocomplete':'off'}), label="Card number")
     name = forms.CharField(max_length=128, label="Name on card")
-    ccv_number = forms.IntegerField(required=True, label="CCV Number",
-        max_value = 99999, widget=forms.TextInput(attrs={'size': '5'}))
+    ccv_number = forms.RegexField(required=True, label="CCV Number",
+                                  regex=r'^\d{3,4}$', widget=forms.TextInput(attrs={'size': '5'}))
     start_month = BankcardStartingMonthField(label="Valid from", required=False)
     expiry_month = BankcardExpiryMonthField(required=True, label = "Valid to")
     
@@ -203,6 +203,7 @@ class BankcardForm(forms.ModelForm):
         Returns a Bankcard object for use in payment processing.
         """
         kwargs = {
+            'name': self.cleaned_data['name'],
             'card_number': self.cleaned_data['number'],
             'expiry_date': self.cleaned_data['expiry_month'].strftime("%m/%y"),
             'ccv': self.cleaned_data['ccv_number'],
