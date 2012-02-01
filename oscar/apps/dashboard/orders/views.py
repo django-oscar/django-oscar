@@ -286,12 +286,14 @@ class OrderDetailView(DetailView):
         if not new_status in order.available_statuses():
             messages.error(request, "The new status '%s' is not valid for this order" % new_status)
             return self.reload_page_response()
+
+        handler = EventHandler()
+        handler.handle_order_status_change(order, new_status)
+
         msg = "Order status changed from '%s' to '%s'" % (order.status, new_status)
         messages.info(request, msg)
         order.notes.create(user=request.user, message=msg,
                            note_type=OrderNote.SYSTEM)
-        order.status = new_status
-        order.save()
         return self.reload_page_response()
 
     def change_line_statuses(self, request, order, lines, quantities):

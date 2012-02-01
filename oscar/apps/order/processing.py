@@ -6,6 +6,12 @@ PaymentEventQuantity = get_model('order', 'PaymentEventQuantity')
 
 class EventHandler(object):
 
+    def handle_order_status_change(self, order, new_status):
+        """
+        Handle a requested order status change
+        """
+        order.set_status(new_status)
+
     def handle_shipping_event(self, order, event_type, lines, line_quantities):
         """
         Handle a shipping event for a given order.
