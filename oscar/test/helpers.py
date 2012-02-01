@@ -1,4 +1,3 @@
-import twill
 from StringIO import StringIO
 from decimal import Decimal as D
 
