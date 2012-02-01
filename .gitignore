@@ -4,6 +4,7 @@ settings_local.py
 fixtures/*
 product-images/*
 *.swp
+*.swo
 .project
 .pydevproject
 .settings
