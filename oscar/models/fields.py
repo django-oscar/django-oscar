@@ -4,6 +4,15 @@ from django.utils.translation import ugettext_lazy as _
 from oscar.core import validators
 from oscar.forms import fields
 
+try:
+    from south.modelsinspector import add_introspection_rules
+except ImportError:
+    pass
+else:
+    add_introspection_rules([], ["^oscar\.models\.fields\.ExtendedURLField$"])
+    add_introspection_rules([], ["^oscar\.models\.fields\.PositiveDecimalField$"])
+
+
 class ExtendedURLField(CharField):
     description = _("URL")
 
