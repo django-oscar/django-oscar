@@ -17,6 +17,9 @@ class Repository(object):
         and overriding this method.
         """ 
         methods = [Free()]
+        return self.add_basket_to_methods(basket, methods)
+
+    def add_basket_to_methods(self, basket, methods):
         for method in methods:
             method.set_basket(basket)
         return methods
