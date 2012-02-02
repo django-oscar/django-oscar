@@ -347,6 +347,8 @@ class OrderPlacementMixin(CheckoutSessionMixin):
     # they will be persisted.
     _payment_sources = None
 
+    _payment_events = None
+
     # Default code for the email to send after successful checkout
     communication_type_code = 'ORDER_PLACED' 
     
@@ -366,6 +368,13 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         if self._payment_sources is None:
             self._payment_sources = []
         self._payment_sources.append(source)  
+
+    def add_payment_event(self, event_type_name):
+        event_type = PaymentEventType.objects.get(name=event_type_name)
+        if self._payment_events is None:
+            self._payment_events = []
+        event = PaymentEvent(event_type=event_type)
+        self._payment_events.append(event)
         
     def handle_successful_order(self, order):  
         """
@@ -483,7 +492,11 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         """
         Saves any relevant payment events for this order
         """
-        pass
+        if not self._payment_events:
+            return
+        for event in self._payment_events:
+            event.order = order
+            event.save()
 
     def save_payment_sources(self, order):
         """
@@ -492,7 +505,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         When the payment sources are created, the order model does not exist and 
         so they need to have it set before saving.
         """
-        if not self._payment_sources:
+        if not self._payment_sources
             return
         for source in self._payment_sources:
             source.order = order
