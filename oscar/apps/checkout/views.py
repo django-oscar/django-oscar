@@ -264,6 +264,11 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
     template_name = 'checkout/shipping_methods.html';
     
     def get(self, request, *args, **kwargs):
+        # Check that shipping address has been completed
+        if not self.checkout_session.is_shipping_address_set():
+            messages.error(request, _("Please choose a shipping address"))
+            return HttpResponseRedirect(reverse('checkout:shipping-address'))
+
         # Save shipping methods as instance var as we need them both here
         # and when setting the context vars.
         self._methods = self.get_available_shipping_methods()
@@ -322,6 +327,15 @@ class PaymentMethodView(CheckoutSessionMixin, TemplateView):
     """
     
     def get(self, request, *args, **kwargs):
+        # Check that shipping address has been completed
+        if not self.checkout_session.is_shipping_address_set():
+            messages.error(request, _("Please choose a shipping address"))
+            return HttpResponseRedirect(reverse('checkout:shipping-address'))
+        # Check that shipping method has been set
+        if not self.checkout_session.is_shipping_method_set():
+            messages.error(request, _("Please choose a shipping method"))
+            return HttpResponseRedirect(reverse('checkout:shipping-method'))
+
         return self.get_success_response()
     
     def get_success_response(self):
@@ -347,6 +361,8 @@ class OrderPlacementMixin(CheckoutSessionMixin):
     # they will be persisted.
     _payment_sources = None
 
+    _payment_events = None
+
     # Default code for the email to send after successful checkout
     communication_type_code = 'ORDER_PLACED' 
     
@@ -366,6 +382,13 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         if self._payment_sources is None:
             self._payment_sources = []
         self._payment_sources.append(source)  
+
+    def add_payment_event(self, event_type_name):
+        event_type = PaymentEventType.objects.get(name=event_type_name)
+        if self._payment_events is None:
+            self._payment_events = []
+        event = PaymentEvent(event_type=event_type)
+        self._payment_events.append(event)
         
     def handle_successful_order(self, order):  
         """
@@ -483,7 +506,11 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         """
         Saves any relevant payment events for this order
         """
-        pass
+        if not self._payment_events:
+            return
+        for event in self._payment_events:
+            event.order = order
+            event.save()
 
     def save_payment_sources(self, order):
         """

@@ -441,8 +441,8 @@ class AbstractPaymentEventType(models.Model):
     """
     Payment events are things like 'Paid', 'Failed', 'Refunded'
     """
-    name = models.CharField(max_length=128)
-    code = models.SlugField(max_length=128)
+    name = models.CharField(max_length=128, unique=True)
+    code = models.SlugField(max_length=128, unique=True)
     sequence_number = models.PositiveIntegerField(default=0)
     
     def save(self, *args, **kwargs):
@@ -555,9 +555,9 @@ class AbstractShippingEventType(models.Model):
     Shipping events are things like 'OrderPlaced', 'Acknowledged', 'Dispatched', 'Refunded'
     """
     # Name is the friendly description of an event
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
     # Code is used in forms
-    code = models.SlugField(max_length=128)
+    code = models.SlugField(max_length=128, unique=True)
     is_required = models.BooleanField(default=True, help_text="This event must be passed before the next shipping event can take place")
     # The normal order in which these shipping events take place
     sequence_number = models.PositiveIntegerField(default=0)

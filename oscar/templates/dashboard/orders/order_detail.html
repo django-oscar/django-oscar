@@ -241,6 +241,39 @@ Order {{ order.number }}
 {% endif %}
 {% endwith %}
 
+<h2>Payment Events</h2>
+{% with events=order.payment_events.all %}
+{% if events %}
+<table>
+	<tr>
+		<th>Date</th>
+		<th>Event</th>
+		<th>Lines</th>
+	</tr>
+	{% for event in events %}
+	{% with line_qtys=event.line_quantities.all %}
+	<tr>
+		<td rowspan="{{ line_qtys|length }}">{{ event.date }}</td>
+		<td rowspan="{{ line_qtys|length }}">{{ event.event_type.name }}</td>
+		<td>
+			<table>
+				{% for line_qty in event.line_quantities.all %}
+				<tr>
+					<td>Product: {{ line_qty.line.title }}</td>
+					<td>Quantity: {{ line_qty.quantity }}</td>
+				</tr>
+				{% endfor %}
+			</table>
+		<td>
+	</tr>
+	{% endwith %}
+	{% endfor %}
+</table>
+{% else %}
+<p>No payment events.</p>
+{% endif %}
+{% endwith %}
+
 <h2>Notes</h2>
 {% with notes=order.notes.all %}
 {% if notes %}

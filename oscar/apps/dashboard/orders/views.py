@@ -10,6 +10,7 @@ from django.shortcuts import get_object_or_404
 from django.template.defaultfilters import date as format_date
 from django.utils.datastructures import SortedDict
 from django.views.generic import TemplateView, ListView, DetailView, UpdateView
+from django.contrib import messages
 
 from oscar.core.loading import get_class
 from oscar.apps.dashboard.orders import forms
@@ -286,12 +287,17 @@ class OrderDetailView(DetailView):
         if not new_status in order.available_statuses():
             messages.error(request, "The new status '%s' is not valid for this order" % new_status)
             return self.reload_page_response()
-        msg = "Order status changed from '%s' to '%s'" % (order.status, new_status)
-        messages.info(request, msg)
-        order.notes.create(user=request.user, message=msg,
-                           note_type=OrderNote.SYSTEM)
-        order.status = new_status
-        order.save()
+
+        handler = EventHandler()
+        try:
+            handler.handle_order_status_change(order, new_status)
+        except PaymentError, e:
+            messages.error("Unable to change order status due to payment error: %s" % e)
+        else:
+            msg = "Order status changed from '%s' to '%s'" % (order.status, new_status)
+            messages.info(request, msg)
+            order.notes.create(user=request.user, message=msg,
+                            note_type=OrderNote.SYSTEM)
         return self.reload_page_response()
 
     def change_line_statuses(self, request, order, lines, quantities):
@@ -328,9 +334,12 @@ class OrderDetailView(DetailView):
             messages.error(request, "The event type '%s' is not valid" % code)
             return self.reload_page_response()
 
-        EventHandler().handle_shipping_event(order, event_type, lines, quantities)
-
-        messages.info(request, "Shipping event created")
+        try:
+            EventHandler().handle_order_status_change(order, new_status)
+        except PaymentError, e:
+            messages.error("Unable to change order status due to payment error: %s" % e)
+        else:
+            messages.info(request, "Shipping event created")
         return self.reload_page_response()
 
 
