@@ -24,4 +24,4 @@ class DashboardViewTests(ClientTestCase):
                 'dashboard:users-index',)
         for name in urls:
             response = self.client.get(reverse(name))
-            self.assertTrue('Username' not in response.context)
+            self.assertTrue('Username' not in response.content)

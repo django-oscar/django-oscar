@@ -1,11 +1,11 @@
-{% extends "layout.html" %}
+{% extends 'dashboard/layout.html' %}
 {% load user_orders %}
 
 {% block header %}
 <h2>User management</h2>
 {% endblock header %}
 
-{% block content %}
+{% block dashboard_content %}
 
 <h2>Search users</h2>
 <form action="." method="get">
@@ -88,4 +88,4 @@
 
 {% endif %}
 
-{% endblock content %}
+{% endblock dashboard_content %}

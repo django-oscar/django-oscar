@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends 'dashboard/layout.html' %}
 {% load currency_filters %}
 
 {% block title %}
@@ -9,7 +9,7 @@ Order {{ order.number }}
     <h2>Order {{ order.number }}</h2>
 {% endblock header %}
 
-{% block content %}
+{% block dashboard_content %}
 
 <h2>Order information</h2>
 <table>
@@ -282,5 +282,5 @@ Order {{ order.number }}
 	<input type="submit" value="Save note" />
 </form>
 
-{% endblock content %}
+{% endblock dashboard_content %}
 
