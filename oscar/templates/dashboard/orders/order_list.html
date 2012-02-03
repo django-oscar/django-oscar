@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends 'dashboard/layout.html' %}
 
 {% load currency_filters %}
 
@@ -6,7 +6,7 @@
 <h2>Order management</h2>
 {% endblock header %}
 
-{% block content %}
+{% block dashboard_content %}
 
 <h2>Search orders</h2>
 <form action="." method="get">
@@ -88,4 +88,4 @@
 
 {% endif %}
 
-{% endblock content %}
+{% endblock dashboard_content %}

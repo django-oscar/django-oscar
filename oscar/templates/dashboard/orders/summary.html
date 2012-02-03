@@ -1,11 +1,11 @@
-{% extends "layout.html" %}
+{% extends 'dashboard/layout.html' %}
 {% load currency_filters %}
 
 {% block header %}
 <h2>Order summary</h2>
 {% endblock header %}
 
-{% block content %}
+{% block dashboard_content %}
 
 <table>
 	<caption>Global stats</caption>
@@ -37,4 +37,4 @@
 	{% endfor %}
 </table>
 
-{% endblock content %}
+{% endblock dashboard_content %}

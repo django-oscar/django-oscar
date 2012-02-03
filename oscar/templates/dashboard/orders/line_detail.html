@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends 'dashboard/layout.html' %}
 {% load currency_filters %}
 
 {% block title %}
@@ -9,7 +9,7 @@ Order {{ order.number }} - Line #{{ line.id }}
 <h2>Order {{ order.number }} - Line #{{ line.id }}</h2>
 {% endblock header %}
 
-{% block content %}
+{% block dashboard_content %}
 
 <h2>Product details</h2>
 <table>
@@ -47,5 +47,5 @@ Order {{ order.number }} - Line #{{ line.id }}
 	</tr>
 </table>
 
-{% endblock content %}
+{% endblock dashboard_content %}
 

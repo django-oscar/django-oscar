@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends 'dashboard/layout.html' %}
 
 {% load currency_filters %}
 
@@ -7,7 +7,7 @@
 {% endblock header %}
 
 
-{% block content %}
+{% block dashboard_content %}
 
 <form method="GET" action="{% url dashboard:reports-index %}">
 
@@ -15,5 +15,5 @@
     <input type="submit" value="Generate report" />
 </form>
 
-{% endblock content %}
+{% endblock dashboard_content %}
 

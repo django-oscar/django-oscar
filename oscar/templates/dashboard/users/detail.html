@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends 'dashboard/layout.html' %}
 {% load currency_filters %}
 
 {% block title %}
@@ -9,7 +9,7 @@
     <h2>User {{ user.username }}</h2>
 {% endblock header %}
 
-{% block content %}
+{% block dashboard_content %}
 <div id="user_details">
     <ul>
         <li>Email: {{ user.email }}</li>
@@ -48,4 +48,4 @@
         <p>This user has not placed any orders yet.</p>
     {% endif %}
 </div>
-{% endblock content %}
+{% endblock dashboard_content %}
