@@ -314,9 +314,10 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
         return HttpResponseRedirect(reverse('checkout:payment-method'))
 
 
-# ======================================
-# Payment method, preview and submission
-# ======================================
+# ==============
+# Payment method
+# ==============
+
 
 class PaymentMethodView(CheckoutSessionMixin, TemplateView):
     """
@@ -342,14 +343,35 @@ class PaymentMethodView(CheckoutSessionMixin, TemplateView):
         return HttpResponseRedirect(reverse('checkout:preview'))
 
 
+# =======
+# Preview
+# =======
+
+
 class OrderPreviewView(CheckoutSessionMixin, TemplateView):
     """
     View a preview of the order before submitting.
     """
     template_name = 'checkout/preview.html'
+
+    def get(self, request, *args, **kwargs):
+        # Check that shipping address has been completed
+        if not self.checkout_session.is_shipping_address_set():
+            messages.error(request, _("Please choose a shipping address"))
+            return HttpResponseRedirect(reverse('checkout:shipping-address'))
+        # Check that shipping method has been set
+        if not self.checkout_session.is_shipping_method_set():
+            messages.error(request, _("Please choose a shipping method"))
+            return HttpResponseRedirect(reverse('checkout:shipping-method'))
+        return super(OrderPreviewView, self).get(request, *args, **kwargs)
     
     def get_success_response(self):
         return HttpResponseRedirect(reverse('checkout:payment-details'))
+
+
+# ================
+# Order submission
+# ================
 
 
 class OrderPlacementMixin(CheckoutSessionMixin):
@@ -586,7 +608,16 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         """
         This method is designed to be overridden by subclasses which will
         validate the forms from the payment details page.  If the forms are valid
-        then the method can call submit()."""
+        then the method can call submit()
+        """
+        # Check that shipping address has been completed
+        if not self.checkout_session.is_shipping_address_set():
+            messages.error(request, _("Please choose a shipping address"))
+            return HttpResponseRedirect(reverse('checkout:shipping-address'))
+        # Check that shipping method has been set
+        if not self.checkout_session.is_shipping_method_set():
+            messages.error(request, _("Please choose a shipping method"))
+            return HttpResponseRedirect(reverse('checkout:shipping-method'))
         return self.submit(request.basket, **kwargs)
     
     def submit(self, basket, **kwargs):
@@ -604,7 +635,8 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         # First check that basket isn't empty
         if basket.is_empty:
             messages.error(self.request, _("This order cannot be submitted as the basket is empty"))
-            return HttpResponseRedirect(self.request.META['HTTP_REFERER'])
+            url = self.request.META.get('HTTP_REFERER', reverse('checkout:shipping-address'))
+            return HttpResponseRedirect(url)
 
         # We generate the order number first as this will be used
         # in payment requests (ie before the order model has been 
@@ -669,6 +701,11 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         default is to do nothing.
         """
         pass
+
+
+# =========
+# Thank you
+# =========
 
 
 class ThankYouView(DetailView):

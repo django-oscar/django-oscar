@@ -8,6 +8,8 @@ from django.conf import settings
 
 from oscar.test.helpers import create_product
 from oscar.test import ClientTestCase
+from oscar.apps.basket.models import Basket
+from oscar.apps.order.models import Order
 
 
 class AnonymousCheckoutViewsTests(ClientTestCase):
@@ -68,6 +70,13 @@ class CheckoutMixin(object):
                                      })
         self.assertIsRedirect(response)
 
+    def complete_shipping_method(self):
+        self.client.get(reverse('checkout:shipping-method'))
+
+    def assertRedirectUrlName(self, response, name):
+        location = response['Location'].replace('http://testserver', '')
+        self.assertEqual(location, reverse(name))
+
 
 class ShippingMethodViewTests(ClientTestCase, CheckoutMixin):
     fixtures = ['countries.json']
@@ -75,14 +84,12 @@ class ShippingMethodViewTests(ClientTestCase, CheckoutMixin):
     def test_shipping_method_view_redirects_if_no_shipping_address(self):
         response = self.client.get(reverse('checkout:shipping-method'))
         self.assertIsRedirect(response)
-        location = response['Location'].replace('http://testserver', '')
-        self.assertEqual(location, reverse('checkout:shipping-address'))
+        self.assertRedirectUrlName(response, 'checkout:shipping-address')
 
     def test_redirects_by_default(self):
         self.complete_shipping_address()
         response = self.client.get(reverse('checkout:shipping-method'))
-        location = response['Location'].replace('http://testserver', '')
-        self.assertEqual(location, reverse('checkout:payment-method'))
+        self.assertRedirectUrlName(response, 'checkout:payment-method')
 
 
 class PaymentMethodViewTests(ClientTestCase, CheckoutMixin):
@@ -90,12 +97,74 @@ class PaymentMethodViewTests(ClientTestCase, CheckoutMixin):
     def test_view_redirects_if_no_shipping_address(self):
         response = self.client.get(reverse('checkout:payment-method'))
         self.assertIsRedirect(response)
-        location = response['Location'].replace('http://testserver', '')
-        self.assertEqual(location, reverse('checkout:shipping-address'))
+        self.assertRedirectUrlName(response, 'checkout:shipping-address')
 
     def test_view_redirects_if_no_shipping_method(self):
         self.complete_shipping_address()
         response = self.client.get(reverse('checkout:payment-method'))
         self.assertIsRedirect(response)
-        location = response['Location'].replace('http://testserver', '')
-        self.assertEqual(location, reverse('checkout:shipping-method'))
+        self.assertRedirectUrlName(response, 'checkout:shipping-method')
+
+
+class PreviewViewTests(ClientTestCase, CheckoutMixin):
+
+    def test_view_redirects_if_no_shipping_address(self):
+        response = self.client.get(reverse('checkout:preview'))
+        self.assertIsRedirect(response)
+        self.assertRedirectUrlName(response, 'checkout:shipping-address')
+
+    def test_view_redirects_if_no_shipping_method(self):
+        self.complete_shipping_address()
+        response = self.client.get(reverse('checkout:preview'))
+        self.assertIsRedirect(response)
+        self.assertRedirectUrlName(response, 'checkout:shipping-method')
+
+    def test_ok_response_if_previous_steps_complete(self):
+        self.complete_shipping_address()
+        self.complete_shipping_method()
+        response = self.client.get(reverse('checkout:preview'))
+        self.assertIsOk(response)
+
+
+class PaymentDetailsViewTests(ClientTestCase, CheckoutMixin):
+
+    def test_view_redirects_if_no_shipping_address(self):
+        response = self.client.post(reverse('checkout:payment-details'))
+        self.assertIsRedirect(response)
+        self.assertRedirectUrlName(response, 'checkout:shipping-address')
+
+    def test_view_redirects_if_no_shipping_method(self):
+        self.complete_shipping_address()
+        response = self.client.post(reverse('checkout:payment-details'))
+        self.assertIsRedirect(response)
+        self.assertRedirectUrlName(response, 'checkout:shipping-method')
+
+    def test_placing_order_with_empty_basket_redirects(self):
+        self.complete_shipping_address()
+        self.complete_shipping_method()
+        response = self.client.post(reverse('checkout:payment-details'))
+        self.assertIsRedirect(response)
+        self.assertRedirectUrlName(response, 'checkout:shipping-address')
+
+
+class OrderPlacementTests(ClientTestCase, CheckoutMixin):
+
+    def setUp(self):
+        Order.objects.all().delete()
+
+        super(OrderPlacementTests, self).setUp()
+        self.basket = Basket.objects.create(owner=self.user)
+        self.basket.add_product(create_product(price=D('12.00')))
+
+        self.complete_shipping_address()
+        self.complete_shipping_method()
+        self.response = self.client.post(reverse('checkout:payment-details'))
+
+    def test_placing_order_with_nonempty_basket_redirects(self):
+        self.assertIsRedirect(self.response)
+        self.assertRedirectUrlName(self.response, 'checkout:thank-you')
+
+    def test_order_is_created(self):
+        self.assertIsRedirect(self.response)
+        orders = Order.objects.all()
+        self.assertEqual(1, len(orders))
