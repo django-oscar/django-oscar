@@ -264,6 +264,11 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
     template_name = 'checkout/shipping_methods.html';
     
     def get(self, request, *args, **kwargs):
+        # Check that shipping address has been completed
+        if not self.checkout_session.is_shipping_address_set():
+            messages.error(request, _("Please choose a shipping address"))
+            return HttpResponseRedirect(reverse('checkout:shipping-address'))
+
         # Save shipping methods as instance var as we need them both here
         # and when setting the context vars.
         self._methods = self.get_available_shipping_methods()
@@ -322,6 +327,15 @@ class PaymentMethodView(CheckoutSessionMixin, TemplateView):
     """
     
     def get(self, request, *args, **kwargs):
+        # Check that shipping address has been completed
+        if not self.checkout_session.is_shipping_address_set():
+            messages.error(request, _("Please choose a shipping address"))
+            return HttpResponseRedirect(reverse('checkout:shipping-address'))
+        # Check that shipping method has been set
+        if not self.checkout_session.is_shipping_method_set():
+            messages.error(request, _("Please choose a shipping method"))
+            return HttpResponseRedirect(reverse('checkout:shipping-method'))
+
         return self.get_success_response()
     
     def get_success_response(self):

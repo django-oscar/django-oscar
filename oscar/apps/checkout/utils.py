@@ -1,11 +1,13 @@
 from django.core.urlresolvers import resolve
 
-from oscar.core.loading import import_module
-import_module('shipping.repository', ['Repository'], locals())
+from oscar.core.loading import get_class
+Repository = get_class('shipping.repository', 'Repository')
 
 
 class CheckoutSessionData(object):
-    u"""Class responsible for marshalling all the checkout session data."""
+    """
+    Class responsible for marshalling all the checkout session data
+    """
     SESSION_KEY = 'checkout_data'
     
     def __init__(self, request):
@@ -60,6 +62,12 @@ class CheckoutSessionData(object):
     def user_address_id(self):
         u"""Get user address id from session"""
         return self._get('shipping', 'user_address_id')
+
+    def is_shipping_address_set(self):
+        new_fields = self.new_shipping_address_fields()
+        has_new_address = new_fields and len(new_fields) > 0
+        has_old_address = self.user_address_id() > 0
+        return has_new_address or has_old_address
     
     # Shipping methods
     
@@ -80,6 +88,9 @@ class CheckoutSessionData(object):
         if not code:
             return None
         return Repository().find_by_code(code)
+
+    def is_shipping_method_set(self):
+        return bool(self._get('shipping', 'method_code'))
     
     # Billing address fields
     
