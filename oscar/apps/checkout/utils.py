@@ -20,47 +20,63 @@ class CheckoutSessionData(object):
             self.request.session[self.SESSION_KEY][namespace] = {}
           
     def _get(self, namespace, key, default=None):
-        u"""Return session value or None"""
+        """
+        Return session value or None
+        """
         self._check_namespace(namespace)
         if key in self.request.session[self.SESSION_KEY][namespace]:
             return self.request.session[self.SESSION_KEY][namespace][key]
         return default
             
     def _set(self, namespace, key, value):
-        u"""Set session value"""
+        """
+        Set session value
+        """
         self._check_namespace(namespace)
         self.request.session[self.SESSION_KEY][namespace][key] = value
         self.request.session.modified = True
         
     def _unset(self, namespace, key):
-        u"""Unset session value"""
+        """
+        Unset session value
+        """
         self._check_namespace(namespace)
         if key in self.request.session[self.SESSION_KEY][namespace]:
             del self.request.session[self.SESSION_KEY][namespace][key]
             self.request.session.modified = True
             
     def flush(self):
-        u"""Delete session key"""
+        """
+        Delete session key
+        """
         self.request.session[self.SESSION_KEY] = {}
         
     # Shipping addresses    
         
     def ship_to_user_address(self, address):
-        u"""Set existing shipping address id to session and unset address fields from session"""
+        """
+        Set existing shipping address id to session and unset address fields from session
+        """
         self._set('shipping', 'user_address_id', address.id)
         self._unset('shipping', 'new_address_fields')
         
     def ship_to_new_address(self, address_fields):
-        u"""Set new shipping address details to session and unset shipping address id"""
+        """
+        Set new shipping address details to session and unset shipping address id
+        """
         self._set('shipping', 'new_address_fields', address_fields)
         self._unset('shipping', 'user_address_id')
         
     def new_shipping_address_fields(self):
-        u"""Get shipping address fields from session"""
+        """
+        Get shipping address fields from session
+        """
         return self._get('shipping', 'new_address_fields')
         
     def user_address_id(self):
-        u"""Get user address id from session"""
+        """
+        Get user address id from session
+        """
         return self._get('shipping', 'user_address_id')
 
     def is_shipping_address_set(self):
@@ -72,15 +88,19 @@ class CheckoutSessionData(object):
     # Shipping methods
     
     def use_free_shipping(self):
-        u"""Set "free shipping" code to session"""
+        """
+        Set "free shipping" code to session
+        """
         self._set('shipping', 'method_code', '__free__')
     
     def use_shipping_method(self, code):
-        u"""Set shipping method code to session"""
+        """
+        Set shipping method code to session
+        """
         self._set('shipping', 'method_code', code)
         
     def shipping_method(self):
-        u"""
+        """
         Returns the shipping method model based on the 
         data stored in the session.
         """

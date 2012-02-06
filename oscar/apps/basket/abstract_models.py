@@ -304,6 +304,7 @@ class AbstractBasket(models.Model):
         else:
             return True
 
+
 class AbstractLine(models.Model):
     """
     A line of a basket (product and a quantity)
