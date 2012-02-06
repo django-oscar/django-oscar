@@ -3,10 +3,8 @@
 {% block dashboard_content %}
 <p>What do you want to do?</p>
 <ul>
-    <li><a href="{% url dashboard:order-summary %}">See statistics</a></li>
-    <li><a href="{% url dashboard:order-list %}">Manage orders</a></li>
-	<li><a href="{% url dashboard:reports-index %}">View reports</a></li>
-    <li><a href="{% url dashboard:users-index %}">User management</a></li>
-    {% comment %}<li><a href="{% url dashboard:events-index %}">Events</a></li>{% endcomment %}
+    {% for item in menu_items %}
+    <li><a href="{{ item.url }}">{{ item.description }}</a></li>
+    {% endfor %}
 </ul>
 {% endblock %}
