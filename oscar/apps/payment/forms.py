@@ -224,4 +224,3 @@ class BillingAddressForm(forms.ModelForm):
     
     class Meta:
         model = order_models.BillingAddress
-   
