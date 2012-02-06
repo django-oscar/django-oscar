@@ -4,8 +4,8 @@ from django.utils import unittest
 from django.test.client import Client
 from django.contrib.auth.models import User
 
-from oscar.apps.shipping.methods import Free, FixedPrice, WeightBased
-from oscar.apps.shipping.models import OrderAndItemCharges, WeightBand
+from oscar.apps.shipping.methods import Free, FixedPrice
+from oscar.apps.shipping.models import OrderAndItemCharges, WeightBand, WeightBased
 from oscar.apps.shipping.repository import Repository
 from oscar.apps.shipping import Scales
 from oscar.apps.basket.models import Basket
@@ -120,51 +120,6 @@ class NonZeroFreeThresholdTest(unittest.TestCase):
         self.assertEquals(D('0.00'), self.method.basket_charge_incl_tax())
 
 
-class WeightBasedShippingTests(unittest.TestCase):
-
-    def test_no_bands_leads_to_zero_charges(self):
-        method = WeightBased('dummy')
-        basket = Basket.objects.create()
-        method.set_basket(basket)
-
-        self.assertEquals(D('0.00'), method.basket_charge_incl_tax())
-        self.assertEquals(D('0.00'), method.basket_charge_excl_tax())
-
-    def test_lower_band_basket(self):
-        WeightBand.objects.create(method_code='standard', upper_limit=1, charge=D('4.00'))
-        WeightBand.objects.create(method_code='standard', upper_limit=3, charge=D('12.00'))
-        method = WeightBased('standard')
-
-        basket = Basket.objects.create()
-        basket.add_product(create_product(attributes={'weight': 0.5}))
-        method.set_basket(basket)
-
-        self.assertEqual(D('4.00'), method.basket_charge_incl_tax())
-
-    def test_inner_band_basket(self):
-        WeightBand.objects.create(method_code='standard', upper_limit=1, charge=D('4.00'))
-        WeightBand.objects.create(method_code='standard', upper_limit=3, charge=D('12.00'))
-        method = WeightBased('standard')
-
-        basket = Basket.objects.create()
-        basket.add_product(create_product(attributes={'weight': 0.5}))
-        basket.add_product(create_product(attributes={'weight': 1}))
-        method.set_basket(basket)
-
-        self.assertEqual(D('12.00'), method.basket_charge_incl_tax())
-
-    def test_outer_band_basket(self):
-        WeightBand.objects.create(method_code='standard', upper_limit=1, charge=D('4.00'))
-        WeightBand.objects.create(method_code='standard', upper_limit=3, charge=D('12.00'))
-        method = WeightBased('standard', upper_charge=D('30.00'))
-
-        basket = Basket.objects.create()
-        basket.add_product(create_product(attributes={'weight': 10.5}))
-        method.set_basket(basket)
-
-        self.assertEqual(D('30.00'), method.basket_charge_incl_tax())
-
-
 class ScalesTests(unittest.TestCase):
 
     def test_simple_weight_calculation(self):
@@ -198,57 +153,62 @@ class ScalesTests(unittest.TestCase):
         self.assertEquals(1+2, scales.weigh_basket(basket))
 
 
-class WeightBandTests(unittest.TestCase):
+class WeightBasedMethodTests(unittest.TestCase):
+
+    def setUp(self):
+        self.standard = WeightBased.objects.create(name='Standard')
+        self.express = WeightBased.objects.create(name='Express')
 
     def tearDown(self):
-        WeightBand.objects.all().delete()
+        self.standard.delete()
+        self.express.delete()
 
     def test_get_band_for_lower_weight(self):
-        band = WeightBand.objects.create(method_code='standard', upper_limit=1, charge=D('4.00'))
-        fetched_band = WeightBand.get_band_for_weight('standard', 0.5)
+        band = self.standard.bands.create(upper_limit=1, charge=D('4.00'))
+        fetched_band = self.standard.get_band_for_weight(0.5)
         self.assertEqual(band.id, fetched_band.id)
 
     def test_get_band_for_higher_weight(self):
-        band = WeightBand.objects.create(method_code='standard', upper_limit=1, charge=D('4.00'))
-        fetched_band = WeightBand.get_band_for_weight('standard', 1.5)
+        band = self.standard.bands.create(upper_limit=1, charge=D('4.00'))
+        fetched_band = self.standard.get_band_for_weight(1.5)
         self.assertIsNone(fetched_band)
 
     def test_get_band_for_matching_weight(self):
-        band = WeightBand.objects.create(method_code='standard', upper_limit=1, charge=D('4.00'))
-        fetched_band = WeightBand.get_band_for_weight('standard', 1)
+        band = self.standard.bands.create(upper_limit=1, charge=D('4.00'))
+        fetched_band = self.standard.get_band_for_weight(1)
         self.assertEqual(band.id, fetched_band.id)
 
     def test_weight_to_is_upper_bound(self):
-        band = WeightBand.objects.create(method_code='standard', upper_limit=1, charge=D('4.00'))
+        band = self.standard.bands.create(upper_limit=1, charge=D('4.00'))
         self.assertEqual(1, band.weight_to)
 
     def test_weight_from_for_single_band(self):
-        band = WeightBand.objects.create(method_code='standard', upper_limit=1, charge=D('4.00'))
+        band = self.standard.bands.create(upper_limit=1, charge=D('4.00'))
         self.assertEqual(0, band.weight_from)
 
     def test_weight_from_for_multiple_bands(self):
-        WeightBand.objects.create(upper_limit=1, charge=D('4.00'))
-        band = WeightBand.objects.create(method_code='standard', upper_limit=2, charge=D('8.00'))
+        self.standard.bands.create(upper_limit=1, charge=D('4.00'))
+        band = self.standard.objects.create(upper_limit=2, charge=D('8.00'))
         self.assertEqual(1, band.weight_from)
 
     def test_weight_from_for_multiple_bands(self):
-        WeightBand.objects.create(method_code='standard', upper_limit=1, charge=D('4.00'))
-        band = WeightBand.objects.create(method_code='express', upper_limit=2, charge=D('8.00'))
+        self.standard.bands.create(upper_limit=1, charge=D('4.00'))
+        band = self.express.bands.create(upper_limit=2, charge=D('8.00'))
         self.assertEqual(0, band.weight_from)
 
     def test_get_band_for_series_of_bands(self):
-        WeightBand.objects.create(method_code='standard', upper_limit=1, charge=D('4.00'))
-        WeightBand.objects.create(method_code='standard', upper_limit=2, charge=D('8.00'))
-        WeightBand.objects.create(method_code='standard', upper_limit=3, charge=D('12.00'))
-        self.assertEqual(D('4.00'), WeightBand.get_band_for_weight('standard', 0.5).charge)
-        self.assertEqual(D('8.00'), WeightBand.get_band_for_weight('standard', 1.5).charge)
-        self.assertEqual(D('12.00'), WeightBand.get_band_for_weight('standard', 2.5).charge)
+        self.standard.bands.create(upper_limit=1, charge=D('4.00'))
+        self.standard.bands.create(upper_limit=2, charge=D('8.00'))
+        self.standard.bands.create(upper_limit=3, charge=D('12.00'))
+        self.assertEqual(D('4.00'), self.standard.get_band_for_weight(0.5).charge)
+        self.assertEqual(D('8.00'), self.standard.get_band_for_weight(1.5).charge)
+        self.assertEqual(D('12.00'), self.standard.get_band_for_weight(2.5).charge)
 
     def test_get_band_for_series_of_bands_from_different_methods(self):
-        WeightBand.objects.create(method_code='standard', upper_limit=1, charge=D('4.00'))
-        WeightBand.objects.create(method_code='express', upper_limit=2, charge=D('8.00'))
-        WeightBand.objects.create(method_code='standard', upper_limit=3, charge=D('12.00'))
-        self.assertEqual(D('12.00'), WeightBand.get_band_for_weight('standard', 2.5).charge)
+        self.express.bands.create(upper_limit=2, charge=D('8.00'))
+        self.standard.bands.create(upper_limit=1, charge=D('4.00'))
+        self.standard.bands.create(upper_limit=3, charge=D('12.00'))
+        self.assertEqual(D('12.00'), self.standard.get_band_for_weight(2.5).charge)
 
 
 class RepositoryTests(unittest.TestCase):

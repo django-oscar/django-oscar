@@ -188,6 +188,8 @@ INSTALLED_APPS = (
     'django_extensions',
     'haystack',
     'debug_toolbar',
+    'pyzen',
+    'south',
     # Apps from oscar
     'oscar',
     'oscar.apps.analytics',
@@ -211,7 +213,6 @@ INSTALLED_APPS = (
     'oscar.apps.dashboard.reports',
     'oscar.apps.dashboard.users',
     'oscar.apps.dashboard.orders',
-    'pyzen',
     'sorl.thumbnail',
 )
 

@@ -6,7 +6,29 @@ from django.template.defaultfilters import slugify
 from django.conf import settings
 
 
-class OrderAndItemCharges(models.Model):
+class ShippingMethod(models.Model):
+    code = models.SlugField(max_length=128, unique=True)
+    name = models.CharField(_("Name"), max_length=128, unique=True)
+    description = models.TextField(_("Description"), blank=True)
+
+    _basket = None
+
+    class Meta:
+        abstract = True
+
+    def save(self, *args, **kwargs):
+        if not self.code:
+            self.code = slugify(self.name)
+        super(ShippingMethod, self).save(*args, **kwargs)
+
+    def __unicode__(self):
+        return self.name
+    
+    def set_basket(self, basket):
+        self._basket = basket
+
+
+class OrderAndItemCharges(ShippingMethod):
     """
     Standard shipping method
     
@@ -18,9 +40,6 @@ class OrderAndItemCharges(models.Model):
     complex shipping logic, a custom shipping method object will need to be provided
     that subclasses ShippingMethod.
     """
-    code = models.CharField(max_length=128, unique=True)
-    name = models.CharField(_("Name"), max_length=128)
-    description = models.TextField(_("Description"), blank=True)
     price_per_order = models.DecimalField(decimal_places=2, max_digits=12, default=D('0.00'))
     price_per_item = models.DecimalField(decimal_places=2, max_digits=12, default=D('0.00'))
     
@@ -28,14 +47,6 @@ class OrderAndItemCharges(models.Model):
     free_shipping_threshold = models.DecimalField(decimal_places=2, max_digits=12, blank=True, null=True)
     
     _basket = None
-    
-    def save(self, *args, **kwargs):
-        if not self.code:
-            self.code = slugify(self.name)
-        super(AbstractOrderAndItemLevelChargeMethod, self).save(*args, **kwargs)
-        
-    def __unicode__(self):
-        return self.name
 
     class Meta:
         verbose_name_plural = 'Order and item charges'
@@ -65,17 +76,46 @@ class OrderAndItemCharges(models.Model):
         return self.basket_charge_incl_tax()
 
 
+class WeightBased(ShippingMethod):
+    upper_charge = models.DecimalField(decimal_places=2, max_digits=12, null=True)
+
+    weight_attribute = 'weight'
+
+    def basket_charge_incl_tax(self):
+        weight = Scales(attribute=self.weight_attribute).weigh_basket(self.basket)
+        band = WeightBand.get_band_for_weight(self.code, weight)
+        if not band:
+            if WeightBand.objects.filter(method_code=self.code).count() > 0 and self.upper_charge:
+                return self.upper_charge
+            else:
+                return D('0.00')
+        return band.charge
+    
+    def basket_charge_excl_tax(self):
+        return D('0.00')
+        
+    def get_band_for_weight(self, weight):
+        """
+        Return the weight band for a given weight
+        """
+        bands = self.bands.filter(upper_limit__gte=weight).order_by('upper_limit')
+        if not bands.count():
+            # No band for this weight
+            return None
+        return bands[0]
+
+
 class WeightBand(models.Model):
     """
     Represents a weight band which are used by the WeightBasedShipping method.
     """
-    method_code = models.CharField(max_length=64, db_index=True)
+    method = models.ForeignKey(WeightBased, related_name='bands')
     upper_limit = models.FloatField(help_text=_("""Enter upper limit of this weight band in Kg"""))
     charge = models.DecimalField(decimal_places=2, max_digits=12)
     
     @property
     def weight_from(self):
-        lower_bands = WeightBand.objects.filter(method_code=self.method_code,
+        lower_bands = self.method.bands.filter(
                 upper_limit__lt=self.upper_limit).order_by('-upper_limit')
         if not lower_bands:
             return D('0.00')
@@ -90,15 +130,3 @@ class WeightBand(models.Model):
 
     def __unicode__(self):
         return u'Charge for weights up to %s' % (self.upper_limit,)
-        
-    @classmethod
-    def get_band_for_weight(cls, method_code, weight):
-        """
-        Return the weight band for a given weight
-        """
-        bands = WeightBand.objects.filter(method_code=method_code, 
-                upper_limit__gte=weight).order_by('upper_limit')
-        if not bands.count():
-            # No band for this weight
-            return None
-        return bands[0]

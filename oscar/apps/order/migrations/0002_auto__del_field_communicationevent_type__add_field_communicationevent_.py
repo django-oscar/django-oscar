@@ -12,7 +12,7 @@ class Migration(SchemaMigration):
         db.delete_column('order_communicationevent', 'type_id')
 
         # Adding field 'CommunicationEvent.event_type'
-        db.add_column('order_communicationevent', 'event_type', self.gf('django.db.models.fields.related.ForeignKey')(default=None, to=orm['customer.CommunicationEventType']), keep_default=False)
+        db.add_column('order_communicationevent', 'event_type', self.gf('django.db.models.fields.related.ForeignKey')(default=1, to=orm['customer.CommunicationEventType']), keep_default=False)
 
 
     def backwards(self, orm):
