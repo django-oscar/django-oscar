@@ -1,8 +1,8 @@
-from django.forms import ModelForm
+from django import forms
 from django.db.models import get_model
 
 
-class ShippingAddressForm(ModelForm):
+class ShippingAddressForm(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
         super(ShippingAddressForm,self ).__init__(*args, **kwargs)
@@ -15,3 +15,5 @@ class ShippingAddressForm(ModelForm):
         model = get_model('order', 'shippingaddress')
         exclude = ('user', 'search_text')
 
+
+# The BillingAddress form is in oscar.apps.payment.forms

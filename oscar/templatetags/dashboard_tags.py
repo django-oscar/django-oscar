@@ -1,4 +1,5 @@
 from django import template
+
 from oscar.apps.order.models import Order
 
 def get_num_user_orders(parser, token):
