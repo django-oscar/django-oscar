@@ -23,7 +23,8 @@ import_module('checkout.calculators', ['OrderTotalCalculator'], locals())
 import_module('checkout.utils', ['CheckoutSessionData'], locals())
 import_module('checkout.signals', ['pre_payment', 'post_payment'], locals())
 import_module('order.models', ['Order', 'ShippingAddress',
-                               'CommunicationEvent'], locals())
+                               'CommunicationEvent', 'PaymentEventType',
+                               'PaymentEvent'], locals())
 import_module('order.utils', ['OrderNumberGenerator', 'OrderCreator'], locals())
 import_module('address.models', ['UserAddress'], locals())
 import_module('address.forms', ['UserAddressForm'], locals())
