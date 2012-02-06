@@ -16,8 +16,4 @@ class ShippingAddressForm(forms.ModelForm):
         exclude = ('user', 'search_text')
 
 
-class BillingAddressForm(forms.ModelForm):
-
-    class Meta:
-        model = get_model('order', 'BillingAddress')
-        exclude = ('search_text',)
+# The BillingAddress form is in oscar.apps.payment.forms
