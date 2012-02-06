@@ -11,7 +11,7 @@ from oscar.test import ClientTestCase
 from oscar.test.helpers import create_order
 from oscar.apps.order.models import Order, OrderNote
 from oscar.apps.dashboard.orders.forms import OrderSearchForm
-from oscar.apps.dashboard.orders.templatetags.user_orders import get_num_user_orders
+from oscar.templatetags.dashboard_tags import get_num_user_orders
 
 
 class OrderSummaryTests(ClientTestCase):
@@ -96,7 +96,7 @@ class TemplateTagTests(TestCase):
         for i in range(1, 4):
             get(Order, user=user)
         out = Template(
-            "{% load user_orders %}"
+            "{% load dashboard_tags %}"
             "{% num_orders user %}"
         ).render(Context({
             'user': user
