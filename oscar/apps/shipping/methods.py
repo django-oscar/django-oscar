@@ -35,24 +35,3 @@ class FixedPrice(ShippingMethod):
     def basket_charge_excl_tax(self):
         return self.charge_excl_tax
 
-
-class WeightBased(ShippingMethod):
-
-    def __init__(self, code=None, weight_attribute='weight', upper_charge=None):
-        if self.code:
-            self.code = code
-        self.scales = Scales(attribute=weight_attribute)
-        self.upper_charge = upper_charge
-
-    def basket_charge_incl_tax(self):
-        weight = self.scales.weigh_basket(self.basket)
-        band = WeightBand.get_band_for_weight(self.code, weight)
-        if not band:
-            if WeightBand.objects.filter(method_code=self.code).count() > 0 and self.upper_charge:
-                return self.upper_charge
-            else:
-                return D('0.00')
-        return band.charge
-    
-    def basket_charge_excl_tax(self):
-        return D('0.00')
