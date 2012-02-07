@@ -77,9 +77,15 @@ class OrderAndItemCharges(ShippingMethod):
 
 
 class WeightBased(ShippingMethod):
-    upper_charge = models.DecimalField(decimal_places=2, max_digits=12, null=True)
+    upper_charge = models.DecimalField(decimal_places=2, max_digits=12, null=True,
+                                      help_text="""This is the charge when the
+                                       weight of the basket is greater than all
+                                      the weight bands""")
 
     weight_attribute = 'weight'
+
+    class Meta:
+        verbose_name_plural = 'Weight-based shipping methods'
 
     def basket_charge_incl_tax(self):
         weight = Scales(attribute=self.weight_attribute).weigh_basket(self.basket)
@@ -129,4 +135,4 @@ class WeightBand(models.Model):
         ordering = ['upper_limit']
 
     def __unicode__(self):
-        return u'Charge for weights up to %s' % (self.upper_limit,)
+        return u'Charge for weights up to %sKg' % (self.upper_limit,)

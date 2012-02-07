@@ -1,7 +1,7 @@
 from decimal import Decimal as D
 
 from oscar.apps.shipping.base import ShippingMethod
-from oscar.apps.shipping.models import OrderAndItemCharges, WeightBand
+from oscar.apps.shipping.models import OrderAndItemCharges, WeightBand, WeightBased
 from oscar.apps.shipping import Scales
 
 
