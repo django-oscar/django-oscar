@@ -28,3 +28,5 @@ sandbox/*.sqlite
 sandbox/assets/*
 .idea
 TODO
+.coverage
+htmlcov/*
