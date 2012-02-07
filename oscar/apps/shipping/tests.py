@@ -210,6 +210,12 @@ class WeightBasedMethodTests(unittest.TestCase):
         self.standard.bands.create(upper_limit=3, charge=D('12.00'))
         self.assertEqual(D('12.00'), self.standard.get_band_for_weight(2.5).charge)
 
+    def test_for_smoke_with_basket_charge(self):
+        basket = Basket()
+        self.standard.set_basket(basket)
+        charge = self.standard.basket_charge_incl_tax()
+        self.assertEqual(D('0.00'), charge)
+
 
 class RepositoryTests(unittest.TestCase):
 

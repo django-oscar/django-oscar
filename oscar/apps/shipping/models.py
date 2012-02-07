@@ -5,6 +5,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.template.defaultfilters import slugify
 from django.conf import settings
 
+from oscar.apps.shipping import Scales
+
 
 class ShippingMethod(models.Model):
     code = models.SlugField(max_length=128, unique=True)
@@ -88,17 +90,17 @@ class WeightBased(ShippingMethod):
         verbose_name_plural = 'Weight-based shipping methods'
 
     def basket_charge_incl_tax(self):
-        weight = Scales(attribute=self.weight_attribute).weigh_basket(self.basket)
-        band = WeightBand.get_band_for_weight(self.code, weight)
+        weight = Scales(attribute=self.weight_attribute).weigh_basket(self._basket)
+        band = self.get_band_for_weight(weight)
         if not band:
-            if WeightBand.objects.filter(method_code=self.code).count() > 0 and self.upper_charge:
+            if self.bands.all().count() > 0 and self.upper_charge:
                 return self.upper_charge
             else:
                 return D('0.00')
         return band.charge
     
     def basket_charge_excl_tax(self):
-        return D('0.00')
+        return self.basket_charge_incl_tax()
         
     def get_band_for_weight(self, weight):
         """
