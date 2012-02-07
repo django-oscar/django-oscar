@@ -31,6 +31,7 @@ class BulkEditMixin():
         objects = (raw_objects[int(id)] for id in ids)
         return getattr(self, action)(request, objects)
 
+
 class IndexView(TemplateView):
     template_name = 'dashboard/index.html'
 
@@ -46,6 +47,7 @@ class IndexView(TemplateView):
             MenuItem('Manage orders', 'dashboard:order-list'),
             MenuItem('View reports', 'dashboard:reports-index'),
             MenuItem('User management', 'dashboard:users-index'),
+            MenuItem('Content block management', 'dashboard:promotion-list'),
         )
 
     def get_context_data(self, **kwargs):

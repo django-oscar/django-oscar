@@ -4,6 +4,7 @@ from django.test import TestCase
 from oscar.apps.dashboard.orders.tests import *
 from oscar.apps.dashboard.reports.tests import *
 from oscar.apps.dashboard.users.tests import *
+from oscar.apps.dashboard.promotions.tests import *
 
 from oscar.test import ClientTestCase
 

@@ -1,0 +1,43 @@
+{% extends 'dashboard/layout.html' %}
+
+{% load currency_filters %}
+
+{% block header %}
+<h2>Content block management</h2>
+{% endblock header %}
+
+{% block dashboard_content %}
+
+{% if promotions %}
+
+<table>
+    <tr>
+        <th></th>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Number of times used</th>
+        <th>Date created</th>
+        <th>Actions</th>
+    </tr>
+    {% for promotion in promotions %}
+    <tr>
+        <td>{{ promotion.name }}</td>
+		<td>{{ promotion.type }}</td>
+		<td>{{ promotion.type }}</td>
+		<td>{{ promotion.type }}</td>
+        <td>
+			{{ promotion }} asdf
+			<a href="">View</a> |
+			<a href="">Delete</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% else %}
+
+<p>No content blocks found.</p>
+
+{% endif %}
+
+{% endblock dashboard_content %}
