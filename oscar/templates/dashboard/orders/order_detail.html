@@ -182,7 +182,16 @@ Order {{ order.number }}
 		<option value="{{ event_type.code }}">{{ event_type.name }}</option>
 		{% endfor %}
 	</select>
-
+	</li>
+	<li><label><input type="radio" name="line_action" value="create_payment_event" /> Create payment event</label>
+	<select name="payment_event_type">
+		<option value=""> -- choose event type -- </option>
+		{% for event_type in payment_event_types %}
+		<option value="{{ event_type.code }}">{{ event_type.name }}</option>
+		{% endfor %}
+	</select>
+	with amount: 
+	<input type="text" name="amount" value="" />
 	</li>
 
 </ul>
@@ -248,6 +257,7 @@ Order {{ order.number }}
 	<tr>
 		<th>Date</th>
 		<th>Event</th>
+		<th>Amount</th>
 		<th>Lines</th>
 	</tr>
 	{% for event in events %}
@@ -255,6 +265,7 @@ Order {{ order.number }}
 	<tr>
 		<td rowspan="{{ line_qtys|length }}">{{ event.date }}</td>
 		<td rowspan="{{ line_qtys|length }}">{{ event.event_type.name }}</td>
+		<td rowspan="{{ line_qtys|length }}">{{ event.amount|currency }}</td>
 		<td>
 			<table>
 				{% for line_qty in event.line_quantities.all %}

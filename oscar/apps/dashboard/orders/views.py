@@ -1,4 +1,5 @@
 import csv
+from decimal import Decimal as D, InvalidOperation
 
 from django.contrib import messages
 from django.core.urlresolvers import reverse
@@ -15,12 +16,14 @@ from django.contrib import messages
 from oscar.core.loading import get_class
 from oscar.apps.dashboard.orders import forms
 from oscar.apps.dashboard.views import BulkEditMixin
+from oscar.apps.payment.exceptions import PaymentError
 
 Order = get_model('order', 'Order')
 OrderNote = get_model('order', 'OrderNote')
 ShippingAddress = get_model('order', 'ShippingAddress')
 Line = get_model('order', 'Line')
 ShippingEventType = get_model('order', 'ShippingEventType')
+PaymentEventType = get_model('order', 'PaymentEventType')
 EventHandler = get_class('order.processing', 'EventHandler')
 
 
@@ -199,7 +202,8 @@ class OrderDetailView(DetailView):
     context_object_name = 'order'
     template_name = 'dashboard/orders/order_detail.html'
     order_actions = ('save_note', 'delete_note', 'change_order_status',)
-    line_actions = ('change_line_statuses', 'create_shipping_event')
+    line_actions = ('change_line_statuses', 'create_shipping_event',
+                    'create_payment_event')
 
     def get_object(self):
         return get_object_or_404(self.model, number=self.kwargs['number'])
@@ -209,6 +213,7 @@ class OrderDetailView(DetailView):
         ctx['note_form'] = self.get_order_note_form()
         ctx['line_statuses'] = Line.all_statuses()
         ctx['shipping_event_types'] = ShippingEventType.objects.all()
+        ctx['payment_event_types'] = PaymentEventType.objects.all()
         return ctx
 
     def get_order_note_form(self):
@@ -335,11 +340,41 @@ class OrderDetailView(DetailView):
             return self.reload_page_response()
 
         try:
-            EventHandler().handle_order_status_change(order, new_status)
+            EventHandler().handle_shipping_event(order, event_type, lines,
+                                                 quantities)
         except PaymentError, e:
             messages.error("Unable to change order status due to payment error: %s" % e)
         else:
             messages.info(request, "Shipping event created")
+        return self.reload_page_response()
+
+    def create_payment_event(self, request, order, lines, quantities):
+        code = request.POST['payment_event_type']
+        try:
+            event_type = PaymentEventType._default_manager.get(code=code)
+        except PaymentEventType.DoesNotExist:
+            messages.error(request, "The event type '%s' is not valid" % code)
+            return self.reload_page_response()
+
+        amount_str = request.POST['amount']
+        if not amount_str:
+            amount = D('0.00')
+            for line, quantity in zip(lines, quantities):
+                amount += int(quantity) * line.line_price_incl_tax
+        else:
+            try:
+                amount = D(amount_str)
+            except InvalidOperation:
+                messages.error(request, "Please choose a valid amount")
+                return self.reload_page_response()
+
+        try:
+            EventHandler().handle_payment_event(order, event_type, amount,
+                                                lines, quantities)
+        except PaymentError, e:
+            messages.error("Unable to change order status due to payment error: %s" % e)
+        else:
+            messages.info(request, "Payment event created")
         return self.reload_page_response()
 
 

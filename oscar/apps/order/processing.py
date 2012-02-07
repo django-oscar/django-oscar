@@ -21,11 +21,11 @@ class EventHandler(object):
         """
         self.create_shipping_event(order, event_type, lines, line_quantities)
 
-    def handle_payment_event(self, order, event_type, lines, line_quantities):
+    def handle_payment_event(self, order, event_type, amount, lines, line_quantities):
         """
         Handle a payment event for a given order.
         """
-        self.create_payment_event(order, event_type, lines, line_quantities)
+        self.create_payment_event(order, event_type, amount, lines, line_quantities)
 
     def create_shipping_event(self, order, event_type, lines, line_quantities):
         event = order.shipping_events.create(event_type=event_type)
@@ -34,8 +34,8 @@ class EventHandler(object):
                                                  line=line,
                                                  quantity=quantity)
 
-    def create_payment_event(self, order, event_type, lines, line_quantities):
-        event = order.payment_events.create(event_type=event_type)
+    def create_payment_event(self, order, event_type, amount, lines, line_quantities):
+        event = order.payment_events.create(event_type=event_type, amount=amount)
         for line, quantity in zip(lines, line_quantities):
             PaymentEventQuantity.objects.create(event=event,
                                                 line=line,

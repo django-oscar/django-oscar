@@ -465,6 +465,7 @@ class AbstractPaymentEvent(models.Model):
     payment being taken for 2 items, or 1 item being dispatched.
     """
     order = models.ForeignKey('order.Order', related_name='payment_events')
+    amount = models.DecimalField(decimal_places=2, max_digits=12)
     lines = models.ManyToManyField('order.Line', through='PaymentEventQuantity')
     event_type = models.ForeignKey('order.PaymentEventType')
     date = models.DateTimeField(auto_now_add=True)
