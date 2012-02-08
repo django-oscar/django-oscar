@@ -212,6 +212,7 @@ INSTALLED_APPS = (
     'oscar.apps.dashboard.reports',
     'oscar.apps.dashboard.users',
     'oscar.apps.dashboard.orders',
+    'oscar.apps.dashboard.promotions',
     'sorl.thumbnail',
 )
 

@@ -8,10 +8,18 @@ from oscar.apps.dashboard.promotions import views
 class PromotionsDashboardApplication(Application):
     name = None
     promotion_list_view = views.PromotionListView
+    promotion_create_redirect_view = views.PromotionCreateRedirectView
+    promotion_create_rawhtml_view = views.PromotionCreateRawHTMLView
 
     def get_urls(self):
         urlpatterns = patterns('',
             url(r'^$', self.promotion_list_view.as_view(), name='promotion-list'),
+            url(r'^create/$', 
+                self.promotion_create_redirect_view.as_view(), 
+                name='promotion-create-redirect'),
+            url(r'^create/rawhtml/$',
+                self.promotion_create_rawhtml_view.as_view(),
+                name='promotion-create-rawhtml'),
         )
         return self.post_process_urls(urlpatterns)
 

@@ -10,6 +10,11 @@
 
 {% if promotions %}
 
+<form action="{% url dashboard:promotion-create-redirect %}" method="get">
+    <p>Create a content block of type: {{ select_form.as_p }}
+    <input type="submit" value="Go!" /></p>
+</form>
+
 <table>
     <tr>
         <th></th>

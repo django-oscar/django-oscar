@@ -44,7 +44,8 @@ class ClientTestCase(TestCase):
         return user
 
     def assertIsRedirect(self, response):
-        self.assertEqual(httplib.FOUND, response.status_code)
+        self.assertTrue(response.status_code in (httplib.FOUND,
+                                                 httplib.MOVED_PERMANENTLY))
 
     def assertIsOk(self, response):
         self.assertEqual(httplib.OK, response.status_code)
