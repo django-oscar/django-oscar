@@ -575,7 +575,8 @@ class OrderPlacementMixin(CheckoutSessionMixin):
 
     def send_confirmation_message(self, order, **kwargs):
         code = self.communication_type_code
-        ctx = {'order': order}
+        ctx = {'order': order,
+               'lines': order.lines.all(),}
         try:
             event_type = CommunicationEventType.objects.get(code=code)
         except CommunicationEventType.DoesNotExist:
