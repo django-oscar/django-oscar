@@ -75,3 +75,19 @@ class PromotionUpdateRawHTMLView(PromotionUpdateView):
     model = RawHTML
     form_class = RawHTMLForm
 
+
+# ============
+# DELETE VIEWS
+# ============
+        
+
+class PromotionDeleteView(generic.DeleteView):
+    template_name = 'dashboard/promotions/delete.html'
+
+    def get_success_url(self):
+        messages.info(self.request, "Promotion deleted successfully")
+        return reverse('dashboard:promotion-list')
+
+
+class PromotionDeleteRawHTMLView(PromotionDeleteView):
+    model = RawHTML

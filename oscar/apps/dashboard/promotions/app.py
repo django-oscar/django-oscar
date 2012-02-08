@@ -11,6 +11,7 @@ class PromotionsDashboardApplication(Application):
     promotion_create_redirect_view = views.PromotionCreateRedirectView
     promotion_create_rawhtml_view = views.PromotionCreateRawHTMLView
     promotion_update_rawhtml_view = views.PromotionUpdateRawHTMLView
+    promotion_delete_rawhtml_view = views.PromotionDeleteRawHTMLView
 
     def get_urls(self):
         urlpatterns = patterns('',
@@ -24,6 +25,9 @@ class PromotionsDashboardApplication(Application):
             url(r'^update/(?P<ptype>rawhtml)/(?P<pk>\d+)/$',
                 self.promotion_update_rawhtml_view.as_view(),
                 name='promotion-update'),
+            url(r'^delete/(?P<ptype>rawhtml)/(?P<pk>\d+)/$',
+                self.promotion_delete_rawhtml_view.as_view(),
+                name='promotion-delete'),
         )
         return self.post_process_urls(urlpatterns)
 

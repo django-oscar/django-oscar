@@ -1,0 +1,14 @@
+{% extends 'dashboard/layout.html' %}
+
+
+{% block dashboard_content %}
+<h1>Delete promotion?</h1>
+
+<form action="." method="post">
+	{% csrf_token %}
+	{{ form }}
+	<p>Delete {{ object.type }} content block <strong>{{ object.name }}</strong> - are you sure?</p>
+	<p><button type="submit" class="btn btn-danger">Delete</button>
+	or <a href="{% url dashboard:promotion-list %}">cancel</a></p>
+</form>
+{% endblock %}

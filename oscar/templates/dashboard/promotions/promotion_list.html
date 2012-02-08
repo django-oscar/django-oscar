@@ -33,7 +33,7 @@
 			<td>{{ promotion.date_created }}</td>
 			<td>
 				<a class="btn btn-success" href="{% url dashboard:promotion-update promotion.code promotion.id %}">Edit</a>
-				<a class="btn btn-danger" href="">Delete</a>
+				<a class="btn btn-danger" href="{% url dashboard:promotion-delete promotion.code promotion.id %}">Delete</a>
 			</td>
 		</tr>
 		{% endfor %}
