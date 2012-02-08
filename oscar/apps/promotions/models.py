@@ -85,13 +85,17 @@ class AbstractPromotion(models.Model):
     @property
     def type(self):
         return _(self._type)
+
+    @property
+    def code(self):
+        return self.__class__.__name__.lower()
     
     def template_name(self):
         """
         Returns the template to use to render this
         promotion.
         """
-        return 'promotions/%s.html' % self.__class__.__name__.lower()
+        return 'promotions/%s.html' % self.code
     
     def template_context(self, *args, **kwargs):
         return {}
@@ -118,7 +122,8 @@ class RawHTML(AbstractPromotion):
     name = models.CharField(_("Name"), max_length=128)
     
     # Used to determine how to render the promotion (eg
-    # if a different width container is required).
+    # if a different width container is required).  This isn't always
+    # required.
     display_type = models.CharField(_("Display type"), max_length=128, blank=True, null=True)
     body = models.TextField(_("HTML"))
     date_created = models.DateTimeField(auto_now_add=True)

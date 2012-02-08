@@ -2,41 +2,42 @@
 
 {% load currency_filters %}
 
-{% block header %}
-<h2>Content block management</h2>
-{% endblock header %}
 
 {% block dashboard_content %}
+
+<h1>Content block management</h1>
 
 {% if promotions %}
 
 <form action="{% url dashboard:promotion-create-redirect %}" method="get">
     <p>Create a content block of type: {{ select_form.as_p }}
-    <input type="submit" value="Go!" /></p>
+	<button type="submit" class="btn btn-primary">Go!</button>
 </form>
 
-<table>
-    <tr>
-        <th></th>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Number of times used</th>
-        <th>Date created</th>
-        <th>Actions</th>
-    </tr>
-    {% for promotion in promotions %}
-    <tr>
-        <td>{{ promotion.name }}</td>
-		<td>{{ promotion.type }}</td>
-		<td>{{ promotion.type }}</td>
-		<td>{{ promotion.type }}</td>
-        <td>
-			{{ promotion }} asdf
-			<a href="">View</a> |
-			<a href="">Delete</a>
-        </td>
-    </tr>
-    {% endfor %}
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Type</th>
+			<th>Number of times used</th>
+			<th>Date created</th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for promotion in promotions %}
+		<tr>
+			<td>{{ promotion.name }}</td>
+			<td>{{ promotion.type }}</td>
+			<td>{{ promotion.num_times_used }}</td>
+			<td>{{ promotion.date_created }}</td>
+			<td>
+				<a class="btn btn-success" href="{% url dashboard:promotion-update promotion.code promotion.id %}">Edit</a>
+				<a class="btn btn-danger" href="">Delete</a>
+			</td>
+		</tr>
+		{% endfor %}
+	</tbody>
 </table>
 
 {% else %}

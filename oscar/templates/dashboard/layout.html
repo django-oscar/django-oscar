@@ -4,7 +4,7 @@
     <h2>Dashboard</h2>
 {% endblock header %}
 
-{% block content %}
+{% block container_nav %}
     <div>
         <a href="{% url dashboard:order-summary %}">See statistics</a> |
         <a href="{% url dashboard:order-list %}">Manage orders</a> |
@@ -12,5 +12,8 @@
         <a href="{% url dashboard:users-index %}">User management</a> |
         {% comment %}<a href="{% url dashboard:events-index %}">Events</a>{% endcomment %}
     </div>
+{% endblock %}
+
+{% block content %}
     {% block dashboard_content %}{% endblock dashboard_content %}
 {% endblock content %}

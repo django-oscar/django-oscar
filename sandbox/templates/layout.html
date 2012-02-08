@@ -6,55 +6,54 @@
 
 {% block layout %}
 
-    <div class="navbar navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container-fluid">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
-          <a class="brand" href="{% url promotions:home %}">Oscar // Domain-driven e-Commerce for Django</a>
-          <div class="nav-collapse">
-            <ul class="nav">
-              <li class="active"><a href="#">Home</a></li>
-              <li><a href="#about">About</a></li>
-              <li><a href="#contact">Contact</a></li>
-            </ul>
-            <p class="navbar-text pull-right">
-            <a href="{% url basket:summary %}">Basket</a>
-  			{{ basket.total_incl_tax|currency }} |
-            {% if user.is_authenticated %}
-                <a href="{% url customer:summary %}">Profile</a>
-                <a href="{% url customer:logout %}">Logout</a>
-            {% else %}
-                <a href="{% url customer:login %}">Login</a>
-            {% endif %}
-			</p>
-          </div><!--/.nav-collapse -->
-        </div>
-      </div>
-    </div>	
-
-    <div class="container">
-		<h1>Welcome</h1>
-	    <p>Hello</p>
-
-        
-		{% if messages %}
-		<ul class="messages">
-			{% for message in messages %}
-			<li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-			{% endfor %}
-		</ul>
-		{% endif %}
-		
-		<div id="promotions">
-			{% for promotion in promotions_page %}
-				{% render_promotion promotion %}
-			{% endfor %}
+<div class="navbar navbar-fixed-top">
+	<div class="navbar-inner">
+		<div class="container-fluid">
+			<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</a>
+			<a class="brand" href="{% url promotions:home %}">Oscar // Domain-driven e-Commerce for Django</a>
+			<div class="nav-collapse">
+				<ul class="nav">
+					<li class="active"><a href="#">Home</a></li>
+					<li><a href="#about">About</a></li>
+					<li><a href="#contact">Contact</a></li>
+				</ul>
+				<p class="navbar-text pull-right">
+				<a href="{% url basket:summary %}">Basket</a>
+				{{ basket.total_incl_tax|currency }} |
+				{% if user.is_authenticated %}
+				<a href="{% url customer:summary %}">Profile</a>
+				<a href="{% url customer:logout %}">Logout</a>
+				{% else %}
+				<a href="{% url customer:login %}">Login</a>
+				{% endif %}
+				</p>
+			</div><!--/.nav-collapse -->
 		</div>
-		
-		{% block content %}{% endblock %}
-    </div>
+	</div>
+</div>	
+
+<div class="container">
+	{% block container_nav %}
+	{% endblock %}
+
+	{% for message in messages %}
+	<div class="alert alert-{{ message.tags }}">
+		<a class="close">x</a>
+		{{ message }}
+	</div>
+	{% endfor %}
+
+	<div id="promotions">
+		{% for promotion in promotions_page %}
+		{% render_promotion promotion %}
+		{% endfor %}
+	</div>
+
+	{% block content %}{% endblock %}
+</div>
+
 {% endblock %}

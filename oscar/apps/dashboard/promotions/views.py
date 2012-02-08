@@ -2,6 +2,7 @@ import itertools
 
 from django.views import generic
 from django.core.urlresolvers import reverse
+from django.contrib import messages
 
 from oscar.core.loading import get_classes, get_class
 
@@ -40,10 +41,15 @@ class PromotionCreateRedirectView(generic.RedirectView):
         return urls.get(code, None)
 
 
+# ============
+# CREATE VIEWS
+# ============
+
 class PromotionCreateView(generic.CreateView):
 
     def get_success_url(self):
-        return reverse('dashboard:promotions_list')
+        messages.info(self.request, "Promotion created successfully")
+        return reverse('dashboard:promotion-list')
 
 
 class PromotionCreateRawHTMLView(PromotionCreateView):
@@ -51,5 +57,21 @@ class PromotionCreateRawHTMLView(PromotionCreateView):
     model = RawHTML
     form_class = RawHTMLForm
 
+
+# ============
+# UPDATE VIEWS
+# ============
         
+
+class PromotionUpdateView(generic.UpdateView):
+
+    def get_success_url(self):
+        messages.info(self.request, "Promotion updated successfully")
+        return reverse('dashboard:promotion-list')
+
+
+class PromotionUpdateRawHTMLView(PromotionUpdateView):
+    template_name = 'dashboard/promotions/create_rawhtml.html'
+    model = RawHTML
+    form_class = RawHTMLForm
 
