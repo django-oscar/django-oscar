@@ -15,7 +15,7 @@
 		<tr>
 			<th></th>
 			<td>
-				<input type="submit" value="Go!" />
+                <button type="submit" class="btn btn-primary">Go!</button>
 			</td>
 	</table>
 </form>
@@ -24,7 +24,7 @@
 {% if orders.count %}
 <form action="." method="post">
     {% csrf_token %}
-<table>
+<table class="table table-striped">
     <tr>
         <th></th>
         <th>Order number</th>
@@ -49,7 +49,7 @@
         <td>{{ order.shipping_address }}</td>
         <td>{{ order.billing_address }}</td>
         <td>
-            <a href="{% url dashboard:order-detail order.number %}">View</a>
+            <a class="btn btn-info" href="{% url dashboard:order-detail order.number %}">View</a>
         </td>
     </tr>
     {% endfor %}
@@ -75,10 +75,8 @@
 {% endif %}
 
 <p>With selected orders:</p>
-<ul>
-    <li><label><input type="radio" name="action" value="download_selected_orders" /> Download as CSV</label></li>
-</ul>
-<input type="submit" value="Go!" />
+<label><input type="radio" name="action" value="download_selected_orders" /> Download as CSV</label>
+<button type="submit" class="btn btn-primary">Go!</button>
 
 </form>
 

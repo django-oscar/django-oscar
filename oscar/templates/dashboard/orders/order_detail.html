@@ -48,7 +48,7 @@ Order {{ order.number }}
 <h2>Payment</h2>
 {% with sources=order.sources.all %}
 {% if sources %}
-<table>     
+<table class="table">     
     <thead>  
         <tr>
             <th>Source</th>
@@ -116,7 +116,8 @@ Order {{ order.number }}
 <h2>Items ordered</h2>
 <form action="." method="post">
 {% csrf_token %}
-<table>
+<table class="table">
+    <thead>
     <tr>
         <th>Select</th>
         <th>Quantity</th>
@@ -129,6 +130,8 @@ Order {{ order.number }}
         <th>Price (before discounts)</th>
         <th>Actions</th>
     </tr>
+    </thead>
+    <tbody>
     {% for line in order.lines.all %}
     <tr>
 		<td>
@@ -163,6 +166,7 @@ Order {{ order.number }}
         <td>Total</td>
         <td>{{ order.total_incl_tax|currency }}</td>
     </tr>
+    </tbody>
 </table>
 
 <p>With selected lines:</p>
@@ -220,12 +224,15 @@ Order {{ order.number }}
 <h2>Shipping Events</h2>
 {% with events=order.shipping_events.all %}
 {% if events %}
-<table>
+<table class="table">
+    <thead>
 	<tr>
 		<th>Date</th>
 		<th>Event</th>
 		<th>Lines</th>
 	</tr>
+    </thead>
+    <tbody>
 	{% for event in events %}
 	{% with line_qtys=event.line_quantities.all %}
 	<tr>
@@ -244,6 +251,7 @@ Order {{ order.number }}
 	</tr>
 	{% endwith %}
 	{% endfor %}
+</tbody>
 </table>
 {% else %}
 <p>No shipping events.</p>
@@ -253,33 +261,37 @@ Order {{ order.number }}
 <h2>Payment Events</h2>
 {% with events=order.payment_events.all %}
 {% if events %}
-<table>
-	<tr>
-		<th>Date</th>
-		<th>Event</th>
-		<th>Amount</th>
-		<th>Lines</th>
-	</tr>
-	{% for event in events %}
-	{% with line_qtys=event.line_quantities.all %}
-	<tr>
-		<td rowspan="{{ line_qtys|length }}">{{ event.date }}</td>
-		<td rowspan="{{ line_qtys|length }}">{{ event.event_type.name }}</td>
-		<td rowspan="{{ line_qtys|length }}">{{ event.amount|currency }}</td>
-		<td>
-			<table>
-				{% for line_qty in event.line_quantities.all %}
-				<tr>
-					<td>Product: {{ line_qty.line.title }}</td>
-					<td>Quantity: {{ line_qty.quantity }}</td>
-				</tr>
-				{% endfor %}
-			</table>
-		<td>
-	</tr>
-	{% endwith %}
-	{% endfor %}
-</table>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Event</th>
+            <th>Amount</th>
+            <th>Lines</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for event in events %}
+        {% with line_qtys=event.line_quantities.all %}
+        <tr>
+            <td rowspan="{{ line_qtys|length }}">{{ event.date }}</td>
+            <td rowspan="{{ line_qtys|length }}">{{ event.event_type.name }}</td>
+            <td rowspan="{{ line_qtys|length }}">{{ event.amount|currency }}</td>
+            <td>
+                <table>
+                    {% for line_qty in event.line_quantities.all %}
+                    <tr>
+                        <td>Product: {{ line_qty.line.title }}</td>
+                        <td>Quantity: {{ line_qty.quantity }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                <td>
+                </tr>
+                {% endwith %}
+                {% endfor %}
+            </tbody>
+        </table>
 {% else %}
 <p>No payment events.</p>
 {% endif %}
