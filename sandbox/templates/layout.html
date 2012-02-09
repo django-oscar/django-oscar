@@ -37,6 +37,12 @@
 </div>	
 
 <div class="container">
+	<ul class="breadcrumb">
+		{% block breadcrumbs %}
+		<li class="active"><a href=".">Home</a></li>
+		{% endblock %}
+	</ul>
+
 	{% block container_nav %}
 	{% endblock %}
 

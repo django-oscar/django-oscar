@@ -1,15 +1,17 @@
 import itertools
 
 from django.views import generic
+from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 from django.contrib import messages
+from django.http import HttpResponseRedirect
 
 from oscar.core.loading import get_classes, get_class
 
-SingleProduct, RawHTML, Image, MultiImage = get_classes('promotions.models',
-    ['SingleProduct', 'RawHTML', 'Image', 'MultiImage'])
-SelectForm, RawHTMLForm = get_classes('dashboard.promotions.forms', 
-    ['PromotionTypeSelectForm', 'RawHTMLForm'])
+SingleProduct, RawHTML, Image, MultiImage, PagePromotion = get_classes('promotions.models',
+    ['SingleProduct', 'RawHTML', 'Image', 'MultiImage', 'PagePromotion'])
+SelectForm, RawHTMLForm, PagePromotionForm = get_classes('dashboard.promotions.forms', 
+    ['PromotionTypeSelectForm', 'RawHTMLForm', 'PagePromotionForm'])
 
 
 class PromotionListView(generic.TemplateView):
@@ -53,9 +55,14 @@ class PromotionCreateView(generic.CreateView):
 
 
 class PromotionCreateRawHTMLView(PromotionCreateView):
-    template_name = 'dashboard/promotions/create_rawhtml.html'
+    template_name = 'dashboard/promotions/rawhtml_form.html'
     model = RawHTML
     form_class = RawHTMLForm
+
+    def get_context_data(self, *args, **kwargs):
+        ctx = super(PromotionCreateRawHTMLView, self).get_context_data(*args, **kwargs)
+        ctx['heading'] = 'Create a new raw HTML block'
+        return ctx
 
 
 # ============
@@ -64,14 +71,60 @@ class PromotionCreateRawHTMLView(PromotionCreateView):
         
 
 class PromotionUpdateView(generic.UpdateView):
+    actions = ('add_to_page', 'remove_from_page')
+    link_form_class = PagePromotionForm
+
+    def get_context_data(self, *args, **kwargs):
+        ctx = super(PromotionUpdateView, self).get_context_data(*args, **kwargs)
+        ctx['heading'] = "Update raw HTML block"
+        ctx['promotion'] = self.get_object()
+        ctx['link_form'] = self.link_form_class()
+        content_type = ContentType.objects.get_for_model(self.model)
+        ctx['links'] = PagePromotion.objects.filter(content_type=content_type,
+                                                    object_id=self.object.id)
+        return ctx
+
+    def post(self, request, *args, **kwargs):
+        action = request.POST.get('action', None)
+        if action in self.actions:
+            self.object = self.get_object()
+            return getattr(self, action)(self.object, request, *args, **kwargs)
+        return super(PromotionUpdateView, self).post(request, *args, **kwargs)
 
     def get_success_url(self):
         messages.info(self.request, "Promotion updated successfully")
         return reverse('dashboard:promotion-list')
 
+    def add_to_page(self, promotion, request, *args, **kwargs):
+        instance = PagePromotion(content_object=self.get_object())
+        form = self.link_form_class(request.POST, instance=instance)
+        if form.is_valid():
+            form.save()
+            page_url = form.cleaned_data['page_url']
+            messages.success(request, "Content block '%s' added to page '%s'" % (
+                promotion.name, page_url))
+            return HttpResponseRedirect(reverse('dashboard:promotion-update', kwargs=kwargs))
+
+        main_form = self.get_form_class()(instance=self.object)
+        ctx = self.get_context_data(form=main_form)
+        ctx['link_form'] = form
+        return self.render_to_response(ctx)
+
+    def remove_from_page(self, promotion, request, *args, **kwargs):
+        link_id = request.POST['pagepromotion_id']
+        try:
+            link = PagePromotion.objects.get(id=link_id)
+        except PagePromotion.DoesNotExist:
+            messages.error(request, "No link found to delete")
+        else:
+            page_url = link.page_url
+            link.delete()
+            messages.success(request, "Promotion removed from page '%s'" % page_url)
+        return HttpResponseRedirect(reverse('dashboard:promotion-update', kwargs=kwargs))
+
 
 class PromotionUpdateRawHTMLView(PromotionUpdateView):
-    template_name = 'dashboard/promotions/create_rawhtml.html'
+    template_name = 'dashboard/promotions/rawhtml_form.html'
     model = RawHTML
     form_class = RawHTMLForm
 

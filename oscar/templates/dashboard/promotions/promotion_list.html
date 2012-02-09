@@ -7,12 +7,8 @@
 
 <h1>Content block management</h1>
 
+<h2>Content blocks</h2>
 {% if promotions %}
-
-<form action="{% url dashboard:promotion-create-redirect %}" method="get">
-    <p>Create a content block of type: {{ select_form.as_p }}
-	<button type="submit" class="btn btn-primary">Go!</button>
-</form>
 
 <table class="table table-striped">
 	<thead>
@@ -45,5 +41,11 @@
 <p>No content blocks found.</p>
 
 {% endif %}
+
+<h3>Create a new content block</h3>
+<form action="{% url dashboard:promotion-create-redirect %}" method="get">
+    {{ select_form.as_p }}
+	<button type="submit" class="btn btn-primary">Go!</button>
+</form>
 
 {% endblock dashboard_content %}

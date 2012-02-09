@@ -4,6 +4,11 @@
     <h2>Dashboard</h2>
 {% endblock header %}
 
+{% block breadcrumbs %}
+<li><a href=".">Home</a><span class="divider">/<span></li>
+<li class="active"><a href=".">Dashboard</a></li>
+{% endblock %}
+
 {% block container_nav %}
     <div>
         <a href="{% url dashboard:order-summary %}">See statistics</a> |
