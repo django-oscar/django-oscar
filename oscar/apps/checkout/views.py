@@ -236,6 +236,7 @@ class UserAddressDeleteView(CheckoutSessionMixin, DeleteView):
     """
     Delete an address from a user's addressbook.
     """
+    template_name = 'checkout/user_address_delete.html'
 
     def get_queryset(self):
         return UserAddress._default_manager.filter(user=self.request.user)
