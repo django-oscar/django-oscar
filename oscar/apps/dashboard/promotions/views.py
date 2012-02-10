@@ -15,7 +15,7 @@ SelectForm, RawHTMLForm, PagePromotionForm = get_classes('dashboard.promotions.f
     ['PromotionTypeSelectForm', 'RawHTMLForm', 'PagePromotionForm'])
 
 
-class PromotionListView(generic.TemplateView):
+class ListView(generic.TemplateView):
     template_name = 'dashboard/promotions/promotion_list.html'
 
     def get_context_data(self):
@@ -33,18 +33,19 @@ class PromotionListView(generic.TemplateView):
         return ctx
 
 
-class PromotionCreateRedirectView(generic.RedirectView):
+class CreateRedirectView(generic.RedirectView):
     permanent = True
 
     def get_redirect_url(self, **kwargs):
         code = self.request.GET.get('promotion_type', None)
         urls = {
-            'rawhtml': reverse('dashboard:promotion-create-rawhtml')
+            'rawhtml': reverse('dashboard:promotion-create-rawhtml'),
+            'singleproduct': reverse('dashboard:promotion-create-singleproduct'),
         }
         return urls.get(code, None)
 
 
-class PromotionPageListView(generic.TemplateView):
+class PageListView(generic.TemplateView):
     template_name = 'dashboard/promotions/pagepromotion_list.html'
 
     def get_context_data(self, *args, **kwargs):
@@ -58,21 +59,32 @@ class PromotionPageListView(generic.TemplateView):
 # CREATE VIEWS
 # ============
 
-class PromotionCreateView(generic.CreateView):
+class CreateView(generic.CreateView):
 
     def get_success_url(self):
         messages.info(self.request, "Promotion created successfully")
         return reverse('dashboard:promotion-list')
 
 
-class PromotionCreateRawHTMLView(PromotionCreateView):
+class CreateRawHTMLView(CreateView):
     template_name = 'dashboard/promotions/rawhtml_form.html'
     model = RawHTML
     form_class = RawHTMLForm
 
     def get_context_data(self, *args, **kwargs):
-        ctx = super(PromotionCreateRawHTMLView, self).get_context_data(*args, **kwargs)
+        ctx = super(CreateRawHTMLView, self).get_context_data(*args, **kwargs)
         ctx['heading'] = 'Create a new raw HTML block'
+        return ctx
+
+
+class CreateSingleProductView(CreateView):
+    template_name = 'dashboard/promotions/singleproduct_form.html'
+    model = SingleProduct
+    #form_class = RawHTMLForm
+
+    def get_context_data(self, *args, **kwargs):
+        ctx = super(CreateSingleProductView, self).get_context_data(*args, **kwargs)
+        ctx['heading'] = 'Create a new single product block'
         return ctx
 
 
@@ -81,12 +93,12 @@ class PromotionCreateRawHTMLView(PromotionCreateView):
 # ============
         
 
-class PromotionUpdateView(generic.UpdateView):
+class UpdateView(generic.UpdateView):
     actions = ('add_to_page', 'remove_from_page')
     link_form_class = PagePromotionForm
 
     def get_context_data(self, *args, **kwargs):
-        ctx = super(PromotionUpdateView, self).get_context_data(*args, **kwargs)
+        ctx = super(UpdateView, self).get_context_data(*args, **kwargs)
         ctx['heading'] = "Update raw HTML block"
         ctx['promotion'] = self.get_object()
         ctx['link_form'] = self.link_form_class()
@@ -100,7 +112,7 @@ class PromotionUpdateView(generic.UpdateView):
         if action in self.actions:
             self.object = self.get_object()
             return getattr(self, action)(self.object, request, *args, **kwargs)
-        return super(PromotionUpdateView, self).post(request, *args, **kwargs)
+        return super(UpdateView, self).post(request, *args, **kwargs)
 
     def get_success_url(self):
         messages.info(self.request, "Promotion updated successfully")
@@ -134,10 +146,16 @@ class PromotionUpdateView(generic.UpdateView):
         return HttpResponseRedirect(reverse('dashboard:promotion-update', kwargs=kwargs))
 
 
-class PromotionUpdateRawHTMLView(PromotionUpdateView):
+class UpdateRawHTMLView(UpdateView):
     template_name = 'dashboard/promotions/rawhtml_form.html'
     model = RawHTML
     form_class = RawHTMLForm
+
+
+class UpdateSingleProductView(UpdateView):
+    template_name = 'dashboard/promotions/singleproduct_form.html'
+    model = SingleProduct
+    #form_class = RawHTMLForm
 
 
 # ============
@@ -145,7 +163,7 @@ class PromotionUpdateRawHTMLView(PromotionUpdateView):
 # ============
         
 
-class PromotionDeleteView(generic.DeleteView):
+class DeleteView(generic.DeleteView):
     template_name = 'dashboard/promotions/delete.html'
 
     def get_success_url(self):
@@ -153,5 +171,9 @@ class PromotionDeleteView(generic.DeleteView):
         return reverse('dashboard:promotion-list')
 
 
-class PromotionDeleteRawHTMLView(PromotionDeleteView):
+class DeleteRawHTMLView(DeleteView):
     model = RawHTML
+
+
+class DeleteSingleProductView(DeleteView):
+    model = SingleProduct
