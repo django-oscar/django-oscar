@@ -12,10 +12,12 @@ class PromotionsDashboardApplication(Application):
     promotion_create_rawhtml_view = views.PromotionCreateRawHTMLView
     promotion_update_rawhtml_view = views.PromotionUpdateRawHTMLView
     promotion_delete_rawhtml_view = views.PromotionDeleteRawHTMLView
+    promotion_page_list = views.PromotionPageListView
 
     def get_urls(self):
         urlpatterns = patterns('',
             url(r'^$', self.promotion_list_view.as_view(), name='promotion-list'),
+            url(r'^pages/$', self.promotion_page_list.as_view(), name='promotion-list-by-page'),
             url(r'^create/$', 
                 self.promotion_create_redirect_view.as_view(), 
                 name='promotion-create-redirect'),

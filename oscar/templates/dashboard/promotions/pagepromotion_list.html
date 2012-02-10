@@ -1,0 +1,45 @@
+{% extends 'dashboard/layout.html' %}
+{% load currency_filters %}
+
+
+{% block dashboard_content %}
+
+<h1>Content block management</h1>
+
+<p><a href="{% url dashboard:promotion-list %}" class="btn">View all promotions</a></p>
+<p><a href="{% url dashboard:promotion-list-by-page %}" class="btn">View promotions by page</a></p>
+
+<h2>Pages with promotions on them</h2>
+{% if pages %}
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>URL</th>
+			<th>Number of promotions</th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for page in pages %}
+		<tr>
+			<td>{{ page.page_url }}</td>
+			<td>{{ page.freq }}</td>
+			<td>
+				<a href="" class="btn btn-info">Edit</a>
+			</td>
+			<td>
+			</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+
+{% else %}
+
+<p>No content blocks found.</p>
+
+{% endif %}
+
+
+{% endblock dashboard_content %}

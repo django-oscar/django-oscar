@@ -5,6 +5,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.http import HttpResponseRedirect
+from django.db.models import Count
 
 from oscar.core.loading import get_classes, get_class
 
@@ -41,6 +42,16 @@ class PromotionCreateRedirectView(generic.RedirectView):
             'rawhtml': reverse('dashboard:promotion-create-rawhtml')
         }
         return urls.get(code, None)
+
+
+class PromotionPageListView(generic.TemplateView):
+    template_name = 'dashboard/promotions/pagepromotion_list.html'
+
+    def get_context_data(self, *args, **kwargs):
+        pages = PagePromotion.objects.all().values('page_url').distinct().annotate(freq=Count('id'))
+        return {'pages': pages}
+
+
 
 
 # ============
