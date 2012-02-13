@@ -10,8 +10,10 @@ from django.db.models import Count
 from oscar.core.loading import get_classes, get_class
 from oscar.apps.promotions.conf import PROMOTION_CLASSES
 
-SingleProduct, RawHTML, Image, MultiImage, PagePromotion = get_classes('promotions.models',
-    ['SingleProduct', 'RawHTML', 'Image', 'MultiImage', 'PagePromotion'])
+SingleProduct, RawHTML, Image, MultiImage, \
+    AutomaticProductList, PagePromotion, HandPickedProductList = get_classes('promotions.models',
+    ['SingleProduct', 'RawHTML', 'Image', 'MultiImage', 'AutomaticProductList',
+     'PagePromotion', 'HandPickedProductList'])
 SelectForm, RawHTMLForm, PagePromotionForm = get_classes('dashboard.promotions.forms', 
     ['PromotionTypeSelectForm', 'RawHTMLForm', 'PagePromotionForm'])
 
@@ -95,6 +97,14 @@ class CreateImageView(CreateView):
     model = Image
 
 
+class CreateAutomaticProductListView(CreateView):
+    model = AutomaticProductList
+
+
+class CreateHandPickedProductListView(CreateView):
+    model = HandPickedProductList
+
+
 # ============
 # UPDATE VIEWS
 # ============
@@ -166,6 +176,14 @@ class UpdateImageView(UpdateView):
     model = Image
 
 
+class UpdateAutomaticProductListView(UpdateView):
+    model = AutomaticProductList
+
+
+class UpdateHandPickedProductListView(UpdateView):
+    model = HandPickedProductList
+
+
 # ============
 # DELETE VIEWS
 # ============
@@ -189,3 +207,11 @@ class DeleteSingleProductView(DeleteView):
 
 class DeleteImageView(DeleteView):
     model = Image
+
+
+class DeleteAutomaticProductListView(DeleteView):
+    model = AutomaticProductList
+
+
+class DeleteHandPickedProductListView(DeleteView):
+    model = HandPickedProductList
