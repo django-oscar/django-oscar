@@ -8,6 +8,7 @@ from django.http import HttpResponseRedirect
 from django.db.models import Count
 
 from oscar.core.loading import get_classes, get_class
+from oscar.apps.promotions.conf import PROMOTION_CLASSES
 
 SingleProduct, RawHTML, Image, MultiImage, PagePromotion = get_classes('promotions.models',
     ['SingleProduct', 'RawHTML', 'Image', 'MultiImage', 'PagePromotion'])
@@ -21,12 +22,11 @@ class ListView(generic.TemplateView):
     def get_context_data(self):
         # Need to load all promotions of all types and chain them together
         # no pagination required for now.
-        promotions = itertools.chain(SingleProduct.objects.all(),
-                                     RawHTML.objects.all(),
-                                     Image.objects.all(),
-                                     MultiImage.objects.all(),
-                                    )
-        ctx ={
+        data = []
+        for klass in PROMOTION_CLASSES:
+            data.append(klass.objects.all())
+        promotions = itertools.chain(*data)                                    
+        ctx = {
             'promotions': promotions,
             'select_form': SelectForm(),
         }
@@ -38,10 +38,10 @@ class CreateRedirectView(generic.RedirectView):
 
     def get_redirect_url(self, **kwargs):
         code = self.request.GET.get('promotion_type', None)
-        urls = {
-            'rawhtml': reverse('dashboard:promotion-create-rawhtml'),
-            'singleproduct': reverse('dashboard:promotion-create-singleproduct'),
-        }
+        urls = {}
+        for klass in PROMOTION_CLASSES:
+            urls[klass.classname()] = reverse('dashboard:promotion-create-%s' % 
+                                              klass.classname())
         return urls.get(code, None)
 
 
@@ -53,39 +53,46 @@ class PageListView(generic.TemplateView):
         return {'pages': pages}
 
 
+class PromotionMixin(object):
+
+    def get_template_names(self):
+        return ['dashboard/promotions/%s_form.html' % self.model.classname(),
+                'dashboard/promotions/form.html']
 
 
 # ============
 # CREATE VIEWS
 # ============
 
-class CreateView(generic.CreateView):
+
+class CreateView(PromotionMixin, generic.CreateView):
 
     def get_success_url(self):
         messages.info(self.request, "Promotion created successfully")
         return reverse('dashboard:promotion-list')
 
+    def get_context_data(self, *args, **kwargs):
+        ctx = super(CreateView, self).get_context_data(*args, **kwargs)
+        ctx['heading'] = self.get_heading()
+        return ctx
+
+    def get_heading(self):
+        if hasattr(self, 'heading'):
+            return getattr(self, 'heading')
+        return 'Create a new %s content block' % self.model._type
+
 
 class CreateRawHTMLView(CreateView):
-    template_name = 'dashboard/promotions/rawhtml_form.html'
     model = RawHTML
     form_class = RawHTMLForm
 
-    def get_context_data(self, *args, **kwargs):
-        ctx = super(CreateRawHTMLView, self).get_context_data(*args, **kwargs)
-        ctx['heading'] = 'Create a new raw HTML block'
-        return ctx
-
 
 class CreateSingleProductView(CreateView):
-    template_name = 'dashboard/promotions/singleproduct_form.html'
     model = SingleProduct
-    #form_class = RawHTMLForm
 
-    def get_context_data(self, *args, **kwargs):
-        ctx = super(CreateSingleProductView, self).get_context_data(*args, **kwargs)
-        ctx['heading'] = 'Create a new single product block'
-        return ctx
+
+class CreateImageView(CreateView):
+    model = Image
 
 
 # ============
@@ -93,7 +100,7 @@ class CreateSingleProductView(CreateView):
 # ============
         
 
-class UpdateView(generic.UpdateView):
+class UpdateView(PromotionMixin, generic.UpdateView):
     actions = ('add_to_page', 'remove_from_page')
     link_form_class = PagePromotionForm
 
@@ -147,15 +154,16 @@ class UpdateView(generic.UpdateView):
 
 
 class UpdateRawHTMLView(UpdateView):
-    template_name = 'dashboard/promotions/rawhtml_form.html'
     model = RawHTML
     form_class = RawHTMLForm
 
 
 class UpdateSingleProductView(UpdateView):
-    template_name = 'dashboard/promotions/singleproduct_form.html'
     model = SingleProduct
-    #form_class = RawHTMLForm
+
+
+class UpdateImageView(UpdateView):
+    model = Image
 
 
 # ============
@@ -177,3 +185,7 @@ class DeleteRawHTMLView(DeleteView):
 
 class DeleteSingleProductView(DeleteView):
     model = SingleProduct
+
+
+class DeleteImageView(DeleteView):
+    model = Image

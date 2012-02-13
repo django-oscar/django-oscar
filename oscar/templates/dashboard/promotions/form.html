@@ -1,11 +1,12 @@
 {% extends 'dashboard/layout.html' %}
 
-<h2>Create new HTML content block</h2>
+<h2>{{ heading }}</h2>
 
 {% block dashboard_content %}
 <h1>{{ heading }}</h1>
 
-<form action="." method="post">
+{% block promotion_form %}
+<form action="." method="post" enctype="multipart/form-data">
 	{% csrf_token %}
 	<table>
 		{{ form.as_table }}
@@ -17,6 +18,7 @@
 		</tr>
 	</table>
 </form>
+{% endblock %}
 
 {% if promotion %}
 <h2>Pages displaying this content block</h2>
@@ -36,7 +38,7 @@
 			<td>{{ link.page_url }}</td>
 			<td>{{ link.position }}</td>
 			<td>
-				<form action="." method="post">
+                <form action="." method="post" >
 					{% csrf_token %}
 					<input type="hidden" name="action" value="remove_from_page" />
 					<input type="hidden" name="pagepromotion_id" value="{{ link.id }}" />

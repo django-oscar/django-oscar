@@ -86,6 +86,10 @@ class AbstractPromotion(models.Model):
     def type(self):
         return _(self._type)
 
+    @classmethod
+    def classname(cls):
+        return cls.__name__.lower()
+
     @property
     def code(self):
         return self.__class__.__name__.lower()

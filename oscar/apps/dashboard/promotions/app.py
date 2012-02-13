@@ -3,6 +3,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 
 from oscar.core.application import Application
 from oscar.apps.dashboard.promotions import views
+from oscar.apps.promotions.conf import PROMOTION_CLASSES
 
 
 class PromotionsDashboardApplication(Application):
@@ -11,13 +12,13 @@ class PromotionsDashboardApplication(Application):
     page_list = views.PageListView
     create_redirect_view = views.CreateRedirectView
 
-    create_rawhtml_view = views.CreateRawHTMLView
-    update_rawhtml_view = views.UpdateRawHTMLView
-    delete_rawhtml_view = views.DeleteRawHTMLView
-
-    create_singleproduct_view = views.CreateSingleProductView
-    update_singleproduct_view = views.UpdateSingleProductView
-    delete_singleproduct_view = views.DeleteSingleProductView
+    for klass in PROMOTION_CLASSES:
+        locals()['create_%s_view' % klass.classname()] = \
+                getattr(views, 'Create%sView' % klass.__name__)
+        locals()['update_%s_view' % klass.classname()] = \
+                getattr(views, 'Update%sView' % klass.__name__)
+        locals()['delete_%s_view' % klass.classname()] = \
+                getattr(views, 'Delete%sView' % klass.__name__)
 
     def get_urls(self):
         urlpatterns = patterns('',
@@ -25,28 +26,22 @@ class PromotionsDashboardApplication(Application):
             url(r'^pages/$', self.page_list.as_view(), name='promotion-list-by-page'),
             url(r'^create/$', 
                 self.create_redirect_view.as_view(), 
-                name='promotion-create-redirect'),
-            # Raw HTML
-            url(r'^create/rawhtml/$',
-                self.create_rawhtml_view.as_view(),
-                name='promotion-create-rawhtml'),
-            url(r'^update/(?P<ptype>rawhtml)/(?P<pk>\d+)/$',
-                self.update_rawhtml_view.as_view(),
-                name='promotion-update'),
-            url(r'^delete/(?P<ptype>rawhtml)/(?P<pk>\d+)/$',
-                self.delete_rawhtml_view.as_view(),
-                name='promotion-delete'),
-            # Single product
-            url(r'^create/singleproduct/$',
-                self.create_singleproduct_view.as_view(),
-                name='promotion-create-singleproduct'),
-            url(r'^update/(?P<ptype>singleproduct)/(?P<pk>\d+)/$',
-                self.update_singleproduct_view.as_view(),
-                name='promotion-update'),
-            url(r'^delete/(?P<ptype>singleproduct)/(?P<pk>\d+)/$',
-                self.delete_singleproduct_view.as_view(),
-                name='promotion-delete'),
-        )
+                name='promotion-create-redirect'),)
+
+        for klass in PROMOTION_CLASSES:
+            code = klass.classname()
+            urlpatterns += patterns('',
+                url(r'create/%s/' % code,
+                    getattr(self, 'create_%s_view' % code).as_view(),
+                    name='promotion-create-%s' % code),
+                url(r'^update/(?P<ptype>%s)/(?P<pk>\d+)/$' % code,
+                    getattr(self, 'update_%s_view' % code).as_view(),
+                    name='promotion-update'),
+                url(r'^delete/(?P<ptype>%s)/(?P<pk>\d+)/$' % code,
+                    getattr(self, 'delete_%s_view' % code).as_view(),
+                    name='promotion-delete')
+            )
+
         return self.post_process_urls(urlpatterns)
 
     def get_url_decorator(self, url_name):

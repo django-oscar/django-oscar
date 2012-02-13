@@ -2,14 +2,17 @@ from django import forms
 
 from oscar.forms.fields import ExtendedURLField
 from oscar.core.loading import get_classes
+from oscar.apps.promotions.conf import PROMOTION_CLASSES
 
 RawHTML, SingleProduct, PagePromotion = get_classes('promotions.models', 
     ['RawHTML', 'SingleProduct', 'PagePromotion'])
 
 
 class PromotionTypeSelectForm(forms.Form):
-    promotion_type = forms.ChoiceField(choices=(('singleproduct', u'Single product'),
-                                                ('rawhtml', u'Raw HTML')))
+    choices = []
+    for klass in PROMOTION_CLASSES:
+        choices.append((klass.classname(), klass._type))
+    promotion_type = forms.ChoiceField(choices=tuple(choices))
 
 
 class RawHTMLForm(forms.ModelForm):
