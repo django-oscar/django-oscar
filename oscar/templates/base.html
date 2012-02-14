@@ -9,6 +9,7 @@
         <link rel="shortcut icon" href="{{ STATIC_URL }}favicon.ico" />
         <link rel="stylesheet" href="{{ STATIC_URL }}bootstrap/css/bootstrap.min.css" />
         <link rel="stylesheet" href="{{ STATIC_URL }}bootstrap/css/bootstrap-responsive.min.css" />
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 		<script type="text/javascript" src="{{ STATIC_URL }}bootstrap/js/bootstrap.min.js"></script>
         {% block extra_head %}{% endblock %}
 		<style>
@@ -19,6 +20,13 @@
     </head>
     <body id="{% block body_id %}default{% endblock %}" class="{% block body_class %}default{% endblock %}">
         {% block layout %}{% endblock %}
+		<script type="text/javascript">
+			$(function(){
+				{% block onbodyload %}
+
+				{% endblock %}
+			});
+		</script>
         {% block tracking %}
             {% if not debug and not request.user.is_staff %}
                 <!-- Tracking to go here. -->

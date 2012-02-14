@@ -107,7 +107,9 @@ class CreateView(PromotionMixin, generic.CreateView):
 
     def get_success_url(self):
         messages.info(self.request, "Promotion created successfully")
-        return reverse('dashboard:promotion-list')
+        return reverse('dashboard:promotion-update', 
+                       kwargs={'ptype': self.model.classname(),
+                               'pk': self.object.id})
 
     def get_context_data(self, *args, **kwargs):
         ctx = super(CreateView, self).get_context_data(*args, **kwargs)
