@@ -201,7 +201,8 @@ class OrderDetailView(DetailView):
     model = Order
     context_object_name = 'order'
     template_name = 'dashboard/orders/order_detail.html'
-    order_actions = ('save_note', 'delete_note', 'change_order_status',)
+    order_actions = ('save_note', 'delete_note', 'change_order_status', 
+                     'create_order_payment_event')
     line_actions = ('change_line_statuses', 'create_shipping_event',
                     'create_payment_event')
 
@@ -348,15 +349,34 @@ class OrderDetailView(DetailView):
             messages.info(request, "Shipping event created")
         return self.reload_page_response()
 
-    def create_payment_event(self, request, order, lines, quantities):
+    def create_order_payment_event(self, request, order):
+        amount_str = request.POST.get('amount', None)
+        try:
+            amount = D(amount_str)
+        except InvalidOperation:
+            messages.error(request, "Please choose a valid amount")
+            return self.reload_page_response()
+        return self._create_payment_event(request, order)
+
+    def _create_payment_event(self, request, order, amount, lines=None,
+                              quantities=None):
         code = request.POST['payment_event_type']
         try:
             event_type = PaymentEventType._default_manager.get(code=code)
         except PaymentEventType.DoesNotExist:
             messages.error(request, "The event type '%s' is not valid" % code)
             return self.reload_page_response()
+        try:
+            EventHandler().handle_payment_event(order, event_type, amount,
+                                                lines, quantities)
+        except PaymentError, e:
+            messages.error("Unable to change order status due to payment error: %s" % e)
+        else:
+            messages.info(request, "Payment event created")
+        return self.reload_page_response()
 
-        amount_str = request.POST['amount']
+    def create_payment_event(self, request, order, lines, quantities):
+        amount_str = request.POST.get('amount', None)
         if not amount_str:
             amount = D('0.00')
             for line, quantity in zip(lines, quantities):
@@ -367,15 +387,8 @@ class OrderDetailView(DetailView):
             except InvalidOperation:
                 messages.error(request, "Please choose a valid amount")
                 return self.reload_page_response()
-
-        try:
-            EventHandler().handle_payment_event(order, event_type, amount,
-                                                lines, quantities)
-        except PaymentError, e:
-            messages.error("Unable to change order status due to payment error: %s" % e)
-        else:
-            messages.info(request, "Payment event created")
-        return self.reload_page_response()
+        return self._create_payment_event(request, order, amount, lines,
+                                          quantities)
 
 
 class LineDetailView(DetailView):

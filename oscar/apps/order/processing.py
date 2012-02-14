@@ -21,7 +21,8 @@ class EventHandler(object):
         """
         self.create_shipping_event(order, event_type, lines, line_quantities)
 
-    def handle_payment_event(self, order, event_type, amount, lines, line_quantities):
+    def handle_payment_event(self, order, event_type, amount, lines=None,
+                             line_quantities=None):
         """
         Handle a payment event for a given order.
         """
@@ -34,12 +35,14 @@ class EventHandler(object):
                                                  line=line,
                                                  quantity=quantity)
 
-    def create_payment_event(self, order, event_type, amount, lines, line_quantities):
+    def create_payment_event(self, order, event_type, amount, lines=None,
+                             line_quantities=None):
         event = order.payment_events.create(event_type=event_type, amount=amount)
-        for line, quantity in zip(lines, line_quantities):
-            PaymentEventQuantity.objects.create(event=event,
-                                                line=line,
-                                                quantity=quantity)
+        if lines and line_quantities:
+            for line, quantity in zip(lines, line_quantities):
+                PaymentEventQuantity.objects.create(event=event,
+                                                    line=line,
+                                                    quantity=quantity)
 
     def create_communication_event(self, order, event_type):
         order.communication_events.create(event_type=event_type)
