@@ -8,6 +8,6 @@
 	{% csrf_token %}
     <p>Remove {{ object.content_object.type }} content block <strong>{{ object.name }}</strong> from page <strong>{{ object.page_url }}</strong> - are you sure?</p>
 	<p><button type="submit" class="btn btn-danger">Remove</button>
-	or <a href="{% url dashboard:promotion-list %}">cancel</a></p>
+	or <a href="{% url dashboard:promotion-list-by-url object.page_url  %}">cancel</a></p>
 </form>
 {% endblock %}

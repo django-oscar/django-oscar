@@ -89,7 +89,7 @@ class PromotionMixin(object):
 
 
 class DeletePagePromotionView(generic.DeleteView):
-    template_name = 'dashboard/promotions/delete-pagepromotion.html'
+    template_name = 'dashboard/promotions/delete_pagepromotion.html'
     model = PagePromotion
 
     def get_success_url(self):
