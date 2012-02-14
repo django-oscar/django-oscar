@@ -370,7 +370,7 @@ class OrderDetailView(DetailView):
             EventHandler().handle_payment_event(order, event_type, amount,
                                                 lines, quantities)
         except PaymentError, e:
-            messages.error("Unable to change order status due to payment error: %s" % e)
+            messages.error(request, "Unable to change order status due to payment error: %s" % e)
         else:
             messages.info(request, "Payment event created")
         return self.reload_page_response()
