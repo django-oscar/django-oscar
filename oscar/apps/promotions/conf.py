@@ -11,5 +11,9 @@ def get_promotion_classes():
             HandPickedProductList)
 
 
+PROMOTION_POSITIONS = (('page', 'Page'),
+                       ('right', 'Right-hand sidebar'),
+                       ('left', 'Left-hand sidebar'))
+
 
 PROMOTION_CLASSES = get_promotion_classes()

@@ -8,7 +8,8 @@ from django.http import HttpResponseRedirect
 from django.db.models import Count
 
 from oscar.core.loading import get_classes, get_class
-from oscar.apps.promotions.conf import PROMOTION_CLASSES
+from oscar.apps.promotions.layout import split_by_position
+from oscar.apps.promotions.conf import PROMOTION_CLASSES, PROMOTION_POSITIONS
 
 SingleProduct, RawHTML, Image, MultiImage, \
     AutomaticProductList, PagePromotion, HandPickedProductList = get_classes('promotions.models',
@@ -55,11 +56,46 @@ class PageListView(generic.TemplateView):
         return {'pages': pages}
 
 
+class PageDetailView(generic.TemplateView):
+    template_name = 'dashboard/promotions/page_detail.html'
+
+    def get_context_data(self, *args, **kwargs):
+        path = self.kwargs['path']
+        ctx = {'page_url': path,
+               'positions': self.get_positions_context_data(path),
+              }
+        return ctx
+
+    def get_positions_context_data(self, path):
+        ctx = []
+        for code, name in PROMOTION_POSITIONS:
+            promotions = PagePromotion._default_manager.select_related() \
+                                                       .filter(page_url=path,
+                                                               position=code) \
+                                                       .order_by('display_order')
+            ctx.append({
+                'code': code,
+                'name': name,
+                'promotions': promotions,
+            })
+        return ctx
+
+
 class PromotionMixin(object):
 
     def get_template_names(self):
         return ['dashboard/promotions/%s_form.html' % self.model.classname(),
                 'dashboard/promotions/form.html']
+
+
+class DeletePagePromotionView(generic.DeleteView):
+    template_name = 'dashboard/promotions/delete-pagepromotion.html'
+    model = PagePromotion
+
+    def get_success_url(self):
+        messages.info(self.request, "Promotion removed successfully")
+        return reverse('dashboard:promotion-list-by-url', 
+                       kwargs={'path': self.object.page_url})
 
 
 # ============

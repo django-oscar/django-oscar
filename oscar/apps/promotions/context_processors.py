@@ -27,6 +27,7 @@ def promotions(request):
 
     return context
 
+
 def _split_by_position(linked_promotions, context):
     """
     Split the list of promotions into separate lists, grouping

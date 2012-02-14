@@ -10,7 +10,9 @@ class PromotionsDashboardApplication(Application):
     name = None
     list_view = views.ListView
     page_list = views.PageListView
+    page_detail = views.PageDetailView
     create_redirect_view = views.CreateRedirectView
+    delete_page_promotion_view = views.DeletePagePromotionView
 
     for klass in PROMOTION_CLASSES:
         locals()['create_%s_view' % klass.classname()] = \
@@ -24,9 +26,13 @@ class PromotionsDashboardApplication(Application):
         urlpatterns = patterns('',
             url(r'^$', self.list_view.as_view(), name='promotion-list'),
             url(r'^pages/$', self.page_list.as_view(), name='promotion-list-by-page'),
+            url(r'^pages/(?P<path>.+)/$', self.page_detail.as_view(), name='promotion-list-by-url'),
             url(r'^create/$', 
                 self.create_redirect_view.as_view(), 
-                name='promotion-create-redirect'),)
+                name='promotion-create-redirect'),
+            url(r'^page-promotion/(?P<pk>\d+)/$', 
+                self.delete_page_promotion_view.as_view(), name='pagepromotion-delete')
+            )
 
         for klass in PROMOTION_CLASSES:
             code = klass.classname()

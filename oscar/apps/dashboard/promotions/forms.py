@@ -2,7 +2,7 @@ from django import forms
 
 from oscar.forms.fields import ExtendedURLField
 from oscar.core.loading import get_classes
-from oscar.apps.promotions.conf import PROMOTION_CLASSES
+from oscar.apps.promotions.conf import PROMOTION_CLASSES, PROMOTION_POSITIONS
 
 RawHTML, SingleProduct, PagePromotion = get_classes('promotions.models', 
     ['RawHTML', 'SingleProduct', 'PagePromotion'])
@@ -21,14 +21,9 @@ class RawHTMLForm(forms.ModelForm):
         model = RawHTML
 
 
-POSITION_CHOICES = (('page', 'Page'),
-                    ('right', 'Right-hand sidebar'),
-                    ('left', 'Left-hand sidebar'))
-
-
 class PagePromotionForm(forms.ModelForm):
     page_url = ExtendedURLField(label="URL")
-    position = forms.CharField(widget=forms.Select(choices=POSITION_CHOICES),
+    position = forms.CharField(widget=forms.Select(choices=PROMOTION_POSITIONS),
                                help_text="""Where in the page this content
                                             block will appear""")
 

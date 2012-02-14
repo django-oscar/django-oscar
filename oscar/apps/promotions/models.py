@@ -21,7 +21,7 @@ class LinkedPromotion(models.Model):
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
     content_object = generic.GenericForeignKey('content_type', 'object_id')
-    
+
     position = models.CharField(_("Position"), max_length=100, help_text="Position on page")
     display_order = models.PositiveIntegerField(default=0)
     clicks = models.PositiveIntegerField(default=0)

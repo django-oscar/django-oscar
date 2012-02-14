@@ -1,0 +1,13 @@
+{% extends 'dashboard/layout.html' %}
+
+
+{% block dashboard_content %}
+<h1>Remove promotion from page?</h1>
+
+<form action="." method="post">
+	{% csrf_token %}
+    <p>Remove {{ object.content_object.type }} content block <strong>{{ object.name }}</strong> from page <strong>{{ object.page_url }}</strong> - are you sure?</p>
+	<p><button type="submit" class="btn btn-danger">Remove</button>
+	or <a href="{% url dashboard:promotion-list %}">cancel</a></p>
+</form>
+{% endblock %}

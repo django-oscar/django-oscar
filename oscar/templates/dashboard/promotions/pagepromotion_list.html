@@ -26,7 +26,7 @@
 			<td>{{ page.page_url }}</td>
 			<td>{{ page.freq }}</td>
 			<td>
-				<a href="" class="btn btn-info">Edit</a>
+                <a href="{% url dashboard:promotion-list-by-url page.page_url %}" class="btn btn-info">Edit</a>
 			</td>
 			<td>
 			</td>

@@ -1,0 +1,27 @@
+{% extends 'dashboard/layout.html' %}
+
+
+{% block dashboard_content %}
+
+<h1>Content blocks for page {{ page }}</h1>
+
+{% for position in positions %}
+<h2>Edit promotions in position '{{ position.name }}'</h2>
+{% if position.promotions %}
+<ul>
+    {% for promotion in position.promotions %}
+    <li>
+    {{ promotion.content_object.name }} - Type: {{ promotion.content_object.type }}
+    <a href="{% url dashboard:promotion-update promotion.content_object.code promotion.content_object.id %}" class="btn btn-success">Edit</a>
+    <a href="#" class="btn btn-info">Re-order</a>
+    <a href="{% url dashboard:pagepromotion-delete promotion.id %}" class="btn btn-danger">Remove</a>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+    <p>No promotions in this position.</p>
+{% endif %}
+
+{% endfor %}
+
+{% endblock dashboard_content %}
