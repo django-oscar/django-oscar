@@ -11,7 +11,8 @@ from django.db.models import Sum
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 
-from oscar.apps.order.exceptions import InvalidOrderStatus, InvalidLineStatus
+from oscar.apps.order.exceptions import (InvalidOrderStatus, InvalidLineStatus,
+                                         InvalidShippingEvent)
 
 
 class AbstractOrder(models.Model):
@@ -516,19 +517,26 @@ class AbstractShippingEvent(models.Model):
 
 
 class ShippingEventQuantity(models.Model):
-    """A "through" model linking lines to shipping events"""
+    """
+    A "through" model linking lines to shipping events
+    """
     event = models.ForeignKey('order.ShippingEvent', related_name='line_quantities')
     line = models.ForeignKey('order.Line')
     quantity = models.PositiveIntegerField()
 
     def _check_previous_events_are_complete(self):
-        u"""Checks whether previous shipping events have passed"""
-        previous_events = ShippingEventQuantity._default_manager.filter(line=self.line, 
-                                                                        event__event_type__sequence_number__lt=self.event.event_type.sequence_number)
-        self.quantity = int(self.quantity)
-        for event_quantities in previous_events:
-            if event_quantities.quantity < self.quantity:
-                raise ValueError("Invalid quantity (%d) for event type (a previous event has not been fully passed)" % self.quantity)
+        """
+        Checks whether previous shipping events have passed
+        """
+        # Quantity of the proposd event must have occurred for
+        # the previous events in the sequence.
+        previous_event_types = self.event.event_type.get_prerequisites()
+        for event_type in previous_event_types:
+            quantity = ShippingEventQuantity._default_manager.filter(
+                line=self.line,
+                event__event_type=event_type).aggregate(Sum('quantity'))['quantity__sum']
+            if quantity is None or quantity < int(self.quantity):
+                raise InvalidShippingEvent("This shipping event is not permitted")
 
     def _check_new_quantity(self):
         quantity_row = ShippingEventQuantity._default_manager.filter(line=self.line, 
@@ -575,6 +583,11 @@ class AbstractShippingEventType(models.Model):
         
     def __unicode__(self):
         return self.name
+
+    def get_prerequisites(self):
+        return self.__class__._default_manager.filter(
+            is_required=True,
+            sequence_number__lt=self.sequence_number).order_by('sequence_number')
         
         
 class AbstractOrderDiscount(models.Model):

@@ -1,5 +1,7 @@
 from django.db.models.loading import get_model
 
+from oscar.apps.order.exceptions import InvalidShippingEvent
+
 ShippingEventQuantity = get_model('order', 'ShippingEventQuantity')
 PaymentEventQuantity = get_model('order', 'PaymentEventQuantity')
 
@@ -30,10 +32,14 @@ class EventHandler(object):
 
     def create_shipping_event(self, order, event_type, lines, line_quantities):
         event = order.shipping_events.create(event_type=event_type)
-        for line, quantity in zip(lines, line_quantities):
-            ShippingEventQuantity.objects.create(event=event,
-                                                 line=line,
-                                                 quantity=quantity)
+        try:
+            for line, quantity in zip(lines, line_quantities):
+                ShippingEventQuantity.objects.create(event=event,
+                                                    line=line,
+                                                    quantity=quantity)
+        except InvalidShippingEvent:
+            event.delete()
+            raise
 
     def create_payment_event(self, order, event_type, amount, lines=None,
                              line_quantities=None):

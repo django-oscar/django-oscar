@@ -8,3 +8,7 @@ class InvalidOrderStatus(InvalidStatus):
 
 class InvalidLineStatus(InvalidStatus):
     pass
+
+
+class InvalidShippingEvent(Exception):
+    pass
