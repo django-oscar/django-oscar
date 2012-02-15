@@ -551,6 +551,7 @@ class ShippingEventQuantity(models.Model):
         # Default quantity to full quantity of line
         if not self.quantity:
             self.quantity = self.line.quantity
+        self.quantity = int(self.quantity)
         self._check_previous_events_are_complete()
         self._check_new_quantity()
         super(ShippingEventQuantity, self).save(*args, **kwargs)

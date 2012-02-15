@@ -186,6 +186,8 @@ Order {{ order.number }}
 		<option value="{{ event_type.code }}">{{ event_type.name }}</option>
 		{% endfor %}
 	</select>
+	with notes: 
+	<textarea name="reference"></textarea>
 	</li>
 	<li><label><input type="radio" name="line_action" value="create_payment_event" /> Create payment event</label>
 	<select name="payment_event_type">
@@ -230,6 +232,7 @@ Order {{ order.number }}
 		<th>Date</th>
 		<th>Event</th>
 		<th>Lines</th>
+		<th>Notes</th>
 	</tr>
     </thead>
     <tbody>
@@ -247,7 +250,8 @@ Order {{ order.number }}
 				</tr>
 				{% endfor %}
 			</table>
-		<td>
+		</td>
+		<td>{{ event.notes }}</td>
 	</tr>
 	{% endwith %}
 	{% endfor %}
