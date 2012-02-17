@@ -1,0 +1,44 @@
+// OSCAR PAGE STRUCTURE
+// -----------
+body {
+  background-color: @grayLighter;
+}
+.container-fluid {
+  //Unique styles
+  padding:0px;
+  margin:0px auto;
+  max-width:960px;
+}
+.page {
+  background:@white;
+  -webkit-border-radius: 0 0 6px 6px;
+  -moz-border-radius: 0 0 6px 6px;
+  border-radius: 0 0 6px 6px;
+  -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+  -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+  box-shadow: 0 1px 2px rgba(0,0,0,.15);
+}
+.page_inner {
+   padding:@gridGutterWidth;
+   .clearfix();
+}
+// OSCAR NAV BAR MODIFICATIONS
+// -----------
+.navbar.primary {
+  margin-bottom:0px;
+  margin-top:@baseFontSize * 2;
+  .brand.hidden {
+    display: none;
+  }
+  .form-search {
+    .btn {
+      margin-top: 0px; // make buttons vertically centered in navbar
+    }
+  }
+}
+.navbar.accounts {
+  margin-bottom:@baseFontSize * 4;
+  .navbar-inner {
+    .border-radius(inherit)
+  }
+}

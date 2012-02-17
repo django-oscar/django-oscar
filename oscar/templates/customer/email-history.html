@@ -1,13 +1,15 @@
 {% extends "layout.html" %}
 
 {% block header %}
-<h2>Email history</h2>
+<div class="page-header">
+    <h2>Email history</h2>
+</div>
 {% endblock header %}
 
 
 {% block content %}
 
-<table>
+<table class="table table-striped table-bordered">
     <tr>
         <th>Date sent</th>
         <th>Subject</th>
@@ -26,25 +28,8 @@
 </table>
 
 {% if page_obj %}
-<div class="pagination">
-    <span class="step-links">
-    
-        {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-        {% endif %}
-
-        <span class="current">
-            Page {{ page_obj.number }} of {{ paginator.num_pages }}.
-        </span>
-
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">next</a>
-        {% endif %}
-    </span>
-</div>
-
-<p><a href="{% url customer:summary %}">Return to profile</a></p>
-
+    {% include "catalogue/partials/pagination.html" %}
+    <div class="form-actions"><a href="{% url customer:summary %}" class="btn">Return to profile</a></div>
 {% endif %}
 
 {% endblock content %}

@@ -3,11 +3,11 @@
 
 {% block shipping_address %}
 
-<h4>Enter an address for your addressbook</h4>
-<form action="{{ form_url }}" method="post">
+<form action="{{ form_url }}" method="post" class="form-stacked">
+    <legend>Enter an address for your addressbook</legend>
     {% csrf_token %}
-    {{ form.as_p }}
-    <p><input type="submit" value="Save address" /></p>
+    {% include "partials/form_fields.html" with form=form %}
+    <div class="form-actions"><input type="submit" value="Save address" class="btn btn-primary" /></div>
 </form>
 
 {% endblock shipping_address %}

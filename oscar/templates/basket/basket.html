@@ -1,9 +1,11 @@
-{% extends "layout.html" %}
+{% extends "layout_checkout.html" %}
 
 {% load currency_filters %}
 
 {% block header %}
-<h2>Basket</h2>
+<div class="page-header">
+    <h1>Basket</h1>
+</div>
 {% endblock header %}
 
 
@@ -11,12 +13,12 @@
 
 {% if request.basket.lines.count %}
 
-<form action="." method="post">
-	{% csrf_token %}
+<form action="." method="post" class="basket_summary">
+    {% csrf_token %}
 	
 	{{ formset.management_form }}
 
-	<table>
+	<table class="table table-striped table-bordered">
 		<thead>
 			<tr>
 				<th>Product</th>
@@ -59,11 +61,12 @@
 	</table>
 	
 
-	<input type="submit" value="Apply Changes" />
+	<div class="form-actions">
+	    <input type="submit" value="Apply Changes" class="btn"/>
+	    <a href="{% url checkout:index %}" class="pull-right btn btn-primary">Checkout</a>
+	</div>
 
 </form>
-
-<a href="{% url checkout:index %}">Checkout</a>
 
 {% else %}
 
@@ -79,30 +82,34 @@
         <form action="{% url basket:vouchers-remove voucher.id %}" method="POST">
             {% csrf_token %}
             {{ voucher.name }} ({{ voucher.code }})
-            <input type="submit" value="Remove" />
+            <input type="submit" value="Remove" class="btn" />
         </form>
     </li>
 {% endfor %}
 </ul>
 {% endif %}
 
-<form action="{% url basket:vouchers-add %}" method="post">
+<form action="{% url basket:vouchers-add %}" method="post" class="form-stacked">
     {% csrf_token %}
-	{{ voucher_form }}
-    <input type="submit" value="Add voucher" />
+	{% include "partials/form_fields.html" with form=voucher_form %}
+    <div class="form-actions">
+        <input type="submit" value="Add voucher" class="btn"/>
+    </div>
 </form>
 
 
 {% if saved_formset %}
 
-<h3>To buy later</h3>
+<div class="page-header">
+    <h2>To buy later</h2>
+</div>
 
-<form action="{% url basket:saved %}" method="post">
+<form action="{% url basket:saved %}" method="post" class="form-stacked later_summary">
 	{% csrf_token %}
 	
 	{{ saved_formset.management_form }}
 	
-	<table>
+	<table class="bordered-table zebra-striped">
 		<thead>
 			<tr>
 				<th>Product</th>
@@ -131,7 +138,9 @@
 
 	
 
-	<input type="submit" value="Apply Changes" />
+	<div class="form-actions">
+   	    <input type="submit" value="Apply Changes" class="btn" />
+   	</div>
 
 </form>
 

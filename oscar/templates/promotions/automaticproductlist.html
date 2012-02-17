@@ -1,10 +1,13 @@
 {% load currency_filters %}
-
+<div class="page-header">
 <h2>{{ promotion.name }}</h2>
+</div>
 
 <p>{{ promotion.description }}</p>
-
-<ol>
+<!-- Elastislide Carousel -->
+<div id="carousel" class="es-carousel-wrapper">
+    <div class="es-carousel">
+<ul>
 {% for product in promotion.get_products %}
 <li>
     <a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a><br/>
@@ -20,7 +23,10 @@
     {% endif %}    
 </li>
 {% endfor %}
-</ol>
+</ul>
+    </div>
+</div>
+<!-- End Elastislide Carousel -->
 
 {% if block.link_url %}
     <a href="{{ block.link_url }}">See more</a>
