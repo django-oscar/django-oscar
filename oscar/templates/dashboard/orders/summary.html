@@ -9,6 +9,24 @@
 
 {% block dashboard_content %}
 
+<table>
+	<form method="post" action="{% url dashboard:order-summary %}">  
+	{% csrf_token %}
+	{{ filter_form.as_table }}
+	<tr>		
+		<td>       
+			<input type="submit" value="Filter result" class="btn primary" />
+		</td>	
+	</tr>
+			
+	{% for path in list %}
+		<tr><td>
+		{{ path }}
+		</tr></td>
+	{% endfor %}
+	</form>
+</table>
+
 <table class="table table-striped table-bordered">
 	<caption>Global stats</caption>
 	<tr>

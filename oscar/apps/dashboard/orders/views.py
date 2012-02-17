@@ -17,6 +17,8 @@ from oscar.core.loading import get_class
 from oscar.apps.dashboard.orders import forms
 from oscar.apps.dashboard.views import BulkEditMixin
 from oscar.apps.payment.exceptions import PaymentError
+from oscar.apps.dashboard.orders.forms import OrderSummaryForm
+import urls
 
 Order = get_model('order', 'Order')
 OrderNote = get_model('order', 'OrderNote')
@@ -30,13 +32,37 @@ EventHandler = get_class('order.processing', 'EventHandler')
 class OrderSummaryView(TemplateView):
     template_name = 'dashboard/orders/summary.html'
 
+    def post(self, request, *args, **kwargs):
+
+        # Check filter form is valid
+        filter_form = OrderSummaryForm(request.POST)
+        if not filter_form.is_valid():
+            ctx = self.get_context_data(**kwargs)
+            ctx['filter_form'] = filter_form
+            return self.render_to_response(ctx)
+
+        ctx = self.get_context_data(**kwargs)
+        ctx['filter_form'] = filter_form
+        status_breakdown = Order.objects.order_by('status').values('status').annotate(freq=Count('id'))
+        date_to = request.POST['date_to']
+        date_from = request.POST['date_from']
+
+        return self.render_to_response({'total_orders': Order.objects.filter(date_placed__range=[date_from, date_to]).count(),
+                'total_lines': Line.objects.filter(est_dispatch_date__range=[date_from, date_to]).count(),
+                'total_revenue': Order.objects.filter(date_placed__range=[date_from, date_to]).aggregate(Sum('total_incl_tax'))['total_incl_tax__sum'],
+                'order_status_breakdown': status_breakdown,
+                'filter_form' : filter_form,
+               })
+
     def get_context_data(self, **kwargs):
         status_breakdown = Order.objects.order_by('status').values('status').annotate(freq=Count('id'))
+        filter_form = OrderSummaryForm
 
         return {'total_orders': Order.objects.all().count(),
                 'total_lines': Line.objects.all().count(),
                 'total_revenue': Order.objects.all().aggregate(Sum('total_incl_tax'))['total_incl_tax__sum'],
-                'order_status_breakdown': status_breakdown, 
+                'order_status_breakdown': status_breakdown,
+                'filter_form' : filter_form,
                }
 
 
@@ -172,7 +198,7 @@ class OrderListView(ListView, BulkEditMixin):
                      ('billing_address_name', 'Bill to name'),
                      )
         columns = SortedDict()
-        for k,v in meta_data:
+        for k, v in meta_data:
             columns[k] = v
 
         writer.writerow(columns.values())
@@ -201,14 +227,14 @@ class OrderDetailView(DetailView):
     model = Order
     context_object_name = 'order'
     template_name = 'dashboard/orders/order_detail.html'
-    order_actions = ('save_note', 'delete_note', 'change_order_status', 
+    order_actions = ('save_note', 'delete_note', 'change_order_status',
                      'create_order_payment_event')
     line_actions = ('change_line_statuses', 'create_shipping_event',
                     'create_payment_event')
 
     def get_object(self):
         return get_object_or_404(self.model, number=self.kwargs['number'])
-    
+
     def get_context_data(self, **kwargs):
         ctx = super(OrderDetailView, self).get_context_data(**kwargs)
         ctx['note_form'] = self.get_order_note_form()
@@ -410,7 +436,7 @@ class LineDetailView(DetailView):
         return ctx
 
 
-def get_changes_between_models(model1, model2, excludes = []):
+def get_changes_between_models(model1, model2, excludes=[]):
     changes = {}
     for field in model1._meta.fields:
         if not (isinstance(field, (fields.AutoField, fields.related.RelatedField))
@@ -457,4 +483,4 @@ class ShippingAddressUpdateView(UpdateView):
 
     def get_success_url(self):
         messages.info(self.request, "Delivery address updated")
-        return reverse('dashboard:order-detail', kwargs={'number': self.object.order.number,})
+        return reverse('dashboard:order-detail', kwargs={'number': self.object.order.number, })
