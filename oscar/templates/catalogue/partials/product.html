@@ -1,7 +1,7 @@
 {% load currency_filters %}
 {% load basket_tags %}
 <article class="product_pod">
-    {% with product.images.all as image %}
+    {% with product.images.all.0 as image %}
     <div class="image_container">
         <a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ image.original.url }}" alt="{{ product.get_title }}"></a>
     </div>    
