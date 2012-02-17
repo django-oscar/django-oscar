@@ -190,7 +190,6 @@ Order {{ order.number }}
 
 <p>With selected lines:</p>
 
-
 <div class="control-group">
     <div class="controls">
         <label class="radio inline">
@@ -277,6 +276,7 @@ Order {{ order.number }}
 		<th>Date</th>
 		<th>Event</th>
 		<th>Lines</th>
+		<th>Notes</th>
 	</tr>
     </thead>
     <tbody>
@@ -294,7 +294,8 @@ Order {{ order.number }}
 				</tr>
 				{% endfor %}
 			</table>
-		<td>
+		</td>
+		<td>{{ event.notes }}</td>
 	</tr>
 	{% endwith %}
 	{% endfor %}

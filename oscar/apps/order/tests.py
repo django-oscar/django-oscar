@@ -11,7 +11,8 @@ from oscar.apps.basket.models import Basket
 from oscar.apps.order.models import ShippingAddress, Order, Line, \
         ShippingEvent, ShippingEventType, ShippingEventQuantity, OrderNote, \
         ShippingEventType
-from oscar.apps.order.exceptions import InvalidOrderStatus, InvalidLineStatus
+from oscar.apps.order.exceptions import (InvalidOrderStatus, InvalidLineStatus,
+                                         InvalidShippingEvent)
 from oscar.test.helpers import create_order, create_product
 from oscar.apps.order.utils import OrderCreator
 from oscar.apps.shipping.methods import Free
@@ -36,6 +37,9 @@ class OrderTest(TestCase):
         self.order = create_order(number='100002')
         self.order_placed,_ = ShippingEventType.objects.get_or_create(code='order_placed', 
                                                                       name='Order placed')
+
+    def tearDown(self):
+        ShippingEventType.objects.all().delete()
 
     def tearDown(self):
         Order.objects.all().delete()
@@ -140,6 +144,9 @@ class LineTests(TestCase):
         self.dispatched,_ = ShippingEventType.objects.get_or_create(code='dispatched', 
                                                                     name='Dispatched')
 
+    def tearDown(self):
+        ShippingEventType.objects.all().delete()
+
     def event(self, type, quantity=None):
         """
         Creates a shipping event for the test line
@@ -235,21 +242,66 @@ class LineStatusTests(TestCase):
         self.line.set_status('A')
         
 
-class ShippingEventQuantityTest(TestCase):
+class ShippingEventTypeTests(TestCase):
+
+    def tearDown(self):
+        ShippingEventType.objects.all().delete()
+
+    def test_code_is_set_automatically(self):
+        etype = ShippingEventType.objects.create(name='Returned')
+        self.assertEqual('returned', etype.code)
+
+    def test_get_prerequisites(self):
+        ShippingEventType.objects.create(name='Shipped',
+                                         is_required=True,
+                                         sequence_number=0)
+        etype = ShippingEventType.objects.create(name='Returned',
+                                                 is_required=False,
+                                                 sequence_number=1)
+        prereqs = etype.get_prerequisites()
+        self.assertEqual(1, len(prereqs))
+        self.assertEqual('Shipped', prereqs[0].name)
+
+
+class ShippingEventQuantityTests(TestCase):
 
     def setUp(self):
         basket = Basket()
         basket.add_product(create_product(price=D('10.00')), 4)
         self.order = create_order(number='100002', basket=basket)
         self.line = self.order.lines.all()[0]
-        self.order_placed,_ = ShippingEventType.objects.get_or_create(code='order_placed', 
-                                                                      name='Order placed')
+
+        self.shipped,_ = ShippingEventType.objects.get_or_create(name='Shipped',
+                                                                 is_required=True,
+                                                                 sequence_number=0)
+        self.returned,_ = ShippingEventType.objects.get_or_create(name='Returned',
+                                                                 is_required=False,
+                                                                 sequence_number=1)
+
+    def tearDown(self):
+        ShippingEventType.objects.all().delete()
 
     def test_quantity_defaults_to_all(self):
-        type = self.order_placed
-        event = ShippingEvent.objects.create(order=self.order, event_type=type)
+        event = self.order.shipping_events.create(event_type=self.shipped)
         event_quantity = ShippingEventQuantity.objects.create(event=event, line=self.line)
         self.assertEquals(self.line.quantity, event_quantity.quantity)
+
+    def test_exception_is_raised_if_previous_events_are_not_passed(self):
+        event = self.order.shipping_events.create(event_type=self.returned)
+        with self.assertRaises(InvalidShippingEvent):
+            ShippingEventQuantity.objects.create(event=event,
+                                                 line=self.line)
+
+    def test_event_is_created_ok_when_prerequisites_are_met(self):
+        shipped_event = self.order.shipping_events.create(event_type=self.shipped)
+        ShippingEventQuantity.objects.create(event=shipped_event,
+                                             line=self.line)
+
+        event = self.order.shipping_events.create(event_type=self.returned)
+        ShippingEventQuantity.objects.create(event=event,
+                                             line=self.line,
+                                             quantity=1)
+
     
    
 class OrderCreatorTests(TestCase):
@@ -323,10 +375,11 @@ class EventHandlerTests(TestCase):
     def setUp(self):
         self.order = create_order()
         self.handler = EventHandler()
-        self.e_type = ShippingEventType.objects.create(name='Shipped')
+        self.shipped = ShippingEventType.objects.create(name='Shipped')
+        self.returned = ShippingEventType.objects.create(name='Returned')
 
     def test_shipping_handler_creates_event(self):
-        self.handler.handle_shipping_event(self.order, self.e_type, 
+        self.handler.handle_shipping_event(self.order, self.shipped, 
                                            self.order.lines.all(), [1])
 
         events = self.order.shipping_events.all()

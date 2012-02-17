@@ -2768,10 +2768,10 @@ body {
   padding: 0px;
   list-style: none;
 }
-.choose_shipping_address .alert-message {
+.choose_shipping_address .alert {
   position: relative;
 }
-.choose_shipping_address .alert-message .delete_address {
+.choose_shipping_address .alert .delete_address {
   position: absolute;
   top: 10px;
   right: 4px;
@@ -2885,7 +2885,7 @@ body {
 .product_pod {
   padding: 8%;
   position: relative;
-  height: 320px;
+  height: 375px;
   overflow: hidden;
   *zoom: 1;
 }
@@ -2912,6 +2912,7 @@ body {
   margin-bottom: 18px;
   margin-top: 9px;
   line-height: 18px;
+  font-size: 16px;
 }
 .product_pod h4:before, .product_pod h4:after {
   display: table;
@@ -2945,6 +2946,9 @@ body {
 .product_pod .product_price form {
   margin-bottom: 0px;
 }
+.product_pod .product_price form input#id_quantity {
+  width: 90%;
+}
 .product_pod .product_price .btn {
   padding-left: 0px;
   padding-right: 0px;
@@ -2953,7 +2957,7 @@ body {
 /* Product list image container */
 .image_container {
   width: 100%;
-  height: 150px;
+  height: 125px;
   overflow: hidden;
   text-align: center;
   margin-bottom: 9px;

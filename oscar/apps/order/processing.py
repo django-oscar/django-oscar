@@ -1,5 +1,7 @@
 from django.db.models.loading import get_model
 
+from oscar.apps.order.exceptions import InvalidShippingEvent
+
 ShippingEventQuantity = get_model('order', 'ShippingEventQuantity')
 PaymentEventQuantity = get_model('order', 'PaymentEventQuantity')
 
@@ -12,31 +14,38 @@ class EventHandler(object):
         """
         order.set_status(new_status)
 
-    def handle_shipping_event(self, order, event_type, lines, line_quantities):
+    def handle_shipping_event(self, order, event_type, lines, line_quantities, **kwargs):
         """
         Handle a shipping event for a given order.
 
         This might involve taking payment, sending messages and 
         creating the event models themeselves.
         """
-        self.create_shipping_event(order, event_type, lines, line_quantities)
+        self.create_shipping_event(order, event_type, lines, line_quantities, **kwargs)
 
     def handle_payment_event(self, order, event_type, amount, lines=None,
-                             line_quantities=None):
+                             line_quantities=None, **kwargs):
         """
         Handle a payment event for a given order.
         """
-        self.create_payment_event(order, event_type, amount, lines, line_quantities)
+        self.create_payment_event(order, event_type, amount, lines, line_quantities, **kwargs)
 
-    def create_shipping_event(self, order, event_type, lines, line_quantities):
-        event = order.shipping_events.create(event_type=event_type)
-        for line, quantity in zip(lines, line_quantities):
-            ShippingEventQuantity.objects.create(event=event,
-                                                 line=line,
-                                                 quantity=quantity)
+    def create_shipping_event(self, order, event_type, lines, line_quantities,
+                              **kwargs):
+        reference = kwargs.get('reference', None)
+        event = order.shipping_events.create(event_type=event_type,
+                                             notes=reference)
+        try:
+            for line, quantity in zip(lines, line_quantities):
+                ShippingEventQuantity.objects.create(event=event,
+                                                    line=line,
+                                                    quantity=quantity)
+        except InvalidShippingEvent:
+            event.delete()
+            raise
 
     def create_payment_event(self, order, event_type, amount, lines=None,
-                             line_quantities=None):
+                             line_quantities=None, **kwargs):
         event = order.payment_events.create(event_type=event_type, amount=amount)
         if lines and line_quantities:
             for line, quantity in zip(lines, line_quantities):

@@ -340,9 +340,11 @@ class OrderDetailView(DetailView):
             messages.error(request, "The event type '%s' is not valid" % code)
             return self.reload_page_response()
 
+        reference = request.POST.get('reference', None)
         try:
             EventHandler().handle_shipping_event(order, event_type, lines,
-                                                 quantities)
+                                                 quantities,
+                                                 reference=reference)
         except PaymentError, e:
             messages.error(request, "Unable to change order status due to payment error: %s" % e)
         else:
