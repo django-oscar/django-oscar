@@ -3,15 +3,19 @@
 {% load currency_filters %}
 
 {% block header %}
-<h2>Order history</h2>
+<div class="page-header">
+    <h2>Order history</h2>
+</div>
 {% endblock header %}
 
 
 {% block content %}
 
-<h3>Order history</h3>
+<div class="sub-header">
+    <h3>Order history</h3>
+</div>
 
-<table>
+<table class="table table-striped table-bordered">
     <tr>
         <th>Order number</th>
         <th>Total inc tax</th>
@@ -32,22 +36,7 @@
 </table>
 
 {% if page_obj %}
-<div class="pagination">
-    <span class="step-links">
-    
-        {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-        {% endif %}
-
-        <span class="current">
-            Page {{ page_obj.number }} of {{ paginator.num_pages }}.
-        </span>
-
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">next</a>
-        {% endif %}
-    </span>
-</div>
+    {% include "catalogue/partials/pagination.html" %}
 {% endif %}
 
 {% endblock content %}

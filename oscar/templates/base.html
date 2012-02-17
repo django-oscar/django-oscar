@@ -6,17 +6,26 @@
         <meta name="created" content='{% now "jS M Y h:i" %}' />
         <meta name="description" content="{% block description %}{% endblock %}" />
         <meta name="keywords" content="{% block keywords %}{% endblock %}" />
+        
+        <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+        <!--[if lt IE 9]>
+        <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+        
+        <!--[if lt IE 8]>
+        	<script src="{{ STATIC_URL }}js/snowcone/snowcone.js"></script>
+        <![endif]-->
+        
         <link rel="shortcut icon" href="{{ STATIC_URL }}favicon.ico" />
-        <link rel="stylesheet" href="{{ STATIC_URL }}bootstrap/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="{{ STATIC_URL }}bootstrap/css/bootstrap-responsive.min.css" />
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-		<script type="text/javascript" src="{{ STATIC_URL }}bootstrap/js/bootstrap.min.js"></script>
+        <!-- Main styles - will need to be minified -->
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/styles.css" />
+        {% if product %}
+        <!-- Colorbox for image galleries -->
+        <link rel="stylesheet" href="{{ STATIC_URL }}js/colorbox/colorbox.css" type="text/css" media="screen" charset="utf-8"/>
+        {% endif %}
+        <!-- Responsive - will need to be minified -->
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/responsive.css" />
         {% block extra_head %}{% endblock %}
-		<style>
-		body {
-			padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
-		}
-		</style>
     </head>
     <body id="{% block body_id %}default{% endblock %}" class="{% block body_class %}default{% endblock %}">
         {% block layout %}{% endblock %}
@@ -32,5 +41,22 @@
                 <!-- Tracking to go here. -->
             {% endif %}
         {% endblock %}
+        <!-- Jquery -->
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="{{ STATIC_URL }}js/jquery/jquery-1.7.1.min.js"><\/script>')</script>
+        <script src="{{ STATIC_URL }}js/jquery/jquery.easing.1.3.js" type="text/javascript" charset="utf-8"></script>
+        <!-- Bootstrap -->
+		<script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap/bootstrap.min.js"></script>
+		<!-- Elastislide carousel js -->
+        <script src="{{ STATIC_URL }}js/elastislide/jquery.elastislide.js" type="text/javascript" charset="utf-8"></script>    
+        <!-- Responsive carousel js -->
+        {% if product %}
+        <script src="{{ STATIC_URL }}js/colorbox/jquery.colorbox-min.js" type="text/javascript" charset="utf-8"></script> 
+        <script src="{{ STATIC_URL }}js/responsivegallery/jquery.tmpl.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="{{ STATIC_URL }}js/responsivegallery/gallery.js" type="text/javascript" charset="utf-8"></script>
+        {% endif %}
+        
+        <!-- Front end js -->
+        <script src="{{ STATIC_URL }}js/script.js" type="text/javascript" charset="utf-8"></script>
     </body>
 </html>

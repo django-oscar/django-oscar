@@ -1,4 +1,4 @@
-{% extends 'dashboard/layout.html' %}
+{% extends 'layout_dashboard.html' %}
 {% load currency_filters %}
 
 {% block title %}
@@ -6,13 +6,17 @@ Order {{ order.number }}
 {% endblock %}
 
 {% block header %}
+<div class="page-header">
     <h2>Order {{ order.number }}</h2>
+</div>
 {% endblock header %}
 
 {% block dashboard_content %}
 
-<h2>Order information</h2>
-<table>
+<div class="sub-header">
+    <h2>Order information</h2>
+</div>
+<table class="table table-striped table-bordered">
     <tr>
         <th>Date of purchase</th>
         <th>Time of purchase</th>
@@ -25,9 +29,11 @@ Order {{ order.number }}
     </tr>
 </table>
 
-<h2>Customer</h2>
+<div class="sub-header">
+    <h2>Customer</h2>
+</div>
 {% if order.user %}
-<table>
+<table class="table table-striped table-bordered">
     <tr>
         <th>Username</th>
         <td><a href="{% url dashboard:user-detail order.user.id %}">{{ order.user.username }}</a></td>
@@ -45,10 +51,12 @@ Order {{ order.number }}
 <p>Customer checked out anonymously.</p>
 {% endif %}
 
-<h2>Payment</h2>
+<div class="sub-header">
+    <h2>Payment</h2>
+</div>
 {% with sources=order.sources.all %}
 {% if sources %}
-<table class="table">     
+<table class="table table-striped table-bordered">    
     <thead>  
         <tr>
             <th>Source</th>
@@ -83,19 +91,25 @@ Order {{ order.number }}
 {% endif %}
 
 {% if order.shipping_address %}
-<h2>Shipping</h2>
-<p>
-{% for field in order.shipping_address.active_address_fields %}
-{{ field }}<br/>
-{% endfor %}
-</p>
-<p><a href="{% url dashboard:order-shipping-address order.number %}">Edit shipping address</a></p>
+<div class="sub-header">
+    <h2>Shipping</h2>
+</div>
+<div class="alert alert-info">
+    <p>
+    {% for field in order.shipping_address.active_address_fields %}
+    {{ field }}<br/>
+    {% endfor %}
+    </p>
+    <div class="alert-actions"><a href="{% url dashboard:order-shipping-address order.number %}" class="btn">Edit shipping address</a></div>
+</div>
 {% endif %}
 
-<h2>Discounts</h2>
+<div class="sub-header">
+    <h2>Discounts</h2>
+</div>
 {% with discounts=order.discounts.all %}
 {% if discounts %}
-<table>
+<table class="table table-striped table-bordered">
     <tr>
         <th>Voucher code</th>
         <th>Offer name</th>
@@ -113,10 +127,12 @@ Order {{ order.number }}
 {% endif %}
 {% endwith %}
 
-<h2>Items ordered</h2>
-<form action="." method="post">
+<div class="sub-header">
+    <h2>Items ordered</h2>
+</div>
+<form action="." method="post" class="">
 {% csrf_token %}
-<table class="table">
+<table class="table table-striped table-bordered">
     <thead>
     <tr>
         <th>Select</th>
@@ -136,7 +152,7 @@ Order {{ order.number }}
     <tr>
 		<td>
 			<input type="checkbox" name="selected_line" value="{{ line.id }}" />
-			<input type="text" name="selected_line_qty" value="{{ line.quantity }}" size="2" />
+			<input type="text" name="selected_line_qty" value="{{ line.quantity }}" class="span9" size="2" />
 		</td>
         <td>{{ line.quantity }}</td>
         <td>{{ line.title }}</td>
@@ -155,54 +171,83 @@ Order {{ order.number }}
         <td colspan="7"></td>
         <td>Discount</td>
         <td>{{ order.total_discount_incl_tax|currency }}</td>
+        <td></td>
     </tr>
     <tr>
         <td colspan="7"></td>
         <td>Shipping charge</td>
         <td>{{ order.shipping_incl_tax|currency }}</td>
+        <td></td>
     </tr>
     <tr>
         <td colspan="7"></td>
         <td>Total</td>
         <td>{{ order.total_incl_tax|currency }}</td>
+        <td></td>
     </tr>
     </tbody>
 </table>
 
 <p>With selected lines:</p>
-<ul>
-    <li><label><input type="radio" name="line_action" value="change_line_statuses" /> Change status to</label>
-	<select name="new_status">
-		<option value=""> -- choose new status -- </option>
-		{% for status in line_statuses %}
-		<option>{{ status }}</option>
-		{% endfor %}
-	</select>
-    </li>
-	<li><label><input type="radio" name="line_action" value="create_shipping_event" /> Create shipping event</label>
-	<select name="shipping_event_type">
-		<option value=""> -- choose event type -- </option>
-		{% for event_type in shipping_event_types %}
-		<option value="{{ event_type.code }}">{{ event_type.name }}</option>
-		{% endfor %}
-	</select>
-	</li>
-	<li><label><input type="radio" name="line_action" value="create_payment_event" /> Create payment event</label>
-	<select name="payment_event_type">
-		<option value=""> -- choose event type -- </option>
-		{% for event_type in payment_event_types %}
-		<option value="{{ event_type.code }}">{{ event_type.name }}</option>
-		{% endfor %}
-	</select>
-	with amount: 
-	<input type="text" name="amount" value="" />
-	</li>
 
-</ul>
-<input type="submit" value="Go!" />
+
+<div class="control-group">
+    <div class="controls">
+        <label class="radio inline">
+            <input type="radio" name="line_action" value="change_line_statuses" /> Change status to
+        </label>
+         <label class="radio inline">
+            <select name="new_status">
+            	<option value=""> -- choose new status -- </option>
+            	{% for status in line_statuses %}
+            	<option>{{ status }}</option>
+            	{% endfor %}
+            </select>
+        </label>
+    </div>
+</div>
+<div class="control-group">
+    <div class="controls">
+        <label class="radio inline">
+            <input type="radio" name="line_action" value="create_shipping_event" /> Create shipping event
+        </label>
+         <label class="radio inline">
+             <select name="shipping_event_type">
+         		<option value=""> -- choose event type -- </option>
+         		{% for event_type in shipping_event_types %}
+         		<option value="{{ event_type.code }}">{{ event_type.name }}</option>
+         		{% endfor %}
+         	</select>
+        </label>
+    </div>
+</div>
+<div class="control-group">
+    <div class="controls">
+        <label class="radio inline">
+            <input type="radio" name="line_action" value="create_payment_event" /> Create payment event
+        </label>
+         <label class="radio inline">
+             <select name="payment_event_type">
+         		<option value=""> -- choose event type -- </option>
+         		{% for event_type in payment_event_types %}
+         		<option value="{{ event_type.code }}">{{ event_type.name }}</option>
+         		{% endfor %}
+         	</select>
+        </label>
+        <label class="radio inline">
+             <input type="text" name="amount" value="" /> with amount
+        </label>
+    </div>
+</div>
+
+<div class="form-actions">
+    <input type="submit" value="Go!" class="btn" />
+</div>
 </form>
 
-<h2>Actions</h2>
+<div class="sub-header">
+    <h2>Actions</h2>
+</div>
 {% with statuses=order.available_statuses %}
 {% if statuses %}
 <form action="." method="post">
@@ -214,17 +259,19 @@ Order {{ order.number }}
 		<option>{{ status }}</option>
 		{% endfor %}
 	</select>
-    <input type="submit" value="Go!" />
+    <input type="submit" value="Go!" class="btn" />
 </form>
 {% else %}
 <p>No further status changes are permitted.</p>
 {% endif %}
 {% endwith%}
 
-<h2>Shipping Events</h2>
+<div class="sub-header">
+    <h2>Shipping Events</h2>
+</div>
 {% with events=order.shipping_events.all %}
 {% if events %}
-<table class="table">
+<table class="table table-striped table-bordered">
     <thead>
 	<tr>
 		<th>Date</th>
@@ -258,10 +305,12 @@ Order {{ order.number }}
 {% endif %}
 {% endwith %}
 
-<h2>Payment Events</h2>
+<div class="sub-header">
+    <h2>Payment Events</h2>
+</div>
 {% with events=order.payment_events.all %}
 {% if events %}
-<table class="table">
+<table class="table table-striped table-bordered">
     <thead>
         <tr>
             <th>Date</th>
@@ -297,10 +346,12 @@ Order {{ order.number }}
 {% endif %}
 {% endwith %}
 
-<h2>Notes</h2>
+<div class="sub-header">
+    <h2>Notes</h2>
+</div>
 {% with notes=order.notes.all %}
 {% if notes %}
-<table>
+<table class="table table-striped table-bordered">
 	<tr>
 		<th>Date</th>
 		<th>User</th>
@@ -316,12 +367,12 @@ Order {{ order.number }}
 		<td>{{ note.message|linebreaks }}</td>
 		<td>
 			{% if note.is_editable %}
-			<a href="{% url dashboard:order-detail-note order.number note.id %}">Edit</a> |
+			<a href="{% url dashboard:order-detail-note order.number note.id %}" class="btn">Edit</a>
 			<form action="." method="post">
 				{% csrf_token %}
 				<input type="hidden" name="order_action" value="delete_note" />
 				<input type="hidden" name="note_id" value="{{ note.id }}" />
-				<input type="submit" value="Delete" />
+				<input type="submit" value="Delete" class="btn btn-danger" />
 			</form>
 			{% endif %}
 		</td>
@@ -335,7 +386,9 @@ Order {{ order.number }}
 	{% csrf_token %}
 	<input type="hidden" value="save_note" name="order_action" />
 	{{ note_form.as_p }}
-	<input type="submit" value="Save note" />
+	<div class="form-actions">
+	    <input type="submit" value="Save note" class="btn" />
+	</div>
 </form>
 
 {% endblock dashboard_content %}

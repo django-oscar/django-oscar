@@ -3,7 +3,9 @@
 {% load currency_filters %}
 
 {% block header %}
-<h2>Address book</h2>
+<div class="page-header">
+    <h2>Address book</h2>
+</div>
 {% endblock header %}
 
 
@@ -23,26 +25,12 @@
 There are no addresses in your address book.
 {% endif %}
 
-<p><a href="{% url customer:address-create %}">Add a New Address</a></p>
+<div class="form-actions"><a href="{% url customer:address-create %}" class="btn btn-primary">Add a New Address</a></div>
 
 {% if page_obj %}
-<div class="pagination">
-    <span class="step-links">
-    
-        {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-        {% endif %}
-
-        <span class="current">
-            Page {{ page_obj.number }} of {{ paginator.num_pages }}.
-        </span>
-
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">next</a>
-        {% endif %}
-    </span>
-</div>
+    {% include "catalogue/partials/pagination.html" %}
 {% endif %}
+
 
 {% endblock content %}
 

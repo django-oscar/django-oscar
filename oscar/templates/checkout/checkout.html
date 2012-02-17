@@ -1,18 +1,20 @@
-{% extends "layout.html" %}
+{% extends "layout_checkout.html" %}
 
 {% load currency_filters %}
 
 {% block header %}
-<h2>Checkout</h2>
+<div class="page-header">
+    <h2>Checkout</h2>
+</div>
 {% endblock header %}
 
 
 {% block content %}
-
-<hr />
-<h3>Order contents</h3>
+<div class="sub-header">
+    <h3>Order contents</h3>
+</div>
 {% block order_contents %}
-<table>
+<table class="table table-striped table-bordered">
     <tr>
         <th>Product</th>
         <th>Availability</th>
@@ -56,43 +58,45 @@
         <td>{{ order_total_incl_tax|currency }}</td>
     </tr>
 </table>
-<a href="{% url basket:summary %}">Edit order contents</a>
+<div class="form-actions">
+    <a href="{% url basket:summary %}" class="btn">Edit order contents</a>
+</div>
 {% endblock order_contents %}
 
-<hr />
-<h3>Shipping address</h3>
+<div class="sub-header">
+    <h3>Shipping address</h3>
+</div>
 {% block shipping_address %}
-<table>
-    <tr>
-        <th>Address</th>
-        <td>
-            {% for field in shipping_address.active_address_fields %}
-                {{ field }}<br/>
-            {% endfor %}
-        </td>
-    </tr>
-    {% if shipping_address.phone_number %}
-    <tr>
-        <th>Contact number</th>
-        <td>{{ shipping_addr.phone_number }}</td>
-    </tr>
-    {% endif %}
-    {% if shipping_address.notes %}
-    <tr>
-        <th>Shipping notes</th>
-        <td>{{ shipping_addr.notes }}</td>
-    </tr>
-    {% endif %} 
-</table>
-<a href="{% url checkout:shipping-address %}">Change shipping address</a>
+<div class="alert alert-success">
+    <dl>
+         <dt>Address</dt>
+         <dd>
+             {% for field in shipping_address.active_address_fields %}
+                 {{ field }}<br/>
+             {% endfor %}
+         </dd>
+         {% if shipping_address.phone_number %}
+         <dt>Contact number</dt>
+         <dd>{{ shipping_addr.phone_number }}</dd>
+         {% endif %}
+         {% if shipping_address.notes %}
+         <dt>Shipping notes</dt>
+         <dd>{{ shipping_addr.notes }}</dd>
+         {% endif %} 
+     </dl>
+     <div class="alert-actions">
+         <a href="{% url checkout:shipping-address %}" class="btn">Change shipping address</a>
+     </div>
+</div>
 {% endblock shipping_address %}
 
-<hr />
-<h3>Shipping method</h3>
+<div class="sub-header">
+    <h3>Shipping method</h3>
+</div>
 {% block shipping_method %}
 
 {% if shipping_method %}
-<table>
+<table class="table table-striped table-bordered">
     <thead>
         <tr>
             <th>Method</th>
@@ -116,10 +120,11 @@
 
 {% block payment_method %}
 {% if payment_method %}
-<hr />
-<h3>Payment method</h3>
+<div class="sub-header">
+    <h3>Payment method</h3>
+</div>
 <p>Method: {{ payment_method }}</p>
-<p><a href="{% url oscar-checkout-payment-method %}">Change payment method</a></p>
+<div class="form-actions"><a href="{% url oscar-checkout-payment-method %}" class="btn">Change payment method</a></div>
 {% endif %}
 {% endblock payment_method %}
 

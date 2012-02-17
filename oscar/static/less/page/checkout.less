@@ -1,0 +1,101 @@
+// OSCAR CHECKOUT UNIQUE STYLES
+// -----------
+.basket_summary,
+.later_summary {
+  padding-left:0px;
+  .actions {
+    margin-left:0px;
+  }
+  table {
+      input {
+      width:20%;
+    }
+  }
+}
+.order_summary {
+  .vertical_list();
+  .tier_one();
+  li {
+    border-color:@grayDark;
+    border-style:dashed;
+    .clearfix();
+    strong {
+      float:left;
+      color:@grayDark;
+    }
+    span {
+      float:right;
+    }
+    .total {
+      background-color:transparent;
+    }
+  }
+}
+.summary {
+/*  .quart_right();*/
+  div {
+    .well();
+    h2 {
+      font-size: @baseFontSize + 5;
+    }
+    h3 {
+      font-size: @baseFontSize + 1;
+    }
+  }
+}
+.shipping_address {
+/*  .three_quart_left();*/
+  h2 {
+    margin-bottom: @baseLineHeight;
+  }
+}
+.choose_shipping_address {
+  margin-top:10px;
+  ul {
+    .remove_bullets();
+  }
+  .alert-message {
+    position:relative;
+    .delete_address {
+      position:absolute;
+      top:10px;
+      right:4px;
+    }
+  }
+  .alert-actions {
+    .clearfix();
+    form,
+    a {
+      float:left;
+      margin:0px 5px;
+    }
+    form {
+      input {
+        width:auto;
+      }
+    }
+  } 
+}
+.enter_shipping_address,
+.shipping_method,
+.order_delivered div,
+.order_payment div
+ {
+  .well();
+  margin-top:10px;
+  h3 {
+    margin-bottom: @baseLineHeight;
+  }
+}
+.order_delivered {
+/*  .half_left();*/
+}
+.order_payment {
+/*  .half_right();*/
+}
+.total {
+  font-size: @baseFontSize + 5;
+  text-align:right;
+  background-color:#FDF5D9;
+  font-weight:bold;
+}

@@ -1,22 +1,40 @@
 {% load currency_filters %}
 
 {% if products %}
-<h4>Products you recently viewed</h4>
-<ul>
-{% for product in products %}
-<li>
-    <a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a><br/>
-    {% if product.is_group %}
-        From {{ product.min_variant_price_incl_tax|currency }}
-    {% else %}
-        {% if product.has_stockrecord %} 
-            {{ product.stockrecord.price_incl_tax|currency }}<br/>
-            {{ product.stockrecord.availability }}
-        {% else %}
-            Not available    
-        {% endif %}
-    {% endif %}    
-</li>
-{% endfor %}
-</ul>
+<div class="sub-header">
+    <h2>Products you recently viewed</h2>
+</div>
+<!-- Elastislide Carousel -->
+<div id="carousel" class="es-carousel-wrapper">
+    <div class="es-carousel">
+        <ul>
+            {% for product in products %}
+            <li>
+                <article class="product_pod">
+                    {% with product.images.all as image %}
+                    <div class="image_container">
+                        <a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ image.original.url }}" alt="{{ product.get_title }}"></a>
+                    </div>    
+                    {% endwith %}
+                    <h3><a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a></h3>
+                    <p>{{ product.description|truncatewords:7 }}</p>
+                    <div class="product_price">
+                        {% if product.is_group %}
+                            <p>From {{ product.min_variant_price_incl_tax|currency }}</p>
+                        {% else %}
+                            {% if product.has_stockrecord %} 
+                                <h4><span>{{ product.stockrecord.price_incl_tax|currency }}</span></h4>
+                                <p class="app-ico avaliability instock">{{ product.stockrecord.availability }}</p>
+                            {% else %}
+                                <p class="app-ico avaliability outstock">Not available</p>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </article>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+<!-- End Elastislide Carousel -->
 {% endif %}

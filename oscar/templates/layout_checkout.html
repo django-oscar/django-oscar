@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% load currency_filters %}
+{% load promotion_tags %}
+{% load category_tags %}
+
+{% block layout %}
+    <div class="navbar accounts">
+        <div class="navbar-inner">
+            <div class="container-fluid">
+                <a class="brand hidden" href="{% url promotions:home %}">Oscar // Domain-driven e-Commerce for Django</a>
+                <ul class="nav pull-right">
+    				<li><a href="#">Home</a></li>
+    				<li><a href="#about">About</a></li>
+    				<li><a href="#contact">Contact</a></li>
+    				{% if user.is_authenticated %}
+    				<li><a href="{% url customer:summary %}">Profile</a></li>
+    				<li><a href="{% url customer:logout %}">Logout</a></li>
+    				{% else %}
+    				<li><a href="{% url customer:login %}">Login</a></li>
+    				{% endif %}
+                </ul>
+            </div>
+        </div><!-- /navbar-inner -->
+    </div><!-- /navbar -->
+    
+    <header class="header container-fluid">
+        <div class="row-fluid">
+            <h1 class="span6"><a href="{% url promotions:home %}">Oscar</a><small> Domain-driven e-Commerce for Django</small></h1>
+        </div><!-- /row-fluid -->
+        <div class="navbar primary">
+            <div class="navbar-inner">
+                <div class="container" style="width: auto;">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <div class="nav-collapse">
+
+                        <ul class="nav">
+                           <!-- Links to modal flatpages -->
+                           {% load flatpages %}
+                           {% get_flatpages '/order/' as flatpages %}
+                           {% for page in flatpages %}
+                           <li>
+                              <a data-toggle="modal" href="#{{ page.title|slugify }}">{{ page.title }}</a>
+                           </li>
+                           {% endfor %}
+                           <!-- Delete this if other links present -->
+                           <li><a href="/">&larr;</a></li>
+                        </ul>
+                    </div><!-- /.nav-collapse -->
+                </div>
+            </div><!-- /navbar-inner -->
+        </div><!-- /navbar -->
+    </header><!-- /header -->
+    <div class="container-fluid page">
+       {% block header %}
+       {% endblock %}
+       
+       <div class="page_inner">
+            {% for message in messages %}
+        	<div class="alert alert-{{ message.tags }}">
+        		<a class="close">x</a>
+        		{{ message }}
+        	</div>
+        	{% endfor %}
+        	
+        	<!-- The main nav on checkout pages contain links to modal flatpages -->   
+            {% block modal %}
+                {% load flatpages %}
+                {% get_flatpages '/order/' as flatpages %}
+                {% for page in flatpages %}
+                <div id="{{ page.title|slugify }}" class="modal hide fade">
+                    <div class="modal-header">
+                        <a class="close" data-dismiss="modal">×</a>
+                        <h3>{{ page.title }}</h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="large-content">
+                            {{ page.content|safe }}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% endblock %}
+
+
+            {% block sidebar %}
+            {% endblock %}
+    
+            {% block flatpage %}
+            {% endblock %}
+            
+            <div id="promotions">
+                {% for promotion in promotions_page %}
+                    {% render_promotion promotion %}
+                {% endfor %}
+            </div>
+
+            {% block content %}{% endblock %}
+        </div><!-- /page_inner -->
+    </div>
+    {% include "partials/footer.html" %}
+{% endblock %}
