@@ -29,13 +29,7 @@
     </head>
     <body id="{% block body_id %}default{% endblock %}" class="{% block body_class %}default{% endblock %}">
         {% block layout %}{% endblock %}
-		<script type="text/javascript">
-			$(function(){
-				{% block onbodyload %}
-
-				{% endblock %}
-			});
-		</script>
+		
         {% block tracking %}
             {% if not debug and not request.user.is_staff %}
                 <!-- Tracking to go here. -->
@@ -45,6 +39,7 @@
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="{{ STATIC_URL }}js/jquery/jquery-1.7.1.min.js"><\/script>')</script>
         <script src="{{ STATIC_URL }}js/jquery/jquery.easing.1.3.js" type="text/javascript" charset="utf-8"></script>
+        <script src="{{ STATIC_URL }}js/scrollto/jquery.scrollTo-min.js" type="text/javascript" charset="utf-8"></script>
         <!-- Bootstrap -->
 		<script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap/bootstrap.min.js"></script>
 		<!-- Elastislide carousel js -->
@@ -55,8 +50,14 @@
         <script src="{{ STATIC_URL }}js/responsivegallery/jquery.tmpl.min.js" type="text/javascript" charset="utf-8"></script>
         <script src="{{ STATIC_URL }}js/responsivegallery/gallery.js" type="text/javascript" charset="utf-8"></script>
         {% endif %}
-        
         <!-- Front end js -->
         <script src="{{ STATIC_URL }}js/script.js" type="text/javascript" charset="utf-8"></script>
+        <script type="text/javascript">
+			$(function(){
+				{% block onbodyload %}
+
+				{% endblock %}
+			});
+		</script>
     </body>
 </html>

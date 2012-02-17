@@ -189,39 +189,6 @@ Order {{ order.number }}
 </table>
 
 <p>With selected lines:</p>
-<<<<<<< HEAD
-<ul>
-    <li><label><input type="radio" name="line_action" value="change_line_statuses" /> Change status to</label>
-	<select name="new_status">
-		<option value=""> -- choose new status -- </option>
-		{% for status in line_statuses %}
-		<option>{{ status }}</option>
-		{% endfor %}
-	</select>
-    </li>
-	<li><label><input type="radio" name="line_action" value="create_shipping_event" /> Create shipping event</label>
-	<select name="shipping_event_type">
-		<option value=""> -- choose event type -- </option>
-		{% for event_type in shipping_event_types %}
-		<option value="{{ event_type.code }}">{{ event_type.name }}</option>
-		{% endfor %}
-	</select>
-	with notes: 
-	<textarea name="reference"></textarea>
-	</li>
-	<li><label><input type="radio" name="line_action" value="create_payment_event" /> Create payment event</label>
-	<select name="payment_event_type">
-		<option value=""> -- choose event type -- </option>
-		{% for event_type in payment_event_types %}
-		<option value="{{ event_type.code }}">{{ event_type.name }}</option>
-		{% endfor %}
-	</select>
-	with amount: 
-	<input type="text" name="amount" value="" />
-	</li>
-=======
->>>>>>> 30ac4fe5d8b4f5dd0e19905d684a07d09bd22200
-
 
 <div class="control-group">
     <div class="controls">

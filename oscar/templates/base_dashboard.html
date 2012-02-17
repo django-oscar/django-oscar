@@ -24,13 +24,7 @@
     </head>
     <body id="{% block body_id %}default{% endblock %}" class="{% block body_class %}default{% endblock %}">
         {% block layout %}{% endblock %}
-		<script type="text/javascript">
-			$(function(){
-				{% block onbodyload %}
-
-				{% endblock %}
-			});
-		</script>
+		
         {% block tracking %}
             {% if not debug and not request.user.is_staff %}
                 <!-- Tracking to go here. -->
@@ -44,5 +38,12 @@
 		<script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap/bootstrap.min.js"></script>    
         <!-- Front end js -->
         <script src="{{ STATIC_URL }}js/dashboard.js" type="text/javascript" charset="utf-8"></script>
+        <script type="text/javascript">
+			$(function(){
+				{% block onbodyload %}
+
+				{% endblock %}
+			});
+		</script>
     </body>
 </html>
