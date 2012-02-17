@@ -20,7 +20,7 @@
         <!-- Main styles - will need to be minified -->
         <link rel="stylesheet" href="{{ STATIC_URL }}css/styles.css" />
         <link rel="stylesheet" href="{{ STATIC_URL }}css/dashboard.css" />
-        {% block extra_head %}{% endblock %}
+        {% block extrahead %}{% endblock %}
     </head>
     <body id="{% block body_id %}default{% endblock %}" class="{% block body_class %}default{% endblock %}">
         {% block layout %}{% endblock %}
@@ -30,6 +30,7 @@
                 <!-- Tracking to go here. -->
             {% endif %}
         {% endblock %}
+
         <!-- Jquery -->
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="{{ STATIC_URL }}js/jquery/jquery-1.7.1.min.js"><\/script>')</script>
@@ -37,7 +38,12 @@
         <!-- Bootstrap -->
 		<script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap/bootstrap.min.js"></script>    
         <!-- Front end js -->
-        <script src="{{ STATIC_URL }}js/dashboard.js" type="text/javascript" charset="utf-8"></script>
+        <script src="{{ STATIC_URL }}js/oscar/dashboard.js" type="text/javascript" charset="utf-8"></script>
+
+		{# Block for additional scripts #}
+		{% block extrascripts %}{% endblock %}
+
+		{# Block to allow pages to define which js functions get loaded #}
         <script type="text/javascript">
 			$(function(){
 				{% block onbodyload %}
