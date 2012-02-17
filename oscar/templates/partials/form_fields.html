@@ -1,0 +1,13 @@
+{% for field in form %}
+<div class="control-group {% for error in field.errors %}error{% endfor %}">
+    {{ field.label_tag }}
+    <div class="controls">            
+        {{ field }}
+        {% for error in field.errors %}
+            <span class="help-block">
+                {{ error|escape }}
+            </span>
+        {% endfor %}
+    </div>
+</div>
+{% endfor %}

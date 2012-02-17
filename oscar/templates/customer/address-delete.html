@@ -3,17 +3,23 @@
 {% load currency_filters %}
 
 {% block header %}
-<h2>Address book</h2>
+<div class="page-header">
+    <h2>Address book</h2>
+</div>
 {% endblock header %}
 
 
 {% block content %}
-
+<div class="sub-header">
+    <h3>Confirm address deletion</h3>
+</div>
 <h3>Confirm address deletion</h3>
-<form action="." method="post">
+<form action="." method="post" class="form-stacked">
     {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Delete address" />
+    {% include "partials/form_fields.html" with form=form %}
+    <div class="form-actions">
+        <input type="submit" value="Delete address" class="btn"/>
+    </div>
 </form>
 
 {% endblock content %}

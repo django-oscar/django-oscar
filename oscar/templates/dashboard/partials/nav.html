@@ -1,0 +1,7 @@
+<div class="span3">        
+    <ul class="primary-nav">
+        {% for item in menu_items %}
+        <li><a href="{{ item.url }}" class="submenu">{{ item.description }}</a></li>
+        {% endfor %}
+     </ul>
+</div>

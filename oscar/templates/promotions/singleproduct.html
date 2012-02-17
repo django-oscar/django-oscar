@@ -1,6 +1,61 @@
 {% load currency_filters %}
 
-<h2>{{ promotion.name }}</h2>
-<p>{{ promotion.description }}</p>
+<div class="sub-header">
+	<h2>{{ promotion.name }}</h2>
+</div>
 
-{{ promotion.product.title }}
+{% load basket_tags %}
+<div class="row-fluid">
+	<div class="span3">
+		<article class="product_pod">
+
+			{% with product.images.all as image %}
+			<div class="image_container">
+				<a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ image.original.url }}" alt="{{ product.get_title }}"></a>
+			</div>    
+			{% endwith %}
+			{% block product_review %}
+			{% with product.reviews.all as reviews %}
+			{% if reviews %}
+			<ul class="review_count">       
+				{% for review in reviews %}
+				<li class="{{ review.score }}">{{ review.score }}</li>
+				{% endfor %}
+			</ul>
+			{% else %}
+			<p class="star">No Rating</p>
+			{% endif %}
+			{% endwith %}
+			{% endblock product_review %}
+
+			<h3><a href="{{ product.get_absolute_url }}">{{ product.get_title|truncatewords:5 }}</a></h3>
+
+			<div class="product_price">
+				{% if product.is_group %}
+					<p>From {{ product.min_variant_price_incl_tax|currency }}</p>
+				{% else %}
+					{% if product.has_stockrecord %} 
+						<h4><span>{{ product.stockrecord.price_incl_tax|currency }}</span></h4>
+						<p class="app-ico avaliability instock">{{ product.stockrecord.availability }}</p>
+					{% else %}
+					<p class="app-ico avaliability outstock">Not available</p>
+					<button class="btn">Notify me</button> 
+					{% endif %}
+				{% endif %}
+				{% basket_form basket product as basket_form %}
+				<form action="{% url basket:add %}" method="post">
+					{% csrf_token %}
+					{{ basket_form.as_p }}
+					<input type="submit" class="btn btn-primary" value="Add to basket" />
+				</form>
+			</div>
+
+		</article>
+	</div>
+	<div class="span9">
+		<div class="sub-header">
+		<h3>{{ promotion.product.title }}</h3>
+		</div>
+		<p>{{ promotion.description }}</p>
+	</div>
+</div>

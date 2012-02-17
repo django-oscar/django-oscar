@@ -1,0 +1,40 @@
+<script id="img-wrapper-tmpl" type="text/x-jquery-tmpl">	    
+	<div class="rg-image-wrapper">
+
+			<div class="rg-image-nav">
+				<a href="#" class="rg-image-nav-prev">Previous Image</a>
+				<a href="#" class="rg-image-nav-next">Next Image</a>
+			</div>
+		
+		<div class="rg-image"></div>
+		<div class="rg-loading"></div>
+		<div class="rg-caption-wrapper">
+			<div class="rg-caption" style="display:none;">
+				<p></p>
+			</div>
+		</div>
+	</div>
+</script>
+{% for image in product.images.all %}
+<div id="rg-gallery" class="rg-gallery">
+	<div class="rg-thumbs">
+		<!-- Elastislide Carousel Thumbnail Viewer -->
+		<div class="es-carousel-wrapper">
+			<div class="es-nav">
+				<span class="es-nav-prev">Previous</span>
+				<span class="es-nav-next">Next</span>
+			</div>
+			<div class="es-carousel">
+				<ul>
+					<li>
+					    <a href="{{ image.original.url }}" rel="lightbox">
+					        <img src="{{ image.original.url }}" data-large="{{ image.original.url }}" alt="image02" data-description="{% if image.caption %}{{ image.caption }}{% endif %}" />
+					    </a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<!-- End Elastislide Carousel Thumbnail Viewer -->
+	</div><!-- rg-thumbs -->
+</div><!-- rg-gallery -->
+{% endfor %}

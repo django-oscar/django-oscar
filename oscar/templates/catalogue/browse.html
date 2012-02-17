@@ -3,66 +3,64 @@
 {% load basket_tags %}
 
 {% block header %}
-<h1>{{ summary }}</h1>
 {% endblock header %}
 
+{% block sidebar %}
+<div class="row-fluid">
+    <aside class="span3" style="position:relative;">
+        <div class="side_categories" style="padding: 8px 0;">
+            {% if categories %}
+    		<ul class="nav nav-list">
+    		    <li class="nav-header">Browse Categories</li>
+    		    {% for category in categories %}
+                <li><a href="{{ category.0.get_absolute_url }}">{{ category.0.name }}</a>
+                	{% if category.1 %}
+                	<ul>
+                		{% for subcategory in category.1 %}
+                		<li><a href="{{ subcategory.0.get_absolute_url }}">{{ subcategory.0.name }}</a>
+                		{% endfor %}
+                	</ul>
+                		{% endif %}
+                </li>
+                {% endfor %}
+    		</ul>
+    		{% endif %}
+        </div>
+    </aside><!-- /span3 -->
+{% endblock sidebar %}
 
 {% block content %}
-
-{% if products.count %}
-
-<ol>
-{% for product in products %}
-<li>
-    {% with product.images.all as image %}
-         <a href="{{ product.get_absolute_url }}"><img src="{{ im.url }}" width="100" height="100"></a>
-    {% endwith %}
-
-    <a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a><br/>
-    {% if product.is_group %}
-        From {{ product.min_variant_price_incl_tax|currency }}
-    {% else %}
-        {% if product.has_stockrecord %} 
-            {{ product.stockrecord.price_incl_tax|currency }}<br/>
-            {{ product.stockrecord.availability }}
-        {% else %}
-            Not available    
-        {% endif %}
-    {% endif %}    
-    {% basket_form basket product as basket_form %}
-    <form action="{% url basket:add %}" method="post">
-        {% csrf_token %}
-        {{ basket_form.as_p }}
-        <input type="submit" value="Add to basket" />
-    </form>
-</li>
-{% endfor %}
-</ol>
-
-{% if page_obj %}
-<div class="pagination">
-    <span class="step-links">
+<div class="span9">
+    <div class="sub-header">
+        <h1>{{ summary }}</h1>
+    </div>
+    {% if products.count %}
     
-        {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-        {% endif %}
+    {% if page_obj %}
+        {% include "catalogue/partials/pagination.html" %}
+    {% endif %}
 
-        <span class="current">
-            Page {{ page_obj.number }} of {{ paginator.num_pages }}.
-        </span>
+    <section>
+        <div class="mod">
+            <ol class="products four">
+                {% for product in products %}
+                <li>
+                    {% include "catalogue/partials/product.html" %}
+                </li>
+                {% endfor %}
+            </ol>
+        </div>
+    <section>
 
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">next</a>
-        {% endif %}
-    </span>
-</div>
-{% endif %}
+    {% if page_obj %}
+        {% include "catalogue/partials/pagination.html" %}
+    {% endif %}
 
-{% else %}
+    {% else %}
 
-<p>No products found.</p>
+    <p>No products found.</p>
 
-{% endif %}
-
+    {% endif %}
+    </div><!-- /span9 -->
+</div><!-- /row-fluid -->
 {% endblock content %}
-

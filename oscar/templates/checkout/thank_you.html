@@ -1,34 +1,45 @@
-{% extends "layout.html" %}
+{% extends "layout_checkout.html" %}
 
 {% load currency_filters %}
 
 {% block header %}
-<h2>Checkout / Thank you</h2>
+<div class="page-header">
+    <h2>Checkout / Thank you</h2>
+</div>
 {% endblock header %}
 
 
 {% block content %}
-
-<h3>Order confirmation</h3>
-<p>Your order has been placed - your order number is <strong>{{order.number}}</strong></p>
+<div class="sub-header">
+    <h3>Order confirmation</h3>
+</div>
+<p>Your order has been placed - your order number is <span class="label label-success">{{order.number}}</span></p>
 <p>Please make a note of this reference or print this page and quote it in any communication
 with us regarding your order.</p>
 
-<h4>Shipping</h4>
-<p>Your order will be delivered to:</p>
-<div>
-    {% for line in order.shipping_address.active_address_fields %}
-    {{ line }}<br/>
-    {% endfor %}
+<div class="row-fluid">
+    <div class="span6 order_delivered">
+        <div>
+            <h3>Shipping</h3>
+            <p>Your order will be delivered to:</p>
+            {% for line in order.shipping_address.active_address_fields %}
+            {{ line }}<br/>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="span6 order_payment">
+        <div>
+            <h3>Payment</h3>
+            {% for source in order.sources.all %}
+            {{ source }}
+            {% endfor %}
+        </div>
+    </div>
 </div>
-
-<h4>Payment</h4>
-{% for source in order.sources.all %}
-{{ source }}
-{% endfor %}
-
-<h4>Order details</h4>
-<table>
+<div class="sub-header">
+    <h3>Order details</h3>
+</div>
+<table class="table table-striped table-bordered">
     <tr>
         <th>Product</th>
         <th>Estimated dispatch date</th>
@@ -71,7 +82,9 @@ with us regarding your order.</p>
 </table>
  
 {% if not order.user %}
-<h4>Tracking your order</h4>
+<div class="sub-header">
+    <h4>Tracking your order</h4>
+</div>
 <p>You can track the status of your order at the following URL:</p>
 <p><a href="{% url customer:anon-order order.number order.verification_hash %}"> {% url customer:anon-order order.number order.verification_hash %}</a></p>
 {% endif %}

@@ -1,4 +1,4 @@
-{% extends 'dashboard/layout.html' %}
+{% extends 'layout_dashboard.html' %}
 {% load currency_filters %}
 
 {% block title %}
@@ -6,11 +6,13 @@
 {% endblock %}
 
 {% block header %}
-    <h2>User {{ user.username }}</h2>
+    <div class="page-header">
+        <h2>User {{ user.username }}</h2>
+    </div>
 {% endblock header %}
 
 {% block dashboard_content %}
-<div id="user_details">
+<div id="user_details" class="alert alert-info">
     <ul>
         <li>Email: {{ user.email }}</li>
         <li>First name: {{ user.first_name }}</li>
@@ -22,9 +24,11 @@
     </ul>
 </div>
 <div id="user_orders">
-    <h3>Orders</h3>
+    <div class="sub-header">
+        <h3>Orders</h3>
+    </div>
     {% if user.orders.count %}
-     <table>
+     <table class="table table-striped table-bordered">
          <tr>
              <th>Order Number</th>
              <th>Num items</th>
