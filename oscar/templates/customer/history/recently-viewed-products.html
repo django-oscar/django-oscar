@@ -11,11 +11,11 @@
             {% for product in products %}
             <li>
                 <article class="product_pod">
-                    {% with product.images.all as image %}
-                    <div class="image_container">
-                        <a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ image.original.url }}" alt="{{ product.get_title }}"></a>
-                    </div>    
-                    {% endwith %}
+					{% with product.images.all.0 as image %}
+				    <div class="image_container">
+				        <a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ image.original.url }}" alt="{{ product.get_title }}"></a>
+				    </div>    
+				    {% endwith %}
                     <h3><a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a></h3>
                     <p>{{ product.description|truncatewords:7 }}</p>
                     <div class="product_price">
