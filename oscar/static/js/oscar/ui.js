@@ -51,20 +51,6 @@ $(document).ready(function()
         $(this).find('span').remove();
     });
 
-    // For multiple submenus in drop down menus
-    var u = $('ul.nav li ul li ul, ul.tabs li ul li ul,').length;
-    if (u > 0) {
-        $("ul.nav li").hover(function()
-        {
-            $(this).addClass("hover");
-            $('ul:first',this).css('visibility', 'visible');
-        }, function(){
-            $(this).removeClass("hover");
-            $('ul:first',this).css('visibility', 'hidden');
-        });
-        $("ul.nav li ul li:has(ul), ul.tabs li ul li:has(ul)").find("a:first").append(" &raquo; ");
-    }
-
     // This activates elastislide
     $('#carousel').elastislide({
         imageW: 200,
