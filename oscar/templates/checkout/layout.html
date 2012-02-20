@@ -4,6 +4,11 @@
 {% load promotion_tags %}
 {% load category_tags %}
 
+{% block extrahead %}
+    <!-- Responsive - will need to be minified -->
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/responsive.css" />
+{% endblock %}
+
 {% block layout %}
     <div class="navbar accounts">
         <div class="navbar-inner">
@@ -106,4 +111,8 @@
         </div><!-- /page_inner -->
     </div>
     {% include "partials/footer.html" %}
+{% endblock %}
+
+{# Block for additional scripts #}
+{% block extrascripts %}
 {% endblock %}

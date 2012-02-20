@@ -15,16 +15,10 @@
         <!--[if lt IE 8]>
         	<script src="{{ STATIC_URL }}js/snowcone/snowcone.js"></script>
         <![endif]-->
-        
+    
         <link rel="shortcut icon" href="{{ STATIC_URL }}favicon.ico" />
         <!-- Main styles - will need to be minified -->
         <link rel="stylesheet" href="{{ STATIC_URL }}css/styles.css" />
-        {% if product %}
-        <!-- Colorbox for image galleries -->
-        <link rel="stylesheet" href="{{ STATIC_URL }}js/colorbox/colorbox.css" type="text/css" media="screen" charset="utf-8"/>
-        {% endif %}
-        <!-- Responsive - will need to be minified -->
-        <link rel="stylesheet" href="{{ STATIC_URL }}css/responsive.css" />
         {% block extrahead %}{% endblock %}
     </head>
     <body id="{% block body_id %}default{% endblock %}" class="{% block body_class %}default{% endblock %}">
@@ -40,25 +34,12 @@
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="{{ STATIC_URL }}js/jquery/jquery-1.7.1.min.js"><\/script>')</script>
         <script src="{{ STATIC_URL }}js/jquery/jquery.easing.1.3.js" type="text/javascript" charset="utf-8"></script>
-        <script src="{{ STATIC_URL }}js/scrollto/jquery.scrollTo-min.js" type="text/javascript" charset="utf-8"></script>
         <!-- Bootstrap -->
 		<script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap/bootstrap.min.js"></script>
-		{% block extra_foot %}{% endblock %}
-		<!-- Elastislide carousel js -->
-        <script src="{{ STATIC_URL }}js/elastislide/jquery.elastislide.js" type="text/javascript" charset="utf-8"></script>    
-
-        <!-- Responsive carousel js -->
-        {% if product %}
-        <script src="{{ STATIC_URL }}js/colorbox/jquery.colorbox-min.js" type="text/javascript" charset="utf-8"></script> 
-        <script src="{{ STATIC_URL }}js/responsivegallery/jquery.tmpl.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="{{ STATIC_URL }}js/responsivegallery/gallery.js" type="text/javascript" charset="utf-8"></script>
-        {% endif %}
-
+		
 		{# Block for additional scripts #}
 		{% block extrascripts %}{% endblock %}
 
-        <!-- Front end js -->
-        <script src="{{ STATIC_URL }}js/oscar/ui.js" type="text/javascript" charset="utf-8"></script>
         <script type="text/javascript">
 			$(function(){
 				{% block onbodyload %}

@@ -1,8 +1,12 @@
-{% extends "base_dashboard.html" %}
+{% extends "base.html" %}
 
 {% load currency_filters %}
 {% load promotion_tags %}
 {% load category_tags %}
+
+{% block extrahead %}
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/dashboard.css" />
+{% endblock %}
 
 {% block layout %}
     <div class="navbar accounts">
@@ -51,4 +55,10 @@
             </div><!-- /span9 --> 
         </div><!-- /row-fluid -->        
     </div><!-- /container -->       
+{% endblock %}
+
+{# Block for additional scripts #}
+{% block extrascripts %}
+    <!-- dashboard js -->
+    <script src="{{ STATIC_URL }}js/oscar/dashboard.js" type="text/javascript" charset="utf-8"></script>
 {% endblock %}
