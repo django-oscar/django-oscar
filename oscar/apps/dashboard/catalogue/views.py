@@ -9,3 +9,11 @@ class ProductListView(generic.ListView):
     model = Product
     context_object_name = 'products'
     paginate_by = 20
+
+
+class ProductUpdateView(generic.UpdateView):
+    template_name = 'dashboard/catalogue/product_update.html'
+    model = Product
+    context_object_name = 'product'
+
+

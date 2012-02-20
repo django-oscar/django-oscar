@@ -49,7 +49,7 @@
 			<td>{{ stockrecord.num_in_stock }}</td>
 		{% endwith %}
 		<td>
-			<a class="btn btn-info" href="">Edit</a>
+			<a class="btn btn-info" href="{% url dashboard:catalogue-product product.id %}">Edit</a>
 		</td>
     </tr>
     {% endfor %}
