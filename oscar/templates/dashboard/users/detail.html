@@ -12,6 +12,7 @@
 {% endblock header %}
 
 {% block dashboard_content %}
+{% with user=object %}
 <div id="user_details" class="alert alert-info">
     <ul>
         <li>Email: {{ user.email }}</li>
@@ -52,4 +53,5 @@
         <p>This user has not placed any orders yet.</p>
     {% endif %}
 </div>
+{% endwith %}
 {% endblock dashboard_content %}
