@@ -8,12 +8,13 @@
 <div class="row-fluid">
 	<div class="span3">
 		<article class="product_pod">
+			
+			{% with product.images.all.0 as image %}
+		    <div class="image_container">
+		        <a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ image.original.url }}" alt="{{ product.get_title }}"></a>
+		    </div>    
+		    {% endwith %}
 
-			{% with product.images.all as image %}
-			<div class="image_container">
-				<a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ image.original.url }}" alt="{{ product.get_title }}"></a>
-			</div>    
-			{% endwith %}
 			{% block product_review %}
 			{% with product.reviews.all as reviews %}
 			{% if reviews %}

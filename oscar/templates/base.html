@@ -23,7 +23,7 @@
     </head>
     <body id="{% block body_id %}default{% endblock %}" class="{% block body_class %}default{% endblock %}">
         {% block layout %}{% endblock %}
-		
+		{% block 404 %} {% endblock %}
         {% block tracking %}
             {% if not debug and not request.user.is_staff %}
                 <!-- Tracking to go here. -->
