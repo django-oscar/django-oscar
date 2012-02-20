@@ -10,9 +10,8 @@
 {% block dashboard_content %}
 
 <table>
-	<form method="post" action="{% url dashboard:order-summary %}">  
-	{% csrf_token %}
-	{{ filter_form.as_table }}
+	<form method="get" action="{% url dashboard:order-summary %}">  
+	{{ filter_form.as_table }}	
 	<tr>		
 		<td>       
 			<input type="submit" value="Filter result" class="btn primary" />

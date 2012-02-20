@@ -32,32 +32,36 @@ EventHandler = get_class('order.processing', 'EventHandler')
 class OrderSummaryView(TemplateView):
     template_name = 'dashboard/orders/summary.html'
 
-    def post(self, request, *args, **kwargs):
-
-        # Check filter form is valid
-        filter_form = OrderSummaryForm(request.POST)
-        if not filter_form.is_valid():
-            ctx = self.get_context_data(**kwargs)
-            ctx['filter_form'] = filter_form
-            return self.render_to_response(ctx)
-
+    def get(self, request, *args, **kwargs):
+        # Handle zero input
+        if request.GET.has_key('date_from') and request.GET.has_key('date_to'):
+            filter_form = OrderSummaryForm(request.GET)
+        else:
+            filter_form = OrderSummaryForm()
         ctx = self.get_context_data(**kwargs)
         ctx['filter_form'] = filter_form
-        status_breakdown = Order.objects.order_by('status').values('status').annotate(freq=Count('id'))
-        date_to = request.POST['date_to']
-        date_from = request.POST['date_from']
-
+        # Check filter form is valid
+        if not filter_form.is_valid():
+            return self.render_to_response(ctx)
+        date_to = request.GET['date_to']
+        date_from = request.GET['date_from']
+        # Return filtered data from date_from to date_to
+        status_breakdown = Order.objects.order_by('status').values('status').filter(date_placed__range=[date_from, date_to]).annotate(freq=Count('id'))
+        total_revenue = Order.objects.filter(date_placed__range=[date_from, date_to]).aggregate(Sum('total_incl_tax'))['total_incl_tax__sum']
+        # Fix the output value of 'total_revenue' when there are zero rows matching filtering condition.
+        # 'total_revenue' value is not zero in that condition.
+        if total_revenue < 0:
+            total_revenue = 0
         return self.render_to_response({'total_orders': Order.objects.filter(date_placed__range=[date_from, date_to]).count(),
                 'total_lines': Line.objects.filter(est_dispatch_date__range=[date_from, date_to]).count(),
-                'total_revenue': Order.objects.filter(date_placed__range=[date_from, date_to]).aggregate(Sum('total_incl_tax'))['total_incl_tax__sum'],
+                'total_revenue': total_revenue,
                 'order_status_breakdown': status_breakdown,
                 'filter_form' : filter_form,
                })
 
     def get_context_data(self, **kwargs):
         status_breakdown = Order.objects.order_by('status').values('status').annotate(freq=Count('id'))
-        filter_form = OrderSummaryForm
-
+        filter_form = OrderSummaryForm()
         return {'total_orders': Order.objects.all().count(),
                 'total_lines': Line.objects.all().count(),
                 'total_revenue': Order.objects.all().aggregate(Sum('total_incl_tax'))['total_incl_tax__sum'],
