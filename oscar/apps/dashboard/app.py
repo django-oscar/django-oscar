@@ -6,6 +6,7 @@ from oscar.apps.dashboard.reports.app import application as reports_app
 from oscar.apps.dashboard.orders.app import application as orders_app
 from oscar.apps.dashboard.users.app import application as users_app
 from oscar.apps.dashboard.promotions.app import application as promotions_app
+from oscar.apps.dashboard.catalogue.app import application as catalogue_app
 from oscar.apps.dashboard import views
 
 
@@ -16,11 +17,13 @@ class DashboardApplication(Application):
     reports_app = reports_app
     orders_app = orders_app
     users_app = users_app
+    catalogue_app = catalogue_app
     promotions_app = promotions_app
 
     def get_urls(self):
         urlpatterns = patterns('',
             url(r'^$', self.index_view.as_view(), name='index'),
+            url(r'^catalogue/', include(self.catalogue_app.urls)),
             url(r'^reports/', include(self.reports_app.urls)),
             url(r'^orders/', include(self.orders_app.urls)),
             url(r'^users/', include(self.users_app.urls)),

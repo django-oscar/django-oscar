@@ -42,12 +42,14 @@ class IndexView(TemplateView):
 
     def get_menu_items(self):
         MenuItem = IndexView.MenuItem
+        # This needs to be configurable per project and permission based
         return (
-            MenuItem('See statistics', 'dashboard:order-summary'),
+            MenuItem('See order statistics', 'dashboard:order-summary'),
             MenuItem('Manage orders', 'dashboard:order-list'),
             MenuItem('View reports', 'dashboard:reports-index'),
             MenuItem('User management', 'dashboard:users-index'),
             MenuItem('Content block management', 'dashboard:promotion-list'),
+            MenuItem('Catalogue management', 'dashboard:catalogue-product-list'),
         )
 
     def get_context_data(self, **kwargs):
