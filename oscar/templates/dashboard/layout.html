@@ -1,29 +1,54 @@
-{% extends 'layout.html' %}
+{% extends "base_dashboard.html" %}
 
-{% block extra_head %}
-<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}oscar/js/dashboard.js"></script>
+{% load currency_filters %}
+{% load promotion_tags %}
+{% load category_tags %}
+
+{% block layout %}
+    <div class="navbar accounts">
+        <div class="navbar-inner">
+            <div class="container" style="width: auto;">
+                <a href="{% url promotions:home %}" class="brand">Oscar // Domain-driven e-Commerce for Django</a>
+                <ul class="nav pull-right">
+                    {% if user.is_authenticated %}
+                        <li><a href="{% url customer:summary %}">Profile</a></li>
+                        <li><a href="{% url customer:logout %}">Logout</a></li>
+                    {% else %}
+                        <li><a href="{% url customer:login %}">Login</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div><!-- /navbar-inner -->
+    </div><!-- /navbar -->
+
+    <div class="container-fluid dashboard">
+        <div class="row-fluid">
+            {% block container_nav %}
+                    
+                    <ul class="primary-nav">
+                       <li><a class="submenu" href="{% url dashboard:order-summary %}">See statistics</a></li>
+                       <li><a class="submenu" href="{% url dashboard:order-list %}">Manage orders</a></li>
+                       <li><a class="submenu" href="{% url dashboard:reports-index %}">View reports</a></li>
+                       <li><a class="submenu" href="{% url dashboard:users-index %}">User management</a></li>
+                       <li>{% comment %}<a class="submenu" href="{% url dashboard:events-index %}">Events</a>{% endcomment %}</li>       
+                     </ul>
+
+            {% endblock %}
+            <div class="offset3 content">
+                {% block header %}
+                {% endblock %}
+                <div class="page-content">
+                    {% for message in messages %}
+                	<div class="alert alert-{{ message.tags }}">
+                		<a class="close">x</a>
+                		{{ message }}
+                	</div>
+                    {% endfor %}
+                    {% block content %}
+                       {% block dashboard_content %}{% endblock dashboard_content %}
+                    {% endblock content %}
+                </div>
+            </div><!-- /span9 --> 
+        </div><!-- /row-fluid -->        
+    </div><!-- /container -->       
 {% endblock %}
-
-{% block header %}
-    <h2>Dashboard</h2>
-{% endblock header %}
-
-{% block breadcrumbs %}
-<li><a href=".">Home</a><span class="divider">/<span></li>
-<li class="active"><a href=".">Dashboard</a></li>
-{% endblock %}
-
-{% block container_nav %}
-    <div>
-        <a href="{% url dashboard:order-summary %}">See statistics</a> |
-        <a href="{% url dashboard:order-list %}">Manage orders</a> |
-        <a href="{% url dashboard:reports-index %}">View reports</a> |
-        <a href="{% url dashboard:users-index %}">User management</a> |
-        {% comment %}<a href="{% url dashboard:events-index %}">Events</a>{% endcomment %}
-    </div>
-{% endblock %}
-
-{% block content %}
-    {% block dashboard_content %}{% endblock dashboard_content %}
-{% endblock content %}

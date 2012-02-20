@@ -14,6 +14,9 @@
     				<li><a href="#about">About</a></li>
     				<li><a href="#contact">Contact</a></li>
     				{% if user.is_authenticated %}
+						{% if user.is_staff %}
+						<li><a href="{% url dashboard:index %}">Dashboard</a></li>
+						{% endif %}
     				<li><a href="{% url customer:summary %}">Profile</a></li>
     				<li><a href="{% url customer:logout %}">Logout</a></li>
     				{% else %}
@@ -31,9 +34,7 @@
                 <li>
                     <div class="btn-group">
                         <a class="btn" href="{% url basket:summary %}">View Basket</a>
-                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                            <span class="caret"></span>
-                        </a>
+                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"> <span class="caret"></span> </a>
                         <ul class="dropdown-menu">
                             <li>
                                 {% include "basket/partials/basket_quick.html" %}
