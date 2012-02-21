@@ -1,9 +1,5 @@
 {% extends "base.html" %}
 {% block extrahead %}
-    {% if product %}
-    <!-- Colorbox for image galleries -->
-    <link rel="stylesheet" href="{{ STATIC_URL }}js/colorbox/colorbox.css" type="text/css" media="screen" charset="utf-8"/>
-    {% endif %}
     <!-- Responsive - will need to be minified -->
     <link rel="stylesheet" href="{{ STATIC_URL }}css/responsive.css" />
 {% endblock %}
@@ -30,7 +26,7 @@
     </div><!-- /navbar-inner -->
 </div><!-- /navbar -->
 
-<div class="container">
+<div class="container-fluid">
 	<div class="hero-unit">
 		<h1>404! Oops, page not found!</h1>
 		<p>The page you are looking for isn't here. Please try searching our site in the search field above or feel free to send us your feedback. Thank you.</p>

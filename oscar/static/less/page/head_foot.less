@@ -123,9 +123,9 @@
 }
 // OSCAR DROPDOWN NAVBAR
 // -----------
-#menu2 .dropdown-menu > li:hover .sub-nav,
-#menu2 .dropdown-menu > li > a:hover .sub-nav,
-#menu2 .dropdown-menu > li:hover {
+#browse .dropdown-menu > li:hover .sub-nav,
+#browse .dropdown-menu > li > a:hover .sub-nav,
+#browse .dropdown-menu > li:hover {
   visibility:visible;
   background-color:#efefef;
   border-right-color:#efefef;
@@ -137,10 +137,20 @@
   background-clip: padding-box;
 }
 .navbar {
-  #menu2 {
+  #menu2.dropdown.open {
+      > a {
+        background-position: 0 -15px;
+      }
+  }
+  #browse {
     > a {
+      .btn;
+      .btn-primary;
       margin: 5px 10px 5px 0px;
       padding: 5px 10px 6px;
+    }
+    > a:hover {
+      background-position: 0 -15px;
     }
     a {
       border:none;
@@ -150,12 +160,13 @@
       line-height: 18px;
     }
     .dropdown-menu {
+      width:212px;
       padding:0px;
       border:none;
       -webkit-border-radius: 0px;
       -moz-border-radius: 0px;
       border-radius: 0px;
-      margin-top:0px; 
+      margin-top:0px;
     }
     .dropdown-menu:before,
     .dropdown-menu:after {
@@ -164,7 +175,6 @@
     .nav.sub-nav {
       visibility: hidden;
       position:absolute;
-      width:300px;
       left:100%;
       top:0px;
       > li {
@@ -197,7 +207,7 @@
     }
   }
 }
-#menu2 .nav-tabs > li {
+#browse .nav-tabs > li {
    border:1px solid #ddd;
    border-top-width:0px;
    margin-bottom:0px;

@@ -2,11 +2,13 @@
 {% load currency_filters %}
 {% load thumbnail %}
 
-{% block content %}
-
+{% block header%}
 <div class="page-header">
     <h1>Search for '{{ query }}'</h1>
 </div>
+{% endblock %}
+
+{% block content %}
 
 {% if suggestion %}
 Did you mean <a href="{% url search:search %}?q={{ suggestion }}">{{ suggestion }}</a>?

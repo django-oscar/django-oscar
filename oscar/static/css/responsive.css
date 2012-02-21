@@ -225,6 +225,35 @@
     margin: 0px;
     padding: 0px;
   }
+  .navbar #browse ul {
+    width: auto!important;
+  }
+  .navbar #browse li {
+    border: none!important;
+  }
+  .navbar #browse .dropdown-menu {
+    margin: 0;
+  }
+  .navbar #browse .nav.sub-nav {
+    position: static;
+    visibility: visible;
+  }
+  .navbar #browse .nav.sub-nav li a {
+    padding: 6px 15px;
+  }
+  #browse .dropdown-menu > li:hover .sub-nav, #browse .dropdown-menu > li > a:hover .sub-nav, #browse .dropdown-menu > li:hover {
+    background: none;
+    border: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    -webkit-background-clip: none;
+    -moz-background-clip: none;
+    background-clip: none;
+  }
+  .header {
+    text-shadow: none;
+  }
 }
 @media (max-width: 768px) {
   .container {

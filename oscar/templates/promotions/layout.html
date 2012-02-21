@@ -61,47 +61,43 @@
                     </a>
                     <a class="brand hidden" href="#">Search</a>
                     <div class="nav-collapse">
-                        {% category_tree depth=2 as categories %}
-                        
-                        {% if categories %}
-                        <ul class="nav">            
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Browse Store <b class="caret"></b></a>
-                                <ul class="dropdown-menu">
+                        <!-- Added 'open' to dropdown so below menu will display - only on home page -->
+                        <div id="browse" class="nav dropdown open">
+                            {% category_tree depth=2 as categories %}
+                            {% if categories %}
+                                <!-- Removed data-toggle="dropdown" from the anchor so the dropdown doesn't work on the home page -->
+                                <a href="#browse" class="dropdown-toggle">Browse Store</a>   
+                                <ul class="dropdown-menu nav-tabs nav-stacked span3">
                                 {% for category in categories %}
-                                    <li><a href="{{ category.0.get_absolute_url }}">{{ category.0.name }}</a>
+                                    <li><a href="{{ category.0.get_absolute_url }}">{{ category.0.name }} <span class="pull-right app-ico ico_fill_right"></span></a>
                                     {% if category.1 %}
-                                        <ul class="submenu dropdown-menu">
+                                        <ul class="sub-nav dropdown-menu nav nav-tabs nav-stacked span3">
                                         {% for subcategory in category.1 %}
-                                            <li><a href="{{ subcategory.0.get_absolute_url }}">{{ subcategory.0.name }}</a></li>
+                                            <li><a href="{{ subcategory.0.get_absolute_url }}" class="app-ico ico_outline_right"> {{ subcategory.0.name }}</a></li>
                                         {% endfor %}
                                         </ul>
                                     {% endif %}
                                     </li>
                                 {% endfor %}
                                 </ul>
-                            </li>
-                        </ul>
-                        {% else %}
-                        <div id="menu2" class="nav dropdown">
-                            <a href="#menu2" class="dropdown-toggle btn" data-toggle="dropdown">menu2</a>   
-                            <ul class="dropdown-menu nav-tabs nav-stacked">
-                                <li><a href="#">Action</a></li>
-                                <li>
-                                    <a href="#" >Another action <span class="pull-right app-ico ico_fill_right"></span></a>
-                                    <ul class="sub-nav dropdown-menu nav nav-tabs nav-stacked">
-                                        <li><a href="#" class="app-ico ico_outline_right"> Action</a></li>
-                                        <li><a href="#" class="app-ico ico_outline_right"> Another action</a></li>
-                                        <li><a href="#" class="app-ico ico_outline_right"> Something else here</a></li>
-                                        <li><a href="#" class="app-ico ico_outline_right"> Separated link</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="#">Something else here</a></li>
-                                <li><a href="#">Separated link</a></li>
-                            </ul>
+                            {% else %}
+                                <!-- Removed data-toggle="dropdown" from the anchor so the dropdown doesn't work on the home page -->
+                                <a href="#browse" class="dropdown-toggle">Browse Store</a>   
+                                <ul class="dropdown-menu nav-tabs nav-stacked">
+                                    <li><a href="/products">All Products</a></li>
+                                    <li>
+                                        <a href="#" >Contains a Submenu  <span class="pull-right app-ico ico_fill_right"></span></a>
+                                        <ul class="sub-nav dropdown-menu nav nav-tabs nav-stacked span3">
+                                            <li><a href="#" class="app-ico ico_outline_right"> Submenu Link</a></li>
+                                            <li><a href="#" class="app-ico ico_outline_right"> Submenu Link</a></li>
+                                            <li><a href="#" class="app-ico ico_outline_right"> Submenu Link</a></li>
+                                            <li><a href="#" class="app-ico ico_outline_right"> Submenu Link</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="/">Go Home!</a></li>
+                                </ul>
+                            {% endif %}
                         </div>
-                        {% endif %}
-                    
                         <form method="get" action="{% url search:search %}" class="form-search navbar-search pull-right">
                             {# {{ search_form.q.label_tag }} #}
                             {{ search_form.q }}
@@ -116,39 +112,44 @@
     </header><!-- /header -->
 
     <div class="container-fluid page">
-        {% block header %}
-        {% endblock %}
         <div class="page_inner">
-        	<ul class="breadcrumb">
-        		{% block breadcrumbs %}
-        		<li class="active"><a href=".">Home</a></li>
-        		{% endblock %}
-        	</ul>
+            <div class="row-fluid">
+                <aside class="span3">
+                    {% block sidebar %}
+                    {% endblock %}
+                </aside><!-- /span3 -->
+                <div class="span9">
+                    <ul class="breadcrumb">
+                		{% block breadcrumbs %}
+                		<li class="active"><a href=".">Home</a></li>
+                		{% endblock %}
+                	</ul>
 
-        	{% block container_nav %}
-        	{% endblock %}
+                	{% block container_nav %}
+                	{% endblock %}
 
-        	{% for message in messages %}
-        	<div class="alert alert-{{ message.tags }}">
-        		<a class="close">x</a>
-        		{{ message }}
-        	</div>
-        	{% endfor %}
-        
-            {% block sidebar %}
-               {% endblock %}
-        
-            {% block flatpage %}
-            {% endblock %}
-           
-        	<div id="promotions">
-        		{% for promotion in promotions_page %}
-        		{% render_promotion promotion %}
-        		{% endfor %}
-        	</div>
-
-        	{% block content %}
-        	{% endblock %}
+                	{% for message in messages %}
+                	<div class="alert alert-{{ message.tags }}">
+                		<a class="close">x</a>
+                		{{ message }}
+                	</div>
+                	{% endfor %}
+                	
+                    {% block header %}
+                    {% endblock %}
+                    
+                    {% block flatpage %}
+                    {% endblock %}
+                    
+                    <div id="promotions">
+                		{% for promotion in promotions_page %}
+                		{% render_promotion promotion %}
+                		{% endfor %}
+                	</div>
+                	{% block content %}
+                	{% endblock %}
+                </div><!-- /span9 -->
+            </div><!-- /row-fluid -->
     	</div><!-- /page_inner -->
     </div><!-- /container-fluid -->
     {% include "partials/footer.html" %}

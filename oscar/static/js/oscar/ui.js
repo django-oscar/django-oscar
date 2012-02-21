@@ -50,7 +50,12 @@ $(document).ready(function()
         $(this).find('h3').addClass(user_rating);
         $(this).find('span').remove();
     });
-
+    //
+    var $browse_width = $('aside.span3').outerWidth();
+    $('#browse').find('> .dropdown-menu').css({
+      width: $browse_width
+    });
+    
     // This activates elastislide
     $('#carousel').elastislide({
         imageW: 200,

@@ -65,30 +65,40 @@
                     </a>
                     <a class="brand hidden" href="#">Search</a>
                     <div class="nav-collapse">
-                        {% category_tree depth=2 as categories %}
-                        <ul class="nav">
-                        {% if categories %}            
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Browse Store <b class="caret"></b></a>
-                                <ul class="dropdown-menu">
+                        <div id="browse" class="nav dropdown">
+                            {% category_tree depth=2 as categories %}
+                            {% if categories %}
+                                <a href="#browse" class="dropdown-toggle" data-toggle="dropdown">Browse Store</a>   
+                                <ul class="dropdown-menu nav-tabs nav-stacked span3">
                                 {% for category in categories %}
-                                    <li><a href="{{ category.0.get_absolute_url }}">{{ category.0.name }}</a>
+                                    <li><a href="{{ category.0.get_absolute_url }}">{{ category.0.name }} <span class="pull-right app-ico ico_fill_right"></span></a>
                                     {% if category.1 %}
-                                        <ul class="submenu dropdown-menu">
+                                        <ul class="sub-nav dropdown-menu nav nav-tabs nav-stacked span3">
                                         {% for subcategory in category.1 %}
-                                            <li><a href="{{ subcategory.0.get_absolute_url }}">{{ subcategory.0.name }}</a></li>
+                                            <li><a href="{{ subcategory.0.get_absolute_url }}" class="app-ico ico_outline_right"> {{ subcategory.0.name }}</a></li>
                                         {% endfor %}
                                         </ul>
                                     {% endif %}
                                     </li>
                                 {% endfor %}
                                 </ul>
-                            </li>
-                        {% else %}
-                            <li><a href="/products" class="browse">Browse Store</a></li>
-                        {% endif %}
-                        </ul>
-                    
+                            {% else %}
+                                <a href="#browse" class="dropdown-toggle" data-toggle="dropdown">Browse Store</a>   
+                                <ul class="dropdown-menu nav-tabs nav-stacked">
+                                    <li><a href="/products">All Products</a></li>
+                                    <li>
+                                        <a href="#" >Contains a Submenu  <span class="pull-right app-ico ico_fill_right"></span></a>
+                                        <ul class="sub-nav dropdown-menu nav nav-tabs nav-stacked span3">
+                                            <li><a href="#" class="app-ico ico_outline_right"> Submenu Link</a></li>
+                                            <li><a href="#" class="app-ico ico_outline_right"> Submenu Link</a></li>
+                                            <li><a href="#" class="app-ico ico_outline_right"> Submenu Link</a></li>
+                                            <li><a href="#" class="app-ico ico_outline_right"> Submenu Link</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="/">Go Home!</a></li>
+                                </ul>
+                            {% endif %}
+                        </div>
                         <form method="get" action="{% url search:search %}" class="form-search navbar-search pull-right">
                             {# {{ search_form.q.label_tag }} #}
                             {{ search_form.q }}
