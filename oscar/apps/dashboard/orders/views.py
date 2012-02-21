@@ -47,11 +47,11 @@ class OrderSummaryView(TemplateView):
         date_from = request.GET['date_from']
         # Return filtered data from date_from to date_to
         status_breakdown = Order.objects.order_by('status').values('status').filter(date_placed__range=[date_from, date_to]).annotate(freq=Count('id'))
-        total_revenue = Order.objects.filter(date_placed__range=[date_from, date_to]).aggregate(Sum('total_incl_tax'))['total_incl_tax__sum']
+        total_revenue = Order.objects.filter(date_placed__range=[date_from, date_to]).aggregate(Sum('total_incl_tax')).get('total_incl_tax__sum')
         # Fix the output value of 'total_revenue' when there are zero rows matching filtering condition.
-        # 'total_revenue' value is not zero in that condition.
-        if total_revenue < 0:
-            total_revenue = 0
+        # 'total_revenue' value is None in that condition.
+        if total_revenue is None:
+            total_revenue = D('0.00')
         return self.render_to_response({'total_orders': Order.objects.filter(date_placed__range=[date_from, date_to]).count(),
                 'total_lines': Line.objects.filter(est_dispatch_date__range=[date_from, date_to]).count(),
                 'total_revenue': total_revenue,
