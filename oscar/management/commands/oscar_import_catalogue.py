@@ -5,12 +5,12 @@ from optparse import make_option
 from django.core.management.base import BaseCommand, CommandError
 
 from oscar.core.loading import import_module
-import_module('partner.utils', ['CatalogueImporter'], locals())
-import_module('partner.exceptions', ['CatalogueImportError'], locals())
+from oscar.core.loading import get_class
+CatalogueImporter = get_class('partner.utils', 'CatalogueImporter')
+CatalogueImportError = get_class('partner.exceptions', 'CatalogueImportError')
 
 
 class Command(BaseCommand):
-    
     args = '/path/to/file1.csv /path/to/file2.csv ...'
     help = 'For creating product catalogues based on a CSV file'
     
@@ -41,7 +41,7 @@ class Command(BaseCommand):
                 raise CommandError(str(e))
             
     def _get_logger(self):
-        logger = logging.getLogger('oscar.apps.catalogue_import')
+        logger = logging.getLogger(__file__)
         stream = logging.StreamHandler(self.stdout)
         logger.addHandler(stream)
         logger.setLevel(logging.DEBUG)
