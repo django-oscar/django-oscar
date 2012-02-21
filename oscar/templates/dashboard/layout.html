@@ -1,14 +1,13 @@
 {% extends "base_dashboard.html" %}
-
 {% load currency_filters %}
-{% load promotion_tags %}
 {% load category_tags %}
+{% load dashboard_tags %}
 
 {% block layout %}
     <div class="navbar accounts">
         <div class="navbar-inner">
             <div class="container" style="width: auto;">
-                <a href="{% url promotions:home %}" class="brand">Oscar // Domain-driven e-Commerce for Django</a>
+                <a href="{% url promotions:home %}" class="brand">Oscar</a>
                 <ul class="nav pull-right">
                     {% if user.is_authenticated %}
                         <li><a href="{% url customer:summary %}">Profile</a></li>
@@ -23,20 +22,16 @@
 
     <div class="container-fluid dashboard">
         <div class="row-fluid">
-            {% block container_nav %}
-                    
-                    <ul class="primary-nav">
-                       <li><a class="submenu" href="{% url dashboard:order-summary %}">See statistics</a></li>
-                       <li><a class="submenu" href="{% url dashboard:order-list %}">Manage orders</a></li>
-                       <li><a class="submenu" href="{% url dashboard:reports-index %}">View reports</a></li>
-                       <li><a class="submenu" href="{% url dashboard:users-index %}">User management</a></li>
-                       <li>{% comment %}<a class="submenu" href="{% url dashboard:events-index %}">Events</a>{% endcomment %}</li>       
-                     </ul>
+			{% dashboard_navigation request.user %}
+			<a href="{% url dashboard:index %}">Dashboard</a>
+			<ul class="primary-nav">
+				{% for item in nav_items %}
+				<li><a class="submenu" href="{{ item.url }}">{{ item.text }}</a></li>
+				{% endfor %}
+			</ul>
 
-            {% endblock %}
             <div class="offset3 content">
-                {% block header %}
-                {% endblock %}
+                {% block header %}{% endblock %}
                 <div class="page-content">
                     {% for message in messages %}
                 	<div class="alert alert-{{ message.tags }}">
@@ -45,10 +40,11 @@
                 	</div>
                     {% endfor %}
                     {% block content %}
-                       {% block dashboard_content %}{% endblock dashboard_content %}
+						{% block dashboard_content %}{% endblock dashboard_content %}
                     {% endblock content %}
                 </div>
             </div><!-- /span9 --> 
+
         </div><!-- /row-fluid -->        
     </div><!-- /container -->       
 {% endblock %}
