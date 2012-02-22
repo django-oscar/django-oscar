@@ -2735,6 +2735,10 @@ body {
 .navbar #browse .nav.sub-nav > li > a {
   padding: 9px 12px;
 }
+.navbar #browse .nav-tabs.nav-stacked > li span {
+  position: absolute;
+  right: 5%;
+}
 .navbar #browse .nav-tabs.nav-stacked > li .sub-nav a:hover {
   background-color: #08C;
 }
