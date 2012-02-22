@@ -3,11 +3,13 @@ import csv
 import sys
 from decimal import Decimal as D
 
-from oscar.core.loading import import_module
-
-import_module('partner.exceptions', ['ImportError'], locals())
-import_module('partner.models', ['Partner', 'StockRecord'], locals())
-import_module('catalogue.models', ['ProductClass', 'Product'], locals())
+from oscar.apps.catalogue.categories import create_from_breadcrumbs
+from oscar.core.loading import get_class, get_classes
+ImportError = get_class('partner.exceptions', 'ImportError')
+Partner, StockRecord = get_classes('partner.models', ('Partner', 'StockRecord'))
+ProductClass, Product, Category, ProductCategory = get_classes(
+    'catalogue.models', ('ProductClass', 'Product', 'Category',
+                         'ProductCategory'))
 
 
 class StockImporter(object):
@@ -83,7 +85,9 @@ class StockImporter(object):
 
 
 class CatalogueImporter(object):
-    u"""A catalogue importer object"""
+    """
+    A catalogue importer object
+    """
     
     _flush = False
     
@@ -91,8 +95,6 @@ class CatalogueImporter(object):
         self.logger = logger
         self._delimiter = delimiter
         self._flush = flush
-        if flush:
-            self.logger.info(" - Flushing product data before import")
     
     def handle(self, file_path=None):
         u"""Handles the actual import process"""
@@ -100,6 +102,7 @@ class CatalogueImporter(object):
             raise ImportError("No file path supplied")
         Validator().validate(file_path)
         if self._flush is True:
+            self.logger.info(" - Flushing product data before import")
             self._flush_product_data()
         self._import(file_path)
         
@@ -113,13 +116,12 @@ class CatalogueImporter(object):
     def _import(self, file_path):
         u"""Imports given file"""
         stats = {'new_items': 0,
-                 'updated_items': 0
-                 }
+                 'updated_items': 0}
         row_number = 0
         for row in csv.reader(open(file_path,'rb'), delimiter=self._delimiter, quotechar='"', escapechar='\\'):
             row_number += 1
             self._import_row(row_number, row, stats)
-        msg = "\tNew items: %d\n\tUpdated items: %d" % (stats['new_items'], stats['updated_items'])
+        msg = "New items: %d, updated items: %d" % (stats['new_items'], stats['updated_items'])
         self.logger.info(msg)
     
     def _import_row(self, row_number, row, stats):
@@ -135,7 +137,7 @@ class CatalogueImporter(object):
         # Ignore any entries that are NULL
         if description == 'NULL':
             description = ''
-        
+
         # Create item class and item
         product_class,_ = ProductClass.objects.get_or_create(name=product_class)
         try:
@@ -149,6 +151,11 @@ class CatalogueImporter(object):
         item.description = description
         item.product_class = product_class
         item.save()
+
+        # Category
+        cat = create_from_breadcrumbs('Books > Fiction')
+        ProductCategory.objects.create(product=item, category=cat)
+        
         return item
         
     def _create_stockrecord(self, item, partner_name, partner_sku, price_excl_tax, num_in_stock, stats):            

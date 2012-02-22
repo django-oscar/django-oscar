@@ -25,11 +25,10 @@
     <body id="{% block body_id %}default{% endblock %}" class="{% block body_class %}default{% endblock %}">
         {% block layout %}{% endblock %}
 		
-        {% block tracking %}
-            {% if not debug and not request.user.is_staff %}
-                <!-- Tracking to go here. -->
-            {% endif %}
-        {% endblock %}
+		{# Tracking code #}
+		{% if not debug and not request.user.is_staff %}
+			{% block tracking %} {% endblock %}
+		{% endif %}
 
         <!-- Jquery -->
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
@@ -45,11 +44,7 @@
 
 		{# Block to allow pages to define which js functions get loaded #}
         <script type="text/javascript">
-			$(function(){
-				{% block onbodyload %}
-
-				{% endblock %}
-			});
+			$(function(){ {% block onbodyload %}{% endblock %} });
 		</script>
     </body>
 </html>

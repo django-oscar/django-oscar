@@ -83,7 +83,9 @@ class ProductCategoryView(ListView):
 
 
 class ProductListView(ListView):
-    u"""A list of products"""
+    """
+    A list of products
+    """
     context_object_name = "products"
     template_name = 'catalogue/browse.html'
     paginate_by = 20
@@ -104,7 +106,7 @@ class ProductListView(ListView):
             self.search_signal.send(sender=self, query=q, user=self.request.user)
             return product_model.browsable.filter(title__icontains=q)
         else:
-            return product_model.browsable.all()
+            return product_model.browsable.select_related().all()
         
     def get_context_data(self, **kwargs):
         context = super(ProductListView, self).get_context_data(**kwargs)
