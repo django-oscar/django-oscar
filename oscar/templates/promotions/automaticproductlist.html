@@ -1,6 +1,6 @@
 {% load currency_filters %}
-<div class="page-header">
-<h2>{{ promotion.name }}</h2>
+<div class="sub-header">
+    <h2>{{ promotion.name }}</h2>
 </div>
 
 <p>{{ promotion.description }}</p>
@@ -8,26 +8,30 @@
 <div id="carousel" class="es-carousel-wrapper">
     <div class="es-carousel">
 <ul>
-{% for product in promotion.get_products %}
-<li>
-	{% with product.images.all.0 as image %}
-    <div class="image_container">
-        <a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ image.original.url }}" alt="{{ product.get_title }}"></a>
-    </div>    
-    {% endwith %}
-    <a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a><br/>
-    {% if product.is_group %}
-        From {{ product.min_variant_price_incl_tax|currency }}
-    {% else %}
-        {% if product.has_stockrecord %} 
-            {{ product.stockrecord.price_incl_tax|currency }}<br/>
-            {{ product.stockrecord.availability }}
-        {% else %}
-            Not available    
-        {% endif %}
-    {% endif %}    
-</li>
-{% endfor %}
+    {% for product in promotion.get_products %}
+    <li>
+        <article class="product_pod">
+            {% with product.images.all.0 as image %}
+            <div class="image_container">
+                <a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ image.original.url }}" alt="{{ product.get_title }}"></a>
+            </div>    
+            {% endwith %}
+            <h3><a href="{{ product.get_absolute_url }}">{{ product.get_title|truncatewords:4 }}</a></h3>
+            <div class="product_price">
+                {% if product.is_group %}
+                From {{ product.min_variant_price_incl_tax|currency }}
+                {% else %}
+                {% if product.has_stockrecord %} 
+                <h4><span>{{ product.stockrecord.price_incl_tax|currency }}</span></h4>
+                <p class="app-ico avaliability instock">{{ product.stockrecord.availability }}</p>
+                {% else %}
+                <p class="app-ico avaliability outstock">Not available</p>
+                {% endif %}
+                {% endif %}
+            </div>
+        </article>    
+    </li>
+    {% endfor %}
 </ul>
     </div>
 </div>

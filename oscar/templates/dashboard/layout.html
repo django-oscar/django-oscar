@@ -1,9 +1,5 @@
-<<<<<<< HEAD
 {% extends "base.html" %}
 
-=======
-{% extends "base_dashboard.html" %}
->>>>>>> 89082239cf689557752c9eb7947514da530c21bf
 {% load currency_filters %}
 {% load category_tags %}
 {% load dashboard_tags %}
@@ -19,10 +15,10 @@
                 <a href="{% url promotions:home %}" class="brand">Oscar</a>
                 <ul class="nav pull-right">
                     {% if user.is_authenticated %}
-                        <li><a href="{% url customer:summary %}">Profile</a></li>
-                        <li><a href="{% url customer:logout %}">Logout</a></li>
+                        <li><a href="{% url customer:summary %}" class="app-ico ico_profile">Profile</a></li>
+        				<li><a href="{% url customer:logout %}" class="app-ico ico_logout">Logout</a></li>
                     {% else %}
-                        <li><a href="{% url customer:login %}">Login</a></li>
+                        <li><a href="{% url customer:login %}" class="app-ico ico_logout">Login</a></li>
                     {% endif %}
                 </ul>
             </div>

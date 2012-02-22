@@ -10,27 +10,7 @@
 {% endblock %}
 
 {% block layout %}
-    <div class="navbar accounts">
-        <div class="navbar-inner">
-            <div class="container-fluid">
-                <a class="brand hidden" href="{% url promotions:home %}">Oscar</a>
-                <ul class="nav pull-right">
-    				<li><a href="#">Home</a></li>
-    				<li><a href="#about">About</a></li>
-    				<li><a href="#contact">Contact</a></li>
-    				{% if user.is_authenticated %}
-						{% if user.is_staff %}
-						<li><a href="{% url dashboard:index %}">Dashboard</a></li>
-						{% endif %}
-						<li><a href="{% url customer:summary %}">Profile</a></li>
-						<li><a href="{% url customer:logout %}">Logout</a></li>
-    				{% else %}
-						<li><a href="{% url customer:login %}">Login</a></li>
-    				{% endif %}
-                </ul>
-            </div>
-        </div><!-- /navbar-inner -->
-    </div><!-- /navbar -->
+    {% include "partials/nav_accounts.html" %}
     
     <header class="header container-fluid">
         <div class="row-fluid">

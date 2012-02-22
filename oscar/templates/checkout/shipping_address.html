@@ -38,7 +38,7 @@
 {% endif %}
 
 
-<form action="{% url checkout:shipping-address %}" method="post" class="form-stacked">
+<form action="{% url checkout:shipping-address %}" method="post" class="form-horizontal">
     <legend>Enter a shipping address</legend>
 	{% csrf_token %}
 	 {% include "partials/form_fields.html" with form=form %}

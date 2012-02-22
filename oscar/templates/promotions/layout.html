@@ -5,16 +5,13 @@
 {% load category_tags %}
 
 {% block extrahead %}
-    {% if product %}
-    <!-- Colorbox for image galleries -->
-    <link rel="stylesheet" href="{{ STATIC_URL }}js/colorbox/colorbox.css" type="text/css" media="screen" charset="utf-8"/>
-    {% endif %}
     <!-- Responsive - will need to be minified -->
     <link rel="stylesheet" href="{{ STATIC_URL }}css/responsive.css" />
 {% endblock %}
 
 {% block layout %}
     {% include "partials/nav_accounts.html" %}
+    
     <header class="header container-fluid">
         <div class="row-fluid">
             {% include "partials/brand.html" %}
@@ -30,10 +27,12 @@
                     </a>
                     <a class="brand hidden" href="#">Search</a>
                     <div class="nav-collapse">
-                        <div id="browse" class="nav dropdown">
+                        <!-- Added 'open' to dropdown so below menu will display - only on home page -->
+                        <div id="browse" class="nav dropdown open">
                             {% category_tree depth=2 as categories %}
                             {% if categories %}
-                                <a href="#browse" class="dropdown-toggle" data-toggle="dropdown">Browse Store</a>   
+                                <!-- Removed data-toggle="dropdown" from the anchor so the dropdown doesn't work on the home page -->
+                                <a href="#browse" class="dropdown-toggle">Browse Store</a>   
                                 <ul class="dropdown-menu nav-tabs nav-stacked">
                                     <li><a href="/products">All Products</a></li>
                                 {% for category in categories %}
@@ -49,7 +48,8 @@
                                 {% endfor %}
                                 </ul>
                             {% else %}
-                                <a href="#browse" class="dropdown-toggle" data-toggle="dropdown">Browse Store</a>   
+                                <!-- Removed data-toggle="dropdown" from the anchor so the dropdown doesn't work on the home page -->
+                                <a href="#browse" class="dropdown-toggle">Browse Store</a>   
                                 <ul class="dropdown-menu nav-tabs nav-stacked">
                                     <li><a href="/products">All Products</a></li>
                                     <li>
@@ -70,42 +70,49 @@
                 </div>
             </div><!-- /navbar-inner -->
         </div><!-- /navbar -->
+        
+        
     </header><!-- /header -->
 
     <div class="container-fluid page">
-        {% block header %}
-        {% endblock %}
         <div class="page_inner">
-        	<ul class="breadcrumb">
-        		{% block breadcrumbs %}
-        		<li class="active"><a href=".">Home</a></li>
-        		{% endblock %}
-        	</ul>
+            <div class="row-fluid">
+                <aside class="span3">
+                    {% block sidebar %}
+                    {% endblock %}
+                </aside><!-- /span3 -->
+                <div class="span9">
+                    <ul class="breadcrumb">
+                		{% block breadcrumbs %}
+                		<li class="active"><a href=".">Home</a></li>
+                		{% endblock %}
+                	</ul>
 
-        	{% block container_nav %}
-        	{% endblock %}
+                	{% block container_nav %}
+                	{% endblock %}
 
-        	{% for message in messages %}
-        	<div class="alert alert-{{ message.tags }}">
-        		<a class="close">x</a>
-        		{{ message }}
-        	</div>
-        	{% endfor %}
-        
-            {% block sidebar %}
-               {% endblock %}
-        
-            {% block flatpage %}
-            {% endblock %}
-           
-        	<div id="promotions">
-        		{% for promotion in promotions_page %}
-        		{% render_promotion promotion %}
-        		{% endfor %}
-        	</div>
-
-        	{% block content %}
-        	{% endblock %}
+                	{% for message in messages %}
+                	<div class="alert alert-{{ message.tags }}">
+                		<a class="close">x</a>
+                		{{ message }}
+                	</div>
+                	{% endfor %}
+                	
+                    {% block header %}
+                    {% endblock %}
+                    
+                    {% block flatpage %}
+                    {% endblock %}
+                    
+                    <div id="promotions">
+                		{% for promotion in promotions_page %}
+                		{% render_promotion promotion %}
+                		{% endfor %}
+                	</div>
+                	{% block content %}
+                	{% endblock %}
+                </div><!-- /span9 -->
+            </div><!-- /row-fluid -->
     	</div><!-- /page_inner -->
     </div><!-- /container-fluid -->
     {% include "partials/footer.html" %}
@@ -116,12 +123,6 @@
     <script src="{{ STATIC_URL }}js/scrollto/jquery.scrollTo-min.js" type="text/javascript" charset="utf-8"></script>
     <!-- Elastislide carousel js -->
     <script src="{{ STATIC_URL }}js/elastislide/jquery.elastislide.js" type="text/javascript" charset="utf-8"></script>    
-    <!-- Responsive gallery js -->
-    {% if product %}
-    <script src="{{ STATIC_URL }}js/colorbox/jquery.colorbox-min.js" type="text/javascript" charset="utf-8"></script> 
-    <script src="{{ STATIC_URL }}js/responsivegallery/jquery.tmpl.min.js" type="text/javascript" charset="utf-8"></script>
-    <script src="{{ STATIC_URL }}js/responsivegallery/gallery.js" type="text/javascript" charset="utf-8"></script>
-    {% endif %}
     <!-- Front end js -->
     <script src="{{ STATIC_URL }}js/oscar/ui.js" type="text/javascript" charset="utf-8"></script>
 {% endblock %}
