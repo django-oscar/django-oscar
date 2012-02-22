@@ -6,23 +6,24 @@ Order {{ order.number }}
 {% endblock %}
 
 {% block header %}
+<div class="page-header">
     <h2>Order {{ order.number }} / Shipping address</h2>
+</div>
 {% endblock header %}
 
 {% block content %}
 
-<h2>Edit shipping address</h2>
+<div class="sub-header">
+    <h3>Edit shipping address</h3>
+</div>
 
-<form action="." method="post">
-	<table>
-		{% csrf_token %}
-		{{ form.as_table }}
-		<tr>
-			<th></th>
-			<td><input type="submit" value="Update address" />
-				or <a href="{% url dashboard:order-detail order.number %}">cancel</a></td>
-		</tr>
-	</table>
+<form action="." method="post" class="form-horizontal">
+	{% csrf_token %}
+	{% include "partials/form_fields.html" with form=form %}
+	<div class="form-actions">
+	    <input type="submit" value="Update address" class="btn btn-primary"/>
+		or <a href="{% url dashboard:order-detail order.number %}">cancel</a>
+	</div>
 </form>
 
 {% endblock content %}

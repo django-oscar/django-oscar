@@ -1,13 +1,21 @@
 {% extends 'dashboard/layout.html' %}
 
+{% block header %}
+<div class="page-header">
+    <h1>Remove promotion from page?</h1>
+</div>
+{% endblock header%}
 
 {% block dashboard_content %}
-<h1>Remove promotion from page?</h1>
+
 
 <form action="." method="post">
 	{% csrf_token %}
     <p>Remove {{ object.content_object.type }} content block <strong>{{ object.name }}</strong> from page <strong>{{ object.page_url }}</strong> - are you sure?</p>
-	<p><button type="submit" class="btn btn-danger">Remove</button>
-	or <a href="{% url dashboard:promotion-list-by-url object.page_url  %}">cancel</a></p>
+    
+	<div class="form-actions">
+	    <button type="submit" class="btn btn-danger">Remove</button>
+	    or <a href="{% url dashboard:promotion-list-by-url object.page_url  %}">cancel</a>
+	</div>
 </form>
 {% endblock %}

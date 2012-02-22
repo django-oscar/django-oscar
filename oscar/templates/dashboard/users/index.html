@@ -5,9 +5,11 @@
 <div class="page-header action">
     <h2>User management</h2><a href="#" class="pull_out">Search Users</a>
     <div class="orders_search">
-        <form action="." method="get">
+        <form action="." method="get" class="form-horizontal">
             {% include "partials/form_fields.html" with form=form %}
-           <input type="submit" value="Go!" class="btn"/>
+           <div class="form-actions">
+               <input type="submit" value="Search" class="btn btn-primary"/>
+           </div>
         </form>
     </div>
 </div>

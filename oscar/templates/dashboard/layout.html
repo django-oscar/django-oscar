@@ -27,8 +27,12 @@
 
     <div class="container-fluid dashboard">
         <div class="row-fluid">
-			{% dashboard_navigation request.user %}
-			<a href="{% url dashboard:index %}">Dashboard</a>
+            {% dashboard_navigation request.user %}
+            <ul class="breadcrumb">
+              <li>
+                <a href="{% url dashboard:index %}">Dashboard</a> <span class="divider">/</span>
+              </li>
+            </ul>
 			<ul class="primary-nav">
 				{% for item in nav_items %}
 				<li><a class="submenu" href="{{ item.url }}">{{ item.text }}</a></li>
