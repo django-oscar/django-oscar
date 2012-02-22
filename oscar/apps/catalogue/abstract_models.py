@@ -1,6 +1,3 @@
-"""
-Models of products
-"""
 import re
 from itertools import chain
 from datetime import datetime, date
@@ -16,7 +13,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from treebeard.mp_tree import MP_Node
 
 from oscar.apps.catalogue.managers import BrowsableProductManager
-
 
 
 class AbstractProductClass(models.Model):

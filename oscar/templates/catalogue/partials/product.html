@@ -1,12 +1,18 @@
 {% load currency_filters %}
 {% load basket_tags %}
 <article class="product_pod">
+	<!-- <div class="badge_container">
+		<div class="badge">
+			<span class="label">For</span>
+			<span class="number">$??.??</span>
+			<span class="label">Sale</span>
+		</div>
+	</div> -->
     {% with product.images.all.0 as image %}
     <div class="image_container">
         <a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ image.original.url }}" alt="{{ product.get_title }}"></a>
-    </div>    
+    </div>
     {% endwith %}
-                        
     {% block product_review %}
         {% with product.reviews.all as reviews %}
             {% if reviews %}

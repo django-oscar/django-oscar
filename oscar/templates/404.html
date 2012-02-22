@@ -3,7 +3,7 @@
     <!-- Responsive - will need to be minified -->
     <link rel="stylesheet" href="{{ STATIC_URL }}css/responsive.css" />
 {% endblock %}
-{% block 404 %}
+{% block layout %}
 <div class="navbar accounts">
 	<div class="navbar-inner">
 		<div class="container-fluid">
@@ -29,7 +29,7 @@
 <div class="container-fluid">
 	<div class="hero-unit">
 		<h1>404! Oops, page not found!</h1>
-		<p>The page you are looking for isn't here. Please try searching our site in the search field above or feel free to send us your feedback. Thank you.</p>
+		<p>The page you are looking for isn't here. Please try again, use the navigation above or feel free to send us your feedback. Thank you.</p>
 		<p>
 			<a class="btn btn-primary btn-large" onClick="javascript:history.go(-1);">Go back to previous page</a>
 		</p>
