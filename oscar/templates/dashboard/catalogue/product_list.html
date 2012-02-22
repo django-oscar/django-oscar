@@ -7,6 +7,20 @@
 
 {% block dashboard_content %}
 
+<h2>Create new product</h2>
+<form action="{% url dashboard:catalogue-product-create %}" method="get">
+	<p>Create a new product of type
+	<select name="product_class">
+		<option> -- choose type --</option>
+		{% for product_class in product_classes %}
+		<option value="{{ product_class.id }}">{{ product_class.name }}</option>
+		{% endfor %}
+	</select>
+	<input type="submit" value="Go!" />
+	</p>
+</form>
+
+
 <h2>Search products</h2>
 <form action="." method="get">
 	<table>
@@ -29,8 +43,11 @@
         <th>UPC</th>
         <th>Title</th>
         <th>Product class</th>
-		<th>Partner</th>
         <th>Status</th>
+		<th>Partner</th>
+		<th>Price excl. tax</th>
+		<th>Price incl. tax</th>
+		<th>Number in stock</th>
         <th></th>
     </tr>
     {% for product in products %}
@@ -38,11 +55,16 @@
 		<td>{{ product.upc }}</td>
         <td>{{ product.title }}</td>
 		<td>{{ product.product_class.name }}</td>
-		<td>{{ product.stockrecord.partner.name }}</td>
 		<td>{{ product.status|default:"-" }}</td>
-        <td>
-            <a class="btn btn-info" href="">Edit</a>
-        </td>
+		{% with stockrecord=product.stockrecord %}
+			<td>{{ stockrecord.partner.name }}</td>
+			<td>{{ stockrecord.price_excl_tax|currency }}</td>
+			<td>{{ stockrecord.price_incl_tax|currency }}</td>
+			<td>{{ stockrecord.num_in_stock }}</td>
+		{% endwith %}
+		<td>
+			<a class="btn btn-info" href="{% url dashboard:catalogue-product product.id %}">Edit</a>
+		</td>
     </tr>
     {% endfor %}
 </table>
