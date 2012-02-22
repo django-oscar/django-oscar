@@ -15,7 +15,7 @@ from oscar.apps.shipping.methods import Free
 
 
 def create_product(price=None, title="Dummy title", product_class="Dummy item class", 
-        partner="Dummy partner", upc="dummy_101", num_in_stock=10, attributes=None):
+        partner="Dummy partner", upc=None, num_in_stock=10, attributes=None):
     """
     Helper method for creating products that are used in tests.
     """

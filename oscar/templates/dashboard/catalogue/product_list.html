@@ -7,6 +7,20 @@
 
 {% block dashboard_content %}
 
+<h2>Create new product</h2>
+<form action="{% url dashboard:catalogue-product-create %}" method="get">
+	<p>Create a new product of type
+	<select name="product_class">
+		<option> -- choose type --</option>
+		{% for product_class in product_classes %}
+		<option value="{{ product_class.id }}">{{ product_class.name }}</option>
+		{% endfor %}
+	</select>
+	<input type="submit" value="Go!" />
+	</p>
+</form>
+
+
 <h2>Search products</h2>
 <form action="." method="get">
 	<table>

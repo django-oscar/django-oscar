@@ -22,7 +22,7 @@ class ProductForm(forms.ModelForm):
         self.add_attribute_fields()
 
     def set_initial_attribute_values(self, kwargs):
-        if 'instance' not in kwargs:
+        if kwargs['instance'] is None:
             return 
         if 'initial' not in kwargs:
             kwargs['initial'] = {}
@@ -112,5 +112,3 @@ class ProductForm(forms.ModelForm):
         for attribute in self.product_class.attributes.all():
             value = self.cleaned_data['attr_%s' % attribute.code]
             attribute.save_value(object, value)
-
-
