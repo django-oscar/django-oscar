@@ -10,45 +10,11 @@
 {% endblock %}
 
 {% block layout %}
-    <div class="navbar accounts">
-    	<div class="navbar-inner">
-    		<div class="container-fluid">
-    			<a class="brand hidden" href="{% url promotions:home %}">Oscar</a>
-    			<ul class="nav pull-right">
-    				<li><a href="#">Home</a></li>
-    				<li><a href="#about">About</a></li>
-    				<li><a href="#contact">Contact</a></li>
-    				{% if user.is_authenticated %}
-						{% if user.is_staff %}
-						<li><a href="{% url dashboard:index %}">Dashboard</a></li>
-						{% endif %}
-    				<li><a href="{% url customer:summary %}">Profile</a></li>
-    				<li><a href="{% url customer:logout %}">Logout</a></li>
-    				{% else %}
-    				<li><a href="{% url customer:login %}">Login</a></li>
-    				{% endif %}
-    			</ul>
-    		</div>
-        </div><!-- /navbar-inner -->
-    </div><!-- /navbar -->
-
+    {% include "partials/nav_accounts.html" %}
+    
     <header class="header container-fluid">
         <div class="row-fluid">
-            <h1 class="span6"><a href="{% url promotions:home %}">Oscar</a><small> Domain-driven e-Commerce for Django</small></h1>
-            <ul class="cart span6">
-                <li>
-                    <div class="btn-group">
-                        <a class="btn" href="{% url basket:summary %}">View Basket</a>
-                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"> <span class="caret"></span> </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                {% include "basket/partials/basket_quick.html" %}
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="cart_summary"><strong>Basket total: <span>{{ basket.total_incl_tax|currency }}</span></strong></li>
-            </ul><!-- /cart -->
+            {% include "partials/brand.html" %}
         </div><!-- /row-fluid -->
         
         <div class="navbar primary">
@@ -67,7 +33,8 @@
                             {% if categories %}
                                 <!-- Removed data-toggle="dropdown" from the anchor so the dropdown doesn't work on the home page -->
                                 <a href="#browse" class="dropdown-toggle">Browse Store</a>   
-                                <ul class="dropdown-menu nav-tabs nav-stacked span3">
+                                <ul class="dropdown-menu nav-tabs nav-stacked">
+                                    <li><a href="/products">All Products</a></li>
                                 {% for category in categories %}
                                     <li><a href="{{ category.0.get_absolute_url }}">{{ category.0.name }} <span class="pull-right app-ico ico_fill_right"></span></a>
                                     {% if category.1 %}
@@ -98,11 +65,7 @@
                                 </ul>
                             {% endif %}
                         </div>
-                        <form method="get" action="{% url search:search %}" class="form-search navbar-search pull-right">
-                            {# {{ search_form.q.label_tag }} #}
-                            {{ search_form.q }}
-                            <input type="submit" value="Search" class="btn" /> 
-                        </form>
+                        {% include "partials/search.html" %}
                     </div><!-- /.nav-collapse -->
                 </div>
             </div><!-- /navbar-inner -->

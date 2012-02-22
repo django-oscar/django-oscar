@@ -1,0 +1,5 @@
+<form method="get" action="{% url search:search %}" class="form-search navbar-search pull-right">
+    {# {{ search_form.q.label_tag }} #}
+    {{ search_form.q }}
+    <input type="submit" value="Search" class="btn" /> 
+</form>
