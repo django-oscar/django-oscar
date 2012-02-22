@@ -2,7 +2,15 @@ from django import forms
 from django.db.models import get_model
 
 Product = get_model('catalogue', 'Product')
+StockRecord = get_model('partner', 'StockRecord')
 ProductAttributeValue = get_model('catalogue', 'ProductAttributeValue')
+
+
+class StockRecordForm(forms.ModelForm):
+
+    class Meta:
+        model = StockRecord
+        exclude = ('product', 'num_allocated')
 
 
 class ProductForm(forms.ModelForm):
