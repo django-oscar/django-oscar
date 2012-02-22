@@ -4,6 +4,14 @@
 {% load history_tags %}
 {% load basket_tags %}
 
+{% block container_nav %}
+    <ul class="breadcrumb">
+    	{% block breadcrumbs %}
+    	<li class="active"><a href=".">Home</a></li>
+    	{% endblock %}
+    </ul>
+{% endblock %}
+
 {% block sidebar %}
 {% endblock sidebar %}
 
