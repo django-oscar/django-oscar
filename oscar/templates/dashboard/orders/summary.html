@@ -9,6 +9,17 @@
 
 {% block dashboard_content %}
 
+<table>
+	<form method="get" action="{% url dashboard:order-summary %}">  
+	{{ filter_form.as_table }}	
+	<tr>		
+		<td>       
+			<input type="submit" value="Filter result" class="btn primary" />
+		</td>	
+	</tr>
+	</form>
+</table>
+
 <table class="table table-striped table-bordered">
 	<caption>Global stats</caption>
 	<tr>
