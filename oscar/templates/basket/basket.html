@@ -89,7 +89,7 @@
 </ul>
 {% endif %}
 
-<form action="{% url basket:vouchers-add %}" method="post" class="form-stacked">
+<form action="{% url basket:vouchers-add %}" method="post" class="form-horizontal">
     {% csrf_token %}
 	{% include "partials/form_fields.html" with form=voucher_form %}
     <div class="form-actions">
