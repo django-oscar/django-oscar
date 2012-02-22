@@ -1,0 +1,50 @@
+<!DOCTYPE html> 
+<html lang="{% block language %}en-gb{% endblock %}">
+    <head>
+        <title>{% block title %}Oscar :: Dashboard{% endblock %}</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+        <meta name="created" content='{% now "jS M Y h:i" %}' />
+        <meta name="description" content="{% block description %}{% endblock %}" />
+        <meta name="keywords" content="{% block keywords %}{% endblock %}" />
+        
+        <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+        <!--[if lt IE 9]>
+        <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+        
+        <!--[if lt IE 8]>
+        	<script src="{{ STATIC_URL }}js/snowcone/snowcone.js"></script>
+        <![endif]-->
+        
+        <link rel="shortcut icon" href="{{ STATIC_URL }}favicon.ico" />
+        <!-- Main styles - will need to be minified -->
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/styles.css" />
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/dashboard.css" />
+        {% block extrahead %}{% endblock %}
+    </head>
+    <body id="{% block body_id %}default{% endblock %}" class="{% block body_class %}default{% endblock %}">
+        {% block layout %}{% endblock %}
+		
+		{# Tracking code #}
+		{% if not debug and not request.user.is_staff %}
+			{% block tracking %} {% endblock %}
+		{% endif %}
+
+        <!-- Jquery -->
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="{{ STATIC_URL }}js/jquery/jquery-1.7.1.min.js"><\/script>')</script>
+        <script src="{{ STATIC_URL }}js/jquery/jquery.easing.1.3.js" type="text/javascript" charset="utf-8"></script>
+        <!-- Bootstrap -->
+		<script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap/bootstrap.min.js"></script>    
+        <!-- Front end js -->
+        <script src="{{ STATIC_URL }}js/oscar/dashboard.js" type="text/javascript" charset="utf-8"></script>
+
+		{# Block for additional scripts #}
+		{% block extrascripts %}{% endblock %}
+
+		{# Block to allow pages to define which js functions get loaded #}
+        <script type="text/javascript">
+			$(function(){ {% block onbodyload %}{% endblock %} });
+		</script>
+    </body>
+</html>
