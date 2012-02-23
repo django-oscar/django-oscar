@@ -8,17 +8,16 @@
 {% endblock header %}
 
 {% block dashboard_content %}
-
+<form method="get" action="{% url dashboard:order-summary %}">
 <table>
-	<form method="get" action="{% url dashboard:order-summary %}">  
-	{{ filter_form.as_table }}	
-	<tr>		
-		<td>       
+	{{ filter_form.as_table }}
+	<tr>
+		<td>
 			<input type="submit" value="Filter result" class="btn primary" />
-		</td>	
+		</td>
 	</tr>
-	</form>
 </table>
+</form>
 
 <table class="table table-striped table-bordered">
 	<caption>Global stats</caption>

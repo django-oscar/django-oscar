@@ -29,9 +29,9 @@ class OrderSearchForm(forms.Form):
             choices=format_choices, initial='html', label="Get results as")
 
 
-class OrderSummaryForm(forms.ModelForm):
-    class Meta:
-        model = OrderSummary
+class OrderSummaryForm(forms.Form):
+        date_from = forms.DateField(required=False, label="From")
+        date_to = forms.DateField(required=False, label="To")
 
 
 class OrderNoteForm(forms.ModelForm):
