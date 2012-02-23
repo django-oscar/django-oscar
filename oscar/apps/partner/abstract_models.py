@@ -143,6 +143,13 @@ class AbstractStockRecord(models.Model):
         Return whether this stockrecord allows the product to be purchased
         """
         return get_partner_wrapper(self.partner.name).is_available_to_buy(self)
+
+    def is_purchase_permitted(self, user=None, quantity=1):
+        """
+        Return whether this stockrecord allows the product to be purchased by a 
+        specific user and quantity
+        """
+        return get_partner_wrapper(self.partner.name).is_purchase_permitted(self, user, quantity)
     
     @property
     def net_stock_level(self):
