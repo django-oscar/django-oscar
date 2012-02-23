@@ -141,6 +141,13 @@ class AbstractStockRecord(models.Model):
         if self.num_allocated is None:
             return self.num_in_stock
         return self.num_in_stock - self.num_allocated
+
+    @property
+    def availability_code(self):
+        """
+        Return an item's availability as a code for use in CSS
+        """
+        return get_partner_wrapper(self.partner.name).availability_code(self)
     
     @property
     def availability(self):
