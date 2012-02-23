@@ -112,6 +112,9 @@
     padding: 6px 10px;
     font-size: 18px;
   }
+  .navbar.accounts span {
+    display: none;
+  }
   .navbar.accounts .nav > li {
     float: left;
   }

@@ -2756,6 +2756,13 @@ body {
   border-top-width: 0px;
   margin-bottom: 0px;
 }
+/* Account Navbar */
+.navbar.accounts span {
+  padding: 10px 10px 11px;
+  line-height: 19px;
+  display: block;
+  color: #999999;
+}
 /* Account Styles */
 .account_settings, .new_address {
   min-height: 20px;
