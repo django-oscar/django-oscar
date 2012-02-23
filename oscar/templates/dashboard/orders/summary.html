@@ -13,7 +13,11 @@
 	{{ filter_form.as_table }}
 	<tr>
 		<td>
+
 			<input type="submit" value="Filter result" class="btn primary" />
+		</td>
+		<td>
+			<p style="color: red; text-align: center">{{ error }}</p>
 		</td>
 	</tr>
 </table>
@@ -35,6 +39,7 @@
 	</tr>
 </table>
 
+{% if order_status_breakdown %}
 <table class="table table-striped table-bordered">
 	<caption>Order status breakdown</caption>
 	<tr>
@@ -48,5 +53,6 @@
 	</tr>
 	{% endfor %}
 </table>
+{% endif %}
 
 {% endblock dashboard_content %}

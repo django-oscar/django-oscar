@@ -44,22 +44,26 @@ class OrderSummaryView(TemplateView):
         date_to = filter_form.cleaned_data['date_to']
         date_from = filter_form.cleaned_data['date_from']
         # Return filtered data from date_from to date_to
-        if date_to and date_from:
-            status_breakdown = Order.objects.order_by('status').values('status').filter(date_placed__range=[date_from, date_to]).annotate(freq=Count('id'))
-            total_revenue = Order.objects.filter(date_placed__range=[date_from, date_to]).aggregate(Sum('total_incl_tax')).get('total_incl_tax__sum')
-            total_orders = Order.objects.filter(date_placed__range=[date_from, date_to]).count()
-            total_lines = Line.objects.filter(est_dispatch_date__range=[date_from, date_to]).count()
-        elif date_to:
-            status_breakdown = Order.objects.order_by('status').values('status').filter(date_placed__lte=date_to).annotate(freq=Count('id'))
-            total_revenue = Order.objects.filter(date_placed__lte=date_to).aggregate(Sum('total_incl_tax')).get('total_incl_tax__sum')
-            total_orders = Order.objects.filter(date_placed__lte=date_to).count()
-            total_lines = Line.objects.filter(est_dispatch_date__lte=date_to).count()
-        else:
-            status_breakdown = Order.objects.order_by('status').values('status').filter(date_placed__gte=date_from).annotate(freq=Count('id'))
-            total_revenue = Order.objects.filter(date_placed__gte=date_from).aggregate(Sum('total_incl_tax')).get('total_incl_tax__sum')
-            total_orders = Order.objects.filter(date_placed__gte=date_from).count()
-            total_lines = Line.objects.filter(est_dispatch_date__gte=date_from).count()
-
+        if date_to or date_from:
+            if not date_from:
+                status_breakdown = Order.objects.order_by('status').values('status').filter(date_placed__lte=date_to).annotate(freq=Count('id'))
+                total_revenue = Order.objects.filter(date_placed__lte=date_to).aggregate(Sum('total_incl_tax')).get('total_incl_tax__sum')
+                total_orders = Order.objects.filter(date_placed__lte=date_to).count()
+                total_lines = Line.objects.filter(est_dispatch_date__lte=date_to).count()
+            elif not date_to:
+                status_breakdown = Order.objects.order_by('status').values('status').filter(date_placed__gte=date_from).annotate(freq=Count('id'))
+                total_revenue = Order.objects.filter(date_placed__gte=date_from).aggregate(Sum('total_incl_tax')).get('total_incl_tax__sum')
+                total_orders = Order.objects.filter(date_placed__gte=date_from).count()
+                total_lines = Line.objects.filter(est_dispatch_date__gte=date_from).count()
+            else:
+                status_breakdown = Order.objects.order_by('status').values('status').filter(date_placed__range=[date_from, date_to]).annotate(freq=Count('id'))
+                total_revenue = Order.objects.filter(date_placed__range=[date_from, date_to]).aggregate(Sum('total_incl_tax')).get('total_incl_tax__sum')
+                total_orders = Order.objects.filter(date_placed__range=[date_from, date_to]).count()
+                total_lines = Line.objects.filter(est_dispatch_date__range=[date_from, date_to]).count()
+        else:  # If both fields of filter_form are blank
+            ctx = self.get_context_data(**kwargs)
+            ctx['error'] = 'Please select filter settings'
+            return self.render_to_response(ctx)
         # Fix the output value of 'total_revenue' when there are zero rows matching filtering condition.
         # 'total_revenue' value is None in that condition.
         if total_revenue is None:
@@ -74,12 +78,13 @@ class OrderSummaryView(TemplateView):
     def get_context_data(self, **kwargs):
         status_breakdown = Order.objects.order_by('status').values('status').annotate(freq=Count('id'))
         filter_form = forms.OrderSummaryForm()
-        return {'total_orders': Order.objects.all().count(),
-                'total_lines': Line.objects.all().count(),
-                'total_revenue': Order.objects.all().aggregate(Sum('total_incl_tax'))['total_incl_tax__sum'],
-                'order_status_breakdown': status_breakdown,
-                'filter_form' : filter_form,
-               }
+        ctx = {}
+        ctx['total_orders'] = Order.objects.all().count()
+        ctx['total_lines'] = Line.objects.all().count()
+        ctx['total_revenue'] = Order.objects.all().aggregate(Sum('total_incl_tax'))['total_incl_tax__sum']
+        ctx['order_status_breakdown'] = status_breakdown
+        ctx['filter_form'] = filter_form
+        return ctx
 
 
 class OrderListView(ListView, BulkEditMixin):
