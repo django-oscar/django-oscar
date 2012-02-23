@@ -8,6 +8,8 @@ core functionality can be customised to suit the needs of your project.  This
 allows it to handle a wide range of e-commerce sites, from large-scale B2C
 sites to complex B2B sites rich in domain-specific business logic.
 
+Here is some stuff
+
 * `Official homepage`_ 
 * `Documentation`_
 

@@ -27,7 +27,9 @@ def get_partner_wrapper(partner_name):
 
 
 class AbstractPartner(models.Model):
-    u"""Fulfillment partner"""
+    """
+    Fulfillment partner
+    """
     name = models.CharField(max_length=128, unique=True)
     
     # A partner can have users assigned to it.  These can be used
@@ -83,7 +85,7 @@ class AbstractStockRecord(models.Model):
     cost_price = models.DecimalField(decimal_places=2, max_digits=12, blank=True, null=True)
     
     # Stock level information
-    num_in_stock = models.IntegerField(default=0, blank=True, null=True)
+    num_in_stock = models.PositiveIntegerField(default=0, blank=True, null=True)
     
     # The amount of stock allocated to orders but not fed back to the master
     # stock system.  A typical stock update process will set the num_in_stock
