@@ -23,12 +23,12 @@ class Shop(Application):
     
     def get_urls(self):
         urlpatterns = patterns('',
-            (r'products/', include(self.catalogue_app.urls)),
-            (r'basket/', include(self.basket_app.urls)),
-            (r'checkout/', include(self.checkout_app.urls)),
-            (r'accounts/', include(self.customer_app.urls)),
-            (r'search/', include(self.search_app.urls)),
-            (r'dashboard/', include(self.dashboard_app.urls)),
+            (r'^products/', include(self.catalogue_app.urls)),
+            (r'^basket/', include(self.basket_app.urls)),
+            (r'^checkout/', include(self.checkout_app.urls)),
+            (r'^accounts/', include(self.customer_app.urls)),
+            (r'^search/', include(self.search_app.urls)),
+            (r'^dashboard/', include(self.dashboard_app.urls)),
             (r'', include(self.promotions_app.urls)),             
         )
         return urlpatterns
