@@ -1,8 +1,8 @@
 from django import template
 from django.db.models import get_model
 
-from oscar.core.loading import import_module
-forms = import_module('basket.forms', ['AddToBasketForm'])
+from oscar.core.loading import get_class
+AddToBasketForm = get_class('basket.forms', 'AddToBasketForm')
 Product = get_model('catalogue', 'product')
 
 register = template.Library()
@@ -39,5 +39,5 @@ class BasketFormNode(template.Node):
             initial = {
                 'product_id': product.id,
             }
-            context[self.form_var] = forms.AddToBasketForm(basket, instance=product,initial=initial)
+            context[self.form_var] = AddToBasketForm(basket, user=None, instance=product,initial=initial)
         return ''
