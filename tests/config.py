@@ -46,6 +46,7 @@ if not settings.configured:
                 'oscar.apps.dashboard.users',
                 'oscar.apps.dashboard.orders',
                 'oscar.apps.dashboard.promotions',
+                'oscar.apps.dashboard.catalogue',
                 ],
             TEMPLATE_CONTEXT_PROCESSORS=(
                 "django.contrib.auth.context_processors.auth",

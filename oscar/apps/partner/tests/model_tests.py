@@ -8,6 +8,8 @@ from oscar.apps.partner.abstract_models import partner_wrappers
 
 
 class DummyWrapper(object):
+
+
     
     def availability(self, stockrecord):
         return 'Dummy response'
@@ -40,10 +42,12 @@ class DefaultWrapperTests(unittest.TestCase):
     def test_default_wrapper_for_in_stock(self):
         product = create_product(price=D('10.00'), partner="Acme", num_in_stock=10)  
         self.assertEquals("In stock (10 available)", product.stockrecord.availability)
+        self.assertEqual("instock", product.stockrecord.availability_code)
         
     def test_default_wrapper_for_out_of_stock(self):
         product = create_product(price=D('10.00'), partner="Acme", num_in_stock=0)  
         self.assertEquals("Out of stock", product.stockrecord.availability)
+        self.assertEqual("outofstock", product.stockrecord.availability_code)
         
     def test_dispatch_date_for_in_stock(self):
         product = create_product(price=D('10.00'), partner="Acme", num_in_stock=1)  

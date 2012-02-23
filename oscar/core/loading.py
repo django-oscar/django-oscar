@@ -63,9 +63,7 @@ def _pluck_classes(modules, classnames):
 def _get_app_module_path(module_label):
     app_name = module_label.rsplit(".", 1)[0] 
     for installed_app in settings.INSTALLED_APPS:
-        base_package = installed_app.split(".")[0]
-        module_name = installed_app.split(".", 2).pop() # strip oscar.apps
-        if app_name == module_name:
+        if installed_app.endswith(app_name):
             return installed_app
     return None
 

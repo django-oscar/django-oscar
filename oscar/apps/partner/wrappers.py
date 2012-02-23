@@ -11,6 +11,14 @@ class DefaultWrapper(object):
     
     def is_available_to_buy(self, stockrecord):
         return stockrecord.num_in_stock > 0
+
+    def availability_code(self, stockrecord):
+        """
+        Return a code for the availability of this product.
+
+        This is normally used within CSS to add icons to stock messages
+        """
+        return 'instock' if stockrecord.num_in_stock > 0 else 'outofstock'
     
     def availability(self, stockrecord):
         if stockrecord.num_in_stock > 0:
