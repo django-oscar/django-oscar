@@ -48,6 +48,7 @@
 		<th>Price excl. tax</th>
 		<th>Price incl. tax</th>
 		<th>Number in stock</th>
+		<th>Number allocated</th>
         <th></th>
     </tr>
     {% for product in products %}
@@ -61,6 +62,7 @@
 			<td>{{ stockrecord.price_excl_tax|currency }}</td>
 			<td>{{ stockrecord.price_incl_tax|currency }}</td>
 			<td>{{ stockrecord.num_in_stock }}</td>
+			<td>{{ stockrecord.num_allocated }}</td>
 		{% endwith %}
 		<td>
 			<a class="btn btn-info" href="{% url dashboard:catalogue-product product.id %}">Edit</a>

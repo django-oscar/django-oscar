@@ -44,6 +44,7 @@ class DashboardNavigationNode(template.Node):
         self.add_item('View reports', 'dashboard:reports-index')
         self.add_item('User management', 'dashboard:users-index')
         self.add_item('Content blocks', 'dashboard:promotion-list')
+        self.add_item('Catalogue management', 'dashboard:catalogue-product-list')
         context['nav_items'] = self.items
         return ''
 

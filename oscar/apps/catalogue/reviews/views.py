@@ -3,8 +3,10 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView
 from django.db.models import Avg
 from django.contrib import messages
-from oscar.apps.catalogue.reviews.forms import SignedInUserProductReviewForm, AnonymousUserProductReviewForm, VoteForm
 from django.db.models import get_model
+
+from oscar.apps.catalogue.reviews.forms import SignedInUserProductReviewForm, AnonymousUserProductReviewForm, VoteForm
+
 
 vote_model = get_model('reviews', 'vote')
 
