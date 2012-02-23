@@ -10,6 +10,12 @@
 {% endblock %}
 
 {% block layout %}
+    {% for message in messages %}
+    <div class="alert fade in alert-{{ message.tags }}">
+    	<a class="close" data-dismiss="alert">x</a>
+    	{{ message }}
+    </div>
+    {% endfor %}
     {% include "partials/nav_accounts.html" %}
     
     <header class="header container-fluid">
@@ -48,13 +54,6 @@
        {% endblock %}
        
        <div class="page_inner">
-            {% for message in messages %}
-        	<div class="alert fade in alert-{{ message.tags }}">
-        		<a class="close" data-dismiss="alert">x</a>
-        		{{ message }}
-        	</div>
-        	{% endfor %}
-        	
         	<!-- The main nav on checkout pages contain links to modal flatpages -->   
             {% block modal %}
                 {% load flatpages %}

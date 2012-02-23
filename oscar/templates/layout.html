@@ -14,12 +14,12 @@
 {% endblock %}
 
 {% block layout %}
-{% for message in messages %}
-<div class="alert fade in alert-{{ message.tags }}">
-	<a class="close" data-dismiss="alert">x</a>
-	{{ message }}
-</div>
-{% endfor %}
+    {% for message in messages %}
+    <div class="alert fade in alert-{{ message.tags }}">
+    	<a class="close" data-dismiss="alert">x</a>
+    	{{ message }}
+    </div>
+    {% endfor %}
     {% include "partials/nav_accounts.html" %}
     <header class="header container-fluid">
         <div class="row-fluid">

@@ -94,7 +94,7 @@ Order {{ order.number }}
 <div class="sub-header">
     <h2>Shipping</h2>
 </div>
-<div class="alert fade in alert-info">
+<div class="well well-info">
     <p>
     {% for field in order.shipping_address.active_address_fields %}
     {{ field }}<br/>

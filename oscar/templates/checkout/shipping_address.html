@@ -10,14 +10,14 @@
     <ul>
     	{% for address in addresses %}
     	<li>
-    	<div class="alert fade in alert-info">
+    	<div class="well well-info">
     	<p>{{ address.summary }}</p>
     	<form action="{% url checkout:shipping-address %}" method="post">
     		{% csrf_token %}
     		<input type="hidden" name="action" value="ship_to" />
     		<input type="hidden" name="address_id" value="{{ address.id }}" />
-    		<input type="submit" value="Ship to this address" class="btn btn-large btn-primary"/>
-    		<p><a href="{% url checkout:user-address-update address.id %}">Edit this address</a></p>
+    		<input type="submit" value="Ship to this address" class="btn btn-primary"/>
+    		<a href="{% url checkout:user-address-update address.id %}"> Edit this address</a>
     	</form>
     	
     	<form action="{% url checkout:user-address-delete address.id %}" method="post" class="delete_address">
