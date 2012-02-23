@@ -50,10 +50,16 @@ $(document).ready(function()
         $(this).find('h3').addClass(user_rating);
         $(this).find('span').remove();
     });
-    //
+    // Width and height of main navigation
     var $browse_width = $('aside.span3').outerWidth();
+    var $browse_height = $('#browse > .dropdown-menu').outerHeight();
+    // set width of nav dropdown on the homepage
     $('#browse').find('> .dropdown-menu').css({
       width: $browse_width
+    });
+    // set margin top of aside allow space for home navigation
+    $('.home aside.span3').css({
+      marginTop: $browse_height
     });
     
     // This activates elastislide
