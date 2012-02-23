@@ -72,8 +72,9 @@ $(document).ready(function()
     $('.typeahead').typeahead();
     
     // This activates the alerts
-    $(".alert").alert('close');
+    $('.alert').alert('.close');
     
+
     
     // This activates elastislide
     $('#carousel').elastislide({
