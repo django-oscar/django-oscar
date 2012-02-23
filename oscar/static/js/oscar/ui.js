@@ -56,11 +56,23 @@ $(document).ready(function()
       width: $browse_width
     });
     
+    // This activates the promotional banner carousel
+    
+    $('#myCarousel').carousel({
+        interval: 6000
+    });
+    
+    // This activates the Typeahead function in the search
+    
+    $('.typeahead').typeahead()
+    });
+    
     // This activates elastislide
     $('#carousel').elastislide({
         imageW: 200,
         minItems: 4
     });
+    
 
     // Acordion - remove the first in the list as it is duplication.
     var n = $('.accordion dt').length;
@@ -94,3 +106,4 @@ $(document).ready(function()
         return false;
     });
 });
+    
