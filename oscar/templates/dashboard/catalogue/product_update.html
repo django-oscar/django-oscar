@@ -26,5 +26,8 @@
 		</tr>
 	</table>
 </form>
+{% if product %}
+<p><a class="btn btn-success" href="{{ product.get_absolute_url }}">View on site</a></p>
+{% endif %}
 
 {% endblock dashboard_content %}

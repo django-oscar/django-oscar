@@ -30,6 +30,20 @@ class EventHandler(object):
         """
         self.create_payment_event(order, event_type, amount, lines, line_quantities, **kwargs)
 
+    def consume_stock_allocations(order, lines, line_quantities):
+        """
+        Consume the stock allocations for the passed lines
+        """
+        for line, qty in zip(lines, line_quantities):
+            line.product.stockrecord.consume_allocation(qty)
+
+    def cancel_stock_allocations(order, lines, line_quantities):
+        """
+        Cancel the stock allocations for the passed lines
+        """
+        for line, qty in zip(lines, line_quantities):
+            line.product.stockrecord.cancel_allocation(qty)
+    
     def create_shipping_event(self, order, event_type, lines, line_quantities,
                               **kwargs):
         reference = kwargs.get('reference', None)

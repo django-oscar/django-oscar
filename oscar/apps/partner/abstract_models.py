@@ -109,6 +109,19 @@ class AbstractStockRecord(models.Model):
         self.num_allocated = int(self.num_allocated)
         self.num_allocated += quantity
         self.save()
+
+    def consume_allocation(self, quantity):
+        if quantity > self.num_allocated:
+            raise ValueError('No more than %d units can be consumed' % self.num_allocated)
+        self.num_allocated -= quantity
+        self.num_in_stock -= quantity
+        self.save()
+
+    def cancel_allocation(self, quantity):
+        if quantity > self.num_allocated:
+            raise ValueError('No more than %d units can be cancelled' % self.num_allocated)
+        self.num_allocated -= quantity
+        self.save()
         
     def set_discount_price(self, price):
         """
@@ -130,6 +143,13 @@ class AbstractStockRecord(models.Model):
         Return whether this stockrecord allows the product to be purchased
         """
         return get_partner_wrapper(self.partner.name).is_available_to_buy(self)
+
+    def is_purchase_permitted(self, user=None, quantity=1):
+        """
+        Return whether this stockrecord allows the product to be purchased by a 
+        specific user and quantity
+        """
+        return get_partner_wrapper(self.partner.name).is_purchase_permitted(self, user, quantity)
     
     @property
     def net_stock_level(self):
@@ -141,6 +161,13 @@ class AbstractStockRecord(models.Model):
         if self.num_allocated is None:
             return self.num_in_stock
         return self.num_in_stock - self.num_allocated
+
+    @property
+    def availability_code(self):
+        """
+        Return an item's availability as a code for use in CSS
+        """
+        return get_partner_wrapper(self.partner.name).availability_code(self)
     
     @property
     def availability(self):

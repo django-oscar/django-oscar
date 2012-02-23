@@ -248,6 +248,14 @@ class AbstractProduct(models.Model):
         except ObjectDoesNotExist:
             return False
 
+    def is_purchase_permitted(self, user, quantity):
+        """
+        Test whether this product can be bought by the passed user.
+        """
+        if not self.has_stockrecord:
+            return False, _("No stock available")
+        return self.stockrecord.is_purchase_permitted(user, quantity)
+
     def add_category_from_breadcrumbs(self, breadcrumb):
         from oscar.apps.catalogue.utils import breadcrumbs_to_category
         category = breadcrumbs_to_category(breadcrumb)
