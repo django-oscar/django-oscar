@@ -15,6 +15,21 @@
     <h3>Order history</h3>
 </div>
 
+<h2>Search in orders</h2>
+<form action="." method="get">
+	<table>
+		{{ search_date_form.as_table }}
+		<tr>
+			<td>
+                <button type="submit" class="btn btn-primary">Filter results</button>
+			</td>
+
+			<td>
+				<p style="color: red; text-align: center">{{ error }}</p>
+			</td>
+	</table>
+</form>
+
 <table class="table table-striped table-bordered">
     <tr>
         <th>Order number</th>
