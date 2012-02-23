@@ -45,7 +45,7 @@
                 <div class="page-content">
                     {% for message in messages %}
                 	<div class="alert alert-{{ message.tags }}">
-                		<a class="close">x</a>
+                		<a class="close" data-dismiss="alert">x</a>
                 		{{ message }}
                 	</div>
                     {% endfor %}

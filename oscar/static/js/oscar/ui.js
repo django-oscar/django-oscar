@@ -50,6 +50,7 @@ $(document).ready(function()
         $(this).find('h3').addClass(user_rating);
         $(this).find('span').remove();
     });
+    
     // Width and height of main navigation
     var $browse_width = $('aside.span3').outerWidth();
     var $browse_height = $('#browse > .dropdown-menu').outerHeight();
@@ -62,11 +63,24 @@ $(document).ready(function()
       marginTop: $browse_height
     });
     
+    // This activates the promotional banner carousel
+    $('#myCarousel').carousel({
+        interval: 6000
+    });
+    
+    // This activates the Typeahead function in the search  
+    $('.typeahead').typeahead();
+    
+    // This activates the alerts
+    $(".alert").alert('close');
+    
+    
     // This activates elastislide
     $('#carousel').elastislide({
         imageW: 200,
         minItems: 4
     });
+    
 
     // Acordion - remove the first in the list as it is duplication.
     var n = $('.accordion dt').length;
@@ -100,3 +114,4 @@ $(document).ready(function()
         return false;
     });
 });
+    
