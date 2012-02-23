@@ -10,7 +10,7 @@
     <ul>
     	{% for address in addresses %}
     	<li>
-    	<div class="alert alert-info">
+    	<div class="alert fade in alert-info">
     	<p>{{ address.summary }}</p>
     	<form action="{% url checkout:shipping-address %}" method="post">
     		{% csrf_token %}
