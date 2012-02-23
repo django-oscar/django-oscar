@@ -5,6 +5,14 @@
 {% block header %}
 {% endblock header %}
 
+{% block container_nav %}
+    <ul class="breadcrumb">
+    	{% block breadcrumbs %}
+    	<li class="active"><a href=".">Home</a></li>
+    	{% endblock %}
+    </ul>
+{% endblock %}
+
 {% block sidebar %}
 <div class="row-fluid">
     <aside class="span3" style="position:relative;">

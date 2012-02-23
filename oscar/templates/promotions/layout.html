@@ -36,7 +36,7 @@
                                 <ul class="dropdown-menu nav-tabs nav-stacked">
                                     <li><a href="/products">All Products</a></li>
                                 {% for category in categories %}
-                                    <li><a href="{{ category.0.get_absolute_url }}">{{ category.0.name }} <span class="pull-right app-ico ico_fill_right"></span></a>
+                                    <li><a href="{{ category.0.get_absolute_url }}">{{ category.0.name }} <span class="app-ico ico_fill_right"></span></a>
                                     {% if category.1 %}
                                         <ul class="sub-nav dropdown-menu nav nav-tabs nav-stacked span3">
                                         {% for subcategory in category.1 %}
@@ -53,7 +53,7 @@
                                 <ul class="dropdown-menu nav-tabs nav-stacked">
                                     <li><a href="/products">All Products</a></li>
                                     <li>
-                                        <a href="#" >Contains a Submenu  <span class="pull-right app-ico ico_fill_right"></span></a>
+                                        <a href="#" >Contains a Submenu  <span class="app-ico ico_fill_right"></span></a>
                                         <ul class="sub-nav dropdown-menu nav nav-tabs nav-stacked span3">
                                             <li><a href="#" class="app-ico ico_outline_right"> Submenu Link</a></li>
                                             <li><a href="#" class="app-ico ico_outline_right"> Submenu Link</a></li>
@@ -77,20 +77,13 @@
     <div class="container-fluid page">
         <div class="page_inner">
             <div class="row-fluid">
+                {% block container_nav %}
+                {% endblock %}
                 <aside class="span3">
                     {% block sidebar %}
                     {% endblock %}
                 </aside><!-- /span3 -->
                 <div class="span9">
-                    <ul class="breadcrumb">
-                		{% block breadcrumbs %}
-                		<li class="active"><a href=".">Home</a></li>
-                		{% endblock %}
-                	</ul>
-
-                	{% block container_nav %}
-                	{% endblock %}
-
                 	{% for message in messages %}
                 	<div class="alert alert-{{ message.tags }}">
                 		<a class="close">x</a>

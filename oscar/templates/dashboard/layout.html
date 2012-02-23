@@ -15,6 +15,7 @@
                 <a href="{% url promotions:home %}" class="brand">Oscar</a>
                 <ul class="nav pull-right">
                     {% if user.is_authenticated %}
+                        <li><span>Welcome <em>{{ user.username }}</em></span></li>
                         <li><a href="{% url customer:summary %}" class="app-ico ico_profile">Profile</a></li>
         				<li><a href="{% url customer:logout %}" class="app-ico ico_logout">Logout</a></li>
                     {% else %}
@@ -27,8 +28,12 @@
 
     <div class="container-fluid dashboard">
         <div class="row-fluid">
-			{% dashboard_navigation request.user %}
-			<a href="{% url dashboard:index %}">Dashboard</a>
+            {% dashboard_navigation request.user %}
+            <ul class="breadcrumb">
+              <li>
+                <a href="{% url dashboard:index %}">Dashboard</a> <span class="divider">/</span>
+              </li>
+            </ul>
 			<ul class="primary-nav">
 				{% for item in nav_items %}
 				<li><a class="submenu" href="{{ item.url }}">{{ item.text }}</a></li>

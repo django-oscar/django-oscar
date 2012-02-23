@@ -2825,6 +2825,10 @@ body {
 .navbar #browse .nav.sub-nav > li > a {
   padding: 9px 12px;
 }
+.navbar #browse .nav-tabs.nav-stacked > li span {
+  position: absolute;
+  right: 5%;
+}
 .navbar #browse .nav-tabs.nav-stacked > li .sub-nav a:hover {
   background-color: #08C;
 }
@@ -2841,6 +2845,13 @@ body {
   border: 1px solid #ddd;
   border-top-width: 0px;
   margin-bottom: 0px;
+}
+/* Account Navbar */
+.navbar.accounts span {
+  padding: 10px 10px 11px;
+  line-height: 19px;
+  display: block;
+  color: #999999;
 }
 /* Account Styles */
 .account_settings, .new_address {
