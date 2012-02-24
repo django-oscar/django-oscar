@@ -3,7 +3,7 @@
 {% block title %}
 Content blocks for page {{ page }} | {{ block.super }}
 {% endblock %}
-
+{% block extrascripts %}<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.7.1/jquery-ui.min.js"></script>{% endblock %}
 {% block dashboard_content %}
 
 <h1>Content blocks for page {{ page }}</h1>
