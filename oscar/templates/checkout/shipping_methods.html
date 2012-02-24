@@ -1,6 +1,9 @@
 {% extends "checkout/checkout.html" %}
-
 {% load currency_filters %}
+
+{% block title %}
+Shipping method | {{ block.super }}
+{% endblock %}
 
 {% block shipping_method %}
 <table class="table table-striped table-bordered">

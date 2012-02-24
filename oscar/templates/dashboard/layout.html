@@ -3,6 +3,10 @@
 {% load category_tags %}
 {% load dashboard_tags %}
 
+{% block title %}
+Dashboard | {{ block.super }}
+{% endblock %}
+
 {% block layout %}
     <div class="navbar accounts">
         <div class="navbar-inner">

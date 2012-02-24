@@ -2,6 +2,10 @@
 {% load currency_filters %}
 {% load basket_tags %}
 
+{% block title %}
+{{ summary }} | {{ block.super }}
+{% endblock %}
+
 {% block header %}
 {% endblock header %}
 

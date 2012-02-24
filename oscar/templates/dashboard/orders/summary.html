@@ -1,6 +1,10 @@
 {% extends 'dashboard/layout.html' %}
 {% load currency_filters %}
 
+{% block title %}
+Order statistics | {{ block.super }}
+{% endblock %}
+
 {% block header %}
 <div class="page-header">
     <h2>Order summary</h2>

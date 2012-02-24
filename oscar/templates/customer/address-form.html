@@ -1,6 +1,9 @@
 {% extends "layout.html" %}
-
 {% load currency_filters %}
+
+{% block title %}
+Update address | {{ block.super }}
+{% endblock %}
 
 {% block header %}
 <div class="page-header">
@@ -15,8 +18,6 @@
 </div>
 <form action="." method="post" class="form-stacked">
     {% csrf_token %}
- 
-    
     {% include "partials/form_fields.html" with form=form %}
     <div class="form-actions">
         <input type="submit" value="Save address" class-"btn btn-primary"/>

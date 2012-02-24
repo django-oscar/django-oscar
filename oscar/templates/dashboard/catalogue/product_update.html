@@ -1,6 +1,10 @@
 {% extends 'dashboard/layout.html' %}
 {% load currency_filters %}
 
+{% block title %}
+Update product | {{ block.super }}
+{% endblock %}
+
 {% block header %}
 <h2>{{ title }}</h2>
 {% endblock header %}

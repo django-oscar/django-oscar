@@ -4,6 +4,10 @@
 {% load history_tags %}
 {% load basket_tags %}
 
+{% block title %}
+{{ product.title }} | {{ block.super }}
+{% endblock %}
+
 {% block sidebar %}
 {% endblock sidebar %}
 

@@ -1,6 +1,10 @@
 {% extends 'dashboard/layout.html' %}
 {% load dashboard_tags %}
 
+{% block title %}
+Users | {{ block.super }}
+{% endblock %}
+
 {% block header %}
 <div class="page-header action">
     <h2>User management</h2><a href="#" class="pull_out">Search Users</a>

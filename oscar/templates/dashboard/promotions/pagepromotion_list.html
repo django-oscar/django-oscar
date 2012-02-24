@@ -1,6 +1,10 @@
 {% extends 'dashboard/layout.html' %}
 {% load currency_filters %}
 
+{% block title %}
+Pages with content blocks | {{ block.super }}
+{% endblock %}
+
 
 {% block dashboard_content %}
 
@@ -9,7 +13,7 @@
 <p><a href="{% url dashboard:promotion-list %}" class="btn">View all promotions</a></p>
 <p><a href="{% url dashboard:promotion-list-by-page %}" class="btn">View promotions by page</a></p>
 
-<h2>Pages with promotions on them</h2>
+<h2>Pages with content blocks on them</h2>
 {% if pages %}
 
 <table class="table table-striped">

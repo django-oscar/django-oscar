@@ -1,6 +1,9 @@
 {% extends "layout.html" %}
-
 {% load currency_filters %}
+
+{% block title %}
+Order {{ order.number }} | {{ block.super }}
+{% endblock %}
 
 {% block header %}
 <div class="page-header">

@@ -1,13 +1,15 @@
 {% extends "checkout/layout.html" %}
-
 {% load currency_filters %}
+
+{% block title %}
+Checkout | {{ block.super }}
+{% endblock %}
 
 {% block header %}
 <div class="page-header">
     <h2>Checkout</h2>
 </div>
 {% endblock header %}
-
 
 {% block content %}
 <div class="sub-header">
