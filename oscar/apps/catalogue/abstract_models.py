@@ -278,7 +278,7 @@ class AbstractProduct(models.Model):
         u"""Return a product's item class"""
         if self.product_class:
             return self.product_class
-        if self.parent.product_class:
+        if self.parent and self.parent.product_class:
             return self.parent.product_class
         return None
 
