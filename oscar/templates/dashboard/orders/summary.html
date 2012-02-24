@@ -10,7 +10,7 @@
 {% block dashboard_content %}
 <form method="get" action="{% url dashboard:order-summary %}">
 <table>
-	{{ filter_form.as_table }}
+	{{ form.as_table }}
 	<tr>
 		<td>
 

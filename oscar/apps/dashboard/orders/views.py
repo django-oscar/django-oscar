@@ -10,7 +10,7 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
 from django.template.defaultfilters import date as format_date
 from django.utils.datastructures import SortedDict
-from django.views.generic import TemplateView, ListView, DetailView, UpdateView
+from django.views.generic import TemplateView, ListView, DetailView, UpdateView, FormView
 from django.contrib import messages
 
 from oscar.core.loading import get_class
@@ -27,64 +27,41 @@ PaymentEventType = get_model('order', 'PaymentEventType')
 EventHandler = get_class('order.processing', 'EventHandler')
 
 
-class OrderSummaryView(TemplateView):
+class OrderSummaryView(FormView):
     template_name = 'dashboard/orders/summary.html'
+    form_class = forms.OrderSummaryForm
 
     def get(self, request, *args, **kwargs):
-        # Handle zero input
         if 'date_from' in request.GET or 'date_to' in request.GET:
-            filter_form = forms.OrderSummaryForm(request.GET)
-        else:
-            filter_form = forms.OrderSummaryForm()
-        ctx = self.get_context_data(**kwargs)
-        ctx['filter_form'] = filter_form
-        # Check filter form is valid
-        if not filter_form.is_valid():
-            return self.render_to_response(ctx)
-        date_to = filter_form.cleaned_data['date_to']
-        date_from = filter_form.cleaned_data['date_from']
-        # Return filtered data from date_from to date_to
-        if date_to or date_from:
-            if not date_from:
-                status_breakdown = Order.objects.order_by('status').values('status').filter(date_placed__lte=date_to).annotate(freq=Count('id'))
-                total_revenue = Order.objects.filter(date_placed__lte=date_to).aggregate(Sum('total_incl_tax')).get('total_incl_tax__sum')
-                total_orders = Order.objects.filter(date_placed__lte=date_to).count()
-                total_lines = Line.objects.filter(est_dispatch_date__lte=date_to).count()
-            elif not date_to:
-                status_breakdown = Order.objects.order_by('status').values('status').filter(date_placed__gte=date_from).annotate(freq=Count('id'))
-                total_revenue = Order.objects.filter(date_placed__gte=date_from).aggregate(Sum('total_incl_tax')).get('total_incl_tax__sum')
-                total_orders = Order.objects.filter(date_placed__gte=date_from).count()
-                total_lines = Line.objects.filter(est_dispatch_date__gte=date_from).count()
-            else:
-                status_breakdown = Order.objects.order_by('status').values('status').filter(date_placed__range=[date_from, date_to]).annotate(freq=Count('id'))
-                total_revenue = Order.objects.filter(date_placed__range=[date_from, date_to]).aggregate(Sum('total_incl_tax')).get('total_incl_tax__sum')
-                total_orders = Order.objects.filter(date_placed__range=[date_from, date_to]).count()
-                total_lines = Line.objects.filter(est_dispatch_date__range=[date_from, date_to]).count()
-        else:  # If both fields of filter_form are blank
-            ctx = self.get_context_data(**kwargs)
-            ctx['error'] = 'Please select filter settings'
-            return self.render_to_response(ctx)
-        # Fix the output value of 'total_revenue' when there are zero rows matching filtering condition.
-        # 'total_revenue' value is None in that condition.
-        if total_revenue is None:
-            total_revenue = D('0.00')
-        return self.render_to_response({'total_orders': total_orders,
-                'total_lines': total_lines,
-                'total_revenue': total_revenue,
-                'order_status_breakdown': status_breakdown,
-                'filter_form' : filter_form,
-               })
+            return self.post(request, *args, **kwargs)
+        return super(OrderSummaryView, self).get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        ctx = self.get_context_data(form=form, 
+                                    title=form.get_title(),
+                                    filters=form.get_filters())
+        return self.render_to_response(ctx)
+
+    def get_form_kwargs(self):
+        kwargs = super(OrderSummaryView, self).get_form_kwargs()
+        kwargs['data'] = self.request.GET
+        return kwargs
 
     def get_context_data(self, **kwargs):
-        status_breakdown = Order.objects.order_by('status').values('status').annotate(freq=Count('id'))
-        filter_form = forms.OrderSummaryForm()
-        ctx = {}
-        ctx['total_orders'] = Order.objects.all().count()
-        ctx['total_lines'] = Line.objects.all().count()
-        ctx['total_revenue'] = Order.objects.all().aggregate(Sum('total_incl_tax'))['total_incl_tax__sum']
-        ctx['order_status_breakdown'] = status_breakdown
-        ctx['filter_form'] = filter_form
+        ctx = super(OrderSummaryView, self).get_context_data(**kwargs)
+        filters = kwargs.get('filters', {})
+        ctx.update(self.get_stats(filters))
         return ctx
+
+    def get_stats(self, filters):
+        orders = Order.objects.filter(**filters)
+        stats = {
+            'total_orders': orders.count(),
+            'total_lines': Line.objects.filter(order__in=orders).count(),
+            'total_revenue': orders.aggregate(Sum('total_incl_tax'))['total_incl_tax__sum'] or D('0.00'),
+            'order_status_breakdown': orders.order_by('status').values('status').annotate(freq=Count('id'))
+        }
+        return stats
 
 
 class OrderListView(ListView, BulkEditMixin):
