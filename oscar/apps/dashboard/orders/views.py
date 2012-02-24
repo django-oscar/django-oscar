@@ -27,6 +27,8 @@ PaymentEventType = get_model('order', 'PaymentEventType')
 EventHandler = get_class('order.processing', 'EventHandler')
 
 
+
+
 class OrderSummaryView(TemplateView):
     template_name = 'dashboard/orders/summary.html'
 

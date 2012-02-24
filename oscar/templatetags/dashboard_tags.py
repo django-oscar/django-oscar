@@ -2,6 +2,7 @@ from django import template
 from django.core.urlresolvers import reverse
 
 from oscar.apps.order.models import Order
+from oscar.apps.dashboard.nav import get_nodes
 
 
 def get_num_user_orders(parser, token):
@@ -25,20 +26,19 @@ register.tag('num_orders', get_num_user_orders)
 
 
 def dashboard_navigation(parser, token):
-    try:
-        tag_name, user = token.split_contents()
-    except ValueError:
-        raise template.TempalteSyntaxError("User required for dashboard navigation tag")
-    return DashboardNavigationNode(user)
+    return DashboardNavigationNode()
 
 
 class DashboardNavigationNode(template.Node):
-    def __init__(self, user):
-        self.user = template.Variable(user)
 
     def render(self, context):
+        user = context['user']
+        context['nav_items'] = get_nodes(user)
+        return ''
+
+    def asdf(sefl):
+
         # This needs to be made dynamic, using the user to filter
-        self.items = []
         self.add_item('See statistics', 'dashboard:order-summary')
         self.add_item('Manage orders', 'dashboard:order-list')
         self.add_item('View reports', 'dashboard:reports-index')
@@ -48,8 +48,5 @@ class DashboardNavigationNode(template.Node):
         context['nav_items'] = self.items
         return ''
 
-    def add_item(self, text, url_name):
-        self.items.append({'text': text,
-                           'url': reverse(url_name)})
-
 register.tag('dashboard_navigation', dashboard_navigation)
+

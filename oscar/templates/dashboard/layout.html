@@ -22,11 +22,24 @@
 
     <div class="container-fluid dashboard">
         <div class="row-fluid">
-			{% dashboard_navigation request.user %}
+			{% dashboard_navigation %}
 			<a href="{% url dashboard:index %}">Dashboard</a>
 			<ul class="primary-nav">
 				{% for item in nav_items %}
-				<li><a class="submenu" href="{{ item.url }}">{{ item.text }}</a></li>
+				<li>
+				{% if item.is_heading %}
+				<a href="#" class="submenu">{{ item.label }}</a>
+				{% else %}
+				<a class="submenu" href="{{ item.url }}">{{ item.label }}</a>
+				{% endif %}
+				{% if item.has_children %}
+				<ul>
+					{% for subitem in item.children %}
+					<li><a href="{{ subitem.url }}">{{ subitem.label }}</a></li>
+					{% endfor %}
+				</ul>
+				{% endif %}
+				</li>
 				{% endfor %}
 			</ul>
 
