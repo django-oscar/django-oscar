@@ -73,7 +73,7 @@ Order {{ order.number }} | {{ block.super }}
                 <input type="hidden" name="action" value="reorder" />
                 <input type="submit" value="Re-order" />
             </form>
-            <a href="{% url products:reviews-add line.product.slug line.product.id %}">Write a review</a>
+            <a href="{% url catalogue:reviews-add line.product.slug line.product.id %}">Write a review</a>
         </td>
     </tr>
     {% endfor %}
