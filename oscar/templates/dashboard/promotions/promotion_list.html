@@ -69,17 +69,9 @@ $('th.order-by').click(function() {
         url: "{{ request.path }}?order-by=" + $(this).attr('value') + "&order=" + order_type,
 		context: document.body,
 		success: function(data, textStatus, jqXHR){
-			//var json_obj = $.parseJSON(data);
 			$('tbody#promotion_holder').empty();
-		    //$(json_obj.promotions).each(function (index, promotion) {
-			//	var new_promo = create_promo_td(promotion);
-			//	$(new_promo).appendTo('tbody#promotion_holder');
-			//});
 			$(data).appendTo('tbody#promotion_holder');
 
-		},
-		fail: function() {
-		    $('th#name').addClass("Fail");
 		}
 	});
 });
