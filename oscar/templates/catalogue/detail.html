@@ -14,6 +14,19 @@
 {% block header %}
 {% endblock header %}
 
+{% block breadcrumbs %}
+<li>
+	<a href="{% url promotions:home %}">Home</a>
+	<span class="divider">/</span>
+</li>
+<li>
+	{% with category=product.categories.all.0 %}
+	<a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
+	<span class="divider">/</span>
+	{% endwith %}
+</li>
+<li class="active"><a href=".">{{ product.get_title }}</a></li>
+{% endblock %}
 
 {% block content %}
 <article class="product_page"><!-- Start of product page -->

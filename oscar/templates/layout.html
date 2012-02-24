@@ -10,9 +10,6 @@
     		<div class="container-fluid">
     			<a class="brand hidden" href="{% url promotions:home %}">Oscar</a>
     			<ul class="nav pull-right">
-    				<li><a href="#">Home</a></li>
-    				<li><a href="#about">About</a></li>
-    				<li><a href="#contact">Contact</a></li>
     				{% if user.is_authenticated %}
 						{% if user.is_staff %}
 						<li><a href="{% url dashboard:index %}">Dashboard</a></li>
@@ -101,8 +98,7 @@
         		{% endblock %}
         	</ul>
 
-        	{% block container_nav %}
-        	{% endblock %}
+        	{% block container_nav %} {% endblock %}
 
         	{% for message in messages %}
         	<div class="alert alert-{{ message.tags }}">
@@ -111,8 +107,7 @@
         	</div>
         	{% endfor %}
         
-            {% block sidebar %}
-               {% endblock %}
+            {% block sidebar %} {% endblock %}
         
             {% block flatpage %}
             {% endblock %}
@@ -123,8 +118,8 @@
         		{% endfor %}
         	</div>
 
-        	{% block content %}
-        	{% endblock %}
+        	{% block content %} {% endblock %}
+
     	</div><!-- /page_inner -->
     </div><!-- /container-fluid -->
     {% include "partials/footer.html" %}

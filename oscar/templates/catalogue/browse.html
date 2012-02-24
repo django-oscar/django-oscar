@@ -33,6 +33,14 @@
     </aside><!-- /span3 -->
 {% endblock sidebar %}
 
+{% block breadcrumbs %}
+<li>
+<a href="{% url promotions:home %}">Home</a>
+<span class="divider">/</span>
+</li>
+<li class="active"><a href=".">{{ summary }}</a></li>
+{% endblock %}
+
 {% block content %}
 <div class="span9">
     <div class="sub-header">
