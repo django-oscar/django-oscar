@@ -15,16 +15,16 @@
 <table class="table table-striped">
 	<thead>
 		<tr>
-			<th>Name</th>
-			<th>Type</th>
-			<th>Number of times used</th>
-			<th>Date created</th>
-			<th>Actions</th>
+			<th class="order-by" value="name">Name</th>
+			<th class="order-by" value="type">Type</th>
+			<th class="order-by" value="num_times_used">Number of times used</th>
+			<th class="order-by" value="date_created">Date created</th>
+			<th class="" value="actions">Actions</th>
 		</tr>
 	</thead>
-	<tbody>
+	<tbody id='promotion_holder'>
 		{% for promotion in promotions %}
-		<tr>
+		<tr class="promo">
 			<td>{{ promotion.name }}</td>
 			<td>{{ promotion.type }}</td>
 			<td>{{ promotion.num_times_used }}</td>
@@ -51,3 +51,36 @@
 </form>
 
 {% endblock dashboard_content %}
+
+{% block onbodyload %}
+{{ block.super }}
+$('th.order-by').click(function() {
+	var this_val = $(this);
+	if ($(this).hasClass('asc')) {
+		$(this).removeClass('asc');
+		var order_type = 'desc';
+	} else {
+	    $(this).removeClass('desc');
+	    var order_type = 'asc';
+	}
+	$(this).addClass(order_type)
+
+	$.ajax({
+        url: "{{ request.path }}?order-by=" + $(this).attr('value') + "&order=" + order_type,
+		context: document.body,
+		success: function(data, textStatus, jqXHR){
+			//var json_obj = $.parseJSON(data);
+			$('tbody#promotion_holder').empty();
+		    //$(json_obj.promotions).each(function (index, promotion) {
+			//	var new_promo = create_promo_td(promotion);
+			//	$(new_promo).appendTo('tbody#promotion_holder');
+			//});
+			$(data).appendTo('tbody#promotion_holder');
+
+		},
+		fail: function() {
+		    $('th#name').addClass("Fail");
+		}
+	});
+});
+{% endblock %}
