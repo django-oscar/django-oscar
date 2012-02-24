@@ -1,6 +1,5 @@
 from django import forms
 from django.db.models.loading import get_model
-from oscar.apps.dashboard.orders.models import OrderSummary
 
 Order = get_model('order', 'Order')
 OrderNote = get_model('order', 'OrderNote')
