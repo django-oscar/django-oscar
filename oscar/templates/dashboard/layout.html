@@ -32,9 +32,9 @@ Dashboard | {{ block.super }}
 				{% for item in nav_items %}
 				<li>
 				{% if item.is_heading %}
-				<a href="#" class="submenu">{{ item.label }}</a>
+					<a href="#" class="submenu">{{ item.label }}</a>
 				{% else %}
-				<a class="submenu" href="{{ item.url }}">{{ item.label }}</a>
+					<a class="submenu" href="{{ item.url }}">{{ item.label }}</a>
 				{% endif %}
 				{% if item.has_children %}
 				<ul>
