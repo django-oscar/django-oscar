@@ -3,7 +3,7 @@
 
 {% block header %}
 <div class="page-header action">
-    <h2>User management</h2><a href="#" class="pull_out">Search Users</a>
+    <h1>User management</h1><a href="#" class="pull_out">Search Users</a>
     <div class="orders_search">
         <form action="." method="get" class="form-horizontal">
             {% include "partials/form_fields.html" with form=form %}
@@ -16,7 +16,9 @@
 {% endblock header %}
 
 {% block dashboard_content %}
-<h2>{{ queryset_description }}</h2>
+<div class="sub-header">
+	<h2>{{ queryset_description }}</h2>
+</div>
 {% if user_list.count %}
 <form action="." method="post">
     {% csrf_token %}

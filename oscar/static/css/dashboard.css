@@ -86,6 +86,13 @@ button {
   background-color: whiteSmoke;
   padding: 20px 20px 10px;
 }
+.page-header h1 {
+  font-size: 24px;
+  line-height: 36px;
+}
+h2 {
+  font-size: 18px;
+}
 .page-header.action {
   *zoom: 1;
   margin-bottom: 0px;

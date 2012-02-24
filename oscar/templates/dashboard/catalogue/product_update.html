@@ -2,12 +2,14 @@
 {% load currency_filters %}
 
 {% block header %}
-<h2>{{ title }}</h2>
+<div class="page-header">
+	<h1>{{ title }}</h1>
+</div>
 {% endblock header %}
 
 {% block dashboard_content %}
 
-<form action="." method="post">
+<form action="." method="post" class="form-horizontal">
 	{% csrf_token %}
 	<table class="table">
 		<tr>
