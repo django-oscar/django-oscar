@@ -27,7 +27,6 @@ Dashboard | {{ block.super }}
     <div class="container-fluid dashboard">
         <div class="row-fluid">
 			{% dashboard_navigation %}
-			<a href="{% url dashboard:index %}">Dashboard</a>
 			<ul class="primary-nav">
 				{% for item in nav_items %}
 				<li>

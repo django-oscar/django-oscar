@@ -1,19 +1,21 @@
 {% load currency_filters %}
+{% load basket_tags %}
 
 <div class="sub-header">
 	<h2>{{ promotion.name }}</h2>
 </div>
 
-{% load basket_tags %}
+{% with product=promotion.product %}
 <div class="row-fluid">
 	<div class="span3">
 		<article class="product_pod">
 
-			{% with product.images.all as image %}
+			{% with promotion.product.images.all.0 as image %}
 			<div class="image_container">
 				<a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ image.original.url }}" alt="{{ product.get_title }}"></a>
 			</div>    
 			{% endwith %}
+
 			{% block product_review %}
 			{% with product.reviews.all as reviews %}
 			{% if reviews %}
@@ -42,12 +44,6 @@
 					<button class="btn">Notify me</button> 
 					{% endif %}
 				{% endif %}
-				{% basket_form basket product as basket_form %}
-				<form action="{% url basket:add %}" method="post">
-					{% csrf_token %}
-					{{ basket_form.as_p }}
-					<input type="submit" class="btn btn-primary" value="Add to basket" />
-				</form>
 			</div>
 
 		</article>
@@ -59,3 +55,4 @@
 		<p>{{ promotion.description }}</p>
 	</div>
 </div>
+{% endwith %}
