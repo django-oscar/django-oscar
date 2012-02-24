@@ -32,14 +32,61 @@ EventHandler = get_class('order.processing', 'EventHandler')
 class OrderSummaryView(TemplateView):
     template_name = 'dashboard/orders/summary.html'
 
+    def get(self, request, *args, **kwargs):
+        # Handle zero input
+        if 'date_from' in request.GET or 'date_to' in request.GET:
+            filter_form = forms.OrderSummaryForm(request.GET)
+        else:
+            filter_form = forms.OrderSummaryForm()
+        ctx = self.get_context_data(**kwargs)
+        ctx['filter_form'] = filter_form
+        # Check filter form is valid
+        if not filter_form.is_valid():
+            return self.render_to_response(ctx)
+        date_to = filter_form.cleaned_data['date_to']
+        date_from = filter_form.cleaned_data['date_from']
+        # Return filtered data from date_from to date_to
+        if date_to or date_from:
+            if not date_from:
+                status_breakdown = Order.objects.order_by('status').values('status').filter(date_placed__lte=date_to).annotate(freq=Count('id'))
+                total_revenue = Order.objects.filter(date_placed__lte=date_to).aggregate(Sum('total_incl_tax')).get('total_incl_tax__sum')
+                total_orders = Order.objects.filter(date_placed__lte=date_to).count()
+                total_lines = Line.objects.filter(est_dispatch_date__lte=date_to).count()
+            elif not date_to:
+                status_breakdown = Order.objects.order_by('status').values('status').filter(date_placed__gte=date_from).annotate(freq=Count('id'))
+                total_revenue = Order.objects.filter(date_placed__gte=date_from).aggregate(Sum('total_incl_tax')).get('total_incl_tax__sum')
+                total_orders = Order.objects.filter(date_placed__gte=date_from).count()
+                total_lines = Line.objects.filter(est_dispatch_date__gte=date_from).count()
+            else:
+                status_breakdown = Order.objects.order_by('status').values('status').filter(date_placed__range=[date_from, date_to]).annotate(freq=Count('id'))
+                total_revenue = Order.objects.filter(date_placed__range=[date_from, date_to]).aggregate(Sum('total_incl_tax')).get('total_incl_tax__sum')
+                total_orders = Order.objects.filter(date_placed__range=[date_from, date_to]).count()
+                total_lines = Line.objects.filter(est_dispatch_date__range=[date_from, date_to]).count()
+        else:  # If both fields of filter_form are blank
+            ctx = self.get_context_data(**kwargs)
+            ctx['error'] = 'Please select filter settings'
+            return self.render_to_response(ctx)
+        # Fix the output value of 'total_revenue' when there are zero rows matching filtering condition.
+        # 'total_revenue' value is None in that condition.
+        if total_revenue is None:
+            total_revenue = D('0.00')
+        return self.render_to_response({'total_orders': total_orders,
+                'total_lines': total_lines,
+                'total_revenue': total_revenue,
+                'order_status_breakdown': status_breakdown,
+                'filter_form' : filter_form,
+               })
+
     def get_context_data(self, **kwargs):
         status_breakdown = Order.objects.order_by('status').values('status').annotate(freq=Count('id'))
-
-        return {'total_orders': Order.objects.all().count(),
-                'total_lines': Line.objects.all().count(),
-                'total_revenue': Order.objects.all().aggregate(Sum('total_incl_tax'))['total_incl_tax__sum'],
-                'order_status_breakdown': status_breakdown, 
-               }
+        filter_form = forms.OrderSummaryForm()
+        ctx = {}
+        ctx['total_orders'] = Order.objects.all().count()
+        ctx['total_lines'] = Line.objects.all().count()
+        ctx['total_revenue'] = Order.objects.all().aggregate(Sum('total_incl_tax'))['total_incl_tax__sum']
+        ctx['order_status_breakdown'] = status_breakdown
+        ctx['filter_form'] = filter_form
+        return ctx
 
 
 class OrderListView(ListView, BulkEditMixin):
@@ -65,7 +112,7 @@ class OrderListView(ListView, BulkEditMixin):
 
     def get_queryset(self):
         """
-        Build the queryset for this list and also update the title that 
+        Build the queryset for this list and also update the title that
         describes the queryset
         """
         queryset = self.model.objects.all().order_by('-date_placed')
@@ -174,7 +221,7 @@ class OrderListView(ListView, BulkEditMixin):
                      ('billing_address_name', 'Bill to name'),
                      )
         columns = SortedDict()
-        for k,v in meta_data:
+        for k, v in meta_data:
             columns[k] = v
 
         writer.writerow(columns.values())
@@ -203,14 +250,14 @@ class OrderDetailView(DetailView):
     model = Order
     context_object_name = 'order'
     template_name = 'dashboard/orders/order_detail.html'
-    order_actions = ('save_note', 'delete_note', 'change_order_status', 
+    order_actions = ('save_note', 'delete_note', 'change_order_status',
                      'create_order_payment_event')
     line_actions = ('change_line_statuses', 'create_shipping_event',
                     'create_payment_event')
 
     def get_object(self):
         return get_object_or_404(self.model, number=self.kwargs['number'])
-    
+
     def get_context_data(self, **kwargs):
         ctx = super(OrderDetailView, self).get_context_data(**kwargs)
         ctx['note_form'] = self.get_order_note_form()
@@ -412,7 +459,7 @@ class LineDetailView(DetailView):
         return ctx
 
 
-def get_changes_between_models(model1, model2, excludes = []):
+def get_changes_between_models(model1, model2, excludes=[]):
     changes = {}
     for field in model1._meta.fields:
         if not (isinstance(field, (fields.AutoField, fields.related.RelatedField))
@@ -459,4 +506,4 @@ class ShippingAddressUpdateView(UpdateView):
 
     def get_success_url(self):
         messages.info(self.request, "Delivery address updated")
-        return reverse('dashboard:order-detail', kwargs={'number': self.object.order.number,})
+        return reverse('dashboard:order-detail', kwargs={'number': self.object.order.number, })
