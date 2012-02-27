@@ -1,7 +1,10 @@
 {% extends "layout.html" %}
-
 {% load currency_filters %}
 {% load thumbnail %}
+
+{% block title %}
+Email detail | {{ block.super }}
+{% endblock %}
 
 {% block header %}
 <div class="page-header">

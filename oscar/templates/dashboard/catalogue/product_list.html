@@ -1,6 +1,10 @@
 {% extends 'dashboard/layout.html' %}
 {% load currency_filters %}
 
+{% block title %}
+Catalogue management | {{ block.super }}
+{% endblock %}
+
 {% block header %}
 <div class="page-header">
 	<h1>Catalogue management</h1>

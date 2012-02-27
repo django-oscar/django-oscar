@@ -1,5 +1,9 @@
 {% extends "checkout/checkout.html" %}
 
+{% block title %}
+Order preview | {{ block.super }}
+{% endblock %}
+
 {% block place_order %}
 <h3>Place your order</h3>
 <form method="post" action="{% url checkout:payment-details %}">

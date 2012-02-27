@@ -8,6 +8,7 @@
 <div id="carousel" class="es-carousel-wrapper">
     <div class="es-carousel">
 <ul>
+<<<<<<< HEAD
     {% for product in promotion.get_products %}
     <li>
         <article class="product_pod">
@@ -32,6 +33,29 @@
         </article>    
     </li>
     {% endfor %}
+=======
+{% for product in promotion.get_products %}
+<li>
+	{% with product.images.all.0 as image %}
+	<div class="image_container">
+		<a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ image.original.url }}" alt="{{ product.get_title }}"></a>
+	</div>    
+	{% endwith %}
+
+    <a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a><br/>
+    {% if product.is_group %}
+        From {{ product.min_variant_price_incl_tax|currency }}
+    {% else %}
+        {% if product.has_stockrecord %} 
+            {{ product.stockrecord.price_incl_tax|currency }}<br/>
+            {{ product.stockrecord.availability }}
+        {% else %}
+            Not available    
+        {% endif %}
+    {% endif %}    
+</li>
+{% endfor %}
+>>>>>>> ac2dec7b25fd5b5c0a56ce855d38031cd2a83b02
 </ul>
     </div>
 </div>

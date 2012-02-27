@@ -1,12 +1,17 @@
 {% extends 'dashboard/layout.html' %}
-
 {% load currency_filters %}
 
+<<<<<<< HEAD
 {% block header %}
 <div class="page-header">
     <h1>Content block management</h1>
 </div>
 {% endblock header %}
+=======
+{% block title %}
+Content blocks | {{ block.super }}
+{% endblock %}
+>>>>>>> ac2dec7b25fd5b5c0a56ce855d38031cd2a83b02
 
 {% block dashboard_content %}
 

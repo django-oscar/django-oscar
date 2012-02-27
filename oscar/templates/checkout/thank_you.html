@@ -1,6 +1,9 @@
 {% extends "checkout/layout.html" %}
-
 {% load currency_filters %}
+
+{% block title %}
+Confirmation of order {{ order.number }} | {{ block.super }}
+{% endblock title %}
 
 {% block header %}
 <div class="page-header">

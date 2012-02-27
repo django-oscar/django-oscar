@@ -4,6 +4,12 @@ from django.contrib.admin.views.decorators import staff_member_required
 from oscar.core.application import Application
 from oscar.apps.dashboard.promotions import views
 from oscar.apps.promotions.conf import PROMOTION_CLASSES
+from oscar.apps.dashboard.nav import register, Node
+
+node = Node('Content blocks')
+node.add_child(Node('All blocks', 'dashboard:promotion-list'))
+node.add_child(Node('By page', 'dashboard:promotion-list-by-page'))
+register(node)
 
 
 class PromotionsDashboardApplication(Application):

@@ -1,11 +1,18 @@
 {% extends 'dashboard/layout.html' %}
 {% load currency_filters %}
 
+<<<<<<< HEAD
 {% block header %}
 <div class="page-header">
     <h1>Content block management</h1>
 </div>
 {% endblock header %}
+=======
+{% block title %}
+Pages with content blocks | {{ block.super }}
+{% endblock %}
+
+>>>>>>> ac2dec7b25fd5b5c0a56ce855d38031cd2a83b02
 
 {% block dashboard_content %}
 
@@ -15,10 +22,14 @@
 </div>
 
 
+<<<<<<< HEAD
 
 <div class="sub-header">
     <h2>Pages with promotions on them</h2>
 </div>
+=======
+<h2>Pages with content blocks on them</h2>
+>>>>>>> ac2dec7b25fd5b5c0a56ce855d38031cd2a83b02
 {% if pages %}
 
 <table class="table table-striped table-bordered">

@@ -3,6 +3,11 @@ from django.contrib.admin.views.decorators import staff_member_required
 
 from oscar.core.application import Application
 from oscar.apps.dashboard.catalogue import views
+from oscar.apps.dashboard.nav import register, Node
+
+node = Node('Catalogue')
+node.add_child(Node('Products', 'dashboard:catalogue-product-list'))
+register(node)
 
 
 class CatalogueApplication(Application):

@@ -4,12 +4,17 @@
 {% load history_tags %}
 {% load basket_tags %}
 
+<<<<<<< HEAD
 {% block container_nav %}
     <ul class="breadcrumb">
     	{% block breadcrumbs %}
     	<li class="active"><a href=".">Home</a></li>
     	{% endblock %}
     </ul>
+=======
+{% block title %}
+{{ product.title }} | {{ block.super }}
+>>>>>>> ac2dec7b25fd5b5c0a56ce855d38031cd2a83b02
 {% endblock %}
 
 {% block sidebar %}
@@ -18,6 +23,19 @@
 {% block header %}
 {% endblock header %}
 
+{% block breadcrumbs %}
+<li>
+	<a href="{% url promotions:home %}">Home</a>
+	<span class="divider">/</span>
+</li>
+<li>
+	{% with category=product.categories.all.0 %}
+	<a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
+	<span class="divider">/</span>
+	{% endwith %}
+</li>
+<li class="active"><a href=".">{{ product.get_title }}</a></li>
+{% endblock %}
 
 {% block content %}
 <article class="product_page"><!-- Start of product page -->

@@ -2,6 +2,10 @@
 {% load currency_filters %}
 {% load basket_tags %}
 
+{% block title %}
+{{ summary }} | {{ block.super }}
+{% endblock %}
+
 {% block header %}
 {% endblock header %}
 
@@ -36,6 +40,14 @@
         </div>
     </aside><!-- /span3 -->
 {% endblock sidebar %}
+
+{% block breadcrumbs %}
+<li>
+<a href="{% url promotions:home %}">Home</a>
+<span class="divider">/</span>
+</li>
+<li class="active"><a href=".">{{ summary }}</a></li>
+{% endblock %}
 
 {% block content %}
 <div class="span9">

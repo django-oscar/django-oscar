@@ -1,6 +1,9 @@
 {% extends "layout.html" %}
-
 {% load currency_filters %}
+
+{% block title %}
+Address book | {{ block.super }}
+{% endblock %}
 
 {% block header %}
 <div class="page-header">

@@ -1,6 +1,9 @@
 {% extends "checkout/layout.html" %}
-
 {% load currency_filters %}
+
+{% block title %}
+Basket | {{ block.super }}
+{% endblock %}
 
 {% block header %}
 <div class="page-header">
