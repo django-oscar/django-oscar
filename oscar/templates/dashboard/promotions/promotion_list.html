@@ -1,17 +1,16 @@
 {% extends 'dashboard/layout.html' %}
 {% load currency_filters %}
 
-<<<<<<< HEAD
+{% block title %}
+Content blocks | {{ block.super }}
+{% endblock %}
+
 {% block header %}
 <div class="page-header">
     <h1>Content block management</h1>
 </div>
 {% endblock header %}
-=======
-{% block title %}
-Content blocks | {{ block.super }}
-{% endblock %}
->>>>>>> ac2dec7b25fd5b5c0a56ce855d38031cd2a83b02
+
 
 {% block dashboard_content %}
 
@@ -57,7 +56,7 @@ Content blocks | {{ block.super }}
 {% endif %}
 
 <div class="sub-header">
-    <h2>Create a new content block</h2>
+    <h3>Create a new content block</h3>
 </div>
 <form action="{% url dashboard:promotion-create-redirect %}" method="get" class="form-horizontal">
     {% include "partials/form_fields.html" with form=select_form %}

@@ -4,7 +4,6 @@
 {% load promotion_tags %}
 {% load category_tags %}
 
-<<<<<<< HEAD
 {% block extrahead %}
     {% if product %}
     <!-- Colorbox for image galleries -->
@@ -13,27 +12,6 @@
     <!-- Responsive - will need to be minified -->
     <link rel="stylesheet" href="{{ STATIC_URL }}css/responsive.css" />
 {% endblock %}
-=======
-{% block layout %}
-    <div class="navbar accounts">
-    	<div class="navbar-inner">
-    		<div class="container-fluid">
-    			<a class="brand hidden" href="{% url promotions:home %}">Oscar</a>
-    			<ul class="nav pull-right">
-    				{% if user.is_authenticated %}
-						{% if user.is_staff %}
-						<li><a href="{% url dashboard:index %}">Dashboard</a></li>
-						{% endif %}
-    				<li><a href="{% url customer:summary %}">Profile</a></li>
-    				<li><a href="{% url customer:logout %}">Logout</a></li>
-    				{% else %}
-    				<li><a href="{% url customer:login %}">Login</a></li>
-    				{% endif %}
-    			</ul>
-    		</div>
-        </div><!-- /navbar-inner -->
-    </div><!-- /navbar -->
->>>>>>> ac2dec7b25fd5b5c0a56ce855d38031cd2a83b02
 
 {% block layout %}
     {% include "partials/nav_accounts.html" %}
@@ -103,26 +81,9 @@
         {% block header %}
         {% endblock %}
         <div class="page_inner">
-<<<<<<< HEAD
         	{% block container_nav %}
         	{% endblock %}
-=======
-        	<ul class="breadcrumb">
-        		{% block breadcrumbs %}
-        		<li class="active"><a href=".">Home</a></li>
-        		{% endblock %}
-        	</ul>
 
-        	{% block container_nav %} {% endblock %}
-
-        	{% for message in messages %}
-        	<div class="alert alert-{{ message.tags }}">
-        		<a class="close">x</a>
-        		{{ message }}
-        	</div>
-        	{% endfor %}
->>>>>>> ac2dec7b25fd5b5c0a56ce855d38031cd2a83b02
-        
             {% block sidebar %} {% endblock %}
         
             {% block flatpage %}

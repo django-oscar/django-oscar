@@ -41,7 +41,7 @@ button {
 .primary-nav li ul li {
   margin: 0px;
   border-top: 1px solid #ddd;
-  font-size: 10px;
+  font-size: 11px;
 }
 .primary-nav li ul li:first-child {
   border-top: 1px solid #bbb;

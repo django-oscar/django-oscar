@@ -15,22 +15,14 @@ Update product | {{ block.super }}
 
 <form action="." method="post" class="form-horizontal">
 	{% csrf_token %}
-	<table class="table">
-		<tr>
-			<th colspan="2">Product information</th>
-		</tr>
-		{{ form.as_table }}
-		<tr>
-			<th colspan="2">Stock and price information</th>
-		</tr>
-		{{ stockrecord_form.as_table }}
-		<tr>
-			<th></th>
-			<td><button class="btn" type="submit">Save</button> or 
-				<a class="btn" href="{% url dashboard:catalogue-product-list">cancel</a>.
-			</td>
-		</tr>
-	</table>
+		<legend>Product information</legend>
+		{% include "partials/form_fields.html" with form=form %}
+		<legend>Stock and price information</legend>
+		{% include "partials/form_fields.html" with form=stockrecord_form %}
+		<div class="form-actions">
+            <button class="btn btn-primary" type="submit">Save</button> or 
+			<a href="{% url dashboard:catalogue-product-list">cancel</a>
+		</div>
 </form>
 {% if product %}
 <p><a class="btn btn-success" href="{{ product.get_absolute_url }}">View on site</a></p>
