@@ -2611,10 +2611,11 @@ body {
   float: right;
 }
 .cart li .btn-group .dropdown-menu {
-  left: initial;
+  left: auto;
   right: 0px;
   width: 300px;
   padding-bottom: 0px;
+  max-width: none;
 }
 .cart li .btn-group .dropdown-menu li {
   width: 100%;
