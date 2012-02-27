@@ -583,7 +583,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             event_type = None
         else:
             # Create order event
-            CommunicationEvent._default_manager.create(order=order, type=event_type)
+            CommunicationEvent._default_manager.create(order=order, event_type=event_type)
             messages = event_type.get_messages(ctx)
 
         if messages and messages['body']:      
