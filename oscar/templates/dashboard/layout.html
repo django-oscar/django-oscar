@@ -34,12 +34,15 @@ Dashboard | {{ block.super }}
     <div class="container-fluid dashboard">
         <div class="row-fluid">
             {% dashboard_navigation request.user %}
-            <ul class="breadcrumb">
+			{% dashboard_navigation %}
+			
+			{% block breadcrumbs %}
+			<ul class="breadcrumb">
               <li>
                 <a href="{% url dashboard:index %}">Dashboard</a> <span class="divider">/</span>
               </li>
             </ul>
-			{% dashboard_navigation %}
+            {% endblock %}
 
 			<ul class="primary-nav">
 				{% for item in nav_items %}
@@ -47,7 +50,7 @@ Dashboard | {{ block.super }}
 				{% if item.is_heading %}
 					<a href="#" class="submenu">{{ item.label }}</a>
 				{% else %}
-					<a class="submenu" href="{{ item.url }}">{{ item.label }}</a>
+					<a href="{{ item.url }}">{{ item.label }}</a>
 				{% endif %}
 				{% if item.has_children %}
 				<ul>

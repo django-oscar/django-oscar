@@ -1215,6 +1215,9 @@ table .span12 {
   background-color: #d9edf7;
   border-color: #bce8f1;
 }
+.well-blank {
+  background-color: #ffffff;
+}
 .fade {
   -webkit-transition: opacity 0.15s linear;
   -moz-transition: opacity 0.15s linear;
