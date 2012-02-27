@@ -2,7 +2,7 @@
 {% load currency_filters %}
 
 {% block title %}
-Order {{ order.number }}
+Order {{ order.number }} | {{ block.super }}
 {% endblock %}
 
 {% block header %}

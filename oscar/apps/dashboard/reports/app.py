@@ -3,6 +3,10 @@ from django.contrib.admin.views.decorators import staff_member_required
 
 from oscar.core.application import Application
 from oscar.apps.dashboard.reports import views
+from oscar.apps.dashboard.nav import register, Node
+
+node = Node('Reports', 'dashboard:reports-index')
+register(node)
 
 
 class ReportsApplication(Application):

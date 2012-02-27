@@ -2,7 +2,7 @@
 {% load currency_filters %}
 
 {% block title %}
-    User {{ user.username }}
+User {{ user.username }} | {{ block.super }}
 {% endblock %}
 
 {% block header %}

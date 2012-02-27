@@ -10,7 +10,7 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
 from django.template.defaultfilters import date as format_date
 from django.utils.datastructures import SortedDict
-from django.views.generic import TemplateView, ListView, DetailView, UpdateView
+from django.views.generic import TemplateView, ListView, DetailView, UpdateView, FormView
 from django.contrib import messages
 
 from oscar.core.loading import get_class
@@ -27,17 +27,40 @@ PaymentEventType = get_model('order', 'PaymentEventType')
 EventHandler = get_class('order.processing', 'EventHandler')
 
 
-class OrderSummaryView(TemplateView):
+class OrderSummaryView(FormView):
     template_name = 'dashboard/orders/summary.html'
+    form_class = forms.OrderSummaryForm
+
+    def get(self, request, *args, **kwargs):
+        if 'date_from' in request.GET or 'date_to' in request.GET:
+            return self.post(request, *args, **kwargs)
+        return super(OrderSummaryView, self).get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        ctx = self.get_context_data(form=form, 
+                                    filters=form.get_filters())
+        return self.render_to_response(ctx)
+
+    def get_form_kwargs(self):
+        kwargs = super(OrderSummaryView, self).get_form_kwargs()
+        kwargs['data'] = self.request.GET
+        return kwargs
 
     def get_context_data(self, **kwargs):
-        status_breakdown = Order.objects.order_by('status').values('status').annotate(freq=Count('id'))
+        ctx = super(OrderSummaryView, self).get_context_data(**kwargs)
+        filters = kwargs.get('filters', {})
+        ctx.update(self.get_stats(filters))
+        return ctx
 
-        return {'total_orders': Order.objects.all().count(),
-                'total_lines': Line.objects.all().count(),
-                'total_revenue': Order.objects.all().aggregate(Sum('total_incl_tax'))['total_incl_tax__sum'],
-                'order_status_breakdown': status_breakdown, 
-               }
+    def get_stats(self, filters):
+        orders = Order.objects.filter(**filters)
+        stats = {
+            'total_orders': orders.count(),
+            'total_lines': Line.objects.filter(order__in=orders).count(),
+            'total_revenue': orders.aggregate(Sum('total_incl_tax'))['total_incl_tax__sum'] or D('0.00'),
+            'order_status_breakdown': orders.order_by('status').values('status').annotate(freq=Count('id'))
+        }
+        return stats
 
 
 class OrderListView(ListView, BulkEditMixin):
@@ -63,7 +86,7 @@ class OrderListView(ListView, BulkEditMixin):
 
     def get_queryset(self):
         """
-        Build the queryset for this list and also update the title that 
+        Build the queryset for this list and also update the title that
         describes the queryset
         """
         queryset = self.model.objects.all().order_by('-date_placed')
@@ -172,7 +195,7 @@ class OrderListView(ListView, BulkEditMixin):
                      ('billing_address_name', 'Bill to name'),
                      )
         columns = SortedDict()
-        for k,v in meta_data:
+        for k, v in meta_data:
             columns[k] = v
 
         writer.writerow(columns.values())
@@ -201,14 +224,14 @@ class OrderDetailView(DetailView):
     model = Order
     context_object_name = 'order'
     template_name = 'dashboard/orders/order_detail.html'
-    order_actions = ('save_note', 'delete_note', 'change_order_status', 
+    order_actions = ('save_note', 'delete_note', 'change_order_status',
                      'create_order_payment_event')
     line_actions = ('change_line_statuses', 'create_shipping_event',
                     'create_payment_event')
 
     def get_object(self):
         return get_object_or_404(self.model, number=self.kwargs['number'])
-    
+
     def get_context_data(self, **kwargs):
         ctx = super(OrderDetailView, self).get_context_data(**kwargs)
         ctx['note_form'] = self.get_order_note_form()
@@ -410,7 +433,7 @@ class LineDetailView(DetailView):
         return ctx
 
 
-def get_changes_between_models(model1, model2, excludes = []):
+def get_changes_between_models(model1, model2, excludes=[]):
     changes = {}
     for field in model1._meta.fields:
         if not (isinstance(field, (fields.AutoField, fields.related.RelatedField))
@@ -457,4 +480,4 @@ class ShippingAddressUpdateView(UpdateView):
 
     def get_success_url(self):
         messages.info(self.request, "Delivery address updated")
-        return reverse('dashboard:order-detail', kwargs={'number': self.object.order.number,})
+        return reverse('dashboard:order-detail', kwargs={'number': self.object.order.number, })

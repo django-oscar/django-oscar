@@ -1,5 +1,9 @@
 {% extends "checkout/checkout.html" %}
 
+{% block title %}
+Shipping address | {{ block.super }}
+{% endblock %}
+
 {% block shipping_address %}
 
 {% if addresses %}

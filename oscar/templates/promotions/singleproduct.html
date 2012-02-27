@@ -1,15 +1,32 @@
 {% load currency_filters %}
+
+{% load basket_tags %}
+
+
 <div class="sub-header">
 	<h2>{{ promotion.name }}</h2>
 </div>
-
+{% with product=promotion.product %}
 <div class="row-fluid">
 	<div class="span3">
-		{% with product.images.all.0 as image %}
-	        <div class="image_container">
-	            <a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ image.original.url }}" alt="{{ product.get_title }}"></a>
-		    </div>    
-	    {% endwith %}
+		{% with promotion.product.images.all.0 as image %}
+		<div class="image_container">
+			<a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ image.original.url }}" alt="{{ product.get_title }}"></a>
+		</div>    
+		{% endwith %}
+		<div class="product_price">
+			{% if product.is_group %}
+				<p>From {{ product.min_variant_price_incl_tax|currency }}</p>
+			{% else %}
+				{% if product.has_stockrecord %} 
+					<h4><span>{{ product.stockrecord.price_incl_tax|currency }}</span></h4>
+					<p class="app-ico avaliability instock">{{ product.stockrecord.availability }}</p>
+				{% else %}
+				<p class="app-ico avaliability outstock">Not available</p>
+				<button class="btn">Notify me</button> 
+				{% endif %}
+			{% endif %}
+		</div>
 	</div>
 	<div class="span9">
 	    <h3>{{ promotion.product.title }}</h3>
@@ -29,3 +46,6 @@
 		<p>{{ promotion.description }}</p>
 	</div>
 </div>
+
+{% endwith %}
+

@@ -154,7 +154,7 @@ class UpdateView(PromotionMixin, generic.UpdateView):
 
     def get_context_data(self, *args, **kwargs):
         ctx = super(UpdateView, self).get_context_data(*args, **kwargs)
-        ctx['heading'] = "Update raw HTML block"
+        ctx['heading'] = "Update content block"
         ctx['promotion'] = self.get_object()
         ctx['link_form'] = self.link_form_class()
         content_type = ContentType.objects.get_for_model(self.model)

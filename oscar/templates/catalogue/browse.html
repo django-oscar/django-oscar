@@ -2,15 +2,21 @@
 {% load currency_filters %}
 {% load basket_tags %}
 
+{% block title %}
+{{ summary }} | {{ block.super }}
+{% endblock %}
+
 {% block header %}
 {% endblock header %}
 
-{% block container_nav %}
-    <ul class="breadcrumb">
-    	{% block breadcrumbs %}
-    	<li class="active"><a href=".">Home</a></li>
-    	{% endblock %}
-    </ul>
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url promotions:home %}">Home</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active"><a href=".">{{ summary }}</a></li>
+</ul>
 {% endblock %}
 
 {% block sidebar %}

@@ -29,6 +29,7 @@ class DashboardApplication(Application):
             url(r'^users/', include(self.users_app.urls)),
             url(r'^promotions/', include(self.promotions_app.urls)),
         )
+
         return self.post_process_urls(urlpatterns)
 
     def get_url_decorator(self, url_name):

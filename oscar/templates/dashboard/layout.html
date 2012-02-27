@@ -4,8 +4,13 @@
 {% load category_tags %}
 {% load dashboard_tags %}
 
+
 {% block extrahead %}
     <link rel="stylesheet" href="{{ STATIC_URL }}css/dashboard.css" />
+{%endblock extrahead %}
+
+{% block title %}
+Dashboard | {{ block.super }}
 {% endblock %}
 
 {% block layout %}
@@ -34,9 +39,24 @@
                 <a href="{% url dashboard:index %}">Dashboard</a> <span class="divider">/</span>
               </li>
             </ul>
+			{% dashboard_navigation %}
+
 			<ul class="primary-nav">
 				{% for item in nav_items %}
-				<li><a class="submenu" href="{{ item.url }}">{{ item.text }}</a></li>
+				<li>
+				{% if item.is_heading %}
+					<a href="#" class="submenu">{{ item.label }}</a>
+				{% else %}
+					<a class="submenu" href="{{ item.url }}">{{ item.label }}</a>
+				{% endif %}
+				{% if item.has_children %}
+				<ul>
+					{% for subitem in item.children %}
+					<li><a href="{{ subitem.url }}">{{ subitem.label }}</a></li>
+					{% endfor %}
+				</ul>
+				{% endif %}
+				</li>
 				{% endfor %}
 			</ul>
 

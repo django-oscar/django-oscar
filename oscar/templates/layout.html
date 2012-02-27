@@ -83,9 +83,8 @@
         <div class="page_inner">
         	{% block container_nav %}
         	{% endblock %}
-        
-            {% block sidebar %}
-               {% endblock %}
+
+            {% block sidebar %} {% endblock %}
         
             {% block flatpage %}
             {% endblock %}
@@ -96,8 +95,8 @@
         		{% endfor %}
         	</div>
 
-        	{% block content %}
-        	{% endblock %}
+        	{% block content %} {% endblock %}
+
     	</div><!-- /page_inner -->
     </div><!-- /container-fluid -->
     {% include "partials/footer.html" %}

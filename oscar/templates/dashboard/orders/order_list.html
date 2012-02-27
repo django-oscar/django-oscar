@@ -1,10 +1,13 @@
 {% extends 'dashboard/layout.html' %}
-
 {% load currency_filters %}
+
+{% block title %}
+Order management | {{ block.super }}
+{% endblock %}
 
 {% block header %}
 <div class="page-header action">
-    <h2>Order management</h2><a href="#" class="pull_out">Search Orders</a>
+    <h1>Order management</h1><a href="#" class="pull_out">Search Orders</a>
     <div class="orders_search">
         <form action="." method="get" class="form-horizontal">
             {% include "partials/form_fields.html" with form=form %}
