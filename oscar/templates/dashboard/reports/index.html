@@ -5,6 +5,16 @@
 Reports
 {% endblock %}
 
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url promotions:home %}">Dashboard</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active"><a href=".">Reporting Dashboard</a></li>
+</ul>
+{% endblock %}
+
 {% block header %}
 <div class="page-header">
     <h1>Reporting dashboard</h1>

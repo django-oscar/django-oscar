@@ -1,7 +1,7 @@
 $(document).ready(function()
 {	
     // Product star rating  -- must improve this in python
-    $('.product_pod, .span6').each(function() 
+    $('.product_pod, .span6, .promotion_single').each(function() 
     {
         var sum_total_reviews = $(this).find(".review_count li").length * 5;
         var sum_rating_count = 0;
@@ -21,8 +21,9 @@ $(document).ready(function()
         } else if (ave_rating <= 10) {
             var ave_rating = 'Five'
         }
-        $(this).find('.review_count').after('<p class=\"star ' + ave_rating + '\">' + ave_rating + ' star(s) by user reviews. <a href=\"#\">Add review</a></p>');
-        $(this).find('.review_count').remove();
+        $(this).find('.review_count')
+          .after('<p class=\"star ' + ave_rating + '\">' + ave_rating + ' star(s) by user reviews. <a href=\"#\">Add review</a></p>')
+          .remove();
     });
     // Product star rating each review -- must improve this in python
     $('.review').each(function()
@@ -47,8 +48,12 @@ $(document).ready(function()
         else if (user_rating == 5) {
             var user_rating = 'Five'
         }
-        $(this).find('h3').addClass(user_rating);
-        $(this).find('span').remove();
+        $(this)
+          .find('h3')
+          .addClass(user_rating)
+          .end()
+          .find('span')
+          .remove();
     });
     
     // Width and height of main navigation
