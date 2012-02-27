@@ -31,20 +31,7 @@
     }
   }
 }
-.summary {
-/*  .quart_right();*/
-  div {
-    .well();
-    h2 {
-      font-size: @baseFontSize + 5;
-    }
-    h3 {
-      font-size: @baseFontSize + 1;
-    }
-  }
-}
 .shipping_address {
-/*  .three_quart_left();*/
   h2 {
     margin-bottom: @baseLineHeight;
   }
@@ -54,12 +41,15 @@
   ul {
     .remove_bullets();
   }
-  .alert {
+  .well {
     position:relative;
+    form {
+      margin-bottom:0px;
+    }
     .delete_address {
       position:absolute;
-      top:10px;
-      right:4px;
+      top:19px;
+      right:19px;
     }
   }
   .alert-actions {
@@ -75,23 +65,6 @@
       }
     }
   } 
-}
-.enter_shipping_address,
-.shipping_method,
-.order_delivered div,
-.order_payment div
- {
-  .well();
-  margin-top:10px;
-  h3 {
-    margin-bottom: @baseLineHeight;
-  }
-}
-.order_delivered {
-/*  .half_left();*/
-}
-.order_payment {
-/*  .half_right();*/
 }
 .total {
   font-size: @baseFontSize + 5;

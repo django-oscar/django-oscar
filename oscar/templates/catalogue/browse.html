@@ -9,6 +9,16 @@
 {% block header %}
 {% endblock header %}
 
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url promotions:home %}">Home</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active"><a href=".">{{ summary }}</a></li>
+</ul>
+{% endblock %}
+
 {% block sidebar %}
 <div class="row-fluid">
     <aside class="span3" style="position:relative;">
@@ -33,14 +43,6 @@
     </aside><!-- /span3 -->
 {% endblock sidebar %}
 
-{% block breadcrumbs %}
-<li>
-<a href="{% url promotions:home %}">Home</a>
-<span class="divider">/</span>
-</li>
-<li class="active"><a href=".">{{ summary }}</a></li>
-{% endblock %}
-
 {% block content %}
 <div class="span9">
     <div class="sub-header">
@@ -48,12 +50,13 @@
     </div>
     {% if products.count %}
     
-    {% if page_obj %}
-        {% include "catalogue/partials/pagination.html" %}
-    {% endif %}
+
 
     <section>
         <div class="mod">
+            {% if page_obj %}
+                {% include "catalogue/partials/pagination.html" %}
+            {% endif %}
             <ol class="products four">
                 {% for product in products %}
                 <li>
@@ -61,12 +64,12 @@
                 </li>
                 {% endfor %}
             </ol>
+            {% if page_obj %}
+                {% include "catalogue/partials/pagination.html" %}
+            {% endif %}
         </div>
     <section>
 
-    {% if page_obj %}
-        {% include "catalogue/partials/pagination.html" %}
-    {% endif %}
 
     {% else %}
 

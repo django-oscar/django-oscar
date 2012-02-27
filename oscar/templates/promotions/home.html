@@ -1,7 +1,29 @@
-{% extends "layout.html" %}
+{% extends "promotions/layout.html" %}
+
+{% block sidebar %}
+ <div class="side_categories" style="padding: 8px 0;">
+     {% if categories %}
+		<ul class="nav nav-list">
+		    <li class="nav-header">Browse Categories</li>
+		    {% for category in categories %}
+         <li><a href="{{ category.0.get_absolute_url }}">{{ category.0.name }}</a>
+         	{% if category.1 %}
+         	<ul>
+         		{% for subcategory in category.1 %}
+         		<li><a href="{{ subcategory.0.get_absolute_url }}">{{ subcategory.0.name }}</a>
+         		{% endfor %}
+         	</ul>
+         		{% endif %}
+         </li>
+         {% endfor %}
+		</ul>
+	{% endif %}
+</div>
+{% endblock sidebar %}
+
 
 {% block header %}
-<div class="page-header">
+<div class="sub-header">
     <h2>Welcome!</h2>
 </div>
 {% endblock header %}

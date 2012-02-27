@@ -50,26 +50,38 @@ $(document).ready(function()
         $(this).find('h3').addClass(user_rating);
         $(this).find('span').remove();
     });
+    
+    // Width and height of main navigation
+    var $browse_width = $('aside.span3').outerWidth();
+    var $browse_height = $('#browse > .dropdown-menu').outerHeight();
+    // set width of nav dropdown on the homepage
+    $('#browse').find('> .dropdown-menu').css({
+      width: $browse_width
+    });
+    // set margin top of aside allow space for home navigation
+    $('.home aside.span3').css({
+      marginTop: $browse_height
+    });
+    
+    // This activates the promotional banner carousel
+    $('#myCarousel').carousel({
+        interval: 6000
+    });
+    
+    // This activates the Typeahead function in the search  
+    $('.typeahead').typeahead();
+    
+    // This activates the alerts
+    $('.alert').alert('.close');
+    
 
-    // For multiple submenus in drop down menus
-    var u = $('ul.nav li ul li ul, ul.tabs li ul li ul,').length;
-    if (u > 0) {
-        $("ul.nav li").hover(function()
-        {
-            $(this).addClass("hover");
-            $('ul:first',this).css('visibility', 'visible');
-        }, function(){
-            $(this).removeClass("hover");
-            $('ul:first',this).css('visibility', 'hidden');
-        });
-        $("ul.nav li ul li:has(ul), ul.tabs li ul li:has(ul)").find("a:first").append(" &raquo; ");
-    }
-
+    
     // This activates elastislide
     $('#carousel').elastislide({
         imageW: 200,
         minItems: 4
     });
+    
 
     // Acordion - remove the first in the list as it is duplication.
     var n = $('.accordion dt').length;
@@ -103,3 +115,4 @@ $(document).ready(function()
         return false;
     });
 });
+    

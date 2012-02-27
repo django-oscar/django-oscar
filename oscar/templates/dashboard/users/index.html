@@ -7,18 +7,22 @@ Users | {{ block.super }}
 
 {% block header %}
 <div class="page-header action">
-    <h2>User management</h2><a href="#" class="pull_out">Search Users</a>
+    <h1>User management</h1><a href="#" class="pull_out">Search Users</a>
     <div class="orders_search">
-        <form action="." method="get">
+        <form action="." method="get" class="form-horizontal">
             {% include "partials/form_fields.html" with form=form %}
-           <input type="submit" value="Go!" class="btn"/>
+           <div class="form-actions">
+               <input type="submit" value="Search" class="btn btn-primary"/>
+           </div>
         </form>
     </div>
 </div>
 {% endblock header %}
 
 {% block dashboard_content %}
-<h2>{{ queryset_description }}</h2>
+<div class="sub-header">
+    <h2>{{ queryset_description }}</h2>
+</div>
 {% if user_list.count %}
 <form action="." method="post">
     {% csrf_token %}
@@ -58,7 +62,7 @@ Users | {{ block.super }}
 {% endif %}
 
 <p></p>
-<div class="alert alert-info">
+<div class="well well-info">
     <div class="control-group">
         <label class="control-label" for="inlineCheckboxes">With selected users:</label>
         <div class="controls">

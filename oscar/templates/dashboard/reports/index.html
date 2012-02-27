@@ -7,18 +7,18 @@ Reports
 
 {% block header %}
 <div class="page-header">
-    <h2>Reporting dashboard</h2>
+    <h1>Reporting dashboard</h1>
 </div>
 {% endblock header %}
 
 
 {% block dashboard_content %}
 
-<form method="GET" action="{% url dashboard:reports-index %}">
+<form method="GET" action="{% url dashboard:reports-index %}" class="form-horizontal">
 
     {% include "partials/form_fields.html" with form=form %}
     <div class="form-actions">
-        <input type="submit" value="Generate report" class="btn" />
+        <input type="submit" value="Generate report" class="btn btn-primary" />
     </div>
 </form>
 
