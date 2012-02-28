@@ -38,6 +38,15 @@ button {
 .primary-nav li {
   display: block;
 }
+.reports .primary-nav li.Reports > a,
+.orders .primary-nav li.Manage.orders > a,
+.users .primary-nav li.Users > a,
+.content-blocks .primary-nav li.Content.blocks > a,
+.catalogue .primary-nav li.Catalogue > a {
+  color: #049cdb;
+  text-shadow: 1px 1px 1px #fff;
+  filter: dropshadow(color=#ffffff, offx=1, offy=1);
+}
 .primary-nav li ul li {
   margin: 0px;
   border-top: 1px solid #ddd;

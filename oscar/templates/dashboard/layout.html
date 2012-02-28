@@ -8,10 +8,11 @@
 {% block extrahead %}
     <link rel="stylesheet" href="{{ STATIC_URL }}css/dashboard.css" />
 {%endblock extrahead %}
-
 {% block title %}
 Dashboard | {{ block.super }}
 {% endblock %}
+
+
 
 {% block layout %}
     <div class="navbar accounts">
@@ -46,7 +47,7 @@ Dashboard | {{ block.super }}
 
 			<ul class="primary-nav">
 				{% for item in nav_items %}
-				<li>
+				<li class="{{ item.label }}">
 				{% if item.is_heading %}
 					<a href="#" class="submenu">{{ item.label }}</a>
 				{% else %}
