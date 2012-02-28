@@ -4,7 +4,7 @@ function addicons(){
 	//Create object with list of icons
 		var icons = {
 		  ico_alert: "A",
-		  ico_cross: "B" || outstock: "B",
+		  ico_cross: "B" || outofstock: "B",
 		  ico_tick: "C" || instock: "C",
 			ico_expand: "D",
 			ico_contract: "E",

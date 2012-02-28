@@ -27,7 +27,7 @@
         {% endwith %}
     {% endblock product_review %}
     
-    <h3><a href="{{ product.get_absolute_url }}">{{ product.get_title|truncatewords:5 }}</a></h3>
+    <h3><a href="{{ product.get_absolute_url }}">{{ product.get_title|truncatewords:7 }}</a></h3>
    
     <div class="product_price">
         {% if product.is_group %}
@@ -35,9 +35,9 @@
         {% else %}
             {% if product.has_stockrecord %} 
                 <h4><span>{{ product.stockrecord.price_incl_tax|currency }}</span></h4>
-                <p class="app-ico avaliability instock">{{ product.stockrecord.availability }}</p>
+                <p class="app-ico avaliability {{ product.stockrecord.availability_code }}">{{ product.stockrecord.availability|truncatewords:2|slice:"-4" }}</p>
             {% else %}
-                <p class="app-ico avaliability outstock">Not available</p>
+                <p class="app-ico avaliability outofstock">Not available</p>
                 <button class="btn">Notify me</button> 
             {% endif %}
         {% endif %}

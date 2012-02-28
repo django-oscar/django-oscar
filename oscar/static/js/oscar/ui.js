@@ -82,7 +82,7 @@ $(document).ready(function()
 
     
     // This activates elastislide
-    $('#carousel').elastislide({
+    $('.es-carousel-wrapper').elastislide({
         imageW: 200,
         minItems: 4
     });

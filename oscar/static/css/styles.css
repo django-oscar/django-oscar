@@ -1217,6 +1217,7 @@ table .span12 {
 }
 .well-blank {
   background-color: #ffffff;
+  border-color: rgba(0, 0, 0, 0.1);
 }
 .fade {
   -webkit-transition: opacity 0.15s linear;
@@ -3259,7 +3260,7 @@ body {
   /*  text-align:center;*/
 
 }
-.avaliability.outstock {
+.avaliability.outofstock {
   color: #9d261d;
 }
 .avaliability.instock {

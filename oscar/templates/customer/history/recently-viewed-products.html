@@ -24,7 +24,7 @@
                         {% else %}
                             {% if product.has_stockrecord %} 
                                 <h4><span>{{ product.stockrecord.price_incl_tax|currency }}</span></h4>
-                                <p class="app-ico avaliability instock">{{ product.stockrecord.availability }}</p>
+                                <p class="app-ico avaliability instock">{{ product.stockrecord.availability|truncatewords:2|slice:"-4" }}</p>
                             {% else %}
                                 <p class="app-ico avaliability outstock">Not available</p>
                             {% endif %}
