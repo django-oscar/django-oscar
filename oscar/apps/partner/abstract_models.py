@@ -242,3 +242,9 @@ class AbstractStockAlert(models.Model):
     def __unicode__(self):
         return u'<stockalert for "%s" status %s>' % (self.stockrecord,
                                                      self.status)
+
+    class Meta:
+        ordering = ('-date_created',)
+
+
+
