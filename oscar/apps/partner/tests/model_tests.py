@@ -8,8 +8,6 @@ from oscar.apps.partner.abstract_models import partner_wrappers
 
 
 class DummyWrapper(object):
-
-
     
     def availability(self, stockrecord):
         return 'Dummy response'
