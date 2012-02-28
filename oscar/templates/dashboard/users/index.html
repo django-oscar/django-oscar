@@ -5,6 +5,16 @@
 Users | {{ block.super }}
 {% endblock %}
 
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url promotions:home %}">Dashboard</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active"><a href=".">User management</a></li>
+</ul>
+{% endblock %}
+
 {% block header %}
 <div class="page-header action">
     <h1>User management</h1><a href="#" class="pull_out">Search Users</a>

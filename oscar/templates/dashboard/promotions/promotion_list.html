@@ -11,6 +11,16 @@ Content blocks | {{ block.super }}
 </div>
 {% endblock header %}
 
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url promotions:home %}">Dashboard</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active"><a href=".">Content block management</a></li>
+</ul>
+{% endblock %}
+
 
 {% block dashboard_content %}
 
