@@ -3088,6 +3088,7 @@ body {
   position: relative;
   height: 375px;
   overflow: hidden;
+  text-align: center;
   *zoom: 1;
 }
 .product_pod:before, .product_pod:after {
@@ -3114,6 +3115,16 @@ body {
   margin-top: 9px;
   line-height: 18px;
   font-size: 16px;
+  /*span {
+          float:right;
+        }
+        del {
+          float:left;
+          font-size:0.611em;
+          font-weight:normal;
+          color:lighten(@grayDark, 40%);
+        }*/
+
 }
 .product_pod h4:before, .product_pod h4:after {
   display: table;
@@ -3121,15 +3132,6 @@ body {
 }
 .product_pod h4:after {
   clear: both;
-}
-.product_pod h4 span {
-  float: right;
-}
-.product_pod h4 del {
-  float: left;
-  font-size: 0.611em;
-  font-weight: normal;
-  color: #999999;
 }
 .product_pod .avaliability {
   margin-bottom: 9px;
@@ -3157,10 +3159,10 @@ body {
 }
 /* carosel product list mods */
 .es-carousel .product_pod {
-  height: auto;
+  height: 250px;
 }
 .es-carousel .product_pod .product_price {
-  position: static;
+  bottom: 0px;
 }
 /* Product list image container */
 .image_container {
@@ -3170,38 +3172,6 @@ body {
   text-align: center;
   margin-bottom: 9px;
   position: relative;
-  /*Badges*/
-
-}
-.image_container span {
-  position: absolute;
-  font-size: 13px;
-  top: 10px;
-  left: 1px;
-  background-color: #0286d5;
-  background-image: -moz-linear-gradient(top, #049cdb, #0064cd);
-  background-image: -ms-linear-gradient(top, #049cdb, #0064cd);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#049cdb), to(#0064cd));
-  background-image: -webkit-linear-gradient(top, #049cdb, #0064cd);
-  background-image: -o-linear-gradient(top, #049cdb, #0064cd);
-  background-image: linear-gradient(top, #049cdb, #0064cd);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#049cdb', endColorstr='#0064cd', GradientType=0);
-  border-color: #0064cd #0064cd #003f81;
-  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-  color: #ffffff;
-  z-index: 1;
-  padding: 15px;
-  text-align: center;
-  -webkit-border-radius: 50px;
-  -moz-border-radius: 50px;
-  border-radius: 50px;
-  -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
-  -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
-}
-.image_container span strong {
-  display: block;
 }
 .image_container img {
   height: 100%;
@@ -3652,6 +3622,8 @@ body {
   background: url(../img/ui/bg-stars-small.png) 0px -4px no-repeat;
   height: 11px;
   line-height: 11px;
+  width: 65px;
+  margin: 0px auto 4px;
 }
 .product_pod .star.One {
   background-position: 0px -18px;

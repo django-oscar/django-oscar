@@ -10,7 +10,7 @@
     <div class="row-fluid">
     	<div class="span3">
     		{% with promotion.product.images.all.0 as image %}
-    		<div class="image_container">
+    		<div class="image_container"> 
     			<a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ image.original.url }}" alt="{{ product.get_title }}"></a>
     		</div>    
     		{% endwith %}

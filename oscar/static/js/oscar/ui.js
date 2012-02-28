@@ -79,14 +79,22 @@ $(document).ready(function()
     // This activates the alerts
     $('.alert').alert('.close');
     
-
-    
     // This activates elastislide
-    $('.es-carousel-wrapper').elastislide({
+    var es_carousel = $('.es-carousel-wrapper');
+    var product_page = $('.product_page').length;
+    // on prodct page
+    if (product_page > 0) {
+      es_carousel.elastislide({
+          imageW: 175,
+          minItems: 5
+      });
+    }
+    else {
+      es_carousel.elastislide({
         imageW: 200,
         minItems: 4
-    });
-    
+      });
+    }  
 
     // Acordion - remove the first in the list as it is duplication.
     var n = $('.accordion dt').length;
