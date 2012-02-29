@@ -76,13 +76,13 @@ class AbstractAddress(models.Model):
         Returns a single string summary of the address,
         separating fields using commas.
         """
-        return u", ".join(self.active_address_fields())    
-        
+        return u", ".join(self.active_address_fields())
+
     def populate_alternative_model(self, address_model):
         """
         For populating an address model using the matching fields
         from this one.
-        
+
         This is used to convert a user address to a shipping address
         as part of the checkout process.
         """
@@ -90,7 +90,7 @@ class AbstractAddress(models.Model):
         for field_name in [field.name for field in self._meta.fields]:
             if field_name in destination_field_names and field_name != 'id':
                 setattr(address_model, field_name, getattr(self, field_name))
-                
+
     def active_address_fields(self):
         u"""
         Returns the non-empty components of the address, but merging the
@@ -102,17 +102,17 @@ class AbstractAddress(models.Model):
         if self.country:
             fields.append(self.country.name)
         return fields
-        
+
     def salutation(self):
         u"""Returns the salutation"""
         return u" ".join([part for part in [self.title, self.first_name, self.last_name] if part])
-        
+
     def name(self):
         """
         Returns the full name
         """
-        return u" ".join([part for part in [self.first_name, self.last_name] if part])    
-        
+        return u" ".join([part for part in [self.first_name, self.last_name] if part])
+
     def __unicode__(self):
         return self.summary
 
