@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 
+from oscar.apps.dashboard.catalogue import forms
 from oscar.core.loading import get_classes
 ProductForm, StockRecordForm, StockAlertSearchForm = get_classes(
     'dashboard.catalogue.forms', ('ProductForm', 'StockRecordForm',
@@ -18,13 +19,39 @@ class ProductListView(generic.ListView):
     template_name = 'dashboard/catalogue/product_list.html'
     model = Product
     context_object_name = 'products'
+    form_class = forms.ProductSearchForm
+    base_description = 'All products'
     paginate_by = 20
 
     def get_context_data(self, **kwargs):
         ctx = super(ProductListView, self).get_context_data(**kwargs)
         ctx['product_classes'] = ProductClass.objects.all()
+        ctx['form'] = self.form_class
+        ctx['queryset_description'] = self.description
         return ctx
 
+    def get_queryset(self):
+        """
+        Build the queryset for this list and also update the title that
+        describes the queryset
+        """
+        self.description = "Products"
+        queryset = self.model.objects.all().order_by('-date_created')
+        self.form = self.form_class(self.request.GET)
+        if not self.form.is_valid():
+            return queryset
+
+        data = self.form.cleaned_data
+
+        if data['upc']:
+            queryset = queryset.filter(upc=data['upc'])
+            self.description += " including an item with UPC '%s'" % data['upc']
+
+        if data['title']:
+            queryset = queryset.filter(title__istartswith=data['title']).distinct()
+            self.description += " including an item with title matching '%s'" % data['title']
+
+        return queryset
 
 class ProductCreateRedirectView(generic.RedirectView):
 
