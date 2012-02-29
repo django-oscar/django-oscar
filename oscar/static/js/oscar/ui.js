@@ -3,8 +3,8 @@ $(document).ready(function()
     // Product star rating  -- must improve this in python
     $('.product_pod, .span6, .promotion_single').each(function() 
     {
-        var sum_total_reviews = $(this).find(".review_count li").length * 5;
-        var sum_rating_count = 0;
+        var sum_total_reviews = $(this).find(".review_count li").length * 5,
+            sum_rating_count = 0;
         $(this).find('.review_count li').each(function() 
         {
             sum_rating_count += parseFloat($(this).text());
@@ -57,8 +57,8 @@ $(document).ready(function()
     });
     
     // Width and height of main navigation
-    var $browse_width = $('aside.span3').outerWidth();
-    var $browse_height = $('#browse > .dropdown-menu').outerHeight();
+    var $browse_width = $('aside.span3').outerWidth(),
+        $browse_height = $('#browse > .dropdown-menu').outerHeight();
     // set width of nav dropdown on the homepage
     $('#browse').find('> .dropdown-menu').css({
       width: $browse_width
@@ -80,8 +80,8 @@ $(document).ready(function()
     $('.alert').alert('.close');
     
     // This activates elastislide
-    var es_carousel = $('.es-carousel-wrapper');
-    var product_page = $('.product_page').length;
+    var es_carousel = $('.es-carousel-wrapper'),
+        product_page = $('.product_page').length;
     // on prodct page
     if (product_page > 0) {
       es_carousel.elastislide({
