@@ -45,6 +45,15 @@ button {
 .primary-nav li {
   display:block;
 }
+.reports .primary-nav li.Reports > a,
+.orders .primary-nav li.Manage.orders > a,
+.users .primary-nav li.Users > a,
+.content-blocks .primary-nav li.Content.blocks > a,
+.catalogue .primary-nav li.Catalogue > a {
+  color: @blue;
+  text-shadow: 1px 1px 1px #fff;
+  filter: dropshadow(color=#fff, offx=1, offy=1);
+}
 .primary-nav li ul li {
   margin:0px;
   border-top:1px solid #ddd;
@@ -57,16 +66,28 @@ button {
   display:block;
   padding:5px 15px;
 }
-.primary-nav li ul li a:hover {
-  background:#efefef;
-}
-.primary-nav .submenu {
-  font-weight:bold;
-  color:#444;
+.primary-nav > li > a {
+  background:#ddd;
   border-top:1px solid #bbb;
   -webkit-box-shadow: inset -1px 1px 0px 0px rgba(255, 255, 255, .5);
   -moz-box-shadow: inset -1px 1px 0px 0px rgba(255, 255, 255, .5);
   box-shadow: inset -1px 1px 0px 0px rgba(255, 255, 255, .5);
+  font-weight:bold;
+  color:#444;
+}
+.primary-nav li:first-child > a {
+  border-top:none;
+  -moz-border-radius-topleft: 4px;
+  -moz-border-radius-topright: 4px;
+  -moz-border-radius-bottomright: 0px;
+  -moz-border-radius-bottomleft: 0px;
+  -webkit-border-radius: 4px 4px 0px 0px;
+  border-radius: 4px 4px 0px 0px;
+}
+.primary-nav li ul li a:hover {
+  background:#efefef;
+}
+.primary-nav .submenu {
   background:url(../img/ui/icon_arrow_left.png) no-repeat 94% 50% #ddd;
 }
 .primary-nav .viewed {

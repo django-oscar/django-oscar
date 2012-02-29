@@ -1,10 +1,10 @@
 $(document).ready(function()
 {	
     // Product star rating  -- must improve this in python
-    $('.product_pod, .span6').each(function() 
+    $('.product_pod, .span6, .promotion_single').each(function() 
     {
-        var sum_total_reviews = $(this).find(".review_count li").length * 5;
-        var sum_rating_count = 0;
+        var sum_total_reviews = $(this).find(".review_count li").length * 5,
+            sum_rating_count = 0;
         $(this).find('.review_count li').each(function() 
         {
             sum_rating_count += parseFloat($(this).text());
@@ -21,8 +21,9 @@ $(document).ready(function()
         } else if (ave_rating <= 10) {
             var ave_rating = 'Five'
         }
-        $(this).find('.review_count').after('<p class=\"star ' + ave_rating + '\">' + ave_rating + ' star(s) by user reviews. <a href=\"#\">Add review</a></p>');
-        $(this).find('.review_count').remove();
+        $(this).find('.review_count')
+          .after('<p class=\"star ' + ave_rating + '\">' + ave_rating + ' star(s) by user reviews. <a href=\"#\">Add review</a></p>')
+          .remove();
     });
     // Product star rating each review -- must improve this in python
     $('.review').each(function()
@@ -47,13 +48,17 @@ $(document).ready(function()
         else if (user_rating == 5) {
             var user_rating = 'Five'
         }
-        $(this).find('h3').addClass(user_rating);
-        $(this).find('span').remove();
+        $(this)
+          .find('h3')
+          .addClass(user_rating)
+          .end()
+          .find('span')
+          .remove();
     });
     
     // Width and height of main navigation
-    var $browse_width = $('aside.span3').outerWidth();
-    var $browse_height = $('#browse > .dropdown-menu').outerHeight();
+    var $browse_width = $('aside.span3').outerWidth(),
+        $browse_height = $('#browse > .dropdown-menu').outerHeight();
     // set width of nav dropdown on the homepage
     $('#browse').find('> .dropdown-menu').css({
       width: $browse_width
@@ -74,14 +79,22 @@ $(document).ready(function()
     // This activates the alerts
     $('.alert').alert('.close');
     
-
-    
     // This activates elastislide
-    $('#carousel').elastislide({
+    var es_carousel = $('.es-carousel-wrapper'),
+        product_page = $('.product_page').length;
+    // on prodct page
+    if (product_page > 0) {
+      es_carousel.elastislide({
+          imageW: 175,
+          minItems: 5
+      });
+    }
+    else {
+      es_carousel.elastislide({
         imageW: 200,
         minItems: 4
-    });
-    
+      });
+    }  
 
     // Acordion - remove the first in the list as it is duplication.
     var n = $('.accordion dt').length;

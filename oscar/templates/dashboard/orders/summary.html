@@ -1,8 +1,18 @@
 {% extends 'dashboard/layout.html' %}
 {% load currency_filters %}
-
+{% block body_class %}orders{% endblock %}
 {% block title %}
 Order statistics | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url promotions:home %}">Dashboard</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active"><a href=".">Order statistics</a></li>
+</ul>
 {% endblock %}
 
 {% block header %}

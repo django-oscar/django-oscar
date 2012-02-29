@@ -24,7 +24,7 @@ Created: 01.06.2012 (US format date)
 ======== */ 
 	.app-ico:before{font-family:'SnowconeRegular';padding-right:5px} 
 	.app-ico.ico_alert:before{content:"A";}
-	.app-ico.ico_cross:before,.app-ico.outstock:before{content:"B";}
+	.app-ico.ico_cross:before,.app-ico.outofstock:before{content:"B";}
 	.app-ico.ico_tick:before,.app-ico.instock:before{content:"C";}
 	.app-ico.ico_expand:before{content:"D";}
 	.app-ico.ico_contract:before{content:"E";}

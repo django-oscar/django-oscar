@@ -1,8 +1,18 @@
 {% extends 'dashboard/layout.html' %}
 {% load dashboard_tags %}
-
+{% block body_class %}users{% endblock %}
 {% block title %}
 Users | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url promotions:home %}">Dashboard</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active"><a href=".">User management</a></li>
+</ul>
 {% endblock %}
 
 {% block header %}

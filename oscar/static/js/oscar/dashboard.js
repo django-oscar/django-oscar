@@ -32,7 +32,7 @@ $(document).ready(function()
     {
         $(this).css('height', $(this).height());
     });
-    $(".primary-nav > li > ul:gt(0), .orders_search").hide();
+    $(".primary-nav > li > ul, .orders_search").hide();
 
     $(".primary-nav > li > a").click(function()
     {
