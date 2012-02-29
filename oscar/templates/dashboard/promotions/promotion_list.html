@@ -1,6 +1,6 @@
 {% extends 'dashboard/layout.html' %}
 {% load currency_filters %}
-
+{% block body_class %}content-blocks{% endblock %}
 {% block title %}
 Content blocks | {{ block.super }}
 {% endblock %}
@@ -10,6 +10,16 @@ Content blocks | {{ block.super }}
     <h1>Content block management</h1>
 </div>
 {% endblock header %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url promotions:home %}">Dashboard</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active"><a href=".">Content block management</a></li>
+</ul>
+{% endblock %}
 
 
 {% block dashboard_content %}

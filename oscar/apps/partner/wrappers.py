@@ -31,7 +31,7 @@ class DefaultWrapper(object):
     def availability(self, stockrecord):
         if stockrecord.net_stock_level > 0:
             return _("In stock (%d available)" % stockrecord.net_stock_level)
-        return _("Out of stock")
+        return _("Not available ...")
     
     def dispatch_date(self, stockrecord):
         if stockrecord.net_stock_level:
