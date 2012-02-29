@@ -10,7 +10,7 @@
     <div class="row-fluid">
     	<div class="span3">
     		{% with promotion.product.images.all.0 as image %}
-    		<div class="image_container">
+    		<div class="image_container"> 
     			<a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ image.original.url }}" alt="{{ product.get_title }}"></a>
     		</div>    
     		{% endwith %}
@@ -20,7 +20,7 @@
     			{% else %}
     				{% if product.has_stockrecord %} 
     					<h4><span>{{ product.stockrecord.price_incl_tax|currency }}</span></h4>
-    					<p class="app-ico avaliability instock">{{ product.stockrecord.availability }}</p>
+    					<p class="app-ico avaliability instock">{{ product.stockrecord.availability|truncatewords:2|slice:"-4" }}</p>
     				{% else %}
     				<p class="app-ico avaliability outstock">Not available</p>
     				<button class="btn">Notify me</button> 

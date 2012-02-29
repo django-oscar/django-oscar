@@ -58,9 +58,9 @@
             
             <p><strong>Product Code:</strong> <code>{{ product.upc }}</code></p>
             {% if product.stockrecord %}
-			<p class="app-ico avaliability {{ product.stockrecord.availability_code }}">{{ product.stockrecord.availability }}</p>
+			<p class="app-ico avaliability {{ product.stockrecord.availability_code }}">{{ product.stockrecord.availability|truncatewords:2|slice:"-4" }}</p>
 			{% else %}
-				<p class="app-ico avaliability outstock">Not available</p>
+				<p class="app-ico avaliability outofstock">Not available</p>
             {% endif %}
              
             <hr/>
