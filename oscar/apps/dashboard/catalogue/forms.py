@@ -6,6 +6,11 @@ StockRecord = get_model('partner', 'StockRecord')
 ProductAttributeValue = get_model('catalogue', 'ProductAttributeValue')
 
 
+class ProductSearchForm(forms.Form):
+    upc = forms.CharField(max_length=16, required=False)
+    title = forms.CharField(max_length=255, required=False)
+
+
 class StockRecordForm(forms.ModelForm):
 
     class Meta:
@@ -23,7 +28,7 @@ class ProductForm(forms.ModelForm):
 
     def set_initial_attribute_values(self, kwargs):
         if kwargs['instance'] is None:
-            return 
+            return
         if 'initial' not in kwargs:
             kwargs['initial'] = {}
         for attribute in self.product_class.attributes.all():
@@ -100,7 +105,7 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         exclude = ('slug', 'status', 'score', 'product_class',
-                   'recommended_products', 'related_products', 
+                   'recommended_products', 'related_products',
                    'product_options', 'attributes', 'categories')
 
     def save(self, commit=True):
