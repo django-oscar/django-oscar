@@ -1439,16 +1439,16 @@ table .span12 {
   background-color: #942a25 \9;
 }
 .btn-success {
-  background-color: #5bb75b;
-  background-image: -moz-linear-gradient(top, #62c462, #51a351);
-  background-image: -ms-linear-gradient(top, #62c462, #51a351);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#62c462), to(#51a351));
-  background-image: -webkit-linear-gradient(top, #62c462, #51a351);
-  background-image: -o-linear-gradient(top, #62c462, #51a351);
-  background-image: linear-gradient(top, #62c462, #51a351);
+  background-color: #61b861;
+  background-image: -moz-linear-gradient(top, #74c474, #46a546);
+  background-image: -ms-linear-gradient(top, #74c474, #46a546);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#74c474), to(#46a546));
+  background-image: -webkit-linear-gradient(top, #74c474, #46a546);
+  background-image: -o-linear-gradient(top, #74c474, #46a546);
+  background-image: linear-gradient(top, #74c474, #46a546);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#62c462', endColorstr='#51a351', GradientType=0);
-  border-color: #51a351 #51a351 #387038;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#74c474', endColorstr='#46a546', GradientType=0);
+  border-color: #46a546 #46a546 #2f6f2f;
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
   filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
 }
@@ -1457,10 +1457,10 @@ table .span12 {
 .btn-success.active,
 .btn-success.disabled,
 .btn-success[disabled] {
-  background-color: #51a351;
+  background-color: #46a546;
 }
 .btn-success:active, .btn-success.active {
-  background-color: #408140 \9;
+  background-color: #378137 \9;
 }
 .btn-info {
   background-color: #49afcd;
@@ -2582,11 +2582,11 @@ body {
   line-height: inherit;
 }
 .page-header, .sub-header {
-  background: #fafafa;
+  background: #f9f9f9;
   padding: 20px;
   margin-top: 0px;
   margin-bottom: 18px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #e0e0e0;
 }
 .sub-header {
   background: none;
@@ -3639,6 +3639,37 @@ body {
 }
 .product_pod .star.Five {
   background-position: 0px -75px;
+}
+/*style guide*/
+.swatch {
+  display: inline-block;
+  width: 30px;
+  height: 20px;
+  margin: -6px 0;
+  background: #555555;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+.swatch-col {
+  width: 30px;
+}
+.test-opacity {
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+}
+.test-square {
+  width: 25px;
+  height: 25px;
+}
+.test-size {
+  width: 7px;
+  height: 25px;
+}
+.test-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 /*** Promotional block styles ***/
 /*** Badge styles ***/
