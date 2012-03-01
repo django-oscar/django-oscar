@@ -7,15 +7,19 @@ from oscar.apps.dashboard.nav import register, Node
 
 node = Node('Catalogue')
 node.add_child(Node('Products', 'dashboard:catalogue-product-list'))
+node.add_child(Node('Stock alerts', 'dashboard:stock-alert-list'))
 register(node)
 
 
 class CatalogueApplication(Application):
     name = None
+
     product_list_view = views.ProductListView
     product_create_redirect_view = views.ProductCreateRedirectView
     product_create_view = views.ProductCreateView
     product_update_view = views.ProductUpdateView
+
+    stock_alert_view = views.StockAlertListView
 
     def get_urls(self):
         urlpatterns = patterns('',
@@ -27,6 +31,8 @@ class CatalogueApplication(Application):
                 name='catalogue-product-create'),
             url(r'^$', self.product_list_view.as_view(),
                 name='catalogue-product-list'),
+            url(r'^stock-alerts/$', self.stock_alert_view.as_view(),
+                name='stock-alert-list'),
         )
         return self.post_process_urls(urlpatterns)
 

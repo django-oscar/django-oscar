@@ -112,3 +112,7 @@ class ProductForm(forms.ModelForm):
         for attribute in self.product_class.attributes.all():
             value = self.cleaned_data['attr_%s' % attribute.code]
             attribute.save_value(object, value)
+
+
+class StockAlertSearchForm(forms.Form):
+    status = forms.CharField(label='Status')

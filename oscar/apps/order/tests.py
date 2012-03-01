@@ -302,7 +302,6 @@ class ShippingEventQuantityTests(TestCase):
                                              line=self.line,
                                              quantity=1)
 
-    
    
 class OrderCreatorTests(TestCase):
 
