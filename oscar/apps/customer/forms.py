@@ -32,7 +32,7 @@ class EmailUserCreationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('email', )
+        fields = ('email',)
 
     def clean_email(self):
         email = self.cleaned_data['email']
@@ -61,5 +61,15 @@ class EmailUserCreationForm(forms.ModelForm):
 
 
 class SearchByDateRangeForm(forms.Form):
-        date_from = forms.DateField(required=False, label="From")
-        date_to = forms.DateField(required=False, label="To")
+    date_from = forms.DateField(required=False, label="From")
+    date_to = forms.DateField(required=False, label="To")
+
+    def clean(self):
+        data = self.cleaned_data
+        date_from = self.data['date_from']
+        date_to = self.data['date_to']
+
+        if not date_from and not date_to:
+            raise forms.ValidationError(_("At least one date field is required."))
+
+        return data
