@@ -5,10 +5,13 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 
 from oscar.core.loading import get_classes
-ProductForm, StockRecordForm = get_classes('dashboard.catalogue.forms', ('ProductForm', 'StockRecordForm'))
+ProductForm, StockRecordForm, StockAlertSearchForm = get_classes(
+    'dashboard.catalogue.forms', ('ProductForm', 'StockRecordForm',
+                                  'StockAlertSearchForm'))
 Product = get_model('catalogue', 'Product')
 ProductClass = get_model('catalogue', 'ProductClass')
 StockRecord = get_model('partner', 'StockRecord')
+StockAlert = get_model('partner', 'StockAlert')
 
 
 class ProductListView(generic.ListView):
@@ -114,3 +117,28 @@ class ProductUpdateView(generic.UpdateView):
         messages.success(self.request, "Updated product '%s'" %
                          self.object.title)
         return reverse('dashboard:catalogue-product-list')
+
+
+class StockAlertListView(generic.ListView):
+    template_name = 'dashboard/catalogue/stockalert_list.html'
+    model = StockAlert
+    context_object_name = 'alerts'
+    paginate_by = 20
+
+    def get_context_data(self, **kwargs):
+        ctx = super(StockAlertListView, self).get_context_data(**kwargs)
+        ctx['form'] = self.form
+        ctx['description'] = self.description
+        return ctx
+
+    def get_queryset(self):
+        if 'status' in self.request.GET:
+            self.form = StockAlertSearchForm(self.request.GET)
+            if self.form.is_valid():
+                status = self.form.cleaned_data['status']
+                self.description = 'Alerts with status "%s"' % status
+                return self.model.objects.filter(status=status)
+        else:
+            self.description = 'All alerts'
+            self.form = StockAlertSearchForm()
+        return self.model.objects.all()
