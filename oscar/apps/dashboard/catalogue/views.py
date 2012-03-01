@@ -20,13 +20,13 @@ class ProductListView(generic.ListView):
     model = Product
     context_object_name = 'products'
     form_class = forms.ProductSearchForm
-    base_description = 'All products'
+    base_description = 'Products'
     paginate_by = 20
 
     def get_context_data(self, **kwargs):
         ctx = super(ProductListView, self).get_context_data(**kwargs)
         ctx['product_classes'] = ProductClass.objects.all()
-        ctx['form'] = self.form_class
+        ctx['form'] = self.form
         ctx['queryset_description'] = self.description
         return ctx
 
@@ -35,7 +35,7 @@ class ProductListView(generic.ListView):
         Build the queryset for this list and also update the title that
         describes the queryset
         """
-        self.description = "Products"
+        self.description = self.base_description
         queryset = self.model.objects.all().order_by('-date_created')
         self.form = self.form_class(self.request.GET)
         if not self.form.is_valid():
