@@ -17,6 +17,11 @@ Update product | {{ block.super }}
 	{% csrf_token %}
 		<legend>Product information</legend>
 		{% include "partials/form_fields.html" with form=form %}
+		<legend>Category information</legend>
+		{{ category_formset.management_form }}
+		{% for category_form in category_formset %}
+			{% include "partials/form_fields.html" with form=category_form %}
+		{% endfor %}
 		<legend>Stock and price information</legend>
 		{% include "partials/form_fields.html" with form=stockrecord_form %}
 		<div class="form-actions">

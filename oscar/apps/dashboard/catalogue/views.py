@@ -6,10 +6,12 @@ from django.core.urlresolvers import reverse
 
 from oscar.apps.dashboard.catalogue import forms
 from oscar.core.loading import get_classes
-ProductForm, StockRecordForm, StockAlertSearchForm = get_classes(
+ProductForm, StockRecordForm, StockAlertSearchForm, ProductCategoryFormSet = get_classes(
     'dashboard.catalogue.forms', ('ProductForm', 'StockRecordForm',
-                                  'StockAlertSearchForm'))
+                                  'StockAlertSearchForm',
+                                  'ProductCategoryFormSet'))
 Product = get_model('catalogue', 'Product')
+ProductCategory = get_model('catalogue', 'ProductCategory')
 ProductClass = get_model('catalogue', 'ProductClass')
 StockRecord = get_model('partner', 'StockRecord')
 StockAlert = get_model('partner', 'StockAlert')
@@ -119,6 +121,7 @@ class ProductUpdateView(generic.UpdateView):
     def get_context_data(self, **kwargs):
         ctx = super(ProductUpdateView, self).get_context_data(**kwargs)
         ctx['stockrecord_form'] = StockRecordForm(instance=self.object.stockrecord)
+        ctx['category_formset'] = ProductCategoryFormSet(instance=self.object)
         ctx['title'] = 'Update product'
         return ctx
 
@@ -130,14 +133,18 @@ class ProductUpdateView(generic.UpdateView):
     def form_valid(self, form):
         stockrecord_form = StockRecordForm(self.request.POST,
                                            instance=self.object.stockrecord)
-        if stockrecord_form.is_valid():
-            form.save()
+        category_formset = ProductCategoryFormSet(self.request.POST,
+                                                  instance=self.object)
+        if stockrecord_form.is_valid() and category_formset.is_valid():
+            product = form.save()
             stockrecord_form.save()
+            category_formset.save()
             return HttpResponseRedirect(self.get_success_url())
 
         ctx = self.get_context_data()
         ctx['form'] = form
         ctx['stockrecord_form'] = stockrecord_form
+        ctx['category_formset'] = category_form
         return self.render_to_response(ctx)
 
     def get_success_url(self):
