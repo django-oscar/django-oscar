@@ -1,5 +1,14 @@
 {% extends 'dashboard/layout.html' %}
-
+{% block body_class %}promotions{% endblock %}
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url promotions:home %}">Dashboard</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active"><a href="."></a></li>
+</ul>
+{% endblock %}
 <!-- <h2>{{ heading }}</h2> -->
 {% block header %}
 <div class="page-header">
