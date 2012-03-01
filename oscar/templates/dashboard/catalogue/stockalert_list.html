@@ -1,8 +1,17 @@
 {% extends 'dashboard/layout.html' %}
 {% load currency_filters %}
-
+{% block body_class %}catalogue{% endblock %}
 {% block title %}
 Stock alerts | {{ block.super }}
+{% endblock %}
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url promotions:home %}">Dashboard</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active"><a href=".">Catalogue</a></li>
+</ul>
 {% endblock %}
 
 {% block header %}
@@ -22,14 +31,18 @@ Stock alerts | {{ block.super }}
 </form>
 {% endcomment %}
 
-<h2>Filter</h2>
+<div class="sub-header">
+	<h2>Filter</h2>
+</div>
 <p>
 	<a class="btn btn-info" href="{% url dashboard:stock-alert-list %}">All</a>
 	<a class="btn btn-info" href="{% url dashboard:stock-alert-list %}?status=Open">Open</a>
 	<a class="btn btn-info" href="{% url dashboard:stock-alert-list %}?status=Closed">Closed</a>
 </p>
 
-<h2>{{ description }}</h2>
+<div class="sub-header">
+	<h2>{{ description }}</h2>
+</div>
 {% if alerts %}
 <table class="table table-striped table-bordered">
     <tr>

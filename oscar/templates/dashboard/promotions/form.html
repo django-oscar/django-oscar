@@ -6,7 +6,7 @@
         <a href="{% url promotions:home %}">Dashboard</a>
         <span class="divider">/</span>
     </li>
-    <li class="active"><a href="."></a></li>
+    <li class="active"><a href=".">Catalogue</a></li>
 </ul>
 {% endblock %}
 <!-- <h2>{{ heading }}</h2> -->
@@ -24,7 +24,7 @@
 	{% include "partials/form_fields.html" with form=form %}
 	<div class="form-actions">
         <button type="submit" class="btn btn-primary">Save</button>
-		or <a href="{% url dashboard:promotion-list %}"><button class="btn btn-danger">Cancel</button></a>
+		or <a href="{% url dashboard:promotion-list %}">Cancel</a>
 	</div>
 </form>
 {% endblock %}
