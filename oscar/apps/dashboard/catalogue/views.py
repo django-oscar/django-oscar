@@ -78,6 +78,7 @@ class ProductCreateView(generic.CreateView):
     def get_context_data(self, **kwargs):
         ctx = super(ProductCreateView, self).get_context_data(**kwargs)
         ctx['stockrecord_form'] = StockRecordForm()
+        ctx['category_formset'] = ProductCategoryFormSet()
         ctx['title'] = 'Create new product'
         return ctx
 
@@ -90,16 +91,20 @@ class ProductCreateView(generic.CreateView):
         return kwargs
 
     def form_valid(self, form):
+        product = form.save(commit=False)
+        product.product_class = self.get_product_class()
         stockrecord_form = StockRecordForm(self.request.POST)
-        if stockrecord_form.is_valid():
+        category_formset = ProductCategoryFormSet(self.request.POST,
+                                                  instance=product)
+        if stockrecord_form.is_valid() and category_formset.is_valid():
             # Save product
-            product = form.save()
-            product.product_class = self.get_product_class()
             product.save()
             # Save stock record
             stockrecord = stockrecord_form.save(commit=False)
             stockrecord.product = product
             stockrecord.save()
+            # Save categories
+            category_formset.save()
             return HttpResponseRedirect(self.get_success_url(product))
 
         ctx = self.get_context_data()
