@@ -1,0 +1,291 @@
+{% extends "layout.html" %}
+
+{% load currency_filters %}
+
+{% block sidebar %}
+{% endblock sidebar %}
+
+{% block header %}
+<div class="page-header">
+    <h1>{{ flatpage.title }}</h1>
+</div>
+{% endblock header %}
+
+{% block flatpage %}
+<article>
+    {{ flatpage.content }}
+    
+    <div class="sub-header">
+        <h2>Colour <small>Links</small></h2>
+    </div>
+    <table class="table table-striped table-bordered">
+        <tr>
+            <th>Variable</th>
+            <th>Hex Value</th>
+            <th>Color</th>
+        </tr>
+        <tr>
+            <td>@linkColor</td>
+            <td>#08c</td>
+            <td style="background-color:#08c"></td>
+        </tr>
+        <tr>
+            <td>@linkColorHover</td>
+            <td>darken(@linkColor, 15%)</td>
+            <td style="background-color:#005580"></td>
+        </tr>
+    </table>
+    
+    <div class="sub-header">
+        <h2>Colour <small>Grays</small></h2>
+    </div>
+    <table class="table table-striped table-bordered">
+        <tr>
+            <th>Variable</th>
+            <th>Hex Value</th>
+            <th>Color</th>
+        </tr>
+        <tr>
+            <td>@black</td>
+            <td>#000</td>
+            <td style="background-color:#000"></td>
+        </tr>
+        <tr>
+            <td>@grayDarker</td>
+            <td>#222</td>
+            <td style="background-color:#222"></td>
+        </tr>
+        <tr>
+            <td>@grayDark</td>
+            <td>#333</td>
+            <td style="background-color:#333"></td>
+        </tr>
+        <tr>
+            <td>@gray</td>
+            <td>#555</td>
+            <td style="background-color:#555"></td>
+        </tr>
+        <tr>
+            <td>@grayLight</td>
+            <td>#999</td>
+            <td style="background-color:#999"></td>
+        </tr>
+        <tr>
+            <td>@grayLighter</td>
+            <td>#eee</td>
+            <td style="background-color:#eee"></td>
+        </tr>
+        <tr>
+            <td>@white</td>
+            <td>#fff</td>
+            <td style="background-color:#fff"></td>
+        </tr>
+    </table>
+    
+    <div class="sub-header">
+        <h2>Colour <small>Accent colors</small></h2>
+    </div>
+    <table class="table table-striped table-bordered">
+        <tr>
+            <th>Variable</th>
+            <th>Hex Value</th>
+            <th>Color</th>
+        </tr>
+        <tr>
+            <td>@blue</td>
+            <td>#049cdb</td>
+            <td style="background-color:#049cdb"></td>
+        </tr>
+        <tr>
+            <td>@blueDark</td>
+            <td>#0064cd</td>
+            <td style="background-color:#0064cd"></td>
+        </tr>
+        <tr>
+            <td>@green</td>
+            <td>#46a546</td>
+            <td style="background-color:#46a546"></td>
+        </tr>
+        <tr>
+            <td>@red</td>
+            <td>#9d261d</td>
+            <td style="background-color:#9d261d"></td>
+        </tr>
+        <tr>
+            <td>@yellow</td>
+            <td>#ffc40d</td>
+            <td style="background-color:#ffc40d"></td>
+        </tr>
+        <tr>
+            <td>@orange</td>
+            <td>#f89406</td>
+            <td style="background-color:#f89406"></td>
+        </tr>
+        <tr>
+            <td>@pink</td>
+            <td>#c3325f</td>
+            <td style="background-color:#c3325f"></td>
+        </tr>
+        <tr>
+            <td>@purple</td>
+            <td>#7a43b6</td>
+            <td style="background-color:#7a43b6"></td>
+        </tr>
+    </table>
+    
+    <div class="sub-header">
+        <h2>Typography <small>Base</small></h2>
+    </div>
+    <table class="table table-striped table-bordered">
+        <tr>
+            <th>Variable</th>
+            <th>Value</th>
+            <th>Example</th>
+        </tr>
+        <tr>
+            <td>@baseFontSize</td>
+            <td>13px</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>@baseFontFamily</td>
+            <td>"Helvetica Neue", Helvetica, Arial, sans-serif</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>@baseLineHeight</td>
+            <td>18px</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>@textColor</td>
+            <td>@grayDark</td>
+            <td style="background-color:#333"></td>
+        </tr>
+    </table>
+    <div class="sub-header">
+        <h2>Typography <small>Headings</small></h2>
+    </div>
+    <table class="table table-striped table-bordered">
+        <tr>
+            <th>Heading</th>
+            <th>Value</th>
+            <th>Example</th>
+        </tr>
+        <tr>
+            <td>h1</td>
+            <td>font-size: 30px<br/>line-height: @baseLineHeight * 2</td>
+            <td><h1>Heading</h1></td>
+        </tr>
+        <tr>
+            <td>h2</td>
+            <td>font-size: 24px<br/>line-height: @baseLineHeight * 2</td>
+            <td><h2>Heading</h2></td>
+        </tr>
+        <tr>
+            <td>h3</td>
+            <td>font-size: 18px<br/>line-height: @baseLineHeight * 1.5</td>
+            <td><h3>Heading</h3></td>
+        </tr>
+        <tr>
+            <td>h4</td>
+            <td>14px</td>
+            <td><h4>Heading</h4></td>
+        </tr>
+        <tr>
+            <td>h5</td>
+            <td>12px</td>
+            <td><h5>Heading</h5></td>
+        </tr>
+        <tr>
+            <td>h6</td>
+            <td>11px<br/>color: @grayLight<br/>text-transform: uppercase</td>
+            <td><h6>Heading</h6></td>
+        </tr>
+        <tr>
+            <td>&lt;div class="page-header"&gt;</td>
+            <td>background:lighten(@grayLighter, 4.5%)<br/>padding:@gridGutterWidth<br/>margin-bottom: @baseLineHeight<br/>border-bottom: 1px solid darken(@grayLighter, 5.5%)</td>
+            <td><div class="page-header"><h1>Page Header</h1></div></td>
+        </tr>
+        <tr>
+            <td>&lt;div class="sub-header"&gt;</td>
+            <td>margin-bottom: @baseLineHeight<br/>border-bottom: 1px solid darken(@grayLighter, 5.5%)</td>
+            <td style="background-color:#fff"><div class="sub-header"><h2>Sub Header</h2></div></td>
+        </tr>
+        <tr>
+            <td>Unordered List</td>
+            <td>&lt;ul&gt;</td>
+            <td>
+                <ul>
+                    <li>List item 1</li>
+                    <li>List item 2</li>
+                    <li>List item 3</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td>Ustyled List</td>
+            <td>&lt;ul class="unstyled"&gt;</td>
+            <td>
+                <ul class="unstyled">
+                    <li>List item 1</li>
+                    <li>List item 2</li>
+                    <li>List item 3</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td>Ordered List</td>
+            <td>&lt;ol&gt;</td>
+            <td>
+                <ol>
+                    <li>List item 1</li>
+                    <li>List item 2</li>
+                    <li>List item 3</li>
+                </ol>
+            </td>
+        </tr>
+        <tr>
+            <td>Description List</td>
+            <td>&lt;dl&gt;</td>
+            <td>
+                <dl>
+                    <dt>Description lists</dt>
+                    <dd>A description list is perfect for defining terms.</dd>
+                    <dt>Euismod</dt>
+                    <dd>Vestibulum id ligula porta felis euismod semper eget lacinia odio sem nec elit.</dd>
+                    <dd>Donec id elit non mi porta gravida at eget metus.</dd>
+                    <dt>Malesuada porta</dt>
+                    <dd>Etiam porta sem malesuada magna mollis euismod.</dd>
+                </dl>
+            </td>
+        </tr>
+    </table>
+    <div class="sub-header">
+        <h2>Buttons</h2>
+    </div>
+    <table class="table table-striped table-bordered">
+        <tr>
+            <th>Button Use</th>
+            <th>Class</th>
+            <th>Example</th>
+        </tr>
+        <tr>
+            <td>Default, any</td>
+            <td>.btn</td>
+            <td><button class="btn">Button</button></td>
+        </tr>
+        <tr>
+            <td>Primary</td>
+            <td>.btn .btn-primary</td>
+            <td><button class="btn btn-primary">Button</button></td>
+        </tr>
+        <tr>
+            <td>Secondary</td>
+            <td>.btn .btn-success</td>
+            <td><button class="btn btn-success">Button</button></td>
+        </tr>
+    </table>
+    
+</article>
+{% endblock %}

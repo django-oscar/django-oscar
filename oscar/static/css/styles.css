@@ -2582,11 +2582,11 @@ body {
   line-height: inherit;
 }
 .page-header, .sub-header {
-  background: #fafafa;
+  background: #f9f9f9;
   padding: 20px;
   margin-top: 0px;
   margin-bottom: 18px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #e0e0e0;
 }
 .sub-header {
   background: none;
