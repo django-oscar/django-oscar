@@ -51,28 +51,3 @@
 </form>
 
 {% endblock dashboard_content %}
-
-{% block onbodyload %}
-{{ block.super }}
-$('th.order-by').click(function() {
-	var this_val = $(this);
-	if ($(this).hasClass('asc')) {
-		$(this).removeClass('asc');
-		var order_type = 'desc';
-	} else {
-	    $(this).removeClass('desc');
-	    var order_type = 'asc';
-	}
-	$(this).addClass(order_type)
-
-	$.ajax({
-        url: "{{ request.path }}?order-by=" + $(this).attr('value') + "&order=" + order_type,
-		context: document.body,
-		success: function(data, textStatus, jqXHR){
-			$('tbody#promotion_holder').empty();
-			$(data).appendTo('tbody#promotion_holder');
-
-		}
-	});
-});
-{% endblock %}
