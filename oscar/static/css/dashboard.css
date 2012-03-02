@@ -251,3 +251,7 @@ h2 {
   font-size: 18px;
   line-height: 23px;
 }
+
+thead th.order-by {
+  cursor: pointer;
+}

@@ -10,4 +10,3 @@ class PostActionMixin(object):
             model = self.get_object()
             getattr(self, "do_%s" % self.request.POST['action'].lower())(model)
             return self.response
-    

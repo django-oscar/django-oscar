@@ -13,8 +13,8 @@ oscar.dashboard = {
     }
 }
 
-$(document).ready(function() 
-{   
+$(document).ready(function()
+{
     //table font size increase decrease
     $('.fontsize li').click(function()
     {
@@ -23,12 +23,12 @@ $(document).ready(function()
         var num = parseFloat(os, 10);// gets rid of the px
         $('.bordered-table').css('font-size', num / 1.1 + uom);
         if (this.id == 'larger') {
-            $('.bordered-table').css('font-size', num * 1.1 + uom);    
-        }  
+            $('.bordered-table').css('font-size', num * 1.1 + uom);
+        }
     });
 
     //side navigation accordion
-    $('.primary-nav > li > ul, .orders_search').each(function(index) 
+    $('.primary-nav > li > ul, .orders_search').each(function(index)
     {
         $(this).css('height', $(this).height());
     });
@@ -46,4 +46,26 @@ $(document).ready(function()
         $(this).parent("div").find('.orders_search').slideToggle("fast");
         $(this).toggleClass("viewed");
     });
+
+    $('th.order-by').click(function() {
+		var this_val = $(this);
+		if ($(this).hasClass('asc')) {
+			$(this).removeClass('asc');
+			var order_type = 'desc';
+		} else {
+			$(this).removeClass('desc');
+			var order_type = 'asc';
+		}
+		$(this).addClass(order_type)
+
+		$.ajax({
+			url: ".?order-by=" + $(this).attr('value') + "&order=" + order_type,
+			context: document.body,
+			success: function(data, textStatus, jqXHR){
+				$('tbody#promotion_holder').empty();
+				$(data).appendTo('tbody#promotion_holder');
+
+			}
+		});
+	});
 });

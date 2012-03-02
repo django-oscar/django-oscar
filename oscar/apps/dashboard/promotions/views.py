@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.db.models import Count
+from django.shortcuts import render_to_response
 
 from oscar.core.loading import get_classes, get_class
 from oscar.apps.promotions.layout import split_by_position
@@ -15,7 +16,7 @@ SingleProduct, RawHTML, Image, MultiImage, \
     AutomaticProductList, PagePromotion, HandPickedProductList = get_classes('promotions.models',
     ['SingleProduct', 'RawHTML', 'Image', 'MultiImage', 'AutomaticProductList',
      'PagePromotion', 'HandPickedProductList'])
-SelectForm, RawHTMLForm, PagePromotionForm = get_classes('dashboard.promotions.forms', 
+SelectForm, RawHTMLForm, PagePromotionForm = get_classes('dashboard.promotions.forms',
     ['PromotionTypeSelectForm', 'RawHTMLForm', 'PagePromotionForm'])
 
 
@@ -28,12 +29,38 @@ class ListView(generic.TemplateView):
         data = []
         for klass in PROMOTION_CLASSES:
             data.append(klass.objects.all())
-        promotions = itertools.chain(*data)                                    
+        promotions = itertools.chain(*data)
         ctx = {
             'promotions': promotions,
             'select_form': SelectForm(),
         }
         return ctx
+
+    def get(self, request, *args, **kwargs):
+        if request.GET.get('order-by', None):
+            ctx = self._get_updated_promotions(
+                request.GET.get('order-by'),
+                order_type=request.GET.get('order', 'asc'))
+            return render_to_response('promotions/promotion_list_table.html', ctx)
+        return super(ListView, self).get(self, request, *args, **kwargs)
+
+    def _get_updated_promotions(self, order_by, order_type='asc'):
+        data = []
+        for klass in PROMOTION_CLASSES:
+            data.append(klass.objects.all())
+
+        promotions = [i for i in itertools.chain(*data)]
+        update_url = '/'.join(
+            reverse("dashboard:promotion-update",
+                    args=[promotions[0].code, promotions[0].id]).split('/')[:-3])
+        delete_url = '/'.join(
+            reverse("dashboard:promotion-delete",
+                    args=[promotions[0].code, promotions[0].id]).split('/')[:-3])
+
+        promotions.sort(key=lambda x: getattr(x, order_by),
+                        reverse=(order_type == 'desc'))
+
+        return {'promotions': promotions}
 
 
 class CreateRedirectView(generic.RedirectView):
@@ -43,7 +70,7 @@ class CreateRedirectView(generic.RedirectView):
         code = self.request.GET.get('promotion_type', None)
         urls = {}
         for klass in PROMOTION_CLASSES:
-            urls[klass.classname()] = reverse('dashboard:promotion-create-%s' % 
+            urls[klass.classname()] = reverse('dashboard:promotion-create-%s' %
                                               klass.classname())
         return urls.get(code, None)
 
@@ -94,7 +121,7 @@ class DeletePagePromotionView(generic.DeleteView):
 
     def get_success_url(self):
         messages.info(self.request, "Promotion removed successfully")
-        return reverse('dashboard:promotion-list-by-url', 
+        return reverse('dashboard:promotion-list-by-url',
                        kwargs={'path': self.object.page_url})
 
 
@@ -107,7 +134,7 @@ class CreateView(PromotionMixin, generic.CreateView):
 
     def get_success_url(self):
         messages.info(self.request, "Promotion created successfully")
-        return reverse('dashboard:promotion-update', 
+        return reverse('dashboard:promotion-update',
                        kwargs={'ptype': self.model.classname(),
                                'pk': self.object.id})
 
@@ -146,7 +173,7 @@ class CreateHandPickedProductListView(CreateView):
 # ============
 # UPDATE VIEWS
 # ============
-        
+
 
 class UpdateView(PromotionMixin, generic.UpdateView):
     actions = ('add_to_page', 'remove_from_page')
@@ -225,7 +252,7 @@ class UpdateHandPickedProductListView(UpdateView):
 # ============
 # DELETE VIEWS
 # ============
-        
+
 
 class DeleteView(generic.DeleteView):
     template_name = 'dashboard/promotions/delete.html'
