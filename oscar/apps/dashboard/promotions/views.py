@@ -96,8 +96,9 @@ class PageDetailView(generic.TemplateView):
         """
         for index, item in enumerate(data):
             page = PagePromotion.objects.get(pk=item)
-            page.display_order = index
-            page.save()
+            if page.display_order != index:
+                page.display_order = index
+                page.save()
 
 
 class PromotionMixin(object):
