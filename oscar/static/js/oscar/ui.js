@@ -22,7 +22,7 @@ $(document).ready(function()
             var ave_rating = 'Five'
         }
         $(this).find('.review_count')
-          .after('<p class=\"star ' + ave_rating + '\">' + ave_rating + ' star(s) by user reviews. <a href=\"#\">Add review</a></p>')
+          .after('<p class=\"star ' + ave_rating + '\">' + ave_rating + ' star(s) by user reviews. <a href=\"#reviews\">Add review</a></p>')
           .remove();
     });
     // Product star rating each review -- must improve this in python
@@ -113,19 +113,30 @@ $(document).ready(function()
     });
     $(".accordion dd").hide();
 
-    //scrollto function
-    var $scrollpage = $('body');
-    $('.span6 .star, .span6 .star a').click(function(){
-        $scrollpage.stop().scrollTo( $('.review_read'), 1000 );
-        return false;
-    });
-    $('a.read_decription').click(function(){
-        $scrollpage.stop().scrollTo( $('.sub-header'), 1000 );
-        return false;
-    });
-    $('.top_page a').click(function(){
-        $scrollpage.stop().scrollTo( $('body'), 1000 );
-        return false;
-    });
+    /* scroll to sections */
+  	$('.top_page a, .product_page a').click(function (e) {
+  		var section = $(this).attr('href');
+  		var sectionPosition = Math.floor($(section).offset().top);
+  		var currentPosition = Math.floor($(document).scrollTop());
+  		// when scrolling downwards
+  		if (sectionPosition > currentPosition) {
+  			$('html, body').animate({
+  				scrollTop: sectionPosition}, 500, function() {
+  				$('html, body').animate({
+  					scrollTop: sectionPosition
+  				});
+  			});
+  		}
+  		// when scrolling upwards
+  		else if (sectionPosition < currentPosition) {
+  			$('html, body').animate({
+  				scrollTop: sectionPosition}, 500, function() {
+  				$('html, body').animate({
+  					scrollTop: sectionPosition
+  				});
+  			});			
+  		}
+  		e.preventDefault();
+  	});
 });
     
