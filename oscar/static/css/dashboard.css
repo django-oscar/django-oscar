@@ -38,10 +38,19 @@ button {
 .primary-nav li {
   display: block;
 }
+.reports .primary-nav li.Reports > a,
+.orders .primary-nav li.Manage.orders > a,
+.users .primary-nav li.Users > a,
+.content-blocks .primary-nav li.Content.blocks > a,
+.catalogue .primary-nav li.Catalogue > a {
+  color: #049cdb;
+  text-shadow: 1px 1px 1px #fff;
+  filter: dropshadow(color=#ffffff, offx=1, offy=1);
+}
 .primary-nav li ul li {
   margin: 0px;
   border-top: 1px solid #ddd;
-  font-size: 10px;
+  font-size: 11px;
 }
 .primary-nav li ul li:first-child {
   border-top: 1px solid #bbb;
@@ -50,16 +59,28 @@ button {
   display: block;
   padding: 5px 15px;
 }
-.primary-nav li ul li a:hover {
-  background: #efefef;
-}
-.primary-nav .submenu {
-  font-weight: bold;
-  color: #444;
+.primary-nav > li > a {
+  background: #ddd;
   border-top: 1px solid #bbb;
   -webkit-box-shadow: inset -1px 1px 0px 0px rgba(255, 255, 255, 0.5);
   -moz-box-shadow: inset -1px 1px 0px 0px rgba(255, 255, 255, 0.5);
   box-shadow: inset -1px 1px 0px 0px rgba(255, 255, 255, 0.5);
+  font-weight: bold;
+  color: #444;
+}
+.primary-nav li:first-child > a {
+  border-top: none;
+  -moz-border-radius-topleft: 4px;
+  -moz-border-radius-topright: 4px;
+  -moz-border-radius-bottomright: 0px;
+  -moz-border-radius-bottomleft: 0px;
+  -webkit-border-radius: 4px 4px 0px 0px;
+  border-radius: 4px 4px 0px 0px;
+}
+.primary-nav li ul li a:hover {
+  background: #efefef;
+}
+.primary-nav .submenu {
   background: url(../img/ui/icon_arrow_left.png) no-repeat 94% 50% #dddddd;
 }
 .primary-nav .viewed {
@@ -85,6 +106,13 @@ button {
 .page-header {
   background-color: whiteSmoke;
   padding: 20px 20px 10px;
+}
+.page-header h1 {
+  font-size: 24px;
+  line-height: 36px;
+}
+h2 {
+  font-size: 18px;
 }
 .page-header.action {
   *zoom: 1;
@@ -122,6 +150,7 @@ button {
 }
 .page-header.action .pull_out.viewed {
   background-color: rgba(0, 0, 0, 0.05);
+  margin-bottom: 18px;
 }
 .page-header.action .pull_out, .page-header.action a.dd_menu {
   display: block;
@@ -143,6 +172,10 @@ button {
 .page-header.action a.dd_menu:hover {
   background: #444;
   color: #fff;
+}
+.controls ul {
+  margin-left: 0px;
+  list-style: none;
 }
 .file_upload {
   *zoom: 1;
@@ -184,14 +217,6 @@ button {
 }
 .order_table .row {
   margin-left: 0px;
-}
-.breadcrumb {
-  padding: 0px;
-  background: none;
-  border: none;
-  box-shadow: none;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
 }
 .tabs.product_managment {
   margin-bottom: 0px;

@@ -1,12 +1,25 @@
 {% extends 'dashboard/layout.html' %}
-
 {% load currency_filters %}
+{% block body_class %}orders{% endblock %}
+{% block title %}
+Order management | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url promotions:home %}">Dashboard</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active"><a href=".">Order management</a></li>
+</ul>
+{% endblock %}
 
 {% block header %}
 <div class="page-header action">
-    <h2>Order management</h2><a href="#" class="pull_out">Search Orders</a>
+    <h1>Order management</h1><a href="#" class="pull_out">Search Orders</a>
     <div class="orders_search">
-        <form action="." method="get">
+        <form action="." method="get" class="form-horizontal">
             {% include "partials/form_fields.html" with form=form %}
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">Search</button>
@@ -60,7 +73,7 @@
     {% include "catalogue/partials/pagination.html" %}
 {% endif %}
 
-<div class="alert alert-info">
+<div class="well well-info">
     <label>With selected orders: Download as CSV </label>
     <input type="radio" name="action" value="download_selected_orders" /> 
     <button type="submit" class="btn btn-primary">Download</button>

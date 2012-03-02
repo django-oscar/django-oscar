@@ -4,12 +4,31 @@
 {% load history_tags %}
 {% load basket_tags %}
 
+{% block title %}
+{{ product.title }} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url promotions:home %}">Home</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        {% with category=product.categories.all.0 %}
+        <a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
+        <span class="divider">/</span>
+        {% endwith %}
+    </li>
+    <li class="active"><a href=".">{{ product.get_title }}</a></li>
+</ul>
+{% endblock %}
+
 {% block sidebar %}
 {% endblock sidebar %}
 
 {% block header %}
 {% endblock header %}
-
 
 {% block content %}
 <article class="product_page"><!-- Start of product page -->
@@ -39,9 +58,9 @@
             
             <p><strong>Product Code:</strong> <code>{{ product.upc }}</code></p>
             {% if product.stockrecord %}
-			<p class="app-ico avaliability {{ product.stockrecord.availability_code }}">{{ product.stockrecord.availability }}</p>
+			<p class="app-ico avaliability {{ product.stockrecord.availability_code }}">{{ product.stockrecord.availability|truncatewords:2|slice:"-4" }}</p>
 			{% else %}
-				<p class="app-ico avaliability outstock">Not available</p>
+				<p class="app-ico avaliability outofstock">Not available</p>
             {% endif %}
              
             <hr/>

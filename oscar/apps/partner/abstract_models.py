@@ -87,6 +87,9 @@ class AbstractStockRecord(models.Model):
     # Stock level information
     num_in_stock = models.PositiveIntegerField(default=0, blank=True, null=True)
     
+    # Threshold for low-stock alerts
+    low_stock_threshold = models.PositiveIntegerField(blank=True, null=True)
+
     # The amount of stock allocated to orders but not fed back to the master
     # stock system.  A typical stock update process will set the num_in_stock
     # variable to a new value and reset num_allocated to zero
@@ -143,6 +146,13 @@ class AbstractStockRecord(models.Model):
         Return whether this stockrecord allows the product to be purchased
         """
         return get_partner_wrapper(self.partner.name).is_available_to_buy(self)
+
+    def is_purchase_permitted(self, user=None, quantity=1):
+        """
+        Return whether this stockrecord allows the product to be purchased by a 
+        specific user and quantity
+        """
+        return get_partner_wrapper(self.partner.name).is_purchase_permitted(self, user, quantity)
     
     @property
     def net_stock_level(self):
@@ -154,6 +164,12 @@ class AbstractStockRecord(models.Model):
         if self.num_allocated is None:
             return self.num_in_stock
         return self.num_in_stock - self.num_allocated
+
+    @property
+    def is_below_threshold(self):
+        if self.low_stock_threshold is None:
+            return False
+        return self.net_stock_level < self.low_stock_threshold
 
     @property
     def availability_code(self):
@@ -205,3 +221,30 @@ class AbstractStockRecord(models.Model):
             return "%s (%s): %s" % (self.partner.name, self.partner_sku, self.product.title)
         else:
             return "%s: %s" % (self.partner.name, self.product.title)
+
+
+class AbstractStockAlert(models.Model):
+    stockrecord = models.ForeignKey('partner.StockRecord', related_name='alerts')
+    threshold = models.PositiveIntegerField()
+    OPEN, CLOSED = 'Open', 'Closed'
+    status_choices = (
+        (OPEN, _('Open')),
+        (CLOSED, _('Closed')),
+    )
+    status = models.CharField(max_length=128, default=OPEN, choices=status_choices)
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_closed = models.DateTimeField(blank=True, null=True)
+
+    def close(self):
+        self.status = self.CLOSED
+        self.save()
+
+    def __unicode__(self):
+        return u'<stockalert for "%s" status %s>' % (self.stockrecord,
+                                                     self.status)
+
+    class Meta:
+        ordering = ('-date_created',)
+
+
+

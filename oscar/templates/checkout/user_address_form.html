@@ -3,7 +3,7 @@
 
 {% block shipping_address %}
 
-<form action="{{ form_url }}" method="post" class="form-stacked">
+<form action="{{ form_url }}" method="post" class="form-horizontal">
     <legend>Enter an address for your addressbook</legend>
     {% csrf_token %}
     {% include "partials/form_fields.html" with form=form %}

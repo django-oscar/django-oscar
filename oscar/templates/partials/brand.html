@@ -1,0 +1,17 @@
+{% load currency_filters %}
+
+<h1 class="span6"><a href="{% url promotions:home %}">Oscar</a><small> Domain-driven e-Commerce for Django</small></h1>
+<ul class="cart span6">
+    <li>
+        <div class="btn-group">
+            <a class="btn" href="{% url basket:summary %}">View Basket</a>
+            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"> <span class="caret"></span> </a>
+            <ul class="dropdown-menu span9">
+                <li>
+                    {% include "basket/partials/basket_quick.html" %}
+                </li>
+            </ul>
+        </div>
+    </li>
+    <li class="cart_summary"><strong>Basket total: <span>{{ basket.total_incl_tax|currency }}</span></strong></li>
+</ul><!-- /cart -->

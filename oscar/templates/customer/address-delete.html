@@ -1,6 +1,9 @@
 {% extends "layout.html" %}
-
 {% load currency_filters %}
+
+{% block title %}
+Delete address? | {{ block.super }}
+{% endblock %}
 
 {% block header %}
 <div class="page-header">
@@ -14,7 +17,7 @@
     <h3>Confirm address deletion</h3>
 </div>
 <h3>Confirm address deletion</h3>
-<form action="." method="post" class="form-stacked">
+<form action="." method="post" class="form-horizontal">
     {% csrf_token %}
     {% include "partials/form_fields.html" with form=form %}
     <div class="form-actions">

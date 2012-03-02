@@ -4,24 +4,54 @@ from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 
+from oscar.apps.dashboard.catalogue import forms
 from oscar.core.loading import get_classes
-ProductForm, StockRecordForm = get_classes('dashboard.catalogue.forms', ('ProductForm', 'StockRecordForm'))
+ProductForm, StockRecordForm, StockAlertSearchForm = get_classes(
+    'dashboard.catalogue.forms', ('ProductForm', 'StockRecordForm',
+                                  'StockAlertSearchForm'))
 Product = get_model('catalogue', 'Product')
 ProductClass = get_model('catalogue', 'ProductClass')
 StockRecord = get_model('partner', 'StockRecord')
+StockAlert = get_model('partner', 'StockAlert')
 
 
 class ProductListView(generic.ListView):
     template_name = 'dashboard/catalogue/product_list.html'
     model = Product
     context_object_name = 'products'
+    form_class = forms.ProductSearchForm
+    base_description = 'Products'
     paginate_by = 20
 
     def get_context_data(self, **kwargs):
         ctx = super(ProductListView, self).get_context_data(**kwargs)
         ctx['product_classes'] = ProductClass.objects.all()
+        ctx['form'] = self.form
+        ctx['queryset_description'] = self.description
         return ctx
 
+    def get_queryset(self):
+        """
+        Build the queryset for this list and also update the title that
+        describes the queryset
+        """
+        self.description = self.base_description
+        queryset = self.model.objects.all().order_by('-date_created')
+        self.form = self.form_class(self.request.GET)
+        if not self.form.is_valid():
+            return queryset
+
+        data = self.form.cleaned_data
+
+        if data['upc']:
+            queryset = queryset.filter(upc=data['upc'])
+            self.description += " including an item with UPC '%s'" % data['upc']
+
+        if data['title']:
+            queryset = queryset.filter(title__istartswith=data['title']).distinct()
+            self.description += " including an item with title matching '%s'" % data['title']
+
+        return queryset
 
 class ProductCreateRedirectView(generic.RedirectView):
 
@@ -114,3 +144,28 @@ class ProductUpdateView(generic.UpdateView):
         messages.success(self.request, "Updated product '%s'" %
                          self.object.title)
         return reverse('dashboard:catalogue-product-list')
+
+
+class StockAlertListView(generic.ListView):
+    template_name = 'dashboard/catalogue/stockalert_list.html'
+    model = StockAlert
+    context_object_name = 'alerts'
+    paginate_by = 20
+
+    def get_context_data(self, **kwargs):
+        ctx = super(StockAlertListView, self).get_context_data(**kwargs)
+        ctx['form'] = self.form
+        ctx['description'] = self.description
+        return ctx
+
+    def get_queryset(self):
+        if 'status' in self.request.GET:
+            self.form = StockAlertSearchForm(self.request.GET)
+            if self.form.is_valid():
+                status = self.form.cleaned_data['status']
+                self.description = 'Alerts with status "%s"' % status
+                return self.model.objects.filter(status=status)
+        else:
+            self.description = 'All alerts'
+            self.form = StockAlertSearchForm()
+        return self.model.objects.all()

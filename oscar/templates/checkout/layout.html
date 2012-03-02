@@ -4,28 +4,13 @@
 {% load promotion_tags %}
 {% load category_tags %}
 
+{% block extrahead %}
+    <!-- Responsive - will need to be minified -->
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/responsive.css" />
+{% endblock %}
+
 {% block layout %}
-    <div class="navbar accounts">
-        <div class="navbar-inner">
-            <div class="container-fluid">
-                <a class="brand hidden" href="{% url promotions:home %}">Oscar</a>
-                <ul class="nav pull-right">
-    				<li><a href="#">Home</a></li>
-    				<li><a href="#about">About</a></li>
-    				<li><a href="#contact">Contact</a></li>
-    				{% if user.is_authenticated %}
-						{% if user.is_staff %}
-						<li><a href="{% url dashboard:index %}">Dashboard</a></li>
-						{% endif %}
-						<li><a href="{% url customer:summary %}">Profile</a></li>
-						<li><a href="{% url customer:logout %}">Logout</a></li>
-    				{% else %}
-						<li><a href="{% url customer:login %}">Login</a></li>
-    				{% endif %}
-                </ul>
-            </div>
-        </div><!-- /navbar-inner -->
-    </div><!-- /navbar -->
+    {% include "partials/nav_accounts.html" %}
     
     <header class="header container-fluid">
         <div class="row-fluid">
@@ -58,18 +43,17 @@
             </div><!-- /navbar-inner -->
         </div><!-- /navbar -->
     </header><!-- /header -->
+    {% for message in messages %}
+       <div class="alert fade in alert-{{ message.tags }}">
+       	<a class="close" data-dismiss="alert">x</a>
+       	{{ message }}
+       </div>
+    {% endfor %}
     <div class="container-fluid page">
        {% block header %}
        {% endblock %}
        
        <div class="page_inner">
-            {% for message in messages %}
-        	<div class="alert alert-{{ message.tags }}">
-        		<a class="close">x</a>
-        		{{ message }}
-        	</div>
-        	{% endfor %}
-        	
         	<!-- The main nav on checkout pages contain links to modal flatpages -->   
             {% block modal %}
                 {% load flatpages %}
@@ -106,4 +90,8 @@
         </div><!-- /page_inner -->
     </div>
     {% include "partials/footer.html" %}
+{% endblock %}
+
+{# Block for additional scripts #}
+{% block extrascripts %}
 {% endblock %}

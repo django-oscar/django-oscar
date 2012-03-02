@@ -3,6 +3,12 @@ from django.contrib.admin.views.decorators import staff_member_required
 
 from oscar.core.application import Application
 from oscar.apps.dashboard.orders import views
+from oscar.apps.dashboard.nav import register, Node
+
+node = Node('Manage orders')
+node.add_child(Node('Orders', 'dashboard:order-list'))
+node.add_child(Node('Statistics', 'dashboard:order-summary'))
+register(node)
 
 
 class OrdersDashboardApplication(Application):

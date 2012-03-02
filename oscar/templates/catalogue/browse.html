@@ -2,8 +2,22 @@
 {% load currency_filters %}
 {% load basket_tags %}
 
+{% block title %}
+{{ summary }} | {{ block.super }}
+{% endblock %}
+
 {% block header %}
 {% endblock header %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url promotions:home %}">Home</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active"><a href=".">{{ summary }}</a></li>
+</ul>
+{% endblock %}
 
 {% block sidebar %}
 <div class="row-fluid">
@@ -36,12 +50,13 @@
     </div>
     {% if products.count %}
     
-    {% if page_obj %}
-        {% include "catalogue/partials/pagination.html" %}
-    {% endif %}
+
 
     <section>
         <div class="mod">
+            {% if page_obj %}
+                {% include "catalogue/partials/pagination.html" %}
+            {% endif %}
             <ol class="products four">
                 {% for product in products %}
                 <li>
@@ -49,12 +64,12 @@
                 </li>
                 {% endfor %}
             </ol>
+            {% if page_obj %}
+                {% include "catalogue/partials/pagination.html" %}
+            {% endif %}
         </div>
     <section>
 
-    {% if page_obj %}
-        {% include "catalogue/partials/pagination.html" %}
-    {% endif %}
 
     {% else %}
 

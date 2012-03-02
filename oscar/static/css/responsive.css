@@ -7,24 +7,6 @@
  *
  * Designed and built with all the love in the world @twitter by @mdo and @fat.
  */
-.well {
-  min-height: 20px;
-  padding: 19px;
-  margin-bottom: 20px;
-  background-color: #f5f5f5;
-  border: 1px solid #eee;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
-  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
-}
-.well blockquote {
-  border-color: #ddd;
-  border-color: rgba(0, 0, 0, 0.15);
-}
 .hidden {
   display: none;
   visibility: hidden;
@@ -100,6 +82,169 @@
   }
   .carousel-caption {
     position: static;
+  }
+  .cart, h1.span6 {
+    display: none!important;
+  }
+  .navbar.accounts {
+    margin-bottom: 0px;
+  }
+  .navbar.accounts .brand.hidden {
+    display: inline;
+    padding: 6px 10px;
+    font-size: 18px;
+  }
+  .navbar.accounts span {
+    display: none;
+  }
+  .navbar.accounts .nav > li {
+    float: left;
+  }
+  .navbar.primary {
+    margin-top: 0px;
+  }
+  .navbar.primary .brand.hidden {
+    display: inline;
+    visibility: visible;
+  }
+  .navbar.primary .navbar-inner {
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    border-radius: 0px;
+  }
+  .brand.hidden {
+    visibility: visible;
+  }
+  /*Remove float, widths, heights*/
+  .product_title,
+  .product_assets,
+  .product_description,
+  .product_related,
+  .review_content,
+  .review_votes,
+  .main,
+  .products li,
+  .five li,
+  .four li,
+  .three li,
+  .two li,
+  .product_pod .product_price,
+  .footer_links li,
+  .footer_links .top_page {
+    float: none;
+    margin: 0px;
+    width: auto;
+    height: auto;
+  }
+  .products li {
+    border-bottom: 1px solid #eeeeee;
+    padding-bottom: 18px;
+    margin-bottom: 18px;
+  }
+  .products li .product_pod {
+    margin-bottom: 15px;
+    height: auto!important;
+    padding: 0px;
+  }
+  .products li .product_pod .star {
+    clear: none;
+    margin-left: 28.749999999999996%;
+  }
+  .products li .product_pod .avaliability {
+    text-align: left;
+  }
+  .products li .product_pod .product_price h4 {
+    margin-bottom: 0px;
+    display: inline;
+  }
+  .products li .product_pod .product_price h4 span, .products li .product_pod .product_price h4 del {
+    float: none;
+  }
+  .products li .product_pod .product_price .btn {
+    width: auto;
+    display: block;
+    padding: 5px 14px 6px;
+    margin-top: 5px;
+  }
+  .products li .product_pod .image_container {
+    width: 25%;
+    float: left;
+    margin-right: 15px;
+    margin-bottom: 0px;
+  }
+  .products li .product_pod .product_price {
+    position: static;
+  }
+  .star {
+    padding-left: 70px;
+    background: url(../../img/ui/bg-stars-small.png) 0px -4px no-repeat;
+    height: 11px;
+    line-height: 11px;
+  }
+  .star.One {
+    background-position: 0px -18px;
+  }
+  .star.Two {
+    background-position: 0px -32px;
+  }
+  .star.Three {
+    background-position: 0px -47px;
+  }
+  .star.Four {
+    background-position: 0px -61px;
+  }
+  .star.Five {
+    background-position: 0px -75px;
+  }
+  .review_content div {
+    border: none;
+  }
+  .review_votes div {
+    padding: 0px;
+  }
+  .footer_links {
+    border-bottom: none;
+  }
+  .footer_links li {
+    border-left: none;
+    margin: 0px;
+    padding: 0px;
+  }
+  .navbar #browse ul {
+    width: auto!important;
+  }
+  .navbar #browse li {
+    border: none!important;
+  }
+  .navbar #browse .dropdown-menu {
+    margin: 0;
+  }
+  .navbar #browse .nav.sub-nav {
+    position: static;
+    visibility: visible;
+  }
+  .navbar #browse .nav.sub-nav li a {
+    padding: 6px 15px;
+  }
+  #browse .dropdown-menu > li:hover .sub-nav, #browse .dropdown-menu > li > a:hover .sub-nav, #browse .dropdown-menu > li:hover {
+    background: none;
+    border: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    -webkit-background-clip: none;
+    -moz-background-clip: none;
+    background-clip: none;
+  }
+  .header {
+    text-shadow: none;
+  }
+  .alert {
+    /*  Position alerts at the bottom of the browser window*/
+  
+    position: static;
+    width: auto;
+    margin-bottom: 0px;
   }
 }
 @media (max-width: 768px) {

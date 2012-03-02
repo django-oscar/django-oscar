@@ -3,8 +3,8 @@ from django.conf import settings
 from django.db.models import get_model
 from django.utils.translation import gettext_lazy as _
 
-basketline_model = get_model('basket', 'line')
-basket_model = get_model('basket', 'basket')
+Line = get_model('basket', 'line')
+Basket = get_model('basket', 'basket')
 Product = get_model('catalogue', 'product')
 
 
@@ -13,6 +13,11 @@ class BasketLineForm(forms.ModelForm):
 
     def clean_quantity(self):
         qty = self.cleaned_data['quantity']
+        self.check_max_allowed_quantity(qty)
+        self.check_permission(qty)
+        return qty
+
+    def check_max_allowed_quantity(self, qty):
         basket_threshold = settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD
         if basket_threshold:
             total_basket_quantity = self.instance.basket.num_items
@@ -25,10 +30,16 @@ class BasketLineForm(forms.ModelForm):
                             'threshold': basket_threshold,
                             'basket': total_basket_quantity,
                     })
-        return qty
+
+    def check_permission(self, qty):
+        product = self.instance.product
+        is_available, reason = product.is_purchase_permitted(user=None,
+                                                             quantity=qty)
+        if not is_available:
+            raise forms.ValidationError(reason)
 
     class Meta:
-        model = basketline_model
+        model = Line
         exclude = ('basket', 'product', 'line_reference', )
 
 
@@ -36,7 +47,7 @@ class SavedLineForm(forms.ModelForm):
     move_to_basket = forms.BooleanField(initial=False, required=False)
 
     class Meta:
-        model = basketline_model
+        model = Line
         exclude = ('basket', 'product', 'line_reference', 'quantity', )
 
 
@@ -63,9 +74,10 @@ class AddToBasketForm(forms.Form):
     product_id = forms.IntegerField(widget=forms.HiddenInput(), min_value=1)
     quantity = forms.IntegerField(initial=1, min_value=1)
 
-    def __init__(self, basket, instance, *args, **kwargs):
+    def __init__(self, basket, user, instance, *args, **kwargs):
         super(AddToBasketForm, self).__init__(*args, **kwargs)
         self.basket = basket
+        self.user = user
         self.instance = instance
         if instance:
             if instance.is_group:
@@ -73,12 +85,22 @@ class AddToBasketForm(forms.Form):
             else:
                 self._create_product_fields(instance)
 
-    def clean_product_id(self):
+    def clean(self):
         id = self.cleaned_data['product_id']
         product = Product.objects.get(id=id)
-        if not product.has_stockrecord or not product.stockrecord.is_available_to_buy:
-            raise forms.ValidationError(_("This product is not available for purchase"))
-        return id
+        qty = self.cleaned_data.get('quantity', 1)
+        try:
+            line = self.basket.lines.get(product=product)
+        except Line.DoesNotExist:
+            desired_qty = qty
+        else:
+            desired_qty = qty + line.quantity
+
+        is_available, reason = product.is_purchase_permitted(user=self.user, 
+                                                             quantity=desired_qty)
+        if not is_available:
+            raise forms.ValidationError(reason)
+        return self.cleaned_data
 
     def clean_quantity(self):
         qty = self.cleaned_data['quantity']

@@ -8,11 +8,14 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist
 
 from extra_views import ModelFormSetView
-from oscar.apps.basket.forms import BasketLineForm, AddToBasketForm, \
-    BasketVoucherForm, SavedLineForm, ProductSelectionForm
 from oscar.apps.basket.signals import basket_addition
-from oscar.core.loading import import_module
-import_module('offer.utils', ['Applicator'], locals())
+from oscar.core.loading import get_class, get_classes
+Applicator = get_class('offer.utils', 'Applicator')
+BasketLineForm, AddToBasketForm, BasketVoucherForm, \
+        SavedLineForm, ProductSelectionForm = get_classes(
+            'basket.forms', ('BasketLineForm', 'AddToBasketForm',
+                             'BasketVoucherForm', 'SavedLineForm',
+                             'ProductSelectionForm'))
 
 
 class BasketView(ModelFormSetView):
@@ -56,6 +59,8 @@ class BasketView(ModelFormSetView):
                     needs_auth = True
         if needs_auth:
             messages.error(self.request, "You can't save an item for later if you're not logged in!")
+        else:
+            messages.success(self.request, _("Basket updated"))
         return super(BasketView, self).formset_valid(formset)
 
     def move_line_to_saved_basket(self, line):
@@ -88,6 +93,7 @@ class BasketAddView(FormView):
             kwargs['instance'] = product_select_form.cleaned_data['product_id']
         else:
             raise Http404()
+        kwargs['user'] = self.request.user
         kwargs['basket'] = self.request.basket
         return kwargs
 
@@ -227,18 +233,3 @@ class SavedView(ModelFormSetView):
 
     def formset_invalid(self, formset):
         return HttpResponseRedirect(self.request.META.get('HTTP_REFERER', reverse('basket:summary')))
-
-
-
-#    def do_bulk_load(self, basket):
-#        num_additions = 0
-#        num_not_found = 0
-#        for sku in re.findall(r"[\d -]{5,}", self.request.POST['source_text']):
-#            try:
-#                item = Product.objects.get(upc=sku)
-#                basket.add_product(item)
-#                num_additions += 1
-#            except Product.DoesNotExist:
-#                num_not_found += 1
-#        messages.info(self.request, "Added %d items to your basket (%d missing)" % (num_additions, num_not_found))
-#

@@ -583,7 +583,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             event_type = None
         else:
             # Create order event
-            CommunicationEvent._default_manager.create(order=order, type=event_type)
+            CommunicationEvent._default_manager.create(order=order, event_type=event_type)
             messages = event_type.get_messages(ctx)
 
         if messages and messages['body']:      
@@ -620,7 +620,14 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             messages.error(request, _("Please choose a shipping method"))
             return HttpResponseRedirect(reverse('checkout:shipping-method'))
         return self.submit(request.basket, **kwargs)
-    
+
+    def can_basket_be_submitted(self, basket):
+        for line in basket.lines.all():
+            is_permitted, reason = line.product.is_purchase_permitted(self.request.user, line.quantity)
+            if not is_permitted:
+                return False, reason, reverse('basket:summary')
+        return True, None, None
+
     def submit(self, basket, **kwargs):
         """
         Submit a basket for order placement.
@@ -637,6 +644,12 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         if basket.is_empty:
             messages.error(self.request, _("This order cannot be submitted as the basket is empty"))
             url = self.request.META.get('HTTP_REFERER', reverse('checkout:shipping-address'))
+            return HttpResponseRedirect(url)
+
+        # Domain-specific checks on the basket
+        is_valid, reason, url = self.can_basket_be_submitted(basket)
+        if not is_valid:
+            messages.error(self.request, reason)
             return HttpResponseRedirect(url)
 
         # We generate the order number first as this will be used

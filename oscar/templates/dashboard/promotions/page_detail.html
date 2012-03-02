@@ -1,5 +1,8 @@
 {% extends 'dashboard/layout.html' %}
 
+{% block title %}
+Content blocks for page {{ page }} | {{ block.super }}
+{% endblock %}
 
 {% block dashboard_content %}
 
