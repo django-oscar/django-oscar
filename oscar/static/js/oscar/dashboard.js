@@ -9,12 +9,35 @@ oscar.dashboard = {
         save_order: function(event, ui) {
             // todo - save order of promotions
             console.log(event, ui);
+
+            // Get the csrf token, otherwise django will not accept the
+            // POST request.
+            var cookies = document.cookie.split(';');
+            var csrf = '';
+            $.each(cookies, function(index, cookie) {
+                cookie_parts = $.trim(cookie).split('=');
+                if (cookie_parts[0] == 'csrftoken') {
+                    csrf = cookie_parts[1];
+                }
+            });
+            //ui.csrfmiddlewaretoken = csrf;
+            var serial = $(this).sortable("serialize");
+            serial = serial + '&csrfmiddlewaretoken=' + csrf;
+            $.ajax({
+                type: 'POST',
+                data: serial,
+                dataType: "json",
+                url: '#',
+                beforeSend: function(xhr, sttngs) {
+                    xhr.setRequestHeader("X-CSRFToken", csrf);
+                },
+            });
         }
     }
 }
 
-$(document).ready(function() 
-{   
+$(document).ready(function()
+{
     //table font size increase decrease
     $('.fontsize li').click(function()
     {
@@ -23,12 +46,12 @@ $(document).ready(function()
         var num = parseFloat(os, 10);// gets rid of the px
         $('.bordered-table').css('font-size', num / 1.1 + uom);
         if (this.id == 'larger') {
-            $('.bordered-table').css('font-size', num * 1.1 + uom);    
-        }  
+            $('.bordered-table').css('font-size', num * 1.1 + uom);
+        }
     });
 
     //side navigation accordion
-    $('.primary-nav > li > ul, .orders_search').each(function(index) 
+    $('.primary-nav > li > ul, .orders_search').each(function(index)
     {
         $(this).css('height', $(this).height());
     });
