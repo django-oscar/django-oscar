@@ -1,4 +1,4 @@
-var oscar = oscar || {}
+var oscar = oscar || {};
 oscar.dashboard = {
     promotions: {
         init: function() {
@@ -11,7 +11,7 @@ oscar.dashboard = {
             console.log(event, ui);
         }
     }
-}
+};
 
 $(document).ready(function() 
 {   

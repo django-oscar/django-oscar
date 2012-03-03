@@ -11,15 +11,15 @@ $(document).ready(function()
         });
         var ave_rating = sum_rating_count / sum_total_reviews *10;
         if (ave_rating <= 2) {
-            var ave_rating = 'One'
+            ave_rating = 'One';
         } else if (ave_rating <= 4) {
-            var ave_rating = 'Two'
+            ave_rating = 'Two';
         } else if (ave_rating <= 6) {
-            var ave_rating = 'Three'
+            ave_rating = 'Three';
         } else if (ave_rating <= 8) {
-            var ave_rating = 'Four'
+            ave_rating = 'Four';
         } else if (ave_rating <= 10) {
-            var ave_rating = 'Five'
+            ave_rating = 'Five';
         }
         $(this).find('.review_count')
           .after('<p class=\"star ' + ave_rating + '\">' + ave_rating + ' star(s) by user reviews. <a href=\"#\">Add review</a></p>')
@@ -34,19 +34,19 @@ $(document).ready(function()
             user_rating += parseFloat($(this).text());
         });
         if (user_rating == 1) {
-            var user_rating = 'One'
+            user_rating = 'One';
         }
         else if (user_rating == 2) {
-            var user_rating = 'Two'
+            user_rating = 'Two';
         }
         else if (user_rating == 3) {
-            var user_rating = 'Three'
+            user_rating = 'Three';
         }
         else if (user_rating == 4) {
-            var user_rating = 'Four'
+            user_rating = 'Four';
         }
         else if (user_rating == 5) {
-            var user_rating = 'Five'
+            user_rating = 'Five';
         }
         $(this)
           .find('h3')
