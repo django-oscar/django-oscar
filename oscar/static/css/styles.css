@@ -2870,7 +2870,7 @@ body {
   margin-bottom: 0px;
 }
 /* Account Navbar */
-.navbar.accounts span {
+.navbar.accounts .nav div {
   padding: 10px 10px 11px;
   line-height: 19px;
   display: block;
