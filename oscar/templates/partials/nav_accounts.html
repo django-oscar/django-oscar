@@ -1,7 +1,6 @@
 <div id="top_page" class="navbar accounts">
 	<div class="navbar-inner">
 		<div class="container-fluid">
-			<a class="brand hidden" href="{% url promotions:home %}">Oscar</a>
 			<ul class="nav pull-right">
 				{% if user.is_authenticated %}
 				<li><div>Welcome <em>{{ user.username }}</em></div></li>	

@@ -83,9 +83,6 @@
   .carousel-caption {
     position: static;
   }
-  .cart, h1.span6 {
-    display: none!important;
-  }
   .navbar.accounts {
     margin-bottom: 0px;
   }
@@ -94,28 +91,9 @@
     padding: 6px 10px;
     font-size: 18px;
   }
-  .navbar.accounts span {
+  .navbar.accounts .nav > li div, .navbar.accounts .nav > li:last-child {
     display: none;
   }
-  .navbar.accounts .nav > li {
-    float: left;
-  }
-  .navbar.primary {
-    margin-top: 0px;
-  }
-  .navbar.primary .brand.hidden {
-    display: inline;
-    visibility: visible;
-  }
-  .navbar.primary .navbar-inner {
-    -webkit-border-radius: 0px;
-    -moz-border-radius: 0px;
-    border-radius: 0px;
-  }
-  .brand.hidden {
-    visibility: visible;
-  }
-  /*Remove float, widths, heights*/
   .product_title,
   .product_assets,
   .product_description,
@@ -181,7 +159,7 @@
   }
   .star {
     padding-left: 70px;
-    background: url(../../img/ui/bg-stars-small.png) 0px -4px no-repeat;
+    background: url(../img/ui/bg-stars-small.png) 0px -4px no-repeat;
     height: 11px;
     line-height: 11px;
   }
@@ -213,35 +191,6 @@
     border-left: none;
     margin: 0px;
     padding: 0px;
-  }
-  .navbar #browse ul {
-    width: auto!important;
-  }
-  .navbar #browse li {
-    border: none!important;
-  }
-  .navbar #browse .dropdown-menu {
-    margin: 0;
-  }
-  .navbar #browse .nav.sub-nav {
-    position: static;
-    visibility: visible;
-  }
-  .navbar #browse .nav.sub-nav li a {
-    padding: 6px 15px;
-  }
-  #browse .dropdown-menu > li:hover .sub-nav, #browse .dropdown-menu > li > a:hover .sub-nav, #browse .dropdown-menu > li:hover {
-    background: none;
-    border: none;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;
-    -webkit-background-clip: none;
-    -moz-background-clip: none;
-    background-clip: none;
-  }
-  .header {
-    text-shadow: none;
   }
   .alert {
     /*  Position alerts at the bottom of the browser window*/
@@ -466,7 +415,7 @@
     margin: 0 0 0 -5px;
   }
   .navbar .nav-collapse {
-    clear: left;
+    clear: both;
   }
   .navbar .nav {
     float: none;
@@ -543,6 +492,83 @@
   .nav-collapse {
     overflow: hidden;
     height: 0;
+  }
+  .header {
+    text-shadow: none;
+  }
+  .cart, h1.span6 {
+    display: none!important;
+  }
+  .navbar.accounts {
+    margin-bottom: 0px;
+  }
+  .navbar.accounts .brand.hidden {
+    display: inline;
+    padding: 6px 10px;
+    font-size: 18px;
+  }
+  .navbar.accounts .nav.pull-right {
+    float: right;
+    margin-bottom: 0px;
+  }
+  .navbar.accounts .nav > li {
+    float: left;
+  }
+  .navbar.accounts .nav > li div {
+    padding: 6px 15px;
+  }
+  .navbar.primary {
+    margin-top: 0px;
+  }
+  .navbar.primary .brand.hidden {
+    display: inline;
+    visibility: visible;
+  }
+  .navbar.primary .navbar-inner {
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    border-radius: 0px;
+  }
+  .brand.hidden, .btn-cart.hidden {
+    visibility: visible;
+  }
+  .btn-cart {
+    color: #fff;
+    line-height: 12px;
+    padding: 7px 10px 6px;
+    text-shadow: none;
+  }
+  .btn-cart:hover {
+    color: #fff;
+  }
+  .navbar #browse > a {
+    display: none;
+  }
+  .navbar #browse ul {
+    width: auto!important;
+  }
+  .navbar #browse li {
+    border: none!important;
+  }
+  .navbar #browse .dropdown-menu {
+    margin: 0;
+  }
+  .navbar #browse .nav.sub-nav {
+    position: static;
+    visibility: visible;
+  }
+  .navbar #browse .nav.sub-nav li a {
+    padding: 6px 15px;
+  }
+  #browse .dropdown-menu > li:hover .sub-nav, #browse .dropdown-menu > li > a:hover .sub-nav, #browse .dropdown-menu > li:hover {
+    background: none;
+    border: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    -webkit-background-clip: none;
+    -moz-background-clip: none;
+    background-clip: none;
   }
 }
 @media (min-width: 980px) {

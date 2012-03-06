@@ -57,21 +57,11 @@ $(document).ready(function()
     });
     
     
-    var $window_width = $(window).width(); // Width of the window
+    var window_width = $(window).width(); // Width of the window
         $browse_width = $('aside.span3').outerWidth(),// Width of main navigation
         $browse_height = $('#browse > .dropdown-menu').outerHeight();// Height of main navigation
     
-    if ($window_width > 480) {
-      
-      // set width of nav dropdown on the homepage
-      $('#browse').find('> .dropdown-menu').css({
-        width: $browse_width
-      });
-      // set margin top of aside allow space for home navigation
-      $('.home aside.span3').css({
-        marginTop: $browse_height
-      });
-      
+    if (window_width > 480) {
       // This activates elastislide
       var es_carousel = $('.es-carousel-wrapper'),
           product_page = $('.product_page').length;
@@ -90,9 +80,18 @@ $(document).ready(function()
           onClick:  true
         });
       }
-      
-    }    
-    
+    }
+    if (window_width > 980) {
+      // set width of nav dropdown on the homepage
+      $('#browse').find('> .dropdown-menu').css({
+        width: $browse_width
+      });
+      // set margin top of aside allow space for home navigation
+      $('.home aside.span3').css({
+        marginTop: $browse_height
+      });
+    }
+
     
     // This activates the promotional banner carousel
     $('#myCarousel').carousel({

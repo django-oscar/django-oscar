@@ -97,7 +97,6 @@
     padding-left: 10px;
     padding-right: 10px;
   }
-
   // Modals
   .modal {
     position: absolute;
@@ -117,11 +116,7 @@
   .carousel-caption {
     position: static;
   }
-  .cart, 
-  h1.span6
-   {
-    display:none!important;
-  }
+  // Navbar Accounts
   .navbar.accounts {
     margin-bottom:0px;
     .brand.hidden {
@@ -129,27 +124,14 @@
       padding:6px 10px;
       font-size:18px;
     }
-    span {
-      display:none;
-    }
     .nav > li {
-      float:left;
+      div,
+      &:last-child {
+        display:none;
+      }
     }
   }
-  .navbar.primary {
-    margin-top:0px;
-    .brand.hidden {
-      display: inline;
-      visibility: visible;
-    }
-    .navbar-inner {
-      .border-radius(0px);
-    }
-  }
-  .brand.hidden {
-    visibility: visible;
-  }
-  /*Remove float, widths, heights*/
+  // Product floats
   .product_title,
   .product_assets,
   .product_description,
@@ -170,6 +152,7 @@
     width:auto;
     height:auto;
   }
+  // Product
   .products {
     li {
       border-bottom:1px solid @grayLighter;
@@ -218,9 +201,10 @@
       }
     }
   }
+  // Reviews
   .star {
     padding-left:70px;
-  	background:url(../../img/ui/bg-stars-small.png) 0px -4px no-repeat;
+  	background:url(../img/ui/bg-stars-small.png) 0px -4px no-repeat;
   	height:11px;
   	line-height:11px;
   }
@@ -249,6 +233,7 @@
       padding:0px;
     }
   }
+  // Footer
   .footer_links {
     border-bottom:none;
     li {
@@ -257,41 +242,7 @@
       padding:0px;
     }
   }
-  .navbar #browse {
-    ul {
-      width:auto!important;
-    }
-    li {
-      border:none!important;
-    }
-    .dropdown-menu {
-      margin: 0;
-    }
-    .nav.sub-nav {
-      position:static;
-      visibility:visible;
-      li {
-        a {
-          padding: 6px 15px;
-        }
-      }
-    }
-  }
-  #browse .dropdown-menu > li:hover .sub-nav,
-  #browse .dropdown-menu > li > a:hover .sub-nav,
-  #browse .dropdown-menu > li:hover {
-    background:none;
-    border:none;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;
-    -webkit-background-clip: none;
-    -moz-background-clip: none;
-    background-clip: none;
-  }
-  .header {
-    text-shadow:none;
-  }
+  // Alerts
   .alert {
   /*  Position alerts at the bottom of the browser window*/
     position: static;
@@ -381,7 +332,7 @@
   }
   // Nav collapse clears brand
   .navbar .nav-collapse {
-    clear: left;
+    clear: both;
   }
   // Block-level the nav
   .navbar .nav {
@@ -464,6 +415,94 @@
   .nav-collapse {
     overflow: hidden;
     height: 0;
+  }
+  // Header
+  .header {
+    text-shadow:none;
+  }
+  // Cart
+  .cart, 
+  h1.span6
+   {
+    display:none!important;
+  }
+  // Navbar Accounts
+  .navbar.accounts {
+    margin-bottom:0px;
+    .brand.hidden {
+      display: inline;
+      padding:6px 10px;
+      font-size:18px;
+    }
+    .nav.pull-right {
+      float:right;
+      margin-bottom:0px;
+    }
+    .nav > li {
+      float:left;
+      div {
+        padding: 6px 15px;
+      }
+    }
+  }
+  // Navbar Primary
+  .navbar.primary {
+    margin-top:0px;
+    .brand.hidden {
+      display: inline;
+      visibility: visible;
+    }
+    .navbar-inner {
+      .border-radius(0px);
+    }
+  }
+  .brand.hidden,
+  .btn-cart.hidden {
+    visibility: visible;
+  }
+  .btn-cart {
+    color:#fff;
+    line-height:12px;
+    padding:7px 10px 6px;
+    text-shadow: none;
+    &:hover {
+     color:#fff; 
+    }
+  }
+  .navbar #browse {
+    > a {
+        display:none;
+    }
+    ul {
+      width:auto!important;
+    }
+    li {
+      border:none!important;
+    }
+    .dropdown-menu {
+      margin: 0;
+    }
+    .nav.sub-nav {
+      position:static;
+      visibility:visible;
+      li {
+        a {
+          padding: 6px 15px;
+        }
+      }
+    }
+  }
+  #browse .dropdown-menu > li:hover .sub-nav,
+  #browse .dropdown-menu > li > a:hover .sub-nav,
+  #browse .dropdown-menu > li:hover {
+    background:none;
+    border:none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    -webkit-background-clip: none;
+    -moz-background-clip: none;
+    background-clip: none;
   }
 }
 
