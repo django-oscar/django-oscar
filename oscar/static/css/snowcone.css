@@ -66,7 +66,7 @@ Created: 01.06.2012 (US format date)
 /*========
 [=3:Ensure legacy browsers still see icons]
 ======== */ 		
-	.app-legacy_ico{font-family:'SnowconeRegular';}
+	.app-legacy_ico{font-family:'SnowconeRegular';margin-right:4px;}
 
 	
 

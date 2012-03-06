@@ -1,17 +1,53 @@
 {% extends 'dashboard/layout.html' %}
-
+{% block body_class %}promotions{% endblock %}
 {% block title %}
 Content blocks for page {{ page }} | {{ block.super }}
 {% endblock %}
 
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url promotions:home %}">Dashboard</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active"><a href=".">Promotions</a></li>
+</ul>
+{% endblock %}
+
 {% block dashboard_content %}
-
-<h1>Content blocks for page {{ page }}</h1>
-
+<!-- {% block header %}
+<div class="page-header">
+	<h1>Content blocks for page {{ page }}</h1>
+</div>
+{% endblock %} -->
 {% for position in positions %}
-<h2>Edit promotions in position '{{ position.name }}'</h2>
+<div class="sub-header">
+	<h2>Edit promotions in position '{{ position.name }}'</h2>
+</div>
 {% if position.promotions %}
-<ul class="promotion_list">
+<table class="table table-striped table-bordered">
+	<thead>
+		<tr>
+			<th>Promotion Name</th>
+			<th>Type</th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for promotion in position.promotions %}
+		<tr>
+			<td>{{ promotion.content_object.name }}</td>
+			<td>{{ promotion.content_object.type }}</td>
+			<td>
+				<a href="{% url dashboard:promotion-update promotion.content_object.code promotion.content_object.id %}" class="btn btn-success">Edit</a>
+			    <a href="#" class="btn btn-info btn-handle">Re-order</a>
+			    <a href="{% url dashboard:pagepromotion-delete promotion.id %}" class="btn btn-danger">Remove</a>
+			</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+<!-- <ul class="promotion_list">
     {% for promotion in position.promotions %}
     <li>
     {{ promotion.content_object.name }} - Type: {{ promotion.content_object.type }}
@@ -20,7 +56,7 @@ Content blocks for page {{ page }} | {{ block.super }}
     <a href="{% url dashboard:pagepromotion-delete promotion.id %}" class="btn btn-danger">Remove</a>
     </li>
     {% endfor %}
-</ul>
+</ul> -->
 {% else %}
     <p>No promotions in this position.</p>
 {% endif %}
