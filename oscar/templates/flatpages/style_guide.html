@@ -403,6 +403,181 @@
             </tr>
         </tbody>
     </table>
+    <h3>CSS3 properties</h3>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Mixin</th>
+                <th>Parameters</th>
+                <th>Usage</th>
+                <th>Example</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>.border-radius()</code></td>
+                <td><code>@radius: 5px</code></td>
+                <td><code>.test-radius { .border-radius(10px) }</code></td>
+                <td><span class="swatch test-radius"></span></td>
+            </tr>
+            <tr>
+                <td><code>.box-shadow()</code></td>
+                <td><code>@shadow: 0 1px 3px rgba(0,0,0,.25)</code></td>
+                <td><code>.test-shadow { .box-shadow(2px 2px 3px rgba(0,0,0,.5)) }</code></td>
+                <td><span class="swatch test-shadow"></span></td>
+            </tr>
+            <tr>
+                <td><code>.transition()</code></td>
+                <td><code>@transition</code></td>
+                <td><code>.test-transition { .transition(all 1s ease-in-out); &:hover{background:@green} }</code>
+                    <ul>
+                        <li>transition:</li>
+                        <li>
+                            <ol>
+                                <li>transition-property</li>
+                                <li>transition-duration</li>
+                                <li>transition-timing-function</li>
+                                <li>transition-delay</li>
+                            </ol>
+                        </li>
+                    </ul>
+                </td>
+                <td><span class="swatch test-transition"></span>hover</td>
+            </tr>
+            <tr>
+                <td><code>.rotate()</code></td>
+                <td><code>@degrees</code></td>
+                <td><code>.test-rotation { .rotate(50deg) }</code></td>
+                <td><span class="swatch test-rotation"></span></td>
+            </tr>
+            <tr>
+                <td><code>.scale()</code></td>
+                <td><code>@ratio</code></td>
+                <td><code>.test-scale { .scale(0.5) }</code></td>
+                <td><span class="swatch test-scale"></span></td>
+            </tr>
+            <tr>
+                <td><code>.translate()</code></td>
+                <td><code>@x: 0, @y: 0</code></td>
+                <td><code>.test-translate { .translate(15px, 5px) }</code></td>
+                <td><span class="swatch test-translate"></span></td>
+            </tr>
+            <tr>
+                <td><code>.background-clip()</code></td>
+                <td><code>@clip</code></td>
+                <td><code>.test-clip { border: 5px solid @yellow;padding:5px;.background-clip(content); }</code>
+                    <ul>
+                        <li>border</li>
+                        <li>padding-box</li>
+                        <li>content</li>
+                    </ul>
+                </td>
+                <td><span class="swatch test-clip">Content</span></td>
+            </tr>
+            <tr>
+                <td><code>.background-size()</code></td>
+                <td><code>@size</code></td>
+                <td><code>.test-bgsize { background:url('http://placehold.it/260x180') no-repeat 0 0 @green;.background-size(10px auto) }</code></td>
+                <td><span class="swatch test-bgsize"></span></td>
+            </tr>
+            <tr>
+                <td><code>.box-sizing()</code></td>
+                <td><code>@boxmodel</code></td>
+                <td><code>.test-sizing { border:3px solid @red;padding:2px;.box-sizing(border-box) }</code></td>
+                <td><span class="swatch test-sizing"></span></td>
+            </tr>
+            <tr>
+                <td><code>.user-select()</code></td>
+                <td><code>@select</code></td>
+                <td><code>.test-select { .user-select(none) }</code><br/>
+                    <ul>
+                        <li>auto</li>
+                        <li>none</li>
+                        <li>text</li>
+                    </ul>
+                </td>
+                <td><span class="test-select">select text</span></td>
+            </tr>
+            <tr>
+                <td><code>.resizable()</code></td>
+                <td><code>@direction: both</code></td>
+                <td><code>.test-resizable { .resizable(both);max-width:40px;max-height:40px;}</code><br />
+                    <ul>
+                        <li>horizontal</li>
+                        <li>vertical</li>
+                        <li>both</li>
+                    </ul>
+                </td>
+                <td><span class="swatch test-resizable"></span></td>
+            </tr>
+            <tr>
+                <td><code>.content-columns()</code></td>
+                <td><code>@columnCount, @columnGap: @gridColumnGutter</code></td>
+                <td colspan="2">
+                    <code>.test-column { .content-columns(3,10) }</code><br />
+                    <p class="test-column">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean egestas blandit ipsum. Morbi nulla metus, luctus et, ullamcorper sit amet, commodo quis, nisl. Ut blandit lacus nec nibh. Phasellus eleifend enim et risus. Nam condimentum. Praesent euismod auctor dui. Nunc ut leo vel magna adipiscing tempor. Donec pretium, ligula et hendrerit faucibus, sem velit accumsan tortor, sodales tempor est ligula non velit. Nulla sagittis, odio quis porta nonummy, mauris arcu gravida odio, quis aliquam lacus elit non</p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <h3>Backgrounds and gradients</h3>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Mixin</th>
+                <th>Parameters</th>
+                <th>Usage</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>#translucent > .background()</code></td>
+                <td><code>.test-transback { #translucent > .background(@green,0.5) }</code></td>
+                <td><span class="swatch test-transback"></span></td>
+            </tr>
+            <tr>
+                <td><code>#translucent > .border()</code></td>
+                <td><code>.test-transborder { border:3px solid @black;#translucent > .border(@red,0.5) }</code></td>
+                <td><span class="swatch test-transborder"></span></td>
+            </tr>
+            <tr>
+                <td><code>#gradient > .vertical()</code></td>
+                <td><code>.test-gradvert { #gradient > .vertical(@green, @yellow) }</code></td>
+                <td><span class="swatch test-gradvert"></span></td>
+            </tr>
+            <tr>
+                <td><code>#gradient > .horizontal()</code></td>
+                <td><code>.test-gradhoriz { #gradient > .horizontal(@green, @yellow) }</code></td>
+                <td><span class="swatch test-gradhoriz"></span></td>
+            </tr>
+            <tr>
+                <td><code>#gradient > .directional()</code></td>
+                <td><code>.test-graddirect{ #gradient > .directional(@green, @yellow, 45deg) }</code></td>
+                <td><span class="swatch test-graddirect"></span></td>
+            </tr>
+            <tr>
+                <td><code>#gradient > .vertical-three-colors()</code></td>
+                <td><code>.test-gradthreecolors { #gradient > .vertical-three-colors(@black, @white, 50%, @grayDark) }</code></td>
+                <td><span class="swatch test-gradthreecolors"></span></td>
+            </tr>
+            <tr>
+                <td><code>#gradient > .radial()</code></td>
+                <td><code>.test-gradradial { #gradient > .radial(@yellow, @blue) }</code></td>
+                <td><span class="swatch test-gradradial"></span></td>
+            </tr>
+            <tr>
+                <td><code>#gradient > .striped()</code></td>
+                <td><code>.test-gradstriped { #gradient > .striped(@blue, 45deg) }</code></td>
+                <td><span class="swatch test-gradstriped"></span></td>
+            </tr>
+            <tr>
+                <td><code>.gradientBar()</code></td>
+                <td><code>.test-gradbar { .gradientBar(@blue, @green) }</code></td>
+                <td><span class="swatch test-gradbar"></span></td>
+            </tr>
+        </tbody>
+    </table>
+    
     
 
     

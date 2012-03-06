@@ -2870,7 +2870,7 @@ body {
   margin-bottom: 0px;
 }
 /* Account Navbar */
-.navbar.accounts span {
+.navbar.accounts .nav div {
   padding: 10px 10px 11px;
   line-height: 19px;
   display: block;
@@ -3670,6 +3670,157 @@ body {
   display: block;
   margin-left: auto;
   margin-right: auto;
+}
+.test-radius {
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+}
+.test-shadow {
+  -webkit-box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5);
+  box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5);
+}
+.test-transition {
+  -webkit-transition: all 1s ease-in-out;
+  -moz-transition: all 1s ease-in-out;
+  -ms-transition: all 1s ease-in-out;
+  -o-transition: all 1s ease-in-out;
+  transition: all 1s ease-in-out;
+}
+.test-transition:hover {
+  background: #46a546;
+}
+.test-rotation {
+  -webkit-transform: rotate(50deg);
+  -moz-transform: rotate(50deg);
+  -ms-transform: rotate(50deg);
+  -o-transform: rotate(50deg);
+  transform: rotate(50deg);
+}
+.test-scale {
+  -webkit-transform: scale(0.5);
+  -moz-transform: scale(0.5);
+  -ms-transform: scale(0.5);
+  -o-transform: scale(0.5);
+  transform: scale(0.5);
+}
+.test-translate {
+  -webkit-transform: translate(15px, 5px);
+  -moz-transform: translate(15px, 5px);
+  -ms-transform: translate(15px, 5px);
+  -o-transform: translate(15px, 5px);
+  transform: translate(15px, 5px);
+}
+.test-clip {
+  border: 5px solid #ffc40d;
+  padding: 5px;
+  -webkit-background-clip: content;
+  -moz-background-clip: content;
+  background-clip: content;
+}
+.test-bgsize {
+  background: url('http://placehold.it/260x180') no-repeat 0 0 #46a546;
+  -webkit-background-size: 10px auto;
+  -moz-background-size: 10px auto;
+  -o-background-size: 10px auto;
+  background-size: 10px auto;
+}
+.test-sizing {
+  border: 3px solid #9d261d;
+  padding: 2px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.test-select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+.test-resizable {
+  resize: both;
+  overflow: auto;
+  max-width: 40px;
+  max-height: 40px;
+}
+.test-column {
+  -webkit-column-count: 3;
+  -moz-column-count: 3;
+  column-count: 3;
+  -webkit-column-gap: 10;
+  -moz-column-gap: 10;
+  column-gap: 10;
+}
+.test-transback {
+  background-color: rgba(70, 164, 70, 0.5);
+}
+.test-transborder {
+  border: 3px solid #000000;
+  border-color: rgba(155, 37, 28, 0.5);
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding-box;
+  background-clip: padding-box;
+}
+.test-gradvert {
+  background-color: #90b12f;
+  background-image: -moz-linear-gradient(top, #46a546, #ffc40d);
+  background-image: -ms-linear-gradient(top, #46a546, #ffc40d);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#46a546), to(#ffc40d));
+  background-image: -webkit-linear-gradient(top, #46a546, #ffc40d);
+  background-image: -o-linear-gradient(top, #46a546, #ffc40d);
+  background-image: linear-gradient(top, #46a546, #ffc40d);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#46a546', endColorstr='#ffc40d', GradientType=0);
+}
+.test-gradhoriz {
+  background-color: #ffc40d;
+  background-image: -moz-linear-gradient(left, #46a546, #ffc40d);
+  background-image: -ms-linear-gradient(left, #46a546, #ffc40d);
+  background-image: -webkit-gradient(linear, 0 0, 100% 0, from(#46a546), to(#ffc40d));
+  background-image: -webkit-linear-gradient(left, #46a546, #ffc40d);
+  background-image: -o-linear-gradient(left, #46a546, #ffc40d);
+  background-image: linear-gradient(left, #46a546, #ffc40d);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#46a546', endColorstr='#ffc40d', GradientType=1);
+}
+.test-graddirect {
+  background-color: #ffc40d;
+  background-repeat: repeat-x;
+  background-image: -moz-linear-gradient(45deg, #46a546, #ffc40d);
+  background-image: -ms-linear-gradient(45deg, #46a546, #ffc40d);
+  background-image: -webkit-linear-gradient(45deg, #46a546, #ffc40d);
+  background-image: -o-linear-gradient(45deg, #46a546, #ffc40d);
+  background-image: linear-gradient(45deg, #46a546, #ffc40d);
+}
+.test-gradthreecolors {
+  background-color: #d6d6d6;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#000000), color-stop(50%, #ffffff), to(#333333));
+  background-image: -webkit-linear-gradient(#000000, #ffffff 50%, #333333);
+  background-image: -moz-linear-gradient(top, #000000, #ffffff 50%, #333333);
+  background-image: -ms-linear-gradient(#000000, #ffffff 50%, #333333);
+  background-image: -o-linear-gradient(#000000, #ffffff 50%, #333333);
+  background-image: linear-gradient(#000000, #ffffff 50%, #333333);
+  background-repeat: no-repeat;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#000000', endColorstr='#333333', GradientType=0);
+}
+.test-gradradial {
+  background-color: #049cdb;
+  background-image: -webkit-gradient(radial, center center, 0, center center, 460, from(#ffc40d), to(#049cdb));
+  background-image: -webkit-radial-gradient(circle, #ffc40d, #049cdb);
+  background-image: -moz-radial-gradient(circle, #ffc40d, #049cdb);
+  background-image: -ms-radial-gradient(circle, #ffc40d, #049cdb);
+  background-repeat: no-repeat;
+}
+.test-gradstriped {
+  background-color: #049cdb;
+  background-image: -webkit-gradient(linear, 0 100%, 100% 0, color-stop(0.25, rgba(255, 255, 255, 0.15)), color-stop(0.25, transparent), color-stop(0.5, transparent), color-stop(0.5, rgba(255, 255, 255, 0.15)), color-stop(0.75, rgba(255, 255, 255, 0.15)), color-stop(0.75, transparent), to(transparent));
+  background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  background-image: -moz-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  background-image: -ms-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
 }
 /*** Promotional block styles ***/
 /*** Badge styles ***/

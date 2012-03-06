@@ -179,6 +179,7 @@
         margin-bottom:15px;
         height:auto!important;
         padding:0px;
+        text-align:left;
         .star {
           clear:none;
           margin-left:@quart * 1.15;
@@ -187,6 +188,7 @@
           text-align:left;
         }
         .product_price {
+          position:static;
           h4 {
             margin-bottom:0px;
             display:inline;
@@ -194,21 +196,24 @@
               float:none;
             }
           }
-          .btn {
-            width:auto;
-            display:block;
-            padding: 5px 14px 6px;
-            margin-top:5px;
+          form {
+            input#id_quantity {
+              width: auto;
+            }
+            .btn {
+              width:auto;
+              display:block;
+              padding: 5px 14px 6px;
+              margin-top:5px;
+            }
           }
+          
         } 
         .image_container {
           width:@quart;
           float:left;
           margin-right:15px;
-          margin-bottom:0px;
-        }
-        .product_price {
-          position:static;
+          margin-bottom:80px;
         }
       }
     }

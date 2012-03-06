@@ -4,8 +4,10 @@ function addicons(){
 	//Create object with list of icons
 		var icons = {
 		  ico_alert: "A",
-		  ico_cross: "B" || outofstock: "B",
-		  ico_tick: "C" || instock: "C",
+		  ico_cross: "B",
+		  outofstock: "B", //cross also used for out of stock items
+		  ico_tick: "C",
+		  instock: "C", //tick also used for in stock items
 			ico_expand: "D",
 			ico_contract: "E",
 			ico_view: "F",
