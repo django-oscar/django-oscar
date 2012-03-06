@@ -79,13 +79,15 @@ $(document).ready(function()
       if (product_page > 0) {
         es_carousel.elastislide({
             imageW: 175,
-            minItems: 5
+            minItems: 5,
+            onClick:  true
         });
       }
       else {
         es_carousel.elastislide({
           imageW: 200,
-          minItems: 4
+          minItems: 4,
+          onClick:  true
         });
       }
       
