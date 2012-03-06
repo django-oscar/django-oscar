@@ -145,6 +145,7 @@
     margin-bottom: 15px;
     height: auto!important;
     padding: 0px;
+    text-align: left;
   }
   .products li .product_pod .star {
     clear: none;
@@ -153,6 +154,9 @@
   .products li .product_pod .avaliability {
     text-align: left;
   }
+  .products li .product_pod .product_price {
+    position: static;
+  }
   .products li .product_pod .product_price h4 {
     margin-bottom: 0px;
     display: inline;
@@ -160,7 +164,10 @@
   .products li .product_pod .product_price h4 span, .products li .product_pod .product_price h4 del {
     float: none;
   }
-  .products li .product_pod .product_price .btn {
+  .products li .product_pod .product_price form input#id_quantity {
+    width: auto;
+  }
+  .products li .product_pod .product_price form .btn {
     width: auto;
     display: block;
     padding: 5px 14px 6px;
@@ -170,10 +177,7 @@
     width: 25%;
     float: left;
     margin-right: 15px;
-    margin-bottom: 0px;
-  }
-  .products li .product_pod .product_price {
-    position: static;
+    margin-bottom: 80px;
   }
   .star {
     padding-left: 70px;

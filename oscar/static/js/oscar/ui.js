@@ -56,17 +56,41 @@ $(document).ready(function()
           .remove();
     });
     
-    // Width and height of main navigation
-    var $browse_width = $('aside.span3').outerWidth(),
-        $browse_height = $('#browse > .dropdown-menu').outerHeight();
-    // set width of nav dropdown on the homepage
-    $('#browse').find('> .dropdown-menu').css({
-      width: $browse_width
-    });
-    // set margin top of aside allow space for home navigation
-    $('.home aside.span3').css({
-      marginTop: $browse_height
-    });
+    
+    var $window_width = $(window).width(); // Width of the window
+        $browse_width = $('aside.span3').outerWidth(),// Width of main navigation
+        $browse_height = $('#browse > .dropdown-menu').outerHeight();// Height of main navigation
+    
+    if ($window_width > 480) {
+      
+      // set width of nav dropdown on the homepage
+      $('#browse').find('> .dropdown-menu').css({
+        width: $browse_width
+      });
+      // set margin top of aside allow space for home navigation
+      $('.home aside.span3').css({
+        marginTop: $browse_height
+      });
+      
+      // This activates elastislide
+      var es_carousel = $('.es-carousel-wrapper'),
+          product_page = $('.product_page').length;
+      // on prodct page
+      if (product_page > 0) {
+        es_carousel.elastislide({
+            imageW: 175,
+            minItems: 5
+        });
+      }
+      else {
+        es_carousel.elastislide({
+          imageW: 200,
+          minItems: 4
+        });
+      }
+      
+    }    
+    
     
     // This activates the promotional banner carousel
     $('#myCarousel').carousel({
@@ -79,22 +103,7 @@ $(document).ready(function()
     // This activates the alerts
     $('.alert').alert('.close');
     
-    // This activates elastislide
-    var es_carousel = $('.es-carousel-wrapper'),
-        product_page = $('.product_page').length;
-    // on prodct page
-    if (product_page > 0) {
-      es_carousel.elastislide({
-          imageW: 175,
-          minItems: 5
-      });
-    }
-    else {
-      es_carousel.elastislide({
-        imageW: 200,
-        minItems: 4
-      });
-    }  
+      
 
     // Acordion - remove the first in the list as it is duplication.
     var n = $('.accordion dt').length;
