@@ -14,6 +14,9 @@
     			<a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ image.original.url }}" alt="{{ product.get_title }}"></a>
     		</div>    
     		{% endwith %}
+    	</div>
+    	<div class="span9">
+    	    <h3>{{ promotion.product.title }}</h3>
     		<div class="product_price">
     			{% if product.is_group %}
     				<p>From {{ product.min_variant_price_incl_tax|currency }}</p>
@@ -27,9 +30,6 @@
     				{% endif %}
     			{% endif %}
     		</div>
-    	</div>
-    	<div class="span9">
-    	    <h3>{{ promotion.product.title }}</h3>
     	    {% block product_review %}
     		    {% with product.reviews.all as reviews %}
     		        {% if reviews %}
