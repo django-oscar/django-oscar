@@ -150,6 +150,11 @@ class OrderHistoryView(ListView):
     template_name = 'customer/order-history.html'
     paginate_by = 20
     model = order_model
+    form_class = SearchByDateRangeForm
+
+    def get(self, request, *args, **kwargs):
+        self.filter_form = SearchByDateRangeForm(self.request.GET)
+        return super(OrderHistoryView, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
         """Return a customer's orders"""
@@ -157,24 +162,12 @@ class OrderHistoryView(ListView):
 
     def get_context_data(self, *args, **kwargs):
         ctx = super(OrderHistoryView, self).get_context_data(*args, **kwargs)
-        if 'date_from' in self.request.GET or 'date_to' in self.request.GET:
-            filter_form = SearchByDateRangeForm(self.request.GET)
-        else:
-            filter_form = SearchByDateRangeForm()
-        ctx['search_date_form'] = filter_form
-        if not filter_form.is_valid():
+        ctx['search_date_form'] = self.filter_form
+        if not self.filter_form.is_valid():
+            ctx['orders'] = self.get_queryset()
             return ctx
-
-        date_to = filter_form.cleaned_data['date_to']
-        date_from = filter_form.cleaned_data['date_from']
         # Return filtered data from date_from to date_to
-        if not date_from:
-            ctx['orders'] = self.model._default_manager.filter(user=self.request.user, date_placed__lte=date_to)
-        elif not date_to:
-            ctx['orders'] = self.model._default_manager.filter(user=self.request.user, date_placed__gte=date_from)
-        else:
-            ctx['orders'] = self.model._default_manager.filter(user=self.request.user, date_placed__range=[date_from, date_to])
-
+        ctx['orders'] = self.model._default_manager.filter(user=self.request.user, **self.filter_form.get_filters())
         return ctx
 
 
