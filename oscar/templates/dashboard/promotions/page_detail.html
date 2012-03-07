@@ -13,7 +13,7 @@ Content blocks for page {{ page }} | {{ block.super }}
 {% if position.promotions %}
 <ul class="promotion_list">
     {% for promotion in position.promotions %}
-    <li>
+    <li id="promo_{{ promotion.pk }}">
     {{ promotion.content_object.name }} - Type: {{ promotion.content_object.type }}
     <a href="{% url dashboard:promotion-update promotion.content_object.code promotion.content_object.id %}" class="btn btn-success">Edit</a>
     <a href="#" class="btn btn-info btn-handle">Re-order</a>
