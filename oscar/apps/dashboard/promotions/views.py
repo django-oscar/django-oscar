@@ -6,16 +6,18 @@ from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.db.models import Count
+from django.shortcuts import HttpResponse
 
 from oscar.core.loading import get_classes, get_class
 from oscar.apps.promotions.layout import split_by_position
 from oscar.apps.promotions.conf import PROMOTION_CLASSES, PROMOTION_POSITIONS
+from oscar.views.generic import PostActionMixin
 
 SingleProduct, RawHTML, Image, MultiImage, \
     AutomaticProductList, PagePromotion, HandPickedProductList = get_classes('promotions.models',
     ['SingleProduct', 'RawHTML', 'Image', 'MultiImage', 'AutomaticProductList',
      'PagePromotion', 'HandPickedProductList'])
-SelectForm, RawHTMLForm, PagePromotionForm = get_classes('dashboard.promotions.forms', 
+SelectForm, RawHTMLForm, PagePromotionForm = get_classes('dashboard.promotions.forms',
     ['PromotionTypeSelectForm', 'RawHTMLForm', 'PagePromotionForm'])
 
 
@@ -28,7 +30,7 @@ class ListView(generic.TemplateView):
         data = []
         for klass in PROMOTION_CLASSES:
             data.append(klass.objects.all())
-        promotions = itertools.chain(*data)                                    
+        promotions = itertools.chain(*data)
         ctx = {
             'promotions': promotions,
             'select_form': SelectForm(),
@@ -43,7 +45,7 @@ class CreateRedirectView(generic.RedirectView):
         code = self.request.GET.get('promotion_type', None)
         urls = {}
         for klass in PROMOTION_CLASSES:
-            urls[klass.classname()] = reverse('dashboard:promotion-create-%s' % 
+            urls[klass.classname()] = reverse('dashboard:promotion-create-%s' %
                                               klass.classname())
         return urls.get(code, None)
 
@@ -80,6 +82,26 @@ class PageDetailView(generic.TemplateView):
             })
         return ctx
 
+    def post(self, request, **kwargs):
+        """
+        When called with a post request, try and get 'promo[]' from
+        the post data and use it to reorder the page content blocks.
+        """
+        data = dict(request.POST).get('promo[]')
+        self._save_page_order(data)
+        return HttpResponse(status=200)
+
+    def _save_page_order(self, data):
+        """ 
+        Save the order of the pages. This gets used when an ajax request
+        posts backa new order for promotions within page regions.
+        """
+        for index, item in enumerate(data):
+            page = PagePromotion.objects.get(pk=item)
+            if page.display_order != index:
+                page.display_order = index
+                page.save()
+
 
 class PromotionMixin(object):
 
@@ -94,7 +116,7 @@ class DeletePagePromotionView(generic.DeleteView):
 
     def get_success_url(self):
         messages.info(self.request, "Promotion removed successfully")
-        return reverse('dashboard:promotion-list-by-url', 
+        return reverse('dashboard:promotion-list-by-url',
                        kwargs={'path': self.object.page_url})
 
 
@@ -107,7 +129,7 @@ class CreateView(PromotionMixin, generic.CreateView):
 
     def get_success_url(self):
         messages.info(self.request, "Promotion created successfully")
-        return reverse('dashboard:promotion-update', 
+        return reverse('dashboard:promotion-update',
                        kwargs={'ptype': self.model.classname(),
                                'pk': self.object.id})
 
@@ -146,7 +168,7 @@ class CreateHandPickedProductListView(CreateView):
 # ============
 # UPDATE VIEWS
 # ============
-        
+
 
 class UpdateView(PromotionMixin, generic.UpdateView):
     actions = ('add_to_page', 'remove_from_page')
@@ -225,7 +247,7 @@ class UpdateHandPickedProductListView(UpdateView):
 # ============
 # DELETE VIEWS
 # ============
-        
+
 
 class DeleteView(generic.DeleteView):
     template_name = 'dashboard/promotions/delete.html'
