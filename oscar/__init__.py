@@ -1,7 +1,7 @@
 # Use 'final' as the 4th element to indicate
 # a full release
 
-VERSION = (0, 1, 7, 'final')
+VERSION = (0, 1, 8, 'final')
     
 def get_short_version():
     return '%s.%s' % (VERSION[0], VERSION[1])
