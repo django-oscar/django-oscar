@@ -55,6 +55,7 @@ class ProductListView(generic.ListView):
 
         return queryset
 
+
 class ProductCreateRedirectView(generic.RedirectView):
 
     def get_redirect_url(self, **kwargs):
