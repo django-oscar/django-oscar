@@ -50,7 +50,7 @@ class BasketView(ModelFormSetView):
     def formset_valid(self, formset):
         needs_auth = False
         for form in formset:
-            if form.cleaned_data['save_for_later']:
+            if hasattr(form, 'cleaned_data') and form.cleaned_data['save_for_later']:
                 line = form.instance
                 if self.request.user.is_authenticated():
                     self.move_line_to_saved_basket(line)
