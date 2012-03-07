@@ -1,5 +1,5 @@
 $(document).ready(function()
-{	
+{   
     // Product star rating  -- must improve this in python
     $('.product_pod, .span6, .promotion_single').each(function() 
     {
@@ -11,15 +11,15 @@ $(document).ready(function()
         });
         var ave_rating = sum_rating_count / sum_total_reviews *10;
         if (ave_rating <= 2) {
-            var ave_rating = 'One'
+            ave_rating = 'One';
         } else if (ave_rating <= 4) {
-            var ave_rating = 'Two'
+            ave_rating = 'Two';
         } else if (ave_rating <= 6) {
-            var ave_rating = 'Three'
+            ave_rating = 'Three';
         } else if (ave_rating <= 8) {
-            var ave_rating = 'Four'
+            ave_rating = 'Four';
         } else if (ave_rating <= 10) {
-            var ave_rating = 'Five'
+            ave_rating = 'Five';
         }
         $(this).find('.review_count')
           .after('<p class=\"star ' + ave_rating + '\">' + ave_rating + ' star(s) by user reviews. <a href=\"#reviews\">Add review</a></p>')
@@ -34,32 +34,26 @@ $(document).ready(function()
             user_rating += parseFloat($(this).text());
         });
         if (user_rating == 1) {
-            var user_rating = 'One'
+            user_rating = 'One';
         }
         else if (user_rating == 2) {
-            var user_rating = 'Two'
+            user_rating = 'Two';
         }
         else if (user_rating == 3) {
-            var user_rating = 'Three'
+            user_rating = 'Three';
         }
         else if (user_rating == 4) {
-            var user_rating = 'Four'
+            user_rating = 'Four';
         }
         else if (user_rating == 5) {
-            var user_rating = 'Five'
+            user_rating = 'Five';
         }
-        $(this)
-          .find('h3')
-          .addClass(user_rating)
-          .end()
-          .find('span')
-          .remove();
+        $(this).find('h3').addClass(user_rating).end().find('span').remove();
     });
     
-    
-    var window_width = $(window).width(); // Width of the window
-        $browse_width = $('aside.span3').outerWidth(),// Width of main navigation
-        $browse_height = $('#browse > .dropdown-menu').outerHeight();// Height of main navigation
+    var window_width = $(window).width(), // Width of the window
+        $browse_width = $('aside.span3').outerWidth(), // Width of main navigation
+        $browse_height = $('#browse > .dropdown-menu').outerHeight(); // Height of main navigation
     
     if (window_width > 480) {
       // This activates elastislide
@@ -124,29 +118,29 @@ $(document).ready(function()
     $(".accordion dd").hide();
 
     /* scroll to sections */
-  	$('.top_page a, .product_page a').click(function (e) {
-  		var section = $(this).attr('href');
-  		var sectionPosition = Math.floor($(section).offset().top);
-  		var currentPosition = Math.floor($(document).scrollTop());
-  		// when scrolling downwards
-  		if (sectionPosition > currentPosition) {
-  			$('html, body').animate({
-  				scrollTop: sectionPosition}, 500, function() {
-  				$('html, body').animate({
-  					scrollTop: sectionPosition
-  				});
-  			});
-  		}
-  		// when scrolling upwards
-  		else if (sectionPosition < currentPosition) {
-  			$('html, body').animate({
-  				scrollTop: sectionPosition}, 500, function() {
-  				$('html, body').animate({
-  					scrollTop: sectionPosition
-  				});
-  			});			
-  		}
-  		e.preventDefault();
-  	});
+    $('.top_page a, .product_page a').click(function (e) {
+        var section = $(this).attr('href');
+        var sectionPosition = Math.floor($(section).offset().top);
+        var currentPosition = Math.floor($(document).scrollTop());
+        // when scrolling downwards
+        if (sectionPosition > currentPosition) {
+            $('html, body').animate({
+                scrollTop: sectionPosition}, 500, function() {
+                $('html, body').animate({
+                    scrollTop: sectionPosition
+                });
+            });
+        }
+        // when scrolling upwards
+        else if (sectionPosition < currentPosition) {
+            $('html, body').animate({
+                scrollTop: sectionPosition}, 500, function() {
+                $('html, body').animate({
+                    scrollTop: sectionPosition
+                });
+            });         
+        }
+        e.preventDefault();
+    });
 });
     

@@ -4,15 +4,13 @@
 {% load category_tags %}
 {% load dashboard_tags %}
 
-
 {% block extrahead %}
     <link rel="stylesheet" href="{{ STATIC_URL }}css/dashboard.css" />
 {%endblock extrahead %}
+
 {% block title %}
 Dashboard | {{ block.super }}
 {% endblock %}
-
-
 
 {% block layout %}
     <div class="navbar accounts">
@@ -87,4 +85,5 @@ Dashboard | {{ block.super }}
 {% block extrascripts %}
     <!-- dashboard js -->
     <script src="{{ STATIC_URL }}js/oscar/dashboard.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.7.1/jquery-ui.min.js"></script>
 {% endblock %}

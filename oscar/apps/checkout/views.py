@@ -236,6 +236,7 @@ class UserAddressDeleteView(CheckoutSessionMixin, DeleteView):
     """
     Delete an address from a user's addressbook.
     """
+    template_name = 'checkout/user_address_delete.html'
 
     def get_queryset(self):
         return UserAddress._default_manager.filter(user=self.request.user)
@@ -574,7 +575,8 @@ class OrderPlacementMixin(CheckoutSessionMixin):
 
     def send_confirmation_message(self, order, **kwargs):
         code = self.communication_type_code
-        ctx = {'order': order}
+        ctx = {'order': order,
+               'lines': order.lines.all(),}
         try:
             event_type = CommunicationEventType.objects.get(code=code)
         except CommunicationEventType.DoesNotExist:
