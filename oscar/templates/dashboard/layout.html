@@ -13,7 +13,7 @@ Dashboard | {{ block.super }}
 {% endblock %}
 
 {% block layout %}
-    <div class="navbar accounts">
+    <div class="navbar navbar-fixed-top">
         <div class="navbar-inner">
             <div class="container" style="width: auto;">
                 <a href="{% url promotions:home %}" class="brand">Oscar</a>
@@ -29,11 +29,35 @@ Dashboard | {{ block.super }}
             </div>
         </div><!-- /navbar-inner -->
     </div><!-- /navbar -->
+    
+    
+    
 
     <div class="container-fluid dashboard">
         <div class="row-fluid">
             {% dashboard_navigation request.user %}
 			{% dashboard_navigation %}
+			
+			<div class="subnav subnav-fixed">
+                <ul class="nav nav-pills">
+                    {% for item in nav_items %}	
+                        <li class="{{ item.label }} dropdown">
+            			{% if item.is_heading %}
+        			        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ item.label }} <b class="caret"></b></a>
+            			{% else %}
+            			    <a href="{{ item.url }}">{{ item.label }}</a>
+            			{% endif %}
+            			{% if item.has_children %}
+            			    <ul class="dropdown-menu">
+            				    {% for subitem in item.children %}
+            				    <li><a href="{{ subitem.url }}">{{ subitem.label }}</a></li>
+            				    {% endfor %}
+            			    </ul>
+            			{% endif %}
+            			</li>
+        			{% endfor %}
+                </ul>
+            </div>
 			
 			{% block breadcrumbs %}
 			<ul class="breadcrumb">
@@ -42,27 +66,29 @@ Dashboard | {{ block.super }}
               </li>
             </ul>
             {% endblock %}
+            
 
-			<ul class="primary-nav">
-				{% for item in nav_items %}
-				<li class="{{ item.label }}">
-				{% if item.is_heading %}
-					<a href="#" class="submenu">{{ item.label }}</a>
-				{% else %}
-					<a href="{{ item.url }}">{{ item.label }}</a>
-				{% endif %}
-				{% if item.has_children %}
-				<ul>
-					{% for subitem in item.children %}
-					<li><a href="{{ subitem.url }}">{{ subitem.label }}</a></li>
-					{% endfor %}
-				</ul>
-				{% endif %}
-				</li>
-				{% endfor %}
-			</ul>
 
-            <div class="offset3 content">
+			<!-- <ul class="primary-nav">
+			             {% for item in nav_items %}
+			             <li class="{{ item.label }}">
+			             {% if item.is_heading %}
+			                 <a href="#" class="submenu">{{ item.label }}</a>
+			             {% else %}
+			                 <a href="{{ item.url }}">{{ item.label }}</a>
+			             {% endif %}
+			             {% if item.has_children %}
+			             <ul>
+			                 {% for subitem in item.children %}
+			                 <li><a href="{{ subitem.url }}">{{ subitem.label }}</a></li>
+			                 {% endfor %}
+			             </ul>
+			             {% endif %}
+			             </li>
+			             {% endfor %}
+			         </ul> -->
+			
+            <div class="content">
                 {% block header %}{% endblock %}
                 <div class="page-content">
                     {% for message in messages %}

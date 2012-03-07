@@ -65,7 +65,9 @@ $(document).ready(function()
     //pull out draw
     $(".pull_out").click(function()
     {
-        $(this).parent("div").find('.orders_search').slideToggle("fast");
+        $('.orders_search').slideToggle("fast");
         $(this).toggleClass("viewed");
     });
+    
+
 });
