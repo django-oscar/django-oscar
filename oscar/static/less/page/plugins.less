@@ -291,3 +291,39 @@
 .product_pod .star.Five {
 	background-position: 0px -75px;
 }
+/*style guide*/
+.swatch {
+display: inline-block;
+width: 30px;
+height: 20px;
+margin: -6px 0;
+background:@gray;
+.border-radius(3px);
+}
+.swatch-col {
+width: 30px;
+}
+.test-opacity { .opacity(50) }
+.test-square { .square(25px) }
+.test-size { .size(25px, 7px) }
+.test-center { .center-block() }
+.test-radius { .border-radius(10px) }
+.test-shadow { .box-shadow(2px 2px 3px rgba(0,0,0,.5)) }
+.test-transition { .transition(all 1s ease-in-out); &:hover{background:@green} }
+.test-rotation { .rotate(50deg) }
+.test-scale { .scale(0.5) }
+.test-translate { .translate(15px, 5px) }
+.test-clip { border: 5px solid @yellow;padding:5px;.background-clip(content); }
+.test-bgsize { background:url('http://placehold.it/260x180') no-repeat 0 0 @green;.background-size(10px auto) }
+.test-sizing { border:3px solid @red;padding:2px;.box-sizing(border-box) }
+.test-select { .user-select(none) }
+.test-resizable { .resizable(both);max-width:40px;max-height:40px;}
+.test-column { .content-columns(3,10) }
+.test-transback { #translucent > .background(@green,0.5) }
+.test-transborder { border:3px solid @black;#translucent > .border(@red,0.5) }
+.test-gradvert { #gradient > .vertical(@green, @yellow) }
+.test-gradhoriz { #gradient > .horizontal(@green, @yellow) }
+.test-graddirect{ #gradient > .directional(@green, @yellow, 45deg) }
+.test-gradthreecolors { #gradient > .vertical-three-colors(@black, @white, 50%, @grayDark) }
+.test-gradradial { #gradient > .radial(@yellow, @blue) }
+.test-gradstriped { #gradient > .striped(@blue, 45deg) }
