@@ -5,23 +5,74 @@
 // OSCAR DASHBOARD UNIQUE STYLES
 // -----------
 body {
-  background:#e1e1e1;
+  background:#fff;
 }
 .container-fluid {
   padding-left: @gridGutterWidth;
   padding-right: @gridGutterWidth;
   max-width:100%;
 }
+.navbar-fixed-top .navbar-inner {
+  padding-left:  20px;
+  padding-right: 20px;
+}
+.subnav-fixed {
+  position: fixed;
+  right: 0;
+  left: 0;
+  z-index: @zindexFixedNavbar;
+  top:40px;
+  .box-shadow(0 1px 5px rgba(0,0,0,.1));
+  border-bottom:1px solid #D5D5D5;
+}
+.subnav {
+  #gradient > .vertical(#f5f5f5, #eee);
+  height:36px;
+  width: 100%;
+}
+.subnav {
+  .nav {
+    padding-left:  20px;
+    padding-right: 20px;
+    > li {
+      > a {
+        margin: 0;
+        padding-top: 11px;
+        padding-bottom: 11px;
+        border-left: 1px solid #f5f5f5;
+        border-right: 1px solid #E5E5E5;
+        .border-radius(0);
+      }
+    }
+  }
+} 
+.reports .subnav li.Reports > a,
+.orders .subnav li.Manage.orders > a,
+.users .subnav li.Users > a,
+.content-blocks .subnav li.Content.blocks > a,
+.catalogue .subnav li.Catalogue > a,
+.subnav .nav > .active > a,
+.subnav .nav > .active > a:hover {
+  padding-left: 13px;
+  color: #777;
+  background-color: #E9E9E9;
+  border-right-color: #DDD;
+  border-left: 0;
+  .box-shadow(inset 0 3px 5px rgba(0,0,0,.05));
+}
+.breadcrumb {
+  margin-top:100px;
+} 
 .content {
   background:#fff;
-  -webkit-box-shadow: -5px 5px 7px 0px rgba(0, 0, 0, .2);
-  -moz-box-shadow: -5px 5px 7px 0px rgba(0, 0, 0, .2);
-  box-shadow: -5px 5px 7px 0px rgba(0, 0, 0, .2);
-  -webkit-border-radius: 0 0 6px 6px;
-  -moz-border-radius: 0 0 6px 6px;
-  border-radius: 0 0 6px 6px;
+  /*-webkit-box-shadow: -5px 5px 7px 0px rgba(0, 0, 0, .2);
+    -moz-box-shadow: -5px 5px 7px 0px rgba(0, 0, 0, .2);
+    box-shadow: -5px 5px 7px 0px rgba(0, 0, 0, .2);
+    -webkit-border-radius: 0 0 6px 6px;
+    -moz-border-radius: 0 0 6px 6px;
+  border-radius: 0 0 6px 6px;*/
   .page-content {
-      padding:30px 20px;
+      padding:30px 0px;
   }
 }
 button {
@@ -111,15 +162,15 @@ button {
   border-radius: 0px 0px 4px 4px;
 }
 .page-header {
-  background-color: whiteSmoke;
-  padding: 20px 20px 10px;
+  background-color: @white;
+  padding: 10px 20px 10px 0px;
   h1 {
-        font-size: 24px;
-        line-height: 36px;
+/*        font-size: 24px;
+        line-height: 36px;*/
     }
 }
 h2 {
-    font-size: 18px;
+/*    font-size: 18px;*/
 }
 
 .page-header.action {
