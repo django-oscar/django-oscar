@@ -65,12 +65,8 @@ class SearchByDateRangeForm(forms.Form):
     date_to = forms.DateField(required=False, label="To")
 
     def clean(self):
-        if self.errors:
-            ctx = {}
-            ctx['search_date_form'] = self.cleaned_data
-            return ctx
 
-        if not self.cleaned_data['date_from'] and not self.cleaned_data['date_to']:
+        if self.is_valid() and not self.cleaned_data['date_from'] and not self.cleaned_data['date_to']:
             raise forms.ValidationError(_("At least one date field is required."))
 
         return super(SearchByDateRangeForm, self).clean()

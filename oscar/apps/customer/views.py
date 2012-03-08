@@ -163,11 +163,10 @@ class OrderHistoryView(ListView):
     def get_context_data(self, *args, **kwargs):
         ctx = super(OrderHistoryView, self).get_context_data(*args, **kwargs)
         ctx['search_date_form'] = self.filter_form
-        if not self.filter_form.is_valid():
-            ctx['orders'] = self.get_queryset()
+        if self.filter_form.is_valid():
+            # Return filtered data from date_from to date_to
+            ctx['orders'] = self.model._default_manager.filter(user=self.request.user, **self.filter_form.get_filters())
             return ctx
-        # Return filtered data from date_from to date_to
-        ctx['orders'] = self.model._default_manager.filter(user=self.request.user, **self.filter_form.get_filters())
         return ctx
 
 
