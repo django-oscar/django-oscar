@@ -178,6 +178,59 @@ h2 {
   /*    font-size: 18px;*/
 
 }
+.control-group.pull-left > label {
+  width: 100px;
+}
+.control-group.pull-left .controls {
+  margin-left: 120px;
+}
+.control-group.pull-left .controls > label {
+  padding-left: 0px;
+}
+.control-group.pull-left .controls .radio ul {
+  padding: 0px;
+  margin: 0px;
+  *zoom: 1;
+}
+.control-group.pull-left .controls .radio ul:before, .control-group.pull-left .controls .radio ul:after {
+  display: table;
+  content: "";
+}
+.control-group.pull-left .controls .radio ul:after {
+  clear: both;
+}
+.control-group.pull-left .controls .radio ul > li {
+  list-style: none;
+}
+.control-group.pull-left .controls .radio ul li {
+  float: left;
+}
+.control-group.pull-left .controls .radio ul li li {
+  float: none;
+}
+.control-group.pull-left .controls .radio ul li label {
+  display: inline-block;
+  padding-top: 5px;
+  margin-bottom: 0;
+  vertical-align: middle;
+  margin-left: 10px;
+  padding-left: 18px;
+}
+.no-float {
+  float: none;
+}
+.control-group.pull-left.no-float > label {
+  width: 140px;
+}
+.control-group.pull-left.no-float .controls {
+  margin-left: 160px;
+}
+.pull-left.btn {
+  margin-left: 20px;
+}
+.pull-left.no-float.btn {
+  margin-left: 160px;
+}
 .page-header.action {
   *zoom: 1;
   margin-bottom: 0px;

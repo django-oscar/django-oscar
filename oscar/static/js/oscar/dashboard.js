@@ -37,37 +37,24 @@ oscar.dashboard = {
 
 $(document).ready(function()
 {
-    //table font size increase decrease
-    $('.fontsize li').click(function()
-    {
-        var os = $('.bordered-table').css('font-size');// find font size for p
-        var uom = os.slice(-2);// finds the unit of mesure = pixles
-        var num = parseFloat(os, 10);// gets rid of the px
-        $('.bordered-table').css('font-size', num / 1.1 + uom);
-        if (this.id == 'larger') {
-            $('.bordered-table').css('font-size', num * 1.1 + uom);
-        }
-    });
-
-    //side navigation accordion
-    $('.primary-nav > li > ul, .orders_search').each(function(index)
-    {
-        $(this).css('height', $(this).height());
-    });
-    $(".primary-nav > li > ul, .orders_search").hide();
-
-    $(".primary-nav > li > a").click(function()
-    {
-        $(this).next("ul").slideToggle("fast");
-        $(this).toggleClass("viewed");
-    });
-
     //pull out draw
-    $(".pull_out").click(function()
-    {
-        $('.orders_search').slideToggle("fast");
-        $(this).toggleClass("viewed");
-    });
-    
+    var 
+      pull_out_draw = $(".orders_search"),
+      pull_out_link = $('.pull_out'),
+      $this = $(this);
 
+    pull_out_draw.each(function(index)
+    {
+      $this.css('height', $this.height());
+    });
+    pull_out_draw.hide();  
+    pull_out_link.on('click', function()
+    {
+      pull_out_draw
+        .parent()      
+        .find('.pull-left')
+        .toggleClass('no-float')
+        .end().end()
+        .slideToggle("fast");
+    });
 });

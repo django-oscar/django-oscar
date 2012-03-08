@@ -462,6 +462,14 @@ cite {
 /*@import "bootstrap/code.less";*/
 form {
   margin: 0 0 18px;
+  *zoom: 1;
+}
+form:before, form:after {
+  display: table;
+  content: "";
+}
+form:after {
+  clear: both;
 }
 fieldset {
   padding: 0;
