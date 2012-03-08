@@ -2,6 +2,15 @@
 {% load currency_filters %}
 {% block body_class %}catalogue{% endblock %}
 {% block title %}
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url promotions:home %}">Dashboard</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active"><a href=".">Catalogue</a></li>
+</ul>
+{% endblock %}
 Catalogue management | {{ block.super }}
 {% endblock %}
 

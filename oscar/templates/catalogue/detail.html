@@ -52,20 +52,20 @@
                         {% endfor %}
                     </ul>
                 {% else %}
-                     <p class="star">No Rating <a href="#">Add review</a></p>
+                     <p class="star">No Rating <a href="#reviews">Add review</a></p>
                 {% endif %}
             {% endwith %}
             
             <p><strong>Product Code:</strong> <code>{{ product.upc }}</code></p>
             {% if product.stockrecord %}
-			<p class="app-ico avaliability {{ product.stockrecord.availability_code }}">{{ product.stockrecord.availability|truncatewords:2|slice:"-4" }}</p>
+			<p class="app-ico {{ product.stockrecord.availability_code }} avaliability">{{ product.stockrecord.availability|truncatewords:2|slice:"-4" }}</p>
 			{% else %}
 				<p class="app-ico avaliability outofstock">Not available</p>
             {% endif %}
              
             <hr/>
             <ul>
-                <li><a href="#" class="read_decription">Read the full description</a></li>
+                <li><a href="#product_description">Read the full description</a></li>
                 <!--TO DO: get alerts working, and add popup-->
                 <li><span class="label notice">Notice</span> <a href="#">Subscribe to alerts</a></li>
             </ul>
@@ -84,7 +84,7 @@
     </div><!-- /row-fluid -->
               
 
-    <div class="sub-header">
+    <div id="product_description" class="sub-header">
         <h2>Product Description</h2>
     </div>
     <p>{{ product.description }}</p>
@@ -146,7 +146,7 @@
 
     {% block product_review %}
     <section>
-        <div class="sub-header">
+        <div id="reviews" class="sub-header">
             <h2>Customer Reviews</h2>
         </div>
         <p>Read customer reviews on this product. If you have read this book, why not post your own

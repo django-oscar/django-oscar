@@ -94,7 +94,10 @@ class AbstractProductCategory(models.Model):
     class Meta:
         abstract = True
         ordering = ['-is_canonical']
-        verbose_name_plural = 'Categories'
+        verbose_name_plural = 'Product categories'
+
+    def __unicode__(self):
+        return u"<productcategory for product '%s'>" % self.product
         
 
 class AbstractContributorRole(models.Model):

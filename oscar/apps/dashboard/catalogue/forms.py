@@ -1,9 +1,11 @@
 from django import forms
+from django.forms.models import inlineformset_factory
 from django.db.models import get_model
 
 Product = get_model('catalogue', 'Product')
 StockRecord = get_model('partner', 'StockRecord')
 ProductAttributeValue = get_model('catalogue', 'ProductAttributeValue')
+ProductCategory = get_model('catalogue', 'ProductCategory')
 
 
 class ProductSearchForm(forms.Form):
@@ -121,3 +123,13 @@ class ProductForm(forms.ModelForm):
 
 class StockAlertSearchForm(forms.Form):
     status = forms.CharField(label='Status')
+
+
+class ProductCategoryForm(forms.ModelForm):
+    class Meta:
+        model = ProductCategory
+        exclude = ('product',)
+
+
+ProductCategoryFormSet = inlineformset_factory(Product, ProductCategory,
+                                               fields=('category',), extra=1)

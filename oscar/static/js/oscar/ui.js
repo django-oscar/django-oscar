@@ -1,5 +1,5 @@
 $(document).ready(function()
-{	
+{   
     // Product star rating  -- must improve this in python
     $('.product_pod, .span6, .promotion_single').each(function() 
     {
@@ -11,18 +11,18 @@ $(document).ready(function()
         });
         var ave_rating = sum_rating_count / sum_total_reviews *10;
         if (ave_rating <= 2) {
-            var ave_rating = 'One'
+            ave_rating = 'One';
         } else if (ave_rating <= 4) {
-            var ave_rating = 'Two'
+            ave_rating = 'Two';
         } else if (ave_rating <= 6) {
-            var ave_rating = 'Three'
+            ave_rating = 'Three';
         } else if (ave_rating <= 8) {
-            var ave_rating = 'Four'
+            ave_rating = 'Four';
         } else if (ave_rating <= 10) {
-            var ave_rating = 'Five'
+            ave_rating = 'Five';
         }
         $(this).find('.review_count')
-          .after('<p class=\"star ' + ave_rating + '\">' + ave_rating + ' star(s) by user reviews. <a href=\"#\">Add review</a></p>')
+          .after('<p class=\"star ' + ave_rating + '\">' + ave_rating + ' star(s) by user reviews. <a href=\"#reviews\">Add review</a></p>')
           .remove();
     });
     // Product star rating each review -- must improve this in python
@@ -34,39 +34,58 @@ $(document).ready(function()
             user_rating += parseFloat($(this).text());
         });
         if (user_rating == 1) {
-            var user_rating = 'One'
+            user_rating = 'One';
         }
         else if (user_rating == 2) {
-            var user_rating = 'Two'
+            user_rating = 'Two';
         }
         else if (user_rating == 3) {
-            var user_rating = 'Three'
+            user_rating = 'Three';
         }
         else if (user_rating == 4) {
-            var user_rating = 'Four'
+            user_rating = 'Four';
         }
         else if (user_rating == 5) {
-            var user_rating = 'Five'
+            user_rating = 'Five';
         }
-        $(this)
-          .find('h3')
-          .addClass(user_rating)
-          .end()
-          .find('span')
-          .remove();
+        $(this).find('h3').addClass(user_rating).end().find('span').remove();
     });
     
-    // Width and height of main navigation
-    var $browse_width = $('aside.span3').outerWidth(),
-        $browse_height = $('#browse > .dropdown-menu').outerHeight();
-    // set width of nav dropdown on the homepage
-    $('#browse').find('> .dropdown-menu').css({
-      width: $browse_width
-    });
-    // set margin top of aside allow space for home navigation
-    $('.home aside.span3').css({
-      marginTop: $browse_height
-    });
+    var window_width = $(window).width(), // Width of the window
+        $browse_width = $('aside.span3').outerWidth(), // Width of main navigation
+        $browse_height = $('#browse > .dropdown-menu').outerHeight(); // Height of main navigation
+    
+    if (window_width > 480) {
+      // This activates elastislide
+      var es_carousel = $('.es-carousel-wrapper'),
+          product_page = $('.product_page').length;
+      // on prodct page
+      if (product_page > 0) {
+        es_carousel.elastislide({
+            imageW: 175,
+            minItems: 5,
+            onClick:  true
+        });
+      }
+      else {
+        es_carousel.elastislide({
+          imageW: 200,
+          minItems: 4,
+          onClick:  true
+        });
+      }
+    }
+    if (window_width > 980) {
+      // set width of nav dropdown on the homepage
+      $('#browse').find('> .dropdown-menu').css({
+        width: $browse_width
+      });
+      // set margin top of aside allow space for home navigation
+      $('.home aside.span3').css({
+        marginTop: $browse_height
+      });
+    }
+
     
     // This activates the promotional banner carousel
     $('#myCarousel').carousel({
@@ -79,22 +98,7 @@ $(document).ready(function()
     // This activates the alerts
     $('.alert').alert('.close');
     
-    // This activates elastislide
-    var es_carousel = $('.es-carousel-wrapper'),
-        product_page = $('.product_page').length;
-    // on prodct page
-    if (product_page > 0) {
-      es_carousel.elastislide({
-          imageW: 175,
-          minItems: 5
-      });
-    }
-    else {
-      es_carousel.elastislide({
-        imageW: 200,
-        minItems: 4
-      });
-    }  
+      
 
     // Acordion - remove the first in the list as it is duplication.
     var n = $('.accordion dt').length;
@@ -113,19 +117,30 @@ $(document).ready(function()
     });
     $(".accordion dd").hide();
 
-    //scrollto function
-    var $scrollpage = $('body');
-    $('.span6 .star, .span6 .star a').click(function(){
-        $scrollpage.stop().scrollTo( $('.review_read'), 1000 );
-        return false;
-    });
-    $('a.read_decription').click(function(){
-        $scrollpage.stop().scrollTo( $('.sub-header'), 1000 );
-        return false;
-    });
-    $('.top_page a').click(function(){
-        $scrollpage.stop().scrollTo( $('body'), 1000 );
-        return false;
+    /* scroll to sections */
+    $('.top_page a, .product_page a').click(function (e) {
+        var section = $(this).attr('href');
+        var sectionPosition = Math.floor($(section).offset().top);
+        var currentPosition = Math.floor($(document).scrollTop());
+        // when scrolling downwards
+        if (sectionPosition > currentPosition) {
+            $('html, body').animate({
+                scrollTop: sectionPosition}, 500, function() {
+                $('html, body').animate({
+                    scrollTop: sectionPosition
+                });
+            });
+        }
+        // when scrolling upwards
+        else if (sectionPosition < currentPosition) {
+            $('html, body').animate({
+                scrollTop: sectionPosition}, 500, function() {
+                $('html, body').animate({
+                    scrollTop: sectionPosition
+                });
+            });         
+        }
+        e.preventDefault();
     });
 });
     

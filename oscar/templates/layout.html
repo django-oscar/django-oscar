@@ -28,7 +28,14 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </a>
-                    <a class="brand hidden" href="#">Search</a>
+                    <a class="btn btn-navbar app-ico ico_shop_bag btn-cart hidden" href="{% url checkout:index %}">
+                        <strong>Basket 
+                        {% if request.basket.lines.count %}
+                            Total: {{ basket.total_incl_tax|currency }}
+                        {% endif %}
+                        </strong>
+                    </a>
+                    <a class="brand hidden" href="{% url promotions:home %}">Oscar</a>
                     <div class="nav-collapse">
                         <div id="browse" class="nav dropdown">
                             {% category_tree depth=2 as categories %}
@@ -107,7 +114,6 @@
 
 {# Block for additional scripts #}
 {% block extrascripts %}
-    <script src="{{ STATIC_URL }}js/scrollto/jquery.scrollTo-min.js" type="text/javascript" charset="utf-8"></script>
     <!-- Elastislide carousel js -->
     <script src="{{ STATIC_URL }}js/elastislide/jquery.elastislide.js" type="text/javascript" charset="utf-8"></script>    
     <!-- Responsive gallery js -->

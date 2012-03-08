@@ -1,10 +1,18 @@
 {% extends 'dashboard/layout.html' %}
 {% load currency_filters %}
-
+{% block body_class %}catalogue{% endblock %}
 {% block title %}
 Update product | {{ block.super }}
 {% endblock %}
-
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url promotions:home %}">Dashboard</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active"><a href=".">Catalogue</a></li>
+</ul>
+{% endblock %}
 {% block header %}
 <div class="page-header">
 	<h1>{{ title }}</h1>
@@ -17,6 +25,11 @@ Update product | {{ block.super }}
 	{% csrf_token %}
 		<legend>Product information</legend>
 		{% include "partials/form_fields.html" with form=form %}
+		<legend>Category information</legend>
+		{{ category_formset.management_form }}
+		{% for category_form in category_formset %}
+			{% include "partials/form_fields.html" with form=category_form %}
+		{% endfor %}
 		<legend>Stock and price information</legend>
 		{% include "partials/form_fields.html" with form=stockrecord_form %}
 		<div class="form-actions">

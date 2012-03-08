@@ -188,7 +188,7 @@ class BankcardForm(forms.ModelForm):
     
     number = BankcardNumberField(max_length=20, widget=forms.TextInput(attrs={'autocomplete':'off'}), label="Card number")
     name = forms.CharField(max_length=128, label="Name on card")
-    ccv_number = forms.RegexField(required=True, label="CCV Number",
+    cvv_number = forms.RegexField(required=True, label="CVV Number",
                                   regex=r'^\d{3,4}$', widget=forms.TextInput(attrs={'size': '5'}))
     start_month = BankcardStartingMonthField(label="Valid from", required=False)
     expiry_month = BankcardExpiryMonthField(required=True, label = "Valid to")
@@ -196,7 +196,7 @@ class BankcardForm(forms.ModelForm):
     class Meta:
         model = payment_models.Bankcard
         exclude = ('user', 'partner_reference')
-        fields = ('number', 'name', 'start_month', 'expiry_month', 'ccv_number')
+        fields = ('number', 'name', 'start_month', 'expiry_month', 'cvv_number')
         
     def get_bankcard_obj(self):
         """
@@ -206,7 +206,7 @@ class BankcardForm(forms.ModelForm):
             'name': self.cleaned_data['name'],
             'card_number': self.cleaned_data['number'],
             'expiry_date': self.cleaned_data['expiry_month'].strftime("%m/%y"),
-            'ccv': self.cleaned_data['ccv_number'],
+            'cvv': self.cleaned_data['cvv_number'],
         }
         if self.cleaned_data['start_month']:
             kwargs['start_date'] = self.cleaned_data['start_month'].strftime("%m/%y")

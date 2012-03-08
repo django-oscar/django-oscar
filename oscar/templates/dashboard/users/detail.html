@@ -1,13 +1,23 @@
 {% extends 'dashboard/layout.html' %}
 {% load currency_filters %}
-
+{% block body_class %}users{% endblock %}
 {% block title %}
 User {{ user.username }} | {{ block.super }}
 {% endblock %}
 
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url promotions:home %}">Dashboard</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active"><a href=".">Users</a></li>
+</ul>
+{% endblock %}
+
 {% block header %}
     <div class="page-header">
-        <h2>User {{ user.username }}</h2>
+        <h1>User {{ user.username }}</h1>
     </div>
 {% endblock header %}
 
@@ -26,7 +36,7 @@ User {{ user.username }} | {{ block.super }}
 </div>
 <div id="user_orders">
     <div class="sub-header">
-        <h3>Orders</h3>
+        <h2>Orders</h2>
     </div>
     {% if user.orders.count %}
      <table class="table table-striped table-bordered">
