@@ -30,7 +30,7 @@ Order management | {{ block.super }}
     <form action="." method="get" class="form-horizontal">
         <!-- {% include "partials/form_fields.html" with form=form %} -->
         {{ form.non_field_errors }}
-        <div class="control-group {% for error in form.order_number.errors %}error{% endfor %}">
+        <div class="control-group {% for error in form.order_number.errors %}error{% endfor %} pull-left">
             <label for="id_order_number">Order number:</label>
             <div class="controls">
                 {{ form.order_number }}
@@ -120,7 +120,7 @@ Order management | {{ block.super }}
                 </div>
             </div>
         </div>
-        <div class="control-group {% for error in form.response_format_0.errors %}error{% endfor %}">
+        <div class="control-group {% for error in form.response_format_0.errors %}error{% endfor %} pull-left">
             <label for="id_response_format_0">Get results as:</label>
             <div class="controls">
                 <label class="radio inline" for="id_response_format_0">
@@ -133,11 +133,7 @@ Order management | {{ block.super }}
                 </label>
             </div>
         </div>
-
-
-        <div class="form-actions">
-            <button type="submit" class="btn btn-primary">Search</button>
-        </div>
+        <button type="submit" class="btn btn-primary pull-left">Search</button>
     </form>
 </div>
 

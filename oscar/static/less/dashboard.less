@@ -1,6 +1,7 @@
 // Core variables and mixins
 @import "bootstrap/variables.less"; // Modify this for custom colors, font-sizes, etc
 @import "bootstrap/mixins.less";
+@import "page/osc_mixins.less";
 
 // OSCAR DASHBOARD UNIQUE STYLES
 // -----------
@@ -172,7 +173,49 @@ button {
 h2 {
 /*    font-size: 18px;*/
 }
-
+.control-group.pull-left {
+  > label {
+    width: 100px;
+  }
+  .controls {
+    margin-left: 120px;
+    > label {
+      padding-left:0px;
+    }
+    .radio {
+      ul {
+        .horiz_col();
+        li {
+          label {
+            display: inline-block;
+            padding-top: 5px;
+            margin-bottom: 0;
+            vertical-align: middle;
+            margin-left: 10px;
+            padding-left: 18px;
+          }
+        }
+      }
+    }
+  }
+}
+.no-float {
+  float:none;
+}
+.control-group.pull-left.no-float {
+  > label {
+    width: 140px;
+  }
+  .controls {
+    margin-left: 160px;
+  }
+}
+.pull-left.btn {
+  margin-left:20px;
+}
+.pull-left.no-float.btn {
+  margin-left:160px;
+}
 .page-header.action {
   .clearfix();
   margin-bottom:0px;

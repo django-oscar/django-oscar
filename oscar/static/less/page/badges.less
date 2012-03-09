@@ -1,4 +1,26 @@
 /*** Badge styles ***/
+.group-price {
+  position:absolute;
+  top:2%;
+  left:0px;
+  border:1px solid @orange;
+  text-transform:uppercase;
+  background-color:@white;
+  .border-radius(4px);
+  .box-shadow(2px 2px 3px rgba(0,0,0,.3));
+  #gradient > .vertical(@grayLighter, @white);
+  span {
+    display:block;
+    font-size:@baseFontSize - 3;
+    background-color:@orange;
+    padding:1px 2px;
+    color:@white;
+  }
+  strong {
+    padding:8px 15px;
+    display:block;
+  }
+}
 
 .badge_container,
 .badge_container:before,
