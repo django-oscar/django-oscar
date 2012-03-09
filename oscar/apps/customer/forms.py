@@ -6,6 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from django import forms
 from django.contrib.auth.models import User
 
+
 def generate_username():
     uname = ''.join([random.choice(string.letters + string.digits + '_') for i in range(30)])
 
@@ -65,11 +66,21 @@ class SearchByDateRangeForm(forms.Form):
     date_to = forms.DateField(required=False, label="To")
 
     def clean(self):
-
         if self.is_valid() and not self.cleaned_data['date_from'] and not self.cleaned_data['date_to']:
             raise forms.ValidationError(_("At least one date field is required."))
-
         return super(SearchByDateRangeForm, self).clean()
+
+    def description(self):
+        if not self.is_bound:
+            return 'All orders'
+        date_from = self.cleaned_data['date_from']
+        date_to = self.cleaned_data['date_to']
+        if date_from and date_to:
+            return 'Orders placed between %s and %s' % (date_from, date_to)
+        elif date_from and not date_to:
+            return 'Orders placed since %s' % date_from
+        elif not date_from and date_to:
+            return 'Orders placed until %s' % date_to
 
     def get_filters(self):
         date_from = self.cleaned_data['date_from']

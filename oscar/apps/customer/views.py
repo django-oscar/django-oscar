@@ -145,7 +145,9 @@ class EmailDetailView(DetailView):
 
 
 class OrderHistoryView(ListView):
-    """Customer order history"""
+    """
+    Customer order history
+    """
     context_object_name = "orders"
     template_name = 'customer/order-history.html'
     paginate_by = 20
@@ -153,20 +155,24 @@ class OrderHistoryView(ListView):
     form_class = SearchByDateRangeForm
 
     def get(self, request, *args, **kwargs):
-        self.filter_form = SearchByDateRangeForm(self.request.GET)
+        if 'date_from' in request.GET:
+            self.form = SearchByDateRangeForm(self.request.GET)
+            if not self.form.is_valid():
+                ctx = self.get_context_data()
+                return self.render_to_response(ctx)
+        else:
+            self.form = SearchByDateRangeForm()
         return super(OrderHistoryView, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
-        """Return a customer's orders"""
-        return self.model._default_manager.filter(user=self.request.user)
+        qs = self.model._default_manager.filter(user=self.request.user)
+        if self.form.is_bound:
+            qs = qs.filter(**self.form.get_filters())
+        return qs
 
     def get_context_data(self, *args, **kwargs):
         ctx = super(OrderHistoryView, self).get_context_data(*args, **kwargs)
-        ctx['search_date_form'] = self.filter_form
-        if self.filter_form.is_valid():
-            # Return filtered data from date_from to date_to
-            ctx['orders'] = self.model._default_manager.filter(user=self.request.user, **self.filter_form.get_filters())
-            return ctx
+        ctx['form'] = self.form
         return ctx
 
 
