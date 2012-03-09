@@ -26,6 +26,7 @@ Order {{ order.number }} | {{ block.super }}
 <div class="sub-header">
     <h2>Order information</h2>
 </div>
+<div class="well">
 <table class="table table-striped table-bordered">
     <tr>
 		<th>Order Number</th>
@@ -46,10 +47,12 @@ Order {{ order.number }} | {{ block.super }}
         <td>{{ order.status|default:"N/A" }}</td>
     </tr>
 </table>
+</div>
 
 <div class="sub-header">
     <h2>Order Details</h2>
 </div>
+
 
 <div class="tabbable">
 	<ul class="nav nav-tabs">
@@ -60,7 +63,10 @@ Order {{ order.number }} | {{ block.super }}
 		<li><a href="#5" data-toggle="tab">Activity Log</a></li>
 		<li><a href="#6" data-toggle="tab">Notes</a></li>
 	</ul>
+	
+
 	<div class="tab-content">
+		
 		<div class="tab-pane active" id="1">
 			<div class="sub-header">
 			    <h2>Items ordered</h2>
@@ -178,7 +184,6 @@ Order {{ order.number }} | {{ block.super }}
 			    <input type="submit" value="Go!" class="btn" />
 			</div>
 			</form>
-			
 		</div>
 		<div class="tab-pane" id="2">
 			{% if order.billing_address %}
@@ -278,6 +283,7 @@ Order {{ order.number }} | {{ block.super }}
 		</div>
 	</div>
 </div>
+
 
 <!-- <div class="sub-header">
     <h2>Customer</h2>
