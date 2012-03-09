@@ -44,7 +44,7 @@
                                 <ul class="dropdown-menu nav-tabs nav-stacked">
                                     <li><a href="/products">All Products</a></li>
                                 {% for category in categories %}
-                                    <li><a href="{{ category.0.get_absolute_url }}">{{ category.0.name }} <span class="app-ico ico_fill_right"></span></a>
+                                    <li><a href="{{ category.0.get_absolute_url }}">{{ category.0.name }} {% if category.1 %}<span class="app-ico ico_fill_right"></span>{% endif %}</a>
                                     {% if category.1 %}
                                         <ul class="sub-nav dropdown-menu nav nav-tabs nav-stacked span3">
                                         {% for subcategory in category.1 %}
@@ -100,11 +100,11 @@
             {% endblock %}
            
         	<div id="promotions">
-        		{% for promotion in promotions_page %}
-        		{% render_promotion promotion %}
-        		{% endfor %}
-        	</div>
-
+            	{% for promotion in promotions_page %}
+            	{% render_promotion promotion %}
+            	{% endfor %}
+            </div>
+        	
         	{% block content %} {% endblock %}
 
     	</div><!-- /page_inner -->

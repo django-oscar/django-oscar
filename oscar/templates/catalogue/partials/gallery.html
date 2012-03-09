@@ -15,7 +15,6 @@
 		</div>
 	</div>
 </script>
-{% for image in product.images.all %}
 <div id="rg-gallery" class="rg-gallery">
 	<div class="rg-thumbs">
 		<!-- Elastislide Carousel Thumbnail Viewer -->
@@ -26,15 +25,16 @@
 			</div>
 			<div class="es-carousel">
 				<ul>
+				    {% for image in product.images.all %}
 					<li>
 					    <a href="{{ image.original.url }}" rel="lightbox">
 					        <img src="{{ image.original.url }}" data-large="{{ image.original.url }}" alt="image02" data-description="{% if image.caption %}{{ image.caption }}{% endif %}" />
 					    </a>
 					</li>
+					{% endfor %}
 				</ul>
 			</div>
 		</div>
 		<!-- End Elastislide Carousel Thumbnail Viewer -->
 	</div><!-- rg-thumbs -->
 </div><!-- rg-gallery -->
-{% endfor %}
