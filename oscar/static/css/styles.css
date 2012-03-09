@@ -3158,7 +3158,7 @@ body {
 .product_pod .product_price form {
   margin-bottom: 0px;
 }
-.product_pod .product_price form input#id_quantity {
+.product_pod .product_price form input#id_quantity, .product_pod .product_price form #id_product_id {
   width: 90%;
 }
 .product_pod .product_price .btn {
@@ -3833,6 +3833,40 @@ body {
 }
 /*** Promotional block styles ***/
 /*** Badge styles ***/
+.group-price {
+  position: absolute;
+  top: 2%;
+  left: 0px;
+  border: 1px solid #f89406;
+  text-transform: uppercase;
+  background-color: #ffffff;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.3);
+  box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.3);
+  background-color: #f5f5f5;
+  background-image: -moz-linear-gradient(top, #eeeeee, #ffffff);
+  background-image: -ms-linear-gradient(top, #eeeeee, #ffffff);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#eeeeee), to(#ffffff));
+  background-image: -webkit-linear-gradient(top, #eeeeee, #ffffff);
+  background-image: -o-linear-gradient(top, #eeeeee, #ffffff);
+  background-image: linear-gradient(top, #eeeeee, #ffffff);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#eeeeee', endColorstr='#ffffff', GradientType=0);
+}
+.group-price span {
+  display: block;
+  font-size: 10px;
+  background-color: #f89406;
+  padding: 1px 2px;
+  color: #ffffff;
+}
+.group-price strong {
+  padding: 8px 15px;
+  display: block;
+}
 .badge_container,
 .badge_container:before,
 .badge_container:after,

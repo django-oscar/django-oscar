@@ -1,4 +1,3 @@
-{% load currency_filters %}
 <section class="well well-blank">
     <div class="sub-header">
         <h2>{{ promotion.name }}</h2>
@@ -12,35 +11,13 @@
             <ul class="products">
                 {% for product in promotion.get_products %}
                 <li>
-                    <article class="product_pod">
-                        {% with product.images.all.0 as image %}
-                        <div class="image_container">
-                            <a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ image.original.url }}" alt="{{ product.get_title }}"></a>
-                        </div>    
-                        {% endwith %}
-                        <h3><a href="{{ product.get_absolute_url }}">{{ product.get_title|truncatewords:5|slice:"-4" }}</a></h3>
-                        <div class="product_price">
-                            {% if product.is_group %}
-                            From {{ product.min_variant_price_incl_tax|currency }}
-                            {% else %}
-                            {% if product.has_stockrecord %} 
-                            <h4><span>{{ product.stockrecord.price_incl_tax|currency }}</span></h4>
-                            <p class="app-ico instock avaliability">{{ product.stockrecord.availability|truncatewords:2|slice:"-4" }}</p>
-                            {% else %}
-                            <p class="app-ico outstock avaliability">Not available</p>
-                            {% endif %}
-                            {% endif %}
-                        </div>
-                    </article>    
+                    {% include "promotions/partials/product_carousel.html" %}
                 </li>
                 {% endfor %}
             </ul>
         </div>
     </div>
     <!-- End Elastislide Carousel -->
-
-
-
 
 
 {% if block.link_url %}
