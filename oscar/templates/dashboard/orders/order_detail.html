@@ -8,16 +8,20 @@ Order {{ order.number }} | {{ block.super }}
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url promotions:home %}">Dashboard</a>
+        <a href="{% url dashboard:index %}">Dashboard</a>
         <span class="divider">/</span>
     </li>
-    <li class="active"><a href=".">Orders</a></li>
+    <li>
+        <a href="{% url dashboard:order-list %}">Orders</a>
+        <span class="divider">/</span>
+    </li>
+	<li class="active"><a href=".">#{{ order.number }}</a></li>
 </ul>
 {% endblock %}
 
 {% block header %}
 <div class="page-header">
-    <h1>View Order #{{ order.number }}</h1>
+    <h1>Order #{{ order.number }}</h1>
 </div>
 {% endblock header %}
 
@@ -63,7 +67,6 @@ Order {{ order.number }} | {{ block.super }}
 		<li><a href="#5" data-toggle="tab">Activity Log</a></li>
 		<li><a href="#6" data-toggle="tab">Notes</a></li>
 	</ul>
-	
 
 	<div class="tab-content">
 		
@@ -158,6 +161,9 @@ Order {{ order.number }} | {{ block.super }}
 			         		<option value="{{ event_type.code }}">{{ event_type.name }}</option>
 			         		{% endfor %}
 			         	</select>
+			        </label>
+			        <label class="radio inline">
+			             <input type="text" name="reference" value="" /> with reference
 			        </label>
 			    </div>
 			</div>
