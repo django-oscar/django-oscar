@@ -132,6 +132,7 @@ Order {{ order.number }} | {{ block.super }}
 			    </tbody>
 			</table>
 
+			{% block line_actions %}
 			<p>With selected lines:</p>
 
 			<div class="control-group">
@@ -190,58 +191,81 @@ Order {{ order.number }} | {{ block.super }}
 			    <input type="submit" value="Go!" class="btn" />
 			</div>
 			</form>
+			{% endblock line_actions %}
 		</div>
-		<div class="tab-pane" id="2">
-			{% if order.billing_address %}
-			<h3>Billing address</h3>
-			<p>
-			{% for field in order.billing_address.active_address_fields %}
-			{{ field }}<br/>
-			{% endfor %}
-			</p>
-			{% endif %}
 
-			{% if order.shipping_address %}
-			<div class="sub-header">
-			    <h2>Shipping</h2>
-			</div>
-			<div class="well well-info">
-			    <p>
-			    {% for field in order.shipping_address.active_address_fields %}
-			    {{ field }}<br/>
-			    {% endfor %}
-			    </p>
-			    <div class="alert-actions"><a href="{% url dashboard:order-shipping-address order.number %}" class="btn">Edit shipping address</a></div>
-			</div>
-			{% endif %}
-		</div>
-		<div class="tab-pane" id="3">
-		</div>
-		<div class="tab-pane" id="4">
-		</div>
-		<div class="tab-pane" id="5">
-			<div class="sub-header">
-			    <h2>Actions</h2>
-			</div>
-			{% with statuses=order.available_statuses %}
-			{% if statuses %}
-			<form action="." method="post">
-			    {% csrf_token %}
-			    <input type="hidden" name="order_action" value="change_order_status" />
-				Change order status to:
-				<select name="new_status">
-					{% for status in statuses %}
-					<option>{{ status }}</option>
+		<div class="tab-pane" id="2">
+			{% block tab_addresses %}
+				{% if order.billing_address %}
+				<h3>Billing address</h3>
+				<p>
+				{% for field in order.billing_address.active_address_fields %}
+				{{ field }}<br/>
+				{% endfor %}
+				</p>
+				{% endif %}
+
+				{% if order.shipping_address %}
+				<div class="sub-header">
+					<h2>Shipping</h2>
+				</div>
+				<div class="well well-info">
+					<p>
+					{% for field in order.shipping_address.active_address_fields %}
+					{{ field }}<br/>
 					{% endfor %}
-				</select>
-			    <input type="submit" value="Go!" class="btn" />
-			</form>
-			{% else %}
-			<p>No further status changes are permitted.</p>
-			{% endif %}
-			{% endwith%}
+					</p>
+					<div class="alert-actions"><a href="{% url dashboard:order-shipping-address order.number %}" class="btn">Edit shipping address</a></div>
+				</div>
+				{% endif %}
+			{% endblock %}
 		</div>
+
+		<div class="tab-pane" id="3">
+			{% block tab_transactions %}
+				<div class="sub-header">
+					<h2>Transactions</h2>
+				</div>
+				<p>No transaction data available.</p>
+			{% endblock %}
+		</div>
+
+		<div class="tab-pane" id="4">
+			{% block tab_emails %}
+				<div class="sub-header">
+					<h2>Emails</h2>
+				</div>
+				<p>No email data available.</p>
+			{% endblock %}
+		</div>
+
+		<div class="tab-pane" id="5">
+			{% block tab_activity %}
+				<div class="sub-header">
+					<h2>Actions</h2>
+				</div>
+				{% with statuses=order.available_statuses %}
+				{% if statuses %}
+				<form action="." method="post">
+					{% csrf_token %}
+					<input type="hidden" name="order_action" value="change_order_status" />
+					Change order status to:
+					<select name="new_status">
+						{% for status in statuses %}
+						<option>{{ status }}</option>
+						{% endfor %}
+					</select>
+					<input type="submit" value="Go!" class="btn" />
+				</form>
+				{% else %}
+				<p>No further status changes are permitted.</p>
+				{% endif %}
+				{% endwith%}
+			{% endblock %}
+		</div>
+		
 		<div class="tab-pane" id="6">
+			{% block tab_notes %}
 			<div class="sub-header">
 			    <h2>Notes</h2>
 			</div>
@@ -286,6 +310,7 @@ Order {{ order.number }} | {{ block.super }}
 				    <input type="submit" value="Save note" class="btn" />
 				</div>
 			</form>
+			{% endblock %}
 		</div>
 	</div>
 </div>
