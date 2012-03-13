@@ -2,7 +2,7 @@
 {% load currency_filters %}
 {% block body_class %}reports{% endblock %}
 {% block title %}
-Reports
+Reports | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -25,7 +25,6 @@ Reports
 {% block dashboard_content %}
 
 <form method="GET" action="{% url dashboard:reports-index %}" class="form-horizontal">
-
     {% include "partials/form_fields.html" with form=form %}
     <div class="form-actions">
         <input type="submit" value="Generate report" class="btn btn-primary" />

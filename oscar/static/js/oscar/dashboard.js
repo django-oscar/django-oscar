@@ -1,20 +1,22 @@
 var oscar = oscar || {};
 oscar.get_csrf_token = function() {
     var cookies = document.cookie.split(';');
+    var csrf_token = null;
     $.each(cookies, function(index, cookie) {
         cookie_parts = $.trim(cookie).split('=');
         if (cookie_parts[0] == 'csrftoken') {
-            return cookie_parts[1];
+            csrf_token = cookie_parts[1];
         }
     });
-    return null;
+    return csrf_token;
 };
 oscar.dashboard = {
     promotions: {
         init: function() {
             $('.promotion_list').sortable({
                 handle: '.btn-handle',
-                stop: oscar.dashboard.promotions.save_order});
+                stop: oscar.dashboard.promotions.save_order
+            });
         },
         save_order: function(event, ui) {
             // Get the csrf token, otherwise django will not accept the
