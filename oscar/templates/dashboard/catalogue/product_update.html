@@ -1,9 +1,12 @@
 {% extends 'dashboard/layout.html' %}
 {% load currency_filters %}
+
 {% block body_class %}catalogue{% endblock %}
+
 {% block title %}
 Update product | {{ block.super }}
 {% endblock %}
+
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
@@ -13,6 +16,7 @@ Update product | {{ block.super }}
     <li class="active"><a href=".">Catalogue</a></li>
 </ul>
 {% endblock %}
+
 {% block header %}
 <div class="page-header">
 	<h1>{{ title }}</h1>
@@ -20,8 +24,7 @@ Update product | {{ block.super }}
 {% endblock header %}
 
 {% block dashboard_content %}
-
-<form action="." method="post" class="form-horizontal">
+<form action="." method="post" class="form-horizontal" enctype="multipart/form-data">
 	{% csrf_token %}
 		<legend>Product information</legend>
 		{% include "partials/form_fields.html" with form=form %}
@@ -32,6 +35,11 @@ Update product | {{ block.super }}
 		{% endfor %}
 		<legend>Stock and price information</legend>
 		{% include "partials/form_fields.html" with form=stockrecord_form %}
+		<legend>Images</legend>
+		{{ image_formset.management_form }}
+		{% for image_form in image_formset %}
+			{% include "partials/form_fields.html" with form=image_form %}
+		{% endfor %}
 		<div class="form-actions">
             <button class="btn btn-primary" type="submit">Save</button> or 
 			<a href="{% url dashboard:catalogue-product-list">cancel</a>
@@ -40,5 +48,4 @@ Update product | {{ block.super }}
 {% if product %}
 <p><a class="btn btn-success" href="{{ product.get_absolute_url }}">View on site</a></p>
 {% endif %}
-
 {% endblock dashboard_content %}
