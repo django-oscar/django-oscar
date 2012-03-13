@@ -208,8 +208,11 @@ class HandPickedProductList(AbstractProductList):
     _type = 'Product list'
     products = models.ManyToManyField('catalogue.Product', through='OrderedProduct', blank=True, null=True)
 
-    def get_products(self):
+    def get_queryset(self):
         return self.products.all().order_by('%s.display_order' % OrderedProduct._meta.db_table)
+
+    def get_products(self):
+        return self.get_queryset()
 
 
 class OrderedProduct(models.Model):
@@ -233,10 +236,13 @@ class AutomaticProductList(AbstractProductList):
     method = models.CharField(max_length=128, choices=METHOD_CHOICES)
     num_products = models.PositiveSmallIntegerField(default=4)
 
-    def get_products(self):
+    def get_queryset(self):
         if self.method == self.BESTSELLING:
-            return Product.browsable.all().order_by('-score')[:self.num_products]
-        return Product.browsable.all().order_by('-date_created')[:self.num_products]
+            return Product.browsable.all().order_by('-score')
+        return Product.browsable.all().order_by('-date_created')
+
+    def get_products(self):
+        return self.get_queryset()[:self.num_products]
 
 
 class OrderedProductList(HandPickedProductList):
