@@ -17,15 +17,15 @@ Users | {{ block.super }}
 
 {% block header %}
 <div class="page-header action">
-    <h1>User management</h1><a href="#" class="pull_out">Search Users</a>
-    <div class="orders_search">
-        <form action="." method="get" class="form-horizontal">
-            {% include "partials/form_fields.html" with form=form %}
-           <div class="form-actions">
-               <input type="submit" value="Search" class="btn btn-primary"/>
-           </div>
-        </form>
-    </div>
+    <h1>User management</h1>
+</div>
+
+<div class="well well-info">
+    <h3 class="app-ico ico_magnify icon">Search</h3>
+    <form action="." method="get" class="form-inline">
+        {% include "partials/form_fields_inline.html" with form=form %}
+        <input type="submit" value="Search" class="btn btn-primary"/>
+    </form>
 </div>
 {% endblock header %}
 

@@ -170,8 +170,8 @@ button {
         line-height: 36px;*/
     }
 }
-h2 {
-/*    font-size: 18px;*/
+h3 {
+  margin-bottom:@baseLineHeight / 4;
 }
 .control-group.pull-left {
   > label {
@@ -279,6 +279,17 @@ h2 {
     list-style:none;
   }
 }
+.form-inline {
+  margin-bottom:0px;
+}
+.icon:before {
+  padding:7px 6px;
+  background:@black;
+  #translucent > .background(@black,0.15);
+  .border-radius(20px);
+  color:@white;
+  margin-right:5px;
+}
 .file_upload {
   .clearfix();
   form, p {
@@ -321,26 +332,18 @@ h2 {
     background-color:#efefef;
   }
 }
-.fontsize {
-  ul {
-    .clearfix();
-    margin-left:10px;
-    margin-bottom:0px;
-  }
-  li {
-    float:left;
-    list-style:none;
-    margin-right:10px;
-    line-height: 27px;
-    padding-top: 6px;
-  }
-  #larger,
-  #smaller {
-    cursor:pointer;
-    color:@linkColor;
-  }
-  #larger {
-    font-size: @baseFontSize + 5;
-    line-height:23px;
-  }
+
+.tabbable.dashboard {
+    border-left: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    border-bottom-radius: 5px;
+        .tab-content > .active {
+        padding: 18px;
+    }
+    .nav-tabs > li > a {
+    background: #F5F5F5;
+    }
+    .nav-tabs > li.active a {
+        background: #fff;
+    }
 }

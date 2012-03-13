@@ -45,10 +45,12 @@
         <div class="sub-header">
             <h1>{{ summary }}</h1>
         </div>
+         <p>{{ category.description }}</p>
+
 {% endblock sidebar %}
 
 {% block content %}
-
+    
     {% if products.count %}
     
     <section>

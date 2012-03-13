@@ -35,7 +35,8 @@ class EventHandler(object):
         Consume the stock allocations for the passed lines
         """
         for line, qty in zip(lines, line_quantities):
-            line.product.stockrecord.consume_allocation(qty)
+            if line.product:
+                line.product.stockrecord.consume_allocation(qty)
 
     def cancel_stock_allocations(self, order, lines, line_quantities):
         """

@@ -8,22 +8,26 @@ Order {{ order.number }} | {{ block.super }}
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url promotions:home %}">Dashboard</a>
+        <a href="{% url dashboard:index %}">Dashboard</a>
         <span class="divider">/</span>
     </li>
-    <li class="active"><a href=".">Orders</a></li>
+    <li>
+        <a href="{% url dashboard:order-list %}">Orders</a>
+        <span class="divider">/</span>
+    </li>
+	<li class="active"><a href=".">#{{ order.number }}</a></li>
 </ul>
 {% endblock %}
 
 {% block header %}
 <div class="page-header">
-    <h1>View Order #{{ order.number }}</h1>
+    <h1>Order #{{ order.number }}</h1>
 </div>
 {% endblock header %}
 
 {% block dashboard_content %}
 
-<div class="well-blank">
+<div class="well well-blank">
 	<div class="sub-header">
 	    <h2>Customer Information</h2>
 	</div>
@@ -66,14 +70,14 @@ Order {{ order.number }} | {{ block.super }}
 </table>
 </div>
 
-<div class="well">
+<div class="well well-blank">
 
 <div class="sub-header">
     <h2>Order Details</h2>
 </div>
 
 
-<div class="tabbable">
+<div class="tabbable dashboard">
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="#1" data-toggle="tab">Order Summary</a></li>
 		<li><a href="#2" data-toggle="tab">Addresses</a></li>
@@ -82,7 +86,6 @@ Order {{ order.number }} | {{ block.super }}
 		<li><a href="#5" data-toggle="tab">Activity Log</a></li>
 		<li><a href="#6" data-toggle="tab">Notes</a></li>
 	</ul>
-	
 
 	<div class="tab-content">
 		
@@ -148,6 +151,7 @@ Order {{ order.number }} | {{ block.super }}
 			    </tbody>
 			</table>
 
+			{% block line_actions %}
 			<p>With selected lines:</p>
 
 			<div class="control-group">
@@ -178,6 +182,9 @@ Order {{ order.number }} | {{ block.super }}
 			         		{% endfor %}
 			         	</select>
 			        </label>
+			        <label class="radio inline">
+			             <input type="text" name="reference" value="" /> with reference
+			        </label>
 			    </div>
 			</div>
 			<div class="control-group">
@@ -203,16 +210,19 @@ Order {{ order.number }} | {{ block.super }}
 			    <input type="submit" value="Go!" class="btn" />
 			</div>
 			</form>
+			{% endblock line_actions %}
 		</div>
+
 		<div class="tab-pane" id="2">
-			{% if order.billing_address %}
-			<h3>Billing address</h3>
-			<p>
-			{% for field in order.billing_address.active_address_fields %}
-			{{ field }}<br/>
-			{% endfor %}
-			</p>
-			{% endif %}
+			{% block tab_addresses %}
+				{% if order.billing_address %}
+				<h3>Billing address</h3>
+				<p>
+				{% for field in order.billing_address.active_address_fields %}
+				{{ field }}<br/>
+				{% endfor %}
+				</p>
+				{% endif %}
 
 			{% if order.shipping_address %}
 			<div class="sub-header">
@@ -268,7 +278,22 @@ Order {{ order.number }} | {{ block.super }}
 			{% endif %}
 			{% endwith %}
 			
+				{% if order.shipping_address %}
+				<div class="sub-header">
+					<h2>Shipping</h2>
+				</div>
+				<div class="well well-info">
+					<p>
+					{% for field in order.shipping_address.active_address_fields %}
+					{{ field }}<br/>
+					{% endfor %}
+					</p>
+					<div class="alert-actions"><a href="{% url dashboard:order-shipping-address order.number %}" class="btn">Edit shipping address</a></div>
+				</div>
+				{% endif %}
+			{% endblock %}
 		</div>
+
 		<div class="tab-pane" id="3">
 			<div class="sub-header">
 			    <h2>Payment</h2>
@@ -364,32 +389,51 @@ Order {{ order.number }} | {{ block.super }}
 			{% endif %}
 			{% endwith %}
 			
+			{% block tab_transactions %}
+				<div class="sub-header">
+					<h2>Transactions</h2>
+				</div>
+				<p>No transaction data available.</p>
+			{% endblock %}
+
 		</div>
+
 		<div class="tab-pane" id="4">
+			{% block tab_emails %}
+				<div class="sub-header">
+					<h2>Emails</h2>
+				</div>
+				<p>No email data available.</p>
+			{% endblock %}
 		</div>
+
 		<div class="tab-pane" id="5">
-			<div class="sub-header">
-			    <h2>Actions</h2>
-			</div>
-			{% with statuses=order.available_statuses %}
-			{% if statuses %}
-			<form action="." method="post">
-			    {% csrf_token %}
-			    <input type="hidden" name="order_action" value="change_order_status" />
-				Change order status to:
-				<select name="new_status">
-					{% for status in statuses %}
-					<option>{{ status }}</option>
-					{% endfor %}
-				</select>
-			    <input type="submit" value="Go!" class="btn" />
-			</form>
-			{% else %}
-			<p>No further status changes are permitted.</p>
-			{% endif %}
-			{% endwith%}
+			{% block tab_activity %}
+				<div class="sub-header">
+					<h2>Actions</h2>
+				</div>
+				{% with statuses=order.available_statuses %}
+				{% if statuses %}
+				<form action="." method="post">
+					{% csrf_token %}
+					<input type="hidden" name="order_action" value="change_order_status" />
+					Change order status to:
+					<select name="new_status">
+						{% for status in statuses %}
+						<option>{{ status }}</option>
+						{% endfor %}
+					</select>
+					<input type="submit" value="Go!" class="btn" />
+				</form>
+				{% else %}
+				<p>No further status changes are permitted.</p>
+				{% endif %}
+				{% endwith%}
+			{% endblock %}
 		</div>
+		
 		<div class="tab-pane" id="6">
+			{% block tab_notes %}
 			<div class="sub-header">
 			    <h2>Notes</h2>
 			</div>
@@ -434,11 +478,11 @@ Order {{ order.number }} | {{ block.super }}
 				    <input type="submit" value="Save note" class="btn" />
 				</div>
 			</form>
+			{% endblock %}
 		</div>
 	</div>
 </div>
 </div>
-
 
 {% endblock dashboard_content %}
 
