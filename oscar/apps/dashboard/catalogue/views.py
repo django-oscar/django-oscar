@@ -92,7 +92,7 @@ class ProductCreateView(generic.CreateView):
         return kwargs
 
     def form_valid(self, form):
-        product = form.save(commit=False)
+        product = form.save()
         product.product_class = self.get_product_class()
         stockrecord_form = StockRecordForm(self.request.POST)
         category_formset = ProductCategoryFormSet(self.request.POST,
@@ -108,6 +108,7 @@ class ProductCreateView(generic.CreateView):
             category_formset.save()
             return HttpResponseRedirect(self.get_success_url(product))
 
+        product.delete()
         ctx = self.get_context_data()
         ctx['form'] = form
         ctx['stockrecord_form'] = stockrecord_form
