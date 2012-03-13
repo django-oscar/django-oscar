@@ -22,21 +22,13 @@ Order statistics | {{ block.super }}
 {% endblock header %}
 
 {% block dashboard_content %}
-<form method="get" action="{% url dashboard:order-summary %}">
-<table>
-	{{ form.as_table }}
-	<tr>
-		<td>
-
-			<input type="submit" value="Filter result" class="btn primary" />
-		</td>
-		<td>
-			<p style="color: red; text-align: center">{{ error }}</p>
-		</td>
-	</tr>
-</table>
-</form>
-
+<div class="well well-info">
+    <form method="get" action="{% url dashboard:order-summary %}" class="form-inline">
+        <h3 class="app-ico ico_magnify icon">Filter</h3>
+        {% include "partials/form_fields_inline.html" with form=form %}
+        <input type="submit" value="Filter result" class="btn primary" />
+    </form>
+</div>
 <table class="table table-striped table-bordered">
 	<caption>Global stats</caption>
 	<tr>

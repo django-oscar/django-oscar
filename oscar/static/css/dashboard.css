@@ -174,9 +174,8 @@ button {
         line-height: 36px;*/
 
 }
-h2 {
-  /*    font-size: 18px;*/
-
+h3 {
+  margin-bottom: 4.5px;
 }
 .control-group.pull-left > label {
   width: 100px;
@@ -294,6 +293,19 @@ h2 {
   margin-left: 0px;
   list-style: none;
 }
+.form-inline {
+  margin-bottom: 0px;
+}
+.icon:before {
+  padding: 7px 6px;
+  background: #000000;
+  background-color: rgba(0, 0, 0, 0.15);
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+  color: #ffffff;
+  margin-right: 5px;
+}
 .file_upload {
   *zoom: 1;
 }
@@ -340,31 +352,4 @@ h2 {
 }
 .tabs.product_managment li.active a {
   background-color: #efefef;
-}
-.fontsize ul {
-  *zoom: 1;
-  margin-left: 10px;
-  margin-bottom: 0px;
-}
-.fontsize ul:before, .fontsize ul:after {
-  display: table;
-  content: "";
-}
-.fontsize ul:after {
-  clear: both;
-}
-.fontsize li {
-  float: left;
-  list-style: none;
-  margin-right: 10px;
-  line-height: 27px;
-  padding-top: 6px;
-}
-.fontsize #larger, .fontsize #smaller {
-  cursor: pointer;
-  color: #0088cc;
-}
-.fontsize #larger {
-  font-size: 18px;
-  line-height: 23px;
 }
