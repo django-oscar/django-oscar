@@ -3,6 +3,8 @@ from decimal import Decimal
 
 from django import template
 from django.conf import settings
+from django.template.defaultfilters import floatformat
+
 
 register = template.Library()
 
@@ -18,9 +20,9 @@ def currency(value):
     symbol = getattr(settings, 'CURRENCY_SYMBOL', None)
     try:
         if symbol:
-            return "%s%s" % (symbol, locale.format("%.2f", value, grouping=True))
+            return "%s%s" % (symbol, floatformat(value, 2))
         else:
-            return locale.currency(value, symbol=True, grouping=True)
+            return floatformat(value, 2)
     except TypeError:
         return '' 
         
