@@ -16,44 +16,33 @@ Catalogue management | {{ block.super }}
 
 {% block header %}
 <div class="page-header action">
-    <h1>Catalogue management</h1><a href="#" class="pull_out">Search Products</a>
-    <div class="orders_search">
-        <form action="." method="get" class="form-horizontal">
-	         <table>
-				{{ form.as_table }}
-				<tr>
-					<th></th>
-					<td>
-		                <button type="submit" class="btn btn-primary">Search</button>
-					</td>
-				</tr>
-			</table>
-        </form>
-    </div>
+    <h1>Catalogue management</h1>
 </div>
 {% endblock header %}
 
 {% block dashboard_content %}
 
-<div class="sub-header">
-	<h2>Create new product</h2>
+<div class="well well-info">
+	<h3 class="app-ico ico_expand icon">Create new product</h3>
+    <form action="{% url dashboard:catalogue-product-create %}" method="get" class="form-inline">
+		<label for="id_promotion_type">Create a new product of type</label>
+		<select id="id_promotion_type" name="product_class">
+			<option> -- choose type --</option>
+			{% for product_class in product_classes %}
+			<option value="{{ product_class.id }}">{{ product_class.name }}</option>
+			{% endfor %}
+		</select>
+		<input type="submit" value="New Product" class="btn-primary" />
+    </form>
 </div>
 
-<form action="{% url dashboard:catalogue-product-create %}" method="get" class="form-horizontal">
-	<div class="control-group">
-		<label for="id_promotion_type">Create a new product of type</label>
-		<div class="controls">
-			<select id="id_promotion_type" name="product_class">
-				<option> -- choose type --</option>
-				{% for product_class in product_classes %}
-				<option value="{{ product_class.id }}">{{ product_class.name }}</option>
-				{% endfor %}
-			</select>
-			<input type="submit" value="Go!" class="btn-primary" />
-		</div>
-	</div>
-</form>
-
+<div class="well well-danger">
+    <h3 class="app-ico ico_magnify icon">Search Products</h3>
+    <form action="." method="get" class="form-inline">
+		{% include "partials/form_fields_inline.html" with form=form %}
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+</div>
 
 <div class="sub-header">
     <h2>{{ queryset_description }}</h2>
