@@ -112,7 +112,8 @@ class ProductForm(forms.ModelForm):
 
     def save(self, commit=True):
         object = super(ProductForm, self).save(commit)
-        self.save_attributes(object)
+        if commit:
+            self.save_attributes(object)
         return object
 
     def save_attributes(self, object):
