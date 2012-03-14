@@ -1,0 +1,39 @@
+{% extends 'dashboard/layout.html' %}
+{% load currency_filters %}
+{% block body_class %}pages{% endblock %}
+{% block title %}
+{{ title }} | {{ block.super }}
+{% endblock %}
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url promotions:home %}">Dashboard</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active"><a href=".">Page Management</a></li>
+</ul>
+{% endblock %}
+{% block header %}
+<div class="page-header">
+	<h1>{{ title }}</h1>
+</div>
+{% endblock header %}
+
+{% block dashboard_content %}
+
+<form action="." method="post" class="form-horizontal">
+	{% csrf_token %}
+
+		<legend>Page</legend>
+		{% include "partials/form_fields.html" with form=form %}
+
+		<div class="form-actions">
+                <button class="btn btn-primary" type="submit">Save</button> or 
+			<a href="{% url dashboard:page-list">cancel</a>
+		</div>
+</form>
+{% if page %}
+<p><a class="btn btn-success" href="{{ page.get_absolute_url }}">View on site</a></p>
+{% endif %}
+
+{% endblock dashboard_content %}

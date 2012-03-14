@@ -1,10 +1,14 @@
 from django import forms
 from django.db.models.loading import get_model
 
-User = get_model('user', 'User')
+FlatPage = get_model('flatpages', 'FlatPage')
 
 
-class UserSearchForm(forms.Form):
-    username = forms.CharField(required=False, label="Username")
-    email = forms.CharField(required=False, label="Email")
-    name = forms.CharField(required=False, label="Name")
+class PageSearchForm(forms.Form):
+    title = forms.CharField(required=False, label="Title")
+
+
+class PageUpdateForm(forms.ModelForm):
+    class Meta:
+        model = FlatPage
+        fields = ('title', 'url', 'content')
