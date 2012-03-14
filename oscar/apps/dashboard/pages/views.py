@@ -114,11 +114,11 @@ class PageUpdateView(generic.UpdateView, URLValidationMixin):
     def form_valid(self, form):
         page = form.save(commit=False)
 
-        if not self.url_exists(page.url):
-            if not page.sites.count():
-                page.sites.add(Site.objects.get_current())
-            page.save()
-            return HttpResponseRedirect(self.get_success_url())
+        ##FIXME(elbaschid): requires proper checking of valid URL in form
+        if not page.sites.count():
+            page.sites.add(Site.objects.get_current())
+        page.save()
+        return HttpResponseRedirect(self.get_success_url())
 
         ctx = self.get_context_data()
         ctx['form'] = form

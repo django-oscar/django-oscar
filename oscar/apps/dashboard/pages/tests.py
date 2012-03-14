@@ -101,19 +101,49 @@ class PageViewTests(ClientTestCase):
         fp2 = FlatPage(title='title2', url='/url2/', content='other content')
         fp2.save()
 
+        self.assertEquals(fp1.title, 'title1')
+
         ## check changing to an invalid urls does not work
+        #response = self.client.post('/dashboard/pages/update/1/', data={
+        #                                'title': 'Test Page', 
+        #                                'url': '/url2/', 
+        #                                'content': "<h1> Content </h1>"
+        #                            }, follow=True)
+
+        #self.assertEquals(FlatPage.objects.count(), 2)
+        
+        #page = FlatPage.objects.get(pk=1)
+        #self.assertEquals(page.title, 'title1')
+        #self.assertEquals(page.url, '/url1/')
+        #self.assertEquals(page.content, "some content")
+
+        ## check doing a valid update
         response = self.client.post('/dashboard/pages/update/1/', data={
                                         'title': 'Test Page', 
-                                        'url': '/url2/', 
+                                        'url': '/url1/', 
                                         'content': "<h1> Content </h1>"
                                     }, follow=True)
 
         self.assertEquals(FlatPage.objects.count(), 2)
         
         page = FlatPage.objects.get(pk=1)
-        self.assertEquals(page.title, 'title1')
+        self.assertEquals(page.title, 'Test Page')
         self.assertEquals(page.url, '/url1/')
-        self.assertEquals(page.content, "some content")
+        self.assertEquals(page.content, "<h1> Content </h1>")
+
+        ## check doing a valid update with new URL
+        response = self.client.post('/dashboard/pages/update/1/', data={
+                                        'title': 'Test Page', 
+                                        'url': '/new/url/', 
+                                        'content': "<h1> Content </h1>"
+                                    }, follow=True)
+
+        self.assertEquals(FlatPage.objects.count(), 2)
+        
+        page = FlatPage.objects.get(pk=1)
+        self.assertEquals(page.title, 'Test Page')
+        self.assertEquals(page.url, '/new/url/')
+        self.assertEquals(page.content, "<h1> Content </h1>")
 
     def test_dashboard_delete_pages(self):
         fp1 = FlatPage(title='title1', url='/url1/', content='some content')
