@@ -6,8 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from django.db.models import get_model
 
-from django.conf import settings
-
+# FlatPages is None if not installed
 FlatPage = get_model('flatpages', 'FlatPage')
 
 class ExtendedURLValidator(validators.URLValidator):
@@ -30,10 +29,11 @@ class ExtendedURLValidator(validators.URLValidator):
                 resolve(value)
             self.is_local_url = True
         except Http404:
-            ## check for existing urls of flatpages
-            for page in FlatPage.objects.all().only(('url')):
-                if value == page.url:
-                    return
+            ## check for existing urls of flatpages if package installed
+            if FlatPage is not None:
+                for page in FlatPage.objects.all().only(('url')):
+                    if value == page.url:
+                        return
             raise ValidationError(_('Specified page does not exist'))
 
     def fix_local_url(self, value):
