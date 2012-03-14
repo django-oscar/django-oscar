@@ -1,14 +1,37 @@
 from django.db.models.loading import get_model
+from django.template.defaultfilters import slugify
 from django.http import HttpResponseRedirect
 
-from django.contrib import messages
+from django.core.exceptions import ValidationError
+from django.core.urlresolvers import reverse
+
 from django.views import generic
 from django.views.generic import ListView
-from django.core.urlresolvers import reverse
+
+from django.contrib import messages
+
+from oscar.core.validators import ExtendedURLValidator
 from oscar.apps.dashboard.pages import forms 
 
 FlatPage = get_model('flatpages', 'FlatPage')
 Site = get_model('sites', 'Site')
+
+
+## FIXME(elbaschid): integrate validation into forms not views
+class URLValidationMixin(object):
+
+    def url_exists(self, url):
+        validate = ExtendedURLValidator(verify_exists=True)
+        try:
+            validate(url)
+            return True
+        except ValidationError, e:
+            for page in FlatPage.objects.all().only(('url')):
+                if url == page.url:
+                    return True
+
+        return False
+
 
 class PageListView(ListView):
     template_name = 'dashboard/pages/index.html'
@@ -42,7 +65,7 @@ class PageListView(ListView):
         return context
 
 
-class PageCreateView(generic.CreateView):
+class PageCreateView(generic.CreateView, URLValidationMixin):
     template_name = 'dashboard/pages/update.html'
     model = FlatPage
     form_class = forms.PageUpdateForm
@@ -54,10 +77,15 @@ class PageCreateView(generic.CreateView):
         return ctx
 
     def form_valid(self, form):
-        ##FIXME: validation of URL is required
-        if True:
-            page = form.save()
+        ## if no URL is specified, generate from title
+        page = form.save(commit=False)
+
+        if not page.url:
+            page.url = '/%s/' % slugify(page.title)
+
+        if not self.url_exists(page.url):
             ## use current site as default for new page
+            page.save()
             page.sites.add(Site.objects.get_current())
             page.save()
 
@@ -72,7 +100,7 @@ class PageCreateView(generic.CreateView):
         return reverse('dashboard:page-list')
 
 
-class PageUpdateView(generic.UpdateView):
+class PageUpdateView(generic.UpdateView, URLValidationMixin):
     template_name = 'dashboard/pages/update.html'
     model = FlatPage
     form_class = forms.PageUpdateForm
@@ -84,16 +112,27 @@ class PageUpdateView(generic.UpdateView):
         return ctx
 
     def form_valid(self, form):
-        ##FIXME: validation of URL is required
-        if True:
-            page = form.save()
+        page = form.save(commit=False)
+
+        if not self.url_exists(page.url):
+            if not page.sites.count():
+                page.sites.add(Site.objects.get_current())
+            page.save()
             return HttpResponseRedirect(self.get_success_url())
 
         ctx = self.get_context_data()
         ctx['form'] = form
         return self.render_to_response(ctx)
 
-    def get_success_url(self, page):
+    def get_success_url(self):
         messages.success(self.request, "Updated page '%s'" % self.object.title)
         return reverse('dashboard:page-list')
 
+
+class PageDeleteView(generic.DeleteView):
+    template_name = 'dashboard/pages/delete.html'
+    model = FlatPage
+
+    def get_success_url(self):
+        messages.success(self.request, "Deleted page '%s'" % self.object.title)
+        return reverse('dashboard:page-list')

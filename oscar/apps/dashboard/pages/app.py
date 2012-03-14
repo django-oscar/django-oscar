@@ -14,6 +14,7 @@ class FlatPageManagementApplication(Application):
     list_view = views.PageListView
     create_view = views.PageCreateView
     update_view = views.PageUpdateView
+    delete_view = views.PageDeleteView
 
     def get_urls(self):
         urlpatterns = patterns('',
@@ -21,8 +22,12 @@ class FlatPageManagementApplication(Application):
 
             url(r'^create/$', self.create_view.as_view(), name='page-create'),
 
-            url(r'^(?P<pk>[-\w]+)/$', 
+            url(r'^update/(?P<pk>[-\w]+)/$', 
                 self.update_view.as_view(), name='page-update'),
+
+            url(r'^delete/(?P<pk>\d+)/$',
+                self.delete_view.as_view(), name='page-delete')
+
         )
         return self.post_process_urls(urlpatterns)
 

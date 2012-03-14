@@ -9,6 +9,9 @@ class PageSearchForm(forms.Form):
 
 
 class PageUpdateForm(forms.ModelForm):
+    url = forms.CharField(max_length=20, required=False,
+                          help_text="some help text")
+
     class Meta:
         model = FlatPage
         fields = ('title', 'url', 'content')
