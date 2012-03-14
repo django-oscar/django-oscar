@@ -13,45 +13,49 @@ Order {{ order.number }} - Line #{{ line.id }} | {{ block.super }}
 
 {% block dashboard_content %}
 
-<div class="sub-header">
-    <h2>Product details</h2>
+<div class="row-fluid">
+    <div class="span4">
+        <h3>Product details</h3>
+        <table class="table table-striped table-bordered">
+            <tr>
+        		<th>Title</th><td>{{ line.title }}</td>
+            </tr>
+            <tr>
+        		<th>Quantity</th><td>{{ line.quantity }}</td>
+            </tr>
+            <tr>
+        		<th>&nbsp;</th><td>&nbsp;</td>
+            </tr>
+        </table>
+    </div>
+    <div class="span4">
+        <h3>Partner details</h3>
+        <table class="table table-striped table-bordered">
+            <tr>
+        		<th>Status</th><td>{{ line.status|default:"-" }}</td>
+            </tr>
+            <tr>
+        		<th>Partner</th><td>{{ line.partner_name }}</td>
+            </tr>
+            <tr>
+        		<th>Partner SKU</th><td>{{ line.partner_sku }}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="span4">
+        <h3>Shipping details</h3>
+        <table class="table table-striped table-bordered">
+        	<tr>
+        		<th>Partner reference number</th><td>{{ line.partner_line_reference|default:"-" }}</td>
+        	</tr>
+        	<tr>
+        		<th>Partner notes</th><td>{{ line.partner_line_notes|default:"-" }}</td>
+        	</tr>
+        	<tr>
+        		<th>Estimate dispatch date</th><td>{{ line.est_dispatch_date }}</td>
+        	</tr>
+        </table>
+    </div>
 </div>
-<table class="table table-striped table-bordered">
-    <tr>
-		<th>Title</th><td>{{ line.title }}</td>
-    </tr>
-    <tr>
-		<th>Quantity</th><td>{{ line.quantity }}</td>
-    </tr>
-</table>
-<div class="sub-header">
-    <h2>Partner details</h2>
-</div>
-<table class="table table-striped table-bordered">
-    <tr>
-		<th>Status</th><td>{{ line.status|default:"-" }}</td>
-    </tr>
-    <tr>
-		<th>Partner</th><td>{{ line.partner_name }}</td>
-    </tr>
-    <tr>
-		<th>Partner SKU</th><td>{{ line.partner_sku }}</td>
-    </tr>
-</table>
-<div class="sub-header">
-    <h2>Shipping details</h2>
-</div>
-<table class="table table-striped table-bordered">
-	<tr>
-		<th>Partner reference number</th><td>{{ line.partner_line_reference|default:"-" }}</td>
-	</tr>
-	<tr>
-		<th>Partner notes</th><td>{{ line.partner_line_notes|default:"-" }}</td>
-	</tr>
-	<tr>
-		<th>Estimate dispatch date</th><td>{{ line.est_dispatch_date }}</td>
-	</tr>
-</table>
-
 {% endblock dashboard_content %}
 

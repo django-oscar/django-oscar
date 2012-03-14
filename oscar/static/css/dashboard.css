@@ -168,6 +168,7 @@ button {
 .page-header {
   background-color: #ffffff;
   padding: 10px 20px 10px 0px;
+  margin-bottom: 0px;
 }
 .page-header h1 {
   /*        font-size: 24px;
@@ -353,17 +354,23 @@ h3 {
 .tabs.product_managment li.active a {
   background-color: #efefef;
 }
-.tabbable.dashboard {
-  border-left: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
-  border-bottom-radius: 5px;
-}
-.tabbable.dashboard .tab-content > .active {
-  padding: 18px;
+.tabbable.dashboard .nav {
+  margin-bottom: 0px;
 }
 .tabbable.dashboard .nav-tabs > li > a {
-  background: #F5F5F5;
+  background: #fff;
+  border: 1px solid #DDD;
 }
 .tabbable.dashboard .nav-tabs > li.active a {
-  background: #fff;
+  background: #f5f5f5;
+  border-bottom-color: transparent;
+}
+.tabbable.dashboard .tab-content {
+  padding: 18px;
+  border: 1px solid #e1e1e1;
+  border-top-width: 0px;
+  background: #f5f5f5;
+}
+.new-product input[type=text], .new-product textarea {
+  width: 99%;
 }

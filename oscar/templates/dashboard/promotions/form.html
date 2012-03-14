@@ -19,66 +19,61 @@
 
 
 {% block promotion_form %}
-<form action="." method="post" enctype="multipart/form-data" class="form-horizontal">
-	{% csrf_token %}
-	{% include "partials/form_fields.html" with form=form %}
-	<div class="form-actions">
+<div class="well well-info">
+    <form action="." method="post" enctype="multipart/form-data" class="new-product">
+    	{% csrf_token %}
+    	{% include "partials/form_fields.html" with form=form %}
         <button type="submit" class="btn btn-primary">Save</button>
 		or <a href="{% url dashboard:promotion-list %}">Cancel</a>
-	</div>
-</form>
+    </form>
+</div>
 {% endblock %}
 
 {% if promotion %}
-<div class="sub-header">
-    <h2>Pages displaying this content block</h2>
+<div class="well">
+    <h3 class="app-ico ico_favourite icon">Pages displaying this content block</h3>
+    {% if links %}
+    <table class="table table-bordered">
+    	<thead>
+    		<tr>
+    			<th>Page URL</th>
+    			<th>Position on page</th>
+    			<th>Actions</th>
+    		</tr>
+    	</thead>
+    	<tbody>
+    		{% for link in links %}
+    		<tr>
+    			<td>{{ link.page_url }}</td>
+    			<td>{{ link.position }}</td>
+    			<td>
+                    <form action="." method="post" >
+    					{% csrf_token %}
+    					<input type="hidden" name="action" value="remove_from_page" />
+    					<input type="hidden" name="pagepromotion_id" value="{{ link.id }}" />
+    					<button class="btn btn-danger btn-small" type="submit">Remove from page</button>
+    				</form>
+    			</td>
+    		</tr>
+    		{% endfor %}
+    	</tbody>
+    </table>
+
+    {% else %}
+    <p>This promotion is not displayed anywhere at the moment.</p>
+    {% endif %}
 </div>
 
-{% if links %}
-<table class="table table-striped table-bordered">
-	<thead>
-		<tr>
-			<th>Page URL</th>
-			<th>Position on page</th>
-			<th>Actions</th>
-		</tr>
-	</thead>
-	<tbody>
-		{% for link in links %}
-		<tr>
-			<td>{{ link.page_url }}</td>
-			<td>{{ link.position }}</td>
-			<td>
-                <form action="." method="post" >
-					{% csrf_token %}
-					<input type="hidden" name="action" value="remove_from_page" />
-					<input type="hidden" name="pagepromotion_id" value="{{ link.id }}" />
-					<button class="btn btn-danger btn-small" type="submit">Remove from page</button>
-				</form>
-			</td>
-		</tr>
-		{% endfor %}
-	</tbody>
-</table>
-
-{% else %}
-<p>This promotion is not displayed anywhere at the moment.</p>
-{% endif %}
-
-
-<div class="sub-header">
-    <h3>Add to a page</h3>
+<div class="well">
+    <h3 class="app-ico ico_favourite icon">Add to a page</h3>
+    <form action="." method="post" class="form-inline">
+    	{% csrf_token %}
+    	<input type="hidden" name="action" value="add_to_page" />
+    	{% include "partials/form_fields_inline.html" with form=link_form %}
+        <!-- {{ link_form.as_table }} -->
+    	<button type="submit" class="btn btn-success">Add to page</button>
+    </form>
 </div>
-<form action="." method="post" class="form-horizontal">
-	{% csrf_token %}
-	<input type="hidden" name="action" value="add_to_page" />
-	{% include "partials/form_fields.html" with form=link_form %}
-    <!-- {{ link_form.as_table }} -->
-	<div class="form-actions">
-	  <button type="submit" class="btn btn-success">Add</button>
-	</div>
-</form>
-
 {% endif %}
 
 {% endblock %}
