@@ -1,9 +1,12 @@
 {% extends 'dashboard/layout.html' %}
 {% load currency_filters %}
+
 {% block body_class %}catalogue{% endblock %}
+
 {% block title %}
 Update product | {{ block.super }}
 {% endblock %}
+
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
@@ -13,6 +16,7 @@ Update product | {{ block.super }}
     <li class="active"><a href=".">Catalogue</a></li>
 </ul>
 {% endblock %}
+
 {% block header %}
 <div class="page-header">
 	<h1>{{ title }}</h1>
@@ -20,8 +24,7 @@ Update product | {{ block.super }}
 {% endblock header %}
 
 {% block dashboard_content %}
-
-<form action="." method="post" class="new-product">
+<form action="." method="post" class="new-product" enctype="multipart/form-data">
 	{% csrf_token %}
     <div class="well well-info">
         <div class="sub-header">
@@ -29,7 +32,6 @@ Update product | {{ block.super }}
         </div>
 		{% include "partials/form_fields.html" with form=form %}
     </div>
-		
 		
 	<div class="well">	
 		<div class="sub-header">
@@ -41,6 +43,17 @@ Update product | {{ block.super }}
     			{% include "partials/form_fields_inline.html" with form=category_form %}
     		{% endfor %}
 		</div>
+	</div>
+	
+	<div class="well">
+    	<div class="sub-header">
+    	   <h3 class="app-ico ico_favourite icon">Images</h3>
+    	</div>
+    	{{ image_formset.management_form }}
+    	{% for image_form in image_formset %}
+    		{% include "partials/form_fields_inline.html" with form=image_form %}
+    		<hr/>
+    	{% endfor %}
 	</div>
 	
 	<div class="well">
@@ -154,6 +167,4 @@ Update product | {{ block.super }}
         {% endif %}
 	</div>
 </form>
-
-
 {% endblock dashboard_content %}

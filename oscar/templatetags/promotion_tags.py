@@ -22,4 +22,5 @@ def get_promotion_html(parser, token):
     _, promotion = token.split_contents()
     return PromotionNode(promotion)
 
+
 register.tag('render_promotion', get_promotion_html)

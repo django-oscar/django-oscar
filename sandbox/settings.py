@@ -89,6 +89,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'oscar.apps.search.context_processors.search_form',
     'oscar.apps.promotions.context_processors.promotions',
     'oscar.apps.checkout.context_processors.checkout',
+    'oscar.core.context_processors.metadata',
 ) 
 
 MIDDLEWARE_CLASSES = (
@@ -99,7 +100,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+#    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'oscar.apps.basket.middleware.BasketMiddleware',
 )
 

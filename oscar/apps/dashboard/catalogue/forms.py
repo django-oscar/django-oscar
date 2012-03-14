@@ -6,6 +6,7 @@ Product = get_model('catalogue', 'Product')
 StockRecord = get_model('partner', 'StockRecord')
 ProductAttributeValue = get_model('catalogue', 'ProductAttributeValue')
 ProductCategory = get_model('catalogue', 'ProductCategory')
+ProductImage = get_model('catalogue', 'ProductImage')
 
 
 class ProductSearchForm(forms.Form):
@@ -125,11 +126,8 @@ class StockAlertSearchForm(forms.Form):
     status = forms.CharField(label='Status')
 
 
-class ProductCategoryForm(forms.ModelForm):
-    class Meta:
-        model = ProductCategory
-        exclude = ('product',)
-
-
 ProductCategoryFormSet = inlineformset_factory(Product, ProductCategory,
                                                fields=('category',), extra=1)
+
+ProductImageFormSet = inlineformset_factory(Product, ProductImage,
+                                            fields=('original', 'caption'), extra=2)

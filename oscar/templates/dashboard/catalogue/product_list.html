@@ -1,7 +1,11 @@
 {% extends 'dashboard/layout.html' %}
 {% load currency_filters %}
 {% block body_class %}catalogue{% endblock %}
+
 {% block title %}
+Catalogue management | {{ block.super }}
+{% endblock %}
+
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
@@ -10,8 +14,6 @@
     </li>
     <li class="active"><a href=".">Catalogue</a></li>
 </ul>
-{% endblock %}
-Catalogue management | {{ block.super }}
 {% endblock %}
 
 {% block header %}
