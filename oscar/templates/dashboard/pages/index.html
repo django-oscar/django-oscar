@@ -36,18 +36,6 @@ Pages | {{ block.super }}
 </div>
 
 <form action="{% url dashboard:page-create %}" method="get" class="form-horizontal">
-        {%comment%}
-	<div class="control-group">
-		<div class="controls">
-			<select id="id_promotion_type" name="product_class">
-				<option> -- choose type --</option>
-				{% for product_class in product_classes %}
-				<option value="{{ product_class.id }}">{{ product_class.name }}</option>
-				{% endfor %}
-			</select>
-		</div>
-	</div>
-        {%endcomment%}
         <input type="submit" value="Create New Page" class="btn-primary" />
 </form>
 
@@ -67,7 +55,8 @@ Pages | {{ block.super }}
         <td>{{ page.title}}</td>
         <td>{{ page.url}}</td>
         <td>
-            <a class="btn btn-info" href="{% url dashboard:page-update page.id %}">Edit</a>
+            <a class="btn btn-info" href="{{ page.get_absolute_url }}">View</a>
+            <a class="btn btn-success" href="{% url dashboard:page-update page.id %}">Edit</a>
         </td>
     </tr>
     {% endfor %}

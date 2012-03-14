@@ -8,7 +8,7 @@ from django.core.urlresolvers import reverse
 from oscar.apps.dashboard.pages import forms 
 
 FlatPage = get_model('flatpages', 'FlatPage')
-
+Site = get_model('sites', 'Site')
 
 class PageListView(ListView):
     template_name = 'dashboard/pages/index.html'
@@ -57,6 +57,10 @@ class PageCreateView(generic.CreateView):
         ##FIXME: validation of URL is required
         if True:
             page = form.save()
+            ## use current site as default for new page
+            page.sites.add(Site.objects.get_current())
+            page.save()
+
             return HttpResponseRedirect(self.get_success_url(page))
 
         ctx = self.get_context_data()
@@ -76,6 +80,7 @@ class PageUpdateView(generic.UpdateView):
     def get_context_data(self, **kwargs):
         ctx = super(PageUpdateView, self).get_context_data(**kwargs)
         ctx['title'] = 'Update Page'
+        ctx['page'] = self.object
         return ctx
 
     def form_valid(self, form):
@@ -91,3 +96,4 @@ class PageUpdateView(generic.UpdateView):
     def get_success_url(self, page):
         messages.success(self.request, "Updated page '%s'" % self.object.title)
         return reverse('dashboard:page-list')
+
