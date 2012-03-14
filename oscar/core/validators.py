@@ -4,6 +4,11 @@ from django.core.urlresolvers import resolve
 from django.http import Http404
 from django.utils.translation import ugettext_lazy as _
 
+from django.db.models import get_model
+
+from django.conf import settings
+
+FlatPage = get_model('flatpages', 'FlatPage')
 
 class ExtendedURLValidator(validators.URLValidator):
     def __call__(self, value):
@@ -25,6 +30,10 @@ class ExtendedURLValidator(validators.URLValidator):
                 resolve(value)
             self.is_local_url = True
         except Http404:
+            ## check for existing urls of flatpages
+            for page in FlatPage.objects.all().only(('url')):
+                if value == page.url:
+                    return
             raise ValidationError(_('Specified page does not exist'))
 
     def fix_local_url(self, value):

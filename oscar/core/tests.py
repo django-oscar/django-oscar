@@ -2,6 +2,8 @@ from django.test import TestCase
 from django.core.exceptions import ValidationError
 from django.conf import settings
 
+from django.contrib.flatpages.models import FlatPage
+
 from oscar.core.loading import import_module, AppNotFoundError, \
         get_classes, get_class
 from oscar.core.validators import ExtendedURLValidator
@@ -94,3 +96,11 @@ class ValidatorTests(TestCase):
             
         with self.assertRaises(ValidationError):
             v('/products')  # Missing the / is bad          
+
+        FlatPage(title='test page', url='/test/page/').save()
+        try:
+            v('/test/page/')
+        except ValidationError:
+            self.fail('ExtendedURLValidator raises ValidationError unexpectedly!')
+
+
