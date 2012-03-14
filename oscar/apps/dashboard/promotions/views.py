@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.db.models import Count
 from django.shortcuts import HttpResponse
+from extra_views import CreateWithInlinesView
 
 from oscar.core.loading import get_classes, get_class
 from oscar.apps.promotions.layout import split_by_position
@@ -14,11 +15,13 @@ from oscar.apps.promotions.conf import PROMOTION_CLASSES, PROMOTION_POSITIONS
 from oscar.views.generic import PostActionMixin
 
 SingleProduct, RawHTML, Image, MultiImage, \
-    AutomaticProductList, PagePromotion, HandPickedProductList = get_classes('promotions.models',
+    AutomaticProductList, PagePromotion, \
+    HandPickedProductList = get_classes('promotions.models',
     ['SingleProduct', 'RawHTML', 'Image', 'MultiImage', 'AutomaticProductList',
      'PagePromotion', 'HandPickedProductList'])
-SelectForm, RawHTMLForm, PagePromotionForm = get_classes('dashboard.promotions.forms',
-    ['PromotionTypeSelectForm', 'RawHTMLForm', 'PagePromotionForm'])
+SelectForm, RawHTMLForm, PagePromotionForm, HandPickedProductListForm, OrderedProductFormSet = get_classes('dashboard.promotions.forms',
+    ['PromotionTypeSelectForm', 'RawHTMLForm', 'PagePromotionForm',
+     'HandPickedProductListForm', 'OrderedProductFormSet'])
 
 
 class ListView(generic.TemplateView):
@@ -163,6 +166,28 @@ class CreateAutomaticProductListView(CreateView):
 
 class CreateHandPickedProductListView(CreateView):
     model = HandPickedProductList
+    form_class = HandPickedProductListForm
+
+    def get_context_data(self, **kwargs):
+        ctx = super(CreateHandPickedProductListView,
+                    self).get_context_data(**kwargs)
+        if 'product_formset' not in kwargs:
+            ctx['product_formset'] = OrderedProductFormSet(instance=self.object)
+        return ctx
+
+    def form_valid(self, form):
+        promotion = form.save(commit=False)
+        product_formset = OrderedProductFormSet(self.request.POST,
+                                                instance=promotion)
+        if product_formset.is_valid():
+            promotion.save()
+            product_formset.save()
+            self.object = promotion
+            messages.success(self.request, 'Product list promotion created')
+            return HttpResponseRedirect(self.get_success_url())
+
+        ctx = self.get_context_data(product_formset=produt_formset)
+        return self.render_response(ctx)
 
 
 # ============
@@ -242,6 +267,29 @@ class UpdateAutomaticProductListView(UpdateView):
 
 class UpdateHandPickedProductListView(UpdateView):
     model = HandPickedProductList
+    form_class = HandPickedProductListForm
+
+    def get_context_data(self, **kwargs):
+        ctx = super(UpdateHandPickedProductListView,
+                    self).get_context_data(**kwargs)
+        if 'product_formset' not in kwargs:
+            ctx['product_formset'] = OrderedProductFormSet(instance=self.object)
+        return ctx
+
+    def form_valid(self, form):
+        promotion = form.save(commit=False)
+        product_formset = OrderedProductFormSet(self.request.POST,
+                                                instance=promotion)
+        if product_formset.is_valid():
+            promotion.save()
+            product_formset.save()
+            self.object = promotion
+            messages.success(self.request, 'Product list promotion updated')
+            return HttpResponseRedirect(self.get_success_url())
+
+        ctx = self.get_context_data(product_formset=produt_formset)
+        return self.render_response(ctx)
+
 
 
 # ============

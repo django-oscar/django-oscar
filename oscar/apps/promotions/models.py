@@ -100,7 +100,7 @@ class AbstractPromotion(models.Model):
         """
         return 'promotions/%s.html' % self.code
 
-    def template_context(self, *args, **kwargs):
+    def template_context(self, request):
         return {}
 
     @property
@@ -184,6 +184,9 @@ class SingleProduct(AbstractPromotion):
     def __unicode__(self):
         return self.name
 
+    def template_context(self, request):
+        return {'product': self.product}
+
 
 class AbstractProductList(AbstractPromotion):
     """
@@ -201,6 +204,9 @@ class AbstractProductList(AbstractPromotion):
 
     def __unicode__(self):
         return self.name
+
+    def template_context(self, request):
+        return {'products': self.get_products()}
 
 
 class HandPickedProductList(AbstractProductList):
