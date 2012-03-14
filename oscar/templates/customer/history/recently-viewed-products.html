@@ -1,6 +1,3 @@
-{% load currency_filters %}
-{% load basket_tags %}
-
 {% if products %}
 <div class="sub-header">
     <h2>Products you recently viewed</h2>
@@ -11,26 +8,7 @@
         <ul>
             {% for product in products %}
             <li>
-                <article class="product_pod">
-					{% with product.images.all.0 as image %}
-				    <div class="image_container">
-				        <a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ image.original.url }}" alt="{{ product.get_title }}"></a>
-				    </div>    
-				    {% endwith %}
-                    <h3><a href="{{ product.get_absolute_url }}">{{ product.get_title|truncatewords:7 }}</a></h3>
-                    <div class="product_price">
-                        {% if product.is_group %}
-                            <p>From {{ product.min_variant_price_incl_tax|currency }}</p>
-                        {% else %}
-                            {% if product.has_stockrecord %} 
-                                <h4><span>{{ product.stockrecord.price_incl_tax|currency }}</span></h4>
-                                <p class="app-ico instock avaliability">{{ product.stockrecord.availability|truncatewords:2|slice:"-4" }}</p>
-                            {% else %}
-                                <p class="app-ico outstock avaliability">Not available</p>
-                            {% endif %}
-                        {% endif %}
-                    </div>
-                </article>
+                {% include "promotions/partials/product_carousel.html" %}
             </li>
             {% endfor %}
         </ul>

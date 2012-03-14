@@ -90,23 +90,23 @@ class ProductListView(ListView):
     template_name = 'catalogue/browse.html'
     paginate_by = 20
     search_signal = product_search
+    model = product_model
 
     def get_search_query(self):
-        u"""Return a search query from GET"""
-        q = None
-        if 'q' in self.request.GET and self.request.GET['q']:
-            q = self.request.GET['q'].strip()
-        return q
+        q = self.request.GET.get('q', None)
+        return q.strip() if q else q
+
+    def get_base_queryset(self):
+        return self.model.browsable.all()
 
     def get_queryset(self):
-        u"""Return a set of products"""
         q = self.get_search_query()
         if q:
             # Send signal to record the view of this product
             self.search_signal.send(sender=self, query=q, user=self.request.user)
-            return product_model.browsable.filter(title__icontains=q)
+            return self.get_base_queryset().filter(title__icontains=q)
         else:
-            return product_model.browsable.select_related().all()
+            return self.get_base_queryset().select_related().all()
         
     def get_context_data(self, **kwargs):
         context = super(ProductListView, self).get_context_data(**kwargs)

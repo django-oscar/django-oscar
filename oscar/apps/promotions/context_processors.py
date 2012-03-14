@@ -9,8 +9,8 @@ def promotions(request):
     context.
     """
     promotions = PagePromotion._default_manager.select_related() \
-                                                .filter(page_url=request.path) \
-                                                .order_by('display_order')
+                                               .filter(page_url=request.path) \
+                                               .order_by('display_order')
 
     if 'q' in request.GET:
         keyword_promotions = KeywordPromotion._default_manager.select_related().filter(keyword=request.GET['q'])

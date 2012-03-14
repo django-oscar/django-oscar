@@ -89,6 +89,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'oscar.apps.search.context_processors.search_form',
     'oscar.apps.promotions.context_processors.promotions',
     'oscar.apps.checkout.context_processors.checkout',
+    'oscar.core.context_processors.metadata',
 ) 
 
 MIDDLEWARE_CLASSES = (
@@ -107,11 +108,10 @@ INTERNAL_IPS = ('127.0.0.1',)
 
 ROOT_URLCONF = 'urls'
 
+from oscar import OSCAR_PARENT_TEMPLATE_DIR
 TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-    location('templates')
+    location('templates'),
+    OSCAR_PARENT_TEMPLATE_DIR,
 )
 
 # A sample logging configuration. The only tangible logging

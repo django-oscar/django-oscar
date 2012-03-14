@@ -174,9 +174,61 @@ button {
         line-height: 36px;*/
 
 }
-h2 {
-  /*    font-size: 18px;*/
-
+h3 {
+  margin-bottom: 4.5px;
+}
+.control-group.pull-left > label {
+  width: 100px;
+}
+.control-group.pull-left .controls {
+  margin-left: 120px;
+}
+.control-group.pull-left .controls > label {
+  padding-left: 0px;
+}
+.control-group.pull-left .controls .radio ul {
+  padding: 0px;
+  margin: 0px;
+  *zoom: 1;
+}
+.control-group.pull-left .controls .radio ul:before, .control-group.pull-left .controls .radio ul:after {
+  display: table;
+  content: "";
+}
+.control-group.pull-left .controls .radio ul:after {
+  clear: both;
+}
+.control-group.pull-left .controls .radio ul > li {
+  list-style: none;
+}
+.control-group.pull-left .controls .radio ul li {
+  float: left;
+}
+.control-group.pull-left .controls .radio ul li li {
+  float: none;
+}
+.control-group.pull-left .controls .radio ul li label {
+  display: inline-block;
+  padding-top: 5px;
+  margin-bottom: 0;
+  vertical-align: middle;
+  margin-left: 10px;
+  padding-left: 18px;
+}
+.no-float {
+  float: none;
+}
+.control-group.pull-left.no-float > label {
+  width: 140px;
+}
+.control-group.pull-left.no-float .controls {
+  margin-left: 160px;
+}
+.pull-left.btn {
+  margin-left: 20px;
+}
+.pull-left.no-float.btn {
+  margin-left: 160px;
 }
 .page-header.action {
   *zoom: 1;
@@ -241,6 +293,19 @@ h2 {
   margin-left: 0px;
   list-style: none;
 }
+.form-inline {
+  margin-bottom: 0px;
+}
+.icon:before {
+  padding: 7px 6px;
+  background: #000000;
+  background-color: rgba(0, 0, 0, 0.15);
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+  color: #ffffff;
+  margin-right: 5px;
+}
 .file_upload {
   *zoom: 1;
 }
@@ -287,31 +352,4 @@ h2 {
 }
 .tabs.product_managment li.active a {
   background-color: #efefef;
-}
-.fontsize ul {
-  *zoom: 1;
-  margin-left: 10px;
-  margin-bottom: 0px;
-}
-.fontsize ul:before, .fontsize ul:after {
-  display: table;
-  content: "";
-}
-.fontsize ul:after {
-  clear: both;
-}
-.fontsize li {
-  float: left;
-  list-style: none;
-  margin-right: 10px;
-  line-height: 27px;
-  padding-top: 6px;
-}
-.fontsize #larger, .fontsize #smaller {
-  cursor: pointer;
-  color: #0088cc;
-}
-.fontsize #larger {
-  font-size: 18px;
-  line-height: 23px;
 }
