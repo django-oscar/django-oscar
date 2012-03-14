@@ -44,19 +44,18 @@ Pages | {{ block.super }}
     {% csrf_token %}
 <table class="table table-striped table-bordered">
     <tr>
-        <th></th>
         <th>Title</th>
         <th>URL</th>
         <th></th>
     </tr>
     {% for page in flatpage_list %}
     <tr>
-        <td><input type="checkbox" name="selected_user" class="selected_user" value="{{ page.id }}"/>
         <td>{{ page.title}}</td>
         <td>{{ page.url}}</td>
         <td>
             <a class="btn btn-info" href="{{ page.get_absolute_url }}">View</a>
             <a class="btn btn-success" href="{% url dashboard:page-update page.id %}">Edit</a>
+            <a class="btn btn-danger" href="{% url dashboard:page-delete page.id %}">Delete</a>
         </td>
     </tr>
     {% endfor %}
