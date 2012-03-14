@@ -24,28 +24,147 @@ Update product | {{ block.super }}
 {% endblock header %}
 
 {% block dashboard_content %}
-<form action="." method="post" class="form-horizontal" enctype="multipart/form-data">
+<form action="." method="post" class="new-product" enctype="multipart/form-data">
 	{% csrf_token %}
-		<legend>Product information</legend>
+    <div class="well well-info">
+        <div class="sub-header">
+            <h3 class="app-ico ico_expand icon">Product information</h3>
+        </div>
 		{% include "partials/form_fields.html" with form=form %}
-		<legend>Category information</legend>
-		{{ category_formset.management_form }}
-		{% for category_form in category_formset %}
-			{% include "partials/form_fields.html" with form=category_form %}
-		{% endfor %}
-		<legend>Stock and price information</legend>
-		{% include "partials/form_fields.html" with form=stockrecord_form %}
-		<legend>Images</legend>
-		{{ image_formset.management_form }}
-		{% for image_form in image_formset %}
-			{% include "partials/form_fields.html" with form=image_form %}
-		{% endfor %}
-		<div class="form-actions">
-            <button class="btn btn-primary" type="submit">Save</button> or 
-			<a href="{% url dashboard:catalogue-product-list">cancel</a>
+    </div>
+		
+	<div class="well">	
+		<div class="sub-header">
+		  <h3 class="app-ico ico_home icon">Category information</h3>
 		</div>
+		<div class="form-inline">
+    		{{ category_formset.management_form }}
+    		{% for category_form in category_formset %}
+    			{% include "partials/form_fields_inline.html" with form=category_form %}
+    		{% endfor %}
+		</div>
+	</div>
+	
+	<div class="well">
+    	<div class="sub-header">
+    	   <h3 class="app-ico ico_favourite icon">Images</h3>
+    	</div>
+    	{{ image_formset.management_form }}
+    	{% for image_form in image_formset %}
+    		{% include "partials/form_fields_inline.html" with form=image_form %}
+    		<hr/>
+    	{% endfor %}
+	</div>
+	
+	<div class="well">
+		<div class="sub-header">
+		    <h3 class="app-ico ico_shop_bag icon">Stock and price information</h3>
+		</div>
+        <!-- {% include "partials/form_fields.html" with form=stockrecord_form %} -->
+        <div class="row-fluid">
+            <div class="span5">
+                <div class="control-group {% for error in stockrecord_form.partner.errors %}error{% endfor %}">
+                    <label for="id_partner">Partner:</label>
+                    <div class="controls">
+                        {{ stockrecord_form.partner }}
+                        {% for error in stockrecord_form.partner.errors %}
+                        <span class="help-block">
+                            {{ error|escape }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="control-group {% for error in stockrecord_form.partner_sku.errors %}error{% endfor %}">
+                    <label for="id_partner_sku">Partner SKU:</label>
+                    <div class="controls">
+                        {{ stockrecord_form.partner_sku }}
+                        {% for error in stockrecord_form.partner_sku.errors %}
+                        <span class="help-block">
+                            {{ error|escape }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="control-group {% for error in stockrecord_form.price_currency.errors %}error{% endfor %}">
+                    <label for="id_price_currency">Price currency:</label>
+                    <div class="controls">
+                        {{ stockrecord_form.price_currency }}
+                        {% for error in stockrecord_form.price_currency.errors %}
+                        <span class="help-block">
+                            {{ error|escape }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="control-group {% for error in stockrecord_form.price_excl_tax.errors %}error{% endfor %}">
+                    <label for="id_price_excl_tax">Price excl tax:</label>
+                    <div class="controls">
+                        {{ stockrecord_form.price_excl_tax }}
+                        {% for error in stockrecord_form.price_excl_tax.errors %}
+                        <span class="help-block">
+                            {{ error|escape }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="span5 offset3">
+                <div class="control-group {% for error in stockrecord_form.price_retail.errors %}error{% endfor %}">
+                    <label for="id_price_retail">Price retail:</label>
+                    <div class="controls">
+                        {{ stockrecord_form.price_retail }}
+                        {% for error in stockrecord_form.price_retail.errors %}
+                        <span class="help-block">
+                            {{ error|escape }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="control-group {% for error in stockrecord_form.cost_price.errors %}error{% endfor %}">
+                    <label for="id_cost_price">Cost price:</label>
+                    <div class="controls">
+                        {{ stockrecord_form.cost_price }}
+                        {% for error in stockrecord_form.cost_price.errors %}
+                        <span class="help-block">
+                            {{ error|escape }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="control-group {% for error in stockrecord_form.num_in_stock.errors %}error{% endfor %}">
+                    <label for="id_num_in_stock">Num in stock:</label>
+                    <div class="controls">
+                        {{ stockrecord_form.num_in_stock }}
+                        {% for error in stockrecord_form.num_in_stock.errors %}
+                        <span class="help-block">
+                            {{ error|escape }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="control-group {% for error in stockrecord_form.low_stock_threshold.errors %}error{% endfor %}">
+                    <label for="id_low_stock_threshold">Low stock threshold:</label>
+                    <div class="controls">
+                        {{ stockrecord_form.low_stock_threshold }}
+                        {% for error in stockrecord_form.low_stock_threshold.errors %}
+                        <span class="help-block">
+                            {{ error|escape }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+		
+        
+		
+	</div>
+	<div class="form-actions">
+        <button class="btn btn-primary btn-large" type="submit">Save Product</button> or 
+		<a href="{% url dashboard:catalogue-product-list">cancel</a>
+		{% if product %}
+            <a class="btn btn-success btn-large pull-right" href="{{ product.get_absolute_url }}">View on site</a>
+        {% endif %}
+	</div>
 </form>
-{% if product %}
-<p><a class="btn btn-success" href="{{ product.get_absolute_url }}">View on site</a></p>
-{% endif %}
 {% endblock dashboard_content %}
