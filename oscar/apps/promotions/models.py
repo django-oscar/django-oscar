@@ -127,7 +127,10 @@ class RawHTML(AbstractPromotion):
     # Used to determine how to render the promotion (eg
     # if a different width container is required).  This isn't always
     # required.
-    display_type = models.CharField(_("Display type"), max_length=128, blank=True, null=True)
+    display_type = models.CharField(
+        _("Display type"), max_length=128,
+        blank=True, null=True,
+        help_text="This can be used to have different types of HTML blocks (eg different widths)")
     body = models.TextField(_("HTML"))
     date_created = models.DateTimeField(auto_now_add=True)
 
