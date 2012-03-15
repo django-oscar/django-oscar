@@ -143,6 +143,12 @@ Order management | {{ block.super }}
 {% if orders.count %}
 <form action="." method="post" class="order_table">
     {% csrf_token %}
+    <div class="well well-danger">
+        <h3 class="app-ico ico_logout icon">Download</h3>
+        <label>With selected orders: Download as CSV </label>
+        <input type="radio" name="action" value="download_selected_orders" /> 
+        <button type="submit" class="btn btn-primary">Download</button>
+    </div>
 <table class="table table-striped table-bordered">
     <tr>
         <th></th>
@@ -178,11 +184,6 @@ Order management | {{ block.super }}
     {% include "catalogue/partials/pagination.html" %}
 {% endif %}
 
-<div class="well well-info">
-    <label>With selected orders: Download as CSV </label>
-    <input type="radio" name="action" value="download_selected_orders" /> 
-    <button type="submit" class="btn btn-primary">Download</button>
-</div>
 </form>
 
 {% else %}

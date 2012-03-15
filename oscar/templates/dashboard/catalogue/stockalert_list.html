@@ -31,14 +31,14 @@ Stock alerts | {{ block.super }}
 </form>
 {% endcomment %}
 
-<div class="sub-header">
-	<h2>Filter</h2>
+<div class="well well-info">
+	<h3 class="app-ico ico_sync icon">Filter</h3>
+    <p>
+    	<a class="btn btn-info" href="{% url dashboard:stock-alert-list %}">All</a>
+    	<a class="btn btn-info" href="{% url dashboard:stock-alert-list %}?status=Open">Open</a>
+    	<a class="btn btn-info" href="{% url dashboard:stock-alert-list %}?status=Closed">Closed</a>
+    </p>
 </div>
-<p>
-	<a class="btn btn-info" href="{% url dashboard:stock-alert-list %}">All</a>
-	<a class="btn btn-info" href="{% url dashboard:stock-alert-list %}?status=Open">Open</a>
-	<a class="btn btn-info" href="{% url dashboard:stock-alert-list %}?status=Closed">Closed</a>
-</p>
 
 <div class="sub-header">
 	<h2>{{ description }}</h2>

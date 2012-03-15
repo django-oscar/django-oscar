@@ -26,8 +26,19 @@ Content blocks | {{ block.super }}
 {% block dashboard_content %}
 
 <div class="well well-info">
-  <a href="{% url dashboard:promotion-list-by-page %}" class="btn">View promotions by page</a>
+    <h3 class="app-ico ico_expand icon">Create a new content block</h3>
+    <form action="{% url dashboard:promotion-create-redirect %}" method="get" class="form-inline">
+        {% include "partials/form_fields_inline.html" with form=select_form %}
+    	<button type="submit" class="btn btn-primary">Create block</button>
+    </form>
 </div>
+
+<div class="well well-danger">
+    <h3 class="app-ico ico_view icon">View by page</h3>
+    <a href="{% url dashboard:promotion-list-by-page %}" class="btn">View promotions by page</a>
+</div>
+
+
 
 <div class="sub-header">
     <h2>Content blocks</h2>
@@ -65,15 +76,5 @@ Content blocks | {{ block.super }}
 <p>No content blocks found.</p>
 
 {% endif %}
-
-<div class="sub-header">
-    <h3>Create a new content block</h3>
-</div>
-<form action="{% url dashboard:promotion-create-redirect %}" method="get" class="form-horizontal">
-    {% include "partials/form_fields.html" with form=select_form %}
-	<div class="form-actions">
-	   <button type="submit" class="btn btn-primary">Create block</button>
-	</div>
-</form>
 
 {% endblock dashboard_content %}
