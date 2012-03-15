@@ -6,6 +6,7 @@ from oscar.apps.dashboard.reports.tests import *
 from oscar.apps.dashboard.users.tests import *
 from oscar.apps.dashboard.promotions.tests import *
 from oscar.apps.dashboard.catalogue.tests import *
+from oscar.apps.dashboard.pages.tests import *
 
 from oscar.test import ClientTestCase
 
