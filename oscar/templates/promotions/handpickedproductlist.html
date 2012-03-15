@@ -4,23 +4,17 @@
     </div>
     <p>{{ promotion.description }}</p>
 
-
-    <!-- Elastislide Carousel -->
     <div class="es-carousel-wrapper">
         <div class="es-carousel">
             <ul class="products">
-                {% for product in promotion.get_products %}
-                <li>
-                    {% include "promotions/partials/product_carousel.html" %}
-                </li>
+                {% for product in products %}
+                <li>{% include "promotions/partials/product_carousel.html" %}</li>
                 {% endfor %}
             </ul>
         </div>
     </div>
-    <!-- End Elastislide Carousel -->
 
-
-{% if block.link_url %}
-    <a href="{{ block.link_url }}">See more</a>
-{% endif %}
+	{% if block.link_url %}
+		<a href="{{ block.link_url }}">See more</a>
+	{% endif %}
 </section>

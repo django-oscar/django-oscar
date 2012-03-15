@@ -22,6 +22,9 @@
 <form action="." method="post" enctype="multipart/form-data" class="form-horizontal">
 	{% csrf_token %}
 	{% include "partials/form_fields.html" with form=form %}
+
+	{% block inlines %} {% endblock %}
+
 	<div class="form-actions">
         <button type="submit" class="btn btn-primary">Save</button>
 		or <a href="{% url dashboard:promotion-list %}">Cancel</a>
