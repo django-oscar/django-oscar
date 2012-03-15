@@ -45,36 +45,33 @@
         <div class="sub-header">
             <h1>{{ summary }}</h1>
         </div>
-         <p>{{ category.description }}</p>
+		{% if category.description %}
+		<p>{{ category.description }}</p>
+		{% endif %}
 
 {% endblock sidebar %}
 
 {% block content %}
-    
     {% if products.count %}
-    
-    <section>
-        <div class="mod">
-            {% if page_obj %}
-                {% include "catalogue/partials/pagination.html" %}
-            {% endif %}
-            <ol class="products four">
-                {% for product in products %}
-                <li>
-                    {% include "catalogue/partials/product.html" %}
-                </li>
-                {% endfor %}
-            </ol>
-            {% if page_obj %}
-                {% include "catalogue/partials/pagination.html" %}
-            {% endif %}
-        </div>
-    <section>
-        
+		<section>
+			<div class="mod">
+				{% if page_obj %}
+					{% include "catalogue/partials/pagination.html" %}
+				{% endif %}
+				<ol class="products four">
+					{% for product in products %}
+					<li>
+						{% include "catalogue/partials/product.html" %}
+					</li>
+					{% endfor %}
+				</ol>
+				{% if page_obj %}
+					{% include "catalogue/partials/pagination.html" %}
+				{% endif %}
+			</div>
+		<section>
     {% else %}
-
-    <p>No products found.</p>
-
+		<p>No products found.</p>
     {% endif %}
     </div><!-- /span9 -->
 </div><!-- /row-fluid -->
