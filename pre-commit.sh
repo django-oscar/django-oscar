@@ -7,7 +7,7 @@ source ~/.virtualenvs/oscar/bin/activate
 ./run_tests.py
 TEST_RESULT=$?
 
-jshint oscar/static/js/oscar
+jshint oscar/static/oscar/js/oscar
 JS_RESULT=$?
 
 git stash pop -q
