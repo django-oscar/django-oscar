@@ -8,6 +8,22 @@ def promotions(request):
     For adding bindings for banners and pods to the template
     context.
     """
+    promotions = get_request_promotions(request)
+
+    # Split the promotions into separate lists for each position, and 
+    # add them to the template bindings
+    context = {
+        'url_path': request.path
+    }
+    split_by_position(promotions, context)
+
+    return context
+
+
+def get_request_promotions(request):
+    """
+    Return promotions relevant to this request
+    """
     promotions = PagePromotion._default_manager.select_related() \
                                                .filter(page_url=request.path) \
                                                .order_by('display_order')
@@ -16,19 +32,10 @@ def promotions(request):
         keyword_promotions = KeywordPromotion._default_manager.select_related().filter(keyword=request.GET['q'])
         if keyword_promotions.count() > 0:
             promotions = list(chain(promotions, keyword_promotions))
-
-    context = {
-        'url_path': request.path
-    }
-
-    # Split the promotions into separate lists for each position, and 
-    # add them to the template bindings
-    _split_by_position(promotions, context)
-
-    return context
+    return promotions
 
 
-def _split_by_position(linked_promotions, context):
+def split_by_position(linked_promotions, context):
     """
     Split the list of promotions into separate lists, grouping
     by position, and write these lists to the context dict.

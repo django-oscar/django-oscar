@@ -1,11 +1,13 @@
 from django import forms
+from django.forms.models import inlineformset_factory
 
 from oscar.forms.fields import ExtendedURLField
 from oscar.core.loading import get_classes
 from oscar.apps.promotions.conf import PROMOTION_CLASSES, PROMOTION_POSITIONS
 
-RawHTML, SingleProduct, PagePromotion = get_classes('promotions.models', 
-    ['RawHTML', 'SingleProduct', 'PagePromotion'])
+RawHTML, SingleProduct, PagePromotion, HandPickedProductList, OrderedProduct = get_classes('promotions.models', 
+    ['RawHTML', 'SingleProduct', 'PagePromotion', 'HandPickedProductList',
+     'OrderedProduct'])
 
 
 class PromotionTypeSelectForm(forms.Form):
@@ -16,9 +18,18 @@ class PromotionTypeSelectForm(forms.Form):
 
 
 class RawHTMLForm(forms.ModelForm):
-
     class Meta:
         model = RawHTML
+
+
+class HandPickedProductListForm(forms.ModelForm):
+    class Meta:
+        model = HandPickedProductList
+        exclude = ('products',)
+
+
+OrderedProductFormSet = inlineformset_factory(HandPickedProductList,
+                                              OrderedProduct, extra=2)
 
 
 class PagePromotionForm(forms.ModelForm):

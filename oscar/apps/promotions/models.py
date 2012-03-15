@@ -100,7 +100,7 @@ class AbstractPromotion(models.Model):
         """
         return 'promotions/%s.html' % self.code
 
-    def template_context(self, *args, **kwargs):
+    def template_context(self, request):
         return {}
 
     @property
@@ -127,7 +127,10 @@ class RawHTML(AbstractPromotion):
     # Used to determine how to render the promotion (eg
     # if a different width container is required).  This isn't always
     # required.
-    display_type = models.CharField(_("Display type"), max_length=128, blank=True, null=True)
+    display_type = models.CharField(
+        _("Display type"), max_length=128,
+        blank=True, null=True,
+        help_text="This can be used to have different types of HTML blocks (eg different widths)")
     body = models.TextField(_("HTML"))
     date_created = models.DateTimeField(auto_now_add=True)
 
@@ -181,6 +184,9 @@ class SingleProduct(AbstractPromotion):
     def __unicode__(self):
         return self.name
 
+    def template_context(self, request):
+        return {'product': self.product}
+
 
 class AbstractProductList(AbstractPromotion):
     """
@@ -198,6 +204,9 @@ class AbstractProductList(AbstractPromotion):
 
     def __unicode__(self):
         return self.name
+
+    def template_context(self, request):
+        return {'products': self.get_products()}
 
 
 class HandPickedProductList(AbstractProductList):
