@@ -33,6 +33,8 @@ class PageUpdateForm(forms.ModelForm):
         Returns cleaned URL or raises an exception.
         """
         if 'url' in self.changed_data:
+            if not self.cleaned_data['url'].endswith('/'):
+                self.cleaned_data['url'] += '/'
             URLDoesNotExistValidator()(self.cleaned_data['url'])
 
         return self.cleaned_data['url']
