@@ -53,7 +53,9 @@ class ProductDetailView(DetailView):
 
 
 class ProductCategoryView(ListView):
-    u"""A list of products"""
+    """
+    Browse products in a given category
+    """
     context_object_name = "products"
     template_name = 'catalogue/browse.html'
     paginate_by = 20
@@ -72,7 +74,6 @@ class ProductCategoryView(ListView):
         context = super(ProductCategoryView, self).get_context_data(**kwargs)
 
         categories = self.get_categories()
-
         context['categories'] = categories
         context['category'] = categories[-1]
         context['summary'] = categories[-1].name
