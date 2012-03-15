@@ -111,11 +111,13 @@ class ProductForm(forms.ModelForm):
                    'recommended_products', 'related_products',
                    'product_options', 'attributes', 'categories')
 
-    def save(self, commit=True):
-        object = super(ProductForm, self).save(commit=False)
+    def save(self):
+        object = super(ProductForm, self).save(False)
         object.product_class = self.product_class
-        object.save(commit)
-        self.save_attributes(object)
+        for attribute in self.product_class.attributes.all():
+            value = self.cleaned_data['attr_%s' % attribute.code]
+            setattr(object.attr, attribute.code, value)
+        object.save()
         return object
 
     def save_attributes(self, object):

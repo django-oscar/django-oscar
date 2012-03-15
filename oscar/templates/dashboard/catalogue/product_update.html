@@ -61,6 +61,7 @@ Update product | {{ block.super }}
 		    <h3 class="app-ico ico_shop_bag icon">Stock and price information</h3>
 		</div>
         <!-- {% include "partials/form_fields.html" with form=stockrecord_form %} -->
+		{% block stockrecord_form %}
         <div class="row-fluid">
             <div class="span5">
                 <div class="control-group {% for error in stockrecord_form.partner.errors %}error{% endfor %}">
@@ -155,9 +156,7 @@ Update product | {{ block.super }}
                 </div>
             </div>
         </div>
-		
-        
-		
+		{% endblock %}
 	</div>
 	<div class="form-actions">
         <button class="btn btn-primary btn-large" type="submit">Save Product</button> or 
