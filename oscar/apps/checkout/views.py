@@ -630,6 +630,21 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
                 return False, reason, reverse('basket:summary')
         return True, None, None
 
+    def get_default_billing_address(self):
+        """
+        Return default billing address for user
+
+        This is useful when the payment details view includes a billing address
+        form - you can use this helper method to prepopulate the form.
+
+        Note, this isn't used in core oscar as there is no billing address form
+        by default.
+        """
+        try:
+            return self.request.user.addresses.get(is_default_for_billing=True)
+        except UserAddress.DoesNotExist:
+            return None
+
     def submit(self, basket, **kwargs):
         """
         Submit a basket for order placement.
