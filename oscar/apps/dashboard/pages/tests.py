@@ -36,15 +36,15 @@ class PageViewTests(ClientTestCase):
 
         ## check that no page is created for existing URL
         response = self.client.post('/dashboard/pages/', data={
-                                        'title': 'test', 
+                                        'title': 'test',
                                         'url': '/dashboard/pages/',
                                     }, follow=True)
         self.assertEquals(FlatPage.objects.count(), 0)
 
         ## check creating a new page with custome URL
         response = self.client.post('/dashboard/pages/create/', data={
-                                        'title': 'Test Page', 
-                                        'url': '/test/page/', 
+                                        'title': 'Test Page',
+                                        'url': '/test/page/',
                                         'content': "<h1> Content </h1>"
                                     }, follow=True)
 
@@ -55,7 +55,7 @@ class PageViewTests(ClientTestCase):
         self.assertEquals(page.content, "<h1> Content </h1>")
         self.assertEquals(page.sites.count(), 1)
 
-        ## check creating page with slugified URL 
+        ## check creating page with slugified URL
         response = self.client.post('/dashboard/pages/create/', data={
                                         'title': 'New Page', 'content': ""
                                     }, follow=True)
@@ -80,15 +80,15 @@ class PageViewTests(ClientTestCase):
         fp2 = FlatPage(title='title2', url='/url2/', content='other content')
         fp2.save()
 
-        ## check if overwriting all properties works 
+        ## check if overwriting all properties works
         response = self.client.post('/dashboard/pages/update/1/', data={
-                                        'title': 'Test Page', 
-                                        'url': '/test/page/', 
+                                        'title': 'Test Page',
+                                        'url': '/test/page/',
                                         'content': "<h1> Content </h1>"
                                     }, follow=True)
 
         self.assertEquals(FlatPage.objects.count(), 2)
-        
+
         page = FlatPage.objects.get(pk=1)
         self.assertEquals(page.title, 'Test Page')
         self.assertEquals(page.url, '/test/page/')
@@ -104,28 +104,28 @@ class PageViewTests(ClientTestCase):
         self.assertEquals(fp1.title, 'title1')
 
         ## check changing to an invalid urls does not work
-        #response = self.client.post('/dashboard/pages/update/1/', data={
-        #                                'title': 'Test Page', 
-        #                                'url': '/url2/', 
-        #                                'content': "<h1> Content </h1>"
-        #                            }, follow=True)
-
-        #self.assertEquals(FlatPage.objects.count(), 2)
-        
-        #page = FlatPage.objects.get(pk=1)
-        #self.assertEquals(page.title, 'title1')
-        #self.assertEquals(page.url, '/url1/')
-        #self.assertEquals(page.content, "some content")
-
-        ## check doing a valid update
         response = self.client.post('/dashboard/pages/update/1/', data={
-                                        'title': 'Test Page', 
-                                        'url': '/url1/', 
+                                        'title': 'Test Page',
+                                        'url': '/url2/',
                                         'content': "<h1> Content </h1>"
                                     }, follow=True)
 
         self.assertEquals(FlatPage.objects.count(), 2)
-        
+
+        page = FlatPage.objects.get(pk=1)
+        self.assertEquals(page.title, 'title1')
+        self.assertEquals(page.url, '/url1/')
+        self.assertEquals(page.content, "some content")
+
+        ## check doing a valid update
+        response = self.client.post('/dashboard/pages/update/1/', data={
+                                        'title': 'Test Page',
+                                        'url': '/url1/',
+                                        'content': "<h1> Content </h1>"
+                                    }, follow=True)
+
+        self.assertEquals(FlatPage.objects.count(), 2)
+
         page = FlatPage.objects.get(pk=1)
         self.assertEquals(page.title, 'Test Page')
         self.assertEquals(page.url, '/url1/')
@@ -133,13 +133,13 @@ class PageViewTests(ClientTestCase):
 
         ## check doing a valid update with new URL
         response = self.client.post('/dashboard/pages/update/1/', data={
-                                        'title': 'Test Page', 
-                                        'url': '/new/url/', 
+                                        'title': 'Test Page',
+                                        'url': '/new/url/',
                                         'content': "<h1> Content </h1>"
                                     }, follow=True)
 
         self.assertEquals(FlatPage.objects.count(), 2)
-        
+
         page = FlatPage.objects.get(pk=1)
         self.assertEquals(page.title, 'Test Page')
         self.assertEquals(page.url, '/new/url/')
@@ -151,13 +151,12 @@ class PageViewTests(ClientTestCase):
         fp2 = FlatPage(title='title2', url='/url2/', content='other content')
         fp2.save()
 
-        ## check if overwriting all properties works 
+        ## check if overwriting all properties works
         response = self.client.post('/dashboard/pages/delete/1/', follow=True)
 
         self.assertEquals(FlatPage.objects.count(), 1)
-        
+
         page = FlatPage.objects.get(pk=2)
         self.assertEquals(page.title, 'title2')
         self.assertEquals(page.url, '/url2/')
         self.assertEquals(page.content, "other content")
-

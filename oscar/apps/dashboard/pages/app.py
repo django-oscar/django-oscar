@@ -17,12 +17,15 @@ class FlatPageManagementApplication(Application):
     delete_view = views.PageDeleteView
 
     def get_urls(self):
+        """
+        Get URL patterns defined for flatpage management application.
+        """
         urlpatterns = patterns('',
             url(r'^$', self.list_view.as_view(), name='page-list'),
 
             url(r'^create/$', self.create_view.as_view(), name='page-create'),
 
-            url(r'^update/(?P<pk>[-\w]+)/$', 
+            url(r'^update/(?P<pk>[-\w]+)/$',
                 self.update_view.as_view(), name='page-update'),
 
             url(r'^delete/(?P<pk>\d+)/$',
