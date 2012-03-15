@@ -34,6 +34,28 @@ User {{ user.username }} | {{ block.super }}
         {% endif %}
     </ul>
 </div>
+<div class="sub-header">
+    <h2>Detail information</h2>
+</div>
+<div id="user_order_details" class="well well-info">
+    <h3>General</h3>
+    <ul>
+        <li>Last login: {{ user.last_login }}</li>
+        <li>Date joined: {{ user.date_joined }}</li>
+        <li>Number of viewed products: {{ user.userrecord.num_product_views }}</li>
+    </ul>
+    <h3>Orders</h3>
+    <ul>
+        <li>Number of orders: {{ user.userrecord.num_orders }}</li>
+        <li>Number of ordered items: {{ user.userrecord.num_order_items }}</li>
+        <li>Total spent: {{ user.userrecord.total_spent|currency }}</li>
+        <li>Date of last order:: {{ user.userrecord.date_last_order }}</li>
+    </ul>
+    <h3>Reviews</h3>
+    <ul>
+        <li>Number of reviews: {{ user.reviews.count }}</li>
+    </ul>
+</div>
 <div id="user_orders">
     <div class="sub-header">
         <h2>Orders</h2>

@@ -25,6 +25,8 @@ Add address to address book | {{ block.super }}
     {% include "partials/form_fields.html" with form=form %}
     <div class="form-actions">
         <input type="submit" value="Save address" class="btn btn-primary" />
+        or
+        <a href="{% url customer:address-list %}">cancel</a>
     </div>
 </form>
 

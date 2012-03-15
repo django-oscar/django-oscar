@@ -15,15 +15,23 @@ Address book | {{ block.super }}
 {% block content %}
 
 {% if addresses %}
-<ul>
+<table class="table">
+	<tr>
+		<th>Address</th>
+		<th></th>
+	</tr>
     {% for address in addresses %}
-    <li>
+	<tr>
+		<td>
         {{ address.summary }}
-        <a href="{% url customer:address-detail address.id %}">Edit</a> | 
-		<a href="{% url customer:address-delete address.id %}">Delete</a>
-    </li>
+		</td>
+		<td>
+        <a class="btn btn-info" href="{% url customer:address-detail address.id %}">Edit</a>
+		<a class="btn btn-danger" href="{% url customer:address-delete address.id %}">Delete</a>
+		</td>
+    </tr>
     {% endfor %}
-</ul>
+</table>
 {% else %}
 There are no addresses in your address book.
 {% endif %}

@@ -12,9 +12,9 @@
         <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
         
-        <link rel="shortcut icon" href="{{ STATIC_URL }}favicon.ico" />
+        <link rel="shortcut icon" href="{{ STATIC_URL }}oscar/favicon.ico" />
         <!-- Main styles - will need to be minified -->
-        <link rel="stylesheet" href="{{ STATIC_URL }}css/styles.css" />
+        <link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/styles.css" />
         {% block extrahead %}{% endblock %}
     </head>
     <body id="{% block body_id %}default{% endblock %}" class="{% block body_class %}default{% endblock %}">
@@ -28,12 +28,12 @@
 
         <!-- Jquery -->
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="{{ STATIC_URL }}js/jquery/jquery-1.7.1.min.js"><\/script>')</script>
-        <script src="{{ STATIC_URL }}js/jquery/jquery.easing.1.3.js" type="text/javascript" charset="utf-8"></script>
+        <script>window.jQuery || document.write('<script src="{{ STATIC_URL }}oscar/js/jquery/jquery-1.7.1.min.js"><\/script>')</script>
+        <script src="{{ STATIC_URL }}oscar/js/jquery/jquery.easing.1.3.js" type="text/javascript" charset="utf-8"></script>
         <!-- Bootstrap -->
-		<script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap/bootstrap.min.js"></script>
+		<script type="text/javascript" src="{{ STATIC_URL }}oscar/js/bootstrap/bootstrap.min.js"></script>
 		<!--[if lt IE 8]>
-        	<script src="{{ STATIC_URL }}js/snowcone/snowcone.js"></script>
+        	<script src="{{ STATIC_URL }}oscar/js/snowcone/snowcone.js"></script>
         <![endif]-->
 		
 		{# Block for additional scripts #}

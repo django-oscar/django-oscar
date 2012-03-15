@@ -165,6 +165,7 @@ button {
 .page-header {
   background-color: @white;
   padding: 10px 20px 10px 0px;
+  margin-bottom:0px;
   h1 {
 /*        font-size: 24px;
         line-height: 36px;*/
@@ -330,5 +331,32 @@ h3 {
   margin-bottom:0px;
   li.active a {
     background-color:#efefef;
+  }
+}
+
+.tabbable.dashboard {
+  .nav {
+    margin-bottom:0px;
+  }
+  .nav-tabs > li > a {
+    background: #fff;
+    border: 1px solid #DDD;
+    
+  }
+  .nav-tabs > li.active a {
+    background: #f5f5f5;
+    border-bottom-color: transparent;
+  }
+  .tab-content {
+    padding:@baseLineHeight;
+    border:1px solid darken(@grayLighter, 5%);
+    border-top-width:0px;
+    background:#f5f5f5;
+  }
+}
+.new-product {
+  input[type=text],
+  textarea {
+    width:99%;
   }
 }

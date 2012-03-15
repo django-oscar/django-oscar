@@ -81,7 +81,7 @@ class CheckoutSessionData(object):
 
     def is_shipping_address_set(self):
         new_fields = self.new_shipping_address_fields()
-        has_new_address = new_fields and len(new_fields) > 0
+        has_new_address = new_fields is not None
         has_old_address = self.user_address_id() > 0
         return has_new_address or has_old_address
     

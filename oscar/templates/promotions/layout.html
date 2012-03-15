@@ -6,7 +6,7 @@
 
 {% block extrahead %}
     <!-- Responsive - will need to be minified -->
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/responsive.css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/responsive.css" />
 {% endblock %}
 
 {% block layout %}
@@ -89,9 +89,12 @@
     <div class="container-fluid page home">
         <div class="page_inner">
             <div class="row-fluid">
-                {% block container_nav %}
-                {% endblock %}
-                <aside class="span3">
+                <aside class="sidebar span3">
+                    <div id="promotions_left">
+                		{% for promotion in promotions_left %}
+                		{% render_promotion promotion %}
+                		{% endfor %}
+                	</div>
                     {% block sidebar %}
                     {% endblock %}
                 </aside><!-- /span3 -->
@@ -107,6 +110,8 @@
                 		{% render_promotion promotion %}
                 		{% endfor %}
                 	</div>
+                	
+                	
                 	{% block content %}
                 	{% endblock %}
                 </div><!-- /span9 -->
@@ -119,7 +124,7 @@
 {# Block for additional scripts #}
 {% block extrascripts %}
     <!-- Elastislide carousel js -->
-    <script src="{{ STATIC_URL }}js/elastislide/jquery.elastislide.js" type="text/javascript" charset="utf-8"></script>    
+    <script src="{{ STATIC_URL }}oscar/js/elastislide/jquery.elastislide.js" type="text/javascript" charset="utf-8"></script>    
     <!-- Front end js -->
-    <script src="{{ STATIC_URL }}js/oscar/ui.js" type="text/javascript" charset="utf-8"></script>
+    <script src="{{ STATIC_URL }}oscar/js/oscar/ui.js" type="text/javascript" charset="utf-8"></script>
 {% endblock %}

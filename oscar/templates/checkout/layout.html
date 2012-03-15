@@ -6,7 +6,7 @@
 
 {% block extrahead %}
     <!-- Responsive - will need to be minified -->
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/responsive.css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/responsive.css" />
 {% endblock %}
 
 {% block layout %}
@@ -14,7 +14,7 @@
     
     <header class="header container-fluid">
         <div class="row-fluid">
-            <h1 class="span6"><a href="{% url promotions:home %}">Oscar</a><small> Domain-driven e-Commerce for Django</small></h1>
+            {% include "partials/brand.html" %}
         </div><!-- /row-fluid -->
         <div class="navbar primary">
             <div class="navbar-inner">

@@ -25,37 +25,37 @@ Content blocks for page {{ page_url }} | {{ block.super }}
 {% endblock %}
 
 {% block dashboard_content %}
-{% for position in positions %}
-<div class="sub-header">
-	<h2>Edit promotions in position '{{ position.name }}'</h2>
-</div>
-{% if position.promotions %}
-<table class="table table-striped table-bordered">
-	<thead>
-		<tr>
-			<th>Promotion Name</th>
-			<th>Type</th>
-			<th>Actions</th>
-		</tr>
-	</thead>
-	<tbody class="promotion_list">
-		{% for promotion in position.promotions %}
-		<tr id="promo_{{ promotion.pk }}">
-			<td>{{ promotion.content_object.name }}</td>
-			<td>{{ promotion.content_object.type }}</td>
-			<td>
-				<a href="{% url dashboard:promotion-update promotion.content_object.code promotion.content_object.id %}" class="btn btn-success">Edit</a>
-			    <a href="#" class="btn btn-info btn-handle">Re-order</a>
-			    <a href="{% url dashboard:pagepromotion-delete promotion.id %}" class="btn btn-danger">Remove</a>
-			</td>
-		</tr>
-		{% endfor %}
-	</tbody>
-</table>
-{% else %}
-    <p>No promotions in this position.</p>
-{% endif %}
 
+{% for position in positions %}
+<div class="well {% if position.promotions %}well-info{% endif%}">
+	<h3 class="app-ico ico_favourite icon">Edit promotions in position '{{ position.name }}'</h3>
+    {% if position.promotions %}
+    <table class="table table-bordered">
+    	<thead>
+    		<tr>
+    			<th>Promotion Name</th>
+    			<th>Type</th>
+    			<th>Actions</th>
+    		</tr>
+    	</thead>
+    	<tbody class="promotion_list">
+    		{% for promotion in position.promotions %}
+    		<tr id="promo_{{ promotion.pk }}">
+    			<td>{{ promotion.content_object.name }}</td>
+    			<td>{{ promotion.content_object.type }}</td>
+    			<td>
+    				<a href="{% url dashboard:promotion-update promotion.content_object.code promotion.content_object.id %}" class="btn btn-success">Edit</a>
+    			    <a href="#" class="btn btn-info btn-handle">Re-order</a>
+    			    <a href="{% url dashboard:pagepromotion-delete promotion.id %}" class="btn btn-danger">Remove</a>
+    			</td>
+    		</tr>
+    		{% endfor %}
+    	</tbody>
+    </table>
+    {% else %}
+        <p>No promotions in this position.</p>
+    {% endif %}
+</div>
 {% endfor %}
 
 {% endblock dashboard_content %}

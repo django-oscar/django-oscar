@@ -34,25 +34,3 @@ class BulkEditMixin():
 
 class IndexView(TemplateView):
     template_name = 'dashboard/index.html'
-
-    class MenuItem(object):
-        def __init__(self, description, view_name):
-            self.description = description
-            self.url = reverse(view_name)
-
-    def get_menu_items(self):
-        MenuItem = IndexView.MenuItem
-        # This needs to be configurable per project and permission based
-        return (
-            MenuItem('See order statistics', 'dashboard:order-summary'),
-            MenuItem('Manage orders', 'dashboard:order-list'),
-            MenuItem('View reports', 'dashboard:reports-index'),
-            MenuItem('User management', 'dashboard:users-index'),
-            MenuItem('Content block management', 'dashboard:promotion-list'),
-            MenuItem('Catalogue management', 'dashboard:catalogue-product-list'),
-        )
-
-    def get_context_data(self, **kwargs):
-        context = super(IndexView, self).get_context_data(**kwargs)
-        context['menu_items'] = self.get_menu_items()
-        return context
