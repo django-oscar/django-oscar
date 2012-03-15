@@ -112,7 +112,9 @@ class ProductForm(forms.ModelForm):
                    'product_options', 'attributes', 'categories')
 
     def save(self, commit=True):
-        object = super(ProductForm, self).save(commit)
+        object = super(ProductForm, self).save(commit=False)
+        object.product_class = self.product_class
+        object.save(commit)
         self.save_attributes(object)
         return object
 

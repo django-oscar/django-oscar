@@ -108,7 +108,7 @@ class ProductCreateView(generic.CreateView):
 
     def form_valid(self, form):
         product = form.save()
-        product.product_class = self.get_product_class()
+
         stockrecord_form = StockRecordForm(self.request.POST)
         category_formset = ProductCategoryFormSet(self.request.POST,
                                                   instance=product)
