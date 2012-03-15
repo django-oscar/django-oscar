@@ -121,6 +121,7 @@ class PageUpdateView(generic.UpdateView):
     template_name = 'dashboard/pages/update.html'
     model = FlatPage
     form_class = forms.PageUpdateForm
+    context_object_name = 'page'
 
     def get_context_data(self, **kwargs):
         """
@@ -128,7 +129,6 @@ class PageUpdateView(generic.UpdateView):
         """
         ctx = super(PageUpdateView, self).get_context_data(**kwargs)
         ctx['title'] = 'Update Page'
-        ctx['page'] = self.object
         return ctx
 
     def form_valid(self, form):
