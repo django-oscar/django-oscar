@@ -29,15 +29,10 @@ Dashboard | {{ block.super }}
             </div>
         </div><!-- /navbar-inner -->
     </div><!-- /navbar -->
-    
-    
-    
 
     <div class="container-fluid dashboard">
         <div class="row-fluid">
             {% dashboard_navigation request.user %}
-			{% dashboard_navigation %}
-			
 			<div class="subnav subnav-fixed">
                 <ul class="nav nav-pills">
                     {% for item in nav_items %}	
