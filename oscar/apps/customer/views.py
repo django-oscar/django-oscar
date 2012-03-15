@@ -22,19 +22,40 @@ order_line_model = get_model('order', 'Line')
 basket_model = get_model('basket', 'Basket')
 user_address_model = get_model('address', 'UserAddress')
 email_model = get_model('customer', 'email')
+UserAddress = get_model('address', 'UserAddress')
 communicationtype_model = get_model('customer', 'communicationeventtype')
 
 
 class AccountSummaryView(ListView):
-    """Customer order history"""
+    """
+    Customer order history
+    """
     context_object_name = "orders"
     template_name = 'customer/profile.html'
     paginate_by = 20
     model = order_model
 
     def get_queryset(self):
-        """Return a customer's orders"""
         return self.model._default_manager.filter(user=self.request.user)[0:5]
+
+    def get_context_data(self, **kwargs):
+        ctx = super(AccountSummaryView, self).get_context_data(**kwargs)
+        ctx['addressbook_size'] = self.request.user.addresses.all().count()
+        ctx['default_shipping_address'] = self.get_default_shipping_address(self.request.user)
+        ctx['default_billing_address'] = self.get_default_billing_address(self.request.user)
+        return ctx
+
+    def get_default_billing_address(self, user):
+        return self.get_user_address(user, is_default_for_billing=True)
+
+    def get_default_shipping_address(self, user):
+        return self.get_user_address(user, is_default_for_shipping=True)
+
+    def get_user_address(self, user, **filters):
+        try:
+            return user.addresses.get(**filters)
+        except UserAddress.DoesNotExist:
+            return None
 
 
 class AccountAuthView(TemplateView):

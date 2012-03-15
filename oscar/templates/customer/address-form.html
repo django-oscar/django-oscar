@@ -11,7 +11,6 @@ Update address | {{ block.super }}
 </div>
 {% endblock header %}
 
-
 {% block content %}
 <div class="sub-header">
     <h3>Edit address</h3>
@@ -22,7 +21,7 @@ Update address | {{ block.super }}
     <div class="form-actions">
         <input type="submit" value="Save address" class-"btn btn-primary"/>
         or
-        <a href="{% url customer:address-list %}">Cancel and return to address book</a>
+        <a href="{% url customer:address-list %}">cancel</a>
     </div>
 </form>
 
