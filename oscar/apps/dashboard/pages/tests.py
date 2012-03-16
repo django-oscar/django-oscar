@@ -13,74 +13,84 @@ class PageViewTests(ClientTestCase):
     is_anonymous = False
     is_staff = True
 
+    def setUp(self):
+        self.flatpage_1 = FlatPage.objects.create(title='title1', url='/url1/',
+                                      content='some content')
+        self.flatpage_1.save()
+        self.flatpage_2 = FlatPage.objects.create(title='title2', url='/url2/',
+                                      content='other content')
+        self.flatpage_2.save()
+
+        super(PageViewTests, self).setUp()
+
     def test_dashboard_index_is_for_staff_only(self):
         response = self.client.get(reverse('dashboard:page-list'))
         self.assertTrue('Password' not in response.content)
 
     def test_dashboard_page_list(self):
-        fp1 = FlatPage(title='title1', url='/url1/', content='some content')
-        fp1.save()
-
-        fp2 = FlatPage(title='title2', url='/url2/', content='other content')
-        fp2.save()
-
         response = self.client.get(reverse('dashboard:page-list'))
         objects = response.context[-1]['object_list']
 
-        self.assertTrue(fp1 in objects)
-        self.assertTrue(fp2 in objects)
+        self.assertTrue(self.flatpage_1 in objects)
+        self.assertTrue(self.flatpage_2 in objects)
 
-    def test_dashboard_create_pages(self):
-        ## make sure no flatpages exist
-        self.assertEquals(FlatPage.objects.count(), 0)
+    def test_dashboard_create_page_with_existing_url(self):
+        self.assertEquals(FlatPage.objects.count(), 2)
 
-        ## check that no page is created for existing URL
         response = self.client.post('/dashboard/pages/', data={
                                         'title': 'test',
                                         'url': '/dashboard/pages/',
                                     }, follow=True)
-        self.assertEquals(FlatPage.objects.count(), 0)
 
-        ## check creating a new page with custome URL
+        # Only the two existing flatpages should be saved.
+        self.assertEquals(FlatPage.objects.count(), 2)
+
+    def test_dashboard_create_page_with_custom_url(self):
+        self.assertEquals(FlatPage.objects.count(), 2)
+
         response = self.client.post('/dashboard/pages/create/', data={
                                         'title': 'Test Page',
                                         'url': '/test/page/',
                                         'content': "<h1> Content </h1>"
                                     }, follow=True)
 
-        self.assertEquals(FlatPage.objects.count(), 1)
-        page = FlatPage.objects.all()[0]
+        self.assertEquals(FlatPage.objects.count(), 3)
+
+        page = FlatPage.objects.get(pk=3)
         self.assertEquals(page.title, 'Test Page')
         self.assertEquals(page.url, '/test/page/')
         self.assertEquals(page.content, "<h1> Content </h1>")
         self.assertEquals(page.sites.count(), 1)
 
-        ## check creating page with slugified URL
+    def test_dashboard_create_page_with_slugified_url(self):
+        self.assertEquals(FlatPage.objects.count(), 2)
+
         response = self.client.post('/dashboard/pages/create/', data={
                                         'title': 'New Page', 'content': ""
                                     }, follow=True)
 
-        self.assertEquals(FlatPage.objects.count(), 2)
-        page = FlatPage.objects.all()[0]
+        self.assertEquals(FlatPage.objects.count(), 3)
+
+        page = FlatPage.objects.get(pk=3)
         self.assertEquals(page.title, 'New Page')
         self.assertEquals(page.url, '/new-page/')
         self.assertEquals(page.content, "")
         self.assertEquals(page.sites.count(), 1)
 
-        ## check creating page with existing URL does not work
+    def test_dashboard_create_page_with_exisiting_url_does_not_work(self):
+        self.assertEquals(FlatPage.objects.count(), 2)
+
         response = self.client.post('/dashboard/pages/create/', data={
                                         'title': 'New Page', 'content': ""
                                     }, follow=True)
 
-        self.assertEquals(FlatPage.objects.count(), 2)
+        response = self.client.post('/dashboard/pages/create/', data={
+                                        'title': 'New Page', 'content': ""
+                                    }, follow=True)
+
+        self.assertEquals(FlatPage.objects.count(), 3)
 
     def test_dashboard_update_page_valid_url(self):
-        fp1 = FlatPage(title='title1', url='/url1/', content='some content')
-        fp1.save()
-        fp2 = FlatPage(title='title2', url='/url2/', content='other content')
-        fp2.save()
-
-        ## check if overwriting all properties works
         response = self.client.post('/dashboard/pages/update/1/', data={
                                         'title': 'Test Page',
                                         'url': '/test/page/',
@@ -96,14 +106,8 @@ class PageViewTests(ClientTestCase):
         self.assertEquals(page.sites.count(), 1)
 
     def test_dashboard_update_page_invalid_url(self):
-        fp1 = FlatPage(title='title1', url='/url1/', content='some content')
-        fp1.save()
-        fp2 = FlatPage(title='title2', url='/url2/', content='other content')
-        fp2.save()
+        self.assertEquals(self.flatpage_1.title, 'title1')
 
-        self.assertEquals(fp1.title, 'title1')
-
-        ## check changing to an invalid urls does not work
         response = self.client.post('/dashboard/pages/update/1/', data={
                                         'title': 'Test Page',
                                         'url': '/url2/',
@@ -117,7 +121,7 @@ class PageViewTests(ClientTestCase):
         self.assertEquals(page.url, '/url1/')
         self.assertEquals(page.content, "some content")
 
-        ## check doing a valid update
+    def test_dashboard_update_page_valid_url_unchanged(self):
         response = self.client.post('/dashboard/pages/update/1/', data={
                                         'title': 'Test Page',
                                         'url': '/url1/',
@@ -131,7 +135,7 @@ class PageViewTests(ClientTestCase):
         self.assertEquals(page.url, '/url1/')
         self.assertEquals(page.content, "<h1> Content </h1>")
 
-        ## check doing a valid update with new URL
+        # now only update the URL
         response = self.client.post('/dashboard/pages/update/1/', data={
                                         'title': 'Test Page',
                                         'url': '/new/url/',
@@ -146,12 +150,6 @@ class PageViewTests(ClientTestCase):
         self.assertEquals(page.content, "<h1> Content </h1>")
 
     def test_dashboard_delete_pages(self):
-        fp1 = FlatPage(title='title1', url='/url1/', content='some content')
-        fp1.save()
-        fp2 = FlatPage(title='title2', url='/url2/', content='other content')
-        fp2.save()
-
-        ## check if overwriting all properties works
         response = self.client.post('/dashboard/pages/delete/1/', follow=True)
 
         self.assertEquals(FlatPage.objects.count(), 1)
