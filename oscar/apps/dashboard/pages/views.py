@@ -86,7 +86,7 @@ class PageCreateView(generic.CreateView):
         version of the title will be used as URL after checking
         if it is valid.
         """
-        ## if no URL is specified, generate from title
+        # if no URL is specified, generate from title
         page = form.save(commit=False)
 
         if not page.url:
@@ -95,7 +95,7 @@ class PageCreateView(generic.CreateView):
         try:
             URLDoesNotExistValidator()(page.url)
 
-            ## use current site as default for new page
+            # use current site as default for new page
             page.save()
             page.sites.add(Site.objects.get_current())
             page.save()

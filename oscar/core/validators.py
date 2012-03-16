@@ -32,7 +32,7 @@ class ExtendedURLValidator(validators.URLValidator):
                 resolve(value)
             self.is_local_url = True
         except Http404:
-            ## check for existing urls of flatpages if package installed
+            # check for existing urls of flatpages if package installed
             if FlatPage is not None:
                 for page in FlatPage.objects.all().only(('url')):
                     if value == page.url:
@@ -70,18 +70,18 @@ class URLDoesNotExistValidator(ExtendedURLValidator):
         """
         self.verify_exists = False
 
-        ## calling ExtendedURLValidator twice instead of replicating its code
-        ## and invert the cases when a ValidationError is returned seemes to
-        ## be a much cleaner solution. Although this might not be the most
-        ## efficient way of handling this, it should have not much of an impact
-        ## due to its current application in flatpage creation.
+        # calling ExtendedURLValidator twice instead of replicating its code
+        # and invert the cases when a ValidationError is returned seemes to
+        # be a much cleaner solution. Although this might not be the most
+        # efficient way of handling this, it should have not much of an impact
+        # due to its current application in flatpage creation.
         try:
             super(URLDoesNotExistValidator, self).__call__(value)
         except ValidationError:
             raise ValidationError(_('Specified page does already exist'),
                                     code='invalid')
 
-        ## check if URL exists since it seems to be valid
+        # check if URL exists since it seems to be valid
         try:
             self.verify_exists = True
             super(URLDoesNotExistValidator, self).__call__(value)
