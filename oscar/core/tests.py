@@ -2,9 +2,12 @@ from django.test import TestCase
 from django.core.exceptions import ValidationError
 from django.conf import settings
 
+from django.contrib.flatpages.models import FlatPage
+
 from oscar.core.loading import import_module, AppNotFoundError, \
         get_classes, get_class
 from oscar.core.validators import ExtendedURLValidator
+from oscar.core.validators import URLDoesNotExistValidator
 from oscar.test import patch_settings
 
 
@@ -13,7 +16,7 @@ class ImportAppTests(TestCase):
     def test_a_specified_class_is_imported_correctly(self):
         module = import_module('analytics.models', ['ProductRecord'])
         self.assertEqual('oscar.apps.analytics.models', module.__name__)
-        
+
     def test_unknown_apps_raise_exception(self):
         self.assertRaises(AppNotFoundError, import_module, 'banana', ['skin'])
 
@@ -67,30 +70,54 @@ class ClassLoadingWithLocalOverrideTests(TestCase):
 
 
 class ValidatorTests(TestCase):
-    
+
     def test_validate_local_url(self):
         v = ExtendedURLValidator(verify_exists=True)
-               
+
         try:
             v('/')
         except ValidationError:
-            self.fail('ExtendedURLValidator raised ValidationError unexpectedly!')
-            
+            self.fail('ExtendedURLValidator raised ValidationError'
+                      'unexpectedly!')
+
         try:
             v('/?q=test')  # Query strings shouldn't affect validation
         except ValidationError:
-            self.fail('ExtendedURLValidator raised ValidationError unexpectedly!')
+            self.fail('ExtendedURLValidator raised ValidationError'
+                      'unexpectedly!')
 
         with self.assertRaises(ValidationError):
             v('/invalid/')
-        
+
         with self.assertRaises(ValidationError):
             v('/invalid/?q=test')  # Query strings shouldn't affect validation
 
         try:
             v('products/')
         except ValidationError:
-            self.fail('ExtendedURLValidator raised ValidationError unexpectedly!')
-            
+            self.fail('ExtendedURLValidator raised ValidationError'
+                      'unexpectedly!')
+
         with self.assertRaises(ValidationError):
-            v('/products')  # Missing the / is bad          
+            v('/products')  # Missing the / is bad
+
+        FlatPage(title='test page', url='/test/page/').save()
+        try:
+            v('/test/page/')
+        except ValidationError:
+            self.fail('ExtendedURLValidator raises ValidationError'
+                      'unexpectedly!')
+
+    def test_validate_url_does_not_exist(self):
+        validator = URLDoesNotExistValidator()
+
+        self.assertRaises(ValidationError, validator, '/')
+
+        try:
+            validator('/invalid/')
+        except ValidationError:
+            self.fail('URLDoesNotExistValidator raised ValidationError'
+                      'unexpectedly!')
+
+        FlatPage(title='test page', url='/test/page/').save()
+        self.assertRaises(ValidationError, validator, '/test/page/')
