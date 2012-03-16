@@ -640,6 +640,8 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         Note, this isn't used in core oscar as there is no billing address form
         by default.
         """
+        if not self.request.user.is_authenticated():
+            return None
         try:
             return self.request.user.addresses.get(is_default_for_billing=True)
         except UserAddress.DoesNotExist:
