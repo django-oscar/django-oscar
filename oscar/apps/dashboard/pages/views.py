@@ -98,7 +98,6 @@ class PageCreateView(generic.CreateView):
             # use current site as default for new page
             page.save()
             page.sites.add(Site.objects.get_current())
-            page.save()
 
             return HttpResponseRedirect(self.get_success_url(page))
 
