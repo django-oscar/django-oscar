@@ -1,0 +1,21 @@
+{% extends 'dashboard/layout.html' %}
+
+{% block header %}
+<div class="page-header">
+    <h1>Delete page?</h1>
+</div>
+{% endblock header%}
+
+{% block dashboard_content %}
+
+
+<form action="." method="post">
+	{% csrf_token %}
+	{{ form }}
+	<p>Delete page <strong>{{ object.title }}</strong> - are you sure?</p>
+	<div class="form-actions">
+	    <button type="submit" class="btn btn-danger">Delete</button>
+	    or <a href="{% url dashboard:page-list %}">cancel</a>
+	</div>
+</form>
+{% endblock %}
