@@ -15,6 +15,8 @@ information:
 * `Documentation`_ on `readthedocs.org`_
 * `Continuous integration homepage`_ on `travis-ci.org`_
 
+.. image:: https://secure.travis-ci.org/tangentlabs/django-oscar.png
+
 .. _`Official homepage`: http://tangentlabs.github.com/django-oscar/
 .. _`Documentation`: http://django-oscar.readthedocs.org/en/latest/
 .. _`readthedocs.org`: http://readthedocs.org
