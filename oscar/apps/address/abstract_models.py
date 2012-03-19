@@ -178,8 +178,8 @@ class AbstractUserAddress(AbstractShippingAddress):
     user = models.ForeignKey('auth.User', related_name='addresses')
     
     # Customers can set defaults
-    is_default_for_shipping = models.BooleanField(default=False)
-    is_default_for_billing = models.BooleanField(default=False)
+    is_default_for_shipping = models.BooleanField(_("Default shipping address?"), default=False)
+    is_default_for_billing = models.BooleanField(_("Default billing address?"), default=False)
     
     # We keep track of the number of times an address has been used
     # as a shipping address so we can show the most popular ones 

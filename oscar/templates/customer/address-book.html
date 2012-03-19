@@ -29,7 +29,8 @@ Address book | {{ block.super }}
             			</address>
             		</td>
             		<td>
-            		    <a class="btn btn-primary" href="{% url customer:address-detail address.id %}">Edit</a> <a href="{% url customer:address-delete address.id %}">Delete</a>
+						<a class="btn btn-primary" href="{% url customer:address-detail address.id %}">Edit</a> 
+						<a class="btn btn-danger" href="{% url customer:address-delete address.id %}">Delete</a>
             		</td>
             	</tr>
             {% endfor %}
