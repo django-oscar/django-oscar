@@ -7,7 +7,7 @@ Address book | {{ block.super }}
 
 {% block header %}
 <div class="page-header">
-    <h2>Address book</h2>
+    <h2>Address Book</h2>
 </div>
 {% endblock header %}
 
@@ -15,23 +15,26 @@ Address book | {{ block.super }}
 {% block content %}
 
 {% if addresses %}
-<table class="table">
-	<tr>
-		<th>Address</th>
-		<th></th>
-	</tr>
-    {% for address in addresses %}
-	<tr>
-		<td>
-        {{ address.summary }}
-		</td>
-		<td>
-        <a class="btn btn-info" href="{% url customer:address-detail address.id %}">Edit</a>
-		<a class="btn btn-danger" href="{% url customer:address-delete address.id %}">Delete</a>
-		</td>
-    </tr>
-    {% endfor %}
-</table>
+    <table class="table table-striped table-condensed table-bordered">
+    	<tbody>
+    		<tr>
+    			<th>Address</th>
+    			<th></th>
+    		</tr>
+            {% for address in addresses %}
+            	<tr>
+            		<td>
+                		<address>
+                		{{ address.summary }}
+            			</address>
+            		</td>
+            		<td>
+            		    <a class="btn btn-primary" href="{% url customer:address-detail address.id %}">Edit</a> <a href="{% url customer:address-delete address.id %}">Delete</a>
+            		</td>
+            	</tr>
+            {% endfor %}
+    	</tbody>
+    </table>
 {% else %}
 There are no addresses in your address book.
 {% endif %}
