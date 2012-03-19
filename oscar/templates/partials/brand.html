@@ -1,6 +1,7 @@
 {% load currency_filters %}
 
 <h1 class="span6"><a href="{% url promotions:home %}">{% block brand_title %}Oscar</a><small> Domain-driven e-Commerce for Django</small>{% endblock %}</h1>
+{% if not hide_basket %}
 <ul class="cart span6">
     <li>
         <div class="btn-group">
@@ -15,3 +16,4 @@
     </li>
     <li class="cart_summary"><strong>Basket total: <span>{{ basket.total_incl_tax|currency }}</span></strong></li>
 </ul><!-- /cart -->
+{% endif %}
