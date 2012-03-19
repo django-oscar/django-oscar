@@ -174,30 +174,37 @@ button {
 h3 {
   margin-bottom:@baseLineHeight / 4;
 }
-.control-group.pull-left {
-  > label {
-    width: 100px;
-  }
-  .controls {
-    margin-left: 120px;
+.search-adv {
+  .control-group.pull-left {
     > label {
-      padding-left:0px;
+      width: 100px;
     }
-    .radio {
-      ul {
-        .horiz_col();
-        li {
-          label {
-            display: inline-block;
-            padding-top: 5px;
-            margin-bottom: 0;
-            vertical-align: middle;
-            margin-left: 10px;
-            padding-left: 18px;
+    .controls {
+      margin-left: 120px;
+      > label {
+        padding-left:0px;
+      }
+      .radio {
+        ul {
+          .horiz_col();
+          li {
+            label {
+              display: inline-block;
+              padding-top: 5px;
+              margin-bottom: 0;
+              vertical-align: middle;
+              margin-left: 10px;
+              padding-left: 18px;
+            }
           }
         }
       }
     }
+  }
+}
+.product-new {
+  .form-inline.pull-left {
+    margin-right:15px;
   }
 }
 .no-float {
@@ -280,9 +287,9 @@ h3 {
     list-style:none;
   }
 }
-.form-inline {
+/*.form-inline {
   margin-bottom:0px;
-}
+}*/
 .icon:before {
   padding:7px 6px;
   background:@black;
@@ -354,7 +361,7 @@ h3 {
     background:#f5f5f5;
   }
 }
-.new-product {
+.fields-full {
   input[type=text],
   textarea {
     width:99%;

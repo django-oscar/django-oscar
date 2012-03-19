@@ -502,7 +502,7 @@ Order {{ order.number }} | {{ block.super }}
 			{% endif %}
 			{% endwith %}
 
-			<form action=".?note={{ note_id }}" method="post" class="new-product">
+			<form action=".?note={{ note_id }}" method="post" class="fields-full">
 				{% csrf_token %}
 				<input type="hidden" value="save_note" name="order_action" />
 				{% include "partials/form_fields.html" with form=note_form %}
