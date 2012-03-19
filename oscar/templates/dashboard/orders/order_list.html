@@ -27,112 +27,47 @@ Order management | {{ block.super }}
     <div class="sub-header">
         <h3>Quick Order Search &nbsp;&nbsp;<small><a href="#" class="app-ico ico_magnify pull_out">Advanced Search</a></small></h3>
     </div>
-    <form action="." method="get" class="form-horizontal">
-        <!-- {% include "partials/form_fields.html" with form=form %} -->
-        {{ form.non_field_errors }}
-        <div class="control-group {% for error in form.order_number.errors %}error{% endfor %} pull-left">
-            <label for="id_order_number">Order number:</label>
-            <div class="controls">
-                {{ form.order_number }}
-                {% for error in form.order_number.errors %}
-                <span class="help-block">
-                    {{ error|escape }}
-                </span>
-                {% endfor %}
-            </div>
-        </div>
-        <div class="orders_search">
-            <div class="control-group {% for error in form.name.errors %}error{% endfor %}">
-                <label for="id_name">Customer name:</label>
-                <div class="controls">
-                    {{ form.name }}
-                    {% for error in form.name.errors %}
-                    <span class="help-block">
-                        {{ error|escape }}
-                    </span>
-                    {% endfor %}
+    <form action="." method="get" class="search-adv form-horizontal">
+        {% for field in form %}
+            {% if not forloop.last %}
+                <div class="control-group {% for error in field.errors %}error{% endfor %} {% if forloop.first %}pull-left{% endif%}">
+                    {% if field.is_hidden %}
+                        {{ field }}
+                    {% else %}
+                    {{ field.label_tag }}
+                    <div class="controls">
+                        {{ field }}
+                            {% for error in field.errors %}
+                            <span class="help-block">
+                                {{ error|escape }}
+                            </span>
+                            {% endfor %}
+                        {% if field.help_text %}
+                            <span class='help-block'>
+                                {{ field.help_text }}
+                            </span>
+                        {% endif %}
+                    </div>
+                    {% endif %}
                 </div>
-            </div>
-            <div class="control-group {% for error in form.product_title.errors %}error{% endfor %}">
-                <label for="id_product_title">Product name:</label>
-                <div class="controls">
-                    {{ form.product_title }}
-                    {% for error in form.product_title.errors %}
-                    <span class="help-block">
-                        {{ error|escape }}
-                    </span>
-                    {% endfor %}
+            {% else%}
+                <div class="control-group {% for error in form.response_format_0.errors %}error{% endfor %} pull-left">
+                    <label for="id_response_format_0">Get results as:</label>
+                    <div class="controls">
+                        <label class="radio inline" for="id_response_format_0">
+                            {{ form.response_format }}
+                            {% for error in form.response_format.errors %}
+                            <span class="help-block">
+                                {{ error|escape }}
+                            </span>
+                            {% endfor %}
+                        </label>
+                    </div>
                 </div>
-            </div>
-            <div class="control-group {% for error in form.product_id.errors %}error{% endfor %}">
-                <label for="id_product_id">Product ID</label>
-                <div class="controls">
-                    {{ form.product_id }}
-                    {% for error in form.product_id.errors %}
-                    <span class="help-block">
-                        {{ error|escape }}
-                    </span>
-                    {% endfor %}
-                </div>
-            </div>
-            <div class="control-group {% for error in form.status.errors %}error{% endfor %}">
-                <label for="id_status">Order number:</label>
-                <div class="controls">
-                    {{ form.status }}
-                    {% for error in form.status.errors %}
-                    <span class="help-block">
-                        {{ error|escape }}
-                    </span>
-                    {% endfor %}
-                </div>
-            </div>
-            <div class="control-group {% for error in form.date_from.errors %}error{% endfor %}">
-                <label for="id_date_from">Date from:</label>
-                <div class="controls">
-                    {{ form.date_from }}
-                    {% for error in form.date_from.errors %}
-                    <span class="help-block">
-                        {{ error|escape }}
-                    </span>
-                    {% endfor %}
-                </div>
-            </div>
-            <div class="control-group {% for error in form.date_to.errors %}error{% endfor %}">
-                <label for="id_date_to">Date to:</label>
-                <div class="controls">
-                    {{ form.date_to }}
-                    {% for error in form.date_to.errors %}
-                    <span class="help-block">
-                        {{ error|escape }}
-                    </span>
-                    {% endfor %}
-                </div>
-            </div>
-            <div class="control-group {% for error in form.voucher.errors %}error{% endfor %}">
-                <label for="id_voucher">Voucher code:</label>
-                <div class="controls">
-                    {{ form.voucher }}
-                    {% for error in form.voucher.errors %}
-                    <span class="help-block">
-                        {{ error|escape }}
-                    </span>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-        <div class="control-group {% for error in form.response_format_0.errors %}error{% endfor %} pull-left">
-            <label for="id_response_format_0">Get results as:</label>
-            <div class="controls">
-                <label class="radio inline" for="id_response_format_0">
-                    {{ form.response_format }}
-                    {% for error in form.response_format.errors %}
-                    <span class="help-block">
-                        {{ error|escape }}
-                    </span>
-                    {% endfor %}
-                </label>
-            </div>
-        </div>
+            {% endif%}
+            {% ifequal forloop.counter 1 %}<div class="orders_search">{% endifequal %}
+            {% ifequal forloop.revcounter0 1 %}</div>{% endifequal %}
+        {% endfor %}
         <button type="submit" class="btn btn-primary pull-left">Search</button>
     </form>
 </div>
