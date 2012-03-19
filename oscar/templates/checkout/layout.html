@@ -14,7 +14,7 @@
     
     <header class="header container-fluid">
         <div class="row-fluid">
-            {% include "partials/brand.html" %}
+            {% include "partials/brand.html" with hide_basket=1 %}
         </div><!-- /row-fluid -->
         <div class="navbar primary">
             <div class="navbar-inner">
@@ -73,7 +73,6 @@
                 </div>
                 {% endfor %}
             {% endblock %}
-
 
             {% block sidebar %}
             {% endblock %}

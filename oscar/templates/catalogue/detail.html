@@ -83,12 +83,14 @@
         </div><!-- /span6 -->
     </div><!-- /row-fluid -->
               
-
+	{% block product_description %}
     <div id="product_description" class="sub-header">
         <h2>Product Description</h2>
     </div>
     <p>{{ product.description }}</p>
+	{% endblock %}
     
+	{% block product_info %}
     <h2>Product Information</h2>
     <table class="table table-striped table-condensed">
         <tr>
@@ -130,7 +132,9 @@
             <td></td>
         </tr>
     </table>
+	{% endblock %}
 
+	{% block product_categories %}
     <div class="sub-header">
         <h2>Categories</h2>
     </div>
@@ -143,6 +147,7 @@
         </li>
         {% endfor %}
     </ul>
+	{% endblock %}
 
     {% block product_review %}
     <section>
