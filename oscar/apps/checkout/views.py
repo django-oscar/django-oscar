@@ -10,6 +10,7 @@ from django.forms import ModelForm
 from django.contrib import messages
 from django.core.urlresolvers import resolve
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth import login
 from django.utils.translation import ugettext as _
 from django.template.response import TemplateResponse
 from django.core.mail import EmailMessage
@@ -18,7 +19,7 @@ from django.views.generic import DetailView, TemplateView, FormView, \
 
 from oscar.apps.shipping.methods import Free
 from oscar.core.loading import import_module
-import_module('checkout.forms', ['ShippingAddressForm'], locals())
+import_module('checkout.forms', ['ShippingAddressForm', 'GatewayForm'], locals())
 import_module('checkout.calculators', ['OrderTotalCalculator'], locals())
 import_module('checkout.utils', ['CheckoutSessionData'], locals())
 import_module('checkout.signals', ['pre_payment', 'post_payment'], locals())
@@ -40,15 +41,31 @@ import_module('basket.models', ['Basket'], locals())
 logger = logging.getLogger('oscar.checkout')
 
 
-class IndexView(AccountAuthView):
+class IndexView(FormView):
     """
-    First page of the checkout.  If the user is signed in then we forward
-    straight onto the next step.  Otherwise, we provide options to login, register and
-    (if the option is enabled) proceed anonymously.
+    First page of the checkout.  We prompt user to either sign in, or
+    to proceed as a guest (where we still collect their email address).
     """
     template_name = 'checkout/gateway.html'
-    
-    def get_logged_in_redirect(self):
+    form_class = GatewayForm
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated():
+            return self.get_success_response()
+        return super(IndexView, self).get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        if form.is_guest_checkout():
+            email = form.cleaned_data['username']
+        else:
+            user = form.get_user()
+            login(self.request, user)
+        return self.get_success_response()
+
+    def get_success_response(self):
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
         return reverse('checkout:shipping-address')
 
 
