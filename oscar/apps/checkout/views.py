@@ -653,11 +653,11 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         """
         # Check that shipping address has been completed
         if not self.checkout_session.is_shipping_address_set():
-            messages.error(request, _("Please choose a shipping address"))
+            messages.error(self.request, _("Please choose a shipping address"))
             return HttpResponseRedirect(reverse('checkout:shipping-address'))
         # Check that shipping method has been set
         if not self.checkout_session.is_shipping_method_set():
-            messages.error(request, _("Please choose a shipping method"))
+            messages.error(self.request, _("Please choose a shipping method"))
             return HttpResponseRedirect(reverse('checkout:shipping-method'))
         # Next, check that basket isn't empty
         if basket.is_empty:
