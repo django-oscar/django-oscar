@@ -613,14 +613,6 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         validate the forms from the payment details page.  If the forms are valid
         then the method can call submit()
         """
-        # Check that shipping address has been completed
-        if not self.checkout_session.is_shipping_address_set():
-            messages.error(request, _("Please choose a shipping address"))
-            return HttpResponseRedirect(reverse('checkout:shipping-address'))
-        # Check that shipping method has been set
-        if not self.checkout_session.is_shipping_method_set():
-            messages.error(request, _("Please choose a shipping method"))
-            return HttpResponseRedirect(reverse('checkout:shipping-method'))
         return self.submit(request.basket, **kwargs)
 
     def can_basket_be_submitted(self, basket):
@@ -659,7 +651,15 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
            - If a redirect is required (eg PayPal, 3DSecure), redirect
            - If payment is unsuccessful, show an appropriate error message
         """
-        # First check that basket isn't empty
+        # Check that shipping address has been completed
+        if not self.checkout_session.is_shipping_address_set():
+            messages.error(request, _("Please choose a shipping address"))
+            return HttpResponseRedirect(reverse('checkout:shipping-address'))
+        # Check that shipping method has been set
+        if not self.checkout_session.is_shipping_method_set():
+            messages.error(request, _("Please choose a shipping method"))
+            return HttpResponseRedirect(reverse('checkout:shipping-method'))
+        # Next, check that basket isn't empty
         if basket.is_empty:
             messages.error(self.request, _("This order cannot be submitted as the basket is empty"))
             url = self.request.META.get('HTTP_REFERER', reverse('checkout:shipping-address'))
