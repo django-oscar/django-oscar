@@ -12,6 +12,7 @@ OSCAR_RECENTLY_VIEWED_PRODUCTS = 4
 # Image paths
 OSCAR_IMAGE_FOLDER = 'images/products/%Y/%m/'
 OSCAR_PROMOTION_FOLDER = 'images/promotions/'
+OSCAR_MISSING_IMAGE_URL = '/static/oscar/img/image_not_found.jpg'
 
 # Search settings
 OSCAR_SEARCH_SUGGEST_LIMIT = 10
