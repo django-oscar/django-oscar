@@ -31,6 +31,8 @@ class Dispatcher(object):
         if order.is_anonymous:
             if 'email_address' in kwargs:
                 self.send_email_messages(kwargs['email_address'], messages)
+            elif order.guest_email:
+                self.send_email_messages(order.guest_email, messages)
             else:
                 return
         else:

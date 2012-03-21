@@ -41,34 +41,6 @@ import_module('basket.models', ['Basket'], locals())
 logger = logging.getLogger('oscar.checkout')
 
 
-class IndexView(FormView):
-    """
-    First page of the checkout.  We prompt user to either sign in, or
-    to proceed as a guest (where we still collect their email address).
-    """
-    template_name = 'checkout/gateway.html'
-    form_class = GatewayForm
-
-    def get(self, request, *args, **kwargs):
-        if request.user.is_authenticated():
-            return self.get_success_response()
-        return super(IndexView, self).get(request, *args, **kwargs)
-
-    def form_valid(self, form):
-        if form.is_guest_checkout():
-            email = form.cleaned_data['username']
-        else:
-            user = form.get_user()
-            login(self.request, user)
-        return self.get_success_response()
-
-    def get_success_response(self):
-        return HttpResponseRedirect(self.get_success_url())
-
-    def get_success_url(self):
-        return reverse('checkout:shipping-address')
-
-
 class CheckoutSessionMixin(object):
     """
     Mixin to provide common functionality shared between checkout views.
@@ -142,6 +114,35 @@ class CheckoutSessionMixin(object):
         return ctx
 
 
+class IndexView(CheckoutSessionMixin, FormView):
+    """
+    First page of the checkout.  We prompt user to either sign in, or
+    to proceed as a guest (where we still collect their email address).
+    """
+    template_name = 'checkout/gateway.html'
+    form_class = GatewayForm
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated():
+            return self.get_success_response()
+        return super(IndexView, self).get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        if form.is_guest_checkout():
+            email = form.cleaned_data['username']
+            self.checkout_session.set_guest_email(email)
+        else:
+            user = form.get_user()
+            login(self.request, user)
+        return self.get_success_response()
+
+    def get_success_response(self):
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse('checkout:shipping-address')
+
+
 # ================
 # SHIPPING ADDRESS
 # ================
@@ -163,6 +164,13 @@ class ShippingAddressView(CheckoutSessionMixin, FormView):
     template_name = 'checkout/shipping_address.html'
     form_class = ShippingAddressForm
     
+    def get(self, request, *args, **kwargs):
+        # Check that guests have entered an email address
+        if not request.user.is_authenticated() and not self.checkout_session.get_guest_email():
+            messages.error(request, _("Please either sign in or enter your email address"))
+            return HttpResponseRedirect(reverse('checkout:index'))
+        return super(ShippingAddressView, self).get(request, *args, **kwargs)
+
     def get_initial(self):
         return self.checkout_session.new_shipping_address_fields()
     
@@ -460,6 +468,8 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             status = self.get_initial_order_status(basket)
         else:
             status = kwargs.pop('status')
+        if not self.request.user.is_authenticated():
+            kwargs['guest_email'] = self.checkout_session.get_guest_email()
         order = OrderCreator().place_order(basket=basket, 
                                            total_incl_tax=total_incl_tax,
                                            total_excl_tax=total_excl_tax,

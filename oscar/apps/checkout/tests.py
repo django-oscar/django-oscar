@@ -1,18 +1,46 @@
 from decimal import Decimal as D
 import httplib
+import sys
 
 from django.test import TestCase
 from django.test.client import Client
-from django.core.urlresolvers import reverse, clear_url_caches
+from django.core.urlresolvers import reverse, clear_url_caches, set_urlconf
 from django.conf import settings
+from django.utils.importlib import import_module
 
 from oscar.test.helpers import create_product
-from oscar.test import ClientTestCase
+from oscar.test import ClientTestCase, patch_settings
 from oscar.apps.basket.models import Basket
 from oscar.apps.order.models import Order
 
 
-class AnonymousCheckoutViewsTests(ClientTestCase):
+class CheckoutMixin(object):
+    fixtures = ['countries.json']
+
+    def complete_guest_email_form(self, email='test@example.com'):
+        response = self.client.post(reverse('checkout:index'),
+                                    {'username': email,
+                                     'options': 'new'})
+        self.assertIsRedirect(response)
+
+    def complete_shipping_address(self):
+        response = self.client.post(reverse('checkout:shipping-address'),
+                                     {'last_name': 'Doe',
+                                      'line1': '1 Egg Street',
+                                      'postcode': 'N1 9RT',
+                                      'country': 'GB',
+                                     })
+        self.assertIsRedirect(response)
+
+    def complete_shipping_method(self):
+        self.client.get(reverse('checkout:shipping-method'))
+
+    def assertRedirectUrlName(self, response, name):
+        location = response['Location'].replace('http://testserver', '')
+        self.assertEqual(location, reverse(name))
+
+
+class DisabledAnonymousCheckoutViewsTests(ClientTestCase):
     is_anonymous = True
 
     def test_index_does_not_require_login(self):
@@ -38,6 +66,41 @@ class AnonymousCheckoutViewsTests(ClientTestCase):
             self.assertIsRedirect(response)
 
 
+class EnabledAnonymousCheckoutViewsTests(ClientTestCase, CheckoutMixin):
+    is_anonymous = True
+
+    def reload_urlconf(self):
+        if settings.ROOT_URLCONF in sys.modules:
+            reload(sys.modules[settings.ROOT_URLCONF])
+        return import_module(settings.ROOT_URLCONF)
+
+    def add_product_to_basket(self):
+        product = create_product(price=D('12.00'))
+        self.client.post(reverse('basket:add'), {'product_id': product.id,
+                                                 'quantity': 1})
+
+    def test_shipping_address_does_require_session_email_address(self):
+        with patch_settings(OSCAR_ALLOW_ANON_CHECKOUT=True):
+            self.reload_urlconf()
+            url = reverse('checkout:shipping-address')
+            response = self.client.get(url)
+            self.assertIsRedirect(response)
+
+    def test_email_address_is_saved_with_order(self):
+        with patch_settings(OSCAR_ALLOW_ANON_CHECKOUT=True):
+            self.reload_urlconf()
+            self.add_product_to_basket()
+            self.complete_guest_email_form('barry@example.com')
+            self.complete_shipping_address()
+            self.complete_shipping_method()
+            self.client.post(reverse('checkout:payment-details'))
+            response = self.client.get(reverse('checkout:thank-you'))
+            order = response.context['order']
+            self.assertEqual('barry@example.com', order.guest_email)
+
+
+
+
 class ShippingAddressViewTests(ClientTestCase):
     fixtures = ['countries.json']
     
@@ -57,25 +120,6 @@ class ShippingAddressViewTests(ClientTestCase):
         self.assertEqual('1 Egg Street', session_address['line1'])
         self.assertEqual('N1 9RT', session_address['postcode'])
 
-
-class CheckoutMixin(object):
-    fixtures = ['countries.json']
-
-    def complete_shipping_address(self):
-        response = self.client.post(reverse('checkout:shipping-address'),
-                                     {'last_name': 'Doe',
-                                      'line1': '1 Egg Street',
-                                      'postcode': 'N1 9RT',
-                                      'country': 'GB',
-                                     })
-        self.assertIsRedirect(response)
-
-    def complete_shipping_method(self):
-        self.client.get(reverse('checkout:shipping-method'))
-
-    def assertRedirectUrlName(self, response, name):
-        location = response['Location'].replace('http://testserver', '')
-        self.assertEqual(location, reverse(name))
 
 
 class ShippingMethodViewTests(ClientTestCase, CheckoutMixin):
