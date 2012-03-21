@@ -3130,24 +3130,53 @@ body {
   font-weight: bold;
 }
 .checkoutNav ul li {
-  padding: 4px 0;
-  background-color: #eeeeee;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-  -webkit-box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5);
-  -moz-box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5);
-  box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5);
-  color: #fff;
+  background: none repeat scroll 0 0 #999999;
+  color: #FFFFFF;
+  float: left;
+  height: 24px;
+  line-height: 24px;
+  margin: 0;
+  padding: 1px 0 4px;
+  position: relative;
+  text-decoration: none;
 }
-.checkoutNav ul li .app-ico {
+.checkoutNav ul li h3 {
   text-align: center;
+  font-size: 12px;
+}
+.checkoutNav ul li:after {
+  border-color: transparent transparent transparent #999999;
+  border-style: solid;
+  border-width: 15px 0 15px 15px;
+  content: "";
+  float: left;
+  height: 0;
+  position: absolute;
+  right: -15px;
+  top: 0;
+  width: 0;
+}
+.checkoutNav ul li.active:after {
+  border-color: transparent transparent transparent #0088CC;
 }
 .checkoutNav ul li.active {
   background-color: #0088CC;
 }
-.checkoutNav ul li.active .app-ico {
+.checkoutNav ul li:before {
+  border-color: transparent transparent transparent #fff;
+  border-style: solid;
+  border-width: 15px 0 15px 15px;
+  content: "";
+  float: left;
+  height: 0;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 0;
+}
+.checkoutNav ul li.active h3 {
   color: #fff;
+  text-align: center;
 }
 /*  Procduct columns*/
 .five li {
