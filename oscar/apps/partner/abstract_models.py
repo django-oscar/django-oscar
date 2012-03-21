@@ -19,6 +19,7 @@ for partner, class_str in settings.OSCAR_PARTNER_WRAPPERS.items():
     module = django_import_module(module_str)
     partner_wrappers[partner] = getattr(module, class_name)()
 
+
 def get_partner_wrapper(partner_name):
     """
     Returns the appropriate partner wrapper given the partner name

@@ -31,7 +31,7 @@ class Migration(SchemaMigration):
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('number', self.gf('django.db.models.fields.CharField')(max_length=128, db_index=True)),
             ('site', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['sites.Site'])),
-            ('basket', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['basket.Basket'], null=True, blank=True)),
+            ('basket_id', self.gf('django.db.models.fields.PositiveIntegerField')(null=True, blank=True)),
             ('user', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='orders', null=True, to=orm['auth.User'])),
             ('billing_address', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['order.BillingAddress'], null=True, blank=True)),
             ('total_incl_tax', self.gf('django.db.models.fields.DecimalField')(max_digits=12, decimal_places=2)),
@@ -60,7 +60,7 @@ class Migration(SchemaMigration):
         db.create_table('order_communicationevent', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('order', self.gf('django.db.models.fields.related.ForeignKey')(related_name='communication_events', to=orm['order.Order'])),
-            ('type', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['customer.CommunicationEventType'])),
+            ('event_type', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['customer.CommunicationEventType'])),
             ('date', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
         ))
         db.send_create_signal('order', ['CommunicationEvent'])
@@ -162,8 +162,8 @@ class Migration(SchemaMigration):
         # Adding model 'ShippingEventType'
         db.create_table('order_shippingeventtype', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=255)),
-            ('code', self.gf('django.db.models.fields.SlugField')(max_length=128, db_index=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(unique=True, max_length=255)),
+            ('code', self.gf('django.db.models.fields.SlugField')(unique=True, max_length=128, db_index=True)),
             ('is_required', self.gf('django.db.models.fields.BooleanField')(default=True)),
             ('sequence_number', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
         ))
@@ -173,6 +173,7 @@ class Migration(SchemaMigration):
         db.create_table('order_paymentevent', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('order', self.gf('django.db.models.fields.related.ForeignKey')(related_name='payment_events', to=orm['order.Order'])),
+            ('amount', self.gf('django.db.models.fields.DecimalField')(max_digits=12, decimal_places=2)),
             ('event_type', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['order.PaymentEventType'])),
             ('date', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
         ))
@@ -181,8 +182,8 @@ class Migration(SchemaMigration):
         # Adding model 'PaymentEventType'
         db.create_table('order_paymenteventtype', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=128)),
-            ('code', self.gf('django.db.models.fields.SlugField')(max_length=128, db_index=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(unique=True, max_length=128)),
+            ('code', self.gf('django.db.models.fields.SlugField')(unique=True, max_length=128, db_index=True)),
             ('sequence_number', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
         ))
         db.send_create_signal('order', ['PaymentEventType'])
@@ -191,8 +192,8 @@ class Migration(SchemaMigration):
         db.create_table('order_orderdiscount', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('order', self.gf('django.db.models.fields.related.ForeignKey')(related_name='discounts', to=orm['order.Order'])),
-            ('offer', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['offer.ConditionalOffer'], null=True)),
-            ('voucher', self.gf('django.db.models.fields.related.ForeignKey')(related_name='discount_vouchers', null=True, to=orm['voucher.Voucher'])),
+            ('offer_id', self.gf('django.db.models.fields.PositiveIntegerField')(null=True, blank=True)),
+            ('voucher_id', self.gf('django.db.models.fields.PositiveIntegerField')(null=True, blank=True)),
             ('voucher_code', self.gf('django.db.models.fields.CharField')(max_length=128, null=True, db_index=True)),
             ('amount', self.gf('django.db.models.fields.DecimalField')(default=0, max_digits=12, decimal_places=2)),
         ))
@@ -287,16 +288,6 @@ class Migration(SchemaMigration):
             'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'}),
             'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
         },
-        'basket.basket': {
-            'Meta': {'object_name': 'Basket'},
-            'date_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'date_merged': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
-            'date_submitted': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'owner': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'baskets'", 'null': 'True', 'to': "orm['auth.User']"}),
-            'status': ('django.db.models.fields.CharField', [], {'default': "'Open'", 'max_length': '128'}),
-            'vouchers': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['voucher.Voucher']", 'null': 'True', 'symmetrical': 'False'})
-        },
         'catalogue.attributeentity': {
             'Meta': {'object_name': 'AttributeEntity'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -324,8 +315,10 @@ class Migration(SchemaMigration):
         'catalogue.category': {
             'Meta': {'ordering': "['name']", 'object_name': 'Category'},
             'depth': ('django.db.models.fields.PositiveIntegerField', [], {}),
+            'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'full_name': ('django.db.models.fields.CharField', [], {'max_length': '1024', 'db_index': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'image': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255', 'db_index': 'True'}),
             'numchild': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'path': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '255'}),
@@ -353,8 +346,9 @@ class Migration(SchemaMigration):
             'related_products': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "'relations'", 'blank': 'True', 'to': "orm['catalogue.Product']"}),
             'score': ('django.db.models.fields.FloatField', [], {'default': '0.0', 'db_index': 'True'}),
             'slug': ('django.db.models.fields.SlugField', [], {'max_length': '255', 'db_index': 'True'}),
+            'status': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '128', 'null': 'True', 'blank': 'True'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
-            'upc': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '64', 'null': 'True', 'blank': 'True'})
+            'upc': ('django.db.models.fields.CharField', [], {'max_length': '64', 'unique': 'True', 'null': 'True', 'blank': 'True'})
         },
         'catalogue.productattribute': {
             'Meta': {'ordering': "['code']", 'object_name': 'ProductAttribute'},
@@ -371,7 +365,7 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'ProductAttributeValue'},
             'attribute': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['catalogue.ProductAttribute']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'product': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['catalogue.Product']"}),
+            'product': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'attribute_values'", 'to': "orm['catalogue.Product']"}),
             'value_boolean': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'value_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'value_entity': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['catalogue.AttributeEntity']", 'null': 'True', 'blank': 'True'}),
@@ -422,46 +416,6 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'sms_template': ('django.db.models.fields.CharField', [], {'max_length': '170', 'blank': 'True'})
         },
-        'offer.benefit': {
-            'Meta': {'object_name': 'Benefit'},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'max_affected_items': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'range': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['offer.Range']", 'null': 'True', 'blank': 'True'}),
-            'type': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-            'value': ('oscar.models.fields.PositiveDecimalField', [], {'null': 'True', 'max_digits': '12', 'decimal_places': '2', 'blank': 'True'})
-        },
-        'offer.condition': {
-            'Meta': {'object_name': 'Condition'},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'range': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['offer.Range']"}),
-            'type': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-            'value': ('oscar.models.fields.PositiveDecimalField', [], {'max_digits': '12', 'decimal_places': '2'})
-        },
-        'offer.conditionaloffer': {
-            'Meta': {'ordering': "['-priority']", 'object_name': 'ConditionalOffer'},
-            'benefit': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['offer.Benefit']"}),
-            'condition': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['offer.Condition']"}),
-            'date_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'end_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-            'offer_type': ('django.db.models.fields.CharField', [], {'default': "'Site'", 'max_length': '128'}),
-            'priority': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-            'redirect_url': ('oscar.models.fields.ExtendedURLField', [], {'max_length': '200', 'blank': 'True'}),
-            'start_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
-            'total_discount': ('django.db.models.fields.DecimalField', [], {'default': "'0.00'", 'max_digits': '12', 'decimal_places': '2'})
-        },
-        'offer.range': {
-            'Meta': {'object_name': 'Range'},
-            'classes': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "'classes'", 'blank': 'True', 'to': "orm['catalogue.ProductClass']"}),
-            'excluded_products': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "'excludes'", 'blank': 'True', 'to': "orm['catalogue.Product']"}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'included_categories': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "'includes'", 'blank': 'True', 'to': "orm['catalogue.Category']"}),
-            'included_products': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "'includes'", 'blank': 'True', 'to': "orm['catalogue.Product']"}),
-            'includes_all_products': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '128'})
-        },
         'order.billingaddress': {
             'Meta': {'object_name': 'BillingAddress'},
             'country': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['address.Country']"}),
@@ -480,9 +434,9 @@ class Migration(SchemaMigration):
         'order.communicationevent': {
             'Meta': {'object_name': 'CommunicationEvent'},
             'date': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
+            'event_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['customer.CommunicationEventType']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'order': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'communication_events'", 'to': "orm['order.Order']"}),
-            'type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['customer.CommunicationEventType']"})
+            'order': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'communication_events'", 'to': "orm['order.Order']"})
         },
         'order.line': {
             'Meta': {'object_name': 'Line'},
@@ -528,7 +482,7 @@ class Migration(SchemaMigration):
         },
         'order.order': {
             'Meta': {'ordering': "['-date_placed']", 'object_name': 'Order'},
-            'basket': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['basket.Basket']", 'null': 'True', 'blank': 'True'}),
+            'basket_id': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True', 'blank': 'True'}),
             'billing_address': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['order.BillingAddress']", 'null': 'True', 'blank': 'True'}),
             'date_placed': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'db_index': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -547,10 +501,10 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'OrderDiscount'},
             'amount': ('django.db.models.fields.DecimalField', [], {'default': '0', 'max_digits': '12', 'decimal_places': '2'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'offer': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['offer.ConditionalOffer']", 'null': 'True'}),
+            'offer_id': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True', 'blank': 'True'}),
             'order': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'discounts'", 'to': "orm['order.Order']"}),
-            'voucher': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'discount_vouchers'", 'null': 'True', 'to': "orm['voucher.Voucher']"}),
-            'voucher_code': ('django.db.models.fields.CharField', [], {'max_length': '128', 'null': 'True', 'db_index': 'True'})
+            'voucher_code': ('django.db.models.fields.CharField', [], {'max_length': '128', 'null': 'True', 'db_index': 'True'}),
+            'voucher_id': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True', 'blank': 'True'})
         },
         'order.ordernote': {
             'Meta': {'object_name': 'OrderNote'},
@@ -563,6 +517,7 @@ class Migration(SchemaMigration):
         },
         'order.paymentevent': {
             'Meta': {'object_name': 'PaymentEvent'},
+            'amount': ('django.db.models.fields.DecimalField', [], {'max_digits': '12', 'decimal_places': '2'}),
             'date': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'event_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['order.PaymentEventType']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -578,9 +533,9 @@ class Migration(SchemaMigration):
         },
         'order.paymenteventtype': {
             'Meta': {'ordering': "('sequence_number',)", 'object_name': 'PaymentEventType'},
-            'code': ('django.db.models.fields.SlugField', [], {'max_length': '128', 'db_index': 'True'}),
+            'code': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '128', 'db_index': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
+            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '128'}),
             'sequence_number': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'})
         },
         'order.shippingaddress': {
@@ -618,10 +573,10 @@ class Migration(SchemaMigration):
         },
         'order.shippingeventtype': {
             'Meta': {'ordering': "('sequence_number',)", 'object_name': 'ShippingEventType'},
-            'code': ('django.db.models.fields.SlugField', [], {'max_length': '128', 'db_index': 'True'}),
+            'code': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '128', 'db_index': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'is_required': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '255'}),
             'sequence_number': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'})
         },
         'partner.partner': {
@@ -635,20 +590,6 @@ class Migration(SchemaMigration):
             'domain': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
-        },
-        'voucher.voucher': {
-            'Meta': {'object_name': 'Voucher'},
-            'code': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '128', 'db_index': 'True'}),
-            'date_created': ('django.db.models.fields.DateField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'end_date': ('django.db.models.fields.DateField', [], {}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-            'num_basket_additions': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
-            'num_orders': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
-            'offers': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'vouchers'", 'symmetrical': 'False', 'to': "orm['offer.ConditionalOffer']"}),
-            'start_date': ('django.db.models.fields.DateField', [], {}),
-            'total_discount': ('django.db.models.fields.DecimalField', [], {'default': "'0.00'", 'max_digits': '12', 'decimal_places': '2'}),
-            'usage': ('django.db.models.fields.CharField', [], {'default': "'Multi-use'", 'max_length': '128'})
         }
     }
 
