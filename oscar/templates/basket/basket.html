@@ -48,12 +48,12 @@ Basket | {{ block.super }}
             <th>Product</th>
             <th>Availability</th>
             <th>Quantity</th>
-            <th>Unit Price Excl. Tax</th>
-            <th>Tax</th>
-            <th>Line Price Excl. Tax</th>
-            <th>Line Price Incl. Tax</th>
+            <th>Unit price</th>
+            <th>Line price</th>
+			{% if request.user.is_authenticated %}
             <th>Save for later&hellip;</th>
-            <th>Delete?</th>
+			{% endif %}
+            <th>Remove?</th>
         </tr>
         </thead>
         <tbody>
@@ -67,11 +67,11 @@ Basket | {{ block.super }}
             <td>{{ form.id }}<a href="{{ form.instance.product.get_absolute_url }}">{{ form.instance.description }}</a></td>
             <td>{{ form.instance.product.stockrecord.availability }}</td>
             <td>{{ form.quantity }}</td>
-            <td>{{ form.instance.unit_price_excl_tax|currency }}</td>
-            <td>{{ form.instance.unit_tax|currency }}</td>
-            <td>{{ form.instance.line_price_excl_tax|currency }}</td>
+            <td>{{ form.instance.unit_price_incl_tax|currency }}</td>
             <td>{{ form.instance.line_price_incl_tax|currency }}</td>
+			{% if request.user.is_authenticated %}
             <td>{{ form.save_for_later }}</td>
+			{% endif %}
             <td>{{ form.DELETE }}</td>
         </tr>
         {% endfor %}
@@ -82,7 +82,7 @@ Basket | {{ block.super }}
         </tr>
         {% endfor %}
         <tr>
-            <td colspan="6">Total</td>
+            <th colspan="4">Subtotal</th>
             <td>{{ request.basket.total_excl_tax|currency }}</td>
             <td>{{ basket.total_incl_tax|currency }}</td>
 			<td></td>
@@ -189,12 +189,15 @@ Basket | {{ block.super }}
 
 {% endif %}
 
-{% if saved_formset %}
 
 <div class="page-header">
     <h2>To buy later</h2>
 </div>
 
+{% if not saved_formset %}
+<p>Your saved basket is empty.</p>
+
+{% else %}
 <form action="{% url basket:saved %}" method="post" class="form-stacked later_summary">
     {% csrf_token %}
 
@@ -228,13 +231,11 @@ Basket | {{ block.super }}
         </tbody>
     </table>
 
-
     <div class="form-actions">
         <input type="submit" value="Apply Changes" class="btn"/>
     </div>
 
 </form>
-
 {% endif %}
 
 {% endblock content %}

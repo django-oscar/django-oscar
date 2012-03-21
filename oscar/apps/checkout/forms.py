@@ -27,7 +27,7 @@ class GatewayForm(AuthenticationForm):
 
     def clean(self):
         cleaned_data = self.cleaned_data
-        if self.is_guest_checkout():
+        if self.is_guest_checkout() and 'password' in self.errors:
             del self.errors['password']
         else:
             return super(GatewayForm, self).clean()
