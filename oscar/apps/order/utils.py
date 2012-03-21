@@ -79,7 +79,7 @@ class OrderCreator(object):
         """
         Creates an order model.
         """
-        order_data = {'basket': basket,
+        order_data = {'basket_id': basket.id,
                       'number': order_number,
                       'site': Site._default_manager.get_current(),
                       'total_incl_tax': total_incl_tax,
@@ -192,9 +192,11 @@ class OrderCreator(object):
         """
         Creates an order discount model for each discount attached to the basket.
         """
-        order_discount = OrderDiscount(order=order, offer=discount['offer'], amount=discount['discount'])
+        order_discount = OrderDiscount(order=order,
+                                       offer_id=discount['offer'].id, 
+                                       amount=discount['discount'])
         if discount['voucher']:
-            order_discount.voucher = discount['voucher']
+            order_discount.voucher_id = discount['voucher'].id
             order_discount.voucher_code = discount['voucher'].code
         order_discount.save()
         

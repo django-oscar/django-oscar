@@ -22,7 +22,7 @@ class AbstractOrder(models.Model):
     number = models.CharField(_("Order number"), max_length=128, db_index=True)
     # We track the site that each order is placed within
     site = models.ForeignKey('sites.Site')
-    basket = models.ForeignKey('basket.Basket', null=True, blank=True)
+    basket_id = models.PositiveIntegerField(null=True, blank=True)
     # Orders can be anonymous so we don't always have a customer ID
     user = models.ForeignKey(User, related_name='orders', null=True, blank=True)
     # Billing address is not always required (eg paying by gift card)
@@ -599,8 +599,8 @@ class AbstractOrderDiscount(models.Model):
     separately even though in reality, the discounts are applied at the line level.
     """
     order = models.ForeignKey('order.Order', related_name="discounts")
-    offer = models.ForeignKey('offer.ConditionalOffer', null=True, on_delete=models.SET_NULL)
-    voucher = models.ForeignKey('voucher.Voucher', related_name="discount_vouchers", null=True, on_delete=models.SET_NULL)
+    offer_id = models.PositiveIntegerField(blank=True, null=True)
+    voucher_id = models.PositiveIntegerField(blank=True, null=True)
     voucher_code = models.CharField(_("Code"), max_length=128, db_index=True, null=True)
     amount = models.DecimalField(decimal_places=2, max_digits=12, default=0)
     
@@ -609,6 +609,22 @@ class AbstractOrderDiscount(models.Model):
         
     def __unicode__(self):
         return u"Discount of %r from order %s" % (self.amount, self.order)    
+
+    @property
+    def offer(self):
+        Offer = models.get_model('offer', 'ConditionalOffer')
+        try:
+            return Offer.objects.get(id=self.offer_id)
+        except Offer.DoesNotExist:
+            return None
+
+    @property
+    def voucher(self):
+        Voucher = models.get_model('voucher', 'Voucher')
+        try:
+            return Voucher.objects.get(id=self.offer_id)
+        except Voucher.DoesNotExist:
+            return None
         
     def description(self):
         if self.voucher_code:
