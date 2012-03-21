@@ -5,6 +5,8 @@
 Checkout | {{ block.super }}
 {% endblock %}
 
+
+
 {% block header %}
 <div class="page-header">
     <h2>Checkout</h2>
@@ -12,6 +14,28 @@ Checkout | {{ block.super }}
 {% endblock header %}
 
 {% block content %}
+
+
+<nav class="checkoutNav">
+	<ul class="nav row-fluid">
+		<li class="active span4">
+			<h3 class="app-ico">1. Shipping Address</h3>
+		</li>
+		<li class="disabled span4">
+			<h3 class="app-ico">2. Shipping Method</h3>
+		</li>
+		<!-- <li class="disabled span4">
+			<span class="number">2</span>
+			<span class="label">Payment</span>
+		</li> -->
+		<li class="disabled span4">
+			<h3 class="app-ico">3. Place Order</h3>
+		</li>
+	</ul>
+</nav>
+
+
+
 <div class="sub-header">
     <h3>Order contents</h3>
 </div>
