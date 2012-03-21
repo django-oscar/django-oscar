@@ -5,8 +5,7 @@
 {% load category_tags %}
 
 {% block extrahead %}
-    <!-- Responsive - will need to be minified -->
-    <link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/responsive.css" />
+    {% include "partials/extrahead.html" %}
 {% endblock %}
 
 {% block layout %}
@@ -77,15 +76,8 @@
                 </div>
             </div><!-- /navbar-inner -->
         </div><!-- /navbar -->
-        
-        
     </header><!-- /header -->
-    {% for message in messages %}
-    <div class="alert fade in alert-{{ message.tags }}">
-    	<a class="close" data-dismiss="alert">x</a>
-    	{{ message }}
-    </div>
-    {% endfor %}
+    {% include "partials/alert_messages.html" %}
     <div class="container-fluid page home">
         <div class="page_inner">
             <div class="row-fluid">
@@ -95,7 +87,7 @@
                 		{% render_promotion promotion %}
                 		{% endfor %}
                 	</div>
-                    {% block sidebar %}
+                    {% block column_left %}
                     {% endblock %}
                 </aside><!-- /span3 -->
                 <div class="span9">
@@ -111,7 +103,6 @@
                 		{% endfor %}
                 	</div>
                 	
-                	
                 	{% block content %}
                 	{% endblock %}
                 </div><!-- /span9 -->
@@ -123,8 +114,5 @@
 
 {# Block for additional scripts #}
 {% block extrascripts %}
-    <!-- Elastislide carousel js -->
-    <script src="{{ STATIC_URL }}oscar/js/elastislide/jquery.elastislide.js" type="text/javascript" charset="utf-8"></script>    
-    <!-- Front end js -->
-    <script src="{{ STATIC_URL }}oscar/js/oscar/ui.js" type="text/javascript" charset="utf-8"></script>
+    {% include "partials/extrascripts.html" %}
 {% endblock %}

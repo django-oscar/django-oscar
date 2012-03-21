@@ -74,19 +74,13 @@
                 {% endfor %}
             {% endblock %}
 
-            {% block sidebar %}
-            {% endblock %}
-    
-            {% block flatpage %}
-            {% endblock %}
+            {% block content %}{% endblock %}
             
             <div id="promotions">
                 {% for promotion in promotions_page %}
                     {% render_promotion promotion %}
                 {% endfor %}
             </div>
-
-            {% block content %}{% endblock %}
         </div><!-- /page_inner -->
     </div>
     {% include "partials/footer.html" %}
