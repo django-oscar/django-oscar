@@ -8,9 +8,6 @@ from django.utils.translation import ugettext_lazy as _
 
 from django.db.models import get_model
 
-# FlatPages is None if not installed
-FlatPage = get_model('flatpages', 'FlatPage')
-
 
 class ExtendedURLValidator(validators.URLValidator):
     def __call__(self, value):
@@ -32,7 +29,8 @@ class ExtendedURLValidator(validators.URLValidator):
                 resolve(value)
             self.is_local_url = True
         except Http404:
-            # check for existing urls of flatpages if package installed
+            # FlatPages is None if not installed
+            FlatPage = get_model('flatpages', 'FlatPage')
             if FlatPage is not None:
                 for page in FlatPage.objects.all().only(('url')):
                     if value == page.url:

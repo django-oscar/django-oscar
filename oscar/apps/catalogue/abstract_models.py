@@ -215,7 +215,10 @@ class AbstractProduct(models.Model):
 
     @property
     def options(self):
-        return list(chain(self.product_options.all(), self.get_product_class().options.all()))
+        pclass = self.get_product_class()
+        if pclass:
+            return list(chain(self.product_options.all(), self.get_product_class().options.all()))
+        return self.product_options.all()
 
     @property
     def is_top_level(self):
@@ -278,7 +281,9 @@ class AbstractProduct(models.Model):
         return title
     
     def get_product_class(self):
-        u"""Return a product's item class"""
+        """
+        Return a product's item class
+        """
         if self.product_class:
             return self.product_class
         if self.parent and self.parent.product_class:
@@ -667,9 +672,10 @@ class AbstractOption(models.Model):
 
 
 class AbstractProductImage(models.Model):
-    u"""An image of a product"""
+    """
+    An image of a product
+    """
     product = models.ForeignKey('catalogue.Product', related_name='images')
-    
     original = models.ImageField(upload_to=settings.OSCAR_IMAGE_FOLDER)
     caption = models.CharField(_("Caption"), max_length=200, blank=True, null=True)
     
@@ -687,20 +693,24 @@ class AbstractProductImage(models.Model):
         return u"Image of '%s'" % self.product
 
     def is_primary(self):
-        u"""Return bool if image display order is 0"""
+        """
+        Return bool if image display order is 0
+        """
         return self.display_order == 0
 
     def resized_image_url(self, width=None, height=None, **kwargs):
         return self.original.url
 
+    @property
     def fullsize_url(self):
-        u"""
+        """
         Returns the URL path for this image.  This is intended
         to be overridden in subclasses that want to serve
         images in a specific way.
         """
         return self.resized_image_url()
     
+    @property
     def thumbnail_url(self):
         return self.resized_image_url()
 
