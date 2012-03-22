@@ -5,7 +5,6 @@ import_module('order.models', ['Order', 'OrderNote', 'CommunicationEvent',
                                         'BillingAddress', 'ShippingAddress', 'Line',
                                         'LinePrice', 'ShippingEvent', 'ShippingEventType', 
                                         'PaymentEvent', 'PaymentEventType', 'LineAttribute', 'OrderDiscount'], locals())
-git 
 class OrderAdmin(admin.ModelAdmin):
     raw_id_fields = ['user','billing_address','shipping_address', ]
     list_display = ('number', 'total_incl_tax', 'site', 'user', 'billing_address', 'date_placed')
