@@ -23,8 +23,9 @@ def receive_order_discount_save(sender, instance, **kwargs):
     if discount.voucher:
         discount.voucher.total_discount += discount.amount
         discount.voucher.save()
-    discount.offer.total_discount += discount.amount
-    discount.offer.save()
+    if discount.offer:
+        discount.offer.total_discount += discount.amount
+        discount.offer.save()
     
     
         

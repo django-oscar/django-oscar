@@ -1,5 +1,6 @@
 {% extends "checkout/layout.html" %}
 {% load currency_filters %}
+{% load product_tags %}
 
 {% block title %}
 Basket | {{ block.super }}
@@ -33,19 +34,17 @@ Basket | {{ block.super }}
 </div>
 {% endblock header %}
 
-
 {% block content %}
 
 {% if request.basket.lines.count %}
 
 <form action="." method="post" class="basket_summary">
     {% csrf_token %}
-
     {{ formset.management_form }}
-
     <table class="table table-striped table-bordered">
         <thead>
         <tr>
+            <th></th>
             <th>Product</th>
             <th>Availability</th>
             <th>Quantity</th>
@@ -60,8 +59,12 @@ Basket | {{ block.super }}
         <tbody>
         {% for form in formset %}
         <tr>
-            <td>{{ form.id }}<a href="{{ form.instance.product.get_absolute_url }}">{{ form.instance.description }}</a>
-            </td>
+			<td>
+				{% product_image form.instance.product as product_image %}
+				<div style="width:100px">
+					<a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ product_image.thumbnail_url }}" alt="{{ product.get_title }}"></a>
+				</div>
+            <td>{{ form.id }}<a href="{{ form.instance.product.get_absolute_url }}">{{ form.instance.description }}</a></td>
             <td>{{ form.instance.product.stockrecord.availability }}</td>
             <td>{{ form.quantity }}</td>
             <td>{{ form.instance.unit_price_excl_tax|currency }}</td>
@@ -74,18 +77,19 @@ Basket | {{ block.super }}
         {% endfor %}
         {% for discount in basket.discounts %}
         <tr>
-            <td colspan="6">{{ discount.name }}</td>
+            <td colspan="7">{{ discount.name }}</td>
             <td colspan="3">-{{ discount.discount|currency }}</td>
         </tr>
         {% endfor %}
         <tr>
-            <td colspan="5">Total</td>
+            <td colspan="6">Total</td>
             <td>{{ request.basket.total_excl_tax|currency }}</td>
-            <td colspan="3">{{ basket.total_incl_tax|currency }}</td>
+            <td>{{ basket.total_incl_tax|currency }}</td>
+			<td></td>
+			<td></td>
         </tr>
         </tbody>
     </table>
-
 	<div class="row-fluid">
 		<div class="span6">
 			{% with product.images.all.0 as image %}
@@ -147,7 +151,6 @@ Basket | {{ block.super }}
 		</table>
 	</div>
 	</div>
-	
     <div class="form-actions">
         Made changes? <input type="submit" value="Update basket" class="btn"/>
         <a href="{% url checkout:index %}" class="pull-right btn btn-primary">Proceed to Checkout</a>

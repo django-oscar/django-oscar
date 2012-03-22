@@ -12,6 +12,7 @@ from oscar.apps.checkout.calculators import OrderTotalCalculator
 from oscar.apps.order.utils import OrderCreator
 from oscar.apps.partner.models import Partner, StockRecord
 from oscar.apps.shipping.methods import Free
+from oscar.apps.offer.models import Range, ConditionalOffer, Condition, Benefit
 
 
 def create_product(price=None, title="Dummy title", product_class="Dummy item class", 
@@ -61,6 +62,25 @@ def create_order(number=None, basket=None, user=None, shipping_address=None, shi
             **kwargs
             )
     return order
+
+
+def create_offer():
+    range = Range.objects.create(name="All products range", includes_all_products=True)
+    condition = Condition.objects.create(range=range,
+                                         type=Condition.COUNT,
+                                         value=1)
+    benefit = Benefit.objects.create(range=range,
+                                     type=Benefit.PERCENTAGE,
+                                     value=20)
+    offer= ConditionalOffer.objects.create(
+        name='Dummy offer',
+        offer_type='Site',
+        condition=condition,
+        benefit=benefit
+    )
+    return offer
+
+
 
 
 class TwillTestCase(TestCase):

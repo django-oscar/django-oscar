@@ -1,18 +1,12 @@
 {% load currency_filters %}
 {% load basket_tags %}
+{% load product_tags %}
 <article class="product_pod">
-	<!-- <div class="badge_container">
-		<div class="badge">
-			<span class="label">For</span>
-			<span class="number">$??.??</span>
-			<span class="label">Sale</span>
-		</div>
-	</div> -->
-    {% with product.images.all.0 as image %}
+	{% product_image product as product_image %}
     <div class="image_container">
-        <a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ image.original.url }}" alt="{{ product.get_title }}"></a>
+        <a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ product_image.thumbnail_url }}" alt="{{ product.get_title }}"></a>
     </div>
-    {% endwith %}
+
     {% block product_review %}
         {% with product.reviews.all as reviews %}
             {% if reviews %}
@@ -28,7 +22,6 @@
     {% endblock product_review %}
     
     <h3><a href="{{ product.get_absolute_url }}">{{ product.get_title|truncatewords:7 }}</a></h3>
-   
     
     {% if product.is_group %}
         <h4 class="group-price"><span>From</span> <strong>{{ product.min_variant_price_incl_tax|currency }}</strong></h4>

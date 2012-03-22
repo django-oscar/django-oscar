@@ -10,10 +10,10 @@ from oscar.apps.address.models import Country
 from oscar.apps.basket.models import Basket
 from oscar.apps.order.models import ShippingAddress, Order, Line, \
         ShippingEvent, ShippingEventType, ShippingEventQuantity, OrderNote, \
-        ShippingEventType
+        ShippingEventType, OrderDiscount
 from oscar.apps.order.exceptions import (InvalidOrderStatus, InvalidLineStatus,
                                          InvalidShippingEvent)
-from oscar.test.helpers import create_order, create_product
+from oscar.test.helpers import create_order, create_product, create_offer
 from oscar.apps.order.utils import OrderCreator
 from oscar.apps.shipping.methods import Free
 from oscar.apps.order.processing import EventHandler
@@ -385,3 +385,19 @@ class EventHandlerTests(TestCase):
         self.assertEqual(1, len(events))
         event = events[0]
         self.assertEqual('Shipped', event.event_type.name)
+
+
+class OrderDiscountTests(TestCase):
+
+    def test_creation_without_offer_or_voucher(self):
+        order = create_order(number='100002')
+        discount = OrderDiscount.objects.create(order=order, amount=D('10.00'))
+        self.assertTrue(discount.voucher is None)
+        self.assertTrue(discount.offer is None)
+
+    def test_creation_with_offer(self):
+        offer = create_offer()
+        order = create_order(number='100002')
+        discount = OrderDiscount.objects.create(order=order, amount=D('10.00'),
+                                                offer_id=offer.id)
+        self.assertEqual(offer.id, discount.offer.id)
