@@ -27,12 +27,12 @@ Checkout gateway | {{ block.super }}
 			I have an account and my password is:</label>
 		{{ form.password }}
 		{{ form.password.errors }}
-		<a href="">Get a password reminder</a>
+		<a href="{% url password-reset %}">Get a password reminder</a>
 		<label><input type="radio" id="id_options_0" name="options" value="new" {% if not form.password.errors %}checked="checked"{% endif %} /> I don't want to create an account</label><br/>
 	</div>
 	<div>
 		<button type="submit" class="btn btn-large btn-primary">Continue</button>
-		Alternatively <a href="">create an account</a> before you checkout.
+		Alternatively <a href="{% url customer:login %}">create an account</a> before you checkout.
 	</div>
 </form>
 

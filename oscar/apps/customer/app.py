@@ -7,6 +7,7 @@ from oscar.apps.customer.views import AccountSummaryView, OrderHistoryView, \
     AccountAuthView, AnonymousOrderDetailView
 from oscar.core.application import Application
 
+
 class CustomerApplication(Application):
     name = 'customer'
     summary_view = AccountSummaryView
@@ -30,6 +31,9 @@ class CustomerApplication(Application):
         urlpatterns += patterns('',
             url(r'^$', login_required(self.summary_view.as_view()), name='summary'),
             url(r'^login/$', self.login_view.as_view(), name='login'),
+
+
+            # Profile
             url(r'^orders/$', login_required(self.order_history_view.as_view()), name='order-list'),
             url(r'^order-status/(?P<order_number>[\w-]*)/(?P<hash>\w+)/$', 
                 self.anon_order_detail_view.as_view(), name='anon-order'),

@@ -1,4 +1,5 @@
 from django.conf.urls.defaults import patterns, url, include
+from django.contrib.auth import views as auth_views
 
 from oscar.core.application import Application
 from oscar.apps.catalogue.app import application as catalogue_app
@@ -29,6 +30,15 @@ class Shop(Application):
             (r'^accounts/', include(self.customer_app.urls)),
             (r'^search/', include(self.search_app.urls)),
             (r'^dashboard/', include(self.dashboard_app.urls)),
+
+            # Password reset - as we're using Django's default view funtions, we
+            # can't namespace these urls as that prevents the reverse function
+            # from working.
+            url(r'^password-reset/$', auth_views.password_reset, name='password-reset'),
+            url(r'^password-reset/done/$', auth_views.password_reset_done, name='password-reset-done'),
+            url(r'^password-reset/confirm/$', auth_views.password_reset_confirm, name='password-reset-confirm'),
+            url(r'^password-reset/complete/$', auth_views.password_reset_complete, name='password-reset-complete'),
+
             (r'', include(self.promotions_app.urls)),             
         )
         return urlpatterns
