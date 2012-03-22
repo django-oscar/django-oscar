@@ -14,6 +14,7 @@
     {% endfor %}
     <li class="form-actions">
         <h4><small>Total Excl Tax: {{ request.basket.total_excl_tax|currency }}</small> Total: {{ basket.total_incl_tax|currency }}</h4>
+		<p><a href="{% url basket:summary %}" class="btn btn-info btn-small">View Basket</a></p>
         <p><a href="{% url checkout:index %}" class="btn btn-primary btn-small">Checkout</a></p>
     </li>
 {% else %}

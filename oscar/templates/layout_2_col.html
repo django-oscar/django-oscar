@@ -18,17 +18,27 @@
     </header><!-- /header -->
     {% include "partials/alert_messages.html" %}
     <div class="container-fluid page">
-        {% block header %}
-        {% endblock %}
         <div class="page_inner">	
         	{% block breadcrumbs %}
             {% endblock %}
+            
+            <div class="row-fluid">
+                <aside class="span3">
+                    {% block column_left %} 
+                    {% endblock %}
+                </aside>
 
-            {% block flatpage %}
-            {% endblock %}
+                <div class="span9">
+                    {% block header %}
+                    {% endblock %}
+                    
+                    {% block flatpage %}
+                    {% endblock %}
            
-        	{% block content %} 
-        	{% endblock %}
+        	        {% block content %} 
+        	        {% endblock %}
+        	    </div><!-- /span9 -->
+            </div><!-- /row-fluid -->
     	</div><!-- /page_inner -->
     </div><!-- /container-fluid -->
     {% include "partials/footer.html" %}
