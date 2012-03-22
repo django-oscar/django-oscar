@@ -19,6 +19,9 @@ class Repository(object):
         methods = [Free()]
         return self.add_basket_to_methods(basket, methods)
 
+    def get_default_shipping_method(self, user, basket, shipping_addr=None, **kwargs):
+        return self.get_shipping_methods(user, basket, shipping_addr, **kwargs)[0]
+
     def add_basket_to_methods(self, basket, methods):
         for method in methods:
             method.set_basket(basket)

@@ -16,6 +16,7 @@ BasketLineForm, AddToBasketForm, BasketVoucherForm, \
             'basket.forms', ('BasketLineForm', 'AddToBasketForm',
                              'BasketVoucherForm', 'SavedLineForm',
                              'ProductSelectionForm'))
+Repository = get_class('shipping.repository', ('Repository'))
 
 
 class BasketView(ModelFormSetView):
@@ -29,9 +30,16 @@ class BasketView(ModelFormSetView):
     def get_queryset(self):
         return self.request.basket.lines.all()
 
+    def get_default_shipping_method(self, basket):
+        return Repository().get_default_shipping_method(self.request.user, self.request.basket)
+
     def get_context_data(self, **kwargs):
         context = super(BasketView, self).get_context_data(**kwargs)
         context['voucher_form'] = BasketVoucherForm()
+        method = self.get_default_shipping_method(self.request.basket)
+        context['shipping_method'] = method
+        context['shipping_charge_incl_tax'] = method.basket_charge_incl_tax()
+        context['order_total_incl_tax'] = self.request.basket.total_incl_tax + method.basket_charge_incl_tax()
 
         if self.request.user.is_authenticated():
             try:

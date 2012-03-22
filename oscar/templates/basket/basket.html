@@ -49,7 +49,7 @@ Basket | {{ block.super }}
             <th>Availability</th>
             <th>Quantity</th>
             <th>Unit price</th>
-            <th>Line price</th>
+            <th>Subtotal</th>
 			{% if request.user.is_authenticated %}
             <th>Save for later&hellip;</th>
 			{% endif %}
@@ -82,10 +82,18 @@ Basket | {{ block.super }}
         </tr>
         {% endfor %}
         <tr>
-            <th colspan="4">Subtotal</th>
-            <td>{{ request.basket.total_excl_tax|currency }}</td>
+            <th colspan="5">Basket total</th>
             <td>{{ basket.total_incl_tax|currency }}</td>
 			<td></td>
+        </tr>
+        <tr>
+			<th colspan="5">Estimated shipping ({{ shipping_method.name }})</th>
+            <td>{{ shipping_charge_incl_tax|currency }}</td>
+			<td></td>
+        </tr>
+        <tr>
+            <th colspan="5">Order total</th>
+            <td>{{ order_total_incl_tax|currency }}</td>
 			<td></td>
         </tr>
         </tbody>
@@ -155,7 +163,7 @@ Basket | {{ block.super }}
 
     <div class="form-actions">
         Made changes? <input type="submit" value="Update basket" class="btn"/>
-        <a href="{% url checkout:index %}" class="pull-right btn btn-primary">Proceed to Checkout</a>
+        <a href="{% url checkout:index %}" class="pull-right btn btn-large btn-primary">Proceed to checkout</a>
     </div>
 
 </form>
