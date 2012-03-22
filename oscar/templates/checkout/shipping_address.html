@@ -4,7 +4,30 @@
 Shipping address | {{ block.super }}
 {% endblock %}
 
+{% block checkout-nav %}
+<nav class="checkoutNav">
+	<ul class="nav row-fluid">
+		<li class="disabled span3">
+			<h3>1. Basket</h3>
+		</li>
+		<li class="active span3">
+			<h3>2. Shipping Address</h3>
+		</li>
+		<li class="disabled span3">
+			<h3>3. Shipping Options</h3>
+		</li>
+		<!-- <li class="disabled span3">
+			<h3>4. Payment</h3>
+		</li> -->
+		<li class="disabled span3">
+			<h3>4. Place Order</h3>
+		</li>
+	</ul>
+</nav>
+{% endblock %}
+
 {% block shipping_address %}
+
 
 {% if addresses %}
 <div class="sub-header">

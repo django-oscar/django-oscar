@@ -53,8 +53,10 @@
     <div class="container-fluid page">
        {% block header %}
        {% endblock %}
-       
+
        <div class="page_inner">
+			{% block checkout-nav %}
+			{% endblock %}
         	<!-- The main nav on checkout pages contain links to modal flatpages -->   
             {% block modal %}
                 {% load flatpages %}
@@ -74,19 +76,13 @@
                 {% endfor %}
             {% endblock %}
 
-            {% block sidebar %}
-            {% endblock %}
-    
-            {% block flatpage %}
-            {% endblock %}
+            {% block content %}{% endblock %}
             
             <div id="promotions">
                 {% for promotion in promotions_page %}
                     {% render_promotion promotion %}
                 {% endfor %}
             </div>
-
-            {% block content %}{% endblock %}
         </div><!-- /page_inner -->
     </div>
     {% include "partials/footer.html" %}
