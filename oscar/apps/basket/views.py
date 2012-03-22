@@ -50,6 +50,7 @@ class BasketView(ModelFormSetView):
                 context['saved_formset'] = formset
             except self.basket_model.DoesNotExist:
                 pass
+
         return context
 
     def get_success_url(self):

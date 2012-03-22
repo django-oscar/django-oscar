@@ -1,4 +1,23 @@
 var oscar = oscar || {};
+oscar.basket = {
+    init: function() {
+        $('#basket_formset a.remove').click(function() {
+            oscar.basket.checkAndSubmit($(this), 'DELETE');
+        });
+        $('#basket_formset a.save').click(function() {
+            oscar.basket.checkAndSubmit($(this), 'save_for_later');
+        });
+        $('#saved_basket_formset a.move').click(function() {
+            oscar.basket.checkAndSubmit($(this), 'move_to_basket');
+        });
+    },
+    checkAndSubmit: function($ele, idSuffix) {
+        var formID = $ele.attr('data-id');
+        var inputID = '#id_form-' + formID + '-' + idSuffix;
+        $(inputID).attr('checked', 'checked');
+        $ele.closest('form').submit();
+    }
+};
 oscar.checkout = {
     gateway: {
         init: function() {
