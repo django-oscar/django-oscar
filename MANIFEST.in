@@ -1,3 +1,5 @@
 include *.rst
 recursive-include oscar/templates *.txt *.html
 recursive-include oscar/apps *.json
+recursive-include oscar/fixtures *.json
+recursive-include oscar/static *
