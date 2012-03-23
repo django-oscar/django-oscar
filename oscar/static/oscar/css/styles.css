@@ -3152,8 +3152,9 @@ body {
 }
 .checkoutNav ul li h3 {
   text-align: center;
-  font-size: 12px;
+  font-size: 11px;
   color: #eeeeee;
+  margin-left: 12px;
 }
 .checkoutNav ul li:after {
   border-color: transparent transparent transparent #999999;
@@ -3188,6 +3189,7 @@ body {
 .checkoutNav ul li.active h3 {
   color: #fff;
   text-align: center;
+  font-size: 12px;
 }
 /*  Procduct columns*/
 .five li {
