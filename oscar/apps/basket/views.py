@@ -185,7 +185,8 @@ class VoucherAddView(FormView):
         return HttpResponseRedirect(self.request.META.get('HTTP_REFERER', reverse('basket:summary')))
 
     def form_invalid(self, form):
-        return HttpResponseRedirect(reverse('basket:summary'))
+        messages.error(self.request, _("Please enter a voucher code"))
+        return HttpResponseRedirect(reverse('basket:summary')+'#voucher')
 
 
 class VoucherRemoveView(View):

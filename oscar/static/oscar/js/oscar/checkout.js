@@ -10,6 +10,25 @@ oscar.basket = {
         $('#saved_basket_formset a.move').click(function() {
             oscar.basket.checkAndSubmit($(this), 'move_to_basket');
         });
+        $('#voucher_form_link a').click(function(e) {
+            oscar.basket.showVoucherForm();
+            e.preventDefault();
+        });
+        $('#voucher_form_cancel').click(function(e) {
+            oscar.basket.hideVoucherForm();
+            e.preventDefault();
+        });
+        if (window.location.hash == '#voucher') {
+            oscar.basket.showVoucherForm();
+        }
+    },
+    showVoucherForm: function() {
+        $('#voucher_form_container').show(); 
+        $('#voucher_form_link').hide();
+    },
+    hideVoucherForm: function() {
+        $('#voucher_form_container').hide(); 
+        $('#voucher_form_link').show();
     },
     checkAndSubmit: function($ele, idSuffix) {
         var formID = $ele.attr('data-id');

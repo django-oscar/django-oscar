@@ -73,28 +73,75 @@ Basket | {{ block.super }}
     </table>
 </form>
 
+<p id="voucher_form_link"><a href="#voucher">I have a voucher code...</a></p>
+<div id="voucher_form_container" style="display:none">
+	<h4>Voucher code</h4>
+	<form action="{% url basket:vouchers-add %}" method="post" class="form-horizontal">
+		{% csrf_token %}
+		{% include "partials/form_fields.html" with form=voucher_form %}
+		<div class="form-actions">
+			<button class="btn btn-info">Add voucher</button>
+			or <a href="#" id="voucher_form_cancel">cancel</a>
+		</div>
+	</form>
+</div>
+
 <div id="basket_totals">
 	<table>
-		{% for discount in basket.discounts %}
+		{% with offer_discounts=basket.offer_discounts voucher_discounts=basket.grouped_voucher_discounts %}
+		{% if offer_discounts or voucher_discounts %}
+			<tr>
+				<th>Basket total (before discounts)</th>
+				<td>{{ basket.total_incl_tax_excl_discounts|currency }}</td>
+			</tr>
+			{% if offer_discounts %}
+				<tr>
+					<th>Site offers</th>
+					<td></td>
+				</tr>
+				{% for discount in offer_discounts %}
+				<tr>
+					<td>{{ discount.name }}</td>
+					<td>-{{ discount.discount|currency }}</td>
+				</tr>
+				{% endfor %}
+			{% endif %}
+			{% if voucher_discounts %}
+				<tr>
+					<th>Vouchers</th>
+					<td></td>
+				</tr>
+				{% for discount in voucher_discounts %}
+				<tr>
+					<td>
+						{{ discount.voucher.name }} ({{ discount.voucher.code }})
+						<form action="{% url basket:vouchers-remove discount.voucher.id %}" method="POST">
+							{% csrf_token %}
+							<input type="submit" value="Remove" class="btn btn-small btn-danger"/>
+						</form>
+					</td>
+					<td>-{{ discount.discount|currency }}</td>
+				</tr>
+				{% endfor %}
+			{% endif %}
+			<tr>
+				<th>Basket total (after discounts)</th>
+				<td>{{ basket.total_incl_tax|currency }}</td>
+			</tr>
+		{% else %}
+			<tr>
+				<th>Basket total</th>
+				<td>{{ basket.total_incl_tax|currency }}</td>
+			</tr>
+		{% endif %}
+		{% endwith %}
 		<tr>
-			<td colspan="7">{{ discount.name }}</td>
-			<td colspan="3">-{{ discount.discount|currency }}</td>
-		</tr>
-		{% endfor %}
-		<tr>
-			<th colspan="5">Basket total</th>
-			<td>{{ basket.total_incl_tax|currency }}</td>
-			<td></td>
-		</tr>
-		<tr>
-			<th colspan="5">Shipping ({{ shipping_method.name }})</th>
+			<th>Shipping ({{ shipping_method.name }})</th>
 			<td>{{ shipping_charge_incl_tax|currency }}</td>
-			<td></td>
 		</tr>
 		<tr>
-			<th colspan="5">Order total</th>
+			<th>Order total</th>
 			<td>{{ order_total_incl_tax|currency }}</td>
-			<td></td>
 		</tr>
 	</table>
 </div>
@@ -102,30 +149,6 @@ Basket | {{ block.super }}
 <div class="form-actions">
 	<a href="{% url checkout:index %}" class="pull-right btn btn-large btn-primary">Proceed to checkout</a>
 </div>
-
-{% if request.basket.pk %}
-
-<h4>Basket vouchers</h4>
-<ul>
-    {% for voucher in basket.vouchers.all %}
-    <li>
-        <form action="{% url basket:vouchers-remove voucher.id %}" method="POST">
-            {% csrf_token %}
-            {{ voucher.name }} ({{ voucher.code }})
-            <input type="submit" value="Remove" class="btn"/>
-        </form>
-    </li>
-    {% endfor %}
-</ul>
-{% endif %}
-
-<form action="{% url basket:vouchers-add %}" method="post" class="form-horizontal">
-    {% csrf_token %}
-    {% include "partials/form_fields.html" with form=voucher_form %}
-    <div class="form-actions">
-        <input type="submit" value="Add voucher" class="btn"/>
-    </div>
-</form>
 
 {% else %}
 

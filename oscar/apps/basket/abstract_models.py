@@ -257,6 +257,25 @@ class AbstractBasket(models.Model):
         return voucher_discounts
 
     @property
+    def grouped_voucher_discounts(self):
+        """
+        Return discounts from vouchers but grouped so that a voucher which links
+        to multiple offers is aggregated into one object.
+        """
+        voucher_discounts = {}
+        for discount in self.voucher_discounts:
+            voucher = discount['voucher']
+            if voucher.code not in voucher_discounts:
+                voucher_discounts[voucher.code] = {
+                    'voucher': voucher,
+                    'discount': discount['discount'],
+                }
+            else:
+                voucher_discounts[voucher.code] += discount.discount
+
+        return voucher_discounts.values()
+
+    @property
     def total_excl_tax_excl_discounts(self):
         """
         Return total price excluding tax and discounts
