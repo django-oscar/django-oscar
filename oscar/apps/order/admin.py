@@ -32,8 +32,8 @@ class OrderNoteAdmin(admin.ModelAdmin):
         obj.save()
         
 class OrderDiscountAdmin(admin.ModelAdmin):
-    readonly_fields = ('order' ,'offer', 'voucher', 'voucher_code', 'amount')
-    list_display = ('order' ,'offer', 'voucher', 'voucher_code', 'amount')
+    readonly_fields = ('order' ,'offer_id', 'voucher_id', 'voucher_code', 'amount')
+    list_display = ('order', 'offer', 'voucher', 'voucher_code', 'amount')
     
 admin.site.register(Order, OrderAdmin)
 admin.site.register(OrderNote, OrderNoteAdmin)

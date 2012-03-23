@@ -45,6 +45,8 @@ class AbstractOrder(models.Model):
     
     # Use this field to indicate that an order is on hold / awaiting payment
     status = models.CharField(_("Status"), max_length=100, null=True, blank=True)
+
+    guest_email = models.EmailField(_("Guest email address"), null=True, blank=True)
     
     # Index added to this field for reporting
     date_placed = models.DateTimeField(auto_now_add=True, db_index=True)

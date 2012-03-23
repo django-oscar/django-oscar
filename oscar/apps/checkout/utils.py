@@ -50,6 +50,14 @@ class CheckoutSessionData(object):
         Delete session key
         """
         self.request.session[self.SESSION_KEY] = {}
+
+    # Guest checkout
+
+    def set_guest_email(self, email):
+        self._set('guest', 'email', email)
+
+    def get_guest_email(self):
+        return self._get('guest', 'email')
         
     # Shipping addresses    
         
