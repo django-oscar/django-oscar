@@ -27,15 +27,14 @@ class GatewayForm(AuthenticationForm):
 
     def clean(self):
         cleaned_data = self.cleaned_data
-        if self.is_guest_checkout() and 'password' in self.errors:
-            del self.errors['password']
-        else:
-            return super(GatewayForm, self).clean()
-        return cleaned_data
+        if self.is_guest_checkout():
+            if 'password' in self.errors:
+                del self.errors['password']
+            return cleaned_data
+        return super(GatewayForm, self).clean()
 
     def is_guest_checkout(self):
         return self.cleaned_data.get('options', None) == self.NEW
-
 
 
 # The BillingAddress form is in oscar.apps.payment.forms

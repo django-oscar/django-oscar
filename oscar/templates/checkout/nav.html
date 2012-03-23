@@ -1,0 +1,27 @@
+<nav class="checkoutNav">
+	<ul class="nav row-fluid">
+        {% if step == 1 %}
+        <li class="active span3"><h3>1. Shipping address</h3></li>
+        {% else %}
+        <li class="disabled span3"><h3><a href="{% url checkout:shipping-address %}">1. Shipping address</a></h3></li>
+        {% endif %}
+
+        {% if step == 2 %}
+        <li class="active span3"><h3>2. Shipping method</h3></li>
+        {% else %}
+        <li class="disabled span3"><h3><a href="{% url checkout:shipping-method %}">2. Shipping method</a></h3></li>
+        {% endif %}
+
+        {% if step == 3 %}
+        <li class="active span3"><h3>3. Payment</h3></li>
+        {% else %}
+        <li class="disabled span3"><h3><a href="{% url checkout:payment-details %}">3. Payment</a></h3></li>
+        {% endif %}
+
+        {% if step == 4 %}
+        <li class="active span3"><h3>4. Place order</h3></li>
+        {% else %}
+        <li class="disabled span3"><h3><a href="{% url checkout:payment-details %}">4. Place order</a></h3></li>
+        {% endif %}
+	</ul>
+</nav>

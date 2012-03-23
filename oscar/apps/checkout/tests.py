@@ -93,12 +93,10 @@ class EnabledAnonymousCheckoutViewsTests(ClientTestCase, CheckoutMixin):
             self.complete_guest_email_form('barry@example.com')
             self.complete_shipping_address()
             self.complete_shipping_method()
-            self.client.post(reverse('checkout:payment-details'))
+            response = self.client.post(reverse('checkout:payment-details'))
             response = self.client.get(reverse('checkout:thank-you'))
             order = response.context['order']
             self.assertEqual('barry@example.com', order.guest_email)
-
-
 
 
 class ShippingAddressViewTests(ClientTestCase):
@@ -119,7 +117,6 @@ class ShippingAddressViewTests(ClientTestCase):
         self.assertEqual('Doe', session_address['last_name'])
         self.assertEqual('1 Egg Street', session_address['line1'])
         self.assertEqual('N1 9RT', session_address['postcode'])
-
 
 
 class ShippingMethodViewTests(ClientTestCase, CheckoutMixin):

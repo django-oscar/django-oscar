@@ -3,20 +3,24 @@
     {% if field.is_hidden %}
         {{ field }}
     {% else %}
-    {{ field.label_tag }}
-    <div class="controls">
-        {{ field }}
+        {% if field.field.required %}
+        <label for="{{ field.auto_id }}" class="required">{{ field.label }}</label>
+        {% else %}
+            {{ field.label_tag }}
+        {% endif %}
+        <div class="controls">
+            {{ field }}
             {% for error in field.errors %}
             <span class="help-block">
                 {{ error|escape }}
             </span>
             {% endfor %}
-        {% if field.help_text %}
-            <span class='help-block'>
-                {{ field.help_text }}
-            </span>
-        {% endif %}
-    </div>
+            {% if field.help_text %}
+                <span class='help-block'>
+                    {{ field.help_text }}
+                </span>
+            {% endif %}
+        </div>
     {% endif %}
 </div>
 {% endfor %}

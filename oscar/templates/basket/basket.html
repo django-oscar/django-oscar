@@ -1,4 +1,4 @@
-{% extends "checkout/layout.html" %}
+{% extends "layout.html" %}
 {% load currency_filters %}
 {% load product_tags %}
 
@@ -7,25 +7,7 @@ Basket | {{ block.super }}
 {% endblock %}
 
 {% block checkout-nav %}
-<nav class="checkoutNav">
-	<ul class="nav row-fluid">
-		<li class="active span3">
-			<h3>1. Basket</h3>
-		</li>
-		<li class="disabled span3">
-			<h3>2. Shipping Address</h3>
-		</li>
-		<li class="disabled span3">
-			<h3>3. Shipping Options</h3>
-		</li>
-		<!-- <li class="disabled span3">
-			<h3>4. Payment</h3>
-		</li> -->
-		<li class="disabled span3">
-			<h3>4. Place Order</h3>
-		</li>
-	</ul>
-</nav>
+{% include 'checkout/nav.html' with step=1 %}
 {% endblock %}
 
 {% block header %}
@@ -205,10 +187,6 @@ Basket | {{ block.super }}
         {% endfor %}
         </tbody>
     </table>
-
-    <div class="form-actions">
-		<a href="{% url checkout:index %}" class="pull-right btn btn-primary btn-large">Proceed to Checkout</a>
-    </div>
 
 </form>
 {% endif %}

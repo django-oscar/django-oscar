@@ -4144,3 +4144,6 @@ body {
 .invisible {
   visibility: hidden;
 }
+.required {
+  font-weight: bold;
+}
