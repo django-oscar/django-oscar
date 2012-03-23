@@ -39,6 +39,7 @@ Shipping address | {{ block.super }}
     	<li>
     	<div class="well well-info">
     	<p>{{ address.summary }}</p>
+
     	<form action="{% url checkout:shipping-address %}" method="post">
     		{% csrf_token %}
     		<input type="hidden" name="action" value="ship_to" />
@@ -64,13 +65,13 @@ Shipping address | {{ block.super }}
         </div>
 {% endif %}
 
-
+<div class="well well-info">
 <form action="{% url checkout:shipping-address %}" method="post" class="form-horizontal">
     <legend>Enter a shipping address</legend>
 	{% csrf_token %}
 	 {% include "partials/form_fields.html" with form=form %}
 	<div class="form-actions"><input type="submit" value="Save shipping address" class="btn" /></div>
 </form>
-
+</div>
 
 {% endblock shipping_address %}

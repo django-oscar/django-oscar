@@ -3013,9 +3013,19 @@ body {
 .basket_summary .actions, .later_summary .actions {
   margin-left: 0px;
 }
-.basket_summary table input, .later_summary table input {
+.basket_summary .checkout-quantity input, .later_summary .checkout-quantity input {
   width: 20%;
+  float: left;
+  margin-right: 2px;
 }
+.basket_summary .basket-products, .later_summary .basket-products {
+  border-bottom: 1px solid #E0E0E0;
+  padding: 0 0 10px;
+  margin-bottom: 18px;
+}
+/*.basket_summary .row-fluid input {
+    width: 20%;
+}*/
 .order_summary {
   margin: 0px 0px;
   padding: 0px;
@@ -3143,11 +3153,12 @@ body {
 .checkoutNav ul li h3 {
   text-align: center;
   font-size: 12px;
+  color: #eeeeee;
 }
 .checkoutNav ul li:after {
   border-color: transparent transparent transparent #999999;
   border-style: solid;
-  border-width: 15px 0 15px 15px;
+  border-width: 14px 0 15px 15px;
   content: "";
   float: left;
   height: 0;
