@@ -7,6 +7,7 @@ from django.utils.translation import ugettext as _
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 
 from oscar.apps.basket.managers import OpenBasketManager, SavedBasketManager
+from oscar.templatetags.currency_filters import currency
 
 # Basket statuses
 # - Frozen is for when a basket is in the process of being submitted
@@ -84,7 +85,7 @@ class AbstractBasket(models.Model):
         if not self.id:
             self.save()
 
-        # Line refernene is used to distinguish between variations of the same 
+        # Line reference is used to distinguish between variations of the same 
         # product (eg T-shirts with different personalisations)
         line_ref = self._create_line_reference(product, options)
 
@@ -512,6 +513,28 @@ class AbstractLine(models.Model):
         if ops:
             d = "%s (%s)" % (d.decode('utf-8'), ", ".join(ops))
         return d
+
+    def get_warning(self):
+        """
+        Return a warning message about this basket line if one is applicable
+
+        This could be things like the price has changed
+        """
+        if not self.price_incl_tax:
+            return
+        current_price_incl_tax = self.product.stockrecord.price_incl_tax
+        if current_price_incl_tax > self.price_incl_tax:
+            msg = u"The price of '%(product)s' has increased from %(old_price)s " \
+                  u"to %(new_price)s since you added it to your basket"
+            return _(msg % {'product': self.product.get_title(),
+                            'old_price': currency(self.price_incl_tax),
+                            'new_price': currency(current_price_incl_tax)})
+        if current_price_incl_tax < self.price_incl_tax:
+            msg = u"The price of '%(product)s' has decreased from %(old_price)s " \
+                  u"to %(new_price)s since you added it to your basket"
+            return _(msg % {'product': self.product.get_title(),
+                            'old_price': currency(self.price_incl_tax),
+                            'new_price': currency(current_price_incl_tax)})
 
 
 class AbstractLineAttribute(models.Model):

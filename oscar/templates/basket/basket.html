@@ -34,9 +34,17 @@ Basket | {{ block.super }}
 </div>
 {% endblock header %}
 
+
 {% block content %}
 
-{% if request.basket.lines.count %}
+{% if basket_warnings %}
+	<h5>Important messages about items in your basket</h5>
+	{% for warning in basket_warnings %}
+	<div class="alert">{{ warning }}</div>
+	{% endfor %}
+{% endif %}
+
+{% if not basket.is_empty %}
 
 <form action="." method="post" class="basket_summary" id="basket_formset">
     {% csrf_token %}

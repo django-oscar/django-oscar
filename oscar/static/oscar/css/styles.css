@@ -1651,13 +1651,6 @@ button.btn.small, input[type="submit"].btn.small {
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
-  /*  Position alerts at the bottom of the browser window*/
-
-  position: fixed;
-  bottom: 0;
-  right: 2em;
-  width: 200px;
-  z-index: 9;
 }
 .alert, .alert-heading {
   color: #c09853;

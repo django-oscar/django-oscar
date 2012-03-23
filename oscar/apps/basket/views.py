@@ -33,6 +33,17 @@ class BasketView(ModelFormSetView):
     def get_default_shipping_method(self, basket):
         return Repository().get_default_shipping_method(self.request.user, self.request.basket)
 
+    def get_basket_warnings(self, basket):
+        """
+        Return a list of warnings that apply to this basket
+        """
+        warnings = []
+        for line in basket.lines.all():
+            warning = line.get_warning()
+            if warning:
+                warnings.append(warning)
+        return warnings
+
     def get_context_data(self, **kwargs):
         context = super(BasketView, self).get_context_data(**kwargs)
         context['voucher_form'] = BasketVoucherForm()
@@ -40,6 +51,7 @@ class BasketView(ModelFormSetView):
         context['shipping_method'] = method
         context['shipping_charge_incl_tax'] = method.basket_charge_incl_tax()
         context['order_total_incl_tax'] = self.request.basket.total_incl_tax + method.basket_charge_incl_tax()
+        context['basket_warnings'] = self.get_basket_warnings(self.request.basket)
 
         if self.request.user.is_authenticated():
             try:
@@ -78,6 +90,7 @@ class BasketView(ModelFormSetView):
 
     def formset_invalid(self, formset):
         messages.info(self.request, _("There was a problem updating your basket, please check that all quantities are numbers"))
+        assert False
         return super(BasketView, self).formset_invalid(formset)
 
 
