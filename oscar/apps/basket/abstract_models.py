@@ -72,9 +72,9 @@ class AbstractBasket(models.Model):
         self.lines_all().delete()
         self._lines = None
 
-    def add_product(self, item, quantity=1, options=None):
+    def add_product(self, product, quantity=1, options=None):
         """
-        Convenience method for adding products to a basket
+        Add a product to the basket
 
         The 'options' list should contains dicts with keys 'option' and 'value'
         which link the relevant product.Option model and string value respectively.
@@ -83,10 +83,22 @@ class AbstractBasket(models.Model):
             options = []
         if not self.id:
             self.save()
-        line_ref = self._create_line_reference(item, options)
+
+        # Line refernene is used to distinguish between variations of the same 
+        # product (eg T-shirts with different personalisations)
+        line_ref = self._create_line_reference(product, options)
+
+        # Determine price to store (if one exists)
+        price = None
+        if product.has_stockrecord:
+            stockrecord = product.stockrecord
+            if stockrecord and stockrecord.price_incl_tax:
+                price = stockrecord.price_incl_tax
+
         line, created = self.lines.get_or_create(line_reference=line_ref,
-                                                 product=item,
-                                                 defaults={'quantity': quantity})
+                                                 product=product,
+                                                 defaults={'quantity': quantity,
+                                                           'price_incl_tax': price})
         if created:
             for option_dict in options:
                 line.attributes.create(option=option_dict['option'],
@@ -338,6 +350,8 @@ class AbstractLine(models.Model):
 
     product = models.ForeignKey('catalogue.Product', related_name='basket_lines')
     quantity = models.PositiveIntegerField(default=1)
+    price_incl_tax = models.DecimalField(decimal_places=2, max_digits=12,
+                                         null=True)
 
     # Track date of first addition
     date_created = models.DateTimeField(auto_now_add=True)
