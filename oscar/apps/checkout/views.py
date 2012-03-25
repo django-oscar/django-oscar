@@ -367,32 +367,6 @@ class PaymentMethodView(CheckoutSessionMixin, TemplateView):
         return self.get_success_response()
     
     def get_success_response(self):
-        return HttpResponseRedirect(reverse('checkout:preview'))
-
-
-# =======
-# Preview
-# =======
-
-
-class OrderPreviewView(CheckoutSessionMixin, TemplateView):
-    """
-    View a preview of the order before submitting.
-    """
-    template_name = 'checkout/preview.html'
-
-    def get(self, request, *args, **kwargs):
-        # Check that shipping address has been completed
-        if not self.checkout_session.is_shipping_address_set():
-            messages.error(request, _("Please choose a shipping address"))
-            return HttpResponseRedirect(reverse('checkout:shipping-address'))
-        # Check that shipping method has been set
-        if not self.checkout_session.is_shipping_method_set():
-            messages.error(request, _("Please choose a shipping method"))
-            return HttpResponseRedirect(reverse('checkout:shipping-method'))
-        return super(OrderPreviewView, self).get(request, *args, **kwargs)
-    
-    def get_success_response(self):
         return HttpResponseRedirect(reverse('checkout:payment-details'))
 
 
@@ -633,6 +607,28 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
     
     Almost all projects will need to subclass and customise this class.
     """
+    template_name = 'checkout/payment_details.html'
+    template_name_preview = 'checkout/preview.html'
+    preview = False
+
+    def get_template_names(self):
+        return [self.template_name_preview] if self.preview else [self.template_name]
+
+    def get_error_response(self):
+        # Check that shipping address has been completed
+        if not self.checkout_session.is_shipping_address_set():
+            messages.error(self.request, _("Please choose a shipping address"))
+            return HttpResponseRedirect(reverse('checkout:shipping-address'))
+        # Check that shipping method has been set
+        if not self.checkout_session.is_shipping_method_set():
+            messages.error(self.request, _("Please choose a shipping method"))
+            return HttpResponseRedirect(reverse('checkout:shipping-method'))
+
+    def get(self, request, *args, **kwargs):
+        error_response = self.get_error_response()
+        if error_response:
+            return error_response
+        return super(PaymentDetailsView, self).get(request, *args, **kwargs)
     
     def post(self, request, *args, **kwargs):
         """
@@ -640,7 +636,23 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         validate the forms from the payment details page.  If the forms are valid
         then the method can call submit()
         """
+        error_response = self.get_error_response()
+        if error_response:
+            return error_response
+        if self.preview:
+            return self.render_preview(request, *args, **kwargs)
         return self.submit(request.basket, **kwargs)
+
+    def render_preview(self, request, *args, **kwargs):
+        """
+        Show a preview of the order.
+
+        If sensitive data was submitted on the payment details page, you will
+        need to pass it back to the view here so it can be stored in hidden form
+        inputs.  This avoids ever writing the sensitive data to disk.
+        """
+        ctx = self.get_context_data()
+        return self.render_to_response(ctx)
 
     def can_basket_be_submitted(self, basket):
         for line in basket.lines.all():
@@ -678,14 +690,6 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
            - If a redirect is required (eg PayPal, 3DSecure), redirect
            - If payment is unsuccessful, show an appropriate error message
         """
-        # Check that shipping address has been completed
-        if not self.checkout_session.is_shipping_address_set():
-            messages.error(self.request, _("Please choose a shipping address"))
-            return HttpResponseRedirect(reverse('checkout:shipping-address'))
-        # Check that shipping method has been set
-        if not self.checkout_session.is_shipping_method_set():
-            messages.error(self.request, _("Please choose a shipping method"))
-            return HttpResponseRedirect(reverse('checkout:shipping-method'))
         # Next, check that basket isn't empty
         if basket.is_empty:
             messages.error(self.request, _("This order cannot be submitted as the basket is empty"))

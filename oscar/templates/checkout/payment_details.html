@@ -1,0 +1,23 @@
+{% extends "checkout/checkout.html" %}
+{% load currency_filters %}
+
+{% block title %}
+Payment details | {{ block.super }}
+{% endblock %}
+
+{% block checkout-nav %}
+{% include 'checkout/nav.html' with step=4 %}
+{% endblock %}
+
+{% block order_contents %}{% endblock %}
+{% block shipping_address %}{% endblock %}
+{% block shipping_method %}{% endblock %}
+
+{% block payment_details %}
+<h1>Payment details</h1>
+<p>This is where a bankcard form might appear.</p>
+<form method="post" action="{% url checkout:preview %}">
+    {% csrf_token %}
+    <div class="form-actions"><button type="submit" class="btn btn-primary btn-large">Continue</button></div>
+</form>
+{% endblock %}

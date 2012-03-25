@@ -6,7 +6,29 @@ Confirmation of order {{ order.number }} | {{ block.super }}
 {% endblock title %}
 
 {% block checkout-nav %}
+<<<<<<< HEAD
+<nav class="checkoutNav">
+	<ul class="nav row-fluid">
+		<li class="disabled span2">
+			<h3>1. Basket</h3>
+		</li>
+		<li class="disabled span2">
+			<h3>2. Shipping Address</h3>
+		</li>
+		<li class="disabled span2">
+			<h3>3. Shipping Options</h3>
+		</li>
+		<li class="disabled span2">
+			<h3>4. Payment</h3>
+		</li>
+		<li class="active span3">
+			<h3>5. Place Order</h3>
+		</li>
+	</ul>
+</nav>
+=======
 {% include 'checkout/nav.html' with step=4 %}
+>>>>>>> 098e234ffd914d89b8ef0c6df5df2bbecad70b45
 {% endblock %}
 
 

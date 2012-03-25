@@ -16,8 +16,8 @@
         {% category_tree depth=2 as categories %}
         {% include "partials/nav_primary.html" %}
     </header><!-- /header -->
-    {% include "partials/alert_messages.html" %}
     <div class="container-fluid page">
+        {% include "partials/alert_messages.html" %}
         {% block header %}
         {% endblock %}
         <div class="page_inner">	

@@ -5,13 +5,81 @@ Shipping address | {{ block.super }}
 {% endblock %}
 
 {% block checkout-nav %}
+<<<<<<< HEAD
+<nav class="checkoutNav">
+	<ul class="nav row-fluid">
+		<li class="disabled span2">
+			<h3>1. Basket</h3>
+		</li>
+		<li class="active span3">
+			<h3>2. Shipping Address</h3>
+		</li>
+		<li class="disabled span2">
+			<h3>3. Shipping Options</h3>
+		</li>
+		<li class="disabled span2">
+			<h3>4. Payment</h3>
+		</li>
+		<li class="disabled span2">
+			<h3>5. Place Order</h3>
+		</li>
+	</ul>
+</nav>
+=======
 {% include 'checkout/nav.html' with step=1 %}
+>>>>>>> 098e234ffd914d89b8ef0c6df5df2bbecad70b45
 {% endblock %}
 
 {% block order_contents %}{% endblock %}
 
 {% block shipping_address %}
 
+<<<<<<< HEAD
+{% if addresses %}
+<div class="sub-header">
+    <h4>Choose a shipping address from your address book</h4>
+</div>
+<div class="choose_shipping_address">
+    <ul>
+    	{% for address in addresses %}
+    	<li>
+    	<div class="well well-info">
+    	<p>{{ address.summary }}</p>
+
+    	<form action="{% url checkout:shipping-address %}" method="post">
+    		{% csrf_token %}
+    		<input type="hidden" name="action" value="ship_to" />
+    		<input type="hidden" name="address_id" value="{{ address.id }}" />
+    		<input type="submit" value="Ship to this address" class="btn btn-primary"/>
+    		<a href="{% url checkout:user-address-update address.id %}"> Edit this address</a>
+    	</form>
+    	
+    	<form action="{% url checkout:user-address-delete address.id %}" method="post" class="delete_address">
+    		{% csrf_token %}
+    		<input type="submit" value="Delete from address book" class="btn btn-small" />
+    	</form>
+    	</div>
+    	</li>
+    	{% endfor %}
+    </ul>
+</div>
+</form>
+{% endif %}
+{% if request.user.is_authenticated %}
+    <div class="form-actions">
+        <a href="{% url checkout:user-address-create %}" class="btn">Add a new address to your address book</a>
+        </div>
+{% endif %}
+
+<div class="well well-info">
+<form action="{% url checkout:shipping-address %}" method="post" class="form-horizontal">
+    <legend>Enter a shipping address</legend>
+	{% csrf_token %}
+	 {% include "partials/form_fields.html" with form=form %}
+	<div class="form-actions"><input type="submit" value="Save shipping address" class="btn" /></div>
+</form>
+</div>
+=======
     <h1>Where should we ship to?</h1>
 
     {% if request.user.is_authenticated %}
@@ -56,6 +124,7 @@ Shipping address | {{ block.super }}
         <div class="form-actions"><button type="submit" class="btn btn-large btn-primary">Continue</button>
             or <a href="{% url basket:summary %}">return to basket</a></div>
     </form>
+>>>>>>> 098e234ffd914d89b8ef0c6df5df2bbecad70b45
 
 {% endblock shipping_address %}
 

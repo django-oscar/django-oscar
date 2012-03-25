@@ -34,16 +34,24 @@ class BasketModelTest(TestCase):
         self.assertEqual(self.basket.num_items, 10)
 
 
-class BasketViewsTest(TestCase):
+class AnonAddToBasketViewTests(TestCase):
 
-    def test_anonymous_add_to_basket_creates_cookie(self):
-        dummy_product = create_product(price=D('10.00'))
+    def setUp(self):
+        self.product = create_product(price=D('10.00'))
         url = reverse('basket:add')
-        post_params = {'product_id': dummy_product.id,
+        post_params = {'product_id': self.product.id,
                        'action': 'add',
                        'quantity': 1}
-        response = self.client.post(url, post_params)
-        self.assertTrue('oscar_open_basket' in response.cookies)
+        self.response = self.client.post(url, post_params)
+
+    def test_cookie_is_created(self):
+        self.assertTrue('oscar_open_basket' in self.response.cookies)
+
+    def test_price_is_recorded(self):
+        basket_id = self.response.cookies['oscar_open_basket'].value.split('_')[0]
+        basket = Basket.objects.get(id=basket_id)
+        line = basket.lines.get(product=self.product)
+        self.assertEqual(self.product.stockrecord.price_incl_tax, line.price_incl_tax)
 
 
 class BasketSummaryViewTests(TestCase):
@@ -70,7 +78,6 @@ class BasketSummaryViewTests(TestCase):
     def test_basket_is_empty(self):
         basket = self.response.context['basket']
         self.assertEquals(0, basket.num_lines)
-
 
 
 class BasketThresholdTest(TestCase):
