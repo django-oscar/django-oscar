@@ -38,15 +38,13 @@ Basket | {{ block.super }}
 
 {% if request.basket.lines.count %}
 
-<<<<<<< HEAD
 	<div class="well">
 	    <a href="{% url checkout:index %}" class="pull-right btn btn-primary">Proceed to Checkout</a>
 	</div>
-=======
 <form action="." method="post" class="basket_summary">
     {% csrf_token %}
     {{ formset.management_form }}
-    <table class="table table-striped table-bordered">
+    <!-- <table class="table table-striped table-bordered">
         <thead>
         <tr>
             <th></th>
@@ -102,8 +100,7 @@ Basket | {{ block.super }}
 			<td></td>
         </tr>
         </tbody>
-    </table>
->>>>>>> d1dfd98adf7fb0c24e4e486483d0fbf6599ddbac
+    </table> -->
 
 	<form action="." method="post" class="basket_summary">
 	    {% csrf_token %}
@@ -135,11 +132,12 @@ Basket | {{ block.super }}
 					</div>
 	                <div class="span3">{{ form.id }}
 						<a href="{{ form.instance.product.get_absolute_url }}">{{ form.instance.description }}</a>
-						<p>{{ form.instance.product.stockrecord.availability }}</p>
+						<label class="checkbox">
+							<p><input id="optionsCheckbox" type="checkbox" value="option1">{{ form.instance.product.stockrecord.availability }}</p>
+						</label>
 					</div>
 					<div class="span2">
-						<form class="well">
-							<label>Quantity</label>
+						<form>
 							<div class="checkout-quantity">{{ form.quantity }}</div>
 							<span class="help-inline">Delete? {{ form.DELETE }}</span>
 							<input type="submit" value="Update" class="btn"/>
@@ -227,15 +225,15 @@ Basket | {{ block.super }}
 	        	<tbody>
 	        		<tr>
 	        			<th>Basket Subtotal</th>
-	        			<td>{{ form.instance.line_price_excl_tax|currency }}</td>
+	        			<td> {{ basket.total_incl_tax|currency }}</td>
 	        		</tr>
 	        		<tr>
 	       				<th>Delivery From</th>
-	       				<td></td>
+	       				<td>{{ shipping_charge_incl_tax|currency }}</td>
 	       			</tr>
 	       			<tr>
 	       				<th>Total</th>
-	       				<td>{{ form.instance.line_price_incl_tax|currency }}</td>
+	       				<td>{{ order_total_incl_tax|currency }}</td>
 	       			</tr>
 	       		</tbody>
 	       	</table>
@@ -245,15 +243,7 @@ Basket | {{ block.super }}
 		    </div>
 	    </div>
 	</div>
-
-<<<<<<< HEAD
 	</form>
-=======
-    <div class="form-actions">
-        Made changes? <input type="submit" value="Update basket" class="btn"/>
-        <a href="{% url checkout:index %}" class="pull-right btn btn-large btn-primary">Proceed to checkout</a>
-    </div>
->>>>>>> d1dfd98adf7fb0c24e4e486483d0fbf6599ddbac
 
 	<div class="row-fluid">
 		<div class="sub-header">
