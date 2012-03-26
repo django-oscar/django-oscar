@@ -13,8 +13,7 @@ Order preview | {{ block.super }}
 <form method="post" action="{% url checkout:payment-details %}">
 {% csrf_token %}
 <div class="form-actions">
-    <input type="submit" value="Place order" class="btn btn-primary btn-large" />
+    <input id='place-order' type="submit" value="Place order" class="btn btn-primary btn-large js-disable-on-click" />
 </div>
 </form>
 {% endblock place_order %}
-
