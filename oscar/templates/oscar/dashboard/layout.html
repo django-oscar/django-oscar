@@ -4,9 +4,9 @@
 {% load category_tags %}
 {% load dashboard_tags %}
 
-{% block _extrahead %}
+{% block extrahead %}
     <link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/dashboard.css" />
-{% endblock %}
+{%endblock extrahead %}
 
 {% block title %}
 Dashboard | {{ block.super }}
@@ -103,7 +103,7 @@ Dashboard | {{ block.super }}
 {% endblock %}
 
 {# Block for additional scripts #}
-{% block _extrascripts %}
+{% block extrascripts %}
     <!-- dashboard js -->
     <script src="{{ STATIC_URL }}oscar/js/oscar/dashboard.js" type="text/javascript" charset="utf-8"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.7.1/jquery-ui.min.js"></script>

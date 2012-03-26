@@ -4,7 +4,7 @@
 {% load promotion_tags %}
 {% load category_tags %}
 
-{% block _extrahead %}
+{% block extrahead %}
     <!-- Responsive - will need to be minified -->
     <link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/responsive.css" />
 {% endblock %}
@@ -89,6 +89,6 @@
 {% endblock %}
 
 {# Block for additional scripts #}
-{% block _extrascripts %}
+{% block extrascripts %}
     <script src="{{ STATIC_URL }}oscar/js/oscar/checkout.js" type="text/javascript" charset="utf-8"></script>
 {% endblock %}
