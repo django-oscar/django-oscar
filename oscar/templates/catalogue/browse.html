@@ -1,6 +1,8 @@
-{% extends "layout.html" %}
+{% extends "layout_2_col.html" %}
 {% load currency_filters %}
 {% load basket_tags %}
+{% load promotion_tags %}
+
 
 {% block title %}
 {{ summary }} | {{ block.super }}
@@ -19,39 +21,39 @@
 </ul>
 {% endblock %}
 
-{% block sidebar %}
-<div class="row-fluid">
-    <aside class="span3" style="position:relative;">
-        <div class="side_categories" style="padding: 8px 0;">
-            {% if categories %}
-    		<ul class="nav nav-list">
-    		    <li class="nav-header">Browse Categories</li>
-    		    {% for category in categories %}
-                <li><a href="{{ category.0.get_absolute_url }}">{{ category.0.name }}</a>
-                	{% if category.1 %}
-                	<ul>
-                		{% for subcategory in category.1 %}
-                		<li><a href="{{ subcategory.0.get_absolute_url }}">{{ subcategory.0.name }}</a>
-                		{% endfor %}
-                	</ul>
-                		{% endif %}
-                </li>
-                {% endfor %}
-    		</ul>
-    		{% endif %}
-        </div>
-    </aside><!-- /span3 -->
-    <div class="span9">
-        <div class="sub-header">
-            <h1>{{ summary }}</h1>
-        </div>
-		{% if category.description %}
-			<p>{{ category.description }}</p>
-		{% endif %}
-
-{% endblock sidebar %}
+{% block column_left %}
+    <div class="side_categories" style="padding: 8px 0;">
+        {% if categories %}
+    	<ul class="nav nav-list">
+    	    <li class="nav-header">Browse Categories</li>
+    	    {% for category in categories %}
+            <li><a href="{{ category.0.get_absolute_url }}">{{ category.0.name }}</a>
+            	{% if category.1 %}
+            	<ul>
+            		{% for subcategory in category.1 %}
+            		<li><a href="{{ subcategory.0.get_absolute_url }}">{{ subcategory.0.name }}</a>
+            		{% endfor %}
+            	</ul>
+            		{% endif %}
+            </li>
+            {% endfor %}
+    	</ul>
+    	{% endif %}
+    </div>
+{% endblock %}
 
 {% block content %}
+    <div class="sub-header">
+        <h1>{{ summary }}</h1>
+    </div>
+    {% if category.description %}
+    	<p>{{ category.description }}</p>
+    {% endif %}
+    <div id="promotions">
+    	{% for promotion in promotions_page %}
+    	{% render_promotion promotion %}
+    	{% endfor %}
+    </div>
     {% if products.count %}
 		<section>
 			<div class="mod">
@@ -71,6 +73,4 @@
     {% else %}
 		<p>No products found.</p>
     {% endif %}
-    </div><!-- /span9 -->
-</div><!-- /row-fluid -->
 {% endblock content %}

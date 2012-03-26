@@ -1,4 +1,5 @@
 from decimal import Decimal as D
+import httplib
 
 from django.conf import settings
 from django.core.urlresolvers import reverse
@@ -33,22 +34,50 @@ class BasketModelTest(TestCase):
         self.assertEqual(self.basket.num_items, 10)
 
 
-class BasketViewsTest(TestCase):
+class AnonAddToBasketViewTests(TestCase):
 
-    def test_empty_basket_view(self):
-        url = reverse('basket:summary')
-        response = self.client.get(url)
-        self.assertEquals(200, response.status_code)
-        self.assertEquals(0, response.context['basket'].num_lines)
-
-    def test_anonymous_add_to_basket_creates_cookie(self):
-        dummy_product = create_product(price=D('10.00'))
+    def setUp(self):
+        self.product = create_product(price=D('10.00'))
         url = reverse('basket:add')
-        post_params = {'product_id': dummy_product.id,
+        post_params = {'product_id': self.product.id,
                        'action': 'add',
                        'quantity': 1}
-        response = self.client.post(url, post_params)
-        self.assertTrue('oscar_open_basket' in response.cookies)
+        self.response = self.client.post(url, post_params)
+
+    def test_cookie_is_created(self):
+        self.assertTrue('oscar_open_basket' in self.response.cookies)
+
+    def test_price_is_recorded(self):
+        basket_id = self.response.cookies['oscar_open_basket'].value.split('_')[0]
+        basket = Basket.objects.get(id=basket_id)
+        line = basket.lines.get(product=self.product)
+        self.assertEqual(self.product.stockrecord.price_incl_tax, line.price_incl_tax)
+
+
+class BasketSummaryViewTests(TestCase):
+
+    def setUp(self):
+        url = reverse('basket:summary')
+        self.response = self.client.get(url)
+
+    def test_shipping_method_in_context(self):
+        self.assertTrue('shipping_method' in self.response.context)
+
+    def test_shipping_charge_in_context(self):
+        self.assertTrue('shipping_charge_incl_tax' in self.response.context)
+
+    def test_order_total_in_context(self):
+        self.assertTrue('order_total_incl_tax' in self.response.context)
+
+    def test_view_does_not_error(self):
+        self.assertEquals(httplib.OK, self.response.status_code)
+
+    def test_basket_in_context(self):
+        self.assertTrue('basket' in self.response.context)
+
+    def test_basket_is_empty(self):
+        basket = self.response.context['basket']
+        self.assertEquals(0, basket.num_lines)
 
 
 class BasketThresholdTest(TestCase):

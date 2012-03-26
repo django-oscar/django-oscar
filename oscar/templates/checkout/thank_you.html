@@ -5,16 +5,14 @@
 Confirmation of order {{ order.number }} | {{ block.super }}
 {% endblock title %}
 
-{% block header %}
-<div class="page-header">
-    <h2>Checkout / Thank you</h2>
-</div>
-{% endblock header %}
+{% block checkout-nav %}
+{% include 'checkout/nav.html' with step=4 %}
+{% endblock %}
 
 
 {% block content %}
 <div class="sub-header">
-    <h3>Order confirmation</h3>
+    <h1>Order confirmation</h1>
 </div>
 <p>Your order has been placed - your order number is <span class="label label-success">{{order.number}}</span></p>
 <p>Please make a note of this reference or print this page and quote it in any communication
@@ -91,6 +89,8 @@ with us regarding your order.</p>
 <p>You can track the status of your order at the following URL:</p>
 <p><a href="{% url customer:anon-order order.number order.verification_hash %}"> {% url customer:anon-order order.number order.verification_hash %}</a></p>
 {% endif %}
+
+<p><a href="/" class="btn btn-primary btn-large">Continue shopping</a></p>
  
 {% endblock content %}
 

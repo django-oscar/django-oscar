@@ -159,16 +159,38 @@
       padding-bottom:@baseLineHeight;
       margin-bottom:@baseLineHeight;
       .product_pod {
-        margin-bottom:15px;
+        margin-bottom:0px;
         height:auto!important;
         padding:0px;
         text-align:left;
         .star {
           clear:none;
-          margin-left:@quart * 1.15;
+          margin:0px;
         }
         .avaliability {
           text-align:left;
+        }
+        .group-price {
+          position:static;
+          border:none;
+          color:@orange;
+          text-transform:capitalize;
+          background-color:none;
+          .border-radius(none);
+          .box-shadow(none);
+          background:none;
+          margin:0px;
+          span {
+            display:inline;
+            font-size:@baseFontSize;
+            background:none;
+            padding:0px;
+            color:inherit;
+          }
+          strong {
+            padding:0px;
+            display:inline;
+          }
         }
         .product_price {
           position:static;
@@ -194,9 +216,12 @@
         } 
         .image_container {
           width:@quart;
-          float:left;
-          margin-right:15px;
-          margin-bottom:80px;
+          float:right;
+          margin-left:15px;
+          margin-bottom:0px;
+          img {
+            height:auto;
+          }
         }
       }
     }
@@ -248,6 +273,20 @@
     position: static;
     width: auto;
     margin-bottom:0px;
+  }
+  // Carousel
+  .es-carousel-wrapper {
+    padding:0px;
+    border:0px;
+  }
+  .es-carousel {
+    border:0px;
+    ul {
+      display:block;
+      li {
+        float:none;
+      }
+    }
   }
 }
 

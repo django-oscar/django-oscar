@@ -1,13 +1,21 @@
 {% extends "checkout/checkout.html" %}
 
+{% block order_contents %}{% endblock %}
+{% block shipping_method %}{% endblock %}
+
+{% block checkout-nav %}
+{% include 'checkout/nav.html' with step=2 %}
+{% endblock %}
 
 {% block shipping_address %}
+    <form action="{{ form_url }}" method="post" class="form-horizontal">
+        <legend>Enter an address for your addressbook</legend>
+        {% csrf_token %}
+        {% include "partials/form_fields.html" with form=form %}
+        <div class="form-actions">
+            <button type="submit" class="btn btn-large btn-primary">Save</button>
+            or <a href="{% url checkout:shipping-address %}">cancel</a>.
 
-<form action="{{ form_url }}" method="post" class="form-horizontal">
-    <legend>Enter an address for your addressbook</legend>
-    {% csrf_token %}
-    {% include "partials/form_fields.html" with form=form %}
-    <div class="form-actions"><input type="submit" value="Save address" class="btn btn-primary" /></div>
-</form>
-
+        </div>
+    </form>
 {% endblock shipping_address %}

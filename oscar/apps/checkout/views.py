@@ -10,6 +10,7 @@ from django.forms import ModelForm
 from django.contrib import messages
 from django.core.urlresolvers import resolve
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth import login
 from django.utils.translation import ugettext as _
 from django.template.response import TemplateResponse
 from django.core.mail import EmailMessage
@@ -18,7 +19,7 @@ from django.views.generic import DetailView, TemplateView, FormView, \
 
 from oscar.apps.shipping.methods import Free
 from oscar.core.loading import import_module
-import_module('checkout.forms', ['ShippingAddressForm'], locals())
+import_module('checkout.forms', ['ShippingAddressForm', 'GatewayForm'], locals())
 import_module('checkout.calculators', ['OrderTotalCalculator'], locals())
 import_module('checkout.utils', ['CheckoutSessionData'], locals())
 import_module('checkout.signals', ['pre_payment', 'post_payment'], locals())
@@ -38,18 +39,6 @@ import_module('basket.models', ['Basket'], locals())
 
 # Standard logger for checkout events
 logger = logging.getLogger('oscar.checkout')
-
-
-class IndexView(AccountAuthView):
-    """
-    First page of the checkout.  If the user is signed in then we forward
-    straight onto the next step.  Otherwise, we provide options to login, register and
-    (if the option is enabled) proceed anonymously.
-    """
-    template_name = 'checkout/gateway.html'
-    
-    def get_logged_in_redirect(self):
-        return reverse('checkout:shipping-address')
 
 
 class CheckoutSessionMixin(object):
@@ -125,6 +114,35 @@ class CheckoutSessionMixin(object):
         return ctx
 
 
+class IndexView(CheckoutSessionMixin, FormView):
+    """
+    First page of the checkout.  We prompt user to either sign in, or
+    to proceed as a guest (where we still collect their email address).
+    """
+    template_name = 'checkout/gateway.html'
+    form_class = GatewayForm
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated():
+            return self.get_success_response()
+        return super(IndexView, self).get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        if form.is_guest_checkout():
+            email = form.cleaned_data['username']
+            self.checkout_session.set_guest_email(email)
+        else:
+            user = form.get_user()
+            login(self.request, user)
+        return self.get_success_response()
+
+    def get_success_response(self):
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse('checkout:shipping-address')
+
+
 # ================
 # SHIPPING ADDRESS
 # ================
@@ -146,6 +164,13 @@ class ShippingAddressView(CheckoutSessionMixin, FormView):
     template_name = 'checkout/shipping_address.html'
     form_class = ShippingAddressForm
     
+    def get(self, request, *args, **kwargs):
+        # Check that guests have entered an email address
+        if not request.user.is_authenticated() and not self.checkout_session.get_guest_email():
+            messages.error(request, _("Please either sign in or enter your email address"))
+            return HttpResponseRedirect(reverse('checkout:index'))
+        return super(ShippingAddressView, self).get(request, *args, **kwargs)
+
     def get_initial(self):
         return self.checkout_session.new_shipping_address_fields()
     
@@ -342,32 +367,6 @@ class PaymentMethodView(CheckoutSessionMixin, TemplateView):
         return self.get_success_response()
     
     def get_success_response(self):
-        return HttpResponseRedirect(reverse('checkout:preview'))
-
-
-# =======
-# Preview
-# =======
-
-
-class OrderPreviewView(CheckoutSessionMixin, TemplateView):
-    """
-    View a preview of the order before submitting.
-    """
-    template_name = 'checkout/preview.html'
-
-    def get(self, request, *args, **kwargs):
-        # Check that shipping address has been completed
-        if not self.checkout_session.is_shipping_address_set():
-            messages.error(request, _("Please choose a shipping address"))
-            return HttpResponseRedirect(reverse('checkout:shipping-address'))
-        # Check that shipping method has been set
-        if not self.checkout_session.is_shipping_method_set():
-            messages.error(request, _("Please choose a shipping method"))
-            return HttpResponseRedirect(reverse('checkout:shipping-method'))
-        return super(OrderPreviewView, self).get(request, *args, **kwargs)
-    
-    def get_success_response(self):
         return HttpResponseRedirect(reverse('checkout:payment-details'))
 
 
@@ -443,6 +442,8 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             status = self.get_initial_order_status(basket)
         else:
             status = kwargs.pop('status')
+        if not self.request.user.is_authenticated():
+            kwargs['guest_email'] = self.checkout_session.get_guest_email()
         order = OrderCreator().place_order(basket=basket, 
                                            total_incl_tax=total_incl_tax,
                                            total_excl_tax=total_excl_tax,
@@ -606,6 +607,28 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
     
     Almost all projects will need to subclass and customise this class.
     """
+    template_name = 'checkout/payment_details.html'
+    template_name_preview = 'checkout/preview.html'
+    preview = False
+
+    def get_template_names(self):
+        return [self.template_name_preview] if self.preview else [self.template_name]
+
+    def get_error_response(self):
+        # Check that shipping address has been completed
+        if not self.checkout_session.is_shipping_address_set():
+            messages.error(self.request, _("Please choose a shipping address"))
+            return HttpResponseRedirect(reverse('checkout:shipping-address'))
+        # Check that shipping method has been set
+        if not self.checkout_session.is_shipping_method_set():
+            messages.error(self.request, _("Please choose a shipping method"))
+            return HttpResponseRedirect(reverse('checkout:shipping-method'))
+
+    def get(self, request, *args, **kwargs):
+        error_response = self.get_error_response()
+        if error_response:
+            return error_response
+        return super(PaymentDetailsView, self).get(request, *args, **kwargs)
     
     def post(self, request, *args, **kwargs):
         """
@@ -613,7 +636,23 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         validate the forms from the payment details page.  If the forms are valid
         then the method can call submit()
         """
+        error_response = self.get_error_response()
+        if error_response:
+            return error_response
+        if self.preview:
+            return self.render_preview(request, *args, **kwargs)
         return self.submit(request.basket, **kwargs)
+
+    def render_preview(self, request, *args, **kwargs):
+        """
+        Show a preview of the order.
+
+        If sensitive data was submitted on the payment details page, you will
+        need to pass it back to the view here so it can be stored in hidden form
+        inputs.  This avoids ever writing the sensitive data to disk.
+        """
+        ctx = self.get_context_data()
+        return self.render_to_response(ctx)
 
     def can_basket_be_submitted(self, basket):
         for line in basket.lines.all():
@@ -651,14 +690,6 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
            - If a redirect is required (eg PayPal, 3DSecure), redirect
            - If payment is unsuccessful, show an appropriate error message
         """
-        # Check that shipping address has been completed
-        if not self.checkout_session.is_shipping_address_set():
-            messages.error(self.request, _("Please choose a shipping address"))
-            return HttpResponseRedirect(reverse('checkout:shipping-address'))
-        # Check that shipping method has been set
-        if not self.checkout_session.is_shipping_method_set():
-            messages.error(self.request, _("Please choose a shipping method"))
-            return HttpResponseRedirect(reverse('checkout:shipping-method'))
         # Next, check that basket isn't empty
         if basket.is_empty:
             messages.error(self.request, _("This order cannot be submitted as the basket is empty"))

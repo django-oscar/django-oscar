@@ -148,7 +148,9 @@ class AbstractShippingAddress(AbstractAddress):
     it should be read-only after that. 
     """
     phone_number = models.CharField(max_length=32, blank=True, null=True)
-    notes = models.TextField(blank=True, null=True, help_text="""Shipping notes""")
+    notes = models.TextField(blank=True, null=True,
+                             help_text="For example, leave the parcel by the " \
+                                       "garden gnomes.")
     
     class Meta:
         abstract = True

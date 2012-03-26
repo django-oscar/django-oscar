@@ -4,7 +4,7 @@ from django.conf import settings
 
 from oscar.core.application import Application
 from oscar.apps.checkout.views import IndexView, ShippingAddressView, UserAddressDeleteView, UserAddressCreateView, \
-                                      UserAddressUpdateView, ShippingMethodView, PaymentMethodView, OrderPreviewView, \
+                                      UserAddressUpdateView, ShippingMethodView, PaymentMethodView, \
                                       PaymentDetailsView, ThankYouView
 
 
@@ -18,7 +18,6 @@ class CheckoutApplication(Application):
     user_address_delete_view = UserAddressDeleteView
     shipping_method_view = ShippingMethodView
     payment_method_view = PaymentMethodView
-    order_preview_view = OrderPreviewView
     payment_details_view = PaymentDetailsView
     thankyou_view = ThankYouView
 
@@ -34,8 +33,8 @@ class CheckoutApplication(Application):
             url(r'shipping-method/$', self.shipping_method_view.as_view(), name='shipping-method'),
             # Payment method views
             url(r'payment-method/$', self.payment_method_view.as_view(), name='payment-method'),
-            url(r'preview/$', self.order_preview_view.as_view(), name='preview'),
             url(r'payment-details/$', self.payment_details_view.as_view(), name='payment-details'),
+            url(r'preview/$', self.payment_details_view.as_view(preview=True), name='preview'),
             url(r'thank-you/$', self.thankyou_view.as_view(), name='thank-you'),
         )
         return self.post_process_urls(urlpatterns)

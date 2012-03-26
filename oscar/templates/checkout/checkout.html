@@ -6,17 +6,19 @@ Checkout | {{ block.super }}
 {% endblock %}
 
 {% block header %}
-<div class="page-header">
-    <h2>Checkout</h2>
-</div>
 {% endblock header %}
 
+{% block checkout-nav %}
+{% include 'checkout/nav.html' %}
+{% endblock %}
+
 {% block content %}
+
+{% block order_contents %}
 <div class="sub-header">
     <h3>Order contents</h3>
 </div>
 
-{% block order_contents %}
 <table class="table table-striped table-bordered">
     <tr>
         <th>Product</th>
@@ -66,10 +68,10 @@ Checkout | {{ block.super }}
 </div>
 {% endblock order_contents %}
 
+{% block shipping_address %}
 <div class="sub-header">
     <h3>Shipping address</h3>
 </div>
-{% block shipping_address %}
 <div class="well well-success">
     <dl>
          <dt>Address</dt>
@@ -93,10 +95,10 @@ Checkout | {{ block.super }}
 </div>
 {% endblock shipping_address %}
 
+{% block shipping_method %}
 <div class="sub-header">
     <h3>Shipping method</h3>
 </div>
-{% block shipping_method %}
 
 {% if shipping_method %}
 <table class="table table-striped table-bordered">
@@ -117,18 +119,9 @@ Checkout | {{ block.super }}
     </tbody>
 </table>
 {% endif %}
-
 {% endblock shipping_method %}
 
-
 {% block payment_method %}
-{% if payment_method %}
-<div class="sub-header">
-    <h3>Payment method</h3>
-</div>
-<p>Method: {{ payment_method }}</p>
-<div class="form-actions"><a href="{% url oscar-checkout-payment-method %}" class="btn">Change payment method</a></div>
-{% endif %}
 {% endblock payment_method %}
 
 {% block payment_details %}
@@ -137,6 +130,9 @@ Checkout | {{ block.super }}
 {% block place_order %}
 {% endblock place_order %}
 
-
 {% endblock content %}
+
+{% block onbodyload %}
+oscar.checkout.init();
+{% endblock %}
 

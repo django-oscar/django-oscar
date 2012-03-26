@@ -110,7 +110,7 @@ ROOT_URLCONF = 'urls'
 
 from oscar import OSCAR_PARENT_TEMPLATE_DIR
 TEMPLATE_DIRS = (
-    location('templates'),
+    os.path.join(OSCAR_PARENT_TEMPLATE_DIR, 'templates'),
     OSCAR_PARENT_TEMPLATE_DIR,
 )
 
@@ -197,7 +197,7 @@ INSTALLED_APPS = (
     'oscar.apps.discount',
     'oscar.apps.order',
     'oscar.apps.checkout',
-    'oscar.apps.shipping',
+    'apps.shipping',
     'oscar.apps.catalogue',
     'oscar.apps.catalogue.reviews',
     'oscar.apps.basket',

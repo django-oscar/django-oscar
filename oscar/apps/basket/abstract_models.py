@@ -7,6 +7,7 @@ from django.utils.translation import ugettext as _
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 
 from oscar.apps.basket.managers import OpenBasketManager, SavedBasketManager
+from oscar.templatetags.currency_filters import currency
 
 # Basket statuses
 # - Frozen is for when a basket is in the process of being submitted
@@ -72,9 +73,9 @@ class AbstractBasket(models.Model):
         self.lines_all().delete()
         self._lines = None
 
-    def add_product(self, item, quantity=1, options=None):
+    def add_product(self, product, quantity=1, options=None):
         """
-        Convenience method for adding products to a basket
+        Add a product to the basket
 
         The 'options' list should contains dicts with keys 'option' and 'value'
         which link the relevant product.Option model and string value respectively.
@@ -83,10 +84,22 @@ class AbstractBasket(models.Model):
             options = []
         if not self.id:
             self.save()
-        line_ref = self._create_line_reference(item, options)
+
+        # Line reference is used to distinguish between variations of the same 
+        # product (eg T-shirts with different personalisations)
+        line_ref = self._create_line_reference(product, options)
+
+        # Determine price to store (if one exists)
+        price = None
+        if product.has_stockrecord:
+            stockrecord = product.stockrecord
+            if stockrecord and stockrecord.price_incl_tax:
+                price = stockrecord.price_incl_tax
+
         line, created = self.lines.get_or_create(line_reference=line_ref,
-                                                 product=item,
-                                                 defaults={'quantity': quantity})
+                                                 product=product,
+                                                 defaults={'quantity': quantity,
+                                                           'price_incl_tax': price})
         if created:
             for option_dict in options:
                 line.attributes.create(option=option_dict['option'],
@@ -257,6 +270,25 @@ class AbstractBasket(models.Model):
         return voucher_discounts
 
     @property
+    def grouped_voucher_discounts(self):
+        """
+        Return discounts from vouchers but grouped so that a voucher which links
+        to multiple offers is aggregated into one object.
+        """
+        voucher_discounts = {}
+        for discount in self.voucher_discounts:
+            voucher = discount['voucher']
+            if voucher.code not in voucher_discounts:
+                voucher_discounts[voucher.code] = {
+                    'voucher': voucher,
+                    'discount': discount['discount'],
+                }
+            else:
+                voucher_discounts[voucher.code] += discount.discount
+
+        return voucher_discounts.values()
+
+    @property
     def total_excl_tax_excl_discounts(self):
         """
         Return total price excluding tax and discounts
@@ -319,6 +351,8 @@ class AbstractLine(models.Model):
 
     product = models.ForeignKey('catalogue.Product', related_name='basket_lines')
     quantity = models.PositiveIntegerField(default=1)
+    price_incl_tax = models.DecimalField(decimal_places=2, max_digits=12,
+                                         null=True)
 
     # Track date of first addition
     date_created = models.DateTimeField(auto_now_add=True)
@@ -479,6 +513,28 @@ class AbstractLine(models.Model):
         if ops:
             d = "%s (%s)" % (d.decode('utf-8'), ", ".join(ops))
         return d
+
+    def get_warning(self):
+        """
+        Return a warning message about this basket line if one is applicable
+
+        This could be things like the price has changed
+        """
+        if not self.price_incl_tax:
+            return
+        current_price_incl_tax = self.product.stockrecord.price_incl_tax
+        if current_price_incl_tax > self.price_incl_tax:
+            msg = u"The price of '%(product)s' has increased from %(old_price)s " \
+                  u"to %(new_price)s since you added it to your basket"
+            return _(msg % {'product': self.product.get_title(),
+                            'old_price': currency(self.price_incl_tax),
+                            'new_price': currency(current_price_incl_tax)})
+        if current_price_incl_tax < self.price_incl_tax:
+            msg = u"The price of '%(product)s' has decreased from %(old_price)s " \
+                  u"to %(new_price)s since you added it to your basket"
+            return _(msg % {'product': self.product.get_title(),
+                            'old_price': currency(self.price_incl_tax),
+                            'new_price': currency(current_price_incl_tax)})
 
 
 class AbstractLineAttribute(models.Model):

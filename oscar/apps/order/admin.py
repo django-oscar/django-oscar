@@ -5,7 +5,6 @@ import_module('order.models', ['Order', 'OrderNote', 'CommunicationEvent',
                                         'BillingAddress', 'ShippingAddress', 'Line',
                                         'LinePrice', 'ShippingEvent', 'ShippingEventType', 
                                         'PaymentEvent', 'PaymentEventType', 'LineAttribute', 'OrderDiscount'], locals())
-
 class OrderAdmin(admin.ModelAdmin):
     raw_id_fields = ['user','billing_address','shipping_address', ]
     list_display = ('number', 'total_incl_tax', 'site', 'user', 'billing_address', 'date_placed')
@@ -33,8 +32,8 @@ class OrderNoteAdmin(admin.ModelAdmin):
         obj.save()
         
 class OrderDiscountAdmin(admin.ModelAdmin):
-    readonly_fields = ('order' ,'offer', 'voucher', 'voucher_code', 'amount')
-    list_display = ('order' ,'offer', 'voucher', 'voucher_code', 'amount')
+    readonly_fields = ('order' ,'offer_id', 'voucher_id', 'voucher_code', 'amount')
+    list_display = ('order', 'offer', 'voucher', 'voucher_code', 'amount')
     
 admin.site.register(Order, OrderAdmin)
 admin.site.register(OrderNote, OrderNoteAdmin)

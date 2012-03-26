@@ -5,7 +5,16 @@
 Shipping method | {{ block.super }}
 {% endblock %}
 
+{% block checkout-nav %}
+{% include 'checkout/nav.html' with step=2 %}
+{% endblock %}
+
+{% block order_contents %}{% endblock %}
+{% block shipping_address %}{% endblock %}
+
 {% block shipping_method %}
+<h1>Choose a shipping method</h1>
+
 <table class="table table-striped table-bordered">
     <thead>
         <tr>
@@ -25,7 +34,7 @@ Shipping method | {{ block.super }}
                 <form method="post" action="{% url checkout:shipping-method %}">
                     {% csrf_token %}
                     <input type="hidden" name="method_code" value="{{ method.code }}" class="btn" />
-                    <input type="submit" value="Use this shipping method" class="btn" />
+                    <button type="submit" class="btn btn-large btn-primary">Use this shipping method</button>
                 </form>
             </td>
         </tr>
