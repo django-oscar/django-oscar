@@ -197,3 +197,6 @@ Basket | {{ block.super }}
 oscar.basket.init();
 {% endblock %}
 
+{% block extrascripts %}
+    <script src="{{ STATIC_URL }}oscar/js/oscar/checkout.js" type="text/javascript" charset="utf-8"></script>
+{% endblock %}

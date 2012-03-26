@@ -90,7 +90,6 @@ class BasketView(ModelFormSetView):
 
     def formset_invalid(self, formset):
         messages.info(self.request, _("There was a problem updating your basket, please check that all quantities are numbers"))
-        assert False
         return super(BasketView, self).formset_invalid(formset)
 
 
@@ -255,4 +254,6 @@ class SavedView(ModelFormSetView):
         return super(SavedView, self).formset_valid(formset)
 
     def formset_invalid(self, formset):
+        messages.error(self.request, _("There was a problem with your submission"))
+        assert False
         return HttpResponseRedirect(self.request.META.get('HTTP_REFERER', reverse('basket:summary')))

@@ -48,7 +48,7 @@ class SavedLineForm(forms.ModelForm):
 
     class Meta:
         model = Line
-        exclude = ('basket', 'product', 'line_reference', 'quantity', )
+        exclude = ('basket', 'product', 'line_reference', 'quantity', 'price_incl_tax')
 
 
 class BasketVoucherForm(forms.Form):
