@@ -36,7 +36,7 @@
                 <button class="btn">Notify me</button> 
             {% endif %}
     {% endif %}
-    {% basket_form basket product as basket_form %}
+    {% basket_form basket product as basket_form single %}
     <form action="{% url basket:add %}" method="post">
         {% csrf_token %}
         {{ basket_form.as_p }}
