@@ -11,8 +11,9 @@ Basket | {{ block.super }}
 {% endblock %}
 
 {% block header %}
-<div class="page-header">
+<div class="page-header action">
     <h1>Basket</h1>
+    <a href="{% url checkout:index %}" class="pull-right btn btn-primary">Proceed to checkout</a>
 </div>
 {% endblock header %}
 
@@ -27,38 +28,34 @@ Basket | {{ block.super }}
 {% endif %}
 
 {% if not basket.is_empty %}
-
-
-<div class="row-fluid">
-   <a href="{% url checkout:index %}" class="pull-right btn btn-primary">Proceed to checkout</a>
+<div class="row-fluid basket-title">
+    <h4 class="span6">Items to buy now</h4>
+    <h4 class="span3">Quantity</h4>
+    <h4 class="span3">Price</h4>
 </div>
-<hr/>
+
 <form action="." method="post" class="basket_summary" id="basket_formset">
 	{% csrf_token %}
 	{{ formset.management_form }}
 
 	{% for form in formset %}
-    <div class="row-fluid">
-	    <div class="span2">
-	        <div class="basket-element">
-    		    {{ form.id }}
-    		    {% product_image form.instance.product as product_image %}
-    		    <div style="">
-    			    <a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ product_image.thumbnail_url }}" alt="{{ product.get_title }}"></a>
-    		    </div>
+    <div class="row-fluid basket-items">
+	    <div class="span6">
+	        {{ form.id }}
+	        {% product_image form.instance.product as product_image %}
+		    <div class="image_container">
+			    <a href="{{ product.get_absolute_url }}">
+			        <img class="thumbnail" src="{{ product_image.thumbnail_url }}" alt="{{ product.get_title }}">
+			    </a>
 		    </div>
+		    <h4><a href="{{ form.instance.product.get_absolute_url }}">{{ form.instance.description }}</a></h4>
+		    <p class="app-ico instock avaliability ">{{ form.instance.product.stockrecord.availability }}</p>
 	    </div>
 	    <div class="span3">
-		    <a href="{{ form.instance.product.get_absolute_url }}">{{ form.instance.description }}</a><br/>
-		    {{ form.instance.product.stockrecord.availability }}
-	    </div>
-	    <div class="span5">
 		    <div class="checkout-quantity">
-		        {{ form.quantity }} <button class="btn btn-small">Update</button><br/>
-			    <a href="#" data-id="{{ forloop.counter0 }}" class="remove">Remove </a>
-			    {% if request.user.is_authenticated %}
-			    | <a href="#" data-id="{{ forloop.counter0 }}" class="save">Save for later</a>
-			    {% endif %}
+		        {{ form.quantity }} 
+		        <button class="btn">Update</button>
+			    <a href="#" data-id="{{ forloop.counter0 }}" class="inline">Remove</a>
 			    <div style="display:none">
 				    {{ form.save_for_later }}
 				    {{ form.DELETE }}
@@ -66,35 +63,35 @@ Basket | {{ block.super }}
 		    </div>
 	    </div>
 	    <div class="span1">
-		    {{ form.instance.unit_price_incl_tax|currency }}
+		    <p class="price">{{ form.instance.unit_price_incl_tax|currency }}<p>
 	    </div>
-	    <div class="span1">
-		    {{ form.instance.line_price_incl_tax|currency }}
+	    <div class="span2">
+		    {% if request.user.is_authenticated %}
+		    <a href="#" data-id="{{ forloop.counter0 }}" class="btn btn-info pull-right save" >Save for later</a>
+		    {% endif %}
 	    </div>
     </div>
-    <hr />
     {% endfor %}
 </form>
-
-<p id="voucher_form_link"><a href="#voucher">I have a voucher code...</a></p>
-<div id="voucher_form_container" style="display:none">
-	<h4>Voucher code</h4>
-	<form action="{% url basket:vouchers-add %}" method="post" class="form-horizontal">
-		{% csrf_token %}
-		{% include "partials/form_fields.html" with form=voucher_form %}
-		<div class="form-actions">
-			<button class="btn btn-info">Add voucher</button>
-			or <a href="#" id="voucher_form_cancel">cancel</a>
-		</div>
-	</form>
-</div>
-
 
 <div class="row-fluid">
 	<div class="span6">
 		<div class="sub-header">
-		<h2>Voucher/Promo Code</h2>
+		    <h2>Voucher/Promo Code</h2>
 		</div>
+		<p id="voucher_form_link"><a href="#voucher" class="btn">I have a voucher code...</a></p>
+
+        <div id="voucher_form_container" style="display:none">
+        	<h4>Voucher code</h4>
+        	<form action="{% url basket:vouchers-add %}" method="post" class="form-horizontal">
+        		{% csrf_token %}
+        		{% include "partials/form_fields.html" with form=voucher_form %}
+        		<div class="form-actions">
+        			<button class="btn btn-info">Add voucher</button>
+        			or <a href="#" id="voucher_form_cancel">cancel</a>
+        		</div>
+        	</form>
+        </div>
 	</div>
 	<div class="span6">
 		<div class="sub-header">
@@ -154,7 +151,7 @@ Basket | {{ block.super }}
 					<th>Shipping ({{ shipping_method.name }})</th>
 					<td>{{ shipping_charge_incl_tax|currency }}</td>
 				</tr>
-				<tr>
+				<tr class="total">
 					<th>Order total</th>
 					<td>{{ order_total_incl_tax|currency }}</td>
 				</tr>
@@ -165,7 +162,7 @@ Basket | {{ block.super }}
 </div>
 
 	
-	<div class="well">
+	<div class="form-actions clearfix" >
 		<a href="{% url checkout:index %}" class="pull-right btn btn-large btn-primary">Proceed to checkout</a>
 	</div>
 
@@ -176,7 +173,7 @@ Basket | {{ block.super }}
 {% endif %}
 
 
-<div class="page-header">
+<div class="sub-header">
     <h2>To buy later</h2>
 </div>
 
@@ -184,39 +181,44 @@ Basket | {{ block.super }}
 <p>Your saved basket is empty.</p>
 
 {% else %}
+<div class="row-fluid basket-title">
+    <h4 class="span6">Items saved</h4>
+    <h4 class="span3">Quantity</h4>
+    <h4 class="span3">Price</h4>
+</div>
 <form action="{% url basket:saved %}" method="post" class="form-stacked later_summary" id="saved_basket_formset">
     {% csrf_token %}
-
     {{ saved_formset.management_form }}
 
-    <table class="bordered-table zebra-striped">
-        <tbody>
+
+
+
         {% for form in saved_formset %}
-        <tr>
-			<td>
+        <div class="row-fluid basket-items">
+    	    <div class="span6">
 				{{ form.id }}
 				{% product_image form.instance.product as product_image %}
-				<div style="width:100px">
-					<a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ product_image.thumbnail_url }}" alt="{{ product.get_title }}"></a>
+				<div class="image_container">
+					<a href="{{ product.get_absolute_url }}">
+					    <img class="thumbnail" src="{{ product_image.thumbnail_url }}" alt="{{ product.get_title }}">
+					</a>
 				</div>
-				<a href="{{ form.instance.product.get_absolute_url }}">{{ form.instance.description }}</a><br/>
-				{{ form.instance.product.stockrecord.availability }}
-			</td>
-			<td>
-				<a href="#" data-id="{{ forloop.counter0 }}" class="remove">Remove</a>
-				| <a href="#" data-id="{{ forloop.counter0 }}" class="move">Move to basket</a>
-				<div style="display:none">
-					{{ form.move_to_basket }}
-					{{ form.DELETE }}
+				<h4><a href="{{ form.instance.product.get_absolute_url }}">{{ form.instance.description }}</a></h4>
+				<p class="app-ico instock avaliability ">{{ form.instance.product.stockrecord.availability }}</p>
+			</div>
+			<div class="span3">
+			    <div class="checkout-quantity">
+    				<a href="#" data-id="{{ forloop.counter0 }}" class="remove">Remove</a>
+    				<div style="display:none">
+    					{{ form.move_to_basket }}
+    					{{ form.DELETE }}
+    				</div>
 				</div>
-			</td>
-            <td>{{ form.instance.unit_price_incl_tax|currency }}</td>
-            <td>{{ form.instance.line_price_incl_tax|currency }}</td>
-        </tr>
+			</div>
+            <div class="span1">{{ form.instance.unit_price_incl_tax|currency }}</div>
+            <div class="span2"><a href="#" data-id="{{ forloop.counter0 }}" class="btn btn-success pull-right move">Move to basket</a></div>
+        </div>
         {% endfor %}
-        </tbody>
-    </table>
-
 </form>
 {% endif %}
 
