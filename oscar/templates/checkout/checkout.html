@@ -68,33 +68,41 @@ Checkout | {{ block.super }}
 </div>
 {% endblock order_contents %}
 
-{% block shipping_address %}
-<div class="sub-header">
-    <h3>Shipping address</h3>
+<div class="row-fluid">
+	<div class="span6">
+		{% block shipping_address %}
+		<div class="sub-header">
+			<h2>Shipping address</h2>
+		</div>
+		<div class="well well-success">
+			<dl>
+				<dt>Address</dt>
+				<dd>
+					{% for field in shipping_address.active_address_fields %}
+					{{ field }}<br/>
+					{% endfor %}
+				</dd>
+				{% if shipping_address.phone_number %}
+				<dt>Contact number</dt>
+				<dd>{{ shipping_addr.phone_number }}</dd>
+				{% endif %}
+				{% if shipping_address.notes %}
+				<dt>Shipping notes</dt>
+				<dd>{{ shipping_addr.notes }}</dd>
+				{% endif %} 
+			</dl>
+			<div class="alert-actions">
+				<a href="{% url checkout:shipping-address %}" class="btn">Change shipping address</a>
+			</div>
+		</div>
+		{% endblock shipping_address %}
+	</div>
+	<!-- <div class="span6">
+			<div class="sub-header">
+				<h2>Payment</h2>
+			</div>
+		</div> -->
 </div>
-<div class="well well-success">
-    <dl>
-         <dt>Address</dt>
-         <dd>
-             {% for field in shipping_address.active_address_fields %}
-                 {{ field }}<br/>
-             {% endfor %}
-         </dd>
-         {% if shipping_address.phone_number %}
-         <dt>Contact number</dt>
-         <dd>{{ shipping_addr.phone_number }}</dd>
-         {% endif %}
-         {% if shipping_address.notes %}
-         <dt>Shipping notes</dt>
-         <dd>{{ shipping_addr.notes }}</dd>
-         {% endif %} 
-     </dl>
-     <div class="alert-actions">
-         <a href="{% url checkout:shipping-address %}" class="btn">Change shipping address</a>
-     </div>
-</div>
-{% endblock shipping_address %}
-
 {% block shipping_method %}
 <div class="sub-header">
     <h3>Shipping method</h3>

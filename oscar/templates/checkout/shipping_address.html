@@ -11,9 +11,9 @@ Shipping address | {{ block.super }}
 {% block order_contents %}{% endblock %}
 
 {% block shipping_address %}
-
-    <h1>Where should we ship to?</h1>
-
+<div class="sub-header">
+    <h2>Where should we ship to?</h2>
+</div>
     {% if request.user.is_authenticated %}
         {% if addresses %}
             <div class="sub-header">
@@ -24,12 +24,12 @@ Shipping address | {{ block.super }}
                     {% for address in addresses %}
                         <li>
                         <div class="well well-info">
-                        <p>{{ address.summary }}</p>
+                        <address>{{ address.summary }}</address>
                         <form action="{% url checkout:shipping-address %}" method="post">
                             {% csrf_token %}
                             <input type="hidden" name="action" value="ship_to" />
                             <input type="hidden" name="address_id" value="{{ address.id }}" />
-                            <input type="submit" value="Ship to this address" class="btn btn-primary btn-large"/>
+                            <input type="submit" value="Ship to this address" class="btn btn-primary btn-small"/>
                         </form>
 
                         <form action="{% url checkout:user-address-delete address.id %}" method="post" class="delete_address">
@@ -45,7 +45,9 @@ Shipping address | {{ block.super }}
         {% else %}
             <p>Your addressbook is currently empty</p>
         {% endif %}
-        <div class="form-actions">
+        
+		
+		<div class="form-actions">
             <a href="{% url checkout:user-address-create %}" class="btn">Add a new address to your address book</a>
         </div>
     {% endif %}
