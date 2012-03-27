@@ -14,10 +14,15 @@ Payment details | {{ block.super }}
 {% block shipping_method %}{% endblock %}
 
 {% block payment_details %}
-<h1>Payment details</h1>
+<div class="sub-header">
+	<h2>Payment details</h2>
+</div>
 <p>This is where a bankcard form might appear.</p>
-<form method="post" action="{% url checkout:preview %}">
+	<form method="post" action="{% url checkout:preview %}">
     {% csrf_token %}
-    <div class="form-actions"><button type="submit" class="btn btn-primary btn-large">Continue</button></div>
-</form>
+	<div class="well">
+    	<div class="form-actions"><button type="submit" class="pull-right btn btn-primary btn-small">Continue</button></div>
+	</div>
+	</form>
+
 {% endblock %}

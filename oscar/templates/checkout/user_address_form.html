@@ -13,7 +13,7 @@
         {% csrf_token %}
         {% include "partials/form_fields.html" with form=form %}
         <div class="form-actions">
-            <button type="submit" class="btn btn-large btn-primary">Save</button>
+            <button type="submit" class="btn btn-small btn-primary">Save</button>
             or <a href="{% url checkout:shipping-address %}">cancel</a>.
 
         </div>
