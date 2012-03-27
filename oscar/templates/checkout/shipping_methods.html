@@ -36,7 +36,7 @@ Shipping method | {{ block.super }}
                 <form method="post" action="{% url checkout:shipping-method %}">
                     {% csrf_token %}
                     <input type="hidden" name="method_code" value="{{ method.code }}" class="btn" />
-                    <button type="submit" class="btn btn-large btn-primary">Use this shipping method</button>
+                    <button type="submit" class="btn btn-small btn-primary">Use this shipping method</button>
                 </form>
             </td>
         </tr>

@@ -11,9 +11,6 @@ Shipping address | {{ block.super }}
 {% block order_contents %}{% endblock %}
 
 {% block shipping_address %}
-<div class="sub-header">
-    <h2>Where should we ship to?</h2>
-</div>
     {% if request.user.is_authenticated %}
         {% if addresses %}
             <div class="sub-header">
@@ -46,19 +43,23 @@ Shipping address | {{ block.super }}
             <p>Your addressbook is currently empty</p>
         {% endif %}
         
-		
+	</div>
+	<div class="span6">
+		<div class="sub-header">
+			<h4>Add a new address</h4>
+		</div>
 		<div class="form-actions">
             <a href="{% url checkout:user-address-create %}" class="btn">Add a new address to your address book</a>
         </div>
     {% endif %}
 
-    <form action="{% url checkout:shipping-address %}" method="post" class="form-horizontal">
-        {% csrf_token %}
-        {% include "partials/form_fields.html" with form=form %}
-        <div class="form-actions"><button type="submit" class="btn btn-large btn-primary">Continue</button>
-            or <a href="{% url basket:summary %}">return to basket</a></div>
-    </form>
-
+    	<form action="{% url checkout:shipping-address %}" method="post" class="form-horizontal">
+	        {% csrf_token %}
+	        {% include "partials/form_fields.html" with form=form %}
+	        <div class="form-actions"><button type="submit" class="btn btn-small btn-primary">Continue</button>
+	            or <a href="{% url basket:summary %}">return to basket</a></div>
+	    </form>
+	</div>
 {% endblock shipping_address %}
 
 {% block shipping_method %}{% endblock %}

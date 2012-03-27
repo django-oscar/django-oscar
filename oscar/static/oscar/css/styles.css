@@ -3113,8 +3113,12 @@ body {
 }
 .choose_shipping_address .well .delete_address {
   position: absolute;
-  top: 19px;
+  bottom: 10px;
   right: 19px;
+  margin-bottom: 0;
+}
+.choose_shipping_address .well .delete_address input {
+  margin-bottom: 0;
 }
 .choose_shipping_address .alert-actions {
   *zoom: 1;
