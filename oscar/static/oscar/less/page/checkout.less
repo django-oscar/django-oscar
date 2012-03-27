@@ -73,11 +73,21 @@
   margin-top:10px;
   ul {
     .remove_bullets();
+    li {
+        width: @third;
+        float: left;
+    }
   }
   .well {
     position:relative;
+    margin: 0 10px 15px;
+    height: 150px;
     form {
       margin-bottom:0px;
+      .ship-address {
+          bottom: 0;
+          position: absolute;
+      }
     }
     .delete_address {
       position:absolute;
@@ -103,6 +113,7 @@
     }
   } 
 }
+
 .total {
   font-size: @baseFontSize + 3;
   padding:3px 0px;

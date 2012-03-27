@@ -3140,11 +3140,21 @@ body {
   padding: 0px;
   list-style: none;
 }
+.choose_shipping_address ul li {
+  width: 33.33333333333333%;
+  float: left;
+}
 .choose_shipping_address .well {
   position: relative;
+  margin: 0 10px 15px;
+  height: 150px;
 }
 .choose_shipping_address .well form {
   margin-bottom: 0px;
+}
+.choose_shipping_address .well form .ship-address {
+  bottom: 0;
+  position: absolute;
 }
 .choose_shipping_address .well .delete_address {
   position: absolute;
