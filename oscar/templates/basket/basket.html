@@ -172,56 +172,47 @@ Basket | {{ block.super }}
 
 {% endif %}
 
+<div class="well">
+    <div class="sub-header">
+        <h3>To buy later</h3>
+    </div>
 
-<div class="sub-header">
-    <h2>To buy later</h2>
-</div>
+    {% if not saved_formset %}
+    <p>Your saved basket is empty.</p>
 
-{% if not saved_formset %}
-<p>Your saved basket is empty.</p>
-
-{% else %}
-<div class="row-fluid basket-title">
-    <h4 class="span6">Items saved</h4>
-    <h4 class="span3">Quantity</h4>
-    <h4 class="span3">Price</h4>
-</div>
-<form action="{% url basket:saved %}" method="post" class="form-stacked later_summary" id="saved_basket_formset">
-    {% csrf_token %}
-    {{ saved_formset.management_form }}
-
-
-
-
+    {% else %}
+    <div class="row-fluid basket-title">
+        <h4 class="span8">To buy an item now, click "Move to cart"</h4>
+        <h4 class="span4">Price</h4>
+    </div>
+    <form action="{% url basket:saved %}" method="post" class="form-stacked later_summary" id="saved_basket_formset">
+        {% csrf_token %}
+        {{ saved_formset.management_form }}
         {% for form in saved_formset %}
         <div class="row-fluid basket-items">
-    	    <div class="span6">
-				{{ form.id }}
-				{% product_image form.instance.product as product_image %}
-				<div class="image_container">
-					<a href="{{ product.get_absolute_url }}">
-					    <img class="thumbnail" src="{{ product_image.thumbnail_url }}" alt="{{ product.get_title }}">
-					</a>
-				</div>
-				<h4><a href="{{ form.instance.product.get_absolute_url }}">{{ form.instance.description }}</a></h4>
-				<p class="app-ico instock avaliability ">{{ form.instance.product.stockrecord.availability }}</p>
-			</div>
-			<div class="span3">
-			    <div class="checkout-quantity">
-    				<a href="#" data-id="{{ forloop.counter0 }}" class="remove">Remove</a>
-    				<div style="display:none">
-    					{{ form.move_to_basket }}
-    					{{ form.DELETE }}
-    				</div>
-				</div>
-			</div>
-            <div class="span1">{{ form.instance.unit_price_incl_tax|currency }}</div>
+    	    <div class="span8">
+    			{{ form.id }}
+    			{% product_image form.instance.product as product_image %}
+    			<div class="image_container">
+    				<a href="{{ product.get_absolute_url }}">
+    				    <img class="thumbnail" src="{{ product_image.thumbnail_url }}" alt="{{ product.get_title }}">
+    				</a>
+    			</div>
+    			<h4><a href="{{ form.instance.product.get_absolute_url }}">{{ form.instance.description }}</a></h4>
+    			<p class="app-ico instock avaliability ">{{ form.instance.product.stockrecord.availability }}</p>
+    			<a href="#" data-id="{{ forloop.counter0 }}" class="remove">Remove</a>
+    			<div style="display:none">
+    				{{ form.move_to_basket }}
+    				{{ form.DELETE }}
+    			</div>
+    		</div>
+            <div class="span2">{{ form.instance.unit_price_incl_tax|currency }}</div>
             <div class="span2"><a href="#" data-id="{{ forloop.counter0 }}" class="btn btn-success pull-right move">Move to basket</a></div>
         </div>
         {% endfor %}
-</form>
-{% endif %}
-
+    </form>
+    {% endif %}
+</div>
 {% endblock content %}
 
 {% block onbodyload %}
