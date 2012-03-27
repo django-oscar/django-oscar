@@ -19,23 +19,25 @@ Shipping address | {{ block.super }}
             <div class="choose_shipping_address">
                 <ul>
                     {% for address in addresses %}
-                        <li>
-                        <div class="well well-info">
-                        <address>{{ address.summary }}</address>
-                        <form action="{% url checkout:shipping-address %}" method="post">
-                            {% csrf_token %}
-                            <input type="hidden" name="action" value="ship_to" />
-                            <input type="hidden" name="address_id" value="{{ address.id }}" />
-                            <input type="submit" value="Ship to this address" class="btn btn-primary btn-small"/>
-                        </form>
+					<li>
+						<div class="well well-info">
+							<address>{% for field in address.active_address_fields %}
+							{{ field }}<br/>
+							{% endfor %}</address>
+							<form action="{% url checkout:shipping-address %}" method="post">
+								{% csrf_token %}
+								<input type="hidden" name="action" value="ship_to" />
+								<input type="hidden" name="address_id" value="{{ address.id }}" />
+								<input type="submit" value="Ship to this address" class="btn btn-primary btn-small ship-address"/>
+							</form>
 
-                        <form action="{% url checkout:user-address-delete address.id %}" method="post" class="delete_address">
-                            {% csrf_token %}
-                            <a class="btn btn-small btn-info" href="{% url checkout:user-address-update address.id %}">Edit</a>
-                            <input type="submit" value="Delete" class="btn btn-small btn-danger" />
-                        </form>
-                        </div>
-                        </li>
+							<form action="{% url checkout:user-address-delete address.id %}" method="post" class="delete_address">
+								{% csrf_token %}
+								<a class="btn btn-small btn-info" href="{% url checkout:user-address-update address.id %}">Edit</a>
+								<input type="submit" value="Delete" class="btn btn-small btn-danger" />
+							</form>
+						</div>
+					</li>
                     {% endfor %}
                 </ul>
             </div>
@@ -44,13 +46,13 @@ Shipping address | {{ block.super }}
         {% endif %}
         
 	</div>
-	<div class="span6">
+	<div class="row-fluid">
 		<div class="sub-header">
 			<h4>Add a new address</h4>
 		</div>
-		<div class="form-actions">
+		<!-- <div class="form-actions">
             <a href="{% url checkout:user-address-create %}" class="btn">Add a new address to your address book</a>
-        </div>
+        </div> -->
     {% endif %}
 
     	<form action="{% url checkout:shipping-address %}" method="post" class="form-horizontal">
