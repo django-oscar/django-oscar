@@ -16,11 +16,11 @@ Shipping address | {{ block.super }}
     </div>
     {% if request.user.is_authenticated %}
         {% if addresses %}
-            <div class="sub-header">
-                <h4>Choose a shipping address from your address book</h4>
-            </div>
-            <div class="choose_shipping_address">
-                <ul>
+            
+            <h4>Choose a shipping address from your address book</h4>
+      
+            <div class="choose-block">
+                <ul class="clearfix">
                     {% for address in addresses %}
 					<li>
 						<div class="well well-info">
@@ -34,7 +34,7 @@ Shipping address | {{ block.super }}
 								<input type="submit" value="Ship to this address" class="btn btn-primary btn-small ship-address"/>
 							</form>
 
-							<form action="{% url checkout:user-address-delete address.id %}" method="post" class="delete_address">
+							<form action="{% url checkout:user-address-delete address.id %}" method="post" class="remove-item">
 								{% csrf_token %}
 								<a class="btn btn-small btn-info" href="{% url checkout:user-address-update address.id %}">Edit</a>
 								<input type="submit" value="Delete" class="btn btn-small btn-danger" />
@@ -44,27 +44,31 @@ Shipping address | {{ block.super }}
                     {% endfor %}
                 </ul>
             </div>
+            <div class="sub-header">
+    			<h2>Or</h2>
+    		</div>
         {% else %}
             <p>Your addressbook is currently empty</p>
         {% endif %}
         
 	</div>
-	<div class="row-fluid">
-		<div class="sub-header">
-			<h4>Add a new address</h4>
-		</div>
-		<!-- <div class="form-actions">
-            <a href="{% url checkout:user-address-create %}" class="btn">Add a new address to your address book</a>
-        </div> -->
+	
+	<br/>
+	<!-- <div class="form-actions">
+        <a href="{% url checkout:user-address-create %}" class="btn">Add a new address to your address book</a>
+    </div> -->
     {% endif %}
-
+    <div class="well well-info">
+        <div class="sub-header">
+            <h3>Add a new address</h3>
+        </div>
     	<form action="{% url checkout:shipping-address %}" method="post" class="form-horizontal">
-	        {% csrf_token %}
-	        {% include "partials/form_fields.html" with form=form %}
-	        <div class="form-actions"><button type="submit" class="btn btn-small btn-primary">Continue</button>
-	            or <a href="{% url basket:summary %}">return to basket</a></div>
-	    </form>
-	</div>
+            {% csrf_token %}
+            {% include "partials/form_fields.html" with form=form %}
+            <div class="form-actions"><button type="submit" class="btn btn-small btn-primary">Continue</button>
+                or <a href="{% url basket:summary %}">return to basket</a></div>
+        </form>
+    </div>
 {% endblock shipping_address %}
 
 {% block shipping_method %}{% endblock %}

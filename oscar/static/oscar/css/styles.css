@@ -3136,78 +3136,58 @@ body {
 .shipping_address h2 {
   margin-bottom: 18px;
 }
-.choose_shipping_address {
+.choose-block {
   margin-top: 10px;
 }
-.choose_shipping_address ul {
+.choose-block ul {
   margin: 0px;
   padding: 0px;
 }
-.choose_shipping_address ul li {
+.choose-block ul li {
   padding: 0px;
   list-style: none;
 }
-.choose_shipping_address ul li {
+.choose-block ul li {
   width: 33.33333333333333%;
   float: left;
 }
-.choose_shipping_address .well {
+.choose-block .well {
   position: relative;
   margin: 0 10px 20px;
   height: 150px;
 }
-.choose_shipping_address .well form {
+.choose-block .well form {
   margin-bottom: 0px;
 }
-.choose_shipping_address .well form .ship-address {
+.choose-block .well form .ship-address {
   bottom: 0;
   position: absolute;
 }
-.choose_shipping_address .well .delete_address {
+.choose-block .well .remove-item {
   position: absolute;
   bottom: 10px;
   right: 19px;
   margin-bottom: 0;
 }
-.choose_shipping_address .well .delete_address input {
+.choose-block .well .remove-item input {
   margin-bottom: 0;
 }
-.choose_shipping_address .alert-actions {
+.choose-block .alert-actions {
   *zoom: 1;
 }
-.choose_shipping_address .alert-actions:before, .choose_shipping_address .alert-actions:after {
+.choose-block .alert-actions:before, .choose-block .alert-actions:after {
   display: table;
   content: "";
 }
-.choose_shipping_address .alert-actions:after {
+.choose-block .alert-actions:after {
   clear: both;
 }
-.choose_shipping_address .alert-actions form, .choose_shipping_address .alert-actions a {
+.choose-block .alert-actions form, .choose-block .alert-actions a {
   float: left;
   margin: 0px 5px;
 }
-.choose_shipping_address .alert-actions form input {
+.choose-block .alert-actions form input {
   width: auto;
-}
-.choose_card {
-  margin-top: 10px;
-}
-.choose_card ul {
-  margin: 0px;
-  padding: 0px;
-}
-.choose_card ul li {
-  padding: 0px;
-  list-style: none;
-}
-.choose_card ul li {
-  width: 33.33333333333333%;
-  float: left;
-}
-.choose_card .well {
-  position: relative;
-  margin: 0 10px 20px;
-  height: 150px;
 }
 .total {
   background-color: #FDF5D9!important;

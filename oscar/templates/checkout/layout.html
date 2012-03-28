@@ -10,39 +10,13 @@
 {% endblock %}
 
 {% block layout %}
-    {% include "partials/nav_checkout.html" %}
+    {% include "partials/nav_accounts.html" %}
     
     <header class="header container-fluid">
         <div class="row-fluid">
             {% include "partials/brand.html" with hide_basket=1 %}
         </div><!-- /row-fluid -->
-        <div class="navbar primary">
-            <div class="navbar-inner">
-                <div class="container" style="width: auto;">
-                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </a>
-                    <a class="brand hidden" href="{% url promotions:home %}">Oscar</a>
-                    <div class="nav-collapse">
-
-                        <ul class="nav">
-                           <!-- Links to modal flatpages -->
-                           {% load flatpages %}
-                           {% get_flatpages '/order/' as flatpages %}
-                           {% for page in flatpages %}
-                           <li>
-                              <a data-toggle="modal" href="#{{ page.title|slugify }}">{{ page.title }}</a>
-                           </li>
-                           {% endfor %}
-                           <!-- Delete this if other links present -->
-                           <li><a href="/">&larr;</a></li>
-                        </ul>
-                    </div><!-- /.nav-collapse -->
-                </div>
-            </div><!-- /navbar-inner -->
-        </div><!-- /navbar -->
+        {% include "partials/nav_checkout.html" %}
     </header><!-- /header -->
     <div class="container-fluid page">
         {% for message in messages %}

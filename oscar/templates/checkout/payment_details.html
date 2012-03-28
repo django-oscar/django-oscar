@@ -18,41 +18,36 @@ Payment details | {{ block.super }}
 <div class="sub-header">
 	<h2>How would you like to pay?</h2>
 </div>
-<div class="sub-header">
-	<h4>Use an existing card</h4>
-</div>
-<div class="well form-inline">
-	<div class="controls">
-		<label class="radio">
-			<input id="optionsRadios1" type="radio" checked="" value="option1" name="optionsRadios"><strong>Credit Card</strong> - Recommended
-		</label>
-	</div>
-	<div class="choose_card">
-        <ul>
-			<li>
+<h4>Choose an existing card</h4>
+<div class="choose-block">
+    <ul class="clearfix">
+		<li>
+		    <div class="well well-success">
+                <span>
+                    xxxx-xxxx-xxxx-4121<br/>
+                    Visa<br/>
+                    04/13<br/>
+                    Gareth Williams<br/>
+                </span>
 				<form method="post" action="{% url checkout:preview %}">
-			    {% csrf_token %}
-					<form action="" method="post">
-						<input type="submit" value="Choose this card" class="btn btn-primary btn-small ship-address"/>
-					</form>
-
-					<form action="" method="post" class="delete_address">
-						<a class="btn btn-small btn-info" href="">Edit</a>
-						<input type="submit" value="Delete" class="btn btn-small btn-danger" />
-					</form>
+			        {% csrf_token %}
+				    <input type="submit" value="Choose this card" class="btn btn-primary btn-small ship-address"/>
 				</form>
-			</li>
-        </ul>
-    </div>
+				<form action="" method="post" class="remove-item">
+					<a class="btn btn-small btn-info" href="">Edit</a>
+					<input type="submit" value="Delete" class="btn btn-small btn-danger" />
+				</form>
+			</div>
+		</li>
+    </ul>
 </div>
-<form class="well well-info">
+<div class="sub-header">
+	<h2>Or</h2>
+</div>
+<form class="well well-success">
 	<div class="sub-header">
-		<div class="controls">
-			<label class="radio">
-				<input id="optionsRadios1" type="radio" checked="" value="option1" name="optionsRadios"><strong>Or use a new card</strong>
-			</label>
-		</div>
-	</div>
+        <h3>Add a new card</h3>
+    </div>
 	<div class="row-fluid">
 		<div class="span6">
 			<label>Card Number</label>
@@ -69,7 +64,15 @@ Payment details | {{ block.super }}
 			<input type="text" placeholder="Your name...">
 		</div>
 	</div>
+	<div class="form-actions">
+	    <button type="submit" class="btn btn-small btn-primary">Add Card</button>
+    </div>
 </form>
+<div class="sub-header">
+	<h2>Paypal</h2>
+</div>
+<p>Or if you would prefer to pay via Paypal click to go there now. <a href="http://www.paypal.com" title="paypal" class="btn" target="_blank">Paypal</a></p>
+
 
 
 

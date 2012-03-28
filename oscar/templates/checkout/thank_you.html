@@ -5,9 +5,7 @@
 Confirmation of order {{ order.number }} | {{ block.super }}
 {% endblock title %}
 
-{% block checkout-nav %}
-{% include 'checkout/nav.html' with step=4 %}
-{% endblock %}
+{% block checkout-nav %}{% endblock %}
 
 
 {% block content %}
@@ -20,7 +18,7 @@ with us regarding your order.</p>
 
 <div class="row-fluid">
     <div class="span6">
-        <div class="well well-success">
+        <div class="well well-info">
             <h3>Shipping</h3>
             <p>Your order will be delivered to:</p>
             {% for line in order.shipping_address.active_address_fields %}
@@ -29,7 +27,7 @@ with us regarding your order.</p>
         </div>
     </div>
     <div class="span6">
-        <div class="well well-info">
+        <div class="well well-success">
             <h3>Payment</h3>
             {% for source in order.sources.all %}
             {{ source }}
