@@ -1,4 +1,4 @@
-#!/usr/bin/env
+#!/usr/bin/env bash
 
 cd /var/www/oscar/django-oscar
 git pull
@@ -12,7 +12,7 @@ pip install -r testing-reqs.txt
 cd sandbox
 ./manage.py syncdb --noinput
 ./manage.py migrate
-./manage.py collectstatic
+./manage.py collectstatic --noinput
 
 # Re-compile python code
 touch deploy/wsgi/sandbox.wsgi

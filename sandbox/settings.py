@@ -9,7 +9,7 @@ TEMPLATE_DEBUG = True
 SQL_DEBUG = True
 
 ADMINS = (
-    # ('Your Name', 'your_email@domain.com'),
+    ('David', 'david.winterbottom@tangentlabs.co.uk'),
 )
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
@@ -64,7 +64,7 @@ MEDIA_URL = '/media/'
 #ADMIN_MEDIA_PREFIX = '/media/admin/'
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = (location('static/'),)
+STATICFILES_DIRS = ()
 STATIC_ROOT = location('public')
 
 # Make this unique, and don't share it with anybody.
@@ -146,6 +146,12 @@ LOGGING = {
              'filename': '/tmp/oscar.log',
              'formatter': 'verbose'
         },
+        'error_file': {
+             'level': 'INFO',
+             'class': 'logging.FileHandler',
+             'filename': '/tmp/errors.log',
+             'formatter': 'verbose'
+        },
         'mail_admins': {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler',
@@ -158,7 +164,7 @@ LOGGING = {
             'level':'INFO',
         },
         'django.request': {
-            'handlers': ['mail_admins'],
+            'handlers': ['mail_admins', 'error_file'],
             'level': 'ERROR',
             'propagate': False,
         },
