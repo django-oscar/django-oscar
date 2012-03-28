@@ -80,7 +80,7 @@
   }
   .well {
     position:relative;
-    margin: 0 10px 15px;
+    margin: 0 10px 20px;
     height: 150px;
     form {
       margin-bottom:0px;
@@ -114,6 +114,22 @@
   } 
 }
 
+.choose_card {
+    margin-top: 10px;
+    ul {
+      .remove_bullets();
+      li {
+          width: @third;
+          float: left;
+      }
+    }
+    .well {
+        position: relative;
+        margin: 0 10px 20px;
+        height: 150px;
+    }   
+}
+
 .total {
   font-size: @baseFontSize + 3;
   padding:3px 0px;
@@ -125,7 +141,7 @@
 }
 
 .checkoutNav ul li {
-    background: none repeat scroll 0 0 @grayLight;
+    background: none repeat scroll 0 0 @grayLighter;
     color: #FFFFFF;
     float: left;
     height: 24px;
@@ -137,13 +153,13 @@
     h3 {
         text-align: center;
         font-size: 11px;
-        color: @grayLighter;
+        color: @grayLight;
         margin-left: 12px;
     }
 }
 
 .checkoutNav ul li:after {
-    border-color: transparent transparent transparent @grayLight;
+    border-color: transparent transparent transparent @grayLighter;
     border-style: solid;
     border-width: 14px 0 15px 15px;
     content: "";
