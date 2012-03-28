@@ -3146,7 +3146,7 @@ body {
 }
 .choose_shipping_address .well {
   position: relative;
-  margin: 0 10px 15px;
+  margin: 0 10px 20px;
   height: 150px;
 }
 .choose_shipping_address .well form {
@@ -3182,6 +3182,26 @@ body {
 .choose_shipping_address .alert-actions form input {
   width: auto;
 }
+.choose_card {
+  margin-top: 10px;
+}
+.choose_card ul {
+  margin: 0px;
+  padding: 0px;
+}
+.choose_card ul li {
+  padding: 0px;
+  list-style: none;
+}
+.choose_card ul li {
+  width: 33.33333333333333%;
+  float: left;
+}
+.choose_card .well {
+  position: relative;
+  margin: 0 10px 20px;
+  height: 150px;
+}
 .total {
   font-size: 16px;
   padding: 3px 0px;
@@ -3192,7 +3212,7 @@ body {
   background-color: #FDF5D9!important;
 }
 .checkoutNav ul li {
-  background: none repeat scroll 0 0 #999999;
+  background: none repeat scroll 0 0 #eeeeee;
   color: #FFFFFF;
   float: left;
   height: 24px;
@@ -3205,11 +3225,11 @@ body {
 .checkoutNav ul li h3 {
   text-align: center;
   font-size: 11px;
-  color: #eeeeee;
+  color: #999999;
   margin-left: 12px;
 }
 .checkoutNav ul li:after {
-  border-color: transparent transparent transparent #999999;
+  border-color: transparent transparent transparent #eeeeee;
   border-style: solid;
   border-width: 14px 0 15px 15px;
   content: "";
