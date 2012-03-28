@@ -11,6 +11,9 @@ Shipping address | {{ block.super }}
 {% block order_contents %}{% endblock %}
 
 {% block shipping_address %}
+    <div class="sub-header">
+        <h2>Where should we ship to?</h2>
+    </div>
     {% if request.user.is_authenticated %}
         {% if addresses %}
             <div class="sub-header">
@@ -65,3 +68,4 @@ Shipping address | {{ block.super }}
 {% endblock shipping_address %}
 
 {% block shipping_method %}{% endblock %}
+{% block payment_method %}{% endblock %}

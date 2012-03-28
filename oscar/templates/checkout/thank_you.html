@@ -40,57 +40,70 @@ with us regarding your order.</p>
 <div class="sub-header">
     <h3>Order details</h3>
 </div>
-<table class="table table-striped table-bordered">
-    <tr>
-        <th>Product</th>
-        <th>Estimated dispatch date</th>
-        <th>Quantity</th>
-        <th>Line price excl tax</th>
-        <th>Line price incl tax</th>
-    </tr>
-    {% for line in order.lines.all %}
-    <tr>
-        <td><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></td>
-        <td>{{ line.est_dispatch_date }}</td>
-        <td>{{ line.quantity }}</td>
-        <td>{{ line.line_price_before_discounts_excl_tax|currency }}</td>
-        <td>{{ line.line_price_before_discounts_incl_tax|currency }}</td>
-    </tr>
-    {% endfor %}
-    {% for discount in order.discounts.all %}
-    <tr>
-        <td>{{ discount.offer }}</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td>- {{ discount.amount|currency }}</td>
-    </tr>
-    {% endfor %}
-    <tr>
-        <td colspan="3">Basket total</td>
-        <td>{{ order.basket_total_excl_tax|currency }}</td>
-        <td>{{ order.basket_total_incl_tax|currency }}</td>
-    </tr>
-    <tr>
-        <td colspan="3">Shipping charge - {{order.shipping_method}}</td>
-        <td>{{ order.shipping_excl_tax|currency }}</td>
-        <td>{{ order.shipping_incl_tax|currency }}</td>
-    </tr>
-    <tr>
-        <td colspan="4">Order total</td>
-        <td>{{ order.total_incl_tax|currency }}</td>
-    </tr>
-</table>
+
+<div class="basket-title">
+    <div class="row-fluid">
+        <h4 class="span7">Items purchased</h4>
+        <h4 class="span3">Estimated dispatch date</h4>
+        <h4 class="span1">Quantity</h4>
+        <h4 class="span1">Cost</h4>
+    </div>
+</div>
+
+{% for line in order.lines.all %}
+<div class="basket-items">
+    <div class="row-fluid">
+        <div class="span7">
+            <h4><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h4>
+        </div>
+        <div class="span3">
+            {{ line.est_dispatch_date }}
+        </div>
+        <div class="span1">
+            {{ line.quantity }}
+        </div>
+        <div class="span1">
+            <span class="price">{{ line.line_price_before_discounts_incl_tax|currency }}</span>
+        </div>        
+    </div>
+</div>
+{% endfor %}
+{% for discount in order.discounts.all %}
+<div class="basket-items">
+    <div class="row-fluid">
+        <h4 class="span11">{{ discount.offer }}</h4>
+        <div class="span1">- {{ discount.amount|currency }}</div>
+    </div>
+</div>
+{% endfor %}
+<div class="basket-items">
+    <div class="row-fluid">
+        <h4 class="span11">Basket total</h4>
+        <div class="span1">{{ order.basket_total_incl_tax|currency }}</div>
+    </div>
+</div>
+<div class="basket-items">
+    <div class="row-fluid">
+        <h4 class="span11">Shipping charge - {{order.shipping_method}}</h4>
+        <div class="span1">{{ order.shipping_incl_tax|currency }}</div>
+    </div>
+</div>
+<div class="basket-items total">
+    <div class="row-fluid">
+        <h3 class="span11">Order total</h3>
+        <h3 class="span1">{{ order.total_incl_tax|currency }}</h3>
+    </div>
+</div>
  
 {% if not order.user %}
-<div class="sub-header">
-    <h4>Tracking your order</h4>
-</div>
-<p>You can track the status of your order at the following URL:</p>
-<p><a href="{% url customer:anon-order order.number order.verification_hash %}"> {% url customer:anon-order order.number order.verification_hash %}</a></p>
+    <div class="sub-header">
+        <h4>Tracking your order</h4>
+    </div>
+    <p>You can track the status of your order at the following URL:</p>
+    <p><a href="{% url customer:anon-order order.number order.verification_hash %}"> {% url customer:anon-order order.number order.verification_hash %}</a></p>
 {% endif %}
-
-<p><a href="/" class="btn btn-primary btn-large">Continue shopping</a></p>
- 
+<div class="form-actions clearfix">
+    <a href="/" class="btn btn-primary btn-large pull-right">Continue shopping</a>
+</div>
 {% endblock content %}
 
