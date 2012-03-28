@@ -245,3 +245,8 @@ OSCAR_ORDER_STATUS_PIPELINE = {
     'Being processed': ('Processed', 'Cancelled',),
     'Cancelled': (),
 }
+
+try:
+    from settings_local import *
+except ImportError:
+    pass
