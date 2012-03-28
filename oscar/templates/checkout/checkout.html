@@ -15,90 +15,76 @@ Checkout | {{ block.super }}
 {% block content %}
 
 {% block order_contents %}
-<div class="sub-header">
-    <h3>Order contents</h3>
-</div>
-<div class="basket-title">
-    <div class="row-fluid">
-        <h4 class="span10">Items Summary</h4>
-        <h4 class="span1">Quantity</h4>
-        <h4 class="span1">Price</h4>
+    <div class="sub-header">
+        <h3>Order contents</h3>
     </div>
-</div>
-{% for line in basket.lines.all %}
-<div class="basket-items">
-    <div class="row-fluid">
-        <div class="span10">
-            <h4><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h4>
-            <p class="app-ico instock avaliability ">{{ line.product.stockrecord.availability }}</p>
-        </div>
-        <div class="span1">
-            <p>{{ line.quantity }}<p>
-        </div>
-        <div class="span1">
-            <p class="price">{{ line.line_price_incl_tax|currency }}</p>
-        </div>        
-    </div>
-</div>
-{% endfor %}
-{% for discount in basket.discounts %}
-<div class="basket-items">
-    <div class="row-fluid">
-        <div class="span11">
-            <h4>{{ discount.name }}</h4>
-        </div>
-        <div class="span1">
-            <p>-{{ discount.discount|currency }}</p>
+    <div class="basket-title">
+        <div class="row-fluid">
+            <h4 class="span10">Items Summary</h4>
+            <h4 class="span1">Quantity</h4>
+            <h4 class="span1">Price</h4>
         </div>
     </div>
-</div>
-{% endfor %}
-{% if shipping_total_excl_tax %}
-<div class="basket-items">
-    <div class="row-fluid">
-        <div class="span11">
-            <h4>Shipping charge</h4>
-        </div>
-        <div class="span1">
-            <p>{{ shipping_total_incl_tax|currency }}</p>
-        </div>
-    </div>
-</div>
-{% endif %}
-<div class="basket-items">
-    <div class="row-fluid">
-        <div class="span11">
-            <h4>Basket total</h4>
-        </div>
-        <div class="span1">
-            <p>{{ basket.total_incl_tax|currency }}</p>
+    {% for line in basket.lines.all %}
+    <div class="basket-items">
+        <div class="row-fluid">
+            <div class="span10">
+                <h4><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h4>
+                <span class="app-ico instock avaliability ">{{ line.product.stockrecord.availability }}</span>
+            </div>
+            <div class="span1">
+                {{ line.quantity }}
+            </div>
+            <div class="span1">
+                <span class="price">{{ line.line_price_incl_tax|currency }}</span>
+            </div>        
         </div>
     </div>
-</div>
-<div class="basket-items">
-    <div class="row-fluid">
-        <div class="span11">
-            <h4>Order total</h4>
-        </div>
-        <div class="span1">
-            <p>{{ order_total_incl_tax|currency }}</p>
+    {% endfor %}
+    {% for discount in basket.discounts %}
+    <div class="basket-items">
+        <div class="row-fluid">
+            <h4 class="span11">{{ discount.name }}</h4>
+            <div class="span1">
+                -{{ discount.discount|currency }}
+            </div>
         </div>
     </div>
-</div>
-<div class="form-actions">
-    <a href="{% url basket:summary %}" class="btn">Edit order contents</a>
-</div>
+    {% endfor %}
+    {% if shipping_total_excl_tax %}
+    <div class="basket-items">
+        <div class="row-fluid">
+            <h4 class="span11">Shipping charge</h4>
+            <div class="span1">{{ shipping_total_incl_tax|currency }}</div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="basket-items">
+        <div class="row-fluid">
+            <h4 class="span11">Basket total:</h4>
+            <div class="span1">{{ basket.total_incl_tax|currency }}</div>
+        </div>
+    </div>
+    <div class="basket-items total">
+        <div class="row-fluid">
+            <h3 class="span11">Order total:</h3>
+            <h3 class="span1">{{ order_total_incl_tax|currency }}</h3>
+        </div>
+    </div>
+    <div class="form-actions">
+        <a href="{% url basket:summary %}" class="btn">Edit order contents</a>
+    </div>
 {% endblock order_contents %}
 
 <div class="sub-header">
     <h2>Where should we ship to?</h2>
 </div>
 <div class="row-fluid">
-
+    
 		{% block shipping_address %}
 		<div class="sub-header">
-							<h2>Shipping address</h2>
-						</div>
+			<h2>Shipping address</h2>
+		</div>
 		<div class="well well-success">
 			<dl>
 				<dt>Address</dt>
@@ -121,11 +107,15 @@ Checkout | {{ block.super }}
 			</div>
 		</div>
 		{% endblock shipping_address %}
-	<!-- <div class="span6">
-			<div class="sub-header">
-				<h2>Payment</h2>
-			</div>
-		</div> -->
+
+    <!-- <div class="span6">
+            <div class="sub-header">
+                <h2>Payment</h2>
+            </div>
+            <div class="well well-info">
+                <p>Payment details to go here</p>
+            </div>    
+        </div> -->
 </div>
 {% block shipping_method %}
 <div class="sub-header">
