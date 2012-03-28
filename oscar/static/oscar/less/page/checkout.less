@@ -22,23 +22,30 @@
 .basket-title {
   clear:both;
   border-bottom:1px solid lighten(@grayLight, 30%);
-  padding-bottom:10px;
-  margin-bottom:10px;
+  padding:10px;
 }
 .basket-items {
   border-bottom:1px solid lighten(@grayLight, 30%);
-  margin-bottom:10px;
+  padding:10px;
   [class*="span"] {
     .image_container {
-      width:75px;
+      height:50px;
+      width:70px;
       float:left;
       margin-right:15px;
     }
+    img {
+      max-height:50px;
+    }
+  }
+  &:nth-child(even) {
+      background:lighten(@grayLighter, 4%);
   }
   .price {
     font-size:@baseFontSize + 2;
     color:@green;
     font-weight:bold;
+    text-align:center;
   }
 }
 
@@ -69,17 +76,28 @@
     margin-bottom: @baseLineHeight;
   }
 }
-.choose_shipping_address {
+.choose-block {
   margin-top:10px;
   ul {
     .remove_bullets();
+    .clearfix();
+    li {
+        width: @third;
+        float: left;
+    }
   }
   .well {
     position:relative;
+    margin: 0 10px 20px;
+    height: 150px;
     form {
       margin-bottom:0px;
+      .ship-address {
+          bottom: 0;
+          position: absolute;
+      }
     }
-    .delete_address {
+    .remove-item {
       position:absolute;
       bottom: 10px;
       right: 19px;
@@ -103,18 +121,13 @@
     }
   } 
 }
+
 .total {
-  font-size: @baseFontSize + 3;
-  padding:3px 0px;
-  text-align:right;
-  font-weight:bold;
-  td,th {
-      background-color:#FDF5D9!important;
-  }
+  background-color:#FDF5D9!important;
 }
 
 .checkoutNav ul li {
-    background: none repeat scroll 0 0 @grayLight;
+    background: none repeat scroll 0 0 @grayLighter;
     color: #FFFFFF;
     float: left;
     height: 24px;
@@ -126,13 +139,13 @@
     h3 {
         text-align: center;
         font-size: 11px;
-        color: @grayLighter;
+        color: @grayLight;
         margin-left: 12px;
     }
 }
 
 .checkoutNav ul li:after {
-    border-color: transparent transparent transparent @grayLight;
+    border-color: transparent transparent transparent @grayLighter;
     border-style: solid;
     border-width: 14px 0 15px 15px;
     content: "";
