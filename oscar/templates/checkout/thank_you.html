@@ -100,7 +100,7 @@ with us regarding your order.</p>
     <p>You can track the status of your order at the following URL:</p>
     <p><a href="{% url customer:anon-order order.number order.verification_hash %}"> {% url customer:anon-order order.number order.verification_hash %}</a></p>
 {% endif %}
-<div class="form-actions clearfix">
+<div class="form-actions">
     <a href="/" class="btn btn-primary btn-large pull-right">Continue shopping</a>
 </div>
 {% endblock content %}

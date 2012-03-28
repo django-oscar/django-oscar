@@ -12,7 +12,7 @@ Order preview | {{ block.super }}
 <h3>Please review the information below, then click "Place Order"</h3>
 <form method="post" action="{% url checkout:payment-details %}">
 {% csrf_token %}
-    <div class="form-actions clearfix">
+    <div class="form-actions">
         <input id='place-order' type="submit" value="Place order" class="pull-right btn btn-primary btn-large js-disable-on-click" />
     </div>
 </form>
