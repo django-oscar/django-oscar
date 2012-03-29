@@ -21,7 +21,7 @@ order_model = get_model('order', 'Order')
 order_line_model = get_model('order', 'Line')
 basket_model = get_model('basket', 'Basket')
 user_address_model = get_model('address', 'UserAddress')
-email_model = get_model('customer', 'email')
+Email = get_model('customer', 'email')
 UserAddress = get_model('address', 'UserAddress')
 communicationtype_model = get_model('customer', 'communicationeventtype')
 
@@ -43,6 +43,7 @@ class AccountSummaryView(ListView):
         ctx['addressbook_size'] = self.request.user.addresses.all().count()
         ctx['default_shipping_address'] = self.get_default_shipping_address(self.request.user)
         ctx['default_billing_address'] = self.get_default_billing_address(self.request.user)
+        ctx['emails'] = Email.objects.filter(user=self.request.user)
         return ctx
 
     def get_default_billing_address(self, user):
@@ -152,7 +153,7 @@ class EmailHistoryView(ListView):
 
     def get_queryset(self):
         """Return a customer's orders"""
-        return email_model._default_manager.filter(user=self.request.user)
+        return Email._default_manager.filter(user=self.request.user)
 
 
 class EmailDetailView(DetailView):
@@ -162,7 +163,7 @@ class EmailDetailView(DetailView):
 
     def get_object(self):
         """Return an order object or 404"""
-        return get_object_or_404(email_model, user=self.request.user, id=self.kwargs['email_id'])
+        return get_object_or_404(Email, user=self.request.user, id=self.kwargs['email_id'])
 
 
 class OrderHistoryView(ListView):

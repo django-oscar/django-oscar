@@ -153,13 +153,13 @@ My account | {{ block.super }}
         <td>{{ email.date_sent }}</td>
         <td>{{ email.subject }}</td>
         <td>
-            <a href="{% url oscar-customer-email-view email.id %}">View</a>
+            <a href="{% url customer:email-detail email.id %}" class="btn btn-info">View</a>
         </td>
     </tr>
     {% endfor %}
 </table>
 <div class="form-actions">
-    <a href="{% url oscar-customer-email-history %}" class="btn">View email history</a>
+    <a href="{% url customer:email-list %}" class="btn btn-primary">View email history</a>
 <div>
 {% endif %}
 </div>

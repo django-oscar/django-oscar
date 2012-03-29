@@ -1,0 +1,22 @@
+{% load currency_filters %}<p>Hello,</p>
+
+<p>We are pleased to confirm your order {{ order.number }} has been received and
+will be processed shortly.</p>
+
+<p>Your order contains:</p>
+
+<ul>
+	{% for line in order.lines.all %}
+	<li>{{ line.title }} - quantity: {{ line.quantity }} - price: {{ line.line_price_incl_tax|currency }}</li>
+	{% endfor %}
+</ul>
+<p>
+Basket total: {{ order.basket_total_incl_tax|currency }}</br>
+Shipping: {{ order.shipping_incl_tax|currency }}</br>
+Order Total: {{ order.total_incl_tax|currency }}
+</p>
+
+<p>Shipping address:</p>
+<p>{% for field in order.shipping_address.active_address_fields %}  {{ field }}<br/>
+{% endfor %}</p>
+<p>The team</p>
