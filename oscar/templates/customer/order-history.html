@@ -50,6 +50,12 @@ Order history | {{ block.super }}
         <td>{{ order.date_placed }}</td>
         <td>
             <a class="btn btn-info" href="{% url customer:order order.number %}">View</a>
+			<form action="{% url customer:order order.number %}" method="post">
+				{% csrf_token %}
+				<input type="hidden" name="order_id" value="{{ order.id }}" />
+				<input type="hidden" name="action" value="reorder" />
+				<button type="submit" class="btn btn-success">Re-order</button>
+			</form>
         </td>
     </tr>
     {% endfor %}

@@ -197,7 +197,7 @@ class OrderHistoryView(ListView):
         return ctx
 
 
-class OrderDetailView(DetailView):
+class OrderDetailView(DetailView, PostActionMixin):
     """Customer order details"""
     model = order_model
 
@@ -206,6 +206,22 @@ class OrderDetailView(DetailView):
 
     def get_object(self):
         return get_object_or_404(self.model, user=self.request.user, number=self.kwargs['order_number'])
+
+    def do_reorder(self, order):
+        self.response = HttpResponseRedirect(reverse('basket:summary'))
+        basket = self.request.basket
+
+        # Convert line attributes into basket options
+        for line in order.lines.all():
+            if not line.product:
+                messages.warning(self.request, "'%s' unavailable for re-order" % line.title)
+                continue
+            options = []
+            for attribute in line.attributes.all():
+                if attribute.option:
+                    options.append({'option': attribute.option, 'value': attribute.value})
+            basket.add_product(line.product, 1, options)
+        messages.info(self.request, "Order %s reordered" % order.number)
 
 
 class OrderLineView(DetailView, PostActionMixin):
