@@ -5,12 +5,25 @@
 Address book | {{ block.super }}
 {% endblock %}
 
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url promotions:home %}">Home</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="{% url customer:summary %}">Account</a>
+        <span class="divider">/</span>
+    </li>
+	<li class="active"><a href=".">Address book</a></li>
+</ul>
+{% endblock %}
+
 {% block header %}
 <div class="page-header">
     <h2>Address Book</h2>
 </div>
 {% endblock header %}
-
 
 {% block content %}
 

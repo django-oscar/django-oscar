@@ -5,23 +5,36 @@
 Delete address? | {{ block.super }}
 {% endblock %}
 
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url promotions:home %}">Home</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="{% url customer:summary %}">Account</a>
+        <span class="divider">/</span>
+    </li>
+	<li>
+		<a href="{% url customer:address-list %}">Address book</a>
+		<span class="divider">/</span>
+	</li>
+	<li class="active"><a href=".">Delete address?</a></li>
+</ul>
+{% endblock %}
+
 {% block header %}
 <div class="page-header">
-    <h2>Address book</h2>
+    <h2>Delete address?</h2>
 </div>
 {% endblock header %}
 
-
 {% block content %}
-<div class="sub-header">
-    <h3>Confirm address deletion</h3>
-</div>
-<h3>Confirm address deletion</h3>
 <form action="." method="post" class="form-horizontal">
     {% csrf_token %}
     {% include "partials/form_fields.html" with form=form %}
     <div class="form-actions">
-        <input type="submit" value="Delete address" class="btn"/>
+        <input type="submit" value="Delete address" class="btn btn-danger btn-large"/>
     </div>
 </form>
 

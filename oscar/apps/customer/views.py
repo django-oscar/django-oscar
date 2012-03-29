@@ -249,6 +249,12 @@ class AddressListView(ListView):
 class AddressCreateView(CreateView):
     form_class = UserAddressForm
     mode = user_address_model
+    template_name = 'customer/address-form.html'
+
+    def get_context_data(self, **kwargs):
+        ctx =  super(AddressCreateView, self).get_context_data(**kwargs)
+        ctx['title'] = _('Add a new address')
+        return ctx
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
@@ -256,25 +262,26 @@ class AddressCreateView(CreateView):
         self.object.save()
         return HttpResponseRedirect(self.get_success_url())
 
-    def get_template_names(self):
-        return ["customer/address-create.html"]
-
     def get_success_url(self):
+        messages.success(self.request, _("Address saved"))
         return reverse('customer:address-list')
 
 
 class AddressUpdateView(UpdateView):
     form_class = UserAddressForm
     model = user_address_model
+    template_name = 'customer/address-form.html'
+
+    def get_context_data(self, **kwargs):
+        ctx =  super(AddressUpdateView, self).get_context_data(**kwargs)
+        ctx['title'] = _('Edit address')
+        return ctx
 
     def get_queryset(self):
-        """Return a customer's addresses"""
         return user_address_model._default_manager.filter(user=self.request.user)
 
-    def get_template_names(self):
-        return ["customer/address-form.html"]
-
     def get_success_url(self):
+        messages.success(self.request, _("Address saved"))
         return reverse('customer:address-detail', kwargs={'pk': self.get_object().pk })
 
 

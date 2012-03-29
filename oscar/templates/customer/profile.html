@@ -2,7 +2,17 @@
 {% load currency_filters %}
 
 {% block title %}
-Profile | {{ block.super }}
+My account | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url promotions:home %}">Home</a>
+        <span class="divider">/</span>
+    </li>
+	<li class="active"><a href=".">Account</a></li>
+</ul>
 {% endblock %}
 
 {% block header %}
@@ -12,9 +22,6 @@ Profile | {{ block.super }}
 {% endblock header %}
 
 {% block content %}
-<div class="sub-header">
-    <h2>Account settings</h2>
-</div>
 
 <div class="tabbable dashboard">
 	<ul class="nav nav-tabs">
@@ -51,8 +58,8 @@ Profile | {{ block.super }}
 					<tr>
 						<th></th>
 						<td>
-							<a href="" class="btn">Edit profile</a>
-							<a href="" class="btn">Change password</a>
+							<a href="" class="btn btn-primary">Edit profile</a>
+							<a href="" class="btn btn-danger">Change password</a>
 						</td>
 					</tr>
 				</tbody>
@@ -85,7 +92,7 @@ Profile | {{ block.super }}
 			</table>
 
 			<div class="form-actions">
-				<a href="{% url customer:order-list %}" class="btn">View order history</a>
+				<a href="{% url customer:order-list %}" class="btn btn-primary">View order history</a>
 			</div>
 			{% else %}
 			<p>You haven't placed any orders yet.</p>
