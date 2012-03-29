@@ -58,7 +58,7 @@ Basket | {{ block.super }}
     		    <div class="checkout-quantity">
     		        {{ form.quantity }} 
     		        <button class="btn">Update</button>
-    			    <a href="#" data-id="{{ forloop.counter0 }}" class="inline remove">Remove</a>
+    			    <a href="#" data-id="{{ forloop.counter0 }}" data-behaviours="remove" class="inline">Remove</a>
     			    <div style="display:none">
     				    {{ form.save_for_later }}
     				    {{ form.DELETE }}
@@ -70,7 +70,7 @@ Basket | {{ block.super }}
     	    </div>
     	    <div class="span2">
     		    {% if request.user.is_authenticated %}
-    		    <a href="#" data-id="{{ forloop.counter0 }}" class="btn btn-info pull-right save" >Save for later</a>
+    		    <a href="#" data-id="{{ forloop.counter0 }}" class="btn btn-info pull-right" data-behaviours="save" >Save for later</a>
     		    {% endif %}
     	    </div>
         </div>
@@ -206,14 +206,14 @@ Basket | {{ block.super }}
     			</div>
     			<h4><a href="{{ form.instance.product.get_absolute_url }}">{{ form.instance.description }}</a></h4>
     			<p class="app-ico instock avaliability ">{{ form.instance.product.stockrecord.availability }}</p>
-    			<a href="#" data-id="{{ forloop.counter0 }}" class="remove">Remove</a>
+    			<a href="#" data-id="{{ forloop.counter0 }}" data-behaviours="remove">Remove</a>
     			<div style="display:none">
     				{{ form.move_to_basket }}
     				{{ form.DELETE }}
     			</div>
     		</div>
             <div class="span2">{{ form.instance.unit_price_incl_tax|currency }}</div>
-            <div class="span2"><a href="#" data-id="{{ forloop.counter0 }}" class="btn btn-success pull-right move">Move to basket</a></div>
+            <div class="span2"><a href="#" data-id="{{ forloop.counter0 }}" class="btn btn-success pull-right" data-behaviours="move">Move to basket</a></div>
         </div>
         {% endfor %}
     </form>

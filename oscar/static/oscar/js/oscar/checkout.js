@@ -1,13 +1,13 @@
 var oscar = oscar || {};
 oscar.basket = {
     init: function() {
-        $('#basket_formset a.remove').click(function() {
+        $('#basket_formset a[data-behaviours~="remove"]').click(function() {
             oscar.basket.checkAndSubmit($(this), 'DELETE');
         });
-        $('#basket_formset a.save').click(function() {
+        $('#basket_formset a[data-behaviours~="save"]').click(function() {
             oscar.basket.checkAndSubmit($(this), 'save_for_later');
         });
-        $('#saved_basket_formset a.move').click(function() {
+        $('#saved_basket_formset a[data-behaviours~="move"]').click(function() {
             oscar.basket.checkAndSubmit($(this), 'move_to_basket');
         });
         $('#voucher_form_link a').click(function(e) {
