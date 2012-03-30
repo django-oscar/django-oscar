@@ -252,6 +252,8 @@ OSCAR_ORDER_STATUS_PIPELINE = {
     'Cancelled': (),
 }
 
+GOOGLE_ANALYTICS_ID = 'UA-XXXXX-Y'
+
 try:
     from settings_local import *
 except ImportError:
