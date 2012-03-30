@@ -16,7 +16,7 @@ Dashboard | {{ block.super }}
     <div class="navbar navbar-fixed-top">
         <div class="navbar-inner">
             <div class="container" style="width: auto;">
-                <a href="{% url promotions:home %}" class="brand">Oscar</a>
+				<a href="{% url promotions:home %}" class="brand">{{ shop_name }}</a>
                 <ul class="nav pull-right">
                     {% if user.is_authenticated %}
                         <li><span>Welcome <em>{{ user.username }}</em></span></li>

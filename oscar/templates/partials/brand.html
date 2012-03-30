@@ -1,6 +1,6 @@
 {% load currency_filters %}
 
-<h1 class="span6"><a href="{% url promotions:home %}">{% block brand_title %}Oscar</a><small> Domain-driven e-Commerce for Django</small>{% endblock %}</h1>
+<h1 class="span6"><a href="{% url promotions:home %}">{% block brand_title %}{{ shop_name }}</a><small> {{ shop_tagline }}</small>{% endblock %}</h1>
 {% if not hide_basket %}
 <ul class="cart span6">
     <li>

@@ -252,6 +252,8 @@ OSCAR_ORDER_STATUS_PIPELINE = {
     'Cancelled': (),
 }
 
+OSCAR_SHOP_NAME = 'Oscar Sandbox'
+
 GOOGLE_ANALYTICS_ID = 'UA-XXXXX-Y'
 
 try:
