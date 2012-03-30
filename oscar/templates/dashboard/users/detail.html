@@ -1,6 +1,7 @@
 {% extends 'dashboard/layout.html' %}
 {% load currency_filters %}
 {% block body_class %}users{% endblock %}
+
 {% block title %}
 User {{ user.username }} | {{ block.super }}
 {% endblock %}
@@ -11,13 +12,17 @@ User {{ user.username }} | {{ block.super }}
         <a href="{% url promotions:home %}">Dashboard</a>
         <span class="divider">/</span>
     </li>
-    <li class="active"><a href=".">Users</a></li>
+    <li>
+        <a href="{% url dashboard:users-index %}">Users</a>
+        <span class="divider">/</span>
+    </li>
+	<li class="active"><a href=".">#{{ user.id }}</a></li>
 </ul>
 {% endblock %}
 
 {% block header %}
     <div class="page-header">
-        <h1>User {{ user.username }}</h1>
+		<h1>User #{{ user.id }} - {{ user.email }}</h1>
     </div>
 {% endblock header %}
 
@@ -77,7 +82,7 @@ User {{ user.username }} | {{ block.super }}
              <td>{{ order.basket_total_incl_tax|currency }}</td>
              <td>{{ order.date_placed|date:"d/m/y H:s" }}</td>
              <td>{{ order.status }}</td>
-             <td><a href="{% url dashboard:order-detail order.number %}">Details</a></td>
+             <td><a href="{% url dashboard:order-detail order.number %}" class="btn btn-info">View</a></td>
          </tr>
          {% endfor %}
      </table>
@@ -85,6 +90,21 @@ User {{ user.username }} | {{ block.super }}
         <p>This user has not placed any orders yet.</p>
     {% endif %}
 </div>
+
+<div id="user_addresses">
+    <div class="sub-header">
+        <h2>Addresses</h2>
+    </div>
+	{% for address in user.addresses.all %}
+	    <div>
+			{% for field in address.active_address_fields %}
+			{{ field }}<br/>
+			{% endfor %}
+		</div>
+	{% endfor %}
+
+</div>
+
 <div id="user_reviews">
     <div class="sub-header">
         <h2>Reviews</h2>
