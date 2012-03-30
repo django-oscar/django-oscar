@@ -1,12 +1,13 @@
 import urlparse
 
 from django.shortcuts import get_object_or_404
-from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView, FormView
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, Http404
 from django.contrib import messages
 from django.utils.translation import ugettext as _
 from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.sites.models import get_current_site
 from django.conf import settings
 from django.db.models import get_model
@@ -329,3 +330,21 @@ class AnonymousOrderDetailView(DetailView):
             raise Http404()
 
         return order
+
+
+class ChangePasswordView(FormView):
+    form_class = PasswordChangeForm
+    template_name = 'customer/change-password.html'
+
+    def get_form_kwargs(self):
+        kwargs = super(ChangePasswordView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, "Password updated")
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse('customer:summary')
