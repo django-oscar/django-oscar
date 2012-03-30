@@ -11,8 +11,9 @@
         <!--[if lt IE 9]>
         <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
-        
-        <link rel="shortcut icon" href="{{ STATIC_URL }}oscar/favicon.ico" />
+        {% block favicon %}
+            <link rel="shortcut icon" href="{{ STATIC_URL }}oscar/favicon.ico" />
+        {% endblock %}
         <!-- Main styles - will need to be minified -->
         <link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/styles.css" />
         {% block extrahead %}{% endblock %}
