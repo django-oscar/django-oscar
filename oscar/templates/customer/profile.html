@@ -105,64 +105,65 @@ My account | {{ block.super }}
 			{% endif %}
 		</div>
 		
-<div class="tab-pane" id="3">
-<div class="sub-header">
-    <h3>Address book</h3>
-</div>
-<table class="table table-striped table-bordered">
-	<tbody>
-		<tr>
-			<th>Number of addresses in addressbook</th>
-			<td>{{ addressbook_size }}</td>
-		</tr>
-		<tr>
-			<th>Default shipping address</th>
-			<td>{{ default_shipping_address|default:"-" }}</td>
-		</tr>
-		<tr>
-			<th>Default billing address</th>
-			<td>{{ default_billing_address|default:"-" }}</td>
-		</tr>
-		<tr>
-			<th></th>
-			<td>
-				<a href="{% url customer:address-list %}" class="btn btn-primary">Manage address book</a>
-			</td>
-		</tr>
-	</tbody>
-</table>
-</div>
-<div class="tab-pane" id="4">
-<div class="sub-header">
-    <h3>Email history</h3>
-</div>
-{% if not emails %}
+        <div class="tab-pane" id="3">
+            <div class="sub-header">
+                <h3>Address book</h3>
+            </div>
+            <table class="table table-striped table-bordered">
+		<tbody>
+			<tr>
+				<th>Number of addresses in addressbook</th>
+				<td>{{ addressbook_size }}</td>
+			</tr>
+			<tr>
+				<th>Default shipping address</th>
+				<td>{{ default_shipping_address|default:"-" }}</td>
+			</tr>
+			<tr>
+				<th>Default billing address</th>
+				<td>{{ default_billing_address|default:"-" }}</td>
+			</tr>
+			<tr>
+				<th></th>
+				<td>
+					<a href="{% url customer:address-list %}" class="btn btn-primary">Manage address book</a>
+				</td>
+			</tr>
+		</tbody>
+            </table>
+        </div>
+        <div class="tab-pane" id="4">
+            <div class="sub-header">
+                <h3>Email history</h3>
+            </div>
+            {% if not emails %}
 
-<p>You haven't been sent any emails yet.</p>
+            <p>You haven't been sent any emails yet.</p>
 
-{% else %}
+            {% else %}
 
-<table class="table table-striped table-bordered">
-    <tr>
-        <th>Date sent</th>
-        <th>Subject</th>
-        <th></th>
-    </tr>
-    {% for email in emails %}
-    <tr>
-        <td>{{ email.date_sent }}</td>
-        <td>{{ email.subject }}</td>
-        <td>
-            <a href="{% url customer:email-detail email.id %}" class="btn btn-info">View</a>
-        </td>
-    </tr>
-    {% endfor %}
-</table>
-<div class="form-actions">
-    <a href="{% url customer:email-list %}" class="btn btn-primary">View email history</a>
-<div>
-{% endif %}
-</div>
+            <table class="table table-striped table-bordered">
+                <tr>
+                    <th>Date sent</th>
+                    <th>Subject</th>
+                    <th></th>
+                </tr>
+                {% for email in emails %}
+                <tr>
+                    <td>{{ email.date_sent }}</td>
+                    <td>{{ email.subject }}</td>
+                    <td>
+                        <a href="{% url customer:email-detail email.id %}" class="btn btn-info">View</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+            <div class="form-actions">
+                <a href="{% url customer:email-list %}" class="btn btn-primary">View email history</a>
+            <div>
+            {% endif %}
+        </div>
+    </div>
 </div><!--End of tab-content -->
 
 {% endblock content %}
