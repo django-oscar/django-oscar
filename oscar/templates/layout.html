@@ -16,11 +16,11 @@
         {% include "partials/nav_primary.html" %}
     </header><!-- /header -->
     <div class="container-fluid page">
-		{% block breadcrumbs %}{% endblock %}
-        {% include "partials/alert_messages.html" %}
         {% block header %}
         {% endblock %}
-        <div class="page_inner">	
+        <div class="page_inner">
+            {% block breadcrumbs %}{% endblock %}
+            {% include "partials/alert_messages.html" %}	
             {% block flatpage %}{% endblock %}
 			{% block content %}{% endblock %}
     	</div><!-- /page_inner -->

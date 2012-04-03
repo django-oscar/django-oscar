@@ -4,7 +4,7 @@
         {{ field }}
     {% else %}
         {% if field.field.required %}
-        <label for="{{ field.auto_id }}" class="required">{{ field.label }}</label>
+        <label for="{{ field.auto_id }}" class="control-label required">{{ field.label }}</label>
         {% else %}
             {{ field.label_tag }}
         {% endif %}

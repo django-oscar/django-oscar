@@ -34,7 +34,7 @@ Order management | {{ block.super }}
                     {% if field.is_hidden %}
                         {{ field }}
                     {% else %}
-                    {{ field.label_tag }}
+                    <label for="{{ field.auto_id }}" class="control-label">{{ field.label }}</label>
                     <div class="controls">
                         {{ field }}
                             {% for error in field.errors %}
@@ -52,9 +52,9 @@ Order management | {{ block.super }}
                 </div>
             {% else%}
                 <div class="control-group {% for error in form.response_format_0.errors %}error{% endfor %} pull-left">
-                    <label for="id_response_format_0">Get results as:</label>
+                    <label for="id_response_format_0" class="control-label">Get results as:</label>
                     <div class="controls">
-                        <label class="radio inline" for="id_response_format_0">
+                        <label class="radio inline control-label" for="id_response_format_0">
                             {{ form.response_format }}
                             {% for error in form.response_format.errors %}
                             <span class="help-block">
