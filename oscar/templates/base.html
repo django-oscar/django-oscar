@@ -15,7 +15,9 @@
             <link rel="shortcut icon" href="{{ STATIC_URL }}oscar/favicon.ico" />
         {% endblock %}
         <!-- Main styles - will need to be minified -->
+        {% block mainstylesheet %}
         <link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/styles.css" />
+        {% endblock %}
         {% block extrahead %}{% endblock %}
     </head>
     <body id="{% block body_id %}default{% endblock %}" class="{% block body_class %}default{% endblock %}">
