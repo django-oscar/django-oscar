@@ -1,3 +1,6 @@
+OSCAR_SHOP_NAME = 'Oscar'
+OSCAR_SHOP_TAGLINE = 'Domain-driven e-Commerce for Django'
+
 # Basket settings
 OSCAR_BASKET_COOKIE_LIFETIME = 7*24*60*60
 OSCAR_BASKET_COOKIE_OPEN = 'oscar_open_basket'

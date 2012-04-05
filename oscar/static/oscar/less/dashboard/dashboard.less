@@ -1,7 +1,10 @@
-// Core variables and mixins
-@import "bootstrap/variables.less"; // Modify this for custom colors, font-sizes, etc
-@import "bootstrap/mixins.less";
-@import "page/osc_mixins.less";
+// import base bootstrap - separate from frontend
+@import url("bootstrap.min.css");
+// Unique Fonts
+@import url("snowcone.css");
+// Core variables and mixins separate from frontend variables and mixins
+@import "variables.less"; // Modify this for custom colors, font-sizes, etc
+@import "mixins.less";
 
 // OSCAR DASHBOARD UNIQUE STYLES
 // -----------
@@ -46,7 +49,7 @@ body {
       }
     }
   }
-} 
+}
 .reports .subnav li.Reports > a,
 .orders .subnav li.Manage.orders > a,
 .users .subnav li.Users > a,
@@ -63,15 +66,9 @@ body {
 }
 .breadcrumb {
   margin-top:100px;
-} 
+}
 .content {
   background:#fff;
-  /*-webkit-box-shadow: -5px 5px 7px 0px rgba(0, 0, 0, .2);
-    -moz-box-shadow: -5px 5px 7px 0px rgba(0, 0, 0, .2);
-    box-shadow: -5px 5px 7px 0px rgba(0, 0, 0, .2);
-    -webkit-border-radius: 0 0 6px 6px;
-    -moz-border-radius: 0 0 6px 6px;
-  border-radius: 0 0 6px 6px;*/
   .page-content {
       padding:30px 0px;
   }
@@ -83,84 +80,6 @@ button {
 .primary-nav ul {
   margin:0px;
   padding:0px;
-}    
-.primary-nav {
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-  padding:0px;
-  background:#f7f7f7;
-  border:1px solid #bbb;
-  width:240px;
-  position:fixed;
-}
-.primary-nav li {
-  display:block;
-}
-.reports .primary-nav li.Reports > a,
-.orders .primary-nav li.Manage.orders > a,
-.users .primary-nav li.Users > a,
-.content-blocks .primary-nav li.Content.blocks > a,
-.catalogue .primary-nav li.Catalogue > a {
-  color: @blue;
-  text-shadow: 1px 1px 1px #fff;
-  filter: dropshadow(color=#fff, offx=1, offy=1);
-}
-.primary-nav li ul li {
-  margin:0px;
-  border-top:1px solid #ddd;
-  font-size: @baseFontSize - 2;
-}
-.primary-nav li ul li:first-child {
-  border-top:1px solid #bbb;
-}
-.primary-nav a {
-  display:block;
-  padding:5px 15px;
-}
-.primary-nav > li > a {
-  background:#ddd;
-  border-top:1px solid #bbb;
-  -webkit-box-shadow: inset -1px 1px 0px 0px rgba(255, 255, 255, .5);
-  -moz-box-shadow: inset -1px 1px 0px 0px rgba(255, 255, 255, .5);
-  box-shadow: inset -1px 1px 0px 0px rgba(255, 255, 255, .5);
-  font-weight:bold;
-  color:#444;
-}
-.primary-nav li:first-child > a {
-  border-top:none;
-  -moz-border-radius-topleft: 4px;
-  -moz-border-radius-topright: 4px;
-  -moz-border-radius-bottomright: 0px;
-  -moz-border-radius-bottomleft: 0px;
-  -webkit-border-radius: 4px 4px 0px 0px;
-  border-radius: 4px 4px 0px 0px;
-}
-.primary-nav li ul li a:hover {
-  background:#efefef;
-}
-.primary-nav .submenu {
-  background:url(../img/ui/icon_arrow_left.png) no-repeat 94% 50% #ddd;
-}
-.primary-nav .viewed {
-  background:url(../img/ui/icon_arrow_down.png) no-repeat 94% 50% #ddd;
-}
-.primary-nav li:first-child .submenu {
-  border-top:none;
-  -moz-border-radius-topleft: 4px;
-  -moz-border-radius-topright: 4px;
-  -moz-border-radius-bottomright: 0px;
-  -moz-border-radius-bottomleft: 0px;
-  -webkit-border-radius: 4px 4px 0px 0px;
-  border-radius: 4px 4px 0px 0px;
-}
-.primary-nav li:last-child .submenu {
-  -moz-border-radius-topleft: 0px;
-  -moz-border-radius-topright: 0px;
-  -moz-border-radius-bottomright: 4px;
-  -moz-border-radius-bottomleft: 4px;
-  -webkit-border-radius: 0px 0px 4px 4px;
-  border-radius: 0px 0px 4px 4px;
 }
 .page-header {
   background-color: @white;
@@ -183,6 +102,7 @@ h3 {
       margin-left: 120px;
       > label {
         padding-left:0px;
+        padding-top:0px;
       }
       .radio {
         ul {
@@ -236,7 +156,7 @@ h3 {
   }
   .tabs .dropdown-menu {
     top:48px;
-    left:10px;  
+    left:10px;
   }
   .tabs {
     border-width:0px;
@@ -324,7 +244,7 @@ h3 {
     float:left;
     margin-right:10px;
     &:first-child {
-      margin-left:10px; 
+      margin-left:10px;
     }
   }
   table {
@@ -384,4 +304,25 @@ h3 {
   textarea {
     width:99%;
   }
+}
+// WELLS
+// -----
+.well {
+  .clearfix();
+}
+.well-success {
+  background-color: @successBackground;
+  border-color: @successBorder;
+}
+.well-danger {
+  background-color: @errorBackground;
+  border-color: @errorBorder;
+}
+.well-info {
+  background-color: @infoBackground;
+  border-color: @infoBorder;
+}
+.well-blank {
+  background-color: @white;
+  border-color: rgba(0,0,0,.1);
 }

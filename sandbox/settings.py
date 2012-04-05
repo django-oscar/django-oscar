@@ -9,7 +9,7 @@ TEMPLATE_DEBUG = True
 SQL_DEBUG = True
 
 ADMINS = (
-    # ('Your Name', 'your_email@domain.com'),
+    ('David', 'david.winterbottom@tangentlabs.co.uk'),
 )
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
@@ -51,7 +51,7 @@ USE_L10N = True
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = location("assets")
+MEDIA_ROOT = location("assets/media")
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
@@ -64,8 +64,8 @@ MEDIA_URL = '/media/'
 #ADMIN_MEDIA_PREFIX = '/media/admin/'
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = (location('static/'),)
-STATIC_ROOT = location('public')
+STATICFILES_DIRS = ()
+STATIC_ROOT = location('public/static')
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '$)a7n&o80u!6y5t-+jrd3)3!%vh&shg$wqpjpxc!ar&p#!)n1a'
@@ -146,6 +146,12 @@ LOGGING = {
              'filename': '/tmp/oscar.log',
              'formatter': 'verbose'
         },
+        'error_file': {
+             'level': 'INFO',
+             'class': 'logging.FileHandler',
+             'filename': '/tmp/errors.log',
+             'formatter': 'verbose'
+        },
         'mail_admins': {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler',
@@ -158,7 +164,7 @@ LOGGING = {
             'level':'INFO',
         },
         'django.request': {
-            'handlers': ['mail_admins'],
+            'handlers': ['mail_admins', 'error_file'],
             'level': 'ERROR',
             'propagate': False,
         },
@@ -197,7 +203,7 @@ INSTALLED_APPS = (
     'oscar.apps.discount',
     'oscar.apps.order',
     'oscar.apps.checkout',
-    'oscar.apps.shipping',
+    'apps.shipping',
     'oscar.apps.catalogue',
     'oscar.apps.catalogue.reviews',
     'oscar.apps.basket',
@@ -245,3 +251,12 @@ OSCAR_ORDER_STATUS_PIPELINE = {
     'Being processed': ('Processed', 'Cancelled',),
     'Cancelled': (),
 }
+
+OSCAR_SHOP_NAME = 'Oscar Sandbox'
+
+GOOGLE_ANALYTICS_ID = 'UA-XXXXX-Y'
+
+try:
+    from settings_local import *
+except ImportError:
+    pass

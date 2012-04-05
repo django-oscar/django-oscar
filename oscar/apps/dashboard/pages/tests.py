@@ -16,10 +16,8 @@ class PageViewTests(ClientTestCase):
     def setUp(self):
         self.flatpage_1 = FlatPage.objects.create(title='title1', url='/url1/',
                                       content='some content')
-        self.flatpage_1.save()
         self.flatpage_2 = FlatPage.objects.create(title='title2', url='/url2/',
                                       content='other content')
-        self.flatpage_2.save()
 
         super(PageViewTests, self).setUp()
 

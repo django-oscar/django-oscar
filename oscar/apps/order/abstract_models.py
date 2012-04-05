@@ -311,6 +311,13 @@ class AbstractLine(models.Model):
                 new_status, self.status))
         self.status = new_status
         self.save()
+
+    @property
+    def category(self):
+        """
+        Used by Google analytics tracking
+        """
+        return None
     
     @property
     def description(self):

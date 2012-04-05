@@ -1,6 +1,20 @@
 {% extends "layout.html" %}
 {% load currency_filters %}
 
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url promotions:home %}">Home</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="{% url customer:summary %}">Account</a>
+        <span class="divider">/</span>
+    </li>
+	<li class="active"><a href=".">Order history</a></li>
+</ul>
+{% endblock %}
+
 {% block title %}
 Order history | {{ block.super }}
 {% endblock %}
@@ -10,7 +24,6 @@ Order history | {{ block.super }}
     <h2>Order history</h2>
 </div>
 {% endblock header %}
-
 
 {% block content %}
 
@@ -37,6 +50,12 @@ Order history | {{ block.super }}
         <td>{{ order.date_placed }}</td>
         <td>
             <a class="btn btn-info" href="{% url customer:order order.number %}">View</a>
+			<form action="{% url customer:order order.number %}" method="post">
+				{% csrf_token %}
+				<input type="hidden" name="order_id" value="{{ order.id }}" />
+				<input type="hidden" name="action" value="reorder" />
+				<button type="submit" class="btn btn-success">Re-order</button>
+			</form>
         </td>
     </tr>
     {% endfor %}

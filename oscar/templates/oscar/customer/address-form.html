@@ -2,24 +2,39 @@
 {% load currency_filters %}
 
 {% block title %}
-Update address | {{ block.super }}
+{{ title }} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url promotions:home %}">Home</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="{% url customer:summary %}">Account</a>
+        <span class="divider">/</span>
+    </li>
+	<li>
+		<a href="{% url customer:address-list %}">Address book</a>
+		<span class="divider">/</span>
+	</li>
+	<li class="active"><a href=".">{{ title }}</a></li>
+</ul>
 {% endblock %}
 
 {% block header %}
 <div class="page-header">
-    <h2>Address book</h2>
+	<h2>{{ title }}</h2>
 </div>
 {% endblock header %}
 
 {% block content %}
-<div class="sub-header">
-    <h3>Edit address</h3>
-</div>
 <form action="." method="post" class="form-horizontal">
     {% csrf_token %}
     {% include "partials/form_fields.html" with form=form %}
     <div class="form-actions">
-        <input type="submit" value="Save address" class-"btn btn-primary"/>
+        <input type="submit" value="Save address" class="btn btn-primary" />
         or
         <a href="{% url customer:address-list %}">cancel</a>
     </div>

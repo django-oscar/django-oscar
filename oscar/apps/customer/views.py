@@ -1,12 +1,13 @@
 import urlparse
 
 from django.shortcuts import get_object_or_404
-from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView, FormView
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, Http404
 from django.contrib import messages
 from django.utils.translation import ugettext as _
 from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.sites.models import get_current_site
 from django.conf import settings
 from django.db.models import get_model
@@ -21,7 +22,7 @@ order_model = get_model('order', 'Order')
 order_line_model = get_model('order', 'Line')
 basket_model = get_model('basket', 'Basket')
 user_address_model = get_model('address', 'UserAddress')
-email_model = get_model('customer', 'email')
+Email = get_model('customer', 'email')
 UserAddress = get_model('address', 'UserAddress')
 communicationtype_model = get_model('customer', 'communicationeventtype')
 
@@ -43,6 +44,7 @@ class AccountSummaryView(ListView):
         ctx['addressbook_size'] = self.request.user.addresses.all().count()
         ctx['default_shipping_address'] = self.get_default_shipping_address(self.request.user)
         ctx['default_billing_address'] = self.get_default_billing_address(self.request.user)
+        ctx['emails'] = Email.objects.filter(user=self.request.user)
         return ctx
 
     def get_default_billing_address(self, user):
@@ -152,7 +154,7 @@ class EmailHistoryView(ListView):
 
     def get_queryset(self):
         """Return a customer's orders"""
-        return email_model._default_manager.filter(user=self.request.user)
+        return Email._default_manager.filter(user=self.request.user)
 
 
 class EmailDetailView(DetailView):
@@ -162,7 +164,7 @@ class EmailDetailView(DetailView):
 
     def get_object(self):
         """Return an order object or 404"""
-        return get_object_or_404(email_model, user=self.request.user, id=self.kwargs['email_id'])
+        return get_object_or_404(Email, user=self.request.user, id=self.kwargs['email_id'])
 
 
 class OrderHistoryView(ListView):
@@ -197,7 +199,7 @@ class OrderHistoryView(ListView):
         return ctx
 
 
-class OrderDetailView(DetailView):
+class OrderDetailView(DetailView, PostActionMixin):
     """Customer order details"""
     model = order_model
 
@@ -206,6 +208,22 @@ class OrderDetailView(DetailView):
 
     def get_object(self):
         return get_object_or_404(self.model, user=self.request.user, number=self.kwargs['order_number'])
+
+    def do_reorder(self, order):
+        self.response = HttpResponseRedirect(reverse('basket:summary'))
+        basket = self.request.basket
+
+        # Convert line attributes into basket options
+        for line in order.lines.all():
+            if not line.product:
+                messages.warning(self.request, "'%s' unavailable for re-order" % line.title)
+                continue
+            options = []
+            for attribute in line.attributes.all():
+                if attribute.option:
+                    options.append({'option': attribute.option, 'value': attribute.value})
+            basket.add_product(line.product, 1, options)
+        messages.info(self.request, "Order %s reordered" % order.number)
 
 
 class OrderLineView(DetailView, PostActionMixin):
@@ -249,6 +267,12 @@ class AddressListView(ListView):
 class AddressCreateView(CreateView):
     form_class = UserAddressForm
     mode = user_address_model
+    template_name = 'customer/address-form.html'
+
+    def get_context_data(self, **kwargs):
+        ctx =  super(AddressCreateView, self).get_context_data(**kwargs)
+        ctx['title'] = _('Add a new address')
+        return ctx
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
@@ -256,25 +280,26 @@ class AddressCreateView(CreateView):
         self.object.save()
         return HttpResponseRedirect(self.get_success_url())
 
-    def get_template_names(self):
-        return ["customer/address-create.html"]
-
     def get_success_url(self):
+        messages.success(self.request, _("Address saved"))
         return reverse('customer:address-list')
 
 
 class AddressUpdateView(UpdateView):
     form_class = UserAddressForm
     model = user_address_model
+    template_name = 'customer/address-form.html'
+
+    def get_context_data(self, **kwargs):
+        ctx =  super(AddressUpdateView, self).get_context_data(**kwargs)
+        ctx['title'] = _('Edit address')
+        return ctx
 
     def get_queryset(self):
-        """Return a customer's addresses"""
         return user_address_model._default_manager.filter(user=self.request.user)
 
-    def get_template_names(self):
-        return ["customer/address-form.html"]
-
     def get_success_url(self):
+        messages.success(self.request, _("Address saved"))
         return reverse('customer:address-detail', kwargs={'pk': self.get_object().pk })
 
 
@@ -305,3 +330,21 @@ class AnonymousOrderDetailView(DetailView):
             raise Http404()
 
         return order
+
+
+class ChangePasswordView(FormView):
+    form_class = PasswordChangeForm
+    template_name = 'customer/change-password.html'
+
+    def get_form_kwargs(self):
+        kwargs = super(ChangePasswordView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, "Password updated")
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse('customer:summary')

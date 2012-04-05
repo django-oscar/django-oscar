@@ -30,3 +30,4 @@ sandbox/assets/*
 TODO
 .coverage
 htmlcov/*
+sandbox/public/

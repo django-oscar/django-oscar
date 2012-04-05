@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-
 {% load currency_filters %}
 {% load category_tags %}
 
@@ -16,19 +15,14 @@
         {% category_tree depth=2 as categories %}
         {% include "partials/nav_primary.html" %}
     </header><!-- /header -->
-    {% include "partials/alert_messages.html" %}
     <div class="container-fluid page">
         {% block header %}
         {% endblock %}
-        <div class="page_inner">	
-        	{% block breadcrumbs %}
-            {% endblock %}
-
-            {% block flatpage %}
-            {% endblock %}
-           
-        	{% block content %} 
-        	{% endblock %}
+        <div class="page_inner">
+            {% block breadcrumbs %}{% endblock %}
+            {% include "partials/alert_messages.html" %}
+            {% block flatpage %}{% endblock %}
+			{% block content %}{% endblock %}
     	</div><!-- /page_inner -->
     </div><!-- /container-fluid -->
     {% include "partials/footer.html" %}

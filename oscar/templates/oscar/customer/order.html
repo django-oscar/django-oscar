@@ -5,6 +5,24 @@
 Order {{ order.number }} | {{ block.super }}
 {% endblock %}
 
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url promotions:home %}">Home</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="{% url customer:summary %}">Account</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="{% url customer:order-list %}">Order history</a>
+        <span class="divider">/</span>
+    </li>
+	<li class="active"><a href=".">Order #{{ order.number }}</a></li>
+</ul>
+{% endblock %}
+
 {% block header %}
 <div class="page-header">
     <h1>Order #{{ order.number }}</h1>
@@ -13,10 +31,6 @@ Order {{ order.number }} | {{ block.super }}
 
 
 {% block content %}
-
-<div class="sub-header">
-    <h2>Shipping address</h2>
-</div>
 
 <div class="tabbable dashboard">
 	<ul class="nav nav-tabs">
@@ -53,36 +67,14 @@ Order {{ order.number }} | {{ block.super }}
 					</div>
 				</div>
 			</div>
-			<!-- <table class="table table-striped table-bordered">
-							<tr>
-								<th>Address</th>
-								<td>
-									{% for field in order.shipping_address.active_address_fields %}
-									{{ field }}<br/>
-									{% endfor %}
-								</td>
-							</tr>
-							{% if order.shipping_address.phone_number %}
-							<tr>
-								<th>Contact number</th>
-								<td>{{ shipping_address.phone_number }}</td>
-							</tr>
-							{% endif %}
-							{% if order.shipping_address.notes %}
-							<tr>
-								<th>Shipping notes</th>
-								<td>{{ shipping_address.notes }}</td>
-							</tr>
-							{% endif %} 
-						</table> -->
 		</div>
+
 		<div class="tab-pane active" id="2">
 			<div class="sub-header">
 				<h3>Shipping method</h3>
 			</div>
 			<p>{{ order.shipping_method }}</p>
 		</div>
-
 
 		<div class="tab-pane active" id="3">
 			<div class="sub-header">
@@ -97,7 +89,6 @@ Order {{ order.number }} | {{ block.super }}
 					<th>Quantity</th>
 					<th>Line price excl tax</th>
 					<th>Line price incl tax</th>
-					<th>Status</th>
 					<th></th>
 				</tr>
 				{% for line in order.lines.all %}
@@ -107,14 +98,13 @@ Order {{ order.number }} | {{ block.super }}
 					<td>{{ line.quantity }}</td>
 					<td>{{ line.line_price_before_discounts_excl_tax|currency }}</td>
 					<td>{{ line.line_price_before_discounts_incl_tax|currency }}</td>
-					<td>{{ line.shipping_status }}</td>
 					<td>
 						<form action="{% url customer:order-line order.number line.id %}" method="POST">
 							{% csrf_token %}
 							<input type="hidden" name="action" value="reorder" />
-							<input type="submit" value="Re-order" />
+							<button class="btn btn-success" type="submit">Re-order</button>
+							<a class="btn btn-info" href="{% url catalogue:reviews-add line.product.slug line.product.id %}">Write a review</a>
 						</form>
-						<a href="{% url catalogue:reviews-add line.product.slug line.product.id %}">Write a review</a>
 					</td>
 				</tr>
 				{% endfor %}

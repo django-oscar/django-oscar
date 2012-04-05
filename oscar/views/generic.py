@@ -1,4 +1,3 @@
-
 class PostActionMixin(object):
     """
     Simple mixin to forward POST request that contain a key 'action'

@@ -1,6 +1,7 @@
 {% extends 'dashboard/layout.html' %}
 {% load dashboard_tags %}
 {% block body_class %}users{% endblock %}
+
 {% block title %}
 Users | {{ block.super }}
 {% endblock %}
@@ -11,7 +12,7 @@ Users | {{ block.super }}
         <a href="{% url promotions:home %}">Dashboard</a>
         <span class="divider">/</span>
     </li>
-    <li class="active"><a href=".">User management</a></li>
+    <li class="active"><a href=".">Users</a></li>
 </ul>
 {% endblock %}
 
@@ -73,7 +74,7 @@ Users | {{ block.super }}
         <td>{{ user.date_joined|date:"d/m/y H:s" }}</td>
         <td>{% num_orders user %}</td>
         <td>
-            <a href="{% url dashboard:user-detail user.id %}">View</a>
+            <a href="{% url dashboard:user-detail user.id %}" class="btn btn-info">View</a>
         </td>
     </tr>
     {% endfor %}

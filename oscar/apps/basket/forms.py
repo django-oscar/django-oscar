@@ -48,7 +48,7 @@ class SavedLineForm(forms.ModelForm):
 
     class Meta:
         model = Line
-        exclude = ('basket', 'product', 'line_reference', 'quantity', )
+        exclude = ('basket', 'product', 'line_reference', 'quantity', 'price_incl_tax')
 
 
 class BasketVoucherForm(forms.Form):
@@ -96,7 +96,7 @@ class AddToBasketForm(forms.Form):
         else:
             desired_qty = qty + line.quantity
 
-        is_available, reason = product.is_purchase_permitted(user=self.user, 
+        is_available, reason = product.is_purchase_permitted(user=self.user,
                                                              quantity=desired_qty)
         if not is_available:
             raise forms.ValidationError(reason)
@@ -145,4 +145,6 @@ class AddToBasketForm(forms.Form):
         """
         self.fields[option.code] = forms.CharField()
 
+class SimpleAddToBasketForm(AddToBasketForm):
+    quantity = forms.IntegerField(initial=1, min_value=1, widget=forms.HiddenInput)
 

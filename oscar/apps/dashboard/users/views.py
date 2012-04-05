@@ -77,4 +77,5 @@ class IndexView(ListView, BulkEditMixin):
 class UserDetailView(DetailView):
     template_name = 'dashboard/users/detail.html'
     model = User
+    context_object_name = 'user'
 
