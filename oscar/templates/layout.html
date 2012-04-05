@@ -20,7 +20,9 @@
         {% endblock %}
         <div class="page_inner">
             {% block breadcrumbs %}{% endblock %}
+
             {% include "partials/alert_messages.html" %}	
+
             {% block flatpage %}{% endblock %}
 			{% block content %}{% endblock %}
     	</div><!-- /page_inner -->
