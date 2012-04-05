@@ -407,7 +407,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         self._payment_sources.append(source)  
 
     def add_payment_event(self, event_type_name, amount):
-        event_type = PaymentEventType.objects.get(name=event_type_name)
+        event_type, n = PaymentEventType.objects.get_or_create(name=event_type_name)
         if self._payment_events is None:
             self._payment_events = []
         event = PaymentEvent(event_type=event_type, amount=amount)
