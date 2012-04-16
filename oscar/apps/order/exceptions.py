@@ -12,3 +12,7 @@ class InvalidLineStatus(InvalidStatus):
 
 class InvalidShippingEvent(Exception):
     pass
+
+
+class UnableToPlaceOrder(Exception):
+    pass

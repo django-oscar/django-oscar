@@ -739,10 +739,17 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             logger.error("Order #%s: payment error (%s)", order_number, msg)
             self.restore_frozen_basket()
             return self.render_to_response(self.get_context_data(error="A problem occurred processing payment."))
-        else:
-            # If all is ok with payment, place order
-            logger.info("Order #%s: payment successful, placing order", order_number)
+
+        # If all is ok with payment, try and place order
+        logger.info("Order #%s: payment successful, placing order", order_number)
+        try:
             return self.handle_order_placement(order_number, basket, total_incl_tax, total_excl_tax, **kwargs)
+        except UnableToPlaceOrder, e:
+            logger.warning("Order #%s: unable to place order - %s",
+                           order_number, e)
+            msg = unicode(e)
+            self.restore_frozen_basket()
+            return self.render_to_response(self.get_context_data(error=msg))
     
     def generate_order_number(self, basket):
         generator = OrderNumberGenerator()
