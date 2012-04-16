@@ -85,7 +85,9 @@ $(document).ready(function()
         marginTop: $browse_height
       });
     }
-
+    
+    // This activates colorbox
+    $('a[rel=lightbox]').colorbox();
     
     // This activates the promotional banner carousel
     $('#myCarousel').carousel({
@@ -118,7 +120,7 @@ $(document).ready(function()
     $(".accordion dd").hide();
 
     /* scroll to sections */
-    $('.top_page a, .product_page a').click(function (e) {
+    $('.top_page a').click(function (e) {
         var section = $(this).attr('href');
         var sectionPosition = Math.floor($(section).offset().top);
         var currentPosition = Math.floor($(document).scrollTop());
