@@ -66,6 +66,8 @@ $(document).ready(function()
             minItems: 5,
             onClick:  true
         });
+        // This activates colorbox on the product page
+        $('a[rel=lightbox]').colorbox();
       }
       else {
         es_carousel.elastislide({
@@ -86,8 +88,7 @@ $(document).ready(function()
       });
     }
     
-    // This activates colorbox
-    $('a[rel=lightbox]').colorbox();
+    
     
     // This activates the promotional banner carousel
     $('#myCarousel').carousel({
