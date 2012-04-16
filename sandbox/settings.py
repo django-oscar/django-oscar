@@ -260,3 +260,5 @@ try:
     from settings_local import *
 except ImportError:
     pass
+
+LOG_ROOT = location('logs')
