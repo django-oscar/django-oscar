@@ -30,11 +30,11 @@ Checkout | {{ block.super }}
                 </dd>
                 {% if shipping_address.phone_number %}
                 <dt>Contact number</dt>
-                <dd>{{ shipping_addr.phone_number }}</dd>
+                <dd>{{ shipping_address.phone_number }}</dd>
                 {% endif %}
                 {% if shipping_address.notes %}
                 <dt>Shipping notes</dt>
-                <dd>{{ shipping_addr.notes }}</dd>
+                <dd>{{ shipping_address.notes }}</dd>
                 {% endif %}
             </dl>
             {% block shipping_address_actions %}
