@@ -4,9 +4,12 @@
 {% load category_tags %}
 {% load dashboard_tags %}
 
-{% block extrahead %}
-    <link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/dashboard.css" />
-{%endblock extrahead %}
+
+{% block mainstylesheet %}
+	<link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/dashboard.css" />
+{% endblock %}
+
+{% block extrahead %} {%endblock extrahead %}
 
 {% block title %}
 Dashboard | {{ block.super }}
