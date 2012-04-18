@@ -20,7 +20,7 @@ Login or register | {{ block.super }}
             <h2>Log In</h2>
             {% csrf_token %}
             {% include "partials/form_fields.html" with form=login_form %}
-            <input name="login_submit" type="submit" value="Log In" class="btn" />
+            <button name="login_submit" type="submit" value="Log In" class="btn">Log In</button>
         </form>
     </div>
     <div class="span6 register_form">
@@ -28,7 +28,7 @@ Login or register | {{ block.super }}
             <h2>Register Here</h2>
             {% csrf_token %}
             {% include "partials/form_fields.html" with form=registration_form %}
-            <input name="registration_submit" type="submit" value="Register" class="btn" />
+            <button name="registration_submit" type="submit" value="Register" class="btn">Register</button>
         </form>
     </div>
 </div>    
