@@ -52,8 +52,9 @@ $(document).ready(function()
     });
     
     var window_width = $(window).width(), // Width of the window
-        $browse_width = $('aside.span3').outerWidth(), // Width of main navigation
-        $browse_height = $('#browse > .dropdown-menu').outerHeight(); // Height of main navigation
+        $sidebar = $('aside.span3'), // Width of main navigation
+        $browse = $('#browse > .dropdown-menu'), // Height of main navigation
+        $browse_open = $browse.parent().find('> a[data-toggle]')  
     
     if (window_width > 480) {
       // This activates elastislide
@@ -79,13 +80,20 @@ $(document).ready(function()
     }
     if (window_width > 980) {
       // set width of nav dropdown on the homepage
-      $('#browse').find('> .dropdown-menu').css({
-        width: $browse_width
-      });
+      $browse.css('width', $sidebar.outerWidth())
+      // Remove click on browse button if menu is currently open
+      if  ($browse_open.length < 1) {
+        $browse.parent().find('> a').on('click', function()
+        {
+          return false;
+        });
+        $sidebar.css({
+          marginTop: $browse.outerHeight()
+        }); 
+      }
+      
       // set margin top of aside allow space for home navigation
-      $('.home aside.span3').css({
-        marginTop: $browse_height
-      });
+      
     }
     
     
