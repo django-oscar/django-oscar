@@ -35,6 +35,7 @@ import_module('customer.views', ['AccountAuthView'], locals())
 import_module('customer.utils', ['Dispatcher'], locals())
 import_module('payment.exceptions', ['RedirectRequired', 'UnableToTakePayment', 
                                      'PaymentError'], locals())
+import_module('order.exceptions', ['UnableToPlaceOrder'])
 import_module('basket.models', ['Basket'], locals())
 
 # Standard logger for checkout events
