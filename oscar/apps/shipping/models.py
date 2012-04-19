@@ -85,12 +85,15 @@ class WeightBased(ShippingMethod):
                                       the weight bands""")
 
     weight_attribute = 'weight'
+    default_weight = models.DecimalField(decimal_places=2, max_digits=12, default=D('0.00'),
+        help_text="""Default product weight in Kg when no
+                                        weight attribute is defined""")
 
     class Meta:
         verbose_name_plural = 'Weight-based shipping methods'
 
     def basket_charge_incl_tax(self):
-        weight = Scales(attribute=self.weight_attribute).weigh_basket(self._basket)
+        weight = Scales(attribute=self.weight_attribute, default_weight=self.default_weight).weigh_basket(self._basket)
         band = self.get_band_for_weight(weight)
         if not band:
             if self.bands.all().count() > 0 and self.upper_charge:

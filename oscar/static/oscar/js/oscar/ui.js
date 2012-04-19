@@ -87,16 +87,12 @@ $(document).ready(function()
         {
           return false;
         });
+        // set margin top of aside allow space for open navigation
         $sidebar.css({
           marginTop: $browse.outerHeight()
         }); 
       }
-      
-      // set margin top of aside allow space for home navigation
-      
     }
-    
-    
     
     // This activates the promotional banner carousel
     $('#myCarousel').carousel({

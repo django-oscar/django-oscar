@@ -438,12 +438,17 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         shipping_address = self.create_shipping_address()
         shipping_method = self.get_shipping_method(basket)
         billing_address = self.create_billing_address(shipping_address)
+
         if 'status' not in kwargs:
             status = self.get_initial_order_status(basket)
         else:
             status = kwargs.pop('status')
-        if not self.request.user.is_authenticated():
+
+        # Set guest email address for anon checkout.   Some libraries (eg
+        # PayPal) will pass this explicitly so we take care not to clobber.
+        if not self.request.user.is_authenticated() and 'guest_email' not in kwargs:
             kwargs['guest_email'] = self.checkout_session.get_guest_email()
+
         order = OrderCreator().place_order(basket=basket, 
                                            total_incl_tax=total_incl_tax,
                                            total_excl_tax=total_excl_tax,
@@ -739,10 +744,17 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             logger.error("Order #%s: payment error (%s)", order_number, msg)
             self.restore_frozen_basket()
             return self.render_to_response(self.get_context_data(error="A problem occurred processing payment."))
-        else:
-            # If all is ok with payment, place order
-            logger.info("Order #%s: payment successful, placing order", order_number)
+
+        # If all is ok with payment, try and place order
+        logger.info("Order #%s: payment successful, placing order", order_number)
+        try:
             return self.handle_order_placement(order_number, basket, total_incl_tax, total_excl_tax, **kwargs)
+        except UnableToPlaceOrder, e:
+            logger.warning("Order #%s: unable to place order - %s",
+                           order_number, e)
+            msg = unicode(e)
+            self.restore_frozen_basket()
+            return self.render_to_response(self.get_context_data(error=msg))
     
     def generate_order_number(self, basket):
         generator = OrderNumberGenerator()
