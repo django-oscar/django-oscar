@@ -37,23 +37,17 @@ oscar.dashboard = {
     }
 };
 
-$(document).ready(function()
-{
-    //pull out draw
-    var 
-      pull_out_draw = $(".orders_search"),
-      pull_out_link = $('.pull_out'),
-      $this = $(this);
-
-    pull_out_draw.each(function(index)
-    {
-      $this.css('height', $this.height());
+// This block needs reworking to be part of the oscar namespace
+$(document).ready(function() {
+    var pull_out_draw = $(".orders_search"),
+        pull_out_link = $('.pull_out'),
+        $this = $(this);
+    pull_out_draw.each(function(index) {
+        $this.css('height', $this.height());
     });
     pull_out_draw.hide();  
-    pull_out_link.on('click', function()
-    {
-      pull_out_draw
-        .parent()      
+    pull_out_link.on('click', function() {
+      pull_out_draw.parent()
         .find('.pull-left')
         .toggleClass('no-float')
         .end().end()
