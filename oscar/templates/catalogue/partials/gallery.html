@@ -39,9 +39,13 @@
 	</div><!-- rg-thumbs -->
 </div><!-- rg-gallery -->
 {% else %}
-    {% for image in product.images.all %}
-    <a href="{{ image.original.url }}" rel="lightbox">
-        <img src="{{ image.original.url }}" data-large="{{ image.original.url }}" alt="image02" data-description="{% if image.caption %}{{ image.caption }}{% endif %}" />
-    </a>
-    {% endfor %}
+    {% if product.images.all.count > 0 %}
+        {% for image in product.images.all %}
+        <a href="{{ image.original.url }}" rel="lightbox">
+            <img src="{{ image.original.url }}" data-large="{{ image.original.url }}" alt="image02" data-description="{% if image.caption %}{{ image.caption }}{% endif %}" />
+        </a>
+        {% endfor %}
+    {% else %}
+        <img src="/static/oscar/img/image_not_found.jpg" alt="No image found"/>
+    {% endif %}    
 {% endif %}
