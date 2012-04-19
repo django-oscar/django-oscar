@@ -79,24 +79,28 @@ Basket | {{ block.super }}
 </form>
 
 <div class="row-fluid">
+	{% block vouchers %}
 	<div class="span6">
 		<div class="sub-header">
 		    <h2>Voucher/Promo Code</h2>
 		</div>
 		<p id="voucher_form_link"><a href="#voucher" class="btn">I have a voucher code...</a></p>
 
-        <div id="voucher_form_container" style="display:none">
-        	<h4>Voucher code</h4>
-        	<form action="{% url basket:vouchers-add %}" method="post" class="form-horizontal">
-        		{% csrf_token %}
-        		{% include "partials/form_fields.html" with form=voucher_form %}
-        		<div class="form-actions">
-        			<button class="btn btn-info">Add voucher</button>
-        			or <a href="#" id="voucher_form_cancel">cancel</a>
-        		</div>
-        	</form>
-        </div>
+	        <div id="voucher_form_container" style="display:none">
+	        	<h4>Voucher code</h4>
+	        	<form action="{% url basket:vouchers-add %}" method="post" class="form-horizontal">
+	        		{% csrf_token %}
+	        		{% include "partials/form_fields.html" with form=voucher_form %}
+	        		<div class="form-actions">
+	        			<button class="btn btn-info">Add voucher</button>
+	        			or <a href="#" id="voucher_form_cancel">cancel</a>
+	        		</div>
+	        	</form>
+	        </div>
 	</div>
+	{% endblock vouchers %}
+	
+	{% block baskettotals %}
 	<div class="span6">
 		<div class="sub-header">
 			<h2>Basket Totals</h2>
@@ -163,6 +167,7 @@ Basket | {{ block.super }}
 			</table>
 		</div>
 	</div>
+	{% endblock baskettotals %}
 </div>
 
 	
