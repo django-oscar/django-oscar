@@ -2,11 +2,11 @@
     <form action="{{ review.get_absolute_url }}" method="post" class="vote_agree" >
         {% csrf_token %}               
         <input type="hidden" name="delta" value="1"/>
-        <input type="submit" value="I agree" class="btn btn-success btn-small" /> 
+        <button type="submit" value="I agree" class="btn btn-success btn-small">I agree</button>
     </form>
     <form  action="{{ review.get_absolute_url }}" method="post">
         {% csrf_token %}                
         <input type="hidden" name="delta" value="-1"/>
-        <input type="submit" class="btn btn-small" value="I disagree" /> 
+        <button type="submit" class="btn btn-small" value="I disagree">I disagree</button>
     </form>
 {% endif %}
