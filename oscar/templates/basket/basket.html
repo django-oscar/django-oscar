@@ -217,7 +217,7 @@ Basket | {{ block.super }}
     				{{ form.DELETE }}
     			</div>
     		</div>
-            <div class="span2">{{ form.instance.unit_price_incl_tax|currency }}</div>
+            <div class="span2"><p class="price">{{ form.instance.unit_price_incl_tax|currency }}</p></div>
             <div class="span2"><a href="#" data-id="{{ forloop.counter0 }}" class="btn btn-success pull-right" data-behaviours="move">Move to basket</a></div>
         </div>
         {% endfor %}
