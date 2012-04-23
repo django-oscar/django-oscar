@@ -53,17 +53,8 @@ Checkout | {{ block.super }}
         </div>
         <div class="well well-success">
             <p>Payment details to go here</p>
-            <dl>
-                <dt>Credit Card</dt>
-                <dd>
-                    xxxx-xxxx-xxxx-4121<br/>
-                    Visa<br/>
-                    04/13<br/>
-                    Gareth Williams<br/>
-                </dd>
-            </dl>
             <div class="alert-actions">
-                <a href="/checkout/payment-details/" class="btn">Change credit card details</a>
+				<a href="{% url checkout:payment-details %}" class="btn">Change payment details</a>
             </div>
         </div>    
     </div>

@@ -6,7 +6,7 @@ Payment details | {{ block.super }}
 {% endblock %}
 
 {% block checkout-nav %}
-{% include 'checkout/nav.html' with step=3 %}
+	{% include 'checkout/nav.html' with step=3 %}
 {% endblock %}
 
 {% block order_contents %}{% endblock %}
@@ -16,71 +16,17 @@ Payment details | {{ block.super }}
 
 {% block payment_details %}
 <div class="sub-header">
-	<h2>How would you like to pay?</h2>
+	<h2>Enter payment details</h2>
 </div>
-<h4>Choose an existing card</h4>
-<div class="choose-block">
-    <ul>
-		<li>
-		    <div class="well well-success">
-                <span>
-                    xxxx-xxxx-xxxx-4121<br/>
-                    Visa<br/>
-                    04/13<br/>
-                    Gareth Williams<br/>
-                </span>
-				<form method="post" action="{% url checkout:preview %}">
-			        {% csrf_token %}
-				    <input type="submit" value="Choose this card" class="btn btn-primary btn-small ship-address"/>
-				</form>
-				<form action="" method="post" class="remove-item">
-					<a class="btn btn-small btn-info" href="">Edit</a>
-					<input type="submit" value="Delete" class="btn btn-small btn-danger" />
-				</form>
-			</div>
-		</li>
-    </ul>
-</div>
-<div class="sub-header">
-	<h2>Or</h2>
-</div>
-<form class="well well-success">
-	<div class="sub-header">
-        <h3>Add a new card</h3>
-    </div>
-	<div class="row-fluid">
-		<div class="span6">
-			<label>Card Number</label>
-			<input type="text" class="span10" placeholder="Card number">
-			<label>Expiry Date</label>
-			<input type="text" class="span5" placeholder="month">
-			/
-			<input type="text" class="span5" placeholder="year">
-			<label>CV2</label>
-			<input type="text" class="span10" placeholder="Last 3 digit on your card">
-		</div>
-		<div class="span6">
-			<label>Name on Card</label>
-			<input type="text" placeholder="Your name...">
-		</div>
-	</div>
-	<div class="form-actions">
-	    <button type="submit" class="btn btn-small btn-primary">Add Card</button>
-    </div>
-</form>
-<div class="sub-header">
-	<h2>Paypal</h2>
-</div>
-<p>Or if you would prefer to pay via Paypal click to go there now. <a href="http://www.paypal.com" title="paypal" class="btn" target="_blank">Paypal</a></p>
 
+{% block payment_details_content %}
+<p>This page needs implementing within your project.  Or you could use one of django-oscar's
+plugin libraries:</p>
+<ul>
+	<li><a href="https://github.com/tangentlabs/django-oscar-paypal">django-oscar-paypal</a></li>
+	<li><a href="https://github.com/tangentlabs/django-oscar-datacash">django-oscar-datacash</a></li>
+</ul>
+<a href="{% url checkout:preview %}" class="btn btn-primary btn-large">Continue</a>
+{% endblock payment_details_content %}
 
-
-
-	<!-- <form method="post" action="{% url checkout:preview %}">
-    {% csrf_token %}
-	<div class="well">
-    	<div class="form-actions"><button type="submit" class="pull-right btn btn-primary btn-small">Continue</button></div>
-	</div>
-	</form> -->
-
-{% endblock %}
+{% endblock payment_details %}

@@ -1,19 +1,11 @@
-from decimal import Decimal
 import logging
 
-from django.conf import settings
-from django.http import HttpResponse, Http404, HttpResponseRedirect, HttpResponseBadRequest
-from django.template import RequestContext
-from django.shortcuts import get_object_or_404
+from django.http import Http404, HttpResponseRedirect, HttpResponseBadRequest
 from django.core.urlresolvers import reverse
-from django.forms import ModelForm
 from django.contrib import messages
-from django.core.urlresolvers import resolve
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import login
 from django.utils.translation import ugettext as _
-from django.template.response import TemplateResponse
-from django.core.mail import EmailMessage
 from django.views.generic import DetailView, TemplateView, FormView, \
                                  DeleteView, UpdateView, CreateView
 
@@ -127,6 +119,16 @@ class IndexView(CheckoutSessionMixin, FormView):
         if request.user.is_authenticated():
             return self.get_success_response()
         return super(IndexView, self).get(request, *args, **kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super(IndexView, self).get_form_kwargs()
+        email = self.checkout_session.get_guest_email()
+        if email:
+            kwargs['initial'] = {
+                'username': email,
+                'options': 'new'
+            }
+        return kwargs
 
     def form_valid(self, form):
         if form.is_guest_checkout():
