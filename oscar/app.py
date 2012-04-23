@@ -39,7 +39,7 @@ class Shop(Application):
             url(r'^password-reset/confirm/$', auth_views.password_reset_confirm, name='password-reset-confirm'),
             url(r'^password-reset/complete/$', auth_views.password_reset_complete, name='password-reset-complete'),
 
-            (r'', include(self.promotions_app.urls)),             
+            (r'', include(self.promotions_app.urls)),
         )
         return urlpatterns
     
