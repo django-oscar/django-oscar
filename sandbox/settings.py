@@ -195,7 +195,6 @@ INSTALLED_APPS = (
     'django_extensions',
     'haystack',
     'debug_toolbar',
-    'pyzen',
     'south',
     # Apps from oscar
     'oscar',
