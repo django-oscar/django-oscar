@@ -5,8 +5,8 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils.importlib import import_module as django_import_module
 
-from oscar.core.loading import import_module
-import_module('partner.wrappers', ['DefaultWrapper'], locals())
+from oscar.core.loading import get_class
+DefaultWrapper = get_class('partner.wrappers', 'DefaultWrapper')
 
 
 # Cache the partners for quicklookups
