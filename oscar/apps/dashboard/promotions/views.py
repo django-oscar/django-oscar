@@ -7,12 +7,9 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.db.models import Count
 from django.shortcuts import HttpResponse
-from extra_views import CreateWithInlinesView
 
-from oscar.core.loading import get_classes, get_class
-from oscar.apps.promotions.layout import split_by_position
+from oscar.core.loading import get_classes
 from oscar.apps.promotions.conf import PROMOTION_CLASSES, PROMOTION_POSITIONS
-from oscar.views.generic import PostActionMixin
 
 SingleProduct, RawHTML, Image, MultiImage, \
     AutomaticProductList, PagePromotion, \

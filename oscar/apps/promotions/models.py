@@ -1,5 +1,3 @@
-import urllib
-
 from django.db import models
 from django.conf import settings
 from django.utils.translation import ugettext as _
@@ -49,10 +47,6 @@ class PagePromotion(LinkedPromotion):
 
     def get_link(self):
         return reverse('promotions:page-click', kwargs={'page_promotion_id': self.id})
-
-    @property
-    def encoded_url(self):
-        return urllib.quote_plus(self.page_url)
 
 
 class KeywordPromotion(LinkedPromotion):
