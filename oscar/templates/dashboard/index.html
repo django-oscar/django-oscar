@@ -1,5 +1,15 @@
 {% extends 'dashboard/layout.html' %}
 
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url dashboard:home %}">Dashboard</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active"><a href=".">Home</a></li>
+</ul>
+{% endblock %}
+
 {% block header %}
 <div class="page-header">
     <h1>Dashboard</h1>
