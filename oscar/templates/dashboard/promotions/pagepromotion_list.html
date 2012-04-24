@@ -51,7 +51,7 @@ Pages with content blocks | {{ block.super }}
 			<td>{{ page.page_url }}</td>
 			<td>{{ page.freq }}</td>
 			<td>
-                <a href="{% url dashboard:promotion-list-by-url page.page_url %}" class="btn btn-success">Edit</a>
+                <a href="{% url dashboard:promotion-list-by-url page.encoded_url %}" class="btn btn-success">Edit</a>
 			</td>
 			<td>
 			</td>

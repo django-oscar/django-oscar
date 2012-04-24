@@ -1,14 +1,26 @@
 {% extends 'dashboard/layout.html' %}
 
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url dashboard:index %}">Dashboard</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="{% url dashboard:promotion-list %}">Content blocks</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active"><a href=".">Delete content block?</a></li>
+</ul>
+{% endblock %}
+
 {% block header %}
 <div class="page-header">
-    <h1>Delete promotion?</h1>
+    <h1>Delete content block?</h1>
 </div>
 {% endblock header%}
 
 {% block dashboard_content %}
-
-
 <form action="." method="post">
 	{% csrf_token %}
 	{{ form }}

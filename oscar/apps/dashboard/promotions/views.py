@@ -31,10 +31,14 @@ class ListView(generic.TemplateView):
         # Need to load all promotions of all types and chain them together
         # no pagination required for now.
         data = []
+        num_promotions = 0
         for klass in PROMOTION_CLASSES:
-            data.append(klass.objects.all())
+            objects = klass.objects.all()
+            num_promotions += objects.count()
+            data.append(objects)
         promotions = itertools.chain(*data)
         ctx = {
+            'num_promotions': num_promotions,
             'promotions': promotions,
             'select_form': SelectForm(),
         }
