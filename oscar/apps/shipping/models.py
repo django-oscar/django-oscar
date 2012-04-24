@@ -3,7 +3,6 @@ from decimal import Decimal as D
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.template.defaultfilters import slugify
-from django.conf import settings
 
 from oscar.apps.shipping import Scales
 
@@ -121,7 +120,10 @@ class WeightBand(models.Model):
     Represents a weight band which are used by the WeightBasedShipping method.
     """
     method = models.ForeignKey(WeightBased, related_name='bands')
-    upper_limit = models.FloatField(help_text=_("""Enter upper limit of this weight band in Kg"""))
+    upper_limit = models.FloatField(help_text=_("""Enter upper limit of this
+                                                weight band in Kg, the lower
+                                                limit will be determine by the
+                                                other weight bands"""))
     charge = models.DecimalField(decimal_places=2, max_digits=12)
     
     @property
