@@ -37,7 +37,8 @@ def get_classes(module_label, classnames):
 
     # App must be local - check if module is in local app (it could be in
     # oscar's)
-    base_package = app_module_path.split(".")[0]
+    app_label = module_label.split('.')[0]
+    base_package = app_module_path.replace('.'+app_label, '')
     local_app = "%s.%s" % (base_package, module_label)
     try:
         imported_local_module = __import__(local_app, fromlist=classnames)
