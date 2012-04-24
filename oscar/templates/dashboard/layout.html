@@ -16,6 +16,7 @@ Dashboard | {{ block.super }}
 {% endblock %}
 
 {% block layout %}
+	{% block navbar %}
     <div class="navbar navbar-fixed-top">
         <div class="navbar-inner">
             <div class="container" style="width: auto;">
@@ -32,6 +33,7 @@ Dashboard | {{ block.super }}
             </div>
         </div><!-- /navbar-inner -->
     </div><!-- /navbar -->
+	{% endblock navbar %}
 
     <div class="container-fluid dashboard">
         <div class="row-fluid">
