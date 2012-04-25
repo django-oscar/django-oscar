@@ -10,7 +10,7 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
 from django.template.defaultfilters import date as format_date
 from django.utils.datastructures import SortedDict
-from django.views.generic import TemplateView, ListView, DetailView, UpdateView, FormView
+from django.views.generic import ListView, DetailView, UpdateView, FormView
 from django.contrib import messages
 
 from oscar.core.loading import get_class

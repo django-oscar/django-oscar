@@ -1,6 +1,8 @@
 from django.utils.encoding import smart_str
 from django.core.urlresolvers import reverse
 from django.views.generic import TemplateView
+from django.contrib import messages
+from django.http import HttpResponseRedirect
 
 
 class BulkEditMixin():
@@ -19,7 +21,7 @@ class BulkEditMixin():
 
     def post(self, request, *args, **kwargs):
         action = request.POST.get('action', '').lower()
-        if action not in self.actions:
+        if not self.actions or action not in self.actions:
             messages.error(self.request, "Invalid action")
             return HttpResponseRedirect(reverse(self.current_view))
         ids = request.POST.getlist('selected_%s' % self.get_checkbox_object_name())
