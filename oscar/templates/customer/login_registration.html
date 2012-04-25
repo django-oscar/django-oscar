@@ -25,7 +25,7 @@ Login or register | {{ block.super }}
     </div>
     <div class="span6 register_form">
         <form action="{{ request.get_full_path }}" method="post" class="form-stacked" />
-            <h2>Register Here</h2>
+            <h2>Register</h2>
             {% csrf_token %}
             {% include "partials/form_fields.html" with form=registration_form %}
             <button name="registration_submit" type="submit" value="Register" class="btn">Register</button>
