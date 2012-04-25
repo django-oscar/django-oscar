@@ -142,7 +142,7 @@ class AbstractContributor(models.Model):
 class AbstractProductContributor(models.Model):
     product = models.ForeignKey('catalogue.Product')
     contributor = models.ForeignKey('catalogue.Contributor')
-    role = models.ForeignKey('catalogue.ContributorRole')
+    role = models.ForeignKey('catalogue.ContributorRole', blank=True, null=True)
     
     def __unicode__(self):
         return '%s <- %s - %s' % (self.product, self.role, self.contributor)
