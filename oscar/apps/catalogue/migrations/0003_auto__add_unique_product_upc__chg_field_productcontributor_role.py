@@ -8,9 +8,6 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
 
-        # Removing index on 'Product', fields ['upc']
-        db.delete_index('catalogue_product', ['upc'])
-
         # Adding unique constraint on 'Product', fields ['upc']
         db.create_unique('catalogue_product', ['upc'])
 
@@ -22,9 +19,6 @@ class Migration(SchemaMigration):
 
         # Removing unique constraint on 'Product', fields ['upc']
         db.delete_unique('catalogue_product', ['upc'])
-
-        # Adding index on 'Product', fields ['upc']
-        db.create_index('catalogue_product', ['upc'])
 
         # User chose to not deal with backwards NULL issues for 'ProductContributor.role'
         raise RuntimeError("Cannot reverse this migration. 'ProductContributor.role' and its values cannot be restored.")
