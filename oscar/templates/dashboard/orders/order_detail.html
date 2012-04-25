@@ -27,7 +27,6 @@ Order {{ order.number }} | {{ block.super }}
 
 {% block dashboard_content %}
 
-
     <h3>Customer Information</h3>
 	{% if order.user %}
 	
@@ -172,7 +171,7 @@ Order {{ order.number }} | {{ block.super }}
 			        <td>{{ line.line_price_before_discounts_incl_tax|currency }}</td>
 			        <td>{{ line.line_price_incl_tax|currency }}</td>
 			        <td>
-						<a href="{% url dashboard:order-line-detail order.number line.id %}" class="btn btn-info">Edit</a>
+						<a href="{% url dashboard:order-line-detail order.number line.id %}" class="btn btn-info">View</a>
 			        </td>
 			    </tr>
 			    {% endfor %}
@@ -509,6 +508,7 @@ Order {{ order.number }} | {{ block.super }}
                 <!-- {{ note_form.as_p }} -->
 				<div class="form-actions">
 				    <input type="submit" value="Save note" class="btn btn-primary" />
+					Notes are only editable for 5 minutes after being saved.
 				</div>
 			</form>
 			{% endblock %}

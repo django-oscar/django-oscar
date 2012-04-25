@@ -1,21 +1,34 @@
 {% extends 'dashboard/layout.html' %}
-{% load currency_filters %}
 
 {% block title %}
 Shipping address | Order {{ order.number }} | {{ block.super }}
 {% endblock %}
 
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url dashboard:index %}">Dashboard</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="{% url dashboard:order-list %}">Orders</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+		<a href="{% url dashboard:order-detail order.number %}">{{ order.number }}</a>
+        <span class="divider">/</span>
+    </li>
+	<li class="active"><a href=".">Edit shipping address</a></li>
+</ul>
+{% endblock %}
+
 {% block header %}
 <div class="page-header">
-    <h2>Order {{ order.number }} / Shipping address</h2>
+    <h2>Edit shipping address for order {{ order.number }}</h2>
 </div>
 {% endblock header %}
 
 {% block content %}
-
-<div class="sub-header">
-    <h3>Edit shipping address</h3>
-</div>
 
 <form action="." method="post" class="form-horizontal">
 	{% csrf_token %}
