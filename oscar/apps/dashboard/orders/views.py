@@ -1,4 +1,5 @@
 import csv
+import datetime
 from decimal import Decimal as D, InvalidOperation
 
 from django.contrib import messages
@@ -11,7 +12,6 @@ from django.shortcuts import get_object_or_404
 from django.template.defaultfilters import date as format_date
 from django.utils.datastructures import SortedDict
 from django.views.generic import ListView, DetailView, UpdateView, FormView
-from django.contrib import messages
 
 from oscar.core.loading import get_class
 from oscar.apps.dashboard.orders import forms
@@ -75,7 +75,7 @@ class OrderListView(ListView, BulkEditMixin):
     current_view = 'dashboard:order-list'
 
     def get(self, request, *args, **kwargs):
-        if 'order_number' in request.GET:
+        if 'order_number' in request.GET and request.GET.get('response_format', None) == 'html':
             try:
                 order = Order.objects.get(number=request.GET['order_number'])
             except Order.DoesNotExist:
@@ -384,7 +384,7 @@ class OrderDetailView(DetailView):
         except InvalidOperation:
             messages.error(request, "Please choose a valid amount")
             return self.reload_page_response()
-        return self._create_payment_event(request, order)
+        return self._create_payment_event(request, order, amount)
 
     def _create_payment_event(self, request, order, amount, lines=None,
                               quantities=None):

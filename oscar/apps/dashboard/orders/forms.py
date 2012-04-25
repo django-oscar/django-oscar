@@ -4,6 +4,7 @@ from django.db.models.loading import get_model
 Order = get_model('order', 'Order')
 OrderNote = get_model('order', 'OrderNote')
 ShippingAddress = get_model('order', 'ShippingAddress')
+SourceType = get_model('payment', 'SourceType')
 
 
 class OrderSearchForm(forms.Form):
@@ -20,7 +21,10 @@ class OrderSearchForm(forms.Form):
     date_to = forms.DateField(required=False, label="Date to", input_formats=date_formats)
 
     voucher = forms.CharField(required=False, label="Voucher code")
-    payment_method = forms.CharField(label="Payment method", required=False)
+
+    method_choices = (('', '---------'),) + tuple([(src.code, src.name) for src in SourceType.objects.all()])
+    payment_method = forms.ChoiceField(label="Payment method", required=False,
+                                       choices=method_choices)
 
     format_choices = (('html', 'HTML'),
                       ('csv', 'CSV'),)
