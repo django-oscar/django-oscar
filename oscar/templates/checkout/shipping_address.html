@@ -31,13 +31,13 @@ Shipping address | {{ block.super }}
 								{% csrf_token %}
 								<input type="hidden" name="action" value="ship_to" />
 								<input type="hidden" name="address_id" value="{{ address.id }}" />
-								<input type="submit" value="Ship to this address" class="btn btn-primary btn-small ship-address"/>
+								<button type="submit" value="Ship to this address" class="btn btn-primary btn-small ship-address">Ship to this address</button>
 							</form>
 
 							<form action="{% url checkout:user-address-delete address.id %}" method="post" class="remove-item">
 								{% csrf_token %}
 								<a class="btn btn-small btn-info" href="{% url checkout:user-address-update address.id %}">Edit</a>
-								<input type="submit" value="Delete" class="btn btn-small btn-danger" />
+								<button type="submit" value="Delete" class="btn btn-small btn-danger">Delete</button>
 							</form>
 						</div>
 					</li>
