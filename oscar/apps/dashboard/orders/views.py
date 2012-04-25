@@ -15,7 +15,7 @@ from django.views.generic import ListView, DetailView, UpdateView, FormView
 
 from oscar.core.loading import get_class
 from oscar.apps.dashboard.orders import forms
-from oscar.apps.dashboard.views import BulkEditMixin
+from oscar.views.generic import BulkEditMixin
 from oscar.apps.payment.exceptions import PaymentError
 
 Order = get_model('order', 'Order')

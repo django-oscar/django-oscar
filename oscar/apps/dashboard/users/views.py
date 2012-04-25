@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 from django.views.generic import ListView, DetailView
 
 from oscar.apps.dashboard.users import forms
-from oscar.apps.dashboard.views import BulkEditMixin
+from oscar.views.generic import BulkEditMixin
 
 
 class IndexView(ListView, BulkEditMixin):
