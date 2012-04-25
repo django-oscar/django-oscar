@@ -1,13 +1,12 @@
 import httplib
-from decimal import Decimal as D
 
 from django.test.client import Client
 from django.test import TestCase
 from django.http import HttpRequest
 from django.core.urlresolvers import reverse
+from django.contrib.auth.models import User
 
 from oscar.apps.customer.models import CommunicationEventType
-from oscar.apps.basket.models import Basket
 from oscar.apps.customer.history_helpers import get_recently_viewed_product_ids
 from oscar.test.helpers import create_product, create_order
 
@@ -66,3 +65,16 @@ class AnonOrderDetail(TestCase):
         response = self.client.get(reverse('customer:anon-order', kwargs={'order_number': order.number,
             'hash': 'bad'}))
         self.assertEqual(httplib.NOT_FOUND, response.status_code)
+
+
+class EditProfileTests(TestCase):
+
+    def test_change_password_page_returns_200(self):
+        User.objects.create_user(username='customer',
+                                 email='customer@example.com', password='')
+        self.client.login(username='customer', password='')
+        url = reverse('customer:profile-update')
+        response = self.client.get(url)
+        self.assertEqual(200, response.status_code)
+        self.assertTrue('form' in response.context)
+

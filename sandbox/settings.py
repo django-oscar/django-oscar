@@ -221,6 +221,7 @@ INSTALLED_APPS = (
     'oscar.apps.dashboard.promotions',
     'oscar.apps.dashboard.catalogue',
     'sorl.thumbnail',
+    'apps.user',
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -238,6 +239,8 @@ HAYSTACK_SEARCH_ENGINE = 'dummy'
 DEBUG_TOOLBAR_CONFIG = {
     'INTERCEPT_REDIRECTS': False
 }
+
+AUTH_PROFILE_MODULE = 'user.Profile'
 
 # Oscar settings
 from oscar.defaults import *

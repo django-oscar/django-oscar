@@ -3,8 +3,12 @@ import random
 
 from django.contrib.auth.forms import AuthenticationForm
 from django.utils.translation import ugettext_lazy as _
+from django.core.exceptions import ObjectDoesNotExist
 from django import forms
 from django.contrib.auth.models import User
+from django.conf import settings
+
+from oscar.core.loading import get_profile_class
 
 
 def generate_username():
@@ -92,3 +96,70 @@ class SearchByDateRangeForm(forms.Form):
         elif not date_from and date_to:
             return {'date_placed__lt': date_to}
         return {}
+
+
+class _UserForm(forms.ModelForm):
+
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        kwargs['instance'] = user
+        super(_UserForm, self).__init__(*args, **kwargs)
+
+    class Meta:
+        model = User
+        exclude = ('username', 'password', 'is_staff', 'is_superuser',
+                   'is_active', 'last_login', 'date_joined',
+                   'user_permissions', 'groups')
+
+
+if hasattr(settings, 'AUTH_PROFILE_MODULE'):
+
+    Profile = get_profile_class()
+
+    class _UserProfileForm(forms.ModelForm):
+
+        first_name = forms.CharField(label='First name', max_length=128)
+        last_name = forms.CharField(label='Last name', max_length=128)
+        email = forms.EmailField(label='Email address')
+
+        # Fields from user model
+        user_fields = ('first_name', 'last_name', 'email')
+
+        def __init__(self, user, *args, **kwargs):
+            self.user = user
+            try:
+                instance = user.get_profile()
+            except ObjectDoesNotExist:
+                # User has no profile, try a blank one
+                instance = Profile(user=user)
+            kwargs['instance'] = instance
+
+            super(_UserProfileForm, self).__init__(*args, **kwargs)
+
+            # Add user fields
+            self.fields['first_name'].initial = self.instance.user.first_name
+            self.fields['last_name'].initial = self.instance.user.last_name
+            self.fields['email'].initial = self.instance.user.email
+
+            # Ensure user fields are above profile
+            order = list(self.user_fields)
+            for field_name in self.fields.keys():
+                if field_name not in self.user_fields:
+                    order.append(field_name)
+            self.fields.keyOrder = order
+
+        class Meta:
+            model = Profile
+            exclude = ('user',)
+
+        def save(self, *args, **kwargs):
+            user = self.instance.user
+            user.first_name = self.cleaned_data['first_name']
+            user.last_name = self.cleaned_data['last_name']
+            user.email = self.cleaned_data['email']
+            user.save()
+            return super(ProfileForm, self).save(*args,**kwargs)
+
+    ProfileForm = _UserProfileForm
+else:
+    ProfileForm = _UserForm 

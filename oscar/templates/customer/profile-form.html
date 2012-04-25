@@ -1,6 +1,4 @@
 {% extends "layout.html" %}
-{% load currency_filters %}
-{% load thumbnail %}
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
@@ -12,18 +10,18 @@
         <a href="{% url customer:summary %}">Account</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">Change password</a></li>
+	<li class="active"><a href=".">Edit profile</a></li>
 </ul>
 {% endblock %}
 
 
 {% block title %}
-Change password {{ block.super }}
+Edit profile {{ block.super }}
 {% endblock %}
 
 {% block header %}
 <div class="page-header">
-    <h2>Change password</h2>
+    <h2>Edit profile</h2>
 </div>
 {% endblock header %}
 
@@ -34,7 +32,7 @@ Change password {{ block.super }}
 	{% csrf_token %}
 	{% include 'partials/form_fields.html' with form=form %}
 	<div class="form-actions">
-		<button type="submit" class="btn btn-primary">Update password</button>
+		<button type="submit" class="btn btn-primary">Save</button>
 		or <a href="{% url customer:summary %}">cancel</a>.
 	</div>
 </form>
