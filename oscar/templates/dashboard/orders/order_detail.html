@@ -480,7 +480,7 @@ Order {{ order.number }} | {{ block.super }}
 				</tr>
 				{% for note in notes %}
 				<tr>
-					<td>{{ note.date }}</td>
+					<td>{{ note.date_created }}</td>
 					<td>{{ note.user }}</td>
 					<td>{{ note.note_type }}</td>
 					<td>{{ note.message|linebreaks }}</td>
