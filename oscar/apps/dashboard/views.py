@@ -4,7 +4,7 @@ from django.views.generic import FormView
 from django.db.models.loading import get_model
 from django.db.models import Sum, Count
 
-from oscar.apps.dashboard.orders import forms
+from oscar.apps.dashboard import forms
 
 Order = get_model('order', 'Order')
 Line = get_model('order', 'Line')
