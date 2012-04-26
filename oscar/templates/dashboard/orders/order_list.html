@@ -65,7 +65,7 @@ Order management | {{ block.super }}
                     </div>
                 </div>
             {% endif%}
-            {% ifequal forloop.counter 1 %}<div class="orders_search">{% endifequal %}
+            {% ifequal forloop.counter 1 %}<div class="orders_search" style="display:none">{% endifequal %}
             {% ifequal forloop.revcounter0 1 %}</div>{% endifequal %}
         {% endfor %}
         <button type="submit" class="btn btn-primary pull-left">Search</button>
@@ -129,3 +129,7 @@ Order management | {{ block.super }}
 {% endif %}
 
 {% endblock dashboard_content %}
+
+{% block onbodyload %}
+oscar.dashboard.search.init();
+{% endblock onbodyload %}

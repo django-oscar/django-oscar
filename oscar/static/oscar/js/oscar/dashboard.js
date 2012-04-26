@@ -41,23 +41,24 @@ oscar.dashboard = {
                 }
             });
         }
+    },
+    search: {
+        init: function() {
+            var searchForm = $(".orders_search"),
+                searchLink = $('.pull_out'),
+                doc = $('document');
+            searchForm.each(function(index) {
+                doc.css('height', doc.height());
+            });
+            searchLink.on('click', function() {
+                console.log('asdf');
+                searchForm.parent()
+                    .find('.pull-left')
+                    .toggleClass('no-float')
+                    .end().end()
+                    .slideToggle("fast");
+                }
+            );
+        }
     }
 };
-
-// This block needs reworking to be part of the oscar namespace
-$(document).ready(function() {
-    var pull_out_draw = $(".orders_search"),
-        pull_out_link = $('.pull_out'),
-        $this = $(this);
-    pull_out_draw.each(function(index) {
-        $this.css('height', $this.height());
-    });
-    pull_out_draw.hide();  
-    pull_out_link.on('click', function() {
-      pull_out_draw.parent()
-        .find('.pull-left')
-        .toggleClass('no-float')
-        .end().end()
-        .slideToggle("fast");
-    });
-});
