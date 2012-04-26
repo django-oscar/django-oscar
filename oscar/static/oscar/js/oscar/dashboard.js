@@ -1,18 +1,18 @@
 var oscar = oscar || {};
-oscar.get_csrf_token = function() {
+oscar.getCsrfToken = function() {
     var cookies = document.cookie.split(';');
     var csrf_token = null;
     $.each(cookies, function(index, cookie) {
-        cookie_parts = $.trim(cookie).split('=');
+        cookieParts = $.trim(cookie).split('=');
         if (cookie_parts[0] == 'csrftoken') {
-            csrf_token = cookie_parts[1];
+            csrfToken = cookieParts[1];
         }
     });
-    return csrf_token;
+    return csrfToken;
 };
 oscar.dashboard = {
     orders: {
-        init_tabs: function() {
+        initTabs: function() {
             if (location.hash) {
                 $('.nav-tabs a[href=' + location.hash + ']').tab('show');
             }
@@ -22,14 +22,14 @@ oscar.dashboard = {
         init: function() {
             $('.promotion_list').sortable({
                 handle: '.btn-handle',
-                stop: oscar.dashboard.promotions.save_order
+                stop: oscar.dashboard.promotions.saveOrder
             });
         },
-        save_order: function(event, ui) {
+        saveOrder: function(event, ui) {
             // Get the csrf token, otherwise django will not accept the
             // POST request.
             var serial = $(this).sortable("serialize"),
-                csrf = oscar.get_csrf_token();
+                csrf = oscar.getCsrfToken();
             serial = serial + '&csrfmiddlewaretoken=' + csrf;
             $.ajax({
                 type: 'POST',
