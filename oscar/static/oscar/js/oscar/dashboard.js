@@ -11,6 +11,13 @@ oscar.get_csrf_token = function() {
     return csrf_token;
 };
 oscar.dashboard = {
+    orders: {
+        init_tabs: function() {
+            if (location.hash) {
+                $('.nav-tabs a[href=' + location.hash + ']').tab('show');
+            }
+        }
+    },
     promotions: {
         init: function() {
             $('.promotion_list').sortable({

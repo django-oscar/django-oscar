@@ -251,7 +251,8 @@ class OrderDetailView(DetailView):
         note_id = self.kwargs.get('note_id', None)
         if note_id:
             note = get_object_or_404(OrderNote, order=self.object, id=note_id)
-            kwargs['instance'] = note
+            if note.is_editable():
+                kwargs['instance'] = note
         return forms.OrderNoteForm(post_data, **kwargs)
 
     def post(self, request, *args, **kwargs):
@@ -285,8 +286,11 @@ class OrderDetailView(DetailView):
         messages.error(request, "No valid action submitted")
         return self.reload_page_response()
 
-    def reload_page_response(self):
-        return HttpResponseRedirect(reverse('dashboard:order-detail', kwargs={'number': self.object.number}))
+    def reload_page_response(self, fragment=None):
+        url = reverse('dashboard:order-detail', kwargs={'number': self.object.number})
+        if fragment:
+            url += '#' + fragment
+        return HttpResponseRedirect(url)
 
     def save_note(self, request, order):
         form = self.get_order_note_form()
@@ -297,7 +301,7 @@ class OrderDetailView(DetailView):
             note.order = order
             note.save()
             messages.success(self.request, success_msg)
-            return self.reload_page_response()
+            return self.reload_page_response(fragment='notes')
         ctx = self.get_context_data(note_form=form)
         return self.render_to_response(ctx)
 
@@ -330,7 +334,7 @@ class OrderDetailView(DetailView):
             messages.info(request, msg)
             order.notes.create(user=request.user, message=msg,
                             note_type=OrderNote.SYSTEM)
-        return self.reload_page_response()
+        return self.reload_page_response(fragment='activity')
 
     def change_line_statuses(self, request, order, lines, quantities):
         new_status = request.POST['new_status'].strip()
