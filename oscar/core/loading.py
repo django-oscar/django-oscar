@@ -9,6 +9,10 @@ class AppNotFoundError(Exception):
     pass
 
 
+class ClassNotFoundError(Exception):
+    pass
+
+
 def get_class(module_label, classname):
     return get_classes(module_label, [classname])[0]
 
@@ -56,10 +60,16 @@ def get_classes(module_label, classnames):
 def _pluck_classes(modules, classnames):
     klasses = []
     for classname in classnames:
+        klass = None
         for module in modules:
             if hasattr(module, classname):
-                klasses.append(getattr(module, classname))
+                klass = getattr(module, classname)
                 break
+        if not klass:
+            packages = [m.__package__ for m in modules]
+            raise ClassNotFoundError("No class '%s' found in %s" % (
+                classname, ", ".join(packages)))
+        klasses.append(klass)
     return klasses
 
 

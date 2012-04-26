@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib.flatpages.models import FlatPage
 
 from oscar.core.loading import import_module, AppNotFoundError, \
-        get_classes, get_class
+        get_classes, get_class, ClassNotFoundError
 from oscar.core.validators import ExtendedURLValidator
 from oscar.core.validators import URLDoesNotExistValidator
 from oscar.test import patch_settings
@@ -38,7 +38,11 @@ class ClassLoadingTests(TestCase):
 
     def test_bad_appname_raises_exception(self):
         with self.assertRaises(AppNotFoundError):
-            Product, Category = get_classes('fridge.models', ('Product', 'Category'))
+            get_classes('fridge.models', ('Product', 'Category'))
+
+    def test_bad_classname_raises_exception(self):
+        with self.assertRaises(ClassNotFoundError):
+            get_class('catalogue.models', 'Monkey')
 
 
 class ClassLoadingWithLocalOverrideTests(TestCase):
