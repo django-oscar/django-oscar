@@ -145,6 +145,8 @@ class Condition(models.Model):
         elif self.type == self.COVERAGE:
             return u"Basket includes %d distinct products from %s" % (self.value, unicode(self.range).lower())
         return u"Basket includes %d value from %s" % (self.value, unicode(self.range).lower())
+
+    description = __unicode__
     
     def consume_items(self, basket, lines=None):
         return ()
@@ -192,6 +194,8 @@ class Benefit(models.Model):
         elif self.max_affected_items > 1:
             desc += u" (max %d items)" % self.max_affected_items
         return desc
+
+    description = __unicode__
     
     def apply(self, basket, condition=None):
         return Decimal('0.00')
