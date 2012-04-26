@@ -1,0 +1,9 @@
+language: python
+python:
+- 2.6
+- 2.7
+install:
+script:
+- pip install -r requirements-dev.txt
+- ./setup.py develop
+- cd examples/vanilla && ./manage.py test oscar --settings=settings_test
