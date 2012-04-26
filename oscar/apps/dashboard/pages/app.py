@@ -6,7 +6,7 @@ from oscar.apps.dashboard.pages import views
 from oscar.apps.dashboard.nav import register, Node
 
 node = Node('Pages', 'dashboard:page-list')
-register(node)
+register(node, 4)
 
 
 class FlatPageManagementApplication(Application):

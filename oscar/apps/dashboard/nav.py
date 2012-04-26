@@ -41,15 +41,17 @@ class Node(object):
     def has_children(self):
         return len(self.children) > 0
 
-def register(node):
-    _nodes.append(node)
+def register(node, display_order=5):
+    # We use tuples so we can sort later on.  The lower the display order, the
+    # closer to the left the node appears.
+    _nodes.append((display_order, node))
 
 def flush():
     _nodes = []
 
 def get_nodes(user):
     nodes = []
-    for node in _nodes:
+    for _, node in sorted(_nodes):
         filtered_node = node.filter(user)
         if filtered_node:
             nodes.append(node)
