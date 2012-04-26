@@ -13,7 +13,11 @@ Update product | {{ block.super }}
         <a href="{% url dashboard:index %}">Dashboard</a>
         <span class="divider">/</span>
     </li>
-    <li class="active"><a href=".">Catalogue</a></li>
+    <li>
+        <a href="{% url dashboard:catalogue-product-list %}">Catalogue</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active"><a href=".">{{ title }}</a></li>
 </ul>
 {% endblock %}
 
@@ -97,6 +101,7 @@ Update product | {{ block.super }}
 		</div>
 		{% block stockrecord_form %}
 		    <div class="row ">
+                {{ stockrecord_form.non_field_errors }}
                 {% for field in stockrecord_form %}
                 <div class="control-group {% for error in field.errors %}error{% endfor %} span4 pull-left {% if forloop.counter|divisibleby:2 %}{% else %}pull-clear{% endif %}">
                     {% if field.is_hidden %}
