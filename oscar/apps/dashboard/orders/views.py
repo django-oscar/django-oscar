@@ -6,12 +6,12 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.loading import get_model
-from django.db.models import Sum, Count, fields, Q
+from django.db.models import fields, Q
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
 from django.template.defaultfilters import date as format_date
 from django.utils.datastructures import SortedDict
-from django.views.generic import ListView, DetailView, UpdateView, FormView
+from django.views.generic import ListView, DetailView, UpdateView
 
 from oscar.core.loading import get_class
 from oscar.apps.dashboard.orders import forms
@@ -25,42 +25,6 @@ Line = get_model('order', 'Line')
 ShippingEventType = get_model('order', 'ShippingEventType')
 PaymentEventType = get_model('order', 'PaymentEventType')
 EventHandler = get_class('order.processing', 'EventHandler')
-
-
-class OrderSummaryView(FormView):
-    template_name = 'dashboard/orders/summary.html'
-    form_class = forms.OrderSummaryForm
-
-    def get(self, request, *args, **kwargs):
-        if 'date_from' in request.GET or 'date_to' in request.GET:
-            return self.post(request, *args, **kwargs)
-        return super(OrderSummaryView, self).get(request, *args, **kwargs)
-
-    def form_valid(self, form):
-        ctx = self.get_context_data(form=form, 
-                                    filters=form.get_filters())
-        return self.render_to_response(ctx)
-
-    def get_form_kwargs(self):
-        kwargs = super(OrderSummaryView, self).get_form_kwargs()
-        kwargs['data'] = self.request.GET
-        return kwargs
-
-    def get_context_data(self, **kwargs):
-        ctx = super(OrderSummaryView, self).get_context_data(**kwargs)
-        filters = kwargs.get('filters', {})
-        ctx.update(self.get_stats(filters))
-        return ctx
-
-    def get_stats(self, filters):
-        orders = Order.objects.filter(**filters)
-        stats = {
-            'total_orders': orders.count(),
-            'total_lines': Line.objects.filter(order__in=orders).count(),
-            'total_revenue': orders.aggregate(Sum('total_incl_tax'))['total_incl_tax__sum'] or D('0.00'),
-            'order_status_breakdown': orders.order_by('status').values('status').annotate(freq=Count('id'))
-        }
-        return stats
 
 
 class OrderListView(ListView, BulkEditMixin):

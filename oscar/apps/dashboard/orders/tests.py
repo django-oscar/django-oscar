@@ -12,17 +12,6 @@ from oscar.test.helpers import create_order
 from oscar.apps.order.models import Order, OrderNote
 
 
-class OrderSummaryTests(ClientTestCase):
-    is_staff = True
-
-    def test_summary_page_has_stats_vars_in_context(self):
-        url = reverse('dashboard:order-summary')
-        response = self.client.get(url)
-        self.assertInContext(response, 'total_orders')
-        self.assertInContext(response, 'total_lines')
-        self.assertInContext(response, 'total_revenue')
-
-
 class OrderListTests(ClientTestCase):
     is_staff = True
 

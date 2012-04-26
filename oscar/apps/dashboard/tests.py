@@ -28,3 +28,11 @@ class DashboardViewTests(ClientTestCase):
         for name in urls:
             response = self.client.get(reverse(name))
             self.assertTrue('Password' not in response.content)
+
+    def test_dashboard_index_has_stats_vars_in_context(self):
+        response = self.client.get(reverse('dashboard:index'))
+
+        self.assertInContext(response, 'total_orders')
+        self.assertInContext(response, 'total_lines')
+        self.assertInContext(response, 'total_revenue')
+

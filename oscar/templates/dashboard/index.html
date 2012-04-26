@@ -1,4 +1,7 @@
 {% extends 'dashboard/layout.html' %}
+{% load currency_filters %}
+
+{% block body_class %}orders{% endblock %}
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
@@ -17,5 +20,42 @@
 {% endblock %}
 
 {% block dashboard_content %}
-<p>Choose an option from above.</p>
+<div class="well well-info">
+    <form method="get" action="{% url dashboard:index %}" class="form-inline">
+        <h3 class="app-ico ico_magnify icon">Filter</h3>
+        {% include "partials/form_fields_inline.html" with form=form %}
+        <input type="submit" value="Filter result" class="btn primary" />
+    </form>
+</div>
+<table class="table table-striped table-bordered">
+	<caption>Global stats</caption>
+	<tr>
+		<th>Total orders</th>
+		<td>{{ total_orders }}</td>
+	</tr>
+	<tr>
+		<th>Total lines</th>
+		<td>{{ total_lines }}</td>
+	</tr>
+	<tr>
+		<th>Total revenue</th>
+		<td>{{ total_revenue|currency }}</td>
+	</tr>
+</table>
+
+{% if order_status_breakdown %}
+<table class="table table-striped table-bordered">
+	<caption>Order status breakdown</caption>
+	<tr>
+		<th>Status</th>
+		<th>Frequency</th>
+	</tr>
+	{% for dict in order_status_breakdown %}
+	<tr>
+		<td><a href="{% url dashboard:order-list %}?order_status={{ dict.status }}">{{ dict.status }}</a></td>
+		<td>{{ dict.freq }}</td>
+	</tr>
+	{% endfor %}
+</table>
+{% endif %}
 {% endblock %}
