@@ -1,9 +1,1 @@
 {% extends 'dashboard/offers/step_form.html' %}
-
-{% block form_actions %}
-<div class="form-actions">
-	<a href="{% url dashboard:offer-condition pk %}" class="btn btn-primary">Back</a> or
-	<button class="btn btn-primary" type="submit">Continue</button> or
-	<a href="{% url dashboard:page-list %}">cancel</a>
-</div>
-{% endblock form_actions %}
