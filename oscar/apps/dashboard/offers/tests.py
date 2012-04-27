@@ -1,9 +1,11 @@
 import datetime
 
 from django.core.urlresolvers import reverse
+from django.test import TestCase
 
 from oscar.test import ClientTestCase
 from oscar.apps.offer.models import Range, ConditionalOffer, Condition, Benefit
+from oscar.apps.dashboard.offers.forms import MetaDataForm
 
 
 class ViewTests(ClientTestCase):
@@ -17,16 +19,31 @@ class ViewTests(ClientTestCase):
             self.assertIsOk(self.client.get(url))
 
 
+class MetadataFormTests(TestCase):
+
+    def test_dates_must_be_cronological(self):
+        start_date = datetime.date(2012, 1, 1)
+        end_date = datetime.date(2011, 1, 1)
+        post = {'name': 'dummy',
+                'description': 'dummy',
+                'start_date': start_date,
+                'end_date': end_date,}
+        form = MetaDataForm(post)
+        self.assertFalse(form.is_valid())
+
+
 class OfferCreationTests(ClientTestCase):
     is_staff = True
+
+    def setUp(self):
+        super(OfferCreationTests, self).setUp()
+        self.range = Range.objects.create(name='All products',
+                                          includes_all_products=True)
 
     def tearDown(self):
         ConditionalOffer.objects.all().delete()
 
     def test_happy_path(self):
-        range = Range.objects.create(name='All products',
-                                     includes_all_products=True)
-
         # Metadata
         response = self.client.post(reverse('dashboard:offer-metadata'),
                                             {'name': 'my offer',
@@ -37,14 +54,14 @@ class OfferCreationTests(ClientTestCase):
 
         # Condition
         response = self.client.post(reverse('dashboard:offer-condition'),
-                                            {'range': range.id,
+                                            {'range': self.range.id,
                                              'type': 'Count',
                                              'value': '3',})
         self.assertIsRedirect(response)
 
         # Benefit
         response = self.client.post(reverse('dashboard:offer-benefit'),
-                                            {'range': range.id,
+                                            {'range': self.range.id,
                                              'type': 'Multibuy',
                                              'value': '1',})
         self.assertIsRedirect(response)
@@ -57,6 +74,10 @@ class OfferCreationTests(ClientTestCase):
         self.assertEqual(1, len(offers))
         offer = offers[0]
         self.assertEqual('my offer', offer.name)
+
+    def test_cannot_jump_to_condition_step(self):
+        response = self.client.get(reverse('dashboard:offer-condition'))
+        self.assertIsRedirect(response)
 
 
 class OfferUpdatingTests(ClientTestCase):
@@ -120,3 +141,8 @@ class OfferUpdatingTests(ClientTestCase):
 
         offer = ConditionalOffer.objects.get(id=self.offer.id)
         self.assertEqual('my new offer', offer.name)
+
+    def test_can_jump_to_condition_step(self):
+        response = self.client.get(reverse('dashboard:offer-condition',
+                                           kwargs={'pk': self.offer.id}))
+        self.assertIsOk(response)

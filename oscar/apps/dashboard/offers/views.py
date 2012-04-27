@@ -26,12 +26,24 @@ class OfferWizardStepView(FormView):
     step_name = None
     update = False
     url_name = None
-    previous_url_name = None
+
+    # Keep a reference to previous view class to allow checks to be made on whether
+    # prior steps have been completed
+    previous_view = None
 
     def dispatch(self, request, *args, **kwargs):
         if self.update:
             self.offer = get_object_or_404(ConditionalOffer, id=kwargs['pk'])
+        if not self.is_previous_step_complete(request):
+            messages.warning(request, "%s step not complete" %
+                             self.previous_view.step_name.title())
+            return HttpResponseRedirect(self.get_back_url())
         return super(OfferWizardStepView, self).dispatch(request, *args, **kwargs)
+
+    def is_previous_step_complete(self, request):
+        if not self.previous_view:
+            return True
+        return self.previous_view.is_valid(self, request)
 
     def _store_form_kwargs(self, form):
         session_data = self.request.session.setdefault(self.wizard_name, {})
@@ -50,9 +62,13 @@ class OfferWizardStepView(FormView):
         session_data[self.step_name + '_obj'] = form.save(commit=False)
         self.request.session.save()
 
-    def _fetch_object(self, step_name):
+    def _fetch_object(self, step_name, request=None):
+        # We pass in the session as part of the checks on previous steps, as in those
+        # cases we're using an
+        if not request:
+            request = self.request
         session_data = self.request.session.setdefault(self.wizard_name, {})
-        return session_data[step_name + '_obj']
+        return session_data.get(step_name + '_obj', None)
 
     def _flush_session(self):
         self.request.session[self.wizard_name] = {}
@@ -77,12 +93,12 @@ class OfferWizardStepView(FormView):
         return ctx
 
     def get_back_url(self):
-        if not self.previous_url_name:
+        if not self.previous_view:
             return None
         if self.update:
-            return reverse(self.previous_url_name,
+            return reverse(self.previous_view.url_name,
                            kwargs={'pk': self.kwargs['pk']})
-        return self.previous_url_name
+        return reverse(self.previous_view.url_name)
 
     def get_title(self):
         if self.update:
@@ -96,16 +112,24 @@ class OfferWizardStepView(FormView):
 
     def get_success_url(self):
         if self.update:
-            return reverse(self.url_name,
+            return reverse(self.success_url_name,
                            kwargs={'pk': self.kwargs['pk']})
-        return reverse(self.url_name)
+        return reverse(self.success_url_name)
+
+    @classmethod
+    def is_valid(cls, current_view, request):
+        if current_view.update:
+            return True
+        current_view.request = request
+        return current_view._fetch_object(cls.step_name) is not None
 
 
 class OfferMetaDataView(OfferWizardStepView):
     step_name = 'metadata'
     form_class = MetaDataForm
     template_name = 'dashboard/offers/metadata_form.html'
-    url_name = 'dashboard:offer-condition'
+    url_name = 'dashboard:offer-metadata'
+    success_url_name = 'dashboard:offer-condition'
 
     def get_instance(self):
         return self.offer
@@ -115,8 +139,9 @@ class OfferConditionView(OfferWizardStepView):
     step_name = 'condition'
     form_class = ConditionForm
     template_name = 'dashboard/offers/condition_form.html'
-    url_name = 'dashboard:offer-benefit'
-    previous_url_name = 'dashboard:offer-metadata'
+    url_name = 'dashboard:offer-condition'
+    success_url_name = 'dashboard:offer-benefit'
+    previous_view = OfferMetaDataView
 
     def get_instance(self):
         return self.offer.condition
@@ -126,8 +151,9 @@ class OfferBenefitView(OfferWizardStepView):
     step_name = 'benefit'
     form_class = BenefitForm
     template_name = 'dashboard/offers/benefit_form.html'
-    url_name = 'dashboard:offer-preview'
-    previous_url_name = 'dashboard:offer-condition'
+    url_name = 'dashboard:offer-benefit'
+    success_url_name = 'dashboard:offer-preview'
+    previous_view = OfferConditionView
 
     def get_instance(self):
         return self.offer.benefit
@@ -137,7 +163,8 @@ class OfferPreviewView(OfferWizardStepView):
     step_name = 'preview'
     form_class = PreviewForm
     template_name = 'dashboard/offers/preview.html'
-    previous_url_name = 'dashboard:offer-benefit'
+    previous_view = OfferBenefitView
+    url_name = 'dashboard:offer-preview'
 
     def get_context_data(self, **kwargs):
         ctx = super(OfferPreviewView, self).get_context_data(**kwargs)
