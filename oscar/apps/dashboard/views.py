@@ -89,6 +89,7 @@ class IndexView(FormView):
 
         stats = {
             'total_orders_last_day': orders_last_day.count(),
+            'total_lines_last_day': orders_last_day.aggregate(Sum('lines'))['lines__sum'] or 0,
             'average_order_costs': orders_last_day.aggregate(Avg('total_incl_tax'))['total_incl_tax__avg'] or D('0.00'),
             'total_revenue_last_day': orders_last_day.aggregate(Sum('total_incl_tax'))['total_incl_tax__sum'] or D('0.00'),
 
