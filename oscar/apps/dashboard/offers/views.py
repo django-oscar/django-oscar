@@ -64,7 +64,17 @@ class OfferWizardStepView(FormView):
     def get_context_data(self, **kwargs):
         ctx = super(OfferWizardStepView, self).get_context_data(**kwargs)
         ctx['pk'] = self.kwargs.get('pk', None)
+        ctx['title'] = self.get_title()
         return ctx
+
+    def get_title(self):
+        if self.update:
+            offer = self.get_offer()
+            return "Edit %s for offer #%d" % (self.step_name, offer.id)
+        return 'Create new offer: %s' % self.step_name
+
+    def get_offer(self):
+        return ConditionalOffer._default_manager.get(id=self.kwargs['pk'])
 
     def form_valid(self, form):
         self._store_form_kwargs(form)
@@ -125,6 +135,12 @@ class OfferPreviewView(OfferWizardStepView):
         self._flush_session()
 
         return HttpResponseRedirect(self.get_success_url())
+
+    def get_title(self):
+        if self.update:
+            offer = self.get_offer()
+            return "Preview offer #%d" % offer.id
+        return 'Preview offer'
 
     def get_success_url(self):
         return reverse('dashboard:offer-list')

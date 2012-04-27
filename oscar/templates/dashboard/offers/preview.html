@@ -1,36 +1,6 @@
-{% extends 'dashboard/layout.html' %}
-{% load currency_filters %}
+{% extends 'dashboard/offers/step_form.html' %}
 
-{% block title %}
-Create new offer | Offer management | {{ block.super }}
-{% endblock %}
-
-{% block breadcrumbs %}
-<ul class="breadcrumb">
-    <li>
-        <a href="{% url dashboard:index %}">Dashboard</a>
-        <span class="divider">/</span>
-    </li>
-    <li>
-        <a href="{% url dashboard:offer-list %}">Offers</a>
-        <span class="divider">/</span>
-    </li>
-    <li class="active"><a href=".">Create new offer</a></li>
-</ul>
-{% endblock %}
-
-{% block header %}
-<div class="page-header">
-    <h1>Create new offer</h1>
-</div>
-{% endblock header %}
-
-{% block dashboard_content %}
-<form action="." method="post" class="_form-horizontal">
-	{% csrf_token %}
-	<legend>Preview</legend>
-	{% include "partials/form_fields.html" with form=form %}
-
+{% block form_extradata %}
 	<table class="table">
 		<tbody>
 			<tr><th>Name</th><td>{{ offer.name }}</td></tr>
@@ -41,11 +11,13 @@ Create new offer | Offer management | {{ block.super }}
 			<tr><th>Benefit</th><td>{{ benefit.description }}</td></tr>
 		</tbody>
 	</table>
+{% endblock %}
 
+{% block form_actions %}
 	<div class="form-actions">
-		<a href="{% url dashboard:offer-benefit %}" class="btn btn-primary">Back to previous step</a> or
+		<a href="{% url dashboard:offer-benefit pk %}" class="btn btn-primary">Back</a> or
 		<button class="btn btn-success btn-large" type="submit">Save</button> or
 		<a href="{% url dashboard:page-list %}">cancel</a>
 	</div>
 </form>
-{% endblock dashboard_content %}
+{% endblock %}

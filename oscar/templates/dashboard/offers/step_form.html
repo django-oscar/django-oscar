@@ -1,0 +1,41 @@
+{% extends 'dashboard/layout.html' %}
+{% load currency_filters %}
+
+{% block title %}
+{{ title }} | Offer management | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url dashboard:index %}">Dashboard</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="{% url dashboard:offer-list %}">Offers</a>
+        <span class="divider">/</span>
+    </li>
+	<li class="active"><a href=".">{{ title }}</a></li>
+</ul>
+{% endblock %}
+
+{% block header %}
+<div class="page-header">
+	<h1>{{ title }}</h1>
+</div>
+{% endblock header %}
+
+{% block dashboard_content %}
+<form action="." method="post" class="">
+	{% csrf_token %}
+	{% include "partials/form_fields.html" with form=form %}
+	{% block form_extradata %}{% endblock %}
+	{% block form_actions %}
+	<div class="form-actions">
+		<a href="{% url dashboard:offer-metadata pk %}" class="btn btn-primary">Back</a> or
+		<button class="btn btn-primary" type="submit">Continue</button> or
+		<a href="{% url dashboard:page-list %}">cancel</a>
+	</div>
+	{% endblock form_actions %}
+</form>
+{% endblock dashboard_content %}
