@@ -18,7 +18,7 @@ class ConditionalOffer(models.Model):
     """
     A conditional offer (eg buy 1, get 10% off)
     """
-    name = models.CharField(max_length=128)
+    name = models.CharField(max_length=128, unique=True)
     description = models.TextField(blank=True, null=True)
 
     # Offers come in a few different types:
