@@ -49,9 +49,9 @@ Offer management | {{ block.super }}
 					<td>{{ offer.benefit.description }}</td>
 					<td>{{ offer.date_created }}</td>
 					<td>
-						<a class="btn btn-info" href="">Stats</a>
+						<a class="btn btn-info" href="{% url dashboard:offer-detail offer.pk %}">Stats</a>
 						<a class="btn btn-primary" href="{% url dashboard:offer-metadata offer.pk %}">Edit</a>
-						<a class="btn btn-danger" href="">Delete</a>
+						<a class="btn btn-danger" href="{% url dashboard:offer-delete offer.pk %}">Delete</a>
 					</td>
 				</tr>
 				{% endfor %}

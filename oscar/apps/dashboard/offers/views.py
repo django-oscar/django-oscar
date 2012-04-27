@@ -1,4 +1,4 @@
-from django.views.generic import ListView, FormView
+from django.views.generic import ListView, FormView, DeleteView
 from django.db.models.loading import get_model
 from django.core.urlresolvers import reverse
 from django.contrib import messages
@@ -31,14 +31,22 @@ class OfferWizardStepView(FormView):
     # prior steps have been completed
     previous_view = None
 
-    def dispatch(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
+        if self.update:
+            self.offer = get_object_or_404(ConditionalOffer, id=kwargs['pk'])
+        if not self.is_previous_step_complete(request):
+            messages.warning(request, "%s step not complete" % self.previous_view.step_name.title())
+            return HttpResponseRedirect(self.get_back_url())
+        return super(OfferWizardStepView, self).get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
         if self.update:
             self.offer = get_object_or_404(ConditionalOffer, id=kwargs['pk'])
         if not self.is_previous_step_complete(request):
             messages.warning(request, "%s step not complete" %
                              self.previous_view.step_name.title())
             return HttpResponseRedirect(self.get_back_url())
-        return super(OfferWizardStepView, self).dispatch(request, *args, **kwargs)
+        return super(OfferWizardStepView, self).post(request, *args, **kwargs)
 
     def is_previous_step_complete(self, request):
         if not self.previous_view:
@@ -120,7 +128,6 @@ class OfferWizardStepView(FormView):
     def is_valid(cls, current_view, request):
         if current_view.update:
             return True
-        current_view.request = request
         return current_view._fetch_object(cls.step_name) is not None
 
 
@@ -168,21 +175,21 @@ class OfferPreviewView(OfferWizardStepView):
 
     def get_context_data(self, **kwargs):
         ctx = super(OfferPreviewView, self).get_context_data(**kwargs)
-        ctx['offer'] = self._fetch_object('metadata')
-        ctx['condition'] = self._fetch_object('condition')
-        ctx['benefit'] = self._fetch_object('benefit')
+        ctx['offer'] = self._fetch_object('metadata') or self.offer
+        ctx['condition'] = self._fetch_object('condition') or self.offer.condition
+        ctx['benefit'] = self._fetch_object('benefit') or self.offer.benefit
         return ctx
 
     def get_form_kwargs(self, *args, **kwargs):
         return super(OfferWizardStepView, self).get_form_kwargs(*args, **kwargs)
 
     def form_valid(self, form):
-        condition = self._fetch_object('condition')
+        condition = self._fetch_object('condition') or self.offer.condition
         condition.save()
-        benefit = self._fetch_object('benefit')
+        benefit = self._fetch_object('benefit') or self.offer.benefit
         benefit.save()
 
-        offer = self._fetch_object('metadata')
+        offer = self._fetch_object('metadata') or self.offer
         offer.condition = condition
         offer.benefit = benefit
         offer.save()
@@ -190,7 +197,7 @@ class OfferPreviewView(OfferWizardStepView):
         self._flush_session()
 
         if self.update:
-            msg = "Offer #%d updated"
+            msg = "Offer #%d updated" % offer.id
         else:
             msg = "Offer created!"
         messages.success(self.request, msg)
@@ -203,4 +210,14 @@ class OfferPreviewView(OfferWizardStepView):
         return 'Preview offer'
 
     def get_success_url(self):
+        return reverse('dashboard:offer-list')
+
+
+class OfferDeleteView(DeleteView):
+    model = ConditionalOffer
+    template_name = 'dashboard/offers/offer_delete.html'
+    context_object_name = 'offer'
+
+    def get_success_url(self):
+        messages.success(self.request, "Offer deleted!")
         return reverse('dashboard:offer-list')

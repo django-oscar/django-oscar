@@ -17,6 +17,7 @@ class OffersDashboardApplication(Application):
     condition_view = views.OfferConditionView
     benefit_view = views.OfferBenefitView
     preview_view = views.OfferPreviewView
+    delete_view = views.OfferDeleteView
 
     def get_urls(self):
         urlpatterns = patterns('',
@@ -31,6 +32,8 @@ class OffersDashboardApplication(Application):
             url(r'^(?P<pk>\d+)/condition/$', self.condition_view.as_view(update=True), name='offer-condition'),
             url(r'^(?P<pk>\d+)/benefit/$', self.benefit_view.as_view(update=True), name='offer-benefit'),
             url(r'^(?P<pk>\d+)/preview/$', self.preview_view.as_view(update=True), name='offer-preview'),
+            # Delete
+            url(r'^(?P<pk>\d+)/delete/$', self.delete_view.as_view(), name='offer-delete'),
         )
         return self.post_process_urls(urlpatterns)
 
