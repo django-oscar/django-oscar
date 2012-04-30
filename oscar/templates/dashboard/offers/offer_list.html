@@ -22,6 +22,17 @@ Offer management | {{ block.super }}
 {% endblock header %}
 
 {% block dashboard_content %}
+<div class="well well-info">
+    <div class="sub-header">
+		<h3>Search</h3>
+    </div>
+    <form action="." method="get" class="form-inline">
+		{% include 'partials/form_fields_inline.html' with form=form %}
+        <button type="submit" class="btn btn-primary">Search</button>
+		<a href="{% url dashboard:offer-list %}" class="btn">Reset</a>
+    </form>
+</div>
+
 <p><a href="{% url dashboard:offer-metadata %}" class="btn-large btn-primary">Create new offer</a></p>
 
 	<div class="sub-header">

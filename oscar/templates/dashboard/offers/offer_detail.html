@@ -49,6 +49,9 @@ Offer #{{ offer.id }} | Offer management | {{ block.super }}
 	</table>
 
     <h2>Recent orders</h2>
+	{% if not order_discounts %}
+	<p>No orders have been placed that use this offer.</p>
+	{% else %}
 	<p>We show a maximum of 20 orders sorted by recency.</p>
 	<table class="table">
 		<thead>
@@ -70,6 +73,7 @@ Offer #{{ offer.id }} | Offer management | {{ block.super }}
 			{% endfor %}
 		</tbody>
 	</table>
+	{% endif %}
 
 	<div class="form-actions">
 		<a class="btn btn-primary" href="{% url dashboard:offer-metadata offer.id %}">Edit</a> or

@@ -1,3 +1,5 @@
+import datetime
+
 from django.views.generic import ListView, FormView, DeleteView, DetailView
 from django.db.models.loading import get_model
 from django.core.urlresolvers import reverse
@@ -11,14 +13,42 @@ ConditionalOffer = get_model('offer', 'ConditionalOffer')
 Condition= get_model('offer', 'Condition')
 OrderDiscount = get_model('order', 'OrderDiscount')
 Benefit = get_model('offer', 'Benefit')
-MetaDataForm, ConditionForm, BenefitForm, PreviewForm = get_classes('dashboard.offers.forms', [
-    'MetaDataForm', 'ConditionForm', 'BenefitForm', 'PreviewForm'])
+MetaDataForm, ConditionForm, BenefitForm, PreviewForm, OfferSearchForm = get_classes(
+    'dashboard.offers.forms', [
+        'MetaDataForm', 'ConditionForm', 'BenefitForm', 'PreviewForm',
+        'OfferSearchForm'])
 
 
 class OfferListView(ListView):
     model = ConditionalOffer
     context_object_name = 'offers'
     template_name = 'dashboard/offers/offer_list.html'
+    form_class = OfferSearchForm
+
+    def get_queryset(self):
+        qs = self.model._default_manager.all()
+        self.description = "All offers"
+
+        self.form = self.form_class(self.request.GET)
+        if not self.form.is_valid():
+            return qs
+
+        data = self.form.cleaned_data
+
+        if data['name']:
+            qs = qs.filter(name__icontains=data['name'])
+            self.description = "Offers matching '%s'" % data['name']
+        if data['is_active']:
+            today = datetime.date.today()
+            qs = qs.filter(start_date__lte=today, end_date__gt=today)
+
+        return qs
+
+    def get_context_data(self, **kwargs):
+        ctx = super(OfferListView, self).get_context_data(**kwargs)
+        ctx['queryset_description'] = self.description
+        ctx['form'] = self.form
+        return ctx
 
 
 class OfferWizardStepView(FormView):

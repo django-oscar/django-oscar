@@ -45,7 +45,9 @@ class ConditionalOffer(models.Model):
     # dates are ignored and only the dates from the voucher are used to determine 
     # availability.
     start_date = models.DateField(blank=True, null=True)
-    end_date = models.DateField(blank=True, null=True)
+    end_date = models.DateField(blank=True, null=True,
+                                help_text="""Offers are not active on their end
+                                date, only the days preceding""")
 
     # Some complicated situations require offers to be applied in a set order.
     priority = models.IntegerField(default=0, help_text="The highest priority offers are applied first")
