@@ -5,9 +5,7 @@ from django.views.generic import TemplateView
 from django.db.models.loading import get_model
 from django.db.models import Avg, Sum, Count
 
-from oscar.core.loading import get_class
 from oscar.apps.offer.models import SITE
-OrderSummaryForm = get_class('dashboard.forms', 'OrderSummaryForm')
 ConditionalOffer = get_model('offer', 'ConditionalOffer')
 Voucher = get_model('voucher', 'Voucher')
 StockAlert = get_model('partner', 'StockAlert')
