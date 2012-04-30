@@ -67,8 +67,8 @@ Catalogue management | {{ block.super }}
     </tr>
     {% for product in products %}
     <tr>
-		<td>{{ product.upc }}</td>
-        <td>{{ product.title }}</td>
+		<td>{{ product.upc|default:"-" }}</td>
+        <td>{{ product.get_title }}</td>
 		<td>{{ product.product_class.name }}</td>
 		<td>{{ product.status|default:"-" }}</td>
 		{% with stockrecord=product.stockrecord %}

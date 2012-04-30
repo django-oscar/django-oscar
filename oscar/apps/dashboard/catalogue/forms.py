@@ -61,7 +61,7 @@ class ProductForm(forms.ModelForm):
     def _attr_date_field(self, attribute):
         return forms.DateField(label=attribute.name,
                                required=attribute.required,
-                               widget=SelectDateWidget)
+                               widget=forms.widgets.SelectDateWidget)
 
     def _attr_option_field(self, attribute):
         return forms.ModelChoiceField(
@@ -117,6 +117,8 @@ class ProductForm(forms.ModelForm):
         for attribute in self.product_class.attributes.all():
             value = self.cleaned_data['attr_%s' % attribute.code]
             setattr(object.attr, attribute.code, value)
+        if not object.upc:
+            object.upc = None
         object.save()
         return object
 

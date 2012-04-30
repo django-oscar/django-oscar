@@ -68,11 +68,22 @@ class AnonOrderDetail(TestCase):
 
 
 class EditProfileTests(TestCase):
+    username = 'customer'
+    password = 'cheeseshop'
+    email = 'customer@example.com'
 
-    def test_change_password_page_returns_200(self):
-        User.objects.create_user(username='customer',
-                                 email='customer@example.com', password='test')
-        self.client.login(username='customer', password='test')
+    def setUp(self):
+        User.objects.create_user(username=self.username,
+                                 email=self.email, password=self.password)
+        is_successful = self.client.login(username=self.username, 
+                                          password=self.password)
+        if not is_successful:
+            self.fail("Unable to login as %s" % self.username)
+
+    def tearDown(self):
+        User.objects.all().delete()
+
+    def test_update_profile_page_for_smoke(self):
         url = reverse('customer:profile-update')
         response = self.client.get(url)
         self.assertEqual(200, response.status_code)

@@ -9,7 +9,7 @@ from oscar.apps.dashboard.nav import register, Node
 node = Node('Content blocks')
 node.add_child(Node('All blocks', 'dashboard:promotion-list'))
 node.add_child(Node('By page', 'dashboard:promotion-list-by-page'))
-register(node)
+register(node, 3)
 
 
 class PromotionsDashboardApplication(Application):

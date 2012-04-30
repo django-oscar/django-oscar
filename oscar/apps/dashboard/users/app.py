@@ -6,7 +6,7 @@ from oscar.apps.dashboard.users import views
 from oscar.apps.dashboard.nav import register, Node
 
 node = Node('Users', 'dashboard:users-index')
-register(node)
+register(node, 5)
 
 
 class UserManagementApplication(Application):
