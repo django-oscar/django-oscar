@@ -32,7 +32,7 @@ class DashboardViewTests(ClientTestCase):
             self.assertTrue('Password' not in response.content)
 
     def test_dashboard_hourly_report_with_no_orders(self):
-        report = IndexView.get_hourly_report()
+        report = IndexView().get_hourly_report()
         self.assertItemsEqual(report, ['order_total_hourly', 'max_revenue',
                                        'y_range'])
         self.assertEquals(len(report['order_total_hourly']), 24)
@@ -43,7 +43,7 @@ class DashboardViewTests(ClientTestCase):
         order_1 = create_order(total_incl_tax=34.05, total_excl_tax=34.05)
         order_2 = create_order(total_incl_tax=21.90, total_excl_tax=21.90)
 
-        report = IndexView.get_hourly_report()
+        report = IndexView().get_hourly_report()
 
         self.assertEquals(len(report['order_total_hourly']), 24)
         self.assertEquals(len(report['y_range']), 11)

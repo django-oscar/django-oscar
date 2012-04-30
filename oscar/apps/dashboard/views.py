@@ -1,68 +1,46 @@
 from decimal import Decimal as D
 from datetime import datetime, timedelta
 
-from django.views.generic import FormView
+from django.views.generic import TemplateView
 from django.db.models.loading import get_model
 from django.db.models import Avg, Sum, Count
 
-from oscar.apps.dashboard import forms
+from oscar.core.loading import get_class
 from oscar.apps.offer.models import SITE
-
+OrderSummaryForm = get_class('dashboard.forms', 'OrderSummaryForm')
 ConditionalOffer = get_model('offer', 'ConditionalOffer')
 Voucher = get_model('voucher', 'Voucher')
-
 StockAlert = get_model('partner', 'StockAlert')
 Product = get_model('catalogue', 'Product')
-
 Order = get_model('order', 'Order')
 Line = get_model('order', 'Line')
 
 
-class IndexView(FormView):
+class IndexView(TemplateView):
     template_name = 'dashboard/index.html'
-    form_class = forms.OrderSummaryForm
-
-    def get(self, request, *args, **kwargs):
-        if 'date_from' in request.GET or 'date_to' in request.GET:
-            return self.post(request, *args, **kwargs)
-        return super(IndexView, self).get(request, *args, **kwargs)
-
-    def form_valid(self, form):
-        ctx = self.get_context_data(form=form,
-                                    filters=form.get_filters())
-        return self.render_to_response(ctx)
-
-    def get_form_kwargs(self):
-        kwargs = super(IndexView, self).get_form_kwargs()
-        kwargs['data'] = self.request.GET
-        return kwargs
 
     def get_context_data(self, **kwargs):
         ctx = super(IndexView, self).get_context_data(**kwargs)
-        filters = kwargs.get('filters', {})
-        ctx.update(self.get_stats(filters))
+        ctx.update(self.get_stats())
         return ctx
 
-    @staticmethod
-    def get_site_offers():
+    def get_active_site_offers(self):
         """
-        Get all active conditional offers of type "site offer". The returned
+        Return active conditional offers of type "site offer". The returned
         ``Queryset`` of site offers is filtered by end date greater then 
         the current date.
         """
         return ConditionalOffer.objects.filter(end_date__gt=datetime.now(),
                                                offer_type=SITE)
 
-    @staticmethod
-    def get_vouchers():
+    def get_active_vouchers(self):
         """
         Get all active vouchers. The returned ``Queryset`` of vouchers 
         is filtered by end date greater then the current date.
         """
         return Voucher.objects.filter(end_date__gt=datetime.now())
 
-    @staticmethod
-    def get_hourly_report(hours=24, segments=10):
+    def get_hourly_report(self, hours=24, segments=10):
         """
         Get report of order revenue split up in hourly chunks. A report is
         generated for the last *hours* (default=24) from the current time. 
@@ -118,8 +96,8 @@ class IndexView(FormView):
             'y_range': y_range,
         }
 
-    def get_stats(self, filters):
-        orders = Order.objects.filter(**filters)
+    def get_stats(self):
+        orders = Order.objects.filter()
 
         date_24hrs_ago = datetime.now() - timedelta(hours=24)
         orders_last_day = Order.objects.filter(date_placed__gt=date_24hrs_ago)
@@ -143,13 +121,11 @@ class IndexView(FormView):
             )['total_incl_tax__sum'] or D('0.00'),
 
             'hourly_report_dict': self.get_hourly_report(hours=24),
-
             'total_products': Product.objects.count(),
             'total_open_stock_alerts': open_alerts.count(),
             'total_closed_stock_alerts': closed_alerts.count(),
-
-            'total_site_offers': self.get_site_offers().count(),
-            'total_vouchers': self.get_vouchers().count(),
+            'total_site_offers': self.get_active_site_offers().count(),
+            'total_vouchers': self.get_active_vouchers().count(),
 
             'total_orders': orders.count(),
             'total_lines': Line.objects.filter(order__in=orders).count(),
