@@ -43,39 +43,79 @@ class IndexView(FormView):
         ctx.update(self.get_stats(filters))
         return ctx
 
-    def get_site_offers(self):
+    @staticmethod
+    def get_site_offers():
+        """
+        Get all active conditional offers of type "site offer". The returned
+        ``Queryset`` of site offers is filtered by end date greater then 
+        the current date.
+        """
         return ConditionalOffer.objects.filter(end_date__gt=datetime.now(),
                                                offer_type=SITE)
 
-    def get_vouchers(self):
+    @staticmethod
+    def get_vouchers():
+        """
+        Get all active vouchers. The returned ``Queryset`` of vouchers 
+        is filtered by end date greater then the current date.
+        """
         return Voucher.objects.filter(end_date__gt=datetime.now())
 
-    def get_bar_chart_data(self, hours=25):
+    @staticmethod
+    def get_hourly_report(hours=24, segments=10):
+        """
+        Get report of order revenue split up in hourly chunks. A report is
+        generated for the last *hours* (default=24) from the current time. 
+        The report provides ``max_revenue`` of the hourly order revenue sum,
+        ``y-range`` as the labeling for the y-axis in a template and
+        ``order_total_hourly``, a list of properties for hourly chunks.
+        *segments* defines the number of labeling segments used for the y-axis
+        when generating the y-axis labels (default=10).
+        """
+        # create report by the full hour
         time_now = datetime.now().replace(minute=0, second=0)
         # subtract 1 to make sure that the full hour is taken into account
         start_time = time_now - timedelta(hours=hours-1)
 
         orders_last_day = Order.objects.filter(date_placed__gt=start_time)
 
-        order_total_per_hour = []
+        order_total_hourly = []
         for hour in range(0, hours):
             end_time = start_time + timedelta(hours=1)
 
-            hourly_orders = orders_last_day.filter(date_placed__gt=start_time, date_placed__lt=end_time)
-            total = hourly_orders.aggregate(Sum('total_incl_tax'))['total_incl_tax__sum'] or D('0.0')
+            hourly_orders = orders_last_day.filter(date_placed__gt=start_time,
+                                                   date_placed__lt=end_time)
+            total = hourly_orders.aggregate(
+                Sum('total_incl_tax')
+            )['total_incl_tax__sum'] or D('0.0')
 
-            order_total_per_hour.append({'end_time': end_time, 'total_incl_tax': total})
+            order_total_hourly.append({
+                'end_time': end_time,
+                'total_incl_tax': total
+            })
+
             start_time = end_time
 
-        max_value = max([x['total_incl_tax'] for x in order_total_per_hour])
+        max_value = max([x['total_incl_tax'] for x in order_total_hourly])
 
-        for item in order_total_per_hour:
-            item['percentage'] = int(item['total_incl_tax'] / (max_value / D(100.)))
+        if max_value:
+            segment_size = (max_value) / D(100.)
+            for item in order_total_hourly:
+                item['percentage'] = int(item['total_incl_tax'] / segment_size)
+
+            y_range = []
+            y_axis_steps = max_value / D(segments)
+            for idx in reversed(range(segments+1)):
+                y_range.append(idx * y_axis_steps)
+        else:
+            y_range = []
+            for item in order_total_hourly:
+                item['percentage'] = 0
 
         return {
-            'order_total_per_hour': order_total_per_hour,
+            'order_total_hourly': order_total_hourly,
             'max_revenue': max_value,
-            'y_range': [int(x) for x in reversed(range(0, max_value, (max_value/D(10))))]
+            'y_range': y_range,
         }
 
     def get_stats(self, filters):
@@ -89,11 +129,20 @@ class IndexView(FormView):
 
         stats = {
             'total_orders_last_day': orders_last_day.count(),
-            'total_lines_last_day': orders_last_day.aggregate(Sum('lines'))['lines__sum'] or 0,
-            'average_order_costs': orders_last_day.aggregate(Avg('total_incl_tax'))['total_incl_tax__avg'] or D('0.00'),
-            'total_revenue_last_day': orders_last_day.aggregate(Sum('total_incl_tax'))['total_incl_tax__sum'] or D('0.00'),
 
-            'bar_chart_data': self.get_bar_chart_data(),
+            'total_lines_last_day': orders_last_day.aggregate(
+                Sum('lines')
+            )['lines__sum'] or 0,
+
+            'average_order_costs': orders_last_day.aggregate(
+                Avg('total_incl_tax')
+            )['total_incl_tax__avg'] or D('0.00'),
+
+            'total_revenue_last_day': orders_last_day.aggregate(
+                Sum('total_incl_tax')
+            )['total_incl_tax__sum'] or D('0.00'),
+
+            'hourly_report_dict': self.get_hourly_report(hours=24),
 
             'total_products': Product.objects.count(),
             'total_open_stock_alerts': open_alerts.count(),
@@ -104,7 +153,13 @@ class IndexView(FormView):
 
             'total_orders': orders.count(),
             'total_lines': Line.objects.filter(order__in=orders).count(),
-            'total_revenue': orders.aggregate(Sum('total_incl_tax'))['total_incl_tax__sum'] or D('0.00'),
-            'order_status_breakdown': orders.order_by('status').values('status').annotate(freq=Count('id'))
+
+            'total_revenue': orders.aggregate(
+                Sum('total_incl_tax')
+            )['total_incl_tax__sum'] or D('0.00'),
+
+            'order_status_breakdown': orders.order_by(
+                'status'
+            ).values('status').annotate(freq=Count('id'))
         }
         return stats

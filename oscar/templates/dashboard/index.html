@@ -3,10 +3,6 @@
 
 {% block body_class %}orders{% endblock %}
 
-{% block extrahead %} 
-<link rel="stylesheet" href="{{ STATIC_URL }}oscar/csschart.css"/>
-{% endblock %}
-
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
@@ -33,20 +29,22 @@
 </div>
 
 <div class='row-fluid'>
-    <div class="span10">
+    <div class="span12">
         <div id="order-graph">
-            {# line graph or bar graph #}
-            <ul class='yAxis'>
-            {% for y_value in bar_chart_data.y_range %}
-                <li><span>{{ y_value|currency }}</span></li>
-            {% endfor %}
-            </ul>
-            <dl id='csschart'> 
-                {% for item in bar_chart_data.order_total_per_hour %}
-                    <dd>
-                        <em>{{ item.end_time|date:"G" }}:00</em>
+            <div class='bar-caption'><h1>Latest Orders (Hourly)</h1></div>
+            <div class='bar-y-axis'>
+                <ul>
+                {% for y_value in hourly_report_dict.y_range %}
+                    <li><span>{{ y_value|currency }}</span></li>
+                {% endfor %}
+                </ul>
+            </div>
+            <dl class='bar-chart'> 
+                {% for item in hourly_report_dict.order_total_hourly %}
+                    <dd class='bar-layer'>
+                        <em>{{ item.end_time|date:"G" }}h</em>
                         <span style="height: {{ item.percentage }}%;" >
-                                <b {% if item.percentage == 0 %} style="display: none;"{% endif %}>{{ item.total_incl_tax|currency }}</b>
+                            <p{% if item.percentage == 0 %} style="display: none;"{% endif %}>{{ item.total_incl_tax|currency }}</p>
                         </span>
                     </dd>
                 {% endfor %}
