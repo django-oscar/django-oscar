@@ -1,7 +1,10 @@
 {% extends "base.html" %}
 
+{% block title %}
+Page not found | {{ block.super }}
+{% endblock %}
+
 {% block extrahead %}
-    <!-- Responsive - will need to be minified -->
     <link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/responsive.css" />
 {% endblock %}
 
@@ -30,7 +33,7 @@
 
 <div class="container-fluid">
 	<div class="hero-unit">
-		<h1>404! Oops, page not found!</h1>
+		<h1>Oops, page not found!</h1>
 		<p>The page you are looking for isn't here. Please try again, use the navigation above or feel free to send us your feedback. Thank you.</p>
 		<p>
 			<a class="btn btn-primary btn-large" onClick="javascript:history.go(-1);">Go back to previous page</a>
