@@ -12,15 +12,15 @@ from oscar.test.helpers import create_product, create_order
 
 
 class HistoryHelpersTest(TestCase):
-    
+
     def setUp(self):
         self.client = Client()
         self.product = create_product()
-    
+
     def test_viewing_product_creates_cookie(self):
         response = self.client.get(self.product.get_absolute_url())
         self.assertTrue('oscar_recently_viewed_products' in response.cookies)
-        
+
     def test_id_gets_added_to_cookie(self):
         response = self.client.get(self.product.get_absolute_url())
         request = HttpRequest()
@@ -30,13 +30,13 @@ class HistoryHelpersTest(TestCase):
 
 class CommunicationTypeTest(TestCase):
     keys = ('body', 'html', 'sms', 'subject')
-    
+
     def test_no_templates_returns_empty_string(self):
         et = CommunicationEventType()
         messages = et.get_messages()
         for key in self.keys:
             self.assertEqual('', messages[key])
-            
+
     def test_field_template_render(self):
         et = CommunicationEventType(email_subject_template='Hello {{ name }}')
         ctx = {'name': 'world'}
@@ -71,10 +71,9 @@ class EditProfileTests(TestCase):
 
     def test_change_password_page_returns_200(self):
         User.objects.create_user(username='customer',
-                                 email='customer@example.com', password='')
-        self.client.login(username='customer', password='')
+                                 email='customer@example.com', password='test')
+        self.client.login(username='customer', password='test')
         url = reverse('customer:profile-update')
         response = self.client.get(url)
         self.assertEqual(200, response.status_code)
         self.assertTrue('form' in response.context)
-
