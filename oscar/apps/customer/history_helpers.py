@@ -3,8 +3,9 @@ import json
 from django.dispatch import receiver
 from django.conf import settings
 
-from oscar.core.loading import import_module
-import_module('catalogue.signals', ['product_viewed'], locals())
+from oscar.core.loading import get_class
+
+product_viewed = get_class('catalogue.signals', 'product_viewed')
 
 MAX_PRODUCTS = settings.OSCAR_RECENTLY_VIEWED_PRODUCTS
 

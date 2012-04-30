@@ -21,7 +21,7 @@ information:
 .. image:: https://secure.travis-ci.org/tangentlabs/django-oscar.png
 
 .. _`Official homepage`: http://tangentlabs.github.com/django-oscar/
-.. _`Demo site`: http://sanbod.oscar.tangentlabs.co.uk
+.. _`Demo site`: http://sandbox.oscar.tangentlabs.co.uk
 .. _`Documentation`: http://django-oscar.readthedocs.org/en/latest/
 .. _`readthedocs.org`: http://readthedocs.org
 .. _`Continuous integration homepage`: http://travis-ci.org/#!/tangentlabs/django-oscar 
