@@ -13,13 +13,13 @@ from django.contrib.sites.models import get_current_site
 from django.conf import settings
 from django.db.models import get_model
 
-from oscar.apps.address.forms import UserAddressForm
 from oscar.views.generic import PostActionMixin
 from oscar.apps.customer.forms import EmailAuthenticationForm, EmailUserCreationForm, SearchByDateRangeForm
 from oscar.core.loading import import_module, get_class, get_profile_class
 import_module('customer.utils', ['Dispatcher'], locals())
 
 ProfileForm = get_class('customer.forms', 'ProfileForm')
+UserAddressForm = get_class('address.forms', 'UserAddressForm')
 
 order_model = get_model('order', 'Order')
 order_line_model = get_model('order', 'Line')
