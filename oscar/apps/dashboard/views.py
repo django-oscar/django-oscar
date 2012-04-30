@@ -75,12 +75,12 @@ class IndexView(TemplateView):
         max_value = max([x['total_incl_tax'] for x in order_total_hourly])
 
         if max_value:
-            segment_size = (max_value) / D(100.)
+            segment_size = (max_value) / D('100.0')
             for item in order_total_hourly:
                 item['percentage'] = int(item['total_incl_tax'] / segment_size)
 
             y_range = []
-            y_axis_steps = max_value / D(segments)
+            y_axis_steps = max_value / D(str(segments))
             for idx in reversed(range(segments+1)):
                 y_range.append(idx * y_axis_steps)
         else:
