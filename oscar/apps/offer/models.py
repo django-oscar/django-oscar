@@ -52,6 +52,7 @@ class ConditionalOffer(models.Model):
 
     # We track some information on usage
     total_discount = models.DecimalField(decimal_places=2, max_digits=12, default=Decimal('0.00'))
+    num_orders = models.PositiveIntegerField(default=0)
     
     date_created = models.DateTimeField(auto_now_add=True)
 
@@ -82,7 +83,7 @@ class ConditionalOffer(models.Model):
         return self._proxy_condition().is_satisfied(basket)
         
     def apply_benefit(self, basket):
-        u"""
+        """
         Applies the benefit to the given basket and returns the discount.
         """
         if not self.is_condition_satisfied(basket):
@@ -96,7 +97,7 @@ class ConditionalOffer(models.Model):
         return self._voucher        
         
     def _proxy_condition(self):
-        u"""
+        """
         Returns the appropriate proxy model for the condition
         """
         field_dict = self.condition.__dict__
@@ -111,7 +112,7 @@ class ConditionalOffer(models.Model):
         return self.condition
     
     def _proxy_benefit(self):
-        u"""
+        """
         Returns the appropriate proxy model for the condition
         """
         field_dict = self.benefit.__dict__
@@ -126,6 +127,11 @@ class ConditionalOffer(models.Model):
         elif self.benefit.type == self.benefit.FIXED_PRICE:
             return FixedPriceBenefit(**field_dict)
         return self.benefit
+
+    def record_usage(self, discount):
+        self.num_orders += 1
+        self.total_discount += discount
+        self.save()
         
 
 class Condition(models.Model):

@@ -50,25 +50,25 @@ class OfferCreationTests(ClientTestCase):
                                              'description': 'offers are nice',
                                              'start_date': '2012-01-01',
                                              'end_date': '2013-01-01'})
-        self.assertIsRedirect(response)
+        self.assertIsRedirect(response, reverse('dashboard:offer-condition'))
 
         # Condition
         response = self.client.post(reverse('dashboard:offer-condition'),
                                             {'range': self.range.id,
                                              'type': 'Count',
                                              'value': '3',})
-        self.assertIsRedirect(response)
+        self.assertIsRedirect(response, reverse('dashboard:offer-benefit'))
 
         # Benefit
         response = self.client.post(reverse('dashboard:offer-benefit'),
                                             {'range': self.range.id,
                                              'type': 'Multibuy',
                                              'value': '1',})
-        self.assertIsRedirect(response)
+        self.assertIsRedirect(response, reverse('dashboard:offer-preview'))
 
         # Preview
         response = self.client.post(reverse('dashboard:offer-preview'), {})
-        self.assertIsRedirect(response)
+        self.assertIsRedirect(response, reverse('dashboard:offer-list'))
 
         offers = ConditionalOffer.objects.all()
         self.assertEqual(1, len(offers))

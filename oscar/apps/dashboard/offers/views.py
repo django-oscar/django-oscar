@@ -1,4 +1,4 @@
-from django.views.generic import ListView, FormView, DeleteView
+from django.views.generic import ListView, FormView, DeleteView, DetailView
 from django.db.models.loading import get_model
 from django.core.urlresolvers import reverse
 from django.contrib import messages
@@ -9,6 +9,7 @@ from oscar.core.loading import get_classes
 
 ConditionalOffer = get_model('offer', 'ConditionalOffer')
 Condition= get_model('offer', 'Condition')
+OrderDiscount = get_model('order', 'OrderDiscount')
 Benefit = get_model('offer', 'Benefit')
 MetaDataForm, ConditionForm, BenefitForm, PreviewForm = get_classes('dashboard.offers.forms', [
     'MetaDataForm', 'ConditionForm', 'BenefitForm', 'PreviewForm'])
@@ -53,30 +54,34 @@ class OfferWizardStepView(FormView):
             return True
         return self.previous_view.is_valid(self, request)
 
+    def _key(self, step_name=None, is_object=False):
+        key = step_name if step_name else self.step_name
+        if self.update:
+            key += str(self.offer.id)
+        if is_object:
+            key += '_obj'
+        return key
+
     def _store_form_kwargs(self, form):
         session_data = self.request.session.setdefault(self.wizard_name, {})
         form_kwargs = {'data': form.cleaned_data.copy()}
-        session_data[self.step_name] = form_kwargs
+        session_data[self._key()] = form_kwargs
         self.request.session.save()
 
     def _fetch_form_kwargs(self, step_name=None):
         if not step_name:
             step_name = self.step_name
         session_data = self.request.session.setdefault(self.wizard_name, {})
-        return session_data.get(step_name, {})
+        return session_data.get(self._key(step_name), {})
 
     def _store_object(self, form):
         session_data = self.request.session.setdefault(self.wizard_name, {})
-        session_data[self.step_name + '_obj'] = form.save(commit=False)
+        session_data[self._key(is_object=True)] = form.save(commit=False)
         self.request.session.save()
 
-    def _fetch_object(self, step_name, request=None):
-        # We pass in the session as part of the checks on previous steps, as in those
-        # cases we're using an
-        if not request:
-            request = self.request
+    def _fetch_object(self, step_name):
         session_data = self.request.session.setdefault(self.wizard_name, {})
-        return session_data.get(step_name + '_obj', None)
+        return session_data.get(self._key(step_name, is_object=True), None)
 
     def _flush_session(self):
         self.request.session[self.wizard_name] = {}
@@ -221,3 +226,14 @@ class OfferDeleteView(DeleteView):
     def get_success_url(self):
         messages.success(self.request, "Offer deleted!")
         return reverse('dashboard:offer-list')
+
+
+class OfferDetailView(DetailView):
+    model = ConditionalOffer
+    template_name = 'dashboard/offers/offer_detail.html'
+    context_object_name = 'offer'
+
+    def get_context_data(self, **kwargs):
+        ctx = super(OfferDetailView, self).get_context_data(**kwargs)
+        ctx['order_discounts'] = OrderDiscount.objects.filter(offer_id=self.object.id).order_by('-id')
+        return ctx
