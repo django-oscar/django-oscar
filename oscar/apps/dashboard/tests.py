@@ -42,9 +42,8 @@ class DashboardViewTests(ClientTestCase):
         self.assertEquals(report['max_revenue'], 0)
 
     def test_dashboard_hourly_report_with_orders(self): 
-        order_1 = create_order(total_incl_tax=34.05, total_excl_tax=34.05)
-        order_2 = create_order(total_incl_tax=21.90, total_excl_tax=21.90)
-
+        create_order(total_incl_tax=D('34.05'), total_excl_tax=D('34.05'))
+        create_order(total_incl_tax=D('21.90'), total_excl_tax=D('21.90'))
         report = IndexView().get_hourly_report()
 
         self.assertEquals(len(report['order_total_hourly']), 24)
