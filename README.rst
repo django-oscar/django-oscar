@@ -12,6 +12,7 @@ This README is just a stub - see the following links for more details
 information:
 
 * `Official homepage`_ 
+* `Demo site`_ (experimental) 
 * `Documentation`_ on `readthedocs.org`_
 * `Continuous integration homepage`_ on `travis-ci.org`_
 * `Twitter account for news and updates`_
@@ -20,6 +21,7 @@ information:
 .. image:: https://secure.travis-ci.org/tangentlabs/django-oscar.png
 
 .. _`Official homepage`: http://tangentlabs.github.com/django-oscar/
+.. _`Demo site`: http://sandbox.oscar.tangentlabs.co.uk
 .. _`Documentation`: http://django-oscar.readthedocs.org/en/latest/
 .. _`readthedocs.org`: http://readthedocs.org
 .. _`Continuous integration homepage`: http://travis-ci.org/#!/tangentlabs/django-oscar 
@@ -32,19 +34,6 @@ and maintained by `Tangent Labs`_, a London-based digital agency.
 
 .. _`@codeinthehole`: https://twitter.com/codeinthehole
 .. _`Tangent Labs`: http://www.tangentlabs.co.uk
-
-.. raw:: html
-
-    <a href="https://twitter.com/share" class="twitter-share-button"
-    data-url="https://github.com/tangentlabs/django-oscar"
-    data-via="codeinthehole" data-size="large">Tweet</a>
-    <script>!function(d,s,id){var
-    js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-
-    <a href="https://twitter.com/django_oscar" class="twitter-follow-button"
-    data-show-count="false" data-size="large">Follow @django_oscar</a>
-    <script>!function(d,s,id){var
-    js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 
 Changelog
 ---------

@@ -9,4 +9,3 @@ class UserAddressForm(ModelForm):
     class Meta:
         model = UserAddress
         exclude = ('user', 'num_orders', 'hash', 'search_text')
-    

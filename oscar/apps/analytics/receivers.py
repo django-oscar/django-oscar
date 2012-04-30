@@ -2,11 +2,15 @@ from django.dispatch import receiver
 from django.db import IntegrityError
 import logging
 
-from oscar.core.loading import import_module
-import_module('analytics.models', ['UserSearch', 'UserRecord', 'ProductRecord', 'UserProductView'], locals())
-import_module('catalogue.signals', ['product_viewed', 'product_search'], locals())
-import_module('basket.signals', ['basket_addition'], locals())
-import_module('order.signals', ['order_placed'], locals())
+from oscar.core.loading import get_class, get_classes
+UserSearch, UserRecord, ProductRecord, UserProductView = get_classes(
+    'analytics.models', ['UserSearch', 'UserRecord', 'ProductRecord',
+                         'UserProductView'])
+product_viewed, product_search = get_classes('catalogue.signals',
+                                             ['product_viewed',
+                                              'product_search'])
+basket_addition = get_class('basket.signals', 'basket_addition')
+order_placed = get_class('order.signals', 'order_placed')
 
 # Helpers
 

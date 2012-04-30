@@ -1,19 +1,15 @@
 from decimal import Decimal as D
 from datetime import datetime, timedelta
 
-from django.views.generic import TemplateView 
+from django.views.generic import TemplateView
 from django.db.models.loading import get_model
 from django.db.models import Avg, Sum, Count
 
-from oscar.apps.dashboard import forms
 from oscar.apps.offer.models import SITE
-
 ConditionalOffer = get_model('offer', 'ConditionalOffer')
 Voucher = get_model('voucher', 'Voucher')
-
 StockAlert = get_model('partner', 'StockAlert')
 Product = get_model('catalogue', 'Product')
-
 Order = get_model('order', 'Order')
 Line = get_model('order', 'Line')
 
@@ -26,26 +22,23 @@ class IndexView(TemplateView):
         ctx.update(self.get_stats())
         return ctx
 
-    @staticmethod
-    def get_site_offers():
+    def get_active_site_offers(self):
         """
-        Get all active conditional offers of type "site offer". The returned
+        Return active conditional offers of type "site offer". The returned
         ``Queryset`` of site offers is filtered by end date greater then 
         the current date.
         """
         return ConditionalOffer.objects.filter(end_date__gt=datetime.now(),
                                                offer_type=SITE)
 
-    @staticmethod
-    def get_vouchers():
+    def get_active_vouchers(self):
         """
         Get all active vouchers. The returned ``Queryset`` of vouchers 
         is filtered by end date greater then the current date.
         """
         return Voucher.objects.filter(end_date__gt=datetime.now())
 
-    @staticmethod
-    def get_hourly_report(hours=24, segments=10):
+    def get_hourly_report(self, hours=24, segments=10):
         """
         Get report of order revenue split up in hourly chunks. A report is
         generated for the last *hours* (default=24) from the current time. 
@@ -82,12 +75,12 @@ class IndexView(TemplateView):
         max_value = max([x['total_incl_tax'] for x in order_total_hourly])
 
         if max_value:
-            segment_size = (max_value) / D(100.)
+            segment_size = (max_value) / D('100.0')
             for item in order_total_hourly:
                 item['percentage'] = int(item['total_incl_tax'] / segment_size)
 
             y_range = []
-            y_axis_steps = max_value / D(segments)
+            y_axis_steps = max_value / D(str(segments))
             for idx in reversed(range(segments+1)):
                 y_range.append(idx * y_axis_steps)
         else:
@@ -126,13 +119,11 @@ class IndexView(TemplateView):
             )['total_incl_tax__sum'] or D('0.00'),
 
             'hourly_report_dict': self.get_hourly_report(hours=24),
-
             'total_products': Product.objects.count(),
             'total_open_stock_alerts': open_alerts.count(),
             'total_closed_stock_alerts': closed_alerts.count(),
-
-            'total_site_offers': self.get_site_offers().count(),
-            'total_vouchers': self.get_vouchers().count(),
+            'total_site_offers': self.get_active_site_offers().count(),
+            'total_vouchers': self.get_active_vouchers().count(),
 
             'total_orders': orders.count(),
             'total_lines': Line.objects.filter(order__in=orders).count(),

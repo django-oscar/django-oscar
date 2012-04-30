@@ -12,3 +12,4 @@ mock==0.7.0
 twill==0.9
 PyHamcrest==1.6
 South==0.7.3
+purl==0.3.2

@@ -4,10 +4,10 @@
 	{% else %}
 		{{ field.label_tag }}
 		{{ field }}
-			{% for error in field.errors %}
-				<ul class="help-block">
-					<li>{{ error|escape }}</li>
-				</ul>
-			{% endfor %}
+		{% for error in field.errors %}
+			<ul class="help-block">
+				<li>{{ error|escape }}</li>
+			</ul>
+		{% endfor %}
 	{% endif %}
 {% endfor %}

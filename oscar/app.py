@@ -43,4 +43,5 @@ class Shop(Application):
         )
         return urlpatterns
     
+
 shop = Shop()

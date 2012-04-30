@@ -1,8 +1,8 @@
 from django.db import connection, transaction
+from django.db.models import get_model
 
-from oscar.core.loading import import_module
-import_module('analytics.models', ['ProductRecord'], locals())
-import_module('catalogue.models', ['Product'], locals())
+ProductRecord = get_model('analytics', 'ProductRecord')
+Product = get_model('catalogue', 'Product')
 
 
 class ScoreCalculator(object):

@@ -1,9 +1,9 @@
 from django.contrib import admin
+from django.db.models import get_model
 
-from oscar.core.loading import import_module
-import_module('customer.models', ['Email', 'CommunicationEventType'], locals())
+CommunicationEventType = get_model('customer', 'CommunicationEventType')
+Email = get_model('customer', 'Email')
+
 
 admin.site.register(Email)
 admin.site.register(CommunicationEventType)
-
-

@@ -13,21 +13,21 @@ from django.contrib.sites.models import get_current_site
 from django.conf import settings
 from django.db.models import get_model
 
-from oscar.apps.address.forms import UserAddressForm
 from oscar.views.generic import PostActionMixin
-from oscar.apps.customer.forms import EmailAuthenticationForm, EmailUserCreationForm, SearchByDateRangeForm
-from oscar.core.loading import import_module, get_class, get_profile_class
-import_module('customer.utils', ['Dispatcher'], locals())
-
+from oscar.core.loading import get_class, get_profile_class, get_classes
+Dispatcher = get_class('customer.utils', 'Dispatcher')
+EmailAuthenticationForm, EmailUserCreationForm, SearchByDateRangeForm = get_classes(
+    'customer.forms', ['EmailAuthenticationForm', 'EmailUserCreationForm',
+                       'SearchByDateRangeForm'])
 ProfileForm = get_class('customer.forms', 'ProfileForm')
-
-order_model = get_model('order', 'Order')
-order_line_model = get_model('order', 'Line')
-basket_model = get_model('basket', 'Basket')
-user_address_model = get_model('address', 'UserAddress')
+UserAddressForm = get_class('address.forms', 'UserAddressForm')
+Order = get_model('order', 'Order')
+Line = get_model('order', 'Line')
+Basket = get_model('basket', 'Basket')
+UserAddress = get_model('address', 'UserAddress')
 Email = get_model('customer', 'email')
 UserAddress = get_model('address', 'UserAddress')
-communicationtype_model = get_model('customer', 'communicationeventtype')
+CommunicationEventType = get_model('customer', 'communicationeventtype')
 
 
 class ProfileUpdateView(FormView):
@@ -55,7 +55,7 @@ class AccountSummaryView(ListView):
     context_object_name = "orders"
     template_name = 'customer/profile.html'
     paginate_by = 20
-    model = order_model
+    model = Order
 
     def get_queryset(self):
         return self.model._default_manager.filter(user=self.request.user)[0:5]
@@ -138,10 +138,10 @@ class AccountAuthView(TemplateView):
         ctx = {'user': user,
                'site': get_current_site(self.request)}
         try:
-            event_type = communicationtype_model.objects.get(code=code)
-        except communicationtype_model.DoesNotExist:
+            event_type = CommunicationEventType.objects.get(code=code)
+        except CommunicationEventType.DoesNotExist:
             # No event in database, attempt to find templates for this type
-            messages = communicationtype_model.objects.get_and_render(code, ctx)
+            messages = CommunicationEventType.objects.get_and_render(code, ctx)
         else:
             # Create order event
             messages = event_type.get_messages(ctx)
@@ -219,7 +219,7 @@ class OrderHistoryView(ListView):
     context_object_name = "orders"
     template_name = 'customer/order-history.html'
     paginate_by = 20
-    model = order_model
+    model = Order
     form_class = SearchByDateRangeForm
 
     def get(self, request, *args, **kwargs):
@@ -246,7 +246,7 @@ class OrderHistoryView(ListView):
 
 class OrderDetailView(DetailView, PostActionMixin):
     """Customer order details"""
-    model = order_model
+    model = Order
 
     def get_template_names(self):
         return ["customer/order.html"]
@@ -276,7 +276,7 @@ class OrderLineView(DetailView, PostActionMixin):
 
     def get_object(self):
         """Return an order object or 404"""
-        order = get_object_or_404(order_model, user=self.request.user, number=self.kwargs['order_number'])
+        order = get_object_or_404(Order, user=self.request.user, number=self.kwargs['order_number'])
         return order.lines.get(id=self.kwargs['line_id'])
 
     def do_reorder(self, line):
@@ -306,12 +306,12 @@ class AddressListView(ListView):
 
     def get_queryset(self):
         """Return a customer's addresses"""
-        return user_address_model._default_manager.filter(user=self.request.user)
+        return UserAddress._default_manager.filter(user=self.request.user)
 
 
 class AddressCreateView(CreateView):
     form_class = UserAddressForm
-    mode = user_address_model
+    mode = UserAddress
     template_name = 'customer/address-form.html'
 
     def get_context_data(self, **kwargs):
@@ -332,7 +332,7 @@ class AddressCreateView(CreateView):
 
 class AddressUpdateView(UpdateView):
     form_class = UserAddressForm
-    model = user_address_model
+    model = UserAddress
     template_name = 'customer/address-form.html'
 
     def get_context_data(self, **kwargs):
@@ -341,7 +341,7 @@ class AddressUpdateView(UpdateView):
         return ctx
 
     def get_queryset(self):
-        return user_address_model._default_manager.filter(user=self.request.user)
+        return UserAddress._default_manager.filter(user=self.request.user)
 
     def get_success_url(self):
         messages.success(self.request, _("Address saved"))
@@ -349,11 +349,11 @@ class AddressUpdateView(UpdateView):
 
 
 class AddressDeleteView(DeleteView):
-    model = user_address_model
+    model = UserAddress
 
     def get_queryset(self):
         """Return a customer's addresses"""
-        return user_address_model._default_manager.filter(user=self.request.user)
+        return UserAddress._default_manager.filter(user=self.request.user)
 
     def get_success_url(self):
         return reverse('customer:address-list')
@@ -364,7 +364,7 @@ class AddressDeleteView(DeleteView):
 
 class AnonymousOrderDetailView(DetailView):
 
-    model = order_model
+    model = Order
 
     def get_template_names(self):
         return ["customer/anon-order.html"]

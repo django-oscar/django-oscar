@@ -10,8 +10,7 @@ from django.core.files import File
 from django.core.exceptions import FieldError
 from django.db.models import get_model
 
-from oscar.core.loading import import_module
-import_module('catalogue.exceptions', ['ImageImportError', 'IdenticalImageError', 'InvalidImageArchive'], locals())
+from oscar.apps.catalogue.exceptions import ImageImportError, IdenticalImageError, InvalidImageArchive
 
 Category = get_model('catalogue', 'category')
 Product = get_model('catalogue', 'product')

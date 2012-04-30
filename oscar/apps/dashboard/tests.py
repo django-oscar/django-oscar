@@ -8,10 +8,12 @@ from oscar.apps.dashboard.users.tests import *
 from oscar.apps.dashboard.promotions.tests import *
 from oscar.apps.dashboard.catalogue.tests import *
 from oscar.apps.dashboard.pages.tests import *
-from oscar.apps.dashboard.views import IndexView 
+from oscar.apps.dashboard.offers.tests import *
 
+from oscar.apps.dashboard.views import IndexView 
 from oscar.test import ClientTestCase
 from oscar.test.helpers import create_order
+
 
 class AnonymousUserTests(ClientTestCase):
 
@@ -32,7 +34,7 @@ class DashboardViewTests(ClientTestCase):
             self.assertTrue('Password' not in response.content)
 
     def test_dashboard_hourly_report_with_no_orders(self):
-        report = IndexView.get_hourly_report()
+        report = IndexView().get_hourly_report()
         self.assertItemsEqual(report, ['order_total_hourly', 'max_revenue',
                                        'y_range'])
         self.assertEquals(len(report['order_total_hourly']), 24)
@@ -40,10 +42,9 @@ class DashboardViewTests(ClientTestCase):
         self.assertEquals(report['max_revenue'], 0)
 
     def test_dashboard_hourly_report_with_orders(self): 
-        order_1 = create_order(total_incl_tax=34.05, total_excl_tax=34.05)
-        order_2 = create_order(total_incl_tax=21.90, total_excl_tax=21.90)
-
-        report = IndexView.get_hourly_report()
+        create_order(total_incl_tax=D('34.05'), total_excl_tax=D('34.05'))
+        create_order(total_incl_tax=D('21.90'), total_excl_tax=D('21.90'))
+        report = IndexView().get_hourly_report()
 
         self.assertEquals(len(report['order_total_hourly']), 24)
         self.assertEquals(len(report['y_range']), 11)

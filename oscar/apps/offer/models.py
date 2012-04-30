@@ -18,7 +18,7 @@ class ConditionalOffer(models.Model):
     """
     A conditional offer (eg buy 1, get 10% off)
     """
-    name = models.CharField(max_length=128)
+    name = models.CharField(max_length=128, unique=True)
     description = models.TextField(blank=True, null=True)
 
     # Offers come in a few different types:
@@ -45,13 +45,16 @@ class ConditionalOffer(models.Model):
     # dates are ignored and only the dates from the voucher are used to determine 
     # availability.
     start_date = models.DateField(blank=True, null=True)
-    end_date = models.DateField(blank=True, null=True)
+    end_date = models.DateField(blank=True, null=True,
+                                help_text="""Offers are not active on their end
+                                date, only the days preceding""")
 
     # Some complicated situations require offers to be applied in a set order.
     priority = models.IntegerField(default=0, help_text="The highest priority offers are applied first")
 
     # We track some information on usage
     total_discount = models.DecimalField(decimal_places=2, max_digits=12, default=Decimal('0.00'))
+    num_orders = models.PositiveIntegerField(default=0)
     
     date_created = models.DateTimeField(auto_now_add=True)
 
@@ -82,7 +85,7 @@ class ConditionalOffer(models.Model):
         return self._proxy_condition().is_satisfied(basket)
         
     def apply_benefit(self, basket):
-        u"""
+        """
         Applies the benefit to the given basket and returns the discount.
         """
         if not self.is_condition_satisfied(basket):
@@ -96,7 +99,7 @@ class ConditionalOffer(models.Model):
         return self._voucher        
         
     def _proxy_condition(self):
-        u"""
+        """
         Returns the appropriate proxy model for the condition
         """
         field_dict = self.condition.__dict__
@@ -111,7 +114,7 @@ class ConditionalOffer(models.Model):
         return self.condition
     
     def _proxy_benefit(self):
-        u"""
+        """
         Returns the appropriate proxy model for the condition
         """
         field_dict = self.benefit.__dict__
@@ -126,6 +129,11 @@ class ConditionalOffer(models.Model):
         elif self.benefit.type == self.benefit.FIXED_PRICE:
             return FixedPriceBenefit(**field_dict)
         return self.benefit
+
+    def record_usage(self, discount):
+        self.num_orders += 1
+        self.total_discount += discount
+        self.save()
         
 
 class Condition(models.Model):
@@ -145,6 +153,8 @@ class Condition(models.Model):
         elif self.type == self.COVERAGE:
             return u"Basket includes %d distinct products from %s" % (self.value, unicode(self.range).lower())
         return u"Basket includes %d value from %s" % (self.value, unicode(self.range).lower())
+
+    description = __unicode__
     
     def consume_items(self, basket, lines=None):
         return ()
@@ -192,6 +202,8 @@ class Benefit(models.Model):
         elif self.max_affected_items > 1:
             desc += u" (max %d items)" % self.max_affected_items
         return desc
+
+    description = __unicode__
     
     def apply(self, basket, condition=None):
         return Decimal('0.00')
