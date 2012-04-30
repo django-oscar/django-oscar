@@ -1,7 +1,7 @@
 from decimal import Decimal as D
 from datetime import datetime, timedelta
 
-from django.views.generic import FormView
+from django.views.generic import TemplateView 
 from django.db.models.loading import get_model
 from django.db.models import Avg, Sum, Count
 
@@ -18,29 +18,12 @@ Order = get_model('order', 'Order')
 Line = get_model('order', 'Line')
 
 
-class IndexView(FormView):
+class IndexView(TemplateView):
     template_name = 'dashboard/index.html'
-    form_class = forms.OrderSummaryForm
-
-    def get(self, request, *args, **kwargs):
-        if 'date_from' in request.GET or 'date_to' in request.GET:
-            return self.post(request, *args, **kwargs)
-        return super(IndexView, self).get(request, *args, **kwargs)
-
-    def form_valid(self, form):
-        ctx = self.get_context_data(form=form,
-                                    filters=form.get_filters())
-        return self.render_to_response(ctx)
-
-    def get_form_kwargs(self):
-        kwargs = super(IndexView, self).get_form_kwargs()
-        kwargs['data'] = self.request.GET
-        return kwargs
 
     def get_context_data(self, **kwargs):
         ctx = super(IndexView, self).get_context_data(**kwargs)
-        filters = kwargs.get('filters', {})
-        ctx.update(self.get_stats(filters))
+        ctx.update(self.get_stats())
         return ctx
 
     @staticmethod
@@ -118,8 +101,8 @@ class IndexView(FormView):
             'y_range': y_range,
         }
 
-    def get_stats(self, filters):
-        orders = Order.objects.filter(**filters)
+    def get_stats(self):
+        orders = Order.objects.filter()
 
         date_24hrs_ago = datetime.now() - timedelta(hours=24)
         orders_last_day = Order.objects.filter(date_placed__gt=date_24hrs_ago)
