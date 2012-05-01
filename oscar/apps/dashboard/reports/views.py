@@ -2,9 +2,9 @@ from django.http import HttpResponse, HttpResponseForbidden, Http404
 from django.template.response import TemplateResponse
 from django.views.generic import TemplateView
 
-from oscar.core.loading import import_module
-report_forms = import_module('dashboard.reports.forms', ['ReportForm'])
-report_utils = import_module('dashboard.reports.utils', ['GeneratorRepository'])
+from oscar.core.loading import get_class
+ReportForm = get_class('dashboard.reports.forms', 'ReportForm')
+GeneratorRepository = get_class('dashboard.reports.utils', 'GeneratorRepository')
 
 
 class IndexView(TemplateView):
@@ -12,7 +12,7 @@ class IndexView(TemplateView):
     
     def get(self, request, *args, **kwargs):
         if 'report_type' in request.GET:
-            form = report_forms.ReportForm(request.GET)
+            form = ReportForm(request.GET)
             if form.is_valid():
                 generator = _get_generator(form)
                 if not generator.is_available_to(request.user):
@@ -23,16 +23,16 @@ class IndexView(TemplateView):
                 generator.generate(response)
                 return response
         else:
-            form = report_forms.ReportForm()
+            form = ReportForm()
         return TemplateResponse(request, self.template_name, {'form': form})
 
 
 def _get_generator(form):
     code = form.cleaned_data['report_type']
 
-    repo = report_utils.GeneratorRepository()
+    repo = GeneratorRepository()
     generator_cls = repo.get_generator(code)
     if not generator_cls:
         raise Http404()
-    return generator_cls(start_date=form.cleaned_data['start_date'], 
-                         end_date=form.cleaned_data['end_date'])
+    return generator_cls(start_date=form.cleaned_data['date_from'], 
+                         end_date=form.cleaned_data['date_to'])

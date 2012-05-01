@@ -3,7 +3,6 @@ class ReportGenerator(object):
     Top-level class that needs to be subclassed to provide a 
     report generator.
     """
-    
     filename_template = 'report-%s-to-%s.csv'
     mimetype = 'text/csv'
     code = ''
