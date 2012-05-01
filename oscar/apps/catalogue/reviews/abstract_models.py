@@ -101,7 +101,8 @@ class AbstractProductReview(models.Model):
         
     def get_reviewer_name(self):
         if self.user:
-            return self.user.username
+            name = self.user.get_full_name()
+            return name if name else 'anonymous'
         else:
             return self.name
 

@@ -5,10 +5,10 @@ from django.db.models import Avg
 from django.contrib import messages
 from django.db.models import get_model
 
-from oscar.apps.catalogue.reviews.forms import SignedInUserProductReviewForm, AnonymousUserProductReviewForm, VoteForm
-
-
-vote_model = get_model('reviews', 'vote')
+from oscar.core.loading import get_classes
+SignedInUserProductReviewForm, AnonymousUserProductReviewForm, VoteForm = get_classes(
+    'catalogue.reviews.forms', ['SignedInUserProductReviewForm', 'AnonymousUserProductReviewForm', 'VoteForm'])
+Vote = get_model('reviews', 'vote')
 
 
 class CreateProductReview(CreateView):
@@ -24,7 +24,7 @@ class CreateProductReview(CreateView):
             try:
                 self.model.objects.get(user=request.user, product=product)
                 messages.info(self.request, "You have already reviewed this product!")
-                return HttpResponseRedirect(product.get_absolute_url()) 
+                return HttpResponseRedirect(product.get_absolute_url())
             except self.model.DoesNotExist:
                 pass
         return super(CreateProductReview, self).get(request, *args, **kwargs)        
@@ -70,12 +70,10 @@ class ProductReviewDetail(DetailView):
     """
     Places each review on its own page
     """
-    
     template_name = "reviews/review.html"
     context_object_name = 'review'
     model = get_model('reviews', 'productreview')
     product_model = get_model('catalogue', 'product')
-    vote_model = vote_model
     
     def get_context_data(self, **kwargs):
         context = super(ProductReviewDetail, self).get_context_data(**kwargs)
@@ -84,18 +82,27 @@ class ProductReviewDetail(DetailView):
     
     def post(self, request, *args, **kwargs ):
         review = self.get_object()
-        try:
-            vote = self.vote_model.objects.get(user=request.user, review=review)
-        except self.vote_model.DoesNotExist:
-            vote = self.vote_model(user=request.user, review=review)
-        form = VoteForm(request.POST,instance=vote)
+        response = HttpResponseRedirect(request.META.get('HTTP_REFERER',
+                                                         review.get_absolute_url()))
+        if review.user == request.user:
+            messages.error(request, "You cannot vote on your own reviews")
+            return response
 
+        try:
+            vote = Vote.objects.get(user=request.user, review=review)
+        except Vote.DoesNotExist:
+            vote = Vote(user=request.user, review=review)
+        else:
+            messages.error(request, "You have already voted on this review")
+            return response
+
+        form = VoteForm(request.POST, instance=vote)
         if form.is_valid():
             form.save()
             messages.info(request, "Thanks for voting!")
         else:
             messages.info(request, "We couldn't process your vote")
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER',review.get_absolute_url()))
+        return response
 
     
 class ProductReviewList(ListView):

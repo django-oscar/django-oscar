@@ -11,6 +11,9 @@ oscar.getCsrfToken = function() {
     return csrfToken;
 };
 oscar.dashboard = {
+    init: function() {
+        $('input[name^="date"]').datepicker({dateFormat: 'yy-mm-dd'});
+    },
     orders: {
         initTabs: function() {
             if (location.hash) {
@@ -51,7 +54,6 @@ oscar.dashboard = {
                 doc.css('height', doc.height());
             });
             searchLink.on('click', function() {
-                console.log('asdf');
                 searchForm.parent()
                     .find('.pull-left')
                     .toggleClass('no-float')
