@@ -71,7 +71,21 @@
                         <td class="span2" >{{ average_order_costs|currency }}</td>
                 </tr>
         </table>
-	</div>
+    </div>
+
+    <div class="span6">
+        <table class="table table-striped table-bordered">
+            <caption>Customers</caption>
+            <tr>
+                <th class="span10">New customers</th>
+                <td class="span2" >{{ total_customers_last_day }}</td>
+            </tr>
+            <tr>
+                <th class="span10">Total <em>open</em> baskets</th>
+                <td class="span2" >{{ total_open_baskets_last_day }}</td>
+            </tr>
+        </table>
+    </div>
 </div>
 
 <div class="sub-header">
@@ -81,21 +95,33 @@
 <div class='row-fluid'>
     <div class="span6">
         <table class="table table-striped table-bordered">
-                <caption>Orders</caption>
-                <tr>
-                        <th class="span10">Total orders</th>
-                        <td class="span2" >{{ total_orders }}</td>
-                </tr>
-                <tr>
-                        <th class="span10">Total lines</th>
-                        <td class="span2" >{{ total_lines }}</td>
-                </tr>
-                <tr>
-                        <th class="span10">Total revenue</th>
-                        <td class="span2" >{{ total_revenue|currency }}</td>
-                </tr>
+            <caption>Orders</caption>
+            <tr>
+                    <th class="span10">Total orders</th>
+                    <td class="span2" >{{ total_orders }}</td>
+            </tr>
+            <tr>
+                    <th class="span10">Total lines</th>
+                    <td class="span2" >{{ total_lines }}</td>
+            </tr>
+            <tr>
+                    <th class="span10">Total revenue</th>
+                    <td class="span2" >{{ total_revenue|currency }}</td>
+            </tr>
+            <tr>
+                <th class="span10">Total <em>open</em> baskets</th>
+                <td class="span2" >{{ total_open_baskets }}</td>
+            </tr>
         </table>
 		<p><a href="{% url dashboard:order-list %}" class="btn">Manage orders</a></p>
+
+        <table class="table table-striped table-bordered">
+            <caption>Customers</caption>
+            <tr>
+                <th class="span10">Total customers</th>
+                <td class="span2" >{{ total_customers }}</td>
+            </tr>
+        </table>
     </div>
 
     <div class="span6">
@@ -118,7 +144,7 @@
 		   <a href="{% url dashboard:stock-alert-list %}" class="btn">View stock alerts</a></p>
 
         <table class="table table-striped table-bordered">
-            <caption>Offers and vouchers</caption>
+            <caption>Offers, vouchers and promotions</caption>
             <tr>
                 <th class="span10">Active <em>Site</em> Offers</th>
                 <td class="span2" >{{ total_site_offers }}</td>
@@ -126,6 +152,9 @@
             <tr>
                 <th class="span10">Active <em>Vouchers</em></th>
                 <td class="span2" >{{ total_vouchers }}</td>
+            </tr>
+                <th class="span10">Promotions</em></th>
+                <td class="span2" >{{ total_promotions }}</td>
             </tr>
         </table>
     </div>
