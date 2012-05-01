@@ -1,3 +1,4 @@
+{% if product.images.all.count > 1 %}
 <script id="img-wrapper-tmpl" type="text/x-jquery-tmpl">	    
 	<div class="rg-image-wrapper">
 
@@ -37,3 +38,14 @@
 		<!-- End Elastislide Carousel Thumbnail Viewer -->
 	</div><!-- rg-thumbs -->
 </div><!-- rg-gallery -->
+{% else %}
+    {% if product.images.all.count > 0 %}
+        {% for image in product.images.all %}
+        <a href="{{ image.original.url }}" rel="lightbox">
+            <img src="{{ image.original.url }}" data-large="{{ image.original.url }}" alt="image02" data-description="{% if image.caption %}{{ image.caption }}{% endif %}" />
+        </a>
+        {% endfor %}
+    {% else %}
+        <img src="/static/oscar/img/image_not_found.jpg" alt="No image found"/>
+    {% endif %}    
+{% endif %}

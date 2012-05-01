@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from oscar.apps.customer.views import AccountSummaryView, OrderHistoryView, \
     OrderDetailView, OrderLineView, AddressListView, AddressCreateView, \
     AddressUpdateView, AddressDeleteView, EmailHistoryView, EmailDetailView, \
-    AccountAuthView, AnonymousOrderDetailView, ChangePasswordView
+    AccountAuthView, AnonymousOrderDetailView, ChangePasswordView, ProfileUpdateView
 from oscar.core.application import Application
 
 
@@ -22,6 +22,7 @@ class CustomerApplication(Application):
     email_list_view = EmailHistoryView
     email_detail_view = EmailDetailView
     login_view = AccountAuthView
+    profile_update_view = ProfileUpdateView
     change_password_view = ChangePasswordView
 
     def get_urls(self):
@@ -36,6 +37,7 @@ class CustomerApplication(Application):
                 name='change-password'),
 
             # Profile
+            url(r'^profile/$', login_required(self.profile_update_view.as_view()), name='profile-update'),
             url(r'^orders/$', login_required(self.order_history_view.as_view()), name='order-list'),
             url(r'^order-status/(?P<order_number>[\w-]*)/(?P<hash>\w+)/$', 
                 self.anon_order_detail_view.as_view(), name='anon-order'),

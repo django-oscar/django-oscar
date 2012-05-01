@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 cd /var/www/oscar/django-oscar
-git pull
+git pull 2> /dev/null
+[ $? -gt 0 ] && echo "Git pull failed" >&2 && exit 1
 
 # Update any dependencies
 source ../env/bin/activate

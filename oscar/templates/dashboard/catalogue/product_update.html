@@ -10,10 +10,14 @@ Update product | {{ block.super }}
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url promotions:home %}">Dashboard</a>
+        <a href="{% url dashboard:index %}">Dashboard</a>
         <span class="divider">/</span>
     </li>
-    <li class="active"><a href=".">Catalogue</a></li>
+    <li>
+        <a href="{% url dashboard:catalogue-product-list %}">Catalogue</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active"><a href=".">{{ title }}</a></li>
 </ul>
 {% endblock %}
 
@@ -36,8 +40,8 @@ Update product | {{ block.super }}
                 	{% if field.is_hidden %}
                 		{{ field }}
                 	{% else %}
-                		{{ field }}
                 		{{ field.label_tag }}
+                		{{ field }}
                 			{% for error in field.errors %}
                 				<ul class="help-block">
                 					<li>{{ error|escape }}</li>
@@ -97,6 +101,7 @@ Update product | {{ block.super }}
 		</div>
 		{% block stockrecord_form %}
 		    <div class="row ">
+                {{ stockrecord_form.non_field_errors }}
                 {% for field in stockrecord_form %}
                 <div class="control-group {% for error in field.errors %}error{% endfor %} span4 pull-left {% if forloop.counter|divisibleby:2 %}{% else %}pull-clear{% endif %}">
                     {% if field.is_hidden %}

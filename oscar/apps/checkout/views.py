@@ -1,19 +1,11 @@
-from decimal import Decimal
 import logging
 
-from django.conf import settings
-from django.http import HttpResponse, Http404, HttpResponseRedirect, HttpResponseBadRequest
-from django.template import RequestContext
-from django.shortcuts import get_object_or_404
+from django.http import Http404, HttpResponseRedirect, HttpResponseBadRequest
 from django.core.urlresolvers import reverse
-from django.forms import ModelForm
 from django.contrib import messages
-from django.core.urlresolvers import resolve
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import login
 from django.utils.translation import ugettext as _
-from django.template.response import TemplateResponse
-from django.core.mail import EmailMessage
 from django.views.generic import DetailView, TemplateView, FormView, \
                                  DeleteView, UpdateView, CreateView
 
@@ -35,6 +27,7 @@ import_module('customer.views', ['AccountAuthView'], locals())
 import_module('customer.utils', ['Dispatcher'], locals())
 import_module('payment.exceptions', ['RedirectRequired', 'UnableToTakePayment', 
                                      'PaymentError'], locals())
+import_module('order.exceptions', ['UnableToPlaceOrder'], locals())
 import_module('basket.models', ['Basket'], locals())
 
 # Standard logger for checkout events
@@ -126,6 +119,16 @@ class IndexView(CheckoutSessionMixin, FormView):
         if request.user.is_authenticated():
             return self.get_success_response()
         return super(IndexView, self).get(request, *args, **kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super(IndexView, self).get_form_kwargs()
+        email = self.checkout_session.get_guest_email()
+        if email:
+            kwargs['initial'] = {
+                'username': email,
+                'options': 'new'
+            }
+        return kwargs
 
     def form_valid(self, form):
         if form.is_guest_checkout():
@@ -407,7 +410,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         self._payment_sources.append(source)  
 
     def add_payment_event(self, event_type_name, amount):
-        event_type = PaymentEventType.objects.get(name=event_type_name)
+        event_type, n = PaymentEventType.objects.get_or_create(name=event_type_name)
         if self._payment_events is None:
             self._payment_events = []
         event = PaymentEvent(event_type=event_type, amount=amount)
@@ -438,12 +441,17 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         shipping_address = self.create_shipping_address()
         shipping_method = self.get_shipping_method(basket)
         billing_address = self.create_billing_address(shipping_address)
+
         if 'status' not in kwargs:
             status = self.get_initial_order_status(basket)
         else:
             status = kwargs.pop('status')
-        if not self.request.user.is_authenticated():
+
+        # Set guest email address for anon checkout.   Some libraries (eg
+        # PayPal) will pass this explicitly so we take care not to clobber.
+        if not self.request.user.is_authenticated() and 'guest_email' not in kwargs:
             kwargs['guest_email'] = self.checkout_session.get_guest_email()
+
         order = OrderCreator().place_order(basket=basket, 
                                            total_incl_tax=total_incl_tax,
                                            total_excl_tax=total_excl_tax,
@@ -739,10 +747,17 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             logger.error("Order #%s: payment error (%s)", order_number, msg)
             self.restore_frozen_basket()
             return self.render_to_response(self.get_context_data(error="A problem occurred processing payment."))
-        else:
-            # If all is ok with payment, place order
-            logger.info("Order #%s: payment successful, placing order", order_number)
+
+        # If all is ok with payment, try and place order
+        logger.info("Order #%s: payment successful, placing order", order_number)
+        try:
             return self.handle_order_placement(order_number, basket, total_incl_tax, total_excl_tax, **kwargs)
+        except UnableToPlaceOrder, e:
+            logger.warning("Order #%s: unable to place order - %s",
+                           order_number, e)
+            msg = unicode(e)
+            self.restore_frozen_basket()
+            return self.render_to_response(self.get_context_data(error=msg))
     
     def generate_order_number(self, basket):
         generator = OrderNumberGenerator()

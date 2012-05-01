@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url promotions:home %}">Home</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="{% url customer:summary %}">Account</a>
+        <span class="divider">/</span>
+    </li>
+	<li class="active"><a href=".">Edit profile</a></li>
+</ul>
+{% endblock %}
+
+
+{% block title %}
+Edit profile {{ block.super }}
+{% endblock %}
+
+{% block header %}
+<div class="page-header">
+    <h2>Edit profile</h2>
+</div>
+{% endblock header %}
+
+
+{% block content %}
+
+<form action="." method="post">
+	{% csrf_token %}
+	{% include 'partials/form_fields.html' with form=form %}
+	<div class="form-actions">
+		<button type="submit" class="btn btn-primary">Save</button>
+		or <a href="{% url customer:summary %}">cancel</a>.
+	</div>
+</form>
+
+{% endblock content %}

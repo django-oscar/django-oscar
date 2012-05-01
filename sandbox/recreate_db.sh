@@ -5,6 +5,11 @@ DATABASE=db.sqlite
 rm $DATABASE
 ./manage.py syncdb --noinput
 ./manage.py migrate
+
+echo "Loading fixtures"
+./manage.py loaddata countries.json
+
+echo "Importing products"
 ./manage.py oscar_import_catalogue data/books-catalogue.csv
 
 echo "Creating superuser"

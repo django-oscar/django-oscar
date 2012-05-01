@@ -12,16 +12,22 @@ This README is just a stub - see the following links for more details
 information:
 
 * `Official homepage`_ 
+* `Demo site`_ (experimental) 
 * `Documentation`_ on `readthedocs.org`_
 * `Continuous integration homepage`_ on `travis-ci.org`_
+* `Twitter account for news and updates`_
+* `Twitter account of all commits`_
 
 .. image:: https://secure.travis-ci.org/tangentlabs/django-oscar.png
 
 .. _`Official homepage`: http://tangentlabs.github.com/django-oscar/
+.. _`Demo site`: http://sandbox.oscar.tangentlabs.co.uk
 .. _`Documentation`: http://django-oscar.readthedocs.org/en/latest/
 .. _`readthedocs.org`: http://readthedocs.org
 .. _`Continuous integration homepage`: http://travis-ci.org/#!/tangentlabs/django-oscar 
 .. _`travis-ci.org`: http://travis-ci.org/
+.. _`Twitter account for news and updates`: https://twitter.com/#!/django_oscar
+.. _`Twitter account of all commits`: https://twitter.com/#!/oscar_django
 
 Oscar was written by David Winterbottom (`@codeinthehole`_) and is developed
 and maintained by `Tangent Labs`_, a London-based digital agency.

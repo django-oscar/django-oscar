@@ -5,8 +5,8 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils.importlib import import_module as django_import_module
 
-from oscar.core.loading import import_module
-import_module('partner.wrappers', ['DefaultWrapper'], locals())
+from oscar.core.loading import get_class
+DefaultWrapper = get_class('partner.wrappers', 'DefaultWrapper')
 
 
 # Cache the partners for quicklookups
@@ -60,17 +60,18 @@ class AbstractStockRecord(models.Model):
     This links a product to a partner, together with price and availability
     information.  Most projects will need to subclass this object to add custom
     fields such as lead_time, report_code, min_quantity.
+
+    We deliberately don't store tax information to allow each project
+    to subclass this model and put its own fields for convey tax.
     """
     product = models.OneToOneField('catalogue.Product', related_name="stockrecord")
     partner = models.ForeignKey('partner.Partner')
     
     # The fulfilment partner will often have their own SKU for a product, which
     # we store here.
-    partner_sku = models.CharField(_("Partner SKU"), max_length=128, blank=True)
+    partner_sku = models.CharField(_("Partner SKU"), max_length=128)
     
     # Price info:
-    # We deliberately don't store tax information to allow each project
-    # to subclass this model and put its own fields for convey tax.
     price_currency = models.CharField(max_length=12, default=settings.OSCAR_DEFAULT_CURRENCY)
     
     # This is the base price for calculations - tax should be applied 
@@ -82,7 +83,7 @@ class AbstractStockRecord(models.Model):
     # Retail price for this item
     price_retail = models.DecimalField(decimal_places=2, max_digits=12, blank=True, null=True)
     
-    # Cost price is optional as not all partner supply it
+    # Cost price is optional as not all partners supply it
     cost_price = models.DecimalField(decimal_places=2, max_digits=12, blank=True, null=True)
     
     # Stock level information
@@ -102,19 +103,28 @@ class AbstractStockRecord(models.Model):
     
     class Meta:
         abstract = True
+        unique_together = ('partner', 'partner_sku')
+
+    # 2-stage stock management model
     
     def allocate(self, quantity):
         """
         Record a stock allocation.
-        
-        We don't alter the num_in_stock variable as it is assumed that this
-        will be set by a batch "stock update" process.
+
+        This normally happens when a product is bought at checkout.  When the
+        product is actually shipped, then we 'consume' the allocation.
         """
         self.num_allocated = int(self.num_allocated)
         self.num_allocated += quantity
         self.save()
 
     def consume_allocation(self, quantity):
+        """
+        Consume a previous allocation
+
+        This is used when an item is shipped.  We remove the original allocation
+        and adjust the number in stock accordingly
+        """
         if quantity > self.num_allocated:
             raise ValueError('No more than %d units can be consumed' % self.num_allocated)
         self.num_allocated -= quantity
@@ -126,6 +136,19 @@ class AbstractStockRecord(models.Model):
             raise ValueError('No more than %d units can be cancelled' % self.num_allocated)
         self.num_allocated -= quantity
         self.save()
+
+    @property
+    def net_stock_level(self):
+        """
+        Return the effective number in stock.  This is correct property to show
+        the customer, not the num_in_stock field as that doesn't account for
+        allocations.
+        """
+        if self.num_in_stock is None:
+            return 0
+        if self.num_allocated is None:
+            return self.num_in_stock
+        return self.num_in_stock - self.num_allocated
         
     def set_discount_price(self, price):
         """
@@ -154,17 +177,6 @@ class AbstractStockRecord(models.Model):
         specific user and quantity
         """
         return get_partner_wrapper(self.partner.name).is_purchase_permitted(self, user, quantity)
-    
-    @property
-    def net_stock_level(self):
-        """
-        Return the effective number in stock
-        """ 
-        if self.num_in_stock is None:
-            return 0
-        if self.num_allocated is None:
-            return self.num_in_stock
-        return self.num_in_stock - self.num_allocated
 
     @property
     def is_below_threshold(self):

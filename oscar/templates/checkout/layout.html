@@ -5,8 +5,7 @@
 {% load category_tags %}
 
 {% block extrahead %}
-    <!-- Responsive - will need to be minified -->
-    <link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/responsive.css" />
+    {% include "partials/extrahead.html" %}
 {% endblock %}
 
 {% block layout %}

@@ -1,17 +1,14 @@
 {% extends "base.html" %}
+
 {% block extrahead %}
-    {% if product %}
-    <!-- Colorbox for image galleries -->
-    <link rel="stylesheet" href="{{ STATIC_URL }}oscar/js/colorbox/colorbox.css" type="text/css" media="screen" charset="utf-8"/>
-    {% endif %}
-    <!-- Responsive - will need to be minified -->
     <link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/responsive.css" />
 {% endblock %}
+
 {% block layout %}
 <div class="navbar accounts">
 	<div class="navbar-inner">
 		<div class="container-fluid">
-			<a class="brand hidden" href="{% url promotions:home %}">Oscar</a>
+            <a class="brand hidden" href="{% url promotions:home %}">{{ shop_name }}</a>
 			<ul class="nav pull-right">
 				<li><a href="#">Home</a></li>
 				<li><a href="#about">About</a></li>
@@ -32,8 +29,8 @@
 
 <div class="container">
 	<div class="hero-unit">
-		<h1>HTTP 500 - Internal Server Error!</h1>
-		<p>The page you are looking for isn't here. Please try again, use the navigation above or feel free to send us your feedback. Thank you.</p>
+		<h1>Internal Server Error!</h1>
+		<p>Something went terribly wrong.  We're very sorry and will fix this problem as soon as possible.</p>
 		<p>
 			<a class="btn btn-primary btn-large" onClick="javascript:history.go(-1);">Go back to previous page</a>
 		</p>

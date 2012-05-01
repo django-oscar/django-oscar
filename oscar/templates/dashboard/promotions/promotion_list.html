@@ -22,28 +22,14 @@ Content blocks | {{ block.super }}
 </ul>
 {% endblock %}
 
-
 {% block dashboard_content %}
-
-<div class="well well-info">
-    <h3 class="app-ico ico_expand icon">Create a new content block</h3>
-    <form action="{% url dashboard:promotion-create-redirect %}" method="get" class="form-inline">
-        {% include "partials/form_fields_inline.html" with form=select_form %}
-    	<button type="submit" class="btn btn-primary">Create block</button>
-    </form>
-</div>
-
-<div class="well well-danger">
-    <h3 class="app-ico ico_view icon">View by page</h3>
-    <a href="{% url dashboard:promotion-list-by-page %}" class="btn">View promotions by page</a>
-</div>
-
 
 
 <div class="sub-header">
-    <h2>Content blocks</h2>
+    <h2>All content blocks</h2>
 </div>
-{% if promotions %}
+
+{% if num_promotions %}
 
 <table class="table table-striped table-bordered">
 	<thead>
@@ -76,5 +62,13 @@ Content blocks | {{ block.super }}
 <p>No content blocks found.</p>
 
 {% endif %}
+
+<div class="well well-info">
+    <h3 class="app-ico ico_expand icon">Create a new content block</h3>
+    <form action="{% url dashboard:promotion-create-redirect %}" method="get" class="form-inline">
+        {% include "partials/form_fields_inline.html" with form=select_form %}
+    	<button type="submit" class="btn btn-primary">Create block</button>
+    </form>
+</div>
 
 {% endblock dashboard_content %}

@@ -4,9 +4,12 @@ import httplib
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.test import TestCase
+from django.http import HttpResponse
 
 from oscar.apps.basket.models import Basket, Line
 from oscar.test.helpers import create_product
+from oscar.apps.basket.reports import (
+    OpenBasketReportGenerator, SubmittedBasketReportGenerator)
 
 
 class BasketModelTest(TestCase):
@@ -103,3 +106,16 @@ class BasketThresholdTest(TestCase):
         response = self.client.post(url, post_params)
         self.assertTrue('Your basket currently has 2 items.' in
                         response.cookies['messages'].value)
+
+
+class BasketReportTests(TestCase):
+
+    def test_open_report_doesnt_error(self):
+        generator = OpenBasketReportGenerator()
+        response = HttpResponse()
+        generator.generate(response)
+
+    def test_submitted_report_doesnt_error(self):
+        generator = SubmittedBasketReportGenerator()
+        response = HttpResponse()
+        generator.generate(response)

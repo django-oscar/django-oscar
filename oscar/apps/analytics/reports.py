@@ -1,11 +1,15 @@
 import csv
 
-from oscar.core.loading import import_module
-report_classes = import_module('dashboard.reports.reports', ['ReportGenerator'])
-analytics_models = import_module('analytics.models', ['ProductRecord', 'UserRecord'])
+from django.db.models import get_model
+
+from oscar.core.loading import get_class
+
+ReportGenerator = get_class('dashboard.reports.reports', 'ReportGenerator')
+ProductRecord = get_model('analytics', 'ProductRecord')
+UserRecord = get_model('analytics', 'UserRecord')
 
 
-class ProductReportGenerator(report_classes.ReportGenerator):
+class ProductReportGenerator(ReportGenerator):
     
     filename_template = 'product-analytics.csv'
     code = 'product_analytics'
@@ -19,7 +23,7 @@ class ProductReportGenerator(report_classes.ReportGenerator):
                       'Purchases',]
         writer.writerow(header_row)
         
-        records = analytics_models.ProductRecord._default_manager.all()
+        records = ProductRecord._default_manager.all()
         for record in records:
             row = [record.product, record.num_views, record.num_basket_additions, record.num_purchases]
             writer.writerow(row)
@@ -31,7 +35,7 @@ class ProductReportGenerator(report_classes.ReportGenerator):
         return self.filename_template
     
 
-class UserReportGenerator(report_classes.ReportGenerator):
+class UserReportGenerator(ReportGenerator):
     
     filename_template = 'user-analytics.csv'
     code = 'user_analytics'
@@ -52,7 +56,7 @@ class UserReportGenerator(report_classes.ReportGenerator):
                       ]
         writer.writerow(header_row)
         
-        records = analytics_models.UserRecord._default_manager.select_related().all()
+        records = UserRecord._default_manager.select_related().all()
         for record in records:
             row = [record.user.username, record.user.get_full_name(), record.user.date_joined, 
                    record.num_product_views, record.num_basket_additions, record.num_orders,

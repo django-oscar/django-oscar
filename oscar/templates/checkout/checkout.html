@@ -15,34 +15,36 @@ Checkout | {{ block.super }}
 {% block content %}
 
 <div class="row-fluid">
-	{% block shipping_address %}
-	<div class="span6">
-		<div class="sub-header">
-			<h2>Shipping address</h2>
-		</div>
-		<div class="well well-info">
-			<dl>
-				<dt>Address</dt>
-				<dd>
-					{% for field in shipping_address.active_address_fields %}
-					{{ field }}<br/>
-					{% endfor %}
-				</dd>
-				{% if shipping_address.phone_number %}
-				<dt>Contact number</dt>
-				<dd>{{ shipping_addr.phone_number }}</dd>
-				{% endif %}
-				{% if shipping_address.notes %}
-				<dt>Shipping notes</dt>
-				<dd>{{ shipping_addr.notes }}</dd>
-				{% endif %} 
-			</dl>
-			<div class="alert-actions">
-				<a href="{% url checkout:shipping-address %}" class="btn">Change shipping address</a>
-			</div>
-		</div>
-	</div>
-	{% endblock shipping_address %}
+    {% block shipping_address %}
+    <div class="span6">
+        <div class="sub-header">
+            <h2>Shipping address</h2>
+        </div>
+        <div class="well well-info">
+            <dl>
+                <dt>Address</dt>
+                <dd>
+                    {% for field in shipping_address.active_address_fields %}
+                    {{ field }}<br/>
+                    {% endfor %}
+                </dd>
+                {% if shipping_address.phone_number %}
+                <dt>Contact number</dt>
+                <dd>{{ shipping_address.phone_number }}</dd>
+                {% endif %}
+                {% if shipping_address.notes %}
+                <dt>Shipping notes</dt>
+                <dd>{{ shipping_address.notes }}</dd>
+                {% endif %}
+            </dl>
+            {% block shipping_address_actions %}
+            <div class="alert-actions">
+                <a href="{% url checkout:shipping-address %}" class="btn">Change shipping address</a>
+            </div>
+            {% endblock %}
+        </div>
+    </div>
+    {% endblock shipping_address %}
 
     {% block payment_method %}
    <div class="span6">
@@ -51,18 +53,9 @@ Checkout | {{ block.super }}
         </div>
         <div class="well well-success">
             <p>Payment details to go here</p>
-            <dl>
-                <dt>Credit Card</dt>
-                <dd>
-                    xxxx-xxxx-xxxx-4121<br/>
-                    Visa<br/>
-                    04/13<br/>
-                    Gareth Williams<br/>
-                </dd>
-            </dl>
             <div class="alert-actions">
-				<a href="/checkout/payment-details/" class="btn">Change credit card details</a>
-			</div>
+				<a href="{% url checkout:payment-details %}" class="btn">Change payment details</a>
+            </div>
         </div>    
     </div>
      {% endblock payment_method %}
@@ -136,9 +129,11 @@ Checkout | {{ block.super }}
             <h3 class="span1">{{ order_total_incl_tax|currency }}</h3>
         </div>
     </div>
+    {% block order_contents_actions %}
     <div class="form-actions">
         <a href="{% url basket:summary %}" class="btn">Edit order contents</a>
     </div>
+    {% endblock %}
 {% endblock order_contents %}
 
 

@@ -8,7 +8,6 @@ from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
 from django.db.models import Sum
-from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 
 from oscar.apps.order.exceptions import (InvalidOrderStatus, InvalidLineStatus,
@@ -210,8 +209,10 @@ class AbstractOrderNote(models.Model):
     note_type = models.CharField(max_length=128, null=True)
     
     message = models.TextField()
-    date = models.DateTimeField(auto_now_add=True)
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_updated = models.DateTimeField(auto_now=True)
 
+    # Notes can only be edited for 5 minutes after being created
     editable_lifetime = 300
     
     class Meta:
@@ -223,7 +224,7 @@ class AbstractOrderNote(models.Model):
     def is_editable(self):
         if self.note_type == self.SYSTEM:
             return False
-        return (datetime.datetime.now() - self.date).seconds < self.editable_lifetime
+        return (datetime.datetime.now() - self.date_updated).seconds < self.editable_lifetime
 
 
 class AbstractCommunicationEvent(models.Model):

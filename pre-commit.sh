@@ -15,7 +15,7 @@ FORBIDDEN='assert False'
 GREP_RESULT=1
 FILES=`git diff --cached --name-only | grep -E $FILES_PATTERN`
 if [ $? -eq 0 ]; then
-	echo $FILES | xargs grep --color --with-filename -n $FORBIDDEN
+	echo $FILES | xargs grep --color --with-filename -n "$FORBIDDEN"
 	GREP_RESULT=$?
 fi
 

@@ -4,15 +4,18 @@
 {% load category_tags %}
 {% load dashboard_tags %}
 
-{% block extrahead %}
-    <link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/dashboard.css" />
-{%endblock extrahead %}
+{% block mainstylesheet %}
+	<link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/dashboard.css" />
+{% endblock %}
+
+{% block extrahead %} {%endblock extrahead %}
 
 {% block title %}
 Dashboard | {{ block.super }}
 {% endblock %}
 
 {% block layout %}
+	{% block navbar %}
     <div class="navbar navbar-fixed-top">
         <div class="navbar-inner">
             <div class="container" style="width: auto;">
@@ -29,6 +32,7 @@ Dashboard | {{ block.super }}
             </div>
         </div><!-- /navbar-inner -->
     </div><!-- /navbar -->
+	{% endblock navbar %}
 
     <div class="container-fluid dashboard">
         <div class="row-fluid">
@@ -62,27 +66,6 @@ Dashboard | {{ block.super }}
             </ul>
             {% endblock %}
             
-
-
-			<!-- <ul class="primary-nav">
-			             {% for item in nav_items %}
-			             <li class="{{ item.label }}">
-			             {% if item.is_heading %}
-			                 <a href="#" class="submenu">{{ item.label }}</a>
-			             {% else %}
-			                 <a href="{{ item.url }}">{{ item.label }}</a>
-			             {% endif %}
-			             {% if item.has_children %}
-			             <ul>
-			                 {% for subitem in item.children %}
-			                 <li><a href="{{ subitem.url }}">{{ subitem.label }}</a></li>
-			                 {% endfor %}
-			             </ul>
-			             {% endif %}
-			             </li>
-			             {% endfor %}
-			         </ul> -->
-			
             <div class="content">
                 {% block header %}{% endblock %}
                 <div class="page-content">

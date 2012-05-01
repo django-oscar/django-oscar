@@ -1,6 +1,8 @@
 {% extends 'dashboard/layout.html' %}
 {% load currency_filters %}
+
 {% block body_class %}orders{% endblock %}
+
 {% block title %}
 Order {{ order.number }} | {{ block.super }}
 {% endblock %}
@@ -26,7 +28,6 @@ Order {{ order.number }} | {{ block.super }}
 {% endblock header %}
 
 {% block dashboard_content %}
-
 
     <h3>Customer Information</h3>
 	{% if order.user %}
@@ -99,23 +100,6 @@ Order {{ order.number }} | {{ block.super }}
             </div>
         </div>
     </div>
-    <!-- <h3>Order information</h3>
-    <table class="table">
-        <tr>
-            <th>Order Number</th>
-            <th>Order Total</th>
-            <th>Date of purchase</th>
-            <th>Time of purchase</th>
-            <th>Status</th>
-        </tr>
-        <tr>
-            <td>{{ order.number }}</td>
-            <td>{{ order.total_incl_tax|currency }}</td>
-            <td>{{ order.date_placed|date:"d/m/y" }}</td>
-            <td>{{ order.date_placed|date:"H:s" }}</td>
-            <td>{{ order.status|default:"N/A" }}</td>
-        </tr>
-    </table> -->
 
 
 <div class="sub-header">
@@ -125,17 +109,17 @@ Order {{ order.number }} | {{ block.super }}
 
 <div class="tabbable dashboard">
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="#1" data-toggle="tab">Order Summary</a></li>
-		<li><a href="#2" data-toggle="tab">Addresses</a></li>
-		<li><a href="#3" data-toggle="tab">Transactions</a></li>
-		<li><a href="#4" data-toggle="tab">Emails</a></li>
-		<li><a href="#5" data-toggle="tab">Activity Log</a></li>
-		<li><a href="#6" data-toggle="tab">Notes</a></li>
+		<li class="active"><a href="#lines" data-toggle="tab">Order Summary</a></li>
+		<li><a href="#addresses" data-toggle="tab">Addresses</a></li>
+		<li><a href="#transactions" data-toggle="tab">Transactions</a></li>
+		<li><a href="#emails" data-toggle="tab">Emails</a></li>
+		<li><a href="#activity" data-toggle="tab">Activity Log</a></li>
+		<li><a href="#notes" data-toggle="tab">Notes</a></li>
 	</ul>
 
 	<div class="tab-content">
 		
-		<div class="tab-pane active" id="1">
+		<div class="tab-pane active" id="lines">
 			<div class="sub-header">
 			    <h3 class="app-ico ico_shop_bag icon">Items ordered</h3>
 			</div>
@@ -161,7 +145,7 @@ Order {{ order.number }} | {{ block.super }}
 			    <tr>
 					<td>
 						<input type="checkbox" name="selected_line" value="{{ line.id }}" />
-						<input type="text" name="selected_line_qty" value="{{ line.quantity }}" class="span9" size="2" />
+						<input type="text" name="selected_line_qty" value="{{ line.quantity }}" class="span1" size="2" />
 					</td>
 			        <td>{{ line.quantity }}</td>
 			        <td>{{ line.title }}</td>
@@ -172,7 +156,7 @@ Order {{ order.number }} | {{ block.super }}
 			        <td>{{ line.line_price_before_discounts_incl_tax|currency }}</td>
 			        <td>{{ line.line_price_incl_tax|currency }}</td>
 			        <td>
-						<a href="{% url dashboard:order-line-detail order.number line.id %}" class="btn btn-info">Edit</a>
+						<a href="{% url dashboard:order-line-detail order.number line.id %}" class="btn btn-info">View</a>
 			        </td>
 			    </tr>
 			    {% endfor %}
@@ -259,7 +243,7 @@ Order {{ order.number }} | {{ block.super }}
 			{% endblock line_actions %}
 		</div>
 
-		<div class="tab-pane" id="2">
+		<div class="tab-pane" id="addresses">
 			{% block tab_addresses %}
 				{% if order.billing_address %}
 				<h3>Billing address</h3>
@@ -326,7 +310,7 @@ Order {{ order.number }} | {{ block.super }}
 			{% endblock %}
 		</div>
 
-		<div class="tab-pane" id="3">
+		<div class="tab-pane" id="transactions">
 			<div class="sub-header">
 			    <h3 class="app-ico ico_settings icon">Payment</h3>
 			</div>
@@ -430,7 +414,7 @@ Order {{ order.number }} | {{ block.super }}
 
 		</div>
 
-		<div class="tab-pane" id="4">
+		<div class="tab-pane" id="emails">
 			{% block tab_emails %}
 				<div class="sub-header">
 					<h3 class="app-ico ico_email icon">Emails</h2>
@@ -439,7 +423,7 @@ Order {{ order.number }} | {{ block.super }}
 			{% endblock %}
 		</div>
 
-		<div class="tab-pane" id="5">
+		<div class="tab-pane" id="activity">
 			{% block tab_activity %}
 				<div class="sub-header">
 					<h3 class="app-ico ico_view icon">Actions</h3>
@@ -464,7 +448,7 @@ Order {{ order.number }} | {{ block.super }}
 			{% endblock %}
 		</div>
 		
-		<div class="tab-pane" id="6">
+		<div class="tab-pane" id="notes">
 			{% block tab_notes %}
 			<div class="sub-header">
 			    <h3 class="app-ico ico_comment icon">Notes</h3>
@@ -481,13 +465,13 @@ Order {{ order.number }} | {{ block.super }}
 				</tr>
 				{% for note in notes %}
 				<tr>
-					<td>{{ note.date }}</td>
+					<td>{{ note.date_created }}</td>
 					<td>{{ note.user }}</td>
 					<td>{{ note.note_type }}</td>
 					<td>{{ note.message|linebreaks }}</td>
 					<td class="span2">
 						{% if note.is_editable %}
-						&nbsp;<a href="{% url dashboard:order-detail-note order.number note.id %}" class="btn btn-info">Edit</a>
+						&nbsp;<a href="{% url dashboard:order-detail-note order.number note.id %}#notes" class="btn btn-info">Edit</a>
 						<form action="." method="post" class="pull-left">
 							{% csrf_token %}
 							<input type="hidden" name="order_action" value="delete_note" />
@@ -509,6 +493,7 @@ Order {{ order.number }} | {{ block.super }}
                 <!-- {{ note_form.as_p }} -->
 				<div class="form-actions">
 				    <input type="submit" value="Save note" class="btn btn-primary" />
+					Notes are only editable for 5 minutes after being saved.
 				</div>
 			</form>
 			{% endblock %}
@@ -516,6 +501,9 @@ Order {{ order.number }} | {{ block.super }}
 	</div>
 </div>
 
-
 {% endblock dashboard_content %}
 
+
+{% block onbodyload %}
+oscar.dashboard.orders.initTabs();
+{% endblock %}

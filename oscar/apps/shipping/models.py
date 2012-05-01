@@ -3,7 +3,6 @@ from decimal import Decimal as D
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.template.defaultfilters import slugify
-from django.conf import settings
 
 from oscar.apps.shipping import Scales
 
@@ -85,12 +84,15 @@ class WeightBased(ShippingMethod):
                                       the weight bands""")
 
     weight_attribute = 'weight'
+    default_weight = models.DecimalField(decimal_places=2, max_digits=12, default=D('0.00'),
+        help_text="""Default product weight in Kg when no
+                                        weight attribute is defined""")
 
     class Meta:
         verbose_name_plural = 'Weight-based shipping methods'
 
     def basket_charge_incl_tax(self):
-        weight = Scales(attribute=self.weight_attribute).weigh_basket(self._basket)
+        weight = Scales(attribute=self.weight_attribute, default_weight=self.default_weight).weigh_basket(self._basket)
         band = self.get_band_for_weight(weight)
         if not band:
             if self.bands.all().count() > 0 and self.upper_charge:
@@ -118,7 +120,10 @@ class WeightBand(models.Model):
     Represents a weight band which are used by the WeightBasedShipping method.
     """
     method = models.ForeignKey(WeightBased, related_name='bands')
-    upper_limit = models.FloatField(help_text=_("""Enter upper limit of this weight band in Kg"""))
+    upper_limit = models.FloatField(help_text=_("""Enter upper limit of this
+                                                weight band in Kg, the lower
+                                                limit will be determine by the
+                                                other weight bands"""))
     charge = models.DecimalField(decimal_places=2, max_digits=12)
     
     @property

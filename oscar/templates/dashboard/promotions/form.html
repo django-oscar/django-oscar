@@ -1,22 +1,27 @@
 {% extends 'dashboard/layout.html' %}
 {% block body_class %}promotions{% endblock %}
+
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url promotions:home %}">Dashboard</a>
+        <a href="{% url dashboard:index %}">Dashboard</a>
         <span class="divider">/</span>
     </li>
-    <li class="active"><a href=".">Catalogue</a></li>
+    <li>
+        <a href="{% url dashboard:promotion-list %}">Content blocks</a>
+        <span class="divider">/</span>
+    </li>
+	<li class="active"><a href=".">{{ heading }}</a></li>
 </ul>
 {% endblock %}
-<!-- <h2>{{ heading }}</h2> -->
+
 {% block header %}
 <div class="page-header">
     <h1>{{ heading }}</h1>
 </div>
 {% endblock header %}
-{% block dashboard_content %}
 
+{% block dashboard_content %}
 
 {% block promotion_form %}
 <div class="well well-info">
@@ -27,7 +32,7 @@
 	    {% block inlines %} {% endblock %}
 
         <button type="submit" class="btn btn-primary">Save</button>
-		or <a href="{% url dashboard:promotion-list %}">Cancel</a>
+		or <a href="{% url dashboard:promotion-list %}">cancel</a>
     </form>
 </div>
 {% endblock %}
@@ -54,6 +59,7 @@
     					{% csrf_token %}
     					<input type="hidden" name="action" value="remove_from_page" />
     					<input type="hidden" name="pagepromotion_id" value="{{ link.id }}" />
+						<a href="{% url dashboard:promotion-list-by-url link.page_url|urlencode %}" class="btn btn-info">View all blocks on this page</a>
     					<button class="btn btn-danger btn-small" type="submit">Remove from page</button>
     				</form>
     			</td>

@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib.flatpages.models import FlatPage
 
 from oscar.core.loading import import_module, AppNotFoundError, \
-        get_classes, get_class
+        get_classes, get_class, ClassNotFoundError
 from oscar.core.validators import ExtendedURLValidator
 from oscar.core.validators import URLDoesNotExistValidator
 from oscar.test import patch_settings
@@ -38,7 +38,11 @@ class ClassLoadingTests(TestCase):
 
     def test_bad_appname_raises_exception(self):
         with self.assertRaises(AppNotFoundError):
-            Product, Category = get_classes('fridge.models', ('Product', 'Category'))
+            get_classes('fridge.models', ('Product', 'Category'))
+
+    def test_bad_classname_raises_exception(self):
+        with self.assertRaises(ClassNotFoundError):
+            get_class('catalogue.models', 'Monkey')
 
 
 class ClassLoadingWithLocalOverrideTests(TestCase):
@@ -110,9 +114,7 @@ class ValidatorTests(TestCase):
 
     def test_validate_url_does_not_exist(self):
         validator = URLDoesNotExistValidator()
-
         self.assertRaises(ValidationError, validator, '/')
-
         try:
             validator('/invalid/')
         except ValidationError:
@@ -121,3 +123,15 @@ class ValidatorTests(TestCase):
 
         FlatPage(title='test page', url='/test/page/').save()
         self.assertRaises(ValidationError, validator, '/test/page/')
+
+
+class ClassLoadingWithLocalOverrideWith3SegmentsTests(TestCase):
+
+    def setUp(self):
+        self.installed_apps = list(settings.INSTALLED_APPS)
+        self.installed_apps[self.installed_apps.index('oscar.apps.shipping')] = 'tests.apps.shipping'
+
+    def test_loading_class_defined_in_local_module(self):
+        with patch_settings(INSTALLED_APPS=self.installed_apps):
+            (Free,) = get_classes('shipping.methods', ('Free',))
+            self.assertEqual('tests.apps.shipping.methods', Free.__module__)

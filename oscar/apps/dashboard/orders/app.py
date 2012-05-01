@@ -5,9 +5,9 @@ from oscar.core.application import Application
 from oscar.apps.dashboard.orders import views
 from oscar.apps.dashboard.nav import register, Node
 
-node = Node('Manage orders')
+node = Node('Orders')
 node.add_child(Node('Orders', 'dashboard:order-list'))
-node.add_child(Node('Statistics', 'dashboard:order-summary'))
+node.add_child(Node('Statistics', 'dashboard:order-stats'))
 register(node)
 
 
@@ -17,13 +17,12 @@ class OrdersDashboardApplication(Application):
     order_detail_view = views.OrderDetailView
     shipping_address_view = views.ShippingAddressUpdateView
     line_detail_view = views.LineDetailView
-    order_summary_view = views.OrderSummaryView
+    order_stats_view = views.OrderStatsView
 
     def get_urls(self):
         urlpatterns = patterns('',
             url(r'^$', self.order_list_view.as_view(), name='order-list'),
-            url(r'^summary/$', self.order_summary_view.as_view(),
-                name='order-summary'),
+            url(r'^statistics/$', self.order_stats_view.as_view(), name='order-stats'),
             url(r'^(?P<number>[-\w]+)/$',
                 self.order_detail_view.as_view(), name='order-detail'),
             url(r'^(?P<number>[-\w]+)/notes/(?P<note_id>\d+)/$',

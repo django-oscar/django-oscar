@@ -1,6 +1,5 @@
 from django import forms
 from django.db.models.loading import get_model
-from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.validators import URLDoesNotExistValidator
 
@@ -36,7 +35,6 @@ class PageUpdateForm(forms.ModelForm):
             if not self.cleaned_data['url'].endswith('/'):
                 self.cleaned_data['url'] += '/'
             URLDoesNotExistValidator()(self.cleaned_data['url'])
-
         return self.cleaned_data['url']
 
     class Meta:

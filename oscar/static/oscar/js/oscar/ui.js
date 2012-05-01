@@ -52,8 +52,9 @@ $(document).ready(function()
     });
     
     var window_width = $(window).width(), // Width of the window
-        $browse_width = $('aside.span3').outerWidth(), // Width of main navigation
-        $browse_height = $('#browse > .dropdown-menu').outerHeight(); // Height of main navigation
+        $sidebar = $('aside.span3'), // Width of main navigation
+        $browse = $('#browse > .dropdown-menu'), // Height of main navigation
+        $browse_open = $browse.parent().find('> a[data-toggle]');
     
     if (window_width > 480) {
       // This activates elastislide
@@ -66,6 +67,8 @@ $(document).ready(function()
             minItems: 5,
             onClick:  true
         });
+        // This activates colorbox on the product page
+        $('a[rel=lightbox]').colorbox();
       }
       else {
         es_carousel.elastislide({
@@ -77,15 +80,19 @@ $(document).ready(function()
     }
     if (window_width > 980) {
       // set width of nav dropdown on the homepage
-      $('#browse').find('> .dropdown-menu').css({
-        width: $browse_width
-      });
-      // set margin top of aside allow space for home navigation
-      $('.home aside.span3').css({
-        marginTop: $browse_height
-      });
+      $browse.css('width', $sidebar.outerWidth());
+      // Remove click on browse button if menu is currently open
+      if  ($browse_open.length < 1) {
+        $browse.parent().find('> a').on('click', function()
+        {
+          return false;
+        });
+        // set margin top of aside allow space for open navigation
+        $sidebar.css({
+          marginTop: $browse.outerHeight()
+        }); 
+      }
     }
-
     
     // This activates the promotional banner carousel
     $('#myCarousel').carousel({
@@ -118,7 +125,7 @@ $(document).ready(function()
     $(".accordion dd").hide();
 
     /* scroll to sections */
-    $('.top_page a, .product_page a').click(function (e) {
+    $('.top_page a').click(function (e) {
         var section = $(this).attr('href');
         var sectionPosition = Math.floor($(section).offset().top);
         var currentPosition = Math.floor($(document).scrollTop());

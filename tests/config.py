@@ -1,6 +1,7 @@
 import os
 
 from django.conf import settings, global_settings
+from oscar import OSCAR_CORE_APPS
 
 
 if not settings.configured:
@@ -14,6 +15,7 @@ if not settings.configured:
             DATABASES={
                 'default': {
                     'ENGINE': 'django.db.backends.sqlite3',
+                    'NAME': ':memory:',
                     }
                 },
             INSTALLED_APPS=[
@@ -23,31 +25,7 @@ if not settings.configured:
                 'django.contrib.sessions',
                 'django.contrib.sites',
                 'django.contrib.flatpages',
-                # Oscar apps
-                'oscar',
-                'oscar.apps.analytics',
-                'oscar.apps.discount',
-                'oscar.apps.order',
-                'oscar.apps.checkout',
-                'oscar.apps.shipping',
-                'oscar.apps.catalogue',
-                'oscar.apps.catalogue.reviews',
-                'oscar.apps.basket',
-                'oscar.apps.payment',
-                'oscar.apps.offer',
-                'oscar.apps.address',
-                'oscar.apps.partner',
-                'oscar.apps.customer',
-                'oscar.apps.promotions',
-                'oscar.apps.search',
-                'oscar.apps.voucher',
-                'oscar.apps.dashboard',
-                'oscar.apps.dashboard.reports',
-                'oscar.apps.dashboard.users',
-                'oscar.apps.dashboard.orders',
-                'oscar.apps.dashboard.promotions',
-                'oscar.apps.dashboard.catalogue',
-                ],
+                ] + OSCAR_CORE_APPS,
             TEMPLATE_CONTEXT_PROCESSORS=(
                 "django.contrib.auth.context_processors.auth",
                 "django.core.context_processors.request",

@@ -73,7 +73,7 @@
                 {% include "partials/form_fields.html" with form=basket_form %}
             	
                 <div class="form-actions">
-                    <input type="submit" class="btn btn-large btn-primary" value="Add to basket" />
+                    <button type="submit" class="btn btn-large btn-primary" value="Add to basket">Add to basket</button>
                 </div>
             </form>
             {% endif %}
@@ -191,30 +191,47 @@
         {% endwith %}
     </section>    
     {% endblock product_review %}
+    
+    <div class="row-fluid">
+        {% if product.related_products.count %}
+        <div class="span6">
+            <div class="sub-header">
+                <h2>Related items</h2>
+            </div>
+            <div class="es-carousel-wrapper">
+                <div class="es-carousel">
+                    <ul>
+                        {% for product in product.related_products.all %}
+                        <li>
+                            {% include "promotions/partials/product_carousel.html" %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endif %}
 
-    {% if product.related_items.count %}
-    <div class="products">
-        <h4>Related items</h4>
-        <ul>
-        {% for product in product.related_items.all %}
-            <li><a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a></li>
-        {% endfor %}
-        </ul>
+        {% if product.recommended_products.count %}
+        <div class="span6">
+            <div class="sub-header">
+                <h2>Recommended items</h2>
+            </div>
+            <div class="es-carousel-wrapper">
+                <div class="es-carousel">
+                    <ul>
+                        {% for product in product.recommended_products.all %}
+                        <li>
+                            {% include "promotions/partials/product_carousel.html" %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endif %}
     </div>
-    {% endif %}
-
-    {% if product.recommended_items.count %}
-    <div class="products">
-        <h4>Recommended items</h4>
-        <ul>
-        {% for product in product.recommended_items.all %}
-            <li><a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a></li>
-        {% endfor %}
-        </ul>
-    </div>
-    {% endif %}
-
-{% recently_viewed_products %}
+    {% recently_viewed_products %}
 </article><!-- End of product page -->
 {% endblock content %}
 

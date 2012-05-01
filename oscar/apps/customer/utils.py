@@ -2,10 +2,10 @@ import logging
 
 from django.core.mail import EmailMessage, EmailMultiAlternatives
 from django.conf import settings
+from django.db.models import get_model
 
-from oscar.core.loading import import_module
-import_module('order.models', ['CommunicationEvent',], locals())
-import_module('customer.models', ['Email'], locals())
+CommunicationEvent = get_model('order', 'CommunicationEvent')
+Email = get_model('customer', 'Email')
 
 
 class Dispatcher(object):

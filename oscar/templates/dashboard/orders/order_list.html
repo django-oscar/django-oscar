@@ -8,7 +8,7 @@ Order management | {{ block.super }}
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url promotions:home %}">Dashboard</a>
+        <a href="{% url dashboard:index %}">Dashboard</a>
         <span class="divider">/</span>
     </li>
     <li class="active"><a href=".">Order management</a></li>
@@ -34,7 +34,7 @@ Order management | {{ block.super }}
                     {% if field.is_hidden %}
                         {{ field }}
                     {% else %}
-                    {{ field.label_tag }}
+                    <label for="{{ field.auto_id }}" class="control-label">{{ field.label }}</label>
                     <div class="controls">
                         {{ field }}
                             {% for error in field.errors %}
@@ -52,9 +52,9 @@ Order management | {{ block.super }}
                 </div>
             {% else%}
                 <div class="control-group {% for error in form.response_format_0.errors %}error{% endfor %} pull-left">
-                    <label for="id_response_format_0">Get results as:</label>
+                    <label for="id_response_format_0" class="control-label">Get results as:</label>
                     <div class="controls">
-                        <label class="radio inline" for="id_response_format_0">
+                        <label class="radio inline control-label" for="id_response_format_0">
                             {{ form.response_format }}
                             {% for error in form.response_format.errors %}
                             <span class="help-block">
@@ -65,7 +65,7 @@ Order management | {{ block.super }}
                     </div>
                 </div>
             {% endif%}
-            {% ifequal forloop.counter 1 %}<div class="orders_search">{% endifequal %}
+            {% ifequal forloop.counter 1 %}<div class="orders_search" style="display:none">{% endifequal %}
             {% ifequal forloop.revcounter0 1 %}</div>{% endifequal %}
         {% endfor %}
         <button type="submit" class="btn btn-primary pull-left">Search</button>
@@ -78,12 +78,6 @@ Order management | {{ block.super }}
 {% if orders.count %}
 <form action="." method="post" class="order_table">
     {% csrf_token %}
-    <div class="well well-danger">
-        <h3 class="app-ico ico_logout icon">Download</h3>
-        <label>With selected orders: Download as CSV </label>
-        <input type="radio" name="action" value="download_selected_orders" /> 
-        <button type="submit" class="btn btn-primary">Download</button>
-    </div>
 <table class="table table-striped table-bordered">
     <tr>
         <th></th>
@@ -115,6 +109,13 @@ Order management | {{ block.super }}
     {% endfor %}
 </table>
 
+<div class="well well-danger">
+	<h3 class="app-ico ico_logout icon">Download</h3>
+	<label>Download selected orders as a CSV</label>
+	<input type="hidden" name="action" value="download_selected_orders" />
+	<button type="submit" class="btn btn-primary">Download</button>
+</div>
+
 {% if page_obj %}
     {% include "catalogue/partials/pagination.html" %}
 {% endif %}
@@ -128,3 +129,7 @@ Order management | {{ block.super }}
 {% endif %}
 
 {% endblock dashboard_content %}
+
+{% block onbodyload %}
+oscar.dashboard.search.init();
+{% endblock onbodyload %}

@@ -16,7 +16,7 @@ Pages with content blocks | {{ block.super }}
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url promotions:home %}">Dashboard</a>
+        <a href="{% url dashboard:index %}">Dashboard</a>
         <span class="divider">/</span>
     </li>
     <li class="active"><a href=".">Content block management</a></li>
@@ -51,7 +51,7 @@ Pages with content blocks | {{ block.super }}
 			<td>{{ page.page_url }}</td>
 			<td>{{ page.freq }}</td>
 			<td>
-                <a href="{% url dashboard:promotion-list-by-url page.page_url %}" class="btn btn-success">Edit</a>
+                <a href="{% url dashboard:promotion-list-by-url page.page_url|urlencode %}" class="btn btn-success">Edit</a>
 			</td>
 			<td>
 			</td>

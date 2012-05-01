@@ -1,5 +1,6 @@
 from StringIO import StringIO
 from decimal import Decimal as D
+import random
 
 from django.test import TestCase
 from django.core.servers.basehttp import AdminMediaHandler
@@ -16,16 +17,20 @@ from oscar.apps.offer.models import Range, ConditionalOffer, Condition, Benefit
 
 
 def create_product(price=None, title="Dummy title", product_class="Dummy item class", 
-        partner="Dummy partner", upc=None, num_in_stock=10, attributes=None):
+        partner="Dummy partner", partner_sku=None, upc=None, num_in_stock=10, attributes=None):
     """
     Helper method for creating products that are used in tests.
     """
     ic,_ = ProductClass._default_manager.get_or_create(name=product_class)
     item = Product._default_manager.create(title=title, product_class=ic, upc=upc)
     if price:
+        if not partner_sku:
+            partner_sku = 'sku_%d_%d' % (item.id, random.randint(0, 10000))
+
         partner,_ = Partner._default_manager.get_or_create(name=partner)
-        sr = StockRecord._default_manager.create(product=item, partner=partner, 
-                                                 price_excl_tax=price, num_in_stock=num_in_stock)
+        StockRecord._default_manager.create(product=item, partner=partner,
+                                            partner_sku=partner_sku,
+                                            price_excl_tax=price, num_in_stock=num_in_stock)
     if attributes:
         for key, value in attributes.items():
             attr,_ = ProductAttribute.objects.get_or_create(name=key)
