@@ -116,12 +116,12 @@ Basket | {{ block.super }}
 					</tr>
 					{% if offer_discounts %}
 						<tr>
-							<th>Site offers</th>
+							<th>Special offers</th>
 							<td></td>
 						</tr>
 						{% for discount in offer_discounts %}
 						<tr>
-							<td>{{ discount.name }}</td>
+							<td class="basket-discount">{{ discount.name }}</td>
 							<td>-{{ discount.discount|currency }}</td>
 						</tr>
 						{% endfor %}
