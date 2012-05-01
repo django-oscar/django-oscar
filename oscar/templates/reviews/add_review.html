@@ -4,14 +4,12 @@
 <div id="addreview" class="review_add">
     <legend>Leave a product review</legend>
     <form method="post" action="." class="form-inline" >
-    
         {% csrf_token %}
-
         {% include "partials/form_fields.html" with form=form %}
-
         <div class="form-actions">
             <button type="submit" value="Submit" class="btn btn-primary">Submit</button>
-            <a href="{{ item.get_absolute_url }}" class="btn">Cancel</a>
+			or
+            <a href="{{ product.get_absolute_url }}" >cancel</a>
         </div>
     </form>
 </div>
