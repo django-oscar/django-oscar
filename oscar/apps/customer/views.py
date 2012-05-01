@@ -49,9 +49,6 @@ class ProfileUpdateView(FormView):
 
 
 class AccountSummaryView(ListView):
-    """
-    Customer order history
-    """
     context_object_name = "orders"
     template_name = 'customer/profile.html'
     paginate_by = 20
@@ -91,6 +88,7 @@ class AccountSummaryView(ListView):
                 'value': value,
             })
         ctx['profile_fields'] = field_data
+        ctx['profile'] = profile
 
     def get_default_billing_address(self, user):
         return self.get_user_address(user, is_default_for_billing=True)

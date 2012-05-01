@@ -34,6 +34,7 @@ My account | {{ block.super }}
 	<div class="tab-content">
 		
 		<div class="tab-pane active" id="1">
+			{% block tab_profile %}
 			<div class="sub-header">
     			<h3>Profile</h3>
 			</div>
@@ -47,12 +48,14 @@ My account | {{ block.super }}
 						<th>Email address</th>
 						<td>{{ user.email }}</td>
 					</tr>
+					{% block profile_fields %}
 					{% for field in profile_fields %}
 					<tr>
 						<th>{{ field.name }}</th>
 						<td>{{ field.value|default:"-" }}</td>
 					</tr>
 					{% endfor %}
+					{% endblock %}
 					<tr>
 						<th>Date registered</th>
 						<td>{{ user.date_joined }}</td>
@@ -66,9 +69,11 @@ My account | {{ block.super }}
 					</tr>
 				</tbody>
 			</table>
+			{% endblock %}
 		</div>
 		
 		<div class="tab-pane" id="2">
+			{% block tab_orderhistory %}
 			<div class="sub-header">
     			<h3>Order history</h3>
 			</div>
@@ -105,9 +110,11 @@ My account | {{ block.super }}
 			{% else %}
 			<p>You haven't placed any orders yet.</p>
 			{% endif %}
+			{% endblock %}
 		</div>
 		
         <div class="tab-pane" id="3">
+			{% block tab_addressbook %}
             <div class="sub-header">
                 <h3>Address book</h3>
             </div>
@@ -133,8 +140,11 @@ My account | {{ block.super }}
             		</tr>
             	</tbody>
             </table>
+			{% endblock %}
         </div>
+
         <div class="tab-pane" id="4">
+			{% block tab_emailhistory %}
             <div class="sub-header">
                 <h3>Email history</h3>
             </div>
@@ -164,6 +174,7 @@ My account | {{ block.super }}
                 <a href="{% url customer:email-list %}" class="btn btn-primary">View email history</a>
             <div>
             {% endif %}
+			{% endblock %}
         </div>
     </div>
 </div><!--End of tab-content -->
