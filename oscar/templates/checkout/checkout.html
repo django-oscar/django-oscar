@@ -72,7 +72,7 @@ Checkout | {{ block.super }}
             <h4 class="span1">Price</h4>
         </div>
     </div>
-    {% for line in basket.lines.all %}
+    {% for line in basket.all_lines %}
     <div class="basket-items">
         <div class="row-fluid">
             <div class="span10">
