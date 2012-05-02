@@ -27,6 +27,13 @@ Basket | {{ block.super }}
 	{% endfor %}
 {% endif %}
 
+{% if upsell_messages %}
+	<h2>You could be missing out on offers!</h2>
+	{% for upsell in upsell_messages %}
+	<div class="warning">{{ upsell.message }} to quality for the '{{ upsell.offer.name }}' special offer</div>
+	{% endfor %}
+{% endif %}
+
 {% if not basket.is_empty %}
 <div class="basket-title">
     <div class="row-fluid">

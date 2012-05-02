@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.db.models import get_model
 from django.http import HttpResponseRedirect, Http404
-from django.views.generic import ListView, FormView, View
+from django.views.generic import FormView, View
 from django.forms.models import modelformset_factory
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist
@@ -38,11 +38,23 @@ class BasketView(ModelFormSetView):
         Return a list of warnings that apply to this basket
         """
         warnings = []
-        for line in basket.lines.all():
+        for line in basket.all_lines():
             warning = line.get_warning()
             if warning:
                 warnings.append(warning)
         return warnings
+
+    def get_upsell_messages(self, basket):
+        offers = Applicator().get_offers(self.request, basket)
+        messages = []
+        for offer in offers:
+            if offer.is_condition_partially_satisfied(basket):
+                data = {
+                    'message': offer.get_upsell_message(basket),
+                    'offer': offer
+                }
+                messages.append(data)
+        return messages
 
     def get_context_data(self, **kwargs):
         context = super(BasketView, self).get_context_data(**kwargs)
@@ -52,6 +64,7 @@ class BasketView(ModelFormSetView):
         context['shipping_charge_incl_tax'] = method.basket_charge_incl_tax()
         context['order_total_incl_tax'] = self.request.basket.total_incl_tax + method.basket_charge_incl_tax()
         context['basket_warnings'] = self.get_basket_warnings(self.request.basket)
+        context['upsell_messages'] = self.get_upsell_messages(self.request.basket)
 
         if self.request.user.is_authenticated():
             try:
