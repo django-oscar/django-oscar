@@ -139,7 +139,7 @@
         {% for category in product.categories.all %}
         <li>
             {% for c in category.get_ancestors %}
-            {% if not forloop.first %} > {% endif %}<a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
+            {% if not forloop.first %} &gt; {% endif %}<a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
             {% endfor %}
         </li>
         {% endfor %}
@@ -154,7 +154,7 @@
         <p>Read customer reviews on this product. If you have read this book, why not post your own
        review?</p>
        <div class="review_read">
-           <a href="{% url catalogue:reviews-add product.slug product.id %}" class="btn btn-success">Add a review</a>
+           <a href="{% url catalogue:reviews-add product.slug product.id %}#addreview" class="btn btn-success">Add a review</a>
        </div>
 
         {% with product.reviews.all as reviews %}
@@ -175,8 +175,8 @@
                             <div class="span4 review_votes">
                                 <div>
                 		            {% include 'reviews/_vote_bit.html' %}
-                                        {% if review.has_votes %}
-                                        <p>{{ review.num_up_votes }} customer{{ review.num_up_votes|pluralize }} found this review helpful.</p>
+									{% if review.has_votes %}
+									<p>{{ review.num_up_votes }} customer{{ review.num_up_votes|pluralize }} found this review helpful.</p>
                                     {% endif %}
                                 </div>
                             </div>

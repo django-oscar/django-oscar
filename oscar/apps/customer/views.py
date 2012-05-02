@@ -49,9 +49,6 @@ class ProfileUpdateView(FormView):
 
 
 class AccountSummaryView(ListView):
-    """
-    Customer order history
-    """
     context_object_name = "orders"
     template_name = 'customer/profile.html'
     paginate_by = 20
@@ -91,6 +88,7 @@ class AccountSummaryView(ListView):
                 'value': value,
             })
         ctx['profile_fields'] = field_data
+        ctx['profile'] = profile
 
     def get_default_billing_address(self, user):
         return self.get_user_address(user, is_default_for_billing=True)
@@ -255,6 +253,11 @@ class OrderDetailView(DetailView, PostActionMixin):
         return get_object_or_404(self.model, user=self.request.user, number=self.kwargs['order_number'])
 
     def do_reorder(self, order):
+        """
+        'Re-order' a previous order.
+
+        This puts the contents of the previous order into your basket
+        """
         self.response = HttpResponseRedirect(reverse('basket:summary'))
         basket = self.request.basket
 
@@ -267,8 +270,8 @@ class OrderDetailView(DetailView, PostActionMixin):
             for attribute in line.attributes.all():
                 if attribute.option:
                     options.append({'option': attribute.option, 'value': attribute.value})
-            basket.add_product(line.product, 1, options)
-        messages.info(self.request, "Order %s reordered" % order.number)
+            basket.add_product(line.product, line.quantity, options)
+        messages.info(self.request, "All available lines from order %s have been added to your basket" % order.number)
 
 
 class OrderLineView(DetailView, PostActionMixin):
@@ -294,8 +297,12 @@ class OrderLineView(DetailView, PostActionMixin):
         for attribute in line.attributes.all():
             if attribute.option:
                 options.append({'option': attribute.option, 'value': attribute.value})
-        basket.add_product(line.product, 1, options)
-        messages.info(self.request, "Line reordered")
+        basket.add_product(line.product, line.quantity, options)
+        if line.quantity > 1:
+            msg = "%d copies of '%s' have been added to your basket" % (line.quantity, line.product)
+        else:
+            msg = "'%s' has been added to your basket" % line.product
+        messages.info(self.request, msg)
 
 
 class AddressListView(ListView):

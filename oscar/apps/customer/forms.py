@@ -98,12 +98,12 @@ class SearchByDateRangeForm(forms.Form):
         return {}
 
 
-class _UserForm(forms.ModelForm):
+class UserForm(forms.ModelForm):
 
     def __init__(self, user, *args, **kwargs):
         self.user = user
         kwargs['instance'] = user
-        super(_UserForm, self).__init__(*args, **kwargs)
+        super(UserForm, self).__init__(*args, **kwargs)
 
     class Meta:
         model = User
@@ -116,7 +116,7 @@ if hasattr(settings, 'AUTH_PROFILE_MODULE'):
 
     Profile = get_profile_class()
 
-    class _UserProfileForm(forms.ModelForm):
+    class UserAndProfileForm(forms.ModelForm):
 
         first_name = forms.CharField(label='First name', max_length=128)
         last_name = forms.CharField(label='Last name', max_length=128)
@@ -134,7 +134,7 @@ if hasattr(settings, 'AUTH_PROFILE_MODULE'):
                 instance = Profile(user=user)
             kwargs['instance'] = instance
 
-            super(_UserProfileForm, self).__init__(*args, **kwargs)
+            super(UserAndProfileForm, self).__init__(*args, **kwargs)
 
             # Add user fields
             self.fields['first_name'].initial = self.instance.user.first_name
@@ -160,6 +160,6 @@ if hasattr(settings, 'AUTH_PROFILE_MODULE'):
             user.save()
             return super(ProfileForm, self).save(*args,**kwargs)
 
-    ProfileForm = _UserProfileForm
+    ProfileForm = UserAndProfileForm
 else:
-    ProfileForm = _UserForm 
+    ProfileForm = UserForm 
