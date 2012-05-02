@@ -8,6 +8,7 @@ from oscar.apps.dashboard.nav import register, Node
 
 node = Node('Content')
 node.add_child(Node('Re-usable content blocks', 'dashboard:promotion-list'))
+node.add_child(Node('Content blocks by page', 'dashboard:promotion-list-by-page'))
 node.add_child(Node('Pages', 'dashboard:page-list'))
 register(node, 20)
 
