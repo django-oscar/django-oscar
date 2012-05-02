@@ -149,8 +149,9 @@ class AbstractShippingAddress(AbstractAddress):
     """
     phone_number = models.CharField(max_length=32, blank=True, null=True)
     notes = models.TextField(blank=True, null=True,
-                             help_text="For example, leave the parcel by the " \
-                                       "garden gnomes.")
+                             verbose_name='Courier instructions',
+                             help_text="For example, leave the parcel in the wheelie bin " \
+                                       "if I'm not in.")
     
     class Meta:
         abstract = True
