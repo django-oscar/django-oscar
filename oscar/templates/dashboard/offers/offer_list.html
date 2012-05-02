@@ -53,7 +53,7 @@ Offer management | {{ block.super }}
 				</tr>
 				{% for offer in offers %}
 				<tr>
-					<td>{{ offer.name }}</td>
+					<td><a href="{{ offer.get_absolute_url }}">{{ offer.name }}</a></td>
 					<td>{{ offer.start_date }}</td>
 					<td>{{ offer.end_date }}</td>
 					<td>{{ offer.condition.description }}</td>

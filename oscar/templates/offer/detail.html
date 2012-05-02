@@ -28,6 +28,13 @@ Offer '{{ offer.name }}' | {{ block.super }}
     <div class="sub-header">
         <h1>{{ offer.name }}</h1>
     </div>
+
+	{% if not offer.is_active %}
+		<div class="alert alert-error">
+			This offer has expired
+		</div>
+	{% endif %}
+
     {% if offer.description %}
 	    <h3>Description</h3>
     	<p>{{ offer.description }}</p>

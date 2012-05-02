@@ -10,8 +10,9 @@ class OfferApplication(Application):
 
     def get_urls(self):
         urlpatterns = patterns('',
-            url(r'^(?P<pk>\d+)/$', self.detail_view.as_view(), name='detail'),
+            url(r'^(?P<slug>[\w-]+)/$', self.detail_view.as_view(), name='detail'),
         )
         return self.post_process_urls(urlpatterns)
+
 
 application = OfferApplication()

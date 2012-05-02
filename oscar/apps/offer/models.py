@@ -3,9 +3,11 @@ import math
 import datetime
 
 from django.core import exceptions
+from django.template.defaultfilters import slugify
 from django.db import models
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ValidationError
+from django.core.urlresolvers import reverse
 from django.conf import settings
 
 from oscar.apps.offer.managers import ActiveOfferManager
@@ -18,7 +20,10 @@ class ConditionalOffer(models.Model):
     """
     A conditional offer (eg buy 1, get 10% off)
     """
-    name = models.CharField(max_length=128, unique=True)
+    name = models.CharField(max_length=128, unique=True, 
+                            help_text="""This is displayed within the customer's
+                            basket""")
+    slug = models.SlugField(max_length=128, unique=True, null=True)
     description = models.TextField(blank=True, null=True)
 
     # Offers come in a few different types:
@@ -68,6 +73,14 @@ class ConditionalOffer(models.Model):
 
     class Meta:
         ordering = ['-priority']
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        return super(ConditionalOffer, self).save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('offer:detail', kwargs={'slug': self.slug})
         
     def __unicode__(self):
         return self.name    

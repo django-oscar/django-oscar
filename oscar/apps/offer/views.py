@@ -9,11 +9,10 @@ Product = get_model('catalogue', 'Product')
 class OfferDetailView(ListView):
     context_object_name = 'products'
     template_name = 'offer/detail.html'
-    template_name_expired = 'offer/detail.html'
     paginate_by = 20
 
     def get(self, request, *args, **kwargs):
-        self.offer = get_object_or_404(ConditionalOffer, id=self.kwargs['pk'])
+        self.offer = get_object_or_404(ConditionalOffer, slug=self.kwargs['slug'])
         return super(OfferDetailView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):

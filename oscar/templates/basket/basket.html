@@ -17,7 +17,6 @@ Basket | {{ block.super }}
 </div>
 {% endblock header %}
 
-
 {% block content %}
 
 {% if basket_warnings %}
@@ -30,7 +29,7 @@ Basket | {{ block.super }}
 {% if upsell_messages %}
 	<h2>You could be missing out on offers!</h2>
 	{% for upsell in upsell_messages %}
-	<div class="warning">{{ upsell.message }} to quality for the '{{ upsell.offer.name }}' special offer</div>
+	<div class="warning">{{ upsell.message }} to quality for the <a href="{{ upsell.offer.get_absolute_url }}">{{ upsell.offer.name }}</a> special offer</div>
 	{% endfor %}
 {% endif %}
 
