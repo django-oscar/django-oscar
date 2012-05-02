@@ -1,6 +1,7 @@
 import datetime
 
-from django.views.generic import ListView, FormView, DeleteView, DetailView
+from django.views.generic import (ListView, FormView, DeleteView, DetailView,
+                                  CreateView, UpdateView)
 from django.db.models.loading import get_model
 from django.core.urlresolvers import reverse
 from django.contrib import messages
@@ -11,6 +12,7 @@ from oscar.core.loading import get_classes
 
 ConditionalOffer = get_model('offer', 'ConditionalOffer')
 Condition= get_model('offer', 'Condition')
+Range = get_model('offer', 'Range')
 OrderDiscount = get_model('order', 'OrderDiscount')
 Benefit = get_model('offer', 'Benefit')
 MetaDataForm, ConditionForm, BenefitForm, PreviewForm, OfferSearchForm = get_classes(
@@ -267,3 +269,37 @@ class OfferDetailView(DetailView):
         ctx = super(OfferDetailView, self).get_context_data(**kwargs)
         ctx['order_discounts'] = OrderDiscount.objects.filter(offer_id=self.object.id).order_by('-id')
         return ctx
+
+
+class RangeListView(ListView):
+    model = Range
+    context_object_name = 'ranges'
+    template_name = 'dashboard/offers/range_list.html'
+
+
+class RangeCreateView(CreateView):
+    model = Range
+    template_name = 'dashboard/offers/range_form.html'
+
+    def get_success_url(self):
+        messages.success(self.request, "Range created")
+        return reverse('dashboard:range-list')
+
+
+class RangeUpdateView(UpdateView):
+    model = Range
+    template_name = 'dashboard/offers/range_form.html'
+
+    def get_success_url(self):
+        messages.success(self.request, "Range updated")
+        return reverse('dashboard:range-list')
+
+
+class RangeDeleteView(DeleteView):
+    model = Range
+    template_name = 'dashboard/offers/range_delete.html'
+    context_object_name = 'range'
+
+    def get_success_url(self):
+        messages.warning(self.request, "Range deleted")
+        return reverse('dashboard:range-list')

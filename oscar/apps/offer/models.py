@@ -278,6 +278,7 @@ class Range(models.Model):
     excluded_products = models.ManyToManyField('catalogue.Product', related_name='excludes', blank=True)
     classes = models.ManyToManyField('catalogue.ProductClass', related_name='classes', blank=True)
     included_categories = models.ManyToManyField('catalogue.Category', related_name='includes', blank=True)
+    date_created = models.DateTimeField(auto_now_add=True)
     
     __included_product_ids = None
     __excluded_product_ids = None
@@ -328,6 +329,11 @@ class Range(models.Model):
         if None == self.__class_ids:
             self.__class_ids = [row['id'] for row in self.classes.values('id')]
         return self.__class_ids
+
+    def num_products(self):
+        if self.includes_all_products:
+            return None
+        return self.included_products.all().count()
         
 
 class CountCondition(Condition):

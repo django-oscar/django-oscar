@@ -9,16 +9,26 @@ node = Node('Offers')
 node.add_child(Node('All offers', 'dashboard:offer-list'))
 register(node, 50)
 
+node = Node('Ranges')
+node.add_child(Node('All ranges', 'dashboard:range-list'))
+register(node, 55)
+
 
 class OffersDashboardApplication(Application):
     name = None
     list_view = views.OfferListView
+
     metadata_view = views.OfferMetaDataView
     condition_view = views.OfferConditionView
     benefit_view = views.OfferBenefitView
     preview_view = views.OfferPreviewView
     delete_view = views.OfferDeleteView
     detail_view = views.OfferDetailView
+
+    range_list_view = views.RangeListView
+    range_create_view = views.RangeCreateView
+    range_update_view = views.RangeUpdateView
+    range_delete_view = views.RangeDeleteView
 
     def get_urls(self):
         urlpatterns = patterns('',
@@ -37,6 +47,11 @@ class OffersDashboardApplication(Application):
             url(r'^(?P<pk>\d+)/delete/$', self.delete_view.as_view(), name='offer-delete'),
             # Stats
             url(r'^(?P<pk>\d+)/$', self.detail_view.as_view(), name='offer-detail'),
+            # Ranges
+            url(r'^ranges/$', self.range_list_view.as_view(), name='range-list'),
+            url(r'^ranges/create/$', self.range_create_view.as_view(), name='range-create'),
+            url(r'^ranges/(?P<pk>\d+)/$', self.range_update_view.as_view(), name='range-update'),
+            url(r'^ranges/(?P<pk>\d+)/delete/$', self.range_delete_view.as_view(), name='range-delete'),
         )
         return self.post_process_urls(urlpatterns)
 
