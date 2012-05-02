@@ -23,16 +23,15 @@ class ProductImageNode(template.Node):
     def __init__(self, product_var, context_key):
         self.product_var = template.Variable(product_var)
         self.context_key = context_key
-        
+
     def render(self, context):
         try:
             product = self.product_var.resolve(context)
         except template.VariableDoesNotExist:
             return ''
-        images = product.images.all().order_by('display_order')
-        if images.count():
-            image = images[0]
-        else:
+        try:
+            image = product.images.all().order_by('display_order')[0]
+        except IndexError:
             image = {'thumbnail_url': settings.OSCAR_MISSING_IMAGE_URL}
         context[self.context_key] = image
         return ''

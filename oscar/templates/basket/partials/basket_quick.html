@@ -3,8 +3,8 @@
 {% load basket_tags %}
 
 <ul class="basket_item">
-{% if request.basket.lines.count %}
-    {% for line in basket.lines.all %}
+{% if request.basket.num_lines %}
+    {% for line in basket.all_lines %}
     <li>
         <article>
             <h4><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h4>
