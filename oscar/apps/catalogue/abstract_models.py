@@ -228,7 +228,10 @@ class AbstractProduct(models.Model):
     @property
     def is_group(self):
         u"""Return True if this is a top level product and has more than 0 variants"""
-        return self.is_top_level and self.variants.count() > 0
+        # use len() instead of count() in this specific instance
+        # as variants are highly likely to be used after this 
+        # which reduces the amount of SQL queries required
+        return self.is_top_level and len(self.variants.all()) > 0
     
     @property
     def is_variant(self):

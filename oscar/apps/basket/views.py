@@ -28,7 +28,7 @@ class BasketView(ModelFormSetView):
     template_name='basket/basket.html'
 
     def get_queryset(self):
-        return self.request.basket.lines.all()
+        return self.request.basket.all_lines()
 
     def get_default_shipping_method(self, basket):
         return Repository().get_default_shipping_method(self.request.user, self.request.basket)
@@ -69,7 +69,7 @@ class BasketView(ModelFormSetView):
         if self.request.user.is_authenticated():
             try:
                 saved_basket = self.basket_model.saved.get(owner=self.request.user)
-                saved_queryset = saved_basket.lines.all().select_related('product', 'product__stockrecord')
+                saved_queryset = saved_basket.all_lines().select_related('product', 'product__stockrecord')
                 SavedFormset = modelformset_factory(self.model, form=SavedLineForm, extra=0, can_delete=True)
                 formset = SavedFormset(queryset=saved_queryset)
                 context['saved_formset'] = formset
@@ -250,7 +250,7 @@ class SavedView(ModelFormSetView):
     def get_queryset(self):
         try:
             saved_basket = self.basket_model.saved.get(owner=self.request.user)
-            return saved_basket.lines.all().select_related('product', 'product__stockrecord')
+            return saved_basket.all_lines().select_related('product', 'product__stockrecord')
         except self.basket_model.DoesNotExist:
             return []
 

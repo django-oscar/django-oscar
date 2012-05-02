@@ -30,6 +30,11 @@
 {% block content %}
 <article class="product_page"><!-- Start of product page -->
     <div class="row-fluid">
+        <div class="well">
+            <a href="{% url dashboard:catalogue-product product.id %}"><button class="btn btn-success" value='Edit this product'>Edit this product</button></a>
+        </div>
+    </div>
+    <div class="row-fluid">
         <div class="span6">
             {% include "catalogue/partials/gallery.html" %}
         </div><!-- /span6 -->
