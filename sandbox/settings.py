@@ -244,5 +244,4 @@ except ImportError:
     pass
 
 LOG_ROOT = location('logs')
-DISPLAY_VERSION = True
-VERSION = '0.1'
+DISPLAY_VERSION = False

@@ -111,6 +111,8 @@ class ConditionalOffer(models.Model):
         field_dict = self.condition.__dict__
         if '_state' in field_dict:
             del field_dict['_state']
+        if '_range_cache' in field_dict:
+            del field_dict['_range_cache']
         if self.condition.type == self.condition.COUNT:
             return CountCondition(**field_dict)
         elif self.condition.type == self.condition.VALUE:
