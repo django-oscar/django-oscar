@@ -1,6 +1,7 @@
 import os
 import sys
 import site
+import urllib
 
 sys.stdout = sys.stderr
 
@@ -18,4 +19,5 @@ import django.core.handlers.wsgi
 _application = django.core.handlers.wsgi.WSGIHandler()
 
 def application(environ, start_response):
+    environ['PATH_INFO'] = urllib.unquote(environ['REQUEST_URI'].split('?')[0])
     return _application(environ, start_response)
