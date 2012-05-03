@@ -13,8 +13,15 @@ def recently_viewed_products(context):
     """
     request = context['request']
     product_ids = history_helpers.get_recently_viewed_product_ids(request)
+
+    try:
+        current_product = context.get('product', None)
+        product_ids.remove(current_product.id)
+    except (ValueError, AttributeError):
+        pass
+
     product_dict = product_models.Product.browsable.in_bulk(product_ids)
-    
+
     # Reordering as the id order gets messed up in the query
     product_ids.reverse()
     products = [product_dict[id] for id in product_ids if id in product_dict]
