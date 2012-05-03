@@ -59,21 +59,14 @@ Dashboard | {{ block.super }}
 			
 			{% block breadcrumbs %}
 			<ul class="breadcrumb">
-              <li>
-                <a href="{% url dashboard:index %}">Dashboard</a> <span class="divider">/</span>
-              </li>
+                <li><a href="{% url dashboard:index %}">Dashboard</a> <span class="divider">/</span></li>
             </ul>
             {% endblock %}
             
             <div class="content">
+				{% include 'partials/alert_messages.html' %}
                 {% block header %}{% endblock %}
                 <div class="page-content">
-                    {% for message in messages %}
-                	<div class="alert alert-{{ message.tags }}">
-                		<a class="close" data-dismiss="alert">x</a>
-                		{{ message }}
-                	</div>
-                    {% endfor %}
                     {% block content %}
 						{% block dashboard_content %}{% endblock dashboard_content %}
                     {% endblock content %}
@@ -86,7 +79,7 @@ Dashboard | {{ block.super }}
 
 {# Block for additional scripts #}
 {% block extrascripts %}
-    <!-- dashboard js -->
+    <script src="{{ STATIC_URL }}oscar/js/oscar/ui.js" type="text/javascript" charset="utf-8"></script>
     <script src="{{ STATIC_URL }}oscar/js/oscar/dashboard.js" type="text/javascript" charset="utf-8"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.7.1/jquery-ui.min.js"></script>
 	<script type="text/javascript">$(oscar.dashboard.init);</script>

@@ -1,3 +1,18 @@
+var oscar = oscar || {};
+oscar.messages = {
+    addMessage: function(tag, msg) {
+        var msgHTML = '<div class="alert fade in alert-' + tag + '">' +
+        '<a class="close" data-dismiss="alert">x</a>' + msg +
+        '</div>';
+        $('#messages').append($(msgHTML));
+    },
+    debug: function(msg) { oscar.messages.addMessage('debug', msg); },
+    info: function(msg) { oscar.messages.addMessage('info', msg); },
+    success: function(msg) { oscar.messages.addMessage('success', msg); },
+    warning: function(msg) { oscar.messages.addMessage('warning', msg); },
+    error: function(msg) { oscar.messages.addMessage('error:', msg); }
+};
+
 $(document).ready(function()
 {   
     // Product star rating  -- must improve this in python
@@ -56,28 +71,28 @@ $(document).ready(function()
         $browse = $('#browse > .dropdown-menu'), // Height of main navigation
         $browse_open = $browse.parent().find('> a[data-toggle]');
     
-    if (window_width > 480) {
-      // This activates elastislide
-      var es_carousel = $('.es-carousel-wrapper'),
-          product_page = $('.product_page').length;
-      // on prodct page
-      if (product_page > 0) {
-        es_carousel.elastislide({
-            imageW: 175,
-            minItems: 5,
-            onClick:  true
-        });
-        // This activates colorbox on the product page
-        $('a[rel=lightbox]').colorbox();
-      }
-      else {
-        es_carousel.elastislide({
-          imageW: 200,
-          minItems: 4,
-          onClick:  true
-        });
-      }
-    }
+        if (window_width > 480) {
+            // This activates elastislide
+            var es_carousel = $('.es-carousel-wrapper'),
+            product_page = $('.product_page').length;
+            // on prodct page
+            if (es_carousel.length && product_page > 0) {
+                es_carousel.elastislide({
+                    imageW: 175,
+                    minItems: 5,
+                    onClick:  true
+                });
+                // This activates colorbox on the product page
+                $('a[rel=lightbox]').colorbox();
+            } else if (es_carousel.length) {
+                es_carousel.elastislide({
+                    imageW: 200,
+                    minItems: 4,
+                    onClick:  true
+                });
+            }
+        }
+
     if (window_width > 980) {
       // set width of nav dropdown on the homepage
       $browse.css('width', $sidebar.outerWidth());
