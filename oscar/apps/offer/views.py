@@ -25,4 +25,4 @@ class OfferDetailView(ListView):
         range = self.offer.condition.range
         if range.includes_all_products:
             return Product.browsable.all()
-        return None
+        return range.included_products.all()
