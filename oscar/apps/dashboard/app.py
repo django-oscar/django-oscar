@@ -9,6 +9,7 @@ from oscar.apps.dashboard.promotions.app import application as promotions_app
 from oscar.apps.dashboard.catalogue.app import application as catalogue_app
 from oscar.apps.dashboard.pages.app import application as pages_app
 from oscar.apps.dashboard.offers.app import application as offers_app
+from oscar.apps.dashboard.ranges.app import application as ranges_app
 from oscar.apps.dashboard import views
 
 
@@ -23,6 +24,7 @@ class DashboardApplication(Application):
     promotions_app = promotions_app
     pages_app = pages_app
     offers_app = offers_app
+    ranges_app = ranges_app
 
     def get_urls(self):
         urlpatterns = patterns('',
@@ -31,11 +33,11 @@ class DashboardApplication(Application):
             url(r'^reports/', include(self.reports_app.urls)),
             url(r'^orders/', include(self.orders_app.urls)),
             url(r'^users/', include(self.users_app.urls)),
-            url(r'^promotions/', include(self.promotions_app.urls)),
+            url(r'^content-blocks/', include(self.promotions_app.urls)),
             url(r'^pages/', include(self.pages_app.urls)),
             url(r'^offers/', include(self.offers_app.urls)),
+            url(r'^ranges/', include(self.ranges_app.urls)),
         )
-
         return self.post_process_urls(urlpatterns)
 
     def get_url_decorator(self, url_name):

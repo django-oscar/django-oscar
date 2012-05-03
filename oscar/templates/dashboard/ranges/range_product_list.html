@@ -1,0 +1,58 @@
+{% extends 'dashboard/layout.html' %}
+{% load currency_filters %}
+
+{% block title %}
+Products in range {{ range.name }} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url dashboard:index %}">Dashboard</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+	<a href="{% url dashboard:range-update range.id %}">Range {{ range.name }}</a>
+        <span class="divider">/</span>
+    </li>
+	<li class="active"><a href=".">Products</a></li>
+</ul>
+{% endblock %}
+
+{% block header %}
+<div class="page-header">
+	<h1>Products in range {{ range.name }}</h1>
+</div>
+{% endblock header %}
+
+{% block dashboard_content %}
+	<div class="sub-header">
+		<h2>Products</h2>
+	</div>
+	{% if products.count %}
+		<form action="." method="post" class="order_table">
+			{% csrf_token %}
+			<table class="table table-striped table-bordered">
+				<tr>
+					<th>Title</th>
+					<th>Price</th>
+					<th></th>
+				</tr>
+				{% for product in products %}
+				<tr>
+					<td>{{ product.get_title }}</td>
+					<td>{{ product.stockrecord.price_incl_tax|currency }}</td>
+					<td>
+						<a class="btn btn-danger" href="">Remove</a>
+					</td>
+				</tr>
+				{% endfor %}
+			</table>
+			{% if page_obj %}
+				{% include "catalogue/partials/pagination.html" %}
+			{% endif %}
+		</form>
+	{% else %}
+		<p>No products found.</p>
+	{% endif %}
+{% endblock dashboard_content %}
