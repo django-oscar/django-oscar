@@ -3,7 +3,7 @@ Werkzeug==0.6.2
 coverage==3.5.1
 django-debug-toolbar==0.9.4
 django-dynamic-fixture==1.4.2
-django-extensions==0.5
+django-extensions==0.8
 docutils==0.8.1
 flake8==0.8
 ipdb==0.2

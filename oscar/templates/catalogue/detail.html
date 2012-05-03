@@ -2,7 +2,6 @@
 
 {% load currency_filters %}
 {% load history_tags %}
-{% load basket_tags %}
 
 {% block title %}
 {{ product.title }} | {{ block.super }}
@@ -29,11 +28,13 @@
 
 {% block content %}
 <article class="product_page"><!-- Start of product page -->
+    {% if user.is_authenticated %}
     <div class="row-fluid">
         <div class="well">
             <a href="{% url dashboard:catalogue-product product.id %}"><button class="btn btn-success" value='Edit this product'>Edit this product</button></a>
         </div>
     </div>
+    {% endif %}
     <div class="row-fluid">
         <div class="span6">
             {% include "catalogue/partials/gallery.html" %}
@@ -41,16 +42,7 @@
         <div class="span6">
             <h1>{{ product.get_title }}</h1>
             
-            {% if product.is_group %}
-                <h2 class="price_color">From {{ product.min_variant_price_incl_tax|currency }}</h2>
-            {% else %}
-                {% if product.has_stockrecord %} 
-                    <h2 class="price_color">{{ product.stockrecord.price_incl_tax|currency }}</h2>
-                    <p class="app-ico {{ product.stockrecord.availability_code }} avaliability ">{{ product.stockrecord.availability|truncatewords:2 }}</p>
-                {% else %}
-                    <p class="app-ico avaliability outofstock">Not available</p>
-                {% endif %}
-            {% endif %}
+            {% include "catalogue/partials/stock_record.html" %}
             
             {% with product.reviews.all as reviews %}
                 {% if reviews %}
@@ -70,18 +62,8 @@
             <ul>
                 <li><a href="#product_description">Read the full description</a></li>
             </ul>
-             
-            {% if product.stockrecord and product.stockrecord.is_available_to_buy %}
-            {% basket_form basket product as basket_form %}
-            <form action="{% url basket:add %}" method="post" class="form-stacked">
-                {% csrf_token %}
-                {% include "partials/form_fields.html" with form=basket_form %}
-            	
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-large btn-primary" value="Add to basket">Add to basket</button>
-                </div>
-            </form>
-            {% endif %}
+
+            {% include "catalogue/partials/add_to_basket_form.html" %}
         </div><!-- /span6 -->
     </div><!-- /row-fluid -->
               
@@ -235,8 +217,8 @@
             </div>
         </div>
         {% endif %}
-    </div>
     {% recently_viewed_products %}
+    </div>
 </article><!-- End of product page -->
 {% endblock content %}
 
