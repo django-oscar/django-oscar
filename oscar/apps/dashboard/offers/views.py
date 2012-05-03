@@ -13,6 +13,7 @@ from oscar.core.loading import get_classes
 ConditionalOffer = get_model('offer', 'ConditionalOffer')
 Condition= get_model('offer', 'Condition')
 Range = get_model('offer', 'Range')
+Product = get_model('catalogue', 'Product')
 OrderDiscount = get_model('order', 'OrderDiscount')
 Benefit = get_model('offer', 'Benefit')
 MetaDataForm, ConditionForm, BenefitForm, PreviewForm, OfferSearchForm = get_classes(
@@ -303,3 +304,21 @@ class RangeDeleteView(DeleteView):
     def get_success_url(self):
         messages.warning(self.request, "Range deleted")
         return reverse('dashboard:range-list')
+
+
+class RangeProductListView(ListView):
+    model = Product
+    template_name = 'dashboard/offers/range_product_list.html'
+    context_object_name = 'products'
+
+    def get(self, request, *args, **kwargs):
+        self.range = get_object_or_404(Range, id=self.kwargs['pk'])
+        return super(RangeProductListView, self).get(request, *args, **kwargs)
+
+    def get_queryset(self):
+        return self.range.included_products.all()
+
+    def get_context_data(self, **kwargs):
+        ctx = super(RangeProductListView, self).get_context_data(**kwargs)
+        ctx['range'] = self.range
+        return ctx

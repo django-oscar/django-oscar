@@ -29,6 +29,7 @@ class OffersDashboardApplication(Application):
     range_create_view = views.RangeCreateView
     range_update_view = views.RangeUpdateView
     range_delete_view = views.RangeDeleteView
+    range_products_view = views.RangeProductListView
 
     def get_urls(self):
         urlpatterns = patterns('',
@@ -52,6 +53,8 @@ class OffersDashboardApplication(Application):
             url(r'^ranges/create/$', self.range_create_view.as_view(), name='range-create'),
             url(r'^ranges/(?P<pk>\d+)/$', self.range_update_view.as_view(), name='range-update'),
             url(r'^ranges/(?P<pk>\d+)/delete/$', self.range_delete_view.as_view(), name='range-delete'),
+            url(r'^ranges/(?P<pk>\d+)/products/$',
+                self.range_products_view.as_view(), name='range-products'),
         )
         return self.post_process_urls(urlpatterns)
 

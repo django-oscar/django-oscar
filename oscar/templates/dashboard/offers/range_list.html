@@ -8,7 +8,7 @@ Range management | {{ block.super }}
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url promotions:home %}">Dashboard</a>
+        <a href="{% url dashboard:index %}">Dashboard</a>
         <span class="divider">/</span>
     </li>
     <li class="active"><a href=".">Range management</a></li>
@@ -43,6 +43,7 @@ Range management | {{ block.super }}
 				<td>{{ range.date_created }}</td>
 				<td>
 					<a class="btn btn-primary" href="{% url dashboard:range-update range.id %}">Edit</a>
+					<a class="btn btn-primary" href="{% url dashboard:range-products range.id %}">Edit products</a>
 					<a class="btn btn-danger" href="{% url dashboard:range-delete range.id %}">Delete</a>
 				</td>
 			</tr>
