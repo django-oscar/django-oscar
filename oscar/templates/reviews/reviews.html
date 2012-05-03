@@ -1,58 +1,113 @@
-{% extends "catalogue/detail.html" %}
+{% extends "layout.html" %}
 
-{% block product_review %}
+{% load currency_filters %}
+{% load history_tags %}
 
-<h3>All Reviews of {{ product.title }}</h3>
-<p>Read customer reviews on this product. If you have read this book, why not post your own review?</p>
-<p><a href="{% url catalogue:reviews-add product.slug product.id %}" class="btn btn-primary">Add a review</a></p>
+{% block title %}
+Reviews for {{ product.title }} | {{ block.super }}
+{% endblock %}
 
-{% if reviews %}
-	<h4> Sort by: </h4>
-	<form action="." method="get">
-        <select name="sort_by">
-        	<option value="score">Score</option>
-        	<option value="recency">Recency</option>
-        </select>
-        <input type="submit" value="Go" />             
-    </form>
-    
-	{% for review in reviews %}
-        <div class="review">
-            <h4>{{ review.title }} ({{ review.score }}/5)</h4>
-            <h5>Reviewed by {{ review.get_reviewer_name }}</h5>
-            <p>{{ review.date_created }}<p>
-            <p>{{ review.body|linebreaks }}</p>
-            <p><a href="{{ review.get_absolute_url }}">Permalink</a>
-            
-			{% include 'reviews/_vote_bit.html' %}
-	
-            {% if review.has_votes %}
-                <p>{{ review.num_up_votes }} customers agreed.</p>
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url promotions:home %}">Home</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        {% with category=product.categories.all.0 %}
+        <a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
+        <span class="divider">/</span>
+        {% endwith %}
+    </li>
+    <li class="active"><a href=".">Reviews of {{ product.get_title }}</a></li>
+</ul>
+{% endblock %}
+
+{% block header %}
+{% endblock header %}
+
+{% block content %}
+
+<article>
+    <h1>All Reviews of {{ product.title }}</h1>
+
+    <div class="row-fluid">
+        <div class='span9'>
+            <div class="well">
+                <p>Read customer reviews on this product. If you have read this book, why not post your own review?</p>
+                <p><a href="{% url catalogue:reviews-add product.slug product.id %}" class="btn btn-primary">Add a review</a></p>
+            </div>
+            {% if reviews %}
+            <h4> Sort by: </h4>
+            <form action="." method="get">
+                <select name="sort_by">
+                        <option value="score">Score</option>
+                        <option value="recency">Recency</option>
+                </select>
+                <input type="submit" value="Go" />
+            </form>
+
+                {% for review in reviews %}
+                <div class="review">
+                    <h4>{{ review.title }} ({{ review.score }}/5)</h4>
+                    <h5>Reviewed by {{ review.get_reviewer_name }}</h5>
+                    <p>{{ review.date_created }}<p>
+                    <p>{{ review.body|linebreaks }}</p>
+                    <p><a href="{{ review.get_absolute_url }}">Permalink</a>
+
+                                {% include 'reviews/_vote_bit.html' %}
+
+                    {% if review.has_votes %}
+                        <p>{{ review.num_up_votes }} customers agreed.</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+            {% if page_obj %}
+            <div class="pagination">
+                <span class="step-links">
+                    {% if page_obj.has_previous %}
+                        <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                    {% endif %}
+                    {% if paginator.num_pages > 1 %}
+                    <span class="current">
+                        Page {{ page_obj.number }} of {{ paginator.num_pages }}.
+                    </span>
+                    {% endif %}
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}">Next</a>
+                    {% endif %}
+                </span>
+            </div>
             {% endif %}
+
+        {% else %}
+
+        <p>This product does not have any reviews yet.</p>
+
+        {% endif %}
         </div>
-    {% endfor %}
-	
-    {% if page_obj %}
-    <div class="pagination">
-        <span class="step-links">
-            {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
-            {% endif %}
-            {% if paginator.num_pages > 1 %}    
-            <span class="current">
-                Page {{ page_obj.number }} of {{ paginator.num_pages }}.
-            </span>
-            {% endif %}
-            {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">Next</a>
-            {% endif %}
-        </span>
-    </div>
-    {% endif %}
-		
-{% else %}
 
-<p>This product does not have any reviews yet.</p>        
-        					
-{% endif %}
+        <div class="span3" style="text-align: center">
+            <div class="thumbnail">
+                {% with product.images.all.0 as image %}
+                    {% if image %}
+                        <a href="{{ image.original.url }}" rel="lightbox">
+                            <img src="{{ image.original.url }}" data-large="{{ image.original.url }}" alt="image02" data-description="{% if image.caption %}{{ image.caption }}{% endif %}" />
+                            </a>
+                        {% else %}
+                        <img src="/static/oscar/img/image_not_found.jpg" alt="No image found"/>
+                    {% endif %}
+                {% endwith %}
+            </div>
+            <div>
+                <h2><a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a></h2>
+                {% include "catalogue/partials/stock_record.html" %}
+                {% include "catalogue/partials/add_to_basket_form.html" %}
+            </div>
+        </div>
+
+        {% recently_viewed_products %}
+    </div>
+</article>
 {% endblock %}

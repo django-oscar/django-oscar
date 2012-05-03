@@ -1,0 +1,12 @@
+{% load basket_tags %}
+{% if product.stockrecord and product.stockrecord.is_available_to_buy %}
+    {% basket_form basket product as basket_form %}
+    <form action="{% url basket:add %}" method="post" class="form-stacked">
+        {% csrf_token %}
+        {% include "partials/form_fields.html" with form=basket_form %}
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-large btn-primary" value="Add to basket">Add to basket</button>
+        </div>
+    </form>
+{% endif %}
