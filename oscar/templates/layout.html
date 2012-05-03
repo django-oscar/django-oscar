@@ -11,25 +11,22 @@
     <header class="header container-fluid">
         <div class="row-fluid">
             {% include "partials/brand.html" %}
-        </div><!-- /row-fluid -->
+        </div>
         {% category_tree depth=2 as categories %}
         
         {% block navigation %}
             {% include "partials/nav_primary.html" %}
         {% endblock %}
-    </header><!-- /header -->
+    </header>
     <div class="container-fluid page">
-        {% block header %}
-        {% endblock %}
+        {% block header %}{% endblock %}
         <div class="page_inner">
             {% block breadcrumbs %}{% endblock %}
-
             {% include "partials/alert_messages.html" %}	
-
             {% block flatpage %}{% endblock %}
 			{% block content %}{% endblock %}
-    	</div><!-- /page_inner -->
-    </div><!-- /container-fluid -->
+	</div>
+    </div>
     {% include "partials/footer.html" %}
 {% endblock %}
 
