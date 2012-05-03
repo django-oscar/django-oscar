@@ -8,7 +8,7 @@ from oscar.apps.dashboard.nav import register, Node
 node = Node('Orders')
 node.add_child(Node('Orders', 'dashboard:order-list'))
 node.add_child(Node('Statistics', 'dashboard:order-stats'))
-register(node)
+register(node, 60)
 
 
 class OrdersDashboardApplication(Application):

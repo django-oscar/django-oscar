@@ -17,7 +17,6 @@ Basket | {{ block.super }}
 </div>
 {% endblock header %}
 
-
 {% block content %}
 
 {% if basket_warnings %}
@@ -27,12 +26,19 @@ Basket | {{ block.super }}
 	{% endfor %}
 {% endif %}
 
+{% if upsell_messages %}
+	<h2>You could be missing out on offers!</h2>
+	{% for upsell in upsell_messages %}
+	<div class="warning">{{ upsell.message }} to quality for the <a href="{{ upsell.offer.get_absolute_url }}">{{ upsell.offer.name }}</a> special offer</div>
+	{% endfor %}
+{% endif %}
+
 {% if not basket.is_empty %}
 <div class="basket-title">
     <div class="row-fluid">
         <h4 class="span6">Items to buy now</h4>
-        <h4 class="span3">Quantity</h4>
-        <h4 class="span3">Price</h4>
+        <h4 class="span5">Quantity</h4>
+        <h4 class="span1">Price</h4>
     </div>
 </div>
 
@@ -47,18 +53,19 @@ Basket | {{ block.super }}
     	        {{ form.id }}
     	        {% product_image form.instance.product as product_image %}
     		    <div class="image_container">
-    			    <a href="{{ product.get_absolute_url }}">
-    			        <img class="thumbnail" src="{{ product_image.thumbnail_url }}" alt="{{ product.get_title }}">
-    			    </a>
+    			    <a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ product_image.thumbnail_url }}" alt="{{ product.get_title }}"></a>
     		    </div>
     		    <h4><a href="{{ form.instance.product.get_absolute_url }}">{{ form.instance.description }}</a></h4>
     		    <p class="app-ico instock avaliability ">{{ form.instance.product.stockrecord.availability }}</p>
     	    </div>
-    	    <div class="span3">
+    	    <div class="span5">
     		    <div class="checkout-quantity">
     		        {{ form.quantity }} 
     		        <button class="btn">Update</button>
     			    <a href="#" data-id="{{ forloop.counter0 }}" data-behaviours="remove" class="inline">Remove</a>
+					{% if request.user.is_authenticated %}
+					| <a href="#" data-id="{{ forloop.counter0 }}" data-behaviours="save" class="inline">Save for later</a>
+					{% endif %}
     			    <div style="display:none">
     				    {{ form.save_for_later }}
     				    {{ form.DELETE }}
@@ -67,11 +74,6 @@ Basket | {{ block.super }}
     	    </div>
     	    <div class="span1">
     		    <p class="price">{{ form.instance.unit_price_incl_tax|currency }}<p>
-    	    </div>
-    	    <div class="span2">
-    		    {% if request.user.is_authenticated %}
-    		    <a href="#" data-id="{{ forloop.counter0 }}" class="btn btn-info pull-right" data-behaviours="save" >Save for later</a>
-    		    {% endif %}
     	    </div>
         </div>
     </div>
@@ -115,13 +117,9 @@ Basket | {{ block.super }}
 						<td>{{ basket.total_incl_tax_excl_discounts|currency }}</td>
 					</tr>
 					{% if offer_discounts %}
-						<tr>
-							<th>Site offers</th>
-							<td></td>
-						</tr>
 						{% for discount in offer_discounts %}
 						<tr>
-							<td>{{ discount.name }}</td>
+							<td class="basket-discount">Special offer: {{ discount.name }}</td>
 							<td>-{{ discount.discount|currency }}</td>
 						</tr>
 						{% endfor %}

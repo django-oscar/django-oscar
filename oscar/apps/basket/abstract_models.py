@@ -341,8 +341,8 @@ class AbstractLine(models.Model):
     """
     A line of a basket (product and a quantity)
     """
-
     basket = models.ForeignKey('basket.Basket', related_name='lines')
+
     # This is to determine which products belong to the same line
     # We can't just use product.id as you can have customised products
     # which should be treated as separate lines.  Set as a

@@ -12,7 +12,7 @@ oscar.getCsrfToken = function() {
 };
 oscar.dashboard = {
     init: function() {
-        $('input[name^="date"]').datepicker({dateFormat: 'yy-mm-dd'});
+        $('input[name^="date"], input[name$="date"]').datepicker({dateFormat: 'yy-mm-dd'});
     },
     orders: {
         initTabs: function() {
@@ -64,3 +64,4 @@ oscar.dashboard = {
         }
     }
 };
+

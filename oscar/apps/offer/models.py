@@ -3,9 +3,11 @@ import math
 import datetime
 
 from django.core import exceptions
+from django.template.defaultfilters import slugify
 from django.db import models
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ValidationError
+from django.core.urlresolvers import reverse
 from django.conf import settings
 
 from oscar.apps.offer.managers import ActiveOfferManager
@@ -18,7 +20,10 @@ class ConditionalOffer(models.Model):
     """
     A conditional offer (eg buy 1, get 10% off)
     """
-    name = models.CharField(max_length=128, unique=True)
+    name = models.CharField(max_length=128, unique=True, 
+                            help_text="""This is displayed within the customer's
+                            basket""")
+    slug = models.SlugField(max_length=128, unique=True, null=True)
     description = models.TextField(blank=True, null=True)
 
     # Offers come in a few different types:
@@ -68,6 +73,14 @@ class ConditionalOffer(models.Model):
 
     class Meta:
         ordering = ['-priority']
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        return super(ConditionalOffer, self).save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('offer:detail', kwargs={'slug': self.slug})
         
     def __unicode__(self):
         return self.name    
@@ -83,6 +96,12 @@ class ConditionalOffer(models.Model):
     
     def is_condition_satisfied(self, basket):
         return self._proxy_condition().is_satisfied(basket)
+
+    def is_condition_partially_satisfied(self, basket):
+        return self._proxy_condition().is_partially_satisfied(basket)
+
+    def get_upsell_message(self, basket):
+        return self._proxy_condition().get_upsell_message(basket)
         
     def apply_benefit(self, basket):
         """
@@ -105,6 +124,8 @@ class ConditionalOffer(models.Model):
         field_dict = self.condition.__dict__
         if '_state' in field_dict:
             del field_dict['_state']
+        if '_range_cache' in field_dict:
+            del field_dict['_range_cache']
         if self.condition.type == self.condition.COUNT:
             return CountCondition(**field_dict)
         elif self.condition.type == self.condition.VALUE:
@@ -166,6 +187,17 @@ class Condition(models.Model):
         responsible for implementing it correctly.
         """
         return False
+
+    def is_partially_satisfied(self, basket):
+        """
+        Determine if the basket partially meets the condition.  This is useful
+        for up-selling messages to entice customers to buy something more in
+        order to qualify for an offer.
+        """
+        return False
+
+    def get_upsell_message(self, basket):
+        return None
     
 
 class Benefit(models.Model):
@@ -317,6 +349,26 @@ class CountCondition(Condition):
             if num_matches >= self.value:
                 return True
         return False
+
+    def _get_num_matches(self, basket):
+        if hasattr(self, '_num_matches'):
+            return getattr(self, '_num_matches')
+        num_matches = 0
+        for line in basket.all_lines():
+            if self.range.contains_product(line.product) and line.quantity_without_discount > 0:
+                num_matches += line.quantity_without_discount
+        self._num_matches = num_matches
+        return num_matches
+
+    def is_partially_satisfied(self, basket):
+        num_matches = self._get_num_matches(basket)
+        return 0 < num_matches < self.value
+
+    def get_upsell_message(self, basket):
+        num_matches = self._get_num_matches(basket)
+        delta = self.value - num_matches
+        return 'Buy %d more product%s from %s' % (delta,
+                                                  's' if delta > 1 else '', self.range)
     
     def consume_items(self, basket, lines=None, value=None):
         """
@@ -339,7 +391,7 @@ class CountCondition(Condition):
         
 class CoverageCondition(Condition):
     """
-    An offer condition dependent on the NUMBER of matching items from the basket.
+    An offer condition dependent on the number of DISTINCT matching items from the basket.
     """
     class Meta:
         proxy = True
@@ -358,6 +410,24 @@ class CoverageCondition(Condition):
             if len(covered_ids) >= self.value:
                 return True
         return False
+
+    def _get_num_covered_products(self, basket):
+        covered_ids = []
+        for line in basket.all_lines():
+            if not line.is_available_for_discount:
+                continue
+            product = line.product
+            if self.range.contains_product(product) and product.id not in covered_ids:
+                covered_ids.append(product.id)
+        return len(covered_ids)
+
+    def get_upsell_message(self, basket):
+        delta = self.value - self._get_num_covered_products(basket)
+        return 'Buy %d more product%s from %s' % (delta,
+                                                  's' if delta > 1 else '', self.range)
+
+    def is_partially_satisfied(self, basket):
+        return 0 < self._get_num_covered_products(basket) < self.value
     
     def consume_items(self, basket, lines=None, value=None):
         """
@@ -409,6 +479,26 @@ class ValueCondition(Condition):
             if value_of_matches >= self.value:
                 return True
         return False
+
+    def _get_value_of_matches(self, basket):
+        if hasattr(self, '_value_of_matches'):
+            return getattr(self, '_value_of_matches')
+        value_of_matches = Decimal('0.00')
+        for line in basket.all_lines():
+            product = line.product
+            if self.range.contains_product(product) and product.has_stockrecord and line.quantity_without_discount > 0:
+                price = getattr(product.stockrecord, self.price_field)
+                value_of_matches += price * int(line.quantity_without_discount)
+        self._value_of_matches = value_of_matches
+        return value_of_matches
+
+    def is_partially_satisfied(self, basket):
+        value_of_matches = self._get_value_of_matches(basket)
+        return Decimal('0.00') < value_of_matches < self.value
+
+    def get_upsell_message(self, basket):
+        value_of_matches = self._get_value_of_matches(basket)
+        return 'Spend %s more from %s' % (value_of_matches, self.range)
     
     def consume_items(self, basket, lines=None, value=None):
         """

@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Offer '{{ offer.name }}' | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url promotions:home %}">Home</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="#">Offers</a>
+        <span class="divider">/</span>
+    </li>
+	<li class="active"><a href=".">'{{ offer.name }}'</a></li>
+</ul>
+{% endblock %}
+
+{% block header %}
+<div class="page-header action">
+	<h1>Offer '{{ offer.name }}'</h1>
+</div>
+{% endblock header %}
+
+{% block content %}
+    <div class="sub-header">
+        <h1>{{ offer.name }}</h1>
+    </div>
+
+	{% if not offer.is_active %}
+		<div class="alert alert-error">
+			This offer has expired
+		</div>
+	{% endif %}
+
+    {% if offer.description %}
+	    <h3>Description</h3>
+    	<p>{{ offer.description }}</p>
+    {% endif %}
+	<h3>What you need to do</h3>
+	<p>{{ upsell_message }}</p>
+    {% if products.count %}
+		<section>
+			<div class="mod">
+				{% if page_obj %}
+					{% include "catalogue/partials/pagination.html" %}
+				{% endif %}
+				<ol class="products four">
+					{% for product in products %}
+					<li>{% include "catalogue/partials/product.html" %}</li>
+					{% endfor %}
+				</ol>
+				{% if page_obj %}
+					{% include "catalogue/partials/pagination.html" %}
+				{% endif %}
+			</div>
+		</section>
+    {% else %}
+		<p class="nonefound">No products found.</p>
+    {% endif %}
+{% endblock content %}

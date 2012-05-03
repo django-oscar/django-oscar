@@ -7,7 +7,7 @@ from oscar.apps.dashboard.nav import register, Node
 
 node = Node('Offers')
 node.add_child(Node('All offers', 'dashboard:offer-list'))
-register(node, 7)
+register(node, 50)
 
 
 class OffersDashboardApplication(Application):

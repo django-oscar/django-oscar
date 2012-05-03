@@ -244,3 +244,4 @@ except ImportError:
     pass
 
 LOG_ROOT = location('logs')
+DISPLAY_VERSION = False

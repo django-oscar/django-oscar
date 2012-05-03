@@ -27,8 +27,8 @@ Pages with content blocks | {{ block.super }}
 
 <div class="well well-danger">
     <h3 class="app-ico ico_view icon">View by page</h3>
-    <a href="{% url dashboard:promotion-list %}" class="btn btn-primary">View all promotions</a>
-    <a href="{% url dashboard:promotion-list-by-page %}" class="btn">View promotions by page</a>
+    <a href="{% url dashboard:promotion-list %}" class="btn btn-primary">View all content blocks</a>
+    <a href="{% url dashboard:promotion-list-by-page %}" class="btn">View content blocks by page</a>
 </div>
 
 <div class="sub-header">
@@ -41,7 +41,7 @@ Pages with content blocks | {{ block.super }}
 	<thead>
 		<tr>
 			<th>URL</th>
-			<th>Number of promotions</th>
+			<th>Number of content blocks</th>
 			<th>Actions</th>
 		</tr>
 	</thead>
@@ -51,7 +51,7 @@ Pages with content blocks | {{ block.super }}
 			<td>{{ page.page_url }}</td>
 			<td>{{ page.freq }}</td>
 			<td>
-                <a href="{% url dashboard:promotion-list-by-url page.page_url|urlencode %}" class="btn btn-success">Edit</a>
+                <a href="{% url dashboard:promotion-list-by-url page.page_url|urlencode:"" %}" class="btn btn-success">Edit</a>
 			</td>
 			<td>
 			</td>
