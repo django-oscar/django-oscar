@@ -2,7 +2,7 @@
 {% load currency_filters %}
 
 {% block title %}
-Create range | Offer management | {{ block.super }}
+Create range | Range management | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -12,7 +12,7 @@ Create range | Offer management | {{ block.super }}
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="{% url dashboard:offer-list %}">Offers</a>
+        <a href="{% url dashboard:range-list %}">Ranges</a>
         <span class="divider">/</span>
     </li>
 	<li class="active"><a href=".">Create range</a></li>
@@ -32,7 +32,7 @@ Create range | Offer management | {{ block.super }}
 	{% block form_actions %}
 	<div class="form-actions">
 		<button class="btn btn-primary btn-large" type="submit">Save</button> or
-		<a href="{% url dashboard:offer-list %}">cancel</a>
+		<a href="{% url dashboard:range-list %}">cancel</a>
 	</div>
 	{% endblock form_actions %}
 </form>

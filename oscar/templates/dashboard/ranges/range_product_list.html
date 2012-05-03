@@ -2,7 +2,7 @@
 {% load currency_filters %}
 
 {% block title %}
-Products in range {{ range.name }} | {{ block.super }}
+Products in range '{{ range.name }}' | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -12,7 +12,7 @@ Products in range {{ range.name }} | {{ block.super }}
         <span class="divider">/</span>
     </li>
     <li>
-	<a href="{% url dashboard:range-update range.id %}">Range {{ range.name }}</a>
+	<a href="{% url dashboard:range-update range.id %}">Range '{{ range.name }}'</a>
         <span class="divider">/</span>
     </li>
 	<li class="active"><a href=".">Products</a></li>

@@ -2,7 +2,7 @@
 {% load currency_filters %}
 
 {% block title %}
-Delete range #{{ range.id }}? | Offer management | {{ block.super }}
+Delete range #{{ range.id }}? | Range management | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -12,16 +12,16 @@ Delete range #{{ range.id }}? | Offer management | {{ block.super }}
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="{% url dashboard:offer-list %}">Offers</a>
+        <a href="{% url dashboard:range-list %}">Ranges</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">Delete range #{{ range.id }}?</a></li>
+	<li class="active"><a href=".">Delete range '{{ range.name }}'?</a></li>
 </ul>
 {% endblock %}
 
 {% block header %}
 <div class="page-header">
-	<h1>Delete range #{{ range.id }}?</h1>
+	<h1>Delete range '{{ range.name }}'?</h1>
 </div>
 {% endblock header %}
 
@@ -30,7 +30,7 @@ Delete range #{{ range.id }}? | Offer management | {{ block.super }}
 	{% csrf_token %}
 	<div class="form-actions">
 		<button class="btn btn-danger btn-large" type="submit">Delete</button> or
-		<a href="{% url dashboard:offer-list %}">cancel</a>
+		<a href="{% url dashboard:range-list %}">cancel</a>
 	</div>
 </form>
 {% endblock dashboard_content %}
