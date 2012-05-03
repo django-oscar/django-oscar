@@ -3,7 +3,9 @@ from django.db.models.loading import get_model
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
+from django.http import HttpResponseRedirect
 
+from oscar.views.generic import BulkEditMixin
 from oscar.core.loading import get_classes
 
 Range = get_model('offer', 'Range')
@@ -45,19 +47,29 @@ class RangeDeleteView(DeleteView):
         return reverse('dashboard:range-list')
 
 
-class RangeProductListView(ListView):
+class RangeProductListView(ListView, BulkEditMixin):
     model = Product
     template_name = 'dashboard/ranges/range_product_list.html'
     context_object_name = 'products'
+    actions = ('remove_selected_products')
 
-    def get(self, request, *args, **kwargs):
-        self.range = get_object_or_404(Range, id=self.kwargs['pk'])
-        return super(RangeProductListView, self).get(request, *args, **kwargs)
+    def get_range(self):
+        if not hasattr(self, '_range'):
+            self._range = get_object_or_404(Range, id=self.kwargs['pk'])
+        return self._range
 
     def get_queryset(self):
-        return self.range.included_products.all()
+        return self.get_range().included_products.all()
 
     def get_context_data(self, **kwargs):
         ctx = super(RangeProductListView, self).get_context_data(**kwargs)
-        ctx['range'] = self.range
+        ctx['range'] = self.get_range()
         return ctx
+
+    def remove_selected_products(self, request, products):
+        range = self.get_range()
+        for product in products:
+            range.included_products.remove(product)
+        messages.success(request, 'Removed %d products from range' %
+                         len(products))
+        return HttpResponseRedirect(self.get_success_url(request))

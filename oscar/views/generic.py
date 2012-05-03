@@ -1,5 +1,4 @@
 from django.utils.encoding import smart_str
-from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 
@@ -31,6 +30,7 @@ class BulkEditMixin(object):
     form of tabular data where each row has a checkbox.  The UI allows a number
     of rows to be selected and then some 'action' to be performed on them.
     """
+    action_param = 'action'
     actions = None
     current_view = None
     checkbox_object_name = None
@@ -44,20 +44,27 @@ class BulkEditMixin(object):
         else:
             return None
 
+    def get_error_url(self, request):
+        return request.META['HTTP_REFERER']
+
+    def get_success_url(self, request):
+        return request.META['HTTP_REFERER']
+
     def post(self, request, *args, **kwargs):
-        # Dynamic dispatch patter - we forward POST requests onto a method
+        # Dynamic dispatch pattern - we forward POST requests onto a method
         # designated by the 'action' parameter.  The action has to be in a
         # whitelist to avoid security issues.
-        action = request.POST.get('action', '').lower()
+        action = request.POST.get(self.action_param, '').lower()
         if not self.actions or action not in self.actions:
             messages.error(self.request, "Invalid action")
-            return HttpResponseRedirect(reverse(self.current_view))
+            return HttpResponseRedirect(self.get_error_url(request))
+
         ids = request.POST.getlist('selected_%s' % self.get_checkbox_object_name())
         if not ids:
             messages.error(self.request, "You need to select some %ss" % self.get_checkbox_object_name())
-            return HttpResponseRedirect(reverse(self.current_view))
+            return HttpResponseRedirect(self.get_error_url(request))
 
         raw_objects = self.model.objects.in_bulk(ids)
-        objects = (raw_objects[int(id)] for id in ids)
+        objects = [raw_objects[int(id)] for id in ids]
         return getattr(self, action)(request, objects)
 

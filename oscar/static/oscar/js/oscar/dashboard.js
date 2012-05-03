@@ -14,6 +14,16 @@ oscar.dashboard = {
     init: function() {
         $('input[name^="date"], input[name$="date"]').datepicker({dateFormat: 'yy-mm-dd'});
     },
+    ranges: {
+        init: function() {
+            $('[data-behaviours~="remove"]').click(function() {
+                $this = $(this);
+                $this.parents('table').find('input').attr('checked', false);
+                $this.parents('tr').find('input').attr('checked', 'checked');
+                $this.parents('form').submit();
+            });
+        }
+    },
     orders: {
         initTabs: function() {
             if (location.hash) {
