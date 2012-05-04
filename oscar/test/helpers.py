@@ -23,9 +23,11 @@ def create_product(price=None, title="Dummy title", product_class="Dummy item cl
     """
     ic,_ = ProductClass._default_manager.get_or_create(name=product_class)
     item = Product._default_manager.create(title=title, product_class=ic, upc=upc)
-    if price:
+    if price or partner_sku:
         if not partner_sku:
             partner_sku = 'sku_%d_%d' % (item.id, random.randint(0, 10000))
+        if not price:
+            price = D('10.00')
 
         partner,_ = Partner._default_manager.get_or_create(name=partner)
         StockRecord._default_manager.create(product=item, partner=partner,

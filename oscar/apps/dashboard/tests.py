@@ -9,8 +9,9 @@ from oscar.apps.dashboard.promotions.tests import *
 from oscar.apps.dashboard.catalogue.tests import *
 from oscar.apps.dashboard.pages.tests import *
 from oscar.apps.dashboard.offers.tests import *
+from oscar.apps.dashboard.ranges.tests import *
 
-from oscar.apps.dashboard.views import IndexView 
+from oscar.apps.dashboard.views import IndexView
 from oscar.test import ClientTestCase
 from oscar.test.helpers import create_order
 
