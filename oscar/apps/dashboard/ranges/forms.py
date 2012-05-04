@@ -4,19 +4,38 @@ from django import forms
 from django.db.models import get_model
 
 Product = get_model('catalogue', 'Product')
+Range = get_model('offer', 'Range')
+
+
+class RangeForm(forms.ModelForm):
+
+    class Meta:
+        model = Range
+        exclude = ('included_products', 'excluded_products', 'classes')
 
 
 class RangeProductForm(forms.Form):
     query = forms.CharField(max_length=1024,
+                            label="Product SKUs",
                             widget=forms.Textarea,
+                            required=False,
                             help_text="""You can paste in a selection of SKUs""")
+    file_upload = forms.FileField(label="File of SKUs", required=False)
 
     def __init__(self, range, *args, **kwargs):
         self.range = range
         super(RangeProductForm, self).__init__(*args, **kwargs)
 
+    def clean(self):
+        clean_data = super(RangeProductForm, self).clean()
+        if not clean_data.get('query') and not clean_data.get('file_upload'):
+            raise forms.ValidationError("You must submit either a list of SKUs or a file")
+        return clean_data
+
     def clean_query(self):
         raw = self.cleaned_data['query']
+        if not raw:
+            return raw
 
         # Check that the search matches some products
         skus = re.compile(r'[\w-]+').findall(raw)
@@ -40,7 +59,7 @@ class RangeProductForm(forms.Form):
         return raw
 
     def get_products(self):
-        return self.products
+        return self.products if hasattr(self, 'products') else []
 
     def get_missing_skus(self):
         return self.missing_skus

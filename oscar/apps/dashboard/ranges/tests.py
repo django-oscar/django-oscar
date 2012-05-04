@@ -16,7 +16,7 @@ class RangeProductFormTests(TestCase):
     def submit_form(self, data):
         return forms.RangeProductForm(self.range, data)
 
-    def test_validation_of_query(self):
+    def test_either_query_or_file_must_be_submitted(self):
         form = self.submit_form({'query': ''})
         self.assertFalse(form.is_valid())
 

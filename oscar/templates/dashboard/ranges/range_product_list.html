@@ -12,7 +12,11 @@ Products in range '{{ range.name }}' | {{ block.super }}
         <span class="divider">/</span>
     </li>
     <li>
-	<a href="{% url dashboard:range-update range.id %}">Range '{{ range.name }}'</a>
+	<a href="{% url dashboard:range-list %}">Ranges</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+	<a href="{% url dashboard:range-update range.id %}">'{{ range.name }}'</a>
         <span class="divider">/</span>
     </li>
 	<li class="active"><a href=".">Products</a></li>
@@ -31,12 +35,41 @@ Products in range '{{ range.name }}' | {{ block.super }}
 		<div class="sub-header">
 			<h3>Add products</h3>
 		</div>
-		<form action="." method="post" class="">
+		<form action="." method="post" class="" enctype="multipart/form-data">
 			{% csrf_token %}
 			<input type="hidden" name="action" value="add_products"/>
 			{% include 'partials/form_fields.html' with form=form %}
 			<button type="submit" class="btn btn-primary">Go!</button>
 		</form>
+		{% with uploads=range.file_uploads.all %}
+			{% if uploads %}
+			<div class="sub-header">
+				<h3>Upload history</h3>
+			</div>
+			<table class="table">
+				<thead>
+				<tr>
+					<th>Filename</th>
+					<th>New SKUs</th>
+					<th>Dupliate SKUs</th>
+					<th>Unknown SKUs</th>
+					<th>Date uploaded</th>
+				</tr>
+				</thead>
+				<tbody>
+				{% for upload in uploads %}
+				<tr>
+					<td>{{ upload.filename }}</td>
+					<td>{{ upload.num_new_skus }}</td>
+					<td>{{ upload.num_unknown_skus }}</td>
+					<td>{{ upload.num_duplicate_skus }}</td>
+					<td>{{ upload.date_uploaded }}</td>
+				</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+			{% endif %}
+		{% endwith %}
 	</div>
 
 	{% if products.count %}
@@ -45,7 +78,7 @@ Products in range '{{ range.name }}' | {{ block.super }}
 			<table class="table table-striped table-bordered">
 				<tr>
 					<th></th>
-					<th>SKU<th>
+					<th>SKU</th>
 					<th>Title</th>
 					<th>Price</th>
 					<th></th>

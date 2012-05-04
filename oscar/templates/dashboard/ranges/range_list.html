@@ -43,7 +43,9 @@ Range management | {{ block.super }}
 				<td>{{ range.date_created }}</td>
 				<td>
 					<a class="btn btn-primary" href="{% url dashboard:range-update range.id %}">Edit</a>
-					<a class="btn btn-primary" href="{% url dashboard:range-products range.id %}">Edit products</a>
+					{% if not range.includes_all_products %}
+					<a class="btn btn-info" href="{% url dashboard:range-products range.id %}">Edit products</a>
+					{% endif %}
 					<a class="btn btn-danger" href="{% url dashboard:range-delete range.id %}">Delete</a>
 				</td>
 			</tr>
