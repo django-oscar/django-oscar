@@ -59,4 +59,5 @@
 {# Block for additional scripts #}
 {% block extrascripts %}
     {% include "partials/extrascripts.html" %}
+    {{ block.super }}
 {% endblock %}
