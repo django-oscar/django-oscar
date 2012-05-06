@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import date
 from calendar import monthrange
 import re
 
@@ -219,7 +219,7 @@ class BillingAddressForm(forms.ModelForm):
         super(BillingAddressForm,self ).__init__(*args, **kwargs)
         self.set_country_queryset() 
         
-    def set_country_queryset(self):    
+    def set_country_queryset(self):
         self.fields['country'].queryset = address_models.Country._default_manager.all()
     
     class Meta:

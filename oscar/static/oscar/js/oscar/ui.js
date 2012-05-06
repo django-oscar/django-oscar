@@ -12,6 +12,21 @@ oscar.messages = {
     warning: function(msg) { oscar.messages.addMessage('warning', msg); },
     error: function(msg) { oscar.messages.addMessage('error:', msg); }
 };
+oscar.forms = {
+    init: function() {
+        // Forms with this behaviour are 'locked' once they are submitted to 
+        // prevent multiple submissions
+        $('form[data-behaviours~="lock"]').submit(oscar.forms.submitIfNotLocked);
+    },
+    submitIfNotLocked: function(event) {
+        $form = $(this);
+        if ($form.data('locked')) {
+            return false;
+        }
+        $form.data('locked', true);
+    }
+};
+$(function(){oscar.forms.init();});
 
 $(document).ready(function()
 {   

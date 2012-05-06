@@ -1,6 +1,3 @@
-u"""Vanilla implementation of order models"""
-from django.db import models
-
 from oscar.apps.order.abstract_models import *
 from oscar.apps.address.abstract_models import AbstractShippingAddress, AbstractBillingAddress
 
