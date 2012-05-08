@@ -10,11 +10,20 @@ class DefaultWrapper(object):
     """
     
     def is_available_to_buy(self, stockrecord):
+        """
+        Test whether a product is available to buy.
+
+        This is used to determine whether to show the add-to-basket button.
+        """
         if stockrecord.num_in_stock is None:
             return True
-        return stockrecord.net_stock_level >= 0
+        return stockrecord.net_stock_level > 0
 
     def is_purchase_permitted(self, stockrecord, user=None, quantity=1):
+        """
+        Test whether a particular purchase is possible (is a user buying a given
+        quantity of the product)
+        """
         if stockrecord.net_stock_level < quantity:
             return False, _("'%s' - A maximum of %d can be bought" % (
                 stockrecord.product.title, stockrecord.net_stock_level))
