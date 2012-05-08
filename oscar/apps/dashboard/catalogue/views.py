@@ -61,6 +61,9 @@ class ProductCreateRedirectView(generic.RedirectView):
 
     def get_redirect_url(self, **kwargs):
         product_class_id = self.request.GET.get('product_class', None)
+        if not product_class_id.isdigit():
+            messages.error(self.request, "Please choose a product class")
+            return reverse('dashboard:catalogue-product-list')
         try:
             product_class = ProductClass.objects.get(id=product_class_id)
         except ProductClass.DoesNotExist:
