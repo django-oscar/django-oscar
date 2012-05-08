@@ -34,7 +34,7 @@ Delete address? | {{ block.super }}
     {% csrf_token %}
     {% include "partials/form_fields.html" with form=form %}
     <div class="form-actions">
-        <input type="submit" value="Delete address" class="btn btn-danger btn-large"/>
+        <button type="submit" value="Delete address" class="btn btn-danger btn-large">Delete address</button> <a href="{% url customer:address-list %}">Cancel</a>
     </div>
 </form>
 
