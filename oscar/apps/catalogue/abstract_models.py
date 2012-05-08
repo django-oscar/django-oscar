@@ -292,6 +292,16 @@ class AbstractProduct(models.Model):
             return self.parent.product_class
         return None
 
+    def primary_image(self):
+        images = self.images.all()
+        if images.count():
+            return images[0]
+        return {
+            'original': MissingProductImage(),
+            'caption': '',
+            'is_missing': True
+        }
+
     # Helpers
     
     def _min_variant_price(self, property):
@@ -671,6 +681,12 @@ class AbstractOption(models.Model):
         if not self.code:
             self.code = slugify(self.name)
         super(AbstractOption, self).save(*args, **kwargs)
+
+
+class MissingProductImage(object):
+
+    def __init__(self, name=None):
+        self.name = name if name else settings.OSCAR_MISSING_IMAGE_URL
 
 
 class AbstractProductImage(models.Model):
