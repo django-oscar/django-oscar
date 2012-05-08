@@ -135,10 +135,7 @@ class IndexView(TemplateView):
 
         stats = {
             'total_orders_last_day': orders_last_day.count(),
-
-            'total_lines_last_day': orders_last_day.aggregate(
-                Sum('lines')
-            )['lines__sum'] or 0,
+            'total_lines_last_day': Line.objects.filter(order__in=orders_last_day).count(),
 
             'average_order_costs': orders_last_day.aggregate(
                 Avg('total_incl_tax')
