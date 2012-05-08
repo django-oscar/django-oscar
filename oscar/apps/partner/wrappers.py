@@ -24,6 +24,8 @@ class DefaultWrapper(object):
         Test whether a particular purchase is possible (is a user buying a given
         quantity of the product)
         """
+        if stockrecord.net_stock_level <= 0:
+            return False, _("'%s' is not available to purchase" % stockrecord.product.title)
         if stockrecord.net_stock_level < quantity:
             return False, _("'%s' - A maximum of %d can be bought" % (
                 stockrecord.product.title, stockrecord.net_stock_level))
