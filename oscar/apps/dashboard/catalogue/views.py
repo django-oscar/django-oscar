@@ -190,7 +190,7 @@ class ProductUpdateView(generic.UpdateView):
                                             self.request.FILES,
                                             instance=self.object)
         if stockrecord_form.is_valid() and category_formset.is_valid() and image_formset.is_valid():
-            product = form.save()
+            form.save()
             stockrecord_form.save()
             category_formset.save()
             image_formset.save()

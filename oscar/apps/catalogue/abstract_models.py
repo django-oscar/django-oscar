@@ -1,4 +1,3 @@
-import re
 from itertools import chain
 from datetime import datetime, date
 
