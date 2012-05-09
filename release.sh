@@ -1,8 +1,14 @@
 #!/bin/bash
 
 RELEASE_NUM=`./setup.py --version`
+git tag | grep $RELEASE_NUM > /dev/null && \
+	echo "New version number required ($RELEASE_NUM already used)" && exit 1
 
 # Push to PyPi
+:xa
+
+
+
 ./setup.py sdist upload
 
 # Tag in Git
