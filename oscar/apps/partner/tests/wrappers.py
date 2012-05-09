@@ -37,3 +37,33 @@ class DefaultWrapperTests(TestCase):
         record = StockRecord(num_in_stock=4, product=self.product)
         result, reason = self.wrapper.is_purchase_permitted(record, quantity=5)
         self.assertFalse(result)
+
+    def test_max_purchase_quantity(self):
+        record  = StockRecord(num_in_stock=4, product=self.product)
+        self.assertEqual(record.num_in_stock, self.wrapper.max_purchase_quantity(record))
+
+    def test_availability_code_for_in_stock(self):
+        record  = StockRecord(num_in_stock=4, product=self.product)
+        self.assertEqual('instock', self.wrapper.availability_code(record))
+
+    def test_availability_code_for_zero_stock(self):
+        record  = StockRecord(num_in_stock=0, product=self.product)
+        self.assertEqual('outofstock', self.wrapper.availability_code(record))
+
+    def test_availability_code_for_null_stock_but_available(self):
+        record  = StockRecord(num_in_stock=None, product=self.product)
+        self.assertEqual('available', self.wrapper.availability_code(record))
+
+    def test_availability_message_for_in_stock(self):
+        record  = StockRecord(num_in_stock=4, product=self.product)
+        self.assertEqual(u'In stock (4 available)', unicode(self.wrapper.availability(record)))
+
+    def test_availability_message_for_available(self):
+        record  = StockRecord(num_in_stock=None, product=self.product)
+        self.assertEqual(u'Available', unicode(self.wrapper.availability(record)))
+
+    def test_availability_message_for_out_of_stock(self):
+        record  = StockRecord(num_in_stock=0, product=self.product)
+        self.assertEqual(u'Not available', unicode(self.wrapper.availability(record)))
+
+
