@@ -185,7 +185,7 @@ class ShippingAddressView(CheckoutSessionMixin, FormView):
         return kwargs
     
     def get_available_addresses(self):
-        return UserAddress._default_manager.filter(user=self.request.user)
+        return UserAddress._default_manager.filter(user=self.request.user).order_by('-is_default_for_shipping')
     
     def post(self, request, *args, **kwargs):
         # Check if a shipping address was selected directly (eg no form was filled in)
