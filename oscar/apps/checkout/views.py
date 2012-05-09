@@ -659,7 +659,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         need to pass it back to the view here so it can be stored in hidden form
         inputs.  This avoids ever writing the sensitive data to disk.
         """
-        ctx = self.get_context_data()
+        ctx = self.get_context_data(**kwargs)
         return self.render_to_response(ctx)
 
     def can_basket_be_submitted(self, basket):
