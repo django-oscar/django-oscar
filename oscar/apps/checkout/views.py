@@ -651,7 +651,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             return self.render_preview(request, *args, **kwargs)
         return self.submit(request.basket, **kwargs)
 
-    def render_preview(self, request, *args, **kwargs):
+    def render_preview(self, request, **kwargs):
         """
         Show a preview of the order.
 
@@ -659,7 +659,8 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         need to pass it back to the view here so it can be stored in hidden form
         inputs.  This avoids ever writing the sensitive data to disk.
         """
-        ctx = self.get_context_data(**kwargs)
+        ctx = self.get_context_data()
+        ctx.update(kwargs)
         return self.render_to_response(ctx)
 
     def can_basket_be_submitted(self, basket):
