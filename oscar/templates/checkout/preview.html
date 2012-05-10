@@ -9,7 +9,7 @@ Order preview | {{ block.super }}
 {% endblock %}
 
 {% block place_order %}
-<h3>Please review the information below, then click "Place Order"</h3>
+<h3>Please review the information above, then click "Place Order"</h3>
 <form method="post" action="{% url checkout:payment-details %}">
 	{% csrf_token %}
     <div class="form-actions">

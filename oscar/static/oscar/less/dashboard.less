@@ -22,6 +22,10 @@ body {
   padding-left:  20px;
   padding-right: 20px;
 }
+.navbar .nav > li span {
+    display:block;
+    padding:10px;
+}
 .subnav-fixed {
   position: fixed;
   right: 0;
@@ -285,10 +289,10 @@ h3 {
     outline: none;
     font-weight: bold;
     color: #0088CC;
-    margin-top: 0;
-    height: 20px;
   }
   .tab-content {
+    display:block;
+    width:auto;      
     padding:@baseLineHeight;
     border:1px solid darken(@grayLighter, 5%);
     border-top-width:0px;
@@ -366,7 +370,7 @@ h3 {
     top: 0;
     left: 0;
 
-    width: 99%;
+    width: 98%;
     height: @barHeight;
     padding-left: 5em;
 }

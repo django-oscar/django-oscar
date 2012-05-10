@@ -5,11 +5,7 @@
     {% if field.is_hidden %}
         {{ field }}
     {% else %}
-        {% if field.field.required %}
-        <label for="{{ field.auto_id }}" class="control-label required">{{ field.label }}</label>
-        {% else %}
-            {{ field.label_tag }}
-        {% endif %}
+        <label for="{{ field.auto_id }}" class="control-label {% if field.field.required %} required{% endif %}">{{ field.label }}</label>
         <div class="controls">
             {{ field }}
             {% for error in field.errors %}

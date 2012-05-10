@@ -30,7 +30,7 @@ Shipping address | Order {{ order.number }} | {{ block.super }}
 
 {% block content %}
 
-<form action="." method="post" class="form-horizontal">
+<form action="." method="post" class="well form-horizontal">
 	{% csrf_token %}
 	{% include "partials/form_fields.html" with form=form %}
 	<div class="form-actions">
