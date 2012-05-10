@@ -142,7 +142,7 @@ class AbstractStockRecord(models.Model):
         """
         Return the effective number in stock.  This is correct property to show
         the customer, not the num_in_stock field as that doesn't account for
-        allocations.
+        allocations.  This can be negative in some unusual circumstances
         """
         if self.num_in_stock is None:
             return 0
@@ -193,6 +193,12 @@ class AbstractStockRecord(models.Model):
     
     @property
     def availability(self):
+        """
+        Return an item's availability as a string
+        """
+        return get_partner_wrapper(self.partner.name).availability(self)
+
+    def max_purchase_quantity(self, user):
         """
         Return an item's availability as a string
         """

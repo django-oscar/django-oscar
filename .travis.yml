@@ -4,6 +4,6 @@ python:
   - 2.7
 install:
 script:
-  - pip install -r testing-reqs.txt
+  - pip install -r requirements.txt
   - ./setup.py develop
   - ./run_tests.py

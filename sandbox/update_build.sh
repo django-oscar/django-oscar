@@ -7,7 +7,7 @@ git pull 2> /dev/null
 # Update any dependencies
 source ../env/bin/activate
 python setup.py develop
-pip install -r testing-reqs.txt
+pip install -r requirements.txt
 
 # Run any new migrations
 cd sandbox

@@ -135,5 +135,25 @@ class StockAlertSearchForm(forms.Form):
 ProductCategoryFormSet = inlineformset_factory(Product, ProductCategory,
                                                fields=('category',), extra=1)
 
+class ProductImageForm(forms.ModelForm):
+    class Meta:
+        model = ProductImage
+        exclude = ('display_order',)
+
+    def save(self, *args, **kwargs):
+        # We infer the display order of the image based on the order of the image fields
+        # within the formset.
+        kwargs['commit'] = False
+        obj = super(ProductImageForm, self).save(*args, **kwargs)
+        obj.display_order = self.get_display_order()
+        obj.save()
+        return obj
+
+    def get_display_order(self):
+        return self.prefix.split('-').pop()
+
+
+
 ProductImageFormSet = inlineformset_factory(Product, ProductImage,
-                                            fields=('original', 'caption'), extra=2)
+                                            form=ProductImageForm,
+                                            extra=2)

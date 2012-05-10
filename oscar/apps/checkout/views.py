@@ -5,30 +5,35 @@ from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import login
+from django.db.models import get_model
 from django.utils.translation import ugettext as _
 from django.views.generic import DetailView, TemplateView, FormView, \
                                  DeleteView, UpdateView, CreateView
 
 from oscar.apps.shipping.methods import Free
-from oscar.core.loading import import_module
-import_module('checkout.forms', ['ShippingAddressForm', 'GatewayForm'], locals())
-import_module('checkout.calculators', ['OrderTotalCalculator'], locals())
-import_module('checkout.utils', ['CheckoutSessionData'], locals())
-import_module('checkout.signals', ['pre_payment', 'post_payment'], locals())
-import_module('order.models', ['Order', 'ShippingAddress',
-                               'CommunicationEvent', 'PaymentEventType',
-                               'PaymentEvent'], locals())
-import_module('order.utils', ['OrderNumberGenerator', 'OrderCreator'], locals())
-import_module('address.models', ['UserAddress'], locals())
-import_module('address.forms', ['UserAddressForm'], locals())
-import_module('shipping.repository', ['Repository'], locals())
-import_module('customer.models', ['Email', 'CommunicationEventType'], locals())
-import_module('customer.views', ['AccountAuthView'], locals())
-import_module('customer.utils', ['Dispatcher'], locals())
-import_module('payment.exceptions', ['RedirectRequired', 'UnableToTakePayment', 
-                                     'PaymentError'], locals())
-import_module('order.exceptions', ['UnableToPlaceOrder'], locals())
-import_module('basket.models', ['Basket'], locals())
+from oscar.core.loading import get_class, get_classes
+ShippingAddressForm, GatewayForm = get_classes('checkout.forms', ['ShippingAddressForm', 'GatewayForm'])
+OrderTotalCalculator = get_class('checkout.calculators', 'OrderTotalCalculator')
+CheckoutSessionData = get_class('checkout.utils', 'CheckoutSessionData')
+pre_payment, post_payment = get_classes('checkout.signals', ['pre_payment', 'post_payment'])
+OrderNumberGenerator, OrderCreator = get_classes('order.utils', ['OrderNumberGenerator', 'OrderCreator'])
+UserAddressForm = get_class('address.forms', 'UserAddressForm')
+Repository = get_class('shipping.repository', 'Repository')
+AccountAuthView = get_class('customer.views', 'AccountAuthView')
+Dispatcher = get_class('customer.utils', 'Dispatcher')
+RedirectRequired, UnableToTakePayment, PaymentError = get_classes(
+    'payment.exceptions', ['RedirectRequired', 'UnableToTakePayment', 'PaymentError'])
+UnableToPlaceOrder = get_class('order.exceptions', 'UnableToPlaceOrder')
+
+Order = get_model('order', 'Order')
+ShippingAddress = get_model('order', 'ShippingAddress')
+CommunicationEvent = get_model('order', 'CommunicationEvent')
+PaymentEventType = get_model('order', 'PaymentEventType')
+PaymentEvent = get_model('order', 'PaymentEvent')
+UserAddress = get_model('address', 'UserAddress')
+Basket = get_model('basket', 'Basket')
+Email = get_model('customer', 'Email')
+CommunicationEventType = get_model('customer', 'CommunicationEventType')
 
 # Standard logger for checkout events
 logger = logging.getLogger('oscar.checkout')
@@ -185,7 +190,7 @@ class ShippingAddressView(CheckoutSessionMixin, FormView):
         return kwargs
     
     def get_available_addresses(self):
-        return UserAddress._default_manager.filter(user=self.request.user)
+        return UserAddress._default_manager.filter(user=self.request.user).order_by('-is_default_for_shipping')
     
     def post(self, request, *args, **kwargs):
         # Check if a shipping address was selected directly (eg no form was filled in)
@@ -648,10 +653,17 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         if error_response:
             return error_response
         if self.preview:
-            return self.render_preview(request, *args, **kwargs)
-        return self.submit(request.basket, **kwargs)
+            # We use a custom parameter to indicate if this is an attempt to place an order.
+            # Without this, we assume a payment form is being submitted from the
+            # payment-details page
+            if request.POST.get('action', '') == 'place_order':
+                return self.submit(request.basket)
+            return self.render_preview(request)
 
-    def render_preview(self, request, *args, **kwargs):
+        # Posting to payment-details isn't the right thing to do
+        return self.get(request, *args, **kwargs)
+
+    def render_preview(self, request, **kwargs):
         """
         Show a preview of the order.
 
@@ -660,6 +672,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         inputs.  This avoids ever writing the sensitive data to disk.
         """
         ctx = self.get_context_data()
+        ctx.update(kwargs)
         return self.render_to_response(ctx)
 
     def can_basket_be_submitted(self, basket):
@@ -686,7 +699,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         except UserAddress.DoesNotExist:
             return None
 
-    def submit(self, basket, **kwargs):
+    def submit(self, basket, payment_kwargs=None, order_kwargs=None):
         """
         Submit a basket for order placement.
         
@@ -698,6 +711,11 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
            - If a redirect is required (eg PayPal, 3DSecure), redirect
            - If payment is unsuccessful, show an appropriate error message
         """
+        if payment_kwargs is None:
+            payment_kwargs = {}
+        if order_kwargs is None:
+            order_kwargs = {}
+
         # Next, check that basket isn't empty
         if basket.is_empty:
             messages.error(self.request, _("This order cannot be submitted as the basket is empty"))
@@ -727,7 +745,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         try:
             pre_payment.send_robust(sender=self, view=self)
             total_incl_tax, total_excl_tax = self.get_order_totals(basket)
-            self.handle_payment(order_number, total_incl_tax, **kwargs)
+            self.handle_payment(order_number, total_incl_tax, **payment_kwargs)
             post_payment.send_robust(sender=self, view=self)
         except RedirectRequired, e:
             # Redirect required (eg PayPal, 3DS)
@@ -751,7 +769,9 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         # If all is ok with payment, try and place order
         logger.info("Order #%s: payment successful, placing order", order_number)
         try:
-            return self.handle_order_placement(order_number, basket, total_incl_tax, total_excl_tax, **kwargs)
+            return self.handle_order_placement(order_number, basket,
+                                               total_incl_tax, total_excl_tax,
+                                               **order_kwargs)
         except UnableToPlaceOrder, e:
             logger.warning("Order #%s: unable to place order - %s",
                            order_number, e)
@@ -780,6 +800,10 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         default is to do nothing.
         """
         pass
+
+    def get_context_data(self, **kwargs):
+        # Return kwargs directly instead of using 'params' as in django's TemplateView
+        return kwargs
 
 
 # =========

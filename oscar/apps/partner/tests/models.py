@@ -1,7 +1,7 @@
 from decimal import Decimal as D
 import datetime
 
-from django.utils import unittest
+from django.test import TestCase
 
 from oscar.test.helpers import create_product
 from oscar.apps.partner.abstract_models import partner_wrappers
@@ -16,7 +16,7 @@ class DummyWrapper(object):
         return "Another dummy response"
 
 
-class StockRecordTests(unittest.TestCase):
+class StockRecordTests(TestCase):
 
     def setUp(self):
         self.product = create_product(price=D('10.00'), num_in_stock=10)
@@ -53,7 +53,7 @@ class StockRecordTests(unittest.TestCase):
         self.assertEqual(10, self.stockrecord.num_in_stock)
 
 
-class DefaultWrapperTests(unittest.TestCase):
+class DefaultWrapperTests(TestCase):
 
     def test_default_wrapper_for_in_stock(self):
         product = create_product(price=D('10.00'), partner="Acme", num_in_stock=10)
@@ -77,7 +77,7 @@ class DefaultWrapperTests(unittest.TestCase):
         self.assertEquals(date, product.stockrecord.dispatch_date)
 
 
-class CustomWrapperTests(unittest.TestCase):
+class CustomWrapperTests(TestCase):
 
     def setUp(self):
         partner_wrappers['Acme'] = DummyWrapper()

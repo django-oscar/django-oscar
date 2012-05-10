@@ -132,11 +132,6 @@ $(document).ready(function()
     // This activates the Typeahead function in the search  
     $('.typeahead').typeahead();
     
-    // This activates the alerts
-    $('.alert').alert('.close');
-    
-      
-
     // Acordion - remove the first in the list as it is duplication.
     var n = $('.accordion dt').length;
     if (n > 1) {

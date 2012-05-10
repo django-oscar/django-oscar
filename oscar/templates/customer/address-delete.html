@@ -36,8 +36,8 @@ Delete address? | {{ block.super }}
 	{{ object.summary }}
 
 	{% include "partials/form_fields.html" with form=form %}
-    	<div class="form-actions">
-		<button type="submit" value="Delete address" class="btn btn-danger btn-large">Delete</button> <a href="{% url customer:address-list %}">Cancel</a>
+	<div class="form-actions">
+		<button type="submit" value="Delete address" class="btn btn-danger btn-large">Delete</button> or <a href="{% url customer:address-list %}">cancel</a>
 	</div>
 </form>
 {% endblock content %}

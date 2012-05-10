@@ -18,6 +18,7 @@ with us regarding your order.</p>
 
 <div class="row-fluid">
     <div class="span6">
+		{% block shipping_info %}
         <div class="well well-info">
             <h3>Shipping</h3>
             <p>Your order will be delivered to:</p>
@@ -25,14 +26,17 @@ with us regarding your order.</p>
             {{ line }}<br/>
             {% endfor %}
         </div>
+		{% endblock %}
     </div>
     <div class="span6">
+		{% block payment_info %}
         <div class="well well-success">
             <h3>Payment</h3>
             {% for source in order.sources.all %}
             {{ source }}
             {% endfor %}
         </div>
+		{% endblock %}
     </div>
 </div>
 <div class="sub-header">
@@ -66,6 +70,7 @@ with us regarding your order.</p>
     </div>
 </div>
 {% endfor %}
+
 {% for discount in order.discounts.all %}
 <div class="basket-items">
     <div class="row-fluid">
@@ -74,6 +79,7 @@ with us regarding your order.</p>
     </div>
 </div>
 {% endfor %}
+
 <div class="basket-items">
     <div class="row-fluid">
         <h4 class="span11">Basket total</h4>

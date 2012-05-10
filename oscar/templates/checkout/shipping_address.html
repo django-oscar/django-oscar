@@ -23,7 +23,7 @@ Shipping address | {{ block.super }}
                 <ul class="clearfix">
                     {% for address in addresses %}
 					<li>
-						<div class="well well-info">
+						<div class="well well-info {% if address.is_default_for_shipping %}default-address{% endif %}">
 							<address>{% for field in address.active_address_fields %}
 							{{ field }}<br/>
 							{% endfor %}</address>

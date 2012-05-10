@@ -1,7 +1,10 @@
 from django.contrib import admin
+from django.db.models import get_model
 
-from oscar.core.loading import import_module
-import_module('offer.models', ['ConditionalOffer', 'Condition', 'Benefit', 'Range'], locals())
+ConditionalOffer = get_model('offer', 'ConditionalOffer')
+Condition = get_model('offer', 'Condition')
+Benefit = get_model('offer', 'Benefit')
+Range = get_model('offer', 'Range')
 
 
 class ConditionAdmin(admin.ModelAdmin):

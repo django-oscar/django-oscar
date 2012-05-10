@@ -408,6 +408,8 @@ class OrderDetailView(DetailView):
 
     def create_payment_event(self, request, order, lines, quantities):
         amount_str = request.POST.get('amount', None)
+
+        # If no amount passed, then we add up the total of the selected lines
         if not amount_str:
             amount = D('0.00')
             for line, quantity in zip(lines, quantities):
@@ -418,6 +420,7 @@ class OrderDetailView(DetailView):
             except InvalidOperation:
                 messages.error(request, "Please choose a valid amount")
                 return self.reload_page_response()
+
         return self._create_payment_event(request, order, amount, lines,
                                           quantities)
 
