@@ -100,8 +100,8 @@ Order management | {{ block.super }}
 		<td>{{ order.num_items }}</td>
         <td>{{ order.status }}</td>
         <td>{{ order.user|default:"Anonymous" }}</td>
-        <td>{{ order.shipping_address }}</td>
-        <td>{{ order.billing_address }}</td>
+        <td>{{ order.shipping_address|default:"-" }}</td>
+        <td>{{ order.billing_address|default:"-" }}</td>
         <td>
             <a class="btn btn-info" href="{% url dashboard:order-detail order.number %}">View</a>
         </td>
