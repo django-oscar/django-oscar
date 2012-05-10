@@ -32,7 +32,7 @@ Checkout gateway | {{ block.super }}
 	</div>
 	<div>
 		<button type="submit" class="btn btn-large btn-primary">Continue</button>
-		Alternatively <a href="{% url customer:login %}?next={% url checkout:index %}">create an account</a> before you checkout.
+		Alternatively <a href="{% url customer:register %}?next={% url checkout:index %}">create an account</a> before you checkout.
 	</div>
 </form>
 
