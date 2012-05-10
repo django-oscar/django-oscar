@@ -1,11 +1,11 @@
 from django import forms
 
-from oscar.core.loading import import_module
-report_utils = import_module('dashboard.reports.utils', ['GeneratorRepository'])
+from oscar.core.loading import get_class
+GeneratorRepository = get_class('dashboard.reports.utils', 'GeneratorRepository')
+
 
 class ReportForm(forms.Form):
-    
-    generators = report_utils.GeneratorRepository().get_report_generators()
+    generators = GeneratorRepository().get_report_generators()
     
     type_choices = []
     for generator in generators:

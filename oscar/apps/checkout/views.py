@@ -5,30 +5,35 @@ from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import login
+from django.db.models import get_model
 from django.utils.translation import ugettext as _
 from django.views.generic import DetailView, TemplateView, FormView, \
                                  DeleteView, UpdateView, CreateView
 
 from oscar.apps.shipping.methods import Free
-from oscar.core.loading import import_module
-import_module('checkout.forms', ['ShippingAddressForm', 'GatewayForm'], locals())
-import_module('checkout.calculators', ['OrderTotalCalculator'], locals())
-import_module('checkout.utils', ['CheckoutSessionData'], locals())
-import_module('checkout.signals', ['pre_payment', 'post_payment'], locals())
-import_module('order.models', ['Order', 'ShippingAddress',
-                               'CommunicationEvent', 'PaymentEventType',
-                               'PaymentEvent'], locals())
-import_module('order.utils', ['OrderNumberGenerator', 'OrderCreator'], locals())
-import_module('address.models', ['UserAddress'], locals())
-import_module('address.forms', ['UserAddressForm'], locals())
-import_module('shipping.repository', ['Repository'], locals())
-import_module('customer.models', ['Email', 'CommunicationEventType'], locals())
-import_module('customer.views', ['AccountAuthView'], locals())
-import_module('customer.utils', ['Dispatcher'], locals())
-import_module('payment.exceptions', ['RedirectRequired', 'UnableToTakePayment', 
-                                     'PaymentError'], locals())
-import_module('order.exceptions', ['UnableToPlaceOrder'], locals())
-import_module('basket.models', ['Basket'], locals())
+from oscar.core.loading import get_class, get_classes
+ShippingAddressForm, GatewayForm = get_classes('checkout.forms', ['ShippingAddressForm', 'GatewayForm'])
+OrderTotalCalculator = get_class('checkout.calculators', 'OrderTotalCalculator')
+CheckoutSessionData = get_class('checkout.utils', 'CheckoutSessionData')
+pre_payment, post_payment = get_classes('checkout.signals', ['pre_payment', 'post_payment'])
+OrderNumberGenerator, OrderCreator = get_classes('order.utils', ['OrderNumberGenerator', 'OrderCreator'])
+UserAddressForm = get_class('address.forms', 'UserAddressForm')
+Repository = get_class('shipping.repository', 'Repository')
+AccountAuthView = get_class('customer.views', 'AccountAuthView')
+Dispatcher = get_class('customer.utils', 'Dispatcher')
+RedirectRequired, UnableToTakePayment, PaymentError = get_classes(
+    'payment.exceptions', ['RedirectRequired', 'UnableToTakePayment', 'PaymentError'])
+UnableToPlaceOrder = get_class('order.exceptions', 'UnableToPlaceOrder')
+
+Order = get_model('order', 'Order')
+ShippingAddress = get_model('order', 'ShippingAddress')
+CommunicationEvent = get_model('order', 'CommunicationEvent')
+PaymentEventType = get_model('order', 'PaymentEventType')
+PaymentEvent = get_model('order', 'PaymentEvent')
+UserAddress = get_model('address', 'UserAddress')
+Basket = get_model('basket', 'Basket')
+Email = get_model('customer', 'Email')
+CommunicationEventType = get_model('customer', 'CommunicationEventType')
 
 # Standard logger for checkout events
 logger = logging.getLogger('oscar.checkout')

@@ -2,8 +2,8 @@ from decimal import Decimal
 from itertools import chain
 import logging
 
-from oscar.core.loading import import_module
-import_module('offer.models', ['ConditionalOffer'], locals())
+from django.db.models import get_model
+ConditionalOffer = get_model('offer', 'ConditionalOffer')
 
 logger = logging.getLogger('oscar.offers')
 
