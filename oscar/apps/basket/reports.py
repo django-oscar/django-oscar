@@ -34,7 +34,7 @@ class OpenBasketReportGenerator(ReportGenerator):
         baskets = Basket._default_manager.filter(status=OPEN)
         for basket in baskets:
             if basket.owner:
-                row = [basket.owner_id, basket.owner.username, basket.owner.get_full_name(). basket.owner.email,
+                row = [basket.owner_id, basket.owner.username, basket.owner.get_full_name(), basket.owner.email,
                        basket.status, basket.num_lines,
                        basket.num_items, basket.total_incl_tax, 
                        basket.date_created, basket.time_since_creation]
