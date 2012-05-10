@@ -52,6 +52,24 @@ class ProductDetailView(DetailView):
         return names
 
 
+def get_product_base_queryset():
+    """
+    Get ``QuerySet`` for product model with related 
+    content pre-loaded. The ``QuerySet`` returns unfiltered
+    results for further filtering.
+    """
+    return product_model.browsable.select_related(
+        'product_class',
+        'stockrecord',
+        'stockrecord__partner',
+    ).prefetch_related(
+        'reviews',
+        'variants',
+        'product_options',
+        'product_class__options',
+    ).all()
+
+
 class ProductCategoryView(ListView):
     """
     Browse products in a given category
@@ -80,7 +98,9 @@ class ProductCategoryView(ListView):
         return context
 
     def get_queryset(self):
-        return product_model.browsable.filter(categories__in=self.get_categories()).distinct()
+        return get_product_base_queryset().filter(
+            categories__in=self.get_categories()
+        ).distinct()
 
 from django.views.decorators.cache import cache_page
 from django.utils.decorators import method_decorator
@@ -99,27 +119,15 @@ class ProductListView(ListView):
         q = self.request.GET.get('q', None)
         return q.strip() if q else q
 
-    def get_base_queryset(self):
-        return self.model.browsable.select_related(
-            'product_class',
-            'stockrecord',
-            'stockrecord__partner',
-        ).prefetch_related(
-            'reviews',
-            'variants',
-            'product_options',
-            'product_class__options',
-        ).all()
-
     def get_queryset(self):
         q = self.get_search_query()
         if q:
             # Send signal to record the view of this product
             self.search_signal.send(sender=self, query=q, user=self.request.user)
-            base_queryset = self.get_base_queryset()
-            return self.get_base_queryset().filter(title__icontains=q)
+            base_queryset = get_product_base_queryset()
+            return get_product_base_queryset().filter(title__icontains=q)
         else:
-            return self.get_base_queryset()
+            return get_product_base_queryset()
 
     def get_context_data(self, **kwargs):
         context = super(ProductListView, self).get_context_data(**kwargs)
