@@ -14,6 +14,12 @@ Checkout | {{ block.super }}
 
 {% block content %}
 
+{% if error %}
+	<div class="alert alert-error">
+		{{ error }}
+	</div>
+{% endif %}
+
 <div class="row-fluid">
     {% block shipping_address %}
     <div class="span6">

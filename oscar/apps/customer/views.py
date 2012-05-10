@@ -75,7 +75,7 @@ class AccountSummaryView(ListView):
             profile = get_profile_class()()
 
         field_data = []
-        for field_name in profile._meta.get_all_field_names(): 
+        for field_name in profile._meta.get_all_field_names():
             if field_name in ('user', 'id'):
                 continue
             field = profile._meta.get_field(field_name)
@@ -103,33 +103,35 @@ class AccountSummaryView(ListView):
             return None
 
 
-class AccountAuthView(TemplateView):
-    template_name = 'customer/login_registration.html'
+class AccountRegistrationView(TemplateView):
+    template_name = 'customer/registration.html'
     redirect_field_name = 'next'
-    login_prefix = 'login'
     registration_prefix = 'registration'
     communication_type_code = 'REGISTRATION'
 
     def get_logged_in_redirect(self):
         return reverse('customer:summary')
 
-    def get_context_data(self, *args, **kwargs):
-        context = super(AccountAuthView, self).get_context_data(*args, **kwargs)
-        redirect_to = self.request.REQUEST.get(self.redirect_field_name, '')
-        context[self.redirect_field_name] = redirect_to
-        context['login_form'] = EmailAuthenticationForm(prefix=self.login_prefix)
-        context['registration_form'] = EmailUserCreationForm(prefix=self.registration_prefix)
-        return context
-
     def check_redirect(self, context):
         redirect_to = context.get(self.redirect_field_name)
 
-        netloc = urlparse.urlparse(redirect_to)[1]
         if not redirect_to:
-            redirect_to = settings.LOGIN_REDIRECT_URL
-        elif netloc and netloc != self.request.get_host():
-            redirect_to = settings.LOGIN_REDIRECT_URL
+            return settings.LOGIN_REDIRECT_URL
+
+        netloc = urlparse.urlparse(redirect_to)[1]
+        if netloc and netloc != self.request.get_host():
+            return settings.LOGIN_REDIRECT_URL
+
         return redirect_to
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(AccountRegistrationView, self).get_context_data(*args, **kwargs)
+        redirect_to = self.request.REQUEST.get(self.redirect_field_name, '')
+        context[self.redirect_field_name] = redirect_to
+        context['registration_form'] = EmailUserCreationForm(
+            prefix=self.registration_prefix
+        )
+        return context
 
     def send_registration_email(self, user):
         code = self.communication_type_code
@@ -161,8 +163,62 @@ class AccountAuthView(TemplateView):
         context = self.get_context_data(*args, **kwargs)
         redirect_to = self.check_redirect(context)
 
+        registration_form = EmailUserCreationForm(
+            prefix=self.registration_prefix,
+            data=request.POST
+        )
+        context['registration_form'] = registration_form
+
+        if registration_form.is_valid():
+            self._register_user(registration_form)
+            return HttpResponseRedirect(redirect_to)
+
+        self.request.session.set_test_cookie()
+        return self.render_to_response(context)
+
+    def _register_user(self, form):
+        """
+        Register a new user from the data in *form*. If 
+        ``OSCAR_SEND_REGISTRATION_EMAIL`` is set to ``True`` a 
+        registration email will be send to the provided email address.
+        A new user account is created and the user is then logged
+        in.
+        """
+        user = form.save()
+
+        if getattr(settings, 'OSCAR_SEND_REGISTRATION_EMAIL', True):
+            self.send_registration_email(user)
+
+        user = authenticate(
+            username=user.email,
+            password=form.cleaned_data['password1']
+        )
+        auth_login(self.request, user)
+        if self.request.session.test_cookie_worked():
+            self.request.session.delete_test_cookie()
+
+
+class AccountAuthView(AccountRegistrationView):
+    template_name = 'customer/login_registration.html'
+    login_prefix = 'login'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(AccountAuthView, self).get_context_data(*args, **kwargs)
+        redirect_to = self.request.REQUEST.get(self.redirect_field_name, '')
+        context[self.redirect_field_name] = redirect_to
+        context['login_form'] = EmailAuthenticationForm(prefix=self.login_prefix)
+        context['registration_form'] = EmailUserCreationForm(prefix=self.registration_prefix)
+        return context
+
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data(*args, **kwargs)
+        redirect_to = self.check_redirect(context)
+
         if u'login_submit' in self.request.POST:
-            login_form = EmailAuthenticationForm(prefix=self.login_prefix, data=request.POST)
+            login_form = EmailAuthenticationForm(
+                prefix=self.login_prefix,
+                data=request.POST
+            )
             if login_form.is_valid():
                 auth_login(request, login_form.get_user())
                 if request.session.test_cookie_worked():
@@ -171,18 +227,14 @@ class AccountAuthView(TemplateView):
             context['login_form'] = login_form
 
         if u'registration_submit' in self.request.POST:
-            registration_form = EmailUserCreationForm(prefix=self.registration_prefix, data=request.POST)
+            registration_form = EmailUserCreationForm(
+                prefix=self.registration_prefix,
+                data=request.POST
+            )
             context['registration_form'] = registration_form
+
             if registration_form.is_valid():
-                user = registration_form.save()
-
-                if getattr(settings, 'OSCAR_SEND_REGISTRATION_EMAIL', True):
-                    self.send_registration_email(user)
-
-                user = authenticate(username=user.email, password=registration_form.cleaned_data['password1'])
-                auth_login(self.request, user)
-                if self.request.session.test_cookie_worked():
-                    self.request.session.delete_test_cookie()
+                self._register_user(registration_form)
                 return HttpResponseRedirect(redirect_to)
 
         self.request.session.set_test_cookie()

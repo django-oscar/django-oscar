@@ -653,8 +653,15 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         if error_response:
             return error_response
         if self.preview:
+            # We use a custom parameter to indicate if this is an attempt to place an order.
+            # Without this, we assume a payment form is being submitted from the
+            # payment-details page
+            if request.POST.get('action', '') == 'place_order':
+                return self.submit(request.basket)
             return self.render_preview(request)
-        return self.submit(request.basket)
+
+        # Posting to payment-details isn't the right thing to do
+        return self.get(request, *args, **kwargs)
 
     def render_preview(self, request, **kwargs):
         """
@@ -793,6 +800,10 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         default is to do nothing.
         """
         pass
+
+    def get_context_data(self, **kwargs):
+        # Return kwargs directly instead of using 'params' as in django's TemplateView
+        return kwargs
 
 
 # =========

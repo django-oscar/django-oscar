@@ -1,10 +1,7 @@
 from decimal import Decimal as D
-import httplib
 import sys
 
-from django.test import TestCase
-from django.test.client import Client
-from django.core.urlresolvers import reverse, clear_url_caches, set_urlconf
+from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.utils.importlib import import_module
 
@@ -93,7 +90,7 @@ class EnabledAnonymousCheckoutViewsTests(ClientTestCase, CheckoutMixin):
             self.complete_guest_email_form('barry@example.com')
             self.complete_shipping_address()
             self.complete_shipping_method()
-            response = self.client.post(reverse('checkout:payment-details'))
+            response = self.client.post(reverse('checkout:preview'), {'action': 'place_order'})
             response = self.client.get(reverse('checkout:thank-you'))
             order = response.context['order']
             self.assertEqual('barry@example.com', order.guest_email)
@@ -183,7 +180,7 @@ class PaymentDetailsViewTests(ClientTestCase, CheckoutMixin):
     def test_placing_order_with_empty_basket_redirects(self):
         self.complete_shipping_address()
         self.complete_shipping_method()
-        response = self.client.post(reverse('checkout:payment-details'))
+        response = self.client.post(reverse('checkout:preview'), {'action': 'place_order'})
         self.assertIsRedirect(response)
         self.assertRedirectUrlName(response, 'checkout:shipping-address')
 
@@ -199,7 +196,7 @@ class OrderPlacementTests(ClientTestCase, CheckoutMixin):
 
         self.complete_shipping_address()
         self.complete_shipping_method()
-        self.response = self.client.post(reverse('checkout:payment-details'))
+        self.response = self.client.post(reverse('checkout:preview'), {'action': 'place_order'})
 
     def test_placing_order_with_nonempty_basket_redirects(self):
         self.assertIsRedirect(self.response)
