@@ -1,0 +1,33 @@
+from django.conf.urls.defaults import patterns, url
+from django.contrib.admin.views.decorators import staff_member_required
+
+from oscar.core.application import Application
+from oscar.apps.dashboard.nav import register, Node
+
+from oscar.apps.dashboard.reviews import views
+
+node = Node('Reviews', 'dashboard:reviews-index')
+register(node, 80)
+
+
+class ReportsApplication(Application):
+    name = None
+    list_view = views.ReviewListView
+    update_view = views.ReviewUpdateView
+
+    def get_urls(self):
+        urlpatterns = patterns('',
+            url(r'^$', self.list_view.as_view(), name='reviews-index'),
+
+            url(r'^/update/(?P<pk>\d+)/$',
+                self.update_view.as_view(),
+                name='reviews-update'
+            ),
+        )
+        return self.post_process_urls(urlpatterns)
+
+    def get_url_decorator(self, url_name):
+        return staff_member_required
+
+
+application = ReportsApplication()

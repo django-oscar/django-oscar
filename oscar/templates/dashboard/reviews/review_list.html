@@ -1,0 +1,97 @@
+{% extends 'dashboard/layout.html' %}
+{% load currency_filters %}
+{% block body_class %}reviews{% endblock %}
+{% block title %}
+Reviews | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url dashboard:index %}">Dashboard</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active"><a href=".">Review Management Dashboard</a></li>
+</ul>
+{% endblock %}
+
+{% block header %}
+<div class="page-header">
+    <h1>Review management dashboard</h1>
+</div>
+{% endblock header %}
+
+
+{% block dashboard_content %}
+
+<div class="sub-header">
+    {#<h2>{{ queryset_description }}</h2>#}
+</div>
+{% if review_list|length %}
+<form action="." method="post" class="order_table">
+    {% csrf_token %}
+<table class="table table-striped table-bordered">
+    <tr>
+        <th></th>
+        <th>Review Title</th>
+        <th>Product</th>
+        <th>User</th>
+        <th>Score</th>
+        <th>Votes</th>
+        <th>Status</th>
+        <th>Date created</th>
+        <th></th>
+    </tr>
+    {% for review in review_list %}
+    <tr>
+        <td><input type="checkbox" name="selected_order" class="selected_order" value="{{ review.id }}"/>
+        <td>{{ review.title }}</td>
+        <td>
+            <a href='{% url catalogue:detail review.product.slug review.product.id %}'>
+                {{ review.product.title }}
+            </a>
+        </td>
+        <td>
+            <a href="{% url dashboard:user-detail review.user.username %}">
+                {{ review.get_reviewer_name }}
+            </a>
+        </td>
+        <td>
+            {{ review.score|floatformat:1 }} / 5.0
+        </td>
+        <td>{{ review.total_votes }}</td>
+        <td>
+        {% if review.status == 1 %}
+            <span class="label label-success">
+        {% elif review.status == 2 %}
+            <span class="label label-important">
+        {% else %}
+            <span class="label label-info">
+        {% endif %}
+                {{ review.get_status_display }}
+            </span>
+        </td>
+        <td>{{ review.date_created }}</td>
+        <td>
+            <a class="btn btn-success" href="{% url dashboard:reviews-update review.id %}">Edit</a>
+            <a class="btn btn-info" href="{% url catalogue:reviews-detail review.product.slug review.product.id review.id %}">View</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% if page_obj %}
+    {% include "catalogue/partials/pagination.html" %}
+{% endif %}
+
+</form>
+
+{% else %}
+
+<p>No reviews found.</p>
+
+{% endif %}
+
+
+
+{% endblock dashboard_content %}
