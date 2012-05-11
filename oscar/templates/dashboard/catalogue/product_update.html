@@ -129,10 +129,10 @@ Update product | {{ block.super }}
 	</div>
 	<div class="form-actions">
         <button class="btn btn-primary btn-large" type="submit">Save Product</button> or 
-		<a href="{% url dashboard:catalogue-product-list">cancel</a>
-		{% if product %}
-            <a class="btn btn-success btn-large pull-right" href="{{ product.get_absolute_url }}">View on site</a>
-        {% endif %}
+            <a href="{% url dashboard:catalogue-product-list %}">cancel</a>
+            {% if product %}
+                <a class="btn btn-success btn-large pull-right" href="{{ product.get_absolute_url }}">View on site</a>
+            {% endif %}
 	</div>
 </form>
 {% endblock dashboard_content %}
