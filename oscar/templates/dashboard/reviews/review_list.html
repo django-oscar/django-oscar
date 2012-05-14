@@ -25,11 +25,10 @@ Reviews | {{ block.super }}
 {% block dashboard_content %}
 
 <div class="well well-info">
-    <div class="sub-header"><h3>Quick Review Search</h3></div>
+    <div class="sub-header"><h3>Review Search</h3></div>
     <form action="." method="get" class="form-inline">
-		{% include 'partials/form_fields_inline.html' with form=form %}
+        {% include 'partials/form_fields_inline.html' with form=form %}
         <button type="submit" class="btn btn-primary">Search</button>
-		<a href="{% url dashboard:reviews-list %}" class="btn">Reset</a>
     </form>
 </div>
 

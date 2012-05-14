@@ -1,8 +1,10 @@
-from django.db.models import get_model
+import datetime
+from django.db.models import get_model, Q
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template.response import TemplateResponse
 from django.views.generic import ListView, UpdateView
+from django.template.defaultfilters import date as format_date
 
 from oscar.views.generic import BulkEditMixin
 from oscar.apps.dashboard.reviews import forms
@@ -14,25 +16,98 @@ class ReviewListView(ListView, BulkEditMixin):
     model = ProductReview
     template_name = 'dashboard/reviews/review_list.html'
     context_object_name = 'review_list'
-    form_class = forms.ReviewSearchForm
-    base_description = 'All reviews'
+    form_class = forms.ProductReviewSearchForm
+    review_form_class = forms.DashboardProductReviewForm
     paginate_by = 25
     current_view = 'dashboard:reviews-list'
     actions = ('update_selected_review_status',)
     checkbox_object_name = 'review'
+    base_description = 'All reviews'
+
+    def get(self, request, *args, **kwargs):
+        response = super(self.__class__, self).get(request, **kwargs)
+        self.form = self.form_class()
+        return response
+
+    def get_date_from_to_queryset(self, date_from, date_to, queryset=None):
+        """
+        Get a ``QuerySet`` of ``ProductReview`` items that match the time
+        frame specified by *date_from* and *date_to*. Both parameters are
+        expected to be in ``datetime`` format with *date_from* < *date_to*.
+        If *queryset* is specified, it will be filtered according to the
+        given dates. Otherwise, a new queryset for all ``ProductReview``
+        items is created.
+        """
+        if not queryset:
+            self.model.objects.all()
+
+        if date_from and date_to:
+            # Add 24 hours to make search inclusive
+            date_to = date_to + datetime.timedelta(days=1)
+            queryset = queryset.filter(
+                date_created__gte=date_from
+            ).filter(
+                date_created__lt=date_to
+            )
+            self.description += " created between %s and %s" % (
+                format_date(date_from),
+                format_date(date_to)
+            )
+
+        elif date_from:
+            queryset = queryset.filter(date_created__gte=date_from)
+            self.description += " created after %s" % format_date(date_from)
+
+        elif date_to:
+            # Add 24 hours to make search inclusive
+            date_to = date_to + datetime.timedelta(days=1)
+            queryset = queryset.filter(date_created__lt=date_to)
+            self.description += " created before %s" % format_date(date_to)
+
+        return queryset
 
     def get_queryset(self):
-        return ProductReview.objects.all()
+        queryset = self.model.objects.all()
+        self.description = self.base_description
 
-    def get(self, request, **kwargs):
-        return super(self.__class__, self).get(request, **kwargs)
+        self.form = self.form_class(self.request.GET)
+        if not self.form.is_valid():
+            return queryset
 
-    def post(self, request, **kwargs):
-        return super(self.__class__, self).post(request, **kwargs)
+        data = self.form.cleaned_data
+
+        if data['keyword']:
+            queryset = queryset.filter(
+                Q(title__icontains=data['keyword']) |
+                Q(body__icontains=data['keyword'])
+            ).distinct()
+            self.description += " with keyword matching '%s'" % data['keyword']
+
+        queryset = self.get_date_from_to_queryset(data['date_from'],
+                                                  data['date_to'], queryset)
+
+        if data['name']:
+            # If the value is two words, then assume they are first name and
+            # last name
+            parts = data['name'].split()
+            if len(parts) >= 2:
+                queryset = queryset.filter(
+                    user__first_name__istartswith=parts[0],
+                    user__last_name__istartswith=parts[1]
+                ).distinct()
+            else:
+                queryset = queryset.filter(
+                    Q(user__first_name__istartswith=parts[0]) |
+                    Q(user__last_name__istartswith=parts[-1])
+                ).distinct()
+            self.description += " with customer name matching '%s'" % data['name']
+
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super(self.__class__, self).get_context_data(**kwargs)
-        context['review_form'] = forms.DashboardProductReviewForm()
+        context['review_form'] = self.review_form_class()
+        context['form'] = self.form
         return context
 
     def update_selected_review_status(self, request, reviews):

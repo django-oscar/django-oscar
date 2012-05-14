@@ -8,5 +8,8 @@ class DashboardProductReviewForm(forms.ModelForm):
         fields = ('title', 'body', 'score', 'status')
 
 
-class ReviewSearchForm(forms.Form):
-    pass
+class ProductReviewSearchForm(forms.Form):
+    keyword = forms.CharField(required=False)
+    date_from = forms.DateTimeField(required=False)
+    date_to = forms.DateTimeField(required=False, label='to')
+    name = forms.CharField(required=False)
