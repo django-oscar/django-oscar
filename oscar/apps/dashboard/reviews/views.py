@@ -1,4 +1,5 @@
 from django.db.models import get_model
+from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseForbidden, Http404
 from django.template.response import TemplateResponse
 from django.views.generic import ListView, UpdateView
@@ -20,3 +21,6 @@ class ReviewUpdateView(UpdateView):
     model = ProductReview
     template_name = 'dashboard/reviews/review_update.html'
     form_class = DashboardProductReviewForm 
+
+    def get_success_url(self):
+        return reverse('dashboard:reviews-index')
