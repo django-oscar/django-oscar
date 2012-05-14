@@ -14,7 +14,7 @@ Update review | {{ block.super }}
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="{% url dashboard:reviews-index %}">Reviews</a>
+        <a href="{% url dashboard:reviews-list %}">Reviews</a>
         <span class="divider">/</span>
     </li>
     <li class="active"><a href=".">{{ title }}</a></li>
@@ -83,7 +83,7 @@ Update review | {{ block.super }}
 		
     <div class="form-actions">
     <button class="btn btn-primary btn-large" type="submit">Save Product</button> or 
-        <a href="{% url dashboard:reviews-index %}">cancel</a>
+        <a href="{% url dashboard:reviews-list %}">cancel</a>
         {% if product %}
             <a class="btn btn-success btn-large pull-right" href="{{ product.get_absolute_url }}">View on site</a>
         {% endif %}

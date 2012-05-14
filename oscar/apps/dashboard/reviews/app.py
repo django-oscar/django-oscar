@@ -6,7 +6,7 @@ from oscar.apps.dashboard.nav import register, Node
 
 from oscar.apps.dashboard.reviews import views
 
-node = Node('Reviews', 'dashboard:reviews-index')
+node = Node('Reviews', 'dashboard:reviews-list')
 register(node, 80)
 
 
@@ -17,9 +17,9 @@ class ReportsApplication(Application):
 
     def get_urls(self):
         urlpatterns = patterns('',
-            url(r'^$', self.list_view.as_view(), name='reviews-index'),
+            url(r'^$', self.list_view.as_view(), name='reviews-list'),
 
-            url(r'^/update/(?P<pk>\d+)/$',
+            url(r'^/(?P<pk>\d+)/update/$',
                 self.update_view.as_view(),
                 name='reviews-update'
             ),
