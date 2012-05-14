@@ -77,6 +77,13 @@ class ReviewListView(generic.ListView, BulkEditMixin):
 
         data = self.form.cleaned_data
 
+        # checking for empty string rather then True is required
+        # as zero is a valid value for 'status' but would be
+        # evaluated to False
+        if data['status'] != '':
+            queryset = queryset.filter(status=data['status']).distinct()
+            self.description += " with status matching '%s'" % data['status']
+
         if data['keyword']:
             queryset = queryset.filter(
                 Q(title__icontains=data['keyword']) |
