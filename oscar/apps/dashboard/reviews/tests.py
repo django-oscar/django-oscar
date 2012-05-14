@@ -115,3 +115,25 @@ class ReviewsDashboardTests(ClientTestCase):
             'date_to': now - timedelta(days=9)
         })
         self.assertItemsEqual(response.context['review_list'], [review3])
+
+    def test_filter_reviews_by_status(self):
+        url = reverse('dashboard:reviews-list')
+
+        user1 = get(User)
+        user2 = get(User)
+
+        review1 = get(ProductReview, user=user1, status=1)
+        review2 = get(ProductReview, user=user2, status=0)
+        review3 = get(ProductReview, user=user2, status=2)
+
+        response = self.client.get(url, {'status': 1})
+        self.assertItemsEqual(response.context['review_list'], [review1])
+
+        response = self.client.get(url, {'status': 2})
+        self.assertItemsEqual(response.context['review_list'], [review3])
+
+        response = self.client.get(url, {'status': 3})
+        self.assertItemsEqual(
+            response.context['review_list'],
+            [review1, review2, review3]
+        )
