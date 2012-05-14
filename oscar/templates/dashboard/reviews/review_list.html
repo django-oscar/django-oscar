@@ -78,7 +78,8 @@ Reviews | {{ block.super }}
             <td>{{ review.date_created }}</td>
             <td>
                 <a class="btn btn-success" href="{% url dashboard:reviews-update review.id %}">Edit</a>
-                <a class="btn btn-info" href="{% url catalogue:reviews-detail review.product.slug review.product.id review.id %}">View</a>
+                {#<a class="btn btn-info" href="{% url catalogue:reviews-detail review.product.slug review.product.id review.id %}">View</a>#}
+                <a class="btn btn-danger" href="{% url dashboard:reviews-delete review.id %}">Delete</a>
             </td>
         </tr>
         {% endfor %}

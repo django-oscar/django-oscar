@@ -14,6 +14,7 @@ class ReportsApplication(Application):
     name = None
     list_view = views.ReviewListView
     update_view = views.ReviewUpdateView
+    delete_view = views.ReviewDeleteView
 
     def get_urls(self):
         urlpatterns = patterns('',
@@ -22,6 +23,10 @@ class ReportsApplication(Application):
             url(r'^/(?P<pk>\d+)/update/$',
                 self.update_view.as_view(),
                 name='reviews-update'
+            ),
+            url(r'^/(?P<pk>\d+)/delete/$',
+                self.delete_view.as_view(),
+                name='reviews-delete'
             ),
         )
         return self.post_process_urls(urlpatterns)
