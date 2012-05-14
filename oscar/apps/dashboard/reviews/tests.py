@@ -135,7 +135,7 @@ class ReviewsDashboardTests(ClientTestCase):
         response = self.client.get(url, {'status': 2})
         self.assertItemsEqual(response.context['review_list'], [review3])
 
-        response = self.client.get(url, {'status': -1})
+        response = self.client.get(url, {'status': 3})
         self.assertItemsEqual(
             response.context['review_list'],
             [review1, review2, review3]
