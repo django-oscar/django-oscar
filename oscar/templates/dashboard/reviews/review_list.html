@@ -39,7 +39,7 @@ Reviews | {{ block.super }}
         <tr>
             <th></th>
             <th>Review Title</th>
-            <th>Product</th>
+            <th>Review For Product</th>
             <th>User</th>
             <th>Score</th>
             <th>Votes</th>
@@ -50,7 +50,11 @@ Reviews | {{ block.super }}
         {% for review in review_list %}
         <tr>
             <td><input type="checkbox" name="selected_review" class="selected_review" value="{{ review.id }}"/>
-            <td>{{ review.title }}</td>
+                <td>
+                    <a href="{% url catalogue:reviews-detail review.product.slug review.product.id review.id %}">
+                    {{ review.title }}
+                    </a>
+                </td>
             <td>
                 <a href='{% url catalogue:detail review.product.slug review.product.id %}'>
                     {{ review.product.title }} </a>
@@ -78,7 +82,6 @@ Reviews | {{ block.super }}
             <td>{{ review.date_created }}</td>
             <td>
                 <a class="btn btn-success" href="{% url dashboard:reviews-update review.id %}">Edit</a>
-                {#<a class="btn btn-info" href="{% url catalogue:reviews-detail review.product.slug review.product.id review.id %}">View</a>#}
                 <a class="btn btn-danger" href="{% url dashboard:reviews-delete review.id %}">Delete</a>
             </td>
         </tr>
