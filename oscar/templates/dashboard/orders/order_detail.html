@@ -46,18 +46,6 @@ Order {{ order.number }} | {{ block.super }}
             </div>
         </div>
     </div>
-    <!-- <table class="table">
-        <tr>
-            <th>Username</th>
-            <th>Name</th>
-            <th>Email address</th>
-        </tr>
-        <tr>
-            <td><a href="{% url dashboard:user-detail order.user.id %}">{{ order.user.username }}</a></td>
-            <td>{{ order.user.get_full_name|default:"-" }}</td>
-            <td>{{ order.user.email|default:"-" }}</td>
-        </tr>
-    </table> -->
 	{% else %}
 	<p>Customer checked out anonymously.</p>
 	{% endif %}
