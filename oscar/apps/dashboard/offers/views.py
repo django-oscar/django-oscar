@@ -235,9 +235,9 @@ class OfferPreviewView(OfferWizardStepView):
         self._flush_session()
 
         if self.update:
-            msg = "Offer #%d updated" % offer.id
+            msg = "Offer '%s' updated" % offer.name
         else:
-            msg = "Offer created!"
+            msg = "Offer '%s' created!" % offer.name
         messages.success(self.request, msg)
 
         return HttpResponseRedirect(self.get_success_url())
