@@ -87,3 +87,5 @@ h3{margin-bottom:4.5px;}
 #ui-datepicker-div td a{padding:4px;display:block;}
 #ui-datepicker-div td .ui-state-highlight{background:#eeeeee;}
 #ui-datepicker-div td .ui-state-active{color:#FFFFFF;background:#0088CC;}
+.errorlist{margin:0 0 0 20px;padding:0 0 10px 0;color:#B94A48;}.errorlist li{padding:0 0 5px 0;list-style:none;}
+.form-inline .help-block{display:inline-block;margin:0 20px 0 10px;}.form-inline .help-block li{list-style:none;color:#B94A48;}
