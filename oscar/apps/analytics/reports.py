@@ -1,6 +1,7 @@
 import csv
 
 from django.db.models import get_model
+from django.template.defaultfilters import date
 
 from oscar.core.loading import get_class
 
@@ -43,8 +44,7 @@ class UserReportGenerator(ReportGenerator):
     
     def generate(self, response):
         writer = csv.writer(response)
-        header_row = ['Username',
-                      'Name',
+        header_row = ['Name',
                       'Date registered',
                       'Product views',
                       'Basket additions',
@@ -58,9 +58,15 @@ class UserReportGenerator(ReportGenerator):
         
         records = UserRecord._default_manager.select_related().all()
         for record in records:
-            row = [record.user.username, record.user.get_full_name(), record.user.date_joined, 
-                   record.num_product_views, record.num_basket_additions, record.num_orders,
-                   record.num_order_lines, record.num_order_items, record.total_spent, record.date_last_order]
+            row = [record.user.get_full_name(), 
+                   self.format_date(record.user.date_joined),
+                   record.num_product_views, 
+                   record.num_basket_additions, 
+                   record.num_orders,
+                   record.num_order_lines,
+                   record.num_order_items,
+                   record.total_spent,
+                   self.format_datetime(record.date_last_order)]
             writer.writerow(row)
             
     def is_available_to(self, user):

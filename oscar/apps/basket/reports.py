@@ -19,7 +19,6 @@ class OpenBasketReportGenerator(ReportGenerator):
     def generate(self, response):
         writer = csv.writer(response)
         header_row = ['User ID',
-                      'Username',
                       'Name',
                       'Email',
                       'Basket status',
@@ -34,14 +33,15 @@ class OpenBasketReportGenerator(ReportGenerator):
         baskets = Basket._default_manager.filter(status=OPEN)
         for basket in baskets:
             if basket.owner:
-                row = [basket.owner_id, basket.owner.username, basket.owner.get_full_name(), basket.owner.email,
+                row = [basket.owner_id, basket.owner.get_full_name(), basket.owner.email,
                        basket.status, basket.num_lines,
                        basket.num_items, basket.total_incl_tax, 
-                       basket.date_created, basket.time_since_creation]
+                       self.format_datetime(basket.date_created), 
+                       basket.time_since_creation]
             else:
-                row = [basket.owner_id, None, None, None, basket.status, basket.num_lines,
+                row = [basket.owner_id, None, None, basket.status, basket.num_lines,
                        basket.num_items, basket.total_incl_tax, 
-                       basket.date_created, basket.time_since_creation]
+                       self.format_datetime(basket.date_created), basket.time_since_creation]
             writer.writerow(row)
 
 
@@ -61,13 +61,19 @@ class SubmittedBasketReportGenerator(ReportGenerator):
                       'Num lines',
                       'Num items',
                       'Value',
+                      'Date created',
                       'Time between creation and submission',
                      ]
         writer.writerow(header_row)
         
         baskets = Basket._default_manager.filter(status=SUBMITTED)
         for basket in baskets:
-            row = [basket.owner_id, basket.owner, basket.status, basket.num_lines,
-                   basket.num_items, basket.total_incl_tax, 
-                   basket.date_created, basket.time_before_submit]
+            row = [basket.owner_id,
+                   basket.owner,
+                   basket.status,
+                   basket.num_lines,
+                   basket.num_items,
+                   basket.total_incl_tax,
+                   self.format_datetime(basket.date_created),
+                   basket.time_before_submit]
             writer.writerow(row)

@@ -1,3 +1,6 @@
+from django.template.defaultfilters import date
+
+
 class ReportGenerator(object):
     """
     Top-level class that needs to be subclassed to provide a 
@@ -17,13 +20,19 @@ class ReportGenerator(object):
         pass
  
     def filename(self):
-        u"""
+        """
         Returns the filename for this report
         """
         return self.filename_template % (self.start_date, self.end_date)
     
     def is_available_to(self, user):
-        u"""
+        """
         Checks whether this report is available to this user
         """
         return user.is_staff
+
+    def format_datetime(self, dt):
+        return date(dt, 'DATETIME_FORMAT')
+
+    def format_date(self, d):
+        return date(d, 'DATE_FORMAT')
