@@ -3,7 +3,6 @@ from datetime import datetime, timedelta
 from django.db.models import get_model
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
-
 from django_dynamic_fixture import get
 
 from oscar.test import ClientTestCase
@@ -78,42 +77,39 @@ class ReviewsDashboardTests(ClientTestCase):
         self.assertItemsEqual(response.context['review_list'], [review2])
 
         response = self.client.get(url, {'keyword': 'review'})
-        self.assertItemsEqual(
-            response.context['review_list'],
-            [review1, review2]
-        )
+        self.assertQuerysetContains(response.context['review_list'],
+                                    [review1, review2])
+
+    def assertQuerysetContains(self, qs, items):
+        qs_ids = [obj.id for obj in qs]
+        item_ids = [item.id for item in items]
+        self.assertItemsEqual(qs_ids, item_ids)
 
     def test_filter_reviews_by_date(self):
-        url = reverse('dashboard:reviews-list')
-
-        user1 = get(User)
-        user2 = get(User)
-
         now = datetime.now()
-        review1 = get(ProductReview, user=user1)
-        review1.date_created = now
-        review1.save()
-        review2 = get(ProductReview, user=user2)
+        review1 = get(ProductReview)
+        review2 = get(ProductReview)
         review2.date_created = now - timedelta(days=2)
         review2.save()
-        review3 = get(ProductReview, user=user2)
+        review3 = get(ProductReview)
         review3.date_created = now - timedelta(days=10)
         review3.save()
 
+        url = reverse('dashboard:reviews-list')
         response = self.client.get(url, {'date_from': now - timedelta(days=5)})
-        self.assertItemsEqual(
-            response.context['review_list'],
-            [review1, review2]
-        )
+        self.assertQuerysetContains(response.context['review_list'],
+                                    [review1, review2])
 
         response = self.client.get(url, {'date_to': now - timedelta(days=5)})
-        self.assertItemsEqual(response.context['review_list'], [review3])
+        self.assertQuerysetContains(response.context['review_list'],
+                                    [review3])
 
         response = self.client.get(url, {
             'date_from': now - timedelta(days=12),
             'date_to': now - timedelta(days=9)
         })
-        self.assertItemsEqual(response.context['review_list'], [review3])
+        self.assertQuerysetContains(response.context['review_list'],
+                                    [review3])
 
     def test_filter_reviews_by_status(self):
         url = reverse('dashboard:reviews-list')
@@ -135,7 +131,5 @@ class ReviewsDashboardTests(ClientTestCase):
         self.assertItemsEqual(response.context['review_list'], [review3])
 
         response = self.client.get(url, {'status': 3})
-        self.assertItemsEqual(
-            response.context['review_list'],
-            [review1, review2, review3]
-        )
+        reviews = response.context['review_list']
+        self.assertTrue(review1 in reviews)

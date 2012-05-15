@@ -5,8 +5,7 @@ from django.conf import settings
 
 from django.db.models import Sum, Count
 
-from oscar.apps.catalogue.reviews.managers import (ApprovedReviewsManager, RecentReviewsManager, 
-                                                   TopScoredReviewsManager, TopVotedReviewsManager)
+from oscar.apps.catalogue.reviews.managers import (ApprovedReviewsManager)
 
 
 class AbstractProductReview(models.Model):
@@ -42,8 +41,8 @@ class AbstractProductReview(models.Model):
     STATUS_CHOICES = (
         (FOR_MODERATION, _("Requires moderation")),
         (APPROVED, _("Approved")),
-        (REJECTED, _("Rejected")), 
-    ) 
+        (REJECTED, _("Rejected")),
+    )
     default_status = FOR_MODERATION if settings.OSCAR_MODERATE_REVIEWS else APPROVED
     status = models.SmallIntegerField(_("Status"), choices=STATUS_CHOICES, default=default_status)
     
