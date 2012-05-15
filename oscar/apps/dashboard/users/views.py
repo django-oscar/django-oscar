@@ -22,7 +22,8 @@ class IndexView(ListView, BulkEditMixin):
     def get_queryset(self):
         queryset = self.model.objects.all().order_by('-date_joined')
         self.description = self.base_description
-        if 'username' not in self.request.GET:
+
+        if 'email' not in self.request.GET:
             self.form = self.form_class()
             return queryset
 
@@ -33,9 +34,6 @@ class IndexView(ListView, BulkEditMixin):
 
         data = self.form.cleaned_data
 
-        if data['username']:
-            queryset = queryset.filter(username__startswith=data['username'])
-            self.description += " with username matching '%s'" % data['username']
         if data['email']:
             queryset = queryset.filter(email__startswith=data['email'])
             self.description += " with email matching '%s'" % data['email']
@@ -49,7 +47,6 @@ class IndexView(ListView, BulkEditMixin):
                 queryset = queryset.filter(Q(first_name__istartswith=data['name']) |
                                            Q(last_name__istartswith=data['name'])).distinct()
             self.description += " with name matching '%s'" % data['name']
-
 
         return queryset
 
