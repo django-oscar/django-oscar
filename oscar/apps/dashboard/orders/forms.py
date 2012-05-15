@@ -54,9 +54,8 @@ class OrderSearchForm(forms.Form):
     status_choices = (('', '---------'),) + tuple([(v, v) for v in Order.all_statuses()])
     status = forms.ChoiceField(choices=status_choices, label="Status", required=False)
 
-    date_formats = ('%d/%m/%Y',)
-    date_from = forms.DateField(required=False, label="Date from", input_formats=date_formats)
-    date_to = forms.DateField(required=False, label="Date to", input_formats=date_formats)
+    date_from = forms.DateField(required=False, label="Date from")
+    date_to = forms.DateField(required=False, label="Date to")
 
     voucher = forms.CharField(required=False, label="Voucher code")
 
