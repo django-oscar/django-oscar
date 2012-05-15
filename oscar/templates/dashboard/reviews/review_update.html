@@ -1,0 +1,84 @@
+{% extends 'dashboard/layout.html' %}
+{% load currency_filters %}
+
+{% block body_class %}reviews{% endblock %}
+
+{% block title %}
+Update review | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url dashboard:index %}">Dashboard</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="{% url dashboard:reviews-list %}">Reviews</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active"><a href=".">Review #{{ review.id }}</a></li>
+</ul>
+{% endblock %}
+
+{% block header %}
+<div class="page-header">
+	<h1>Review #{{ review.id }}</h1>
+</div>
+{% endblock header %}
+
+{% block dashboard_content %}
+<form action="." method="post" class="product-new" enctype="multipart/form-data">
+	{% csrf_token %}
+    <div class="well well-info">
+        <div class="sub-header">
+            <h3 class="app-ico ico_expand icon">Review information</h3>
+        </div>
+        {{ form.first }}
+        {% for field in form %}
+            {# display title (first) and body (last) as full lines #}
+            {% if forloop.counter < 3 %}
+                <div class="control-group {% for error in field.errors %}error{% endfor %} fields-full">
+                    {% if field.is_hidden %}
+                        {{ field }}
+                    {% else %}
+                    {{ field.label_tag }}
+                    <div class="controls">
+                        {{ field }}
+                            {% for error in field.errors %}
+                            <span class="help-block">
+                                {{ error|escape }}
+                            </span>
+                            {% endfor %}
+                        {% if field.help_text %}
+                            <span class='help-block'>
+                                {{ field.help_text }}
+                            </span>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+            {% else %}
+                <div class="form-inline pull-left">
+                {% if field.is_hidden %}
+                        {{ field }}
+                {% else %}
+                        {{ field.label_tag }}
+                        {{ field }}
+						{% for error in field.errors %}
+								<ul class="help-block">
+										<li>{{ error|escape }}</li>
+								</ul>
+						{% endfor %}
+                {% endif %}
+            	</div>
+            {% endif %}
+        {% endfor %}
+    </div>
+		
+    <div class="form-actions">
+    <button class="btn btn-primary btn-large" type="submit">Save</button> or 
+        <a href="{% url dashboard:reviews-list %}">cancel</a>
+    </div>
+</form>
+{% endblock dashboard_content %}

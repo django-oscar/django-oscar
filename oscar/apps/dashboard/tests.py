@@ -10,6 +10,7 @@ from oscar.apps.dashboard.catalogue.tests import *
 from oscar.apps.dashboard.pages.tests import *
 from oscar.apps.dashboard.offers.tests import *
 from oscar.apps.dashboard.ranges.tests import *
+from oscar.apps.dashboard.reviews.tests import *
 
 from oscar.apps.dashboard.views import IndexView
 from oscar.test import ClientTestCase
