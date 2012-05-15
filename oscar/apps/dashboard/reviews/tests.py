@@ -1,6 +1,5 @@
 from datetime import datetime, timedelta
 
-from django.test import TestCase
 from django.db.models import get_model
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
@@ -26,9 +25,9 @@ class ReviewsDashboardTests(ClientTestCase):
         user1 = get(User)
         user2 = get(User)
 
-        review1 = get(ProductReview, user=user1, status=0)
-        review2 = get(ProductReview, user=user2, status=0)
-        review3 = get(ProductReview, user=user2, status=0)
+        get(ProductReview, user=user1, status=0)
+        get(ProductReview, user=user2, status=0)
+        get(ProductReview, user=user2, status=0)
 
         assert(ProductReview.objects.count() == 3)
 
@@ -37,7 +36,7 @@ class ReviewsDashboardTests(ClientTestCase):
             'selected_review': [3, 2],
             'action': ['update_selected_review_status'],
         }
-        response = self.client.post(url, post_params)
+        self.client.post(url, post_params)
 
         self.assertEquals(ProductReview.objects.get(pk=1).status, 0)
         self.assertEquals(ProductReview.objects.get(pk=2).status, 1)
@@ -49,9 +48,9 @@ class ReviewsDashboardTests(ClientTestCase):
         user1 = get(User, first_name='Peter', last_name='Griffin')
         user2 = get(User, first_name='Lois', last_name='Griffin')
 
-        review1 = get(ProductReview, user=user1, status=0)
-        review2 = get(ProductReview, user=user2, status=0)
-        review3 = get(ProductReview, user=user2, status=0)
+        get(ProductReview, user=user1, status=0)
+        get(ProductReview, user=user2, status=0)
+        get(ProductReview, user=user2, status=0)
 
         response = self.client.get(url, {'name': 'peter'})
 
@@ -73,7 +72,7 @@ class ReviewsDashboardTests(ClientTestCase):
         review1 = get(ProductReview, user=user1, title='Sexy Review')
         review2 = get(ProductReview, user=user2, title='Anry Review',
                       body='argh')
-        review3 = get(ProductReview, user=user2, title='Lovely Thing')
+        get(ProductReview, user=user2, title='Lovely Thing')
 
         response = self.client.get(url, {'keyword': 'argh'})
         self.assertItemsEqual(response.context['review_list'], [review2])

@@ -4,7 +4,6 @@ from django.db.models import get_model
 ProductReview = get_model('reviews', 'productreview')
 
 
-
 class DashboardProductReviewForm(forms.ModelForm):
     class Meta:
         model = ProductReview

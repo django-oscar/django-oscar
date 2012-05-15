@@ -11,16 +11,15 @@ Reviews | {{ block.super }}
         <a href="{% url dashboard:index %}">Dashboard</a>
         <span class="divider">/</span>
     </li>
-    <li class="active"><a href=".">Review Management Dashboard</a></li>
+    <li class="active"><a href=".">Reviews</a></li>
 </ul>
 {% endblock %}
 
 {% block header %}
 <div class="page-header">
-    <h1>Review management dashboard</h1>
+    <h1>Reviews</h1>
 </div>
 {% endblock header %}
-
 
 {% block dashboard_content %}
 
@@ -51,18 +50,12 @@ Reviews | {{ block.super }}
         <tr>
             <td><input type="checkbox" name="selected_review" class="selected_review" value="{{ review.id }}"/>
                 <td>
-                    <a href="{% url catalogue:reviews-detail review.product.slug review.product.id review.id %}">
-                    {{ review.title }}
-                    </a>
+                    <a href="{% url catalogue:reviews-detail review.product.slug review.product.id review.id %}">{{ review.title }}</a>
                 </td>
             <td>
-                <a href='{% url catalogue:detail review.product.slug review.product.id %}'>
-                    {{ review.product.title }} </a>
-            </td>
+                <a href='{% url catalogue:detail review.product.slug review.product.id %}'>{{ review.product.title }}</a> </td>
             <td>
-                <a href="{% url dashboard:user-detail review.user.username %}">
-                    {{ review.get_reviewer_name }}
-                </a>
+                <a href="{% url dashboard:user-detail review.user.id %}">{{ review.get_reviewer_name }}</a>
             </td>
             <td>
                 {{ review.score|floatformat:1 }} / 5.0

@@ -17,13 +17,13 @@ Update review | {{ block.super }}
         <a href="{% url dashboard:reviews-list %}">Reviews</a>
         <span class="divider">/</span>
     </li>
-    <li class="active"><a href=".">{{ title }}</a></li>
+    <li class="active"><a href=".">Review #{{ review.id }}</a></li>
 </ul>
 {% endblock %}
 
 {% block header %}
 <div class="page-header">
-	<h1>{{ title }}</h1>
+	<h1>Review #{{ review.id }}</h1>
 </div>
 {% endblock header %}
 
@@ -65,28 +65,20 @@ Update review | {{ block.super }}
                 {% else %}
                         {{ field.label_tag }}
                         {{ field }}
-                                {% for error in field.errors %}
-                                        <ul class="help-block">
-                                                <li>{{ error|escape }}</li>
-                                        </ul>
-                                {% endfor %}
+						{% for error in field.errors %}
+								<ul class="help-block">
+										<li>{{ error|escape }}</li>
+								</ul>
+						{% endfor %}
                 {% endif %}
             	</div>
             {% endif %}
-            {% comment %}
-            {% if forloop.counter > 4 %}
-            {% else %}
-            {% endif %}
-            {% endcomment %}
         {% endfor %}
     </div>
 		
     <div class="form-actions">
-    <button class="btn btn-primary btn-large" type="submit">Save Product</button> or 
+    <button class="btn btn-primary btn-large" type="submit">Save</button> or 
         <a href="{% url dashboard:reviews-list %}">cancel</a>
-        {% if product %}
-            <a class="btn btn-success btn-large pull-right" href="{{ product.get_absolute_url }}">View on site</a>
-        {% endif %}
     </div>
 </form>
 {% endblock dashboard_content %}

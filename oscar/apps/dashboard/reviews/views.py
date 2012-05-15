@@ -3,8 +3,7 @@ import datetime
 from django.views import generic
 from django.db.models import get_model, Q
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse, HttpResponseRedirect
-from django.template.response import TemplateResponse
+from django.http import HttpResponseRedirect
 from django.template.defaultfilters import date as format_date
 
 from oscar.views.generic import BulkEditMixin
@@ -135,6 +134,7 @@ class ReviewUpdateView(generic.UpdateView):
     model = ProductReview
     template_name = 'dashboard/reviews/review_update.html'
     form_class = forms.DashboardProductReviewForm
+    context_object_name = 'review'
 
     def get_success_url(self):
         return reverse('dashboard:reviews-list')
