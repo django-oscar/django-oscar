@@ -77,6 +77,7 @@ class MultiFacetedSearchView(FacetedSearchView):
         
         return super(MultiFacetedSearchView, self).__call__(request, *args, **kwargs)
 
+    @property
     def __name__(self):
         return "MultiFacetedSearchView"
 
