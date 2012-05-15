@@ -1,5 +1,7 @@
 <div class="navbar primary">
-{% comment %}
+    {% load flatpages %}
+    {% get_flatpages '/order/' as flatpages %}
+    {% if flatpages %}
     <div class="navbar-inner">
         <div class="container" style="width: auto;">
             <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -12,8 +14,6 @@
 
                 <ul class="nav">
                    <!-- Links to modal flatpages -->
-                   {% load flatpages %}
-                   {% get_flatpages '/order/' as flatpages %}
                    {% for page in flatpages %}
                    <li>
                       <a data-toggle="modal" href="#{{ page.title|slugify }}">{{ page.title }}</a>
@@ -25,5 +25,5 @@
             </div><!-- /.nav-collapse -->
         </div>
     </div><!-- /navbar-inner -->
-{% endcomment %}
+    {% endif %}
 </div><!-- /navbar -->
