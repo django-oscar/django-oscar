@@ -35,12 +35,6 @@ Order {{ order.number }} | {{ block.super }}
     <div class="row-fluid">
         <div class="span4">
             <div class="well well-info">
-                <h4>Username</h4>
-                <p><a href="{% url dashboard:user-detail order.user.id %}">{{ order.user.username }}</a><p>
-            </div>
-        </div>
-        <div class="span4">
-            <div class="well well-info">
                 <h4>Name</h4>
                 <p>{{ order.user.get_full_name|default:"-" }}</p>
             </div>
@@ -69,12 +63,6 @@ Order {{ order.number }} | {{ block.super }}
 	{% endif %}
 	<h3>Order information</h3>
     <div class="row-fluid">
-        <div class="span4">
-            <div class="well well-info">
-                <h4>Order Number</h4>
-                <p>{{ order.number }}</p>
-            </div>
-        </div>
         <div class="span2">
             <div class="well well-info">
                 <h4>Order Total</h4>

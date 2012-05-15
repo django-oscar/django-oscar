@@ -197,6 +197,7 @@ class OrderListView(ListView, BulkEditMixin):
                      ('date', 'Date of purchase'),
                      ('num_items', 'Number of items'),
                      ('status', 'Order status'),
+                     ('customer', 'Customer email address'),
                      ('shipping_address_name', 'Deliver to name'),
                      ('billing_address_name', 'Bill to name'),
                      )
@@ -209,9 +210,10 @@ class OrderListView(ListView, BulkEditMixin):
             row = columns.copy()
             row['number'] = order.number
             row['value'] = order.total_incl_tax
-            row['date'] = order.date_placed
+            row['date'] = format_date(order.date_placed, 'DATETIME_FORMAT')
             row['num_items'] = order.num_items
             row['status'] = order.status
+            row['customer'] = order.email
             if order.shipping_address:
                 row['shipping_address_name'] = order.shipping_address.name()
             else:
@@ -455,6 +457,7 @@ def get_changes_between_models(model1, model2, excludes=[]):
                 changes[field.verbose_name] = (field.value_from_object(model1),
                                                    field.value_from_object(model2))
     return changes
+
 
 def get_change_summary(model1, model2):
     """

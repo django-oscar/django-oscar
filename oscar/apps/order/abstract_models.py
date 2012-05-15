@@ -190,6 +190,12 @@ class AbstractOrder(models.Model):
     def verification_hash(self):
         return hashlib.md5('%s%s' % (self.number, settings.SECRET_KEY)).hexdigest()
 
+    @property
+    def email(self):
+        if not self.user:
+            return self.guest_email
+        return self.user.email
+
 
 class AbstractOrderNote(models.Model):
     """
