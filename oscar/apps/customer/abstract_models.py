@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.template import Template, Context, TemplateDoesNotExist
 from django.template.loader import get_template
+from django.conf import settings
 
 from oscar.apps.customer.managers import CommunicationTypeManager
 
@@ -70,6 +71,10 @@ class AbstractCommunicationEventType(models.Model):
         """
         if ctx is None:
             ctx = {}
+
+        # Pass base URL for serving images within HTML emails
+        ctx['static_base_url'] = getattr(settings, 'OSCAR_STATIC_BASE_URL', None)
+
         code = self.code.lower()
         # Build a dict of message name to Template instance
         templates = {'subject': 'email_subject_template',

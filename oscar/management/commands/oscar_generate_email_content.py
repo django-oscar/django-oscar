@@ -21,5 +21,5 @@ class Command(BaseCommand):
             raise CommandError("No order found with number %s" % args[1])
         
         messages = CommunicationEventType.objects.get_and_render(args[0], {'order': order})
-        print "Subject: %s\nBody:\n\n%sBody HTML:\n\n%s"% (
+        print "Subject: %s\nBody:\n\n%s\nBody HTML:\n\n%s"% (
             messages['subject'], messages['body'], messages['html'])
