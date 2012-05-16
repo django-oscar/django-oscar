@@ -5,14 +5,15 @@
 Checkout gateway | {{ block.super }}
 {% endblock %}
 
-{% block header %}
-<div class="page-header">
-    <h1>About you</h1>
-</div>
-{% endblock header %}
+{% block checkout-nav %}
+	{% include 'checkout/nav.html' with step=0 %}
+{% endblock %}
 
 {% block content %}
 
+<div class="sub-header">
+	<h2>Who are you?</h2>
+</div>
 <form action="." method="post" class="genericform">
 	{% csrf_token %}
 	{{ form.non_field_errors }}
