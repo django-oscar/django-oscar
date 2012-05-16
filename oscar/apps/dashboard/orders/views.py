@@ -17,7 +17,7 @@ from oscar.core.loading import get_class
 from oscar.apps.dashboard.orders import forms
 from oscar.views.generic import BulkEditMixin
 from oscar.apps.payment.exceptions import PaymentError
-from oscar.apps.order.exceptions import InvalidShippingEvent
+from oscar.apps.order.exceptions import InvalidShippingEvent, InvalidStatus
 
 Order = get_model('order', 'Order')
 OrderNote = get_model('order', 'OrderNote')
@@ -382,10 +382,12 @@ class OrderDetailView(DetailView):
                                                  reference=reference)
         except InvalidShippingEvent, e:
             messages.error(request, "Unable to create shipping event: %s" % e)
+        except InvalidStatus, e:
+            messages.error(request, "Unable to create shipping event: %s" % e)
         except PaymentError, e:
             messages.error(request, "Unable to create shipping event due to payment error: %s" % e)
         else:
-            messages.info(request, "Shipping event created")
+            messages.success(request, "Shipping event created")
         return self.reload_page_response()
 
     def create_order_payment_event(self, request, order):

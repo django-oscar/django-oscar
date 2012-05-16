@@ -25,6 +25,21 @@ class EventHandler(object):
         """
         self.create_shipping_event(order, event_type, lines, line_quantities, **kwargs)
 
+    def has_any_line_passed_shipping_event(self, order, lines, line_quantities, event_name):
+        """
+        Test whether any one of the lines passed has been through the event
+        specified.
+        """
+        events = order.shipping_events.filter(event_type__name=event_name)
+        remaining_qtys = [line.quantity - qty for line, qty in zip(lines, line_quantities)]
+        spare_line_qtys = dict(zip([line.id for line in lines], remaining_qtys))
+        for event in events:
+            for line_qty in event.line_quantities.all():
+                line_id = line_qty.line.id
+                if line_id in spare_line_qtys:
+                    spare_line_qtys[line_id] -= line_qty.quantity
+        return any(map(lambda x: x<0, spare_line_qtys.values()))
+
     def have_lines_passed_shipping_event(self, order, lines, line_quantities, event_name):
         """
         Test whether the passed lines and quantities have been through the
@@ -36,7 +51,7 @@ class EventHandler(object):
         events = order.shipping_events.filter(event_type__name=event_name)
         required_line_qtys = dict(zip([line.id for line in lines], line_quantities))
         for event in events:
-            for line_qty in event.line_quantites.all():
+            for line_qty in event.line_quantities.all():
                 line_id = line_qty.line.id
                 if line_id in required_line_qtys:
                     required_line_qtys[line_id] -= line_qty.quantity

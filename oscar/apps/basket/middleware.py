@@ -1,7 +1,6 @@
 import zlib
 
 from django.conf import settings
-from django.core.exceptions import SuspiciousOperation
 from django.db.models import get_model
 
 from oscar.core.loading import get_class
