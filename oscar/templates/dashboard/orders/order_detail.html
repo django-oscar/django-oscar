@@ -304,9 +304,6 @@ Order {{ order.number }} | {{ block.super }}
 
 		<div class="tab-pane" id="shipping">
 			{% block tab_shipping %}
-				<div class="sub-header">
-					<h3 class="app-ico ico_mapmarker icon">Shipping</h3>
-				</div>
 				<table class="table">
 					<tbody>
 						<tr>
@@ -378,7 +375,7 @@ Order {{ order.number }} | {{ block.super }}
 
 			{% block tab_transactions %}
 			<div class="sub-header">
-				<h3 class="app-ico ico_settings icon">Transactions</h3>
+				<h3 class="app-ico ico_mapmarker icon">Transactions</h3>
 			</div>
 			<p>No transaction data available.</p>
 			{% endblock %}
