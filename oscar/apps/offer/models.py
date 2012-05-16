@@ -660,12 +660,6 @@ class FixedPriceBenefit(Benefit):
             line.discount(line_discount, quantity)
             discount_applied += line_discount
         return discount 
-        
-        # Apply discount weighted by original value of line
-        for line, quantity in covered_lines:
-            line_discount = self.round(discount * (line.unit_price_incl_tax * quantity) / product_total)  
-            line.discount(line_discount.quantize(Decimal('.01')), quantity)
-        return discount 
 
 
 class MultibuyDiscountBenefit(Benefit):
