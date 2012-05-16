@@ -56,25 +56,31 @@ class RangeProductFileUpload(models.Model):
         """
         Process the file upload and add products to the range
         """
-        all_skus = list(self.extract_skus())
-        existing_skus = self.range.included_products.all().values_list(
-            'stockrecord__partner_sku', flat=True)
-        new_skus = list(set(all_skus) - set(existing_skus))
+        all_ids = set(self.extract_ids())
+        products = self.range.included_products.all()
+        existing_skus = set(products.values_list('stockrecord__partner_sku', flat=True))
+        existing_upcs = set(products.values_list('upc', flat=True))
+        existing_ids = existing_skus.union(existing_upcs)
+        new_ids = all_ids - existing_ids
 
-        products = Product._default_manager.filter(stockrecord__partner_sku__in=new_skus)
+        products = Product._default_manager.filter(
+            models.Q(stockrecord__partner_sku__in=new_ids) |
+            models.Q(upc__in=new_ids))
         for product in products:
             self.range.included_products.add(product)
 
         # Processing stats
-        found_skus = products.values_list('stockrecord__partner_sku', flat=True)
-        missing_skus = set(new_skus) - set(found_skus)
-        dupes = set(all_skus).intersection(set(existing_skus))
+        found_skus = set(products.values_list('stockrecord__partner_sku', flat=True))
+        found_upcs = set(products.values_list('upc', flat=True))
+        found_ids = found_skus.union(found_upcs)
+        missing_skus = new_ids - found_ids
+        dupes = set(all_ids).intersection(existing_skus)
 
         self.mark_as_processed(len(found_skus), len(missing_skus), len(dupes))
 
-    def extract_skus(self):
+    def extract_ids(self):
         """
-        Extract all SKU-like strings from the file
+        Extract all SKU- or UPC-like strings from the file
         """
         reader = csv.reader(open(self.filepath, 'r'))
         for row in reader:

@@ -1,7 +1,7 @@
 import re
 
 from django import forms
-from django.db.models import get_model
+from django.db.models import get_model, Q
 
 Product = get_model('catalogue', 'Product')
 Range = get_model('offer', 'Range')
@@ -16,12 +16,12 @@ class RangeForm(forms.ModelForm):
 
 class RangeProductForm(forms.Form):
     query = forms.CharField(max_length=1024,
-                            label="Product SKUs",
+                            label="Product SKUs or UPCs",
                             widget=forms.Textarea,
                             required=False,
-                            help_text="""You can paste in a selection of SKUs""")
-    file_upload = forms.FileField(label="File of SKUs", required=False,
-                                  help_text='Either comma-separated, or one SKU per line')
+                            help_text="""You can paste in a selection of SKUs or UPCs""")
+    file_upload = forms.FileField(label="File of SKUs or UPCs", required=False,
+                                  help_text='Either comma-separated, or one identifier per line')
 
     def __init__(self, range, *args, **kwargs):
         self.range = range
@@ -30,7 +30,7 @@ class RangeProductForm(forms.Form):
     def clean(self):
         clean_data = super(RangeProductForm, self).clean()
         if not clean_data.get('query') and not clean_data.get('file_upload'):
-            raise forms.ValidationError("You must submit either a list of SKUs or a file")
+            raise forms.ValidationError("You must submit either a list of SKU/UPCs or a file")
         return clean_data
 
     def clean_query(self):
@@ -39,23 +39,29 @@ class RangeProductForm(forms.Form):
             return raw
 
         # Check that the search matches some products
-        skus = re.compile(r'[\w-]+').findall(raw)
-        existing_skus = self.range.included_products.all().values_list(
-            'stockrecord__partner_sku', flat=True)
-        new_skus = list(set(skus) - set(existing_skus))
+        ids = set(re.compile(r'[\w-]+').findall(raw))
+        products = self.range.included_products.all()
+        existing_skus = set(products.values_list('stockrecord__partner_sku', flat=True))
+        existing_upcs = set(products.values_list('upc', flat=True))
+        existing_ids = existing_skus.union(existing_upcs)
+        new_ids = ids - existing_ids
 
-        if len(new_skus) == 0:
+        if len(new_ids) == 0:
             raise forms.ValidationError(
-                "The products with SKUs matching %s are already in this range" % (
-                    ', '.join(skus)))
+                "The products with SKUs or UPCs matching %s are already in this range" % (
+                    ', '.join(ids)))
 
-        self.products = Product._default_manager.filter(stockrecord__partner_sku__in=new_skus)
+        self.products = Product._default_manager.filter(
+            Q(stockrecord__partner_sku__in=new_ids) |
+            Q(upc__in=new_ids))
         if len(self.products) == 0:
-            raise forms.ValidationError("No products exist with a SKU matching %s" % ", ".join(skus))
+            raise forms.ValidationError("No products exist with a SKU or UPC matching %s" % ", ".join(ids))
 
-        found_skus = self.products.values_list('stockrecord__partner_sku', flat=True)
-        self.missing_skus = set(new_skus) - set(found_skus)
-        self.duplicate_skus = set(existing_skus).intersection(set(skus))
+        found_skus = set(self.products.values_list('stockrecord__partner_sku', flat=True))
+        found_upcs = set(self.products.values_list('upc', flat=True))
+        found_ids = found_skus.union(found_upcs)
+        self.missing_skus = new_ids - found_ids
+        self.duplicate_skus = existing_ids.intersection(ids)
 
         return raw
 

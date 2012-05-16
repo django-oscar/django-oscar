@@ -100,11 +100,11 @@ class RangeProductListView(ListView, BulkEditMixin):
             ctx = self.get_context_data(form=form, object_list=self.object_list)
             return self.render_to_response(ctx)
 
-        self.handle_query_products(request, form)
+        self.handle_query_products(request, range, form)
         self.handle_file_products(request, range, form)
         return HttpResponseRedirect(self.get_success_url(request))
 
-    def handle_query_products(self, request, form):
+    def handle_query_products(self, request, range, form):
         products = form.get_products()
         if not products:
             return
@@ -120,21 +120,23 @@ class RangeProductListView(ListView, BulkEditMixin):
         if dupe_skus:
             messages.warning(
                 request,
-                "The products with SKUs matching %s are already in this range" % (", ".join(dupe_skus)))
+                "The products with SKUs or UPCs matching %s are already in this range" % (", ".join(dupe_skus)))
 
         missing_skus = form.get_missing_skus()
         if missing_skus:
             messages.warning(request,
-                             "No product was found with SKU matching %s" % ', '.join(missing_skus))
+                             "No product was found with SKU or UPC matching %s" % ', '.join(missing_skus))
 
     def handle_file_products(self, request, range, form):
+        if not 'file_upload' in request.FILES:
+            return 
         upload = self.create_upload_object(request, range)
         upload.process()
         if not upload.was_processing_successful():
             messages.error(request, upload.error_message)
         else:
-            msg = "File processed: %d products added, %d duplicate SKUs, %d " \
-                  "SKUS were not found"
+            msg = "File processed: %d products added, %d duplicate identifiers, %d " \
+                  "identifiers were not found"
             msg = msg % (upload.num_new_skus, upload.num_duplicate_skus,
                          upload.num_unknown_skus)
             if upload.num_new_skus:
