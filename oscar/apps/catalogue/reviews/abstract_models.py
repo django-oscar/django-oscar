@@ -28,7 +28,7 @@ class AbstractProductReview(models.Model):
     
     SCORE_CHOICES = tuple([(x, x) for x in range(0, 6)])
     score = models.SmallIntegerField(_("Score"), choices=SCORE_CHOICES)
-    title = models.CharField(_("Title"), max_length=255)
+    title = models.CharField(max_length=255, verbose_name=_("Review title"))
     body = models.TextField(_("Body"))
     
     # User information.  We include fields to handle anonymous users
