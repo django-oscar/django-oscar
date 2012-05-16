@@ -19,9 +19,28 @@ class EventHandler(object):
         Handle a shipping event for a given order.
 
         This might involve taking payment, sending messages and 
-        creating the event models themeselves.
+        creating the event models themeselves.  You will generally want to
+        override this method to implement the specifics of you order processing
+        pipeline.
         """
         self.create_shipping_event(order, event_type, lines, line_quantities, **kwargs)
+
+    def have_lines_passed_shipping_event(self, order, lines, line_quantities, event_name):
+        """
+        Test whether the passed lines and quantities have been through the
+        specified shipping event.  
+
+        This is useful for validating if certain shipping events are allowed (ie
+        you can't return something before it has shipped).
+        """
+        events = order.shipping_events.filter(event_type__name=event_name)
+        required_line_qtys = dict(zip([line.id for line in lines], line_quantities))
+        for event in events:
+            for line_qty in event.line_quantites.all():
+                line_id = line_qty.line.id
+                if line_id in required_line_qtys:
+                    required_line_qtys[line_id] -= line_qty.quantity
+        return not any(map(lambda x: x>0, required_line_qtys.values()))
 
     def handle_payment_event(self, order, event_type, amount, lines=None,
                              line_quantities=None, **kwargs):
@@ -53,8 +72,8 @@ class EventHandler(object):
         try:
             for line, quantity in zip(lines, line_quantities):
                 ShippingEventQuantity.objects.create(event=event,
-                                                    line=line,
-                                                    quantity=quantity)
+                                                     line=line,
+                                                     quantity=quantity)
         except InvalidShippingEvent:
             event.delete()
             raise
