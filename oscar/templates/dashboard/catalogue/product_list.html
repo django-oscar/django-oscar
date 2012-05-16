@@ -59,6 +59,7 @@ Catalogue management | {{ block.super }}
         <th>Product class</th>
         <th>Status</th>
 		<th>Partner</th>
+		<th>Partner SKU</th>
 		<th>Price excl. tax</th>
 		<th>Price incl. tax</th>
 		<th>Number in stock</th>
@@ -73,6 +74,7 @@ Catalogue management | {{ block.super }}
 		<td>{{ product.status|default:"-" }}</td>
 		{% with stockrecord=product.stockrecord %}
 			<td>{{ stockrecord.partner.name }}</td>
+			<td>{{ stockrecord.partner_sku }}</td>
 			<td>{{ stockrecord.price_excl_tax|currency }}</td>
 			<td>{{ stockrecord.price_incl_tax|currency }}</td>
 			<td>{{ stockrecord.num_in_stock }}</td>

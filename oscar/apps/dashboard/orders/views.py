@@ -131,12 +131,8 @@ class OrderListView(ListView, BulkEditMixin):
             queryset = queryset.filter(lines__title__istartswith=data['product_title']).distinct()
             self.description += " including an item with title matching '%s'" % data['product_title']
 
-        if data['product_id']:
-            if data['product_id'].isdigit():
-                queryset = queryset.filter(Q(lines__partner_sku=data['product_id']) |
-                                        Q(lines__product_id=data['product_id'])).distinct()
-            else:
-                queryset = queryset.filter(lines__partner_sku=data['product_id'])
+        if data['partner_sku']:
+            queryset = queryset.filter(lines__partner_sku=data['product_id'])
 
             self.description += " including an item with ID '%s'" % data['product_id']
 

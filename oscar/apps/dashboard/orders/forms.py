@@ -49,7 +49,7 @@ class OrderSearchForm(forms.Form):
     order_number = forms.CharField(required=False, label="Order number")
     name = forms.CharField(required=False, label="Customer name")
     product_title = forms.CharField(required=False, label="Product name")
-    product_id = forms.CharField(required=False, label="Product ID")
+    partner_sku = forms.CharField(required=False, label="Partner SKU")
 
     status_choices = (('', '---------'),) + tuple([(v, v) for v in Order.all_statuses()])
     status = forms.ChoiceField(choices=status_choices, label="Status", required=False)
