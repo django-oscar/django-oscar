@@ -10,7 +10,7 @@ ProductImage = get_model('catalogue', 'ProductImage')
 
 
 class ProductSearchForm(forms.Form):
-    upc = forms.CharField(max_length=16, required=False)
+    upc = forms.CharField(max_length=16, required=False, label='UPC')
     title = forms.CharField(max_length=255, required=False)
 
 
