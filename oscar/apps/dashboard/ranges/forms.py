@@ -20,7 +20,8 @@ class RangeProductForm(forms.Form):
                             widget=forms.Textarea,
                             required=False,
                             help_text="""You can paste in a selection of SKUs""")
-    file_upload = forms.FileField(label="File of SKUs", required=False)
+    file_upload = forms.FileField(label="File of SKUs", required=False,
+                                  help_text='Either comma-separated, or one SKU per line')
 
     def __init__(self, range, *args, **kwargs):
         self.range = range
