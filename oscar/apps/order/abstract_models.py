@@ -264,7 +264,9 @@ class AbstractLine(models.Model):
     partner = models.ForeignKey('partner.Partner', related_name='order_lines', blank=True, null=True, on_delete=models.SET_NULL)
     partner_name = models.CharField(_("Partner name"), max_length=128)
     partner_sku = models.CharField(_("Partner SKU"), max_length=128)
+
     title = models.CharField(_("Title"), max_length=255)
+    upc = models.CharField(_("UPC"), max_length=128, blank=True, null=True)
     
     # We don't want any hard links between orders and the products table so we allow
     # this link to be NULLable.

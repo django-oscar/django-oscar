@@ -1,11 +1,16 @@
 from django.contrib.sites.models import Site
 from django.conf import settings
+from django.db.models import get_model
 
 from oscar.apps.shipping.methods import Free
-from oscar.core.loading import import_module
-import_module('order.models', ['ShippingAddress', 'Order', 'Line', 
-                               'LinePrice', 'LineAttribute', 'OrderDiscount'], locals())
-import_module('order.signals', ['order_placed'], locals())
+from oscar.core.loading import get_class
+ShippingAddress = get_model('order', 'ShippingAddress')
+Order = get_model('order', 'Order')
+Line = get_model('order', 'Line')
+LinePrice = get_model('order', 'LinePrice')
+LineAttribute = get_model('order', 'LineAttribute')
+OrderDiscount = get_model('order', 'OrderDiscount')
+order_placed = get_class('order.signals', 'order_placed')
 
 
 class OrderNumberGenerator(object):
@@ -123,11 +128,12 @@ class OrderCreator(object):
                      'partner_name': partner.name,
                      'partner_sku': stockrecord.partner_sku,
                      # Product details
-                     'product': basket_line.product, 
+                     'product': basket_line.product,
                      'title': basket_line.product.get_title(),
+                     'upc': basket_line.product.upc,
                      'quantity': basket_line.quantity,
                      # Price details 
-                     'line_price_excl_tax': basket_line.line_price_excl_tax_and_discounts, 
+                     'line_price_excl_tax': basket_line.line_price_excl_tax_and_discounts,
                      'line_price_incl_tax': basket_line.line_price_incl_tax_and_discounts,
                      'line_price_before_discounts_excl_tax': basket_line.line_price_excl_tax,
                      'line_price_before_discounts_incl_tax': basket_line.line_price_incl_tax,

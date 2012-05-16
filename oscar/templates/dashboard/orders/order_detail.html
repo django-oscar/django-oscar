@@ -107,6 +107,7 @@ Order {{ order.number }} | {{ block.super }}
 			        <th>Select</th>
 			        <th>Quantity</th>
 			        <th>Product</th>
+			        <th>UPC</th>
 			        <th>Status</th>
 			        <th>Supplier</th>
 			        <th>Supplier SKU</th>
@@ -125,6 +126,7 @@ Order {{ order.number }} | {{ block.super }}
 					</td>
 			        <td>{{ line.quantity }}</td>
 			        <td>{{ line.title }}</td>
+			        <td>{{ line.upc }}</td>
 			        <td>{{ line.status|default:"-" }}</td>
 			        <td>{{ line.partner_name }}</td>
 			        <td>{{ line.partner_sku }}</td>

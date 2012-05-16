@@ -803,7 +803,9 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         # Return kwargs directly instead of using 'params' as in django's TemplateView
-        return kwargs
+        ctx = super(PaymentDetailsView, self).get_context_data(**kwargs)
+        ctx.update(kwargs)
+        return ctx
 
 
 # =========
