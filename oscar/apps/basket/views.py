@@ -69,32 +69,36 @@ class BasketView(ModelFormSetView):
         if self.request.user.is_authenticated():
             try:
                 saved_basket = self.basket_model.saved.get(owner=self.request.user)
-                saved_queryset = saved_basket.all_lines().select_related('product', 'product__stockrecord')
-                SavedFormset = modelformset_factory(self.model, form=SavedLineForm, extra=0, can_delete=True)
-                formset = SavedFormset(queryset=saved_queryset)
-                context['saved_formset'] = formset
             except self.basket_model.DoesNotExist:
                 pass
-
+            else:
+                if not saved_basket.is_empty:
+                    saved_queryset = saved_basket.all_lines().select_related('product', 'product__stockrecord')
+                    SavedFormset = modelformset_factory(self.model, form=SavedLineForm, extra=0, can_delete=True)
+                    formset = SavedFormset(queryset=saved_queryset)
+                    context['saved_formset'] = formset
         return context
 
     def get_success_url(self):
+        messages.success(self.request, _("Basket updated"))
         return self.request.META.get('HTTP_REFERER', reverse('basket:summary'))
 
     def formset_valid(self, formset):
-        needs_auth = False
+        save_for_later = False
         for form in formset:
             if hasattr(form, 'cleaned_data') and form.cleaned_data['save_for_later']:
                 line = form.instance
                 if self.request.user.is_authenticated():
                     self.move_line_to_saved_basket(line)
                     messages.info(self.request, _(u"'%(title)s' has been saved for later" % {'title': line.product}))
+                    save_for_later = True
                 else:
-                    needs_auth = True
-        if needs_auth:
-            messages.error(self.request, "You can't save an item for later if you're not logged in!")
-        else:
-            messages.success(self.request, _("Basket updated"))
+                    messages.error(self.request, "You can't save an item for later if you're not logged in!")
+                    return HttpResponseRedirect(self.get_success_url())
+
+        if save_for_later:
+            # No need to call super if we're moving lines to the saved basket
+            return HttpResponseRedirect(self.get_success_url())
         return super(BasketView, self).formset_valid(formset)
 
     def move_line_to_saved_basket(self, line):
@@ -102,7 +106,7 @@ class BasketView(ModelFormSetView):
         saved_basket.merge_line(line)
 
     def formset_invalid(self, formset):
-        messages.info(self.request, _("There was a problem updating your basket, please check that all quantities are numbers"))
+        messages.warning(self.request, _("There was a problem updating your basket, please check that all quantities are numbers"))
         return super(BasketView, self).formset_invalid(formset)
 
 
