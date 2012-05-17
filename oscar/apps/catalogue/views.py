@@ -4,7 +4,8 @@ from django.db.models import get_model
 
 from oscar.apps.catalogue.signals import product_viewed, product_search
 
-product_model = get_model('catalogue','product')
+product_model = get_model('catalogue', 'product')
+ProductReview = get_model('reviews', 'ProductReview')
 category_model = get_model('catalogue', 'category')
 
 
@@ -19,6 +20,12 @@ class ProductDetailView(DetailView):
         if not self._product:
             self._product = super(ProductDetailView, self).get_object()
         return self._product
+
+    def get_context_data(self, **kwargs):
+        ctx = super(ProductDetailView, self).get_context_data(**kwargs)
+        ctx['reviews'] = ProductReview.objects.filter(status=ProductReview.APPROVED,
+                                                      product=self.object)
+        return ctx
 
     def get(self, request, **kwargs):
         """
@@ -102,8 +109,6 @@ class ProductCategoryView(ListView):
             categories__in=self.get_categories()
         ).distinct()
 
-from django.views.decorators.cache import cache_page
-from django.utils.decorators import method_decorator
 
 class ProductListView(ListView):
     """

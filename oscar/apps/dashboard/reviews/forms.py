@@ -5,6 +5,12 @@ ProductReview = get_model('reviews', 'productreview')
 
 
 class DashboardProductReviewForm(forms.ModelForm):
+    choices= (
+        (ProductReview.APPROVED, 'Approved'),
+        (ProductReview.REJECTED, 'Rejected'),
+    )
+    status = forms.ChoiceField(choices=choices)
+
     class Meta:
         model = ProductReview
         fields = ('title', 'body', 'score', 'status')
