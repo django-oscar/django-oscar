@@ -52,6 +52,12 @@ class StockRecordTests(TestCase):
         self.assertEqual(1, self.stockrecord.num_allocated)
         self.assertEqual(10, self.stockrecord.num_in_stock)
 
+    def test_cancelling_allocation_ignores_too_big_allocations(self):
+        self.stockrecord.allocate(5)
+        self.stockrecord.cancel_allocation(6)
+        self.assertEqual(0, self.stockrecord.num_allocated)
+        self.assertEqual(10, self.stockrecord.num_in_stock)
+
 
 class DefaultWrapperTests(TestCase):
 

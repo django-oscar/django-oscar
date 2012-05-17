@@ -6,6 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.importlib import import_module as django_import_module
 
 from oscar.core.loading import get_class
+from oscar.apps.partner.exceptions import InvalidStockAdjustment
 DefaultWrapper = get_class('partner.wrappers', 'DefaultWrapper')
 
 
@@ -118,6 +119,9 @@ class AbstractStockRecord(models.Model):
         self.num_allocated += quantity
         self.save()
 
+    def is_allocation_consumption_possible(self, quantity):
+        return quantity <= min(self.num_allocated, self.num_in_stock)
+
     def consume_allocation(self, quantity):
         """
         Consume a previous allocation
@@ -125,19 +129,16 @@ class AbstractStockRecord(models.Model):
         This is used when an item is shipped.  We remove the original allocation
         and adjust the number in stock accordingly
         """
-        if quantity > self.num_allocated:
-            raise ValueError('No more than %d units can be consumed' % self.num_allocated)
+        if not self.is_allocation_consumption_possible(quantity):
+            raise InvalidStockAdjustment('Invalid stock consumption request')
         self.num_allocated -= quantity
-        if quantity >= self.num_in_stock:
-            self.num_in_stock = 0
-        else:
-            self.num_in_stock -= quantity
+        self.num_in_stock -= quantity
         self.save()
 
     def cancel_allocation(self, quantity):
-        if quantity > self.num_allocated:
-            raise ValueError('No more than %d units can be cancelled' % self.num_allocated)
-        self.num_allocated -= quantity
+        # We ignore requests that request a cancellation of more than the amount already
+        # allocated.
+        self.num_allocated -= min(self.num_allocated, quantity)
         self.save()
 
     @property
