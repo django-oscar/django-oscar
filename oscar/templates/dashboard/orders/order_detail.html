@@ -239,14 +239,9 @@ Order {{ order.number }} | {{ block.super }}
 						<td rowspan="{{ line_qtys|length }}">{{ event.date }}</td>
 						<td rowspan="{{ line_qtys|length }}">{{ event.event_type.name }}</td>
 						<td>
-							<table>
-								{% for line_qty in event.line_quantities.all %}
-								<tr>
-									<td>Product: {{ line_qty.line.title }}</td>
-									<td>Quantity: {{ line_qty.quantity }}</td>
-								</tr>
-								{% endfor %}
-							</table>
+							{% for line_qty in event.line_quantities.all %}
+							Product: {{ line_qty.line.title }} - quantity {{ line_qty.quantity }}</br>
+							{% endfor %}
 						</td>
 						<td>{{ event.notes }}</td>
 					</tr>
@@ -277,18 +272,13 @@ Order {{ order.number }} | {{ block.super }}
 					{% for event in events %}
 					{% with line_qtys=event.line_quantities.all %}
 					<tr>
-						<td rowspan="{{ line_qtys.count }}">{{ event.date }}</td>
-						<td rowspan="{{ line_qtys.count }}">{{ event.event_type.name }}</td>
-						<td rowspan="{{ line_qtys.count }}">{{ event.amount|currency }}</td>
+						<td >{{ event.date }}</td>
+						<td >{{ event.event_type.name }}</td>
+						<td >{{ event.amount|currency }}</td>
 						<td>
-							<table>
-								{% for line_qty in event.line_quantities.all %}
-								<tr>
-									<td>Product: {{ line_qty.line.title }}</td>
-									<td>Quantity: {{ line_qty.quantity }}</td>
-								</tr>
-								{% endfor %}
-							</table>
+							{% for line_qty in event.line_quantities.all %}
+							Product: {{ line_qty.line.title }} - quantity {{ line_qty.quantity }}</br>
+							{% endfor %}
 						</td>
 					</tr>
 					{% endwith %}
