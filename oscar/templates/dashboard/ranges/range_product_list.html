@@ -51,7 +51,7 @@ Products in range '{{ range.name }}' | {{ block.super }}
 				<tr>
 					<th>Filename</th>
 					<th>New products</th>
-					<th>Dupliate products</th>
+					<th>Duplicate products</th>
 					<th>Unknown products</th>
 					<th>Date uploaded</th>
 				</tr>
@@ -61,8 +61,8 @@ Products in range '{{ range.name }}' | {{ block.super }}
 				<tr>
 					<td>{{ upload.filename }}</td>
 					<td>{{ upload.num_new_skus }}</td>
-					<td>{{ upload.num_unknown_skus }}</td>
 					<td>{{ upload.num_duplicate_skus }}</td>
+					<td>{{ upload.num_unknown_skus }}</td>
 					<td>{{ upload.date_uploaded }}</td>
 				</tr>
 				{% endfor %}
