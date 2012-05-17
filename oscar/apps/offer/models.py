@@ -13,8 +13,6 @@ from django.conf import settings
 from oscar.apps.offer.managers import ActiveOfferManager
 from oscar.models.fields import PositiveDecimalField, ExtendedURLField
 
-SITE, VOUCHER, USER, SESSION = ("Site", "Voucher", "User", "Session")
-
 
 class ConditionalOffer(models.Model):
     """
@@ -35,6 +33,7 @@ class ConditionalOffer(models.Model):
     #     to apply this offer needs to be coded
     # (d) Session offers - these are temporarily available to a user after some trigger 
     #     event.  Eg, users coming from some affiliate site get 10% off.     
+    SITE, VOUCHER, USER, SESSION = ("Site", "Voucher", "User", "Session")
     TYPE_CHOICES = (
         (SITE, "Site offer - available to all users"),
         (VOUCHER, "Voucher offer - only available after entering the appropriate voucher code"),

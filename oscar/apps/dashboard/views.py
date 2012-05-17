@@ -7,7 +7,6 @@ from django.db.models import Avg, Sum, Count
 from django.contrib.auth.models import User
 
 from oscar.apps.basket.abstract_models import OPEN as basket_OPEN
-from oscar.apps.offer.models import SITE
 from oscar.apps.promotions.models import AbstractPromotion
 
 ConditionalOffer = get_model('offer', 'ConditionalOffer')
@@ -34,7 +33,7 @@ class IndexView(TemplateView):
         the current date.
         """
         return ConditionalOffer.objects.filter(end_date__gt=datetime.now(),
-                                               offer_type=SITE)
+                                               offer_type=ConditionalOffer.SITE)
 
     def get_active_vouchers(self):
         """

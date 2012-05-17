@@ -57,6 +57,9 @@ class BasketVoucherForm(forms.Form):
     def __init__(self, *args, **kwargs):
         return super(BasketVoucherForm, self).__init__(*args,**kwargs)
 
+    def clean_code(self):
+        return self.cleaned_data['code'].strip().upper()
+
 
 class ProductSelectionForm(forms.Form):
     product_id = forms.IntegerField(min_value=1)

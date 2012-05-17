@@ -29,7 +29,7 @@ class OfferListView(ListView):
     form_class = OfferSearchForm
 
     def get_queryset(self):
-        qs = self.model._default_manager.all()
+        qs = self.model._default_manager.filter(offer_type=ConditionalOffer.SITE)
         self.description = "All offers"
 
         self.form = self.form_class(self.request.GET)
