@@ -293,7 +293,7 @@ class AbstractProduct(models.Model):
         return None
 
     def primary_image(self):
-        images = self.images.all()
+        images = self.images.all().order_by('display_order')
         if images.count():
             return images[0]
         return {

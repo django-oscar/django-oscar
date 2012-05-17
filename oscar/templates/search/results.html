@@ -14,21 +14,16 @@
 Did you mean <a href="{% url search:search %}?q={{ suggestion }}">{{ suggestion }}</a>?
 {% endif %}
 
-
 {% if page.object_list %}
     <ol class="products vertical three">
         {% for result in page.object_list %}
         <li>
             <article class="product_pod">
-            {% for image in result.object.images.all %}
-                {% if forloop.first %}
-                    {% thumbnail image.original "100" crop="center" as im %}
-                    <div class="image_container">
-                        <a href="{{ result.object.get_absolute_url }}"><img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"></a>
-                    </div>
-                    {% endthumbnail %}
-                {% endif %}
-            {% endfor %}
+			{% with image=product.primary_image %}
+			{% thumbnail image.original "400x400" upscale=False as thumb %}
+			<a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
+			{% endthumbnail %}
+			{% endwith %}
             <h3><a href="{{ result.object.get_absolute_url }}">{{ result.object.get_title }}</a></h3>
             <div class="product_price">
                 {% if result.object.is_group %}

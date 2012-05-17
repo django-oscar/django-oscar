@@ -31,11 +31,11 @@
                                     <ul>
                                         {% for image in all_images %}
                                             <li>
-                                                <a href="{{ image.original.url }}" rel="lightbox">
-                                                    <img src="{{ image.original.url }}" data-large="{{ image.original.url }}" alt="image02" data-description="{% if image.caption %}{{ image.caption }}{% endif %}" />
-                                                </a>
+											{% thumbnail image.original "250x400" upscale=False as thumb %}
+                                                <a href="{{ image.original.url }}" rel="lightbox"> <img src="{{ thumb.url }}" data-large="{{ image.original.url }}" alt="image02" data-description="{% if image.caption %}{{ image.caption }}{% endif %}" /> </a>
+											{% endthumbnail %}
                                             </li>
-                                            {% endfor %}
+										{% endfor %}
                                     </ul>
                             </div>
                     </div>
@@ -46,9 +46,11 @@
     {% else %}
 		{% with image=product.primary_image %}
 		    {% thumbnail image.original "400x400" upscale=False as thumb %}
-			<a href="{{ thumb.url }}" rel="lightbox">
-				<img src="{{ thumb.url }}" data-large="{{ image.original.url }}" alt="image02" data-description="{% if image.caption %}{{ image.caption }}{% endif %}" />
-			</a>
+			{% if not image.is_missing %}
+			<a href="{{ image.original.url }}" rel="lightbox"><img src="{{ thumb.url }}" data-large="{{ image.original.url }}" alt="image02" data-description="{% if image.caption %}{{ image.caption }}{% endif %}" /></a>
+			{% else %}
+			<img src="{{ thumb.url }}" alt="image02" />
+			{% endif %}
 			{% endthumbnail %}
 		{% endwith %}
     {% endif %}
