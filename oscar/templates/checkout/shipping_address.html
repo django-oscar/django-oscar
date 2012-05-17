@@ -20,9 +20,12 @@ Shipping address | {{ block.super }}
 		<h3>An address from your addressbook?</h3>
       
             <div class="choose-block">
-                <ul class="clearfix">
+                <ul class="row-fluid">
                     {% for address in addresses %}
-					<li>
+                    {% if forloop.counter|divisibleby:5 %}
+                    </ul><ul class="row-fluid">
+                    {% endif %}
+					<li class="span3">
 						<div class="well well-info {% if address.is_default_for_shipping %}default-address{% endif %}">
 							<address>{% for field in address.active_address_fields %}
 							{{ field }}<br/>

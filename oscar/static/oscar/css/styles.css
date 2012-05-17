@@ -524,7 +524,7 @@ form:after{clear:both;}
 .choose-block ul:before,.choose-block ul:after{display:table;content:"";}
 .choose-block ul:after{clear:both;}
 .choose-block ul li{width:33.33333333333333%;float:left;}
-.choose-block .well{position:relative;margin:0 10px 20px;}.choose-block .well form{position:relative;padding-bottom:35px;margin-bottom:0;}.choose-block .well form .ship-address{bottom:0;position:absolute;}
+.choose-block .well{position:relative;}.choose-block .well form{position:relative;padding-bottom:35px;margin-bottom:0;}.choose-block .well form .ship-address{bottom:0;position:absolute;}
 .choose-block .well .remove-item{position:absolute;bottom:10px;right:19px;margin-bottom:0;}.choose-block .well .remove-item input{margin-bottom:0;}
 .choose-block .alert-actions{*zoom:1;}.choose-block .alert-actions:before,.choose-block .alert-actions:after{display:table;content:"";}
 .choose-block .alert-actions:after{clear:both;}
