@@ -78,9 +78,8 @@ class IndexView(TemplateView):
         *segments* defines the number of labeling segments used for the y-axis
         when generating the y-axis labels (default=10).
         """
-        # create report by the full hour
+        # Get datetime for 24 hours agao
         time_now = datetime.now().replace(minute=0, second=0)
-        # subtract 1 to make sure that the full hour is taken into account
         start_time = time_now - timedelta(hours=hours-1)
 
         orders_last_day = Order.objects.filter(date_placed__gt=start_time)
@@ -88,22 +87,18 @@ class IndexView(TemplateView):
         order_total_hourly = []
         for hour in range(0, hours):
             end_time = start_time + timedelta(hours=1)
-
             hourly_orders = orders_last_day.filter(date_placed__gt=start_time,
                                                    date_placed__lt=end_time)
             total = hourly_orders.aggregate(
                 Sum('total_incl_tax')
             )['total_incl_tax__sum'] or D('0.0')
-
             order_total_hourly.append({
                 'end_time': end_time,
                 'total_incl_tax': total
             })
-
             start_time = end_time
 
         max_value = max([x['total_incl_tax'] for x in order_total_hourly])
-
         if max_value:
             segment_size = (max_value) / D('100.0')
             for item in order_total_hourly:
@@ -118,11 +113,12 @@ class IndexView(TemplateView):
             for item in order_total_hourly:
                 item['percentage'] = 0
 
-        return {
+        ctx = {
             'order_total_hourly': order_total_hourly,
             'max_revenue': max_value,
             'y_range': y_range,
         }
+        return ctx
 
     def get_stats(self):
         datetime_24hrs_ago = datetime.now() - timedelta(hours=24)
