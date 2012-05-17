@@ -128,7 +128,10 @@ class AbstractStockRecord(models.Model):
         if quantity > self.num_allocated:
             raise ValueError('No more than %d units can be consumed' % self.num_allocated)
         self.num_allocated -= quantity
-        self.num_in_stock -= quantity
+        if quantity >= self.num_in_stock:
+            self.num_in_stock = 0
+        else:
+            self.num_in_stock -= quantity
         self.save()
 
     def cancel_allocation(self, quantity):
