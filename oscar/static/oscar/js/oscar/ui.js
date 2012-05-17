@@ -98,7 +98,10 @@ $(document).ready(function()
                     onClick:  true
                 });
                 // This activates colorbox on the product page
-                $('a[rel=lightbox]').colorbox();
+                var lightbox_elements = $('a[rel=lightbox]');
+                if (lightbox_elements.length) {
+                    lightbox_elements.colorbox();
+                }
             } else if (es_carousel.length) {
                 es_carousel.elastislide({
                     imageW: 200,
