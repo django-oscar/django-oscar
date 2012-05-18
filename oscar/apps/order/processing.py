@@ -64,6 +64,17 @@ class EventHandler(object):
         """
         self.create_payment_event(order, event_type, amount, lines, line_quantities, **kwargs)
 
+    def are_stock_allocations_available(self, lines, line_quantities):
+        """
+        Check whether stock records still have enough stock to honour the
+        requested allocations.
+        """
+        for line, qty in zip(lines, line_quantities):
+            record = line.product.stockrecord
+            if not record.is_allocation_consumption_possible(qty):
+                return False
+        return True
+
     def consume_stock_allocations(self, order, lines, line_quantities):
         """
         Consume the stock allocations for the passed lines

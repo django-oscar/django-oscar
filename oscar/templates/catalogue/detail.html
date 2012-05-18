@@ -28,7 +28,7 @@
 
 {% block content %}
 <article class="product_page"><!-- Start of product page -->
-    {% if user.is_authenticated %}
+    {% if user.is_authenticated and user.is_staff %}
     <div class="row-fluid">
         <div class="well">
             <a href="{% url dashboard:catalogue-product product.id %}"><button class="btn btn-success" value='Edit this product'>Edit this product</button></a>
@@ -44,17 +44,15 @@
             
             {% include "catalogue/partials/stock_record.html" %}
             
-            {% with product.reviews.all as reviews %}
-                {% if reviews %}
-                    <ul class="review_count">
-                        {% for review in reviews %}
-                            <li class="{{ review.score }}">{{ review.score }}</li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                     <p class="star">No Rating <a href="#reviews">Add review</a></p>
-                {% endif %}
-            {% endwith %}
+			{% if reviews %}
+				<ul class="review_count">
+					{% for review in reviews %}
+						<li class="{{ review.score }}">{{ review.score }}</li>
+					{% endfor %}
+				</ul>
+			{% else %}
+					<p class="star">No Rating <a href="#reviews">Add review</a></p>
+			{% endif %}
             
             <p><strong>Product Code:</strong> <code>{{ product.upc }}</code></p>
              
@@ -109,7 +107,7 @@
         {% endfor %}
         <tr>
             <th>Num reviews</th>
-            <td>{{ product.reviews.count }}</td>
+            <td>{{ reviews.count }}</td>
         </tr>
         <tr>
             <td></td>
@@ -144,7 +142,6 @@
            <a href="{% url catalogue:reviews-add product.slug product.id %}#addreview" class="btn btn-success">Add a review</a>
        </div>
 
-        {% with product.reviews.all as reviews %}
         {% if reviews %}
             <div>
                 {% for review in reviews|slice:":3" %}
@@ -175,7 +172,6 @@
                 </div>
             </div>
         {% endif %}
-        {% endwith %}
     </section>    
     {% endblock product_review %}
     

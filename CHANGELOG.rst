@@ -29,5 +29,7 @@ Currently a work-in-progress, estimated release date: May 2012.  It will feature
 ~~~
 
 * Rewrite of search app to use Solr and probably not Haystack
+* Much better support for variant products which aren't handled very well at the
+  moment.
 * Dashboard issue management
 * Better support for role-based permissions

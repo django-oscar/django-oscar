@@ -2,6 +2,7 @@
 
 {% load currency_filters %}
 {% load history_tags %}
+{% load thumbnail %}
 
 {% block title %}
 Reviews for {{ product.title }} | {{ block.super }}
@@ -90,15 +91,11 @@ Reviews for {{ product.title }} | {{ block.super }}
 
         <div class="span3" style="text-align: center">
             <div class="thumbnail">
-                {% with product.images.all.0 as image %}
-                    {% if image %}
-                        <a href="{{ image.original.url }}" rel="lightbox">
-                            <img src="{{ image.original.url }}" data-large="{{ image.original.url }}" alt="image02" data-description="{% if image.caption %}{{ image.caption }}{% endif %}" />
-                            </a>
-                        {% else %}
-                        <img src="/static/oscar/img/image_not_found.jpg" alt="No image found"/>
-                    {% endif %}
-                {% endwith %}
+				{% with image=product.primary_image %}
+				{% thumbnail image.original "400x400" upscale=False as thumb %}
+				<a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
+				{% endthumbnail %}
+				{% endwith %}
             </div>
             <div>
                 <h2><a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a></h2>

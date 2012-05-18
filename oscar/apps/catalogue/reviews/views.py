@@ -106,8 +106,9 @@ class ProductReviewDetail(DetailView):
 
     
 class ProductReviewList(ListView):
-    u"""A list of reviews for a particular product
-    * The review browsing page allows reviews to be sorted by score, or recency.
+    """
+    A list of reviews for a particular product
+     The review browsing page allows reviews to be sorted by score, or recency.
     """    
     template_name = 'reviews/reviews.html'
     context_object_name = "reviews"

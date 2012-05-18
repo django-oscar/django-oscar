@@ -55,7 +55,11 @@ Reviews | {{ block.super }}
             <td>
                 <a href='{% url catalogue:detail review.product.slug review.product.id %}'>{{ review.product.title }}</a> </td>
             <td>
+				{% if review.user %}
                 <a href="{% url dashboard:user-detail review.user.id %}">{{ review.get_reviewer_name }}</a>
+				{% else %}
+				{{ review.name }}
+				{% endif %}
             </td>
             <td>
                 {{ review.score|floatformat:1 }} / 5.0

@@ -6,7 +6,7 @@ from oscar.apps.dashboard.nav import register, Node
 from oscar.apps.dashboard.reviews import views
 
 node = Node('Reviews', 'dashboard:reviews-list')
-register(node, 80)
+register(node, 35)
 
 
 class ReviewsApplication(Application):

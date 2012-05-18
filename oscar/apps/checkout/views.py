@@ -3,6 +3,7 @@ import logging
 from django.http import Http404, HttpResponseRedirect, HttpResponseBadRequest
 from django.core.urlresolvers import reverse
 from django.contrib import messages
+from django.contrib.sites.models import Site
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import login
 from django.db.models import get_model
@@ -591,6 +592,14 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         code = self.communication_type_code
         ctx = {'order': order,
                'lines': order.lines.all(),}
+
+        if not self.request.user.is_authenticated():
+            path = reverse('customer:anon-order',
+                           kwargs={'order_number': order.number,
+                                   'hash': order.verification_hash()})
+            site = Site.objects.get_current()
+            ctx['status_url'] = 'http://%s%s' % (site.domain, path)
+
         try:
             event_type = CommunicationEventType.objects.get(code=code)
         except CommunicationEventType.DoesNotExist:
