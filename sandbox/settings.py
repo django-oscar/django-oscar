@@ -150,16 +150,16 @@ LOGGING = {
             'class':'logging.StreamHandler',
             'formatter': 'verbose'
         },
-        'file': {
+        'checkout_file': {
              'level': 'INFO',
-             'class': 'logging.FileHandler',
-             'filename': '/tmp/oscar.log',
+             'class': 'oscar.core.logging.handlers.EnvFileHandler',
+             'filename': 'checkout.log',
              'formatter': 'verbose'
         },
         'error_file': {
              'level': 'INFO',
-             'class': 'logging.FileHandler',
-             'filename': '/tmp/errors.log',
+             'class': 'oscar.core.logging.handlers.EnvFileHandler',
+             'filename': 'errors.log',
              'formatter': 'verbose'
         },
         'mail_admins': {
@@ -179,7 +179,7 @@ LOGGING = {
             'propagate': False,
         },
         'oscar.checkout': {
-            'handlers': ['console', 'file'],
+            'handlers': ['console', 'checkout_file'],
             'propagate': True,
             'level':'INFO',
         },
