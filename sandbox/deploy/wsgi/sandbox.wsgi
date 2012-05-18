@@ -6,7 +6,7 @@ import urllib
 sys.stdout = sys.stderr
 
 # Project root
-root = '/var/www/oscar/django-oscar/sandbox/'
+root = '/var/www/oscar/builds/sandbox/sandbox'
 sys.path.insert(0, root)
 
 # Packages from virtualenv
