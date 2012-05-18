@@ -91,6 +91,10 @@ class AbstractVoucher(models.Model):
         Records a usage of this voucher in an order.
         """
         self.applications.create(voucher=self, order=order, user=user)
+
+    @property
+    def benefit(self):
+        return self.offers.all()[0].benefit
         
         
 class AbstractVoucherApplication(models.Model):

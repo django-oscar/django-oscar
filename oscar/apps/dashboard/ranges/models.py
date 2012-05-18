@@ -73,10 +73,10 @@ class RangeProductFileUpload(models.Model):
         found_skus = set(products.values_list('stockrecord__partner_sku', flat=True))
         found_upcs = set(products.values_list('upc', flat=True))
         found_ids = found_skus.union(found_upcs)
-        missing_skus = new_ids - found_ids
-        dupes = set(all_ids).intersection(existing_skus)
+        missing_ids = new_ids - found_ids
+        dupes = set(all_ids).intersection(existing_ids)
 
-        self.mark_as_processed(len(found_skus), len(missing_skus), len(dupes))
+        self.mark_as_processed(len(found_ids), len(missing_ids), len(dupes))
 
     def extract_ids(self):
         """

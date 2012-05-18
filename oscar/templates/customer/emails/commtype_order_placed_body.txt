@@ -15,4 +15,10 @@ Shipping address:
 
 {% for field in order.shipping_address.active_address_fields %}  {{ field }}
 {% endfor %}
+
+{% if status_url %}
+You can change the status of this order at the below URL:
+{{ status_url }}
+{% endif %}
+
 The team

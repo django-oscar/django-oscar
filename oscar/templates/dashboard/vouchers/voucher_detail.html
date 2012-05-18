@@ -1,0 +1,86 @@
+{% extends 'dashboard/layout.html' %}
+{% load currency_filters %}
+
+{% block title %}
+Voucher '{{ voucher.name }}' | Vouchers | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url dashboard:index %}">Dashboard</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="{% url dashboard:voucher-list %}">Vouchers</a>
+        <span class="divider">/</span>
+    </li>
+	<li class="active"><a href=".">Voucher '{{ voucher.name }}'</a></li>
+</ul>
+{% endblock %}
+
+{% block header %}
+<div class="page-header">
+	<h1>Voucher '{{ voucher.name }}'</h1>
+</div>
+{% endblock header %}
+
+{% block dashboard_content %}
+
+    <h2>Voucher details</h2>
+	<table class="table">
+		<tbody>
+			<tr><th>Name</th><td>{{ voucher.name }}</td></tr>
+			<tr><th>Code</th><td>{{ voucher.code }}</td></tr>
+			<tr><th>Start date</th><td>{{ voucher.start_date }}</td></tr>
+			<tr><th>End date</th><td>{{ voucher.end_date }}</td></tr>
+			<tr><th>Usage</th><td>{{ voucher.usage }}</td></tr>
+			<tr><th>Discount</th><td>{{ voucher.benefit.description }}</td></tr>
+		</tbody>
+	</table>
+
+    <h2>Voucher performance</h2>
+	<table class="table">
+		<tbody>
+			<tr><th>Number of basket additions</th><td>{{ voucher.num_basket_additions }}</td></tr>
+			<tr><th>Number of orders</th><td>{{ voucher.num_orders }}</td></tr>
+			<tr><th>Total discount</th><td>{{ voucher.total_discount }}</td></tr>
+		</tbody>
+	</table>
+
+    <h2>Recent orders</h2>
+	{% if not discounts %}
+	<p>No orders have been placed that use this voucher.</p>
+	{% else %}
+	<table class="table">
+		<thead>
+			<th>Order number</th>
+			<th>Order total</th>
+			<th>Discount</th>
+			<th>Date placed</th>
+			<th></th>
+		</thead>
+		<tbody>
+			{% for discount in discounts %}
+			{% with order=discount.order %}
+				<tr>
+					<td>{{ order.number }}</td>
+					<td>{{ order.total_incl_tax|currency }}</td>
+					<td>{{ discount.amount|currency }}</td>
+					<td>{{ order.date_placed }}</td>
+					<td><a href="{% url dashboard:order-detail order.number %}" class="btn btn-info">View</a></td>
+				</tr>
+			{% endwith %}
+			{% endfor %}
+		</tbody>
+	</table>
+	{% endif %}
+
+	<div class="form-actions">
+		<a class="btn btn-primary" href="{% url dashboard:voucher-update voucher.id %}">Edit</a> or
+		<a class="btn btn-danger" href="{% url dashboard:voucher-delete voucher.id %}">Delete</a> or
+		<a href="{% url dashboard:voucher-list %}">cancel</a>
+	</div>
+
+
+{% endblock dashboard_content %}

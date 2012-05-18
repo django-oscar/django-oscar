@@ -8,6 +8,8 @@ Benefit = get_model('offer', 'Benefit')
 
 
 class MetaDataForm(forms.ModelForm):
+    start_date = forms.DateField(widget=forms.DateInput(format='%Y-%m-%d'))
+    end_date = forms.DateField(widget=forms.DateInput(format='%Y-%m-%d'))
 
     class Meta:
         model = ConditionalOffer

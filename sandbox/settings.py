@@ -11,6 +11,7 @@ SQL_DEBUG = True
 ADMINS = (
     ('David', 'david.winterbottom@tangentlabs.co.uk'),
 )
+EMAIL_SUBJECT_PREFIX = '[Oscar sandbox] '
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 MANAGERS = ADMINS
@@ -23,6 +24,14 @@ DATABASES = {
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+    }
+}
+
+CACHES = {
+    'default': {
+        'BACKEND':
+        'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
     }
 }
 
@@ -246,3 +255,8 @@ except ImportError:
 
 LOG_ROOT = location('logs')
 DISPLAY_VERSION = False
+
+THUMBNAIL_DEBUG = True
+
+# Must be within MEDIA_ROOT for sorl to work
+OSCAR_MISSING_IMAGE_URL = 'image_not_found.jpg'

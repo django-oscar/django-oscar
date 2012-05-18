@@ -266,12 +266,17 @@ class SavedView(ModelFormSetView):
         return self.request.META.get('HTTP_REFERER', reverse('basket:summary'))
 
     def formset_valid(self, formset):
+        is_move = False
         for form in formset:
             if form.cleaned_data['move_to_basket']:
+                is_move = True
                 msg = "'%s' has been moved back to your basket" % form.instance.product
                 messages.info(self.request, msg)
                 real_basket = self.request.basket
                 real_basket.merge_line(form.instance)
+        if is_move:
+            return HttpResponseRedirect(self.get_success_url())
+
         return super(SavedView, self).formset_valid(formset)
 
     def formset_invalid(self, formset):

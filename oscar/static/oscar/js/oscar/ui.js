@@ -98,7 +98,10 @@ $(document).ready(function()
                     onClick:  true
                 });
                 // This activates colorbox on the product page
-                $('a[rel=lightbox]').colorbox();
+                var lightbox_elements = $('a[rel=lightbox]');
+                if (lightbox_elements.length) {
+                    lightbox_elements.colorbox();
+                }
             } else if (es_carousel.length) {
                 es_carousel.elastislide({
                     imageW: 200,
@@ -131,7 +134,7 @@ $(document).ready(function()
     
     // This activates the Typeahead function in the search  
     $('.typeahead').typeahead();
-    
+
     // Acordion - remove the first in the list as it is duplication.
     var n = $('.accordion dt').length;
     if (n > 1) {
