@@ -6,7 +6,7 @@ from oscar.apps.dashboard.reports import views
 from oscar.apps.dashboard.nav import register, Node
 
 node = Node('Reports', 'dashboard:reports-index')
-register(node, 70)
+register(node, 90)
 
 
 class ReportsApplication(Application):
