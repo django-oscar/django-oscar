@@ -32,6 +32,7 @@ setup(name='django-oscar',
           'django-haystack==1.2.7',
           'django-treebeard==1.61',
           'sorl-thumbnail==11.12',
+          'python-memcached==1.48',
           ],
       # See http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=['Environment :: Web Environment',
