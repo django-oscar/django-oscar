@@ -153,7 +153,10 @@ class ProductUpdateView(generic.UpdateView):
     def get_context_data(self, **kwargs):
         ctx = super(ProductUpdateView, self).get_context_data(**kwargs)
         if 'stockrecord_form' not in ctx:
-            ctx['stockrecord_form'] = StockRecordForm(instance=self.object.stockrecord)
+            instance = None
+            if self.object.has_stockrecord:
+                instance=self.object.stockrecord
+            ctx['stockrecord_form'] = StockRecordForm(instance=instance)
         if 'category_formset' not in ctx:
             ctx['category_formset'] = ProductCategoryFormSet(instance=self.object)
         if 'image_formset' not in ctx:
