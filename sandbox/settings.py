@@ -11,6 +11,7 @@ SQL_DEBUG = True
 ADMINS = (
     ('David', 'david.winterbottom@tangentlabs.co.uk'),
 )
+EMAIL_SUBJECT_PREFIX = '[Oscar sandbox] '
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 MANAGERS = ADMINS
