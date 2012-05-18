@@ -1,6 +1,5 @@
 {% extends "layout.html" %}
 {% load currency_filters %}
-{% load product_tags %}
 
 {% block title %}
 Basket | {{ block.super }}
@@ -180,6 +179,7 @@ Basket | {{ block.super }}
 
 {% endif %}
 
+{% if request.user.is_authenticated %}
 <div class="well">
     <div class="sub-header">
         <h3>To buy later</h3>
@@ -221,6 +221,7 @@ Basket | {{ block.super }}
     </form>
     {% endif %}
 </div>
+{% endif %}
 {% endblock content %}
 
 {% block onbodyload %}
