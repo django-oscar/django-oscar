@@ -14,7 +14,7 @@
     {% block product_review %}
         {% with product.reviews.all as reviews %}
             {% if reviews %}
-                <ul class="review_count">       
+                <ul class="review_count">
                 {% for review in reviews %}
                     <li class="{{ review.score }}">{{ review.score }}</li>
                 {% endfor %}
@@ -24,21 +24,10 @@
             {% endif %}
         {% endwith %}
     {% endblock product_review %}
-    
+
     <h3><a href="{{ product.get_absolute_url }}">{{ product.get_title|truncatewords:7 }}</a></h3>
-    
-    {% if product.is_group %}
-        <h4 class="group-price"><span>From</span> <strong>{{ product.min_variant_price_incl_tax|currency }}</strong></h4>
-        <div class="product_price">
-    {% else %}
-        <div class="product_price">
-            {% if product.has_stockrecord %} 
-                <h4><span>{{ product.stockrecord.price_incl_tax|currency }}</span></h4>
-                <p class="app-ico {{ product.stockrecord.availability_code }} avaliability ">{{ product.stockrecord.availability|truncatewords:2 }}</p>
-            {% else %}
-                <p class="app-ico avaliability outofstock">Not available</p>
-            {% endif %}
-    {% endif %}
+
+    {% include "catalogue/partials/stock_record.html" %}
 
     {% basket_form basket product as basket_form single %}
     <form action="{% url basket:add %}" method="post">
