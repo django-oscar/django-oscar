@@ -1,0 +1,10 @@
+{% extends 'static/base.html' %}
+{% load i18n %}
+
+{% block main-column %}
+
+    {% if notification.active %}
+        Thank you for subscribing. Notifications will be sent to {{ notification.email }}
+    {% endif %}
+
+{% endblock %}

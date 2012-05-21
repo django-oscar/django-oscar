@@ -1,8 +1,10 @@
 from django.http import HttpResponsePermanentRedirect, Http404
 from django.views.generic import ListView, DetailView
+from django.forms.formsets import formset_factory
 from django.db.models import get_model
 
 from oscar.apps.catalogue.signals import product_viewed, product_search
+from oscar.apps.catalogue.notification.forms import NotificationForm
 
 product_model = get_model('catalogue', 'product')
 ProductReview = get_model('reviews', 'ProductReview')
@@ -23,8 +25,14 @@ class ProductDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         ctx = super(ProductDetailView, self).get_context_data(**kwargs)
-        ctx['reviews'] = ProductReview.objects.filter(status=ProductReview.APPROVED,
-                                                      product=self.object)
+        ctx['reviews'] = ProductReview.objects.filter(
+            status=ProductReview.APPROVED,
+            product=self.object
+        )
+        ctx['notification_form'] = NotificationForm(initial={
+            'user': self.request.user,
+            'email': self.request.user.email,
+        })
         return ctx
 
     def get(self, request, **kwargs):
