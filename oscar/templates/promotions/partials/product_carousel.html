@@ -1,10 +1,15 @@
 {% load currency_filters %}
-{% load product_tags %}
+{% load thumbnail %}
+
 <article class="product_pod">
-    {% product_image product as product_image %}
     <div class="image_container">
-        <a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ product_image.thumbnail_url }}" alt="{{ product.get_title }}"></a>
+		{% with image=product.primary_image %}
+		{% thumbnail image.original "400x400" upscale=False as thumb %}
+		<a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
+		{% endthumbnail %}
+		{% endwith %}
     </div>    
+
     <h3><a href="{{ product.get_absolute_url }}">{{ product.get_title|truncatewords:5|slice:"-4" }}</a></h3>
     {% if product.is_group %}
         <h4 class="group-price"><span>From</span> <strong>{{ product.min_variant_price_incl_tax|currency }}</strong></h4>
