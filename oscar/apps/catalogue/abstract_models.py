@@ -11,7 +11,8 @@ from django.template.defaultfilters import slugify
 from django.core.exceptions import ObjectDoesNotExist
 from treebeard.mp_tree import MP_Node
 
-from oscar.apps.catalogue.managers import BrowsableProductManager
+from oscar.core.loading import get_class
+BrowsableProductManager = get_class('catalogue.managers', 'BrowsableProductManager')
 
 
 class AbstractProductClass(models.Model):
