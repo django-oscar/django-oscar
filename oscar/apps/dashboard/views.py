@@ -98,7 +98,7 @@ class IndexView(TemplateView):
             start_time = end_time
 
         max_value = max([x['total_incl_tax'] for x in order_total_hourly])
-        max_value = (max_value/100).quantize(D('1'), rounding=ROUND_UP)*100
+        max_value = (max_value / 100).quantize(D('1'), rounding=ROUND_UP) * 100
         if max_value:
             segment_size = (max_value) / D('100.0')
             for item in order_total_hourly:
