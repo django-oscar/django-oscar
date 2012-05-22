@@ -55,6 +55,16 @@ oscar.dashboard = {
             });
         }
     },
+    orderTable: {
+        init: function() {
+            var table = $('form.order_table table');
+            var input = $('<input type="checkbox" />');
+            $('th:first', table).append(input);
+            $(input).change(function(){
+                $('input.selected_order', table).prop("checked", $(this).is(':checked'));
+            });
+        }
+    },
     search: {
         init: function() {
             var searchForm = $(".orders_search"),
