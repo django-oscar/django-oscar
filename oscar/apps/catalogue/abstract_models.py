@@ -406,7 +406,7 @@ class ProductAttributesContainer(object):
         return self.get_values().get(attribute=attribute)    
     
     def get_all_attributes(self):
-        return self.product.product_class.attributes.all()
+        return self.product.get_product_class().attributes.all()
     
     def get_attribute_by_code(self, code):
         return self.get_all_attributes().get(code=code)
