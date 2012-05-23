@@ -122,7 +122,9 @@ class IndexView(CheckoutSessionMixin, FormView):
     form_class = GatewayForm
 
     def get(self, request, *args, **kwargs):
-        if request.user.is_authenticated():
+        # We redirect immediately to shipping address stage if the user is signed in or
+        # has already filled out the anonymous checkout form.
+        if request.user.is_authenticated() or self.checkout_session.get_guest_email():
             return self.get_success_response()
         return super(IndexView, self).get(request, *args, **kwargs)
 
