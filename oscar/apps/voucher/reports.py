@@ -2,16 +2,15 @@ import csv
 
 from oscar.core.loading import import_module
 import_module('dashboard.reports.reports', ['ReportGenerator'], locals())
+import_module('dashboard.reports.reports', ['ReportCSVFormatter'], locals())
+import_module('dashboard.reports.reports', ['ReportHTMLFormatter'], locals())
 import_module('voucher.models', ['Voucher'], locals())
 
 
-class VoucherReportGenerator(ReportGenerator):
-    
+class VoucherReportCSVFormatter(ReportCSVFormatter):
     filename_template = 'voucher-performance.csv'
-    code = 'vouchers'
-    description = 'Voucher performance'
-    
-    def generate(self, response):
+
+    def generate_csv(self, response, vouchers):
         writer = csv.writer(response)
         header_row = ['Voucher code',
                       'Added to a basket',
@@ -19,11 +18,29 @@ class VoucherReportGenerator(ReportGenerator):
                       'Total discount',
                      ]
         writer.writerow(header_row)
-        
-        vouchers = Voucher._default_manager.all()
+
         for voucher in vouchers:
-            row = [voucher.code, voucher.num_basket_additions, voucher.num_orders, voucher.total_discount]
+            row = [voucher.code,
+                   voucher.num_basket_additions,
+                   voucher.num_orders,
+                   voucher.total_discount]
             writer.writerow(row)
 
-    def filename(self):
-        return self.filename_template
+
+class VoucherReportHTMLFormatter(ReportHTMLFormatter):
+    template = 'dashboard/reports/partials/voucher_report.html'
+
+
+class VoucherReportGenerator(ReportGenerator):
+
+    code = 'vouchers'
+    description = 'Voucher performance'
+
+    formatters = {
+        'CSV_formatter': VoucherReportCSVFormatter,
+        'HTML_formatter': VoucherReportHTMLFormatter
+    }
+
+    def generate(self):
+        vouchers = Voucher._default_manager.all()
+        return self.formatter.generate_response(vouchers)
