@@ -31,5 +31,9 @@ Reports | {{ block.super }}
     </div>
 </form>
 
+{% if report %}
+    {{ report }}
+{% endif %}
+
 {% endblock dashboard_content %}
 

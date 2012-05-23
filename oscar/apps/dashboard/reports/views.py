@@ -9,7 +9,7 @@ GeneratorRepository = get_class('dashboard.reports.utils', 'GeneratorRepository'
 
 class IndexView(TemplateView):
     template_name = 'dashboard/reports/index.html'
-    
+
     def get(self, request, *args, **kwargs):
         if 'report_type' in request.GET:
             form = ReportForm(request.GET)
@@ -17,11 +17,14 @@ class IndexView(TemplateView):
                 generator = _get_generator(form)
                 if not generator.is_available_to(request.user):
                     return HttpResponseForbidden("You do not have access to this report")
-                
-                response = HttpResponse(mimetype=generator.mimetype)
-                response['Content-Disposition'] = 'attachment; filename=%s' % generator.filename()
-                generator.generate(response)
-                return response
+
+                report = generator.generate()
+
+                if form.cleaned_data['download']:
+                    return report
+                else:
+                    return TemplateResponse(request, self.template_name,
+                        {'form': form, 'report': report})
         else:
             form = ReportForm()
         return TemplateResponse(request, self.template_name, {'form': form})
@@ -34,5 +37,10 @@ def _get_generator(form):
     generator_cls = repo.get_generator(code)
     if not generator_cls:
         raise Http404()
-    return generator_cls(start_date=form.cleaned_data['date_from'], 
-                         end_date=form.cleaned_data['date_to'])
+
+    download = form.cleaned_data['download']
+    formatter = 'CSV' if download else 'HTML'
+
+    return generator_cls(start_date=form.cleaned_data['date_from'],
+                         end_date=form.cleaned_data['date_to'],
+                         formatter=formatter)
