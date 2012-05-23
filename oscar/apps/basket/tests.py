@@ -1,5 +1,6 @@
 from decimal import Decimal as D
 import httplib
+import datetime
 
 from django.conf import settings
 from django.core.urlresolvers import reverse
@@ -111,11 +112,19 @@ class BasketThresholdTest(TestCase):
 class BasketReportTests(TestCase):
 
     def test_open_report_doesnt_error(self):
-        generator = OpenBasketReportGenerator()
-        response = HttpResponse()
-        generator.generate(response)
+        data = {
+            'start_date': datetime.date(2012, 5, 1),
+            'end_date': datetime.date(2012, 5, 17),
+            'formatter': 'CSV'
+        }
+        generator = OpenBasketReportGenerator(**data)
+        generator.generate()
 
     def test_submitted_report_doesnt_error(self):
-        generator = SubmittedBasketReportGenerator()
-        response = HttpResponse()
-        generator.generate(response)
+        data = {
+            'start_date': datetime.date(2012, 5, 1),
+            'end_date': datetime.date(2012, 5, 17),
+            'formatter': 'CSV'
+        }
+        generator = SubmittedBasketReportGenerator(**data)
+        generator.generate()
