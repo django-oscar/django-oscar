@@ -1,6 +1,7 @@
 from django import forms
 from django.db.models import get_model
 
+
 class SignedInUserProductReviewForm(forms.ModelForm):
     class Meta:
         model = get_model('reviews', 'productreview')
@@ -13,7 +14,7 @@ class AnonymousUserProductReviewForm(forms.ModelForm):
 
     class Meta:
         model = get_model('reviews', 'productreview')
-        fields = ('title', 'score', 'body', 'name', 'email', 'homepage')
+        fields = ('title', 'score', 'body', 'name', 'email',)
 
 
 class VoteForm(forms.ModelForm):
