@@ -18,7 +18,7 @@ class StockRecordForm(forms.ModelForm):
 
     class Meta:
         model = StockRecord
-        exclude = ('product', 'num_allocated')
+        exclude = ('product', 'num_allocated', 'price_currency')
 
 
 class ProductForm(forms.ModelForm):
