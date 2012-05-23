@@ -132,8 +132,16 @@ class StockAlertSearchForm(forms.Form):
     status = forms.CharField(label='Status')
 
 
+class ProductCategoryForm(forms.ModelForm):
+
+    class Meta:
+        model = ProductCategory
+
+
 ProductCategoryFormSet = inlineformset_factory(Product, ProductCategory,
+                                               form=ProductCategoryForm,
                                                fields=('category',), extra=1)
+
 
 class ProductImageForm(forms.ModelForm):
     class Meta:

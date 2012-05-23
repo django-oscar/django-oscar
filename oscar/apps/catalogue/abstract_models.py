@@ -51,7 +51,7 @@ class AbstractCategory(MP_Node):
     full_name = models.CharField(max_length=1024, db_index=True, editable=False)
     
     def __unicode__(self):
-        return self.name
+        return self.full_name
     
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -78,7 +78,7 @@ class AbstractCategory(MP_Node):
 
     class Meta:
         abstract = True
-        ordering = ['name']
+        ordering = ['full_name']
         verbose_name_plural = 'Categories'
         verbose_name = 'Category'
 
