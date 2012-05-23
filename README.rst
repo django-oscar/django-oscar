@@ -13,7 +13,7 @@ sites to complex B2B sites rich in domain-specific business logic.
 Oscar is used in production by:
 
 * Tata - http://www.landmarkonthenet.com
-* Carlsberg's global business platform is powered by Oscar.
+* Carlsberg - Their global "We deliver more" platform is powered by Oscar.
 * Dolbeau - http://www.dolbeau.ca/
 * The UK Labour party
 
