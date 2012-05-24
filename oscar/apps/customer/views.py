@@ -1,13 +1,13 @@
 import urlparse
 
 from django.shortcuts import get_object_or_404
-from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView, FormView
+from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView, FormView, RedirectView
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect, Http404
 from django.contrib import messages
 from django.utils.translation import ugettext as _
-from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.sites.models import get_current_site
 from django.conf import settings
@@ -28,6 +28,19 @@ UserAddress = get_model('address', 'UserAddress')
 Email = get_model('customer', 'email')
 UserAddress = get_model('address', 'UserAddress')
 CommunicationEventType = get_model('customer', 'communicationeventtype')
+
+
+class LogoutView(RedirectView):
+    url = '/'
+
+    def get(self, request, *args, **kwargs):
+        auth_logout(request)
+        response = super(LogoutView, self).get(request, *args, **kwargs)
+
+        for cookie in settings.COOKIES_DELETE_ON_LOGOUT:
+            response.delete_cookie(cookie)
+
+        return response
 
 
 class ProfileUpdateView(FormView):
@@ -178,8 +191,8 @@ class AccountRegistrationView(TemplateView):
 
     def _register_user(self, form):
         """
-        Register a new user from the data in *form*. If 
-        ``OSCAR_SEND_REGISTRATION_EMAIL`` is set to ``True`` a 
+        Register a new user from the data in *form*. If
+        ``OSCAR_SEND_REGISTRATION_EMAIL`` is set to ``True`` a
         registration email will be send to the provided email address.
         A new user account is created and the user is then logged
         in.
