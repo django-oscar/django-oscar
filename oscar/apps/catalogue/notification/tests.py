@@ -1,20 +1,19 @@
 import itertools
 
 from django.test import TestCase
-from django.test import Client
 from django.core.urlresolvers import reverse
 
 from django.contrib.auth.models import User
 
 from django_dynamic_fixture import get
 
+from oscar.test import ClientTestCase
 from oscar.apps.catalogue.models import Product, ProductClass
-from oscar.apps.partner.models import StockRecord
-
+from oscar.apps.partner.models import StockRecord 
 from oscar.apps.catalogue.notification.models import NotificationList
 
 
-class NotificationTestCase(TestCase):
+class NotificationTestCase(ClientTestCase):
     product_counter = itertools.count()
 
     def create_product_class(self, name='books'):
@@ -30,7 +29,7 @@ class NotificationTestCase(TestCase):
                    title='product_%s' % product_id,
                    upc='00000000000%s' % product_id)
 
-        stockrecord = get(StockRecord, product=product)
+        stockrecord = get(StockRecord, product=product, num_in_stock=0)
         return product
 
 
@@ -64,23 +63,43 @@ class NotifyMeInViewTests(NotificationTestCase):
         self.assertNotContains(response, 'notify-me', status_code=200)
 
 
-class CreateNotificationViewTest(TestCase):
+class CreateNotificationViewAsAnonymousTests(NotificationTestCase):
+    is_anonymous = True
 
     def setUp(self):
-        """
-        """
-        self.username = 'testuser'
-        self.password = 'password'
-        self.email = 'test@oscar.com'
-        self.user = User.objects.create(username=self.username,
-                                        email=self.email,
-                                        is_active=True)
-        self.user.save()
-        self.user.set_password(self.password)
-        self.user.save()
-        # create a couple of products
-        self._create_products()
+        super(self.__class__, self).setUp()
+        self.create_product_class()
+        self.product_1 = self.create_product()
+        self.product_2 = self.create_product()
 
+    def test_create_notification_for_anonymous_without_email(self):
+        pass
+
+    def test_create_notification_for_anonymous_with_email(self):
+        pass
+
+
+class CreateNotificationViewAsAuthenticatedUserTests(NotificationTestCase):
+    is_anonymous = False
+    is_staff = False
+    email = 'testuser@oscar.com'
+
+    def setUp(self):
+        super(self.__class__, self).setUp()
+        self.create_product_class()
+        self.product_1 = self.create_product()
+        self.product_2 = self.create_product()
+
+    def test_prefilled_email_for_authenticated_user(self):
+        product_url = reverse('catalogue:detail',
+                              args=(self.product_1.slug, self.product_1.id))
+        self.client.login()
+        response = self.client.get(product_url)
+
+        self.assertContains(response, self.email, status_code=200)
+
+    def test_create_notification_for_auth_user_with_email(self):
+        pass
 
    # def test_create_notification_authenticated_user(self):
    #     """
