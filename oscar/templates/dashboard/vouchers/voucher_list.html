@@ -60,7 +60,7 @@
 				<td>
 					<a class="btn btn-info" href="{% url dashboard:voucher-stats voucher.id %}">Stats</a>
 					<a class="btn btn-primary" href="{% url dashboard:voucher-update voucher.id %}">Edit</a>
-					<a class="btn btn-danger" href="">Delete</a>
+					<a class="btn btn-danger" href="{% url dashboard:voucher-delete voucher.id %}">Delete</a>
 				</td>
 			</tr>
 			{% endfor %}
