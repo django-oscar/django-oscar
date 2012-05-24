@@ -10,7 +10,7 @@ from django_dynamic_fixture import get
 from oscar.test import ClientTestCase
 from oscar.apps.catalogue.models import Product, ProductClass
 from oscar.apps.partner.models import StockRecord 
-from oscar.apps.catalogue.notification.models import NotificationList
+from oscar.apps.catalogue.notification.models import ProductNotification
 
 
 class NotificationTestCase(ClientTestCase):
@@ -99,7 +99,68 @@ class CreateNotificationViewAsAuthenticatedUserTests(NotificationTestCase):
         self.assertContains(response, self.email, status_code=200)
 
     def test_create_notification_for_auth_user_with_email(self):
-        pass
+        """ 
+        Test creating a notification for an authenticated user with the
+        providing the account email address in the (hidden) signup form.
+        """
+        self.assertEquals(self.user.notifications.count(), 0)
+        self.client.login()
+
+        notification_url = reverse('catalogue:notification-add',
+                                   args=(self.product_1.slug, self.product_1.id))
+        response = self.client.post(notification_url, data={'email': self.email},
+                                    follow=True)
+
+        self.assertContains(response, self.product_1.title, status_code=200)
+        self.assertEquals(self.user.notifications.count(), 1)
+
+        notification = self.user.notifications.all()[0]
+        self.assertEquals(notification.get_notification_email(), self.user.email)
+        self.assertEquals(notification.confirm_key, None)
+        self.assertEquals(notification.unsubscribe_key, None)
+
+    def test_create_notification_for_auth_user_with_invalid_email(self):
+        """
+        Test creating a notification with an email address that is different
+        from the user's account email. This should set the account email 
+        address instead of the provided email in POST data.
+        """
+        notification_url = reverse('catalogue:notification-add',
+                              args=(self.product_1.slug, self.product_1.id))
+        response = self.client.post(notification_url,
+                                    data={'email': 'someother@oscar.com'},
+                                    follow=True)
+
+        product_url = reverse('catalogue:detail',
+                               args=(self.product_1.slug, self.product_1.id))
+
+        ## FIXME: this need template tag implementation
+        #self.assertContains(response, 'You chose to be notified', status_code=200)
+
+        self.assertEquals(self.user.notifications.count(), 1)
+        
+        notification = self.user.notifications.all()[0]
+        self.assertEquals(notification.product.id, self.product_1.id)
+        self.assertEquals(notification.get_notification_email(), self.user.email)
+        self.assertEquals(notification.confirm_key, None)
+        self.assertEquals(notification.unsubscribe_key, None)
+
+    def test_create_notification_for_auth_user_when_notification_exists(self):
+        """
+        Test creating a notification when the user has already signed up for
+        this product notification. The user should be redirected to the product
+        page with a notification that he has already signed up. 
+        """
+        notification = get(ProductNotification, product=self.product_1, user=self.user,
+                           )
+        notification_url = reverse('catalogue:notification-add',
+                              args=(self.product_1.slug, self.product_1.id))
+        response = self.client.post(notification_url, data={'email': self.user.email},
+                                    follow=True)
+
+        self.assertContains(response, self.product_1.title, status_code=200)
+        self.assertEquals(self.user.notifications.count(), 1)
+        self.assertEquals(notification, self.user.notifications.all()[0])
 
    # def test_create_notification_authenticated_user(self):
    #     """

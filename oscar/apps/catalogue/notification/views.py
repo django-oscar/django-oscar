@@ -1,17 +1,18 @@
 import random
 from django.conf import settings
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
 from django.views import generic
 
 from django.db.models import get_model
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
+from django.utils.translation import ugettext as _
 
-from oscar.apps.catalogue.notification.models import NotificationList
 from oscar.apps.catalogue.notification.forms import NotificationForm
 
 Product = get_model('catalogue', 'product')
+ProductNotification = get_model('notification', 'productnotification')
 
 
 class UnsubscribeNotificationView(generic.TemplateView):
@@ -24,8 +25,8 @@ class UnsubscribeNotificationView(generic.TemplateView):
         if key is None or email is None:
             raise Http404
         try:
-            return NotificationList.objects.get(unsubscribe_key=key, email=email)
-        except NotificationList.DoesNotExist:
+            return ProductNotification.objects.get(unsubscribe_key=key, email=email)
+        except ProductNotification.DoesNotExist:
             raise Http404
 
     def get(self, *args, **kwargs):
@@ -51,8 +52,8 @@ class ConfirmNotificationView(generic.TemplateView):
         if key is None or email is None:
             raise Http404
         try:
-            return NotificationList.objects.get(confirm_key=key, email=email)
-        except NotificationList.DoesNotExist:
+            return ProductNotification.objects.get(confirm_key=key, email=email)
+        except ProductNotification.DoesNotExist:
             raise Http404
 
     def get(self, *args, **kwargs):
@@ -62,7 +63,6 @@ class ConfirmNotificationView(generic.TemplateView):
         self.object.save()
         return super(ConfirmNotificationView, self).get(*args, **kwargs)
 
-from django.forms.formsets import formset_factory
 
 class CreateProductNotificationView(generic.FormView):
     """
@@ -90,43 +90,50 @@ class CreateProductNotificationView(generic.FormView):
 
     def form_valid(self, form):
         self.product = self.get_product()
-
         is_authenticated = self.request.user.is_authenticated()
-        if is_authenticated:
-            # search for previous product subscriptions from this user
-            self.notification, created = NotificationList.objects.get_or_create(
-                user=self.request.user,
-                email=self.request.user.email
-            )
-            mobile_number = form.cleaned_data.get('mobile_number', None)
-            if mobile_number:
-                self.request.user.userprofile.mobile_no = mobile_number
-                self.request.user.userprofile.save()
-        else:
-            self.notification, created = NotificationList.objects.get_or_create(
-                                                email=form.cleaned_data['email']
-                                        )
-        if created:
-            # if notification was created, generate a key for mark a False
-            # active for unkwn user
-            alphabet = [chr(x) for x in range(ord('A'), ord('Z') + 1)]
-            keys = [''.join([random.choice(alphabet) for i in range(0, 16)]),
-                    ''.join([random.choice(alphabet) for i in range(0, 16)]),
-                    ''.join([random.choice(alphabet) for i in range(0, 32)])]
-            self.notification.confirm_key =  keys[0]
-            self.notification.unsubscribe_key = keys[1]
-            self.notification.persistence_key = keys[2]
-            self.notification.active = True if is_authenticated else False
-            self.notification.save()
-            # TODO : send an email confirmation email in case is annonymous
-            if not is_authenticated:
-                messages.info(self.request,
-                        "Check your email to confirm this subscription")
 
-        # now add the required product to the notification list
-        self.notification.productnotification_set.get_or_create(
-            product=self.product
-        )
+        # if the user is registered with the site, the user will
+        # be stored without email. The email can be retrieved from
+        # the user.
+        # For an anonymous user, the email will be stored and the
+        # user is empty.
+        if is_authenticated:
+            notification, created = ProductNotification.objects.get_or_create(
+                user=self.request.user,
+                product=self.product,
+            )
+        else:
+            notification, created = ProductNotification.objects.get_or_create(
+                email=form.cleaned_data['email'],
+                product=self.product,
+            )
+
+        if not created:
+            messages.success(self.request,
+                             _("you have signed up for a "
+                               "notification of '%s'") % self.product.title)
+            return HttpResponseRedirect(self.get_success_url())
+
+        if created and not is_authenticated:
+            # create keys for anonymous users leave blank for users that
+            # are registered as they can manage their subscriptions in
+            # their account settings
+            alphabet = [chr(x) for x in range(ord('A'), ord('Z') + 1)]
+            keys = (''.join([random.choice(alphabet) for i in range(0, 16)]),
+                    ''.join([random.choice(alphabet) for i in range(0, 16)]),)
+                    #''.join([random.choice(alphabet) for i in range(0, 32)]))
+
+            notification.confirm_key =  keys[0]
+            notification.unsubscribe_key = keys[1]
+            #notification.persistence_key = keys[2]
+
+            notification.active = not is_authenticated
+            notification.save()
+
+            # TODO : send an email confirmation email in case is annonymous
+            messages.info(self.request,
+                    "Check your email to confirm this subscription")
+
         messages.success(self.request,
                 "%s was added to your notification list" % self.product.title)
         return super(self.__class__, self).form_valid(form)
