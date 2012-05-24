@@ -25,6 +25,7 @@ if not settings.configured:
                 'django.contrib.sessions',
                 'django.contrib.sites',
                 'django.contrib.flatpages',
+                'sorl.thumbnail',
                 ] + OSCAR_CORE_APPS,
             TEMPLATE_CONTEXT_PROCESSORS=(
                 "django.contrib.auth.context_processors.auth",

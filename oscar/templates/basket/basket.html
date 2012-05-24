@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% load currency_filters %}
-{% load product_tags %}
+{% load thumbnail %}
 
 {% block title %}
 Basket | {{ block.super }}
@@ -50,10 +50,14 @@ Basket | {{ block.super }}
         <div class="row-fluid">
     	    <div class="span6">
     	        {{ form.id }}
-    	        {% product_image form.instance.product as product_image %}
     		    <div class="image_container">
-    			    <a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ product_image.thumbnail_url }}" alt="{{ product.get_title }}"></a>
+					{% with image=form.instance.product.primary_image %}
+					{% thumbnail image.original "200x200" upscale=False as thumb %}
+					<a href="{{ form.instance.product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
+					{% endthumbnail %}
+					{% endwith %}
     		    </div>
+
     		    <h4><a href="{{ form.instance.product.get_absolute_url }}">{{ form.instance.description }}</a></h4>
     		    <p class="app-ico instock avaliability ">{{ form.instance.product.stockrecord.availability }}</p>
     	    </div>
@@ -180,6 +184,7 @@ Basket | {{ block.super }}
 
 {% endif %}
 
+{% if request.user.is_authenticated %}
 <div class="well">
     <div class="sub-header">
         <h3>To buy later</h3>
@@ -200,12 +205,13 @@ Basket | {{ block.super }}
         <div class="row-fluid basket-items">
     	    <div class="span8">
     			{{ form.id }}
-    			{% product_image form.instance.product as product_image %}
-    			<div class="image_container">
-    				<a href="{{ product.get_absolute_url }}">
-    				    <img class="thumbnail" src="{{ product_image.thumbnail_url }}" alt="{{ product.get_title }}">
-    				</a>
-    			</div>
+    		    <div class="image_container">
+					{% with image=form.instance.product.primary_image %}
+					{% thumbnail image.original "200x200" upscale=False as thumb %}
+					<a href="{{ form.instance.product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
+					{% endthumbnail %}
+					{% endwith %}
+    		    </div>
     			<h4><a href="{{ form.instance.product.get_absolute_url }}">{{ form.instance.description }}</a></h4>
     			<p class="app-ico instock avaliability ">{{ form.instance.product.stockrecord.availability }}</p>
     			<a href="#" data-id="{{ forloop.counter0 }}" data-behaviours="remove">Remove</a>
@@ -221,6 +227,7 @@ Basket | {{ block.super }}
     </form>
     {% endif %}
 </div>
+{% endif %}
 {% endblock content %}
 
 {% block onbodyload %}

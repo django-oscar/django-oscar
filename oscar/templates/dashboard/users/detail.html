@@ -123,6 +123,7 @@ User {{ user.email }} | {{ block.super }}
             <h2>Addresses</h2>
             <div class="row-fluid">
         	{% for address in user.addresses.all %}
+
                 <div class="span3">
             	    <div class="well well-info">
             			{% for field in address.active_address_fields %}
@@ -130,6 +131,13 @@ User {{ user.email }} | {{ block.super }}
             			{% endfor %}
             		</div>
             	</div>
+                {% if forloop.counter|divisibleby:4 %}
+					</div>
+					{% if not forloop.last %}
+					<div class="row-fluid">
+					{% endif %}
+                {% endif %}
+
         	{% endfor %}
             </div>
         </div>
