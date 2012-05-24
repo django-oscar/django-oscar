@@ -35,6 +35,11 @@ class RangeCreateView(CreateView):
         messages.success(self.request, "Range created")
         return reverse('dashboard:range-list')
 
+    def get_context_data(self, **kwargs):
+        ctx = super(RangeUpdateView, self).get_context_data(**kwargs)
+        ctx['title'] = "Create range"
+        return ctx
+
 
 class RangeUpdateView(UpdateView):
     model = Range
@@ -44,6 +49,11 @@ class RangeUpdateView(UpdateView):
     def get_success_url(self):
         messages.success(self.request, "Range updated")
         return reverse('dashboard:range-list')
+
+    def get_context_data(self, **kwargs):
+        ctx = super(RangeUpdateView, self).get_context_data(**kwargs)
+        ctx['title'] = "Update range"
+        return ctx
 
 
 class RangeDeleteView(DeleteView):
