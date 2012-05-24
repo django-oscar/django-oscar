@@ -1,12 +1,8 @@
-from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
-from django_dynamic_fixture import new, get, F
-
 from django.contrib.flatpages.models import FlatPage
 
 from oscar.test import ClientTestCase
 
-from oscar.apps.dashboard.users.views import IndexView
 
 
 class PageViewTests(ClientTestCase):
@@ -35,7 +31,7 @@ class PageViewTests(ClientTestCase):
     def test_dashboard_create_page_with_existing_url(self):
         self.assertEquals(FlatPage.objects.count(), 2)
 
-        response = self.client.post('/dashboard/pages/', data={
+        self.client.post('/dashboard/pages/', data={
                                         'title': 'test',
                                         'url': '/dashboard/pages/',
                                     }, follow=True)
@@ -46,7 +42,7 @@ class PageViewTests(ClientTestCase):
     def test_dashboard_create_page_with_custom_url(self):
         self.assertEquals(FlatPage.objects.count(), 2)
 
-        response = self.client.post('/dashboard/pages/create/', data={
+        self.client.post('/dashboard/pages/create/', data={
                                         'title': 'Test Page',
                                         'url': '/test/page/',
                                         'content': "<h1> Content </h1>"
@@ -63,7 +59,7 @@ class PageViewTests(ClientTestCase):
     def test_dashboard_create_page_with_slugified_url(self):
         self.assertEquals(FlatPage.objects.count(), 2)
 
-        response = self.client.post('/dashboard/pages/create/', data={
+        self.client.post('/dashboard/pages/create/', data={
                                         'title': 'New Page', 'content': ""
                                     }, follow=True)
 
@@ -78,18 +74,18 @@ class PageViewTests(ClientTestCase):
     def test_dashboard_create_page_with_exisiting_url_does_not_work(self):
         self.assertEquals(FlatPage.objects.count(), 2)
 
-        response = self.client.post('/dashboard/pages/create/', data={
+        self.client.post('/dashboard/pages/create/', data={
                                         'title': 'New Page', 'content': ""
                                     }, follow=True)
 
-        response = self.client.post('/dashboard/pages/create/', data={
+        self.client.post('/dashboard/pages/create/', data={
                                         'title': 'New Page', 'content': ""
                                     }, follow=True)
 
         self.assertEquals(FlatPage.objects.count(), 3)
 
     def test_dashboard_update_page_valid_url(self):
-        response = self.client.post('/dashboard/pages/update/1/', data={
+        self.client.post('/dashboard/pages/update/1/', data={
                                         'title': 'Test Page',
                                         'url': '/test/page/',
                                         'content': "<h1> Content </h1>"
@@ -106,7 +102,7 @@ class PageViewTests(ClientTestCase):
     def test_dashboard_update_page_invalid_url(self):
         self.assertEquals(self.flatpage_1.title, 'title1')
 
-        response = self.client.post('/dashboard/pages/update/1/', data={
+        self.client.post('/dashboard/pages/update/1/', data={
                                         'title': 'Test Page',
                                         'url': '/url2/',
                                         'content': "<h1> Content </h1>"
@@ -120,7 +116,7 @@ class PageViewTests(ClientTestCase):
         self.assertEquals(page.content, "some content")
 
     def test_dashboard_update_page_valid_url_unchanged(self):
-        response = self.client.post('/dashboard/pages/update/1/', data={
+        self.client.post('/dashboard/pages/update/1/', data={
                                         'title': 'Test Page',
                                         'url': '/url1/',
                                         'content': "<h1> Content </h1>"
@@ -134,7 +130,7 @@ class PageViewTests(ClientTestCase):
         self.assertEquals(page.content, "<h1> Content </h1>")
 
         # now only update the URL
-        response = self.client.post('/dashboard/pages/update/1/', data={
+        self.client.post('/dashboard/pages/update/1/', data={
                                         'title': 'Test Page',
                                         'url': '/new/url/',
                                         'content': "<h1> Content </h1>"
@@ -148,7 +144,7 @@ class PageViewTests(ClientTestCase):
         self.assertEquals(page.content, "<h1> Content </h1>")
 
     def test_dashboard_delete_pages(self):
-        response = self.client.post('/dashboard/pages/delete/1/', follow=True)
+        self.client.post('/dashboard/pages/delete/1/', follow=True)
 
         self.assertEquals(FlatPage.objects.count(), 1)
 

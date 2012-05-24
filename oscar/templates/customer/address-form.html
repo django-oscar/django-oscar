@@ -30,11 +30,11 @@
 {% endblock header %}
 
 {% block content %}
-<form action="." method="post" class="form-horizontal">
+<form action="." method="post" class="form-horizontal" data-behaviours="lock">
     {% csrf_token %}
     {% include "partials/form_fields.html" with form=form %}
     <div class="form-actions">
-        <input type="submit" value="Save address" class="btn btn-primary" />
+        <button type="submit" value="Save" class="btn btn-primary btn-large">Save</button>
         or
         <a href="{% url customer:address-list %}">cancel</a>
     </div>

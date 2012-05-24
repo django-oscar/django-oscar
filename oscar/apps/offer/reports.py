@@ -1,8 +1,10 @@
 import csv
 
-from oscar.core.loading import import_module
-import_module('dashboard.reports.reports', ['ReportGenerator'], locals())
-import_module('offer.models', ['ConditionalOffer'], locals())
+from django.db.models import get_model
+
+from oscar.core.loading import get_class
+ReportGenerator = get_class('dashboard.reports.reports', 'ReportGenerator')
+ConditionalOffer = get_model('offer', 'ConditionalOffer')
 
 
 class OfferReportGenerator(ReportGenerator):

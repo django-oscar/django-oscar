@@ -4,7 +4,8 @@ from django.db.models import get_model
 
 from oscar.apps.catalogue.signals import product_viewed, product_search
 
-product_model = get_model('catalogue','product')
+product_model = get_model('catalogue', 'product')
+ProductReview = get_model('reviews', 'ProductReview')
 category_model = get_model('catalogue', 'category')
 
 
@@ -14,22 +15,28 @@ class ProductDetailView(DetailView):
     view_signal = product_viewed
     template_folder = "catalogue"
     _product = None
-    
+
     def get_object(self):
         if not self._product:
             self._product = super(ProductDetailView, self).get_object()
         return self._product
-    
+
+    def get_context_data(self, **kwargs):
+        ctx = super(ProductDetailView, self).get_context_data(**kwargs)
+        ctx['reviews'] = ProductReview.objects.filter(status=ProductReview.APPROVED,
+                                                      product=self.object)
+        return ctx
+
     def get(self, request, **kwargs):
         """
         Ensure that the correct URL is used
         """
         product = self.get_object()
-        correct_path = product.get_absolute_url() 
+        correct_path = product.get_absolute_url()
         if correct_path != request.path:
             return HttpResponsePermanentRedirect(correct_path)
         response = super(ProductDetailView, self).get(request, **kwargs)
-        
+
         # Send signal to record the view of this product
         self.view_signal.send(sender=self, product=product, user=request.user, request=request, response=response)
         return response;
@@ -37,19 +44,37 @@ class ProductDetailView(DetailView):
     def get_template_names(self):
         """
         Return a list of possible templates.
-        
+
         We try 2 options before defaulting to catalogue/detail.html:
         1). detail-for-upc-<upc>.html
         2). detail-for-class-<classname>.html
-        
+
         This allows alternative templates to be provided for a per-product
         and a per-item-class basis.
-        """    
+        """
         product = self.get_object()
-        names = ['%s/detail-for-upc-%s.html' % (self.template_folder, product.upc), 
+        names = ['%s/detail-for-upc-%s.html' % (self.template_folder, product.upc),
                  '%s/detail-for-class-%s.html' % (self.template_folder, product.product_class.name.lower()),
                  '%s/detail.html' % (self.template_folder)]
         return names
+
+
+def get_product_base_queryset():
+    """
+    Get ``QuerySet`` for product model with related 
+    content pre-loaded. The ``QuerySet`` returns unfiltered
+    results for further filtering.
+    """
+    return product_model.browsable.select_related(
+        'product_class',
+        'stockrecord',
+        'stockrecord__partner',
+    ).prefetch_related(
+        'reviews',
+        'variants',
+        'product_options',
+        'product_class__options',
+    ).all()
 
 
 class ProductCategoryView(ListView):
@@ -59,7 +84,7 @@ class ProductCategoryView(ListView):
     context_object_name = "products"
     template_name = 'catalogue/browse.html'
     paginate_by = 20
-    
+
     def get_categories(self):
         slug = self.kwargs['category_slug']
         try:
@@ -69,7 +94,7 @@ class ProductCategoryView(ListView):
         categories = list(category.get_descendants())
         categories.append(category)
         return categories
-    
+
     def get_context_data(self, **kwargs):
         context = super(ProductCategoryView, self).get_context_data(**kwargs)
 
@@ -77,10 +102,12 @@ class ProductCategoryView(ListView):
         context['categories'] = categories
         context['category'] = categories[-1]
         context['summary'] = categories[-1].name
-        return context    
+        return context
 
     def get_queryset(self):
-        return product_model.browsable.filter(categories__in=self.get_categories()).distinct()
+        return get_product_base_queryset().filter(
+            categories__in=self.get_categories()
+        ).distinct()
 
 
 class ProductListView(ListView):
@@ -97,18 +124,16 @@ class ProductListView(ListView):
         q = self.request.GET.get('q', None)
         return q.strip() if q else q
 
-    def get_base_queryset(self):
-        return self.model.browsable.all()
-
     def get_queryset(self):
         q = self.get_search_query()
         if q:
             # Send signal to record the view of this product
             self.search_signal.send(sender=self, query=q, user=self.request.user)
-            return self.get_base_queryset().filter(title__icontains=q)
+            base_queryset = get_product_base_queryset()
+            return get_product_base_queryset().filter(title__icontains=q)
         else:
-            return self.get_base_queryset().select_related().all()
-        
+            return get_product_base_queryset()
+
     def get_context_data(self, **kwargs):
         context = super(ProductListView, self).get_context_data(**kwargs)
         q = self.get_search_query()

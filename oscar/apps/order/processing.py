@@ -19,9 +19,43 @@ class EventHandler(object):
         Handle a shipping event for a given order.
 
         This might involve taking payment, sending messages and 
-        creating the event models themeselves.
+        creating the event models themeselves.  You will generally want to
+        override this method to implement the specifics of you order processing
+        pipeline.
         """
         self.create_shipping_event(order, event_type, lines, line_quantities, **kwargs)
+
+    def has_any_line_passed_shipping_event(self, order, lines, line_quantities, event_name):
+        """
+        Test whether any one of the lines passed has been through the event
+        specified.
+        """
+        events = order.shipping_events.filter(event_type__name=event_name)
+        remaining_qtys = [line.quantity - qty for line, qty in zip(lines, line_quantities)]
+        spare_line_qtys = dict(zip([line.id for line in lines], remaining_qtys))
+        for event in events:
+            for line_qty in event.line_quantities.all():
+                line_id = line_qty.line.id
+                if line_id in spare_line_qtys:
+                    spare_line_qtys[line_id] -= line_qty.quantity
+        return any(map(lambda x: x<0, spare_line_qtys.values()))
+
+    def have_lines_passed_shipping_event(self, order, lines, line_quantities, event_name):
+        """
+        Test whether the passed lines and quantities have been through the
+        specified shipping event.  
+
+        This is useful for validating if certain shipping events are allowed (ie
+        you can't return something before it has shipped).
+        """
+        events = order.shipping_events.filter(event_type__name=event_name)
+        required_line_qtys = dict(zip([line.id for line in lines], line_quantities))
+        for event in events:
+            for line_qty in event.line_quantities.all():
+                line_id = line_qty.line.id
+                if line_id in required_line_qtys:
+                    required_line_qtys[line_id] -= line_qty.quantity
+        return not any(map(lambda x: x>0, required_line_qtys.values()))
 
     def handle_payment_event(self, order, event_type, amount, lines=None,
                              line_quantities=None, **kwargs):
@@ -29,6 +63,17 @@ class EventHandler(object):
         Handle a payment event for a given order.
         """
         self.create_payment_event(order, event_type, amount, lines, line_quantities, **kwargs)
+
+    def are_stock_allocations_available(self, lines, line_quantities):
+        """
+        Check whether stock records still have enough stock to honour the
+        requested allocations.
+        """
+        for line, qty in zip(lines, line_quantities):
+            record = line.product.stockrecord
+            if not record.is_allocation_consumption_possible(qty):
+                return False
+        return True
 
     def consume_stock_allocations(self, order, lines, line_quantities):
         """
@@ -53,8 +98,8 @@ class EventHandler(object):
         try:
             for line, quantity in zip(lines, line_quantities):
                 ShippingEventQuantity.objects.create(event=event,
-                                                    line=line,
-                                                    quantity=quantity)
+                                                     line=line,
+                                                     quantity=quantity)
         except InvalidShippingEvent:
             event.delete()
             raise

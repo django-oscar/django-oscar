@@ -8,6 +8,7 @@ from oscar.apps.basket.app import application as basket_app
 from oscar.apps.checkout.app import application as checkout_app
 from oscar.apps.promotions.app import application as promotions_app
 from oscar.apps.search.app import application as search_app
+from oscar.apps.offer.app import application as offer_app
 from oscar.apps.dashboard.app import application as dashboard_app
 
 
@@ -21,6 +22,7 @@ class Shop(Application):
     promotions_app = promotions_app
     search_app = search_app
     dashboard_app = dashboard_app
+    offer_app = offer_app
     
     def get_urls(self):
         urlpatterns = patterns('',
@@ -30,6 +32,7 @@ class Shop(Application):
             (r'^accounts/', include(self.customer_app.urls)),
             (r'^search/', include(self.search_app.urls)),
             (r'^dashboard/', include(self.dashboard_app.urls)),
+            (r'^offers/', include(self.offer_app.urls)),
 
             # Password reset - as we're using Django's default view funtions, we
             # can't namespace these urls as that prevents the reverse function
@@ -39,8 +42,9 @@ class Shop(Application):
             url(r'^password-reset/confirm/$', auth_views.password_reset_confirm, name='password-reset-confirm'),
             url(r'^password-reset/complete/$', auth_views.password_reset_complete, name='password-reset-complete'),
 
-            (r'', include(self.promotions_app.urls)),             
+            (r'', include(self.promotions_app.urls)),
         )
         return urlpatterns
     
+
 shop = Shop()

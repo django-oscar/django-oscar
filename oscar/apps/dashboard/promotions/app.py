@@ -6,10 +6,11 @@ from oscar.apps.dashboard.promotions import views
 from oscar.apps.promotions.conf import PROMOTION_CLASSES
 from oscar.apps.dashboard.nav import register, Node
 
-node = Node('Content blocks')
-node.add_child(Node('All blocks', 'dashboard:promotion-list'))
-node.add_child(Node('By page', 'dashboard:promotion-list-by-page'))
-register(node)
+node = Node('Content')
+node.add_child(Node('Re-usable content blocks', 'dashboard:promotion-list'))
+node.add_child(Node('Content blocks by page', 'dashboard:promotion-list-by-page'))
+node.add_child(Node('Pages', 'dashboard:page-list'))
+register(node, 20)
 
 
 class PromotionsDashboardApplication(Application):

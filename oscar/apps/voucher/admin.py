@@ -1,7 +1,8 @@
 from django.contrib import admin
+from django.db.models import get_model
 
-from oscar.core.loading import import_module
-import_module('voucher.models', ['Voucher', 'VoucherApplication'], locals())
+Voucher = get_model('voucher', 'Voucher')
+VoucherApplication = get_model('voucher', 'VoucherApplication')
 
     
 class VoucherAdmin(admin.ModelAdmin):
@@ -20,6 +21,7 @@ class VoucherAdmin(admin.ModelAdmin):
         
     )
     
+
 class VoucherApplicationAdmin(admin.ModelAdmin):
     list_display = ('voucher', 'user', 'order', 'date_created')
     readonly_fields = ('voucher', 'user', 'order')        

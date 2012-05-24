@@ -1,5 +1,3 @@
-from django.core.urlresolvers import resolve
-
 from oscar.core.loading import get_class
 Repository = get_class('shipping.repository', 'Repository')
 

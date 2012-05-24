@@ -1,34 +1,23 @@
 import httplib
-from django_dynamic_fixture import new, get, F
 
 from django.test import TestCase
-from django.test.client import Client
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.template import Template, Context
+from django_dynamic_fixture import get
+
 
 from oscar.test import ClientTestCase
 from oscar.test.helpers import create_order
 from oscar.apps.order.models import Order, OrderNote
-from oscar.apps.dashboard.orders.forms import OrderSearchForm
-from oscar.templatetags.dashboard_tags import get_num_user_orders
-
-
-class OrderSummaryTests(ClientTestCase):
-    is_staff = True
-
-    def test_summary_page_has_stats_vars_in_context(self):
-        url = reverse('dashboard:order-summary')
-        response = self.client.get(url)
-        self.assertInContext(response, 'total_orders')
-        self.assertInContext(response, 'total_lines')
-        self.assertInContext(response, 'total_revenue')
 
 
 class OrderListTests(ClientTestCase):
     is_staff = True
 
     def test_searching_for_valid_order_number_redirects_to_order_page(self):
+        # Importing here as the import makes DB queries
+        from oscar.apps.dashboard.orders.forms import OrderSearchForm
         order = create_order()
         fields = OrderSearchForm.base_fields.keys()
         pairs = dict(zip(fields, ['']*len(fields)))
@@ -65,7 +54,7 @@ class OrderDetailTests(ClientTestCase):
     def test_order_status_change_creates_system_note(self):
         params = {'order_action': 'change_order_status',
                   'new_status': 'B'}
-        response = self.client.post(self.url, params)
+        self.client.post(self.url, params)
         notes = self.order.notes.all()
         self.assertEqual(1, len(notes))
         self.assertEqual(OrderNote.SYSTEM, notes[0].note_type)

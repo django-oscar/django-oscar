@@ -2,6 +2,7 @@
 
 {% load currency_filters %}
 {% load category_tags %}
+{% load promotion_tags %}
 
 {% block extrahead %}
     {% include "partials/extrahead.html" %}
@@ -14,23 +15,34 @@
             {% include "partials/brand.html" %}
         </div><!-- /row-fluid -->
         {% category_tree depth=2 as categories %}
-        {% include "partials/nav_primary.html" %}
+        {% block navigation %}
+            {% include "partials/nav_primary.html" %}
+        {% endblock %}
     </header><!-- /header -->
-    {% include "partials/alert_messages.html" %}
     <div class="container-fluid page">
         <div class="page_inner">	
-        	{% block breadcrumbs %}
-            {% endblock %}
-            
+			{% block breadcrumbs %}{% endblock %}
+			{% include "partials/alert_messages.html" %}
             <div class="row-fluid">
-                <aside class="span3">
-                    {% block column_left %} 
+                <aside class="sidebar span3">
+                    <div id="promotions_left">
+                		{% for promotion in promotions_left %}
+                		{% render_promotion promotion %}
+                		{% endfor %}
+                	</div>
+                    {% block column_left %}
                     {% endblock %}
-                </aside>
+                </aside><!-- /span3 -->
 
                 <div class="span9">
                     {% block header %}
                     {% endblock %}
+                    
+                    <div id="promotions">
+                		{% for promotion in promotions_page %}
+                		{% render_promotion promotion %}
+                		{% endfor %}
+                	</div>
                     
                     {% block flatpage %}
                     {% endblock %}
@@ -47,4 +59,5 @@
 {# Block for additional scripts #}
 {% block extrascripts %}
     {% include "partials/extrascripts.html" %}
+    {{ block.super }}
 {% endblock %}

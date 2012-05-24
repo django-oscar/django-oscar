@@ -1,19 +1,21 @@
-from oscar.core.loading import import_module
-order_reports = import_module('order.reports', ['OrderReportGenerator'])
-analytics_reports = import_module('analytics.reports', ['ProductReportGenerator', 'UserReportGenerator'])
-basket_reports = import_module('basket.reports', ['OpenBasketReportGenerator', 'SubmittedBasketReportGenerator'])     
-offer_reports = import_module('offer.reports', ['OfferReportGenerator'])
-voucher_reports = import_module('voucher.reports', ['VoucherReportGenerator'])  
+from oscar.core.loading import get_class, get_classes
+OrderReportGenerator = get_class('order.reports', 'OrderReportGenerator')
+ProductReportGenerator, UserReportGenerator = get_classes('analytics.reports', ['ProductReportGenerator', 'UserReportGenerator'])
+OpenBasketReportGenerator, SubmittedBasketReportGenerator = get_classes(
+    'basket.reports', ['OpenBasketReportGenerator', 'SubmittedBasketReportGenerator'])
+OfferReportGenerator = get_class('offer.reports', 'OfferReportGenerator')
+VoucherReportGenerator = get_class('voucher.reports', 'VoucherReportGenerator')
+
 
 class GeneratorRepository(object):
     
-    generators = [order_reports.OrderReportGenerator,
-                  analytics_reports.ProductReportGenerator,
-                  analytics_reports.UserReportGenerator,
-                  basket_reports.OpenBasketReportGenerator,
-                  basket_reports.SubmittedBasketReportGenerator,
-                  voucher_reports.VoucherReportGenerator, 
-                  offer_reports.OfferReportGenerator]
+    generators = [OrderReportGenerator,
+                  ProductReportGenerator,
+                  UserReportGenerator,
+                  OpenBasketReportGenerator,
+                  SubmittedBasketReportGenerator,
+                  VoucherReportGenerator,
+                  OfferReportGenerator]
 
     def get_report_generators(self):
         return self.generators

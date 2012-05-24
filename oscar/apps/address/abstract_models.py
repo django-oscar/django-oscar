@@ -149,8 +149,9 @@ class AbstractShippingAddress(AbstractAddress):
     """
     phone_number = models.CharField(max_length=32, blank=True, null=True)
     notes = models.TextField(blank=True, null=True,
-                             help_text="For example, leave the parcel by the " \
-                                       "garden gnomes.")
+                             verbose_name='Courier instructions',
+                             help_text="For example, leave the parcel in the wheelie bin " \
+                                       "if I'm not in.")
     
     class Meta:
         abstract = True
@@ -194,16 +195,35 @@ class AbstractUserAddress(AbstractShippingAddress):
     date_created = models.DateTimeField(auto_now_add=True)
     
     def generate_hash(self):
-        u"""Returns a hash of the address summary."""
+        """
+        Returns a hash of the address summary
+        """
         # We use an upper-case version of the summary
         return zlib.crc32(self.summary.strip().upper().encode('UTF8'))
 
     def save(self, *args, **kwargs):
-        u"""Save a hash of the address fields"""
+        """
+        Save a hash of the address fields
+        """
         # Save a hash of the address fields so we can check whether two 
         # addresses are the same to avoid saving duplicates
         self.hash = self.generate_hash()
+        # Ensure that each user only has one default shipping address
+        # and billing address
+        self._ensure_defaults_integrity()
         super(AbstractUserAddress, self).save(*args, **kwargs)
+
+    def _ensure_defaults_integrity(self):
+        if self.is_default_for_shipping:
+            self.__class__._default_manager.filter(
+                user=self.user,
+                is_default_for_shipping=True
+            ).update(is_default_for_shipping=False)
+        if self.is_default_for_billing:
+            self.__class__._default_manager.filter(
+                user=self.user,
+                is_default_for_billing=True
+            ).update(is_default_for_billing=False)
     
     class Meta:
         abstract = True

@@ -5,8 +5,7 @@ from django.conf import settings
 
 from django.db.models import Sum, Count
 
-from oscar.apps.catalogue.reviews.managers import (ApprovedReviewsManager, RecentReviewsManager, 
-                                                   TopScoredReviewsManager, TopVotedReviewsManager)
+from oscar.apps.catalogue.reviews.managers import (ApprovedReviewsManager)
 
 
 class AbstractProductReview(models.Model):
@@ -29,7 +28,7 @@ class AbstractProductReview(models.Model):
     
     SCORE_CHOICES = tuple([(x, x) for x in range(0, 6)])
     score = models.SmallIntegerField(_("Score"), choices=SCORE_CHOICES)
-    title = models.CharField(_("Title"), max_length=255)
+    title = models.CharField(max_length=255, verbose_name=_("Review title"))
     body = models.TextField(_("Body"))
     
     # User information.  We include fields to handle anonymous users
@@ -42,8 +41,8 @@ class AbstractProductReview(models.Model):
     STATUS_CHOICES = (
         (FOR_MODERATION, _("Requires moderation")),
         (APPROVED, _("Approved")),
-        (REJECTED, _("Rejected")), 
-    ) 
+        (REJECTED, _("Rejected")),
+    )
     default_status = FOR_MODERATION if settings.OSCAR_MODERATE_REVIEWS else APPROVED
     status = models.SmallIntegerField(_("Status"), choices=STATUS_CHOICES, default=default_status)
     
@@ -101,7 +100,8 @@ class AbstractProductReview(models.Model):
         
     def get_reviewer_name(self):
         if self.user:
-            return self.user.username
+            name = self.user.get_full_name()
+            return name if name else 'anonymous'
         else:
             return self.name
 

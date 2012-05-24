@@ -1,8 +1,10 @@
 import csv
 
-from oscar.core.loading import import_module
-import_module('dashboard.reports.reports', ['ReportGenerator'], locals())
-import_module('order.models', ['Order'], locals())
+from django.db.models import get_model
+
+from oscar.core.loading import get_class
+ReportGenerator = get_class('dashboard.reports.reports', 'ReportGenerator')
+Order = get_model('order', 'Order')
 
 
 class OrderReportGenerator(ReportGenerator):
@@ -23,7 +25,10 @@ class OrderReportGenerator(ReportGenerator):
                       'Date placed',]
         writer.writerow(header_row)
         for order in orders:
-            row = [order.number, order.user, order.total_incl_tax, order.date_placed]
+            row = [order.number,
+                   order.user,
+                   order.total_incl_tax,
+                   self.format_datetime(order.date_placed)]
             writer.writerow(row)
             
     def is_available_to(self, user):

@@ -2,8 +2,8 @@ from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 
-from oscar.core.loading import import_module
-import_module('checkout.utils', ['ProgressChecker'], locals())
+from oscar.core.loading import get_class
+ProgressChecker = get_class('checkout.utils', 'ProgressChecker')
 
 
 def prev_steps_must_be_complete(view_fn):

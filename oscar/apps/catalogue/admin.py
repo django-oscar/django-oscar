@@ -1,20 +1,30 @@
 from django.contrib import admin
+from django.db.models import get_model
 
-from oscar.core.loading import import_module
-product_models = import_module('catalogue.models', ['Product', 'ProductClass', 'ProductAttribute', 'ProductAttributeValue', 
-                                                    'Option', 'ProductRecommendation', 'AttributeOption', 'AttributeOptionGroup',
-                                                    'AttributeEntity', 'AttributeEntityType', 'ProductImage', 'Category', 
-                                                    'ProductCategory'])
+Product = get_model('catalogue', 'Product')
+ProductClass = get_model('catalogue', 'ProductClass')
+ProductAttribute = get_model('catalogue', 'ProductAttribute')
+ProductAttributeValue = get_model('catalogue', 'ProductAttributeValue')
+Option = get_model('catalogue', 'Option')
+ProductRecommendation = get_model('catalogue', 'ProductRecommendation')
+AttributeOption = get_model('catalogue', 'AttributeOption')
+AttributeOptionGroup = get_model('catalogue', 'AttributeOptionGroup')
+AttributeEntity = get_model('catalogue', 'AttributeEntity')
+AttributeEntityType = get_model('catalogue', 'AttributeEntityType')
+ProductImage = get_model('catalogue', 'ProductImage')
+Category = get_model('catalogue', 'Category')
+ProductCategory = get_model('catalogue', 'ProductCategory')
+
 
 class AttributeInline(admin.TabularInline):
-    model = product_models.ProductAttributeValue
+    model = ProductAttributeValue
 
 class ProductRecommendationInline(admin.TabularInline):
-    model = product_models.ProductRecommendation
+    model = ProductRecommendation
     fk_name = 'primary'
     
 class CategoryInline(admin.TabularInline):
-    model = product_models.ProductCategory
+    model = ProductCategory
     extra = 1
 
 class ProductClassAdmin(admin.ModelAdmin):
@@ -35,7 +45,7 @@ class ProductAttributeValueAdmin(admin.ModelAdmin):
     list_display = ('product', 'attribute', 'value')
 
 class AttributeOptionInline(admin.TabularInline):
-    model = product_models.AttributeOption
+    model = AttributeOption
     
 class AttributeOptionGroupAdmin(admin.ModelAdmin):
     inlines = [AttributeOptionInline, ]
@@ -44,14 +54,14 @@ class AttributeEntityAdmin(admin.ModelAdmin):
     list_display = ('name', )
                  
 
-admin.site.register(product_models.ProductClass, ProductClassAdmin)
-admin.site.register(product_models.Product, ProductAdmin)
-admin.site.register(product_models.ProductAttribute, ProductAttributeAdmin)
-admin.site.register(product_models.ProductAttributeValue, ProductAttributeValueAdmin)
-admin.site.register(product_models.AttributeOptionGroup, AttributeOptionGroupAdmin)
-admin.site.register(product_models.AttributeEntity, AttributeEntityAdmin)
-admin.site.register(product_models.AttributeEntityType)
-admin.site.register(product_models.Option, OptionAdmin)
-admin.site.register(product_models.ProductImage)
-admin.site.register(product_models.Category)
-admin.site.register(product_models.ProductCategory)
+admin.site.register(ProductClass, ProductClassAdmin)
+admin.site.register(Product, ProductAdmin)
+admin.site.register(ProductAttribute, ProductAttributeAdmin)
+admin.site.register(ProductAttributeValue, ProductAttributeValueAdmin)
+admin.site.register(AttributeOptionGroup, AttributeOptionGroupAdmin)
+admin.site.register(AttributeEntity, AttributeEntityAdmin)
+admin.site.register(AttributeEntityType)
+admin.site.register(Option, OptionAdmin)
+admin.site.register(ProductImage)
+admin.site.register(Category)
+admin.site.register(ProductCategory)

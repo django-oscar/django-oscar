@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import sys
-import os
 import logging
 from optparse import OptionParser
 from coverage import coverage

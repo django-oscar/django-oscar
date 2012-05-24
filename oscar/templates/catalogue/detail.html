@@ -2,7 +2,6 @@
 
 {% load currency_filters %}
 {% load history_tags %}
-{% load basket_tags %}
 
 {% block title %}
 {{ product.title }} | {{ block.super }}
@@ -29,6 +28,13 @@
 
 {% block content %}
 <article class="product_page"><!-- Start of product page -->
+    {% if user.is_authenticated and user.is_staff %}
+    <div class="row-fluid">
+        <div class="well">
+            <a href="{% url dashboard:catalogue-product product.id %}"><button class="btn btn-success" value='Edit this product'>Edit this product</button></a>
+        </div>
+    </div>
+    {% endif %}
     <div class="row-fluid">
         <div class="span6">
             {% include "catalogue/partials/gallery.html" %}
@@ -36,28 +42,17 @@
         <div class="span6">
             <h1>{{ product.get_title }}</h1>
             
-            {% if product.is_group %}
-                <h2 class="price_color">From {{ product.min_variant_price_incl_tax|currency }}</h2>
-            {% else %}
-                {% if product.has_stockrecord %} 
-                    <h2 class="price_color">{{ product.stockrecord.price_incl_tax|currency }}</h2>
-                    <p class="app-ico {{ product.stockrecord.availability_code }} avaliability ">{{ product.stockrecord.availability|truncatewords:2 }}</p>
-                {% else %}
-                    <p class="app-ico avaliability outofstock">Not available</p>
-                {% endif %}
-            {% endif %}
+            {% include "catalogue/partials/stock_record.html" %}
             
-            {% with product.reviews.all as reviews %}
-                {% if reviews %}
-                    <ul class="review_count">
-                        {% for review in reviews %}
-                            <li class="{{ review.score }}">{{ review.score }}</li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                     <p class="star">No Rating <a href="#reviews">Add review</a></p>
-                {% endif %}
-            {% endwith %}
+			{% if reviews %}
+				<ul class="review_count">
+					{% for review in reviews %}
+						<li class="{{ review.score }}">{{ review.score }}</li>
+					{% endfor %}
+				</ul>
+			{% else %}
+					<p class="star">No Rating <a href="#reviews">Add review</a></p>
+			{% endif %}
             
             <p><strong>Product Code:</strong> <code>{{ product.upc }}</code></p>
              
@@ -65,18 +60,8 @@
             <ul>
                 <li><a href="#product_description">Read the full description</a></li>
             </ul>
-             
-            {% if product.stockrecord and product.stockrecord.is_available_to_buy %}
-            {% basket_form basket product as basket_form %}
-            <form action="{% url basket:add %}" method="post" class="form-stacked">
-                {% csrf_token %}
-                {% include "partials/form_fields.html" with form=basket_form %}
-            	
-                <div class="form-actions">
-                    <input type="submit" class="btn btn-large btn-primary" value="Add to basket" />
-                </div>
-            </form>
-            {% endif %}
+
+            {% include "catalogue/partials/add_to_basket_form.html" %}
         </div><!-- /span6 -->
     </div><!-- /row-fluid -->
               
@@ -139,7 +124,7 @@
         {% for category in product.categories.all %}
         <li>
             {% for c in category.get_ancestors %}
-            {% if not forloop.first %} > {% endif %}<a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
+            {% if not forloop.first %} &gt; {% endif %}<a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
             {% endfor %}
         </li>
         {% endfor %}
@@ -154,10 +139,9 @@
         <p>Read customer reviews on this product. If you have read this book, why not post your own
        review?</p>
        <div class="review_read">
-           <a href="{% url catalogue:reviews-add product.slug product.id %}" class="btn btn-success">Add a review</a>
+           <a href="{% url catalogue:reviews-add product.slug product.id %}#addreview" class="btn btn-success">Add a review</a>
        </div>
 
-        {% with product.reviews.all as reviews %}
         {% if reviews %}
             <div>
                 {% for review in reviews|slice:":3" %}
@@ -175,8 +159,8 @@
                             <div class="span4 review_votes">
                                 <div>
                 		            {% include 'reviews/_vote_bit.html' %}
-                                        {% if review.has_votes %}
-                                        <p>{{ review.num_up_votes }} customer{{ review.num_up_votes|pluralize }} found this review helpful.</p>
+									{% if review.has_votes %}
+									<p>{{ review.num_up_votes }} customer{{ review.num_up_votes|pluralize }} found this review helpful.</p>
                                     {% endif %}
                                 </div>
                             </div>
@@ -188,10 +172,9 @@
                 </div>
             </div>
         {% endif %}
-        {% endwith %}
     </section>    
     {% endblock product_review %}
-
+    
     <div class="row-fluid">
         {% if product.related_products.count %}
         <div class="span6">
@@ -230,8 +213,8 @@
             </div>
         </div>
         {% endif %}
-    </div>
     {% recently_viewed_products %}
+    </div>
 </article><!-- End of product page -->
 {% endblock content %}
 

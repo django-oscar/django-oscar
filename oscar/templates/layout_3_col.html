@@ -14,7 +14,9 @@
             {% include "partials/brand.html" %}
         </div><!-- /row-fluid -->
         {% category_tree depth=2 as categories %}
-        {% include "partials/nav_primary.html" %}
+        {% block navigation %}
+            {% include "partials/nav_primary.html" %}
+        {% endblock %}
     </header><!-- /header -->
     {% include "partials/alert_messages.html" %}
     <div class="container-fluid page">
@@ -50,4 +52,5 @@
 {# Block for additional scripts #}
 {% block extrascripts %}
     {% include "partials/extrascripts.html" %}
+    {{ block.super }}
 {% endblock %}

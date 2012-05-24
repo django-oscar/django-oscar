@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.db.models import get_model
 from django.http import HttpResponseRedirect, Http404
-from django.views.generic import ListView, FormView, View
+from django.views.generic import FormView, View
 from django.forms.models import modelformset_factory
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist
@@ -28,7 +28,7 @@ class BasketView(ModelFormSetView):
     template_name='basket/basket.html'
 
     def get_queryset(self):
-        return self.request.basket.lines.all()
+        return self.request.basket.all_lines()
 
     def get_default_shipping_method(self, basket):
         return Repository().get_default_shipping_method(self.request.user, self.request.basket)
@@ -38,11 +38,23 @@ class BasketView(ModelFormSetView):
         Return a list of warnings that apply to this basket
         """
         warnings = []
-        for line in basket.lines.all():
+        for line in basket.all_lines():
             warning = line.get_warning()
             if warning:
                 warnings.append(warning)
         return warnings
+
+    def get_upsell_messages(self, basket):
+        offers = Applicator().get_offers(self.request, basket)
+        messages = []
+        for offer in offers:
+            if offer.is_condition_partially_satisfied(basket):
+                data = {
+                    'message': offer.get_upsell_message(basket),
+                    'offer': offer
+                }
+                messages.append(data)
+        return messages
 
     def get_context_data(self, **kwargs):
         context = super(BasketView, self).get_context_data(**kwargs)
@@ -52,36 +64,41 @@ class BasketView(ModelFormSetView):
         context['shipping_charge_incl_tax'] = method.basket_charge_incl_tax()
         context['order_total_incl_tax'] = self.request.basket.total_incl_tax + method.basket_charge_incl_tax()
         context['basket_warnings'] = self.get_basket_warnings(self.request.basket)
+        context['upsell_messages'] = self.get_upsell_messages(self.request.basket)
 
         if self.request.user.is_authenticated():
             try:
                 saved_basket = self.basket_model.saved.get(owner=self.request.user)
-                saved_queryset = saved_basket.lines.all().select_related('product', 'product__stockrecord')
-                SavedFormset = modelformset_factory(self.model, form=SavedLineForm, extra=0, can_delete=True)
-                formset = SavedFormset(queryset=saved_queryset)
-                context['saved_formset'] = formset
             except self.basket_model.DoesNotExist:
                 pass
-
+            else:
+                if not saved_basket.is_empty:
+                    saved_queryset = saved_basket.all_lines().select_related('product', 'product__stockrecord')
+                    SavedFormset = modelformset_factory(self.model, form=SavedLineForm, extra=0, can_delete=True)
+                    formset = SavedFormset(queryset=saved_queryset)
+                    context['saved_formset'] = formset
         return context
 
     def get_success_url(self):
+        messages.success(self.request, _("Basket updated"))
         return self.request.META.get('HTTP_REFERER', reverse('basket:summary'))
 
     def formset_valid(self, formset):
-        needs_auth = False
+        save_for_later = False
         for form in formset:
             if hasattr(form, 'cleaned_data') and form.cleaned_data['save_for_later']:
                 line = form.instance
                 if self.request.user.is_authenticated():
                     self.move_line_to_saved_basket(line)
                     messages.info(self.request, _(u"'%(title)s' has been saved for later" % {'title': line.product}))
+                    save_for_later = True
                 else:
-                    needs_auth = True
-        if needs_auth:
-            messages.error(self.request, "You can't save an item for later if you're not logged in!")
-        else:
-            messages.success(self.request, _("Basket updated"))
+                    messages.error(self.request, "You can't save an item for later if you're not logged in!")
+                    return HttpResponseRedirect(self.get_success_url())
+
+        if save_for_later:
+            # No need to call super if we're moving lines to the saved basket
+            return HttpResponseRedirect(self.get_success_url())
         return super(BasketView, self).formset_valid(formset)
 
     def move_line_to_saved_basket(self, line):
@@ -89,7 +106,11 @@ class BasketView(ModelFormSetView):
         saved_basket.merge_line(line)
 
     def formset_invalid(self, formset):
-        messages.info(self.request, _("There was a problem updating your basket, please check that all quantities are numbers"))
+        errors = []
+        for error_dict in formset.errors:
+            errors += [error_list.as_text() for error_list in error_dict.values()]
+        msg = "Your basket couldn't be updated because:\n%s" % "\n".join(errors)
+        messages.warning(self.request, msg)
         return super(BasketView, self).formset_invalid(formset)
 
 
@@ -237,7 +258,7 @@ class SavedView(ModelFormSetView):
     def get_queryset(self):
         try:
             saved_basket = self.basket_model.saved.get(owner=self.request.user)
-            return saved_basket.lines.all().select_related('product', 'product__stockrecord')
+            return saved_basket.all_lines().select_related('product', 'product__stockrecord')
         except self.basket_model.DoesNotExist:
             return []
 
@@ -245,12 +266,17 @@ class SavedView(ModelFormSetView):
         return self.request.META.get('HTTP_REFERER', reverse('basket:summary'))
 
     def formset_valid(self, formset):
+        is_move = False
         for form in formset:
             if form.cleaned_data['move_to_basket']:
+                is_move = True
                 msg = "'%s' has been moved back to your basket" % form.instance.product
                 messages.info(self.request, msg)
                 real_basket = self.request.basket
                 real_basket.merge_line(form.instance)
+        if is_move:
+            return HttpResponseRedirect(self.get_success_url())
+
         return super(SavedView, self).formset_valid(formset)
 
     def formset_invalid(self, formset):

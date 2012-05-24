@@ -10,7 +10,7 @@ ProductImage = get_model('catalogue', 'ProductImage')
 
 
 class ProductSearchForm(forms.Form):
-    upc = forms.CharField(max_length=16, required=False)
+    upc = forms.CharField(max_length=16, required=False, label='UPC')
     title = forms.CharField(max_length=255, required=False)
 
 
@@ -61,7 +61,7 @@ class ProductForm(forms.ModelForm):
     def _attr_date_field(self, attribute):
         return forms.DateField(label=attribute.name,
                                required=attribute.required,
-                               widget=SelectDateWidget)
+                               widget=forms.widgets.SelectDateWidget)
 
     def _attr_option_field(self, attribute):
         return forms.ModelChoiceField(
@@ -117,6 +117,8 @@ class ProductForm(forms.ModelForm):
         for attribute in self.product_class.attributes.all():
             value = self.cleaned_data['attr_%s' % attribute.code]
             setattr(object.attr, attribute.code, value)
+        if not object.upc:
+            object.upc = None
         object.save()
         return object
 
@@ -133,5 +135,25 @@ class StockAlertSearchForm(forms.Form):
 ProductCategoryFormSet = inlineformset_factory(Product, ProductCategory,
                                                fields=('category',), extra=1)
 
+class ProductImageForm(forms.ModelForm):
+    class Meta:
+        model = ProductImage
+        exclude = ('display_order',)
+
+    def save(self, *args, **kwargs):
+        # We infer the display order of the image based on the order of the image fields
+        # within the formset.
+        kwargs['commit'] = False
+        obj = super(ProductImageForm, self).save(*args, **kwargs)
+        obj.display_order = self.get_display_order()
+        obj.save()
+        return obj
+
+    def get_display_order(self):
+        return self.prefix.split('-').pop()
+
+
+
 ProductImageFormSet = inlineformset_factory(Product, ProductImage,
-                                            fields=('original', 'caption'), extra=2)
+                                            form=ProductImageForm,
+                                            extra=2)

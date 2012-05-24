@@ -1,0 +1,31 @@
+﻿{% extends "layout.html" %}
+{# {% load currency_filters %} #}
+
+{% block title %}
+Register | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url promotions:home %}">Home</a>
+        <span class="divider">/</span>
+    </li>
+	<li class="active"><a href=".">Register</a></li>
+</ul>
+{% endblock %}
+
+{% block content %}
+
+<div class="row-fluid">
+    <div class="span6 register_form">
+        <form action="{{ request.get_full_path }}" method="post" class="form-stacked" />
+			<h2>Register</h2>
+            {% csrf_token %}
+            {% include "partials/form_fields.html" with form=registration_form %}
+            <button name="registration_submit" type="submit" value="Register" class="btn btn-primary btn-large">Register</button>
+        </form>
+    </div>
+</div>    
+
+{% endblock content %}

@@ -1,17 +1,15 @@
 {% extends "catalogue/detail.html" %}
 
 {% block product_review %}
-<div class="review_add">
+<div id="addreview" class="review_add">
     <legend>Leave a product review</legend>
-    <form method="post" action="." class="form-inline" >
-    
+    <form method="post" action="." class="form-horizontal" >
         {% csrf_token %}
-
         {% include "partials/form_fields.html" with form=form %}
-
         <div class="form-actions">
-            <input type="submit" value="Submit" class="btn btn-primary" />
-            <a href="{{ item.get_absolute_url }}" class="btn">Cancel</a>
+            <button type="submit" value="Submit" class="btn btn-primary">Submit</button>
+			or
+            <a href="{{ product.get_absolute_url }}" >cancel</a>
         </div>
     </form>
 </div>

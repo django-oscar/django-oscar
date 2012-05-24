@@ -1,4 +1,3 @@
-import re
 from itertools import chain
 from datetime import datetime, date
 
@@ -12,8 +11,8 @@ from django.template.defaultfilters import slugify
 from django.core.exceptions import ObjectDoesNotExist
 from treebeard.mp_tree import MP_Node
 
-from oscar.apps.catalogue.managers import BrowsableProductManager
-
+from oscar.core.loading import get_class
+BrowsableProductManager = get_class('catalogue.managers', 'BrowsableProductManager')
 
 class AbstractProductClass(models.Model):
     """
@@ -142,7 +141,7 @@ class AbstractContributor(models.Model):
 class AbstractProductContributor(models.Model):
     product = models.ForeignKey('catalogue.Product')
     contributor = models.ForeignKey('catalogue.Contributor')
-    role = models.ForeignKey('catalogue.ContributorRole')
+    role = models.ForeignKey('catalogue.ContributorRole', blank=True, null=True)
     
     def __unicode__(self):
         return '%s <- %s - %s' % (self.product, self.role, self.contributor)
@@ -228,7 +227,10 @@ class AbstractProduct(models.Model):
     @property
     def is_group(self):
         u"""Return True if this is a top level product and has more than 0 variants"""
-        return self.is_top_level and self.variants.count() > 0
+        # use len() instead of count() in this specific instance
+        # as variants are highly likely to be used after this 
+        # which reduces the amount of SQL queries required
+        return self.is_top_level and len(self.variants.all()) > 0
     
     @property
     def is_variant(self):
@@ -289,6 +291,16 @@ class AbstractProduct(models.Model):
         if self.parent and self.parent.product_class:
             return self.parent.product_class
         return None
+
+    def primary_image(self):
+        images = self.images.all().order_by('display_order')
+        if images.count():
+            return images[0]
+        return {
+            'original': MissingProductImage(),
+            'caption': '',
+            'is_missing': True
+        }
 
     # Helpers
     
@@ -669,6 +681,12 @@ class AbstractOption(models.Model):
         if not self.code:
             self.code = slugify(self.name)
         super(AbstractOption, self).save(*args, **kwargs)
+
+
+class MissingProductImage(object):
+
+    def __init__(self, name=None):
+        self.name = name if name else settings.OSCAR_MISSING_IMAGE_URL
 
 
 class AbstractProductImage(models.Model):

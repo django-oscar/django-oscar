@@ -49,11 +49,7 @@
     {% if category.description %}
     	<p>{{ category.description }}</p>
     {% endif %}
-    <div id="promotions">
-    	{% for promotion in promotions_page %}
-    	{% render_promotion promotion %}
-    	{% endfor %}
-    </div>
+
     {% if products.count %}
 		<section>
 			<div class="mod">
@@ -69,8 +65,8 @@
 					{% include "catalogue/partials/pagination.html" %}
 				{% endif %}
 			</div>
-		<section>
+		</section>
     {% else %}
-		<p>No products found.</p>
+		<p class="nonefound">No products found.</p>
     {% endif %}
 {% endblock content %}

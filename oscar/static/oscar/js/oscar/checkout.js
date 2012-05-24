@@ -1,5 +1,6 @@
 var oscar = oscar || {};
 oscar.basket = {
+    is_form_being_submitted: false,
     init: function() {
         $('#basket_formset a[data-behaviours~="remove"]').click(function() {
             oscar.basket.checkAndSubmit($(this), 'DELETE');
@@ -31,10 +32,14 @@ oscar.basket = {
         $('#voucher_form_link').show();
     },
     checkAndSubmit: function($ele, idSuffix) {
+        if (oscar.basket.is_form_being_submitted) {
+            return;
+        }
         var formID = $ele.attr('data-id');
         var inputID = '#id_form-' + formID + '-' + idSuffix;
         $(inputID).attr('checked', 'checked');
         $ele.closest('form').submit();
+        oscar.basket.is_form_being_submitted = true;
     }
 };
 oscar.checkout = {

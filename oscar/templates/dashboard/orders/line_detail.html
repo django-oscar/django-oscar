@@ -5,9 +5,27 @@
 Order {{ order.number }} - Line #{{ line.id }} | {{ block.super }}
 {% endblock %}
 
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url dashboard:index %}">Dashboard</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="{% url dashboard:order-list %}">Orders</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+		<a href="{% url dashboard:order-detail order.number %}">#{{ order.number }}</a>
+        <span class="divider">/</span>
+    </li>
+	<li class="active"><a href=".">Line #{{ line.id }}</a></li>
+</ul>
+{% endblock %}
+
 {% block header %}
 <div class="page-header">
-    <h1>Order {{ order.number }} - Line #{{ line.id }}</h1>
+    <h1>Order #{{ order.number }} - Line #{{ line.id }}</h1>
 </div>
 {% endblock header %}
 
@@ -21,10 +39,10 @@ Order {{ order.number }} - Line #{{ line.id }} | {{ block.super }}
         		<th>Title</th><td>{{ line.title }}</td>
             </tr>
             <tr>
-        		<th>Quantity</th><td>{{ line.quantity }}</td>
+        		<th>UPC</th><td>{{ line.upc|default:"-" }}</td>
             </tr>
             <tr>
-        		<th>&nbsp;</th><td>&nbsp;</td>
+        		<th>Quantity</th><td>{{ line.quantity }}</td>
             </tr>
         </table>
     </div>

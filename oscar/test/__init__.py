@@ -4,6 +4,7 @@ from contextlib import contextmanager
 from django.test import TestCase
 from django.test.client import Client
 from django.contrib.auth.models import User
+from purl import URL
 
 
 @contextmanager
@@ -31,7 +32,7 @@ class ClientTestCase(TestCase):
         self.client = Client()
         if not self.is_anonymous:
             self.user = self.create_user()
-            self.client.login(username=self.username, 
+            self.client.login(username=self.username,
                               password=self.password)
 
     def create_user(self):
@@ -43,9 +44,14 @@ class ClientTestCase(TestCase):
         user.save()
         return user
 
-    def assertIsRedirect(self, response):
+    def assertIsRedirect(self, response, expected_url=None):
         self.assertTrue(response.status_code in (httplib.FOUND,
                                                  httplib.MOVED_PERMANENTLY))
+        if expected_url:
+            location = URL.from_string(response['Location'])
+            self.assertEqual(expected_url, location.path())
+
+
 
     def assertIsOk(self, response):
         self.assertEqual(httplib.OK, response.status_code)

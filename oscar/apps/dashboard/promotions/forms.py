@@ -20,6 +20,7 @@ class PromotionTypeSelectForm(forms.Form):
 class RawHTMLForm(forms.ModelForm):
     class Meta:
         model = RawHTML
+        exclude = ('display_type',)
 
 
 class HandPickedProductListForm(forms.ModelForm):

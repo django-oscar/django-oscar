@@ -8,7 +8,6 @@ from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
 from django.db.models import Sum
-from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 
 from oscar.apps.order.exceptions import (InvalidOrderStatus, InvalidLineStatus,
@@ -191,6 +190,12 @@ class AbstractOrder(models.Model):
     def verification_hash(self):
         return hashlib.md5('%s%s' % (self.number, settings.SECRET_KEY)).hexdigest()
 
+    @property
+    def email(self):
+        if not self.user:
+            return self.guest_email
+        return self.user.email
+
 
 class AbstractOrderNote(models.Model):
     """
@@ -210,8 +215,10 @@ class AbstractOrderNote(models.Model):
     note_type = models.CharField(max_length=128, null=True)
     
     message = models.TextField()
-    date = models.DateTimeField(auto_now_add=True)
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_updated = models.DateTimeField(auto_now=True)
 
+    # Notes can only be edited for 5 minutes after being created
     editable_lifetime = 300
     
     class Meta:
@@ -223,7 +230,7 @@ class AbstractOrderNote(models.Model):
     def is_editable(self):
         if self.note_type == self.SYSTEM:
             return False
-        return (datetime.datetime.now() - self.date).seconds < self.editable_lifetime
+        return (datetime.datetime.now() - self.date_updated).seconds < self.editable_lifetime
 
 
 class AbstractCommunicationEvent(models.Model):
@@ -257,7 +264,9 @@ class AbstractLine(models.Model):
     partner = models.ForeignKey('partner.Partner', related_name='order_lines', blank=True, null=True, on_delete=models.SET_NULL)
     partner_name = models.CharField(_("Partner name"), max_length=128)
     partner_sku = models.CharField(_("Partner SKU"), max_length=128)
+
     title = models.CharField(_("Title"), max_length=255)
+    upc = models.CharField(_("UPC"), max_length=128, blank=True, null=True)
     
     # We don't want any hard links between orders and the products table so we allow
     # this link to be NULLable.

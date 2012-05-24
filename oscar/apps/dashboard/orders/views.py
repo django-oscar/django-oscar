@@ -1,22 +1,23 @@
 import csv
+import datetime
 from decimal import Decimal as D, InvalidOperation
 
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.loading import get_model
-from django.db.models import Sum, Count, fields, Q
+from django.db.models import fields, Q, Sum, Count
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
 from django.template.defaultfilters import date as format_date
 from django.utils.datastructures import SortedDict
-from django.views.generic import TemplateView, ListView, DetailView, UpdateView, FormView
-from django.contrib import messages
+from django.views.generic import ListView, DetailView, UpdateView, FormView
 
 from oscar.core.loading import get_class
 from oscar.apps.dashboard.orders import forms
-from oscar.apps.dashboard.views import BulkEditMixin
+from oscar.views.generic import BulkEditMixin
 from oscar.apps.payment.exceptions import PaymentError
+from oscar.apps.order.exceptions import InvalidShippingEvent, InvalidStatus
 
 Order = get_model('order', 'Order')
 OrderNote = get_model('order', 'OrderNote')
@@ -27,29 +28,28 @@ PaymentEventType = get_model('order', 'PaymentEventType')
 EventHandler = get_class('order.processing', 'EventHandler')
 
 
-class OrderSummaryView(FormView):
-    template_name = 'dashboard/orders/summary.html'
-    form_class = forms.OrderSummaryForm
+class OrderStatsView(FormView):
+    template_name = 'dashboard/orders/statistics.html'
+    form_class = forms.OrderStatsForm
 
     def get(self, request, *args, **kwargs):
-        if 'date_from' in request.GET or 'date_to' in request.GET:
-            return self.post(request, *args, **kwargs)
-        return super(OrderSummaryView, self).get(request, *args, **kwargs)
+        return self.post(request, *args, **kwargs)
 
     def form_valid(self, form):
-        ctx = self.get_context_data(form=form, 
+        ctx = self.get_context_data(form=form,
                                     filters=form.get_filters())
         return self.render_to_response(ctx)
 
     def get_form_kwargs(self):
-        kwargs = super(OrderSummaryView, self).get_form_kwargs()
+        kwargs = super(OrderStatsView, self).get_form_kwargs()
         kwargs['data'] = self.request.GET
         return kwargs
 
     def get_context_data(self, **kwargs):
-        ctx = super(OrderSummaryView, self).get_context_data(**kwargs)
+        ctx = super(OrderStatsView, self).get_context_data(**kwargs)
         filters = kwargs.get('filters', {})
         ctx.update(self.get_stats(filters))
+        ctx['title'] = kwargs['form'].get_filter_description()
         return ctx
 
     def get_stats(self, filters):
@@ -75,7 +75,7 @@ class OrderListView(ListView, BulkEditMixin):
     current_view = 'dashboard:order-list'
 
     def get(self, request, *args, **kwargs):
-        if 'order_number' in request.GET:
+        if 'order_number' in request.GET and request.GET.get('response_format', None) == 'html':
             try:
                 order = Order.objects.get(number=request.GET['order_number'])
             except Order.DoesNotExist:
@@ -132,10 +132,13 @@ class OrderListView(ListView, BulkEditMixin):
             queryset = queryset.filter(lines__title__istartswith=data['product_title']).distinct()
             self.description += " including an item with title matching '%s'" % data['product_title']
 
-        if data['product_id']:
-            queryset = queryset.filter(Q(lines__upc=data['product_id']) |
-                                       Q(lines__product_id=data['product_id'])).distinct()
-            self.description += " including an item with ID '%s'" % data['product_id']
+        if data['upc']:
+            queryset = queryset.filter(lines__upc=data['upc'])
+            self.description += " including an item with UPC '%s'" % data['upc']
+
+        if data['partner_sku']:
+            queryset = queryset.filter(lines__partner_sku=data['partner_sku'])
+            self.description += " including an item with ID '%s'" % data['partner_sku']
 
         if data['date_from'] and data['date_to']:
             # Add 24 hours to make search inclusive
@@ -181,9 +184,12 @@ class OrderListView(ListView, BulkEditMixin):
             return self.download_selected_orders(self.request, context['object_list'])
         return super(OrderListView, self).render_to_response(context)
 
+    def get_download_filename(self, request):
+        return 'orders.csv'
+
     def download_selected_orders(self, request, orders):
         response = HttpResponse(mimetype='text/csv')
-        response['Content-Disposition'] = 'attachment; filename=orders.csv'
+        response['Content-Disposition'] = 'attachment; filename=%s' % self.get_download_filename(request)
         writer = csv.writer(response, delimiter=',')
 
         meta_data = (('number', 'Order number'),
@@ -191,6 +197,7 @@ class OrderListView(ListView, BulkEditMixin):
                      ('date', 'Date of purchase'),
                      ('num_items', 'Number of items'),
                      ('status', 'Order status'),
+                     ('customer', 'Customer email address'),
                      ('shipping_address_name', 'Deliver to name'),
                      ('billing_address_name', 'Bill to name'),
                      )
@@ -203,9 +210,10 @@ class OrderListView(ListView, BulkEditMixin):
             row = columns.copy()
             row['number'] = order.number
             row['value'] = order.total_incl_tax
-            row['date'] = order.date_placed
+            row['date'] = format_date(order.date_placed, 'DATETIME_FORMAT')
             row['num_items'] = order.num_items
             row['status'] = order.status
+            row['customer'] = order.email
             if order.shipping_address:
                 row['shipping_address_name'] = order.shipping_address.name()
             else:
@@ -248,7 +256,8 @@ class OrderDetailView(DetailView):
         note_id = self.kwargs.get('note_id', None)
         if note_id:
             note = get_object_or_404(OrderNote, order=self.object, id=note_id)
-            kwargs['instance'] = note
+            if note.is_editable():
+                kwargs['instance'] = note
         return forms.OrderNoteForm(post_data, **kwargs)
 
     def post(self, request, *args, **kwargs):
@@ -282,8 +291,11 @@ class OrderDetailView(DetailView):
         messages.error(request, "No valid action submitted")
         return self.reload_page_response()
 
-    def reload_page_response(self):
-        return HttpResponseRedirect(reverse('dashboard:order-detail', kwargs={'number': self.object.number}))
+    def reload_page_response(self, fragment=None):
+        url = reverse('dashboard:order-detail', kwargs={'number': self.object.number})
+        if fragment:
+            url += '#' + fragment
+        return HttpResponseRedirect(url)
 
     def save_note(self, request, order):
         form = self.get_order_note_form()
@@ -294,7 +306,7 @@ class OrderDetailView(DetailView):
             note.order = order
             note.save()
             messages.success(self.request, success_msg)
-            return self.reload_page_response()
+            return self.reload_page_response(fragment='notes')
         ctx = self.get_context_data(note_form=form)
         return self.render_to_response(ctx)
 
@@ -327,7 +339,7 @@ class OrderDetailView(DetailView):
             messages.info(request, msg)
             order.notes.create(user=request.user, message=msg,
                             note_type=OrderNote.SYSTEM)
-        return self.reload_page_response()
+        return self.reload_page_response(fragment='activity')
 
     def change_line_statuses(self, request, order, lines, quantities):
         new_status = request.POST['new_status'].strip()
@@ -368,10 +380,14 @@ class OrderDetailView(DetailView):
             EventHandler().handle_shipping_event(order, event_type, lines,
                                                  quantities,
                                                  reference=reference)
+        except InvalidShippingEvent, e:
+            messages.error(request, "Unable to create shipping event: %s" % e)
+        except InvalidStatus, e:
+            messages.error(request, "Unable to create shipping event: %s" % e)
         except PaymentError, e:
-            messages.error(request, "Unable to change order status due to payment error: %s" % e)
+            messages.error(request, "Unable to create shipping event due to payment error: %s" % e)
         else:
-            messages.info(request, "Shipping event created")
+            messages.success(request, "Shipping event created")
         return self.reload_page_response()
 
     def create_order_payment_event(self, request, order):
@@ -381,7 +397,7 @@ class OrderDetailView(DetailView):
         except InvalidOperation:
             messages.error(request, "Please choose a valid amount")
             return self.reload_page_response()
-        return self._create_payment_event(request, order)
+        return self._create_payment_event(request, order, amount)
 
     def _create_payment_event(self, request, order, amount, lines=None,
                               quantities=None):
@@ -402,6 +418,8 @@ class OrderDetailView(DetailView):
 
     def create_payment_event(self, request, order, lines, quantities):
         amount_str = request.POST.get('amount', None)
+
+        # If no amount passed, then we add up the total of the selected lines
         if not amount_str:
             amount = D('0.00')
             for line, quantity in zip(lines, quantities):
@@ -412,6 +430,7 @@ class OrderDetailView(DetailView):
             except InvalidOperation:
                 messages.error(request, "Please choose a valid amount")
                 return self.reload_page_response()
+
         return self._create_payment_event(request, order, amount, lines,
                                           quantities)
 
@@ -442,6 +461,7 @@ def get_changes_between_models(model1, model2, excludes=[]):
                 changes[field.verbose_name] = (field.value_from_object(model1),
                                                    field.value_from_object(model2))
     return changes
+
 
 def get_change_summary(model1, model2):
     """

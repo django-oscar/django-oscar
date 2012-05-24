@@ -5,12 +5,15 @@
 Login or register | {{ block.super }}
 {% endblock %}
 
-{% block header %}
-<div class="page-header">
-    <h1>Login / Register</h1>
-</div>
-{% endblock header %}
-
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url promotions:home %}">Home</a>
+        <span class="divider">/</span>
+    </li>
+	<li class="active"><a href=".">Login or register</a></li>
+</ul>
+{% endblock %}
 
 {% block content %}
 
@@ -20,15 +23,15 @@ Login or register | {{ block.super }}
             <h2>Log In</h2>
             {% csrf_token %}
             {% include "partials/form_fields.html" with form=login_form %}
-            <input name="login_submit" type="submit" value="Log In" class="btn" />
+            <button name="login_submit" type="submit" value="Log In" class="btn btn-large btn-primary">Log In</button>
         </form>
     </div>
     <div class="span6 register_form">
         <form action="{{ request.get_full_path }}" method="post" class="form-stacked" />
-            <h2>Register Here</h2>
+            <h2>Register</h2>
             {% csrf_token %}
             {% include "partials/form_fields.html" with form=registration_form %}
-            <input name="registration_submit" type="submit" value="Register" class="btn" />
+            <button name="registration_submit" type="submit" value="Register" class="btn btn-large btn-primary">Register</button>
         </form>
     </div>
 </div>    

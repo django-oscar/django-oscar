@@ -11,6 +11,7 @@ SQL_DEBUG = True
 ADMINS = (
     ('David', 'david.winterbottom@tangentlabs.co.uk'),
 )
+EMAIL_SUBJECT_PREFIX = '[Oscar sandbox] '
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 MANAGERS = ADMINS
@@ -23,6 +24,14 @@ DATABASES = {
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+    }
+}
+
+CACHES = {
+    'default': {
+        'BACKEND':
+        'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
     }
 }
 
@@ -110,6 +119,7 @@ ROOT_URLCONF = 'urls'
 
 from oscar import OSCAR_PARENT_TEMPLATE_DIR
 TEMPLATE_DIRS = (
+    location('templates'),
     os.path.join(OSCAR_PARENT_TEMPLATE_DIR, 'templates'),
     OSCAR_PARENT_TEMPLATE_DIR,
 )
@@ -140,16 +150,16 @@ LOGGING = {
             'class':'logging.StreamHandler',
             'formatter': 'verbose'
         },
-        'file': {
+        'checkout_file': {
              'level': 'INFO',
-             'class': 'logging.FileHandler',
-             'filename': '/tmp/oscar.log',
+             'class': 'oscar.core.logging.handlers.EnvFileHandler',
+             'filename': 'checkout.log',
              'formatter': 'verbose'
         },
         'error_file': {
              'level': 'INFO',
-             'class': 'logging.FileHandler',
-             'filename': '/tmp/errors.log',
+             'class': 'oscar.core.logging.handlers.EnvFileHandler',
+             'filename': 'errors.log',
              'formatter': 'verbose'
         },
         'mail_admins': {
@@ -169,7 +179,7 @@ LOGGING = {
             'propagate': False,
         },
         'oscar.checkout': {
-            'handlers': ['console', 'file'],
+            'handlers': ['console', 'checkout_file'],
             'propagate': True,
             'level':'INFO',
         },
@@ -182,7 +192,7 @@ LOGGING = {
 }
 
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -195,34 +205,13 @@ INSTALLED_APPS = (
     'django_extensions',
     'haystack',
     'debug_toolbar',
-    'pyzen',
     'south',
-    # Apps from oscar
-    'oscar',
-    'oscar.apps.analytics',
-    'oscar.apps.discount',
-    'oscar.apps.order',
-    'oscar.apps.checkout',
-    'apps.shipping',
-    'oscar.apps.catalogue',
-    'oscar.apps.catalogue.reviews',
-    'oscar.apps.basket',
-    'oscar.apps.payment',
-    'oscar.apps.offer',
-    'oscar.apps.address',
-    'oscar.apps.partner',
-    'oscar.apps.customer',
-    'oscar.apps.promotions',
-    'oscar.apps.search',
-    'oscar.apps.voucher',
-    'oscar.apps.dashboard',
-    'oscar.apps.dashboard.reports',
-    'oscar.apps.dashboard.users',
-    'oscar.apps.dashboard.orders',
-    'oscar.apps.dashboard.promotions',
-    'oscar.apps.dashboard.catalogue',
     'sorl.thumbnail',
-)
+    # For profile testing
+    'apps.user',
+]
+from oscar import get_core_apps
+INSTALLED_APPS = INSTALLED_APPS + get_core_apps(['apps.shipping'])
 
 AUTHENTICATION_BACKENDS = (
     'oscar.apps.customer.auth_backends.Emailbackend',
@@ -240,6 +229,8 @@ DEBUG_TOOLBAR_CONFIG = {
     'INTERCEPT_REDIRECTS': False
 }
 
+AUTH_PROFILE_MODULE = 'user.Profile'
+
 # Oscar settings
 from oscar.defaults import *
 
@@ -253,6 +244,7 @@ OSCAR_ORDER_STATUS_PIPELINE = {
 }
 
 OSCAR_SHOP_NAME = 'Oscar Sandbox'
+OSCAR_SHOP_TAGLINE = 'e-Commerce for Django'
 
 GOOGLE_ANALYTICS_ID = 'UA-XXXXX-Y'
 
@@ -260,3 +252,11 @@ try:
     from settings_local import *
 except ImportError:
     pass
+
+LOG_ROOT = location('logs')
+DISPLAY_VERSION = False
+
+THUMBNAIL_DEBUG = True
+
+# Must be within MEDIA_ROOT for sorl to work
+OSCAR_MISSING_IMAGE_URL = 'image_not_found.jpg'

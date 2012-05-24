@@ -4,3 +4,7 @@ class ImportError(Exception):
 
 class CatalogueImportError(Exception):
     pass
+
+
+class InvalidStockAdjustment(Exception):
+    pass

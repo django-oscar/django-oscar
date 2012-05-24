@@ -6,7 +6,7 @@ Shipping method | {{ block.super }}
 {% endblock %}
 
 {% block checkout-nav %}
-{% include 'checkout/nav.html' with step=2 %}
+	{% include 'checkout/nav.html' with step=2 %}
 {% endblock %}
 
 {% block order_contents %}{% endblock %}
@@ -37,7 +37,7 @@ Shipping method | {{ block.super }}
             <form method="post" action="{% url checkout:shipping-method %}">
                 {% csrf_token %}
                 <input type="hidden" name="method_code" value="{{ method.code }}" class="btn" />
-                <button type="submit" class="btn btn-small btn-primary pull-right">Select option</button>
+                <button type="submit" class="btn btn-large btn-primary pull-right">Select option</button>
             </form>
         </div>    
     </div>

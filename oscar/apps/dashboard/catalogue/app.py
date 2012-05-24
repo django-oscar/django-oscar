@@ -8,7 +8,7 @@ from oscar.apps.dashboard.nav import register, Node
 node = Node('Catalogue')
 node.add_child(Node('Products', 'dashboard:catalogue-product-list'))
 node.add_child(Node('Stock alerts', 'dashboard:stock-alert-list'))
-register(node)
+register(node, 10)
 
 
 class CatalogueApplication(Application):

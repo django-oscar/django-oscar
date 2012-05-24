@@ -1,9 +1,15 @@
 from imp import new_module
 
 from django.conf import settings
+from django.core.exceptions import ImproperlyConfigured
+from django.db.models import get_model
 
 
 class AppNotFoundError(Exception):
+    pass
+
+
+class ClassNotFoundError(Exception):
     pass
 
 
@@ -37,7 +43,8 @@ def get_classes(module_label, classnames):
 
     # App must be local - check if module is in local app (it could be in
     # oscar's)
-    base_package = app_module_path.split(".")[0]
+    app_label = module_label.split('.')[0]
+    base_package = app_module_path.replace('.'+app_label, '')
     local_app = "%s.%s" % (base_package, module_label)
     try:
         imported_local_module = __import__(local_app, fromlist=classnames)
@@ -53,10 +60,16 @@ def get_classes(module_label, classnames):
 def _pluck_classes(modules, classnames):
     klasses = []
     for classname in classnames:
+        klass = None
         for module in modules:
             if hasattr(module, classname):
-                klasses.append(getattr(module, classname))
+                klass = getattr(module, classname)
                 break
+        if not klass:
+            packages = [m.__name__ for m in modules]
+            raise ClassNotFoundError("No class '%s' found in %s" % (
+                classname, ", ".join(packages)))
+        klasses.append(klass)
     return klasses
 
 
@@ -81,3 +94,14 @@ def import_module(module_label, classes, namespace=None):
         for classname, klass in zip(classes, klasses):
             setattr(module, classname, klass)
         return module
+
+
+def get_profile_class():
+    """
+    Return the profile model class
+    """
+    app_label, model_name = settings.AUTH_PROFILE_MODULE.split('.')
+    profile_class = get_model(app_label, model_name)
+    if not profile_class:
+        raise ImproperlyConfigured("Can't import profile model")
+    return profile_class

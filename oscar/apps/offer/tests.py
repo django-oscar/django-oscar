@@ -91,6 +91,22 @@ class CountConditionTest(OfferTest):
     
     def test_empty_basket_fails_condition(self):
         self.assertFalse(self.cond.is_satisfied(self.basket))
+
+    def test_empty_basket_fails_partial_condition(self):
+        self.assertFalse(self.cond.is_partially_satisfied(self.basket))
+
+    def test_smaller_quantity_basket_passes_partial_condition(self):
+        self.basket.add_product(create_product(), 1)
+        self.assertTrue(self.cond.is_partially_satisfied(self.basket))
+
+    def test_smaller_quantity_basket_upsell_message(self):
+        self.basket.add_product(create_product(), 1)
+        self.assertTrue('Buy 1 more product from ' in
+                        self.cond.get_upsell_message(self.basket))
+
+    def test_matching_quantity_basket_fails_partial_condition(self):
+        self.basket.add_product(create_product(), 2)
+        self.assertFalse(self.cond.is_partially_satisfied(self.basket))
         
     def test_matching_quantity_basket_passes_condition(self):
         self.basket.add_product(create_product(), 2)
@@ -133,10 +149,25 @@ class ValueConditionTest(OfferTest):
     
     def test_empty_basket_fails_condition(self):
         self.assertFalse(self.cond.is_satisfied(self.basket))
+
+    def test_empty_basket_fails_partial_condition(self):
+        self.assertFalse(self.cond.is_partially_satisfied(self.basket))
         
     def test_less_value_basket_fails_condition(self):
         self.basket.add_product(self.item, 1)
         self.assertFalse(self.cond.is_satisfied(self.basket))    
+
+    def test_upsell_message(self):
+        self.basket.add_product(self.item, 1)
+        self.assertTrue('Spend' in self.cond.get_upsell_message(self.basket))
+
+    def test_matching_basket_fails_partial_condition(self):
+        self.basket.add_product(self.item, 2)
+        self.assertFalse(self.cond.is_partially_satisfied(self.basket))   
+
+    def test_less_value_basket_passes_partial_condition(self):
+        self.basket.add_product(self.item, 1)
+        self.assertTrue(self.cond.is_partially_satisfied(self.basket))    
         
     def test_matching_basket_passes_condition(self):
         self.basket.add_product(self.item, 2)
@@ -177,20 +208,40 @@ class CoverageConditionTest(TestCase):
     
     def test_empty_basket_fails(self):
         self.assertFalse(self.cond.is_satisfied(self.basket))
+
+    def test_empty_basket_fails_partial_condition(self):
+        self.assertFalse(self.cond.is_partially_satisfied(self.basket))
         
     def test_single_item_fails(self):
         self.basket.add_product(self.products[0])
         self.assertFalse(self.cond.is_satisfied(self.basket))
+
+    def test_single_item_passes_partial_condition(self):
+        self.basket.add_product(self.products[0])
+        self.assertTrue(self.cond.is_partially_satisfied(self.basket))
+
+    def test_upsell_message(self):
+        self.basket.add_product(self.products[0])
+        self.assertTrue('Buy 1 more' in self.cond.get_upsell_message(self.basket))
         
     def test_duplicate_item_fails(self):
         self.basket.add_product(self.products[0])
         self.basket.add_product(self.products[0])
         self.assertFalse(self.cond.is_satisfied(self.basket))  
+
+    def test_duplicate_item_passes_partial_condition(self):
+        self.basket.add_product(self.products[0], 2)
+        self.assertTrue(self.cond.is_partially_satisfied(self.basket))  
         
     def test_covering_items_pass(self):
         self.basket.add_product(self.products[0])
         self.basket.add_product(self.products[1])
         self.assertTrue(self.cond.is_satisfied(self.basket))
+
+    def test_covering_items_fail_partial_condition(self):
+        self.basket.add_product(self.products[0])
+        self.basket.add_product(self.products[1])
+        self.assertFalse(self.cond.is_partially_satisfied(self.basket))
         
     def test_covering_items_are_consumed(self):
         self.basket.add_product(self.products[0])

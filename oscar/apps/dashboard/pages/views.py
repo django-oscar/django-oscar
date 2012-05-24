@@ -1,13 +1,10 @@
 from django.db.models.loading import get_model
 from django.template.defaultfilters import slugify
 from django.http import HttpResponseRedirect
-
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
-
 from django.views import generic
 from django.views.generic import ListView
-
 from django.contrib import messages
 
 from oscar.core.validators import URLDoesNotExistValidator

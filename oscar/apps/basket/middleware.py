@@ -1,12 +1,13 @@
 import zlib
 
 from django.conf import settings
-from django.core.exceptions import SuspiciousOperation
 from django.db.models import get_model
 
-from oscar.core.loading import import_module
-import_module('offer.utils', ['Applicator'], locals())
-basket_model = get_model('basket', 'basket')
+from oscar.core.loading import get_class
+from oscar.apps.basket.abstract_models import OPEN
+
+Applicator = get_class('offer.utils', 'Applicator')
+Basket = get_model('basket', 'basket')
 
 
 class BasketMiddleware(object):
@@ -18,7 +19,7 @@ class BasketMiddleware(object):
         request.basket = basket
     
     def get_basket(self, request):  
-        manager = basket_model.open
+        manager = Basket.open
         cookie_basket = self.get_cookie_basket(settings.OSCAR_BASKET_COOKIE_OPEN, 
                                                request, manager)
         
@@ -28,7 +29,7 @@ class BasketMiddleware(object):
             # basket into their user basket, then delete the cookie
             try:
                 basket, _ = manager.get_or_create(owner=request.user)
-            except basket_model.MultipleObjectsReturned:
+            except Basket.MultipleObjectsReturned:
                 # Not sure quite how we end up here with multiple baskets
                 # We merge any  them and create a fresh one
                 old_baskets = list(manager.filter(owner=request.user))
@@ -45,7 +46,7 @@ class BasketMiddleware(object):
         else:
             # Anonymous user with no basket - we don't save the basket until
             # we need to.
-            basket = basket_model() 
+            basket = Basket()
         return basket 
             
     def merge_baskets(self, master, slave):
@@ -57,7 +58,6 @@ class BasketMiddleware(object):
         master.merge(slave)    
         
     def process_response(self, request, response):
-        
         # Delete any surplus cookies
         if hasattr(self, 'cookies_to_delete'):
             for cookie_key in self.cookies_to_delete:
@@ -96,8 +96,9 @@ class BasketMiddleware(object):
             basket_id, basket_hash = parts
             if basket_hash == self.get_basket_hash(basket_id):
                 try:
-                    basket = basket_model.objects.get(pk=basket_id, owner=None)
-                except basket_model.DoesNotExist:
+                    basket = Basket.objects.get(pk=basket_id, owner=None,
+                                                status=OPEN)
+                except Basket.DoesNotExist:
                     self.cookies_to_delete.append(cookie_key)
             else:
                 self.cookies_to_delete.append(cookie_key)

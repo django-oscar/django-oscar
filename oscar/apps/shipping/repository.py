@@ -1,3 +1,4 @@
+from django.core.exceptions import ImproperlyConfigured
 from oscar.apps.shipping.methods import Free
 
 
@@ -20,7 +21,10 @@ class Repository(object):
         return self.add_basket_to_methods(basket, methods)
 
     def get_default_shipping_method(self, user, basket, shipping_addr=None, **kwargs):
-        return self.get_shipping_methods(user, basket, shipping_addr, **kwargs)[0]
+        methods = self.get_shipping_methods(user, basket, shipping_addr, **kwargs)
+        if len(methods) == 0:
+            raise ImproperlyConfigured("You need to define some shipping methods")
+        return methods[0]
 
     def add_basket_to_methods(self, basket, methods):
         for method in methods:

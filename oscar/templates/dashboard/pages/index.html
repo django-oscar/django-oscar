@@ -8,7 +8,7 @@ Pages | {{ block.super }}
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url promotions:home %}">Dashboard</a>
+        <a href="{% url dashboard:index %}">Dashboard</a>
         <span class="divider">/</span>
     </li>
     <li class="active"><a href=".">Page Management</a></li>
@@ -18,7 +18,7 @@ Pages | {{ block.super }}
 {% block header %}
 <div class="page-header action">
     <h1>Page Management</h1><a href="#" class="pull_out">Search Pages</a>
-    <div class="orders_search">
+    <div class="orders_search" style="display:none">
         <form action="." method="get" class="form-horizontal">
             {% include "partials/form_fields.html" with form=form %}
            <div class="form-actions">
@@ -73,3 +73,7 @@ Pages | {{ block.super }}
 {% endif %}
 
 {% endblock dashboard_content %}
+
+{% block onbodyload %}
+oscar.dashboard.search.init();
+{% endblock onbodyload %}

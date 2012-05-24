@@ -4,7 +4,8 @@ from django.contrib.auth.decorators import login_required
 from oscar.apps.customer.views import AccountSummaryView, OrderHistoryView, \
     OrderDetailView, OrderLineView, AddressListView, AddressCreateView, \
     AddressUpdateView, AddressDeleteView, EmailHistoryView, EmailDetailView, \
-    AccountAuthView, AnonymousOrderDetailView, ChangePasswordView
+    AccountAuthView, AnonymousOrderDetailView, ChangePasswordView, ProfileUpdateView, \
+    AccountRegistrationView
 from oscar.core.application import Application
 
 
@@ -22,6 +23,8 @@ class CustomerApplication(Application):
     email_list_view = EmailHistoryView
     email_detail_view = EmailDetailView
     login_view = AccountAuthView
+    register_view = AccountRegistrationView
+    profile_update_view = ProfileUpdateView
     change_password_view = ChangePasswordView
 
     def get_urls(self):
@@ -32,10 +35,12 @@ class CustomerApplication(Application):
         urlpatterns += patterns('',
             url(r'^$', login_required(self.summary_view.as_view()), name='summary'),
             url(r'^login/$', self.login_view.as_view(), name='login'),
+            url(r'^register/$', self.register_view.as_view(), name='register'),
             url(r'^change-password/$', self.change_password_view.as_view(),
                 name='change-password'),
 
             # Profile
+            url(r'^profile/$', login_required(self.profile_update_view.as_view()), name='profile-update'),
             url(r'^orders/$', login_required(self.order_history_view.as_view()), name='order-list'),
             url(r'^order-status/(?P<order_number>[\w-]*)/(?P<hash>\w+)/$', 
                 self.anon_order_detail_view.as_view(), name='anon-order'),

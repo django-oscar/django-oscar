@@ -61,6 +61,9 @@ class ProductCreateRedirectView(generic.RedirectView):
 
     def get_redirect_url(self, **kwargs):
         product_class_id = self.request.GET.get('product_class', None)
+        if not product_class_id.isdigit():
+            messages.error(self.request, "Please choose a product class")
+            return reverse('dashboard:catalogue-product-list')
         try:
             product_class = ProductClass.objects.get(id=product_class_id)
         except ProductClass.DoesNotExist:
@@ -150,7 +153,10 @@ class ProductUpdateView(generic.UpdateView):
     def get_context_data(self, **kwargs):
         ctx = super(ProductUpdateView, self).get_context_data(**kwargs)
         if 'stockrecord_form' not in ctx:
-            ctx['stockrecord_form'] = StockRecordForm(instance=self.object.stockrecord)
+            instance = None
+            if self.object.has_stockrecord:
+                instance=self.object.stockrecord
+            ctx['stockrecord_form'] = StockRecordForm(instance=instance)
         if 'category_formset' not in ctx:
             ctx['category_formset'] = ProductCategoryFormSet(instance=self.object)
         if 'image_formset' not in ctx:
@@ -187,7 +193,7 @@ class ProductUpdateView(generic.UpdateView):
                                             self.request.FILES,
                                             instance=self.object)
         if stockrecord_form.is_valid() and category_formset.is_valid() and image_formset.is_valid():
-            product = form.save()
+            form.save()
             stockrecord_form.save()
             category_formset.save()
             image_formset.save()
