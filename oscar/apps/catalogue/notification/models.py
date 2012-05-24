@@ -10,7 +10,8 @@ class NotificationList(models.Model):
     user can be an anonymous user.
     """
     active = models.BooleanField(db_index=True, default=True)
-    user = models.OneToOneField(User, db_index=True, null=True, related_name="notifications")
+    user = models.OneToOneField(User, db_index=True, null=True,
+                                related_name="notifications")
     email = models.EmailField(db_index=True)
     confirm_key = models.CharField(max_length=16, null=True)
     unsubscribe_key = models.CharField(max_length=16, null=True)

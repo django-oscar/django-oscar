@@ -30,7 +30,7 @@ class UnsubscribeNotificationView(generic.TemplateView):
 
     def get(self, *args, **kwargs):
         self.object = self.get_notification(kwargs.get('key', None),
-                                        self.request.GET.get('email', None))
+                                            self.request.GET.get('email', None))
         self.object.active = False
         self.object.save()
         return super(UnsubscribeNotificationView, self).get(*args, **kwargs)
@@ -57,7 +57,7 @@ class ConfirmNotificationView(generic.TemplateView):
 
     def get(self, *args, **kwargs):
         self.object = self.get_notification(kwargs.get('key', None),
-                                        self.request.GET.get('email', None))
+                                            self.request.GET.get('email', None))
         self.object.active = True
         self.object.save()
         return super(ConfirmNotificationView, self).get(*args, **kwargs)
@@ -107,7 +107,8 @@ class CreateProductNotificationView(generic.FormView):
                                                 email=form.cleaned_data['email']
                                         )
         if created:
-            # if notification was created, generate a key for mark a False active for unkwn user
+            # if notification was created, generate a key for mark a False
+            # active for unkwn user
             alphabet = [chr(x) for x in range(ord('A'), ord('Z') + 1)]
             keys = [''.join([random.choice(alphabet) for i in range(0, 16)]),
                     ''.join([random.choice(alphabet) for i in range(0, 16)]),
@@ -123,7 +124,9 @@ class CreateProductNotificationView(generic.FormView):
                         "Check your email to confirm this subscription")
 
         # now add the required product to the notification list
-        self.notification.productnotification_set.get_or_create(product=self.product)
+        self.notification.productnotification_set.get_or_create(
+            product=self.product
+        )
         messages.success(self.request,
                 "%s was added to your notification list" % self.product.title)
         return super(self.__class__, self).form_valid(form)

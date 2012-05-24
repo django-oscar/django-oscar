@@ -1,9 +1,11 @@
-{% if user.is_authenticated %}
-    <form method="POST" action="{% url catalogue:notification-add product.slug product.id %}">
-        {% csrf_token %}
-        {{ form }}
-        <button type="submit" class="btn btn-info">Notify Me</button>
-    </form>
-{% else %}
-    <p><a href="{% url catalogue:notification-add product.slug product.id %}">Notify me</a> when this product becomes available</p>
+{% if product.stockrecord.num_in_stock == 0 %}
+    {% if user.is_authenticated %}
+        <form method="POST" action="{% url catalogue:notification-add product.slug product.id %}">
+            {% csrf_token %}
+            {{ form }}
+            <button type="submit" class="btn btn-info">Notify Me</button>
+        </form>
+    {% else %}
+        <p><a href="{% url catalogue:notification-add product.slug product.id %}">Notify me</a> when this product becomes available</p>
+    {% endif %}
 {% endif %}

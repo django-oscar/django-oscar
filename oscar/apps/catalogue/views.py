@@ -31,7 +31,7 @@ class ProductDetailView(DetailView):
         )
         ctx['notification_form'] = NotificationForm(initial={
             'user': self.request.user,
-            'email': self.request.user.email,
+            'email': getattr(self.request.user, 'email', ''),
         })
         return ctx
 
