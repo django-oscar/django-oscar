@@ -27,6 +27,7 @@
 
     <h3><a href="{{ product.get_absolute_url }}">{{ product.get_title|truncatewords:7 }}</a></h3>
 
+    <div class="product_price">
     {% include "catalogue/partials/stock_record.html" %}
 
     {% basket_form basket product as basket_form single %}
