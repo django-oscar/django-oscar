@@ -5,8 +5,7 @@ from oscar.core.application import Application
 from oscar.apps.dashboard.ranges import views
 from oscar.apps.dashboard.nav import register, Node
 
-node = Node('Ranges')
-node.add_child(Node('All ranges', 'dashboard:range-list'))
+node = Node('Ranges', 'dashboard:range-list')
 register(node, 70)
 
 

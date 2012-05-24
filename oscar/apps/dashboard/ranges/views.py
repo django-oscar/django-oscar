@@ -32,11 +32,14 @@ class RangeCreateView(CreateView):
     form_class = RangeForm
 
     def get_success_url(self):
-        messages.success(self.request, "Range created")
-        return reverse('dashboard:range-list')
+        if 'action' in self.request.POST:
+            return reverse('dashboard:range-products', kwargs={'pk': self.object.id})
+        else:
+            messages.success(self.request, "Range created")
+            return reverse('dashboard:range-list')
 
     def get_context_data(self, **kwargs):
-        ctx = super(RangeUpdateView, self).get_context_data(**kwargs)
+        ctx = super(RangeCreateView, self).get_context_data(**kwargs)
         ctx['title'] = "Create range"
         return ctx
 
@@ -47,8 +50,11 @@ class RangeUpdateView(UpdateView):
     form_class = RangeForm
 
     def get_success_url(self):
-        messages.success(self.request, "Range updated")
-        return reverse('dashboard:range-list')
+        if 'action' in self.request.POST:
+            return reverse('dashboard:range-products', kwargs={'pk': self.object.id})
+        else:
+            messages.success(self.request, "Range updated")
+            return reverse('dashboard:range-list')
 
     def get_context_data(self, **kwargs):
         ctx = super(RangeUpdateView, self).get_context_data(**kwargs)

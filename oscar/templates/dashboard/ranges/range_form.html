@@ -32,6 +32,8 @@
 	{% block form_actions %}
 	<div class="form-actions">
 		<button class="btn btn-primary btn-large" type="submit">Save</button> or
+		{# This is an input so we distinguish between which button was pressed #}
+		<input class="btn btn-primary btn-large" type="submit" name="action" value="Save and edit products"/>
 		<a href="{% url dashboard:range-list %}">cancel</a>
 	</div>
 	{% endblock form_actions %}
