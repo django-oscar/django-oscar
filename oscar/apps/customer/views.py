@@ -37,7 +37,7 @@ class LogoutView(RedirectView):
         auth_logout(request)
         response = super(LogoutView, self).get(request, *args, **kwargs)
 
-        for cookie in settings.COOKIES_DELETE_ON_LOGOUT:
+        for cookie in settings.OSCAR_COOKIES_DELETE_ON_LOGOUT:
             response.delete_cookie(cookie)
 
         return response

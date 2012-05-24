@@ -54,4 +54,4 @@ OSCAR_OFFER_BLACKLIST_PRODUCT = None
 OSCAR_MAX_BASKET_QUANTITY_THRESHOLD = None
 
 #Cookies
-COOKIES_DELETE_ON_LOGOUT = ['oscar_recently_viewed_products', ]
+OSCAR_COOKIES_DELETE_ON_LOGOUT = ['oscar_recently_viewed_products', ]
