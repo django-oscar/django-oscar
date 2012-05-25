@@ -1,6 +1,6 @@
 import datetime
 import os
-import csv
+import re
 
 from django.db import models
 Product = models.get_model('catalogue', 'Product')
@@ -70,8 +70,8 @@ class RangeProductFileUpload(models.Model):
             self.range.included_products.add(product)
 
         # Processing stats
-        found_skus = set(products.values_list('stockrecord__partner_sku', flat=True))
-        found_upcs = set(products.values_list('upc', flat=True))
+        found_skus = filter(bool, set(products.values_list('stockrecord__partner_sku', flat=True)))
+        found_upcs = filter(bool, set(products.values_list('upc', flat=True)))
         found_ids = found_skus.union(found_upcs)
         missing_ids = new_ids - found_ids
         dupes = set(all_ids).intersection(existing_ids)
@@ -82,10 +82,10 @@ class RangeProductFileUpload(models.Model):
         """
         Extract all SKU- or UPC-like strings from the file
         """
-        reader = csv.reader(open(self.filepath, 'r'))
-        for row in reader:
-            for field in row:
-                yield field
+        for line in open(self.filepath, 'r'):
+            for id in re.split('[^\w:\.-]', line):
+                if id:
+                    yield id
 
     def delete_file(self):
         os.unlink(self.filepath)
