@@ -25,7 +25,7 @@ class ReviewListView(generic.ListView, BulkEditMixin):
     base_description = 'All reviews'
 
     def get(self, request, *args, **kwargs):
-        response = super(self.__class__, self).get(request, **kwargs)
+        response = super(ReviewListView, self).get(request, **kwargs)
         self.form = self.form_class()
         return response
 
@@ -112,7 +112,7 @@ class ReviewListView(generic.ListView, BulkEditMixin):
         return queryset
 
     def get_context_data(self, **kwargs):
-        context = super(self.__class__, self).get_context_data(**kwargs)
+        context = super(ReviewListView, self).get_context_data(**kwargs)
         context['review_form'] = self.review_form_class()
         context['form'] = self.form
         return context
