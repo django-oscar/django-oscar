@@ -13,6 +13,25 @@ from oscar.apps.partner.models import StockRecord
 from oscar.apps.catalogue.notification.models import ProductNotification
 
 
+class ProductNotificationTests(TestCase):
+
+    def setUp(self):
+        self.product = get(Product)
+
+    def test_authenticated_user_notification_get_email(self):
+        user = get(User)
+        notification = ProductNotification.objects.create(user=user, product=self.product)
+
+        self.assertEquals(notification.get_notification_email(), user.email)
+
+    def test_authenticated_user_notification_get_email(self):
+        notification = ProductNotification.objects.create(email='test@oscar.com',
+                                                          product=self.product)
+
+        self.assertEquals(notification.get_notification_email(),
+                          'test@oscar.com')
+
+
 class NotificationTestCase(ClientTestCase):
     product_counter = itertools.count()
 
@@ -151,8 +170,7 @@ class CreateNotificationViewAsAuthenticatedUserTests(NotificationTestCase):
         this product notification. The user should be redirected to the product
         page with a notification that he has already signed up. 
         """
-        notification = get(ProductNotification, product=self.product_1, user=self.user,
-                           )
+        notification = get(ProductNotification, product=self.product_1, user=self.user)
         notification_url = reverse('catalogue:notification-add',
                               args=(self.product_1.slug, self.product_1.id))
         response = self.client.post(notification_url, data={'email': self.user.email},
@@ -161,6 +179,41 @@ class CreateNotificationViewAsAuthenticatedUserTests(NotificationTestCase):
         self.assertContains(response, self.product_1.title, status_code=200)
         self.assertEquals(self.user.notifications.count(), 1)
         self.assertEquals(notification, self.user.notifications.all()[0])
+
+
+class CreateNotificationViewAsAnonymousUserTests(NotificationTestCase):
+    is_anonymous = True 
+    email = 'testuser@oscar.com'
+    username = 'testuser'
+    password = 'password'
+
+    def setUp(self):
+        super(self.__class__, self).setUp()
+        self.create_user()
+
+        self.create_product_class()
+        self.product_1 = self.create_product()
+        self.product_2 = self.create_product()
+
+    def test_creating_notification_when_registered_user_is_not_logged_in(self):
+        """
+        Test creating a notification when a registered user is not yet logged
+        in. The email address in the form is checked against all users. If a
+        user profile has this email address set, the user will be redirected
+        to the login page and from there right back to the product detail
+        page where the user hits the 'Notify Me' button again.
+        """
+        notification_url = reverse('catalogue:notification-add',
+                                   args=(self.product_1.slug, self.product_1.id))
+        response = self.client.post(notification_url, data={'email': self.email},
+                                    follow=True)
+
+        self.assertContains(response, 'Password', status_code=200)
+        self.assertEquals(
+            response.context[0].get('next'),
+            reverse('catalogue:detail', args=(self.product_1.slug,
+                                              self.product_1.id))
+        )
 
    # def test_create_notification_authenticated_user(self):
    #     """

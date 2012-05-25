@@ -1,3 +1,4 @@
+import sha
 import random
 from django.conf import settings
 from django.http import Http404, HttpResponseRedirect
@@ -5,6 +6,7 @@ from django.views import generic
 
 from django.db.models import get_model
 from django.contrib import messages
+from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext as _
@@ -88,60 +90,80 @@ class CreateProductNotificationView(generic.FormView):
         ctx['product'] = self.get_product()
         return ctx
 
-    def form_valid(self, form):
-        self.product = self.get_product()
-        is_authenticated = self.request.user.is_authenticated()
+    def generate_random_key(self, email):
+        salt = sha.new(str(random.random())).hexdigest()
+        return sha.new(salt+str(email)).hexdigest()
 
-        # if the user is registered with the site, the user will
-        # be stored without email. The email can be retrieved from
-        # the user.
-        # For an anonymous user, the email will be stored and the
-        # user is empty.
+    def get_notification_for_anonymous_user(self, email):
+        notification, created = ProductNotification.objects.get_or_create(
+            email=email,
+            product=self.product,
+        )
+
+        if created: 
+            notification.status = ProductNotification.UNCONFIRMED
+            notification.confirm_key = self.generate_random_key(anonymous_email)
+            notification.unsubscribe_key = self.generate_random_key(anonymous_email)
+            notification.save()
+        return notification, created
+
+    def get_notification_for_authenticated_user(self):
+        notification, created = ProductNotification.objects.get_or_create(
+            user=self.request.user,
+            product=self.product,
+        )
+
+        if created:
+            notification.status = ProductNotification.ACTIVE
+            notification.save()
+        return notification, created
+
+    def form_valid(self, form):
+        is_authenticated = self.request.user.is_authenticated()
+        self.product = self.get_product()
+
+        # first check if the anonymous user provided an email address
+        # that belongs to a registered user. If that is the case the
+        # user will be redirected to the login/register page
+        if not is_authenticated:
+            try:
+                user = User.objects.get(email=form.cleaned_data['email'])
+                redirect_url = "%s?next=%s" % (reverse('customer:login'),
+                                               self.get_success_url())
+                return HttpResponseRedirect(redirect_url)
+            except User.DoesNotExist:
+                pass
+
         if is_authenticated:
-            notification, created = ProductNotification.objects.get_or_create(
-                user=self.request.user,
-                product=self.product,
-            )
+            notification, created = self.get_notification_for_authenticated_user()
         else:
-            notification, created = ProductNotification.objects.get_or_create(
-                email=form.cleaned_data['email'],
-                product=self.product,
+            notification, created = self.get_notification_for_anonymous_user(
+                form.cleaned_data['email']
             )
 
         if not created:
             messages.success(self.request,
                              _("you have signed up for a "
-                               "notification of '%s'") % self.product.title)
+                               "notification of '%s' already") % self.product.title)
             return HttpResponseRedirect(self.get_success_url())
 
         if created and not is_authenticated:
             # create keys for anonymous users leave blank for users that
             # are registered as they can manage their subscriptions in
             # their account settings
-            alphabet = [chr(x) for x in range(ord('A'), ord('Z') + 1)]
-            keys = (''.join([random.choice(alphabet) for i in range(0, 16)]),
-                    ''.join([random.choice(alphabet) for i in range(0, 16)]),)
-                    #''.join([random.choice(alphabet) for i in range(0, 32)]))
-
-            notification.confirm_key =  keys[0]
-            notification.unsubscribe_key = keys[1]
-            #notification.persistence_key = keys[2]
-
-            notification.active = not is_authenticated
-            notification.save()
 
             # TODO : send an email confirmation email in case is annonymous
             messages.info(self.request,
                     "Check your email to confirm this subscription")
 
         messages.success(self.request,
-                "%s was added to your notification list" % self.product.title)
-        return super(self.__class__, self).form_valid(form)
+                "%s was added to your notifications" % self.product.title)
+
+        return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
-        return reverse('catalogue:detail', kwargs={
-                                        'product_slug': self.product.slug,
-                                        "pk": self.product.pk})
+        return reverse('catalogue:detail',
+                       args=(self.product.slug, self.product.pk))
 
 
 class DeleteProductNotificationView(generic.FormView):

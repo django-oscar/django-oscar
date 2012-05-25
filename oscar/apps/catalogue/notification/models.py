@@ -12,14 +12,22 @@ class AbstractNotification(models.Model):
     """
     user = models.ForeignKey(User, db_index=True, blank=True, null=True,
                              related_name="notifications")
+    # these field only apply to unauthenticated users and are empty
+    # if the user is registered in the system
     email = models.EmailField(db_index=True, blank=True, null=True)
-    date_created = models.DateTimeField(auto_now_add=True)
     confirm_key = models.CharField(max_length=16, null=True)
     unsubscribe_key = models.CharField(max_length=16, null=True)
 
-    #TODO: check what this is actually for, I don't understand it
-    # used for an authenticated user to keep persistence with his notifications
-    #persistence_key = models.CharField(max_length=32, null=True)
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_modified = models.DateTimeField(auto_now=True)
+
+    UNCONFIRMED, ACTIVE, INACTIVE = ('unconfirmed', 'active', 'inactive')
+    STATUS_TYPES = (
+        (UNCONFIRMED, _('Not Yet Confirmed')),
+        (ACTIVE, _('Active')),
+        (INACTIVE, _('Inactive')),
+    )
+    status = models.CharField(max_length=20, choices=STATUS_TYPES, default=INACTIVE)
 
     def get_notification_email(self):
         if self.user:
