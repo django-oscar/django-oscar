@@ -69,14 +69,14 @@ Order {{ order.number }} | {{ block.super }}
 			</div>
 		</div>
 
-		<div class="tab-pane active" id="2">
+		<div class="tab-pane" id="2">
 			<div class="sub-header">
 				<h3>Shipping method</h3>
 			</div>
 			<p>{{ order.shipping_method }}</p>
 		</div>
 
-		<div class="tab-pane active" id="3">
+		<div class="tab-pane" id="3">
 			<div class="sub-header">
 				<h3>Order contents</h3>
 			</div>
@@ -114,21 +114,17 @@ Order {{ order.number }} | {{ block.super }}
 					<td>-{{ discount.amount|currency }}</td>
 				</tr>
 				{% endfor %}
-			</table>
-
-			<table class="table table-striped table-bordered">
-				<caption>Totals</caption>
 				<tr>
-					<th>Basket total (inc. tax)</th>
-					<td>{{ order.basket_total_incl_tax|currency }}</td>
+					<th colspan="4">Basket total (inc. tax)</th>
+					<td colspan="2">{{ order.basket_total_incl_tax|currency }}</td>
 				</tr>
 				<tr>
-					<th>Shipping charge (inc. tax)</th>
-					<td>{{ order.shipping_incl_tax|currency }}</td>
+					<th colspan="4">Shipping charge (inc. tax)</th>
+					<td colspan="2">{{ order.shipping_incl_tax|currency }}</td>
 				</tr>
 				<tr>
-					<th>Order total</th>
-					<td>{{ order.total_incl_tax|currency }}</td>
+					<th colspan="4">Order total</th>
+					<td colspan="2">{{ order.total_incl_tax|currency }}</td>
 				</tr>
 			</table>
 		</div>
