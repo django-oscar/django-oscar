@@ -1,6 +1,7 @@
 import itertools
 
 from django.test import TestCase
+from django.core import mail
 from django.core.urlresolvers import reverse
 
 from django.contrib.auth.models import User
@@ -9,7 +10,7 @@ from django_dynamic_fixture import get
 
 from oscar.test import ClientTestCase
 from oscar.apps.catalogue.models import Product, ProductClass
-from oscar.apps.partner.models import StockRecord 
+from oscar.apps.partner.models import StockRecord
 from oscar.apps.catalogue.notification.models import ProductNotification
 
 
@@ -18,13 +19,12 @@ class ProductNotificationTests(TestCase):
     def setUp(self):
         self.product = get(Product)
 
-    def test_authenticated_user_notification_get_email(self):
+    def test_authenticated_user_notification_get_authenticated_email(self):
         user = get(User)
         notification = ProductNotification.objects.create(user=user, product=self.product)
-
         self.assertEquals(notification.get_notification_email(), user.email)
 
-    def test_authenticated_user_notification_get_email(self):
+    def test_authenticated_user_notification_get_anonymous_email(self):
         notification = ProductNotification.objects.create(email='test@oscar.com',
                                                           product=self.product)
 
@@ -48,7 +48,7 @@ class NotificationTestCase(ClientTestCase):
                    title='product_%s' % product_id,
                    upc='00000000000%s' % product_id)
 
-        stockrecord = get(StockRecord, product=product, num_in_stock=0)
+        get(StockRecord, product=product, num_in_stock=0)
         return product
 
 
@@ -84,18 +84,67 @@ class NotifyMeInViewTests(NotificationTestCase):
 
 class CreateNotificationViewAsAnonymousTests(NotificationTestCase):
     is_anonymous = True
+    email = 'anonymous@email.com'
 
     def setUp(self):
-        super(self.__class__, self).setUp()
+        super(CreateNotificationViewAsAnonymousTests, self).setUp()
         self.create_product_class()
         self.product_1 = self.create_product()
-        self.product_2 = self.create_product()
 
-    def test_create_notification_for_anonymous_without_email(self):
-        pass
+    def test_create_notification_for_anonymous(self):
+        """
+        Test creating a notification for an anonymous user. A notification
+        is generated for the user with confirmation and unsubscribe code.
+        The notification is set to UNCONFIRMED and a email is sent to the
+        user. The confirmation of the notification is handled by a link
+        that will activate the notification.
+        """
+        notification_url = reverse('catalogue:notification-add',
+                                   args=(self.product_1.slug, self.product_1.id))
+        response = self.client.post(notification_url, data={'email': self.email},
+                                    follow=True)
 
-    def test_create_notification_for_anonymous_with_email(self):
-        pass
+        self.assertContains(response, self.product_1.title, status_code=200)
+        notification = ProductNotification.objects.get(email=self.email,
+                                                       product=self.product_1)
+        self.assertEquals(notification.status, ProductNotification.UNCONFIRMED)
+
+        self.assertEquals(len(mail.outbox), 1)
+        self.assertTrue("confirm" in mail.outbox[0].body)
+        self.assertTrue("unsubscribe" in mail.outbox[0].body)
+
+    def test_activating_unconfirmed_notification(self):
+        notification = ProductNotification.objects.create(
+            email=self.email,
+            product=self.product_1
+        )
+        notification_url = reverse('catalogue:notification-confirm',
+                                   args=(self.product_1.slug,
+                                         self.product_1.id,
+                                         notification.confirm_key,))
+        self.client.get(notification_url)
+
+        notification = ProductNotification.objects.get(pk=notification.id)
+        self.assertEquals(notification.status, ProductNotification.ACTIVE)
+
+    def test_unsubscribing_from_notification(self):
+        """
+        Test that unsubscribing from a notification inactivates the notification.
+        This does not delete the notification as it might be used for
+        analytical purposes later on by the site owner.
+        """
+        notification = ProductNotification.objects.create(
+            email=self.email,
+            product=self.product_1
+        )
+        notification_url = reverse('catalogue:notification-unsubscribe',
+                                   args=(self.product_1.slug,
+                                         self.product_1.id,
+                                         notification.unsubscribe_key,))
+        self.client.get(notification_url)
+
+        notification = ProductNotification.objects.get(pk=notification.id)
+        self.assertEquals(notification.status, ProductNotification.INACTIVE)
 
 
 class CreateNotificationViewAsAuthenticatedUserTests(NotificationTestCase):
@@ -104,7 +153,7 @@ class CreateNotificationViewAsAuthenticatedUserTests(NotificationTestCase):
     email = 'testuser@oscar.com'
 
     def setUp(self):
-        super(self.__class__, self).setUp()
+        super(CreateNotificationViewAsAuthenticatedUserTests, self).setUp()
         self.create_product_class()
         self.product_1 = self.create_product()
         self.product_2 = self.create_product()
@@ -118,7 +167,7 @@ class CreateNotificationViewAsAuthenticatedUserTests(NotificationTestCase):
         self.assertContains(response, self.email, status_code=200)
 
     def test_create_notification_for_auth_user_with_email(self):
-        """ 
+        """
         Test creating a notification for an authenticated user with the
         providing the account email address in the (hidden) signup form.
         """
@@ -141,23 +190,19 @@ class CreateNotificationViewAsAuthenticatedUserTests(NotificationTestCase):
     def test_create_notification_for_auth_user_with_invalid_email(self):
         """
         Test creating a notification with an email address that is different
-        from the user's account email. This should set the account email 
+        from the user's account email. This should set the account email
         address instead of the provided email in POST data.
         """
         notification_url = reverse('catalogue:notification-add',
                               args=(self.product_1.slug, self.product_1.id))
-        response = self.client.post(notification_url,
-                                    data={'email': 'someother@oscar.com'},
-                                    follow=True)
-
-        product_url = reverse('catalogue:detail',
-                               args=(self.product_1.slug, self.product_1.id))
+        self.client.post(notification_url, data={'email': 'someother@oscar.com'},
+                         follow=True)
 
         ## FIXME: this need template tag implementation
         #self.assertContains(response, 'You chose to be notified', status_code=200)
 
         self.assertEquals(self.user.notifications.count(), 1)
-        
+
         notification = self.user.notifications.all()[0]
         self.assertEquals(notification.product.id, self.product_1.id)
         self.assertEquals(notification.get_notification_email(), self.user.email)
@@ -168,7 +213,7 @@ class CreateNotificationViewAsAuthenticatedUserTests(NotificationTestCase):
         """
         Test creating a notification when the user has already signed up for
         this product notification. The user should be redirected to the product
-        page with a notification that he has already signed up. 
+        page with a notification that he has already signed up.
         """
         notification = get(ProductNotification, product=self.product_1, user=self.user)
         notification_url = reverse('catalogue:notification-add',
@@ -182,13 +227,13 @@ class CreateNotificationViewAsAuthenticatedUserTests(NotificationTestCase):
 
 
 class CreateNotificationViewAsAnonymousUserTests(NotificationTestCase):
-    is_anonymous = True 
+    is_anonymous = True
     email = 'testuser@oscar.com'
     username = 'testuser'
     password = 'password'
 
     def setUp(self):
-        super(self.__class__, self).setUp()
+        super(CreateNotificationViewAsAnonymousUserTests, self).setUp()
         self.create_user()
 
         self.create_product_class()
@@ -214,87 +259,3 @@ class CreateNotificationViewAsAnonymousUserTests(NotificationTestCase):
             reverse('catalogue:detail', args=(self.product_1.slug,
                                               self.product_1.id))
         )
-
-   # def test_create_notification_authenticated_user(self):
-   #     """
-   #     This view will test notification creation from a authenticated user.
-   #     - a user asks for notification
-   #     - as she is authenticated, email is already verified and notification
-   #     should be active
-   #     """
-   #     client = Client()
-   #     loggedin = client.login(email=self.user.email,
-   #                             username=self.user.username,
-   #                             password=self.password)
-   #     self.assertTrue(loggedin)
-
-   #     response = client.get(self.product_1.get_absolute_url())
-   #     self.assertEquals(response.status_code, 200)
-
-   #     test_email = 'user@landmark.com'
-   #     product_url = "/notify-me/%(slug)s-%(id)s/add/" % vars(self.product_1)
-   #     response = client.post( product_url, { 'email': test_email })
-   #     self.assertEquals(response.status_code, 302)
-
-   #     notification = Notification.objects.get(user=self.user)
-   #     product_set = notification.productnotification_set.filter(product=self.product_1)
-
-   #     self.assertEquals(product_set.count(), 1)
-   #     # should be activated by default as user is authenticated
-   #     self.assertTrue(notification.active)
-   #     # registered user shouln't be able to ask for notification in a different email
-   #     self.assertEquals(notification.email, self.user.email)
-   #     self.assertIsNotNone(notification.confirm_key)
-   #     self.assertIsNotNone(notification.unsubscribe_key)
-
-
-   # def test_create_notification_annonimous_user(self):
-   #     """
-   #         This test will make sure an unauthenticated user can subscribe
-   #     for product notification.
-   #     - An authenticated user is requested a email.
-   #     - As he is an authenticated user, this notification has to be verified
-   #     """
-   #     annonymous_email = 'annonymous@landmark.com'
-   #     client = Client()
-
-   #     response = client.get(self.product_1.get_absolute_url())
-   #     self.assertEquals(response.status_code, 200)
-
-   #     product_url = "/notify-me/%(slug)s-%(id)s/add/" % vars(self.product_1)
-   #     response = client.post(product_url, { 'email': annonymous_email })
-
-   #     self.assertEquals(response.status_code, 302)
-
-   #     notification = Notification.objects.get(email=annonymous_email)
-
-   #     self.assertEquals(notification.user, None) # should be None as
-   #     self.assertFalse(notification.active)   # should be false, needs to verify email
-
-   #     # User needs to verify email
-   #     confirm_url = '/notify-me/confirm/%s/' % notification.confirm_key
-   #     response = client.get(confirm_url, {'email': annonymous_email})
-   #     self.assertEquals(response.status_code, 200)
-   #     notification = Notification.objects.get(email=annonymous_email)
-   #     self.assertTrue(notification.active)
-
-   #     self.assertIsNotNone(notification.confirm_key)
-   #     self.assertIsNotNone(notification.unsubscribe_key)
-
-   # def test_delete_notification_view(self):
-   #     """
-   #     """
-   #     annonymous_email = "annonymous@landmark.com"
-   #     notification = Notification.objects.create(active=True,
-   #                                 email=annonymous_email,
-   #                                 user=None,
-   #                                 confirm_key='AAAAAAAAAAAAAAAA',
-   #                                 unsubscribe_key='BBBBBBBBBBBBBBBB')
-
-   #     client = Client()
-   #     # User needs to verify email
-   #     unsubscribe_url = '/notify-me/unsubscribe/%s/' % notification.unsubscribe_key
-   #     response = client.get(unsubscribe_url, {'email': annonymous_email})
-   #     self.assertEquals(response.status_code, 200)
-   #     notification = Notification.objects.get(email=annonymous_email)
-   #     self.assertFalse(notification.active)

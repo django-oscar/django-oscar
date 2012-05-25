@@ -1,3 +1,5 @@
+import sha
+import random
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
@@ -7,16 +9,25 @@ from oscar.apps.catalogue.models import Product
 
 class AbstractNotification(models.Model):
     """
-    Model of a user's notification subscriptions for products. The 
-    user can be an anonymous user.
+    Abstract class defining the basic field required for a notification.
+    To create a custom notification, this class must be subclassed and 
+    ``get_confirm_url`` and ``get_unsubscribe`` URL have to be overwritten
+    in it. 
+    A notification can have two different status for authenticated 
+    users (``ACTIVE`` and ``INACTIVE`` and anonymous users have an 
+    additional status ``UNCONFIRMED``. For anonymous users a confirmation
+    and unsubscription key are generated when an instance is saved for
+    the first time and can be used to confirm and unsubscribe the 
+    notifications.
     """
+    KEY_LENGTH = 40
     user = models.ForeignKey(User, db_index=True, blank=True, null=True,
                              related_name="notifications")
     # these field only apply to unauthenticated users and are empty
     # if the user is registered in the system
     email = models.EmailField(db_index=True, blank=True, null=True)
-    confirm_key = models.CharField(max_length=16, null=True)
-    unsubscribe_key = models.CharField(max_length=16, null=True)
+    confirm_key = models.CharField(max_length=KEY_LENGTH, null=True)
+    unsubscribe_key = models.CharField(max_length=KEY_LENGTH, null=True)
 
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
@@ -29,12 +40,69 @@ class AbstractNotification(models.Model):
     )
     status = models.CharField(max_length=20, choices=STATUS_TYPES, default=INACTIVE)
 
+    def is_active(self):
+        """
+        Check if the notification is active or not.
+        Returns ``True`` if notification is active, ``False`` otherwise.
+        """
+        return self.status == self.ACTIVE
+
+    def is_confirmed(self):
+        """
+        Check if the notification is confirmed or not.
+        Returns ``True`` if notification is confirmed, ``False`` otherwise.
+        """
+        return self.status != self.UNCONFIRMED
+
+    def get_random_key(self):
+        """
+        Get a random generated key based on SHA-1 and the notification
+        email provided in this instance of the notification.
+        """
+        salt = sha.new(str(random.random())).hexdigest()
+        return sha.new(salt+self.get_notification_email()).hexdigest()
+
     def get_notification_email(self):
+        """
+        Get the notification email address of the user subscribed to
+        this notification. Return the user's email for an authenticated
+        user and the email property for an anonymous user.
+        """
         if self.user:
             return self.user.email
         return self.email
 
+    @models.permalink
+    def get_confirm_url(self):
+        """
+        Get confirmation URL for this notification. Needs to be
+        implemented in subclasses.
+        """
+        raise NotImplementedError
+
+    @models.permalink
+    def get_unsubscribe_url(self):
+        """
+        Get confirmation URL for this notification. Needs to be
+        implemented in subclasses.
+        """
+        raise NotImplementedError
+
+    def save(self, *args, **kwargs):
+        """
+        Save the current notification instance. If the user is not
+        a registered/authenticated user, a confirmation and
+        unsubscription key will be generated for the notification.
+        """
+        if self.email and not self.user:
+            if not self.confirm_key:
+                self.confirm_key = self.get_random_key()
+            if not self.unsubscribe_key:
+                self.unsubscribe_key = self.get_random_key()
+        return super(AbstractNotification, self).save(*args, **kwargs)
+
     def __unicode__(self):
+        """ Unicode representation of this notification """
         return _(u'Notification for %s - %s') % (self.user, self.email)
 
     class Meta:
@@ -44,10 +112,32 @@ class AbstractNotification(models.Model):
 
 class ProductNotification(AbstractNotification):
     """
-    A Notification might have several products attached. For the case a user
-    requires more than one product
+    A product notification that is used to notify the set user when the
+    specified product is back in stock.
     """
     product = models.ForeignKey(Product, db_index=True)
+
+    @models.permalink
+    def get_confirm_url(self):
+        """
+        Get confirmation URL for this specific notification/user combo.
+        """
+        return ('notification-confirm', (), {
+            'slug': self.product.slug,
+            'pk': self.product.id,
+            'key': self.confirm_key
+        })
+
+    @models.permalink
+    def get_unsubscribe_url(self):
+        """
+        Get unsubscribtion URL for this specific notification/user combo.
+        """
+        return ('notification-unsubscribe', (), {
+            'slug': self.product.slug,
+            'pk': self.product.id,
+            'key': self.confirm_key
+        })
 
     class Meta:
         app_label = 'notification'
