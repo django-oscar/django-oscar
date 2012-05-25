@@ -12,9 +12,9 @@ class ProductNotificationApplication(Application):
 
     def get_urls(self):
         urlpatterns = patterns('',
-            url(r'^confirm/(?P<key>[a-z0-9]+)/$', self.confirm_view.as_view(),
+            url(r'^confirm/(?P<key>[a-z0-9]{40})/$', self.confirm_view.as_view(),
                 name='notification-confirm'),
-            url(r'^unsubscribe/(?P<key>[a-z0-9]+)/$', self.unsubscribe_view.as_view(),
+            url(r'^unsubscribe/(?P<key>[a-z0-9]{40})/$', self.unsubscribe_view.as_view(),
                 name='notification-unsubscribe'),
             url(r'^add/$', self.create_view.as_view(),
                 name='notification-add'),
