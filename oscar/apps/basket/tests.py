@@ -2,8 +2,9 @@ from decimal import Decimal as D
 import httplib
 
 from django.conf import settings
+from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
-from django.test import TestCase
+from django.test import TestCase, Client
 from django.http import HttpResponse
 
 from oscar.apps.basket.models import Basket, Line
@@ -107,7 +108,6 @@ class BasketThresholdTest(TestCase):
         self.assertTrue('Your basket currently has 2 items.' in
                         response.cookies['messages'].value)
 
-
 class BasketReportTests(TestCase):
 
     def test_open_report_doesnt_error(self):
@@ -119,3 +119,64 @@ class BasketReportTests(TestCase):
         generator = SubmittedBasketReportGenerator()
         response = HttpResponse()
         generator.generate(response)
+
+
+class SavedBasketTests(TestCase):
+    def test_moving_from_saved_basket(self):
+        user = User.objects.create_user(username='test', password='pass',
+                                        email='test@example.com')
+        client = Client()
+        client.login(username=user.username, password='pass')
+
+        product = create_product(price=D('10.00'), num_in_stock=2)
+        basket, created = Basket.open.get_or_create(owner=user)
+        basket.add_product(product=product, quantity=1)
+
+        saved_basket, created = Basket.saved.get_or_create(owner=user)
+        saved_basket.add_product(product=product, quantity=1)
+
+        response = client.get(reverse('basket:summary'))
+        saved_formset = response.context['saved_formset']
+        saved_form = saved_formset.forms[0]
+
+        data = {
+            saved_formset.add_prefix('INITIAL_FORMS'): 1,
+            saved_formset.add_prefix('MAX_NUM_FORMS'): 1,
+            saved_formset.add_prefix('TOTAL_FORMS'): 1,
+            saved_form.add_prefix('id'): saved_form.initial['id'],
+            saved_form.add_prefix('move_to_basket'): True,
+        }
+        response = client.post(reverse('basket:saved'), data=data)
+        self.assertEqual(Basket.open.get(id=basket.id).lines.get(product=product).quantity, 2)
+        self.assertRedirects(response, reverse('basket:summary'))
+
+    def test_moving_from_saved_basket_more_than_stocklevel_raises(self):
+        user = User.objects.create_user(username='test', password='pass',
+                                        email='test@example.com')
+        client = Client()
+        client.login(username=user.username, password='pass')
+
+        product = create_product(price=D('10.00'), num_in_stock=1)
+        basket, created = Basket.open.get_or_create(owner=user)
+        basket.add_product(product=product, quantity=1)
+
+        saved_basket, created = Basket.saved.get_or_create(owner=user)
+        saved_basket.add_product(product=product, quantity=1)
+
+        response = client.get(reverse('basket:summary'))
+        saved_formset = response.context['saved_formset']
+        saved_form = saved_formset.forms[0]
+
+        data = {
+            saved_formset.add_prefix('INITIAL_FORMS'): 1,
+            saved_formset.add_prefix('MAX_NUM_FORMS'): 1,
+            saved_formset.add_prefix('TOTAL_FORMS'): 1,
+            saved_form.add_prefix('id'): saved_form.initial['id'],
+            saved_form.add_prefix('move_to_basket'): True,
+        }
+        response = client.post(reverse('basket:saved'), data=data)
+        # we can't add more than stock level into basket
+        self.assertEqual(Basket.open.get(id=basket.id).lines.get(product=product).quantity, 1)
+        self.assertRedirects(response, reverse('basket:summary'))
+
+
