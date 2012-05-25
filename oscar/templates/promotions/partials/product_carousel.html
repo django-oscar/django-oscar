@@ -10,7 +10,7 @@
 		{% endwith %}
     </div>    
 
-    <h3><a href="{{ product.get_absolute_url }}">{{ product.get_title|truncatewords:5|slice:"-4" }}</a></h3>
+    <h3><a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a></h3>
     {% if product.is_group %}
         <h4 class="group-price"><span>From</span> <strong>{{ product.min_variant_price_incl_tax|currency }}</strong></h4>
         <div class="product_price">

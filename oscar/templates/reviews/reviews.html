@@ -102,9 +102,11 @@ Reviews for {{ product.title }} | {{ block.super }}
                 {% include "catalogue/partials/stock_record.html" %}
                 {% include "catalogue/partials/add_to_basket_form.html" %}
             </div>
+            
+            {% recently_viewed_products %}
         </div>
 
-        {% recently_viewed_products %}
+        
     </div>
 </article>
 {% endblock %}
