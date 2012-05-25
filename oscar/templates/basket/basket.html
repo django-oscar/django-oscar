@@ -179,9 +179,10 @@ Basket | {{ block.super }}
 {% endblock formactions %}
 
 {% else %}
-
-<p>Your basket is empty, you should probably add some items to buy.</p>
-
+    {% block emptybasket %}
+        <p>Your basket is empty, you should probably add some items to buy.</p>
+        <a href="/" class="btn btn-primary">Continue shopping</a>
+    {% endblock %}
 {% endif %}
 
 {% if request.user.is_authenticated %}
