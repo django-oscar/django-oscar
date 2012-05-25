@@ -3,7 +3,7 @@
 cd /var/www/oscar/builds/qa/
 
 # Update any dependencies
-source ../../../virtualenvs/qa/bin/activate
+source ../../virtualenvs/qa/bin/activate
 python setup.py develop
 pip install -r requirements.txt
 
