@@ -33,7 +33,6 @@ OSCAR_PARENT_TEMPLATE_DIR = os.path.dirname(os.path.abspath(__file__))
 OSCAR_CORE_APPS = [
     'oscar',
     'oscar.apps.analytics',
-    'oscar.apps.discount',
     'oscar.apps.order',
     'oscar.apps.checkout',
     'oscar.apps.shipping',
