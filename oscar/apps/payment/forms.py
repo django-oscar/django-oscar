@@ -3,15 +3,17 @@ from calendar import monthrange
 import re
 
 from django import forms
+from django.db.models import get_model
 
-from oscar.core.loading import import_module
+from oscar.core.loading import get_class
 
-address_models = import_module('address.models', ['Country'])
-order_models = import_module('order.models', ['BillingAddress'])
-payment_models = import_module('payment.models', ['Bankcard'])
-import_module('payment.utils', ['Bankcard'], locals())
+Country = get_model('address', 'Country')
+BillingAddress = get_model('order', 'BillingAddress')
+BankcardModel = get_model('payment', 'Bankcard')
+Bankcard = get_class('payment.utils', 'Bankcard')
 
 VISA, MASTERCARD, AMEX, MAESTRO, DISCOVER = ('Visa', 'Mastercard', 'American Express', 'Maestro', 'Discover')
+
 
 def bankcard_type(number):
     u"""
@@ -194,7 +196,7 @@ class BankcardForm(forms.ModelForm):
     expiry_month = BankcardExpiryMonthField(required=True, label = "Valid to")
     
     class Meta:
-        model = payment_models.Bankcard
+        model = BankcardModel
         exclude = ('user', 'partner_reference')
         fields = ('number', 'name', 'start_month', 'expiry_month', 'cvv_number')
         
@@ -220,8 +222,8 @@ class BillingAddressForm(forms.ModelForm):
         self.set_country_queryset() 
         
     def set_country_queryset(self):
-        self.fields['country'].queryset = address_models.Country._default_manager.all()
+        self.fields['country'].queryset = Country._default_manager.all()
     
     class Meta:
-        model = order_models.BillingAddress
+        model = BillingAddress
         exclude = ('search_text',)
