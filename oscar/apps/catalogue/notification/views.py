@@ -48,7 +48,7 @@ class UnsubscribeNotificationView(NotificationDetailView):
 
 class ConfirmNotificationView(NotificationDetailView):
     """
-    View to confirm the email address of an anonymous user used to 
+    View to confirm the email address of an anonymous user used to
     sign up for a product notification.
     """
     template_name = 'notification/confirm.html'
@@ -172,6 +172,49 @@ class CreateProductNotificationView(generic.FormView):
         return reverse('catalogue:detail',
                        args=(self.product.slug, self.product.pk))
 
+
+class SetStatusProductNotificationView(generic.TemplateView):
+    """
+    View to change the status of a product notification. The status can
+    be changed from ``active`` to ``inactive`` and vice versa.
+    """
+    model = ProductNotification
+    status_types = [map[0] for map in ProductNotification.STATUS_TYPES]
+
+    def get(self, *args, **kwargs):
+        """
+        Handle GET request for this view. Extract the product and notification
+        from the URL as well as the new status. If the status is not ``active``
+        or ``inactive`` a HTTP redirect is returned without changing the
+        notification. Otherwise the notification status is updated
+        """
+        self.product= get_object_or_404(Product, pk=kwargs.get('product_pk'))
+        status = kwargs.get('status', None)
+
+        if status in (self.status_types):
+            notification = get_object_or_404(self.model, pk=kwargs.get('pk'))
+            notification.status = status
+            notification.save()
+
+        return HttpResponseRedirect(self.get_success_url())
+
+    def post(self, *args, **kwargs):
+        """
+        Handle POST request for this view similar to the GET request. Ignores
+        any POST request parameters. Extract the product and notification
+        from the URL as well as the new status. If the status is not ``active``
+        or ``inactive`` a HTTP redirect is returned without changing the
+        notification. Otherwise the notification status is updated
+        """
+        return self.get(*args, **kwargs)
+
+    def get_success_url(self):
+        """
+        Get URL to redirect to after successful status change.
+        """
+        detail_url = reverse('catalogue:detail',
+                             args=(self.product.slug, self.product.pk))
+        return self.request.META.get('HTTP_REFERER', detail_url)
 
 class DeleteProductNotificationView(generic.DeleteView):
     """

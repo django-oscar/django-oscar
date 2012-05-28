@@ -28,6 +28,7 @@ UserAddress = get_model('address', 'UserAddress')
 Email = get_model('customer', 'email')
 UserAddress = get_model('address', 'UserAddress')
 CommunicationEventType = get_model('customer', 'communicationeventtype')
+ProductNotification = get_model('notification', 'productnotification')
 
 
 class ProfileUpdateView(FormView):
@@ -63,6 +64,9 @@ class AccountSummaryView(ListView):
         ctx['default_shipping_address'] = self.get_default_shipping_address(self.request.user)
         ctx['default_billing_address'] = self.get_default_billing_address(self.request.user)
         ctx['emails'] = Email.objects.filter(user=self.request.user)
+        ctx['notification_list'] = ProductNotification.objects.select_related().filter(
+            user=self.request.user
+        )
         self.add_profile_fields(ctx)
         return ctx
 

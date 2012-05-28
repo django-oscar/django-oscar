@@ -29,6 +29,7 @@ My account | {{ block.super }}
 		<li><a href="#2" data-toggle="tab">Order History</a></li>
 		<li><a href="#3" data-toggle="tab">Address Book</a></li>
 		<li><a href="#4" data-toggle="tab">Email History</a></li>
+		<li><a href="#5" data-toggle="tab">Notifications</a></li>
 	</ul>
 	
 	<div class="tab-content">
@@ -175,6 +176,58 @@ My account | {{ block.super }}
             </div>
             {% endif %}
 			{% endblock %}
+        </div>
+
+        <div class="tab-pane" id="5">
+            {% block tab_notifications %}
+            <div class="sub-header">
+                <h3>Notifications</h3>
+            </div>
+            {% if not notification_list %}
+                <p>You do not have any notifications for out-of-stock produts.</p>
+            {% else %}
+                <table class="table table-stiped table-bordered">
+                    <tr>
+                        <th class="hidden">Notification ID</th>
+                        <th>Product Title</th>
+                        <th>Status</th>
+                        <th>Date Subscribed</th>
+                        <th></th>
+                    </tr>
+
+                    {% for notification in notification_list %}
+                    <tr>
+                        <td class="hidden">{{ notification.id }}</td>
+                        <td>{{ notification.product.title }}</td>
+                        <td>
+                            {% if notification.is_active %}
+                            <span class="label label-success">
+                            {% else %}
+                            <span class="label label-important">
+                            {% endif %}
+                            {{ notification.get_status_display }}
+                            </span>
+                        </td>
+                        <td>{{ notification.date_created|date }}</td>
+                        {% if not notification.is_active %}
+                        <td>
+                            <a href="{% url catalogue:notification-set-status notification.product.slug notification.product.id notification.id "active" %}">
+                                <button class="btn btn-success" type='submit' name='activate' value='activate'>Activate</button>
+                            </a>
+                        </td>
+                        {% else %}
+                        <td>
+                            <a href="{% url catalogue:notification-set-status notification.product.slug notification.product.id notification.id "inactive" %}">
+                                <button class="btn btn-danger" type='submit' name='deactivate' value='deactivate'>Deactivate</button>
+                            </a>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+
+                </table>
+            {% endif %}
+            {% endblock %}
         </div>
     </div>
 </div><!--End of tab-content -->

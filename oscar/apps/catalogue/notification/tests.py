@@ -261,6 +261,47 @@ class CreateNotificationViewAsAnonymousUserTests(NotificationTestCase):
         )
 
 
+class SetStatusProductNotificationViewTests(NotificationTestCase):
+    is_anonymous = False
+    is_staff = False
+    email = 'testuser@oscar.com'
+    username = 'testuser'
+    password = 'password'
+
+    def setUp(self):
+        super(SetStatusProductNotificationViewTests, self).setUp()
+        self.product_class = self.create_product_class()
+        self.product = self.create_product()
+        self.notification = ProductNotification.objects.create(
+            email=self.email,
+            product=self.product,
+            status=ProductNotification.ACTIVE
+        )
+
+    def test_setting_notification_status_active(self):
+        self.assertEquals(self.notification.status, ProductNotification.ACTIVE)
+        status_url = reverse('catalogue:notification-set-status',
+                             args=(self.product.slug, self.product.id,
+                                   self.notification.id,
+                                   ProductNotification.INACTIVE))
+
+        response = self.client.get(status_url)
+
+        notification = ProductNotification.objects.get(pk=self.notification.id)
+        self.assertEquals(notification.status, ProductNotification.INACTIVE)
+
+    def test_setting_notification_status_with_invalid_status(self):
+        self.assertEquals(self.notification.status, ProductNotification.ACTIVE)
+        status_url = reverse('catalogue:notification-set-status',
+                             args=(self.product.slug, self.product.id,
+                                   self.notification.id,
+                                   ProductNotification.INACTIVE))
+
+        response = self.client.get('/products/40-2/notify-me/set-status/1/invalid/')
+
+        self.assertEquals(response.status_code, 404)
+
+
 class DeleteNotificationViewTests(NotificationTestCase):
     is_anonymous = False
     is_staff = True
