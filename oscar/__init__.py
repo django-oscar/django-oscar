@@ -4,7 +4,7 @@ import os
 # a full release
 
 VERSION = (0, 2, 0, 'beta', 1)
-    
+
 def get_short_version():
     return '%s.%s' % (VERSION[0], VERSION[1])
 
@@ -57,6 +57,8 @@ OSCAR_CORE_APPS = [
     'oscar.apps.dashboard.offers',
     'oscar.apps.dashboard.ranges',
     'oscar.apps.dashboard.vouchers',
+
+    'django_sorting',
 ]
 
 
