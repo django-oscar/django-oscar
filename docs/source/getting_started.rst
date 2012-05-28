@@ -38,6 +38,11 @@ to your ``INSTALLED_APPS``::
     'oscar.apps.search',
     'oscar.apps.voucher',
 
+Add the following to your `INSTALLED_APPS` if you intend to use the default
+oscar dashboard templates::
+
+    'django_sorting',
+
 Add::
 
     from oscar.defaults import *
@@ -52,7 +57,7 @@ to create the database tables.
 Demo shop
 ---------
 
-A demo shop is in preparation at the moment and will be available soon.  
+A demo shop is in preparation at the moment and will be available soon.
 
 Real shop
 ---------
