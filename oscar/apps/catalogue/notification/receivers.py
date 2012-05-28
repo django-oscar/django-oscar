@@ -1,0 +1,89 @@
+from django.conf import settings
+import datetime
+
+from django.core import mail
+from django.dispatch import receiver
+from django.template import loader, Context
+from django.contrib.sites.models import Site
+from django.db.models.signals import post_save
+from django.utils.translation import ugettext as _
+
+from oscar.core.loading import get_class
+
+StockRecord = get_class('partner.models', 'StockRecord')
+ProductNotification = get_class('catalogue.notification.models',
+                                'ProductNotification')
+
+def _get_email_from_context(email, template, context):
+    subject = _("[Product Notification] Product '%s' back in stock!")
+    subject = subject % context['product'].title
+
+    msg = mail.EmailMessage(
+        template.render(context),
+        subject,
+        settings.OSCAR_FROM_EMAIL,
+        [email],
+    )
+    msg.content_subtype = "html",
+    return msg
+
+
+@receiver(post_save, sender=StockRecord)
+def send_email_notifications(sender, instance, created, **kwargs):
+    """
+    Check for notifications for this product and send email to users
+    if the product is back in stock. Add a little 'hurry' note if the
+    amount of in-stock items is less then the number of notifications.
+    """
+    stockrecord = instance
+    notifications = ProductNotification.objects.filter(
+        product__id=stockrecord.product_id,
+        status=ProductNotification.ACTIVE,
+    )
+
+    # ignore the rest if no notifications for this stockrecord
+    if not len(notifications):
+        return
+
+    # add a hurry disclaimer if less products in stock then 
+    # notifications requested
+    context = Context({
+        'product': stockrecord.product,
+        'site': Site.objects.get(pk=getattr(settings, 'SITE_ID', 1)),
+        'hurry': len(notifications) <= stockrecord.num_in_stock,
+    })
+
+    template_file = getattr(settings, 'OSCAR_NOTIFICATION_EMAIL_TEMPLATE',
+                            'notification/notification_email.html')
+    template = loader.get_template(template_file)
+
+    email_messages = []
+    # generate personalised emails for registered users first
+    for notification in notifications.exclude(user=None):
+        context['user'] = notification.user
+        email_messages.append(_get_email_from_context(
+            notification.get_notification_email(),
+            template,
+            context
+        ))
+
+    # generate the same email for all anonymous users
+    anonymous_body = template.render(context)
+    for notification in notifications.filter(user=None):
+        email_messages.append(_get_email_from_context(
+            notification.get_notification_email(),
+            template,
+            context
+        ))
+
+    # send all emails in one go to prevent multiple SMTP
+    # connections to be opened
+    connection = mail.get_connection()
+    connection.send_messages(email_messages)
+    connection.close()
+
+    # set the notified date for all notifications and deactivate them
+    for notification in notifications:
+        notification.status = ProductNotification.INACTIVE
+        notification.date_notified = datetime.datetime.now()
+        notification.save()

@@ -31,6 +31,7 @@ class AbstractNotification(models.Model):
 
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
+    date_notified = models.DateTimeField(blank=True, null=True)
 
     UNCONFIRMED, ACTIVE, INACTIVE = ('unconfirmed', 'active', 'inactive')
     STATUS_TYPES = (
@@ -142,3 +143,6 @@ class ProductNotification(AbstractNotification):
 
     class Meta:
         app_label = 'notification'
+
+
+from oscar.apps.catalogue.notification.receivers import * 

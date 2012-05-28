@@ -1,7 +1,7 @@
 import itertools
 
-from django.test import TestCase
 from django.core import mail
+from django.test import TestCase
 from django.core.urlresolvers import reverse
 
 from django.contrib.auth.models import User
@@ -330,3 +330,79 @@ class DeleteNotificationViewTests(NotificationTestCase):
 
         self.assertContains(response, '', status_code=200)
         self.assertEquals(ProductNotification.objects.count(), 0)
+
+
+class SendingNotificationTests(TestCase):
+
+    def setUp(self):
+        self.product_class = ProductClass.objects.create(name='books')
+        self.product = get(Product, product_class=self.product_class,
+                           title='product_1', upc='000000000001')
+        self.product_2 = get(Product, product_class=self.product_class,
+                           title='product_2', upc='000000000002')
+
+        self.user_1 = get(User, email='user@one.com')
+        self.user_2 = get(User, email='user@two.com')
+
+        get(StockRecord, product=self.product, num_in_stock=0)
+
+    def test_sending_email_with_empty_stock(self):
+        stock_record = StockRecord.objects.get(pk=1)
+        self.assertEquals(stock_record.num_in_stock, 0)
+        stock_record.save()
+        self.assertEquals(stock_record.num_in_stock, 0)
+
+        self.assertEquals(len(mail.outbox), 0)
+
+    def test_sending_email_without_notifications(self):
+        stock_record = StockRecord.objects.get(pk=1)
+        self.assertEquals(stock_record.num_in_stock, 0)
+
+        stock_record.num_in_stock = 20
+        stock_record.save()
+
+        self.assertEquals(len(mail.outbox), 0)
+
+    def test_sending_email_with_notifications(self):
+        ProductNotification.objects.create(user=self.user_1,
+                                           product=self.product,
+                                           status=ProductNotification.ACTIVE)
+        ProductNotification.objects.create(user=self.user_2,
+                                           product=self.product,
+                                           status=ProductNotification.ACTIVE)
+        ProductNotification.objects.create(user=None, email='anonymous@test.com',
+                                           product=self.product,
+                                           status=ProductNotification.ACTIVE)
+        ProductNotification.objects.create(user=self.user_2,
+                                           product=self.product_2,
+                                           status=ProductNotification.ACTIVE)
+        ProductNotification.objects.create(product=self.product,
+                                           status=ProductNotification.INACTIVE)
+
+        stock_record = StockRecord.objects.get(pk=1)
+        self.assertEquals(stock_record.num_in_stock, 0)
+
+        stock_record.num_in_stock = 20
+        stock_record.save()
+
+        self.assertEquals(len(mail.outbox), 3)
+        self.assertItemsEqual(
+            [e.to[0] for e in mail.outbox],
+            [self.user_1.email, self.user_2.email, 'anonymous@test.com'],
+        )
+
+        notification = ProductNotification.objects.get(pk=1)
+        self.assertEquals(notification.status, ProductNotification.INACTIVE)
+        self.assertNotEquals(notification.date_notified, None)
+
+        notification = ProductNotification.objects.get(pk=2)
+        self.assertEquals(notification.status, ProductNotification.INACTIVE)
+        self.assertNotEquals(notification.date_notified, None)
+
+        notification = ProductNotification.objects.get(pk=3)
+        self.assertEquals(notification.status, ProductNotification.INACTIVE)
+        self.assertNotEquals(notification.date_notified, None)
+
+        notification = ProductNotification.objects.get(pk=4)
+        self.assertEquals(notification.status, ProductNotification.ACTIVE)
+        self.assertEquals(notification.date_notified, None)
