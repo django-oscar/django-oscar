@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block main-column %}
+    <div class="well well-danger">
+        <h1>Delete notification?</h1>
+        Are you sure that you want to delete notification of
+        {{ notification.get_notification_email }} for product 
+        {{ notification.product.title }}?
+        <button type='submit' name='submit' class="btn btn-danger"><a href="#">Delete</a></button>
+        <button type='cancel' name='cancle' class="btn"><a href="#">Delete</a></button>
+    </div>
+{% endblock %}

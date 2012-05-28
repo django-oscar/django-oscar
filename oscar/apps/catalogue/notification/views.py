@@ -19,6 +19,9 @@ ProductNotification = get_model('notification', 'productnotification')
 
 
 class NotificationDetailView(generic.DetailView):
+    """
+    Detailed view of a product notification.
+    """
     model = ProductNotification
     context_object_name = 'notification'
 
@@ -29,7 +32,7 @@ class NotificationDetailView(generic.DetailView):
 
 class UnsubscribeNotificationView(NotificationDetailView):
     """
-    This view is meant to disable product Notifications
+    View to inactivate notifications for anonymous users.
     """
     template_name = 'notification/unsubscribe.html'
 
@@ -45,7 +48,8 @@ class UnsubscribeNotificationView(NotificationDetailView):
 
 class ConfirmNotificationView(NotificationDetailView):
     """
-    This view will care about notification activations
+    View to confirm the email address of an anonymous user used to 
+    sign up for a product notification.
     """
     template_name = 'notification/confirm.html'
 
@@ -62,7 +66,8 @@ class ConfirmNotificationView(NotificationDetailView):
 
 class CreateProductNotificationView(generic.FormView):
     """
-    Add a new product to the users notification list.
+    View to create a new product notification based on a registered user
+    or an email address provided by an anonymous user.
     """
     product_model = Product
     form_class = NotificationForm
@@ -132,8 +137,7 @@ class CreateProductNotificationView(generic.FormView):
         self.product = self.get_product()
 
         # first check if the anonymous user provided an email address
-        # that belongs to a registered user. If that is the case the
-        # user will be redirected to the login/register page
+        # that belongs to a registered user. If that is the case the # user will be redirected to the login/register page
         if not is_authenticated:
             try:
                 User.objects.get(email=form.cleaned_data['email'])
@@ -169,5 +173,15 @@ class CreateProductNotificationView(generic.FormView):
                        args=(self.product.slug, self.product.pk))
 
 
-class DeleteProductNotificationView(generic.FormView):
-    pass
+class DeleteProductNotificationView(generic.DeleteView):
+    """
+    View to delete a product notification. This should not be available
+    to the users as their can only activate and deactivate notifications.
+    It should be checked for logged in staff member.
+    """
+    model = ProductNotification
+    template_name = 'notification/delete.html'
+
+    def get_success_url(self):
+        #return reverse('dashboard:notification-list')
+        return reverse('dashboard:index')

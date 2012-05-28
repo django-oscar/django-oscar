@@ -259,3 +259,33 @@ class CreateNotificationViewAsAnonymousUserTests(NotificationTestCase):
             reverse('catalogue:detail', args=(self.product_1.slug,
                                               self.product_1.id))
         )
+
+
+class DeleteNotificationViewTests(NotificationTestCase):
+    is_anonymous = False
+    is_staff = True
+    email = 'staff@oscar.com'
+    username = 'staff'
+    password = 'password'
+
+    def setUp(self):
+        super(DeleteNotificationViewTests, self).setUp()
+        self.product_class = self.create_product_class()
+        self.product = self.create_product()
+        self.notification = ProductNotification.objects.create(
+            email=self.email,
+            product=self.product
+        )
+
+    def test_deleting_notification(self):
+        delete_url = reverse('catalogue:notification-remove',
+                             args=(self.product.slug, self.product.id,
+                                   self.notification.id))
+
+        self.assertEquals(ProductNotification.objects.count(), 1)
+
+        response = self.client.post(delete_url, data={'submit': 'submit'},
+                                    follow=True)
+
+        self.assertContains(response, '', status_code=200)
+        self.assertEquals(ProductNotification.objects.count(), 0)

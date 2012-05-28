@@ -1,5 +1,7 @@
-from oscar.core.application import Application
 from django.conf.urls.defaults import patterns, url
+from django.contrib.auth.decorators import login_required
+
+from oscar.core.application import Application
 from oscar.apps.catalogue.notification import views
 
 
@@ -8,7 +10,7 @@ class ProductNotificationApplication(Application):
     confirm_view = views.ConfirmNotificationView
     unsubscribe_view = views.UnsubscribeNotificationView
     create_view = views.CreateProductNotificationView
-    #delete_view = views.DeleteProductNotificationView
+    delete_view = views.DeleteProductNotificationView
 
     def get_urls(self):
         urlpatterns = patterns('',
@@ -18,9 +20,8 @@ class ProductNotificationApplication(Application):
                 name='notification-unsubscribe'),
             url(r'^add/$', self.create_view.as_view(),
                 name='notification-add'),
-            #url(r'^remove/$',
-            #    self.delete_view.as_view(),
-            #    name='notification-remove'),
+            url(r'^remove/(?P<pk>\d+)/$', login_required(self.delete_view.as_view()),
+                name='notification-remove'),
         )
         return urlpatterns
 
