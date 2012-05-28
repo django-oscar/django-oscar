@@ -21,38 +21,38 @@ Create a new virtual env::
 A nice extension now is to edit your ``~/.virtualenv/$PROJECTNAME/bin/postactivate`` file to contain::
 
     cd ~/path/to/my/workspace/$PROJECTNAME
-    
+
 so that you can simply type ``workon $PROJECTNAME`` to jump into your project folder with the virtual
 environment set-up.
 
 Installation
 ------------
-    
-Install oscar and its dependencies::    
-    
+
+Install oscar and its dependencies::
+
     pip install -e git+git://github.com/tangentlabs/django-oscar.git#egg=django-oscar
-    
+
 You will also need to install the appropriate python module for your database of choice.
 If you are using MySQL, then run the following::
 
     pip install MySQL-python
 
-Also, depending on your search backend for haystack, you'll need to install further 
+Also, depending on your search backend for haystack, you'll need to install further
 packages::
 
     pip install pysolr
 
 Now create the project::
-    
+
     cd /path/to/my/workspace
     django-admin.py startproject $PROJECTNAME
 
 Configure ``settings.py``
 -------------------------
 
-* Add ``'django.middleware.transaction.TransactionMiddleware'`` to your ``MIDDLEWARE_CLASSES`` tuple, making 
+* Add ``'django.middleware.transaction.TransactionMiddleware'`` to your ``MIDDLEWARE_CLASSES`` tuple, making
   sure it comes AFTER ``'django.contrib.auth.middleware.AuthenticationMiddleware'``.
-  
+
 * Add the following to your `INSTALLED_APPS`::
 
     'haystack',
@@ -75,25 +75,29 @@ Configure ``settings.py``
     'oscar.apps.reports',
     'oscar.apps.search',
     'oscar.apps.catalogue_import',
-    
+
+* Add the following to your `INSTALLED_APPS` if you intend to use the default oscar dashboard templates::
+
+    'django_sorting',
+
 * Add these to ``TEMPLATE_CONTECT_PROCESSORS``::
 
     'oscar.apps.search.context_processors.search_form',
     'oscar.apps.promotions.context_processors.promotions',
-    'oscar.apps.promotions.context_processors.merchandising_blocks',    
-    
+    'oscar.apps.promotions.context_processors.merchandising_blocks',
+
 * Import default settings::
 
     from oscar.defaults import *
-    
+
 * If using Solr, configure it::
 
     HAYSTACK_SITECONF = 'oscar.search_sites'
     HAYSTACK_SEARCH_ENGINE = 'solr'
     HAYSTACK_SOLR_URL = 'http://127.0.0.1:8080/solr'
     HAYSTACK_INCLUDE_SPELLING = True
-    
-Now fill in the normal settings (not related to django-oscar) within ``settings.py`` - eg ``DATABASES``, ``TIME_ZONE`` etc    
+
+Now fill in the normal settings (not related to django-oscar) within ``settings.py`` - eg ``DATABASES``, ``TIME_ZONE`` etc
 
 A vanilla install of django-oscar is now ready, you could now finish the process by running::
 
