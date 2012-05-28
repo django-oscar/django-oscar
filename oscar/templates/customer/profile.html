@@ -190,6 +190,7 @@ My account | {{ block.super }}
                     <tr>
                         <th class="hidden">Notification ID</th>
                         <th>Product Title</th>
+                        <th>Product Availability</th>
                         <th>Status</th>
                         <th>Date Subscribed</th>
                         <th></th>
@@ -198,7 +199,18 @@ My account | {{ block.super }}
                     {% for notification in notification_list %}
                     <tr>
                         <td class="hidden">{{ notification.id }}</td>
-                        <td>{{ notification.product.title }}</td>
+                        <td>
+                            <a href="{% url catalogue:detail notification.product.slug notification.product.id %}">
+                                {{ notification.product.title }}
+                            </a>
+                        </td>
+                        <td>
+                            {% if notification.product.stock_record.num_in_stock > 0 %}
+                                {{ notification.product.stock_record.num_in_stock }}
+                            {% else %}
+                                Not in Stock
+                            {% endif %}
+                        </td>
                         <td>
                             {% if notification.is_active %}
                             <span class="label label-success">
