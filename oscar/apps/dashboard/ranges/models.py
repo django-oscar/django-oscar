@@ -58,8 +58,8 @@ class RangeProductFileUpload(models.Model):
         """
         all_ids = set(self.extract_ids())
         products = self.range.included_products.all()
-        existing_skus = set(products.values_list('stockrecord__partner_sku', flat=True))
-        existing_upcs = set(products.values_list('upc', flat=True))
+        existing_skus = set(filter(bool, products.values_list('stockrecord__partner_sku', flat=True)))
+        existing_upcs = set(filter(bool, products.values_list('upc', flat=True)))
         existing_ids = existing_skus.union(existing_upcs)
         new_ids = all_ids - existing_ids
 
@@ -70,8 +70,8 @@ class RangeProductFileUpload(models.Model):
             self.range.included_products.add(product)
 
         # Processing stats
-        found_skus = filter(bool, set(products.values_list('stockrecord__partner_sku', flat=True)))
-        found_upcs = filter(bool, set(products.values_list('upc', flat=True)))
+        found_skus = set(filter(bool, products.values_list('stockrecord__partner_sku', flat=True)))
+        found_upcs = set(filter(bool, products.values_list('upc', flat=True)))
         found_ids = found_skus.union(found_upcs)
         missing_ids = new_ids - found_ids
         dupes = set(all_ids).intersection(existing_ids)
