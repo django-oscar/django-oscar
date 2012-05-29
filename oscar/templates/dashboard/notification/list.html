@@ -24,9 +24,8 @@ Notification management | {{ block.super }}
 
 {% block dashboard_content %}
 
-{% comment %}
-<div class="well well-danger">
-    <h3 class="app-ico ico_magnify icon">Search Products</h3>
+<div class="well well-info">
+    <h3 class="app-ico ico_magnify icon">Search Notifications</h3>
     <form action="." method="get" class="form-inline">
 		{% include "partials/form_fields_inline.html" with form=form %}
         <button type="submit" class="btn btn-primary">Search</button>
@@ -36,7 +35,6 @@ Notification management | {{ block.super }}
 <div class="sub-header">
     <h2>{{ queryset_description }}</h2>
 </div>
-{% endcomment %}
 
 {% if notification_list.all|length > 0 %}
     <form action="." method="post">

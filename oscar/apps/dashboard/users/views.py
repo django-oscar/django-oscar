@@ -81,6 +81,7 @@ class UserDetailView(generic.DetailView):
 
 class NotificationListView(generic.ListView, BulkEditMixin):
     model = ProductNotification
+    form_class = forms.ProductNotificationSearchForm
     context_object_name = 'notification_list'
     template_name = 'dashboard/notification/list.html'
     paginate = 25
@@ -90,8 +91,47 @@ class NotificationListView(generic.ListView, BulkEditMixin):
     description = ''
 
     def get_queryset(self):
+        queryset = self.model.objects.all()
         self.description = self.base_description
-        return self.model.objects.all()
+
+        self.form = self.form_class(self.request.GET)
+        if not self.form.is_valid():
+            return queryset
+
+        data = self.form.cleaned_data
+
+        if data['status']:
+            queryset = queryset.filter(status=data['status']).distinct()
+            self.description += " with status matching '%s'" % data['status']
+
+        if data['name']:
+            # If the value is two words, then assume they are first name and
+            # last name
+            parts = data['name'].split()
+            if len(parts) >= 2:
+                queryset = queryset.filter(
+                    user__first_name__istartswith=parts[0],
+                    user__last_name__istartswith=parts[1]
+                ).distinct()
+            else:
+                queryset = queryset.filter(
+                    Q(user__first_name__istartswith=parts[0]) |
+                    Q(user__last_name__istartswith=parts[-1])
+                ).distinct()
+            self.description += " with customer name matching '%s'" % data['name']
+
+        if data['email']:
+            queryset = queryset.filter(
+                Q(user__email__icontains=data['email']) |
+                Q(email__icontains=data['email'])
+            )
+            self.description += " with customer email matching '%s'" % data['email']
+
+        if data['product']:
+            queryset = queryset.filter(product__title__icontains=data['product'])
+            self.description += " with product matching '%s'" % data['product']
+
+        return queryset
 
     def update_selected_notification_status(self, request, notifications):
         new_status = request.POST.get('status')
@@ -102,6 +142,7 @@ class NotificationListView(generic.ListView, BulkEditMixin):
 
     def get_context_data(self, **kwargs):
         context = super(NotificationListView, self).get_context_data(**kwargs)
+        context['form'] = self.form
         context['notification_form'] = forms.NotificationUpdateForm
         context['queryset_description'] = self.description
         return context
