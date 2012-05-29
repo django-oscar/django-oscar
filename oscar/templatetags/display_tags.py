@@ -2,9 +2,10 @@ from django import template
 
 register = template.Library()
 
+
 def get_parameters(parser, token):
     """
-        {% get_parameters except_field %}
+    {% get_parameters except_field %}
     """
 
     args = token.split_contents()
@@ -15,7 +16,7 @@ def get_parameters(parser, token):
 
 class GetParametersNode(template.Node):
     """
-        Renders current get parameters except for the specified parameter
+    Renders current get parameters except for the specified parameter
     """
     def __init__(self, field):
         self.field = field
