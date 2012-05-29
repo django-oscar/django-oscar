@@ -1,15 +1,17 @@
-from django.db.models import Q
+from django.db.models import Q, get_model
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from django.views.generic import ListView, DetailView
+from django.views import generic
 
 from oscar.apps.dashboard.users import forms
 from oscar.views.generic import BulkEditMixin
 
+ProductNotification = get_model('notification', 'productnotification')
 
-class IndexView(ListView, BulkEditMixin):
+
+class IndexView(generic.ListView, BulkEditMixin):
     template_name = 'dashboard/users/index.html'
     paginate_by = 25
     model = User
@@ -71,8 +73,38 @@ class IndexView(ListView, BulkEditMixin):
         return HttpResponseRedirect(reverse(self.current_view))
 
 
-class UserDetailView(DetailView):
+class UserDetailView(generic.DetailView):
     template_name = 'dashboard/users/detail.html'
     model = User
     context_object_name = 'user'
 
+
+class NotificationListView(generic.ListView, BulkEditMixin):
+    model = ProductNotification
+    context_object_name = 'notification_list'
+    template_name = 'dashboard/notification/list.html'
+    paginate = 25
+    base_description = 'All notifications'
+    description = ''
+
+    def get_queryset(self):
+        self.description = self.base_description
+        return self.model.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super(NotificationListView, self).get_context_data(**kwargs)
+        context['queryset_description'] = self.description
+        return context
+
+
+class NotificationDetailView(generic.DetailView):
+    pass
+
+
+class NotificationDeleteView(generic.DeleteView):
+    model = ProductNotification
+    template_name = 'dashboard/notification/delete.html'
+    context_object_name = 'notification'
+
+    def get_success_url(self):
+        return reverse('dashboard:user-notification-list')

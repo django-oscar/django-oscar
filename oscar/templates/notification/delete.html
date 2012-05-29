@@ -5,9 +5,14 @@
     <div class="well well-danger">
         <h1>Delete notification?</h1>
         Are you sure that you want to delete notification of
-        {{ notification.get_notification_email }} for product 
-        {{ notification.product.title }}?
-        <button type='submit' name='submit' class="btn btn-danger"><a href="#">Delete</a></button>
-        <button type='cancel' name='cancle' class="btn"><a href="#">Delete</a></button>
+
+        <form action="." method="post">
+            {{ notification.get_notification_email }} for product 
+            {{ notification.product.title }}?
+            <div class="form-actions">
+                <button type='submit' name='submit' class="btn btn-danger">Delete</button> or
+                <a href="{% url customer:summary %}">cancel</a>
+            </div>
+        </form>
     </div>
 {% endblock %}
