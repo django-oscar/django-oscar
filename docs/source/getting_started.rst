@@ -52,7 +52,7 @@ to create the database tables.
 Demo shop
 ---------
 
-A demo shop is in preparation at the moment and will be available soon.  
+A demo shop is in preparation at the moment and will be available soon.
 
 Real shop
 ---------
