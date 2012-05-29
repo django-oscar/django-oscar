@@ -84,7 +84,7 @@ class BaseSavedLineFormSet(BaseModelFormSet):
                                                              basket=self.basket, **kwargs)
 
 
-SavedLineFormSet =  modelformset_factory(Line, form=SavedLineForm,
+SavedLineFormSet = modelformset_factory(Line, form=SavedLineForm,
                                          formset=BaseSavedLineFormSet, extra=0,
                                          can_delete=True)
 
