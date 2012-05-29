@@ -29,6 +29,7 @@ My account | {{ block.super }}
 		<li><a href="#2" data-toggle="tab">Order History</a></li>
 		<li><a href="#3" data-toggle="tab">Address Book</a></li>
 		<li><a href="#4" data-toggle="tab">Email History</a></li>
+		<li><a href="#5" data-toggle="tab">Notifications</a></li>
 	</ul>
 	
 	<div class="tab-content">
@@ -175,6 +176,14 @@ My account | {{ block.super }}
             </div>
             {% endif %}
 			{% endblock %}
+        </div>
+
+        <div class="tab-pane" id="5">
+            {% block tab_notifications %}
+                {% with edit_enabled="true" %}
+                    {% include "notification/partials/notification_pane.html" %}
+                {% endwith %}
+            {% endblock %}
         </div>
     </div>
 </div><!--End of tab-content -->

@@ -1,0 +1,58 @@
+{% extends 'dashboard/layout.html' %}
+
+{% block body_class %}users{% endblock %}
+
+{% block title %}
+Update notification #{{ notification.id }} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url dashboard:index %}">Dashboard</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="{% url dashboard:user-notification-list %}">Notifications</a>
+        <span class="divider">/</span>
+    </li>
+	<li class="active"><a href=".">#{{ notification.id }}</a></li>
+</ul>
+{% endblock %}
+
+{% block header %}
+    <div class="page-header">
+        <h1>Notification #{{ notification.id }}</h1>
+    </div>
+{% endblock header %}
+
+{% block dashboard_content %}
+<form action="." method="post">
+    {% csrf_token %}
+
+    {% for field in form %}
+        {% if field.is_hidden %}
+            {{ field }}
+        {% else %}
+        {{ field.label_tag }}
+        <div class="controls">
+            {{ field }}
+                {% for error in field.errors %}
+                <span class="help-block">
+                    {{ error|escape }}
+                </span>
+                {% endfor %}
+            {% if field.help_text %}
+                <span class='help-block'>
+                    {{ field.help_text }}
+                </span>
+            {% endif %}
+        </div>
+        {% endif %}
+    {% endfor %}
+    <div class="form-actions">
+        <button type='submit' class="btn btn-info">Save</button> or
+        <a href="{% url dashboard:user-notification-list %}">cancel</a>
+    </div>
+</form>
+{% endblock dashboard_content %}

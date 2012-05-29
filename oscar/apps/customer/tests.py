@@ -5,10 +5,14 @@ from django.test import TestCase
 from django.http import HttpRequest
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
+from django_dynamic_fixture import get
 
+from oscar.test import ClientTestCase
 from oscar.apps.customer.models import CommunicationEventType
 from oscar.apps.customer.history_helpers import get_recently_viewed_product_ids
 from oscar.test.helpers import create_product, create_order
+
+from oscar.apps.catalogue.notification.models import ProductNotification
 
 
 class HistoryHelpersTest(TestCase):
@@ -88,3 +92,40 @@ class EditProfileTests(TestCase):
         response = self.client.get(url)
         self.assertEqual(200, response.status_code)
         self.assertTrue('form' in response.context)
+
+
+class AccountRegistrationViewTest(ClientTestCase):
+    is_anonymous = True
+    username = 'newuser'
+    password = 'password'
+    email = 'newuser@oscar.com'
+
+    def setUp(self):
+        super(AccountRegistrationViewTest, self).setUp()
+
+    def test_assigning_anonymous_notifications_to_new_registered_user(self):
+        """
+        Test that anonymous notifications are assigned correctly to a
+        user that registers an account. This is based on email addresses
+        and as long as the account email address matches the notification
+        email field it will be changed accordingly.
+        """
+        get(ProductNotification, user=None, email=self.email)
+        get(ProductNotification, user=None, email=self.email)
+        get(ProductNotification, user=None, email='some@other.com')
+
+        for notification in ProductNotification.objects.all():
+            self.assertEquals(notification.user, None)
+        self.assertEquals(ProductNotification.objects.count(), 3)
+
+        response = self.client.post(reverse('customer:register'), data={
+            'registration-email': self.email,
+            'registration-password1': self.password,
+            'registration-password2': self.password,
+        }, follow=True)
+
+        self.assertContains(response, "Account", status_code=200)
+
+        user = User.objects.get(email=self.email)
+        user_notifications = ProductNotification.objects.filter(user=user)
+        self.assertEquals(len(user_notifications), 2)

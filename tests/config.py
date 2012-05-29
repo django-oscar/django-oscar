@@ -56,5 +56,6 @@ if not settings.configured:
             HAYSTACK_SEARCH_ENGINE='dummy',
             HAYSTACK_SITECONF = 'oscar.search_sites',
             APPEND_SLASH=True,
+            EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend',
             **oscar_settings
         )

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block main-column %}
+    {% if notification.is_active %}
+    <div class="alert alert-success">
+        Thank you for subscribing. Notifications will be sent to {{ notification.email }}
+    </div>
+    {% else %}
+    <div class="alert alert-error">
+        Something went wrong confirming your email address. Please try again or contact us.
+    </div>
+    {% endif %}
+{% endblock %}

@@ -57,9 +57,9 @@
 					{% include "catalogue/partials/pagination.html" %}
 				{% endif %}
 				<ol class="products four">
-					{% for product in products %}
-					<li>{% include "catalogue/partials/product.html" %}</li>
-					{% endfor %}
+                                    {% for product in products %}
+                                    <li>{% include "catalogue/partials/product.html" %}</li>
+                                    {% endfor %}
 				</ol>
 				{% if page_obj %}
 					{% include "catalogue/partials/pagination.html" %}

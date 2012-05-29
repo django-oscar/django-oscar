@@ -1,0 +1,55 @@
+﻿<div class="sub-header">
+    <h3>Notifications</h3>
+</div>
+{% if not notification_list %}
+    <p>You do not have any notifications for out-of-stock produts.</p>
+{% else %}
+    <table class="table table-stiped table-bordered">
+        <tr>
+            <th>Product Title</th>
+            <th>Product Availability</th>
+            <th>Status</th>
+            <th>Date Subscribed</th>
+            {% if edit_enabled %}
+            <th></th>
+            {% endif %}
+        </tr>
+
+        {% for notification in notification_list %}
+        <tr>
+            <td>
+                <a href="{% url catalogue:detail notification.product.slug notification.product.id %}">
+                    {{ notification.product.title }}
+                </a>
+            </td>
+            <td>
+                {% if notification.product.stock_record.num_in_stock > 0 %}
+                    {{ notification.product.stock_record.num_in_stock }}
+                {% else %}
+                    Not in Stock
+                {% endif %}
+            </td>
+            <td>
+                {% include "notification/partials/status.html" %}
+            </td>
+            <td>{{ notification.date_created|date }}</td>
+            {% if edit_enabled %}
+                {% if not notification.is_active %}
+                <td>
+                    <a href="{% url catalogue:notification-set-status notification.product.slug notification.product.id notification.id "active" %}">
+                        <button class="btn btn-success" type='submit' name='activate' value='activate'>Activate</button>
+                    </a>
+                </td>
+                {% else %}
+                <td>
+                    <a href="{% url catalogue:notification-set-status notification.product.slug notification.product.id notification.id "inactive" %}">
+                        <button class="btn btn-danger" type='submit' name='deactivate' value='deactivate'>Deactivate</button>
+                    </a>
+                </td>
+                {% endif %}
+            {% endif %}
+        </tr>
+        {% endfor %}
+
+    </table>
+{% endif %}

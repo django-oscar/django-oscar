@@ -1,0 +1,7 @@
+{% if product.stockrecord.num_in_stock == 0 %}
+    <form method="POST" action="{% url catalogue:notification-add product.slug product.id %}">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit" class="btn btn-info">Notify Me</button>
+    </form>
+{% endif %}

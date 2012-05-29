@@ -1,0 +1,5 @@
+{% if notification.date_notified %}
+    {{ notification.date_notified|date }}
+{% else %}
+    Not yet notified
+{% endif %}

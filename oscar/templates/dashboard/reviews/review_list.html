@@ -48,10 +48,7 @@ Reviews | {{ block.super }}
         </tr>
         {% for review in review_list %}
         <tr>
-            <td><input type="checkbox" name="selected_review" class="selected_review" value="{{ review.id }}"/>
-                <td>
-                    <a href="{% url catalogue:reviews-detail review.product.slug review.product.id review.id %}">{{ review.title }}</a>
-                </td>
+            <td><input type="checkbox" name="selected_review" class="selected_review" value="{{ review.id }}"/></td>
             <td>
                 <a href='{% url catalogue:detail review.product.slug review.product.id %}'>{{ review.product.title }}</a> </td>
             <td>
