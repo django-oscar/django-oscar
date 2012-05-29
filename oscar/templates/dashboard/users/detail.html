@@ -88,6 +88,7 @@ User {{ user.email }} | {{ block.super }}
 		<li class="active"><a href="#user_orders" data-toggle="tab">Orders</a></li>
 		<li><a href="#user_addresses" data-toggle="tab">Addresses</a></li>
 		<li><a href="#user_reviews" data-toggle="tab">Reviews</a></li>
+		<li><a href="#user_notifications" data-toggle="tab">Notifications</a></li>
 	</ul>
 
 	<div class="tab-content">
@@ -168,6 +169,12 @@ User {{ user.email }} | {{ block.super }}
             {% else %}
             <p>This user has not written any reviews yet.</p>
             {% endif %}
+        </div>
+
+        <div id="user_notifications" class="tab-pane">
+            {% block tab_notifications %}
+                {% include "notification/partials/notification_pane.html" with notification_list=user.notifications.all %}
+            {% endblock %}
         </div>
 
     </div>

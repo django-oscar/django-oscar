@@ -78,6 +78,10 @@ class UserDetailView(generic.DetailView):
     model = User
     context_object_name = 'user'
 
+    def get_context_data(self, **kwargs):
+        context = super(UserDetailView, self).get_context_data(**kwargs)
+        return context
+
 
 class NotificationListView(generic.ListView, BulkEditMixin):
     model = ProductNotification
