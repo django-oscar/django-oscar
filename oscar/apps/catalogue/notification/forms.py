@@ -3,6 +3,11 @@ from django import forms
 
 class NotificationForm(forms.Form):
     """
+    Form providing a single email field for signing up to a notification. If
+    ``email`` or ``user`` are provided as initial values these values are
+    used to update the ``email`` field. If ``user`` is specified and the
+    user is registered and logged in, the ``email`` field is hidden in the
+    HTML template.
     """
     email = forms.EmailField(required=True, label=(u'Send notification to'))
 

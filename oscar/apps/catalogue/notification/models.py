@@ -2,8 +2,7 @@ import sha
 import random
 from django.db import models
 from django.contrib.auth.models import User
-from django.utils.translation import ugettext as _
-
+from django.utils.translation import ugettext as _ 
 from oscar.apps.catalogue.models import Product
 
 
@@ -72,6 +71,20 @@ class AbstractNotification(models.Model):
         if self.user:
             return self.user.email
         return self.email
+
+    def transfer_to_user(self, user):
+        """
+        Convenience function that allows for assigning a notification 
+        to a user. This is aimed at the situation when a user has 
+        notifications available as anonymous user but decides to sign
+        up. In this case, the notification will be transfered to the
+        specific user account.
+        """
+        if not self.user:
+            self.user = user
+            self.email = None
+            self.confirm_key, self.unsubscribe_key = None, None
+            self.save()
 
     @models.permalink
     def get_confirm_url(self):

@@ -184,11 +184,14 @@ class AccountRegistrationView(TemplateView):
 
     def _register_user(self, form):
         """
-        Register a new user from the data in *form*. If 
-        ``OSCAR_SEND_REGISTRATION_EMAIL`` is set to ``True`` a 
+        Register a new user from the data in *form*. If
+        ``OSCAR_SEND_REGISTRATION_EMAIL`` is set to ``True`` a
         registration email will be send to the provided email address.
-        A new user account is created and the user is then logged
-        in.
+        A new user account is created and the user is then logged in.
+
+        If the user has anonymous ``ProductNotifications`` subscriptions
+        from before they registered, these notifications will be updated
+        to be connected with their newly created user account.
         """
         user = form.save()
 
@@ -202,6 +205,17 @@ class AccountRegistrationView(TemplateView):
         auth_login(self.request, user)
         if self.request.session.test_cookie_worked():
             self.request.session.delete_test_cookie()
+
+        # check if there are notifications for this user's
+        # email address and change them from anonymous to this
+        # user's account
+        #FIXME: Needs to implement base class of all notifications
+        notifications = ProductNotification.objects.filter(
+            email=user.email,
+            user=None
+        )
+        for notification in notifications:
+            notification.transfer_to_user(user)
 
 
 class AccountAuthView(AccountRegistrationView):
