@@ -56,8 +56,6 @@ OSCAR_CORE_APPS = [
     'oscar.apps.dashboard.offers',
     'oscar.apps.dashboard.ranges',
     'oscar.apps.dashboard.vouchers',
-
-    'django_sorting',
 ]
 
 

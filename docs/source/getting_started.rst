@@ -38,11 +38,6 @@ to your ``INSTALLED_APPS``::
     'oscar.apps.search',
     'oscar.apps.voucher',
 
-Add the following to your `INSTALLED_APPS` if you intend to use the default
-oscar dashboard templates::
-
-    'django_sorting',
-
 Add::
 
     from oscar.defaults import *
