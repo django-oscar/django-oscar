@@ -65,7 +65,9 @@ class AccountSummaryView(ListView):
         ctx['default_billing_address'] = self.get_default_billing_address(self.request.user)
         ctx['emails'] = Email.objects.filter(user=self.request.user)
         ctx['notification_list'] = ProductNotification.objects.select_related().filter(
-            user=self.request.user
+            user=self.request.user,
+            # only show notifications that have not been process
+            date_notified=None,
         )
         self.add_profile_fields(ctx)
         return ctx
