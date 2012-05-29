@@ -29,7 +29,7 @@ information:
 
 .. image:: https://secure.travis-ci.org/tangentlabs/django-oscar.png
 
-.. _`Official homepage`: http://tangentlabs.github.com/django-oscar/
+.. _`Official homepage`: http://oscarcommerce.com
 .. _`Demo site`: http://sandbox.oscar.tangentlabs.co.uk
 .. _`Documentation`: http://django-oscar.readthedocs.org/en/latest/
 .. _`readthedocs.org`: http://readthedocs.org
