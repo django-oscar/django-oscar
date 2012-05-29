@@ -2767,6 +2767,9 @@ form:after {
 .form-actions:after {
   clear: both;
 }
+.select-open {
+  width: 300px!important;
+}
 .errorlist {
   margin: 0;
   padding: 0 0 10px 0;
@@ -2776,9 +2779,7 @@ form:after {
   padding: 0 0 5px 0;
   list-style: none;
 }
-.control-label.required:after {
-  content: "*";
-  padding: 0 0 0 3px;
+.control-label.required span {
   color: #FF0000;
 }
 .header {
