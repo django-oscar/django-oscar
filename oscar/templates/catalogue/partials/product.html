@@ -30,11 +30,13 @@
     <div class="product_price">
     {% include "catalogue/partials/stock_record.html" %}
 
-    {% basket_form basket product as basket_form single %}
-    <form action="{% url basket:add %}" method="post">
-        {% csrf_token %}
-        {{ basket_form.as_p }}
-        <input type="submit" class="btn btn-primary" value="Add to basket" />
-    </form>
+    {% if product.has_stockrecord and product.stockrecord.num_in_stock > 0 %}
+        {% basket_form basket product as basket_form single %}
+        <form action="{% url basket:add %}" method="post">
+            {% csrf_token %}
+            {{ basket_form.as_p }}
+            <input type="submit" class="btn btn-primary" value="Add to basket" />
+        </form>
+    {% endif %}
     </div>
 </article>

@@ -11,3 +11,6 @@ class NotificationForm(forms.Form):
         user = self.initial.get('user', None)
         if user and user.is_authenticated():
             self.fields['email'].widget = forms.HiddenInput()
+
+            if not self.initial.get('email', None):
+                self.initial['email'] = user.email
