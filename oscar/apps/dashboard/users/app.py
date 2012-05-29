@@ -16,6 +16,7 @@ class UserManagementApplication(Application):
     index_view = views.IndexView
     user_detail_view = views.UserDetailView
     notification_list_view = views.NotificationListView
+    notification_update_view = views.NotificationUpdateView
     notification_delete_view = views.NotificationDeleteView
 
     def get_urls(self):
@@ -24,6 +25,9 @@ class UserManagementApplication(Application):
             url(r'^notification/(?P<pk>\d+)/delete/$',
                 self.notification_delete_view.as_view(),
                 name='user-notification-delete'),
+            url(r'^notification/(?P<pk>\d+)/update/$',
+                self.notification_update_view.as_view(),
+                name='user-notification-update'),
             url(r'^notifications/$',
                 self.notification_list_view.as_view(),
                 name='user-notification-list'),

@@ -212,13 +212,7 @@ My account | {{ block.super }}
                             {% endif %}
                         </td>
                         <td>
-                            {% if notification.is_active %}
-                            <span class="label label-success">
-                            {% else %}
-                            <span class="label label-important">
-                            {% endif %}
-                            {{ notification.get_status_display }}
-                            </span>
+                            {% include "notification/partials/status.html" %}
                         </td>
                         <td>{{ notification.date_created|date }}</td>
                         {% if not notification.is_active %}

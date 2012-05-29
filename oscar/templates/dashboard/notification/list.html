@@ -59,14 +59,13 @@ Notification management | {{ block.super }}
                 {% include "notification/partials/user_link.html" %}
             </td>
             <td>
-                <span class="label">{{ notification.get_status_display }}</span>
+                {% include "notification/partials/status.html" %}
             </td>
             <td>{{ notification.date_created|date }}</td>
             <td>{% include "notification/partials/notified_date.html" %}</td>
             <td>
-                <a href="">
-                    <button class="btn btn-info" type="submit" name="" value="">Edit</button>
-                </a>
+                <a href="{% url dashboard:user-notification-update notification.id %}">
+                    <button class="btn btn-info" type="submit" name="" value="">Edit</button></a>
                 <a href="{% url dashboard:user-notification-delete notification.id %}">
                     <button class="btn btn-danger" type="submit" name="" value="">Delete</button>
                 </a>

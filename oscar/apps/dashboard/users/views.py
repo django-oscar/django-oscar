@@ -97,8 +97,14 @@ class NotificationListView(generic.ListView, BulkEditMixin):
         return context
 
 
-class NotificationDetailView(generic.DetailView):
-    pass
+class NotificationUpdateView(generic.UpdateView):
+    template_name = 'dashboard/notification/update.html'
+    model = ProductNotification
+    form_class = forms.NotificationUpdateForm
+    context_object_name = 'notification'
+
+    def get_success_url(self):
+        return reverse('dashboard:user-notification-list')
 
 
 class NotificationDeleteView(generic.DeleteView):
