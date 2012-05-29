@@ -76,9 +76,6 @@ Configure ``settings.py``
     'oscar.apps.search',
     'oscar.apps.catalogue_import',
 
-* Add the following to your `INSTALLED_APPS` if you intend to use the default oscar dashboard templates::
-
-    'django_sorting',
 
 * Add these to ``TEMPLATE_CONTECT_PROCESSORS``::
 
