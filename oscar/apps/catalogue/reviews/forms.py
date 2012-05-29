@@ -8,6 +8,9 @@ class ValidateReviewMixin(object):
         title = self.cleaned_data['title'].strip()
         if not title:
             raise forms.ValidationError("This field is required")
+        if len(title) > 100:
+            excess = len(title) - 100
+            raise forms.ValidationError("Please enter a short title (with %d fewer characters)" % excess)
         return title
 
     def clean_body(self):
