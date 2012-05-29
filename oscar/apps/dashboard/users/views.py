@@ -84,15 +84,25 @@ class NotificationListView(generic.ListView, BulkEditMixin):
     context_object_name = 'notification_list'
     template_name = 'dashboard/notification/list.html'
     paginate = 25
+    actions = ('update_selected_notification_status',)
     base_description = 'All notifications'
+    checkbox_object_name = 'notification'
     description = ''
 
     def get_queryset(self):
         self.description = self.base_description
         return self.model.objects.all()
 
+    def update_selected_notification_status(self, request, notifications):
+        new_status = request.POST.get('status')
+        for notification in notifications:
+            notification.status = new_status
+            notification.save()
+        return HttpResponseRedirect(reverse('dashboard:user-notification-list'))
+
     def get_context_data(self, **kwargs):
         context = super(NotificationListView, self).get_context_data(**kwargs)
+        context['notification_form'] = forms.NotificationUpdateForm
         context['queryset_description'] = self.description
         return context
 

@@ -137,7 +137,8 @@ class CreateProductNotificationView(generic.FormView):
         self.product = self.get_product()
 
         # first check if the anonymous user provided an email address
-        # that belongs to a registered user. If that is the case the # user will be redirected to the login/register page
+        # that belongs to a registered user. If that is the case the
+        # user will be redirected to the login/register page
         if not is_authenticated:
             try:
                 User.objects.get(email=form.cleaned_data['email'])

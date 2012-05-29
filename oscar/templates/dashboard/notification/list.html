@@ -53,7 +53,9 @@ Notification management | {{ block.super }}
         </tr>
         {% for notification in notification_list %}
         <tr>
-            <td class="hidden">{{ notification.id }}</td>
+            <td>
+                <input type="checkbox" name="selected_notification" class="selected_notification" value="{{ notification.id }}" />
+            </td>
             <td>{{ notification.product.title }}</td>
             <td>
                 {% include "notification/partials/user_link.html" %}
@@ -73,6 +75,13 @@ Notification management | {{ block.super }}
         </tr>
         {% endfor %}
     </table>
+
+    <div class="well well-danger">
+        Update status of selected notifications
+        {{ notification_form.status }}
+	<input type="hidden" name="action" value="update_selected_notification_status" />
+        <button type="submit" class="btn btn-success">Update</button>
+    </div>
 
     {% if page_obj %}
         {% include "catalogue/partials/pagination.html" %}
