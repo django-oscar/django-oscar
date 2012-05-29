@@ -441,8 +441,9 @@ form{*zoom:1;}form:before,form:after{display:table;content:"";}
 form:after{clear:both;}
 .form-actions{*zoom:1;}.form-actions:before,.form-actions:after{display:table;content:"";}
 .form-actions:after{clear:both;}
+.select-open{width:300px!important;}
 .errorlist{margin:0;padding:0 0 10px 0;color:#B94A48;}.errorlist li{padding:0 0 5px 0;list-style:none;}
-.control-label.required:after{content:"*";padding:0 0 0 3px;color:#FF0000;}
+.control-label.required span{color:#FF0000;}
 .header{text-shadow:0 1px 0 white;position:relative;z-index:2;}.header h1{line-height:inherit;}
 .page-header,.sub-header{background:#f9f9f9;padding:20px;margin-top:0px;margin-bottom:18px;border-bottom:1px solid #e0e0e0;}
 .page-header{margin-bottom:0px;}
