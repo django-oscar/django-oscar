@@ -349,6 +349,14 @@ class AbstractLine(models.Model):
     @property
     def discount_excl_tax(self):
         return self.line_price_before_discounts_excl_tax - self.line_price_excl_tax
+
+    @property
+    def line_price_tax(self):
+        return self.line_price_incl_tax - self.line_price_excl_tax
+
+    @property
+    def unit_price_tax(self):
+        return self.unit_price_incl_tax - self.unit_price_excl_tax
     
     @property
     def shipping_status(self):
