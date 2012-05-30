@@ -51,7 +51,7 @@ class ProductListView(generic.ListView):
             self.description += " including an item with UPC '%s'" % data['upc']
 
         if data['title']:
-            queryset = queryset.filter(title__istartswith=data['title']).distinct()
+            queryset = queryset.filter(title__icontains=data['title']).distinct()
             self.description += " including an item with title matching '%s'" % data['title']
 
         return queryset
