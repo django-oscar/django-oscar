@@ -90,6 +90,7 @@ $(document).ready(function()
             // This activates elastislide
             var es_carousel = $('.es-carousel-wrapper'),
             product_page = $('.product_page').length;
+            console.log(es_carousel.length);
             // on prodct page
             if (es_carousel.length && product_page > 0) {
                 es_carousel.elastislide({
@@ -177,5 +178,20 @@ $(document).ready(function()
         }
         e.preventDefault();
     });
+    
+    //For IE - sets the width of a select in an overflow hidden container
+    var selectBox = $('.product_pod select'),
+        isIE = navigator.userAgent.toLowerCase().indexOf("msie");
+    if (isIE > -1) {
+      selectBox.on({
+        mousedown: function(){
+          $(this).addClass("select-open");
+        },
+        change: function(){
+          $(this).removeClass("select-open");
+        }
+      });
+    }
+ 
 });
     

@@ -11,6 +11,9 @@ oscar.basket = {
         $('#saved_basket_formset a[data-behaviours~="move"]').click(function() {
             oscar.basket.checkAndSubmit($(this), 'move_to_basket');
         });
+        $('#saved_basket_formset a[data-behaviours~="remove"]').click(function() {
+            oscar.basket.checkAndSubmit($(this), 'DELETE');
+        });
         $('#voucher_form_link a').click(function(e) {
             oscar.basket.showVoucherForm();
             e.preventDefault();

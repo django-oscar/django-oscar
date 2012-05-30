@@ -15,6 +15,13 @@ from oscar.test.helpers import create_product, create_order
 from oscar.apps.catalogue.notification.models import ProductNotification
 
 
+def create_test_user():
+    username = 'customer'
+    password = 'cheeseshop'
+    email = 'customer@example.com'
+
+
+
 class HistoryHelpersTest(TestCase):
 
     def setUp(self):
@@ -79,7 +86,7 @@ class EditProfileTests(TestCase):
     def setUp(self):
         User.objects.create_user(username=self.username,
                                  email=self.email, password=self.password)
-        is_successful = self.client.login(username=self.username, 
+        is_successful = self.client.login(username=self.username,
                                           password=self.password)
         if not is_successful:
             self.fail("Unable to login as %s" % self.username)
@@ -97,7 +104,7 @@ class EditProfileTests(TestCase):
 class AccountRegistrationViewTest(ClientTestCase):
     is_anonymous = True
     username = 'newuser'
-    password = 'password'
+    password = 'zlkdsjflk3jSvj'
     email = 'newuser@oscar.com'
 
     def setUp(self):
@@ -129,3 +136,26 @@ class AccountRegistrationViewTest(ClientTestCase):
         user = User.objects.get(email=self.email)
         user_notifications = ProductNotification.objects.filter(user=user)
         self.assertEquals(len(user_notifications), 2)
+
+
+class AuthTestCase(TestCase):
+
+    username = 'customer'
+    password = 'cheeseshop'
+    email = 'customer@example.com'
+
+    def setUp(self):
+        self.client = Client()
+        self.product = create_product()
+        User.objects.create_user(username=self.username,
+                                 email=self.email, password=self.password)
+        self.client.login(username=self.username, password=self.password)
+
+    def test_cookies_deleted_on_logout(self):
+        response = self.client.get(self.product.get_absolute_url())
+        self.assertTrue('oscar_recently_viewed_products' in response.cookies)
+
+        response = self.client.get(reverse('customer:logout'))
+        self.assertTrue(('oscar_recently_viewed_products' not in response.cookies)
+                        or not
+                        self.client.cookies['oscar_recently_viewed_products'].coded_value)

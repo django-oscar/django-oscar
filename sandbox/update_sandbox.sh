@@ -17,3 +17,10 @@ cd sandbox
 
 # Re-compile python code
 touch deploy/wsgi/sandbox.wsgi
+
+# Copy down server config files
+cp deploy/nginx/sandbox.conf /etc/nginx/sites-enabled/sandbox.oscar.tangentlabs.co.uk
+/etc/init.d/nginx configtest && /etc/init.d/nginx force-reload
+
+cp deploy/apache2/sandbox.conf /etc/apache2/sites-enabled/sandbox.oscar.tangentlabs.co.uk
+/etc/init.d/apache2 reload

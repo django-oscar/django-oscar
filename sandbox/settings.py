@@ -248,11 +248,6 @@ OSCAR_SHOP_TAGLINE = 'e-Commerce for Django'
 
 GOOGLE_ANALYTICS_ID = 'UA-XXXXX-Y'
 
-try:
-    from settings_local import *
-except ImportError:
-    pass
-
 LOG_ROOT = location('logs')
 DISPLAY_VERSION = False
 
@@ -260,3 +255,9 @@ THUMBNAIL_DEBUG = True
 
 # Must be within MEDIA_ROOT for sorl to work
 OSCAR_MISSING_IMAGE_URL = 'image_not_found.jpg'
+
+try:
+    from settings_local import *
+except ImportError:
+    pass
+

@@ -76,7 +76,7 @@ class IndexView(generic.ListView, BulkEditMixin):
 class UserDetailView(generic.DetailView):
     template_name = 'dashboard/users/detail.html'
     model = User
-    context_object_name = 'user'
+    context_object_name = 'customer'
 
     def get_context_data(self, **kwargs):
         context = super(UserDetailView, self).get_context_data(**kwargs)

@@ -5,7 +5,7 @@ ProductRecord = get_model('analytics', 'ProductRecord')
 Product = get_model('catalogue', 'Product')
 
 
-class ScoreCalculator(object):
+class Calculator(object):
     
     # Map of field name to weight
     weights = {'num_views': 1,
@@ -30,15 +30,17 @@ class ScoreCalculator(object):
                'weighted_total': weighted_sum,
                'total_weight': sum(self.weights.values())}
         sql = '''UPDATE `%(table)s` 
-                 SET score = (%(weighted_total)s) / %(total_weight)s''' % ctx
+                 SET score = %(weighted_total)s / %(total_weight)s''' % ctx
+
         self.logger.debug(sql)         
         self.cursor.execute(sql)
         transaction.commit_unless_managed()
         
     def update_product_models(self):
         self.logger.info("Updating product records")
-        sql = '''UPDATE `%s` product, `%s` analytics
-                 SET product.score = analytics.score
-                 WHERE product.id = analytics.product_id''' % (Product._meta.db_table, ProductRecord._meta.db_table)
-        self.cursor.execute(sql)
-        transaction.commit_unless_managed()
+        qs = ProductRecord.objects.all()
+        for record in qs:
+            record.product.score = record.score
+            record.product.save()
+        self.logger.info("Updated scores for %d products" % qs.count())
+        

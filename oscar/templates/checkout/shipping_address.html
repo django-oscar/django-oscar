@@ -22,9 +22,6 @@ Shipping address | {{ block.super }}
             <div class="choose-block">
                 <ul class="row-fluid">
                     {% for address in addresses %}
-                    {% if forloop.counter|divisibleby:5 %}
-                    </ul><ul class="row-fluid">
-                    {% endif %}
 					<li class="span3">
 						<div class="well well-info {% if address.is_default_for_shipping %}default-address{% endif %}">
 							<address>{% for field in address.active_address_fields %}
@@ -40,6 +37,10 @@ Shipping address | {{ block.super }}
 							</form>
 						</div>
 					</li>
+                    {% if forloop.counter|divisibleby:4 %}
+						</ul>
+						{% if not forloop.last %}<ul class="row-fluid">{% endif %}
+                    {% endif %}
                     {% endfor %}
                 </ul>
             </div>
