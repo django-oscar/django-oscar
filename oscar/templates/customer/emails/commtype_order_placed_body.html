@@ -1,4 +1,4 @@
-{% load currency_filters %}<p>Hello,</p>
+{% load currency_filters %}<p xmlns="http://www.w3.org/1999/html">Hello,</p>
 
 <p>We are pleased to confirm your order {{ order.number }} has been received and
 will be processed shortly.</p>
@@ -19,4 +19,9 @@ Order Total: {{ order.total_incl_tax|currency }}
 <p>Shipping address:</p>
 <p>{% for field in order.shipping_address.active_address_fields %}  {{ field }}<br/>
 {% endfor %}</p>
+
+{% if status_url %}
+<p>You can view the status of this order by clicking <a href="{{ status_url }}" title="order status">here</a>
+{% endif %}
+
 <p>The team</p>
