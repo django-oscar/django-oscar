@@ -43,14 +43,14 @@ class DashboardViewTests(ClientTestCase):
         self.assertEquals(len(report['y_range']), 0)
         self.assertEquals(report['max_revenue'], 0)
 
-    def test_dashboard_hourly_report_with_orders(self): 
+    def test_dashboard_hourly_report_with_orders(self):
         create_order(total_incl_tax=D('34.05'), total_excl_tax=D('34.05'))
         create_order(total_incl_tax=D('21.90'), total_excl_tax=D('21.90'))
         report = IndexView().get_hourly_report()
 
         self.assertEquals(len(report['order_total_hourly']), 24)
         self.assertEquals(len(report['y_range']), 11)
-        self.assertEquals(report['max_revenue'], D('55.95'))
+        self.assertEquals(report['max_revenue'], D('60'))
 
     def test_dashboard_index_has_stats_vars_in_context(self):
         response = self.client.get(reverse('dashboard:index'))

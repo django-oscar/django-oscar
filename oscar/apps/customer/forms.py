@@ -7,6 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django import forms
 from django.contrib.auth.models import User
 from django.conf import settings
+from django.core import validators
 
 from oscar.core.loading import get_profile_class
 
@@ -30,9 +31,43 @@ class EmailAuthenticationForm(AuthenticationForm):
     username = forms.EmailField(label=_('Email Address'))
 
 
+class CommonPasswordValidator(validators.BaseValidator):
+    # See http://www.smartplanet.com/blog/business-brains/top-20-most-common-passwords-of-all-time-revealed-8216123456-8216princess-8216qwerty/4519
+    forbidden_passwords = [
+        'password',
+        '123456',
+        '123456789',
+        'iloveyou',
+        'princess',
+        'monkey',
+        'rockyou',
+        'babygirl',
+        'monkey',
+        'qwerty',
+        '654321',
+    ]
+    message = _("Please choose a less common password")
+    code = 'password'
+
+    def __init__(self, password_file=None):
+        self.limit_value = password_file
+
+    def clean(self, value):
+        return value.strip()
+
+    def compare(self, value, limit):
+        return value in self.forbidden_passwords
+
+    def get_forbidden_passwords(self):
+        if self.limit_value is None:
+            return self.forbidden_passwords
+
+
 class EmailUserCreationForm(forms.ModelForm):
     email = forms.EmailField(label=_('Email Address'))
-    password1 = forms.CharField(label=_('Password'), widget=forms.PasswordInput)
+    password1 = forms.CharField(label=_('Password'), widget=forms.PasswordInput,
+                                validators=[validators.MinLengthValidator(6),
+                                CommonPasswordValidator()])
     password2 = forms.CharField(label=_('Confirm Password'), widget=forms.PasswordInput)
 
     class Meta:

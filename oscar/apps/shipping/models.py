@@ -12,6 +12,9 @@ class ShippingMethod(models.Model):
     name = models.CharField(_("Name"), max_length=128, unique=True)
     description = models.TextField(_("Description"), blank=True)
 
+    # We allow shipping methods to be linked to a specific set of countries
+    countries = models.ManyToManyField('address.Country', null=True, blank=True)
+
     _basket = None
 
     class Meta:

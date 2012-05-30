@@ -114,6 +114,12 @@ Products in range '{{ range.name }}' | {{ block.super }}
 	{% else %}
 		<p>No products found.</p>
 	{% endif %}
+
+	<div class="well well-info">
+		<a href="{% url dashboard:range-update range.id %}" class="btn btn-large btn-primary">Edit range</a> or
+		<a href="{% url dashboard:range-list %}" class="">return to range list</a>
+	</div>
+			
 {% endblock dashboard_content %}
 
 {% block onbodyload %}
