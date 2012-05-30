@@ -1,5 +1,6 @@
 {% extends 'dashboard/layout.html' %}
 {% load currency_filters %}
+{% load sorting_tags %}
 {% block body_class %}orders{% endblock %}
 {% block title %}
 Order management | {{ block.super }}
@@ -81,7 +82,7 @@ Order management | {{ block.super }}
 <table class="table table-striped table-bordered">
     <tr>
         <th></th>
-        <th>Order number</th>
+        <th>{% anchor 'number' 'Order number' %}</th>
         <th>Total inc tax</th>
         <th>Date of purchase</th>
         <th>Number of items</th>

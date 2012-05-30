@@ -3,7 +3,7 @@
 {% block body_class %}users{% endblock %}
 
 {% block title %}
-Users | {{ block.super }}
+Customers | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -12,13 +12,13 @@ Users | {{ block.super }}
         <a href="{% url dashboard:index %}">Dashboard</a>
         <span class="divider">/</span>
     </li>
-    <li class="active"><a href=".">Users</a></li>
+    <li class="active"><a href=".">Customers</a></li>
 </ul>
 {% endblock %}
 
 {% block header %}
 <div class="page-header">
-    <h1>User management</h1>
+    <h1>Customers</h1>
 </div>
 {% endblock header %}
 
@@ -73,7 +73,7 @@ Users | {{ block.super }}
 
 <div class="well well-danger">
     <h3 class="app-ico ico_sync icon">Bulk Actions</h3>
-    <label for="inlineCheckboxes">With selected users:</label>
+    <label for="inlineCheckboxes">With selected customers:</label>
     <label>
         <input type="radio" name="action" value="make_active" /> Make active
     </label>
@@ -88,7 +88,7 @@ Users | {{ block.super }}
 
 {% else %}
 
-<p>No users found.</p>
+<p>No customers found.</p>
 
 {% endif %}
 

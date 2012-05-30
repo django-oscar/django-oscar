@@ -31,3 +31,5 @@ TODO
 .coverage
 htmlcov/*
 sandbox/public/
+logs/
+build/
