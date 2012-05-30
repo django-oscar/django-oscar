@@ -3,8 +3,8 @@ import os
 # Use 'final' as the 4th element to indicate
 # a full release
 
-VERSION = (0, 2, 0, 'beta', 1)
-    
+VERSION = (0, 2, 0, 'RC', 2)
+
 def get_short_version():
     return '%s.%s' % (VERSION[0], VERSION[1])
 
@@ -33,7 +33,6 @@ OSCAR_PARENT_TEMPLATE_DIR = os.path.dirname(os.path.abspath(__file__))
 OSCAR_CORE_APPS = [
     'oscar',
     'oscar.apps.analytics',
-    'oscar.apps.discount',
     'oscar.apps.order',
     'oscar.apps.checkout',
     'oscar.apps.shipping',

@@ -76,6 +76,10 @@ form {
 .form-actions {
   .clearfix();
 }
+//For IE: adds width for selects inside overflow hidden containers
+.select-open {
+  width:300px!important;
+}
 
 // ADDITIONAL ERRORS
 .errorlist {
@@ -88,8 +92,6 @@ form {
     }
 }
 
-.control-label.required:after {
-    content: "*";
-    padding:0 0 0 3px;
+.control-label.required span {
     color: #FF0000;
 }

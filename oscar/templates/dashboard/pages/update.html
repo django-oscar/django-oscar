@@ -10,7 +10,11 @@
         <a href="{% url dashboard:index %}">Dashboard</a>
         <span class="divider">/</span>
     </li>
-    <li class="active"><a href=".">Page Management</a></li>
+    <li>
+        <a href="{% url dashboard:page-list %}">Page management</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active"><a href=".">Update page</a></li>
 </ul>
 {% endblock %}
 {% block header %}

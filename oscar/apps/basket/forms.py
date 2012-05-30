@@ -1,6 +1,7 @@
 from django import forms
 from django.conf import settings
 from django.db.models import get_model
+from django.forms.models import modelformset_factory, BaseModelFormSet
 from django.utils.translation import gettext_lazy as _
 
 Line = get_model('basket', 'line')
@@ -49,6 +50,43 @@ class SavedLineForm(forms.ModelForm):
     class Meta:
         model = Line
         exclude = ('basket', 'product', 'line_reference', 'quantity', 'price_incl_tax')
+
+    def __init__(self, user, basket, *args, **kwargs):
+        self.user = user
+        self.basket = basket
+        super(SavedLineForm, self).__init__(*args, **kwargs)
+
+    def clean(self):
+        cleaned_data = super(SavedLineForm, self).clean()
+        try:
+            line = self.basket.lines.get(product=self.instance.product)
+        except Line.DoesNotExist:
+            desired_qty = self.instance.quantity
+        else:
+            desired_qty = self.instance.quantity + line.quantity
+
+        is_available, reason = self.instance.product.is_purchase_permitted(user=self.user,
+                                                                           quantity=desired_qty)
+        if not is_available:
+            raise forms.ValidationError(reason)
+        return cleaned_data
+
+
+class BaseSavedLineFormSet(BaseModelFormSet):
+
+    def __init__(self, user, basket, *args, **kwargs):
+        self.user = user
+        self.basket = basket
+        super(BaseSavedLineFormSet, self).__init__(*args, **kwargs)
+
+    def _construct_form(self, i, **kwargs):
+        return super(BaseSavedLineFormSet, self)._construct_form(i, user=self.user,
+                                                             basket=self.basket, **kwargs)
+
+
+SavedLineFormSet = modelformset_factory(Line, form=SavedLineForm,
+                                         formset=BaseSavedLineFormSet, extra=0,
+                                         can_delete=True)
 
 
 class BasketVoucherForm(forms.Form):

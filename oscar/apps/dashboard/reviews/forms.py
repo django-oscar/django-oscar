@@ -17,9 +17,8 @@ class DashboardProductReviewForm(forms.ModelForm):
 
 
 class ProductReviewSearchForm(forms.Form):
-    NO_SELECTION = 4 
     STATUS_CHOICES = (
-        (NO_SELECTION, '------------'),
+        ('', '------------'),
     ) + ProductReview.STATUS_CHOICES
     keyword = forms.CharField(required=False)
     status = forms.ChoiceField(required=False, choices=STATUS_CHOICES)

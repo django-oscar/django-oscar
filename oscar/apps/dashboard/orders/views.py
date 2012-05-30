@@ -90,6 +90,7 @@ class OrderListView(ListView, BulkEditMixin):
         describes the queryset
         """
         queryset = self.model.objects.all().order_by('-date_placed')
+        queryset = self.sort_queryset(queryset)
         self.description = self.base_description
 
         # Look for shortcut query filters
@@ -165,6 +166,15 @@ class OrderListView(ListView, BulkEditMixin):
             queryset = queryset.filter(status=data['status'])
             self.description += " with status %s" % data['status']
 
+        return queryset
+
+    def sort_queryset(self, queryset):
+        sort = self.request.GET.get('sort', None)
+        allowed_sorts = ['number',]
+        if sort in allowed_sorts:
+            direction = self.request.GET.get('dir', 'desc')
+            sort = ('-' if direction == 'desc' else '') + sort
+            queryset = queryset.order_by(sort)
         return queryset
 
     def get_context_data(self, **kwargs):

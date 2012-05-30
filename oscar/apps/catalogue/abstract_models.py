@@ -48,10 +48,10 @@ class AbstractCategory(MP_Node):
     description = models.TextField(blank=True, null=True)
     image = models.ImageField(upload_to='categories', blank=True, null=True)
     slug = models.SlugField(max_length=1024, db_index=True, editable=False)
-    full_name = models.CharField(max_length=1024, db_index=True, editable=False)    
+    full_name = models.CharField(max_length=1024, db_index=True, editable=False)
     
     def __unicode__(self):
-        return self.name
+        return self.full_name
     
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -78,7 +78,7 @@ class AbstractCategory(MP_Node):
 
     class Meta:
         abstract = True
-        ordering = ['name']
+        ordering = ['full_name']
         verbose_name_plural = 'Categories'
         verbose_name = 'Category'
 
@@ -209,8 +209,6 @@ class AbstractProduct(models.Model):
     objects = models.Manager()
     browsable = BrowsableProductManager()
 
-    ENABLE_ATTRIBUTE_BINDING = getattr(settings, 'OSCAR_ENABLE_ATTRIBUTE_BINDING', False)
-
     # Properties
 
     @property
@@ -334,8 +332,7 @@ class AbstractProduct(models.Model):
         
     def __init__(self, *args, **kwargs):
         super(AbstractProduct, self).__init__(*args, **kwargs)
-        if self.ENABLE_ATTRIBUTE_BINDING:
-            self.attr = ProductAttributesContainer(product=self)
+        self.attr = ProductAttributesContainer(product=self)
     
     def save(self, *args, **kwargs):
         if self.is_top_level and not self.title:
@@ -344,15 +341,13 @@ class AbstractProduct(models.Model):
             self.slug = slugify(self.get_title())
         
         # Validate attributes if necessary
-        if self.ENABLE_ATTRIBUTE_BINDING:
-            self.attr.validate_attributes()
+        self.attr.validate_attributes()
             
         # Save product
         super(AbstractProduct, self).save(*args, **kwargs)
         
         # Finally, save attributes
-        if self.ENABLE_ATTRIBUTE_BINDING:
-            self.attr.save()
+        self.attr.save()
 
 
 class ProductRecommendation(models.Model):
@@ -411,7 +406,7 @@ class ProductAttributesContainer(object):
         return self.get_values().get(attribute=attribute)    
     
     def get_all_attributes(self):
-        return self.product.product_class.attributes.all()
+        return self.product.get_product_class().attributes.all()
     
     def get_attribute_by_code(self, code):
         return self.get_all_attributes().get(code=code)

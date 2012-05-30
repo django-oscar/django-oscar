@@ -76,11 +76,12 @@ Update product | {{ block.super }}
 		
 	<div class="well form-inline">	
 		<div class="sub-header">
-		  <h3 class="app-ico ico_home icon">Category information</h3>
+			<h3 class="app-ico ico_home icon">Category information</h3>
 		</div>
     	{{ category_formset.management_form }}
     	{% for category_form in category_formset %}
-    		{% include "partials/form_fields_inline.html" with form=category_form %}
+			{% include "partials/form_fields_inline.html" with form=category_form %}
+    		<hr/>
     	{% endfor %}
 	</div>
 	

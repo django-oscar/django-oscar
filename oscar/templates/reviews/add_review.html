@@ -3,7 +3,7 @@
 {% block product_review %}
 <div id="addreview" class="review_add">
     <legend>Leave a product review</legend>
-    <form method="post" action="." class="form-horizontal" >
+    <form method="post" action="./#addreview" class="form-horizontal" >
         {% csrf_token %}
         {% include "partials/form_fields.html" with form=form %}
         <div class="form-actions">

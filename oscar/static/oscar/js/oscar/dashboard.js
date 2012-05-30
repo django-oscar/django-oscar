@@ -29,6 +29,14 @@ oscar.dashboard = {
             if (location.hash) {
                 $('.nav-tabs a[href=' + location.hash + ']').tab('show');
             }
+        },
+        initTable: function() {
+            var table = $('form.order_table table'),
+                input = $('<input type="checkbox" />');
+            $('th:first', table).append(input);
+            $(input).change(function(){
+                $('input.selected_order', table).prop("checked", $(this).is(':checked'));
+            });
         }
     },
     promotions: {

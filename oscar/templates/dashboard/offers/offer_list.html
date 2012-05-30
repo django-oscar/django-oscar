@@ -44,6 +44,7 @@ Offer management | {{ block.super }}
 			<table class="table table-striped table-bordered">
 				<tr>
 					<th>Offer name</th>
+					<th>Status</th>
 					<th>Start date</th>
 					<th>End date</th>
 					<th>Condition</th>
@@ -54,6 +55,7 @@ Offer management | {{ block.super }}
 				{% for offer in offers %}
 				<tr>
 					<td><a href="{{ offer.get_absolute_url }}">{{ offer.name }}</a></td>
+					<td>{% if offer.is_active %}Active{% else %}Inactive{% endif %}</td>
 					<td>{{ offer.start_date }}</td>
 					<td>{{ offer.end_date }}</td>
 					<td>{{ offer.condition.description }}</td>

@@ -56,3 +56,12 @@ class VoucherForm(forms.Form):
         if end_date < start_date:
             raise forms.ValidationError("The start date must be before the end date")
         return cleaned_data
+
+
+class VoucherSearchForm(forms.Form):
+    name = forms.CharField(required=False)
+    code = forms.CharField(required=False)
+    is_active = forms.BooleanField(required=False)
+
+    def clean_code(self):
+        return self.cleaned_data['code'].upper()

@@ -1,12 +1,10 @@
 import logging
-import sys
-import os
 from optparse import make_option
 
 from django.core.management.base import BaseCommand, CommandError
 
-from oscar.core.loading import import_module
-import_module('catalogue.utils', ['Importer'], locals())
+from oscar.core.loading import get_class
+Importer = get_class('catalogue.utils', 'Importer')
 
 
 class Command(BaseCommand):
