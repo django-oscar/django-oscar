@@ -1,0 +1,62 @@
+import logging
+
+from optparse import make_option
+from datetime import datetime, timedelta
+
+from django.core.management.base import BaseCommand
+
+from oscar.core.loading import get_class
+AbstractNotification = get_class('catalogue.notification.models',
+                                 'AbstractNotification')
+
+logger = logging.getLogger(__name__)
+
+
+class Command(BaseCommand):
+    """
+    Command to remove all notifications derived from
+    ``AbstractNotification`` that are in status ``UNCONFIRMED`` and
+    have been created before a threshold date and time. The threshold
+    can be specified as options ``days`` and ``hours`` and is
+    calculated relative to the current date and time.
+    """
+    help = "Check unconfirmed notifications and clean them up"
+    option_list = BaseCommand.option_list + (
+        make_option('--days',
+            dest='days',
+            default=0,
+            help='cleanup notifications older then DAYS from now.'),
+        make_option('--hours',
+            dest='hours',
+            default=0,
+            help='cleanup notifications older then HOURS from now.'),
+        )
+
+    def handle(self, *args, **options):
+        """
+        Generate a threshold date from the input options or 24 hours
+        if no options specified. All notifications that have the
+        status ``UNCONFIRMED`` and have been created before the
+        threshold date will be removed assuming that the emails
+        are wrong or the customer changed their mind.
+        """
+        delta = timedelta(days=int(options['days']),
+                          hours=int(options['hours']))
+
+        if not delta:
+            delta = timedelta(hours=24)
+
+        threshold_date = datetime.now() - delta
+
+        logger.info('cleaning up unconfirmed notifications older than %s',
+                    threshold_date.strftime("%Y-%m-%d %H:%M"))
+
+        for subcls in AbstractNotification.__subclasses__():
+            notifications = subcls.objects.filter(
+                status=AbstractNotification.UNCONFIRMED,
+                date_created__lt=threshold_date
+            )
+            logger.info("removing %d notifications of type '%s'",
+                        len(notifications), subcls.__name__)
+
+            [n.delete() for n in notifications]

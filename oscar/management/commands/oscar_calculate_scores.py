@@ -10,11 +10,6 @@ logger = logging.getLogger(__name__)
 
 class Command(BaseCommand):
     help = 'Calculate product scores based on analytics data'
-    
+
     def handle(self, *args, **options):
         ScoreCalculator(logger).run()
-
-        
-        
-        
-            

@@ -20,6 +20,7 @@ from oscar.apps.dashboard.tests import *
 
 from oscar.core.tests import *
 from oscar.core.logging.tests import *
+from oscar.management.commands.tests import *
 
 import oscar
 
