@@ -13,13 +13,17 @@
         <a href="{% url promotions:home %}">Home</a>
         <span class="divider">/</span>
     </li>
-    <li>
-        {% with category=product.categories.all.0 %}
-        <a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
-        <span class="divider">/</span>
-        {% endwith %}
-    </li>
-    <li class="active"><a href=".">{{ product.get_title }}</a></li>
+	{% with category=product.categories.all.0 %}
+		{% for c in category.get_ancestors %}
+		<li>
+			<a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
+			<span class="divider">/</span>
+		</li>
+		{% endfor %}
+		<li class="active">
+			<a href=".">{{ product.title }}</a>
+		</li>
+    {% endwith %}
 </ul>
 {% endblock %}
 
@@ -51,7 +55,10 @@
 					{% endfor %}
 				</ul>
 			{% else %}
-			<p class="star">No Rating <a href="{% url catalogue:reviews-add product.slug product.id %}#addreview">Add review</a></p>
+			<p class="star">No Rating 
+			
+			<a href="{% url catalogue:reviews-add product.slug product.id %}#addreview">Add review</a>
+			</p>
 			{% endif %}
             
             <p><strong>Product Code:</strong> <code>{{ product.upc }}</code></p>
@@ -114,21 +121,6 @@
             <td></td>
         </tr>
     </table>
-	{% endblock %}
-
-	{% block product_categories %}
-    <div class="sub-header">
-        <h2>Reviews</h2>
-    </div>
-    <ul class="pills">
-        {% for category in product.categories.all %}
-        <li>
-            {% for c in category.get_ancestors %}
-            {% if not forloop.first %} &gt; {% endif %}<a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
-            {% endfor %}
-        </li>
-        {% endfor %}
-    </ul>
 	{% endblock %}
 
     {% block product_review %}
