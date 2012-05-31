@@ -4,6 +4,8 @@ from django.db.models import get_model
 from django.forms.models import modelformset_factory, BaseModelFormSet
 from django.utils.translation import gettext_lazy as _
 
+from oscar.templatetags.currency_filters import currency
+
 Line = get_model('basket', 'line')
 Basket = get_model('basket', 'basket')
 Product = get_model('catalogue', 'product')
@@ -167,10 +169,14 @@ class AddToBasketForm(forms.Form):
         choices = []
         for variant in item.variants.all():
             if variant.has_stockrecord:
-                summary = u"%s (%s) - %.2f" % (variant.get_title(), variant.attribute_summary(),
-                                               variant.stockrecord.price_incl_tax)
+                attr_summary = variant.attribute_summary()
+                if attr_summary:
+                    attr_summary = "(%s)" % attr_summary
+                summary = u"%s %s - %s" % (variant.get_title(), attr_summary,
+                                           currency(variant.stockrecord.price_incl_tax))
                 choices.append((variant.id, summary))
-        self.fields['product_id'] = forms.ChoiceField(choices=tuple(choices))
+        self.fields['product_id'] = forms.ChoiceField(choices=tuple(choices),
+                                                      label="Variant")
 
     def _create_product_fields(self, item):
         u"""Add the product option fields."""
