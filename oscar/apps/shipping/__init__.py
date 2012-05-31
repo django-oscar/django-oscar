@@ -18,7 +18,7 @@ class Scales(object):
             weight = self.default_weight
         else:
             weight = attr_val.value
-        return float(weight)
+        return float(weight) if weight is not None else 0.0
 
     def weigh_basket(self, basket):
         weight = 0.0
