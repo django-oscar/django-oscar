@@ -27,7 +27,7 @@ class ReportGenerator(object):
         """
         Returns the filename for this report
         """
-        return self.filename_template % (self.start_date, self.end_date)
+        return self.formatter.filename()
 
     def is_available_to(self, user):
         """
@@ -59,6 +59,4 @@ class ReportCSVFormatter(ReportFormatter):
 class ReportHTMLFormatter(ReportFormatter):
 
     def generate_response(self, objects, **kwargs):
-        template = loader.get_template(self.template)
-        ctx = Context({'objects': objects})
-        return template.render(ctx)
+        return objects

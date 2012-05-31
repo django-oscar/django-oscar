@@ -25,7 +25,7 @@ class OfferReportCSVFormatter(ReportCSVFormatter):
 
 
 class OfferReportHTMLFormatter(ReportHTMLFormatter):
-    template = 'dashboard/reports/partials/offer_report.html'
+    filename_template = 'dashboard/reports/partials/offer_report.html'
 
 
 class OfferReportGenerator(ReportGenerator):
@@ -41,6 +41,3 @@ class OfferReportGenerator(ReportGenerator):
     def generate(self):
         offers = ConditionalOffer._default_manager.all()
         return self.formatter.generate_response(offers)
-
-    def filename(self):
-        return self.filename_template

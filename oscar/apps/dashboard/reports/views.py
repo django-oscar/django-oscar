@@ -1,14 +1,16 @@
 from django.http import HttpResponse, HttpResponseForbidden, Http404
 from django.template.response import TemplateResponse
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, ListView
 
 from oscar.core.loading import get_class
 ReportForm = get_class('dashboard.reports.forms', 'ReportForm')
 GeneratorRepository = get_class('dashboard.reports.utils', 'GeneratorRepository')
 
 
-class IndexView(TemplateView):
+class IndexView(ListView):
     template_name = 'dashboard/reports/index.html'
+    paginate_by = 25
+    context_object_name = 'objects'
 
     def get(self, request, *args, **kwargs):
         if 'report_type' in request.GET:
@@ -16,19 +18,25 @@ class IndexView(TemplateView):
             if form.is_valid():
                 generator = _get_generator(form)
                 if not generator.is_available_to(request.user):
-                    return HttpResponseForbidden("You do not have access to this report")
+                    return HttpResponseForbidden("You do not have access"
+                                                 " to this report")
 
                 report = generator.generate()
 
                 if form.cleaned_data['download']:
                     return report
                 else:
-                    return TemplateResponse(request, self.template_name,
-                        {'form': form, 'report': report})
+                    self.set_list_view_attrs(generator, report)
+                    context = self.get_context_data(object_list=self.queryset)
+                    context['form'] = form
+                    return self.render_to_response(context)
         else:
             form = ReportForm()
         return TemplateResponse(request, self.template_name, {'form': form})
 
+    def set_list_view_attrs(self, generator, report):
+        self.template_name = generator.filename()
+        self.object_list = self.queryset = report
 
 def _get_generator(form):
     code = form.cleaned_data['report_type']

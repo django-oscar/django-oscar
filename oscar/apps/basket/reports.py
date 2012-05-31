@@ -45,7 +45,7 @@ class OpenBasketReportCSVFormatter(ReportCSVFormatter):
 
 
 class OpenBasketReportHTMLFormatter(ReportHTMLFormatter):
-    template = 'dashboard/reports/partials/open_basket_report.html'
+    filename_template = 'dashboard/reports/partials/open_basket_report.html'
 
 
 class OpenBasketReportGenerator(ReportGenerator):
@@ -101,7 +101,7 @@ class SubmittedBasketReportCSVFormatter(ReportCSVFormatter):
 
 
 class SubmittedBasketReportHTMLFormatter(ReportHTMLFormatter):
-    template = 'dashboard/reports/partials/submitted_basket_report.html'
+    filename_template = 'dashboard/reports/partials/submitted_basket_report.html'
 
 
 class SubmittedBasketReportGenerator(ReportGenerator):
@@ -123,4 +123,3 @@ class SubmittedBasketReportGenerator(ReportGenerator):
         }
         baskets = Basket._default_manager.filter(status=SUBMITTED)
         return self.formatter.generate_response(baskets, **additional_data)
-

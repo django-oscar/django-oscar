@@ -31,7 +31,7 @@ class VoucherReportCSVFormatter(ReportCSVFormatter):
 
 
 class VoucherReportHTMLFormatter(ReportHTMLFormatter):
-    template = 'dashboard/reports/partials/voucher_report.html'
+    filename_template = 'dashboard/reports/partials/voucher_report.html'
 
 
 class VoucherReportGenerator(ReportGenerator):

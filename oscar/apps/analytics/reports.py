@@ -32,7 +32,7 @@ class ProductReportCSVFormatter(ReportCSVFormatter):
 
 
 class ProductReportHTMLFormatter(ReportHTMLFormatter):
-    template = 'dashboard/reports/partials/product_report.html'
+    filename_template = 'dashboard/reports/partials/product_report.html'
 
 
 class ProductReportGenerator(ReportGenerator):
@@ -84,7 +84,7 @@ class UserReportCSVFormatter(ReportCSVFormatter):
 
 
 class UserReportHTMLFormatter(ReportHTMLFormatter):
-    template = 'dashboard/reports/partials/user_report.html'
+    filename_template = 'dashboard/reports/partials/user_report.html'
 
 
 class UserReportGenerator(ReportGenerator):
