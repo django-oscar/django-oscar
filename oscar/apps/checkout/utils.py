@@ -58,20 +58,32 @@ class CheckoutSessionData(object):
         return self._get('guest', 'email')
         
     # Shipping addresses    
+
+    def reset_shipping_data(self):
+        self._unset('shipping', 'not_required')
+        self._unset('shipping', 'new_address_fields')
+        self._unset('shipping', 'user_address_id')
+
+    def no_shipping_required(self):
+        """
+        Record fact that basket doesn't require a shipping address or method
+        """
+        self.reset_shipping_data()
+        self._set('shipping', 'is_required', False)
         
     def ship_to_user_address(self, address):
         """
         Set existing shipping address id to session and unset address fields from session
         """
+        self.reset_shipping_data()
         self._set('shipping', 'user_address_id', address.id)
-        self._unset('shipping', 'new_address_fields')
         
     def ship_to_new_address(self, address_fields):
         """
         Set new shipping address details to session and unset shipping address id
         """
+        self._unset('shipping', 'new_address_fields')
         self._set('shipping', 'new_address_fields', address_fields)
-        self._unset('shipping', 'user_address_id')
         
     def new_shipping_address_fields(self):
         """
@@ -84,6 +96,9 @@ class CheckoutSessionData(object):
         Get user address id from session
         """
         return self._get('shipping', 'user_address_id')
+
+    def is_shipping_required(self):
+        return self._get('shipping', 'is_required', True)
 
     def is_shipping_address_set(self):
         new_fields = self.new_shipping_address_fields()

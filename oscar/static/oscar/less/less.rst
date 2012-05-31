@@ -26,10 +26,13 @@ Note :
 Bootstrap
 ---------
 
-
+Files in the Bootstrap folder are direct copies from https://github.com/twitter/bootstrap/  - Version 2.0
+These files have been kept clean of alterations so Bootstrap can be upgraded.
+New projects however should feel free in modifying these to suit their designs.
 
 Page
 ----
+
 
 
 

@@ -2,6 +2,12 @@
 Template Structure
 ==================
 
+Markup
+------
+
+Template markup for the most part has been written in accordance with Twitter Bootstrap.
+Documentation on Bootstrap HTML markup and classes used see (http://twitter.github.com/bootstrap/index.html).
+
 Layouts
 -------
 

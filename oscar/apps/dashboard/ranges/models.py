@@ -76,7 +76,7 @@ class RangeProductFileUpload(models.Model):
         missing_ids = new_ids - found_ids
         dupes = set(all_ids).intersection(existing_ids)
 
-        self.mark_as_processed(len(found_ids), len(missing_ids), len(dupes))
+        self.mark_as_processed(products.count(), len(missing_ids), len(dupes))
 
     def extract_ids(self):
         """
