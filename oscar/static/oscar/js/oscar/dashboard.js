@@ -31,11 +31,16 @@ oscar.dashboard = {
             }
         },
         initTable: function() {
-            var table = $('form.order_table table'),
-                input = $('<input type="checkbox" />');
-            $('th:first', table).append(input);
+            var table = $('form table'),
+                input = $('<input type="checkbox" />').css({
+                    'margin-right': '5px',
+                    'vertical-align': 'top'
+                });
+            $('th:first', table).prepend(input);
             $(input).change(function(){
-                $('input.selected_order', table).prop("checked", $(this).is(':checked'));
+                $('tr', table).each(function() {
+                    $('td:first input', this).prop("checked", $(input).is(':checked'));
+                });
             });
         }
     },
