@@ -95,7 +95,7 @@ class WeightBased(ShippingMethod):
         verbose_name_plural = 'Weight-based shipping methods'
 
     def basket_charge_incl_tax(self):
-        weight = Scales(attribute=self.weight_attribute, default_weight=self.default_weight).weigh_basket(self._basket)
+        weight = Scales(attribute_code=self.weight_attribute, default_weight=self.default_weight).weigh_basket(self._basket)
         band = self.get_band_for_weight(weight)
         if not band:
             if self.bands.all().count() > 0 and self.upper_charge:
