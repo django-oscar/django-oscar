@@ -15,7 +15,7 @@
     </tr>
     {% for basket in objects %}
     <tr>
-        <td>{{ basket.owner_id }}</td>
+        <td>{{ basket.owner_id|default:"-" }}</td>
         <td>{{ basket.owner }}</td>
         <td>{{ basket.status }}</td>
         <td>{{ basket.num_lines }}</td>

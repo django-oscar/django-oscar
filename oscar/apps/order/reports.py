@@ -1,7 +1,6 @@
 import csv
 
 from django.db.models import get_model
-from django.template.response import TemplateResponse
 
 from oscar.core.loading import get_class
 ReportGenerator = get_class('dashboard.reports.reports', 'ReportGenerator')

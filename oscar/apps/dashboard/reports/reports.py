@@ -1,5 +1,4 @@
 from django.template.defaultfilters import date
-from django.template import loader, Context
 from django.http import HttpResponse
 
 

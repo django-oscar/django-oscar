@@ -4,6 +4,7 @@
 {% block report %}
 <table class="table table-striped table-bordered">
     <tr>
+        <th>Email</th>
         <th>Name</th>
         <th>Date registered</th>
         <th>Product views</th>
@@ -16,7 +17,8 @@
     </tr>
     {% for user in objects %}
     <tr>
-        <td>{{ user.user.get_full_name }}</td>
+        <td>{{ user.user.email }}</td>
+        <td>{{ user.user.get_full_name|default:"-" }}</td>
         <td>{{ user.user.date_joined }}</td>
         <td>{{ user.num_product_views }}</td>
         <td>{{ user.num_basket_additions }}</td>
@@ -24,7 +26,7 @@
         <td>{{ user.num_order_lines }}</td>
         <td>{{ user.num_order_items }}</td>
         <td>{{ user.total_spent|currency }}</td>
-        <td>{% if user.date_last_order %}{{ user.date_last_order }}{% endif %}</td>
+        <td>{{ user.date_last_order|default:"-" }}</td>
     </tr>
     {% endfor %}
 </table>

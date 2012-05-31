@@ -1,6 +1,6 @@
-from django.http import HttpResponse, HttpResponseForbidden, Http404
+from django.http import HttpResponseForbidden, Http404
 from django.template.response import TemplateResponse
-from django.views.generic import TemplateView, ListView
+from django.views.generic import ListView
 
 from oscar.core.loading import get_class
 ReportForm = get_class('dashboard.reports.forms', 'ReportForm')
@@ -29,6 +29,11 @@ class IndexView(ListView):
                     self.set_list_view_attrs(generator, report)
                     context = self.get_context_data(object_list=self.queryset)
                     context['form'] = form
+                    context['description'] = '%s between %s and %s' % (
+                        generator.description,
+                        form.cleaned_data['date_from'],
+                        form.cleaned_data['date_to'],
+                    )
                     return self.render_to_response(context)
         else:
             form = ReportForm()
