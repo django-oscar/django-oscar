@@ -99,10 +99,10 @@
             {% if product.is_group %}Product group{% else %}{% if product.is_variant %}Variant{% else %}Stand-alone{% endif %}{% endif %}
             </td>
         </tr>
-        {% for attribute in product.attributes.all %}
+        {% for av in product.attribute_values.all %}
         <tr>
-            <th>{{ attribute.type.name }}</th>
-            <td>{{ attribute.value }}</td>
+            <th>{{ av.attribute.name }}</th>
+            <td>{{ av.value }}</td>
         </tr>
         {% endfor %}
         <tr>
