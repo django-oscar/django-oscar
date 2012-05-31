@@ -99,7 +99,7 @@ class CreateNotificationViewAsAnonymousTests(NotificationTestCase):
         user. The confirmation of the notification is handled by a link
         that will activate the notification.
         """
-        notification_url = reverse('catalogue:notification-add',
+        notification_url = reverse('catalogue:notification-create',
                                    args=(self.product_1.slug, self.product_1.id))
         response = self.client.post(notification_url, data={'email': self.email},
                                     follow=True)
@@ -174,7 +174,7 @@ class CreateNotificationViewAsAuthenticatedUserTests(NotificationTestCase):
         self.assertEquals(self.user.notifications.count(), 0)
         self.client.login()
 
-        notification_url = reverse('catalogue:notification-add',
+        notification_url = reverse('catalogue:notification-create',
                                    args=(self.product_1.slug, self.product_1.id))
         response = self.client.post(notification_url, data={'email': self.email},
                                     follow=True)
@@ -193,7 +193,7 @@ class CreateNotificationViewAsAuthenticatedUserTests(NotificationTestCase):
         from the user's account email. This should set the account email
         address instead of the provided email in POST data.
         """
-        notification_url = reverse('catalogue:notification-add',
+        notification_url = reverse('catalogue:notification-create',
                               args=(self.product_1.slug, self.product_1.id))
         self.client.post(notification_url, data={'email': 'someother@oscar.com'},
                          follow=True)
@@ -216,7 +216,7 @@ class CreateNotificationViewAsAuthenticatedUserTests(NotificationTestCase):
         page with a notification that he has already signed up.
         """
         notification = get(ProductNotification, product=self.product_1, user=self.user)
-        notification_url = reverse('catalogue:notification-add',
+        notification_url = reverse('catalogue:notification-create',
                               args=(self.product_1.slug, self.product_1.id))
         response = self.client.post(notification_url, data={'email': self.user.email},
                                     follow=True)
@@ -248,7 +248,7 @@ class CreateNotificationViewAsAnonymousUserTests(NotificationTestCase):
         to the login page and from there right back to the product detail
         page where the user hits the 'Notify Me' button again.
         """
-        notification_url = reverse('catalogue:notification-add',
+        notification_url = reverse('catalogue:notification-create',
                                    args=(self.product_1.slug, self.product_1.id))
         response = self.client.post(notification_url, data={'email': self.email},
                                     follow=True)
@@ -319,7 +319,7 @@ class DeleteNotificationViewTests(NotificationTestCase):
         )
 
     def test_deleting_notification(self):
-        delete_url = reverse('catalogue:notification-remove',
+        delete_url = reverse('catalogue:notification-delete',
                              args=(self.product.slug, self.product.id,
                                    self.notification.id))
 

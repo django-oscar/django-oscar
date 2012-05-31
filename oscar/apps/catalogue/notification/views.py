@@ -30,7 +30,7 @@ class NotificationDetailView(generic.DetailView):
         return get_object_or_404(ProductNotification, confirm_key=key)
 
 
-class UnsubscribeNotificationView(NotificationDetailView):
+class NotificationUnsubscribeView(NotificationDetailView):
     """
     View to inactivate notifications for anonymous users.
     """
@@ -43,10 +43,10 @@ class UnsubscribeNotificationView(NotificationDetailView):
         messages.info(self.request,
             _("You have successfully unsubscribed from this notification.")
         )
-        return super(UnsubscribeNotificationView, self).get(*args, **kwargs)
+        return super(NotificationUnsubscribeView, self).get(*args, **kwargs)
 
 
-class ConfirmNotificationView(NotificationDetailView):
+class NotificationConfirmView(NotificationDetailView):
     """
     View to confirm the email address of an anonymous user used to
     sign up for a product notification.
@@ -61,10 +61,10 @@ class ConfirmNotificationView(NotificationDetailView):
             _("Yeah! You have confirmed your subscription. We'll notify "
               "you as soon as the product is back in stock.")
         )
-        return super(ConfirmNotificationView, self).get(*args, **kwargs)
+        return super(NotificationConfirmView, self).get(*args, **kwargs)
 
 
-class CreateProductNotificationView(generic.FormView):
+class ProductNotificationCreateView(generic.FormView):
     """
     View to create a new product notification based on a registered user
     or an email address provided by an anonymous user.
@@ -75,7 +75,7 @@ class CreateProductNotificationView(generic.FormView):
     email_template = 'notification/email.html'
 
     def get_form_kwargs(self):
-        kwargs = super(CreateProductNotificationView, self).get_form_kwargs()
+        kwargs = super(ProductNotificationCreateView, self).get_form_kwargs()
 
         user = self.request.user
         if user.is_authenticated():
@@ -86,7 +86,7 @@ class CreateProductNotificationView(generic.FormView):
         return get_object_or_404(self.product_model, pk=self.kwargs['product_pk'])
 
     def get_context_data(self, *args, **kwargs):
-        ctx = super(CreateProductNotificationView, self).get_context_data(*args, **kwargs)
+        ctx = super(ProductNotificationCreateView, self).get_context_data(*args, **kwargs)
         ctx['product'] = self.get_product()
         return ctx
 
@@ -174,7 +174,7 @@ class CreateProductNotificationView(generic.FormView):
                        args=(self.product.slug, self.product.pk))
 
 
-class SetStatusProductNotificationView(generic.TemplateView):
+class ProductNotificationSetStatusView(generic.TemplateView):
     """
     View to change the status of a product notification. The status can
     be changed from ``active`` to ``inactive`` and vice versa.
@@ -217,7 +217,7 @@ class SetStatusProductNotificationView(generic.TemplateView):
                              args=(self.product.slug, self.product.pk))
         return self.request.META.get('HTTP_REFERER', detail_url)
 
-class DeleteProductNotificationView(generic.DeleteView):
+class ProductNotificationDeleteView(generic.DeleteView):
     """
     View to delete a product notification. This should not be available
     to the users as their can only activate and deactivate notifications.
