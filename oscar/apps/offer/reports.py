@@ -28,6 +28,7 @@ class OfferReportHTMLFormatter(ReportHTMLFormatter):
     filename_template = 'dashboard/reports/partials/offer_report.html'
 
 
+
 class OfferReportGenerator(ReportGenerator):
 
     code = 'conditional-offers'

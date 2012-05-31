@@ -38,6 +38,7 @@ class IndexView(ListView):
         self.template_name = generator.filename()
         self.object_list = self.queryset = report
 
+
 def _get_generator(form):
     code = form.cleaned_data['report_type']
 
