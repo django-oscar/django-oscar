@@ -23,7 +23,7 @@
         <td>{{ user.num_orders }}</td>
         <td>{{ user.num_order_lines }}</td>
         <td>{{ user.num_order_items }}</td>
-        <td>{{ user.total_spent }}</td>
+        <td>{{ user.total_spent|currency }}</td>
         <td>{% if user.date_last_order %}{{ user.date_last_order }}{% endif %}</td>
     </tr>
     {% endfor %}
