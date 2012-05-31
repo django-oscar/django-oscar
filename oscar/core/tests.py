@@ -1,13 +1,21 @@
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 from django.conf import settings
+from django.contrib import messages
+from django.http import HttpRequest
+from django.contrib.sessions.middleware import SessionMiddleware
+from django.contrib.messages.middleware import MessageMiddleware
 
 from django.contrib.flatpages.models import FlatPage
+
+from hamcrest import *
 
 from oscar.core.loading import import_module, AppNotFoundError, \
         get_classes, get_class, ClassNotFoundError
 from oscar.core.validators import ExtendedURLValidator
 from oscar.core.validators import URLDoesNotExistValidator
+from oscar.core.ajax.middleware import AjaxMiddleware
+from oscar.core.ajax.http import JsonResponse
 from oscar.test import patch_settings
 
 
@@ -97,7 +105,7 @@ class ValidatorTests(TestCase):
             v('/invalid/?q=test')  # Query strings shouldn't affect validation
 
         try:
-            v('products/')
+            v('products//home/eleni/workspaces/python/eleni-django-oscar')
         except ValidationError:
             self.fail('ExtendedURLValidator raised ValidationError'
                       'unexpectedly!')
@@ -135,3 +143,20 @@ class ClassLoadingWithLocalOverrideWith3SegmentsTests(TestCase):
         with patch_settings(INSTALLED_APPS=self.installed_apps):
             (Free,) = get_classes('shipping.methods', ('Free',))
             self.assertEqual('tests.apps.shipping.methods', Free.__module__)
+
+
+class AjaxMiddlewareTests(TestCase):
+    def test_middleware_appends_messages(self):
+        request = HttpRequest()
+        request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
+        SessionMiddleware().process_request(request)
+        MessageMiddleware().process_request(request)
+
+        message = "Hello. Yes. This is dog"
+        messages.info(request, message)
+
+        response = JsonResponse({'foo': 'bar'})
+        middleware = AjaxMiddleware()
+        processed_response = middleware.process_response(request, response)
+
+        assert_that(processed_response.dict_content["django_messages"][0], has_entry("message", equal_to(message)))
