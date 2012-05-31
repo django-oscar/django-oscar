@@ -50,7 +50,8 @@ oscar.checkout = {
         // Disable 'place order' button when it is clicked.
         $('#place-order').click(function(e) {
             var $btn = $(this);
-            $btn.attr('value', 'Submitting')
+            $btn.attr('disabled', 'disabled')
+                .html('Submitting...')
                 .removeClass('btn-primary')
                 .addClass('btn-success');
         });
