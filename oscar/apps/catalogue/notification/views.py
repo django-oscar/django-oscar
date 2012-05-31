@@ -18,23 +18,24 @@ Product = get_model('catalogue', 'product')
 ProductNotification = get_model('notification', 'productnotification')
 
 
-class NotificationDetailView(generic.DetailView):
+class NotificationUnsubscribeView(generic.DetailView):
     """
-    Detailed view of a product notification.
+    View to unsubscribe from a notification based on the provided
+    unsubscribe key. The notification is set to ``INACTIVE`` instead
+    of being deleted for analytical purposes.
     """
     model = ProductNotification
     context_object_name = 'notification'
+    template_name = 'notification/unsubscribe.html'
 
     def get_object(self, queryset=None):
-        key = self.kwargs.get('key', 'invalid')
-        return get_object_or_404(ProductNotification, confirm_key=key)
-
-
-class NotificationUnsubscribeView(NotificationDetailView):
-    """
-    View to inactivate notifications for anonymous users.
-    """
-    template_name = 'notification/unsubscribe.html'
+        """ Get notification object that matches the unsubscribe key. """
+        #FIXME: this will need to be handled on the AbstractNotification level
+        #FIXME: my prefered solutions involves an InheritanceManager on
+        #FIXME: AbstractNotification
+        return get_object_or_404(ProductNotification,
+                                 unsubscribe_key=self.kwargs.get('key',
+                                                                 'invalid'))
 
     def get(self, *args, **kwargs):
         notification = self.get_object()
@@ -46,12 +47,22 @@ class NotificationUnsubscribeView(NotificationDetailView):
         return super(NotificationUnsubscribeView, self).get(*args, **kwargs)
 
 
-class NotificationConfirmView(NotificationDetailView):
+class NotificationConfirmView(generic.DetailView):
     """
     View to confirm the email address of an anonymous user used to
     sign up for a product notification.
     """
+    model = ProductNotification
+    context_object_name = 'notification'
     template_name = 'notification/confirm.html'
+
+    def get_object(self, queryset=None):
+        """ Get notification object that matches the confirmation key. """
+        #FIXME: this will need to be handled on the AbstractNotification level
+        #FIXME: my prefered solutions involves an InheritanceManager on
+        #FIXME: AbstractNotification
+        return get_object_or_404(ProductNotification,
+                                 confirm_key=self.kwargs.get('key', 'invalid'))
 
     def get(self, *args, **kwargs):
         notification = self.get_object()
@@ -75,6 +86,12 @@ class ProductNotificationCreateView(generic.FormView):
     email_template = 'notification/email.html'
 
     def get_form_kwargs(self):
+        """
+        Get keywords to instantiate the view's form with. If the current
+        user is authenticated as registered user, their email address is
+        added to the ``initial`` dictionary as ``email`` which prepopulates
+        the ``email`` form field.
+        """
         kwargs = super(ProductNotificationCreateView, self).get_form_kwargs()
 
         user = self.request.user
@@ -83,14 +100,33 @@ class ProductNotificationCreateView(generic.FormView):
         return kwargs
 
     def get_product(self):
-        return get_object_or_404(self.product_model, pk=self.kwargs['product_pk'])
+        """
+        Get product from primary key specified in URL patterns as
+        ``product_pk``. Raises a 404 if product does not exist.
+        """
+        return get_object_or_404(self.product_model,
+                                 pk=self.kwargs['product_pk'])
 
     def get_context_data(self, *args, **kwargs):
-        ctx = super(ProductNotificationCreateView, self).get_context_data(*args, **kwargs)
+        """
+        Get context data including ``product`` representing the product
+        related to this product notification.
+        """
+        ctx = super(ProductNotificationCreateView, self).get_context_data(
+            *args,
+            **kwargs
+        )
         ctx['product'] = self.get_product()
         return ctx
 
     def get_notification_for_anonymous_user(self, email):
+        """
+        Get a the ``ProductNotification`` for the given product and anonymous
+        users email address. If no notification exists, a new
+        ``ProductNotification`` will be created for the product. A newly
+        created ``ProductNotification`` will be set to status ``UNCONFIRMED``
+        and need confirmation of the email address.
+        """
         notification, created = ProductNotification.objects.get_or_create(
             email=email,
             product=self.product,
@@ -102,6 +138,13 @@ class ProductNotificationCreateView(generic.FormView):
         return notification, created
 
     def get_notification_for_authenticated_user(self):
+        """
+        Get a the ``ProductNotification`` for the given product and anonymous
+        users email address. If no notification exists, a new
+        ``ProductNotification`` will be created for the product. A newly
+        created ``ProductNotification`` will be set to status ``ACTIVE``
+        immediately.
+        """
         notification, created = ProductNotification.objects.get_or_create(
             user=self.request.user,
             product=self.product,
@@ -113,6 +156,11 @@ class ProductNotificationCreateView(generic.FormView):
         return notification, created
 
     def send_confirmation_email(self, notification):
+        """
+        Send email message to unregistered user's email address containing
+        a confirmation URL and a unsubscribe URL. This is the only means
+        for the user to active and deactivate their notification.
+        """
         template = loader.get_template(self.email_template)
         context = Context({
             'site': Site.objects.get(pk=getattr(settings, 'SITE_ID', 1)),
@@ -133,6 +181,23 @@ class ProductNotificationCreateView(generic.FormView):
                   "please check your email."))
 
     def form_valid(self, form):
+        """
+        Handle creating a new ``ProductNotification`` when no errors
+        have been found in form. If a user has already signed up for
+        this ``ProductNotification``, no new notification will be
+        created but the user will receive confirmation that the notification
+        was created successfully. This reduces the complexity of handling
+        this situation differently from a new notification and the user
+        does not get annoyed by realising that they have already signed
+        up and just forgot about it.
+        If a new notification is created for an unregistered user, an
+        email is sent out with a confirmation and unsubscibe URL. A
+        registered users notification is activated immediately.
+
+        NOTE: a registered user that is not logged in will be redirected
+        to the login page. This is achieved by checking if an anonymous
+        email address is already part of a registered customer account.
+        """
         is_authenticated = self.request.user.is_authenticated()
         self.product = self.get_product()
 
@@ -157,8 +222,8 @@ class ProductNotificationCreateView(generic.FormView):
 
         if not created:
             messages.success(self.request,
-                             _("you have signed up for a "
-                               "notification of '%s' already") % self.product.title)
+                     _("you have signed up for a "
+                       "notification of '%s' already") % self.product.title)
             return HttpResponseRedirect(self.get_success_url())
 
         if created and not is_authenticated:
@@ -170,6 +235,9 @@ class ProductNotificationCreateView(generic.FormView):
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
+        """
+        Get success URL to redirect to the product's detail page.
+        """
         return reverse('catalogue:detail',
                        args=(self.product.slug, self.product.pk))
 
@@ -189,7 +257,7 @@ class ProductNotificationSetStatusView(generic.TemplateView):
         or ``inactive`` a HTTP redirect is returned without changing the
         notification. Otherwise the notification status is updated
         """
-        self.product= get_object_or_404(Product, pk=kwargs.get('product_pk'))
+        self.product = get_object_or_404(Product, pk=kwargs.get('product_pk'))
         status = kwargs.get('status', None)
 
         if status in (self.status_types):
@@ -216,6 +284,7 @@ class ProductNotificationSetStatusView(generic.TemplateView):
         detail_url = reverse('catalogue:detail',
                              args=(self.product.slug, self.product.pk))
         return self.request.META.get('HTTP_REFERER', detail_url)
+
 
 class ProductNotificationDeleteView(generic.DeleteView):
     """

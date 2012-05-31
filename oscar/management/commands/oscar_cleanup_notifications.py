@@ -59,4 +59,5 @@ class Command(BaseCommand):
             logger.info("removing %d notifications of type '%s'",
                         len(notifications), subcls.__name__)
 
-            [n.delete() for n in notifications]
+            for notification in notifications:
+                notification.delete()

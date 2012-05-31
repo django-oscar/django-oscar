@@ -21,13 +21,17 @@ class ProductNotificationTests(TestCase):
 
     def test_authenticated_user_notification_get_authenticated_email(self):
         user = get(User)
-        notification = ProductNotification.objects.create(user=user, product=self.product)
+        notification = ProductNotification.objects.create(
+            user=user,
+            product=self.product
+        )
         self.assertEquals(notification.get_notification_email(), user.email)
 
     def test_authenticated_user_notification_get_anonymous_email(self):
-        notification = ProductNotification.objects.create(email='test@oscar.com',
-                                                          product=self.product)
-
+        notification = ProductNotification.objects.create(
+            email='test@oscar.com',
+            product=self.product
+        )
         self.assertEquals(notification.get_notification_email(),
                           'test@oscar.com')
 
@@ -62,7 +66,8 @@ class NotifyMeInViewTests(NotificationTestCase):
         self.product.stockrecord.num_in_stock = 0
         self.product.stockrecord.save()
 
-        url = reverse('catalogue:detail', args=(self.product.slug, self.product.id))
+        url = reverse('catalogue:detail', args=(self.product.slug,
+                                                self.product.id))
         response = self.client.get(url)
 
         self.assertContains(response, 'notify-me', status_code=200)
@@ -71,7 +76,8 @@ class NotifyMeInViewTests(NotificationTestCase):
         self.product.stockrecord.num_in_stock = 20
         self.product.stockrecord.save()
 
-        url = reverse('catalogue:detail', args=(self.product.slug, self.product.id))
+        url = reverse('catalogue:detail', args=(self.product.slug,
+                                                self.product.id))
         response = self.client.get(url)
         self.assertNotContains(response, 'notify-me', status_code=200)
 
@@ -100,8 +106,10 @@ class CreateNotificationViewAsAnonymousTests(NotificationTestCase):
         that will activate the notification.
         """
         notification_url = reverse('catalogue:notification-create',
-                                   args=(self.product_1.slug, self.product_1.id))
-        response = self.client.post(notification_url, data={'email': self.email},
+                                   args=(self.product_1.slug,
+                                         self.product_1.id))
+        response = self.client.post(notification_url,
+                                    data={'email': self.email},
                                     follow=True)
 
         self.assertContains(response, self.product_1.title, status_code=200)
@@ -129,14 +137,16 @@ class CreateNotificationViewAsAnonymousTests(NotificationTestCase):
 
     def test_unsubscribing_from_notification(self):
         """
-        Test that unsubscribing from a notification inactivates the notification.
-        This does not delete the notification as it might be used for
-        analytical purposes later on by the site owner.
+        Test that unsubscribing from a notification inactivates the
+        notification. This does not delete the notification as it might be
+        used for analytical purposes later on by the site owner.
         """
         notification = ProductNotification.objects.create(
             email=self.email,
-            product=self.product_1
+            product=self.product_1,
+            status=ProductNotification.UNCONFIRMED
         )
+        self.assertEquals(notification.status, ProductNotification.UNCONFIRMED)
         notification_url = reverse('catalogue:notification-unsubscribe',
                                    args=(self.product_1.slug,
                                          self.product_1.id,
@@ -175,15 +185,18 @@ class CreateNotificationViewAsAuthenticatedUserTests(NotificationTestCase):
         self.client.login()
 
         notification_url = reverse('catalogue:notification-create',
-                                   args=(self.product_1.slug, self.product_1.id))
-        response = self.client.post(notification_url, data={'email': self.email},
+                                   args=(self.product_1.slug,
+                                          self.product_1.id))
+        response = self.client.post(notification_url,
+                                    data={'email': self.email},
                                     follow=True)
 
         self.assertContains(response, self.product_1.title, status_code=200)
         self.assertEquals(self.user.notifications.count(), 1)
 
         notification = self.user.notifications.all()[0]
-        self.assertEquals(notification.get_notification_email(), self.user.email)
+        self.assertEquals(notification.get_notification_email(),
+                          self.user.email)
         self.assertEquals(notification.confirm_key, None)
         self.assertEquals(notification.unsubscribe_key, None)
 
@@ -195,17 +208,18 @@ class CreateNotificationViewAsAuthenticatedUserTests(NotificationTestCase):
         """
         notification_url = reverse('catalogue:notification-create',
                               args=(self.product_1.slug, self.product_1.id))
-        self.client.post(notification_url, data={'email': 'someother@oscar.com'},
-                         follow=True)
+        response = self.client.post(notification_url,
+                                    data={'email': 'someother@oscar.com'},
+                                    follow=True)
 
-        ## FIXME: this need template tag implementation
-        #self.assertContains(response, 'You chose to be notified', status_code=200)
+        self.assertContains(response, 'first to know', status_code=200)
 
         self.assertEquals(self.user.notifications.count(), 1)
 
         notification = self.user.notifications.all()[0]
         self.assertEquals(notification.product.id, self.product_1.id)
-        self.assertEquals(notification.get_notification_email(), self.user.email)
+        self.assertEquals(notification.get_notification_email(),
+                          self.user.email)
         self.assertEquals(notification.confirm_key, None)
         self.assertEquals(notification.unsubscribe_key, None)
 
@@ -215,10 +229,12 @@ class CreateNotificationViewAsAuthenticatedUserTests(NotificationTestCase):
         this product notification. The user should be redirected to the product
         page with a notification that he has already signed up.
         """
-        notification = get(ProductNotification, product=self.product_1, user=self.user)
+        notification = get(ProductNotification, product=self.product_1,
+                           user=self.user)
         notification_url = reverse('catalogue:notification-create',
                               args=(self.product_1.slug, self.product_1.id))
-        response = self.client.post(notification_url, data={'email': self.user.email},
+        response = self.client.post(notification_url,
+                                    data={'email': self.user.email},
                                     follow=True)
 
         self.assertContains(response, self.product_1.title, status_code=200)
@@ -249,8 +265,10 @@ class CreateNotificationViewAsAnonymousUserTests(NotificationTestCase):
         page where the user hits the 'Notify Me' button again.
         """
         notification_url = reverse('catalogue:notification-create',
-                                   args=(self.product_1.slug, self.product_1.id))
-        response = self.client.post(notification_url, data={'email': self.email},
+                                   args=(self.product_1.slug,
+                                         self.product_1.id))
+        response = self.client.post(notification_url,
+                                    data={'email': self.email},
                                     follow=True)
 
         self.assertContains(response, 'Password', status_code=200)
@@ -284,21 +302,16 @@ class SetStatusProductNotificationViewTests(NotificationTestCase):
                              args=(self.product.slug, self.product.id,
                                    self.notification.id,
                                    ProductNotification.INACTIVE))
-
-        response = self.client.get(status_url)
+        self.client.get(status_url)
 
         notification = ProductNotification.objects.get(pk=self.notification.id)
         self.assertEquals(notification.status, ProductNotification.INACTIVE)
 
     def test_setting_notification_status_with_invalid_status(self):
         self.assertEquals(self.notification.status, ProductNotification.ACTIVE)
-        status_url = reverse('catalogue:notification-set-status',
-                             args=(self.product.slug, self.product.id,
-                                   self.notification.id,
-                                   ProductNotification.INACTIVE))
-
-        response = self.client.get('/products/40-2/notify-me/set-status/1/invalid/')
-
+        response = self.client.get(
+            '/products/40-2/notify-me/set-status/1/invalid/'
+        )
         self.assertEquals(response.status_code, 404)
 
 
@@ -370,7 +383,8 @@ class SendingNotificationTests(TestCase):
         ProductNotification.objects.create(user=self.user_2,
                                            product=self.product,
                                            status=ProductNotification.ACTIVE)
-        ProductNotification.objects.create(user=None, email='anonymous@test.com',
+        ProductNotification.objects.create(user=None,
+                                           email='anonymous@test.com',
                                            product=self.product,
                                            status=ProductNotification.ACTIVE)
         ProductNotification.objects.create(user=self.user_2,

@@ -2,21 +2,21 @@ import sha
 import random
 from django.db import models
 from django.contrib.auth.models import User
-from django.utils.translation import ugettext as _ 
+from django.utils.translation import ugettext as _
 from oscar.apps.catalogue.models import Product
 
 
 class AbstractNotification(models.Model):
     """
     Abstract class defining the basic field required for a notification.
-    To create a custom notification, this class must be subclassed and 
+    To create a custom notification, this class must be subclassed and
     ``get_confirm_url`` and ``get_unsubscribe`` URL have to be overwritten
-    in it. 
-    A notification can have two different status for authenticated 
-    users (``ACTIVE`` and ``INACTIVE`` and anonymous users have an 
+    in it.
+    A notification can have two different status for authenticated
+    users (``ACTIVE`` and ``INACTIVE`` and anonymous users have an
     additional status ``UNCONFIRMED``. For anonymous users a confirmation
     and unsubscription key are generated when an instance is saved for
-    the first time and can be used to confirm and unsubscribe the 
+    the first time and can be used to confirm and unsubscribe the
     notifications.
     """
     KEY_LENGTH = 40
@@ -38,7 +38,8 @@ class AbstractNotification(models.Model):
         (ACTIVE, _('Active')),
         (INACTIVE, _('Inactive')),
     )
-    status = models.CharField(max_length=20, choices=STATUS_TYPES, default=INACTIVE)
+    status = models.CharField(max_length=20, choices=STATUS_TYPES,
+                              default=INACTIVE)
 
     def is_active(self):
         """
@@ -60,7 +61,7 @@ class AbstractNotification(models.Model):
         email provided in this instance of the notification.
         """
         salt = sha.new(str(random.random())).hexdigest()
-        return sha.new(salt+self.get_notification_email()).hexdigest()
+        return sha.new(salt + self.get_notification_email()).hexdigest()
 
     def get_notification_email(self):
         """
@@ -74,8 +75,8 @@ class AbstractNotification(models.Model):
 
     def transfer_to_user(self, user):
         """
-        Convenience function that allows for assigning a notification 
-        to a user. This is aimed at the situation when a user has 
+        Convenience function that allows for assigning a notification
+        to a user. This is aimed at the situation when a user has
         notifications available as anonymous user but decides to sign
         up. In this case, the notification will be transfered to the
         specific user account.
@@ -158,4 +159,4 @@ class ProductNotification(AbstractNotification):
         app_label = 'notification'
 
 
-from oscar.apps.catalogue.notification.receivers import * 
+from oscar.apps.catalogue.notification.receivers import *

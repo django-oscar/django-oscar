@@ -14,7 +14,16 @@ StockRecord = get_class('partner.models', 'StockRecord')
 ProductNotification = get_class('catalogue.notification.models',
                                 'ProductNotification')
 
-def _get_email_from_context(email, template, context):
+
+def _create_email_from_context(email, template, context):
+    """
+    Create ``EmailMessage`` with message body composed as HTML from
+    *template* rendered with *context*. The email address to send the
+    message to is provided by *email*. The content subtype of the
+    message is set to ``html``.
+
+    Returns a ``EmailMessage`` instance.
+    """
     subject = _("[Product Notification] Product '%s' back in stock!")
     subject = subject % context['product'].title
 
@@ -45,7 +54,7 @@ def send_email_notifications(sender, instance, created, **kwargs):
     if not len(notifications):
         return
 
-    # add a hurry disclaimer if less products in stock then 
+    # add a hurry disclaimer if less products in stock then
     # notifications requested
     context = Context({
         'product': stockrecord.product,
@@ -61,16 +70,15 @@ def send_email_notifications(sender, instance, created, **kwargs):
     # generate personalised emails for registered users first
     for notification in notifications.exclude(user=None):
         context['user'] = notification.user
-        email_messages.append(_get_email_from_context(
+        email_messages.append(_create_email_from_context(
             notification.get_notification_email(),
             template,
             context
         ))
 
     # generate the same email for all anonymous users
-    anonymous_body = template.render(context)
     for notification in notifications.filter(user=None):
-        email_messages.append(_get_email_from_context(
+        email_messages.append(_create_email_from_context(
             notification.get_notification_email(),
             template,
             context
