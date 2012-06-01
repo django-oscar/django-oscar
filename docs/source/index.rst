@@ -53,6 +53,7 @@ ipads.  The `source is on Github`_.
    getting_started
    key_questions
    recipes
+   getting_help
    design_decisions
    reference
    contributing
