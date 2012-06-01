@@ -56,9 +56,10 @@ with a custom repository.
 
 * ``oscar.apps.shipping.methods.Free``.  No shipping charges.
 
-* ``oscar.apps.shipping.methods.WeightBased``.  This uses a model ``WeightBand``
-  to provide charges for different weight bands.  By default, the method will calculate
-  the weight of a product by looking for a 'weight' attribute although this can be
+* ``oscar.apps.shipping.methods.WeightBased``.  This is a model-driven method
+  that uses two models: ``WeightBased`` and ``WeightBand`` to provide charges
+  for different weight bands.  By default, the method will calculate the weight
+  of a product by looking for a 'weight' attribute although this can be
   configured.  
 
 * ``oscar.apps.shipping.methods.FixedPrice``.  This simply charges a fixed price for 

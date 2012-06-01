@@ -1,0 +1,24 @@
+{% extends 'dashboard/reports/index.html' %}
+{% load currency_filters %}
+
+{% block report %}
+<table class="table table-striped table-bordered">
+    <tr>
+        <th>Voucher code</th>
+        <th>Added to a basket</th>
+        <th>Used in an order</th>
+        <th>Total discount</th>
+    </tr>
+    {% for voucher in objects %}
+    <tr>
+        <td>{{ voucher.code }}</td>
+        <td>{{ voucher.num_basket_additions }}</td>
+        <td>{{ voucher.num_orders }}</td>
+        <td>{{ voucher.total_discount|currency }}</td>
+    </tr>
+    {% endfor %}
+</table>
+    {% if page_obj %}
+        {% include "catalogue/partials/pagination.html" %}
+    {% endif %}
+{% endblock %}

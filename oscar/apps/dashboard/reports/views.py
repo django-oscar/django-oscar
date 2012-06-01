@@ -1,30 +1,47 @@
-from django.http import HttpResponse, HttpResponseForbidden, Http404
+from django.http import HttpResponseForbidden, Http404
 from django.template.response import TemplateResponse
-from django.views.generic import TemplateView
+from django.views.generic import ListView
 
 from oscar.core.loading import get_class
 ReportForm = get_class('dashboard.reports.forms', 'ReportForm')
 GeneratorRepository = get_class('dashboard.reports.utils', 'GeneratorRepository')
 
 
-class IndexView(TemplateView):
+class IndexView(ListView):
     template_name = 'dashboard/reports/index.html'
-    
+    paginate_by = 25
+    context_object_name = 'objects'
+
     def get(self, request, *args, **kwargs):
         if 'report_type' in request.GET:
             form = ReportForm(request.GET)
             if form.is_valid():
                 generator = _get_generator(form)
                 if not generator.is_available_to(request.user):
-                    return HttpResponseForbidden("You do not have access to this report")
-                
-                response = HttpResponse(mimetype=generator.mimetype)
-                response['Content-Disposition'] = 'attachment; filename=%s' % generator.filename()
-                generator.generate(response)
-                return response
+                    return HttpResponseForbidden("You do not have access"
+                                                 " to this report")
+
+                report = generator.generate()
+
+                if form.cleaned_data['download']:
+                    return report
+                else:
+                    self.set_list_view_attrs(generator, report)
+                    context = self.get_context_data(object_list=self.queryset)
+                    context['form'] = form
+                    context['description'] = '%s between %s and %s' % (
+                        generator.description,
+                        form.cleaned_data['date_from'],
+                        form.cleaned_data['date_to'],
+                    )
+                    return self.render_to_response(context)
         else:
             form = ReportForm()
         return TemplateResponse(request, self.template_name, {'form': form})
+
+    def set_list_view_attrs(self, generator, report):
+        self.template_name = generator.filename()
+        self.object_list = self.queryset = report
 
 
 def _get_generator(form):
@@ -34,5 +51,10 @@ def _get_generator(form):
     generator_cls = repo.get_generator(code)
     if not generator_cls:
         raise Http404()
-    return generator_cls(start_date=form.cleaned_data['date_from'], 
-                         end_date=form.cleaned_data['date_to'])
+
+    download = form.cleaned_data['download']
+    formatter = 'CSV' if download else 'HTML'
+
+    return generator_cls(start_date=form.cleaned_data['date_from'],
+                         end_date=form.cleaned_data['date_to'],
+                         formatter=formatter)
