@@ -2,7 +2,7 @@
 {% load currency_filters %}
 
 {% block title %}
-Vouchers | {{ block.super }}
+{{ description }} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -11,7 +11,7 @@ Vouchers | {{ block.super }}
         <a href="{% url dashboard:index %}">Dashboard</a>
         <span class="divider">/</span>
     </li>
-    <li class="active"><a href=".">Vouchers</a></li>
+	<li class="active"><a href=".">{{ description }}</a></li>
 </ul>
 {% endblock %}
 
@@ -22,17 +22,28 @@ Vouchers | {{ block.super }}
 {% endblock header %}
 
 {% block dashboard_content %}
+<div class="well well-info">
+    <div class="sub-header">
+		<h3>Search</h3>
+    </div>
+    <form action="." method="get" class="form-inline">
+		{% include 'partials/form_fields_inline.html' with form=form %}
+        <button type="submit" class="btn btn-primary">Search</button>
+		<a href="{% url dashboard:voucher-list %}" class="btn">Reset</a>
+    </form>
+</div>
 
 <p><a href="{% url dashboard:voucher-create %} " class="btn-large btn-primary">Create new voucher</a></p>
 
 	<div class="sub-header">
-		<h2>All vouchers</h2>
+		<h2>{{ description }}</h2>
 	</div>
 	{% if vouchers.count %}
 		<table class="table table-striped table-bordered">
 			<tr>
 				<th>Name</th>
 				<th>Code</th>
+				<th>Is active?</th>
 				<th>Num baskets</th>
 				<th>Num orders</th>
 				<th>Date created</th>
@@ -42,13 +53,14 @@ Vouchers | {{ block.super }}
 			<tr>
 				<td>{{ voucher.name }}</td>
 				<td>{{ voucher.code }}</td>
+				<td>{{ voucher.is_active }}</td>
 				<td>{{ voucher.num_basket_additions }}</td>
 				<td>{{ voucher.num_orders }}</td>
 				<td>{{ voucher.date_created }}</td>
 				<td>
 					<a class="btn btn-info" href="{% url dashboard:voucher-stats voucher.id %}">Stats</a>
 					<a class="btn btn-primary" href="{% url dashboard:voucher-update voucher.id %}">Edit</a>
-					<a class="btn btn-danger" href="">Delete</a>
+					<a class="btn btn-danger" href="{% url dashboard:voucher-delete voucher.id %}">Delete</a>
 				</td>
 			</tr>
 			{% endfor %}

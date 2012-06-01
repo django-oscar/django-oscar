@@ -1,7 +1,10 @@
 from django import forms
 from django.conf import settings
 from django.db.models import get_model
+from django.forms.models import modelformset_factory, BaseModelFormSet
 from django.utils.translation import gettext_lazy as _
+
+from oscar.templatetags.currency_filters import currency
 
 Line = get_model('basket', 'line')
 Basket = get_model('basket', 'basket')
@@ -49,6 +52,43 @@ class SavedLineForm(forms.ModelForm):
     class Meta:
         model = Line
         exclude = ('basket', 'product', 'line_reference', 'quantity', 'price_incl_tax')
+
+    def __init__(self, user, basket, *args, **kwargs):
+        self.user = user
+        self.basket = basket
+        super(SavedLineForm, self).__init__(*args, **kwargs)
+
+    def clean(self):
+        cleaned_data = super(SavedLineForm, self).clean()
+        try:
+            line = self.basket.lines.get(product=self.instance.product)
+        except Line.DoesNotExist:
+            desired_qty = self.instance.quantity
+        else:
+            desired_qty = self.instance.quantity + line.quantity
+
+        is_available, reason = self.instance.product.is_purchase_permitted(user=self.user,
+                                                                           quantity=desired_qty)
+        if not is_available:
+            raise forms.ValidationError(reason)
+        return cleaned_data
+
+
+class BaseSavedLineFormSet(BaseModelFormSet):
+
+    def __init__(self, user, basket, *args, **kwargs):
+        self.user = user
+        self.basket = basket
+        super(BaseSavedLineFormSet, self).__init__(*args, **kwargs)
+
+    def _construct_form(self, i, **kwargs):
+        return super(BaseSavedLineFormSet, self)._construct_form(i, user=self.user,
+                                                             basket=self.basket, **kwargs)
+
+
+SavedLineFormSet = modelformset_factory(Line, form=SavedLineForm,
+                                         formset=BaseSavedLineFormSet, extra=0,
+                                         can_delete=True)
 
 
 class BasketVoucherForm(forms.Form):
@@ -129,10 +169,14 @@ class AddToBasketForm(forms.Form):
         choices = []
         for variant in item.variants.all():
             if variant.has_stockrecord:
-                summary = u"%s (%s) - %.2f" % (variant.get_title(), variant.attribute_summary(),
-                                               variant.stockrecord.price_incl_tax)
+                attr_summary = variant.attribute_summary()
+                if attr_summary:
+                    attr_summary = "(%s)" % attr_summary
+                summary = u"%s %s - %s" % (variant.get_title(), attr_summary,
+                                           currency(variant.stockrecord.price_incl_tax))
                 choices.append((variant.id, summary))
-        self.fields['product_id'] = forms.ChoiceField(choices=tuple(choices))
+        self.fields['product_id'] = forms.ChoiceField(choices=tuple(choices),
+                                                      label="Variant")
 
     def _create_product_fields(self, item):
         u"""Add the product option fields."""

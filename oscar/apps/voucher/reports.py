@@ -1,8 +1,10 @@
 import csv
 
-from oscar.core.loading import import_module
-import_module('dashboard.reports.reports', ['ReportGenerator'], locals())
-import_module('voucher.models', ['Voucher'], locals())
+from django.db.models import get_model
+
+from oscar.core.loading import get_class
+ReportGenerator = get_class('dashboard.reports.reports', 'ReportGenerator')
+Voucher = get_model('voucher', 'Voucher')
 
 
 class VoucherReportGenerator(ReportGenerator):

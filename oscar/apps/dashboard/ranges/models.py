@@ -1,6 +1,6 @@
 import datetime
 import os
-import csv
+import re
 
 from django.db import models
 Product = models.get_model('catalogue', 'Product')
@@ -58,8 +58,8 @@ class RangeProductFileUpload(models.Model):
         """
         all_ids = set(self.extract_ids())
         products = self.range.included_products.all()
-        existing_skus = set(products.values_list('stockrecord__partner_sku', flat=True))
-        existing_upcs = set(products.values_list('upc', flat=True))
+        existing_skus = set(filter(bool, products.values_list('stockrecord__partner_sku', flat=True)))
+        existing_upcs = set(filter(bool, products.values_list('upc', flat=True)))
         existing_ids = existing_skus.union(existing_upcs)
         new_ids = all_ids - existing_ids
 
@@ -70,22 +70,22 @@ class RangeProductFileUpload(models.Model):
             self.range.included_products.add(product)
 
         # Processing stats
-        found_skus = set(products.values_list('stockrecord__partner_sku', flat=True))
-        found_upcs = set(products.values_list('upc', flat=True))
+        found_skus = set(filter(bool, products.values_list('stockrecord__partner_sku', flat=True)))
+        found_upcs = set(filter(bool, products.values_list('upc', flat=True)))
         found_ids = found_skus.union(found_upcs)
         missing_ids = new_ids - found_ids
         dupes = set(all_ids).intersection(existing_ids)
 
-        self.mark_as_processed(len(found_ids), len(missing_ids), len(dupes))
+        self.mark_as_processed(products.count(), len(missing_ids), len(dupes))
 
     def extract_ids(self):
         """
         Extract all SKU- or UPC-like strings from the file
         """
-        reader = csv.reader(open(self.filepath, 'r'))
-        for row in reader:
-            for field in row:
-                yield field
+        for line in open(self.filepath, 'r'):
+            for id in re.split('[^\w:\.-]', line):
+                if id:
+                    yield id
 
     def delete_file(self):
         os.unlink(self.filepath)

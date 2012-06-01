@@ -3,13 +3,16 @@ oscar.basket = {
     is_form_being_submitted: false,
     init: function() {
         $('#basket_formset a[data-behaviours~="remove"]').click(function() {
-            oscar.basket.checkAndSubmit($(this), 'DELETE');
+            oscar.basket.checkAndSubmit($(this), 'form', 'DELETE');
         });
         $('#basket_formset a[data-behaviours~="save"]').click(function() {
-            oscar.basket.checkAndSubmit($(this), 'save_for_later');
+            oscar.basket.checkAndSubmit($(this), 'form', 'save_for_later');
         });
         $('#saved_basket_formset a[data-behaviours~="move"]').click(function() {
-            oscar.basket.checkAndSubmit($(this), 'move_to_basket');
+            oscar.basket.checkAndSubmit($(this), 'saved', 'move_to_basket');
+        });
+        $('#saved_basket_formset a[data-behaviours~="remove"]').click(function() {
+            oscar.basket.checkAndSubmit($(this), 'saved', 'DELETE');
         });
         $('#voucher_form_link a').click(function(e) {
             oscar.basket.showVoucherForm();
@@ -31,12 +34,12 @@ oscar.basket = {
         $('#voucher_form_container').hide(); 
         $('#voucher_form_link').show();
     },
-    checkAndSubmit: function($ele, idSuffix) {
+    checkAndSubmit: function($ele, formPrefix, idSuffix) {
         if (oscar.basket.is_form_being_submitted) {
             return;
         }
         var formID = $ele.attr('data-id');
-        var inputID = '#id_form-' + formID + '-' + idSuffix;
+        var inputID = '#id_' + formPrefix + '-' + formID + '-' + idSuffix;
         $(inputID).attr('checked', 'checked');
         $ele.closest('form').submit();
         oscar.basket.is_form_being_submitted = true;
@@ -47,7 +50,8 @@ oscar.checkout = {
         // Disable 'place order' button when it is clicked.
         $('#place-order').click(function(e) {
             var $btn = $(this);
-            $btn.attr('value', 'Submitting')
+            $btn.attr('disabled', 'disabled')
+                .html('Submitting...')
                 .removeClass('btn-primary')
                 .addClass('btn-success');
         });

@@ -5,9 +5,9 @@ from oscar.core.application import Application
 from oscar.apps.dashboard.offers import views
 from oscar.apps.dashboard.nav import register, Node
 
-node = Node('Offers')
-node.add_child(Node('All offers', 'dashboard:offer-list'))
+node = Node('Offers', 'dashboard:offer-list')
 register(node, 50)
+
 
 class OffersDashboardApplication(Application):
     name = None

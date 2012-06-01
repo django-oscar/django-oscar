@@ -1,4 +1,7 @@
 class Bankcard(object):
+    """
+    Simple data container for bankcard data
+    """
     
     def __init__(self, card_number, expiry_date, name=None, cvv=None, start_date=None, issue_number=None):
         self.card_number = card_number

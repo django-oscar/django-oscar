@@ -2,7 +2,7 @@
 {% load currency_filters %}
 
 {% block title %}
-Create range | Range management | {{ block.super }}
+{{ title }} | Range management | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -15,13 +15,13 @@ Create range | Range management | {{ block.super }}
         <a href="{% url dashboard:range-list %}">Ranges</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">Create range</a></li>
+	<li class="active"><a href=".">{{ title }}</a></li>
 </ul>
 {% endblock %}
 
 {% block header %}
 <div class="page-header">
-	<h1>Create range</h1>
+	<h1>{{ title }}</h1>
 </div>
 {% endblock header %}
 
@@ -32,6 +32,9 @@ Create range | Range management | {{ block.super }}
 	{% block form_actions %}
 	<div class="form-actions">
 		<button class="btn btn-primary btn-large" type="submit">Save</button> or
+		{# This is an input so we distinguish between which button was pressed #}
+		<input class="btn btn-primary btn-large" type="submit" name="action" value="Save and edit products"/>
+		or
 		<a href="{% url dashboard:range-list %}">cancel</a>
 	</div>
 	{% endblock form_actions %}

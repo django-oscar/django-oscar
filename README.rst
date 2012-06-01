@@ -13,7 +13,7 @@ sites to complex B2B sites rich in domain-specific business logic.
 Oscar is used in production by:
 
 * Tata - http://www.landmarkonthenet.com
-* Carlsberg's global business platform is powered by Oscar.
+* Carlsberg - Their global "We deliver more" platform is powered by Oscar.
 * Dolbeau - http://www.dolbeau.ca/
 * The UK Labour party
 
@@ -29,7 +29,7 @@ information:
 
 .. image:: https://secure.travis-ci.org/tangentlabs/django-oscar.png
 
-.. _`Official homepage`: http://tangentlabs.github.com/django-oscar/
+.. _`Official homepage`: http://oscarcommerce.com
 .. _`Demo site`: http://sandbox.oscar.tangentlabs.co.uk
 .. _`Documentation`: http://django-oscar.readthedocs.org/en/latest/
 .. _`readthedocs.org`: http://readthedocs.org

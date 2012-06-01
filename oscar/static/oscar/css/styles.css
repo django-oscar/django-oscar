@@ -2767,6 +2767,9 @@ form:after {
 .form-actions:after {
   clear: both;
 }
+.select-open {
+  width: 300px!important;
+}
 .errorlist {
   margin: 0;
   padding: 0 0 10px 0;
@@ -2776,9 +2779,7 @@ form:after {
   padding: 0 0 5px 0;
   list-style: none;
 }
-.control-label.required:after {
-  content: "*";
-  padding: 0 0 0 3px;
+.control-label.required span {
   color: #FF0000;
 }
 .header {
@@ -3406,6 +3407,10 @@ form:after {
 .choose-block .well .remove-item input {
   margin-bottom: 0;
 }
+.choose-block .well-info.default-address {
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
+}
 .choose-block .alert-actions {
   *zoom: 1;
 }
@@ -3596,6 +3601,9 @@ form:after {
 .product_pod .product_price form input#id_quantity,
 .product_pod .product_price form #id_product_id {
   width: 90%;
+}
+.product_pod .product_price form label {
+  display: none;
 }
 .product_pod .product_price .btn {
   padding-left: 0px;

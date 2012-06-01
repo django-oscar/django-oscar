@@ -35,7 +35,7 @@ Reviews for {{ product.title }} | {{ block.super }}
     <div class="row-fluid">
         <div class='span9'>
             <div class="well">
-                <p>Read customer reviews on this product. If you have read this book, why not post your own review?</p>
+                <p>Read customer reviews on this product.</p>
                 <p><a href="{% url catalogue:reviews-add product.slug product.id %}" class="btn btn-primary">Add a review</a></p>
             </div>
             {% if reviews %}
@@ -102,9 +102,11 @@ Reviews for {{ product.title }} | {{ block.super }}
                 {% include "catalogue/partials/stock_record.html" %}
                 {% include "catalogue/partials/add_to_basket_form.html" %}
             </div>
+            
+            {% recently_viewed_products %}
         </div>
 
-        {% recently_viewed_products %}
+        
     </div>
 </article>
 {% endblock %}

@@ -77,6 +77,10 @@
         <table class="table table-striped table-bordered">
             <caption>Customers</caption>
             <tr>
+                <th class="span10">Total customers</th>
+                <td class="span2" >{{ total_customers }}</td>
+            </tr>
+            <tr>
                 <th class="span10">New customers</th>
                 <td class="span2" >{{ total_customers_last_day }}</td>
             </tr>
@@ -114,14 +118,6 @@
             </tr>
         </table>
 		<p><a href="{% url dashboard:order-list %}" class="btn">Manage orders</a></p>
-
-        <table class="table table-striped table-bordered">
-            <caption>Customers</caption>
-            <tr>
-                <th class="span10">Total customers</th>
-                <td class="span2" >{{ total_customers }}</td>
-            </tr>
-        </table>
     </div>
 
     <div class="span6">

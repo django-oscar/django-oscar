@@ -1,5 +1,5 @@
 from django.core.exceptions import ImproperlyConfigured
-from oscar.apps.shipping.methods import Free
+from oscar.apps.shipping.methods import Free, NoShippingRequired
 
 
 class Repository(object):
@@ -35,6 +35,8 @@ class Repository(object):
         """
         Return the appropriate Method object for the given code
         """
-        if code == Free.code:
-            return Free()
+        known_methods = [Free, NoShippingRequired]
+        for klass in known_methods:
+            if code == getattr(klass, 'code'):
+                return klass()
         return None

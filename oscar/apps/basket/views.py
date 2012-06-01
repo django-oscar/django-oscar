@@ -3,7 +3,6 @@ from django.core.urlresolvers import reverse
 from django.db.models import get_model
 from django.http import HttpResponseRedirect, Http404
 from django.views.generic import FormView, View
-from django.forms.models import modelformset_factory
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -12,10 +11,10 @@ from oscar.apps.basket.signals import basket_addition
 from oscar.core.loading import get_class, get_classes
 Applicator = get_class('offer.utils', 'Applicator')
 BasketLineForm, AddToBasketForm, BasketVoucherForm, \
-        SavedLineForm, ProductSelectionForm = get_classes(
+        SavedLineFormSet, SavedLineForm, ProductSelectionForm = get_classes(
             'basket.forms', ('BasketLineForm', 'AddToBasketForm',
-                             'BasketVoucherForm', 'SavedLineForm',
-                             'ProductSelectionForm'))
+                             'BasketVoucherForm', 'SavedLineFormSet',
+                             'SavedLineForm', 'ProductSelectionForm'))
 Repository = get_class('shipping.repository', ('Repository'))
 
 
@@ -74,8 +73,10 @@ class BasketView(ModelFormSetView):
             else:
                 if not saved_basket.is_empty:
                     saved_queryset = saved_basket.all_lines().select_related('product', 'product__stockrecord')
-                    SavedFormset = modelformset_factory(self.model, form=SavedLineForm, extra=0, can_delete=True)
-                    formset = SavedFormset(queryset=saved_queryset)
+                    formset = SavedLineFormSet(user=self.request.user,
+                                               basket=self.request.basket,
+                                               queryset=saved_queryset,
+                                               prefix='saved')
                     context['saved_formset'] = formset
         return context
 
@@ -248,6 +249,7 @@ class VoucherRemoveView(View):
 class SavedView(ModelFormSetView):
     model = get_model('basket', 'line')
     basket_model = get_model('basket', 'basket')
+    formset_class = SavedLineFormSet
     form_class = SavedLineForm
     extra = 0
     can_delete = True
@@ -265,6 +267,13 @@ class SavedView(ModelFormSetView):
     def get_success_url(self):
         return self.request.META.get('HTTP_REFERER', reverse('basket:summary'))
 
+    def get_formset_kwargs(self):
+        kwargs = super(SavedView, self).get_formset_kwargs()
+        kwargs['prefix'] = 'saved'
+        kwargs['basket'] = self.request.basket
+        kwargs['user'] = self.request.user
+        return kwargs
+
     def formset_valid(self, formset):
         is_move = False
         for form in formset:
@@ -280,6 +289,5 @@ class SavedView(ModelFormSetView):
         return super(SavedView, self).formset_valid(formset)
 
     def formset_invalid(self, formset):
-        messages.error(self.request, _("There was a problem with your submission"))
-        assert False
+        messages.error(self.request, '\n'.join(error for ed in formset.errors for el in ed.values() for error in el))
         return HttpResponseRedirect(self.request.META.get('HTTP_REFERER', reverse('basket:summary')))
