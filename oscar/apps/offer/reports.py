@@ -1,4 +1,5 @@
 import csv
+from decimal import Decimal as D
 
 from django.db.models import get_model
 
@@ -7,6 +8,7 @@ ReportGenerator = get_class('dashboard.reports.reports', 'ReportGenerator')
 ReportCSVFormatter = get_class('dashboard.reports.reports', 'ReportCSVFormatter')
 ReportHTMLFormatter = get_class('dashboard.reports.reports', 'ReportHTMLFormatter')
 ConditionalOffer = get_model('offer', 'ConditionalOffer')
+OrderDiscount = get_model('order', 'OrderDiscount')
 
 
 class OfferReportCSVFormatter(ReportCSVFormatter):
@@ -28,9 +30,7 @@ class OfferReportHTMLFormatter(ReportHTMLFormatter):
     filename_template = 'dashboard/reports/partials/offer_report.html'
 
 
-
 class OfferReportGenerator(ReportGenerator):
-
     code = 'conditional-offers'
     description = 'Offer performance'
 
@@ -40,5 +40,21 @@ class OfferReportGenerator(ReportGenerator):
     }
 
     def generate(self):
-        offers = ConditionalOffer._default_manager.all()
-        return self.formatter.generate_response(offers)
+        discounts = OrderDiscount._default_manager.filter(
+            order__date_placed__gte=self.start_date,
+            order__date_placed__lt=self.end_date
+        )
+        offer_discounts = {}
+        for discount in discounts:
+            if discount.offer_id not in offer_discounts:
+                try:
+                    offer = ConditionalOffer._default_manager.get(id=discount.offer_id)
+                except ConditionalOffer.DoesNotExist:
+                    continue
+                offer_discounts[discount.offer_id] = {
+                    'offer': offer,
+                    'total_discount': D('0.00')
+                }
+            offer_discounts[discount.offer_id]['total_discount'] += discount.amount
+
+        return self.formatter.generate_response(offer_discounts.values())

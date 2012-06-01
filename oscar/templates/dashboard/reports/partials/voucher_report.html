@@ -14,7 +14,7 @@
         <td>{{ voucher.code }}</td>
         <td>{{ voucher.num_basket_additions }}</td>
         <td>{{ voucher.num_orders }}</td>
-        <td>{{ voucher.total_discount }}</td>
+        <td>{{ voucher.total_discount|currency }}</td>
     </tr>
     {% endfor %}
 </table>

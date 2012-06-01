@@ -4,9 +4,8 @@
 {% block report %}
 <table class="table table-striped table-bordered">
     <tr>
-        <th>User ID</th>
-        <th>User</th>
-        <th>Basket status</th>
+        <th>Email</th>
+        <th>Name</th>
         <th>Num lines</th>
         <th>Num items</th>
         <th>Value</th>
@@ -15,9 +14,8 @@
     </tr>
     {% for basket in objects %}
     <tr>
-        <td>{{ basket.owner_id|default:"-" }}</td>
-        <td>{{ basket.owner }}</td>
-        <td>{{ basket.status }}</td>
+        <td>{{ basket.owner.email }}</td>
+        <td>{{ basket.owner.get_full_name|default:"-" }}</td>
         <td>{{ basket.num_lines }}</td>
         <td>{{ basket.num_items }}</td>
         <td>{{ basket.total_incl_tax|currency }}</td>
