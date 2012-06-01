@@ -113,7 +113,7 @@ Install using Tangent's boilerplate django project
 The easiest way to get started is to use Tangent's `template django project`_
 although it is tailored to an Agency structure which may not suit everyone.
 
-.. `template django project`: https://github.com/tangentlabs/tangent-django-boilerplate
+.. _`template django project`: https://github.com/tangentlabs/tangent-django-boilerplate
 
 Set up a virtualenv, and create a new project using the ``startproject``
 management command::
@@ -124,7 +124,7 @@ management command::
         --template=https://github.com/tangentlabs/tangent-django-boilerplate/zipball/master 
 
 This will create a folder ``frobshop`` which is an entire templated project that
-follows Tangent's conventions.  The structure is:
+follows Tangent's conventions.  The structure is::
 
     frobshop/
         docs/
