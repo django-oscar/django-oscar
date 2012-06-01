@@ -18,10 +18,11 @@ from oscar.test.helpers import create_order
 
 
 class AnonymousUserTests(ClientTestCase):
+    is_anonymous = True
 
     def test_login_form_is_displayed_for_anon_user(self):
-        response = self.client.get(reverse('dashboard:index'))
-        self.assertTrue('Username' in response.content)
+        response = self.client.get(reverse('dashboard:index'), follow=True)
+        self.assertContains(response, 'login-username', status_code=200)
 
 
 class DashboardViewTests(ClientTestCase):
