@@ -32,8 +32,8 @@ middlewares. This will inject all messages generated in your request into your `
             if request.is_ajax:
                 context = self.get_context_data()
 
-                messages.info("This is very useful")
-                messages.warning("Be careful!")
+                messages.info(request, "This is very useful")
+                messages.warning(request, "Be careful!")
 
                 return JsonResponse(context)
             # ...

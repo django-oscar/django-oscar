@@ -151,10 +151,12 @@ class JsonResponseTests(TestCase):
 
     def test_response_rendering(self):
         response = JsonResponse({'foo': 'bar'})
-        assert_that(response.render(), is_('{"foo": "bar"}'))
+        response.render()
+        assert_that(response.content, is_('{"foo": "bar"}'))
 
         response = JsonResponse({'foo': u'ελληνικά'})
-        assert_that(response.render(), is_('{"foo": "\u03b5\u03bb\u03bb\u03b7\u03bd\u03b9\u03ba\u03ac"}'))
+        response.render()
+        assert_that(response.content, is_('{"foo": "\u03b5\u03bb\u03bb\u03b7\u03bd\u03b9\u03ba\u03ac"}'))
 
 
 class AjaxMiddlewareTests(TestCase):
@@ -170,7 +172,6 @@ class AjaxMiddlewareTests(TestCase):
 
         response = JsonResponse()
         middleware = AjaxMiddleware()
-        processed_response = middleware.process_response(request, response)
-        print processed_response.render()
+        processed_response = middleware.process_template_response(request, response)
 
         assert_that(processed_response.dict_content["django_messages"][0], has_entry("message", equal_to(message)))
