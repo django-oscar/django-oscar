@@ -1,0 +1,20 @@
+{% extends 'dashboard/reports/index.html' %}
+{% load currency_filters %}
+
+{% block report %}
+<table class="table table-striped table-bordered">
+    <tr>
+        <th>Offer</th>
+        <th>Total discount</th>
+    </tr>
+    {% for offer in objects %}
+    <tr>
+        <td>{{ offer }}</td>
+        <td>{{ offer.total_discount }}</td>
+    </tr>
+    {% endfor %}
+</table>
+    {% if page_obj %}
+        {% include "catalogue/partials/pagination.html" %}
+    {% endif %}
+{% endblock %}
