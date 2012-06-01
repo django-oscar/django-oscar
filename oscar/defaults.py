@@ -10,7 +10,7 @@ OSCAR_BASKET_COOKIE_SAVED = 'oscar_saved_basket'
 OSCAR_DEFAULT_CURRENCY = 'GBP'
 
 # Max number of products to keep on the user's history
-OSCAR_RECENTLY_VIEWED_PRODUCTS = 4
+OSCAR_RECENTLY_VIEWED_PRODUCTS = 20
 
 # Paths
 OSCAR_IMAGE_FOLDER = 'images/products/%Y/%m/'
