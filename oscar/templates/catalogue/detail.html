@@ -47,8 +47,8 @@
 			{% if reviews %}
 				<ul class="review_count">
 					{% for review in reviews %}
-						<li class="{{ review.score }}">{{ review.score }}</li>
-					{% endfor %}
+					<li class="{{ review.score }}">{{ review.score }}</li>
+			{% endfor %}
 				</ul>
 			{% else %}
 					<p class="star">No Rating <a href="#reviews">Add review</a></p>
