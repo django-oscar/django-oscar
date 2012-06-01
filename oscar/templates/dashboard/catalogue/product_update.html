@@ -34,6 +34,9 @@ Update product | {{ block.super }}
         <div class="sub-header">
             <h3 class="app-ico ico_expand icon">Product information</h3>
         </div>
+		<div class="control-group fields-full">
+			Product class: <strong>{{ product.product_class }}</strong>
+		</div>
         {% for field in form %}
             {% if forloop.counter > 4 %}
                 <div class="form-inline pull-left">
