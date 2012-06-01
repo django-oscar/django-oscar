@@ -10,20 +10,6 @@ core functionality can be customised to suit the needs of your project.  This
 allows it to handle a wide range of e-commerce requirements, from large-scale B2C
 sites to complex B2B sites rich in domain-specific business logic.
 
-Case studies
-------------
-
-Oscar is still in active development, but is used in production by a range of
-companies, from large multinationals to small, boutique stores:
-
-* Tata Group - http://www.landmarkonthenet.com
-* Carlsberg - Their global "We Deliver More" platform is powered by Oscar (but
-  is a B2B site so it not browsable by the public).
-* Dolbeau - http://www.dolbeau.ca/
-* The UK Labour party - http://shop.labour.org.uk (will be live in early June)
-
-Many more on the way.
-
 This README is just a stub - see the following links for more details
 information:
 
@@ -56,3 +42,17 @@ Oscar is released under the permissive `New BSD license`_.
 .. _`@codeinthehole`: https://twitter.com/codeinthehole
 .. _`Tangent Labs`: http://www.tangentlabs.co.uk
 .. _`New BSD license`: https://github.com/tangentlabs/django-oscar/blob/master/LICENSE
+
+Case studies
+------------
+
+Oscar is still in active development, but is used in production by a range of
+companies, from large multinationals to small, boutique stores:
+
+* Tata Group - http://www.landmarkonthenet.com
+* Carlsberg - Their global "We Deliver More" platform is powered by Oscar (but
+  is a B2B site so it not browsable by the public).
+* Dolbeau - http://www.dolbeau.ca/
+* The UK Labour party - http://shop.labour.org.uk (will be live in early June)
+
+Many more on the way.
