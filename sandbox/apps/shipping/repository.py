@@ -1,4 +1,4 @@
-from oscar.apps.shipping.methods import Free
+from oscar.apps.shipping.methods import Free, NoShippingRequired
 from oscar.apps.shipping.repository import Repository as CoreRepository
 
 # Dummy shipping methods
@@ -9,6 +9,7 @@ free1.description = 'Ship by van'
 free2 = Free()
 free2.code = 'free2'
 free2.description = 'Ship by boat'
+
 
 class Repository(CoreRepository):
 
@@ -22,4 +23,6 @@ class Repository(CoreRepository):
         return self.add_basket_to_methods(basket, methods)
 
     def find_by_code(self, code):
+        if code == NoShippingRequired.code:
+            return NoShippingRequired()
         return self.methods.get(code, None)

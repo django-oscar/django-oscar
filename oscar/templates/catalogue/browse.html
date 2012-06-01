@@ -47,7 +47,10 @@
         <h1>{{ summary }}</h1>
     </div>
     {% if category.description %}
-    	<p>{{ category.description }}</p>
+        <div class="row-fluid">
+            <div class="span9"><p>{{ category.description }}</p></div>
+            <div class="span3"><img src="{{ category.image.url }}" alt="{{ summary }}" /></div>
+        </div>
     {% endif %}
 
     {% if products.count %}

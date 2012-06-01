@@ -74,8 +74,9 @@ class BasketView(ModelFormSetView):
                 if not saved_basket.is_empty:
                     saved_queryset = saved_basket.all_lines().select_related('product', 'product__stockrecord')
                     formset = SavedLineFormSet(user=self.request.user,
-                                           basket=self.request.basket,
-                                           queryset=saved_queryset)
+                                               basket=self.request.basket,
+                                               queryset=saved_queryset,
+                                               prefix='saved')
                     context['saved_formset'] = formset
         return context
 
@@ -268,6 +269,7 @@ class SavedView(ModelFormSetView):
 
     def get_formset_kwargs(self):
         kwargs = super(SavedView, self).get_formset_kwargs()
+        kwargs['prefix'] = 'saved'
         kwargs['basket'] = self.request.basket
         kwargs['user'] = self.request.user
         return kwargs

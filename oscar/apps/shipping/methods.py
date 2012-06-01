@@ -17,6 +17,11 @@ class Free(ShippingMethod):
     
     def basket_charge_excl_tax(self):
         return D('0.00')
+
+
+class NoShippingRequired(Free):
+    code = 'no-shipping-required'
+    name = 'No shipping required'
     
 
 class FixedPrice(ShippingMethod):
