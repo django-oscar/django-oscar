@@ -18,7 +18,7 @@ package now.  New features include:
 * Reworking of shipping methods.
 
 * Automatic up-selling on the basket page.  We now inform the user if they
-  partially quanlify for an offer.
+  partially qualify for an offer.
 
 The documentation still needs more work which we'll do over the next week or
 two.
