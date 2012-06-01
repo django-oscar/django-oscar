@@ -1,3 +1,5 @@
+# coding=UTF-8
+
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 from django.conf import settings
@@ -105,7 +107,7 @@ class ValidatorTests(TestCase):
             v('/invalid/?q=test')  # Query strings shouldn't affect validation
 
         try:
-            v('products//home/eleni/workspaces/python/eleni-django-oscar')
+            v('products/')
         except ValidationError:
             self.fail('ExtendedURLValidator raised ValidationError'
                       'unexpectedly!')
@@ -145,7 +147,18 @@ class ClassLoadingWithLocalOverrideWith3SegmentsTests(TestCase):
             self.assertEqual('tests.apps.shipping.methods', Free.__module__)
 
 
+class JsonResponseTests(TestCase):
+
+    def test_response_rendering(self):
+        response = JsonResponse({'foo': 'bar'})
+        assert_that(response.render(), is_('{"foo": "bar"}'))
+
+        response = JsonResponse({'foo': u'ελληνικά'})
+        assert_that(response.render(), is_('{"foo": "\u03b5\u03bb\u03bb\u03b7\u03bd\u03b9\u03ba\u03ac"}'))
+
+
 class AjaxMiddlewareTests(TestCase):
+
     def test_middleware_appends_messages(self):
         request = HttpRequest()
         request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
@@ -155,8 +168,9 @@ class AjaxMiddlewareTests(TestCase):
         message = "Hello. Yes. This is dog"
         messages.info(request, message)
 
-        response = JsonResponse({'foo': 'bar'})
+        response = JsonResponse()
         middleware = AjaxMiddleware()
         processed_response = middleware.process_response(request, response)
+        print processed_response.render()
 
         assert_that(processed_response.dict_content["django_messages"][0], has_entry("message", equal_to(message)))
