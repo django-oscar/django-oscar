@@ -31,5 +31,13 @@ Reports | {{ block.super }}
     </div>
 </form>
 
+{% if description %}
+<div class="sub-header">
+	<h3>{{ description }}</h3>
+</div>
+{% endif %}
+{% block report %}
+{% endblock %}
+
 {% endblock dashboard_content %}
 

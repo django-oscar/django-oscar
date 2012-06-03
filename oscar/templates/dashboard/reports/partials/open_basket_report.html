@@ -1,0 +1,30 @@
+{% extends 'dashboard/reports/index.html' %}
+{% load currency_filters %}
+
+{% block report %}
+<table class="table table-striped table-bordered">
+    <tr>
+        <th>Email</th>
+        <th>Name</th>
+        <th>Num lines</th>
+        <th>Num items</th>
+        <th>Value</th>
+        <th>Date of creation</th>
+        <th>Time since creation</th>
+    </tr>
+    {% for basket in objects %}
+    <tr>
+        <td>{{ basket.owner.email }}</td>
+        <td>{{ basket.owner.get_full_name|default:"-" }}</td>
+        <td>{{ basket.num_lines }}</td>
+        <td>{{ basket.num_items }}</td>
+        <td>{{ basket.total_incl_tax|currency }}</td>
+        <td>{{ basket.date_created }}</td>
+        <td>{{ basket.time_since_creation }}</td>
+    </tr>
+    {% endfor %}
+</table>
+    {% if page_obj %}
+        {% include "catalogue/partials/pagination.html" %}
+    {% endif %}
+{% endblock %}

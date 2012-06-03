@@ -90,7 +90,6 @@ $(document).ready(function()
             // This activates elastislide
             var es_carousel = $('.es-carousel-wrapper'),
             product_page = $('.product_page').length;
-            console.log(es_carousel.length);
             // on prodct page
             if (es_carousel.length && product_page > 0) {
                 es_carousel.elastislide({
