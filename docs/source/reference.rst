@@ -8,3 +8,4 @@ Contents:
    :maxdepth: 2
 
    reference/settings
+   reference/signals
