@@ -1,5 +1,6 @@
 from decimal import Decimal as D
 import httplib
+import datetime
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -111,14 +112,22 @@ class BasketThresholdTest(TestCase):
 class BasketReportTests(TestCase):
 
     def test_open_report_doesnt_error(self):
-        generator = OpenBasketReportGenerator()
-        response = HttpResponse()
-        generator.generate(response)
+        data = {
+            'start_date': datetime.date(2012, 5, 1),
+            'end_date': datetime.date(2012, 5, 17),
+            'formatter': 'CSV'
+        }
+        generator = OpenBasketReportGenerator(**data)
+        generator.generate()
 
     def test_submitted_report_doesnt_error(self):
-        generator = SubmittedBasketReportGenerator()
-        response = HttpResponse()
-        generator.generate(response)
+        data = {
+            'start_date': datetime.date(2012, 5, 1),
+            'end_date': datetime.date(2012, 5, 17),
+            'formatter': 'CSV'
+        }
+        generator = SubmittedBasketReportGenerator(**data)
+        generator.generate()
 
 
 class SavedBasketTests(TestCase):
@@ -178,5 +187,3 @@ class SavedBasketTests(TestCase):
         # we can't add more than stock level into basket
         self.assertEqual(Basket.open.get(id=basket.id).lines.get(product=product).quantity, 1)
         self.assertRedirects(response, reverse('basket:summary'))
-
-
