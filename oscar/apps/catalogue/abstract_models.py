@@ -237,6 +237,10 @@ class AbstractProduct(models.Model):
         return not self.is_top_level
 
     @property
+    def is_shipping_required(self):
+        return True
+
+    @property
     def min_variant_price_incl_tax(self):
         u"""Return minimum variant price including tax"""
         return self._min_variant_price('price_incl_tax')

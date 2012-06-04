@@ -35,7 +35,7 @@ def create_product(price=None, title="Dummy title", product_class="Dummy item cl
                                             price_excl_tax=price, num_in_stock=num_in_stock)
     if attributes:
         for key, value in attributes.items():
-            attr,_ = ProductAttribute.objects.get_or_create(name=key)
+            attr,_ = ProductAttribute.objects.get_or_create(name=key, code=key)
             ProductAttributeValue.objects.create(product=item, attribute=attr, value=value)
 
     return item

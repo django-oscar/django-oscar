@@ -57,6 +57,19 @@ class LogoutView(RedirectView):
         return response
 
 
+class LogoutView(RedirectView):
+    url = '/'
+
+    def get(self, request, *args, **kwargs):
+        auth_logout(request)
+        response = super(LogoutView, self).get(request, *args, **kwargs)
+
+        for cookie in settings.OSCAR_COOKIES_DELETE_ON_LOGOUT:
+            response.delete_cookie(cookie)
+
+        return response
+
+
 class ProfileUpdateView(FormView):
     form_class = ProfileForm
     template_name = 'customer/profile-form.html'

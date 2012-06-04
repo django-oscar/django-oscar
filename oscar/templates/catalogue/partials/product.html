@@ -27,7 +27,6 @@
 
     <h3><a href="{{ product.get_absolute_url }}">{{ product.get_title|truncatewords:7 }}</a></h3>
 
-    <div class="product_price">
     {% include "catalogue/partials/stock_record.html" %}
 
     {% if product.has_stockrecord and product.stockrecord.num_in_stock > 0 %}

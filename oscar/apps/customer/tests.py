@@ -28,6 +28,13 @@ def create_test_user():
     email = 'customer@example.com'
 
 
+def create_test_user():
+    username = 'customer'
+    password = 'cheeseshop'
+    email = 'customer@example.com'
+
+
+
 class HistoryHelpersTest(TestCase):
 
     def setUp(self):

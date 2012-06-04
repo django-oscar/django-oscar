@@ -17,7 +17,7 @@ Shipping address:
 {% endfor %}
 
 {% if status_url %}
-You can change the status of this order at the below URL:
+You can view the status of this order at the below URL:
 {{ status_url }}
 {% endif %}
 
