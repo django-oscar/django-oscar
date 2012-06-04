@@ -70,6 +70,13 @@ class CheckoutSessionData(object):
         """
         self.reset_shipping_data()
         self._set('shipping', 'is_required', False)
+
+    def shipping_required(self):
+        """
+        Record fact that basket does require a shipping address or method
+	"""
+	self.reset_shipping_data()
+	self._set('shipping', 'is_required', True)
         
     def ship_to_user_address(self, address):
         """

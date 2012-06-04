@@ -187,6 +187,8 @@ class ShippingAddressView(CheckoutSessionMixin, FormView):
             messages.info(request, _("Your basket does not require a shipping address to be submitted"))
             self.checkout_session.no_shipping_required()
             return HttpResponseRedirect(self.get_success_url())
+	else:
+	    self.checkout_session.shipping_required()
 
         return super(ShippingAddressView, self).get(request, *args, **kwargs)
 
