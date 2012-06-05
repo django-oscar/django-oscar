@@ -123,17 +123,17 @@ class NonZeroFreeThresholdTest(unittest.TestCase):
 class ScalesTests(unittest.TestCase):
 
     def test_simple_weight_calculation(self):
-        scales = Scales(attribute='weight')
+        scales = Scales(attribute_code='weight')
         p = create_product(attributes={'weight': 1})
         self.assertEqual(1, scales.weigh_product(p))
 
     def test_default_weight_is_used_when_attribute_is_missing(self):
-        scales = Scales(attribute='weight', default_weight=0.5)
+        scales = Scales(attribute_code='weight', default_weight=0.5)
         p = create_product()
         self.assertEqual(0.5, scales.weigh_product(p))
 
     def test_exception_is_raised_when_attribute_is_missing(self):
-        scales = Scales(attribute='weight')
+        scales = Scales(attribute_code='weight')
         p = create_product()
         with self.assertRaises(ValueError):
             scales.weigh_product(p)
@@ -141,7 +141,7 @@ class ScalesTests(unittest.TestCase):
     def test_weight_calculation_of_empty_basket(self):
         basket = Basket()
 
-        scales = Scales(attribute='weight')
+        scales = Scales(attribute_code='weight')
         self.assertEquals(0, scales.weigh_basket(basket))
 
     def test_weight_calculation_of_basket(self):
@@ -149,7 +149,7 @@ class ScalesTests(unittest.TestCase):
         basket.add_product(create_product(attributes={'weight': 1}))
         basket.add_product(create_product(attributes={'weight': 2}))
 
-        scales = Scales(attribute='weight')
+        scales = Scales(attribute_code='weight')
         self.assertEquals(1+2, scales.weigh_basket(basket))
 
 

@@ -8,7 +8,7 @@ VoucherReportGenerator = get_class('voucher.reports', 'VoucherReportGenerator')
 
 
 class GeneratorRepository(object):
-    
+
     generators = [OrderReportGenerator,
                   ProductReportGenerator,
                   UserReportGenerator,
@@ -19,11 +19,11 @@ class GeneratorRepository(object):
 
     def get_report_generators(self):
         return self.generators
-    
+
     def get_generator(self, code):
         for generator in self.generators:
             if generator.code == code:
                 return generator
         return None
-    
-    
+
+

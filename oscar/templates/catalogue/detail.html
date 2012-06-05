@@ -13,13 +13,17 @@
         <a href="{% url promotions:home %}">Home</a>
         <span class="divider">/</span>
     </li>
-    <li>
-        {% with category=product.categories.all.0 %}
-        <a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
-        <span class="divider">/</span>
-        {% endwith %}
-    </li>
-    <li class="active"><a href=".">{{ product.get_title }}</a></li>
+	{% with category=product.categories.all.0 %}
+		{% for c in category.get_ancestors %}
+		<li>
+			<a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
+			<span class="divider">/</span>
+		</li>
+		{% endfor %}
+		<li class="active">
+			<a href=".">{{ product.title }}</a>
+		</li>
+    {% endwith %}
 </ul>
 {% endblock %}
 
@@ -51,7 +55,10 @@
 					{% endfor %}
 				</ul>
 			{% else %}
-			<p class="star">No Rating <a href="{% url catalogue:reviews-add product.slug product.id %}#addreview">Add review</a></p>
+			<p class="star">No Rating 
+			
+			<a href="{% url catalogue:reviews-add product.slug product.id %}#addreview">Add review</a>
+			</p>
 			{% endif %}
             
             <p><strong>Product Code:</strong> <code>{{ product.upc }}</code></p>
@@ -99,10 +106,10 @@
             {% if product.is_group %}Product group{% else %}{% if product.is_variant %}Variant{% else %}Stand-alone{% endif %}{% endif %}
             </td>
         </tr>
-        {% for attribute in product.attributes.all %}
+        {% for av in product.attribute_values.all %}
         <tr>
-            <th>{{ attribute.type.name }}</th>
-            <td>{{ attribute.value }}</td>
+            <th>{{ av.attribute.name }}</th>
+            <td>{{ av.value }}</td>
         </tr>
         {% endfor %}
         <tr>
@@ -116,28 +123,12 @@
     </table>
 	{% endblock %}
 
-	{% block product_categories %}
-    <div class="sub-header">
-        <h2>Reviews</h2>
-    </div>
-    <ul class="pills">
-        {% for category in product.categories.all %}
-        <li>
-            {% for c in category.get_ancestors %}
-            {% if not forloop.first %} &gt; {% endif %}<a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
-            {% endfor %}
-        </li>
-        {% endfor %}
-    </ul>
-	{% endblock %}
-
     {% block product_review %}
     <section>
         <div id="reviews" class="sub-header">
             <h2>Customer Reviews</h2>
         </div>
-        <p>Read customer reviews on this product. If you have read this book, why not post your own
-       review?</p>
+        <p>Read customer reviews on this product.</p>
        <div class="review_read">
            <a href="{% url catalogue:reviews-add product.slug product.id %}#addreview" class="btn btn-success">Add a review</a>
        </div>
