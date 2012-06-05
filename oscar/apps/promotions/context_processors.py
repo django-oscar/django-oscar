@@ -25,6 +25,7 @@ def get_request_promotions(request):
     Return promotions relevant to this request
     """
     promotions = PagePromotion._default_manager.select_related() \
+                                               .prefetch_related('content_object') \
                                                .filter(page_url=request.path) \
                                                .order_by('display_order')
 
