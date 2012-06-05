@@ -296,9 +296,9 @@ class AbstractProduct(models.Model):
         return None
 
     def primary_image(self):
-        images = self.images.all().order_by('display_order')
+        images = self.images.all()
         if images.count():
-            return images[0]
+            return images.order_by('display_order')[0]
         return {
             'original': MissingProductImage(),
             'caption': '',
