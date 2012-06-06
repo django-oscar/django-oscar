@@ -20,14 +20,14 @@ def get_class(module_label, classname):
 def get_classes(module_label, classnames):
     """
     For dynamically importing classes from a module.
-    
+
     Eg. calling get_classes('catalogue.models', ['Product']) will search
     INSTALLED_APPS for the relevant product app (default is
     'oscar.apps.catalogue') and then import the classes from there.  If the
     class can't be found in the overriding module, then we attempt to import it
-    from within oscar.  
-    
-    This is very similar to django.db.models.get_model although that is only 
+    from within oscar.
+
+    This is very similar to django.db.models.get_model although that is only
     for loading models while this method will load any class.
     """
     app_module_path = _get_app_module_path(module_label)
@@ -44,7 +44,7 @@ def get_classes(module_label, classnames):
     # App must be local - check if module is in local app (it could be in
     # oscar's)
     app_label = module_label.split('.')[0]
-    base_package = app_module_path.replace('.'+app_label, '')
+    base_package = app_module_path.rsplit('.'+app_label, 1)[0]
     local_app = "%s.%s" % (base_package, module_label)
     try:
         imported_local_module = __import__(local_app, fromlist=classnames)
@@ -74,7 +74,7 @@ def _pluck_classes(modules, classnames):
 
 
 def _get_app_module_path(module_label):
-    app_name = module_label.rsplit(".", 1)[0] 
+    app_name = module_label.rsplit(".", 1)[0]
     for installed_app in settings.INSTALLED_APPS:
         if installed_app.endswith(app_name):
             return installed_app
@@ -90,7 +90,7 @@ def import_module(module_label, classes, namespace=None):
         for classname, klass in zip(classes, klasses):
             namespace[classname] = klass
     else:
-        module = new_module("oscar.apps.%s" % module_label)   
+        module = new_module("oscar.apps.%s" % module_label)
         for classname, klass in zip(classes, klasses):
             setattr(module, classname, klass)
         return module
