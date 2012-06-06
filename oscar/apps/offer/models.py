@@ -296,6 +296,8 @@ class Range(models.Model):
         if settings.OSCAR_OFFER_BLACKLIST_PRODUCT and \
             settings.OSCAR_OFFER_BLACKLIST_PRODUCT(product):
             return False
+        if product.not_discountable:
+            return False
         excluded_product_ids = self._excluded_product_ids()
         if product.id in excluded_product_ids:
             return False
