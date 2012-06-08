@@ -50,6 +50,11 @@ Update product | {{ block.super }}
                 					<li>{{ error|escape }}</li>
                 				</ul>
                 			{% endfor %}
+                        {% if field.help_text %}
+                            <span class='help-block'>
+                                {{ field.help_text }}
+                            </span>
+                        {% endif %}
                 	{% endif %}
             	</div>
             {% else %}
@@ -76,8 +81,8 @@ Update product | {{ block.super }}
             {% endif %}
         {% endfor %}
     </div>
-		
-	<div class="well form-inline">	
+
+	<div class="well form-inline">
 		<div class="sub-header">
 			<h3 class="app-ico ico_home icon">Category information</h3>
 		</div>
@@ -87,7 +92,7 @@ Update product | {{ block.super }}
     		<hr/>
     	{% endfor %}
 	</div>
-	
+
 	<div class="well form-inline">
     	<div class="sub-header">
     	   <h3 class="app-ico ico_favourite icon">Images</h3>
@@ -98,7 +103,7 @@ Update product | {{ block.super }}
     		<hr/>
     	{% endfor %}
 	</div>
-	
+
 	<div class="well fields-full">
 		<div class="sub-header">
 		    <h3 class="app-ico ico_shop_bag icon">Stock and price information</h3>
@@ -132,7 +137,7 @@ Update product | {{ block.super }}
 		{% endblock %}
 	</div>
 	<div class="form-actions">
-        <button class="btn btn-primary btn-large" type="submit">Save Product</button> or 
+        <button class="btn btn-primary btn-large" type="submit">Save Product</button> or
             <a href="{% url dashboard:catalogue-product-list %}">cancel</a>
             {% if product %}
                 <a class="btn btn-success btn-large pull-right" href="{{ product.get_absolute_url }}">View on site</a>
