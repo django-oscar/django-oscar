@@ -52,7 +52,7 @@ Update product | {{ block.super }}
                 			{% endfor %}
                         {% if field.help_text %}
                             <span class='help-block'>
-                                {{ field.help_text }}
+                                {{ field.help_text|safe }}
                             </span>
                         {% endif %}
                 	{% endif %}
