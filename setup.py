@@ -25,6 +25,7 @@ setup(name='django-oscar',
       packages=find_packages(exclude=["*.tests"]),
       install_requires=[
           'Django>=1.3',
+          'PIL==1.1.7',
           'django-extra-views>=0.1.0',
           'django-haystack>=1.2.0',
           'django-treebeard>=1.6.1',
