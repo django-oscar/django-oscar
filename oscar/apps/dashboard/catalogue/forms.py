@@ -61,7 +61,7 @@ class ProductForm(forms.ModelForm):
     def _attr_date_field(self, attribute):
         return forms.DateField(label=attribute.name,
                                required=attribute.required,
-                               widget=forms.widgets.SelectDateWidget)
+                               widget=forms.widgets.DateInput)
 
     def _attr_option_field(self, attribute):
         return forms.ModelChoiceField(
