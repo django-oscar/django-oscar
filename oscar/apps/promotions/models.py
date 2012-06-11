@@ -247,8 +247,14 @@ class AutomaticProductList(AbstractProductList):
 
     def get_queryset(self):
         if self.method == self.BESTSELLING:
-            return Product.browsable.all().order_by('-score')
-        return Product.browsable.all().order_by('-date_created')
+            return (Product.browsable.all()
+                    .select_related('stockrecord__partner')
+                    .prefetch_related('variants', 'images')
+                    .order_by('-score'))
+        return (Product.browsable.all()
+                .select_related('stockrecord__partner')
+                .prefetch_related('variants', 'images')
+                .order_by('-date_created'))
 
     def get_products(self):
         return self.get_queryset()[:self.num_products]
