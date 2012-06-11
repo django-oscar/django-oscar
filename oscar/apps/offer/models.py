@@ -99,7 +99,7 @@ class ConditionalOffer(models.Model):
         u"""
         Returns the appropriate proxy model for the condition
         """
-        field_dict = self.condition.__dict__
+        field_dict = dict(self.condition.__dict__)
         if '_state' in field_dict:
             del field_dict['_state']
         if self.condition.type == self.condition.COUNT:
@@ -114,7 +114,7 @@ class ConditionalOffer(models.Model):
         u"""
         Returns the appropriate proxy model for the condition
         """
-        field_dict = self.benefit.__dict__
+        field_dict = dict(self.benefit.__dict__)
         if '_state' in field_dict:
             del field_dict['_state']
         if self.benefit.type == self.benefit.PERCENTAGE:
