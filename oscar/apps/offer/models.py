@@ -705,7 +705,7 @@ class MultibuyDiscountBenefit(Benefit):
             lines_with_price = [line for line in basket.all_lines() if line.product.has_stockrecord]
             sorted_lines = sorted(lines_with_price, compare)
             free_line.discount(discount, 1)
-            if condition.range.contains_product(line.product):
+            if condition.range.contains_product(free_line.product):
                 condition.consume_items(basket, lines=sorted_lines,
                                         value=condition.value-1)
             else:
