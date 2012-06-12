@@ -1,4 +1,5 @@
 {% extends 'dashboard/layout.html' %}
+{% load currency_filters %}
 {% load i18n %}
 
 {% block body_class %}pages{% endblock %}
@@ -26,17 +27,49 @@
 {% endblock header %}
 
 {% block dashboard_content %}
-
-<form action="." method="post" class="form-horizontal">
-	{% csrf_token %}
-
-	<legend>{% trans "Page" %}</legend>
-		{% include "partials/form_fields.html" with form=form %}
+<div class="well well-blank">
+	<form action="." method="post" class="product-new form-horizontal" enctype="multipart/form-data">
+		{% csrf_token %}
+		<legend>{% trans "Page" %}</legend>
+			<div class="product-details">
+			<span class="help-block">{{ form.non_field_errors }}</span>
+	        {% for field in form %}
+	            {% if field.is_hidden %}
+	                {{ field }}
+	            {% endif %}
+	            {% if 'attr' not in field.id_for_label %}
+					<div class="control-group {% for error in field.errors %}error{% endfor %}">
+	                    {% if field.is_hidden %}
+	                        {{ field }}
+	                    {% else %}
+	                        <label for="{{ field.auto_id }}" class="control-label {% if field.field.required %}required{% endif %}">{{ field.label }}{% if field.field.required %} <span>*</span>{% endif %}</label>
+	                        <div class="controls">
+	                            {{ field }}
+	                            {% for error in field.errors %}
+							<span class="help-block">
+								{{ error|escape }}
+							</span>
+	                            {% endfor %}
+	                            {% if field.help_text %}
+	                                <span class='help-block'>
+	                                    {{ field.help_text }}
+	                                </span>
+	                            {% endif %}
+	                        </div>
+	                    {% endif %}
+	                </div>
+				{% endif %}
+	        {% endfor %}
+		</div>
 
 		<div class="form-actions">
 			<button class="btn btn-primary" type="submit">{% trans "Save" %}</button> {% trans "or" %}
 			<a href="{% url dashboard:page-list %}">{% trans "cancel" %}</a>
 		</div>
-</form>
+	</form>
+</div>
+{% if page %}
+<p><a class="btn btn-success" href="{{ page.get_absolute_url }}">{% trans "View on site" %}</a></p>
+{% endif %}
 
 {% endblock dashboard_content %}

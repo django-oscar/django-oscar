@@ -12,20 +12,17 @@
 	<a href="{% url promotions:home %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">{% trans "Offer management" %}</a></li>
+    <li class="active"><a href=".">Offers &amp; promotions</a></li>
 </ul>
 {% endblock %}
 
 {% block header %}
-<div class="page-header">
-	<h1>{% trans "Offer management" %}</h1>
-</div>
 {% endblock header %}
 
 {% block dashboard_content %}
 <div class="well well-info">
     <div class="sub-header">
-		<h3>Search</h3>
+		<h3>{% trans "Search" %}</h3>
     </div>
     <form action="." method="get" class="form-inline">
 		{% include 'partials/form_fields_inline.html' with form=form %}
@@ -34,7 +31,10 @@
     </form>
 </div>
 
-<p><a href="{% url dashboard:offer-metadata %}" class="btn-large btn-primary">{% trans "Create new offer" %}</a></p>
+<div class="well well-success">
+    <h3>{% trans "Create Offer" %}</h3>
+   	<a href="{% url dashboard:offer-metadata %}" class="btn btn-primary">Create</a>
+</div>
 
 	<div class="sub-header">
 		<h2>{{ queryset_description }}</h2>

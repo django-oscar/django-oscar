@@ -8,6 +8,9 @@
 	<link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/dashboard.css" />
 {% endblock %}
 
+{% block extrahead %}
+{% endblock extrahead %}
+
 {% block title %}
 {% trans "Dashboard" %} | {{ block.super }}
 {% endblock %}
@@ -20,7 +23,7 @@
 				<a href="{% url promotions:home %}" class="brand">{{ shop_name }}</a>
                 <ul class="nav pull-right">
                     {% if user.is_authenticated %}
-                        <li><span>Welcome <em>{{ user.username }}</em></span></li>
+                        <li><span>Welcome <em>{{ request.user.get_full_name|default:'Guest' }}</em></span></li>
 						<li><a href="{% url customer:summary %}" class="app-ico ico_profile">{% trans "Account" %}</a></li>
 						<li><a href="{% url customer:logout %}" class="app-ico ico_logout">{% trans "Logout" %}</a></li>
                     {% else %}
@@ -33,7 +36,7 @@
 	{% endblock navbar %}
 
     <div class="container-fluid dashboard">
-		{% block dashboard_nav %}
+        {% block dashboard_nav %}
         <div class="row-fluid">
             {% dashboard_navigation request.user %}
 			<div class="subnav subnav-fixed">
@@ -56,31 +59,31 @@
         			{% endfor %}
                 </ul>
             </div>
-			{% endblock %}
-			
-			{% block breadcrumbs %}
-			<ul class="breadcrumb">
-				<li><a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a> <span class="divider">/</span></li>
-            </ul>
-            {% endblock %}
-            
-            <div class="content">
-				{% include 'partials/alert_messages.html' %}
-                {% block header %}{% endblock %}
-                <div class="page-content">
-                    {% block content %}
-						{% block dashboard_content %}{% endblock dashboard_content %}
-                    {% endblock content %}
-                </div>
-            </div><!-- /span9 --> 
+        </div>
+        {% endblock %}
 
-        </div><!-- /row-fluid -->        
+        {% block breadcrumbs %}
+        <ul class="breadcrumb">
+            <li><a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a> <span class="divider">/</span></li>
+        </ul>
+        {% endblock %}
+            
+        <div class="content">
+            {% include 'partials/alert_messages.html' %}
+            {% block header %}{% endblock %}
+            <div class="page-content">
+                {% block content %}
+                    {% block dashboard_content %}{% endblock dashboard_content %}
+                {% endblock content %}
+            </div>
+        </div>
     </div><!-- /container -->       
 {% endblock %}
 
 {# Block for additional scripts #}
 {% block extrascripts %}
     {{ block.super }}
+	<script src="{{ STATIC_URL }}oscar/js/plugins/plugins.js" type="text/javascript" charset="utf-8"></script>
     <script src="{{ STATIC_URL }}oscar/js/oscar/ui.js" type="text/javascript" charset="utf-8"></script>
     <script src="{{ STATIC_URL }}oscar/js/oscar/dashboard.js" type="text/javascript" charset="utf-8"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>

@@ -19,71 +19,82 @@
 {% endblock %}
 
 {% block header %}
-<div class="page-header">
-	<h1>{% trans "Order management" %}</h1>
-</div>
 {% endblock header %}
 
 {% block dashboard_content %}
 
-<div class="well well-info">
-    <div class="sub-header">
-		<h3>{% trans "Quick Order Search" %} &nbsp;&nbsp;<small><a href="#" class="app-ico ico_magnify pull_out">{% trans "Advanced Search" %}</a></small></h3>
-    </div>
-    <form action="." method="get" class="search-adv form-horizontal">
+<div class="well">
+    <h3>{% trans "Search" %}</h3>
+    <form action="." method="get" class="form-inline">
         {% for field in form %}
-            {% if not forloop.last %}
-                <div class="control-group {% for error in field.errors %}error{% endfor %} {% if forloop.first %}pull-left{% endif%}">
-                    {% if field.is_hidden %}
-                        {{ field }}
-                    {% else %}
-                    <label for="{{ field.auto_id }}" class="control-label">{{ field.label }}</label>
-                    <div class="controls">
-                        {{ field }}
-                            {% for error in field.errors %}
-                            <span class="help-block">
-                                {{ error|escape }}
-                            </span>
-                            {% endfor %}
-                        {% if field.help_text %}
-                            <span class='help-block'>
-                                {{ field.help_text }}
-                            </span>
-                        {% endif %}
-                    </div>
-                    {% endif %}
-                </div>
-            {% else%}
-                <div class="control-group {% for error in form.response_format_0.errors %}error{% endfor %} pull-left">
-					<label for="id_response_format_0" class="control-label">{% trans "Get results as:" %}</label>
-                    <div class="controls">
-                        <label class="radio inline control-label" for="id_response_format_0">
-                            {{ form.response_format }}
-                            {% for error in form.response_format.errors %}
-                            <span class="help-block">
-                                {{ error|escape }}
-                            </span>
-                            {% endfor %}
-                        </label>
-                    </div>
-                </div>
-            {% endif%}
-            {% ifequal forloop.counter 1 %}<div class="orders_search" style="display:none">{% endifequal %}
-            {% ifequal forloop.revcounter0 1 %}</div>{% endifequal %}
+            {% if "order" in field.id_for_label %}
+                {% if field.is_hidden %}
+                    {{ field }}
+                {% else %}
+                <span class="control-group {% if field.errors %}error{% endif %}">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% for error in field.errors %}
+                        <ul class="help-block">
+                            <li>{{ error|escape }}</li>
+                        </ul>
+                    {% endfor %}
+                </span>
+                {% endif %}
+            {% endif %}
         {% endfor %}
-        <button type="submit" class="btn btn-primary pull-left">Search</button>
+        <input type="submit" value="Search" class="btn btn-primary" />
+        <a data-toggle="modal" href="#SearchModal">Advanced Search</a>
     </form>
+
+    <div class="modal hide fade" id="SearchModal">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h3>{% trans "Advanced Search" %}</h3>
+        </div>
+        <form action="." method="get" class="form-horizontal">
+            <div class="modal-body">
+                {% csrf_token %}
+                {% include "partials/form_fields.html" with form=form %}
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn" data-dismiss="modal">Close</a>
+                <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
+            </div>
+        </form>
+    </div>
 </div>
 
-<div class="sub-header">
-    <h2>{{ queryset_description }}</h2>
+{% if queryset_description != "All orders" %}
+<div class="alert alert-info">
+    <strong>{{ queryset_description }}</strong>
 </div>
-{% if orders.count %}
+{% endif %}
+
+<div class="tabbable dashboard">
+    <ul class="nav nav-tabs">
+        <li {% if not active_status %}class="active"{% endif %}>
+            <a href="{% url dashboard:order-list %}">All Orders</a>
+        </li>
+        {% for slug, name in status_lookup.items %}
+        <li {% if slug == active_status %}class="active"{% endif %}>
+            <a href="{% url dashboard:order-list slug %}">{{ name }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+
+{% if orders|length %}
 <form action="." method="post" class="order_table">
     {% csrf_token %}
+    {% include "dashboard/orders/partials/bulk_edit_form.html" with status=active_status %}
+
 <table class="table table-striped table-bordered">
     <tr>
-        <th></th>
+        <th>
+			<input name="select_all_orders" type="checkbox">
+            Select all
+		</th>
         <th>{% anchor 'number' 'Order number' %}</th>
 		<th>{% trans "Total inc tax" %}</th>
 		<th>{% trans "Date of purchase" %}</th>
@@ -118,6 +129,8 @@
 	<input type="hidden" name="action" value="download_selected_orders" />
 	<button type="submit" class="btn btn-primary">{% trans "Download" %}</button>
 </div>
+
+{% include "dashboard/orders/partials/bulk_edit_form.html" with status=active_status %}
 
 {% if page_obj %}
     {% include "partials/pagination.html" %}
