@@ -18,13 +18,22 @@ body {
   padding-right: @gridGutterWidth;
   max-width:100%;
 }
+.navbar .brand {
+    text-transform: uppercase;
+    font-weight: bold;
+}
 .navbar-fixed-top .navbar-inner {
   padding-left:  20px;
   padding-right: 20px;
+  background-color: #314555;
+  #gradient > .vertical(@navbarBackgroundHighlight, @navbarBackground);
 }
 .navbar .nav > li span {
     display:block;
     padding:10px;
+}
+.navbar .nav > li > a {
+    color: #efefef;
 }
 .subnav-fixed {
   position: fixed;
@@ -36,7 +45,7 @@ body {
   border-bottom:1px solid #D5D5D5;
 }
 .subnav {
-  #gradient > .vertical(#f5f5f5, #eee);
+  #gradient > .vertical(#87afb9, #88b1ba);
   filter: progid:DXImageTransform.Microsoft.gradient(enabled=false) !important;
   height:36px;
   width: 100%;
@@ -50,9 +59,16 @@ body {
         margin: 0;
         padding-top: 11px;
         padding-bottom: 11px;
-        border-left: 1px solid #f5f5f5;
-        border-right: 1px solid #E5E5E5;
         .border-radius(0);
+        color: #162f40;
+        font-weight: bold;
+        text-shadow: 1px 1px 1px @grayLight;
+      }
+      > a:hover {
+        background-color: @white;
+        color: #e56e21;
+        margin-top: 3px;
+        text-shadow: none;
       }
     }
   }
@@ -73,11 +89,18 @@ body {
 }
 .breadcrumb {
   margin-top:100px;
+  background: none;
+  border: none;
+  li {
+      text-transform: uppercase;
+      color: #afafaf;
+      font-weight: bold;
+  }
 }
 .content {
   background:#fff;
   .page-content {
-      padding:30px 0px;
+      padding: 30px 0;
   }
 }
 button {
@@ -104,6 +127,12 @@ caption {
   font-weight: bold;
   font-size: 14px;
   margin-bottom: 8px;
+}
+label {
+    font-weight: bold;
+}
+.table th, .table td {
+    text-align: center;
 }
 .search-adv {
   .control-group.pull-left {
@@ -321,7 +350,11 @@ caption {
 // -----
 .well {
   .clearfix();
+  border-radius: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
 }
+/*** This ought to be able to be worked out in mixins ***/
 .well-success {
   background-color: @successBackground;
   border-color: @successBorder;

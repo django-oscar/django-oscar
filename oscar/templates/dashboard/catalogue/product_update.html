@@ -28,18 +28,17 @@ Update product | {{ block.super }}
 {% endblock header %}
 
 {% block dashboard_content %}
-<form action="." method="post" class="product-new" enctype="multipart/form-data">
+<form action="." method="post" class="product-new form-horizontal" enctype="multipart/form-data">
 	{% csrf_token %}
-    <div class="well well-info">
+    <div class="well well-blank">
         <div class="sub-header">
-            <h3 class="app-ico ico_expand icon">Product information</h3>
+            <h3>Product Details</h3>
         </div>
-		<div class="control-group fields-full">
-			Product class: <strong>{{ product.product_class }}</strong>
-		</div>
         {% for field in form %}
+					<p>Product Attributes</p>
             {% if forloop.counter > 4 %}
                 <div class="form-inline pull-left">
+					
                 	{% if field.is_hidden %}
                 		{{ field }}
                 	{% else %}
@@ -53,6 +52,7 @@ Update product | {{ block.super }}
                 	{% endif %}
             	</div>
             {% else %}
+
                 <div class="control-group {% for error in field.errors %}error{% endfor %} fields-full">
                     {% if field.is_hidden %}
                         {{ field }}
@@ -76,10 +76,21 @@ Update product | {{ block.super }}
             {% endif %}
         {% endfor %}
     </div>
-		
-	<div class="well form-inline">	
+	<div class="well well-blank form-inline">
 		<div class="sub-header">
-			<h3 class="app-ico ico_home icon">Category information</h3>
+			<h3>Product Attributes</h3>
+			<div class="control-group fields-full">
+				Product class <strong>{{ product.product_class }}</strong>
+			</div>
+			<div class="control-group fields-full">
+				Variances
+			</div>
+		</div>
+	</div>
+		
+	<div class="well well-blank form-horizontal">	
+		<div class="sub-header">
+			<h3>Category</h3>
 		</div>
     	{{ category_formset.management_form }}
     	{% for category_form in category_formset %}
@@ -88,7 +99,7 @@ Update product | {{ block.super }}
     	{% endfor %}
 	</div>
 	
-	<div class="well form-inline">
+	<div class="well well-blank form-inline">
     	<div class="sub-header">
     	   <h3 class="app-ico ico_favourite icon">Images</h3>
     	</div>
@@ -99,7 +110,7 @@ Update product | {{ block.super }}
     	{% endfor %}
 	</div>
 	
-	<div class="well fields-full">
+	<div class="well well-blank fields-full">
 		<div class="sub-header">
 		    <h3 class="app-ico ico_shop_bag icon">Stock and price information</h3>
 		</div>
@@ -107,7 +118,7 @@ Update product | {{ block.super }}
 		    <div class="row ">
                 {{ stockrecord_form.non_field_errors }}
                 {% for field in stockrecord_form %}
-                <div class="control-group {% for error in field.errors %}error{% endfor %} span4 pull-left {% if forloop.counter|divisibleby:2 %}{% else %}pull-clear{% endif %}">
+                <div class="control-group {% for error in field.errors %}error{% endfor %} span6 pull-left {% if forloop.counter|divisibleby:2 %}{% else %}pull-clear{% endif %}">
                     {% if field.is_hidden %}
                         {{ field }}
                     {% else %}

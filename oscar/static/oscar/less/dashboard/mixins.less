@@ -487,6 +487,8 @@
 // Grid System
 // -----------
 
+
+
 // Centered container element
 .container-fixed() {
   margin-left: auto;
@@ -514,104 +516,6 @@
 }
 
 // The Grid
-#grid {
-
-  .core (@gridColumnWidth, @gridGutterWidth) {
-
-    .spanX (@index) when (@index > 0) {
-      (~".span@{index}") { .span(@index); }
-      .spanX(@index - 1);
-    }
-    .spanX (0) {}
-
-    .offsetX (@index) when (@index > 0) {
-      (~".offset@{index}") { .offset(@index); }
-      .offsetX(@index - 1);
-    }
-    .offsetX (0) {}
-
-    .offset (@columns) {
-      margin-left: (@gridColumnWidth * @columns) + (@gridGutterWidth * (@columns - 1)) + (@gridGutterWidth * 2);
-    }
-
-    .span (@columns) {
-      width: (@gridColumnWidth * @columns) + (@gridGutterWidth * (@columns - 1));
-    }
-
-    .row {
-      margin-left: @gridGutterWidth * -1;
-      .clearfix();
-    }
-
-    [class*="span"] {
-      float: left;
-      margin-left: @gridGutterWidth;
-    }
-
-    // Set the container width, and override it for fixed navbars in media queries
-    .container,
-    .navbar-fixed-top .container,
-    .navbar-fixed-bottom .container { .span(@gridColumns); }
-
-    // generate .spanX and .offsetX
-    .spanX (@gridColumns);
-    .offsetX (@gridColumns);
-
-  }
-
-  .fluid (@fluidGridColumnWidth, @fluidGridGutterWidth) {
-
-    .spanX (@index) when (@index > 0) {
-      (~"> .span@{index}") { .span(@index); }
-      .spanX(@index - 1);
-    }
-    .spanX (0) {}
-
-    .span (@columns) {
-      width: (@fluidGridColumnWidth * @columns) + (@fluidGridGutterWidth * (@columns - 1));
-    }
-
-    .row-fluid {
-      width: 100%;
-      .clearfix();
-      > [class*="span"] {
-        float: left;
-        margin-left: @fluidGridGutterWidth;
-      }
-      > [class*="span"]:first-child {
-        margin-left: 0;
-      }
-
-      // generate .spanX
-      .spanX (@gridColumns);
-    }
-
-  }
-
-  .input(@gridColumnWidth, @gridGutterWidth) {
-
-    .spanX (@index) when (@index > 0) {
-      (~"input.span@{index}, textarea.span@{index}, .uneditable-input.span@{index}") { .span(@index); }
-      .spanX(@index - 1);
-    }
-    .spanX (0) {}
-
-    .span(@columns) {
-      width: ((@gridColumnWidth) * @columns) + (@gridGutterWidth * (@columns - 1)) - 10;
-    }
-
-    input,
-    textarea,
-    .uneditable-input {
-      margin-left: 0; // override margin-left from core grid system
-    }
-
-    // generate .spanX
-    .spanX (@gridColumns);
-
-  }
-
-}
 
 // OSC MIXINS
 // --------------------------------------------------
