@@ -92,6 +92,14 @@ class CountConditionTest(OfferTest):
     def test_empty_basket_fails_condition(self):
         self.assertFalse(self.cond.is_satisfied(self.basket))
 
+    def test_not_discountable_product_fails_condition(self):
+        prod1, prod2 = create_product(), create_product()
+        prod2.not_discountable = True
+        prod2.save()
+        self.basket.add_product(prod1)
+        self.basket.add_product(prod2)
+        self.assertFalse(self.cond.is_satisfied(self.basket))
+
     def test_empty_basket_fails_partial_condition(self):
         self.assertFalse(self.cond.is_partially_satisfied(self.basket))
 
@@ -157,6 +165,12 @@ class ValueConditionTest(OfferTest):
         self.basket.add_product(self.item, 1)
         self.assertFalse(self.cond.is_satisfied(self.basket))    
 
+    def test_not_discountable_item_fails_condition(self):
+        self.expensive_item.not_discountable = True
+        self.expensive_item.save()
+        self.basket.add_product(self.expensive_item, 1)
+        self.assertFalse(self.cond.is_satisfied(self.basket))
+
     def test_upsell_message(self):
         self.basket.add_product(self.item, 1)
         self.assertTrue('Spend' in self.cond.get_upsell_message(self.basket))
@@ -214,6 +228,13 @@ class CoverageConditionTest(TestCase):
         
     def test_single_item_fails(self):
         self.basket.add_product(self.products[0])
+        self.assertFalse(self.cond.is_satisfied(self.basket))
+
+    def test_not_discountable_item_fails(self):
+        self.products[0].not_discountable = True
+        self.products[0].save()
+        self.basket.add_product(self.products[0])
+        self.basket.add_product(self.products[1])
         self.assertFalse(self.cond.is_satisfied(self.basket))
 
     def test_single_item_passes_partial_condition(self):
@@ -286,6 +307,12 @@ class PercentageDiscountBenefitTest(OfferTest):
     
     def test_no_discount_for_empty_basket(self):
         self.assertEquals(Decimal('0.00'), self.benefit.apply(self.basket))
+
+    def test_no_discount_for_not_discountable_product(self):
+        self.item.not_discountable = True
+        self.item.save()
+        self.basket.add_product(self.item, 1)
+        self.assertEquals(Decimal('0.00'), self.benefit.apply(self.basket))
         
     def test_discount_for_single_item_basket(self):
         self.basket.add_product(self.item, 1)
@@ -330,6 +357,12 @@ class AbsoluteDiscountBenefitTest(OfferTest):
     
     def test_no_discount_for_empty_basket(self):
         self.assertEquals(Decimal('0.00'), self.benefit.apply(self.basket))
+
+    def test_no_discount_for_not_discountable_product(self):
+        self.item.not_discountable = True
+        self.item.save()
+        self.basket.add_product(self.item, 1)
+        self.assertEquals(Decimal('0.00'), self.benefit.apply(self.basket))
         
     def test_discount_for_single_item_basket(self):
         self.basket.add_product(self.item, 1)
@@ -370,7 +403,13 @@ class MultibuyDiscountBenefitTest(OfferTest):
         
     def test_discount_for_multi_item_basket(self):
         self.basket.add_product(self.item, 3)
-        self.assertEquals(Decimal('5.00'), self.benefit.apply(self.basket))   
+        self.assertEquals(Decimal('5.00'), self.benefit.apply(self.basket))  
+
+    def test_no_discount_for_not_discountable_product(self):
+        self.item.not_discountable = True
+        self.item.save()
+        self.basket.add_product(self.item, 1)
+        self.assertEquals(Decimal('0.00'), self.benefit.apply(self.basket))
         
     def test_discount_does_not_consume_item_if_in_condition_range(self):
         self.basket.add_product(self.item, 1)
@@ -507,7 +546,22 @@ class FixedPriceBenefitTest(OfferTest):
         
         condition = CoverageCondition(range=range, type="Coverage", value=2)
         discount = self.benefit.apply(basket, condition)
-        self.assertEquals(Decimal('2.00'), discount)   
+        self.assertEquals(Decimal('2.00'), discount)
+
+    def test_no_discount_when_product_not_discountable(self):
+        product = create_product(Decimal('18.00'))
+        product.not_discountable = True
+        product.save()
+
+        product_range = Range.objects.create(name="Dummy range")
+        product_range.included_products.add(product)
+            
+        basket = Basket.objects.create()
+        basket.add_product(product)
+        
+        condition = CoverageCondition(range=product_range, type="Coverage", value=1)
+        discount = self.benefit.apply(basket, condition)
+        self.assertEquals(Decimal('0.00'), discount)   
         
     def test_no_discount_is_returned_when_value_is_greater_than_product_total(self):
         products = [create_product(Decimal('4.00')), create_product(Decimal('4.00'))]
