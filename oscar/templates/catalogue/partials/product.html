@@ -1,5 +1,4 @@
 {% load currency_filters %}
-{% load basket_tags %}
 {% load thumbnail %}
 
 <article class="product_pod">
@@ -39,11 +38,6 @@
             <p class="app-ico avaliability outofstock">Not available</p>
         {% endif %}
 
-        {% basket_form basket product as basket_form single %}
-        <form action="{% url basket:add %}" method="post">
-            {% csrf_token %}
-            {{ basket_form.as_p }}
-            <input type="submit" class="btn btn-primary" value="Add to basket" />
-        </form>
-    </div>
+        {% include "catalogue/partials/add_to_basket_form_compact.html" %}
+   </div>
 </article>
