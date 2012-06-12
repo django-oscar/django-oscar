@@ -21,6 +21,7 @@ if not settings.configured:
             INSTALLED_APPS=[
                 'django.contrib.auth',
                 'django.contrib.admin',
+                'django.contrib.messages',
                 'django.contrib.contenttypes',
                 'django.contrib.sessions',
                 'django.contrib.sites',
@@ -44,6 +45,7 @@ if not settings.configured:
                 ),
             MIDDLEWARE_CLASSES=global_settings.MIDDLEWARE_CLASSES + (
                 'oscar.apps.basket.middleware.BasketMiddleware',
+                'oscar.core.ajax.middleware.AjaxMiddleware',
                 ),
             AUTHENTICATION_BACKENDS=(
                 'oscar.apps.customer.auth_backends.Emailbackend',

@@ -10,7 +10,26 @@ oscar.messages = {
     info: function(msg) { oscar.messages.addMessage('info', msg); },
     success: function(msg) { oscar.messages.addMessage('success', msg); },
     warning: function(msg) { oscar.messages.addMessage('warning', msg); },
-    error: function(msg) { oscar.messages.addMessage('error:', msg); }
+    error: function(msg) { oscar.messages.addMessage('error:', msg); },
+    ajaxInit: function(){
+        var self = this;
+        $('#messages').ajaxSuccess(function(e, xhr, settings) {
+            var resp_data;
+            try {
+                resp_data = $.parseJSON(xhr.responseText);
+            } catch(err) {
+                // not json response?
+            }
+            if (resp_data && resp_data['django_messages']) {
+                var django_messages = resp_data['django_messages'];
+                var i = django_messages.length, message;
+                for (i; i--; ){
+                    message = django_messages[i];
+                    self.addMessage(message['extra_tags'], message['message']);
+                }
+            }
+        });
+    }
 };
 oscar.forms = {
     init: function() {
@@ -29,7 +48,8 @@ oscar.forms = {
 $(function(){oscar.forms.init();});
 
 $(document).ready(function()
-{   
+{
+    oscar.messages.ajaxInit();
     // Product star rating  -- must improve this in python
     $('.product_pod, .span6, .promotion_single').each(function() 
     {
@@ -191,6 +211,5 @@ $(document).ready(function()
         }
       });
     }
- 
 });
     
