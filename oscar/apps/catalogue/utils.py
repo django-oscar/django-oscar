@@ -4,7 +4,7 @@ import tarfile
 import zipfile
 import tempfile
 import shutil
-from PIL import Image as PImage
+import Image as PImage
 
 from django.core.files import File
 from django.core.exceptions import FieldError
