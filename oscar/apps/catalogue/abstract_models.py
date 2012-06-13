@@ -206,7 +206,7 @@ class AbstractProduct(models.Model):
     
     categories = models.ManyToManyField('catalogue.Category', through='ProductCategory')
 
-    not_discountable = models.BooleanField(default=False)
+    is_discountable = models.BooleanField(default=True)
 
     objects = models.Manager()
     browsable = BrowsableProductManager()

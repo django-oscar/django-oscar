@@ -8,14 +8,14 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         
-        # Adding field 'Product.not_discountable'
-        db.add_column('catalogue_product', 'not_discountable', self.gf('django.db.models.fields.BooleanField')(default=False), keep_default=False)
+        # Adding field 'Product.is_discountable'
+        db.add_column('catalogue_product', 'is_discountable', self.gf('django.db.models.fields.BooleanField')(default=True), keep_default=False)
 
 
     def backwards(self, orm):
         
-        # Deleting field 'Product.not_discountable'
-        db.delete_column('catalogue_product', 'not_discountable')
+        # Deleting field 'Product.is_discountable'
+        db.delete_column('catalogue_product', 'is_discountable')
 
 
     models = {
@@ -83,7 +83,7 @@ class Migration(SchemaMigration):
             'date_updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'db_index': 'True', 'blank': 'True'}),
             'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'not_discountable': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'is_discountable': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'parent': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'variants'", 'null': 'True', 'to': "orm['catalogue.Product']"}),
             'product_class': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['catalogue.ProductClass']", 'null': 'True'}),
             'product_options': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['catalogue.Option']", 'symmetrical': 'False', 'blank': 'True'}),
