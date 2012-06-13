@@ -27,11 +27,11 @@ oscar.basket = {
         }
     },
     showVoucherForm: function() {
-        $('#voucher_form_container').show(); 
+        $('#voucher_form_container').show();
         $('#voucher_form_link').hide();
     },
     hideVoucherForm: function() {
-        $('#voucher_form_container').hide(); 
+        $('#voucher_form_container').hide();
         $('#voucher_form_link').show();
     },
     checkAndSubmit: function($ele, formPrefix, idSuffix) {
@@ -48,8 +48,8 @@ oscar.basket = {
 oscar.checkout = {
     init: function() {
         // Disable 'place order' button when it is clicked.
-        $('#place-order').click(function(e) {
-            var $btn = $(this);
+        $('#place-order-form').submit(function() {
+            var $btn = $('button#place-order', this);
             $btn.attr('disabled', 'disabled')
                 .html('Submitting...')
                 .removeClass('btn-primary')
