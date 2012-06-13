@@ -39,7 +39,7 @@ class ProductDetailView(DetailView):
 
         # Send signal to record the view of this product
         self.view_signal.send(sender=self, product=product, user=request.user, request=request, response=response)
-        return response;
+        return response
 
     def get_template_names(self):
         """
