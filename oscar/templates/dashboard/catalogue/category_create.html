@@ -1,0 +1,36 @@
+{% extends 'dashboard/layout.html' %}
+{% load category_tags %}
+{% block body_class %}catalogue{% endblock %}
+
+{% block title %}
+Category management | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url dashboard:index %}">Dashboard</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active"><a href=".">Add a category</a></li>
+</ul>
+{% endblock %}
+
+{% block header %}
+<div class="page-header action">
+    <h1>Add a category</h1>
+</div>
+{% endblock header %}
+
+{% block dashboard_content %}
+
+<form action="." method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Save" />
+</form>
+
+<div class="sub-header">
+    <h2>{{ queryset_description }}</h2>
+</div>
+
+{% endblock dashboard_content %}

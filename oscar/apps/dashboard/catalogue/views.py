@@ -6,12 +6,13 @@ from django.core.urlresolvers import reverse
 
 from oscar.apps.dashboard.catalogue import forms
 from oscar.core.loading import get_classes
-ProductForm, StockRecordForm, StockAlertSearchForm, ProductCategoryFormSet, ProductImageFormSet = get_classes(
-    'dashboard.catalogue.forms', ('ProductForm', 'StockRecordForm',
+ProductForm, CategoryForm, StockRecordForm, StockAlertSearchForm, ProductCategoryFormSet, ProductImageFormSet = get_classes(
+    'dashboard.catalogue.forms', ('ProductForm', 'CategoryForm', 'StockRecordForm',
                                   'StockAlertSearchForm',
                                   'ProductCategoryFormSet',
                                   'ProductImageFormSet'))
 Product = get_model('catalogue', 'Product')
+Category = get_model('catalogue', 'Category')
 ProductCategory = get_model('catalogue', 'ProductCategory')
 ProductClass = get_model('catalogue', 'ProductClass')
 StockRecord = get_model('partner', 'StockRecord')
@@ -234,3 +235,25 @@ class StockAlertListView(generic.ListView):
             self.description = 'All alerts'
             self.form = StockAlertSearchForm()
         return self.model.objects.all()
+
+
+class CategoryListView(generic.TemplateView):
+    template_name = 'dashboard/catalogue/category_list.html'
+
+
+class CategoryCreateView(generic.CreateView):
+    template_name = 'dashboard/catalogue/category_create.html'
+    model = Category
+    form_class = CategoryForm
+
+    def get_success_url(self):
+        return reverse("dashboard:catalogue-category-list")
+
+
+class CategoryUpdateView(generic.UpdateView):
+    template_name = 'dashboard/catalogue/category_add.html'
+    model = Category
+    form_class = CategoryForm
+
+    def get_success_url(self):
+        return reverse("dashboard:catalogue-category-list")

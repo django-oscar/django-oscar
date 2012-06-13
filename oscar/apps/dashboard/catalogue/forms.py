@@ -2,11 +2,20 @@ from django import forms
 from django.forms.models import inlineformset_factory
 from django.db.models import get_model
 
+from treebeard.forms import MoveNodeForm
+
 Product = get_model('catalogue', 'Product')
+Category = get_model('catalogue', 'Category')
 StockRecord = get_model('partner', 'StockRecord')
 ProductAttributeValue = get_model('catalogue', 'ProductAttributeValue')
 ProductCategory = get_model('catalogue', 'ProductCategory')
 ProductImage = get_model('catalogue', 'ProductImage')
+
+
+class CategoryForm(MoveNodeForm):
+
+        class Meta(MoveNodeForm.Meta):
+            model = Category
 
 
 class ProductSearchForm(forms.Form):

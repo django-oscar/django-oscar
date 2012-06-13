@@ -7,6 +7,7 @@ from oscar.apps.dashboard.nav import register, Node
 
 node = Node('Catalogue')
 node.add_child(Node('Products', 'dashboard:catalogue-product-list'))
+node.add_child(Node('Categories', 'dashboard:catalogue-category-list'))
 node.add_child(Node('Stock alerts', 'dashboard:stock-alert-list'))
 register(node, 10)
 
@@ -18,6 +19,9 @@ class CatalogueApplication(Application):
     product_create_redirect_view = views.ProductCreateRedirectView
     product_create_view = views.ProductCreateView
     product_update_view = views.ProductUpdateView
+    category_list_view = views.CategoryListView
+    category_create_view = views.CategoryCreateView
+    category_update_view = views.CategoryUpdateView
 
     stock_alert_view = views.StockAlertListView
 
@@ -33,6 +37,12 @@ class CatalogueApplication(Application):
                 name='catalogue-product-list'),
             url(r'^stock-alerts/$', self.stock_alert_view.as_view(),
                 name='stock-alert-list'),
+            url(r'^categories/$', self.category_list_view.as_view(),
+                name='catalogue-category-list'),
+            url(r'^categories/create/$', self.category_create_view.as_view(),
+                name='catalogue-category-create'),
+            url(r'^categories/update/(?P<pk>\d+)/$', self.category_update_view.as_view(),
+                name='catalogue-category-update'),
         )
         return self.post_process_urls(urlpatterns)
 

@@ -54,15 +54,14 @@ class AbstractCategory(MP_Node):
         return self.full_name
     
     def save(self, *args, **kwargs):
-        if not self.slug:
-            parent = self.get_parent()
-            slug = slugify(self.name)
-            if parent:
-                self.slug = '%s/%s' % (parent.slug, slug)
-                self.full_name = '%s > %s' % (parent.full_name, self.name)
-            else:
-                self.slug = slug
-                self.full_name = self.name
+        parent = self.get_parent()
+        slug = slugify(self.name)
+        if parent:
+            self.slug = '%s/%s' % (parent.slug, slug)
+            self.full_name = '%s > %s' % (parent.full_name, self.name)
+        else:
+            self.slug = slug
+            self.full_name = self.name
         super(AbstractCategory, self).save(*args, **kwargs)
 
     def get_ancestors(self, include_self=True):
