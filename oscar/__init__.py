@@ -79,9 +79,3 @@ def get_core_apps(overrides=None):
     for app_label in OSCAR_CORE_APPS:
         apps.append(get_app_label(app_label, overrides))
     return apps
-
-
-
-
-
-    return OSCAR_CORE_APPS
