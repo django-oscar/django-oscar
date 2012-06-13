@@ -203,7 +203,7 @@ class Condition(models.Model):
             Determines whether the condition can be applied to a given product
         """
         return (self.range.contains_product(product) 
-                and not product.not_discountable)
+                and product.is_discountable)
     
 
 class Benefit(models.Model):
@@ -277,7 +277,7 @@ class Benefit(models.Model):
         """
             Determines whether the benefit can be applied to a given product
         """
-        return (not product.not_discountable)
+        return product.is_discountable
 
 
 class Range(models.Model):
