@@ -1,5 +1,4 @@
 {% load currency_filters %}
-{% load basket_tags %}
 {% load thumbnail %}
 
 <article class="product_pod">
@@ -27,15 +26,8 @@
 
     <h3><a href="{{ product.get_absolute_url }}">{{ product.get_title|truncatewords:7 }}</a></h3>
 
-    {% include "catalogue/partials/stock_record.html" %}
-
-    {% if product.has_stockrecord and product.stockrecord.num_in_stock > 0 %}
-        {% basket_form basket product as basket_form single %}
-        <form action="{% url basket:add %}" method="post">
-            {% csrf_token %}
-            {{ basket_form.as_p }}
-            <input type="submit" class="btn btn-primary" value="Add to basket" />
-        </form>
-    {% endif %}
-    </div>
+    <div class="product_price">
+        {% include "catalogue/partials/stock_record.html" %}
+        {% include "catalogue/partials/add_to_basket_form_compact.html" %}
+   </div>
 </article>

@@ -10,13 +10,6 @@ core functionality can be customised to suit the needs of your project.  This
 allows it to handle a wide range of e-commerce requirements, from large-scale B2C
 sites to complex B2B sites rich in domain-specific business logic.
 
-Oscar is used in production by:
-
-* Tata - http://www.landmarkonthenet.com
-* Carlsberg - Their global "We deliver more" platform is powered by Oscar.
-* Dolbeau - http://www.dolbeau.ca/
-* The UK Labour party
-
 This README is just a stub - see the following links for more details
 information:
 

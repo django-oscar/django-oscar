@@ -206,7 +206,6 @@ INSTALLED_APPS = [
     'haystack',
     'debug_toolbar',
     'south',
-    'sorl.thumbnail',
     # For profile testing
     'apps.user',
 ]
@@ -234,6 +233,8 @@ AUTH_PROFILE_MODULE = 'user.Profile'
 # Oscar settings
 from oscar.defaults import *
 
+
+OSCAR_RECENTLY_VIEWED_PRODUCTS = 20
 OSCAR_ALLOW_ANON_CHECKOUT = True
 OSCAR_INITIAL_ORDER_STATUS = 'Pending'
 OSCAR_INITIAL_LINE_STATUS = 'Pending'
@@ -260,4 +261,3 @@ try:
     from settings_local import *
 except ImportError:
     pass
-
