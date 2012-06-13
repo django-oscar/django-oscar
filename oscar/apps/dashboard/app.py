@@ -1,6 +1,5 @@
 from django.conf.urls.defaults import patterns, url, include
-#from django.contrib.admin.views.decorators import staff_member_required
-from oscar.apps.customer.decorators import staff_member_required
+from oscar.views.decorators import staff_member_required
 
 from oscar.core.application import Application
 from oscar.apps.dashboard.reports.app import application as reports_app
