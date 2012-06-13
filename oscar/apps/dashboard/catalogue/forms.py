@@ -64,10 +64,12 @@ def _attr_numeric_field(attribute):
     return forms.FloatField(label=attribute.name,
                             required=attribute.required)
 
+
 class ProductForm(forms.ModelForm):
 
     FIELD_FACTORIES = {
         "text": _attr_text_field,
+        "richtext": _attr_text_field,
         "integer": _attr_integer_field,
         "boolean": _attr_boolean_field,
         "float": _attr_float_field,
