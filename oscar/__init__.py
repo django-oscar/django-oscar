@@ -60,6 +60,7 @@ OSCAR_CORE_APPS = [
     # 3rd-party apps that oscar depends on
     'treebeard',
     'sorl.thumbnail',
+    'model_utils', 
 ]
 
 

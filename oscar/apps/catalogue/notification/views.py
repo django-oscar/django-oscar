@@ -15,6 +15,7 @@ from django.utils.translation import ugettext as _
 from oscar.apps.catalogue.notification.forms import NotificationForm
 
 Product = get_model('catalogue', 'product')
+Notification = get_model('notification', 'notification')
 ProductNotification = get_model('notification', 'productnotification')
 
 
@@ -24,16 +25,13 @@ class NotificationUnsubscribeView(generic.DetailView):
     unsubscribe key. The notification is set to ``INACTIVE`` instead
     of being deleted for analytical purposes.
     """
-    model = ProductNotification
+    model = Notification
     context_object_name = 'notification'
     template_name = 'notification/unsubscribe.html'
 
     def get_object(self, queryset=None):
         """ Get notification object that matches the unsubscribe key. """
-        #FIXME: this will need to be handled on the AbstractNotification level
-        #FIXME: my prefered solutions involves an InheritanceManager on
-        #FIXME: AbstractNotification
-        return get_object_or_404(ProductNotification,
+        return get_object_or_404(self.model,
                                  unsubscribe_key=self.kwargs.get('key',
                                                                  'invalid'))
 
@@ -52,21 +50,18 @@ class NotificationConfirmView(generic.DetailView):
     View to confirm the email address of an anonymous user used to
     sign up for a product notification.
     """
-    model = ProductNotification
+    model = Notification
     context_object_name = 'notification'
     template_name = 'notification/confirm.html'
 
     def get_object(self, queryset=None):
         """ Get notification object that matches the confirmation key. """
-        #FIXME: this will need to be handled on the AbstractNotification level
-        #FIXME: my prefered solutions involves an InheritanceManager on
-        #FIXME: AbstractNotification
-        return get_object_or_404(ProductNotification,
+        return get_object_or_404(self.model,
                                  confirm_key=self.kwargs.get('key', 'invalid'))
 
     def get(self, *args, **kwargs):
         notification = self.get_object()
-        notification.status = ProductNotification.ACTIVE
+        notification.status = self.model.ACTIVE
         notification.save()
         messages.info(self.request,
             _("Yeah! You have confirmed your subscription. We'll notify "

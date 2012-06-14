@@ -216,7 +216,7 @@ class CreateNotificationViewAsAuthenticatedUserTests(NotificationTestCase):
 
         self.assertEquals(self.user.notifications.count(), 1)
 
-        notification = self.user.notifications.all()[0]
+        notification = self.user.notifications.all()[0].productnotification
         self.assertEquals(notification.product.id, self.product_1.id)
         self.assertEquals(notification.get_notification_email(),
                           self.user.email)
@@ -239,7 +239,8 @@ class CreateNotificationViewAsAuthenticatedUserTests(NotificationTestCase):
 
         self.assertContains(response, self.product_1.title, status_code=200)
         self.assertEquals(self.user.notifications.count(), 1)
-        self.assertEquals(notification, self.user.notifications.all()[0])
+        self.assertEquals(notification,
+                          self.user.notifications.all()[0].productnotification)
 
 
 class CreateNotificationViewAsAnonymousUserTests(NotificationTestCase):

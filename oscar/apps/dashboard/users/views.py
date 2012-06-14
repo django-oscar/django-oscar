@@ -8,7 +8,7 @@ from django.views import generic
 from oscar.apps.dashboard.users import forms
 from oscar.views.generic import BulkEditMixin
 
-ProductNotification = get_model('notification', 'productnotification')
+Notification = get_model('notification', 'notification')
 
 
 class IndexView(generic.ListView, BulkEditMixin):
@@ -84,8 +84,8 @@ class UserDetailView(generic.DetailView):
 
 
 class NotificationListView(generic.ListView, BulkEditMixin):
-    model = ProductNotification
-    form_class = forms.ProductNotificationSearchForm
+    model = Notification
+    form_class = forms.NotificationSearchForm
     context_object_name = 'notification_list'
     template_name = 'dashboard/notification/list.html'
     paginate = 25
@@ -95,7 +95,7 @@ class NotificationListView(generic.ListView, BulkEditMixin):
     description = ''
 
     def get_queryset(self):
-        queryset = self.model.objects.all()
+        queryset = self.model.objects.select_subclasses()
         self.description = self.base_description
 
         self.form = self.form_class(self.request.GET)
@@ -131,10 +131,6 @@ class NotificationListView(generic.ListView, BulkEditMixin):
             )
             self.description += " with customer email matching '%s'" % data['email']
 
-        if data['product']:
-            queryset = queryset.filter(product__title__icontains=data['product'])
-            self.description += " with product matching '%s'" % data['product']
-
         return queryset
 
     def update_selected_notification_status(self, request, notifications):
@@ -154,7 +150,7 @@ class NotificationListView(generic.ListView, BulkEditMixin):
 
 class NotificationUpdateView(generic.UpdateView):
     template_name = 'dashboard/notification/update.html'
-    model = ProductNotification
+    model = Notification
     form_class = forms.NotificationUpdateForm
     context_object_name = 'notification'
 
@@ -163,7 +159,7 @@ class NotificationUpdateView(generic.UpdateView):
 
 
 class NotificationDeleteView(generic.DeleteView):
-    model = ProductNotification
+    model = Notification
     template_name = 'dashboard/notification/delete.html'
     context_object_name = 'notification'
 
