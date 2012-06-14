@@ -43,6 +43,9 @@ class CatalogueApplication(Application):
                 name='catalogue-category-create'),
             url(r'^categories/update/(?P<pk>\d+)/$', self.category_update_view.as_view(),
                 name='catalogue-category-update'),
+
+            url(r'^categories-autocomplete/$', views.category_autocomplete,
+                name='catalogue-category-autocomplete'),
         )
         return self.post_process_urls(urlpatterns)
 

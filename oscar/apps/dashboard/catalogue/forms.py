@@ -1,6 +1,7 @@
 from django import forms
 from django.forms.models import inlineformset_factory
 from django.db.models import get_model
+from django.utils.translation import ugettext as _
 
 from treebeard.forms import MoveNodeForm
 
@@ -14,8 +15,22 @@ ProductImage = get_model('catalogue', 'ProductImage')
 
 class CategoryForm(MoveNodeForm):
 
-        class Meta(MoveNodeForm.Meta):
-            model = Category
+    _ref_node_id = forms.CharField(required=False,
+                                   label=_(u"Relative to (category)"))
+
+    def clean__ref_node_id(self):
+        cd = self.cleaned_data
+        if '_ref_node_id' in cd:
+            try:
+                c = Category.objects.get(full_name=cd['_ref_node_id'])
+            except Category.DoesNotExist:
+                raise forms.ValidationError(_('The specified category does not exist'))
+            else:
+                cd['_ref_node_id'] = c.pk
+        return cd['_ref_node_id']
+
+    class Meta(MoveNodeForm.Meta):
+        model = Category
 
 
 class ProductSearchForm(forms.Form):
