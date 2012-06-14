@@ -1,0 +1,44 @@
+{% extends 'dashboard/layout.html' %}
+{% load category_tags %}
+{% block body_class %}catalogue{% endblock %}
+
+{% block extrascripts %}
+    {{ block.super }}
+    <script src="{{ STATIC_URL }}oscar/js/jquery/jquery-ui-1.8.21.custom.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="{{ STATIC_URL }}oscar/js/sortable/jquery.ui.nestedSortable.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">$(oscar.dashboard.catalogue.init);</script>
+{% endblock %}
+
+{% block title %}
+Category management | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url dashboard:index %}">Dashboard</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active"><a href=".">Categories</a></li>
+</ul>
+{% endblock %}
+
+{% block header %}
+<div class="page-header action">
+    <h1>Category management</h1>
+</div>
+{% endblock header %}
+
+{% block dashboard_content %}
+
+<div class="well well-info">
+    <h3 class="app-ico ico_expand icon"><a href="{% url dashboard:catalogue-category-create %}">Create a new category</a></h3>
+</div>
+
+{% category_tree depth=4 as categories %}
+
+<div class="sub-header">
+    <h2>{{ queryset_description }}</h2>
+</div>
+
+{% endblock dashboard_content %}
