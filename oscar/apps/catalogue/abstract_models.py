@@ -555,7 +555,7 @@ class AbstractProductAttributeValue(models.Model):
     product = models.ForeignKey('catalogue.Product', related_name='attribute_values')
     value_text = models.CharField(max_length=255, blank=True, null=True)
     value_integer = models.IntegerField(blank=True, null=True)
-    value_boolean = models.BooleanField(blank=True)
+    value_boolean = models.NullBooleanField(blank=True)
     value_float = models.FloatField(blank=True, null=True)
     value_richtext = models.TextField(blank=True, null=True)
     value_date = models.DateField(blank=True, null=True)
