@@ -13,6 +13,4 @@ def has_signed_up(user, product):
     if not user.is_authenticated():
         return False
 
-    if user.notifications.filter(product=product).count() > 0:
-        return True
-    return False
+    return user.notifications.filter(product=product).count() > 0
