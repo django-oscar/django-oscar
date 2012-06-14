@@ -12,7 +12,9 @@ Notification management | {{ block.super }}
         <a href="{% url dashboard:index %}">Dashboard</a>
         <span class="divider">/</span>
     </li>
-    <li class="active"><a href=".">Users</a></li>
+    <li>
+        <a href="{% url dashboard:user-notification-list %}">Notifications</a>
+    </li>
 </ul>
 {% endblock %}
 

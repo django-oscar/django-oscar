@@ -16,7 +16,7 @@ Notification #{{ notification.id }} | {{ block.super }}
         <a href="{% url dashboard:user-notification-list %}">Notifications</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">#{{ notification.id }}</a></li>
+    <li class="active"><a href=".">Notification #{{ notification.id }}</a></li>
 </ul>
 {% endblock %}
 
