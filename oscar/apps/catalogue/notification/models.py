@@ -93,7 +93,7 @@ class AbstractNotification(models.Model):
         Get confirmation URL for this notification. Needs to be
         implemented in subclasses.
         """
-        raise NotImplementedError
+        raise NotImplementedError()
 
     @models.permalink
     def get_unsubscribe_url(self):
@@ -101,7 +101,7 @@ class AbstractNotification(models.Model):
         Get confirmation URL for this notification. Needs to be
         implemented in subclasses.
         """
-        raise NotImplementedError
+        raise NotImplementedError()
 
     def save(self, *args, **kwargs):
         """
