@@ -118,8 +118,10 @@ class AbstractNotification(models.Model):
 
     def __unicode__(self):
         """ Unicode representation of this notification """
-        return _(u'Notification for %s - %s') % (self.user or "anonymous",
-                                                 self.email)
+        return _(u'Notification for %(user)s - %(email)s') % {
+            'user': self.user or _("anonymous"),
+            'email': self.email
+        }
 
     class Meta:
         abstract = True

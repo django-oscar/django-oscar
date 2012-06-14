@@ -10,6 +10,9 @@ from django.utils.translation import ugettext as _
 
 from oscar.core.loading import get_class
 
+# use get_class instead of get_model as this module get imported
+# in the models module of notification. That means models are not
+# available at this point in time.
 StockRecord = get_class('partner.models', 'StockRecord')
 ProductNotification = get_class('catalogue.notification.models',
                                 'ProductNotification')
@@ -24,8 +27,8 @@ def _create_email_from_context(email, template, context):
 
     Returns a ``EmailMessage`` instance.
     """
-    subject = _("[Product Notification] Product '%s' back in stock!")
-    subject = subject % context['product'].title
+    subject = _("[Product Notification] Product '%(title)s' back in stock!")
+    subject = subject % {'title': context['product'].title}
 
     msg = mail.EmailMessage(
         template.render(context),
