@@ -58,6 +58,9 @@ class StockRecordTests(TestCase):
         self.assertEqual(0, self.stockrecord.num_allocated)
         self.assertEqual(10, self.stockrecord.num_in_stock)
 
+    def test_max_purchase_quantity(self):
+        self.assertEqual(10, self.stockrecord.max_purchase_quantity())
+
 
 class DefaultWrapperTests(TestCase):
 

@@ -202,11 +202,13 @@ class AbstractStockRecord(models.Model):
         """
         return get_partner_wrapper(self.partner.name).availability(self)
 
-    def max_purchase_quantity(self, user):
+    def max_purchase_quantity(self, user=None):
         """
         Return an item's availability as a string
+
+        :param user: (optional) The user who wants to purchase
         """
-        return get_partner_wrapper(self.partner.name).availability(self)
+        return get_partner_wrapper(self.partner.name).max_purchase_quantity(self, user)
     
     @property
     def dispatch_date(self):
