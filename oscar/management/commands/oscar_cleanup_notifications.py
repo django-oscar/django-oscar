@@ -3,11 +3,10 @@ import logging
 from optparse import make_option
 from datetime import datetime, timedelta
 
+from django.db.models import get_model
 from django.core.management.base import BaseCommand
 
-from oscar.core.loading import get_class
-AbstractNotification = get_class('catalogue.notification.models',
-                                 'AbstractNotification')
+Notification = get_model('notification', 'Notification')
 
 logger = logging.getLogger(__name__)
 
@@ -15,7 +14,7 @@ logger = logging.getLogger(__name__)
 class Command(BaseCommand):
     """
     Command to remove all notifications derived from
-    ``AbstractNotification`` that are in status ``UNCONFIRMED`` and
+    ``Notification`` that are in status ``UNCONFIRMED`` and
     have been created before a threshold date and time. The threshold
     can be specified as options ``days`` and ``hours`` and is
     calculated relative to the current date and time.
@@ -51,13 +50,7 @@ class Command(BaseCommand):
         logger.info('cleaning up unconfirmed notifications older than %s',
                     threshold_date.strftime("%Y-%m-%d %H:%M"))
 
-        for subcls in AbstractNotification.__subclasses__():
-            notifications = subcls.objects.filter(
-                status=AbstractNotification.UNCONFIRMED,
-                date_created__lt=threshold_date
-            )
-            logger.info("removing %d notifications of type '%s'",
-                        len(notifications), subcls.__name__)
-
-            for notification in notifications:
-                notification.delete()
+        Notification.objects.filter(
+            status=Notification.UNCONFIRMED,
+            date_created__lt=threshold_date
+        ).delete()
