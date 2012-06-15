@@ -46,5 +46,5 @@ class Shop(Application):
         )
         return urlpatterns
     
-
-shop = Shop()
+# 'shop' kept for legacy projects - 'application' is a better name
+shop = application = Shop()
