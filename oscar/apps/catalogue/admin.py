@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.db.models import get_model
+from treebeard.admin import TreeAdmin
 
 Product = get_model('catalogue', 'Product')
 ProductClass = get_model('catalogue', 'ProductClass')
@@ -53,6 +54,8 @@ class AttributeOptionGroupAdmin(admin.ModelAdmin):
 class AttributeEntityAdmin(admin.ModelAdmin):
     list_display = ('name', )
                  
+class CategoryAdmin(TreeAdmin):
+    pass
 
 admin.site.register(ProductClass, ProductClassAdmin)
 admin.site.register(Product, ProductAdmin)
@@ -63,5 +66,5 @@ admin.site.register(AttributeEntity, AttributeEntityAdmin)
 admin.site.register(AttributeEntityType)
 admin.site.register(Option, OptionAdmin)
 admin.site.register(ProductImage)
-admin.site.register(Category)
+admin.site.register(Category, CategoryAdmin)
 admin.site.register(ProductCategory)

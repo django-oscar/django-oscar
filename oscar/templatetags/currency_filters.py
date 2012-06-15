@@ -1,5 +1,4 @@
 import locale
-from decimal import Decimal
 
 from django import template
 from django.conf import settings

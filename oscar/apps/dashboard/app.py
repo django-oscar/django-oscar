@@ -1,5 +1,5 @@
 from django.conf.urls.defaults import patterns, url, include
-from django.contrib.admin.views.decorators import staff_member_required
+from oscar.views.decorators import staff_member_required
 
 from oscar.core.application import Application
 from oscar.apps.dashboard.reports.app import application as reports_app
@@ -17,7 +17,7 @@ from oscar.apps.dashboard import views
 
 class DashboardApplication(Application):
     name = 'dashboard'
-    
+
     index_view = views.IndexView
     reports_app = reports_app
     orders_app = orders_app

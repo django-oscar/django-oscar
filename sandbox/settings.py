@@ -206,7 +206,6 @@ INSTALLED_APPS = [
     'haystack',
     'debug_toolbar',
     'south',
-    'sorl.thumbnail',
     # For profile testing
     'apps.user',
 ]

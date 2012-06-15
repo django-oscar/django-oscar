@@ -11,13 +11,6 @@ from oscar.apps.customer.history_helpers import get_recently_viewed_product_ids
 from oscar.test.helpers import create_product, create_order
 
 
-def create_test_user():
-    username = 'customer'
-    password = 'cheeseshop'
-    email = 'customer@example.com'
-
-
-
 class HistoryHelpersTest(TestCase):
 
     def setUp(self):
@@ -118,3 +111,26 @@ class AuthTestCase(TestCase):
         self.assertTrue(('oscar_recently_viewed_products' not in response.cookies)
                         or not
                         self.client.cookies['oscar_recently_viewed_products'].coded_value)
+
+
+class AuthStaffRedirectTests(TestCase):
+    username = 'staff'
+    password = 'cheeseshop'
+    email = 'staff@example.com'
+
+    def test_staff_member_login_for_dashboard(self):
+        """
+        Test if a staff member that is not yet logged in and trying to access the
+        dashboard is redirected to the Oscar login page (instead of the ``admin`` 
+        login page). Also test that the redirect after successful login will 
+        be the originally requested page.
+        """
+        self.client = Client()
+        user = User.objects.create_user(username=self.username,
+                                    email=self.email, password=self.password)
+        user.is_staff = True
+        user.save()
+
+        response = self.client.get(reverse('dashboard:index'), follow=True)
+        self.assertContains(response, "login-username", status_code=200)
+        self.assertEquals(response.context['next'], reverse('dashboard:index'))

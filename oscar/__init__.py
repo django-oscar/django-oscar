@@ -56,6 +56,9 @@ OSCAR_CORE_APPS = [
     'oscar.apps.dashboard.offers',
     'oscar.apps.dashboard.ranges',
     'oscar.apps.dashboard.vouchers',
+    # 3rd-party apps that oscar depends on
+    'treebeard',
+    'sorl.thumbnail',
 ]
 
 
@@ -76,9 +79,3 @@ def get_core_apps(overrides=None):
     for app_label in OSCAR_CORE_APPS:
         apps.append(get_app_label(app_label, overrides))
     return apps
-
-
-
-
-
-    return OSCAR_CORE_APPS
