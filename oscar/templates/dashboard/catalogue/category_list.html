@@ -35,7 +35,31 @@ Category management | {{ block.super }}
     <h3 class="app-ico ico_expand icon"><a href="{% url dashboard:catalogue-category-create %}">Create a new category</a></h3>
 </div>
 
-{% category_tree depth=4 as categories %}
+<div class="well well-info">
+    <a href="{% url dashboard:catalogue-category-list %}">Home</a> >
+    {% if ancestors %}
+        {% for ancestor in ancestors %}
+            <a href="{% url dashboard:catalogue-category-detail-list pk=ancestor.pk %}">{{ ancestor.name }}</a>{% if not forloop.last %} > {% endif %}
+        {% endfor %}
+    {% endif %}
+</div>
+
+<table class="table table-striped table-bordered">
+    {% for category in child_categories %}
+        <tr>
+            <td>
+            {% if category.get_children_count > 0 %}
+                <a href="{% url dashboard:catalogue-category-detail-list pk=category.pk %}">{{ category.name }}</a>
+            {% else %}
+                {{ category.name }}
+            {% endif %}
+            </td>
+            <td>
+                <a class="btn btn-info" href="{% url dashboard:catalogue-category-update category.id %}">Edit</a>
+            </td>
+        </tr>
+    {% endfor %}
+</table>
 
 <div class="sub-header">
     <h2>{{ queryset_description }}</h2>

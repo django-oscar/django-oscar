@@ -17,13 +17,13 @@ Category management | {{ block.super }}
         <a href="{% url dashboard:index %}">Dashboard</a>
         <span class="divider">/</span>
     </li>
-    <li class="active"><a href=".">Add a category</a></li>
+    <li class="active"><a href=".">{% if object %}Update category{% else %}Add a category{% endif %}</a></li>
 </ul>
 {% endblock %}
 
 {% block header %}
 <div class="page-header action">
-    <h1>Add a category</h1>
+    <h1>{% if object %}Update category{% else %}Add a category{% endif %}</h1>
 </div>
 {% endblock header %}
 

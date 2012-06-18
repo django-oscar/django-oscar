@@ -30,7 +30,6 @@ class CategoryForm(MoveNodeForm):
                 else:
                     self.initial['_ref_node_id'] = c.full_name
 
-
     def clean__ref_node_id(self):
         cd = self.cleaned_data
         if '_ref_node_id' in cd and cd['_ref_node_id']:

@@ -243,6 +243,22 @@ class StockAlertListView(generic.ListView):
 class CategoryListView(generic.TemplateView):
     template_name = 'dashboard/catalogue/category_list.html'
 
+    def get_context_data(self, *args, **kwargs):
+        ctx = super(CategoryListView, self).get_context_data(*args, **kwargs)
+        ctx['child_categories'] = Category.get_root_nodes()
+        return ctx
+
+
+class CategoryDetailListView(generic.DetailView):
+    template_name = 'dashboard/catalogue/category_list.html'
+    model = Category
+
+    def get_context_data(self, *args, **kwargs):
+        ctx = super(CategoryDetailListView, self).get_context_data(*args, **kwargs)
+        ctx['child_categories'] = self.object.get_children()
+        ctx['ancestors'] = self.object.get_ancestors()
+        return ctx
+
 
 class CategoryCreateView(generic.CreateView):
     template_name = 'dashboard/catalogue/category_create.html'
@@ -259,7 +275,12 @@ class CategoryUpdateView(generic.UpdateView):
     form_class = CategoryForm
 
     def get_success_url(self):
-        return reverse("dashboard:catalogue-category-list")
+        parent = self.object.get_parent()
+        if parent is None:
+            return reverse("dashboard:catalogue-category-list")
+        else:
+            return reverse("dashboard:catalogue-category-detail-list", 
+                            args=(parent.pk,))
 
 
 def category_autocomplete(request):

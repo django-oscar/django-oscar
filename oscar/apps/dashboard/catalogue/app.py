@@ -20,6 +20,7 @@ class CatalogueApplication(Application):
     product_create_view = views.ProductCreateView
     product_update_view = views.ProductUpdateView
     category_list_view = views.CategoryListView
+    category_detail_list_view = views.CategoryDetailListView
     category_create_view = views.CategoryCreateView
     category_update_view = views.CategoryUpdateView
 
@@ -39,6 +40,8 @@ class CatalogueApplication(Application):
                 name='stock-alert-list'),
             url(r'^categories/$', self.category_list_view.as_view(),
                 name='catalogue-category-list'),
+            url(r'^categories/(?P<pk>\d+)/$', self.category_detail_list_view.as_view(),
+                name='catalogue-category-detail-list'),
             url(r'^categories/create/$', self.category_create_view.as_view(),
                 name='catalogue-category-create'),
             url(r'^categories/update/(?P<pk>\d+)/$', self.category_update_view.as_view(),
