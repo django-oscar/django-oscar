@@ -4,7 +4,9 @@
 
 {% block extrascripts %}
     {{ block.super }}
-    <script type="text/javascript">$(oscar.dashboard.catalogue.init);</script>
+    <script type="text/javascript">
+        $(oscar.dashboard.catalogue.category_autocomplete("{% url dashboard:catalogue-category-autocomplete %}"));
+    </script>
 {% endblock %}
 
 {% block title %}
