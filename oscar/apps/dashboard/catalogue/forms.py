@@ -22,17 +22,18 @@ class CategoryForm(MoveNodeForm):
         super(CategoryForm, self).__init__(*args, **kwargs)
         if self.initial:
             ref_pk = self.initial['_ref_node_id']
-            try:
-                c = Category.objects.get(pk=ref_pk)
-            except Category.DoesnNotExist:
-                self.initial['_ref_node_id'] = ''
-            else:
-                self.initial['_ref_node_id'] = c.full_name
+            if ref_pk:
+                try:
+                    c = Category.objects.get(pk=ref_pk)
+                except Category.DoesNotExist:
+                    self.initial['_ref_node_id'] = ''
+                else:
+                    self.initial['_ref_node_id'] = c.full_name
 
 
     def clean__ref_node_id(self):
         cd = self.cleaned_data
-        if '_ref_node_id' in cd:
+        if '_ref_node_id' in cd and cd['_ref_node_id']:
             try:
                 c = Category.objects.get(full_name=cd['_ref_node_id'])
             except Category.DoesNotExist:
