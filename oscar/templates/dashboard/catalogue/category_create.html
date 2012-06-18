@@ -12,6 +12,10 @@ Category management | {{ block.super }}
         <a href="{% url dashboard:index %}">Dashboard</a>
         <span class="divider">/</span>
     </li>
+    <li>
+        <a href="{% url dashboard:catalogue-category-list %}">Categories</a>
+        <span class="divider">/</span>
+    </li>
     <li class="active"><a href=".">{% if object %}Update category{% else %}Add a category{% endif %}</a></li>
 </ul>
 {% endblock %}
