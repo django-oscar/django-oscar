@@ -2,13 +2,6 @@
 {% load category_tags %}
 {% block body_class %}catalogue{% endblock %}
 
-{% block extrascripts %}
-    {{ block.super }}
-    <script type="text/javascript">
-        $(oscar.dashboard.catalogue.category_autocomplete("{% url dashboard:catalogue-category-autocomplete %}"));
-    </script>
-{% endblock %}
-
 {% block title %}
 Category management | {{ block.super }}
 {% endblock %}

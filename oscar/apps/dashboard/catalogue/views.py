@@ -1,13 +1,11 @@
 from django.views import generic
 from django.db.models import get_model
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 
 from oscar.apps.dashboard.catalogue import forms
 from oscar.core.loading import get_classes
-
-import simplejson
 
 ProductForm, CategoryForm, StockRecordForm, StockAlertSearchForm, ProductCategoryFormSet, ProductImageFormSet = get_classes(
     'dashboard.catalogue.forms', ('ProductForm', 'CategoryForm', 'StockRecordForm',
@@ -281,10 +279,3 @@ class CategoryUpdateView(generic.UpdateView):
         else:
             return reverse("dashboard:catalogue-category-detail-list", 
                             args=(parent.pk,))
-
-
-def category_autocomplete(request):
-    q = request.GET.get('term', '')
-    categories =Category.objects.filter(full_name__icontains=q)
-    result = [c.full_name for c in categories]
-    return HttpResponse(simplejson.dumps(result))

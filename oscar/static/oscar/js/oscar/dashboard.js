@@ -85,18 +85,6 @@ oscar.dashboard = {
                 }
             );
         }
-    },
-    catalogue: {
-        init: function() {
-        },
-        category_autocomplete: function(url) {
-            return function () {
-                $("#id__ref_node_id").autocomplete({
-                    'source': url,
-                    'minLength': 3,
-                });
-            }
-        }
     }
 };
 

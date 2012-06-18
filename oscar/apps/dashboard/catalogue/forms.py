@@ -1,7 +1,6 @@
 from django import forms
 from django.forms.models import inlineformset_factory
 from django.db.models import get_model
-from django.utils.translation import ugettext as _
 
 from treebeard.forms import MoveNodeForm
 
@@ -14,32 +13,6 @@ ProductImage = get_model('catalogue', 'ProductImage')
 
 
 class CategoryForm(MoveNodeForm):
-
-    _ref_node_id = forms.CharField(required=False,
-                                   label=_(u"Relative to (category)"))
-
-    def __init__(self, *args, **kwargs):
-        super(CategoryForm, self).__init__(*args, **kwargs)
-        if self.initial:
-            ref_pk = self.initial['_ref_node_id']
-            if ref_pk:
-                try:
-                    c = Category.objects.get(pk=ref_pk)
-                except Category.DoesNotExist:
-                    self.initial['_ref_node_id'] = ''
-                else:
-                    self.initial['_ref_node_id'] = c.full_name
-
-    def clean__ref_node_id(self):
-        cd = self.cleaned_data
-        if '_ref_node_id' in cd and cd['_ref_node_id']:
-            try:
-                c = Category.objects.get(full_name=cd['_ref_node_id'])
-            except Category.DoesNotExist:
-                raise forms.ValidationError(_('The specified category does not exist'))
-            else:
-                cd['_ref_node_id'] = c.pk
-        return cd['_ref_node_id']
 
     class Meta(MoveNodeForm.Meta):
         model = Category

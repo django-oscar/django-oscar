@@ -2,13 +2,6 @@
 {% load category_tags %}
 {% block body_class %}catalogue{% endblock %}
 
-{% block extrascripts %}
-    {{ block.super }}
-    <script src="{{ STATIC_URL }}oscar/js/jquery/jquery-ui-1.8.21.custom.min.js" type="text/javascript" charset="utf-8"></script>
-    <script src="{{ STATIC_URL }}oscar/js/sortable/jquery.ui.nestedSortable.js" type="text/javascript" charset="utf-8"></script>
-    <script type="text/javascript">$(oscar.dashboard.catalogue.init);</script>
-{% endblock %}
-
 {% block title %}
 Category management | {{ block.super }}
 {% endblock %}
