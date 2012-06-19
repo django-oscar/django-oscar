@@ -1,15 +1,16 @@
 {% extends "catalogue/detail.html" %}
+{% load i18n %}
 
 {% block product_review %}
 <div id="addreview" class="review_add">
-    <legend>Leave a product review</legend>
+	<legend>{% trans "Leave a product review" %}</legend>
     <form method="post" action="./#addreview" class="form-horizontal" >
         {% csrf_token %}
         {% include "partials/form_fields.html" with form=form %}
         <div class="form-actions">
-            <button type="submit" value="Submit" class="btn btn-primary">Submit</button>
-			or
-            <a href="{{ product.get_absolute_url }}" >cancel</a>
+			<button type="submit"  class="btn btn-primary">{% trans "Submit" %}</button>
+			{% trans "or" %}
+			<a href="{{ product.get_absolute_url }}" >{% trans "cancel" %}</a>
         </div>
     </form>
 </div>

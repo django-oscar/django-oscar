@@ -2,7 +2,7 @@
 {% load currency_filters %}
 {% load basket_tags %}
 {% load promotion_tags %}
-
+{% load i18n %}
 
 {% block title %}
 {{ summary }} | {{ block.super }}
@@ -14,7 +14,7 @@
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url promotions:home %}">Home</a>
+	<a href="{% url promotions:home %}">{% trans "Home" %}</a>
         <span class="divider">/</span>
     </li>
     <li class="active"><a href=".">{{ summary }}</a></li>
@@ -25,7 +25,7 @@
     <div class="side_categories" style="padding: 8px 0;">
         {% if categories %}
     	<ul class="nav nav-list">
-    	    <li class="nav-header">Browse Categories</li>
+			<li class="nav-header">{% trans "Browse Categories" %}</li>
     	    {% for category in categories %}
             <li><a href="{{ category.0.get_absolute_url }}">{{ category.0.name }}</a>
             	{% if category.1 %}
@@ -72,6 +72,6 @@
 			</div>
 		</section>
     {% else %}
-		<p class="nonefound">No products found.</p>
+	<p class="nonefound">{% trans "No products found." %}</p>
     {% endif %}
 {% endblock content %}

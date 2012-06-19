@@ -1,13 +1,14 @@
 {% extends "layout.html" %}
+{% load i18n %}
 
 {% block title %}
-Offer '{{ offer.name }}' | {{ block.super }}
+{% trans "Offer" %} '{{ offer.name }}' | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url promotions:home %}">Home</a>
+	<a href="{% url promotions:home %}">{% trans "Home" %}</a>
         <span class="divider">/</span>
     </li>
     <li>
@@ -20,7 +21,7 @@ Offer '{{ offer.name }}' | {{ block.super }}
 
 {% block header %}
 <div class="page-header action">
-	<h1>Offer '{{ offer.name }}'</h1>
+	<h1>{% trans "Offer" %} '{{ offer.name }}'</h1>
 </div>
 {% endblock header %}
 
@@ -30,16 +31,14 @@ Offer '{{ offer.name }}' | {{ block.super }}
     </div>
 
 	{% if not offer.is_active %}
-		<div class="alert alert-error">
-			This offer has expired
-		</div>
+	<div class="alert alert-error">{% trans " This offer has expired " %}</div>
 	{% endif %}
 
     {% if offer.description %}
-	    <h3>Description</h3>
+	<h3>{% trans "Description" %}</h3>
     	<p>{{ offer.description }}</p>
     {% endif %}
-	<h3>What you need to do</h3>
+	<h3>{% trans "What you need to do" %}</h3>
 	<p>{{ upsell_message }}</p>
     {% if products.count %}
 		<section>
@@ -58,6 +57,6 @@ Offer '{{ offer.name }}' | {{ block.super }}
 			</div>
 		</section>
     {% else %}
-		<p class="nonefound">No products found.</p>
+	<p class="nonefound">{% trans "No products found." %}</p>
     {% endif %}
 {% endblock content %}

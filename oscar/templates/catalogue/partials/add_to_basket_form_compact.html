@@ -1,8 +1,9 @@
 {% load basket_tags %}
+{% load i18n %}
 
 {% basket_form basket product as basket_form single %}
 <form action="{% url basket:add %}" method="post">
     {% csrf_token %}
     {{ basket_form.as_p }}
-    <input type="submit" class="btn btn-primary" value="Add to basket" />
+	<button type="submit" class="btn btn-primary">{% trans "Add to basket" %}</button>
 </form>

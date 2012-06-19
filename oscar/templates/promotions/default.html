@@ -1,4 +1,5 @@
 {% load currency_filters %}
+{% load i18n %}
 
 <h2>{{ block.title }}</h2>
 
@@ -15,7 +16,7 @@
             {{ product.stockrecord.price_incl_tax|currency }}<br/>
             {{ product.stockrecord.availability }}
         {% else %}
-            Not available    
+		{% trans "Not available" %}
         {% endif %}
     {% endif %}    
 </li>

@@ -1,4 +1,5 @@
 {% extends "layout_2_col.html" %}
+{% load i18n %}
 
 {% block navigation %}
     {% include "partials/nav_alternate.html" %}
@@ -9,7 +10,7 @@
 
 {% block header %}
 <div class="sub-header">
-    <h2>Welcome!</h2>
+	<h2>{% trans "Welcome!" %}</h2>
 </div>
 {% endblock header %}
 

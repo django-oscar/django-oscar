@@ -30,8 +30,9 @@ class DefaultWrapper(object):
         if max_qty is None:
             return True, None
         if max_qty < quantity:
-            return False, _("'%s' - A maximum of %d can be bought" % (
-                stockrecord.product.title, max_qty))
+            return False, _("'%(title)s' - A maximum of %(max)d can be bought" %
+                            {'title': stockrecord.product.title,
+                             'max': max_qty})
         return True, None
 
     def max_purchase_quantity(self, stockrecord, user=None):

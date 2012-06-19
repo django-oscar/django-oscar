@@ -1,5 +1,6 @@
 {% load currency_filters %}
 {% load thumbnail %}
+{% load i18n %}
 
 <article class="product_pod">
     <div class="image_container">
@@ -20,8 +21,8 @@
                 <h4><span>{{ product.stockrecord.price_incl_tax|currency }}</span></h4>
                 <p class="app-ico {{ product.stockrecord.availability_code }} avaliability ">{{ product.stockrecord.availability|truncatewords:2 }}</p>
             {% else %}
-                <p class="app-ico avaliability outofstock">Not available</p>
-                <button class="btn">Notify me</button> 
+			<p class="app-ico avaliability outofstock">{% trans "Not available" %}</p>
+			<button class="btn">{% trans "Notify me" %}</button>
             {% endif %}
     {% endif %}
         </div>

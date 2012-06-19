@@ -1,3 +1,5 @@
+{% load i18n %}
+
 <section class="well well-blank">
     <div class="sub-header">
         <h2>{{ promotion.name }}</h2>
@@ -15,6 +17,6 @@
     </div>
 
 	{% if block.link_url %}
-		<a href="{{ block.link_url }}">See more</a>
+	<a href="{{ block.link_url }}">{% trans "See more" %}</a>
 	{% endif %}
 </section>

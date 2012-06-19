@@ -1,8 +1,9 @@
 {% extends "checkout/checkout.html" %}
 {% load currency_filters %}
+{% load i18n %}
 
 {% block title %}
-Payment details | {{ block.super }}
+{% trans "Payment details" %} | {{ block.super }}
 {% endblock %}
 
 {% block checkout-nav %}
@@ -15,18 +16,17 @@ Payment details | {{ block.super }}
 {% block payment_method %}{% endblock %}
 
 {% block payment_details %}
-<div class="sub-header">
-	<h2>Enter payment details</h2>
-</div>
+	<div class="sub-header">
+		<h2>Enter payment details</h2>
+	</div>
 
-{% block payment_details_content %}
-<p>This page needs implementing within your project.  Or you could use one of django-oscar's
-plugin libraries:</p>
-<ul>
-	<li><a href="https://github.com/tangentlabs/django-oscar-paypal">django-oscar-paypal</a></li>
-	<li><a href="https://github.com/tangentlabs/django-oscar-datacash">django-oscar-datacash</a></li>
-</ul>
-<a href="{% url checkout:preview %}" class="btn btn-primary btn-large">Continue</a>
-{% endblock payment_details_content %}
+	{% block payment_details_content %}
+		<p>{% trans "This page needs implementing within your project.  Or you could use one of Oscar's plugin libraries:" %}</p>
+		<ul>
+			<li><a href="https://github.com/tangentlabs/django-oscar-paypal">django-oscar-paypal</a></li>
+			<li><a href="https://github.com/tangentlabs/django-oscar-datacash">django-oscar-datacash</a></li>
+		</ul>
+		<a href="{% url checkout:preview %}" class="btn btn-primary btn-large">{% trans "Continue" %}</a>
+	{% endblock payment_details_content %}
 
 {% endblock payment_details %}

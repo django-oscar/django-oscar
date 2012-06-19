@@ -2,7 +2,7 @@
 {% load currency_filters %}
 
 {% block title %}
-Shipping method | {{ block.super }}
+{% trans "Shipping method" %} | {{ block.super }}
 {% endblock %}
 
 {% block checkout-nav %}
@@ -15,12 +15,12 @@ Shipping method | {{ block.super }}
 
 {% block shipping_method %}
 <div class="sub-header">
-	<h2>Choose a shipping method</h2>
+	<h2>{% trans "Choose a shipping method" %}</h2>
 </div>
 <div class="basket-title">
     <div class="row-fluid">
-        <h4 class="span9">Method</h4>
-        <h4 class="span3">Cost</h4>
+		<h4 class="span9">{% trans "Method" %}</h4>
+		<h4 class="span3">{% trans "Cost" %}</h4>
     </div>
 </div>
 {% for method in methods %}
@@ -28,7 +28,7 @@ Shipping method | {{ block.super }}
     <div class="row-fluid">
         <div class="span9">
             <h4>{{ method.name }}</h4>
-            <p>Description: {{ method.description }}</p>
+			<p>{% trans "Description:" %} {{ method.description }}</p>
         </div>
         <div class="span1">
             {{ method.basket_charge_incl_tax|currency }}
@@ -37,7 +37,7 @@ Shipping method | {{ block.super }}
             <form method="post" action="{% url checkout:shipping-method %}">
                 {% csrf_token %}
                 <input type="hidden" name="method_code" value="{{ method.code }}" class="btn" />
-                <button type="submit" class="btn btn-large btn-primary pull-right">Select option</button>
+				<button type="submit" class="btn btn-large btn-primary pull-right">{% trans "Select option" %}</button>
             </form>
         </div>    
     </div>

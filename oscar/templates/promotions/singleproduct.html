@@ -1,6 +1,7 @@
 {% load currency_filters %}
 {% load basket_tags %}
 {% load thumbnail %}
+{% load i18n %}
 
 <article class="well promotion_single">
     <div class="sub-header">
@@ -20,14 +21,14 @@
     	    <h3>{{ product.title }}</h3>
     		<div class="product_price">
     			{% if product.is_group %}
-    				<p>From {{ product.min_variant_price_incl_tax|currency }}</p>
+				<p>{% trans "From" %} {{ product.min_variant_price_incl_tax|currency }}</p>
     			{% else %}
     				{% if product.has_stockrecord %} 
     					<h4><span>{{ product.stockrecord.price_incl_tax|currency }}</span></h4>
 						<p class="app-ico {{ product.stockrecord.availability_code }} avaliability">{{ product.stockrecord.availability|truncatewords:2 }}</p>
     				{% else %}
-    				<p class="app-ico notavailable avaliability">Not available</p>
-    				<button class="btn">Notify me</button> 
+					<p class="app-ico notavailable avaliability">{% trans "Not available" %}</p>
+					<button class="btn">{% trans "Notify me" %}</button>
     				{% endif %}
     			{% endif %}
     		</div>
@@ -40,7 +41,7 @@
         			        {% endfor %}
     		            </ul>
     		        {% else %}
-    		            <p class="star">No Rating</p>
+					<p class="star">{% trans "No rating" %}</p>
     		        {% endif %}
     		    {% endwith %}
     		{% endblock product_review %}

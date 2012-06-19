@@ -1,7 +1,7 @@
 {% extends "checkout/checkout.html" %}
 
 {% block title %}
-Shipping address | {{ block.super }}
+{% trans "Shipping address" %} | {{ block.super }}
 {% endblock %}
 
 {% block checkout-nav %}
@@ -12,7 +12,7 @@ Shipping address | {{ block.super }}
 
 {% block shipping_address %}
     <div class="sub-header">
-        <h2>Where should we ship to?</h2>
+		<h2>{% trans "Where should we ship to?" %}</h2>
     </div>
     {% if request.user.is_authenticated %}
         {% if addresses %}
@@ -31,9 +31,9 @@ Shipping address | {{ block.super }}
 								{% csrf_token %}
 								<input type="hidden" name="action" value="ship_to" />
 								<input type="hidden" name="address_id" value="{{ address.id }}" />
-								<button type="submit" value="Ship to this address" class="btn btn-primary  ship-address">Ship to this address</button>
-								<a class="btn btn-small btn-info" href="{% url checkout:user-address-update address.id %}">Edit</a>
-								<a href="{% url checkout:user-address-delete address.id %}" class="btn btn-small btn-danger">Delete</a>
+								<button type="submit" value="Ship to this address" class="btn btn-primary  ship-address">{% trans "Ship to this address" %}</button>
+								<a class="btn btn-small btn-info" href="{% url checkout:user-address-update address.id %}">{% trans "Edit" %}</a>
+								<a href="{% url checkout:user-address-delete address.id %}" class="btn btn-small btn-danger">{% trans "Delete" %}</a>
 							</form>
 						</div>
 					</li>
@@ -45,10 +45,10 @@ Shipping address | {{ block.super }}
                 </ul>
             </div>
             <div class="sub-header">
-			<h3>Or a new address?</h3>
+				<h3>{% trans "Or a new address?" %}</h3>
     		</div>
         {% else %}
-            <p>Your addressbook is currently empty</p>
+		<p>{% trans "Your addressbook is currently empty" %}</p>
         {% endif %}
 	</div>
     {% endif %}
@@ -57,8 +57,8 @@ Shipping address | {{ block.super }}
     	<form action="{% url checkout:shipping-address %}" method="post" class="form-horizontal">
             {% csrf_token %}
             {% include "partials/form_fields.html" with form=form %}
-            <div class="form-actions"><button type="submit" class="btn btn-large btn-primary">Continue</button>
-                or <a href="{% url basket:summary %}">return to basket</a></div>
+			<div class="form-actions"><button type="submit" class="btn btn-large btn-primary">{% trans "Continue" %}</button>
+				{% trans "or" %} <a href="{% url basket:summary %}">{% trans "return to basket" %}</a></div>
         </form>
     </div>
 {% endblock shipping_address %}

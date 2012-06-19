@@ -1,12 +1,12 @@
 {% extends "layout_2_col.html" %}
-
+{% load i18n %}
 {% load currency_filters %}
 
 {% block column_left %} 
    <div class="well" style="padding: 8px 0;">
        {% load flatpages %}
        <ul class="nav nav-list">
-           <li class="nav-header">Pages</li>
+		   <li class="nav-header">{% trans "Pages" %}</li>
            {% get_flatpages '/help/' as flatpages %}
            {% for page in flatpages %}
            <li><a href="{{ page.url }}">{{ page.title }}</a></li>
