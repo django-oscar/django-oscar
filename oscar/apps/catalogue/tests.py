@@ -49,6 +49,57 @@ class CategoryTests(TestCase):
         create_from_breadcrumbs(trail, separator='|')
         self.assertEquals(3, len(Category.objects.all()))
 
+    def test_updating_subtree_slugs_when_moving_category_to_new_parent(self):
+        trail = 'A > B > C'
+        create_from_breadcrumbs(trail)
+        trail = 'A > B > D'
+        create_from_breadcrumbs(trail)
+        trail = 'A > E > F'
+        create_from_breadcrumbs(trail)
+        trail = 'A > E > G'
+        create_from_breadcrumbs(trail)
+        
+        trail = 'T'
+        target = create_from_breadcrumbs(trail)
+        category = Category.objects.get(name='A')
+
+        category.move(target, pos='first-child')
+
+        c1 = Category.objects.get(name='A')
+        self.assertEqual(c1.slug, 't/a')
+        self.assertEqual(c1.full_name, 'T > A')
+
+        child = Category.objects.get(name='F')
+        self.assertEqual(child.slug, 't/a/e/f')
+        self.assertEqual(child.full_name, 'T > A > E > F')
+
+        child = Category.objects.get(name='D')
+        self.assertEqual(child.slug, 't/a/b/d')
+        self.assertEqual(child.full_name, 'T > A > B > D')
+
+    def test_updating_subtree_when_moving_category_to_new_sibling(self):
+        trail = 'A > B > C'
+        create_from_breadcrumbs(trail)
+        trail = 'A > B > D'
+        create_from_breadcrumbs(trail)
+        trail = 'A > E > F'
+        create_from_breadcrumbs(trail)
+        trail = 'A > E > G'
+        create_from_breadcrumbs(trail)
+
+        category = Category.objects.get(name='E')
+        target = Category.objects.get(name='A')
+
+        category.move(target, pos='right')
+
+        child = Category.objects.get(name='E')
+        self.assertEqual(child.slug, 'e')
+        self.assertEqual(child.full_name, 'E')
+
+        child = Category.objects.get(name='F')
+        self.assertEqual(child.slug, 'e/f')
+        self.assertEqual(child.full_name, 'E > F')
+
 
 class ProductTests(TestCase):
 
