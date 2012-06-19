@@ -56,16 +56,17 @@ class AbstractCategory(MP_Node):
     def __unicode__(self):
         return self.full_name
     
-    def save(self, *args, **kwargs):
-        parent = self.get_parent()
-        slug = slugify(self.name)
-        if parent:
-            self.slug = '%s%s%s' % (parent.slug, self._slug_separator, slug)
-            self.full_name = '%s%s%s' % (parent.full_name, 
-                                         self._full_name_separator, self.name)
-        else:
-            self.slug = slug
-            self.full_name = self.name
+    def save(self, update_slugs=True, *args, **kwargs):
+        if update_slugs:
+            parent = self.get_parent()
+            slug = slugify(self.name)
+            if parent:
+                self.slug = '%s%s%s' % (parent.slug, self._slug_separator, slug)
+                self.full_name = '%s%s%s' % (parent.full_name, 
+                                             self._full_name_separator, self.name)
+            else:
+                self.slug = slug
+                self.full_name = self.name
         super(AbstractCategory, self).save(*args, **kwargs)
 
     def move(self, target, pos=None):
@@ -74,8 +75,16 @@ class AbstractCategory(MP_Node):
         reloaded_self = self.__class__.objects.get(pk=self.pk)
         subtree = self.__class__.get_tree(parent=reloaded_self)
         if subtree:
-            self.__class__.update_subtree_properties(list(subtree), [self.slug], 
-                                                [self.full_name], curr_depth=0)
+            slug_parts = []
+            name_parts = []
+            curr_depth = 0
+            parent = reloaded_self.get_parent()
+            if parent:
+                slug_parts = [parent.slug]
+                name_parts = [parent.full_name]
+                curr_depth = parent.depth
+            self.__class__.update_subtree_properties(list(subtree), slug_parts, 
+                                                name_parts, curr_depth=curr_depth)
 
     @classmethod
     def update_subtree_properties(cls, nodes, slug_parts, name_parts, curr_depth):
@@ -96,13 +105,13 @@ class AbstractCategory(MP_Node):
 
             node.slug = cls._slug_separator.join(slug_parts)
             node.full_name = cls._full_name_separator.join(name_parts)
-            node.save()
+            node.save(update_slugs=False)
             curr_depth += 1
             nodes = nodes[1:]
 
         else:
-            slug_parts = slug_parts[1:]
-            name_parts = name_parts[1:]
+            slug_parts = slug_parts[:-1]
+            name_parts = name_parts[:-1]
             curr_depth -= 1
 
         cls.update_subtree_properties(nodes, slug_parts, name_parts, curr_depth)
