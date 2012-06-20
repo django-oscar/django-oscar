@@ -18,7 +18,7 @@ class CategoryForm(MoveNodeForm):
 
     def clean_name(self):
         name = self.cleaned_data['name']
-        if name and self.instance:
+        if name:
             slug = slugify(name)
             try:
                 category = Category.objects.get(slug=slug)
