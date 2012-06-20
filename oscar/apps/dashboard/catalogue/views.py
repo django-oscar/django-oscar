@@ -288,9 +288,15 @@ class CategoryUpdateView(CategoryListMixin, generic.UpdateView):
         messages.info(self.request, "Category updated successfully")
         return super(CategoryUpdateView, self).get_success_url()
 
+
 class CategoryDeleteView(CategoryListMixin, generic.DeleteView):
     template_name = 'dashboard/catalogue/category_delete.html'
     model = Category
+
+    def get_context_data(self, *args, **kwargs):
+        ctx = super(CategoryDeleteView, self).get_context_data(*args, **kwargs)
+        ctx['parent'] = self.object.get_parent()
+        return ctx
 
     def get_success_url(self):
         messages.info(self.request, "Category deleted successfully")
