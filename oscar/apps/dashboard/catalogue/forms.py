@@ -18,15 +18,17 @@ class CategoryForm(MoveNodeForm):
 
     def clean_name(self):
         name = self.cleaned_data['name']
-        if name:
+        if name and self.instance:
             slug = slugify(name)
             try:
-                Category.objects.get(slug=slug)
+                category = Category.objects.get(slug=slug)
             except Category.DoesNotExist:
-                return name
+                pass
             else:
-                raise forms.ValidationError(_('Category with the given name'
-                                              ' already exists.'))
+                if category.pk != self.instance.pk:
+                    raise forms.ValidationError(_('Category with the given name'
+                                                  ' already exists.'))
+        return name
 
     class Meta(MoveNodeForm.Meta):
         model = Category
