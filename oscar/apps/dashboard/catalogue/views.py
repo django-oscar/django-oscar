@@ -258,19 +258,7 @@ class CategoryDetailListView(generic.DetailView):
         return ctx
 
 
-class CategoryCreateView(generic.CreateView):
-    template_name = 'dashboard/catalogue/category_create.html'
-    model = Category
-    form_class = CategoryForm
-
-    def get_success_url(self):
-        return reverse("dashboard:catalogue-category-list")
-
-
-class CategoryUpdateView(generic.UpdateView):
-    template_name = 'dashboard/catalogue/category_create.html'
-    model = Category
-    form_class = CategoryForm
+class CategoryListMixin(object):
 
     def get_success_url(self):
         parent = self.object.get_parent()
@@ -279,3 +267,31 @@ class CategoryUpdateView(generic.UpdateView):
         else:
             return reverse("dashboard:catalogue-category-detail-list", 
                             args=(parent.pk,))
+
+
+class CategoryCreateView(generic.CreateView):
+    template_name = 'dashboard/catalogue/category_create.html'
+    model = Category
+    form_class = CategoryForm
+
+    def get_success_url(self):
+        messages.info(self.request, "Category created successfully")
+        return reverse("dashboard:catalogue-category-list")
+
+
+class CategoryUpdateView(CategoryListMixin, generic.UpdateView):
+    template_name = 'dashboard/catalogue/category_create.html'
+    model = Category
+    form_class = CategoryForm
+
+    def get_success_url(self):
+        messages.info(self.request, "Category updated successfully")
+        return super(CategoryUpdateView, self).get_success_url()
+
+class CategoryDeleteView(CategoryListMixin, generic.DeleteView):
+    template_name = 'dashboard/catalogue/category_delete.html'
+    model = Category
+
+    def get_success_url(self):
+        messages.info(self.request, "Category deleted successfully")
+        return super(CategoryDeleteView, self).get_success_url()

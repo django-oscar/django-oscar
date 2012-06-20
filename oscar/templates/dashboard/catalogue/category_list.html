@@ -48,7 +48,8 @@ Category management | {{ block.super }}
             {% endif %}
             </td>
             <td>
-                <a class="btn btn-info" href="{% url dashboard:catalogue-category-update category.id %}">Edit</a>
+                <a class="btn btn-primary" href="{% url dashboard:catalogue-category-update category.id %}">Edit</a>
+                <a class="btn btn-success" href="{% url dashboard:catalogue-category-delete category.id %}">Delete</a>
             </td>
         </tr>
     {% endfor %}

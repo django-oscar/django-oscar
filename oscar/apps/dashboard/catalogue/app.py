@@ -19,10 +19,12 @@ class CatalogueApplication(Application):
     product_create_redirect_view = views.ProductCreateRedirectView
     product_create_view = views.ProductCreateView
     product_update_view = views.ProductUpdateView
+    
     category_list_view = views.CategoryListView
     category_detail_list_view = views.CategoryDetailListView
     category_create_view = views.CategoryCreateView
     category_update_view = views.CategoryUpdateView
+    category_delete_view = views.CategoryDeleteView
 
     stock_alert_view = views.StockAlertListView
 
@@ -46,6 +48,8 @@ class CatalogueApplication(Application):
                 name='catalogue-category-create'),
             url(r'^categories/update/(?P<pk>\d+)/$', self.category_update_view.as_view(),
                 name='catalogue-category-update'),
+            url(r'^categories/delete/(?P<pk>\d+)/$', self.category_delete_view.as_view(),
+                name='catalogue-category-delete'),
         )
         return self.post_process_urls(urlpatterns)
 
