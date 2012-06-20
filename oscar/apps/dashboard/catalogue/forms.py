@@ -1,6 +1,8 @@
 from django import forms
 from django.forms.models import inlineformset_factory
 from django.db.models import get_model
+from django.template.defaultfilters import slugify
+from django.utils.translation import ugettext_lazy as _
 
 from treebeard.forms import MoveNodeForm
 
@@ -13,6 +15,18 @@ ProductImage = get_model('catalogue', 'ProductImage')
 
 
 class CategoryForm(MoveNodeForm):
+
+    def clean_name(self):
+        name = self.cleaned_data['name']
+        if name:
+            slug = slugify(name)
+            try:
+                Category.objects.get(slug=slug)
+            except Category.DoesNotExist:
+                return name
+            else:
+                raise forms.ValidationError(_('Category with the given name'
+                                              ' already exists.'))
 
     class Meta(MoveNodeForm.Meta):
         model = Category
