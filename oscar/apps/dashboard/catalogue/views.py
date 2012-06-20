@@ -269,14 +269,14 @@ class CategoryListMixin(object):
                             args=(parent.pk,))
 
 
-class CategoryCreateView(generic.CreateView):
+class CategoryCreateView(CategoryListMixin, generic.CreateView):
     template_name = 'dashboard/catalogue/category_create.html'
     model = Category
     form_class = CategoryForm
 
     def get_success_url(self):
         messages.info(self.request, "Category created successfully")
-        return reverse("dashboard:catalogue-category-list")
+        return super(CategoryCreateView, self).get_success_url()
 
 
 class CategoryUpdateView(CategoryListMixin, generic.UpdateView):
