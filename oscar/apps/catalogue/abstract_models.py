@@ -47,23 +47,74 @@ class AbstractCategory(MP_Node):
     name = models.CharField(max_length=255, db_index=True)
     description = models.TextField(blank=True, null=True)
     image = models.ImageField(upload_to='categories', blank=True, null=True)
-    slug = models.SlugField(max_length=1024, db_index=True, editable=False)
+    slug = models.SlugField(max_length=1024, db_index=True, editable=False, unique=True)
     full_name = models.CharField(max_length=1024, db_index=True, editable=False)
+
+    _slug_separator = '/'
+    _full_name_separator = ' > '
     
     def __unicode__(self):
         return self.full_name
     
-    def save(self, *args, **kwargs):
-        if not self.slug:
+    def save(self, update_slugs=True, *args, **kwargs):
+        if update_slugs:
             parent = self.get_parent()
             slug = slugify(self.name)
             if parent:
-                self.slug = '%s/%s' % (parent.slug, slug)
-                self.full_name = '%s > %s' % (parent.full_name, self.name)
+                self.slug = '%s%s%s' % (parent.slug, self._slug_separator, slug)
+                self.full_name = '%s%s%s' % (parent.full_name, 
+                                             self._full_name_separator, self.name)
             else:
                 self.slug = slug
                 self.full_name = self.name
         super(AbstractCategory, self).save(*args, **kwargs)
+
+    def move(self, target, pos=None):
+        super(AbstractCategory, self).move(target, pos)
+
+        reloaded_self = self.__class__.objects.get(pk=self.pk)
+        subtree = self.__class__.get_tree(parent=reloaded_self)
+        if subtree:
+            slug_parts = []
+            name_parts = []
+            curr_depth = 0
+            parent = reloaded_self.get_parent()
+            if parent:
+                slug_parts = [parent.slug]
+                name_parts = [parent.full_name]
+                curr_depth = parent.depth
+            self.__class__.update_subtree_properties(list(subtree), slug_parts, 
+                                                name_parts, curr_depth=curr_depth)
+
+    @classmethod
+    def update_subtree_properties(cls, nodes, slug_parts, name_parts, curr_depth):
+
+        """
+            Update slugs and full_names of children in a subtree.
+            Assumes nodes were originally in DFS order.
+        """
+
+        if nodes == []:
+            return
+
+        node = nodes[0]
+        if node.depth > curr_depth:
+            slug = slugify(node.name)
+            slug_parts.append(slug)
+            name_parts.append(node.name)
+
+            node.slug = cls._slug_separator.join(slug_parts)
+            node.full_name = cls._full_name_separator.join(name_parts)
+            node.save(update_slugs=False)
+            curr_depth += 1
+            nodes = nodes[1:]
+
+        else:
+            slug_parts = slug_parts[:-1]
+            name_parts = name_parts[:-1]
+            curr_depth -= 1
+
+        cls.update_subtree_properties(nodes, slug_parts, name_parts, curr_depth)
 
     def get_ancestors(self, include_self=True):
         ancestors = list(super(AbstractCategory, self).get_ancestors())

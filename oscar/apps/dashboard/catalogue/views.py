@@ -6,12 +6,14 @@ from django.core.urlresolvers import reverse
 
 from oscar.apps.dashboard.catalogue import forms
 from oscar.core.loading import get_classes
-ProductForm, StockRecordForm, StockAlertSearchForm, ProductCategoryFormSet, ProductImageFormSet = get_classes(
-    'dashboard.catalogue.forms', ('ProductForm', 'StockRecordForm',
+
+ProductForm, CategoryForm, StockRecordForm, StockAlertSearchForm, ProductCategoryFormSet, ProductImageFormSet = get_classes(
+    'dashboard.catalogue.forms', ('ProductForm', 'CategoryForm', 'StockRecordForm',
                                   'StockAlertSearchForm',
                                   'ProductCategoryFormSet',
                                   'ProductImageFormSet'))
 Product = get_model('catalogue', 'Product')
+Category = get_model('catalogue', 'Category')
 ProductCategory = get_model('catalogue', 'ProductCategory')
 ProductClass = get_model('catalogue', 'ProductClass')
 StockRecord = get_model('partner', 'StockRecord')
@@ -234,3 +236,68 @@ class StockAlertListView(generic.ListView):
             self.description = 'All alerts'
             self.form = StockAlertSearchForm()
         return self.model.objects.all()
+
+
+class CategoryListView(generic.TemplateView):
+    template_name = 'dashboard/catalogue/category_list.html'
+
+    def get_context_data(self, *args, **kwargs):
+        ctx = super(CategoryListView, self).get_context_data(*args, **kwargs)
+        ctx['child_categories'] = Category.get_root_nodes()
+        return ctx
+
+
+class CategoryDetailListView(generic.DetailView):
+    template_name = 'dashboard/catalogue/category_list.html'
+    model = Category
+
+    def get_context_data(self, *args, **kwargs):
+        ctx = super(CategoryDetailListView, self).get_context_data(*args, **kwargs)
+        ctx['child_categories'] = self.object.get_children()
+        ctx['ancestors'] = self.object.get_ancestors()
+        return ctx
+
+
+class CategoryListMixin(object):
+
+    def get_success_url(self):
+        parent = self.object.get_parent()
+        if parent is None:
+            return reverse("dashboard:catalogue-category-list")
+        else:
+            return reverse("dashboard:catalogue-category-detail-list", 
+                            args=(parent.pk,))
+
+
+class CategoryCreateView(CategoryListMixin, generic.CreateView):
+    template_name = 'dashboard/catalogue/category_create.html'
+    model = Category
+    form_class = CategoryForm
+
+    def get_success_url(self):
+        messages.info(self.request, "Category created successfully")
+        return super(CategoryCreateView, self).get_success_url()
+
+
+class CategoryUpdateView(CategoryListMixin, generic.UpdateView):
+    template_name = 'dashboard/catalogue/category_create.html'
+    model = Category
+    form_class = CategoryForm
+
+    def get_success_url(self):
+        messages.info(self.request, "Category updated successfully")
+        return super(CategoryUpdateView, self).get_success_url()
+
+
+class CategoryDeleteView(CategoryListMixin, generic.DeleteView):
+    template_name = 'dashboard/catalogue/category_delete.html'
+    model = Category
+
+    def get_context_data(self, *args, **kwargs):
+        ctx = super(CategoryDeleteView, self).get_context_data(*args, **kwargs)
+        ctx['parent'] = self.object.get_parent()
+        return ctx
+
+    def get_success_url(self):
+        messages.info(self.request, "Category deleted successfully")
+        return super(CategoryDeleteView, self).get_success_url()

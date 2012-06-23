@@ -1,12 +1,61 @@
 from django import forms
 from django.forms.models import inlineformset_factory
 from django.db.models import get_model
+from django.template.defaultfilters import slugify
+from django.utils.translation import ugettext_lazy as _
+
+from treebeard.forms import MoveNodeForm
 
 Product = get_model('catalogue', 'Product')
+Category = get_model('catalogue', 'Category')
 StockRecord = get_model('partner', 'StockRecord')
 ProductAttributeValue = get_model('catalogue', 'ProductAttributeValue')
 ProductCategory = get_model('catalogue', 'ProductCategory')
 ProductImage = get_model('catalogue', 'ProductImage')
+
+
+class CategoryForm(MoveNodeForm):
+
+    def clean(self):
+        cleaned_data = super(CategoryForm, self).clean()
+
+        name = cleaned_data['name']
+        ref_node_pk = cleaned_data['_ref_node_id']
+        pos = cleaned_data['_position']
+
+        if name and self.is_slug_conflicting(name, ref_node_pk, pos):
+            raise forms.ValidationError(_('Category with the given path'
+                                                  ' already exists.'))
+        return cleaned_data
+
+    def is_slug_conflicting(self, name, ref_node_pk, position):
+        
+        #determine parent
+        if ref_node_pk:
+            ref_category = Category.objects.get(pk=ref_node_pk)
+            if position == 'first-child':
+                parent = ref_category
+            else:
+                parent = ref_category.get_parent()
+        else:
+            parent = None
+
+        #build full slug
+        slug_prefix = (parent.slug + Category._slug_separator) if parent else ''
+        slug = '%s%s' % (slug_prefix, slugify(name))
+
+        #check if slug is conflicting
+        try:
+            category = Category.objects.get(slug=slug)
+        except Category.DoesNotExist:
+            pass
+        else:
+            if category.pk != self.instance.pk:
+                return True
+        return False
+
+    class Meta(MoveNodeForm.Meta):
+        model = Category
 
 
 class ProductSearchForm(forms.Form):
