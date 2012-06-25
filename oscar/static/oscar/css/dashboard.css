@@ -178,8 +178,8 @@ label {
   margin-left: 120px;
 }
 .search-adv .control-group.pull-left .controls > label {
-  padding-left: 0px;
-  padding-top: 0px;
+  padding-left: 0;
+  padding-top: 0;
 }
 .search-adv .control-group.pull-left .controls .radio ul {
   padding: 0px;
@@ -209,6 +209,25 @@ label {
   vertical-align: middle;
   margin-left: 10px;
   padding-left: 18px;
+}
+.form-horizontal .control-label {
+  text-align: left;
+}
+.seven li {
+  width: 14.28571%;
+  float: left;
+  list-style: none;
+}
+.seven li .image_container {
+  margin-bottom: 9px;
+  overflow: hidden;
+  position: relative;
+  text-align: center;
+  width: 100%;
+}
+.seven li img {
+  height: 125px;
+  background: #cfcfcf;
 }
 .product-new .form-inline.pull-left {
   margin-right: 15px;

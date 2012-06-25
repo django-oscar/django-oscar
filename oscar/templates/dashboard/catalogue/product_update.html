@@ -35,24 +35,7 @@ Update product | {{ block.super }}
             <h3>Product Details</h3>
         </div>
         {% for field in form %}
-					<p>Product Attributes</p>
-            {% if forloop.counter > 4 %}
-                <div class="form-inline pull-left">
-					
-                	{% if field.is_hidden %}
-                		{{ field }}
-                	{% else %}
-                		{{ field.label_tag }}
-                		{{ field }}
-                			{% for error in field.errors %}
-                				<ul class="help-block">
-                					<li>{{ error|escape }}</li>
-                				</ul>
-                			{% endfor %}
-                	{% endif %}
-            	</div>
-            {% else %}
-
+            {% if 'attr' not in field.id_for_label %}
                 <div class="control-group {% for error in field.errors %}error{% endfor %} fields-full">
                     {% if field.is_hidden %}
                         {{ field }}
@@ -73,14 +56,25 @@ Update product | {{ block.super }}
                     </div>
                     {% endif %}
                 </div>
-            {% endif %}
+			{% endif %}
         {% endfor %}
     </div>
 	<div class="well well-blank form-inline">
 		<div class="sub-header">
 			<h3>Product Attributes</h3>
+			{% for field in form %}
+	            {% if 'attr' in field.id_for_label %}
+	 			{{ field }}
+				{{ field.label_tag }}
+				{% endif %}
+	        {% endfor %}
 			<div class="control-group fields-full">
-				Product class <strong>{{ product.product_class }}</strong>
+				<label class="control-label">Product class</label>
+				<div class="controls">
+					<select id="select01">
+						<option>{{ product.product_class }}</option>
+					</select>
+				</div>
 			</div>
 			<div class="control-group fields-full">
 				Variances
@@ -93,26 +87,26 @@ Update product | {{ block.super }}
 			<h3>Category</h3>
 		</div>
     	{{ category_formset.management_form }}
-    	{% for category_form in category_formset %}
-			{% include "partials/form_fields_inline.html" with form=category_form %}
-    		<hr/>
-    	{% endfor %}
+		        {% for category_form in category_formset %}
+		        {% include "partials/form_fields_inline.html" with form=category_form %}
+		        <hr/>
+	        {% endfor %}
 	</div>
 	
 	<div class="well well-blank form-inline">
     	<div class="sub-header">
-    	   <h3 class="app-ico ico_favourite icon">Images</h3>
+    	   <h3>Upload, Change or Remove Images</h3>
     	</div>
     	{{ image_formset.management_form }}
     	{% for image_form in image_formset %}
-    		{% include "partials/form_fields_inline.html" with form=image_form %}
+    		{% include "dashboard/partials/product_images.html" with form=image_form %}
     		<hr/>
     	{% endfor %}
 	</div>
 	
 	<div class="well well-blank fields-full">
 		<div class="sub-header">
-		    <h3 class="app-ico ico_shop_bag icon">Stock and price information</h3>
+		    <h3>Stock and price information</h3>
 		</div>
 		{% block stockrecord_form %}
 		    <div class="row ">

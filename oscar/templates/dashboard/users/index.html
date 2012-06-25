@@ -16,12 +16,6 @@ Customers | {{ block.super }}
 </ul>
 {% endblock %}
 
-{% block header %}
-<!-- <div class="page-header">
-    <h1>Customers</h1>
-</div> -->
-{% endblock header %}
-
 {% block dashboard_content %}
 <div class="row-fluid">
 	<div class="span6">
@@ -29,14 +23,15 @@ Customers | {{ block.super }}
     		<h3 class="app-ico ico_magnify icon"></h3>
     		<form action="." method="get" class="form-inline">
         		{% include "partials/form_fields_inline.html" with form=form %}
-        		<input type="submit" value="Search" class="btn btn-primary"/>
+        		<input type="submit" value="Search" class="btn"/>
 				<a href="{% url dashboard:users-index %}" class="btn">Reset</a>
     		</form>
 		</div>
 	</div>
 	<div class="span6">
 		<div class="well">
-			<h3 class="app-ico ico-download icon"></h3>
+			<h3 class="app-ico ico-download icon">Export 2 filtered customers to a .csv file.</h3>
+			<input type="submit" value="Export" class="btn btn-primary"/>
 		</div>
 	</div>
 </div>

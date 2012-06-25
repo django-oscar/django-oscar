@@ -3160,12 +3160,12 @@ form:after {
   margin-top: 10px;
 }
 .choose-block ul {
-  margin: 0px;
-  padding: 0px;
+  margin: 0;
+  padding: 0;
   *zoom: 1;
 }
 .choose-block ul li {
-  padding: 0px;
+  padding: 0;
   list-style: none;
 }
 .choose-block ul:before, .choose-block ul:after {
