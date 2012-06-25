@@ -36,26 +36,26 @@ Update product | {{ block.super }}
         </div>
         {% for field in form %}
             {% if 'attr' not in field.id_for_label %}
-                <div class="control-group {% for error in field.errors %}error{% endfor %} fields-full">
-                    {% if field.is_hidden %}
-                        {{ field }}
-                    {% else %}
-                    {{ field.label_tag }}
-                    <div class="controls">
-                        {{ field }}
-                            {% for error in field.errors %}
-                            <span class="help-block">
-                                {{ error|escape }}
-                            </span>
-                            {% endfor %}
+				<div class="control-group {% for error in field.errors %}error{% endfor %} fields-full">
+                	{% if field.is_hidden %}
+                		{{ field }}
+                	{% else %}
+                		{{ field.label_tag }}
+                		{{ field }}
+                			{% for error in field.errors %}
+                				<ul class="help-block">
+                					<li>{{ error|escape }}</li>
+                				</ul>
+                			{% endfor %}
+
                         {% if field.help_text %}
                             <span class='help-block'>
-                                {{ field.help_text }}
+                                {{ field.help_text|safe }}
                             </span>
                         {% endif %}
-                    </div>
-                    {% endif %}
-                </div>
+
+                	{% endif %}
+            	</div>
 			{% endif %}
         {% endfor %}
     </div>
@@ -76,13 +76,10 @@ Update product | {{ block.super }}
 					</select>
 				</div>
 			</div>
-			<div class="control-group fields-full">
-				Variances
-			</div>
 		</div>
 	</div>
-		
-	<div class="well well-blank form-horizontal">	
+
+	<div class="well well-blank form-inline">
 		<div class="sub-header">
 			<h3>Category</h3>
 		</div>
@@ -92,7 +89,6 @@ Update product | {{ block.super }}
 		        <hr/>
 	        {% endfor %}
 	</div>
-	
 	<div class="well well-blank form-inline">
     	<div class="sub-header">
     	   <h3>Upload, Change or Remove Images</h3>
@@ -103,7 +99,6 @@ Update product | {{ block.super }}
     		<hr/>
     	{% endfor %}
 	</div>
-	
 	<div class="well well-blank fields-full">
 		<div class="sub-header">
 		    <h3>Stock and price information</h3>
@@ -137,7 +132,7 @@ Update product | {{ block.super }}
 		{% endblock %}
 	</div>
 	<div class="form-actions">
-        <button class="btn btn-primary btn-large" type="submit">Save Product</button> or 
+        <button class="btn btn-primary btn-large" type="submit">Save Product</button> or
             <a href="{% url dashboard:catalogue-product-list %}">cancel</a>
             {% if product %}
                 <a class="btn btn-success btn-large pull-right" href="{{ product.get_absolute_url }}">View on site</a>

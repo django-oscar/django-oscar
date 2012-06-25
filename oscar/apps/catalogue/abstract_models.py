@@ -184,7 +184,7 @@ class AbstractProduct(models.Model):
         help_text="""Choose what type of product this is""")
     attributes = models.ManyToManyField('catalogue.ProductAttribute', through='ProductAttributeValue',
         help_text="""A product attribute is something that this product MUST have, such as a size, as specified by its class""")
-    product_options = models.ManyToManyField('catalogue.Option', blank=True, 
+    product_options = models.ManyToManyField('catalogue.Option', blank=True,
         help_text="""Options are values that can be associated with a item when it is added to 
                      a customer's basket.  This could be something like a personalised message to be
                      printed on a T-shirt.<br/>""")
@@ -296,9 +296,9 @@ class AbstractProduct(models.Model):
         return None
 
     def primary_image(self):
-        images = self.images.all().order_by('display_order')
+        images = self.images.all()
         if images.count():
-            return images[0]
+            return images.order_by('display_order')[0]
         return {
             'original': MissingProductImage(),
             'caption': '',
@@ -555,7 +555,7 @@ class AbstractProductAttributeValue(models.Model):
     product = models.ForeignKey('catalogue.Product', related_name='attribute_values')
     value_text = models.CharField(max_length=255, blank=True, null=True)
     value_integer = models.IntegerField(blank=True, null=True)
-    value_boolean = models.BooleanField(blank=True)
+    value_boolean = models.NullBooleanField(blank=True)
     value_float = models.FloatField(blank=True, null=True)
     value_richtext = models.TextField(blank=True, null=True)
     value_date = models.DateField(blank=True, null=True)

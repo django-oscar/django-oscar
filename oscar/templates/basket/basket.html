@@ -64,7 +64,7 @@ Basket | {{ block.super }}
     	    <div class="span5">
     		    <div class="checkout-quantity">
     		        {{ form.quantity }} 
-    		        <button class="btn">Update</button>
+    		        <button class="btn" type="submit">Update</button>
     			    <a href="#" data-id="{{ forloop.counter0 }}" data-behaviours="remove" class="inline">Remove</a>
 					{% if request.user.is_authenticated %}
 					| <a href="#" data-id="{{ forloop.counter0 }}" data-behaviours="save" class="inline">Save for later</a>
@@ -97,7 +97,7 @@ Basket | {{ block.super }}
 	        		{% csrf_token %}
 	        		{% include "partials/form_fields.html" with form=voucher_form %}
 	        		<div class="form-actions">
-	        			<button class="btn btn-info">Add voucher</button>
+	        			<button type="submit" class="btn btn-info">Add voucher</button>
 	        			or <a href="#" id="voucher_form_cancel">cancel</a>
 	        		</div>
 	        	</form>

@@ -76,9 +76,10 @@ class BasketMiddleware(object):
         return response
     
     def process_template_response(self, request, response):
-        if response.context_data is None:
-            response.context_data = {}
-        response.context_data['basket'] = request.basket
+        if hasattr(response, 'context_data'):
+            if response.context_data is None:
+                response.context_data = {}
+            response.context_data['basket'] = request.basket
         return response
     
     def get_cookie_basket(self, cookie_key, request, manager):
