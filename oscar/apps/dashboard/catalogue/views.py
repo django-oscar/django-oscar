@@ -118,7 +118,7 @@ class ProductCreateView(generic.CreateView):
         image_formset = ProductImageFormSet(self.request.POST,
                                             self.request.FILES,
                                             instance=product)
-        if stockrecord_form.is_valid() and category_formset.is_valid() and image_formset.is_valid():
+        if all([stockrecord_form.is_valid(), category_formset.is_valid(), image_formset.is_valid()]):
             # Save product
             product.save()
             # Save stock record
@@ -192,7 +192,7 @@ class ProductUpdateView(generic.UpdateView):
         image_formset = ProductImageFormSet(self.request.POST,
                                             self.request.FILES,
                                             instance=self.object)
-        if stockrecord_form.is_valid() and category_formset.is_valid() and image_formset.is_valid():
+        if all([stockrecord_form.is_valid(), category_formset.is_valid(), image_formset.is_valid()]):
             form.save()
             stockrecord_form.save()
             category_formset.save()
