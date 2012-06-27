@@ -6,7 +6,6 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.test import TestCase, Client
-from django.http import HttpResponse
 
 from oscar.apps.basket.models import Basket, Line
 from oscar.test.helpers import create_product
@@ -37,6 +36,27 @@ class BasketModelTest(TestCase):
     def test_adding_multiproduct_line_returns_correct_number_of_items(self):
         self.basket.add_product(self.dummy_product, 10)
         self.assertEqual(self.basket.num_items, 10)
+
+
+class BasketMergingTests(TestCase):
+
+    def setUp(self):
+        self.product = create_product()
+        self.user_basket = Basket()
+        self.user_basket.add_product(self.product)
+        self.cookie_basket = Basket()
+        self.cookie_basket.add_product(self.product, 2)
+        self.user_basket.merge(self.cookie_basket, add_quantities=False)
+
+    def test_cookie_basket_has_status_set(self):
+        self.assertEqual('Merged', self.cookie_basket.status)
+
+    def test_lines_are_moved_across(self):
+        self.assertEqual(1, self.user_basket.lines.all().count())
+
+    def test_merge_line_takes_max_quantity(self):
+        line = self.user_basket.lines.get(product=self.product)
+        self.assertEqual(2, line.quantity)
 
 
 class AnonAddToBasketViewTests(TestCase):
@@ -108,6 +128,7 @@ class BasketThresholdTest(TestCase):
         response = self.client.post(url, post_params)
         self.assertTrue('Your basket currently has 2 items.' in
                         response.cookies['messages'].value)
+
 
 class BasketReportTests(TestCase):
 
