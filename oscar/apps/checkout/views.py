@@ -196,10 +196,7 @@ class ShippingAddressView(CheckoutSessionMixin, FormView):
         """
         Test whether the contents of the basket require shipping
         """
-        for line in basket.all_lines():
-            if line.product.is_shipping_required:
-                return True
-        return False
+        return basket.is_shipping_required()
 
     def get_initial(self):
         return self.checkout_session.new_shipping_address_fields()
