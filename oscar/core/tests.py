@@ -49,12 +49,12 @@ class ClassLoadingWithLocalOverrideTests(TestCase):
 
     def setUp(self):
         self.installed_apps = list(settings.INSTALLED_APPS)
-        self.installed_apps[self.installed_apps.index('oscar.apps.shipping')] = 'tests.shipping'
+        self.installed_apps[self.installed_apps.index('oscar.apps.shipping')] = 'tests.site.shipping'
 
     def test_loading_class_defined_in_local_module(self):
         with patch_settings(INSTALLED_APPS=self.installed_apps):
             (Free,) = get_classes('shipping.methods', ('Free',))
-            self.assertEqual('tests.shipping.methods', Free.__module__)
+            self.assertEqual('tests.site.shipping.methods', Free.__module__)
 
     def test_loading_class_which_is_not_defined_in_local_module(self):
         with patch_settings(INSTALLED_APPS=self.installed_apps):
@@ -69,7 +69,7 @@ class ClassLoadingWithLocalOverrideTests(TestCase):
     def test_loading_classes_defined_in_both_local_and_oscar_modules(self):
         with patch_settings(INSTALLED_APPS=self.installed_apps):
             (Free, FixedPrice) = get_classes('shipping.methods', ('Free', 'FixedPrice'))
-            self.assertEqual('tests.shipping.methods', Free.__module__)
+            self.assertEqual('tests.site.shipping.methods', Free.__module__)
             self.assertEqual('oscar.apps.shipping.methods', FixedPrice.__module__)
 
 
@@ -125,13 +125,13 @@ class ValidatorTests(TestCase):
         self.assertRaises(ValidationError, validator, '/test/page/')
 
 
-class ClassLoadingWithLocalOverrideWith3SegmentsTests(TestCase):
+class ClassLoadingWithLocalOverrideWithMultipleSegmentsTests(TestCase):
 
     def setUp(self):
         self.installed_apps = list(settings.INSTALLED_APPS)
-        self.installed_apps[self.installed_apps.index('oscar.apps.shipping')] = 'tests.apps.shipping'
+        self.installed_apps[self.installed_apps.index('oscar.apps.shipping')] = 'tests.site.apps.shipping'
 
     def test_loading_class_defined_in_local_module(self):
         with patch_settings(INSTALLED_APPS=self.installed_apps):
             (Free,) = get_classes('shipping.methods', ('Free',))
-            self.assertEqual('tests.apps.shipping.methods', Free.__module__)
+            self.assertEqual('tests.site.apps.shipping.methods', Free.__module__)

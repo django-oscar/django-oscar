@@ -19,6 +19,7 @@ def run_tests(verbosity, *test_args):
     if num_failures:
         sys.exit(num_failures)
 
+
 if __name__ == '__main__':
     parser = OptionParser()
     parser.add_option('-c', '--coverage', dest='use_coverage', default=False,
