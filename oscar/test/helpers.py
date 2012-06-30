@@ -16,7 +16,7 @@ from oscar.apps.shipping.methods import Free
 from oscar.apps.offer.models import Range, ConditionalOffer, Condition, Benefit
 
 
-def create_product(price=None, title="Dummy title", product_class="Dummy item class", 
+def create_product(price=None, title="Dummy title", product_class="Dummy item class",
         partner="Dummy partner", partner_sku=None, upc=None, num_in_stock=10, attributes=None):
     """
     Helper method for creating products that are used in tests.

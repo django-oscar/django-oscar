@@ -6,16 +6,13 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User, AnonymousUser
 from django.db import IntegrityError
 from django.core.urlresolvers import reverse
-from django.utils import unittest
 
 from oscar.apps.catalogue.reviews.models import ProductReview, Vote
 from oscar.test.helpers import create_product
 
 
-class ProductReviewTests(unittest.TestCase):
-    u"""
-    Basic setup
-    """
+class ProductReviewTests(TestCase):
+
     def setUp(self):
         username = str(randint(0, maxint))
         self.user = User.objects.create_user(username, '%s@users.com'%username, '%spass123'%username)
@@ -36,9 +33,6 @@ class ProductReviewTests(unittest.TestCase):
 
 
 class TopLevelProductReviewVoteTests(ProductReviewTests):
-    """
-    Basic tests for Vote model
-    """
 
     def test_try_vote_without_login(self):
         self.assertRaises(ValueError, Vote.objects.create, review=self.review, delta=-1, user=self.anon_user)
@@ -50,9 +44,7 @@ class TopLevelProductReviewVoteTests(ProductReviewTests):
 
 
 class SingleProductReviewViewTest(ProductReviewTests, TestCase):
-    u"""
-    Tests for each product review 
-    """
+
     def setUp(self):
         self.client = Client()
         super(SingleProductReviewViewTest, self).setUp()
@@ -73,9 +65,11 @@ class SingleProductReviewViewTest(ProductReviewTests, TestCase):
         self.client.login(username='testuser', password='secret')
         response = self.client.get(url)
         self.assertEquals(200, response.status_code)
+
         # check necessary review fields for logged in user
         self.assertContains(response, 'title')
         self.assertContains(response, 'score')
+
         # check additional fields for anonymous user
         self.client.login(username=None)
         response = self.client.get(url)

@@ -1,12 +1,11 @@
 import httplib
 
 from django.test.client import Client
+from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.http import HttpRequest
-from django.core.urlresolvers import reverse
-from django.contrib.auth.models import User
 
-from oscar.apps.customer.models import CommunicationEventType
 from oscar.apps.customer.history_helpers import get_recently_viewed_product_ids
 from oscar.test.helpers import create_product, create_order
 
@@ -26,22 +25,6 @@ class HistoryHelpersTest(TestCase):
         request = HttpRequest()
         request.COOKIES['oscar_recently_viewed_products'] = response.cookies['oscar_recently_viewed_products'].value
         self.assertTrue(self.product.id in get_recently_viewed_product_ids(request))
-
-
-class CommunicationTypeTest(TestCase):
-    keys = ('body', 'html', 'sms', 'subject')
-
-    def test_no_templates_returns_empty_string(self):
-        et = CommunicationEventType()
-        messages = et.get_messages()
-        for key in self.keys:
-            self.assertEqual('', messages[key])
-
-    def test_field_template_render(self):
-        et = CommunicationEventType(email_subject_template='Hello {{ name }}')
-        ctx = {'name': 'world'}
-        messages = et.get_messages(ctx)
-        self.assertEqual('Hello world', messages['subject'])
 
 
 class AnonOrderDetail(TestCase):

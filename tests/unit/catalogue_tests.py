@@ -1,7 +1,5 @@
-from django.test import TestCase, Client
+from django.test import TestCase
 from django.core.exceptions import ValidationError
-from django.core.urlresolvers import reverse
-from django.conf import settings
 
 from oscar.apps.catalogue.models import Product, ProductClass, Category, \
         ProductAttribute
@@ -90,11 +88,11 @@ class VariantProductTests(ProductTests):
         self.parent = Product.objects.create(title="Parent product", product_class=self.product_class)
     
     def test_variant_products_dont_need_titles(self):
-        p = Product.objects.create(parent=self.parent, product_class=self.product_class)
+        Product.objects.create(parent=self.parent, product_class=self.product_class)
         
     def test_variant_products_dont_need_a_product_class(self):
-        p = Product.objects.create(parent=self.parent)
-        
+        Product.objects.create(parent=self.parent)
+       
     def test_variant_products_inherit_parent_titles(self):
         p = Product.objects.create(parent=self.parent, product_class=self.product_class)
         self.assertEquals("Parent product", p.get_title())
@@ -102,18 +100,3 @@ class VariantProductTests(ProductTests):
     def test_variant_products_inherit_product_class(self):
         p = Product.objects.create(parent=self.parent)
         self.assertEquals("Clothing", p.get_product_class().name)
-
-
-class SingleProductViewTest(TestCase):
-    fixtures = ['sample-products']
-    
-    def setUp(self):
-        self.client = Client()
-        
-    def test_canonical_urls_are_enforced(self):
-        p = Product.objects.get(id=1)
-        args = {'product_slug': 'wrong-slug',
-                'pk': p.id}
-        wrong_url = reverse('catalogue:detail', kwargs=args)
-        response = self.client.get(wrong_url)
-        self.assertEquals(301, response.status_code)
