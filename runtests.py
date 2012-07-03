@@ -39,5 +39,4 @@ if __name__ == '__main__':
         print 'Generate HTML reports'
         c.html_report()
     else:
-        print 'Running tests'
         run_tests(options.verbosity, *args)

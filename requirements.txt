@@ -13,4 +13,5 @@ twill==0.9
 PyHamcrest==1.6
 South==0.7.3
 purl==0.3.2
-django-sorting==0.1
+pinocchio==0.3.1
+nose-progressive==1.3
