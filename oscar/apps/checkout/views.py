@@ -183,23 +183,13 @@ class ShippingAddressView(CheckoutSessionMixin, FormView):
 
         # Check to see that a shipping address is actually required.  It may not be if
         # the basket is purely downloads
-        if not self.does_basket_require_shipping(request.basket):
+        if not request.basket.is_shipping_required():
             messages.info(request, _("Your basket does not require a shipping address to be submitted"))
-            self.checkout_session.no_shipping_required()
             return HttpResponseRedirect(self.get_success_url())
         else:
             self.checkout_session.shipping_required()
 
         return super(ShippingAddressView, self).get(request, *args, **kwargs)
-
-    def does_basket_require_shipping(self, basket):
-        """
-        Test whether the contents of the basket require shipping
-        """
-        for line in basket.all_lines():
-            if line.product.is_shipping_required:
-                return True
-        return False
 
     def get_initial(self):
         return self.checkout_session.new_shipping_address_fields()
@@ -322,7 +312,7 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
 
     def get(self, request, *args, **kwargs):
         # Check that shipping is required at all
-        if not self.checkout_session.is_shipping_required():
+        if not request.basket.is_shipping_required():
             self.checkout_session.use_shipping_method(NoShippingRequired().code)
             return self.get_success_response()
 
@@ -398,7 +388,7 @@ class PaymentMethodView(CheckoutSessionMixin, TemplateView):
 
     def get(self, request, *args, **kwargs):
         # Check that shipping address has been completed
-        if self.checkout_session.is_shipping_required() and not self.checkout_session.is_shipping_address_set():
+        if request.basket.is_shipping_required() and not self.checkout_session.is_shipping_address_set():
             messages.error(request, _("Please choose a shipping address"))
             return HttpResponseRedirect(reverse('checkout:shipping-address'))
         # Check that shipping method has been set
@@ -516,7 +506,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         If the shipping address was selected from the user's address book,
         then we convert the UserAddress to a ShippingAddress.
         """
-        if not self.checkout_session.is_shipping_required():
+        if not self.request.basket.is_shipping_required():
             return None
 
         addr_data = self.checkout_session.new_shipping_address_fields()
@@ -674,7 +664,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
 
     def get_error_response(self):
         # Check that shipping address has been completed
-        if self.checkout_session.is_shipping_required() and not self.checkout_session.is_shipping_address_set():
+        if self.request.basket.is_shipping_required() and not self.checkout_session.is_shipping_address_set():
             messages.error(self.request, _("Please choose a shipping address"))
             return HttpResponseRedirect(reverse('checkout:shipping-address'))
         # Check that shipping method has been set
@@ -695,6 +685,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         then the method can call submit()
         """
         error_response = self.get_error_response()
+        
         if error_response:
             return error_response
         if self.preview:

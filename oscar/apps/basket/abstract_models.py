@@ -189,6 +189,16 @@ class AbstractBasket(models.Model):
         for line in self.all_lines():
             line.set_as_tax_exempt()
 
+    def is_shipping_required(self):
+        """
+        Test whether the basket contains physical products that require
+        shipping.
+        """
+        for line in self.all_lines():
+            if line.product.is_shipping_required:
+                return True
+        return False
+
     # =======
     # Helpers
     # =======

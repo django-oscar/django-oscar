@@ -14,6 +14,11 @@ from oscar.apps.order.models import Order
 class CheckoutMixin(object):
     fixtures = ['countries.json']
 
+    def add_product_to_basket(self):
+        product = create_product(price=D('12.00'))
+        self.client.post(reverse('basket:add'), {'product_id': product.id,
+                                                 'quantity': 1})
+
     def complete_guest_email_form(self, email='test@example.com'):
         response = self.client.post(reverse('checkout:index'),
                                     {'username': email,
@@ -120,6 +125,7 @@ class ShippingMethodViewTests(ClientTestCase, CheckoutMixin):
     fixtures = ['countries.json']
 
     def test_shipping_method_view_redirects_if_no_shipping_address(self):
+        self.add_product_to_basket()
         response = self.client.get(reverse('checkout:shipping-method'))
         self.assertIsRedirect(response)
         self.assertRedirectUrlName(response, 'checkout:shipping-address')
@@ -133,6 +139,7 @@ class ShippingMethodViewTests(ClientTestCase, CheckoutMixin):
 class PaymentMethodViewTests(ClientTestCase, CheckoutMixin):
 
     def test_view_redirects_if_no_shipping_address(self):
+        self.add_product_to_basket() 
         response = self.client.get(reverse('checkout:payment-method'))
         self.assertIsRedirect(response)
         self.assertRedirectUrlName(response, 'checkout:shipping-address')
@@ -147,6 +154,7 @@ class PaymentMethodViewTests(ClientTestCase, CheckoutMixin):
 class PreviewViewTests(ClientTestCase, CheckoutMixin):
 
     def test_view_redirects_if_no_shipping_address(self):
+        self.add_product_to_basket()
         response = self.client.get(reverse('checkout:preview'))
         self.assertIsRedirect(response)
         self.assertRedirectUrlName(response, 'checkout:shipping-address')
@@ -167,11 +175,13 @@ class PreviewViewTests(ClientTestCase, CheckoutMixin):
 class PaymentDetailsViewTests(ClientTestCase, CheckoutMixin):
 
     def test_view_redirects_if_no_shipping_address(self):
+        self.add_product_to_basket()
         response = self.client.post(reverse('checkout:payment-details'))
         self.assertIsRedirect(response)
         self.assertRedirectUrlName(response, 'checkout:shipping-address')
 
     def test_view_redirects_if_no_shipping_method(self):
+        self.add_product_to_basket()
         self.complete_shipping_address()
         response = self.client.post(reverse('checkout:payment-details'))
         self.assertIsRedirect(response)
