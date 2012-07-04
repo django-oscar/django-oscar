@@ -189,7 +189,7 @@ class AbstractBasket(models.Model):
         shipping.
         """
         for line in self.all_lines():
-            if line.product.os_shipping_required:
+            if line.product.is_shipping_required:
                 return True
         return False
 
