@@ -119,6 +119,14 @@ class ShippingAddressViewTests(ClientTestCase):
 class ShippingMethodViewTests(ClientTestCase, CheckoutMixin):
     fixtures = ['countries.json']
 
+    def add_product_to_basket(self):
+        product = create_product(price=D('12.00'))
+        self.client.post(reverse('basket:add'), {'product_id': product.id,
+                                                 'quantity': 1})
+
+    def setUp(self):
+        self.add_product_to_basket()
+
     def test_shipping_method_view_redirects_if_no_shipping_address(self):
         response = self.client.get(reverse('checkout:shipping-method'))
         self.assertIsRedirect(response)
@@ -131,6 +139,14 @@ class ShippingMethodViewTests(ClientTestCase, CheckoutMixin):
 
 
 class PaymentMethodViewTests(ClientTestCase, CheckoutMixin):
+
+    def add_product_to_basket(self):
+        product = create_product(price=D('12.00'))
+        self.client.post(reverse('basket:add'), {'product_id': product.id,
+                                                 'quantity': 1})
+
+    def setUp(self):
+        self.add_product_to_basket()
 
     def test_view_redirects_if_no_shipping_address(self):
         response = self.client.get(reverse('checkout:payment-method'))
@@ -145,6 +161,14 @@ class PaymentMethodViewTests(ClientTestCase, CheckoutMixin):
 
 
 class PreviewViewTests(ClientTestCase, CheckoutMixin):
+
+    def add_product_to_basket(self):
+        product = create_product(price=D('12.00'))
+        self.client.post(reverse('basket:add'), {'product_id': product.id,
+                                                 'quantity': 1})
+
+    def setUp(self):
+        self.add_product_to_basket()
 
     def test_view_redirects_if_no_shipping_address(self):
         response = self.client.get(reverse('checkout:preview'))
@@ -166,12 +190,19 @@ class PreviewViewTests(ClientTestCase, CheckoutMixin):
 
 class PaymentDetailsViewTests(ClientTestCase, CheckoutMixin):
 
+    def add_product_to_basket(self):
+        product = create_product(price=D('12.00'))
+        self.client.post(reverse('basket:add'), {'product_id': product.id,
+                                                 'quantity': 1})
+
     def test_view_redirects_if_no_shipping_address(self):
+        self.add_product_to_basket()
         response = self.client.post(reverse('checkout:payment-details'))
         self.assertIsRedirect(response)
         self.assertRedirectUrlName(response, 'checkout:shipping-address')
 
     def test_view_redirects_if_no_shipping_method(self):
+        self.add_product_to_basket()
         self.complete_shipping_address()
         response = self.client.post(reverse('checkout:payment-details'))
         self.assertIsRedirect(response)
