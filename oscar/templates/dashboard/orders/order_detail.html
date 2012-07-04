@@ -31,7 +31,7 @@ Order {{ order.number }} | {{ block.super }}
 
     <h3>Customer Information</h3>
 	{% if order.user %}
-	
+
     <div class="row-fluid">
         <div class="span4">
             <div class="well well-info">
@@ -85,12 +85,14 @@ Order {{ order.number }} | {{ block.super }}
 
 <div class="tabbable dashboard">
 	<ul class="nav nav-tabs">
+	{% block nav_tabs %}
 		<li class="active"><a href="#lines" data-toggle="tab">Order contents</a></li>
 		<li><a href="#shipping" data-toggle="tab">Shipping</a></li>
 		<li><a href="#payment" data-toggle="tab">Payment</a></li>
 		<li><a href="#discounts" data-toggle="tab">Discounts</a></li>
 		<li><a href="#emails" data-toggle="tab">Emails</a></li>
 		<li><a href="#notes" data-toggle="tab">Notes</a></li>
+	{% endblock nav_tabs %}
 	</ul>
 
 	<div class="tab-content">
@@ -207,7 +209,7 @@ Order {{ order.number }} | {{ block.super }}
 							</select>
 						</label>
 						<label class="radio inline">
-							with amount <input type="text" name="amount" value="" /> 
+							with amount <input type="text" name="amount" value="" />
 						</label>
 					</div>
 				</div>
@@ -338,16 +340,16 @@ Order {{ order.number }} | {{ block.super }}
 				<h3 class="app-ico ico_mapmarker icon">Payment sources</h3>
 			</div>
 			{% if sources %}
-				<table class="table table-striped table-bordered">    
-					<thead>  
+				<table class="table table-striped table-bordered">
+					<thead>
 						<tr>
 							<th>Source</th>
 							<th>Allocation</th>
 							<th>Amount debited</th>
 							<th>Amount refunded</th>
-						</tr>  
-					</thead>	
-					<tbody> 
+						</tr>
+					</thead>
+					<tbody>
 						{% for source in sources %}
 						<tr>
 							<td>{{ source.source_type }}</td>
@@ -356,7 +358,7 @@ Order {{ order.number }} | {{ block.super }}
 							<td>{{ source.amount_refunded|currency }}</td>
 						</tr>
 						{% endfor %}
-					</tbody>	
+					</tbody>
 				</table>
 			{% else %}
 				<p>No payment sources</p>
@@ -463,6 +465,8 @@ Order {{ order.number }} | {{ block.super }}
 			</form>
 			{% endblock %}
 		</div>
+
+		{% block extra_tabs %}{% endblock %}
 	</div>
 </div>
 
