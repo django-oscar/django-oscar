@@ -36,6 +36,11 @@ class CheckoutMixin(object):
         location = response['Location'].replace('http://testserver', '')
         self.assertEqual(location, reverse(name))
 
+    def add_product_to_basket(self):
+        product = create_product(price=D('12.00'))
+        self.client.post(reverse('basket:add'), {'product_id': product.id,
+                                                 'quantity': 1})
+
 
 class DisabledAnonymousCheckoutViewsTests(ClientTestCase):
     is_anonymous = True
@@ -70,11 +75,6 @@ class EnabledAnonymousCheckoutViewsTests(ClientTestCase, CheckoutMixin):
         if settings.ROOT_URLCONF in sys.modules:
             reload(sys.modules[settings.ROOT_URLCONF])
         return import_module(settings.ROOT_URLCONF)
-
-    def add_product_to_basket(self):
-        product = create_product(price=D('12.00'))
-        self.client.post(reverse('basket:add'), {'product_id': product.id,
-                                                 'quantity': 1})
 
     def test_shipping_address_does_require_session_email_address(self):
         with patch_settings(OSCAR_ALLOW_ANON_CHECKOUT=True):
@@ -119,6 +119,9 @@ class ShippingAddressViewTests(ClientTestCase):
 class ShippingMethodViewTests(ClientTestCase, CheckoutMixin):
     fixtures = ['countries.json']
 
+    def setUp(self):
+        self.add_product_to_basket()
+
     def test_shipping_method_view_redirects_if_no_shipping_address(self):
         response = self.client.get(reverse('checkout:shipping-method'))
         self.assertIsRedirect(response)
@@ -131,6 +134,9 @@ class ShippingMethodViewTests(ClientTestCase, CheckoutMixin):
 
 
 class PaymentMethodViewTests(ClientTestCase, CheckoutMixin):
+
+    def setUp(self):
+        self.add_product_to_basket()
 
     def test_view_redirects_if_no_shipping_address(self):
         response = self.client.get(reverse('checkout:payment-method'))
@@ -145,6 +151,9 @@ class PaymentMethodViewTests(ClientTestCase, CheckoutMixin):
 
 
 class PreviewViewTests(ClientTestCase, CheckoutMixin):
+
+    def setUp(self):
+        self.add_product_to_basket()
 
     def test_view_redirects_if_no_shipping_address(self):
         response = self.client.get(reverse('checkout:preview'))
@@ -167,11 +176,13 @@ class PreviewViewTests(ClientTestCase, CheckoutMixin):
 class PaymentDetailsViewTests(ClientTestCase, CheckoutMixin):
 
     def test_view_redirects_if_no_shipping_address(self):
+        self.add_product_to_basket()
         response = self.client.post(reverse('checkout:payment-details'))
         self.assertIsRedirect(response)
         self.assertRedirectUrlName(response, 'checkout:shipping-address')
 
     def test_view_redirects_if_no_shipping_method(self):
+        self.add_product_to_basket()
         self.complete_shipping_address()
         response = self.client.post(reverse('checkout:payment-details'))
         self.assertIsRedirect(response)
