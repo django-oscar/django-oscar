@@ -49,6 +49,12 @@ TIME_ZONE = 'Europe/London'
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en-us'
 
+LANGUAGES = (
+    ('de', 'German'),
+)
+ROSETTA_STORAGE_CLASS = 'rosetta.storage.SessionRosettaStorage'
+ROSETTA_ENABLE_TRANSLATION_SUGGESTIONS = True
+
 SITE_ID = 1
 
 # If you set this to False, Django will make some optimizations so as not
@@ -207,6 +213,7 @@ INSTALLED_APPS = [
     'haystack',
     'debug_toolbar',
     'south',
+    'rosetta',
     # For profile testing
     'apps.user',
 ]

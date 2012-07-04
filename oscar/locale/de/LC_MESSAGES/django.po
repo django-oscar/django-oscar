@@ -1,0 +1,1486 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-07-04 22:16+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+#: apps/address/abstract_models.py:20
+msgid "Mr"
+msgstr ""
+
+#: apps/address/abstract_models.py:21
+msgid "Miss"
+msgstr ""
+
+#: apps/address/abstract_models.py:22
+msgid "Mrs"
+msgstr ""
+
+#: apps/address/abstract_models.py:23
+msgid "Ms"
+msgstr ""
+
+#: apps/address/abstract_models.py:24
+msgid "Dr"
+msgstr ""
+
+#: apps/address/abstract_models.py:26 apps/catalogue/abstract_models.py:177
+#: apps/order/abstract_models.py:268 apps/promotions/models.py:196
+#: apps/promotions/models.py:275
+msgid "Title"
+msgstr ""
+
+#: apps/address/abstract_models.py:27
+msgid "First name"
+msgstr ""
+
+#: apps/address/abstract_models.py:28
+msgid "Last name"
+msgstr ""
+
+#: apps/address/abstract_models.py:32
+msgid "First line of address"
+msgstr ""
+
+#: apps/address/abstract_models.py:33
+msgid "Second line of address"
+msgstr ""
+
+#: apps/address/abstract_models.py:34
+msgid "Third line of address"
+msgstr ""
+
+#: apps/address/abstract_models.py:35
+msgid "City"
+msgstr ""
+
+#: apps/address/abstract_models.py:36
+msgid "State/County"
+msgstr ""
+
+#: apps/address/abstract_models.py:37
+msgid "Post/Zip-code"
+msgstr ""
+
+#: apps/address/abstract_models.py:41
+msgid "Search text"
+msgstr ""
+
+#: apps/address/abstract_models.py:124
+msgid "ISO 3166-1 alpha-2"
+msgstr ""
+
+#: apps/address/abstract_models.py:125
+msgid "ISO 3166-1 alpha-3"
+msgstr ""
+
+#: apps/address/abstract_models.py:126
+msgid "ISO 3166-1 numeric"
+msgstr ""
+
+#: apps/address/abstract_models.py:127
+msgid "Official name (CAPS)"
+msgstr ""
+
+#: apps/address/abstract_models.py:128
+msgid "Country name"
+msgstr ""
+
+#: apps/address/abstract_models.py:135
+msgid "Country"
+msgstr ""
+
+#: apps/address/abstract_models.py:136
+msgid "Countries"
+msgstr ""
+
+#: apps/address/abstract_models.py:184
+msgid "Default shipping address?"
+msgstr ""
+
+#: apps/address/abstract_models.py:185
+msgid "Default billing address?"
+msgstr ""
+
+#: apps/analytics/abstract_models.py:71
+msgid "Search term"
+msgstr ""
+
+#: apps/analytics/abstract_models.py:76
+msgid "User search queries"
+msgstr ""
+
+#: apps/basket/abstract_models.py:25
+msgid "Open - currently active"
+msgstr ""
+
+#: apps/basket/abstract_models.py:26
+msgid "Merged - superceded by another basket"
+msgstr ""
+
+#: apps/basket/abstract_models.py:27
+msgid "Saved - for items to be purchased later"
+msgstr ""
+
+#: apps/basket/abstract_models.py:28
+msgid "Frozen - the basket cannot be modified"
+msgstr ""
+
+#: apps/basket/abstract_models.py:29
+msgid "Submitted - has been ordered at the checkout"
+msgstr ""
+
+#: apps/basket/abstract_models.py:31 apps/catalogue/abstract_models.py:182
+#: apps/catalogue/abstract_models.py:672
+#: apps/catalogue/reviews/abstract_models.py:47
+#: apps/order/abstract_models.py:46 apps/order/abstract_models.py:301
+msgid "Status"
+msgstr ""
+
+#: apps/basket/abstract_models.py:539 apps/basket/abstract_models.py:545
+msgid "product"
+msgstr ""
+
+#: apps/basket/abstract_models.py:554 apps/order/abstract_models.py:432
+msgid "Value"
+msgstr ""
+
+#: apps/basket/forms.py:30 apps/basket/forms.py:156
+#, python-format
+msgid ""
+"Due to technical limitations we are not able to ship more than %(threshold)d "
+"items in one order. Your basket currently has %(basket)d items."
+msgstr ""
+
+#: apps/basket/forms.py:113
+msgid "This product is not available for purchase"
+msgstr ""
+
+#: apps/basket/views.py:84
+msgid "Basket updated"
+msgstr ""
+
+#: apps/basket/views.py:94
+#, python-format
+msgid "'%(title)s' has been saved for later"
+msgstr ""
+
+#: apps/basket/views.py:152
+#, python-format
+msgid "'%(title)s' (quantity %(quantity)d) has been added to your basket"
+msgstr ""
+
+#: apps/basket/views.py:178
+#, python-format
+msgid "The '%(code)s' voucher has expired"
+msgstr ""
+
+#: apps/basket/views.py:201
+msgid "Your basket does not qualify for a voucher discount"
+msgstr ""
+
+#: apps/basket/views.py:204
+#, python-format
+msgid "Voucher '%(code)s' added to basket"
+msgstr ""
+
+#: apps/basket/views.py:211
+#, python-format
+msgid "You have already added the '%(code)s' voucher to your basket"
+msgstr ""
+
+#: apps/basket/views.py:216
+#, python-format
+msgid "No voucher found with code '%(code)s'"
+msgstr ""
+
+#: apps/basket/views.py:222
+msgid "Please enter a voucher code"
+msgstr ""
+
+#: apps/catalogue/abstract_models.py:23 apps/catalogue/abstract_models.py:445
+#: apps/catalogue/abstract_models.py:664
+msgid "name"
+msgstr ""
+
+#: apps/catalogue/abstract_models.py:127 apps/catalogue/abstract_models.py:617
+#: apps/catalogue/abstract_models.py:638
+#: apps/catalogue/reviews/abstract_models.py:36 apps/offer/models.py:274
+#: apps/promotions/models.py:125 apps/promotions/models.py:152
+#: apps/promotions/models.py:169 apps/promotions/models.py:179
+#: apps/shipping/models.py:12 apps/voucher/abstract_models.py:18
+msgid "Name"
+msgstr ""
+
+#: apps/catalogue/abstract_models.py:166 apps/order/abstract_models.py:269
+#: templates/catalogue/detail.html:86
+msgid "UPC"
+msgstr ""
+
+#: apps/catalogue/abstract_models.py:179 apps/promotions/models.py:181
+#: apps/shipping/models.py:13 templates/offer/detail.html:38
+msgid "Description"
+msgstr ""
+
+#: apps/catalogue/abstract_models.py:183
+msgid "product class"
+msgstr ""
+
+#: apps/catalogue/abstract_models.py:267
+msgid "No stock available"
+msgstr ""
+
+#: apps/catalogue/abstract_models.py:386
+#, python-format
+msgid "%(obj)s has no attribute named '%(attr)s'"
+msgstr ""
+
+#: apps/catalogue/abstract_models.py:395
+#, python-format
+msgid "%(attr)s attribute cannot be blank"
+msgstr ""
+
+#: apps/catalogue/abstract_models.py:402
+#, python-format
+msgid "%(attr)s attribute %(err)s"
+msgstr ""
+
+#: apps/catalogue/abstract_models.py:446 apps/catalogue/abstract_models.py:665
+msgid "code"
+msgstr ""
+
+#: apps/catalogue/abstract_models.py:458
+msgid "Must be str or unicode"
+msgstr ""
+
+#: apps/catalogue/abstract_models.py:464
+msgid "Must be a float"
+msgstr ""
+
+#: apps/catalogue/abstract_models.py:470
+msgid "Must be an integer"
+msgstr ""
+
+#: apps/catalogue/abstract_models.py:474
+msgid "Must be a date or datetime"
+msgstr ""
+
+#: apps/catalogue/abstract_models.py:478
+msgid "Must be a boolean"
+msgstr ""
+
+#: apps/catalogue/abstract_models.py:482
+msgid "Must be an AttributeEntity model object instance"
+msgstr ""
+
+#: apps/catalogue/abstract_models.py:484
+msgid "Model has not been saved yet"
+msgstr ""
+
+#: apps/catalogue/abstract_models.py:486
+#, python-format
+msgid "Entity must be of type %s"
+msgstr ""
+
+#: apps/catalogue/abstract_models.py:490
+msgid "Must be an AttributeOption model object instance"
+msgstr ""
+
+#: apps/catalogue/abstract_models.py:492
+msgid "AttributeOption has not been saved yet"
+msgstr ""
+
+#: apps/catalogue/abstract_models.py:495
+#, python-format
+msgid "%(enum)s is not a valid choice for %(attr)s"
+msgstr ""
+
+#: apps/catalogue/abstract_models.py:669
+msgid "Required - a value for this option must be specified"
+msgstr ""
+
+#: apps/catalogue/abstract_models.py:670
+msgid "Optional - a value for this option can be omitted"
+msgstr ""
+
+#: apps/catalogue/abstract_models.py:698
+msgid "Caption"
+msgstr ""
+
+#: apps/catalogue/reviews/abstract_models.py:30
+#: templates/reviews/reviews.html:45
+msgid "Score"
+msgstr ""
+
+#: apps/catalogue/reviews/abstract_models.py:31
+msgid "Review title"
+msgstr ""
+
+#: apps/catalogue/reviews/abstract_models.py:32
+msgid "Body"
+msgstr ""
+
+#: apps/catalogue/reviews/abstract_models.py:37
+msgid "Email"
+msgstr ""
+
+#: apps/catalogue/reviews/abstract_models.py:38 models/fields.py:17
+msgid "URL"
+msgstr ""
+
+#: apps/catalogue/reviews/abstract_models.py:42
+msgid "Requires moderation"
+msgstr ""
+
+#: apps/catalogue/reviews/abstract_models.py:43
+msgid "Approved"
+msgstr ""
+
+#: apps/catalogue/reviews/abstract_models.py:44
+msgid "Rejected"
+msgstr ""
+
+#: apps/catalogue/reviews/abstract_models.py:50
+msgid "Total Votes"
+msgstr ""
+
+#: apps/catalogue/reviews/abstract_models.py:51
+msgid "Delta Votes"
+msgstr ""
+
+#: apps/catalogue/reviews/abstract_models.py:119
+msgid "Up"
+msgstr ""
+
+#: apps/catalogue/reviews/abstract_models.py:120
+msgid "Down"
+msgstr ""
+
+#: apps/checkout/views.py:181
+msgid "Please either sign in or enter your email address"
+msgstr ""
+
+#: apps/checkout/views.py:187
+msgid "Your basket does not require a shipping address to be submitted"
+msgstr ""
+
+#: apps/checkout/views.py:262 apps/checkout/views.py:283
+#: apps/customer/views.py:401 apps/customer/views.py:419
+msgid "Address saved"
+msgstr ""
+
+#: apps/checkout/views.py:297
+msgid "Address deleted"
+msgstr ""
+
+#: apps/checkout/views.py:328 apps/checkout/views.py:399
+#: apps/checkout/views.py:675
+msgid "Please choose a shipping address"
+msgstr ""
+
+#: apps/checkout/views.py:336
+msgid ""
+"Shipping is not available for your chosen address - please choose another"
+msgstr ""
+
+#: apps/checkout/views.py:371
+msgid "Your submitted shipping method is not permitted"
+msgstr ""
+
+#: apps/checkout/views.py:403 apps/checkout/views.py:679
+msgid "Please choose a shipping method"
+msgstr ""
+
+#: apps/checkout/views.py:763
+msgid "This order cannot be submitted as the basket is empty"
+msgstr ""
+
+#: apps/checkout/views.py:878
+msgid "No order found"
+msgstr ""
+
+#: apps/customer/abstract_models.py:16
+msgid "Subject"
+msgstr ""
+
+#: apps/customer/abstract_models.py:63
+msgid "Communication event types"
+msgstr ""
+
+#: apps/customer/forms.py:31 apps/customer/forms.py:67
+msgid "Email Address"
+msgstr ""
+
+#: apps/customer/forms.py:49
+msgid "Please choose a less common password"
+msgstr ""
+
+#: apps/customer/forms.py:68
+msgid "Password"
+msgstr ""
+
+#: apps/customer/forms.py:71
+msgid "Confirm Password"
+msgstr ""
+
+#: apps/customer/forms.py:83
+msgid "A user with that email address already exists."
+msgstr ""
+
+#: apps/customer/forms.py:90
+msgid "The two password fields didn't match."
+msgstr ""
+
+#: apps/customer/forms.py:109
+msgid "At least one date field is required."
+msgstr ""
+
+#: apps/customer/views.py:352
+msgid "This product is no longer available for re-order"
+msgstr ""
+
+#: apps/customer/views.py:391
+msgid "Add a new address"
+msgstr ""
+
+#: apps/customer/views.py:412
+msgid "Edit address"
+msgstr ""
+
+#: apps/offer/models.py:43 apps/order/abstract_models.py:431
+msgid "Type"
+msgstr ""
+
+#: apps/offer/models.py:68
+msgid "URL redirect (optional)"
+msgstr ""
+
+#: apps/offer/models.py:162
+msgid "Depends on number of items in basket that are in condition range"
+msgstr ""
+
+#: apps/offer/models.py:163
+msgid "Depends on value of items in basket that are in condition range"
+msgstr ""
+
+#: apps/offer/models.py:164
+msgid ""
+"Needs to contain a set number of DISTINCT items from the condition range"
+msgstr ""
+
+#: apps/offer/models.py:205
+#, python-format
+msgid "Discount is a % of the product's value"
+msgstr ""
+
+#: apps/offer/models.py:206
+msgid "Discount is a fixed amount off the product's value"
+msgstr ""
+
+#: apps/offer/models.py:207
+msgid "Discount is to give the cheapest product for free"
+msgstr ""
+
+#: apps/offer/models.py:208
+msgid "Get the products that meet the condition for a fixed price"
+msgstr ""
+
+#: apps/order/abstract_models.py:21
+msgid "Order number"
+msgstr ""
+
+#: apps/order/abstract_models.py:33
+msgid "Order total (inc. tax)"
+msgstr ""
+
+#: apps/order/abstract_models.py:34
+msgid "Order total (excl. tax)"
+msgstr ""
+
+#: apps/order/abstract_models.py:37
+msgid "Shipping charge (inc. tax)"
+msgstr ""
+
+#: apps/order/abstract_models.py:38
+msgid "Shipping charge (excl. tax)"
+msgstr ""
+
+#: apps/order/abstract_models.py:43 templates/checkout/shipping_methods.html:5
+msgid "Shipping method"
+msgstr ""
+
+#: apps/order/abstract_models.py:48
+msgid "Guest email address"
+msgstr ""
+
+#: apps/order/abstract_models.py:161
+msgid "In progress"
+msgstr ""
+
+#: apps/order/abstract_models.py:265
+msgid "Partner name"
+msgstr ""
+
+#: apps/order/abstract_models.py:266 apps/partner/abstract_models.py:73
+msgid "Partner SKU"
+msgstr ""
+
+#: apps/order/abstract_models.py:295
+msgid "Partner reference"
+msgstr ""
+
+#: apps/order/abstract_models.py:296
+msgid "This is the item number that the partner uses within their system"
+msgstr ""
+
+#: apps/order/abstract_models.py:417
+msgid "Order lines"
+msgstr ""
+
+#: apps/order/abstract_models.py:482
+msgid "Payment event types"
+msgstr ""
+
+#: apps/order/abstract_models.py:502
+msgid "Payment events"
+msgstr ""
+
+#: apps/order/abstract_models.py:528
+msgid "Event notes"
+msgstr ""
+
+#: apps/order/abstract_models.py:534
+msgid "Shipping events"
+msgstr ""
+
+#: apps/order/abstract_models.py:608
+msgid "Shipping event types"
+msgstr ""
+
+#: apps/order/abstract_models.py:630 apps/voucher/abstract_models.py:20
+msgid "Code"
+msgstr ""
+
+#: apps/partner/abstract_models.py:254
+msgid "Open"
+msgstr ""
+
+#: apps/partner/abstract_models.py:255
+msgid "Closed"
+msgstr ""
+
+#: apps/partner/wrappers.py:28
+#, python-format
+msgid "'%s' is not available to purchase"
+msgstr ""
+
+#: apps/partner/wrappers.py:33
+#, python-format
+msgid "'%(title)s' - A maximum of %(max)d can be bought"
+msgstr ""
+
+#: apps/partner/wrappers.py:60
+#, python-format
+msgid "In stock (%d available)"
+msgstr ""
+
+#: apps/partner/wrappers.py:62
+msgid "Available"
+msgstr ""
+
+#: apps/partner/wrappers.py:63 templates/catalogue/partials/product.html:39
+#: templates/catalogue/partials/stock_record.html:11
+#: templates/promotions/default.html:19
+#: templates/promotions/singleproduct.html:30
+#: templates/promotions/partials/product_carousel.html:24
+msgid "Not available"
+msgstr ""
+
+#: apps/payment/models.py:137
+msgid ""
+"This is used within\n"
+"        forms to identify this source type"
+msgstr ""
+
+#: apps/promotions/models.py:25
+msgid "Position"
+msgstr ""
+
+#: apps/promotions/models.py:60
+msgid "Keyword"
+msgstr ""
+
+#: apps/promotions/models.py:64
+msgid "Filter"
+msgstr ""
+
+#: apps/promotions/models.py:131
+msgid "Display type"
+msgstr ""
+
+#: apps/promotions/models.py:134
+msgid "HTML"
+msgstr ""
+
+#: apps/promotions/models.py:199
+msgid "Link text"
+msgstr ""
+
+#: apps/promotions/models.py:242
+msgid "Bestselling products"
+msgstr ""
+
+#: apps/promotions/models.py:243
+msgid "Recently added products"
+msgstr ""
+
+#: apps/search/forms.py:21 templates/partials/search.html:5
+msgid "Search"
+msgstr ""
+
+#: apps/shipping/models.py:126
+msgid ""
+"Enter upper limit of this\n"
+"                                                weight band in Kg, the "
+"lower\n"
+"                                                limit will be determine by "
+"the\n"
+"                                                other weight bands"
+msgstr ""
+
+#: apps/voucher/abstract_models.py:19
+msgid ""
+"This will be shown in the checkout and basket once the voucher is entered"
+msgstr ""
+
+#: apps/voucher/abstract_models.py:21
+msgid "Case insensitive / No spaces allowed"
+msgstr ""
+
+#: apps/voucher/abstract_models.py:27
+msgid "Can be used once by one customer"
+msgstr ""
+
+#: apps/voucher/abstract_models.py:28
+msgid "Can be used multiple times by multiple customers"
+msgstr ""
+
+#: apps/voucher/abstract_models.py:29
+msgid "Can only be used once per customer"
+msgstr ""
+
+#: apps/voucher/abstract_models.py:31
+msgid "Usage"
+msgstr ""
+
+#: apps/voucher/abstract_models.py:52
+msgid "End date should be later than start date"
+msgstr ""
+
+#: core/validators.py:38
+msgid "Specified page does not exist"
+msgstr ""
+
+#: core/validators.py:79 core/validators.py:89
+msgid "Specified page does already exist"
+msgstr ""
+
+#: templates/base.html:5
+msgid "Build"
+msgstr ""
+
+#: templates/base.html:70
+msgid "Version:"
+msgstr ""
+
+#: templates/basket/basket.html:7 templates/basket/basket.html.py:16
+#: templates/partials/nav_alternate.html:13
+#: templates/partials/nav_primary.html:14
+msgid "Basket"
+msgstr ""
+
+#: templates/basket/basket.html:23
+msgid "Important messages about items in your basket"
+msgstr ""
+
+#: templates/basket/basket.html:30
+msgid "You could be missing out on offers!"
+msgstr ""
+
+#: templates/basket/basket.html:32
+#, python-format
+msgid ""
+"\n"
+"\t<div class=\"warning\">%(upsell_message)s to qualify for the <a href="
+"\"%(url)s\">%(offer_name)s</a> special offer</div>\n"
+"    "
+msgstr ""
+
+#: templates/basket/basket.html:41
+msgid "Items to buy now"
+msgstr ""
+
+#: templates/basket/basket.html:42 templates/checkout/checkout.html:78
+#: templates/checkout/thank_you.html:53
+msgid "Quantity"
+msgstr ""
+
+#: templates/basket/basket.html:43 templates/basket/basket.html.py:203
+#: templates/checkout/checkout.html:79
+msgid "Price"
+msgstr ""
+
+#: templates/basket/basket.html:70
+msgid "Update"
+msgstr ""
+
+#: templates/basket/basket.html:71 templates/basket/basket.html.py:221
+msgid "Remove"
+msgstr ""
+
+#: templates/basket/basket.html:73
+msgid "Save for later"
+msgstr ""
+
+#: templates/basket/basket.html:93
+msgid "Voucher/Promo Code"
+msgstr ""
+
+#: templates/basket/basket.html:95
+msgid "I have a voucher code..."
+msgstr ""
+
+#: templates/basket/basket.html:98
+msgid "Voucher code"
+msgstr ""
+
+#: templates/basket/basket.html:103
+msgid "Add voucher"
+msgstr ""
+
+#: templates/basket/basket.html:104
+#: templates/checkout/user_address_delete.html:20
+#: templates/checkout/user_address_form.html:21
+#: templates/reviews/add_review.html:13
+msgid "cancel"
+msgstr ""
+
+#: templates/basket/basket.html:114
+msgid "Basket Totals"
+msgstr ""
+
+#: templates/basket/basket.html:122
+msgid "Basket total (before discounts)"
+msgstr ""
+
+#: templates/basket/basket.html:128
+msgid "Special offer:"
+msgstr ""
+
+#: templates/basket/basket.html:135
+msgid "Vouchers"
+msgstr ""
+
+#: templates/basket/basket.html:152
+msgid "Basket total (after discounts)"
+msgstr ""
+
+#: templates/basket/basket.html:157 templates/checkout/thank_you.html:88
+msgid "Basket total"
+msgstr ""
+
+#: templates/basket/basket.html:163 templates/checkout/thank_you.html:26
+msgid "Shipping"
+msgstr ""
+
+#: templates/basket/basket.html:167 templates/checkout/thank_you.html:100
+msgid "Order total"
+msgstr ""
+
+#: templates/basket/basket.html:180
+msgid "Proceed to checkout"
+msgstr ""
+
+#: templates/basket/basket.html:186
+#: templates/basket/partials/basket_quick.html:23
+msgid "Your basket is empty, you should probably add some items to buy."
+msgstr ""
+
+#: templates/basket/basket.html:187 templates/checkout/thank_you.html:116
+msgid "Continue shopping"
+msgstr ""
+
+#: templates/basket/basket.html:194
+msgid "To buy later"
+msgstr ""
+
+#: templates/basket/basket.html:198
+msgid "Your saved basket is empty."
+msgstr ""
+
+#: templates/basket/basket.html:202
+msgid "To buy an item now, click 'Move to basket'"
+msgstr ""
+
+#: templates/basket/basket.html:228
+msgid "Move to basket"
+msgstr ""
+
+#: templates/basket/saved_list.html:6
+msgid "Saved Basket"
+msgstr ""
+
+#: templates/basket/partials/basket_quick.html:12
+msgid "Quantity:"
+msgstr ""
+
+#: templates/basket/partials/basket_quick.html:17
+msgid "Total Excl Tax:"
+msgstr ""
+
+#: templates/basket/partials/basket_quick.html:17
+#: templates/partials/nav_alternate.html:15
+#: templates/partials/nav_primary.html:16
+msgid "Total:"
+msgstr ""
+
+#: templates/basket/partials/basket_quick.html:18
+#: templates/partials/brand.html:9
+msgid "View Basket"
+msgstr ""
+
+#: templates/basket/partials/basket_quick.html:19
+#: templates/checkout/checkout.html:6
+msgid "Checkout"
+msgstr ""
+
+#: templates/catalogue/browse.html:17 templates/catalogue/detail.html:13
+#: templates/offer/detail.html:11 templates/reviews/reviews.html:14
+msgid "Home"
+msgstr ""
+
+#: templates/catalogue/browse.html:28
+msgid "Browse Categories"
+msgstr ""
+
+#: templates/catalogue/browse.html:75 templates/offer/detail.html:60
+msgid "No products found."
+msgstr ""
+
+#: templates/catalogue/detail.html:60
+msgid "Add review"
+msgstr ""
+
+#: templates/catalogue/detail.html:64
+msgid "Product Code:"
+msgstr ""
+
+#: templates/catalogue/detail.html:68
+msgid "Read the full description"
+msgstr ""
+
+#: templates/catalogue/detail.html:89
+msgid "Product class"
+msgstr ""
+
+#: templates/catalogue/detail.html:93
+msgid "Price (excl. tax)"
+msgstr ""
+
+#: templates/catalogue/detail.html:96
+msgid "Price (incl. tax)"
+msgstr ""
+
+#: templates/catalogue/detail.html:99
+msgid "Availability"
+msgstr ""
+
+#: templates/catalogue/detail.html:104
+msgid "Product type"
+msgstr ""
+
+#: templates/catalogue/detail.html:116
+msgid "Num reviews"
+msgstr ""
+
+#: templates/catalogue/detail.html:129
+msgid "Customer Reviews"
+msgstr ""
+
+#: templates/catalogue/detail.html:133 templates/reviews/reviews.html:39
+msgid "Add a review"
+msgstr ""
+
+#: templates/catalogue/detail.html:142
+msgid "Reviewed by"
+msgstr ""
+
+#: templates/catalogue/detail.html:162
+msgid "See all reviews"
+msgstr ""
+
+#: templates/catalogue/detail.html:173
+msgid "Related items"
+msgstr ""
+
+#: templates/catalogue/detail.html:192
+msgid "Recommended items"
+msgstr ""
+
+#: templates/catalogue/partials/add_to_basket_form.html:11
+#: templates/catalogue/partials/add_to_basket_form_compact.html:8
+msgid "Add to basket"
+msgstr ""
+
+#: templates/catalogue/partials/gallery.html:11
+msgid "Previous Image"
+msgstr ""
+
+#: templates/catalogue/partials/gallery.html:12
+msgid "Next Image"
+msgstr ""
+
+#: templates/catalogue/partials/gallery.html:28
+#: templates/reviews/reviews.html:69
+msgid "Previous"
+msgstr ""
+
+#: templates/catalogue/partials/gallery.html:29
+#: templates/reviews/reviews.html:79
+msgid "Next"
+msgstr ""
+
+#: templates/catalogue/partials/pagination.html:7
+msgid "previous"
+msgstr ""
+
+#: templates/catalogue/partials/pagination.html:10
+#, python-format
+msgid ""
+"\n"
+"\t\tPage %(page_num)s of %(total_pages)s\n"
+"\t\t"
+msgstr ""
+
+#: templates/catalogue/partials/pagination.html:15
+msgid "next"
+msgstr ""
+
+#: templates/catalogue/partials/product.html:33
+#: templates/promotions/singleproduct.html:24
+msgid "From"
+msgstr ""
+
+#: templates/checkout/checkout.html:28
+#: templates/checkout/shipping_address.html:4
+msgid "Shipping address"
+msgstr ""
+
+#: templates/checkout/checkout.html:32
+msgid "Address"
+msgstr ""
+
+#: templates/checkout/checkout.html:39
+msgid "Contact number"
+msgstr ""
+
+#: templates/checkout/checkout.html:43
+msgid "Shipping notes"
+msgstr ""
+
+#: templates/checkout/checkout.html:49
+msgid "Change shipping address"
+msgstr ""
+
+#: templates/checkout/checkout.html:59 templates/checkout/thank_you.html:37
+msgid "Payment"
+msgstr ""
+
+#: templates/checkout/checkout.html:62
+msgid "Payment details to go here"
+msgstr ""
+
+#: templates/checkout/checkout.html:64
+msgid "Change payment details"
+msgstr ""
+
+#: templates/checkout/checkout.html:73
+msgid "Order contents"
+msgstr ""
+
+#: templates/checkout/checkout.html:77
+msgid "Items in basket"
+msgstr ""
+
+#: templates/checkout/checkout.html:121 templates/partials/brand.html:16
+msgid "Basket total:"
+msgstr ""
+
+#: templates/checkout/checkout.html:127
+msgid "Order total:"
+msgstr ""
+
+#: templates/checkout/checkout.html:133
+msgid "Edit order contents"
+msgstr ""
+
+#: templates/checkout/gateway.html:6
+msgid "Checkout gateway"
+msgstr ""
+
+#: templates/checkout/gateway.html:16
+msgid "Who are you?"
+msgstr ""
+
+#: templates/checkout/gateway.html:40
+msgid "I have an account and my password is"
+msgstr ""
+
+#: templates/checkout/gateway.html:56
+msgid "Get a password reminder"
+msgstr ""
+
+#: templates/checkout/gateway.html:62
+msgid "I don't want to create an account"
+msgstr ""
+
+#: templates/checkout/gateway.html:68
+#: templates/checkout/payment_details.html:29
+#: templates/checkout/shipping_address.html:60
+msgid "Continue"
+msgstr ""
+
+#: templates/checkout/gateway.html:69
+msgid "Alternatively"
+msgstr ""
+
+#: templates/checkout/gateway.html:69
+msgid "create an account"
+msgstr ""
+
+#: templates/checkout/gateway.html:69
+msgid "before you checkout."
+msgstr ""
+
+#: templates/checkout/payment_details.html:6
+msgid "Payment details"
+msgstr ""
+
+#: templates/checkout/payment_details.html:24
+msgid ""
+"This page needs implementing within your project.  Or you could use one of "
+"Oscar's plugin libraries:"
+msgstr ""
+
+#: templates/checkout/preview.html:5
+msgid "Order preview"
+msgstr ""
+
+#: templates/checkout/preview.html:13
+msgid "Please review the information above, then click 'Place Order'"
+msgstr ""
+
+#: templates/checkout/preview.html:18
+msgid "Place order"
+msgstr ""
+
+#: templates/checkout/shipping_address.html:15
+msgid "Where should we ship to?"
+msgstr ""
+
+#: templates/checkout/shipping_address.html:34
+msgid "Ship to this address"
+msgstr ""
+
+#: templates/checkout/shipping_address.html:35
+msgid "Edit"
+msgstr ""
+
+#: templates/checkout/shipping_address.html:36
+msgid "Delete"
+msgstr ""
+
+#: templates/checkout/shipping_address.html:48
+msgid "Or a new address?"
+msgstr ""
+
+#: templates/checkout/shipping_address.html:51
+msgid "Your addressbook is currently empty"
+msgstr ""
+
+#: templates/checkout/shipping_address.html:61
+#: templates/checkout/user_address_delete.html:20
+#: templates/checkout/user_address_form.html:21
+#: templates/reviews/add_review.html:12
+msgid "or"
+msgstr ""
+
+#: templates/checkout/shipping_address.html:61
+msgid "return to basket"
+msgstr ""
+
+#: templates/checkout/shipping_methods.html:18
+msgid "Choose a shipping method"
+msgstr ""
+
+#: templates/checkout/shipping_methods.html:22
+msgid "Method"
+msgstr ""
+
+#: templates/checkout/shipping_methods.html:23
+#: templates/checkout/thank_you.html:54
+msgid "Cost"
+msgstr ""
+
+#: templates/checkout/shipping_methods.html:31
+msgid "Description:"
+msgstr ""
+
+#: templates/checkout/shipping_methods.html:40
+msgid "Select option"
+msgstr ""
+
+#: templates/checkout/thank_you.html:6
+msgid "Confirmation of order"
+msgstr ""
+
+#: templates/checkout/thank_you.html:14
+#, python-format
+msgid ""
+"\n"
+"\t\tConfirmation for order #%(order_num)s\n"
+"\t\t"
+msgstr ""
+
+#: templates/checkout/thank_you.html:18
+msgid ""
+"Your order has been placed and a confirmation email has ben sent - your "
+"order number is"
+msgstr ""
+
+#: templates/checkout/thank_you.html:20
+msgid ""
+"Please make a note of this reference or print this page and quote it in any "
+"communication with us regarding your order."
+msgstr ""
+
+#: templates/checkout/thank_you.html:27
+msgid "Your order will be delivered to:"
+msgstr ""
+
+#: templates/checkout/thank_you.html:46
+msgid "Order details"
+msgstr ""
+
+#: templates/checkout/thank_you.html:51
+msgid "Items purchased"
+msgstr ""
+
+#: templates/checkout/thank_you.html:52
+msgid "Estimated dispatch date"
+msgstr ""
+
+#: templates/checkout/thank_you.html:94
+msgid "Shipping charge - {{order.shipping_method}}"
+msgstr ""
+
+#: templates/checkout/thank_you.html:107
+msgid "Tracking your order"
+msgstr ""
+
+#: templates/checkout/thank_you.html:115
+msgid "Print this page"
+msgstr ""
+
+#: templates/checkout/user_address_delete.html:19
+msgid "Are you sure you want to delete this address?"
+msgstr ""
+
+#: templates/checkout/user_address_delete.html:19
+msgid "Yes!"
+msgstr ""
+
+#: templates/checkout/user_address_form.html:14
+msgid "Enter an address for your addressbook"
+msgstr ""
+
+#: templates/checkout/user_address_form.html:20
+msgid "Save"
+msgstr ""
+
+#: templates/flatpages/help.html:9
+msgid "Pages"
+msgstr ""
+
+#: templates/offer/detail.html:5 templates/offer/detail.html.py:24
+msgid "Offer"
+msgstr ""
+
+#: templates/offer/detail.html:34
+msgid " This offer has expired "
+msgstr ""
+
+#: templates/offer/detail.html:41
+msgid "What you need to do"
+msgstr ""
+
+#: templates/partials/footer.html:5
+msgid "About"
+msgstr ""
+
+#: templates/partials/footer.html:6
+msgid "Top of the page"
+msgstr ""
+
+#: templates/partials/nav_accounts.html:8
+msgid "Welcome"
+msgstr ""
+
+#: templates/partials/nav_accounts.html:10
+msgid "Account"
+msgstr ""
+
+#: templates/partials/nav_accounts.html:11
+msgid "Logout"
+msgstr ""
+
+#: templates/partials/nav_accounts.html:13
+msgid "Dashboard"
+msgstr ""
+
+#: templates/partials/nav_accounts.html:16
+msgid "Login"
+msgstr ""
+
+#: templates/partials/nav_alternate.html:25
+#: templates/partials/nav_alternate.html:41
+#: templates/partials/nav_primary.html:25
+#: templates/partials/nav_primary.html:41
+msgid "Browse Store"
+msgstr ""
+
+#: templates/partials/nav_alternate.html:27
+#: templates/partials/nav_alternate.html:43
+#: templates/partials/nav_primary.html:27
+#: templates/partials/nav_primary.html:43
+msgid "All Products"
+msgstr ""
+
+#: templates/partials/nav_alternate.html:45
+#: templates/partials/nav_primary.html:45
+msgid "Contains a Submenu"
+msgstr ""
+
+#: templates/partials/nav_alternate.html:47
+#: templates/partials/nav_alternate.html:48
+#: templates/partials/nav_alternate.html:49
+#: templates/partials/nav_alternate.html:50
+#: templates/partials/nav_primary.html:47
+#: templates/partials/nav_primary.html:48
+#: templates/partials/nav_primary.html:49
+#: templates/partials/nav_primary.html:50
+msgid "Submenu Link"
+msgstr ""
+
+#: templates/partials/nav_alternate.html:53
+#: templates/partials/nav_primary.html:53
+msgid "Go Home!"
+msgstr ""
+
+#: templates/promotions/automaticproductlist.html:20
+#: templates/promotions/handpickedproductlist.html:20
+msgid "See more"
+msgstr ""
+
+#: templates/promotions/home.html:13
+msgid "Welcome!"
+msgstr ""
+
+#: templates/promotions/singleproduct.html:31
+#: templates/promotions/partials/product_carousel.html:25
+msgid "Notify me"
+msgstr ""
+
+#: templates/promotions/singleproduct.html:44
+msgid "No rating"
+msgstr ""
+
+#: templates/registration/password_reset_complete.html:4
+#: templates/registration/password_reset_complete.html:7
+msgid "Password reset complete"
+msgstr ""
+
+#: templates/registration/password_reset_complete.html:8
+msgid "Your password has been set.  You may go ahead and log in now."
+msgstr ""
+
+#: templates/registration/password_reset_complete.html:9
+msgid "Log in"
+msgstr ""
+
+#: templates/registration/password_reset_confirm.html:4
+msgid "Password reset confirm"
+msgstr ""
+
+#: templates/registration/password_reset_confirm.html:10
+msgid "Enter new password"
+msgstr ""
+
+#: templates/registration/password_reset_confirm.html:12
+msgid ""
+"Please enter your new password twice so we can verify you typed it in "
+"correctly."
+msgstr ""
+
+#: templates/registration/password_reset_confirm.html:16
+msgid "New password:"
+msgstr ""
+
+#: templates/registration/password_reset_confirm.html:18
+msgid "Confirm password:"
+msgstr ""
+
+#: templates/registration/password_reset_confirm.html:19
+msgid "Change my password"
+msgstr ""
+
+#: templates/registration/password_reset_confirm.html:24
+msgid "Password reset unsuccessful"
+msgstr ""
+
+#: templates/registration/password_reset_confirm.html:26
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used.  Please request a new password reset."
+msgstr ""
+
+#: templates/registration/password_reset_done.html:4
+#: templates/registration/password_reset_done.html:8
+msgid "Password reset successful"
+msgstr ""
+
+#: templates/registration/password_reset_done.html:9
+msgid ""
+"We've e-mailed you instructions for setting your password to the e-mail "
+"address you submitted. You should be receiving it shortly."
+msgstr ""
+
+#: templates/registration/password_reset_email.html:2
+#, python-format
+msgid ""
+"You're receiving this e-mail because you requested a password reset for your "
+"user account at %(site_name)s."
+msgstr ""
+
+#: templates/registration/password_reset_email.html:4
+msgid "Please go to the following page and choose a new password:"
+msgstr ""
+
+#: templates/registration/password_reset_email.html:9
+msgid "Thanks for using our site!"
+msgstr ""
+
+#: templates/registration/password_reset_email.html:11
+#, python-format
+msgid "The %(site_name)s team"
+msgstr ""
+
+#: templates/registration/password_reset_form.html:4
+#: templates/registration/password_reset_form.html:9
+msgid "Password reset"
+msgstr ""
+
+#: templates/registration/password_reset_form.html:15
+msgid ""
+"Forgotten your password? Enter your e-mail address below, and we'll e-mail "
+"instructions for setting a new one."
+msgstr ""
+
+#: templates/registration/password_reset_form.html:18
+msgid "E-mail address:"
+msgstr ""
+
+#: templates/registration/password_reset_form.html:30
+msgid "Reset my password"
+msgstr ""
+
+#: templates/registration/password_reset_subject.txt:2
+#, python-format
+msgid "Password reset on %(site_name)s"
+msgstr ""
+
+#: templates/reviews/_vote_bit.html:4
+msgid "Is this review helpful?"
+msgstr ""
+
+#: templates/reviews/_vote_bit.html:8
+msgid "Yes"
+msgstr ""
+
+#: templates/reviews/_vote_bit.html:13
+msgid "No"
+msgstr ""
+
+#: templates/reviews/add_review.html:6
+msgid "Leave a product review"
+msgstr ""
+
+#: templates/reviews/add_review.html:11
+msgid "Submit"
+msgstr ""
+
+#: templates/reviews/review.html:7
+msgid "Score:"
+msgstr ""
+
+#: templates/reviews/review.html:8
+msgid "Comments:"
+msgstr ""
+
+#: templates/reviews/reviews.html:8
+msgid "Reviews for"
+msgstr ""
+
+#: templates/reviews/reviews.html:23
+msgid "Reviews of"
+msgstr ""
+
+#: templates/reviews/reviews.html:38
+msgid "Read customer reviews on this product."
+msgstr ""
+
+#: templates/reviews/reviews.html:42
+msgid "Sort by:"
+msgstr ""
+
+#: templates/reviews/reviews.html:46
+msgid "Recency"
+msgstr ""
+
+#: templates/reviews/reviews.html:60
+#, python-format
+msgid "%(review.num_up_votes)s customers agreed."
+msgstr ""
+
+#: templates/reviews/reviews.html:73
+#, python-format
+msgid ""
+"\n"
+"                        Page %(page_obj.number)s of "
+"%(paginator.num_pages)s.\n"
+"\t\t\t\t\t\t"
+msgstr ""
