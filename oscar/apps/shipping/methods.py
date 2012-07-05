@@ -1,5 +1,7 @@
 from decimal import Decimal as D
 
+from django.utils.translation import ugettext_lazy as _
+
 from oscar.apps.shipping.base import ShippingMethod
 from oscar.apps.shipping.models import OrderAndItemCharges, WeightBand, WeightBased
 from oscar.apps.shipping import Scales
@@ -10,7 +12,7 @@ class Free(ShippingMethod):
     Simple method for free shipping
     """
     code = 'free-shipping'
-    name = 'Free shipping'
+    name = _('Free shipping')
     
     def basket_charge_incl_tax(self):
         return D('0.00')
@@ -21,12 +23,12 @@ class Free(ShippingMethod):
 
 class NoShippingRequired(Free):
     code = 'no-shipping-required'
-    name = 'No shipping required'
+    name = _('No shipping required')
     
 
 class FixedPrice(ShippingMethod):
     code = 'fixed-price-shipping'
-    name = 'Fixed price shipping'
+    name = _('Fixed price shipping')
     
     def __init__(self, charge_incl_tax, charge_excl_tax=None):
         self.charge_incl_tax = charge_incl_tax

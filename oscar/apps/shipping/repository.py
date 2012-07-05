@@ -23,7 +23,7 @@ class Repository(object):
     def get_default_shipping_method(self, user, basket, shipping_addr=None, **kwargs):
         methods = self.get_shipping_methods(user, basket, shipping_addr, **kwargs)
         if len(methods) == 0:
-            raise ImproperlyConfigured("You need to define some shipping methods")
+            raise ImproperlyConfigured(_("You need to define some shipping methods"))
         return methods[0]
 
     def add_basket_to_methods(self, basket, methods):

@@ -329,14 +329,14 @@ class OrderDetailView(DetailView, PostActionMixin):
         # Convert line attributes into basket options
         for line in order.lines.all():
             if not line.product:
-                messages.warning(self.request, "'%s' unavailable for re-order" % line.title)
+                messages.warning(self.request, _("'%s' unavailable for re-order") % line.title)
                 continue
             options = []
             for attribute in line.attributes.all():
                 if attribute.option:
                     options.append({'option': attribute.option, 'value': attribute.value})
             basket.add_product(line.product, line.quantity, options)
-        messages.info(self.request, "All available lines from order %s have been added to your basket" % order.number)
+        messages.info(self.request, _("All available lines from order %s have been added to your basket") % order.number)
 
 
 class OrderLineView(DetailView, PostActionMixin):
@@ -364,9 +364,10 @@ class OrderLineView(DetailView, PostActionMixin):
                 options.append({'option': attribute.option, 'value': attribute.value})
         basket.add_product(line.product, line.quantity, options)
         if line.quantity > 1:
-            msg = "%d copies of '%s' have been added to your basket" % (line.quantity, line.product)
+            msg = _("%(qty)d copies of '%(product)s' have been added to your basket") % {
+                'qty': line.quantity, 'product': line.product}
         else:
-            msg = "'%s' has been added to your basket" % line.product
+            msg = _("'%s' has been added to your basket") % line.product
         messages.info(self.request, msg)
 
 
@@ -460,7 +461,7 @@ class ChangePasswordView(FormView):
 
     def form_valid(self, form):
         form.save()
-        messages.success(self.request, "Password updated")
+        messages.success(self.request, _("Password updated"))
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):

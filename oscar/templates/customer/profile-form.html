@@ -1,27 +1,28 @@
 {% extends "layout.html" %}
+{% load i18n %}
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url promotions:home %}">Home</a>
+        <a href="{% url promotions:home %}">{% trans 'Home' %}</a>
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="{% url customer:summary %}">Account</a>
+        <a href="{% url customer:summary %}">{% trans 'Account' %}</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">Edit profile</a></li>
+    <li class="active"><a href=".">{% trans 'Edit profile' %}</a></li>
 </ul>
 {% endblock %}
 
 
 {% block title %}
-Edit profile {{ block.super }}
+{% trans 'Edit profile' %} | {{ block.super }}
 {% endblock %}
 
 {% block header %}
 <div class="page-header">
-    <h2>Edit profile</h2>
+    <h2>{% trans 'Edit profile' %}</h2>
 </div>
 {% endblock header %}
 
@@ -29,12 +30,12 @@ Edit profile {{ block.super }}
 {% block content %}
 
 <form action="." method="post">
-	{% csrf_token %}
-	{% include 'partials/form_fields.html' with form=form %}
-	<div class="form-actions">
-		<button type="submit" class="btn btn-primary">Save</button>
-		or <a href="{% url customer:summary %}">cancel</a>.
-	</div>
+    {% csrf_token %}
+    {% include 'partials/form_fields.html' with form=form %}
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">{% trans 'Save' %}</button>
+        {% trans 'or' %} <a href="{% url customer:summary %}">{% trans 'cancel' %}</a>.
+    </div>
 </form>
 
 {% endblock content %}

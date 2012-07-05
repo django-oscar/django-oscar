@@ -21,15 +21,15 @@
     </header><!-- /header -->
     <div class="container-fluid page">
         <div class="page_inner">	
-			{% block breadcrumbs %}{% endblock %}
-			{% include "partials/alert_messages.html" %}
+            {% block breadcrumbs %}{% endblock %}
+            {% include "partials/alert_messages.html" %}
             <div class="row-fluid">
                 <aside class="sidebar span3">
                     <div id="promotions_left">
-                		{% for promotion in promotions_left %}
-                		{% render_promotion promotion %}
-                		{% endfor %}
-                	</div>
+                        {% for promotion in promotions_left %}
+                        {% render_promotion promotion %}
+                        {% endfor %}
+                    </div>
                     {% block column_left %}
                     {% endblock %}
                 </aside><!-- /span3 -->
@@ -37,21 +37,21 @@
                 <div class="span9">
                     {% block header %}
                     {% endblock %}
-                    
+
                     <div id="promotions">
-                		{% for promotion in promotions_page %}
-                		{% render_promotion promotion %}
-                		{% endfor %}
-                	</div>
-                    
+                        {% for promotion in promotions_page %}
+                        {% render_promotion promotion %}
+                        {% endfor %}
+                    </div>
+
                     {% block flatpage %}
                     {% endblock %}
-           
-        	        {% block content %} 
-        	        {% endblock %}
-        	    </div><!-- /span9 -->
+
+                    {% block content %}
+                    {% endblock %}
+                </div><!-- /span9 -->
             </div><!-- /row-fluid -->
-    	</div><!-- /page_inner -->
+        </div><!-- /page_inner -->
     </div><!-- /container-fluid -->
     {% include "partials/footer.html" %}
 {% endblock %}

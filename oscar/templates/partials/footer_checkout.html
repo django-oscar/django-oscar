@@ -1,10 +1,11 @@
+{% load i18n %}
 <footer class="footer container-fluid">
     {% block footer %}
-	    {% comment %}
+        {% comment %}
         <ul class="footer_links">
-            <li><a href="#terms-and-conditions">Terms and conditions</a></li>
-			<li><a href="#shipping">Shipping</a></li>
+            <li><a href="#terms-and-conditions">{% tans "Terms and conditions" %}</a></li>
+            <li><a href="#shipping">{% tans "Shipping" %}</a></li>
         </ul>
-		{% endcomment %}
+        {% endcomment %}
     {% endblock %}
 </footer>

@@ -1,163 +1,164 @@
 {% extends "layout.html" %}
 {% load currency_filters %}
+{% load i18n %}
 
 {% block title %}
-My account | {{ block.super }}
+{% trans 'My account' %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url promotions:home %}">Home</a>
+        <a href="{% url promotions:home %}">{% trans 'Home' %}</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">Account</a></li>
+    <li class="active"><a href=".">{% trans 'Account' %}</a></li>
 </ul>
 {% endblock %}
 
 {% block header %}
 <div class="page-header">
-    <h1>Account</h1>
+    <h1>{% trans 'Account' %}</h1>
 </div>
 {% endblock header %}
 
 {% block content %}
 
 <div class="tabbable dashboard">
-	<ul class="nav nav-tabs">
-		<li class="active"><a href="#1" data-toggle="tab">Profile</a></li>
-		<li><a href="#2" data-toggle="tab">Order History</a></li>
-		<li><a href="#3" data-toggle="tab">Address Book</a></li>
-		<li><a href="#4" data-toggle="tab">Email History</a></li>
-	</ul>
-	
-	<div class="tab-content">
-		
-		<div class="tab-pane active" id="1">
-			{% block tab_profile %}
-			<div class="sub-header">
-    			<h3>Profile</h3>
-			</div>
-			<table class="table table-striped table-bordered">
-				<tbody>
-					<tr>
-						<th>Name</th>
-						<td>{{ request.user.get_full_name|default:'-' }}</td>
-					</tr>
-					<tr>
-						<th>Email address</th>
-						<td>{{ user.email }}</td>
-					</tr>
-					{% block profile_fields %}
-					{% for field in profile_fields %}
-					<tr>
-						<th>{{ field.name }}</th>
-						<td>{{ field.value|default:"-" }}</td>
-					</tr>
-					{% endfor %}
-					{% endblock %}
-					<tr>
-						<th>Date registered</th>
-						<td>{{ user.date_joined }}</td>
-					</tr>
-					<tr>
-						<th></th>
-						<td>
-							<a href="{% url customer:profile-update %}" class="btn btn-primary">Edit profile</a>
-							<a href="{% url customer:change-password %}" class="btn btn-danger">Change password</a>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-			{% endblock %}
-		</div>
-		
-		<div class="tab-pane" id="2">
-			{% block tab_orderhistory %}
-			<div class="sub-header">
-    			<h3>Order history</h3>
-			</div>
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#1" data-toggle="tab">{% trans 'Profile' %}</a></li>
+        <li><a href="#2" data-toggle="tab">{% trans 'Order History' %}</a></li>
+        <li><a href="#3" data-toggle="tab">{% trans 'Address Book' %}</a></li>
+        <li><a href="#4" data-toggle="tab">{% trans 'Email History' %}</a></li>
+    </ul>
 
-			{% if orders %}
-			<table class="table table-striped table-bordered">
-				<tr>
-					<th>Order number</th>
-					<th>Total inc tax</th>
-					<th>Date submitted</th>
-					<th></th>
-				</tr>
-				{% for order in orders %}
-				<tr>
-					<td>{{ order.number }}</td>
-					<td>{{ order.total_incl_tax|currency }}</td>
-					<td>{{ order.date_placed }}</td>
-					<td>
-						<a class="btn btn-info" href="{% url customer:order order.number %}">View</a>
-						<form action="{% url customer:order order.number %}" method="post">
-							{% csrf_token %}
-							<input type="hidden" name="order_id" value="{{ order.id }}" />
-							<input type="hidden" name="action" value="reorder" />
-							<button type="submit" class="btn btn-success">Re-order</button>
-						</form>
-					</td>
-				</tr>
-				{% endfor %}
-			</table>
+    <div class="tab-content">
 
-			<div class="form-actions">
-				<a href="{% url customer:order-list %}" class="btn btn-primary">View order history</a>
-			</div>
-			{% else %}
-			<p>You haven't placed any orders yet.</p>
-			{% endif %}
-			{% endblock %}
-		</div>
-		
+        <div class="tab-pane active" id="1">
+            {% block tab_profile %}
+            <div class="sub-header">
+                <h3>{% trans 'Profile' %}</h3>
+            </div>
+            <table class="table table-striped table-bordered">
+                <tbody>
+                    <tr>
+                        <th>{% trans 'Name' %}</th>
+                        <td>{{ request.user.get_full_name|default:'-' }}</td>
+                    </tr>
+                    <tr>
+                        <th>{% trans 'Email address' %}</th>
+                        <td>{{ user.email }}</td>
+                    </tr>
+                    {% block profile_fields %}
+                    {% for field in profile_fields %}
+                    <tr>
+                        <th>{{ field.name }}</th>
+                        <td>{{ field.value|default:"-" }}</td>
+                    </tr>
+                    {% endfor %}
+                    {% endblock %}
+                    <tr>
+                        <th>{% trans 'Date registered' %}</th>
+                        <td>{{ user.date_joined }}</td>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <td>
+                            <a href="{% url customer:profile-update %}" class="btn btn-primary">{% trans 'Edit profile' %}</a>
+                            <a href="{% url customer:change-password %}" class="btn btn-danger">{% trans 'Change password' %}</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            {% endblock %}
+        </div>
+
+        <div class="tab-pane" id="2">
+            {% block tab_orderhistory %}
+            <div class="sub-header">
+                <h3>{% trans 'Order history' %}</h3>
+            </div>
+
+            {% if orders %}
+            <table class="table table-striped table-bordered">
+                <tr>
+                    <th>{% trans 'Order number' %}</th>
+                    <th>{% trans 'Total inc tax' %}</th>
+                    <th>{% trans 'Date submitted' %}</th>
+                    <th></th>
+                </tr>
+                {% for order in orders %}
+                <tr>
+                    <td>{{ order.number }}</td>
+                    <td>{{ order.total_incl_tax|currency }}</td>
+                    <td>{{ order.date_placed }}</td>
+                    <td>
+                        <a class="btn btn-info" href="{% url customer:order order.number %}">{% trans 'View' %}</a>
+                        <form action="{% url customer:order order.number %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="order_id" value="{{ order.id }}" />
+                            <input type="hidden" name="action" value="reorder" />
+                            <button type="submit" class="btn btn-success">{% trans 'Re-order' %}</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+
+            <div class="form-actions">
+                <a href="{% url customer:order-list %}" class="btn btn-primary">{% trans 'View order history' %}</a>
+            </div>
+            {% else %}
+            <p>{% trans "You haven't placed any orders yet." %}</p>
+            {% endif %}
+            {% endblock %}
+        </div>
+
         <div class="tab-pane" id="3">
-			{% block tab_addressbook %}
+            {% block tab_addressbook %}
             <div class="sub-header">
                 <h3>Address book</h3>
             </div>
             <table class="table table-striped table-bordered">
-            	<tbody>
-            		<tr>
-            			<th>Number of addresses in addressbook</th>
-            			<td>{{ addressbook_size }}</td>
-            		</tr>
-            		<tr>
-            			<th>Default shipping address</th>
-            			<td>{{ default_shipping_address|default:"-" }}</td>
-            		</tr>
-            		<tr>
-            			<th>Default billing address</th>
-            			<td>{{ default_billing_address|default:"-" }}</td>
-            		</tr>
-            		<tr>
-            			<th></th>
-            			<td>
-            				<a href="{% url customer:address-list %}" class="btn btn-primary">Manage address book</a>
-            			</td>
-            		</tr>
-            	</tbody>
+                <tbody>
+                    <tr>
+                        <th>{% trans 'Number of addresses in addressbook' %}</th>
+                        <td>{{ addressbook_size }}</td>
+                    </tr>
+                    <tr>
+                        <th>{% trans 'Default shipping address' %}</th>
+                        <td>{{ default_shipping_address|default:"-" }}</td>
+                    </tr>
+                    <tr>
+                        <th>{% trans 'Default billing address' %}</th>
+                        <td>{{ default_billing_address|default:"-" }}</td>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <td>
+                            <a href="{% url customer:address-list %}" class="btn btn-primary">{% trans 'Manage address book' %}</a>
+                        </td>
+                    </tr>
+                </tbody>
             </table>
-			{% endblock %}
+            {% endblock %}
         </div>
 
         <div class="tab-pane" id="4">
-			{% block tab_emailhistory %}
+            {% block tab_emailhistory %}
             <div class="sub-header">
-                <h3>Email history</h3>
+                <h3>{% trans 'Email history' %}</h3>
             </div>
             {% if not emails %}
 
-            <p>You haven't been sent any emails yet.</p>
+            <p>{% trans "You haven't been sent any emails yet." %}</p>
 
             {% else %}
 
             <table class="table table-striped table-bordered">
                 <tr>
-                    <th>Date sent</th>
-                    <th>Subject</th>
+                    <th>{% trans 'Date sent' %}</th>
+                    <th>{% trans 'Subject' %}</th>
                     <th></th>
                 </tr>
                 {% for email in emails %}
@@ -165,16 +166,16 @@ My account | {{ block.super }}
                     <td>{{ email.date_sent }}</td>
                     <td>{{ email.subject }}</td>
                     <td>
-                        <a href="{% url customer:email-detail email.id %}" class="btn btn-info">View</a>
+                        <a href="{% url customer:email-detail email.id %}" class="btn btn-info">{% trans 'View' %}</a>
                     </td>
                 </tr>
                 {% endfor %}
             </table>
             <div class="form-actions">
-                <a href="{% url customer:email-list %}" class="btn btn-primary">View email history</a>
+                <a href="{% url customer:email-list %}" class="btn btn-primary">{% trans 'View email history' %}</a>
             </div>
             {% endif %}
-			{% endblock %}
+            {% endblock %}
         </div>
     </div>
 </div><!--End of tab-content -->

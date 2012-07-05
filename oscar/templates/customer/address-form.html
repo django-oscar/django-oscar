@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% load currency_filters %}
+{% load i18n %}
 
 {% block title %}
 {{ title }} | {{ block.super }}
@@ -8,24 +9,24 @@
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url promotions:home %}">Home</a>
+        <a href="{% url promotions:home %}">{% tran 'Home' %}</a>
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="{% url customer:summary %}">Account</a>
+        <a href="{% url customer:summary %}">{% trans 'Account' %}</a>
         <span class="divider">/</span>
     </li>
-	<li>
-		<a href="{% url customer:address-list %}">Address book</a>
-		<span class="divider">/</span>
-	</li>
-	<li class="active"><a href=".">{{ title }}</a></li>
+    <li>
+        <a href="{% url customer:address-list %}">{% trans 'Address book' %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active"><a href=".">{{ title }}</a></li>
 </ul>
 {% endblock %}
 
 {% block header %}
 <div class="page-header">
-	<h2>{{ title }}</h2>
+    <h2>{{ title }}</h2>
 </div>
 {% endblock header %}
 
@@ -34,11 +35,10 @@
     {% csrf_token %}
     {% include "partials/form_fields.html" with form=form %}
     <div class="form-actions">
-        <button type="submit" value="Save" class="btn btn-primary btn-large">Save</button>
-        or
-        <a href="{% url customer:address-list %}">cancel</a>
+        <button type="submit" value="Save" class="btn btn-primary btn-large">{% trans 'Save' %}</button>
+        {% trans 'or' %}
+        <a href="{% url customer:address-list %}">{% trans 'cancel' %}</a>
     </div>
 </form>
 
 {% endblock content %}
-

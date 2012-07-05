@@ -25,13 +25,13 @@ class DefaultWrapper(object):
         quantity of the product)
         """
         if not self.is_available_to_buy(stockrecord):
-            return False, _("'%s' is not available to purchase" % stockrecord.product.title)
+            return False, _("'%s' is not available to purchase") % stockrecord.product.title
         max_qty = self.max_purchase_quantity(stockrecord, user)
         if max_qty is None:
             return True, None
         if max_qty < quantity:
-            return False, _("'%s' - A maximum of %d can be bought" % (
-                stockrecord.product.title, max_qty))
+            return False, _("'%(product)s' - A maximum of %(max)d can be bought") % {
+                            'product':stockrecord.product.title, 'max':max_qty}
         return True, None
 
     def max_purchase_quantity(self, stockrecord, user=None):
@@ -56,7 +56,7 @@ class DefaultWrapper(object):
     
     def availability(self, stockrecord):
         if stockrecord.net_stock_level > 0:
-            return _("In stock (%d available)" % stockrecord.net_stock_level)
+            return _("In stock (%d available)") % stockrecord.net_stock_level
         if self.is_available_to_buy(stockrecord):
             return _('Available')
         return _("Not available")

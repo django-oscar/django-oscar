@@ -1,27 +1,27 @@
-{% load currency_filters %}<p xmlns="http://www.w3.org/1999/html">Hello,</p>
+{% load currency_filters i18n %}<p xmlns="http://www.w3.org/1999/html">{% trans 'Hello,' %}</p>
 
-<p>We are pleased to confirm your order {{ order.number }} has been received and
-will be processed shortly.</p>
+<p>{% blocktrans %}We are pleased to confirm your order {{ order.number }} has been received and
+will be processed shortly.{% endblocktrans %}</p>
 
-<p>Your order contains:</p>
+<p>{% trans 'Your order contains:' %}</p>
 
 <ul>
-	{% for line in order.lines.all %}
-	<li>{{ line.title }} - quantity: {{ line.quantity }} - price: {{ line.line_price_incl_tax|currency }}</li>
-	{% endfor %}
+    {% for line in order.lines.all %}
+    <li>{{ line.title }} - {%  trans 'quantity:' %} {{ line.quantity }} - {% trans 'price:' %} {{ line.line_price_incl_tax|currency }}</li>
+    {% endfor %}
 </ul>
 <p>
-Basket total: {{ order.basket_total_incl_tax|currency }}</br>
-Shipping: {{ order.shipping_incl_tax|currency }}</br>
-Order Total: {{ order.total_incl_tax|currency }}
+{% trans 'Basket total:' %} {{ order.basket_total_incl_tax|currency }}</br>
+{% trans 'Shipping:' %} {{ order.shipping_incl_tax|currency }}</br>
+{% trans 'Order Total:' %} {{ order.total_incl_tax|currency }}
 </p>
 
-<p>Shipping address:</p>
+<p>{% trans 'Shipping address:' %}</p>
 <p>{% for field in order.shipping_address.active_address_fields %}  {{ field }}<br/>
 {% endfor %}</p>
 
 {% if status_url %}
-<p>You can view the status of this order by clicking <a href="{{ status_url }}" title="order status">here</a>
+<p>{% blocktrans %}You can view the status of this order by clicking <a href="{{ status_url }}" title="order status">here</a>{% endblocktrans %}</p>
 {% endif %}
 
-<p>The team</p>
+<p>{% blocktrans %}The team{% endblocktrans %}</p>

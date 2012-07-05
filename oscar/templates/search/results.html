@@ -1,17 +1,18 @@
 {% extends 'layout.html' %}
 {% load currency_filters %}
 {% load thumbnail %}
+{% load i18n %}
 
 {% block header%}
 <div class="page-header">
-    <h1>Search for '{{ query }}'</h1>
+    <h1>{% trans 'Search for' %} '{{ query }}'</h1>
 </div>
 {% endblock %}
 
 {% block content %}
 
 {% if suggestion %}
-Did you mean <a href="{% url search:search %}?q={{ suggestion }}">{{ suggestion }}</a>?
+{% trans 'Did you mean' %} <a href="{% url search:search %}?q={{ suggestion }}">{{ suggestion }}</a>?
 {% endif %}
 
 {% if page.object_list %}
@@ -19,11 +20,11 @@ Did you mean <a href="{% url search:search %}?q={{ suggestion }}">{{ suggestion 
         {% for result in page.object_list %}
         <li>
             <article class="product_pod">
-			{% with image=product.primary_image %}
-			{% thumbnail image.original "400x400" upscale=False as thumb %}
-			<a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
-			{% endthumbnail %}
-			{% endwith %}
+            {% with image=product.primary_image %}
+            {% thumbnail image.original "400x400" upscale=False as thumb %}
+            <a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
+            {% endthumbnail %}
+            {% endwith %}
             <h3><a href="{{ result.object.get_absolute_url }}">{{ result.object.get_title }}</a></h3>
             <div class="product_price">
                 {% if result.object.is_group %}
@@ -33,7 +34,7 @@ Did you mean <a href="{% url search:search %}?q={{ suggestion }}">{{ suggestion 
                         <h4>{{ result.object.stockrecord.price_incl_tax|currency }}</h4>
                          <p class="app-ico avaliability instock">{{ result.object.stockrecord.availability }}</p>
                      {% else %}
-                         <p class="app-ico avaliability outstock">Not available</p>
+                         <p class="app-ico avaliability outstock">{% trans 'Not available' %}</p>
                      {% endif %}
                 {% endif %}
             </div>
@@ -42,7 +43,7 @@ Did you mean <a href="{% url search:search %}?q={{ suggestion }}">{{ suggestion 
         {% endfor %}
     </ol>
 {% else %}
-    <p>No search results found.</p>
+    <p>{% trans 'No search results found.' %}</p>
 {% endif %}
 
 {% if page_obj %}

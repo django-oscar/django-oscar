@@ -42,6 +42,9 @@ class AbstractAddress(models.Model):
     
     class Meta:
         abstract = True
+        verbose_name = _('Address')
+        verbose_name_plural = _('Addresses')
+
 
     def save(self, *args, **kwargs):
         self._clean_fields()
@@ -149,14 +152,15 @@ class AbstractShippingAddress(AbstractAddress):
     """
     phone_number = models.CharField(max_length=32, blank=True, null=True)
     notes = models.TextField(blank=True, null=True,
-                             verbose_name='Courier instructions',
-                             help_text="For example, leave the parcel in the wheelie bin " \
-                                       "if I'm not in.")
+                             verbose_name=_('Courier instructions'),
+                             help_text=_("For example, leave the parcel in the wheelie bin " \
+                                       "if I'm not in."))
     
     class Meta:
         abstract = True
-        verbose_name_plural = "shipping addresses"
-        
+        verbose_name = _("shipping address")
+        verbose_name_plural = _("shipping addresses")
+
     @property    
     def order(self):
         """
@@ -227,7 +231,8 @@ class AbstractUserAddress(AbstractShippingAddress):
     
     class Meta:
         abstract = True
-        verbose_name_plural = "User addresses"
+        verbose_name = _("User address")
+        verbose_name_plural = _("User addresses")
         ordering = ['-num_orders']
 
 
@@ -235,8 +240,9 @@ class AbstractBillingAddress(AbstractAddress):
     
     class Meta:
         abstract = True
-        verbose_name_plural = "Billing addresses"   
-        
+        verbose_name_plural = _("Billing address")
+        verbose_name_plural = _("Billing addresses")
+
     @property    
     def order(self):
         """
