@@ -103,6 +103,11 @@ class EnabledAnonymousCheckoutViewsTests(ClientTestCase, CheckoutMixin):
 
 class TestShippingAddressView(ClientTestCase, CheckoutMixin):
     fixtures = ['countries.json']
+
+    def test_pages_returns_200(self):
+        self.add_product_to_basket()
+        response = self.client.get(reverse('checkout:shipping-address'))
+        self.assertIsOk(response)
     
     def test_anon_checkout_disabled_by_default(self):
         self.assertFalse(settings.OSCAR_ALLOW_ANON_CHECKOUT)
