@@ -4,7 +4,7 @@ import os
 # a full release
 
 VERSION = (0, 3, 0, 'alpha', 0)
-
+    
 def get_short_version():
     return '%s.%s' % (VERSION[0], VERSION[1])
 

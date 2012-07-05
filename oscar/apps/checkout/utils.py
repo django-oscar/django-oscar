@@ -71,20 +71,6 @@ class CheckoutSessionData(object):
     def reset_shipping_data(self):
         self._flush_namespace('shipping')
 
-    def no_shipping_required(self):
-        """
-        Record fact that basket doesn't require a shipping address or method
-        """
-        self.reset_shipping_data()
-        self._set('shipping', 'is_required', False)
-
-    def shipping_required(self):
-        """
-        Record fact that basket does require a shipping address or method
-        """
-        self.reset_shipping_data()
-        self._set('shipping', 'is_required', True)
-
     def ship_to_user_address(self, address):
         """
         Set existing shipping address id to session and unset address fields from session
@@ -112,10 +98,12 @@ class CheckoutSessionData(object):
         return self._get('shipping', 'user_address_id')
     user_address_id = shipping_user_address_id
 
-    def is_shipping_required(self):
-        return self._get('shipping', 'is_required', True)
-
     def is_shipping_address_set(self):
+        """
+        Test whether a shipping address has been stored in the session.
+
+        This can be from a new address or re-using an existing address.
+        """
         new_fields = self.new_shipping_address_fields()
         has_new_address = new_fields is not None
         has_old_address = self.user_address_id() > 0

@@ -176,6 +176,11 @@ class ShippingAddressView(CheckoutSessionMixin, FormView):
     form_class = ShippingAddressForm
 
     def get(self, request, *args, **kwargs):
+        # Check that the user's basket is not empty
+        if request.basket.is_empty:
+            messages.error(request, _("You need to add some items to your basket to checkout"))
+            return HttpResponseRedirect(reverse('basket:summary'))
+
         # Check that guests have entered an email address
         if not request.user.is_authenticated() and not self.checkout_session.get_guest_email():
             messages.error(request, _("Please either sign in or enter your email address"))
@@ -183,20 +188,11 @@ class ShippingAddressView(CheckoutSessionMixin, FormView):
 
         # Check to see that a shipping address is actually required.  It may not be if
         # the basket is purely downloads
-        if not self.does_basket_require_shipping(request.basket):
+        if not request.basket.is_shipping_required():
             messages.info(request, _("Your basket does not require a shipping address to be submitted"))
-            self.checkout_session.no_shipping_required()
             return HttpResponseRedirect(self.get_success_url())
-        else:
-            self.checkout_session.shipping_required()
 
         return super(ShippingAddressView, self).get(request, *args, **kwargs)
-
-    def does_basket_require_shipping(self, basket):
-        """
-        Test whether the contents of the basket require shipping
-        """
-        return basket.is_shipping_required()
 
     def get_initial(self):
         return self.checkout_session.new_shipping_address_fields()
@@ -318,8 +314,13 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
     template_name = 'checkout/shipping_methods.html';
 
     def get(self, request, *args, **kwargs):
+        # Check that the user's basket is not empty
+        if request.basket.is_empty:
+            messages.error(request, _("You need to add some items to your basket to checkout"))
+            return HttpResponseRedirect(reverse('basket:summary'))
+
         # Check that shipping is required at all
-        if not self.checkout_session.is_shipping_required():
+        if not request.basket.is_shipping_required():
             self.checkout_session.use_shipping_method(NoShippingRequired().code)
             return self.get_success_response()
 
@@ -394,10 +395,16 @@ class PaymentMethodView(CheckoutSessionMixin, TemplateView):
     """
 
     def get(self, request, *args, **kwargs):
+        # Check that the user's basket is not empty
+        if request.basket.is_empty:
+            messages.error(request, _("You need to add some items to your basket to checkout"))
+            return HttpResponseRedirect(reverse('basket:summary'))
+
         # Check that shipping address has been completed
-        if self.checkout_session.is_shipping_required() and not self.checkout_session.is_shipping_address_set():
+        if request.basket.is_shipping_required() and not self.checkout_session.is_shipping_address_set():
             messages.error(request, _("Please choose a shipping address"))
             return HttpResponseRedirect(reverse('checkout:shipping-address'))
+
         # Check that shipping method has been set
         if not self.checkout_session.is_shipping_method_set():
             messages.error(request, _("Please choose a shipping method"))
@@ -513,7 +520,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         If the shipping address was selected from the user's address book,
         then we convert the UserAddress to a ShippingAddress.
         """
-        if not self.checkout_session.is_shipping_required():
+        if not self.request.basket.is_shipping_required():
             return None
 
         addr_data = self.checkout_session.new_shipping_address_fields()
@@ -670,8 +677,12 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         return [self.template_name_preview] if self.preview else [self.template_name]
 
     def get_error_response(self):
+        # Check that the user's basket is not empty
+        if self.request.basket.is_empty:
+            messages.error(self.request, _("You need to add some items to your basket to checkout"))
+            return HttpResponseRedirect(reverse('basket:summary'))
         # Check that shipping address has been completed
-        if self.checkout_session.is_shipping_required() and not self.checkout_session.is_shipping_address_set():
+        if self.request.basket.is_shipping_required() and not self.checkout_session.is_shipping_address_set():
             messages.error(self.request, _("Please choose a shipping address"))
             return HttpResponseRedirect(reverse('checkout:shipping-address'))
         # Check that shipping method has been set
@@ -692,6 +703,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         then the method can call submit()
         """
         error_response = self.get_error_response()
+        
         if error_response:
             return error_response
         if self.preview:
@@ -761,7 +773,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         # Next, check that basket isn't empty
         if basket.is_empty:
             messages.error(self.request, _("This order cannot be submitted as the basket is empty"))
-            url = self.request.META.get('HTTP_REFERER', reverse('checkout:shipping-address'))
+            url = self.request.META.get('HTTP_REFERER', reverse('basket:summary'))
             return HttpResponseRedirect(url)
 
         # Domain-specific checks on the basket

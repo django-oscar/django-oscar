@@ -55,7 +55,7 @@ class BasketMiddleware(object):
         
         This is its own method to allow it to be overridden
         """
-        master.merge(slave)    
+        master.merge(slave, add_quantities=False)
         
     def process_response(self, request, response):
         # Delete any surplus cookies

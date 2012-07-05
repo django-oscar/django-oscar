@@ -10,12 +10,13 @@ core functionality can be customised to suit the needs of your project.  This
 allows it to handle a wide range of e-commerce requirements, from large-scale B2C
 sites to complex B2B sites rich in domain-specific business logic.
 
-This README is just a stub - see the following links for more details
-information:
+More information:
 
 * `Official homepage`_ 
-* `Demo site`_ (experimental) 
-* `Documentation`_ on `readthedocs.org`_
+* `Sandbox site`_ (an hourly build of the unstable master branch - it's
+  experimental but feel free to explore and get a feel for the base Oscar
+  install) 
+* `Documentation`_ on the excellent `readthedocs.org`_
 * `Google Group`_ - the mailing list is django-oscar@googlegroups.com
 * `Continuous integration homepage`_ on `travis-ci.org`_
 * `Twitter account for news and updates`_
@@ -24,7 +25,7 @@ information:
 .. image:: https://secure.travis-ci.org/tangentlabs/django-oscar.png
 
 .. _`Official homepage`: http://oscarcommerce.com
-.. _`Demo site`: http://sandbox.oscar.tangentlabs.co.uk
+.. _`Sandbox site`: http://sandbox.oscar.tangentlabs.co.uk
 .. _`Documentation`: http://django-oscar.readthedocs.org/en/latest/
 .. _`readthedocs.org`: http://readthedocs.org
 .. _`Continuous integration homepage`: http://travis-ci.org/#!/tangentlabs/django-oscar 
@@ -34,7 +35,8 @@ information:
 .. _`Google Group`: https://groups.google.com/forum/?fromgroups#!forum/django-oscar
 
 Oscar was written by `David Winterbottom`_ (`@codeinthehole`_) and is developed
-and maintained by `Tangent Labs`_, a London-based digital agency.
+and maintained by `Tangent Labs`_, a London-based digital agency, with help from
+`Mirumee`.
 
 Oscar is released under the permissive `New BSD license`_.
 
@@ -42,6 +44,7 @@ Oscar is released under the permissive `New BSD license`_.
 .. _`@codeinthehole`: https://twitter.com/codeinthehole
 .. _`Tangent Labs`: http://www.tangentlabs.co.uk
 .. _`New BSD license`: https://github.com/tangentlabs/django-oscar/blob/master/LICENSE
+.. _`Mirumee`: http://mirumee.com/
 
 Case studies
 ------------

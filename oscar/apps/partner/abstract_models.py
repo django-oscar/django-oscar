@@ -191,22 +191,27 @@ class AbstractStockRecord(models.Model):
     @property
     def availability_code(self):
         """
-        Return an item's availability as a code for use in CSS
+        Return an product's availability as a code for use in CSS to add icons
+        to the overall availability mark-up.  For example, "instock",
+        "unavailable".
         """
         return get_partner_wrapper(self.partner.name).availability_code(self)
     
     @property
     def availability(self):
         """
-        Return an item's availability as a string
+        Return a product's availability as a string that can be displayed to the
+        user.  For example, "In stock", "Unavailabl".
         """
         return get_partner_wrapper(self.partner.name).availability(self)
 
-    def max_purchase_quantity(self, user):
+    def max_purchase_quantity(self, user=None):
         """
         Return an item's availability as a string
+
+        :param user: (optional) The user who wants to purchase
         """
-        return get_partner_wrapper(self.partner.name).availability(self)
+        return get_partner_wrapper(self.partner.name).max_purchase_quantity(self, user)
     
     @property
     def dispatch_date(self):

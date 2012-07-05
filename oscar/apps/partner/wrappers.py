@@ -47,6 +47,8 @@ class DefaultWrapper(object):
         Return a code for the availability of this product.
 
         This is normally used within CSS to add icons to stock messages
+
+        :param oscar.apps.partner.models.StockRecord stockrecord: stockrecord instance
         """
         if stockrecord.net_stock_level > 0:
             return 'instock'
@@ -55,6 +57,11 @@ class DefaultWrapper(object):
         return 'outofstock'
     
     def availability(self, stockrecord):
+        """
+        Return an availability message for the passed stockrecord.
+
+        :param oscar.apps.partner.models.StockRecord stockrecord: stockrecord instance
+        """
         if stockrecord.net_stock_level > 0:
             return _("In stock (%d available)" % stockrecord.net_stock_level)
         if self.is_available_to_buy(stockrecord):

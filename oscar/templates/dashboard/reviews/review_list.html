@@ -50,10 +50,18 @@ Reviews | {{ block.super }}
         <tr>
             <td><input type="checkbox" name="selected_review" class="selected_review" value="{{ review.id }}"/>
                 <td>
-                    <a href="{% url catalogue:reviews-detail review.product.slug review.product.id review.id %}">{{ review.title }}</a>
+					{% if review.product %}
+						<a href="{% url catalogue:reviews-detail review.product.slug review.product.id review.id %}">{{ review.title }}</a>
+					{% else %}
+						{{ review.title }}
+					{% endif %}
                 </td>
             <td>
-                <a href='{% url catalogue:detail review.product.slug review.product.id %}'>{{ review.product.title }}</a> </td>
+				{% if review.product %}
+					<a href='{% url catalogue:detail review.product.slug review.product.id %}'>{{ review.product.title }}</a> </td>
+				{% else %}
+					[Product deleted]
+				{% endif %}
             <td>
 				{% if review.user %}
                 <a href="{% url dashboard:user-detail review.user.id %}">{{ review.get_reviewer_name }}</a>

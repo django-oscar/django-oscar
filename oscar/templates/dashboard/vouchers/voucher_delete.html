@@ -43,7 +43,7 @@ Delete voucher '{{ voucher.name }}'? | Vouchers | {{ block.super }}
 		{% csrf_token %}
 		<div class="form-actions">
 			<button class="btn btn-danger btn-large" type="submit">Delete</button> or
-			<a href="{% url dashboard:range-list %}">cancel</a>
+			<a href="{% url dashboard:voucher-list %}">cancel</a>
 		</div>
 	</form>
 

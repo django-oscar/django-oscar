@@ -1,5 +1,6 @@
 from decimal import Decimal as D
 import httplib
+import datetime
 
 from django.contrib.auth.models import User
 from django.conf import settings
@@ -8,6 +9,28 @@ from django.core.urlresolvers import reverse
 
 from oscar.test.helpers import create_product
 from oscar.apps.basket.models import Basket
+from oscar.apps.basket import reports
+
+
+class BasketMergingTests(TestCase):
+
+    def setUp(self):
+        self.product = create_product()
+        self.user_basket = Basket()
+        self.user_basket.add_product(self.product)
+        self.cookie_basket = Basket()
+        self.cookie_basket.add_product(self.product, 2)
+        self.user_basket.merge(self.cookie_basket, add_quantities=False)
+
+    def test_cookie_basket_has_status_set(self):
+        self.assertEqual('Merged', self.cookie_basket.status)
+
+    def test_lines_are_moved_across(self):
+        self.assertEqual(1, self.user_basket.lines.all().count())
+
+    def test_merge_line_takes_max_quantity(self):
+        line = self.user_basket.lines.get(product=self.product)
+        self.assertEqual(2, line.quantity)
 
 
 class AnonAddToBasketViewTests(TestCase):
@@ -80,6 +103,27 @@ class BasketThresholdTest(TestCase):
         response = self.client.post(url, post_params)
         self.assertTrue('Your basket currently has 2 items.' in
                         response.cookies['messages'].value)
+
+
+class BasketReportTests(TestCase):
+
+    def test_open_report_doesnt_error(self):
+        data = {
+            'start_date': datetime.date(2012, 5, 1),
+            'end_date': datetime.date(2012, 5, 17),
+            'formatter': 'CSV'
+        }
+        generator = reports.OpenBasketReportGenerator(**data)
+        generator.generate()
+
+    def test_submitted_report_doesnt_error(self):
+        data = {
+            'start_date': datetime.date(2012, 5, 1),
+            'end_date': datetime.date(2012, 5, 17),
+            'formatter': 'CSV'
+        }
+        generator = reports.SubmittedBasketReportGenerator(**data)
+        generator.generate()
 
 
 class SavedBasketTests(TestCase):
