@@ -1,11 +1,6 @@
-from StringIO import StringIO
 from decimal import Decimal as D
 import random
-
-from django.test import TestCase
-from django.core.servers.basehttp import AdminMediaHandler
-from django.core.handlers.wsgi import WSGIHandler
-from django.core.urlresolvers import reverse
+import datetime
 
 from oscar.apps.basket.models import Basket
 from oscar.apps.catalogue.models import ProductClass, Product, ProductAttribute, ProductAttributeValue
@@ -14,6 +9,7 @@ from oscar.apps.order.utils import OrderCreator
 from oscar.apps.partner.models import Partner, StockRecord
 from oscar.apps.shipping.methods import Free
 from oscar.apps.offer.models import Range, ConditionalOffer, Condition, Benefit
+from oscar.apps.voucher.models import Voucher
 
 
 def create_product(price=None, title="Dummy title", product_class="Dummy item class", 
@@ -72,6 +68,9 @@ def create_order(number=None, basket=None, user=None, shipping_address=None, shi
 
 
 def create_offer():
+    """
+    Helper method for creating an offer
+    """
     range = Range.objects.create(name="All products range", includes_all_products=True)
     condition = Condition.objects.create(range=range,
                                          type=Condition.COUNT,
@@ -79,7 +78,7 @@ def create_offer():
     benefit = Benefit.objects.create(range=range,
                                      type=Benefit.PERCENTAGE,
                                      value=20)
-    offer= ConditionalOffer.objects.create(
+    offer = ConditionalOffer.objects.create(
         name='Dummy offer',
         offer_type='Site',
         condition=condition,
@@ -88,53 +87,15 @@ def create_offer():
     return offer
 
 
-
-
-class TwillTestCase(TestCase):
+def create_voucher():
     """
-    Simple wrapper around Twill to make writing TestCases easier.
-
-    Commands availabel through self.command are:
-    - go        -> visit a URL
-    - back      -> back to previous URL
-    - reload    -> reload URL
-    - follow    -> follow a given link
-    - code      -> assert the HTTP response code
-    - find      -> assert page contains some string
-    - notfind   -> assert page does not contain
-    - title     -> assert page title
+    Helper method for creating a voucher
     """
-
-    HOST = '127.0.0.1'
-    PORT = 8080
-
-    def setUp(self):
-        app = AdminMediaHandler(WSGIHandler())
-        twill.add_wsgi_intercept(self.HOST, self.PORT, lambda: app)
-        twill.set_output(StringIO())
-        self.command = twill.commands
-
-    def tearDown(self):
-        twill.remove_wsgi_intercept(self.HOST, self.PORT)
-
-    def reverse(self, url_name, *args, **kwargs):
-        """
-        Custom 'reverse' function that includes the protocol and host
-        """
-        return 'http://%s:%d%s' % (self.HOST, self.PORT, reverse(url_name, *args, **kwargs))
-
-    def visit(self, url_name, *args,**kwargs):
-        self.command.go(self.reverse(url_name, *args, **kwargs))
-
-    def assertResponseCodeIs(self, code):
-        self.command.code(code)
-
-    def assertPageContains(self, regexp):
-        self.command.find(regexp)
-
-    def assertPageDoesNotContain(self, regexp):
-        self.command.notfind(regexp)
-
-    def assertPageTitleMatches(self, regexp):
-        self.command.title(regexp)
-
+    voucher = Voucher.objects.create(
+        name="Test voucher",
+        code="test",
+        start_date=datetime.date.today(),
+        end_date=datetime.date.today() + datetime.timedelta(days=12)
+    )
+    voucher.offers.add(create_offer())
+    return voucher
