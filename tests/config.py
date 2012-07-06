@@ -56,6 +56,6 @@ def configure():
             HAYSTACK_SEARCH_ENGINE='dummy',
             HAYSTACK_SITECONF = 'oscar.search_sites',
             APPEND_SLASH=True,
-            NOSE_ARGS=['-s', '-x'],
+            NOSE_ARGS=['-s', '-x', '--with-spec'],
             **OSCAR_SETTINGS
         )
