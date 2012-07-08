@@ -1,6 +1,7 @@
 from django.http import HttpResponsePermanentRedirect, Http404
 from django.views.generic import ListView, DetailView
 from django.db.models import get_model
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.catalogue.signals import product_viewed, product_search
 
@@ -139,8 +140,8 @@ class ProductListView(ListView):
         context = super(ProductListView, self).get_context_data(**kwargs)
         q = self.get_search_query()
         if not q:
-            context['summary'] = 'All products'
+            context['summary'] = _('All products')
         else:
-            context['summary'] = "Products matching '%s'" % q
+            context['summary'] = _("Products matching '%s'") % q
             context['search_term'] = q
         return context

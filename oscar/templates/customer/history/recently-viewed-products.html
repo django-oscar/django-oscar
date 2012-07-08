@@ -1,6 +1,6 @@
-{% if products %}
+{% if products %}{% load i18n %}
 <div class="sub-header">
-    <h2>Products you recently viewed</h2>
+    <h2>{% trans 'Products you recently viewed' %}</h2>
 </div>
 <!-- Elastislide Carousel -->
 <div id="carousel" class="es-carousel-wrapper">

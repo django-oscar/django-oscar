@@ -1,5 +1,6 @@
 from django import forms
 from django.db.models import get_model
+from django.utils.translation import ugettext_lazy as _
 
 
 class ValidateReviewMixin(object):
@@ -7,16 +8,16 @@ class ValidateReviewMixin(object):
     def clean_title(self):
         title = self.cleaned_data['title'].strip()
         if not title:
-            raise forms.ValidationError("This field is required")
+            raise forms.ValidationError(_("This field is required"))
         if len(title) > 100:
             excess = len(title) - 100
-            raise forms.ValidationError("Please enter a short title (with %d fewer characters)" % excess)
+            raise forms.ValidationError(_("Please enter a short title (with %d fewer characters)") % excess)
         return title
 
     def clean_body(self):
         body = self.cleaned_data['body'].strip()
         if not body:
-            raise forms.ValidationError("This field is required")
+            raise forms.ValidationError(_("This field is required"))
         return body
 
 
@@ -33,7 +34,7 @@ class AnonymousUserProductReviewForm(forms.ModelForm, ValidateReviewMixin):
     def clean_name(self):
         name = self.cleaned_data['name'].strip()
         if not name:
-            raise forms.ValidationError("This field is required")
+            raise forms.ValidationError(_("This field is required"))
         return name
 
     class Meta:
@@ -46,7 +47,7 @@ class VoteForm(forms.ModelForm):
         user = self.instance.user
         review = self.instance.review
         if review.user == user:
-            raise forms.ValidationError("You cannot vote on your own reviews!")
+            raise forms.ValidationError(_("You cannot vote on your own reviews!"))
         return self.cleaned_data
 
     class Meta:

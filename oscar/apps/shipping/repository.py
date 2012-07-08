@@ -1,4 +1,7 @@
 from django.core.exceptions import ImproperlyConfigured
+from django.utils.translation import ugettext_lazy as _
+
+
 from oscar.apps.shipping.methods import Free, NoShippingRequired
 
 
@@ -23,7 +26,7 @@ class Repository(object):
     def get_default_shipping_method(self, user, basket, shipping_addr=None, **kwargs):
         methods = self.get_shipping_methods(user, basket, shipping_addr, **kwargs)
         if len(methods) == 0:
-            raise ImproperlyConfigured("You need to define some shipping methods")
+            raise ImproperlyConfigured(_("You need to define some shipping methods"))
         return min(methods, key=lambda method: method.basket_charge_incl_tax())
 
     def add_basket_to_methods(self, basket, methods):

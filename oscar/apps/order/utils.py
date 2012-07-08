@@ -1,6 +1,7 @@
 from django.contrib.sites.models import Site
 from django.conf import settings
 from django.db.models import get_model
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.shipping.methods import Free
 from oscar.core.loading import get_class
@@ -43,7 +44,7 @@ class OrderCreator(object):
         # Only a basket instance is required to place an order - everything else can be set
         # to defaults
         if basket.is_empty:
-            raise ValueError("Empty baskets cannot be submitted")
+            raise ValueError(_("Empty baskets cannot be submitted"))
         if not shipping_method:
             shipping_method = Free()
         if total_incl_tax is None or total_excl_tax is None:
@@ -59,7 +60,7 @@ class OrderCreator(object):
         except Order.DoesNotExist:
             pass
         else:
-            raise ValueError("There is already an order with number %s" % order_number)
+            raise ValueError(_("There is already an order with number %s") % order_number)
         
         # Ok - everything seems to be in order, let's place the order
         order = self.create_order_model(user, basket, shipping_address, 
@@ -112,7 +113,7 @@ class OrderCreator(object):
         """
         if product.has_stockrecord:
             return product.stockrecord.partner
-        raise AttributeError("No partner found for product '%s'" % product)
+        raise AttributeError(_("No partner found for product '%s'") % product)
     
     def create_line_models(self, order, basket_line, extra_line_fields=None):
         """

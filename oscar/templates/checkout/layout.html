@@ -18,13 +18,13 @@
         {% include "partials/nav_checkout.html" %}
     </header><!-- /header -->
     <div class="container-fluid page">
-		{% include 'partials/alert_messages.html' %}
+        {% include 'partials/alert_messages.html' %}
         {% block header %}{% endblock %}
 
        <div class="page_inner">
-			{% block checkout-nav %}
-			{% endblock %}
-        	<!-- The main nav on checkout pages contain links to modal flatpages -->   
+            {% block checkout-nav %}
+            {% endblock %}
+            <!-- The main nav on checkout pages contain links to modal flatpages -->
             {% block modal %}
                 {% load flatpages %}
                 {% get_flatpages '/order/' as flatpages %}
@@ -44,7 +44,7 @@
             {% endblock %}
 
             {% block content %}{% endblock %}
-            
+
             <div id="promotions">
                 {% for promotion in promotions_page %}
                     {% render_promotion promotion %}

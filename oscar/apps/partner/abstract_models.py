@@ -32,22 +32,23 @@ class AbstractPartner(models.Model):
     """
     Fulfillment partner
     """
-    name = models.CharField(max_length=128, unique=True)
+    name = models.CharField(_('Name'), max_length=128, unique=True)
     
     # A partner can have users assigned to it.  These can be used
     # to provide authentication for webservices etc.
     users = models.ManyToManyField('auth.User', related_name="partners", blank=True, null=True)
     
     class Meta:
-        verbose_name_plural = 'Fulfillment partners'
+        verbose_name = _('Fulfillment partner')
+        verbose_name_plural = _('Fulfillment partners')
         abstract = True
         permissions = (
-            ("can_edit_stock_records", "Can edit stock records"),
-            ("can_view_stock_records", "Can view stock records"),
-            ("can_edit_product_range", "Can edit product range"),
-            ("can_view_product_range", "Can view product range"),
-            ("can_edit_order_lines", "Can edit order lines"),
-            ("can_view_order_lines", "Can view order lines"),
+            ("can_edit_stock_records", _("Can edit stock records")),
+            ("can_view_stock_records", _("Can view stock records")),
+            ("can_edit_product_range", _("Can edit product range")),
+            ("can_view_product_range", _("Can view product range")),
+            ("can_edit_order_lines", _("Can edit order lines")),
+            ("can_view_order_lines", _("Can view order lines"))
         )
         
     def __unicode__(self):
@@ -73,30 +74,30 @@ class AbstractStockRecord(models.Model):
     partner_sku = models.CharField(_("Partner SKU"), max_length=128)
     
     # Price info:
-    price_currency = models.CharField(max_length=12, default=settings.OSCAR_DEFAULT_CURRENCY)
+    price_currency = models.CharField(_('Currency'), max_length=12, default=settings.OSCAR_DEFAULT_CURRENCY)
     
     # This is the base price for calculations - tax should be applied 
     # by the appropriate method.  We don't store it here as its calculation is 
     # highly domain-specific.  It is NULLable because some items don't have a fixed
     # price.
-    price_excl_tax = models.DecimalField(decimal_places=2, max_digits=12, blank=True, null=True)
+    price_excl_tax = models.DecimalField(_('Price (excl. tax)'), decimal_places=2, max_digits=12, blank=True, null=True)
     
     # Retail price for this item
-    price_retail = models.DecimalField(decimal_places=2, max_digits=12, blank=True, null=True)
+    price_retail = models.DecimalField(_('Price (retail)'), decimal_places=2, max_digits=12, blank=True, null=True)
     
     # Cost price is optional as not all partners supply it
-    cost_price = models.DecimalField(decimal_places=2, max_digits=12, blank=True, null=True)
+    cost_price = models.DecimalField(_('Cost Price'), decimal_places=2, max_digits=12, blank=True, null=True)
     
     # Stock level information
-    num_in_stock = models.PositiveIntegerField(default=0, blank=True, null=True)
+    num_in_stock = models.PositiveIntegerField(_('Number in stock'), default=0, blank=True, null=True)
     
     # Threshold for low-stock alerts
-    low_stock_threshold = models.PositiveIntegerField(blank=True, null=True)
+    low_stock_threshold = models.PositiveIntegerField(_('Low Stock Threshold'), blank=True, null=True)
 
     # The amount of stock allocated to orders but not fed back to the master
     # stock system.  A typical stock update process will set the num_in_stock
     # variable to a new value and reset num_allocated to zero
-    num_allocated = models.IntegerField(default=0, blank=True, null=True)
+    num_allocated = models.IntegerField(_('Number of Allocated'), default=0, blank=True, null=True)
     
     # Date information
     date_created = models.DateTimeField(auto_now_add=True)
@@ -105,6 +106,8 @@ class AbstractStockRecord(models.Model):
     class Meta:
         abstract = True
         unique_together = ('partner', 'partner_sku')
+        verbose_name = _("Stock Record")
+        verbose_name_plural = _("Stock Records")
 
     # 2-stage stock management model
     
@@ -130,7 +133,7 @@ class AbstractStockRecord(models.Model):
         and adjust the number in stock accordingly
         """
         if not self.is_allocation_consumption_possible(quantity):
-            raise InvalidStockAdjustment('Invalid stock consumption request')
+            raise InvalidStockAdjustment(_('Invalid stock consumption request'))
         self.num_allocated -= quantity
         self.num_in_stock -= quantity
         self.save()
@@ -253,7 +256,7 @@ class AbstractStockRecord(models.Model):
 
 class AbstractStockAlert(models.Model):
     stockrecord = models.ForeignKey('partner.StockRecord', related_name='alerts')
-    threshold = models.PositiveIntegerField()
+    threshold = models.PositiveIntegerField(_('Threshold'))
     OPEN, CLOSED = 'Open', 'Closed'
     status_choices = (
         (OPEN, _('Open')),
@@ -268,11 +271,9 @@ class AbstractStockAlert(models.Model):
         self.save()
 
     def __unicode__(self):
-        return u'<stockalert for "%s" status %s>' % (self.stockrecord,
-                                                     self.status)
+        return _('<stockalert for "%(stock)s" status %(status)s>') % {'stock': self.stockrecord, 'status': self.status}
 
     class Meta:
         ordering = ('-date_created',)
-
-
-
+        verbose_name = _('Stock Alert')
+        verbose_name_plural = _('Stock Alerts')

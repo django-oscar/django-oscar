@@ -5,7 +5,7 @@ import datetime
 from django.core import exceptions
 from django.template.defaultfilters import slugify
 from django.db import models
-from django.utils.translation import ugettext as _
+from django.utils.translation import ungettext, ugettext as _
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.conf import settings
@@ -18,11 +18,11 @@ class ConditionalOffer(models.Model):
     """
     A conditional offer (eg buy 1, get 10% off)
     """
-    name = models.CharField(max_length=128, unique=True, 
-                            help_text="""This is displayed within the customer's
-                            basket""")
-    slug = models.SlugField(max_length=128, unique=True, null=True)
-    description = models.TextField(blank=True, null=True)
+    name = models.CharField(_('Name'), max_length=128, unique=True,
+                            help_text=_("""This is displayed within the customer's
+                            basket"""))
+    slug = models.SlugField(_('Slug'), max_length=128, unique=True, null=True)
+    description = models.TextField(_('Description'), blank=True, null=True)
 
     # Offers come in a few different types:
     # (a) Offers that are available to all customers on the site.  Eg a 
@@ -35,12 +35,12 @@ class ConditionalOffer(models.Model):
     #     event.  Eg, users coming from some affiliate site get 10% off.     
     SITE, VOUCHER, USER, SESSION = ("Site", "Voucher", "User", "Session")
     TYPE_CHOICES = (
-        (SITE, "Site offer - available to all users"),
-        (VOUCHER, "Voucher offer - only available after entering the appropriate voucher code"),
-        (USER, "User offer - available to certain types of user"),
-        (SESSION, "Session offer - temporary offer, available for a user for the duration of their session"),
+        (SITE, _("Site offer - available to all users")),
+        (VOUCHER, _("Voucher offer - only available after entering the appropriate voucher code")),
+        (USER, _("User offer - available to certain types of user")),
+        (SESSION, _("Session offer - temporary offer, available for a user for the duration of their session")),
     )
-    offer_type = models.CharField(_("Type"), choices=TYPE_CHOICES, default=SITE, max_length=128)
+    offer_type = models.CharField(_('Type'), choices=TYPE_CHOICES, default=SITE, max_length=128)
 
     condition = models.ForeignKey('offer.Condition')
     benefit = models.ForeignKey('offer.Benefit')
@@ -48,17 +48,18 @@ class ConditionalOffer(models.Model):
     # Range of availability.  Note that if this is a voucher offer, then these
     # dates are ignored and only the dates from the voucher are used to determine 
     # availability.
-    start_date = models.DateField(blank=True, null=True)
-    end_date = models.DateField(blank=True, null=True,
-                                help_text="""Offers are not active on their end
-                                date, only the days preceding""")
+    start_date = models.DateField(_('Start Date'), blank=True, null=True)
+    end_date = models.DateField(_('End Date'), blank=True, null=True,
+                                help_text=_("""Offers are not active on their end
+                                date, only the days preceding"""))
 
     # Some complicated situations require offers to be applied in a set order.
-    priority = models.IntegerField(default=0, help_text="The highest priority offers are applied first")
+    priority = models.IntegerField(_('Priority'), default=0,
+        help_text=_("The highest priority offers are applied first"))
 
     # We track some information on usage
-    total_discount = models.DecimalField(decimal_places=2, max_digits=12, default=Decimal('0.00'))
-    num_orders = models.PositiveIntegerField(default=0)
+    total_discount = models.DecimalField(_('Total Discount'), decimal_places=2, max_digits=12, default=Decimal('0.00'))
+    num_orders = models.PositiveIntegerField(_('Number of Orders'), default=0)
     
     date_created = models.DateTimeField(auto_now_add=True)
 
@@ -72,6 +73,8 @@ class ConditionalOffer(models.Model):
 
     class Meta:
         ordering = ['-priority']
+        verbose_name = _("Conditional Offer")
+        verbose_name_plural = _("Conditional Offers")
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -86,7 +89,7 @@ class ConditionalOffer(models.Model):
 
     def clean(self):
         if self.start_date and self.end_date and self.start_date > self.end_date:
-            raise exceptions.ValidationError('End date should be later than start date')
+            raise exceptions.ValidationError(_('End date should be later than start date'))
         
     def is_active(self, test_date=None):
         if not test_date:
@@ -164,15 +167,22 @@ class Condition(models.Model):
         (COVERAGE, _("Needs to contain a set number of DISTINCT items from the condition range"))
     )
     range = models.ForeignKey('offer.Range')
-    type = models.CharField(max_length=128, choices=TYPE_CHOICES)
-    value = PositiveDecimalField(decimal_places=2, max_digits=12)
+    type = models.CharField(_('Type'), max_length=128, choices=TYPE_CHOICES)
+    value = PositiveDecimalField(_('Value'), decimal_places=2, max_digits=12)
+
+    class Meta:
+        verbose_name = _("Condition")
+        verbose_name_plural = _("Conditions")
 
     def __unicode__(self):
         if self.type == self.COUNT:
-            return u"Basket includes %d item(s) from %s" % (self.value, unicode(self.range).lower())
+            return _("Basket includes %(count)d item(s) from %(range)s") % {
+                'count': self.value, 'range': unicode(self.range).lower()}
         elif self.type == self.COVERAGE:
-            return u"Basket includes %d distinct products from %s" % (self.value, unicode(self.range).lower())
-        return u"Basket includes %d value from %s" % (self.value, unicode(self.range).lower())
+            return _("Basket includes %(count)d distinct products from %(range)s") % {
+                'count': self.value, 'range': unicode(self.range).lower()}
+        return _("Basket includes %(count)d value from %(range)s") % {
+                'count': self.value, 'range': unicode(self.range).lower()}
 
     description = __unicode__
     
@@ -215,30 +225,34 @@ class Benefit(models.Model):
         (FIXED_PRICE, _("Get the products that meet the condition for a fixed price")),
     )
     range = models.ForeignKey('offer.Range', null=True, blank=True)
-    type = models.CharField(max_length=128, choices=TYPE_CHOICES)
-    value = PositiveDecimalField(decimal_places=2, max_digits=12,
+    type = models.CharField(_('Type'), max_length=128, choices=TYPE_CHOICES)
+    value = PositiveDecimalField(_('Value'), decimal_places=2, max_digits=12,
                                  null=True, blank=True)
 
     price_field = 'price_incl_tax'
 
     # If this is not set, then there is no upper limit on how many products 
     # can be discounted by this benefit.
-    max_affected_items = models.PositiveIntegerField(blank=True, null=True, help_text="""Set this
-        to prevent the discount consuming all items within the range that are in the basket.""")
-    
+    max_affected_items = models.PositiveIntegerField(_('Max Affected Items'), blank=True, null=True,
+        help_text=_("""Set this to prevent the discount consuming all items within the range that are in the basket."""))
+
+    class Meta:
+        verbose_name = _("Benefit")
+        verbose_name_plural = _("Benefits")
+
     def __unicode__(self):
         if self.type == self.PERCENTAGE:
-            desc = u"%s%% discount on %s" % (self.value, unicode(self.range).lower())
+            desc = _("%(value)s%% discount on %(range)s") % {'value': self.value, 'range': unicode(self.range).lower()}
         elif self.type == self.MULTIBUY:
-            desc = u"Cheapest product is free from %s" % unicode(self.range).lower()
+            desc = _("Cheapest product is free from %s") % unicode(self.range).lower()
         elif self.type == self.FIXED_PRICE:
-            desc = u"The products that meet the condition are sold for %s" % self.value
+            desc = _("The products that meet the condition are sold for %s") % self.value
         else:
-            desc = u"%.2f discount on %s" % (float(self.value), unicode(self.range).lower())
-        if self.max_affected_items == 1:
-            desc += u" (max 1 item)"
-        elif self.max_affected_items > 1:
-            desc += u" (max %d items)" % self.max_affected_items
+            desc = _("%(value).2f discount on %(range)s") % {'value': float(self.value),
+                                                             'range': unicode(self.range).lower()}
+
+        desc += ungettext(" (max 1 item)", " (max %d items)", self.max_affected_items)
+
         return desc
 
     description = __unicode__
@@ -249,14 +263,14 @@ class Benefit(models.Model):
     def clean(self):
         if self.value is None:
             if not self.type:
-                raise ValidationError("Benefit requires a value")
+                raise ValidationError(_("Benefit requires a value"))
             elif self.type != self.MULTIBUY:
-                raise ValidationError("Benefits of type %s need a value" % self.type)
+                raise ValidationError(_("Benefits of type %s need a value") % self.type)
         elif self.value > 100 and self.type == 'Percentage':
-            raise ValidationError("Percentage benefit value can't be greater than 100")
+            raise ValidationError(_("Percentage benefit value can't be greater than 100"))
         # All benefits need a range apart from FIXED_PRICE
         if self.type and self.type != self.FIXED_PRICE and not self.range:
-            raise ValidationError("Benefits of type %s need a range" % self.type)
+            raise ValidationError(_("Benefits of type %s need a range") % self.type)
 
     def round(self, amount):
         """
@@ -285,7 +299,7 @@ class Range(models.Model):
     Represents a range of products that can be used within an offer
     """
     name = models.CharField(_("Name"), max_length=128, unique=True)
-    includes_all_products = models.BooleanField(default=False)
+    includes_all_products = models.BooleanField(_('Includes All Products'), default=False)
     included_products = models.ManyToManyField('catalogue.Product', related_name='includes', blank=True)
     excluded_products = models.ManyToManyField('catalogue.Product', related_name='excludes', blank=True)
     classes = models.ManyToManyField('catalogue.ProductClass', related_name='classes', blank=True)
@@ -295,6 +309,10 @@ class Range(models.Model):
     __included_product_ids = None
     __excluded_product_ids = None
     __class_ids = None
+
+    class Meta:
+        verbose_name = _("Range")
+        verbose_name_plural = _("Ranges")
 
     def __unicode__(self):
         return self.name    
@@ -355,6 +373,8 @@ class CountCondition(Condition):
 
     class Meta:
         proxy = True
+        verbose_name = _("Count Condition")
+        verbose_name_plural = _("Count Conditions")
 
     def is_satisfied(self, basket):
         """
@@ -387,9 +407,10 @@ class CountCondition(Condition):
     def get_upsell_message(self, basket):
         num_matches = self._get_num_matches(basket)
         delta = self.value - num_matches
-        return 'Buy %d more product%s from %s' % (delta,
-                                                  's' if delta > 1 else '', self.range)
-    
+        return ungettext('Buy %(delta)d more product from %(range)s',
+                         'Buy %(delta)d more products from %(range)s', delta) % {
+                            'delta': delta, 'range': self.range}
+
     def consume_items(self, basket, lines=None, value=None):
         """
         Marks items within the basket lines as consumed so they
@@ -415,6 +436,9 @@ class CoverageCondition(Condition):
     """
     class Meta:
         proxy = True
+        verbose_name = _("Coverage Condition")
+        verbose_name_plural = _("Coverage Conditions")
+
 
     def is_satisfied(self, basket):
         """
@@ -443,8 +467,9 @@ class CoverageCondition(Condition):
 
     def get_upsell_message(self, basket):
         delta = self.value - self._get_num_covered_products(basket)
-        return 'Buy %d more product%s from %s' % (delta,
-                                                  's' if delta > 1 else '', self.range)
+        return ungettext('Buy %(delta)d more product from %(range)s',
+                         'Buy %(delta)d more products from %(range)s', delta) % {
+                         'delta': delta, 'range': self.range}
 
     def is_partially_satisfied(self, basket):
         return 0 < self._get_num_covered_products(basket) < self.value
@@ -487,6 +512,9 @@ class ValueCondition(Condition):
 
     class Meta:
         proxy = True
+        verbose_name = _("Value Condition")
+        verbose_name_plural = _("Value Conditions")
+
 
     def is_satisfied(self, basket):
         """Determines whether a given basket meets this condition"""
@@ -520,7 +548,7 @@ class ValueCondition(Condition):
 
     def get_upsell_message(self, basket):
         value_of_matches = self._get_value_of_matches(basket)
-        return 'Spend %s more from %s' % (value_of_matches, self.range)
+        return _('Spend %(value)s more from %(range)s') % {'value': value_of_matches, 'range': self.range}
     
     def consume_items(self, basket, lines=None, value=None):
         """
@@ -561,6 +589,8 @@ class PercentageDiscountBenefit(Benefit):
 
     class Meta:
         proxy = True
+        verbose_name = _("Percentage Discount Benefit")
+        verbose_name_plural = _("Percentage Discount Benefits")
 
     def apply(self, basket, condition=None):
         discount = Decimal('0.00')
@@ -593,6 +623,8 @@ class AbsoluteDiscountBenefit(Benefit):
 
     class Meta:
         proxy = True
+        verbose_name = _("Absolute Discount Benefit")
+        verbose_name_plural = _("Absolute Discount Benefits")
 
     def apply(self, basket, condition=None):
         discount = Decimal('0.00')
@@ -641,6 +673,8 @@ class FixedPriceBenefit(Benefit):
     """
     class Meta:
         proxy = True
+        verbose_name = _("Fixed Price Benefit")
+        verbose_name_plural = _("Fixed Price Benefits")
 
     def apply(self, basket, condition=None):
         num_covered = 0
@@ -683,8 +717,11 @@ class FixedPriceBenefit(Benefit):
 
 
 class MultibuyDiscountBenefit(Benefit):
+
     class Meta:
         proxy = True
+        verbose_name = _("Multibuy Discount Benefit")
+        verbose_name_plural = _("Multibuy Discount Benefits")
 
     def apply(self, basket, condition=None):
         benefit_lines = [line for line in basket.all_lines() if (self.range.contains_product(line.product) and

@@ -2,6 +2,7 @@ import csv
 
 from django.db.models import get_model
 from django.template.defaultfilters import date
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import get_class
 
@@ -17,10 +18,10 @@ class ProductReportCSVFormatter(ReportCSVFormatter):
 
     def generate_csv(self, response, products):
         writer = csv.writer(response)
-        header_row = ['Product',
-                      'Views',
-                      'Basket additions',
-                      'Purchases',]
+        header_row = [_('Product'),
+                      _('Views'),
+                      _('Basket additions'),
+                      _('Purchases')]
         writer.writerow(header_row)
 
         for record in products:
@@ -38,7 +39,7 @@ class ProductReportHTMLFormatter(ReportHTMLFormatter):
 class ProductReportGenerator(ReportGenerator):
 
     code = 'product_analytics'
-    description = 'Product analytics'
+    description = _('Product analytics')
 
     formatters = {
       'CSV_formatter': ProductReportCSVFormatter,
@@ -58,15 +59,15 @@ class UserReportCSVFormatter(ReportCSVFormatter):
 
     def generate_csv(self, response, users):
         writer = csv.writer(response)
-        header_row = ['Name',
-                      'Date registered',
-                      'Product views',
-                      'Basket additions',
-                      'Orders',
-                      'Order lines',
-                      'Order items',
-                      'Total spent',
-                      'Date of last order',
+        header_row = [_('Name'),
+                      _('Date registered'),
+                      _('Product views'),
+                      _('Basket additions'),
+                      _('Orders'),
+                      _('Order lines'),
+                      _('Order items'),
+                      _('Total spent'),
+                      _('Date of last order')
                       ]
         writer.writerow(header_row)
 
@@ -90,7 +91,7 @@ class UserReportHTMLFormatter(ReportHTMLFormatter):
 class UserReportGenerator(ReportGenerator):
 
     code = 'user_analytics'
-    description = 'User analytics'
+    description = _('User analytics')
 
     formatters = {
         'CSV_formatter': UserReportCSVFormatter,

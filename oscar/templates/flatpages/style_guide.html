@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 
 {% load currency_filters %}
+{% load i18n %}
 
 {% block header %}
 <div class="page-header">
@@ -12,9 +13,9 @@
 <article>
     {{ flatpage.content }}
     <div class="sub-header">
-        <h2>Colours</h2>
+        <h2>{% trans 'Colours' %}</h2>
     </div>
-    <h3>Hyperlinks</h3>
+    <h3>{% trans 'Hyperlinks' %}</h3>
     <table class="table table-bordered table-striped">
         <tbody>
             <tr>

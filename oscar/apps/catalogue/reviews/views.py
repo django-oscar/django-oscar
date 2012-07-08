@@ -23,7 +23,7 @@ class CreateProductReview(CreateView):
             product = self.get_product()
             try:
                 self.model.objects.get(user=request.user, product=product)
-                messages.info(self.request, "You have already reviewed this product!")
+                messages.info(self.request, _("You have already reviewed this product!"))
                 return HttpResponseRedirect(product.get_absolute_url())
             except self.model.DoesNotExist:
                 pass
@@ -85,7 +85,7 @@ class ProductReviewDetail(DetailView):
         response = HttpResponseRedirect(request.META.get('HTTP_REFERER',
                                                          review.get_absolute_url()))
         if review.user == request.user:
-            messages.error(request, "You cannot vote on your own reviews")
+            messages.error(request, _("You cannot vote on your own reviews"))
             return response
 
         try:
@@ -93,15 +93,15 @@ class ProductReviewDetail(DetailView):
         except Vote.DoesNotExist:
             vote = Vote(user=request.user, review=review)
         else:
-            messages.error(request, "You have already voted on this review")
+            messages.error(request, _("You have already voted on this review"))
             return response
 
         form = VoteForm(request.POST, instance=vote)
         if form.is_valid():
             form.save()
-            messages.info(request, "Thanks for voting!")
+            messages.info(request, _("Thanks for voting!"))
         else:
-            messages.info(request, "We couldn't process your vote")
+            messages.info(request, _("We couldn't process your vote"))
         return response
 
     

@@ -91,10 +91,10 @@ class BasketView(ModelFormSetView):
                 line = form.instance
                 if self.request.user.is_authenticated():
                     self.move_line_to_saved_basket(line)
-                    messages.info(self.request, _(u"'%(title)s' has been saved for later" % {'title': line.product}))
+                    messages.info(self.request, _(u"'%(title)s' has been saved for later") % {'title': line.product})
                     save_for_later = True
                 else:
-                    messages.error(self.request, "You can't save an item for later if you're not logged in!")
+                    messages.error(self.request, _("You can't save an item for later if you're not logged in!"))
                     return HttpResponseRedirect(self.get_success_url())
 
         if save_for_later:
@@ -110,7 +110,7 @@ class BasketView(ModelFormSetView):
         errors = []
         for error_dict in formset.errors:
             errors += [error_list.as_text() for error_list in error_dict.values()]
-        msg = "Your basket couldn't be updated because:\n%s" % "\n".join(errors)
+        msg = _("Your basket couldn't be updated because:\n%s") % "\n".join(errors)
         messages.warning(self.request, msg)
         return super(BasketView, self).formset_invalid(formset)
 
@@ -149,9 +149,9 @@ class BasketAddView(FormView):
             if option.code in form.cleaned_data:
                 options.append({'option': option, 'value': form.cleaned_data[option.code]})
         self.request.basket.add_product(form.instance, form.cleaned_data['quantity'], options)
-        messages.info(self.request, _(u"'%(title)s' (quantity %(quantity)d) has been added to your basket" %
+        messages.info(self.request, _(u"'%(title)s' (quantity %(quantity)d) has been added to your basket") %
                 {'title': form.instance.get_title(),
-                 'quantity': form.cleaned_data['quantity']}))
+                 'quantity': form.cleaned_data['quantity']})
 
         # Send signal for basket addition
         self.add_signal.send(sender=self, product=form.instance, user=self.request.user)
@@ -176,7 +176,7 @@ class VoucherAddView(FormView):
 
     def apply_voucher_to_basket(self, voucher):
         if not voucher.is_active():
-            messages.error(self.request, _("The '%(code)s' voucher has expired" % {'code': voucher.code}))
+            messages.error(self.request, _("The '%(code)s' voucher has expired") % {'code': voucher.code})
             return
 
         is_available, message = voucher.is_available_to_user(self.request.user)
@@ -207,19 +207,19 @@ class VoucherAddView(FormView):
             messages.warning(self.request, _("Your basket does not qualify for a voucher discount"))
             self.request.basket.vouchers.remove(voucher)
         else:
-            messages.info(self.request, _("Voucher '%(code)s' added to basket" % {'code': voucher.code}))
+            messages.info(self.request, _("Voucher '%(code)s' added to basket") % {'code': voucher.code})
 
     def form_valid(self, form):
         code = form.cleaned_data['code']
         if not self.request.basket.id:
             return HttpResponseRedirect(self.request.META.get('HTTP_REFERER', reverse('basket:summary')))
         if self.request.basket.contains_voucher(code):
-            messages.error(self.request, _("You have already added the '%(code)s' voucher to your basket" % {'code': code}))
+            messages.error(self.request, _("You have already added the '%(code)s' voucher to your basket") % {'code': code})
         else:
             try:
                 voucher = self.voucher_model._default_manager.get(code=code)
             except self.voucher_model.DoesNotExist:
-                messages.error(self.request, _("No voucher found with code '%(code)s'" % {'code': code}))
+                messages.error(self.request, _("No voucher found with code '%(code)s'") % {'code': code})
             else:
                 self.apply_voucher_to_basket(voucher)
         return HttpResponseRedirect(self.request.META.get('HTTP_REFERER', reverse('basket:summary')))
@@ -244,11 +244,11 @@ class VoucherRemoveView(View):
         try:
             voucher = request.basket.vouchers.get(id=voucher_id)
         except ObjectDoesNotExist:
-            messages.error(request, "No voucher found with id '%d'" % voucher_id)
+            messages.error(request, _("No voucher found with id '%d'") % voucher_id)
         else:
             request.basket.vouchers.remove(voucher)
             request.basket.save()
-            messages.info(request, "Voucher '%s' removed from basket" % voucher.code)
+            messages.info(request, _("Voucher '%s' removed from basket") % voucher.code)
         return HttpResponseRedirect(reverse('basket:summary'))
 
 
@@ -285,7 +285,7 @@ class SavedView(ModelFormSetView):
         for form in formset:
             if form.cleaned_data['move_to_basket']:
                 is_move = True
-                msg = "'%s' has been moved back to your basket" % form.instance.product
+                msg = _("'%s' has been moved back to your basket") % form.instance.product
                 messages.info(self.request, msg)
                 real_basket = self.request.basket
                 real_basket.merge_line(form.instance)

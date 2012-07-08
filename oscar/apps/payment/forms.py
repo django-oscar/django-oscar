@@ -4,6 +4,7 @@ import re
 
 from django import forms
 from django.db.models import get_model
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import get_class
 
@@ -67,7 +68,7 @@ class BankcardNumberField(forms.CharField):
         value = non_decimal.sub('', value.strip())    
            
         if value and not luhn(value):
-            raise forms.ValidationError("Please enter a valid credit card number.")
+            raise forms.ValidationError(_("Please enter a valid credit card number."))
         return super(BankcardNumberField, self).clean(value)
 
 
@@ -88,8 +89,8 @@ class BankcardMonthField(forms.MultiValueField):
     A modified version of the snippet: http://djangosnippets.org/snippets/907/
     """
     default_error_messages = {
-        'invalid_month': u'Enter a valid month.',
-        'invalid_year': u'Enter a valid year.',
+        'invalid_month': _('Enter a valid month.'),
+        'invalid_year': _('Enter a valid year.'),
     }
     num_years = 5
 
@@ -133,7 +134,7 @@ class BankcardExpiryMonthField(BankcardMonthField):
     def clean(self, value):
         expiry_date = super(BankcardExpiryMonthField, self).clean(value)
         if date.today() > expiry_date:
-            raise forms.ValidationError("The expiration date you entered is in the past.")
+            raise forms.ValidationError(_("The expiration date you entered is in the past."))
         return expiry_date
 
     def compress(self, data_list):
@@ -169,7 +170,7 @@ class BankcardStartingMonthField(BankcardMonthField):
     def clean(self, value):
         starting_date = super(BankcardMonthField, self).clean(value)
         if starting_date and date.today() < starting_date:
-            raise forms.ValidationError("The starting date you entered is in the future.")
+            raise forms.ValidationError(_("The starting date you entered is in the future."))
         return starting_date
 
     def compress(self, data_list):
@@ -188,12 +189,13 @@ class BankcardStartingMonthField(BankcardMonthField):
 
 class BankcardForm(forms.ModelForm):
     
-    number = BankcardNumberField(max_length=20, widget=forms.TextInput(attrs={'autocomplete':'off'}), label="Card number")
-    name = forms.CharField(max_length=128, label="Name on card")
-    cvv_number = forms.RegexField(required=True, label="CVV Number",
+    number = BankcardNumberField(max_length=20, widget=forms.TextInput(attrs={'autocomplete':'off'}),
+                                 label=_("Card number"))
+    name = forms.CharField(max_length=128, label=_("Name on card"))
+    cvv_number = forms.RegexField(required=True, label=_("CVV Number"),
                                   regex=r'^\d{3,4}$', widget=forms.TextInput(attrs={'size': '5'}))
-    start_month = BankcardStartingMonthField(label="Valid from", required=False)
-    expiry_month = BankcardExpiryMonthField(required=True, label = "Valid to")
+    start_month = BankcardStartingMonthField(label=_("Valid from"), required=False)
+    expiry_month = BankcardExpiryMonthField(required=True, label=_("Valid to"))
     
     class Meta:
         model = BankcardModel

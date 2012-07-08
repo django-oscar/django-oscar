@@ -1,4 +1,5 @@
 {% extends "checkout/checkout.html" %}
+{% load i18n %}
 
 {% block title %}
 {% trans "Shipping address" %} | {{ block.super }}
@@ -31,7 +32,7 @@
 								{% csrf_token %}
 								<input type="hidden" name="action" value="ship_to" />
 								<input type="hidden" name="address_id" value="{{ address.id }}" />
-								<button type="submit" value="Ship to this address" class="btn btn-primary  ship-address">{% trans "Ship to this address" %}</button>
+								<button type="submit" class="btn btn-primary  ship-address">{% trans "Ship to this address" %}</button>
 								<a class="btn btn-small btn-info" href="{% url checkout:user-address-update address.id %}">{% trans "Edit" %}</a>
 								<a href="{% url checkout:user-address-delete address.id %}" class="btn btn-small btn-danger">{% trans "Delete" %}</a>
 							</form>

@@ -1,34 +1,36 @@
 {% extends "layout.html" %}
 
+{% load i18n %}
+
 {% block title %}
-Email history | {{ block.super }}
+{% trans 'Email history' %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url promotions:home %}">Home</a>
+        <a href="{% url promotions:home %}">{% trans 'Home' %}</a>
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="{% url customer:summary %}">Account</a>
+        <a href="{% url customer:summary %}">{% trans 'Account' %}</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">Email history</a></li>
+	<li class="active"><a href=".">{% trans 'Email history' %}</a></li>
 </ul>
 {% endblock %}
 
 {% block header %}
 <div class="page-header">
-    <h2>Email history</h2>
+    <h2>{% trans 'Email history' %}</h2>
 </div>
 {% endblock header %}
 
 {% block content %}
 	<table class="table table-striped table-bordered">
 		<tr>
-			<th>Date sent</th>
-			<th>Subject</th>
+			<th>{% trans 'Date sent' %}</th>
+			<th>{% trans 'Subject' %}</th>
 			<th></th>
 		</tr>
 		{% for email in emails %}
@@ -36,7 +38,7 @@ Email history | {{ block.super }}
 			<td>{{ email.date_sent }}</td>
 			<td>{{ email.subject }}</td>
 			<td>
-				<a href="{% url customer:email-detail email.id %}" class="btn btn-info">View</a>
+				<a href="{% url customer:email-detail email.id %}" class="btn btn-info">{% trans 'View' %}</a>
 			</td>
 		</tr>
 		{% endfor %}

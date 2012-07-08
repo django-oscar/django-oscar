@@ -30,19 +30,21 @@ class AbstractVoucher(models.Model):
     )
     usage = models.CharField(_("Usage"), max_length=128, choices=USAGE_CHOICES, default=MULTI_USE)
 
-    start_date = models.DateField()
-    end_date = models.DateField()
+    start_date = models.DateField(_('Start Date'))
+    end_date = models.DateField(_('End Date'))
 
     # Summary information
-    num_basket_additions = models.PositiveIntegerField(default=0)
-    num_orders = models.PositiveIntegerField(default=0)
-    total_discount = models.DecimalField(decimal_places=2, max_digits=12, default=Decimal('0.00'))
+    num_basket_additions = models.PositiveIntegerField(_('Times added to basket'), default=0)
+    num_orders = models.PositiveIntegerField(_('Times on orders'), default=0)
+    total_discount = models.DecimalField(_('Total discount'), decimal_places=2, max_digits=12, default=Decimal('0.00'))
     
     date_created = models.DateField(auto_now_add=True)
 
     class Meta:
         get_latest_by = 'date_created'
         abstract = True
+        verbose_name = _("Voucher")
+        verbose_name_plural = _("Vouchers")
 
     def __unicode__(self):
         return self.name
@@ -73,17 +75,17 @@ class AbstractVoucher(models.Model):
         if self.usage == self.SINGLE_USE:
             is_available = self.applications.count() == 0
             if not is_available:
-                message = "This voucher has already been used"
+                message = _("This voucher has already been used")
         elif self.usage == self.MULTI_USE:
             is_available = True
         elif self.usage == self.ONCE_PER_CUSTOMER:
             if not user.is_authenticated():
                 is_available = False
-                message = "This voucher is only available to signed in users"
+                message = _("This voucher is only available to signed in users")
             else:
                 is_available = self.applications.filter(voucher=self, user=user).count() == 0
                 if not is_available:
-                    message = "You have already used this voucher in a previous order"
+                    message = _("You have already used this voucher in a previous order")
         return is_available, message
     
     def record_usage(self, order, user):
@@ -114,6 +116,8 @@ class AbstractVoucherApplication(models.Model):
 
     class Meta:
         abstract = True
+        verbose_name = _("Voucher Application")
+        verbose_name_plural = _("Voucher Applications")
 
     def __unicode__(self):
-        return u"'%s' used by '%s'" % (self.voucher, self.user)        
+        return _("'%(voucher)s' used by '%(user)s'") % {'voucher': self.voucher, 'user': self.user}

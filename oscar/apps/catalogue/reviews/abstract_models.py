@@ -60,6 +60,8 @@ class AbstractProductReview(models.Model):
         abstract = True
         ordering = ['-delta_votes']
         unique_together = (('product', 'user'),)
+        verbose_name = _('Product Review')
+        verbose_name_plural = _('Product Reviews')
 
     @models.permalink
     def get_absolute_url(self):
@@ -73,11 +75,11 @@ class AbstractProductReview(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.user and not (self.name and self.email):  
-            raise ValidationError("Anonymous review must have a name and an email")
+            raise ValidationError(_("Anonymous review must have a name and an email"))
         if not self.title:
-            raise ValidationError("Reviews must have a title")
+            raise ValidationError(_("Reviews must have a title"))
         if self.score is None:
-            raise ValidationError("Reviews must have a score")
+            raise ValidationError(_("Reviews must have a score"))
         super(AbstractProductReview, self).save(*args, **kwargs)
 
     def has_votes(self):
@@ -119,13 +121,15 @@ class AbstractVote(models.Model):
         (UP, _("Up")),
         (DOWN, _("Down"))
     )
-    delta = models.SmallIntegerField(choices=VOTE_CHOICES)
+    delta = models.SmallIntegerField(_('Delta'), choices=VOTE_CHOICES)
     date_created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         abstract = True
         ordering = ['-date_created']
         unique_together = (('user', 'review'),)
+        verbose_name = _('Vote')
+        verbose_name_plural = _('Votes')
 
     def __unicode__(self):
         return u"%s vote for %s" % (self.delta, self.review)

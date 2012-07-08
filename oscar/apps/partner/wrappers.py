@@ -25,7 +25,7 @@ class DefaultWrapper(object):
         quantity of the product)
         """
         if not self.is_available_to_buy(stockrecord):
-            return False, _("'%s' is not available to purchase" % stockrecord.product.title)
+            return False, _("'%s' is not available to purchase") % stockrecord.product.title
         max_qty = self.max_purchase_quantity(stockrecord, user)
         if max_qty is None:
             return True, None
@@ -64,7 +64,7 @@ class DefaultWrapper(object):
         :param oscar.apps.partner.models.StockRecord stockrecord: stockrecord instance
         """
         if stockrecord.net_stock_level > 0:
-            return _("In stock (%d available)" % stockrecord.net_stock_level)
+            return _("In stock (%d available)") % stockrecord.net_stock_level
         if self.is_available_to_buy(stockrecord):
             return _('Available')
         return _("Not available")

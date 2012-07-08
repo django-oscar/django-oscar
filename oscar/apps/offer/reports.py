@@ -2,6 +2,7 @@ import csv
 from decimal import Decimal as D
 
 from django.db.models import get_model
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import get_class
 ReportGenerator = get_class('dashboard.reports.reports', 'ReportGenerator')
@@ -16,8 +17,8 @@ class OfferReportCSVFormatter(ReportCSVFormatter):
 
     def generate_csv(self, response, offers):
         writer = csv.writer(response)
-        header_row = ['Offer',
-                      'Total discount',
+        header_row = [_('Offer'),
+                      _('Total discount')
                      ]
         writer.writerow(header_row)
 
@@ -32,7 +33,7 @@ class OfferReportHTMLFormatter(ReportHTMLFormatter):
 
 class OfferReportGenerator(ReportGenerator):
     code = 'conditional-offers'
-    description = 'Offer performance'
+    description = _('Offer performance')
 
     formatters = {
         'CSV_formatter': OfferReportCSVFormatter,

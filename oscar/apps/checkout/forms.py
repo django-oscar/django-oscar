@@ -1,6 +1,7 @@
 from django import forms
 from django.db.models import get_model
 from django.contrib.auth.forms import AuthenticationForm
+from django.utils.translation import ugettext_lazy as _
 
 
 class ShippingAddressForm(forms.ModelForm):
@@ -19,10 +20,10 @@ class ShippingAddressForm(forms.ModelForm):
 
 
 class GatewayForm(AuthenticationForm):
-    username = forms.EmailField(label="My email address is")
+    username = forms.EmailField(label=_("My email address is"))
     NEW, EXISTING = 'new', 'existing'
-    CHOICES = ((NEW, 'No, I am a new customer'),
-               (EXISTING, 'Yes, I have a password'))
+    CHOICES = ((NEW, _('No, I am a new customer')),
+               (EXISTING, _('Yes, I have a password')))
     options = forms.ChoiceField(widget=forms.widgets.RadioSelect,
                                 choices=CHOICES)
 

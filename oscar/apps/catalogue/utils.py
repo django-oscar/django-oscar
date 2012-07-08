@@ -9,6 +9,7 @@ import Image as PImage
 from django.core.files import File
 from django.core.exceptions import FieldError
 from django.db.models import get_model
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.catalogue.exceptions import ImageImportError, IdenticalImageError, InvalidImageArchive
 
@@ -48,7 +49,8 @@ class Importer(object):
                     self.logger.warning(" - Identical image already exists for %s='%s', skipping" % (self._field, lookup_value))
                     stats['num_skipped'] += 1
                 except IOError, e:
-                    raise ImageImportError('%s is not a valid image (%s)' % (filename, e))    
+                    raise ImageImportError(_('%(filename)s is not a valid image (%(error)s)') % {
+                        'filename': filename, 'error': e})
                     stats['num_invalid'] += 1
                 except FieldError, e:
                     raise ImageImportError(e)
@@ -56,7 +58,7 @@ class Importer(object):
             if image_dir != dirname:
                 shutil.rmtree(image_dir)
         else:
-            raise InvalidImageArchive('%s is not a valid image archive' % dirname)
+            raise InvalidImageArchive(_('%s is not a valid image archive') % dirname)
         self.logger.info("Finished image import: %(num_processed)d imported, %(num_skipped)d skipped" % stats)
         
     def _get_image_files(self, dirname):

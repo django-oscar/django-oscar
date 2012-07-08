@@ -217,7 +217,7 @@ class ShippingAddressView(CheckoutSessionMixin, FormView):
                 return HttpResponseRedirect(self.get_success_url())
             elif 'action' in self.request.POST and self.request.POST['action'] == 'delete':
                 address.delete()
-                messages.info(self.request, "Address deleted from your address book")
+                messages.info(self.request, _("Address deleted from your address book"))
                 return HttpResponseRedirect(reverse('checkout:shipping-method'))
             else:
                 return HttpResponseBadRequest()

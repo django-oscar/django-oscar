@@ -37,6 +37,8 @@ class AbstractBasket(models.Model):
 
     class Meta:
         abstract = True
+        verbose_name = _('Basket')
+        verbose_name_plural = _('Baskets')
 
     objects = models.Manager()
     open = OpenBasketManager()
@@ -51,7 +53,8 @@ class AbstractBasket(models.Model):
         self.exempt_from_tax = False
 
     def __unicode__(self):
-        return u"%s basket (owner: %s, lines: %d)" % (self.status, self.owner, self.num_lines)
+        return _(u"%(status)s basket (owner: %(owner)s, lines: %(num_lines)d)") % {
+            'status': self.status, 'owner': self.owner, 'num_lines': self.num_lines}
 
     def all_lines(self):
         """
@@ -368,8 +371,8 @@ class AbstractLine(models.Model):
     line_reference = models.SlugField(max_length=128, db_index=True)
 
     product = models.ForeignKey('catalogue.Product', related_name='basket_lines')
-    quantity = models.PositiveIntegerField(default=1)
-    price_incl_tax = models.DecimalField(decimal_places=2, max_digits=12,
+    quantity = models.PositiveIntegerField(_('Quantity'), default=1)
+    price_incl_tax = models.DecimalField(_('Price incl. Tax'), decimal_places=2, max_digits=12,
                                          null=True)
 
     # Track date of first addition
@@ -383,14 +386,18 @@ class AbstractLine(models.Model):
     class Meta:
         abstract = True
         unique_together = ("basket", "line_reference")
+        verbose_name = _('Pozycja koszyka')
+        verbose_name_plural = _('Pozycje koszyka')
+
 
     def __unicode__(self):
-        return u"%s, Product '%s', quantity %d" % (self.basket, self.product, self.quantity)
+        return _(u"%(basket)s, Product '%(product)s', quantity %(quantity)d") % {
+            'basket': self.basket, 'product': self.product, 'quantity': self.quantity}
 
     def save(self, *args, **kwargs):
         """Saves a line or deletes if it's quanity is 0"""
         if self.basket.status not in (OPEN, SAVED):
-            raise PermissionDenied("You cannot modify a %s basket" % self.basket.status.lower())
+            raise PermissionDenied(_("You cannot modify a %s basket") % self.basket.status.lower())
         if self.quantity == 0:
             return self.delete(*args, **kwargs)
         super(AbstractLine, self).save(*args, **kwargs)
@@ -544,15 +551,15 @@ class AbstractLine(models.Model):
         if current_price_incl_tax > self.price_incl_tax:
             msg = u"The price of '%(product)s' has increased from %(old_price)s " \
                   u"to %(new_price)s since you added it to your basket"
-            return _(msg % {'product': self.product.get_title(),
+            return _(msg) % {'product': self.product.get_title(),
                             'old_price': currency(self.price_incl_tax),
-                            'new_price': currency(current_price_incl_tax)})
+                            'new_price': currency(current_price_incl_tax)}
         if current_price_incl_tax < self.price_incl_tax:
             msg = u"The price of '%(product)s' has decreased from %(old_price)s " \
                   u"to %(new_price)s since you added it to your basket"
-            return _(msg % {'product': self.product.get_title(),
+            return _(msg) % {'product': self.product.get_title(),
                             'old_price': currency(self.price_incl_tax),
-                            'new_price': currency(current_price_incl_tax)})
+                            'new_price': currency(current_price_incl_tax)}
 
 
 class AbstractLineAttribute(models.Model):
@@ -563,5 +570,6 @@ class AbstractLineAttribute(models.Model):
 
     class Meta:
         abstract = True
-
+        verbose_name = _('Atrybut pozycji')
+        verbose_name_plural = _('Atrybuty pozycji')
 

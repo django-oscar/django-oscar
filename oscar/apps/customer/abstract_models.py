@@ -20,32 +20,36 @@ class AbstractEmail(models.Model):
 
     class Meta:
         abstract = True
+        verbose_name = _('Email')
+        verbose_name_plural = _('Emails')
 
     def __unicode__(self):
-        return u"Email to %s with subject '%s'" % (self.user.username, self.subject)
+        return _(u"Email to %(user)s with subject '%(subject)s'") % {
+            'user': self.user.username, 'subject': self.subject}
 
 
 class AbstractCommunicationEventType(models.Model):
     
     # Code used for looking up this event programmatically.
     # eg. PASSWORD_RESET
-    code = models.SlugField(max_length=128)
+    code = models.SlugField(_('Code'), max_length=128)
     
     # Name is the friendly description of an event for use in the admin
-    name = models.CharField(max_length=255)
+    name = models.CharField(_('Name'), max_length=255)
     
     # We allow communication types to be categorised
-    ORDER_RELATED = 'Order related'
-    USER_RELATED = 'User related'
-    category = models.CharField(max_length=255, default=ORDER_RELATED)
+    ORDER_RELATED = _('Order related')
+    USER_RELATED = _('User related')
+    category = models.CharField(_('Category'), max_length=255, default=ORDER_RELATED)
     
     # Template content for emails
-    email_subject_template = models.CharField(max_length=255, blank=True)
-    email_body_template = models.TextField(blank=True, null=True)
-    email_body_html_template = models.TextField(blank=True, null=True, help_text="HTML template")
+    email_subject_template = models.CharField(_('Email Subject Template'), max_length=255, blank=True)
+    email_body_template = models.TextField(_('Email Body Template'), blank=True, null=True)
+    email_body_html_template = models.TextField(_('Email Body HTML Temlate'), blank=True, null=True,
+        help_text=_("HTML template"))
     
     # Template content for SMS messages
-    sms_template = models.CharField(max_length=170, blank=True, help_text="SMS template")
+    sms_template = models.CharField(_('SMS Template'), max_length=170, blank=True, help_text=_("SMS template"))
     
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
@@ -60,7 +64,8 @@ class AbstractCommunicationEventType(models.Model):
     
     class Meta:
         abstract = True
-        verbose_name_plural = _("Communication event types")
+        verbose_name = _("Communication Event Type")
+        verbose_name_plural = _("Communication Event Types")
 
     def get_messages(self, ctx=None):
         """

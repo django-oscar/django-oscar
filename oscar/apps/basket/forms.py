@@ -12,7 +12,7 @@ Product = get_model('catalogue', 'product')
 
 
 class BasketLineForm(forms.ModelForm):
-    save_for_later = forms.BooleanField(initial=False, required=False)
+    save_for_later = forms.BooleanField(initial=False, required=False, label=_('Save for Later'))
 
     def clean_quantity(self):
         qty = self.cleaned_data['quantity']
@@ -47,7 +47,7 @@ class BasketLineForm(forms.ModelForm):
 
 
 class SavedLineForm(forms.ModelForm):
-    move_to_basket = forms.BooleanField(initial=False, required=False)
+    move_to_basket = forms.BooleanField(initial=False, required=False, label=_('Move to Basket'))
 
     class Meta:
         model = Line
@@ -92,7 +92,7 @@ SavedLineFormSet = modelformset_factory(Line, form=SavedLineForm,
 
 
 class BasketVoucherForm(forms.Form):
-    code = forms.CharField(max_length=128)
+    code = forms.CharField(max_length=128, label=_('Code'))
 
     def __init__(self, *args, **kwargs):
         return super(BasketVoucherForm, self).__init__(*args,**kwargs)
@@ -102,7 +102,7 @@ class BasketVoucherForm(forms.Form):
 
 
 class ProductSelectionForm(forms.Form):
-    product_id = forms.IntegerField(min_value=1)
+    product_id = forms.IntegerField(min_value=1, label=_("Product ID"))
 
     def clean_product_id(self):
         id = self.cleaned_data['product_id']
@@ -114,8 +114,8 @@ class ProductSelectionForm(forms.Form):
 
 
 class AddToBasketForm(forms.Form):
-    product_id = forms.IntegerField(widget=forms.HiddenInput(), min_value=1)
-    quantity = forms.IntegerField(initial=1, min_value=1)
+    product_id = forms.IntegerField(widget=forms.HiddenInput(), min_value=1, label=_("Product ID"))
+    quantity = forms.IntegerField(initial=1, min_value=1, label=_('Quantity'))
 
     def __init__(self, basket, user, instance, *args, **kwargs):
         super(AddToBasketForm, self).__init__(*args, **kwargs)
@@ -194,5 +194,5 @@ class AddToBasketForm(forms.Form):
 
 
 class SimpleAddToBasketForm(AddToBasketForm):
-    quantity = forms.IntegerField(initial=1, min_value=1, widget=forms.HiddenInput)
+    quantity = forms.IntegerField(initial=1, min_value=1, widget=forms.HiddenInput, label=_('Quantity'))
 

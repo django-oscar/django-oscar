@@ -3,6 +3,8 @@ from itertools import chain
 import logging
 
 from django.db.models import get_model
+from django.utils.translation import ugettext_lazy as _
+
 ConditionalOffer = get_model('offer', 'ConditionalOffer')
 
 logger = logging.getLogger('oscar.offers')
@@ -73,7 +75,10 @@ class Applicator(object):
                     break
                 if applications > self.max_applications:
                     logger.error("Exceeded %d applications for offer %d on basket %d", self.max_applications, offer.id, basket.id)
-                    raise OfferApplicationError("Exceeded %d applications for offer %d on basket %d" % (self.max_applications, offer.id, basket.id))
+                    raise OfferApplicationError(_("Exceeded %(applications)d applications for offer %(offer)d " +
+                                                  "on basket %(basket)d") % {'applications': self.max_applications,
+                                                                            'offer': offer.id,
+                                                                            'basket': basket.id})
         
         logger.debug("Finished applying offers to basket %d", basket.id)
         return discounts
