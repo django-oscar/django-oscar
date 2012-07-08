@@ -5,7 +5,7 @@ from django.utils.translation import ugettext as _
 
 
 class AbstractProductRecord(models.Model):
-    u"""
+    """
     A record of a how popular a product is.
     
     This used be auto-merchandising to display the most popular
@@ -25,8 +25,8 @@ class AbstractProductRecord(models.Model):
     class Meta:
         abstract = True
         ordering = ['-num_purchases']
-        verbose_name = _('Product Record')
-        verbose_name_plural = _('Product Records')
+        verbose_name = _('Product record')
+        verbose_name_plural = _('Product records')
 
 
     def __unicode__(self):
@@ -34,7 +34,7 @@ class AbstractProductRecord(models.Model):
         
 
 class AbstractUserRecord(models.Model):
-    u"""
+    """
     A record of a user's activity.
     """
     
@@ -86,4 +86,6 @@ class AbstractUserSearch(models.Model):
         
     def __unicode__(self):
         return _("%(user)s searched for '%(query)s'") % {
-            'user':self.user, 'query':self.query}
+            'user': self.user,
+            'query': self.query
+        }

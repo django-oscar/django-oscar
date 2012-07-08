@@ -1,7 +1,6 @@
 import csv
 
 from django.db.models import get_model
-from django.template.defaultfilters import date
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import get_class
@@ -42,8 +41,8 @@ class ProductReportGenerator(ReportGenerator):
     description = _('Product analytics')
 
     formatters = {
-      'CSV_formatter': ProductReportCSVFormatter,
-      'HTML_formatter': ProductReportHTMLFormatter
+        'CSV_formatter': ProductReportCSVFormatter,
+        'HTML_formatter': ProductReportHTMLFormatter
     }
 
     def generate(self):
@@ -89,7 +88,6 @@ class UserReportHTMLFormatter(ReportHTMLFormatter):
 
 
 class UserReportGenerator(ReportGenerator):
-
     code = 'user_analytics'
     description = _('User analytics')
 

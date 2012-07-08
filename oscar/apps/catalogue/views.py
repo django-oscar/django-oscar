@@ -131,7 +131,6 @@ class ProductListView(ListView):
         if q:
             # Send signal to record the view of this product
             self.search_signal.send(sender=self, query=q, user=self.request.user)
-            base_queryset = get_product_base_queryset()
             return get_product_base_queryset().filter(title__icontains=q)
         else:
             return get_product_base_queryset()
@@ -142,6 +141,6 @@ class ProductListView(ListView):
         if not q:
             context['summary'] = _('All products')
         else:
-            context['summary'] = _("Products matching '%s'") % q
+            context['summary'] = _("Products matching '%(query)s'") % {'query': q}
             context['search_term'] = q
         return context

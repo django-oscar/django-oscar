@@ -45,7 +45,6 @@ class AbstractAddress(models.Model):
         verbose_name = _('Address')
         verbose_name_plural = _('Addresses')
 
-
     def save(self, *args, **kwargs):
         self._clean_fields()
         self._update_search_text()
@@ -144,7 +143,7 @@ class AbstractCountry(models.Model):
         
 
 class AbstractShippingAddress(AbstractAddress):
-    u"""
+    """
     Shipping address.
     
     A shipping address should not be edited once the order has been placed - 
@@ -158,8 +157,8 @@ class AbstractShippingAddress(AbstractAddress):
     
     class Meta:
         abstract = True
-        verbose_name = _("shipping address")
-        verbose_name_plural = _("shipping addresses")
+        verbose_name = _("Shipping address")
+        verbose_name_plural = _("Shipping addresses")
 
     @property    
     def order(self):

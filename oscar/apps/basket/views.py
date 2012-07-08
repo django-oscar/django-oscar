@@ -45,15 +45,15 @@ class BasketView(ModelFormSetView):
 
     def get_upsell_messages(self, basket):
         offers = Applicator().get_offers(self.request, basket)
-        messages = []
+        msgs = []
         for offer in offers:
             if offer.is_condition_partially_satisfied(basket):
                 data = {
                     'message': offer.get_upsell_message(basket),
                     'offer': offer
                 }
-                messages.append(data)
-        return messages
+                msgs.append(data)
+        return msgs
 
     def get_context_data(self, **kwargs):
         context = super(BasketView, self).get_context_data(**kwargs)
@@ -192,7 +192,6 @@ class VoucherAddView(FormView):
                              voucher=voucher)
 
         # Recalculate discounts to see if the voucher gives any
-        discounts_before = self.request.basket.get_discounts()
         self.request.basket.remove_discounts()
         Applicator().apply(self.request, self.request.basket)
         discounts_after = self.request.basket.get_discounts()

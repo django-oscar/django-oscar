@@ -32,7 +32,7 @@ class Calculator(object):
         sql = '''UPDATE `%(table)s` 
                  SET score = %(weighted_total)s / %(total_weight)s''' % ctx
 
-        self.logger.debug(sql)         
+        self.logger.debug(sql)
         self.cursor.execute(sql)
         transaction.commit_unless_managed()
         

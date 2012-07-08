@@ -386,9 +386,8 @@ class AbstractLine(models.Model):
     class Meta:
         abstract = True
         unique_together = ("basket", "line_reference")
-        verbose_name = _('Pozycja koszyka')
-        verbose_name_plural = _('Pozycje koszyka')
-
+        verbose_name = _('Basket line')
+        verbose_name_plural = _('Basket lines')
 
     def __unicode__(self):
         return _(u"%(basket)s, Product '%(product)s', quantity %(quantity)d") % {
@@ -552,24 +551,26 @@ class AbstractLine(models.Model):
             msg = u"The price of '%(product)s' has increased from %(old_price)s " \
                   u"to %(new_price)s since you added it to your basket"
             return _(msg) % {'product': self.product.get_title(),
-                            'old_price': currency(self.price_incl_tax),
-                            'new_price': currency(current_price_incl_tax)}
+                             'old_price': currency(self.price_incl_tax),
+                             'new_price': currency(current_price_incl_tax)}
         if current_price_incl_tax < self.price_incl_tax:
             msg = u"The price of '%(product)s' has decreased from %(old_price)s " \
                   u"to %(new_price)s since you added it to your basket"
             return _(msg) % {'product': self.product.get_title(),
-                            'old_price': currency(self.price_incl_tax),
-                            'new_price': currency(current_price_incl_tax)}
+                             'old_price': currency(self.price_incl_tax),
+                             'new_price': currency(current_price_incl_tax)}
 
 
 class AbstractLineAttribute(models.Model):
-    """An attribute of a basket line"""
+    """
+    An attribute of a basket line
+    """
     line = models.ForeignKey('basket.Line', related_name='attributes')
     option = models.ForeignKey('catalogue.Option')
     value = models.CharField(_("Value"), max_length=255)
 
     class Meta:
         abstract = True
-        verbose_name = _('Atrybut pozycji')
-        verbose_name_plural = _('Atrybuty pozycji')
+        verbose_name = _('Line attribute')
+        verbose_name_plural = _('Line attributes')
 
