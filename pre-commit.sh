@@ -4,7 +4,7 @@ git stash --keep-index -q
 
 source ~/.virtualenvs/oscar/bin/activate
 
-./run_tests.py
+./runtests.py
 TEST_RESULT=$?
 
 jshint oscar/static/oscar/js/oscar

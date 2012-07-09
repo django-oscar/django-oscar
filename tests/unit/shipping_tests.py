@@ -1,11 +1,10 @@
 from decimal import Decimal as D
 
-from django.utils import unittest
-from django.test.client import Client
+from django.test import TestCase
 from django.contrib.auth.models import User
 
 from oscar.apps.shipping.methods import Free, FixedPrice
-from oscar.apps.shipping.models import OrderAndItemCharges, WeightBand, WeightBased
+from oscar.apps.shipping.models import OrderAndItemCharges, WeightBased
 from oscar.apps.shipping.repository import Repository
 from oscar.apps.shipping import Scales
 from oscar.apps.basket.models import Basket
@@ -13,7 +12,7 @@ from oscar.test.helpers import create_product
 from oscar.test.decorators import dataProvider
 
 
-class FreeTest(unittest.TestCase):
+class FreeTest(TestCase):
 
     def setUp(self):
         self.method = Free()
@@ -32,7 +31,7 @@ class FreeTest(unittest.TestCase):
         self.assertEquals(D('0.00'), self.method.basket_charge_excl_tax())
         
         
-class FixedPriceTest(unittest.TestCase):        
+class FixedPriceTest(TestCase):        
     
     def test_fixed_price_shipping_charges_for_empty_basket(self):
         method = FixedPrice(D('10.00'), D('10.00'))
@@ -60,7 +59,7 @@ class FixedPriceTest(unittest.TestCase):
         self.assertEquals(D(value), method.basket_charge_excl_tax())
         
         
-class OrderAndItemChargesTests(unittest.TestCase):
+class OrderAndItemChargesTests(TestCase):
     
     def setUp(self):
         self.method = OrderAndItemCharges(price_per_order=D('5.00'), price_per_item=D('1.00'))
@@ -81,7 +80,7 @@ class OrderAndItemChargesTests(unittest.TestCase):
         self.assertEquals(D('5.00') + 7*D('1.00'), self.method.basket_charge_incl_tax())
 
 
-class ZeroFreeThresholdTest(unittest.TestCase):
+class ZeroFreeThresholdTest(TestCase):
     
     def setUp(self):
         self.method = OrderAndItemCharges(price_per_order=D('10.00'), free_shipping_threshold=D('0.00'))
@@ -97,7 +96,7 @@ class ZeroFreeThresholdTest(unittest.TestCase):
         self.assertEquals(D('0.00'), self.method.basket_charge_incl_tax())
 
 
-class NonZeroFreeThresholdTest(unittest.TestCase):
+class NonZeroFreeThresholdTest(TestCase):
     
     def setUp(self):
         self.method = OrderAndItemCharges(price_per_order=D('10.00'), free_shipping_threshold=D('20.00'))
@@ -120,7 +119,7 @@ class NonZeroFreeThresholdTest(unittest.TestCase):
         self.assertEquals(D('0.00'), self.method.basket_charge_incl_tax())
 
 
-class ScalesTests(unittest.TestCase):
+class ScalesTests(TestCase):
 
     def test_simple_weight_calculation(self):
         scales = Scales(attribute_code='weight')
@@ -153,7 +152,7 @@ class ScalesTests(unittest.TestCase):
         self.assertEquals(1+2, scales.weigh_basket(basket))
 
 
-class WeightBasedMethodTests(unittest.TestCase):
+class WeightBasedMethodTests(TestCase):
 
     def setUp(self):
         self.standard = WeightBased.objects.create(name='Standard')
@@ -217,7 +216,7 @@ class WeightBasedMethodTests(unittest.TestCase):
         self.assertEqual(D('0.00'), charge)
 
 
-class RepositoryTests(unittest.TestCase):
+class RepositoryTests(TestCase):
 
     def setUp(self):
         self.repo = Repository()

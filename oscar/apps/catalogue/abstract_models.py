@@ -18,12 +18,19 @@ BrowsableProductManager = get_class('catalogue.managers', 'BrowsableProductManag
 class AbstractProductClass(models.Model):
     """
     Defines the options and attributes for a group of products, e.g. Books, DVDs and Toys.
+
     Not necessarily equivalent to top-level categories but usually will be.
     """
     name = models.CharField(_('name'), max_length=128)
     slug = models.SlugField(max_length=128, unique=True)
+
+    # Some product type don't require shipping (eg digital products) - we use
+    # this field to take some shortcuts in the checkout.
+    requires_shipping = models.BooleanField(_("Requires shipping?"), default=True)
     
-    # These are the options (set by the user when they add to basket) for this item class
+    # These are the options (set by the user when they add to basket) for this
+    # item class.  For instance, a product class of "SMS message" would always
+    # require a message to be specified before it could be bought.
     options = models.ManyToManyField('catalogue.Option', blank=True)
 
     class Meta:
@@ -33,8 +40,8 @@ class AbstractProductClass(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug= slugify(self.name)
-        super(AbstractProductClass, self).save(*args, **kwargs)
+            self.slug = slugify(self.name)
+        return super(AbstractProductClass, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return self.name
@@ -42,7 +49,9 @@ class AbstractProductClass(models.Model):
 
 class AbstractCategory(MP_Node):
     """
-    Category hierarchy, top-level nodes represent departments. Uses django-treebeard.
+    A product category.
+    
+    Uses django-treebeard.
     """
     name = models.CharField(max_length=255, db_index=True)
     description = models.TextField(blank=True, null=True)
@@ -235,7 +244,7 @@ class AbstractProduct(models.Model):
         help_text="""Choose what type of product this is""")
     attributes = models.ManyToManyField('catalogue.ProductAttribute', through='ProductAttributeValue',
         help_text="""A product attribute is something that this product MUST have, such as a size, as specified by its class""")
-    product_options = models.ManyToManyField('catalogue.Option', blank=True, 
+    product_options = models.ManyToManyField('catalogue.Option', blank=True,
         help_text="""Options are values that can be associated with a item when it is added to 
                      a customer's basket.  This could be something like a personalised message to be
                      printed on a T-shirt.<br/>""")
@@ -347,9 +356,9 @@ class AbstractProduct(models.Model):
         return None
 
     def primary_image(self):
-        images = self.images.all().order_by('display_order')
+        images = self.images.all()
         if images.count():
-            return images[0]
+            return images.order_by('display_order')[0]
         return {
             'original': MissingProductImage(),
             'caption': '',
@@ -606,7 +615,7 @@ class AbstractProductAttributeValue(models.Model):
     product = models.ForeignKey('catalogue.Product', related_name='attribute_values')
     value_text = models.CharField(max_length=255, blank=True, null=True)
     value_integer = models.IntegerField(blank=True, null=True)
-    value_boolean = models.BooleanField(blank=True)
+    value_boolean = models.NullBooleanField(blank=True)
     value_float = models.FloatField(blank=True, null=True)
     value_richtext = models.TextField(blank=True, null=True)
     value_date = models.DateField(blank=True, null=True)

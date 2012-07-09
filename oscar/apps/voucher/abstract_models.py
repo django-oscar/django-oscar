@@ -90,7 +90,10 @@ class AbstractVoucher(models.Model):
         """
         Records a usage of this voucher in an order.
         """
-        self.applications.create(voucher=self, order=order, user=user)
+        if user.is_authenticated():
+            self.applications.create(voucher=self, order=order, user=user)
+        else:
+            self.applications.create(voucher=self, order=order)
 
     @property
     def benefit(self):
@@ -102,6 +105,7 @@ class AbstractVoucherApplication(models.Model):
     For tracking how often a voucher has been used
     """
     voucher = models.ForeignKey('voucher.Voucher', related_name="applications")
+
     # It is possible for an anonymous user to apply a voucher so we need to allow
     # the user to be nullable
     user = models.ForeignKey('auth.User', blank=True, null=True)

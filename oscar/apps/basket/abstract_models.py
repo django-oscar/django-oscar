@@ -129,7 +129,7 @@ class AbstractBasket(models.Model):
         self.discounts = []
         self._lines = None
 
-    def merge_line(self, line):
+    def merge_line(self, line, add_quantities=True):
         """
         For transferring a line from another basket to this one.
 
@@ -142,17 +142,23 @@ class AbstractBasket(models.Model):
             line.basket = self
             line.save()
         else:
-            # Line already exists - bump its quantity and delete the old
-            existing_line.quantity += line.quantity
+            # Line already exists - assume the max quantity is correct and delete the old
+            if add_quantities:
+                existing_line.quantity += line.quantity
+            else:
+                existing_line.quantity = max(existing_line.quantity, line.quantity)
             existing_line.save()
             line.delete()
 
-    def merge(self, basket):
+    def merge(self, basket, add_quantities=True):
         """
         Merges another basket with this one.
+
+        :basket: The basket to merge into this one
+        :add_quantities: Whether to add line quantities when they are merged.
         """
         for line_to_merge in basket.all_lines():
-            self.merge_line(line_to_merge)
+            self.merge_line(line_to_merge, add_quantities)
         basket.status = MERGED
         basket.date_merged = datetime.datetime.now()
         basket.save()
@@ -182,6 +188,16 @@ class AbstractBasket(models.Model):
         self.exempt_from_tax = True
         for line in self.all_lines():
             line.set_as_tax_exempt()
+
+    def is_shipping_required(self):
+        """
+        Test whether the basket contains physical products that require
+        shipping.
+        """
+        for line in self.all_lines():
+            if line.product.is_shipping_required:
+                return True
+        return False
 
     # =======
     # Helpers

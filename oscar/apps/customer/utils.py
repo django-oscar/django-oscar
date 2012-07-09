@@ -8,8 +8,7 @@ CommunicationEvent = get_model('order', 'CommunicationEvent')
 Email = get_model('customer', 'Email')
 
 
-class Dispatcher(object):
-
+class Dispatcher(object): 
     def __init__(self, logger=None):
         if not logger:
             logger = logging.getLogger(__name__)
@@ -24,7 +23,7 @@ class Dispatcher(object):
         if messages['subject'] and messages['body']:
             self.send_email_messages(recipient, messages)
     
-    def dispatch_order_messages(self, order, messages, event_type, **kwargs):
+    def dispatch_order_messages(self, order, messages, event_type=None, **kwargs):
         """
         Dispatch order-related messages to the customer
         """

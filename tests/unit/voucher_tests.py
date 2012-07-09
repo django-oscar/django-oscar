@@ -5,16 +5,16 @@ from django.test import TestCase
 from oscar.apps.voucher.models import Voucher
 
 
-class VoucherTest(TestCase):
+class TestVoucher(TestCase):
     
-    def test_is_active(self):
+    def test_is_active_between_start_and_end_dates(self):
         start = datetime.date(2011, 01, 01)
         test = datetime.date(2011, 01, 10)
         end = datetime.date(2011, 02, 01)
         voucher = Voucher(start_date=start, end_date=end)
         self.assertTrue(voucher.is_active(test))
 
-    def test_is_inactive(self):
+    def test_is_inactive_outside_of_start_and_end_dates(self):
         start = datetime.date(2011, 01, 01)
         test = datetime.date(2011, 03, 10)
         end = datetime.date(2011, 02, 01)
@@ -27,7 +27,3 @@ class VoucherTest(TestCase):
         voucher = Voucher(name="Dummy voucher", code="lowercase", start_date=start, end_date=end)
         voucher.save()
         self.assertEquals("LOWERCASE", voucher.code)
-        
-
-    
-   

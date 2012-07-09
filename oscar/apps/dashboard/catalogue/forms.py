@@ -70,7 +70,64 @@ class StockRecordForm(forms.ModelForm):
         exclude = ('product', 'num_allocated', 'price_currency')
 
 
+def _attr_text_field(attribute):
+    return forms.CharField(label=attribute.name,
+                           required=attribute.required)
+
+def _attr_integer_field(attribute):
+    return forms.IntegerField(label=attribute.name,
+                              required=attribute.required)
+
+def _attr_boolean_field(attribute):
+    return forms.BooleanField(label=attribute.name,
+                              required=attribute.required)
+
+def _attr_float_field(attribute):
+    return forms.FloatField(label=attribute.name,
+                            required=attribute.required)
+
+def _attr_date_field(attribute):
+    return forms.DateField(label=attribute.name,
+                           required=attribute.required,
+                           widget=forms.widgets.DateInput)
+
+def _attr_option_field(attribute):
+    return forms.ModelChoiceField(
+        label=attribute.name,
+        required=attribute.required,
+        queryset=attribute.option_group.options.all())
+
+def _attr_multi_option_field(attribute):
+    return forms.ModelMultipleChoiceField(
+        label=attribute.name,
+        required=attribute.required,
+        queryset=attribute.option_group.options.all())
+
+def _attr_entity_field(attribute):
+    return forms.ModelChoiceField(
+        label=attribute.name,
+        required=attribute.required,
+        queryset=attribute.entity_type.entities.all())
+
+def _attr_numeric_field(attribute):
+    return forms.FloatField(label=attribute.name,
+                            required=attribute.required)
+
+
 class ProductForm(forms.ModelForm):
+
+    FIELD_FACTORIES = {
+        "text": _attr_text_field,
+        "richtext": _attr_text_field,
+        "integer": _attr_integer_field,
+        "boolean": _attr_boolean_field,
+        "float": _attr_float_field,
+        "date": _attr_date_field,
+        "option": _attr_option_field,
+        "multi_option" : _attr_multi_option_field,
+        "entity": _attr_entity_field,
+        "numeric" : _attr_numeric_field,
+    }
 
     def __init__(self, product_class, *args, **kwargs):
         self.product_class = product_class
@@ -91,68 +148,13 @@ class ProductForm(forms.ModelForm):
             else:
                 kwargs['initial']['attr_%s' % attribute.code] = value
 
-    def _attr_text_field(self, attribute):
-        return forms.CharField(label=attribute.name,
-                               required=attribute.required)
-
-    def _attr_integer_field(self, attribute):
-        return forms.IntegerField(label=attribute.name,
-                                  required=attribute.required)
-
-    def _attr_boolean_field(self, attribute):
-        return forms.BooleanField(label=attribute.name,
-                                  required=attribute.required)
-
-    def _attr_float_field(self, attribute):
-        return forms.FloatField(label=attribute.name,
-                                required=attribute.required)
-
-    def _attr_date_field(self, attribute):
-        return forms.DateField(label=attribute.name,
-                               required=attribute.required,
-                               widget=forms.widgets.SelectDateWidget)
-
-    def _attr_option_field(self, attribute):
-        return forms.ModelChoiceField(
-            label=attribute.name,
-            required=attribute.required,
-            queryset=attribute.option_group.options.all())
-
-    def _attr_multi_option_field(self, attribute):
-        return forms.ModelMultipleChoiceField(
-            label=attribute.name,
-            required=attribute.required,
-            queryset=attribute.option_group.options.all())
-
-    def _attr_entity_field(self, attribute):
-        return forms.ModelChoiceField(
-            label=attribute.name,
-            required=attribute.required,
-            queryset=attribute.entity_type.entities.all())
-
-    def _attr_numeric_field(self, attribute):
-        return forms.FloatField(label=attribute.name,
-                                required=attribute.required)
-
-    FIELD_FACTORIES = {
-        "text": _attr_text_field,
-        "integer": _attr_integer_field,
-        "boolean": _attr_boolean_field,
-        "float": _attr_float_field,
-        "date": _attr_date_field,
-        "option": _attr_option_field,
-        "multi_option" : _attr_multi_option_field,
-        "entity": _attr_entity_field,
-        "numeric" : _attr_numeric_field,
-    }
-
     def add_attribute_fields(self):
         for attribute in self.product_class.attributes.all():
             self.fields['attr_%s' % attribute.code] = \
                     self.get_attribute_field(attribute)
 
     def get_attribute_field(self, attribute):
-        return self.FIELD_FACTORIES[attribute.type](self, attribute)
+        return self.FIELD_FACTORIES[attribute.type](attribute)
 
     class Meta:
         model = Product
