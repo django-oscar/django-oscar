@@ -124,6 +124,12 @@ class TestCategory(TestCase):
         root.add_child(name="Books")
         self.assertTrue(root.has_children())
 
+    def test_enforces_slug_uniqueness(self):
+        root = Category.add_root(name="Products")
+        root.add_child(name="Books")
+        with self.assertRaises(ValidationError):
+            root.add_child(name="Books")
+
 
 class ProductTests(TestCase):
 

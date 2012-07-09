@@ -24,17 +24,15 @@ Category management | {{ block.super }}
 
 {% block dashboard_content %}
 
-<div class="well well-info">
-	<p>You are editing:
-    <a href="{% url dashboard:catalogue-category-list %}">Home</a>
-    {% if ancestors %}
-	    &gt;
-        {% for ancestor in ancestors %}
-            <a href="{% url dashboard:catalogue-category-detail-list pk=ancestor.pk %}">{{ ancestor.name }}</a>{% if not forloop.last %} > {% endif %}
-        {% endfor %}
-    {% endif %}
-	</p>
-</div>
+<p>You are editing:
+<a href="{% url dashboard:catalogue-category-list %}">Home</a>
+{% if ancestors %}
+	&gt;
+	{% for ancestor in ancestors %}
+		<a href="{% url dashboard:catalogue-category-detail-list pk=ancestor.pk %}">{{ ancestor.name }}</a>{% if not forloop.last %} > {% endif %}
+	{% endfor %}
+{% endif %}
+</p>
 
 <table class="table table-striped table-bordered">
 	<thead>

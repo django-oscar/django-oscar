@@ -56,7 +56,7 @@ class AbstractCategory(MP_Node):
     name = models.CharField(max_length=255, db_index=True)
     description = models.TextField(blank=True, null=True)
     image = models.ImageField(upload_to='categories', blank=True, null=True)
-    slug = models.SlugField(max_length=1024, db_index=True, editable=False, unique=True)
+    slug = models.SlugField(max_length=1024, db_index=True, editable=False)
     full_name = models.CharField(max_length=1024, db_index=True, editable=False)
 
     _slug_separator = '/'
@@ -76,6 +76,16 @@ class AbstractCategory(MP_Node):
             else:
                 self.slug = slug
                 self.full_name = self.name
+
+        # Enforce slug uniqueness here as MySQL can't handle a unique index on
+        # the slug field
+        try:
+            match = self.__class__.objects.get(slug=self.slug)
+        except self.__class__.DoesNotExist:
+            pass
+        else:
+            if match.id != self.id:
+                raise ValidationError(_("A category with slug '%(slug)s' already exists") % {'slug': self.slug})
         super(AbstractCategory, self).save(*args, **kwargs)
 
     def move(self, target, pos=None):
