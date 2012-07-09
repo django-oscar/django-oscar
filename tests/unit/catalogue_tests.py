@@ -115,6 +115,16 @@ class TestCategoryFactory(TestCase):
         self.assertEqual(child.full_name, 'E > F')
 
 
+class TestCategory(TestCase):
+
+    def test_supports_has_children_method(self):
+        """Supports has_children method"""
+        root = Category.add_root(name="Products")
+        self.assertFalse(root.has_children())
+        root.add_child(name="Books")
+        self.assertTrue(root.has_children())
+
+
 class ProductTests(TestCase):
 
     def setUp(self):

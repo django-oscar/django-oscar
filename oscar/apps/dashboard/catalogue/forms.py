@@ -29,8 +29,7 @@ class CategoryForm(MoveNodeForm):
         return cleaned_data
 
     def is_slug_conflicting(self, name, ref_node_pk, position):
-        
-        #determine parent
+        # determine parent
         if ref_node_pk:
             ref_category = Category.objects.get(pk=ref_node_pk)
             if position == 'first-child':
@@ -40,11 +39,11 @@ class CategoryForm(MoveNodeForm):
         else:
             parent = None
 
-        #build full slug
+        # build full slug
         slug_prefix = (parent.slug + Category._slug_separator) if parent else ''
         slug = '%s%s' % (slug_prefix, slugify(name))
 
-        #check if slug is conflicting
+        # check if slug is conflicting
         try:
             category = Category.objects.get(slug=slug)
         except Category.DoesNotExist:

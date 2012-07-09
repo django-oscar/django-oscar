@@ -270,9 +270,14 @@ class CategoryListMixin(object):
 
 
 class CategoryCreateView(CategoryListMixin, generic.CreateView):
-    template_name = 'dashboard/catalogue/category_create.html'
+    template_name = 'dashboard/catalogue/category_form.html'
     model = Category
     form_class = CategoryForm
+
+    def get_context_data(self, **kwargs):
+        ctx = super(CategoryCreateView, self).get_context_data(**kwargs)
+        ctx['title'] = "Add a new category"
+        return ctx
 
     def get_success_url(self):
         messages.info(self.request, "Category created successfully")
@@ -280,9 +285,14 @@ class CategoryCreateView(CategoryListMixin, generic.CreateView):
 
 
 class CategoryUpdateView(CategoryListMixin, generic.UpdateView):
-    template_name = 'dashboard/catalogue/category_create.html'
+    template_name = 'dashboard/catalogue/category_form.html'
     model = Category
     form_class = CategoryForm
+
+    def get_context_data(self, **kwargs):
+        ctx = super(CategoryUpdateView, self).get_context_data(**kwargs)
+        ctx['title'] = "Update category '%s'" % self.object.name
+        return ctx
 
     def get_success_url(self):
         messages.info(self.request, "Category updated successfully")

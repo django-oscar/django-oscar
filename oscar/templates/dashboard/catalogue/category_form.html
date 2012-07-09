@@ -3,7 +3,7 @@
 {% block body_class %}catalogue{% endblock %}
 
 {% block title %}
-Category management | {{ block.super }}
+{{ title }} | Category management | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -16,25 +16,20 @@ Category management | {{ block.super }}
         <a href="{% url dashboard:catalogue-category-list %}">Categories</a>
         <span class="divider">/</span>
     </li>
-    <li class="active"><a href=".">{% if object %}Update category{% else %}Add a category{% endif %}</a></li>
+	<li class="active"><a href=".">{{ title }}</a></li>
 </ul>
 {% endblock %}
 
 {% block header %}
 <div class="page-header action">
-    <h1>{% if object %}Update category{% else %}Add a category{% endif %}</h1>
+	<h1>{{ title }}</h1>
 </div>
 {% endblock header %}
 
 {% block dashboard_content %}
-
-<form action="." method="post">{% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Save" />
-</form>
-
-<div class="sub-header">
-    <h2>{{ queryset_description }}</h2>
-</div>
-
+	<form action="." method="post" enctype="multipart/form-data">{% csrf_token %}
+		{{ form.as_p }}
+		<button type="submit" class="btn btn-primary btn-large">Save</button> or
+		<a href="{% url dashboard:catalogue-category-list %}">cancel</a>
+	</form>
 {% endblock dashboard_content %}

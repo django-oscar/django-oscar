@@ -71,7 +71,7 @@ class AbstractCategory(MP_Node):
             slug = slugify(self.name)
             if parent:
                 self.slug = '%s%s%s' % (parent.slug, self._slug_separator, slug)
-                self.full_name = '%s%s%s' % (parent.full_name, 
+                self.full_name = '%s%s%s' % (parent.full_name,
                                              self._full_name_separator, self.name)
             else:
                 self.slug = slug
@@ -92,17 +92,15 @@ class AbstractCategory(MP_Node):
                 slug_parts = [parent.slug]
                 name_parts = [parent.full_name]
                 curr_depth = parent.depth
-            self.__class__.update_subtree_properties(list(subtree), slug_parts, 
+            self.__class__.update_subtree_properties(list(subtree), slug_parts,
                                                 name_parts, curr_depth=curr_depth)
 
     @classmethod
     def update_subtree_properties(cls, nodes, slug_parts, name_parts, curr_depth):
-
         """
-            Update slugs and full_names of children in a subtree.
-            Assumes nodes were originally in DFS order.
+        Update slugs and full_names of children in a subtree.
+        Assumes nodes were originally in DFS order.
         """
-
         if nodes == []:
             return
 
@@ -141,6 +139,9 @@ class AbstractCategory(MP_Node):
         ordering = ['full_name']
         verbose_name_plural = 'Categories'
         verbose_name = 'Category'
+
+    def has_children(self):
+        return self.get_children().count() > 0
 
 
 class AbstractProductCategory(models.Model):
