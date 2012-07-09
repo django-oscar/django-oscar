@@ -10,13 +10,13 @@ system will be able to accurately capture all the domain-specific behaviour
 required.
 
 The design philosophy of Oscar is to not make a decision for you here, but to
-provide the environment where any domain logic can be implemented, no matter how
+provide the foundations upon which any domain logic can be implemented, no matter how
 complex.
 
 This document lists the components which will require implementation according
 to the domain at hand.  These are the key questions to answer when building your
 application.  Much of Oscar's documentation is in the form of "recipes" that
-explain how to solve the questions listed here.  Each question links to the
+explain how to solve the questions listed here - each question links to the
 relevant recipes.
 
 Catalogue
@@ -64,6 +64,19 @@ Pricing, stock and availability
 How is tax calculated?
 ----------------------
 
+Taxes vary widely between countries.  Even the way that prices are displayed
+varies between countries.  For instance, in the UK and Europe prices are shown inclusive of
+VAT whereas in the US, taxes are often not shown until the final stage of checkout.
+
+Furthermore, the amount of tax charged can vary depending on a number of
+factors, including:
+
+* The products being bought (eg in the UK, certain products have pay no VAT).
+* Who the customer is.  For instance, sales reps will often not pay tax whereas
+  regular customers will.
+* The shipping address of the order.
+* The payment method used.
+
 What availability messages are shown to customers?
 --------------------------------------------------
 
@@ -78,7 +91,6 @@ Do you allow pre- and back-orders
 An pre-order is where you allow a product to be bought before it has been
 published, while a back-order is where you allow a product to be bought that is
 currently out of stock.
-
 
 Shipping
 ========
@@ -115,7 +127,6 @@ Recipes:
 
 * :doc:`/howto/how_to_configure_shipping`
 
-
 Payment
 =======
 
@@ -137,7 +148,7 @@ Possible payment sources include:
 * Gift card
 * No upfront payment but send invoices later
 
-The checkout app within ``django-oscar`` is suitable flexible that all of these
+The checkout app within ``django-oscar`` is suitably flexible that all of these
 methods (and in any combination) is supported.  However, you will need to
 implement the logic for your domain by subclassing the relevant ``view/util``
 classes.
@@ -150,16 +161,33 @@ Domain logic is often required to:
 * Determine how to handle failing payments (this can get complicated when using
   multiple payment sources to pay for an order).
 
-* :doc:`/howto/how_to_configure_shipping`
-
 When will payment be taken?
 ---------------------------
 
 A common pattern is to 'pre-auth' a bankcard at the point of checkout then
 'settle' for the appropriate amounts when the items actually ship.  However,
 sometimes payment is taken up front.  Often you won't have a choice due to
-limitations of the payment partner you need to integrate with.
+limitations of the payment partner you need to integrate with, or legal
+restrictions of the country you are operating in.
 
 * Will the customer be debited at point of checkout, or when the items are dispatched?
 * If charging after checkout, when are shipping charges collected?
 * What happens if an order is cancelled after partial payment?
+
+Order processing
+================
+
+How will orders by processed?
+-----------------------------
+
+Orders can be processing in many ways, including:
+
+* Manual process.  For instance, a worker in a warehouse may download a picking
+  slip from the dashboard and mark products as shipped when they have been put in the van.
+
+* Fully automated process, where files are transferred between the merchant and
+  the fulfillment partner to indicate shipping statuses.
+
+Recipes:
+
+* :doc:`/howto/how_to_set_up_order_processing`
