@@ -157,7 +157,7 @@ class AbstractProductContributor(models.Model):
     class Meta:
         abstract = True
         verbose_name = _('Product Contributor')
-        verbose_name_plural = _('Product COntributors')
+        verbose_name_plural = _('Product Contributors')
 
 
 class AbstractProduct(models.Model):

@@ -368,8 +368,8 @@ class AbstractLine(models.Model):
     class Meta:
         abstract = True
         unique_together = ("basket", "line_reference")
-        verbose_name = _('Pozycja koszyka')
-        verbose_name_plural = _('Pozycje koszyka')
+        verbose_name = _('Basket Line')
+        verbose_name_plural = _('Basket Lines')
 
 
     def __unicode__(self):
@@ -552,6 +552,6 @@ class AbstractLineAttribute(models.Model):
 
     class Meta:
         abstract = True
-        verbose_name = _('Atrybut pozycji')
-        verbose_name_plural = _('Atrybuty pozycji')
+        verbose_name = _('Line Attribute')
+        verbose_name_plural = _('Line Attributes')
 

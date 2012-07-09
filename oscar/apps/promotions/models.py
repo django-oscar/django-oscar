@@ -53,7 +53,7 @@ class PagePromotion(LinkedPromotion):
 
     class Meta:
         verbose_name = _("Page Promotion")
-        verbose_name_plural = _("Page Prmotions")
+        verbose_name_plural = _("Page Promotions")
 
 
 class KeywordPromotion(LinkedPromotion):

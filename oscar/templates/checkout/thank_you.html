@@ -104,7 +104,7 @@ with us regarding your order.</p>
 
 {% if not order.user %}
     <div class="sub-header">
-        <h4>{% trans "Tracking your orde" %}r</h4>
+        <h4>{% trans "Tracking your order" %}</h4>
     </div>
     <p>{% trans "You can" %}
     <a href="{% url customer:anon-order order.number order.verification_hash %}">{% trans "track the status of your order" %}</a>.</p>

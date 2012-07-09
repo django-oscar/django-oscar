@@ -31,7 +31,7 @@
     {% for upsell in upsell_messages %}
     <div class="warning">
         {% blocktrans with message=upsell.message url=upsell.offer.get_absolute_url offer_name=upsell.offer.name %}
-        {{ message }} to quality for the <a href="{{ url }}">{{ offer_name }}</a> special offer
+        {{ message }} to qualify for the <a href="{{ url }}">{{ offer_name }}</a> special offer
         {% endblocktrans %}
     </div>
     {% endfor %}
