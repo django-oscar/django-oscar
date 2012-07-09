@@ -6,12 +6,14 @@ from django.core.urlresolvers import reverse
 
 from oscar.apps.dashboard.catalogue import forms
 from oscar.core.loading import get_classes
-ProductForm, StockRecordForm, StockAlertSearchForm, ProductCategoryFormSet, ProductImageFormSet = get_classes(
-    'dashboard.catalogue.forms', ('ProductForm', 'StockRecordForm',
+
+ProductForm, CategoryForm, StockRecordForm, StockAlertSearchForm, ProductCategoryFormSet, ProductImageFormSet = get_classes(
+    'dashboard.catalogue.forms', ('ProductForm', 'CategoryForm', 'StockRecordForm',
                                   'StockAlertSearchForm',
                                   'ProductCategoryFormSet',
                                   'ProductImageFormSet'))
 Product = get_model('catalogue', 'Product')
+Category = get_model('catalogue', 'Category')
 ProductCategory = get_model('catalogue', 'ProductCategory')
 ProductClass = get_model('catalogue', 'ProductClass')
 StockRecord = get_model('partner', 'StockRecord')
@@ -118,7 +120,7 @@ class ProductCreateView(generic.CreateView):
         image_formset = ProductImageFormSet(self.request.POST,
                                             self.request.FILES,
                                             instance=product)
-        if stockrecord_form.is_valid() and category_formset.is_valid() and image_formset.is_valid():
+        if all([stockrecord_form.is_valid(), category_formset.is_valid(), image_formset.is_valid()]):
             # Save product
             product.save()
             # Save stock record
@@ -192,7 +194,7 @@ class ProductUpdateView(generic.UpdateView):
         image_formset = ProductImageFormSet(self.request.POST,
                                             self.request.FILES,
                                             instance=self.object)
-        if stockrecord_form.is_valid() and category_formset.is_valid() and image_formset.is_valid():
+        if all([stockrecord_form.is_valid(), category_formset.is_valid(), image_formset.is_valid()]):
             form.save()
             stockrecord_form.save()
             category_formset.save()
@@ -234,3 +236,78 @@ class StockAlertListView(generic.ListView):
             self.description = 'All alerts'
             self.form = StockAlertSearchForm()
         return self.model.objects.all()
+
+
+class CategoryListView(generic.TemplateView):
+    template_name = 'dashboard/catalogue/category_list.html'
+
+    def get_context_data(self, *args, **kwargs):
+        ctx = super(CategoryListView, self).get_context_data(*args, **kwargs)
+        ctx['child_categories'] = Category.get_root_nodes()
+        return ctx
+
+
+class CategoryDetailListView(generic.DetailView):
+    template_name = 'dashboard/catalogue/category_list.html'
+    model = Category
+
+    def get_context_data(self, *args, **kwargs):
+        ctx = super(CategoryDetailListView, self).get_context_data(*args, **kwargs)
+        ctx['child_categories'] = self.object.get_children()
+        ctx['ancestors'] = self.object.get_ancestors()
+        return ctx
+
+
+class CategoryListMixin(object):
+
+    def get_success_url(self):
+        parent = self.object.get_parent()
+        if parent is None:
+            return reverse("dashboard:catalogue-category-list")
+        else:
+            return reverse("dashboard:catalogue-category-detail-list", 
+                            args=(parent.pk,))
+
+
+class CategoryCreateView(CategoryListMixin, generic.CreateView):
+    template_name = 'dashboard/catalogue/category_form.html'
+    model = Category
+    form_class = CategoryForm
+
+    def get_context_data(self, **kwargs):
+        ctx = super(CategoryCreateView, self).get_context_data(**kwargs)
+        ctx['title'] = "Add a new category"
+        return ctx
+
+    def get_success_url(self):
+        messages.info(self.request, "Category created successfully")
+        return super(CategoryCreateView, self).get_success_url()
+
+
+class CategoryUpdateView(CategoryListMixin, generic.UpdateView):
+    template_name = 'dashboard/catalogue/category_form.html'
+    model = Category
+    form_class = CategoryForm
+
+    def get_context_data(self, **kwargs):
+        ctx = super(CategoryUpdateView, self).get_context_data(**kwargs)
+        ctx['title'] = "Update category '%s'" % self.object.name
+        return ctx
+
+    def get_success_url(self):
+        messages.info(self.request, "Category updated successfully")
+        return super(CategoryUpdateView, self).get_success_url()
+
+
+class CategoryDeleteView(CategoryListMixin, generic.DeleteView):
+    template_name = 'dashboard/catalogue/category_delete.html'
+    model = Category
+
+    def get_context_data(self, *args, **kwargs):
+        ctx = super(CategoryDeleteView, self).get_context_data(*args, **kwargs)
+        ctx['parent'] = self.object.get_parent()
+        return ctx
+
+    def get_success_url(self):
+        messages.info(self.request, "Category deleted successfully")
+        return super(CategoryDeleteView, self).get_success_url()

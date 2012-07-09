@@ -4,6 +4,7 @@ from contextlib import contextmanager
 from django.test import TestCase
 from django.test.client import Client
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 from purl import URL
 
 
@@ -51,7 +52,10 @@ class ClientTestCase(TestCase):
             location = URL.from_string(response['Location'])
             self.assertEqual(expected_url, location.path())
 
-
+    def assertRedirectUrlName(self, response, name):
+        self.assertIsRedirect(response)
+        location = response['Location'].replace('http://testserver', '')
+        self.assertEqual(location, reverse(name))
 
     def assertIsOk(self, response):
         self.assertEqual(httplib.OK, response.status_code)

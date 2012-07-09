@@ -8,17 +8,16 @@ from oscar.apps.order.models import ShippingAddress
 
 
 class UserAddressTest(TestCase):
-    fixtures = ['countries.json']
     
     def setUp(self):
         self.user = User.objects.create(username='dummy_user')
-        self.country = Country.objects.get(iso_3166_1_a2='GB')
+        self.country = Country(iso_3166_1_a2='GB', name="UNITED KINGDOM")
     
     def tearDown(self):
         self.user.delete()
     
     def test_titleless_salutation_is_stripped(self):
-        a = UserAddress.objects.create(last_name='Barrington', line1="75 Smith Road", postcode="N4 8TY", 
+        a = UserAddress(last_name='Barrington', line1="75 Smith Road", postcode="N4 8TY", 
                                        country=self.country, user=self.user)
         self.assertEquals("Barrington", a.salutation())
     
@@ -67,10 +66,9 @@ class UserAddressTest(TestCase):
     def test_hashing_with_utf8(self):
         a = UserAddress(first_name=u"\u0141ukasz Smith", last_name=u'Smith', line1=u"75 Smith Road", postcode=u"n4 8ty", 
                         country=self.country, user=self.user)
-        hash = a.active_address_fields()
+        a.active_address_fields()
         
     def test_city_is_alias_of_line4(self):
-        a = UserAddress.objects.create(last_name='Barrington', line1="75 Smith Road", line4="London", postcode="n4 8ty", 
+        a = UserAddress(last_name='Barrington', line1="75 Smith Road", line4="London", postcode="n4 8ty", 
                                        country=self.country, user=self.user)
         self.assertEqual('London', a.city)
-           

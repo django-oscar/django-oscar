@@ -4,6 +4,7 @@ from django.conf import settings
 
 from django.contrib.flatpages.models import FlatPage
 
+import oscar
 from oscar.core.loading import import_module, AppNotFoundError, \
         get_classes, get_class, ClassNotFoundError
 from oscar.core.validators import ExtendedURLValidator
@@ -11,36 +12,42 @@ from oscar.core.validators import URLDoesNotExistValidator
 from oscar.test import patch_settings
 
 
-class ImportAppTests(TestCase):
+class TestImportModule(TestCase):
+    """
+    oscar.core.loading.import_module
+    """
 
-    def test_a_specified_class_is_imported_correctly(self):
+    def test_imports_a_class_correctly(self):
         module = import_module('analytics.models', ['ProductRecord'])
         self.assertEqual('oscar.apps.analytics.models', module.__name__)
 
-    def test_unknown_apps_raise_exception(self):
+    def test_raises_exception_for_unknown_app(self):
         self.assertRaises(AppNotFoundError, import_module, 'banana', ['skin'])
 
 
-class ClassLoadingTests(TestCase):
+class TestClassLoading(TestCase):
+    """
+    Oscar's class loading utilities
+    """
 
-    def test_loading_oscar_classes(self):
+    def test_load_oscar_classes_correctly(self):
         Product, Category = get_classes('catalogue.models', ('Product', 'Category'))
         self.assertEqual('oscar.apps.catalogue.models', Product.__module__)
         self.assertEqual('oscar.apps.catalogue.models', Category.__module__)
 
-    def test_loading_oscar_class(self):
+    def test_load_oscar_class_correctly(self):
         Product = get_class('catalogue.models', 'Product')
         self.assertEqual('oscar.apps.catalogue.models', Product.__module__)
 
-    def test_loading_oscar_class_from_dashboard_subapp(self):
+    def test_load_oscar_class_from_dashboard_subapp(self):
         ReportForm = get_class('dashboard.reports.forms', 'ReportForm')
         self.assertEqual('oscar.apps.dashboard.reports.forms', ReportForm.__module__)
 
-    def test_bad_appname_raises_exception(self):
+    def test_raise_exception_when_bad_appname_used(self):
         with self.assertRaises(AppNotFoundError):
             get_classes('fridge.models', ('Product', 'Category'))
 
-    def test_bad_classname_raises_exception(self):
+    def test_raise_exception_when_bad_classname_used(self):
         with self.assertRaises(ClassNotFoundError):
             get_class('catalogue.models', 'Monkey')
 
@@ -49,12 +56,12 @@ class ClassLoadingWithLocalOverrideTests(TestCase):
 
     def setUp(self):
         self.installed_apps = list(settings.INSTALLED_APPS)
-        self.installed_apps[self.installed_apps.index('oscar.apps.shipping')] = 'tests.shipping'
+        self.installed_apps[self.installed_apps.index('oscar.apps.shipping')] = 'tests.site.shipping'
 
     def test_loading_class_defined_in_local_module(self):
         with patch_settings(INSTALLED_APPS=self.installed_apps):
             (Free,) = get_classes('shipping.methods', ('Free',))
-            self.assertEqual('tests.shipping.methods', Free.__module__)
+            self.assertEqual('tests.site.shipping.methods', Free.__module__)
 
     def test_loading_class_which_is_not_defined_in_local_module(self):
         with patch_settings(INSTALLED_APPS=self.installed_apps):
@@ -69,13 +76,16 @@ class ClassLoadingWithLocalOverrideTests(TestCase):
     def test_loading_classes_defined_in_both_local_and_oscar_modules(self):
         with patch_settings(INSTALLED_APPS=self.installed_apps):
             (Free, FixedPrice) = get_classes('shipping.methods', ('Free', 'FixedPrice'))
-            self.assertEqual('tests.shipping.methods', Free.__module__)
+            self.assertEqual('tests.site.shipping.methods', Free.__module__)
             self.assertEqual('oscar.apps.shipping.methods', FixedPrice.__module__)
 
 
-class ValidatorTests(TestCase):
+class TestExtendedURLValidator(TestCase):
+    """
+    ExtendedURLValidator
+    """
 
-    def test_validate_local_url(self):
+    def test_validates_local_url(self):
         v = ExtendedURLValidator(verify_exists=True)
 
         try:
@@ -112,7 +122,7 @@ class ValidatorTests(TestCase):
             self.fail('ExtendedURLValidator raises ValidationError'
                       'unexpectedly!')
 
-    def test_validate_url_does_not_exist(self):
+    def test_raises_exception_for_missing_url(self):
         validator = URLDoesNotExistValidator()
         self.assertRaises(ValidationError, validator, '/')
         try:
@@ -125,13 +135,35 @@ class ValidatorTests(TestCase):
         self.assertRaises(ValidationError, validator, '/test/page/')
 
 
-class ClassLoadingWithLocalOverrideWith3SegmentsTests(TestCase):
+class ClassLoadingWithLocalOverrideWithMultipleSegmentsTests(TestCase):
 
     def setUp(self):
         self.installed_apps = list(settings.INSTALLED_APPS)
-        self.installed_apps[self.installed_apps.index('oscar.apps.shipping')] = 'tests.apps.shipping'
+        self.installed_apps[self.installed_apps.index('oscar.apps.shipping')] = 'tests.site.apps.shipping'
 
     def test_loading_class_defined_in_local_module(self):
         with patch_settings(INSTALLED_APPS=self.installed_apps):
             (Free,) = get_classes('shipping.methods', ('Free',))
-            self.assertEqual('tests.apps.shipping.methods', Free.__module__)
+            self.assertEqual('tests.site.apps.shipping.methods', Free.__module__)
+
+
+class TestGetCoreAppsFunction(TestCase):
+    """
+    oscar.get_core_apps function
+    """
+
+    def test_returns_core_apps_when_no_overrides_specified(self):
+        apps = oscar.get_core_apps()
+        self.assertEqual(oscar.OSCAR_CORE_APPS, apps)
+
+    def test_uses_non_dashboard_override_when_specified(self):
+        apps = oscar.get_core_apps(overrides=['apps.shipping'])
+        self.assertTrue('apps.shipping' in apps)
+        self.assertTrue('oscar.apps.shipping' not in apps)
+
+    def test_uses_dashboard_override_when_specified(self):
+        apps = oscar.get_core_apps(overrides=['apps.dashboard.catalogue'])
+        self.assertTrue('apps.dashboard.catalogue' in apps)
+        self.assertTrue('oscar.apps.dashboard.catalogue' not in apps)
+        self.assertTrue('oscar.apps.catalogue' in apps)
+

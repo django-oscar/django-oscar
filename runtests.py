@@ -4,20 +4,23 @@ import logging
 from optparse import OptionParser
 from coverage import coverage
 
-import tests.config
+# This configures the settings
+from tests.config import configure
+configure()
 
-from django.test.simple import DjangoTestSuiteRunner
+from django_nose import NoseTestSuiteRunner
 
 logging.disable(logging.CRITICAL)
 
 
 def run_tests(verbosity, *test_args):
-    test_runner = DjangoTestSuiteRunner(verbosity=verbosity)
+    test_runner = NoseTestSuiteRunner(verbosity=verbosity)
     if not test_args:
-        test_args = ['oscar']
+        test_args = ['tests']
     num_failures = test_runner.run_tests(test_args)
     if num_failures:
         sys.exit(num_failures)
+
 
 if __name__ == '__main__':
     parser = OptionParser()
@@ -36,5 +39,4 @@ if __name__ == '__main__':
         print 'Generate HTML reports'
         c.html_report()
     else:
-        print 'Running tests'
         run_tests(options.verbosity, *args)

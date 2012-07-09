@@ -10,12 +10,11 @@ from oscar.apps.address.models import Country
 from oscar.apps.basket.models import Basket
 from oscar.apps.order.models import ShippingAddress, Order, Line, \
         ShippingEvent, ShippingEventType, ShippingEventQuantity, OrderNote, \
-        ShippingEventType, OrderDiscount
+        OrderDiscount
 from oscar.apps.order.exceptions import (InvalidOrderStatus, InvalidLineStatus,
                                          InvalidShippingEvent)
 from oscar.test.helpers import create_order, create_product, create_offer
 from oscar.apps.order.utils import OrderCreator
-from oscar.apps.shipping.methods import Free
 from oscar.apps.order.processing import EventHandler
 from oscar.test import patch_settings
 

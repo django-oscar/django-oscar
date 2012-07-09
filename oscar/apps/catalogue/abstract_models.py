@@ -18,12 +18,19 @@ BrowsableProductManager = get_class('catalogue.managers', 'BrowsableProductManag
 class AbstractProductClass(models.Model):
     """
     Defines the options and attributes for a group of products, e.g. Books, DVDs and Toys.
+
     Not necessarily equivalent to top-level categories but usually will be.
     """
     name = models.CharField(_('name'), max_length=128)
     slug = models.SlugField(max_length=128, unique=True)
+
+    # Some product type don't require shipping (eg digital products) - we use
+    # this field to take some shortcuts in the checkout.
+    requires_shipping = models.BooleanField(_("Requires shipping?"), default=True)
     
-    # These are the options (set by the user when they add to basket) for this item class
+    # These are the options (set by the user when they add to basket) for this
+    # item class.  For instance, a product class of "SMS message" would always
+    # require a message to be specified before it could be bought.
     options = models.ManyToManyField('catalogue.Option', blank=True)
 
     class Meta:
@@ -33,8 +40,8 @@ class AbstractProductClass(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug= slugify(self.name)
-        super(AbstractProductClass, self).save(*args, **kwargs)
+            self.slug = slugify(self.name)
+        return super(AbstractProductClass, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return self.name
@@ -42,28 +49,89 @@ class AbstractProductClass(models.Model):
 
 class AbstractCategory(MP_Node):
     """
-    Category hierarchy, top-level nodes represent departments. Uses django-treebeard.
+    A product category.
+    
+    Uses django-treebeard.
     """
     name = models.CharField(max_length=255, db_index=True)
     description = models.TextField(blank=True, null=True)
     image = models.ImageField(upload_to='categories', blank=True, null=True)
     slug = models.SlugField(max_length=1024, db_index=True, editable=False)
     full_name = models.CharField(max_length=1024, db_index=True, editable=False)
+
+    _slug_separator = '/'
+    _full_name_separator = ' > '
     
     def __unicode__(self):
         return self.full_name
     
-    def save(self, *args, **kwargs):
-        if not self.slug:
+    def save(self, update_slugs=True, *args, **kwargs):
+        if update_slugs:
             parent = self.get_parent()
             slug = slugify(self.name)
             if parent:
-                self.slug = '%s/%s' % (parent.slug, slug)
-                self.full_name = '%s > %s' % (parent.full_name, self.name)
+                self.slug = '%s%s%s' % (parent.slug, self._slug_separator, slug)
+                self.full_name = '%s%s%s' % (parent.full_name,
+                                             self._full_name_separator, self.name)
             else:
                 self.slug = slug
                 self.full_name = self.name
+
+        # Enforce slug uniqueness here as MySQL can't handle a unique index on
+        # the slug field
+        try:
+            match = self.__class__.objects.get(slug=self.slug)
+        except self.__class__.DoesNotExist:
+            pass
+        else:
+            if match.id != self.id:
+                raise ValidationError(_("A category with slug '%(slug)s' already exists") % {'slug': self.slug})
         super(AbstractCategory, self).save(*args, **kwargs)
+
+    def move(self, target, pos=None):
+        super(AbstractCategory, self).move(target, pos)
+
+        reloaded_self = self.__class__.objects.get(pk=self.pk)
+        subtree = self.__class__.get_tree(parent=reloaded_self)
+        if subtree:
+            slug_parts = []
+            name_parts = []
+            curr_depth = 0
+            parent = reloaded_self.get_parent()
+            if parent:
+                slug_parts = [parent.slug]
+                name_parts = [parent.full_name]
+                curr_depth = parent.depth
+            self.__class__.update_subtree_properties(list(subtree), slug_parts,
+                                                name_parts, curr_depth=curr_depth)
+
+    @classmethod
+    def update_subtree_properties(cls, nodes, slug_parts, name_parts, curr_depth):
+        """
+        Update slugs and full_names of children in a subtree.
+        Assumes nodes were originally in DFS order.
+        """
+        if nodes == []:
+            return
+
+        node = nodes[0]
+        if node.depth > curr_depth:
+            slug = slugify(node.name)
+            slug_parts.append(slug)
+            name_parts.append(node.name)
+
+            node.slug = cls._slug_separator.join(slug_parts)
+            node.full_name = cls._full_name_separator.join(name_parts)
+            node.save(update_slugs=False)
+            curr_depth += 1
+            nodes = nodes[1:]
+
+        else:
+            slug_parts = slug_parts[:-1]
+            name_parts = name_parts[:-1]
+            curr_depth -= 1
+
+        cls.update_subtree_properties(nodes, slug_parts, name_parts, curr_depth)
 
     def get_ancestors(self, include_self=True):
         ancestors = list(super(AbstractCategory, self).get_ancestors())
@@ -81,6 +149,9 @@ class AbstractCategory(MP_Node):
         ordering = ['full_name']
         verbose_name_plural = 'Categories'
         verbose_name = 'Category'
+
+    def has_children(self):
+        return self.get_children().count() > 0
 
 
 class AbstractProductCategory(models.Model):
@@ -184,7 +255,7 @@ class AbstractProduct(models.Model):
         help_text="""Choose what type of product this is""")
     attributes = models.ManyToManyField('catalogue.ProductAttribute', through='ProductAttributeValue',
         help_text="""A product attribute is something that this product MUST have, such as a size, as specified by its class""")
-    product_options = models.ManyToManyField('catalogue.Option', blank=True, 
+    product_options = models.ManyToManyField('catalogue.Option', blank=True,
         help_text="""Options are values that can be associated with a item when it is added to 
                      a customer's basket.  This could be something like a personalised message to be
                      printed on a T-shirt.<br/>""")
@@ -298,9 +369,9 @@ class AbstractProduct(models.Model):
         return None
 
     def primary_image(self):
-        images = self.images.all().order_by('display_order')
+        images = self.images.all()
         if images.count():
-            return images[0]
+            return images.order_by('display_order')[0]
         return {
             'original': MissingProductImage(),
             'caption': '',
@@ -557,7 +628,7 @@ class AbstractProductAttributeValue(models.Model):
     product = models.ForeignKey('catalogue.Product', related_name='attribute_values')
     value_text = models.CharField(max_length=255, blank=True, null=True)
     value_integer = models.IntegerField(blank=True, null=True)
-    value_boolean = models.BooleanField(blank=True)
+    value_boolean = models.NullBooleanField(blank=True)
     value_float = models.FloatField(blank=True, null=True)
     value_richtext = models.TextField(blank=True, null=True)
     value_date = models.DateField(blank=True, null=True)
