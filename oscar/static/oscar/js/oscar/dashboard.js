@@ -4,7 +4,7 @@ oscar.getCsrfToken = function() {
     var csrf_token = null;
     $.each(cookies, function(index, cookie) {
         cookieParts = $.trim(cookie).split('=');
-        if (cookie_parts[0] == 'csrftoken') {
+        if (cookieParts[0] == 'csrftoken') {
             csrfToken = cookieParts[1];
         }
     });
