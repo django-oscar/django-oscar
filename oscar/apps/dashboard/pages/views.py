@@ -42,7 +42,7 @@ class PageListView(ListView):
         data = self.form.cleaned_data
 
         if data['title']:
-            queryset = queryset.filter(title__contains=data['title'])
+            queryset = queryset.filter(title__icontains=data['title'])
             self.description += " with title containing '%s'" % data['title']
 
         return queryset
