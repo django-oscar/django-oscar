@@ -456,6 +456,7 @@ class AbstractLinePrice(models.Model):
     
     class Meta:
         abstract = True
+        ordering = ('id',)
         
     def __unicode__(self):
         return u"Line '%s' (quantity %d) price %s" % (self.line, self.quantity, self.price_incl_tax)
