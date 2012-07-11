@@ -1,63 +1,66 @@
 {% extends 'dashboard/layout.html' %}
 {% load currency_filters %}
+{% load i18n %}
 
 {% block title %}
-Offer #{{ offer.id }} | Offer management | {{ block.super }}
+{% blocktrans %}
+Offer '{{ offer.name }}' | Offer management | {{ block.super }}
+{% endblocktrans %}
 {% endblock %}
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url dashboard:index %}">Dashboard</a>
+	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="{% url dashboard:offer-list %}">Offers</a>
+	<a href="{% url dashboard:offer-list %}">{% trans "Offers" %}</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">Offer #{{ offer.id }}</a></li>
+	<li class="active"><a href=".">{% blocktrans %}Offer '{{ offer.name }}'{% endblocktrans %}</a></li>
 </ul>
 {% endblock %}
 
 {% block header %}
 <div class="page-header">
-	<h1>Offer #{{ offer.id }}</h1>
+	<h1>{% blocktrans %}Offer '{{ offer.name }}'{% endblocktrans %}</h1>
 </div>
 {% endblock header %}
 
 {% block dashboard_content %}
 
-    <h2>Offer details</h2>
+<h2>{% trans "Offer details" %}</h2>
 	<table class="table">
 		<tbody>
-			<tr><th>Name</th><td>{{ offer.name }}</td></tr>
-			<tr><th>Description</th><td>{{ offer.description }}</td></tr>
-			<tr><th>Start date</th><td>{{ offer.start_date }}</td></tr>
-			<tr><th>End date</th><td>{{ offer.end_date }}</td></tr>
-			<tr><th>Condition </th><td>{{ offer.condition.description }}</td></tr>
-			<tr><th>Benefit</th><td>{{ offer.benefit.description }}</td></tr>
-			<tr><th>Date created</th><td>{{ offer.date_created }}</td></tr>
+			<tr><th>{% trans "Name" %}</th><td>{{ offer.name }}</td></tr>
+			<tr><th>{% trans "Description" %}</th><td>{{ offer.description }}</td></tr>
+			<tr><th>{% trans "Start date" %}</th><td>{{ offer.start_date }}</td></tr>
+			<tr><th>{% trans "End date" %}</th><td>{{ offer.end_date }}</td></tr>
+			<tr><th>{% trans "Condition" %}</th><td>{{ offer.condition.description }}</td></tr>
+			<tr><th>{% trans "Benefit" %}</th><td>{{ offer.benefit.description }}</td></tr>
+			<tr><th>{% trans "Date created" %}</th><td>{{ offer.date_created }}</td></tr>
 		</tbody>
 	</table>
 
-    <h2>Offer performance</h2>
+	<h2>{% trans "Offer performance" %}</h2>
 	<table class="table">
 		<tbody>
-			<tr><th>Total discount</th><td>{{ offer.total_discount|currency }}</td></tr>
-			<tr><th>Number of orders</th><td>{{ offer.num_orders }}</td></tr>
+			<tr><th>{% trans "Total discount" %}</th><td>{{ offer.total_discount|currency }}</td></tr>
+			<tr><th>{% trans "Number of orders" %}</th><td>{{ offer.num_orders }}</td></tr>
 		</tbody>
 	</table>
 
-    <h2>Recent orders</h2>
+	<h2>{% trans "Recent orders" %}</h2>
 	{% if not order_discounts %}
-	<p>No orders have been placed that use this offer.</p>
+	<p>{% trans "No orders have been placed that use this offer." %}</p>
 	{% else %}
-	<p>We show a maximum of 20 orders sorted by recency.</p>
+	<p>{% trans "We show a maximum of 20 orders sorted by recency." %}</p>
 	<table class="table">
 		<thead>
-			<th>Order number</th>
-			<th>Order total</th>
-			<th>Discount</th>
+			<th>{% trans "Order number" %}</th>
+			<th>{% trans "Order total" %}</th>
+			<th>{% trans "Discount" %}</th>
 			<th></th>
 		</thead>
 		<tbody>
@@ -67,7 +70,7 @@ Offer #{{ offer.id }} | Offer management | {{ block.super }}
 					<td>{{ order.number }}</td>
 					<td>{{ order.total_incl_tax|currency }}</td>
 					<td>{{ discount.amount|currency }}</td>
-					<td><a href="{% url dashboard:order-detail order.number %}" class="btn btn-info">View</a></td>
+					<td><a href="{% url dashboard:order-detail order.number %}" class="btn btn-info">{% trans "View" %}</a></td>
 				</tr>
 			{% endwith %}
 			{% endfor %}
@@ -76,10 +79,9 @@ Offer #{{ offer.id }} | Offer management | {{ block.super }}
 	{% endif %}
 
 	<div class="form-actions">
-		<a class="btn btn-primary" href="{% url dashboard:offer-metadata offer.id %}">Edit</a> or
-		<a class="btn btn-danger" href="{% url dashboard:offer-delete offer.id %}">Delete</a> or
-		<a href="{% url dashboard:offer-list %}">cancel</a>
+		<a class="btn btn-primary" href="{% url dashboard:offer-metadata offer.id %}">{% trans "Edit" %}</a> {% trans "or" %}
+		<a class="btn btn-danger" href="{% url dashboard:offer-delete offer.id %}">{% trans "Delete" %}</a> {% trans "or" %}
+		<a href="{% url dashboard:offer-list %}">{% trans "cancel" %}</a>
 	</div>
-
 
 {% endblock dashboard_content %}

@@ -573,4 +573,3 @@ class AbstractLineAttribute(models.Model):
         abstract = True
         verbose_name = _('Line attribute')
         verbose_name_plural = _('Line attributes')
-

@@ -1,18 +1,19 @@
 {% extends 'dashboard/layout.html' %}
 {% load currency_filters %}
+{% load i18n %}
 
 {% block title %}
-{{ title }} | Offer management | {{ block.super }}
+{{ title }} | {% trans "Offer management" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url dashboard:index %}">Dashboard</a>
+	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="{% url dashboard:offer-list %}">Offers</a>
+	<a href="{% url dashboard:offer-list %}">{% trans "Offers" %}</a>
         <span class="divider">/</span>
     </li>
 	<li class="active"><a href=".">{{ title }}</a></li>
@@ -33,10 +34,10 @@
 	{% block form_actions %}
 	<div class="form-actions">
 		{% if back_url %}
-		<a href="{{ back_url }}" class="btn btn-primary">Back</a> or
+		<a href="{{ back_url }}" class="btn btn-primary">{% trans "Back" %}</a> {% trans "or" %}
 		{% endif %}
-		<button class="btn btn-primary" type="submit">Continue</button> or
-		<a href="{% url dashboard:offer-list %}">cancel</a>
+		<button class="btn btn-primary" type="submit">{% trans "Continue" %}</button> {% trans "or" %}
+		<a href="{% url dashboard:offer-list %}">{% trans "cancel" %}</a>
 	</div>
 	{% endblock form_actions %}
 </form>

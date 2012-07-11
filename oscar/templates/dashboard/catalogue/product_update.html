@@ -1,20 +1,21 @@
 {% extends 'dashboard/layout.html' %}
 {% load currency_filters %}
+{% load i18n %}
 
 {% block body_class %}catalogue{% endblock %}
 
 {% block title %}
-Update product | {{ block.super }}
+{% trans "Update product" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url dashboard:index %}">Dashboard</a>
+	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="{% url dashboard:catalogue-product-list %}">Catalogue</a>
+	<a href="{% url dashboard:catalogue-product-list %}">{% trans "Catalogue" %}</a>
         <span class="divider">/</span>
     </li>
     <li class="active"><a href=".">{{ title }}</a></li>
@@ -35,7 +36,7 @@ Update product | {{ block.super }}
             <h3 class="app-ico ico_expand icon">Product information</h3>
         </div>
 		<div class="control-group fields-full">
-			Product class: <strong>{{ product.product_class }}</strong>
+			{% trans "Product class" %}: <strong>{{ product.product_class }}</strong>
 		</div>
         {% for field in form %}
             {% if forloop.counter > 4 %}
@@ -84,7 +85,7 @@ Update product | {{ block.super }}
 
 	<div class="well form-inline">
 		<div class="sub-header">
-			<h3 class="app-ico ico_home icon">Category information</h3>
+			<h3 class="app-ico ico_home icon">{% trans "Category information" %}</h3>
 		</div>
     	{{ category_formset.management_form }}
     	{% for category_form in category_formset %}
@@ -95,7 +96,7 @@ Update product | {{ block.super }}
 
 	<div class="well form-inline">
     	<div class="sub-header">
-    	   <h3 class="app-ico ico_favourite icon">Images</h3>
+			<h3 class="app-ico ico_favourite icon">{% trans "Images" %}</h3>
     	</div>
     	{{ image_formset.management_form }}
     	{% for image_form in image_formset %}
@@ -106,7 +107,7 @@ Update product | {{ block.super }}
 
 	<div class="well fields-full">
 		<div class="sub-header">
-		    <h3 class="app-ico ico_shop_bag icon">Stock and price information</h3>
+			<h3 class="app-ico ico_shop_bag icon">{% trans "Stock and price information" %}</h3>
 		</div>
 		{% block stockrecord_form %}
 		    <div class="row ">
@@ -137,10 +138,10 @@ Update product | {{ block.super }}
 		{% endblock %}
 	</div>
 	<div class="form-actions">
-        <button class="btn btn-primary btn-large" type="submit">Save Product</button> or
-            <a href="{% url dashboard:catalogue-product-list %}">cancel</a>
+		<button class="btn btn-primary btn-large" type="submit">{% trans "Save Product" %}</button> or
+		<a href="{% url dashboard:catalogue-product-list %}">{% trans "cancel" %}</a>
             {% if product %}
-                <a class="btn btn-success btn-large pull-right" href="{{ product.get_absolute_url }}">View on site</a>
+			<a class="btn btn-success btn-large pull-right" href="{{ product.get_absolute_url }}">{% trans "View on site" %}</a>
             {% endif %}
 	</div>
 </form>

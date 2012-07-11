@@ -1,25 +1,28 @@
 {% extends 'dashboard/layout.html' %}
 {% load currency_filters %}
+{% load i18n %}
 
 {% block title %}
+{% blocktrans %}
 Order {{ order.number }} - Line #{{ line.id }} | {{ block.super }}
+{% endblocktrans %}
 {% endblock %}
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url dashboard:index %}">Dashboard</a>
+	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="{% url dashboard:order-list %}">Orders</a>
+	<a href="{% url dashboard:order-list %}">{% trans "Orders" %}</a>
         <span class="divider">/</span>
     </li>
     <li>
 		<a href="{% url dashboard:order-detail order.number %}">#{{ order.number }}</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">Line #{{ line.id }}</a></li>
+	<li class="active"><a href=".">{% blocktrans %}Line #{{ line.id }}{% endblocktrans %}</a></li>
 </ul>
 {% endblock %}
 

@@ -1,42 +1,37 @@
 {% extends 'dashboard/layout.html' %}
 {% load currency_filters %}
+{% load i18n %}
+
 {% block body_class %}catalogue{% endblock %}
+
 {% block title %}
-Stock alerts | {{ block.super }}
+{% trans "Stock alerts" %} | {{ block.super }}
 {% endblock %}
+
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url dashboard:index %}">Dashboard</a>
+	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
-    <li class="active"><a href=".">Catalogue</a></li>
+	<li class="active"><a href=".">{% trans "Catalogue" %}</a></li>
 </ul>
 {% endblock %}
 
 {% block header %}
 <div class="page-header">
-	<h1>Stock alerts</h1>
+	<h1>{% trans "Stock alerts" %}</h1>
 </div>
 {% endblock header %}
 
 {% block dashboard_content %}
 
-{% comment %}
-<form action="." method="get" class="form-horizontal">
-	{% include "partials/form_fields.html" with form=form %}
-	<div class="form-actions">
-		<button type="submit" class="btn btn-primary">Search</button>
-	</div>
-</form>
-{% endcomment %}
-
 <div class="well well-info">
 	<h3 class="app-ico ico_sync icon">Filter</h3>
     <p>
-    	<a class="btn btn-info" href="{% url dashboard:stock-alert-list %}">All</a>
-    	<a class="btn btn-info" href="{% url dashboard:stock-alert-list %}?status=Open">Open</a>
-    	<a class="btn btn-info" href="{% url dashboard:stock-alert-list %}?status=Closed">Closed</a>
+	<a class="btn btn-info" href="{% url dashboard:stock-alert-list %}">{% trans "All" %}</a>
+	<a class="btn btn-info" href="{% url dashboard:stock-alert-list %}?status=Open">{% trans "Open" %}</a>
+	<a class="btn btn-info" href="{% url dashboard:stock-alert-list %}?status=Closed">{% trans "Closed" %}</a>
     </p>
 </div>
 
@@ -46,12 +41,12 @@ Stock alerts | {{ block.super }}
 {% if alerts %}
 <table class="table table-striped table-bordered">
     <tr>
-        <th>Product</th>
-        <th>Partner</th>
-        <th>Low stock threshold</th>
-        <th>Current available stock</th>
-		<th>Date alert raised</th>
-		<th>Status</th>
+		<th>{% trans "Product" %}</th>
+		<th>{% trans "Partner" %}</th>
+		<th>{% trans "Low stock threshold" %}</th>
+		<th>{% trans "Current available stock" %}</th>
+		<th>{% trans "Date alert raised" %}</th>
+		<th>{% trans "Status" %}</th>
         <th></th>
     </tr>
     {% for alert in alerts %}
@@ -63,7 +58,7 @@ Stock alerts | {{ block.super }}
 		<td>{{ alert.date_created }}</td>
 		<td>{{ alert.status }}</td>
 		<td>
-			<a class="btn btn-info" href="{% url dashboard:catalogue-product alert.stockrecord.product.id %}">Update</a>
+			<a class="btn btn-info" href="{% url dashboard:catalogue-product alert.stockrecord.product.id %}">{% trans "Update" %}</a>
 		</td>
     </tr>
     {% endfor %}
@@ -71,7 +66,7 @@ Stock alerts | {{ block.super }}
 
 {% else %}
 
-<p>No stock alerts found.</p>
+<p>{% trans "No stock alerts found." %}</p>
 
 {% endif %}
 

@@ -28,7 +28,6 @@ class AbstractProductRecord(models.Model):
         verbose_name = _('Product record')
         verbose_name_plural = _('Product records')
 
-
     def __unicode__(self):
         return _("Record for '%s'") % self.product
         

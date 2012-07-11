@@ -1,24 +1,26 @@
 {% extends 'dashboard/layout.html' %}
 {% load currency_filters %}
+{% load i18n %}
+
 {% block body_class %}catalogue{% endblock %}
 
 {% block title %}
-Catalogue management | {{ block.super }}
+{% trans "Catalogue management" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url dashboard:index %}">Dashboard</a>
+	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
-    <li class="active"><a href=".">Catalogue</a></li>
+	<li class="active"><a href=".">{% trans "Catalogue" %}</a></li>
 </ul>
 {% endblock %}
 
 {% block header %}
 <div class="page-header action">
-    <h1>Catalogue management</h1>
+	<h1>{% trans "Catalogue management" %}</h1>
 </div>
 {% endblock header %}
 
@@ -27,14 +29,14 @@ Catalogue management | {{ block.super }}
 <div class="well well-info">
 	<h3 class="app-ico ico_expand icon">Create new product</h3>
     <form action="{% url dashboard:catalogue-product-create %}" method="get" class="form-inline">
-		<label for="id_promotion_type">Create a new product of type</label>
+		<label for="id_promotion_type">{% trans "Create a new product of type" %}</label>
 		<select id="id_promotion_type" name="product_class">
 			<option> -- choose type --</option>
 			{% for product_class in product_classes %}
 			<option value="{{ product_class.id }}">{{ product_class.name }}</option>
 			{% endfor %}
 		</select>
-		<input type="submit" value="New Product" class="btn-primary" />
+		<input type="submit" value="{% trans "New Product" %}" class="btn-primary" />
     </form>
 </div>
 
@@ -42,7 +44,7 @@ Catalogue management | {{ block.super }}
     <h3 class="app-ico ico_magnify icon">Search Products</h3>
     <form action="." method="get" class="form-inline">
 		{% include "partials/form_fields_inline.html" with form=form %}
-        <button type="submit" class="btn btn-primary">Search</button>
+		<button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
     </form>
 </div>
 
@@ -54,16 +56,16 @@ Catalogue management | {{ block.super }}
     {% csrf_token %}
 <table class="table table-striped table-bordered">
     <tr>
-        <th>UPC</th>
-        <th>Title</th>
-        <th>Product class</th>
-        <th>Status</th>
-		<th>Partner</th>
-		<th>Partner SKU</th>
-		<th>Price excl. tax</th>
-		<th>Price incl. tax</th>
-		<th>Number in stock</th>
-		<th>Number allocated</th>
+		<th>{% trans "UPC" %}</th>
+		<th>{% trans "Title" %}</th>
+		<th>{% trans "Product class" %}</th>
+		<th>{% trans "Status" %}</th>
+		<th>{% trans "Partner" %}</th>
+		<th>{% trans "Partner SKU" %}</th>
+		<th>{% trans "Price excl. tax" %}</th>
+		<th>{% trans "Price incl. tax" %}</th>
+		<th>{% trans "Number in stock" %}</th>
+		<th>{% trans "Number allocated" %}</th>
         <th></th>
     </tr>
     {% for product in products %}
@@ -81,8 +83,8 @@ Catalogue management | {{ block.super }}
 			<td>{{ stockrecord.num_allocated }}</td>
 		{% endwith %}
 		<td>
-			<a class="btn btn-info" href="{% url dashboard:catalogue-product product.id %}">Edit</a>
-			<a class="btn btn-success" href="{{ product.get_absolute_id }}">View on site</a>
+			<a class="btn btn-info" href="{% url dashboard:catalogue-product product.id %}">{% trans "Edit" %}</a>
+			<a class="btn btn-success" href="{{ product.get_absolute_id }}">{% trans "View on site" %}</a>
 		</td>
     </tr>
     {% endfor %}
@@ -96,7 +98,7 @@ Catalogue management | {{ block.super }}
 
 {% else %}
 
-<p>No products found.</p>
+<p>{% trans "No products found." %}</p>
 
 {% endif %}
 
