@@ -187,8 +187,11 @@ class ProductUpdateView(generic.UpdateView):
 
 
     def form_valid(self, form):
+        stockrecord = None
+        if self.object.has_stockrecord:
+            stockrecord = self.object.stockrecord
         stockrecord_form = StockRecordForm(self.request.POST,
-                                           instance=self.object.stockrecord)
+                                           instance=stockrecord)
         category_formset = ProductCategoryFormSet(self.request.POST,
                                                   instance=self.object)
         image_formset = ProductImageFormSet(self.request.POST,
