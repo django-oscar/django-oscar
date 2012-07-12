@@ -7,6 +7,7 @@ location = lambda x: os.path.join(os.path.dirname(os.path.realpath(__file__)), x
 DEBUG = True
 TEMPLATE_DEBUG = True
 SQL_DEBUG = True
+SEND_BROKEN_LINK_EMAILS = True
 
 ADMINS = (
     ('David', 'david.winterbottom@tangentlabs.co.uk'),
