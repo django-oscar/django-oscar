@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 cd /var/www/oscar/builds/sandbox
-git pull 2> /dev/null
+git pull --ff-only 2> /dev/null
 [ $? -gt 0 ] && echo "Git pull failed" >&2 && exit 1
 
 # Update any dependencies
