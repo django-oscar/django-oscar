@@ -597,7 +597,8 @@ class AbsoluteDiscountBenefit(Benefit):
                 
                 # Update line with discounts
                 line_discount = self.round(min(remaining_discount, quantity_affected * price))
-                line.discount(line_discount, quantity_affected)
+                if not condition:
+                    line.discount(line_discount, quantity_affected)
                 
                 # Update loop vars
                 affected_items += quantity_affected
