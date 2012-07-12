@@ -7,10 +7,10 @@ from oscar.apps.dashboard.catalogue.forms import CategoryForm
 from oscar.apps.catalogue.categories import create_from_breadcrumbs
 
 
-class ViewTests(ClientTestCase):
+class TestCatalogueViews(ClientTestCase):
     is_staff = True
 
-    def test_pages_exist(self):
+    def test_exist(self):
         urls = [reverse('dashboard:catalogue-product-list'),
                 reverse('dashboard:catalogue-category-list'),
                 reverse('dashboard:stock-alert-list'),
@@ -30,7 +30,7 @@ def create_test_category_tree():
     create_from_breadcrumbs(trail)
 
 
-class CategoryFormTests(TestCase):
+class TestCategoryForm(TestCase):
 
     def setUp(self):
         Category.objects.all().delete()

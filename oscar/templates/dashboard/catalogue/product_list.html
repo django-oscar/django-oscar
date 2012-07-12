@@ -82,6 +82,7 @@ Catalogue management | {{ block.super }}
 		{% endwith %}
 		<td>
 			<a class="btn btn-info" href="{% url dashboard:catalogue-product product.id %}">Edit</a>
+			<a class="btn btn-success" href="{{ product.get_absolute_id }}">View on site</a>
 		</td>
     </tr>
     {% endfor %}
