@@ -41,7 +41,8 @@ class ProductListView(generic.ListView):
         describes the queryset
         """
         self.description = self.base_description
-        queryset = self.model.objects.all().order_by('-date_created')
+        queryset = self.model.objects.all().order_by('-date_created').prefetch_related(
+            'product_class', 'stockrecord__partner')
         self.form = self.form_class(self.request.GET)
         if not self.form.is_valid():
             return queryset
