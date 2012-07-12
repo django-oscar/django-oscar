@@ -42,6 +42,8 @@ class AbstractBasket(models.Model):
     open = OpenBasketManager()
     saved = SavedBasketManager()
 
+    _lines = None
+
     def __init__(self, *args, **kwargs):
         super(AbstractBasket, self).__init__(*args, **kwargs)
         self._lines = None  # Cached queryset of lines
