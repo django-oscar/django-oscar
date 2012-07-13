@@ -4,6 +4,7 @@ from django.views.generic import ListView, DetailView, CreateView
 from django.db.models import Avg
 from django.contrib import messages
 from django.db.models import get_model
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import get_classes
 SignedInUserProductReviewForm, AnonymousUserProductReviewForm, VoteForm = get_classes(
