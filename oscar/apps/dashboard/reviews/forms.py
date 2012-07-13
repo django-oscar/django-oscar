@@ -1,13 +1,14 @@
 from django import forms
 from django.db.models import get_model
+from django.utils.translation import ugettext_lazy as _
 
 ProductReview = get_model('reviews', 'productreview')
 
 
 class DashboardProductReviewForm(forms.ModelForm):
     choices= (
-        (ProductReview.APPROVED, 'Approved'),
-        (ProductReview.REJECTED, 'Rejected'),
+        (ProductReview.APPROVED, _('Approved')),
+        (ProductReview.REJECTED, _('Rejected')),
     )
     status = forms.ChoiceField(choices=choices)
 
@@ -23,5 +24,12 @@ class ProductReviewSearchForm(forms.Form):
     keyword = forms.CharField(required=False)
     status = forms.ChoiceField(required=False, choices=STATUS_CHOICES)
     date_from = forms.DateTimeField(required=False)
-    date_to = forms.DateTimeField(required=False, label='to')
+    date_to = forms.DateTimeField(required=False, label=_('to'))
     name = forms.CharField(required=False)
+
+    def get_friendly_status(self):
+        raw = int(self.cleaned_data['status'])
+        for key, value in self.STATUS_CHOICES:
+            if key == raw:
+                return value
+        return ''

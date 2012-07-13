@@ -19,12 +19,12 @@
 
 {% block header %}
 <div class="page-header action">
-	<h1>Page Management</h1><a href="#" class="pull_out">{% trans "Search Pages" %}</a>
+	<h1>{% trans "Page Management" %}</h1><a href="#" class="pull_out">{% trans "Search Pages" %}</a>
     <div class="orders_search" style="display:none">
         <form action="." method="get" class="form-horizontal">
             {% include "partials/form_fields.html" with form=form %}
            <div class="form-actions">
-               <input type="submit" value="Search" class="btn btn-primary"/>
+			   <input type="submit" value="{% trans "Search" %}" class="btn btn-primary"/>
            </div>
         </form>
     </div>
@@ -37,9 +37,7 @@
     <h2>{{ queryset_description }}</h2>
 </div>
 
-<form action="{% url dashboard:page-create %}" method="get" class="form-horizontal">
-	<button type="submit" class="btn-primary">{% trans "Create new page" %}</button>
-</form>
+<a class="btn btn-primary btn-large" href="{% url dashboard:page-create %}">{% trans "Create new page" %}</a>
 
 {% if flatpage_list.count %}
 <form action="." method="post">

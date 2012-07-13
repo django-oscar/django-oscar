@@ -1,6 +1,7 @@
 import os
 
 from django.views.generic import (ListView, DeleteView, CreateView, UpdateView)
+from django.utils.translation import ugettext_lazy as _
 from django.db.models.loading import get_model
 from django.core.urlresolvers import reverse
 from django.contrib import messages
@@ -40,7 +41,7 @@ class RangeCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         ctx = super(RangeCreateView, self).get_context_data(**kwargs)
-        ctx['title'] = "Create range"
+        ctx['title'] = _("Create range")
         return ctx
 
 
@@ -58,7 +59,7 @@ class RangeUpdateView(UpdateView):
 
     def get_context_data(self, **kwargs):
         ctx = super(RangeUpdateView, self).get_context_data(**kwargs)
-        ctx['title'] = "Update range"
+        ctx['title'] = _("Update range")
         return ctx
 
 
@@ -105,7 +106,7 @@ class RangeProductListView(ListView, BulkEditMixin):
         range = self.get_range()
         for product in products:
             range.included_products.remove(product)
-        messages.success(request, 'Removed %d products from range' %
+        messages.success(request, _('Removed %d products from range') %
                          len(products))
         return HttpResponseRedirect(self.get_success_url(request))
 
@@ -129,19 +130,19 @@ class RangeProductListView(ListView, BulkEditMixin):
             range.included_products.add(product)
 
         num_products = len(products)
-        messages.success(request, "%d product%s added to range" % (
+        messages.success(request, _("%d product%s added to range") % (
             num_products, pluralize(num_products)))
 
         dupe_skus = form.get_duplicate_skus()
         if dupe_skus:
             messages.warning(
                 request,
-                "The products with SKUs or UPCs matching %s are already in this range" % (", ".join(dupe_skus)))
+                _("The products with SKUs or UPCs matching %s are already in this range") % (", ".join(dupe_skus)))
 
         missing_skus = form.get_missing_skus()
         if missing_skus:
             messages.warning(request,
-                             "No product was found with SKU or UPC matching %s" % ', '.join(missing_skus))
+                             _("No product was found with SKU or UPC matching %s") % ', '.join(missing_skus))
 
     def handle_file_products(self, request, range, form):
         if not 'file_upload' in request.FILES:
@@ -151,10 +152,13 @@ class RangeProductListView(ListView, BulkEditMixin):
         if not upload.was_processing_successful():
             messages.error(request, upload.error_message)
         else:
-            msg = "File processed: %d products added, %d duplicate identifiers, %d " \
-                  "identifiers were not found"
-            msg = msg % (upload.num_new_skus, upload.num_duplicate_skus,
-                         upload.num_unknown_skus)
+            msg = _("File processed: %(new_skus)d products added, "
+                    "%(dupe_skus)d duplicate identifiers, "
+                    "%(unknown_skus)d identifiers were not found") % {
+                        'new_skus': upload.num_new_skus,
+                        'dupe_skus': upload.num_duplicate_skus,
+                        'unknown_skus': upload.num_unknown_skus
+                    }
             if upload.num_new_skus:
                 messages.success(request, msg)
             else:

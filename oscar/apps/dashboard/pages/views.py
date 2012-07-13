@@ -1,6 +1,7 @@
 from django.db.models.loading import get_model
 from django.template.defaultfilters import slugify
 from django.http import HttpResponseRedirect
+from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.views import generic
@@ -23,8 +24,7 @@ class PageListView(ListView):
     model = FlatPage
     form_class = forms.PageSearchForm
     paginate_by = 25
-    base_description = 'All pages'
-    description = ''
+    desc_template = u'%(main_filter)s %(title_filter)s'
 
     def get_queryset(self):
         """
@@ -32,7 +32,10 @@ class PageListView(ListView):
         search term is specified in the search form, it will be used
         to filter the queryset.
         """
-        self.description = self.base_description
+        self.desc_ctx = {
+            'main_filter': _('All pages'),
+            'title_filter': '',
+        }
         queryset = self.model.objects.all().order_by('title')
 
         self.form = self.form_class(self.request.GET)
@@ -43,7 +46,7 @@ class PageListView(ListView):
 
         if data['title']:
             queryset = queryset.filter(title__icontains=data['title'])
-            self.description += " with title containing '%s'" % data['title']
+            self.desc_ctx['title_filter'] = _(" with title containing '%s'") % data['title']
 
         return queryset
 
@@ -54,7 +57,7 @@ class PageListView(ListView):
         """
         context = super(PageListView, self).get_context_data(**kwargs)
         context['form'] = self.form
-        context['queryset_description'] = self.description
+        context['queryset_description'] = self.desc_template % self.desc_ctx
         return context
 
 
@@ -72,7 +75,7 @@ class PageCreateView(generic.CreateView):
         Get context data with additional *title* object.
         """
         ctx = super(PageCreateView, self).get_context_data(**kwargs)
-        ctx['title'] = 'Create New Page'
+        ctx['title'] = _('Create New Page')
         return ctx
 
     def form_valid(self, form):
@@ -106,7 +109,7 @@ class PageCreateView(generic.CreateView):
         return self.render_to_response(ctx)
 
     def get_success_url(self, page):
-        messages.success(self.request, "Created new page '%s'" % page.title)
+        messages.success(self.request, _("Created new page '%s'") % page.title)
         return reverse('dashboard:page-list')
 
 
@@ -144,7 +147,7 @@ class PageUpdateView(generic.UpdateView):
         """
         Get URL to redirect to when updating page was successful.
         """
-        messages.success(self.request, "Updated page '%s'" % self.object.title)
+        messages.success(self.request, _("Updated page '%s'") % self.object.title)
         return reverse('dashboard:page-list')
 
 
@@ -160,5 +163,5 @@ class PageDeleteView(generic.DeleteView):
         """
         Get URL to redirect to when deleting page is succesful.
         """
-        messages.success(self.request, "Deleted page '%s'" % self.object.title)
+        messages.success(self.request, _("Deleted page '%s'") % self.object.title)
         return reverse('dashboard:page-list')

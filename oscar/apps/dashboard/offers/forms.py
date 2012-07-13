@@ -1,6 +1,7 @@
 from django import forms
 
 from django.db.models.loading import get_model
+from django.utils.translation import ugettext_lazy as _
 
 ConditionalOffer = get_model('offer', 'ConditionalOffer')
 Condition = get_model('offer', 'Condition')
@@ -33,5 +34,5 @@ class PreviewForm(forms.Form):
 
 
 class OfferSearchForm(forms.Form):
-    name = forms.CharField(required=False, label="Offer name")
+    name = forms.CharField(required=False, label=_("Offer name"))
     is_active = forms.BooleanField(required=False)

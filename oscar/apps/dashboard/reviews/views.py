@@ -2,6 +2,7 @@ import datetime
 
 from django.views import generic
 from django.db.models import get_model, Q
+from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.template.defaultfilters import date as format_date
@@ -22,7 +23,8 @@ class ReviewListView(generic.ListView, BulkEditMixin):
     current_view = 'dashboard:reviews-list'
     actions = ('update_selected_review_status',)
     checkbox_object_name = 'review'
-    base_description = 'All reviews'
+    desc_template = _("%(main_filter)s %(date_filter)s %(status_filter)s"
+                      "%(kw_filter)s %(name_filter)s")
 
     def get(self, request, *args, **kwargs):
         response = super(self.__class__, self).get(request, **kwargs)
@@ -49,26 +51,30 @@ class ReviewListView(generic.ListView, BulkEditMixin):
             ).filter(
                 date_created__lt=date_to
             )
-            self.description += " created between %s and %s" % (
-                format_date(date_from),
-                format_date(date_to)
-            )
-
+            self.desc_ctx['date_filter'] = _(" created between %(start_date)s and %(end_date)s") % {
+                'start_date': format_date(date_from),
+                'end_date': format_date(date_to)
+            }
         elif date_from:
             queryset = queryset.filter(date_created__gte=date_from)
-            self.description += " created after %s" % format_date(date_from)
-
+            self.desc_ctx['date_filter'] =  _(" created after %s") % format_date(date_from)
         elif date_to:
             # Add 24 hours to make search inclusive
             date_to = date_to + datetime.timedelta(days=1)
             queryset = queryset.filter(date_created__lt=date_to)
-            self.description += " created before %s" % format_date(date_to)
+            self.desc_ctx['date_filter'] = _(" created before %s") % format_date(date_to)
 
         return queryset
 
     def get_queryset(self):
         queryset = self.model.objects.all()
-        self.description = self.base_description
+        self.desc_ctx = {
+            'main_filter': _('All reviews'),
+            'date_filter': '',
+            'status_filter': '',
+            'kw_filter': '',
+            'name_filter': '',
+        }
 
         self.form = self.form_class(self.request.GET)
         if not self.form.is_valid():
@@ -81,14 +87,15 @@ class ReviewListView(generic.ListView, BulkEditMixin):
         # evaluated to False
         if data['status'] != '':
             queryset = queryset.filter(status=data['status']).distinct()
-            self.description += " with status matching '%s'" % data['status']
+            display_status = self.form.get_friendly_status()
+            self.desc_ctx['status_filter'] = _(" with status matching '%s'") % display_status
 
         if data['keyword']:
             queryset = queryset.filter(
                 Q(title__icontains=data['keyword']) |
                 Q(body__icontains=data['keyword'])
             ).distinct()
-            self.description += " with keyword matching '%s'" % data['keyword']
+            self.desc_ctx['kw_filter'] = _(" with keyword matching '%s'") % data['keyword']
 
         queryset = self.get_date_from_to_queryset(data['date_from'],
                                                   data['date_to'], queryset)
@@ -107,7 +114,7 @@ class ReviewListView(generic.ListView, BulkEditMixin):
                     Q(user__first_name__istartswith=parts[0]) |
                     Q(user__last_name__istartswith=parts[-1])
                 ).distinct()
-            self.description += " with customer name matching '%s'" % data['name']
+            self.desc_ctx['name_filter'] = _(" with customer name matching '%s'") % data['name']
 
         return queryset
 
@@ -115,6 +122,7 @@ class ReviewListView(generic.ListView, BulkEditMixin):
         context = super(self.__class__, self).get_context_data(**kwargs)
         context['review_form'] = self.review_form_class()
         context['form'] = self.form
+        context['description'] = self.desc_template % self.desc_ctx
         return context
 
     def update_selected_review_status(self, request, reviews):

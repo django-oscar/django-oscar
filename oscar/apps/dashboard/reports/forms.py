@@ -1,4 +1,5 @@
 from django import forms
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import get_class
 GeneratorRepository = get_class('dashboard.reports.utils', 'GeneratorRepository')
@@ -17,5 +18,5 @@ class ReportForm(forms.Form):
 
     def clean(self):
         if 'date_from' in self.cleaned_data and 'date_to' in self.cleaned_data and self.cleaned_data['date_from'] > self.cleaned_data['date_to']:
-            raise forms.ValidationError("Your start date must be before your end date")
+            raise forms.ValidationError(_("Your start date must be before your end date"))
         return self.cleaned_data

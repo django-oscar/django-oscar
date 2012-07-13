@@ -1,5 +1,6 @@
 from django import forms
 from django.forms.models import inlineformset_factory
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.forms.fields import ExtendedURLField
 from oscar.core.loading import get_classes
@@ -36,8 +37,7 @@ OrderedProductFormSet = inlineformset_factory(HandPickedProductList,
 class PagePromotionForm(forms.ModelForm):
     page_url = ExtendedURLField(label="URL")
     position = forms.CharField(widget=forms.Select(choices=PROMOTION_POSITIONS),
-                               help_text="""Where in the page this content
-                                            block will appear""")
+                               help_text=_("Where in the page this content block will appear"))
 
     class Meta:
         model = PagePromotion
