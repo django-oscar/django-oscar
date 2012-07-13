@@ -219,7 +219,7 @@ class Condition(models.Model):
 class Benefit(models.Model):
     PERCENTAGE, FIXED, MULTIBUY, FIXED_PRICE = ("Percentage", "Absolute", "Multibuy", "Fixed price")
     TYPE_CHOICES = (
-        (PERCENTAGE, _("Discount is a % of the product's value")),
+        (PERCENTAGE, _("Discount is a %% of the product's value")),
         (FIXED, _("Discount is a fixed amount off the product's value")),
         (MULTIBUY, _("Discount is to give the cheapest product for free")),
         (FIXED_PRICE, _("Get the products that meet the condition for a fixed price")),
