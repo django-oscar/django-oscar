@@ -2,6 +2,11 @@
 Changelog
 =========
 
+0.2.2 - 13 July 2012
+~~~~~~~~~~~~~~~~~~~~
+
+Fixes a bug with applying absolute-discount benefits
+
 0.2.1 - 09 July 2012
 ~~~~~~~~~~~~~~~~~~~~
 
