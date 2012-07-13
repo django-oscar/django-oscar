@@ -130,8 +130,8 @@ class RangeProductListView(ListView, BulkEditMixin):
             range.included_products.add(product)
 
         num_products = len(products)
-        messages.success(request, _("%d product%s added to range") % (
-            num_products, pluralize(num_products)))
+        messages.success(request, _("Products added to range: %d") % (
+            num_products))
 
         dupe_skus = form.get_duplicate_skus()
         if dupe_skus:
