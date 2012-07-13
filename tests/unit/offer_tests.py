@@ -385,6 +385,22 @@ class AbsoluteDiscountBenefitTest(OfferTest):
         
         second_discount = self.benefit.apply(self.basket)
         self.assertEquals(Decimal('5.00'), second_discount)
+
+    def test_absolute_does_not_consume_twice(self):
+        product = create_product(Decimal('25000'))
+        rng = Range.objects.create(name='Dummy')
+        rng.included_products.add(product)
+        condition = ValueCondition(range=rng, type='Value', value=Decimal('5000'))
+        basket = Basket.objects.create()
+        basket.add_product(product, 5)
+        benefit = AbsoluteDiscountBenefit(range=rng, type='Absolute', value=Decimal('100'))
+        self.assertTrue(condition.is_satisfied(basket))
+        self.assertEquals(Decimal('100'), benefit.apply(basket, condition))
+        self.assertEquals(Decimal('100'), benefit.apply(basket, condition))
+        self.assertEquals(Decimal('100'), benefit.apply(basket, condition))
+        self.assertEquals(Decimal('100'), benefit.apply(basket, condition))
+        self.assertEquals(Decimal('100'), benefit.apply(basket, condition))
+        self.assertEquals(Decimal('0'), benefit.apply(basket, condition))
         
         
 class MultibuyDiscountBenefitTest(OfferTest):
