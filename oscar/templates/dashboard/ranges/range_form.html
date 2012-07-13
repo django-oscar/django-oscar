@@ -1,18 +1,19 @@
 {% extends 'dashboard/layout.html' %}
 {% load currency_filters %}
+{% load i18n %}
 
 {% block title %}
-{{ title }} | Range management | {{ block.super }}
+{{ title }} | {% trans "Range management" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url dashboard:index %}">Dashboard</a>
+	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="{% url dashboard:range-list %}">Ranges</a>
+	<a href="{% url dashboard:range-list %}">{% trans "Ranges" %}</a>
         <span class="divider">/</span>
     </li>
 	<li class="active"><a href=".">{{ title }}</a></li>
@@ -31,11 +32,11 @@
 	{% include "partials/form_fields.html" with form=form %}
 	{% block form_actions %}
 	<div class="form-actions">
-		<button class="btn btn-primary btn-large" type="submit">Save</button> or
+		<button class="btn btn-primary btn-large" type="submit">{% trans "Save" %}</button> {% trans "or" %}
 		{# This is an input so we distinguish between which button was pressed #}
-		<input class="btn btn-primary btn-large" type="submit" name="action" value="Save and edit products"/>
-		or
-		<a href="{% url dashboard:range-list %}">cancel</a>
+		<input class="btn btn-primary btn-large" type="submit" name="action" value="{% trans "Save and edit products" %}"/>
+		{% trans "or" %}
+		<a href="{% url dashboard:range-list %}">{% trans "cancel" %}</a>
 	</div>
 	{% endblock form_actions %}
 </form>

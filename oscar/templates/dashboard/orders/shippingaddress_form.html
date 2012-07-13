@@ -1,30 +1,31 @@
 {% extends 'dashboard/layout.html' %}
+{% load i18n %}
 
 {% block title %}
-Shipping address | Order {{ order.number }} | {{ block.super }}
+{% trans "Shipping address" %} | {% trans "Order" %} {{ order.number }} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url dashboard:index %}">Dashboard</a>
+	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="{% url dashboard:order-list %}">Orders</a>
+	<a href="{% url dashboard:order-list %}">{% trans "Orders" %}</a>
         <span class="divider">/</span>
     </li>
     <li>
 		<a href="{% url dashboard:order-detail order.number %}">{{ order.number }}</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">Edit shipping address</a></li>
+	<li class="active"><a href=".">{% trans "Edit shipping address" %}</a></li>
 </ul>
 {% endblock %}
 
 {% block header %}
 <div class="page-header">
-    <h2>Edit shipping address for order {{ order.number }}</h2>
+	<h2>{% blocktrans %}Edit shipping address for order {{ order.number }}{% endblocktrans %}</h2>
 </div>
 {% endblock header %}
 
@@ -34,8 +35,8 @@ Shipping address | Order {{ order.number }} | {{ block.super }}
 	{% csrf_token %}
 	{% include "partials/form_fields.html" with form=form %}
 	<div class="form-actions">
-	    <input type="submit" value="Update address" class="btn btn-primary"/>
-		or <a href="{% url dashboard:order-detail order.number %}">cancel</a>
+		<button type="submit" class="btn btn-primary">{% trans "Update address" %}</button>
+		or <a href="{% url dashboard:order-detail order.number %}">{% trans "cancel" %}</a>
 	</div>
 </form>
 

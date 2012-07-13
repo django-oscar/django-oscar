@@ -1,35 +1,39 @@
 {% extends "dashboard/layout.html" %}
 {% load currency_filters %}
+{% load i18n %}
+
 {% block body_class %}reviews{% endblock %}
 {% block title %}
-Reviews | {{ block.super }}
+{% trans "Reviews" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url dashboard:index %}">Dashboard</a>
+	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
-    <li class="active"><a href=".">Reviews</a></li>
+	<li class="active"><a href=".">{% trans "Reviews" %}</a></li>
 </ul>
 {% endblock %}
 
 {% block header %}
 <div class="page-header">
-    <h1>Reviews</h1>
+	<h1>{% trans "Reviews" %}</h1>
 </div>
 {% endblock header %}
 
 {% block dashboard_content %}
 
 <div class="well well-info">
-    <div class="sub-header"><h3>Review Search</h3></div>
+	<div class="sub-header"><h3>{% trans "Review Search" %}</h3></div>
     <form action="." method="get" class="form-inline">
         {% include 'partials/form_fields_inline.html' with form=form %}
-        <button type="submit" class="btn btn-primary">Search</button>
+		<button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
     </form>
 </div>
+
+<h2>{{ description }}</h2>
 
 {% if review_list|length %}
 <form action="." method="post">
@@ -37,13 +41,13 @@ Reviews | {{ block.super }}
     <table class="table table-striped table-bordered">
         <tr>
             <th></th>
-            <th>Review Title</th>
-            <th>Review For Product</th>
-            <th>User</th>
-            <th>Score</th>
-            <th>Votes</th>
-            <th>Status</th>
-            <th>Date created</th>
+			<th>{% trans "Review Title" %}</th>
+			<th>{% trans "Review For Product" %}</th>
+			<th>{% trans "User" %}</th>
+			<th>{% trans "Score" %}</th>
+			<th>{% trans "Votes" %}</th>
+			<th>{% trans "Status" %}</th>
+			<th>{% trans "Date created" %}</th>
             <th></th>
         </tr>
         {% for review in review_list %}
@@ -86,18 +90,18 @@ Reviews | {{ block.super }}
             </td>
             <td>{{ review.date_created }}</td>
             <td>
-                <a class="btn btn-success" href="{% url dashboard:reviews-update review.id %}">Edit</a>
-                <a class="btn btn-danger" href="{% url dashboard:reviews-delete review.id %}">Delete</a>
+				<a class="btn btn-success" href="{% url dashboard:reviews-update review.id %}">{% trans "Edit" %}</a>
+				<a class="btn btn-danger" href="{% url dashboard:reviews-delete review.id %}">{% trans "Delete" %}</a>
             </td>
         </tr>
         {% endfor %}
     </table>
 
     <div class="well well-danger">
-        Update status of selected reviews 
+		{% trans "Update status of selected reviews" %}
         {{ review_form.status }}
 	<input type="hidden" name="action" value="update_selected_review_status" />
-        <button type="submit" class="btn btn-success">Update</button>
+	<button type="submit" class="btn btn-success">{% trans "Update" %}</button>
     </div>
 
 {% if page_obj %}
@@ -108,10 +112,8 @@ Reviews | {{ block.super }}
 
 {% else %}
 
-<p>No reviews found.</p>
+<p>{% trans "No reviews found." %}</p>
 
 {% endif %}
-
-
 
 {% endblock dashboard_content %}

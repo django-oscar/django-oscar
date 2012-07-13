@@ -1,31 +1,32 @@
 {% extends 'dashboard/layout.html' %}
 {% load currency_filters %}
+{% load i18n %}
 
 {% block title %}
-Products in range '{{ range.name }}' | {{ block.super }}
+{% blocktrans %}Products in range '{{ range.name }}'{% endblocktrans %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url dashboard:index %}">Dashboard</a>
+	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
     <li>
-	<a href="{% url dashboard:range-list %}">Ranges</a>
+	<a href="{% url dashboard:range-list %}">{% trans "Ranges" %}</a>
         <span class="divider">/</span>
     </li>
     <li>
 	<a href="{% url dashboard:range-update range.id %}">'{{ range.name }}'</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">Products</a></li>
+	<li class="active"><a href=".">{% trans "Products" %}</a></li>
 </ul>
 {% endblock %}
 
 {% block header %}
 <div class="page-header">
-	<h1>Products in range {{ range.name }}</h1>
+	<h1>{% blocktrans %}Products in range {{ range.name }}{% endblocktrans %}</h1>
 </div>
 {% endblock header %}
 
@@ -33,27 +34,27 @@ Products in range '{{ range.name }}' | {{ block.super }}
 
 	<div class="well well-info">
 		<div class="sub-header">
-			<h3>Add products</h3>
+			<h3>{% trans "Add products" %}</h3>
 		</div>
 		<form action="." method="post" class="" enctype="multipart/form-data">
 			{% csrf_token %}
 			<input type="hidden" name="action" value="add_products"/>
 			{% include 'partials/form_fields.html' with form=form %}
-			<button type="submit" class="btn btn-primary">Go!</button>
+			<button type="submit" class="btn btn-primary">{% trans "Go!" %}</button>
 		</form>
 		{% with uploads=range.file_uploads.all %}
 			{% if uploads %}
 			<div class="sub-header">
-				<h3>Upload history</h3>
+				<h3>{% trans "Upload history" %}</h3>
 			</div>
 			<table class="table">
 				<thead>
 				<tr>
-					<th>Filename</th>
-					<th>New products</th>
-					<th>Duplicate products</th>
-					<th>Unknown products</th>
-					<th>Date uploaded</th>
+					<th>{% trans "Filename" %}</th>
+					<th>{% trans "New products" %}</th>
+					<th>{% trans "Duplicate products" %}</th>
+					<th>{% trans "Unknown products" %}</th>
+					<th>{% trans "Date uploaded" %}</th>
 				</tr>
 				</thead>
 				<tbody>
@@ -78,12 +79,12 @@ Products in range '{{ range.name }}' | {{ block.super }}
 			<table class="table table-striped table-bordered">
 				<tr>
 					<th></th>
-					<th>UPC</th>
-					<th>Title</th>
-					<th>Partner</th>
-					<th>Partner SKU</th>
-					<th>Price</th>
-					<th>Is product discountable?</th>
+					<th>{% trans "UPC" %}</th>
+					<th>{% trans "Title" %}</th>
+					<th>{% trans "Partner" %}</th>
+					<th>{% trans "Partner SKU" %}</th>
+					<th>{% trans "Price" %}</th>
+					<th>{% trans "Is product discountable?" %}</th>
 					<th></th>
 				</tr>
 				{% for product in products %}
@@ -96,9 +97,9 @@ Products in range '{{ range.name }}' | {{ block.super }}
 					<td>{{ product.stockrecord.partner.name }}</td>
 					<td>{{ product.stockrecord.partner_sku }}</td>
 					<td>{{ product.stockrecord.price_incl_tax|currency }}</td>
-					<td>{% if product.is_discountable %}Yes{% else %}No{% endif %}</td>
+					<td>{% if product.is_discountable %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}</td>
 					<td>
-						<a class="btn btn-danger" href="#" data-behaviours="remove">Remove</a>
+						<a class="btn btn-danger" href="#" data-behaviours="remove">{% trans "Remove" %}</a>
 					</td>
 				</tr>
 				{% endfor %}
@@ -106,7 +107,7 @@ Products in range '{{ range.name }}' | {{ block.super }}
 
 			<div class="well well-danger">
 				<input type="hidden" name="action" value="remove_selected_products" />
-				<button type="submit" class="btn btn-danger">Remove selected products</button>
+				<button type="submit" class="btn btn-danger">{% trans "Remove selected products" %}</button>
 			</div>
 
 			{% if page_obj %}
@@ -114,12 +115,12 @@ Products in range '{{ range.name }}' | {{ block.super }}
 			{% endif %}
 		</form>
 	{% else %}
-		<p>No products found.</p>
+	<p>{% trans "No products found." %}</p>
 	{% endif %}
 
 	<div class="well well-info">
-		<a href="{% url dashboard:range-update range.id %}" class="btn btn-large btn-primary">Edit range</a> or
-		<a href="{% url dashboard:range-list %}" class="">return to range list</a>
+		<a href="{% url dashboard:range-update range.id %}" class="btn btn-large btn-primary">{% trans "Edit range" %}</a> {% trans "or" %}
+		<a href="{% url dashboard:range-list %}" class="">{% trans "return to range list" %}</a>
 	</div>
 			
 {% endblock dashboard_content %}

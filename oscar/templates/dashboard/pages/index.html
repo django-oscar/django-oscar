@@ -1,23 +1,25 @@
 {% extends 'dashboard/layout.html' %}
 {% load dashboard_tags %}
+{% load i18n %}
+
 {% block body_class %}pages{% endblock %}
 {% block title %}
-Pages | {{ block.super }}
+{% trans "Pages" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url dashboard:index %}">Dashboard</a>
+	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
-    <li class="active"><a href=".">Page Management</a></li>
+	<li class="active"><a href=".">{% trans "Page Management" %}</a></li>
 </ul>
 {% endblock %}
 
 {% block header %}
 <div class="page-header action">
-    <h1>Page Management</h1><a href="#" class="pull_out">Search Pages</a>
+	<h1>Page Management</h1><a href="#" class="pull_out">{% trans "Search Pages" %}</a>
     <div class="orders_search" style="display:none">
         <form action="." method="get" class="form-horizontal">
             {% include "partials/form_fields.html" with form=form %}
@@ -36,7 +38,7 @@ Pages | {{ block.super }}
 </div>
 
 <form action="{% url dashboard:page-create %}" method="get" class="form-horizontal">
-        <input type="submit" value="Create New Page" class="btn-primary" />
+	<button type="submit" class="btn-primary">{% trans "Create new page" %}</button>
 </form>
 
 {% if flatpage_list.count %}
@@ -44,8 +46,8 @@ Pages | {{ block.super }}
     {% csrf_token %}
 <table class="table table-striped table-bordered">
     <tr>
-        <th>Title</th>
-        <th>URL</th>
+		<th>{% trans "Title" %}</th>
+		<th>{% trans "URL" %}</th>
         <th></th>
     </tr>
     {% for page in flatpage_list %}
@@ -53,9 +55,9 @@ Pages | {{ block.super }}
         <td>{{ page.title}}</td>
         <td>{{ page.url}}</td>
         <td>
-            <a class="btn btn-info" href="{{ page.get_absolute_url }}">View</a>
-            <a class="btn btn-success" href="{% url dashboard:page-update page.id %}">Edit</a>
-            <a class="btn btn-danger" href="{% url dashboard:page-delete page.id %}">Delete</a>
+			<a class="btn btn-info" href="{{ page.get_absolute_url }}">{% trans "View" %}</a>
+			<a class="btn btn-success" href="{% url dashboard:page-update page.id %}">{% trans "Edit" %}</a>
+			<a class="btn btn-danger" href="{% url dashboard:page-delete page.id %}">{% trans "Delete" %}</a>
         </td>
     </tr>
     {% endfor %}
@@ -68,7 +70,7 @@ Pages | {{ block.super }}
 
 {% else %}
 
-<p>No pages found.</p>
+<p>{% trans "No pages found." %}</p>
 
 {% endif %}
 

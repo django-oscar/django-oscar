@@ -1,24 +1,26 @@
 {% extends 'dashboard/layout.html' %}
 {% load currency_filters %}
 {% load sorting_tags %}
+{% load i18n %}
+
 {% block body_class %}orders{% endblock %}
 {% block title %}
-Order management | {{ block.super }}
+{% trans "Order management" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url dashboard:index %}">Dashboard</a>
+	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
-    <li class="active"><a href=".">Order management</a></li>
+	<li class="active"><a href=".">{% trans "Order management" %}</a></li>
 </ul>
 {% endblock %}
 
 {% block header %}
 <div class="page-header">
-    <h1>Order management</h1>
+	<h1>{% trans "Order management" %}</h1>
 </div>
 {% endblock header %}
 
@@ -26,7 +28,7 @@ Order management | {{ block.super }}
 
 <div class="well well-info">
     <div class="sub-header">
-        <h3>Quick Order Search &nbsp;&nbsp;<small><a href="#" class="app-ico ico_magnify pull_out">Advanced Search</a></small></h3>
+		<h3>{% trans "Quick Order Search" %} &nbsp;&nbsp;<small><a href="#" class="app-ico ico_magnify pull_out">{% trans "Advanced Search" %}</a></small></h3>
     </div>
     <form action="." method="get" class="search-adv form-horizontal">
         {% for field in form %}
@@ -53,7 +55,7 @@ Order management | {{ block.super }}
                 </div>
             {% else%}
                 <div class="control-group {% for error in form.response_format_0.errors %}error{% endfor %} pull-left">
-                    <label for="id_response_format_0" class="control-label">Get results as:</label>
+					<label for="id_response_format_0" class="control-label">{% trans "Get results as:" %}</label>
                     <div class="controls">
                         <label class="radio inline control-label" for="id_response_format_0">
                             {{ form.response_format }}
@@ -83,13 +85,13 @@ Order management | {{ block.super }}
     <tr>
         <th></th>
         <th>{% anchor 'number' 'Order number' %}</th>
-        <th>Total inc tax</th>
-        <th>Date of purchase</th>
-        <th>Number of items</th>
-        <th>Status</th>
-        <th>Customer</th>
-        <th>Shipping address</th>
-        <th>Billing address</th>
+		<th>{% trans "Total inc tax" %}</th>
+		<th>{% trans "Date of purchase" %}</th>
+		<th>{% trans "Number of items" %}</th>
+		<th>{% trans "Status" %}</th>
+		<th>{% trans "Customer" %}</th>
+		<th>{% trans "Shipping address" %}</th>
+		<th>{% trans "Billing address" %}</th>
         <th></th>
     </tr>
     {% for order in orders %}
@@ -104,17 +106,17 @@ Order management | {{ block.super }}
         <td>{{ order.shipping_address|default:"-" }}</td>
         <td>{{ order.billing_address|default:"-" }}</td>
         <td>
-            <a class="btn btn-info" href="{% url dashboard:order-detail order.number %}">View</a>
+			<a class="btn btn-info" href="{% url dashboard:order-detail order.number %}">{% trans "View" %}</a>
         </td>
     </tr>
     {% endfor %}
 </table>
 
 <div class="well well-danger">
-	<h3 class="app-ico ico_logout icon">Download</h3>
-	<label>Download selected orders as a CSV</label>
+	<h3 class="app-ico ico_logout icon">{% trans "Download" %}</h3>
+	<label>{% trans "Download selected orders as a CSV" %}</label>
 	<input type="hidden" name="action" value="download_selected_orders" />
-	<button type="submit" class="btn btn-primary">Download</button>
+	<button type="submit" class="btn btn-primary">{% trans "Download" %}</button>
 </div>
 
 {% if page_obj %}
@@ -125,7 +127,7 @@ Order management | {{ block.super }}
 
 {% else %}
 
-<p>No orders found.</p>
+<p>{% trans "No orders found." %}</p>
 
 {% endif %}
 

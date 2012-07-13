@@ -1,27 +1,28 @@
 {% extends 'dashboard/layout.html' %}
 {% load currency_filters %}
+{% load i18n %}
 
 {% block title %}
-Delete range #{{ range.id }}? | Range management | {{ block.super }}
+{% blocktrans %}Delete range #{{ range.id }}?{% endblocktrans %} | {% trans "Range management" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url dashboard:index %}">Dashboard</a>
+	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="{% url dashboard:range-list %}">Ranges</a>
+	<a href="{% url dashboard:range-list %}">{% trans "Ranges" %}</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">Delete range '{{ range.name }}'?</a></li>
+	<li class="active"><a href=".">{% blocktrans %}Delete range '{{ range.name }}'?{% endblocktrans %}</a></li>
 </ul>
 {% endblock %}
 
 {% block header %}
 <div class="page-header">
-	<h1>Delete range '{{ range.name }}'?</h1>
+	<h1>{% blocktrans %}Delete range '{{ range.name }}'?{% endblocktrans %}</h1>
 </div>
 {% endblock header %}
 
@@ -29,8 +30,8 @@ Delete range #{{ range.id }}? | Range management | {{ block.super }}
 <form action="." method="post" class="">
 	{% csrf_token %}
 	<div class="form-actions">
-		<button class="btn btn-danger btn-large" type="submit">Delete</button> or
-		<a href="{% url dashboard:range-list %}">cancel</a>
+		<button class="btn btn-danger btn-large" type="submit">{% trans "Delete" %}</button> {% trans "or" %}
+		<a href="{% url dashboard:range-list %}">{% trans "cancel" %}</a>
 	</div>
 </form>
 {% endblock dashboard_content %}

@@ -1,16 +1,17 @@
 {% extends 'dashboard/reports/index.html' %}
 {% load currency_filters %}
+{% load i18n %}
 
 {% block report %}
 <table class="table table-striped table-bordered">
     <tr>
-        <th>Email</th>
-        <th>Name</th>
-        <th>Num lines</th>
-        <th>Num items</th>
-        <th>Value</th>
-        <th>Date created</th>
-        <th>Time between creation and submission</th>
+		<th>{% trans "Email" %}</th>
+		<th>{% trans "Name" %}</th>
+		<th>{% trans "Num lines" %}</th>
+		<th>{% trans "Num items" %}</th>
+		<th>{% trans "Value" %}</th>
+		<th>{% trans "Date created" %}</th>
+		<th>{% trans "Time between creation and submission" %}</th>
     </tr>
     {% for basket in objects %}
     <tr>

@@ -29,7 +29,7 @@ class IndexView(ListView):
                     self.set_list_view_attrs(generator, report)
                     context = self.get_context_data(object_list=self.queryset)
                     context['form'] = form
-                    context['description'] = '%s between %s and %s' % (
+                    context['description'] = u'%s between %s and %s' % (
                         generator.description,
                         form.cleaned_data['date_from'],
                         form.cleaned_data['date_to'],

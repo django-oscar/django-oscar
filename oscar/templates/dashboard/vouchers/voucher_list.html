@@ -1,5 +1,6 @@
 {% extends 'dashboard/layout.html' %}
 {% load currency_filters %}
+{% load i18n %}
 
 {% block title %}
 {{ description }} | {{ block.super }}
@@ -8,7 +9,7 @@
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url dashboard:index %}">Dashboard</a>
+	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
 	<li class="active"><a href=".">{{ description }}</a></li>
@@ -17,23 +18,23 @@
 
 {% block header %}
 <div class="page-header">
-    <h1>Vouchers</h1>
+	<h1>{% trans "Vouchers" %}</h1>
 </div>
 {% endblock header %}
 
 {% block dashboard_content %}
 <div class="well well-info">
     <div class="sub-header">
-		<h3>Search</h3>
+		<h3>{% trans "Search" %}</h3>
     </div>
     <form action="." method="get" class="form-inline">
 		{% include 'partials/form_fields_inline.html' with form=form %}
-        <button type="submit" class="btn btn-primary">Search</button>
-		<a href="{% url dashboard:voucher-list %}" class="btn">Reset</a>
+		<button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
+		<a href="{% url dashboard:voucher-list %}" class="btn">{% trans "Reset" %}</a>
     </form>
 </div>
 
-<p><a href="{% url dashboard:voucher-create %} " class="btn-large btn-primary">Create new voucher</a></p>
+<p><a href="{% url dashboard:voucher-create %} " class="btn-large btn-primary">{% trans "Create new voucher" %}</a></p>
 
 	<div class="sub-header">
 		<h2>{{ description }}</h2>
@@ -41,12 +42,12 @@
 	{% if vouchers.count %}
 		<table class="table table-striped table-bordered">
 			<tr>
-				<th>Name</th>
-				<th>Code</th>
-				<th>Is active?</th>
-				<th>Num baskets</th>
-				<th>Num orders</th>
-				<th>Date created</th>
+				<th>{% trans "Name" %}</th>
+				<th>{% trans "Code" %}</th>
+				<th>{% trans "Is active?" %}</th>
+				<th>{% trans "Num baskets" %}</th>
+				<th>{% trans "Num orders" %}</th>
+				<th>{% trans "Date created" %}</th>
 				<th></th>
 			</tr>
 			{% for voucher in vouchers %}
@@ -58,9 +59,9 @@
 				<td>{{ voucher.num_orders }}</td>
 				<td>{{ voucher.date_created }}</td>
 				<td>
-					<a class="btn btn-info" href="{% url dashboard:voucher-stats voucher.id %}">Stats</a>
-					<a class="btn btn-primary" href="{% url dashboard:voucher-update voucher.id %}">Edit</a>
-					<a class="btn btn-danger" href="{% url dashboard:voucher-delete voucher.id %}">Delete</a>
+					<a class="btn btn-info" href="{% url dashboard:voucher-stats voucher.id %}">{% trans "Stats" %}</a>
+					<a class="btn btn-primary" href="{% url dashboard:voucher-update voucher.id %}">{% trans "Edit" %}</a>
+					<a class="btn btn-danger" href="{% url dashboard:voucher-delete voucher.id %}">{% trans "Delete" %}</a>
 				</td>
 			</tr>
 			{% endfor %}
@@ -69,6 +70,6 @@
 			{% include "catalogue/partials/pagination.html" %}
 		{% endif %}
 	{% else %}
-		<p>No vouchers found.</p>
+	<p>{% trans "No vouchers found." %}</p>
 	{% endif %}
 {% endblock dashboard_content %}

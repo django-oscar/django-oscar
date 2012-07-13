@@ -1,25 +1,26 @@
 {% extends 'dashboard/layout.html' %}
 {% load currency_filters %}
-{% block body_class %}content-blocks{% endblock %}
+{% load i18n %}
 
+{% block body_class %}content-blocks{% endblock %}
 
 {% block header %}
 <div class="page-header">
-    <h1>Content block management</h1>
+	<h1>{% trans "Content block management" %}</h1>
 </div>
 {% endblock header %}
 
 {% block title %}
-Pages with content blocks | {{ block.super }}
+{% trans "Pages with content blocks" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url dashboard:index %}">Dashboard</a>
+	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
-    <li class="active"><a href=".">Content block management</a></li>
+	<li class="active"><a href=".">{% trans "Content block management" %}</a></li>
 </ul>
 {% endblock %}
 
@@ -27,12 +28,12 @@ Pages with content blocks | {{ block.super }}
 
 <div class="well well-danger">
     <h3 class="app-ico ico_view icon">View by page</h3>
-    <a href="{% url dashboard:promotion-list %}" class="btn btn-primary">View all content blocks</a>
-    <a href="{% url dashboard:promotion-list-by-page %}" class="btn">View content blocks by page</a>
+	<a href="{% url dashboard:promotion-list %}" class="btn btn-primary">{% trans "View all content blocks" %}</a>
+	<a href="{% url dashboard:promotion-list-by-page %}" class="btn">{% trans "View content blocks by page" %}</a>
 </div>
 
 <div class="sub-header">
-    <h2>Pages with content blocks on them</h2>
+	<h2>{% trans "Pages with content blocks on them" %}</h2>
 </div>
 
 {% if pages %}
@@ -40,9 +41,9 @@ Pages with content blocks | {{ block.super }}
 <table class="table table-striped table-bordered">
 	<thead>
 		<tr>
-			<th>URL</th>
-			<th>Number of content blocks</th>
-			<th>Actions</th>
+			<th>{% trans "URL" %}</th>
+			<th>{% trans "Number of content blocks" %}</th>
+			<th>{% trans "Actions" %}</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -51,10 +52,9 @@ Pages with content blocks | {{ block.super }}
 			<td>{{ page.page_url }}</td>
 			<td>{{ page.freq }}</td>
 			<td>
-                <a href="{% url dashboard:promotion-list-by-url page.page_url|urlencode:"" %}" class="btn btn-success">Edit</a>
+				<a href="{% url dashboard:promotion-list-by-url page.page_url|urlencode:"" %}" class="btn btn-success">{% trans "Edit" %}</a>
 			</td>
-			<td>
-			</td>
+			<td> </td>
 		</tr>
 		{% endfor %}
 	</tbody>
@@ -62,7 +62,7 @@ Pages with content blocks | {{ block.super }}
 
 {% else %}
 
-<p>No content blocks found.</p>
+<p>{% trans "No content blocks found." %}</p>
 
 {% endif %}
 
