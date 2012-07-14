@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 from django.views import generic
 from django.views.generic import ListView
 from django.contrib import messages
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.validators import URLDoesNotExistValidator
 from oscar.apps.dashboard.pages import forms
@@ -23,7 +24,7 @@ class PageListView(ListView):
     model = FlatPage
     form_class = forms.PageSearchForm
     paginate_by = 25
-    base_description = 'All pages'
+    base_description = _('All pages')
     description = ''
 
     def get_queryset(self):
@@ -43,7 +44,7 @@ class PageListView(ListView):
 
         if data['title']:
             queryset = queryset.filter(title__contains=data['title'])
-            self.description += " with title containing '%s'" % data['title']
+            self.description += _(" with title containing '%s'") % data['title']
 
         return queryset
 
@@ -72,7 +73,7 @@ class PageCreateView(generic.CreateView):
         Get context data with additional *title* object.
         """
         ctx = super(PageCreateView, self).get_context_data(**kwargs)
-        ctx['title'] = 'Create New Page'
+        ctx['title'] = _('Create New Page')
         return ctx
 
     def form_valid(self, form):
@@ -106,7 +107,7 @@ class PageCreateView(generic.CreateView):
         return self.render_to_response(ctx)
 
     def get_success_url(self, page):
-        messages.success(self.request, "Created new page '%s'" % page.title)
+        messages.success(self.request, _("Created new page '%s'") % page.title)
         return reverse('dashboard:page-list')
 
 
@@ -124,7 +125,7 @@ class PageUpdateView(generic.UpdateView):
         Get context data with additional *title* and *page* objects attached.
         """
         ctx = super(PageUpdateView, self).get_context_data(**kwargs)
-        ctx['title'] = 'Update Page'
+        ctx['title'] = _('Update Page')
         return ctx
 
     def form_valid(self, form):
@@ -144,7 +145,7 @@ class PageUpdateView(generic.UpdateView):
         """
         Get URL to redirect to when updating page was successful.
         """
-        messages.success(self.request, "Updated page '%s'" % self.object.title)
+        messages.success(self.request, _("Updated page '%s'") % self.object.title)
         return reverse('dashboard:page-list')
 
 
@@ -160,5 +161,5 @@ class PageDeleteView(generic.DeleteView):
         """
         Get URL to redirect to when deleting page is succesful.
         """
-        messages.success(self.request, "Deleted page '%s'" % self.object.title)
+        messages.success(self.request, _("Deleted page '%s'") % self.object.title)
         return reverse('dashboard:page-list')

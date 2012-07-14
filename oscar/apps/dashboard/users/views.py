@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views.generic import ListView, DetailView
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.dashboard.users import forms
 from oscar.views.generic import BulkEditMixin
@@ -16,7 +17,7 @@ class IndexView(ListView, BulkEditMixin):
     actions = ('make_active', 'make_inactive', )
     current_view = 'dashboard:users-index'
     form_class = forms.UserSearchForm
-    base_description = 'All users'
+    base_description = _('All users')
     description = ''
 
     def get_queryset(self):
@@ -36,7 +37,7 @@ class IndexView(ListView, BulkEditMixin):
 
         if data['email']:
             queryset = queryset.filter(email__startswith=data['email'])
-            self.description += " with email matching '%s'" % data['email']
+            self.description += _(" with email matching '%s'") % data['email']
         if data['name']:
             # If the value is two words, then assume they are first name and last name
             parts = data['name'].split()
@@ -46,7 +47,7 @@ class IndexView(ListView, BulkEditMixin):
             else:
                 queryset = queryset.filter(Q(first_name__istartswith=data['name']) |
                                            Q(last_name__istartswith=data['name'])).distinct()
-            self.description += " with name matching '%s'" % data['name']
+            self.description += _(" with name matching '%s'") % data['name']
 
         return queryset
 
@@ -67,7 +68,7 @@ class IndexView(ListView, BulkEditMixin):
             if not user.is_superuser:
                 user.is_active = value
                 user.save()
-        messages.info(self.request, 'Users\' status successfully changed')
+        messages.info(self.request, _('Users\' status successfully changed'))
         return HttpResponseRedirect(reverse(self.current_view))
 
 

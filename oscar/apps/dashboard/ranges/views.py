@@ -8,6 +8,7 @@ from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
 from django.template.defaultfilters import pluralize
 from django.conf import settings
+from django.utils.translation import ungettext_lazy, ugettext_lazy as _
 
 from oscar.views.generic import BulkEditMixin
 from oscar.core.loading import get_classes
@@ -35,12 +36,12 @@ class RangeCreateView(CreateView):
         if 'action' in self.request.POST:
             return reverse('dashboard:range-products', kwargs={'pk': self.object.id})
         else:
-            messages.success(self.request, "Range created")
+            messages.success(self.request, _("Range created"))
             return reverse('dashboard:range-list')
 
     def get_context_data(self, **kwargs):
         ctx = super(RangeCreateView, self).get_context_data(**kwargs)
-        ctx['title'] = "Create range"
+        ctx['title'] = _("Create range")
         return ctx
 
 
@@ -53,12 +54,12 @@ class RangeUpdateView(UpdateView):
         if 'action' in self.request.POST:
             return reverse('dashboard:range-products', kwargs={'pk': self.object.id})
         else:
-            messages.success(self.request, "Range updated")
+            messages.success(self.request, _("Range updated"))
             return reverse('dashboard:range-list')
 
     def get_context_data(self, **kwargs):
         ctx = super(RangeUpdateView, self).get_context_data(**kwargs)
-        ctx['title'] = "Update range"
+        ctx['title'] = _("Update range")
         return ctx
 
 
@@ -68,7 +69,7 @@ class RangeDeleteView(DeleteView):
     context_object_name = 'range'
 
     def get_success_url(self):
-        messages.warning(self.request, "Range deleted")
+        messages.warning(self.request, _("Range deleted"))
         return reverse('dashboard:range-list')
 
 
@@ -105,8 +106,9 @@ class RangeProductListView(ListView, BulkEditMixin):
         range = self.get_range()
         for product in products:
             range.included_products.remove(product)
-        messages.success(request, 'Removed %d products from range' %
-                         len(products))
+        messages.success(request, ungettext_lazy('Removed %d product from range',
+                                                 'Removed %d products from range',
+                                                  len(products)) % len(products))
         return HttpResponseRedirect(self.get_success_url(request))
 
     def add_products(self, request):
@@ -129,19 +131,20 @@ class RangeProductListView(ListView, BulkEditMixin):
             range.included_products.add(product)
 
         num_products = len(products)
-        messages.success(request, "%d product%s added to range" % (
-            num_products, pluralize(num_products)))
+        messages.success(request, ungettext_lazy("%d product added to range",
+                                                 "%d products added to range",
+                                                 num_products) % num_products)
 
         dupe_skus = form.get_duplicate_skus()
         if dupe_skus:
             messages.warning(
                 request,
-                "The products with SKUs or UPCs matching %s are already in this range" % (", ".join(dupe_skus)))
+                _("The products with SKUs or UPCs matching %s are already in this range") % (", ".join(dupe_skus)))
 
         missing_skus = form.get_missing_skus()
         if missing_skus:
             messages.warning(request,
-                             "No product was found with SKU or UPC matching %s" % ', '.join(missing_skus))
+                             _("No product was found with SKU or UPC matching %s") % ', '.join(missing_skus))
 
     def handle_file_products(self, request, range, form):
         if not 'file_upload' in request.FILES:
@@ -151,10 +154,13 @@ class RangeProductListView(ListView, BulkEditMixin):
         if not upload.was_processing_successful():
             messages.error(request, upload.error_message)
         else:
-            msg = "File processed: %d products added, %d duplicate identifiers, %d " \
-                  "identifiers were not found"
-            msg = msg % (upload.num_new_skus, upload.num_duplicate_skus,
-                         upload.num_unknown_skus)
+            msg = _("File processed: %(new)d products added, %(duplicate)d duplicate identifiers, %(unknown)d "
+                  "identifiers were not found")
+            msg = msg % {
+                'new': upload.num_new_skus,
+                'duplicate': upload.num_duplicate_skus,
+                'unknown': upload.num_unknown_skus
+            }
             if upload.num_new_skus:
                 messages.success(request, msg)
             else:

@@ -5,6 +5,7 @@ from django.db.models import get_model, Q
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.template.defaultfilters import date as format_date
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.views.generic import BulkEditMixin
 from oscar.apps.dashboard.reviews import forms
@@ -22,7 +23,7 @@ class ReviewListView(generic.ListView, BulkEditMixin):
     current_view = 'dashboard:reviews-list'
     actions = ('update_selected_review_status',)
     checkbox_object_name = 'review'
-    base_description = 'All reviews'
+    base_description = _('All reviews')
 
     def get(self, request, *args, **kwargs):
         response = super(self.__class__, self).get(request, **kwargs)
@@ -49,20 +50,20 @@ class ReviewListView(generic.ListView, BulkEditMixin):
             ).filter(
                 date_created__lt=date_to
             )
-            self.description += " created between %s and %s" % (
-                format_date(date_from),
-                format_date(date_to)
-            )
+            self.description += _(" created between %(from)s and %(to)s") % {
+                'from': format_date(date_from),
+                'to': format_date(date_to)
+            }
 
         elif date_from:
             queryset = queryset.filter(date_created__gte=date_from)
-            self.description += " created after %s" % format_date(date_from)
+            self.description += _(" created after %s") % format_date(date_from)
 
         elif date_to:
             # Add 24 hours to make search inclusive
             date_to = date_to + datetime.timedelta(days=1)
             queryset = queryset.filter(date_created__lt=date_to)
-            self.description += " created before %s" % format_date(date_to)
+            self.description += _(" created before %s") % format_date(date_to)
 
         return queryset
 
@@ -81,14 +82,14 @@ class ReviewListView(generic.ListView, BulkEditMixin):
         # evaluated to False
         if data['status'] != '':
             queryset = queryset.filter(status=data['status']).distinct()
-            self.description += " with status matching '%s'" % data['status']
+            self.description += _(" with status matching '%s'") % data['status']
 
         if data['keyword']:
             queryset = queryset.filter(
                 Q(title__icontains=data['keyword']) |
                 Q(body__icontains=data['keyword'])
             ).distinct()
-            self.description += " with keyword matching '%s'" % data['keyword']
+            self.description += _(" with keyword matching '%s'") % data['keyword']
 
         queryset = self.get_date_from_to_queryset(data['date_from'],
                                                   data['date_to'], queryset)
@@ -107,7 +108,7 @@ class ReviewListView(generic.ListView, BulkEditMixin):
                     Q(user__first_name__istartswith=parts[0]) |
                     Q(user__last_name__istartswith=parts[-1])
                 ).distinct()
-            self.description += " with customer name matching '%s'" % data['name']
+            self.description += _(" with customer name matching '%s'") % data['name']
 
         return queryset
 

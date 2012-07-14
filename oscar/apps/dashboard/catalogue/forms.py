@@ -1,6 +1,7 @@
 from django import forms
 from django.forms.models import inlineformset_factory
 from django.db.models import get_model
+from django.utils.translation import ugettext_lazy as _
 
 Product = get_model('catalogue', 'Product')
 StockRecord = get_model('partner', 'StockRecord')
@@ -10,8 +11,8 @@ ProductImage = get_model('catalogue', 'ProductImage')
 
 
 class ProductSearchForm(forms.Form):
-    upc = forms.CharField(max_length=16, required=False, label='UPC')
-    title = forms.CharField(max_length=255, required=False)
+    upc = forms.CharField(max_length=16, required=False, label=_('UPC'))
+    title = forms.CharField(max_length=255, required=False, label=_('Title'))
 
 
 class StockRecordForm(forms.ModelForm):
@@ -129,7 +130,7 @@ class ProductForm(forms.ModelForm):
 
 
 class StockAlertSearchForm(forms.Form):
-    status = forms.CharField(label='Status')
+    status = forms.CharField(label=_('Status'))
 
 
 class ProductCategoryForm(forms.ModelForm):

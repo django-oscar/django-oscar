@@ -3,6 +3,7 @@ from django.db.models import get_model
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.core.urlresolvers import reverse
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.dashboard.catalogue import forms
 from oscar.core.loading import get_classes
@@ -23,7 +24,7 @@ class ProductListView(generic.ListView):
     model = Product
     context_object_name = 'products'
     form_class = forms.ProductSearchForm
-    base_description = 'Products'
+    base_description = _('Products')
     paginate_by = 20
 
     def get_context_data(self, **kwargs):
@@ -48,11 +49,11 @@ class ProductListView(generic.ListView):
 
         if data['upc']:
             queryset = queryset.filter(upc=data['upc'])
-            self.description += " including an item with UPC '%s'" % data['upc']
+            self.description += _(" including an item with UPC '%s'") % data['upc']
 
         if data['title']:
             queryset = queryset.filter(title__icontains=data['title']).distinct()
-            self.description += " including an item with title matching '%s'" % data['title']
+            self.description += _(" including an item with title matching '%s'") % data['title']
 
         return queryset
 
@@ -62,12 +63,12 @@ class ProductCreateRedirectView(generic.RedirectView):
     def get_redirect_url(self, **kwargs):
         product_class_id = self.request.GET.get('product_class', None)
         if not product_class_id.isdigit():
-            messages.error(self.request, "Please choose a product class")
+            messages.error(self.request, _("Please choose a product class"))
             return reverse('dashboard:catalogue-product-list')
         try:
             product_class = ProductClass.objects.get(id=product_class_id)
         except ProductClass.DoesNotExist:
-            messages.error(self.request, "Please choose a product class")
+            messages.error(self.request, _("Please choose a product class"))
             return reverse('dashboard:catalogue-product-list')
         else:
             return reverse('dashboard:catalogue-product-create',
@@ -88,7 +89,7 @@ class ProductCreateView(generic.CreateView):
             ctx['category_formset'] = ProductCategoryFormSet()
         if 'image_formset' not in ctx:
             ctx['image_formset'] = ProductImageFormSet()
-        ctx['title'] = 'Create new product'
+        ctx['title'] = _('Create new product')
         return ctx
 
     def get_product_class(self):
@@ -140,7 +141,7 @@ class ProductCreateView(generic.CreateView):
         return self.render_to_response(ctx)
 
     def get_success_url(self, product):
-        messages.success(self.request, "Created product '%s'" % product.title)
+        messages.success(self.request, _("Created product '%s'") % product.title)
         return reverse('dashboard:catalogue-product-list')
 
 
@@ -206,7 +207,7 @@ class ProductUpdateView(generic.UpdateView):
         return self.render_to_response(ctx)
 
     def get_success_url(self):
-        messages.success(self.request, "Updated product '%s'" %
+        messages.success(self.request, _("Updated product '%s'") %
                          self.object.title)
         return reverse('dashboard:catalogue-product-list')
 
@@ -228,9 +229,9 @@ class StockAlertListView(generic.ListView):
             self.form = StockAlertSearchForm(self.request.GET)
             if self.form.is_valid():
                 status = self.form.cleaned_data['status']
-                self.description = 'Alerts with status "%s"' % status
+                self.description = _('Alerts with status "%s"') % status
                 return self.model.objects.filter(status=status)
         else:
-            self.description = 'All alerts'
+            self.description = _('All alerts')
             self.form = StockAlertSearchForm()
         return self.model.objects.all()
