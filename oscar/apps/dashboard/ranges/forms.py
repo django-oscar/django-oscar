@@ -20,7 +20,7 @@ class RangeProductForm(forms.Form):
                             label=_("Product SKUs or UPCs"),
                             widget=forms.Textarea,
                             required=False,
-                            help_text=_("""You can paste in a selection of SKUs or UPCs"""))
+                            help_text=_("You can paste in a selection of SKUs or UPCs"))
     file_upload = forms.FileField(label=_("File of SKUs or UPCs"), required=False,
                                   help_text=_('Either comma-separated, or one identifier per line'))
 
@@ -55,7 +55,7 @@ class RangeProductForm(forms.Form):
         self.products = Product._default_manager.filter(
             Q(stockrecord__partner_sku__in=new_ids) |
             Q(upc__in=new_ids))
-        if not len(self.products):
+        if len(self.products) == 0:
             raise forms.ValidationError(_("No products exist with a SKU or UPC matching %s") % ", ".join(ids))
 
         found_skus = set(self.products.values_list('stockrecord__partner_sku', flat=True))

@@ -1,7 +1,8 @@
 import os
 import csv
-import sys
 from decimal import Decimal as D
+
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.catalogue.categories import create_from_breadcrumbs
 from oscar.core.loading import get_class, get_classes

@@ -1,18 +1,17 @@
 {% extends "layout.html" %}
-
 {% load currency_filters %}
 {% load history_tags %}
 {% load thumbnail %}
 {% load i18n %}
 
 {% block title %}
-{% trans 'Reviews for' %} {{ product.title }} | {{ block.super }}
+{% trans "Reviews of" %} {{ product.get_title }} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url promotions:home %}">{% trans 'Home' %}</a>
+        <a href="{% url promotions:home %}">{% trans "Home" %}</a>
         <span class="divider">/</span>
     </li>
     <li>
@@ -21,7 +20,7 @@
         <span class="divider">/</span>
         {% endwith %}
     </li>
-    <li class="active"><a href=".">{% trans 'Reviews of' %} {{ product.get_title }}</a></li>
+    <li class="active"><a href=".">{% trans "Reviews of" %} {{ product.get_title }}</a></li>
 </ul>
 {% endblock %}
 
@@ -31,22 +30,22 @@
 {% block content %}
 
 <article>
-    <h1>{% trans 'All Reviews of' %} {{ product.title }}</h1>
+    <h1>{% trans "All Reviews of" %} {{ product.title }}</h1>
 
     <div class="row-fluid">
         <div class='span9'>
             <div class="well">
-                <p>{% trans 'Read customer reviews on this product.' %}</p>
-                <p><a href="{% url catalogue:reviews-add product.slug product.id %}" class="btn btn-primary">{% trans 'Add a review' %}</a></p>
+                <p>{% trans "Read customer reviews on this product." %}</p>
+                <p><a href="{% url catalogue:reviews-add product.slug product.id %}" class="btn btn-primary">{% trans "Add a review" %}</a></p>
             </div>
             {% if reviews %}
-            <h4>{% trans 'Sort by:' %}</h4>
+            <h4>{% trans "Sort by:" %}</h4>
             <form action="." method="get">
                 <select name="sort_by">
-                        <option value="score">{% trans 'Score' %}</option>
-                        <option value="recency">{% trans 'Recency' %}</option>
+                    <option value="score">{% trans "Score" %}</option>
+                    <option value="recency">{% trans "Recency" %}</option>
                 </select>
-                <input type="submit" value="Go" />
+                <input type="submit" value="{% trans 'Go' %}" />
             </form>
 
                 {% for review in reviews %}
@@ -55,12 +54,10 @@
                     <h5>{% trans 'Reviewed by' %} {{ review.get_reviewer_name }}</h5>
                     <p>{{ review.date_created }}<p>
                     <p>{{ review.body|linebreaks }}</p>
-                    <p><a href="{{ review.get_absolute_url }}">{% trans 'Permalink' %}</a>
-
-                                {% include 'reviews/_vote_bit.html' %}
-
+                    <p><a href="{{ review.get_absolute_url }}">{% trans "Permalink" %}</a>
+                    {% include 'reviews/_vote_bit.html' %}
                     {% if review.has_votes %}
-                        <p>{% blocktrans up_votes=review.num_up_votes %}{{ up_votes }} customers agreed.{% endblocktrans %}</p>
+                    <p>{% blocktrans %}{{ review.num_up_votes }} customers agreed.{% endblocktrans %}</p>
                     {% endif %}
                 </div>
                 {% endfor %}
@@ -69,15 +66,17 @@
             <div class="pagination">
                 <span class="step-links">
                     {% if page_obj.has_previous %}
-                        <a href="?page={{ page_obj.previous_page_number }}">{% trans 'Previous' %}</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">{% trans "Previous" %}</a>
                     {% endif %}
                     {% if paginator.num_pages > 1 %}
                     <span class="current">
-                        {% blocktrans page=page_obj.number pages=paginator.num_pages %}Page {{ page }} of {{ pages }}.{% endblocktrans %}
+                        {% blocktrans %}
+                        Page {{ page_obj.number }} of {{ paginator.num_pages }}.
+                        {% endblocktrans %}
                     </span>
                     {% endif %}
                     {% if page_obj.has_next %}
-                        <a href="?page={{ page_obj.next_page_number }}">{% trans 'Next' %}</a>
+                    <a href="?page={{ page_obj.next_page_number }}">{% trans "Next" %}</a>
                     {% endif %}
                 </span>
             </div>
@@ -85,7 +84,7 @@
 
         {% else %}
 
-        <p>{% trans 'This product does not have any reviews yet.' %}</p>
+        <p>{% trans "This product does not have any reviews yet." %}</p>
 
         {% endif %}
         </div>

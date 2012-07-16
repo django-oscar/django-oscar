@@ -39,9 +39,25 @@ Features:
 
 * Extension libraries available for PayPal, GoCardless, DataCash and more
 
+Oscar is a good choice if your domain has non-trivial business logic.  Oscar's
+flexibility means it's straightforward to implement business rules that would be
+difficult to apply in other frameworks.  
+
+Example requirements that Oscar applications already handle:
+
+* Paying for an order with multiple payment sources (eg using a bankcard,
+  voucher, giftcard and business account).
+
+* Complex access control rules governing who can view and order what.
+
+* Supporting a hierarchy of customers, sales reps and sales directors - each
+  being able to "masquerade" as their subordinate users.
+
+* Multi-lingual products and categories
+
 Oscar is developed by `Tangent Labs`_, a London-based digital agency.  It is
 used in production in several applications to sell everything from beer mats to
-ipads.  The `source is on Github`_. 
+ipads.  The `source is on Github`_ - contributions welcome.
 
 .. _`Tangent Labs`: http://www.tangentlabs.co.uk
 .. _`source is on Github`: https://github.com/tangentlabs/django-oscar

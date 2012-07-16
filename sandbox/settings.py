@@ -7,6 +7,7 @@ location = lambda x: os.path.join(os.path.dirname(os.path.realpath(__file__)), x
 DEBUG = True
 TEMPLATE_DEBUG = True
 SQL_DEBUG = True
+SEND_BROKEN_LINK_EMAILS = True
 
 ADMINS = (
     ('David', 'david.winterbottom@tangentlabs.co.uk'),
@@ -47,6 +48,13 @@ TIME_ZONE = 'Europe/London'
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en-us'
+
+LANGUAGES = (
+    ('de', 'German'),
+    ('fr', 'French'),
+)
+ROSETTA_STORAGE_CLASS = 'rosetta.storage.SessionRosettaStorage'
+ROSETTA_ENABLE_TRANSLATION_SUGGESTIONS = True
 
 SITE_ID = 1
 
@@ -206,7 +214,7 @@ INSTALLED_APPS = [
     'haystack',
     'debug_toolbar',
     'south',
-    'sorl.thumbnail',
+    'rosetta',
     # For profile testing
     'apps.user',
 ]

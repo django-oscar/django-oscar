@@ -38,8 +38,7 @@ class PagePromotionForm(forms.ModelForm):
     page_url = ExtendedURLField(label=_("URL"))
     position = forms.CharField(widget=forms.Select(choices=PROMOTION_POSITIONS),
                                label=_("Position"),
-                               help_text=_("""Where in the page this content
-                                            block will appear"""))
+                               help_text=_("Where in the page this content block will appear"))
 
     class Meta:
         model = PagePromotion

@@ -24,8 +24,9 @@ class OrderStatsForm(forms.Form):
         date_to = self.cleaned_data['date_to']
         if date_from and date_to:
             self._filters = {'date_placed__range': [date_from, date_to]}
-            self._description = _('Orders placed between %(from)s and %(to)s') % {
-                'from': date_from, 'to': date_to}
+            self._description = _('Orders placed between %(date_from)s and %(date_to)s') % {
+                'date_from': date_from,
+                'date_to': date_to}
         elif date_from and not date_to:
             self._filters = {'date_placed__gt': date_from}
             self._description = _('Orders placed since %s') % (date_from,)
@@ -66,8 +67,8 @@ class OrderSearchForm(forms.Form):
     payment_method = forms.ChoiceField(label=_("Payment method"), required=False,
                                        choices=method_choices)
 
-    format_choices = (('html', 'HTML'),
-                      ('csv', 'CSV'),)
+    format_choices = (('html', _('HTML')),
+                      ('csv', _('CSV')),)
     response_format = forms.ChoiceField(widget=forms.RadioSelect,
             choices=format_choices, initial='html', label=_("Get results as"))
 

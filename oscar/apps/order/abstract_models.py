@@ -476,6 +476,7 @@ class AbstractLinePrice(models.Model):
     
     class Meta:
         abstract = True
+        ordering = ('id',)
         verbose_name = _("Line Price")
         verbose_name_plural = _("Line Prices")
 

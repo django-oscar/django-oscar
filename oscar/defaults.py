@@ -53,5 +53,7 @@ OSCAR_OFFER_BLACKLIST_PRODUCT = None
 # Max total number of items in basket
 OSCAR_MAX_BASKET_QUANTITY_THRESHOLD = None
 
-#Cookies
+# Cookies
 OSCAR_COOKIES_DELETE_ON_LOGOUT = ['oscar_recently_viewed_products', ]
+
+OSCAR_SETTINGS = dict([(k, v) for k, v in locals().items() if k.startswith('OSCAR_')])

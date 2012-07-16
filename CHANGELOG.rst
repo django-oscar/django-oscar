@@ -2,6 +2,11 @@
 Changelog
 =========
 
+0.2.1 - 09 July 2012
+~~~~~~~~~~~~~~~~~~~~
+
+Mainly small bug-fixes to templates and javascript.  
+
 0.2 - 01 June 2012
 ~~~~~~~~~~~~~~~~~~
 

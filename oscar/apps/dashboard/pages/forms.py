@@ -22,7 +22,7 @@ class PageUpdateForm(forms.ModelForm):
     """
     url = forms.CharField(max_length=128, required=False, label=_("URL"),
                           help_text=_("Example: '/about/contact/'. Make sure"
-                                    " to have leading and trailing slashes."))
+                                      " to have leading and trailing slashes."))
 
     def clean_url(self):
         """

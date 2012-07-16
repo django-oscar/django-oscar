@@ -3,17 +3,17 @@
 {% load i18n %}
 
 {% block title %}
-{% blocktrans %}Delete range #{{ range.id }}?{% endblocktrans %} | {% trans 'Range management' %} | {{ block.super }}
+{% blocktrans %}Delete range #{{ range.id }}?{% endblocktrans %} | {% trans "Range management" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url dashboard:index %}">{% trans 'Dashboard' %}</a>
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="{% url dashboard:range-list %}">{% trans 'Ranges' %}</a>
+        <a href="{% url dashboard:range-list %}">{% trans "Ranges" %}</a>
         <span class="divider">/</span>
     </li>
     <li class="active"><a href=".">{% blocktrans %}Delete range '{{ range.name }}'?{% endblocktrans %}</a></li>
@@ -30,8 +30,8 @@
 <form action="." method="post" class="">
     {% csrf_token %}
     <div class="form-actions">
-        <button class="btn btn-danger btn-large" type="submit">{% trans 'Delete' %}</button> {% trans 'or' %}
-        <a href="{% url dashboard:range-list %}">{% trans 'cancel' %}</a>
+        <button class="btn btn-danger btn-large" type="submit">{% trans "Delete" %}</button> {% trans "or" %}
+        <a href="{% url dashboard:range-list %}">{% trans "cancel" %}</a>
     </div>
 </form>
 {% endblock dashboard_content %}

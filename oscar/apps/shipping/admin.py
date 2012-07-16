@@ -4,7 +4,7 @@ from oscar.apps.shipping.methods import OrderAndItemCharges, WeightBand, WeightB
 
 
 class OrderChargesAdmin(admin.ModelAdmin):
-    exclude = ('code',)
+    readonly_fields = ('code',)
     list_display = ('name', 'description', 'price_per_order', 'price_per_item', 'free_shipping_threshold')
 
 

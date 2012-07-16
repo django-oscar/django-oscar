@@ -1,6 +1,7 @@
 from django.db.models import Q
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.utils.translation import ugettext_lazy as _
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views.generic import ListView, DetailView
@@ -17,12 +18,16 @@ class IndexView(ListView, BulkEditMixin):
     actions = ('make_active', 'make_inactive', )
     current_view = 'dashboard:users-index'
     form_class = forms.UserSearchForm
-    base_description = _('All users')
+    desc_template = _(u'%(main_filter)s %(email_filter)s %(name_filter)s')
     description = ''
 
     def get_queryset(self):
         queryset = self.model.objects.all().order_by('-date_joined')
-        self.description = self.base_description
+        self.desc_ctx = {
+            'main_filter': _('All users'),
+            'email_filter': '',
+            'name_filter': '',
+        }
 
         if 'email' not in self.request.GET:
             self.form = self.form_class()
@@ -37,7 +42,7 @@ class IndexView(ListView, BulkEditMixin):
 
         if data['email']:
             queryset = queryset.filter(email__startswith=data['email'])
-            self.description += _(" with email matching '%s'") % data['email']
+            self.desc_ctx['email_filter'] = _(" with email matching '%s'") % data['email']
         if data['name']:
             # If the value is two words, then assume they are first name and last name
             parts = data['name'].split()
@@ -47,14 +52,14 @@ class IndexView(ListView, BulkEditMixin):
             else:
                 queryset = queryset.filter(Q(first_name__istartswith=data['name']) |
                                            Q(last_name__istartswith=data['name'])).distinct()
-            self.description += _(" with name matching '%s'") % data['name']
+            self.desc_ctx['name_filter'] = _(" with name matching '%s'") % data['name']
 
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
         context['form'] = self.form
-        context['queryset_description'] = self.description
+        context['queryset_description'] = self.desc_template % self.desc_ctx
         return context
 
     def make_inactive(self, request, users):
@@ -68,7 +73,7 @@ class IndexView(ListView, BulkEditMixin):
             if not user.is_superuser:
                 user.is_active = value
                 user.save()
-        messages.info(self.request, _('Users\' status successfully changed'))
+        messages.info(self.request, _("Users' status successfully changed"))
         return HttpResponseRedirect(reverse(self.current_view))
 
 
@@ -76,4 +81,3 @@ class UserDetailView(DetailView):
     template_name = 'dashboard/users/detail.html'
     model = User
     context_object_name = 'customer'
-

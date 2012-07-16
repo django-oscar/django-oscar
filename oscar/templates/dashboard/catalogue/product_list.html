@@ -1,19 +1,20 @@
 {% extends 'dashboard/layout.html' %}
 {% load currency_filters %}
 {% load i18n %}
+
 {% block body_class %}catalogue{% endblock %}
 
 {% block title %}
-{% trans 'Catalogue management' %} | {{ block.super }}
+{% trans "Catalogue management" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url dashboard:index %}">{% trans 'Dashboard' %}</a>
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
-    <li class="active"><a href=".">{% trans 'Catalogue' %}</a></li>
+    <li class="active"><a href=".">{% trans "Catalogue" %}</a></li>
 </ul>
 {% endblock %}
 
@@ -83,6 +84,7 @@
         {% endwith %}
         <td>
             <a class="btn btn-info" href="{% url dashboard:catalogue-product product.id %}">{% trans 'Edit' %}</a>
+            <a class="btn btn-success" href="{{ product.get_absolute_id }}">{% trans "View on site" %}</a>
         </td>
     </tr>
     {% endfor %}

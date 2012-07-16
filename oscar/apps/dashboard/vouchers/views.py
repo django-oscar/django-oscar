@@ -1,6 +1,7 @@
 import datetime
 
 from django.views.generic import (ListView, FormView, DetailView, DeleteView)
+from django.utils.translation import ugettext_lazy as _
 from django.db.models.loading import get_model
 from django.http import HttpResponseRedirect
 from django.contrib import messages
@@ -22,13 +23,13 @@ class VoucherListView(ListView):
     context_object_name = 'vouchers'
     template_name = 'dashboard/vouchers/voucher_list.html'
     form_class = VoucherSearchForm
-    description_template = _("%(status)s vouchers %(name_filter)s %(code_filter)s")
-    description_ctx = {'status': 'All',
-                       'name_filter': '',
-                       'code_filter': ''}
+    description_template = _("%(main_filter)s %(name_filter)s %(code_filter)s")
 
     def get_queryset(self):
         qs = self.model.objects.all().order_by('-date_created')
+        self.description_ctx = {'main_filter': _('All vouchers'),
+                                'name_filter': '',
+                                'code_filter': ''}
 
         # If form not submitted, return early
         if 'name' not in self.request.GET:
@@ -49,7 +50,7 @@ class VoucherListView(ListView):
         if data['is_active']:
             today = datetime.date.today()
             qs = qs.filter(start_date__lte=today, end_date__gt=today)
-            self.description_ctx['status'] = _('Active')
+            self.description_ctx['main_filter'] = _('Active vouchers')
 
         return qs
 

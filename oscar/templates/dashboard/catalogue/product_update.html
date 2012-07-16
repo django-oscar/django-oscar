@@ -5,7 +5,7 @@
 {% block body_class %}catalogue{% endblock %}
 
 {% block title %}
-{% trans 'Update product' %} | {{ block.super }}
+{% trans "Update product" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -51,6 +51,11 @@
                                     <li>{{ error|escape }}</li>
                                 </ul>
                             {% endfor %}
+                        {% if field.help_text %}
+                            <span class='help-block'>
+                                {{ field.help_text|safe }}
+                            </span>
+                        {% endif %}
                     {% endif %}
                 </div>
             {% else %}

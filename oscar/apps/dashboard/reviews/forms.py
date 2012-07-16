@@ -23,6 +23,13 @@ class ProductReviewSearchForm(forms.Form):
     ) + ProductReview.STATUS_CHOICES
     keyword = forms.CharField(required=False, label=_("Keyword"))
     status = forms.ChoiceField(required=False, choices=STATUS_CHOICES, label=_("Status"))
-    date_from = forms.DateTimeField(required=False, label=_("from"))
-    date_to = forms.DateTimeField(required=False, label=_('to'))
+    date_from = forms.DateTimeField(required=False, label=_("From"))
+    date_to = forms.DateTimeField(required=False, label=_('To'))
     name = forms.CharField(required=False, label=_("Name"))
+
+    def get_friendly_status(self):
+        raw = int(self.cleaned_data['status'])
+        for key, value in self.STATUS_CHOICES:
+            if key == raw:
+                return value
+        return ''

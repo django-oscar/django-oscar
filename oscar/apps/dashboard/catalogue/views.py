@@ -7,12 +7,14 @@ from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.dashboard.catalogue import forms
 from oscar.core.loading import get_classes
-ProductForm, StockRecordForm, StockAlertSearchForm, ProductCategoryFormSet, ProductImageFormSet = get_classes(
-    'dashboard.catalogue.forms', ('ProductForm', 'StockRecordForm',
+
+ProductForm, CategoryForm, StockRecordForm, StockAlertSearchForm, ProductCategoryFormSet, ProductImageFormSet = get_classes(
+    'dashboard.catalogue.forms', ('ProductForm', 'CategoryForm', 'StockRecordForm',
                                   'StockAlertSearchForm',
                                   'ProductCategoryFormSet',
                                   'ProductImageFormSet'))
 Product = get_model('catalogue', 'Product')
+Category = get_model('catalogue', 'Category')
 ProductCategory = get_model('catalogue', 'ProductCategory')
 ProductClass = get_model('catalogue', 'ProductClass')
 StockRecord = get_model('partner', 'StockRecord')
@@ -24,7 +26,7 @@ class ProductListView(generic.ListView):
     model = Product
     context_object_name = 'products'
     form_class = forms.ProductSearchForm
-    base_description = _('Products')
+    description_template = _(u'Products %(upc_filter)s %(title_filter)s')
     paginate_by = 20
 
     def get_context_data(self, **kwargs):
@@ -39,22 +41,26 @@ class ProductListView(generic.ListView):
         Build the queryset for this list and also update the title that
         describes the queryset
         """
-        self.description = self.base_description
-        queryset = self.model.objects.all().order_by('-date_created')
+        description_ctx = {'upc_filter': '',
+                           'title_filter': ''}
+        queryset = self.model.objects.all().order_by('-date_created').prefetch_related(
+            'product_class', 'stockrecord__partner')
         self.form = self.form_class(self.request.GET)
         if not self.form.is_valid():
+            self.description = self.description_template % description_ctx
             return queryset
 
         data = self.form.cleaned_data
 
         if data['upc']:
             queryset = queryset.filter(upc=data['upc'])
-            self.description += _(" including an item with UPC '%s'") % data['upc']
+            description_ctx['upc_filter'] = _(" including an item with UPC '%s'") % data['upc']
 
         if data['title']:
             queryset = queryset.filter(title__icontains=data['title']).distinct()
-            self.description += _(" including an item with title matching '%s'") % data['title']
+            description_ctx['title_filter'] = _(" including an item with title matching '%s'") % data['title']
 
+        self.description = self.description_template % description_ctx
         return queryset
 
 
@@ -119,7 +125,7 @@ class ProductCreateView(generic.CreateView):
         image_formset = ProductImageFormSet(self.request.POST,
                                             self.request.FILES,
                                             instance=product)
-        if stockrecord_form.is_valid() and category_formset.is_valid() and image_formset.is_valid():
+        if all([stockrecord_form.is_valid(), category_formset.is_valid(), image_formset.is_valid()]):
             # Save product
             product.save()
             # Save stock record
@@ -162,7 +168,7 @@ class ProductUpdateView(generic.UpdateView):
             ctx['category_formset'] = ProductCategoryFormSet(instance=self.object)
         if 'image_formset' not in ctx:
             ctx['image_formset'] = ProductImageFormSet(instance=self.object)
-        ctx['title'] = 'Update product'
+        ctx['title'] = _('Update product')
         return ctx
 
     def get_form_kwargs(self):
@@ -184,16 +190,18 @@ class ProductUpdateView(generic.UpdateView):
                                     image_formset=image_formset)
         return self.render_to_response(ctx)
 
-
     def form_valid(self, form):
+        stockrecord = None
+        if self.object.has_stockrecord:
+            stockrecord = self.object.stockrecord
         stockrecord_form = StockRecordForm(self.request.POST,
-                                           instance=self.object.stockrecord)
+                                           instance=stockrecord)
         category_formset = ProductCategoryFormSet(self.request.POST,
                                                   instance=self.object)
         image_formset = ProductImageFormSet(self.request.POST,
                                             self.request.FILES,
                                             instance=self.object)
-        if stockrecord_form.is_valid() and category_formset.is_valid() and image_formset.is_valid():
+        if all([stockrecord_form.is_valid(), category_formset.is_valid(), image_formset.is_valid()]):
             form.save()
             stockrecord_form.save()
             category_formset.save()
@@ -235,3 +243,78 @@ class StockAlertListView(generic.ListView):
             self.description = _('All alerts')
             self.form = StockAlertSearchForm()
         return self.model.objects.all()
+
+
+class CategoryListView(generic.TemplateView):
+    template_name = 'dashboard/catalogue/category_list.html'
+
+    def get_context_data(self, *args, **kwargs):
+        ctx = super(CategoryListView, self).get_context_data(*args, **kwargs)
+        ctx['child_categories'] = Category.get_root_nodes()
+        return ctx
+
+
+class CategoryDetailListView(generic.DetailView):
+    template_name = 'dashboard/catalogue/category_list.html'
+    model = Category
+
+    def get_context_data(self, *args, **kwargs):
+        ctx = super(CategoryDetailListView, self).get_context_data(*args, **kwargs)
+        ctx['child_categories'] = self.object.get_children()
+        ctx['ancestors'] = self.object.get_ancestors()
+        return ctx
+
+
+class CategoryListMixin(object):
+
+    def get_success_url(self):
+        parent = self.object.get_parent()
+        if parent is None:
+            return reverse("dashboard:catalogue-category-list")
+        else:
+            return reverse("dashboard:catalogue-category-detail-list", 
+                            args=(parent.pk,))
+
+
+class CategoryCreateView(CategoryListMixin, generic.CreateView):
+    template_name = 'dashboard/catalogue/category_form.html'
+    model = Category
+    form_class = CategoryForm
+
+    def get_context_data(self, **kwargs):
+        ctx = super(CategoryCreateView, self).get_context_data(**kwargs)
+        ctx['title'] = _("Add a new category")
+        return ctx
+
+    def get_success_url(self):
+        messages.info(self.request, _("Category created successfully"))
+        return super(CategoryCreateView, self).get_success_url()
+
+
+class CategoryUpdateView(CategoryListMixin, generic.UpdateView):
+    template_name = 'dashboard/catalogue/category_form.html'
+    model = Category
+    form_class = CategoryForm
+
+    def get_context_data(self, **kwargs):
+        ctx = super(CategoryUpdateView, self).get_context_data(**kwargs)
+        ctx['title'] = _("Update category '%s'") % self.object.name
+        return ctx
+
+    def get_success_url(self):
+        messages.info(self.request, _("Category updated successfully"))
+        return super(CategoryUpdateView, self).get_success_url()
+
+
+class CategoryDeleteView(CategoryListMixin, generic.DeleteView):
+    template_name = 'dashboard/catalogue/category_delete.html'
+    model = Category
+
+    def get_context_data(self, *args, **kwargs):
+        ctx = super(CategoryDeleteView, self).get_context_data(*args, **kwargs)
+        ctx['parent'] = self.object.get_parent()
+        return ctx
+
+    def get_success_url(self):
+        messages.info(self.request, _("Category deleted successfully"))
+        return super(CategoryDeleteView, self).get_success_url()

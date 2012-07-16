@@ -149,8 +149,10 @@ class OfferWizardStepView(FormView):
 
     def get_title(self):
         if self.update:
-            return _("Edit %(name)s for offer #%(id)d") % {
-                'name': self.step_name, 'id': self.offer.id}
+            return _("Edit %(step_name)s for offer #%(offer_id)d") % {
+                'step_name': self.step_name,
+                'offer_id': self.offer.id
+            }
         return _('Create new offer: %s') % self.step_name
 
     def form_valid(self, form):

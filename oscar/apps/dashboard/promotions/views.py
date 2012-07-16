@@ -2,6 +2,7 @@ import itertools
 
 from django.views import generic
 from django.contrib.contenttypes.models import ContentType
+from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.http import HttpResponseRedirect
@@ -146,7 +147,7 @@ class CreateView(PromotionMixin, generic.CreateView):
     def get_heading(self):
         if hasattr(self, 'heading'):
             return getattr(self, 'heading')
-        return 'Create a new %s content block' % self.model._type
+        return _('Create a new %s content block') % self.model._type
 
 
 class CreateRawHTMLView(CreateView):
@@ -188,7 +189,7 @@ class CreateHandPickedProductListView(CreateView):
             messages.success(self.request, _('Product list promotion created'))
             return HttpResponseRedirect(self.get_success_url())
 
-        ctx = self.get_context_data(product_formset=produt_formset)
+        ctx = self.get_context_data(product_formset=product_formset)
         return self.render_response(ctx)
 
 
@@ -228,8 +229,9 @@ class UpdateView(PromotionMixin, generic.UpdateView):
         if form.is_valid():
             form.save()
             page_url = form.cleaned_data['page_url']
-            messages.success(request, _("Content block '%(name)s' added to page '%(url)s'") % {
-                'name': promotion.name, 'url': page_url})
+            messages.success(request, _("Content block '%(block)s' added to page '%(page)s'") % {
+                'block': promotion.name,
+                'page': page_url})
             return HttpResponseRedirect(reverse('dashboard:promotion-update', kwargs=kwargs))
 
         main_form = self.get_form_class()(instance=self.object)
@@ -289,7 +291,7 @@ class UpdateHandPickedProductListView(UpdateView):
             messages.success(self.request, _('Product list promotion updated'))
             return HttpResponseRedirect(self.get_success_url())
 
-        ctx = self.get_context_data(product_formset=produt_formset)
+        ctx = self.get_context_data(product_formset=product_formset)
         return self.render_response(ctx)
 
 

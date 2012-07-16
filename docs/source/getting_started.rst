@@ -159,7 +159,7 @@ Install dependencies::
 
 Create database::
 
-    python manage.py syncdb -noinput
+    python manage.py syncdb --noinput
     python manage.py migrate
 
 And that should be it.

@@ -24,5 +24,5 @@ class OfferDetailView(ListView):
     def get_queryset(self):
         range = self.offer.condition.range
         if range.includes_all_products:
-            return Product.browsable.all()
-        return range.included_products.all()
+            return Product.browsable.filter(is_discountable=True)
+        return range.included_products.filter(is_discountable=True)

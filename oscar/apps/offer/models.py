@@ -207,6 +207,13 @@ class Condition(models.Model):
 
     def get_upsell_message(self, basket):
         return None
+
+    def can_apply_condition(self, product):
+        """
+            Determines whether the condition can be applied to a given product
+        """
+        return (self.range.contains_product(product) 
+                and product.is_discountable)
     
 
 class Benefit(models.Model):
@@ -279,6 +286,12 @@ class Benefit(models.Model):
         else:
             max_affected_items = self.max_affected_items
         return max_affected_items
+
+    def can_apply_benefit(self, product):
+        """
+            Determines whether the benefit can be applied to a given product
+        """
+        return product.is_discountable
 
 
 class Range(models.Model):
@@ -369,7 +382,8 @@ class CountCondition(Condition):
         """
         num_matches = 0
         for line in basket.all_lines():
-            if self.range.contains_product(line.product) and line.quantity_without_discount > 0:
+            if (self.can_apply_condition(line.product) 
+                and line.quantity_without_discount > 0):
                 num_matches += line.quantity_without_discount
             if num_matches >= self.value:
                 return True
@@ -380,7 +394,8 @@ class CountCondition(Condition):
             return getattr(self, '_num_matches')
         num_matches = 0
         for line in basket.all_lines():
-            if self.range.contains_product(line.product) and line.quantity_without_discount > 0:
+            if (self.can_apply_condition(line.product) 
+                and line.quantity_without_discount > 0):
                 num_matches += line.quantity_without_discount
         self._num_matches = num_matches
         return num_matches
@@ -405,7 +420,7 @@ class CountCondition(Condition):
         consumed_products = []
         value = self.value if value is None else value
         for line in lines:
-            if self.range.contains_product(line.product):
+            if self.can_apply_condition(line.product):
                 quantity_to_consume = min(line.quantity_without_discount,
                                           value - len(consumed_products))
                 line.consume(quantity_to_consume)
@@ -434,7 +449,7 @@ class CoverageCondition(Condition):
             if not line.is_available_for_discount:
                 continue
             product = line.product
-            if self.range.contains_product(product) and product.id not in covered_ids:
+            if (self.can_apply_condition(product) and product.id not in covered_ids):
                 covered_ids.append(product.id)
             if len(covered_ids) >= self.value:
                 return True
@@ -446,7 +461,7 @@ class CoverageCondition(Condition):
             if not line.is_available_for_discount:
                 continue
             product = line.product
-            if self.range.contains_product(product) and product.id not in covered_ids:
+            if (self.can_apply_condition(product) and product.id not in covered_ids):
                 covered_ids.append(product.id)
         return len(covered_ids)
 
@@ -469,7 +484,7 @@ class CoverageCondition(Condition):
         value = self.value if value is None else value
         for line in basket.all_lines():
             product = line.product
-            if (line.is_available_for_discount and self.range.contains_product(product)
+            if (line.is_available_for_discount and self.can_apply_condition(product)
                 and product not in consumed_products):
                 line.consume(1)
                 consumed_products.append(line.product)
@@ -481,7 +496,7 @@ class CoverageCondition(Condition):
         covered_ids = []
         value = Decimal('0.00')
         for line in basket.all_lines():
-            if self.range.contains_product(line.product) and line.product.id not in covered_ids:
+            if (self.can_apply_condition(line.product) and line.product.id not in covered_ids):
                 covered_ids.append(line.product.id)
                 value += line.unit_price_incl_tax
             if len(covered_ids) >= self.value:
@@ -506,7 +521,8 @@ class ValueCondition(Condition):
         value_of_matches = Decimal('0.00')
         for line in basket.all_lines():
             product = line.product
-            if self.range.contains_product(product) and product.has_stockrecord and line.quantity_without_discount > 0:
+            if (self.can_apply_condition(product) and product.has_stockrecord 
+                and line.quantity_without_discount > 0):
                 price = getattr(product.stockrecord, self.price_field)
                 value_of_matches += price * int(line.quantity_without_discount)
             if value_of_matches >= self.value:
@@ -519,7 +535,8 @@ class ValueCondition(Condition):
         value_of_matches = Decimal('0.00')
         for line in basket.all_lines():
             product = line.product
-            if self.range.contains_product(product) and product.has_stockrecord and line.quantity_without_discount > 0:
+            if (self.can_apply_condition(product) and product.has_stockrecord 
+                and line.quantity_without_discount > 0):
                 price = getattr(product.stockrecord, self.price_field)
                 value_of_matches += price * int(line.quantity_without_discount)
         self._value_of_matches = value_of_matches
@@ -547,7 +564,7 @@ class ValueCondition(Condition):
         value = self.value if value is None else value
         for line in basket.all_lines():
             product = line.product
-            if self.range.contains_product(product) and line.product.has_stockrecord:
+            if (self.can_apply_condition(product) and product.has_stockrecord):
                 price = getattr(product.stockrecord, self.price_field)
                 if not price:
                     continue
@@ -584,7 +601,8 @@ class PercentageDiscountBenefit(Benefit):
             if affected_items >= max_affected_items:
                 break
             product = line.product
-            if self.range.contains_product(product) and product.has_stockrecord:
+            if (self.range.contains_product(product) and product.has_stockrecord
+                and self.can_apply_benefit(product)):
                 price = getattr(product.stockrecord, self.price_field)
                 quantity = min(line.quantity_without_discount, 
                                max_affected_items - affected_items)
@@ -617,7 +635,8 @@ class AbsoluteDiscountBenefit(Benefit):
             if affected_items >= max_affected_items:
                 break
             product = line.product
-            if self.range.contains_product(product) and product.has_stockrecord:
+            if (self.range.contains_product(product) and product.has_stockrecord
+                and self.can_apply_benefit(product)):
                 price = getattr(product.stockrecord, self.price_field)
                 if not price:
                     # Avoid zero price products
@@ -629,7 +648,8 @@ class AbsoluteDiscountBenefit(Benefit):
                 
                 # Update line with discounts
                 line_discount = self.round(min(remaining_discount, quantity_affected * price))
-                line.discount(line_discount, quantity_affected)
+                if not condition:
+                    line.discount(line_discount, quantity_affected)
                 
                 # Update loop vars
                 affected_items += quantity_affected
@@ -663,7 +683,8 @@ class FixedPriceBenefit(Benefit):
         product_total = Decimal('0.00')
         for line in basket.all_lines():
             product = line.product
-            if condition.range.contains_product(product) and line.quantity_without_discount > 0:
+            if (condition.range.contains_product(product) and line.quantity_without_discount > 0
+                and self.can_apply_benefit(product)):
                 # Line is available - determine quantity to consume and 
                 # record the total of the consumed products
                 if isinstance(condition, CoverageCondition):
@@ -705,7 +726,8 @@ class MultibuyDiscountBenefit(Benefit):
     def apply(self, basket, condition=None):
         benefit_lines = [line for line in basket.all_lines() if (self.range.contains_product(line.product) and
                                                                  line.quantity_without_discount > 0 and
-                                                                 line.product.has_stockrecord)]
+                                                                 line.product.has_stockrecord and
+                                                                 self.can_apply_benefit(line.product))]
         if not benefit_lines:
             return self.round(Decimal('0.00'))
 
@@ -721,7 +743,7 @@ class MultibuyDiscountBenefit(Benefit):
             lines_with_price = [line for line in basket.all_lines() if line.product.has_stockrecord]
             sorted_lines = sorted(lines_with_price, compare)
             free_line.discount(discount, 1)
-            if condition.range.contains_product(line.product):
+            if condition.range.contains_product(free_line.product):
                 condition.consume_items(basket, lines=sorted_lines,
                                         value=condition.value-1)
             else:

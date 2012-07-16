@@ -19,8 +19,7 @@ class IndexView(ListView):
             if form.is_valid():
                 generator = _get_generator(form)
                 if not generator.is_available_to(request.user):
-                    return HttpResponseForbidden(_("You do not have access"
-                                                 " to this report"))
+                    return HttpResponseForbidden(_("You do not have access to this report"))
 
                 report = generator.generate()
 
@@ -30,10 +29,10 @@ class IndexView(ListView):
                     self.set_list_view_attrs(generator, report)
                     context = self.get_context_data(object_list=self.queryset)
                     context['form'] = form
-                    context['description'] = _('%(desc)s between %(from)s and %(to)s') % {
-                        'desc': generator.description,
-                        'from': form.cleaned_data['date_from'],
-                        'to': form.cleaned_data['date_to']
+                    context['description'] = _('%(report_filter)s between %(start_date)s and %(end_date)s') % {
+                        'report_filter': generator.description,
+                        'start_date': form.cleaned_data['date_from'],
+                        'end_date': form.cleaned_data['date_to'],
                     }
                     return self.render_to_response(context)
         else:

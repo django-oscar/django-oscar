@@ -1,9 +1,11 @@
 #!/usr/bin/env python
-import sys
-import os
+"""
+Convenience script to create migrations
+"""
 from optparse import OptionParser
 
-import tests.config
+from tests.config import configure
+configure()
 
 
 def create_migration(app_label, **kwargs):
@@ -20,4 +22,3 @@ if __name__ == '__main__':
                       action='store_true', default=False)
     (options, args) = parser.parse_args()
     create_migration(args[0], initial=options.initial, auto=options.auto)
-

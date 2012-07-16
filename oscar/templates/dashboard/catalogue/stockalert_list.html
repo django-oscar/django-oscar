@@ -3,9 +3,11 @@
 {% load i18n %}
 
 {% block body_class %}catalogue{% endblock %}
+
 {% block title %}
 {% trans 'Stock alerts' %} | {{ block.super }}
 {% endblock %}
+
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
@@ -23,15 +25,6 @@
 {% endblock header %}
 
 {% block dashboard_content %}
-
-{% comment %}
-<form action="." method="get" class="form-horizontal">
-    {% include "partials/form_fields.html" with form=form %}
-    <div class="form-actions">
-        <button type="submit" class="btn btn-primary">Search</button>
-    </div>
-</form>
-{% endcomment %}
 
 <div class="well well-info">
     <h3 class="app-ico ico_sync icon">{% trans 'Filter' %}</h3>

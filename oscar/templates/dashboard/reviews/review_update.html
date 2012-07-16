@@ -5,17 +5,17 @@
 {% block body_class %}reviews{% endblock %}
 
 {% block title %}
-{% trans 'Update review' %} | {{ block.super }}
+{% trans "Update review" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url dashboard:index %}">{% trans 'Dashboard' %}</a>
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="{% url dashboard:reviews-list %}">{% trans 'Reviews' %}</a>
+        <a href="{% url dashboard:reviews-list %}">{% trans "Reviews" %}</a>
         <span class="divider">/</span>
     </li>
     <li class="active"><a href=".">{% blocktrans %}Review #{{ review.id }}{% endblocktrans %}</a></li>
@@ -33,7 +33,7 @@
     {% csrf_token %}
     <div class="well well-info">
         <div class="sub-header">
-            <h3 class="app-ico ico_expand icon">{% trans 'Review information' %}</h3>
+           <h3 class="app-ico ico_expand icon">{% trans "Review information" %}</h3>
         </div>
         {{ form.first }}
         {% for field in form %}
@@ -78,8 +78,8 @@
     </div>
 
     <div class="form-actions">
-    <button class="btn btn-primary btn-large" type="submit">{% trans 'Save' %}</button> {% trans 'or' %}
-        <a href="{% url dashboard:reviews-list %}">{% trans 'cancel' %}</a>
+        <button class="btn btn-primary btn-large" type="submit">{% trans "Save" %}</button> {% trans "or" %}
+        <a href="{% url dashboard:reviews-list %}">{% trans "cancel" %}</a>
     </div>
 </form>
 {% endblock dashboard_content %}

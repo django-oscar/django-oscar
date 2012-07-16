@@ -44,6 +44,8 @@ class AbstractBasket(models.Model):
     open = OpenBasketManager()
     saved = SavedBasketManager()
 
+    _lines = None
+
     def __init__(self, *args, **kwargs):
         super(AbstractBasket, self).__init__(*args, **kwargs)
         self._lines = None  # Cached queryset of lines
@@ -132,7 +134,7 @@ class AbstractBasket(models.Model):
         self.discounts = []
         self._lines = None
 
-    def merge_line(self, line):
+    def merge_line(self, line, add_quantities=True):
         """
         For transferring a line from another basket to this one.
 
@@ -145,17 +147,23 @@ class AbstractBasket(models.Model):
             line.basket = self
             line.save()
         else:
-            # Line already exists - bump its quantity and delete the old
-            existing_line.quantity += line.quantity
+            # Line already exists - assume the max quantity is correct and delete the old
+            if add_quantities:
+                existing_line.quantity += line.quantity
+            else:
+                existing_line.quantity = max(existing_line.quantity, line.quantity)
             existing_line.save()
             line.delete()
 
-    def merge(self, basket):
+    def merge(self, basket, add_quantities=True):
         """
         Merges another basket with this one.
+
+        :basket: The basket to merge into this one
+        :add_quantities: Whether to add line quantities when they are merged.
         """
         for line_to_merge in basket.all_lines():
-            self.merge_line(line_to_merge)
+            self.merge_line(line_to_merge, add_quantities)
         basket.status = MERGED
         basket.date_merged = datetime.datetime.now()
         basket.save()
@@ -185,6 +193,16 @@ class AbstractBasket(models.Model):
         self.exempt_from_tax = True
         for line in self.all_lines():
             line.set_as_tax_exempt()
+
+    def is_shipping_required(self):
+        """
+        Test whether the basket contains physical products that require
+        shipping.
+        """
+        for line in self.all_lines():
+            if line.product.is_shipping_required:
+                return True
+        return False
 
     # =======
     # Helpers
@@ -368,9 +386,8 @@ class AbstractLine(models.Model):
     class Meta:
         abstract = True
         unique_together = ("basket", "line_reference")
-        verbose_name = _('Basket Line')
-        verbose_name_plural = _('Basket Lines')
-
+        verbose_name = _('Basket line')
+        verbose_name_plural = _('Basket lines')
 
     def __unicode__(self):
         return _(u"%(basket)s, Product '%(product)s', quantity %(quantity)d") % {
@@ -534,24 +551,25 @@ class AbstractLine(models.Model):
             msg = u"The price of '%(product)s' has increased from %(old_price)s " \
                   u"to %(new_price)s since you added it to your basket"
             return _(msg) % {'product': self.product.get_title(),
-                            'old_price': currency(self.price_incl_tax),
-                            'new_price': currency(current_price_incl_tax)}
+                             'old_price': currency(self.price_incl_tax),
+                             'new_price': currency(current_price_incl_tax)}
         if current_price_incl_tax < self.price_incl_tax:
             msg = u"The price of '%(product)s' has decreased from %(old_price)s " \
                   u"to %(new_price)s since you added it to your basket"
             return _(msg) % {'product': self.product.get_title(),
-                            'old_price': currency(self.price_incl_tax),
-                            'new_price': currency(current_price_incl_tax)}
+                             'old_price': currency(self.price_incl_tax),
+                             'new_price': currency(current_price_incl_tax)}
 
 
 class AbstractLineAttribute(models.Model):
-    """An attribute of a basket line"""
+    """
+    An attribute of a basket line
+    """
     line = models.ForeignKey('basket.Line', related_name='attributes')
     option = models.ForeignKey('catalogue.Option')
     value = models.CharField(_("Value"), max_length=255)
 
     class Meta:
         abstract = True
-        verbose_name = _('Line Attribute')
-        verbose_name_plural = _('Line Attributes')
-
+        verbose_name = _('Line attribute')
+        verbose_name_plural = _('Line attributes')

@@ -3,7 +3,7 @@
 {% load i18n %}
 
 {% block title %}
-{% blocktrans with order=order.number %}Confirmation of order {{ order }}{% endblocktrans %} | {{ block.super }}
+{% blocktrans with order=order.number %}Confirmation of order #{{ order }}{% endblocktrans %} | {{ block.super }}
 {% endblock title %}
 
 {% block checkout-nav %}{% endblock %}
@@ -13,11 +13,9 @@
 <div class="sub-header">
     <h1>{% blocktrans with order=order.number %}Confirmation of order #{{ order }}{% endblocktrans %}</h1>
 </div>
-{% blocktrans with order=order.number %}
-<p>Your order has been placed and a confirmation email has ben sent - your order number is <span class="label label-success">{{ order }}</span></p>
-<p>Please make a note of this reference or print this page and quote it in any communication
-with us regarding your order.</p>
-{% endblocktrans %}
+<p>{% trans "Your order has been placed and a confirmation email has ben sent - your order number is" %}
+<span class="label label-success">{{ order.number }}</span></p>
+<p>{% trans "Please make a note of this reference or print this page and quote it in any communication with us regarding your order." %}</p>
 
 <div class="row-fluid">
     <div class="span6">

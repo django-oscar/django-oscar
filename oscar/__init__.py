@@ -4,7 +4,7 @@ import os
 # a full release
 
 VERSION = (0, 3, 0, 'alpha', 0)
-
+    
 def get_short_version():
     return '%s.%s' % (VERSION[0], VERSION[1])
 
@@ -56,6 +56,9 @@ OSCAR_CORE_APPS = [
     'oscar.apps.dashboard.offers',
     'oscar.apps.dashboard.ranges',
     'oscar.apps.dashboard.vouchers',
+    # 3rd-party apps that oscar depends on
+    'treebeard',
+    'sorl.thumbnail',
 ]
 
 
@@ -63,12 +66,14 @@ def get_core_apps(overrides=None):
     """
     Return a list of oscar's apps amended with any passed overrides
     """
-    if overrides is None:
+    if not overrides:
         return OSCAR_CORE_APPS
     def get_app_label(app_label, overrides):
         pattern = app_label.replace('oscar.apps.', '')
         for override in overrides:
             if override.endswith(pattern):
+                if 'dashboard' in override and 'dashboard' not in pattern:
+                    continue
                 return override
         return app_label
 

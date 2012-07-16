@@ -6,4 +6,4 @@ install:
 script:
   - pip install -r requirements.txt
   - ./setup.py develop
-  - ./run_tests.py
+  - ./runtests.py

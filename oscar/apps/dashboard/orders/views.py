@@ -3,6 +3,7 @@ import datetime
 from decimal import Decimal as D, InvalidOperation
 
 from django.contrib import messages
+from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.loading import get_model
@@ -69,7 +70,9 @@ class OrderListView(ListView, BulkEditMixin):
     context_object_name = 'orders'
     template_name = 'dashboard/orders/order_list.html'
     form_class = forms.OrderSearchForm
-    base_description = _('All orders')
+    desc_template = _("%(main_filter)s %(name_filter)s %(title_filter)s"
+                      "%(upc_filter)s %(sku_filter)s %(date_filter)s"
+                      "%(voucher_filter)s %(payment_filter)s %(status_filter)s")
     paginate_by = 25
     description = ''
     actions = ('download_selected_orders',)
@@ -92,20 +95,32 @@ class OrderListView(ListView, BulkEditMixin):
         """
         queryset = self.model.objects.all().order_by('-date_placed')
         queryset = self.sort_queryset(queryset)
-        self.description = self.base_description
+        desc_ctx = {
+            'main_filter': _('All orders'),
+            'name_filter': '',
+            'title_filter': '',
+            'upc_filter': '',
+            'sku_filter': '',
+            'date_filter': '',
+            'voucher_filter': '',
+            'payment_filter': '',
+            'status_filter': '',
+        }
 
         # Look for shortcut query filters
         if 'order_status' in self.request.GET:
             self.form = self.form_class()
             status = self.request.GET['order_status']
             if status.lower() == 'none':
-                self.description = _("Orders without an order status")
+                desc_ctx['main_filter'] = _("Orders without an order status")
                 status = None
             else:
-                self.description = _("Orders with status '%s'") % status
+                desc_ctx['main_filter'] = _("Orders with status '%s'") % status
+            self.description = self.desc_template % desc_ctx
             return self.model.objects.filter(status=status)
 
         if 'order_number' not in self.request.GET:
+            self.description = self.desc_template % desc_ctx
             self.form = self.form_class()
             return queryset
 
@@ -117,7 +132,7 @@ class OrderListView(ListView, BulkEditMixin):
 
         if data['order_number']:
             queryset = self.model.objects.filter(number__istartswith=data['order_number'])
-            self.description = _('Orders with number starting with "%s"') % data['order_number']
+            desc_ctx['main_filter'] = _('Orders with number starting with "%s"') % data['order_number']
 
         if data['name']:
             # If the value is two words, then assume they are first name and last name
@@ -128,45 +143,46 @@ class OrderListView(ListView, BulkEditMixin):
             else:
                 queryset = queryset.filter(Q(user__first_name__istartswith=data['name']) |
                                            Q(user__last_name__istartswith=data['name'])).distinct()
-            self.description += _(" with customer name matching '%s'") % data['name']
+            desc_ctx['name_filter'] = _(" with customer name matching '%s'") % data['name']
 
         if data['product_title']:
             queryset = queryset.filter(lines__title__istartswith=data['product_title']).distinct()
-            self.description += _(" including an item with title matching '%s'") % data['product_title']
+            desc_ctx['title_filter'] = _(" including an item with title matching '%s'") % data['product_title']
 
         if data['upc']:
             queryset = queryset.filter(lines__upc=data['upc'])
-            self.description += _(" including an item with UPC '%s'") % data['upc']
+            desc_ctx['upc_filter'] = _(" including an item with UPC '%s'") % data['upc']
 
         if data['partner_sku']:
             queryset = queryset.filter(lines__partner_sku=data['partner_sku'])
-            self.description += _(" including an item with ID '%s'") % data['partner_sku']
+            desc_ctx['upc_filter'] = _(" including an item with ID '%s'") % data['partner_sku']
 
         if data['date_from'] and data['date_to']:
             # Add 24 hours to make search inclusive
             date_to = data['date_to'] + datetime.timedelta(days=1)
             queryset = queryset.filter(date_placed__gte=data['date_from']).filter(date_placed__lt=date_to)
-            self.description += _(" placed between %(from)s and %(to)s") % {
-                'from': format_date(data['date_from']), 'to': format_date(data['date_to'])}
+            desc_ctx['date_filter'] = _(" placed between %(start_date)s and %(end_date)s") % {
+                'start_date': format_date(data['date_from']),
+                'end_date': format_date(data['date_to'])}
         elif data['date_from']:
             queryset = queryset.filter(date_placed__gte=data['date_from'])
-            self.description += _(" placed since %s") % format_date(data['date_from'])
+            desc_ctx['date_filter'] = _(" placed since %s") % format_date(data['date_from'])
         elif data['date_to']:
             date_to = data['date_to'] + datetime.timedelta(days=1)
             queryset = queryset.filter(date_placed__lt=date_to)
-            self.description += _(" placed before %s") % format_date(data['date_to'])
+            desc_ctx['date_filter'] = _(" placed before %s") % format_date(data['date_to'])
 
         if data['voucher']:
             queryset = queryset.filter(discounts__voucher_code=data['voucher']).distinct()
-            self.description += _(" using voucher '%s'") % data['voucher']
+            desc_ctx['voucher_filter'] = _(" using voucher '%s'") % data['voucher']
 
         if data['payment_method']:
             queryset = queryset.filter(sources__source_type__code=data['payment_method']).distinct()
-            self.description += _(" paid for by %s") % data['payment_method']
+            desc_ctx['payment_filter'] = _(" paid for by %s") % data['payment_method']
 
         if data['status']:
             queryset = queryset.filter(status=data['status'])
-            self.description += _(" with status %s") % data['status']
+            desc_ctx['status_filter'] = _(" with status %s") % data['status']
 
         return queryset
 
@@ -347,8 +363,9 @@ class OrderDetailView(DetailView):
         except PaymentError, e:
             messages.error(request, _("Unable to change order status due to payment error: %s") % e)
         else:
-            msg = _("Order status changed from '%(old)s' to '%(new)s'" )% {
-                'old': order.status, 'new': new_status}
+            msg = _("Order status changed from '%(old_status)s' to '%(new_status)s'") % {
+                'old_status': order.status,
+                'new_status': new_status}
             messages.info(request, msg)
             order.notes.create(user=request.user, message=msg,
                             note_type=OrderNote.SYSTEM)
@@ -362,16 +379,19 @@ class OrderDetailView(DetailView):
         errors = []
         for line in lines:
             if new_status not in line.available_statuses():
-                errors.append(_("'%(status)s' is not a valid new status for line %(num)d") % {
-                    'status': new_status, 'numr': line.id})
+                errors.append(_("'%(status)s' is not a valid new status for line %(line_id)d") % {
+                    'status': new_status,
+                    'line_id': line.id})
         if errors:
             messages.error(request, "\n".join(errors))
             return self.reload_page_response()
 
         msgs = []
         for line in lines:
-            msg = _("Status of line %(num)d changed from '%(old)s' to '%(new)s'") % {
-                'num': line.id, 'old': line.status, 'new': new_status}
+            msg = _("Status of line #%(line_id)d changed from '%(old_status)s' to '%(new_status)s'") % {
+                        'line_id': line.id,
+                        'old_status': line.status,
+                        'new_status': new_status}
             msgs.append(msg)
             line.set_status(new_status)
         message = "\n".join(msgs)
@@ -483,8 +503,10 @@ def get_change_summary(model1, model2):
     changes = get_changes_between_models(model1, model2, ['search_text'])
     change_descriptions = []
     for field, delta in changes.items():
-        change_descriptions.append(_("%(field)s changed from '%(from)s' to '%(to)s'") % {
-            'field': field, 'from': delta[0], 'to': delta[1]})
+        change_descriptions.append(_(u"%(field)s changed from '%(old_value)s' to '%(new_value)s'") % {
+            'field': field,
+            'old_value': delta[0],
+            'new_value': delta[1]})
     return "\n".join(change_descriptions)
 
 

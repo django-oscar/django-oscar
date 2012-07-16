@@ -3,7 +3,7 @@
 {% load i18n %}
 
 {% block title %}
-{%  trans "Checkout" %} | {{ block.super }}
+{% trans "Checkout" %} | {{ block.super }}
 {% endblock %}
 
 {% block header %}
@@ -105,14 +105,6 @@
         </div>
     </div>
     {% endfor %}
-    <!-- {% if shipping_total_excl_tax %}
-        <div class="basket-items">
-            <div class="row-fluid">
-                <h4 class="span11">Shipping charge</h4>
-                <div class="span1">{{ shipping_total_incl_tax|currency }}</div>
-            </div>
-        </div>
-        {% endif %} -->
     {% if shipping_method %}
     <div class="basket-items">
         <div class="row-fluid">

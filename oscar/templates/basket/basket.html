@@ -72,7 +72,7 @@
                     <button class="btn">{% trans "Update" %}</button>
                     <a href="#" data-id="{{ forloop.counter0 }}" data-behaviours="remove" class="inline">{% trans "Remove" %}</a>
                     {% if request.user.is_authenticated %}
-                    | <a href="#" data-id="{{ forloop.counter0 }}" data-behaviours="save" class="inline">{% trans "Save for later" %}</a>
+                        <a href="#" data-id="{{ forloop.counter0 }}" data-behaviours="save" class="inline">{% trans "Save for later" %}</a>
                     {% endif %}
                     <div style="display:none">
                         {{ form.save_for_later }}
@@ -102,8 +102,8 @@
                     {% csrf_token %}
                     {% include "partials/form_fields.html" with form=voucher_form %}
                     <div class="form-actions">
-                        <button class="btn btn-info">{% trans "Add voucher" %}</button>
-                        or <a href="#" id="voucher_form_cancel">{% trans "cancel" %}</a>
+                        <button type="submit" class="btn btn-info">{% trans "Add voucher" %}</button>
+                        {% trans 'or' %} <a href="#" id="voucher_form_cancel">{% trans "cancel" %}</a>
                     </div>
                 </form>
             </div>
@@ -219,7 +219,7 @@
                     {% endwith %}
                 </div>
                 <h4><a href="{{ form.instance.product.get_absolute_url }}">{{ form.instance.description }}</a></h4>
-                <p class="app-ico instock avaliability ">{{ form.instance.product.stockrecord.availability }}</p>
+                <p class="app-ico {{ form.instance.product.stockrecord.availability_code }}">{{ form.instance.product.stockrecord.availability }}</p>
                 <a href="#" data-id="{{ forloop.counter0 }}" data-behaviours="remove">{% trans "Remove" %}</a>
                 <div style="display:none">
                     {{ form.move_to_basket }}

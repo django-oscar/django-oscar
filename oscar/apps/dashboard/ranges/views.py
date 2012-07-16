@@ -1,6 +1,7 @@
 import os
 
 from django.views.generic import (ListView, DeleteView, CreateView, UpdateView)
+from django.utils.translation import ugettext_lazy as _
 from django.db.models.loading import get_model
 from django.core.urlresolvers import reverse
 from django.contrib import messages
@@ -154,13 +155,13 @@ class RangeProductListView(ListView, BulkEditMixin):
         if not upload.was_processing_successful():
             messages.error(request, upload.error_message)
         else:
-            msg = _("File processed: %(new)d products added, %(duplicate)d duplicate identifiers, %(unknown)d "
-                  "identifiers were not found")
-            msg = msg % {
-                'new': upload.num_new_skus,
-                'duplicate': upload.num_duplicate_skus,
-                'unknown': upload.num_unknown_skus
-            }
+            msg = _("File processed: %(new_skus)d products added, "
+                    "%(dupe_skus)d duplicate identifiers, "
+                    "%(unknown_skus)d identifiers were not found") % {
+                        'new_skus': upload.num_new_skus,
+                        'dupe_skus': upload.num_duplicate_skus,
+                        'unknown_skus': upload.num_unknown_skus
+                    }
             if upload.num_new_skus:
                 messages.success(request, msg)
             else:

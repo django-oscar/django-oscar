@@ -2,7 +2,7 @@
 {% load i18n %}
 
 {% block inlines %}
-<h2>{% trans 'Products' %}</h2>
+<h2>{% trans "Products" %}</h2>
 {{ product_formset.management_form }}
 {% for form in product_formset %}
     {% include "partials/form_fields.html" with form=form %}
