@@ -3,7 +3,7 @@
 {% load i18n %}
 
 {% block title %}
-{% blocktrans %}Delete range #{{ range.id }}?{% endblocktrans %} | {% trans "Range management" %} | {{ block.super }}
+{% blocktrans with name=range.id %}Delete range '{{ name }}'?{% endblocktrans %} | {% trans "Range management" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -16,13 +16,13 @@
 	<a href="{% url dashboard:range-list %}">{% trans "Ranges" %}</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">{% blocktrans %}Delete range '{{ range.name }}'?{% endblocktrans %}</a></li>
+	<li class="active"><a href=".">{% blocktrans with name=range.name %}Delete range '{{ name }}'?{% endblocktrans %}</a></li>
 </ul>
 {% endblock %}
 
 {% block header %}
 <div class="page-header">
-	<h1>{% blocktrans %}Delete range '{{ range.name }}'?{% endblocktrans %}</h1>
+	<h1>{% blocktrans with name=range.name %}Delete range '{{ name }}'?{% endblocktrans %}</h1>
 </div>
 {% endblock header %}
 

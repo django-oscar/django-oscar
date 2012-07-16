@@ -46,7 +46,7 @@ class VoucherForm(forms.Form):
         except Voucher.DoesNotExist:
             pass
         else:
-            if voucher.id != self.voucher.id:
+            if (not self.voucher) or (voucher.id != self.voucher.id):
                 raise forms.ValidationError(_("The code '%s' is already in use") % code)
         return code
 

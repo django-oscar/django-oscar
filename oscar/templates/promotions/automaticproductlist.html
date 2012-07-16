@@ -16,8 +16,8 @@
         </div>
     </div>
 
-    {% if block.link_url %}
-	<a href="{{ block.link_url }}">{% trans "See more" %}</a>
+    {% if promotion.link_url %}
+	<a href="{{ promotion.link_url }}">{{ promotion.link_text }}</a>
     {% endif %}
 </section>
 

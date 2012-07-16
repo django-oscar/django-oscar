@@ -5,7 +5,7 @@
 {% block body_class %}orders{% endblock %}
 
 {% block title %}
-{% blocktrans %}Order {{ order.number }}{% endblocktrans %} | {{ block.super }}
+{% blocktrans with number=order.number %}Order {{ number }}{% endblocktrans %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -24,7 +24,7 @@
 
 {% block header %}
 <div class="page-header">
-	<h1>{% blocktrans %}Order #{{ order.number }}{% endblocktrans %}</h1>
+	<h1>{% blocktrans with number=order.number %}Order #{{ number }}{% endblocktrans %}</h1>
 </div>
 {% endblock header %}
 

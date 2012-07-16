@@ -133,7 +133,7 @@ class DeletePagePromotionView(generic.DeleteView):
 class CreateView(PromotionMixin, generic.CreateView):
 
     def get_success_url(self):
-        messages.info(self.request, _("Promotion created successfully"))
+        messages.success(self.request, _("Promotion created successfully"))
         return reverse('dashboard:promotion-update',
                        kwargs={'ptype': self.model.classname(),
                                'pk': self.object.id})

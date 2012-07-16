@@ -3,9 +3,9 @@
 {% load i18n %}
 
 {% block title %}
-{% blocktrans %}
-Order {{ order.number }} - Line #{{ line.id }} | {{ block.super }}
-{% endblocktrans %}
+{% blocktrans with number=order.number id=line.id%}
+Order {{ number }} - Line #{{ id }}
+{% endblocktrans %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -22,13 +22,13 @@ Order {{ order.number }} - Line #{{ line.id }} | {{ block.super }}
 		<a href="{% url dashboard:order-detail order.number %}">#{{ order.number }}</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">{% blocktrans %}Line #{{ line.id }}{% endblocktrans %}</a></li>
+	<li class="active"><a href=".">{% blocktrans with id=line.id %}Line #{{ id }}{% endblocktrans %}</a></li>
 </ul>
 {% endblock %}
 
 {% block header %}
 <div class="page-header">
-	<h1>{% blocktrans %}Order #{{ order.number }} - Line #{{ line.id }}{% endblocktrans %}</h1>
+	<h1>{% blocktrans with number=order.number id=line.id %}Order #{{ number }} - Line #{{ id }}{% endblocktrans %}</h1>
 </div>
 {% endblock header %}
 
