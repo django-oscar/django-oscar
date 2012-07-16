@@ -584,7 +584,7 @@ class AbstractProductAttribute(models.Model):
         if not value.pk:
             raise ValidationError(_(u"AttributeOption has not been saved yet"))
         valid_values = self.option_group.options.values_list('option', flat=True)
-        if value not in valid_values:
+        if value.option not in valid_values:
             raise ValidationError(_(u"%(enum)s is not a valid choice "
                                         u"for %(attr)s") % \
                                        {'enum': value, 'attr': self})
