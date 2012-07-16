@@ -1,8 +1,10 @@
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 
-from oscar.apps.catalogue.models import Product, ProductClass, Category, \
-        ProductAttribute
+from oscar.apps.catalogue.models import (Product, ProductClass, Category,
+                                         ProductAttribute,
+                                         AttributeOptionGroup,
+                                         AttributeOption)
 from oscar.apps.catalogue.categories import create_from_breadcrumbs
 
 
@@ -26,37 +28,37 @@ class TestCategoryFactory(TestCase):
 
     def setUp(self):
         Category.objects.all().delete()
-    
+
     def test_can_create_single_level_category(self):
         trail = 'Books'
         category = create_from_breadcrumbs(trail)
         self.assertIsNotNone(category)
         self.assertEquals(category.name, 'Books')
-        self.assertEquals(category.slug, 'books')      
-    
+        self.assertEquals(category.slug, 'books')
+
     def test_can_create_parent_and_child_categories(self):
         trail = 'Books > Science-Fiction'
         category = create_from_breadcrumbs(trail)
-        
+
         self.assertIsNotNone(category)
         self.assertEquals(category.name, 'Science-Fiction')
         self.assertEquals(category.get_depth(), 2)
         self.assertEquals(category.get_parent().name, 'Books')
         self.assertEquals(2, Category.objects.count())
         self.assertEquals(category.slug, 'books/science-fiction')
-        
+
     def test_can_create_multiple_categories(self):
         trail = 'Books > Science-Fiction > Star Trek'
         create_from_breadcrumbs(trail)
         trail = 'Books > Factual > Popular Science'
         category = create_from_breadcrumbs(trail)
-        
+
         self.assertIsNotNone(category)
         self.assertEquals(category.name, 'Popular Science')
         self.assertEquals(category.get_depth(), 3)
         self.assertEquals(category.get_parent().name, 'Factual')
         self.assertEquals(5, Category.objects.count())
-        self.assertEquals(category.slug, 'books/factual/popular-science', )        
+        self.assertEquals(category.slug, 'books/factual/popular-science', )
 
     def test_can_use_alternative_separator(self):
         trail = 'Food|Cheese|Blue'
@@ -72,7 +74,7 @@ class TestCategoryFactory(TestCase):
         create_from_breadcrumbs(trail)
         trail = 'A > E > G'
         create_from_breadcrumbs(trail)
-        
+
         trail = 'T'
         target = create_from_breadcrumbs(trail)
         category = Category.objects.get(name='A')
@@ -156,30 +158,65 @@ class ProductCreationTests(ProductTests):
                           title='testing')
         product.attr.num_pages = 100
         product.save()
-   
+
 
 class TopLevelProductTests(ProductTests):
-    
+
     def test_top_level_products_must_have_titles(self):
         self.assertRaises(ValidationError, Product.objects.create, product_class=self.product_class)
-        
-        
+
+
 class VariantProductTests(ProductTests):
-    
+
     def setUp(self):
         super(VariantProductTests, self).setUp()
         self.parent = Product.objects.create(title="Parent product", product_class=self.product_class)
-    
+
     def test_variant_products_dont_need_titles(self):
         Product.objects.create(parent=self.parent, product_class=self.product_class)
-        
+
     def test_variant_products_dont_need_a_product_class(self):
         Product.objects.create(parent=self.parent)
-       
+
     def test_variant_products_inherit_parent_titles(self):
         p = Product.objects.create(parent=self.parent, product_class=self.product_class)
         self.assertEquals("Parent product", p.get_title())
-        
+
     def test_variant_products_inherit_product_class(self):
         p = Product.objects.create(parent=self.parent)
         self.assertEquals("Clothing", p.get_product_class().name)
+
+
+class ProductAttributeCreationTests(TestCase):
+
+    def setUp(self):
+        self.product_class,_ = ProductClass.objects.get_or_create(
+            name='Clothing'
+        )
+        self.option_group = AttributeOptionGroup.objects.create(name='group')
+        self.option_1 = AttributeOption.objects.create(group=self.option_group, option='first')
+        self.option_2 = AttributeOption.objects.create(group=self.option_group, option='second')
+
+    def test_validating_option_attribute(self):
+        pa = ProductAttribute.objects.create(product_class=self.product_class,
+                                             name='test group',
+                                             code='test_group',
+                                             type='option',
+                                             option_group=self.option_group)
+
+        self.assertRaises(ValidationError, pa.get_validator(), 'invalid')
+
+        try:
+            pa.get_validator()(self.option_1)
+        except ValidationError:
+            self.fail("valid option '%s' not validated" % self.option_1)
+
+        try:
+            pa.get_validator()(self.option_2)
+        except ValidationError:
+            self.fail("valid option '%s' not validated" % self.option_1)
+
+        invalid_option = AttributeOption()
+        invalid_option.option = 'invalid option'
+        self.assertRaises(ValidationError, pa.get_validator(),
+                          invalid_option)
