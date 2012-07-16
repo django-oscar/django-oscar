@@ -3,7 +3,7 @@
 {% load i18n %}
 
 {% block title %}
-{% blocktrans %}Delete review '{{ review.title|truncatechars:15 }}'?{% endblocktrans %} | {% trans "Review management" %} | {{ block.super }}
+{% blocktrans with title=review.title|truncatechars:30 %}Delete review '{{ title }}'?{% endblocktrans %} | {% trans "Review management" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -16,13 +16,13 @@
 	<a href="{% url dashboard:reviews-list %}">{% trans "Reviews" %}</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">{% blocktrans %}Delete review "{{ review.title|truncatechars:15 }}"?{% endblocktrans %}</a></li>
+	<li class="active"><a href=".">{% blocktrans with title=review.title|truncatechars:30 %}Delete review "{{ title }}"?{% endblocktrans %}</a></li>
 </ul>
 {% endblock %}
 
 {% block header %}
 <div class="page-header">
-	<h1>{% blocktrans %}Delete review "{{ review.title|truncatechars:15 }}"?{% endblocktrans %}</h1>
+	<h1>{% blocktrans with title=review.title|truncatechars:30 %}Delete review "{{ title }}"?{% endblocktrans %}</h1>
 </div>
 {% endblock header %}
 
@@ -34,7 +34,7 @@
             <tbody> 
 				<tr><th>{% trans "Review Title" %}</th><td>{{ review.title }}</td></tr>
 				<tr><th>{% trans "Product" %}</th><td>{{ review.product.title }}</td></tr>
-				<tr><th>{% trans "User" %}</th><td>{{ review.user.get_reviewer_name }}</td></tr>
+				<tr><th>{% trans "User" %}</th><td>{{ review.user.get_reviewer_name|default:"-" }}</td></tr>
 				<tr><th>{% trans "Score" %}</th><td>{{ review.score|floatformat:1 }}</td></tr>
 				<tr><th>{% trans "Votest" %}</th><td>{{ review.total_votes }}</td></tr>
 				<tr><th>{% trans "Status" %}</th><td>{{ review.status }}</td></tr>

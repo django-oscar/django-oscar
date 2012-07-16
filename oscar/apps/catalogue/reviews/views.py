@@ -52,6 +52,7 @@ class CreateProductReview(CreateView):
         return kwargs
     
     def get_success_url(self):
+        messages.success(self.request, _("Thank you for reviewing this product"))
         return self.object.product.get_absolute_url()
 
 
