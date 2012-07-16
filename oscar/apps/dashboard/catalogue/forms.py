@@ -135,7 +135,7 @@ class ProductForm(forms.ModelForm):
         self.add_attribute_fields()
 
     def set_initial_attribute_values(self, kwargs):
-        if kwargs['instance'] is None:
+        if kwargs.get('instance', None) is None:
             return
         if 'initial' not in kwargs:
             kwargs['initial'] = {}
@@ -176,6 +176,12 @@ class ProductForm(forms.ModelForm):
         for attribute in self.product_class.attributes.all():
             value = self.cleaned_data['attr_%s' % attribute.code]
             attribute.save_value(object, value)
+
+    def clean(self):
+        data = self.cleaned_data
+        if data['parent'] is None and not data['title']:
+            raise forms.ValidationError(_("Parent products must have a title"))
+        return data
 
 
 class StockAlertSearchForm(forms.Form):

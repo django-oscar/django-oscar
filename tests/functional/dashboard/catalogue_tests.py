@@ -90,7 +90,7 @@ class CategoryTests(ClientTestCase):
         b = Category.objects.get(name='B')
         c = Category.objects.get(name='C')
 
-        #Redirect to subcategory list view
+        # Redirect to subcategory list view
         response = self.client.post(reverse('dashboard:catalogue-category-create'),
                                             {'name': 'Testee',
                                              '_position': 'left',
@@ -99,7 +99,7 @@ class CategoryTests(ClientTestCase):
         self.assertIsRedirect(response, reverse('dashboard:catalogue-category-detail-list', 
                                                 args=(b.pk,)))
 
-        #Redirect to main category list view
+        # Redirect to main category list view
         response = self.client.post(reverse('dashboard:catalogue-category-create'),
                                             {'name': 'Testee',
                                              '_position': 'right',
@@ -108,3 +108,4 @@ class CategoryTests(ClientTestCase):
         self.assertIsRedirect(response, reverse('dashboard:catalogue-category-list'))
 
         self.assertEqual(Category.objects.all().count(), 9)
+
