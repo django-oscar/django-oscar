@@ -36,7 +36,6 @@ class ProductReportHTMLFormatter(ReportHTMLFormatter):
 
 
 class ProductReportGenerator(ReportGenerator):
-
     code = 'product_analytics'
     description = _('Product analytics')
 
@@ -44,6 +43,9 @@ class ProductReportGenerator(ReportGenerator):
         'CSV_formatter': ProductReportCSVFormatter,
         'HTML_formatter': ProductReportHTMLFormatter
     }
+
+    def report_description(self):
+        return self.description
 
     def generate(self):
         records = ProductRecord._default_manager.all()

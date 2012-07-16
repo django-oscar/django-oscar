@@ -11,7 +11,10 @@ class ReportForm(forms.Form):
     type_choices = []
     for generator in generators:
         type_choices.append((generator.code, generator.description))
-    report_type = forms.ChoiceField(widget=forms.Select(), choices=type_choices)
+    report_type = forms.ChoiceField(widget=forms.Select(), choices=type_choices,
+                                    help_text=_("Product analytics reports ignore"
+                                                "the selected date range"))
+                                                
     date_from = forms.DateField()
     date_to = forms.DateField()
     download = forms.BooleanField(required=False)
