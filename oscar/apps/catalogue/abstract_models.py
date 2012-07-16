@@ -152,7 +152,10 @@ class AbstractCategory(MP_Node):
         verbose_name_plural = _('Categories')
 
     def has_children(self):
-        return self.get_children().count() > 0
+        return self.get_num_children() > 0
+
+    def get_num_children(self):
+        return self.get_children().count()
 
 
 class AbstractProductCategory(models.Model):

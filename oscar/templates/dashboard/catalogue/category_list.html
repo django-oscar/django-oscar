@@ -48,7 +48,7 @@ Category management | {{ block.super }}
         <tr>
             <td>{{ category.name }}</td>
 			<td>{{ category.description|default:""|truncatewords:6 }}</td>
-			<td>{{ category.get_children_count }}</td>
+			<td>{{ category.get_num_children }}</td>
             <td>
                 <a class="btn btn-primary" href="{% url dashboard:catalogue-category-update category.id %}">Edit category</a>
 				<a class="btn btn-primary {% if not category.has_children %}disabled{% endif %}" href="{% url dashboard:catalogue-category-detail-list pk=category.pk %}">Edit children</a>

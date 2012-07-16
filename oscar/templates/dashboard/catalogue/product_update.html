@@ -87,6 +87,10 @@
 		<div class="sub-header">
 			<h3 class="app-ico ico_home icon">{% trans "Category information" %}</h3>
 		</div>
+		<p>{% blocktrans %}The first category in this list is the "primary" category for the product, and will be the one displayed
+		in the site breadcrumb trail.
+		{% endblocktrans %}
+		</p>
     	{{ category_formset.management_form }}
     	{% for category_form in category_formset %}
 			{% include "partials/form_fields_inline.html" with form=category_form %}
