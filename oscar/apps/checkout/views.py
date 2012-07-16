@@ -23,8 +23,8 @@ Dispatcher = get_class('customer.utils', 'Dispatcher')
 RedirectRequired, UnableToTakePayment, PaymentError = get_classes(
     'payment.exceptions', ['RedirectRequired', 'UnableToTakePayment', 'PaymentError'])
 UnableToPlaceOrder = get_class('order.exceptions', 'UnableToPlaceOrder')
-CheckoutSessionMixin, OrderPlacementMixin = get_classes('checkout.mixins',
-    ('CheckoutSessionMixin', 'OrderPlacementMixin'))
+OrderPlacementMixin = get_class('checkout.mixins', 'OrderPlacementMixin')
+CheckoutSessionMixin = get_class('checkout.session', 'CheckoutSessionMixin')
 
 Order = get_model('order', 'Order')
 ShippingAddress = get_model('order', 'ShippingAddress')
