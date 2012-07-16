@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.db.models import Count
 from django.shortcuts import HttpResponse
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import get_classes
 from oscar.apps.promotions.conf import PROMOTION_CLASSES, PROMOTION_POSITIONS

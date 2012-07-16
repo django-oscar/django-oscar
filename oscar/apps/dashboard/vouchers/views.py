@@ -6,6 +6,7 @@ from django.db.models.loading import get_model
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.core.urlresolvers import reverse
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import get_class
 VoucherForm = get_class('dashboard.vouchers.forms', 'VoucherForm')
@@ -84,7 +85,7 @@ class VoucherCreateView(FormView):
         )
         name = form.cleaned_data['name']
         offer = ConditionalOffer.objects.create(
-            name="Offer for voucher '%s'" % name,
+            name=_("Offer for voucher '%s'") % name,
             offer_type="Voucher",
             benefit=benefit,
             condition=condition,

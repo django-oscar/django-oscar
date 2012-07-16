@@ -16,7 +16,7 @@ class VoucherForm(forms.Form):
     code = forms.CharField(label=_("Code"))
     start_date = forms.DateField(label=_("Start date"))
     end_date = forms.DateField(label=_("End date"))
-    usage = forms.ChoiceField(choices=Voucher.USAGE_CHOICES)
+    usage = forms.ChoiceField(choices=Voucher.USAGE_CHOICES, label=_("Usage"))
 
     benefit_range = forms.ModelChoiceField(
         label=_('Which products get a discount?'),
@@ -28,7 +28,7 @@ class VoucherForm(forms.Form):
     )
     benefit_type = forms.ChoiceField(
         choices=type_choices,
-        label=_('Discount type'),
+        label=_('Discount type')
     )
     benefit_value = forms.DecimalField(
         label=_('Discount value'))
@@ -60,9 +60,9 @@ class VoucherForm(forms.Form):
 
 
 class VoucherSearchForm(forms.Form):
-    name = forms.CharField(required=False)
-    code = forms.CharField(required=False)
-    is_active = forms.BooleanField(required=False)
+    name = forms.CharField(required=False, label=_("Name"))
+    code = forms.CharField(required=False, label=_("Code"))
+    is_active = forms.BooleanField(required=False, label=_("Is Active?"))
 
     def clean_code(self):
         return self.cleaned_data['code'].upper()

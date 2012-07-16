@@ -287,7 +287,7 @@ class RangeCreateView(CreateView):
     template_name = 'dashboard/offers/range_form.html'
 
     def get_success_url(self):
-        messages.success(self.request, "Range created")
+        messages.success(self.request, _("Range created"))
         return reverse('dashboard:range-list')
 
 
@@ -296,7 +296,7 @@ class RangeUpdateView(UpdateView):
     template_name = 'dashboard/offers/range_form.html'
 
     def get_success_url(self):
-        messages.success(self.request, "Range updated")
+        messages.success(self.request, _("Range updated"))
         return reverse('dashboard:range-list')
 
 
@@ -306,7 +306,7 @@ class RangeDeleteView(DeleteView):
     context_object_name = 'range'
 
     def get_success_url(self):
-        messages.warning(self.request, "Range deleted")
+        messages.warning(self.request, _("Range deleted"))
         return reverse('dashboard:range-list')
 
 

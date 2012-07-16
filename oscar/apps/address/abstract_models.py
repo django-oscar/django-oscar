@@ -35,7 +35,7 @@ class AbstractAddress(models.Model):
     line4 = models.CharField(_("City"), max_length=255, blank=True, null=True)
     state = models.CharField(_("State/County"), max_length=255, blank=True, null=True)
     postcode = models.CharField(_("Post/Zip-code"), max_length=64)
-    country = models.ForeignKey('address.Country', verbose_name=_("Country"))
+    country = models.ForeignKey('address.Country', verbose_name=_('Country'))
     
     # A field only used for searching addresses - this contains all the relevant fields
     search_text = models.CharField(_("Search text"), max_length=1000)
@@ -44,6 +44,7 @@ class AbstractAddress(models.Model):
         abstract = True
         verbose_name = _('Address')
         verbose_name_plural = _('Addresses')
+
 
     def save(self, *args, **kwargs):
         self._clean_fields()
@@ -143,13 +144,13 @@ class AbstractCountry(models.Model):
         
 
 class AbstractShippingAddress(AbstractAddress):
-    """
+    u"""
     Shipping address.
     
     A shipping address should not be edited once the order has been placed - 
     it should be read-only after that. 
     """
-    phone_number = models.CharField(_("Phone number"), max_length=32, blank=True, null=True)
+    phone_number = models.CharField(_('Phone Number'), max_length=32, blank=True, null=True)
     notes = models.TextField(blank=True, null=True,
                              verbose_name=_('Courier instructions'),
                              help_text=_("For example, leave the parcel in the wheelie bin " \
@@ -157,8 +158,8 @@ class AbstractShippingAddress(AbstractAddress):
     
     class Meta:
         abstract = True
-        verbose_name = _("Shipping address")
-        verbose_name_plural = _("Shipping addresses")
+        verbose_name = _("shipping address")
+        verbose_name_plural = _("shipping addresses")
 
     @property    
     def order(self):

@@ -55,7 +55,7 @@ class OrderSearchForm(forms.Form):
     upc = forms.CharField(required=False, label=_("UPC"))
     partner_sku = forms.CharField(required=False, label=_("Partner SKU"))
 
-    status_choices = (('', '---------'),) + tuple([(v, v) for v in Order.all_statuses()])
+    status_choices = (('', _('---------')),) + tuple([(v, v) for v in Order.all_statuses()])
     status = forms.ChoiceField(choices=status_choices, label=_("Status"), required=False)
 
     date_from = forms.DateField(required=False, label=_("Date from"))
@@ -63,7 +63,7 @@ class OrderSearchForm(forms.Form):
 
     voucher = forms.CharField(required=False, label=_("Voucher code"))
 
-    method_choices = (('', '---------'),) + tuple([(src.code, src.name) for src in SourceType.objects.all()])
+    method_choices = (('', _('---------')),) + tuple([(src.code, src.name) for src in SourceType.objects.all()])
     payment_method = forms.ChoiceField(label=_("Payment method"), required=False,
                                        choices=method_choices)
 

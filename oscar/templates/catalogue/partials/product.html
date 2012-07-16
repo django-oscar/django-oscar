@@ -4,11 +4,11 @@
 
 <article class="product_pod">
     <div class="image_container">
-		{% with image=product.primary_image %}
-		{% thumbnail image.original "400x400" upscale=False as thumb %}
-		<a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
-		{% endthumbnail %}
-		{% endwith %}
+        {% with image=product.primary_image %}
+        {% thumbnail image.original "400x400" upscale=False as thumb %}
+        <a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
+        {% endthumbnail %}
+        {% endwith %}
     </div>
 
     {% block product_review %}
@@ -20,23 +20,23 @@
                 {% endfor %}
                 </ul>
             {% else %}
-                 <p class="star">No Rating</p>
+                 <p class="star">{% trans "No Rating" %}</p>
             {% endif %}
         {% endwith %}
     {% endblock product_review %}
-    
+
     <h3><a href="{{ product.get_absolute_url }}">{{ product.get_title|truncatewords:7 }}</a></h3>
-    
+
     <div class="product_price">
         {% if product.has_stockrecord %}    
             {% if product.is_group %}
-			<h4><span>{% trans "From" %}</span> {{ product.min_variant_price_incl_tax|currency }}</h4>
+                <h4><span>{% trans "From" %}</span> {{ product.min_variant_price_incl_tax|currency }}</h4>
             {% else %}
                 <h4>{{ product.stockrecord.price_incl_tax|currency }}</h4>
             {% endif %}
             <p class="app-ico {{ product.stockrecord.availability_code }} avaliability ">{{ product.stockrecord.availability|truncatewords:2 }}</p>
         {% else %}
-		<p class="app-ico avaliability outofstock">{% trans "Not available" %}</p>
+            <p class="app-ico avaliability outofstock">{% trans "Not available" %}</p>
         {% endif %}
 
         {% include "catalogue/partials/add_to_basket_form_compact.html" %}

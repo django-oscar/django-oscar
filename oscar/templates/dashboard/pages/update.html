@@ -10,34 +10,34 @@
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
     <li>
-	<a href="{% url dashboard:page-list %}">{% trans "Page management" %}</a>
+    <a href="{% url dashboard:page-list %}">{% trans "Page management" %}</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">{% trans "Update page" %}</a></li>
+    <li class="active"><a href=".">{% trans "Update page" %}</a></li>
 </ul>
 {% endblock %}
 {% block header %}
 <div class="page-header">
-	<h1>{{ title }}</h1>
+    <h1>{{ title }}</h1>
 </div>
 {% endblock header %}
 
 {% block dashboard_content %}
 
 <form action="." method="post" class="form-horizontal">
-	{% csrf_token %}
+    {% csrf_token %}
 
-	<legend>{% trans "Page" %}</legend>
-		{% include "partials/form_fields.html" with form=form %}
+    <legend>{% trans "Page" %}</legend>
+    {% include "partials/form_fields.html" with form=form %}
 
-		<div class="form-actions">
-			<button class="btn btn-primary" type="submit">{% trans "Save" %}</button> {% trans "or" %}
-			<a href="{% url dashboard:page-list %}">{% trans "cancel" %}</a>
-		</div>
+    <div class="form-actions">
+        <button class="btn btn-primary" type="submit">{% trans "Save" %}</button> {% trans "or" %}
+        <a href="{% url dashboard:page-list %}">{% trans "cancel" %}</a>
+    </div>
 </form>
 
 {% if page %}

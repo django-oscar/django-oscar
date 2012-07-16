@@ -47,7 +47,7 @@ class RangeProductForm(forms.Form):
         existing_ids = existing_skus.union(existing_upcs)
         new_ids = ids - existing_ids
 
-        if len(new_ids) == 0:
+        if not len(new_ids):
             raise forms.ValidationError(
                 _("The products with SKUs or UPCs matching %s are already in this range") % (
                     ', '.join(ids)))

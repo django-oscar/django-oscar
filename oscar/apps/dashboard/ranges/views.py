@@ -9,6 +9,7 @@ from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
 from django.template.defaultfilters import pluralize
 from django.conf import settings
+from django.utils.translation import ungettext_lazy, ugettext_lazy as _
 
 from oscar.views.generic import BulkEditMixin
 from oscar.core.loading import get_classes
@@ -36,7 +37,7 @@ class RangeCreateView(CreateView):
         if 'action' in self.request.POST:
             return reverse('dashboard:range-products', kwargs={'pk': self.object.id})
         else:
-            messages.success(self.request, "Range created")
+            messages.success(self.request, _("Range created"))
             return reverse('dashboard:range-list')
 
     def get_context_data(self, **kwargs):
@@ -54,7 +55,7 @@ class RangeUpdateView(UpdateView):
         if 'action' in self.request.POST:
             return reverse('dashboard:range-products', kwargs={'pk': self.object.id})
         else:
-            messages.success(self.request, "Range updated")
+            messages.success(self.request, _("Range updated"))
             return reverse('dashboard:range-list')
 
     def get_context_data(self, **kwargs):
@@ -69,7 +70,7 @@ class RangeDeleteView(DeleteView):
     context_object_name = 'range'
 
     def get_success_url(self):
-        messages.warning(self.request, "Range deleted")
+        messages.warning(self.request, _("Range deleted"))
         return reverse('dashboard:range-list')
 
 
@@ -106,8 +107,9 @@ class RangeProductListView(ListView, BulkEditMixin):
         range = self.get_range()
         for product in products:
             range.included_products.remove(product)
-        messages.success(request, _('Removed %d products from range') %
-                         len(products))
+        messages.success(request, ungettext_lazy('Removed %d product from range',
+                                                 'Removed %d products from range',
+                                                  len(products)) % len(products))
         return HttpResponseRedirect(self.get_success_url(request))
 
     def add_products(self, request):
@@ -130,8 +132,9 @@ class RangeProductListView(ListView, BulkEditMixin):
             range.included_products.add(product)
 
         num_products = len(products)
-        messages.success(request, _("Products added to range: %d") % (
-            num_products))
+        messages.success(request, ungettext_lazy("%d product added to range",
+                                                 "%d products added to range",
+                                                 num_products) % num_products)
 
         dupe_skus = form.get_duplicate_skus()
         if dupe_skus:

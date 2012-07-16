@@ -11,29 +11,29 @@
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
     <li>
-	<a href="{% url dashboard:reviews-list %}">{% trans "Reviews" %}</a>
+        <a href="{% url dashboard:reviews-list %}">{% trans "Reviews" %}</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">{% blocktrans %}Review #{{ review.id }}{% endblocktrans %}</a></li>
+    <li class="active"><a href=".">{% blocktrans %}Review #{{ review.id }}{% endblocktrans %}</a></li>
 </ul>
 {% endblock %}
 
 {% block header %}
 <div class="page-header">
-	<h1>{% blocktrans %}Review #{{ review.id }}{% endblocktrans %}</h1>
+    <h1>{% blocktrans %}Review #{{ review.id }}{% endblocktrans %}</h1>
 </div>
 {% endblock header %}
 
 {% block dashboard_content %}
 <form action="." method="post" class="product-new" enctype="multipart/form-data">
-	{% csrf_token %}
+    {% csrf_token %}
     <div class="well well-info">
         <div class="sub-header">
-			<h3 class="app-ico ico_expand icon">{% trans "Review information" %}</h3>
+           <h3 class="app-ico ico_expand icon">{% trans "Review information" %}</h3>
         </div>
         {{ form.first }}
         {% for field in form %}
@@ -66,20 +66,20 @@
                 {% else %}
                         {{ field.label_tag }}
                         {{ field }}
-						{% for error in field.errors %}
-								<ul class="help-block">
-										<li>{{ error|escape }}</li>
-								</ul>
-						{% endfor %}
+                        {% for error in field.errors %}
+                                <ul class="help-block">
+                                        <li>{{ error|escape }}</li>
+                                </ul>
+                        {% endfor %}
                 {% endif %}
-            	</div>
+                </div>
             {% endif %}
         {% endfor %}
     </div>
-		
+
     <div class="form-actions">
-		<button class="btn btn-primary btn-large" type="submit">{% trans "Save" %}</button> {% trans "or" %}
-		<a href="{% url dashboard:reviews-list %}">{% trans "cancel" %}</a>
+        <button class="btn btn-primary btn-large" type="submit">{% trans "Save" %}</button> {% trans "or" %}
+        <a href="{% url dashboard:reviews-list %}">{% trans "cancel" %}</a>
     </div>
 </form>
 {% endblock dashboard_content %}
