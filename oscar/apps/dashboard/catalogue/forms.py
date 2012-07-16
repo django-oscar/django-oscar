@@ -185,7 +185,7 @@ class ProductForm(forms.ModelForm):
 
 
 class StockAlertSearchForm(forms.Form):
-    status = forms.CharField(label='Status')
+    status = forms.CharField(label=_('Status'))
 
 
 class ProductCategoryForm(forms.ModelForm):

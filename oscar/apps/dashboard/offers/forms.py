@@ -9,8 +9,10 @@ Benefit = get_model('offer', 'Benefit')
 
 
 class MetaDataForm(forms.ModelForm):
-    start_date = forms.DateField(widget=forms.DateInput(format='%Y-%m-%d'))
-    end_date = forms.DateField(widget=forms.DateInput(format='%Y-%m-%d'))
+    start_date = forms.DateField(widget=forms.DateInput(format='%Y-%m-%d'),
+                                 label=_("Start date"))
+    end_date = forms.DateField(widget=forms.DateInput(format='%Y-%m-%d'),
+                               label=_("End date"))
 
     class Meta:
         model = ConditionalOffer
@@ -35,4 +37,4 @@ class PreviewForm(forms.Form):
 
 class OfferSearchForm(forms.Form):
     name = forms.CharField(required=False, label=_("Offer name"))
-    is_active = forms.BooleanField(required=False)
+    is_active = forms.BooleanField(required=False, label=_("Is active?"))

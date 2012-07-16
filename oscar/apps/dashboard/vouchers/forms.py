@@ -16,7 +16,7 @@ class VoucherForm(forms.Form):
     code = forms.CharField(label=_("Code"))
     start_date = forms.DateField(label=_("Start date"))
     end_date = forms.DateField(label=_("End date"))
-    usage = forms.ChoiceField(choices=Voucher.USAGE_CHOICES)
+    usage = forms.ChoiceField(choices=Voucher.USAGE_CHOICES, label=_("Usage"))
 
     benefit_range = forms.ModelChoiceField(
         label=_('Which products get a discount?'),

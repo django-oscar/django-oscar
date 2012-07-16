@@ -15,7 +15,8 @@ class PromotionTypeSelectForm(forms.Form):
     choices = []
     for klass in PROMOTION_CLASSES:
         choices.append((klass.classname(), klass._type))
-    promotion_type = forms.ChoiceField(choices=tuple(choices))
+    promotion_type = forms.ChoiceField(choices=tuple(choices),
+                                       label=_("Promotion type"))
 
 
 class RawHTMLForm(forms.ModelForm):
@@ -35,8 +36,9 @@ OrderedProductFormSet = inlineformset_factory(HandPickedProductList,
 
 
 class PagePromotionForm(forms.ModelForm):
-    page_url = ExtendedURLField(label="URL")
+    page_url = ExtendedURLField(label=_("URL"))
     position = forms.CharField(widget=forms.Select(choices=PROMOTION_POSITIONS),
+                               label=_("Position"),
                                help_text=_("Where in the page this content block will appear"))
 
     class Meta:

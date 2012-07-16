@@ -1,15 +1,16 @@
-from django.conf.urls.defaults import patterns, url
+from django.conf.urls import patterns, url
 from django.contrib.admin.views.decorators import staff_member_required
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.application import Application
 from oscar.apps.dashboard.promotions import views
 from oscar.apps.promotions.conf import PROMOTION_CLASSES
 from oscar.apps.dashboard.nav import register, Node
 
-node = Node('Content')
-node.add_child(Node('Re-usable content blocks', 'dashboard:promotion-list'))
-node.add_child(Node('Content blocks by page', 'dashboard:promotion-list-by-page'))
-node.add_child(Node('Pages', 'dashboard:page-list'))
+node = Node(_('Content'))
+node.add_child(Node(_('Re-usable content blocks'), 'dashboard:promotion-list'))
+node.add_child(Node(_('Content blocks by page'), 'dashboard:promotion-list-by-page'))
+node.add_child(Node(_('Pages'), 'dashboard:page-list'))
 register(node, 20)
 
 

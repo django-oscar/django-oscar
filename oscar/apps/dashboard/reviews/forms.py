@@ -10,7 +10,7 @@ class DashboardProductReviewForm(forms.ModelForm):
         (ProductReview.APPROVED, _('Approved')),
         (ProductReview.REJECTED, _('Rejected')),
     )
-    status = forms.ChoiceField(choices=choices)
+    status = forms.ChoiceField(choices=choices, label=_("Status"))
 
     class Meta:
         model = ProductReview
@@ -21,8 +21,9 @@ class ProductReviewSearchForm(forms.Form):
     STATUS_CHOICES = (
         ('', '------------'),
     ) + ProductReview.STATUS_CHOICES
-    keyword = forms.CharField(required=False)
-    status = forms.ChoiceField(required=False, choices=STATUS_CHOICES)
+    keyword = forms.CharField(required=False, label=_("Keyword"))
+    status = forms.ChoiceField(required=False, choices=STATUS_CHOICES,
+                               label=_("Status"))
     date_from = forms.DateTimeField(required=False)
     date_to = forms.DateTimeField(required=False, label=_('to'))
     name = forms.CharField(required=False, label=_('Customer name'))
