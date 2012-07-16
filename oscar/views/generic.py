@@ -1,7 +1,7 @@
 from django.utils.encoding import smart_str
 from django.contrib import messages
 from django.http import HttpResponseRedirect
-from django.utils.translation import ugettext_lazy
+from django.utils.translation import ugettext_lazy as _
 
 
 class PostActionMixin(object):
