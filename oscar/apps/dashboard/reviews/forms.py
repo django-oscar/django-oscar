@@ -25,7 +25,7 @@ class ProductReviewSearchForm(forms.Form):
     status = forms.ChoiceField(required=False, choices=STATUS_CHOICES)
     date_from = forms.DateTimeField(required=False)
     date_to = forms.DateTimeField(required=False, label=_('to'))
-    name = forms.CharField(required=False)
+    name = forms.CharField(required=False, label=_('Customer name'))
 
     def get_friendly_status(self):
         raw = int(self.cleaned_data['status'])

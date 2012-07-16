@@ -3,9 +3,9 @@
 {% load i18n %}
 
 {% block title %}
-{% blocktrans %}
-Offer '{{ offer.name }}' | Offer management | {{ block.super }}
-{% endblocktrans %}
+{% blocktrans with name=offer.name %}
+Offer '{{ name }}' | Offer management
+{% endblocktrans %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -18,13 +18,13 @@ Offer '{{ offer.name }}' | Offer management | {{ block.super }}
 	<a href="{% url dashboard:offer-list %}">{% trans "Offers" %}</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">{% blocktrans %}Offer '{{ offer.name }}'{% endblocktrans %}</a></li>
+	<li class="active"><a href=".">{% blocktrans with name=offer.name %}Offer '{{ name }}'{% endblocktrans %}</a></li>
 </ul>
 {% endblock %}
 
 {% block header %}
 <div class="page-header">
-	<h1>{% blocktrans %}Offer '{{ offer.name }}'{% endblocktrans %}</h1>
+	<h1>{% blocktrans with name=offer.name %}Offer '{{ name }}'{% endblocktrans %}</h1>
 </div>
 {% endblock header %}
 
