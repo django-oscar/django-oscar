@@ -10,20 +10,20 @@
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+    <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
     <li>
-	<a href="{% url dashboard:promotion-list %}">{% trans "Content blocks" %}</a>
+    <a href="{% url dashboard:promotion-list %}">{% trans "Content blocks" %}</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">{% blocktrans %}Content blocks on page '{{ page_url }}'{% endblocktrans %}</a></li>
+    <li class="active"><a href=".">{% blocktrans %}Content blocks on page '{{ page_url }}'{% endblocktrans %}</a></li>
 </ul>
 {% endblock %}
 
 {% block header %}
 <div class="page-header">
-	<h1>{% blocktrans %}Content blocks for page {{ page_url }}{% endblocktrans %}</h1>
+    <h1>{% blocktrans %}Content blocks for page {{ page_url }}{% endblocktrans %}</h1>
 </div>
 {% endblock %}
 
@@ -31,32 +31,32 @@
 
 {% for position in positions %}
 <div class="well {% if position.promotions %}well-info{% endif%}">
-	<h3 class="app-ico ico_favourite icon">{% blocktrans %}Edit promotions in position '{{ position.name }}'{% endblocktrans %}</h3>
+    <h3 class="app-ico ico_favourite icon">{% blocktrans %}Edit promotions in position '{{ position.name }}'{% endblocktrans %}</h3>
     {% if position.promotions %}
     <table class="table table-bordered">
-    	<thead>
-    		<tr>
-				<th>{% trans "Promotion Name" %}</th>
-				<th>{% trans "Type" %}</th>
-				<th>{% trans "Actions" %}</th>
-    		</tr>
-    	</thead>
-    	<tbody class="promotion_list">
-    		{% for promotion in position.promotions %}
-    		<tr id="promo_{{ promotion.pk }}">
-    			<td>{{ promotion.content_object.name }}</td>
-    			<td>{{ promotion.content_object.type }}</td>
-    			<td>
-					<a href="{% url dashboard:promotion-update promotion.content_object.code promotion.content_object.id %}" class="btn btn-success">{% trans "Edit" %}</a>
-					<a href="#" class="btn btn-info btn-handle">{% trans "Re-order" %}</a>
-					<a href="{% url dashboard:pagepromotion-delete promotion.id %}" class="btn btn-danger">{% trans "Remove" %}</a>
-    			</td>
-    		</tr>
-    		{% endfor %}
-    	</tbody>
+        <thead>
+            <tr>
+                <th>{% trans "Promotion Name" %}</th>
+                <th>{% trans "Type" %}</th>
+                <th>{% trans "Actions" %}</th>
+            </tr>
+        </thead>
+        <tbody class="promotion_list">
+            {% for promotion in position.promotions %}
+            <tr id="promo_{{ promotion.pk }}">
+                <td>{{ promotion.content_object.name }}</td>
+                <td>{{ promotion.content_object.type }}</td>
+                <td>
+                    <a href="{% url dashboard:promotion-update promotion.content_object.code promotion.content_object.id %}" class="btn btn-success">{% trans "Edit" %}</a>
+                    <a href="#" class="btn btn-info btn-handle">{% trans "Re-order" %}</a>
+                    <a href="{% url dashboard:pagepromotion-delete promotion.id %}" class="btn btn-danger">{% trans "Remove" %}</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
     {% else %}
-	<p>{% trans "No promotions in this position." %}</p>
+    <p>{% trans "No promotions in this position." %}</p>
     {% endif %}
 </div>
 {% endfor %}

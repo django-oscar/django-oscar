@@ -9,29 +9,29 @@
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
     <li>
-	<a href="{% url dashboard:range-list %}">{% trans "Ranges" %}</a>
+        <a href="{% url dashboard:range-list %}">{% trans "Ranges" %}</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">{% blocktrans %}Delete range '{{ range.name }}'?{% endblocktrans %}</a></li>
+    <li class="active"><a href=".">{% blocktrans %}Delete range '{{ range.name }}'?{% endblocktrans %}</a></li>
 </ul>
 {% endblock %}
 
 {% block header %}
 <div class="page-header">
-	<h1>{% blocktrans %}Delete range '{{ range.name }}'?{% endblocktrans %}</h1>
+    <h1>{% blocktrans %}Delete range '{{ range.name }}'?{% endblocktrans %}</h1>
 </div>
 {% endblock header %}
 
 {% block dashboard_content %}
 <form action="." method="post" class="">
-	{% csrf_token %}
-	<div class="form-actions">
-		<button class="btn btn-danger btn-large" type="submit">{% trans "Delete" %}</button> {% trans "or" %}
-		<a href="{% url dashboard:range-list %}">{% trans "cancel" %}</a>
-	</div>
+    {% csrf_token %}
+    <div class="form-actions">
+        <button class="btn btn-danger btn-large" type="submit">{% trans "Delete" %}</button> {% trans "or" %}
+        <a href="{% url dashboard:range-list %}">{% trans "cancel" %}</a>
+    </div>
 </form>
 {% endblock dashboard_content %}

@@ -10,16 +10,16 @@
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">{% trans "Reporting Dashboard" %}</a></li>
+    <li class="active"><a href=".">{% trans "Reporting Dashboard" %}</a></li>
 </ul>
 {% endblock %}
 
 {% block header %}
 <div class="page-header">
-	<h1>{% trans "Reporting dashboard" %}</h1>
+    <h1>{% trans "Reporting dashboard" %}</h1>
 </div>
 {% endblock header %}
 
@@ -28,13 +28,13 @@
 <form method="get" action="." class="form-horizontal">
     {% include "partials/form_fields.html" with form=form %}
     <div class="form-actions">
-		<button type="submit" class="btn btn-primary">Generate report</button>
+        <button type="submit" class="btn btn-primary">{% trans "Generate report" %}</button>
     </div>
 </form>
 
 {% if description %}
 <div class="sub-header">
-	<h3>{{ description }}</h3>
+    <h3>{{ description }}</h3>
 </div>
 {% endif %}
 

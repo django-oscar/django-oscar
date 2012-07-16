@@ -5,6 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views.generic import ListView, DetailView
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.dashboard.users import forms
 from oscar.views.generic import BulkEditMixin

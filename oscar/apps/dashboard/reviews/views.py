@@ -6,6 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.template.defaultfilters import date as format_date
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.views.generic import BulkEditMixin
 from oscar.apps.dashboard.reviews import forms

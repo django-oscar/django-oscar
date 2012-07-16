@@ -13,6 +13,7 @@ from django.shortcuts import get_object_or_404
 from django.template.defaultfilters import date as format_date
 from django.utils.datastructures import SortedDict
 from django.views.generic import ListView, DetailView, UpdateView, FormView
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import get_class
 from oscar.apps.dashboard.orders import forms
@@ -295,7 +296,7 @@ class OrderDetailView(DetailView):
         order_action = request.POST.get('order_action', '').lower()
         if order_action:
             if order_action not in self.order_actions:
-                messages.error(self.request, "Invalid action")
+                messages.error(self.request, _("Invalid action"))
                 return self.reload_page_response()
             else:
                 return getattr(self, order_action)(request, order)
@@ -304,7 +305,7 @@ class OrderDetailView(DetailView):
         line_action = request.POST.get('line_action', '').lower()
         if line_action:
             if line_action not in self.line_actions:
-                messages.error(self.request, "Invalid action")
+                messages.error(self.request, _("Invalid action"))
                 return self.reload_page_response()
             else:
                 line_ids = request.POST.getlist('selected_line')

@@ -2,26 +2,26 @@
 {% load i18n %}
 
 {% block title %}
-{% trans "Offer" %} '{{ offer.name }}' | {{ block.super }}
+{% blocktrans %}Offer '{{ offer.name }}'{% endblocktrans %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-	<a href="{% url promotions:home %}">{% trans "Home" %}</a>
+        <a href="{% url promotions:home %}">{% trans "Home" %}</a>
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="#">Offers</a>
+        <a href="#">{% trans "Offers" %}</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">'{{ offer.name }}'</a></li>
+    <li class="active"><a href=".">'{{ offer.name }}'</a></li>
 </ul>
 {% endblock %}
 
 {% block header %}
 <div class="page-header action">
-	<h1>{% trans "Offer" %} '{{ offer.name }}'</h1>
+    <h1>{% blocktrans %}Offer '{{ offer.name }}'{% endblocktrans %}</h1>
 </div>
 {% endblock header %}
 
@@ -30,33 +30,33 @@
         <h1>{{ offer.name }}</h1>
     </div>
 
-	{% if not offer.is_active %}
-	<div class="alert alert-error">{% trans " This offer has expired " %}</div>
-	{% endif %}
+    {% if not offer.is_active %}
+    <div class="alert alert-error">{% trans " This offer has expired " %}</div>
+    {% endif %}
 
     {% if offer.description %}
-	<h3>{% trans "Description" %}</h3>
-    	<p>{{ offer.description }}</p>
+    <h3>{% trans "Description" %}</h3>
+        <p>{{ offer.description }}</p>
     {% endif %}
-	<h3>{% trans "What you need to do" %}</h3>
-	<p>{{ upsell_message }}</p>
+    <h3>{% trans "What you need to do" %}</h3>
+    <p>{{ upsell_message }}</p>
     {% if products.count %}
-		<section>
-			<div class="mod">
-				{% if page_obj %}
-					{% include "catalogue/partials/pagination.html" %}
-				{% endif %}
-				<ol class="products four">
-					{% for product in products %}
-					<li>{% include "catalogue/partials/product.html" %}</li>
-					{% endfor %}
-				</ol>
-				{% if page_obj %}
-					{% include "catalogue/partials/pagination.html" %}
-				{% endif %}
-			</div>
-		</section>
+        <section>
+            <div class="mod">
+                {% if page_obj %}
+                    {% include "catalogue/partials/pagination.html" %}
+                {% endif %}
+                <ol class="products four">
+                    {% for product in products %}
+                    <li>{% include "catalogue/partials/product.html" %}</li>
+                    {% endfor %}
+                </ol>
+                {% if page_obj %}
+                    {% include "catalogue/partials/pagination.html" %}
+                {% endif %}
+            </div>
+        </section>
     {% else %}
-	<p class="nonefound">{% trans "No products found." %}</p>
+        <p class="nonefound">{% trans "No products found." %}</p>
     {% endif %}
 {% endblock content %}

@@ -27,7 +27,7 @@ class AbstractProductClass(models.Model):
     # Some product type don't require shipping (eg digital products) - we use
     # this field to take some shortcuts in the checkout.
     requires_shipping = models.BooleanField(_("Requires shipping?"), default=True)
-    
+
     # These are the options (set by the user when they add to basket) for this
     # item class.  For instance, a product class of "SMS message" would always
     # require a message to be specified before it could be bought.
@@ -62,7 +62,7 @@ class AbstractCategory(MP_Node):
 
     _slug_separator = '/'
     _full_name_separator = ' > '
-    
+
     def __unicode__(self):
         return self.full_name
     
