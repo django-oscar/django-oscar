@@ -20,13 +20,13 @@
         <a href="{% url customer:order-list %}">{% trans 'Order history' %}</a>
         <span class="divider">/</span>
     </li>
-    <li class="active"><a href=".">{% blocktrans number=order.number %}Order #{{ number }}{% endblocktrans %}</a></li>
+    <li class="active"><a href=".">{% blocktrans with number=order.number %}Order #{{ number }}{% endblocktrans %}</a></li>
 </ul>
 {% endblock %}
 
 {% block header %}
 <div class="page-header">
-    <h1>{% blocktrans number=order.number %}Order #{{ number }}{% endblocktrans %}</h1>
+    <h1>{% blocktrans with number=order.number %}Order #{{ number }}{% endblocktrans %}</h1>
 </div>
 {% endblock header %}
 
