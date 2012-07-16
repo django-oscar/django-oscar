@@ -618,7 +618,7 @@ class ShippingEventQuantity(models.Model):
         super(ShippingEventQuantity, self).save(*args, **kwargs)
         
     def __unicode__(self):
-        return _("%(product)s - quantity %(qty)d") % {'product': self.line.product, 'qty': self.quantity}
+        return _(u"%(product)s - quantity %(qty)d") % {'product': self.line.product, 'qty': self.quantity}
 
 
 class AbstractShippingEventType(models.Model):
