@@ -58,8 +58,8 @@ class CategoryForm(MoveNodeForm):
 
 
 class ProductSearchForm(forms.Form):
-    upc = forms.CharField(max_length=16, required=False, label='UPC')
-    title = forms.CharField(max_length=255, required=False)
+    upc = forms.CharField(max_length=16, required=False, label=_('UPC'))
+    title = forms.CharField(max_length=255, required=False, label=_('Title'))
 
 
 class StockRecordForm(forms.ModelForm):
