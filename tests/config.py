@@ -4,7 +4,7 @@ from django.conf import settings, global_settings
 from oscar import OSCAR_CORE_APPS
 
 
-def configure():
+def configure(nose_args):
     if not settings.configured:
         from oscar.defaults import OSCAR_SETTINGS
 
@@ -56,6 +56,6 @@ def configure():
             HAYSTACK_SEARCH_ENGINE='dummy',
             HAYSTACK_SITECONF = 'oscar.search_sites',
             APPEND_SLASH=True,
-            NOSE_ARGS=['-s', '-x', '--with-spec'],
+            NOSE_ARGS=nose_args,
             **OSCAR_SETTINGS
         )
