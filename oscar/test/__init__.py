@@ -32,9 +32,12 @@ class ClientTestCase(TestCase):
     def setUp(self):
         self.client = Client()
         if not self.is_anonymous:
-            self.user = self.create_user()
-            self.client.login(username=self.username,
-                              password=self.password)
+            self.login()
+
+    def login(self):
+        self.user = self.create_user()
+        self.client.login(username=self.username,
+                          password=self.password)
 
     def create_user(self):
         user = User.objects.create_user(self.username,
