@@ -252,8 +252,6 @@ class AbstractCommunicationEvent(models.Model):
     
     class Meta:
         abstract = True
-
-    class Meta:
         verbose_name = _("Communication Event")
         verbose_name_plural = _("Communication Events")
 
