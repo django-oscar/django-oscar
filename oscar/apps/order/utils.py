@@ -69,8 +69,11 @@ class OrderCreator(object):
         for line in basket.all_lines():
             self.create_line_models(order, line)
             self.update_stock_records(line)
+
         for discount in basket.get_discounts():
             self.create_discount_model(order, discount)
+            self.record_discount(discount)
+
         for voucher in basket.vouchers.all():
             self.record_voucher_usage(order, voucher, user)
         
@@ -78,6 +81,8 @@ class OrderCreator(object):
         order_placed.send(sender=self, order=order, user=user)
         
         return order
+
+
         
     def create_order_model(self, user, basket, shipping_address, shipping_method, 
                            billing_address, total_incl_tax, total_excl_tax, 
@@ -200,17 +205,21 @@ class OrderCreator(object):
         Creates an order discount model for each discount attached to the basket.
         """
         order_discount = OrderDiscount(order=order,
-                                       offer_id=discount['offer'].id, 
+                                       offer_id=discount['offer'].id,
                                        amount=discount['discount'])
-        if discount['voucher']:
-            order_discount.voucher_id = discount['voucher'].id
-            order_discount.voucher_code = discount['voucher'].code
+        voucher = discount.get('voucher', None)
+        if voucher:
+            order_discount.voucher_id = voucher.id
+            order_discount.voucher_code = voucher.code
         order_discount.save()
+
+    def record_discount(self, discount):
+        discount['offer'].record_usage(discount['discount'])
+        if 'voucher' in discount:
+            discount['voucher'].record_discount(discount['discount'])
         
     def record_voucher_usage(self, order, voucher, user):
         """
         Updates the models that care about this voucher.
         """
         voucher.record_usage(order, user)
-        voucher.num_orders += 1
-        voucher.save()

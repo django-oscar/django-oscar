@@ -16,15 +16,3 @@ def receive_basket_voucher_change(sender, **kwargs):
         voucher = Voucher._default_manager.get(pk=voucher_id)
         voucher.num_basket_additions += 1
         voucher.save()
-
-
-@receiver(post_save, sender=OrderDiscount)        
-def receive_order_discount_save(sender, instance, **kwargs):
-    # Record the amount of discount against the appropriate offers
-    # and vouchers
-    discount = instance
-    if discount.voucher:
-        discount.voucher.total_discount += discount.amount
-        discount.voucher.save()
-    if discount.offer:
-        discount.offer.record_usage(discount.amount)

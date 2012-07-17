@@ -10,6 +10,7 @@ from oscar.test import ClientTestCase, patch_settings
 from oscar.apps.basket.models import Basket
 from oscar.apps.order.models import Order
 from oscar.apps.address.models import Country
+from oscar.apps.voucher.models import Voucher
 
 
 class CheckoutMixin(object):
@@ -19,8 +20,9 @@ class CheckoutMixin(object):
         self.client.post(reverse('basket:add'), {'product_id': product.id,
                                                  'quantity': 1})
 
-    def add_voucher_to_basket(self):
-        voucher = create_voucher()
+    def add_voucher_to_basket(self, voucher=None):
+        if voucher is None:
+            voucher = create_voucher()
         self.client.post(reverse('basket:vouchers-add'),
                          {'code': voucher.code})
 
@@ -41,7 +43,7 @@ class CheckoutMixin(object):
                                       'postcode': 'N1 9RT',
                                       'country': 'GB',
                                      })
-        self.assertIsRedirect(response)
+        self.assertRedirectUrlName(response, 'checkout:shipping-method')
 
     def complete_shipping_method(self):
         self.client.get(reverse('checkout:shipping-method'))
@@ -205,7 +207,7 @@ class TestPreviewView(ClientTestCase, CheckoutMixin):
         self.assertIsOk(response)
 
 
-class PaymentDetailsViewTests(ClientTestCase, CheckoutMixin):
+class TestPaymentDetailsView(ClientTestCase, CheckoutMixin):
 
     def test_user_must_have_a_nonempty_basket(self):
         response = self.client.get(reverse('checkout:payment-details'))
@@ -230,12 +232,12 @@ class PaymentDetailsViewTests(ClientTestCase, CheckoutMixin):
         self.assertRedirectUrlName(response, 'basket:summary')
 
 
-class OrderPlacementTests(ClientTestCase, CheckoutMixin):
+class TestOrderPlacement(ClientTestCase, CheckoutMixin):
 
     def setUp(self):
         Order.objects.all().delete()
 
-        super(OrderPlacementTests, self).setUp()
+        super(TestOrderPlacement, self).setUp()
         self.basket = Basket.objects.create(owner=self.user)
         self.basket.add_product(create_product(price=D('12.00')))
 
@@ -253,19 +255,25 @@ class OrderPlacementTests(ClientTestCase, CheckoutMixin):
         self.assertEqual(1, len(orders))
         
 
-class TestAnonUserOrderPlacementScenarios(ClientTestCase, CheckoutMixin):
+class TestPlacingOrderUsingAVoucher(ClientTestCase, CheckoutMixin):
 
-    def test_basic_submission_gets_redirect_to_thankyou(self):
+    def setUp(self):
+        self.login()
         self.add_product_to_basket()
+        voucher = create_voucher()
+        self.add_voucher_to_basket(voucher)
         self.complete_shipping_address()
         self.complete_shipping_method()
-        response = self.submit()
-        self.assertRedirectUrlName(response, 'checkout:thank-you')
+        self.response = self.submit()
 
-    def test_submission_using_voucher(self):
-        self.add_product_to_basket()
-        self.add_voucher_to_basket()
-        self.complete_shipping_address()
-        self.complete_shipping_method()
-        response = self.submit()
-        self.assertRedirectUrlName(response, 'checkout:thank-you')
+        # Reload voucher
+        self.voucher = Voucher.objects.get(id=voucher.id)
+
+    def test_is_successful(self):
+        self.assertRedirectUrlName(self.response, 'checkout:thank-you')
+
+    def test_records_use(self):
+        self.assertEquals(1, self.voucher.num_orders)
+
+    def test_records_discount(self):
+        self.assertEquals(1, self.voucher.num_orders)

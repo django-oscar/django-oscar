@@ -48,6 +48,7 @@ class Applicator(object):
         offers = self.get_offers(request, basket) 
         logger.debug("Found %d offers to apply to basket %d", len(offers), basket.id)
         discounts = self.get_basket_discounts(basket, offers)
+
         # Store this list of discounts with the basket so it can be 
         # rendered in templates
         basket.set_discounts(list(discounts.values()))

@@ -8,7 +8,7 @@ from django.utils.translation import ugettext as _
 
 class AbstractVoucher(models.Model):
     """
-    A voucher.  This is simply a link to a collection of offers
+    A voucher.  This is simply a link to a collection of offers.
 
     Note that there are three possible "usage" models:
     (a) Single use
@@ -19,7 +19,7 @@ class AbstractVoucher(models.Model):
         help_text=_("""This will be shown in the checkout and basket once the voucher is entered"""))
     code = models.CharField(_("Code"), max_length=128, db_index=True, unique=True,
         help_text=_("""Case insensitive / No spaces allowed"""))
-    offers = models.ManyToManyField('offer.ConditionalOffer', related_name='vouchers', 
+    offers = models.ManyToManyField('offer.ConditionalOffer', related_name='vouchers',
                                     limit_choices_to={'offer_type': "Voucher"})
 
     SINGLE_USE, MULTI_USE, ONCE_PER_CUSTOMER = ('Single use', 'Multi-use', 'Once per customer')
@@ -33,7 +33,7 @@ class AbstractVoucher(models.Model):
     start_date = models.DateField(_('Start Date'))
     end_date = models.DateField(_('End Date'))
 
-    # Summary information
+    # Audit information
     num_basket_additions = models.PositiveIntegerField(_('Times added to basket'), default=0)
     num_orders = models.PositiveIntegerField(_('Times on orders'), default=0)
     total_discount = models.DecimalField(_('Total discount'), decimal_places=2, max_digits=12, default=Decimal('0.00'))
@@ -59,7 +59,7 @@ class AbstractVoucher(models.Model):
 
     def is_active(self, test_date=None):
         """
-        Tests whether this voucher is currently active.
+        Test whether this voucher is currently active.
         """
         if not test_date:
             test_date = datetime.date.today()
@@ -67,7 +67,7 @@ class AbstractVoucher(models.Model):
 
     def is_available_to_user(self, user=None):
         """
-        Tests whether this voucher is available to the passed user.
+        Test whether this voucher is available to the passed user.
         
         Returns a tuple of a boolean for whether it is successulf, and a message
         """
@@ -96,6 +96,15 @@ class AbstractVoucher(models.Model):
             self.applications.create(voucher=self, order=order, user=user)
         else:
             self.applications.create(voucher=self, order=order)
+        self.num_orders += 1
+        self.save()
+
+    def record_discount(self, discount):
+        """
+        Record a discount that this offer has given
+        """
+        self.total_discount += discount
+        self.save()
 
     @property
     def benefit(self):
@@ -120,4 +129,6 @@ class AbstractVoucherApplication(models.Model):
         verbose_name_plural = _("Voucher Applications")
 
     def __unicode__(self):
-        return _("'%(voucher)s' used by '%(user)s'") % {'voucher': self.voucher, 'user': self.user}
+        return _("'%(voucher)s' used by '%(user)s'") % {
+            'voucher': self.voucher,
+            'user': self.user}
