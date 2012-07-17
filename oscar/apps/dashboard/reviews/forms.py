@@ -24,7 +24,7 @@ class ProductReviewSearchForm(forms.Form):
     keyword = forms.CharField(required=False, label=_("Keyword"))
     status = forms.ChoiceField(required=False, choices=STATUS_CHOICES,
                                label=_("Status"))
-    date_from = forms.DateTimeField(required=False)
+    date_from = forms.DateTimeField(required=False, label=_("Date from"))
     date_to = forms.DateTimeField(required=False, label=_('to'))
     name = forms.CharField(required=False, label=_('Customer name'))
 
