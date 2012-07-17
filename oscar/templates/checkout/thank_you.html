@@ -91,11 +91,7 @@
 </div>
 <div class="basket-items">
     <div class="row-fluid">
-		<h4 class="span11">
-            {% blocktrans with order.shipping_method as shipping_method %}
-            Shipping charge - {{ shipping_method }}
-            {% endblocktrans %}
-        </h4>
+		<h4 class="span11">{% blocktrans with method=order.shipping_method %}Shipping charge - {{ method }}{% endblocktrans %}</h4>
         <div class="span1">{{ order.shipping_incl_tax|currency }}</div>
     </div>
 </div>
