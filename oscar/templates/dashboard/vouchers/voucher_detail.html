@@ -45,7 +45,7 @@
 		<tbody>
 			<tr><th>{% trans "Number of basket additions" %}</th><td>{{ voucher.num_basket_additions }}</td></tr>
 			<tr><th>{% trans "Number of orders" %}</th><td>{{ voucher.num_orders }}</td></tr>
-			<tr><th>{% trans "Total discount" %}</th><td>{{ voucher.total_discount }}</td></tr>
+			<tr><th>{% trans "Total discount" %}</th><td>{{ voucher.total_discount|currency }}</td></tr>
 		</tbody>
 	</table>
 

@@ -15,7 +15,7 @@
     </tr>
     {% for basket in objects %}
     <tr>
-        <td>{{ basket.owner.email }}</td>
+        <td>{{ basket.owner.email|default:"-" }}</td>
         <td>{{ basket.owner.get_full_name|default:"-" }}</td>
         <td>{{ basket.num_lines }}</td>
         <td>{{ basket.num_items }}</td>
