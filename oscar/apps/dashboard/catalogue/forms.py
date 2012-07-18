@@ -170,6 +170,8 @@ class ProductForm(forms.ModelForm):
         if not object.upc:
             object.upc = None
         object.save()
+        if hasattr(self, 'save_m2m'):
+            self.save_m2m()
         return object
 
     def save_attributes(self, object):
