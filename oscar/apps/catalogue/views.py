@@ -68,8 +68,6 @@ def get_product_base_queryset():
     """
     return product_model.browsable.select_related(
         'product_class',
-        'stockrecord',
-        'stockrecord__partner',
     ).prefetch_related(
         'reviews',
         'variants',
