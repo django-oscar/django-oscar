@@ -305,8 +305,10 @@ class AbstractProduct(models.Model):
 
     @property
     def is_top_level(self):
-        u"""Return True if this is a parent product"""
-        return self.parent_id == None
+        """
+        Test if this product is a parent (who may or may not have children)
+        """
+        return self.parent_id is None
 
     @property
     def is_group(self):

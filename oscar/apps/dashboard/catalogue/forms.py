@@ -1,5 +1,5 @@
 from django import forms
-from django.forms.models import inlineformset_factory
+from django.forms.models import inlineformset_factory, BaseInlineFormSet
 from django.db.models import get_model
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
@@ -9,6 +9,7 @@ from treebeard.forms import MoveNodeForm
 Product = get_model('catalogue', 'Product')
 Category = get_model('catalogue', 'Category')
 StockRecord = get_model('partner', 'StockRecord')
+Partner = get_model('partner', 'Partner')
 ProductAttributeValue = get_model('catalogue', 'ProductAttributeValue')
 ProductCategory = get_model('catalogue', 'ProductCategory')
 ProductImage = get_model('catalogue', 'ProductImage')
@@ -63,6 +64,11 @@ class ProductSearchForm(forms.Form):
 
 
 class StockRecordForm(forms.ModelForm):
+    partner = forms.ModelChoiceField(queryset=Partner.objects.all(),
+                                    required=False,
+                                    label=_("Partner"))
+    partner_sku = forms.CharField(required=False,
+                                  label=_("Partner SKU"))
 
     class Meta:
         model = StockRecord
@@ -196,8 +202,24 @@ class ProductCategoryForm(forms.ModelForm):
         model = ProductCategory
 
 
+class ProductCategoryFormSet(BaseInlineFormSet):
+
+    def clean(self):
+        if self.instance.is_top_level and self.get_num_categories() == 0:
+            raise forms.ValidationError(
+                _("A top-level product must have at least one category"))
+
+    def get_num_categories(self):
+        num_categories = 0
+        for i in range(0, self.total_form_count()):
+            form = self.forms[i]
+            if form.has_changed():
+                num_categories += 1
+        return num_categories
+
 ProductCategoryFormSet = inlineformset_factory(Product, ProductCategory,
                                                form=ProductCategoryForm,
+                                               formset=ProductCategoryFormSet,
                                                fields=('category',), extra=1)
 
 

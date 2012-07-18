@@ -55,10 +55,10 @@ class ClientTestCase(TestCase):
             location = URL.from_string(response['Location'])
             self.assertEqual(expected_url, location.path())
 
-    def assertRedirectUrlName(self, response, name):
+    def assertRedirectUrlName(self, response, name, kwargs=None):
         self.assertIsRedirect(response)
         location = response['Location'].replace('http://testserver', '')
-        self.assertEqual(location, reverse(name))
+        self.assertEqual(location, reverse(name, kwargs=kwargs))
 
     def assertIsOk(self, response):
         self.assertEqual(httplib.OK, response.status_code)

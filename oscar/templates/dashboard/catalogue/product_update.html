@@ -36,8 +36,9 @@
             <h3 class="app-ico ico_expand icon">Product information</h3>
         </div>
 		<div class="control-group fields-full">
-			{% trans "Product class" %}: <strong>{{ product.product_class }}</strong>
+			{% trans "Product class" %}: <strong>{{ product_class.name }}</strong>
 		</div>
+		{{ form.non_field_errors }}
         {% for field in form %}
             {% if forloop.counter > 4 %}
                 <div class="form-inline pull-left">
@@ -92,6 +93,7 @@
 		{% endblocktrans %}
 		</p>
     	{{ category_formset.management_form }}
+	{{ category_formset.non_form_errors }}
     	{% for category_form in category_formset %}
 			{% include "partials/form_fields_inline.html" with form=category_form %}
     		<hr/>

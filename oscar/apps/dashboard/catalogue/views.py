@@ -68,7 +68,7 @@ class ProductCreateRedirectView(generic.RedirectView):
 
     def get_redirect_url(self, **kwargs):
         product_class_id = self.request.GET.get('product_class', None)
-        if not product_class_id.isdigit():
+        if not product_class_id or not product_class_id.isdigit():
             messages.error(self.request, _("Please choose a product class"))
             return reverse('dashboard:catalogue-product-list')
         try:
@@ -96,6 +96,7 @@ class ProductCreateView(generic.CreateView):
         if 'image_formset' not in ctx:
             ctx['image_formset'] = ProductImageFormSet()
         ctx['title'] = _('Create new product')
+        ctx['product_class'] = self.get_product_class()
         return ctx
 
     def get_product_class(self):
@@ -106,10 +107,20 @@ class ProductCreateView(generic.CreateView):
         kwargs['product_class'] = self.get_product_class()
         return kwargs
 
+    def is_stockrecord_submitted(self):
+        return len(self.request.POST.get('partner', '')) > 0
+
     def form_invalid(self, form):
-        stockrecord_form = StockRecordForm(self.request.POST)
+        if self.is_stockrecord_submitted():
+            stockrecord_form = StockRecordForm(self.request.POST)
+        else:
+            stockrecord_form = StockRecordForm()
         category_formset = ProductCategoryFormSet(self.request.POST)
         image_formset = ProductImageFormSet(self.request.POST, self.request.FILES)
+
+        messages.error(self.request,
+                       _("Your submitted data was not valid - please "
+                         "correct the below errors"))
         ctx = self.get_context_data(form=form,
                                     stockrecord_form=stockrecord_form,
                                     category_formset=category_formset,
@@ -118,28 +129,37 @@ class ProductCreateView(generic.CreateView):
 
     def form_valid(self, form):
         product = form.save()
-
-        stockrecord_form = StockRecordForm(self.request.POST)
         category_formset = ProductCategoryFormSet(self.request.POST,
                                                   instance=product)
         image_formset = ProductImageFormSet(self.request.POST,
                                             self.request.FILES,
                                             instance=product)
-        if all([stockrecord_form.is_valid(), category_formset.is_valid(), image_formset.is_valid()]):
-            # Save product
-            product.save()
-            # Save stock record
-            stockrecord = stockrecord_form.save(commit=False)
-            stockrecord.product = product
-            stockrecord.save()
+        if self.is_stockrecord_submitted():
+            stockrecord_form = StockRecordForm(self.request.POST)
+            is_valid = all([stockrecord_form.is_valid(),
+                            category_formset.is_valid(),
+                            image_formset.is_valid()])
+        else:
+            stockrecord_form = StockRecordForm()
+            is_valid = all([category_formset.is_valid(),
+                            image_formset.is_valid()])
+        if is_valid:
+            if self.is_stockrecord_submitted():
+                # Save stock record
+                stockrecord = stockrecord_form.save(commit=False)
+                stockrecord.product = product
+                stockrecord.save()
             # Save formsets
             category_formset.save()
             image_formset.save()
             return HttpResponseRedirect(self.get_success_url(product))
 
+        messages.error(self.request,
+                       _("Your submitted data was not valid - please "
+                         "correct the below errors"))
+
         # Delete product as its relations were not valid
         product.delete()
-
         ctx = self.get_context_data(form=form,
                                     stockrecord_form=stockrecord_form,
                                     category_formset=category_formset,
