@@ -251,7 +251,8 @@ class Benefit(models.Model):
             desc = _("%(value).2f discount on %(range)s") % {'value': float(self.value),
                                                              'range': unicode(self.range).lower()}
 
-        desc += ungettext(" (max 1 item)", " (max %d items)", self.max_affected_items)
+        max_item_str = ungettext(" (max %d item)", " (max %d items)", self.max_affected_items)
+        desc += max_item_str % self.max_affected_items
 
         return desc
 
