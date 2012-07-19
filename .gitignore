@@ -33,3 +33,4 @@ htmlcov/*
 sandbox/public/
 logs/
 build/
+*.pdf
