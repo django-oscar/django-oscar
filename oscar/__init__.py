@@ -20,15 +20,12 @@ def get_version():
     return version
 
 
-# Cheeky setting that can be used to override templates and give them
-# the same name.  You can use:
-#
-# {% includes 'templates/basket/basket.html' %}
-#
-# when you want to create a new template with path 'basket/basket.html'
-# Just add this setting to the end of your TEMPLATE_DIRS setting.
-OSCAR_PARENT_TEMPLATE_DIR = os.path.dirname(os.path.abspath(__file__))
-
+# Cheeky setting that allows each template to be accessible by two paths. 
+# Eg: the template 'oscar/templates/oscar/base.html' can be accessed via both
+# 'base.html' and 'oscar/base.html'.  This allows Oscar's templates to be 
+# extended by templates with the same filename
+OSCAR_MAIN_TEMPLATE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                       'templates/oscar')
 
 OSCAR_CORE_APPS = [
     'oscar',

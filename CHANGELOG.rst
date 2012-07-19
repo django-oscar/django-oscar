@@ -2,6 +2,33 @@
 Changelog
 =========
 
+0.3 
+~~~
+
+**Important** - A new setting ``OSCAR_MAIN_TEMPLATE_DIR`` has been introduced
+as the template structure has been altered.  This requires your
+``TEMPLATE_DIRS`` setting to be altered to include this folder, eg::
+
+    from oscar import OSCAR_MAIN_TEMPLATE_DIR
+    TEMPLATE_DIRS = (
+        location('templates'),
+        OSCAR_MAIN_TEMPLATE_DIR
+    )
+
+If you want to extend one of Oscar's templates, then use::
+
+    # base.html
+    {% extends 'oscar/base.html' %}
+
+instead of::
+
+    # base.html
+    {% extends 'templates/base.html' %}
+
+* Category management added to dashboard
+
+* Some improvements to how group/variant products are handled
+
 0.2.1 - 09 July 2012
 ~~~~~~~~~~~~~~~~~~~~
 

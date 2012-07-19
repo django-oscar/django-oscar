@@ -75,6 +75,11 @@ and set your auth backends to::
 
 to allow customers to sign in using an email address rather than a username.
 
+Modify your ``TEMPLATE_DIRS`` to include the main Oscar template directory::
+
+    from oscar import OSCAR_MAIN_TEMPLATE_DIR
+    TEMPLATE_DIRS = TEMPLATE_DIRS + (OSCAR_MAIN_TEMPLATE_DIR,) 
+
 Oscar currently uses Haystack for search so you need to specify::
 
     HAYSTACK_SITECONF = 'oscar.search_sites'
