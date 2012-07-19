@@ -208,6 +208,9 @@ class ProductCategoryFormSet(BaseInlineFormSet):
         if self.instance.is_top_level and self.get_num_categories() == 0:
             raise forms.ValidationError(
                 _("A top-level product must have at least one category"))
+        if self.instance.is_variant and self.get_num_categories() > 0:
+            raise forms.ValidationError(
+                _("A variant product should not have at categories"))
 
     def get_num_categories(self):
         num_categories = 0
