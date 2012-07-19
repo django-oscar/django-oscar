@@ -11,7 +11,7 @@
             </a>
             <a class="btn btn-navbar app-ico ico_shop_bag btn-cart hidden" href="{% url checkout:index %}">
 				<strong>{% trans "Basket" %}
-                {% if request.basket.lines.count %}
+                {% if not request.basket.is_empty %}
 				{% trans "Total:" %} {{ basket.total_incl_tax|currency }}
                 {% endif %}
                 </strong>

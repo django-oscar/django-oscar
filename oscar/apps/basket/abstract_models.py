@@ -63,6 +63,8 @@ class AbstractBasket(models.Model):
         This is important for offers as they alter the line models and you don't
         want to reload them from the DB.
         """
+        if self.id is None:
+            return []
         if self._lines is None:
             self._lines = self.lines.all()
         return self._lines
@@ -237,8 +239,10 @@ class AbstractBasket(models.Model):
 
     @property
     def is_empty(self):
-        """Return bool based on basket having 0 lines"""
-        return self.num_lines == 0
+        """
+        Test if this basket is empty
+        """
+        return self.id is None or self.num_lines == 0
 
     @property
     def total_excl_tax(self):
@@ -319,7 +323,7 @@ class AbstractBasket(models.Model):
     @property
     def num_lines(self):
         """Return number of lines"""
-        return self.all_lines().count()
+        return len(self.all_lines())
 
     @property
     def num_items(self):
