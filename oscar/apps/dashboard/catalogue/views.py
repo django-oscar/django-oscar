@@ -221,9 +221,13 @@ class ProductUpdateView(generic.UpdateView):
         image_formset = ProductImageFormSet(self.request.POST,
                                             self.request.FILES,
                                             instance=self.object)
-        if all([stockrecord_form.is_valid(), category_formset.is_valid(), image_formset.is_valid()]):
+        if all([stockrecord_form.is_valid(),
+                category_formset.is_valid(),
+                image_formset.is_valid()]):
             form.save()
-            stockrecord_form.save()
+            stockrecord = stockrecord_form.save()
+            stockrecord.product = self.object
+            stockrecord.save()
             category_formset.save()
             image_formset.save()
             return HttpResponseRedirect(self.get_success_url())
