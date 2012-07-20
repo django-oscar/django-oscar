@@ -15,7 +15,6 @@ docs/build/*
 examples/.coverage
 assets/*
 nbproject
-examples/vanilla/assets/*
 oscar/bin
 oscar/include
 oscar/lib
@@ -24,13 +23,16 @@ oscar/share
 .~lock.*
 dist/
 *.DS_Store
-sandbox/*.sqlite
-sandbox/assets/*
+sites/sandbox/*.sqlite
+sites/sandbox/assets/*
+sites/sandbox/public/
+sites/demo/*.sqlite
+sites/demo/assets/*
+sites/demo/public/
 .idea
 TODO
 .coverage
 htmlcov/*
-sandbox/public/
 logs/
 build/
 *.pdf

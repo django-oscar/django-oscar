@@ -6,12 +6,12 @@ contribute:
 	python setup.py develop
 	pip install -r requirements.txt
 	# Create database
-	sandbox/manage.py syncdb --noinput
-	sandbox/manage.py migrate
+	sites/sandbox/manage.py syncdb --noinput
+	sites/sandbox/manage.py migrate
 	# Import some fixtures
-	sandbox/manage.py oscar_import_catalogue sandbox/data/books-catalogue.csv
-	sandbox/manage.py oscar_import_catalogue_images sandbox/data/books-images.tar.gz
-	sandbox/manage.py loaddata countries.json sandbox/fixtures/pages.json
+	sites/sandbox/manage.py oscar_import_catalogue sites/sandbox/data/books-catalogue.csv
+	sites/sandbox/manage.py oscar_import_catalogue_images sites/sandbox/data/books-images.tar.gz
+	sites/sandbox/manage.py loaddata countries.json sites/sandbox/fixtures/pages.json
 
 ci:
 	# Run continous tests and generate lint reports
@@ -26,10 +26,10 @@ test:
 i18n:
 	# Create the .po files used for i18n 
 	cd oscar; \
-		../sandbox/manage.py makemessages --ignore=sandbox/ --locale=de; \
-		../sandbox/manage.py makemessages --ignore=sandbox/ --locale=fr; \
-		../sandbox/manage.py makemessages --ignore=sandbox/ --locale=pl; \
-		../sandbox/manage.py makemessages --ignore=sandbox/ --locale=ru; \
-		../sandbox/manage.py makemessages --ignore=sandbox/ --locale=es; \
-		../sandbox/manage.py makemessages --ignore=sandbox/ --locale=it; \
-		../sandbox/manage.py makemessages --ignore=sandbox/ --locale=da
+		../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=de; \
+		../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=fr; \
+		../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=pl; \
+		../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=ru; \
+		../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=es; \
+		../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=it; \
+		../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=da
