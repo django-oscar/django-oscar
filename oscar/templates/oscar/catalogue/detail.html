@@ -52,7 +52,7 @@
 				<ul class="review_count">
 					{% for review in reviews %}
 					<li class="{{ review.score }}">{{ review.score }}</li>
-			{% endfor %}
+					{% endfor %}
 				</ul>
 			{% else %}
 			<p class="star">{% trans "No Rating" %}
@@ -60,8 +60,6 @@
 			<a href="{% url catalogue:reviews-add product.slug product.id %}#addreview">{% trans "Add review" %}</a>
 			</p>
 			{% endif %}
-            
-			<p><strong>{% trans "Product Code:" %}</strong> <code>{{ product.upc }}</code></p>
              
             <hr/>
 
@@ -88,7 +86,7 @@
 	<div class="sub-header">
 		<h2>Product Information</h2>
 	</div>
-    <table class="table table-condensed">
+    <table class="table table-striped table-condensed">
 		{% if product.upc %}
         <tr>
 			<th>{% trans "UPC" %}</th><td>{{ product.upc }}</td>

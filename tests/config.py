@@ -4,7 +4,7 @@ from django.conf import settings, global_settings
 from oscar import OSCAR_CORE_APPS, OSCAR_MAIN_TEMPLATE_DIR
 
 
-def configure(nose_args):
+def configure(nose_args=None):
     if not settings.configured:
         from oscar.defaults import OSCAR_SETTINGS
 

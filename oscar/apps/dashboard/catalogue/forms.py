@@ -70,6 +70,16 @@ class StockRecordForm(forms.ModelForm):
     partner_sku = forms.CharField(required=False,
                                   label=_("Partner SKU"))
 
+    def __init__(self, product_class, *args, **kwargs):
+        self.product_class = product_class
+        super(StockRecordForm, self).__init__(*args, **kwargs)
+
+        # If not tracking stock, we hide the fields
+        if not self.product_class.track_stock:
+            del self.fields['num_in_stock']
+            del self.fields['low_stock_threshold']
+
+
     class Meta:
         model = StockRecord
         exclude = ('product', 'num_allocated', 'price_currency')
@@ -223,6 +233,7 @@ class ProductCategoryFormSet(BaseInlineFormSet):
                     and form.cleaned_data.get('DELETE', False) != True):
                 num_categories += 1
         return num_categories
+
 
 ProductCategoryFormSet = inlineformset_factory(Product, ProductCategory,
                                                form=ProductCategoryForm,

@@ -28,6 +28,9 @@ class AbstractProductClass(models.Model):
     # this field to take some shortcuts in the checkout.
     requires_shipping = models.BooleanField(_("Requires shipping?"), default=True)
 
+    # Digital products generally don't require their stock levels to be tracked.
+    track_stock = models.BooleanField(_("Track stock levels?"), default=True)
+
     # These are the options (set by the user when they add to basket) for this
     # item class.  For instance, a product class of "SMS message" would always
     # require a message to be specified before it could be bought.
@@ -327,7 +330,7 @@ class AbstractProduct(models.Model):
 
     @property
     def is_shipping_required(self):
-        return True
+        return self.product_class.requires_shipping
 
     @property
     def is_available_to_buy(self):
