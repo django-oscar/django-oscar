@@ -222,7 +222,6 @@ class ProductUpdateView(generic.UpdateView):
         image_formset = ProductImageFormSet(self.request.POST,
                                             self.request.FILES,
                                             instance=self.object)
-
         if self.is_stockrecord_submitted():
             stockrecord_form = StockRecordForm(self.request.POST,
                                                instance=stockrecord)
@@ -236,12 +235,10 @@ class ProductUpdateView(generic.UpdateView):
 
         if is_valid:
             form.save()
-
             if self.is_stockrecord_submitted():
                 stockrecord = stockrecord_form.save()
                 stockrecord.product = self.object
                 stockrecord.save()
-
             category_formset.save()
             image_formset.save()
             return HttpResponseRedirect(self.get_success_url())
