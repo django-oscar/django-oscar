@@ -2,7 +2,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-.. image:: http://img94.imageshack.us/img94/9094/oscarza.jpg
+.. image:: http://img692.imageshack.us/img692/6498/logovf.png
 
 ===================================
 Domain-driven e-commerce for Django
