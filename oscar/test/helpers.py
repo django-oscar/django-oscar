@@ -22,7 +22,7 @@ def create_product(price=None, title="Dummy title", product_class="Dummy item cl
     if price is not None or partner_sku or num_in_stock is not None:
         if not partner_sku:
             partner_sku = 'sku_%d_%d' % (item.id, random.randint(0, 10000))
-        if not price:
+        if price is None:
             price = D('10.00')
 
         partner,_ = Partner._default_manager.get_or_create(name=partner)
