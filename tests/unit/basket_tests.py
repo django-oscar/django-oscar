@@ -13,7 +13,7 @@ from oscar.apps.basket.reports import (
 class TestBasketModel(TestCase):
 
     def setUp(self):
-        self.basket = Basket.objects.create()
+        self.basket = Basket()
         self.product = create_product()
 
     def test_an_empty_basket_has_zero_lines(self):
@@ -30,6 +30,16 @@ class TestBasketModel(TestCase):
         self.basket.add_product(self.product, 10)
         self.assertEqual(self.basket.num_items, 10)
         self.assertEqual(self.basket.num_lines, 1)
+
+    def test_add_product_creates_line(self):
+        self.basket.add_product(self.product)
+        self.assertTrue(self.basket.num_lines == 1)
+
+    def test_flushing_basket_removes_all_lines(self):
+        self.basket.add_product(self.product, 10)
+        self.assertEqual(self.basket.num_items, 10)
+        self.basket.flush()
+        self.assertEqual(self.basket.num_items, 0)
 
 
 class TestBasketMiddleware(TestCase):

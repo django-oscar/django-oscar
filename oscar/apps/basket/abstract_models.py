@@ -77,7 +77,7 @@ class AbstractBasket(models.Model):
         """Remove all lines from basket."""
         if self.status == FROZEN:
             raise PermissionDenied("A frozen basket cannot be flushed")
-        self.lines_all().delete()
+        self.lines.all().delete()
         self._lines = None
 
     def add_product(self, product, quantity=1, options=None):
@@ -92,7 +92,7 @@ class AbstractBasket(models.Model):
         if not self.id:
             self.save()
 
-        # Line reference is used to distinguish between variations of the same 
+        # Line reference is used to distinguish between variations of the same
         # product (eg T-shirts with different personalisations)
         line_ref = self._create_line_reference(product, options)
 
