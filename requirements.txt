@@ -18,3 +18,4 @@ pinocchio==0.3.1
 nose-progressive==1.3
 django-nose==1.1
 django-rosetta==0.6.8
+Whoosh==2.4.1

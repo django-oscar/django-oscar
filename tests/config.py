@@ -50,12 +50,15 @@ def configure(nose_args):
                 'oscar.apps.customer.auth_backends.Emailbackend',
                 'django.contrib.auth.backends.ModelBackend',
                 ),
+            HAYSTACK_CONNECTIONS={
+                'default': {
+                    'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
+                }
+            },
             ROOT_URLCONF='tests.site.urls',
             LOGIN_REDIRECT_URL='/accounts/',
             DEBUG=False,
             SITE_ID=1,
-            HAYSTACK_SEARCH_ENGINE='dummy',
-            HAYSTACK_SITECONF = 'oscar.search_sites',
             APPEND_SLASH=True,
             NOSE_ARGS=nose_args,
             **OSCAR_SETTINGS
