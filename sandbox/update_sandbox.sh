@@ -14,6 +14,7 @@ cd sandbox
 ./manage.py syncdb --noinput
 ./manage.py migrate
 ./manage.py collectstatic --noinput
+./manage.py rebuild_index --noinput
 
 # Re-compile python code
 touch deploy/wsgi/sandbox.wsgi

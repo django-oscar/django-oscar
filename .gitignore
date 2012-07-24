@@ -34,3 +34,4 @@ sandbox/public/
 logs/
 build/
 *.pdf
+sandbox/whoosh_index

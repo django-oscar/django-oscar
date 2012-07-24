@@ -58,4 +58,4 @@ class OrderReportGenerator(ReportGenerator):
         return self.formatter.generate_response(orders, **additional_data)
 
     def is_available_to(self, user):
-        return user.is_staff and user.has_perm('order.can_view')
+        return user.is_staff

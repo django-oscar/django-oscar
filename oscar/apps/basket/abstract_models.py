@@ -63,6 +63,8 @@ class AbstractBasket(models.Model):
         This is important for offers as they alter the line models and you don't
         want to reload them from the DB.
         """
+        if self.id is None:
+            return []
         if self._lines is None:
             self._lines = self.lines.all()
         return self._lines
@@ -75,7 +77,7 @@ class AbstractBasket(models.Model):
         """Remove all lines from basket."""
         if self.status == FROZEN:
             raise PermissionDenied("A frozen basket cannot be flushed")
-        self.lines_all().delete()
+        self.lines.all().delete()
         self._lines = None
 
     def add_product(self, product, quantity=1, options=None):
@@ -90,7 +92,7 @@ class AbstractBasket(models.Model):
         if not self.id:
             self.save()
 
-        # Line reference is used to distinguish between variations of the same 
+        # Line reference is used to distinguish between variations of the same
         # product (eg T-shirts with different personalisations)
         line_ref = self._create_line_reference(product, options)
 
@@ -237,8 +239,10 @@ class AbstractBasket(models.Model):
 
     @property
     def is_empty(self):
-        """Return bool based on basket having 0 lines"""
-        return self.num_lines == 0
+        """
+        Test if this basket is empty
+        """
+        return self.id is None or self.num_lines == 0
 
     @property
     def total_excl_tax(self):
@@ -319,7 +323,7 @@ class AbstractBasket(models.Model):
     @property
     def num_lines(self):
         """Return number of lines"""
-        return self.all_lines().count()
+        return len(self.all_lines())
 
     @property
     def num_items(self):

@@ -3,9 +3,27 @@
 {% load thumbnail %}
 {% load i18n %}
 
+{% block title %}
+"{{ query }}" | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+	<li>
+	<a href="{% url promotions:home %}">{% trans "Home" %}</a>
+	<span class="divider">/</span>
+	</li>
+	<li>
+	{% trans "Search" %}
+	<span class="divider">/</span>
+	</li>
+	<li class="active"><a href=".">{% blocktrans with q=query%}"{{ q }}"{% endblocktrans %}</a></li>
+</ul>
+{% endblock %}
+
 {% block header%}
 <div class="page-header">
-    <h1>{% trans 'Search for' %} '{{ query }}'</h1>
+	<h1>{% trans 'Search for' %} '{{ query }}'</h1>
 </div>
 {% endblock %}
 
@@ -16,38 +34,17 @@
 {% endif %}
 
 {% if page.object_list %}
-    <ol class="products vertical three">
-        {% for result in page.object_list %}
-        <li>
-            <article class="product_pod">
-            {% with image=product.primary_image %}
-            {% thumbnail image.original "400x400" upscale=False as thumb %}
-            <a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
-            {% endthumbnail %}
-            {% endwith %}
-            <h3><a href="{{ result.object.get_absolute_url }}">{{ result.object.get_title }}</a></h3>
-            <div class="product_price">
-                {% if result.object.is_group %}
-                    <p>From {{ result.object.min_variant_price_incl_tax|currency }}</p>
-                {% else %}
-                    {% if result.object.has_stockrecord %}
-                        <h4>{{ result.object.stockrecord.price_incl_tax|currency }}</h4>
-                         <p class="app-ico avaliability instock">{{ result.object.stockrecord.availability }}</p>
-                     {% else %}
-                         <p class="app-ico avaliability outstock">{% trans 'Not available' %}</p>
-                     {% endif %}
-                {% endif %}
-            </div>
-            </article>    
-        </li>
-        {% endfor %}
-    </ol>
+<ol class="products vertical three">
+	{% for result in page.object_list %}
+	{% include "catalogue/partials/product.html" with product=result.object %}
+	{% endfor %}
+</ol>
 {% else %}
-    <p>{% trans 'No search results found.' %}</p>
+<p>{% trans 'No search results found.' %}</p>
 {% endif %}
 
 {% if page_obj %}
-    {% include "catalogue/partials/pagination.html" %}
+{% include "catalogue/partials/pagination.html" %}
 {% endif %}
 
 {% endblock %}

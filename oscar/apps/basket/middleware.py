@@ -13,7 +13,7 @@ Basket = get_model('basket', 'basket')
 class BasketMiddleware(object):
 
     def process_request(self, request):
-        self.cookies_to_delete = []
+        request.cookies_to_delete = []
         basket = self.get_basket(request)
         self.apply_offers_to_basket(request, basket)
         request.basket = basket
@@ -23,7 +23,7 @@ class BasketMiddleware(object):
         cookie_basket = self.get_cookie_basket(settings.OSCAR_BASKET_COOKIE_OPEN,
                                                request, manager)
 
-        if request.user.is_authenticated():
+        if hasattr(request, 'user') and request.user.is_authenticated():
             # Signed-in user: if they have a cookie basket too, it means
             # that they have just signed in and we need to merge their cookie
             # basket into their user basket, then delete the cookie
@@ -31,7 +31,7 @@ class BasketMiddleware(object):
                 basket, _ = manager.get_or_create(owner=request.user)
             except Basket.MultipleObjectsReturned:
                 # Not sure quite how we end up here with multiple baskets
-                # We merge any  them and create a fresh one
+                # We merge them and create a fresh one
                 old_baskets = list(manager.filter(owner=request.user))
                 basket = old_baskets[0]
                 for other_basket in old_baskets[1:]:
@@ -39,7 +39,7 @@ class BasketMiddleware(object):
 
             if cookie_basket:
                 self.merge_baskets(basket, cookie_basket)
-                self.cookies_to_delete.append(settings.OSCAR_BASKET_COOKIE_OPEN)
+                request.cookies_to_delete.append(settings.OSCAR_BASKET_COOKIE_OPEN)
         elif cookie_basket:
             # Anonymous user with a basket tied to the cookie
             basket = cookie_basket
@@ -59,8 +59,8 @@ class BasketMiddleware(object):
 
     def process_response(self, request, response):
         # Delete any surplus cookies
-        if hasattr(self, 'cookies_to_delete'):
-            for cookie_key in self.cookies_to_delete:
+        if hasattr(request, 'cookies_to_delete'):
+            for cookie_key in request.cookies_to_delete:
                 response.delete_cookie(cookie_key)
 
         # If a basket has had products added to it, but the user is anonymous
@@ -100,9 +100,9 @@ class BasketMiddleware(object):
                     basket = Basket.objects.get(pk=basket_id, owner=None,
                                                 status=OPEN)
                 except Basket.DoesNotExist:
-                    self.cookies_to_delete.append(cookie_key)
+                    request.cookies_to_delete.append(cookie_key)
             else:
-                self.cookies_to_delete.append(cookie_key)
+                request.cookies_to_delete.append(cookie_key)
         return basket
 
     def apply_offers_to_basket(self, request, basket):

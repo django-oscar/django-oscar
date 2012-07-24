@@ -35,7 +35,7 @@
     {% if user.is_authenticated and user.is_staff %}
     <div class="row-fluid">
         <div class="well">
-            <a href="{% url dashboard:catalogue-product product.id %}"><button class="btn btn-success" value='Edit this product'>Edit this product</button></a>
+			<a href="{% url dashboard:catalogue-product product.id %}"><button class="btn btn-success">{% trans "Edit this product" %}</button></a>
         </div>
     </div>
     {% endif %}
@@ -55,7 +55,7 @@
 			{% endfor %}
 				</ul>
 			{% else %}
-			<p class="star">No Rating 
+			<p class="star">{% trans "No Rating" %}
 			
 			<a href="{% url catalogue:reviews-add product.slug product.id %}#addreview">{% trans "Add review" %}</a>
 			</p>
@@ -74,7 +74,7 @@
               
 	{% block product_description %}
     <div id="product_description" class="sub-header">
-        <h2>Product Description</h2>
+		<h2>{% trans "Product Description" %}</h2>
     </div>
     <p>{{ product.description }}</p>
 	{% endblock %}

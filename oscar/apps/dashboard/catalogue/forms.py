@@ -216,7 +216,8 @@ class ProductCategoryFormSet(BaseInlineFormSet):
         num_categories = 0
         for i in range(0, self.total_form_count()):
             form = self.forms[i]
-            if form.has_changed():
+            if form.cleaned_data.get('category', None) and \
+               form.cleaned_data.get('DELETE', False) != True:
                 num_categories += 1
         return num_categories
 
