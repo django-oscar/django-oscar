@@ -3,6 +3,7 @@ import zlib
 import datetime
 
 from django.db import models
+from django.db.models import query
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 
@@ -64,7 +65,7 @@ class AbstractBasket(models.Model):
         want to reload them from the DB.
         """
         if self.id is None:
-            return []
+            return query.EmptyQuerySet(model=self.__class__)
         if self._lines is None:
             self._lines = self.lines.all()
         return self._lines
