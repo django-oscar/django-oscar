@@ -22,7 +22,7 @@ EmailAuthenticationForm, EmailUserCreationForm, SearchByDateRangeForm = get_clas
 ProfileForm = get_class('customer.forms', 'ProfileForm')
 UserAddressForm = get_class('address.forms', 'UserAddressForm')
 Order = get_model('order', 'Order')
-Line = get_model('order', 'Line')
+Line = get_model('basket', 'Line')
 Basket = get_model('basket', 'Basket')
 UserAddress = get_model('address', 'UserAddress')
 Email = get_model('customer', 'email')
@@ -327,16 +327,38 @@ class OrderDetailView(DetailView, PostActionMixin):
         basket = self.request.basket
 
         # Convert line attributes into basket options
+        lines_added = 0
         for line in order.lines.all():
             if not line.product:
                 messages.warning(self.request, _("'%s' unavailable for re-order") % line.title)
                 continue
+
+            try:
+                basket_line = basket.lines.get(product=line.product)
+            except Line.DoesNotExist:
+                desired_qty = line.quantity
+            else:
+                desired_qty = basket_line.quantity + line.quantity
+
+            is_available, reason = line.product.is_purchase_permitted(
+                                                        user=self.request.user,
+                                                        quantity=desired_qty)
+            if not is_available:
+                messages.warning(self.request, reason)
+                continue
+
             options = []
             for attribute in line.attributes.all():
                 if attribute.option:
                     options.append({'option': attribute.option, 'value': attribute.value})
             basket.add_product(line.product, line.quantity, options)
-        messages.info(self.request, _("All available lines from order %s have been added to your basket") % order.number)
+
+            lines_added += 1
+
+        if lines_added > 0:
+            messages.info(self.request, _("All available lines from order %s have been added to your basket") % order.number)
+        else:
+            self.response = HttpResponseRedirect(reverse('customer:order-list'))
 
 
 class OrderLineView(DetailView, PostActionMixin):
@@ -348,15 +370,33 @@ class OrderLineView(DetailView, PostActionMixin):
         return order.lines.get(id=self.kwargs['line_id'])
 
     def do_reorder(self, line):
+        self.response = HttpResponseRedirect(reverse('customer:order', 
+                                    args=(int(self.kwargs['order_number']),)))
+        basket = self.request.basket
+
         if not line.product:
             messages.info(self.request, _("This product is no longer available for re-order"))
+            return
+
+        try:
+            basket_line = basket.lines.get(product=line.product)
+        except Line.DoesNotExist:
+            desired_qty = line.quantity
+        else:
+            desired_qty = basket_line.quantity + line.quantity
+
+        is_available, reason = line.product.is_purchase_permitted(
+                                                    user=self.request.user,
+                                                    quantity=desired_qty)
+
+        if not is_available:
+            messages.warning(self.request, reason)
             return
 
         # We need to pass response to the get_or_create... method
         # as a new basket might need to be created
         self.response = HttpResponseRedirect(reverse('basket:summary'))
-        basket = self.request.basket
-
+        
         # Convert line attributes into basket options
         options = []
         for attribute in line.attributes.all():

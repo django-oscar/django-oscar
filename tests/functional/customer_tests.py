@@ -8,6 +8,8 @@ from django.http import HttpRequest
 
 from oscar.apps.customer.history_helpers import get_recently_viewed_product_ids
 from oscar.test.helpers import create_product, create_order
+from oscar.test import ClientTestCase
+from oscar.apps.basket.models import Basket
 
 
 class HistoryHelpersTest(TestCase):
@@ -117,3 +119,64 @@ class AuthStaffRedirectTests(TestCase):
         response = self.client.get(reverse('dashboard:index'), follow=True)
         self.assertContains(response, "login-username", status_code=200)
         self.assertEquals(response.context['next'], reverse('dashboard:index'))
+
+
+class ReorderTests(ClientTestCase):
+
+    def test_can_reorder_product(self):
+        order = create_order(user=self.user)
+        Basket.objects.all().delete()
+
+        response = self.client.post(reverse('customer:order', 
+                                            args=(order.number,)),
+                                    {'order_id': order.pk,
+                                     'action': 'reorder'})
+        
+        basket = Basket.objects.all()[0]
+        self.assertEquals(len(basket.all_lines()), 1)
+
+    def test_can_reorder_line(self):
+        order = create_order(user=self.user)
+        line = order.lines.all()[0]
+        Basket.objects.all().delete()
+
+        response = self.client.post(reverse('customer:order-line', 
+                                            args=(order.number, line.pk)),
+                                    {'action': 'reorder'})
+        
+        basket = Basket.objects.all()[0]
+        self.assertEquals(len(basket.all_lines()), 1)
+
+    def test_cannot_reorder_out_of_stock_product(self):
+        order = create_order(user=self.user)
+
+        product = order.lines.all()[0].product
+        product.stockrecord.num_in_stock = 0
+        product.stockrecord.save()
+
+        Basket.objects.all().delete()
+
+        response = self.client.post(reverse('customer:order', 
+                                            args=(order.number,)),
+                                    {'order_id': order.pk,
+                                     'action': 'reorder'})
+        
+        basket = Basket.objects.all()[0]
+        self.assertEquals(len(basket.all_lines()), 0)
+
+    def test_cannot_reorder_out_of_stock_line(self):
+        order = create_order(user=self.user)
+        line = order.lines.all()[0]
+
+        product = line.product
+        product.stockrecord.num_in_stock = 0
+        product.stockrecord.save()
+
+        Basket.objects.all().delete()
+
+        response = self.client.post(reverse('customer:order-line', 
+                                            args=(order.number, line.pk)),
+                                    {'action': 'reorder'})
+        
+        basket = Basket.objects.all()[0]
+        self.assertEquals(len(basket.all_lines()), 0)
