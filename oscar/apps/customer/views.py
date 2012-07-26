@@ -327,14 +327,15 @@ class OrderDetailView(DetailView, PostActionMixin):
 
         This puts the contents of the previous order into your basket
         """
-        self.response = HttpResponseRedirect(reverse('basket:summary'))
         basket = self.request.basket
 
         # Convert line attributes into basket options
-        lines_added = 0
+        lines_added = []
+        warnings = []
+        #collect lines to be added to the basket and the warnings
         for line in order.lines.all():
             if not line.product:
-                messages.warning(self.request, _("'%s' unavailable for re-order") % line.title)
+                warnings.append(_("'%s' unavailable for re-order") % line.title)
                 continue
 
             try:
@@ -348,23 +349,37 @@ class OrderDetailView(DetailView, PostActionMixin):
                                                         user=self.request.user,
                                                         quantity=desired_qty)
             if not is_available:
-                messages.warning(self.request, reason)
+                warnings.append(reason)
                 continue
 
-            options = []
-            for attribute in line.attributes.all():
-                if attribute.option:
-                    options.append({'option': attribute.option, 'value': attribute.value})
-            basket.add_product(line.product, line.quantity, options)
+            lines_added.append(line)
 
-            lines_added += 1
+        #check whether the number of items in the basket won't exceed the maximum
+        total_quantity = sum([line.quantity for line in lines_added])
+        is_quantity_allowed, reason = basket.is_quantity_allowed(total_quantity)
 
-        if lines_added > 0:
+        self.response = HttpResponseRedirect(reverse('customer:order-list'))
+
+        if not is_quantity_allowed:
+            messages.warning(self.request, reason)
+            return
+        else:
+            #add items to the basket, display warnings
+            for warning in warnings:
+                messages.warning(self.request, warning)
+
+            for line in lines_added:
+                options = []
+                for attribute in line.attributes.all():
+                    if attribute.option:
+                        options.append({'option': attribute.option, 'value': attribute.value})
+                basket.add_product(line.product, line.quantity, options)
+
+        if len(lines_added) > 0:
+            self.response = HttpResponseRedirect(reverse('basket:summary'))
             messages.info(self.request, 
                           _("All available lines from order %s "
                             "have been added to your basket") % order.number)
-        else:
-            self.response = HttpResponseRedirect(reverse('customer:order-list'))
 
 
 class OrderLineView(DetailView, PostActionMixin):
@@ -379,6 +394,12 @@ class OrderLineView(DetailView, PostActionMixin):
         self.response = HttpResponseRedirect(reverse('customer:order', 
                                     args=(int(self.kwargs['order_number']),)))
         basket = self.request.basket
+
+        #check whether basket items quantity won't exceed the maximum
+        is_quantity_allowed, reason = basket.is_quantity_allowed(line.quantity)
+        if not is_quantity_allowed:
+            messages.warning(self.request, reason)
+            return
 
         if not line.product:
             messages.info(self.request, _("This product is no longer available for re-order"))
@@ -409,11 +430,13 @@ class OrderLineView(DetailView, PostActionMixin):
             if attribute.option:
                 options.append({'option': attribute.option, 'value': attribute.value})
         basket.add_product(line.product, line.quantity, options)
+
         if line.quantity > 1:
             msg = _("%(qty)d copies of '%(product)s' have been added to your basket") % {
                 'qty': line.quantity, 'product': line.product}
         else:
             msg = _("'%s' has been added to your basket") % line.product
+        
         messages.info(self.request, msg)
 
 
