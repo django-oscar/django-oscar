@@ -65,15 +65,15 @@ class BankcardNumberField(forms.CharField):
         """Check if given CC number is valid and one of the
            card types we accept"""
         non_decimal = re.compile(r'\D+')
-        value = non_decimal.sub('', value.strip())    
-           
+        value = non_decimal.sub('', value.strip())
+
         if value and not luhn(value):
             raise forms.ValidationError(_("Please enter a valid credit card number."))
         return super(BankcardNumberField, self).clean(value)
 
 
 class BankcardMonthWidget(forms.MultiWidget):
-    """ 
+    """
     Widget containing two select boxes for selecting the month and year
     """
     def decompress(self, value):
@@ -95,12 +95,11 @@ class BankcardMonthField(forms.MultiValueField):
     num_years = 5
 
     def __init__(self, *args, **kwargs):
-        
         # Allow the number of years to be specified
         if 'num_years' in kwargs:
             self.num_years = kwargs['num_years']
             del kwargs['num_years']
-        
+
         errors = self.default_error_messages.copy()
         if 'error_messages' in kwargs:
             errors.update(kwargs['error_messages'])
@@ -110,13 +109,13 @@ class BankcardMonthField(forms.MultiValueField):
             forms.ChoiceField(choices=self.year_choices(),
                 error_messages={'invalid': errors['invalid_year']}),
         )
-        
+
         super(BankcardMonthField, self).__init__(fields, *args, **kwargs)
         self.widget = BankcardMonthWidget(widgets = [fields[0].widget, fields[1].widget])
-        
+
     def month_choices(self):
         return []
-    
+
     def year_choices(self):
         return []
 
@@ -150,8 +149,8 @@ class BankcardExpiryMonthField(BankcardMonthField):
             # find last day of the month
             day = monthrange(year, month)[1]
             return date(year, month, day)
-        return None 
-    
+        return None
+
 
 class BankcardStartingMonthField(BankcardMonthField):
     """
@@ -184,11 +183,10 @@ class BankcardStartingMonthField(BankcardMonthField):
             year = int(data_list[1])
             month = int(data_list[0])
             return date(year, month, 1)
-        return None 
-    
+        return None
+
 
 class BankcardForm(forms.ModelForm):
-    
     number = BankcardNumberField(max_length=20, widget=forms.TextInput(attrs={'autocomplete':'off'}),
                                  label=_("Card number"))
     name = forms.CharField(max_length=128, label=_("Name on card"))
@@ -196,12 +194,12 @@ class BankcardForm(forms.ModelForm):
                                   regex=r'^\d{3,4}$', widget=forms.TextInput(attrs={'size': '5'}))
     start_month = BankcardStartingMonthField(label=_("Valid from"), required=False)
     expiry_month = BankcardExpiryMonthField(required=True, label=_("Valid to"))
-    
+
     class Meta:
         model = BankcardModel
         exclude = ('user', 'partner_reference')
         fields = ('number', 'name', 'start_month', 'expiry_month', 'cvv_number')
-        
+
     def get_bankcard_obj(self):
         """
         Returns a Bankcard object for use in payment processing.
@@ -215,17 +213,17 @@ class BankcardForm(forms.ModelForm):
         if self.cleaned_data['start_month']:
             kwargs['start_date'] = self.cleaned_data['start_month'].strftime("%m/%y")
         return Bankcard(**kwargs)
-    
+
 
 class BillingAddressForm(forms.ModelForm):
-    
+
     def __init__(self, *args, **kwargs):
         super(BillingAddressForm,self ).__init__(*args, **kwargs)
-        self.set_country_queryset() 
-        
+        self.set_country_queryset()
+
     def set_country_queryset(self):
         self.fields['country'].queryset = Country._default_manager.all()
-    
+
     class Meta:
         model = BillingAddress
         exclude = ('search_text',)

@@ -358,7 +358,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
     thing.  This is to make it easier to subclass and override just one component of
     functionality.
 
-    Almost all projects will need to subclass and customise this class.
+    All projects will need to subclass and customise this class.
     """
     template_name = 'checkout/payment_details.html'
     template_name_preview = 'checkout/preview.html'
@@ -396,7 +396,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         then the method can call submit()
         """
         error_response = self.get_error_response()
-        
+
         if error_response:
             return error_response
         if self.preview:
