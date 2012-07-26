@@ -1,4 +1,6 @@
 import httplib
+from mock import patch
+from decimal import Decimal as D
 
 from django.test.client import Client
 from django.contrib.auth.models import User
@@ -123,7 +125,7 @@ class AuthStaffRedirectTests(TestCase):
 
 class ReorderTests(ClientTestCase):
 
-    def test_can_reorder_product(self):
+    def test_can_reorder(self):
         order = create_order(user=self.user)
         Basket.objects.all().delete()
 
@@ -180,3 +182,48 @@ class ReorderTests(ClientTestCase):
         
         basket = Basket.objects.all()[0]
         self.assertEquals(len(basket.all_lines()), 0)
+
+    @patch('django.conf.settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD', 1)
+    def test_cannot_reorder_when_basket_maximum_exceeded(self):
+        order = create_order(user=self.user)
+        line = order.lines.all()[0]
+
+        Basket.objects.all().delete()
+        #add a product
+        product = create_product(price=D('12.00'))
+        self.client.post(reverse('basket:add'), {'product_id': product.id,
+                                                 'quantity': 1})
+
+
+        basket = Basket.objects.all()[0]
+        self.assertEquals(len(basket.all_lines()), 1)
+
+        #try to reorder a product
+        response = self.client.post(reverse('customer:order', 
+                                            args=(order.number,)),
+                                    {'order_id': order.pk,
+                                     'action': 'reorder'})
+        
+        self.assertEqual(len(basket.all_lines()), 1)
+        self.assertNotEqual(line.product.pk, product.pk)
+
+    @patch('django.conf.settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD', 1)
+    def test_cannot_reorder_line_when_basket_maximum_exceeded(self):
+        order = create_order(user=self.user)
+        line = order.lines.all()[0]
+
+        Basket.objects.all().delete()
+        #add a product
+        product = create_product(price=D('12.00'))
+        self.client.post(reverse('basket:add'), {'product_id': product.id,
+                                                 'quantity': 1})
+
+        basket = Basket.objects.all()[0]
+        self.assertEquals(len(basket.all_lines()), 1)
+
+        response = self.client.post(reverse('customer:order-line', 
+                                            args=(order.number, line.pk)),
+                                    {'action': 'reorder'})
+        
+        self.assertEquals(len(basket.all_lines()), 1)
+        self.assertNotEqual(line.product.pk, product.pk)
