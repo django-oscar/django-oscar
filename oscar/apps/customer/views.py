@@ -1,13 +1,17 @@
 import urlparse
 
 from django.shortcuts import get_object_or_404
-from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView, FormView, RedirectView
+from django.views.generic import (TemplateView, ListView, DetailView, 
+                                  CreateView, UpdateView, DeleteView, 
+                                  FormView, RedirectView)
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect, Http404
 from django.contrib import messages
 from django.utils.translation import ugettext as _
-from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
+from django.contrib.auth import (login, 
+                                 authenticate as auth_login, 
+                                 logout as auth_logout)
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.sites.models import get_current_site
 from django.conf import settings
@@ -356,7 +360,9 @@ class OrderDetailView(DetailView, PostActionMixin):
             lines_added += 1
 
         if lines_added > 0:
-            messages.info(self.request, _("All available lines from order %s have been added to your basket") % order.number)
+            messages.info(self.request, 
+                          _("All available lines from order %s "
+                            "have been added to your basket") % order.number)
         else:
             self.response = HttpResponseRedirect(reverse('customer:order-list'))
 
