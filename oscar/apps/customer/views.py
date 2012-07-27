@@ -1,13 +1,16 @@
 import urlparse
 
 from django.shortcuts import get_object_or_404
-from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView, FormView, RedirectView
+from django.views.generic import (TemplateView, ListView, DetailView,
+                                  CreateView, UpdateView, DeleteView,
+                                  FormView, RedirectView)
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect, Http404
 from django.contrib import messages
 from django.utils.translation import ugettext as _
-from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
+from django.contrib.auth import (authenticate as auth_login,
+                                 logout as auth_logout)
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.sites.models import get_current_site
 from django.conf import settings
@@ -22,7 +25,7 @@ EmailAuthenticationForm, EmailUserCreationForm, SearchByDateRangeForm = get_clas
 ProfileForm = get_class('customer.forms', 'ProfileForm')
 UserAddressForm = get_class('address.forms', 'UserAddressForm')
 Order = get_model('order', 'Order')
-Line = get_model('order', 'Line')
+Line = get_model('basket', 'Line')
 Basket = get_model('basket', 'Basket')
 UserAddress = get_model('address', 'UserAddress')
 Email = get_model('customer', 'email')
@@ -323,20 +326,59 @@ class OrderDetailView(DetailView, PostActionMixin):
 
         This puts the contents of the previous order into your basket
         """
-        self.response = HttpResponseRedirect(reverse('basket:summary'))
         basket = self.request.basket
 
         # Convert line attributes into basket options
+        lines_added = []
+        warnings = []
+        # Collect lines to be added to the basket and the warnings
         for line in order.lines.all():
             if not line.product:
-                messages.warning(self.request, _("'%s' unavailable for re-order") % line.title)
+                warnings.append(_("'%s' unavailable for re-order") % line.title)
                 continue
-            options = []
-            for attribute in line.attributes.all():
-                if attribute.option:
-                    options.append({'option': attribute.option, 'value': attribute.value})
-            basket.add_product(line.product, line.quantity, options)
-        messages.info(self.request, _("All available lines from order %s have been added to your basket") % order.number)
+
+            try:
+                basket_line = basket.lines.get(product=line.product)
+            except Line.DoesNotExist:
+                desired_qty = line.quantity
+            else:
+                desired_qty = basket_line.quantity + line.quantity
+
+            is_available, reason = line.product.is_purchase_permitted(
+                                                        user=self.request.user,
+                                                        quantity=desired_qty)
+            if not is_available:
+                warnings.append(reason)
+                continue
+
+            lines_added.append(line)
+
+        # Check whether the number of items in the basket won't exceed the maximum
+        total_quantity = sum([line.quantity for line in lines_added])
+        is_quantity_allowed, reason = basket.is_quantity_allowed(total_quantity)
+
+        self.response = HttpResponseRedirect(reverse('customer:order-list'))
+
+        if not is_quantity_allowed:
+            messages.warning(self.request, reason)
+            return
+        else:
+            # Add items to the basket, display warnings
+            for warning in warnings:
+                messages.warning(self.request, warning)
+
+            for line in lines_added:
+                options = []
+                for attribute in line.attributes.all():
+                    if attribute.option:
+                        options.append({'option': attribute.option, 'value': attribute.value})
+                basket.add_product(line.product, line.quantity, options)
+
+        if len(lines_added) > 0:
+            self.response = HttpResponseRedirect(reverse('basket:summary'))
+            messages.info(self.request,
+                          _("All available lines from order %s "
+                            "have been added to your basket") % order.number)
 
 
 class OrderLineView(DetailView, PostActionMixin):
@@ -348,14 +390,38 @@ class OrderLineView(DetailView, PostActionMixin):
         return order.lines.get(id=self.kwargs['line_id'])
 
     def do_reorder(self, line):
+        self.response = HttpResponseRedirect(reverse('customer:order',
+                                    args=(int(self.kwargs['order_number']),)))
+        basket = self.request.basket
+
+        # Check whether basket items quantity won't exceed the maximum
+        is_quantity_allowed, reason = basket.is_quantity_allowed(line.quantity)
+        if not is_quantity_allowed:
+            messages.warning(self.request, reason)
+            return
+
         if not line.product:
             messages.info(self.request, _("This product is no longer available for re-order"))
+            return
+
+        try:
+            basket_line = basket.lines.get(product=line.product)
+        except Line.DoesNotExist:
+            desired_qty = line.quantity
+        else:
+            desired_qty = basket_line.quantity + line.quantity
+
+        is_available, reason = line.product.is_purchase_permitted(
+                                                    user=self.request.user,
+                                                    quantity=desired_qty)
+
+        if not is_available:
+            messages.warning(self.request, reason)
             return
 
         # We need to pass response to the get_or_create... method
         # as a new basket might need to be created
         self.response = HttpResponseRedirect(reverse('basket:summary'))
-        basket = self.request.basket
 
         # Convert line attributes into basket options
         options = []
@@ -363,11 +429,13 @@ class OrderLineView(DetailView, PostActionMixin):
             if attribute.option:
                 options.append({'option': attribute.option, 'value': attribute.value})
         basket.add_product(line.product, line.quantity, options)
+
         if line.quantity > 1:
             msg = _("%(qty)d copies of '%(product)s' have been added to your basket") % {
                 'qty': line.quantity, 'product': line.product}
         else:
             msg = _("'%s' has been added to your basket") % line.product
+
         messages.info(self.request, msg)
 
 

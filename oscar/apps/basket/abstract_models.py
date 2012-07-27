@@ -4,6 +4,7 @@ import datetime
 
 from django.db import models
 from django.db.models import query
+from django.conf import settings
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 
@@ -69,6 +70,20 @@ class AbstractBasket(models.Model):
         if self._lines is None:
             self._lines = self.lines.all()
         return self._lines
+
+    def is_quantity_allowed(self, qty):
+        basket_threshold = settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD
+        if basket_threshold:
+            total_basket_quantity = self.num_items
+            max_allowed = basket_threshold - total_basket_quantity
+            if qty > max_allowed:
+                return False, _("Due to technical limitations we are not able "
+                                "to ship more than %(threshold)d items in one order."
+                                " Your basket currently has %(basket)d items.") % {
+                                        'threshold': basket_threshold,
+                                        'basket': total_basket_quantity,
+                                    }
+        return True, None
 
     # ============
     # Manipulation
