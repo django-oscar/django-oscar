@@ -1,4 +1,6 @@
 import httplib
+from mock import patch
+from decimal import Decimal as D
 
 from django.test.client import Client
 from django.contrib.auth.models import User
@@ -8,6 +10,8 @@ from django.http import HttpRequest
 
 from oscar.apps.customer.history_helpers import get_recently_viewed_product_ids
 from oscar.test.helpers import create_product, create_order
+from oscar.test import ClientTestCase
+from oscar.apps.basket.models import Basket
 
 
 class HistoryHelpersTest(TestCase):
@@ -117,3 +121,109 @@ class AuthStaffRedirectTests(TestCase):
         response = self.client.get(reverse('dashboard:index'), follow=True)
         self.assertContains(response, "login-username", status_code=200)
         self.assertEquals(response.context['next'], reverse('dashboard:index'))
+
+
+class ReorderTests(ClientTestCase):
+
+    def test_can_reorder(self):
+        order = create_order(user=self.user)
+        Basket.objects.all().delete()
+
+        response = self.client.post(reverse('customer:order', 
+                                            args=(order.number,)),
+                                    {'order_id': order.pk,
+                                     'action': 'reorder'})
+        
+        basket = Basket.objects.all()[0]
+        self.assertEquals(len(basket.all_lines()), 1)
+
+    def test_can_reorder_line(self):
+        order = create_order(user=self.user)
+        line = order.lines.all()[0]
+        Basket.objects.all().delete()
+
+        response = self.client.post(reverse('customer:order-line', 
+                                            args=(order.number, line.pk)),
+                                    {'action': 'reorder'})
+        
+        basket = Basket.objects.all()[0]
+        self.assertEquals(len(basket.all_lines()), 1)
+
+    def test_cannot_reorder_out_of_stock_product(self):
+        order = create_order(user=self.user)
+
+        product = order.lines.all()[0].product
+        product.stockrecord.num_in_stock = 0
+        product.stockrecord.save()
+
+        Basket.objects.all().delete()
+
+        response = self.client.post(reverse('customer:order', 
+                                            args=(order.number,)),
+                                    {'order_id': order.pk,
+                                     'action': 'reorder'})
+        
+        basket = Basket.objects.all()[0]
+        self.assertEquals(len(basket.all_lines()), 0)
+
+    def test_cannot_reorder_out_of_stock_line(self):
+        order = create_order(user=self.user)
+        line = order.lines.all()[0]
+
+        product = line.product
+        product.stockrecord.num_in_stock = 0
+        product.stockrecord.save()
+
+        Basket.objects.all().delete()
+
+        response = self.client.post(reverse('customer:order-line', 
+                                            args=(order.number, line.pk)),
+                                    {'action': 'reorder'})
+        
+        basket = Basket.objects.all()[0]
+        self.assertEquals(len(basket.all_lines()), 0)
+
+    @patch('django.conf.settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD', 1)
+    def test_cannot_reorder_when_basket_maximum_exceeded(self):
+        order = create_order(user=self.user)
+        line = order.lines.all()[0]
+
+        Basket.objects.all().delete()
+        #add a product
+        product = create_product(price=D('12.00'))
+        self.client.post(reverse('basket:add'), {'product_id': product.id,
+                                                 'quantity': 1})
+
+
+        basket = Basket.objects.all()[0]
+        self.assertEquals(len(basket.all_lines()), 1)
+
+        #try to reorder a product
+        response = self.client.post(reverse('customer:order', 
+                                            args=(order.number,)),
+                                    {'order_id': order.pk,
+                                     'action': 'reorder'})
+        
+        self.assertEqual(len(basket.all_lines()), 1)
+        self.assertNotEqual(line.product.pk, product.pk)
+
+    @patch('django.conf.settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD', 1)
+    def test_cannot_reorder_line_when_basket_maximum_exceeded(self):
+        order = create_order(user=self.user)
+        line = order.lines.all()[0]
+
+        Basket.objects.all().delete()
+        #add a product
+        product = create_product(price=D('12.00'))
+        self.client.post(reverse('basket:add'), {'product_id': product.id,
+                                                 'quantity': 1})
+
+        basket = Basket.objects.all()[0]
+        self.assertEquals(len(basket.all_lines()), 1)
+
+        response = self.client.post(reverse('customer:order-line', 
+                                            args=(order.number, line.pk)),
+                                    {'action': 'reorder'})
+        
+        self.assertEquals(len(basket.all_lines()), 1)
+        self.assertNotEqual(line.product.pk, product.pk)
