@@ -1,16 +1,15 @@
 import urlparse
 
 from django.shortcuts import get_object_or_404
-from django.views.generic import (TemplateView, ListView, DetailView, 
-                                  CreateView, UpdateView, DeleteView, 
+from django.views.generic import (TemplateView, ListView, DetailView,
+                                  CreateView, UpdateView, DeleteView,
                                   FormView, RedirectView)
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect, Http404
 from django.contrib import messages
 from django.utils.translation import ugettext as _
-from django.contrib.auth import (login, 
-                                 authenticate as auth_login, 
+from django.contrib.auth import (authenticate as auth_login,
                                  logout as auth_logout)
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.sites.models import get_current_site
@@ -332,7 +331,7 @@ class OrderDetailView(DetailView, PostActionMixin):
         # Convert line attributes into basket options
         lines_added = []
         warnings = []
-        #collect lines to be added to the basket and the warnings
+        # Collect lines to be added to the basket and the warnings
         for line in order.lines.all():
             if not line.product:
                 warnings.append(_("'%s' unavailable for re-order") % line.title)
@@ -354,7 +353,7 @@ class OrderDetailView(DetailView, PostActionMixin):
 
             lines_added.append(line)
 
-        #check whether the number of items in the basket won't exceed the maximum
+        # Check whether the number of items in the basket won't exceed the maximum
         total_quantity = sum([line.quantity for line in lines_added])
         is_quantity_allowed, reason = basket.is_quantity_allowed(total_quantity)
 
@@ -364,7 +363,7 @@ class OrderDetailView(DetailView, PostActionMixin):
             messages.warning(self.request, reason)
             return
         else:
-            #add items to the basket, display warnings
+            # Add items to the basket, display warnings
             for warning in warnings:
                 messages.warning(self.request, warning)
 
@@ -377,7 +376,7 @@ class OrderDetailView(DetailView, PostActionMixin):
 
         if len(lines_added) > 0:
             self.response = HttpResponseRedirect(reverse('basket:summary'))
-            messages.info(self.request, 
+            messages.info(self.request,
                           _("All available lines from order %s "
                             "have been added to your basket") % order.number)
 
@@ -391,11 +390,11 @@ class OrderLineView(DetailView, PostActionMixin):
         return order.lines.get(id=self.kwargs['line_id'])
 
     def do_reorder(self, line):
-        self.response = HttpResponseRedirect(reverse('customer:order', 
+        self.response = HttpResponseRedirect(reverse('customer:order',
                                     args=(int(self.kwargs['order_number']),)))
         basket = self.request.basket
 
-        #check whether basket items quantity won't exceed the maximum
+        # Check whether basket items quantity won't exceed the maximum
         is_quantity_allowed, reason = basket.is_quantity_allowed(line.quantity)
         if not is_quantity_allowed:
             messages.warning(self.request, reason)
@@ -423,7 +422,7 @@ class OrderLineView(DetailView, PostActionMixin):
         # We need to pass response to the get_or_create... method
         # as a new basket might need to be created
         self.response = HttpResponseRedirect(reverse('basket:summary'))
-        
+
         # Convert line attributes into basket options
         options = []
         for attribute in line.attributes.all():
@@ -436,7 +435,7 @@ class OrderLineView(DetailView, PostActionMixin):
                 'qty': line.quantity, 'product': line.product}
         else:
             msg = _("'%s' has been added to your basket") % line.product
-        
+
         messages.info(self.request, msg)
 
 
