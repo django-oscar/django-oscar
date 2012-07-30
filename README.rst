@@ -1,14 +1,14 @@
-.. image:: http://img94.imageshack.us/img94/9094/oscarza.jpg
+.. image:: http://img692.imageshack.us/img692/6498/logovf.png
 
 ===================================
 Domain-driven e-commerce for Django
 ===================================
 
-Oscar is an e-commerce framework for Django designed for building
-domain-driven e-commerce sites.  It is structured such that any part of the
-core functionality can be customised to suit the needs of your project.  This
-allows it to handle a wide range of e-commerce requirements, from large-scale B2C
-sites to complex B2B sites rich in domain-specific business logic.
+Oscar is an e-commerce framework for Django designed for building domain-driven
+e-commerce sites.  It is structured such that any part of the core functionality
+can be customised to suit the needs of your project.  This allows it to handle a
+wide range of e-commerce requirements, from large-scale B2C sites to complex B2B
+sites rich in domain-specific business logic.
 
 More information:
 
@@ -38,6 +38,9 @@ Oscar was written by `David Winterbottom`_ (`@codeinthehole`_) and is developed
 and maintained by `Tangent Labs`_, a London-based digital agency, with help from
 `Mirumee`.
 
+License
+-------
+
 Oscar is released under the permissive `New BSD license`_.
 
 .. _`David Winterbottom`: http://codeinthehole.com
@@ -58,4 +61,4 @@ companies, from large multinationals to small, boutique stores:
 * Dolbeau - http://www.dolbeau.ca/
 * The UK Labour party - http://shop.labour.org.uk (will be live in early June)
 
-Many more on the way.
+Many more on the way.  If you use Oscar in production, please let us know.

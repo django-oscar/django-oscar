@@ -566,6 +566,10 @@ class AbstractLine(models.Model):
         """
         if not self.price_incl_tax:
             return
+        if not self.product.has_stockrecord:
+            msg = u"'%(product)s' is no longer available"
+            return _(msg) % {'product': self.product.get_title()}
+
         current_price_incl_tax = self.product.stockrecord.price_incl_tax
         if current_price_incl_tax > self.price_incl_tax:
             msg = u"The price of '%(product)s' has increased from %(old_price)s " \

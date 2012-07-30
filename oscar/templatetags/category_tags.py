@@ -38,11 +38,14 @@ class CategoryTreeNode(template.Node):
                     self._build_tree(node[1], category, data, depth+1)
                 root.append(node)
         return root
-        
+
+    def get_category_queryset(self, depth):
+        return Category.objects.filter(depth__lte=depth)
+
     def render(self, context):
         depth = int(self.depth_var.resolve(context))
-        categories = Category.objects.filter(depth__lte=depth)
-        
+        categories = self.get_category_queryset(depth)
+
         category_buckets = [[] for i in range(depth)]
         
         for c in categories:

@@ -15,6 +15,7 @@ cd sandbox
 ./manage.py migrate
 ./manage.py collectstatic --noinput
 ./manage.py rebuild_index --noinput
+chown -R www-data:www-data whoosh_index
 
 # Re-compile python code
 touch deploy/wsgi/sandbox.wsgi
