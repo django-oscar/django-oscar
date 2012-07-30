@@ -167,7 +167,7 @@ class AddToBasketForm(forms.Form):
                                            currency(variant.stockrecord.price_incl_tax))
                 choices.append((variant.id, summary))
         self.fields['product_id'] = forms.ChoiceField(choices=tuple(choices),
-                                                      label="Variant")
+                                                      label=_("Variant"))
 
     def _create_product_fields(self, item):
         u"""Add the product option fields."""
