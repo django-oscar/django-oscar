@@ -149,14 +149,21 @@ class BasketAddView(FormView):
             if option.code in form.cleaned_data:
                 options.append({'option': option, 'value': form.cleaned_data[option.code]})
         self.request.basket.add_product(form.instance, form.cleaned_data['quantity'], options)
-        messages.info(self.request, _(u"'%(title)s' (quantity %(quantity)d) has been added to your basket") %
-                {'title': form.instance.get_title(),
-                 'quantity': form.cleaned_data['quantity']})
+        messages.success(self.request, self.get_success_message(form))
 
         # Send signal for basket addition
         self.add_signal.send(sender=self, product=form.instance, user=self.request.user)
 
         return super(BasketAddView, self).form_valid(form)
+
+    def get_success_message(self, form):
+        qty = form.cleaned_data['quantity']
+        title = form.instance.get_title()
+        if qty == 1:
+            return _("'%(title)s' has been added to your basket") % {'title': title}
+        else:
+            return _("'%(title)s' (quantity %(quantity)d) has been added to your"
+                     "basket") % {'title': title, 'quantity': qty}
 
     def form_invalid(self, form):
         msgs = []
@@ -187,8 +194,8 @@ class VoucherAddView(FormView):
         self.request.basket.vouchers.add(voucher)
 
         # Raise signal
-        self.add_signal.send(sender=self, 
-                             basket=self.request.basket, 
+        self.add_signal.send(sender=self,
+                             basket=self.request.basket,
                              voucher=voucher)
 
         # Recalculate discounts to see if the voucher gives any
