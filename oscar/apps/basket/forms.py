@@ -105,7 +105,9 @@ class ProductSelectionForm(forms.Form):
 
 
 class AddToBasketForm(forms.Form):
-    product_id = forms.IntegerField(widget=forms.HiddenInput(), min_value=1, label=_("Product ID"))
+    # We set required=False as validation happens later on
+    product_id = forms.IntegerField(widget=forms.HiddenInput(), required=False,
+                                    min_value=1, label=_("Product ID"))
     quantity = forms.IntegerField(initial=1, min_value=1, label=_('Quantity'))
 
     def __init__(self, basket, user, instance, *args, **kwargs):
@@ -120,8 +122,13 @@ class AddToBasketForm(forms.Form):
                 self._create_product_fields(instance)
 
     def clean(self):
-        id = self.cleaned_data['product_id']
-        product = Product.objects.get(id=id)
+        try:
+            product = Product.objects.get(
+                id=self.cleaned_data.get('product_id', None))
+        except Product.DoesNotExist:
+            raise forms.ValidationError(
+                _("Please select a valid product"))
+
         qty = self.cleaned_data.get('quantity', 1)
         try:
             line = self.basket.lines.get(product=product)

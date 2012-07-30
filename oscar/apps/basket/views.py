@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.db.models import get_model
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect
 from django.views.generic import FormView, View
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist
@@ -135,7 +135,7 @@ class BasketAddView(FormView):
         if product_select_form.is_valid():
             kwargs['instance'] = product_select_form.cleaned_data['product_id']
         else:
-            raise Http404()
+            kwargs['instance'] = None
         kwargs['user'] = self.request.user
         kwargs['basket'] = self.request.basket
         return kwargs
