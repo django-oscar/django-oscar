@@ -19,7 +19,7 @@ def do_basket_form(parse, token):
     tokens = token.split_contents()
     if len(tokens) < 4 or tokens[3] != 'as':
         raise template.TemplateSyntaxError("%r tag uses the following syntax: {%% basket_form basket_var product_var as form_var %%}" % tokens[0])
-    
+
     basket_var, product_var, form_var = tokens[1], tokens[2], tokens[4]
 
     quantity_type = tokens[5] if len(tokens) == 6 else QNT_MULTIPLE
@@ -41,10 +41,10 @@ class BasketFormNode(template.Node):
             product = self.product_var.resolve(context)
         except template.VariableDoesNotExist:
             return ''
-        
+
         if isinstance(product, Product):
-            initial = {
-                'product_id': product.id,
-            }
+            initial = {}
+            if not product.is_group:
+                initial['product_id'] = product.id
             context[self.form_var] = self.form_class(basket, user=None, instance=product, initial=initial)
         return ''
