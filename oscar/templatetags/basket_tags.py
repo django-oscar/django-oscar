@@ -43,8 +43,13 @@ class BasketFormNode(template.Node):
             return ''
         
         if isinstance(product, Product):
-            initial = {
-                'product_id': product.id,
-            }
+            try:
+                initial = {
+                    'product_id': product.variants.all()[0].id,
+                }
+            except IndexError:
+                initial = {
+                    'product_id': product.id,
+                }
             context[self.form_var] = self.form_class(basket, user=None, instance=product, initial=initial)
         return ''
