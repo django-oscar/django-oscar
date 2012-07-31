@@ -1,7 +1,6 @@
-sandbox:
+contribute:
 	# Create a sandbox installation for playing around with oscar.
-	mkvirtualenv oscar
-	python setup.up develop
+	python setup.py develop
 	pip install -r requirements.txt
 	# Create database
 	sandbox/manage.py syncdb --noinput

@@ -8,14 +8,14 @@ scratch and have decided to use Oscar.  Let's call this shop 'frobshop'
 .. tip::
 
     You can always review the set-up of the `Sandbox site`_ in case you have
-    trouble following the below instructions.
+    trouble with the below instructions.
 
 .. _`Sandbox site`: https://github.com/tangentlabs/django-oscar/tree/releases/0.2/sandbox
 
 Install by hand
 ===============
 
-Install oscar (which will install Django as a dependency), then create the
+Install Oscar (which will install Django as a dependency), then create the
 project::
 
     pip install django-oscar
@@ -27,7 +27,7 @@ Settings
 --------
 
 Now edit your settings file ``frobshop.frobshop.settings.py`` to specify a
-database (we use sqlite for simplicity)::
+database (we use SQLite for simplicity)::
 
     DATABASES = {
         'default': {
@@ -85,6 +85,9 @@ Oscar currently uses Haystack for search so you need to specify::
     HAYSTACK_SITECONF = 'oscar.search_sites'
     HAYSTACK_SEARCH_ENGINE = 'dummy'
 
+When moving towards production, you'll obviously need to switch to a real search
+backend.
+
 The last addition to the settings file is to import all of Oscar's default settings::
 
     from oscar.defaults import *
@@ -116,7 +119,7 @@ Install using Tangent's boilerplate django project
 ==================================================
 
 The easiest way to get started is to use Tangent's `template django project`_
-although it is tailored to an Agency structure which may not suit everyone.
+although it is tailored to an agency structure which may not suit everyone.
 
 .. _`template django project`: https://github.com/tangentlabs/tangent-django-boilerplate
 
@@ -151,7 +154,8 @@ follows Tangent's conventions.  The structure is::
         deploy-to-stage.sh
         deploy-to-prod.sh
 
-Replace a few files with Oscar-specific versions::
+Replace a few files with Oscar-specific versions (the templated project can be
+used for non-Oscar projects too)::
 
     mv frobshop/www/urls{_oscar,}.py
     mv frobshop/www/deploy/requirements{_oscar,}.py
@@ -173,4 +177,4 @@ Next steps
 ==========
 
 The next step is to implement the business logic of your domain on top of
-Oscar.
+Oscar.  The fun part.
