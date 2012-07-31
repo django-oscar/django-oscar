@@ -14,12 +14,18 @@
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-	<a href="{% url promotions:home %}">{% trans "Home" %}</a>
+        <a href="{% url promotions:home %}">{% trans "Home" %}</a>
         <span class="divider">/</span>
     </li>
-    <li class="active"><a href=".">{{ summary }}</a></li>
+    {% for category in category.get_ancestors|slice:":-1" %}
+    <li>
+        <a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
+        <span class="divider">/</span>
+    </li>
+    {% endfor %}
+    <li class="active"><a href=".">{{ category.name }}</a></li>
 </ul>
-{% endblock %}
+{% endblock breadcrumbs %}
 
 {% block column_left %}
     <div class="side_categories" style="padding: 8px 0;">
