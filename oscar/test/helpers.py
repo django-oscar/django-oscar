@@ -2,14 +2,28 @@ from decimal import Decimal as D
 import random
 import datetime
 
-from oscar.apps.basket.models import Basket
-from oscar.apps.catalogue.models import ProductClass, Product, ProductAttribute, ProductAttributeValue
-from oscar.apps.checkout.calculators import OrderTotalCalculator
-from oscar.apps.order.utils import OrderCreator
-from oscar.apps.partner.models import Partner, StockRecord
-from oscar.apps.shipping.methods import Free
-from oscar.apps.offer.models import Range, ConditionalOffer, Condition, Benefit
-from oscar.apps.voucher.models import Voucher
+from oscar.core.loading import get_class, get_classes
+
+Basket = get_class('basket.models', 'Basket')
+Free = get_class('shipping.methods', 'Free')
+Voucher = get_class('voucher.models', 'Voucher')
+OrderCreator = get_class('order.utils', 'OrderCreator')
+OrderTotalCalculator = get_class('checkout.calculators', 'OrderTotalCalculator')
+Partner, StockRecord = get_classes('partner.models', ('Partner',
+                                                      'StockRecord'))
+(ProductClass,
+ Product,
+ ProductAttribute,
+ ProductAttributeValue) = get_classes('catalogue.models',
+                                      ('ProductClass',
+                                       'Product',
+                                       'ProductAttribute',
+                                       'ProductAttributeValue'))
+(Range,
+ ConditionalOffer,
+ Condition,
+ Benefit) = get_classes('offer.models', ('Range', 'ConditionalOffer',
+                                         'Condition', 'Benefit'))
 
 
 def create_product(price=None, title="Dummy title", product_class="Dummy item class",
