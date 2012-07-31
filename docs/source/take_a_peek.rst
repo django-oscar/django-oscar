@@ -42,6 +42,7 @@ simple database populated with products.
 
 You can then browse a sample Oscar site using Django's development server::
 
+    cd sandbox
     ./manage.py runserver
 
 Note that some things are deliberately not implemented within core Oscar
