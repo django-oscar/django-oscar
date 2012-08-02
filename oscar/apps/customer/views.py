@@ -9,7 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect, Http404
 from django.contrib import messages
 from django.utils.translation import ugettext as _
-from django.contrib.auth import (authenticate as auth_login,
+from django.contrib.auth import (authenticate, login as auth_login,
                                  logout as auth_logout)
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.sites.models import get_current_site
@@ -130,7 +130,6 @@ class AccountRegistrationView(TemplateView):
 
     def check_redirect(self, context):
         redirect_to = context.get(self.redirect_field_name)
-
         if not redirect_to:
             return settings.LOGIN_REDIRECT_URL
 

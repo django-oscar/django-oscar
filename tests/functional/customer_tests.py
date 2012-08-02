@@ -2,11 +2,13 @@ import httplib
 from mock import patch
 from decimal import Decimal as D
 
-from django.test.client import Client
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
-from django.test import TestCase
 from django.http import HttpRequest
+from django.test import TestCase
+from django.test.client import Client
+from django_webtest import WebTest
 
 from oscar.apps.customer.history_helpers import get_recently_viewed_product_ids
 from oscar.test.helpers import create_product, create_order
@@ -78,7 +80,6 @@ class EditProfileTests(TestCase):
 
 
 class AuthTestCase(TestCase):
-
     username = 'customer'
     password = 'cheeseshop'
     email = 'customer@example.com'
@@ -108,8 +109,8 @@ class AuthStaffRedirectTests(TestCase):
     def test_staff_member_login_for_dashboard(self):
         """
         Test if a staff member that is not yet logged in and trying to access the
-        dashboard is redirected to the Oscar login page (instead of the ``admin`` 
-        login page). Also test that the redirect after successful login will 
+        dashboard is redirected to the Oscar login page (instead of the ``admin``
+        login page). Also test that the redirect after successful login will
         be the originally requested page.
         """
         self.client = Client()
@@ -129,11 +130,11 @@ class ReorderTests(ClientTestCase):
         order = create_order(user=self.user)
         Basket.objects.all().delete()
 
-        response = self.client.post(reverse('customer:order', 
+        self.client.post(reverse('customer:order',
                                             args=(order.number,)),
                                     {'order_id': order.pk,
                                      'action': 'reorder'})
-        
+
         basket = Basket.objects.all()[0]
         self.assertEquals(len(basket.all_lines()), 1)
 
@@ -142,10 +143,10 @@ class ReorderTests(ClientTestCase):
         line = order.lines.all()[0]
         Basket.objects.all().delete()
 
-        response = self.client.post(reverse('customer:order-line', 
+        self.client.post(reverse('customer:order-line',
                                             args=(order.number, line.pk)),
                                     {'action': 'reorder'})
-        
+
         basket = Basket.objects.all()[0]
         self.assertEquals(len(basket.all_lines()), 1)
 
@@ -158,11 +159,11 @@ class ReorderTests(ClientTestCase):
 
         Basket.objects.all().delete()
 
-        response = self.client.post(reverse('customer:order', 
+        self.client.post(reverse('customer:order',
                                             args=(order.number,)),
                                     {'order_id': order.pk,
                                      'action': 'reorder'})
-        
+
         basket = Basket.objects.all()[0]
         self.assertEquals(len(basket.all_lines()), 0)
 
@@ -176,10 +177,10 @@ class ReorderTests(ClientTestCase):
 
         Basket.objects.all().delete()
 
-        response = self.client.post(reverse('customer:order-line', 
+        self.client.post(reverse('customer:order-line',
                                             args=(order.number, line.pk)),
                                     {'action': 'reorder'})
-        
+
         basket = Basket.objects.all()[0]
         self.assertEquals(len(basket.all_lines()), 0)
 
@@ -199,11 +200,11 @@ class ReorderTests(ClientTestCase):
         self.assertEquals(len(basket.all_lines()), 1)
 
         #try to reorder a product
-        response = self.client.post(reverse('customer:order', 
+        self.client.post(reverse('customer:order',
                                             args=(order.number,)),
                                     {'order_id': order.pk,
                                      'action': 'reorder'})
-        
+
         self.assertEqual(len(basket.all_lines()), 1)
         self.assertNotEqual(line.product.pk, product.pk)
 
@@ -221,9 +222,38 @@ class ReorderTests(ClientTestCase):
         basket = Basket.objects.all()[0]
         self.assertEquals(len(basket.all_lines()), 1)
 
-        response = self.client.post(reverse('customer:order-line', 
+        self.client.post(reverse('customer:order-line',
                                             args=(order.number, line.pk)),
                                     {'action': 'reorder'})
-        
+
         self.assertEquals(len(basket.all_lines()), 1)
         self.assertNotEqual(line.product.pk, product.pk)
+
+
+class TestAUser(WebTest):
+
+    def assertRedirectsTo(self, response, url_name):
+        self.assertTrue(str(response.status_code).startswith('3'))
+        location = response.headers['Location']
+        redirect_path = location.replace('http://localhost:80', '')
+        self.assertEqual(reverse(url_name), redirect_path)
+
+    def test_can_login(self):
+        email, password = 'd@d.com', 'mypassword'
+        User.objects.create_user('_', email, password)
+
+        url = reverse('customer:login')
+        form = self.app.get(url).forms['login_form']
+        form['login-username'] = email
+        form['login-password'] = password
+        response = form.submit('login_submit')
+        self.assertRedirectsTo(response, 'customer:summary')
+
+    def test_can_register(self):
+        url = reverse('customer:register')
+        form = self.app.get(url).forms['register_form']
+        form['registration-email'] = 'terry@boom.com'
+        form['registration-password1'] = 'hedgehog'
+        form['registration-password2'] = 'hedgehog'
+        response = form.submit()
+        self.assertRedirectsTo(response, 'customer:summary')
