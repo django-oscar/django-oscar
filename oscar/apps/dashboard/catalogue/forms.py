@@ -187,7 +187,9 @@ class ProductForm(forms.ModelForm):
 
     def clean(self):
         data = self.cleaned_data
-        if data['parent'] is None and not data['title']:
+        if 'parent' not in data and not data['title']:
+            raise forms.ValidationError(_("This field is required"))
+        elif 'parent' in data and data['parent'] is None and not data['title']:
             raise forms.ValidationError(_("Parent products must have a title"))
         return data
 
