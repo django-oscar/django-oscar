@@ -2,6 +2,7 @@ import locale
 
 from django import template
 from django.conf import settings
+from django.utils.translation import ugettext as _
 
 register = template.Library()
 
@@ -10,12 +11,14 @@ def currency(value):
     """
     Return value converted to a locale currency
     """
+    if not value:
+        return getattr(settings, 'FREE_PRODUCT_PRICE_TEXT', _('Free'))
     try:
         locale.setlocale(locale.LC_ALL, settings.LOCALE)
     except AttributeError:
         locale.setlocale(locale.LC_ALL, '')
-        
-    # We allow the currency symbol to be overridden    
+
+    # We allow the currency symbol to be overridden
     symbol = getattr(settings, 'CURRENCY_SYMBOL', None)
     try:
         if symbol:
@@ -24,5 +27,5 @@ def currency(value):
             c = locale.currency(value, symbol=True, grouping=True)
             return unicode(c, 'utf8')
     except TypeError:
-        return '' 
-        
+        return ''
+
