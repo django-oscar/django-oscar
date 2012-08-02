@@ -14,9 +14,10 @@ class ReportForm(forms.Form):
     report_type = forms.ChoiceField(widget=forms.Select(), choices=type_choices,
                                     help_text=_("Product analytics reports ignore"
                                                 "the selected date range"))
-                                                
-    date_from = forms.DateField()
-    date_to = forms.DateField()
+
+    date_from = forms.DateField(_("Date from"))
+    date_to = forms.DateField(_("Date to"),
+                              help_text=_("The report is inclusive of this date"))
     download = forms.BooleanField(required=False)
 
     def clean(self):
