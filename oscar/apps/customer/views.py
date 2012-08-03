@@ -33,6 +33,7 @@ UserAddress = get_model('address', 'UserAddress')
 Email = get_model('customer', 'email')
 UserAddress = get_model('address', 'UserAddress')
 CommunicationEventType = get_model('customer', 'communicationeventtype')
+ProductNotification = get_model('notification', 'productnotification')
 
 
 class LogoutView(RedirectView):
@@ -71,12 +72,17 @@ class AccountSummaryView(TemplateView):
 
     def get_context_data(self, **kwargs):
         ctx = super(AccountSummaryView, self).get_context_data(**kwargs)
+        # Delegate data fetching to separate methods so they are easy to
+        # override.
         ctx['addressbook_size'] = self.request.user.addresses.all().count()
         ctx['default_shipping_address'] = self.get_default_shipping_address(self.request.user)
         ctx['default_billing_address'] = self.get_default_billing_address(self.request.user)
-        ctx['emails'] = Email.objects.filter(user=self.request.user)
         ctx['orders'] = self.get_orders(self.request.user)
+        ctx['emails'] = self.get_emails(self.request.user)
+        ctx['notification_list'] = self.get_product_notifications(self.request.user)
         self.add_profile_fields(ctx)
+
+        ctx['active_tab'] = self.request.GET.get('tab', 'profile')
         return ctx
 
     def get_orders(self, user):
@@ -105,6 +111,41 @@ class AccountSummaryView(TemplateView):
             })
         ctx['profile_fields'] = field_data
         ctx['profile'] = profile
+
+    def post(self, request, *args, **kwargs):
+        if 'deactivate' in request.POST:
+            notification_id = request.POST.get('deactivate')
+            status = ProductNotification.INACTIVE
+            success_msg = _("Notification deactivated")
+        elif 'activate' in request.POST:
+            notification_id = request.POST.get('activate')
+            status = ProductNotification.ACTIVE
+            success_msg = _("Notification activated")
+
+        try:
+            notification = ProductNotification.objects.get(pk=notification_id,
+                                                           user=request.user)
+        except ProductNotification.DoesNotExist:
+            messages.error(_("Cannot change notification status, notification "
+                             "does not exist"))
+        else:
+            messages.success(request, success_msg)
+            notification.status = status
+            notification.save()
+
+        return HttpResponseRedirect(
+            reverse('customer:summary')+'?tab=notifications'
+        )
+
+    def get_emails(self, user):
+        return Email.objects.filter(user=user)
+
+    def get_product_notifications(self, user):
+        # Only show notifications that have not been processed
+        return ProductNotification.objects.select_related().filter(
+            user=self.request.user,
+            date_notified=None,
+        )
 
     def get_default_billing_address(self, user):
         return self.get_user_address(user, is_default_for_billing=True)
@@ -196,8 +237,11 @@ class AccountRegistrationView(TemplateView):
         Register a new user from the data in *form*. If
         ``OSCAR_SEND_REGISTRATION_EMAIL`` is set to ``True`` a
         registration email will be send to the provided email address.
-        A new user account is created and the user is then logged
-        in.
+        A new user account is created and the user is then logged in.
+
+        If the user has anonymous ``Notifications`` subscriptions
+        from before they registered, these notifications will be updated
+        to be connected with their newly created user account.
         """
         user = form.save()
 
@@ -224,6 +268,17 @@ class AccountRegistrationView(TemplateView):
         auth_login(self.request, user)
         if self.request.session.test_cookie_worked():
             self.request.session.delete_test_cookie()
+
+        # check if there are notifications for this user's
+        # email address and change them from anonymous to this
+        # user's account
+        #FIXME: Needs to implement base class of all notifications
+        notifications = ProductNotification.objects.filter(
+            email=user.email,
+            user=None
+        )
+        for notification in notifications:
+            notification.transfer_to_user(user)
 
 
 class AccountAuthView(AccountRegistrationView):

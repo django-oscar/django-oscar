@@ -1,0 +1,7 @@
+{% load i18n %}
+
+{% if notification.user %}
+    <a href="{% url dashboard:user-detail notification.user.id %}">{{ notification.user.email }}</a>
+{% else %}
+    {% blocktrans with email=notification.get_notification_email %}{{ email }} (anonymous){% endblocktrans %}
+{% endif %}

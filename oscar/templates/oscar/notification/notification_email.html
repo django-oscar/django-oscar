@@ -1,0 +1,30 @@
+{% load i18n %}
+
+{% if user and user.get_full_name %}
+	{% blocktrans with full_name=user.get_full_name %}
+	Dear {{ full_name }},
+	{% endblocktrans %}
+{% else %}
+	{% trans "Dear Customer," %}
+{% endif %}
+
+{% url catalogue:detail product.slug product.id as product_url %}
+{% blocktrans with product_url=product_url product_title=product.title %}
+we are happy to inform you that our product <strong><a href="{{ product_url }}">
+{{ product_title }}</a></strong> is back in stock.
+{% endblocktrans %}
+
+{% if hurry %}
+{% blocktrans with product_url=product_url %}
+The amount of items in stock is limited. Head over to <a href="{{ product_url }}">
+order the product</a> now, before someone else get's there first.
+{% endblocktrans %}
+{% endif %}
+
+{% blocktrans with site_name=site.name %}
+With this email we have disabled your notification automatically and you will not
+receive any further email regarding this product.
+
+Thanks for your interest,
+Your {{ site_name }} Team
+{% endblocktrans %}

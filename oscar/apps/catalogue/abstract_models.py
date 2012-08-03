@@ -338,7 +338,10 @@ class AbstractProduct(models.Model):
         Test whether to show an add-to-basket button for this product
         """
         if self.is_group:
-            return True
+            for variant in self.variants.select_related('stockrecord').all():
+                if variant.is_available_to_buy:
+                    return True
+            return False
         return self.has_stockrecord and self.stockrecord.is_available_to_buy
 
     @property

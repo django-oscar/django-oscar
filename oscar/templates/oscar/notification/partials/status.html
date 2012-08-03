@@ -1,0 +1,7 @@
+{% if notification.is_active %}
+<span class="label label-success">
+{% else %}
+<span class="label label-important">
+{% endif %}
+    {{ notification.get_status_display }}
+</span>
