@@ -1,0 +1,61 @@
+{% extends 'dashboard/layout.html' %}
+{% load i18n %}
+
+{% block body_class %}users{% endblock %}
+
+{% block title %}
+{% blocktrans with id=notification.id %}Notification #{{ id }}{% endblocktrans %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+    <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+    <a href="{% url dashboard:user-notification-list %}">{% trans "Notifications" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active"><a href=".">{% blocktrans with id=notification.id %}Notification #{{ id }}{% endblocktrans %}</a></li>
+</ul>
+{% endblock %}
+
+{% block header %}
+    <div class="page-header">
+        <h1>{% blocktrans with id=notification.id %}Delete Notification #{{ id }}?{% endblocktrans %}</h1>
+    </div>
+{% endblock header %}
+
+{% block dashboard_content %}
+    {% trans "Are you sure that you want to delete this notification:" %}
+    <form action="." method="post">
+        {% csrf_token %}
+        <table class="table table-bordered">
+            <tr>
+                <th>{% trans "Product title" %}</th>
+                <td>{{ notification.product.get_title }}</td>
+            </tr>
+            <tr>
+                <th>{% trans "User" %}</th>
+                <td>{% include "notification/partials/user_link.html" %}</td>
+            </tr>
+            <tr>
+                <th>{% trans "Email" %}</th>
+                <td>{{ notification.get_notification_email }}</td>
+            </tr>
+            <tr>
+                <th>{% trans "Date created" %}</th>
+                <td>{{ notification.date_created|date }}</td>
+            </tr>
+            <tr>
+                <th>{% trans "Date notified" %}</th>
+                <td>{% include "notification/partials/notified_date.html" %}</td>
+            </tr>
+        </table>
+        <div class="form-actions">
+            <button type='submit' class="btn btn-danger">{% trans "Delete" %}</button> or
+            <a href="{% url dashboard:user-notification-list %}">{% trans "cancel" %}</a>
+        </div>
+    </form>
+{% endblock dashboard_content %}

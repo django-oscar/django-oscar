@@ -28,17 +28,7 @@
     <h3><a href="{{ product.get_absolute_url }}">{{ product.get_title|truncatewords:7 }}</a></h3>
     
     <div class="product_price">
-        {% if product.has_stockrecord %}    
-			<h4>{{ product.stockrecord.price_incl_tax|currency }}</h4>
-            <p class="app-ico {{ product.stockrecord.availability_code }} availability ">{{ product.stockrecord.availability|truncatewords:2 }}</p>
-        {% else %}
-            {% if product.is_group %}
-			<h4><span>{% trans "From" %}</span> {{ product.min_variant_price_incl_tax|currency }}</h4>
-			{% else %}
-			<p class="app-ico avaliability outofstock">{% trans "Not available" %}</p>
-			{% endif %}
-        {% endif %}
-
+        {% include "catalogue/partials/stock_record.html" with anon_notifications="hide" %}
         {% include "catalogue/partials/add_to_basket_form_compact.html" %}
    </div>
 </article>

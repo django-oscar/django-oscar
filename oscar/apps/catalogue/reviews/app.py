@@ -1,6 +1,6 @@
 from oscar.core.application import Application
 from django.conf.urls import patterns, url
-from oscar.apps.catalogue.reviews.views import ProductReviewDetail, CreateProductReview, CreateProductReviewComplete, ProductReviewList 
+from oscar.apps.catalogue.reviews.views import ProductReviewDetail, CreateProductReview, CreateProductReviewComplete, ProductReviewList
 
 
 class ProductReviewsApplication(Application):
@@ -14,7 +14,7 @@ class ProductReviewsApplication(Application):
         urlpatterns = patterns('',
             url(r'^(?P<pk>\d+)/$', self.detail_view.as_view(), name='reviews-detail'),
             url(r'^add/$', self.create_view.as_view(), name='reviews-add'),
-            url(r'^add/complete/$', self.create_complete_view.as_view(), name='reviews-add-complete'),            
+            url(r'^add/complete/$', self.create_complete_view.as_view(), name='reviews-add-complete'),
             url(r'^$', self.list_view.as_view(), name='reviews-list'),
         )
         return urlpatterns
