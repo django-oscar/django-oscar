@@ -16,7 +16,7 @@ class DummyWrapper(object):
         return "Another dummy response"
 
 
-class StockRecordTests(TestCase):
+class TestStockRecord(TestCase):
 
     def setUp(self):
         self.product = create_product(price=D('10.00'), num_in_stock=10)
@@ -39,6 +39,10 @@ class StockRecordTests(TestCase):
         self.stockrecord.allocate(5)
         self.assertEqual(10, self.stockrecord.num_in_stock)
         self.assertEqual(5, self.stockrecord.num_allocated)
+
+    def test_allocation_handles_null_value(self):
+        self.stockrecord.num_allocated = None
+        self.stockrecord.allocate(5)
 
     def test_consuming_allocation(self):
         self.stockrecord.allocate(5)

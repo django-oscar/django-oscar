@@ -48,7 +48,7 @@ class OrderReportGenerator(ReportGenerator):
     def generate(self):
         orders = Order._default_manager.filter(
             date_placed__gte=self.start_date
-        ).filter(date_placed__lt=self.end_date)
+        ).filter(date_placed__lte=self.end_date)
 
         additional_data = {
             'start_date': self.start_date,

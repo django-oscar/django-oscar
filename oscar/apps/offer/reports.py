@@ -43,7 +43,7 @@ class OfferReportGenerator(ReportGenerator):
     def generate(self):
         discounts = OrderDiscount._default_manager.filter(
             order__date_placed__gte=self.start_date,
-            order__date_placed__lt=self.end_date
+            order__date_placed__lte=self.end_date
         )
         offer_discounts = {}
         for discount in discounts:

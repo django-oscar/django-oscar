@@ -1,13 +1,19 @@
 import httplib
+from mock import patch
+from decimal import Decimal as D
 
-from django.test.client import Client
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
-from django.test import TestCase
 from django.http import HttpRequest
+from django.test import TestCase
+from django.test.client import Client
+from django_webtest import WebTest
 
 from oscar.apps.customer.history_helpers import get_recently_viewed_product_ids
 from oscar.test.helpers import create_product, create_order
+from oscar.test import ClientTestCase
+from oscar.apps.basket.models import Basket
 
 
 class HistoryHelpersTest(TestCase):
@@ -74,7 +80,6 @@ class EditProfileTests(TestCase):
 
 
 class AuthTestCase(TestCase):
-
     username = 'customer'
     password = 'cheeseshop'
     email = 'customer@example.com'
@@ -104,8 +109,8 @@ class AuthStaffRedirectTests(TestCase):
     def test_staff_member_login_for_dashboard(self):
         """
         Test if a staff member that is not yet logged in and trying to access the
-        dashboard is redirected to the Oscar login page (instead of the ``admin`` 
-        login page). Also test that the redirect after successful login will 
+        dashboard is redirected to the Oscar login page (instead of the ``admin``
+        login page). Also test that the redirect after successful login will
         be the originally requested page.
         """
         self.client = Client()
@@ -117,3 +122,138 @@ class AuthStaffRedirectTests(TestCase):
         response = self.client.get(reverse('dashboard:index'), follow=True)
         self.assertContains(response, "login-username", status_code=200)
         self.assertEquals(response.context['next'], reverse('dashboard:index'))
+
+
+class ReorderTests(ClientTestCase):
+
+    def test_can_reorder(self):
+        order = create_order(user=self.user)
+        Basket.objects.all().delete()
+
+        self.client.post(reverse('customer:order',
+                                            args=(order.number,)),
+                                    {'order_id': order.pk,
+                                     'action': 'reorder'})
+
+        basket = Basket.objects.all()[0]
+        self.assertEquals(len(basket.all_lines()), 1)
+
+    def test_can_reorder_line(self):
+        order = create_order(user=self.user)
+        line = order.lines.all()[0]
+        Basket.objects.all().delete()
+
+        self.client.post(reverse('customer:order-line',
+                                            args=(order.number, line.pk)),
+                                    {'action': 'reorder'})
+
+        basket = Basket.objects.all()[0]
+        self.assertEquals(len(basket.all_lines()), 1)
+
+    def test_cannot_reorder_out_of_stock_product(self):
+        order = create_order(user=self.user)
+
+        product = order.lines.all()[0].product
+        product.stockrecord.num_in_stock = 0
+        product.stockrecord.save()
+
+        Basket.objects.all().delete()
+
+        self.client.post(reverse('customer:order',
+                                            args=(order.number,)),
+                                    {'order_id': order.pk,
+                                     'action': 'reorder'})
+
+        basket = Basket.objects.all()[0]
+        self.assertEquals(len(basket.all_lines()), 0)
+
+    def test_cannot_reorder_out_of_stock_line(self):
+        order = create_order(user=self.user)
+        line = order.lines.all()[0]
+
+        product = line.product
+        product.stockrecord.num_in_stock = 0
+        product.stockrecord.save()
+
+        Basket.objects.all().delete()
+
+        self.client.post(reverse('customer:order-line',
+                                            args=(order.number, line.pk)),
+                                    {'action': 'reorder'})
+
+        basket = Basket.objects.all()[0]
+        self.assertEquals(len(basket.all_lines()), 0)
+
+    @patch('django.conf.settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD', 1)
+    def test_cannot_reorder_when_basket_maximum_exceeded(self):
+        order = create_order(user=self.user)
+        line = order.lines.all()[0]
+
+        Basket.objects.all().delete()
+        #add a product
+        product = create_product(price=D('12.00'))
+        self.client.post(reverse('basket:add'), {'product_id': product.id,
+                                                 'quantity': 1})
+
+
+        basket = Basket.objects.all()[0]
+        self.assertEquals(len(basket.all_lines()), 1)
+
+        #try to reorder a product
+        self.client.post(reverse('customer:order',
+                                            args=(order.number,)),
+                                    {'order_id': order.pk,
+                                     'action': 'reorder'})
+
+        self.assertEqual(len(basket.all_lines()), 1)
+        self.assertNotEqual(line.product.pk, product.pk)
+
+    @patch('django.conf.settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD', 1)
+    def test_cannot_reorder_line_when_basket_maximum_exceeded(self):
+        order = create_order(user=self.user)
+        line = order.lines.all()[0]
+
+        Basket.objects.all().delete()
+        #add a product
+        product = create_product(price=D('12.00'))
+        self.client.post(reverse('basket:add'), {'product_id': product.id,
+                                                 'quantity': 1})
+
+        basket = Basket.objects.all()[0]
+        self.assertEquals(len(basket.all_lines()), 1)
+
+        self.client.post(reverse('customer:order-line',
+                                            args=(order.number, line.pk)),
+                                    {'action': 'reorder'})
+
+        self.assertEquals(len(basket.all_lines()), 1)
+        self.assertNotEqual(line.product.pk, product.pk)
+
+
+class TestAUser(WebTest):
+
+    def assertRedirectsTo(self, response, url_name):
+        self.assertTrue(str(response.status_code).startswith('3'))
+        location = response.headers['Location']
+        redirect_path = location.replace('http://localhost:80', '')
+        self.assertEqual(reverse(url_name), redirect_path)
+
+    def test_can_login(self):
+        email, password = 'd@d.com', 'mypassword'
+        User.objects.create_user('_', email, password)
+
+        url = reverse('customer:login')
+        form = self.app.get(url).forms['login_form']
+        form['login-username'] = email
+        form['login-password'] = password
+        response = form.submit('login_submit')
+        self.assertRedirectsTo(response, 'customer:summary')
+
+    def test_can_register(self):
+        url = reverse('customer:register')
+        form = self.app.get(url).forms['register_form']
+        form['registration-email'] = 'terry@boom.com'
+        form['registration-password1'] = 'hedgehog'
+        form['registration-password2'] = 'hedgehog'
+        response = form.submit()
+        self.assertRedirectsTo(response, 'customer:summary')
