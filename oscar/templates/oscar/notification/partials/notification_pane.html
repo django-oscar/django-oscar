@@ -1,0 +1,56 @@
+﻿{% load i18n %}
+<div class="sub-header">
+    <h3>{%trans "Notifications" %}</h3>
+</div>
+{% if not notification_list %}
+<p>{%trans "You do not have any notifications for out-of-stock products." %}</p>
+{% else %}
+    <table class="table table-stiped table-bordered">
+        <tr>
+            <th>{%trans "Product Title" %}</th>
+            <th>{%trans "Product Availability" %}</th>
+            <th>{%trans "Status" %}</th>
+            <th>{%trans "Date Subscribed" %}</th>
+            {% if edit_enabled %}
+            <th></th>
+            {% endif %}
+        </tr>
+
+        {% for notification in notification_list %}
+        <tr>
+            <td>
+                <a href="{% url catalogue:detail notification.product.slug notification.product.id %}">
+                    {{ notification.product.title }}
+                </a>
+            </td>
+            <td>
+                {% if notification.product.stock_record.num_in_stock > 0 %}
+                    {{ notification.product.stock_record.num_in_stock }}
+                {% else %}
+                    {% trans "Not in Stock" %}
+                {% endif %}
+            </td>
+            <td>
+                {% include "notification/partials/status.html" %}
+            </td>
+            <td>{{ notification.date_created|date }}</td>
+            {% if edit_enabled %}
+                {% if not notification.is_active %}
+                <td>
+                    <a href="{% url catalogue:notification-set-status notification.product.slug notification.product.id notification.id "active" %}">
+                        <button class="btn btn-success" type='submit' name='activate' value='activate'>{%trans "Activate" %}</button>
+                    </a>
+                </td>
+                {% else %}
+                <td>
+                    <a href="{% url catalogue:notification-set-status notification.product.slug notification.product.id notification.id "inactive" %}">
+                        <button class="btn btn-danger" type='submit' name='deactivate' value='deactivate'>{%trans "Deactivate" %}</button>
+                    </a>
+                </td>
+                {% endif %}
+            {% endif %}
+        </tr>
+        {% endfor %}
+
+    </table>
+{% endif %}
