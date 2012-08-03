@@ -174,7 +174,6 @@ class CreateNotificationViewAsAuthenticatedUserTests(NotificationTestCase):
         self.client.login()
         response = self.client.get(product_url)
 
-        print response.content
         self.assertContains(response, self.email, status_code=200)
 
     def test_create_notification_for_auth_user_with_email(self):
