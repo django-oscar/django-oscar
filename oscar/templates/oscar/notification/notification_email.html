@@ -10,13 +10,17 @@ Dear Customer,
 {% endblocktrans %}
 {% endif %}
 
-we are happy to inform you that our product <strong><a href="{% url catalogue:detail product.slug product.id %}">
+{% url catalogue:detail product.slug product.id as product_url %}
+{% blocktrans %}
+we are happy to inform you that our product <strong><a href="{{ product_url }}">
 {{ product.title }}</a></strong> is back in stock. 
+{% endblocktrans %}
 
 {% if hurry %}
-{# TODO translation required but does not work #}
-The amount of items in stock is limited. Head over to <a href="{% url catalogue:detail product.slug product.id %}">
+{% blocktrans %}
+The amount of items in stock is limited. Head over to <a href="{{ product_url }}">
 order the product</a> now, before someone else get's there first.
+{% endblocktrans %}
 {% endif %}
 
 {% blocktrans %}

@@ -12,9 +12,11 @@ copying it into the address bar of your favourite browser.
 </a>
 </p>
 <p>
-{# TODO translation required but does not work #}
+{% url catalogue:detail product.slug product.id as product_url %}
+{% blocktrans %}
 We will send you an email to {{ notification.email }} as soon as
-<a href="{% url catalogue:detail product.slug product.id %}">{{ product }}</a> is back in stock.
+<a href="{{ product_url }}">{{ product }}</a> is back in stock.
+{% endblocktrans %}
 </p>
 
 <p>
