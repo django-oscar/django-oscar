@@ -3,11 +3,13 @@ from django.views.generic import ListView, DetailView
 from django.db.models import get_model
 from django.utils.translation import ugettext_lazy as _
 
+from oscar.core.loading import get_class
 from oscar.apps.catalogue.signals import product_viewed, product_search
 
 Product = get_model('catalogue', 'product')
 ProductReview = get_model('reviews', 'ProductReview')
 Category = get_model('catalogue', 'category')
+NotificationForm = get_class('catalogue.notification.forms', 'NotificationForm')
 
 
 class ProductDetailView(DetailView):
@@ -26,6 +28,10 @@ class ProductDetailView(DetailView):
         ctx = super(ProductDetailView, self).get_context_data(**kwargs)
         ctx['reviews'] = ProductReview.objects.filter(status=ProductReview.APPROVED,
                                                       product=self.object)
+        ctx['notification_form'] = NotificationForm(initial={
+            'user': self.request.user,
+            'email': getattr(self.request.user, 'email', ''),
+        })
         return ctx
 
     def get(self, request, **kwargs):
@@ -39,7 +45,8 @@ class ProductDetailView(DetailView):
         response = super(ProductDetailView, self).get(request, **kwargs)
 
         # Send signal to record the view of this product
-        self.view_signal.send(sender=self, product=product, user=request.user, request=request, response=response)
+        self.view_signal.send(sender=self, product=product, user=request.user,
+                              request=request, response=response)
         return response
 
     def get_template_names(self):
@@ -142,4 +149,7 @@ class ProductListView(ListView):
         else:
             context['summary'] = _("Products matching '%(query)s'") % {'query': q}
             context['search_term'] = q
+        context['notification_form'] = NotificationForm(initial={
+            'user':self.request.user,
+        })
         return context
