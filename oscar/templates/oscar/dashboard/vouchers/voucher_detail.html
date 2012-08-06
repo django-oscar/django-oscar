@@ -3,7 +3,7 @@
 {% load i18n %}
 
 {% block title %}
-{% blocktrans %}Voucher '{{ voucher.name }}'{% endblocktrans %} | Vouchers | {{ block.super }}
+{% blocktrans with name=voucher.name %}Voucher '{{ name }}'{% endblocktrans %} | Vouchers | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -16,13 +16,13 @@
 	<a href="{% url dashboard:voucher-list %}">{% trans "Vouchers" %}</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">{% blocktrans %}Voucher '{{ voucher.name }}'{% endblocktrans %}</a></li>
+	<li class="active"><a href=".">{% blocktrans with name=voucher.name %}Voucher '{{ name }}'{% endblocktrans %}</a></li>
 </ul>
 {% endblock %}
 
 {% block header %}
 <div class="page-header">
-	<h1>{% blocktrans %}Voucher '{{ voucher.name }}'{% endblocktrans %}</h1>
+	<h1>{% blocktrans with name=voucher.name %}Voucher '{{ name }}'{% endblocktrans %}</h1>
 </div>
 {% endblock header %}
 
