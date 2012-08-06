@@ -2,7 +2,6 @@ import locale
 
 from django import template
 from django.conf import settings
-from django.utils.translation import ugettext as _
 
 register = template.Library()
 
@@ -11,8 +10,6 @@ def currency(value):
     """
     Return value converted to a locale currency
     """
-    if not value:
-        return getattr(settings, 'FREE_PRODUCT_PRICE_TEXT', _('Free'))
     try:
         locale.setlocale(locale.LC_ALL, settings.LOCALE)
     except AttributeError:
