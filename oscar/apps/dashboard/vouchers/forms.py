@@ -37,6 +37,17 @@ class VoucherForm(forms.Form):
         self.voucher = voucher
         super(VoucherForm, self).__init__(*args, **kwargs)
 
+    def clean_name(self):
+        name = self.cleaned_data['name']
+        try:
+            voucher = Voucher.objects.get(name=name)
+        except Voucher.DoesNotExist:
+            pass
+        else:
+            if (not self.voucher) or (voucher.id != self.voucher.id):
+                raise forms.ValidationError(_("The name '%s' is already in use") % name)
+        return name
+
     def clean_code(self):
         code = self.cleaned_data['code'].strip().upper()
         if not code:
