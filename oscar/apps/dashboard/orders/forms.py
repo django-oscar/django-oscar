@@ -1,3 +1,5 @@
+import datetime
+
 from django import forms
 from django.db.models.loading import get_model
 from django.utils.translation import ugettext_lazy as _
@@ -23,16 +25,20 @@ class OrderStatsForm(forms.Form):
         date_from = self.cleaned_data['date_from']
         date_to = self.cleaned_data['date_to']
         if date_from and date_to:
-            self._filters = {'date_placed__range': [date_from, date_to]}
+            # We want to include end date so we adjust the date we use with the 'range'
+            # function.
+            self._filters = {'date_placed__range': [date_from,
+                                                    date_to +
+                                                    datetime.timedelta(days=1)]}
             self._description = _('Orders placed between %(date_from)s and %(date_to)s') % {
                 'date_from': date_from,
                 'date_to': date_to}
         elif date_from and not date_to:
-            self._filters = {'date_placed__gt': date_from}
+            self._filters = {'date_placed__gte': date_from}
             self._description = _('Orders placed since %s') % (date_from,)
         elif not date_from and date_to:
-            self._filters = {'date_placed__lt': date_to}
-            self._description = _('Orders placed before %s') % (date_to,)
+            self._filters = {'date_placed__lte': date_to}
+            self._description = _('Orders placed until %s') % (date_to,)
         else:
             self._filters = {}
             self._description = _('All orders')
@@ -63,14 +69,23 @@ class OrderSearchForm(forms.Form):
 
     voucher = forms.CharField(required=False, label=_("Voucher code"))
 
-    method_choices = (('', '---------'),) + tuple([(src.code, src.name) for src in SourceType.objects.all()])
-    payment_method = forms.ChoiceField(label=_("Payment method"), required=False,
-                                       choices=method_choices)
+    payment_method = forms.ChoiceField(
+        label=_("Payment method"), required=False,
+        choices=())
 
     format_choices = (('html', _('HTML')),
                       ('csv', _('CSV')),)
     response_format = forms.ChoiceField(widget=forms.RadioSelect,
             choices=format_choices, initial='html', label=_("Get results as"))
+
+    def __init__(self, *args, **kwargs):
+        super(OrderSearchForm, self).__init__(*args, **kwargs)
+        self.fields['payment_method'].choices = self.payment_method_choices()
+
+    def payment_method_choices(self):
+        return (('', '---------'),) + tuple(
+            [(src.code, src.name) for src in SourceType.objects.all()])
+
 
 
 class OrderNoteForm(forms.ModelForm):
