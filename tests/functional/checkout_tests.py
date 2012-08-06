@@ -55,10 +55,10 @@ class CheckoutMixin(object):
 class DisabledAnonymousCheckoutViewsTests(ClientTestCase):
     is_anonymous = True
 
-    def test_index_does_not_require_login(self):
+    def test_index_does_require_login(self):
         url = reverse('checkout:index')
         response = self.client.get(url)
-        self.assertIsOk(response)
+        self.assertIsRedirect(response)
 
     def test_user_address_views_require_a_login(self):
         urls = [reverse('checkout:user-address-create'),
@@ -118,7 +118,7 @@ class TestShippingAddressView(ClientTestCase, CheckoutMixin):
         self.add_product_to_basket()
         response = self.client.get(reverse('checkout:shipping-address'))
         self.assertIsOk(response)
-    
+
     def test_anon_checkout_disabled_by_default(self):
         self.assertFalse(settings.OSCAR_ALLOW_ANON_CHECKOUT)
 
@@ -163,13 +163,13 @@ class TestShippingMethodView(ClientTestCase, CheckoutMixin):
 class TestPaymentMethodView(ClientTestCase, CheckoutMixin):
 
     def test_view_redirects_if_no_shipping_address(self):
-        self.add_product_to_basket() 
+        self.add_product_to_basket()
         response = self.client.get(reverse('checkout:payment-method'))
         self.assertIsRedirect(response)
         self.assertRedirectUrlName(response, 'checkout:shipping-address')
 
     def test_view_redirects_if_no_shipping_method(self):
-        self.add_product_to_basket() 
+        self.add_product_to_basket()
         self.complete_shipping_address()
         response = self.client.get(reverse('checkout:payment-method'))
         self.assertIsRedirect(response)
@@ -253,7 +253,7 @@ class TestOrderPlacement(ClientTestCase, CheckoutMixin):
         self.assertIsRedirect(self.response)
         orders = Order.objects.all()
         self.assertEqual(1, len(orders))
-        
+
 
 class TestPlacingOrderUsingAVoucher(ClientTestCase, CheckoutMixin):
 
