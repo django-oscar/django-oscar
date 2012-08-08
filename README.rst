@@ -59,6 +59,6 @@ companies, from large multinationals to small, boutique stores:
 * Carlsberg - Their global "We Deliver More" platform is powered by Oscar (but
   is a B2B site so it not browsable by the public).
 * Dolbeau - http://www.dolbeau.ca/
-* The UK Labour party - http://shop.labour.org.uk (will be live in early June)
+* The UK Labour party - http://shop.labour.org.uk
 
 Many more on the way.  If you use Oscar in production, please let us know.
