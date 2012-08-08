@@ -16,7 +16,7 @@ class FreeTest(TestCase):
 
     def setUp(self):
         self.method = Free()
-    
+
     def test_shipping_is_free_for_empty_basket(self):
         basket = Basket()
         self.method.set_basket(basket)
@@ -29,51 +29,51 @@ class FreeTest(TestCase):
         self.method.set_basket(basket)
         self.assertEquals(D('0.00'), self.method.basket_charge_incl_tax())
         self.assertEquals(D('0.00'), self.method.basket_charge_excl_tax())
-        
-        
-class FixedPriceTest(TestCase):        
-    
+
+
+class FixedPriceTest(TestCase):
+
     def test_fixed_price_shipping_charges_for_empty_basket(self):
         method = FixedPrice(D('10.00'), D('10.00'))
         basket = Basket()
         method.set_basket(basket)
         self.assertEquals(D('10.00'), method.basket_charge_incl_tax())
         self.assertEquals(D('10.00'), method.basket_charge_excl_tax())
-        
+
     def test_fixed_price_shipping_assumes_no_tax(self):
         method = FixedPrice(D('10.00'))
         basket = Basket()
         method.set_basket(basket)
         self.assertEquals(D('10.00'), method.basket_charge_excl_tax())
-        
-    shipping_values = lambda: [('1.00',), 
-                               ('5.00',), 
-                               ('10.00',), 
-                               ('12.00',)]    
-        
-    @dataProvider(shipping_values)    
+
+    shipping_values = lambda: [('1.00',),
+                               ('5.00',),
+                               ('10.00',),
+                               ('12.00',)]
+
+    @dataProvider(shipping_values)
     def test_different_values(self, value):
         method = FixedPrice(D(value))
         basket = Basket()
         method.set_basket(basket)
         self.assertEquals(D(value), method.basket_charge_excl_tax())
-        
-        
+
+
 class OrderAndItemChargesTests(TestCase):
-    
+
     def setUp(self):
         self.method = OrderAndItemCharges(price_per_order=D('5.00'), price_per_item=D('1.00'))
         self.basket = Basket.objects.create()
         self.method.set_basket(self.basket)
-    
+
     def test_order_level_charge_for_empty_basket(self):
         self.assertEquals(D('5.00'), self.method.basket_charge_incl_tax())
-        
+
     def test_single_item_basket(self):
         p = create_product()
         self.basket.add_product(p)
         self.assertEquals(D('5.00') + D('1.00'), self.method.basket_charge_incl_tax())
-        
+
     def test_multi_item_basket(self):
         p = create_product()
         self.basket.add_product(p, 7)
@@ -81,15 +81,15 @@ class OrderAndItemChargesTests(TestCase):
 
 
 class ZeroFreeThresholdTest(TestCase):
-    
+
     def setUp(self):
         self.method = OrderAndItemCharges(price_per_order=D('10.00'), free_shipping_threshold=D('0.00'))
         self.basket = Basket.objects.create()
         self.method.set_basket(self.basket)
-    
+
     def test_free_shipping_with_empty_basket(self):
         self.assertEquals(D('0.00'), self.method.basket_charge_incl_tax())
-        
+
     def test_free_shipping_with_nonempty_basket(self):
         p = create_product(D('5.00'))
         self.basket.add_product(p)
@@ -97,22 +97,22 @@ class ZeroFreeThresholdTest(TestCase):
 
 
 class NonZeroFreeThresholdTest(TestCase):
-    
+
     def setUp(self):
         self.method = OrderAndItemCharges(price_per_order=D('10.00'), free_shipping_threshold=D('20.00'))
         self.basket = Basket.objects.create()
         self.method.set_basket(self.basket)
-        
+
     def test_basket_below_threshold(self):
         p = create_product(D('5.00'))
         self.basket.add_product(p)
         self.assertEquals(D('10.00'), self.method.basket_charge_incl_tax())
-        
+
     def test_basket_on_threshold(self):
         p = create_product(D('5.00'))
         self.basket.add_product(p, 4)
         self.assertEquals(D('0.00'), self.method.basket_charge_incl_tax())
-        
+
     def test_basket_above_threshold(self):
         p = create_product(D('5.00'))
         self.basket.add_product(p, 8)
@@ -150,6 +150,14 @@ class ScalesTests(TestCase):
 
         scales = Scales(attribute_code='weight')
         self.assertEquals(1+2, scales.weigh_basket(basket))
+
+    def test_weight_calculation_of_basket_with_line_quantity(self):
+        basket = Basket()
+        basket.add_product(create_product(attributes={'weight': 1}), quantity=3)
+        basket.add_product(create_product(attributes={'weight': 2}), quantity=4)
+
+        scales = Scales(attribute_code='weight')
+        self.assertEquals(1*3+2*4, scales.weigh_basket(basket))
 
 
 class WeightBasedMethodTests(TestCase):
