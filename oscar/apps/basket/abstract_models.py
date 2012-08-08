@@ -130,7 +130,7 @@ class AbstractBasket(models.Model):
             line.save()
         else:
             # Line already exists - bump its quantity and delete the old
-            existing_line.quantity += line.quantity
+            existing_line.quantity = max(existing_line.quantity, line.quantity)
             existing_line.save()
             line.delete()
 
