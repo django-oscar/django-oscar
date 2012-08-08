@@ -232,12 +232,11 @@ class Range(models.Model):
     includes_all_products = models.BooleanField(default=False)
     included_products = models.ManyToManyField('catalogue.Product', related_name='includes', blank=True)
     excluded_products = models.ManyToManyField('catalogue.Product', related_name='excludes', blank=True)
-    classes = models.ManyToManyField('catalogue.ProductClass', related_name='classes', blank=True)
+    klasses = models.ManyToManyField('catalogue.ProductClass', blank=True)
     included_categories = models.ManyToManyField('catalogue.Category', related_name='includes', blank=True)
 
     __included_product_ids = None
     __excluded_product_ids = None
-    __class_ids = None
 
     def __unicode__(self):
         return self.name
@@ -281,8 +280,8 @@ class Range(models.Model):
         return self.__excluded_product_ids
 
     def _class_ids(self):
-        if None == self.__class_ids:
-            self.__class_ids = [row['id'] for row in self.classes.values('id')]
+        if not hasattr(self, '__class_ids'):
+            self.__class_ids = [row['id'] for row in self.klasses.values('id')]
         return self.__class_ids
 
 
