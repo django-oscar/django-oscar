@@ -21,6 +21,8 @@ Further reading:
 * `Continuous integration homepage`_ on `travis-ci.org`_
 * `Twitter account for news and updates`_
 * `Twitter account of all commits`_
+* `crate.io page`_
+* `PyPI page`_
 
 Continuous integration status:
 
@@ -35,6 +37,8 @@ Continuous integration status:
 .. _`Twitter account for news and updates`: https://twitter.com/#!/django_oscar
 .. _`Twitter account of all commits`: https://twitter.com/#!/oscar_django
 .. _`Google Group`: https://groups.google.com/forum/?fromgroups#!forum/django-oscar
+.. _`crate.io page`: https://crate.io/packages/django-oscar/
+.. _`PyPI page`: http://pypi.python.org/pypi/django-oscar/
 
 Oscar was written by `David Winterbottom`_ (`@codeinthehole`_) and is developed
 and maintained by `Tangent Labs`_, a London-based digital agency, with help from
