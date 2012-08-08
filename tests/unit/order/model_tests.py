@@ -1,10 +1,8 @@
 from decimal import Decimal as D
-import hashlib
-import time
+import datetime
 
 from django.test import TestCase
-from django.conf import settings
-from mock import Mock
+import mock
 
 from oscar.apps.address.models import Country
 from oscar.apps.basket.models import Basket
@@ -14,54 +12,17 @@ from oscar.apps.order.models import ShippingAddress, Order, Line, \
 from oscar.apps.order.exceptions import (InvalidOrderStatus, InvalidLineStatus,
                                          InvalidShippingEvent)
 from oscar.test.helpers import create_order, create_product, create_offer
-from oscar.apps.order.utils import OrderCreator
-from oscar.apps.order.processing import EventHandler
-from oscar.test import patch_settings
 
 ORDER_PLACED = 'order_placed'
 
 
 class ShippingAddressTest(TestCase):
     fixtures = ['countries.json']
-    
+
     def test_titleless_salutation_is_stripped(self):
         country = Country.objects.get(iso_3166_1_a2='GB')
         a = ShippingAddress.objects.create(last_name='Barrington', line1="75 Smith Road", postcode="N4 8TY", country=country)
         self.assertEquals("Barrington", a.salutation())
-    
-
-class OrderTest(TestCase):
-
-    def setUp(self):
-        self.order = create_order(number='100002')
-        self.order_placed,_ = ShippingEventType.objects.get_or_create(code='order_placed', 
-                                                                      name='Order placed')
-
-    def tearDown(self):
-        ShippingEventType.objects.all().delete()
-
-    def tearDown(self):
-        Order.objects.all().delete()
-        
-    def event(self, type):
-        """
-        Creates an order-level shipping event
-        """
-        type = self.order_placed
-        event = ShippingEvent.objects.create(order=self.order, event_type=type)
-        for line in self.order.lines.all():
-            ShippingEventQuantity.objects.create(event=event, line=line)  
-        
-    def test_shipping_status_is_empty_with_no_events(self):
-        self.assertEquals("", self.order.shipping_status)
-
-    def test_shipping_status_after_one_order_level_events(self):
-        self.event(ORDER_PLACED)
-        self.assertEquals("Order placed", self.order.shipping_status)
-
-    def test_order_hash_generation(self):
-        expected = hashlib.md5("%s%s" % (self.order.number, settings.SECRET_KEY)).hexdigest()
-        self.assertEqual(expected, self.order.verification_hash())
 
 
 class OrderStatusPipelineTests(TestCase):
@@ -110,6 +71,15 @@ class OrderStatusPipelineTests(TestCase):
             self.assertEqual('SHIPPED', line.status)
 
 
+class MockDateTime(datetime.datetime):
+
+    @classmethod
+    def stub(cls, method_name, return_value):
+        mocked_method = mock.Mock()
+        mocked_method.return_value = return_value
+        setattr(cls, method_name, mocked_method)
+
+
 class OrderNoteTests(TestCase):
 
     def setUp(self):
@@ -127,10 +97,12 @@ class OrderNoteTests(TestCase):
         OrderNote.editable_lifetime = 1
         note = self.order.notes.create(message='test')
         self.assertTrue(note.is_editable())
-        time.sleep(2)
-        self.assertFalse(note.is_editable())
+        now = datetime.datetime.now()
+        with mock.patch('datetime.datetime', MockDateTime) as mock_datetime:
+            mock_datetime.stub('now', now + datetime.timedelta(seconds=30))
+            self.assertFalse(note.is_editable())
 
-        
+
 class LineTests(TestCase):
 
     def setUp(self):
@@ -138,9 +110,9 @@ class LineTests(TestCase):
         basket.add_product(create_product(price=D('10.00')), 4)
         self.order = create_order(number='100002', basket=basket)
         self.line = self.order.lines.all()[0]
-        self.order_placed,_ = ShippingEventType.objects.get_or_create(code='order_placed', 
+        self.order_placed,_ = ShippingEventType.objects.get_or_create(code='order_placed',
                                                                       name='Order placed')
-        self.dispatched,_ = ShippingEventType.objects.get_or_create(code='dispatched', 
+        self.dispatched,_ = ShippingEventType.objects.get_or_create(code='dispatched',
                                                                     name='Dispatched')
 
     def tearDown(self):
@@ -153,7 +125,7 @@ class LineTests(TestCase):
         event = ShippingEvent.objects.create(order=self.order, event_type=type)
         if quantity == None:
             quantity = self.line.quantity
-        event_quantity = ShippingEventQuantity.objects.create(event=event, line=self.line, quantity=quantity)
+        ShippingEventQuantity.objects.create(event=event, line=self.line, quantity=quantity)
 
     def test_shipping_event_history(self):
         self.event(self.order_placed, 3)
@@ -164,34 +136,34 @@ class LineTests(TestCase):
 
     def test_shipping_status_is_empty_to_start_with(self):
         self.assertEquals('', self.line.shipping_status)
-        
+
     def test_shipping_status_after_full_line_event(self):
         self.event(self.order_placed)
-        self.assertEquals(self.order_placed.name, self.line.shipping_status)    
-        
+        self.assertEquals(self.order_placed.name, self.line.shipping_status)
+
     def test_shipping_status_after_two_full_line_events(self):
         type1 = self.order_placed
         self.event(type1)
         type2 = self.dispatched
         self.event(type2)
-        self.assertEquals(type2.name, self.line.shipping_status) 
-        
+        self.assertEquals(type2.name, self.line.shipping_status)
+
     def test_shipping_status_after_partial_line_event(self):
         type = self.order_placed
         self.event(type, 3)
         expected = "%s (%d/%d items)" % (type.name, 3, self.line.quantity)
-        self.assertEquals(expected, self.line.shipping_status) 
-        
+        self.assertEquals(expected, self.line.shipping_status)
+
     def test_has_passed_shipping_status_after_full_line_event(self):
         type = self.order_placed
         self.event(type)
-        self.assertTrue(self.line.has_shipping_event_occurred(type)) 
-        
+        self.assertTrue(self.line.has_shipping_event_occurred(type))
+
     def test_has_passed_shipping_status_after_partial_line_event(self):
         type = self.order_placed
         self.event(type, self.line.quantity - 1)
         self.assertFalse(self.line.has_shipping_event_occurred(type), 1)
-        
+
     def test_has_passed_shipping_status_after_multiple_line_event(self):
         event_types = [ShippingEventType.objects.get(code='order_placed'),
                        ShippingEventType.objects.get(code='dispatched')]
@@ -203,18 +175,18 @@ class LineTests(TestCase):
     def test_inconsistent_shipping_status_setting(self):
         type = self.order_placed
         self.event(type, self.line.quantity - 1)
-        
+
         with self.assertRaises(ValueError):
             self.event(type, self.line.quantity)
-        
+
     def test_inconsistent_shipping_quantities(self):
         type = ShippingEventType.objects.get(code='order_placed')
         self.event(type, self.line.quantity - 1)
-        
+
         with self.assertRaises(ValueError):
             # Total quantity is too high
             self.event(type, 2)
-        
+
 
 class LineStatusTests(TestCase):
 
@@ -239,7 +211,7 @@ class LineStatusTests(TestCase):
 
     def test_setting_same_status_does_nothing(self):
         self.line.set_status('A')
-        
+
 
 class ShippingEventTypeTests(TestCase):
 
@@ -300,90 +272,6 @@ class ShippingEventQuantityTests(TestCase):
         ShippingEventQuantity.objects.create(event=event,
                                              line=self.line,
                                              quantity=1)
-
-   
-class OrderCreatorTests(TestCase):
-
-    def setUp(self):
-        self.creator = OrderCreator()
-        self.basket = Basket.objects.create()
-
-    def tearDown(self):
-        Order.objects.all().delete()
-
-    def test_exception_raised_when_empty_basket_passed(self):
-        with self.assertRaises(ValueError):
-            self.creator.place_order(basket=self.basket)
-
-    def test_order_models_are_created(self):
-        self.basket.add_product(create_product(price=D('12.00')))
-        self.creator.place_order(basket=self.basket, order_number='1234')
-        order = Order.objects.get(number='1234')
-        lines = order.lines.all()
-        self.assertEqual(1, len(lines))
-
-    def test_status_is_saved_if_passed(self):
-        self.basket.add_product(create_product(price=D('12.00')))
-        self.creator.place_order(basket=self.basket, order_number='1234', status='Active')
-        order = Order.objects.get(number='1234')
-        self.assertEqual('Active', order.status)
-
-    def test_shipping_is_free_by_default(self):
-        self.basket.add_product(create_product(price=D('12.00')))
-        self.creator.place_order(basket=self.basket, order_number='1234')
-        order = Order.objects.get(number='1234')
-        self.assertEqual(order.total_incl_tax, self.basket.total_incl_tax)
-        self.assertEqual(order.total_excl_tax, self.basket.total_excl_tax)
-
-    def test_basket_totals_are_used_by_default(self):
-        self.basket.add_product(create_product(price=D('12.00')))
-        method = Mock()
-        method.basket_charge_incl_tax = Mock(return_value=D('2.00'))
-        method.basket_charge_excl_tax = Mock(return_value=D('2.00'))
-
-        self.creator.place_order(basket=self.basket, order_number='1234', shipping_method=method)
-        order = Order.objects.get(number='1234')
-        self.assertEqual(order.total_incl_tax, self.basket.total_incl_tax + D('2.00'))
-        self.assertEqual(order.total_excl_tax, self.basket.total_excl_tax + D('2.00'))
-        
-    def test_exception_raised_if_duplicate_number_passed(self):
-        self.basket.add_product(create_product(price=D('12.00')))
-        self.creator.place_order(basket=self.basket, order_number='1234')
-        with self.assertRaises(ValueError):
-            self.creator.place_order(basket=self.basket, order_number='1234')
-
-    def test_default_order_status_comes_from_settings(self):
-        self.basket.add_product(create_product(price=D('12.00')))
-        with patch_settings(OSCAR_INITIAL_ORDER_STATUS='A'):
-            self.creator.place_order(basket=self.basket, order_number='1234')
-        order = Order.objects.get(number='1234')
-        self.assertEqual('A', order.status)
-
-    def test_default_line_status_comes_from_settings(self):
-        self.basket.add_product(create_product(price=D('12.00')))
-        with patch_settings(OSCAR_INITIAL_LINE_STATUS='A'):
-            self.creator.place_order(basket=self.basket, order_number='1234')
-        order = Order.objects.get(number='1234')
-        line = order.lines.all()[0]
-        self.assertEqual('A', line.status)
-
-
-class EventHandlerTests(TestCase):
-
-    def setUp(self):
-        self.order = create_order()
-        self.handler = EventHandler()
-        self.shipped = ShippingEventType.objects.create(name='Shipped')
-        self.returned = ShippingEventType.objects.create(name='Returned')
-
-    def test_shipping_handler_creates_event(self):
-        self.handler.handle_shipping_event(self.order, self.shipped, 
-                                           self.order.lines.all(), [1])
-
-        events = self.order.shipping_events.all()
-        self.assertEqual(1, len(events))
-        event = events[0]
-        self.assertEqual('Shipped', event.event_type.name)
 
 
 class OrderDiscountTests(TestCase):

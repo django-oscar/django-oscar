@@ -14,8 +14,8 @@ def currency(value):
         locale.setlocale(locale.LC_ALL, settings.LOCALE)
     except AttributeError:
         locale.setlocale(locale.LC_ALL, '')
-        
-    # We allow the currency symbol to be overridden    
+
+    # We allow the currency symbol to be overridden
     symbol = getattr(settings, 'CURRENCY_SYMBOL', None)
     try:
         if symbol:
@@ -24,5 +24,5 @@ def currency(value):
             c = locale.currency(value, symbol=True, grouping=True)
             return unicode(c, 'utf8')
     except TypeError:
-        return '' 
-        
+        return ''
+

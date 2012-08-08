@@ -1,5 +1,6 @@
 import csv
 from decimal import Decimal as D
+import datetime
 
 from django.db.models import get_model
 from django.utils.translation import ugettext_lazy as _
@@ -43,7 +44,7 @@ class OfferReportGenerator(ReportGenerator):
     def generate(self):
         discounts = OrderDiscount._default_manager.filter(
             order__date_placed__gte=self.start_date,
-            order__date_placed__lt=self.end_date
+            order__date_placed__lt=self.end_date + datetime.timedelta(days=1)
         )
         offer_discounts = {}
         for discount in discounts:

@@ -21,18 +21,9 @@ class BasketLineForm(forms.ModelForm):
         return qty
 
     def check_max_allowed_quantity(self, qty):
-        basket_threshold = settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD
-        if basket_threshold:
-            total_basket_quantity = self.instance.basket.num_items
-            max_allowed = basket_threshold - total_basket_quantity
-            if qty > max_allowed:
-                raise forms.ValidationError(
-                    _("Due to technical limitations we are not able to ship"
-                      " more than %(threshold)d items in one order. Your basket"
-                      " currently has %(basket)d items.") % {
-                            'threshold': basket_threshold,
-                            'basket': total_basket_quantity,
-                    })
+        is_quantity_allowed, reason = self.instance.basket.is_quantity_allowed(qty)
+        if not is_quantity_allowed:
+            raise forms.ValidationError(reason)
 
     def check_permission(self, qty):
         product = self.instance.product
@@ -114,7 +105,9 @@ class ProductSelectionForm(forms.Form):
 
 
 class AddToBasketForm(forms.Form):
-    product_id = forms.IntegerField(widget=forms.HiddenInput(), min_value=1, label=_("Product ID"))
+    # We set required=False as validation happens later on
+    product_id = forms.IntegerField(widget=forms.HiddenInput(), required=False,
+                                    min_value=1, label=_("Product ID"))
     quantity = forms.IntegerField(initial=1, min_value=1, label=_('Quantity'))
 
     def __init__(self, basket, user, instance, *args, **kwargs):
@@ -129,8 +122,13 @@ class AddToBasketForm(forms.Form):
                 self._create_product_fields(instance)
 
     def clean(self):
-        id = self.cleaned_data['product_id']
-        product = Product.objects.get(id=id)
+        try:
+            product = Product.objects.get(
+                id=self.cleaned_data.get('product_id', None))
+        except Product.DoesNotExist:
+            raise forms.ValidationError(
+                _("Please select a valid product"))
+
         qty = self.cleaned_data.get('quantity', 1)
         try:
             line = self.basket.lines.get(product=product)
@@ -176,7 +174,7 @@ class AddToBasketForm(forms.Form):
                                            currency(variant.stockrecord.price_incl_tax))
                 choices.append((variant.id, summary))
         self.fields['product_id'] = forms.ChoiceField(choices=tuple(choices),
-                                                      label="Variant")
+                                                      label=_("Variant"))
 
     def _create_product_fields(self, item):
         u"""Add the product option fields."""

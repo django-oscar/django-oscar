@@ -10,7 +10,7 @@ from oscar.apps.checkout.views import IndexView, ShippingAddressView, UserAddres
 
 class CheckoutApplication(Application):
     name = 'checkout'
-    
+
     index_view = IndexView
     shipping_address_view = ShippingAddressView
     user_address_create_view = UserAddressCreateView
@@ -40,8 +40,6 @@ class CheckoutApplication(Application):
         return self.post_process_urls(urlpatterns)
 
     def get_url_decorator(self, pattern):
-        if pattern.name == 'index':
-            return None
         if not settings.OSCAR_ALLOW_ANON_CHECKOUT:
             return login_required
         if pattern.name.startswith('user-address'):

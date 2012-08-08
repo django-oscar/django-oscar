@@ -64,27 +64,36 @@
 			<p><strong>{% trans "Product Code:" %}</strong> <code>{{ product.upc }}</code></p>
              
             <hr/>
+
+			{% if product.description %}
             <ul>
 				<li><a href="#product_description">{% trans "Read the full description" %}</a></li>
             </ul>
+			{% endif %}
 
             {% include "catalogue/partials/add_to_basket_form.html" %}
         </div><!-- /span6 -->
     </div><!-- /row-fluid -->
               
 	{% block product_description %}
+	{% if product.description %}
     <div id="product_description" class="sub-header">
 		<h2>{% trans "Product Description" %}</h2>
     </div>
     <p>{{ product.description }}</p>
+	{% endif %}
 	{% endblock %}
     
 	{% block product_info %}
-    <h2>Product Information</h2>
-    <table class="table table-striped table-condensed">
+	<div class="sub-header">
+		<h2>Product Information</h2>
+	</div>
+    <table class="table table-condensed">
+		{% if product.upc %}
         <tr>
 			<th>{% trans "UPC" %}</th><td>{{ product.upc }}</td>
         </tr>
+		{% endif %}
         <tr>
 			<th>{% trans "Product class" %}</th><td>{{ product.product_class.name }}</td>
         </tr>
@@ -100,12 +109,6 @@
             <td>{{ product.stockrecord.availability }}</td>
         </tr>
         {% endif %}
-        <tr>
-			<th>{% trans "Product type" %}</th>
-            <td>
-            {% if product.is_group %}Product group{% else %}{% if product.is_variant %}Variant{% else %}Stand-alone{% endif %}{% endif %}
-            </td>
-        </tr>
         {% for av in product.attribute_values.all %}
         <tr>
             <th>{{ av.attribute.name }}</th>
@@ -128,9 +131,13 @@
         <div id="reviews" class="sub-header">
 			<h2>{% trans "Customer Reviews" %}</h2>
         </div>
-        <p>Read customer reviews on this product.</p>
+		{% if reviews %}
+		<p>{% trans "Read customer reviews on this product." %}</p>
+		{% else %}
+		<p>{% trans "Be the first to review this product." %}</p>
+		{% endif %}
        <div class="review_read">
-		   <a href="{% url catalogue:reviews-add product.slug product.id %}#addreview" class="btn btn-success">{% trans "Add a review" %}</a>
+		   <a href="{% url catalogue:reviews-add product.slug product.id %}#addreview" class="btn btn-success">{% trans "Write a review" %}</a>
        </div>
 
         {% if reviews %}

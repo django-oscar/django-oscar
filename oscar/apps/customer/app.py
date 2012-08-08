@@ -29,7 +29,6 @@ class CustomerApplication(Application):
     change_password_view = ChangePasswordView
 
     def get_urls(self):
-
         urlpatterns = patterns('',
             url(r'^$', login_required(self.summary_view.as_view()), name='summary'),
             url(r'^login/$', self.login_view.as_view(), name='login'),

@@ -3,6 +3,7 @@
 {% load i18n %}
 
 {% block report %}
+{% if objects %}
 <table class="table table-striped table-bordered">
     <tr>
 		<th>{% trans "Voucher code" %}</th>
@@ -19,7 +20,10 @@
     </tr>
     {% endfor %}
 </table>
-    {% if page_obj %}
-        {% include "catalogue/partials/pagination.html" %}
-    {% endif %}
+{% if page_obj %}
+	{% include "catalogue/partials/pagination.html" %}
+{% endif %}
+{% else %}
+<p>{% trans "No vouchers were used in this period" %}</p>
+{% endif %}
 {% endblock %}

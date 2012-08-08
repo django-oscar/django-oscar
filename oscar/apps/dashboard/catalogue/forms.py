@@ -187,7 +187,9 @@ class ProductForm(forms.ModelForm):
 
     def clean(self):
         data = self.cleaned_data
-        if data['parent'] is None and not data['title']:
+        if 'parent' not in data and not data['title']:
+            raise forms.ValidationError(_("This field is required"))
+        elif 'parent' in data and data['parent'] is None and not data['title']:
             raise forms.ValidationError(_("Parent products must have a title"))
         return data
 
@@ -210,14 +212,15 @@ class ProductCategoryFormSet(BaseInlineFormSet):
                 _("A top-level product must have at least one category"))
         if self.instance.is_variant and self.get_num_categories() > 0:
             raise forms.ValidationError(
-                _("A variant product should not have at categories"))
+                _("A variant product should not have categories"))
 
     def get_num_categories(self):
         num_categories = 0
         for i in range(0, self.total_form_count()):
             form = self.forms[i]
-            if form.cleaned_data.get('category', None) and \
-               form.cleaned_data.get('DELETE', False) != True:
+            if (hasattr(form, 'cleaned_data')
+                    and form.cleaned_data.get('category', None)
+                    and form.cleaned_data.get('DELETE', False) != True):
                 num_categories += 1
         return num_categories
 

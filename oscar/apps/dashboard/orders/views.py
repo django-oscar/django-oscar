@@ -269,6 +269,7 @@ class OrderDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         ctx = super(OrderDetailView, self).get_context_data(**kwargs)
+        ctx['active_tab'] = kwargs.get('active_tab', 'lines')
         ctx['note_form'] = self.get_order_note_form()
         ctx['line_statuses'] = Line.all_statuses()
         ctx['shipping_event_types'] = ShippingEventType.objects.all()
@@ -334,7 +335,7 @@ class OrderDetailView(DetailView):
             note.save()
             messages.success(self.request, success_msg)
             return self.reload_page_response(fragment='notes')
-        ctx = self.get_context_data(note_form=form)
+        ctx = self.get_context_data(note_form=form, active_tab='notes')
         return self.render_to_response(ctx)
 
     def delete_note(self, request, order):

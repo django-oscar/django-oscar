@@ -1,4 +1,5 @@
 import csv
+import datetime
 
 from django.db.models import get_model
 from django.utils.translation import ugettext_lazy as _
@@ -36,7 +37,6 @@ class OrderReportHTMLFormatter(ReportHTMLFormatter):
 
 
 class OrderReportGenerator(ReportGenerator):
-
     code = 'order_report'
     description = _("Orders placed")
 
@@ -47,8 +47,9 @@ class OrderReportGenerator(ReportGenerator):
 
     def generate(self):
         orders = Order._default_manager.filter(
-            date_placed__gte=self.start_date
-        ).filter(date_placed__lt=self.end_date)
+            date_placed__gte=self.start_date,
+            date_placed__lt=self.end_date + datetime.timedelta(days=1)
+        )
 
         additional_data = {
             'start_date': self.start_date,

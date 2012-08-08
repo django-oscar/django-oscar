@@ -33,7 +33,7 @@ class OrderCreator(object):
     """
     Places the order by writing out the various models
     """
-    
+
     def place_order(self, basket, total_incl_tax=None, total_excl_tax=None,
                     user=None, shipping_method=None, shipping_address=None,
                     billing_address=None, order_number=None, status=None, **kwargs):
@@ -61,10 +61,10 @@ class OrderCreator(object):
             pass
         else:
             raise ValueError(_("There is already an order with number %s") % order_number)
-        
+
         # Ok - everything seems to be in order, let's place the order
-        order = self.create_order_model(user, basket, shipping_address, 
-                                        shipping_method, billing_address, total_incl_tax, 
+        order = self.create_order_model(user, basket, shipping_address,
+                                        shipping_method, billing_address, total_incl_tax,
                                         total_excl_tax, order_number, status, **kwargs)
         for line in basket.all_lines():
             self.create_line_models(order, line)
@@ -76,16 +76,14 @@ class OrderCreator(object):
 
         for voucher in basket.vouchers.all():
             self.record_voucher_usage(order, voucher, user)
-        
+
         # Send signal for analytics to pick up
         order_placed.send(sender=self, order=order, user=user)
-        
+
         return order
 
-
-        
-    def create_order_model(self, user, basket, shipping_address, shipping_method, 
-                           billing_address, total_incl_tax, total_excl_tax, 
+    def create_order_model(self, user, basket, shipping_address, shipping_method,
+                           billing_address, total_incl_tax, total_excl_tax,
                            order_number, status, **extra_order_fields):
         """
         Creates an order model.
@@ -111,7 +109,7 @@ class OrderCreator(object):
         order = Order(**order_data)
         order.save()
         return order
-    
+
     def get_partner_for_product(self, product):
         """
         Return the partner for a product
@@ -119,11 +117,11 @@ class OrderCreator(object):
         if product.has_stockrecord:
             return product.stockrecord.partner
         raise AttributeError(_("No partner found for product '%s'") % product)
-    
+
     def create_line_models(self, order, basket_line, extra_line_fields=None):
         """
         Create the batch line model.
-        
+
         You can set extra fields by passing a dictionary as the extra_line_fields value
         """
         partner = self.get_partner_for_product(basket_line.product)
@@ -138,7 +136,7 @@ class OrderCreator(object):
                      'title': basket_line.product.get_title(),
                      'upc': basket_line.product.upc,
                      'quantity': basket_line.quantity,
-                     # Price details 
+                     # Price details
                      'line_price_excl_tax': basket_line.line_price_excl_tax_and_discounts,
                      'line_price_incl_tax': basket_line.line_price_incl_tax_and_discounts,
                      'line_price_before_discounts_excl_tax': basket_line.line_price_excl_tax,
@@ -157,23 +155,23 @@ class OrderCreator(object):
                 extra_line_fields['status'] = getattr(settings, 'OSCAR_INITIAL_LINE_STATUS')
         if extra_line_fields:
             line_data.update(extra_line_fields)
-        
+
         order_line = Line._default_manager.create(**line_data)
         self.create_line_price_models(order, order_line, basket_line)
         self.create_line_attributes(order, order_line, basket_line)
         self.create_additional_line_models(order, order_line, basket_line)
 
         return order_line
-        
+
     def update_stock_records(self, line):
-        line.product.stockrecord.allocate(line.quantity)    
-        
+        line.product.stockrecord.allocate(line.quantity)
+
     def create_additional_line_models(self, order, order_line, basket_line):
         """
         Empty method designed to be overridden.
 
-        Some applications require additional information about lines, this 
-        method provides a clean place to create additional models that 
+        Some applications require additional information about lines, this
+        method provides a clean place to create additional models that
         relate to a given line.
         """
         pass
@@ -185,21 +183,21 @@ class OrderCreator(object):
         breakdown = basket_line.get_price_breakdown()
         for price_incl_tax, price_excl_tax, quantity in breakdown:
             LinePrice._default_manager.create(order=order,
-                                              line=order_line, 
-                                              quantity=quantity, 
+                                              line=order_line,
+                                              quantity=quantity,
                                               price_incl_tax=price_incl_tax,
                                               price_excl_tax=price_excl_tax)
-    
+
     def create_line_attributes(self, order, order_line, basket_line):
         """
         Creates the batch line attributes.
         """
         for attr in basket_line.attributes.all():
             LineAttribute._default_manager.create(line=order_line,
-                                                  option=attr.option, 
+                                                  option=attr.option,
                                                   type=attr.option.code,
                                                   value=attr.value)
-            
+
     def create_discount_model(self, order, discount):
         """
         Creates an order discount model for each discount attached to the basket.
@@ -215,9 +213,9 @@ class OrderCreator(object):
 
     def record_discount(self, discount):
         discount['offer'].record_usage(discount['discount'])
-        if 'voucher' in discount:
+        if 'voucher' in discount and discount['voucher']:
             discount['voucher'].record_discount(discount['discount'])
-        
+
     def record_voucher_usage(self, order, voucher, user):
         """
         Updates the models that care about this voucher.

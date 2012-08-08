@@ -87,18 +87,17 @@
 <div class="tabbable dashboard">
 	<ul class="nav nav-tabs">
 	{% block nav_tabs %}
-		<li class="active"><a href="#lines" data-toggle="tab">{% trans "Order contents" %}</a></li>
-		<li><a href="#shipping" data-toggle="tab">{% trans "Shipping" %}</a></li>
-		<li><a href="#payment" data-toggle="tab">{% trans "Payment" %}</a></li>
-		<li><a href="#discounts" data-toggle="tab">{% trans "Discounts" %}</a></li>
-		<li><a href="#emails" data-toggle="tab">{% trans "Emails" %}</a></li>
-		<li><a href="#notes" data-toggle="tab">{% trans "Notes" %}</a></li>
+	<li class="{% if active_tab == 'lines' %}active{% endif %}"><a href="#lines" data-toggle="tab">{% trans "Order contents" %}</a></li>
+	<li class="{% if active_tab == 'shipping' %}active{% endif %}"><a href="#shipping" data-toggle="tab">{% trans "Shipping" %}</a></li>
+	<li class="{% if active_tab == 'payment' %}active{% endif %}"><a href="#payment" data-toggle="tab">{% trans "Payment" %}</a></li>
+	<li class="{% if active_tab == 'discounts' %}active{% endif %}"><a href="#discounts" data-toggle="tab">{% trans "Discounts" %}</a></li>
+	<li class="{% if active_tab == 'emails' %}active{% endif %}"><a href="#emails" data-toggle="tab">{% trans "Emails" %}</a></li>
+	<li class="{% if active_tab == 'notes' %}active{% endif %}"><a href="#notes" data-toggle="tab">{% trans "Notes" %}</a></li>
 	{% endblock nav_tabs %}
 	</ul>
 
 	<div class="tab-content">
-
-		<div class="tab-pane active" id="lines">
+		<div class="tab-pane {% if active_tab == 'lines' %}active{% endif %}" id="lines">
 			<div class="sub-header">
 				<h3 class="app-ico ico_shop_bag icon">{% trans "Items ordered" %}</h3>
 			</div>
@@ -295,7 +294,7 @@
 
 		</div>
 
-		<div class="tab-pane" id="shipping">
+		<div class="tab-pane {% if active_tab == 'shipping' %}active{% endif %}" id="shipping">
 			{% block tab_shipping %}
 				<table class="table">
 					<tbody>
@@ -324,7 +323,7 @@
 			{% endblock %}
 		</div>
 
-		<div class="tab-pane" id="payment">
+		<div class="tab-pane {% if active_tab == 'payment' %}active{% endif %}" id="payment">
 			{% if order.billing_address %}
 				<div class="sub-header">
 					<h3 class="app-ico ico_mapmarker icon">{% trans "Billing address" %}</h3>
@@ -375,7 +374,7 @@
 
 		</div>
 
-		<div class="tab-pane" id="discounts">
+		<div class="tab-pane {% if active_tab == 'discounts' %}active{% endif %}" id="discounts">
 			{% block tab_discounts %}
 				<div class="sub-header">
 					<h3 class="app-ico ico_settings icon">{% trans "Discounts" %}</h3>
@@ -407,7 +406,7 @@
 			{% endblock %}
 		</div>
 
-		<div class="tab-pane" id="emails">
+		<div class="tab-pane {% if active_tab == 'emails' %}active{% endif %}" id="emails">
 			{% block tab_emails %}
 			<div class="sub-header">
 				<h3 class="app-ico ico_email icon">{% trans "Emails" %}</h3>
@@ -416,7 +415,7 @@
 			{% endblock %}
 		</div>
 
-		<div class="tab-pane" id="notes">
+		<div class="tab-pane {% if active_tab == 'notes' %}active{% endif %}" id="notes">
 			{% block tab_notes %}
 			<div class="sub-header">
 				<h3 class="app-ico ico_comment icon">{% trans "Notes" %}</h3>
