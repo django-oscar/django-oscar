@@ -82,8 +82,6 @@ class OrderCreator(object):
 
         return order
 
-
-
     def create_order_model(self, user, basket, shipping_address, shipping_method,
                            billing_address, total_incl_tax, total_excl_tax,
                            order_number, status, **extra_order_fields):
