@@ -82,8 +82,11 @@ Modify your ``TEMPLATE_DIRS`` to include the main Oscar template directory::
 
 Oscar currently uses Haystack for search so you need to specify::
 
-    HAYSTACK_SITECONF = 'oscar.search_sites'
-    HAYSTACK_SEARCH_ENGINE = 'dummy'
+    HAYSTACK_CONNECTIONS = {
+        'default': {
+            'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
+        },
+    }
 
 When moving towards production, you'll obviously need to switch to a real search
 backend.
