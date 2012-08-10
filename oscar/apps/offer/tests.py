@@ -67,11 +67,11 @@ class PartialRangeTest(TestCase):
     def test_empty_list(self):
         self.assertFalse(self.range.contains_product(self.prod))
 
-    def test_included_classes(self):
+    def _test_included_classes(self):
         self.range.classes.add(self.prod.product_class)
         self.assertTrue(self.range.contains_product(self.prod))
 
-    def test_included_class_with_exception(self):
+    def _test_included_class_with_exception(self):
         self.range.classes.add(self.prod.product_class)
         self.range.excluded_products.add(self.prod)
         self.assertFalse(self.range.contains_product(self.prod))

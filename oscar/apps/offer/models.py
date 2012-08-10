@@ -232,7 +232,7 @@ class Range(models.Model):
     includes_all_products = models.BooleanField(default=False)
     included_products = models.ManyToManyField('catalogue.Product', related_name='includes', blank=True)
     excluded_products = models.ManyToManyField('catalogue.Product', related_name='excludes', blank=True)
-    klasses = models.ManyToManyField('catalogue.ProductClass', blank=True)
+    classes = models.ManyToManyField('catalogue.ProductClass', blank=True)
     included_categories = models.ManyToManyField('catalogue.Category', related_name='includes', blank=True)
 
     __included_product_ids = None
@@ -281,7 +281,12 @@ class Range(models.Model):
 
     def _class_ids(self):
         if not hasattr(self, '__class_ids'):
-            self.__class_ids = [row['id'] for row in self.klasses.values('id')]
+            # This is deliberately disabled as it causes a nasty problem in the
+            # Landmark project which we've been unable to reproduce.  Will
+            # re-enable when the problem is resolved.  Apologies for any
+            # inconvenience.
+            #self.__class_ids = [row['id'] for row in self.klasses.values('id')]
+            self.__class_ids = []
         return self.__class_ids
 
 
