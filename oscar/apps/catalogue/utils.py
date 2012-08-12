@@ -112,7 +112,7 @@ class Importer(object):
         kwargs = {self._field: lookup_value}
         item = Product._default_manager.get(**kwargs)
 
-        new_data = open(file_path).read()
+        new_data = open(file_path, 'rb').read()
         next_index = 0
         for existing in item.images.all():
             next_index = existing.display_order + 1
@@ -123,7 +123,7 @@ class Importer(object):
                 # File probably doesn't exist
                 existing.delete()
 
-        new_file = File(open(file_path))
+        new_file = File(open(file_path, 'rb'))
         im = ProductImage(product=item, display_order=next_index)
         im.original.save(filename, new_file, save=False)
         im.save()
