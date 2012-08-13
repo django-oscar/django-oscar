@@ -4,6 +4,6 @@
     <form method="POST" action="{% url catalogue:notification-create product.slug product.id %}">
         {% csrf_token %}
         {{ form }}
-        <button type="submit" class="btn btn-info">{%trans "Notify Me" %}</button>
+        <button type="submit" class="btn btn-info">{% trans "Notify Me" %}</button>
     </form>
 {% endif %}

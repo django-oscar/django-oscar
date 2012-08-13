@@ -33,29 +33,29 @@
         {% csrf_token %}
         <table class="table table-bordered">
             <tr>
-                <th>{%trans "Product title" %}</th>
+                <th>{% trans "Product title" %}</th>
                 <td>{{ notification.product.title }}</td>
             </tr>
             <tr>
-                <th>{%trans "User" %}</th>
+                <th>{% trans "User" %}</th>
                 <td>{% include "notification/partials/user_link.html" %}</td>
             </tr>
             <tr>
-                <th>{%trans "Email" %}</th>
+                <th>{% trans "Email" %}</th>
                 <td>{{ notification.get_notification_email }}</td>
             </tr>
             <tr>
-                <th>{%trans "Date created" %}</th>
+                <th>{% trans "Date created" %}</th>
                 <td>{{ notification.date_created|date }}</td>
             </tr>
             <tr>
-                <th>{%trans "Date notified" %}</th>
+                <th>{% trans "Date notified" %}</th>
                 <td>{% include "notification/partials/notified_date.html" %}</td>
             </tr>
         </table>
         <div class="form-actions">
-            <button type='submit' class="btn btn-danger">{%trans "Delete" %}</button> or
-            <a href="{% url dashboard:user-notification-list %}">{%trans "cancel" %}</a>
+            <button type='submit' class="btn btn-danger">{% trans "Delete" %}</button> or
+            <a href="{% url dashboard:user-notification-list %}">{% trans "cancel" %}</a>
         </div>
     </form>
 {% endblock dashboard_content %}

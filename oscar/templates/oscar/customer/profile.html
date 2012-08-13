@@ -31,7 +31,7 @@
         <li {% if active_tab == 'orders' %}class="active"{% endif %}><a href="#orders" data-toggle="tab">{% trans 'Order History' %}</a></li>
         <li {% if active_tab == 'addresses' %}class="active"{% endif %}><a href="#addresses" data-toggle="tab">{% trans 'Address Book' %}</a></li>
         <li {% if active_tab == 'emails' %}class="active"{% endif %}><a href="#emails" data-toggle="tab">{% trans 'Email History' %}</a></li>
-        <li {% if active_tab == 'notifications' %}class="active"{% endif %}><a href="#notifications" data-toggle="tab">{%trans "Notifications" %}</a></li>
+        <li {% if active_tab == 'notifications' %}class="active"{% endif %}><a href="#notifications" data-toggle="tab">{% trans "Notifications" %}</a></li>
     </ul>
 
     <div class="tab-content">
@@ -119,7 +119,7 @@
         <div class="tab-pane {% if active_tab == 'addresses' %}active{% endif %}" id="addresses">
             {% block tab_addressbook %}
             <div class="sub-header">
-                <h3>{%trans "Address book" %}</h3>
+                <h3>{% trans "Address book" %}</h3>
             </div>
             <table class="table table-striped table-bordered">
                 <tbody>

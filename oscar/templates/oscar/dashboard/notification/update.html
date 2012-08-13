@@ -10,11 +10,11 @@
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url dashboard:index %}">{%trans "Dashboard" %}</a>
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="{% url dashboard:user-notification-list %}">{%trans "Notifications" %}</a>
+        <a href="{% url dashboard:user-notification-list %}">{% trans "Notifications" %}</a>
         <span class="divider">/</span>
     </li>
     <li class="active"><a href=".">{% blocktrans %}Notification #{{ notification.id }}{% endblocktrans %}</a></li>
@@ -52,8 +52,8 @@
         {% endif %}
     {% endfor %}
     <div class="form-actions">
-        <button type='submit' class="btn btn-info">{%trans "Save" %}</button> or
-        <a href="{% url dashboard:user-notification-list %}">{%trans "cancel" %}</a>
+        <button type='submit' class="btn btn-info">{% trans "Save" %}</button> or
+        <a href="{% url dashboard:user-notification-list %}">{% trans "cancel" %}</a>
     </div>
 </form>
 {% endblock dashboard_content %}
