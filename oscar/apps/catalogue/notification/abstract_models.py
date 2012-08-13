@@ -22,7 +22,7 @@ class AbstractNotification(models.Model):
     KEY_LENGTH = 40
     user = models.ForeignKey(User, db_index=True, blank=True, null=True,
                              related_name="notifications")
-    # these field only apply to unauthenticated users and are empty
+    # These fields only apply to unauthenticated users and are empty
     # if the user is registered in the system
     email = models.EmailField(db_index=True, blank=True, null=True)
     confirm_key = models.CharField(max_length=KEY_LENGTH, null=True)

@@ -23,7 +23,7 @@ class BaseCatalogueApplication(Application):
 
 
 class ReviewsApplication(Application):
-    name=None
+    name = None
     reviews_app = reviews_app
     notification_app = notification_app
 

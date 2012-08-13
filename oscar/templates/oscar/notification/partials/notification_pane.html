@@ -1,9 +1,9 @@
-﻿{% load i18n %}
+{% load i18n %}
 <div class="sub-header">
     <h3>{%trans "Notifications" %}</h3>
 </div>
 {% if not notification_list %}
-<p>{%trans "You do not have any notifications for out-of-stock products." %}</p>
+<p>{% trans "You do not have any notifications for out-of-stock products." %}</p>
 {% else %}
     <table class="table table-stiped table-bordered">
         <tr>

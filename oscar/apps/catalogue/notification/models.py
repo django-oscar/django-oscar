@@ -1,12 +1,9 @@
 from django.db import models
-
 from model_utils.managers import InheritanceManager
 
-from oscar.core.loading import get_class 
+from oscar.apps.catalogue.notification.abstract_models import AbstractNotification
 
-Product = get_class('catalogue.models', 'Product')
-AbstractNotification = get_class('catalogue.notification.abstract_models',
-                                 'AbstractNotification')
+Product = models.get_model('catalogue', 'Product')
 
 
 class Notification(AbstractNotification):

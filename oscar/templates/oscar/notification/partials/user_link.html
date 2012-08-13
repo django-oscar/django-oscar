@@ -1,5 +1,7 @@
+{% load i18n %}
+
 {% if notification.user %}
-    <a href="{% url dashboard:user-detail notification.user.id %}">{{ notification.user.get_full_name }}</a>
+    <a href="{% url dashboard:user-detail notification.user.id %}">{{ notification.user.email }}</a>
 {% else %}
-    {% blocktrans %}Anonymous ({{ notification.get_notification_email }}){% endblocktrans %}
+    {% blocktrans with email=notification.get_notification_email %}{{ email }} (anonymous){% endblocktrans %}
 {% endif %}

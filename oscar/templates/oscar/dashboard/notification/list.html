@@ -12,28 +12,28 @@
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url dashboard:index %}">{%trans "Dashboard" %}</a>
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
-    <li>
-        <a href="{% url dashboard:user-notification-list %}">{%trans "Notifications" %}</a>
+    <li class="active">
+        <a href="{% url dashboard:user-notification-list %}">{% trans "Notifications" %}</a>
     </li>
 </ul>
 {% endblock %}
 
 {% block header %}
 <div class="page-header action">
-    <h1>{%trans "Notification management" %}</h1>
+    <h1>{% trans "Notification management" %}</h1>
 </div>
 {% endblock header %}
 
 {% block dashboard_content %}
 
 <div class="well well-info">
-    <h3 class="app-ico ico_magnify icon">{%trans "Search Notifications" %}</h3>
+    <h3 class="app-ico ico_magnify icon">{% trans "Search Notifications" %}</h3>
     <form action="." method="get" class="form-inline">
 		{% include "partials/form_fields_inline.html" with form=form %}
-    <button type="submit" class="btn btn-primary">{%trans "Search" %}</button>
+    <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
     </form>
 </div>
 
@@ -47,11 +47,11 @@
     <table class="table table-striped table-bordered">
         <tr>
             <th></th>
-            <th>{%trans "Description" %}</th>
-            <th>{%trans "User" %}</th>
-            <th>{%trans "Status" %}</th>
-            <th>{%trans "Date Created" %}</th>
-            <th>{%trans "Date Notified" %}</th>
+            <th>{% trans "Description" %}</th>
+            <th>{% trans "User" %}</th>
+            <th>{% trans "Status" %}</th>
+            <th>{% trans "Date created" %}</th>
+            <th>{% trans "Date notified" %}</th>
             <th></th>
         </tr>
         {% for notification in notification_list %}
@@ -70,9 +70,9 @@
             <td>{% include "notification/partials/notified_date.html" %}</td>
             <td>
                 <a href="{% url dashboard:user-notification-update notification.id %}">
-                    <button class="btn btn-info" type="submit" name="" value="">{%trans "Edit" %}</button></a>
+                    <button class="btn btn-info" type="submit" name="" value="">{% trans "Edit" %}</button></a>
                 <a href="{% url dashboard:user-notification-delete notification.id %}">
-                    <button class="btn btn-danger" type="submit" name="" value="">{%trans "Delete" %}</button>
+                    <button class="btn btn-danger" type="submit" name="" value="">{% trans "Delete" %}</button>
                 </a>
             </td>
         </tr>
@@ -83,7 +83,7 @@
         {% trans "Update status of selected notifications" %}
         {{ notification_form.status }}
 	<input type="hidden" name="action" value="update_selected_notification_status" />
-        <button type="submit" class="btn btn-success">{%trans "Update" %}</button>
+        <button type="submit" class="btn btn-success">{% trans "Update" %}</button>
     </div>
 
     {% if page_obj %}
@@ -93,7 +93,7 @@
     </form>
 
 {% else %}
-<p>{%trans "No notifications found." %}</p>
+<p>{% trans "No notifications found." %}</p>
 {% endif %}
 
 {% endblock dashboard_content %}
