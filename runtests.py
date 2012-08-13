@@ -26,8 +26,8 @@ if __name__ == '__main__':
     # used down to a minimum.  Otherwise, use the spec plugin
     nose_args = ['-s', '-x',
                  '--with-progressive' if not args else '--with-spec']
-    nose_args.extend([
-        '--with-coverage', '--cover-package=oscar', '--cover-html',
-        '--cover-html-dir=htmlcov'])
+    #nose_args.extend([
+    #    '--with-coverage', '--cover-package=oscar', '--cover-html',
+    #    '--cover-html-dir=htmlcov'])
     configure(nose_args)
     run_tests(*args)
