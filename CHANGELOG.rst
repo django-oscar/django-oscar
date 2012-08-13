@@ -6,6 +6,7 @@ Changelog
 -----
 
 * Bug fix for basket calculations
+* Bug fix for absolute discount benefit calculations
 
 0.3.1 - 2012-08-08
 ------------------
