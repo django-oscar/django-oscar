@@ -113,20 +113,61 @@ class AbsoluteDiscountBenefitTest(OfferTest):
         basket = Basket.objects.create()
         basket.add_product(product, 5)
         benefit = models.AbsoluteDiscountBenefit(range=rng, type='Absolute', value=Decimal('100'))
+
         self.assertTrue(condition.is_satisfied(basket))
         self.assertEquals(Decimal('100'), benefit.apply(basket, condition))
+        self.assertTrue(condition.is_satisfied(basket))
         self.assertEquals(Decimal('100'), benefit.apply(basket, condition))
+        self.assertTrue(condition.is_satisfied(basket))
         self.assertEquals(Decimal('100'), benefit.apply(basket, condition))
+        self.assertTrue(condition.is_satisfied(basket))
         self.assertEquals(Decimal('100'), benefit.apply(basket, condition))
+        self.assertTrue(condition.is_satisfied(basket))
+        self.assertEquals(Decimal('100'), benefit.apply(basket, condition))
+        self.assertFalse(condition.is_satisfied(basket))
+        self.assertEquals(Decimal('0'), benefit.apply(basket, condition))
+
+    def test_absolute_consumes_all(self):
+        product1 = create_product(Decimal('150'))
+        product2 = create_product(Decimal('300'))
+        product3 = create_product(Decimal('300'))
+        rng = models.Range.objects.create(name='Dummy')
+        rng.included_products.add(product1)
+        rng.included_products.add(product2)
+        rng.included_products.add(product3)
+
+        condition = models.ValueCondition(range=rng, type='Value', value=Decimal('500'))
+
+        basket = Basket.objects.create()
+        basket.add_product(product1, 1)
+        basket.add_product(product2, 1)
+        basket.add_product(product3, 1)
+
+        benefit = models.AbsoluteDiscountBenefit(range=rng, type='Absolute', value=Decimal('100'))
+        self.assertTrue(condition.is_satisfied(basket))
         self.assertEquals(Decimal('100'), benefit.apply(basket, condition))
         self.assertEquals(Decimal('0'), benefit.apply(basket, condition))
 
+    def test_absolute_applies_line_discount(self):
+        product = create_product(Decimal('500'))
+        rng = models.Range.objects.create(name='Dummy')
+        rng.included_products.add(product)
+
+        condition = models.ValueCondition(range=rng, type='Value', value=Decimal('500'))
+        basket = Basket.objects.create()
+        basket.add_product(product, 1)
+
+        benefit = models.AbsoluteDiscountBenefit(range=rng, type='Absolute', value=Decimal('100'))
+
+        self.assertTrue(condition.is_satisfied(basket))
+        self.assertEquals(Decimal('100'), benefit.apply(basket, condition))
+        self.assertEquals(Decimal('100'), basket.all_lines()[0]._discount)
+
     def test_discount_is_applied_to_lines(self):
-        condition = models.Condition.objects.create(
+        condition = models.CountCondition.objects.create(
             range=self.range, type="Count", value=1)
         self.basket.add_product(self.item, 1)
         self.benefit.apply(self.basket, condition)
-
         self.assertTrue(self.basket.all_lines()[0].has_discount)
 
 
