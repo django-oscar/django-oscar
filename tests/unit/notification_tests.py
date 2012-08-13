@@ -212,7 +212,7 @@ class CreateNotificationViewAsAuthenticatedUserTests(NotificationTestCase):
                                     data={'email': 'someother@oscar.com'},
                                     follow=True)
 
-        self.assertContains(response, 'first to know', status_code=200)
+        self.assertContains(response, 'notified', status_code=200)
 
         self.assertEquals(self.user.notifications.count(), 1)
 
