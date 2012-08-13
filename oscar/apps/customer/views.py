@@ -64,14 +64,8 @@ class ProfileUpdateView(FormView):
         return reverse('customer:summary')
 
 
-class AccountSummaryView(ListView):
-    context_object_name = "orders"
+class AccountSummaryView(TemplateView):
     template_name = 'customer/profile.html'
-    paginate_by = 20
-    model = Order
-
-    def get_queryset(self):
-        return self.model._default_manager.filter(user=self.request.user)[0:5]
 
     def get_context_data(self, **kwargs):
         ctx = super(AccountSummaryView, self).get_context_data(**kwargs)
@@ -79,8 +73,12 @@ class AccountSummaryView(ListView):
         ctx['default_shipping_address'] = self.get_default_shipping_address(self.request.user)
         ctx['default_billing_address'] = self.get_default_billing_address(self.request.user)
         ctx['emails'] = Email.objects.filter(user=self.request.user)
+        ctx['orders'] = self.get_orders(self.request.user)
         self.add_profile_fields(ctx)
         return ctx
+
+    def get_orders(self, user):
+        return Order._default_manager.filter(user=user)[0:5]
 
     def add_profile_fields(self, ctx):
         if not hasattr(settings, 'AUTH_PROFILE_MODULE'):

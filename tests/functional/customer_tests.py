@@ -2,17 +2,15 @@ import httplib
 from mock import patch
 from decimal import Decimal as D
 
-from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.http import HttpRequest
 from django.test import TestCase
 from django.test.client import Client
-from django_webtest import WebTest
 
 from oscar.apps.customer.history_helpers import get_recently_viewed_product_ids
 from oscar.test.helpers import create_product, create_order
-from oscar.test import ClientTestCase
+from oscar.test import ClientTestCase, WebTestCase
 from oscar.apps.basket.models import Basket
 
 
@@ -230,13 +228,7 @@ class ReorderTests(ClientTestCase):
         self.assertNotEqual(line.product.pk, product.pk)
 
 
-class TestAUser(WebTest):
-
-    def assertRedirectsTo(self, response, url_name):
-        self.assertTrue(str(response.status_code).startswith('3'))
-        location = response.headers['Location']
-        redirect_path = location.replace('http://localhost:80', '')
-        self.assertEqual(reverse(url_name), redirect_path)
+class TestAnAnonymousUser(WebTestCase):
 
     def test_can_login(self):
         email, password = 'd@d.com', 'mypassword'
@@ -257,3 +249,12 @@ class TestAUser(WebTest):
         form['registration-password2'] = 'hedgehog'
         response = form.submit()
         self.assertRedirectsTo(response, 'customer:summary')
+
+
+class TestASignedInUser(WebTestCase):
+
+    def test_can_view_their_profile(self):
+        email, password = 'd@d.com', 'mypassword'
+        user = User.objects.create_user('_', email, password)
+        url = reverse('customer:summary')
+        self.app.get(url, user=user)

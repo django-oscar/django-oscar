@@ -5,6 +5,7 @@ from django.test import TestCase
 from django.test.client import Client
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
+from django_webtest import WebTest
 from purl import URL
 
 
@@ -65,3 +66,12 @@ class ClientTestCase(TestCase):
 
     def assertInContext(self, response, key):
         self.assertTrue(key in response.context, "Context should contain a variable '%s'" % key)
+
+
+class WebTestCase(WebTest):
+
+    def assertRedirectsTo(self, response, url_name):
+        self.assertTrue(str(response.status_code).startswith('3'))
+        location = response.headers['Location']
+        redirect_path = location.replace('http://localhost:80', '')
+        self.assertEqual(reverse(url_name), redirect_path)
