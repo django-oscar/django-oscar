@@ -25,17 +25,18 @@
 {% block content %}
 
 <div class="tabbable dashboard">
+
     <ul class="nav nav-tabs">
-        <li class="active"><a href="#1" data-toggle="tab">{% trans 'Profile' %}</a></li>
-        <li><a href="#2" data-toggle="tab">{% trans 'Order History' %}</a></li>
-        <li><a href="#3" data-toggle="tab">{% trans 'Address Book' %}</a></li>
-        <li><a href="#4" data-toggle="tab">{% trans 'Email History' %}</a></li>
-        <li><a href="#5" data-toggle="tab">{%trans "Notifications" %}</a></li>
+		<li {% if active_tab == 'profile' %}class="active"{% endif %}><a href="#profile" data-toggle="tab">{% trans 'Profile' %}</a></li>
+        <li {% if active_tab == 'orders' %}class="active"{% endif %}><a href="#orders" data-toggle="tab">{% trans 'Order History' %}</a></li>
+        <li {% if active_tab == 'addresses' %}class="active"{% endif %}><a href="#addresses" data-toggle="tab">{% trans 'Address Book' %}</a></li>
+        <li {% if active_tab == 'emails' %}class="active"{% endif %}><a href="#emails" data-toggle="tab">{% trans 'Email History' %}</a></li>
+        <li {% if active_tab == 'notifications' %}class="active"{% endif %}><a href="#notifications" data-toggle="tab">{%trans "Notifications" %}</a></li>
     </ul>
 
     <div class="tab-content">
 
-        <div class="tab-pane active" id="1">
+		<div class="tab-pane {% if active_tab == 'profile' %}active{% endif %}" id="profile">
             {% block tab_profile %}
             <div class="sub-header">
                 <h3>{% trans 'Profile' %}</h3>
@@ -74,7 +75,7 @@
             {% endblock %}
         </div>
 
-        <div class="tab-pane" id="2">
+        <div class="tab-pane {% if active_tab == 'orders' %}active{% endif %}" id="orders">
             {% block tab_orderhistory %}
             <div class="sub-header">
                 <h3>{% trans 'Order history' %}</h3>
@@ -115,7 +116,7 @@
             {% endblock %}
         </div>
 
-        <div class="tab-pane" id="3">
+        <div class="tab-pane {% if active_tab == 'addresses' %}active{% endif %}" id="addresses">
             {% block tab_addressbook %}
             <div class="sub-header">
                 <h3>{%trans "Address book" %}</h3>
@@ -145,7 +146,7 @@
             {% endblock %}
         </div>
 
-        <div class="tab-pane" id="4">
+        <div class="tab-pane {% if active_tab == 'emails' %}active{% endif %}" id="emails">
             {% block tab_emailhistory %}
             <div class="sub-header">
                 <h3>{% trans 'Email history' %}</h3>
@@ -179,9 +180,9 @@
 			{% endblock %}
         </div>
 
-        <div class="tab-pane" id="5">
+        <div class="tab-pane {% if active_tab == 'notifications' %}active{% endif %}" id="notifications">
             {% block tab_notifications %}
-                {% with edit_enabled="true" %}
+                {% with edit_enabled=True %}
                     {% include "notification/partials/notification_pane.html" %}
                 {% endwith %}
             {% endblock %}

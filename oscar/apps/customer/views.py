@@ -76,16 +76,17 @@ class AccountSummaryView(ListView):
 
     def get_context_data(self, **kwargs):
         ctx = super(AccountSummaryView, self).get_context_data(**kwargs)
+        # Delegate data fetching to separate methods so they are easy to
+        # override.
         ctx['addressbook_size'] = self.request.user.addresses.all().count()
         ctx['default_shipping_address'] = self.get_default_shipping_address(self.request.user)
         ctx['default_billing_address'] = self.get_default_billing_address(self.request.user)
-        ctx['emails'] = Email.objects.filter(user=self.request.user)
-        ctx['notification_list'] = ProductNotification.objects.select_related().filter(
-            user=self.request.user,
-            # only show notifications that have not been process
-            date_notified=None,
-        )
+        ctx['emails'] = self.get_emails(self.request.user)
+        ctx['notification_list'] = self.get_product_notifications(self.request.user)
         self.add_profile_fields(ctx)
+
+        ctx['active_tab'] = self.request.GET.get('tab', 'profile')
+
         return ctx
 
     def add_profile_fields(self, ctx):
@@ -111,6 +112,16 @@ class AccountSummaryView(ListView):
             })
         ctx['profile_fields'] = field_data
         ctx['profile'] = profile
+
+    def get_emails(self, user):
+        return Email.objects.filter(user=user)
+
+    def get_product_notifications(self, user):
+        # Only show notifications that have not been processed
+        return ProductNotification.objects.select_related().filter(
+            user=self.request.user,
+            date_notified=None,
+        )
 
     def get_default_billing_address(self, user):
         return self.get_user_address(user, is_default_for_billing=True)
