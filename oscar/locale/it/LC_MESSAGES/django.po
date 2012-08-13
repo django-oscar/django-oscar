@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-08 11:03+0100\n"
+"POT-Creation-Date: 2012-08-03 17:42+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -315,7 +315,7 @@ msgstr ""
 #: apps/catalogue/abstract_models.py:205 apps/catalogue/abstract_models.py:730
 #: apps/catalogue/abstract_models.py:752
 #: apps/catalogue/reviews/abstract_models.py:36
-#: apps/customer/abstract_models.py:38 apps/dashboard/users/forms.py:10
+#: apps/customer/abstract_models.py:38 apps/dashboard/users/forms.py:11
 #: apps/dashboard/vouchers/forms.py:15 apps/offer/models.py:21
 #: apps/offer/models.py:302 apps/order/abstract_models.py:493
 #: apps/order/abstract_models.py:627 apps/partner/abstract_models.py:35
@@ -323,7 +323,7 @@ msgstr ""
 #: apps/promotions/models.py:137 apps/promotions/models.py:165
 #: apps/promotions/models.py:186 apps/promotions/models.py:200
 #: apps/shipping/models.py:12 apps/voucher/abstract_models.py:18
-#: templates/oscar/customer/profile.html:45
+#: templates/oscar/customer/profile.html:46
 #: templates/oscar/dashboard/offers/offer_delete.html:35
 #: templates/oscar/dashboard/offers/offer_detail.html:36
 #: templates/oscar/dashboard/offers/preview.html:7
@@ -339,7 +339,7 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: apps/analytics/reports.py:64 templates/oscar/customer/profile.html:61
+#: apps/analytics/reports.py:64 templates/oscar/customer/profile.html:62
 #: templates/oscar/dashboard/reports/partials/user_report.html:10
 #: templates/oscar/dashboard/users/index.html:51
 msgid "Date registered"
@@ -397,13 +397,14 @@ msgstr ""
 #: apps/basket/abstract_models.py:33 apps/catalogue/abstract_models.py:265
 #: apps/catalogue/abstract_models.py:788
 #: apps/catalogue/reviews/abstract_models.py:47
-#: apps/dashboard/catalogue/forms.py:198 apps/dashboard/orders/forms.py:65
+#: apps/dashboard/catalogue/forms.py:198 apps/dashboard/orders/forms.py:59
 #: apps/dashboard/reviews/forms.py:13 apps/dashboard/reviews/forms.py:26
 #: apps/order/abstract_models.py:46 apps/order/abstract_models.py:316
 #: apps/payment/models.py:23 templates/oscar/customer/anon-order.html:14
 #: templates/oscar/customer/anon-order.html:60
 #: templates/oscar/dashboard/catalogue/product_list.html:62
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:49
+#: templates/oscar/dashboard/notification/list.html:52
 #: templates/oscar/dashboard/offers/offer_list.html:48
 #: templates/oscar/dashboard/orders/line_detail.html:56
 #: templates/oscar/dashboard/orders/order_detail.html:75
@@ -413,6 +414,7 @@ msgstr ""
 #: templates/oscar/dashboard/reviews/review_delete.html:40
 #: templates/oscar/dashboard/reviews/review_list.html:49
 #: templates/oscar/dashboard/users/detail.html:110
+#: templates/oscar/notification/partials/notification_pane.html:12
 msgid "Status"
 msgstr ""
 
@@ -519,7 +521,8 @@ msgid "User ID"
 msgstr ""
 
 #: apps/basket/reports.py:21 apps/catalogue/reviews/abstract_models.py:37
-#: apps/customer/abstract_models.py:23 apps/dashboard/users/forms.py:9
+#: apps/customer/abstract_models.py:23 apps/dashboard/users/forms.py:10
+#: templates/oscar/dashboard/notification/delete.html:44
 #: templates/oscar/dashboard/reports/partials/open_basket_report.html:8
 #: templates/oscar/dashboard/reports/partials/submitted_basket_report.html:8
 #: templates/oscar/dashboard/reports/partials/user_report.html:8
@@ -558,7 +561,9 @@ msgstr ""
 msgid "Open baskets"
 msgstr ""
 
-#: apps/basket/reports.py:79 apps/order/reports.py:20
+#: apps/basket/reports.py:79 apps/order/reports.py:19
+#: templates/oscar/dashboard/notification/delete.html:40
+#: templates/oscar/dashboard/notification/list.html:51
 #: templates/oscar/dashboard/orders/order_detail.html:428
 #: templates/oscar/dashboard/reports/partials/order_report.html:10
 #: templates/oscar/dashboard/reviews/review_delete.html:37
@@ -567,6 +572,7 @@ msgid "User"
 msgstr ""
 
 #: apps/basket/reports.py:84
+#: templates/oscar/dashboard/notification/delete.html:48
 #: templates/oscar/dashboard/offers/offer_detail.html:42
 #: templates/oscar/dashboard/offers/offer_list.html:53
 #: templates/oscar/dashboard/promotions/promotion_list.html:42
@@ -642,7 +648,7 @@ msgstr ""
 msgid "No voucher found with code '%(code)s'"
 msgstr ""
 
-#: apps/basket/views.py:234 apps/dashboard/vouchers/forms.py:54
+#: apps/basket/views.py:234 apps/dashboard/vouchers/forms.py:43
 msgid "Please enter a voucher code"
 msgstr ""
 
@@ -758,7 +764,7 @@ msgid "Product contributors"
 msgstr ""
 
 #: apps/catalogue/abstract_models.py:249 apps/dashboard/catalogue/forms.py:62
-#: apps/dashboard/orders/forms.py:61 apps/order/abstract_models.py:279
+#: apps/dashboard/orders/forms.py:55 apps/order/abstract_models.py:279
 #: templates/oscar/catalogue/detail.html:94
 #: templates/oscar/dashboard/catalogue/product_list.html:59
 #: templates/oscar/dashboard/orders/line_detail.html:45
@@ -786,6 +792,7 @@ msgstr ""
 #: apps/catalogue/abstract_models.py:262 apps/offer/models.py:25
 #: apps/promotions/models.py:202 apps/promotions/models.py:222
 #: apps/shipping/models.py:13
+#: templates/oscar/dashboard/notification/list.html:50
 #: templates/oscar/dashboard/offers/offer_delete.html:36
 #: templates/oscar/dashboard/offers/offer_detail.html:37
 #: templates/oscar/dashboard/offers/preview.html:8
@@ -1089,13 +1096,81 @@ msgstr ""
 msgid "%s is not a valid image archive"
 msgstr ""
 
-#: apps/catalogue/views.py:141
+#: apps/catalogue/views.py:148
 msgid "All products"
 msgstr ""
 
-#: apps/catalogue/views.py:143
+#: apps/catalogue/views.py:150
 #, python-format
 msgid "Products matching '%(query)s'"
+msgstr ""
+
+#: apps/catalogue/notification/abstract_models.py:37
+msgid "Not Yet Confirmed"
+msgstr ""
+
+#: apps/catalogue/notification/abstract_models.py:38
+#: templates/oscar/dashboard/index.html:146
+#: templates/oscar/dashboard/index.html:150
+#: templates/oscar/dashboard/offers/offer_list.html:59
+#: templates/oscar/dashboard/users/index.html:49
+msgid "Active"
+msgstr ""
+
+#: apps/catalogue/notification/abstract_models.py:39
+#: templates/oscar/dashboard/offers/offer_list.html:59
+msgid "Inactive"
+msgstr ""
+
+#: apps/catalogue/notification/abstract_models.py:129
+#, python-format
+msgid "Notification for %(user)s - %(email)s"
+msgstr ""
+
+#: apps/catalogue/notification/abstract_models.py:130
+msgid "anonymous"
+msgstr ""
+
+#: apps/catalogue/notification/forms.py:13
+msgid "Send notification to"
+msgstr ""
+
+#: apps/catalogue/notification/forms.py:14
+msgid "Enter Your Email"
+msgstr ""
+
+#: apps/catalogue/notification/receivers.py:30
+#, python-format
+msgid "[Product Notification] Product '%(title)s' back in stock!"
+msgstr ""
+
+#: apps/catalogue/notification/views.py:43
+msgid "You have successfully unsubscribed from this notification."
+msgstr ""
+
+#: apps/catalogue/notification/views.py:67
+msgid ""
+"Yeah! You have confirmed your subscription. We'll notify you as soon as the "
+"product is back in stock."
+msgstr ""
+
+#: apps/catalogue/notification/views.py:167
+#, python-format
+msgid "[Confirmation] Please confirm the notification for product %s"
+msgstr ""
+
+#: apps/catalogue/notification/views.py:175
+msgid "Confirmation email send successfully, please check your email."
+msgstr ""
+
+#: apps/catalogue/notification/views.py:220
+#, python-format
+msgid "you have signed up for a notification of '%s' already"
+msgstr ""
+
+#: apps/catalogue/notification/views.py:228
+#, python-format
+msgid "%s was added to your notifications"
 msgstr ""
 
 #: apps/catalogue/reviews/abstract_models.py:31
@@ -1254,7 +1329,7 @@ msgid "Address deleted from your address book"
 msgstr ""
 
 #: apps/checkout/views.py:185 apps/checkout/views.py:206
-#: apps/customer/views.py:469 apps/customer/views.py:487
+#: apps/customer/views.py:489 apps/customer/views.py:507
 msgid "Address saved"
 msgstr ""
 
@@ -1291,7 +1366,7 @@ msgstr ""
 #: apps/customer/abstract_models.py:16
 #: templates/oscar/customer/email-history.html:33
 #: templates/oscar/customer/email.html:44
-#: templates/oscar/customer/profile.html:161
+#: templates/oscar/customer/profile.html:162
 msgid "Subject"
 msgstr ""
 
@@ -1374,7 +1449,7 @@ msgstr ""
 msgid "At least one date field is required."
 msgstr ""
 
-#: apps/customer/forms.py:158 templates/oscar/customer/profile.html:49
+#: apps/customer/forms.py:158 templates/oscar/customer/profile.html:50
 #: templates/oscar/dashboard/orders/order_detail.html:45
 msgid "Email address"
 msgstr ""
@@ -1383,39 +1458,39 @@ msgstr ""
 msgid "Can't import profile model"
 msgstr ""
 
-#: apps/customer/views.py:336
+#: apps/customer/views.py:356
 #, python-format
 msgid "'%s' unavailable for re-order"
 msgstr ""
 
-#: apps/customer/views.py:379
+#: apps/customer/views.py:399
 #, python-format
 msgid "All available lines from order %s have been added to your basket"
 msgstr ""
 
-#: apps/customer/views.py:403
+#: apps/customer/views.py:423
 msgid "This product is no longer available for re-order"
 msgstr ""
 
-#: apps/customer/views.py:433
+#: apps/customer/views.py:453
 #, python-format
 msgid "%(qty)d copies of '%(product)s' have been added to your basket"
 msgstr ""
 
-#: apps/customer/views.py:436
+#: apps/customer/views.py:456
 #, python-format
 msgid "'%s' has been added to your basket"
 msgstr ""
 
-#: apps/customer/views.py:459
+#: apps/customer/views.py:479
 msgid "Add a new address"
 msgstr ""
 
-#: apps/customer/views.py:480
+#: apps/customer/views.py:500
 msgid "Edit address"
 msgstr ""
 
-#: apps/customer/views.py:531
+#: apps/customer/views.py:551
 msgid "Password updated"
 msgstr ""
 
@@ -1444,7 +1519,7 @@ msgstr ""
 msgid "Partner"
 msgstr ""
 
-#: apps/dashboard/catalogue/forms.py:71 apps/dashboard/orders/forms.py:62
+#: apps/dashboard/catalogue/forms.py:71 apps/dashboard/orders/forms.py:56
 #: apps/order/abstract_models.py:276 apps/partner/abstract_models.py:74
 #: templates/oscar/dashboard/catalogue/product_list.html:64
 #: templates/oscar/dashboard/orders/line_detail.html:62
@@ -1461,7 +1536,7 @@ msgid "A top-level product must have at least one category"
 msgstr ""
 
 #: apps/dashboard/catalogue/forms.py:215
-msgid "A variant product should not have categories"
+msgid "A variant product should not have at categories"
 msgstr ""
 
 #: apps/dashboard/catalogue/views.py:29
@@ -1601,83 +1676,82 @@ msgstr ""
 msgid "Statistics"
 msgstr ""
 
-#: apps/dashboard/orders/forms.py:14
-#: templates/oscar/catalogue/partials/product.html:36
+#: apps/dashboard/orders/forms.py:12
 #: templates/oscar/promotions/singleproduct.html:24
 msgid "From"
 msgstr ""
 
-#: apps/dashboard/orders/forms.py:15
+#: apps/dashboard/orders/forms.py:13
 msgid "To"
 msgstr ""
 
-#: apps/dashboard/orders/forms.py:21 apps/dashboard/orders/forms.py:44
+#: apps/dashboard/orders/forms.py:19 apps/dashboard/orders/forms.py:38
 #: apps/dashboard/orders/views.py:98
 msgid "All orders"
 msgstr ""
 
-#: apps/dashboard/orders/forms.py:33
+#: apps/dashboard/orders/forms.py:27
 #, python-format
 msgid "Orders placed between %(date_from)s and %(date_to)s"
 msgstr ""
 
-#: apps/dashboard/orders/forms.py:38
+#: apps/dashboard/orders/forms.py:32
 #, python-format
 msgid "Orders placed since %s"
 msgstr ""
 
-#: apps/dashboard/orders/forms.py:41
+#: apps/dashboard/orders/forms.py:35
 #, python-format
-msgid "Orders placed until %s"
+msgid "Orders placed before %s"
 msgstr ""
 
-#: apps/dashboard/orders/forms.py:58 apps/dashboard/orders/views.py:222
-#: apps/order/abstract_models.py:21 apps/order/reports.py:19
+#: apps/dashboard/orders/forms.py:52 apps/dashboard/orders/views.py:222
+#: apps/order/abstract_models.py:21 apps/order/reports.py:18
 #: templates/oscar/customer/order-history.html:42
-#: templates/oscar/customer/profile.html:85
+#: templates/oscar/customer/profile.html:86
 #: templates/oscar/dashboard/offers/offer_detail.html:57
 #: templates/oscar/dashboard/reports/partials/order_report.html:9
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:58
 msgid "Order number"
 msgstr ""
 
-#: apps/dashboard/orders/forms.py:59 apps/dashboard/reviews/forms.py:29
+#: apps/dashboard/orders/forms.py:53 apps/dashboard/reviews/forms.py:29
 msgid "Customer name"
 msgstr ""
 
-#: apps/dashboard/orders/forms.py:60
+#: apps/dashboard/orders/forms.py:54
 msgid "Product name"
 msgstr ""
 
-#: apps/dashboard/orders/forms.py:67 apps/dashboard/reports/forms.py:18
+#: apps/dashboard/orders/forms.py:61 apps/dashboard/reports/forms.py:18
 #: apps/dashboard/reviews/forms.py:27
 msgid "Date from"
 msgstr ""
 
-#: apps/dashboard/orders/forms.py:68 apps/dashboard/reports/forms.py:19
+#: apps/dashboard/orders/forms.py:62 apps/dashboard/reports/forms.py:19
 msgid "Date to"
 msgstr ""
 
-#: apps/dashboard/orders/forms.py:70 apps/voucher/reports.py:19
+#: apps/dashboard/orders/forms.py:64 apps/voucher/reports.py:19
 #: templates/oscar/basket/basket.html:98
 #: templates/oscar/dashboard/orders/order_detail.html:387
 #: templates/oscar/dashboard/reports/partials/voucher_report.html:9
 msgid "Voucher code"
 msgstr ""
 
-#: apps/dashboard/orders/forms.py:73
+#: apps/dashboard/orders/forms.py:67
 msgid "Payment method"
 msgstr ""
 
-#: apps/dashboard/orders/forms.py:76 apps/promotions/models.py:146
+#: apps/dashboard/orders/forms.py:70 apps/promotions/models.py:146
 msgid "HTML"
 msgstr ""
 
-#: apps/dashboard/orders/forms.py:77
+#: apps/dashboard/orders/forms.py:71
 msgid "CSV"
 msgstr ""
 
-#: apps/dashboard/orders/forms.py:79
+#: apps/dashboard/orders/forms.py:73
 msgid "Get results as"
 msgstr ""
 
@@ -1704,6 +1778,7 @@ msgid "Orders with number starting with \"%s\""
 msgstr ""
 
 #: apps/dashboard/orders/views.py:145 apps/dashboard/reviews/views.py:117
+#: apps/dashboard/users/views.py:129
 #, python-format
 msgid " with customer name matching '%s'"
 msgstr ""
@@ -2054,7 +2129,7 @@ msgid "Reports"
 msgstr ""
 
 #: apps/dashboard/reports/forms.py:15
-msgid "Only the offer and order reports use the selected date range"
+msgid "Product analytics reports ignorethe selected date range"
 msgstr ""
 
 #: apps/dashboard/reports/forms.py:20
@@ -2120,7 +2195,7 @@ msgstr ""
 msgid "All reviews"
 msgstr ""
 
-#: apps/dashboard/reviews/views.py:91
+#: apps/dashboard/reviews/views.py:91 apps/dashboard/users/views.py:113
 #, python-format
 msgid " with status matching '%s'"
 msgstr ""
@@ -2130,7 +2205,8 @@ msgstr ""
 msgid " with keyword matching '%s'"
 msgstr ""
 
-#: apps/dashboard/users/app.py:9 templates/oscar/dashboard/index.html:79
+#: apps/dashboard/users/app.py:9 apps/dashboard/users/app.py:10
+#: templates/oscar/dashboard/index.html:79
 #: templates/oscar/dashboard/users/detail.html:18
 #: templates/oscar/dashboard/users/index.html:8
 #: templates/oscar/dashboard/users/index.html:17
@@ -2138,27 +2214,44 @@ msgstr ""
 msgid "Customers"
 msgstr ""
 
-#: apps/dashboard/users/views.py:20
+#: apps/dashboard/users/app.py:11 templates/oscar/customer/profile.html:33
+#: templates/oscar/dashboard/notification/delete.html:17
+#: templates/oscar/dashboard/notification/list.html:19
+#: templates/oscar/dashboard/notification/update.html:17
+#: templates/oscar/notification/partials/notification_pane.html:3
+msgid "Notifications"
+msgstr ""
+
+#: apps/dashboard/users/views.py:21
 #, python-format
 msgid "%(main_filter)s %(email_filter)s %(name_filter)s"
 msgstr ""
 
-#: apps/dashboard/users/views.py:26
+#: apps/dashboard/users/views.py:27
 msgid "All users"
 msgstr ""
 
-#: apps/dashboard/users/views.py:44
+#: apps/dashboard/users/views.py:45
 #, python-format
 msgid " with email matching '%s'"
 msgstr ""
 
-#: apps/dashboard/users/views.py:54
+#: apps/dashboard/users/views.py:55
 #, python-format
 msgid " with name matching '%s'"
 msgstr ""
 
-#: apps/dashboard/users/views.py:75
+#: apps/dashboard/users/views.py:76
 msgid "Users' status successfully changed"
+msgstr ""
+
+#: apps/dashboard/users/views.py:97
+msgid "All notifications"
+msgstr ""
+
+#: apps/dashboard/users/views.py:136
+#, python-format
+msgid " with customer email matching '%s'"
 msgstr ""
 
 #: apps/dashboard/vouchers/app.py:9 apps/voucher/abstract_models.py:47
@@ -2199,17 +2292,12 @@ msgstr ""
 msgid "Discount value"
 msgstr ""
 
-#: apps/dashboard/vouchers/forms.py:48
-#, python-format
-msgid "The name '%s' is already in use"
-msgstr ""
-
-#: apps/dashboard/vouchers/forms.py:61
+#: apps/dashboard/vouchers/forms.py:50
 #, python-format
 msgid "The code '%s' is already in use"
 msgstr ""
 
-#: apps/dashboard/vouchers/forms.py:69
+#: apps/dashboard/vouchers/forms.py:58
 msgid "The start date must be before the end date"
 msgstr ""
 
@@ -2535,13 +2623,13 @@ msgstr ""
 msgid "Multibuy Discount Benefits"
 msgstr ""
 
-#: apps/offer/reports.py:21
+#: apps/offer/reports.py:20
 #: templates/oscar/dashboard/reports/partials/offer_report.html:9
 #: templates/oscar/offer/detail.html:5 templates/oscar/offer/detail.html:24
 msgid "Offer"
 msgstr ""
 
-#: apps/offer/reports.py:22 apps/voucher/abstract_models.py:39
+#: apps/offer/reports.py:21 apps/voucher/abstract_models.py:39
 #: apps/voucher/reports.py:22
 #: templates/oscar/dashboard/offers/offer_detail.html:45
 #: templates/oscar/dashboard/reports/partials/offer_report.html:10
@@ -2550,7 +2638,7 @@ msgstr ""
 msgid "Total discount"
 msgstr ""
 
-#: apps/offer/reports.py:37
+#: apps/offer/reports.py:36
 #: templates/oscar/dashboard/offers/offer_detail.html:44
 msgid "Offer performance"
 msgstr ""
@@ -2858,12 +2946,12 @@ msgstr ""
 msgid "Discount of %(amount)r from order %(order)s"
 msgstr ""
 
-#: apps/order/reports.py:21
+#: apps/order/reports.py:20
 #: templates/oscar/dashboard/reports/partials/order_report.html:11
 msgid "Total incl. tax"
 msgstr ""
 
-#: apps/order/reports.py:22
+#: apps/order/reports.py:21
 #: templates/oscar/dashboard/reports/partials/order_report.html:12
 #: templates/oscar/dashboard/users/detail.html:109
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:61
@@ -2883,7 +2971,7 @@ msgstr ""
 msgid "There is already an order with number %s"
 msgstr ""
 
-#: apps/order/utils.py:119
+#: apps/order/utils.py:121
 #, python-format
 msgid "No partner found for product '%s'"
 msgstr ""
@@ -3031,8 +3119,7 @@ msgid "Available"
 msgstr ""
 
 #: apps/partner/wrappers.py:70
-#: templates/oscar/catalogue/partials/product.html:38
-#: templates/oscar/catalogue/partials/stock_record.html:11
+#: templates/oscar/catalogue/partials/stock_record.html:18
 #: templates/oscar/promotions/default.html:19
 #: templates/oscar/promotions/singleproduct.html:30
 #: templates/oscar/promotions/partials/product_carousel.html:24
@@ -3327,6 +3414,7 @@ msgstr ""
 
 #: apps/search/forms.py:21
 #: templates/oscar/dashboard/catalogue/product_list.html:47
+#: templates/oscar/dashboard/notification/list.html:36
 #: templates/oscar/dashboard/offers/offer_list.html:32
 #: templates/oscar/dashboard/pages/index.html:27
 #: templates/oscar/dashboard/reviews/review_list.html:32
@@ -3568,6 +3656,9 @@ msgstr ""
 #: templates/oscar/dashboard/catalogue/product_list.html:14
 #: templates/oscar/dashboard/catalogue/product_update.html:14
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:14
+#: templates/oscar/dashboard/notification/delete.html:13
+#: templates/oscar/dashboard/notification/list.html:15
+#: templates/oscar/dashboard/notification/update.html:13
 #: templates/oscar/dashboard/offers/offer_delete.html:12
 #: templates/oscar/dashboard/offers/offer_detail.html:14
 #: templates/oscar/dashboard/offers/offer_list.html:12
@@ -3606,7 +3697,7 @@ msgstr ""
 #: templates/oscar/404.html:25 templates/oscar/500.html:21
 #: templates/oscar/customer/order.html:47
 #: templates/oscar/customer/profile.html:29
-#: templates/oscar/customer/profile.html:40
+#: templates/oscar/customer/profile.html:41
 msgid "Profile"
 msgstr ""
 
@@ -3684,6 +3775,7 @@ msgstr ""
 
 #: templates/oscar/basket/basket.html:70
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:61
+#: templates/oscar/dashboard/notification/list.html:86
 #: templates/oscar/dashboard/reviews/review_list.html:104
 msgid "Update"
 msgstr ""
@@ -3720,6 +3812,8 @@ msgstr ""
 #: templates/oscar/customer/change-password.html:39
 #: templates/oscar/customer/profile-form.html:37
 #: templates/oscar/dashboard/catalogue/product_update.html:148
+#: templates/oscar/dashboard/notification/delete.html:58
+#: templates/oscar/dashboard/notification/update.html:56
 #: templates/oscar/dashboard/offers/offer_delete.html:46
 #: templates/oscar/dashboard/offers/offer_detail.html:80
 #: templates/oscar/dashboard/offers/preview.html:23
@@ -3737,6 +3831,7 @@ msgstr ""
 #: templates/oscar/dashboard/vouchers/voucher_delete.html:47
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:83
 #: templates/oscar/dashboard/vouchers/voucher_form.html:36
+#: templates/oscar/notification/delete.html:14
 #: templates/oscar/reviews/add_review.html:13
 msgid "cancel"
 msgstr ""
@@ -3959,6 +4054,15 @@ msgstr ""
 msgid "next"
 msgstr ""
 
+#: templates/oscar/catalogue/partials/stock_record.html:6
+#, python-format
+msgid "From %(price)s"
+msgstr ""
+
+#: templates/oscar/catalogue/partials/stock_record.html:15
+msgid "You will be the first to know."
+msgstr ""
+
 #: templates/oscar/checkout/checkout.html:39
 #: templates/oscar/customer/anon-order.html:32
 msgid "Contact number"
@@ -4101,6 +4205,7 @@ msgstr ""
 #: templates/oscar/checkout/shipping_address.html:36
 #: templates/oscar/customer/address-book.html:46
 #: templates/oscar/dashboard/catalogue/product_list.html:86
+#: templates/oscar/dashboard/notification/list.html:73
 #: templates/oscar/dashboard/offers/offer_detail.html:78
 #: templates/oscar/dashboard/offers/offer_list.html:67
 #: templates/oscar/dashboard/orders/order_detail.html:441
@@ -4118,6 +4223,8 @@ msgstr ""
 #: templates/oscar/checkout/shipping_address.html:37
 #: templates/oscar/customer/address-book.html:47
 #: templates/oscar/customer/address-delete.html:41
+#: templates/oscar/dashboard/notification/delete.html:57
+#: templates/oscar/dashboard/notification/list.html:75
 #: templates/oscar/dashboard/offers/offer_delete.html:45
 #: templates/oscar/dashboard/offers/offer_detail.html:79
 #: templates/oscar/dashboard/offers/offer_list.html:68
@@ -4132,6 +4239,7 @@ msgstr ""
 #: templates/oscar/dashboard/vouchers/voucher_delete.html:46
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:82
 #: templates/oscar/dashboard/vouchers/voucher_list.html:64
+#: templates/oscar/notification/delete.html:13
 msgid "Delete"
 msgstr ""
 
@@ -4263,6 +4371,7 @@ msgstr ""
 #: templates/oscar/checkout/user_address_form.html:20
 #: templates/oscar/customer/address-form.html:38
 #: templates/oscar/customer/profile-form.html:36
+#: templates/oscar/dashboard/notification/update.html:55
 #: templates/oscar/dashboard/offers/preview.html:22
 #: templates/oscar/dashboard/pages/update.html:37
 #: templates/oscar/dashboard/promotions/form.html:36
@@ -4276,6 +4385,7 @@ msgstr ""
 #: templates/oscar/customer/address-book.html:19
 #: templates/oscar/customer/address-delete.html:20
 #: templates/oscar/customer/address-form.html:20
+#: templates/oscar/customer/profile.html:121
 msgid "Address book"
 msgstr ""
 
@@ -4342,7 +4452,7 @@ msgstr ""
 #: templates/oscar/customer/change-password.html:16
 #: templates/oscar/customer/change-password.html:22
 #: templates/oscar/customer/change-password.html:27
-#: templates/oscar/customer/profile.html:68
+#: templates/oscar/customer/profile.html:69
 msgid "Change password"
 msgstr ""
 
@@ -4354,20 +4464,20 @@ msgstr ""
 #: templates/oscar/customer/email-history.html:19
 #: templates/oscar/customer/email-history.html:25
 #: templates/oscar/customer/email.html:17
-#: templates/oscar/customer/profile.html:150
+#: templates/oscar/customer/profile.html:151
 msgid "Email history"
 msgstr ""
 
 #: templates/oscar/customer/email-history.html:32
 #: templates/oscar/customer/email.html:40
-#: templates/oscar/customer/profile.html:160
+#: templates/oscar/customer/profile.html:161
 msgid "Date sent"
 msgstr ""
 
 #: templates/oscar/customer/email-history.html:41
 #: templates/oscar/customer/order-history.html:53
-#: templates/oscar/customer/profile.html:96
-#: templates/oscar/customer/profile.html:169
+#: templates/oscar/customer/profile.html:97
+#: templates/oscar/customer/profile.html:170
 #: templates/oscar/dashboard/offers/offer_detail.html:69
 #: templates/oscar/dashboard/orders/order_detail.html:137
 #: templates/oscar/dashboard/orders/order_list.html:109
@@ -4415,7 +4525,7 @@ msgstr ""
 #: templates/oscar/customer/order-history.html:20
 #: templates/oscar/customer/order-history.html:25
 #: templates/oscar/customer/order.html:20
-#: templates/oscar/customer/profile.html:79
+#: templates/oscar/customer/profile.html:80
 msgid "Order history"
 msgstr ""
 
@@ -4436,19 +4546,19 @@ msgid "Reset"
 msgstr ""
 
 #: templates/oscar/customer/order-history.html:43
-#: templates/oscar/customer/profile.html:86
+#: templates/oscar/customer/profile.html:87
 #: templates/oscar/dashboard/orders/order_list.html:88
 msgid "Total inc tax"
 msgstr ""
 
 #: templates/oscar/customer/order-history.html:44
-#: templates/oscar/customer/profile.html:87
+#: templates/oscar/customer/profile.html:88
 msgid "Date submitted"
 msgstr ""
 
 #: templates/oscar/customer/order-history.html:58
 #: templates/oscar/customer/order.html:106
-#: templates/oscar/customer/profile.html:101
+#: templates/oscar/customer/profile.html:102
 #: templates/oscar/dashboard/promotions/page_detail.html:51
 msgid "Re-order"
 msgstr ""
@@ -4488,7 +4598,7 @@ msgstr ""
 #: templates/oscar/customer/profile-form.html:14
 #: templates/oscar/customer/profile-form.html:20
 #: templates/oscar/customer/profile-form.html:25
-#: templates/oscar/customer/profile.html:67
+#: templates/oscar/customer/profile.html:68
 msgid "Edit profile"
 msgstr ""
 
@@ -4504,35 +4614,35 @@ msgstr ""
 msgid "Email History"
 msgstr ""
 
-#: templates/oscar/customer/profile.html:109
+#: templates/oscar/customer/profile.html:110
 msgid "View order history"
 msgstr ""
 
-#: templates/oscar/customer/profile.html:112
+#: templates/oscar/customer/profile.html:113
 msgid "You haven't placed any orders yet."
 msgstr ""
 
-#: templates/oscar/customer/profile.html:125
+#: templates/oscar/customer/profile.html:126
 msgid "Number of addresses in addressbook"
 msgstr ""
 
-#: templates/oscar/customer/profile.html:129
+#: templates/oscar/customer/profile.html:130
 msgid "Default shipping address"
 msgstr ""
 
-#: templates/oscar/customer/profile.html:133
+#: templates/oscar/customer/profile.html:134
 msgid "Default billing address"
 msgstr ""
 
-#: templates/oscar/customer/profile.html:139
+#: templates/oscar/customer/profile.html:140
 msgid "Manage address book"
 msgstr ""
 
-#: templates/oscar/customer/profile.html:154
+#: templates/oscar/customer/profile.html:155
 msgid "You haven't been sent any emails yet."
 msgstr ""
 
-#: templates/oscar/customer/profile.html:175
+#: templates/oscar/customer/profile.html:176
 msgid "View email history"
 msgstr ""
 
@@ -4708,13 +4818,6 @@ msgid "Offers, vouchers and promotions"
 msgstr ""
 
 #: templates/oscar/dashboard/index.html:146
-#: templates/oscar/dashboard/index.html:150
-#: templates/oscar/dashboard/offers/offer_list.html:59
-#: templates/oscar/dashboard/users/index.html:49
-msgid "Active"
-msgstr ""
-
-#: templates/oscar/dashboard/index.html:146
 msgid "Site"
 msgstr ""
 
@@ -4792,6 +4895,61 @@ msgstr ""
 msgid "No stock alerts found."
 msgstr ""
 
+#: templates/oscar/dashboard/notification/delete.html:7
+#: templates/oscar/dashboard/notification/delete.html:20
+#: templates/oscar/dashboard/notification/update.html:20
+#: templates/oscar/dashboard/notification/update.html:26
+#, python-format
+msgid "Notification #%(notification.id)s"
+msgstr ""
+
+#: templates/oscar/dashboard/notification/delete.html:26
+#, python-format
+msgid "Delete Notification #%(notification.id)s?"
+msgstr ""
+
+#: templates/oscar/dashboard/notification/delete.html:31
+msgid "Are you sure that you want to delete this notification:"
+msgstr ""
+
+#: templates/oscar/dashboard/notification/delete.html:36
+msgid "Product title"
+msgstr ""
+
+#: templates/oscar/dashboard/notification/delete.html:52
+msgid "Date notified"
+msgstr ""
+
+#: templates/oscar/dashboard/notification/list.html:9
+#: templates/oscar/dashboard/notification/list.html:26
+msgid "Notification management"
+msgstr ""
+
+#: templates/oscar/dashboard/notification/list.html:33
+msgid "Search Notifications"
+msgstr ""
+
+#: templates/oscar/dashboard/notification/list.html:53
+msgid "Date Created"
+msgstr ""
+
+#: templates/oscar/dashboard/notification/list.html:54
+msgid "Date Notified"
+msgstr ""
+
+#: templates/oscar/dashboard/notification/list.html:83
+msgid "Update status of selected notifications"
+msgstr ""
+
+#: templates/oscar/dashboard/notification/list.html:96
+msgid "No notifications found."
+msgstr ""
+
+#: templates/oscar/dashboard/notification/update.html:7
+#, python-format
+msgid "Update notification #%(notification.id)s"
+msgstr ""
+
 #: templates/oscar/dashboard/offers/offer_delete.html:6
 msgid "Delete offer"
 msgstr ""
@@ -4854,10 +5012,6 @@ msgstr ""
 
 #: templates/oscar/dashboard/offers/offer_list.html:37
 msgid "Create new offer"
-msgstr ""
-
-#: templates/oscar/dashboard/offers/offer_list.html:59
-msgid "Inactive"
 msgstr ""
 
 #: templates/oscar/dashboard/offers/offer_list.html:66
@@ -5623,7 +5777,7 @@ msgstr ""
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:19
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:25
 #, python-format
-msgid "Voucher '%(name)s'"
+msgid "Voucher '%(voucher.name)s'"
 msgstr ""
 
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:46
@@ -5656,6 +5810,155 @@ msgstr ""
 
 #: templates/oscar/flatpages/style_guide.html:18
 msgid "Hyperlinks"
+msgstr ""
+
+#: templates/oscar/notification/confirm.html:7
+#, python-format
+msgid ""
+"Thank you for subscribing. Notifications will be sent to "
+"%(notification.email)s"
+msgstr ""
+
+#: templates/oscar/notification/confirm.html:11
+msgid ""
+"Something went wrong confirming your email address. Please try again or "
+"contact us."
+msgstr ""
+
+#: templates/oscar/notification/delete.html:6
+msgid "Delete notification?"
+msgstr ""
+
+#: templates/oscar/notification/delete.html:8
+#, python-format
+msgid ""
+"Are you sure that you want to delete notification of\n"
+"            %(notification.get_notification_email)s for product \n"
+"            %(notification.product.title)s?\n"
+"        "
+msgstr ""
+
+#: templates/oscar/notification/email.html:16
+#, python-format
+msgid ""
+"\n"
+"We will send you an email to %(notification.email)s as soon as\n"
+"<a href=\"%(product_url)s\">%(product)s</a> is back in stock.\n"
+msgstr ""
+
+#: templates/oscar/notification/email.html:23
+msgid ""
+"\n"
+"If you want to disable your notification at any point in time, use the \n"
+"following link to unsubscribe:\n"
+msgstr ""
+
+#: templates/oscar/notification/email.html:35
+msgid "Thank you very much for your interest."
+msgstr ""
+
+#: templates/oscar/notification/notification.html:7
+msgid "Notify Me"
+msgstr ""
+
+#: templates/oscar/notification/notification_email.html:4
+#, python-format
+msgid ""
+"\n"
+"Dear %(user.get_full_name)s,\n"
+msgstr ""
+
+#: templates/oscar/notification/notification_email.html:8
+msgid ""
+"\n"
+"Dear Customer,\n"
+msgstr ""
+
+#: templates/oscar/notification/notification_email.html:14
+#, python-format
+msgid ""
+"\n"
+"we are happy to inform you that our product <strong><a href=\"%(product_url)s"
+"\">\n"
+"%(product.title)s</a></strong> is back in stock. \n"
+msgstr ""
+
+#: templates/oscar/notification/notification_email.html:20
+#, python-format
+msgid ""
+"\n"
+"The amount of items in stock is limited. Head over to <a href="
+"\"%(product_url)s\">\n"
+"order the product</a> now, before someone else get's there first.\n"
+msgstr ""
+
+#: templates/oscar/notification/notification_email.html:26
+#, python-format
+msgid ""
+"\n"
+"With this email we have disabled your notification automatically and you "
+"will not \n"
+"receive any further email regarding this product. \n"
+"\n"
+"Thanks for your interest,\n"
+"Your %(site.name)s Team\n"
+msgstr ""
+
+#: templates/oscar/notification/unsubscribe.html:6
+msgid ""
+"\n"
+"        You have successfully unsubscribed from this notification.\n"
+"        We are sorry to see you go and hope to see you back here soon.\n"
+"        "
+msgstr ""
+
+#: templates/oscar/notification/partials/notification_description.html:2
+msgid "Generic Notification without related content."
+msgstr ""
+
+#: templates/oscar/notification/partials/notification_pane.html:6
+msgid "You do not have any notifications for out-of-stock products."
+msgstr ""
+
+#: templates/oscar/notification/partials/notification_pane.html:10
+msgid "Product Title"
+msgstr ""
+
+#: templates/oscar/notification/partials/notification_pane.html:11
+msgid "Product Availability"
+msgstr ""
+
+#: templates/oscar/notification/partials/notification_pane.html:13
+msgid "Date Subscribed"
+msgstr ""
+
+#: templates/oscar/notification/partials/notification_pane.html:30
+msgid "Not in Stock"
+msgstr ""
+
+#: templates/oscar/notification/partials/notification_pane.html:41
+msgid "Activate"
+msgstr ""
+
+#: templates/oscar/notification/partials/notification_pane.html:47
+msgid "Deactivate"
+msgstr ""
+
+#: templates/oscar/notification/partials/notified_date.html:5
+msgid "Not yet notified"
+msgstr ""
+
+#: templates/oscar/notification/partials/productnotification_description.html:3
+#, python-format
+msgid ""
+"\n"
+"Product notification for <a href=\"%(product_url)s\">%(notify_item.title)s</"
+"a>\n"
+msgstr ""
+
+#: templates/oscar/notification/partials/user_link.html:4
+#, python-format
+msgid "Anonymous (%(notification.get_notification_email)s)"
 msgstr ""
 
 #: templates/oscar/offer/detail.html:34
@@ -5907,6 +6210,15 @@ msgstr ""
 
 #: templates/oscar/search/results.html:43
 msgid "No search results found."
+msgstr ""
+
+#: templatetags/currency_filters.py:15
+msgid "Free"
+msgstr ""
+
+#: templatetags/notification_tags.py:62
+#, python-format
+msgid "%r tag requires notification instance as argument"
 msgstr ""
 
 #: views/decorators.py:32

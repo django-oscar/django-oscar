@@ -1,0 +1,35 @@
+{% load i18n %}
+
+<p>
+You have just signed up for a notification to {{ product }} on our
+website <a href="{{ site.domain }}">{{ site.name }}</a>. If this was you,
+please feel confirm your email address by clicking the following link or
+copying it into the address bar of your favourite browser.
+</p>
+<p>
+<a>
+    {{ notification.get_confirm_url }}
+</a>
+</p>
+<p>
+{% url catalogue:detail product.slug product.id as product_url %}
+{% blocktrans %}
+We will send you an email to {{ notification.email }} as soon as
+<a href="{{ product_url }}">{{ product }}</a> is back in stock.
+{% endblocktrans %}
+</p>
+
+<p>
+{% blocktrans %}
+If you want to disable your notification at any point in time, use the 
+following link to unsubscribe:
+{% endblocktrans %}
+</p>
+
+<p>
+<a>
+    {{ notification.get_unsubscribe_url }}
+</a>
+</p>
+
+<strong>{%trans "Thank you very much for your interest." %}</strong>

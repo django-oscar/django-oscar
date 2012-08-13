@@ -1,14 +1,15 @@
-from django.db.models import Q
+from django.db.models import Q, get_model
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, DeleteView, UpdateView
 
 from oscar.apps.dashboard.users import forms
 from oscar.views.generic import BulkEditMixin
 
+Notification = get_model('notification', 'notification')
 
 class IndexView(ListView, BulkEditMixin):
     template_name = 'dashboard/users/index.html'
@@ -80,3 +81,91 @@ class UserDetailView(DetailView):
     template_name = 'dashboard/users/detail.html'
     model = User
     context_object_name = 'customer'
+
+    def get_context_data(self, **kwargs):
+        context = super(UserDetailView, self).get_context_data(**kwargs)
+        return context
+
+
+class NotificationListView(ListView, BulkEditMixin):
+    model = Notification
+    form_class = forms.NotificationSearchForm
+    context_object_name = 'notification_list'
+    template_name = 'dashboard/notification/list.html'
+    paginate = 25
+    actions = ('update_selected_notification_status',)
+    base_description = _('All notifications')
+    checkbox_object_name = 'notification'
+    description = ''
+
+    def get_queryset(self):
+        queryset = self.model.objects.select_subclasses()
+        self.description = self.base_description
+
+        self.form = self.form_class(self.request.GET)
+        if not self.form.is_valid():
+            return queryset
+
+        data = self.form.cleaned_data
+
+        if data['status']:
+            queryset = queryset.filter(status=data['status']).distinct()
+            self.description += _(" with status matching '%s'") % data['status']
+
+        if data['name']:
+            # If the value is two words, then assume they are first name and
+            # last name
+            parts = data['name'].split()
+            if len(parts) >= 2:
+                queryset = queryset.filter(
+                    user__first_name__istartswith=parts[0],
+                    user__last_name__istartswith=parts[1]
+                ).distinct()
+            else:
+                queryset = queryset.filter(
+                    Q(user__first_name__istartswith=parts[0]) |
+                    Q(user__last_name__istartswith=parts[-1])
+                ).distinct()
+            self.description += _(" with customer name matching '%s'") % data['name']
+
+        if data['email']:
+            queryset = queryset.filter(
+                Q(user__email__icontains=data['email']) |
+                Q(email__icontains=data['email'])
+            )
+            self.description += _(" with customer email matching '%s'") % data['email']
+
+        return queryset
+
+    def update_selected_notification_status(self, request, notifications):
+        new_status = request.POST.get('status')
+        for notification in notifications:
+            notification.status = new_status
+            notification.save()
+        return HttpResponseRedirect(reverse('dashboard:user-notification-list'))
+
+    def get_context_data(self, **kwargs):
+        context = super(NotificationListView, self).get_context_data(**kwargs)
+        context['form'] = self.form
+        context['notification_form'] = forms.NotificationUpdateForm
+        context['queryset_description'] = self.description
+        return context
+
+
+class NotificationUpdateView(UpdateView):
+    template_name = 'dashboard/notification/update.html'
+    model = Notification
+    form_class = forms.NotificationUpdateForm
+    context_object_name = 'notification'
+
+    def get_success_url(self):
+        return reverse('dashboard:user-notification-list')
+
+
+class NotificationDeleteView(DeleteView):
+    model = Notification
+    template_name = 'dashboard/notification/delete.html'
+    context_object_name = 'notification'
+
+    def get_success_url(self):
+        return reverse('dashboard:user-notification-list')
