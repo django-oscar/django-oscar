@@ -2,7 +2,6 @@ import httplib
 from mock import patch
 from decimal import Decimal as D
 
-from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.http import HttpRequest
