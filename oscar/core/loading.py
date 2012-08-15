@@ -44,7 +44,7 @@ def get_classes(module_label, classnames):
     # App must be local - check if module is in local app (it could be in
     # oscar's)
     app_label = module_label.split('.')[0]
-    base_package = app_module_path.rsplit('.'+app_label, 1)[0]
+    base_package = app_module_path.rsplit('.' + app_label, 1)[0]
     local_app = "%s.%s" % (base_package, module_label)
     try:
         imported_local_module = __import__(local_app, fromlist=classnames)
@@ -54,7 +54,8 @@ def get_classes(module_label, classnames):
     oscar_app = "oscar.apps.%s" % module_label
     imported_oscar_module = __import__(oscar_app, fromlist=classnames)
 
-    return _pluck_classes([imported_local_module, imported_oscar_module], classnames)
+    return _pluck_classes([imported_local_module, imported_oscar_module],
+                          classnames)
 
 
 def _pluck_classes(modules, classnames):

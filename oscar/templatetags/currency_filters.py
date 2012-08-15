@@ -5,6 +5,7 @@ from django.conf import settings
 
 register = template.Library()
 
+
 @register.filter(name='currency')
 def currency(value):
     """
@@ -19,10 +20,10 @@ def currency(value):
     symbol = getattr(settings, 'CURRENCY_SYMBOL', None)
     try:
         if symbol:
-            return u"%s%s" % (symbol, locale.format("%.2f", value, grouping=True))
+            return u"%s%s" % (symbol, locale.format("%.2f",
+                                                    value, grouping=True))
         else:
             c = locale.currency(value, symbol=True, grouping=True)
             return unicode(c, 'utf8')
     except TypeError:
         return ''
-

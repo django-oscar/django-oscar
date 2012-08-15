@@ -2,7 +2,7 @@ OSCAR_SHOP_NAME = 'Oscar'
 OSCAR_SHOP_TAGLINE = 'Domain-driven e-Commerce for Django'
 
 # Basket settings
-OSCAR_BASKET_COOKIE_LIFETIME = 7*24*60*60
+OSCAR_BASKET_COOKIE_LIFETIME = 7 * 24 * 60 * 60
 OSCAR_BASKET_COOKIE_OPEN = 'oscar_open_basket'
 OSCAR_BASKET_COOKIE_SAVED = 'oscar_saved_basket'
 
@@ -31,7 +31,8 @@ OSCAR_ALLOW_ANON_CHECKOUT = False
 OSCAR_PARTNER_WRAPPERS = {}
 
 # Promotions
-COUNTDOWN, LIST, SINGLE_PRODUCT, TABBED_BLOCK = ('Countdown', 'List', 'SingleProduct', 'TabbedBlock')
+COUNTDOWN, LIST, SINGLE_PRODUCT, TABBED_BLOCK = (
+    'Countdown', 'List', 'SingleProduct', 'TabbedBlock')
 OSCAR_PROMOTION_MERCHANDISING_BLOCK_TYPES = (
     (COUNTDOWN, "Vertical list"),
     (LIST, "Horizontal list"),
@@ -56,4 +57,5 @@ OSCAR_MAX_BASKET_QUANTITY_THRESHOLD = None
 # Cookies
 OSCAR_COOKIES_DELETE_ON_LOGOUT = ['oscar_recently_viewed_products', ]
 
-OSCAR_SETTINGS = dict([(k, v) for k, v in locals().items() if k.startswith('OSCAR_')])
+OSCAR_SETTINGS = dict(
+    [(k, v) for k, v in locals().items() if k.startswith('OSCAR_')])

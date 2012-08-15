@@ -1,12 +1,10 @@
-import re
-
 from django.core import validators
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import resolve
+from django.db.models import get_model
 from django.http import Http404
 from django.utils.translation import ugettext_lazy as _
 
-from django.db.models import get_model
 
 class ExtendedURLValidator(validators.URLValidator):
     def __call__(self, value):
@@ -77,7 +75,7 @@ class URLDoesNotExistValidator(ExtendedURLValidator):
             super(URLDoesNotExistValidator, self).__call__(value)
         except ValidationError:
             raise ValidationError(_('Specified page does already exist'),
-                                    code='invalid')
+                                  code='invalid')
 
         # check if URL exists since it seems to be valid
         try:
@@ -87,4 +85,4 @@ class URLDoesNotExistValidator(ExtendedURLValidator):
             return
 
         raise ValidationError(_('Specified page does already exist'),
-                                code='invalid')
+                              code='invalid')
