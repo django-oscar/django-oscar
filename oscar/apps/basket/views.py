@@ -24,7 +24,7 @@ class BasketView(ModelFormSetView):
     form_class = BasketLineForm
     extra = 0
     can_delete = True
-    template_name='basket/basket.html'
+    template_name = 'basket/basket.html'
 
     def get_queryset(self):
         return self.request.basket.all_lines()

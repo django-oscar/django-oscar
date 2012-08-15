@@ -2,8 +2,19 @@
 Changelog
 =========
 
-0.3 
----
+0.3.2
+-----
+
+* Bug fix for basket calculations
+* Bug fix for absolute discount benefit calculations
+
+0.3.1 - 2012-08-08
+------------------
+
+* Now including the translation files.
+
+0.3 - 2012-08-08
+----------------
 
 * i18n support added - Oscar now ships with .po files for seven languages.
   Translation files are welcome.

@@ -187,7 +187,8 @@ class Condition(models.Model):
     description = __unicode__
 
     def consume_items(self, basket, lines=None):
-        return ()
+        raise NotImplementedError("This method should never be called - "
+                                  "ensure you are using the correct proxy model")
 
     def is_satisfied(self, basket):
         """
@@ -421,6 +422,7 @@ class CountCondition(Condition):
         consumed_products = []
         value = self.value if value is None else value
         for line in lines:
+
             if self.can_apply_condition(line.product):
                 quantity_to_consume = min(line.quantity_without_discount,
                                           value - len(consumed_products))
@@ -649,12 +651,19 @@ class AbsoluteDiscountBenefit(Benefit):
 
                 # Update line with discounts
                 line_discount = self.round(min(remaining_discount, quantity_affected * price))
-                line.discount(line_discount, quantity_affected)
+                if condition:
+                    # Pass zero as quantity to avoid double consumption
+                    line.discount(line_discount, 0)
+                else:
+                    line.discount(line_discount, quantity_affected)
 
                 # Update loop vars
                 affected_items += quantity_affected
                 remaining_discount -= line_discount
                 discount += line_discount
+
+        if discount > 0 and condition:
+            condition.consume_items(basket)
 
         return discount
 

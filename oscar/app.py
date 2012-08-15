@@ -14,7 +14,7 @@ from oscar.apps.dashboard.app import application as dashboard_app
 
 class Shop(Application):
     name = None
-    
+
     catalogue_app = catalogue_app
     customer_app = customer_app
     basket_app = basket_app
@@ -23,7 +23,7 @@ class Shop(Application):
     search_app = search_app
     dashboard_app = dashboard_app
     offer_app = offer_app
-    
+
     def get_urls(self):
         urlpatterns = patterns('',
             (r'^products/', include(self.catalogue_app.urls)),
@@ -39,12 +39,14 @@ class Shop(Application):
             # from working.
             url(r'^password-reset/$', auth_views.password_reset, name='password-reset'),
             url(r'^password-reset/done/$', auth_views.password_reset_done, name='password-reset-done'),
-            url(r'^password-reset/confirm/$', auth_views.password_reset_confirm, name='password-reset-confirm'),
+            url(r'^password-reset/confirm/(?P<uidb36>[0-9A-Za-z]{1,13})-(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+                auth_views.password_reset_confirm, name='password-reset-confirm'),
             url(r'^password-reset/complete/$', auth_views.password_reset_complete, name='password-reset-complete'),
 
             (r'', include(self.promotions_app.urls)),
         )
         return urlpatterns
-    
+
+
 # 'shop' kept for legacy projects - 'application' is a better name
 shop = application = Shop()
