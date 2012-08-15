@@ -17,9 +17,8 @@ ci:
 	# Run continous tests and generate lint reports
 	python setup.py develop
 	pip install -r requirements.txt
-	#./runtests.py --with-coverage
-	pyflakes oscar | perl -ple "s/: /: [E] /" | grep -v migrations > violations.txt
-	pep8 --exclude="migrations" oscar | perl -ple 's/: [WE](\d+)/: [W$1]/' > violations.txt
+	./runtests.py --with-coverage
+	flake8 oscar | perl -ple "s/: /: [E] /" | grep -v migrations > violations.txt
 
 test:
 	./runtests.py
