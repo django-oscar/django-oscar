@@ -20,14 +20,23 @@ def run_tests(*test_args):
 
 if __name__ == '__main__':
     parser = OptionParser()
-    __, args = parser.parse_args()
+    parser.add_option('--with-coverage', dest='coverage', default=False,
+                      action='store_true')
+    parser.add_option('--with-xunit', dest='xunit', default=False,
+                      action='store_true')
+    options, args = parser.parse_args()
 
     # If no args, then use 'progressive' plugin to keep the screen real estate
     # used down to a minimum.  Otherwise, use the spec plugin
     nose_args = ['-s', '-x',
                  '--with-progressive' if not args else '--with-spec']
-    #nose_args.extend([
-    #    '--with-coverage', '--cover-package=oscar', '--cover-html',
-    #    '--cover-html-dir=htmlcov'])
+
+    if options.coverage:
+        # Nose automatically uses any options passed to runtests.py, which is
+        # why the coverage trigger uses '--with-coverage' and why we don't need
+        # to explicitly include it here.
+        nose_args.extend([
+            '--cover-package=oscar', '--cover-html',
+            '--cover-html-dir=htmlcov'])
     configure(nose_args)
     run_tests(*args)

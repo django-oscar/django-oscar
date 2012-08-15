@@ -1,3 +1,6 @@
+# These targets are not files
+.PHONY: contribute ci test i18n
+
 contribute:
 	# Create a sandbox installation for playing around with oscar.
 	python setup.py develop
@@ -9,6 +12,14 @@ contribute:
 	sandbox/manage.py oscar_import_catalogue sandbox/data/books-catalogue.csv
 	sandbox/manage.py oscar_import_catalogue_images sandbox/data/books-images.tar.gz
 	sandbox/manage.py loaddata countries.json sandbox/fixtures/pages.json
+
+ci:
+	# Run continous tests and generate lint reports
+	python setup.py develop
+	pip install -r requirements.txt
+	#./runtests.py --with-coverage
+	pyflakes oscar | perl -ple "s/: /: [E] /" | grep -v migrations > violations.txt
+	pep8 --exclude="migrations" oscar | perl -ple 's/: [WE](\d+)/: [W$1]/' > violations.txt
 
 test:
 	./runtests.py
