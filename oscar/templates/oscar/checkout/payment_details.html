@@ -21,10 +21,12 @@
 	</div>
 
 	{% block payment_details_content %}
-		<p>{% trans "This page needs implementing within your project.  Or you could use one of Oscar's plugin libraries:" %}</p>
+		<p>{% trans "This page needs implementing within your project.  You may want to use on one of Oscar's payment gateway libraries:" %}</p>
 		<ul>
 			<li><a href="https://github.com/tangentlabs/django-oscar-paypal">django-oscar-paypal</a></li>
 			<li><a href="https://github.com/tangentlabs/django-oscar-datacash">django-oscar-datacash</a></li>
+			<li><a href="https://github.com/tangentlabs/django-oscar-gocardless">django-oscar-gocardless</a></li>
+			<li><a href="https://github.com/tangentlabs/django-oscar-paymentexpress">django-oscar-paymentexpress</a></li>
 		</ul>
 		<a href="{% url checkout:preview %}" class="btn btn-primary btn-large">{% trans "Continue" %}</a>
 	{% endblock payment_details_content %}
