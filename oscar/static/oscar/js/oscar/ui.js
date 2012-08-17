@@ -2,7 +2,7 @@ var oscar = oscar || {};
 oscar.messages = {
     addMessage: function(tag, msg) {
         var msgHTML = '<div class="alert fade in alert-' + tag + '">' +
-        '<a class="close" data-dismiss="alert">x</a>' + msg +
+        '<a href="#" class="close" data-dismiss="alert">x</a>' + msg +
         '</div>';
         $('#messages').append($(msgHTML));
     },
