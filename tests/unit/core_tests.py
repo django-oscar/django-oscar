@@ -107,13 +107,13 @@ class TestExtendedURLValidator(TestCase):
             v('/invalid/?q=test')  # Query strings shouldn't affect validation
 
         try:
-            v('products/')
+            v('catalogue/')
         except ValidationError:
             self.fail('ExtendedURLValidator raised ValidationError'
                       'unexpectedly!')
 
         with self.assertRaises(ValidationError):
-            v('/products')  # Missing the / is bad
+            v('/catalogue')  # Missing the / is bad
 
         FlatPage(title='test page', url='/test/page/').save()
         try:
