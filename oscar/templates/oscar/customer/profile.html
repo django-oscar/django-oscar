@@ -61,15 +61,13 @@
                         <th>{% trans 'Date registered' %}</th>
                         <td>{{ user.date_joined }}</td>
                     </tr>
-                    <tr>
-                        <th></th>
-                        <td>
-                            <a href="{% url customer:profile-update %}" class="btn btn-primary">{% trans 'Edit profile' %}</a>
-                            <a href="{% url customer:change-password %}" class="btn btn-danger">{% trans 'Change password' %}</a>
-                        </td>
-                    </tr>
                 </tbody>
             </table>
+
+            <div class="form-actions">
+                <a href="{% url customer:profile-update %}" class="btn btn-primary">{% trans 'Edit profile' %}</a>
+                <a href="{% url customer:change-password %}" class="btn btn-danger">{% trans 'Change password' %}</a>
+            </div>
             {% endblock %}
         </div>
 
@@ -133,14 +131,13 @@
                         <th>{% trans 'Default billing address' %}</th>
                         <td>{{ default_billing_address|default:"-" }}</td>
                     </tr>
-                    <tr>
-                        <th></th>
-                        <td>
-                            <a href="{% url customer:address-list %}" class="btn btn-primary">{% trans 'Manage address book' %}</a>
-                        </td>
-                    </tr>
                 </tbody>
             </table>
+
+            <div class="form-actions">
+                <a href="{% url customer:address-list %}" class="btn btn-primary">{% trans 'Manage address book' %}</a>
+            </div>
+            
             {% endblock %}
         </div>
 
@@ -171,9 +168,11 @@
                 </tr>
                 {% endfor %}
             </table>
+            
             <div class="form-actions">
                 <a href="{% url customer:email-list %}" class="btn btn-primary">{% trans 'View email history' %}</a>
             </div>
+            
             {% endif %}
             {% endblock %}
         </div>
