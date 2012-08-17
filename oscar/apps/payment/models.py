@@ -17,14 +17,18 @@ class Transaction(models.Model):
     
     # We define some sample types
     AUTHORISE, DEBIT, REFUND = 'Authorise', 'Debit', 'Refund'
-    txn_type = models.CharField(max_length=128, blank=True)
-    amount = models.DecimalField(decimal_places=2, max_digits=12)
-    reference = models.CharField(max_length=128, null=True)
-    status = models.CharField(max_length=128, null=True)
+    txn_type = models.CharField(_('Type'), max_length=128, blank=True)
+    amount = models.DecimalField(_('Amount'), decimal_places=2, max_digits=12)
+    reference = models.CharField(_('Reference'), max_length=128, null=True)
+    status = models.CharField(_('Status'), max_length=128, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
     
     def __unicode__(self):
-        return "%s of %.2f" % (self.txn_type, self.amount)
+        return _("%(type)s of %(amount).2f") % {'type': self.txn_type, 'amount': self.amount}
+
+    class Meta:
+        verbose_name = _("Transaction")
+        verbose_name_plural = _("Transactions")
 
 
 class Source(models.Model):
@@ -38,19 +42,19 @@ class Source(models.Model):
     """
     order = models.ForeignKey('order.Order', related_name='sources')
     source_type = models.ForeignKey('payment.SourceType')
-    currency = models.CharField(max_length=12, default=settings.OSCAR_DEFAULT_CURRENCY)
+    currency = models.CharField(_('Currency'), max_length=12, default=settings.OSCAR_DEFAULT_CURRENCY)
     
     # Track the various amounts associated with this source
-    amount_allocated = models.DecimalField(decimal_places=2, max_digits=12, default=Decimal('0.00'))
-    amount_debited = models.DecimalField(decimal_places=2, max_digits=12, default=Decimal('0.00'))
-    amount_refunded = models.DecimalField(decimal_places=2, max_digits=12, default=Decimal('0.00'))
+    amount_allocated = models.DecimalField(_('Amount Allocated'), decimal_places=2, max_digits=12, default=Decimal('0.00'))
+    amount_debited = models.DecimalField(_('Amount Debited'), decimal_places=2, max_digits=12, default=Decimal('0.00'))
+    amount_refunded = models.DecimalField(_('Amount Refunded'), decimal_places=2, max_digits=12, default=Decimal('0.00'))
     
     # Reference number for this payment source.  This is often used to look up a
     # transaction model for a particular payment partner. 
-    reference = models.CharField(max_length=128, blank=True, null=True)
+    reference = models.CharField(_('Reference'), max_length=128, blank=True, null=True)
     
     # A customer-friendly label for the source, eg XXXX-XXXX-XXXX-1234
-    label = models.CharField(max_length=128, blank=True, null=True)
+    label = models.CharField(_('Label'), max_length=128, blank=True, null=True)
     
     # A dictionary of submission data that is stored as part of the
     # checkout process.
@@ -59,11 +63,16 @@ class Source(models.Model):
     # We keep a list of deferred transactions that are only actually saved when 
     # the source is saved for the first time
     deferred_txns = None
-    
+
+    class Meta:
+        verbose_name = _("Source")
+        verbose_name_plural = _("Sources")
+
     def __unicode__(self):
-        description = "Allocation of %.2f from type %s" % (self.amount_allocated, self.source_type)
+        description = _("Allocation of %(amount).2f from type %(type)s") % {
+            'amount': self.amount_allocated, 'type': self.source_type}
         if self.reference:
-            description += " (reference: %s)" % self.reference
+            description += _(" (reference: %s)") % self.reference
         return description
     
     def save(self, *args, **kwargs):
@@ -133,9 +142,13 @@ class SourceType(models.Model):
     This could be an external partner like PayPal or DataCash,
     or an internal source such as a managed account.i
     """
-    name = models.CharField(max_length=128)
-    code = models.SlugField(max_length=128, help_text=_("""This is used within
+    name = models.CharField(_('Name'), max_length=128)
+    code = models.SlugField(_('Code'), max_length=128, help_text=_("""This is used within
         forms to identify this source type"""))
+
+    class Meta:
+        verbose_name = _("Source Type")
+        verbose_name_plural = _("Source Types")
 
     def __unicode__(self):
         return self.name
@@ -148,14 +161,18 @@ class SourceType(models.Model):
 
 class Bankcard(models.Model):
     user = models.ForeignKey('auth.User', related_name='bankcards')
-    card_type = models.CharField(max_length=128)
-    name = models.CharField(max_length=255)
-    number = models.CharField(max_length=32)
-    expiry_date = models.DateField()
+    card_type = models.CharField(_('Card Type'), max_length=128)
+    name = models.CharField(_('Name'), max_length=255)
+    number = models.CharField(_('Number'), max_length=32)
+    expiry_date = models.DateField(_('Expiry Date'))
     
     # For payment partners who are storing the full card details for us
-    partner_reference = models.CharField(max_length=255, null=True, blank=True)
-    
+    partner_reference = models.CharField(_('Partner Reference'), max_length=255, null=True, blank=True)
+
+    class Meta:
+        verbose_name = _("Bankcard")
+        verbose_name_plural = _("Bankcards")
+
     def save(self, *args, **kwargs):
         self.number = self._get_obfuscated_number()
         super(Bankcard, self).save(*args, **kwargs)    

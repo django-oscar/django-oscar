@@ -1,0 +1,154 @@
+{% extends 'dashboard/layout.html' %}
+{% load currency_filters %}
+{% load i18n %}
+
+{% block body_class %}catalogue{% endblock %}
+
+{% block title %}
+{% trans "Update product" %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+	<a href="{% url dashboard:catalogue-product-list %}">{% trans "Catalogue" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active"><a href=".">{{ title }}</a></li>
+</ul>
+{% endblock %}
+
+{% block header %}
+<div class="page-header">
+	<h1>{{ title }}</h1>
+</div>
+{% endblock header %}
+
+{% block dashboard_content %}
+<form action="." method="post" class="product-new" enctype="multipart/form-data">
+	{% csrf_token %}
+    <div class="well well-info">
+        <div class="sub-header">
+            <h3 class="app-ico ico_expand icon">Product information</h3>
+        </div>
+		<div class="control-group fields-full">
+			{% trans "Product class" %}: <strong>{{ product_class.name }}</strong>
+		</div>
+		{{ form.non_field_errors }}
+        {% for field in form %}
+            {% if forloop.counter > 4 %}
+                <div class="form-inline pull-left">
+                	{% if field.is_hidden %}
+                		{{ field }}
+                	{% else %}
+                		{{ field.label_tag }}
+                		{{ field }}
+                			{% for error in field.errors %}
+                				<ul class="help-block">
+                					<li>{{ error|escape }}</li>
+                				</ul>
+                			{% endfor %}
+                        {% if field.help_text %}
+                            <span class='help-block'>
+                                {{ field.help_text|safe }}
+                            </span>
+                        {% endif %}
+                	{% endif %}
+            	</div>
+            {% else %}
+                <div class="control-group {% for error in field.errors %}error{% endfor %} fields-full">
+                    {% if field.is_hidden %}
+                        {{ field }}
+                    {% else %}
+                    {{ field.label_tag }}
+                    <div class="controls">
+                        {{ field }}
+                            {% for error in field.errors %}
+                            <span class="help-block">
+                                {{ error|escape }}
+                            </span>
+                            {% endfor %}
+                        {% if field.help_text %}
+                            <span class='help-block'>
+                                {{ field.help_text }}
+                            </span>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+	<div class="well form-inline">
+		<div class="sub-header">
+			<h3 class="app-ico ico_home icon">{% trans "Category information" %}</h3>
+		</div>
+		<p>{% blocktrans %}The first category in this list is the "primary" category for the product, and will be the one displayed
+		in the site breadcrumb trail.
+		{% endblocktrans %}
+		</p>
+    	{{ category_formset.management_form }}
+	{{ category_formset.non_form_errors }}
+    	{% for category_form in category_formset %}
+			{% include "partials/form_fields_inline.html" with form=category_form %}
+    		<hr/>
+    	{% endfor %}
+	</div>
+
+	<div class="well form-inline">
+    	<div class="sub-header">
+			<h3 class="app-ico ico_favourite icon">{% trans "Images" %}</h3>
+    	</div>
+    	{{ image_formset.management_form }}
+    	{% for image_form in image_formset %}
+    		{% include "partials/form_fields_inline.html" with form=image_form %}
+    		<hr/>
+    	{% endfor %}
+	</div>
+
+	<div class="well fields-full">
+		<div class="sub-header">
+			<h3 class="app-ico ico_shop_bag icon">{% trans "Stock and price information" %}</h3>
+		</div>
+		{% block stockrecord_form %}
+		    <div class="row ">
+                {{ stockrecord_form.non_field_errors }}
+                {% for field in stockrecord_form %}
+                <div class="control-group {% for error in field.errors %}error{% endfor %} span4 pull-left {% if forloop.counter|divisibleby:2 %}{% else %}pull-clear{% endif %}">
+                    {% if field.is_hidden %}
+                        {{ field }}
+                    {% else %}
+                    {{ field.label_tag }}
+                    <div class="controls">
+                        {{ field }}
+                            {% for error in field.errors %}
+                            <span class="help-block">
+                                {{ error|escape }}
+                            </span>
+                            {% endfor %}
+                        {% if field.help_text %}
+                            <span class='help-block'>
+                                {{ field.help_text }}
+                            </span>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+		{% endblock %}
+	</div>
+	<div class="form-actions">
+		<button class="btn btn-primary btn-large" type="submit">{% trans "Save Product" %}</button> or
+		<a href="{% url dashboard:catalogue-product-list %}">{% trans "cancel" %}</a>
+            {% if product %}
+			<a class="btn btn-success btn-large pull-right" href="{{ product.get_absolute_url }}">{% trans "View on site" %}</a>
+            {% endif %}
+	</div>
+</form>
+{% endblock dashboard_content %}

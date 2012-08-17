@@ -1,6 +1,7 @@
 from django.utils.encoding import smart_str
 from django.contrib import messages
 from django.http import HttpResponseRedirect
+from django.utils.translation import ugettext_lazy as _
 
 
 class PostActionMixin(object):
@@ -20,7 +21,7 @@ class PostActionMixin(object):
                 getattr(self, method_name)(model)
                 return self.response
             else:
-                messages.error(request, "Invalid form submission")
+                messages.error(request, _("Invalid form submission"))
         return super(PostActionMixin, self).post(request, *args, **kwargs)
     
 
@@ -56,12 +57,12 @@ class BulkEditMixin(object):
         # whitelist to avoid security issues.
         action = request.POST.get(self.action_param, '').lower()
         if not self.actions or action not in self.actions:
-            messages.error(self.request, "Invalid action")
+            messages.error(self.request, _("Invalid action"))
             return HttpResponseRedirect(self.get_error_url(request))
 
         ids = request.POST.getlist('selected_%s' % self.get_checkbox_object_name())
         if not ids:
-            messages.error(self.request, "You need to select some %ss" % self.get_checkbox_object_name())
+            messages.error(self.request, _("You need to select some %ss") % self.get_checkbox_object_name())
             return HttpResponseRedirect(self.get_error_url(request))
 
         raw_objects = self.model.objects.in_bulk(ids)

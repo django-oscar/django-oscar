@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load currency_filters %}
+{% load category_tags %}
+
+{% block extrahead %}
+    {% include "partials/extrahead.html" %}
+{% endblock %}
+
+{% block layout %}
+    {% include "partials/nav_accounts.html" %}
+    <header class="header container-fluid">
+        <div class="row-fluid">
+            {% include "partials/brand.html" %}
+        </div>
+        {% category_tree depth=2 as categories %}
+
+        {% block navigation %}
+            {% include "partials/nav_primary.html" %}
+        {% endblock %}
+    </header>
+	<div class="container-fluid page">
+        {% block header %}{% endblock %}
+        <div class="page_inner">
+            {% block breadcrumbs %}{% endblock %}
+            {% include "partials/alert_messages.html" %}
+            {% block flatpage %}{% endblock %}
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+    {% include "partials/footer.html" %}
+{% endblock %}
+
+{# Block for additional scripts #}
+{% block extrascripts %}
+    {% include "partials/extrascripts.html" %}
+    {{ block.super }}
+{% endblock %}

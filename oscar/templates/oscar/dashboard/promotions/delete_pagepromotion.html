@@ -1,0 +1,20 @@
+{% extends 'dashboard/layout.html' %}
+{% load i18n %}
+
+{% block header %}
+<div class="page-header">
+	<h1>{% trans "Remove promotion from page?" %}</h1>
+</div>
+{% endblock header%}
+
+{% block dashboard_content %}
+<form action="." method="post">
+	{% csrf_token %}
+	<p>{% blocktrans %}Remove {{ object.content_object.type }} content block <strong>{{ object.name }}</strong> from page <strong>{{ object.page_url }}</strong> - are you sure?{% endblocktrans %}</p>
+    
+	<div class="form-actions">
+		<button type="submit" class="btn btn-danger">{% trans "Remove" %}</button>
+		{% trans "or" %} <a href="{% url dashboard:promotion-list-by-url object.page_url  %}">{% trans "cancel" %}</a>
+	</div>
+</form>
+{% endblock %}

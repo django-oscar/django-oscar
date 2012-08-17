@@ -1,7 +1,8 @@
 import os
 import csv
-import sys
 from decimal import Decimal as D
+
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.catalogue.categories import create_from_breadcrumbs
 from oscar.core.loading import get_class, get_classes
@@ -22,12 +23,13 @@ class StockImporter(object):
             self._partner = Partner.objects.get(name=partner)
         except Partner.DoesNotExist:
             name_list = ", ".join([d['name'] for d in Partner.objects.values('name')])
-            raise ImportError("Partner named '%s' does not exist (existing partners: %s)" % (partner, name_list))
+            raise ImportError(_("Partner named '%(partner)s' does not exist (existing partners: %(list)s)") % {
+                              'partner': partner, 'list': name_list})
         
     def handle(self, file_path=None):
         u"""Handles the actual import process"""
         if not file_path:
-            raise ImportError("No file path supplied")
+            raise ImportError(_("No file path supplied"))
         Validator().validate(file_path)
         self._import(file_path)
 
@@ -41,7 +43,7 @@ class StockImporter(object):
             row_number += 1
             self._import_row(row_number, row, stats)
         msg = "\tUpdated items: %d\n\tUnchanged items: %d\n\tUnmatched items: %d" % (
-            stats['updated_items'], 
+            stats['updated_items'],
             stats['unchanged_items'],
             stats['unmatched_items'])
         self.logger.info(msg)
@@ -99,7 +101,7 @@ class CatalogueImporter(object):
     def handle(self, file_path=None):
         u"""Handles the actual import process"""
         if not file_path:
-            raise ImportError("No file path supplied")
+            raise ImportError(_("No file path supplied"))
         Validator().validate(file_path)
         if self._flush is True:
             self.logger.info(" - Flushing product data before import")
@@ -184,12 +186,12 @@ class Validator(object):
     def _exists(self, file_path):
         u"""Check whether a file exists"""
         if not os.path.exists(file_path):
-            raise ImportError("%s does not exist" % (file_path))
+            raise ImportError(_("%s does not exist") % (file_path))
         
     def _is_file(self, file_path):
         u"""Check whether file is actually a file type"""
         if not os.path.isfile(file_path):
-            raise ImportError("%s is not a file" % (file_path))
+            raise ImportError(_("%s is not a file") % (file_path))
         
     def _is_readable(self, file_path):
         u"""Check file is readable"""
@@ -197,4 +199,4 @@ class Validator(object):
             f = open(file_path, 'r')
             f.close()
         except:
-            raise ImportError("%s is not readable" % (file_path))
+            raise ImportError(_("%s is not readable") % (file_path))

@@ -1,0 +1,49 @@
+{% extends 'dashboard/layout.html' %}
+{% load currency_filters %}
+{% load i18n %}
+
+{% block title %}
+{% trans "Delete offer" %} | {% trans "Offer management" %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+	<a href="{% url dashboard:offer-list %}">{% trans "Offers" %}</a>
+        <span class="divider">/</span>
+    </li>
+	<li class="active"><a href=".">{% trans "Delete offer?" %}</a></li>
+</ul>
+{% endblock %}
+
+{% block header %}
+<div class="page-header">
+	<h1>{% trans "Delete offer?" %}</h1>
+</div>
+{% endblock header %}
+
+{% block dashboard_content %}
+<form action="." method="post" class="">
+	{% csrf_token %}
+
+	<table class="table">
+		<tbody>
+			<tr><th>{% trans "Name" %}</th><td>{{ offer.name }}</td></tr>
+			<tr><th>{% trans "Description" %}</th><td>{{ offer.description }}</td></tr>
+			<tr><th>{% trans "Start date" %}</th><td>{{ offer.start_date }}</td></tr>
+			<tr><th>{% trans "End date" %}</th><td>{{ offer.end_date }}</td></tr>
+			<tr><th>{% trans "Condition" %}</th><td>{{ offer.condition.description }}</td></tr>
+			<tr><th>{% trans "Benefit" %}</th><td>{{ offer.benefit.description }}</td></tr>
+		</tbody>
+	</table>
+
+	<div class="form-actions">
+		<button class="btn btn-danger" type="submit">{% trans "Delete" %}</button> or
+		<a href="{% url dashboard:offer-list %}">{% trans "cancel" %}</a>
+	</div>
+</form>
+{% endblock dashboard_content %}

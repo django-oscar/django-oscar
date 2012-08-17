@@ -7,6 +7,7 @@ from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import get_classes
 
@@ -30,7 +31,7 @@ class OfferListView(ListView):
 
     def get_queryset(self):
         qs = self.model._default_manager.filter(offer_type=ConditionalOffer.SITE)
-        self.description = "All offers"
+        self.description = _("All offers")
 
         self.form = self.form_class(self.request.GET)
         if not self.form.is_valid():
@@ -40,7 +41,7 @@ class OfferListView(ListView):
 
         if data['name']:
             qs = qs.filter(name__icontains=data['name'])
-            self.description = "Offers matching '%s'" % data['name']
+            self.description = _("Offers matching '%s'") % data['name']
         if data['is_active']:
             today = datetime.date.today()
             qs = qs.filter(start_date__lte=today, end_date__gt=today)
@@ -69,7 +70,7 @@ class OfferWizardStepView(FormView):
         if self.update:
             self.offer = get_object_or_404(ConditionalOffer, id=kwargs['pk'])
         if not self.is_previous_step_complete(request):
-            messages.warning(request, "%s step not complete" % self.previous_view.step_name.title())
+            messages.warning(request, _("%s step not complete") % self.previous_view.step_name.title())
             return HttpResponseRedirect(self.get_back_url())
         return super(OfferWizardStepView, self).get(request, *args, **kwargs)
 
@@ -77,7 +78,7 @@ class OfferWizardStepView(FormView):
         if self.update:
             self.offer = get_object_or_404(ConditionalOffer, id=kwargs['pk'])
         if not self.is_previous_step_complete(request):
-            messages.warning(request, "%s step not complete" %
+            messages.warning(request, _("%s step not complete") %
                              self.previous_view.step_name.title())
             return HttpResponseRedirect(self.get_back_url())
         return super(OfferWizardStepView, self).post(request, *args, **kwargs)
@@ -148,8 +149,11 @@ class OfferWizardStepView(FormView):
 
     def get_title(self):
         if self.update:
-            return "Edit %s for offer #%d" % (self.step_name, self.offer.id)
-        return 'Create new offer: %s' % self.step_name
+            return _("Edit %(step_name)s for offer #%(offer_id)d") % {
+                'step_name': self.step_name,
+                'offer_id': self.offer.id
+            }
+        return _('Create new offer: %s') % self.step_name
 
     def form_valid(self, form):
         self._store_form_kwargs(form)
@@ -235,17 +239,17 @@ class OfferPreviewView(OfferWizardStepView):
         self._flush_session()
 
         if self.update:
-            msg = "Offer '%s' updated" % offer.name
+            msg = _("Offer '%s' updated") % offer.name
         else:
-            msg = "Offer '%s' created!" % offer.name
+            msg = _("Offer '%s' created!") % offer.name
         messages.success(self.request, msg)
 
         return HttpResponseRedirect(self.get_success_url())
 
     def get_title(self):
         if self.update:
-            return "Preview offer #%d" % self.offer.id
-        return 'Preview offer'
+            return _("Preview offer #%d") % self.offer.id
+        return _('Preview offer')
 
     def get_success_url(self):
         return reverse('dashboard:offer-list')

@@ -8,7 +8,9 @@ get_recently_viewed_product_ids = get_class('customer.history_helpers',
 
 register = template.Library()
 
-@register.inclusion_tag('customer/history/recently-viewed-products.html', takes_context=True)
+
+@register.inclusion_tag('customer/history/recently-viewed-products.html',
+                        takes_context=True)
 def recently_viewed_products(context):
     u"""
     Inclusion tag listing the most recently viewed products

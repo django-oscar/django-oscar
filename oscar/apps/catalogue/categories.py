@@ -4,6 +4,9 @@ Category = get_model('catalogue', 'category')
 
 
 def create_from_sequence(bits):
+    """
+    Create categories from an iterable
+    """
     if len(bits) == 1:
         # Get or create root node
         try:
@@ -19,6 +22,7 @@ def create_from_sequence(bits):
             child = parents[-1].add_child(name=bits[-1])
         parents.append(child)
         return parents
+
 
 def create_from_breadcrumbs(breadcrumb_str, separator='>'):
     """

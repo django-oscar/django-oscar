@@ -1,17 +1,17 @@
 import os
 
 from django.conf import settings, global_settings
-from oscar import OSCAR_CORE_APPS
+from oscar import OSCAR_CORE_APPS, OSCAR_MAIN_TEMPLATE_DIR
 
 
-if not settings.configured:
-    from oscar.defaults import *
-    oscar_settings = dict([(k, v) for k, v in locals().items() if k.startswith('OSCAR_')])
+def configure(nose_args):
+    if not settings.configured:
+        from oscar.defaults import OSCAR_SETTINGS
 
-    # Helper function to extract absolute path
-    location = lambda x: os.path.join(os.path.dirname(os.path.realpath(__file__)), x)
+        # Helper function to extract absolute path
+        location = lambda x: os.path.join(os.path.dirname(os.path.realpath(__file__)), x)
 
-    settings.configure(
+        settings.configure(
             DATABASES={
                 'default': {
                     'ENGINE': 'django.db.backends.sqlite3',
@@ -41,6 +41,7 @@ if not settings.configured:
                 ),
             TEMPLATE_DIRS=(
                 location('templates'),
+                OSCAR_MAIN_TEMPLATE_DIR,
                 ),
             MIDDLEWARE_CLASSES=global_settings.MIDDLEWARE_CLASSES + (
                 'oscar.apps.basket.middleware.BasketMiddleware',
@@ -49,12 +50,16 @@ if not settings.configured:
                 'oscar.apps.customer.auth_backends.Emailbackend',
                 'django.contrib.auth.backends.ModelBackend',
                 ),
-            ROOT_URLCONF='tests.urls',
+            HAYSTACK_CONNECTIONS={
+                'default': {
+                    'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
+                }
+            },
+            ROOT_URLCONF='tests.site.urls',
             LOGIN_REDIRECT_URL='/accounts/',
             DEBUG=False,
             SITE_ID=1,
-            HAYSTACK_SEARCH_ENGINE='dummy',
-            HAYSTACK_SITECONF = 'oscar.search_sites',
             APPEND_SLASH=True,
-            **oscar_settings
+            NOSE_ARGS=nose_args,
+            **OSCAR_SETTINGS
         )

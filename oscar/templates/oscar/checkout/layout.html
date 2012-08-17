@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% load currency_filters %}
+{% load promotion_tags %}
+{% load category_tags %}
+
+{% block extrahead %}
+    {% include "partials/extrahead.html" %}
+{% endblock %}
+
+{% block layout %}
+    {% include "partials/nav_accounts.html" %}
+
+    <header class="header container-fluid">
+        <div class="row-fluid">
+            {% include "partials/brand.html" with hide_basket=1 %}
+        </div><!-- /row-fluid -->
+        {% include "partials/nav_checkout.html" %}
+    </header><!-- /header -->
+    <div class="container-fluid page">
+        {% include 'partials/alert_messages.html' %}
+        {% block header %}{% endblock %}
+
+       <div class="page_inner">
+            {% block checkout-nav %}
+            {% endblock %}
+            <!-- The main nav on checkout pages contain links to modal flatpages -->
+            {% block modal %}
+                {% load flatpages %}
+                {% get_flatpages '/order/' as flatpages %}
+                {% for page in flatpages %}
+                <div id="{{ page.title|slugify }}" class="modal hide fade">
+                    <div class="modal-header">
+                        <a class="close" data-dismiss="modal">×</a>
+                        <h3>{{ page.title }}</h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="large-content">
+                            {{ page.content|safe }}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% endblock %}
+
+            {% block content %}{% endblock %}
+
+            <div id="promotions">
+                {% for promotion in promotions_page %}
+                    {% render_promotion promotion %}
+                {% endfor %}
+            </div>
+        </div><!-- /page_inner -->
+    </div>
+    {% include "partials/footer_checkout.html" %}
+{% endblock %}
+
+{% block extrascripts %}
+    {{ block.super }}
+    <script src="{{ STATIC_URL }}oscar/js/oscar/checkout.js" type="text/javascript" charset="utf-8"></script>
+{% endblock %}

@@ -1,0 +1,1 @@
+{% load i18n %}{% blocktrans %}Confirmation of order {{ order.number }}{% endblocktrans %}

@@ -1,0 +1,218 @@
+{% extends "layout.html" %}
+{% load currency_filters %}
+{% load history_tags %}
+{% load i18n %}
+
+{% block title %}
+{{ product.title }} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+	<a href="{% url promotions:home %}">{% trans "Home" %}</a>
+        <span class="divider">/</span>
+    </li>
+	{% with category=product.categories.all.0 %}
+		{% for c in category.get_ancestors %}
+		<li>
+			<a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
+			<span class="divider">/</span>
+		</li>
+		{% endfor %}
+		<li class="active">
+			<a href=".">{{ product.title }}</a>
+		</li>
+    {% endwith %}
+</ul>
+{% endblock %}
+
+{% block header %}
+{% endblock header %}
+
+{% block content %}
+<article class="product_page"><!-- Start of product page -->
+    {% if user.is_authenticated and user.is_staff %}
+    <div class="row-fluid">
+        <div class="well">
+			<a href="{% url dashboard:catalogue-product product.id %}"><button class="btn btn-success">{% trans "Edit this product" %}</button></a>
+        </div>
+    </div>
+    {% endif %}
+    <div class="row-fluid">
+        <div class="span6">
+            {% include "catalogue/partials/gallery.html" %}
+        </div><!-- /span6 -->
+        <div class="span6">
+            <h1>{{ product.get_title }}</h1>
+            
+            {% include "catalogue/partials/stock_record.html" %}
+            
+			{% if reviews %}
+				<ul class="review_count">
+					{% for review in reviews %}
+					<li class="{{ review.score }}">{{ review.score }}</li>
+			{% endfor %}
+				</ul>
+			{% else %}
+			<p class="star">{% trans "No Rating" %}
+			
+			<a href="{% url catalogue:reviews-add product.slug product.id %}#addreview">{% trans "Add review" %}</a>
+			</p>
+			{% endif %}
+            
+			<p><strong>{% trans "Product Code:" %}</strong> <code>{{ product.upc }}</code></p>
+             
+            <hr/>
+
+			{% if product.description %}
+            <ul>
+				<li><a href="#product_description">{% trans "Read the full description" %}</a></li>
+            </ul>
+			{% endif %}
+
+            {% include "catalogue/partials/add_to_basket_form.html" %}
+        </div><!-- /span6 -->
+    </div><!-- /row-fluid -->
+              
+	{% block product_description %}
+	{% if product.description %}
+    <div id="product_description" class="sub-header">
+		<h2>{% trans "Product Description" %}</h2>
+    </div>
+    <p>{{ product.description }}</p>
+	{% endif %}
+	{% endblock %}
+    
+	{% block product_info %}
+	<div class="sub-header">
+		<h2>Product Information</h2>
+	</div>
+    <table class="table table-condensed">
+		{% if product.upc %}
+        <tr>
+			<th>{% trans "UPC" %}</th><td>{{ product.upc }}</td>
+        </tr>
+		{% endif %}
+        <tr>
+			<th>{% trans "Product class" %}</th><td>{{ product.product_class.name }}</td>
+        </tr>
+        {% if product.stockrecord %}
+        <tr>
+			<th>{% trans "Price (excl. tax)" %}</th><td>{{ product.stockrecord.price_incl_tax|currency }}</td>
+        </tr>
+        <tr>
+			<th>{% trans "Price (incl. tax)" %}</th><td>{{ product.stockrecord.price_excl_tax|currency }}</td>
+        </tr>
+        <tr>
+			<th>{% trans "Availability" %}</th>
+            <td>{{ product.stockrecord.availability }}</td>
+        </tr>
+        {% endif %}
+        {% for av in product.attribute_values.all %}
+        <tr>
+            <th>{{ av.attribute.name }}</th>
+            <td>{{ av.value }}</td>
+        </tr>
+        {% endfor %}
+        <tr>
+			<th>{% trans "Num reviews" %}</th>
+            <td>{{ reviews.count }}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+	{% endblock %}
+
+    {% block product_review %}
+    <section>
+        <div id="reviews" class="sub-header">
+			<h2>{% trans "Customer Reviews" %}</h2>
+        </div>
+		{% if reviews %}
+		<p>{% trans "Read customer reviews on this product." %}</p>
+		{% else %}
+		<p>{% trans "Be the first to review this product." %}</p>
+		{% endif %}
+       <div class="review_read">
+		   <a href="{% url catalogue:reviews-add product.slug product.id %}#addreview" class="btn btn-success">{% trans "Write a review" %}</a>
+       </div>
+
+        {% if reviews %}
+            <div>
+                {% for review in reviews|slice:":3" %}
+                    <article class="review">
+                        <header>
+                            <h3 class="star"><a href="{{ review.get_absolute_url }}">{{ review.title }} <span>{{ review.score }}</span></a></h3>
+							<h4>{% trans "Reviewed by" %} {{ review.get_reviewer_name }} <small>({{ review.date_created }})</small></h4>
+                        </header>
+                        <div class="row-fluid">
+                            <div class="span8 review_content">  
+                                <div>  
+                                    <p>{{ review.body|linebreaks }}</p>
+                                </div>
+                            </div>
+                            <div class="span4 review_votes">
+                                <div>
+                		            {% include 'reviews/_vote_bit.html' %}
+									{% if review.has_votes %}
+									<p>{{ review.num_up_votes }} customer{{ review.num_up_votes|pluralize }} found this review helpful.</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                {% endfor %}
+                <div class="review_all">
+					<a href="{% url catalogue:reviews-list product.slug product.id %}" class="btn">{% trans "See all reviews" %}</a>
+                </div>
+            </div>
+        {% endif %}
+    </section>    
+    {% endblock product_review %}
+    
+    <div class="row-fluid">
+        {% if product.related_products.count %}
+        <div class="span6">
+            <div class="sub-header">
+				<h2>{% trans "Related items" %}</h2>
+            </div>
+            <div class="es-carousel-wrapper">
+                <div class="es-carousel">
+                    <ul>
+                        {% for product in product.related_products.all %}
+                        <li>
+                            {% include "promotions/partials/product_carousel.html" %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if product.recommended_products.count %}
+        <div class="span6">
+            <div class="sub-header">
+				<h2>{% trans "Recommended items" %}</h2>
+            </div>
+            <div class="es-carousel-wrapper">
+                <div class="es-carousel">
+                    <ul>
+                        {% for product in product.recommended_products.all %}
+                        <li>
+                            {% include "promotions/partials/product_carousel.html" %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    {% recently_viewed_products %}
+    </div>
+</article><!-- End of product page -->
+{% endblock content %}
+

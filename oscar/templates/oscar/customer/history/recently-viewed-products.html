@@ -1,0 +1,18 @@
+{% if products %}{% load i18n %}
+<div class="sub-header">
+    <h2>{% trans 'Products you recently viewed' %}</h2>
+</div>
+<!-- Elastislide Carousel -->
+<div id="carousel" class="es-carousel-wrapper">
+    <div class="es-carousel">
+        <ul>
+            {% for product in products %}
+            <li>
+                {% include "promotions/partials/product_carousel.html" %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+<!-- End Elastislide Carousel -->
+{% endif %}

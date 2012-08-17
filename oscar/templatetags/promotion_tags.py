@@ -1,23 +1,25 @@
-from django.template import Library, Node, Variable, Context
+from django.template import Library, Node, Variable
 from django.template.loader import select_template
 from django.template import RequestContext
 
-     
+
 register = Library()
-     
-     
+
+
 class PromotionNode(Node):
     def __init__(self, promotion):
         self.promotion_var = Variable(promotion)
-    
+
     def render(self, context):
         promotion = self.promotion_var.resolve(context)
-        template = select_template([promotion.template_name(), 'promotions/default.html'])
+        template = select_template([promotion.template_name(),
+                                    'promotions/default.html'])
         args = {'promotion': promotion}
         args.update(**promotion.template_context(request=context['request']))
         ctx = RequestContext(context['request'], args)
         return template.render(ctx)
- 
+
+
 def get_promotion_html(parser, token):
     _, promotion = token.split_contents()
     return PromotionNode(promotion)

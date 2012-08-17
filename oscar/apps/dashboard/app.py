@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import patterns, url, include
+from django.conf.urls import patterns, url, include
 from oscar.views.decorators import staff_member_required
 
 from oscar.core.application import Application

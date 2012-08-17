@@ -10,10 +10,10 @@ Browse the sandbox site
 There is a demo Oscar site, built hourly from HEAD of the master branch (unstable):
 http://sandbox.oscar.tangentlabs.co.uk
 
-It is intended to be a vanilla install of oscar, using the default templates and
+It is intended to be a vanilla install of Oscar, using the default templates and
 styles.  This is the blank canvas upon which you an build your application.
 
-It only has two customisations on top of oscar's core:
+It only has two customisations on top of Oscar's core:
 
 * Two shipping methods are specified so that the shipping method step of
   checkout is not skipped.  If there is only one shipping method (which is true of core
@@ -35,20 +35,14 @@ Install Oscar and its dependencies within a virtualenv::
     git clone git://github.com/tangentlabs/django-oscar.git
     cd django-oscar
     mkvirtualenv oscar
-    python setup.py develop
-    pip install -r requirements.txt
+    make contribute
 
-Create a SQLite database and load some sample products and required fixtures::
+This will install all dependencies required for developing Oscar and create a
+simple database populated with products.
+
+You can then browse a sample Oscar site using Django's development server::
 
     cd sandbox
-    ./manage.py syncdb --noinput
-    ./manage.py migrate 
-    ./manage.py oscar_import_catalogue data/books-catalogue.csv 
-    ./manage.py oscar_import_catalogue_images data/books-images.tar.gz 
-    ./manage.py loaddata countries.json fixtures/pages.json 
-
-Now you can browse a sample Oscar site using Django's development server::
-
     ./manage.py runserver
 
 Note that some things are deliberately not implemented within core Oscar
@@ -61,7 +55,7 @@ as they are domain-specific.  For instance:
 I've found a problem!
 ---------------------
 
-Please `report them in Github's issue tracker`_.
+Good for you - please `report them in Github's issue tracker`_.
 
 .. _`report them in Github's issue tracker`: https://github.com/tangentlabs/django-oscar/issues
 

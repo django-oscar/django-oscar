@@ -1,0 +1,40 @@
+{% extends 'dashboard/layout.html' %}
+{% load currency_filters %}
+{% load i18n %}
+
+{% block title %}
+{{ title }} | {% trans "Vouchers" %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+	<a href="{% url dashboard:voucher-list %}">{% trans "Vouchers" %}</a>
+        <span class="divider">/</span>
+    </li>
+	<li class="active"><a href=".">{{ title }}</a></li>
+</ul>
+{% endblock %}
+
+{% block header %}
+<div class="page-header">
+	<h1>{{ title }}</h1>
+</div>
+{% endblock header %}
+
+{% block dashboard_content %}
+<form action="." method="post" class="well form-horizontal">
+	{% csrf_token %}
+	{% include "partials/form_fields.html" with form=form %}
+	{% block form_actions %}
+	<div class="form-actions">
+		<button class="btn btn-primary btn-large" type="submit">{% trans "Save" %}</button> {% trans "or" %}
+		<a href="{% url dashboard:voucher-list %}">{% trans "cancel" %}</a>
+	</div>
+	{% endblock form_actions %}
+</form>
+{% endblock dashboard_content %}

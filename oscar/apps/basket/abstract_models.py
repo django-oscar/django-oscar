@@ -3,6 +3,8 @@ import zlib
 import datetime
 
 from django.db import models
+from django.db.models import query
+from django.conf import settings
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 
@@ -37,10 +39,14 @@ class AbstractBasket(models.Model):
 
     class Meta:
         abstract = True
+        verbose_name = _('Basket')
+        verbose_name_plural = _('Baskets')
 
     objects = models.Manager()
     open = OpenBasketManager()
     saved = SavedBasketManager()
+
+    _lines = None
 
     def __init__(self, *args, **kwargs):
         super(AbstractBasket, self).__init__(*args, **kwargs)
@@ -49,7 +55,8 @@ class AbstractBasket(models.Model):
         self.exempt_from_tax = False
 
     def __unicode__(self):
-        return u"%s basket (owner: %s, lines: %d)" % (self.status, self.owner, self.num_lines)
+        return _(u"%(status)s basket (owner: %(owner)s, lines: %(num_lines)d)") % {
+            'status': self.status, 'owner': self.owner, 'num_lines': self.num_lines}
 
     def all_lines(self):
         """
@@ -58,9 +65,25 @@ class AbstractBasket(models.Model):
         This is important for offers as they alter the line models and you don't
         want to reload them from the DB.
         """
+        if self.id is None:
+            return query.EmptyQuerySet(model=self.__class__)
         if self._lines is None:
             self._lines = self.lines.all()
         return self._lines
+
+    def is_quantity_allowed(self, qty):
+        basket_threshold = settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD
+        if basket_threshold:
+            total_basket_quantity = self.num_items
+            max_allowed = basket_threshold - total_basket_quantity
+            if qty > max_allowed:
+                return False, _("Due to technical limitations we are not able "
+                                "to ship more than %(threshold)d items in one order."
+                                " Your basket currently has %(basket)d items.") % {
+                                        'threshold': basket_threshold,
+                                        'basket': total_basket_quantity,
+                                    }
+        return True, None
 
     # ============
     # Manipulation
@@ -70,7 +93,7 @@ class AbstractBasket(models.Model):
         """Remove all lines from basket."""
         if self.status == FROZEN:
             raise PermissionDenied("A frozen basket cannot be flushed")
-        self.lines_all().delete()
+        self.lines.all().delete()
         self._lines = None
 
     def add_product(self, product, quantity=1, options=None):
@@ -85,7 +108,7 @@ class AbstractBasket(models.Model):
         if not self.id:
             self.save()
 
-        # Line reference is used to distinguish between variations of the same 
+        # Line reference is used to distinguish between variations of the same
         # product (eg T-shirts with different personalisations)
         line_ref = self._create_line_reference(product, options)
 
@@ -129,7 +152,7 @@ class AbstractBasket(models.Model):
         self.discounts = []
         self._lines = None
 
-    def merge_line(self, line):
+    def merge_line(self, line, add_quantities=True):
         """
         For transferring a line from another basket to this one.
 
@@ -142,17 +165,23 @@ class AbstractBasket(models.Model):
             line.basket = self
             line.save()
         else:
-            # Line already exists - bump its quantity and delete the old
-            existing_line.quantity += line.quantity
+            # Line already exists - assume the max quantity is correct and delete the old
+            if add_quantities:
+                existing_line.quantity += line.quantity
+            else:
+                existing_line.quantity = max(existing_line.quantity, line.quantity)
             existing_line.save()
             line.delete()
 
-    def merge(self, basket):
+    def merge(self, basket, add_quantities=True):
         """
         Merges another basket with this one.
+
+        :basket: The basket to merge into this one
+        :add_quantities: Whether to add line quantities when they are merged.
         """
         for line_to_merge in basket.all_lines():
-            self.merge_line(line_to_merge)
+            self.merge_line(line_to_merge, add_quantities)
         basket.status = MERGED
         basket.date_merged = datetime.datetime.now()
         basket.save()
@@ -182,6 +211,16 @@ class AbstractBasket(models.Model):
         self.exempt_from_tax = True
         for line in self.all_lines():
             line.set_as_tax_exempt()
+
+    def is_shipping_required(self):
+        """
+        Test whether the basket contains physical products that require
+        shipping.
+        """
+        for line in self.all_lines():
+            if line.product.is_shipping_required:
+                return True
+        return False
 
     # =======
     # Helpers
@@ -216,8 +255,10 @@ class AbstractBasket(models.Model):
 
     @property
     def is_empty(self):
-        """Return bool based on basket having 0 lines"""
-        return self.num_lines == 0
+        """
+        Test if this basket is empty
+        """
+        return self.id is None or self.num_lines == 0
 
     @property
     def total_excl_tax(self):
@@ -298,7 +339,7 @@ class AbstractBasket(models.Model):
     @property
     def num_lines(self):
         """Return number of lines"""
-        return self.all_lines().count()
+        return len(self.all_lines())
 
     @property
     def num_items(self):
@@ -350,8 +391,8 @@ class AbstractLine(models.Model):
     line_reference = models.SlugField(max_length=128, db_index=True)
 
     product = models.ForeignKey('catalogue.Product', related_name='basket_lines')
-    quantity = models.PositiveIntegerField(default=1)
-    price_incl_tax = models.DecimalField(decimal_places=2, max_digits=12,
+    quantity = models.PositiveIntegerField(_('Quantity'), default=1)
+    price_incl_tax = models.DecimalField(_('Price incl. Tax'), decimal_places=2, max_digits=12,
                                          null=True)
 
     # Track date of first addition
@@ -365,14 +406,17 @@ class AbstractLine(models.Model):
     class Meta:
         abstract = True
         unique_together = ("basket", "line_reference")
+        verbose_name = _('Basket line')
+        verbose_name_plural = _('Basket lines')
 
     def __unicode__(self):
-        return u"%s, Product '%s', quantity %d" % (self.basket, self.product, self.quantity)
+        return _(u"%(basket)s, Product '%(product)s', quantity %(quantity)d") % {
+            'basket': self.basket, 'product': self.product, 'quantity': self.quantity}
 
     def save(self, *args, **kwargs):
         """Saves a line or deletes if it's quanity is 0"""
         if self.basket.status not in (OPEN, SAVED):
-            raise PermissionDenied("You cannot modify a %s basket" % self.basket.status.lower())
+            raise PermissionDenied(_("You cannot modify a %s basket") % self.basket.status.lower())
         if self.quantity == 0:
             return self.delete(*args, **kwargs)
         super(AbstractLine, self).save(*args, **kwargs)
@@ -522,28 +566,34 @@ class AbstractLine(models.Model):
         """
         if not self.price_incl_tax:
             return
+        if not self.product.has_stockrecord:
+            msg = u"'%(product)s' is no longer available"
+            return _(msg) % {'product': self.product.get_title()}
+
         current_price_incl_tax = self.product.stockrecord.price_incl_tax
         if current_price_incl_tax > self.price_incl_tax:
             msg = u"The price of '%(product)s' has increased from %(old_price)s " \
                   u"to %(new_price)s since you added it to your basket"
-            return _(msg % {'product': self.product.get_title(),
-                            'old_price': currency(self.price_incl_tax),
-                            'new_price': currency(current_price_incl_tax)})
+            return _(msg) % {'product': self.product.get_title(),
+                             'old_price': currency(self.price_incl_tax),
+                             'new_price': currency(current_price_incl_tax)}
         if current_price_incl_tax < self.price_incl_tax:
             msg = u"The price of '%(product)s' has decreased from %(old_price)s " \
                   u"to %(new_price)s since you added it to your basket"
-            return _(msg % {'product': self.product.get_title(),
-                            'old_price': currency(self.price_incl_tax),
-                            'new_price': currency(current_price_incl_tax)})
+            return _(msg) % {'product': self.product.get_title(),
+                             'old_price': currency(self.price_incl_tax),
+                             'new_price': currency(current_price_incl_tax)}
 
 
 class AbstractLineAttribute(models.Model):
-    """An attribute of a basket line"""
+    """
+    An attribute of a basket line
+    """
     line = models.ForeignKey('basket.Line', related_name='attributes')
     option = models.ForeignKey('catalogue.Option')
     value = models.CharField(_("Value"), max_length=255)
 
     class Meta:
         abstract = True
-
-
+        verbose_name = _('Line attribute')
+        verbose_name_plural = _('Line attributes')

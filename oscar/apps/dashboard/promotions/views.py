@@ -2,6 +2,7 @@ import itertools
 
 from django.views import generic
 from django.contrib.contenttypes.models import ContentType
+from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.http import HttpResponseRedirect
@@ -119,7 +120,7 @@ class DeletePagePromotionView(generic.DeleteView):
     model = PagePromotion
 
     def get_success_url(self):
-        messages.info(self.request, "Promotion removed successfully")
+        messages.info(self.request, _("Promotion removed successfully"))
         return reverse('dashboard:promotion-list-by-url',
                        kwargs={'path': self.object.page_url})
 
@@ -132,7 +133,7 @@ class DeletePagePromotionView(generic.DeleteView):
 class CreateView(PromotionMixin, generic.CreateView):
 
     def get_success_url(self):
-        messages.info(self.request, "Promotion created successfully")
+        messages.success(self.request, _("Promotion created successfully"))
         return reverse('dashboard:promotion-update',
                        kwargs={'ptype': self.model.classname(),
                                'pk': self.object.id})
@@ -145,7 +146,7 @@ class CreateView(PromotionMixin, generic.CreateView):
     def get_heading(self):
         if hasattr(self, 'heading'):
             return getattr(self, 'heading')
-        return 'Create a new %s content block' % self.model._type
+        return _('Create a new %s content block') % self.model._type
 
 
 class CreateRawHTMLView(CreateView):
@@ -184,10 +185,10 @@ class CreateHandPickedProductListView(CreateView):
             promotion.save()
             product_formset.save()
             self.object = promotion
-            messages.success(self.request, 'Product list promotion created')
+            messages.success(self.request, _('Product list promotion created'))
             return HttpResponseRedirect(self.get_success_url())
 
-        ctx = self.get_context_data(product_formset=produt_formset)
+        ctx = self.get_context_data(product_formset=product_formset)
         return self.render_response(ctx)
 
 
@@ -202,7 +203,7 @@ class UpdateView(PromotionMixin, generic.UpdateView):
 
     def get_context_data(self, *args, **kwargs):
         ctx = super(UpdateView, self).get_context_data(*args, **kwargs)
-        ctx['heading'] = "Update content block"
+        ctx['heading'] = _("Update content block")
         ctx['promotion'] = self.get_object()
         ctx['link_form'] = self.link_form_class()
         content_type = ContentType.objects.get_for_model(self.model)
@@ -218,7 +219,7 @@ class UpdateView(PromotionMixin, generic.UpdateView):
         return super(UpdateView, self).post(request, *args, **kwargs)
 
     def get_success_url(self):
-        messages.info(self.request, "Promotion updated successfully")
+        messages.info(self.request, _("Promotion updated successfully"))
         return reverse('dashboard:promotion-list')
 
     def add_to_page(self, promotion, request, *args, **kwargs):
@@ -227,8 +228,9 @@ class UpdateView(PromotionMixin, generic.UpdateView):
         if form.is_valid():
             form.save()
             page_url = form.cleaned_data['page_url']
-            messages.success(request, "Content block '%s' added to page '%s'" % (
-                promotion.name, page_url))
+            messages.success(request, _("Content block '%(block)s' added to page '%(page)s'") % {
+                'block': promotion.name,
+                'page': page_url})
             return HttpResponseRedirect(reverse('dashboard:promotion-update', kwargs=kwargs))
 
         main_form = self.get_form_class()(instance=self.object)
@@ -241,11 +243,11 @@ class UpdateView(PromotionMixin, generic.UpdateView):
         try:
             link = PagePromotion.objects.get(id=link_id)
         except PagePromotion.DoesNotExist:
-            messages.error(request, "No link found to delete")
+            messages.error(request, _("No link found to delete"))
         else:
             page_url = link.page_url
             link.delete()
-            messages.success(request, "Promotion removed from page '%s'" % page_url)
+            messages.success(request, _("Promotion removed from page '%s'") % page_url)
         return HttpResponseRedirect(reverse('dashboard:promotion-update', kwargs=kwargs))
 
 
@@ -285,10 +287,10 @@ class UpdateHandPickedProductListView(UpdateView):
             promotion.save()
             product_formset.save()
             self.object = promotion
-            messages.success(self.request, 'Product list promotion updated')
+            messages.success(self.request, _('Product list promotion updated'))
             return HttpResponseRedirect(self.get_success_url())
 
-        ctx = self.get_context_data(product_formset=produt_formset)
+        ctx = self.get_context_data(product_formset=product_formset)
         return self.render_response(ctx)
 
 
@@ -302,7 +304,7 @@ class DeleteView(generic.DeleteView):
     template_name = 'dashboard/promotions/delete.html'
 
     def get_success_url(self):
-        messages.info(self.request, "Promotion deleted successfully")
+        messages.info(self.request, _("Promotion deleted successfully"))
         return reverse('dashboard:promotion-list')
 
 

@@ -1,0 +1,24 @@
+{% extends "checkout/checkout.html" %}
+{% load i18n %}
+
+{% block order_contents %}{% endblock %}
+{% block shipping_method %}{% endblock %}
+{% block payment_method %}{% endblock %}
+{% block payment_details %}{% endblock %}
+
+{% block checkout-nav %}
+{% include 'checkout/nav.html' with step=1 %}
+{% endblock %}
+
+{% block shipping_address %}
+<h1>{% trans "Enter an address for your addressbook" %}</h1>
+<p> </p>
+    <form action="{{ form_url }}" method="post" class="form-horizontal">
+        {% csrf_token %}
+        {% include "partials/form_fields.html" with form=form %}
+        <div class="form-actions">
+			<button type="submit" class="btn btn-large btn-primary">{% trans "Save"	%}</button>
+			{% trans "or" %} <a href="{% url checkout:shipping-address %}">{% trans "cancel" %}</a>.
+        </div>
+    </form>
+{% endblock shipping_address %}

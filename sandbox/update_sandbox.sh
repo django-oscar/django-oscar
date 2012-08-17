@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 cd /var/www/oscar/builds/sandbox
-git pull 2> /dev/null
+git pull --ff-only 2> /dev/null
 [ $? -gt 0 ] && echo "Git pull failed" >&2 && exit 1
 
 # Update any dependencies
@@ -14,6 +14,8 @@ cd sandbox
 ./manage.py syncdb --noinput
 ./manage.py migrate
 ./manage.py collectstatic --noinput
+./manage.py rebuild_index --noinput
+chown -R www-data:www-data whoosh_index
 
 # Re-compile python code
 touch deploy/wsgi/sandbox.wsgi

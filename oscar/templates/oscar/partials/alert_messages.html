@@ -1,0 +1,8 @@
+<div id="messages">
+{% for message in messages %}
+    <div class="alert fade in alert-{{ message.tags }}">
+        <a class="close" data-dismiss="alert">x</a>
+        {{ message|linebreaks }}
+    </div>
+{% endfor %}
+</div>

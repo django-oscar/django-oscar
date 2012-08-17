@@ -1,0 +1,65 @@
+{% extends 'dashboard/layout.html' %}
+{% load category_tags %}
+{% block body_class %}catalogue{% endblock %}
+
+{% block title %}
+Category management | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url dashboard:index %}">Dashboard</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active"><a href=".">Category management</a></li>
+</ul>
+{% endblock %}
+
+{% block header %}
+<div class="page-header action">
+    <h1>Category management</h1>
+</div>
+{% endblock header %}
+
+{% block dashboard_content %}
+
+<p>You are editing:
+<a href="{% url dashboard:catalogue-category-list %}">Home</a>
+{% if ancestors %}
+	&gt;
+	{% for ancestor in ancestors %}
+		<a href="{% url dashboard:catalogue-category-detail-list pk=ancestor.pk %}">{{ ancestor.name }}</a>{% if not forloop.last %} > {% endif %}
+	{% endfor %}
+{% endif %}
+</p>
+
+<table class="table table-striped table-bordered">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Description</th>
+			<th>Number of child categories</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+    {% for category in child_categories %}
+        <tr>
+            <td>{{ category.name }}</td>
+			<td>{{ category.description|default:""|truncatewords:6 }}</td>
+			<td>{{ category.get_num_children }}</td>
+            <td>
+                <a class="btn btn-primary" href="{% url dashboard:catalogue-category-update category.id %}">Edit category</a>
+				<a class="btn btn-primary {% if not category.has_children %}disabled{% endif %}" href="{% url dashboard:catalogue-category-detail-list pk=category.pk %}">Edit children</a>
+				<a class="btn btn-info" href="{{ category.get_absolute_url }}">View on site</a>
+                <a class="btn btn-danger" href="{% url dashboard:catalogue-category-delete category.id %}">Delete</a>
+            </td>
+        </tr>
+    {% endfor %}
+	</tbody>
+</table>
+
+<a class="btn btn-large btn-primary" href="{% url dashboard:catalogue-category-create %}">Create a new category</a>
+
+{% endblock dashboard_content %}

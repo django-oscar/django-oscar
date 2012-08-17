@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# 
+# Updated the QA build to HEAD of the current git branch.
 
 cd /var/www/oscar/builds/qa/
 

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% load currency_filters %}
+{% load category_tags %}
+
+{% block extrahead %}
+    {% include "partials/extrahead.html" %}
+{% endblock %}
+
+{% block layout %}
+    {% include "partials/nav_accounts.html" %}
+    <header class="header container-fluid">
+        <div class="row-fluid">
+            {% include "partials/brand.html" %}
+        </div><!-- /row-fluid -->
+        {% category_tree depth=2 as categories %}
+        {% block navigation %}
+            {% include "partials/nav_primary.html" %}
+        {% endblock %}
+    </header><!-- /header -->
+    {% include "partials/alert_messages.html" %}
+    <div class="container-fluid page">
+        <div class="page_inner">	
+            {% block breadcrumbs %}
+            {% endblock %}
+
+            <div class="row-fluid">
+                <aside class="span3">
+                    {% block column_left %} 
+                    {% endblock %}
+                </aside><!-- /span3 -->
+                <div class="span6">
+                    {% block header %}
+                    {% endblock %}
+
+                    {% block flatpage %}
+                    {% endblock %}
+
+                    {% block content %}
+                    {% endblock %}
+                </div><!-- /span6 -->
+                <aside class="span3">
+                    {% block column_right %} 
+                    {% endblock %}
+                </aside><!-- /span3 -->
+            </div><!-- /row-fluid -->
+        </div><!-- /page_inner -->
+    </div><!-- /container-fluid -->
+    {% include "partials/footer.html" %}
+{% endblock %}
+
+{# Block for additional scripts #}
+{% block extrascripts %}
+    {% include "partials/extrascripts.html" %}
+    {{ block.super }}
+{% endblock %}

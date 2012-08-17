@@ -3,7 +3,6 @@ import json
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic.base import View
 from django.conf import settings
-from django.template.response import TemplateResponse
 from haystack.query import SearchQuerySet
 from haystack.views import FacetedSearchView
 
@@ -55,7 +54,7 @@ class SuggestionsView(View):
 
 
 class MultiFacetedSearchView(FacetedSearchView):
-    u"""
+    """
     Search view for multifaceted searches
     """
     template = 'search/results.html'
@@ -63,18 +62,16 @@ class MultiFacetedSearchView(FacetedSearchView):
     def __call__(self, request, *args, **kwargs):
         """
         Generates the actual response to the search.
-        
+
         Relies on internal, overridable methods to construct the response.
         """
-        
         # Look for UPC match
-        query = request.GET['q'].strip()
+        query = request.GET.get('q', '').strip()
         try:
             item = product_models.Product._default_manager.get(upc=query)
             return HttpResponseRedirect(item.get_absolute_url())
         except product_models.Product.DoesNotExist:
             pass
-        
         return super(MultiFacetedSearchView, self).__call__(request, *args, **kwargs)
 
     @property

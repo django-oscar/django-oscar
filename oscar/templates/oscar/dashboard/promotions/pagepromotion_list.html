@@ -1,0 +1,70 @@
+{% extends 'dashboard/layout.html' %}
+{% load currency_filters %}
+{% load i18n %}
+
+{% block body_class %}content-blocks{% endblock %}
+
+{% block header %}
+<div class="page-header">
+	<h1>{% trans "Content block management" %}</h1>
+</div>
+{% endblock header %}
+
+{% block title %}
+{% trans "Pages with content blocks" %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <span class="divider">/</span>
+    </li>
+	<li class="active"><a href=".">{% trans "Content block management" %}</a></li>
+</ul>
+{% endblock %}
+
+{% block dashboard_content %}
+
+<div class="well well-danger">
+    <h3 class="app-ico ico_view icon">View by page</h3>
+	<a href="{% url dashboard:promotion-list %}" class="btn btn-primary">{% trans "View all content blocks" %}</a>
+	<a href="{% url dashboard:promotion-list-by-page %}" class="btn">{% trans "View content blocks by page" %}</a>
+</div>
+
+<div class="sub-header">
+	<h2>{% trans "Pages with content blocks on them" %}</h2>
+</div>
+
+{% if pages %}
+
+<table class="table table-striped table-bordered">
+	<thead>
+		<tr>
+			<th>{% trans "URL" %}</th>
+			<th>{% trans "Number of content blocks" %}</th>
+			<th>{% trans "Actions" %}</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for page in pages %}
+		<tr>
+			<td>{{ page.page_url }}</td>
+			<td>{{ page.freq }}</td>
+			<td>
+				<a href="{% url dashboard:promotion-list-by-url page.page_url|urlencode:"" %}" class="btn btn-success">{% trans "Edit" %}</a>
+			</td>
+			<td> </td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+
+{% else %}
+
+<p>{% trans "No content blocks found." %}</p>
+
+{% endif %}
+
+
+{% endblock dashboard_content %}

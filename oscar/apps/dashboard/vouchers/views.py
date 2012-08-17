@@ -1,6 +1,7 @@
 import datetime
 
 from django.views.generic import (ListView, FormView, DetailView, DeleteView)
+from django.utils.translation import ugettext_lazy as _
 from django.db.models.loading import get_model
 from django.http import HttpResponseRedirect
 from django.contrib import messages
@@ -21,13 +22,13 @@ class VoucherListView(ListView):
     context_object_name = 'vouchers'
     template_name = 'dashboard/vouchers/voucher_list.html'
     form_class = VoucherSearchForm
-    description_template = "%(status)s vouchers %(name_filter)s %(code_filter)s"
-    description_ctx = {'status': 'All',
-                       'name_filter': '',
-                       'code_filter': ''}
+    description_template = _("%(main_filter)s %(name_filter)s %(code_filter)s")
 
     def get_queryset(self):
         qs = self.model.objects.all().order_by('-date_created')
+        self.description_ctx = {'main_filter': _('All vouchers'),
+                                'name_filter': '',
+                                'code_filter': ''}
 
         # If form not submitted, return early
         if 'name' not in self.request.GET:
@@ -41,14 +42,14 @@ class VoucherListView(ListView):
         data = self.form.cleaned_data
         if data['name']:
             qs = qs.filter(name__icontains=data['name'])
-            self.description_ctx['name_filter'] = "with name matching '%s'" % data['name']
+            self.description_ctx['name_filter'] = _("with name matching '%s'") % data['name']
         if data['code']:
             qs = qs.filter(code=data['code'])
-            self.description_ctx['code_filter'] = "with code '%s'" % data['code']
+            self.description_ctx['code_filter'] = _("with code '%s'") % data['code']
         if data['is_active']:
             today = datetime.date.today()
             qs = qs.filter(start_date__lte=today, end_date__gt=today)
-            self.description_ctx['status'] = 'Active'
+            self.description_ctx['main_filter'] = _('Active vouchers')
 
         return qs
 
@@ -66,7 +67,7 @@ class VoucherCreateView(FormView):
 
     def get_context_data(self, **kwargs):
         ctx = super(VoucherCreateView, self).get_context_data(**kwargs)
-        ctx['title'] = 'Create voucher'
+        ctx['title'] = _('Create voucher')
         return ctx
 
     def form_valid(self, form):
@@ -99,7 +100,7 @@ class VoucherCreateView(FormView):
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
-        messages.success(self.request, "Voucher created")
+        messages.success(self.request, _("Voucher created"))
         return reverse('dashboard:voucher-list')
 
 
@@ -126,7 +127,7 @@ class VoucherUpdateView(FormView):
 
     def get_context_data(self, **kwargs):
         ctx = super(VoucherUpdateView, self).get_context_data(**kwargs)
-        ctx['title'] = 'Update voucher'
+        ctx['title'] = _('Update voucher')
         return ctx
 
     def get_form_kwargs(self):
@@ -171,7 +172,7 @@ class VoucherUpdateView(FormView):
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
-        messages.success(self.request, "Voucher updated")
+        messages.success(self.request, _("Voucher updated"))
         return reverse('dashboard:voucher-list')
 
 
@@ -181,5 +182,5 @@ class VoucherDeleteView(DeleteView):
     context_object_name = 'voucher'
 
     def get_success_url(self):
-        messages.warning(self.request, "Voucher deleted")
+        messages.warning(self.request, _("Voucher deleted"))
         return reverse('dashboard:voucher-list')

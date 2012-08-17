@@ -1,6 +1,7 @@
 import csv
 
 from django.db.models import get_model
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import get_class
 
@@ -15,11 +16,10 @@ class VoucherReportCSVFormatter(ReportCSVFormatter):
 
     def generate_csv(self, response, vouchers):
         writer = csv.writer(response)
-        header_row = ['Voucher code',
-                      'Added to a basket',
-                      'Used in an order',
-                      'Total discount',
-                     ]
+        header_row = [_('Voucher code'),
+                      _('Added to a basket'),
+                      _('Used in an order'),
+                      _('Total discount')]
         writer.writerow(header_row)
 
         for voucher in vouchers:
@@ -37,7 +37,7 @@ class VoucherReportHTMLFormatter(ReportHTMLFormatter):
 class VoucherReportGenerator(ReportGenerator):
 
     code = 'vouchers'
-    description = 'Voucher performance'
+    description = _('Voucher performance')
 
     formatters = {
         'CSV_formatter': VoucherReportCSVFormatter,

@@ -3,7 +3,7 @@ import os
 # Use 'final' as the 4th element to indicate
 # a full release
 
-VERSION = (0, 3, 0, 'alpha', 0)
+VERSION = (0, 4, 0, 'alpha', 0)
 
 def get_short_version():
     return '%s.%s' % (VERSION[0], VERSION[1])
@@ -20,15 +20,12 @@ def get_version():
     return version
 
 
-# Cheeky setting that can be used to override templates and give them
-# the same name.  You can use:
-#
-# {% includes 'templates/basket/basket.html' %}
-#
-# when you want to create a new template with path 'basket/basket.html'
-# Just add this setting to the end of your TEMPLATE_DIRS setting.
-OSCAR_PARENT_TEMPLATE_DIR = os.path.dirname(os.path.abspath(__file__))
-
+# Cheeky setting that allows each template to be accessible by two paths.
+# Eg: the template 'oscar/templates/oscar/base.html' can be accessed via both
+# 'base.html' and 'oscar/base.html'.  This allows Oscar's templates to be
+# extended by templates with the same filename
+OSCAR_MAIN_TEMPLATE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                       'templates/oscar')
 
 OSCAR_CORE_APPS = [
     'oscar',
@@ -66,12 +63,14 @@ def get_core_apps(overrides=None):
     """
     Return a list of oscar's apps amended with any passed overrides
     """
-    if overrides is None:
+    if not overrides:
         return OSCAR_CORE_APPS
     def get_app_label(app_label, overrides):
         pattern = app_label.replace('oscar.apps.', '')
         for override in overrides:
             if override.endswith(pattern):
+                if 'dashboard' in override and 'dashboard' not in pattern:
+                    continue
                 return override
         return app_label
 

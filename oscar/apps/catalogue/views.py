@@ -1,17 +1,18 @@
 from django.http import HttpResponsePermanentRedirect, Http404
 from django.views.generic import ListView, DetailView
 from django.db.models import get_model
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.catalogue.signals import product_viewed, product_search
 
-product_model = get_model('catalogue', 'product')
+Product = get_model('catalogue', 'product')
 ProductReview = get_model('reviews', 'ProductReview')
-category_model = get_model('catalogue', 'category')
+Category = get_model('catalogue', 'category')
 
 
 class ProductDetailView(DetailView):
     context_object_name = 'product'
-    model = product_model
+    model = Product
     view_signal = product_viewed
     template_folder = "catalogue"
     _product = None
@@ -61,19 +62,19 @@ class ProductDetailView(DetailView):
 
 def get_product_base_queryset():
     """
-    Get ``QuerySet`` for product model with related 
+    Return ``QuerySet`` for product model with related
     content pre-loaded. The ``QuerySet`` returns unfiltered
     results for further filtering.
     """
-    return product_model.browsable.select_related(
+    return Product.browsable.select_related(
         'product_class',
-        'stockrecord',
-        'stockrecord__partner',
     ).prefetch_related(
         'reviews',
         'variants',
         'product_options',
         'product_class__options',
+        'stockrecord',
+        'images',
     ).all()
 
 
@@ -88,8 +89,8 @@ class ProductCategoryView(ListView):
     def get_categories(self):
         slug = self.kwargs['category_slug']
         try:
-            category = category_model.objects.get(slug=slug)
-        except category_model.DoesNotExist:
+            category = Category.objects.get(slug=slug)
+        except Category.DoesNotExist:
             raise Http404()
         categories = list(category.get_descendants())
         categories.append(category)
@@ -118,7 +119,7 @@ class ProductListView(ListView):
     template_name = 'catalogue/browse.html'
     paginate_by = 20
     search_signal = product_search
-    model = product_model
+    model = Product
 
     def get_search_query(self):
         q = self.request.GET.get('q', None)
@@ -129,7 +130,6 @@ class ProductListView(ListView):
         if q:
             # Send signal to record the view of this product
             self.search_signal.send(sender=self, query=q, user=self.request.user)
-            base_queryset = get_product_base_queryset()
             return get_product_base_queryset().filter(title__icontains=q)
         else:
             return get_product_base_queryset()
@@ -138,8 +138,8 @@ class ProductListView(ListView):
         context = super(ProductListView, self).get_context_data(**kwargs)
         q = self.get_search_query()
         if not q:
-            context['summary'] = 'All products'
+            context['summary'] = _('All products')
         else:
-            context['summary'] = "Products matching '%s'" % q
+            context['summary'] = _("Products matching '%(query)s'") % {'query': q}
             context['search_term'] = q
         return context

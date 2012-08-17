@@ -7,5 +7,3 @@ class Voucher(AbstractVoucher):
 
 class VoucherApplication(AbstractVoucherApplication):
     pass
-
-

@@ -7,6 +7,7 @@ location = lambda x: os.path.join(os.path.dirname(os.path.realpath(__file__)), x
 DEBUG = True
 TEMPLATE_DEBUG = True
 SQL_DEBUG = True
+SEND_BROKEN_LINK_EMAILS = True
 
 ADMINS = (
     ('David', 'david.winterbottom@tangentlabs.co.uk'),
@@ -19,7 +20,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'db.sqlite',                      # Or path to database file if using sqlite3.
+        'NAME': os.path.join(os.path.dirname(__file__), 'db.sqlite'),                      # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
@@ -47,6 +48,13 @@ TIME_ZONE = 'Europe/London'
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en-us'
+
+LANGUAGES = (
+    ('de', 'German'),
+    ('fr', 'French'),
+)
+ROSETTA_STORAGE_CLASS = 'rosetta.storage.SessionRosettaStorage'
+ROSETTA_ENABLE_TRANSLATION_SUGGESTIONS = True
 
 SITE_ID = 1
 
@@ -99,7 +107,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'oscar.apps.promotions.context_processors.promotions',
     'oscar.apps.checkout.context_processors.checkout',
     'oscar.core.context_processors.metadata',
-) 
+)
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
@@ -117,11 +125,10 @@ INTERNAL_IPS = ('127.0.0.1',)
 
 ROOT_URLCONF = 'urls'
 
-from oscar import OSCAR_PARENT_TEMPLATE_DIR
+from oscar import OSCAR_MAIN_TEMPLATE_DIR
 TEMPLATE_DIRS = (
     location('templates'),
-    os.path.join(OSCAR_PARENT_TEMPLATE_DIR, 'templates'),
-    OSCAR_PARENT_TEMPLATE_DIR,
+    OSCAR_MAIN_TEMPLATE_DIR,
 )
 
 # A sample logging configuration. The only tangible logging
@@ -206,6 +213,7 @@ INSTALLED_APPS = [
     'haystack',
     'debug_toolbar',
     'south',
+    'rosetta',
     # For profile testing
     'apps.user',
 ]
@@ -221,8 +229,12 @@ LOGIN_REDIRECT_URL = '/accounts/'
 APPEND_SLASH = True
 
 # Haystack settings
-HAYSTACK_SITECONF = 'oscar.search_sites'
-HAYSTACK_SEARCH_ENGINE = 'dummy'
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
+    },
+}
 
 DEBUG_TOOLBAR_CONFIG = {
     'INTERCEPT_REDIRECTS': False

@@ -1,0 +1,29 @@
+{% extends 'dashboard/reports/index.html' %}
+{% load currency_filters %}
+{% load i18n %}
+
+{% block report %}
+{% if objects %}
+<table class="table table-striped table-bordered">
+    <tr>
+		<th>{% trans "Voucher code" %}</th>
+		<th>{% trans "Added to a basket" %}</th>
+		<th>{% trans "Used in an order" %}</th>
+		<th>{% trans "Total discount" %}</th>
+    </tr>
+    {% for voucher in objects %}
+    <tr>
+        <td>{{ voucher.code }}</td>
+        <td>{{ voucher.num_basket_additions }}</td>
+        <td>{{ voucher.num_orders }}</td>
+        <td>{{ voucher.total_discount|currency }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% if page_obj %}
+	{% include "catalogue/partials/pagination.html" %}
+{% endif %}
+{% else %}
+<p>{% trans "No vouchers were used in this period" %}</p>
+{% endif %}
+{% endblock %}

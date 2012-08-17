@@ -1,5 +1,6 @@
 from django import forms
 from django.db.models.loading import get_model
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.validators import URLDoesNotExistValidator
 
@@ -10,7 +11,7 @@ class PageSearchForm(forms.Form):
     """
     Search form to filter pages by *title.
     """
-    title = forms.CharField(required=False, label="Title")
+    title = forms.CharField(required=False, label=_("Title"))
 
 
 class PageUpdateForm(forms.ModelForm):
@@ -20,8 +21,8 @@ class PageUpdateForm(forms.ModelForm):
     the same URL already exists in the system.
     """
     url = forms.CharField(max_length=128, required=False,
-                          help_text="Example: '/about/contact/'. Make sure" + \
-                                    " to have leading and trailing slashes.")
+                          help_text=_("Example: '/about/contact/'. Make sure"
+                                      " to have leading and trailing slashes."))
 
     def clean_url(self):
         """

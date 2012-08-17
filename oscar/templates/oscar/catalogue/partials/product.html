@@ -1,0 +1,44 @@
+{% load currency_filters %}
+{% load thumbnail %}
+{% load i18n %}
+
+<article class="product_pod">
+    <div class="image_container">
+		{% with image=product.primary_image %}
+		{% thumbnail image.original "400x400" upscale=False as thumb %}
+		<a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
+		{% endthumbnail %}
+		{% endwith %}
+    </div>
+
+    {% block product_review %}
+        {% with product.reviews.all as reviews %}
+            {% if reviews %}
+                <ul class="review_count">       
+                {% for review in reviews %}
+                    <li class="{{ review.score }}">{{ review.score }}</li>
+                {% endfor %}
+                </ul>
+            {% else %}
+			<p class="star">{% trans "No Rating" %}</p>
+            {% endif %}
+        {% endwith %}
+    {% endblock product_review %}
+    
+    <h3><a href="{{ product.get_absolute_url }}">{{ product.get_title|truncatewords:7 }}</a></h3>
+    
+    <div class="product_price">
+        {% if product.has_stockrecord %}    
+			<h4>{{ product.stockrecord.price_incl_tax|currency }}</h4>
+            <p class="app-ico {{ product.stockrecord.availability_code }} availability ">{{ product.stockrecord.availability|truncatewords:2 }}</p>
+        {% else %}
+            {% if product.is_group %}
+			<h4><span>{% trans "From" %}</span> {{ product.min_variant_price_incl_tax|currency }}</h4>
+			{% else %}
+			<p class="app-ico avaliability outofstock">{% trans "Not available" %}</p>
+			{% endif %}
+        {% endif %}
+
+        {% include "catalogue/partials/add_to_basket_form_compact.html" %}
+   </div>
+</article>

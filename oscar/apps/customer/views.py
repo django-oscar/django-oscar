@@ -1,13 +1,16 @@
 import urlparse
 
 from django.shortcuts import get_object_or_404
-from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView, FormView, RedirectView
+from django.views.generic import (TemplateView, ListView, DetailView,
+                                  CreateView, UpdateView, DeleteView,
+                                  FormView, RedirectView)
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect, Http404
 from django.contrib import messages
 from django.utils.translation import ugettext as _
-from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
+from django.contrib.auth import (authenticate, login as auth_login,
+                                 logout as auth_logout)
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.sites.models import get_current_site
 from django.conf import settings
@@ -22,7 +25,7 @@ EmailAuthenticationForm, EmailUserCreationForm, SearchByDateRangeForm = get_clas
 ProfileForm = get_class('customer.forms', 'ProfileForm')
 UserAddressForm = get_class('address.forms', 'UserAddressForm')
 Order = get_model('order', 'Order')
-Line = get_model('order', 'Line')
+Line = get_model('basket', 'Line')
 Basket = get_model('basket', 'Basket')
 UserAddress = get_model('address', 'UserAddress')
 Email = get_model('customer', 'email')
@@ -61,14 +64,8 @@ class ProfileUpdateView(FormView):
         return reverse('customer:summary')
 
 
-class AccountSummaryView(ListView):
-    context_object_name = "orders"
+class AccountSummaryView(TemplateView):
     template_name = 'customer/profile.html'
-    paginate_by = 20
-    model = Order
-
-    def get_queryset(self):
-        return self.model._default_manager.filter(user=self.request.user)[0:5]
 
     def get_context_data(self, **kwargs):
         ctx = super(AccountSummaryView, self).get_context_data(**kwargs)
@@ -76,8 +73,12 @@ class AccountSummaryView(ListView):
         ctx['default_shipping_address'] = self.get_default_shipping_address(self.request.user)
         ctx['default_billing_address'] = self.get_default_billing_address(self.request.user)
         ctx['emails'] = Email.objects.filter(user=self.request.user)
+        ctx['orders'] = self.get_orders(self.request.user)
         self.add_profile_fields(ctx)
         return ctx
+
+    def get_orders(self, user):
+        return Order._default_manager.filter(user=user)[0:5]
 
     def add_profile_fields(self, ctx):
         if not hasattr(settings, 'AUTH_PROFILE_MODULE'):
@@ -127,7 +128,6 @@ class AccountRegistrationView(TemplateView):
 
     def check_redirect(self, context):
         redirect_to = context.get(self.redirect_field_name)
-
         if not redirect_to:
             return settings.LOGIN_REDIRECT_URL
 
@@ -323,20 +323,59 @@ class OrderDetailView(DetailView, PostActionMixin):
 
         This puts the contents of the previous order into your basket
         """
-        self.response = HttpResponseRedirect(reverse('basket:summary'))
         basket = self.request.basket
 
         # Convert line attributes into basket options
+        lines_added = []
+        warnings = []
+        # Collect lines to be added to the basket and the warnings
         for line in order.lines.all():
             if not line.product:
-                messages.warning(self.request, "'%s' unavailable for re-order" % line.title)
+                warnings.append(_("'%s' unavailable for re-order") % line.title)
                 continue
-            options = []
-            for attribute in line.attributes.all():
-                if attribute.option:
-                    options.append({'option': attribute.option, 'value': attribute.value})
-            basket.add_product(line.product, line.quantity, options)
-        messages.info(self.request, "All available lines from order %s have been added to your basket" % order.number)
+
+            try:
+                basket_line = basket.lines.get(product=line.product)
+            except Line.DoesNotExist:
+                desired_qty = line.quantity
+            else:
+                desired_qty = basket_line.quantity + line.quantity
+
+            is_available, reason = line.product.is_purchase_permitted(
+                                                        user=self.request.user,
+                                                        quantity=desired_qty)
+            if not is_available:
+                warnings.append(reason)
+                continue
+
+            lines_added.append(line)
+
+        # Check whether the number of items in the basket won't exceed the maximum
+        total_quantity = sum([line.quantity for line in lines_added])
+        is_quantity_allowed, reason = basket.is_quantity_allowed(total_quantity)
+
+        self.response = HttpResponseRedirect(reverse('customer:order-list'))
+
+        if not is_quantity_allowed:
+            messages.warning(self.request, reason)
+            return
+        else:
+            # Add items to the basket, display warnings
+            for warning in warnings:
+                messages.warning(self.request, warning)
+
+            for line in lines_added:
+                options = []
+                for attribute in line.attributes.all():
+                    if attribute.option:
+                        options.append({'option': attribute.option, 'value': attribute.value})
+                basket.add_product(line.product, line.quantity, options)
+
+        if len(lines_added) > 0:
+            self.response = HttpResponseRedirect(reverse('basket:summary'))
+            messages.info(self.request,
+                          _("All available lines from order %s "
+                            "have been added to your basket") % order.number)
 
 
 class OrderLineView(DetailView, PostActionMixin):
@@ -348,14 +387,38 @@ class OrderLineView(DetailView, PostActionMixin):
         return order.lines.get(id=self.kwargs['line_id'])
 
     def do_reorder(self, line):
+        self.response = HttpResponseRedirect(reverse('customer:order',
+                                    args=(int(self.kwargs['order_number']),)))
+        basket = self.request.basket
+
+        # Check whether basket items quantity won't exceed the maximum
+        is_quantity_allowed, reason = basket.is_quantity_allowed(line.quantity)
+        if not is_quantity_allowed:
+            messages.warning(self.request, reason)
+            return
+
         if not line.product:
             messages.info(self.request, _("This product is no longer available for re-order"))
+            return
+
+        try:
+            basket_line = basket.lines.get(product=line.product)
+        except Line.DoesNotExist:
+            desired_qty = line.quantity
+        else:
+            desired_qty = basket_line.quantity + line.quantity
+
+        is_available, reason = line.product.is_purchase_permitted(
+                                                    user=self.request.user,
+                                                    quantity=desired_qty)
+
+        if not is_available:
+            messages.warning(self.request, reason)
             return
 
         # We need to pass response to the get_or_create... method
         # as a new basket might need to be created
         self.response = HttpResponseRedirect(reverse('basket:summary'))
-        basket = self.request.basket
 
         # Convert line attributes into basket options
         options = []
@@ -363,10 +426,13 @@ class OrderLineView(DetailView, PostActionMixin):
             if attribute.option:
                 options.append({'option': attribute.option, 'value': attribute.value})
         basket.add_product(line.product, line.quantity, options)
+
         if line.quantity > 1:
-            msg = "%d copies of '%s' have been added to your basket" % (line.quantity, line.product)
+            msg = _("%(qty)d copies of '%(product)s' have been added to your basket") % {
+                'qty': line.quantity, 'product': line.product}
         else:
-            msg = "'%s' has been added to your basket" % line.product
+            msg = _("'%s' has been added to your basket") % line.product
+
         messages.info(self.request, msg)
 
 
@@ -460,7 +526,7 @@ class ChangePasswordView(FormView):
 
     def form_valid(self, form):
         form.save()
-        messages.success(self.request, "Password updated")
+        messages.success(self.request, _("Password updated"))
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):

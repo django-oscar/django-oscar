@@ -1,5 +1,6 @@
 from django.template.defaultfilters import date
 from django.http import HttpResponse
+from django.utils.translation import ugettext_lazy as _
 
 
 class ReportGenerator(object):
@@ -18,6 +19,14 @@ class ReportGenerator(object):
             self.end_date = kwargs['end_date']
 
         self.formatter = self.formatters['%s_formatter' % kwargs['formatter']]()
+
+    def report_description(self):
+        return _(u'%(report_filter)s between %(start_date)s and %(end_date)s') % {
+            'report_filter': self.description,
+            'start_date': self.start_date,
+            'end_date': self.end_date,
+        }
+
 
     def generate(self, response):
         pass

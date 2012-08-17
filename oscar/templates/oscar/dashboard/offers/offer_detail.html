@@ -1,0 +1,83 @@
+{% extends 'dashboard/layout.html' %}
+{% load currency_filters %}
+{% load i18n %}
+
+{% block title %}
+{% blocktrans with name=offer.name %}
+Offer '{{ name }}' | Offer management
+{% endblocktrans %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+	<a href="{% url dashboard:offer-list %}">{% trans "Offers" %}</a>
+        <span class="divider">/</span>
+    </li>
+	<li class="active"><a href=".">{% blocktrans with name=offer.name %}Offer '{{ name }}'{% endblocktrans %}</a></li>
+</ul>
+{% endblock %}
+
+{% block header %}
+<div class="page-header">
+	<h1>{% blocktrans with name=offer.name %}Offer '{{ name }}'{% endblocktrans %}</h1>
+</div>
+{% endblock header %}
+
+{% block dashboard_content %}
+
+	<table class="table">
+		<tbody>
+            <tr><td colspan="2"><h2>{% trans "Offer details" %}</h2></td></tr>
+			<tr><th>{% trans "Name" %}</th><td>{{ offer.name }}</td></tr>
+			<tr><th>{% trans "Description" %}</th><td>{{ offer.description }}</td></tr>
+			<tr><th>{% trans "Start date" %}</th><td>{{ offer.start_date }}</td></tr>
+			<tr><th>{% trans "End date" %}</th><td>{{ offer.end_date }}</td></tr>
+			<tr><th>{% trans "Condition" %}</th><td>{{ offer.condition.description }}</td></tr>
+			<tr><th>{% trans "Benefit" %}</th><td>{{ offer.benefit.description }}</td></tr>
+			<tr><th>{% trans "Date created" %}</th><td>{{ offer.date_created }}</td></tr>
+
+            <tr><td colspan="2"><h2>{% trans "Offer performance" %}</h2></td></tr>
+			<tr><th>{% trans "Total discount" %}</th><td>{{ offer.total_discount|currency }}</td></tr>
+			<tr><th>{% trans "Number of orders" %}</th><td>{{ offer.num_orders }}</td></tr>
+		</tbody>
+	</table>
+
+	<h2>{% trans "Recent orders" %}</h2>
+	{% if not order_discounts %}
+	<p>{% trans "No orders have been placed that use this offer." %}</p>
+	{% else %}
+	<p>{% trans "We show a maximum of 20 orders sorted by recency." %}</p>
+	<table class="table">
+		<thead>
+			<th>{% trans "Order number" %}</th>
+			<th>{% trans "Order total" %}</th>
+			<th>{% trans "Discount" %}</th>
+			<th></th>
+		</thead>
+		<tbody>
+			{% for discount in order_discounts %}
+			{% with order=discount.order %}
+				<tr>
+					<td>{{ order.number }}</td>
+					<td>{{ order.total_incl_tax|currency }}</td>
+					<td>{{ discount.amount|currency }}</td>
+					<td><a href="{% url dashboard:order-detail order.number %}" class="btn btn-info">{% trans "View" %}</a></td>
+				</tr>
+			{% endwith %}
+			{% endfor %}
+		</tbody>
+	</table>
+	{% endif %}
+
+	<div class="form-actions">
+		<a class="btn btn-primary" href="{% url dashboard:offer-metadata offer.id %}">{% trans "Edit" %}</a> {% trans "or" %}
+		<a class="btn btn-danger" href="{% url dashboard:offer-delete offer.id %}">{% trans "Delete" %}</a> {% trans "or" %}
+		<a href="{% url dashboard:offer-list %}">{% trans "cancel" %}</a>
+	</div>
+
+{% endblock dashboard_content %}

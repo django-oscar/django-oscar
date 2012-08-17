@@ -1,32 +1,44 @@
-from StringIO import StringIO
 from decimal import Decimal as D
 import random
+import datetime
 
-from django.test import TestCase
-from django.core.servers.basehttp import AdminMediaHandler
-from django.core.handlers.wsgi import WSGIHandler
-from django.core.urlresolvers import reverse
+from oscar.core.loading import get_class, get_classes
 
-from oscar.apps.basket.models import Basket
-from oscar.apps.catalogue.models import ProductClass, Product, ProductAttribute, ProductAttributeValue
-from oscar.apps.checkout.calculators import OrderTotalCalculator
-from oscar.apps.order.utils import OrderCreator
-from oscar.apps.partner.models import Partner, StockRecord
-from oscar.apps.shipping.methods import Free
-from oscar.apps.offer.models import Range, ConditionalOffer, Condition, Benefit
+Basket = get_class('basket.models', 'Basket')
+Free = get_class('shipping.methods', 'Free')
+Voucher = get_class('voucher.models', 'Voucher')
+OrderCreator = get_class('order.utils', 'OrderCreator')
+OrderTotalCalculator = get_class('checkout.calculators', 'OrderTotalCalculator')
+Partner, StockRecord = get_classes('partner.models', ('Partner',
+                                                      'StockRecord'))
+(ProductClass,
+ Product,
+ ProductAttribute,
+ ProductAttributeValue) = get_classes('catalogue.models',
+                                      ('ProductClass',
+                                       'Product',
+                                       'ProductAttribute',
+                                       'ProductAttributeValue'))
+(Range,
+ ConditionalOffer,
+ Condition,
+ Benefit) = get_classes('offer.models', ('Range', 'ConditionalOffer',
+                                         'Condition', 'Benefit'))
 
 
-def create_product(price=None, title="Dummy title", product_class="Dummy item class", 
-        partner="Dummy partner", partner_sku=None, upc=None, num_in_stock=10, attributes=None):
+def create_product(price=None, title="Dummy title", product_class="Dummy item class",
+        partner="Dummy partner", partner_sku=None, upc=None, num_in_stock=10,
+        attributes=None, **kwargs):
     """
     Helper method for creating products that are used in tests.
     """
     ic,_ = ProductClass._default_manager.get_or_create(name=product_class)
-    item = Product._default_manager.create(title=title, product_class=ic, upc=upc)
+    item = Product._default_manager.create(title=title, product_class=ic,
+                                           upc=upc, **kwargs)
     if price is not None or partner_sku or num_in_stock is not None:
         if not partner_sku:
             partner_sku = 'sku_%d_%d' % (item.id, random.randint(0, 10000))
-        if not price:
+        if price is None:
             price = D('10.00')
 
         partner,_ = Partner._default_manager.get_or_create(name=partner)
@@ -72,6 +84,9 @@ def create_order(number=None, basket=None, user=None, shipping_address=None, shi
 
 
 def create_offer():
+    """
+    Helper method for creating an offer
+    """
     range = Range.objects.create(name="All products range", includes_all_products=True)
     condition = Condition.objects.create(range=range,
                                          type=Condition.COUNT,
@@ -79,7 +94,7 @@ def create_offer():
     benefit = Benefit.objects.create(range=range,
                                      type=Benefit.PERCENTAGE,
                                      value=20)
-    offer= ConditionalOffer.objects.create(
+    offer = ConditionalOffer.objects.create(
         name='Dummy offer',
         offer_type='Site',
         condition=condition,
@@ -88,53 +103,15 @@ def create_offer():
     return offer
 
 
-
-
-class TwillTestCase(TestCase):
+def create_voucher():
     """
-    Simple wrapper around Twill to make writing TestCases easier.
-
-    Commands availabel through self.command are:
-    - go        -> visit a URL
-    - back      -> back to previous URL
-    - reload    -> reload URL
-    - follow    -> follow a given link
-    - code      -> assert the HTTP response code
-    - find      -> assert page contains some string
-    - notfind   -> assert page does not contain
-    - title     -> assert page title
+    Helper method for creating a voucher
     """
-
-    HOST = '127.0.0.1'
-    PORT = 8080
-
-    def setUp(self):
-        app = AdminMediaHandler(WSGIHandler())
-        twill.add_wsgi_intercept(self.HOST, self.PORT, lambda: app)
-        twill.set_output(StringIO())
-        self.command = twill.commands
-
-    def tearDown(self):
-        twill.remove_wsgi_intercept(self.HOST, self.PORT)
-
-    def reverse(self, url_name, *args, **kwargs):
-        """
-        Custom 'reverse' function that includes the protocol and host
-        """
-        return 'http://%s:%d%s' % (self.HOST, self.PORT, reverse(url_name, *args, **kwargs))
-
-    def visit(self, url_name, *args,**kwargs):
-        self.command.go(self.reverse(url_name, *args, **kwargs))
-
-    def assertResponseCodeIs(self, code):
-        self.command.code(code)
-
-    def assertPageContains(self, regexp):
-        self.command.find(regexp)
-
-    def assertPageDoesNotContain(self, regexp):
-        self.command.notfind(regexp)
-
-    def assertPageTitleMatches(self, regexp):
-        self.command.title(regexp)
-
+    voucher = Voucher.objects.create(
+        name="Test voucher",
+        code="test",
+        start_date=datetime.date.today(),
+        end_date=datetime.date.today() + datetime.timedelta(days=12)
+    )
+    voucher.offers.add(create_offer())
+    return voucher
