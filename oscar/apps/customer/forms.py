@@ -14,7 +14,6 @@ from oscar.core.loading import get_profile_class
 
 def generate_username():
     uname = ''.join([random.choice(string.letters + string.digits + '_') for i in range(30)])
-
     try:
         User.objects.get(username=uname)
         return generate_username()
@@ -197,4 +196,4 @@ if hasattr(settings, 'AUTH_PROFILE_MODULE'):
 
     ProfileForm = UserAndProfileForm
 else:
-    ProfileForm = UserForm 
+    ProfileForm = UserForm

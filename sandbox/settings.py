@@ -144,7 +144,7 @@ LOGGING = {
             'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
         },
         'simple': {
-            'format': '%(levelname)s %(message)s'
+            'format': '[%(asctime)s] %(message)s'
         },
     },
     'handlers': {
@@ -162,6 +162,12 @@ LOGGING = {
              'class': 'oscar.core.logging.handlers.EnvFileHandler',
              'filename': 'checkout.log',
              'formatter': 'verbose'
+        },
+        'gateway_file': {
+             'level': 'INFO',
+             'class': 'oscar.core.logging.handlers.EnvFileHandler',
+             'filename': 'gateway.log',
+             'formatter': 'simple'
         },
         'error_file': {
              'level': 'INFO',
@@ -187,6 +193,11 @@ LOGGING = {
         },
         'oscar.checkout': {
             'handlers': ['console', 'checkout_file'],
+            'propagate': True,
+            'level':'INFO',
+        },
+        'gateway': {
+            'handlers': ['gateway_file'],
             'propagate': True,
             'level':'INFO',
         },
@@ -216,6 +227,7 @@ INSTALLED_APPS = [
     'rosetta',
     # For profile testing
     'apps.user',
+    'apps.gateway',
 ]
 from oscar import get_core_apps
 INSTALLED_APPS = INSTALLED_APPS + get_core_apps(['apps.shipping'])
