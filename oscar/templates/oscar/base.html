@@ -44,6 +44,7 @@
             {% endif %}
         {% endblock %}
 
+		{# In production, you should collate and minify these scripts using django-compressor or something similar #}
 		{% block scripts %}
 			<!-- Jquery -->
 			<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>
@@ -66,7 +67,7 @@
 			});
 		</script>
 
-		{# Page meta-data #}
+		{# Page meta-data - useful for debugging #}
 		<!-- {% trans "Version:" %} {{ version }} -->
     </body>
 </html>
