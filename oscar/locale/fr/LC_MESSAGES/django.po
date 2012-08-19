@@ -20,23 +20,23 @@ msgstr ""
 
 #: apps/address/abstract_models.py:20
 msgid "Mr"
-msgstr ""
+msgstr "Mr"
 
 #: apps/address/abstract_models.py:21
 msgid "Miss"
-msgstr ""
+msgstr "Mme"
 
 #: apps/address/abstract_models.py:22
 msgid "Mrs"
-msgstr ""
+msgstr "Mrs"
 
 #: apps/address/abstract_models.py:23
 msgid "Ms"
-msgstr ""
+msgstr "Mlle"
 
 #: apps/address/abstract_models.py:24
 msgid "Dr"
-msgstr ""
+msgstr "Mmes"
 
 #: apps/address/abstract_models.py:26 apps/catalogue/abstract_models.py:260
 #: apps/dashboard/catalogue/forms.py:63 apps/dashboard/pages/forms.py:14
@@ -48,62 +48,62 @@ msgstr ""
 #: templates/oscar/dashboard/ranges/range_product_list.html:83
 #: templates/oscar/dashboard/users/detail.html:162
 msgid "Title"
-msgstr ""
+msgstr "Titre"
 
 #: apps/address/abstract_models.py:27 apps/customer/forms.py:156
 #: templates/oscar/dashboard/users/index.html:47
 msgid "First name"
-msgstr ""
+msgstr "Prénom"
 
 #: apps/address/abstract_models.py:28 apps/customer/forms.py:157
 #: templates/oscar/dashboard/users/index.html:48
 msgid "Last name"
-msgstr ""
+msgstr "Nom de famille"
 
 #: apps/address/abstract_models.py:32
 msgid "First line of address"
-msgstr ""
+msgstr "Adresse ligne 1"
 
 #: apps/address/abstract_models.py:33
 msgid "Second line of address"
-msgstr ""
+msgstr "Adresse ligne 2"
 
 #: apps/address/abstract_models.py:34
 msgid "Third line of address"
-msgstr ""
+msgstr "Adresse ligne 3"
 
 #: apps/address/abstract_models.py:35
 msgid "City"
-msgstr ""
+msgstr "Ville"
 
 #: apps/address/abstract_models.py:36
 msgid "State/County"
-msgstr ""
+msgstr "Département"
 
 #: apps/address/abstract_models.py:37
 msgid "Post/Zip-code"
-msgstr ""
+msgstr "Code postal"
 
 #: apps/address/abstract_models.py:38 apps/address/abstract_models.py:137
 msgid "Country"
-msgstr ""
+msgstr "Pays"
 
 #: apps/address/abstract_models.py:41
 msgid "Search text"
-msgstr ""
+msgstr "Rechercher du texte"
 
 #: apps/address/abstract_models.py:45
 #: templates/oscar/checkout/checkout.html:32
 #: templates/oscar/customer/anon-order.html:23
 #: templates/oscar/dashboard/orders/order_detail.html:314
 msgid "Address"
-msgstr ""
+msgstr "Adresse"
 
 #: apps/address/abstract_models.py:46
 #: templates/oscar/dashboard/users/detail.html:96
 #: templates/oscar/dashboard/users/detail.html:130
 msgid "Addresses"
-msgstr ""
+msgstr "Adresses"
 
 #: apps/address/abstract_models.py:126
 msgid "ISO 3166-1 alpha-2"
@@ -123,23 +123,23 @@ msgstr ""
 
 #: apps/address/abstract_models.py:130
 msgid "Country name"
-msgstr ""
+msgstr "Nom du pays"
 
 #: apps/address/abstract_models.py:138
 msgid "Countries"
-msgstr ""
+msgstr "Pays"
 
 #: apps/address/abstract_models.py:152
 msgid "Phone number"
-msgstr ""
+msgstr "Téléphone"
 
 #: apps/address/abstract_models.py:154
 msgid "Courier instructions"
-msgstr ""
+msgstr "Instruction courrier"
 
 #: apps/address/abstract_models.py:155
 msgid "For example, leave the parcel in the wheelie bin if I'm not in."
-msgstr ""
+msgstr "Par exemple, laisser le courier dans la poubelle en cas d'absence."
 
 #: apps/address/abstract_models.py:160
 #: templates/oscar/checkout/checkout.html:28
@@ -148,50 +148,50 @@ msgstr ""
 #: templates/oscar/dashboard/orders/order_list.html:93
 #: templates/oscar/dashboard/orders/shippingaddress_form.html:5
 msgid "Shipping address"
-msgstr ""
+msgstr "Adresse de livraison"
 
 #: apps/address/abstract_models.py:161
 msgid "Shipping addresses"
-msgstr ""
+msgstr "Adresses de livraison"
 
 #: apps/address/abstract_models.py:187
 msgid "Default shipping address?"
-msgstr ""
+msgstr "Adresse de livraison par défaut?"
 
 #: apps/address/abstract_models.py:188
 msgid "Default billing address?"
-msgstr ""
+msgstr "Adresse de facturation par défaut"
 
 #: apps/address/abstract_models.py:233
 msgid "User address"
-msgstr ""
+msgstr "Adresse client"
 
 #: apps/address/abstract_models.py:234
 msgid "User addresses"
-msgstr ""
+msgstr "Adresses client"
 
 #: apps/address/abstract_models.py:242
 #: templates/oscar/dashboard/orders/order_detail.html:329
 #: templates/oscar/dashboard/orders/order_list.html:94
 msgid "Billing address"
-msgstr ""
+msgstr "Adresse de facturation"
 
 #: apps/address/abstract_models.py:243
 msgid "Billing addresses"
-msgstr ""
+msgstr "Adresses facturation"
 
 #: apps/analytics/abstract_models.py:18 apps/analytics/reports.py:21
 #: templates/oscar/dashboard/reports/partials/product_report.html:9
 msgid "Views"
-msgstr ""
+msgstr "Vues"
 
 #: apps/analytics/abstract_models.py:19 apps/analytics/abstract_models.py:44
 msgid "Basket Additions"
-msgstr ""
+msgstr "Ajouts panier"
 
 #: apps/analytics/abstract_models.py:20
 msgid "Purchaes"
-msgstr ""
+msgstr "Achats"
 
 #: apps/analytics/abstract_models.py:23 apps/catalogue/abstract_models.py:283
 #: apps/catalogue/reviews/abstract_models.py:30
@@ -200,24 +200,24 @@ msgstr ""
 #: templates/oscar/dashboard/users/detail.html:161
 #: templates/oscar/reviews/reviews.html:45
 msgid "Score"
-msgstr ""
+msgstr "Score"
 
 #: apps/analytics/abstract_models.py:28
 msgid "Product record"
-msgstr ""
+msgstr "Enregistrement produit"
 
 #: apps/analytics/abstract_models.py:29
 msgid "Product records"
-msgstr ""
+msgstr "Enregistrements produit"
 
 #: apps/analytics/abstract_models.py:32
 #, python-format
 msgid "Record for '%s'"
-msgstr ""
+msgstr "Enregistrements pour '%s'"
 
 #: apps/analytics/abstract_models.py:43
 msgid "Product Views"
-msgstr ""
+msgstr "Vues produit"
 
 #: apps/analytics/abstract_models.py:47 apps/analytics/reports.py:67
 #: apps/dashboard/orders/app.py:9 apps/dashboard/orders/app.py:10
@@ -231,60 +231,60 @@ msgstr ""
 #: templates/oscar/dashboard/users/detail.html:95
 #: templates/oscar/dashboard/users/detail.html:102
 msgid "Orders"
-msgstr ""
+msgstr "Commandes"
 
 #: apps/analytics/abstract_models.py:48
 msgid "Order Lines"
-msgstr ""
+msgstr "Lignes commande"
 
 #: apps/analytics/abstract_models.py:49
 msgid "Order Items"
-msgstr ""
+msgstr "Articles commande"
 
 #: apps/analytics/abstract_models.py:50
 msgid "Total Spent"
-msgstr ""
+msgstr "Total dépensé"
 
 #: apps/analytics/abstract_models.py:51
 msgid "Last Order Date"
-msgstr ""
+msgstr "Date dernière commande"
 
 #: apps/analytics/abstract_models.py:55
 msgid "User Record"
-msgstr ""
+msgstr "Enregistrement client"
 
 #: apps/analytics/abstract_models.py:56
 msgid "User Records"
-msgstr ""
+msgstr "Enregistrements client"
 
 #: apps/analytics/abstract_models.py:67 apps/basket/abstract_models.py:42
 #: templates/oscar/basket/basket.html:7 templates/oscar/basket/basket.html:16
 #: templates/oscar/partials/nav_alternate.html:13
 #: templates/oscar/partials/nav_primary.html:14
 msgid "Basket"
-msgstr ""
+msgstr "panier"
 
 #: apps/analytics/abstract_models.py:68 apps/basket/abstract_models.py:43
 msgid "Baskets"
-msgstr ""
+msgstr "paniers"
 
 #: apps/analytics/abstract_models.py:72
 #, python-format
 msgid "%(user)s viewed '%(product)s'"
-msgstr ""
+msgstr "%(user)s a vue '%(product)s'"
 
 #: apps/analytics/abstract_models.py:79
 msgid "Search term"
-msgstr ""
+msgstr "Mots clés"
 
 #: apps/analytics/abstract_models.py:84
 msgid "User search queries"
-msgstr ""
+msgstr "Requêtes de recherche des utilisateurs"
 
 #: apps/analytics/abstract_models.py:87
 #, python-format
 msgid "%(user)s searched for '%(query)s'"
-msgstr ""
+msgstr "%(user)s chercha '%(query)s'"
 
 #: apps/analytics/reports.py:20 apps/catalogue/abstract_models.py:420
 #: templates/oscar/customer/anon-order.html:55
@@ -294,22 +294,22 @@ msgstr ""
 #: templates/oscar/dashboard/reports/partials/product_report.html:8
 #: templates/oscar/dashboard/reviews/review_delete.html:36
 msgid "Product"
-msgstr ""
+msgstr "Produit"
 
 #: apps/analytics/reports.py:22 apps/analytics/reports.py:66
 #: templates/oscar/dashboard/reports/partials/product_report.html:10
 #: templates/oscar/dashboard/reports/partials/user_report.html:12
 msgid "Basket additions"
-msgstr ""
+msgstr "Ajouts panier"
 
 #: apps/analytics/reports.py:23
 #: templates/oscar/dashboard/reports/partials/product_report.html:11
 msgid "Purchases"
-msgstr ""
+msgstr "Achats"
 
 #: apps/analytics/reports.py:40
 msgid "Product analytics"
-msgstr ""
+msgstr "Analytiques produits"
 
 #: apps/analytics/reports.py:63 apps/basket/reports.py:20
 #: apps/catalogue/abstract_models.py:205 apps/catalogue/abstract_models.py:730
@@ -337,62 +337,62 @@ msgstr ""
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:34
 #: templates/oscar/dashboard/vouchers/voucher_list.html:45
 msgid "Name"
-msgstr ""
+msgstr "Nom"
 
 #: apps/analytics/reports.py:64 templates/oscar/customer/profile.html:61
 #: templates/oscar/dashboard/reports/partials/user_report.html:10
 #: templates/oscar/dashboard/users/index.html:51
 msgid "Date registered"
-msgstr ""
+msgstr "Date d'enregistrement"
 
 #: apps/analytics/reports.py:65
 #: templates/oscar/dashboard/reports/partials/user_report.html:11
 msgid "Product views"
-msgstr ""
+msgstr "Vues produit"
 
 #: apps/analytics/reports.py:68 apps/order/abstract_models.py:433
 #: templates/oscar/dashboard/reports/partials/user_report.html:14
 msgid "Order lines"
-msgstr ""
+msgstr "Lignes commande"
 
 #: apps/analytics/reports.py:69
 #: templates/oscar/dashboard/reports/partials/user_report.html:15
 msgid "Order items"
-msgstr ""
+msgstr "Articles commandés"
 
 #: apps/analytics/reports.py:70
 #: templates/oscar/dashboard/reports/partials/user_report.html:16
 msgid "Total spent"
-msgstr ""
+msgstr "Total dépensé"
 
 #: apps/analytics/reports.py:71
 #: templates/oscar/dashboard/reports/partials/user_report.html:17
 msgid "Date of last order"
-msgstr ""
+msgstr "Date de la dernière commande"
 
 #: apps/analytics/reports.py:94
 msgid "User analytics"
-msgstr ""
+msgstr "Analytiques clients"
 
 #: apps/basket/abstract_models.py:27
 msgid "Open - currently active"
-msgstr ""
+msgstr "Ouvert - statut actif"
 
 #: apps/basket/abstract_models.py:28
 msgid "Merged - superceded by another basket"
-msgstr ""
+msgstr "Fusionné - avec un autre panier"
 
 #: apps/basket/abstract_models.py:29
 msgid "Saved - for items to be purchased later"
-msgstr ""
+msgstr "Sauvegardé - des articles devant être achetés plus tard"
 
 #: apps/basket/abstract_models.py:30
 msgid "Frozen - the basket cannot be modified"
-msgstr ""
+msgstr "Gelé - Le panier ne peut être modifié"
 
 #: apps/basket/abstract_models.py:31
 msgid "Submitted - has been ordered at the checkout"
-msgstr ""
+msgstr "Validé - panier commandé"
 
 #: apps/basket/abstract_models.py:33 apps/catalogue/abstract_models.py:265
 #: apps/catalogue/abstract_models.py:788
@@ -414,19 +414,19 @@ msgstr ""
 #: templates/oscar/dashboard/reviews/review_list.html:49
 #: templates/oscar/dashboard/users/detail.html:110
 msgid "Status"
-msgstr ""
+msgstr "Statut"
 
 #: apps/basket/abstract_models.py:58
 #, python-format
 msgid "%(status)s basket (owner: %(owner)s, lines: %(num_lines)d)"
-msgstr ""
+msgstr "%(status)s panier (propriétaire: %(owner)s, Lignes: %(num_lines)d)"
 
 #: apps/basket/abstract_models.py:80 apps/basket/forms.py:154
 #, python-format
-msgid ""
-"Due to technical limitations we are not able to ship more than %(threshold)d "
+msgid "Due to technical limitations we are not able to ship more than %(threshold)d "
 "items in one order. Your basket currently has %(basket)d items."
-msgstr ""
+msgstr "En raison de limitations techniques nous ne sommes pas en mesure d'expédier plus de %(threshold)d"
+"articles en une commande. Votre panier posséde actuellement %(basket)d articles."
 
 #: apps/basket/abstract_models.py:394 apps/basket/forms.py:111
 #: apps/basket/forms.py:195 apps/order/abstract_models.py:284
@@ -439,29 +439,29 @@ msgstr ""
 #: templates/oscar/dashboard/orders/line_detail.html:48
 #: templates/oscar/dashboard/orders/order_detail.html:110
 msgid "Quantity"
-msgstr ""
+msgstr "Quantité"
 
 #: apps/basket/abstract_models.py:395
 msgid "Price incl. Tax"
-msgstr ""
+msgstr "Prix TTC"
 
 #: apps/basket/abstract_models.py:409
 msgid "Basket line"
-msgstr ""
+msgstr "Ligne panier"
 
 #: apps/basket/abstract_models.py:410
 msgid "Basket lines"
-msgstr ""
+msgstr "Lignes panier"
 
 #: apps/basket/abstract_models.py:413
 #, python-format
 msgid "%(basket)s, Product '%(product)s', quantity %(quantity)d"
-msgstr ""
+msgstr "%(basket)s, Produit '%(product)s', quantité %(quantity)d"
 
 #: apps/basket/abstract_models.py:419
 #, python-format
 msgid "You cannot modify a %s basket"
-msgstr ""
+msgstr "Vous ne pouvez modifier un panier %s"
 
 #: apps/basket/abstract_models.py:594 apps/basket/reports.py:25
 #: apps/basket/reports.py:83 apps/offer/models.py:171 apps/offer/models.py:229
@@ -469,23 +469,23 @@ msgstr ""
 #: templates/oscar/dashboard/reports/partials/open_basket_report.html:12
 #: templates/oscar/dashboard/reports/partials/submitted_basket_report.html:12
 msgid "Value"
-msgstr ""
+msgstr "Valeur"
 
 #: apps/basket/abstract_models.py:598
 msgid "Line attribute"
-msgstr ""
+msgstr "Attribut ligne"
 
 #: apps/basket/abstract_models.py:599
 msgid "Line attributes"
-msgstr ""
+msgstr "Attributs lignes"
 
 #: apps/basket/forms.py:15
 msgid "Save for Later"
-msgstr ""
+msgstr "Sauvegarder - mettre de coté"
 
 #: apps/basket/forms.py:41
 msgid "Move to Basket"
-msgstr ""
+msgstr "Voir le panier"
 
 #: apps/basket/forms.py:86 apps/customer/abstract_models.py:35
 #: apps/dashboard/vouchers/forms.py:16 apps/order/abstract_models.py:494
@@ -495,28 +495,28 @@ msgstr ""
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:35
 #: templates/oscar/dashboard/vouchers/voucher_list.html:46
 msgid "Code"
-msgstr ""
+msgstr "Code"
 
 #: apps/basket/forms.py:96 apps/basket/forms.py:110
 #: templates/oscar/dashboard/users/detail.html:160
 msgid "Product ID"
-msgstr ""
+msgstr "ID Produit"
 
 #: apps/basket/forms.py:104
 msgid "This product is not available for purchase"
-msgstr ""
+msgstr "Ce produit n'est pas disponible à l'achat "
 
 #: apps/basket/forms.py:130
 msgid "Please select a valid product"
-msgstr ""
+msgstr "Choisir un produit valide"
 
 #: apps/basket/forms.py:177
 msgid "Variant"
-msgstr ""
+msgstr "Variante"
 
 #: apps/basket/reports.py:19 apps/basket/reports.py:78
 msgid "User ID"
-msgstr ""
+msgstr "ID client"
 
 #: apps/basket/reports.py:21 apps/catalogue/reviews/abstract_models.py:37
 #: apps/customer/abstract_models.py:23 apps/dashboard/users/forms.py:9
@@ -525,38 +525,38 @@ msgstr ""
 #: templates/oscar/dashboard/reports/partials/user_report.html:8
 #: templates/oscar/dashboard/users/index.html:46
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #: apps/basket/reports.py:22 apps/basket/reports.py:80
 msgid "Basket status"
-msgstr ""
+msgstr "Satut panier"
 
 #: apps/basket/reports.py:23 apps/basket/reports.py:81
 #: templates/oscar/dashboard/reports/partials/open_basket_report.html:10
 #: templates/oscar/dashboard/reports/partials/submitted_basket_report.html:10
 msgid "Num lines"
-msgstr ""
+msgstr "Num lignes"
 
 #: apps/basket/reports.py:24 apps/basket/reports.py:82
 #: templates/oscar/dashboard/reports/partials/open_basket_report.html:11
 #: templates/oscar/dashboard/reports/partials/submitted_basket_report.html:11
 #: templates/oscar/dashboard/users/detail.html:107
 msgid "Num items"
-msgstr ""
+msgstr "Num articles"
 
 #: apps/basket/reports.py:26
 #: templates/oscar/dashboard/reports/partials/open_basket_report.html:13
 msgid "Date of creation"
-msgstr ""
+msgstr "Date de création"
 
 #: apps/basket/reports.py:27
 #: templates/oscar/dashboard/reports/partials/open_basket_report.html:14
 msgid "Time since creation"
-msgstr ""
+msgstr "Temps depuis la création"
 
 #: apps/basket/reports.py:57
 msgid "Open baskets"
-msgstr ""
+msgstr "Paniers ouverts"
 
 #: apps/basket/reports.py:79 apps/order/reports.py:20
 #: templates/oscar/dashboard/orders/order_detail.html:428
@@ -564,7 +564,7 @@ msgstr ""
 #: templates/oscar/dashboard/reviews/review_delete.html:37
 #: templates/oscar/dashboard/reviews/review_list.html:46
 msgid "User"
-msgstr ""
+msgstr "Client"
 
 #: apps/basket/reports.py:84
 #: templates/oscar/dashboard/offers/offer_detail.html:42
@@ -577,29 +577,29 @@ msgstr ""
 #: templates/oscar/dashboard/users/detail.html:164
 #: templates/oscar/dashboard/vouchers/voucher_list.html:50
 msgid "Date created"
-msgstr ""
+msgstr "Date de création"
 
 #: apps/basket/reports.py:85
 #: templates/oscar/dashboard/reports/partials/submitted_basket_report.html:14
 msgid "Time between creation and submission"
-msgstr ""
+msgstr "Temps entre la création et la validation"
 
 #: apps/basket/reports.py:113
 msgid "Submitted baskets"
-msgstr ""
+msgstr "Paniers validés"
 
 #: apps/basket/views.py:84
 msgid "Basket updated"
-msgstr ""
+msgstr "Panier mis à jour"
 
 #: apps/basket/views.py:94
 #, python-format
 msgid "'%(title)s' has been saved for later"
-msgstr ""
+msgstr "'%(title)s' est sauvegardé pour votre prochaine visite"
 
 #: apps/basket/views.py:97
 msgid "You can't save an item for later if you're not logged in!"
-msgstr ""
+msgstr "Vous ne pouvez pas enregistrer un élément pour plus tard si vous n'êtes pas connecté!"
 
 #: apps/basket/views.py:113
 #, python-format
@@ -607,155 +607,157 @@ msgid ""
 "Your basket couldn't be updated because:\n"
 "%s"
 msgstr ""
+"Votre panier ne peut être mis à jour:\n"
+"%s"
 
 #: apps/basket/views.py:163
 #, python-format
 msgid "'%(title)s' has been added to your basket"
-msgstr ""
+msgstr "'%(title)s' ajouté au panier"
 
 #: apps/basket/views.py:165
 #, python-format
 msgid "'%(title)s' (quantity %(quantity)d) has been added to yourbasket"
-msgstr ""
+msgstr "'%(title)s' (quantity %(quantity)d) vient d'être ajouté à votre panier"
 
 #: apps/basket/views.py:186
 #, python-format
 msgid "The '%(code)s' voucher has expired"
-msgstr ""
+msgstr "Le bon de réduciotn '%(code)s' a expiré"
 
 #: apps/basket/views.py:213
 msgid "Your basket does not qualify for a voucher discount"
-msgstr ""
+msgstr "Impossible d'appliquer le bon de réduction sur ce panier"
 
 #: apps/basket/views.py:216
 #, python-format
 msgid "Voucher '%(code)s' added to basket"
-msgstr ""
+msgstr "Le bon de réduction '%(code)s' ajouté au panier"
 
 #: apps/basket/views.py:223
 #, python-format
 msgid "You have already added the '%(code)s' voucher to your basket"
-msgstr ""
+msgstr "Le bon de réduction '%(code)s' est déjà dans votre panier"
 
 #: apps/basket/views.py:228
 #, python-format
 msgid "No voucher found with code '%(code)s'"
-msgstr ""
+msgstr "Aucun bon de réduction trouvé avec le code: '%(code)s'"
 
 #: apps/basket/views.py:234 apps/dashboard/vouchers/forms.py:54
 msgid "Please enter a voucher code"
-msgstr ""
+msgstr "Entrez un code de bon de réduction"
 
 #: apps/basket/views.py:253
 #, python-format
 msgid "No voucher found with id '%d'"
-msgstr ""
+msgstr "Aucun bon de réduction touvé avec l'ID '%d'"
 
 #: apps/basket/views.py:257
 #, python-format
 msgid "Voucher '%s' removed from basket"
-msgstr ""
+msgstr "Le bon de réduciton '%s' a été retiré du panier"
 
 #: apps/basket/views.py:294
 #, python-format
 msgid "'%s' has been moved back to your basket"
-msgstr ""
+msgstr "'%s' a été remis dans le panier"
 
 #: apps/catalogue/abstract_models.py:24 apps/catalogue/abstract_models.py:57
 #: apps/catalogue/abstract_models.py:183 apps/catalogue/abstract_models.py:547
 #: apps/catalogue/abstract_models.py:698 apps/catalogue/abstract_models.py:780
 msgid "name"
-msgstr ""
+msgstr "nom"
 
 #: apps/catalogue/abstract_models.py:25 apps/catalogue/abstract_models.py:60
 msgid "slug"
-msgstr ""
+msgstr "slug(limace)"
 
 #: apps/catalogue/abstract_models.py:29
 msgid "Requires shipping?"
-msgstr ""
+msgstr "Nécessite une expédition"
 
 #: apps/catalogue/abstract_models.py:39
 #: templates/oscar/catalogue/detail.html:98
 #: templates/oscar/dashboard/catalogue/product_list.html:61
 #: templates/oscar/dashboard/catalogue/product_update.html:39
 msgid "Product class"
-msgstr ""
+msgstr "Classe produit"
 
 #: apps/catalogue/abstract_models.py:40
 msgid "Product classes"
-msgstr ""
+msgstr "Classes produit"
 
 #: apps/catalogue/abstract_models.py:58
 msgid "description"
-msgstr ""
+msgstr "description"
 
 #: apps/catalogue/abstract_models.py:59
 msgid "image"
-msgstr ""
+msgstr "image"
 
 #: apps/catalogue/abstract_models.py:61
 msgid "full name"
-msgstr ""
+msgstr "Nom"
 
 #: apps/catalogue/abstract_models.py:89
 #, python-format
 msgid "A category with slug '%(slug)s' already exists"
-msgstr ""
+msgstr "Une catégorie avec le slug '%(slug)s' éxiste déjà"
 
 #: apps/catalogue/abstract_models.py:151 apps/customer/abstract_models.py:43
 msgid "Category"
-msgstr ""
+msgstr "Catégorie"
 
 #: apps/catalogue/abstract_models.py:152 apps/dashboard/catalogue/app.py:11
 msgid "Categories"
-msgstr ""
+msgstr "Catégories"
 
 #: apps/catalogue/abstract_models.py:167
 msgid "is cannonical"
-msgstr ""
+msgstr "est cannonique"
 
 #: apps/catalogue/abstract_models.py:172
 msgid "Product category"
-msgstr ""
+msgstr "Catégorie produit"
 
 #: apps/catalogue/abstract_models.py:173
 msgid "Product categories"
-msgstr ""
+msgstr "Catégories produit"
 
 #: apps/catalogue/abstract_models.py:184
 msgid "name plural"
-msgstr ""
+msgstr "Nom (pluriel)"
 
 #: apps/catalogue/abstract_models.py:192
 msgid "Contributor Role"
-msgstr ""
+msgstr "Rôle contributeur"
 
 #: apps/catalogue/abstract_models.py:193
 msgid "Contributor Roles"
-msgstr ""
+msgstr "Rôles contributeurs"
 
 #: apps/catalogue/abstract_models.py:206 apps/catalogue/abstract_models.py:261
 #: apps/catalogue/abstract_models.py:731 apps/catalogue/abstract_models.py:753
 #: apps/offer/models.py:24 apps/shipping/models.py:11
 msgid "Slug"
-msgstr ""
+msgstr "Slug (limace)"
 
 #: apps/catalogue/abstract_models.py:213
 msgid "Contributor"
-msgstr ""
+msgstr "Contributeur"
 
 #: apps/catalogue/abstract_models.py:214
 msgid "Contributors"
-msgstr ""
+msgstr "Contributeurs"
 
 #: apps/catalogue/abstract_models.py:233
 msgid "Product contributor"
-msgstr ""
+msgstr "Contributeur Produit"
 
 #: apps/catalogue/abstract_models.py:234
 msgid "Product contributors"
-msgstr ""
+msgstr "Contributeurs produit"
 
 #: apps/catalogue/abstract_models.py:249 apps/dashboard/catalogue/forms.py:62
 #: apps/dashboard/orders/forms.py:61 apps/order/abstract_models.py:279
@@ -765,7 +767,7 @@ msgstr ""
 #: templates/oscar/dashboard/orders/order_detail.html:112
 #: templates/oscar/dashboard/ranges/range_product_list.html:82
 msgid "UPC"
-msgstr ""
+msgstr "Référence"
 
 #: apps/catalogue/abstract_models.py:250
 msgid ""
@@ -773,6 +775,7 @@ msgid ""
 "                     not specific to a particular supplier.  Eg an ISBN for "
 "a book."
 msgstr ""
+"La référence est un identifiant pour un produit"
 
 #: apps/catalogue/abstract_models.py:255
 msgid ""
@@ -782,6 +785,8 @@ msgid ""
 "blank if this is a CANONICAL PRODUCT (ie\n"
 "                     there is only one version of this product)."
 msgstr ""
+"Choisir un produit parent si c'est une variante de ce même produit."
+"exemple: les différentes couleurs d'un T-shirt"
 
 #: apps/catalogue/abstract_models.py:262 apps/offer/models.py:25
 #: apps/promotions/models.py:202 apps/promotions/models.py:222
@@ -791,21 +796,23 @@ msgstr ""
 #: templates/oscar/dashboard/offers/preview.html:8
 #: templates/oscar/offer/detail.html:38
 msgid "Description"
-msgstr ""
+msgstr "Description"
 
 #: apps/catalogue/abstract_models.py:266
 msgid "product class"
-msgstr ""
+msgstr "Classe produit"
 
 #: apps/catalogue/abstract_models.py:267
 msgid "Choose what type of product this is"
-msgstr ""
+msgstr "Choisir le type de produit"
 
 #: apps/catalogue/abstract_models.py:269
 msgid ""
 "A product attribute is something that this product MUST have, such as a "
 "size, as specified by its class"
 msgstr ""
+"L'attribut d'un produit est une notion que le produit doit avoir, comme"
+"sa taille, comme spécifié par sa classe"
 
 #: apps/catalogue/abstract_models.py:271
 msgid ""
@@ -814,97 +821,100 @@ msgid ""
 "personalised message to be\n"
 "                     printed on a T-shirt."
 msgstr ""
+"L'option est une valeur qui peut être associée avec un article quand le produit est\n"
+"                     ajouté à un panier. Comme la personnalisation d'un T-shirt (un message)"
 
 #: apps/catalogue/abstract_models.py:276
 msgid ""
 "Related items are things like different formats of the same book.  Grouping "
 "them together allows\n"
-"                     better linking betwen products on the site."
+"better linking betwen products on the site."
 msgstr ""
+"Ce sont les produits associés de l'article"
 
 #: apps/catalogue/abstract_models.py:363
 msgid "No stock available"
-msgstr ""
+msgstr "Pas de stock"
 
 #: apps/catalogue/abstract_models.py:421 apps/dashboard/catalogue/app.py:10
 #: templates/oscar/dashboard/promotions/handpickedproductlist_form.html:5
 #: templates/oscar/dashboard/ranges/range_product_list.html:23
 msgid "Products"
-msgstr ""
+msgstr "Produits"
 
 #: apps/catalogue/abstract_models.py:441
 msgid "Canonical products must have a title"
-msgstr ""
+msgstr "Les produits cannoniques doivent avoir un titre"
 
 #: apps/catalogue/abstract_models.py:461
 msgid "Ranking"
-msgstr ""
+msgstr "Rang"
 
 #: apps/catalogue/abstract_models.py:464
 msgid "Product recommendation"
-msgstr ""
+msgstr "Recommendation du produit"
 
 #: apps/catalogue/abstract_models.py:465
 msgid "Product recomendations"
-msgstr ""
+msgstr "Recommendations du produit"
 
 #: apps/catalogue/abstract_models.py:488
 #, python-format
 msgid "%(obj)s has no attribute named '%(attr)s'"
-msgstr ""
+msgstr "%(obj)s n'a pas d'attribut nommé '%(attr)s'"
 
 #: apps/catalogue/abstract_models.py:497
 #, python-format
 msgid "%(attr)s attribute cannot be blank"
-msgstr ""
+msgstr "L'attribut %(attr)s ne peut être vide"
 
 #: apps/catalogue/abstract_models.py:504
 #, python-format
 msgid "%(attr)s attribute %(err)s"
-msgstr ""
+msgstr "%(attr)s attribut %(err)s"
 
 #: apps/catalogue/abstract_models.py:533
 msgid "Text"
-msgstr ""
+msgstr "Texte"
 
 #: apps/catalogue/abstract_models.py:534
 msgid "Integer"
-msgstr ""
+msgstr "Integer"
 
 #: apps/catalogue/abstract_models.py:535
 msgid "True / False"
-msgstr ""
+msgstr "Vraie / faux"
 
 #: apps/catalogue/abstract_models.py:536
 msgid "Float"
-msgstr ""
+msgstr "Float"
 
 #: apps/catalogue/abstract_models.py:537
 msgid "Rich Text"
-msgstr ""
+msgstr "Rich text"
 
 #: apps/catalogue/abstract_models.py:538
 #: templates/oscar/dashboard/orders/order_detail.html:231
 #: templates/oscar/dashboard/orders/order_detail.html:267
 #: templates/oscar/dashboard/orders/order_detail.html:427
 msgid "Date"
-msgstr ""
+msgstr "Date"
 
 #: apps/catalogue/abstract_models.py:539 apps/catalogue/abstract_models.py:792
 msgid "Option"
-msgstr ""
+msgstr "Option"
 
 #: apps/catalogue/abstract_models.py:540
 msgid "Entity"
-msgstr ""
+msgstr "Entité"
 
 #: apps/catalogue/abstract_models.py:548 apps/catalogue/abstract_models.py:781
 msgid "code"
-msgstr ""
+msgstr "code"
 
 #: apps/catalogue/abstract_models.py:549
 msgid "Code must match ^[a-zA-Z_][0-9a-zA-Z_]*$"
-msgstr ""
+msgstr "Le code doit correspondre ^[a-zA-Z_][0-9a-zA-Z_]*$"
 
 #: apps/catalogue/abstract_models.py:552
 msgid "Select an option group if using type \"Option\""
@@ -916,197 +926,199 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:555
 msgid "required"
-msgstr ""
+msgstr "requis"
 
 #: apps/catalogue/abstract_models.py:560
 msgid "Product attribute"
-msgstr ""
+msgstr "Attribut produit"
 
 #: apps/catalogue/abstract_models.py:561
 msgid "Product attributes"
-msgstr ""
+msgstr "Attributs produits"
 
 #: apps/catalogue/abstract_models.py:565
 msgid "Must be str or unicode"
-msgstr ""
+msgstr "Must be str or unicode"
 
 #: apps/catalogue/abstract_models.py:571
 msgid "Must be a float"
-msgstr ""
+msgstr "Must be a float"
 
 #: apps/catalogue/abstract_models.py:577
 msgid "Must be an integer"
-msgstr ""
+msgstr "Must be an integer"
 
 #: apps/catalogue/abstract_models.py:581
 msgid "Must be a date or datetime"
-msgstr ""
+msgstr "Doit être une date"
 
 #: apps/catalogue/abstract_models.py:585
 msgid "Must be a boolean"
-msgstr ""
+msgstr "Must be a boolean"
 
 #: apps/catalogue/abstract_models.py:589
 msgid "Must be an AttributeEntity model object instance"
-msgstr ""
+msgstr "Must be an AttributeEntity model object instance"
 
 #: apps/catalogue/abstract_models.py:591
 msgid "Model has not been saved yet"
-msgstr ""
+msgstr "Le model n'est pas sauvegardé pour l'instant"
 
 #: apps/catalogue/abstract_models.py:593
 #, python-format
 msgid "Entity must be of type %s"
-msgstr ""
+msgstr "Entity must be of type %s"
 
 #: apps/catalogue/abstract_models.py:597
 msgid "Must be an AttributeOption model object instance"
-msgstr ""
+msgstr "Must be an AttributeOption model object instance"
 
 #: apps/catalogue/abstract_models.py:599
 msgid "AttributeOption has not been saved yet"
-msgstr ""
+msgstr "AttributeOption has not been saved yet"
 
 #: apps/catalogue/abstract_models.py:602
 #, python-format
 msgid "%(enum)s is not a valid choice for %(attr)s"
-msgstr ""
+msgstr "%(enum)s is not a valid choice for %(attr)s"
 
 #: apps/catalogue/abstract_models.py:663
 msgid "text"
-msgstr ""
+msgstr "texte"
 
 #: apps/catalogue/abstract_models.py:664
 msgid "integer"
-msgstr ""
+msgstr "integer"
 
 #: apps/catalogue/abstract_models.py:665
 msgid "boolean"
-msgstr ""
+msgstr "boolean"
 
 #: apps/catalogue/abstract_models.py:666
 msgid "float"
-msgstr ""
+msgstr "float"
 
 #: apps/catalogue/abstract_models.py:667
 msgid "richtext"
-msgstr ""
+msgstr "richtext"
 
 #: apps/catalogue/abstract_models.py:668
 msgid "date"
-msgstr ""
+msgstr "date"
 
 #: apps/catalogue/abstract_models.py:685
 msgid "Product Attribute Value"
-msgstr ""
+msgstr "Valeur attribut produit"
 
 #: apps/catalogue/abstract_models.py:686
 msgid "Product Attribut Values"
-msgstr ""
+msgstr "Valeurs attribut produit"
 
 #: apps/catalogue/abstract_models.py:705
 msgid "Attribute Option Group"
-msgstr ""
+msgstr "Groupe attribut option"
 
 #: apps/catalogue/abstract_models.py:706
 msgid "Attribute Option Groups"
-msgstr ""
+msgstr "Groupes attribut option"
 
 #: apps/catalogue/abstract_models.py:715
 msgid "option"
-msgstr ""
+msgstr "option"
 
 #: apps/catalogue/abstract_models.py:722
 msgid "Attribute option"
-msgstr ""
+msgstr "option attribut"
 
 #: apps/catalogue/abstract_models.py:723
 msgid "Attribute options"
-msgstr ""
+msgstr "attributs options"
 
 #: apps/catalogue/abstract_models.py:739
 msgid "Attribute entity"
-msgstr ""
+msgstr "Entité attribut"
 
 #: apps/catalogue/abstract_models.py:740
 msgid "Attribute entities"
-msgstr ""
+msgstr "Entitée attribut"
 
 #: apps/catalogue/abstract_models.py:760
 msgid "Attribute Entity Type"
-msgstr ""
+msgstr "Attribute Entity Type"
 
 #: apps/catalogue/abstract_models.py:761
 msgid "Attribute Entity Types"
-msgstr ""
+msgstr "Attribute Entity Types"
 
 #: apps/catalogue/abstract_models.py:785
 msgid "Required - a value for this option must be specified"
-msgstr ""
+msgstr "Obligatoire - une valeur pour cette option doit être spécifiée"
 
 #: apps/catalogue/abstract_models.py:786
 msgid "Optional - a value for this option can be omitted"
-msgstr ""
+msgstr "Optionel - la valeur n'est pas obligatoire"
 
 #: apps/catalogue/abstract_models.py:793
 msgid "Options"
-msgstr ""
+msgstr "Options"
 
 #: apps/catalogue/abstract_models.py:815
 msgid "Original"
-msgstr ""
+msgstr "Original"
 
 #: apps/catalogue/abstract_models.py:816
 msgid "Caption"
-msgstr ""
+msgstr "Légende"
 
 #: apps/catalogue/abstract_models.py:819 apps/promotions/models.py:27
 #: apps/promotions/models.py:262 apps/promotions/models.py:303
 msgid "Display Order"
-msgstr ""
+msgstr "Ordre d'affichage"
 
 #: apps/catalogue/abstract_models.py:820
 msgid ""
 "An image with a display order of\n"
 "                       zero will be the primary image for a product"
 msgstr ""
+"Une image avec un ordre d'affichage\n"
+"                       zéro sera la première image du produit"
 
 #: apps/catalogue/abstract_models.py:828
 msgid "Product Image"
-msgstr ""
+msgstr "Image produit"
 
 #: apps/catalogue/abstract_models.py:829
 msgid "Product Images"
-msgstr ""
+msgstr "Images produit"
 
 #: apps/catalogue/utils.py:52
 #, python-format
 msgid "%(filename)s is not a valid image (%(error)s)"
-msgstr ""
+msgstr "%(filename)s n'est pas une image valide (%(error)s)"
 
 #: apps/catalogue/utils.py:61
 #, python-format
 msgid "%s is not a valid image archive"
-msgstr ""
+msgstr "%s n'est pas une archive d'image valide"
 
 #: apps/catalogue/views.py:141
 msgid "All products"
-msgstr ""
+msgstr "Tous les produits"
 
 #: apps/catalogue/views.py:143
 #, python-format
 msgid "Products matching '%(query)s'"
-msgstr ""
+msgstr "Produits correspondants '%(query)s'"
 
 #: apps/catalogue/reviews/abstract_models.py:31
 msgid "Review title"
-msgstr ""
+msgstr "Titre de l'avis"
 
 #: apps/catalogue/reviews/abstract_models.py:32
 #: templates/oscar/customer/email.html:48
 #: templates/oscar/dashboard/users/detail.html:163
 msgid "Body"
-msgstr ""
+msgstr "Corps"
 
 #: apps/catalogue/reviews/abstract_models.py:38
 #: apps/dashboard/promotions/forms.py:39 models/fields.py:17
@@ -1117,324 +1129,325 @@ msgstr ""
 
 #: apps/catalogue/reviews/abstract_models.py:42
 msgid "Requires moderation"
-msgstr ""
+msgstr "Exige la modération"
 
 #: apps/catalogue/reviews/abstract_models.py:43
 #: apps/dashboard/reviews/forms.py:10
 msgid "Approved"
-msgstr ""
+msgstr "Approuvé"
 
 #: apps/catalogue/reviews/abstract_models.py:44
 #: apps/dashboard/reviews/forms.py:11
 msgid "Rejected"
-msgstr ""
+msgstr "Rejeté"
 
 #: apps/catalogue/reviews/abstract_models.py:50
 msgid "Total Votes"
-msgstr ""
+msgstr "Total des votes"
 
 #: apps/catalogue/reviews/abstract_models.py:51
 msgid "Delta Votes"
-msgstr ""
+msgstr "Delta votes"
 
 #: apps/catalogue/reviews/abstract_models.py:63
 msgid "Product Review"
-msgstr ""
+msgstr "Avis du produit"
 
 #: apps/catalogue/reviews/abstract_models.py:64
 msgid "Product Reviews"
-msgstr ""
+msgstr "Avis du produit"
 
 #: apps/catalogue/reviews/abstract_models.py:78
 msgid "Anonymous review must have a name and an email"
-msgstr ""
+msgstr "Un avis anonyme doit impérativement avoir un mail et un nom"
 
 #: apps/catalogue/reviews/abstract_models.py:80
 msgid "Reviews must have a title"
-msgstr ""
+msgstr "Les avis doivent avoir un titre"
 
 #: apps/catalogue/reviews/abstract_models.py:82
 msgid "Reviews must have a score"
-msgstr ""
+msgstr "Les avis doivent avoir un score"
 
 #: apps/catalogue/reviews/abstract_models.py:121
 msgid "Up"
-msgstr ""
+msgstr "Haut"
 
 #: apps/catalogue/reviews/abstract_models.py:122
 msgid "Down"
-msgstr ""
+msgstr "Bas"
 
 #: apps/catalogue/reviews/abstract_models.py:124
 msgid "Delta"
-msgstr ""
+msgstr "Delta"
 
 #: apps/catalogue/reviews/abstract_models.py:131
 msgid "Vote"
-msgstr ""
+msgstr "Vote"
 
 #: apps/catalogue/reviews/abstract_models.py:132
 #: templates/oscar/dashboard/reviews/review_list.html:48
 msgid "Votes"
-msgstr ""
+msgstr "Votes"
 
 #: apps/catalogue/reviews/forms.py:11 apps/catalogue/reviews/forms.py:20
 #: apps/catalogue/reviews/forms.py:37 apps/dashboard/catalogue/forms.py:191
 msgid "This field is required"
-msgstr ""
+msgstr "Ce champ est obligatoire"
 
 #: apps/catalogue/reviews/forms.py:14
 #, python-format
 msgid "Please enter a short title (with %d fewer characters)"
-msgstr ""
+msgstr "Entrer un titre court (avec %d moins de caractères)"
 
 #: apps/catalogue/reviews/forms.py:50
 msgid "You cannot vote on your own reviews!"
-msgstr ""
+msgstr "Vous ne pouvez voter sur vos propres avis!"
 
 #: apps/catalogue/reviews/views.py:27
 msgid "You have already reviewed this product!"
-msgstr ""
+msgstr "Vous avez déjà donné votre avis sur ce produit!"
 
 #: apps/catalogue/reviews/views.py:55
 msgid "Thank you for reviewing this product"
-msgstr ""
+msgstr "Merci d'avoir donné votre avis sur ce produit"
 
 #: apps/catalogue/reviews/views.py:90
 msgid "You cannot vote on your own reviews"
-msgstr ""
+msgstr "Vous ne pouvez voter sur vos propres avis"
 
 #: apps/catalogue/reviews/views.py:98
 msgid "You have already voted on this review"
-msgstr ""
+msgstr "Vous avez déjà voté sur cet avis"
 
 #: apps/catalogue/reviews/views.py:104
 msgid "Thanks for voting!"
-msgstr ""
+msgstr "Merci pour votre vote!"
 
 #: apps/catalogue/reviews/views.py:106
 msgid "We couldn't process your vote"
-msgstr ""
+msgstr "Nous ne pouvons pas procéder à votre vote"
 
 #: apps/checkout/decorators.py:21
 msgid "You must complete this step of the checkout first"
-msgstr ""
+msgstr "Vous devez compléter cette étape avant de finaliser la commande"
 
 #: apps/checkout/decorators.py:35
 msgid "You must add some products to your basket before checking out"
-msgstr ""
+msgstr "Vous devez ajouter quelques produits avant de passer à la commande"
 
 #: apps/checkout/forms.py:23
 msgid "My email address is"
-msgstr ""
+msgstr "Mon adresse email est"
 
 #: apps/checkout/forms.py:25
 msgid "No, I am a new customer"
-msgstr ""
+msgstr "Non, je suis un nouveau"
 
 #: apps/checkout/forms.py:26
 msgid "Yes, I have a password"
-msgstr ""
+msgstr "Oui, je suis un abitué"
 
 #: apps/checkout/views.py:108 apps/checkout/views.py:246
 #: apps/checkout/views.py:327 apps/checkout/views.py:373
 msgid "You need to add some items to your basket to checkout"
-msgstr ""
+msgstr "Vous devez ajouter quelques produits avant de passer à la commande"
 
 #: apps/checkout/views.py:113
 msgid "Please either sign in or enter your email address"
-msgstr ""
+msgstr "Vous pouvez soit vous connecter à votre compte ou soit entrer votre adresse email"
 
 #: apps/checkout/views.py:119
 msgid "Your basket does not require a shipping address to be submitted"
-msgstr ""
+msgstr "Votre panier ne requière pas d'adresse de livraison pour la validation"
 
 #: apps/checkout/views.py:147
 msgid "Address deleted from your address book"
-msgstr ""
+msgstr "Adresse supprimée de votre carnet d'adresse"
 
 #: apps/checkout/views.py:185 apps/checkout/views.py:206
 #: apps/customer/views.py:469 apps/customer/views.py:487
 msgid "Address saved"
-msgstr ""
+msgstr "Adresse sauvegardée"
 
 #: apps/checkout/views.py:220
 msgid "Address deleted"
-msgstr ""
+msgstr "Adresse supprimée"
 
 #: apps/checkout/views.py:256 apps/checkout/views.py:334
 #: apps/checkout/views.py:379
 msgid "Please choose a shipping address"
-msgstr ""
+msgstr "Choisir une adresse de livraison"
 
 #: apps/checkout/views.py:264
 msgid ""
 "Shipping is not available for your chosen address - please choose another"
 msgstr ""
+"Votre adresse de livraison n'est pas valable - choisir une nouvelle adresse"
 
 #: apps/checkout/views.py:299
 msgid "Your submitted shipping method is not permitted"
-msgstr ""
+msgstr "La méthode de livraison choisit n'est pas valable"
 
 #: apps/checkout/views.py:339 apps/checkout/views.py:383
 msgid "Please choose a shipping method"
-msgstr ""
+msgstr "Choisir un mode de livrason"
 
 #: apps/checkout/views.py:468
 msgid "This order cannot be submitted as the basket is empty"
-msgstr ""
+msgstr "Cette commande ne peut être validé si le panier est vide"
 
 #: apps/checkout/views.py:583
 msgid "No order found"
-msgstr ""
+msgstr "Aucune commande trouvée"
 
 #: apps/customer/abstract_models.py:16
 #: templates/oscar/customer/email-history.html:33
 #: templates/oscar/customer/email.html:44
 #: templates/oscar/customer/profile.html:161
 msgid "Subject"
-msgstr ""
+msgstr "Sujet"
 
 #: apps/customer/abstract_models.py:24
 #: templates/oscar/dashboard/orders/order_detail.html:94
 #: templates/oscar/dashboard/orders/order_detail.html:412
 msgid "Emails"
-msgstr ""
+msgstr "Emails"
 
 #: apps/customer/abstract_models.py:27
 #, python-format
 msgid "Email to %(user)s with subject '%(subject)s'"
-msgstr ""
+msgstr "Email à %(user)s avec le sujet: '%(subject)s'"
 
 #: apps/customer/abstract_models.py:41
 msgid "Order related"
-msgstr ""
+msgstr "En référence avec la commande"
 
 #: apps/customer/abstract_models.py:42
 msgid "User related"
-msgstr ""
+msgstr "En référence avec le client"
 
 #: apps/customer/abstract_models.py:46
 msgid "Email Subject Template"
-msgstr ""
+msgstr "Modèle objet de l'email"
 
 #: apps/customer/abstract_models.py:47
 msgid "Email Body Template"
-msgstr ""
+msgstr "Modèle corps de l'email"
 
 #: apps/customer/abstract_models.py:48
 msgid "Email Body HTML Temlate"
-msgstr ""
+msgstr "Modèle cops HTML de l'email"
 
 #: apps/customer/abstract_models.py:49
 msgid "HTML template"
-msgstr ""
+msgstr "Modèle HTML"
 
 #: apps/customer/abstract_models.py:52
 msgid "SMS Template"
-msgstr ""
+msgstr "Modèle SMS"
 
 #: apps/customer/abstract_models.py:52
 msgid "SMS template"
-msgstr ""
+msgstr "Modèle SMS"
 
 #: apps/customer/abstract_models.py:67
 msgid "Communication Event Type"
-msgstr ""
+msgstr "Type d'événement de communication"
 
 #: apps/customer/abstract_models.py:68
 msgid "Communication Event Types"
-msgstr ""
+msgstr "Types d'événement de communication"
 
 #: apps/customer/forms.py:31 apps/customer/forms.py:67
 msgid "Email Address"
-msgstr ""
+msgstr "Adresse email"
 
 #: apps/customer/forms.py:49
 msgid "Please choose a less common password"
-msgstr ""
+msgstr "Veuillez choisir un mot de passe moins commun"
 
 #: apps/customer/forms.py:68
 msgid "Password"
-msgstr ""
+msgstr "Mot de passe"
 
 #: apps/customer/forms.py:71
 msgid "Confirm Password"
-msgstr ""
+msgstr "Confirmation du mot de passe"
 
 #: apps/customer/forms.py:83
 msgid "A user with that email address already exists."
-msgstr ""
+msgstr "Un utilisateur avec cette adresse mail existe déjà."
 
 #: apps/customer/forms.py:90
 msgid "The two password fields didn't match."
-msgstr ""
+msgstr "La confirmation du mot de passe ne correspond pas au premier champ."
 
 #: apps/customer/forms.py:109
 msgid "At least one date field is required."
-msgstr ""
+msgstr "Au moins un champ date est necessaire."
 
 #: apps/customer/forms.py:158 templates/oscar/customer/profile.html:49
 #: templates/oscar/dashboard/orders/order_detail.html:45
 msgid "Email address"
-msgstr ""
+msgstr "Adresse Email"
 
 #: apps/customer/profile.py:14
 msgid "Can't import profile model"
-msgstr ""
+msgstr "Impossible d'importer le modèle profile"
 
 #: apps/customer/views.py:336
 #, python-format
 msgid "'%s' unavailable for re-order"
-msgstr ""
+msgstr "'%s' impossible de re-commander"
 
 #: apps/customer/views.py:379
 #, python-format
 msgid "All available lines from order %s have been added to your basket"
-msgstr ""
+msgstr "Toutes les lignes de la commande %s ont été ajoutées au panier"
 
 #: apps/customer/views.py:403
 msgid "This product is no longer available for re-order"
-msgstr ""
+msgstr "Impossible de re-commander ce produit"
 
 #: apps/customer/views.py:433
 #, python-format
 msgid "%(qty)d copies of '%(product)s' have been added to your basket"
-msgstr ""
+msgstr "%(qty)d copies de '%(product)s' ont été ajoutés au panier"
 
 #: apps/customer/views.py:436
 #, python-format
 msgid "'%s' has been added to your basket"
-msgstr ""
+msgstr "'%s' ajouté au panier"
 
 #: apps/customer/views.py:459
 msgid "Add a new address"
-msgstr ""
+msgstr "Ajouter une nouvelle adresse"
 
 #: apps/customer/views.py:480
 msgid "Edit address"
-msgstr ""
+msgstr "Editer adresse"
 
 #: apps/customer/views.py:531
 msgid "Password updated"
-msgstr ""
+msgstr "Mot de passe mis à jour"
 
 #: apps/dashboard/catalogue/app.py:9
 #: templates/oscar/dashboard/catalogue/product_list.html:17
 #: templates/oscar/dashboard/catalogue/product_update.html:18
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:17
 msgid "Catalogue"
-msgstr ""
+msgstr "Catalogue"
 
 #: apps/dashboard/catalogue/app.py:12
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:8
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:23
 msgid "Stock alerts"
-msgstr ""
+msgstr "Alertes stock"
 
 #: apps/dashboard/catalogue/forms.py:28
 msgid "Category with the given path already exists."
-msgstr ""
+msgstr "La catégorie avec le chemin donné existe déjà."
 
 #: apps/dashboard/catalogue/forms.py:69
 #: templates/oscar/dashboard/catalogue/product_list.html:63
@@ -1442,7 +1455,7 @@ msgstr ""
 #: templates/oscar/dashboard/orders/line_detail.html:59
 #: templates/oscar/dashboard/ranges/range_product_list.html:84
 msgid "Partner"
-msgstr ""
+msgstr "Fournisseur"
 
 #: apps/dashboard/catalogue/forms.py:71 apps/dashboard/orders/forms.py:62
 #: apps/order/abstract_models.py:276 apps/partner/abstract_models.py:74
@@ -1450,77 +1463,77 @@ msgstr ""
 #: templates/oscar/dashboard/orders/line_detail.html:62
 #: templates/oscar/dashboard/ranges/range_product_list.html:85
 msgid "Partner SKU"
-msgstr ""
+msgstr "Référence fournisseur"
 
 #: apps/dashboard/catalogue/forms.py:193
 msgid "Parent products must have a title"
-msgstr ""
+msgstr "La catégorie parent doit avoir un titre"
 
 #: apps/dashboard/catalogue/forms.py:212
 msgid "A top-level product must have at least one category"
-msgstr ""
+msgstr "Un top-produit doit avoir un au moins une catégorie"
 
 #: apps/dashboard/catalogue/forms.py:215
 msgid "A variant product should not have categories"
-msgstr ""
+msgstr "Une variante d'un produit ne doit pas avoir de catégorie"
 
 #: apps/dashboard/catalogue/views.py:29
 #, python-format
 msgid "Products %(upc_filter)s %(title_filter)s"
-msgstr ""
+msgstr "Produits %(upc_filter)s %(title_filter)s"
 
 #: apps/dashboard/catalogue/views.py:57 apps/dashboard/orders/views.py:153
 #, python-format
 msgid " including an item with UPC '%s'"
-msgstr ""
+msgstr " incluant un article avec la référence UPC '%s'"
 
 #: apps/dashboard/catalogue/views.py:61 apps/dashboard/orders/views.py:149
 #, python-format
 msgid " including an item with title matching '%s'"
-msgstr ""
+msgstr " incluant un article avec le titre '%s'"
 
 #: apps/dashboard/catalogue/views.py:72 apps/dashboard/catalogue/views.py:77
 msgid "Please choose a product class"
-msgstr ""
+msgstr "Choisir le classe du produit"
 
 #: apps/dashboard/catalogue/views.py:98
 msgid "Create new product"
-msgstr ""
+msgstr "Créer un nouveau produit"
 
 #: apps/dashboard/catalogue/views.py:122 apps/dashboard/catalogue/views.py:158
 msgid "Your submitted data was not valid - please correct the below errors"
-msgstr ""
+msgstr "Vos données présentées ne sont pas valides - s'il vous plaît corriger les erreurs ci-dessous"
 
 #: apps/dashboard/catalogue/views.py:170
 #, python-format
 msgid "Created product '%s'"
-msgstr ""
+msgstr "Produit créé '%s'"
 
 #: apps/dashboard/catalogue/views.py:191
 #: templates/oscar/dashboard/catalogue/product_update.html:8
 msgid "Update product"
-msgstr ""
+msgstr "Produit mis à jour"
 
 #: apps/dashboard/catalogue/views.py:242
 #, python-format
 msgid "Updated product '%s'"
-msgstr ""
+msgstr "Produit '%s' mis à jour"
 
 #: apps/dashboard/catalogue/views.py:264
 #, python-format
 msgid "Alerts with status \"%s\""
-msgstr ""
+msgstr "Alertes avec le statut \"%s\""
 
 #: apps/dashboard/catalogue/views.py:267
 msgid "All alerts"
-msgstr ""
+msgstr "Toutes les alertes"
 
 #: apps/dashboard/offers/app.py:9 templates/oscar/dashboard/index.html:146
 #: templates/oscar/dashboard/offers/offer_delete.html:16
 #: templates/oscar/dashboard/offers/offer_detail.html:18
 #: templates/oscar/dashboard/offers/step_form.html:16
 msgid "Offers"
-msgstr ""
+msgstr "Offres"
 
 #: apps/dashboard/offers/forms.py:13 apps/dashboard/vouchers/forms.py:17
 #: templates/oscar/dashboard/offers/offer_delete.html:37
@@ -1530,7 +1543,7 @@ msgstr ""
 #: templates/oscar/dashboard/vouchers/voucher_delete.html:36
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:36
 msgid "Start date"
-msgstr ""
+msgstr "Date de début"
 
 #: apps/dashboard/offers/forms.py:15 apps/dashboard/vouchers/forms.py:18
 #: templates/oscar/dashboard/offers/offer_delete.html:38
@@ -1540,96 +1553,96 @@ msgstr ""
 #: templates/oscar/dashboard/vouchers/voucher_delete.html:37
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:37
 msgid "End date"
-msgstr ""
+msgstr "Date de fin"
 
 #: apps/dashboard/offers/forms.py:39
 #: templates/oscar/dashboard/offers/offer_list.html:47
 #: templates/oscar/dashboard/orders/order_detail.html:388
 msgid "Offer name"
-msgstr ""
+msgstr "Nom de l'offre"
 
 #: apps/dashboard/offers/forms.py:40
 #: templates/oscar/dashboard/vouchers/voucher_list.html:47
 msgid "Is active?"
-msgstr ""
+msgstr "Actif?"
 
 #: apps/dashboard/offers/views.py:34
 msgid "All offers"
-msgstr ""
+msgstr "Toutes les offres"
 
 #: apps/dashboard/offers/views.py:44
 #, python-format
 msgid "Offers matching '%s'"
-msgstr ""
+msgstr "Offres correspondantes '%s'"
 
 #: apps/dashboard/offers/views.py:73 apps/dashboard/offers/views.py:81
 #, python-format
 msgid "%s step not complete"
-msgstr ""
+msgstr "%s étape incomplète"
 
 #: apps/dashboard/offers/views.py:152
 #, python-format
 msgid "Edit %(step_name)s for offer #%(offer_id)d"
-msgstr ""
+msgstr "Editer %(step_name)s pour l'offre #%(offer_id)d"
 
 #: apps/dashboard/offers/views.py:156
 #, python-format
 msgid "Create new offer: %s"
-msgstr ""
+msgstr "Créer une nouvelle offre: %s"
 
 #: apps/dashboard/offers/views.py:242
 #, python-format
 msgid "Offer '%s' updated"
-msgstr ""
+msgstr "Offre '%s' mis à jour"
 
 #: apps/dashboard/offers/views.py:244
 #, python-format
 msgid "Offer '%s' created!"
-msgstr ""
+msgstr "Offre '%s' créée"
 
 #: apps/dashboard/offers/views.py:251
 #, python-format
 msgid "Preview offer #%d"
-msgstr ""
+msgstr "Prévisualiser l'offre #%d"
 
 #: apps/dashboard/offers/views.py:252
 msgid "Preview offer"
-msgstr ""
+msgstr "Prévisualiser l'offre"
 
 #: apps/dashboard/orders/app.py:11
 #: templates/oscar/dashboard/orders/statistics.html:21
 msgid "Statistics"
-msgstr ""
+msgstr "Statistiques"
 
 #: apps/dashboard/orders/forms.py:14
 #: templates/oscar/catalogue/partials/product.html:36
 #: templates/oscar/promotions/singleproduct.html:24
 msgid "From"
-msgstr ""
+msgstr "De"
 
 #: apps/dashboard/orders/forms.py:15
 msgid "To"
-msgstr ""
+msgstr "A"
 
 #: apps/dashboard/orders/forms.py:21 apps/dashboard/orders/forms.py:44
 #: apps/dashboard/orders/views.py:98
 msgid "All orders"
-msgstr ""
+msgstr "Toutes les commandes"
 
 #: apps/dashboard/orders/forms.py:33
 #, python-format
 msgid "Orders placed between %(date_from)s and %(date_to)s"
-msgstr ""
+msgstr "Commandes entre %(date_from)s et %(date_to)s"
 
 #: apps/dashboard/orders/forms.py:38
 #, python-format
 msgid "Orders placed since %s"
-msgstr ""
+msgstr "Commandes effectuées depuis %s"
 
 #: apps/dashboard/orders/forms.py:41
 #, python-format
 msgid "Orders placed until %s"
-msgstr ""
+msgstr "Commandes effectuées jusqu'à %s"
 
 #: apps/dashboard/orders/forms.py:58 apps/dashboard/orders/views.py:222
 #: apps/order/abstract_models.py:21 apps/order/reports.py:19
@@ -1639,47 +1652,47 @@ msgstr ""
 #: templates/oscar/dashboard/reports/partials/order_report.html:9
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:58
 msgid "Order number"
-msgstr ""
+msgstr "Numéro commande"
 
 #: apps/dashboard/orders/forms.py:59 apps/dashboard/reviews/forms.py:29
 msgid "Customer name"
-msgstr ""
+msgstr "Nom cient"
 
 #: apps/dashboard/orders/forms.py:60
 msgid "Product name"
-msgstr ""
+msgstr "Nom produit"
 
 #: apps/dashboard/orders/forms.py:67 apps/dashboard/reports/forms.py:18
 #: apps/dashboard/reviews/forms.py:27
 msgid "Date from"
-msgstr ""
+msgstr "Date depuis"
 
 #: apps/dashboard/orders/forms.py:68 apps/dashboard/reports/forms.py:19
 msgid "Date to"
-msgstr ""
+msgstr "Date jusqu'à"
 
 #: apps/dashboard/orders/forms.py:70 apps/voucher/reports.py:19
 #: templates/oscar/basket/basket.html:98
 #: templates/oscar/dashboard/orders/order_detail.html:387
 #: templates/oscar/dashboard/reports/partials/voucher_report.html:9
 msgid "Voucher code"
-msgstr ""
+msgstr "Code bon de réduction"
 
 #: apps/dashboard/orders/forms.py:73
 msgid "Payment method"
-msgstr ""
+msgstr "Mode de paiement"
 
 #: apps/dashboard/orders/forms.py:76 apps/promotions/models.py:146
 msgid "HTML"
-msgstr ""
+msgstr "HTML"
 
 #: apps/dashboard/orders/forms.py:77
 msgid "CSV"
-msgstr ""
+msgstr "CVS"
 
 #: apps/dashboard/orders/forms.py:79
 msgid "Get results as"
-msgstr ""
+msgstr "Sous le format"
 
 #: apps/dashboard/orders/views.py:72
 #, python-format
@@ -1688,174 +1701,178 @@ msgid ""
 "%(sku_filter)s %(date_filter)s%(voucher_filter)s %(payment_filter)s "
 "%(status_filter)s"
 msgstr ""
+"%(main_filter)s %(name_filter)s %(title_filter)s%(upc_filter)s "
+"%(sku_filter)s %(date_filter)s%(voucher_filter)s %(payment_filter)s "
+"%(status_filter)s"
 
 #: apps/dashboard/orders/views.py:114
 msgid "Orders without an order status"
-msgstr ""
+msgstr "Commandes sans statut commande"
 
 #: apps/dashboard/orders/views.py:117
 #, python-format
 msgid "Orders with status '%s'"
-msgstr ""
+msgstr "Commandes avec statut de commande '%s'"
 
 #: apps/dashboard/orders/views.py:134
 #, python-format
 msgid "Orders with number starting with \"%s\""
-msgstr ""
+msgstr "Commandes avec un numéro commencant par \"%s\""
 
 #: apps/dashboard/orders/views.py:145 apps/dashboard/reviews/views.py:117
 #, python-format
 msgid " with customer name matching '%s'"
-msgstr ""
+msgstr "avec le nom du client correspondant à '%s'"
 
 #: apps/dashboard/orders/views.py:157
 #, python-format
 msgid " including an item with ID '%s'"
-msgstr ""
+msgstr " incluant un article avec la référence '%s'"
 
 #: apps/dashboard/orders/views.py:163
 #, python-format
 msgid " placed between %(start_date)s and %(end_date)s"
-msgstr ""
+msgstr " placé entre %(start_date)s et %(end_date)s"
 
 #: apps/dashboard/orders/views.py:168
 #, python-format
 msgid " placed since %s"
-msgstr ""
+msgstr " placé depuis %s"
 
 #: apps/dashboard/orders/views.py:172
 #, python-format
 msgid " placed before %s"
-msgstr ""
+msgstr " placé avant %s"
 
 #: apps/dashboard/orders/views.py:176
 #, python-format
 msgid " using voucher '%s'"
-msgstr ""
+msgstr " utilisant le bon de réduction '%s'"
 
 #: apps/dashboard/orders/views.py:180
 #, python-format
 msgid " paid for by %s"
-msgstr ""
+msgstr " payés par %s"
 
 #: apps/dashboard/orders/views.py:184
 #, python-format
 msgid " with status %s"
-msgstr ""
+msgstr " avec le statut %s"
 
 #: apps/dashboard/orders/views.py:223
 msgid "Order value"
-msgstr ""
+msgstr "Valeur commande"
 
 #: apps/dashboard/orders/views.py:224
 #: templates/oscar/dashboard/orders/order_detail.html:63
 #: templates/oscar/dashboard/orders/order_list.html:89
 msgid "Date of purchase"
-msgstr ""
+msgstr "Date d'achat"
 
 #: apps/dashboard/orders/views.py:225
 #: templates/oscar/dashboard/orders/order_list.html:90
 msgid "Number of items"
-msgstr ""
+msgstr "Nombre d'articles"
 
 #: apps/dashboard/orders/views.py:226
 msgid "Order status"
-msgstr ""
+msgstr "Statut commande"
 
 #: apps/dashboard/orders/views.py:227
 msgid "Customer email address"
-msgstr ""
+msgstr "Adresse email client"
 
 #: apps/dashboard/orders/views.py:228
 msgid "Deliver to name"
-msgstr ""
+msgstr "Nom livraison"
 
 #: apps/dashboard/orders/views.py:229
 msgid "Bill to name"
-msgstr ""
+msgstr "Nom facturation"
 
 #: apps/dashboard/orders/views.py:315
 msgid "You must select some lines to act on"
-msgstr ""
+msgstr "Sélectionnez quelques lignes"
 
 #: apps/dashboard/orders/views.py:319
 msgid "No valid action submitted"
-msgstr ""
+msgstr "Aucune action valable soumise"
 
 #: apps/dashboard/orders/views.py:330
 msgid "Note saved"
-msgstr ""
+msgstr "Note sauvegardée"
 
 #: apps/dashboard/orders/views.py:345
 msgid "Note cannot be deleted"
-msgstr ""
+msgstr "Note ne peut être supprimée"
 
 #: apps/dashboard/orders/views.py:347
 msgid "Note deleted"
-msgstr ""
+msgstr "Note supprimée"
 
 #: apps/dashboard/orders/views.py:354 apps/dashboard/orders/views.py:377
 #, python-format
 msgid "The new status '%s' is not valid"
-msgstr ""
+msgstr "Le nouveau statut '%s' n'est pas valide"
 
 #: apps/dashboard/orders/views.py:357
 #, python-format
 msgid "The new status '%s' is not valid for this order"
-msgstr ""
+msgstr "Le nouveau statut '%s' n'est pas valide pour cette commande"
 
 #: apps/dashboard/orders/views.py:364 apps/dashboard/orders/views.py:447
 #, python-format
 msgid "Unable to change order status due to payment error: %s"
-msgstr ""
+msgstr "Impossible de changer le statut à cause d'une erreur de paiment: %s"
 
 #: apps/dashboard/orders/views.py:366
 #, python-format
 msgid "Order status changed from '%(old_status)s' to '%(new_status)s'"
-msgstr ""
+msgstr "Statut de la command changé de '%(old_status)s' à '%(new_status)s'"
 
 #: apps/dashboard/orders/views.py:382
 #, python-format
 msgid "'%(status)s' is not a valid new status for line %(line_id)d"
-msgstr ""
+msgstr "'%(status)s' n'est pas statut valable pour la ligne %(line_id)d"
 
 #: apps/dashboard/orders/views.py:391
 #, python-format
 msgid ""
 "Status of line #%(line_id)d changed from '%(old_status)s' to '%(new_status)s'"
 msgstr ""
+"Le statut de la ligne #%(line_id)d changé de '%(old_status)s' à '%(new_status)s'"
 
 #: apps/dashboard/orders/views.py:408 apps/dashboard/orders/views.py:441
 #, python-format
 msgid "The event type '%s' is not valid"
-msgstr ""
+msgstr "Le type d'événement '%s' n'est pas valide"
 
 #: apps/dashboard/orders/views.py:417 apps/dashboard/orders/views.py:419
 #, python-format
 msgid "Unable to create shipping event: %s"
-msgstr ""
+msgstr "Impossible de créer un événement d'expédition: %s"
 
 #: apps/dashboard/orders/views.py:421
 #, python-format
 msgid "Unable to create shipping event due to payment error: %s"
-msgstr ""
+msgstr "Impossible de créer un événment d'expédition à cause de l'érreur de paiement: %s"
 
 #: apps/dashboard/orders/views.py:423
 msgid "Shipping event created"
-msgstr ""
+msgstr "Evénement d'expédition créé"
 
 #: apps/dashboard/orders/views.py:431 apps/dashboard/orders/views.py:464
 msgid "Please choose a valid amount"
-msgstr ""
+msgstr "Choisir un montant valable"
 
 #: apps/dashboard/orders/views.py:449
 msgid "Payment event created"
-msgstr ""
+msgstr "Evénement de paiement créé"
 
 #: apps/dashboard/orders/views.py:506
 #, python-format
 msgid "%(field)s changed from '%(old_value)s' to '%(new_value)s'"
-msgstr ""
+msgstr "%(field)s changé de '%(old_value)s' en '%(new_value)s'"
 
 #: apps/dashboard/orders/views.py:532
 #, python-format
@@ -1863,55 +1880,58 @@ msgid ""
 "Delivery address updated:\n"
 "%s"
 msgstr ""
+"Adresse de livraison mise à jour:\n"
+"%s"
 
 #: apps/dashboard/orders/views.py:538
 msgid "Delivery address updated"
-msgstr ""
+msgstr "Adresse de livraison mise à jour"
 
 #: apps/dashboard/pages/forms.py:24
 msgid ""
 "Example: '/about/contact/'. Make sure to have leading and trailing slashes."
 msgstr ""
+"Example: '/about/contact/'. important: laisser les /."
 
 #: apps/dashboard/pages/views.py:36
 msgid "All pages"
-msgstr ""
+msgstr "Toutes les pages"
 
 #: apps/dashboard/pages/views.py:49
 #, python-format
 msgid " with title containing '%s'"
-msgstr ""
+msgstr " contenant le titre '%s'"
 
 #: apps/dashboard/pages/views.py:78
 msgid "Create New Page"
-msgstr ""
+msgstr "Créer une nouelle page"
 
 #: apps/dashboard/pages/views.py:112
 #, python-format
 msgid "Created new page '%s'"
-msgstr ""
+msgstr "Nouvelle page créée: '%s'"
 
 #: apps/dashboard/pages/views.py:150
 #, python-format
 msgid "Updated page '%s'"
-msgstr ""
+msgstr "Page '%s' mise à jour"
 
 #: apps/dashboard/pages/views.py:166
 #, python-format
 msgid "Deleted page '%s'"
-msgstr ""
+msgstr "Page '%s' supprimée"
 
 #: apps/dashboard/promotions/app.py:10
 msgid "Content"
-msgstr ""
+msgstr "Contenu"
 
 #: apps/dashboard/promotions/app.py:11
 msgid "Re-usable content blocks"
-msgstr ""
+msgstr "Blocs ré-utilisable"
 
 #: apps/dashboard/promotions/app.py:12
 msgid "Content blocks by page"
-msgstr ""
+msgstr "Blocs par page"
 
 #: apps/dashboard/promotions/app.py:13 apps/promotions/models.py:90
 #: templates/oscar/dashboard/pages/delete.html:16
@@ -1920,126 +1940,126 @@ msgstr ""
 #: templates/oscar/dashboard/pages/update.html:16
 #: templates/oscar/flatpages/help.html:9
 msgid "Pages"
-msgstr ""
+msgstr "Pages"
 
 #: apps/dashboard/promotions/forms.py:19
 msgid "Promotion type"
-msgstr ""
+msgstr "Type de promotion"
 
 #: apps/dashboard/promotions/forms.py:41 apps/promotions/models.py:26
 msgid "Position"
-msgstr ""
+msgstr "Position"
 
 #: apps/dashboard/promotions/forms.py:42
 msgid "Where in the page this content block will appear"
-msgstr ""
+msgstr "Position dans la page pour ce bloc de contenu"
 
 #: apps/dashboard/promotions/views.py:123
 msgid "Promotion removed successfully"
-msgstr ""
+msgstr "Promotion supprimée avec succès"
 
 #: apps/dashboard/promotions/views.py:136
 msgid "Promotion created successfully"
-msgstr ""
+msgstr "Promotion créée avec succès"
 
 #: apps/dashboard/promotions/views.py:149
 #, python-format
 msgid "Create a new %s content block"
-msgstr ""
+msgstr "Créer un nouveau %s bloc"
 
 #: apps/dashboard/promotions/views.py:188
 msgid "Product list promotion created"
-msgstr ""
+msgstr "La promotion de la liste de produit créé"
 
 #: apps/dashboard/promotions/views.py:206
 msgid "Update content block"
-msgstr ""
+msgstr "Mis à jour du bloc"
 
 #: apps/dashboard/promotions/views.py:222
 msgid "Promotion updated successfully"
-msgstr ""
+msgstr "Promotion mis à jour avec succès"
 
 #: apps/dashboard/promotions/views.py:231
 #, python-format
 msgid "Content block '%(block)s' added to page '%(page)s'"
-msgstr ""
+msgstr "Bloc '%(block)s' ajouté à la page '%(page)s'"
 
 #: apps/dashboard/promotions/views.py:246
 msgid "No link found to delete"
-msgstr ""
+msgstr "Aucun lien trouvé à supprimer"
 
 #: apps/dashboard/promotions/views.py:250
 #, python-format
 msgid "Promotion removed from page '%s'"
-msgstr ""
+msgstr "La promotion a été enlevé de la page '%s'"
 
 #: apps/dashboard/promotions/views.py:290
 msgid "Product list promotion updated"
-msgstr ""
+msgstr "La promotion de la liste de produit mise à jour"
 
 #: apps/dashboard/promotions/views.py:307
 msgid "Promotion deleted successfully"
-msgstr ""
+msgstr "Promotion supprimée avec succès"
 
 #: apps/dashboard/ranges/app.py:9 apps/offer/models.py:316
 #: templates/oscar/dashboard/ranges/range_delete.html:16
 #: templates/oscar/dashboard/ranges/range_form.html:16
 #: templates/oscar/dashboard/ranges/range_product_list.html:16
 msgid "Ranges"
-msgstr ""
+msgstr "Packs"
 
 #: apps/dashboard/ranges/forms.py:20
 msgid "Product SKUs or UPCs"
-msgstr ""
+msgstr "Référence produit"
 
 #: apps/dashboard/ranges/forms.py:23
 msgid "You can paste in a selection of SKUs or UPCs"
-msgstr ""
+msgstr "Vous pouvez coller une sélection de référence"
 
 #: apps/dashboard/ranges/forms.py:24
 msgid "File of SKUs or UPCs"
-msgstr ""
+msgstr "Fichier de références"
 
 #: apps/dashboard/ranges/forms.py:25
 msgid "Either comma-separated, or one identifier per line"
-msgstr ""
+msgstr "Séparer par des virgules"
 
 #: apps/dashboard/ranges/forms.py:34
 msgid "You must submit either a list of SKU/UPCs or a file"
-msgstr ""
+msgstr "Vous pouvez soit copier une liste de référence ou charger un fichier"
 
 #: apps/dashboard/ranges/forms.py:52 apps/dashboard/ranges/views.py:140
 #, python-format
 msgid "The products with SKUs or UPCs matching %s are already in this range"
-msgstr ""
+msgstr "Les produits avec la référence %s sont déjà dans le pack"
 
 #: apps/dashboard/ranges/forms.py:59
 #, python-format
 msgid "No products exist with a SKU or UPC matching %s"
-msgstr ""
+msgstr "Aucun produit correspondant à la référence %s"
 
 #: apps/dashboard/ranges/views.py:44
 msgid "Create range"
-msgstr ""
+msgstr "Créer un pack"
 
 #: apps/dashboard/ranges/views.py:62
 msgid "Update range"
-msgstr ""
+msgstr "Mettre à jour pack"
 
 #: apps/dashboard/ranges/views.py:109
 #, python-format
 msgid "Removed %d products from range"
-msgstr ""
+msgstr "Le produit %d supprimé du pack"
 
 #: apps/dashboard/ranges/views.py:133
 #, python-format
 msgid "Products added to range: %d"
-msgstr ""
+msgstr "Produits ajoutés au pack: %d"
 
 #: apps/dashboard/ranges/views.py:145
 #, python-format
 msgid "No product was found with SKU or UPC matching %s"
-msgstr ""
+msgstr "Aucun produit correspondant à la référence %s"
 
 #: apps/dashboard/ranges/views.py:155
 #, python-format
@@ -2047,32 +2067,34 @@ msgid ""
 "File processed: %(new_skus)d products added, %(dupe_skus)d duplicate "
 "identifiers, %(unknown_skus)d identifiers were not found"
 msgstr ""
+"Fichiers procédéq: %(new_skus)d produits ajoutés, %(dupe_skus)d identifiants "
+"dupliqués, %(unknown_skus)d identifiants non trouvé"
 
 #: apps/dashboard/reports/app.py:9
 #: templates/oscar/dashboard/reports/index.html:7
 msgid "Reports"
-msgstr ""
+msgstr "Rapports"
 
 #: apps/dashboard/reports/forms.py:15
 msgid "Only the offer and order reports use the selected date range"
-msgstr ""
+msgstr "Only the offer and order reports use the selected date range"
 
 #: apps/dashboard/reports/forms.py:20
 msgid "The report is inclusive of this date"
-msgstr ""
+msgstr "The report is inclusive of this date"
 
 #: apps/dashboard/reports/forms.py:25
 msgid "Your start date must be before your end date"
-msgstr ""
+msgstr "La date de début doit être antérieure à la date de fin"
 
 #: apps/dashboard/reports/reports.py:24
 #, python-format
 msgid "%(report_filter)s between %(start_date)s and %(end_date)s"
-msgstr ""
+msgstr "%(report_filter)s entre %(start_date)s et %(end_date)s"
 
 #: apps/dashboard/reports/views.py:22
 msgid "You do not have access to this report"
-msgstr ""
+msgstr "Vous n'avez pas accès à ce rapport"
 
 #: apps/dashboard/reviews/app.py:9
 #: templates/oscar/dashboard/reviews/review_delete.html:16
@@ -2084,15 +2106,15 @@ msgstr ""
 #: templates/oscar/dashboard/users/detail.html:97
 #: templates/oscar/dashboard/users/detail.html:155
 msgid "Reviews"
-msgstr ""
+msgstr "Avis"
 
 #: apps/dashboard/reviews/forms.py:24 apps/promotions/models.py:67
 msgid "Keyword"
-msgstr ""
+msgstr "Mot clé"
 
 #: apps/dashboard/reviews/forms.py:28
 msgid "to"
-msgstr ""
+msgstr "à"
 
 #: apps/dashboard/reviews/views.py:26
 #, python-format
@@ -2100,35 +2122,37 @@ msgid ""
 "%(main_filter)s %(date_filter)s %(status_filter)s%(kw_filter)s "
 "%(name_filter)s"
 msgstr ""
+"%(main_filter)s %(date_filter)s %(status_filter)s%(kw_filter)s "
+"%(name_filter)s"
 
 #: apps/dashboard/reviews/views.py:54
 #, python-format
 msgid " created between %(start_date)s and %(end_date)s"
-msgstr ""
+msgstr " créé entre %(start_date)s et %(end_date)s"
 
 #: apps/dashboard/reviews/views.py:60
 #, python-format
 msgid " created after %s"
-msgstr ""
+msgstr " créé après %s"
 
 #: apps/dashboard/reviews/views.py:65
 #, python-format
 msgid " created before %s"
-msgstr ""
+msgstr " créé avant %s"
 
 #: apps/dashboard/reviews/views.py:72
 msgid "All reviews"
-msgstr ""
+msgstr "Tous les avis"
 
 #: apps/dashboard/reviews/views.py:91
 #, python-format
 msgid " with status matching '%s'"
-msgstr ""
+msgstr " avec un statut correspondant '%s'"
 
 #: apps/dashboard/reviews/views.py:98
 #, python-format
 msgid " with keyword matching '%s'"
-msgstr ""
+msgstr " avec le mot clé correpondant '%s'"
 
 #: apps/dashboard/users/app.py:9 templates/oscar/dashboard/index.html:79
 #: templates/oscar/dashboard/users/detail.html:18
@@ -2136,30 +2160,30 @@ msgstr ""
 #: templates/oscar/dashboard/users/index.html:17
 #: templates/oscar/dashboard/users/index.html:23
 msgid "Customers"
-msgstr ""
+msgstr "Clients"
 
 #: apps/dashboard/users/views.py:20
 #, python-format
 msgid "%(main_filter)s %(email_filter)s %(name_filter)s"
-msgstr ""
+msgstr "%(main_filter)s %(email_filter)s %(name_filter)s"
 
 #: apps/dashboard/users/views.py:26
 msgid "All users"
-msgstr ""
+msgstr "Tous les clients"
 
 #: apps/dashboard/users/views.py:44
 #, python-format
 msgid " with email matching '%s'"
-msgstr ""
+msgstr " avec un email correspondant à '%s'"
 
 #: apps/dashboard/users/views.py:54
 #, python-format
 msgid " with name matching '%s'"
-msgstr ""
+msgstr " avec le nom correspondant à '%s'"
 
 #: apps/dashboard/users/views.py:75
 msgid "Users' status successfully changed"
-msgstr ""
+msgstr "Le statut du client modifié avec succès"
 
 #: apps/dashboard/vouchers/app.py:9 apps/voucher/abstract_models.py:47
 #: templates/oscar/basket/basket.html:135
@@ -2170,116 +2194,121 @@ msgstr ""
 #: templates/oscar/dashboard/vouchers/voucher_form.html:16
 #: templates/oscar/dashboard/vouchers/voucher_list.html:21
 msgid "Vouchers"
-msgstr ""
+msgstr "Bons de réduction"
 
 #: apps/dashboard/vouchers/forms.py:19 apps/voucher/abstract_models.py:31
 #: templates/oscar/dashboard/vouchers/voucher_delete.html:38
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:38
 msgid "Usage"
-msgstr ""
+msgstr "Usage"
 
 #: apps/dashboard/vouchers/forms.py:22
 msgid "Which products get a discount?"
-msgstr ""
+msgstr "Quels sont les produits bénéficiant d'une réduction?"
 
 #: apps/dashboard/vouchers/forms.py:26
 #, python-format
 msgid "% off products in range"
-msgstr ""
+msgstr "% de réduction sur les produits du pack"
 
 #: apps/dashboard/vouchers/forms.py:27
 msgid "Fixed amount off products in range"
-msgstr ""
+msgstr "Fixer le nombre de produit dans le pack"
 
 #: apps/dashboard/vouchers/forms.py:31
 msgid "Discount type"
-msgstr ""
+msgstr "Type de réduction"
 
 #: apps/dashboard/vouchers/forms.py:34
 msgid "Discount value"
-msgstr ""
+msgstr "Valeur de la réduction"
 
 #: apps/dashboard/vouchers/forms.py:48
 #, python-format
 msgid "The name '%s' is already in use"
-msgstr ""
+msgstr "Le nom '%s' éxiste déjà"
 
 #: apps/dashboard/vouchers/forms.py:61
 #, python-format
 msgid "The code '%s' is already in use"
-msgstr ""
+msgstr "Le code '%s' est déjà utilisé"
 
 #: apps/dashboard/vouchers/forms.py:69
 msgid "The start date must be before the end date"
-msgstr ""
+msgstr "La date de début doit être antérieure à la date de fin"
 
 #: apps/dashboard/vouchers/views.py:25
 #, python-format
 msgid "%(main_filter)s %(name_filter)s %(code_filter)s"
-msgstr ""
+msgstr "%(main_filter)s %(name_filter)s %(code_filter)s"
 
 #: apps/dashboard/vouchers/views.py:29
 msgid "All vouchers"
-msgstr ""
+msgstr "Tous les bons de réduction"
 
 #: apps/dashboard/vouchers/views.py:45
 #, python-format
 msgid "with name matching '%s'"
-msgstr ""
+msgstr "correspondant au nom '%s'"
 
 #: apps/dashboard/vouchers/views.py:48
 #, python-format
 msgid "with code '%s'"
-msgstr ""
+msgstr " avec le code '%s'"
 
 #: apps/dashboard/vouchers/views.py:52
 msgid "Active vouchers"
-msgstr ""
+msgstr "Bon de réduction actif"
 
 #: apps/dashboard/vouchers/views.py:70
 msgid "Create voucher"
-msgstr ""
+msgstr "Créer un bon de réduction"
 
 #: apps/dashboard/vouchers/views.py:103
 msgid "Voucher created"
-msgstr ""
+msgstr "Bon de réduction créé"
 
 #: apps/dashboard/vouchers/views.py:130
 msgid "Update voucher"
-msgstr ""
+msgstr "Mettre à jour le Bon de réduction"
 
 #: apps/dashboard/vouchers/views.py:175
 msgid "Voucher updated"
-msgstr ""
+msgstr "Bon de réduction mis à jour"
 
 #: apps/dashboard/vouchers/views.py:185
 msgid "Voucher deleted"
-msgstr ""
+msgstr "Bon de réduction supprimé"
 
 #: apps/offer/models.py:22
 msgid ""
 "This is displayed within the customer's\n"
 "                            basket"
 msgstr ""
+"Il est affiché dans le panier du\n"
+"                            client"
 
 #: apps/offer/models.py:38
 msgid "Site offer - available to all users"
-msgstr ""
+msgstr "Offre site - valable pour tous les clients"
 
 #: apps/offer/models.py:39
 msgid ""
 "Voucher offer - only available after entering the appropriate voucher code"
 msgstr ""
+"Bon de réduction - seulement valable après avoir entré le code du bon de réduction"
 
 #: apps/offer/models.py:40
 msgid "User offer - available to certain types of user"
-msgstr ""
+msgstr "Offre client - valable pour certains types de clients"
 
 #: apps/offer/models.py:41
 msgid ""
 "Session offer - temporary offer, available for a user for the duration of "
 "their session"
 msgstr ""
+"Offre temporaire - vente flash, valable pour tous les client pour un temps"
+"determiné"
 
 #: apps/offer/models.py:43 apps/offer/models.py:170 apps/offer/models.py:228
 #: apps/order/abstract_models.py:447 apps/payment/models.py:20
@@ -2287,66 +2316,69 @@ msgstr ""
 #: templates/oscar/dashboard/promotions/page_detail.html:40
 #: templates/oscar/dashboard/promotions/promotion_list.html:40
 msgid "Type"
-msgstr ""
+msgstr "Type"
 
 #: apps/offer/models.py:51 apps/voucher/abstract_models.py:33
 msgid "Start Date"
-msgstr ""
+msgstr "Date de départ"
 
 #: apps/offer/models.py:52 apps/voucher/abstract_models.py:34
 msgid "End Date"
-msgstr ""
+msgstr "Date de fin"
 
 #: apps/offer/models.py:53
 msgid ""
 "Offers are not active on their end\n"
 "                                date, only the days preceding"
 msgstr ""
+"Les offres ne sont pas actives à leur date\n"
+"                                 de fin, seulement les jours précédents"
 
 #: apps/offer/models.py:57
 msgid "Priority"
-msgstr ""
+msgstr "Priorité"
 
 #: apps/offer/models.py:58
 msgid "The highest priority offers are applied first"
-msgstr ""
+msgstr "La priorité la plus haute sera appliqué en premier"
 
 #: apps/offer/models.py:61
 msgid "Total Discount"
-msgstr ""
+msgstr "Total des réductions"
 
 #: apps/offer/models.py:62
 msgid "Number of Orders"
-msgstr ""
+msgstr "Nombre de commande"
 
 #: apps/offer/models.py:69
 msgid "URL redirect (optional)"
-msgstr ""
+msgstr "Redirection URL (optionnel)"
 
 #: apps/offer/models.py:76
 msgid "Conditional Offer"
-msgstr ""
+msgstr "Offre conditionnelle"
 
 #: apps/offer/models.py:77
 msgid "Conditional Offers"
-msgstr ""
+msgstr "Offres conditionnelle"
 
 #: apps/offer/models.py:92 apps/voucher/abstract_models.py:54
 msgid "End date should be later than start date"
-msgstr ""
+msgstr "La date de début doit être antérieure à la date de fin"
 
 #: apps/offer/models.py:165
 msgid "Depends on number of items in basket that are in condition range"
-msgstr ""
+msgstr "Dépend du nombre d'article dans le panier qui est dans les caractéristiques du pack"
 
 #: apps/offer/models.py:166
 msgid "Depends on value of items in basket that are in condition range"
-msgstr ""
+msgstr "Dépend de la valeur des articles dans le panier qui est dans les caractéristiques du pack"
 
 #: apps/offer/models.py:167
 msgid ""
 "Needs to contain a set number of DISTINCT items from the condition range"
 msgstr ""
+"Needs to contain a set number of DISTINCT items from the condition range"
 
 #: apps/offer/models.py:174
 #: templates/oscar/dashboard/offers/offer_delete.html:39
@@ -2354,53 +2386,55 @@ msgstr ""
 #: templates/oscar/dashboard/offers/offer_list.html:51
 #: templates/oscar/dashboard/offers/preview.html:11
 msgid "Condition"
-msgstr ""
+msgstr "Condition"
 
 #: apps/offer/models.py:175
 msgid "Conditions"
-msgstr ""
+msgstr "Conditions"
 
 #: apps/offer/models.py:179
 #, python-format
 msgid "Basket includes %(count)d item(s) from %(range)s"
-msgstr ""
+msgstr "Le panier contient %(count)d item(s) de %(range)s"
 
 #: apps/offer/models.py:182
 #, python-format
 msgid "Basket includes %(count)d distinct products from %(range)s"
-msgstr ""
+msgstr "Le panier contient %(count)d produits distincts de %(range)s"
 
 #: apps/offer/models.py:184
 #, python-format
 msgid "Basket includes %(count)d value from %(range)s"
-msgstr ""
+msgstr "Le panier contient une valeur de %(count)d de %(range)s"
 
 #: apps/offer/models.py:222
 #, python-format
-msgid "Discount is a % of the product's value"
-msgstr ""
+msgid "Discount is a %% of the product's value"
+msgstr "La réduction est un pourcentage de la valeur du produit"
 
 #: apps/offer/models.py:223
 msgid "Discount is a fixed amount off the product's value"
-msgstr ""
+msgstr "La réduction est un montant fixe de la veleur du produit"
 
 #: apps/offer/models.py:224
 msgid "Discount is to give the cheapest product for free"
-msgstr ""
+msgstr "La réduction est de donner le produit le moins cher gratuit"
 
 #: apps/offer/models.py:225
 msgid "Get the products that meet the condition for a fixed price"
-msgstr ""
+msgstr "Obtener les produits qui correspondent à la condition pour un prix fixe"
 
 #: apps/offer/models.py:236
 msgid "Max Affected Items"
-msgstr ""
+msgstr "Maxi des produits affectés"
 
 #: apps/offer/models.py:237
 msgid ""
 "Set this to prevent the discount consuming all items within the range that "
 "are in the basket."
 msgstr ""
+"Set this to prevent the discount consuming all items within the range that "
+"are in the basket."
 
 #: apps/offer/models.py:240
 #: templates/oscar/dashboard/offers/offer_delete.html:40
@@ -2408,138 +2442,138 @@ msgstr ""
 #: templates/oscar/dashboard/offers/offer_list.html:52
 #: templates/oscar/dashboard/offers/preview.html:12
 msgid "Benefit"
-msgstr ""
+msgstr "Benefice"
 
 #: apps/offer/models.py:241
 msgid "Benefits"
-msgstr ""
+msgstr "Benefices"
 
 #: apps/offer/models.py:245
 #, python-format
 msgid "%(value)s%% discount on %(range)s"
-msgstr ""
+msgstr "%(value)s%% de réduction sur %(range)s"
 
 #: apps/offer/models.py:247
 #, python-format
 msgid "Cheapest product is free from %s"
-msgstr ""
+msgstr "Le produit le moins cher est gratuit à partir de %s"
 
 #: apps/offer/models.py:249
 #, python-format
 msgid "The products that meet the condition are sold for %s"
-msgstr ""
+msgstr "Les prodits remplissants les conditions sont vendus pour %s"
 
 #: apps/offer/models.py:251
 #, python-format
 msgid "%(value).2f discount on %(range)s"
-msgstr ""
+msgstr "%(value).2f de réduction sur %(range)s"
 
 #: apps/offer/models.py:255
 #, python-format
-msgid " (max 1 item)"
+msgid " (max %d item)"
 msgid_plural " (max %d items)"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] " (Max %d article)"
+msgstr[1] " (Max %d articles)"
 
 #: apps/offer/models.py:267
 msgid "Benefit requires a value"
-msgstr ""
+msgstr "Le benefice requière une valeur"
 
 #: apps/offer/models.py:269
 #, python-format
 msgid "Benefits of type %s need a value"
-msgstr ""
+msgstr "Les bénéfices de type %s nécessitent une valeur"
 
 #: apps/offer/models.py:271
 msgid "Percentage benefit value can't be greater than 100"
-msgstr ""
+msgstr "Le pourcentage de bénéfice ne peut être supérieur à 100"
 
 #: apps/offer/models.py:274
 #, python-format
 msgid "Benefits of type %s need a range"
-msgstr ""
+msgstr "Les bénéfices de type %s ont besoin d'un pack"
 
 #: apps/offer/models.py:303
 msgid "Includes All Products"
-msgstr ""
+msgstr "Inclure tous les produits"
 
 #: apps/offer/models.py:315
 msgid "Range"
-msgstr ""
+msgstr "Pack"
 
 #: apps/offer/models.py:377
 msgid "Count Condition"
-msgstr ""
+msgstr "Condition sur le nombre"
 
 #: apps/offer/models.py:378
 msgid "Count Conditions"
-msgstr ""
+msgstr "Conditions sur le nombre"
 
 #: apps/offer/models.py:411 apps/offer/models.py:471
 #, python-format
 msgid "Buy %(delta)d more product from %(range)s"
 msgid_plural "Buy %(delta)d more products from %(range)s"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Acheter %(delta)d produit en plus du pack: %(range)s"
+msgstr[1] "Acheter %(delta)d produits en plus du pack: %(range)s"
 
 #: apps/offer/models.py:440
 msgid "Coverage Condition"
-msgstr ""
+msgstr "Condition couverture"
 
 #: apps/offer/models.py:441
 msgid "Coverage Conditions"
-msgstr ""
+msgstr "Conditions couvertures"
 
 #: apps/offer/models.py:516
 msgid "Value Condition"
-msgstr ""
+msgstr "Condition valeur"
 
 #: apps/offer/models.py:517
 msgid "Value Conditions"
-msgstr ""
+msgstr "Conditions valeurs"
 
 #: apps/offer/models.py:552
 #, python-format
 msgid "Spend %(value)s more from %(range)s"
-msgstr ""
+msgstr "Dépensser %(value)s de plus dans le pack: %(range)s"
 
 #: apps/offer/models.py:593
 msgid "Percentage Discount Benefit"
-msgstr ""
+msgstr "Bénéfice pourcentage de réduction"
 
 #: apps/offer/models.py:594
 msgid "Percentage Discount Benefits"
-msgstr ""
+msgstr "Bénéfices pourcentage de réduction"
 
 #: apps/offer/models.py:627
 msgid "Absolute Discount Benefit"
-msgstr ""
+msgstr "Bénéfice réduction absolue"
 
 #: apps/offer/models.py:628
 msgid "Absolute Discount Benefits"
-msgstr ""
+msgstr "Bénéfices réduction absolue"
 
 #: apps/offer/models.py:677
 msgid "Fixed Price Benefit"
-msgstr ""
+msgstr "Bénéfice prix fixe"
 
 #: apps/offer/models.py:678
 msgid "Fixed Price Benefits"
-msgstr ""
+msgstr "Bénéfices prix fixe"
 
 #: apps/offer/models.py:724
 msgid "Multibuy Discount Benefit"
-msgstr ""
+msgstr "Bénéfice réduction multi-achat"
 
 #: apps/offer/models.py:725
 msgid "Multibuy Discount Benefits"
-msgstr ""
+msgstr "Bénéfices réduction multi-achat"
 
 #: apps/offer/reports.py:21
 #: templates/oscar/dashboard/reports/partials/offer_report.html:9
 #: templates/oscar/offer/detail.html:5 templates/oscar/offer/detail.html:24
 msgid "Offer"
-msgstr ""
+msgstr "Offre"
 
 #: apps/offer/reports.py:22 apps/voucher/abstract_models.py:39
 #: apps/voucher/reports.py:22
@@ -2548,487 +2582,488 @@ msgstr ""
 #: templates/oscar/dashboard/reports/partials/voucher_report.html:12
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:48
 msgid "Total discount"
-msgstr ""
+msgstr "Total réduction"
 
 #: apps/offer/reports.py:37
 #: templates/oscar/dashboard/offers/offer_detail.html:44
 msgid "Offer performance"
-msgstr ""
+msgstr "Performances de l'offre"
 
 #: apps/offer/utils.py:79
 #, python-format
 msgid "Exceeded %(applications)d applications for offer %(offer)d "
-msgstr ""
+msgstr "Dépassé %(applications)d applications pour l'offre %(offer)d"
 
 #: apps/order/abstract_models.py:24
 msgid "Basket ID"
-msgstr ""
+msgstr "Panier ID"
 
 #: apps/order/abstract_models.py:33
 msgid "Order total (inc. tax)"
-msgstr ""
+msgstr "Total commande TTC"
 
 #: apps/order/abstract_models.py:34
 msgid "Order total (excl. tax)"
-msgstr ""
+msgstr "Total commande HT"
 
 #: apps/order/abstract_models.py:37
 #: templates/oscar/customer/anon-order.html:91
 #: templates/oscar/customer/order.html:123
 msgid "Shipping charge (inc. tax)"
-msgstr ""
+msgstr "Frais de port TTC"
 
 #: apps/order/abstract_models.py:38
 msgid "Shipping charge (excl. tax)"
-msgstr ""
+msgstr "Frais de port HT"
 
 #: apps/order/abstract_models.py:43
 #: templates/oscar/checkout/shipping_methods.html:6
 #: templates/oscar/customer/anon-order.html:45
 #: templates/oscar/customer/order.html:75
 msgid "Shipping method"
-msgstr ""
+msgstr "Mode d'expédition"
 
 #: apps/order/abstract_models.py:48
 msgid "Guest email address"
-msgstr ""
+msgstr "Adresse email (client de passage)"
 
 #: apps/order/abstract_models.py:68
 #, python-format
 msgid "'%(new_status)s' is not a valid status for order %(number)s "
-msgstr ""
+msgstr "'%(new_status)s' n'est pas un statut valide pour la commande %(number)s"
 
 #: apps/order/abstract_models.py:164
 msgid "In progress"
-msgstr ""
+msgstr "En cours"
 
 #: apps/order/abstract_models.py:189 templates/oscar/customer/order.html:6
 #: templates/oscar/dashboard/orders/shippingaddress_form.html:5
 msgid "Order"
-msgstr ""
+msgstr "Commande"
 
 #: apps/order/abstract_models.py:221
 msgid "Note Type"
-msgstr ""
+msgstr "Type Note"
 
 #: apps/order/abstract_models.py:223
 #: templates/oscar/dashboard/orders/order_detail.html:430
 msgid "Message"
-msgstr ""
+msgstr "Message"
 
 #: apps/order/abstract_models.py:232
 msgid "Order Note"
-msgstr ""
+msgstr "Note sur la commande"
 
 #: apps/order/abstract_models.py:233
 msgid "Order Notes"
-msgstr ""
+msgstr "Notes sur la commande"
 
 #: apps/order/abstract_models.py:255
 msgid "Communication Event"
-msgstr ""
+msgstr "Evénement de communication"
 
 #: apps/order/abstract_models.py:256
 msgid "Communication Events"
-msgstr ""
+msgstr "Evénements de communicationx"
 
 #: apps/order/abstract_models.py:259
 #, python-format
 msgid "'%(type)s' event for order #%(number)s"
-msgstr ""
+msgstr "'%(type)s' événement pour la commande #%(number)s"
 
 #: apps/order/abstract_models.py:275
 msgid "Partner name"
-msgstr ""
+msgstr "Nom fournisseur"
 
 #: apps/order/abstract_models.py:288 apps/order/abstract_models.py:470
 msgid "Price (inc. tax)"
-msgstr ""
+msgstr "Prix TTC"
 
 #: apps/order/abstract_models.py:289 apps/order/abstract_models.py:471
 #: apps/partner/abstract_models.py:83
 #: templates/oscar/catalogue/detail.html:102
 msgid "Price (excl. tax)"
-msgstr ""
+msgstr "Prix HT"
 
 #: apps/order/abstract_models.py:292
 msgid "Price before discounts (inc. tax)"
-msgstr ""
+msgstr "Prix avant réduction TTC"
 
 #: apps/order/abstract_models.py:294
 msgid "Price before discounts (excl. tax)"
-msgstr ""
+msgstr "Prix avant réduction HT"
 
 #: apps/order/abstract_models.py:299
 msgid "Unit Cost Price"
-msgstr ""
+msgstr "Prix unitaire"
 
 #: apps/order/abstract_models.py:301
 msgid "Unit Price (inc. tax)"
-msgstr ""
+msgstr "Prix unitaire TTC"
 
 #: apps/order/abstract_models.py:303
 msgid "Unit Price (excl. tax)"
-msgstr ""
+msgstr "Prix unitaire HT"
 
 #: apps/order/abstract_models.py:306
 msgid "Unit Retail Price"
-msgstr ""
+msgstr "Prix unitaire au détail"
 
 #: apps/order/abstract_models.py:310
 msgid "Partner reference"
-msgstr ""
+msgstr "Référence fournisseur"
 
 #: apps/order/abstract_models.py:311
 msgid "This is the item number that the partner uses within their system"
-msgstr ""
+msgstr "C'est la référence du produit dans le catalogue du fournisseur"
 
 #: apps/order/abstract_models.py:312
 msgid "Partner Notes"
-msgstr ""
+msgstr "Notes fournisseur"
 
 #: apps/order/abstract_models.py:319
 msgid "Estimated Dispatch Date"
-msgstr ""
+msgstr "Date d'expédition estimée"
 
 #: apps/order/abstract_models.py:334
 #, python-format
 msgid "'%(new_status)s' is not a valid status (current status: '%(status)s')"
-msgstr ""
+msgstr "'%(new_status)s' n'est pas un statut valide (statut actuel: '%(status)s')"
 
 #: apps/order/abstract_models.py:432
 msgid "Order line"
-msgstr ""
+msgstr "Ligne commande"
 
 #: apps/order/abstract_models.py:439
 msgid "<missing product>"
-msgstr ""
+msgstr "<produit manquant>"
 
 #: apps/order/abstract_models.py:440
 #, python-format
 msgid "Product '%(name)s', quantity '%(qty)s'"
-msgstr ""
+msgstr "Produit '%(name)s', quantité '%(qty)s'"
 
 #: apps/order/abstract_models.py:452
 msgid "Line Attribute"
-msgstr ""
+msgstr "Attribut ligne"
 
 #: apps/order/abstract_models.py:453
 msgid "Line Attributes"
-msgstr ""
+msgstr "Attributs lignes"
 
 #: apps/order/abstract_models.py:472
 msgid "Shiping (inc. tax)"
-msgstr ""
+msgstr "Expédition TTC"
 
 #: apps/order/abstract_models.py:473
 msgid "Shipping (excl. tax)"
-msgstr ""
+msgstr "Expédition HT"
 
 #: apps/order/abstract_models.py:478
 msgid "Line Price"
-msgstr ""
+msgstr "Prix ligne"
 
 #: apps/order/abstract_models.py:479
 msgid "Line Prices"
-msgstr ""
+msgstr "Prix lignes"
 
 #: apps/order/abstract_models.py:482
 #, python-format
 msgid "Line '%(number)s' (quantity %(qty)d) price %(price)s"
-msgstr ""
+msgstr "Ligne '%(number)s' (quantité %(qty)d) prix %(price)s"
 
 #: apps/order/abstract_models.py:495 apps/order/abstract_models.py:633
 msgid "Sequence"
-msgstr ""
+msgstr "Sequence"
 
 #: apps/order/abstract_models.py:504
 msgid "Payment event type"
-msgstr ""
+msgstr "Type d'événement de paiement"
 
 #: apps/order/abstract_models.py:505
 msgid "Payment event types"
-msgstr ""
+msgstr "Types d'événement de paiement"
 
 #: apps/order/abstract_models.py:518 apps/order/abstract_models.py:666
 #: apps/payment/models.py:21
 #: templates/oscar/dashboard/orders/order_detail.html:269
 #: templates/oscar/dashboard/orders/order_detail.html:389
 msgid "Amount"
-msgstr ""
+msgstr "Montant"
 
 #: apps/order/abstract_models.py:525
 msgid "Payment event"
-msgstr ""
+msgstr "Evénement de paiement"
 
 #: apps/order/abstract_models.py:526
 msgid "Payment events"
-msgstr ""
+msgstr "Evénement de paiement"
 
 #: apps/order/abstract_models.py:529
 #, python-format
 msgid "Payment event for order %s"
-msgstr ""
+msgstr "Evénement de paiement pour la commande %s"
 
 #: apps/order/abstract_models.py:541
 msgid "Payment Event Quantity"
-msgstr ""
+msgstr "Quantité événement de paiement"
 
 #: apps/order/abstract_models.py:542
 msgid "Payment Event Quantities"
-msgstr ""
+msgstr "Quantités événements de paiement"
 
 #: apps/order/abstract_models.py:556
 msgid "Event notes"
-msgstr ""
+msgstr "Notes événements"
 
 #: apps/order/abstract_models.py:557
 msgid "This could be the dispatch reference, or a tracking number"
-msgstr ""
+msgstr "Cela pourrait être la référence d'expédition, ou un numéro de suivi"
 
 #: apps/order/abstract_models.py:562
 msgid "Shipping event"
-msgstr ""
+msgstr "Evénement d'expédition"
 
 #: apps/order/abstract_models.py:563
 msgid "Shipping events"
-msgstr ""
+msgstr "Evénements d'expédition"
 
 #: apps/order/abstract_models.py:567
 #, python-format
 msgid "Order #%(number)s, type %(type)s"
-msgstr ""
+msgstr "Commande #%(number)s, type %(type)s"
 
 #: apps/order/abstract_models.py:583
 msgid "Shipping Event Quantity"
-msgstr ""
+msgstr "Quantité événement expédition"
 
 #: apps/order/abstract_models.py:584
 msgid "Shipping Event Quantities"
-msgstr ""
+msgstr "Quantités événement expédition"
 
 #: apps/order/abstract_models.py:598
 msgid "This shipping event is not permitted"
-msgstr ""
+msgstr "Cette événement d'expédition n'est pas permis"
 
 #: apps/order/abstract_models.py:607
 #, python-format
 msgid "Invalid quantity (%d) for event type (total exceeds line total)"
-msgstr ""
+msgstr "Quantité invalide (%d) pour ce type d'événement (total exéde le total de la ligne)"
 
 #: apps/order/abstract_models.py:619
 #, python-format
 msgid "%(product)s - quantity %(qty)d"
-msgstr ""
+msgstr "%(product)s - quantité %(qty)d"
 
 #: apps/order/abstract_models.py:630
 msgid "Is Required"
-msgstr ""
+msgstr "Obligatoire"
 
 #: apps/order/abstract_models.py:631
 msgid "This event must be passed before the next shipping event can take place"
-msgstr ""
+msgstr "Cet événement doit être effectué avant le prochain événement expédition"
 
 #: apps/order/abstract_models.py:642
 msgid "Shipping event type"
-msgstr ""
+msgstr "Type événement d'expédition"
 
 #: apps/order/abstract_models.py:643
 msgid "Shipping event types"
-msgstr ""
+msgstr "Types événements d'expédition"
 
 #: apps/order/abstract_models.py:663
 msgid "Offer ID"
-msgstr ""
+msgstr "Offre ID"
 
 #: apps/order/abstract_models.py:664
 msgid "Voucher ID"
-msgstr ""
+msgstr "Bon de réduction ID"
 
 #: apps/order/abstract_models.py:670
 msgid "Order Discount"
-msgstr ""
+msgstr "Réduction commande"
 
 #: apps/order/abstract_models.py:671
 msgid "Order Discounts"
-msgstr ""
+msgstr "Réduction commandes"
 
 #: apps/order/abstract_models.py:674
 #, python-format
 msgid "Discount of %(amount)r from order %(order)s"
-msgstr ""
+msgstr "Réduction de %(amount)r de la commande %(order)s"
 
 #: apps/order/reports.py:21
 #: templates/oscar/dashboard/reports/partials/order_report.html:11
 msgid "Total incl. tax"
-msgstr ""
+msgstr "Total TTC"
 
 #: apps/order/reports.py:22
 #: templates/oscar/dashboard/reports/partials/order_report.html:12
 #: templates/oscar/dashboard/users/detail.html:109
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:61
 msgid "Date placed"
-msgstr ""
+msgstr "Date"
 
 #: apps/order/reports.py:41
 msgid "Orders placed"
-msgstr ""
+msgstr "Commandes"
 
 #: apps/order/utils.py:47
 msgid "Empty baskets cannot be submitted"
-msgstr ""
+msgstr "Les paniers vides ne peuvent être validés"
 
 #: apps/order/utils.py:63
 #, python-format
 msgid "There is already an order with number %s"
-msgstr ""
+msgstr "Il y a toujours une commande avec le numéro %s"
 
 #: apps/order/utils.py:119
 #, python-format
 msgid "No partner found for product '%s'"
-msgstr ""
+msgstr "Aucun fournisseur trouvée pour le produit '%s'"
 
 #: apps/partner/abstract_models.py:42
 msgid "Fulfillment partner"
-msgstr ""
+msgstr "Fournisseur d'exécution"
 
 #: apps/partner/abstract_models.py:43
 msgid "Fulfillment partners"
-msgstr ""
+msgstr "Fournisseurs d'exécution"
 
 #: apps/partner/abstract_models.py:46
 msgid "Can edit stock records"
-msgstr ""
+msgstr "Peut éditer les enregistrements du stock"
 
 #: apps/partner/abstract_models.py:47
 msgid "Can view stock records"
-msgstr ""
+msgstr "Peut voir les enregistrements du stock"
 
 #: apps/partner/abstract_models.py:48
 msgid "Can edit product range"
-msgstr ""
+msgstr "Peut éditer les produits dans un pack"
 
 #: apps/partner/abstract_models.py:49
 msgid "Can view product range"
-msgstr ""
+msgstr "Peut voir les produits dans le pack"
 
 #: apps/partner/abstract_models.py:50
 msgid "Can edit order lines"
-msgstr ""
+msgstr "Peut éditer les lignes de commande"
 
 #: apps/partner/abstract_models.py:51
 msgid "Can view order lines"
-msgstr ""
+msgstr "Peut voir les lignes de commande"
 
 #: apps/partner/abstract_models.py:77 apps/payment/models.py:45
 msgid "Currency"
-msgstr ""
+msgstr "Monnaie"
 
 #: apps/partner/abstract_models.py:86
 msgid "Price (retail)"
-msgstr ""
+msgstr "Prix (détail)"
 
 #: apps/partner/abstract_models.py:89
 msgid "Cost Price"
-msgstr ""
+msgstr "Prix"
 
 #: apps/partner/abstract_models.py:92
 #: templates/oscar/dashboard/catalogue/product_list.html:67
 msgid "Number in stock"
-msgstr ""
+msgstr "Nbr en stock"
 
 #: apps/partner/abstract_models.py:95
 msgid "Low Stock Threshold"
-msgstr ""
+msgstr "Seuil de l'alerte stock"
 
 #: apps/partner/abstract_models.py:100
 msgid "Number of Allocated"
-msgstr ""
+msgstr "Nombre d'attribution"
 
 #: apps/partner/abstract_models.py:109
 msgid "Stock Record"
-msgstr ""
+msgstr "Enregirstrement du stock"
 
 #: apps/partner/abstract_models.py:110
 msgid "Stock Records"
-msgstr ""
+msgstr "Enregirstrements du stock"
 
 #: apps/partner/abstract_models.py:137
 msgid "Invalid stock consumption request"
-msgstr ""
+msgstr "Invalid demande de consommation de stock"
 
 #: apps/partner/abstract_models.py:260
 msgid "Threshold"
-msgstr ""
+msgstr "Seuil"
 
 #: apps/partner/abstract_models.py:263
 #: templates/oscar/dashboard/index.html:132
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:33
 msgid "Open"
-msgstr ""
+msgstr "Ouvert"
 
 #: apps/partner/abstract_models.py:264
 #: templates/oscar/dashboard/index.html:136
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:34
 msgid "Closed"
-msgstr ""
+msgstr "Fermé"
 
 #: apps/partner/abstract_models.py:275
 #, python-format
 msgid "<stockalert for \"%(stock)s\" status %(status)s>"
-msgstr ""
+msgstr "<Alerte stock pour \"%(stock)s\" statut %(status)s>"
 
 #: apps/partner/abstract_models.py:279
 msgid "Stock Alert"
-msgstr ""
+msgstr "Alerte stock"
 
 #: apps/partner/abstract_models.py:280
 msgid "Stock Alerts"
-msgstr ""
+msgstr "Alertes stock"
 
 #: apps/partner/utils.py:26
 #, python-format
 msgid ""
 "Partner named '%(partner)s' does not exist (existing partners: %(list)s)"
 msgstr ""
+"Le fournisseur '%(partner)s' n'existe pas (fournisseurs existants: %(list)s)"
 
 #: apps/partner/utils.py:32 apps/partner/utils.py:104
 msgid "No file path supplied"
-msgstr ""
+msgstr "Aucun chemin d'accès du fichier fourni"
 
 #: apps/partner/utils.py:189
 #, python-format
 msgid "%s does not exist"
-msgstr ""
+msgstr "%s n'existe pas"
 
 #: apps/partner/utils.py:194
 #, python-format
 msgid "%s is not a file"
-msgstr ""
+msgstr "%s n'est pas un fichier"
 
 #: apps/partner/utils.py:202
 #, python-format
 msgid "%s is not readable"
-msgstr ""
+msgstr "%s n'est pas lisible"
 
 #: apps/partner/wrappers.py:28
 #, python-format
 msgid "'%s' is not available to purchase"
-msgstr ""
+msgstr "'%s' n'est pas valable à l'achat"
 
 #: apps/partner/wrappers.py:33
 #, python-format
 msgid "'%(title)s' - A maximum of %(max)d can be bought"
-msgstr ""
+msgstr "'%(title)s' - Un maximum de %(max)d peut être acheté"
 
 #: apps/partner/wrappers.py:67
 #, python-format
 msgid "In stock (%d available)"
-msgstr ""
+msgstr "En stock (%d disponible)"
 
 #: apps/partner/wrappers.py:69
 msgid "Available"
-msgstr ""
+msgstr "Disponible"
 
 #: apps/partner/wrappers.py:70
 #: templates/oscar/catalogue/partials/product.html:38
@@ -3037,293 +3072,298 @@ msgstr ""
 #: templates/oscar/promotions/singleproduct.html:30
 #: templates/oscar/promotions/partials/product_carousel.html:24
 msgid "Not available"
-msgstr ""
+msgstr "Non disponible"
 
 #: apps/payment/forms.py:71
 msgid "Please enter a valid credit card number."
-msgstr ""
+msgstr "Entrer un numéro de carte de crédit valide"
 
 #: apps/payment/forms.py:92
 msgid "Enter a valid month."
-msgstr ""
+msgstr "Entrer un mois valide."
 
 #: apps/payment/forms.py:93
 msgid "Enter a valid year."
-msgstr ""
+msgstr "Entrer une année valide."
 
 #: apps/payment/forms.py:136
 msgid "The expiration date you entered is in the past."
-msgstr ""
+msgstr "La date d'expiration est déjà passée."
 
 #: apps/payment/forms.py:172
 msgid "The starting date you entered is in the future."
-msgstr ""
+msgstr "La date de départ que vous avez entré est dans le futur."
 
 #: apps/payment/forms.py:191
 msgid "Card number"
-msgstr ""
+msgstr "Numéro de carte"
 
 #: apps/payment/forms.py:192
 msgid "Name on card"
-msgstr ""
+msgstr "Nom de carte"
 
 #: apps/payment/forms.py:193
 msgid "CVV Number"
-msgstr ""
+msgstr "Numéro CVV"
 
 #: apps/payment/forms.py:195
 msgid "Valid from"
-msgstr ""
+msgstr "Formulaire de validation"
 
 #: apps/payment/forms.py:196
 msgid "Valid to"
-msgstr ""
+msgstr "Valable pour"
 
 #: apps/payment/models.py:22 apps/payment/models.py:54
 msgid "Reference"
-msgstr ""
+msgstr "Référence"
 
 #: apps/payment/models.py:27
 #, python-format
 msgid "%(type)s of %(amount).2f"
-msgstr ""
+msgstr "%(type)s de %(amount).2f"
 
 #: apps/payment/models.py:30
 msgid "Transaction"
-msgstr ""
+msgstr "Transaction"
 
 #: apps/payment/models.py:31
 #: templates/oscar/dashboard/orders/order_detail.html:370
 msgid "Transactions"
-msgstr ""
+msgstr "Transactions"
 
 #: apps/payment/models.py:48
 msgid "Amount Allocated"
-msgstr ""
+msgstr "Montant alloué"
 
 #: apps/payment/models.py:49
 msgid "Amount Debited"
-msgstr ""
+msgstr "Montant débité"
 
 #: apps/payment/models.py:50
 msgid "Amount Refunded"
-msgstr ""
+msgstr "Montant remboursé"
 
 #: apps/payment/models.py:57
 msgid "Label"
-msgstr ""
+msgstr "Etiquette"
 
 #: apps/payment/models.py:68
 #: templates/oscar/dashboard/orders/order_detail.html:346
 msgid "Source"
-msgstr ""
+msgstr "Source"
 
 #: apps/payment/models.py:69
 msgid "Sources"
-msgstr ""
+msgstr "Sources"
 
 #: apps/payment/models.py:72
 #, python-format
 msgid "Allocation of %(amount).2f from type %(type)s"
-msgstr ""
+msgstr "Allocation de %(amount).2f depuis le type %(type)s"
 
 #: apps/payment/models.py:75
 #, python-format
 msgid " (reference: %s)"
-msgstr ""
+msgstr " (référence: %s)"
 
 #: apps/payment/models.py:146
 msgid ""
 "This is used within\n"
 "        forms to identify this source type"
 msgstr ""
+"Ceci est utilisé dans les \n"
+"        formes pour identifier ce type de source"
 
 #: apps/payment/models.py:150
 msgid "Source Type"
-msgstr ""
+msgstr "Type de source"
 
 #: apps/payment/models.py:151
 msgid "Source Types"
-msgstr ""
+msgstr "Types de source"
 
 #: apps/payment/models.py:164
 msgid "Card Type"
-msgstr ""
+msgstr "Type de carte"
 
 #: apps/payment/models.py:166
 msgid "Number"
-msgstr ""
+msgstr "Numéro"
 
 #: apps/payment/models.py:167
 msgid "Expiry Date"
-msgstr ""
+msgstr "Date d'expiration"
 
 #: apps/payment/models.py:170
 msgid "Partner Reference"
-msgstr ""
+msgstr "Référence du fournisseur"
 
 #: apps/payment/models.py:173
 msgid "Bankcard"
-msgstr ""
+msgstr "Carte banquaire"
 
 #: apps/payment/models.py:174
 msgid "Bankcards"
-msgstr ""
+msgstr "Cartes banquaires"
 
 #: apps/promotions/models.py:28
 msgid "Clicks"
-msgstr ""
+msgstr "Clics"
 
 #: apps/promotions/models.py:34
 msgid "Linked Promotion"
-msgstr ""
+msgstr "Promotion liée"
 
 #: apps/promotions/models.py:35
 msgid "Linked Promotions"
-msgstr ""
+msgstr "Promotions liées"
 
 #: apps/promotions/models.py:46
 #: templates/oscar/dashboard/promotions/form.html:49
 msgid "Page URL"
-msgstr ""
+msgstr "URL page"
 
 #: apps/promotions/models.py:55
 msgid "Page Promotion"
-msgstr ""
+msgstr "Page promotion"
 
 #: apps/promotions/models.py:56
 msgid "Page Promotions"
-msgstr ""
+msgstr "Pages promotions"
 
 #: apps/promotions/models.py:71
 msgid "Filter"
-msgstr ""
+msgstr "Filtrer"
 
 #: apps/promotions/models.py:77
 msgid "Keyword Promotion"
-msgstr ""
+msgstr "Promotion Mot-clé"
 
 #: apps/promotions/models.py:78
 msgid "Keyword Promotions"
-msgstr ""
+msgstr "Promotions Mots-clés"
 
 #: apps/promotions/models.py:89
 msgid "Keywords"
-msgstr ""
+msgstr "Mots-clés"
 
 #: apps/promotions/models.py:94
 msgid "Promotion"
-msgstr ""
+msgstr "Promotion"
 
 #: apps/promotions/models.py:95 templates/oscar/dashboard/index.html:153
 msgid "Promotions"
-msgstr ""
+msgstr "Promotions"
 
 #: apps/promotions/models.py:143
 msgid "Display type"
-msgstr ""
+msgstr "Afficher type"
 
 #: apps/promotions/models.py:145
 msgid ""
 "This can be used to have different types of HTML blocks (eg different widths)"
 msgstr ""
+"Ceci peut être utilisé pour avoir différents types de blocs HTML (c'est à dire différentes largeurs)"
 
 #: apps/promotions/models.py:150 apps/promotions/models.py:151
 msgid "Raw HTML"
-msgstr ""
+msgstr "HTML brut"
 
 #: apps/promotions/models.py:166 apps/promotions/models.py:223
 msgid "Link URL"
-msgstr ""
+msgstr "Lien URL"
 
 #: apps/promotions/models.py:166
 msgid ""
 "This is\n"
 "        where this promotion links to"
 msgstr ""
+"C'est\n"
+"        où le lien de la promotion redirige"
 
 #: apps/promotions/models.py:168 apps/promotions/models.py:175
 #: apps/promotions/models.py:176
 msgid "Image"
-msgstr ""
+msgstr "Image"
 
 #: apps/promotions/models.py:194
 msgid "Multi Image"
-msgstr ""
+msgstr "Multi image"
 
 #: apps/promotions/models.py:195
 msgid "Multi Images"
-msgstr ""
+msgstr "Multi images"
 
 #: apps/promotions/models.py:212 apps/promotions/models.py:213
 msgid "Single Product"
-msgstr ""
+msgstr "Produit unique"
 
 #: apps/promotions/models.py:224
 msgid "Link text"
-msgstr ""
+msgstr "Texte de lien"
 
 #: apps/promotions/models.py:229
 msgid "Product List"
-msgstr ""
+msgstr "Liste de produit"
 
 #: apps/promotions/models.py:230
 msgid "Product Lists"
-msgstr ""
+msgstr "Liste de produits"
 
 #: apps/promotions/models.py:254
 msgid "Hand Picked Product List"
-msgstr ""
+msgstr "Liste de produits manuelle"
 
 #: apps/promotions/models.py:255
 msgid "Hand Picked Product Lists"
-msgstr ""
+msgstr "Listes de produits manuelle"
 
 #: apps/promotions/models.py:266 apps/promotions/models.py:267
 msgid "Ordered Product"
-msgstr ""
+msgstr "Produit commandé"
 
 #: apps/promotions/models.py:275
 msgid "Bestselling products"
-msgstr ""
+msgstr "Meilleurs ventes"
 
 #: apps/promotions/models.py:276
 msgid "Recently added products"
-msgstr ""
+msgstr "Les nouveautés du magasin (dernier ajout)"
 
 #: apps/promotions/models.py:278
 #: templates/oscar/checkout/shipping_methods.html:23
 #: templates/oscar/dashboard/orders/order_detail.html:302
 msgid "Method"
-msgstr ""
+msgstr "Méthode"
 
 #: apps/promotions/models.py:279
 msgid "Number of Products"
-msgstr ""
+msgstr "Nombre de produits"
 
 #: apps/promotions/models.py:296
 msgid "Automatic Product List"
-msgstr ""
+msgstr "Liste de produits automatique"
 
 #: apps/promotions/models.py:297
 msgid "Automatic Product Lists"
-msgstr ""
+msgstr "Listes de produits automatique"
 
 #: apps/promotions/models.py:307
 msgid "Ordered Product List"
-msgstr ""
+msgstr "Liste des produits commandés"
 
 #: apps/promotions/models.py:308
 msgid "Ordered Product Lists"
-msgstr ""
+msgstr "Listes des produits commandés"
 
 #: apps/promotions/models.py:318
 msgid "Tabbed Block"
-msgstr ""
+msgstr "Bloc onglet"
 
 #: apps/promotions/models.py:319
 msgid "Tabbed Blocks"
-msgstr ""
+msgstr "Blocs onglets"
 
 #: apps/search/forms.py:21
 #: templates/oscar/dashboard/catalogue/product_list.html:47
@@ -3337,51 +3377,51 @@ msgstr ""
 #: templates/oscar/partials/search.html:5
 #: templates/oscar/search/results.html:17
 msgid "Search"
-msgstr ""
+msgstr "Rechercher"
 
 #: apps/shipping/methods.py:15
 msgid "Free shipping"
-msgstr ""
+msgstr "Livraison gratuite"
 
 #: apps/shipping/methods.py:26
 msgid "No shipping required"
-msgstr ""
+msgstr "Pas de livraison requise"
 
 #: apps/shipping/methods.py:31
 msgid "Fixed price shipping"
-msgstr ""
+msgstr "Expédition prix fixe"
 
 #: apps/shipping/models.py:22 templates/oscar/customer/order.html:39
 msgid "Shipping Method"
-msgstr ""
+msgstr "Mode de livraison"
 
 #: apps/shipping/models.py:23
 msgid "Shipping Methods"
-msgstr ""
+msgstr "Modes de livraison"
 
 #: apps/shipping/models.py:50
 msgid "Price per order"
-msgstr ""
+msgstr "Prix par commande"
 
 #: apps/shipping/models.py:51
 msgid "Price per item"
-msgstr ""
+msgstr "Prix par article"
 
 #: apps/shipping/models.py:54
 msgid "Free Shipping"
-msgstr ""
+msgstr "Livraison gratuite"
 
 #: apps/shipping/models.py:59
 msgid "Order and item charge"
-msgstr ""
+msgstr "Commande et article prix"
 
 #: apps/shipping/models.py:60
 msgid "Order and item charges"
-msgstr ""
+msgstr "Commandes et articles prix"
 
 #: apps/shipping/models.py:88
 msgid "Upper Charge"
-msgstr ""
+msgstr "Charge supérieur"
 
 #: apps/shipping/models.py:89
 msgid ""
@@ -3390,28 +3430,34 @@ msgid ""
 "all\n"
 "                                      the weight bands"
 msgstr ""
+"Ceci correspond au prix quand le\n"
+"                                       poids du panier est supérieur à "
+"toutes\n"
+"                                      les échelles de poids"
 
 #: apps/shipping/models.py:94
 msgid "Default Weight"
-msgstr ""
+msgstr "Poids par défaut"
 
 #: apps/shipping/models.py:95
 msgid ""
 "Default product weight in Kg when no\n"
 "                                        weight attribute is defined"
 msgstr ""
+"Poids (Kg) par défaut quand aucun\n"
+"                                        attribut poids est défnie"
 
 #: apps/shipping/models.py:99
 msgid "Weight-based shipping method"
-msgstr ""
+msgstr "Méthode de livraison en fonction du poids"
 
 #: apps/shipping/models.py:100
 msgid "Weight-based shipping methods"
-msgstr ""
+msgstr "Méthodes de livraison en fonction du poids"
 
 #: apps/shipping/models.py:131
 msgid "Upper Limit"
-msgstr ""
+msgstr "Limite supérieure"
 
 #: apps/shipping/models.py:131
 msgid ""
@@ -3422,68 +3468,75 @@ msgid ""
 "the\n"
 "                                                other weight bands"
 msgstr ""
+"Entrer un limite supérieure sur cette\n"
+"                                                échelle de poids en Kg, la "
+"limite\n"
+"                                                basse sera déterminée par"
+"les\n"
+"                                                autres limites de poids."
 
 #: apps/shipping/models.py:135
 msgid "Charge"
-msgstr ""
+msgstr "Prix"
 
 #: apps/shipping/models.py:151
 msgid "Weight Band"
-msgstr ""
+msgstr "Echelle de poids"
 
 #: apps/shipping/models.py:152
 msgid "Weight Bands"
-msgstr ""
+msgstr "Echelles de poids"
 
 #: apps/shipping/models.py:155
 #, python-format
 msgid "Charge for weights up to %sKg"
-msgstr ""
+msgstr "Prix pour des poids supérieure à %s Kg"
 
 #: apps/shipping/repository.py:29
 msgid "You need to define some shipping methods"
-msgstr ""
+msgstr "Vous devez définir quelques méthodes de livraison"
 
 #: apps/voucher/abstract_models.py:19
 msgid ""
 "This will be shown in the checkout and basket once the voucher is entered"
 msgstr ""
+"Ce sera affiché dans la caisse et le panier une fois que le bon de réduction est entré"
 
 #: apps/voucher/abstract_models.py:21
 msgid "Case insensitive / No spaces allowed"
-msgstr ""
+msgstr "Insensible aux majuscules / sans espaces "
 
 #: apps/voucher/abstract_models.py:27
 msgid "Can be used once by one customer"
-msgstr ""
+msgstr "Peut être utilisé une fois par client"
 
 #: apps/voucher/abstract_models.py:28
 msgid "Can be used multiple times by multiple customers"
-msgstr ""
+msgstr "Peut être utiliser de multiples fois par de multiples clients"
 
 #: apps/voucher/abstract_models.py:29
 msgid "Can only be used once per customer"
-msgstr ""
+msgstr "Peut être utilisé une fois par client"
 
 #: apps/voucher/abstract_models.py:37
 msgid "Times added to basket"
-msgstr ""
+msgstr "Nbr d'ajout dans le panier"
 
 #: apps/voucher/abstract_models.py:38
 msgid "Times on orders"
-msgstr ""
+msgstr "Nbr commandé"
 
 #: apps/voucher/abstract_models.py:46
 msgid "Voucher"
-msgstr ""
+msgstr "Bon de réduction"
 
 #: apps/voucher/abstract_models.py:78
 msgid "This voucher has already been used"
-msgstr ""
+msgstr "Ce bon de réduction déjà été utilisé"
 
 #: apps/voucher/abstract_models.py:84
 msgid "This voucher is only available to signed in users"
-msgstr ""
+msgstr "Ce bon de réduction est uniquement disponible pour les clients connectés"
 
 #: apps/voucher/abstract_models.py:88
 msgid "You have already used this voucher in a previous order"
@@ -3491,43 +3544,43 @@ msgstr ""
 
 #: apps/voucher/abstract_models.py:128
 msgid "Voucher Application"
-msgstr ""
+msgstr "Bon de réduction application"
 
 #: apps/voucher/abstract_models.py:129
 msgid "Voucher Applications"
-msgstr ""
+msgstr "Applications bon de réduction"
 
 #: apps/voucher/abstract_models.py:132
 #, python-format
 msgid "'%(voucher)s' used by '%(user)s'"
-msgstr ""
+msgstr "'%(voucher)s' utilisé par '%(user)s'"
 
 #: apps/voucher/reports.py:20
 #: templates/oscar/dashboard/reports/partials/voucher_report.html:10
 msgid "Added to a basket"
-msgstr ""
+msgstr "Ajouté au panier"
 
 #: apps/voucher/reports.py:21
 #: templates/oscar/dashboard/reports/partials/voucher_report.html:11
 msgid "Used in an order"
-msgstr ""
+msgstr "Utilisé dans une commande"
 
 #: apps/voucher/reports.py:40
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:43
 msgid "Voucher performance"
-msgstr ""
+msgstr "Performance du bon de réduction"
 
 #: core/validators.py:38
 msgid "Specified page does not exist"
-msgstr ""
+msgstr "La page stécifiée n'existe pas"
 
 #: core/validators.py:79 core/validators.py:89
 msgid "Specified page does already exist"
-msgstr ""
+msgstr "La page spécifié existe déjà"
 
 #: templates/oscar/404.html:5
 msgid "Page not found"
-msgstr ""
+msgstr "Page non trouvée"
 
 #: templates/oscar/404.html:18 templates/oscar/500.html:14
 #: templates/oscar/catalogue/browse.html:17
@@ -3549,16 +3602,16 @@ msgstr ""
 #: templates/oscar/reviews/reviews.html:14
 #: templates/oscar/search/results.html:13
 msgid "Home"
-msgstr ""
+msgstr "Accueil"
 
 #: templates/oscar/404.html:19 templates/oscar/500.html:15
 #: templates/oscar/partials/footer.html:5
 msgid "About"
-msgstr ""
+msgstr "A propos"
 
 #: templates/oscar/404.html:20 templates/oscar/500.html:16
 msgid "Contact"
-msgstr ""
+msgstr "Contact"
 
 #: templates/oscar/404.html:23 templates/oscar/500.html:19
 #: templates/oscar/dashboard/index.html:10
@@ -3601,66 +3654,70 @@ msgstr ""
 #: templates/oscar/dashboard/vouchers/voucher_list.html:12
 #: templates/oscar/partials/nav_accounts.html:13
 msgid "Dashboard"
-msgstr ""
+msgstr "Dashboard"
 
 #: templates/oscar/404.html:25 templates/oscar/500.html:21
 #: templates/oscar/customer/order.html:47
 #: templates/oscar/customer/profile.html:29
 #: templates/oscar/customer/profile.html:40
 msgid "Profile"
-msgstr ""
+msgstr "Profil"
 
 #: templates/oscar/404.html:26 templates/oscar/500.html:22
 #: templates/oscar/dashboard/layout.html:27
 #: templates/oscar/partials/nav_accounts.html:11
 msgid "Logout"
-msgstr ""
+msgstr "Déconnexion"
 
 #: templates/oscar/404.html:28 templates/oscar/500.html:24
 #: templates/oscar/dashboard/layout.html:29
 #: templates/oscar/partials/nav_accounts.html:16
 msgid "Login"
-msgstr ""
+msgstr "Connexion"
 
 #: templates/oscar/404.html:37
 msgid "Oops, page not found!"
-msgstr ""
+msgstr "Oops, page non trouvée!"
 
 #: templates/oscar/404.html:38
 msgid ""
 "The page you are looking for isn't here. Please try again, use the "
 "navigation above or feel free to send us your feedback. Thank you."
 msgstr ""
+"La page que vous recherchez n'est pas ici. S'il vous plaît essayer de nouveau, utilisez la fonction"
+"navigation ci-dessus et n'hésitez pas à nous envoyer vos commentaires. merci."
 
 #: templates/oscar/404.html:40 templates/oscar/500.html:36
 msgid "Go back to previous page"
-msgstr ""
+msgstr "Retourner à la page précedente"
 
 #: templates/oscar/500.html:33
 msgid "Internal Server Error!"
-msgstr ""
+msgstr "Erreur du serveur!"
 
 #: templates/oscar/500.html:34
 msgid ""
 "Something went terribly wrong.  We're very sorry and will fix this problem "
 "as soon as possible."
 msgstr ""
+"Quelque chose a terriblement mal tourné. Nous sommes vraiment désolés et nous essayons de résoudre ce problème"
+"dès que possible."
 
 #: templates/oscar/base.html:5
 msgid "Build"
-msgstr ""
+msgstr "Build"
 
 #: templates/oscar/base.html:70
 msgid "Version:"
-msgstr ""
+msgstr "Version:"
 
 #: templates/oscar/basket/basket.html:23
 msgid "Important messages about items in your basket"
-msgstr ""
+msgstr "Messages importants à propos des articles de votre panier"
 
 #: templates/oscar/basket/basket.html:30
 msgid "You could be missing out on offers!"
-msgstr ""
+msgstr "Vous risquez de manquer quelques offres intéressantes!"
 
 #: templates/oscar/basket/basket.html:32
 #, python-format
@@ -3670,23 +3727,27 @@ msgid ""
 "\"%(url)s\">%(offer_name)s</a> special offer</div>\n"
 "    "
 msgstr ""
+"\n"
+"\t<div class=\"warning\">%(upsell_message)s pour qualifier pour le <a href="
+"\"%(url)s\">%(offer_name)s</a> offre spéciale</div>\n"
+"    "
 
 #: templates/oscar/basket/basket.html:41
 msgid "Items to buy now"
-msgstr ""
+msgstr "Articles à acheter maintenant"
 
 #: templates/oscar/basket/basket.html:43
 #: templates/oscar/basket/basket.html:203
 #: templates/oscar/checkout/checkout.html:79
 #: templates/oscar/dashboard/ranges/range_product_list.html:86
 msgid "Price"
-msgstr ""
+msgstr "Prix"
 
 #: templates/oscar/basket/basket.html:70
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:61
 #: templates/oscar/dashboard/reviews/review_list.html:104
 msgid "Update"
-msgstr ""
+msgstr "Mettre à jour"
 
 #: templates/oscar/basket/basket.html:71
 #: templates/oscar/basket/basket.html:221
@@ -3694,23 +3755,23 @@ msgstr ""
 #: templates/oscar/dashboard/promotions/page_detail.html:52
 #: templates/oscar/dashboard/ranges/range_product_list.html:102
 msgid "Remove"
-msgstr ""
+msgstr "Supprimer"
 
 #: templates/oscar/basket/basket.html:73
 msgid "Save for later"
-msgstr ""
+msgstr "Sauvegarder pour plus tard"
 
 #: templates/oscar/basket/basket.html:93
 msgid "Voucher/Promo Code"
-msgstr ""
+msgstr "Bon de réduction/Code promo"
 
 #: templates/oscar/basket/basket.html:95
 msgid "I have a voucher code..."
-msgstr ""
+msgstr "J'ai un bon de réduction..."
 
 #: templates/oscar/basket/basket.html:103
 msgid "Add voucher"
-msgstr ""
+msgstr "Ajouter un bon de réduction"
 
 #: templates/oscar/basket/basket.html:104
 #: templates/oscar/checkout/user_address_delete.html:20
@@ -3739,34 +3800,34 @@ msgstr ""
 #: templates/oscar/dashboard/vouchers/voucher_form.html:36
 #: templates/oscar/reviews/add_review.html:13
 msgid "cancel"
-msgstr ""
+msgstr "Annuler"
 
 #: templates/oscar/basket/basket.html:114
 msgid "Basket Totals"
-msgstr ""
+msgstr "Total du panier"
 
 #: templates/oscar/basket/basket.html:122
 msgid "Basket total (before discounts)"
-msgstr ""
+msgstr "Total du panier (avant réduction)"
 
 #: templates/oscar/basket/basket.html:128
 msgid "Special offer:"
-msgstr ""
+msgstr "Offre spéciale:"
 
 #: templates/oscar/basket/basket.html:152
 msgid "Basket total (after discounts)"
-msgstr ""
+msgstr "Total du panier (après réduction)"
 
 #: templates/oscar/basket/basket.html:157
 #: templates/oscar/checkout/thank_you.html:88
 msgid "Basket total"
-msgstr ""
+msgstr "Total du panier"
 
 #: templates/oscar/basket/basket.html:163
 #: templates/oscar/checkout/thank_you.html:26
 #: templates/oscar/dashboard/orders/order_detail.html:91
 msgid "Shipping"
-msgstr ""
+msgstr "Livraison"
 
 #: templates/oscar/basket/basket.html:167
 #: templates/oscar/checkout/thank_you.html:100
@@ -3775,177 +3836,177 @@ msgstr ""
 #: templates/oscar/dashboard/offers/offer_detail.html:58
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:59
 msgid "Order total"
-msgstr ""
+msgstr "Total de la commande"
 
 #: templates/oscar/basket/basket.html:180
 msgid "Proceed to checkout"
-msgstr ""
+msgstr "Procéder au réglement"
 
 #: templates/oscar/basket/basket.html:186
 #: templates/oscar/basket/partials/basket_quick.html:23
 msgid "Your basket is empty, you should probably add some items to buy."
-msgstr ""
+msgstr "Votre panier est vide, ajoutez quelques articles."
 
 #: templates/oscar/basket/basket.html:187
 #: templates/oscar/checkout/thank_you.html:116
 msgid "Continue shopping"
-msgstr ""
+msgstr "Continuer mes achats"
 
 #: templates/oscar/basket/basket.html:194
 msgid "To buy later"
-msgstr ""
+msgstr "Acheter plus tard"
 
 #: templates/oscar/basket/basket.html:198
 msgid "Your saved basket is empty."
-msgstr ""
+msgstr "Votre panier sauvegardé est vide."
 
 #: templates/oscar/basket/basket.html:202
 msgid "To buy an item now, click 'Move to basket'"
-msgstr ""
+msgstr "Pour acheter un article, cliquez sur 'Voir mon panier'"
 
 #: templates/oscar/basket/basket.html:228
 msgid "Move to basket"
-msgstr ""
+msgstr "Voir mon panier"
 
 #: templates/oscar/basket/saved_list.html:6
 msgid "Saved Basket"
-msgstr ""
+msgstr "Panier sauvegardé"
 
 #: templates/oscar/basket/partials/basket_quick.html:12
 msgid "Quantity:"
-msgstr ""
+msgstr "Quantité:"
 
 #: templates/oscar/basket/partials/basket_quick.html:17
 msgid "Total Excl Tax:"
-msgstr ""
+msgstr "Total HT:"
 
 #: templates/oscar/basket/partials/basket_quick.html:17
 #: templates/oscar/partials/nav_alternate.html:15
 #: templates/oscar/partials/nav_primary.html:16
 msgid "Total:"
-msgstr ""
+msgstr "Total:"
 
 #: templates/oscar/basket/partials/basket_quick.html:18
 #: templates/oscar/partials/brand.html:9
 msgid "View Basket"
-msgstr ""
+msgstr "Voir le panier"
 
 #: templates/oscar/basket/partials/basket_quick.html:19
 #: templates/oscar/checkout/checkout.html:6
 msgid "Checkout"
-msgstr ""
+msgstr "Commander"
 
 #: templates/oscar/catalogue/browse.html:34
 msgid "Browse Categories"
-msgstr ""
+msgstr "Parcourir les catégories"
 
 #: templates/oscar/catalogue/browse.html:81
 #: templates/oscar/dashboard/catalogue/product_list.html:101
 #: templates/oscar/dashboard/ranges/range_product_list.html:118
 #: templates/oscar/offer/detail.html:60
 msgid "No products found."
-msgstr ""
+msgstr "Aucun produit trouvé."
 
 #: templates/oscar/catalogue/detail.html:38
 msgid "Edit this product"
-msgstr ""
+msgstr "Editer ce produit"
 
 #: templates/oscar/catalogue/detail.html:58
 #: templates/oscar/catalogue/partials/product.html:23
 msgid "No Rating"
-msgstr ""
+msgstr "Aucune note"
 
 #: templates/oscar/catalogue/detail.html:60
 msgid "Add review"
-msgstr ""
+msgstr "Ajouter un avis"
 
 #: templates/oscar/catalogue/detail.html:64
 msgid "Product Code:"
-msgstr ""
+msgstr "Code produit:"
 
 #: templates/oscar/catalogue/detail.html:70
 msgid "Read the full description"
-msgstr ""
+msgstr "Lire la description complète"
 
 #: templates/oscar/catalogue/detail.html:81
 msgid "Product Description"
-msgstr ""
+msgstr "Description du produit"
 
 #: templates/oscar/catalogue/detail.html:105
 msgid "Price (incl. tax)"
-msgstr ""
+msgstr "Prix TTC"
 
 #: templates/oscar/catalogue/detail.html:108
 #: templates/oscar/customer/anon-order.html:56
 #: templates/oscar/customer/order.html:89
 msgid "Availability"
-msgstr ""
+msgstr "Disponibilité"
 
 #: templates/oscar/catalogue/detail.html:119
 msgid "Num reviews"
-msgstr ""
+msgstr "Nombre d'avis"
 
 #: templates/oscar/catalogue/detail.html:132
 msgid "Customer Reviews"
-msgstr ""
+msgstr "Avis clients"
 
 #: templates/oscar/catalogue/detail.html:135
 #: templates/oscar/reviews/reviews.html:38
 msgid "Read customer reviews on this product."
-msgstr ""
+msgstr "Lire les avis des clients sur ce produit."
 
 #: templates/oscar/catalogue/detail.html:137
 msgid "Be the first to review this product."
-msgstr ""
+msgstr "Soyez le premier à donner votre avis sur ce produit."
 
 #: templates/oscar/catalogue/detail.html:140
 #: templates/oscar/customer/anon-order.html:72
 #: templates/oscar/customer/order.html:107
 msgid "Write a review"
-msgstr ""
+msgstr "Ecrire un avis"
 
 #: templates/oscar/catalogue/detail.html:149
 msgid "Reviewed by"
-msgstr ""
+msgstr "Avis donné par"
 
 #: templates/oscar/catalogue/detail.html:169
 msgid "See all reviews"
-msgstr ""
+msgstr "Voir tous les avis"
 
 #: templates/oscar/catalogue/detail.html:180
 msgid "Related items"
-msgstr ""
+msgstr "Articles associés"
 
 #: templates/oscar/catalogue/detail.html:199
 msgid "Recommended items"
-msgstr ""
+msgstr "Articles recommendés"
 
 #: templates/oscar/catalogue/partials/add_to_basket_form.html:11
 #: templates/oscar/catalogue/partials/add_to_basket_form_compact.html:9
 msgid "Add to basket"
-msgstr ""
+msgstr "Ajouter au panier"
 
 #: templates/oscar/catalogue/partials/gallery.html:11
 msgid "Previous Image"
-msgstr ""
+msgstr "Image précedente"
 
 #: templates/oscar/catalogue/partials/gallery.html:12
 msgid "Next Image"
-msgstr ""
+msgstr "Image suivante"
 
 #: templates/oscar/catalogue/partials/gallery.html:28
 #: templates/oscar/reviews/reviews.html:74
 msgid "Previous"
-msgstr ""
+msgstr "Précedent"
 
 #: templates/oscar/catalogue/partials/gallery.html:29
 #: templates/oscar/reviews/reviews.html:84
 msgid "Next"
-msgstr ""
+msgstr "Suivant"
 
 #: templates/oscar/catalogue/partials/pagination.html:7
 msgid "previous"
-msgstr ""
+msgstr "Précédent"
 
 #: templates/oscar/catalogue/partials/pagination.html:10
 #, python-format
@@ -3954,149 +4015,154 @@ msgid ""
 "\t\tPage %(page_num)s of %(total_pages)s\n"
 "\t\t"
 msgstr ""
+"\n"
+"\t\tPage %(page_num)s sur %(total_pages)s\n"
+"\t\t"
 
 #: templates/oscar/catalogue/partials/pagination.html:15
 msgid "next"
-msgstr ""
+msgstr "Suivant"
 
 #: templates/oscar/checkout/checkout.html:39
 #: templates/oscar/customer/anon-order.html:32
 msgid "Contact number"
-msgstr ""
+msgstr "Numéro de contact"
 
 #: templates/oscar/checkout/checkout.html:43
 #: templates/oscar/customer/anon-order.html:38
 msgid "Shipping notes"
-msgstr ""
+msgstr "Notes d'expédition"
 
 #: templates/oscar/checkout/checkout.html:49
 msgid "Change shipping address"
-msgstr ""
+msgstr "Changer l'adresse de livraison"
 
 #: templates/oscar/checkout/checkout.html:59
 #: templates/oscar/checkout/thank_you.html:37
 #: templates/oscar/dashboard/orders/order_detail.html:92
 msgid "Payment"
-msgstr ""
+msgstr "Paiement"
 
 #: templates/oscar/checkout/checkout.html:62
 msgid "Payment details to go here"
-msgstr ""
+msgstr "Les détails de paiement sont ici!"
 
 #: templates/oscar/checkout/checkout.html:64
 msgid "Change payment details"
-msgstr ""
+msgstr "Changer les détails de paiement"
 
 #: templates/oscar/checkout/checkout.html:73
 #: templates/oscar/customer/anon-order.html:50
 #: templates/oscar/customer/order.html:82
 #: templates/oscar/dashboard/orders/order_detail.html:90
 msgid "Order contents"
-msgstr ""
+msgstr "Contenu de la commande"
 
 #: templates/oscar/checkout/checkout.html:77
 msgid "Items in basket"
-msgstr ""
+msgstr "Articles dans le panier"
 
 #: templates/oscar/checkout/checkout.html:121
 #: templates/oscar/customer/emails/commtype_order_placed_body.html:14
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:10
 #: templates/oscar/partials/brand.html:16
 msgid "Basket total:"
-msgstr ""
+msgstr "Total du panier:"
 
 #: templates/oscar/checkout/checkout.html:127
 msgid "Order total:"
-msgstr ""
+msgstr "Total de la commande:"
 
 #: templates/oscar/checkout/checkout.html:133
 msgid "Edit order contents"
-msgstr ""
+msgstr "Editer le contenu de la commande"
 
 #: templates/oscar/checkout/gateway.html:6
 msgid "Checkout gateway"
-msgstr ""
+msgstr "Portail de commande"
 
 #: templates/oscar/checkout/gateway.html:16
 msgid "Who are you?"
-msgstr ""
+msgstr "Identifiez-vous!"
 
 #: templates/oscar/checkout/gateway.html:40
 msgid "I have an account and my password is"
-msgstr ""
+msgstr "J'ai un compte et mon mot de passe est"
 
 #: templates/oscar/checkout/gateway.html:56
 msgid "Get a password reminder"
-msgstr ""
+msgstr "Obtenir un indice du mot de passe"
 
 #: templates/oscar/checkout/gateway.html:62
 msgid "I don't want to create an account"
-msgstr ""
+msgstr "Je ne veux pas créer un compte client"
 
 #: templates/oscar/checkout/gateway.html:68
 #: templates/oscar/checkout/payment_details.html:29
 #: templates/oscar/checkout/shipping_address.html:61
 #: templates/oscar/dashboard/offers/step_form.html:39
 msgid "Continue"
-msgstr ""
+msgstr "Continuer"
 
 #: templates/oscar/checkout/gateway.html:69
 msgid "Alternatively"
-msgstr ""
+msgstr "Sinon"
 
 #: templates/oscar/checkout/gateway.html:69
 msgid "create an account"
-msgstr ""
+msgstr "Créer un compte"
 
 #: templates/oscar/checkout/gateway.html:69
 msgid "before you checkout."
-msgstr ""
+msgstr "Avant la commande."
 
 #: templates/oscar/checkout/nav.html:4
 msgid "1. Shipping address"
-msgstr ""
+msgstr "1. Adresse de livraison"
 
 #: templates/oscar/checkout/nav.html:5
 msgid "2. Shipping method"
-msgstr ""
+msgstr "2. Méthode de livraison"
 
 #: templates/oscar/checkout/nav.html:6
 msgid "3. Payment"
-msgstr ""
+msgstr "3. Paiement"
 
 #: templates/oscar/checkout/nav.html:7
 msgid "4. Confirmation"
-msgstr ""
+msgstr "4. Confirmation"
 
 #: templates/oscar/checkout/payment_details.html:6
 msgid "Payment details"
-msgstr ""
+msgstr "Datails du paiement"
 
 #: templates/oscar/checkout/payment_details.html:24
 msgid ""
 "This page needs implementing within your project.  Or you could use one of "
 "Oscar's plugin libraries:"
 msgstr ""
+"This page needs implementing within your project.  Or you could use one of "
+"Oscar's plugin libraries:"
 
 #: templates/oscar/checkout/preview.html:5
 msgid "Order preview"
-msgstr ""
+msgstr "Prévisualisation de la commande"
 
 #: templates/oscar/checkout/preview.html:13
 msgid "Please review the information above, then click 'Place Order'"
-msgstr ""
+msgstr "Merci de bien vérifier les informations ci dessus, puis cliquer sur 'Confirmation de la commande'"
 
 #: templates/oscar/checkout/preview.html:18
 msgid "Place order"
-msgstr ""
+msgstr "Confirmation de la commande"
 
 #: templates/oscar/checkout/shipping_address.html:16
 msgid "Where should we ship to?"
-msgstr ""
+msgstr "Où doit-on expédier la commande?"
 
 #: templates/oscar/checkout/shipping_address.html:35
 msgid "Ship to this address"
-msgstr ""
+msgstr "Expédier à cette adresse"
 
 #: templates/oscar/checkout/shipping_address.html:36
 #: templates/oscar/customer/address-book.html:46
@@ -4113,7 +4179,7 @@ msgstr ""
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:81
 #: templates/oscar/dashboard/vouchers/voucher_list.html:63
 msgid "Edit"
-msgstr ""
+msgstr "Editer"
 
 #: templates/oscar/checkout/shipping_address.html:37
 #: templates/oscar/customer/address-book.html:47
@@ -4133,15 +4199,15 @@ msgstr ""
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:82
 #: templates/oscar/dashboard/vouchers/voucher_list.html:64
 msgid "Delete"
-msgstr ""
+msgstr "Effacer"
 
 #: templates/oscar/checkout/shipping_address.html:49
 msgid "Or a new address?"
-msgstr ""
+msgstr "Ou avec une nouvelle adresse?"
 
 #: templates/oscar/checkout/shipping_address.html:52
 msgid "Your addressbook is currently empty"
-msgstr ""
+msgstr "Votre carnet d'adresse est vide"
 
 #: templates/oscar/checkout/shipping_address.html:62
 #: templates/oscar/checkout/user_address_delete.html:20
@@ -4171,32 +4237,32 @@ msgstr ""
 #: templates/oscar/dashboard/vouchers/voucher_form.html:35
 #: templates/oscar/reviews/add_review.html:12
 msgid "or"
-msgstr ""
+msgstr "ou"
 
 #: templates/oscar/checkout/shipping_address.html:62
 msgid "return to basket"
-msgstr ""
+msgstr "retourner au panier"
 
 #: templates/oscar/checkout/shipping_methods.html:19
 msgid "Choose a shipping method"
-msgstr ""
+msgstr "Choisir une méthode de livraison"
 
 #: templates/oscar/checkout/shipping_methods.html:24
 #: templates/oscar/checkout/thank_you.html:54
 msgid "Cost"
-msgstr ""
+msgstr "Cout"
 
 #: templates/oscar/checkout/shipping_methods.html:32
 msgid "Description:"
-msgstr ""
+msgstr "Description:"
 
 #: templates/oscar/checkout/shipping_methods.html:41
 msgid "Select option"
-msgstr ""
+msgstr "Selectionner une option"
 
 #: templates/oscar/checkout/thank_you.html:6
 msgid "Confirmation of order"
-msgstr ""
+msgstr "Confirmation de la commmande"
 
 #: templates/oscar/checkout/thank_you.html:14
 #, python-format
@@ -4205,60 +4271,66 @@ msgid ""
 "\t\tConfirmation for order #%(order_num)s\n"
 "\t\t"
 msgstr ""
+"\n"
+"\t\tConfirmation pour la commande #%(order_num)s\n"
+"\t\t"
 
 #: templates/oscar/checkout/thank_you.html:18
 msgid ""
 "Your order has been placed and a confirmation email has ben sent - your "
 "order number is"
-msgstr ""
+msgstr "Votre commande est en attente et un email de confirmation vient d'être evoyé - votre"
+"numéro de commande est"
 
 #: templates/oscar/checkout/thank_you.html:20
 msgid ""
 "Please make a note of this reference or print this page and quote it in any "
 "communication with us regarding your order."
 msgstr ""
+"Veuillez noter cette référence ou imprimer cette page. Nous communiquer ces informations"
+"dans toutes les conversations avec nous concernant votre commande."
 
 #: templates/oscar/checkout/thank_you.html:27
 msgid "Your order will be delivered to:"
-msgstr ""
+msgstr "Votre commande sera livrée à:"
 
 #: templates/oscar/checkout/thank_you.html:46
 msgid "Order details"
-msgstr ""
+msgstr "Détail de la commande"
 
 #: templates/oscar/checkout/thank_you.html:51
 msgid "Items purchased"
-msgstr ""
+msgstr "Articles achetés"
 
 #: templates/oscar/checkout/thank_you.html:52
 msgid "Estimated dispatch date"
-msgstr ""
+msgstr "Date d'expédition estimée"
 
 #: templates/oscar/checkout/thank_you.html:94
 #, python-format
 msgid "Shipping charge - %(method)s"
-msgstr ""
+msgstr "Frais de port - %(method)s"
 
 #: templates/oscar/checkout/thank_you.html:107
 msgid "Tracking your order"
-msgstr ""
+msgstr "Suivi de votre commande"
 
 #: templates/oscar/checkout/thank_you.html:115
 msgid "Print this page"
-msgstr ""
+msgstr "Imprimer cette page"
 
 #: templates/oscar/checkout/user_address_delete.html:19
 #: templates/oscar/customer/address-delete.html:36
 msgid "Are you sure you want to delete this address?"
-msgstr ""
+msgstr "Etes-vous sûr de vouloir supprimer cette adresse?"
 
 #: templates/oscar/checkout/user_address_delete.html:19
 msgid "Yes!"
-msgstr ""
+msgstr "Oui!"
 
 #: templates/oscar/checkout/user_address_form.html:14
 msgid "Enter an address for your addressbook"
-msgstr ""
+msgstr "Entrez une adresse de votre carnet d'adresse"
 
 #: templates/oscar/checkout/user_address_form.html:20
 #: templates/oscar/customer/address-form.html:38
@@ -4270,14 +4342,14 @@ msgstr ""
 #: templates/oscar/dashboard/reviews/review_update.html:81
 #: templates/oscar/dashboard/vouchers/voucher_form.html:35
 msgid "Save"
-msgstr ""
+msgstr "Sauvegarder"
 
 #: templates/oscar/customer/address-book.html:6
 #: templates/oscar/customer/address-book.html:19
 #: templates/oscar/customer/address-delete.html:20
 #: templates/oscar/customer/address-form.html:20
 msgid "Address book"
-msgstr ""
+msgstr "Carner d'adresse"
 
 #: templates/oscar/customer/address-book.html:16
 #: templates/oscar/customer/address-delete.html:16
@@ -4293,26 +4365,26 @@ msgstr ""
 #: templates/oscar/dashboard/layout.html:26
 #: templates/oscar/partials/nav_accounts.html:10
 msgid "Account"
-msgstr ""
+msgstr "Compte"
 
 #: templates/oscar/customer/address-book.html:25
 #: templates/oscar/customer/profile.html:31
 msgid "Address Book"
-msgstr ""
+msgstr "Carnet d'adresse"
 
 #: templates/oscar/customer/address-book.html:54
 msgid "There are no addresses in your address book."
-msgstr ""
+msgstr "Il n'y a aucune adresse dans votre carnet d'adresse."
 
 #: templates/oscar/customer/address-book.html:57
 msgid "Add a New Address"
-msgstr ""
+msgstr "Ajouter une nouvelle adresse"
 
 #: templates/oscar/customer/address-delete.html:6
 #: templates/oscar/customer/address-delete.html:23
 #: templates/oscar/customer/address-delete.html:29
 msgid "Delete address?"
-msgstr ""
+msgstr "supprimer l'adresse?"
 
 #: templates/oscar/customer/anon-order.html:8
 #: templates/oscar/customer/order.html:23
@@ -4320,35 +4392,35 @@ msgstr ""
 #: templates/oscar/dashboard/orders/order_detail.html:27
 #, python-format
 msgid "Order #%(number)s"
-msgstr ""
+msgstr "Commande #%(number)s"
 
 #: templates/oscar/customer/anon-order.html:58
 msgid "Line price excl. tax"
-msgstr ""
+msgstr "Prix de la ligne HT"
 
 #: templates/oscar/customer/anon-order.html:59
 msgid "Line price incl. tax"
-msgstr ""
+msgstr "Prix de la ligne TTC"
 
 #: templates/oscar/customer/anon-order.html:85
 msgid "Totals"
-msgstr ""
+msgstr "Totals"
 
 #: templates/oscar/customer/anon-order.html:87
 #: templates/oscar/customer/order.html:119
 msgid "Basket total (inc. tax)"
-msgstr ""
+msgstr "Total du panier TTC"
 
 #: templates/oscar/customer/change-password.html:16
 #: templates/oscar/customer/change-password.html:22
 #: templates/oscar/customer/change-password.html:27
 #: templates/oscar/customer/profile.html:68
 msgid "Change password"
-msgstr ""
+msgstr "Changer de mot de passe"
 
 #: templates/oscar/customer/change-password.html:38
 msgid "Update password"
-msgstr ""
+msgstr "Mettre a jour le mot de passe"
 
 #: templates/oscar/customer/email-history.html:6
 #: templates/oscar/customer/email-history.html:19
@@ -4356,13 +4428,13 @@ msgstr ""
 #: templates/oscar/customer/email.html:17
 #: templates/oscar/customer/profile.html:150
 msgid "Email history"
-msgstr ""
+msgstr "Historique des emails"
 
 #: templates/oscar/customer/email-history.html:32
 #: templates/oscar/customer/email.html:40
 #: templates/oscar/customer/profile.html:160
 msgid "Date sent"
-msgstr ""
+msgstr "Date d'envoi"
 
 #: templates/oscar/customer/email-history.html:41
 #: templates/oscar/customer/order-history.html:53
@@ -4377,30 +4449,30 @@ msgstr ""
 #: templates/oscar/dashboard/users/index.html:66
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:72
 msgid "View"
-msgstr ""
+msgstr "Voir"
 
 #: templates/oscar/customer/email.html:26
 msgid "Email detail"
-msgstr ""
+msgstr "Email détail"
 
 #: templates/oscar/customer/email.html:31
 #: templates/oscar/dashboard/users/detail.html:37
 msgid "Email:"
-msgstr ""
+msgstr "Email;"
 
 #: templates/oscar/customer/email.html:53
 msgid "Return to email history"
-msgstr ""
+msgstr "Retourner à l'historique des emails"
 
 #: templates/oscar/customer/login_registration.html:6
 #: templates/oscar/customer/login_registration.html:15
 msgid "Login or register"
-msgstr ""
+msgstr "Connection ou inscription"
 
 #: templates/oscar/customer/login_registration.html:24
 #: templates/oscar/customer/login_registration.html:27
 msgid "Log In"
-msgstr ""
+msgstr "Connection"
 
 #: templates/oscar/customer/login_registration.html:32
 #: templates/oscar/customer/login_registration.html:35
@@ -4409,7 +4481,7 @@ msgstr ""
 #: templates/oscar/customer/registration.html:23
 #: templates/oscar/customer/registration.html:26
 msgid "Register"
-msgstr ""
+msgstr "Inscription"
 
 #: templates/oscar/customer/order-history.html:15
 #: templates/oscar/customer/order-history.html:20
@@ -4417,15 +4489,15 @@ msgstr ""
 #: templates/oscar/customer/order.html:20
 #: templates/oscar/customer/profile.html:79
 msgid "Order history"
-msgstr ""
+msgstr "Historique des commandes"
 
 #: templates/oscar/customer/order-history.html:31
 msgid "Search in orders"
-msgstr ""
+msgstr "Rechercher dans les commandes"
 
 #: templates/oscar/customer/order-history.html:34
 msgid "Filter results"
-msgstr ""
+msgstr "Filtrer les résultats"
 
 #: templates/oscar/customer/order-history.html:35
 #: templates/oscar/dashboard/offers/offer_list.html:33
@@ -4433,112 +4505,112 @@ msgstr ""
 #: templates/oscar/dashboard/users/index.html:33
 #: templates/oscar/dashboard/vouchers/voucher_list.html:33
 msgid "Reset"
-msgstr ""
+msgstr "Remettre à zéro"
 
 #: templates/oscar/customer/order-history.html:43
 #: templates/oscar/customer/profile.html:86
 #: templates/oscar/dashboard/orders/order_list.html:88
 msgid "Total inc tax"
-msgstr ""
+msgstr "Total TTC"
 
 #: templates/oscar/customer/order-history.html:44
 #: templates/oscar/customer/profile.html:87
 msgid "Date submitted"
-msgstr ""
+msgstr "Date de validation"
 
 #: templates/oscar/customer/order-history.html:58
 #: templates/oscar/customer/order.html:106
 #: templates/oscar/customer/profile.html:101
 #: templates/oscar/dashboard/promotions/page_detail.html:51
 msgid "Re-order"
-msgstr ""
+msgstr "Re-commander"
 
 #: templates/oscar/customer/order-history.html:65
 msgid "No orders found"
-msgstr ""
+msgstr "Aucune commande trouvée"
 
 #: templates/oscar/customer/order.html:38
 msgid "Shipping Address"
-msgstr ""
+msgstr "Adresse de livraison"
 
 #: templates/oscar/customer/order.html:40
 msgid "Order Contents"
-msgstr ""
+msgstr "Contenu de la commande"
 
 #: templates/oscar/customer/order.html:52
 msgid "Address:"
-msgstr ""
+msgstr "Adresse:"
 
 #: templates/oscar/customer/order.html:60
 msgid "Contact Number:"
-msgstr ""
+msgstr "Numéro de contact:"
 
 #: templates/oscar/customer/order.html:66
 msgid "Shipping Notes:"
-msgstr ""
+msgstr "Notes de livraison"
 
 #: templates/oscar/customer/order.html:91
 msgid "Line price excl tax"
-msgstr ""
+msgstr "Prix de la ligne HT"
 
 #: templates/oscar/customer/order.html:92
 msgid "Line price incl tax"
-msgstr ""
+msgstr "Prix de la ligne TTC"
 
 #: templates/oscar/customer/profile-form.html:14
 #: templates/oscar/customer/profile-form.html:20
 #: templates/oscar/customer/profile-form.html:25
 #: templates/oscar/customer/profile.html:67
 msgid "Edit profile"
-msgstr ""
+msgstr "Editer profil"
 
 #: templates/oscar/customer/profile.html:6
 msgid "My account"
-msgstr ""
+msgstr "Mon compte"
 
 #: templates/oscar/customer/profile.html:30
 msgid "Order History"
-msgstr ""
+msgstr "Historique des commandes"
 
 #: templates/oscar/customer/profile.html:32
 msgid "Email History"
-msgstr ""
+msgstr "Historique des emails"
 
 #: templates/oscar/customer/profile.html:109
 msgid "View order history"
-msgstr ""
+msgstr "Voir l'historique de la commande"
 
 #: templates/oscar/customer/profile.html:112
 msgid "You haven't placed any orders yet."
-msgstr ""
+msgstr "Vous n'avez pas encore passé de commande."
 
 #: templates/oscar/customer/profile.html:125
 msgid "Number of addresses in addressbook"
-msgstr ""
+msgstr "Nombre d'adresse dans le carnet d'adresse"
 
 #: templates/oscar/customer/profile.html:129
 msgid "Default shipping address"
-msgstr ""
+msgstr "Adresse de livraison par défaut"
 
 #: templates/oscar/customer/profile.html:133
 msgid "Default billing address"
-msgstr ""
+msgstr "Adresse de facturation par défaut"
 
 #: templates/oscar/customer/profile.html:139
 msgid "Manage address book"
-msgstr ""
+msgstr "Gestion du carnet d'adresse"
 
 #: templates/oscar/customer/profile.html:154
 msgid "You haven't been sent any emails yet."
-msgstr ""
+msgstr "Aucun email pour l'instant"
 
 #: templates/oscar/customer/profile.html:175
 msgid "View email history"
-msgstr ""
+msgstr "Voir l'historique des emails"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.html:1
 msgid "Hello,"
-msgstr ""
+msgstr "Bonjour,"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.html:3
 #, python-format
@@ -4546,36 +4618,38 @@ msgid ""
 "We are pleased to confirm your order %(order.number)s has been received and\n"
 "will be processed shortly."
 msgstr ""
+"Nous sommes heureux de confirmer votre commande %(order.number)s. Cette commande a bien été reçue\n"
+"et sera tratée sous peu."
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.html:6
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:6
 msgid "Your order contains:"
-msgstr ""
+msgstr "Votre commande contient:"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.html:10
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:8
 msgid "quantity:"
-msgstr ""
+msgstr "Quantité:"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.html:10
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:8
 msgid "price:"
-msgstr ""
+msgstr "Prix:"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.html:15
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:11
 msgid "Shipping:"
-msgstr ""
+msgstr "Livraison:"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.html:16
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:12
 msgid "Order Total:"
-msgstr ""
+msgstr "Total de la commande"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.html:19
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:14
 msgid "Shipping address:"
-msgstr ""
+msgstr "Adresse de livraison:"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.html:24
 #, python-format
@@ -4583,11 +4657,13 @@ msgid ""
 "You can view the status of this order by clicking <a href=\"%(status_url)s\" "
 "title=\"order status\">here</a>"
 msgstr ""
+"Vous pouvez afficher l'état de cet ordre en cliquant <a href=\"%(status_url)s\" "
+"title=\"order status\">ici</a>"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.html:27
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:24
 msgid "The team"
-msgstr ""
+msgstr "L'équipe de Powergun"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:1
 #, python-format
@@ -4597,6 +4673,10 @@ msgid ""
 "We are pleased to confirm your order %(order.number)s has been received and\n"
 "will be processed shortly."
 msgstr ""
+"Bonjour,\n"
+"\n"
+"Nous sommes heureux de confirmer votre commande %(order.number)s. Cette commande a bien été reçue\n"
+"et sera tratée sous peu."
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:20
 #, python-format
@@ -4604,153 +4684,155 @@ msgid ""
 "You can view the status of this order at the below URL:\n"
 "%(status_url)s"
 msgstr ""
+"Vous pouvez afficher l'état de cet ordre à l'adresse URL ci-dessous:\n"
+"%(status_url)s"
 
 #: templates/oscar/customer/emails/commtype_order_placed_subject.txt:1
 #, python-format
 msgid "Confirmation of order %(order.number)s"
-msgstr ""
+msgstr "Confirmation de la commande %(order.number)s"
 
 #: templates/oscar/customer/emails/commtype_registration_body.html:1
 #: templates/oscar/customer/emails/commtype_registration_body.txt:1
 #: templates/oscar/customer/emails/commtype_registration_subject.txt:1
 msgid "Thank you for registering."
-msgstr ""
+msgstr "Merci pour votre inscription."
 
 #: templates/oscar/customer/history/recently-viewed-products.html:3
 msgid "Products you recently viewed"
-msgstr ""
+msgstr "Produits que vous avez récemment vus"
 
 #: templates/oscar/dashboard/index.html:26
 msgid "Last 24 hours"
-msgstr ""
+msgstr "Dernière 24 heures"
 
 #: templates/oscar/dashboard/index.html:57
 msgid "Order stats for last 24 hours"
-msgstr ""
+msgstr "Statistiques des commandes pour les dernières 24 heures"
 
 #: templates/oscar/dashboard/index.html:59
 #: templates/oscar/dashboard/index.html:105
 #: templates/oscar/dashboard/orders/statistics.html:43
 msgid "Total orders"
-msgstr ""
+msgstr "Total des commandes"
 
 #: templates/oscar/dashboard/index.html:63
 #: templates/oscar/dashboard/index.html:109
 #: templates/oscar/dashboard/orders/statistics.html:47
 msgid "Total lines"
-msgstr ""
+msgstr "Total des lignes"
 
 #: templates/oscar/dashboard/index.html:67
 #: templates/oscar/dashboard/index.html:113
 #: templates/oscar/dashboard/orders/statistics.html:51
 msgid "Total revenue"
-msgstr ""
+msgstr "Total CA"
 
 #: templates/oscar/dashboard/index.html:71
 msgid "Average order costs"
-msgstr ""
+msgstr "Coûts moyens par commande"
 
 #: templates/oscar/dashboard/index.html:81
 msgid "Total customers"
-msgstr ""
+msgstr "Total des clients"
 
 #: templates/oscar/dashboard/index.html:85
 msgid "New customers"
-msgstr ""
+msgstr "Nouveaux clients"
 
 #: templates/oscar/dashboard/index.html:89
 #: templates/oscar/dashboard/index.html:117
 #: templates/oscar/dashboard/orders/order_detail.html:155
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #: templates/oscar/dashboard/index.html:89
 #: templates/oscar/dashboard/index.html:117
 msgid "open"
-msgstr ""
+msgstr "Ouvert"
 
 #: templates/oscar/dashboard/index.html:89
 #: templates/oscar/dashboard/index.html:117
 msgid "baskets"
-msgstr ""
+msgstr "Paniers"
 
 #: templates/oscar/dashboard/index.html:97
 msgid "All time"
-msgstr ""
+msgstr "Depuis l'ouverture"
 
 #: templates/oscar/dashboard/index.html:121
 msgid "Manage orders"
-msgstr ""
+msgstr "Gestion des commandes"
 
 #: templates/oscar/dashboard/index.html:126
 msgid "Catalogue and stock"
-msgstr ""
+msgstr "Catalogue et stock"
 
 #: templates/oscar/dashboard/index.html:128
 msgid "Total products"
-msgstr ""
+msgstr "Total produits"
 
 #: templates/oscar/dashboard/index.html:132
 #: templates/oscar/dashboard/index.html:136
 msgid "stock alerts"
-msgstr ""
+msgstr "Alertes stock"
 
 #: templates/oscar/dashboard/index.html:140
 msgid "Manage catalogue"
-msgstr ""
+msgstr "Gestion du catalogue"
 
 #: templates/oscar/dashboard/index.html:141
 msgid "View stock alerts"
-msgstr ""
+msgstr "Voir les alertes stock"
 
 #: templates/oscar/dashboard/index.html:144
 msgid "Offers, vouchers and promotions"
-msgstr ""
+msgstr "Offres, bon de réduction et promotions"
 
 #: templates/oscar/dashboard/index.html:146
 #: templates/oscar/dashboard/index.html:150
 #: templates/oscar/dashboard/offers/offer_list.html:59
 #: templates/oscar/dashboard/users/index.html:49
 msgid "Active"
-msgstr ""
+msgstr "Actif"
 
 #: templates/oscar/dashboard/index.html:146
 msgid "Site"
-msgstr ""
+msgstr "Site"
 
 #: templates/oscar/dashboard/catalogue/product_list.html:8
 #: templates/oscar/dashboard/catalogue/product_list.html:23
 msgid "Catalogue management"
-msgstr ""
+msgstr "Gestion du catalogue"
 
 #: templates/oscar/dashboard/catalogue/product_list.html:32
 msgid "Create a new product of type"
-msgstr ""
+msgstr "Créer un nouveau type de produit"
 
 #: templates/oscar/dashboard/catalogue/product_list.html:39
 msgid "New Product"
-msgstr ""
+msgstr "Nouveau produit"
 
 #: templates/oscar/dashboard/catalogue/product_list.html:65
 msgid "Price excl. tax"
-msgstr ""
+msgstr "Pric HT"
 
 #: templates/oscar/dashboard/catalogue/product_list.html:66
 msgid "Price incl. tax"
-msgstr ""
+msgstr "Pric TTC"
 
 #: templates/oscar/dashboard/catalogue/product_list.html:68
 msgid "Number allocated"
-msgstr ""
+msgstr "Nombre alloué"
 
 #: templates/oscar/dashboard/catalogue/product_list.html:87
 #: templates/oscar/dashboard/catalogue/product_update.html:150
 msgid "View on site"
-msgstr ""
+msgstr "Voir sur le site"
 
 #: templates/oscar/dashboard/catalogue/product_update.html:89
 msgid "Category information"
-msgstr ""
+msgstr "Catégorie"
 
 #: templates/oscar/dashboard/catalogue/product_update.html:91
 msgid ""
@@ -4759,42 +4841,46 @@ msgid ""
 "\t\tin the site breadcrumb trail.\n"
 "\t\t"
 msgstr ""
+"La première catégorie dans cette liste est la \"primary\" catégorie pour les produits, "
+"et sera celle affichée\n"
+"\t\tdans le 'breadcrumb' du site.\n"
+"\t\t"
 
 #: templates/oscar/dashboard/catalogue/product_update.html:105
 msgid "Images"
-msgstr ""
+msgstr "Images"
 
 #: templates/oscar/dashboard/catalogue/product_update.html:116
 msgid "Stock and price information"
-msgstr ""
+msgstr "Stock et prix informations"
 
 #: templates/oscar/dashboard/catalogue/product_update.html:147
 msgid "Save Product"
-msgstr ""
+msgstr "Sauvegarder le produit"
 
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:32
 msgid "All"
-msgstr ""
+msgstr "Tout"
 
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:46
 msgid "Low stock threshold"
-msgstr ""
+msgstr "Seuil de l'alerte stock"
 
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:47
 msgid "Current available stock"
-msgstr ""
+msgstr "Stock actuel"
 
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:48
 msgid "Date alert raised"
-msgstr ""
+msgstr "Date de levé de l'alerte"
 
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:69
 msgid "No stock alerts found."
-msgstr ""
+msgstr "Aucune alerte stock."
 
 #: templates/oscar/dashboard/offers/offer_delete.html:6
 msgid "Delete offer"
-msgstr ""
+msgstr "supprimer l'offre"
 
 #: templates/oscar/dashboard/offers/offer_delete.html:6
 #: templates/oscar/dashboard/offers/offer_list.html:6
@@ -4802,12 +4888,12 @@ msgstr ""
 #: templates/oscar/dashboard/offers/offer_list.html:21
 #: templates/oscar/dashboard/offers/step_form.html:6
 msgid "Offer management"
-msgstr ""
+msgstr "Gestion des offres"
 
 #: templates/oscar/dashboard/offers/offer_delete.html:19
 #: templates/oscar/dashboard/offers/offer_delete.html:25
 msgid "Delete offer?"
-msgstr ""
+msgstr "Supprimer l'offre?"
 
 #: templates/oscar/dashboard/offers/offer_detail.html:6
 #, python-format
@@ -4815,34 +4901,36 @@ msgid ""
 "\n"
 "Offer '%(name)s' | Offer management\n"
 msgstr ""
+"\n"
+"Offre '%(name)s' | Gestion des offres\n"
 
 #: templates/oscar/dashboard/offers/offer_detail.html:21
 #: templates/oscar/dashboard/offers/offer_detail.html:27
 #, python-format
 msgid "Offer '%(name)s'"
-msgstr ""
+msgstr "Offre '%(name)s'"
 
 #: templates/oscar/dashboard/offers/offer_detail.html:35
 msgid "Offer details"
-msgstr ""
+msgstr "Détails de l'offre"
 
 #: templates/oscar/dashboard/offers/offer_detail.html:46
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:47
 msgid "Number of orders"
-msgstr ""
+msgstr "Nombre de commandes"
 
 #: templates/oscar/dashboard/offers/offer_detail.html:50
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:52
 msgid "Recent orders"
-msgstr ""
+msgstr "Commandes récentes"
 
 #: templates/oscar/dashboard/offers/offer_detail.html:52
 msgid "No orders have been placed that use this offer."
-msgstr ""
+msgstr "Aucune commande utilisant cette offre."
 
 #: templates/oscar/dashboard/offers/offer_detail.html:54
 msgid "We show a maximum of 20 orders sorted by recency."
-msgstr ""
+msgstr "Nous montrons un maximum de 20 commandes triées par date."
 
 #: templates/oscar/dashboard/offers/offer_detail.html:59
 #: templates/oscar/dashboard/orders/order_detail.html:143
@@ -4850,29 +4938,29 @@ msgstr ""
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:39
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:60
 msgid "Discount"
-msgstr ""
+msgstr "Réduction"
 
 #: templates/oscar/dashboard/offers/offer_list.html:37
 msgid "Create new offer"
-msgstr ""
+msgstr "Créer une nouvelle offre"
 
 #: templates/oscar/dashboard/offers/offer_list.html:59
 msgid "Inactive"
-msgstr ""
+msgstr "Inactif"
 
 #: templates/oscar/dashboard/offers/offer_list.html:66
 #: templates/oscar/dashboard/vouchers/voucher_list.html:62
 msgid "Stats"
-msgstr ""
+msgstr "Statistiques"
 
 #: templates/oscar/dashboard/offers/offer_list.html:78
 msgid "No offers found."
-msgstr ""
+msgstr "Aucune offre touvée"
 
 #: templates/oscar/dashboard/offers/preview.html:20
 #: templates/oscar/dashboard/offers/step_form.html:37
 msgid "Back"
-msgstr ""
+msgstr "Retour"
 
 #: templates/oscar/dashboard/orders/line_detail.html:6
 #, python-format
@@ -4880,104 +4968,106 @@ msgid ""
 "\n"
 "Order %(number)s - Line #%(id)s\n"
 msgstr ""
+"\n"
+"Commande %(number)s - Ligne #%(id)s\n"
 
 #: templates/oscar/dashboard/orders/line_detail.html:25
 #, python-format
 msgid "Line #%(id)s"
-msgstr ""
+msgstr "Ligne #%(id)s"
 
 #: templates/oscar/dashboard/orders/line_detail.html:31
 #, python-format
 msgid "Order #%(number)s - Line #%(id)s"
-msgstr ""
+msgstr "Commande #%(number)s - Ligne #%(id)s"
 
 #: templates/oscar/dashboard/orders/line_detail.html:39
 msgid "Product details"
-msgstr ""
+msgstr "Détails du produit"
 
 #: templates/oscar/dashboard/orders/line_detail.html:53
 msgid "Partner details"
-msgstr ""
+msgstr "Détails du fournisseur"
 
 #: templates/oscar/dashboard/orders/line_detail.html:67
 msgid "Shipping details"
-msgstr ""
+msgstr "Détails de livraison"
 
 #: templates/oscar/dashboard/orders/line_detail.html:70
 msgid "Partner reference number"
-msgstr ""
+msgstr "Numéro de référence du fournisseur"
 
 #: templates/oscar/dashboard/orders/line_detail.html:73
 msgid "Partner notes"
-msgstr ""
+msgstr "Notes fournisseur"
 
 #: templates/oscar/dashboard/orders/line_detail.html:76
 msgid "Estimate dispatch date"
-msgstr ""
+msgstr "Date de livraison estimée"
 
 #: templates/oscar/dashboard/orders/order_detail.html:8
 #, python-format
 msgid "Order %(number)s"
-msgstr ""
+msgstr "Commande %(number)s"
 
 #: templates/oscar/dashboard/orders/order_detail.html:33
 msgid "Customer Information"
-msgstr ""
+msgstr "Information client"
 
 #: templates/oscar/dashboard/orders/order_detail.html:51
 msgid "Customer checked out anonymously."
-msgstr ""
+msgstr "Commandes clients anonymes "
 
 #: templates/oscar/dashboard/orders/order_detail.html:53
 msgid "Order information"
-msgstr ""
+msgstr "Information commande"
 
 #: templates/oscar/dashboard/orders/order_detail.html:57
 msgid "Order Total"
-msgstr ""
+msgstr "Total de la commande"
 
 #: templates/oscar/dashboard/orders/order_detail.html:69
 msgid "Time of purchase"
-msgstr ""
+msgstr "Moment de l'achat"
 
 #: templates/oscar/dashboard/orders/order_detail.html:83
 msgid "Order Details"
-msgstr ""
+msgstr "Détails de la commande"
 
 #: templates/oscar/dashboard/orders/order_detail.html:93
 #: templates/oscar/dashboard/orders/order_detail.html:380
 msgid "Discounts"
-msgstr ""
+msgstr "Réductions"
 
 #: templates/oscar/dashboard/orders/order_detail.html:95
 #: templates/oscar/dashboard/orders/order_detail.html:234
 #: templates/oscar/dashboard/orders/order_detail.html:421
 msgid "Notes"
-msgstr ""
+msgstr "Notes"
 
 #: templates/oscar/dashboard/orders/order_detail.html:102
 msgid "Items ordered"
-msgstr ""
+msgstr "Articles commandés"
 
 #: templates/oscar/dashboard/orders/order_detail.html:109
 msgid "Select"
-msgstr ""
+msgstr "Sélectionner"
 
 #: templates/oscar/dashboard/orders/order_detail.html:114
 msgid "Supplier"
-msgstr ""
+msgstr "Fournisseur"
 
 #: templates/oscar/dashboard/orders/order_detail.html:115
 msgid "Supplier SKU"
-msgstr ""
+msgstr "Référence fournisseur"
 
 #: templates/oscar/dashboard/orders/order_detail.html:116
 msgid "Est. delivery date"
-msgstr ""
+msgstr "Date de livraison estimée"
 
 #: templates/oscar/dashboard/orders/order_detail.html:117
 msgid "Price (before discounts)"
-msgstr ""
+msgstr "Prix (avant réductions)"
 
 #: templates/oscar/dashboard/orders/order_detail.html:118
 #: templates/oscar/dashboard/promotions/form.html:51
@@ -4985,213 +5075,213 @@ msgstr ""
 #: templates/oscar/dashboard/promotions/pagepromotion_list.html:46
 #: templates/oscar/dashboard/promotions/promotion_list.html:43
 msgid "Actions"
-msgstr ""
+msgstr "Actions"
 
 #: templates/oscar/dashboard/orders/order_detail.html:149
 msgid "Shipping charge"
-msgstr ""
+msgstr "Frais de port"
 
 #: templates/oscar/dashboard/orders/order_detail.html:168
 msgid "Change status to"
-msgstr ""
+msgstr "Changer le statut en"
 
 #: templates/oscar/dashboard/orders/order_detail.html:172
 msgid "choose new status"
-msgstr ""
+msgstr "choisir un nouveau statut"
 
 #: templates/oscar/dashboard/orders/order_detail.html:183
 msgid "Create shipping event"
-msgstr ""
+msgstr "Créer un événement de livraison"
 
 #: templates/oscar/dashboard/orders/order_detail.html:187
 #: templates/oscar/dashboard/orders/order_detail.html:205
 msgid "choose event type"
-msgstr ""
+msgstr "Choisir un type d'événement"
 
 #: templates/oscar/dashboard/orders/order_detail.html:201
 msgid "Create payment event"
-msgstr ""
+msgstr "Créer un événement de paiement"
 
 #: templates/oscar/dashboard/orders/order_detail.html:218
 #: templates/oscar/dashboard/ranges/range_product_list.html:43
 #: templates/oscar/dashboard/users/index.html:85
 msgid "Go!"
-msgstr ""
+msgstr "Aller!"
 
 #: templates/oscar/dashboard/orders/order_detail.html:224
 msgid "Shipping Events"
-msgstr ""
+msgstr "Evénement de livraison"
 
 #: templates/oscar/dashboard/orders/order_detail.html:232
 #: templates/oscar/dashboard/orders/order_detail.html:268
 msgid "Event"
-msgstr ""
+msgstr "Evénement"
 
 #: templates/oscar/dashboard/orders/order_detail.html:233
 #: templates/oscar/dashboard/orders/order_detail.html:270
 msgid "Lines"
-msgstr ""
+msgstr "Lignes"
 
 #: templates/oscar/dashboard/orders/order_detail.html:245
 #: templates/oscar/dashboard/orders/order_detail.html:282
 msgid "Product:"
-msgstr ""
+msgstr "Produit:"
 
 #: templates/oscar/dashboard/orders/order_detail.html:245
 #: templates/oscar/dashboard/orders/order_detail.html:282
 msgid "quantity"
-msgstr ""
+msgstr "Quantité"
 
 #: templates/oscar/dashboard/orders/order_detail.html:260
 msgid "Payment Events"
-msgstr ""
+msgstr "Evénement de paiement"
 
 #: templates/oscar/dashboard/orders/order_detail.html:291
 msgid "No payment events."
-msgstr ""
+msgstr "Aucun événement de paiment."
 
 #: templates/oscar/dashboard/orders/order_detail.html:306
 msgid "Charge (incl tax)"
-msgstr ""
+msgstr "Frais TTC"
 
 #: templates/oscar/dashboard/orders/order_detail.html:310
 msgid "Charge (excl tax)"
-msgstr ""
+msgstr "Frais HT "
 
 #: templates/oscar/dashboard/orders/order_detail.html:347
 msgid "Allocation"
-msgstr ""
+msgstr "Allocation"
 
 #: templates/oscar/dashboard/orders/order_detail.html:348
 msgid "Amount debited"
-msgstr ""
+msgstr "Montant débité"
 
 #: templates/oscar/dashboard/orders/order_detail.html:349
 msgid "Amount refunded"
-msgstr ""
+msgstr "Montant remboursé"
 
 #: templates/oscar/dashboard/orders/order_detail.html:364
 msgid "No payment sources"
-msgstr ""
+msgstr "Aucune soource de paiement"
 
 #: templates/oscar/dashboard/orders/order_detail.html:372
 msgid "No transaction data available."
-msgstr ""
+msgstr "Pas de données disponibles de transaction"
 
 #: templates/oscar/dashboard/orders/order_detail.html:403
 msgid "No discounts were applied in this order."
-msgstr ""
+msgstr "Aucunes réductions appliquées sur cette commande."
 
 #: templates/oscar/dashboard/orders/order_detail.html:414
 msgid "No email data available."
-msgstr ""
+msgstr "Pas de données disponibles pour les emails"
 
 #: templates/oscar/dashboard/orders/order_detail.html:463
 msgid "Notes are only editable for 5 minutes after being saved."
-msgstr ""
+msgstr "Les notes sont uniquement modifiables pendant 5 minutes après avoir été sauvées"
 
 #: templates/oscar/dashboard/orders/order_list.html:8
 #: templates/oscar/dashboard/orders/order_list.html:17
 #: templates/oscar/dashboard/orders/order_list.html:23
 msgid "Order management"
-msgstr ""
+msgstr "Gestion des commandes"
 
 #: templates/oscar/dashboard/orders/order_list.html:31
 msgid "Quick Order Search"
-msgstr ""
+msgstr "Recherche rapide"
 
 #: templates/oscar/dashboard/orders/order_list.html:31
 msgid "Advanced Search"
-msgstr ""
+msgstr "Recherche avancée"
 
 #: templates/oscar/dashboard/orders/order_list.html:58
 msgid "Get results as:"
-msgstr ""
+msgstr "Avoir le résultat sour le format:"
 
 #: templates/oscar/dashboard/orders/order_list.html:92
 msgid "Customer"
-msgstr ""
+msgstr "Client"
 
 #: templates/oscar/dashboard/orders/order_list.html:116
 #: templates/oscar/dashboard/orders/order_list.html:119
 msgid "Download"
-msgstr ""
+msgstr "Télécharger"
 
 #: templates/oscar/dashboard/orders/order_list.html:117
 msgid "Download selected orders as a CSV"
-msgstr ""
+msgstr "Tétécharger les commandes séléctionnées en un fichier au format CSV"
 
 #: templates/oscar/dashboard/orders/order_list.html:130
 msgid "No orders found."
-msgstr ""
+msgstr "Aucune commande trouvée."
 
 #: templates/oscar/dashboard/orders/shippingaddress_form.html:22
 msgid "Edit shipping address"
-msgstr ""
+msgstr "Editer l'adresse de livraison"
 
 #: templates/oscar/dashboard/orders/shippingaddress_form.html:28
 #, python-format
 msgid "Edit shipping address for order %(order.number)s"
-msgstr ""
+msgstr "Editer l'adresse de livraison pour la commande %(order.number)s"
 
 #: templates/oscar/dashboard/orders/shippingaddress_form.html:38
 msgid "Update address"
-msgstr ""
+msgstr "Mettre à jour l'adresse"
 
 #: templates/oscar/dashboard/orders/statistics.html:8
 msgid "Order statistics"
-msgstr ""
+msgstr "Statistiques de la commande"
 
 #: templates/oscar/dashboard/orders/statistics.html:41
 msgid "Summary"
-msgstr ""
+msgstr "Résumé"
 
 #: templates/oscar/dashboard/orders/statistics.html:58
 msgid "Order status breakdown"
-msgstr ""
+msgstr "Statut de la commande en panne"
 
 #: templates/oscar/dashboard/orders/statistics.html:61
 msgid "Frequency"
-msgstr ""
+msgstr "Fréquence"
 
 #: templates/oscar/dashboard/pages/delete.html:5
 #: templates/oscar/dashboard/pages/delete.html:19
 #: templates/oscar/dashboard/pages/delete.html:25
 #, python-format
 msgid "Delete page '%(title)s'?"
-msgstr ""
+msgstr "Supprimer la page '%(title)s'?"
 
 #: templates/oscar/dashboard/pages/delete.html:33
 #, python-format
 msgid "Delete page <strong>%(title)s</strong> - are you sure?"
-msgstr ""
+msgstr "Supprimer la page <strong>%(title)s</strong> - êtes-vous sùr?"
 
 #: templates/oscar/dashboard/pages/index.html:22
 msgid "Page Management"
-msgstr ""
+msgstr "Gestion des pages"
 
 #: templates/oscar/dashboard/pages/index.html:22
 msgid "Search Pages"
-msgstr ""
+msgstr "Rechercher des pages"
 
 #: templates/oscar/dashboard/pages/index.html:72
 msgid "Create new page"
-msgstr ""
+msgstr "Créer une nouvelle page"
 
 #: templates/oscar/dashboard/pages/index.html:76
 msgid "No pages found."
-msgstr ""
+msgstr "Aucun page touvée."
 
 #: templates/oscar/dashboard/pages/update.html:33
 msgid "Page"
-msgstr ""
+msgstr "Page"
 
 #: templates/oscar/dashboard/promotions/delete.html:5
 #: templates/oscar/dashboard/promotions/delete.html:19
 #: templates/oscar/dashboard/promotions/delete.html:25
 #, python-format
 msgid "Delete content block '%(name)s'?\""
-msgstr ""
+msgstr "Supprimer le bloc'%(name)s'?\""
 
 #: templates/oscar/dashboard/promotions/delete.html:16
 #: templates/oscar/dashboard/promotions/form.html:13
@@ -5200,7 +5290,7 @@ msgstr ""
 #: templates/oscar/dashboard/promotions/promotion_list.html:13
 #: templates/oscar/dashboard/promotions/promotion_list.html:23
 msgid "Content blocks"
-msgstr ""
+msgstr "Blocs"
 
 #: templates/oscar/dashboard/promotions/delete.html:33
 #, python-format
@@ -5208,10 +5298,12 @@ msgid ""
 "Delete %(object.type)s content block <strong>%(object.name)s</strong> - are "
 "you sure?"
 msgstr ""
+"Supprimer %(object.type)s bloc <strong>%(object.name)s</strong> - êtes-"
+"vous sùr?"
 
 #: templates/oscar/dashboard/promotions/delete_pagepromotion.html:6
 msgid "Remove promotion from page?"
-msgstr ""
+msgstr "Retirer la promotion de la page?"
 
 #: templates/oscar/dashboard/promotions/delete_pagepromotion.html:13
 #, python-format
@@ -5219,111 +5311,113 @@ msgid ""
 "Remove %(object.content_object.type)s content block <strong>%(object.name)s</"
 "strong> from page <strong>%(object.page_url)s</strong> - are you sure?"
 msgstr ""
+"Retirer %(object.content_object.type)s bloc <strong>%(object.name)s</"
+"strong> de la page <strong>%(object.page_url)s</strong> - êtes-vous sûr?"
 
 #: templates/oscar/dashboard/promotions/form.html:44
 msgid "Pages displaying this content block"
-msgstr ""
+msgstr "Pages contenant ce bloc"
 
 #: templates/oscar/dashboard/promotions/form.html:50
 msgid "Position on page"
-msgstr ""
+msgstr "Position sur la page"
 
 #: templates/oscar/dashboard/promotions/form.html:64
 msgid "View all blocks on this page"
-msgstr ""
+msgstr "Voir tous les blocs de la page"
 
 #: templates/oscar/dashboard/promotions/form.html:65
 msgid "Remove from page"
-msgstr ""
+msgstr "Retirer de la page"
 
 #: templates/oscar/dashboard/promotions/form.html:74
 msgid "This promotion is not displayed anywhere at the moment."
-msgstr ""
+msgstr "Cette promotion n'est affichée nul part pour le moment."
 
 #: templates/oscar/dashboard/promotions/form.html:79
 msgid "Add to a page"
-msgstr ""
+msgstr "Ajouter à une page"
 
 #: templates/oscar/dashboard/promotions/form.html:85
 msgid "Add to page"
-msgstr ""
+msgstr "Ajouter à la page"
 
 #: templates/oscar/dashboard/promotions/page_detail.html:7
 #: templates/oscar/dashboard/promotions/page_detail.html:26
 #, python-format
 msgid "Content blocks for page %(page_url)s"
-msgstr ""
+msgstr "Blocs pour la page %(page_url)s"
 
 #: templates/oscar/dashboard/promotions/page_detail.html:20
 #, python-format
 msgid "Content blocks on page '%(page_url)s'"
-msgstr ""
+msgstr "Blocs sur la page '%(page_url)s'"
 
 #: templates/oscar/dashboard/promotions/page_detail.html:34
 #, python-format
 msgid "Edit promotions in position '%(name)s'"
-msgstr ""
+msgstr "Editer la promotion dans la position '%(name)s'"
 
 #: templates/oscar/dashboard/promotions/page_detail.html:39
 msgid "Promotion Name"
-msgstr ""
+msgstr "Nom de la promotion"
 
 #: templates/oscar/dashboard/promotions/page_detail.html:59
 msgid "No promotions in this position."
-msgstr ""
+msgstr "Aucune promotion à cette position"
 
 #: templates/oscar/dashboard/promotions/pagepromotion_list.html:9
 #: templates/oscar/dashboard/promotions/pagepromotion_list.html:23
 msgid "Content block management"
-msgstr ""
+msgstr "Gestion des blocs"
 
 #: templates/oscar/dashboard/promotions/pagepromotion_list.html:14
 msgid "Pages with content blocks"
-msgstr ""
+msgstr "Pages avec des blocs"
 
 #: templates/oscar/dashboard/promotions/pagepromotion_list.html:31
 msgid "View all content blocks"
-msgstr ""
+msgstr "Voir tous les blocs"
 
 #: templates/oscar/dashboard/promotions/pagepromotion_list.html:32
 msgid "View content blocks by page"
-msgstr ""
+msgstr "Voir les blocs par page"
 
 #: templates/oscar/dashboard/promotions/pagepromotion_list.html:36
 msgid "Pages with content blocks on them"
-msgstr ""
+msgstr "Pages contenant des blocs"
 
 #: templates/oscar/dashboard/promotions/pagepromotion_list.html:45
 msgid "Number of content blocks"
-msgstr ""
+msgstr "Nombre de blocs"
 
 #: templates/oscar/dashboard/promotions/pagepromotion_list.html:65
 #: templates/oscar/dashboard/promotions/promotion_list.html:64
 msgid "No content blocks found."
-msgstr ""
+msgstr "Aucun bloc trouvé."
 
 #: templates/oscar/dashboard/promotions/promotion_list.html:31
 msgid "All content blocks"
-msgstr ""
+msgstr "Tous les blocs"
 
 #: templates/oscar/dashboard/promotions/promotion_list.html:41
 msgid "Number of times used"
-msgstr ""
+msgstr "Nombre d'utilisation"
 
 #: templates/oscar/dashboard/promotions/promotion_list.html:69
 msgid "Create a new content block"
-msgstr ""
+msgstr "Créer un nouveau bloc"
 
 #: templates/oscar/dashboard/promotions/promotion_list.html:72
 msgid "Create block"
-msgstr ""
+msgstr "Créer un bloc"
 
 #: templates/oscar/dashboard/ranges/range_delete.html:6
 #: templates/oscar/dashboard/ranges/range_delete.html:19
 #: templates/oscar/dashboard/ranges/range_delete.html:25
 #, python-format
 msgid "Delete range '%(name)s'?"
-msgstr ""
+msgstr "Supprimer le pack '%(name)s'?"
 
 #: templates/oscar/dashboard/ranges/range_delete.html:6
 #: templates/oscar/dashboard/ranges/range_form.html:6
@@ -5331,367 +5425,367 @@ msgstr ""
 #: templates/oscar/dashboard/ranges/range_list.html:15
 #: templates/oscar/dashboard/ranges/range_list.html:21
 msgid "Range management"
-msgstr ""
+msgstr "Gestion des packs"
 
 #: templates/oscar/dashboard/ranges/range_form.html:37
 msgid "Save and edit products"
-msgstr ""
+msgstr "Sauvegarder et éditer les produits"
 
 #: templates/oscar/dashboard/ranges/range_list.html:27
 msgid "Create new range"
-msgstr ""
+msgstr "Créer un nouveau pack"
 
 #: templates/oscar/dashboard/ranges/range_list.html:30
 msgid "All ranges"
-msgstr ""
+msgstr "Tous les packs"
 
 #: templates/oscar/dashboard/ranges/range_list.html:36
 msgid "Num products"
-msgstr ""
+msgstr "Nombre de produits"
 
 #: templates/oscar/dashboard/ranges/range_list.html:48
 msgid "Edit products"
-msgstr ""
+msgstr "Editer les produits"
 
 #: templates/oscar/dashboard/ranges/range_list.html:59
 msgid "No ranges found."
-msgstr ""
+msgstr "Aucun pack trouvé."
 
 #: templates/oscar/dashboard/ranges/range_product_list.html:6
 #, python-format
 msgid "Products in range '%(range.name)s'"
-msgstr ""
+msgstr "Produits dans le pack '%(range.name)s'"
 
 #: templates/oscar/dashboard/ranges/range_product_list.html:29
 #, python-format
 msgid "Products in range %(range.name)s"
-msgstr ""
+msgstr "Produits dans le pack %(range.name)s"
 
 #: templates/oscar/dashboard/ranges/range_product_list.html:37
 msgid "Add products"
-msgstr ""
+msgstr "Ajouter les produits"
 
 #: templates/oscar/dashboard/ranges/range_product_list.html:48
 msgid "Upload history"
-msgstr ""
+msgstr "Charger l'historique"
 
 #: templates/oscar/dashboard/ranges/range_product_list.html:53
 msgid "Filename"
-msgstr ""
+msgstr "Nom du fichier"
 
 #: templates/oscar/dashboard/ranges/range_product_list.html:54
 msgid "New products"
-msgstr ""
+msgstr "Produits nouveaux"
 
 #: templates/oscar/dashboard/ranges/range_product_list.html:55
 msgid "Duplicate products"
-msgstr ""
+msgstr "Produits dupliqués"
 
 #: templates/oscar/dashboard/ranges/range_product_list.html:56
 msgid "Unknown products"
-msgstr ""
+msgstr "Produits inconnues"
 
 #: templates/oscar/dashboard/ranges/range_product_list.html:57
 msgid "Date uploaded"
-msgstr ""
+msgstr "Date chargée"
 
 #: templates/oscar/dashboard/ranges/range_product_list.html:87
 msgid "Is product discountable?"
-msgstr ""
+msgstr "Possibilité d'appliquer une réduction?"
 
 #: templates/oscar/dashboard/ranges/range_product_list.html:100
 #: templates/oscar/reviews/_vote_bit.html:8
 msgid "Yes"
-msgstr ""
+msgstr "Oui"
 
 #: templates/oscar/dashboard/ranges/range_product_list.html:100
 #: templates/oscar/reviews/_vote_bit.html:13
 msgid "No"
-msgstr ""
+msgstr "Non"
 
 #: templates/oscar/dashboard/ranges/range_product_list.html:110
 msgid "Remove selected products"
-msgstr ""
+msgstr "Supprimer les produits sélectionnés"
 
 #: templates/oscar/dashboard/ranges/range_product_list.html:122
 msgid "Edit range"
-msgstr ""
+msgstr "Editer pack"
 
 #: templates/oscar/dashboard/ranges/range_product_list.html:123
 msgid "return to range list"
-msgstr ""
+msgstr "Retourner à la liste des packs"
 
 #: templates/oscar/dashboard/reports/index.html:16
 msgid "Reporting Dashboard"
-msgstr ""
+msgstr "Rapports Dashboard"
 
 #: templates/oscar/dashboard/reports/index.html:22
 msgid "Reporting dashboard"
-msgstr ""
+msgstr "Rapports Dashboard"
 
 #: templates/oscar/dashboard/reports/partials/offer_report.html:23
 #: templates/oscar/dashboard/reports/partials/order_report.html:31
 msgid "No results found."
-msgstr ""
+msgstr "Aucun résultat."
 
 #: templates/oscar/dashboard/reports/partials/voucher_report.html:27
 msgid "No vouchers were used in this period"
-msgstr ""
+msgstr "Aucun bon de réduction utilisé pendant cette période"
 
 #: templates/oscar/dashboard/reviews/review_delete.html:6
 #, python-format
 msgid "Delete review '%(title)s'?"
-msgstr ""
+msgstr "Supprimer l'avis '%(title)s'?"
 
 #: templates/oscar/dashboard/reviews/review_delete.html:6
 msgid "Review management"
-msgstr ""
+msgstr "Gestion des avis"
 
 #: templates/oscar/dashboard/reviews/review_delete.html:19
 #: templates/oscar/dashboard/reviews/review_delete.html:25
 #, python-format
 msgid "Delete review \"%(title)s\"?"
-msgstr ""
+msgstr "Supprimer l'avis \"%(title)s\"?"
 
 #: templates/oscar/dashboard/reviews/review_delete.html:35
 #: templates/oscar/dashboard/reviews/review_list.html:44
 msgid "Review Title"
-msgstr ""
+msgstr "Titre de l'avis"
 
 #: templates/oscar/dashboard/reviews/review_delete.html:39
 msgid "Votest"
-msgstr ""
+msgstr "Votest"
 
 #: templates/oscar/dashboard/reviews/review_list.html:29
 msgid "Review Search"
-msgstr ""
+msgstr "Rechercher un avis"
 
 #: templates/oscar/dashboard/reviews/review_list.html:45
 msgid "Review For Product"
-msgstr ""
+msgstr "Avis sur ce produit"
 
 #: templates/oscar/dashboard/reviews/review_list.html:101
 msgid "Update status of selected reviews"
-msgstr ""
+msgstr "Mise à jour des statuts des avis selectionnés"
 
 #: templates/oscar/dashboard/reviews/review_list.html:115
 msgid "No reviews found."
-msgstr ""
+msgstr "Aucun avis trouvés"
 
 #: templates/oscar/dashboard/reviews/review_update.html:8
 msgid "Update review"
-msgstr ""
+msgstr "Mise à jour de l'avis"
 
 #: templates/oscar/dashboard/reviews/review_update.html:21
 #: templates/oscar/dashboard/reviews/review_update.html:27
 #, python-format
 msgid "Review #%(review.id)s"
-msgstr ""
+msgstr "Avis #%(review.id)s"
 
 #: templates/oscar/dashboard/reviews/review_update.html:36
 msgid "Review information"
-msgstr ""
+msgstr "Information avis"
 
 #: templates/oscar/dashboard/users/detail.html:8
 #: templates/oscar/dashboard/users/detail.html:21
 #: templates/oscar/dashboard/users/detail.html:27
 #, python-format
 msgid "%(email)s"
-msgstr ""
+msgstr "%(email)s"
 
 #: templates/oscar/dashboard/users/detail.html:34
 #: templates/oscar/dashboard/users/detail.html:59
 msgid "General"
-msgstr ""
+msgstr "Général"
 
 #: templates/oscar/dashboard/users/detail.html:38
 msgid "First name:"
-msgstr ""
+msgstr "Prenom:"
 
 #: templates/oscar/dashboard/users/detail.html:39
 msgid "Last name:"
-msgstr ""
+msgstr "Nom:"
 
 #: templates/oscar/dashboard/users/detail.html:42
 msgid "This customer is active"
-msgstr ""
+msgstr "ce client est actif"
 
 #: templates/oscar/dashboard/users/detail.html:44
 msgid "This customer is inactive"
-msgstr ""
+msgstr "Ce client est inactif"
 
 #: templates/oscar/dashboard/users/detail.html:48
 msgid "Superuser"
-msgstr ""
+msgstr "SuperUtilisateur"
 
 #: templates/oscar/dashboard/users/detail.html:55
 msgid "Detailed information"
-msgstr ""
+msgstr "Information détaillée"
 
 #: templates/oscar/dashboard/users/detail.html:61
 msgid "Last login:"
-msgstr ""
+msgstr "Dernière connexion:"
 
 #: templates/oscar/dashboard/users/detail.html:62
 msgid "Date joined:"
-msgstr ""
+msgstr "Date d'inscription:"
 
 #: templates/oscar/dashboard/users/detail.html:63
 msgid "Number of viewed products:"
-msgstr ""
+msgstr "Nombre de produits vus:"
 
 #: templates/oscar/dashboard/users/detail.html:72
 msgid "Number of orders:"
-msgstr ""
+msgstr "Nombre de commandes:"
 
 #: templates/oscar/dashboard/users/detail.html:73
 msgid "Number of ordered items:"
-msgstr ""
+msgstr "Nombre de produits commandés:"
 
 #: templates/oscar/dashboard/users/detail.html:74
 msgid "Total spent:"
-msgstr ""
+msgstr "Total dépensé:"
 
 #: templates/oscar/dashboard/users/detail.html:75
 msgid "Date of last order:"
-msgstr ""
+msgstr "Dernière commande:"
 
 #: templates/oscar/dashboard/users/detail.html:84
 msgid "Number of reviews:"
-msgstr ""
+msgstr "Nombre d'avis:"
 
 #: templates/oscar/dashboard/users/detail.html:106
 msgid "Order Number"
-msgstr ""
+msgstr "Numéro de commande"
 
 #: templates/oscar/dashboard/users/detail.html:108
 msgid "Total value"
-msgstr ""
+msgstr "Valeur total"
 
 #: templates/oscar/dashboard/users/detail.html:125
 msgid "This customer has not placed any orders yet."
-msgstr ""
+msgstr "Aucune commande pour ce client."
 
 #: templates/oscar/dashboard/users/detail.html:148
 msgid "This customer has not saved any addresses."
-msgstr ""
+msgstr "Aucune adresse pour ce client."
 
 #: templates/oscar/dashboard/users/detail.html:177
 msgid "This customer has not written any reviews yet."
-msgstr ""
+msgstr "Aucun avis pour ce client."
 
 #: templates/oscar/dashboard/users/index.html:50
 msgid "Staff status"
-msgstr ""
+msgstr "Statut staff"
 
 #: templates/oscar/dashboard/users/index.html:52
 msgid "Num Orders"
-msgstr ""
+msgstr "Num commandes"
 
 #: templates/oscar/dashboard/users/index.html:77
 msgid "Bulk Actions"
-msgstr ""
+msgstr "Actions groupées"
 
 #: templates/oscar/dashboard/users/index.html:78
 msgid "With selected customers:"
-msgstr ""
+msgstr "Avec les clients sélectionnées:"
 
 #: templates/oscar/dashboard/users/index.html:80
 msgid "Make active"
-msgstr ""
+msgstr "Activer"
 
 #: templates/oscar/dashboard/users/index.html:83
 msgid "Make inactive"
-msgstr ""
+msgstr "Désactiver"
 
 #: templates/oscar/dashboard/users/index.html:93
 msgid "No customers found."
-msgstr ""
+msgstr "Aucun client trouvée."
 
 #: templates/oscar/dashboard/vouchers/voucher_delete.html:6
 #: templates/oscar/dashboard/vouchers/voucher_delete.html:19
 #: templates/oscar/dashboard/vouchers/voucher_delete.html:25
 #, python-format
 msgid "Delete voucher '%(name)s'?"
-msgstr ""
+msgstr "Supprimer le bon de commande '%(name)s'?"
 
 #: templates/oscar/dashboard/vouchers/voucher_delete.html:31
 msgid "Voucher details"
-msgstr ""
+msgstr "Détails bon de réduction"
 
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:6
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:19
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:25
 #, python-format
 msgid "Voucher '%(name)s'"
-msgstr ""
+msgstr "Bon de réduction '%(name)s'"
 
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:46
 msgid "Number of basket additions"
-msgstr ""
+msgstr "Nombre d'ajout dans le panier"
 
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:54
 msgid "No orders have been placed that use this voucher."
-msgstr ""
+msgstr "Aucune commande utilisant ce bon de réduction."
 
 #: templates/oscar/dashboard/vouchers/voucher_list.html:37
 msgid "Create new voucher"
-msgstr ""
+msgstr "Créer un nouveau bon de commande"
 
 #: templates/oscar/dashboard/vouchers/voucher_list.html:48
 msgid "Num baskets"
-msgstr ""
+msgstr "Num paniers"
 
 #: templates/oscar/dashboard/vouchers/voucher_list.html:49
 msgid "Num orders"
-msgstr ""
+msgstr "Num commandes"
 
 #: templates/oscar/dashboard/vouchers/voucher_list.html:73
 msgid "No vouchers found."
-msgstr ""
+msgstr "Aucun bon de réduction trouvé."
 
 #: templates/oscar/flatpages/style_guide.html:16
 msgid "Colours"
-msgstr ""
+msgstr "Couleurs"
 
 #: templates/oscar/flatpages/style_guide.html:18
 msgid "Hyperlinks"
-msgstr ""
+msgstr "Hyperliens"
 
 #: templates/oscar/offer/detail.html:34
 msgid " This offer has expired "
-msgstr ""
+msgstr " Cette offre a expiré"
 
 #: templates/oscar/offer/detail.html:41
 msgid "What you need to do"
-msgstr ""
+msgstr "Que voulez-vous faire"
 
 #: templates/oscar/partials/footer.html:6
 msgid "Top of the page"
-msgstr ""
+msgstr "Haut de la page"
 
 #: templates/oscar/partials/nav_accounts.html:8
 msgid "Welcome"
-msgstr ""
+msgstr "Bienvenu"
 
 #: templates/oscar/partials/nav_alternate.html:25
 #: templates/oscar/partials/nav_alternate.html:41
 #: templates/oscar/partials/nav_primary.html:25
 #: templates/oscar/partials/nav_primary.html:41
 msgid "Browse Store"
-msgstr ""
+msgstr "Parcourir le magasin"
 
 #: templates/oscar/partials/nav_alternate.html:27
 #: templates/oscar/partials/nav_alternate.html:43
 #: templates/oscar/partials/nav_primary.html:27
 #: templates/oscar/partials/nav_primary.html:43
 msgid "All Products"
-msgstr ""
+msgstr "Tous les produits"
 
 #: templates/oscar/partials/nav_alternate.html:45
 #: templates/oscar/partials/nav_primary.html:45
 msgid "Contains a Submenu"
-msgstr ""
+msgstr "Contenant un sous-menu"
 
 #: templates/oscar/partials/nav_alternate.html:47
 #: templates/oscar/partials/nav_alternate.html:48
@@ -5702,89 +5796,94 @@ msgstr ""
 #: templates/oscar/partials/nav_primary.html:49
 #: templates/oscar/partials/nav_primary.html:50
 msgid "Submenu Link"
-msgstr ""
+msgstr "Lien sous-menu"
 
 #: templates/oscar/partials/nav_alternate.html:53
 #: templates/oscar/partials/nav_primary.html:53
 msgid "Go Home!"
-msgstr ""
+msgstr "Aller à l'accueil!"
 
 #: templates/oscar/promotions/handpickedproductlist.html:20
 msgid "See more"
-msgstr ""
+msgstr "Voir plus"
 
 #: templates/oscar/promotions/home.html:13
 msgid "Welcome!"
-msgstr ""
+msgstr "Bienvenu"
 
 #: templates/oscar/promotions/singleproduct.html:31
 #: templates/oscar/promotions/partials/product_carousel.html:25
 msgid "Notify me"
-msgstr ""
+msgstr "m'avertir"
 
 #: templates/oscar/promotions/singleproduct.html:44
 msgid "No rating"
-msgstr ""
+msgstr "Aucue note"
 
 #: templates/oscar/registration/password_reset_complete.html:4
 #: templates/oscar/registration/password_reset_complete.html:7
 msgid "Password reset complete"
-msgstr ""
+msgstr "Réinitialisation du mot passe complette"
 
 #: templates/oscar/registration/password_reset_complete.html:8
 msgid "Your password has been set.  You may go ahead and log in now."
-msgstr ""
+msgstr "Votre mot de passe a été défini. Vous pouvez désormais vous connecter."
 
 #: templates/oscar/registration/password_reset_complete.html:9
 msgid "Log in"
-msgstr ""
+msgstr "Connexion"
 
 #: templates/oscar/registration/password_reset_confirm.html:4
 msgid "Password reset confirm"
-msgstr ""
+msgstr "Réinitialisation du mot de passe complette"
 
 #: templates/oscar/registration/password_reset_confirm.html:10
 msgid "Enter new password"
-msgstr ""
+msgstr "Entrer un nouveau mot de passe"
 
 #: templates/oscar/registration/password_reset_confirm.html:12
 msgid ""
 "Please enter your new password twice so we can verify you typed it in "
 "correctly."
 msgstr ""
+"Entrer votre nouveau mot de passe ainsi que la vérification de celui-ci."
 
 #: templates/oscar/registration/password_reset_confirm.html:16
 msgid "New password:"
-msgstr ""
+msgstr "Nouveau mot de passe"
 
 #: templates/oscar/registration/password_reset_confirm.html:18
 msgid "Confirm password:"
-msgstr ""
+msgstr "Confirmation du mot de passe:"
 
 #: templates/oscar/registration/password_reset_confirm.html:19
 msgid "Change my password"
-msgstr ""
+msgstr "Changer mon mot de passe"
 
 #: templates/oscar/registration/password_reset_confirm.html:24
 msgid "Password reset unsuccessful"
-msgstr ""
+msgstr "Erreur dans la réinitialisation du mot de passe"
 
 #: templates/oscar/registration/password_reset_confirm.html:26
 msgid ""
 "The password reset link was invalid, possibly because it has already been "
 "used.  Please request a new password reset."
 msgstr ""
+"Le lien de réinitialisation du mot de passe est invalide. Il se peut que ce lien à déjà été utilisé."
+" Veuillez demander une nouvelle réinitialisation du mot de passe."
 
 #: templates/oscar/registration/password_reset_done.html:4
 #: templates/oscar/registration/password_reset_done.html:8
 msgid "Password reset successful"
-msgstr ""
+msgstr "Mot de passe réinitialisé avec succès"
 
 #: templates/oscar/registration/password_reset_done.html:9
 msgid ""
 "We've e-mailed you instructions for setting your password to the e-mail "
 "address you submitted. You should be receiving it shortly."
 msgstr ""
+"Nous venons d'envoyer un email contenant les instructions sur la configuration de votre mot de passe"
+"à l'adresse email soumise. Vous devriez le recevoir sous peu."
 
 #: templates/oscar/registration/password_reset_email.html:2
 #, python-format
@@ -5792,83 +5891,88 @@ msgid ""
 "You're receiving this e-mail because you requested a password reset for your "
 "user account at %(site_name)s."
 msgstr ""
+"Vous recevez cet e-mail parce que vous avez demandé une réinitialisation de mot de passe"
+"pour votre compte d'utilisateur sur notre site %(site_name)s."
 
 #: templates/oscar/registration/password_reset_email.html:4
 msgid "Please go to the following page and choose a new password:"
-msgstr ""
+msgstr "S'il vous plaît, aller à la page suivante et choisir un nouveau mot de passe:"
 
 #: templates/oscar/registration/password_reset_email.html:9
 msgid "Thanks for using our site!"
-msgstr ""
+msgstr "Merci et à bientôt sur notre site internet!"
 
 #: templates/oscar/registration/password_reset_email.html:11
 #, python-format
 msgid "The %(site_name)s team"
-msgstr ""
+msgstr "L'équipe de %(site_name)s"
 
 #: templates/oscar/registration/password_reset_form.html:4
 #: templates/oscar/registration/password_reset_form.html:9
 msgid "Password reset"
-msgstr ""
+msgstr "Réinitialisation du mot de passe"
 
 #: templates/oscar/registration/password_reset_form.html:15
 msgid ""
 "Forgotten your password? Enter your e-mail address below, and we'll e-mail "
 "instructions for setting a new one."
 msgstr ""
+"Mot de passe oublié? Entrer votre adresse email ci-dessous, nous allons vous"
+"un email contenant les instructions pour confirmation du nouveau mot de passe."
+
 
 #: templates/oscar/registration/password_reset_form.html:18
 msgid "E-mail address:"
-msgstr ""
+msgstr "Adresse Email:"
 
 #: templates/oscar/registration/password_reset_form.html:30
 msgid "Reset my password"
-msgstr ""
+msgstr "Réinitialiser mon mot de passe"
 
 #: templates/oscar/registration/password_reset_subject.txt:1
 #, python-format
 msgid "Password reset on %(site_name)s"
-msgstr ""
+msgstr "Réinitialisation du mot de passe sur %(site_name)s"
 
 #: templates/oscar/reviews/_vote_bit.html:4
 msgid "Is this review helpful?"
-msgstr ""
+msgstr "Cet avis est utile?"
 
 #: templates/oscar/reviews/add_review.html:6
 msgid "Leave a product review"
-msgstr ""
+msgstr "Laisser un avis du produit"
 
 #: templates/oscar/reviews/add_review.html:11
 msgid "Submit"
-msgstr ""
+msgstr "Soumettre"
 
 #: templates/oscar/reviews/review.html:7
 msgid "Score:"
-msgstr ""
+msgstr "Score:"
 
 #: templates/oscar/reviews/review.html:8
 msgid "Comments:"
-msgstr ""
+msgstr "Commentaires:"
 
 #: templates/oscar/reviews/reviews.html:8
 msgid "Reviews for"
-msgstr ""
+msgstr "Avis de"
 
 #: templates/oscar/reviews/reviews.html:23
 msgid "Reviews of"
-msgstr ""
+msgstr "Avis de"
 
 #: templates/oscar/reviews/reviews.html:39
 msgid "Add a review"
-msgstr ""
+msgstr "Ajouter un commentaire"
 
 #: templates/oscar/reviews/reviews.html:42
 msgid "Sort by:"
-msgstr ""
+msgstr "Trier par:"
 
 #: templates/oscar/reviews/reviews.html:46
 msgid "Recency"
-msgstr ""
+msgstr "Date"
 
 #: templates/oscar/reviews/reviews.html:60
 #, python-format
@@ -5881,7 +5985,13 @@ msgid_plural ""
 "\t\t\t\t\t%(review.num_up_votes)s customers agreed.\n"
 "\t\t\t\t\t"
 msgstr[0] ""
+"\n"
+"\t\t\t\t\t1 Client accepté.\n"
+"\t\t\t\t\t"
 msgstr[1] ""
+"\n"
+"\t\t\t\t\t%(review.num_up_votes)s Clients accepté.\n"
+"\t\t\t\t\t"
 
 #: templates/oscar/reviews/reviews.html:78
 #, python-format
@@ -5891,37 +6001,41 @@ msgid ""
 "%(paginator.num_pages)s.\n"
 "\t\t\t\t\t\t"
 msgstr ""
+"\n"
+"                        Page %(page_obj.number)s sur "
+"%(paginator.num_pages)s.\n"
+"\t\t\t\t\t\t"
 
 #: templates/oscar/search/results.html:20
 #, python-format
 msgid "\"%(q)s\""
-msgstr ""
+msgstr "\"%(q)s\""
 
 #: templates/oscar/search/results.html:26
 msgid "Search for"
-msgstr ""
+msgstr "Rechercher"
 
 #: templates/oscar/search/results.html:33
 msgid "Did you mean"
-msgstr ""
+msgstr "Vous voulez dire"
 
 #: templates/oscar/search/results.html:43
 msgid "No search results found."
-msgstr ""
+msgstr "Pas de résultats trouvés."
 
 #: views/decorators.py:32
 msgid "You must log in to access this page"
-msgstr ""
+msgstr "Vous devez vous connecter pour accéder à cette page"
 
 #: views/generic.py:24
 msgid "Invalid form submission"
-msgstr ""
+msgstr "Formulaire invalide"
 
 #: views/generic.py:60
 msgid "Invalid action"
-msgstr ""
+msgstr "Action invalide"
 
 #: views/generic.py:65
 #, python-format
 msgid "You need to select some %ss"
-msgstr ""
+msgstr "Vous devez sélectionner quelques %ss"
