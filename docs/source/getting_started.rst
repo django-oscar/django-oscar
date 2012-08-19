@@ -161,7 +161,7 @@ Replace a few files with Oscar-specific versions (the templated project can be
 used for non-Oscar projects too)::
 
     mv frobshop/www/urls{_oscar,}.py
-    mv frobshop/www/deploy/requirements{_oscar,}.py
+    mv frobshop/www/deploy/requirements{_oscar,}.txt
     mv frobshop/www/conf/default{_oscar,}.py
 
 Install dependencies::
