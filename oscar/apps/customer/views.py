@@ -291,7 +291,8 @@ class OrderHistoryView(ListView):
         if 'date_from' in request.GET:
             self.form = SearchByDateRangeForm(self.request.GET)
             if not self.form.is_valid():
-                ctx = self.get_context_data()
+                self.object_list = self.get_queryset()
+                ctx = self.get_context_data(object_list=self.object_list)
                 return self.render_to_response(ctx)
         else:
             self.form = SearchByDateRangeForm()
@@ -299,7 +300,7 @@ class OrderHistoryView(ListView):
 
     def get_queryset(self):
         qs = self.model._default_manager.filter(user=self.request.user)
-        if self.form.is_bound:
+        if self.form.is_bound and self.form.is_valid():
             qs = qs.filter(**self.form.get_filters())
         return qs
 

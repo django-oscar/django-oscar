@@ -110,7 +110,7 @@ class SearchByDateRangeForm(forms.Form):
         return super(SearchByDateRangeForm, self).clean()
 
     def description(self):
-        if not self.is_bound:
+        if not self.is_bound or not self.is_valid():
             return 'All orders'
         date_from = self.cleaned_data['date_from']
         date_to = self.cleaned_data['date_to']
