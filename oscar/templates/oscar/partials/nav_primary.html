@@ -24,7 +24,7 @@
                     {% if categories %}
 					<a href="#browse" class="dropdown-toggle" data-toggle="dropdown">{% trans "Browse Store" %}</a>
                         <ul class="dropdown-menu nav-tabs nav-stacked">
-							<li><a href="/products">{% trans "All Products" %}</a></li>
+							<li><a href="{% url promotions:home %}">{% trans "All Products" %}</a></li>
                         {% for category in categories %}
                             <li><a href="{{ category.0.get_absolute_url }}">{{ category.0.name }} {% if category.1 %}<span class="app-ico ico_fill_right"></span>{% endif %}</a>
                             {% if category.1 %}
