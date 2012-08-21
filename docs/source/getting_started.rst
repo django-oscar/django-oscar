@@ -97,7 +97,7 @@ Alter your ``frobshop/urls.py`` to include Oscar's URLs::
     from django.conf.urls import patterns, include, url
     from oscar.app import shop
 
-    urlpatterns = ('',
+    urlpatterns = patterns('',
         (r'', include(shop.urls))
     )
 
