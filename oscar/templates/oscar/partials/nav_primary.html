@@ -40,7 +40,7 @@
                     {% else %}
 					<a href="#browse" class="dropdown-toggle" data-toggle="dropdown">{% trans "Browse Store" %}</a>
                         <ul class="dropdown-menu nav-tabs nav-stacked">
-							<li><a href="/products">{% trans "All Products" %}</a></li>
+							<li><a href="{% url promotions:home %}">{% trans "All Products" %}</a></li>
                             <li>
 							<a href="#" >{% trans "Contains a Submenu" %}  <span class="app-ico ico_fill_right"></span></a>
                                 <ul class="sub-nav dropdown-menu nav nav-tabs nav-stacked span3">
