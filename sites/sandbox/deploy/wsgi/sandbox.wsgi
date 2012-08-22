@@ -6,7 +6,7 @@ import urllib
 sys.stdout = sys.stderr
 
 # Project root
-root = '/var/www/oscar/builds/sandbox/sandbox'
+root = '/var/www/oscar/builds/sandbox/sites/sandbox'
 sys.path.insert(0, root)
 
 # Packages from virtualenv
