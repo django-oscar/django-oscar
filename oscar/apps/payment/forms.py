@@ -162,7 +162,7 @@ class BankcardStartingMonthField(BankcardMonthField):
         return months
 
     def year_choices(self):
-        years = [(x, x) for x in xrange( date.today().year - self.num_years, date.today().year)]
+        years = [(x, x) for x in xrange(date.today().year - self.num_years, date.today().year + 1)]
         years.insert(0, ("", "--"))
         return years
 
