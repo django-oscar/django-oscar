@@ -39,6 +39,7 @@ def bankcard_type(number):
             return VISA
     return None
 
+
 def luhn(card_number):
     u"""
     Tests whether a bankcard number passes the Luhn algorithm.
@@ -103,11 +104,12 @@ class BankcardMonthField(forms.MultiValueField):
         errors = self.default_error_messages.copy()
         if 'error_messages' in kwargs:
             errors.update(kwargs['error_messages'])
+
         fields = (
             forms.ChoiceField(choices=self.month_choices(),
-                error_messages={'invalid': errors['invalid_month']}),
+                              error_messages={'invalid': errors['invalid_month']}),
             forms.ChoiceField(choices=self.year_choices(),
-                error_messages={'invalid': errors['invalid_year']}),
+                              error_messages={'invalid': errors['invalid_year']}),
         )
 
         super(BankcardMonthField, self).__init__(fields, *args, **kwargs)
@@ -153,9 +155,6 @@ class BankcardExpiryMonthField(BankcardMonthField):
 
 
 class BankcardStartingMonthField(BankcardMonthField):
-    """
-    Starting month
-    """
     def month_choices(self):
         months = [("%.2d" % x, "%.2d" % x) for x in xrange(1, 13)]
         months.insert(0, ("", "--"))
@@ -189,11 +188,24 @@ class BankcardStartingMonthField(BankcardMonthField):
 class BankcardForm(forms.ModelForm):
     number = BankcardNumberField(max_length=20, widget=forms.TextInput(attrs={'autocomplete':'off'}),
                                  label=_("Card number"))
-    name = forms.CharField(max_length=128, label=_("Name on card"))
-    cvv_number = forms.RegexField(required=True, label=_("CVV Number"),
-                                  regex=r'^\d{3,4}$', widget=forms.TextInput(attrs={'size': '5'}))
+    # Name is not normally needed by payment gateways so we hide it by default
+    name = forms.CharField(max_length=128, label=_("Name on card"),
+                           widget=forms.widgets.HiddenInput, required=False)
+    cvv_number = forms.RegexField(
+        required=True, label=_("CVV Number"),
+        regex=r'^\d{3,4}$',
+        widget=forms.TextInput(attrs={'size': '5'}),
+        help_text=_("This is the 3 or 4 digit security number on the back of your bankcard"))
     start_month = BankcardStartingMonthField(label=_("Valid from"), required=False)
     expiry_month = BankcardExpiryMonthField(required=True, label=_("Valid to"))
+
+    def __init__(self, *args, **kwargs):
+        if 'initial' not in kwargs:
+            # Set the initial expiry month to be current month
+            today = date.today()
+            kwargs['initial'] = {'expiry_month': ["%.2d" % today.month,
+                                                  today.year]}
+        super(BankcardForm, self).__init__(*args, **kwargs)
 
     class Meta:
         model = BankcardModel
