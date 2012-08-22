@@ -9,11 +9,8 @@ product-images/*
 .pydevproject
 .settings
 django_oscar.egg-info/
-STORIES
 docs/build/*
 *.*~
-examples/.coverage
-assets/*
 nbproject
 oscar/bin
 oscar/include
@@ -26,9 +23,11 @@ dist/
 sites/sandbox/*.sqlite
 sites/sandbox/assets/*
 sites/sandbox/public/
+sites/sandbox/whoosh_index/
 sites/demo/*.sqlite
 sites/demo/assets/*
 sites/demo/public/
+sites/demo/whoosh_index/
 .idea
 TODO
 .coverage
@@ -36,4 +35,3 @@ htmlcov/*
 logs/
 build/
 *.pdf
-sandbox/whoosh_index
