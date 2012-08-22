@@ -17,13 +17,17 @@
         <a href="{% url promotions:home %}">{% trans "Home" %}</a>
         <span class="divider">/</span>
     </li>
-    {% for category in category.get_ancestors|slice:":-1" %}
-    <li>
-        <a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
-        <span class="divider">/</span>
-    </li>
-    {% endfor %}
-    <li class="active"><a href=".">{{ category.name }}</a></li>
+	{% if not category %}
+	<li class="active"><a href=".">{% trans "All products" %}</a></li>
+	{% else %}
+		{% for category in category.get_ancestors|slice:":-1" %}
+		<li>
+			<a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
+			<span class="divider">/</span>
+		</li>
+		{% endfor %}
+		<li class="active"><a href=".">{{ category.name }}</a></li>
+	{% endif %}
 </ul>
 {% endblock breadcrumbs %}
 
