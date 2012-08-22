@@ -58,7 +58,7 @@
     </div>
     {% if category.description %}
         <div class="row-fluid">
-            <div class="span9"><p>{{ category.description }}</p></div>
+            <div class="span9"><p>{{ category.description|safe }}</p></div>
 			{% if category.image %}
 				<div class="span3"><img src="{{ category.image.url }}" alt="{{ summary }}" /></div>
 			{% endif %}
