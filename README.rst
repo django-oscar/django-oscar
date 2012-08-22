@@ -61,8 +61,12 @@ Extensions
   `Express Checkout`_ and `PayFlow Pro`_.
 * django-oscar-gocardless_ - Integration with the GoCardless_ payment gateway
 * django-oscar-jirafe_ - Integration with the Jirafe_ analytics package
+* django-oscar-paymentexpress_ - Integration with the `Payment Express`_ payment
+  gateway
 
 .. _django-oscar-datacash: https://github.com/tangentlabs/django-oscar-datacash
+.. _django-oscar-paymentexpress: https://github.com/tangentlabs/django-oscar-paymentexpress
+.. _`Payment Express`: http://www.paymentexpress.com
 .. _DataCash: http://www.datacash.com/
 .. _django-oscar-paypal: https://github.com/tangentlabs/django-oscar-paypal
 .. _`Express Checkout`: https://www.paypal.com/uk/cgi-bin/webscr?cmd=_additional-payment-ref-impl1
