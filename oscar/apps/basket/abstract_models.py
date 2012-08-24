@@ -112,7 +112,8 @@ class AbstractBasket(models.Model):
         # product (eg T-shirts with different personalisations)
         line_ref = self._create_line_reference(product, options)
 
-        # Determine price to store (if one exists)
+        # Determine price to store (if one exists).  It is only stored for audit
+        # and sometimes caching.
         price = None
         if product.has_stockrecord:
             stockrecord = product.stockrecord
@@ -366,6 +367,10 @@ class AbstractBasket(models.Model):
             test_datetime = datetime.datetime.now()
         return test_datetime - self.date_created
 
+    @property
+    def contains_a_voucher(self):
+        return self.vouchers.all().count() > 0
+
     def contains_voucher(self, code):
         """
         Test whether the basket contains a voucher with a given code
@@ -392,6 +397,10 @@ class AbstractLine(models.Model):
 
     product = models.ForeignKey('catalogue.Product', related_name='basket_lines')
     quantity = models.PositiveIntegerField(_('Quantity'), default=1)
+
+    # We store the unit price incl tax of the product when it is first added to
+    # the basket.  This allows us to tell if a product has changed price since a
+    # person first added it to their basket.
     price_incl_tax = models.DecimalField(_('Price incl. Tax'), decimal_places=2, max_digits=12,
                                          null=True)
 
