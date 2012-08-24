@@ -364,10 +364,10 @@ class AbstractProduct(models.Model):
         return self.stockrecord.is_purchase_permitted(user, quantity)
 
     def add_category_from_breadcrumbs(self, breadcrumb):
-        from oscar.apps.catalogue.utils import breadcrumbs_to_category
-        category = breadcrumbs_to_category(breadcrumb)
+        from oscar.apps.catalogue.categories import create_from_breadcrumbs
+        category = create_from_breadcrumbs(breadcrumb)
 
-        temp = models.get_model('product', 'productcategory')(category=category, product=self)
+        temp = get_model('catalogue', 'ProductCategory')(category=category, product=self)
         temp.save()
 
     def attribute_summary(self):
