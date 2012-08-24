@@ -37,7 +37,8 @@ class OrderPlacementMixin(CheckoutSessionMixin):
     # Default code for the email to send after successful checkout
     communication_type_code = 'ORDER_PLACED'
 
-    def handle_order_placement(self, order_number, basket, total_incl_tax, total_excl_tax, **kwargs):
+    def handle_order_placement(self, order_number, basket, total_incl_tax,
+                               total_excl_tax, **kwargs):
         """
         Write out the order models and return the appropriate HTTP response
 
@@ -77,7 +78,10 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         # Save order id in session so thank-you page can load it
         self.request.session['checkout_order_id'] = order.id
 
-        return HttpResponseRedirect(reverse('checkout:thank-you'))
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse('checkout:thank-you')
 
     def place_order(self, order_number, basket, total_incl_tax, total_excl_tax, **kwargs):
         """
