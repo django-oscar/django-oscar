@@ -2,11 +2,16 @@
 Changelog
 =========
 
-0.3.2
------
+0.3.3 - 2012-08-24
+-------------------
 
-* Bug fix for basket calculations
-* Bug fix for absolute discount benefit calculations
+* Minor bug fixes around category editing and order history.
+
+0.3.2 - 2012-08-13
+------------------
+
+* Bug fix for basket calculations.
+* Bug fix for absolute discount benefit calculations.
 
 0.3.1 - 2012-08-08
 ------------------
