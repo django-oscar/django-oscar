@@ -81,13 +81,11 @@ class DefaultWrapperTests(TestCase):
 
     def test_dispatch_date_for_in_stock(self):
         product = create_product(price=D('10.00'), partner="Acme", num_in_stock=1)
-        tomorrow = datetime.date.today() + datetime.timedelta(days=1)
-        self.assertEquals(tomorrow, product.stockrecord.dispatch_date)
+        self.assertIsNone(product.stockrecord.dispatch_date)
 
     def test_dispatch_date_for_out_of_stock(self):
         product = create_product(price=D('10.00'), partner="Acme", num_in_stock=0)
-        date = datetime.date.today() + datetime.timedelta(days=7)
-        self.assertEquals(date, product.stockrecord.dispatch_date)
+        self.assertIsNone(product.stockrecord.dispatch_date)
 
 
 class CustomWrapperTests(TestCase):

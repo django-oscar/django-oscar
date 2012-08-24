@@ -75,13 +75,3 @@ class DefaultWrapperTests(TestCase):
             m.return_value = None
             result, reason = self.wrapper.is_purchase_permitted(record)
             self.assertTrue(result)
-
-    def test_dispatch_date_for_in_stock(self):
-        tomorrow = datetime.date.today() + datetime.timedelta(days=1)
-        record = StockRecord(product=self.product, num_in_stock=4)
-        self.assertEquals(tomorrow, self.wrapper.dispatch_date(record))
-
-    def test_dispatch_date_for_out_of_stock(self):
-        date = datetime.date.today() + datetime.timedelta(days=7)
-        record = StockRecord(product=self.product)
-        self.assertEquals(date, self.wrapper.dispatch_date(record))

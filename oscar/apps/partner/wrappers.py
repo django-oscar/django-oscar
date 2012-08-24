@@ -1,4 +1,3 @@
-import datetime
 from decimal import Decimal as D
 
 from django.utils.translation import ugettext_lazy as _
@@ -8,7 +7,7 @@ class DefaultWrapper(object):
     """
     Default stockrecord wrapper
     """
-    
+
     def is_available_to_buy(self, stockrecord):
         """
         Test whether a product is available to buy.
@@ -56,7 +55,7 @@ class DefaultWrapper(object):
         if self.is_available_to_buy(stockrecord):
             return 'available'
         return 'outofstock'
-    
+
     def availability(self, stockrecord):
         """
         Return an availability message for the passed stockrecord.
@@ -68,16 +67,12 @@ class DefaultWrapper(object):
         if self.is_available_to_buy(stockrecord):
             return _('Available')
         return _("Not available")
-    
+
     def dispatch_date(self, stockrecord):
-        if stockrecord.net_stock_level:
-            # Assume next day for in-stock items
-            return datetime.date.today() + datetime.timedelta(days=1)
-        # Assume one week for out-of-stock items
-        return datetime.date.today() + datetime.timedelta(days=7)
-    
+        return None
+
     def lead_time(self, stockrecord):
         return 1
-    
+
     def calculate_tax(self, stockrecord):
         return D('0.00')
