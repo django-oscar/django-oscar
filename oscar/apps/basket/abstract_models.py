@@ -113,16 +113,18 @@ class AbstractBasket(models.Model):
         line_ref = self._create_line_reference(product, options)
 
         # Determine price to store (if one exists)
-        price = None
+        price_excl_tax, price_incl_tax = None, None
         if product.has_stockrecord:
             stockrecord = product.stockrecord
-            if stockrecord and stockrecord.price_incl_tax:
-                price = stockrecord.price_incl_tax
+            if stockrecord:
+                price_excl_tax = getattr(stockrecord, 'price_excl_tax', None)
+                price_incl_tax = getattr(stockrecord, 'price_incl_tax', None)
 
         line, created = self.lines.get_or_create(line_reference=line_ref,
                                                  product=product,
                                                  defaults={'quantity': quantity,
-                                                           'price_incl_tax': price})
+                                                           'price_excl_tax': price_excl_tax,
+                                                           'price_incl_tax': price_incl_tax})
         if created:
             for option_dict in options:
                 line.attributes.create(option=option_dict['option'],
@@ -392,9 +394,10 @@ class AbstractLine(models.Model):
 
     product = models.ForeignKey('catalogue.Product', related_name='basket_lines')
     quantity = models.PositiveIntegerField(_('Quantity'), default=1)
-    price_incl_tax = models.DecimalField(_('Price incl. Tax'), decimal_places=2, max_digits=12,
+    price_excl_tax = models.DecimalField(_('Price excl. Tax'), decimal_places=2, max_digits=12,
                                          null=True)
-
+    price_incl_tax = models.DecimalField(_('Price incl. Tax'), decimal_places=2, max_digits=12,
+        null=True)
     # Track date of first addition
     date_created = models.DateTimeField(auto_now_add=True)
 
