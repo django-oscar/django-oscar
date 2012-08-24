@@ -15,6 +15,7 @@ ShippingAddress = get_model('order', 'ShippingAddress')
 CommunicationEvent = get_model('order', 'CommunicationEvent')
 PaymentEventType = get_model('order', 'PaymentEventType')
 PaymentEvent = get_model('order', 'PaymentEvent')
+PaymentEventQuantity = get_model('order', 'PaymentEventQuantity')
 UserAddress = get_model('address', 'UserAddress')
 Basket = get_model('basket', 'Basket')
 CommunicationEventType = get_model('customer', 'CommunicationEventType')
@@ -56,7 +57,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         self._payment_sources.append(source)
 
     def add_payment_event(self, event_type_name, amount):
-        event_type, n = PaymentEventType.objects.get_or_create(name=event_type_name)
+        event_type, __ = PaymentEventType.objects.get_or_create(name=event_type_name)
         if self._payment_events is None:
             self._payment_events = []
         event = PaymentEvent(event_type=event_type, amount=amount)
@@ -196,6 +197,12 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         for event in self._payment_events:
             event.order = order
             event.save()
+        # We assume all lines are involved in the initial payment event
+        for line in order.lines.all():
+            PaymentEventQuantity.objects.create(
+                event=event,
+                line=line,
+                quantity=line.quantity)
 
     def save_payment_sources(self, order):
         """

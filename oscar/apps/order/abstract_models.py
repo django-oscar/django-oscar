@@ -528,6 +528,9 @@ class AbstractPaymentEvent(models.Model):
     def __unicode__(self):
         return _("Payment event for order %s") % self.order
 
+    def num_affected_lines(self):
+        return self.lines.all().count()
+
 
 class PaymentEventQuantity(models.Model):
     """
