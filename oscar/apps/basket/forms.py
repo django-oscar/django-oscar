@@ -34,7 +34,7 @@ class BasketLineForm(forms.ModelForm):
 
     class Meta:
         model = Line
-        exclude = ('basket', 'product', 'line_reference', 'price_incl_tax')
+        exclude = ('basket', 'product', 'line_reference', 'price_excl_tax', 'price_incl_tax')
 
 
 class SavedLineForm(forms.ModelForm):
@@ -42,7 +42,7 @@ class SavedLineForm(forms.ModelForm):
 
     class Meta:
         model = Line
-        exclude = ('basket', 'product', 'line_reference', 'quantity', 'price_incl_tax')
+        exclude = ('basket', 'product', 'line_reference', 'quantity', 'price_excl_tax', 'price_incl_tax')
 
     def __init__(self, user, basket, *args, **kwargs):
         self.user = user

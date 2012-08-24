@@ -114,16 +114,18 @@ class AbstractBasket(models.Model):
 
         # Determine price to store (if one exists).  It is only stored for audit
         # and sometimes caching.
-        price = None
+        price_excl_tax, price_incl_tax = None, None
         if product.has_stockrecord:
             stockrecord = product.stockrecord
-            if stockrecord and stockrecord.price_incl_tax:
-                price = stockrecord.price_incl_tax
+            if stockrecord:
+                price_excl_tax = getattr(stockrecord, 'price_excl_tax', None)
+                price_incl_tax = getattr(stockrecord, 'price_incl_tax', None)
 
         line, created = self.lines.get_or_create(line_reference=line_ref,
                                                  product=product,
                                                  defaults={'quantity': quantity,
-                                                           'price_incl_tax': price})
+                                                           'price_excl_tax': price_excl_tax,
+                                                           'price_incl_tax': price_incl_tax})
         if created:
             for option_dict in options:
                 line.attributes.create(option=option_dict['option'],
@@ -401,9 +403,10 @@ class AbstractLine(models.Model):
     # We store the unit price incl tax of the product when it is first added to
     # the basket.  This allows us to tell if a product has changed price since a
     # person first added it to their basket.
+    price_excl_tax = models.DecimalField(_('Price excl. Tax'), decimal_places=2, max_digits=12,
+                                         null=True)
     price_incl_tax = models.DecimalField(_('Price incl. Tax'), decimal_places=2, max_digits=12,
                                          null=True)
-
     # Track date of first addition
     date_created = models.DateTimeField(auto_now_add=True)
 

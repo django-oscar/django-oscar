@@ -1,4 +1,5 @@
 import datetime
+from decimal import Decimal as D
 
 from django.test import TestCase
 from django.test.client import RequestFactory
@@ -34,6 +35,12 @@ class TestBasketModel(TestCase):
     def test_add_product_creates_line(self):
         self.basket.add_product(self.product)
         self.assertTrue(self.basket.num_lines == 1)
+
+    def test_add_product_sets_line_prices(self):
+        self.basket.add_product(self.product)
+        basket_line = self.basket.lines.all()[0]
+        self.assertEqual(basket_line.price_incl_tax, D('10.00'))
+        self.assertEqual(basket_line.price_excl_tax, D('10.00'))
 
     def test_flushing_basket_removes_all_lines(self):
         self.basket.add_product(self.product, 10)
