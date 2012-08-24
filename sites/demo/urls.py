@@ -1,18 +1,20 @@
-from django.conf.urls.defaults import *
+from django.conf.urls.defaults import patterns, url, include
 from django.conf import settings
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
 
-from oscar.app import shop
+from apps.app import application
+
+# These need to be imported into this namespace
 from oscar.views import handler500, handler404
 
 admin.autodiscover()
 
 urlpatterns = patterns('',
     (r'^admin/', include(admin.site.urls)),
-    (r'', include(shop.urls)),
+    (r'', include(application.urls)),
 )
 
 if settings.DEBUG:
