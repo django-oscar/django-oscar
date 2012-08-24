@@ -397,7 +397,7 @@ class AbstractLine(models.Model):
     price_excl_tax = models.DecimalField(_('Price excl. Tax'), decimal_places=2, max_digits=12,
                                          null=True)
     price_incl_tax = models.DecimalField(_('Price incl. Tax'), decimal_places=2, max_digits=12,
-        null=True)
+                                         null=True)
     # Track date of first addition
     date_created = models.DateTimeField(auto_now_add=True)
 
