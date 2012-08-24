@@ -196,6 +196,9 @@ class ProductUpdateView(generic.UpdateView):
         kwargs['product_class'] = self.object.product_class
         return kwargs
 
+    def is_stockrecord_submitted(self):
+        return len(self.request.POST.get('partner', '')) > 0
+
     def form_invalid(self, form):
         stockrecord_form = StockRecordForm(self.request.POST,
                                            instance=self.object.stockrecord)
@@ -214,20 +217,31 @@ class ProductUpdateView(generic.UpdateView):
         stockrecord = None
         if self.object.has_stockrecord:
             stockrecord = self.object.stockrecord
-        stockrecord_form = StockRecordForm(self.request.POST,
-                                           instance=stockrecord)
         category_formset = ProductCategoryFormSet(self.request.POST,
                                                   instance=self.object)
         image_formset = ProductImageFormSet(self.request.POST,
                                             self.request.FILES,
                                             instance=self.object)
-        if all([stockrecord_form.is_valid(),
-                category_formset.is_valid(),
-                image_formset.is_valid()]):
+
+        if self.is_stockrecord_submitted():
+            stockrecord_form = StockRecordForm(self.request.POST,
+                                               instance=stockrecord)
+            is_valid = all([stockrecord_form.is_valid(),
+                            category_formset.is_valid(),
+                            image_formset.is_valid()])
+        else:
+            stockrecord_form = StockRecordForm()
+            is_valid = all([category_formset.is_valid(),
+                            image_formset.is_valid()])
+
+        if is_valid:
             form.save()
-            stockrecord = stockrecord_form.save()
-            stockrecord.product = self.object
-            stockrecord.save()
+
+            if self.is_stockrecord_submitted():
+                stockrecord = stockrecord_form.save()
+                stockrecord.product = self.object
+                stockrecord.save()
+
             category_formset.save()
             image_formset.save()
             return HttpResponseRedirect(self.get_success_url())
