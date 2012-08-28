@@ -30,6 +30,8 @@
         <li><a href="#2" data-toggle="tab">{% trans 'Order History' %}</a></li>
         <li><a href="#3" data-toggle="tab">{% trans 'Address Book' %}</a></li>
         <li><a href="#4" data-toggle="tab">{% trans 'Email History' %}</a></li>
+        {% block extra_tabs_nav %}
+        {% endblock %}
     </ul>
 
     <div class="tab-content">
@@ -176,6 +178,10 @@
             {% endif %}
             {% endblock %}
         </div>
+
+        {% block extra_tabs %}
+        {% endblock %}
+
     </div>
 </div><!--End of tab-content -->
 
