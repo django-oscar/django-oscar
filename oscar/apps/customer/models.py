@@ -7,3 +7,6 @@ class Email(AbstractEmail):
 
 class CommunicationEventType(AbstractCommunicationEventType):
     pass
+
+
+from oscar.apps.customer.history_helpers import *

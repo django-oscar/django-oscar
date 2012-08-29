@@ -78,8 +78,8 @@ def create_order(number=None, basket=None, user=None, shipping_address=None, shi
             billing_address=billing_address,
             total_incl_tax=total_incl_tax,
             total_excl_tax=total_excl_tax,
-            **kwargs
-            )
+            **kwargs)
+    basket.set_as_submitted()
     return order
 
 

@@ -30,7 +30,6 @@
 </div>
 {% endblock header %}
 
-
 {% block content %}
 
 <div class="tabbable dashboard">
@@ -100,7 +99,7 @@
                     <td>{{ line.line_price_before_discounts_excl_tax|currency }}</td>
                     <td>{{ line.line_price_before_discounts_incl_tax|currency }}</td>
                     <td>
-                        <form action="{% url customer:order-line order.number line.id %}" method="POST">
+						<form id="line_form_{{ line.id }}" action="{% url customer:order-line order.number line.id %}" method="POST">
                             {% csrf_token %}
                             <input type="hidden" name="action" value="reorder" />
                             <button class="btn btn-success" type="submit">{% trans 'Re-order' %}</button>
