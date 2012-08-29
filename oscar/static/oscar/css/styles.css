@@ -446,7 +446,7 @@ form:after{clear:both;}
 .control-label.required span{color:#FF0000;}
 .header{text-shadow:0 1px 0 white;position:relative;z-index:2;}.header h1{line-height:inherit;}
 .page-header,.sub-header{background:#f9f9f9;padding:20px;margin-top:0px;margin-bottom:18px;border-bottom:1px solid #e0e0e0;}
-.page-header{margin-bottom:0px;}
+.page-header{margin-bottom:10px;padding:0 0 20px 0;}
 .sub-header{background:none;padding:0px 0px 10px;}
 .page-header.action{*zoom:1;margin-bottom:0px;}.page-header.action:before,.page-header.action:after{display:table;content:"";}
 .page-header.action:after{clear:both;}

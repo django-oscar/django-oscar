@@ -13,15 +13,14 @@
             {% include "partials/brand.html" %}
         </div>
         {% category_tree depth=2 as categories %}
-
         {% block navigation %}
             {% include "partials/nav_primary.html" %}
         {% endblock %}
     </header>
 	<div class="container-fluid page">
-        {% block header %}{% endblock %}
         <div class="page_inner">
             {% block breadcrumbs %}{% endblock %}
+			{% block header %}{% endblock %}
             {% include "partials/alert_messages.html" %}
             {% block flatpage %}{% endblock %}
             {% block content %}{% endblock %}
@@ -30,7 +29,6 @@
     {% include "partials/footer.html" %}
 {% endblock %}
 
-{# Block for additional scripts #}
 {% block extrascripts %}
     {% include "partials/extrascripts.html" %}
     {{ block.super }}

@@ -24,10 +24,12 @@
 		
         {% block extrahead %}{% endblock %}
     </head>
+
     <body id="{% block body_id %}default{% endblock %}" class="{% block body_class %}default{% endblock %}">
 		{% block layout %}{% endblock %}
-		{% block 404 %} {% endblock %}
+		{% block 404 %}{% endblock %}
 
+		{# Google analytics block #}
         {% block tracking %}
             {% if google_analytics_id %}
 				<script type="text/javascript">
@@ -46,7 +48,7 @@
 
 		{# In production, you should collate and minify these scripts using django-compressor or something similar #}
 		{% block scripts %}
-			<!-- Jquery -->
+			<!-- JQuery -->
 			<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>
 			<script>window.jQuery || document.write('<script src="{{ STATIC_URL }}oscar/js/jquery/jquery-1.7.1.js"><\/script>')</script>
 			<script src="{{ STATIC_URL }}oscar/js/jquery/jquery.easing.1.3.js" type="text/javascript" charset="utf-8"></script>
