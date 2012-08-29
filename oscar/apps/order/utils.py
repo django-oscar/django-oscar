@@ -4,6 +4,7 @@ from django.db.models import get_model
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.shipping.methods import Free
+from oscar.apps.order.exceptions import UnableToPlaceOrder
 from oscar.core.loading import get_class
 ShippingAddress = get_model('order', 'ShippingAddress')
 Order = get_model('order', 'Order')
@@ -116,7 +117,7 @@ class OrderCreator(object):
         """
         if product.has_stockrecord:
             return product.stockrecord.partner
-        raise AttributeError(_("No partner found for product '%s'") % product)
+        raise UnableToPlaceOrder(_("No partner found for product '%s'") % product)
 
     def create_line_models(self, order, basket_line, extra_line_fields=None):
         """
