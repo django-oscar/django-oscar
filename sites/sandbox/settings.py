@@ -2,7 +2,8 @@ import os
 
 # Django settings for oscar project.
 PROJECT_DIR = os.path.dirname(__file__)
-location = lambda x: os.path.join(os.path.dirname(os.path.realpath(__file__)), x)
+location = lambda x: os.path.join(
+    os.path.dirname(os.path.realpath(__file__)), x)
 
 DEBUG = True
 TEMPLATE_DEBUG = True
@@ -10,7 +11,7 @@ SQL_DEBUG = True
 SEND_BROKEN_LINK_EMAILS = True
 
 ADMINS = (
-    ('David', 'david.winterbottom@tangentlabs.co.uk'),
+    ('David Winterbottom', 'david.winterbottom@tangentlabs.co.uk'),
 )
 EMAIL_SUBJECT_PREFIX = '[Oscar sandbox] '
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -19,12 +20,12 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': os.path.join(os.path.dirname(__file__), 'db.sqlite'),                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(os.path.dirname(__file__), 'db.sqlite'),
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '',
+        'PORT': '',
     }
 }
 
@@ -141,7 +142,7 @@ LOGGING = {
     'disable_existing_loggers': False,
     'formatters': {
         'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+            'format': '%(levelname)s %(asctime)s %(module)s %(message)s',
         },
         'simple': {
             'format': '[%(asctime)s] %(message)s'
@@ -149,12 +150,12 @@ LOGGING = {
     },
     'handlers': {
         'null': {
-            'level':'DEBUG',
-            'class':'django.utils.log.NullHandler',
+            'level': 'DEBUG',
+            'class': 'django.utils.log.NullHandler',
         },
-        'console':{
-            'level':'DEBUG',
-            'class':'logging.StreamHandler',
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
             'formatter': 'verbose'
         },
         'checkout_file': {
@@ -182,9 +183,9 @@ LOGGING = {
     },
     'loggers': {
         'django': {
-            'handlers':['null'],
+            'handlers': ['null'],
             'propagate': True,
-            'level':'INFO',
+            'level': 'INFO',
         },
         'django.request': {
             'handlers': ['mail_admins', 'error_file'],
@@ -194,17 +195,17 @@ LOGGING = {
         'oscar.checkout': {
             'handlers': ['console', 'checkout_file'],
             'propagate': True,
-            'level':'INFO',
+            'level': 'INFO',
         },
         'gateway': {
             'handlers': ['gateway_file'],
             'propagate': True,
-            'level':'INFO',
+            'level': 'INFO',
         },
         'django.db.backends': {
-            'handlers':['null'],
+            'handlers': ['null'],
             'propagate': False,
-            'level':'DEBUG',
+            'level': 'DEBUG',
         },
     }
 }
@@ -219,18 +220,15 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.flatpages',
     'django.contrib.staticfiles',
-    # External apps
     'django_extensions',
-    'haystack',
     'debug_toolbar',
     'south',
-    'rosetta',
-    # For profile testing
-    'apps.user',
-    'apps.gateway',
+    'rosetta',  # For i18n testing
+    'apps.user',  # For profile testing
+    'apps.gateway',  # For allowing dashboard access
 ]
 from oscar import get_core_apps
-INSTALLED_APPS = INSTALLED_APPS + get_core_apps(['apps.shipping'])
+INSTALLED_APPS = INSTALLED_APPS + get_core_apps()
 
 AUTHENTICATION_BACKENDS = (
     'oscar.apps.customer.auth_backends.Emailbackend',
@@ -249,7 +247,7 @@ HAYSTACK_CONNECTIONS = {
 }
 
 DEBUG_TOOLBAR_CONFIG = {
-    'INTERCEPT_REDIRECTS': False
+    'INTERCEPT_REDIRECTS': False,
 }
 
 AUTH_PROFILE_MODULE = 'user.Profile'

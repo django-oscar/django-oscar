@@ -5,9 +5,9 @@ Domain-driven e-commerce for Django
 ===================================
 
 Oscar is an e-commerce framework for Django designed for building domain-driven
-sites.  It is structured such that any part of the core functionality
-can be customised to suit the needs of your project.  This allows it to handle a
-wide range of e-commerce requirements, from large-scale B2C sites to complex B2B
+sites.  It is structured such that any part of the core functionality can be
+customised to suit the needs of your project.  This allows a wide range of
+e-commerce requirements to be handled, from large-scale B2C sites to complex B2B
 sites rich in domain-specific business logic.
 
 Further reading:
@@ -17,7 +17,8 @@ Further reading:
   experimental but feel free to explore and get a feel for the base Oscar
   install.  Dashboard access coming soon!) 
 * `Documentation`_ on the excellent `readthedocs.org`_
-* `Trello board managing current tasks`_
+* `Trello board managing current tasks`_ - note for features that you'd like
+  prioritsed!
 * `Google Group`_ - the mailing list is django-oscar@googlegroups.com
 * `Continuous integration homepage`_ on `travis-ci.org`_
 * `Twitter account for news and updates`_

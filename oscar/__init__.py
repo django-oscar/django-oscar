@@ -54,7 +54,7 @@ OSCAR_CORE_APPS = [
     'oscar.apps.dashboard.ranges',
     'oscar.apps.dashboard.vouchers',
     # 3rd-party apps that oscar depends on
-    'django.contrib.flatpages',
+    'haystack',
     'treebeard',
     'sorl.thumbnail',
 ]
