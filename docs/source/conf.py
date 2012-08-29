@@ -15,12 +15,17 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.insert(0, os.path.abspath('.'))
-import sys, os
-oscar_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), '../..'))
+import sys
+import os
+oscar_folder = os.path.realpath(
+    os.path.join(os.path.dirname(__file__), '../..'))
+sandbox_folder = os.path.realpath(
+    os.path.join(os.path.dirname(__file__), '../../sites/sandbox'))
 sys.path.append(oscar_folder)
+sys.path.append(sandbox_folder)
 
 # Get django settings
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'sandbox.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings')
 
 # -- General configuration -----------------------------------------------------
 
