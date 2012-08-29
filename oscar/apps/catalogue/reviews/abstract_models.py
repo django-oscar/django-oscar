@@ -22,21 +22,22 @@ class AbstractProductReview(models.Model):
     * Only signed in users can vote
     * A user can only vote once on each product once
     """
-    
+
     # Note we keep the review even if the product is deleted
-    product = models.ForeignKey('catalogue.Product', related_name='reviews', null=True, on_delete=models.SET_NULL)
-    
+    product = models.ForeignKey('catalogue.Product', related_name='reviews',
+                                null=True, on_delete=models.SET_NULL)
+
     SCORE_CHOICES = tuple([(x, x) for x in range(0, 6)])
     score = models.SmallIntegerField(_("Score"), choices=SCORE_CHOICES)
     title = models.CharField(max_length=255, verbose_name=_("Review title"))
     body = models.TextField(_("Body"))
-    
+
     # User information.  We include fields to handle anonymous users
     user = models.ForeignKey('auth.User', related_name='reviews', null=True, blank=True)
     name = models.CharField(_("Name"), max_length=255, null=True, blank=True)
     email = models.EmailField(_("Email"), null=True, blank=True)
     homepage = models.URLField(_("URL"), null=True, blank=True)
-    
+
     FOR_MODERATION, APPROVED, REJECTED = range(0, 3)
     STATUS_CHOICES = (
         (FOR_MODERATION, _("Requires moderation")),
@@ -45,13 +46,13 @@ class AbstractProductReview(models.Model):
     )
     default_status = FOR_MODERATION if settings.OSCAR_MODERATE_REVIEWS else APPROVED
     status = models.SmallIntegerField(_("Status"), choices=STATUS_CHOICES, default=default_status)
-    
+
     # Denormalised vote totals
     total_votes = models.IntegerField(_("Total Votes"), default=0)  # upvotes + down votes
-    delta_votes = models.IntegerField(_("Delta Votes"), default=0, db_index=True)  # upvotes - down votes  
-    
+    delta_votes = models.IntegerField(_("Delta Votes"), default=0, db_index=True)  # upvotes - down votes
+
     date_created = models.DateTimeField(auto_now_add=True)
-    
+
     # Managers
     objects = models.Manager()
     approved = ApprovedReviewsManager()
@@ -74,7 +75,7 @@ class AbstractProductReview(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
-        if not self.user and not (self.name and self.email):  
+        if not self.user and not (self.name and self.email):
             raise ValidationError(_("Anonymous review must have a name and an email"))
         if not self.title:
             raise ValidationError(_("Reviews must have a title"))
@@ -88,7 +89,7 @@ class AbstractProductReview(models.Model):
     def num_up_votes(self):
         """Returns the total up votes"""
         return int((self.total_votes + self.delta_votes) / 2)
-    
+
     def num_down_votes(self):
         """Returns the total down votes"""
         return int((self.total_votes - self.delta_votes) / 2)
@@ -99,7 +100,7 @@ class AbstractProductReview(models.Model):
         self.total_votes = result['total_votes'] or 0
         self.delta_votes = result['score'] or 0
         self.save()
-        
+
     def get_reviewer_name(self):
         if self.user:
             name = self.user.get_full_name()
@@ -139,4 +140,4 @@ class AbstractVote(models.Model):
         Validates model and raises error if validation fails
         """
         super(AbstractVote, self).save(*args, **kwargs)
-        self.review.update_totals()        
+        self.review.update_totals()
