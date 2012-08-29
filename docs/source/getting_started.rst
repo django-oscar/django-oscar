@@ -71,7 +71,7 @@ Next, modify ``INSTALLED_APPS`` to be a list, add ``South`` and append Oscar's c
         'south',
     ] + get_core_apps()
 
-Note that Oscar requires ``django.contrib.messages`` and 
+Note that Oscar requires ``django.contrib.messages`` and
 ``django.contrib.flatpages`` which aren't included by default.
 
 Now set your auth backends to::
@@ -88,9 +88,7 @@ Modify your ``TEMPLATE_DIRS`` to include the main Oscar template directory::
     from oscar import OSCAR_MAIN_TEMPLATE_DIR
     TEMPLATE_DIRS = TEMPLATE_DIRS + (OSCAR_MAIN_TEMPLATE_DIR,) 
 
-Oscar currently uses Haystack for search so you need to specify a
-``HAYSTACK_CONNECTIONS`` dictionary.  The 'Simple' backend can be used to get up
-and running quickly::
+Oscar currently uses Haystack for search so you need to specify::
 
     HAYSTACK_CONNECTIONS = {
         'default': {
