@@ -1,17 +1,18 @@
 # These targets are not files
 .PHONY: contribute ci test i18n
 
-contribute:
-	# Create a sandbox installation for playing around with oscar.
+install:
 	python setup.py develop
 	pip install -r requirements.txt
+
+sandbox: install
 	# Create database
 	sites/sandbox/manage.py syncdb --noinput
 	sites/sandbox/manage.py migrate
 	# Import some fixtures
-	sites/sandbox/manage.py oscar_import_catalogue sites/sandbox/data/books-catalogue.csv
-	sites/sandbox/manage.py oscar_import_catalogue_images sites/sandbox/data/books-images.tar.gz
-	sites/sandbox/manage.py loaddata countries.json sites/sandbox/fixtures/pages.json
+	sites/sandbox/manage.py oscar_import_catalogue sites/_fixtures/books-catalogue.csv
+	sites/sandbox/manage.py oscar_import_catalogue_images sites/_fixtures/books-images.tar.gz
+	sites/sandbox/manage.py loaddata countries.json sites/_fixtures/pages.json
 
 ci:
 	# Run continous tests and generate lint reports
