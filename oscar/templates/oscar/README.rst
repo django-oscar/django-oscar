@@ -61,3 +61,8 @@ Partials form_fields::
 Partials form_fields_inline::
 
     'include "partials/form_fields_inline.html" with form=form'
+
+Conventions
+-----------
+
+Template names should use underscores, not hyphens.

@@ -48,7 +48,7 @@ class LogoutView(RedirectView):
 
 class ProfileUpdateView(FormView):
     form_class = ProfileForm
-    template_name = 'customer/profile-form.html'
+    template_name = 'customer/profile_form.html'
 
     def get_form_kwargs(self):
         kwargs = super(ProfileUpdateView, self).get_form_kwargs()
@@ -257,7 +257,7 @@ class AccountAuthView(AccountRegistrationView):
 class EmailHistoryView(ListView):
     """Customer email history"""
     context_object_name = "emails"
-    template_name = 'customer/email-history.html'
+    template_name = 'customer/email_list.html'
     paginate_by = 20
 
     def get_queryset(self):
@@ -280,7 +280,7 @@ class OrderHistoryView(ListView):
     Customer order history
     """
     context_object_name = "orders"
-    template_name = 'customer/order-history.html'
+    template_name = 'customer/order_list.html'
     paginate_by = 20
     model = Order
     form_class = SearchByDateRangeForm
@@ -440,7 +440,7 @@ class OrderLineView(DetailView, PostActionMixin):
 class AddressListView(ListView):
     """Customer address book"""
     context_object_name = "addresses"
-    template_name = 'customer/address-book.html'
+    template_name = 'customer/address_list.html'
     paginate_by = 40
 
     def get_queryset(self):
@@ -451,10 +451,10 @@ class AddressListView(ListView):
 class AddressCreateView(CreateView):
     form_class = UserAddressForm
     mode = UserAddress
-    template_name = 'customer/address-form.html'
+    template_name = 'customer/address_form.html'
 
     def get_context_data(self, **kwargs):
-        ctx =  super(AddressCreateView, self).get_context_data(**kwargs)
+        ctx = super(AddressCreateView, self).get_context_data(**kwargs)
         ctx['title'] = _('Add a new address')
         return ctx
 
@@ -472,7 +472,7 @@ class AddressCreateView(CreateView):
 class AddressUpdateView(UpdateView):
     form_class = UserAddressForm
     model = UserAddress
-    template_name = 'customer/address-form.html'
+    template_name = 'customer/address_form.html'
 
     def get_context_data(self, **kwargs):
         ctx =  super(AddressUpdateView, self).get_context_data(**kwargs)
@@ -489,36 +489,31 @@ class AddressUpdateView(UpdateView):
 
 class AddressDeleteView(DeleteView):
     model = UserAddress
+    template_name = "customer/address_delete.html"
 
     def get_queryset(self):
-        """Return a customer's addresses"""
         return UserAddress._default_manager.filter(user=self.request.user)
 
     def get_success_url(self):
         return reverse('customer:address-list')
 
-    def get_template_names(self):
-        return ["customer/address-delete.html"]
-
 
 class AnonymousOrderDetailView(DetailView):
-
     model = Order
-
-    def get_template_names(self):
-        return ["customer/anon-order.html"]
+    template_name = "customer/anon_order.html"
 
     def get_object(self):
-        order = get_object_or_404(self.model, user=None, number=self.kwargs['order_number'])
+        # Check URL hash matches that for order to prevent spoof attacks
+        order = get_object_or_404(self.model, user=None,
+                                  number=self.kwargs['order_number'])
         if self.kwargs['hash'] != order.verification_hash():
             raise Http404()
-
         return order
 
 
 class ChangePasswordView(FormView):
     form_class = PasswordChangeForm
-    template_name = 'customer/change-password.html'
+    template_name = 'customer/change_password_form.html'
 
     def get_form_kwargs(self):
         kwargs = super(ChangePasswordView, self).get_form_kwargs()
