@@ -3,6 +3,7 @@ from django.conf.urls.defaults import patterns, url, include
 from oscar.core.application import Application
 from oscar.apps.catalogue.views import ProductDetailView, ProductListView, ProductCategoryView
 from oscar.apps.catalogue.reviews.app import application as reviews_app
+from oscar.apps.catalogue.notification.app import application as notification_app
 
 
 class BaseCatalogueApplication(Application):
@@ -24,12 +25,17 @@ class BaseCatalogueApplication(Application):
 
 
 class ReviewsApplication(Application):
+    name = None
     reviews_app = reviews_app
+    notification_app = notification_app
 
     def get_urls(self):
         urlpatterns = super(ReviewsApplication, self).get_urls()
         urlpatterns += patterns('',
-            url(r'^(?P<product_slug>[\w-]*)-(?P<product_pk>\d+)/reviews/', include(self.reviews_app.urls)),
+            url(r'^(?P<product_slug>[\w-]*)-(?P<product_pk>\d+)/reviews/',
+                include(self.reviews_app.urls)),
+            url(r'^(?P<product_slug>[\w-]*)-(?P<product_pk>\d+)/notify-me/',
+                include(self.notification_app.urls)),
         )
         return self.post_process_urls(urlpatterns)
 

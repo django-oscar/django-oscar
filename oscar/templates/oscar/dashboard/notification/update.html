@@ -1,0 +1,59 @@
+{% extends 'dashboard/layout.html' %}
+{% load i18n %}
+
+{% block body_class %}users{% endblock %}
+
+{% block title %}
+{% blocktrans %}Update notification #{{ notification.id }}{% endblocktrans %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="{% url dashboard:user-notification-list %}">{% trans "Notifications" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active"><a href=".">{% blocktrans %}Notification #{{ notification.id }}{% endblocktrans %}</a></li>
+</ul>
+{% endblock %}
+
+{% block header %}
+    <div class="page-header">
+        <h1>{% blocktrans %}Notification #{{ notification.id }}{% endblocktrans %}</h1>
+    </div>
+{% endblock header %}
+
+{% block dashboard_content %}
+<form action="." method="post">
+    {% csrf_token %}
+
+    {% for field in form %}
+        {% if field.is_hidden %}
+            {{ field }}
+        {% else %}
+        {{ field.label_tag }}
+        <div class="controls">
+            {{ field }}
+                {% for error in field.errors %}
+                <span class="help-block">
+                    {{ error|escape }}
+                </span>
+                {% endfor %}
+            {% if field.help_text %}
+                <span class='help-block'>
+                    {{ field.help_text }}
+                </span>
+            {% endif %}
+        </div>
+        {% endif %}
+    {% endfor %}
+    <div class="form-actions">
+        <button type='submit' class="btn btn-info">{% trans "Save" %}</button> or
+        <a href="{% url dashboard:user-notification-list %}">{% trans "cancel" %}</a>
+    </div>
+</form>
+{% endblock dashboard_content %}

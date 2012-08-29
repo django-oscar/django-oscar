@@ -1,0 +1,5 @@
+{% load i18n %}
+
+{% blocktrans with title=notify_item.title %}
+Product notification for <a href="{{ url catalogue:detail notify_item.slug notify_item.id }}">{{ title }}</a>
+{% endblocktrans %}

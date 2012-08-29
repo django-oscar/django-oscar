@@ -1,0 +1,6 @@
+{% load i18n %}
+{% if notification.date_notified %}
+    {{ notification.date_notified|date }}
+{% else %}
+    {% trans "Not yet notified" %}
+{% endif %}

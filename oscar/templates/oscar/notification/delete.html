@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block main-column %}
+    <div class="well well-danger">
+        <h1>{% trans "Delete notification?" %}</h1>
+        <form action="." method="post">
+        {% blocktrans %}Are you sure that you want to delete notification of
+            {{ notification.get_notification_email }} for product 
+            {{ notification.product.title }}?
+        {% endblocktrans %}
+            <div class="form-actions">
+                <button type='submit' name='submit' class="btn btn-danger">{% trans "Delete" %}</button> or
+                <a href="{% url customer:summary %}">{% trans "cancel" %}</a>
+            </div>
+        </form>
+    </div>
+{% endblock %}
