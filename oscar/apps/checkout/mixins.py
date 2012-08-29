@@ -256,7 +256,8 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         try:
             event_type = CommunicationEventType.objects.get(code=code)
         except CommunicationEventType.DoesNotExist:
-            # No event in database, attempt to find templates for this type
+            # No event-type in database, attempt to find templates for this type
+            # and render them immediately to get the messages
             messages = CommunicationEventType.objects.get_and_render(code, ctx)
             event_type = None
         else:
