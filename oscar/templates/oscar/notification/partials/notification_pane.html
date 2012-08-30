@@ -13,9 +13,9 @@
                 <th>{% trans "Product Availability" %}</th>
                 <th>{% trans "Status" %}</th>
                 <th>{% trans "Date Subscribed" %}</th>
-                {# {% if edit_enabled %} #}
+                {% if edit_enabled %}
                 <th></th>
-                {#{% endif %}#}
+                {% endif %}
             </tr>
 
             {% for notification in notification_list %}
@@ -38,15 +38,15 @@
                     {% include "notification/partials/status.html" %}
                 </td>
                 <td>{{ notification.date_created|date }}</td>
+                {% if edit_enabled == 'yes' %}
                 <td>
-                    {# {% if edit_enabled %} #}
                     {% if not notification.is_active %}
                         <button class="btn btn-success" type='submit' name='activate' value='{{ notification.id }}'>{% trans "Activate" %}</button>
                     {% else %}
                         <button class="btn btn-danger" type='submit' name='deactivate' value='{{ notification.id }}'>{% trans "Deactivate" %}</button>
                     {% endif %}
                 </td>
-                {#{% endif %} #}
+                {% endif %}
             </tr>
             {% endfor %}
         </table>

@@ -181,9 +181,7 @@
 
         <div class="tab-pane {% if active_tab == 'notifications' %}active{% endif %}" id="notifications">
             {% block tab_notifications %}
-                {% with edit_enabled=True %}
-                    {% include "notification/partials/notification_pane.html" %}
-                {% endwith %}
+                {% include "notification/partials/notification_pane.html" with edit_enabled="yes" %}
             {% endblock %}
         </div>
     </div>
