@@ -14,12 +14,12 @@ from oscar.apps.partner.models import StockRecord
 from oscar.apps.catalogue.notification.models import ProductNotification
 
 
-class ProductNotificationTests(TestCase):
+class TestProductNotification(TestCase):
 
     def setUp(self):
         self.product = get(Product)
 
-    def test_authenticated_user_notification_get_authenticated_email(self):
+    def test_getting_notification_email_for_authenticated_user(self):
         user = get(User)
         notification = ProductNotification.objects.create(
             user=user,
@@ -27,7 +27,7 @@ class ProductNotificationTests(TestCase):
         )
         self.assertEquals(notification.get_notification_email(), user.email)
 
-    def test_authenticated_user_notification_get_anonymous_email(self):
+    def test_getting_notification_email_for_anonymous_user(self):
         notification = ProductNotification.objects.create(
             email='test@oscar.com',
             product=self.product
@@ -56,13 +56,13 @@ class NotificationTestCase(ClientTestCase):
         return product
 
 
-class NotifyMeInViewTests(NotificationTestCase):
+class TestNotifyMeButtons(NotificationTestCase):
 
     def setUp(self):
         self.create_product_class()
         self.product = self.create_product()
 
-    def test_notify_me_button_on_unavailable_product_page(self):
+    def test_are_displayed_on_unavailable_product_page(self):
         self.product.stockrecord.num_in_stock = 0
         self.product.stockrecord.save()
 
@@ -72,7 +72,7 @@ class NotifyMeInViewTests(NotificationTestCase):
 
         self.assertContains(response, 'notify-me', status_code=200)
 
-    def test_notify_me_button_on_available_product_page(self):
+    def test_are_not_displayed_on_available_product_page(self):
         self.product.stockrecord.num_in_stock = 20
         self.product.stockrecord.save()
 
@@ -88,16 +88,16 @@ class NotifyMeInViewTests(NotificationTestCase):
         self.assertNotContains(response, 'notify-me', status_code=200)
 
 
-class CreateNotificationViewAsAnonymousTests(NotificationTestCase):
+class TestNotificationForAnonymousUser(NotificationTestCase):
     is_anonymous = True
     email = 'anonymous@email.com'
 
     def setUp(self):
-        super(CreateNotificationViewAsAnonymousTests, self).setUp()
+        super(TestNotificationForAnonymousUser, self).setUp()
         self.create_product_class()
         self.product_1 = self.create_product()
 
-    def test_create_notification_for_anonymous(self):
+    def test_creating_notification(self):
         """
         Test creating a notification for an anonymous user. A notification
         is generated for the user with confirmation and unsubscribe code.
@@ -156,7 +156,7 @@ class CreateNotificationViewAsAnonymousTests(NotificationTestCase):
         notification = ProductNotification.objects.get(pk=notification.id)
         self.assertEquals(notification.status, ProductNotification.INACTIVE)
 
-    def test_confirm_url_generation(self):
+    def test_make_sure_confirm_url_is_available(self):
         notification = ProductNotification.objects.create(
             email=self.email,
             product=self.product_1,
@@ -169,7 +169,7 @@ class CreateNotificationViewAsAnonymousTests(NotificationTestCase):
                           notification.confirm_key,)) 
         )
 
-    def test_unsubscribe_url_generation(self):
+    def test_make_sure_unsubscribe_url_is_available(self):
         notification = ProductNotification.objects.create(
             email=self.email,
             product=self.product_1,
@@ -183,18 +183,18 @@ class CreateNotificationViewAsAnonymousTests(NotificationTestCase):
         )
 
 
-class CreateNotificationViewAsAuthenticatedUserTests(NotificationTestCase):
+class TestNotificationForAuthenticatedUser(NotificationTestCase):
     is_anonymous = False
     is_staff = False
     email = 'testuser@oscar.com'
 
     def setUp(self):
-        super(CreateNotificationViewAsAuthenticatedUserTests, self).setUp()
+        super(TestNotificationForAuthenticatedUser, self).setUp()
         self.create_product_class()
         self.product_1 = self.create_product()
         self.product_2 = self.create_product()
 
-    def test_prefilled_email_for_authenticated_user(self):
+    def test_prefilling_email_for_authenticated_user(self):
         product_url = reverse('catalogue:detail',
                               args=(self.product_1.slug, self.product_1.id))
         self.client.login()
@@ -202,7 +202,7 @@ class CreateNotificationViewAsAuthenticatedUserTests(NotificationTestCase):
 
         self.assertContains(response, self.email, status_code=200)
 
-    def test_create_notification_for_auth_user_with_email(self):
+    def test_creating_a_notification_with_valid_email(self):
         """
         Test creating a notification for an authenticated user with the
         providing the account email address in the (hidden) signup form.
@@ -226,7 +226,7 @@ class CreateNotificationViewAsAuthenticatedUserTests(NotificationTestCase):
         self.assertEquals(notification.confirm_key, None)
         self.assertEquals(notification.unsubscribe_key, None)
 
-    def test_create_notification_for_auth_user_with_invalid_email(self):
+    def test_creating_a_notification_with_invalid_email(self):
         """
         Test creating a notification with an email address that is different
         from the user's account email. This should set the account email
@@ -249,7 +249,7 @@ class CreateNotificationViewAsAuthenticatedUserTests(NotificationTestCase):
         self.assertEquals(notification.confirm_key, None)
         self.assertEquals(notification.unsubscribe_key, None)
 
-    def test_create_notification_for_auth_user_when_notification_exists(self):
+    def test_creating_a_notification_when_notification_already_exists(self):
         """
         Test creating a notification when the user has already signed up for
         this product notification. The user should be redirected to the product
@@ -269,14 +269,14 @@ class CreateNotificationViewAsAuthenticatedUserTests(NotificationTestCase):
                           self.user.notifications.all()[0].productnotification)
 
 
-class CreateNotificationViewAsAnonymousUserTests(NotificationTestCase):
+class TestNotificationForAnonymousExistingUser(NotificationTestCase):
     is_anonymous = True
     email = 'testuser@oscar.com'
     username = 'testuser'
     password = 'password'
 
     def setUp(self):
-        super(CreateNotificationViewAsAnonymousUserTests, self).setUp()
+        super(TestNotificationForAnonymousExistingUser, self).setUp()
         self.create_user()
 
         self.create_product_class()
@@ -306,7 +306,7 @@ class CreateNotificationViewAsAnonymousUserTests(NotificationTestCase):
         )
 
 
-class SetStatusProductNotificationViewTests(NotificationTestCase):
+class TestSetStatusProductNotification(NotificationTestCase):
     is_anonymous = False
     is_staff = False
     email = 'testuser@oscar.com'
@@ -314,7 +314,7 @@ class SetStatusProductNotificationViewTests(NotificationTestCase):
     password = 'password'
 
     def setUp(self):
-        super(SetStatusProductNotificationViewTests, self).setUp()
+        super(TestSetStatusProductNotification, self).setUp()
         self.product_class = self.create_product_class()
         self.product = self.create_product()
         self.notification = ProductNotification.objects.create(
@@ -342,7 +342,7 @@ class SetStatusProductNotificationViewTests(NotificationTestCase):
         self.assertEquals(response.status_code, 404)
 
 
-class DeleteNotificationViewTests(NotificationTestCase):
+class TestDeleteNotification(NotificationTestCase):
     is_anonymous = False
     is_staff = True
     email = 'staff@oscar.com'
@@ -350,7 +350,7 @@ class DeleteNotificationViewTests(NotificationTestCase):
     password = 'password'
 
     def setUp(self):
-        super(DeleteNotificationViewTests, self).setUp()
+        super(TestDeleteNotification, self).setUp()
         self.product_class = self.create_product_class()
         self.product = self.create_product()
         self.notification = ProductNotification.objects.create(
@@ -372,7 +372,7 @@ class DeleteNotificationViewTests(NotificationTestCase):
         self.assertEquals(ProductNotification.objects.count(), 0)
 
 
-class SendingNotificationTests(TestCase):
+class TestSendingNotification(TestCase):
 
     def setUp(self):
         self.product_class = ProductClass.objects.create(name='books')
