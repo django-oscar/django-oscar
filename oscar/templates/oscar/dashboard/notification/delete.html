@@ -4,7 +4,7 @@
 {% block body_class %}users{% endblock %}
 
 {% block title %}
-{% blocktrans %}Notification #{{ notification.id }}{% endblocktrans %} | {{ block.super }}
+{% blocktrans with id=notification.id %}Notification #{{ id }}{% endblocktrans %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -17,13 +17,13 @@
     <a href="{% url dashboard:user-notification-list %}">{% trans "Notifications" %}</a>
         <span class="divider">/</span>
     </li>
-    <li class="active"><a href=".">{% blocktrans %}Notification #{{ notification.id }}{% endblocktrans %}</a></li>
+    <li class="active"><a href=".">{% blocktrans with id=notification.id %}Notification #{{ id }}{% endblocktrans %}</a></li>
 </ul>
 {% endblock %}
 
 {% block header %}
     <div class="page-header">
-        <h1>{% blocktrans %}Delete Notification #{{ notification.id }}?{% endblocktrans %}</h1>
+        <h1>{% blocktrans with id=notification.id %}Delete Notification #{{ id }}?{% endblocktrans %}</h1>
     </div>
 {% endblock header %}
 

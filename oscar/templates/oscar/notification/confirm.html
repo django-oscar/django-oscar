@@ -4,7 +4,7 @@
 {% block main-column %}
     {% if notification.is_active %}
     <div class="alert alert-success">
-        {% blocktrans %}Thank you for subscribing. Notifications will be sent to {{ notification.email }}{% endblocktrans %}
+        {% blocktrans with notification_email=notification.email %}Thank you for subscribing. Notifications will be sent to {{ notification_email }}{% endblocktrans %}
     </div>
     {% else %}
     <div class="alert alert-error">
