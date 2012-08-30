@@ -156,6 +156,32 @@ class CreateNotificationViewAsAnonymousTests(NotificationTestCase):
         notification = ProductNotification.objects.get(pk=notification.id)
         self.assertEquals(notification.status, ProductNotification.INACTIVE)
 
+    def test_confirm_url_generation(self):
+        notification = ProductNotification.objects.create(
+            email=self.email,
+            product=self.product_1,
+            status=ProductNotification.UNCONFIRMED
+        )
+        self.assertTrue(
+            notification.get_confirm_url(),
+            reverse('catalogue:notification-confirm',
+                    args=(self.product_1.slug, self.product_1.id,
+                          notification.confirm_key,)) 
+        )
+
+    def test_unsubscribe_url_generation(self):
+        notification = ProductNotification.objects.create(
+            email=self.email,
+            product=self.product_1,
+            status=ProductNotification.UNCONFIRMED
+        )
+        self.assertTrue(
+            notification.get_unsubscribe_url(),
+            reverse('catalogue:notification-unsubscribe',
+                    args=(self.product_1.slug, self.product_1.id,
+                          notification.unsubscribe_key,)) 
+        )
+
 
 class CreateNotificationViewAsAuthenticatedUserTests(NotificationTestCase):
     is_anonymous = False

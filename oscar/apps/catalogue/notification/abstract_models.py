@@ -5,6 +5,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
 
+from model_utils.managers import InheritanceManager
+
 
 class AbstractNotification(models.Model):
     """
@@ -20,6 +22,8 @@ class AbstractNotification(models.Model):
     notifications.
     """
     KEY_LENGTH = 40
+    item_field_name = None
+
     user = models.ForeignKey(User, db_index=True, blank=True, null=True,
                              related_name="notifications")
     # These fields only apply to unauthenticated users and are empty
@@ -40,6 +44,8 @@ class AbstractNotification(models.Model):
     )
     status = models.CharField(max_length=20, choices=STATUS_TYPES,
                               default=INACTIVE)
+
+    objects = InheritanceManager()
 
     def is_active(self):
         """
@@ -90,18 +96,30 @@ class AbstractNotification(models.Model):
     @models.permalink
     def get_confirm_url(self):
         """
-        Get confirmation URL for this notification. Needs to be
-        implemented in subclasses.
+        Get confirmation URL for this notification.This assumes
+        that for the related item the url is determined by its ``slug``
+        and ``pk`` fields prefixed with the specified ``item_field_name``,
+        e.g. for a product notification with ``item_field_name='product'``
+        the URL reverse lookup requires ``product_slug`` and
+        ``product_pk`` as part of its URL pattern definition.
         """
-        raise NotImplementedError()
+        kwargs = self._get_url_kwargs()
+        kwargs['key'] = self.confirm_key
+        return ('catalogue:notification-confirm', (), kwargs)
 
     @models.permalink
     def get_unsubscribe_url(self):
         """
-        Get confirmation URL for this notification. Needs to be
-        implemented in subclasses.
+        Get unsubscribe URL for this notification. This assumes
+        that for the related item the url is determined by its ``slug``
+        and ``pk`` fields prefixed with the specified ``item_field_name``,
+        e.g. for a product notification with ``item_field_name='product'``
+        the URL reverse lookup requires ``product_slug`` and
+        ``product_pk`` as part of its URL pattern definition.
         """
-        raise NotImplementedError()
+        kwargs = self._get_url_kwargs()
+        kwargs['key'] = self.unsubscribe_key
+        return ('catalogue:notification-unsubscribe', (), kwargs)
 
     def save(self, *args, **kwargs):
         """
@@ -118,11 +136,30 @@ class AbstractNotification(models.Model):
 
     def get_notification_item(self):
         """
-        Get the item of this notification for. This is an abstract
-        declaration and needs to be overwritten in subclasses. The
-        expected return value is either a model instance or ``None``.
+        Get the item associated with this notification. The item is 
+        assumed to be stored in a field with the name defined in 
+        ``item_field_name``.
         """
-        raise NotImplementedError()
+        if not self.item_field_name:
+            raise AttributeError(_("no item field name provided, please provide "
+                                   "the name of the field referencing the item "
+                                   "for this notification"))
+
+        return getattr(self, self.item_field_name)
+
+    def _get_url_kwargs(self):
+        """
+        Get the keyword arguments for the confirmation URL reverse
+        lookup. This provides the item specific arguments for slug
+        and primary key.
+        """
+        slug_key = '%s_slug' % self.item_field_name
+        pk_key = '%s_pk' % self.item_field_name
+        item = self.get_notification_item()
+        return {
+            slug_key: item.slug,
+            pk_key: item.id,
+        }
 
     def __unicode__(self):
         """ Unicode representation of this notification """
