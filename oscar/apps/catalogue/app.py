@@ -27,20 +27,30 @@ class BaseCatalogueApplication(Application):
 class ReviewsApplication(Application):
     name = None
     reviews_app = reviews_app
-    notification_app = notification_app
 
     def get_urls(self):
         urlpatterns = super(ReviewsApplication, self).get_urls()
         urlpatterns += patterns('',
             url(r'^(?P<product_slug>[\w-]*)-(?P<product_pk>\d+)/reviews/',
                 include(self.reviews_app.urls)),
+        )
+        return self.post_process_urls(urlpatterns)
+
+
+class NotificationsApplication(Application):
+    name = None
+    notification_app = notification_app
+
+    def get_urls(self):
+        urlpatterns = super(NotificationsApplication, self).get_urls()
+        urlpatterns += patterns('',
             url(r'^(?P<product_slug>[\w-]*)-(?P<product_pk>\d+)/notify-me/',
                 include(self.notification_app.urls)),
         )
         return self.post_process_urls(urlpatterns)
 
 
-class CatalogueApplication(BaseCatalogueApplication, ReviewsApplication):
+class CatalogueApplication(BaseCatalogueApplication, ReviewsApplication, NotificationsApplication):
     """
     Composite class combining Products with Reviews
     """
