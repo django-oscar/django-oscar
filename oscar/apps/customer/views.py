@@ -31,7 +31,7 @@ UserAddress = get_model('address', 'UserAddress')
 Email = get_model('customer', 'email')
 UserAddress = get_model('address', 'UserAddress')
 CommunicationEventType = get_model('customer', 'communicationeventtype')
-ProductNotification = get_model('notification', 'productnotification')
+Notification = get_model('notification', 'notification')
 
 
 class LogoutView(RedirectView):
@@ -81,7 +81,6 @@ class AccountSummaryView(TemplateView):
         self.add_profile_fields(ctx)
 
         ctx['active_tab'] = self.request.GET.get('tab', 'profile')
-
         return ctx
 
     def get_orders(self, user):
@@ -111,12 +110,33 @@ class AccountSummaryView(TemplateView):
         ctx['profile_fields'] = field_data
         ctx['profile'] = profile
 
+    def post(self, request, *args, **kwargs):
+        if 'deactivate' in request.POST:
+            notification_id = request.POST.get('deactivate')
+            status = Notification.INACTIVE
+
+        elif 'activate' in request.POST:
+            notification_id = request.POST.get('activate')
+            status = Notification.ACTIVE
+
+        try:
+            notification = Notification.objects.get(pk=notification_id)
+            notification.status = status
+            notification.save()
+        except Notification.DoesNotExist:
+            messages.error(_("Cannot change notification status, notification "
+                             "does not exist"))
+
+        return HttpResponseRedirect(
+            reverse('customer:summary')+'?tab=notifications'
+        )
+
     def get_emails(self, user):
         return Email.objects.filter(user=user)
 
     def get_product_notifications(self, user):
         # Only show notifications that have not been processed
-        return ProductNotification.objects.select_related().filter(
+        return Notification.objects.select_subclasses().select_related().filter(
             user=self.request.user,
             date_notified=None,
         )
@@ -213,7 +233,7 @@ class AccountRegistrationView(TemplateView):
         registration email will be send to the provided email address.
         A new user account is created and the user is then logged in.
 
-        If the user has anonymous ``ProductNotifications`` subscriptions
+        If the user has anonymous ``Notifications`` subscriptions
         from before they registered, these notifications will be updated
         to be connected with their newly created user account.
         """
@@ -234,7 +254,7 @@ class AccountRegistrationView(TemplateView):
         # email address and change them from anonymous to this
         # user's account
         #FIXME: Needs to implement base class of all notifications
-        notifications = ProductNotification.objects.filter(
+        notifications = Notification.objects.filter(
             email=user.email,
             user=None
         )
