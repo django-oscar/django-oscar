@@ -238,7 +238,7 @@ class ProductUpdateView(generic.UpdateView):
             form.save()
 
             if self.is_stockrecord_submitted():
-                stockrecord = stockrecord_form.save()
+                stockrecord = stockrecord_form.save(commit=False)
                 stockrecord.product = self.object
                 stockrecord.save()
 
@@ -310,7 +310,7 @@ class CategoryListMixin(object):
         if parent is None:
             return reverse("dashboard:catalogue-category-list")
         else:
-            return reverse("dashboard:catalogue-category-detail-list", 
+            return reverse("dashboard:catalogue-category-detail-list",
                             args=(parent.pk,))
 
 
