@@ -1,0 +1,59 @@
+[
+    {
+        "pk": 1,
+        "model": "order.shippingeventtype",
+        "fields": {
+            "is_required": false,
+            "code": "shipped",
+            "name": "Shipped",
+            "sequence_number": 0
+        }
+    },
+    {
+        "pk": 2,
+        "model": "order.shippingeventtype",
+        "fields": {
+            "is_required": false,
+            "code": "cancelled",
+            "name": "Cancelled",
+            "sequence_number": 0
+        }
+    },
+    {
+        "pk": 3,
+        "model": "order.shippingeventtype",
+        "fields": {
+            "is_required": false,
+            "code": "returned",
+            "name": "Returned",
+            "sequence_number": 0
+        }
+    },
+    {
+        "pk": 1,
+        "model": "order.paymenteventtype",
+        "fields": {
+            "code": "pre-authorised",
+            "name": "Pre-authorised",
+            "sequence_number": 0
+        }
+    },
+    {
+        "pk": 2,
+        "model": "order.paymenteventtype",
+        "fields": {
+            "code": "settled",
+            "name": "Settled",
+            "sequence_number": 1
+        }
+    },
+    {
+        "pk": 3,
+        "model": "order.paymenteventtype",
+        "fields": {
+            "code": "refunded",
+            "name": "Refunded",
+            "sequence_number": 3
+        }
+    }
+]

@@ -1,6 +1,8 @@
 import csv
+import datetime
 
 from django.db.models import get_model
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import get_class
 ReportGenerator = get_class('dashboard.reports.reports', 'ReportGenerator')
@@ -14,10 +16,10 @@ class OrderReportCSVFormatter(ReportCSVFormatter):
 
     def generate_csv(self, response, orders):
         writer = csv.writer(response)
-        header_row = ['Order number',
-                      'User',
-                      'Total incl. tax',
-                      'Date placed',]
+        header_row = [_('Order number'),
+                      _('User'),
+                      _('Total incl. tax'),
+                      _('Date placed')]
         writer.writerow(header_row)
         for order in orders:
             row = [order.number,
@@ -35,9 +37,8 @@ class OrderReportHTMLFormatter(ReportHTMLFormatter):
 
 
 class OrderReportGenerator(ReportGenerator):
-
     code = 'order_report'
-    description = "Orders placed"
+    description = _("Orders placed")
 
     formatters = {
         'CSV_formatter': OrderReportCSVFormatter,
@@ -46,8 +47,9 @@ class OrderReportGenerator(ReportGenerator):
 
     def generate(self):
         orders = Order._default_manager.filter(
-            date_placed__gte=self.start_date
-        ).filter(date_placed__lt=self.end_date)
+            date_placed__gte=self.start_date,
+            date_placed__lt=self.end_date + datetime.timedelta(days=1)
+        )
 
         additional_data = {
             'start_date': self.start_date,
@@ -57,4 +59,4 @@ class OrderReportGenerator(ReportGenerator):
         return self.formatter.generate_response(orders, **additional_data)
 
     def is_available_to(self, user):
-        return user.is_staff and user.has_perm('order.can_view')
+        return user.is_staff

@@ -10,20 +10,22 @@ class BaseCatalogueApplication(Application):
     detail_view = ProductDetailView
     index_view = ProductListView
     category_view = ProductCategoryView
-    
+
     def get_urls(self):
-        urlpatterns = super(BaseCatalogueApplication, self).get_urls()        
+        urlpatterns = super(BaseCatalogueApplication, self).get_urls()
         urlpatterns += patterns('',
-            url(r'^$', self.index_view.as_view(), name='index'),       
-            url(r'^(?P<product_slug>[\w-]*)-(?P<pk>\d+)/$', self.detail_view.as_view(), name='detail'),
-            url(r'^(?P<category_slug>[\w-]+(/[\w-]+)*)/$', self.category_view.as_view(), name='category')
+            url(r'^$', self.index_view.as_view(), name='index'),
+            url(r'^(?P<product_slug>[\w-]*)_(?P<pk>\d+)/$',
+                self.detail_view.as_view(), name='detail'),
+            url(r'^(?P<category_slug>[\w-]+(/[\w-]+)*)/$',
+                self.category_view.as_view(), name='category')
         )
         return self.post_process_urls(urlpatterns)
 
 
 class ReviewsApplication(Application):
-    reviews_app = reviews_app    
-    
+    reviews_app = reviews_app
+
     def get_urls(self):
         urlpatterns = super(ReviewsApplication, self).get_urls()
         urlpatterns += patterns('',
@@ -36,5 +38,6 @@ class CatalogueApplication(BaseCatalogueApplication, ReviewsApplication):
     """
     Composite class combining Products with Reviews
     """
+
 
 application = CatalogueApplication()

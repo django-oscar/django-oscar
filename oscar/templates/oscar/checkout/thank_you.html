@@ -1,0 +1,141 @@
+{% extends "checkout/layout.html" %}
+{% load currency_filters %}
+{% load i18n %}
+
+{% block title %}
+{% trans "Confirmation of order" %} {{ order.number }} | {{ block.super }}
+{% endblock title %}
+
+{% block checkout-nav %}{% endblock %}
+
+
+{% block content %}
+<div class="sub-header">
+	<h1>{% blocktrans with order_num=order.number %}
+		Confirmation for order #{{ order_num }}
+		{% endblocktrans %}</h1>
+</div>
+<p>{% trans "Your order has been placed and a confirmation email has ben sent - your order number is" %}
+<span class="label label-success">{{ order.number }}</span></p>
+<p>{% trans "Please make a note of this reference or print this page and quote it in any communication with us regarding your order." %}</p>
+
+<div class="row-fluid">
+    <div class="span6">
+		{% block shipping_info %}
+        <div class="well well-info">
+			<h3>{% trans "Shipping" %}</h3>
+			<p>{% trans "Your order will be delivered to:" %}</p>
+            {% for line in order.shipping_address.active_address_fields %}
+            {{ line }}<br/>
+            {% endfor %}
+        </div>
+		{% endblock %}
+    </div>
+    <div class="span6">
+		{% block payment_info %}
+        <div class="well well-success">
+			<h3>{% trans "Payment" %}</h3>
+            {% for source in order.sources.all %}
+            {{ source }}
+            {% endfor %}
+        </div>
+		{% endblock %}
+    </div>
+</div>
+<div class="sub-header">
+	<h3>{% trans "Order details" %}</h3>
+</div>
+
+<div class="basket-title">
+    <div class="row-fluid">
+		<h4 class="span7">{% trans "Items purchased" %}</h4>
+		<h4 class="span3">{% trans "Estimated dispatch date" %}</h4>
+		<h4 class="span1">{% trans "Quantity" %}</h4>
+		<h4 class="span1">{% trans "Cost" %}</h4>
+    </div>
+</div>
+
+{% for line in order.lines.all %}
+<div class="basket-items">
+    <div class="row-fluid">
+        <div class="span7">
+            <h4><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h4>
+        </div>
+        <div class="span3">
+            {{ line.est_dispatch_date }}
+        </div>
+        <div class="span1">
+            {{ line.quantity }}
+        </div>
+        <div class="span1">
+            <span class="price">{{ line.line_price_before_discounts_incl_tax|currency }}</span>
+        </div>        
+    </div>
+</div>
+{% endfor %}
+
+{% for discount in order.discounts.all %}
+<div class="basket-items">
+    <div class="row-fluid">
+        <h4 class="span11">{{ discount.offer }}</h4>
+        <div class="span1">- {{ discount.amount|currency }}</div>
+    </div>
+</div>
+{% endfor %}
+
+<div class="basket-items">
+    <div class="row-fluid">
+		<h4 class="span11">{% trans "Basket total" %}</h4>
+        <div class="span1">{{ order.basket_total_incl_tax|currency }}</div>
+    </div>
+</div>
+<div class="basket-items">
+    <div class="row-fluid">
+		<h4 class="span11">{% blocktrans with method=order.shipping_method %}Shipping charge - {{ method }}{% endblocktrans %}</h4>
+        <div class="span1">{{ order.shipping_incl_tax|currency }}</div>
+    </div>
+</div>
+<div class="basket-items total">
+    <div class="row-fluid">
+		<h3 class="span11">{% trans "Order total" %}</h3>
+        <h3 class="span1">{{ order.total_incl_tax|currency }}</h3>
+    </div>
+</div>
+ 
+{% if not order.user %}
+    <div class="sub-header">
+		<h4>{% trans "Tracking your order" %}</h4>
+    </div>
+	<p>You can
+	<a href="{% url customer:anon-order order.number order.verification_hash %}">track the status of your order</a>.</p>
+	</p>
+{% endif %}
+
+<div class="form-actions">
+	<a onclick="window.print()" href="#" class="btn btn-primary btn-large">{% trans "Print this page" %}</a>
+	<a href="/" class="btn btn-primary btn-large pull-right">{% trans "Continue shopping" %}</a>
+</div>
+{% endblock content %}
+
+{% block extratracking %}
+    _gaq.push(['_addTrans',
+        '{{ order.number|escapejs }}',
+		'{{ shop_name|escapejs }}',
+        '{{ order.total_incl_tax|escapejs }}',
+        '{{ order.total_tax|escapejs }}',
+        '{{ order.shipping_incl_tax|escapejs }}',
+        '{{ order.shipping_address.line4|escapejs }}',
+        '{{ order.shipping_address.state|escapejs }}',
+        '{{ order.shipping_address.country.name|escapejs }}'
+    ]);
+    {% for line in order.lines.all %}
+        _gaq.push(['_addItem',
+            '{{ order.number }}',
+            '{{ line.partner_sku|escapejs }}',
+            '{{ line.title|escapejs }}',
+            '{{ line.category|escapejs }}',
+            '{{ line.unit_price_incl_tax }}',
+            '{{ line.quantity }}']);
+    {% endfor %}
+    _gaq.push(['_trackTrans']);
+{% endblock %}

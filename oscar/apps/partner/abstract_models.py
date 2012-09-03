@@ -32,24 +32,25 @@ class AbstractPartner(models.Model):
     """
     Fulfillment partner
     """
-    name = models.CharField(max_length=128, unique=True)
-    
+    name = models.CharField(_('Name'), max_length=128, unique=True)
+
     # A partner can have users assigned to it.  These can be used
     # to provide authentication for webservices etc.
     users = models.ManyToManyField('auth.User', related_name="partners", blank=True, null=True)
-    
+
     class Meta:
-        verbose_name_plural = 'Fulfillment partners'
+        verbose_name = _('Fulfillment partner')
+        verbose_name_plural = _('Fulfillment partners')
         abstract = True
         permissions = (
-            ("can_edit_stock_records", "Can edit stock records"),
-            ("can_view_stock_records", "Can view stock records"),
-            ("can_edit_product_range", "Can edit product range"),
-            ("can_view_product_range", "Can view product range"),
-            ("can_edit_order_lines", "Can edit order lines"),
-            ("can_view_order_lines", "Can view order lines"),
+            ("can_edit_stock_records", _("Can edit stock records")),
+            ("can_view_stock_records", _("Can view stock records")),
+            ("can_edit_product_range", _("Can edit product range")),
+            ("can_view_product_range", _("Can view product range")),
+            ("can_edit_order_lines", _("Can edit order lines")),
+            ("can_view_order_lines", _("Can view order lines"))
         )
-        
+
     def __unicode__(self):
         return self.name
 
@@ -57,7 +58,7 @@ class AbstractPartner(models.Model):
 class AbstractStockRecord(models.Model):
     """
     A basic stock record.
-    
+
     This links a product to a partner, together with price and availability
     information.  Most projects will need to subclass this object to add custom
     fields such as lead_time, report_code, min_quantity.
@@ -67,47 +68,49 @@ class AbstractStockRecord(models.Model):
     """
     product = models.OneToOneField('catalogue.Product', related_name="stockrecord")
     partner = models.ForeignKey('partner.Partner')
-    
+
     # The fulfilment partner will often have their own SKU for a product, which
     # we store here.
     partner_sku = models.CharField(_("Partner SKU"), max_length=128)
-    
+
     # Price info:
-    price_currency = models.CharField(max_length=12, default=settings.OSCAR_DEFAULT_CURRENCY)
-    
-    # This is the base price for calculations - tax should be applied 
-    # by the appropriate method.  We don't store it here as its calculation is 
+    price_currency = models.CharField(_('Currency'), max_length=12, default=settings.OSCAR_DEFAULT_CURRENCY)
+
+    # This is the base price for calculations - tax should be applied
+    # by the appropriate method.  We don't store it here as its calculation is
     # highly domain-specific.  It is NULLable because some items don't have a fixed
     # price.
-    price_excl_tax = models.DecimalField(decimal_places=2, max_digits=12, blank=True, null=True)
-    
+    price_excl_tax = models.DecimalField(_('Price (excl. tax)'), decimal_places=2, max_digits=12, blank=True, null=True)
+
     # Retail price for this item
-    price_retail = models.DecimalField(decimal_places=2, max_digits=12, blank=True, null=True)
-    
+    price_retail = models.DecimalField(_('Price (retail)'), decimal_places=2, max_digits=12, blank=True, null=True)
+
     # Cost price is optional as not all partners supply it
-    cost_price = models.DecimalField(decimal_places=2, max_digits=12, blank=True, null=True)
-    
+    cost_price = models.DecimalField(_('Cost Price'), decimal_places=2, max_digits=12, blank=True, null=True)
+
     # Stock level information
-    num_in_stock = models.PositiveIntegerField(default=0, blank=True, null=True)
-    
+    num_in_stock = models.PositiveIntegerField(_('Number in stock'), default=0, blank=True, null=True)
+
     # Threshold for low-stock alerts
-    low_stock_threshold = models.PositiveIntegerField(blank=True, null=True)
+    low_stock_threshold = models.PositiveIntegerField(_('Low Stock Threshold'), blank=True, null=True)
 
     # The amount of stock allocated to orders but not fed back to the master
     # stock system.  A typical stock update process will set the num_in_stock
     # variable to a new value and reset num_allocated to zero
-    num_allocated = models.IntegerField(default=0, blank=True, null=True)
-    
+    num_allocated = models.IntegerField(_('Number of Allocated'), default=0, blank=True, null=True)
+
     # Date information
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True, db_index=True)
-    
+
     class Meta:
         abstract = True
         unique_together = ('partner', 'partner_sku')
+        verbose_name = _("Stock Record")
+        verbose_name_plural = _("Stock Records")
 
     # 2-stage stock management model
-    
+
     def allocate(self, quantity):
         """
         Record a stock allocation.
@@ -115,7 +118,8 @@ class AbstractStockRecord(models.Model):
         This normally happens when a product is bought at checkout.  When the
         product is actually shipped, then we 'consume' the allocation.
         """
-        self.num_allocated = int(self.num_allocated)
+        if self.num_allocated is None:
+            self.num_allocated = 0
         self.num_allocated += quantity
         self.save()
 
@@ -130,7 +134,7 @@ class AbstractStockRecord(models.Model):
         and adjust the number in stock accordingly
         """
         if not self.is_allocation_consumption_possible(quantity):
-            raise InvalidStockAdjustment('Invalid stock consumption request')
+            raise InvalidStockAdjustment(_('Invalid stock consumption request'))
         self.num_allocated -= quantity
         self.num_in_stock -= quantity
         self.save()
@@ -153,21 +157,21 @@ class AbstractStockRecord(models.Model):
         if self.num_allocated is None:
             return self.num_in_stock
         return self.num_in_stock - self.num_allocated
-        
+
     def set_discount_price(self, price):
         """
-        A setter method for setting a new price.  
-        
+        A setter method for setting a new price.
+
         This is called from within the "discount" app, which is responsible
         for applying fixed-discount offers to products.  We use a setter method
         so that this behaviour can be customised in projects.
         """
         self.price_excl_tax = price
         self.save()
-        
+
     # Price retrieval methods - these default to no tax being applicable
-    # These are intended to be overridden.   
-    
+    # These are intended to be overridden.
+
     @property
     def is_available_to_buy(self):
         """
@@ -177,7 +181,7 @@ class AbstractStockRecord(models.Model):
 
     def is_purchase_permitted(self, user=None, quantity=1):
         """
-        Return whether this stockrecord allows the product to be purchased by a 
+        Return whether this stockrecord allows the product to be purchased by a
         specific user and quantity
         """
         return get_partner_wrapper(self.partner.name).is_purchase_permitted(self, user, quantity)
@@ -191,54 +195,59 @@ class AbstractStockRecord(models.Model):
     @property
     def availability_code(self):
         """
-        Return an item's availability as a code for use in CSS
+        Return an product's availability as a code for use in CSS to add icons
+        to the overall availability mark-up.  For example, "instock",
+        "unavailable".
         """
         return get_partner_wrapper(self.partner.name).availability_code(self)
-    
+
     @property
     def availability(self):
         """
-        Return an item's availability as a string
+        Return a product's availability as a string that can be displayed to the
+        user.  For example, "In stock", "Unavailabl".
         """
         return get_partner_wrapper(self.partner.name).availability(self)
 
-    def max_purchase_quantity(self, user):
+    def max_purchase_quantity(self, user=None):
         """
         Return an item's availability as a string
+
+        :param user: (optional) The user who wants to purchase
         """
-        return get_partner_wrapper(self.partner.name).availability(self)
-    
+        return get_partner_wrapper(self.partner.name).max_purchase_quantity(self, user)
+
     @property
     def dispatch_date(self):
         """
         Return the estimated dispatch date for a line
         """
         return get_partner_wrapper(self.partner.name).dispatch_date(self)
-    
+
     @property
     def lead_time(self):
         return get_partner_wrapper(self.partner.name).lead_time(self)
-    
-    @property 
+
+    @property
     def price_incl_tax(self):
         """
         Return a product's price including tax.
-        
-        This defaults to the price_excl_tax as tax calculations are 
+
+        This defaults to the price_excl_tax as tax calculations are
         domain specific.  This class needs to be subclassed and tax logic
         added to this method.
         """
         if self.price_excl_tax is None:
             return D('0.00')
         return self.price_excl_tax + self.price_tax
-    
-    @property 
+
+    @property
     def price_tax(self):
         """
         Return a product's tax value
         """
         return get_partner_wrapper(self.partner.name).calculate_tax(self)
-    
+
     def __unicode__(self):
         if self.partner_sku:
             return "%s (%s): %s" % (self.partner.name, self.partner_sku, self.product.title)
@@ -248,7 +257,7 @@ class AbstractStockRecord(models.Model):
 
 class AbstractStockAlert(models.Model):
     stockrecord = models.ForeignKey('partner.StockRecord', related_name='alerts')
-    threshold = models.PositiveIntegerField()
+    threshold = models.PositiveIntegerField(_('Threshold'))
     OPEN, CLOSED = 'Open', 'Closed'
     status_choices = (
         (OPEN, _('Open')),
@@ -263,11 +272,9 @@ class AbstractStockAlert(models.Model):
         self.save()
 
     def __unicode__(self):
-        return u'<stockalert for "%s" status %s>' % (self.stockrecord,
-                                                     self.status)
+        return _('<stockalert for "%(stock)s" status %(status)s>') % {'stock': self.stockrecord, 'status': self.status}
 
     class Meta:
         ordering = ('-date_created',)
-
-
-
+        verbose_name = _('Stock Alert')
+        verbose_name_plural = _('Stock Alerts')

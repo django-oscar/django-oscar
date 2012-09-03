@@ -1,0 +1,26 @@
+{% extends 'dashboard/offers/step_form.html' %}
+{% load i18n %}
+
+{% block form_extradata %}
+	<table class="table">
+		<tbody>
+			<tr><th>{% trans "Name" %}</th><td>{{ offer.name }}</td></tr>
+			<tr><th>{% trans "Description" %}</th><td>{{ offer.description }}</td></tr>
+			<tr><th>{% trans "Start date" %}</th><td>{{ offer.start_date }}</td></tr>
+			<tr><th>{% trans "End date" %}</th><td>{{ offer.end_date }}</td></tr>
+			<tr><th>{% trans "Condition" %}</th><td>{{ condition.description }}</td></tr>
+			<tr><th>{% trans "Benefit" %}</th><td>{{ benefit.description }}</td></tr>
+		</tbody>
+	</table>
+{% endblock %}
+
+{% block form_actions %}
+	<div class="form-actions">
+		{% if back_url %}
+		<a href="{{ back_url }}" class="btn btn-primary">{% trans "Back" %}</a> or
+		{% endif %}
+		<button class="btn btn-success btn-large" type="submit">{% trans "Save" %}</button> or
+		<a href="{% url dashboard:page-list %}">{% trans "cancel" %}</a>
+	</div>
+</form>
+{% endblock %}

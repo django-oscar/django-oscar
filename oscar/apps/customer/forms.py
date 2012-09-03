@@ -14,7 +14,6 @@ from oscar.core.loading import get_profile_class
 
 def generate_username():
     uname = ''.join([random.choice(string.letters + string.digits + '_') for i in range(30)])
-
     try:
         User.objects.get(username=uname)
         return generate_username()
@@ -110,7 +109,7 @@ class SearchByDateRangeForm(forms.Form):
         return super(SearchByDateRangeForm, self).clean()
 
     def description(self):
-        if not self.is_bound:
+        if not self.is_bound or not self.is_valid():
             return 'All orders'
         date_from = self.cleaned_data['date_from']
         date_to = self.cleaned_data['date_to']
@@ -153,9 +152,9 @@ if hasattr(settings, 'AUTH_PROFILE_MODULE'):
 
     class UserAndProfileForm(forms.ModelForm):
 
-        first_name = forms.CharField(label='First name', max_length=128)
-        last_name = forms.CharField(label='Last name', max_length=128)
-        email = forms.EmailField(label='Email address')
+        first_name = forms.CharField(label=_('First name'), max_length=128)
+        last_name = forms.CharField(label=_('Last name'), max_length=128)
+        email = forms.EmailField(label=_('Email address'))
 
         # Fields from user model
         user_fields = ('first_name', 'last_name', 'email')
@@ -197,4 +196,4 @@ if hasattr(settings, 'AUTH_PROFILE_MODULE'):
 
     ProfileForm = UserAndProfileForm
 else:
-    ProfileForm = UserForm 
+    ProfileForm = UserForm

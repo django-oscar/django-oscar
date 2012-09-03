@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+{% load currency_filters %}
+{% load i18n %}
+
+{% block title %}
+{% trans 'Delete address?' %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url promotions:home %}">{% trans 'Home' %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="{% url customer:summary %}">{% trans 'Account' %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="{% url customer:address-list %}">{% trans 'Address book' %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active"><a href=".">{% trans 'Delete address?' %}</a></li>
+</ul>
+{% endblock %}
+
+{% block header %}
+<div class="page-header">
+    <h2>{% trans 'Delete address?' %}</h2>
+</div>
+{% endblock header %}
+
+{% block content %}
+<form action="." method="post">
+    {% csrf_token %}
+    <p>{% trans 'Are you sure you want to delete this address?' %}</p>
+    {{ object.summary }}
+
+    {% include "partials/form_fields.html" with form=form %}
+    <div class="form-actions">
+        <button type="submit" value="Delete address" class="btn btn-danger btn-large">{% trans 'Delete' %}</button> {% trans 'or' %} <a href="{% url customer:address-list %}">{% trans 'cancel' %}</a>
+    </div>
+</form>
+{% endblock content %}
+

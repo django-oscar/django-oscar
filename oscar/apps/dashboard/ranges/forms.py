@@ -2,6 +2,7 @@ import re
 
 from django import forms
 from django.db.models import get_model, Q
+from django.utils.translation import ugettext_lazy as _
 
 Product = get_model('catalogue', 'Product')
 Range = get_model('offer', 'Range')
@@ -16,12 +17,12 @@ class RangeForm(forms.ModelForm):
 
 class RangeProductForm(forms.Form):
     query = forms.CharField(max_length=1024,
-                            label="Product SKUs or UPCs",
+                            label=_("Product SKUs or UPCs"),
                             widget=forms.Textarea,
                             required=False,
-                            help_text="""You can paste in a selection of SKUs or UPCs""")
-    file_upload = forms.FileField(label="File of SKUs or UPCs", required=False,
-                                  help_text='Either comma-separated, or one identifier per line')
+                            help_text=_("You can paste in a selection of SKUs or UPCs"))
+    file_upload = forms.FileField(label=_("File of SKUs or UPCs"), required=False,
+                                  help_text=_('Either comma-separated, or one identifier per line'))
 
     def __init__(self, range, *args, **kwargs):
         self.range = range
@@ -30,7 +31,7 @@ class RangeProductForm(forms.Form):
     def clean(self):
         clean_data = super(RangeProductForm, self).clean()
         if not clean_data.get('query') and not clean_data.get('file_upload'):
-            raise forms.ValidationError("You must submit either a list of SKU/UPCs or a file")
+            raise forms.ValidationError(_("You must submit either a list of SKU/UPCs or a file"))
         return clean_data
 
     def clean_query(self):
@@ -48,14 +49,14 @@ class RangeProductForm(forms.Form):
 
         if len(new_ids) == 0:
             raise forms.ValidationError(
-                "The products with SKUs or UPCs matching %s are already in this range" % (
+                _("The products with SKUs or UPCs matching %s are already in this range") % (
                     ', '.join(ids)))
 
         self.products = Product._default_manager.filter(
             Q(stockrecord__partner_sku__in=new_ids) |
             Q(upc__in=new_ids))
         if len(self.products) == 0:
-            raise forms.ValidationError("No products exist with a SKU or UPC matching %s" % ", ".join(ids))
+            raise forms.ValidationError(_("No products exist with a SKU or UPC matching %s") % ", ".join(ids))
 
         found_skus = set(self.products.values_list('stockrecord__partner_sku', flat=True))
         found_upcs = set(self.products.values_list('upc', flat=True))

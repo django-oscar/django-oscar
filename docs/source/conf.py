@@ -11,14 +11,21 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys, os
-oscar_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), '../..'))
-sys.path.append(oscar_folder)
-
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.insert(0, os.path.abspath('.'))
+import sys
+import os
+oscar_folder = os.path.realpath(
+    os.path.join(os.path.dirname(__file__), '../..'))
+sandbox_folder = os.path.realpath(
+    os.path.join(os.path.dirname(__file__), '../../sites/sandbox'))
+sys.path.append(oscar_folder)
+sys.path.append(sandbox_folder)
+
+# Get django settings
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings')
 
 # -- General configuration -----------------------------------------------------
 
@@ -43,7 +50,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'django-oscar'
-copyright = u'2011, David Winterbottom'
+copyright = u'Tangent Labs'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

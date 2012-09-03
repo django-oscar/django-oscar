@@ -12,9 +12,9 @@ MAX_PRODUCTS = settings.OSCAR_RECENTLY_VIEWED_PRODUCTS
 # Helpers
 
 def get_recently_viewed_product_ids(request):
-    u"""
-    Returns the list of ids of the last products browsed by the user
-    
+    """
+    Returns IDs of the last products browsed by the user
+
     Limited to the max number defined in settings.py
     under OSCAR_RECENTLY_VIEWED_PRODUCTS.
     """
@@ -38,7 +38,7 @@ def _update_recently_viewed_products(product, request, response):
     product_ids.append(product.id)
     if (len(product_ids) > MAX_PRODUCTS):
         product_ids = product_ids[len(product_ids)-MAX_PRODUCTS:]
-    response.set_cookie('oscar_recently_viewed_products', 
+    response.set_cookie('oscar_recently_viewed_products',
                         _get_json_string_from_list(product_ids),
                         httponly=True)
 
@@ -57,7 +57,7 @@ def _get_json_string_from_list(list):
 def receive_product_view(sender, product, user, request, response, **kwargs):
     """
     Receiver to handle viewing single product pages
-    
+
     Requires the request and response objects due to dependence on cookies
     """
     return _update_recently_viewed_products(product, request, response)

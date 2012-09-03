@@ -1,8 +1,9 @@
 import csv
 
 from django.db.models import get_model
-
+from django.utils.translation import gettext_lazy as _
 from oscar.core.loading import get_class, get_classes
+
 ReportGenerator = get_class('dashboard.reports.reports', 'ReportGenerator')
 ReportCSVFormatter = get_class('dashboard.reports.reports', 'ReportCSVFormatter')
 ReportHTMLFormatter = get_class('dashboard.reports.reports', 'ReportHTMLFormatter')
@@ -15,15 +16,15 @@ class OpenBasketReportCSVFormatter(ReportCSVFormatter):
 
     def generate_csv(self, response, baskets):
         writer = csv.writer(response)
-        header_row = ['User ID',
-                      'Name',
-                      'Email',
-                      'Basket status',
-                      'Num lines',
-                      'Num items',
-                      'Value',
-                      'Date of creation',
-                      'Time since creation',
+        header_row = [_('User ID'),
+                      _('Name'),
+                      _('Email'),
+                      _('Basket status'),
+                      _('Num lines'),
+                      _('Num items'),
+                      _('Value'),
+                      _('Date of creation'),
+                      _('Time since creation'),
                      ]
         writer.writerow(header_row)
 
@@ -53,7 +54,7 @@ class OpenBasketReportGenerator(ReportGenerator):
     Report of baskets which haven't been submitted yet
     """
     code = 'open_baskets'
-    description = 'Open baskets'
+    description = _('Open baskets')
 
     formatters = {
         'CSV_formatter': OpenBasketReportCSVFormatter,
@@ -74,14 +75,14 @@ class SubmittedBasketReportCSVFormatter(ReportCSVFormatter):
 
     def generate_csv(self, response, baskets):
         writer = csv.writer(response)
-        header_row = ['User ID',
-                      'User',
-                      'Basket status',
-                      'Num lines',
-                      'Num items',
-                      'Value',
-                      'Date created',
-                      'Time between creation and submission',
+        header_row = [_('User ID'),
+                      _('User'),
+                      _('Basket status'),
+                      _('Num lines'),
+                      _('Num items'),
+                      _('Value'),
+                      _('Date created'),
+                      _('Time between creation and submission'),
                      ]
         writer.writerow(header_row)
 
@@ -109,7 +110,7 @@ class SubmittedBasketReportGenerator(ReportGenerator):
     Report of baskets that have been submitted
     """
     code = 'submitted_baskets'
-    description = 'Submitted baskets'
+    description = _('Submitted baskets')
 
     formatters = {
         'CSV_formatter': SubmittedBasketReportCSVFormatter,

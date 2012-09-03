@@ -1,0 +1,82 @@
+{% extends 'dashboard/layout.html' %}
+{% load currency_filters %}
+{% load i18n %}
+
+{% block title %}
+{% blocktrans with number=order.number id=line.id%}
+Order {{ number }} - Line #{{ id }}
+{% endblocktrans %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+	<a href="{% url dashboard:order-list %}">{% trans "Orders" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+		<a href="{% url dashboard:order-detail order.number %}">#{{ order.number }}</a>
+        <span class="divider">/</span>
+    </li>
+	<li class="active"><a href=".">{% blocktrans with id=line.id %}Line #{{ id }}{% endblocktrans %}</a></li>
+</ul>
+{% endblock %}
+
+{% block header %}
+<div class="page-header">
+	<h1>{% blocktrans with number=order.number id=line.id %}Order #{{ number }} - Line #{{ id }}{% endblocktrans %}</h1>
+</div>
+{% endblock header %}
+
+{% block dashboard_content %}
+
+<div class="row-fluid">
+    <div class="span4">
+		<h3>{% trans "Product details" %}</h3>
+        <table class="table table-striped table-bordered">
+            <tr>
+				<th>{% trans "Title" %}</th><td>{{ line.title }}</td>
+            </tr>
+            <tr>
+				<th>{% trans "UPC" %}</th><td>{{ line.upc|default:"-" }}</td>
+            </tr>
+            <tr>
+				<th>{% trans "Quantity" %}</th><td>{{ line.quantity }}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="span4">
+		<h3>{% trans "Partner details" %}</h3>
+        <table class="table table-striped table-bordered">
+            <tr>
+				<th>{% trans "Status" %}</th><td>{{ line.status|default:"-" }}</td>
+            </tr>
+            <tr>
+				<th>{% trans "Partner" %}</th><td>{{ line.partner_name }}</td>
+            </tr>
+            <tr>
+				<th>{% trans "Partner SKU" %}</th><td>{{ line.partner_sku }}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="span4">
+		<h3>{% trans "Shipping details" %}</h3>
+        <table class="table table-striped table-bordered">
+        	<tr>
+				<th>{% trans "Partner reference number" %}</th><td>{{ line.partner_line_reference|default:"-" }}</td>
+        	</tr>
+        	<tr>
+				<th>{% trans "Partner notes" %}</th><td>{{ line.partner_line_notes|default:"-" }}</td>
+        	</tr>
+        	<tr>
+				<th>{% trans "Estimate dispatch date" %}</th><td>{{ line.est_dispatch_date }}</td>
+        	</tr>
+        </table>
+    </div>
+</div>
+{% endblock dashboard_content %}
+

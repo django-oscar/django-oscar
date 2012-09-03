@@ -1,11 +1,12 @@
-from django.conf.urls.defaults import patterns, url
+from django.conf.urls import patterns, url
 from django.contrib.admin.views.decorators import staff_member_required
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.application import Application
 from oscar.apps.dashboard.ranges import views
 from oscar.apps.dashboard.nav import register, Node
 
-node = Node('Ranges', 'dashboard:range-list')
+node = Node(_('Ranges'), 'dashboard:range-list')
 register(node, 70)
 
 

@@ -32,7 +32,7 @@ Set a custom shipping methods
 -----------------------------
 
 To apply your domain logic for shipping, you will need to override
-the default repository class (see :doc:`recipes/how_to_override_a_class`) and alter
+the default repository class (see :doc:`how_to_override_a_core_class`) and alter
 the implementation of the ``get_shipping_methods`` method.  This method
 should return a list of "shipping method" classes already instantiated
 and holding a reference to the basket instance.

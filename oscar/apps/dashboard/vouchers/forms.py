@@ -1,5 +1,6 @@
 from django import forms
 from django.db.models.loading import get_model
+from django.utils.translation import ugettext_lazy as _
 
 Voucher = get_model('voucher', 'Voucher')
 Benefit = get_model('offer', 'Benefit')
@@ -11,42 +12,53 @@ class VoucherForm(forms.Form):
     A specialised form for creating a voucher and offer
     model.
     """
-    name = forms.CharField(label="Name")
-    code = forms.CharField(label="Code")
-    start_date = forms.DateField(label="Start date")
-    end_date = forms.DateField(label="End date")
-    usage = forms.ChoiceField(choices=Voucher.USAGE_CHOICES)
+    name = forms.CharField(label=_("Name"))
+    code = forms.CharField(label=_("Code"))
+    start_date = forms.DateField(label=_("Start date"))
+    end_date = forms.DateField(label=_("End date"))
+    usage = forms.ChoiceField(choices=Voucher.USAGE_CHOICES, label=_("Usage"))
 
     benefit_range = forms.ModelChoiceField(
-        label='Which products get a discount?',
+        label=_('Which products get a discount?'),
         queryset=Range.objects.all(),
     )
     type_choices = (
-        (Benefit.PERCENTAGE, '% off products in range'),
-        (Benefit.FIXED, 'Fixed amount off products in range'),
+        (Benefit.PERCENTAGE, _('% off products in range')),
+        (Benefit.FIXED, _('Fixed amount off products in range')),
     )
     benefit_type = forms.ChoiceField(
         choices=type_choices,
-        label='Discount type'
+        label=_('Discount type'),
     )
     benefit_value = forms.DecimalField(
-        label='Discount value')
+        label=_('Discount value'))
 
     def __init__(self, voucher=None, *args, **kwargs):
         self.voucher = voucher
         super(VoucherForm, self).__init__(*args, **kwargs)
 
+    def clean_name(self):
+        name = self.cleaned_data['name']
+        try:
+            voucher = Voucher.objects.get(name=name)
+        except Voucher.DoesNotExist:
+            pass
+        else:
+            if (not self.voucher) or (voucher.id != self.voucher.id):
+                raise forms.ValidationError(_("The name '%s' is already in use") % name)
+        return name
+
     def clean_code(self):
         code = self.cleaned_data['code'].strip().upper()
         if not code:
-            raise forms.ValidationError("Please enter a voucher code")
+            raise forms.ValidationError(_("Please enter a voucher code"))
         try:
             voucher = Voucher.objects.get(code=code)
         except Voucher.DoesNotExist:
             pass
         else:
-            if voucher.id != self.voucher.id:
-                raise forms.ValidationError("The code '%s' is already in use" % code)
+            if (not self.voucher) or (voucher.id != self.voucher.id):
+                raise forms.ValidationError(_("The code '%s' is already in use") % code)
         return code
 
     def clean(self):
@@ -54,7 +66,7 @@ class VoucherForm(forms.Form):
         start_date = cleaned_data['start_date']
         end_date = cleaned_data['end_date']
         if end_date < start_date:
-            raise forms.ValidationError("The start date must be before the end date")
+            raise forms.ValidationError(_("The start date must be before the end date"))
         return cleaned_data
 
 

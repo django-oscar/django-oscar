@@ -1,0 +1,9 @@
+{% load i18n %}
+<footer class="footer container-fluid">
+    {% block footer %}
+        <ul class="footer_links">   
+			<li><a href="/about/">{% trans "About" %}</a></li>
+			<li class="top_page"><a href="#top_page" class="app-ico ico_fill_up">{% trans "Top of the page" %}</a></li>
+        </ul>
+    {% endblock %}
+</footer>

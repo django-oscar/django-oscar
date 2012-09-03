@@ -1,11 +1,12 @@
-from django.conf.urls.defaults import patterns, url
+from django.conf.urls import patterns, url
 from django.contrib.admin.views.decorators import staff_member_required
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.application import Application
 from oscar.apps.dashboard.users import views
 from oscar.apps.dashboard.nav import register, Node
 
-node = Node('Customers', 'dashboard:users-index')
+node = Node(_('Customers'), 'dashboard:users-index')
 register(node, 30)
 
 

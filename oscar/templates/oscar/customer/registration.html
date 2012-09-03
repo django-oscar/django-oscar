@@ -1,0 +1,31 @@
+﻿{% extends "layout.html" %}
+{% load i18n %}
+
+{% block title %}
+{% trans 'Register' %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url promotions:home %}">{% trans 'Home' %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active"><a href=".">{% trans 'Register' %}</a></li>
+</ul>
+{% endblock %}
+
+{% block content %}
+
+<div class="row-fluid">
+    <div class="span6 register_form">
+        <form id="register_form" action="{{ request.get_full_path }}" method="post" class="form-stacked" />
+            <h2>{% trans 'Register' %}</h2>
+            {% csrf_token %}
+            {% include "partials/form_fields.html" with form=registration_form %}
+            <button name="registration_submit" type="submit" value="Register" class="btn btn-primary btn-large">{% trans 'Register' %}</button>
+        </form>
+    </div>
+</div>    
+
+{% endblock content %}

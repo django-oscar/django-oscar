@@ -1,0 +1,47 @@
+{% extends "checkout/checkout.html" %}
+{% load currency_filters %}
+{% load i18n %}
+
+{% block title %}
+{% trans "Shipping method" %} | {{ block.super }}
+{% endblock %}
+
+{% block checkout-nav %}
+	{% include 'checkout/nav.html' with step=2 %}
+{% endblock %}
+
+{% block order_contents %}{% endblock %}
+{% block shipping_address %}{% endblock %}
+{% block payment_method %}{% endblock %}
+
+{% block shipping_method %}
+<div class="sub-header">
+	<h2>{% trans "Choose a shipping method" %}</h2>
+</div>
+<div class="basket-title">
+    <div class="row-fluid">
+		<h4 class="span9">{% trans "Method" %}</h4>
+		<h4 class="span3">{% trans "Cost" %}</h4>
+    </div>
+</div>
+{% for method in methods %}
+<div class="basket-items">
+    <div class="row-fluid">
+        <div class="span9">
+            <h4>{{ method.name }}</h4>
+			<p>{% trans "Description:" %} {{ method.description }}</p>
+        </div>
+        <div class="span1">
+            {{ method.basket_charge_incl_tax|currency }}
+        </div>
+        <div class="span2">
+            <form method="post" action="{% url checkout:shipping-method %}">
+                {% csrf_token %}
+                <input type="hidden" name="method_code" value="{{ method.code }}" class="btn" />
+				<button type="submit" class="btn btn-large btn-primary pull-right">{% trans "Select option" %}</button>
+            </form>
+        </div>    
+    </div>
+</div>
+{% endfor %}
+{% endblock shipping_method %}

@@ -1,11 +1,12 @@
 from django.conf.urls.defaults import patterns, url
 from django.contrib.admin.views.decorators import staff_member_required
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.application import Application
 from oscar.apps.dashboard.nav import register, Node
 from oscar.apps.dashboard.reviews import views
 
-node = Node('Reviews', 'dashboard:reviews-list')
+node = Node(_('Reviews'), 'dashboard:reviews-list')
 register(node, 35)
 
 

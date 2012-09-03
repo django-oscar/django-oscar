@@ -1,0 +1,13 @@
+A dashboard user has been created for you with credentials:
+
+- Email: {{ email }}
+- Password: {{ password }}
+
+Sign into the dashboard here:
+http://sandbox.oscar.tangentlabs.co.uk/dashboard/
+
+Feel free to play around with the dashboard, although please don't deface the
+public-facing pages.
+
+Best wishes,
+Oscar Team, Tangent Labs

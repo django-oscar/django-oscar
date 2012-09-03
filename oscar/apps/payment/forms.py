@@ -4,6 +4,7 @@ import re
 
 from django import forms
 from django.db.models import get_model
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import get_class
 
@@ -38,6 +39,7 @@ def bankcard_type(number):
             return VISA
     return None
 
+
 def luhn(card_number):
     u"""
     Tests whether a bankcard number passes the Luhn algorithm.
@@ -64,15 +66,15 @@ class BankcardNumberField(forms.CharField):
         """Check if given CC number is valid and one of the
            card types we accept"""
         non_decimal = re.compile(r'\D+')
-        value = non_decimal.sub('', value.strip())    
-           
+        value = non_decimal.sub('', value.strip())
+
         if value and not luhn(value):
-            raise forms.ValidationError("Please enter a valid credit card number.")
+            raise forms.ValidationError(_("Please enter a valid credit card number."))
         return super(BankcardNumberField, self).clean(value)
 
 
 class BankcardMonthWidget(forms.MultiWidget):
-    """ 
+    """
     Widget containing two select boxes for selecting the month and year
     """
     def decompress(self, value):
@@ -88,34 +90,34 @@ class BankcardMonthField(forms.MultiValueField):
     A modified version of the snippet: http://djangosnippets.org/snippets/907/
     """
     default_error_messages = {
-        'invalid_month': u'Enter a valid month.',
-        'invalid_year': u'Enter a valid year.',
+        'invalid_month': _('Enter a valid month.'),
+        'invalid_year': _('Enter a valid year.'),
     }
     num_years = 5
 
     def __init__(self, *args, **kwargs):
-        
         # Allow the number of years to be specified
         if 'num_years' in kwargs:
             self.num_years = kwargs['num_years']
             del kwargs['num_years']
-        
+
         errors = self.default_error_messages.copy()
         if 'error_messages' in kwargs:
             errors.update(kwargs['error_messages'])
+
         fields = (
             forms.ChoiceField(choices=self.month_choices(),
-                error_messages={'invalid': errors['invalid_month']}),
+                              error_messages={'invalid': errors['invalid_month']}),
             forms.ChoiceField(choices=self.year_choices(),
-                error_messages={'invalid': errors['invalid_year']}),
+                              error_messages={'invalid': errors['invalid_year']}),
         )
-        
+
         super(BankcardMonthField, self).__init__(fields, *args, **kwargs)
         self.widget = BankcardMonthWidget(widgets = [fields[0].widget, fields[1].widget])
-        
+
     def month_choices(self):
         return []
-    
+
     def year_choices(self):
         return []
 
@@ -133,7 +135,7 @@ class BankcardExpiryMonthField(BankcardMonthField):
     def clean(self, value):
         expiry_date = super(BankcardExpiryMonthField, self).clean(value)
         if date.today() > expiry_date:
-            raise forms.ValidationError("The expiration date you entered is in the past.")
+            raise forms.ValidationError(_("The expiration date you entered is in the past."))
         return expiry_date
 
     def compress(self, data_list):
@@ -149,27 +151,24 @@ class BankcardExpiryMonthField(BankcardMonthField):
             # find last day of the month
             day = monthrange(year, month)[1]
             return date(year, month, day)
-        return None 
-    
+        return None
+
 
 class BankcardStartingMonthField(BankcardMonthField):
-    """
-    Starting month
-    """
     def month_choices(self):
         months = [("%.2d" % x, "%.2d" % x) for x in xrange(1, 13)]
         months.insert(0, ("", "--"))
         return months
 
     def year_choices(self):
-        years = [(x, x) for x in xrange( date.today().year - self.num_years, date.today().year)]
+        years = [(x, x) for x in xrange(date.today().year - self.num_years, date.today().year + 1)]
         years.insert(0, ("", "--"))
         return years
 
     def clean(self, value):
         starting_date = super(BankcardMonthField, self).clean(value)
         if starting_date and date.today() < starting_date:
-            raise forms.ValidationError("The starting date you entered is in the future.")
+            raise forms.ValidationError(_("The starting date you entered is in the future."))
         return starting_date
 
     def compress(self, data_list):
@@ -183,23 +182,36 @@ class BankcardStartingMonthField(BankcardMonthField):
             year = int(data_list[1])
             month = int(data_list[0])
             return date(year, month, 1)
-        return None 
-    
+        return None
+
 
 class BankcardForm(forms.ModelForm):
-    
-    number = BankcardNumberField(max_length=20, widget=forms.TextInput(attrs={'autocomplete':'off'}), label="Card number")
-    name = forms.CharField(max_length=128, label="Name on card")
-    cvv_number = forms.RegexField(required=True, label="CVV Number",
-                                  regex=r'^\d{3,4}$', widget=forms.TextInput(attrs={'size': '5'}))
-    start_month = BankcardStartingMonthField(label="Valid from", required=False)
-    expiry_month = BankcardExpiryMonthField(required=True, label = "Valid to")
-    
+    number = BankcardNumberField(max_length=20, widget=forms.TextInput(attrs={'autocomplete':'off'}),
+                                 label=_("Card number"))
+    # Name is not normally needed by payment gateways so we hide it by default
+    name = forms.CharField(max_length=128, label=_("Name on card"),
+                           widget=forms.widgets.HiddenInput, required=False)
+    cvv_number = forms.RegexField(
+        required=True, label=_("CVV Number"),
+        regex=r'^\d{3,4}$',
+        widget=forms.TextInput(attrs={'size': '5'}),
+        help_text=_("This is the 3 or 4 digit security number on the back of your bankcard"))
+    start_month = BankcardStartingMonthField(label=_("Valid from"), required=False)
+    expiry_month = BankcardExpiryMonthField(required=True, label=_("Valid to"))
+
+    def __init__(self, *args, **kwargs):
+        if 'initial' not in kwargs:
+            # Set the initial expiry month to be current month
+            today = date.today()
+            kwargs['initial'] = {'expiry_month': ["%.2d" % today.month,
+                                                  today.year]}
+        super(BankcardForm, self).__init__(*args, **kwargs)
+
     class Meta:
         model = BankcardModel
         exclude = ('user', 'partner_reference')
         fields = ('number', 'name', 'start_month', 'expiry_month', 'cvv_number')
-        
+
     def get_bankcard_obj(self):
         """
         Returns a Bankcard object for use in payment processing.
@@ -213,17 +225,17 @@ class BankcardForm(forms.ModelForm):
         if self.cleaned_data['start_month']:
             kwargs['start_date'] = self.cleaned_data['start_month'].strftime("%m/%y")
         return Bankcard(**kwargs)
-    
+
 
 class BillingAddressForm(forms.ModelForm):
-    
+
     def __init__(self, *args, **kwargs):
         super(BillingAddressForm,self ).__init__(*args, **kwargs)
-        self.set_country_queryset() 
-        
+        self.set_country_queryset()
+
     def set_country_queryset(self):
         self.fields['country'].queryset = Country._default_manager.all()
-    
+
     class Meta:
         model = BillingAddress
         exclude = ('search_text',)

@@ -1,5 +1,4 @@
 from django import template
-from django.core.urlresolvers import reverse
 
 from oscar.core.loading import get_class
 Order = get_class('order.models', 'Order')
@@ -13,7 +12,8 @@ def get_num_user_orders(parser, token):
         tag_name, user = token.split_contents()
         return NumUserOrdersNode(user)
     except IndexError:
-        raise template.TemplateSyntaxError("%r tag requires a user as it's first argument" % tag_name)
+        raise template.TemplateSyntaxError(
+            "%r tag requires a user as it's first argument" % tag_name)
 
 
 class NumUserOrdersNode(template.Node):
@@ -40,4 +40,3 @@ class DashboardNavigationNode(template.Node):
 
 
 register.tag('dashboard_navigation', dashboard_navigation)
-

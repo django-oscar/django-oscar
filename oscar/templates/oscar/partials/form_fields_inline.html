@@ -1,0 +1,15 @@
+{% for field in form %}
+    {% if field.is_hidden %}
+        {{ field }}
+    {% else %}
+        <span class="control-group {% if field.errors %}error{% endif %}">
+            {{ field.label_tag }}
+            {{ field }}
+            {% for error in field.errors %}
+                <ul class="help-block">
+                    <li>{{ error|escape }}</li>
+                </ul>
+            {% endfor %}
+        </span>
+    {% endif %}
+{% endfor %}

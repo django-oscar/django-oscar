@@ -1,13 +1,14 @@
-from django.conf.urls.defaults import patterns, url
+from django.conf.urls import patterns, url
 from django.contrib.admin.views.decorators import staff_member_required
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.application import Application
 from oscar.apps.dashboard.orders import views
 from oscar.apps.dashboard.nav import register, Node
 
-node = Node('Orders')
-node.add_child(Node('Orders', 'dashboard:order-list'))
-node.add_child(Node('Statistics', 'dashboard:order-stats'))
+node = Node(_('Orders'))
+node.add_child(Node(_('Orders'), 'dashboard:order-list'))
+node.add_child(Node(_('Statistics'), 'dashboard:order-stats'))
 register(node, 80)
 
 

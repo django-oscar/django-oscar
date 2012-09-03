@@ -1,0 +1,51 @@
+{% load currency_filters %}
+{% load basket_tags %}
+{% load thumbnail %}
+{% load i18n %}
+
+<article class="well promotion_single">
+    <div class="sub-header">
+    	<h2>{{ promotion.name }}</h2>
+    </div>
+    <div class="row-fluid">
+    	<div class="span3">
+    		<div class="image_container"> 
+				{% with image=product.primary_image %}
+				{% thumbnail image.original "400x400" upscale=False as thumb %}
+				<a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
+				{% endthumbnail %}
+				{% endwith %}
+    		</div>    
+    	</div>
+    	<div class="span9">
+    	    <h3>{{ product.title }}</h3>
+    		<div class="product_price">
+    			{% if product.is_group %}
+				<p>{% trans "From" %} {{ product.min_variant_price_incl_tax|currency }}</p>
+    			{% else %}
+    				{% if product.has_stockrecord %} 
+    					<h4><span>{{ product.stockrecord.price_incl_tax|currency }}</span></h4>
+						<p class="app-ico {{ product.stockrecord.availability_code }} avaliability">{{ product.stockrecord.availability|truncatewords:2 }}</p>
+    				{% else %}
+					<p class="app-ico notavailable avaliability">{% trans "Not available" %}</p>
+					<button class="btn">{% trans "Notify me" %}</button>
+    				{% endif %}
+    			{% endif %}
+    		</div>
+    	    {% block product_review %}
+    		    {% with product.reviews.all as reviews %}
+    		        {% if reviews %}
+    		            <ul class="review_count">       
+    			            {% for review in reviews %}
+        			            <li class="{{ review.score }}">{{ review.score }}</li>
+        			        {% endfor %}
+    		            </ul>
+    		        {% else %}
+					<p class="star">{% trans "No rating" %}</p>
+    		        {% endif %}
+    		    {% endwith %}
+    		{% endblock product_review %}
+    		<p>{{ promotion.description }}</p>
+    	</div>
+    </div>
+</article>

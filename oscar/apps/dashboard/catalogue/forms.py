@@ -1,20 +1,74 @@
 from django import forms
-from django.forms.models import inlineformset_factory
+from django.forms.models import inlineformset_factory, BaseInlineFormSet
 from django.db.models import get_model
+from django.template.defaultfilters import slugify
+from django.utils.translation import ugettext_lazy as _
+
+from treebeard.forms import MoveNodeForm
 
 Product = get_model('catalogue', 'Product')
+Category = get_model('catalogue', 'Category')
 StockRecord = get_model('partner', 'StockRecord')
+Partner = get_model('partner', 'Partner')
 ProductAttributeValue = get_model('catalogue', 'ProductAttributeValue')
 ProductCategory = get_model('catalogue', 'ProductCategory')
 ProductImage = get_model('catalogue', 'ProductImage')
 
 
+class CategoryForm(MoveNodeForm):
+
+    def clean(self):
+        cleaned_data = super(CategoryForm, self).clean()
+
+        name = cleaned_data['name']
+        ref_node_pk = cleaned_data['_ref_node_id']
+        pos = cleaned_data['_position']
+
+        if name and self.is_slug_conflicting(name, ref_node_pk, pos):
+            raise forms.ValidationError(_('Category with the given path'
+                                                  ' already exists.'))
+        return cleaned_data
+
+    def is_slug_conflicting(self, name, ref_node_pk, position):
+        # determine parent
+        if ref_node_pk:
+            ref_category = Category.objects.get(pk=ref_node_pk)
+            if position == 'first-child':
+                parent = ref_category
+            else:
+                parent = ref_category.get_parent()
+        else:
+            parent = None
+
+        # build full slug
+        slug_prefix = (parent.slug + Category._slug_separator) if parent else ''
+        slug = '%s%s' % (slug_prefix, slugify(name))
+
+        # check if slug is conflicting
+        try:
+            category = Category.objects.get(slug=slug)
+        except Category.DoesNotExist:
+            pass
+        else:
+            if category.pk != self.instance.pk:
+                return True
+        return False
+
+    class Meta(MoveNodeForm.Meta):
+        model = Category
+
+
 class ProductSearchForm(forms.Form):
-    upc = forms.CharField(max_length=16, required=False, label='UPC')
-    title = forms.CharField(max_length=255, required=False)
+    upc = forms.CharField(max_length=16, required=False, label=_('UPC'))
+    title = forms.CharField(max_length=255, required=False, label=_('Title'))
 
 
 class StockRecordForm(forms.ModelForm):
+    partner = forms.ModelChoiceField(queryset=Partner.objects.all(),
+                                    required=False,
+                                    label=_("Partner"))
+    partner_sku = forms.CharField(required=False,
+                                  label=_("Partner SKU"))
 
     class Meta:
         model = StockRecord
@@ -87,7 +141,7 @@ class ProductForm(forms.ModelForm):
         self.add_attribute_fields()
 
     def set_initial_attribute_values(self, kwargs):
-        if kwargs['instance'] is None:
+        if kwargs.get('instance', None) is None:
             return
         if 'initial' not in kwargs:
             kwargs['initial'] = {}
@@ -122,6 +176,8 @@ class ProductForm(forms.ModelForm):
         if not object.upc:
             object.upc = None
         object.save()
+        if hasattr(self, 'save_m2m'):
+            self.save_m2m()
         return object
 
     def save_attributes(self, object):
@@ -129,9 +185,17 @@ class ProductForm(forms.ModelForm):
             value = self.cleaned_data['attr_%s' % attribute.code]
             attribute.save_value(object, value)
 
+    def clean(self):
+        data = self.cleaned_data
+        if 'parent' not in data and not data['title']:
+            raise forms.ValidationError(_("This field is required"))
+        elif 'parent' in data and data['parent'] is None and not data['title']:
+            raise forms.ValidationError(_("Parent products must have a title"))
+        return data
+
 
 class StockAlertSearchForm(forms.Form):
-    status = forms.CharField(label='Status')
+    status = forms.CharField(label=_('Status'))
 
 
 class ProductCategoryForm(forms.ModelForm):
@@ -140,8 +204,29 @@ class ProductCategoryForm(forms.ModelForm):
         model = ProductCategory
 
 
+class ProductCategoryFormSet(BaseInlineFormSet):
+
+    def clean(self):
+        if self.instance.is_top_level and self.get_num_categories() == 0:
+            raise forms.ValidationError(
+                _("A top-level product must have at least one category"))
+        if self.instance.is_variant and self.get_num_categories() > 0:
+            raise forms.ValidationError(
+                _("A variant product should not have categories"))
+
+    def get_num_categories(self):
+        num_categories = 0
+        for i in range(0, self.total_form_count()):
+            form = self.forms[i]
+            if (hasattr(form, 'cleaned_data')
+                    and form.cleaned_data.get('category', None)
+                    and form.cleaned_data.get('DELETE', False) != True):
+                num_categories += 1
+        return num_categories
+
 ProductCategoryFormSet = inlineformset_factory(Product, ProductCategory,
                                                form=ProductCategoryForm,
+                                               formset=ProductCategoryFormSet,
                                                fields=('category',), extra=1)
 
 

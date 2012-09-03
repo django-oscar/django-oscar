@@ -1,0 +1,90 @@
+{% extends 'dashboard/layout.html' %}
+{% load i18n %}
+
+{% block body_class %}promotions{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+	<a href="{% url dashboard:promotion-list %}">{% trans "Content blocks" %}</a>
+        <span class="divider">/</span>
+    </li>
+	<li class="active"><a href=".">{{ heading }}</a></li>
+</ul>
+{% endblock %}
+
+{% block header %}
+<div class="page-header">
+    <h1>{{ heading }}</h1>
+</div>
+{% endblock header %}
+
+{% block dashboard_content %}
+
+{% block promotion_form %}
+<div class="well well-info">
+    <form action="." method="post" enctype="multipart/form-data" class="fields-full">
+    	{% csrf_token %}
+    	{% include "partials/form_fields.html" with form=form %}
+
+	    {% block inlines %} {% endblock %}
+
+		<button type="submit" class="btn btn-primary">{% trans "Save" %}</button>
+		{% trans "or" %} <a href="{% url dashboard:promotion-list %}">{% trans "cancel" %}</a>
+    </form>
+</div>
+{% endblock %}
+
+{% if promotion %}
+<div class="well">
+	<h3 class="app-ico ico_favourite icon">{% trans "Pages displaying this content block" %}</h3>
+    {% if links %}
+    <table class="table table-bordered">
+    	<thead>
+    		<tr>
+				<th>{% trans "Page URL" %}</th>
+				<th>{% trans "Position on page" %}</th>
+				<th>{% trans "Actions" %}</th>
+    		</tr>
+    	</thead>
+    	<tbody>
+    		{% for link in links %}
+    		<tr>
+    			<td>{{ link.page_url }}</td>
+    			<td>{{ link.position }}</td>
+    			<td>
+                    <form action="." method="post" >
+    					{% csrf_token %}
+    					<input type="hidden" name="action" value="remove_from_page" />
+    					<input type="hidden" name="pagepromotion_id" value="{{ link.id }}" />
+						<a href="{% url dashboard:promotion-list-by-url link.page_url|urlencode:"" %}" class="btn btn-info">{% trans "View all blocks on this page" %}</a>
+						<button class="btn btn-danger btn-small" type="submit">{% trans "Remove from page" %}</button>
+    				</form>
+    			</td>
+    		</tr>
+    		{% endfor %}
+    	</tbody>
+    </table>
+
+    {% else %}
+	<p>{% trans "This promotion is not displayed anywhere at the moment." %}</p>
+    {% endif %}
+</div>
+
+<div class="well">
+	<h3 class="app-ico ico_favourite icon">{% trans "Add to a page" %}</h3>
+    <form action="." method="post" class="form-inline">
+    	{% csrf_token %}
+    	<input type="hidden" name="action" value="add_to_page" />
+    	{% include "partials/form_fields_inline.html" with form=link_form %}
+        <!-- {{ link_form.as_table }} -->
+		<button type="submit" class="btn btn-success">{% trans "Add to page" %}</button>
+    </form>
+</div>
+{% endif %}
+
+{% endblock %}

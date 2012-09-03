@@ -10,7 +10,8 @@ def get_parameters(parser, token):
 
     args = token.split_contents()
     if len(args) < 2:
-        raise template.TemplateSyntaxError, "get_parameters tag takes at least 1 argument"
+        raise template.TemplateSyntaxError(
+            "get_parameters tag takes at least 1 argument")
     return GetParametersNode(args[1].strip())
 
 

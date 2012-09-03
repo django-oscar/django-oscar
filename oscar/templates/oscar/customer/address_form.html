@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+{% load currency_filters %}
+{% load i18n %}
+
+{% block title %}
+{{ title }} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url promotions:home %}">{% trans 'Home' %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="{% url customer:summary %}">{% trans 'Account' %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="{% url customer:address-list %}">{% trans 'Address book' %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active"><a href=".">{{ title }}</a></li>
+</ul>
+{% endblock %}
+
+{% block header %}
+<div class="page-header">
+    <h2>{{ title }}</h2>
+</div>
+{% endblock header %}
+
+{% block content %}
+<form action="." method="post" class="form-horizontal" data-behaviours="lock">
+    {% csrf_token %}
+    {% include "partials/form_fields.html" with form=form %}
+    <div class="form-actions">
+        <button type="submit" value="Save" class="btn btn-primary btn-large">{% trans 'Save' %}</button>
+        {% trans 'or' %}
+        <a href="{% url customer:address-list %}">{% trans 'cancel' %}</a>
+    </div>
+</form>
+
+{% endblock content %}

@@ -1,0 +1,153 @@
+{% extends "checkout/layout.html" %}
+{% load currency_filters %}
+{% load i18n %}
+
+{% block title %}
+{% trans "Checkout" %} | {{ block.super }}
+{% endblock %}
+
+{% block header %}
+{% endblock header %}
+
+{% block checkout-nav %}
+{% include 'checkout/nav.html' %}
+{% endblock %}
+
+{% block content %}
+
+{% if error %}
+	<div class="alert alert-error">
+		{{ error }}
+	</div>
+{% endif %}
+
+<div class="row-fluid">
+    {% block shipping_address %}
+    <div class="span6">
+        <div class="sub-header">
+			<h2>{% trans "Shipping address" %}</h2>
+        </div>
+        <div class="well well-info">
+            <dl>
+				<dt>{% trans "Address" %}</dt>
+                <dd>
+                    {% for field in shipping_address.active_address_fields %}
+                    {{ field }}<br/>
+                    {% endfor %}
+                </dd>
+                {% if shipping_address.phone_number %}
+				<dt>{% trans "Contact number" %}</dt>
+                <dd>{{ shipping_address.phone_number }}</dd>
+                {% endif %}
+                {% if shipping_address.notes %}
+				<dt>{% trans "Shipping notes" %}</dt>
+                <dd>{{ shipping_address.notes }}</dd>
+                {% endif %}
+            </dl>
+            {% block shipping_address_actions %}
+            <div class="alert-actions">
+				<a href="{% url checkout:shipping-address %}" class="btn">{% trans "Change shipping address" %}</a>
+            </div>
+            {% endblock %}
+        </div>
+    </div>
+    {% endblock shipping_address %}
+
+    {% block payment_method %}
+   <div class="span6">
+       <div class="sub-header">
+		   <h2>{% trans "Payment" %}</h2>
+        </div>
+        <div class="well well-success">
+			<p>{% trans "Payment details to go here" %}</p>
+            <div class="alert-actions">
+				<a href="{% url checkout:payment-details %}" class="btn">{% trans "Change payment details" %}</a>
+            </div>
+        </div>    
+    </div>
+     {% endblock payment_method %}
+</div>
+
+{% block order_contents %}
+    <div class="sub-header">
+		<h2>{% trans "Order contents" %}</h2>
+    </div>
+    <div class="basket-title">
+        <div class="row-fluid">
+			<h4 class="span10">{% trans "Items in basket" %}</h4>
+			<h4 class="span1">{% trans "Quantity" %}</h4>
+			<h4 class="span1">{% trans "Price" %}</h4>
+        </div>
+    </div>
+    {% for line in basket.all_lines %}
+    <div class="basket-items">
+        <div class="row-fluid">
+            <div class="span10">
+                <h4><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h4>
+                <span class="app-ico instock avaliability ">{{ line.product.stockrecord.availability }}</span>
+            </div>
+            <div class="span1">
+                {{ line.quantity }}
+            </div>
+            <div class="span1">
+                <span class="price">{{ line.line_price_incl_tax|currency }}</span>
+            </div>        
+        </div>
+    </div>
+    {% endfor %}
+    {% for discount in basket.discounts %}
+    <div class="basket-items">
+        <div class="row-fluid">
+            <h4 class="span11">{{ discount.name }}</h4>
+            <div class="span1">
+                -{{ discount.discount|currency }}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% if shipping_method %}
+    <div class="basket-items">
+        <div class="row-fluid">
+            <h4 class="span11">{{ shipping_method.name }}</h4>
+            {{ shipping_method.description }}
+            <div class="span1">
+                {{ shipping_method.basket_charge_incl_tax|currency }}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="basket-items">
+        <div class="row-fluid">
+			<h4 class="span11">{% trans "Basket total:" %}</h4>
+            <div class="span1">{{ basket.total_incl_tax|currency }}</div>
+        </div>
+    </div>
+    <div class="basket-items total">
+        <div class="row-fluid">
+			<h3 class="span11">{% trans "Order total:" %}</h3>
+            <h3 class="span1">{{ order_total_incl_tax|currency }}</h3>
+        </div>
+    </div>
+    {% block order_contents_actions %}
+    <div class="form-actions">
+		<a href="{% url basket:summary %}" class="btn">{% trans "Edit order contents" %}</a>
+    </div>
+    {% endblock %}
+{% endblock order_contents %}
+
+
+{% block shipping_method %}
+{% endblock shipping_method %}
+
+{% block payment_details %}
+{% endblock payment_details %}
+
+{% block place_order %}
+{% endblock place_order %}
+
+{% endblock content %}
+
+{% block onbodyload %}
+oscar.checkout.init();
+{% endblock %}
+
