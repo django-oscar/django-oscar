@@ -88,3 +88,39 @@ oscar.dashboard = {
     }
 };
 
+$(document).ready(function() {
+  $(".product-new #id_description").markItUp(mySettings);
+  $('.scroll-pane').jScrollPane();
+  $(".category-select ul").prev('a').on('click', function(){
+    var $this = $(this),
+        plus = $this.hasClass('ico_expand');
+    if ( plus ) {
+      $this.removeClass('ico_expand').addClass('ico_contract');
+    } else {
+      $this.removeClass('ico_contract').addClass('ico_expand');
+    }
+    return false;
+  });
+
+    // add local file loader to update image files on change in 
+    // dashboard. This will provide a preview to the selected
+    // image without uploading it. Upload only occures when 
+    // submitting the form.
+    if (window.FileReader) {
+        $('input[type="file"]').change(function(evt) {
+            var reader = new FileReader();
+            var imgId = evt.target.id + "-image";
+
+            reader.onload = (function() {
+                return function(e) {
+                    var imgDiv = $("#"+imgId);
+                    imgDiv.children('img').attr('src', e.target.result);
+                    imgDiv.children('button').remove();
+                };
+            })();
+            reader.readAsDataURL(evt.target.files[0]);
+        });
+    } else {
+        alert('This browser does not support FileReader');
+    }
+});

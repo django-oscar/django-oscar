@@ -17,9 +17,6 @@
 {% endblock %}
 
 {% block header %}
-<div class="page-header">
-	<h1>{% trans "Vouchers" %}</h1>
-</div>
 {% endblock header %}
 
 {% block dashboard_content %}
@@ -34,11 +31,19 @@
     </form>
 </div>
 
-<p><a href="{% url dashboard:voucher-create %} " class="btn-large btn-primary">{% trans "Create new voucher" %}</a></p>
-
+<div class="well well-success">
 	<div class="sub-header">
-		<h2>{{ description }}</h2>
+		<h3>Create a new voucher</h3>
 	</div>
+	<a href="{% url dashboard:voucher-create %} " class="btn btn-primary">{% trans "Create new voucher" %}</a>
+</div>
+
+{% if description != "All vouchers  " %}
+<div class="alert alert-info">
+  <strong>{{ description }}</strong>
+</div>
+{% endif %}
+
 	{% if vouchers.count %}
 		<table class="table table-striped table-bordered">
 			<tr>

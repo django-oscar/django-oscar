@@ -17,9 +17,6 @@
 {% endblock %}
 
 {% block header %}
-<div class="page-header">
-	<h1>{% trans "Offer management" %}</h1>
-</div>
 {% endblock header %}
 
 {% block dashboard_content %}
@@ -34,7 +31,16 @@
     </form>
 </div>
 
-<p><a href="{% url dashboard:offer-metadata %}" class="btn-large btn-primary">{% trans "Create new offer" %}</a></p>
+<div class="well well-success">
+    <h3>Create Offer</h3>
+    <!-- HARDCODED -->
+    <div class="pull-right">
+        <button type="submit" class="btn btn-primary">New Fixed Discount</button>
+        <button type="submit" class="btn btn-primary">New Conditional Discount</button>
+    </div>
+   	<!-- END HARDCODED -->
+   	<a href="{% url dashboard:offer-metadata %}" class="btn btn-primary">Create</a>
+</div>
 
 	<div class="sub-header">
 		<h2>{{ queryset_description }}</h2>

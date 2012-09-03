@@ -9,9 +9,6 @@
 {% endblock %}
 
 {% block header %}
-<div class="page-header">
-	<h1>{% trans "Customers" %}</h1>
-</div>
 {% endblock header %}
 
 {% block breadcrumbs %}
@@ -26,16 +23,58 @@
 
 {% block dashboard_content %}
 <div class="well well-info">
-	<h3 class="app-ico ico_magnify icon">{% trans "Search" %}</h3>
+	<h3>{% trans "Search" %}</h3>
     <form action="." method="get" class="form-inline">
         {% include "partials/form_fields_inline.html" with form=form %}
-		<input type="submit" value="{% trans "Search" %}" class="btn btn-primary"/>
+		<input type="submit" value="{% trans "Search" %}" class="btn"/>
 		<a href="{% url dashboard:users-index %}" class="btn">{% trans "Reset" %}</a>
     </form>
 </div>
-<div class="sub-header">
-    <h2>{{ queryset_description }}</h2>
+{% if queryset_description != "All users" %}
+<div class="alert alert-info">
+  <strong>{{ queryset_description }}</strong>
 </div>
+{% endif %}
+<div class="well well-danger">
+	<h3 class="app-ico ico-download icon">Export 2 filtered customers to a .csv file.</h3>
+	<input type="submit" value="Export" class="btn btn-primary"/>
+</div>
+
+<!--- Hard coded -->
+<div class="well">
+    <div class="form-inline">
+        <h3>Filter</h3>
+        <span class="control-group">
+            <label for="">Custom Filter</label>
+            <select>
+                <option>Quick Filters</option>
+                <option>Something</option>
+                <option>Something</option>
+            </select>
+        </span>
+        <span class="control-group">
+            <label for="">Custom Filter</label>
+            <select>                    
+                <option>Money Spent</option>
+                <option>Something</option>
+                <option>Something</option></span>
+            </select>
+        </span>
+        <span class="control-group">
+            <label for="">Custom Filter</label>
+            <select>
+                <option>Is Greater Than</option>
+                <option>Something</option>
+                <option>Something</option>
+            </select>
+        </span>
+        <input type="text" placeholder=".span2" >
+        <span class="help-inline">Save as Quick Filter</span>
+        <span class="help-inline">+ Add Another</span>
+    </div>
+</div>
+<!-- End of hard coded section -->
+
 {% if user_list.count %}
 <form action="." method="post" class="form-inline">
     {% csrf_token %}
@@ -44,8 +83,7 @@
     <tr>
         <th></th>
 		<th>{% trans "Email" %}</th>
-		<th>{% trans "First name" %}</th>
-		<th>{% trans "Last name" %}</th>
+		<th>{% trans "Name (First, Last)" %}</th>
 		<th>{% trans "Active" %}</th>
 		<th>{% trans "Staff status" %}</th>
 		<th>{% trans "Date registered" %}</th>
@@ -67,22 +105,21 @@
     </tr>
     {% endfor %}
 </table>
-
+<div class="well">
+    <h3 class="app-ico ico_sync icon">Bulk Actions</h3>
+    <label for="inlineCheckboxes">With selected customers:</label>
+    <label>
+        <input type="radio" name="action" value="make_active" /> Make active
+    </label>
+    <label>
+        <input type="radio" name="action" value="make_inactive" /> Make inactive
+    </label>
+    <input type="submit" value="Go!" class="btn btn-primary" />
+</div>
 {% if page_obj %}
     {% include "catalogue/partials/pagination.html" %}
 {% endif %}
 
-<div class="well well-danger">
-	<h3 class="app-ico ico_sync icon">{% trans "Bulk Actions" %}</h3>
-	<label for="inlineCheckboxes">{% trans "With selected customers:" %}</label>
-    <label>
-		<input type="radio" name="action" value="make_active" /> {% trans "Make active" %}
-    </label>
-    <label>
-		<input type="radio" name="action" value="make_inactive" /> {% trans "Make inactive" %}
-    </label>
-	<input type="submit" value="{% trans "Go!" %}" class="btn btn-primary" />
-</div>
 
 
 </form>
