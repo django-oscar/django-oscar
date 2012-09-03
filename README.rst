@@ -57,6 +57,8 @@ and maintained by `Tangent Labs`_, a London-based digital agency, with help from
 Extensions
 ----------
 
+The following extensions are stable and ready for use:
+
 * django-oscar-datacash_ - Integration with the DataCash_ payment gateway
 * django-oscar-paypal_ - Integration with PayPal.  This currently supports both
   `Express Checkout`_ and `PayFlow Pro`_.
@@ -64,6 +66,8 @@ Extensions
 * django-oscar-jirafe_ - Integration with the Jirafe_ analytics package
 * django-oscar-paymentexpress_ - Integration with the `Payment Express`_ payment
   gateway
+* django-oscar-budgets_ - Managed budgets (can be used for giftcard
+  functionality and loyalty schemes)
 
 .. _django-oscar-datacash: https://github.com/tangentlabs/django-oscar-datacash
 .. _django-oscar-paymentexpress: https://github.com/tangentlabs/django-oscar-paymentexpress
@@ -76,6 +80,20 @@ Extensions
 .. _GoCardless: https://gocardless.com/
 .. _django-oscar-jirafe: https://github.com/tangentlabs/django-oscar-jirafe
 .. _Jirafe: https://jirafe.com/
+.. _django-oscar-budgets: https://github.com/tangentlabs/django-oscar-budgets
+
+The following extensions are in development:
+
+* django-oscar-stores_ - Physical stores integration (opening hours, store
+  locator etc)
+* django-oscar-parachute_ - Import scripts for migrating away from non-Oscar
+  platforms.
+* django-oscar-approval_ - Approval workflow for authorising new
+  orders/products.
+
+.. _django-oscar-stores: https://github.com/tangentlabs/django-oscar-stores
+.. _django-oscar-parachute: https://github.com/tangentlabs/django-oscar-parachute
+.. _django-oscar-approval: https://github.com/tangentlabs/django-oscar-approval
 
 License
 -------
