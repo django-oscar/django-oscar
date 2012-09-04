@@ -114,18 +114,22 @@ class AccountSummaryView(TemplateView):
         if 'deactivate' in request.POST:
             notification_id = request.POST.get('deactivate')
             status = Notification.INACTIVE
-
+            success_msg = _("Notification deactivated")
         elif 'activate' in request.POST:
             notification_id = request.POST.get('activate')
             status = Notification.ACTIVE
+            success_msg = _("Notification activated")
 
         try:
-            notification = Notification.objects.get(pk=notification_id)
-            notification.status = status
-            notification.save()
+            notification = Notification.objects.get(pk=notification_id,
+                                                    user=request.user)
         except Notification.DoesNotExist:
             messages.error(_("Cannot change notification status, notification "
                              "does not exist"))
+        else:
+            messages.success(request, success_msg)
+            notification.status = status
+            notification.save()
 
         return HttpResponseRedirect(
             reverse('customer:summary')+'?tab=notifications'
