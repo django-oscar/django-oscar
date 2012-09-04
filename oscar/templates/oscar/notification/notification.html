@@ -1,9 +1,10 @@
 {% load i18n %}
 
 {% if product.stockrecord.num_in_stock == 0 %}
-    <form method="POST" action="{% url catalogue:notification-create product.slug product.id %}">
+    <form method="post" action="{% url catalogue:notification-create product.slug product.id %}">
         {% csrf_token %}
+		<p>{% trans "You can get an email notification when this product is in stock." %}</p>
         {{ form }}
-        <button type="submit" class="btn btn-info">{% trans "Notify Me" %}</button>
+        <button type="submit" class="btn btn-info">{% trans "Notify me" %}</button>
     </form>
 {% endif %}
