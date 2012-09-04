@@ -38,40 +38,32 @@ class TestCleanNotificationsCommand(TestCase):
             notification.save()
 
     def test_cleans_up_unconfirmed_notifications_with_default_settings(self):
-        """
-        Test removing all notifications that have status UNCONFIRMED and
-        are older then 24 hours which is the default
-        """
+        # Test removing all notifications that have status UNCONFIRMED and
+        # are older then 24 hours which is the default
         self.assertEquals(ProductNotification.objects.count(), 7)
         call_command('oscar_cleanup_notifications', *[], **{})
 
         self.assertEquals(ProductNotification.objects.count(), 5)
 
     def test_cleans_up_unconfirmed_notifications_older_than_two_days(self):
-        """
-        Test removing all notifications that have status ``UNCONFIRMED``
-        and remove the ones older then 2 days.
-        """
+        # Test removing all notifications that have status ``UNCONFIRMED``
+        # and remove the ones older then 2 days.
         self.assertEquals(ProductNotification.objects.count(), 7)
         call_command('oscar_cleanup_notifications', *[], **{'days': '2'})
 
         self.assertEquals(ProductNotification.objects.count(), 6)
 
     def test_cleans_up_unconfirmed_notifications_older_than_6_hours(self):
-        """
-        Test removing all notifications that have status ``UNCONFIRMED``
-        and remove the ones older then 6 hours.
-        """
+        # Test removing all notifications that have status ``UNCONFIRMED``
+        # and remove the ones older then 6 hours.
         self.assertEquals(ProductNotification.objects.count(), 7)
         call_command('oscar_cleanup_notifications', *[], **{'hours': '6'})
 
         self.assertEquals(ProductNotification.objects.count(), 4)
 
     def test_cleans_up_unconfirmed_notifications_older_than_1_day_2_hours(self):
-        """
-        Test removing all notifications that have status ``UNCONFIRMED``
-        and remove the ones older then 6 hours.
-        """
+        # Test removing all notifications that have status ``UNCONFIRMED``
+        # and remove the ones older then 6 hours.
         self.assertEquals(ProductNotification.objects.count(), 7)
         call_command('oscar_cleanup_notifications',
                      *[], **{'days': 1, 'hours': '2'})
