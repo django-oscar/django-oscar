@@ -4,7 +4,6 @@ import random
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
-
 from model_utils.managers import InheritanceManager
 
 
@@ -14,6 +13,7 @@ class AbstractNotification(models.Model):
     To create a custom notification, this class must be subclassed and
     ``get_confirm_url`` and ``get_unsubscribe`` URL have to be overwritten
     in it.
+
     A notification can have two different status for authenticated
     users (``ACTIVE`` and ``INACTIVE`` and anonymous users have an
     additional status ``UNCONFIRMED``. For anonymous users a confirmation
@@ -26,24 +26,25 @@ class AbstractNotification(models.Model):
 
     user = models.ForeignKey(User, db_index=True, blank=True, null=True,
                              related_name="notifications")
+
     # These fields only apply to unauthenticated users and are empty
-    # if the user is registered in the system
+    # if the user is registered.
     email = models.EmailField(db_index=True, blank=True, null=True)
     confirm_key = models.CharField(max_length=KEY_LENGTH, null=True)
     unsubscribe_key = models.CharField(max_length=KEY_LENGTH, null=True)
 
-    date_created = models.DateTimeField(auto_now_add=True)
-    date_modified = models.DateTimeField(auto_now=True)
-    date_notified = models.DateTimeField(blank=True, null=True)
-
     UNCONFIRMED, ACTIVE, INACTIVE = ('unconfirmed', 'active', 'inactive')
     STATUS_TYPES = (
-        (UNCONFIRMED, _('Not Yet Confirmed')),
+        (UNCONFIRMED, _('Not yet confirmed')),
         (ACTIVE, _('Active')),
         (INACTIVE, _('Inactive')),
     )
     status = models.CharField(max_length=20, choices=STATUS_TYPES,
                               default=INACTIVE)
+
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_modified = models.DateTimeField(auto_now=True)
+    date_notified = models.DateTimeField(blank=True, null=True)
 
     objects = InheritanceManager()
 
@@ -59,7 +60,7 @@ class AbstractNotification(models.Model):
         Check if the notification is confirmed or not.
         Returns ``True`` if notification is confirmed, ``False`` otherwise.
         """
-        return self.status != self.UNCONFIRMED
+        return self.status == self.ACTIVE
 
     def get_random_key(self):
         """
@@ -71,7 +72,7 @@ class AbstractNotification(models.Model):
 
     def get_notification_email(self):
         """
-        Get the notification email address of the user subscribed to
+        Return the notification email address of the user subscribed to
         this notification. Return the user's email for an authenticated
         user and the email property for an anonymous user.
         """
@@ -136,8 +137,8 @@ class AbstractNotification(models.Model):
 
     def get_notification_item(self):
         """
-        Get the item associated with this notification. The item is 
-        assumed to be stored in a field with the name defined in 
+        Get the item associated with this notification. The item is
+        assumed to be stored in a field with the name defined in
         ``item_field_name``.
         """
         if not self.item_field_name:
