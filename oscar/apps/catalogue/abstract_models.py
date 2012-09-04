@@ -375,8 +375,10 @@ class AbstractProduct(models.Model):
         return ", ".join([attribute.__unicode__() for attribute in self.attributes.all()])
 
     def get_title(self):
-        u"""Return a product's title or it's parent's title if it has no title"""
-        title = self.__dict__.setdefault('title', '')
+        """
+        Return a product's title or it's parent's title if it has no title
+        """
+        title = self.title
         if not title and self.parent_id:
             title = self.parent.title
         return title
