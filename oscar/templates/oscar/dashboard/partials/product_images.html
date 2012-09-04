@@ -1,0 +1,17 @@
+<li class='sortable-handle span2'>
+    {% for field in form %}
+        {% if field.is_hidden %}
+            {{ field }}
+        {% elif "original" in field.id_for_label %}
+            <div class="btn btn-fileinput">{{ field }}</div>
+        {% else %}
+            {{ field.label_tag }}
+            {{ field }}
+            {% for error in field.errors %}
+                <ul class="help-block">
+                    <li>{{ error|escape }}</li>
+                </ul>
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+</li>

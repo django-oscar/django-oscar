@@ -89,7 +89,7 @@ oscar.dashboard = {
 };
 
 $(document).ready(function() {
-  $(".product-new #id_description").markItUp(mySettings);
+  $(".product-new #id_description, #id_content").markItUp(mySettings);
   $('.scroll-pane').jScrollPane();
   $(".category-select ul").prev('a').on('click', function(){
     var $this = $(this),

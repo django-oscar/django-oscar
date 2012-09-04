@@ -119,7 +119,7 @@
 	               <h3>Upload, Change or Remove Images</h3>
 	            </div>
 	            {{ image_formset.management_form }}
-	            <ol class='upload-image'>
+	            <ol class='upload-image row-fluid'>
 	            {% for image_form in image_formset %}
 	                {% include "dashboard/partials/product_images.html" with form=image_form %}
 	            {% endfor %}
