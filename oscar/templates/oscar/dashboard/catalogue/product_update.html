@@ -1,21 +1,20 @@
 {% extends 'dashboard/layout.html' %}
 {% load currency_filters %}
-{% load i18n %}
 
 {% block body_class %}catalogue{% endblock %}
 
 {% block title %}
-{% trans "Update product" %} | {{ block.super }}
+Update product | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <a href="{% url dashboard:index %}">Dashboard</a>
         <span class="divider">/</span>
     </li>
     <li>
-	<a href="{% url dashboard:catalogue-product-list %}">{% trans "Catalogue" %}</a>
+        <a href="{% url dashboard:catalogue-product-list %}">Catalogue</a>
         <span class="divider">/</span>
     </li>
     <li class="active"><a href=".">{{ title }}</a></li>
@@ -24,24 +23,24 @@
 
 {% block header %}
 <div class="page-header">
-	<h1>{{ title }}</h1>
+<h1>{{ title }}</h1>
 </div>
 {% endblock header %}
 
 {% block dashboard_content %}
 <form action="." method="post" class="product-new form-horizontal" enctype="multipart/form-data">
-	{% csrf_token %}
+{% csrf_token %}
     <div class="well well-blank product-details">
         <div class="sub-header">
             <h3>Product Details</h3>
         </div>
-		<span class="help-block">{{ form.non_field_errors }}</span>
+        <span class="help-block">{{ form.non_field_errors }}</span>
         {% for field in form %}
             {% if field.is_hidden %}
                 {{ field }}
             {% endif %}
             {% if 'attr' not in field.id_for_label %}
-				<div class="control-group {% for error in field.errors %}error{% endfor %}">
+<div class="control-group {% for error in field.errors %}error{% endfor %}">
                     {% if field.is_hidden %}
                         {{ field }}
                     {% else %}
@@ -49,9 +48,9 @@
                         <div class="controls">
                             {{ field }}
                             {% for error in field.errors %}
-                				<span class="help-block">
-                					{{ error|escape }}
-                				</span>
+                <span class="help-block">
+                {{ error|escape }}
+                </span>
                             {% endfor %}
                             {% if field.help_text %}
                                 <span class='help-block'>
@@ -61,11 +60,10 @@
                         </div>
                     {% endif %}
                 </div>
-			{% endif %}
+{% endif %}
         {% endfor %}
     </div>
-
-	<div class="well well-blank">
+<div class="well well-blank">
         <div class="sub-header">
             <h3>Product Attributes</h3>
         </div>
@@ -77,103 +75,189 @@
                 </select>
             </div>
         </div>
-		    {% for field in form %}
-	            {% if 'attr' in field.id_for_label %}
-	            <div class="control-group {% for error in field.errors %}error{% endfor %}">
-	                {% if field.is_hidden %}
-	                {{ field }}
-	                {% else %}
-	                <label for="{{ field.auto_id }}" class="control-label {% if field.field.required %}required{% endif %}">{{ field.label }}{% if field.field.required %} <span>*</span>{% endif %}</label>
-	                <div class="controls">
-	                    {{ field }}
-	                    {% for error in field.errors %}
-	                    <span class="help-block">
-	                        {{ error|escape }}
-	                    </span>
-	                    {% endfor %}
-	                    {% if field.help_text %}
-	                    <span class='help-block'>
-	                        {{ field.help_text }}
-	                    </span>
-	                    {% endif %}
-	                </div>
-	                {% endif %}
-	            </div>
-	            {% endif %}
-	        {% endfor %}
-		</div>
-
-		<div class="well well-blank form-inline">
-	            <div class="sub-header">
-	                <h3>Category</h3>
-	            </div>
-	            {{ category_formset.management_form }}
-	            {% for category_form in category_formset %}
-			{% include "partials/form_fields_inline.html" with form=category_form %}
-	            {% endfor %}
-	        </div>
-		</div>
-
-		<div class="well well-blank form-inline">
-	            <div class="sub-header">
-	               <h3>Upload, Change or Remove Images</h3>
-	            </div>
-	            {{ image_formset.management_form }}
-	            <ol class='upload-image row-fluid'>
-	            {% for image_form in image_formset %}
-	                {% include "dashboard/partials/product_images.html" with form=image_form %}
-	            {% endfor %}
-	            </ol>
-		</div>
-		
-		<div class="well well-blank fields-full stock-pricing">
-			<div class="sub-header">
-			    <h3>{% trans "Stock and price information" %}</h3>
-			</div>
-			{{ stockrecord_form.non_field_errors }}
-			<div class="row-fluid">
-				<div class="span3">
-					<h4>Partner</h4>
-					{% for field in stockrecord_form %}
-					    {% if "partner" in field.id_for_label %}
-						    {% include "dashboard/partials/stock_info.html" %}
-	                    {% endif %}
-					{% endfor %}
-				</div>
-				<div class="span3">
-					<h4>Price</h4>
-					{% for field in stockrecord_form %}
-					    {% if "price" in field.id_for_label %}
-					        {% include "dashboard/partials/stock_info.html" %}
-	                    {% endif %}
-					{% endfor %}
-				</div>
-				<div class="span3">
-					<h4>Stock levels</h4>
-					{% for field in stockrecord_form %}
-					    {% if "stock" in field.id_for_label %}
-	                        {% include "dashboard/partials/stock_info.html" %}
-	                    {% endif %}
-					{% endfor %}
-				</div>
-			</div>
-		</div>
-		<hr />
-		<div class="control-group">
-	        <div class="pull-right">
-	            <a href="{% url dashboard:catalogue-product-list %}">{% trans "cancel" %}</a> or <button class="btn btn-primary btn-large" type="submit">{% trans "Save Product" %}</button>
-	        </div>
-	        {% if product %}
-	            <a class="btn btn-success btn-large" href="{{ product.get_absolute_url }}">{% trans "View on site" %}</a>
-	        {% endif %}
-		</div>
-		
-	<!-- <div class="form-actions">
-		<button class="btn btn-primary btn-large" type="submit">{% trans "Save Product" %}</button> or
-		<a href="{% url dashboard:catalogue-product-list %}">{% trans "cancel" %}</a>
-            {% if product %}
-			<a class="btn btn-success btn-large pull-right" href="{{ product.get_absolute_url }}">{% trans "View on site" %}</a>
+        {% for field in form %}
+            {% if 'attr' in field.id_for_label %}
+            <div class="control-group {% for error in field.errors %}error{% endfor %}">
+                {% if field.is_hidden %}
+                {{ field }}
+                {% else %}
+                <label for="{{ field.auto_id }}" class="control-label {% if field.field.required %}required{% endif %}">{{ field.label }}{% if field.field.required %} <span>*</span>{% endif %}</label>
+                <div class="controls">
+                    {{ field }}
+                    {% for error in field.errors %}
+                    <span class="help-block">
+                        {{ error|escape }}
+                    </span>
+                    {% endfor %}
+                    {% if field.help_text %}
+                    <span class='help-block'>
+                        {{ field.help_text }}
+                    </span>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
             {% endif %}
-	</div> -->
+        {% endfor %}
+</div>
+
+<div class="well well-blank form-inline">
+            <div class="sub-header">
+                <h3>Category</h3>
+            </div>
+            {{ category_formset.management_form }}
+            {% for category_form in category_formset %}
+{% include "partials/form_fields_inline.html" with form=category_form %}
+            {% endfor %}
+        </div>
+
+        {% comment %}
+<!-- HARDCODED -->
+         <!-- <div class="row-fluid">
+              <div class="span3">
+                  <div class="scroll-pane">
+                      <ul class="category-select">
+                          <li>
+                              <a href="#" class="app-ico ico_expand">category top level</a>
+                              <ul>
+                                  <li><a href="#">category second level</a></li>
+                                  <li>
+                                      <a href="#" class="app-ico ico_expand">category second level</a>
+                                      <ul>
+                                          <li><a href="#">category third level</a></li>
+                                          <li><a href="#">category third level</a></li>
+                                          <li><a href="#">category third level</a></li>
+                                      </ul>
+                                  </li>
+                                  <li><a href="#">category second level</a></li>
+                              </ul>
+                          </li>
+                          <li>
+                              <a href="#" class="app-ico ico_contract">category top level</a>
+                              <ul>
+                                  <li><a href="#">category second level</a></li>
+                                  <li>
+                                      <a href="#" class="app-ico ico_expand">category second level</a>
+                                      <ul>
+                                          <li><a href="#">category third level</a></li>
+                                          <li><a href="#">category third level</a></li>
+                                          <li><a href="#">category third level</a></li>
+                                      </ul>
+                                  </li>
+                                  <li><a href="#">category second level</a></li>
+                              </ul>
+                          </li>
+                          <li>
+                              <a href="#" class="app-ico ico_contract">category top level</a>
+                              <ul>
+                                  <li><a href="#">category second level</a></li>
+                                  <li>
+                                      <a href="#" class="app-ico ico_expand">category second level</a>
+                                      <ul>
+                                          <li><a href="#">category third level</a></li>
+                                          <li><a href="#">category third level</a></li>
+                                          <li><a href="#">category third level</a></li>
+                                      </ul>
+                                  </li>
+                                  <li><a href="#">category second level</a></li>
+                              </ul>
+                          </li>
+                          <li><a href="#">category top level</a></li>
+                      </ul>
+                  </div>
+              </div>
+              <div class="span9">
+                 <p>Scroll through categories on the left and add all that apply.</p>
+                 <h4>selected Categories</h4>
+                 <ul class="category-selected">
+                     <li>Selected Category <span>x</span></li>
+                     <li>Selected Category <span>x</span></li>
+                     <li>Selected Category <span>x</span></li>
+                 </ul>
+              </div>
+          </div> -->
+         <!-- END HARDCODED -->
+         {% endcomment %}
+</div>
+
+<div class="well well-blank form-inline">
+            <div class="sub-header">
+               <h3>Upload, Change or Remove Images</h3>
+            </div>
+            {{ image_formset.management_form }}
+            <ol class='upload-image'>
+            {% for image_form in image_formset %}
+                {% include "dashboard/partials/product_images.html" with form=image_form %}
+            {% endfor %}
+            </ol>
+</div>
+<div class="well well-blank fields-full stock-pricing">
+<div class="sub-header">
+   <h3>Stock and Price Information</h3>
+</div>
+{{ stockrecord_form.non_field_errors }}
+<div class="row-fluid">
+<div class="span3">
+<h4>Partner</h4>
+{% for field in stockrecord_form %}
+   {% if "partner" in field.id_for_label %}
+   {% include "dashboard/partials/stock_info.html" %}
+                    {% endif %}
+{% endfor %}
+</div>
+<div class="span3">
+<h4>Price</h4>
+{% for field in stockrecord_form %}
+   {% if "price" in field.id_for_label %}
+       {% include "dashboard/partials/stock_info.html" %}
+                    {% endif %}
+{% endfor %}
+</div>
+<div class="span3">
+<h4>Stock levels</h4>
+{% for field in stockrecord_form %}
+   {% if "stock" in field.id_for_label %}
+                        {% include "dashboard/partials/stock_info.html" %}
+                    {% endif %}
+{% endfor %}
+</div>
+<!-- <div class="span3"> -->
+   <!-- HARDCODED -->
+<!-- <h4>Weight</h4>
+<div class="control-group">
+                   <label for="id_weight">Weight</label>
+                   <div>
+                       <input type="text" name="weight" value="25" id="id_weight">
+                   </div>
+               </div>
+               <div class="control-group">
+                   <label for="id_unit">Unit</label>
+                   <div>
+                       <select name="unit" id="id_unit">
+                           <option value="">g</option>
+                           <option value="1">kg</option>
+                       </select>
+                   </div>
+               </div>
+               <div class="control-group">
+                   <label for="id_digital">Digital item (no shipping address required)</label>
+                   <div>
+                       <input type="checkbox" name="digital" value="25" id="id_digital">
+                   </div>
+               </div> -->
+<!-- END HARDCODED -->
+<!-- </div> -->
+
+</div>
+</div>
+<hr/>
+    <div class="control-group">
+        <div class="pull-right">
+            <a href="{% url dashboard:catalogue-product-list %}">Cancel</a> or <button class="btn btn-primary btn-large" type="submit">Save Product</button>
+        </div>
+        {% if product %}
+            <a class="btn btn-success btn-large" href="{{ product.get_absolute_url }}">View on site</a>
+        {% endif %}
+</div>
 </form>
 {% endblock dashboard_content %}

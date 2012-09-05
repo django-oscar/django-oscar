@@ -520,92 +520,97 @@ caption {
   font-family:@baseFontFamily;
 }
 .upload-image {
-  .clearfix();
-  margin:0;
-  li {
-    display:block;
-    width: 200px;
-/*    height: 200px;*/
-/*    line-height:80px;*/
-    margin:0 1% 2%;
-    float: left;
-    text-align:center;
-    > div {
-      /*padding:4px;*/
-      background:#ccc;
-      /*margin-bottom:10px;*/
-/*      + label,
-      + label + input {
-        display:none;
-      }*/
-    }
-  }
-/*  div {
-    background:#fff;
-    position: relative;
-    width: 200px;
-    height: 200px;
-    z-index: 200;
-  }*/
-  img {
-      position: absolute;
-      margin:auto;
-      top: 0;
-      max-height:200px;
-      max-width:200px;
-      width: auto;
-      height: auto;
-      left: 0;
-  }
-  .image-input{
-      z-index: 800;
-  }
-  .image-input button {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      left: 0;
-      .border-radius(0);
-  }
-  .input-field{
-      position: relative;
-      z-index: 1000;
-      opacity: 0;
-  }
-  .input-field input{
-      position: absolute;
-      border-width: 0 0 100px 200px;
-      filter: alpha(opacity=0);
-      -moz-transform: translate(-300px, 0) scale(4);
-      direction: ltr;
-      cursor: pointer;
-      width: 200px;
-      height: 200px;
-  }
-  .btn-fileinput {
-    position: relative;
-    float: left;
-    overflow: hidden;
-    input {
-        -moz-border-bottom-colors: none;
-        -moz-border-left-colors: none;
-        -moz-border-right-colors: none;
-        -moz-border-top-colors: none;
-        -moz-transform: translate(-300px, 0px) scale(4);
-        border-color: transparent;
-        border-image: none;
-        border-style: solid;
-        border-width: 0 0 100px 200px;
-        cursor: pointer;
-        direction: ltr;
-        margin: 0;
-        opacity: 0;
-        position: absolute;
-        right: 0;
-        top: 0;
-    }
-  }
+  .clearfix();
+  margin:0;
+  li {
+    display:block;
+    width: 200px;
+    margin:0 1% 2%;
+    float: left;
+    text-align:center;
+    > div {
+      padding: 4px;
+      background: #ccc;
+      margin-bottom: 10px;
+
+    }
+  }
+  div {
+    background:#fff;
+    position: relative;
+    width: 200px;
+    height: 200px;
+    z-index: 200;
+  }
+  img {
+    position: absolute;
+    margin:auto;
+    top: 0;
+    max-height:200px;
+    max-width:200px;
+    width: auto;
+    height: auto;
+    left: 0;
+  }
+  .image-input {
+    z-index: 800;
+  }
+  .image-input button {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    .border-radius(0);
+  }
+  .input-field {
+    position: relative;
+    z-index: 1000;
+    opacity: 0;
+  }
+  .input-field input {
+    position: absolute;
+    border-width: 0 0 100px 200px;
+    filter: alpha(opacity=0);
+    -moz-transform: translate(-300px, 0) scale(4);
+    direction: ltr;
+    cursor: pointer;
+    width: 200px;
+    height: 200px;
+  }
 }
+/*.btn-fileinput {
+  position: relative;
+  overflow: hidden;
+  float: left;
+  margin-right: 4px;
+  height: 200px;
+  width: 200px;
+  input {
+    position: absolute;
+    top: 0;
+    font-size: 62px;
+    left: -395%;
+    margin: 0;
+    border: solid transparent;
+    border-width: 0 0 100px 200px;
+    opacity: 0;
+    filter: alpha(opacity=0);
+    direction: ltr;
+    cursor: pointer;
+  }
+  select, input[type="file"] {
+  height: 208px;
+  line-height: 208px;
+  -webkit-box-align: baseline;
+  text-align: start;
+  -webkit-rtl-ordering: logical;
+  -webkit-user-select: text;
+  }
+  input, textarea {
+  width: 210px;
+  }
+}*/
+
 .stock-pricing {
     label,
     .control-group div {

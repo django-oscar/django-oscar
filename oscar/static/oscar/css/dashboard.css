@@ -671,14 +671,6 @@ caption {
 .upload-image {
   *zoom: 1;
   margin: 0;
-  /*  div {
-    background:#fff;
-    position: relative;
-    width: 200px;
-    height: 200px;
-    z-index: 200;
-  }*/
-
 }
 .upload-image:before,
 .upload-image:after {
@@ -691,25 +683,21 @@ caption {
 .upload-image li {
   display: block;
   width: 200px;
-  /*    height: 200px;*/
-
-  /*    line-height:80px;*/
-
   margin: 0 1% 2%;
   float: left;
   text-align: center;
 }
 .upload-image li > div {
-  /*padding:4px;*/
-
+  padding: 4px;
   background: #ccc;
-  /*margin-bottom:10px;*/
-
-  /*      + label,
-      + label + input {
-        display:none;
-      }*/
-
+  margin-bottom: 10px;
+}
+.upload-image div {
+  background: #fff;
+  position: relative;
+  width: 200px;
+  height: 200px;
+  z-index: 200;
 }
 .upload-image img {
   position: absolute;
@@ -748,29 +736,38 @@ caption {
   width: 200px;
   height: 200px;
 }
-.upload-image .btn-fileinput {
+/*.btn-fileinput {
   position: relative;
-  float: left;
   overflow: hidden;
-}
-.upload-image .btn-fileinput input {
-  -moz-border-bottom-colors: none;
-  -moz-border-left-colors: none;
-  -moz-border-right-colors: none;
-  -moz-border-top-colors: none;
-  -moz-transform: translate(-300px, 0px) scale(4);
-  border-color: transparent;
-  border-image: none;
-  border-style: solid;
-  border-width: 0 0 100px 200px;
-  cursor: pointer;
-  direction: ltr;
-  margin: 0;
-  opacity: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
-}
+  float: left;
+  margin-right: 4px;
+  height: 200px;
+  width: 200px;
+  input {
+    position: absolute;
+    top: 0;
+    font-size: 62px;
+    left: -395%;
+    margin: 0;
+    border: solid transparent;
+    border-width: 0 0 100px 200px;
+    opacity: 0;
+    filter: alpha(opacity=0);
+    direction: ltr;
+    cursor: pointer;
+  }
+  select, input[type="file"] {
+  height: 208px;
+  line-height: 208px;
+  -webkit-box-align: baseline;
+  text-align: start;
+  -webkit-rtl-ordering: logical;
+  -webkit-user-select: text;
+  }
+  input, textarea {
+  width: 210px;
+  }
+}*/
 .stock-pricing label,
 .stock-pricing .control-group div {
   display: inline-block;
