@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.views import generic
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 
 from django.core import mail
 from django.contrib import messages
@@ -19,7 +19,7 @@ Notification = get_model('notification', 'notification')
 ProductNotification = get_model('notification', 'productnotification')
 
 
-class NotificationUnsubscribeView(generic.DetailView):
+class NotificationUnsubscribeView(generic.RedirectView):
     """
     View to unsubscribe from a notification based on the provided
     unsubscribe key. The notification is set to ``INACTIVE`` instead
@@ -27,13 +27,15 @@ class NotificationUnsubscribeView(generic.DetailView):
     """
     model = Notification
     context_object_name = 'notification'
-    template_name = 'notification/unsubscribe.html'
 
     def get_object(self, queryset=None):
         """ Get notification object that matches the unsubscribe key. """
-        return get_object_or_404(self.model,
-                                 unsubscribe_key=self.kwargs.get('key',
-                                                                 'invalid'))
+        try:
+            return self.model.objects.select_subclasses().get(
+                unsubscribe_key=self.kwargs.get('key', 'invalid')
+            )
+        except self.model.DoesNotExist:
+            raise Http404
 
     def get(self, *args, **kwargs):
         notification = self.get_object()
@@ -42,22 +44,29 @@ class NotificationUnsubscribeView(generic.DetailView):
         messages.info(self.request,
             _("You have successfully unsubscribed from this notification.")
         )
+        kwargs['notification'] = notification
         return super(NotificationUnsubscribeView, self).get(*args, **kwargs)
 
+    def get_redirect_url(self, **kwargs):
+        return kwargs.get('notification').get_absolute_item_url()
 
-class NotificationConfirmView(generic.DetailView):
+
+class NotificationConfirmView(generic.RedirectView):
     """
     View to confirm the email address of an anonymous user used to
     sign up for a product notification.
     """
     model = Notification
     context_object_name = 'notification'
-    template_name = 'notification/confirm.html'
 
     def get_object(self, queryset=None):
         """ Get notification object that matches the confirmation key. """
-        return get_object_or_404(self.model,
-                                 confirm_key=self.kwargs.get('key', 'invalid'))
+        try:
+            return self.model.objects.select_subclasses().get(
+                confirm_key=self.kwargs.get('key', 'invalid')
+            )
+        except self.model.DoesNotExist:
+            raise Http404
 
     def get(self, *args, **kwargs):
         notification = self.get_object()
@@ -67,7 +76,11 @@ class NotificationConfirmView(generic.DetailView):
             _("Yeah! You have confirmed your subscription. We'll notify "
               "you as soon as the product is back in stock.")
         )
+        kwargs['notification'] = notification
         return super(NotificationConfirmView, self).get(*args, **kwargs)
+
+    def get_redirect_url(self, **kwargs):
+        return kwargs.get('notification').get_absolute_item_url()
 
 
 class ProductNotificationCreateView(generic.FormView):
@@ -97,10 +110,9 @@ class ProductNotificationCreateView(generic.FormView):
     def get_product(self):
         """
         Get product from primary key specified in URL patterns as
-        ``product_pk``. Raises a 404 if product does not exist.
+        ``pk``. Raises a 404 if product does not exist.
         """
-        return get_object_or_404(self.product_model,
-                                 pk=self.kwargs['product_pk'])
+        return get_object_or_404(self.product_model, pk=self.kwargs['pk'])
 
     def get_context_data(self, *args, **kwargs):
         """
@@ -233,8 +245,10 @@ class ProductNotificationCreateView(generic.FormView):
         """
         Get success URL to redirect to the product's detail page.
         """
-        return reverse('catalogue:detail',
-                       args=(self.product.slug, self.product.pk))
+        return reverse('catalogue:detail', kwargs={
+            'product_slug':self.product.slug,
+            'pk': self.product.pk
+        })
 
 
 class ProductNotificationSetStatusView(generic.TemplateView):
@@ -244,6 +258,7 @@ class ProductNotificationSetStatusView(generic.TemplateView):
     """
     model = ProductNotification
     status_types = [map[0] for map in ProductNotification.STATUS_TYPES]
+    pk_url_kwarg = 'notification_pk'
 
     def get(self, *args, **kwargs):
         """
@@ -252,7 +267,7 @@ class ProductNotificationSetStatusView(generic.TemplateView):
         or ``inactive`` a HTTP redirect is returned without changing the
         notification. Otherwise the notification status is updated
         """
-        self.product = get_object_or_404(Product, pk=kwargs.get('product_pk'))
+        self.product = get_object_or_404(Product, pk=kwargs.get('pk'))
         status = kwargs.get('status', None)
 
         if status in (self.status_types):
@@ -289,6 +304,7 @@ class ProductNotificationDeleteView(generic.DeleteView):
     """
     model = ProductNotification
     template_name = 'notification/delete.html'
+    pk_url_kwarg = 'notification_pk'
 
     def get_success_url(self):
         return reverse('dashboard:index')

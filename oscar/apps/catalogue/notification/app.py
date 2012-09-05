@@ -25,12 +25,12 @@ class ProductNotificationApplication(Application):
                 name='notification-create'),
             # Make sure that only valid status values are allowed in the
             # URL pattern
-            url(r'^(?P<pk>\d+)/set-status/(?P<status>%s)/$' % (
+            url(r'^(?P<notification_pk>\d+)/set-status/(?P<status>%s)/$' % (
                     '|'.join([x[0] for x in AbstractNotification.STATUS_TYPES])
                 ),
                 login_required(self.update_view.as_view()),
                 name='notification-set-status'),
-            url(r'^(?P<pk>\d+)/delete/$',
+            url(r'^(?P<notification_pk>\d+)/delete/$',
                 login_required(self.delete_view.as_view()),
                 name='notification-delete'),
         )

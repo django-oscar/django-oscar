@@ -23,6 +23,7 @@ class AbstractNotification(models.Model):
     """
     KEY_LENGTH = 40
     item_field_name = None
+    item_url_index = None
 
     user = models.ForeignKey(User, db_index=True, blank=True, null=True,
                              related_name="notifications")
@@ -102,7 +103,7 @@ class AbstractNotification(models.Model):
         and ``pk`` fields prefixed with the specified ``item_field_name``,
         e.g. for a product notification with ``item_field_name='product'``
         the URL reverse lookup requires ``product_slug`` and
-        ``product_pk`` as part of its URL pattern definition.
+        ``pk`` as part of its URL pattern definition.
         """
         kwargs = self._get_url_kwargs()
         kwargs['key'] = self.confirm_key
@@ -116,11 +117,21 @@ class AbstractNotification(models.Model):
         and ``pk`` fields prefixed with the specified ``item_field_name``,
         e.g. for a product notification with ``item_field_name='product'``
         the URL reverse lookup requires ``product_slug`` and
-        ``product_pk`` as part of its URL pattern definition.
+        ``pk`` as part of its URL pattern definition.
         """
         kwargs = self._get_url_kwargs()
         kwargs['key'] = self.unsubscribe_key
         return ('catalogue:notification-unsubscribe', (), kwargs)
+
+    @models.permalink
+    def get_absolute_item_url(self):
+        """
+        Get the absolute URL for the item referenced by this 
+        notification. The URL patterns uses the ``item_url_index``
+        attribute specified in the class definition.
+        """
+        kwargs = self._get_url_kwargs()
+        return (self.item_url_index, (), kwargs)
 
     def save(self, *args, **kwargs):
         """
@@ -155,11 +166,10 @@ class AbstractNotification(models.Model):
         and primary key.
         """
         slug_key = '%s_slug' % self.item_field_name
-        pk_key = '%s_pk' % self.item_field_name
         item = self.get_notification_item()
         return {
             slug_key: item.slug,
-            pk_key: item.id,
+            'pk': item.id,
         }
 
     def __unicode__(self):

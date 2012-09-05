@@ -44,7 +44,7 @@ class NotificationsApplication(Application):
     def get_urls(self):
         urlpatterns = super(NotificationsApplication, self).get_urls()
         urlpatterns += patterns('',
-            url(r'^(?P<product_slug>[\w-]*)-(?P<product_pk>\d+)/notify-me/',
+            url(r'^(?P<product_slug>[\w-]*)_(?P<pk>\d+)/notify-me/',
                 include(self.notification_app.urls)),
         )
         return self.post_process_urls(urlpatterns)
