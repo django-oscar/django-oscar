@@ -73,8 +73,8 @@
             <td>{{ notification.date_created|date }}</td>
             <td>{% include "notification/partials/notified_date.html" %}</td>
             <td>
-                <a href="{% url dashboard:user-notification-update notification.id %}"><button class="btn btn-info">{% trans "Edit" %}</button></a>
-                <a href="{% url dashboard:user-notification-delete notification.id %}"><button class="btn btn-danger">{% trans "Delete" %}</button></a>
+                <a href="{% url dashboard:user-notification-update notification.id %}" class="btn btn-info">{% trans "Edit" %}</a>
+                <a href="{% url dashboard:user-notification-delete notification.id %}" class="btn btn-danger">{% trans "Delete" %}</a>
             </td>
         </tr>
         {% endfor %}
