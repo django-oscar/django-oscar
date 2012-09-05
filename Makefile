@@ -13,6 +13,7 @@ sandbox: install
 	sites/sandbox/manage.py oscar_import_catalogue sites/_fixtures/books-catalogue.csv
 	sites/sandbox/manage.py oscar_import_catalogue_images sites/_fixtures/books-images.tar.gz
 	sites/sandbox/manage.py loaddata countries.json sites/_fixtures/pages.json
+	sites/sandbox/manage.py rebuild_index --noinput
 
 ci:
 	# Run continous tests and generate lint reports
