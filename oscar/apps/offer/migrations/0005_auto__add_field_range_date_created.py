@@ -4,12 +4,15 @@ from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
 
+from django.utils.timezone import now
+
+
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
 
         # Adding field 'Range.date_created'
-        db.add_column('offer_range', 'date_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, default=datetime.datetime(2012, 5, 2, 22, 10, 11, 993563), blank=True), keep_default=False)
+        db.add_column('offer_range', 'date_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, default=now(), blank=True), keep_default=False)
 
 
     def backwards(self, orm):

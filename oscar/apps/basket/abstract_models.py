@@ -1,10 +1,10 @@
 from decimal import Decimal
 import zlib
-import datetime
 
 from django.db import models
 from django.db.models import query
 from django.conf import settings
+from django.utils.timezone import now
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 
@@ -186,7 +186,7 @@ class AbstractBasket(models.Model):
         for line_to_merge in basket.all_lines():
             self.merge_line(line_to_merge, add_quantities)
         basket.status = MERGED
-        basket.date_merged = datetime.datetime.now()
+        basket.date_merged = now()
         basket.save()
         self._lines = None
 
@@ -207,7 +207,7 @@ class AbstractBasket(models.Model):
     def set_as_submitted(self):
         """Mark this basket as submitted."""
         self.status = SUBMITTED
-        self.date_submitted = datetime.datetime.now()
+        self.date_submitted = now()
         self.save()
 
     def set_as_tax_exempt(self):
@@ -366,7 +366,7 @@ class AbstractBasket(models.Model):
     @property
     def time_since_creation(self, test_datetime=None):
         if not test_datetime:
-            test_datetime = datetime.datetime.now()
+            test_datetime = now()
         return test_datetime - self.date_created
 
     @property
