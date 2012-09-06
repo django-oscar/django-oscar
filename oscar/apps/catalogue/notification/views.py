@@ -294,17 +294,3 @@ class ProductNotificationSetStatusView(generic.TemplateView):
         detail_url = reverse('catalogue:detail',
                              args=(self.product.slug, self.product.pk))
         return self.request.META.get('HTTP_REFERER', detail_url)
-
-
-class ProductNotificationDeleteView(generic.DeleteView):
-    """
-    View to delete a product notification. This should not be available
-    to the users as their can only activate and deactivate notifications.
-    It should be checked for logged in staff member.
-    """
-    model = ProductNotification
-    template_name = 'notification/delete.html'
-    pk_url_kwarg = 'notification_pk'
-
-    def get_success_url(self):
-        return reverse('dashboard:index')

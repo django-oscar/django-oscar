@@ -11,7 +11,6 @@ class ProductNotificationApplication(Application):
     unsubscribe_view = views.NotificationUnsubscribeView
     create_view = views.ProductNotificationCreateView
     update_view = views.ProductNotificationSetStatusView
-    delete_view = views.ProductNotificationDeleteView
 
     def get_urls(self):
         urlpatterns = patterns('',
@@ -30,9 +29,6 @@ class ProductNotificationApplication(Application):
                 ),
                 login_required(self.update_view.as_view()),
                 name='notification-set-status'),
-            url(r'^(?P<notification_pk>\d+)/delete/$',
-                login_required(self.delete_view.as_view()),
-                name='notification-delete'),
         )
         return urlpatterns
 

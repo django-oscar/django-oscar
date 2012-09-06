@@ -11,7 +11,7 @@
 
         {% has_product_notification user product as notification_exists %}
         {% if not notification_exists %}
-			<p>{% include "notification/partials/notification_form.html" with form=notification_form %}</p>
+			<p>{% include "notification/partials/notification_form.html" with form=notification_form anon_notifications=anon_notifications %}</p>
         {% else %}
 			<p class="alert alert-success">{% trans "You will be notified when this product is available." %}</p>
         {% endif %}
