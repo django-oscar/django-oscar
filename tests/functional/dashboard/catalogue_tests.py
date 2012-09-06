@@ -28,7 +28,6 @@ class TestCatalogueDashboardViews(WebTest):
     password = 'mypassword'
 
     def setUp(self):
-        print 'setting up test'
         user = User.objects.create_user('_', self.email, self.password)
         user.is_staff = True
         user.save()
