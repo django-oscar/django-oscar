@@ -66,7 +66,7 @@ The following extensions are stable and ready for use:
 * django-oscar-jirafe_ - Integration with the Jirafe_ analytics package
 * django-oscar-paymentexpress_ - Integration with the `Payment Express`_ payment
   gateway
-* django-oscar-budgets_ - Managed budgets (can be used for giftcard
+* django-oscar-accounts - Managed accounts (can be used for giftcard
   functionality and loyalty schemes)
 
 .. _django-oscar-datacash: https://github.com/tangentlabs/django-oscar-datacash
@@ -80,7 +80,7 @@ The following extensions are stable and ready for use:
 .. _GoCardless: https://gocardless.com/
 .. _django-oscar-jirafe: https://github.com/tangentlabs/django-oscar-jirafe
 .. _Jirafe: https://jirafe.com/
-.. _django-oscar-budgets: https://github.com/tangentlabs/django-oscar-budgets
+.. _django-oscar-accounts: https://github.com/tangentlabs/django-oscar-accounts
 
 The following extensions are in development:
 
