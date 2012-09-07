@@ -128,12 +128,18 @@ $(document).ready(function()
     }
     
     // This activates the promotional banner carousel
-    $('#myCarousel').carousel({
-        interval: 6000
-    });
+    var n = $('#myCarousel').length;
+    if (n>0){
+        $('#myCarousel').carousel({
+            interval: 6000
+        });
+    };
     
     // This activates the Typeahead function in the search  
-    $('.typeahead').typeahead();
+    var n = $('#typeahead').length;
+    if (n>0){
+        $('.typeahead').typeahead();
+    };
 
     // Acordion - remove the first in the list as it is duplication.
     var n = $('.accordion dt').length;
