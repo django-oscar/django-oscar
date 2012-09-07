@@ -141,6 +141,8 @@ class BasketAddView(FormView):
         return kwargs
 
     def get_success_url(self):
+        if self.request.POST.get('redirect'):
+            return self.request.POST.get('redirect')
         return self.request.META.get('HTTP_REFERER', reverse('basket:summary'))
 
     def form_valid(self, form):
