@@ -34,7 +34,10 @@ class CommonPasswordValidator(validators.BaseValidator):
     # See http://www.smartplanet.com/blog/business-brains/top-20-most-common-passwords-of-all-time-revealed-8216123456-8216princess-8216qwerty/4519
     forbidden_passwords = [
         'password',
+        '1234',
+        '12345'
         '123456',
+        '123456y',
         '123456789',
         'iloveyou',
         'princess',
@@ -44,6 +47,26 @@ class CommonPasswordValidator(validators.BaseValidator):
         'monkey',
         'qwerty',
         '654321',
+        'dragon',
+        'pussy',
+        'baseball',
+        'football',
+        'letmein',
+        'monkey',
+        '696969',
+        'abc123',
+        'qwe123',
+        'qweasd',
+        'mustang',
+        'michael',
+        'shadow',
+        'master',
+        'jennifer',
+        '111111',
+        '2000',
+        'jordan',
+        'superman'
+        'harley'
     ]
     message = _("Please choose a less common password")
     code = 'password'
@@ -74,7 +97,7 @@ class EmailUserCreationForm(forms.ModelForm):
         fields = ('email',)
 
     def clean_email(self):
-        email = self.cleaned_data['email']
+        email = self.cleaned_data['email'].lower()
         try:
             User.objects.get(email=email)
         except User.DoesNotExist:
