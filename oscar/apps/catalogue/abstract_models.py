@@ -163,7 +163,7 @@ class AbstractProductCategory(models.Model):
     Joining model between products and categories.
     """
     product = models.ForeignKey('catalogue.Product', verbose_name=_("Product"))
-    category = models.ForeignKey('catalogue.Category', verbose_name=_("Categry"))
+    category = models.ForeignKey('catalogue.Category', verbose_name=_("Category"))
     is_canonical = models.BooleanField(_('Is Cannonical'), default=False, db_index=True)
 
     class Meta:
