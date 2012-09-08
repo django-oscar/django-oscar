@@ -191,5 +191,8 @@ $(document).ready(function()
         }
       });
     }
- 
+
+    // disble button on click
+    $('.js-disable-on-click').click(function(){$(this).button('loading')});
+
 });

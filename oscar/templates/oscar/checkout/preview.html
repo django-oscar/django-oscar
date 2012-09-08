@@ -15,7 +15,7 @@
 	<input type="hidden" name="action" value="place_order" />
 	{% csrf_token %}
     <div class="form-actions">
-		<button id='place-order' type="submit" class="pull-right btn btn-primary btn-large js-disable-on-click">{% trans "Place order" %}</button>
+		<button id='place-order' type="submit" class="pull-right btn btn-primary btn-large js-disable-on-click" data-loading-text="{% trans 'Submitting...' %}">{% trans "Place order" %}</button>
     </div>
 </form>
 {% endblock place_order %}
