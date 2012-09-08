@@ -20,7 +20,7 @@ class PageUpdateForm(forms.ModelForm):
     and *content* field. The specified URL will be validated and check if
     the same URL already exists in the system.
     """
-    url = forms.CharField(max_length=128, required=False,
+    url = forms.CharField(max_length=128, required=False, label=_("URL"),
                           help_text=_("Example: '/about/contact/'. Make sure"
                                       " to have leading and trailing slashes."))
 

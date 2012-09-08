@@ -1,13 +1,11 @@
 import os
-
 from django.views.generic import (ListView, DeleteView, CreateView, UpdateView)
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ungettext, ugettext_lazy as _
 from django.db.models.loading import get_model
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
-from django.template.defaultfilters import pluralize
 from django.conf import settings
 
 from oscar.views.generic import BulkEditMixin
@@ -36,7 +34,7 @@ class RangeCreateView(CreateView):
         if 'action' in self.request.POST:
             return reverse('dashboard:range-products', kwargs={'pk': self.object.id})
         else:
-            messages.success(self.request, "Range created")
+            messages.success(self.request, _("Range created"))
             return reverse('dashboard:range-list')
 
     def get_context_data(self, **kwargs):
@@ -54,7 +52,7 @@ class RangeUpdateView(UpdateView):
         if 'action' in self.request.POST:
             return reverse('dashboard:range-products', kwargs={'pk': self.object.id})
         else:
-            messages.success(self.request, "Range updated")
+            messages.success(self.request, _("Range updated"))
             return reverse('dashboard:range-list')
 
     def get_context_data(self, **kwargs):
@@ -69,7 +67,7 @@ class RangeDeleteView(DeleteView):
     context_object_name = 'range'
 
     def get_success_url(self):
-        messages.warning(self.request, "Range deleted")
+        messages.warning(self.request, _("Range deleted"))
         return reverse('dashboard:range-list')
 
 
@@ -106,8 +104,10 @@ class RangeProductListView(ListView, BulkEditMixin):
         range = self.get_range()
         for product in products:
             range.included_products.remove(product)
-        messages.success(request, _('Removed %d products from range') %
-                         len(products))
+        num_products = len(products)
+        messages.success(request, ungettext("Removed %d product from range",
+                                            "Removed %d products from range",
+                                            num_products) % num_products)
         return HttpResponseRedirect(self.get_success_url(request))
 
     def add_products(self, request):
@@ -130,19 +130,19 @@ class RangeProductListView(ListView, BulkEditMixin):
             range.included_products.add(product)
 
         num_products = len(products)
-        messages.success(request, _("Products added to range: %d") % (
-            num_products))
-
+        messages.success(request, ungettext("%d product added to range",
+                                            "%d products added to range",
+                                            num_products) % num_products)
         dupe_skus = form.get_duplicate_skus()
         if dupe_skus:
             messages.warning(
                 request,
-                _("The products with SKUs or UPCs matching %s are already in this range") % (", ".join(dupe_skus)))
+                _("The products with SKUs or UPCs matching %s are already in this range") % ", ".join(dupe_skus))
 
         missing_skus = form.get_missing_skus()
         if missing_skus:
             messages.warning(request,
-                             _("No product was found with SKU or UPC matching %s") % ', '.join(missing_skus))
+                             _("No product(s) were found with SKU or UPC matching %s") % ", ".join(missing_skus))
 
     def handle_file_products(self, request, range, form):
         if not 'file_upload' in request.FILES:

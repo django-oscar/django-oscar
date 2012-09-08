@@ -13,7 +13,7 @@ class ShippingMethod(models.Model):
     description = models.TextField(_("Description"), blank=True)
 
     # We allow shipping methods to be linked to a specific set of countries
-    countries = models.ManyToManyField('address.Country', null=True, blank=True)
+    countries = models.ManyToManyField('address.Country', null=True, blank=True, verbose_name=_("Countries"))
 
     _basket = None
 
@@ -47,17 +47,17 @@ class OrderAndItemCharges(ShippingMethod):
     complex shipping logic, a custom shipping method object will need to be provided
     that subclasses ShippingMethod.
     """
-    price_per_order = models.DecimalField(_('Price per order'), decimal_places=2, max_digits=12, default=D('0.00'))
-    price_per_item = models.DecimalField(_('Price per item'), decimal_places=2, max_digits=12, default=D('0.00'))
+    price_per_order = models.DecimalField(_("Price per order"), decimal_places=2, max_digits=12, default=D('0.00'))
+    price_per_item = models.DecimalField(_("Price per item"), decimal_places=2, max_digits=12, default=D('0.00'))
     
     # If basket value is above this threshold, then shipping is free
-    free_shipping_threshold = models.DecimalField(_('Free Shipping'), decimal_places=2, max_digits=12, blank=True, null=True)
+    free_shipping_threshold = models.DecimalField(_("Free Shipping"), decimal_places=2, max_digits=12, blank=True, null=True)
     
     _basket = None
 
     class Meta:
-        verbose_name = _('Order and item charge')
-        verbose_name_plural = _('Order and item charges')
+        verbose_name = _("Order and Item Charge")
+        verbose_name_plural = _("Order and Item Charges")
 
     def set_basket(self, basket):
         self._basket = basket
@@ -85,19 +85,19 @@ class OrderAndItemCharges(ShippingMethod):
 
 
 class WeightBased(ShippingMethod):
-    upper_charge = models.DecimalField(_('Upper Charge'), decimal_places=2, max_digits=12, null=True,
+    upper_charge = models.DecimalField(_("Upper Charge"), decimal_places=2, max_digits=12, null=True,
                                       help_text=_("""This is the charge when the
                                        weight of the basket is greater than all
                                       the weight bands"""))
 
     weight_attribute = 'weight'
-    default_weight = models.DecimalField(_('Default Weight'), decimal_places=2, max_digits=12, default=D('0.00'),
+    default_weight = models.DecimalField(_("Default Weight"), decimal_places=2, max_digits=12, default=D('0.00'),
                         help_text=_("""Default product weight in Kg when no
                                         weight attribute is defined"""))
 
     class Meta:
-        verbose_name = _('Weight-based shipping method')
-        verbose_name_plural = _('Weight-based shipping methods')
+        verbose_name = _("Weight-based Shipping Method")
+        verbose_name_plural = _("Weight-based Shipping Methods")
 
     def basket_charge_incl_tax(self):
         weight = Scales(attribute_code=self.weight_attribute, default_weight=self.default_weight).weigh_basket(self._basket)
@@ -127,12 +127,12 @@ class WeightBand(models.Model):
     """
     Represents a weight band which are used by the WeightBasedShipping method.
     """
-    method = models.ForeignKey(WeightBased, related_name='bands')
-    upper_limit = models.FloatField(_('Upper Limit'), help_text=_("""Enter upper limit of this
+    method = models.ForeignKey(WeightBased, related_name='bands', verbose_name=_("Method"))
+    upper_limit = models.FloatField(_("Upper Limit"), help_text=_("""Enter upper limit of this
                                                 weight band in Kg, the lower
                                                 limit will be determine by the
                                                 other weight bands"""))
-    charge = models.DecimalField(_('Charge'), decimal_places=2, max_digits=12)
+    charge = models.DecimalField(_("Charge"), decimal_places=2, max_digits=12)
     
     @property
     def weight_from(self):

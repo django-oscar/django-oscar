@@ -127,7 +127,7 @@ class PageUpdateView(generic.UpdateView):
         Get context data with additional *title* and *page* objects attached.
         """
         ctx = super(PageUpdateView, self).get_context_data(**kwargs)
-        ctx['title'] = 'Update Page'
+        ctx['title'] = _('Update Page')
         return ctx
 
     def form_valid(self, form):
