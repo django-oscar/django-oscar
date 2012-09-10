@@ -206,10 +206,13 @@ class OrderListView(ListView, BulkEditMixin):
     def get_paginate_by(self, queryset):
         return None if self.is_csv_download() else self.paginate_by
 
-    def render_to_response(self, context):
+    def render_to_response(self, context, **response_kwargs):
         if self.is_csv_download():
-            return self.download_selected_orders(self.request, context['object_list'])
-        return super(OrderListView, self).render_to_response(context)
+            return self.download_selected_orders(
+                self.request,
+                context['object_list'])
+        return super(OrderListView, self).render_to_response(
+            context, **response_kwargs)
 
     def get_download_filename(self, request):
         return 'orders.csv'
@@ -264,7 +267,7 @@ class OrderDetailView(DetailView):
     line_actions = ('change_line_statuses', 'create_shipping_event',
                     'create_payment_event')
 
-    def get_object(self):
+    def get_object(self, queryset=None):
         return get_object_or_404(self.model, number=self.kwargs['number'])
 
     def get_context_data(self, **kwargs):
@@ -521,7 +524,7 @@ class ShippingAddressUpdateView(UpdateView):
     template_name = 'dashboard/orders/shippingaddress_form.html'
     form_class = forms.ShippingAddressForm
 
-    def get_object(self):
+    def get_object(self, queryset=None):
         return get_object_or_404(self.model, order__number=self.kwargs['number'])
 
     def get_context_data(self, **kwargs):

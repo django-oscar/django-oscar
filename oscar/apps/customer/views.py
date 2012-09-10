@@ -273,9 +273,10 @@ class EmailDetailView(DetailView):
     template_name = "customer/email.html"
     context_object_name = 'email'
 
-    def get_object(self):
+    def get_object(self, queryset=None):
         """Return an order object or 404"""
-        return get_object_or_404(Email, user=self.request.user, id=self.kwargs['email_id'])
+        return get_object_or_404(Email, user=self.request.user,
+                                 id=self.kwargs['email_id'])
 
 
 class OrderHistoryView(ListView):
@@ -318,8 +319,9 @@ class OrderDetailView(DetailView, PostActionMixin):
     def get_template_names(self):
         return ["customer/order.html"]
 
-    def get_object(self):
-        return get_object_or_404(self.model, user=self.request.user, number=self.kwargs['order_number'])
+    def get_object(self, queryset=None):
+        return get_object_or_404(self.model, user=self.request.user,
+                                 number=self.kwargs['order_number'])
 
     def do_reorder(self, order):
         """
@@ -385,9 +387,10 @@ class OrderDetailView(DetailView, PostActionMixin):
 class OrderLineView(DetailView, PostActionMixin):
     """Customer order line"""
 
-    def get_object(self):
+    def get_object(self, queryset=None):
         """Return an order object or 404"""
-        order = get_object_or_404(Order, user=self.request.user, number=self.kwargs['order_number'])
+        order = get_object_or_404(Order, user=self.request.user,
+                                  number=self.kwargs['order_number'])
         return order.lines.get(id=self.kwargs['line_id'])
 
     def do_reorder(self, line):
@@ -505,7 +508,7 @@ class AnonymousOrderDetailView(DetailView):
     model = Order
     template_name = "customer/anon_order.html"
 
-    def get_object(self):
+    def get_object(self, queryset=None):
         # Check URL hash matches that for order to prevent spoof attacks
         order = get_object_or_404(self.model, user=None,
                                   number=self.kwargs['order_number'])
