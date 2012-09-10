@@ -77,7 +77,7 @@ class WebTestCase(WebTest):
 
     def setUp(self):
         self.user = None
-        if not self.is_anonymous:
+        if not self.is_anonymous or self.is_staff:
             self.user = User.objects.create(
                 username=self.username, email=self.email,
                 password=self.password, is_staff=self.is_staff)
