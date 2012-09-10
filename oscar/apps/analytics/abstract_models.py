@@ -12,7 +12,7 @@ class AbstractProductRecord(models.Model):
     products.
     """
     
-    product = models.OneToOneField('catalogue.Product')
+    product = models.OneToOneField('catalogue.Product', verbose_name=_("Product"))
     
     # Data used for generating a score
     num_views = models.PositiveIntegerField(_('Views'), default=0)
@@ -37,7 +37,7 @@ class AbstractUserRecord(models.Model):
     A record of a user's activity.
     """
     
-    user = models.OneToOneField('auth.User')
+    user = models.OneToOneField('auth.User', verbose_name=_("User"))
     
     # Browsing stats
     num_product_views = models.PositiveIntegerField(_('Product Views'), default=0)
@@ -58,9 +58,9 @@ class AbstractUserRecord(models.Model):
 
 class AbstractUserProductView(models.Model):
     
-    user = models.ForeignKey('auth.User')
-    product = models.ForeignKey('catalogue.Product')
-    date_created = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey('auth.User', verbose_name=_("User"))
+    product = models.ForeignKey('catalogue.Product', verbose_name=_("Product"))
+    date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
      
     class Meta:
         abstract = True
@@ -75,9 +75,9 @@ class AbstractUserProductView(models.Model):
 
 class AbstractUserSearch(models.Model):
     
-    user = models.ForeignKey('auth.User')
+    user = models.ForeignKey('auth.User', verbose_name=_("User"))
     query = models.CharField(_("Search term"), max_length=255, db_index=True)
-    date_created = models.DateTimeField(auto_now_add=True)
+    date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
      
     class Meta:
         abstract = True

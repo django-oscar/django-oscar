@@ -26,7 +26,7 @@ class LinkedPromotion(models.Model):
     position = models.CharField(_("Position"), max_length=100, help_text="Position on page")
     display_order = models.PositiveIntegerField(_("Display Order"), default=0)
     clicks = models.PositiveIntegerField(_("Clicks"), default=0)
-    date_created = models.DateTimeField(auto_now_add=True)
+    date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
     class Meta:
         abstract = True
@@ -242,7 +242,8 @@ class HandPickedProductList(AbstractProductList):
     products.
     """
     _type = 'Product list'
-    products = models.ManyToManyField('catalogue.Product', through='OrderedProduct', blank=True, null=True)
+    products = models.ManyToManyField('catalogue.Product', through='OrderedProduct', blank=True, null=True,
+        verbose_name=_("Products"))
 
     def get_queryset(self):
         return self.products.all().order_by('%s.display_order' % OrderedProduct._meta.db_table)
@@ -257,8 +258,8 @@ class HandPickedProductList(AbstractProductList):
 
 class OrderedProduct(models.Model):
 
-    list = models.ForeignKey('promotions.HandPickedProductList')
-    product = models.ForeignKey('catalogue.Product')
+    list = models.ForeignKey('promotions.HandPickedProductList', verbose_name=_("List"))
+    product = models.ForeignKey('catalogue.Product', verbose_name=_("Product"))
     display_order = models.PositiveIntegerField(_('Display Order'), default=0)
 
     class Meta:
@@ -299,7 +300,7 @@ class AutomaticProductList(AbstractProductList):
 
 class OrderedProductList(HandPickedProductList):
     tabbed_block = models.ForeignKey('promotions.TabbedBlock',
-                                     related_name='tabs')
+                                     related_name='tabs', verbose_name=_("Tabbed Block"))
     display_order = models.PositiveIntegerField(_('Display Order'), default=0)
 
     class Meta:
@@ -312,7 +313,7 @@ class TabbedBlock(AbstractPromotion):
 
     _type = 'Tabbed block'
     name = models.CharField(_("Title"), max_length=255)
-    date_created = models.DateTimeField(auto_now_add=True)
+    date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
     class Meta:
         verbose_name = _("Tabbed Block")

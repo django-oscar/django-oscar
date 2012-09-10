@@ -1,17 +1,19 @@
 import datetime
 import os
 import re
-
+from django.utils.translation import ugettext_lazy as _
 from django.db import models
+
+
 Product = models.get_model('catalogue', 'Product')
 
 
 class RangeProductFileUpload(models.Model):
-    range = models.ForeignKey('offer.Range', related_name='file_uploads')
-    filepath = models.CharField(max_length=255)
-    size = models.PositiveIntegerField()
-    uploaded_by = models.ForeignKey('auth.User')
-    date_uploaded = models.DateTimeField(auto_now_add=True)
+    range = models.ForeignKey('offer.Range', related_name='file_uploads', verbose_name=_("Range"))
+    filepath = models.CharField(_("File Path"), max_length=255)
+    size = models.PositiveIntegerField(_("Size"))
+    uploaded_by = models.ForeignKey('auth.User', verbose_name=_("Uploaded By"))
+    date_uploaded = models.DateTimeField(_("Date Uploaded"), auto_now_add=True)
 
     PENDING, FAILED, PROCESSED = 'Pending', 'Failed', 'Processed'
     choices = (
@@ -19,17 +21,19 @@ class RangeProductFileUpload(models.Model):
         (FAILED, FAILED),
         (PROCESSED, PROCESSED),
     )
-    status = models.CharField(max_length=32, choices=choices, default=PENDING)
-    error_message = models.CharField(max_length=255, null=True)
+    status = models.CharField(_("Status"), max_length=32, choices=choices, default=PENDING)
+    error_message = models.CharField(_("Error Message"), max_length=255, null=True)
 
     # Post-processing audit fields
-    date_processed = models.DateTimeField(null=True)
-    num_new_skus = models.PositiveIntegerField(null=True)
-    num_unknown_skus = models.PositiveIntegerField(null=True)
-    num_duplicate_skus = models.PositiveIntegerField(null=True)
+    date_processed = models.DateTimeField(_("Date Processed"), null=True)
+    num_new_skus = models.PositiveIntegerField(_("Number of New SKUs"), null=True)
+    num_unknown_skus = models.PositiveIntegerField(_("Number of Unknown SKUs"), null=True)
+    num_duplicate_skus = models.PositiveIntegerField(_("Number of Duplicate SKUs"), null=True)
 
     class Meta:
         ordering = ('-date_uploaded',)
+        verbose_name = _("Range Product Uploaded File")
+        verbose_name_plural = _("Range Product Uploaded Files")
 
     @property
     def filename(self):
