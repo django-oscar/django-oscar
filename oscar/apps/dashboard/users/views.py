@@ -17,7 +17,7 @@ class IndexView(ListView, BulkEditMixin):
     actions = ('make_active', 'make_inactive', )
     current_view = 'dashboard:users-index'
     form_class = forms.UserSearchForm
-    desc_template = _(u'%(main_filter)s %(email_filter)s %(name_filter)s')
+    desc_template = _('%(main_filter)s %(email_filter)s %(name_filter)s')
     description = ''
 
     def get_queryset(self):

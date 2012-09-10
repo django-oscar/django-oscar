@@ -88,7 +88,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         """
         Writes the order out to the DB including the payment models
         """
-        shipping_address = self.create_shipping_address()
+        shipping_address = self.create_shipping_address(basket)
         shipping_method = self.get_shipping_method(basket)
         billing_address = self.create_billing_address(shipping_address)
 
@@ -115,7 +115,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         self.save_payment_details(order)
         return order
 
-    def create_shipping_address(self):
+    def create_shipping_address(self, basket=None):
         """
         Create and returns the shipping address for the current order.
 
@@ -127,7 +127,10 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         If the shipping address was selected from the user's address book,
         then we convert the UserAddress to a ShippingAddress.
         """
-        if not self.request.basket.is_shipping_required():
+        if not basket:
+            basket = self.request.basket
+
+        if not basket.is_shipping_required():
             return None
 
         addr_data = self.checkout_session.new_shipping_address_fields()

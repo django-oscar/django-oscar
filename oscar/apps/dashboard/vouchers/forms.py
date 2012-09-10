@@ -71,9 +71,9 @@ class VoucherForm(forms.Form):
 
 
 class VoucherSearchForm(forms.Form):
-    name = forms.CharField(required=False)
-    code = forms.CharField(required=False)
-    is_active = forms.BooleanField(required=False)
+    name = forms.CharField(required=False, label=_("Name"))
+    code = forms.CharField(required=False, label=_("Code"))
+    is_active = forms.BooleanField(required=False, label=_("Is Active?"))
 
     def clean_code(self):
         return self.cleaned_data['code'].upper()

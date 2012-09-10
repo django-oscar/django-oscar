@@ -18,7 +18,7 @@ def get_recently_viewed_product_ids(request):
     Limited to the max number defined in settings.py
     under OSCAR_RECENTLY_VIEWED_PRODUCTS.
     """
-    product_ids = [];
+    product_ids = []
     if (request.COOKIES.has_key('oscar_recently_viewed_products')):
         try:
             product_ids = _get_list_from_json_string(request.COOKIES['oscar_recently_viewed_products'])

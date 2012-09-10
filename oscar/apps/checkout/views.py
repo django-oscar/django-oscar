@@ -238,7 +238,7 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
     automatically selected.  Otherwise, a page is rendered where
     the user can choose the appropriate one.
     """
-    template_name = 'checkout/shipping_methods.html';
+    template_name = 'checkout/shipping_methods.html'
 
     def get(self, request, *args, **kwargs):
         # Check that the user's basket is not empty

@@ -7,7 +7,7 @@ class Emailbackend(ModelBackend):
         if not email:
             email = kwargs.pop('username', None)
         try:
-            user = User.objects.get(email=email)
+            user = User.objects.get(email=email.lower() if email else email)
             if user.check_password(password):
                 return user
         except User.DoesNotExist:

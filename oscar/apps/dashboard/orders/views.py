@@ -296,7 +296,7 @@ class OrderDetailView(DetailView):
         order_action = request.POST.get('order_action', '').lower()
         if order_action:
             if order_action not in self.order_actions:
-                messages.error(self.request, "Invalid action")
+                messages.error(self.request, _("Invalid action"))
                 return self.reload_page_response()
             else:
                 return getattr(self, order_action)(request, order)
@@ -503,7 +503,7 @@ def get_change_summary(model1, model2):
     changes = get_changes_between_models(model1, model2, ['search_text'])
     change_descriptions = []
     for field, delta in changes.items():
-        change_descriptions.append(_(u"%(field)s changed from '%(old_value)s' to '%(new_value)s'") % {
+        change_descriptions.append(_("%(field)s changed from '%(old_value)s' to '%(new_value)s'") % {
             'field': field,
             'old_value': delta[0],
             'new_value': delta[1]})

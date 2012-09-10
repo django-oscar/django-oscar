@@ -18,11 +18,11 @@ class ConditionalOffer(models.Model):
     """
     A conditional offer (eg buy 1, get 10% off)
     """
-    name = models.CharField(_('Name'), max_length=128, unique=True,
+    name = models.CharField(_("Name"), max_length=128, unique=True,
                             help_text=_("""This is displayed within the customer's
                             basket"""))
-    slug = models.SlugField(_('Slug'), max_length=128, unique=True, null=True)
-    description = models.TextField(_('Description'), blank=True, null=True)
+    slug = models.SlugField(_("Slug"), max_length=128, unique=True, null=True)
+    description = models.TextField(_("Description"), blank=True, null=True)
 
     # Offers come in a few different types:
     # (a) Offers that are available to all customers on the site.  Eg a
@@ -40,33 +40,33 @@ class ConditionalOffer(models.Model):
         (USER, _("User offer - available to certain types of user")),
         (SESSION, _("Session offer - temporary offer, available for a user for the duration of their session")),
     )
-    offer_type = models.CharField(_('Type'), choices=TYPE_CHOICES, default=SITE, max_length=128)
+    offer_type = models.CharField(_("Type"), choices=TYPE_CHOICES, default=SITE, max_length=128)
 
-    condition = models.ForeignKey('offer.Condition')
-    benefit = models.ForeignKey('offer.Benefit')
+    condition = models.ForeignKey('offer.Condition', verbose_name=_("Condition"))
+    benefit = models.ForeignKey('offer.Benefit', verbose_name=_("Benefit"))
 
     # Range of availability.  Note that if this is a voucher offer, then these
     # dates are ignored and only the dates from the voucher are used to determine
     # availability.
-    start_date = models.DateField(_('Start Date'), blank=True, null=True)
-    end_date = models.DateField(_('End Date'), blank=True, null=True,
-                                help_text=_("""Offers are not active on their end
-                                date, only the days preceding"""))
+    start_date = models.DateField(_("Start Date"), blank=True, null=True)
+    end_date = models.DateField(_("End Date"), blank=True, null=True,
+                                help_text=_("Offers are not active on their end "
+                                            "date, only the days preceding"))
 
     # Some complicated situations require offers to be applied in a set order.
-    priority = models.IntegerField(_('Priority'), default=0,
+    priority = models.IntegerField(_("Priority"), default=0,
         help_text=_("The highest priority offers are applied first"))
 
     # We track some information on usage
-    total_discount = models.DecimalField(_('Total Discount'), decimal_places=2, max_digits=12, default=Decimal('0.00'))
-    num_orders = models.PositiveIntegerField(_('Number of Orders'), default=0)
+    total_discount = models.DecimalField(_("Total Discount"), decimal_places=2, max_digits=12, default=Decimal('0.00'))
+    num_orders = models.PositiveIntegerField(_("Number of Orders"), default=0)
 
-    date_created = models.DateTimeField(auto_now_add=True)
+    date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
+
+    redirect_url = ExtendedURLField(_("URL redirect (optional)"), blank=True)
 
     objects = models.Manager()
     active = ActiveOfferManager()
-
-    redirect_url = ExtendedURLField(_('URL redirect (optional)'), blank=True)
 
     # We need to track the voucher that this offer came from (if it is a voucher offer)
     _voucher = None
@@ -166,7 +166,7 @@ class Condition(models.Model):
         (VALUE, _("Depends on value of items in basket that are in condition range")),
         (COVERAGE, _("Needs to contain a set number of DISTINCT items from the condition range"))
     )
-    range = models.ForeignKey('offer.Range')
+    range = models.ForeignKey('offer.Range', verbose_name=_("Range"))
     type = models.CharField(_('Type'), max_length=128, choices=TYPE_CHOICES)
     value = PositiveDecimalField(_('Value'), decimal_places=2, max_digits=12)
 
@@ -220,22 +220,22 @@ class Condition(models.Model):
 class Benefit(models.Model):
     PERCENTAGE, FIXED, MULTIBUY, FIXED_PRICE = ("Percentage", "Absolute", "Multibuy", "Fixed price")
     TYPE_CHOICES = (
-        (PERCENTAGE, _("Discount is a % of the product's value")),
+        (PERCENTAGE, _("Discount is a %% of the product's value")),
         (FIXED, _("Discount is a fixed amount off the product's value")),
         (MULTIBUY, _("Discount is to give the cheapest product for free")),
         (FIXED_PRICE, _("Get the products that meet the condition for a fixed price")),
     )
-    range = models.ForeignKey('offer.Range', null=True, blank=True)
-    type = models.CharField(_('Type'), max_length=128, choices=TYPE_CHOICES)
-    value = PositiveDecimalField(_('Value'), decimal_places=2, max_digits=12,
+    range = models.ForeignKey('offer.Range', null=True, blank=True, verbose_name=_("Range"))
+    type = models.CharField(_("Type"), max_length=128, choices=TYPE_CHOICES)
+    value = PositiveDecimalField(_("Value"), decimal_places=2, max_digits=12,
                                  null=True, blank=True)
 
     price_field = 'price_incl_tax'
 
     # If this is not set, then there is no upper limit on how many products
     # can be discounted by this benefit.
-    max_affected_items = models.PositiveIntegerField(_('Max Affected Items'), blank=True, null=True,
-        help_text=_("""Set this to prevent the discount consuming all items within the range that are in the basket."""))
+    max_affected_items = models.PositiveIntegerField(_("Max Affected Items"), blank=True, null=True,
+        help_text=_("Set this to prevent the discount consuming all items within the range that are in the basket."))
 
     class Meta:
         verbose_name = _("Benefit")
@@ -302,11 +302,15 @@ class Range(models.Model):
     """
     name = models.CharField(_("Name"), max_length=128, unique=True)
     includes_all_products = models.BooleanField(_('Includes All Products'), default=False)
-    included_products = models.ManyToManyField('catalogue.Product', related_name='includes', blank=True)
-    excluded_products = models.ManyToManyField('catalogue.Product', related_name='excludes', blank=True)
-    classes = models.ManyToManyField('catalogue.ProductClass', related_name='classes', blank=True)
-    included_categories = models.ManyToManyField('catalogue.Category', related_name='includes', blank=True)
-    date_created = models.DateTimeField(auto_now_add=True)
+    included_products = models.ManyToManyField('catalogue.Product', related_name='includes', blank=True,
+        verbose_name=_("Included Products"))
+    excluded_products = models.ManyToManyField('catalogue.Product', related_name='excludes', blank=True,
+        verbose_name=_("Excluded Products"))
+    classes = models.ManyToManyField('catalogue.ProductClass', related_name='classes', blank=True,
+        verbose_name=_("Product Classes"))
+    included_categories = models.ManyToManyField('catalogue.Category', related_name='includes', blank=True,
+        verbose_name=_("Included Categories"))
+    date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
     __included_product_ids = None
     __excluded_product_ids = None

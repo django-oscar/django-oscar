@@ -11,7 +11,7 @@ class ReportForm(forms.Form):
     type_choices = []
     for generator in generators:
         type_choices.append((generator.code, generator.description))
-    report_type = forms.ChoiceField(widget=forms.Select(), choices=type_choices,
+    report_type = forms.ChoiceField(widget=forms.Select(), choices=type_choices, label=_("Report Type"),
                                     help_text=_("Only the offer and order reports "
                                                 "use the selected date range"))
 

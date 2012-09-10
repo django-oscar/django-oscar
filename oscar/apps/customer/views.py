@@ -24,6 +24,7 @@ EmailAuthenticationForm, EmailUserCreationForm, SearchByDateRangeForm = get_clas
                        'SearchByDateRangeForm'])
 ProfileForm = get_class('customer.forms', 'ProfileForm')
 UserAddressForm = get_class('address.forms', 'UserAddressForm')
+user_registered = get_class('customer.signals', 'user_registered')
 Order = get_model('order', 'Order')
 Line = get_model('basket', 'Line')
 Basket = get_model('basket', 'Basket')
@@ -201,6 +202,8 @@ class AccountRegistrationView(TemplateView):
 
         if getattr(settings, 'OSCAR_SEND_REGISTRATION_EMAIL', True):
             self.send_registration_email(user)
+
+        user_registered.send_robust(sender=self, user=user)
 
         user = authenticate(
             username=user.email,
