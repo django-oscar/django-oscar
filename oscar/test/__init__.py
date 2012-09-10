@@ -69,6 +69,9 @@ class ClientTestCase(TestCase):
 
 
 class WebTestCase(WebTest):
+    """
+    Custom version of WebTest that adds a few useful assertion methods
+    """
 
     def assertRedirectsTo(self, response, url_name):
         self.assertTrue(str(response.status_code).startswith('3'))

@@ -1,7 +1,9 @@
 from django.core.urlresolvers import reverse
+from django.contrib.auth.models import User
 from django.test import TestCase
+from django_dynamic_fixture import G
 
-from oscar.test import ClientTestCase
+from oscar.test import WebTestCase, ClientTestCase
 from oscar.apps.catalogue.models import Category
 from oscar.apps.dashboard.catalogue.forms import CategoryForm
 from oscar.apps.catalogue.categories import create_from_breadcrumbs
@@ -96,3 +98,17 @@ class CategoryTests(ClientTestCase):
         self.assertIsRedirect(response, reverse('dashboard:catalogue-category-list'))
 
         self.assertEqual(Category.objects.all().count(), 9)
+
+
+class TestCategoryDashboard(WebTestCase):
+
+    def setUp(self):
+        self.staff = G(User, is_staff=True)
+
+    def test_handles_invalid_form_gracefully(self):
+        dashboard_index = self.app.get(reverse('dashboard:index'),
+                                       user=self.staff)
+        category_index = dashboard_index.click("Categories")
+        category_add = category_index.click("Create a new category")
+        response = category_add.form.submit()
+        self.assertEqual(200, response.status_code)

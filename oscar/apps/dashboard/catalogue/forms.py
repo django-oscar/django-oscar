@@ -20,13 +20,13 @@ class CategoryForm(MoveNodeForm):
     def clean(self):
         cleaned_data = super(CategoryForm, self).clean()
 
-        name = cleaned_data['name']
-        ref_node_pk = cleaned_data['_ref_node_id']
-        pos = cleaned_data['_position']
+        name = cleaned_data.get('name')
+        ref_node_pk = cleaned_data.get('_ref_node_id')
+        pos = cleaned_data.get('_position')
 
         if name and self.is_slug_conflicting(name, ref_node_pk, pos):
             raise forms.ValidationError(_('Category with the given path'
-                                                  ' already exists.'))
+                                          ' already exists.'))
         return cleaned_data
 
     def is_slug_conflicting(self, name, ref_node_pk, position):
