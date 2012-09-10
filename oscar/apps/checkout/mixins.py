@@ -129,7 +129,6 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         """
         if not basket:
             basket = self.request.basket
-
         if not basket.is_shipping_required():
             return None
 
