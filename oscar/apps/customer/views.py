@@ -13,6 +13,7 @@ from django.contrib.auth import (authenticate, login as auth_login,
                                  logout as auth_logout)
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.sites.models import get_current_site
+from django.contrib.auth.models import User
 from django.conf import settings
 from django.db.models import get_model
 
@@ -205,10 +206,21 @@ class AccountRegistrationView(TemplateView):
 
         user_registered.send_robust(sender=self, user=user)
 
-        user = authenticate(
-            username=user.email,
-            password=form.cleaned_data['password1']
-        )
+        try:
+            user = authenticate(
+                username=user.email,
+                password=form.cleaned_data['password1'])
+        except User.MultipleObjectsReturned:
+            # Handle race condition where the registration request is made
+            # multiple times in quick succession.  This leads to both requests
+            # passing the uniqueness check and creating users (as the first one
+            # hasn't committed when the second one runs the check).  We retain
+            # the first one and delete the dupes.
+            users = User.objects.filter(email=user.email)
+            user = users[0]
+            for u in users[1:]:
+                u.delete()
+
         auth_login(self.request, user)
         if self.request.session.test_cookie_worked():
             self.request.session.delete_test_cookie()
