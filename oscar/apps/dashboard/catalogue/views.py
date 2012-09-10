@@ -295,6 +295,7 @@ class CategoryListView(generic.TemplateView):
 class CategoryDetailListView(generic.DetailView):
     template_name = 'dashboard/catalogue/category_list.html'
     model = Category
+    context_object_name = 'category'
 
     def get_context_data(self, *args, **kwargs):
         ctx = super(CategoryDetailListView, self).get_context_data(*args, **kwargs)
@@ -310,7 +311,7 @@ class CategoryListMixin(object):
         if parent is None:
             return reverse("dashboard:catalogue-category-list")
         else:
-            return reverse("dashboard:catalogue-category-detail-list", 
+            return reverse("dashboard:catalogue-category-detail-list",
                             args=(parent.pk,))
 
 
@@ -321,11 +322,11 @@ class CategoryCreateView(CategoryListMixin, generic.CreateView):
 
     def get_context_data(self, **kwargs):
         ctx = super(CategoryCreateView, self).get_context_data(**kwargs)
-        ctx['title'] = _("Add a new category")
+        ctx['title'] = "Add a new category"
         return ctx
 
     def get_success_url(self):
-        messages.info(self.request, _("Category created successfully"))
+        messages.info(self.request, "Category created successfully")
         return super(CategoryCreateView, self).get_success_url()
 
 
@@ -336,11 +337,11 @@ class CategoryUpdateView(CategoryListMixin, generic.UpdateView):
 
     def get_context_data(self, **kwargs):
         ctx = super(CategoryUpdateView, self).get_context_data(**kwargs)
-        ctx['title'] = _("Update category '%s'") % self.object.name
+        ctx['title'] = "Update category '%s'" % self.object.name
         return ctx
 
     def get_success_url(self):
-        messages.info(self.request, _("Category updated successfully"))
+        messages.info(self.request, "Category updated successfully")
         return super(CategoryUpdateView, self).get_success_url()
 
 
@@ -354,5 +355,5 @@ class CategoryDeleteView(CategoryListMixin, generic.DeleteView):
         return ctx
 
     def get_success_url(self):
-        messages.info(self.request, _("Category deleted successfully"))
+        messages.info(self.request, "Category deleted successfully")
         return super(CategoryDeleteView, self).get_success_url()
