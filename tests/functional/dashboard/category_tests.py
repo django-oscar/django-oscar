@@ -68,42 +68,37 @@ class TestCategoryForm(TestCase):
         self.assertEqual(conflicting, False)
 
 
-class CategoryTests(ClientTestCase):
-    is_staff = True
-
-    def setUp(self):
-        super(CategoryTests, self).setUp()
-        create_test_category_tree()
-
-    def test_category_create(self):
-        a = Category.objects.get(name='A')
-        b = Category.objects.get(name='B')
-        c = Category.objects.get(name='C')
-
-        # Redirect to subcategory list view
-        response = self.client.post(reverse('dashboard:catalogue-category-create'),
-                                            {'name': 'Testee',
-                                             '_position': 'left',
-                                             '_ref_node_id': c.id,})
-
-        self.assertIsRedirect(response, reverse('dashboard:catalogue-category-detail-list',
-                                                args=(b.pk,)))
-
-        # Redirect to main category list view
-        response = self.client.post(reverse('dashboard:catalogue-category-create'),
-                                            {'name': 'Testee',
-                                             '_position': 'right',
-                                             '_ref_node_id': a.id,})
-
-        self.assertIsRedirect(response, reverse('dashboard:catalogue-category-list'))
-
-        self.assertEqual(Category.objects.all().count(), 9)
-
-
 class TestCategoryDashboard(WebTestCase):
 
     def setUp(self):
         self.staff = G(User, is_staff=True)
+        create_from_breadcrumbs('A > B > C')
+
+    def test_redirects_to_main_dashboard_after_creating_top_level_category(self):
+        a = Category.objects.get(name='A')
+        category_add = self.app.get(reverse('dashboard:catalogue-category-create'),
+                                    user=self.staff)
+        form = category_add.form
+        form['name'] = 'Top-level category'
+        form['_position'] = 'right'
+        form['_ref_node_id'] = a.id
+        response = form.submit()
+        self.assertRedirects(response,
+                             reverse('dashboard:catalogue-category-list'))
+
+    def test_redirects_to_parent_list_after_creating_child_category(self):
+        b = Category.objects.get(name='B')
+        c = Category.objects.get(name='C')
+        category_add = self.app.get(reverse('dashboard:catalogue-category-create'),
+                                    user=self.staff)
+        form = category_add.form
+        form['name'] = 'Child category'
+        form['_position'] = 'left'
+        form['_ref_node_id'] = c.id
+        response = form.submit()
+        self.assertRedirects(response,
+                             reverse('dashboard:catalogue-category-detail-list',
+                                    args=(b.pk,)))
 
     def test_handles_invalid_form_gracefully(self):
         dashboard_index = self.app.get(reverse('dashboard:index'),
