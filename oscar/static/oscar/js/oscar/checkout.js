@@ -47,10 +47,6 @@ oscar.basket = {
 };
 oscar.checkout = {
     init: function() {
-        // Disable 'place order' button when it is clicked.
-        $('#place-order-form').submit(function() {
-            var $btn = $('button#place-order', this);
-        });
     },
     gateway: {
         init: function() {
