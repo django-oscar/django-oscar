@@ -96,9 +96,9 @@ class ShippingAddressView(CheckoutSessionMixin, FormView):
     automatically converted into a SHIPPING address when the user checks out.
 
     Alternatively, the user can enter a SHIPPING address directly which will be
-    saved in the session and saved as a model when the order is sucessfully submitted.
+    saved in the session and later saved as ShippingAddress model when the order
+    is sucessfully submitted.
     """
-
     template_name = 'checkout/shipping_address.html'
     form_class = ShippingAddressForm
 
@@ -136,13 +136,16 @@ class ShippingAddressView(CheckoutSessionMixin, FormView):
 
     def post(self, request, *args, **kwargs):
         # Check if a shipping address was selected directly (eg no form was filled in)
-        if self.request.user.is_authenticated and 'address_id' in self.request.POST:
-            address = UserAddress._default_manager.get(pk=self.request.POST['address_id'])
-            if 'action' in self.request.POST and self.request.POST['action'] == 'ship_to':
+        if self.request.user.is_authenticated() and 'address_id' in self.request.POST:
+            address = UserAddress._default_manager.get(pk=self.request.POST['address_id'],
+                                                       user=self.request.user)
+            action = self.request.POST.get('action', None)
+            if action == 'ship_to':
                 # User has selected a previous address to ship to
                 self.checkout_session.ship_to_user_address(address)
                 return HttpResponseRedirect(self.get_success_url())
-            elif 'action' in self.request.POST and self.request.POST['action'] == 'delete':
+            elif action == 'delete':
+                # Delete the selected address
                 address.delete()
                 messages.info(self.request, _("Address deleted from your address book"))
                 return HttpResponseRedirect(reverse('checkout:shipping-method'))
