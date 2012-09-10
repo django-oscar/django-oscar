@@ -485,14 +485,19 @@ class LineDetailView(DetailView):
         return ctx
 
 
-def get_changes_between_models(model1, model2, excludes=[]):
+def get_changes_between_models(model1, model2, excludes=None):
+    """
+    Return a dict of differences between two model instances
+    """
+    if excludes is None:
+        excludes = []
     changes = {}
     for field in model1._meta.fields:
         if not (isinstance(field, (fields.AutoField, fields.related.RelatedField))
                 or field.name in excludes):
             if field.value_from_object(model1) != field.value_from_object(model2):
                 changes[field.verbose_name] = (field.value_from_object(model1),
-                                                   field.value_from_object(model2))
+                                               field.value_from_object(model2))
     return changes
 
 
