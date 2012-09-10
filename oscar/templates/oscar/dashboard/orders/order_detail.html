@@ -191,7 +191,7 @@
 							</select>
 						</label>
 						<label class="radio inline">
-							with reference <input type="text" name="reference" value="" />
+                            {% trans 'with reference' %} <input type="text" name="reference" value="" />
 						</label>
 					</div>
 				</div>
@@ -209,7 +209,7 @@
 							</select>
 						</label>
 						<label class="radio inline">
-							with amount <input type="text" name="amount" value="" />
+                            {% trans 'with amount' %} <input type="text" name="amount" value="" />
 						</label>
 					</div>
 				</div>
@@ -242,7 +242,7 @@
 						<td rowspan="{{ line_qtys|length }}">{{ event.event_type.name }}</td>
 						<td>
 							{% for line_qty in event.line_quantities.all %}
-							{% trans "Product:" %} {{ line_qty.line.title }} - {% trans "quantity" %} {{ line_qty.quantity }}</br>
+							{% trans "Product:" %} {{ line_qty.line.title }} - {% trans "quantity" %} {{ line_qty.quantity }}<br/>
 							{% endfor %}
 						</td>
 						<td>{{ event.notes }}</td>
@@ -252,7 +252,7 @@
 				</tbody>
 			</table>
 			{% else %}
-			<p>No shipping events.</p>
+            <p>{% trans "No shipping events." %}</p>
 			{% endif %}
 			{% endwith %}
 
@@ -279,7 +279,7 @@
 						<td >{{ event.amount|currency }}</td>
 						<td>
 							{% for line_qty in event.line_quantities.all %}
-							{% trans "Product:" %} {{ line_qty.line.title }} - {% trans "quantity" %} {{ line_qty.quantity }}</br>
+							{% trans "Product:" %} {{ line_qty.line.title }} - {% trans "quantity" %} {{ line_qty.quantity }}<br/>
 							{% endfor %}
 						</td>
 					</tr>
@@ -318,6 +318,13 @@
 								{% endfor %}
 							</td>
 						</tr>
+                        {% if order.shipping_address.phone_number %}
+                        <tr>
+                            <th>{% trans "Phone" %}</th>
+                            <td>{{ order.shipping_address.phone_number }}
+                            </td>
+                        </tr>
+                        {% endif %}
 					</tbody>
 				</table>
 			{% endblock %}
@@ -443,7 +450,7 @@
 							{% csrf_token %}
 							<input type="hidden" name="order_action" value="delete_note" />
 							<input type="hidden" name="note_id" value="{{ note.id }}" />
-							<input type="submit" value="Delete" class="btn btn-danger" />
+							<input type="submit" value="{% trans 'Delete' %}" class="btn btn-danger" />
 						</form>
 						{% endif %}
 					</td>
@@ -459,7 +466,7 @@
 				{% include "partials/form_fields.html" with form=note_form %}
 				<!-- {{ note_form.as_p }} -->
 				<div class="form-actions">
-					<input type="submit" value="Save note" class="btn btn-primary" />
+					<input type="submit" value="{% trans 'Save note' %}" class="btn btn-primary" />
 					{% trans "Notes are only editable for 5 minutes after being saved." %}
 				</div>
 			</form>
