@@ -2703,9 +2703,9 @@ msgstr "upust w kwocie %(value).2f dla %(range)s"
 #, python-format
 msgid " (max 1 item)"
 msgid_plural " (max %d items)"
-msgstr[0] "(max %d przedmiot)"
-msgstr[1] "(max %d przedmioty)"
-msgstr[2] "(max %d przedmiotów)"
+msgstr[0] " (max %d przedmiot)"
+msgstr[1] " (max %d przedmioty)"
+msgstr[2] " (max %d przedmiotów)"
 
 #: apps/offer/models.py:268
 msgid "Benefit requires a value"
