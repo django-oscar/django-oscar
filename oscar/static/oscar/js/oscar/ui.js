@@ -17,6 +17,9 @@ oscar.forms = {
         // Forms with this behaviour are 'locked' once they are submitted to 
         // prevent multiple submissions
         $('form[data-behaviours~="lock"]').submit(oscar.forms.submitIfNotLocked);
+
+        // Disable buttons when they are clicked
+        $('.js-disable-on-click').click(function(){$(this).button('loading');});
     },
     submitIfNotLocked: function(event) {
         $form = $(this);
@@ -28,6 +31,9 @@ oscar.forms = {
 };
 $(function(){oscar.forms.init();});
 
+
+// TODO - rewrite the below JS to git into the oscar object, splitting the functionality 
+// into SRP methods.
 $(document).ready(function()
 {   
     // Product star rating  -- must improve this in python
@@ -191,8 +197,4 @@ $(document).ready(function()
         }
       });
     }
-
-    // disble button on click
-    $('.js-disable-on-click').click(function(){$(this).button('loading')});
-
 });

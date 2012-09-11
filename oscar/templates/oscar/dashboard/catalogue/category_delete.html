@@ -1,22 +1,23 @@
 {% extends 'dashboard/layout.html' %}
+{% load i18n %}
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url dashboard:index %}">Dashboard</a>
+		<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="{% if parent %}{% url dashboard:catalogue-category-detail-list pk=parent.pk %}{% else %}{% url dashboard:catalogue-category-list %}{% endif %}">Categories</a>
+		<a href="{% if parent %}{% url dashboard:catalogue-category-detail-list pk=parent.pk %}{% else %}{% url dashboard:catalogue-category-list %}{% endif %}">{% trans "Categories" %}</a>
         <span class="divider">/</span>
     </li>
-    <li class="active"><a href=".">Delete category?</a></li>
+	<li class="active"><a href=".">{% trans "Delete category?" %}</a></li>
 </ul>
 {% endblock %}
 
 {% block header %}
 <div class="page-header">
-    <h1>Delete category?</h1>
+	<h1>{% trans "Delete category?" %}</h1>
 </div>
 {% endblock header%}
 
@@ -24,10 +25,12 @@
 <form action="." method="post">
     {% csrf_token %}
     {{ form }}
-    <p>Delete category <strong>{{ object.name }}</strong> - are you sure?</p>
+	{% blocktrans with name=object.name %}
+    <p>Delete category <strong>{{ name }}</strong> - are you sure?</p>
+	{% endblocktrans %}
     <div class="form-actions">
-        <button type="submit" class="btn btn-danger">Delete</button>
-        or <a href="{% if parent %}{% url dashboard:catalogue-category-detail-list pk=parent.pk %}{% else %}{% url dashboard:catalogue-category-list %}{% endif %}">cancel</a>
+		<button type="submit" class="btn btn-danger">{% trans "Delete" %}</button>
+		{% trans "or" %} <a href="{% if parent %}{% url dashboard:catalogue-category-detail-list pk=parent.pk %}{% else %}{% url dashboard:catalogue-category-list %}{% endif %}">{% trans "cancel" %}</a>
     </div>
 </form>
 {% endblock %}

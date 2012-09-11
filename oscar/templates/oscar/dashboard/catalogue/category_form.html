@@ -1,19 +1,20 @@
 {% extends 'dashboard/layout.html' %}
 {% load category_tags %}
+{% load i18n %}
 {% block body_class %}catalogue{% endblock %}
 
 {% block title %}
-{{ title }} | Category management | {{ block.super }}
+{{ title }} | {% trans "Category management" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url dashboard:index %}">Dashboard</a>
+		<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="{% url dashboard:catalogue-category-list %}">Categories</a>
+		<a href="{% url dashboard:catalogue-category-list %}">{% trans "Categories" %}</a>
         <span class="divider">/</span>
     </li>
 	<li class="active"><a href=".">{{ title }}</a></li>
@@ -29,7 +30,7 @@
 {% block dashboard_content %}
 	<form action="." method="post" enctype="multipart/form-data">{% csrf_token %}
 		{{ form.as_p }}
-		<button type="submit" class="btn btn-primary btn-large">Save</button> or
-		<a href="{% url dashboard:catalogue-category-list %}">cancel</a>
+		<button type="submit" class="btn btn-primary btn-large">{% trans "Save" %}</button> {% trans "or" %}
+		<a href="{% url dashboard:catalogue-category-list %}">{% trans "cancel" %}</a>
 	</form>
 {% endblock dashboard_content %}
