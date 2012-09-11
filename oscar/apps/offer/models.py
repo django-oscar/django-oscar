@@ -143,6 +143,8 @@ class ConditionalOffer(models.Model):
         field_dict = dict(self.benefit.__dict__)
         if '_state' in field_dict:
             del field_dict['_state']
+        if '_range_cache' in field_dict:
+            del field_dict['_range_cache']
         if self.benefit.type == self.benefit.PERCENTAGE:
             return PercentageDiscountBenefit(**field_dict)
         elif self.benefit.type == self.benefit.FIXED:
@@ -613,7 +615,7 @@ class PercentageDiscountBenefit(Benefit):
                 price = getattr(product.stockrecord, self.price_field)
                 quantity = min(line.quantity_without_discount,
                                max_affected_items - affected_items)
-                line_discount = self.round(self.value/100 * price * int(quantity))
+                line_discount = self.round(self.value / Decimal(100.0) * price * int(quantity))
                 line.discount(line_discount, quantity)
                 affected_items += quantity
                 discount += line_discount

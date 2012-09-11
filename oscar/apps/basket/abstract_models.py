@@ -351,10 +351,16 @@ class AbstractBasket(models.Model):
 
     @property
     def num_items_without_discount(self):
-        """Return number of items"""
         num = 0
         for line in self.all_lines():
             num += line.quantity_without_discount
+        return num
+
+    @property
+    def num_items_with_discount(self):
+        num = 0
+        for line in self.all_lines():
+            num += line.quantity_with_discount
         return num
 
     @property
@@ -504,6 +510,10 @@ class AbstractLine(models.Model):
     @property
     def has_discount(self):
         return self.quantity > self.quantity_without_discount
+
+    @property
+    def quantity_with_discount(self):
+        return self._affected_quantity
 
     @property
     def quantity_without_discount(self):
