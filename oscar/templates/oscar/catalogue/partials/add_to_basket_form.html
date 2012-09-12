@@ -6,8 +6,6 @@
     <form action="{% url basket:add %}" method="post" class="form-stacked">
         {% csrf_token %}
         {% include "partials/form_fields.html" with form=basket_form %}
-		<input type="hidden" name="next" value="/" />
-
         <div class="form-actions">
 			<button type="submit" class="btn btn-large btn-primary" value="Add to basket">{% trans "Add to basket" %}</button>
         </div>

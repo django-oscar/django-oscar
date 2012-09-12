@@ -8,22 +8,22 @@ from oscar.apps.partner.models import StockRecord
 from oscar.test.helpers import create_product
 
 
-class DefaultWrapperTests(TestCase):
+class TestDefaultWrapper(TestCase):
 
     def setUp(self):
         self.wrapper = DefaultWrapper()
         self.product = create_product()
 
     def test_num_in_stock_is_none_is_available_to_buy(self):
-        record = StockRecord(num_in_stock=None)
+        record = StockRecord(num_in_stock=None, product=self.product)
         self.assertTrue(self.wrapper.is_available_to_buy(record))
 
     def test_zero_stock_is_not_available_to_buy(self):
-        record = StockRecord(num_in_stock=0)
+        record = StockRecord(num_in_stock=0, product=self.product)
         self.assertFalse(self.wrapper.is_available_to_buy(record))
 
     def test_nonzero_stock_is_available_to_buy(self):
-        record = StockRecord(num_in_stock=10)
+        record = StockRecord(num_in_stock=10, product=self.product)
         self.assertTrue(self.wrapper.is_available_to_buy(record))
 
     def test_matching_purchase_is_permitted(self):

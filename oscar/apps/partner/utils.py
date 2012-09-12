@@ -86,6 +86,7 @@ class StockImporter(object):
             stats['unchanged_items'] += 1
 
 
+# Deprecated
 class CatalogueImporter(object):
     """
     A catalogue importer object

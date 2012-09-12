@@ -24,10 +24,28 @@
 		{% block shipping_info %}
         <div class="well well-info">
 			<h3>{% trans "Shipping" %}</h3>
-			<p>{% trans "Your order will be delivered to:" %}</p>
-            {% for line in order.shipping_address.active_address_fields %}
-            {{ line }}<br/>
-            {% endfor %}
+			{% if order.shipping_address %}
+				<dl>
+					<dt>{% trans "Address" %}</dt>
+					<dd>
+						{% for field in order.shipping_address.active_address_fields %}
+						{{ field }}<br/>
+						{% endfor %}
+					</dd>
+					{% if order.shipping_address.phone_number %}
+					<dt>{% trans "Contact number" %}</dt>
+					<dd>{{ order.shipping_address.phone_number }}</dd>
+					{% endif %}
+					{% if order.shipping_address.notes %}
+					<dt>{% trans "Shipping notes" %}</dt>
+					<dd>{{ order.shipping_address.notes }}</dd>
+					{% endif %}
+					<dt>{% trans "Shipping method" %}</dt>
+					<dd>{{ order.shipping_method }}</dd>
+				</dl>
+			{% else %}
+				{% trans "No shipping is required for this order." %}
+			{% endif %}
         </div>
 		{% endblock %}
     </div>
@@ -37,6 +55,8 @@
 			<h3>{% trans "Payment" %}</h3>
             {% for source in order.sources.all %}
             {{ source }}
+			{% empty %}
+			{% trans "No payment was required for this order." %}
             {% endfor %}
         </div>
 		{% endblock %}
@@ -62,7 +82,7 @@
             <h4><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h4>
         </div>
         <div class="span3">
-            {{ line.est_dispatch_date }}
+            {{ line.est_dispatch_date|default:"-" }}
         </div>
         <div class="span1">
             {{ line.quantity }}
@@ -91,7 +111,7 @@
 </div>
 <div class="basket-items">
     <div class="row-fluid">
-		<h4 class="span11">{% blocktrans with method=order.shipping_method %}Shipping charge - {{ method }}{% endblocktrans %}</h4>
+		<h4 class="span11">{% trans "Shipping" %}</h4>
         <div class="span1">{{ order.shipping_incl_tax|currency }}</div>
     </div>
 </div>
@@ -106,8 +126,8 @@
     <div class="sub-header">
 		<h4>{% trans "Tracking your order" %}</h4>
     </div>
-	<p>You can
-	<a href="{% url customer:anon-order order.number order.verification_hash %}">track the status of your order</a>.</p>
+	<p>{% trans "You can" %}
+		<a href="{% url customer:anon-order order.number order.verification_hash %}">{% trans "track the status of your order" %}</a>.</p>
 	</p>
 {% endif %}
 

@@ -25,9 +25,10 @@
     {% block shipping_address %}
     <div class="span6">
         <div class="sub-header">
-			<h2>{% trans "Shipping address" %}</h2>
+			<h2>{% trans "Shipping" %}</h2>
         </div>
         <div class="well well-info">
+			{% if shipping_address %}
             <dl>
 				<dt>{% trans "Address" %}</dt>
                 <dd>
@@ -43,12 +44,22 @@
 				<dt>{% trans "Shipping notes" %}</dt>
                 <dd>{{ shipping_address.notes }}</dd>
                 {% endif %}
+				<dt>{% trans "Shipping method" %}</dt>
+				<dd>{{ shipping_method.name }} 
+					{% if shipping_method.description %}
+					- {{ shipping_method.description }}
+					{% endif %}
+				</dd>
+				</dd>
             </dl>
             {% block shipping_address_actions %}
             <div class="alert-actions">
 				<a href="{% url checkout:shipping-address %}" class="btn">{% trans "Change shipping address" %}</a>
             </div>
             {% endblock %}
+			{% else %}
+			{% trans "No shipping is required for this order" %}
+			{% endif %}
         </div>
     </div>
     {% endblock shipping_address %}
@@ -108,8 +119,7 @@
     {% if shipping_method %}
     <div class="basket-items">
         <div class="row-fluid">
-            <h4 class="span11">{{ shipping_method.name }}</h4>
-            {{ shipping_method.description }}
+			<h4 class="span11">{% trans "Shipping:" %}</h4>
             <div class="span1">
                 {{ shipping_method.basket_charge_incl_tax|currency }}
             </div>
