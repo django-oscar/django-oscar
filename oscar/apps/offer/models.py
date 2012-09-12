@@ -681,7 +681,7 @@ class PercentageDiscountBenefit(Benefit):
                 break
             quantity_affected = min(line.quantity_without_discount,
                                     max_affected_items - affected_items)
-            line_discount = self.round(self.value / D(100.0) * price
+            line_discount = self.round(self.value / D('100.0') * price
                                         * int(quantity_affected))
             line.discount(line_discount, quantity_affected)
 
