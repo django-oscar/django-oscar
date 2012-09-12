@@ -6,13 +6,14 @@ install:
 	pip install -r requirements.txt
 
 sandbox: install
+	[ -f sites/sandbox/db.sqlite ] && rm sites/sandbox/db.sqlite
 	# Create database
 	sites/sandbox/manage.py syncdb --noinput
 	sites/sandbox/manage.py migrate
 	# Import some fixtures
 	sites/sandbox/manage.py oscar_import_catalogue sites/_fixtures/books-catalogue.csv
 	sites/sandbox/manage.py oscar_import_catalogue_images sites/_fixtures/books-images.tar.gz
-	sites/sandbox/manage.py loaddata countries.json sites/_fixtures/pages.json
+	sites/sandbox/manage.py loaddata countries.json sites/_fixtures/pages.json sites/_fixtures/auth.json
 	sites/sandbox/manage.py rebuild_index --noinput
 
 ci:

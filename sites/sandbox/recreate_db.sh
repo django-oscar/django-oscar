@@ -7,7 +7,7 @@ rm $DATABASE
 ./manage.py migrate
 
 echo "Loading fixtures"
-./manage.py loaddata countries.json
+./manage.py loaddata countries.json ../_fixtures/pages.json
 
 echo "Importing products"
 ./manage.py oscar_import_catalogue ../_fixtures/books-catalogue.csv
