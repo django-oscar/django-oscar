@@ -34,15 +34,19 @@ class Shop(Application):
             (r'^dashboard/', include(self.dashboard_app.urls)),
             (r'^offers/', include(self.offer_app.urls)),
 
-            # Password reset - as we're using Django's default view funtions, we
-            # can't namespace these urls as that prevents the reverse function
-            # from working.
-            url(r'^password-reset/$', auth_views.password_reset, name='password-reset'),
-            url(r'^password-reset/done/$', auth_views.password_reset_done, name='password-reset-done'),
+            # Password reset - as we're using Django's default view funtions,
+            # we can't namespace these urls as that prevents
+            # the reverse function from working.
+            url(r'^password-reset/$', auth_views.password_reset,
+                name='password-reset'),
+            url(r'^password-reset/done/$', auth_views.password_reset_done,
+                name='password-reset-done'),
             url(r'^password-reset/confirm/(?P<uidb36>[0-9A-Za-z]{1,13})-(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
-                auth_views.password_reset_confirm, name='password-reset-confirm'),
-            url(r'^password-reset/complete/$', auth_views.password_reset_complete, name='password-reset-complete'),
-
+                auth_views.password_reset_confirm,
+                name='password-reset-confirm'),
+            url(r'^password-reset/complete/$',
+                auth_views.password_reset_complete,
+                name='password-reset-complete'),
             (r'', include(self.promotions_app.urls)),
         )
         return urlpatterns
