@@ -3,6 +3,11 @@
 {% load history_tags %}
 {% load i18n %}
 
+{% block extrahead %}
+	<!-- Colorbox for image galleries -->
+	<link rel="stylesheet" href="{{ STATIC_URL }}oscar/js/colorbox/colorbox.css" type="text/css" media="screen" charset="utf-8"/>
+{% endblock %}
+
 {% block title %}
 {{ product.title }} | {{ block.super }}
 {% endblock %}

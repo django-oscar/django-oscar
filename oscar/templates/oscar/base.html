@@ -2,12 +2,12 @@
 <!DOCTYPE html> 
 <html lang="{% block language %}en-gb{% endblock %}">
     <head>
-		<title>{% if display_version %}[{% trans "Build" %} {{ version }}] {% endif %}{% block title %}{{ shop_name }} - {{ shop_tagline }}{% endblock %}</title>
+        <title>{% if display_version %}[{% trans "Build" %} {{ version }}] {% endif %}{% block title %}{{ shop_name }} - {{ shop_tagline }}{% endblock %}</title>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
         <meta name="created" content='{% now "jS M Y h:i" %}' />
         <meta name="description" content="{% block description %}{% endblock %}" />
         <meta name="keywords" content="{% block keywords %}{% endblock %}" />
-		<meta name="viewport" content="width=device-width">
+        <meta name="viewport" content="width=device-width">
         
         <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
         <!--[if lt IE 9]>
@@ -19,57 +19,58 @@
         {% endblock %}
 
         {% block mainstylesheet %}
-			<link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/styles.css" />
+            <link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/styles.css" />
+            <link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/responsive.css" />
         {% endblock %}
-		
+        
         {% block extrahead %}{% endblock %}
     </head>
 
     <body id="{% block body_id %}default{% endblock %}" class="{% block body_class %}default{% endblock %}">
-		{% block layout %}{% endblock %}
-		{% block 404 %}{% endblock %}
+        {% block layout %}{% endblock %}
+        {% block 404 %}{% endblock %}
 
-		{# Google analytics block #}
+        {# Google analytics block #}
         {% block tracking %}
             {% if google_analytics_id %}
-				<script type="text/javascript">
-					var _gaq = _gaq || [];
-					_gaq.push(['_setAccount', '{{ google_analytics_id }}']);
-					_gaq.push(['_trackPageview']);
-					{% block extratracking %}{% endblock %}
-					(function() {
-						var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-						ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-						var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-					})();
-				</script>
+                <script type="text/javascript">
+                    var _gaq = _gaq || [];
+                    _gaq.push(['_setAccount', '{{ google_analytics_id }}']);
+                    _gaq.push(['_trackPageview']);
+                    {% block extratracking %}{% endblock %}
+                    (function() {
+                        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+                    })();
+                </script>
             {% endif %}
         {% endblock %}
 
-		{# In production, you should collate and minify these scripts using django-compressor or something similar #}
-		{% block scripts %}
-			<!-- JQuery -->
-			<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>
-			<script>window.jQuery || document.write('<script src="{{ STATIC_URL }}oscar/js/jquery/jquery-1.7.1.js"><\/script>')</script>
-			<script src="{{ STATIC_URL }}oscar/js/jquery/jquery.easing.1.3.js" type="text/javascript" charset="utf-8"></script>
-			<!-- Bootstrap -->
-			<script type="text/javascript" src="{{ STATIC_URL }}oscar/js/bootstrap/bootstrap.min.js"></script>
-			<!--[if lt IE 8]>
-				<script src="{{ STATIC_URL }}oscar/js/snowcone/snowcone.js"></script>
-			<![endif]-->
-		{% endblock %}
-		
-		{# Block for additional scripts #}
-		{% block extrascripts %}{% endblock %}
+        {# In production, you should collate and minify these scripts using django-compressor or something similar #}
+        {% block scripts %}
+            <!-- JQuery -->
+            <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>
+            <script>window.jQuery || document.write('<script src="{{ STATIC_URL }}oscar/js/jquery/jquery-1.7.1.js"><\/script>')</script>
+            <script src="{{ STATIC_URL }}oscar/js/jquery/jquery.easing.1.3.js" type="text/javascript" charset="utf-8"></script>
+            <!-- Bootstrap -->
+            <script type="text/javascript" src="{{ STATIC_URL }}oscar/js/bootstrap/bootstrap.min.js"></script>
+            <!--[if lt IE 8]>
+                <script src="{{ STATIC_URL }}oscar/js/snowcone/snowcone.js"></script>
+            <![endif]-->
+        {% endblock %}
+        
+        {# Block for additional scripts #}
+        {% block extrascripts %}{% endblock %}
 
-		{# Block for body onload functions #}
+        {# Block for body onload functions #}
         <script type="text/javascript">
-			$(function() {
-				{% block onbodyload %}{% endblock %}
-			});
-		</script>
+            $(function() {
+                {% block onbodyload %}{% endblock %}
+            });
+        </script>
 
-		{# Page meta-data - useful for debugging #}
-		<!-- {% trans "Version:" %} {{ version }} -->
+        {# Page meta-data - useful for debugging #}
+        <!-- {% trans "Version:" %} {{ version }} -->
     </body>
 </html>
