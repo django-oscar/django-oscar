@@ -1,6 +1,5 @@
 from django import template
 from django.db.models import get_model
-from django.utils.translation import ugettext_lazy as _
 
 ProductNotification = get_model('notification', 'productnotification')
 

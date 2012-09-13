@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from django.db.models import get_model
 from django.core.management.base import BaseCommand
 
-Notification = get_model('notification', 'Notification')
+ProductNotification = get_model('notification', 'productnotification')
 
 logger = logging.getLogger(__name__)
 
@@ -50,7 +50,7 @@ class Command(BaseCommand):
         logger.info('cleaning up unconfirmed notifications older than %s',
                     threshold_date.strftime("%Y-%m-%d %H:%M"))
 
-        Notification.objects.filter(
-            status=Notification.UNCONFIRMED,
+        ProductNotification.objects.filter(
+            status=ProductNotification.UNCONFIRMED,
             date_created__lt=threshold_date
         ).delete()

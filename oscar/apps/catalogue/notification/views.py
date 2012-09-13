@@ -12,10 +12,9 @@ from django.contrib.sites.models import Site
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext as _
 
-from oscar.apps.catalogue.notification.forms import NotificationForm
+from oscar.apps.catalogue.notification.forms import ProductNotificationForm
 
 Product = get_model('catalogue', 'product')
-Notification = get_model('notification', 'notification')
 ProductNotification = get_model('notification', 'productnotification')
 
 
@@ -25,13 +24,13 @@ class NotificationUnsubscribeView(generic.RedirectView):
     unsubscribe key. The notification is set to ``INACTIVE`` instead
     of being deleted for analytical purposes.
     """
-    model = Notification
+    model = ProductNotification
     context_object_name = 'notification'
 
     def get_object(self, queryset=None):
         """ Get notification object that matches the unsubscribe key. """
         try:
-            return self.model.objects.select_subclasses().get(
+            return self.model.objects.get(
                 unsubscribe_key=self.kwargs.get('key', 'invalid')
             )
         except self.model.DoesNotExist:
@@ -56,13 +55,13 @@ class NotificationConfirmView(generic.RedirectView):
     View to confirm the email address of an anonymous user used to
     sign up for a product notification.
     """
-    model = Notification
+    model = ProductNotification
     context_object_name = 'notification'
 
     def get_object(self, queryset=None):
         """ Get notification object that matches the confirmation key. """
         try:
-            return self.model.objects.select_subclasses().get(
+            return self.model.objects.get(
                 confirm_key=self.kwargs.get('key', 'invalid')
             )
         except self.model.DoesNotExist:
@@ -89,7 +88,7 @@ class ProductNotificationCreateView(generic.FormView):
     or an email address provided by an anonymous user.
     """
     product_model = Product
-    form_class = NotificationForm
+    form_class = ProductNotificationForm
     template_name = 'notification/notification.html'
     email_template = 'notification/email.html'
 

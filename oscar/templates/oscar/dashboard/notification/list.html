@@ -30,7 +30,7 @@
 {% block dashboard_content %}
 
 <div class="well well-info">
-    <h3 class="app-ico ico_magnify icon">{% trans "Search Notifications" %}</h3>
+    <h3 class="app-ico ico_magnify icon">{% trans "Search product notifications" %}</h3>
     <form action="." method="get" class="form-inline">
 		{% include "partials/form_fields_inline.html" with form=form %}
     <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
@@ -47,7 +47,7 @@
     <table class="table table-striped table-bordered">
         <tr>
             <th></th>
-            <th>{% trans "Description" %}</th>
+            <th>{% trans "Product" %}</th>
             <th>{% trans "User" %}</th>
             <th>{% trans "Status" %}</th>
             <th>{% trans "Date created" %}</th>
@@ -60,9 +60,9 @@
                 <input type="checkbox" name="selected_notification" class="selected_notification" value="{{ notification.id }}" />
             </td>
             <td>
-                {% blocktrans with title=notify_item.title %}
-                Product notification for <a href="{{ url catalogue:detail notify_item.slug notify_item.id }}">{{ title }}</a>
-                {% endblocktrans %}
+                <a href="{% url catalogue:detail notification.product.slug notification.product.id %}">
+                    {{ notification.product.title }}
+                </a>
             </td>
             <td>
                 {% include "notification/partials/user_link.html" %}

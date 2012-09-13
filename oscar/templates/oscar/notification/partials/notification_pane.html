@@ -21,9 +21,9 @@
             {% for notification in notification_list %}
             <tr>
                 <td>
-                    {% with item=notification.get_notification_item %}
-                    <a href="{% url catalogue:detail item.slug item.id %}">
-                        {{ item.title }}
+                    {% with product=notification.product %}
+                    <a href="{% url catalogue:detail product.slug product.id %}">
+                        {{ product.title }}
                     </a>
                     {% endwith %}
                 </td>

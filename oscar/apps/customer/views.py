@@ -31,7 +31,7 @@ UserAddress = get_model('address', 'UserAddress')
 Email = get_model('customer', 'email')
 UserAddress = get_model('address', 'UserAddress')
 CommunicationEventType = get_model('customer', 'communicationeventtype')
-Notification = get_model('notification', 'notification')
+ProductNotification = get_model('notification', 'productnotification')
 
 
 class LogoutView(RedirectView):
@@ -113,17 +113,17 @@ class AccountSummaryView(TemplateView):
     def post(self, request, *args, **kwargs):
         if 'deactivate' in request.POST:
             notification_id = request.POST.get('deactivate')
-            status = Notification.INACTIVE
+            status = ProductNotification.INACTIVE
             success_msg = _("Notification deactivated")
         elif 'activate' in request.POST:
             notification_id = request.POST.get('activate')
-            status = Notification.ACTIVE
+            status = ProductNotification.ACTIVE
             success_msg = _("Notification activated")
 
         try:
-            notification = Notification.objects.get(pk=notification_id,
-                                                    user=request.user)
-        except Notification.DoesNotExist:
+            notification = ProductNotification.objects.get(pk=notification_id,
+                                                           user=request.user)
+        except ProductNotification.DoesNotExist:
             messages.error(_("Cannot change notification status, notification "
                              "does not exist"))
         else:
@@ -140,7 +140,7 @@ class AccountSummaryView(TemplateView):
 
     def get_product_notifications(self, user):
         # Only show notifications that have not been processed
-        return Notification.objects.select_subclasses().select_related().filter(
+        return ProductNotification.objects.select_related().filter(
             user=self.request.user,
             date_notified=None,
         )
@@ -258,7 +258,7 @@ class AccountRegistrationView(TemplateView):
         # email address and change them from anonymous to this
         # user's account
         #FIXME: Needs to implement base class of all notifications
-        notifications = Notification.objects.filter(
+        notifications = ProductNotification.objects.filter(
             email=user.email,
             user=None
         )

@@ -188,7 +188,7 @@ class TestARegisteredUserRequestingANotification(NotificationWebTest):
     def test_creates_a_notification_object(self):
         # Test creating a notification for an authenticated user with the
         # providing the account email address in the (hidden) signup form.
-        self.assertEquals(self.user.notifications.count(), 0)
+        self.assertEquals(self.user.product_notifications.count(), 0)
 
         page = self.get(reverse('catalogue:detail', args=(self.product.slug,
                                                           self.product.id)))
@@ -197,9 +197,9 @@ class TestARegisteredUserRequestingANotification(NotificationWebTest):
         page = notification_form.submit().follow()
 
         self.assertContains(page, self.product.title, status_code=200)
-        self.assertEquals(self.user.notifications.count(), 1)
+        self.assertEquals(self.user.product_notifications.count(), 1)
 
-        notification = self.user.notifications.all()[0]
+        notification = self.user.product_notifications.all()[0]
         self.assertEquals(notification.get_notification_email(),
                           self.user.email)
         self.assertEquals(notification.confirm_key, None)
@@ -217,9 +217,9 @@ class TestARegisteredUserRequestingANotification(NotificationWebTest):
 
         self.assertContains(page, 'notified', status_code=200)
 
-        self.assertEquals(self.user.notifications.count(), 1)
+        self.assertEquals(self.user.product_notifications.count(), 1)
 
-        notification = self.user.notifications.all()[0].productnotification
+        notification = self.user.product_notifications.all()[0]
         self.assertEquals(notification.product.id, self.product.id)
         self.assertEquals(notification.get_notification_email(),
                           self.user.email)
@@ -285,18 +285,6 @@ class TestASignedInUser(NotificationWebTest):
             product=self.product,
             status=ProductNotification.ACTIVE)
 
-    def test_can_deactivate_a_notification(self):
-        self.assertEquals(self.notification.status, ProductNotification.ACTIVE)
-
-        status_url = reverse('catalogue:notification-set-status',
-                             args=(self.product.slug, self.product.id,
-                                   self.notification.id,
-                                   ProductNotification.INACTIVE))
-        self.get(status_url)
-
-        notification = ProductNotification.objects.get(id=self.notification.id)
-        self.assertEquals(notification.status, ProductNotification.INACTIVE)
-
     def test_gets_a_404_when_accessing_invalid_url(self):
         self.assertEquals(self.notification.status, ProductNotification.ACTIVE)
 
@@ -305,3 +293,16 @@ class TestASignedInUser(NotificationWebTest):
             self.fail('expected 404 but did not happen')
         except AppError:
             pass
+
+    def test_can_deactivate_a_notification_from_the_account_section(self):
+        self.assertEquals(self.notification.status, ProductNotification.ACTIVE)
+
+        notification_tab_url = reverse('customer:summary')+"?tab=notifications"
+        page = self.get(notification_tab_url)
+        notification_form = page.forms[1]
+        page = notification_form.submit('deactivate', index=0)
+
+        self.assertRedirects(page, notification_tab_url)
+
+        notification = ProductNotification.objects.get(id=self.notification.id)
+        self.assertEquals(notification.status, ProductNotification.INACTIVE)

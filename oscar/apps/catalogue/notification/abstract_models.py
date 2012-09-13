@@ -4,17 +4,14 @@ import random
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
-from model_utils.managers import InheritanceManager
+
+Product = models.get_model('catalogue', 'Product')
 
 
-class AbstractNotification(models.Model):
+class AbstractProductNotification(models.Model):
     """
-    Abstract class defining the basic field required for a notification.
-    To create a custom notification, this class must be subclassed and
-    ``get_confirm_url`` and ``get_unsubscribe`` URL have to be overwritten
-    in it.
-
-    A notification can have two different status for authenticated
+    Abstract class of a product notification 
+    A notification can have two different statuses for authenticated
     users (``ACTIVE`` and ``INACTIVE`` and anonymous users have an
     additional status ``UNCONFIRMED``. For anonymous users a confirmation
     and unsubscription key are generated when an instance is saved for
@@ -22,11 +19,14 @@ class AbstractNotification(models.Model):
     notifications.
     """
     KEY_LENGTH = 40
-    item_field_name = None
-    item_url_index = None
+    product_url_index = 'catalogue:detail'
 
+    # a user is only required if the notification is created by a 
+    # registered user, anonymous users will only have an email address
+    # attached to the notification
     user = models.ForeignKey(User, db_index=True, blank=True, null=True,
-                             related_name="notifications")
+                             related_name="product_notifications")
+    product = models.ForeignKey(Product, db_index=True)
 
     # These fields only apply to unauthenticated users and are empty
     # if the user is registered.
@@ -46,8 +46,6 @@ class AbstractNotification(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
     date_notified = models.DateTimeField(blank=True, null=True)
-
-    objects = InheritanceManager()
 
     def is_active(self):
         """
@@ -98,12 +96,7 @@ class AbstractNotification(models.Model):
     @models.permalink
     def get_confirm_url(self):
         """
-        Get confirmation URL for this notification.This assumes
-        that for the related item the url is determined by its ``slug``
-        and ``pk`` fields prefixed with the specified ``item_field_name``,
-        e.g. for a product notification with ``item_field_name='product'``
-        the URL reverse lookup requires ``product_slug`` and
-        ``pk`` as part of its URL pattern definition.
+        Get confirmation URL for this notification.
         """
         kwargs = self._get_url_kwargs()
         kwargs['key'] = self.confirm_key
@@ -112,12 +105,7 @@ class AbstractNotification(models.Model):
     @models.permalink
     def get_unsubscribe_url(self):
         """
-        Get unsubscribe URL for this notification. This assumes
-        that for the related item the url is determined by its ``slug``
-        and ``pk`` fields prefixed with the specified ``item_field_name``,
-        e.g. for a product notification with ``item_field_name='product'``
-        the URL reverse lookup requires ``product_slug`` and
-        ``pk`` as part of its URL pattern definition.
+        Get unsubscribe URL for this notification.
         """
         kwargs = self._get_url_kwargs()
         kwargs['key'] = self.unsubscribe_key
@@ -126,12 +114,12 @@ class AbstractNotification(models.Model):
     @models.permalink
     def get_absolute_item_url(self):
         """
-        Get the absolute URL for the item referenced by this 
-        notification. The URL patterns uses the ``item_url_index``
+        Get the absolute URL for the product referenced by this
+        notification. The URL patterns uses the ``product_url_index``
         attribute specified in the class definition.
         """
         kwargs = self._get_url_kwargs()
-        return (self.item_url_index, (), kwargs)
+        return (self.product_url_index, (), kwargs)
 
     def save(self, *args, **kwargs):
         """
@@ -144,20 +132,7 @@ class AbstractNotification(models.Model):
                 self.confirm_key = self.get_random_key()
             if not self.unsubscribe_key:
                 self.unsubscribe_key = self.get_random_key()
-        return super(AbstractNotification, self).save(*args, **kwargs)
-
-    def get_notification_item(self):
-        """
-        Get the item associated with this notification. The item is
-        assumed to be stored in a field with the name defined in
-        ``item_field_name``.
-        """
-        if not self.item_field_name:
-            raise AttributeError(_("no item field name provided, please provide "
-                                   "the name of the field referencing the item "
-                                   "for this notification"))
-
-        return getattr(self, self.item_field_name)
+        return super(AbstractProductNotification, self).save(*args, **kwargs)
 
     def _get_url_kwargs(self):
         """
@@ -165,11 +140,9 @@ class AbstractNotification(models.Model):
         lookup. This provides the item specific arguments for slug
         and primary key.
         """
-        slug_key = '%s_slug' % self.item_field_name
-        item = self.get_notification_item()
         return {
-            slug_key: item.slug,
-            'pk': item.id,
+            'product_slug': self.product.slug,
+            'pk': self.product.id,
         }
 
     def __unicode__(self):

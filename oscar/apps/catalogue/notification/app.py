@@ -1,9 +1,11 @@
+from django.db.models import get_model
 from django.conf.urls.defaults import patterns, url
 from django.contrib.auth.decorators import login_required
 
 from oscar.core.application import Application
 from oscar.apps.catalogue.notification import views
-from oscar.apps.catalogue.notification.models import AbstractNotification
+
+ProductNotification = get_model('notification', 'productnotification')
 
 
 class ProductNotificationApplication(Application):
@@ -25,7 +27,7 @@ class ProductNotificationApplication(Application):
             # Make sure that only valid status values are allowed in the
             # URL pattern
             url(r'^(?P<notification_pk>\d+)/set-status/(?P<status>%s)/$' % (
-                    '|'.join([x[0] for x in AbstractNotification.STATUS_TYPES])
+                    '|'.join([x[0] for x in ProductNotification.STATUS_TYPES])
                 ),
                 login_required(self.update_view.as_view()),
                 name='notification-set-status'),

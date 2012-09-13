@@ -9,7 +9,7 @@ from django.views.generic import ListView, DetailView, DeleteView, UpdateView
 from oscar.apps.dashboard.users import forms
 from oscar.views.generic import BulkEditMixin
 
-Notification = get_model('notification', 'notification')
+ProductNotification = get_model('notification', 'productnotification')
 
 class IndexView(ListView, BulkEditMixin):
     template_name = 'dashboard/users/index.html'
@@ -87,9 +87,9 @@ class UserDetailView(DetailView):
         return context
 
 
-class NotificationListView(ListView, BulkEditMixin):
-    model = Notification
-    form_class = forms.NotificationSearchForm
+class ProductNotificationListView(ListView, BulkEditMixin):
+    model = ProductNotification
+    form_class = forms.ProductNotificationSearchForm
     context_object_name = 'notification_list'
     template_name = 'dashboard/notification/list.html'
     paginate = 25
@@ -99,7 +99,7 @@ class NotificationListView(ListView, BulkEditMixin):
     description = ''
 
     def get_queryset(self):
-        queryset = self.model.objects.select_subclasses()
+        queryset = self.model.objects.all()
         self.description = self.base_description
 
         self.form = self.form_class(self.request.GET)
@@ -145,25 +145,25 @@ class NotificationListView(ListView, BulkEditMixin):
         return HttpResponseRedirect(reverse('dashboard:user-notification-list'))
 
     def get_context_data(self, **kwargs):
-        context = super(NotificationListView, self).get_context_data(**kwargs)
+        context = super(ProductNotificationListView, self).get_context_data(**kwargs)
         context['form'] = self.form
-        context['notification_form'] = forms.NotificationUpdateForm
+        context['notification_form'] = forms.ProductNotificationUpdateForm
         context['queryset_description'] = self.description
         return context
 
 
-class NotificationUpdateView(UpdateView):
+class ProductNotificationUpdateView(UpdateView):
     template_name = 'dashboard/notification/update.html'
-    model = Notification
-    form_class = forms.NotificationUpdateForm
+    model = ProductNotification
+    form_class = forms.ProductNotificationUpdateForm
     context_object_name = 'notification'
 
     def get_success_url(self):
         return reverse('dashboard:user-notification-list')
 
 
-class NotificationDeleteView(DeleteView):
-    model = Notification
+class ProductNotificationDeleteView(DeleteView):
+    model = ProductNotification
     template_name = 'dashboard/notification/delete.html'
     context_object_name = 'notification'
 

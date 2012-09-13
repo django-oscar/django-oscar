@@ -16,9 +16,9 @@ class UserManagementApplication(Application):
     name = None
     index_view = views.IndexView
     user_detail_view = views.UserDetailView
-    notification_list_view = views.NotificationListView
-    notification_update_view = views.NotificationUpdateView
-    notification_delete_view = views.NotificationDeleteView
+    notification_list_view = views.ProductNotificationListView
+    notification_update_view = views.ProductNotificationUpdateView
+    notification_delete_view = views.ProductNotificationDeleteView
 
     def get_urls(self):
         urlpatterns = patterns('',

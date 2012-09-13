@@ -2,7 +2,7 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 
 
-class NotificationForm(forms.Form):
+class ProductNotificationForm(forms.Form):
     """
     Form providing a single email field for signing up to a notification. If
     ``email`` or ``user`` are provided as initial values these values are
@@ -11,9 +11,12 @@ class NotificationForm(forms.Form):
     HTML template.
     """
     email = forms.EmailField(required=True, label=_(u'Send notification to'),
-                             widget=forms.TextInput(attrs={'placeholder': _('Enter Your Email')}))
+                             widget=forms.TextInput(attrs={
+                                 'placeholder': _('Enter Your Email')
+                             }))
+
     def __init__(self, *args, **kwargs):
-        super(NotificationForm, self).__init__(*args, **kwargs)
+        super(ProductNotificationForm, self).__init__(*args, **kwargs)
         user = self.initial.get('user', None)
         if user and user.is_authenticated():
             self.fields['email'].widget = forms.HiddenInput()

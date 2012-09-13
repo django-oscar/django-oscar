@@ -1,40 +1,30 @@
-# encoding: utf-8
+# -*- coding: utf-8 -*-
 import datetime
 from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
 
+
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        
-        # Adding model 'Notification'
-        db.create_table('notification_notification', (
+        # Adding model 'ProductNotification'
+        db.create_table('notification_productnotification', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='notifications', null=True, to=orm['auth.User'])),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='product_notifications', null=True, to=orm['auth.User'])),
+            ('product', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['catalogue.Product'])),
             ('email', self.gf('django.db.models.fields.EmailField')(db_index=True, max_length=75, null=True, blank=True)),
             ('confirm_key', self.gf('django.db.models.fields.CharField')(max_length=40, null=True)),
             ('unsubscribe_key', self.gf('django.db.models.fields.CharField')(max_length=40, null=True)),
+            ('status', self.gf('django.db.models.fields.CharField')(default='inactive', max_length=20)),
             ('date_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
             ('date_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
             ('date_notified', self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True)),
-            ('status', self.gf('django.db.models.fields.CharField')(default='inactive', max_length=20)),
-        ))
-        db.send_create_signal('notification', ['Notification'])
-
-        # Adding model 'ProductNotification'
-        db.create_table('notification_productnotification', (
-            ('notification_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['notification.Notification'], unique=True, primary_key=True)),
-            ('product', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['catalogue.Product'])),
         ))
         db.send_create_signal('notification', ['ProductNotification'])
 
 
     def backwards(self, orm):
-        
-        # Deleting model 'Notification'
-        db.delete_table('notification_notification')
-
         # Deleting model 'ProductNotification'
         db.delete_table('notification_productnotification')
 
@@ -55,7 +45,7 @@ class Migration(SchemaMigration):
         },
         'auth.user': {
             'Meta': {'object_name': 'User'},
-            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2012, 8, 30, 1, 57, 30, 975856)'}),
+            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'groups': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Group']", 'symmetrical': 'False', 'blank': 'True'}),
@@ -63,7 +53,7 @@ class Migration(SchemaMigration):
             'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2012, 8, 30, 1, 57, 30, 975680)'}),
+            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
             'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'}),
@@ -73,14 +63,14 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'AttributeEntity'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'db_index': 'True', 'max_length': '255', 'blank': 'True'}),
+            'slug': ('django.db.models.fields.SlugField', [], {'max_length': '255', 'blank': 'True'}),
             'type': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'entities'", 'to': "orm['catalogue.AttributeEntityType']"})
         },
         'catalogue.attributeentitytype': {
             'Meta': {'object_name': 'AttributeEntityType'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'db_index': 'True', 'max_length': '255', 'blank': 'True'})
+            'slug': ('django.db.models.fields.SlugField', [], {'max_length': '255', 'blank': 'True'})
         },
         'catalogue.attributeoption': {
             'Meta': {'object_name': 'AttributeOption'},
@@ -103,11 +93,11 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255', 'db_index': 'True'}),
             'numchild': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'path': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '255'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'max_length': '1024', 'db_index': 'True'})
+            'slug': ('django.db.models.fields.SlugField', [], {'max_length': '1024'})
         },
         'catalogue.option': {
             'Meta': {'object_name': 'Option'},
-            'code': ('django.db.models.fields.SlugField', [], {'max_length': '128', 'db_index': 'True'}),
+            'code': ('django.db.models.fields.SlugField', [], {'max_length': '128'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
             'type': ('django.db.models.fields.CharField', [], {'default': "'Required'", 'max_length': '128'})
@@ -127,14 +117,14 @@ class Migration(SchemaMigration):
             'recommended_products': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['catalogue.Product']", 'symmetrical': 'False', 'through': "orm['catalogue.ProductRecommendation']", 'blank': 'True'}),
             'related_products': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "'relations'", 'blank': 'True', 'to': "orm['catalogue.Product']"}),
             'score': ('django.db.models.fields.FloatField', [], {'default': '0.0', 'db_index': 'True'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'max_length': '255', 'db_index': 'True'}),
+            'slug': ('django.db.models.fields.SlugField', [], {'max_length': '255'}),
             'status': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '128', 'null': 'True', 'blank': 'True'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'upc': ('django.db.models.fields.CharField', [], {'max_length': '64', 'unique': 'True', 'null': 'True', 'blank': 'True'})
         },
         'catalogue.productattribute': {
             'Meta': {'ordering': "['code']", 'object_name': 'ProductAttribute'},
-            'code': ('django.db.models.fields.SlugField', [], {'max_length': '128', 'db_index': 'True'}),
+            'code': ('django.db.models.fields.SlugField', [], {'max_length': '128'}),
             'entity_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['catalogue.AttributeEntityType']", 'null': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
@@ -170,7 +160,7 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
             'options': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['catalogue.Option']", 'symmetrical': 'False', 'blank': 'True'}),
             'requires_shipping': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '128', 'db_index': 'True'})
+            'slug': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '128'})
         },
         'catalogue.productrecommendation': {
             'Meta': {'object_name': 'ProductRecommendation'},
@@ -186,22 +176,18 @@ class Migration(SchemaMigration):
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
-        'notification.notification': {
-            'Meta': {'object_name': 'Notification'},
+        'notification.productnotification': {
+            'Meta': {'object_name': 'ProductNotification'},
             'confirm_key': ('django.db.models.fields.CharField', [], {'max_length': '40', 'null': 'True'}),
             'date_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'date_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
             'date_notified': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
             'email': ('django.db.models.fields.EmailField', [], {'db_index': 'True', 'max_length': '75', 'null': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'product': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['catalogue.Product']"}),
             'status': ('django.db.models.fields.CharField', [], {'default': "'inactive'", 'max_length': '20'}),
             'unsubscribe_key': ('django.db.models.fields.CharField', [], {'max_length': '40', 'null': 'True'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'notifications'", 'null': 'True', 'to': "orm['auth.User']"})
-        },
-        'notification.productnotification': {
-            'Meta': {'object_name': 'ProductNotification', '_ormbases': ['notification.Notification']},
-            'notification_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['notification.Notification']", 'unique': 'True', 'primary_key': 'True'}),
-            'product': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['catalogue.Product']"})
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'product_notifications'", 'null': 'True', 'to': "orm['auth.User']"})
         }
     }
 
