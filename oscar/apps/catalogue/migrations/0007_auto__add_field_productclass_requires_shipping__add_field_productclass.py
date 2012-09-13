@@ -8,17 +8,11 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
 
-        # Adding field 'ProductClass.requires_shipping'
-        db.add_column('catalogue_productclass', 'requires_shipping', self.gf('django.db.models.fields.BooleanField')(default=True), keep_default=False)
-
         # Adding field 'ProductClass.track_stock'
         db.add_column('catalogue_productclass', 'track_stock', self.gf('django.db.models.fields.BooleanField')(default=True), keep_default=False)
 
 
     def backwards(self, orm):
-
-        # Deleting field 'ProductClass.requires_shipping'
-        db.delete_column('catalogue_productclass', 'requires_shipping')
 
         # Deleting field 'ProductClass.track_stock'
         db.delete_column('catalogue_productclass', 'track_stock')
