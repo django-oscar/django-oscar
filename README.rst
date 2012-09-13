@@ -17,7 +17,7 @@ Further reading:
   experimental but feel free to explore and get a feel for the base Oscar
   install.  Dashboard access coming soon!) 
 * `Documentation`_ on the excellent `readthedocs.org`_
-* `Trello board managing current tasks`_ - note for features that you'd like
+* `Trello board managing current tasks`_ - vote for features that you'd like
   prioritsed!
 * `Google Group`_ - the mailing list is django-oscar@googlegroups.com
 * `Continuous integration homepage`_ on `travis-ci.org`_
