@@ -1,15 +1,12 @@
 *.pyc
-local_settings.py
-settings_local.py
-product-images/*
 *.swp
 *.swo
+*.*~
 .project
 .pydevproject
 .settings
 django_oscar.egg-info/
 docs/build/*
-*.*~
 nbproject
 oscar/bin
 oscar/include
@@ -34,3 +31,6 @@ htmlcov/*
 logs/
 build/
 *.pdf
+coverage.xml
+violations.txt
+nosetests.xml
