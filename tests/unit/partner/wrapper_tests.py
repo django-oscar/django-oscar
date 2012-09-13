@@ -40,6 +40,9 @@ class TestStockRecordWithNullStockLevel(TestCase):
     def test_returns_no_estimated_dispatch_date(self):
         self.assertIsNone(self.wrapper.dispatch_date(self.record))
 
+    def test_returns_no_estimated_lead_time(self):
+        self.assertIsNone(self.wrapper.lead_time(self.record))
+
     def test_returns_zero_tax(self):
         self.assertEqual(D('0.00'), self.wrapper.calculate_tax(self.record))
 
@@ -74,6 +77,9 @@ class TestStockRecordOfDigitalProduct(TestCase):
     def test_returns_no_estimated_dispatch_date(self):
         self.assertIsNone(self.wrapper.dispatch_date(self.record))
 
+    def test_returns_no_estimated_lead_time(self):
+        self.assertIsNone(self.wrapper.lead_time(self.record))
+
     def test_returns_zero_tax(self):
         self.assertEqual(D('0.00'), self.wrapper.calculate_tax(self.record))
 
@@ -107,6 +113,9 @@ class TestStockRecordOfZeroStockProduct(TestCase):
 
     def test_returns_no_estimated_dispatch_date(self):
         self.assertIsNone(self.wrapper.dispatch_date(self.record))
+
+    def test_returns_no_estimated_lead_time(self):
+        self.assertIsNone(self.wrapper.lead_time(self.record))
 
     def test_returns_zero_tax(self):
         self.assertEqual(D('0.00'), self.wrapper.calculate_tax(self.record))
@@ -148,6 +157,9 @@ class TestStockRecordWithPositiveStock(TestCase):
 
     def test_returns_no_estimated_dispatch_date(self):
         self.assertIsNone(self.wrapper.dispatch_date(self.record))
+
+    def test_returns_no_estimated_lead_time(self):
+        self.assertIsNone(self.wrapper.lead_time(self.record))
 
     def test_returns_zero_tax(self):
         self.assertEqual(D('0.00'), self.wrapper.calculate_tax(self.record))

@@ -76,10 +76,18 @@ class DefaultWrapper(object):
         return _("Not available")
 
     def dispatch_date(self, stockrecord):
+        """
+        We don't provide a default value as it could be confusing.  Subclass
+        and override this method to provide estimated dispatch dates
+        """
         return None
 
     def lead_time(self, stockrecord):
-        return 1
+        """
+        We don't provide a default value as it could be confusing.  Subclass
+        and override this method to provide estimated dispatch dates
+        """
+        return None
 
     def calculate_tax(self, stockrecord):
         return D('0.00')
