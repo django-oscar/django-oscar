@@ -21,6 +21,7 @@ ci:
 	python setup.py develop
 	pip install -r requirements.txt
 	./runtests.py --with-coverage --with-xunit
+	coverage xml
 	flake8 oscar | perl -ple "s/: /: [E] /" | grep -v migrations > violations.txt
 
 test:
