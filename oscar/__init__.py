@@ -58,7 +58,6 @@ OSCAR_CORE_APPS = [
     'haystack',
     'treebeard',
     'sorl.thumbnail',
-    'model_utils', 
 ]
 
 
