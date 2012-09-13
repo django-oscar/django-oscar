@@ -34,3 +34,4 @@ build/
 coverage.xml
 violations.txt
 nosetests.xml
+settings_local.py
