@@ -1,77 +1,153 @@
-import datetime
+from decimal import Decimal as D
 
 from django.test import TestCase
-from mock import patch
 
 from oscar.apps.partner.wrappers import DefaultWrapper
+from oscar.apps.catalogue.models import Product, ProductClass
 from oscar.apps.partner.models import StockRecord
-from oscar.test.helpers import create_product
 
 
-class TestDefaultWrapper(TestCase):
+class TestStockRecordWithNullStockLevel(TestCase):
+    """
+    Stock record with num_in_stock=None
+    """
 
     def setUp(self):
         self.wrapper = DefaultWrapper()
-        self.product = create_product()
+        self.product = Product()
+        self.product.product_class = ProductClass()
+        self.record = StockRecord(num_in_stock=None, product=self.product)
 
-    def test_num_in_stock_is_none_is_available_to_buy(self):
-        record = StockRecord(num_in_stock=None, product=self.product)
-        self.assertTrue(self.wrapper.is_available_to_buy(record))
+    def test_is_available_to_buy(self):
+        self.assertTrue(self.wrapper.is_available_to_buy(self.record))
 
-    def test_zero_stock_is_not_available_to_buy(self):
-        record = StockRecord(num_in_stock=0, product=self.product)
-        self.assertFalse(self.wrapper.is_available_to_buy(record))
+    def test_permits_purchase(self):
+        is_permitted, reason = self.wrapper.is_purchase_permitted(
+            self.record)
+        self.assertTrue(is_permitted)
 
-    def test_nonzero_stock_is_available_to_buy(self):
-        record = StockRecord(num_in_stock=10, product=self.product)
-        self.assertTrue(self.wrapper.is_available_to_buy(record))
+    def test_has_no_max_purchase_quantity(self):
+        self.assertIsNone(self.wrapper.max_purchase_quantity(self.record))
 
-    def test_matching_purchase_is_permitted(self):
-        record = StockRecord(num_in_stock=4, product=self.product)
-        result, reason = self.wrapper.is_purchase_permitted(record, quantity=4)
-        self.assertTrue(result)
+    def test_returns_available_code(self):
+        self.assertEqual(DefaultWrapper.CODE_AVAILABLE,
+                         self.wrapper.availability_code(self.record))
 
-    def test_smaller_purchase_is_permitted(self):
-        record = StockRecord(num_in_stock=4, product=self.product)
-        result, reason = self.wrapper.is_purchase_permitted(record, quantity=3)
-        self.assertTrue(result)
+    def test_returns_correct_availability_message(self):
+        self.assertEqual("Available",
+                         self.wrapper.availability(self.record))
 
-    def test_too_large_purchase_is_not_permitted(self):
-        record = StockRecord(num_in_stock=4, product=self.product)
-        result, reason = self.wrapper.is_purchase_permitted(record, quantity=5)
-        self.assertFalse(result)
+    def test_returns_no_estimated_dispatch_date(self):
+        self.assertIsNone(self.wrapper.dispatch_date(self.record))
 
-    def test_max_purchase_quantity(self):
-        record = StockRecord(num_in_stock=4, product=self.product)
-        self.assertEqual(record.num_in_stock, self.wrapper.max_purchase_quantity(record))
+    def test_returns_zero_tax(self):
+        self.assertEqual(D('0.00'), self.wrapper.calculate_tax(self.record))
 
-    def test_availability_code_for_in_stock(self):
-        record = StockRecord(num_in_stock=4, product=self.product)
-        self.assertEqual('instock', self.wrapper.availability_code(record))
 
-    def test_availability_code_for_zero_stock(self):
-        record = StockRecord(num_in_stock=0, product=self.product)
-        self.assertEqual('outofstock', self.wrapper.availability_code(record))
+class TestStockRecordOfDigitalProduct(TestCase):
 
-    def test_availability_code_for_null_stock_but_available(self):
-        record = StockRecord(num_in_stock=None, product=self.product)
-        self.assertEqual('available', self.wrapper.availability_code(record))
+    def setUp(self):
+        self.wrapper = DefaultWrapper()
+        self.product = Product()
+        self.product.product_class = ProductClass(track_stock=False)
+        self.record = StockRecord(num_in_stock=None, product=self.product)
 
-    def test_availability_message_for_in_stock(self):
-        record = StockRecord(num_in_stock=4, product=self.product)
-        self.assertEqual(u'In stock (4 available)', unicode(self.wrapper.availability(record)))
+    def test_is_available_to_buy(self):
+        self.assertTrue(self.wrapper.is_available_to_buy(self.record))
 
-    def test_availability_message_for_available(self):
-        record = StockRecord(num_in_stock=None, product=self.product)
-        self.assertEqual(u'Available', unicode(self.wrapper.availability(record)))
+    def test_permits_purchase(self):
+        is_permitted, reason = self.wrapper.is_purchase_permitted(
+            self.record)
+        self.assertTrue(is_permitted)
 
-    def test_availability_message_for_out_of_stock(self):
-        record = StockRecord(num_in_stock=0, product=self.product)
-        self.assertEqual(u'Not available', unicode(self.wrapper.availability(record)))
+    def test_has_no_max_purchase_quantity(self):
+        self.assertIsNone(self.wrapper.max_purchase_quantity(self.record))
 
-    def test_backorder_purchase_is_permitted(self):
-        record = StockRecord(num_in_stock=None, product=self.product)
-        with patch.object(self.wrapper, 'max_purchase_quantity') as m:
-            m.return_value = None
-            result, reason = self.wrapper.is_purchase_permitted(record)
-            self.assertTrue(result)
+    def test_returns_available_code(self):
+        self.assertEqual(DefaultWrapper.CODE_AVAILABLE,
+                         self.wrapper.availability_code(self.record))
+
+    def test_returns_correct_availability_message(self):
+        self.assertEqual("Available",
+                         self.wrapper.availability(self.record))
+
+    def test_returns_no_estimated_dispatch_date(self):
+        self.assertIsNone(self.wrapper.dispatch_date(self.record))
+
+    def test_returns_zero_tax(self):
+        self.assertEqual(D('0.00'), self.wrapper.calculate_tax(self.record))
+
+
+class TestStockRecordOfZeroStockProduct(TestCase):
+
+    def setUp(self):
+        self.wrapper = DefaultWrapper()
+        self.product = Product()
+        self.product.product_class = ProductClass()
+        self.record = StockRecord(num_in_stock=0, product=self.product)
+
+    def test_is_not_available_to_buy(self):
+        self.assertFalse(self.wrapper.is_available_to_buy(self.record))
+
+    def test_does_not_permit_purchase(self):
+        is_permitted, reason = self.wrapper.is_purchase_permitted(
+            self.record)
+        self.assertFalse(is_permitted)
+
+    def test_has_zero_max_purchase_quantity(self):
+        self.assertEqual(0, self.wrapper.max_purchase_quantity(self.record))
+
+    def test_returns_unavailable_code(self):
+        self.assertEqual(DefaultWrapper.CODE_UNAVAILABLE,
+                         self.wrapper.availability_code(self.record))
+
+    def test_returns_correct_availability_message(self):
+        self.assertEqual("Not available",
+                         self.wrapper.availability(self.record))
+
+    def test_returns_no_estimated_dispatch_date(self):
+        self.assertIsNone(self.wrapper.dispatch_date(self.record))
+
+    def test_returns_zero_tax(self):
+        self.assertEqual(D('0.00'), self.wrapper.calculate_tax(self.record))
+
+
+class TestStockRecordWithPositiveStock(TestCase):
+
+    def setUp(self):
+        self.wrapper = DefaultWrapper()
+        self.product = Product()
+        self.product.product_class = ProductClass()
+        self.record = StockRecord(num_in_stock=5, product=self.product)
+
+    def test_is_available_to_buy(self):
+        self.assertTrue(self.wrapper.is_available_to_buy(self.record))
+
+    def test_does_permit_purchase_for_smaller_quantities(self):
+        for x in range(1, 6):
+            is_permitted, reason = self.wrapper.is_purchase_permitted(
+                self.record, quantity=x)
+            self.assertTrue(is_permitted)
+
+    def test_does_not_permit_purchase_for_larger_quantities(self):
+        for x in range(6, 10):
+            is_permitted, reason = self.wrapper.is_purchase_permitted(
+                self.record, quantity=x)
+            self.assertFalse(is_permitted)
+
+    def test_has_correct_max_purchase_quantity(self):
+        self.assertEqual(5, self.wrapper.max_purchase_quantity(self.record))
+
+    def test_returns_available_code(self):
+        self.assertEqual(DefaultWrapper.CODE_IN_STOCK,
+                         self.wrapper.availability_code(self.record))
+
+    def test_returns_correct_availability_message(self):
+        self.assertEqual("In stock (5 available)",
+                         self.wrapper.availability(self.record))
+
+    def test_returns_no_estimated_dispatch_date(self):
+        self.assertIsNone(self.wrapper.dispatch_date(self.record))
+
+    def test_returns_zero_tax(self):
+        self.assertEqual(D('0.00'), self.wrapper.calculate_tax(self.record))

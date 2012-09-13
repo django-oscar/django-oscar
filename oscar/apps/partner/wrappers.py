@@ -7,6 +7,9 @@ class DefaultWrapper(object):
     """
     Default stockrecord wrapper
     """
+    CODE_IN_STOCK = 'instock'
+    CODE_AVAILABLE = 'available'
+    CODE_UNAVAILABLE = 'outofstock'
 
     def is_available_to_buy(self, stockrecord):
         """
@@ -55,10 +58,10 @@ class DefaultWrapper(object):
         :param oscar.apps.partner.models.StockRecord stockrecord: stockrecord instance
         """
         if stockrecord.net_stock_level > 0:
-            return 'instock'
+            return self.CODE_IN_STOCK
         if self.is_available_to_buy(stockrecord):
-            return 'available'
-        return 'outofstock'
+            return self.CODE_AVAILABLE
+        return self.CODE_UNAVAILABLE
 
     def availability(self, stockrecord):
         """
