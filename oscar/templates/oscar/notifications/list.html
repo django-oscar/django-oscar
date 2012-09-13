@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+{% load i18n %}
+
+{% block title %}
+{% trans 'Notifications' %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url promotions:home %}">{% trans 'Home' %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="{% url customer:summary %}">{% trans 'Account' %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active"><a href=".">{% trans 'Notifications' %}</a></li>
+</ul>
+{% endblock %}
+
+{% block header %}
+<div class="page-header">
+    <h2>{% trans 'Notifications' %}</h2>
+</div>
+{% endblock header %}
+
+{% block content %}
+
+<a href="{% url customer:notification-inbox %}">Inbox</a>
+<a href="{% url customer:notification-archive %}">Archive</a>
+
+{% if notifications %}
+<form action="." method="post">
+	<ul>
+		{% for notification in notifications %}
+		<li>
+			{{ notification.subject|safe }} <br/>
+			Send: {{ notification.date_sent }}<br/>
+			Read: {{ notification.date_read }}
+		</li>
+		{% endfor %}
+	</ul>
+</form>
+{% endif %}
+
+{% endblock content %}
+

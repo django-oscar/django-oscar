@@ -1,32 +1,31 @@
 from django.conf.urls import patterns, url
 from django.contrib.auth.decorators import login_required
 
-from oscar.apps.customer.views import (AccountSummaryView, OrderHistoryView,
-    OrderDetailView, OrderLineView, AddressListView, AddressCreateView,
-    AddressUpdateView, AddressDeleteView, EmailHistoryView, EmailDetailView,
-    AccountAuthView, AnonymousOrderDetailView, ChangePasswordView,
-    ProfileUpdateView, AccountRegistrationView, LogoutView)
+from oscar.apps.customer import views, notification_views
 from oscar.core.application import Application
 
 
 class CustomerApplication(Application):
     name = 'customer'
-    summary_view = AccountSummaryView
-    order_history_view = OrderHistoryView
-    order_detail_view = OrderDetailView
-    anon_order_detail_view = AnonymousOrderDetailView
-    order_line_view = OrderLineView
-    address_list_view = AddressListView
-    address_create_view = AddressCreateView
-    address_update_view = AddressUpdateView
-    address_delete_view = AddressDeleteView
-    email_list_view = EmailHistoryView
-    email_detail_view = EmailDetailView
-    login_view = AccountAuthView
-    logout_view = LogoutView
-    register_view = AccountRegistrationView
-    profile_update_view = ProfileUpdateView
-    change_password_view = ChangePasswordView
+    summary_view = views.AccountSummaryView
+    order_history_view = views.OrderHistoryView
+    order_detail_view = views.OrderDetailView
+    anon_order_detail_view = views.AnonymousOrderDetailView
+    order_line_view = views.OrderLineView
+    address_list_view = views.AddressListView
+    address_create_view = views.AddressCreateView
+    address_update_view = views.AddressUpdateView
+    address_delete_view = views.AddressDeleteView
+    email_list_view = views.EmailHistoryView
+    email_detail_view = views.EmailDetailView
+    login_view = views.AccountAuthView
+    logout_view = views.LogoutView
+    register_view = views.AccountRegistrationView
+    profile_update_view = views.ProfileUpdateView
+    change_password_view = views.ChangePasswordView
+
+    notification_inbox_view = notification_views.InboxView
+    notification_archive_view = notification_views.ArchiveView
 
     def get_urls(self):
         urlpatterns = patterns('',
@@ -42,6 +41,8 @@ class CustomerApplication(Application):
             url(r'^profile/$',
                 login_required(self.profile_update_view.as_view()),
                 name='profile-update'),
+
+            # Order history
             url(r'^orders/$',
                 login_required(self.order_history_view.as_view()),
                 name='order-list'),
@@ -53,6 +54,8 @@ class CustomerApplication(Application):
             url(r'^orders/(?P<order_number>[\w-]*)/(?P<line_id>\d+)$',
                 login_required(self.order_line_view.as_view()),
                 name='order-line'),
+
+            # Address book
             url(r'^addresses/$',
                 login_required(self.address_list_view.as_view()),
                 name='address-list'),
@@ -65,12 +68,22 @@ class CustomerApplication(Application):
             url(r'^addresses/(?P<pk>\d+)/delete/$',
                 login_required(self.address_delete_view.as_view()),
                 name='address-delete'),
+
+            # Email history
             url(r'^emails/$',
                 login_required(self.email_list_view.as_view()),
                 name='email-list'),
             url(r'^emails/(?P<email_id>\d+)/$',
                 login_required(self.email_detail_view.as_view()),
                 name='email-detail'),
+
+            # Notifications
+            url(r'^notifications/inbox/$',
+                login_required(self.notification_inbox_view.as_view()),
+                name='notification-inbox'),
+            url(r'^notifications/archive/$',
+                login_required(self.notification_archive_view.as_view()),
+                name='notification-archive'),
             )
         return self.post_process_urls(urlpatterns)
 
