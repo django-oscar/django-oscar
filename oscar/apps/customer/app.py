@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, url
 from django.contrib.auth.decorators import login_required
+from django.views import generic
 
 from oscar.apps.customer import views, notification_views
 from oscar.core.application import Application
@@ -79,6 +80,8 @@ class CustomerApplication(Application):
                 name='email-detail'),
 
             # Notifications
+            url(r'^notifications/$', generic.RedirectView.as_view(
+                url='/accounts/notifications/inbox/')),
             url(r'^notifications/inbox/$',
                 login_required(self.notification_inbox_view.as_view()),
                 name='notifications-inbox'),
