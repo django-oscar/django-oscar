@@ -48,18 +48,26 @@
 				value="{{ notification.id }}"/>
 			</td>
 			<td>
-				{% if notification.is_new %}*NEW*{% endif %}
+				{% if notification.is_new %}
+				    {# Maybe use a different icon for NEW messages #}
+					<span style="font-size: 20pt" class="app-ico ico_email">&nbsp;</span>
+				{% else %}
+					<span style="font-size: 20pt" class="app-ico ico_email">&nbsp;</span>
+				{% endif %}
+			</td>
+			<td>
 				{{ notification.subject|safe }} <br/>
-				Send: {{ notification.date_sent }}<br/>
-				Read: {{ notification.date_read }}
+				<em>{{ notification.date_sent }}</em>
 			</td>
 		</tr>
 		{% endfor %}
 		</tbody>
 	</table>
-	With selected items: 
-	<button type="submit" class="btn" name="action" value="archive">Archive</button>
-	<button type="submit" class="btn" name="action" value="delete">Delete</button>
+	{% trans "With selected items:" %} 
+	{% if list_type == 'inbox' %}
+	<button type="submit" class="btn" name="action" value="archive">{% trans "Archive" %}</button>
+	{% endif %}
+	<button type="submit" class="btn" name="action" value="delete">{% trans "Delete" %}</button>
 </form>
 
 {% if page_obj %}
@@ -67,7 +75,7 @@
 {% endif %}
 
 {% else %}
-<p>There are no notifications to display.</p>
+<p>{% trans "There are no notifications to display." %}</p>
 {% endif %}
 
 {% endblock content %}

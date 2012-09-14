@@ -1,7 +1,7 @@
 import datetime
 
 from django.core.urlresolvers import reverse
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext_lazy as _, ungettext
 from django.contrib import messages
 from django import http
 from django.views import generic
@@ -82,11 +82,19 @@ class UpdateView(BulkEditMixin, generic.RedirectView):
     def archive(self, request, notifications):
         for notification in notifications:
             notification.archive()
-        messages.success(request, "%d messages archived" % len(notifications))
+        msg = ungettext(
+            '%(count)d notification archived',
+            '%(count)d notifications archived', len(notifications)) % {
+                'count': len(notifications)}
+        messages.success(request, msg)
         return self.get_success_response()
 
     def delete(self, request, notifications):
         for notification in notifications:
             notification.delete()
-        messages.success(request, "%d messages deleted" % len(notifications))
+        msg = ungettext(
+            '%(count)d notification deleted',
+            '%(count)d notifications deleted', len(notifications)) % {
+                'count': len(notifications)}
+        messages.success(request, msg)
         return self.get_success_response()
