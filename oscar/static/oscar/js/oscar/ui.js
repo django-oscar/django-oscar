@@ -12,6 +12,21 @@ oscar.messages = {
     warning: function(msg) { oscar.messages.addMessage('warning', msg); },
     error: function(msg) { oscar.messages.addMessage('error:', msg); }
 };
+oscar.notifications = {
+    init: function() {
+        $('a[data-behaviours~="archive"]').click(function() {
+            oscar.notifications.checkAndSubmit($(this), 'archive');
+        });
+        $('a[data-behaviours~="delete"]').click(function() {
+            oscar.notifications.checkAndSubmit($(this), 'delete');
+        });
+    },
+    checkAndSubmit: function($ele, btn_val) {
+        $ele.closest('tr').find('input').attr('checked', 'checked');
+        $ele.closest('form').find('button[value="' + btn_val + '"]').click();
+        return false;
+    }
+};
 oscar.forms = {
     init: function() {
         // Forms with this behaviour are 'locked' once they are submitted to 

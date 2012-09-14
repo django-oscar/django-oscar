@@ -14,7 +14,7 @@
 						<a class="app-ico ico_email" href="{% url customer:notifications-inbox %}">
 							{% trans "Notifications" %}
 							{% if num_unread_notifications > 0 %}
-								<span class="badge badge-important">{{ num_unread_notifications }}</span>
+								<span class="label label-important">{{ num_unread_notifications }}</span>
 							{% endif %}</a>
 					</li>
 					{% if user.is_staff %}

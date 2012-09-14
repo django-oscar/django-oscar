@@ -57,7 +57,13 @@
 			</td>
 			<td>
 				{{ notification.subject|safe }} <br/>
-				<em>{{ notification.date_sent }}</em>
+				<em>{{ notification.date_sent }}</em> 
+			</td>
+			<td>
+				{% if list_type == 'inbox' %}
+				<a class="btn btn-success btn-small" href="#" data-behaviours="archive">Archive</a>
+				{% endif %}
+				<a class="btn btn-danger btn-small "href="#" data-behaviours="delete">Delete</a>
 			</td>
 		</tr>
 		{% endfor %}
@@ -65,9 +71,9 @@
 	</table>
 	{% trans "With selected items:" %} 
 	{% if list_type == 'inbox' %}
-	<button type="submit" class="btn" name="action" value="archive">{% trans "Archive" %}</button>
+	<button type="submit" class="btn btn-success" name="action" value="archive">{% trans "Archive" %}</button>
 	{% endif %}
-	<button type="submit" class="btn" name="action" value="delete">{% trans "Delete" %}</button>
+	<button type="submit" class="btn btn-danger" name="action" value="delete">{% trans "Delete" %}</button>
 </form>
 
 {% if page_obj %}
@@ -79,4 +85,8 @@
 {% endif %}
 
 {% endblock content %}
+
+{% block onbodyload %}
+oscar.notifications.init();
+{% endblock %}
 
