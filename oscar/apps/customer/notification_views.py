@@ -19,28 +19,35 @@ class NotificationListView(generic.ListView):
     paginate_by = 20
 
     def get_context_data(self, **kwargs):
-        ctx = super(InboxView, self).get_context_data(**kwargs)
+        ctx = super(NotificationListView, self).get_context_data(**kwargs)
         ctx['title'] = self.title
+        ctx['list_type'] = self.list_type
         return ctx
 
 
 class InboxView(NotificationListView):
     title = _("Notifications inbox")
+    list_type = 'inbox'
 
     def get_queryset(self):
         qs = self.model._default_manager.filter(
             recipient=self.request.user,
             location=self.model.INBOX)
+        for obj in qs:
+            if not obj.is_read:
+                setattr(obj, 'is_new', True)
         self.mark_as_read(qs)
         return qs
 
     def mark_as_read(self, queryset):
         now = datetime.datetime.now()
-        queryset.update(date_read=now)
+        unread = queryset.filter(date_read=None)
+        unread.update(date_read=now)
 
 
 class ArchiveView(NotificationListView):
     title = _("Archived notifications")
+    list_type = 'archive'
 
     def get_queryset(self):
         return self.model._default_manager.filter(

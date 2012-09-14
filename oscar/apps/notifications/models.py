@@ -36,3 +36,7 @@ class Notification(models.Model):
     def archive(self):
         self.location = self.ARCHIVE
         self.save()
+
+    @property
+    def is_read(self):
+        return self.date_read is not None

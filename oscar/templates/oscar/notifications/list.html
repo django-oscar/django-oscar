@@ -27,10 +27,10 @@
 
 {% block content %}
 
-<p>
-	<a class="btn" href="{% url customer:notifications-inbox %}">Inbox</a>
-	<a class="btn" href="{% url customer:notifications-archive %}">Archive</a>
-</p>
+<ul class="nav nav-tabs">
+	<li class="{% if list_type == 'inbox' %}active{% endif %}"><a href="{% url customer:notifications-inbox %}">Inbox</a></li>
+	<li class="{% if list_type == 'archive' %}active{% endif %}"><a href="{% url customer:notifications-archive %}">Archive</a></li>
+</ul>
 
 {% if notifications %}
 {% if page_obj %}
@@ -48,6 +48,7 @@
 				value="{{ notification.id }}"/>
 			</td>
 			<td>
+				{% if notification.is_new %}*NEW*{% endif %}
 				{{ notification.subject|safe }} <br/>
 				Send: {{ notification.date_sent }}<br/>
 				Read: {{ notification.date_read }}
@@ -56,6 +57,7 @@
 		{% endfor %}
 		</tbody>
 	</table>
+	With selected items: 
 	<button type="submit" class="btn" name="action" value="archive">Archive</button>
 	<button type="submit" class="btn" name="action" value="delete">Delete</button>
 </form>

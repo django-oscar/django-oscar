@@ -108,6 +108,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'oscar.apps.promotions.context_processors.promotions',
     'oscar.apps.checkout.context_processors.checkout',
     'oscar.core.context_processors.metadata',
+    'oscar.apps.notifications.context_processors.notifications',
 )
 
 MIDDLEWARE_CLASSES = (
