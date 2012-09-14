@@ -14,7 +14,7 @@ Notification = get_model('customer', 'Notification')
 
 class NotificationListView(generic.ListView):
     model = Notification
-    template_name = 'notifications/list.html'
+    template_name = 'customer/notifications/list.html'
     context_object_name = 'notifications'
     paginate_by = 20
 
@@ -57,7 +57,7 @@ class ArchiveView(NotificationListView):
 
 class DetailView(generic.DetailView):
     model = Notification
-    template_name = 'notifications/detail.html'
+    template_name = 'customer/notifications/detail.html'
     context_object_name = 'notification'
 
     def get_queryset(self):
