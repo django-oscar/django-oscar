@@ -1,16 +1,33 @@
 import datetime
 
+from django.core.urlresolvers import reverse
+from django.utils.translation import ugettext_lazy as _
+from django.contrib import messages
+from django import http
 from django.views import generic
 from django.db.models import get_model
 
+from oscar.views.generic import BulkEditMixin
 
-class InboxView(generic.ListView):
-    model = get_model('notifications', 'Notification')
+Notification = get_model('notifications', 'Notification')
+
+
+class NotificationListView(generic.ListView):
+    model = Notification
     template_name = 'notifications/list.html'
     context_object_name = 'notifications'
+    paginate_by = 20
+
+    def get_context_data(self, **kwargs):
+        ctx = super(InboxView, self).get_context_data(**kwargs)
+        ctx['title'] = self.title
+        return ctx
+
+
+class InboxView(NotificationListView):
+    title = _("Notifications inbox")
 
     def get_queryset(self):
-        # By default show only inbox messages
         qs = self.model._default_manager.filter(
             recipient=self.request.user,
             location=self.model.INBOX)
@@ -22,13 +39,47 @@ class InboxView(generic.ListView):
         queryset.update(date_read=now)
 
 
-class ArchiveView(generic.ListView):
-    model = get_model('notifications', 'Notification')
-    template_name = 'notifications/list.html'
-    context_object_name = 'notifications'
+class ArchiveView(NotificationListView):
+    title = _("Archived notifications")
 
     def get_queryset(self):
-        qs = self.model._default_manager.filter(
+        return self.model._default_manager.filter(
             recipient=self.request.user,
             location=self.model.ARCHIVE)
-        return qs
+
+
+class DetailView(generic.DetailView):
+    model = Notification
+    template_name = 'notifications/detail.html'
+    context_object_name = 'notification'
+
+    def get_queryset(self):
+        return self.model._default_manager.filter(
+            recipient=self.request.user)
+
+
+class UpdateView(BulkEditMixin, generic.RedirectView):
+    model = Notification
+    actions = ('archive', 'delete')
+    checkbox_object_name = 'notification'
+
+    def get_object_dict(self, ids):
+        return self.model.objects.filter(
+            recipient=self.request.user).in_bulk(ids)
+
+    def get_success_response(self):
+        default = reverse('customer:notifications-inbox')
+        return http.HttpResponseRedirect(
+            self.request.META.get('HTTP_REFERER', default))
+
+    def archive(self, request, notifications):
+        for notification in notifications:
+            notification.archive()
+        messages.success(request, "%d messages archived" % len(notifications))
+        return self.get_success_response()
+
+    def delete(self, request, notifications):
+        for notification in notifications:
+            notification.delete()
+        messages.success(request, "%d messages deleted" % len(notifications))
+        return self.get_success_response()

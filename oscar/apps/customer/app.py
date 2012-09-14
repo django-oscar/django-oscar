@@ -26,6 +26,7 @@ class CustomerApplication(Application):
 
     notification_inbox_view = notification_views.InboxView
     notification_archive_view = notification_views.ArchiveView
+    notification_update_view = notification_views.UpdateView
 
     def get_urls(self):
         urlpatterns = patterns('',
@@ -80,10 +81,13 @@ class CustomerApplication(Application):
             # Notifications
             url(r'^notifications/inbox/$',
                 login_required(self.notification_inbox_view.as_view()),
-                name='notification-inbox'),
+                name='notifications-inbox'),
             url(r'^notifications/archive/$',
                 login_required(self.notification_archive_view.as_view()),
-                name='notification-archive'),
+                name='notifications-archive'),
+            url(r'^notifications/update/$',
+                login_required(self.notification_update_view.as_view()),
+                name='notifications-update'),
             )
         return self.post_process_urls(urlpatterns)
 

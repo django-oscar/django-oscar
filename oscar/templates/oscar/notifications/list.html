@@ -2,7 +2,7 @@
 {% load i18n %}
 
 {% block title %}
-{% trans 'Notifications' %} | {{ block.super }}
+{{ title }} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -15,33 +15,57 @@
         <a href="{% url customer:summary %}">{% trans 'Account' %}</a>
         <span class="divider">/</span>
     </li>
-    <li class="active"><a href=".">{% trans 'Notifications' %}</a></li>
+	<li class="active"><a href=".">{{ title }}</a></li>
 </ul>
 {% endblock %}
 
 {% block header %}
 <div class="page-header">
-    <h2>{% trans 'Notifications' %}</h2>
+	<h2>{{ title }}</h2>
 </div>
 {% endblock header %}
 
 {% block content %}
 
-<a href="{% url customer:notification-inbox %}">Inbox</a>
-<a href="{% url customer:notification-archive %}">Archive</a>
+<p>
+	<a class="btn" href="{% url customer:notifications-inbox %}">Inbox</a>
+	<a class="btn" href="{% url customer:notifications-archive %}">Archive</a>
+</p>
 
 {% if notifications %}
-<form action="." method="post">
-	<ul>
+{% if page_obj %}
+    {% include "catalogue/partials/pagination.html" %}
+{% endif %}
+
+<form action="{% url customer:notifications-update %}" method="post">
+	{% csrf_token %}
+	<table class="table">
+		<tbody>
 		{% for notification in notifications %}
-		<li>
-			{{ notification.subject|safe }} <br/>
-			Send: {{ notification.date_sent }}<br/>
-			Read: {{ notification.date_read }}
-		</li>
+		<tr>
+			<td>
+				<input type="checkbox" name="selected_notification" 
+				value="{{ notification.id }}"/>
+			</td>
+			<td>
+				{{ notification.subject|safe }} <br/>
+				Send: {{ notification.date_sent }}<br/>
+				Read: {{ notification.date_read }}
+			</td>
+		</tr>
 		{% endfor %}
-	</ul>
+		</tbody>
+	</table>
+	<button type="submit" class="btn" name="action" value="archive">Archive</button>
+	<button type="submit" class="btn" name="action" value="delete">Delete</button>
 </form>
+
+{% if page_obj %}
+    {% include "catalogue/partials/pagination.html" %}
+{% endif %}
+
+{% else %}
+<p>There are no notifications to display.</p>
 {% endif %}
 
 {% endblock content %}
