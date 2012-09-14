@@ -34,7 +34,7 @@
 
 {% if notifications %}
 {% if page_obj %}
-    {% include "catalogue/partials/pagination.html" %}
+    {% include "partials/pagination.html" %}
 {% endif %}
 
 <form action="{% url customer:notifications-update %}" method="post">
@@ -63,7 +63,7 @@
 </form>
 
 {% if page_obj %}
-    {% include "catalogue/partials/pagination.html" %}
+    {% include "partials/pagination.html" %}
 {% endif %}
 
 {% else %}
