@@ -1,6 +1,6 @@
 from django.db.models import get_model
 
-Notification = get_model('notifications', 'Notification')
+Notification = get_model('customer', 'Notification')
 
 
 def notifications(request):

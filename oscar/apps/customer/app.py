@@ -2,7 +2,8 @@ from django.conf.urls import patterns, url
 from django.contrib.auth.decorators import login_required
 from django.views import generic
 
-from oscar.apps.customer import views, notification_views
+from oscar.apps.customer import views
+from oscar.apps.customer.notifications import views as notification_views
 from oscar.core.application import Application
 
 

@@ -1,4 +1,5 @@
-from oscar.apps.customer.abstract_models import AbstractEmail, AbstractCommunicationEventType
+from oscar.apps.customer.abstract_models import (
+    AbstractEmail, AbstractCommunicationEventType, AbstractNotification)
 
 
 class Email(AbstractEmail):
@@ -6,6 +7,10 @@ class Email(AbstractEmail):
 
 
 class CommunicationEventType(AbstractCommunicationEventType):
+    pass
+
+
+class Notification(AbstractNotification):
     pass
 
 

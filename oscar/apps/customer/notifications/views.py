@@ -9,7 +9,7 @@ from django.db.models import get_model
 
 from oscar.views.generic import BulkEditMixin
 
-Notification = get_model('notifications', 'Notification')
+Notification = get_model('customer', 'Notification')
 
 
 class NotificationListView(generic.ListView):

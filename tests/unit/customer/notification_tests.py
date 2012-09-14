@@ -2,7 +2,8 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from django_dynamic_fixture import G
 
-from oscar.apps.notifications.models import Notification
+from oscar.apps.customer.models import Notification
+from oscar.apps.customer.notifications import services
 
 
 class TestANewNotification(TestCase):
@@ -30,3 +31,19 @@ class TestANotification(TestCase):
     def test_can_be_archived(self):
         self.notification.archive()
         self.assertEqual(Notification.ARCHIVE, self.notification.location)
+
+
+class TestAServiceExistsTo(TestCase):
+
+    def test_notify_a_single_user(self):
+        user = G(User)
+        services.notify_user(user, "Hello you!")
+        self.assertEqual(1, Notification.objects.filter(
+            recipient=user).count())
+
+    def test_notify_a_set_of_users(self):
+        users = [G(User) for i in range(5)]
+        services.notify_users(User.objects.all(), "Hello everybody!")
+        for user in users:
+            self.assertEqual(1, Notification.objects.filter(
+                recipient=user).count())
