@@ -6,8 +6,10 @@ from django.utils.translation import ugettext_lazy as _
 from oscar.core.loading import get_class
 
 ReportGenerator = get_class('dashboard.reports.reports', 'ReportGenerator')
-ReportCSVFormatter = get_class('dashboard.reports.reports', 'ReportCSVFormatter')
-ReportHTMLFormatter = get_class('dashboard.reports.reports', 'ReportHTMLFormatter')
+ReportCSVFormatter = get_class('dashboard.reports.reports',
+                               'ReportCSVFormatter')
+ReportHTMLFormatter = get_class('dashboard.reports.reports',
+                                'ReportHTMLFormatter')
 ProductRecord = get_model('analytics', 'ProductRecord')
 UserRecord = get_model('analytics', 'UserRecord')
 
@@ -41,8 +43,7 @@ class ProductReportGenerator(ReportGenerator):
 
     formatters = {
         'CSV_formatter': ProductReportCSVFormatter,
-        'HTML_formatter': ProductReportHTMLFormatter
-    }
+        'HTML_formatter': ProductReportHTMLFormatter}
 
     def report_description(self):
         return self.description
@@ -68,8 +69,7 @@ class UserReportCSVFormatter(ReportCSVFormatter):
                       _('Order lines'),
                       _('Order items'),
                       _('Total spent'),
-                      _('Date of last order')
-                      ]
+                      _('Date of last order')]
         writer.writerow(header_row)
 
         for record in users:
@@ -95,8 +95,7 @@ class UserReportGenerator(ReportGenerator):
 
     formatters = {
         'CSV_formatter': UserReportCSVFormatter,
-        'HTML_formatter': UserReportHTMLFormatter
-    }
+        'HTML_formatter': UserReportHTMLFormatter}
 
     def generate(self):
         users = UserRecord._default_manager.select_related().all()
