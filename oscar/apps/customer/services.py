@@ -3,7 +3,7 @@ from django.db.models import get_model
 Notification = get_model('notifications', 'Notification')
 
 
-def notify(user, msg, category=None):
+def notify_user(user, msg, category=None):
     """
     Send a simple notification to a user
     """
@@ -12,9 +12,10 @@ def notify(user, msg, category=None):
         subject=msg,
         category=category)
 
-def send_message(user, subject, body, category):
-    Notification.objects.create(
-        recipient=user,
-        subject=subject,
-        body=body,
-        category=category)
+
+def notify_users(users, msg, category=None):
+    """
+    Send a simple notification to an iterable of users
+    """
+    for user in users:
+        notify_user(user, msg, category)
