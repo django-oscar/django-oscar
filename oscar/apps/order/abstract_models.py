@@ -20,12 +20,13 @@ class AbstractOrder(models.Model):
     """
     number = models.CharField(_("Order number"), max_length=128, db_index=True)
     # We track the site that each order is placed within
-    site = models.ForeignKey('sites.Site')
-    basket_id = models.PositiveIntegerField(_('Basket ID'), null=True, blank=True)
+    site = models.ForeignKey('sites.Site', verbose_name=_("Site"))
+    basket_id = models.PositiveIntegerField(_("Basket ID"), null=True, blank=True)
     # Orders can be anonymous so we don't always have a customer ID
-    user = models.ForeignKey(User, related_name='orders', null=True, blank=True)
+    user = models.ForeignKey(User, related_name='orders', null=True, blank=True, verbose_name=_("User"))
     # Billing address is not always required (eg paying by gift card)
-    billing_address = models.ForeignKey('order.BillingAddress', null=True, blank=True)
+    billing_address = models.ForeignKey('order.BillingAddress', null=True, blank=True,
+        verbose_name=_("Billing Address"))
 
     # Total price looks like it could be calculated by adding up the
     # prices of the associated lines, but in some circumstances extra
@@ -39,7 +40,8 @@ class AbstractOrder(models.Model):
 
     # Not all lines are actually shipped (such as downloads), hence shipping address
     # is not mandatory.
-    shipping_address = models.ForeignKey('order.ShippingAddress', null=True, blank=True)
+    shipping_address = models.ForeignKey('order.ShippingAddress', null=True, blank=True,
+        verbose_name=_("Shipping Address"))
     shipping_method = models.CharField(_("Shipping method"), max_length=128, null=True, blank=True)
 
     # Use this field to indicate that an order is on hold / awaiting payment
@@ -65,7 +67,7 @@ class AbstractOrder(models.Model):
         if new_status == self.status:
             return
         if new_status not in self.available_statuses():
-            raise InvalidOrderStatus(_("'%(new_status)s' is not a valid status for order %(number)s "+
+            raise InvalidOrderStatus(_("'%(new_status)s' is not a valid status for order %(number)s "
                                        "(current status: '%(status)s')") % {
                                             'new_status': new_status,
                                             'number': self.number,
@@ -184,7 +186,7 @@ class AbstractOrder(models.Model):
         abstract = True
         ordering = ['-date_placed',]
         permissions = (
-            ("can_view", "Can view orders (eg for reporting)"),
+            ("can_view", _("Can view orders (eg for reporting)")),
         )
         verbose_name = _("Order")
         verbose_name_plural = _("Orders")
@@ -210,19 +212,19 @@ class AbstractOrderNote(models.Model):
     This are often used for audit purposes too.  IE, whenever an admin
     makes a change to an order, we create a note to record what happened.
     """
-    order = models.ForeignKey('order.Order', related_name="notes")
+    order = models.ForeignKey('order.Order', related_name="notes", verbose_name=_("Order"))
 
     # These are sometimes programatically generated so don't need a
     # user everytime
-    user = models.ForeignKey('auth.User', null=True)
+    user = models.ForeignKey('auth.User', null=True, verbose_name=_("User"))
 
     # We allow notes to be classified although this isn't always needed
     INFO, WARNING, ERROR, SYSTEM = 'Info', 'Warning', 'Error', 'System'
-    note_type = models.CharField(_('Note Type'), max_length=128, null=True)
+    note_type = models.CharField(_("Note Type"), max_length=128, null=True)
 
-    message = models.TextField(_('Message'))
-    date_created = models.DateTimeField(auto_now_add=True)
-    date_updated = models.DateTimeField(auto_now=True)
+    message = models.TextField(_("Message"))
+    date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
+    date_updated = models.DateTimeField(_("Date Updated"), auto_now=True)
 
     # Notes can only be edited for 5 minutes after being created
     editable_lifetime = 300
@@ -246,9 +248,9 @@ class AbstractCommunicationEvent(models.Model):
     An order-level event involving a communication to the customer, such
     as an confirmation email being sent.
     """
-    order = models.ForeignKey('order.Order', related_name="communication_events")
-    event_type = models.ForeignKey('customer.CommunicationEventType')
-    date = models.DateTimeField(auto_now_add=True)
+    order = models.ForeignKey('order.Order', related_name="communication_events", verbose_name=_("Order"))
+    event_type = models.ForeignKey('customer.CommunicationEventType', verbose_name=_("Event Type"))
+    date = models.DateTimeField(_("Date"), auto_now_add=True)
 
     class Meta:
         abstract = True
@@ -266,12 +268,13 @@ class AbstractLine(models.Model):
     Not using a line model as it's difficult to capture and payment
     information when it splits across a line.
     """
-    order = models.ForeignKey('order.Order', related_name='lines')
+    order = models.ForeignKey('order.Order', related_name='lines', verbose_name=_("Order"))
 
     # We store the partner, their SKU and the title for cases where the product has been
     # deleted from the catalogue.  We also store the partner name in case the partner
     # gets deleted at a later date.
-    partner = models.ForeignKey('partner.Partner', related_name='order_lines', blank=True, null=True, on_delete=models.SET_NULL)
+    partner = models.ForeignKey('partner.Partner', related_name='order_lines', blank=True, null=True,
+        on_delete=models.SET_NULL, verbose_name=_("Partner"))
     partner_name = models.CharField(_("Partner name"), max_length=128)
     partner_sku = models.CharField(_("Partner SKU"), max_length=128)
 
@@ -280,43 +283,44 @@ class AbstractLine(models.Model):
 
     # We don't want any hard links between orders and the products table so we allow
     # this link to be NULLable.
-    product = models.ForeignKey('catalogue.Product', on_delete=models.SET_NULL, blank=True, null=True)
-    quantity = models.PositiveIntegerField(_('Quantity'), default=1)
+    product = models.ForeignKey('catalogue.Product', on_delete=models.SET_NULL, blank=True, null=True,
+        verbose_name=_("Product"))
+    quantity = models.PositiveIntegerField(_("Quantity"), default=1)
 
     # Price information (these fields are actually redundant as the information
     # can be calculated from the LinePrice models
-    line_price_incl_tax = models.DecimalField(_('Price (inc. tax)'), decimal_places=2, max_digits=12)
-    line_price_excl_tax = models.DecimalField(_('Price (excl. tax)'), decimal_places=2, max_digits=12)
+    line_price_incl_tax = models.DecimalField(_("Price (inc. tax)"), decimal_places=2, max_digits=12)
+    line_price_excl_tax = models.DecimalField(_("Price (excl. tax)"), decimal_places=2, max_digits=12)
 
     # Price information before discounts are applied
-    line_price_before_discounts_incl_tax = models.DecimalField(_('Price before discounts (inc. tax)'),
+    line_price_before_discounts_incl_tax = models.DecimalField(_("Price before discounts (inc. tax)"),
         decimal_places=2, max_digits=12)
-    line_price_before_discounts_excl_tax = models.DecimalField(_('Price before discounts (excl. tax)'),
+    line_price_before_discounts_excl_tax = models.DecimalField(_("Price before discounts (excl. tax)"),
         decimal_places=2, max_digits=12)
 
     # REPORTING FIELDS
     # Cost price (the price charged by the fulfilment partner for this product).
-    unit_cost_price = models.DecimalField(_('Unit Cost Price'), decimal_places=2, max_digits=12, blank=True, null=True)
+    unit_cost_price = models.DecimalField(_("Unit Cost Price"), decimal_places=2, max_digits=12, blank=True, null=True)
     # Normal site price for item (without discounts)
-    unit_price_incl_tax = models.DecimalField(_('Unit Price (inc. tax)'),decimal_places=2, max_digits=12,
+    unit_price_incl_tax = models.DecimalField(_("Unit Price (inc. tax)"),decimal_places=2, max_digits=12,
         blank=True, null=True)
-    unit_price_excl_tax = models.DecimalField(_('Unit Price (excl. tax)'), decimal_places=2, max_digits=12,
+    unit_price_excl_tax = models.DecimalField(_("Unit Price (excl. tax)"), decimal_places=2, max_digits=12,
         blank=True, null=True)
     # Retail price at time of purchase
-    unit_retail_price = models.DecimalField(_('Unit Retail Price'), decimal_places=2, max_digits=12,
+    unit_retail_price = models.DecimalField(_("Unit Retail Price"), decimal_places=2, max_digits=12,
         blank=True, null=True)
 
     # Partner information
     partner_line_reference = models.CharField(_("Partner reference"), max_length=128, blank=True, null=True,
         help_text=_("This is the item number that the partner uses within their system"))
-    partner_line_notes = models.TextField(_('Partner Notes'), blank=True, null=True)
+    partner_line_notes = models.TextField(_("Partner Notes"), blank=True, null=True)
 
     # Partners often want to assign some status to each line to help with their own
     # business processes.
     status = models.CharField(_("Status"), max_length=255, null=True, blank=True)
 
     # Estimated dispatch date - should be set at order time
-    est_dispatch_date = models.DateField(_('Estimated Dispatch Date'), blank=True, null=True)
+    est_dispatch_date = models.DateField(_("Estimated Dispatch Date"), blank=True, null=True)
 
     pipeline = getattr(settings,  'OSCAR_LINE_STATUS_PIPELINE', {})
 
@@ -429,8 +433,8 @@ class AbstractLine(models.Model):
 
     class Meta:
         abstract = True
-        verbose_name = _("Order line")
-        verbose_name_plural = _("Order lines")
+        verbose_name = _("Order Line")
+        verbose_name_plural = _("Order Lines")
 
     def __unicode__(self):
         if self.product:
@@ -442,8 +446,9 @@ class AbstractLine(models.Model):
 
 class AbstractLineAttribute(models.Model):
     u"""An attribute of a line."""
-    line = models.ForeignKey('order.Line', related_name='attributes')
-    option = models.ForeignKey('catalogue.Option', null=True, on_delete=models.SET_NULL, related_name="line_attributes")
+    line = models.ForeignKey('order.Line', related_name='attributes', verbose_name=_("Line"))
+    option = models.ForeignKey('catalogue.Option', null=True, on_delete=models.SET_NULL,
+        related_name="line_attributes", verbose_name=_("Option"))
     type = models.CharField(_("Type"), max_length=128)
     value = models.CharField(_("Value"), max_length=255)
 
@@ -464,13 +469,13 @@ class AbstractLinePrice(models.Model):
     having different prices.  For example, one product may be sold at
     50% off as it's part of an offer while the remainder are full price.
     """
-    order = models.ForeignKey('order.Order', related_name='line_prices')
-    line = models.ForeignKey('order.Line', related_name='prices')
-    quantity = models.PositiveIntegerField(_('Quantity'), default=1)
-    price_incl_tax = models.DecimalField(_('Price (inc. tax)'), decimal_places=2, max_digits=12)
-    price_excl_tax = models.DecimalField(_('Price (excl. tax)'), decimal_places=2, max_digits=12)
-    shipping_incl_tax = models.DecimalField(_('Shiping (inc. tax)'), decimal_places=2, max_digits=12, default=0)
-    shipping_excl_tax = models.DecimalField(_('Shipping (excl. tax)'), decimal_places=2, max_digits=12, default=0)
+    order = models.ForeignKey('order.Order', related_name='line_prices', verbose_name=_("Option"))
+    line = models.ForeignKey('order.Line', related_name='prices', verbose_name=_("Line"))
+    quantity = models.PositiveIntegerField(_("Quantity"), default=1)
+    price_incl_tax = models.DecimalField(_("Price (inc. tax)"), decimal_places=2, max_digits=12)
+    price_excl_tax = models.DecimalField(_("Price (excl. tax)"), decimal_places=2, max_digits=12)
+    shipping_incl_tax = models.DecimalField(_("Shiping (inc. tax)"), decimal_places=2, max_digits=12, default=0)
+    shipping_excl_tax = models.DecimalField(_("Shipping (excl. tax)"), decimal_places=2, max_digits=12, default=0)
 
     class Meta:
         abstract = True
@@ -490,9 +495,9 @@ class AbstractPaymentEventType(models.Model):
     """
     Payment events are things like 'Paid', 'Failed', 'Refunded'
     """
-    name = models.CharField(_('Name'), max_length=128, unique=True)
-    code = models.SlugField(_('Code'), max_length=128, unique=True)
-    sequence_number = models.PositiveIntegerField(_('Sequence'), default=0)
+    name = models.CharField(_("Name"), max_length=128, unique=True)
+    code = models.SlugField(_("Code"), max_length=128, unique=True)
+    sequence_number = models.PositiveIntegerField(_("Sequence"), default=0)
 
     def save(self, *args, **kwargs):
         if not self.code:
@@ -501,8 +506,8 @@ class AbstractPaymentEventType(models.Model):
 
     class Meta:
         abstract = True
-        verbose_name = _("Payment event type")
-        verbose_name_plural = _("Payment event types")
+        verbose_name = _("Payment Event Type")
+        verbose_name_plural = _("Payment Event Types")
         ordering = ('sequence_number',)
 
     def __unicode__(self):
@@ -514,16 +519,16 @@ class AbstractPaymentEvent(models.Model):
     An event is something which happens to a line such as
     payment being taken for 2 items, or 1 item being dispatched.
     """
-    order = models.ForeignKey('order.Order', related_name='payment_events')
-    amount = models.DecimalField(_('Amount'), decimal_places=2, max_digits=12)
-    lines = models.ManyToManyField('order.Line', through='PaymentEventQuantity')
-    event_type = models.ForeignKey('order.PaymentEventType')
-    date = models.DateTimeField(auto_now_add=True)
+    order = models.ForeignKey('order.Order', related_name='payment_events', verbose_name=_("Order"))
+    amount = models.DecimalField(_("Amount"), decimal_places=2, max_digits=12)
+    lines = models.ManyToManyField('order.Line', through='PaymentEventQuantity', verbose_name=_("Lines"))
+    event_type = models.ForeignKey('order.PaymentEventType', verbose_name=_("Event Type"))
+    date = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
     class Meta:
         abstract = True
-        verbose_name = _("Payment event")
-        verbose_name_plural = _("Payment events")
+        verbose_name = _("Payment Event")
+        verbose_name_plural = _("Payment Events")
 
     def __unicode__(self):
         return _("Payment event for order %s") % self.order
@@ -536,9 +541,9 @@ class PaymentEventQuantity(models.Model):
     """
     A "through" model linking lines to payment events
     """
-    event = models.ForeignKey('order.PaymentEvent', related_name='line_quantities')
-    line = models.ForeignKey('order.Line')
-    quantity = models.PositiveIntegerField(_('Quantity'))
+    event = models.ForeignKey('order.PaymentEvent', related_name='line_quantities', verbose_name=_("Event"))
+    line = models.ForeignKey('order.Line', verbose_name=_("Line"))
+    quantity = models.PositiveIntegerField(_("Quantity"))
 
     class Meta:
         verbose_name = _("Payment Event Quantity")
@@ -553,17 +558,17 @@ class AbstractShippingEvent(models.Model):
     An event is something which happens to a group of lines such as
     1 item being dispatched.
     """
-    order = models.ForeignKey('order.Order', related_name='shipping_events')
-    lines = models.ManyToManyField('order.Line', through='ShippingEventQuantity')
-    event_type = models.ForeignKey('order.ShippingEventType')
+    order = models.ForeignKey('order.Order', related_name='shipping_events', verbose_name=_("Order"))
+    lines = models.ManyToManyField('order.Line', through='ShippingEventQuantity', verbose_name=_("Lines"))
+    event_type = models.ForeignKey('order.ShippingEventType', verbose_name=_("Event Type"))
     notes = models.TextField(_("Event notes"), blank=True, null=True,
         help_text=_("This could be the dispatch reference, or a tracking number"))
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
     class Meta:
         abstract = True
-        verbose_name = _("Shipping event")
-        verbose_name_plural = _("Shipping events")
+        verbose_name = _("Shipping Event")
+        verbose_name_plural = _("Shipping Events")
         ordering = ['-date']
 
     def __unicode__(self):
@@ -578,9 +583,9 @@ class ShippingEventQuantity(models.Model):
     """
     A "through" model linking lines to shipping events
     """
-    event = models.ForeignKey('order.ShippingEvent', related_name='line_quantities')
-    line = models.ForeignKey('order.Line')
-    quantity = models.PositiveIntegerField(_('Quantity'))
+    event = models.ForeignKey('order.ShippingEvent', related_name='line_quantities', verbose_name=_("Event"))
+    line = models.ForeignKey('order.Line', verbose_name=_("Line"))
+    quantity = models.PositiveIntegerField(_("Quantity"))
 
     class Meta:
         verbose_name = _("Shipping Event Quantity")
@@ -619,7 +624,7 @@ class ShippingEventQuantity(models.Model):
         super(ShippingEventQuantity, self).save(*args, **kwargs)
 
     def __unicode__(self):
-        return _(u"%(product)s - quantity %(qty)d") % {'product': self.line.product, 'qty': self.quantity}
+        return _("%(product)s - quantity %(qty)d") % {'product': self.line.product, 'qty': self.quantity}
 
 
 class AbstractShippingEventType(models.Model):
@@ -627,13 +632,13 @@ class AbstractShippingEventType(models.Model):
     Shipping events are things like 'OrderPlaced', 'Acknowledged', 'Dispatched', 'Refunded'
     """
     # Name is the friendly description of an event
-    name = models.CharField(_('Name'), max_length=255, unique=True)
+    name = models.CharField(_("Name"), max_length=255, unique=True)
     # Code is used in forms
-    code = models.SlugField(_('Code'), max_length=128, unique=True)
-    is_required = models.BooleanField(_('Is Required'), default=True,
+    code = models.SlugField(_("Code"), max_length=128, unique=True)
+    is_required = models.BooleanField(_("Is Required"), default=True,
         help_text=_("This event must be passed before the next shipping event can take place"))
     # The normal order in which these shipping events take place
-    sequence_number = models.PositiveIntegerField(_('Sequence'), default=0)
+    sequence_number = models.PositiveIntegerField(_("Sequence"), default=0)
 
     def save(self, *args, **kwargs):
         if not self.code:
@@ -642,8 +647,8 @@ class AbstractShippingEventType(models.Model):
 
     class Meta:
         abstract = True
-        verbose_name = _("Shipping event type")
-        verbose_name_plural = _("Shipping event types")
+        verbose_name = _("Shipping Event Type")
+        verbose_name_plural = _("Shipping Event Types")
         ordering = ('sequence_number',)
 
     def __unicode__(self):
@@ -662,11 +667,11 @@ class AbstractOrderDiscount(models.Model):
     Normally only used for display purposes so an order can be listed with discounts displayed
     separately even though in reality, the discounts are applied at the line level.
     """
-    order = models.ForeignKey('order.Order', related_name="discounts")
-    offer_id = models.PositiveIntegerField(_('Offer ID'), blank=True, null=True)
-    voucher_id = models.PositiveIntegerField(_('Voucher ID'), blank=True, null=True)
+    order = models.ForeignKey('order.Order', related_name="discounts", verbose_name=_("Order"))
+    offer_id = models.PositiveIntegerField(_("Offer ID"), blank=True, null=True)
+    voucher_id = models.PositiveIntegerField(_("Voucher ID"), blank=True, null=True)
     voucher_code = models.CharField(_("Code"), max_length=128, db_index=True, null=True)
-    amount = models.DecimalField(_('Amount'), decimal_places=2, max_digits=12, default=0)
+    amount = models.DecimalField(_("Amount"), decimal_places=2, max_digits=12, default=0)
 
     class Meta:
         abstract = True

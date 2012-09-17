@@ -4,10 +4,10 @@
 {% if product.is_group %}
     <h2 class="price_color">From {{ product.min_variant_price_incl_tax|currency }}</h2>
 {% else %}
-    {% if product.has_stockrecord %} 
+    {% if product.is_available_to_buy %} 
         <h2 class="price_color">{{ product.stockrecord.price_incl_tax|currency }}</h2>
-        <p class="app-ico {{ product.stockrecord.availability_code }} avaliability ">{{ product.stockrecord.availability|truncatewords:2 }}</p>
+        <p class="app-ico {{ product.stockrecord.availability_code }} availability ">{{ product.stockrecord.availability|truncatewords:2 }}</p>
     {% else %}
-	<p class="app-ico avaliability outofstock">{% trans "Not available" %}</p>
+		<p class="app-ico avaliability outofstock">{% trans "Not available" %}</p>
     {% endif %}
 {% endif %}

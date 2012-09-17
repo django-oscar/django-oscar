@@ -129,8 +129,8 @@ class AbstractCountry(models.Model):
     name = models.CharField(_('Official name (CAPS)'), max_length=128)
     printable_name = models.CharField(_('Country name'), max_length=128)
     
-    is_highlighted = models.BooleanField(default=False, db_index=True)
-    is_shipping_country = models.BooleanField(default=False, db_index=True)
+    is_highlighted = models.BooleanField(_("Is Highlighted"), default=False, db_index=True)
+    is_shipping_country = models.BooleanField(_("Is Shipping Country"), default=False, db_index=True)
     
     class Meta:
         abstract = True
@@ -181,7 +181,7 @@ class AbstractUserAddress(AbstractShippingAddress):
     users the ability to add/edit/delete from their address book without affecting
     orders already placed. 
     """
-    user = models.ForeignKey('auth.User', related_name='addresses')
+    user = models.ForeignKey('auth.User', related_name='addresses', verbose_name=_("User"))
     
     # Customers can set defaults
     is_default_for_shipping = models.BooleanField(_("Default shipping address?"), default=False)
@@ -190,12 +190,12 @@ class AbstractUserAddress(AbstractShippingAddress):
     # We keep track of the number of times an address has been used
     # as a shipping address so we can show the most popular ones 
     # first at the checkout.
-    num_orders = models.PositiveIntegerField(default=0)
+    num_orders = models.PositiveIntegerField(_("Number of Orders"), default=0)
     
     # A hash is kept to try and avoid duplicate addresses being added
     # to the address book.
-    hash = models.CharField(max_length=255, db_index=True)
-    date_created = models.DateTimeField(auto_now_add=True)
+    hash = models.CharField(_("Address Hash"), max_length=255, db_index=True)
+    date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
     
     def generate_hash(self):
         """

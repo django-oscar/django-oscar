@@ -1,5 +1,5 @@
 from oscar.core.application import Application
-from django.conf.urls.defaults import patterns, url, include
+from django.conf.urls import patterns, url
 from oscar.apps.catalogue.reviews.views import ProductReviewDetail, CreateProductReview, CreateProductReviewComplete, ProductReviewList 
 
 

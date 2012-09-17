@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import *
+from django.conf.urls import *
 from haystack.query import SearchQuerySet
 
 from oscar.core.loading import import_module

@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import patterns, url
+from django.conf.urls import patterns, url
 
 from oscar.core.application import Application
 from oscar.apps.promotions.views import HomeView, RecordClickView

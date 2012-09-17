@@ -43,36 +43,3 @@ class TopLevelProductReviewVoteTests(ProductReviewTests):
         self.assertRaises(IntegrityError, Vote.objects.create, review=self.review, delta=-1, user=self.user)
 
 
-class SingleProductReviewViewTest(ProductReviewTests, TestCase):
-
-    def setUp(self):
-        self.client = Client()
-        super(SingleProductReviewViewTest, self).setUp()
-        self.kwargs = {
-                'product_slug': self.product.slug,
-                'pk': str(self.product.id)}
-        
-    def test_each_product_has_review(self):
-        url = reverse('catalogue:detail', kwargs=self.kwargs)
-        response = self.client.get(url)
-        self.assertEquals(200, response.status_code)
-    
-    def test_user_can_add_product_review(self):
-        kwargs = {
-                'product_slug': self.product.slug,
-                'product_pk': str(self.product.id)}
-        url = reverse('catalogue:reviews-add', kwargs=kwargs)
-        self.client.login(username='testuser', password='secret')
-        response = self.client.get(url)
-        self.assertEquals(200, response.status_code)
-
-        # check necessary review fields for logged in user
-        self.assertContains(response, 'title')
-        self.assertContains(response, 'score')
-
-        # check additional fields for anonymous user
-        self.client.login(username=None)
-        response = self.client.get(url)
-        self.assertContains(response, 'name')
-        self.assertContains(response, 'email')
-

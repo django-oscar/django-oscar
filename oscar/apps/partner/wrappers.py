@@ -14,6 +14,8 @@ class DefaultWrapper(object):
 
         This is used to determine whether to show the add-to-basket button.
         """
+        if not stockrecord.product.product_class.track_stock:
+            return True
         if stockrecord.num_in_stock is None:
             return True
         return stockrecord.net_stock_level > 0
@@ -38,6 +40,8 @@ class DefaultWrapper(object):
         """
         Return the maximum available purchase quantity for a given user
         """
+        if not stockrecord.product.product_class.track_stock:
+            return None
         if stockrecord.num_in_stock is None:
             return None
         return stockrecord.net_stock_level

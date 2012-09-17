@@ -1,0 +1,71 @@
+// OSC PRODUCT WIDTHS
+// --------------------------------------------------
+@fifth: 20%;
+@quart: 25%;
+@third: 33.33333333333333%;
+@half: 50%;
+@three_quart: 75%;
+@full:100%;
+
+// OSC MIXINS
+// --------------------------------------------------
+.remove_bullets() {
+  margin:0px;
+  padding:0px;
+  li {
+    padding:0px;
+    list-style:none;
+  }
+}
+.horiz_col() {
+  padding:0px;
+  margin:0px;
+  .clearfix();
+  > li {
+    list-style:none;
+  }
+  li {
+    float:left;
+    li {
+      float:none;
+    }
+  }
+}
+.vertical_list(@background_hover:@green) {
+  margin:0px 0px;
+  padding:0px;
+  .clearfix;
+  li {
+    display:block;
+  }
+  li a {
+    display:block;
+    padding:4px 0px;
+    width:100%;
+    line-height:@baseLineHeight;
+  }
+}
+.tier_one() {
+  padding-top:0px;
+  ul {
+    margin:0px;
+  }
+  li {
+    border-bottom:1px solid @grayLight;
+    padding: 2px 0px;
+    margin-bottom:@baseLineHeight / 2;
+    h6 {
+      line-height:@baseLineHeight;
+      margin-bottom:@baseLineHeight / 2;
+      color:@grayDark;
+      font-size: @baseFontSize - 2;
+    }
+  }
+  li li {
+    border-bottom:none;
+    margin:0px 0px;
+    span {
+      color:@gray;
+    }
+  }
+}

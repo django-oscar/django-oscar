@@ -22,7 +22,7 @@ class AbstractBasket(models.Model):
     Basket object
     """
     # Baskets can be anonymously owned (which are merged if the user signs in)
-    owner = models.ForeignKey('auth.User', related_name='baskets', null=True)
+    owner = models.ForeignKey('auth.User', related_name='baskets', null=True, verbose_name=_("Owner"))
     STATUS_CHOICES = (
         (OPEN, _("Open - currently active")),
         (MERGED, _("Merged - superceded by another basket")),
@@ -31,11 +31,11 @@ class AbstractBasket(models.Model):
         (SUBMITTED, _("Submitted - has been ordered at the checkout")),
     )
     status = models.CharField(_("Status"), max_length=128, default=OPEN, choices=STATUS_CHOICES)
-    vouchers = models.ManyToManyField('voucher.Voucher', null=True)
+    vouchers = models.ManyToManyField('voucher.Voucher', null=True, verbose_name=_("Vouchers"))
 
-    date_created = models.DateTimeField(auto_now_add=True)
-    date_merged = models.DateTimeField(null=True, blank=True)
-    date_submitted = models.DateTimeField(null=True, blank=True)
+    date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
+    date_merged = models.DateTimeField(_("Date Merged"), null=True, blank=True)
+    date_submitted = models.DateTimeField(_("Date Submitted"), null=True, blank=True)
 
     class Meta:
         abstract = True
@@ -351,10 +351,16 @@ class AbstractBasket(models.Model):
 
     @property
     def num_items_without_discount(self):
-        """Return number of items"""
         num = 0
         for line in self.all_lines():
             num += line.quantity_without_discount
+        return num
+
+    @property
+    def num_items_with_discount(self):
+        num = 0
+        for line in self.all_lines():
+            num += line.quantity_with_discount
         return num
 
     @property
@@ -389,15 +395,15 @@ class AbstractLine(models.Model):
     """
     A line of a basket (product and a quantity)
     """
-    basket = models.ForeignKey('basket.Basket', related_name='lines')
+    basket = models.ForeignKey('basket.Basket', related_name='lines', verbose_name=_("Basket"))
 
     # This is to determine which products belong to the same line
     # We can't just use product.id as you can have customised products
     # which should be treated as separate lines.  Set as a
     # SlugField as it is included in the path for certain views.
-    line_reference = models.SlugField(max_length=128, db_index=True)
+    line_reference = models.SlugField(_("Line Reference"), max_length=128, db_index=True)
 
-    product = models.ForeignKey('catalogue.Product', related_name='basket_lines')
+    product = models.ForeignKey('catalogue.Product', related_name='basket_lines', verbose_name=_("Product"))
     quantity = models.PositiveIntegerField(_('Quantity'), default=1)
 
     # We store the unit price incl tax of the product when it is first added to
@@ -408,7 +414,7 @@ class AbstractLine(models.Model):
     price_incl_tax = models.DecimalField(_('Price incl. Tax'), decimal_places=2, max_digits=12,
                                          null=True)
     # Track date of first addition
-    date_created = models.DateTimeField(auto_now_add=True)
+    date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
     # Instance variables used to persist discount information
     _discount = Decimal('0.00')
@@ -506,6 +512,10 @@ class AbstractLine(models.Model):
         return self.quantity > self.quantity_without_discount
 
     @property
+    def quantity_with_discount(self):
+        return self._affected_quantity
+
+    @property
     def quantity_without_discount(self):
         return int(self.quantity - self._affected_quantity)
 
@@ -601,8 +611,8 @@ class AbstractLineAttribute(models.Model):
     """
     An attribute of a basket line
     """
-    line = models.ForeignKey('basket.Line', related_name='attributes')
-    option = models.ForeignKey('catalogue.Option')
+    line = models.ForeignKey('basket.Line', related_name='attributes', verbose_name=_("Line"))
+    option = models.ForeignKey('catalogue.Option', verbose_name=_("Option"))
     value = models.CharField(_("Value"), max_length=255)
 
     class Meta:

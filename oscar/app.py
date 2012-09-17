@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import patterns, url, include
+from django.conf.urls import patterns, url, include
 from django.contrib.auth import views as auth_views
 
 from oscar.core.application import Application

@@ -1,0 +1,131 @@
+/*** Badge styles ***/
+.group-price {
+  position:absolute;
+  top:2%;
+  left:0px;
+  border:1px solid @orange;
+  text-transform:uppercase;
+  background-color:@white;
+  .border-radius(4px);
+  .box-shadow(2px 2px 3px rgba(0,0,0,.3));
+  #gradient > .vertical(@grayLighter, @white);
+  span {
+    display:block;
+    font-size:@baseFontSize - 3;
+    background-color:@orange;
+    padding:1px 2px;
+    color:@white;
+  }
+  strong {
+    padding:8px 15px;
+    display:block;
+  }
+}
+
+.badge_container,
+.badge_container:before,
+.badge_container:after,
+.badge_container .badge,
+.badge_container .badge:before,
+.badge_container .badge:after {
+	height: 2.5em;
+	width: 2.5em;
+	background-color: #DA4F49;
+	background-size: 2.5em;
+}
+
+.badge_container:before,
+.badge_container:after,
+.badge_container .badge:before,
+.badge_container .badge:after {
+	content: "";
+	position: absolute;
+}
+
+.badge_container {
+	margin: 0 auto; /* Centering for demo */
+	position: absolute; /* Context */
+	top: 1.5em;
+	left: 1.5em;
+	z-index: 9;
+	-webkit-transform: rotate(-45deg);
+	  -moz-transform: rotate(-45deg);
+	   -ms-transform: rotate(-45deg);
+	    -o-transform: rotate(-45deg);
+	       transform: rotate(-45deg);
+}
+
+.badge_container:before {
+	top: 0;
+	left: 0;
+	-webkit-transform: rotate(-30deg);
+	  -moz-transform: rotate(-30deg);
+	   -ms-transform: rotate(-30deg);
+	    -o-transform: rotate(-30deg);
+	       transform: rotate(-30deg);
+}
+
+.badge_container:after {
+	top: 0;
+	left: 0;
+	-webkit-transform: rotate(-15deg);
+	  -moz-transform: rotate(-15deg);
+	   -ms-transform: rotate(-15deg);
+	    -o-transform: rotate(-15deg);
+	       transform: rotate(-15deg);
+}
+
+.badge_container .badge {
+	padding: .5em 0em;
+	height: 1.5em; /* height minus padding */
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	-webkit-transform: rotate(45deg);
+	  -moz-transform: rotate(45deg);
+	   -ms-transform: rotate(45deg);
+	    -o-transform: rotate(45deg);
+	       transform: rotate(45deg);
+	z-index: 1; /* important so the text shows up */
+	.label {
+	    background-color: transparent;
+	}
+}
+
+.badge_container .badge:before {
+	top: 0;
+	left: 0;
+	-webkit-transform: rotate(60deg);
+	  -moz-transform: rotate(60deg);
+	   -ms-transform: rotate(60deg);
+	    -o-transform: rotate(60deg);
+	       transform: rotate(60deg);
+}
+
+.badge_container .badge:after {
+	top: 0;
+	left: 0;
+	-webkit-transform: rotate(75deg);
+	  -moz-transform: rotate(75deg);
+	   -ms-transform: rotate(75deg);
+	    -o-transform: rotate(75deg);
+	       transform: rotate(75deg);
+}
+
+.badge_container .badge span {
+    position: relative;
+    z-index: 100;
+    display: block;
+    text-align: center;
+    color: #fff;
+    font-size: 0.6em;
+    line-height: 0.8em;
+    text-transform: uppercase;
+}
+
+.badge_container .badge span.number {
+    font-weight: bold;
+    font-size: 0.5em;
+    line-height: .4em;
+    color: #f2f2f2;
+}

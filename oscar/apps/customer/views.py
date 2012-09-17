@@ -13,6 +13,7 @@ from django.contrib.auth import (authenticate, login as auth_login,
                                  logout as auth_logout)
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.sites.models import get_current_site
+from django.contrib.auth.models import User
 from django.conf import settings
 from django.db.models import get_model
 
@@ -24,6 +25,7 @@ EmailAuthenticationForm, EmailUserCreationForm, SearchByDateRangeForm = get_clas
                        'SearchByDateRangeForm'])
 ProfileForm = get_class('customer.forms', 'ProfileForm')
 UserAddressForm = get_class('address.forms', 'UserAddressForm')
+user_registered = get_class('customer.signals', 'user_registered')
 Order = get_model('order', 'Order')
 Line = get_model('basket', 'Line')
 Basket = get_model('basket', 'Basket')
@@ -202,10 +204,23 @@ class AccountRegistrationView(TemplateView):
         if getattr(settings, 'OSCAR_SEND_REGISTRATION_EMAIL', True):
             self.send_registration_email(user)
 
-        user = authenticate(
-            username=user.email,
-            password=form.cleaned_data['password1']
-        )
+        user_registered.send_robust(sender=self, user=user)
+
+        try:
+            user = authenticate(
+                username=user.email,
+                password=form.cleaned_data['password1'])
+        except User.MultipleObjectsReturned:
+            # Handle race condition where the registration request is made
+            # multiple times in quick succession.  This leads to both requests
+            # passing the uniqueness check and creating users (as the first one
+            # hasn't committed when the second one runs the check).  We retain
+            # the first one and delete the dupes.
+            users = User.objects.filter(email=user.email)
+            user = users[0]
+            for u in users[1:]:
+                u.delete()
+
         auth_login(self.request, user)
         if self.request.session.test_cookie_worked():
             self.request.session.delete_test_cookie()
@@ -270,9 +285,10 @@ class EmailDetailView(DetailView):
     template_name = "customer/email.html"
     context_object_name = 'email'
 
-    def get_object(self):
+    def get_object(self, queryset=None):
         """Return an order object or 404"""
-        return get_object_or_404(Email, user=self.request.user, id=self.kwargs['email_id'])
+        return get_object_or_404(Email, user=self.request.user,
+                                 id=self.kwargs['email_id'])
 
 
 class OrderHistoryView(ListView):
@@ -315,8 +331,9 @@ class OrderDetailView(DetailView, PostActionMixin):
     def get_template_names(self):
         return ["customer/order.html"]
 
-    def get_object(self):
-        return get_object_or_404(self.model, user=self.request.user, number=self.kwargs['order_number'])
+    def get_object(self, queryset=None):
+        return get_object_or_404(self.model, user=self.request.user,
+                                 number=self.kwargs['order_number'])
 
     def do_reorder(self, order):
         """
@@ -382,9 +399,10 @@ class OrderDetailView(DetailView, PostActionMixin):
 class OrderLineView(DetailView, PostActionMixin):
     """Customer order line"""
 
-    def get_object(self):
+    def get_object(self, queryset=None):
         """Return an order object or 404"""
-        order = get_object_or_404(Order, user=self.request.user, number=self.kwargs['order_number'])
+        order = get_object_or_404(Order, user=self.request.user,
+                                  number=self.kwargs['order_number'])
         return order.lines.get(id=self.kwargs['line_id'])
 
     def do_reorder(self, line):
@@ -502,7 +520,7 @@ class AnonymousOrderDetailView(DetailView):
     model = Order
     template_name = "customer/anon_order.html"
 
-    def get_object(self):
+    def get_object(self, queryset=None):
         # Check URL hash matches that for order to prevent spoof attacks
         order = get_object_or_404(self.model, user=None,
                                   number=self.kwargs['order_number'])

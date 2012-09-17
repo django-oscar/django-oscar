@@ -206,10 +206,13 @@ class OrderListView(ListView, BulkEditMixin):
     def get_paginate_by(self, queryset):
         return None if self.is_csv_download() else self.paginate_by
 
-    def render_to_response(self, context):
+    def render_to_response(self, context, **response_kwargs):
         if self.is_csv_download():
-            return self.download_selected_orders(self.request, context['object_list'])
-        return super(OrderListView, self).render_to_response(context)
+            return self.download_selected_orders(
+                self.request,
+                context['object_list'])
+        return super(OrderListView, self).render_to_response(
+            context, **response_kwargs)
 
     def get_download_filename(self, request):
         return 'orders.csv'
@@ -264,7 +267,7 @@ class OrderDetailView(DetailView):
     line_actions = ('change_line_statuses', 'create_shipping_event',
                     'create_payment_event')
 
-    def get_object(self):
+    def get_object(self, queryset=None):
         return get_object_or_404(self.model, number=self.kwargs['number'])
 
     def get_context_data(self, **kwargs):
@@ -296,7 +299,7 @@ class OrderDetailView(DetailView):
         order_action = request.POST.get('order_action', '').lower()
         if order_action:
             if order_action not in self.order_actions:
-                messages.error(self.request, "Invalid action")
+                messages.error(self.request, _("Invalid action"))
                 return self.reload_page_response()
             else:
                 return getattr(self, order_action)(request, order)
@@ -485,14 +488,19 @@ class LineDetailView(DetailView):
         return ctx
 
 
-def get_changes_between_models(model1, model2, excludes=[]):
+def get_changes_between_models(model1, model2, excludes=None):
+    """
+    Return a dict of differences between two model instances
+    """
+    if excludes is None:
+        excludes = []
     changes = {}
     for field in model1._meta.fields:
         if not (isinstance(field, (fields.AutoField, fields.related.RelatedField))
                 or field.name in excludes):
             if field.value_from_object(model1) != field.value_from_object(model2):
                 changes[field.verbose_name] = (field.value_from_object(model1),
-                                                   field.value_from_object(model2))
+                                               field.value_from_object(model2))
     return changes
 
 
@@ -503,7 +511,7 @@ def get_change_summary(model1, model2):
     changes = get_changes_between_models(model1, model2, ['search_text'])
     change_descriptions = []
     for field, delta in changes.items():
-        change_descriptions.append(_(u"%(field)s changed from '%(old_value)s' to '%(new_value)s'") % {
+        change_descriptions.append(_("%(field)s changed from '%(old_value)s' to '%(new_value)s'") % {
             'field': field,
             'old_value': delta[0],
             'new_value': delta[1]})
@@ -516,7 +524,7 @@ class ShippingAddressUpdateView(UpdateView):
     template_name = 'dashboard/orders/shippingaddress_form.html'
     form_class = forms.ShippingAddressForm
 
-    def get_object(self):
+    def get_object(self, queryset=None):
         return get_object_or_404(self.model, order__number=self.kwargs['number'])
 
     def get_context_data(self, **kwargs):

@@ -12,11 +12,11 @@ class AbstractEmail(models.Model):
     This is a record of all emails sent to a customer.
     Normally, we only record order-related emails.
     """
-    user = models.ForeignKey('auth.User', related_name='emails')
+    user = models.ForeignKey('auth.User', related_name='emails', verbose_name=_("User"))
     subject = models.TextField(_('Subject'), max_length=255)
-    body_text = models.TextField()
-    body_html = models.TextField(blank=True, null=True)
-    date_sent = models.DateTimeField(auto_now_add=True)
+    body_text = models.TextField(_("Body Text"))
+    body_html = models.TextField(_("Body HTML"), blank=True, null=True)
+    date_sent = models.DateTimeField(_("Date Sent"), auto_now_add=True)
 
     class Meta:
         abstract = True
@@ -24,7 +24,7 @@ class AbstractEmail(models.Model):
         verbose_name_plural = _('Emails')
 
     def __unicode__(self):
-        return _(u"Email to %(user)s with subject '%(subject)s'") % {
+        return _("Email to %(user)s with subject '%(subject)s'") % {
             'user': self.user.username, 'subject': self.subject}
 
 
@@ -51,8 +51,8 @@ class AbstractCommunicationEventType(models.Model):
     # Template content for SMS messages
     sms_template = models.CharField(_('SMS Template'), max_length=170, blank=True, help_text=_("SMS template"))
 
-    date_created = models.DateTimeField(auto_now_add=True)
-    date_updated = models.DateTimeField(auto_now=True)
+    date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
+    date_updated = models.DateTimeField(_("Date Updated"), auto_now=True)
 
     objects = CommunicationTypeManager()
 

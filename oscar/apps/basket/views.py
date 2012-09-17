@@ -1,7 +1,7 @@
 from django.contrib import messages
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, resolve
 from django.db.models import get_model
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.views.generic import FormView, View
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist
@@ -141,7 +141,20 @@ class BasketAddView(FormView):
         return kwargs
 
     def get_success_url(self):
-        return self.request.META.get('HTTP_REFERER', reverse('basket:summary'))
+        url = None
+        if self.request.POST.get('next'):
+            url = self.request.POST.get('next')
+        elif 'HTTP_REFERER' in self.request.META:
+            url = self.request.META['HTTP_REFERER']
+        if url:
+            # We only allow internal URLs so we see if the url resolves
+            try:
+                resolve(url)
+            except Http404:
+                url = None
+        if url is None:
+            url = reverse('basket:summary')
+        return url
 
     def form_valid(self, form):
         options = []

@@ -19,7 +19,7 @@ class AbstractVoucher(models.Model):
         help_text=_("""This will be shown in the checkout and basket once the voucher is entered"""))
     code = models.CharField(_("Code"), max_length=128, db_index=True, unique=True,
         help_text=_("""Case insensitive / No spaces allowed"""))
-    offers = models.ManyToManyField('offer.ConditionalOffer', related_name='vouchers',
+    offers = models.ManyToManyField('offer.ConditionalOffer', related_name='vouchers', verbose_name=_("Offers"),
                                     limit_choices_to={'offer_type': "Voucher"})
 
     SINGLE_USE, MULTI_USE, ONCE_PER_CUSTOMER = ('Single use', 'Multi-use', 'Once per customer')
@@ -34,9 +34,9 @@ class AbstractVoucher(models.Model):
     end_date = models.DateField(_('End Date'))
 
     # Audit information
-    num_basket_additions = models.PositiveIntegerField(_('Times added to basket'), default=0)
-    num_orders = models.PositiveIntegerField(_('Times on orders'), default=0)
-    total_discount = models.DecimalField(_('Total discount'), decimal_places=2, max_digits=12, default=Decimal('0.00'))
+    num_basket_additions = models.PositiveIntegerField(_("Times added to basket"), default=0)
+    num_orders = models.PositiveIntegerField(_("Times on orders"), default=0)
+    total_discount = models.DecimalField(_("Total discount"), decimal_places=2, max_digits=12, default=Decimal('0.00'))
     
     date_created = models.DateField(auto_now_add=True)
 
@@ -115,13 +115,13 @@ class AbstractVoucherApplication(models.Model):
     """
     For tracking how often a voucher has been used
     """
-    voucher = models.ForeignKey('voucher.Voucher', related_name="applications")
+    voucher = models.ForeignKey('voucher.Voucher', related_name="applications", verbose_name=_("Voucher"))
 
     # It is possible for an anonymous user to apply a voucher so we need to allow
     # the user to be nullable
-    user = models.ForeignKey('auth.User', blank=True, null=True)
-    order = models.ForeignKey('order.Order')
-    date_created = models.DateField(auto_now_add=True)
+    user = models.ForeignKey('auth.User', blank=True, null=True, verbose_name=_("User"))
+    order = models.ForeignKey('order.Order', verbose_name=_("Order"))
+    date_created = models.DateField(_("Date Creted"), auto_now_add=True)
 
     class Meta:
         abstract = True

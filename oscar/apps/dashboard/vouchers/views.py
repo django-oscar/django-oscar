@@ -84,7 +84,7 @@ class VoucherCreateView(FormView):
         )
         name = form.cleaned_data['name']
         offer = ConditionalOffer.objects.create(
-            name="Offer for voucher '%s'" % name,
+            name=_("Offer for voucher '%s'") % name,
             offer_type="Voucher",
             benefit=benefit,
             condition=condition,
