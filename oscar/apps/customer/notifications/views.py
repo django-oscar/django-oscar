@@ -1,7 +1,6 @@
-import datetime
-
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _, ungettext
+from django.utils.timezone import now
 from django.contrib import messages
 from django import http
 from django.views import generic
@@ -40,9 +39,8 @@ class InboxView(NotificationListView):
         return qs
 
     def mark_as_read(self, queryset):
-        now = datetime.datetime.now()
         unread = queryset.filter(date_read=None)
-        unread.update(date_read=now)
+        unread.update(date_read=now())
 
 
 class ArchiveView(NotificationListView):
