@@ -10,9 +10,13 @@ Some ground rules:
 * Write tests! Pull requests will be rejected if sufficient tests aren't
   provided.  See the guidance below on the testing conventions that oscar uses
 
-* Make pull requests against Oscar's master branch unless instructed otherwise.
+* Write docs! Please update the documentation when altering behaviour or introducing new features.
 
-* Please update the documentation when altering behaviour or introducing new features.
+* Write good commit messages: see `Tim Pope's excellent note`_.
+
+.. _`Tim Pope's excellent note`: http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
+
+* Make pull requests against Oscar's master branch unless instructed otherwise.
 
 Installation
 ============
