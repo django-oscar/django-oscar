@@ -57,7 +57,6 @@ class PasswordResetForm(auth_forms.PasswordResetForm):
         code = self.communication_type_code
         ctx = {
             'user': user,
-            'static_base_url': getattr(settings, 'OSCAR_STATIC_BASE_URL', None)
         }
 
         if extra_context:
