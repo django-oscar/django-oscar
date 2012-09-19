@@ -7,13 +7,12 @@ Some ground rules:
 * To avoid disappointment, new features should be discussed on the mailing list
   (django-oscar@googlegroups.com) before serious work starts. 
 
-* Pull requests will be rejected if sufficient tests aren't provided.
+* Write tests! Pull requests will be rejected if sufficient tests aren't
+  provided.  See the guidance below on the testing conventions that oscar uses
 
 * Make pull requests against Oscar's master branch unless instructed otherwise.
 
 * Please update the documentation when altering behaviour or introducing new features.
-
-* Follow the conventions (see below).
 
 Installation
 ============
@@ -54,7 +53,7 @@ To run an individual test, use one of::
 
 Oscar's testrunner uses the progressive_ plugin when running all tests, but uses
 the spec_ plugin when running a subset.  It is a good practice to name your test
-cases and methods so that the spec output reads correctly.  For example::
+cases and methods so that the spec output reads well.  For example::
 
     $ ./runtests.py tests/unit/offer/benefit_tests.py:TestAbsoluteDiscount
     nosetests --verbosity 1 tests/unit/offer/benefit_tests.py:TestAbsoluteDiscount -s -x --with-spec
@@ -93,7 +92,8 @@ Oscar using a browser.  Set it up by::
    cd sites/sandbox 
    ./manage.py runserver
 
-This will create the database and load some fixtures.
+This will create the database and load some fixtures for categories and shipping
+countries.
 
 Writing docs
 ============
@@ -127,7 +127,7 @@ URLs
   ``/dashboard/notifications/3/``.  If there is a distinction between the detail
   page and the update page, use ``/dashboard/notifications/3/update/``.
 
-* Delete pages, eg /dashboard/notifications/3/delete/
+* Delete pages, eg ``/dashboard/notifications/3/delete/``
 
 View class names
 ----------------
