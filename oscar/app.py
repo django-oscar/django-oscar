@@ -11,6 +11,8 @@ from oscar.apps.search.app import application as search_app
 from oscar.apps.offer.app import application as offer_app
 from oscar.apps.dashboard.app import application as dashboard_app
 
+from oscar.apps.customer import forms
+
 
 class Shop(Application):
     name = None
@@ -38,6 +40,7 @@ class Shop(Application):
             # we can't namespace these urls as that prevents
             # the reverse function from working.
             url(r'^password-reset/$', auth_views.password_reset,
+                {'password_reset_form': forms.PasswordResetForm},
                 name='password-reset'),
             url(r'^password-reset/done/$', auth_views.password_reset_done,
                 name='password-reset-done'),
