@@ -350,8 +350,7 @@ class ProductAttributesContainer(object):
                 if v.attribute.code == name:
                     result = v.value
             self.initialised = True
-            if result:
-                return result
+            return result
         raise AttributeError((_(u"%(obj)s has no attribute named " \
                                        u"'%(attr)s'") % \
                                      {'obj': self.product.product_class, 'attr': name}))
