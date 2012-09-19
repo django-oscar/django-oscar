@@ -347,6 +347,7 @@
 							<th>{% trans "Allocation" %}</th>
 							<th>{% trans "Amount debited" %}</th>
 							<th>{% trans "Amount refunded" %}</th>
+							<th>{% trans "Reference" %}</th>
 						</tr>  
 					</thead>	
 					<tbody> 
@@ -356,6 +357,7 @@
 							<td>{{ source.amount_allocated|currency }}</td>
 							<td>{{ source.amount_debited|currency }}</td>
 							<td>{{ source.amount_refunded|currency }}</td>
+							<td>{{ source.reference|default:"-" }}</td>
 						</tr>
 						{% endfor %}
 					</tbody>
