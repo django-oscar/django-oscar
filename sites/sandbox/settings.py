@@ -5,6 +5,8 @@ PROJECT_DIR = os.path.dirname(__file__)
 location = lambda x: os.path.join(
     os.path.dirname(os.path.realpath(__file__)), x)
 
+USE_TZ = True
+
 DEBUG = True
 TEMPLATE_DEBUG = True
 SQL_DEBUG = True

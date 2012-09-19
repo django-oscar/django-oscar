@@ -1,7 +1,8 @@
+from datetime import timedelta
 from decimal import Decimal as D
-import datetime
 
 from django.test import TestCase
+from django.utils import timezone
 import mock
 
 from oscar.apps.address.models import Country
@@ -71,15 +72,6 @@ class OrderStatusPipelineTests(TestCase):
             self.assertEqual('SHIPPED', line.status)
 
 
-class MockDateTime(datetime.datetime):
-
-    @classmethod
-    def stub(cls, method_name, return_value):
-        mocked_method = mock.Mock()
-        mocked_method.return_value = return_value
-        setattr(cls, method_name, mocked_method)
-
-
 class OrderNoteTests(TestCase):
 
     def setUp(self):
@@ -97,9 +89,10 @@ class OrderNoteTests(TestCase):
         OrderNote.editable_lifetime = 1
         note = self.order.notes.create(message='test')
         self.assertTrue(note.is_editable())
-        now = datetime.datetime.now()
-        with mock.patch('datetime.datetime', MockDateTime) as mock_datetime:
-            mock_datetime.stub('now', now + datetime.timedelta(seconds=30))
+
+        now = timezone.now()
+        with mock.patch.object(timezone, 'now') as mock_timezone:
+            mock_timezone.return_value = now + timedelta(seconds=30)
             self.assertFalse(note.is_editable())
 
 
