@@ -1,9 +1,9 @@
 from itertools import chain
 from decimal import Decimal as D
 import hashlib
-import datetime
 
 from django.db import models
+from django.utils import timezone
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
@@ -240,8 +240,8 @@ class AbstractOrderNote(models.Model):
     def is_editable(self):
         if self.note_type == self.SYSTEM:
             return False
-        return (datetime.datetime.now() - self.date_updated).seconds < self.editable_lifetime
-
+        delta = timezone.now() - self.date_updated
+        return delta.seconds < self.editable_lifetime
 
 class AbstractCommunicationEvent(models.Model):
     """

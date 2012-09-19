@@ -1,9 +1,8 @@
-import datetime
 import os
 import re
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
-
+from django.utils.timezone import now
 
 Product = models.get_model('catalogue', 'Product')
 
@@ -40,14 +39,14 @@ class RangeProductFileUpload(models.Model):
         return os.path.basename(self.filepath)
 
     def mark_as_failed(self, message=None):
-        self.date_processed = datetime.datetime.now()
+        self.date_processed = now()
         self.error_message = message
         self.status = self.FAILED
         self.save()
 
     def mark_as_processed(self, num_new, num_unknown, num_duplicate):
         self.status = self.PROCESSED
-        self.date_processed = datetime.datetime.now()
+        self.date_processed = now()
         self.num_new_skus = num_new
         self.num_unknown_skus = num_unknown
         self.num_duplicate_skus = num_duplicate
