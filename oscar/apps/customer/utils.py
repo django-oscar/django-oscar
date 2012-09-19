@@ -8,7 +8,7 @@ CommunicationEvent = get_model('order', 'CommunicationEvent')
 Email = get_model('customer', 'Email')
 
 
-class Dispatcher(object): 
+class Dispatcher(object):
     def __init__(self, logger=None):
         if not logger:
             logger = logging.getLogger(__name__)
@@ -22,7 +22,7 @@ class Dispatcher(object):
         """
         if messages['subject'] and messages['body']:
             self.send_email_messages(recipient, messages)
-    
+
     def dispatch_order_messages(self, order, messages, event_type=None, **kwargs):
         """
         Dispatch order-related messages to the customer
@@ -36,11 +36,12 @@ class Dispatcher(object):
                 return
         else:
             self.dispatch_user_messages(order.user, messages)
-            
+
         # Create order comms event for audit
         if event_type:
-            CommunicationEvent._default_manager.create(order=order, type=event_type)
-    
+            CommunicationEvent._default_manager.create(order=order,
+                                                       event_type=event_type)
+
     def dispatch_user_messages(self, user, messages):
         """
         Send messages to a site user
@@ -49,9 +50,9 @@ class Dispatcher(object):
             self.send_user_email_messages(user, messages)
         if messages['sms']:
             self.send_text_message(user, messages['sms'])
-    
+
     # Internal
-    
+
     def send_user_email_messages(self, user, messages):
         """
         Sends message to the registered user / customer and collects data in database
@@ -59,16 +60,16 @@ class Dispatcher(object):
         if not user.email:
             self.logger.warning("Unable to send email messages as user #%d has no email address", user.id)
             return
-        
+
         email = self.send_email_messages(user.email, messages)
-        
+
         # Is user is signed in, record the event for audit
         if email and user.is_authenticated():
-            Email._default_manager.create(user=user, 
+            Email._default_manager.create(user=user,
                                           subject=email.subject,
                                           body_text=email.body,
                                           body_html=messages['html'])
-    
+
     def send_email_messages(self, recipient, messages):
         """
         Plain email sending to the specified recipient
@@ -77,7 +78,7 @@ class Dispatcher(object):
             from_email = settings.OSCAR_FROM_EMAIL
         else:
             from_email = None
-            
+
         # Determine whether we are sending a HTML version too
         if messages['html']:
             email = EmailMultiAlternatives(messages['subject'],
@@ -92,9 +93,9 @@ class Dispatcher(object):
                                  to=[recipient])
         self.logger.info("Sending email to %s" % recipient)
         email.send()
-        
+
         return email
-        
+
     def send_text_message(self, user, event_type):
         raise NotImplementedError
 
