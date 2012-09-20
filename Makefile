@@ -22,7 +22,7 @@ ci:
 	pip install -r requirements.txt
 	./runtests.py --with-coverage --with-xunit
 	coverage xml
-	flake8 --ignore=W292 oscar | perl -ple "s/: /: [E] /" | grep -v migrations > violations.txt
+	flake8 --ignore=W292,E202 oscar | perl -ple "s/: /: [E] /" | grep -v migrations > violations.txt
 
 test:
 	./runtests.py
