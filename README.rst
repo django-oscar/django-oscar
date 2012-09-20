@@ -17,8 +17,6 @@ Further reading:
   experimental but feel free to explore and get a feel for the base Oscar
   install.  Dashboard access coming soon!) 
 * `Documentation`_ on the excellent `readthedocs.org`_
-* `Trello board managing current tasks`_ - vote for features that you'd like
-  prioritsed!
 * `Google Group`_ - the mailing list is django-oscar@googlegroups.com
 * `Continuous integration homepage`_ on `travis-ci.org`_
 * `Twitter account for news and updates`_
@@ -32,7 +30,6 @@ Continuous integration status:
 
 .. _`Official homepage`: http://oscarcommerce.com
 .. _`Sandbox site`: http://sandbox.oscar.tangentlabs.co.uk
-.. _`Trello board managing current tasks`: https://trello.com/b/VDIVW8Xc
 .. _`Documentation`: http://django-oscar.readthedocs.org/en/latest/
 .. _`readthedocs.org`: http://readthedocs.org
 .. _`Continuous integration homepage`: http://travis-ci.org/#!/tangentlabs/django-oscar 
