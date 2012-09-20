@@ -2,34 +2,15 @@
 {% load i18n %}
 
 {% block layout %}
-<div class="navbar accounts">
-    <div class="navbar-inner">
-        <div class="container-fluid">
-            <a class="brand hidden" href="{% url promotions:home %}">{{ shop_name }}</a>
-            <ul class="nav pull-right">
-                <li><a href="#">{% trans 'Home' %}</a></li>
-                <li><a href="#about">{% trans 'About' %}</a></li>
-                <li><a href="#contact">{% trans 'Contact' %}</a></li>
-                {% if user.is_authenticated %}
-                    {% if user.is_staff %}
-                    <li><a href="{% url dashboard:index %}">{% trans 'Dashboard' %}</a></li>
-                    {% endif %}
-                <li><a href="{% url customer:summary %}">{% trans 'Profile' %}</a></li>
-                <li><a href="{% url customer:logout %}">{% trans 'Logout' %}</a></li>
-                {% else %}
-                <li><a href="{% url customer:login %}">{% trans 'Login' %}</a></li>
-                {% endif %}
-            </ul>
-        </div>
-    </div><!-- /navbar-inner -->
-</div><!-- /navbar -->
+{% include "partials/nav_accounts.html" %}
 
-<div class="container">
+<div class="container-fluid">
     <div class="hero-unit">
-        <h1>{% trans 'Internal Server Error!' %}</h1>
+        <h1>{% trans 'Internal server error!' %}</h1>
         <p>{% trans "Something went terribly wrong.  We're very sorry and will fix this problem as soon as possible." %}</p>
         <p>
             <a class="btn btn-primary btn-large" onClick="javascript:history.go(-1);">{% trans 'Go back to previous page' %}</a>
+			<a class="btn btn-primary btn-large" href="/">{% trans "Homepage" %}</a>
         </p>
     </div>
 </div>
