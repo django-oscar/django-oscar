@@ -15,7 +15,8 @@ class PostActionMixin(object):
         if 'action' in self.request.POST:
             model = self.get_object()
             # The do_* method is required to do what it needs to with the model
-            # it is passed, and then to assign the HTTP response to self.response.
+            # it is passed, and then to assign the HTTP response to
+            # self.response.
             method_name = "do_%s" % self.request.POST['action'].lower()
             if hasattr(self, method_name):
                 getattr(self, method_name)(model)
@@ -70,7 +71,8 @@ class BulkEditMixin(object):
         ids = map(int, ids)
         if not ids:
             messages.error(
-                self.request, _("You need to select some %ss") % self.get_checkbox_object_name())
+                self.request,
+                _("You need to select some %ss") % self.get_checkbox_object_name())
             return HttpResponseRedirect(self.get_error_url(request))
 
         objects = self.get_objects(ids)

@@ -65,7 +65,8 @@ class ClientTestCase(TestCase):
         self.assertEqual(httplib.OK, response.status_code)
 
     def assertInContext(self, response, key):
-        self.assertTrue(key in response.context, "Context should contain a variable '%s'" % key)
+        self.assertTrue(key in response.context,
+                        "Context should contain a variable '%s'" % key)
 
 
 class WebTestCase(WebTest):
