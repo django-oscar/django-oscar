@@ -35,14 +35,14 @@ Install Oscar and its dependencies within a virtualenv::
     git clone git://github.com/tangentlabs/django-oscar.git
     cd django-oscar
     mkvirtualenv oscar
-    make contribute
+    make sandbox
 
 This will install all dependencies required for developing Oscar and create a
 simple database populated with products.
 
 You can then browse a sample Oscar site using Django's development server::
 
-    cd sandbox
+    cd sites/sandbox
     ./manage.py runserver
 
 Note that some things are deliberately not implemented within core Oscar
