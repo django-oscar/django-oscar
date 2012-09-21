@@ -54,7 +54,7 @@ set ``TEMPLATE_CONTEXT_PROCESSORS`` to::
         'oscar.apps.search.context_processors.search_form',
         'oscar.apps.promotions.context_processors.promotions',
         'oscar.apps.checkout.context_processors.checkout',
-        'oscar.apps.notifications.context_processors.notifications',
+        'oscar.apps.customer.notifications.context_processors.notifications',
         'oscar.core.context_processors.metadata',
     ) 
 
