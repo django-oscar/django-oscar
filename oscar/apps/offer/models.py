@@ -172,8 +172,6 @@ class Condition(models.Model):
     type = models.CharField(_('Type'), max_length=128, choices=TYPE_CHOICES)
     value = PositiveDecimalField(_('Value'), decimal_places=2, max_digits=12)
 
-    price_field = getattr(settings, 'OSCAR_OFFER_PRICE', 'price_incl_tax')
-
     class Meta:
         verbose_name = _("Condition")
         verbose_name_plural = _("Conditions")
@@ -229,7 +227,7 @@ class Condition(models.Model):
             product = line.product
             if not self.can_apply_condition(product):
                 continue
-            price = getattr(product.stockrecord, self.price_field)
+            price = line.unit_price_incl_tax
             if not price:
                 continue
             line_tuples.append((price, line))
@@ -248,8 +246,6 @@ class Benefit(models.Model):
     type = models.CharField(_("Type"), max_length=128, choices=TYPE_CHOICES)
     value = PositiveDecimalField(_("Value"), decimal_places=2, max_digits=12,
                                  null=True, blank=True)
-
-    price_field = 'price_incl_tax'
 
     # If this is not set, then there is no upper limit on how many products
     # can be discounted by this benefit.
@@ -330,7 +326,7 @@ class Benefit(models.Model):
             if (not range.contains(product) or
                 not self.can_apply_benefit(product)):
                 continue
-            price = getattr(product.stockrecord, self.price_field)
+            price = line.unit_price_incl_tax
             if not price:
                 # Avoid zero price products
                 continue
@@ -600,7 +596,7 @@ class ValueCondition(Condition):
             product = line.product
             if (self.can_apply_condition(product) and product.has_stockrecord
                 and line.quantity_without_discount > 0):
-                price = getattr(product.stockrecord, self.price_field)
+                price = line.unit_price_incl_tax
                 value_of_matches += price * int(line.quantity_without_discount)
             if value_of_matches >= self.value:
                 return True
@@ -614,7 +610,7 @@ class ValueCondition(Condition):
             product = line.product
             if (self.can_apply_condition(product) and product.has_stockrecord
                 and line.quantity_without_discount > 0):
-                price = getattr(product.stockrecord, self.price_field)
+                price = line.unit_price_incl_tax
                 value_of_matches += price * int(line.quantity_without_discount)
         self._value_of_matches = value_of_matches
         return value_of_matches
@@ -638,7 +634,7 @@ class ValueCondition(Condition):
         # Determine value of items already consumed as part of discount
         value_consumed = D('0.00')
         for line, __, qty in affected_lines:
-            price = getattr(line.product.stockrecord, self.price_field)
+            price = line.unit_price_incl_tax
             value_consumed += price * qty
 
         to_consume = max(0, self.value - value_consumed)
