@@ -275,6 +275,10 @@ OSCAR_SHOP_TAGLINE = 'e-Commerce for Django'
 GOOGLE_ANALYTICS_ID = 'UA-XXXXX-Y'
 
 LOG_ROOT = location('logs')
+# Ensure log root exists
+if not os.path.exists(LOG_ROOT):
+    os.mkdir(LOG_ROOT)
+
 DISPLAY_VERSION = False
 
 THUMBNAIL_DEBUG = True
