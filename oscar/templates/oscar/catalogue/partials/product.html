@@ -12,7 +12,7 @@
     </div>
 
     {% block product_review %}
-        {% with product.reviews.all as reviews %}
+        {% with reviews=product.reviews.all %}
             {% if reviews %}
                 <ul class="review_count">       
                 {% for review in reviews %}
