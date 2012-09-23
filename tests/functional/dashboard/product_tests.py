@@ -1,75 +1,108 @@
+from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django_dynamic_fixture import G
 
-from oscar.test import ClientTestCase
+from oscar.test import WebTestCase
 from oscar.apps.catalogue.models import ProductClass, Category, Product
 
 
-class TestGatewayPage(ClientTestCase):
+class ProductWebTest(WebTestCase):
+    is_staff = True
+
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser',
+                                             email='test@email.com',
+                                             password='somefancypassword')
+        self.user.is_staff = self.is_staff
+        self.user.save()
+
+    def get(self, url, **kwargs):
+        kwargs['user'] = self.user
+        return self.app.get(url, **kwargs)
+
+
+class TestGatewayPage(ProductWebTest):
     is_staff = True
 
     def test_redirects_to_list_page_when_no_query_param(self):
         url = reverse('dashboard:catalogue-product-create')
-        response = self.client.get(url)
-        self.assertRedirectUrlName(response,
-                                   'dashboard:catalogue-product-list')
+        response = self.get(url)
+        self.assertRedirects(response,
+                             reverse('dashboard:catalogue-product-list'),
+                             status_code=301)
 
     def test_redirects_to_list_page_when_invalid_query_param(self):
         url = reverse('dashboard:catalogue-product-create')
-        response = self.client.get(url + '?product_class=bad')
-        self.assertRedirectUrlName(response,
-                                   'dashboard:catalogue-product-list')
+        response = self.get(url + '?product_class=bad')
+        self.assertRedirects(response,
+                             reverse('dashboard:catalogue-product-list'),
+                             status_code=301)
 
     def test_redirects_to_form_page_when_valid_query_param(self):
         pclass = G(ProductClass)
         url = reverse('dashboard:catalogue-product-create')
-        response = self.client.get(url + '?product_class=%d' % pclass.id)
-        self.assertRedirectUrlName(response,
-                                   'dashboard:catalogue-product-create',
-                                   {'product_class_id': pclass.id})
+        response = self.get(url + '?product_class=%d' % pclass.id)
+        self.assertRedirects(response,
+                             reverse('dashboard:catalogue-product-create',
+                                     kwargs={'product_class_id': pclass.id}),
+                             status_code=301)
 
 
-class TestCreateGroupProduct(ClientTestCase):
+class TestCreateGroupProduct(ProductWebTest):
     is_staff = True
 
     def setUp(self):
         self.pclass = G(ProductClass)
         super(TestCreateGroupProduct, self).setUp()
 
-    def submit(self, **params):
-        data = {'title': 'Nice T-Shirt',
-                'productcategory_set-TOTAL_FORMS': '1',
-                'productcategory_set-INITIAL_FORMS': '0',
-                'productcategory_set-MAX_NUM_FORMS': '',
-                'images-TOTAL_FORMS': '2',
-                'images-INITIAL_FORMS': '0',
-                'images-MAX_NUM_FORMS': '',
-               }
-        data.update(params)
+    def submit(self, title=None, category=None, upc=None):
         url = reverse('dashboard:catalogue-product-create',
                       kwargs={'product_class_id': self.pclass.id})
-        return self.client.post(url, data)
+
+        product_form = self.get(url).form
+
+        product_form['title'] = title
+        product_form['upc'] = upc
+
+        if category:
+            product_form['productcategory_set-0-category'] = category.id
+
+        return product_form.submit()
 
     def test_title_is_required(self):
         response = self.submit(title='')
-        self.assertIsOk(response)
+
+        self.assertContains(response, "Parent products must have a title")
+        self.assertEquals(Product.objects.count(), 0)
 
     def test_requires_a_category(self):
-        response = self.submit()
-        self.assertIsOk(response)
+        response = self.submit(title="Nice T-Shirt")
+
+        self.assertContains(response,
+            "A top-level product must have at least one category")
+        self.assertEquals(Product.objects.count(), 0)
 
     def test_doesnt_smoke(self):
         category = G(Category)
-        data = {
-            'productcategory_set-0-category': category.id,
-            'productcategory_set-0-id': '',
-            'productcategory_set-0-product': '',
-        }
-        response = self.submit(**data)
-        self.assertRedirectUrlName(response, 'dashboard:catalogue-product-list')
+        response = self.submit(category=category)
+
+        self.assertContains(response, "Parent products must have a title")
+        self.assertEquals(Product.objects.count(), 0)
+
+    def test_doesnt_allow_duplicate_upc(self):
+        G(Product, parent=None, upc="12345")
+        category = G(Category)
+        self.assertTrue(Product.objects.get(upc="12345"))
+
+        response = self.submit(title="Nice T-Shirt", category=category,
+                               upc="12345")
+
+        self.assertEquals(Product.objects.count(), 1)
+        self.assertContains(response,
+                            "A product with UPC &#39;12345&#39; already exists")
 
 
-class TestCreateChildProduct(ClientTestCase):
+class TestCreateChildProduct(ProductWebTest):
     is_staff = True
 
     def setUp(self):
@@ -77,27 +110,19 @@ class TestCreateChildProduct(ClientTestCase):
         self.parent = G(Product)
         super(TestCreateChildProduct, self).setUp()
 
-    def submit(self, **params):
-        data = {'title': 'Nice T-Shirt',
-                'productcategory_set-TOTAL_FORMS': '1',
-                'productcategory_set-INITIAL_FORMS': '0',
-                'productcategory_set-MAX_NUM_FORMS': '',
-                'images-TOTAL_FORMS': '2',
-                'images-INITIAL_FORMS': '0',
-                'images-MAX_NUM_FORMS': '',
-               }
-        data.update(params)
+    def test_categories_are_not_required(self):
         url = reverse('dashboard:catalogue-product-create',
                       kwargs={'product_class_id': self.pclass.id})
-        return self.client.post(url, data)
+        page = self.get(url)
 
-    def test_categories_are_not_required(self):
-        category = G(Category)
-        data = {
-            'parent': self.parent.id,
-            'productcategory_set-0-category': category.id,
-            'productcategory_set-0-id': '',
-            'productcategory_set-0-product': '',
-        }
-        response = self.submit(**data)
-        self.assertIsOk(response)
+        product_form = page.form
+        product_form['title'] = 'Nice T-Shirt'
+        product_form['parent'] = self.parent.id
+        page = product_form.submit()
+
+        try:
+            product = Product.objects.get(title='Nice T-Shirt')
+        except Product.DoesNotExist:
+            self.fail('creating a child product did not work: %s' % page.body)
+
+        self.assertEquals(product.parent, self.parent)
