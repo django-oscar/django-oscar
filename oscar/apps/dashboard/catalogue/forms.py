@@ -195,6 +195,17 @@ class ProductForm(forms.ModelForm):
             value = self.cleaned_data['attr_%s' % attribute.code]
             attribute.save_value(object, value)
 
+    def clean_upc(self):
+        upc = self.cleaned_data['upc']
+        try:
+            Product.objects.get(upc=upc)
+        except Product.DoesNotExist:
+            pass
+        else:
+            raise forms.ValidationError(
+                _("A product with UPC '%s' already exists") % upc)
+        return upc
+
     def clean(self):
         data = self.cleaned_data
         if 'parent' not in data and not data['title']:
