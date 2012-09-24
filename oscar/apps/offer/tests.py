@@ -8,8 +8,31 @@ from oscar.apps.offer.models import (Range, CountCondition, ValueCondition,
                                      CoverageCondition, ConditionalOffer,
                                      PercentageDiscountBenefit, FixedPriceBenefit,
                                      MultibuyDiscountBenefit, AbsoluteDiscountBenefit)
+from oscar.apps.offer.utils import Applicator
 from oscar.apps.basket.models import Basket
 from oscar.test.helpers import create_product
+
+
+class CustomConditionalOffer(ConditionalOffer):
+    def get_max_applications(self):
+        return 3
+
+
+class ApplicatorTest(TestCase):
+
+    def test_max_application_limit(self):
+        rng = Range.objects.create(name="All products range", includes_all_products=True)
+        basket = Basket.objects.create()
+        item = create_product(price=Decimal('100'))
+        basket.add_product(item, 5)
+        cond = ValueCondition(range=rng, type="Value", value=Decimal('100.00'))
+        benefit = AbsoluteDiscountBenefit(range=rng, type="Absolute", value=Decimal('10.00'))
+        offer = CustomConditionalOffer(id='test', condition=cond, benefit=benefit)
+        applicator = Applicator()
+        discounts = applicator.get_basket_discounts(basket, [offer])
+        discount = discounts['test']
+        self.assertEquals(discount['freq'], 3)
+        self.assertEquals(discount['discount'], Decimal('30'))
 
 
 class WholeSiteRangeWithGlobalBlacklistTest(TestCase):
