@@ -58,7 +58,9 @@ class ConditionalOffer(models.Model):
         help_text=_("The highest priority offers are applied first"))
 
     # We track some information on usage
-    total_discount = models.DecimalField(_("Total Discount"), decimal_places=2, max_digits=12, default=D('0.00'))
+    total_discount = models.DecimalField(_("Total Discount"),
+                                         decimal_places=2, max_digits=12,
+                                         default=D('0.00'))
     num_orders = models.PositiveIntegerField(_("Number of Orders"), default=0)
 
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
@@ -68,7 +70,8 @@ class ConditionalOffer(models.Model):
     objects = models.Manager()
     active = ActiveOfferManager()
 
-    # We need to track the voucher that this offer came from (if it is a voucher offer)
+    # We need to track the voucher that this offer came from (if it is a
+    # voucher offer)
     _voucher = None
 
     class Meta:
@@ -119,21 +122,25 @@ class ConditionalOffer(models.Model):
     def get_voucher(self):
         return self._voucher
 
+    def get_max_applications(self):
+        # Default value to prevent infinite loops
+        return 10000
+
     def _proxy_condition(self):
         """
         Returns the appropriate proxy model for the condition
         """
         field_dict = dict(self.condition.__dict__)
-        if '_state' in field_dict:
-            del field_dict['_state']
-        if '_range_cache' in field_dict:
-            del field_dict['_range_cache']
-        if self.condition.type == self.condition.COUNT:
-            return CountCondition(**field_dict)
-        elif self.condition.type == self.condition.VALUE:
-            return ValueCondition(**field_dict)
-        elif self.condition.type == self.condition.COVERAGE:
-            return CoverageCondition(**field_dict)
+        for field in field_dict.keys():
+            if field.startswith('_'):
+                del field_dict[field]
+
+        klassmap = {
+            self.condition.COUNT: CountCondition,
+            self.condition.VALUE: ValueCondition,
+            self.condition.COVERAGE: CoverageCondition}
+        if self.condition.type in klassmap:
+            return klassmap[self.condition.type](**field_dict)
         return self.condition
 
     def _proxy_benefit(self):
@@ -141,18 +148,17 @@ class ConditionalOffer(models.Model):
         Returns the appropriate proxy model for the condition
         """
         field_dict = dict(self.benefit.__dict__)
-        if '_state' in field_dict:
-            del field_dict['_state']
-        if '_range_cache' in field_dict:
-            del field_dict['_range_cache']
-        if self.benefit.type == self.benefit.PERCENTAGE:
-            return PercentageDiscountBenefit(**field_dict)
-        elif self.benefit.type == self.benefit.FIXED:
-            return AbsoluteDiscountBenefit(**field_dict)
-        elif self.benefit.type == self.benefit.MULTIBUY:
-            return MultibuyDiscountBenefit(**field_dict)
-        elif self.benefit.type == self.benefit.FIXED_PRICE:
-            return FixedPriceBenefit(**field_dict)
+        for field in field_dict.keys():
+            if field.startswith('_'):
+                del field_dict[field]
+
+        klassmap = {
+            self.benefit.PERCENTAGE: PercentageDiscountBenefit,
+            self.benefit.FIXED: AbsoluteDiscountBenefit,
+            self.benefit.MULTIBUY: MultibuyDiscountBenefit,
+            self.benefit.FIXED_PRICE: FixedPriceBenefit}
+        if self.benefit.type in klassmap:
+            return klassmap[self.benefit.type](**field_dict)
         return self.benefit
 
     def record_usage(self, discount):

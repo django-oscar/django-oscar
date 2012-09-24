@@ -37,8 +37,6 @@ class Applicator(object):
     """
     Apply offers to a basket.
     """
-    max_applications = 10000
-
     def apply(self, request, basket):
         """
         Apply all relevant offers to the given basket.
@@ -61,7 +59,7 @@ class Applicator(object):
             # For each offer, we keep trying to apply it until the
             # discount is 0
             applications = 0
-            while True:
+            while applications < offer.get_max_applications():
                 discount = offer.apply_benefit(basket)
                 applications += 1
                 logger.debug("Found discount %.2f for basket %d from offer %d",
@@ -77,12 +75,6 @@ class Applicator(object):
                     discounts[offer.id]['freq'] += 1
                 else:
                     break
-                if applications > self.max_applications:
-                    logger.error("Exceeded %d applications for offer %d on basket %d", self.max_applications, offer.id, basket.id)
-                    raise OfferApplicationError(_("Exceeded %(applications)d applications for offer %(offer)d " +
-                                                  "on basket %(basket)d") % {'applications': self.max_applications,
-                                                                            'offer': offer.id,
-                                                                            'basket': basket.id})
 
         logger.debug("Finished applying offers to basket %d", basket.id)
         return discounts
