@@ -57,6 +57,13 @@ class ConditionalOffer(models.Model):
     priority = models.IntegerField(_("Priority"), default=0,
         help_text=_("The highest priority offers are applied first"))
 
+    # Use this field to limit the number of times this offer can be applied to
+    # a basket
+    max_applications = models.PositiveIntegerField(
+        blank=True, null=True,
+        help_text=_("This controls the maximum times an offer can "
+                    "be applied to a single basket"))
+
     # We track some information on usage
     total_discount = models.DecimalField(_("Total Discount"),
                                          decimal_places=2, max_digits=12,
@@ -123,8 +130,10 @@ class ConditionalOffer(models.Model):
         return self._voucher
 
     def get_max_applications(self):
-        # Default value to prevent infinite loops
-        return 10000
+        if self.max_applications is None:
+            # Default value to prevent infinite loops
+            return 10000
+        return self.max_applications
 
     def _proxy_condition(self):
         """
@@ -243,7 +252,7 @@ class Condition(models.Model):
 class Benefit(models.Model):
     PERCENTAGE, FIXED, MULTIBUY, FIXED_PRICE = ("Percentage", "Absolute", "Multibuy", "Fixed price")
     TYPE_CHOICES = (
-        (PERCENTAGE, _("Discount is a %% of the product's value")),
+        (PERCENTAGE, _("Discount is a % of the product's value")),
         (FIXED, _("Discount is a fixed amount off the product's value")),
         (MULTIBUY, _("Discount is to give the cheapest product for free")),
         (FIXED_PRICE, _("Get the products that meet the condition for a fixed price")),
@@ -274,7 +283,7 @@ class Benefit(models.Model):
                                                              'range': unicode(self.range).lower()}
 
         if self.max_affected_items:
-            desc += ungettext(" (max 1 item)", " (max %d items)", self.max_affected_items) % self.max_affected_items
+            desc += ungettext(" (max %d item)", " (max %d items)", self.max_affected_items) % self.max_affected_items
 
         return desc
 
@@ -587,7 +596,8 @@ class CoverageCondition(Condition):
 
 class ValueCondition(Condition):
     """
-    An offer condition dependent on the VALUE of matching items from the basket.
+    An offer condition dependent on the VALUE of matching items from the
+    basket.
     """
 
     class Meta:
@@ -596,7 +606,9 @@ class ValueCondition(Condition):
         verbose_name_plural = _("Value Conditions")
 
     def is_satisfied(self, basket):
-        """Determines whether a given basket meets this condition"""
+        """
+        Determine whether a given basket meets this condition
+        """
         value_of_matches = D('0.00')
         for line in basket.all_lines():
             product = line.product
