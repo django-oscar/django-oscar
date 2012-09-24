@@ -14,9 +14,28 @@ Available settings
 OSCAR_DEFAULT_CURRENCY
 ----------------------
 
-Default: ``None`` (This is a required field)
+Default: ``GBP``
 
 This should be the symbol of the currency you wish Oscar to use by default.
+This will be used by the currency templatetag.
+
+OSCAR_CURRENCY_LOCALE
+---------------------
+
+Default: ``None``
+
+This can be used to customise currency formatting. The value will be passed to
+the ``format_currency`` function from the `Babel library`_.
+
+.. _`Babel library`: http://babel.edgewall.org/wiki/ApiDocs/0.9/babel.numbers#babel.numbers:format_decimal
+
+OSCAR_CURRENCY_FORMAT
+---------------------
+
+Default: ``None``
+
+This can be used to customise currency formatting. The value will be passed to
+the ``format_currency`` function from the Babel library.
 
 OSCAR_BASKET_COOKIE_LIFETIME
 ----------------------------
