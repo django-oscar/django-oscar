@@ -89,24 +89,29 @@ def create_order(number=None, basket=None, user=None, shipping_address=None,
     return order
 
 
-def create_offer():
+def create_offer(name="Dummy offer", offer_type="Site",
+                 max_applications=None, range=None, condition=None,
+                 benefit=None):
     """
     Helper method for creating an offer
     """
-    range = Range.objects.create(name="All products range",
-                                 includes_all_products=True)
-    condition = Condition.objects.create(range=range,
-                                         type=Condition.COUNT,
-                                         value=1)
-    benefit = Benefit.objects.create(range=range,
-                                     type=Benefit.PERCENTAGE,
-                                     value=20)
-    offer = ConditionalOffer.objects.create(
-        name='Dummy offer',
-        offer_type='Site',
+    if range is None:
+        range = Range.objects.create(name="All products range",
+                                    includes_all_products=True)
+    if condition is None:
+        condition = Condition.objects.create(range=range,
+                                            type=Condition.COUNT,
+                                            value=1)
+    if benefit is None:
+        benefit = Benefit.objects.create(range=range,
+                                        type=Benefit.PERCENTAGE,
+                                        value=20)
+    return ConditionalOffer.objects.create(
+        name=name,
+        offer_type=offer_type,
         condition=condition,
-        benefit=benefit)
-    return offer
+        benefit=benefit,
+        max_applications=max_applications)
 
 
 def create_voucher():
