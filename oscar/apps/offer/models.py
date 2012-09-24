@@ -230,8 +230,6 @@ class Benefit(models.Model):
     value = PositiveDecimalField(_('Value'), decimal_places=2, max_digits=12,
                                  null=True, blank=True)
 
-    price_field = 'price_incl_tax'
-
     # If this is not set, then there is no upper limit on how many products
     # can be discounted by this benefit.
     max_affected_items = models.PositiveIntegerField(_('Max Affected Items'), blank=True, null=True,
@@ -511,7 +509,6 @@ class ValueCondition(Condition):
     """
     An offer condition dependent on the VALUE of matching items from the basket.
     """
-    price_field = 'price_incl_tax'
 
     class Meta:
         proxy = True
@@ -526,7 +523,7 @@ class ValueCondition(Condition):
             product = line.product
             if (self.can_apply_condition(product) and product.has_stockrecord
                 and line.quantity_without_discount > 0):
-                price = getattr(product.stockrecord, self.price_field)
+                price = line.unit_price_incl_tax
                 value_of_matches += price * int(line.quantity_without_discount)
             if value_of_matches >= self.value:
                 return True
@@ -540,7 +537,7 @@ class ValueCondition(Condition):
             product = line.product
             if (self.can_apply_condition(product) and product.has_stockrecord
                 and line.quantity_without_discount > 0):
-                price = getattr(product.stockrecord, self.price_field)
+                price = line.unit_price_incl_tax
                 value_of_matches += price * int(line.quantity_without_discount)
         self._value_of_matches = value_of_matches
         return value_of_matches
@@ -568,7 +565,7 @@ class ValueCondition(Condition):
         for line in basket.all_lines():
             product = line.product
             if (self.can_apply_condition(product) and product.has_stockrecord):
-                price = getattr(product.stockrecord, self.price_field)
+                price = line.unit_price_incl_tax
                 if not price:
                     continue
                 quantity_to_consume = min(line.quantity_without_discount,
@@ -606,7 +603,7 @@ class PercentageDiscountBenefit(Benefit):
             product = line.product
             if (self.range.contains_product(product) and product.has_stockrecord
                 and self.can_apply_benefit(product)):
-                price = getattr(product.stockrecord, self.price_field)
+                price = line.unit_price_incl_tax
                 quantity = min(line.quantity_without_discount,
                                max_affected_items - affected_items)
                 line_discount = self.round(self.value/100 * price * int(quantity))
@@ -640,7 +637,7 @@ class AbsoluteDiscountBenefit(Benefit):
             product = line.product
             if (self.range.contains_product(product) and product.has_stockrecord
                 and self.can_apply_benefit(product)):
-                price = getattr(product.stockrecord, self.price_field)
+                price = line.unit_price_incl_tax
                 if not price:
                     # Avoid zero price products
                     continue
@@ -739,8 +736,7 @@ class MultibuyDiscountBenefit(Benefit):
             return self.round(Decimal('0.00'))
 
         # Determine cheapest line to give for free
-        line_price_getter = lambda line: getattr(line.product.stockrecord,
-                                                 self.price_field)
+        line_price_getter = lambda line: line.unit_price_incl_tax
         free_line = min(benefit_lines, key=line_price_getter)
         discount = line_price_getter(free_line)
 
