@@ -2,6 +2,14 @@
 Changelog
 =========
 
+0.3.4 - 2012-09-24
+------------------
+
+* Rework price lookups in offer calculations (backport of functionality from 0.4)
+* Add additional block to profile template
+
+Diff: https://github.com/tangentlabs/django-oscar/compare/0.3.3...0.3.4
+
 0.3.3 - 2012-08-24
 -------------------
 
