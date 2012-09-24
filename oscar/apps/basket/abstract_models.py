@@ -393,6 +393,10 @@ class AbstractBasket(models.Model):
     def contains_a_voucher(self):
         return self.vouchers.all().count() > 0
 
+    # =============
+    # Query methods
+    # =============
+
     def contains_voucher(self, code):
         """
         Test whether the basket contains a voucher with a given code
@@ -403,6 +407,16 @@ class AbstractBasket(models.Model):
             return False
         else:
             return True
+
+    def line_quantity(self, product, options=None):
+        """
+        Return the current quantity of a specific product and options
+        """
+        ref = self._create_line_reference(product, options)
+        try:
+            return self.lines.get(line_reference=ref).quantity
+        except ObjectDoesNotExist:
+            return 0
 
 
 class AbstractLine(models.Model):

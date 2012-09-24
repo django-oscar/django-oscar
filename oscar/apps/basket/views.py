@@ -173,14 +173,9 @@ class BasketAddView(FormView):
         return url
 
     def form_valid(self, form):
-        options = []
-        for option in form.instance.options:
-            if option.code in form.cleaned_data:
-                options.append({
-                    'option': option,
-                    'value': form.cleaned_data[option.code]})
         self.request.basket.add_product(
-            form.instance, form.cleaned_data['quantity'], options)
+            form.instance, form.cleaned_data['quantity'],
+            form.cleaned_options())
         messages.success(self.request, self.get_success_message(form))
 
         # Send signal for basket addition

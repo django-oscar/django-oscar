@@ -53,8 +53,6 @@ class BasketFormNode(template.Node):
             initial = {}
             if not product.is_group:
                 initial['product_id'] = product.id
-            context[self.form_var] = self.form_class(basket,
-                                                     user=None,
-                                                     instance=product,
-                                                     initial=initial)
+            context[self.form_var] = self.form_class(
+                basket, user=None, instance=product, initial=initial)
         return ''

@@ -777,15 +777,16 @@ class AbstractAttributeEntityType(models.Model):
 
 
 class AbstractOption(models.Model):
-    u"""
+    """
     An option that can be selected for a particular item when the product
     is added to the basket.
 
-    Eg a list ID for an SMS message send, or a personalised message to
+    For example,  a list ID for an SMS message send, or a personalised message to
     print on a T-shirt.
 
-    This is not the same as an attribute as options do not have a fixed value for
-    a particular item - options, they need to be specified by the customer.
+    This is not the same as an 'attribute' as options do not have a fixed value
+    for a particular item.  Instead, option need to be specified by a customer
+    when add the item to their basket.
     """
     name = models.CharField(_("Name"), max_length=128)
     code = models.SlugField(_("Code"), max_length=128)
@@ -795,7 +796,8 @@ class AbstractOption(models.Model):
         (REQUIRED, _("Required - a value for this option must be specified")),
         (OPTIONAL, _("Optional - a value for this option can be omitted")),
     )
-    type = models.CharField(_("Status"), max_length=128, default=REQUIRED, choices=TYPE_CHOICES)
+    type = models.CharField(_("Status"), max_length=128, default=REQUIRED,
+                            choices=TYPE_CHOICES)
 
     class Meta:
         abstract = True
@@ -809,6 +811,10 @@ class AbstractOption(models.Model):
         if not self.code:
             self.code = slugify(self.name)
         super(AbstractOption, self).save(*args, **kwargs)
+
+    @property
+    def is_required(self):
+        return self.type == self.REQUIRED
 
 
 class MissingProductImage(object):

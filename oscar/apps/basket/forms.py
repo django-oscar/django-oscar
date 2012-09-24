@@ -126,7 +126,20 @@ class AddToBasketForm(forms.Form):
             else:
                 self._create_product_fields(instance)
 
+    def cleaned_options(self):
+        """
+        Return submitted options in a clean format
+        """
+        options = []
+        for option in self.instance.options:
+            if option.code in self.cleaned_data:
+                options.append({
+                    'option': option,
+                    'value': self.cleaned_data[option.code]})
+        return options
+
     def clean(self):
+        # Check product exists
         try:
             product = Product.objects.get(
                 id=self.cleaned_data.get('product_id', None))
@@ -134,13 +147,9 @@ class AddToBasketForm(forms.Form):
             raise forms.ValidationError(
                 _("Please select a valid product"))
 
-        qty = self.cleaned_data.get('quantity', 1)
-        try:
-            line = self.basket.lines.get(product=product)
-        except Line.DoesNotExist:
-            desired_qty = qty
-        else:
-            desired_qty = qty + line.quantity
+        current_qty = self.basket.line_quantity(product,
+                                                self.cleaned_options())
+        desired_qty = current_qty + self.cleaned_data.get('quantity', 1)
 
         is_available, reason = product.is_purchase_permitted(
             user=self.user, quantity=desired_qty)
@@ -183,7 +192,9 @@ class AddToBasketForm(forms.Form):
                                                       label=_("Variant"))
 
     def _create_product_fields(self, item):
-        """Add the product option fields."""
+        """
+        Add the product option fields.
+        """
         for option in item.options:
             self._add_option_field(item, option)
 
@@ -194,7 +205,8 @@ class AddToBasketForm(forms.Form):
         This is designed to be overridden so that specific widgets can be used
         for certain types of options.
         """
-        self.fields[option.code] = forms.CharField()
+        kwargs = {'required': option.is_required}
+        self.fields[option.code] = forms.CharField(**kwargs)
 
 
 class SimpleAddToBasketForm(AddToBasketForm):

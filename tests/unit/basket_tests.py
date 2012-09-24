@@ -9,9 +9,10 @@ from oscar.apps.basket.middleware import BasketMiddleware
 from oscar.test.helpers import create_product
 from oscar.apps.basket.reports import (
     OpenBasketReportGenerator, SubmittedBasketReportGenerator)
+from oscar.apps.catalogue.models import Option
 
 
-class TestBasketModel(TestCase):
+class TestABasket(TestCase):
 
     def setUp(self):
         self.basket = Basket()
@@ -47,6 +48,21 @@ class TestBasketModel(TestCase):
         self.assertEqual(self.basket.num_items, 10)
         self.basket.flush()
         self.assertEqual(self.basket.num_items, 0)
+
+    def test_returns_correct_quantity_for_missing_product(self):
+        self.assertEqual(0, self.basket.line_quantity(self.product))
+
+    def test_returns_correct_quantity_for_existing_product(self):
+        self.basket.add_product(self.product)
+        self.assertEqual(1, self.basket.line_quantity(self.product))
+
+    def test_returns_correct_quantity_for_existing_product_with_options(self):
+        option = Option.objects.create(name="Message")
+        options = [{"option": option, "value": "2"}]
+        self.basket.add_product(self.product, options=options)
+        self.assertEqual(0, self.basket.line_quantity(self.product))
+        self.assertEqual(1, self.basket.line_quantity(self.product, options))
+
 
 
 class TestBasketMiddleware(TestCase):
