@@ -789,7 +789,7 @@ class AbstractOption(models.Model):
     when add the item to their basket.
     """
     name = models.CharField(_("Name"), max_length=128)
-    code = models.SlugField(_("Code"), max_length=128)
+    code = models.SlugField(_("Code"), max_length=128, unique=True)
 
     REQUIRED, OPTIONAL = ('Required', 'Optional')
     TYPE_CHOICES = (
