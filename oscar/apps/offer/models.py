@@ -95,13 +95,17 @@ class ConditionalOffer(models.Model):
     def get_voucher(self):
         return self._voucher
 
+    def get_max_applications(self):
+        return 10000
+
     def _proxy_condition(self):
         u"""
         Returns the appropriate proxy model for the condition
         """
         field_dict = dict(self.condition.__dict__)
-        if '_state' in field_dict:
-            del field_dict['_state']
+        for field in field_dict.keys():
+            if field.startswith('_'):
+                del field_dict[field]
         if self.condition.type == self.condition.COUNT:
             return CountCondition(**field_dict)
         elif self.condition.type == self.condition.VALUE:
@@ -115,8 +119,9 @@ class ConditionalOffer(models.Model):
         Returns the appropriate proxy model for the condition
         """
         field_dict = dict(self.benefit.__dict__)
-        if '_state' in field_dict:
-            del field_dict['_state']
+        for field in field_dict.keys():
+            if field.startswith('_'):
+                del field_dict[field]
         if self.benefit.type == self.benefit.PERCENTAGE:
             return PercentageDiscountBenefit(**field_dict)
         elif self.benefit.type == self.benefit.FIXED:
