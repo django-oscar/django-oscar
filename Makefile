@@ -1,5 +1,5 @@
 # These targets are not files
-.PHONY: contribute ci test i18n
+.PHONY: contribute ci test i18n lint travis
 
 install:
 	python setup.py develop
@@ -16,16 +16,18 @@ sandbox: install
 	sites/sandbox/manage.py loaddata countries.json sites/_fixtures/pages.json sites/_fixtures/auth.json
 	sites/sandbox/manage.py rebuild_index --noinput
 
-ci:
+test: 
+	./runtests.py tests/
+
+ci: install lint
 	# Run continous tests and generate lint reports
-	python setup.py develop
-	pip install -r requirements.txt
 	./runtests.py --with-coverage --with-xunit
 	coverage xml
-	flake8 --ignore=W292,E202 oscar | perl -ple "s/: /: [E] /" | grep -v migrations > violations.txt
 
-test:
-	./runtests.py
+lint:
+	./lint.sh
+
+travis: install test lint
 
 i18n:
 	# Create the .po files used for i18n 
