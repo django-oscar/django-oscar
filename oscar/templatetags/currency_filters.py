@@ -10,6 +10,8 @@ def currency(value):
     """
     Format decimal value as currency
     """
+    if value is None:
+        return ''
     # Using Babel's currency formatting
     # http://packages.python.org/Babel/api/babel.numbers-module.html#format_currency
     kwargs = {
