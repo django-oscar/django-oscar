@@ -3,7 +3,7 @@ from django.db.models.loading import get_model
 from django.utils.translation import ugettext_lazy as _
 
 User = get_model('user', 'User')
-ProductNotification = get_model('notification', 'productnotification')
+ProductAlert = get_model('customer', 'ProductAlert')
 
 
 class UserSearchForm(forms.Form):
@@ -11,16 +11,28 @@ class UserSearchForm(forms.Form):
     name = forms.CharField(required=False, label=_("Name"))
 
 
-class ProductNotificationUpdateForm(forms.ModelForm):
+class ProductAlertUpdateForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(ProductAlertUpdateForm, self).__init__(*args, **kwargs)
+        alert = kwargs['instance']
+        if alert.user:
+            # Remove 'unconfirmed' from list of available choices when editing
+            # an alert for a real user
+            choices = self.fields['status'].choices
+            del choices[0]
+            self.fields['status'].choices = choices
+
     class Meta:
-        model = ProductNotification
-        exclude = ('confirm_key', 'unsubscribe_key')
+        model = ProductAlert
+        exclude = ('product', 'user', 'email', 'key',
+                   'date_confirmed', 'date_cancelled', 'date_closed')
 
 
-class ProductNotificationSearchForm(forms.Form):
+class ProductAlertSearchForm(forms.Form):
     STATUS_CHOICES = (
         ('', '------------'),
-    ) + ProductNotification.STATUS_TYPES
+    ) + ProductAlert.STATUS_CHOICES
 
     status = forms.ChoiceField(required=False, choices=STATUS_CHOICES)
     name = forms.CharField(required=False)

@@ -1,17 +1,21 @@
-from oscar.apps.customer.abstract_models import (
-    AbstractEmail, AbstractCommunicationEventType, AbstractNotification)
+from oscar.apps.customer import abstract_models
 
 
-class Email(AbstractEmail):
+class Email(abstract_models.AbstractEmail):
     pass
 
 
-class CommunicationEventType(AbstractCommunicationEventType):
+class CommunicationEventType(abstract_models.AbstractCommunicationEventType):
     pass
 
 
-class Notification(AbstractNotification):
+class Notification(abstract_models.AbstractNotification):
+    pass
+
+
+class ProductAlert(abstract_models.AbstractProductAlert):
     pass
 
 
 from oscar.apps.customer.history_helpers import *
+from oscar.apps.customer.alerts.receivers import *

@@ -6,10 +6,13 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views.generic import ListView, DetailView, DeleteView, UpdateView
 
-from oscar.apps.dashboard.users import forms
 from oscar.views.generic import BulkEditMixin
+from oscar.core.loading import get_classes
 
-ProductNotification = get_model('notification', 'productnotification')
+UserSearchForm, ProductAlertSearchForm, ProductAlertUpdateForm  = get_classes(
+    'dashboard.users.forms', ('UserSearchForm', 'ProductAlertSearchForm',
+                              'ProductAlertUpdateForm'))
+ProductAlert = get_model('customer', 'ProductAlert')
 
 
 class IndexView(ListView, BulkEditMixin):
@@ -18,7 +21,7 @@ class IndexView(ListView, BulkEditMixin):
     model = User
     actions = ('make_active', 'make_inactive', )
     current_view = 'dashboard:users-index'
-    form_class = forms.UserSearchForm
+    form_class = UserSearchForm
     desc_template = _('%(main_filter)s %(email_filter)s %(name_filter)s')
     description = ''
 
@@ -88,15 +91,13 @@ class UserDetailView(DetailView):
         return context
 
 
-class ProductNotificationListView(ListView, BulkEditMixin):
-    model = ProductNotification
-    form_class = forms.ProductNotificationSearchForm
-    context_object_name = 'notification_list'
-    template_name = 'dashboard/notification/list.html'
-    paginate = 25
-    actions = ('update_selected_notification_status',)
-    base_description = _('All notifications')
-    checkbox_object_name = 'notification'
+class ProductAlertListView(ListView):
+    model = ProductAlert
+    form_class = ProductAlertSearchForm
+    context_object_name = 'alerts'
+    template_name = 'dashboard/users/alerts/list.html'
+    paginate_by = 20
+    base_description = _('All Alerts')
     description = ''
 
     def get_queryset(self):
@@ -138,35 +139,29 @@ class ProductNotificationListView(ListView, BulkEditMixin):
 
         return queryset
 
-    def update_selected_notification_status(self, request, notifications):
-        new_status = request.POST.get('status')
-        for notification in notifications:
-            notification.status = new_status
-            notification.save()
-        return HttpResponseRedirect(reverse('dashboard:user-notification-list'))
-
     def get_context_data(self, **kwargs):
-        context = super(ProductNotificationListView, self).get_context_data(**kwargs)
+        context = super(ProductAlertListView, self).get_context_data(**kwargs)
         context['form'] = self.form
-        context['notification_form'] = forms.ProductNotificationUpdateForm
         context['queryset_description'] = self.description
         return context
 
 
-class ProductNotificationUpdateView(UpdateView):
-    template_name = 'dashboard/notification/update.html'
-    model = ProductNotification
-    form_class = forms.ProductNotificationUpdateForm
-    context_object_name = 'notification'
+class ProductAlertUpdateView(UpdateView):
+    template_name = 'dashboard/users/alerts/update.html'
+    model = ProductAlert
+    form_class = ProductAlertUpdateForm
+    context_object_name = 'alert'
 
     def get_success_url(self):
-        return reverse('dashboard:user-notification-list')
+        messages.success(self.request, _("Product alert saved"))
+        return reverse('dashboard:user-alert-list')
 
 
-class ProductNotificationDeleteView(DeleteView):
-    model = ProductNotification
-    template_name = 'dashboard/notification/delete.html'
-    context_object_name = 'notification'
+class ProductAlertDeleteView(DeleteView):
+    model = ProductAlert
+    template_name = 'dashboard/users/alerts/delete.html'
+    context_object_name = 'alert'
 
     def get_success_url(self):
-        return reverse('dashboard:user-notification-list')
+        messages.warning(self.request, _("Product alert deleted"))
+        return reverse('dashboard:user-alert-list')

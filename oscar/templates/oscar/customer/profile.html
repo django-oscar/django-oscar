@@ -31,7 +31,7 @@
         <li {% if active_tab == 'orders' %}class="active"{% endif %}><a href="#orders" data-toggle="tab">{% trans 'Order History' %}</a></li>
         <li {% if active_tab == 'addresses' %}class="active"{% endif %}><a href="#addresses" data-toggle="tab">{% trans 'Address Book' %}</a></li>
         <li {% if active_tab == 'emails' %}class="active"{% endif %}><a href="#emails" data-toggle="tab">{% trans 'Email History' %}</a></li>
-        <li {% if active_tab == 'notifications' %}class="active"{% endif %}><a href="#notifications" data-toggle="tab">{% trans "Notifications" %}</a></li>
+        <li {% if active_tab == 'alerts' %}class="active"{% endif %}><a href="#alerts" data-toggle="tab">{% trans "Alerts" %}</a></li>
         {% block extra_tabs_nav %}
         {% endblock %}
     </ul>
@@ -181,9 +181,45 @@
 			{% endblock %}
         </div>
 
-        <div class="tab-pane {% if active_tab == 'notifications' %}active{% endif %}" id="notifications">
-            {% block tab_notifications %}
-                {% include "notification/partials/notification_pane.html" with edit_enabled="yes" %}
+        <div class="tab-pane {% if active_tab == 'alerts' %}active{% endif %}" id="alerts">
+            {% block tab_alerts %}
+            <div class="sub-header">
+			    <h3>{% trans "Alerts" %}</h3>
+			</div>
+
+			{% if not alerts %}
+			<p>{% trans "You do not have any active alerts for out-of-stock products." %}</p>
+			{% else %}
+			    <form action="." method="post" id="alerts_form">
+			    {% csrf_token %}
+			        <table class="table table-stiped table-bordered">
+			            <tr>
+			                <th>{% trans "Product" %}</th>
+			                <th>{% trans "Status" %}</th>
+			                <th>{% trans "Date created" %}</th>
+			                <th></th>
+			            </tr>
+
+			            {% for alert in alerts %}
+			            <tr>
+			                <td>
+			                    {% with product=alert.product %}
+			                    <a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a>
+			                    {% endwith %}
+			                </td>
+			                <td>{{ alert.status }}</td>
+			                <td>{{ alert.date_created }}</td>
+			                <td>
+			                    {% if alert.can_be_cancelled %}
+			                        <button class="btn btn-danger" type='submit' name='cancel_alert' value='{{ alert.id }}'>{% trans "Cancel" %}</button>
+			                    {% endif %}
+			                </td>
+			            </tr>
+			            {% endfor %}
+			        </table>
+			    </form>
+			{% endif %}
+
             {% endblock %}
         </div>
 

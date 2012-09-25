@@ -9,8 +9,8 @@ from oscar.apps.catalogue.signals import product_viewed, product_search
 Product = get_model('catalogue', 'product')
 ProductReview = get_model('reviews', 'ProductReview')
 Category = get_model('catalogue', 'category')
-ProductNotificationForm = get_class('catalogue.notification.forms',
-                                    'ProductNotificationForm')
+ProductAlertForm = get_class('customer.forms',
+                             'ProductAlertForm')
 
 
 class ProductDetailView(DetailView):
@@ -29,11 +29,12 @@ class ProductDetailView(DetailView):
     def get_context_data(self, **kwargs):
         ctx = super(ProductDetailView, self).get_context_data(**kwargs)
         ctx['reviews'] = self.get_reviews()
-        ctx['notification_form'] = ProductNotificationForm(initial={
-            'user': self.request.user,
-            'email': getattr(self.request.user, 'email', ''),
-        })
+        ctx['alert_form'] = self.get_alert_form()
         return ctx
+
+    def get_alert_form(self):
+        return ProductAlertForm(user=self.request.user,
+                                product=self.object)
 
     def get_reviews(self):
         return self.object.reviews.filter(status=ProductReview.APPROVED)
@@ -153,7 +154,4 @@ class ProductListView(ListView):
         else:
             context['summary'] = _("Products matching '%(query)s'") % {'query': q}
             context['search_term'] = q
-        context['notification_form'] = ProductNotificationForm(initial={
-            'user':self.request.user,
-        })
         return context

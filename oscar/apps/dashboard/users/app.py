@@ -8,7 +8,7 @@ from oscar.apps.dashboard.nav import register, Node
 
 node = Node(_('Customers'))
 node.add_child(Node(_('Customers'), 'dashboard:users-index'))
-node.add_child(Node(_('Notifications'), 'dashboard:user-notification-list'))
+node.add_child(Node(_('Alerts'), 'dashboard:user-alert-list'))
 register(node, 30)
 
 
@@ -16,24 +16,28 @@ class UserManagementApplication(Application):
     name = None
     index_view = views.IndexView
     user_detail_view = views.UserDetailView
-    notification_list_view = views.ProductNotificationListView
-    notification_update_view = views.ProductNotificationUpdateView
-    notification_delete_view = views.ProductNotificationDeleteView
+    alert_list_view = views.ProductAlertListView
+    alert_update_view = views.ProductAlertUpdateView
+    alert_delete_view = views.ProductAlertDeleteView
 
     def get_urls(self):
         urlpatterns = patterns('',
             url(r'^$', self.index_view.as_view(), name='users-index'),
-            url(r'^notifications/(?P<pk>\d+)/delete/$',
-                self.notification_delete_view.as_view(),
-                name='user-notification-delete'),
-            url(r'^notifications/(?P<pk>\d+)/update/$',
-                self.notification_update_view.as_view(),
-                name='user-notification-update'),
-            url(r'^notifications/$',
-                self.notification_list_view.as_view(),
-                name='user-notification-list'),
+
+            # Alerts
+            url(r'^alerts/(?P<pk>\d+)/delete/$',
+                self.alert_delete_view.as_view(),
+                name='user-alert-delete'),
+            url(r'^alerts/(?P<pk>\d+)/update/$',
+                self.alert_update_view.as_view(),
+                name='user-alert-update'),
+            url(r'^alerts/$',
+                self.alert_list_view.as_view(),
+                name='user-alert-list'),
+
             url(r'^(?P<pk>[-\w]+)/$',
                 self.user_detail_view.as_view(), name='user-detail'),
+
         )
         return self.post_process_urls(urlpatterns)
 
