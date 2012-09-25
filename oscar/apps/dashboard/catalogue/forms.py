@@ -79,7 +79,6 @@ class StockRecordForm(forms.ModelForm):
             del self.fields['num_in_stock']
             del self.fields['low_stock_threshold']
 
-
     class Meta:
         model = StockRecord
         exclude = ('product', 'num_allocated', 'price_currency')
@@ -195,24 +194,16 @@ class ProductForm(forms.ModelForm):
             value = self.cleaned_data['attr_%s' % attribute.code]
             attribute.save_value(object, value)
 
-    def clean_upc(self):
-        upc = self.cleaned_data['upc']
-        try:
-            Product.objects.get(upc=upc)
-        except Product.DoesNotExist:
-            pass
-        else:
-            raise forms.ValidationError(
-                _("A product with UPC '%s' already exists") % upc)
-        return upc
-
     def clean(self):
         data = self.cleaned_data
         if 'parent' not in data and not data['title']:
             raise forms.ValidationError(_("This field is required"))
         elif 'parent' in data and data['parent'] is None and not data['title']:
             raise forms.ValidationError(_("Parent products must have a title"))
-        return data
+        # calling the clean() method of BaseForm here is required to apply checks
+        # for 'unique' field. This prevents e.g. the UPC field from raising 
+        # a DatabaseError.
+        return super(ProductForm, self).clean()
 
 
 class StockAlertSearchForm(forms.Form):
