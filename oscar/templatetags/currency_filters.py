@@ -1,3 +1,5 @@
+from decimal import InvalidOperation, Decimal as D
+
 from django import template
 from django.conf import settings
 from babel.numbers import format_currency
@@ -20,4 +22,10 @@ def currency(value):
     locale = getattr(settings, 'OSCAR_CURRENCY_LOCALE', None)
     if locale:
         kwargs['locale'] = locale
+
+    try:
+        value = D(value)
+    except (TypeError, InvalidOperation):
+        return u""
+
     return format_currency(value, **kwargs)
