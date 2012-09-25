@@ -21,6 +21,8 @@ Next, you can modify the ``Product`` model through subclassing::
 
     # yourproject/catalogue/models.py
 
+    from django.db import models
+
     from oscar.apps.catalogue.abstract_models import AbstractProduct
 
     class Product(AbstractProduct):
