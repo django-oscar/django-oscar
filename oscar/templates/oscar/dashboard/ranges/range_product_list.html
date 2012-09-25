@@ -3,7 +3,7 @@
 {% load i18n %}
 
 {% block title %}
-{% blocktrans %}Products in range '{{ range.name }}'{% endblocktrans %} | {{ block.super }}
+{% blocktrans with name=range.name %}Products in range '{{ name }}'{% endblocktrans %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
