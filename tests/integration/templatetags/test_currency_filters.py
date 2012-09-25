@@ -19,7 +19,12 @@ class TestCurrencyFilter(TestCase):
         }))
         self.assertTrue(u'£10.23' in out)
 
-    def test_handles_missing_values_gracefully(self):
+    def test_handles_none_price_gracefully(self):
         self.template.render(template.Context({
             'price': None
+        }))
+
+    def test_handles_string_price_gracefully(self):
+        self.template.render(template.Context({
+            'price': ''
         }))

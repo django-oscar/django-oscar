@@ -1,3 +1,5 @@
+from decimal import Decimal as D, InvalidOperation
+
 from django import template
 from django.conf import settings
 from babel.numbers import format_currency
@@ -10,8 +12,10 @@ def currency(value):
     """
     Format decimal value as currency
     """
-    if value is None:
-        return ''
+    try:
+        value = D(value)
+    except (TypeError, InvalidOperation):
+        return u""
     # Using Babel's currency formatting
     # http://packages.python.org/Babel/api/babel.numbers-module.html#format_currency
     kwargs = {
