@@ -8,6 +8,7 @@ from django_dynamic_fixture import G
 
 User = get_model('auth', 'user')
 Product = get_model('catalogue', 'product')
+Category = get_model('catalogue', 'Category')
 StockRecord = get_model('partner', 'stockrecord')
 
 
@@ -23,12 +24,11 @@ class TestCatalogueViews(ClientTestCase):
             self.assertIsOk(self.client.get(url))
 
 
-class TestCatalogueDashboardViews(WebTest):
+class TestAStaffUser(WebTest):
     email = 'test@test.com'
     password = 'mypassword'
 
     def setUp(self):
-        print 'setting up test'
         user = User.objects.create_user('_', self.email, self.password)
         user.is_staff = True
         user.save()
@@ -38,8 +38,8 @@ class TestCatalogueDashboardViews(WebTest):
         form['login-password'] = self.password
         form.submit('login_submit')
 
-    def test_can_login(self):
-        product = G(Product, ignore_fields=['stockrecord'])
+    def test_can_submit_an_invalid_product_update_and_returns_to_update_page(self):
+        product = G(Product, ignore_fields=['stockrecord'], parent=None)
 
         form = self.app.get(
             reverse('dashboard:catalogue-product',
@@ -47,11 +47,27 @@ class TestCatalogueDashboardViews(WebTest):
         ).forms[0]
         assert form['partner'].value == u''
 
+        page = form.submit()
+        self.assertContains(page, 'errorlist')
+
+    def test_can_update_a_product_without_stockrecord(self):
+        category = G(Category)
+        product = G(Product, ignore_fields=['stockrecord'], parent=None)
+
+        page = self.app.get(
+            reverse('dashboard:catalogue-product',
+                    kwargs={'pk': product.id})
+        )
+        form = page.forms[0]
+        form['productcategory_set-0-category'] = category.id
+        assert form['partner'].value == u''
+
         form.submit()
 
         try:
             product = Product.objects.get(pk=product.pk)
-            product.stockrecord
-            self.fail('product has stock record but should not')
-        except StockRecord.DoesNotExist:
+        except Product.DoesNotExist:
             pass
+        else:
+            if product.has_stockrecord:
+                self.fail('product has stock record but should not')
