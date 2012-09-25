@@ -60,10 +60,9 @@
 					{% endfor %}
 				</ul>
 			{% else %}
-			<p class="star">{% trans "No Rating" %}
-			
-			<a href="{% url catalogue:reviews-add product.slug product.id %}#addreview">{% trans "Add review" %}</a>
-			</p>
+				<p class="star">
+					<a href="{% url catalogue:reviews-add product.slug product.id %}#addreview">{% trans "Add review" %}</a>
+				</p>
 			{% endif %}
              
             <hr/>
