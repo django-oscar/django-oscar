@@ -1,3 +1,4 @@
+from urlparse import urlparse
 from django.contrib import messages
 from django.core.urlresolvers import reverse, resolve
 from django.db.models import get_model
@@ -165,7 +166,7 @@ class BasketAddView(FormView):
         if url:
             # We only allow internal URLs so we see if the url resolves
             try:
-                resolve(url)
+                resolve(urlparse(url).path)
             except Http404:
                 url = None
         if url is None:
