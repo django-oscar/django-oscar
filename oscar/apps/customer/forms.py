@@ -309,13 +309,14 @@ class ProductAlertForm(forms.ModelForm):
         if email:
             try:
                 ProductAlert.objects.get(
-                    product=self.product, email=email, status=ProductAlert.ACTIVE)
+                    product=self.product, email=email,
+                    status=ProductAlert.ACTIVE)
             except ProductAlert.DoesNotExist:
                 pass
             else:
                 raise forms.ValidationError(_(
                     "There is already an active stock alert for %s") % email)
-        elif self.user.id:
+        elif self.user.is_authenticated():
             try:
                 ProductAlert.objects.get(product=self.product,
                                          user=self.user,
