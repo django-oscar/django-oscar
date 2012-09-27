@@ -174,11 +174,11 @@ class AbstractProductAlert(models.Model):
     # registered user, anonymous users will only have an email address
     # attached to the notification
     user = models.ForeignKey('auth.User', db_index=True, blank=True, null=True,
-                             related_name="alerts")
-    email = models.EmailField(db_index=True, blank=True, null=True)
+                             related_name="alerts", verbose_name=_('User'))
+    email = models.EmailField(_("Email"), db_index=True, blank=True, null=True)
 
     # This key are used to confirm and cancel alerts for anon users
-    key = models.CharField(max_length=128, null=True, db_index=True)
+    key = models.CharField(_("Key"), max_length=128, null=True, db_index=True)
 
     # An alert can have two different statuses for authenticated
     # users (``ACTIVE`` and ``INACTIVE`` and anonymous users have an
@@ -194,13 +194,15 @@ class AbstractProductAlert(models.Model):
         (CANCELLED, _('Cancelled')),
         (CLOSED, _('Closed')),
     )
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES,
-                              default=ACTIVE)
+    status = models.CharField(_("Status"), max_length=20,
+                              choices=STATUS_CHOICES, default=ACTIVE)
 
-    date_created = models.DateTimeField(auto_now_add=True)
-    date_confirmed = models.DateTimeField(blank=True, null=True)
-    date_cancelled = models.DateTimeField(blank=True, null=True)
-    date_closed = models.DateTimeField(blank=True, null=True)
+    date_created = models.DateTimeField(_("Date created"), auto_now_add=True)
+    date_confirmed = models.DateTimeField(_("Date confirmed"), blank=True,
+                                          null=True)
+    date_cancelled = models.DateTimeField(_("Date cancelled"), blank=True,
+                                          null=True)
+    date_closed = models.DateTimeField(_("Date closed"), blank=True, null=True)
 
     class Meta:
         abstract = True
