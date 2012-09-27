@@ -154,7 +154,4 @@ class ProductListView(ListView):
         else:
             context['summary'] = _("Products matching '%(query)s'") % {'query': q}
             context['search_term'] = q
-        context['alert_form'] = ProductAlertForm(initial={
-            'user':self.request.user,
-        })
         return context
