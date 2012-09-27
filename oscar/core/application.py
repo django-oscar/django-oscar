@@ -3,13 +3,13 @@ from django.conf.urls.defaults import patterns
 
 class Application(object):
     name = None
-    
+
     def __init__(self, app_name=None, **kwargs):
         self.app_name = app_name
         # Set all kwargs as object attributes
         for key, value in kwargs.iteritems():
             setattr(self, key, value)
-    
+
     def get_urls(self):
         """
         Return the url patterns for this app, MUST be implemented in the subclass
@@ -18,12 +18,14 @@ class Application(object):
 
     def post_process_urls(self, urlpatterns):
         """
-        Customise URL patterns.  
-        
+        Customise URL patterns.
+
         By default, this only allows custom decorators to be specified, but you
         could override this method to do anything you want.
         """
         for pattern in urlpatterns:
+            if hasattr(pattern, 'url_patterns'):
+                self.post_process_urls(pattern.url_patterns)
             if not hasattr(pattern, '_callback'):
                 continue
             # Look for a custom decorator
@@ -35,7 +37,7 @@ class Application(object):
 
     def get_url_decorator(self, url_name):
         return None
-    
+
     @property
     def urls(self):
         # We set the application and instance namespace here
