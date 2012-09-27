@@ -4,6 +4,7 @@ from django.views import generic
 
 from oscar.apps.customer import views
 from oscar.apps.customer.notifications import views as notification_views
+from oscar.apps.customer.alerts import views as alert_views
 from oscar.core.application import Application
 
 
@@ -29,6 +30,10 @@ class CustomerApplication(Application):
     notification_inbox_view = notification_views.InboxView
     notification_archive_view = notification_views.ArchiveView
     notification_update_view = notification_views.UpdateView
+
+    alert_create_view = alert_views.ProductAlertCreateView
+    alert_confirm_view = alert_views.ProductAlertConfirmView
+    alert_cancel_view = alert_views.ProductAlertCancelView
 
     def get_urls(self):
         urlpatterns = patterns('',
@@ -92,6 +97,16 @@ class CustomerApplication(Application):
             url(r'^notifications/update/$',
                 login_required(self.notification_update_view.as_view()),
                 name='notifications-update'),
+
+            # Alerts
+            url(r'^alerts/create/(?P<pk>\d+)/$', self.alert_create_view.as_view(),
+                name='alert-create'),
+            url(r'^alerts/confirm/(?P<key>[a-z0-9]+)/$',
+                self.alert_confirm_view.as_view(),
+                name='alerts-confirm'),
+            url(r'^alerts/cancel/(?P<key>[a-z0-9]+)/$',
+                self.alert_cancel_view.as_view(),
+                name='alerts-cancel'),
             )
         return self.post_process_urls(urlpatterns)
 

@@ -1,0 +1,43 @@
+{% extends 'dashboard/layout.html' %}
+{% load i18n %}
+
+{% block body_class %}users{% endblock %}
+
+{% block title %}
+{% blocktrans with id=alert.id %}Update alert #{{ id }}{% endblocktrans %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="{% url dashboard:user-alert-list %}">{% trans "Product alerts" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active"><a href=".">{% blocktrans with id=alert.id %}Alert #{{ id }}{% endblocktrans %}</a></li>
+</ul>
+{% endblock %}
+
+{% block header %}
+    <div class="page-header">
+        <h1>{% blocktrans with id=alert.id %}Product alert #{{ id }}{% endblocktrans %}</h1>
+    </div>
+{% endblock header %}
+
+{% block dashboard_content %}
+{% include 'dashboard/users/alerts/partials/alert.html' %}
+
+<h2>{% trans "Change status" %}</h2>
+<form action="." method="post">
+    {% csrf_token %}
+
+	{% include 'partials/form_fields.html' %}
+    <div class="form-actions">
+		<button type='submit' class="btn btn-large btn-primary">{% trans "Save" %}</button> {% trans "or" %}
+        <a href="{% url dashboard:user-alert-list %}">{% trans "cancel" %}</a>
+    </div>
+</form>
+{% endblock dashboard_content %}
