@@ -27,7 +27,7 @@
 
 {% block promotion_form %}
 <div class="well well-info">
-    <form action="." method="post" enctype="multipart/form-data" class="fields-full">
+    <form action="." method="post" enctype="multipart/form-data" class="fields-full wysiwyg">
     	{% csrf_token %}
     	{% include "partials/form_fields.html" with form=form %}
 

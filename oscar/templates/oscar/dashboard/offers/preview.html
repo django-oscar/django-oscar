@@ -5,7 +5,7 @@
 	<table class="table">
 		<tbody>
 			<tr><th>{% trans "Name" %}</th><td>{{ offer.name }}</td></tr>
-			<tr><th>{% trans "Description" %}</th><td>{{ offer.description }}</td></tr>
+			<tr><th>{% trans "Description" %}</th><td>{{ offer.description|safe }}</td></tr>
 			<tr><th>{% trans "Start date" %}</th><td>{{ offer.start_date }}</td></tr>
 			<tr><th>{% trans "End date" %}</th><td>{{ offer.end_date }}</td></tr>
 			<tr><th>{% trans "Condition" %}</th><td>{{ condition.description }}</td></tr>

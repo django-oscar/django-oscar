@@ -82,7 +82,7 @@
     <div id="product_description" class="sub-header">
 		<h2>{% trans "Product Description" %}</h2>
     </div>
-    <p>{{ product.description }}</p>
+    <p>{{ product.description|safe }}</p>
 	{% endif %}
 	{% endblock %}
     
