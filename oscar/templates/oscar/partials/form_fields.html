@@ -1,5 +1,4 @@
 <span class="help-block">{{ form.non_field_errors }}</span>
-
 {% for field in form %}
 <div class="control-group {% for error in field.errors %}error{% endfor %}">
     {% if field.is_hidden %}
@@ -10,7 +9,7 @@
             {{ field }}
             {% for error in field.errors %}
                 <span class="help-block">
-                    {{ error|escape }}
+                    {{ error }}
                 </span>
             {% endfor %}
             {% if field.help_text %}

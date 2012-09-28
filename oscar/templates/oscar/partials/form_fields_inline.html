@@ -7,7 +7,7 @@
             {{ field }}
             {% for error in field.errors %}
                 <ul class="help-block">
-                    <li>{{ error|escape }}</li>
+                    <li>{{ error }}</li>
                 </ul>
             {% endfor %}
         </span>
