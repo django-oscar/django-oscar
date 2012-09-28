@@ -2,6 +2,13 @@
 Changelog
 =========
 
+0.3.5 - 2012-09-28
+------------------
+A couple of minor adjustments for Tangent projects
+
+* Add handling of custom redirect after adding to basket
+* Add recursive URL decoration
+
 0.3.4 - 2012-09-24
 ------------------
 
