@@ -1,4 +1,4 @@
-import sha
+import hashlib
 import random
 
 from django.db import models
@@ -267,8 +267,8 @@ class AbstractProductAlert(models.Model):
         """
         Get a random generated key based on SHA-1 and email address
         """
-        salt = sha.new(str(random.random())).hexdigest()
-        return sha.new(salt + self.email).hexdigest()
+        salt = hashlib.sha1(str(random.random())).hexdigest()
+        return hashlib.sha1(salt + self.email).hexdigest()
 
     def get_confirm_url(self):
         return reverse('customer:alerts-confirm', kwargs={'key': self.key})
