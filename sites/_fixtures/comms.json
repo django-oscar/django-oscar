@@ -1,0 +1,32 @@
+[
+    {
+        "pk": 1,
+        "model": "customer.communicationeventtype",
+        "fields": {
+            "category": "User related",
+            "email_body_html_template": "<p>Thank you for registering</p>",
+            "code": "REGISTRATION",
+            "sms_template": "",
+            "name": "Newly registered user",
+            "email_subject_template": "Welcome to {{ site.name }}",
+            "date_updated": "2012-10-16T10:23:23.059Z",
+            "email_body_template": "Thank you for registering",
+            "date_created": "2012-10-11T15:09:56.317Z"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "customer.communicationeventtype",
+        "fields": {
+            "category": "User related",
+            "email_body_html_template": "<p>You're receiving this e-mail because you requested a password reset for your user account at {{ site.name }}.</p>\r\n\r\n<p>Please go to the following page and choose a new password:</p>\r\n{{ reset_url }} \r\n\r\n<p>Thanks for using our site!</p>\r\n<p>The {{ site.name }} team</p>",
+            "code": "PASSWORD_RESET",
+            "sms_template": "",
+            "name": "Forgotten password",
+            "email_subject_template": "Resetting your password at {{ site.name }}",
+            "date_updated": "2012-10-16T10:21:32.909Z",
+            "email_body_template": "You're receiving this e-mail because you requested a password reset for your user account at {{ site.name }}.\r\n\r\nPlease go to the following page and choose a new password:\r\n{{ reset_url }} \r\n\r\nThanks for using our site!\r\nThe {{ site.name }} team",
+            "date_created": "2012-10-16T09:47:43.471Z"
+        }
+    }
+]

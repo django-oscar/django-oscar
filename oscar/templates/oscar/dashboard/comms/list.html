@@ -1,0 +1,49 @@
+{% extends 'dashboard/layout.html' %}
+{% load i18n %}
+
+{% block title %}
+	{% trans "Emails" %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <span class="divider">/</span>
+    </li>
+	<li class="active"><a href=".">{% trans "Emails" %}</a></li>
+</ul>
+{% endblock %}
+
+{% block dashboard_content %}
+<div class="sub-header">
+	<h2>{% trans "Emails" %}</h2>
+</div>
+{% if commtypes %}
+<table class="table table-striped table-bordered">
+	<thead>
+		<tr>
+			<th>{% trans "Code" %}</th>
+			<th>{% trans "Name" %}</th>
+			<th>{% trans "Category" %}</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for commtype in commtypes %}
+		<tr>
+			<td>{{ commtype.code }}</td>
+			<td>{{ commtype.name }}</td>
+			<td>{{ commtype.category }}</td>
+			<td>
+				<a class="btn btn-success" href="{% url dashboard:comms-update commtype.code|lower %}">{% trans "Edit" %}</a>
+			</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+{% include "partials/pagination.html" %}
+{% else %}
+<p>{% trans "There are no defined emails to edit." %}</p>
+{% endif %}
+{% endblock dashboard_content %}

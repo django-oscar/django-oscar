@@ -21,7 +21,7 @@ oscar.dashboard = {
         var options = {
             "html": true
         };
-        $('form.wysiwyg textarea').wysihtml5(options);
+        $('form.wysiwyg textarea, textarea.wysiwyg').wysihtml5(options);
 
         $('.scroll-pane').jScrollPane();
 

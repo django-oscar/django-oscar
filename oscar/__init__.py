@@ -55,6 +55,7 @@ OSCAR_CORE_APPS = [
     'oscar.apps.dashboard.offers',
     'oscar.apps.dashboard.ranges',
     'oscar.apps.dashboard.vouchers',
+    'oscar.apps.dashboard.communications',
     # 3rd-party apps that oscar depends on
     'haystack',
     'treebeard',
