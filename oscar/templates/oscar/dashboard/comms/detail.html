@@ -1,0 +1,40 @@
+{% extends 'dashboard/layout.html' %}
+{% load i18n %}
+
+{% block title %}
+{{ commtype.name }} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+	<li>
+		<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+		<span class="divider">/</span>
+	</li>
+	<li>
+		<a href="{% url dashboard:comms-list %}">{% trans "Emails" %}</a>
+		<span class="divider">/</span>
+	</li>
+	<li class="active"><a href=".">{{ commtype.name }}</a></li>
+</ul>
+{% endblock %}
+
+{% block dashboard_content %}
+
+<div class="sub-header">
+	<h2>{{ commtype.name }}</h2>
+</div>
+
+<form method="post" action=".">
+	{% csrf_token %}
+	{% include 'partials/form_fields.html' %}
+	<div class="well">
+		<button type="submit" class="btn btn-primary btn-large" name="send_preview">Send preview email</button>
+	</div>
+	<div class="well">
+		<button type="submit" class="btn btn-primary btn-large">Save</button>
+		or <a href="">cancel</a>.
+	</div>
+</form>
+
+{% endblock dashboard_content %}

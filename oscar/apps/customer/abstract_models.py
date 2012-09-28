@@ -34,6 +34,9 @@ class AbstractEmail(models.Model):
 
 
 class AbstractCommunicationEventType(models.Model):
+    """
+    A 'type' of communication.  Like a order confirmation email.
+    """
 
     # Code used for looking up this event programmatically.
     # eg. PASSWORD_RESET
@@ -45,16 +48,21 @@ class AbstractCommunicationEventType(models.Model):
     # We allow communication types to be categorised
     ORDER_RELATED = _('Order related')
     USER_RELATED = _('User related')
-    category = models.CharField(_('Category'), max_length=255, default=ORDER_RELATED)
+    category = models.CharField(_('Category'), max_length=255,
+                                default=ORDER_RELATED)
 
     # Template content for emails
-    email_subject_template = models.CharField(_('Email Subject Template'), max_length=255, blank=True)
-    email_body_template = models.TextField(_('Email Body Template'), blank=True, null=True)
-    email_body_html_template = models.TextField(_('Email Body HTML Temlate'), blank=True, null=True,
+    email_subject_template = models.CharField(
+        _('Email Subject Template'), max_length=255, blank=True)
+    email_body_template = models.TextField(
+        _('Email Body Template'), blank=True, null=True)
+    email_body_html_template = models.TextField(
+        _('Email Body HTML Template'), blank=True, null=True,
         help_text=_("HTML template"))
 
     # Template content for SMS messages
-    sms_template = models.CharField(_('SMS Template'), max_length=170, blank=True, help_text=_("SMS template"))
+    sms_template = models.CharField(_('SMS Template'), max_length=170,
+                                    blank=True, help_text=_("SMS template"))
 
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
     date_updated = models.DateTimeField(_("Date Updated"), auto_now=True)
@@ -69,8 +77,8 @@ class AbstractCommunicationEventType(models.Model):
 
     class Meta:
         abstract = True
-        verbose_name = _("Communication Event Type")
-        verbose_name_plural = _("Communication Event Types")
+        verbose_name = _("Communication event type")
+        verbose_name_plural = _("Communication event types")
 
     def get_messages(self, ctx=None):
         """
