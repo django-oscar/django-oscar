@@ -97,6 +97,7 @@ def send_product_alerts(product):
     # Send all emails in one go to prevent multiple SMTP
     # connections to be opened
     connection = mail.get_connection()
+    connection.open()
     connection.send_messages(emails)
     connection.close()
 
