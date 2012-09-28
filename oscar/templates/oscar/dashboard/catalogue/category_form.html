@@ -28,7 +28,7 @@
 {% endblock header %}
 
 {% block dashboard_content %}
-	<form action="." method="post" enctype="multipart/form-data">{% csrf_token %}
+	<form action="." class="wysiwyg" method="post" enctype="multipart/form-data">{% csrf_token %}
 		{{ form.as_p }}
 		<button type="submit" class="btn btn-primary btn-large">{% trans "Save" %}</button> {% trans "or" %}
 		<a href="{% url dashboard:catalogue-category-list %}">{% trans "cancel" %}</a>

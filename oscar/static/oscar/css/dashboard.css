@@ -141,3 +141,4 @@ caption{font-weight:bold;font-size:14px;margin-bottom:8px;}
 .jspVerticalBar .jspArrow:focus{outline:0;}
 .jspCorner{background:#eeeef4;float:left;height:100%;}
 * html .jspCorner{margin:0 -3px 0 0;}
+textarea{width:500px;height:400px;}

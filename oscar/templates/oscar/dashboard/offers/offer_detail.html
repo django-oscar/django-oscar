@@ -4,7 +4,7 @@
 
 {% block title %}
 {% blocktrans with name=offer.name %}
-Offer '{{ name }}' | Offer management
+'{{ name }}' | Offer management
 {% endblocktrans %} | {{ block.super }}
 {% endblock %}
 
@@ -18,15 +18,9 @@ Offer '{{ name }}' | Offer management
 	<a href="{% url dashboard:offer-list %}">{% trans "Offers" %}</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">{% blocktrans with name=offer.name %}Offer '{{ name }}'{% endblocktrans %}</a></li>
+    <li class="active"><a href=".">'{{ offer.name }}'</a></li>
 </ul>
 {% endblock %}
-
-{% block header %}
-<div class="page-header">
-	<h1>{% blocktrans with name=offer.name %}Offer '{{ name }}'{% endblocktrans %}</h1>
-</div>
-{% endblock header %}
 
 {% block dashboard_content %}
 
@@ -34,7 +28,7 @@ Offer '{{ name }}' | Offer management
 		<tbody>
             <tr><td colspan="2"><h2>{% trans "Offer details" %}</h2></td></tr>
 			<tr><th>{% trans "Name" %}</th><td>{{ offer.name }}</td></tr>
-			<tr><th>{% trans "Description" %}</th><td>{{ offer.description }}</td></tr>
+			<tr><th>{% trans "Description" %}</th><td>{{ offer.description|safe }}</td></tr>
 			<tr><th>{% trans "Start date" %}</th><td>{{ offer.start_date }}</td></tr>
 			<tr><th>{% trans "End date" %}</th><td>{{ offer.end_date }}</td></tr>
 			<tr><th>{% trans "Condition" %}</th><td>{{ offer.condition.description }}</td></tr>

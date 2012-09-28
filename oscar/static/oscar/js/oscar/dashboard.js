@@ -12,7 +12,28 @@ oscar.getCsrfToken = function() {
 };
 oscar.dashboard = {
     init: function() {
+        // Run initialisation that should take place on every page of the dashboard.
+
+        // Use datepicker for all intputs that have 'date' in the name
         $('input[name^="date"], input[name$="date"]').datepicker({dateFormat: 'yy-mm-dd'});
+
+        // Use WYSIHTML5 widget on textareas
+        $('form.wysiwyg textarea').wysihtml5();
+
+        $('.scroll-pane').jScrollPane();
+
+        $(".category-select ul").prev('a').on('click', function(){
+            var $this = $(this),
+            plus = $this.hasClass('ico_expand');
+            if (plus) {
+                $this.removeClass('ico_expand').addClass('ico_contract');
+            } else {
+                $this.removeClass('ico_contract').addClass('ico_expand');
+            }
+            return false;
+        });
+
+        oscar.dashboard.filereader.init();
     },
     ranges: {
         init: function() {
@@ -96,7 +117,6 @@ oscar.dashboard = {
                 $('input[type="file"]').change(function(evt) {
                     var reader = new FileReader();
                     var imgId = evt.target.id + "-image";
-
                     reader.onload = (function() {
                         return function(e) {
                             var imgDiv = $("#"+imgId);
@@ -110,18 +130,3 @@ oscar.dashboard = {
         }
     }
 };
-
-$(document).ready(function() {
-  $('.scroll-pane').jScrollPane();
-  $(".category-select ul").prev('a').on('click', function(){
-    var $this = $(this),
-        plus = $this.hasClass('ico_expand');
-    if ( plus ) {
-      $this.removeClass('ico_expand').addClass('ico_contract');
-    } else {
-      $this.removeClass('ico_contract').addClass('ico_expand');
-    }
-    return false;
-  });
-  oscar.dashboard.filereader.init();
-});

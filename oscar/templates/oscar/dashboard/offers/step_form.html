@@ -30,7 +30,7 @@ create-page
 {% endblock header %}
 
 {% block dashboard_content %}
-<form action="." method="post" class="form-horizontal well">
+<form action="." method="post" class="form-horizontal well wysiwyg">
 	{% csrf_token %}
 	{% include "partials/form_fields.html" with form=form %}
 	{% block form_extradata %}{% endblock %}
