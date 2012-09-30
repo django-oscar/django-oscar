@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import forms as auth_forms
 from django.conf import settings
 from django.core import validators
+from django.core.exceptions import ValidationError
 from django.utils.http import int_to_base36
 from django.contrib.sites.models import get_current_site
 from django.contrib.auth.tokens import default_token_generator
@@ -211,7 +212,33 @@ class SearchByDateRangeForm(forms.Form):
         return {}
 
 
-class UserForm(forms.ModelForm):
+class CleanEmailMixin(object):
+
+    def clean_email(self):
+        """
+        Make sure that the email address is aways unique as it is
+        used instead of the username. This is necessary because the
+        unique-ness of email addresses is *not* enforced on the model
+        level in ``django.contrib.auth.models.User``.
+        """
+        email = self.cleaned_data['email']
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            # this email address is unique so we don't have to worry
+            # about it
+            return email
+
+        if self.instance and self.instance.id != user.id:
+            raise ValidationError(
+                _("A user with this email address already exists")
+            )
+
+        return email
+
+
+class UserForm(forms.ModelForm, CleanEmailMixin):
 
     def __init__(self, user, *args, **kwargs):
         self.user = user
@@ -229,7 +256,7 @@ if hasattr(settings, 'AUTH_PROFILE_MODULE'):
 
     Profile = get_profile_class()
 
-    class UserAndProfileForm(forms.ModelForm):
+    class UserAndProfileForm(forms.ModelForm, CleanEmailMixin):
 
         first_name = forms.CharField(label=_('First name'), max_length=128)
         last_name = forms.CharField(label=_('Last name'), max_length=128)
