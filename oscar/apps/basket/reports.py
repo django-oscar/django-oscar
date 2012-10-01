@@ -2,7 +2,7 @@ import csv
 
 from django.db.models import get_model
 from django.utils.translation import gettext_lazy as _
-from oscar.core.loading import get_class, get_classes
+from oscar.core.loading import get_class
 
 ReportGenerator = get_class('dashboard.reports.reports', 'ReportGenerator')
 ReportCSVFormatter = get_class('dashboard.reports.reports',
@@ -10,7 +10,6 @@ ReportCSVFormatter = get_class('dashboard.reports.reports',
 ReportHTMLFormatter = get_class('dashboard.reports.reports',
                                 'ReportHTMLFormatter')
 Basket = get_model('basket', 'Basket')
-OPEN, SUBMITTED = get_classes('basket.models', ['OPEN', 'SUBMITTED'])
 
 
 class OpenBasketReportCSVFormatter(ReportCSVFormatter):
@@ -70,7 +69,7 @@ class OpenBasketReportGenerator(ReportGenerator):
         additional_data = {
             'start_date': self.start_date,
             'end_date': self.end_date}
-        baskets = Basket._default_manager.filter(status=OPEN)
+        baskets = Basket._default_manager.filter(status=Basket.OPEN)
         return self.formatter.generate_response(baskets, **additional_data)
 
 
@@ -125,5 +124,5 @@ class SubmittedBasketReportGenerator(ReportGenerator):
         additional_data = {
             'start_date': self.start_date,
             'end_date': self.end_date}
-        baskets = Basket._default_manager.filter(status=SUBMITTED)
+        baskets = Basket._default_manager.filter(status=Basket.SUBMITTED)
         return self.formatter.generate_response(baskets, **additional_data)
