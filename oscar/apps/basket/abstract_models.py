@@ -42,6 +42,9 @@ class AbstractBasket(models.Model):
     date_submitted = models.DateTimeField(_("Date Submitted"), null=True,
                                           blank=True)
 
+    # Only if a basket is in one of these statuses can it be edited
+    editable_statuses = (OPEN, SAVED)
+
     class Meta:
         abstract = True
         verbose_name = _('Basket')
@@ -397,6 +400,12 @@ class AbstractBasket(models.Model):
     # Query methods
     # =============
 
+    def can_be_edited(self):
+        """
+        Test if a basket can be edited
+        """
+        return self.status in self.editable_statuses
+
     def contains_voucher(self, code):
         """
         Test whether the basket contains a voucher with a given code
@@ -471,14 +480,16 @@ class AbstractLine(models.Model):
                 'quantity': self.quantity}
 
     def save(self, *args, **kwargs):
-        """Saves a line or deletes if it's quanity is 0"""
-        if self.basket.status not in (OPEN, SAVED):
+        """
+        Saves a line or deletes if the quantity is 0
+        """
+        if not self.basket.can_be_edited():
             raise PermissionDenied(
                 _("You cannot modify a %s basket") % (
                     self.basket.status.lower(),))
         if self.quantity == 0:
             return self.delete(*args, **kwargs)
-        super(AbstractLine, self).save(*args, **kwargs)
+        return super(AbstractLine, self).save(*args, **kwargs)
 
     def set_as_tax_exempt(self):
         self._charge_tax = False
