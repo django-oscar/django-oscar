@@ -39,3 +39,9 @@ i18n:
 		../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=es; \
 		../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=it; \
 		../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=da
+
+puppet:
+	# Install puppet modules required to set-up a Vagrant box
+	puppet module install --target-dir sites/puppet/modules/ saz-memcached -v 2.0.2
+	git clone git://github.com/uggedal/puppet-module-python.git sites/puppet/modules/python
+	git clone git://github.com/codeinthehole/puppet-userconfig.git sites/puppet/modules/userconfig
