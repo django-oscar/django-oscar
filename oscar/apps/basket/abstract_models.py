@@ -418,6 +418,9 @@ class AbstractBasket(models.Model):
         except ObjectDoesNotExist:
             return 0
 
+    def is_submitted(self):
+        return self.status == SUBMITTED
+
 
 class AbstractLine(models.Model):
     """

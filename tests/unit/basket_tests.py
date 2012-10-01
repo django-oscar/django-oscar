@@ -63,6 +63,9 @@ class TestABasket(TestCase):
         self.assertEqual(0, self.basket.line_quantity(self.product))
         self.assertEqual(1, self.basket.line_quantity(self.product, options))
 
+    def test_has_method_to_test_if_submitted(self):
+        self.basket.set_as_submitted()
+        self.assertTrue(self.basket.is_submitted())
 
 
 class TestBasketMiddleware(TestCase):
