@@ -1,6 +1,5 @@
 from oscar.apps.basket.abstract_models import (
-    AbstractBasket, AbstractLine, AbstractLineAttribute,
-    OPEN, MERGED, SAVED, SUBMITTED)
+    AbstractBasket, AbstractLine, AbstractLineAttribute)
 
 
 class InvalidBasketLineError(Exception):

@@ -4,7 +4,6 @@ from django.conf import settings
 from django.db.models import get_model
 
 from oscar.core.loading import get_class
-from oscar.apps.basket.abstract_models import OPEN
 
 Applicator = get_class('offer.utils', 'Applicator')
 Basket = get_model('basket', 'basket')
@@ -100,7 +99,7 @@ class BasketMiddleware(object):
             if basket_hash == self.get_basket_hash(basket_id):
                 try:
                     basket = Basket.objects.get(pk=basket_id, owner=None,
-                                                status=OPEN)
+                                                status=Basket.OPEN)
                 except Basket.DoesNotExist:
                     request.cookies_to_delete.append(cookie_key)
             else:
