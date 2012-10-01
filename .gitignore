@@ -17,12 +17,6 @@ oscar/share
 .~lock.*
 dist/
 *.DS_Store
-sites/sandbox/*.sqlite
-sites/sandbox/public/
-sites/sandbox/whoosh_index/
-sites/demo/*.sqlite
-sites/demo/public/
-sites/demo/whoosh_index/
 .idea
 TODO
 .coverage
@@ -34,3 +28,10 @@ coverage.xml
 violations.txt
 nosetests.xml
 settings_local.py
+.vagrant
+sites/sandbox/*.sqlite
+sites/sandbox/public/
+sites/sandbox/whoosh_index/
+sites/demo/*.sqlite
+sites/demo/public/
+sites/demo/whoosh_index/

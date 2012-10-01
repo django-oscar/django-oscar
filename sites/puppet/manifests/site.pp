@@ -10,6 +10,9 @@ node precise64 {
 	class {"memcached": max_memory => 64 }
 
 	# Python
+	# - set-up a virtualenv
+	# - install testing requirements
+	# - install oscar in 'develop' mode
 	$virtualenv = "/var/www/virtualenv"
 	include python::dev
 	include python::venv
@@ -17,7 +20,7 @@ node precise64 {
 	    requirements => "/vagrant/requirements.txt"
 	}
     exec {"install-oscar":
-	    command => "$virtualenv/bin/python /vagrant/setup.py develop",
+	    command => "cd /vagrant && $virtualenv/bin/python setup.py develop",
 		require => Python::Venv::Isolate[$virtualenv]
 	}
 }

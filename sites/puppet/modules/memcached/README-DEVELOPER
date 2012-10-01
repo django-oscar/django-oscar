@@ -1,9 +1,0 @@
-In order to run tests:
-  - puppet and facter must be installed and available in Ruby's LOADPATH
-  - the latest revision of rspec-puppet must be installed
-  - rake, and rspec2 must be install
-
-  - the name of the module directory needs to be memcached
-
-to run all tests:
-  rake spec

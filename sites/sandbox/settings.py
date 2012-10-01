@@ -265,7 +265,6 @@ AUTH_PROFILE_MODULE = 'user.Profile'
 # Oscar settings
 from oscar.defaults import *
 
-
 OSCAR_RECENTLY_VIEWED_PRODUCTS = 20
 OSCAR_ALLOW_ANON_CHECKOUT = True
 OSCAR_INITIAL_ORDER_STATUS = 'Pending'

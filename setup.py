@@ -8,9 +8,11 @@ To release a new version to PyPi:
 """
 
 from setuptools import setup, find_packages
+import os
 
 from oscar import get_version
 
+PROJECT_DIR = os.path.dirname(__file__)
 
 setup(name='django-oscar',
       version=get_version().replace(' ', '-'),
@@ -18,7 +20,7 @@ setup(name='django-oscar',
       author="David Winterbottom",
       author_email="david.winterbottom@tangentlabs.co.uk",
       description="A domain-driven e-commerce framework for Django 1.3+",
-      long_description=open('README.rst').read(),
+      long_description=open(os.path.join(PROJECT_DIR, 'README.rst')).read(),
       keywords="E-commerce, Django, domain-driven",
       license='BSD',
       platforms=['linux'],
