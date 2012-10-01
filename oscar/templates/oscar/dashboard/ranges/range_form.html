@@ -27,7 +27,7 @@
 {% endblock header %}
 
 {% block dashboard_content %}
-<form action="." method="post" class="well form-horizontal">
+<form action="." method="post" class="well">
 	{% csrf_token %}
 	{% include "partials/form_fields.html" with form=form %}
 	{% block form_actions %}
