@@ -120,7 +120,5 @@ $(document).ready(function() {
             })();
             reader.readAsDataURL(evt.target.files[0]);
         });
-    } else {
-        alert('This browser does not support FileReader');
     }
 });

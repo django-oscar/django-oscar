@@ -271,7 +271,8 @@ button {
 .page-header {
   background-color: #ffffff;
   padding: 10px 20px 10px 0;
-  margin-bottom: 0px;
+  margin-bottom: 0;
+  border-bottom: 0;
 }
 caption {
   font-weight: bold;
@@ -692,6 +693,10 @@ caption {
   background: #ccc;
   margin-bottom: 10px;
 }
+.upload-image li > div + label,
+.upload-image li > div + label + input {
+  display: none;
+}
 .upload-image div {
   background: #fff;
   position: relative;
@@ -736,38 +741,6 @@ caption {
   width: 200px;
   height: 200px;
 }
-/*.btn-fileinput {
-  position: relative;
-  overflow: hidden;
-  float: left;
-  margin-right: 4px;
-  height: 200px;
-  width: 200px;
-  input {
-    position: absolute;
-    top: 0;
-    font-size: 62px;
-    left: -395%;
-    margin: 0;
-    border: solid transparent;
-    border-width: 0 0 100px 200px;
-    opacity: 0;
-    filter: alpha(opacity=0);
-    direction: ltr;
-    cursor: pointer;
-  }
-  select, input[type="file"] {
-  height: 208px;
-  line-height: 208px;
-  -webkit-box-align: baseline;
-  text-align: start;
-  -webkit-rtl-ordering: logical;
-  -webkit-user-select: text;
-  }
-  input, textarea {
-  width: 210px;
-  }
-}*/
 .stock-pricing label,
 .stock-pricing .control-group div {
   display: inline-block;
@@ -782,8 +755,11 @@ caption {
 .stock-pricing input[type=text] {
   width: 120px;
 }
-.product-details input[type=text] {
-  width: 220px;
+.product-details input[type=text],
+.product-details + .well input[type=text],
+.product-details select,
+.product-details + .well select {
+  width: 50%;
 }
 /* date picker */
 #ui-datepicker-div {

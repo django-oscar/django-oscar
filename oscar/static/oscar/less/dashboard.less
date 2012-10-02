@@ -174,7 +174,8 @@ button {
 .page-header {
   background-color: @white;
   padding: 10px 20px 10px 0;
-  margin-bottom:0px;
+  margin-bottom: 0;
+  border-bottom: 0;
 }
 caption {
   font-weight: bold;
@@ -532,7 +533,10 @@ caption {
       padding: 4px;
       background: #ccc;
       margin-bottom: 10px;
-
+      + label,
+      + label + input {
+        display: none;
+      }
     }
   }
   div {
@@ -578,38 +582,6 @@ caption {
     height: 200px;
   }
 }
-/*.btn-fileinput {
-  position: relative;
-  overflow: hidden;
-  float: left;
-  margin-right: 4px;
-  height: 200px;
-  width: 200px;
-  input {
-    position: absolute;
-    top: 0;
-    font-size: 62px;
-    left: -395%;
-    margin: 0;
-    border: solid transparent;
-    border-width: 0 0 100px 200px;
-    opacity: 0;
-    filter: alpha(opacity=0);
-    direction: ltr;
-    cursor: pointer;
-  }
-  select, input[type="file"] {
-  height: 208px;
-  line-height: 208px;
-  -webkit-box-align: baseline;
-  text-align: start;
-  -webkit-rtl-ordering: logical;
-  -webkit-user-select: text;
-  }
-  input, textarea {
-  width: 210px;
-  }
-}*/
 
 .stock-pricing {
     label,
@@ -627,9 +599,11 @@ caption {
        width:120px;
     }
 }
-.product-details {
-    input[type=text] {
-        width: 220px;
+.product-details,
+.product-details + .well {
+    input[type=text],
+    select {
+        width: 50%;
     }
 }
 // PLUGINS
