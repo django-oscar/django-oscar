@@ -12,11 +12,29 @@ oscar.messages = {
     warning: function(msg) { oscar.messages.addMessage('warning', msg); },
     error: function(msg) { oscar.messages.addMessage('error:', msg); }
 };
+oscar.notifications = {
+    init: function() {
+        $('a[data-behaviours~="archive"]').click(function() {
+            oscar.notifications.checkAndSubmit($(this), 'archive');
+        });
+        $('a[data-behaviours~="delete"]').click(function() {
+            oscar.notifications.checkAndSubmit($(this), 'delete');
+        });
+    },
+    checkAndSubmit: function($ele, btn_val) {
+        $ele.closest('tr').find('input').attr('checked', 'checked');
+        $ele.closest('form').find('button[value="' + btn_val + '"]').click();
+        return false;
+    }
+};
 oscar.forms = {
     init: function() {
         // Forms with this behaviour are 'locked' once they are submitted to 
         // prevent multiple submissions
         $('form[data-behaviours~="lock"]').submit(oscar.forms.submitIfNotLocked);
+
+        // Disable buttons when they are clicked
+        $('.js-disable-on-click').click(function(){$(this).button('loading');});
     },
     submitIfNotLocked: function(event) {
         $form = $(this);
@@ -28,6 +46,9 @@ oscar.forms = {
 };
 $(function(){oscar.forms.init();});
 
+
+// TODO - rewrite the below JS to git into the oscar object, splitting the functionality 
+// into SRP methods.
 $(document).ready(function()
 {   
     // Product star rating  -- must improve this in python
@@ -191,5 +212,4 @@ $(document).ready(function()
         }
       });
     }
- 
 });

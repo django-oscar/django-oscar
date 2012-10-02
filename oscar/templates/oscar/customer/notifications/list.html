@@ -1,0 +1,92 @@
+{% extends "layout.html" %}
+{% load i18n %}
+
+{% block title %}
+{{ title }} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url promotions:home %}">{% trans 'Home' %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="{% url customer:summary %}">{% trans 'Account' %}</a>
+        <span class="divider">/</span>
+    </li>
+	<li class="active"><a href=".">{{ title }}</a></li>
+</ul>
+{% endblock %}
+
+{% block header %}
+<div class="page-header">
+	<h2>{{ title }}</h2>
+</div>
+{% endblock header %}
+
+{% block content %}
+
+<ul class="nav nav-tabs">
+	<li class="{% if list_type == 'inbox' %}active{% endif %}"><a href="{% url customer:notifications-inbox %}">Inbox</a></li>
+	<li class="{% if list_type == 'archive' %}active{% endif %}"><a href="{% url customer:notifications-archive %}">Archive</a></li>
+</ul>
+
+{% if notifications %}
+{% if page_obj %}
+    {% include "partials/pagination.html" %}
+{% endif %}
+
+<form action="{% url customer:notifications-update %}" method="post">
+	{% csrf_token %}
+	<table class="table">
+		<tbody>
+		{% for notification in notifications %}
+		<tr>
+			<td>
+				<input type="checkbox" name="selected_notification" 
+				value="{{ notification.id }}"/>
+			</td>
+			<td>
+				{% if notification.is_new %}
+				    {# Maybe use a different icon for NEW messages #}
+					<span style="font-size: 20pt" class="app-ico ico_email">&nbsp;</span>
+				{% else %}
+					<span style="font-size: 20pt" class="app-ico ico_email">&nbsp;</span>
+				{% endif %}
+			</td>
+			<td>
+				{{ notification.subject|safe }} <br/>
+				<em>{{ notification.date_sent }}</em> 
+			</td>
+			<td>
+				{% if list_type == 'inbox' %}
+				<a class="btn btn-success btn-small" href="#" data-behaviours="archive">Archive</a>
+				{% endif %}
+				<a class="btn btn-danger btn-small "href="#" data-behaviours="delete">Delete</a>
+			</td>
+		</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+	{% trans "With selected items:" %} 
+	{% if list_type == 'inbox' %}
+	<button type="submit" class="btn btn-success" name="action" value="archive">{% trans "Archive" %}</button>
+	{% endif %}
+	<button type="submit" class="btn btn-danger" name="action" value="delete">{% trans "Delete" %}</button>
+</form>
+
+{% if page_obj %}
+    {% include "partials/pagination.html" %}
+{% endif %}
+
+{% else %}
+<p>{% trans "There are no notifications to display." %}</p>
+{% endif %}
+
+{% endblock content %}
+
+{% block onbodyload %}
+oscar.notifications.init();
+{% endblock %}
+

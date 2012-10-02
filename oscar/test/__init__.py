@@ -65,10 +65,14 @@ class ClientTestCase(TestCase):
         self.assertEqual(httplib.OK, response.status_code)
 
     def assertInContext(self, response, key):
-        self.assertTrue(key in response.context, "Context should contain a variable '%s'" % key)
+        self.assertTrue(key in response.context,
+                        "Context should contain a variable '%s'" % key)
 
 
 class WebTestCase(WebTest):
+    """
+    Custom version of WebTest that adds a few useful assertion methods
+    """
 
     def assertRedirectsTo(self, response, url_name):
         self.assertTrue(str(response.status_code).startswith('3'))

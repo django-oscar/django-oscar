@@ -1,0 +1,89 @@
+{% extends 'dashboard/layout.html' %}
+{% load i18n %}
+{% load currency_filters %}
+
+{% block body_class %}users{% endblock %}
+
+{% block title %}
+{% trans "Product alerts" %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active">
+        <a href="{% url dashboard:user-alert-list %}">{% trans "Product alerts" %}</a>
+    </li>
+</ul>
+{% endblock %}
+
+{% block header %}
+<div class="page-header action">
+    <h1>{% trans "Product alerts" %}</h1>
+</div>
+{% endblock header %}
+
+{% block dashboard_content %}
+
+<div class="well well-info">
+    <h3 class="app-ico ico_magnify icon">{% trans "Search product alerts" %}</h3>
+    <form action="." method="get" class="form-inline">
+		{% include "partials/form_fields_inline.html" with form=form %}
+	<button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
+	{% trans "or" %}
+		<a href="{% url dashboard:user-alert-list %}" class="btn">{% trans "reset" %}</a>
+    </form>
+</div>
+
+<div class="sub-header">
+    <h2>{{ queryset_description }}</h2>
+</div>
+
+{% if alerts %}
+    <table class="table table-striped table-bordered">
+        <tr>
+            <th></th>
+            <th>{% trans "Product" %}</th>
+            <th>{% trans "User" %}</th>
+            <th>{% trans "Status" %}</th>
+            <th>{% trans "Date created" %}</th>
+            <th>{% trans "Date alert sent" %}</th>
+            <th></th>
+        </tr>
+        {% for alert in alerts %}
+        <tr>
+            <td>
+				<a href="{{ alert.product.get_absolute_url }}">{{ alert.product }}</a>
+            </td>
+            <td>
+                {% if alert.user %}
+				<a href="{% url dashboard:user-detail alert.user.id %}">{{ alert.user.email }}</a>
+				{% else %}
+				{{ alert.email }} {% trans "(Anonymous)" %}
+				{% endif %}
+            </td>
+            <td>
+                {{ alert.status }}
+            </td>
+            <td>{{ alert.date_created }}</td>
+            <td>{{ alert.date_closed|default:"-" }}</td>
+            <td>
+                <a href="{% url dashboard:user-alert-update alert.id %}" class="btn btn-info">{% trans "Edit" %}</a>
+                <a href="{% url dashboard:user-alert-delete alert.id %}" class="btn btn-danger">{% trans "Delete" %}</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    {% if page_obj %}
+        {% include "catalogue/partials/pagination.html" %}
+    {% endif %}
+
+{% else %}
+	<p>{% trans "No alerts found." %}</p>
+{% endif %}
+
+{% endblock dashboard_content %}

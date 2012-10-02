@@ -42,6 +42,9 @@ Order {{ number }} - Line #{{ id }}
 				<th>{% trans "Title" %}</th><td>{{ line.title }}</td>
             </tr>
             <tr>
+				<th>{% trans "Product class" %}</th><td>{{ line.product.product_class }}</td>
+            </tr>
+            <tr>
 				<th>{% trans "UPC" %}</th><td>{{ line.upc|default:"-" }}</td>
             </tr>
             <tr>
@@ -73,7 +76,7 @@ Order {{ number }} - Line #{{ id }}
 				<th>{% trans "Partner notes" %}</th><td>{{ line.partner_line_notes|default:"-" }}</td>
         	</tr>
         	<tr>
-				<th>{% trans "Estimate dispatch date" %}</th><td>{{ line.est_dispatch_date }}</td>
+				<th>{% trans "Estimate dispatch date" %}</th><td>{{ line.est_dispatch_date|default:"-" }}</td>
         	</tr>
         </table>
     </div>

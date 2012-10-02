@@ -1,0 +1,470 @@
+// import base bootstrap - separate from frontend
+@import url("bootstrap.min.css");
+
+// Unique Fonts
+@import url("snowcone.css");
+
+// Core variables and mixins separate from frontend variables and mixins
+@import "dashboard/variables.less"; // Modify this for custom colors, font-sizes, etc
+@import "dashboard/mixins.less";
+
+// OSCAR DASHBOARD UNIQUE STYLES
+// -----------
+body {
+  background:#fff;
+}
+.container-fluid {
+  padding-left: @gridGutterWidth;
+  padding-right: @gridGutterWidth;
+  max-width:100%;
+}
+.navbar-fixed-top .navbar-inner {
+  padding-left:  20px;
+  padding-right: 20px;
+}
+.navbar .nav > li span {
+    display:block;
+    padding:10px;
+}
+.subnav-fixed {
+  position: fixed;
+  right: 0;
+  left: 0;
+  z-index: @zindexFixedNavbar;
+  top:40px;
+  .box-shadow(0 1px 5px rgba(0,0,0,.1));
+  border-bottom:1px solid #D5D5D5;
+}
+.subnav {
+  #gradient > .vertical(#f5f5f5, #eee);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false) !important;
+  height:36px;
+  width: 100%;
+}
+.subnav {
+  .nav {
+    padding-left:  20px;
+    padding-right: 20px;
+    > li {
+      > a {
+        margin: 0;
+        padding-top: 11px;
+        padding-bottom: 11px;
+        border-left: 1px solid #f5f5f5;
+        border-right: 1px solid #E5E5E5;
+        .border-radius(0);
+      }
+    }
+  }
+}
+.reports .subnav li.Reports > a,
+.orders .subnav li.Manage.orders > a,
+.users .subnav li.Users > a,
+.content-blocks .subnav li.Content.blocks > a,
+.catalogue .subnav li.Catalogue > a,
+.subnav .nav > .active > a,
+.subnav .nav > .active > a:hover {
+  padding-left: 13px;
+  color: #777;
+  background-color: #E9E9E9;
+  border-right-color: #DDD;
+  border-left: 0;
+  .box-shadow(inset 0 3px 5px rgba(0,0,0,.05));
+}
+.breadcrumb {
+  margin-top:100px;
+}
+.content {
+  background:#fff;
+  .page-content {
+      padding:30px 0px;
+  }
+}
+button {
+  background-color:transparent;
+}
+.primary-nav,
+.primary-nav ul {
+  margin:0px;
+  padding:0px;
+}
+.page-header {
+  background-color: @white;
+  padding: 10px 20px 10px 0px;
+  margin-bottom:0px;
+  h1 {
+/*        font-size: 24px;
+        line-height: 36px;*/
+    }
+}
+h3 {
+  margin-bottom:@baseLineHeight / 4;
+}
+caption {
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+.search-adv {
+  .control-group.pull-left {
+    > label {
+      width: 100px;
+    }
+    .controls {
+      margin-left: 120px;
+      > label {
+        padding-left:0px;
+        padding-top:0px;
+      }
+      .radio {
+        ul {
+          .horiz_col();
+          li {
+            label {
+              display: inline-block;
+              padding-top: 5px;
+              margin-bottom: 0;
+              vertical-align: middle;
+              margin-left: 10px;
+              padding-left: 18px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+.product-new {
+  .form-inline.pull-left {
+    margin-right:15px;
+  }
+}
+.no-float {
+  float:none;
+}
+.control-group.pull-left.no-float {
+  > label {
+    width: 140px;
+  }
+  .controls {
+    margin-left: 160px;
+  }
+}
+.pull-left.btn {
+  margin-left:20px;
+}
+.pull-left.no-float.btn {
+  margin-left:160px;
+}
+.page-header.action {
+  .clearfix();
+  margin-bottom:0px;
+  .open .dropdown-toggle {
+    color:#fff;
+    background:#444;
+  }
+  .btn {
+    margin-left:10px;
+  }
+  .tabs .dropdown-menu {
+    top:48px;
+    left:10px;
+  }
+  .tabs {
+    border-width:0px;
+    margin-bottom:0px;
+  }
+  h1,h2 {
+    float:left;
+    margin-bottom:0px;
+  }
+  .orders_search {
+    clear:both;
+    margin-bottom: @baseLineHeight;
+  }
+  .pull_out.viewed {
+    background-color:rgba(0, 0, 0, 0.05);
+    margin-bottom:@baseLineHeight;
+  }
+  .pull_out,
+  a.dd_menu {
+    display:block;
+    float:left;
+    line-height: @baseLineHeight * 2 - 4;
+    font-size: @baseFontSize + 5;
+    margin-left:10px;
+    padding:4px 10px;
+    color:@linkColor;
+    &:hover {
+    }
+    &.viewed {
+      -moz-border-radius-topleft: 4px;
+      -moz-border-radius-topright: 4px;
+      -moz-border-radius-bottomright: 0px;
+      -moz-border-radius-bottomleft: 0px;
+      -webkit-border-radius: 4px 4px 0px 0px;
+      border-radius: 4px 4px 0px 0px;
+    }
+  }
+  a.dd_menu {
+    &:hover {
+      background:#444;
+      color:#fff;
+    }
+  }
+}
+.controls {
+  ul {
+    margin-left:0px;
+    list-style:none;
+  }
+}
+/*.form-inline {
+  margin-bottom:0px;
+}*/
+.icon:before {
+  padding:7px 6px;
+  background:@black;
+  #translucent > .background(@black,0.15);
+  .border-radius(20px);
+  color:@white;
+  margin-right:5px;
+}
+.file_upload {
+  .clearfix();
+  form, p {
+    float:left;
+  }
+  label {
+    width:auto;
+    padding-top:0px;
+    margin-right:10px;
+  }
+  input {
+    line-height:@baseLineHeight;
+    background:none;
+  }
+}
+.alert-message.block-message.file_upload p {
+  margin-right:10px;
+}
+.order_table {
+  label {
+    width:auto;
+    margin-left:20px;
+    line-height:27px;
+    float:left;
+    margin-right:10px;
+    &:first-child {
+      margin-left:10px;
+    }
+  }
+  table {
+    margin-top:@baseLineHeight;
+  }
+  .row {
+    margin-left:0px;
+  }
+}
+.tabs.product_managment {
+  margin-bottom:0px;
+  li.active a {
+    background-color:#efefef;
+  }
+}
+
+.tabbable.dashboard {
+  .nav {
+    margin-bottom:0px;
+  }
+  .nav-tabs > li > a {
+    background: #f5f5f5;
+    #gradient > .vertical(#ccc, #fff);
+    border: 1px solid #DDD;
+    margin: 6px 10px 0 0;
+    color: @gray;
+    font-weight: bold;
+    text-shadow: 1px 1px 0 #fff;
+  }
+  .nav-tabs > li.active a,
+  .nav-tabs > li > a:hover {
+    background: #f5f5f5;
+    border-bottom-color: transparent;
+    #gradient > .vertical(@grayLighter, #fff);
+    border-bottom: 1px solid #fff;
+    outline: none;
+    font-weight: bold;
+    color: #0088CC;
+  }
+  .tab-content {
+    display:block;
+    width:auto;
+    padding:@baseLineHeight;
+    border:1px solid darken(@grayLighter, 5%);
+    border-top-width:0px;
+    background:#fff;
+    -webkit-border-bottom-right-radius: 5px;
+    -webkit-border-bottom-left-radius: 5px;
+    -moz-border-radius-bottomright: 5px;
+    -moz-border-radius-bottomleft: 5px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+  }
+}
+.fields-full {
+  input[type=text],
+  textarea {
+    width:99%;
+  }
+}
+// WELLS
+// -----
+.well {
+  .clearfix();
+}
+.well-success {
+  background-color: @successBackground;
+  border-color: @successBorder;
+}
+.well-danger {
+  background-color: @errorBackground;
+  border-color: @errorBorder;
+}
+.well-info {
+  background-color: @infoBackground;
+  border-color: @infoBorder;
+}
+.well-blank {
+  background-color: @white;
+  border-color: rgba(0,0,0,.1);
+}
+/* styles related to dashboard graph */
+#order-graph {
+    position: relative;
+    margin-bottom: 5em;
+    width: 99%;
+    height: @graphHeight;
+}
+.bar-caption{
+    position: absolute;
+    color: @grayLight;
+    text-align: center;
+    opacity: 0.4;
+    top: 50%;
+    left: 50%;
+}
+.bar-y-axis{
+    position: absolute;
+    top: 16px;
+    width: 5em;
+    margin: 0;
+    padding: 0;
+    float: left;
+    display: inline;
+}
+.bar-y-axis li{
+    list-style:none;
+    height: @graphSegmentsHeight;
+    float: right;
+}
+.bar-chart, .bar-chart dt, .bar-chart dd{
+    margin:0;
+    padding:0;
+}
+.bar-chart{
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 98%;
+    height: @barHeight;
+    padding-left: 5em;
+}
+.bar-chart dd{
+    position: relative;
+    float: left;
+    width: @barWidth;
+    height: @graphHeight;
+    margin-top: 22px;
+}
+.bar-chart dd em{
+    position: absolute;
+    bottom: -2em;
+    right: 0;
+}
+.bar-chart span{
+    position: absolute;
+    display: block;
+    width: 90%;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    color: @gray;
+    text-align: center;
+    text-decoration: none;
+}
+.bar-chart span p{
+    position: relative;
+    top: 1em;
+    display: inline;
+    padding: 3px;
+    color: @grayDark;
+    z-index: 2;
+    background-color: @white;
+    font-weight: bold;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -khtml-border-radius: 3px;
+    border-radius: 3px;
+}
+.bar-layer:hover span p {
+}
+.bar-chart span{
+    height: 50%;
+    background: #87e0fd; /* Old browsers */
+    background: -moz-linear-gradient(-45deg, #87e0fd 0%, #53cbf1 40%, #05abe0 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,#87e0fd), color-stop(40%,#53cbf1), color-stop(100%,#05abe0)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(-45deg, #87e0fd 0%,#53cbf1 40%,#05abe0 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(-45deg, #87e0fd 0%,#53cbf1 40%,#05abe0 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(-45deg, #87e0fd 0%,#53cbf1 40%,#05abe0 100%); /* IE10+ */
+    background: linear-gradient(-45deg, #87e0fd 0%,#53cbf1 40%,#05abe0 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#87e0fd', endColorstr='#05abe0',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+    border-radius: 5px;
+}
+
+/* date picker */
+#ui-datepicker-div {background:#FFFFFF;width:218px;box-shadow:2px 2px 2px #AAAAAA;}
+    #ui-datepicker-div .ui-datepicker-header {position:relative;padding:5px;text-align:center;background:#dddddd;font-weight:bold;}
+        #ui-datepicker-div .ui-datepicker-prev {position:absolute;top:6px;left:6px;cursor:pointer;}
+        #ui-datepicker-div .ui-datepicker-next {position:absolute;top:6px;right:6px;cursor:pointer;}
+    #ui-datepicker-div table {width:100%;}
+        #ui-datepicker-div th,
+        #ui-datepicker-div td {padding:0px;text-align:center;}
+        #ui-datepicker-div th {padding:4px;}
+        #ui-datepicker-div td a {padding:4px;display:block;}
+        #ui-datepicker-div td .ui-state-highlight {background:#eeeeee;}
+        #ui-datepicker-div td .ui-state-active {color:#FFFFFF;background:#0088CC;}
+
+/* ADDITIONAL ERRORS */
+.errorlist {
+    margin:0 0 0 20px;
+    padding:0 0 10px 0;
+    color:#B94A48;
+    li {
+        padding:0 0 5px 0;
+        list-style:none;
+    }
+}
+.form-inline {
+    .help-block {
+        display:inline-block;
+        margin:0 20px 0 10px;
+        li {
+            list-style:none;
+            color:#B94A48;
+        }
+    }
+}

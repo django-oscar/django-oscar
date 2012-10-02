@@ -3,7 +3,6 @@ from decimal import Decimal as D
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.shipping.base import ShippingMethod
-from oscar.apps.shipping.models import OrderAndItemCharges, WeightBand, WeightBased
 from oscar.apps.shipping import Scales
 
 

@@ -8,7 +8,8 @@ Basket = get_class('basket.models', 'Basket')
 Free = get_class('shipping.methods', 'Free')
 Voucher = get_class('voucher.models', 'Voucher')
 OrderCreator = get_class('order.utils', 'OrderCreator')
-OrderTotalCalculator = get_class('checkout.calculators', 'OrderTotalCalculator')
+OrderTotalCalculator = get_class('checkout.calculators',
+                                 'OrderTotalCalculator')
 Partner, StockRecord = get_classes('partner.models', ('Partner',
                                                       'StockRecord'))
 (ProductClass,
@@ -26,13 +27,14 @@ Partner, StockRecord = get_classes('partner.models', ('Partner',
                                          'Condition', 'Benefit'))
 
 
-def create_product(price=None, title="Dummy title", product_class="Dummy item class",
+def create_product(price=None, title="Dummy title",
+                   product_class="Dummy item class",
         partner="Dummy partner", partner_sku=None, upc=None, num_in_stock=10,
         attributes=None, **kwargs):
     """
     Helper method for creating products that are used in tests.
     """
-    ic,_ = ProductClass._default_manager.get_or_create(name=product_class)
+    ic, __ = ProductClass._default_manager.get_or_create(name=product_class)
     item = Product._default_manager.create(title=title, product_class=ic,
                                            upc=upc, **kwargs)
     if price is not None or partner_sku or num_in_stock is not None:
@@ -41,20 +43,24 @@ def create_product(price=None, title="Dummy title", product_class="Dummy item cl
         if price is None:
             price = D('10.00')
 
-        partner,_ = Partner._default_manager.get_or_create(name=partner)
+        partner, __ = Partner._default_manager.get_or_create(name=partner)
         StockRecord._default_manager.create(product=item, partner=partner,
                                             partner_sku=partner_sku,
-                                            price_excl_tax=price, num_in_stock=num_in_stock)
+                                            price_excl_tax=price,
+                                            num_in_stock=num_in_stock)
     if attributes:
         for key, value in attributes.items():
-            attr,_ = ProductAttribute.objects.get_or_create(name=key, code=key)
-            ProductAttributeValue.objects.create(product=item, attribute=attr, value=value)
+            attr, __ = ProductAttribute.objects.get_or_create(
+                name=key, code=key)
+            ProductAttributeValue.objects.create(
+                product=item, attribute=attr, value=value)
 
     return item
 
 
-def create_order(number=None, basket=None, user=None, shipping_address=None, shipping_method=None,
-        billing_address=None, total_incl_tax=None, total_excl_tax=None, **kwargs):
+def create_order(number=None, basket=None, user=None, shipping_address=None,
+                 shipping_method=None, billing_address=None,
+                 total_incl_tax=None, total_excl_tax=None, **kwargs):
     """
     Helper method for creating an order for testing
     """
@@ -83,24 +89,29 @@ def create_order(number=None, basket=None, user=None, shipping_address=None, shi
     return order
 
 
-def create_offer():
+def create_offer(name="Dummy offer", offer_type="Site",
+                 max_applications=None, range=None, condition=None,
+                 benefit=None):
     """
     Helper method for creating an offer
     """
-    range = Range.objects.create(name="All products range", includes_all_products=True)
-    condition = Condition.objects.create(range=range,
-                                         type=Condition.COUNT,
-                                         value=1)
-    benefit = Benefit.objects.create(range=range,
-                                     type=Benefit.PERCENTAGE,
-                                     value=20)
-    offer = ConditionalOffer.objects.create(
-        name='Dummy offer',
-        offer_type='Site',
+    if range is None:
+        range = Range.objects.create(name="All products range",
+                                    includes_all_products=True)
+    if condition is None:
+        condition = Condition.objects.create(range=range,
+                                            type=Condition.COUNT,
+                                            value=1)
+    if benefit is None:
+        benefit = Benefit.objects.create(range=range,
+                                        type=Benefit.PERCENTAGE,
+                                        value=20)
+    return ConditionalOffer.objects.create(
+        name=name,
+        offer_type=offer_type,
         condition=condition,
-        benefit=benefit
-    )
-    return offer
+        benefit=benefit,
+        max_applications=max_applications)
 
 
 def create_voucher():
@@ -111,7 +122,6 @@ def create_voucher():
         name="Test voucher",
         code="test",
         start_date=datetime.date.today(),
-        end_date=datetime.date.today() + datetime.timedelta(days=12)
-    )
+        end_date=datetime.date.today() + datetime.timedelta(days=12))
     voucher.offers.add(create_offer())
     return voucher

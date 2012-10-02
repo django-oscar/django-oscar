@@ -5,8 +5,10 @@ import os
 
 VERSION = (0, 4, 0, 'alpha', 0)
 
+
 def get_short_version():
     return '%s.%s' % (VERSION[0], VERSION[1])
+
 
 def get_version():
     version = '%s.%s' % (VERSION[0], VERSION[1])
@@ -24,8 +26,8 @@ def get_version():
 # Eg: the template 'oscar/templates/oscar/base.html' can be accessed via both
 # 'base.html' and 'oscar/base.html'.  This allows Oscar's templates to be
 # extended by templates with the same filename
-OSCAR_MAIN_TEMPLATE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                       'templates/oscar')
+OSCAR_MAIN_TEMPLATE_DIR = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), 'templates/oscar')
 
 OSCAR_CORE_APPS = [
     'oscar',
@@ -66,6 +68,7 @@ def get_core_apps(overrides=None):
     """
     if not overrides:
         return OSCAR_CORE_APPS
+
     def get_app_label(app_label, overrides):
         pattern = app_label.replace('oscar.apps.', '')
         for override in overrides:

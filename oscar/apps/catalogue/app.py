@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import patterns, url, include
+from django.conf.urls import patterns, url, include
 
 from oscar.core.application import Application
 from oscar.apps.catalogue.views import ProductDetailView, ProductListView, ProductCategoryView
@@ -24,12 +24,14 @@ class BaseCatalogueApplication(Application):
 
 
 class ReviewsApplication(Application):
+    name = None
     reviews_app = reviews_app
 
     def get_urls(self):
         urlpatterns = super(ReviewsApplication, self).get_urls()
         urlpatterns += patterns('',
-            url(r'^(?P<product_slug>[\w-]*)-(?P<product_pk>\d+)/reviews/', include(self.reviews_app.urls)),
+            url(r'^(?P<product_slug>[\w-]*)-(?P<product_pk>\d+)/reviews/',
+                include(self.reviews_app.urls)),
         )
         return self.post_process_urls(urlpatterns)
 

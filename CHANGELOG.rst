@@ -2,6 +2,13 @@
 Changelog
 =========
 
+0.4 (not released yet)
+----------------------
+* Better support for digital products.  Additional fields added to product class
+  model.
+* Major refactor of the offers module and test suite  
+* Product stock alerts
+
 0.3.3 - 2012-08-24
 -------------------
 

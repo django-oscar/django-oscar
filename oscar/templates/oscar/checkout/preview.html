@@ -10,12 +10,11 @@
 {% endblock %}
 
 {% block place_order %}
-<h3>{% trans "Please review the information above, then click 'Place Order'" %}</h3>
 <form method="post" action="{% url checkout:preview %}" id="place-order-form">
 	<input type="hidden" name="action" value="place_order" />
 	{% csrf_token %}
     <div class="form-actions">
-		<button id='place-order' type="submit" class="pull-right btn btn-primary btn-large js-disable-on-click">{% trans "Place order" %}</button>
+		<button id='place-order' type="submit" class="pull-right btn btn-primary btn-large js-disable-on-click" data-loading-text="{% trans 'Submitting...' %}">{% trans "Place order" %}</button>
     </div>
 </form>
 {% endblock place_order %}

@@ -17,8 +17,6 @@ Further reading:
   experimental but feel free to explore and get a feel for the base Oscar
   install.  Dashboard access coming soon!) 
 * `Documentation`_ on the excellent `readthedocs.org`_
-* `Trello board managing current tasks`_ - note for features that you'd like
-  prioritsed!
 * `Google Group`_ - the mailing list is django-oscar@googlegroups.com
 * `Continuous integration homepage`_ on `travis-ci.org`_
 * `Twitter account for news and updates`_
@@ -32,7 +30,6 @@ Continuous integration status:
 
 .. _`Official homepage`: http://oscarcommerce.com
 .. _`Sandbox site`: http://sandbox.oscar.tangentlabs.co.uk
-.. _`Trello board managing current tasks`: https://trello.com/b/VDIVW8Xc
 .. _`Documentation`: http://django-oscar.readthedocs.org/en/latest/
 .. _`readthedocs.org`: http://readthedocs.org
 .. _`Continuous integration homepage`: http://travis-ci.org/#!/tangentlabs/django-oscar 
@@ -57,6 +54,8 @@ and maintained by `Tangent Labs`_, a London-based digital agency, with help from
 Extensions
 ----------
 
+The following extensions are stable and ready for use:
+
 * django-oscar-datacash_ - Integration with the DataCash_ payment gateway
 * django-oscar-paypal_ - Integration with PayPal.  This currently supports both
   `Express Checkout`_ and `PayFlow Pro`_.
@@ -64,6 +63,8 @@ Extensions
 * django-oscar-jirafe_ - Integration with the Jirafe_ analytics package
 * django-oscar-paymentexpress_ - Integration with the `Payment Express`_ payment
   gateway
+* django-oscar-accounts_ - Managed accounts (can be used for giftcard
+  functionality and loyalty schemes)
 
 .. _django-oscar-datacash: https://github.com/tangentlabs/django-oscar-datacash
 .. _django-oscar-paymentexpress: https://github.com/tangentlabs/django-oscar-paymentexpress
@@ -76,6 +77,20 @@ Extensions
 .. _GoCardless: https://gocardless.com/
 .. _django-oscar-jirafe: https://github.com/tangentlabs/django-oscar-jirafe
 .. _Jirafe: https://jirafe.com/
+.. _django-oscar-accounts: https://github.com/tangentlabs/django-oscar-accounts
+
+The following extensions are in development:
+
+* django-oscar-stores_ - Physical stores integration (opening hours, store
+  locator etc)
+* django-oscar-parachute_ - Import scripts for migrating away from non-Oscar
+  platforms.
+* django-oscar-approval_ - Approval workflow for authorising new
+  orders/products.
+
+.. _django-oscar-stores: https://github.com/tangentlabs/django-oscar-stores
+.. _django-oscar-parachute: https://github.com/tangentlabs/django-oscar-parachute
+.. _django-oscar-approval: https://github.com/tangentlabs/django-oscar-approval
 
 License
 -------

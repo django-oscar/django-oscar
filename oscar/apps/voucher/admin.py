@@ -4,27 +4,25 @@ from django.db.models import get_model
 Voucher = get_model('voucher', 'Voucher')
 VoucherApplication = get_model('voucher', 'VoucherApplication')
 
-    
+
 class VoucherAdmin(admin.ModelAdmin):
-    list_display = ('name', 'code', 'usage', 'num_basket_additions', 'num_orders', 'total_discount')    
+    list_display = ('name', 'code', 'usage', 'num_basket_additions',
+                    'num_orders', 'total_discount')
     readonly_fields = ('num_basket_additions', 'num_orders', 'total_discount')
     fieldsets = (
         (None, {
-            'fields': ('name', 'code', 'usage', 'start_date', 'end_date')
-        }),
+            'fields': ('name', 'code', 'usage', 'start_date', 'end_date')}),
         ('Benefit', {
-            'fields': ('offers',)
-        }),
+            'fields': ('offers',)}),
         ('Usage', {
-            'fields': ('num_basket_additions', 'num_orders', 'total_discount')
-        }),
-        
+            'fields': ('num_basket_additions', 'num_orders',
+                       'total_discount')}),
     )
-    
+
 
 class VoucherApplicationAdmin(admin.ModelAdmin):
     list_display = ('voucher', 'user', 'order', 'date_created')
-    readonly_fields = ('voucher', 'user', 'order')        
+    readonly_fields = ('voucher', 'user', 'order')
 
 
 admin.site.register(Voucher, VoucherAdmin)

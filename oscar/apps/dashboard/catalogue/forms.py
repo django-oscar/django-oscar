@@ -20,13 +20,13 @@ class CategoryForm(MoveNodeForm):
     def clean(self):
         cleaned_data = super(CategoryForm, self).clean()
 
-        name = cleaned_data['name']
-        ref_node_pk = cleaned_data['_ref_node_id']
-        pos = cleaned_data['_position']
+        name = cleaned_data.get('name')
+        ref_node_pk = cleaned_data.get('_ref_node_id')
+        pos = cleaned_data.get('_position')
 
         if name and self.is_slug_conflicting(name, ref_node_pk, pos):
             raise forms.ValidationError(_('Category with the given path'
-                                                  ' already exists.'))
+                                          ' already exists.'))
         return cleaned_data
 
     def is_slug_conflicting(self, name, ref_node_pk, position):
@@ -69,6 +69,15 @@ class StockRecordForm(forms.ModelForm):
                                     label=_("Partner"))
     partner_sku = forms.CharField(required=False,
                                   label=_("Partner SKU"))
+
+    def __init__(self, product_class, *args, **kwargs):
+        self.product_class = product_class
+        super(StockRecordForm, self).__init__(*args, **kwargs)
+
+        # If not tracking stock, we hide the fields
+        if not self.product_class.track_stock:
+            del self.fields['num_in_stock']
+            del self.fields['low_stock_threshold']
 
     class Meta:
         model = StockRecord
@@ -191,7 +200,10 @@ class ProductForm(forms.ModelForm):
             raise forms.ValidationError(_("This field is required"))
         elif 'parent' in data and data['parent'] is None and not data['title']:
             raise forms.ValidationError(_("Parent products must have a title"))
-        return data
+        # calling the clean() method of BaseForm here is required to apply checks
+        # for 'unique' field. This prevents e.g. the UPC field from raising 
+        # a DatabaseError.
+        return super(ProductForm, self).clean()
 
 
 class StockAlertSearchForm(forms.Form):
@@ -223,6 +235,7 @@ class ProductCategoryFormSet(BaseInlineFormSet):
                     and form.cleaned_data.get('DELETE', False) != True):
                 num_categories += 1
         return num_categories
+
 
 ProductCategoryFormSet = inlineformset_factory(Product, ProductCategory,
                                                form=ProductCategoryForm,

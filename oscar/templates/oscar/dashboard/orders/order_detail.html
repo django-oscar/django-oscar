@@ -127,11 +127,11 @@
 							</td>
 							<td>{{ line.quantity }}</td>
 							<td>{{ line.title }}</td>
-							<td>{{ line.upc }}</td>
+							<td>{{ line.upc|default:"-" }}</td>
 							<td>{{ line.status|default:"-" }}</td>
 							<td>{{ line.partner_name }}</td>
 							<td>{{ line.partner_sku }}</td>
-							<td>{{ line.est_dispatch_date }}</td>
+							<td>{{ line.est_dispatch_date|default:"-" }}</td>
 							<td>{{ line.line_price_before_discounts_incl_tax|currency }}</td>
 							<td>
 								<a href="{% url dashboard:order-line-detail order.number line.id %}" class="btn btn-info">{% trans "View" %}</a>
@@ -347,6 +347,7 @@
 							<th>{% trans "Allocation" %}</th>
 							<th>{% trans "Amount debited" %}</th>
 							<th>{% trans "Amount refunded" %}</th>
+							<th>{% trans "Reference" %}</th>
 						</tr>  
 					</thead>	
 					<tbody> 
@@ -356,6 +357,7 @@
 							<td>{{ source.amount_allocated|currency }}</td>
 							<td>{{ source.amount_debited|currency }}</td>
 							<td>{{ source.amount_refunded|currency }}</td>
+							<td>{{ source.reference|default:"-" }}</td>
 						</tr>
 						{% endfor %}
 					</tbody>

@@ -1,5 +1,4 @@
 from decimal import Decimal as D
-import datetime
 
 from django.test import TestCase
 
@@ -64,28 +63,6 @@ class TestStockRecord(TestCase):
 
     def test_max_purchase_quantity(self):
         self.assertEqual(10, self.stockrecord.max_purchase_quantity())
-
-
-class DefaultWrapperTests(TestCase):
-
-    def test_default_wrapper_for_in_stock(self):
-        product = create_product(price=D('10.00'), partner="Acme", num_in_stock=10)
-        self.assertEquals("In stock (10 available)", product.stockrecord.availability)
-        self.assertEqual("instock", product.stockrecord.availability_code)
-
-    def test_default_wrapper_for_out_of_stock(self):
-        product = create_product(price=D('10.00'), partner="Acme", num_in_stock=0)
-        self.assertEquals(u"Not available",
-                          unicode(product.stockrecord.availability))
-        self.assertEqual("outofstock", product.stockrecord.availability_code)
-
-    def test_dispatch_date_for_in_stock(self):
-        product = create_product(price=D('10.00'), partner="Acme", num_in_stock=1)
-        self.assertIsNone(product.stockrecord.dispatch_date)
-
-    def test_dispatch_date_for_out_of_stock(self):
-        product = create_product(price=D('10.00'), partner="Acme", num_in_stock=0)
-        self.assertIsNone(product.stockrecord.dispatch_date)
 
 
 class CustomWrapperTests(TestCase):

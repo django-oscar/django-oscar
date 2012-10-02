@@ -1,13 +1,18 @@
-from django.db.models import Q
+from django.db.models import Q, get_model
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, DeleteView, UpdateView
 
-from oscar.apps.dashboard.users import forms
 from oscar.views.generic import BulkEditMixin
+from oscar.core.loading import get_classes
+
+UserSearchForm, ProductAlertSearchForm, ProductAlertUpdateForm  = get_classes(
+    'dashboard.users.forms', ('UserSearchForm', 'ProductAlertSearchForm',
+                              'ProductAlertUpdateForm'))
+ProductAlert = get_model('customer', 'ProductAlert')
 
 
 class IndexView(ListView, BulkEditMixin):
@@ -16,8 +21,8 @@ class IndexView(ListView, BulkEditMixin):
     model = User
     actions = ('make_active', 'make_inactive', )
     current_view = 'dashboard:users-index'
-    form_class = forms.UserSearchForm
-    desc_template = _(u'%(main_filter)s %(email_filter)s %(name_filter)s')
+    form_class = UserSearchForm
+    desc_template = _('%(main_filter)s %(email_filter)s %(name_filter)s')
     description = ''
 
     def get_queryset(self):
@@ -80,3 +85,83 @@ class UserDetailView(DetailView):
     template_name = 'dashboard/users/detail.html'
     model = User
     context_object_name = 'customer'
+
+    def get_context_data(self, **kwargs):
+        context = super(UserDetailView, self).get_context_data(**kwargs)
+        return context
+
+
+class ProductAlertListView(ListView):
+    model = ProductAlert
+    form_class = ProductAlertSearchForm
+    context_object_name = 'alerts'
+    template_name = 'dashboard/users/alerts/list.html'
+    paginate_by = 20
+    base_description = _('All Alerts')
+    description = ''
+
+    def get_queryset(self):
+        queryset = self.model.objects.all()
+        self.description = self.base_description
+
+        self.form = self.form_class(self.request.GET)
+        if not self.form.is_valid():
+            return queryset
+
+        data = self.form.cleaned_data
+
+        if data['status']:
+            queryset = queryset.filter(status=data['status']).distinct()
+            self.description += _(" with status matching '%s'") % data['status']
+
+        if data['name']:
+            # If the value is two words, then assume they are first name and
+            # last name
+            parts = data['name'].split()
+            if len(parts) >= 2:
+                queryset = queryset.filter(
+                    user__first_name__istartswith=parts[0],
+                    user__last_name__istartswith=parts[1]
+                ).distinct()
+            else:
+                queryset = queryset.filter(
+                    Q(user__first_name__istartswith=parts[0]) |
+                    Q(user__last_name__istartswith=parts[-1])
+                ).distinct()
+            self.description += _(" with customer name matching '%s'") % data['name']
+
+        if data['email']:
+            queryset = queryset.filter(
+                Q(user__email__icontains=data['email']) |
+                Q(email__icontains=data['email'])
+            )
+            self.description += _(" with customer email matching '%s'") % data['email']
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super(ProductAlertListView, self).get_context_data(**kwargs)
+        context['form'] = self.form
+        context['queryset_description'] = self.description
+        return context
+
+
+class ProductAlertUpdateView(UpdateView):
+    template_name = 'dashboard/users/alerts/update.html'
+    model = ProductAlert
+    form_class = ProductAlertUpdateForm
+    context_object_name = 'alert'
+
+    def get_success_url(self):
+        messages.success(self.request, _("Product alert saved"))
+        return reverse('dashboard:user-alert-list')
+
+
+class ProductAlertDeleteView(DeleteView):
+    model = ProductAlert
+    template_name = 'dashboard/users/alerts/delete.html'
+    context_object_name = 'alert'
+
+    def get_success_url(self):
+        messages.warning(self.request, _("Product alert deleted"))
+        return reverse('dashboard:user-alert-list')

@@ -5,6 +5,8 @@ PROJECT_DIR = os.path.dirname(__file__)
 location = lambda x: os.path.join(
     os.path.dirname(os.path.realpath(__file__)), x)
 
+USE_TZ = True
+
 DEBUG = True
 TEMPLATE_DEBUG = True
 SQL_DEBUG = True
@@ -108,6 +110,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'oscar.apps.promotions.context_processors.promotions',
     'oscar.apps.checkout.context_processors.checkout',
     'oscar.core.context_processors.metadata',
+    'oscar.apps.customer.notifications.context_processors.notifications',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -272,6 +275,10 @@ OSCAR_SHOP_TAGLINE = 'e-Commerce for Django'
 GOOGLE_ANALYTICS_ID = 'UA-XXXXX-Y'
 
 LOG_ROOT = location('logs')
+# Ensure log root exists
+if not os.path.exists(LOG_ROOT):
+    os.mkdir(LOG_ROOT)
+
 DISPLAY_VERSION = False
 
 THUMBNAIL_DEBUG = True

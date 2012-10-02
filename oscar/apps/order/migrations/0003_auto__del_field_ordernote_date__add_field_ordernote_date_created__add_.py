@@ -3,6 +3,8 @@ import datetime
 from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
+from django.utils.timezone import now
+
 
 class Migration(SchemaMigration):
 
@@ -11,7 +13,7 @@ class Migration(SchemaMigration):
         db.rename_column('order_ordernote', 'date', 'date_created')
 
         # Adding field 'OrderNote.date_updated'
-        db.add_column('order_ordernote', 'date_updated', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, default=datetime.datetime(2012, 4, 25, 12, 11, 37, 946052), blank=True), keep_default=False)
+        db.add_column('order_ordernote', 'date_updated', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, default=now(), blank=True), keep_default=False)
 
 
     def backwards(self, orm):

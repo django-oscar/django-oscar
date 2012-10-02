@@ -7,6 +7,9 @@ class DefaultWrapper(object):
     """
     Default stockrecord wrapper
     """
+    CODE_IN_STOCK = 'instock'
+    CODE_AVAILABLE = 'available'
+    CODE_UNAVAILABLE = 'outofstock'
 
     def is_available_to_buy(self, stockrecord):
         """
@@ -14,6 +17,8 @@ class DefaultWrapper(object):
 
         This is used to determine whether to show the add-to-basket button.
         """
+        if not stockrecord.product.product_class.track_stock:
+            return True
         if stockrecord.num_in_stock is None:
             return True
         return stockrecord.net_stock_level > 0
@@ -38,6 +43,8 @@ class DefaultWrapper(object):
         """
         Return the maximum available purchase quantity for a given user
         """
+        if not stockrecord.product.product_class.track_stock:
+            return None
         if stockrecord.num_in_stock is None:
             return None
         return stockrecord.net_stock_level
@@ -51,10 +58,10 @@ class DefaultWrapper(object):
         :param oscar.apps.partner.models.StockRecord stockrecord: stockrecord instance
         """
         if stockrecord.net_stock_level > 0:
-            return 'instock'
+            return self.CODE_IN_STOCK
         if self.is_available_to_buy(stockrecord):
-            return 'available'
-        return 'outofstock'
+            return self.CODE_AVAILABLE
+        return self.CODE_UNAVAILABLE
 
     def availability(self, stockrecord):
         """
@@ -69,10 +76,18 @@ class DefaultWrapper(object):
         return _("Not available")
 
     def dispatch_date(self, stockrecord):
+        """
+        We don't provide a default value as it could be confusing.  Subclass
+        and override this method to provide estimated dispatch dates
+        """
         return None
 
     def lead_time(self, stockrecord):
-        return 1
+        """
+        We don't provide a default value as it could be confusing.  Subclass
+        and override this method to provide estimated dispatch dates
+        """
+        return None
 
     def calculate_tax(self, stockrecord):
         return D('0.00')
