@@ -23,17 +23,17 @@
 
 {% block dashboard_content %}
 <div class="well well-info">
-    <h3 class="app-ico ico_magnify icon">Search Products</h3>
+    <h3 class="app-ico ico_magnify icon">{% trans "Search Products" %}</h3>
     <form action="." method="get" class="form-inline">
 		{% include "partials/form_fields_inline.html" with form=form %}
-        <button type="submit" class="btn btn-primary">Search</button>
+        <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
     </form>
 </div>
 <div class="well well-success">
-	<h3 class="app-ico ico_expand icon">Create new product</h3>
+	<h3 class="app-ico ico_expand icon">{% trans "Create new product" %}</h3>
     <form action="{% url dashboard:catalogue-product-create %}" method="get" class="form-inline">
         <span class="control-group">
-            <label for="id_promotion_type">Create a new product of type</label>
+            <label for="id_promotion_type">{% trans "Create a new product of type" %}</label>
             <select id="id_promotion_type" name="product_class">
                 <option> -- choose type --</option>
                 {% for product_class in product_classes %}

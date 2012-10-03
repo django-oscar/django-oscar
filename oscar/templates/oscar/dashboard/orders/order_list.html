@@ -26,7 +26,6 @@
 <div class="well">
     <h3>{% trans "Search" %}</h3>
     <form action="." method="get" class="form-inline">
-        {% csrf_token %}
         {% for field in form %}
             {% if "order" in field.id_for_label %}
                 {% if field.is_hidden %}

@@ -43,41 +43,6 @@
 	<input type="submit" value="Export" class="btn btn-primary"/>
 </div>
 
-<!--- Hard coded -->
-<div class="well">
-    <div class="form-inline">
-        <h3>Filter</h3>
-        <span class="control-group">
-            <label for="">Custom Filter</label>
-            <select>
-                <option>Quick Filters</option>
-                <option>Something</option>
-                <option>Something</option>
-            </select>
-        </span>
-        <span class="control-group">
-            <label for="">Custom Filter</label>
-            <select>                    
-                <option>Money Spent</option>
-                <option>Something</option>
-                <option>Something</option></span>
-            </select>
-        </span>
-        <span class="control-group">
-            <label for="">Custom Filter</label>
-            <select>
-                <option>Is Greater Than</option>
-                <option>Something</option>
-                <option>Something</option>
-            </select>
-        </span>
-        <input type="text" placeholder=".span2" >
-        <span class="help-inline">Save as Quick Filter</span>
-        <span class="help-inline">+ Add Another</span>
-    </div>
-</div>
-<!-- End of hard coded section -->
-
 {% if user_list.count %}
 <form action="." method="post" class="form-inline">
     {% csrf_token %}

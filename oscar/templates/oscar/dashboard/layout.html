@@ -9,8 +9,6 @@
 {% endblock %}
 
 {% block extrahead %}
-<link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/markitup/skins/markitup/style.css" type="text/css" media="screen" title="no title" charset="utf-8">
-<link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/markitup/sets/default/style.css" type="text/css" media="screen" title="no title" charset="utf-8">
 {% endblock extrahead %}
 
 {% block title %}
@@ -84,7 +82,7 @@
 {# Block for additional scripts #}
 {% block extrascripts %}
     {{ block.super }}
-	<script src="{{ STATIC_URL }}oscar/js/oscar/plugins.js" type="text/javascript" charset="utf-8"></script>
+	<script src="{{ STATIC_URL }}oscar/js/plugins/plugins.js" type="text/javascript" charset="utf-8"></script>
     <script src="{{ STATIC_URL }}oscar/js/oscar/ui.js" type="text/javascript" charset="utf-8"></script>
     <script src="{{ STATIC_URL }}oscar/js/oscar/dashboard.js" type="text/javascript" charset="utf-8"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>

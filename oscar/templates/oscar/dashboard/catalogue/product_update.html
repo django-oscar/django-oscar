@@ -1,4 +1,5 @@
 {% extends 'dashboard/layout.html' %}
+{% load i18n %}
 {% load currency_filters %}
 
 {% block body_class %}catalogue{% endblock %}
@@ -32,7 +33,7 @@ Update product | {{ block.super }}
 {% csrf_token %}
     <div class="well well-blank product-details">
         <div class="sub-header">
-            <h3>Product Details</h3>
+            <h3>{% trans "Product Details" %}</h3>
         </div>
         <span class="help-block">{{ form.non_field_errors }}</span>
         {% for field in form %}
@@ -65,10 +66,10 @@ Update product | {{ block.super }}
     </div>
 	<div class="well well-blank">
         <div class="sub-header">
-            <h3>Product Attributes</h3>
+            <h3>{% trans "Product Attributes" %}</h3>
         </div>
         <div class="control-group">
-            <label class="control-label">Product class</label>
+            <label class="control-label">{% trans "Product class" %}</label>
             <div class="controls">
                 <select id="select01">
                     <option>{{ product.product_class }}</option>
@@ -103,7 +104,7 @@ Update product | {{ block.super }}
 
 	<div class="well well-blank form-inline">
 		<div class="sub-header">
-			<h3>Category</h3>
+			<h3>{% trans "Category" %}</h3>
 		</div>
 		{{ category_formset.management_form }}
 		{% for category_form in category_formset %}
@@ -114,7 +115,7 @@ Update product | {{ block.super }}
 
 <div class="well well-blank">
 	<div class="sub-header">
-		<h3>Upload, Change or Remove Images</h3>
+		<h3>{% trans "Upload, Change or Remove Images" %}</h3>
 	</div>
 	{{ image_formset.management_form }}
 	{{ image_formset.non_form_errors }}
@@ -126,12 +127,12 @@ Update product | {{ block.super }}
 </div>
 <div class="well well-blank fields-full stock-pricing">
 	<div class="sub-header">
-   		<h3>Stock and Price Information</h3>
+   		<h3>{% trans "Stock and Price Information" %}</h3>
 	</div>
 	{{ stockrecord_form.non_field_errors }}
 	<div class="row-fluid">
 		<div class="span3">
-			<h4>Partner</h4>
+			<h4>{% trans "Partner" %}</h4>
 			{% for field in stockrecord_form %}
 			   {% if "partner" in field.id_for_label %}
 			   	{% include "dashboard/partials/stock_info.html" %}
@@ -139,7 +140,7 @@ Update product | {{ block.super }}
 			{% endfor %}
 		</div>
 		<div class="span3">
-			<h4>Price</h4>
+			<h4>{% trans "Price" %}</h4>
 			{% for field in stockrecord_form %}
 			   {% if "price" in field.id_for_label %}
 			       {% include "dashboard/partials/stock_info.html" %}
@@ -147,7 +148,7 @@ Update product | {{ block.super }}
 			{% endfor %}
 		</div>
 		<div class="span3">
-			<h4>Stock levels</h4>
+			<h4>{% trans "Stock levels" %}</h4>
 			{% for field in stockrecord_form %}
 				{% if "stock" in field.id_for_label %}
 					{% include "dashboard/partials/stock_info.html" %}
@@ -159,10 +160,10 @@ Update product | {{ block.super }}
 <hr/>
     <div class="control-group">
         <div class="pull-right">
-            <a href="{% url dashboard:catalogue-product-list %}">Cancel</a> or <button class="btn btn-primary btn-large" type="submit">Save Product</button>
+            <a href="{% url dashboard:catalogue-product-list %}">Cancel</a> or <button class="btn btn-primary btn-large" type="submit">{% trans "Save Product" %}</button>
         </div>
         {% if product %}
-            <a class="btn btn-success btn-large" href="{{ product.get_absolute_url }}">View on site</a>
+            <a class="btn btn-success btn-large" href="{{ product.get_absolute_url }}">{% trans "View on site" %}</a>
         {% endif %}
 </div>
 </form>
