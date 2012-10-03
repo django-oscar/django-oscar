@@ -11,20 +11,21 @@ from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from oscar.apps.basket.managers import OpenBasketManager, SavedBasketManager
 from oscar.templatetags.currency_filters import currency
 
-# Basket statuses
-# - Frozen is for when a basket is in the process of being submitted
-#   and we need to prevent any changes to it.
-OPEN, MERGED, SAVED, FROZEN, SUBMITTED = (
-    "Open", "Merged", "Saved", "Frozen", "Submitted")
-
 
 class AbstractBasket(models.Model):
     """
     Basket object
     """
-    # Baskets can be anonymously owned (which are merged if the user signs in)
+    # Baskets can be anonymously owned - hence this field is nullable.  When a
+    # anon user signs in, their two baskets are merged.
     owner = models.ForeignKey('auth.User', related_name='baskets',
                               null=True, verbose_name=_("Owner"))
+
+    # Basket statuses
+    # - Frozen is for when a basket is in the process of being submitted
+    #   and we need to prevent any changes to it.
+    OPEN, MERGED, SAVED, FROZEN, SUBMITTED = (
+    "Open", "Merged", "Saved", "Frozen", "Submitted")
     STATUS_CHOICES = (
         (OPEN, _("Open - currently active")),
         (MERGED, _("Merged - superceded by another basket")),
@@ -34,13 +35,17 @@ class AbstractBasket(models.Model):
     )
     status = models.CharField(_("Status"), max_length=128, default=OPEN,
                               choices=STATUS_CHOICES)
+
     vouchers = models.ManyToManyField('voucher.Voucher', null=True,
                                       verbose_name=_("Vouchers"))
 
-    date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
-    date_merged = models.DateTimeField(_("Date Merged"), null=True, blank=True)
-    date_submitted = models.DateTimeField(_("Date Submitted"), null=True,
+    date_created = models.DateTimeField(_("Date created"), auto_now_add=True)
+    date_merged = models.DateTimeField(_("Date merged"), null=True, blank=True)
+    date_submitted = models.DateTimeField(_("Date submitted"), null=True,
                                           blank=True)
+
+    # Only if a basket is in one of these statuses can it be edited
+    editable_statuses = (OPEN, SAVED)
 
     class Meta:
         abstract = True
@@ -100,7 +105,7 @@ class AbstractBasket(models.Model):
 
     def flush(self):
         """Remove all lines from basket."""
-        if self.status == FROZEN:
+        if self.status == self.FROZEN:
             raise PermissionDenied("A frozen basket cannot be flushed")
         self.lines.all().delete()
         self._lines = None
@@ -198,7 +203,7 @@ class AbstractBasket(models.Model):
         """
         for line_to_merge in basket.all_lines():
             self.merge_line(line_to_merge, add_quantities)
-        basket.status = MERGED
+        basket.status = self.MERGED
         basket.date_merged = now()
         basket.save()
         self._lines = None
@@ -207,19 +212,19 @@ class AbstractBasket(models.Model):
         """
         Freezes the basket so it cannot be modified.
         """
-        self.status = FROZEN
+        self.status = self.FROZEN
         self.save()
 
     def thaw(self):
         """
         Unfreezes a basket so it can be modified again
         """
-        self.status = OPEN
+        self.status = self.OPEN
         self.save()
 
     def set_as_submitted(self):
         """Mark this basket as submitted."""
-        self.status = SUBMITTED
+        self.status = self.SUBMITTED
         self.date_submitted = now()
         self.save()
 
@@ -397,6 +402,12 @@ class AbstractBasket(models.Model):
     # Query methods
     # =============
 
+    def can_be_edited(self):
+        """
+        Test if a basket can be edited
+        """
+        return self.status in self.editable_statuses
+
     def contains_voucher(self, code):
         """
         Test whether the basket contains a voucher with a given code
@@ -419,7 +430,7 @@ class AbstractBasket(models.Model):
             return 0
 
     def is_submitted(self):
-        return self.status == SUBMITTED
+        return self.status == self.SUBMITTED
 
 
 class AbstractLine(models.Model):
@@ -471,14 +482,16 @@ class AbstractLine(models.Model):
                 'quantity': self.quantity}
 
     def save(self, *args, **kwargs):
-        """Saves a line or deletes if it's quanity is 0"""
-        if self.basket.status not in (OPEN, SAVED):
+        """
+        Saves a line or deletes if the quantity is 0
+        """
+        if not self.basket.can_be_edited():
             raise PermissionDenied(
                 _("You cannot modify a %s basket") % (
                     self.basket.status.lower(),))
         if self.quantity == 0:
             return self.delete(*args, **kwargs)
-        super(AbstractLine, self).save(*args, **kwargs)
+        return super(AbstractLine, self).save(*args, **kwargs)
 
     def set_as_tax_exempt(self):
         self._charge_tax = False

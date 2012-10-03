@@ -7,7 +7,6 @@ from django.db.models.loading import get_model
 from django.db.models import Avg, Sum, Count
 from django.contrib.auth.models import User
 
-from oscar.apps.basket.abstract_models import OPEN as basket_OPEN
 from oscar.apps.promotions.models import AbstractPromotion
 
 ConditionalOffer = get_model('offer', 'ConditionalOffer')
@@ -65,7 +64,7 @@ class IndexView(TemplateView):
         """
         if filters is None:
             filters = {}
-        filters['status'] = basket_OPEN
+        filters['status'] = Basket.OPEN
         return Basket.objects.filter(**filters)
 
     def get_hourly_report(self, hours=24, segments=10):
