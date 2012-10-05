@@ -126,6 +126,41 @@ Then create the database and the shop should be browsable::
 
 You should now have a running Oscar install that you can browse.
 
+Defining the order pipeline
+---------------------------
+
+The order management in Oscar relies on the order pipeline that
+defines all the statuses an order can have and the possible transitions
+for any given status. Statuses in Oscar are not just used for an order
+but are handled on the line level as well to be able to handle partial
+shipping of an order.
+
+The order status pipeline is different for every shop which means that
+changing it is fairly straightforward in Oscar. The pipeline is defined in
+your ``settings.py`` file using the ``OSCAR_ORDER_STATUS_PIPELINE`` setting.
+You also need to specify the inital status for an order and a line item in
+``OSCAR_INITIAL_ORDER_STATUS`` and ``OSCAR_INITIAL_LINE_STATUS``
+respectively.
+
+To give you an idea of what an order pipeline might look like take a look
+at the Oscar sandbox settings::
+
+    OSCAR_INITIAL_ORDER_STATUS = 'Pending'
+    OSCAR_INITIAL_LINE_STATUS = 'Pending'
+    OSCAR_ORDER_STATUS_PIPELINE = {
+        'Pending': ('Being processed', 'Cancelled',),
+        'Being processed': ('Processed', 'Cancelled',),
+        'Cancelled': (),
+    }
+
+Defining the order status pipeline is simply a dictionary of where each
+status is given as a key. Possible transitions into other statuses can be
+specified as an interable of status names. An empty iterable defines an
+end point in the pipeline.
+
+With these three settings defined in your project you'll be able to see
+the different statuses in the order management dashboard.
+
 
 Install using Tangent's boilerplate django project
 ==================================================
@@ -184,6 +219,7 @@ Create database::
     python manage.py migrate
 
 And that should be it.
+
 
 Next steps
 ==========
