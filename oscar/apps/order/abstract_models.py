@@ -243,6 +243,7 @@ class AbstractOrderNote(models.Model):
         delta = timezone.now() - self.date_updated
         return delta.seconds < self.editable_lifetime
 
+
 class AbstractCommunicationEvent(models.Model):
     """
     An order-level event involving a communication to the customer, such
@@ -669,6 +670,7 @@ class AbstractOrderDiscount(models.Model):
     """
     order = models.ForeignKey('order.Order', related_name="discounts", verbose_name=_("Order"))
     offer_id = models.PositiveIntegerField(_("Offer ID"), blank=True, null=True)
+    offer_name = models.CharField(_("Offer name"), max_length=128, db_index=True, null=True)
     voucher_id = models.PositiveIntegerField(_("Voucher ID"), blank=True, null=True)
     voucher_code = models.CharField(_("Code"), max_length=128, db_index=True, null=True)
     amount = models.DecimalField(_("Amount"), decimal_places=2, max_digits=12, default=0)
@@ -677,6 +679,19 @@ class AbstractOrderDiscount(models.Model):
         abstract = True
         verbose_name = _("Order Discount")
         verbose_name_plural = _("Order Discounts")
+
+    def save(self, **kwargs):
+        if self.offer_id and not self.offer_name:
+            offer = self.offer
+            if offer:
+                self.offer_name = offer.name
+
+        if self.voucher_id and not self.voucher_code:
+            voucher = self.voucher
+            if voucher:
+                self.voucher_code = voucher.code
+
+        super(AbstractOrderDiscount, self).save(**kwargs)
 
     def __unicode__(self):
         return _("Discount of %(amount)r from order %(order)s") % {'amount': self.amount, 'order': self.order}
@@ -693,11 +708,11 @@ class AbstractOrderDiscount(models.Model):
     def voucher(self):
         Voucher = models.get_model('voucher', 'Voucher')
         try:
-            return Voucher.objects.get(id=self.offer_id)
+            return Voucher.objects.get(id=self.voucher_id)
         except Voucher.DoesNotExist:
             return None
 
     def description(self):
         if self.voucher_code:
             return self.voucher_code
-        return self.offer.name
+        return self.offer_name or u""
