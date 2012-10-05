@@ -70,15 +70,16 @@ Default: ``{}``
 OSCAR_PROMOTION_MERCHANDISING_BLOCK_TYPES
 -----------------------------------------
 
-Default = ```
-COUNTDOWN, LIST, SINGLE_PRODUCT, TABBED_BLOCK = (
-    'Countdown', 'List', 'SingleProduct', 'TabbedBlock')
-OSCAR_PROMOTION_MERCHANDISING_BLOCK_TYPES = (
-    (COUNTDOWN, "Vertical list"),
-    (LIST, "Horizontal list"),
-    (TABBED_BLOCK, "Tabbed block"),
-    (SINGLE_PRODUCT, "Single product"),
-)```
+Default::
+
+    COUNTDOWN, LIST, SINGLE_PRODUCT, TABBED_BLOCK = (
+        'Countdown', 'List', 'SingleProduct', 'TabbedBlock')
+    OSCAR_PROMOTION_MERCHANDISING_BLOCK_TYPES = (
+        (COUNTDOWN, "Vertical list"),
+        (LIST, "Horizontal list"),
+        (TABBED_BLOCK, "Tabbed block"),
+        (SINGLE_PRODUCT, "Single product"),
+    )
 
 Defines the available promotion block types that can be used in Oscar.
 
