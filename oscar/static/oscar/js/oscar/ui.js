@@ -105,7 +105,7 @@ $(document).ready(function()
     var window_width = $(window).width(), // Width of the window
         $sidebar = $('aside.span3'), // Width of main navigation
         $browse = $('#browse > .dropdown-menu'), // Height of main navigation
-        $browse_open = $browse.parent().find('> a[data-toggle]');
+        $browse_open = $browse.parent().find('> button[data-toggle]');
     
         if (window_width > 480) {
             // This activates elastislide
