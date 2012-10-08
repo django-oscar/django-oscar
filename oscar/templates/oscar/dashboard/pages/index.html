@@ -19,7 +19,7 @@
 
 {% block header %}
 <div class="well well-info">
-    <h3>{% trans "Search" %}</h3>
+    <h3><i class="icon-search"></i> Search</h3>
     <form action="." method="get" class="form-inline">
         {% include "partials/form_fields_inline.html" with form=form %}
         <input type="submit" value="{% trans "Search" %}" class="btn btn-primary"/>
@@ -30,9 +30,9 @@
 {% block dashboard_content %}
 
 <div class="well well-success">
-    <h3>{% trans "Create new page" %}</h3>
+    <h3><i class="icon-file"></i> Create new page</h3>
     <form action="{% url dashboard:page-create %}" method="get" class="form-inline">
-        <input type="submit" value="{% trans "Create" %}" class="btn-primary" />
+        <input type="submit" value="{% trans "Create" %}" class="btn btn-primary" />
     </form>
 </div>
 

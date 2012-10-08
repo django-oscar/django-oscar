@@ -23,7 +23,7 @@
 
 {% block dashboard_content %}
 <div class="well well-info">
-	<h3>{% trans "Search" %}</h3>
+    <h3><i class="icon-search"></i> {% trans "Search" %}</h3>
     <form action="." method="get" class="form-inline">
         {% include "partials/form_fields_inline.html" with form=form %}
 		<input type="submit" value="{% trans "Search" %}" class="btn"/>
@@ -68,7 +68,7 @@
         {% endfor %}
     </table>
     <div class="well">
-        <h3 class="app-ico ico_sync icon">{% trans "Bulk Actions" %}</h3>
+        <h3><i class="icon-refresh"></i> {% trans "Bulk Actions" %}</h3>
         <label for="inlineCheckboxes">{% trans "With selected customers:" %}</label>
         <label>
             <input type="radio" name="action" value="make_active" /> {% trans "Make active" %}

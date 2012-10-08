@@ -22,7 +22,7 @@
 {% block dashboard_content %}
 <div class="well well-info">
     <div class="sub-header">
-        <h3>{% trans "Search" %}</h3>
+        <h3><i class="icon-search"></i> {% trans "Search" %}</h3>
     </div>
     <form action="." method="get" class="form-inline">
         {% include 'partials/form_fields_inline.html' with form=form %}
@@ -32,7 +32,7 @@
 </div>
 
 <div class="well well-success">
-    <h3>{% trans "Create Offer" %}</h3>
+    <h3><i class="icon-file"></i> {% trans "Create Offer" %}</h3>
     <a href="{% url dashboard:offer-metadata %}" class="btn btn-primary">{% trans "Create" %}</a>
 </div>
 

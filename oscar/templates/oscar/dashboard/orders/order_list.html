@@ -23,8 +23,8 @@
 
 {% block dashboard_content %}
 
-<div class="well">
-    <h3>{% trans "Search" %}</h3>
+<div class="well well-info">
+    <h3><i class="icon-search"></i> {% trans "Search" %}</h3>
     <form action="." method="get" class="form-inline">
         {% for field in form %}
             {% if "order" in field.id_for_label %}
@@ -124,7 +124,7 @@
 </table>
 
 <div class="well well-danger">
-	<h3 class="app-ico ico_logout icon">{% trans "Download" %}</h3>
+    <h3><i class="icon-download-alt"></i> {% trans "Download" %}</h3>
 	<label>{% trans "Download selected orders as a CSV" %}</label>
 	<input type="hidden" name="action" value="download_selected_orders" />
 	<button type="submit" class="btn btn-primary">{% trans "Download" %}</button>

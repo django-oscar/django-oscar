@@ -6,6 +6,8 @@
 {% trans 'Email history' %} | {{ block.super }}
 {% endblock %}
 
+{% block body_class %}account-pages{% endblock %}
+
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
@@ -22,9 +24,19 @@
 
 {% block header %}
 <div class="page-header">
-    <h2>{% trans 'Email history' %}</h2>
+    <h2>{% trans 'Account' %}</h2>
 </div>
 {% endblock header %}
+
+{% block subnavigation %}
+    {% include "partials/nav_profile.html" with email_history="active" %}
+{% endblock %}
+
+{% block subheader %}
+<div class="sub-header">
+    <h2>{% trans 'Email history' %}</h2>
+</div>
+{% endblock subheader %}
 
 {% block content %}
 	<table class="table table-striped table-bordered">

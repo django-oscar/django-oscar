@@ -31,7 +31,7 @@
 
 {% for position in positions %}
 <div class="well {% if position.promotions %}well-info{% endif%}">
-	<h3 class="app-ico ico_favourite icon">{% blocktrans with name=position.name %}Edit promotions in position '{{ name }}'{% endblocktrans %}</h3>
+	<h3>{% blocktrans with name=position.name %}Edit promotions in position '{{ name }}'{% endblocktrans %}</h3>
     {% if position.promotions %}
     <table class="table table-bordered">
     	<thead>

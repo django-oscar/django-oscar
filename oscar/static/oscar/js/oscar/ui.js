@@ -105,9 +105,9 @@ $(document).ready(function()
     var window_width = $(window).width(), // Width of the window
         $sidebar = $('aside.span3'), // Width of main navigation
         $browse = $('#browse > .dropdown-menu'), // Height of main navigation
-        $browse_open = $browse.parent().find('> a[data-toggle]');
+        $browse_open = $browse.parent().find('> button[data-toggle]');
     
-        if (window_width > 480) {
+        if (window_width > 767) {
             // This activates elastislide
             var es_carousel = $('.es-carousel-wrapper'),
             product_page = $('.product_page').length;
@@ -132,7 +132,7 @@ $(document).ready(function()
             }
         }
 
-    if (window_width > 980) {
+    if (window_width > 767) {
       // set width of nav dropdown on the homepage
       $browse.css('width', $sidebar.outerWidth());
       // Remove click on browse button if menu is currently open
@@ -199,6 +199,16 @@ $(document).ready(function()
         e.preventDefault();
     });
     
+    //Account / Profile navigation
+    var checkHash = document.location.hash,
+        getId = checkHash.substring(1),
+        activeClass = $('.account-profile .tabbable'),
+        aHref = $('a[href=' + checkHash + ']').closest('li');
+    if (checkHash) {
+      activeClass.find('.active').removeClass('active');
+      $('#' + getId).add(aHref).addClass('active');
+    }
+
     //For IE - sets the width of a select in an overflow hidden container
     var selectBox = $('.product_pod select'),
         isIE = navigator.userAgent.toLowerCase().indexOf("msie");

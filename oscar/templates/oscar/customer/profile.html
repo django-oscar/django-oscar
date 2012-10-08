@@ -6,6 +6,8 @@
 {% trans 'My account' %} | {{ block.super }}
 {% endblock %}
 
+{% block body_class %}account-profile{% endblock %}
+
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
@@ -17,24 +19,41 @@
 {% endblock %}
 
 {% block header %}
-<div class="page-header">
+<div class="page-header hidden-phone">
     <h1>{% trans 'Account' %}</h1>
 </div>
 {% endblock header %}
 
 {% block content %}
 
-<div class="tabbable dashboard">
+<div class="tabbable">
 
-    <ul class="nav nav-tabs">
-		<li {% if active_tab == 'profile' %}class="active"{% endif %}><a href="#profile" data-toggle="tab">{% trans 'Profile' %}</a></li>
-        <li {% if active_tab == 'orders' %}class="active"{% endif %}><a href="#orders" data-toggle="tab">{% trans 'Order History' %}</a></li>
-        <li {% if active_tab == 'addresses' %}class="active"{% endif %}><a href="#addresses" data-toggle="tab">{% trans 'Address Book' %}</a></li>
-        <li {% if active_tab == 'emails' %}class="active"{% endif %}><a href="#emails" data-toggle="tab">{% trans 'Email History' %}</a></li>
-        <li {% if active_tab == 'alerts' %}class="active"{% endif %}><a href="#alerts" data-toggle="tab">{% trans "Alerts" %}</a></li>
-        {% block extra_tabs_nav %}
-        {% endblock %}
-    </ul>
+    <div class="navbar nav-profile">
+        <div class="navbar-inner">
+            <div class="container">
+
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".profile-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+
+                <span class="brand visible-phone" href="#">Account</span>
+
+                <div class="nav-collapse profile-collapse">
+                    <ul class="nav nav-tabs">
+                        <li {% if active_tab == 'profile' %}class="active"{% endif %}><a href="#profile" data-toggle="tab">{% trans 'Profile' %}</a></li>
+                        <li {% if active_tab == 'orders' %}class="active"{% endif %}><a href="#orders" data-toggle="tab">{% trans 'Order History' %}</a></li>
+                        <li {% if active_tab == 'addresses' %}class="active"{% endif %}><a href="#addresses" data-toggle="tab">{% trans 'Address Book' %}</a></li>
+                        <li {% if active_tab == 'emails' %}class="active"{% endif %}><a href="#emails" data-toggle="tab">{% trans 'Email History' %}</a></li>
+                        <li {% if active_tab == 'alerts' %}class="active"{% endif %}><a href="#alerts" data-toggle="tab">{% trans "Alerts" %}</a></li>
+                        {% block extra_tabs_nav %}
+                        {% endblock %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="tab-content">
 

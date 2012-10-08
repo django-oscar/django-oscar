@@ -1,26 +1,37 @@
 {% load currency_filters %}
 {% load history_tags %}
 {% load basket_tags %}
+{% load thumbnail %}
 {% load i18n %}
 
 <ul class="basket_item">
 {% if request.basket.num_lines %}
     {% for line in request.basket.all_lines %}
     <li>
-        <article>
-            <h4><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h4>
-			<p><strong>{% trans "Quantity:" %}</strong> <span>{{ line.quantity }}</span> x <span>{{ line.unit_price_excl_tax|currency }}</span></p>
-        </article>
+        <div class="row-fluid">
+            <div class="span3">
+                <div class="image_container">
+                {% with image=line.product.primary_image %}
+                    {% thumbnail image.original "100x100" upscale=False as thumb %}
+                    <a href="{{ form.instance.product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
+                    {% endthumbnail %}
+                {% endwith %}
+                </div>
+            </div>
+            <div class="span6">
+                <h4><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h4>
+            </div>
+			<div class="span1 align-center"><strong>{% trans "Qty" %}</strong> {{ line.quantity }}</div>
+            <div class="span2 price_color align-right">{{ line.unit_price_excl_tax|currency }}</div>
+        </div>
     </li>
     {% endfor %}
     <li class="form-actions">
-	<h4><small>{% trans "Total Excl Tax:" %} {{ request.basket.total_excl_tax|currency }}</small> {% trans "Total:" %} {{ request.basket.total_incl_tax|currency }}</h4>
-	<p><a href="{% url basket:summary %}" class="btn btn-info btn-small">{% trans "View Basket" %}</a></p>
-	<p><a href="{% url checkout:index %}" class="btn btn-primary btn-small">{% trans "Checkout" %}</a></p>
+		<h4><small>{% trans "Total Excl Tax:" %} {{ request.basket.total_excl_tax|currency }}</small> <span class="price_color">{% trans "Total:" %} {{ basket.total_incl_tax|currency }}</span></h4>
+		<p class="pull-left"><a href="{% url basket:summary %}" class="btn btn-info btn-small">{% trans "View Basket" %}</a></p>
+		<p class="pull-right"><a href="{% url checkout:index %}" class="btn btn-primary btn-small"><i class="icon-shopping-cart"></i> {% trans "Checkout" %}</a></p>
     </li>
 {% else %}
-    <li>
-	<p>{% trans "Your basket is empty, you should probably add some items to buy." %}</p>
-    </li>
+    <li><p>{% trans "Your basket is empty." %}</p></li>
 {% endif %}
 </ul>
