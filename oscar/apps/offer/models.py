@@ -58,7 +58,7 @@ class ConditionalOffer(models.Model):
         help_text=_("The highest priority offers are applied first"))
 
     # Use this field to limit the number of times this offer can be applied to
-    # a basket
+    # a basket.
     max_applications = models.PositiveIntegerField(
         blank=True, null=True,
         help_text=_("This controls the maximum times an offer can "
@@ -70,9 +70,9 @@ class ConditionalOffer(models.Model):
                                          default=D('0.00'))
     num_orders = models.PositiveIntegerField(_("Number of Orders"), default=0)
 
-    date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
-
     redirect_url = ExtendedURLField(_("URL redirect (optional)"), blank=True)
+
+    date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
     objects = models.Manager()
     active = ActiveOfferManager()
