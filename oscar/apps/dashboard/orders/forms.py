@@ -87,7 +87,6 @@ class OrderSearchForm(forms.Form):
             [(src.code, src.name) for src in SourceType.objects.all()])
 
 
-
 class OrderNoteForm(forms.ModelForm):
 
     class Meta:
