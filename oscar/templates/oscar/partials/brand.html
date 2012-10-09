@@ -13,6 +13,6 @@
             </ul>
         </div>
     </li>
-	<li class="cart_summary"><strong>{% trans "Basket total:" %} <span>{{ basket.total_incl_tax|currency }}</span></strong></li>
+	<li class="cart_summary"><strong>{% trans "Basket total:" %} <span>{{ request.basket.total_incl_tax|currency }}</span></strong></li>
 </ul><!-- /cart -->
 {% endif %}
