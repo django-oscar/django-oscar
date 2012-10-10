@@ -37,15 +37,17 @@ class OrderPlacementMixin(CheckoutSessionMixin):
     # Default code for the email to send after successful checkout
     communication_type_code = 'ORDER_PLACED'
 
-    def handle_order_placement(self, order_number, basket, total_incl_tax, total_excl_tax, **kwargs):
+    def handle_order_placement(self, order_number, basket, total_incl_tax,
+                               total_excl_tax, user=None, **kwargs):
         """
         Write out the order models and return the appropriate HTTP response
 
         We deliberately pass the basket in here as the one tied to the request
-        isn't necessarily the correct one to use in placing the order.  This can
-        happen when a basket gets frozen.
+        isn't necessarily the correct one to use in placing the order.  This
+        can happen when a basket gets frozen.
         """
-        order = self.place_order(order_number, basket, total_incl_tax, total_excl_tax, **kwargs)
+        order = self.place_order(order_number, basket, total_incl_tax,
+                                 total_excl_tax, **kwargs)
         basket.set_as_submitted()
         return self.handle_successful_order(order)
 
@@ -79,7 +81,8 @@ class OrderPlacementMixin(CheckoutSessionMixin):
 
         return HttpResponseRedirect(reverse('checkout:thank-you'))
 
-    def place_order(self, order_number, basket, total_incl_tax, total_excl_tax, **kwargs):
+    def place_order(self, order_number, basket, total_incl_tax,
+                    total_excl_tax, user=None, **kwargs):
         """
         Writes the order out to the DB including the payment models
         """
@@ -92,6 +95,11 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         else:
             status = kwargs.pop('status')
 
+        # We allow a user to be passed in to handle cases where the order is
+        # being placed on behalf of someone else.
+        if user is None:
+            user = self.request.user
+
         # Set guest email address for anon checkout.   Some libraries (eg
         # PayPal) will pass this explicitly so we take care not to clobber.
         if not self.request.user.is_authenticated() and 'guest_email' not in kwargs:
@@ -100,7 +108,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         order = OrderCreator().place_order(basket=basket,
                                            total_incl_tax=total_incl_tax,
                                            total_excl_tax=total_excl_tax,
-                                           user=self.request.user,
+                                           user=user,
                                            shipping_method=shipping_method,
                                            shipping_address=shipping_address,
                                            billing_address=billing_address,
