@@ -39,15 +39,16 @@ class OrderPlacementMixin(CheckoutSessionMixin):
     communication_type_code = 'ORDER_PLACED'
 
     def handle_order_placement(self, order_number, basket, total_incl_tax,
-                               total_excl_tax, **kwargs):
+                               total_excl_tax, user=None, **kwargs):
         """
         Write out the order models and return the appropriate HTTP response
 
         We deliberately pass the basket in here as the one tied to the request
-        isn't necessarily the correct one to use in placing the order.  This can
-        happen when a basket gets frozen.
+        isn't necessarily the correct one to use in placing the order.  This
+        can happen when a basket gets frozen.
         """
-        order = self.place_order(order_number, basket, total_incl_tax, total_excl_tax, **kwargs)
+        order = self.place_order(order_number, basket, total_incl_tax,
+                                 total_excl_tax, user, **kwargs)
         basket.set_as_submitted()
         return self.handle_successful_order(order)
 
@@ -57,7 +58,8 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         self._payment_sources.append(source)
 
     def add_payment_event(self, event_type_name, amount):
-        event_type, __ = PaymentEventType.objects.get_or_create(name=event_type_name)
+        event_type, __ = PaymentEventType.objects.get_or_create(
+            name=event_type_name)
         if self._payment_events is None:
             self._payment_events = []
         event = PaymentEvent(event_type=event_type, amount=amount)
@@ -65,7 +67,8 @@ class OrderPlacementMixin(CheckoutSessionMixin):
 
     def handle_successful_order(self, order):
         """
-        Handle the various steps required after an order has been successfully placed.
+        Handle the various steps required after an order has been successfully
+        placed.
 
         Override this view if you want to perform custom actions when an
         order is submitted.
@@ -84,7 +87,8 @@ class OrderPlacementMixin(CheckoutSessionMixin):
     def get_success_url(self):
         return reverse('checkout:thank-you')
 
-    def place_order(self, order_number, basket, total_incl_tax, total_excl_tax, **kwargs):
+    def place_order(self, order_number, basket, total_incl_tax,
+                    total_excl_tax, user=None, **kwargs):
         """
         Writes the order out to the DB including the payment models
         """
@@ -97,15 +101,21 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         else:
             status = kwargs.pop('status')
 
+        # We allow a user to be passed in to handle cases where the order is
+        # being placed on behalf of someone else.
+        if user is None:
+            user = self.request.user
+
         # Set guest email address for anon checkout.   Some libraries (eg
         # PayPal) will pass this explicitly so we take care not to clobber.
-        if not self.request.user.is_authenticated() and 'guest_email' not in kwargs:
+        if (not self.request.user.is_authenticated() and 'guest_email'
+            not in kwargs):
             kwargs['guest_email'] = self.checkout_session.get_guest_email()
 
         order = OrderCreator().place_order(basket=basket,
                                            total_incl_tax=total_incl_tax,
                                            total_excl_tax=total_excl_tax,
-                                           user=self.request.user,
+                                           user=user,
                                            shipping_method=shipping_method,
                                            shipping_address=shipping_address,
                                            billing_address=billing_address,
@@ -160,7 +170,8 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             # Check that this address isn't already in the db as we don't want
             # to fill up the customer address book with duplicate addresses
             try:
-                UserAddress._default_manager.get(hash=user_addr.generate_hash())
+                UserAddress._default_manager.get(
+                    hash=user_addr.generate_hash())
             except ObjectDoesNotExist:
                 user_addr.save()
 
@@ -210,8 +221,8 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         """
         Saves any payment sources used in this order.
 
-        When the payment sources are created, the order model does not exist and
-        so they need to have it set before saving.
+        When the payment sources are created, the order model does not exist
+        and so they need to have it set before saving.
         """
         if not self._payment_sources:
             return
@@ -228,8 +239,9 @@ class OrderPlacementMixin(CheckoutSessionMixin):
 
     def restore_frozen_basket(self):
         """
-        Restores a frozen basket as the sole OPEN basket.  Note that this also merges
-        in any new products that have been added to a basket that has been created while payment.
+        Restores a frozen basket as the sole OPEN basket.  Note that this also
+        merges in any new products that have been added to a basket that has
+        been created while payment.
         """
         try:
             fzn_basket = self.get_submitted_basket()
@@ -246,7 +258,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
     def send_confirmation_message(self, order, **kwargs):
         code = self.communication_type_code
         ctx = {'order': order,
-               'lines': order.lines.all(),}
+               'lines': order.lines.all()}
 
         if not self.request.user.is_authenticated():
             path = reverse('customer:anon-order',
@@ -258,18 +270,21 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         try:
             event_type = CommunicationEventType.objects.get(code=code)
         except CommunicationEventType.DoesNotExist:
-            # No event-type in database, attempt to find templates for this type
-            # and render them immediately to get the messages
+            # No event-type in database, attempt to find templates for this
+            # type and render them immediately to get the messages
             messages = CommunicationEventType.objects.get_and_render(code, ctx)
             event_type = None
         else:
             # Create order event
-            CommunicationEvent._default_manager.create(order=order, event_type=event_type)
+            CommunicationEvent._default_manager.create(order=order,
+                                                       event_type=event_type)
             messages = event_type.get_messages(ctx)
 
         if messages and messages['body']:
             logger.info("Order #%s - sending %s messages", order.number, code)
             dispatcher = Dispatcher(logger)
-            dispatcher.dispatch_order_messages(order, messages, event_type, **kwargs)
+            dispatcher.dispatch_order_messages(order, messages,
+                                               event_type, **kwargs)
         else:
-            logger.warning("Order #%s - no %s communication event type", order.number, code)
+            logger.warning("Order #%s - no %s communication event type",
+                           order.number, code)
