@@ -47,7 +47,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         can happen when a basket gets frozen.
         """
         order = self.place_order(order_number, basket, total_incl_tax,
-                                 total_excl_tax, **kwargs)
+                                 total_excl_tax, user, **kwargs)
         basket.set_as_submitted()
         return self.handle_successful_order(order)
 
