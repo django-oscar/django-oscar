@@ -107,6 +107,7 @@
             <h3>{% trans "Category" %}</h3>
         </div>
         {{ category_formset.management_form }}
+		{{ category_formset.non_form_errors }}
         {% for category_form in category_formset %}
             {% include "partials/form_fields_inline.html" with form=category_form %}
         {% endfor %}

@@ -48,7 +48,7 @@ class TestAStaffUser(WebTest):
         assert form['partner'].value == u''
 
         page = form.submit()
-        self.assertContains(page, 'errorlist')
+        self.assertFalse(page.context['stockrecord_form'].is_valid())
 
     def test_can_update_a_product_without_stockrecord(self):
         category = G(Category)

@@ -77,7 +77,6 @@ class TestCreateGroupProduct(ProductWebTest):
 
     def test_requires_a_category(self):
         response = self.submit(title="Nice T-Shirt")
-
         self.assertContains(response,
             "A top-level product must have at least one category")
         self.assertEquals(Product.objects.count(), 0)
