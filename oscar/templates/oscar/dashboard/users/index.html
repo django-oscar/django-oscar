@@ -26,16 +26,23 @@
 
 {% block dashboard_content %}
 <div class="well well-info">
-	<h3 class="app-ico ico_magnify icon">{% trans "Search" %}</h3>
+	<h3>{% trans "Search" %}</h3>
     <form action="." method="get" class="form-inline">
         {% include "partials/form_fields_inline.html" with form=form %}
 		<input type="submit" value="{% trans "Search" %}" class="btn btn-primary"/>
 		<a href="{% url dashboard:users-index %}" class="btn">{% trans "Reset" %}</a>
     </form>
 </div>
-<div class="sub-header">
-    <h2>{{ queryset_description }}</h2>
+{% if queryset_description != "All users" %}
+<div class="alert alert-info">
+  <strong>{{ queryset_description }}</strong>
 </div>
+{% endif %}
+<div class="well well-danger">
+	<h3 class="app-ico ico-download icon">Export 2 filtered customers to a .csv file.</h3>
+	<input type="submit" value="Export" class="btn btn-primary"/>
+</div>
+
 {% if user_list.count %}
 <form action="." method="post" class="form-inline">
     {% csrf_token %}
@@ -68,14 +75,9 @@
     </tr>
     {% endfor %}
 </table>
-
-{% if page_obj %}
-    {% include "partials/pagination.html" %}
-{% endif %}
-
-<div class="well well-danger">
-	<h3 class="app-ico ico_sync icon">{% trans "Bulk Actions" %}</h3>
-	<label for="inlineCheckboxes">{% trans "With selected customers:" %}</label>
+<div class="well">
+    <h3 class="app-ico ico_sync icon">Bulk Actions</h3>
+    <label for="inlineCheckboxes">With selected customers:</label>
     <label>
 		<input type="radio" name="action" value="make_active" /> {% trans "Make active" %}
     </label>
@@ -84,6 +86,10 @@
     </label>
 	<input type="submit" value="{% trans "Go!" %}" class="btn btn-primary" />
 </div>
+{% if page_obj %}
+    {% include "catalogue/partials/pagination.html" %}
+{% endif %}
+
 
 
 </form>

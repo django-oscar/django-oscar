@@ -6,6 +6,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from treebeard.forms import MoveNodeForm
 
+from oscar.forms.widgets import ImageInput
+
 Product = get_model('catalogue', 'Product')
 Category = get_model('catalogue', 'Category')
 StockRecord = get_model('partner', 'StockRecord')
@@ -247,6 +249,12 @@ class ProductImageForm(forms.ModelForm):
     class Meta:
         model = ProductImage
         exclude = ('display_order',)
+        # use ImageInput widget to create HTML displaying the
+        # actual uploaded image and providing the upload dialog
+        # when clicking on the actual image.
+        widgets = {
+            'original': ImageInput(),
+        }
 
     def save(self, *args, **kwargs):
         # We infer the display order of the image based on the order of the image fields

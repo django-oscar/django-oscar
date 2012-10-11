@@ -18,20 +18,23 @@
 {% endblock %}
 
 {% block header %}
-<div class="page-header action">
-	<h1>{% trans "Page Management" %}</h1><a href="#" class="pull_out">{% trans "Search Pages" %}</a>
-    <div class="orders_search" style="display:none">
-        <form action="." method="get" class="form-horizontal">
-            {% include "partials/form_fields.html" with form=form %}
-           <div class="form-actions">
-			   <input type="submit" value="{% trans "Search" %}" class="btn btn-primary"/>
-           </div>
-        </form>
-    </div>
+<div class="well well-info">
+    <h3>Search</h3>
+    <form action="." method="get" class="form-inline">
+        {% include "partials/form_fields_inline.html" with form=form %}
+        <input type="submit" value="Search" class="btn btn-primary"/>
+    </form>
 </div>
 {% endblock header %}
 
 {% block dashboard_content %}
+
+<div class="well well-success">
+    <h3>Create new page</h3>
+    <form action="{% url dashboard:page-create %}" method="get" class="form-inline">
+            <input type="submit" value="Create" class="btn-primary" />
+    </form>
+</div>
 
 <div class="sub-header">
     <h2>{{ queryset_description }}</h2>
@@ -69,14 +72,11 @@
 {% endif %}
 </form>
 
-
 {% else %}
 
 <p>{% trans "No pages found." %}</p>
 
 {% endif %}
-
-<a class="btn btn-primary btn-large" href="{% url dashboard:page-create %}">{% trans "Create new page" %}</a>
 
 {% endblock dashboard_content %}
 

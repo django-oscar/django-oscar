@@ -9,9 +9,6 @@
 {% endblock %}
 
 {% block header %}
-<div class="page-header">
-	<h1>{% trans "Content blocks" %}</h1>
-</div>
 {% endblock header %}
 
 {% block breadcrumbs %}
@@ -26,9 +23,12 @@
 
 {% block dashboard_content %}
 
-
-<div class="sub-header">
-	<h2>{% trans "All content blocks" %}</h2>
+<div class="well well-success">
+	<h3 class="app-ico ico_expand icon">{% trans "Create a new content block" %}</h3>
+    <form action="{% url dashboard:promotion-create-redirect %}" method="get" class="form-inline">
+        {% include "partials/form_fields_inline.html" with form=select_form %}
+		<button type="submit" class="btn btn-primary">{% trans "Create block" %}</button>
+    </form>
 </div>
 
 {% if num_promotions %}
@@ -46,7 +46,7 @@
 	<tbody>
 		{% for promotion in promotions %}
 		<tr>
-			<td>{{ promotion.name }}</td>
+			<td><a href="{% url dashboard:promotion-update promotion.code promotion.id %}">{{ promotion.name }}</a></td>
 			<td>{{ promotion.type }}</td>
 			<td>{{ promotion.num_times_used }}</td>
 			<td>{{ promotion.date_created }}</td>
@@ -64,13 +64,5 @@
 <p>{% trans "No content blocks found." %}</p>
 
 {% endif %}
-
-<div class="well well-info">
-	<h3 class="app-ico ico_expand icon">{% trans "Create a new content block" %}</h3>
-    <form action="{% url dashboard:promotion-create-redirect %}" method="get" class="form-inline">
-        {% include "partials/form_fields_inline.html" with form=select_form %}
-		<button type="submit" class="btn btn-primary">{% trans "Create block" %}</button>
-    </form>
-</div>
 
 {% endblock dashboard_content %}
