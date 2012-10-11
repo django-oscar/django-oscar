@@ -12,8 +12,12 @@ class Migration(DataMigration):
         # Note: Remember to use orm['appname.ModelName'] rather than "from appname.models..."
         OrderDiscount = orm['order.OrderDiscount']
         for discount in OrderDiscount.objects.all():
-            offer = discount.offer
-            if offer:
+            from oscar.apps.offer.models import ConditionalOffer
+            try:
+                offer = ConditionalOffer.objects.get(id=discount.offer_id)
+            except ConditionalOffer.DoesNotExist:
+                pass
+            else:
                 discount.offer_name = offer.name
                 discount.save()
 
