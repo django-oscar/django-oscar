@@ -185,18 +185,10 @@ class AccountRegistrationView(TemplateView):
         code = self.communication_type_code
         ctx = {'user': user,
                'site': get_current_site(self.request)}
-        try:
-            event_type = CommunicationEventType.objects.get(code=code)
-        except CommunicationEventType.DoesNotExist:
-            # No event in database, attempt to find templates for this type
-            messages = CommunicationEventType.objects.get_and_render(code, ctx)
-        else:
-            # Create order event
-            messages = event_type.get_messages(ctx)
-
+        messages = CommunicationEventType.objects.get_and_render(
+            code, ctx)
         if messages and messages['body']:
-            dispatcher = Dispatcher()
-            dispatcher.dispatch_user_messages(user, messages)
+            Dispatcher().dispatch_user_messages(user, messages)
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(*args, **kwargs)
