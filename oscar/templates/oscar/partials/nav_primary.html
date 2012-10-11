@@ -10,19 +10,19 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </a>
-        <a class="btn btn-navbar app-ico ico_shop_bag btn-cart hidden" href="{% url checkout:index %}">
+        <a class="btn btn-navbar btn-cart visible-phone" href="{% url checkout:index %}">
+            <i class="icon-shopping-cart"></i>
 			<strong>{% trans "Basket" %}
             {% if request.basket.all_lines.count %}
 			{% trans "Total:" %} {{ basket.total_incl_tax|currency }}
             {% endif %}
             </strong>
         </a>
-		<a class="brand hidden" href="{% url promotions:home %}">{{ shop_name }}</a>
 		
         <div class="nav-collapse">
             <div id="browse" class="dropdown pull-left">
                 {% if categories %}
-                    <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                    <button class="btn btn-primary dropdown-toggle hidden-phone" data-toggle="dropdown">
                         {% trans "Browse Store" %} 
                         <span class="caret"></span>
                     </button>  
@@ -43,7 +43,7 @@
                     {% endfor %}
                     </ul>
                 {% else %}
-                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                    <button class="btn dropdown-toggle visible-desktop" data-toggle="dropdown">
                         {% trans "Browse Store" %} 
                         <span class="caret"></span>
                     </button>

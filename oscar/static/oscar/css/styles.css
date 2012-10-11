@@ -5816,11 +5816,6 @@ body {
 .navbar.accounts {
   margin-bottom: 56px;
 }
-.navbar.accounts .navbar-inner {
-  -webkit-border-radius: inherit;
-  -moz-border-radius: inherit;
-  border-radius: inherit;
-}
 .well {
   *zoom: 1;
 }
@@ -5851,6 +5846,12 @@ body {
 }
 .pull-clear {
   clear: both;
+}
+.align-right {
+  text-align: right;
+}
+.align-center {
+  text-align: center;
 }
 form {
   *zoom: 1;
@@ -5935,6 +5936,9 @@ form:after {
   display: block;
   float: right;
 }
+.cart li .btn-group {
+  white-space: normal;
+}
 .cart li .btn-group .dropdown-menu {
   width: 400px;
   padding-bottom: 0px;
@@ -5954,6 +5958,15 @@ form:after {
 }
 .basket_item li:first-child {
   border-top: none;
+}
+.basket_item .image_container {
+  min-height: 70px;
+}
+.basket_item .image_container img {
+  max-height: 70px;
+}
+.basket_item .image_container a {
+  padding: 0;
 }
 .basket_item .form-actions {
   -webkit-border-radius: 0 0px 6px 6px;
@@ -5993,7 +6006,7 @@ form:after {
 }
 .basket_item h4 {
   font-size: 14px;
-  margin-bottom: 0;
+  margin: 0;
 }
 .basket_item h4 a {
   padding: 0px;
@@ -6050,46 +6063,6 @@ form:after {
 #browse > .dropdown-menu {
   top: 109%;
 }
-/* Account Navbar */
-.navbar.accounts .nav div {
-  padding: 10px 10px 11px;
-  line-height: 19px;
-  display: block;
-  color: #999999;
-}
-/* Account Styles */
-.account_settings,
-.new_address {
-  min-height: 20px;
-  padding: 19px;
-  margin-bottom: 20px;
-  background-color: #f5f5f5;
-  border: 1px solid #e3e3e3;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
-  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
-  *zoom: 1;
-}
-.account_settings blockquote,
-.new_address blockquote {
-  border-color: #ddd;
-  border-color: rgba(0, 0, 0, 0.15);
-}
-.account_settings:before,
-.new_address:before,
-.account_settings:after,
-.new_address:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-.account_settings:after,
-.new_address:after {
-  clear: both;
-}
 .login_form form,
 .register_form form {
   min-height: 20px;
@@ -6122,61 +6095,6 @@ form:after {
 .register_form form:after {
   clear: both;
 }
-.login_form form h2,
-.register_form form h2 {
-  margin-bottom: 20px;
-  font-size: 19px;
-}
-.tabbable.dashboard .nav {
-  margin-bottom: 0px;
-}
-.tabbable.dashboard .nav-tabs > li > a {
-  background: #f5f5f5;
-  background-color: #e0e0e0;
-  background-image: -moz-linear-gradient(top, #cccccc, #ffffff);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#cccccc), to(#ffffff));
-  background-image: -webkit-linear-gradient(top, #cccccc, #ffffff);
-  background-image: -o-linear-gradient(top, #cccccc, #ffffff);
-  background-image: linear-gradient(to bottom, #cccccc, #ffffff);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffcccccc', endColorstr='#ffffffff', GradientType=0);
-  border: 1px solid #DDD;
-  margin: 6px 10px 0 0;
-  color: #555555;
-  font-weight: bold;
-  text-shadow: 1px 1px 0 #fff;
-}
-.tabbable.dashboard .nav-tabs > li.active a,
-.tabbable.dashboard .nav-tabs > li > a:hover {
-  background: #f5f5f5;
-  border-bottom-color: transparent;
-  background-color: #f5f5f5;
-  background-image: -moz-linear-gradient(top, #eeeeee, #ffffff);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#eeeeee), to(#ffffff));
-  background-image: -webkit-linear-gradient(top, #eeeeee, #ffffff);
-  background-image: -o-linear-gradient(top, #eeeeee, #ffffff);
-  background-image: linear-gradient(to bottom, #eeeeee, #ffffff);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffeeeeee', endColorstr='#ffffffff', GradientType=0);
-  border-bottom: 1px solid #fff;
-  outline: none;
-  font-weight: bold;
-  color: #0088CC;
-  margin-top: 0;
-  height: 20px;
-}
-.tabbable.dashboard .tab-content {
-  padding: 20px;
-  border: 1px solid #e1e1e1;
-  border-top-width: 0px;
-  background: #fff;
-  -webkit-border-bottom-right-radius: 5px;
-  -webkit-border-bottom-left-radius: 5px;
-  -moz-border-radius-bottomright: 5px;
-  -moz-border-radius-bottomleft: 5px;
-  border-bottom-right-radius: 5px;
-  border-bottom-left-radius: 5px;
-}
 .basket_summary,
 .later_summary {
   padding-left: 0px;
@@ -6207,7 +6125,7 @@ form:after {
   padding: 10px;
 }
 .basket-items [class*="span"] .image_container {
-  height: 50px;
+  min-height: 50px;
   width: 70px;
   float: left;
   margin-right: 15px;
@@ -6565,15 +6483,13 @@ form:after {
 /* Product list image container */
 .image_container {
   width: 100%;
-  height: 125px;
+  min-height: 125px;
   overflow: hidden;
   text-align: center;
   margin-bottom: 10px;
   position: relative;
 }
 .image_container img {
-  /*    height:100%;*/
-
   max-height: 125px;
   width: auto;
   margin: 0px auto;
@@ -6812,14 +6728,7 @@ form:after {
   display: block;
 }
 .es-carousel ul li a {
-  /*display:block;
-	 border-style:solid;
-	 border-color:#999;
-	 opacity:0.8;*/
-
   -webkit-touch-callout: none;
-  /* option */
-
   -webkit-transition: all 0.2s ease-in-out;
   -moz-transition: all 0.2s ease-in-out;
   -o-transition: all 0.2s ease-in-out;
@@ -6832,8 +6741,6 @@ form:after {
 }
 .es-carousel ul li a img {
   display: block;
-  border: none;
-  max-height: 100%;
   max-width: 100%;
 }
 .es-nav span {

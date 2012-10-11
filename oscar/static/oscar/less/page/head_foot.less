@@ -48,6 +48,7 @@
     display:block;
     float:right;
     .btn-group {
+      white-space: normal;
       .dropdown-menu {
         width:400px;
         padding-bottom:0px;
@@ -67,6 +68,15 @@
     border-top:1px solid @grayLighter;
     padding:10px 15px;
     &:first-child { border-top:none; }
+  }
+  .image_container {
+    min-height: 70px;
+    img {
+      max-height: 70px;
+    }
+    a {
+      padding:0;
+    }
   }
   .form-actions {
     -webkit-border-radius: 0 0px 6px 6px;
@@ -97,7 +107,7 @@
   }
   h4 {
     font-size:14px;
-    margin-bottom:0;
+    margin:0;
     a {
       padding:0px;
     }
