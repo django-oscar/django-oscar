@@ -2,7 +2,7 @@ from django.views import generic
 from django.db.models import get_model
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
-from django import http
+from django.contrib.sites.models import get_current_site
 from django.template import TemplateSyntaxError
 
 from oscar.core.loading import get_class
@@ -35,6 +35,8 @@ class UpdateView(generic.UpdateView):
     def send_preview(self, form):
         commtype = form.save(commit=False)
         commtype_ctx = {}
+        commtype_ctx = {'user': self.request.user,
+                        'site': get_current_site(self.request)}
         ctx = super(UpdateView, self).get_context_data()
         ctx['form'] = form
         try:
