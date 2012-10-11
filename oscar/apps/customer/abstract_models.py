@@ -43,7 +43,9 @@ class AbstractCommunicationEventType(models.Model):
     code = models.SlugField(_('Code'), max_length=128)
 
     # Name is the friendly description of an event for use in the admin
-    name = models.CharField(_('Name'), max_length=255)
+    name = models.CharField(
+        _('Name'), max_length=255,
+        help_text=_("This is just used for organisational purposes"))
 
     # We allow communication types to be categorised
     ORDER_RELATED = _('Order related')

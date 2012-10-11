@@ -19,7 +19,7 @@ class CommsDashboardApplication(Application):
     def get_urls(self):
         urlpatterns = patterns('',
             url(r'^$', self.list_view.as_view(), name='comms-list'),
-            url(r'^(?P<pk>\d+)/$', self.update_view.as_view(),
+            url(r'^(?P<code>\w+)/$', self.update_view.as_view(),
                 name='comms-update'),
         )
         return self.post_process_urls(urlpatterns)

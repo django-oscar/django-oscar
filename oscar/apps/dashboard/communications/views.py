@@ -1,6 +1,7 @@
 from django.views import generic
 from django.db.models import get_model
 from django.contrib import messages
+from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.sites.models import get_current_site
 from django.template import TemplateSyntaxError
@@ -25,6 +26,10 @@ class UpdateView(generic.UpdateView):
     template_name = 'dashboard/comms/detail.html'
     context_object_name = 'commtype'
     success_url = '.'
+
+    def get_object(self, **kwargs):
+        return get_object_or_404(self.model,
+                                 code=self.kwargs['code'].upper())
 
     def form_valid(self, form):
         if 'send_preview' in self.request.POST:
