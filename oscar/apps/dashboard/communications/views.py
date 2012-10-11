@@ -29,8 +29,27 @@ class UpdateView(generic.UpdateView):
     def form_valid(self, form):
         if 'send_preview' in self.request.POST:
             return self.send_preview(form)
+        if 'show_preview' in self.request.POST:
+            return self.show_preview(form)
         messages.success(self.request, _("Email saved"))
         return super(UpdateView, self).form_valid(form)
+
+    def show_preview(self, form):
+        commtype = form.save(commit=False)
+        commtype_ctx = {}
+        commtype_ctx = {'user': self.request.user,
+                        'site': get_current_site(self.request)}
+        ctx = super(UpdateView, self).get_context_data()
+        ctx['form'] = form
+        try:
+            msgs = commtype.get_messages(commtype_ctx)
+        except TemplateSyntaxError, e:
+            form.errors['__all__'] = form.error_class([e.message])
+            return self.render_to_response(ctx)
+
+        ctx['show_preview'] = True
+        ctx['preview'] = msgs
+        return self.render_to_response(ctx)
 
     def send_preview(self, form):
         commtype = form.save(commit=False)

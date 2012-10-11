@@ -26,15 +26,46 @@
 </div>
 
 <form method="post" action=".">
-	{% csrf_token %}
-	{% include 'partials/form_fields.html' %}
-	<div class="well">
-		<button type="submit" class="btn btn-primary btn-large" name="send_preview">Send preview email</button>
-	</div>
-	<div class="well">
-		<button type="submit" class="btn btn-primary btn-large">Save</button>
-		or <a href="">cancel</a>.
-	</div>
+<div class="tabbable">
+	 {% if preview %}
+	 <ul class="nav nav-tabs">
+		 <li><a href="#tab1" data-toggle="tab">Edit</a></li>
+		 <li class="active"><a href="#tab2" data-toggle="tab">Preview</a></li>
+	 </ul>
+	 {% endif %}
+	 <div class="tab-content">
+		 <div class="tab-pane {% if not preview %}active{% endif %}" id="tab1">
+				 {% csrf_token %}
+				 {% include 'partials/form_fields.html' %}
+				 <div class="well">
+					 <button type="submit" class="btn btn-primary btn-large" name="show_preview">{% trans "Preview" %}</button>
+				 </div>
+				 <div class="well">
+					 <button type="submit" class="btn btn-primary btn-large" name="send_preview">{% trans "Send preview email" %}</button>
+				 </div>
+		 </div>
+		 <div class="tab-pane {% if preview %}active{% endif %}" id="tab2">
+			 <table>
+				 <tr>
+					 <th>Subject</th>
+					 <td>{{ preview.subject }}</td>
+				</tr>
+				 <tr>
+					 <th>Body text</th>
+					 <td>{{ preview.body }}</td>
+				</tr>
+				 <tr>
+					 <th>Body HTML</th>
+					 <td>{{ preview.html }}</td>
+				</tr>
+			</table>
+		 </div>
+	 </div>
+</div>
+<div class="well">
+	<button type="submit" class="btn btn-primary btn-large">{% trans "Save" %}</button>
+	{% trans "or" %} <a href="{% url dashboard:comms-list %}">{% trans "cancel" %}</a>.
+</div>
 </form>
 
 {% endblock dashboard_content %}
