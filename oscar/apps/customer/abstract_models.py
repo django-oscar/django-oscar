@@ -91,14 +91,14 @@ class AbstractCommunicationEventType(models.Model):
         """
         code = self.code.lower()
 
-        # Build a dict of message name to Template instance
+        # Build a dict of message name to Template instances
         templates = {'subject': 'email_subject_template',
                      'body': 'email_body_template',
                      'html': 'email_body_html_template',
                      'sms': 'sms_template'}
         for name, attr_name in templates.items():
             field = getattr(self, attr_name, None)
-            if field:
+            if field is not None:
                 # Template content is in a model field
                 templates[name] = Template(field)
             else:
@@ -112,7 +112,8 @@ class AbstractCommunicationEventType(models.Model):
         # Pass base URL for serving images within HTML emails
         if ctx is None:
             ctx = {}
-        ctx['static_base_url'] = getattr(settings, 'OSCAR_STATIC_BASE_URL', None)
+        ctx['static_base_url'] = getattr(settings,
+                                         'OSCAR_STATIC_BASE_URL', None)
 
         messages = {}
         for name, template in templates.items():
