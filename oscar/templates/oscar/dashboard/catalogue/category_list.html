@@ -14,11 +14,7 @@
 		<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
-    <li>
-		<a href="{% url dashboard:catalogue-category-list %}">{% trans "Category management" %}</a>
-        <span class="divider">/</span>
-    </li>
-	<li class="active"><a href=".">{{ category.name }}</a></li>
+    <li class="active"><a href=".">{% trans "Categories" %}</a></li>
 </ul>
 {% endblock %}
 

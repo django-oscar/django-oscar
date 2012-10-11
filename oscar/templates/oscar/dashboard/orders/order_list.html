@@ -36,15 +36,15 @@
                     {{ field }}
                     {% for error in field.errors %}
                         <ul class="help-block">
-                            <li>{{ error|escape }}</li>
+                            <li>{{ error }}</li>
                         </ul>
                     {% endfor %}
                 </span>
                 {% endif %}
             {% endif %}
         {% endfor %}
-        <input type="submit" value="Search" class="btn btn-primary" />
-        <a data-toggle="modal" href="#SearchModal">Advanced Search</a>
+        <input type="submit" value="{% trans "Search" %}" class="btn btn-primary" />
+        <a data-toggle="modal" href="#SearchModal">{% trans "Advanced Search" %}</a>
     </form>
 
     <div class="modal hide fade" id="SearchModal">
@@ -58,7 +58,7 @@
                 {% include "partials/form_fields.html" with form=form %}
             </div>
             <div class="modal-footer">
-                <a href="#" class="btn" data-dismiss="modal">Close</a>
+                <a href="#" class="btn" data-dismiss="modal">{% trans "Close" %}</a>
                 <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
             </div>
         </form>
@@ -74,7 +74,7 @@
 <div class="tabbable dashboard">
     <ul class="nav nav-tabs">
         <li {% if not active_status %}class="active"{% endif %}>
-            <a href="{% url dashboard:order-list %}">All Orders</a>
+            <a href="{% url dashboard:order-list %}">{% trans "All Orders" %}</a>
         </li>
         {% for slug, name in status_lookup.items %}
         <li {% if slug == active_status %}class="active"{% endif %}>
@@ -93,7 +93,7 @@
     <tr>
         <th>
 			<input name="select_all_orders" type="checkbox">
-            Select all
+            {% trans "Select all" %}
 		</th>
         <th>{% anchor 'number' 'Order number' %}</th>
 		<th>{% trans "Total inc tax" %}</th>
@@ -131,10 +131,7 @@
 </div>
 
 {% include "dashboard/orders/partials/bulk_edit_form.html" with status=active_status %}
-
-{% if page_obj %}
-    {% include "partials/pagination.html" %}
-{% endif %}
+{% include "partials/pagination.html" %}
 
 </form>
 

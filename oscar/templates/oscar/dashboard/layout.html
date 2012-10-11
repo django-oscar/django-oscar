@@ -5,7 +5,7 @@
 {% load i18n %}
 
 {% block mainstylesheet %}
-	<link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/dashboard.css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/dashboard.css" />
 {% endblock %}
 
 {% block extrahead %}
@@ -16,51 +16,51 @@
 {% endblock %}
 
 {% block layout %}
-	{% block navbar %}
+    {% block navbar %}
     <div class="navbar navbar-fixed-top">
         <div class="navbar-inner">
             <div class="container" style="width: auto;">
-				<a href="{% url promotions:home %}" class="brand">{{ shop_name }}</a>
+                <a href="{% url promotions:home %}" class="brand">{{ shop_name }}</a>
                 <ul class="nav pull-right">
                     {% if user.is_authenticated %}
                         <li><span>Welcome <em>{{ request.user.get_full_name|default:'Guest' }}</em></span></li>
-						<li><a href="{% url customer:summary %}" class="app-ico ico_profile">{% trans "Account" %}</a></li>
-						<li><a href="{% url customer:logout %}" class="app-ico ico_logout">{% trans "Logout" %}</a></li>
+                        <li><a href="{% url customer:summary %}" class="app-ico ico_profile">{% trans "Account" %}</a></li>
+                        <li><a href="{% url customer:logout %}" class="app-ico ico_logout">{% trans "Logout" %}</a></li>
                     {% else %}
-					<li><a href="{% url customer:login %}" class="app-ico ico_logout">{% trans "Login" %}</a></li>
+                    <li><a href="{% url customer:login %}" class="app-ico ico_logout">{% trans "Login" %}</a></li>
                     {% endif %}
                 </ul>
             </div>
         </div><!-- /navbar-inner -->
     </div><!-- /navbar -->
-	{% endblock navbar %}
+    {% endblock navbar %}
 
     <div class="container-fluid dashboard">
         {% block dashboard_nav %}
         <div class="row-fluid">
             {% dashboard_navigation request.user %}
-			<div class="subnav subnav-fixed">
+            <div class="subnav subnav-fixed">
                 <ul class="nav nav-pills">
-                    {% for item in nav_items %}	
+                    {% for item in nav_items %}
                         <li class="{{ item.label }} dropdown">
-            			{% if item.is_heading %}
-        			        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ item.label }} <b class="caret"></b></a>
-            			{% else %}
-            			    <a href="{{ item.url }}">{{ item.label }}</a>
-            			{% endif %}
-            			{% if item.has_children %}
-            			    <ul class="dropdown-menu">
-            				    {% for subitem in item.children %}
-            				    <li><a href="{{ subitem.url }}">{{ subitem.label }}</a></li>
-            				    {% endfor %}
-            			    </ul>
-            			{% endif %}
-            			</li>
-        			{% endfor %}
+                        {% if item.is_heading %}
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ item.label }} <b class="caret"></b></a>
+                        {% else %}
+                            <a href="{{ item.url }}">{{ item.label }}</a>
+                        {% endif %}
+                        {% if item.has_children %}
+                            <ul class="dropdown-menu">
+                                {% for subitem in item.children %}
+                                <li><a href="{{ subitem.url }}">{{ subitem.label }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                        </li>
+                    {% endfor %}
                 </ul>
             </div>
-        </div>
-        {% endblock %}
+		</div>
+		{% endblock %}
 
         {% block breadcrumbs %}
         <ul class="breadcrumb">
@@ -83,9 +83,9 @@
 {# Block for additional scripts #}
 {% block extrascripts %}
     {{ block.super }}
-	<script src="{{ STATIC_URL }}oscar/js/plugins/plugins.js" type="text/javascript" charset="utf-8"></script>
+    <script src="{{ STATIC_URL }}oscar/js/plugins/plugins.js" type="text/javascript" charset="utf-8"></script>
     <script src="{{ STATIC_URL }}oscar/js/oscar/ui.js" type="text/javascript" charset="utf-8"></script>
     <script src="{{ STATIC_URL }}oscar/js/oscar/dashboard.js" type="text/javascript" charset="utf-8"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
-	<script type="text/javascript">$(oscar.dashboard.init);</script>
+    <script type="text/javascript">$(oscar.dashboard.init);</script>
 {% endblock %}

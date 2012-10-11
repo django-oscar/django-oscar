@@ -33,7 +33,7 @@
 
 <div class="well well-success">
 	<div class="sub-header">
-		<h3>Create a new voucher</h3>
+        <h3>{% trans "Create a new voucher" %}</h3>
 	</div>
 	<a href="{% url dashboard:voucher-create %} " class="btn btn-primary">{% trans "Create new voucher" %}</a>
 </div>
@@ -71,9 +71,7 @@
 			</tr>
 			{% endfor %}
 		</table>
-		{% if page_obj %}
-			{% include "partials/pagination.html" %}
-		{% endif %}
+        {% include "partials/pagination.html" %}
 	{% else %}
 	<p>{% trans "No vouchers found." %}</p>
 	{% endif %}

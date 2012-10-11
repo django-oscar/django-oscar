@@ -22,38 +22,40 @@
 {% block dashboard_content %}
 <div class="well well-success">
 	<div class="sub-header">
-		<h2>Create new range</h2>
+        <h2>{% trans "Create new range" %}</h2>
 	</div>
 	<a href="{% url dashboard:range-create %}" class="btn btn-primary">{% trans "Create new range" %}</a>
 </div>
 
-	{% if ranges.count %}
-		<table class="table table-striped table-bordered">
-			<tr>
-				<th>{% trans "Name" %}</th>
-				<th>{% trans "Num products" %}</th>
-				<th>{% trans "Date created" %}</th>
-				<th></th>
-			</tr>
-			{% for range in ranges %}
-			<tr>
-				<td>{{ range.name }}</td>
-				<td>{{ range.num_products|default:"-" }}</td>
-				<td>{{ range.date_created }}</td>
-				<td>
-					<a class="btn btn-primary" href="{% url dashboard:range-update range.id %}">{% trans "Edit" %}</a>
-					{% if not range.includes_all_products %}
-					<a class="btn btn-info" href="{% url dashboard:range-products range.id %}">{% trans "Edit products" %}</a>
-					{% endif %}
-					<a class="btn btn-danger" href="{% url dashboard:range-delete range.id %}">{% trans "Delete" %}</a>
-				</td>
-			</tr>
-			{% endfor %}
-		</table>
-		{% if page_obj %}
-			{% include "partials/pagination.html" %}
-		{% endif %}
-	{% else %}
-	<p>{% trans "No ranges found." %}</p>
-	{% endif %}
+{% if ranges.count %}
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>{% trans "Name" %}</th>
+                <th>{% trans "Num products" %}</th>
+                <th>{% trans "Date created" %}</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for range in ranges %}
+        <tr>
+            <td>{{ range.name }}</td>
+            <td>{{ range.num_products|default:"-" }}</td>
+            <td>{{ range.date_created }}</td>
+            <td>
+                <a class="btn btn-primary" href="{% url dashboard:range-update range.id %}">{% trans "Edit" %}</a>
+                {% if not range.includes_all_products %}
+                <a class="btn btn-info" href="{% url dashboard:range-products range.id %}">{% trans "Edit products" %}</a>
+                {% endif %}
+                <a class="btn btn-danger" href="{% url dashboard:range-delete range.id %}">{% trans "Delete" %}</a>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% include "partials/pagination.html" %}
+{% else %}
+    <p>{% trans "No ranges found." %}</p>
+{% endif %}
 {% endblock dashboard_content %}
