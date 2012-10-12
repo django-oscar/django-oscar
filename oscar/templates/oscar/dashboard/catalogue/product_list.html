@@ -9,28 +9,36 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">
-    <li>
-	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
-        <span class="divider">/</span>
-    </li>
-	<li class="active">{% trans "Product Management" %}</li>
+<ul class="breadcrumb">	
+    <li>	
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a> 	
+        <span class="divider">/</span>	
+    </li> 	
+    <li class="active">{% trans "Product Management" %}</li> 	
 </ul>
 {% endblock %}
 
 {% block header %}
+<div class="page-header action">
+    <h1>{% trans "Catalogue management" %}</h1>
+</div>
 {% endblock header %}
 
 {% block dashboard_content %}
-<div class="well well-info">
-	<h3><i class="icon-search"></i> {% trans "Search Products" %}</h3>
+<div class="table-header">
+	<h3><i class="icon-search icon-large"></i>{% trans "Search Products" %}</h3>
+</div>
+<div class="well">
     <form action="." method="get" class="form-inline">
 		{% include "partials/form_fields_inline.html" with form=form %}
         <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
     </form>
 </div>
-<div class="well well-success">
-    <h3><i class="icon-file"></i> {% trans "Create new product" %}</h3>
+
+<div class="table-header">
+    <h3><i class="icon-sitemap icon-large"></i> {% trans "Create new product" %}</h3>
+</div>
+<div class="well">
     <form action="{% url dashboard:catalogue-product-create %}" method="get" class="form-inline">
         <span class="control-group">
             <label for="id_promotion_type">{% trans "Create a new product of type" %}</label>
@@ -41,12 +49,12 @@
                 {% endfor %}
             </select>
         </span>
-        <input type="submit" value="{% trans "New Product" %}" class="btn btn-primary" />
+        <button class="btn btn-primary" type="submit"><i class="icon-plus"></i> {% trans "New Product" %}</button>
     </form>
 </div>
 
-<div class="sub-header">
-    <h2>{{ queryset_description }}</h2>
+<div class="table-header">
+    <h2><i class="icon-sitemap icon-large"></i>{{ queryset_description }}</h2>
 </div>
 {% if products %}
 <form action="." method="post">
@@ -80,8 +88,18 @@
 				<td>{{ stockrecord.num_allocated }}</td>
 			{% endwith %}
 			<td>
-				<a class="btn btn-info" href="{% url dashboard:catalogue-product product.id %}">{% trans "Edit" %}</a>
-				<a class="btn btn-success" href="{{ product.get_absolute_url }}">{% trans "View on site" %}</a>
+			    <div class="btn-toolbar">
+                    <div class="btn-group">
+                      <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                        Actions
+                        <span class="caret"></span>
+                      </a>
+                      <ul class="dropdown-menu pull-right">
+                          <li><a href="{% url dashboard:catalogue-product product.id %}">{% trans "Edit" %}</a></li>
+          				  <li><a href="{{ product.get_absolute_url }}">{% trans "View on site" %}</a></li>
+                      </ul>
+                    </div>
+                </div>
 			</td>
 	    </tr>
 	    {% endfor %}

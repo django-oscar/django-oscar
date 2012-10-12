@@ -10,16 +10,16 @@ create-page
 {% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">
-    <li>
-	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
-        <span class="divider">/</span>
-    </li>
-    <li>
-	<a href="{% url dashboard:range-list %}">{% trans "Ranges" %}</a>
-        <span class="divider">/</span>
-    </li>
-	<li class="active">{{ title }}</li>
+<ul class="breadcrumb">	  	
+    <li>	  	
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>	  	
+        <span class="divider">/</span>	  	
+    </li>	  	
+    <li>	  	
+        <a href="{% url dashboard:range-list %}">{% trans "Ranges" %}</a>	  	
+        <span class="divider">/</span>	  	
+    </li>	  	
+    <li class="active">{{ title }}</li>	  	
 </ul>
 {% endblock %}
 
@@ -30,7 +30,10 @@ create-page
 {% endblock header %}
 
 {% block dashboard_content %}
-<form action="." method="post" class="well">
+<div class="table-header">
+    <h3><i  class="icon-reorder icon-large"></i>New range</h3>
+</div>
+<form action="." method="post" class="form-stacked well">
 	{% csrf_token %}
 	{% include "partials/form_fields.html" with form=form %}
 	{% block form_actions %}
