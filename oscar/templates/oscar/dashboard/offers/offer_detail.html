@@ -23,23 +23,7 @@
 {% endblock %}
 
 {% block dashboard_content %}
-
-	<table class="table">
-		<tbody>
-            <tr><td colspan="2"><h2>{% trans "Offer details" %}</h2></td></tr>
-			<tr><th>{% trans "Name" %}</th><td>{{ offer.name }}</td></tr>
-			<tr><th>{% trans "Description" %}</th><td>{{ offer.description|safe }}</td></tr>
-			<tr><th>{% trans "Start date" %}</th><td>{{ offer.start_date }}</td></tr>
-			<tr><th>{% trans "End date" %}</th><td>{{ offer.end_date }}</td></tr>
-			<tr><th>{% trans "Condition" %}</th><td>{{ offer.condition.description }}</td></tr>
-			<tr><th>{% trans "Benefit" %}</th><td>{{ offer.benefit.description }}</td></tr>
-			<tr><th>{% trans "Date created" %}</th><td>{{ offer.date_created }}</td></tr>
-
-            <tr><td colspan="2"><h2>{% trans "Offer performance" %}</h2></td></tr>
-			<tr><th>{% trans "Total discount" %}</th><td>{{ offer.total_discount|currency }}</td></tr>
-			<tr><th>{% trans "Number of orders" %}</th><td>{{ offer.num_orders }}</td></tr>
-		</tbody>
-	</table>
+	{% include 'dashboard/offers/partials/offer.html' %}
 
 	<h2>{% trans "Recent orders" %}</h2>
 	{% if not order_discounts %}
