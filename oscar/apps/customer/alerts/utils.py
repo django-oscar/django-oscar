@@ -91,7 +91,6 @@ def send_product_alerts(product):
                 [alert.get_email_address()],
             )
         )
-
         alert.close()
 
     # Send all emails in one go to prevent multiple SMTP
