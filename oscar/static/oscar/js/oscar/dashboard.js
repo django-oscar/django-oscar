@@ -18,7 +18,10 @@ oscar.dashboard = {
         $('input[name^="date"], input[name$="date"]').datepicker({dateFormat: 'yy-mm-dd'});
 
         // Use WYSIHTML5 widget on textareas
-        $('form.wysiwyg textarea').wysihtml5();
+        var options = {
+            "html": true
+        };
+        $('form.wysiwyg textarea').wysihtml5(options);
 
         $('.scroll-pane').jScrollPane();
 
