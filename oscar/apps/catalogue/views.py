@@ -9,6 +9,7 @@ from oscar.apps.catalogue.signals import product_viewed, product_search
 Product = get_model('catalogue', 'product')
 ProductReview = get_model('reviews', 'ProductReview')
 Category = get_model('catalogue', 'category')
+ProductAlert = get_model('customer', 'ProductAlert')
 ProductAlertForm = get_class('customer.forms',
                              'ProductAlertForm')
 
@@ -30,7 +31,18 @@ class ProductDetailView(DetailView):
         ctx = super(ProductDetailView, self).get_context_data(**kwargs)
         ctx['reviews'] = self.get_reviews()
         ctx['alert_form'] = self.get_alert_form()
+        ctx['has_active_alert'] = self.get_alert_status()
         return ctx
+
+    def get_alert_status(self):
+        # Check if this user already have an alert for this product
+        has_alert = False
+        if self.request.user.is_authenticated():
+            alerts = ProductAlert.objects.filter(
+                product=self.object, user=self.request.user,
+                status=ProductAlert.ACTIVE)
+            has_alert = alerts.count() > 0
+        return has_alert
 
     def get_alert_form(self):
         return ProductAlertForm(user=self.request.user,

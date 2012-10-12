@@ -14,8 +14,8 @@
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
-    <li>
-	<a href="{% url promotions:home %}">{% trans "Home" %}</a>
+	<li> 
+		<a href="{% url promotions:home %}">{% trans "Home" %}</a>
         <span class="divider">/</span>
     </li>
 	{% with category=product.categories.all.0 %}
@@ -37,6 +37,7 @@
 
 {% block content %}
 <article class="product_page"><!-- Start of product page -->
+
     {% if user.is_authenticated and user.is_staff %}
     <div class="row-fluid">
         <div class="well">
@@ -44,6 +45,7 @@
         </div>
     </div>
     {% endif %}
+
     <div class="row-fluid">
         <div class="span6">
             {% include "catalogue/partials/gallery.html" %}
