@@ -65,6 +65,23 @@
     </div>
 </div>
 
+<div>
+    <table class="table table-striped table-bordered">
+        <tr>
+            <th>{% trans "Status" %}</th>
+            {% for item in order_status_breakdown %}
+                <td><a href="{% url dashboard:order-list item.status|slugify %}">{{ item.status }}</a></td>
+            {% endfor %}
+        </tr>
+        <tr>
+            <th>{% trans "Frequency" %}</th>
+            {% for item in order_status_breakdown %}
+                <td>{{ item.freq }}</td>
+            {% endfor %}
+        </tr>
+    </table>
+</div>
+
 {% if queryset_description != "All orders" %}
 <div class="alert alert-info">
     <strong>{{ queryset_description }}</strong>
@@ -73,9 +90,6 @@
 
 <div class="tabbable dashboard">
     <ul class="nav nav-tabs">
-        <li {% if not active_status %}class="active"{% endif %}>
-            <a href="{% url dashboard:order-list %}">{% trans "All Orders" %}</a>
-        </li>
         {% for slug, name in status_lookup.items %}
         <li {% if slug == active_status %}class="active"{% endif %}>
             <a href="{% url dashboard:order-list slug %}">{{ name }}</a>
