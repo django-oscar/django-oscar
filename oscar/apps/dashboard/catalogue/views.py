@@ -208,13 +208,12 @@ class ProductUpdateView(generic.UpdateView):
         stock record it will be passed into the form as
         ``instance``.
         """
-        if not self.is_stockrecord_submitted():
-            return StockRecordForm(self.object.product_class)
-
         stockrecord = None
         if self.object.has_stockrecord:
             stockrecord = self.object.stockrecord
-
+        if not self.is_stockrecord_submitted():
+            return StockRecordForm(self.object.product_class,
+                                   instance=stockrecord)
         return StockRecordForm(
             self.object.product_class,
             self.request.POST,
