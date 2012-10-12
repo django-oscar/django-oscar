@@ -52,7 +52,7 @@ class ProductAlertCreateView(generic.CreateView):
         if self.object.user:
             msg = _("An alert has been created")
         else:
-            msg = _("An email has been sent to %s for confirmation") % self.object.email
+            msg = _("A confirmation email has been sent to %s") % self.object.email
         messages.success(self.request, msg)
         return self.object.product.get_absolute_url()
 
