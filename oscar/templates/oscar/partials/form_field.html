@@ -1,6 +1,9 @@
 {% load form_tags %}
 
-{# Make the field widget type available to templates #}
+{% comment %}
+Make the field widget type available to templates so we can mark-up
+checkboxes differently to other widgets.
+{% endcomment %}
 {% annotate_form_field field %}
 
 <div class="control-group {% for error in field.errors %}error{% endfor %}">
