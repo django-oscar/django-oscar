@@ -29,14 +29,26 @@
 <div class="tabbable">
 	 {% if preview %}
 	 <ul class="nav nav-tabs">
-		 <li><a href="#tab1" data-toggle="tab">Edit</a></li>
-		 <li class="active"><a href="#tab2" data-toggle="tab">Preview</a></li>
+		 <li><a href="#tab1" data-toggle="tab">{% trans "Edit" %}</a></li>
+		 <li class="active"><a href="#tab2" data-toggle="tab">{% trans "Preview" %}</a></li>
 	 </ul>
 	 {% endif %}
 	 <div class="tab-content">
 		 <div class="tab-pane {% if not preview %}active{% endif %}" id="tab1">
 				 {% csrf_token %}
-				 {% include 'partials/form_fields.html' %}
+				 {% include 'partials/form_field.html' with field=form.name %}
+				 <h4>Email content</h4>
+				 <p>These fields are rendered using Django's template system.</p>
+				 <p>You can use the following variables:</p>
+				 <dl>
+					 <dt><code>{{ user.get_full_name }}</code></dt>
+					 <dd>The user who the email is sent to.</dd>
+					 <dt><code>{{ user.email }}</code></dt>
+					 <dd>The user who the email is sent to.</dd>
+				 </dl>
+				 {% include 'partials/form_field.html' with field=form.email_subject_template %}
+				 {% include 'partials/form_field.html' with field=form.email_body_template %}
+				 {% include 'partials/form_field.html' with field=form.email_body_html_template %}
 				 <div class="well">
 					 <button type="submit" class="btn btn-primary btn-large" name="show_preview">{% trans "Preview" %}</button>
 				 </div>
@@ -47,15 +59,15 @@
 		 <div class="tab-pane {% if preview %}active{% endif %}" id="tab2">
 			 <table>
 				 <tr>
-					 <th>Subject</th>
+					 <th>{% trans "Subject" %}</th>
 					 <td>{{ preview.subject }}</td>
 				</tr>
 				 <tr>
-					 <th>Body text</th>
+					 <th>{% trans "Body text" %}</th>
 					 <td>{{ preview.body }}</td>
 				</tr>
 				 <tr>
-					 <th>Body HTML</th>
+					 <th>{% trans "Body HTML" %}</th>
 					 <td>{{ preview.html }}</td>
 				</tr>
 			</table>
