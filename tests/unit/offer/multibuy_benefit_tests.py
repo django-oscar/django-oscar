@@ -82,5 +82,5 @@ class TestAMultibuyDiscountAppliedWithAValueCondition(TestCase):
             self.basket.add_product(product, 2)
         discount = self.benefit.apply(self.basket, self.condition)
         self.assertEqual(D('2.00'), discount)
-        self.assertEqual(4, self.basket.num_items_with_discount)
-        self.assertEqual(0, self.basket.num_items_without_discount)
+        self.assertEqual(3, self.basket.num_items_with_discount)
+        self.assertEqual(1, self.basket.num_items_without_discount)

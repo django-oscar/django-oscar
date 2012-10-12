@@ -233,7 +233,7 @@ class Condition(models.Model):
         return (self.range.contains_product(product)
                 and product.is_discountable and product.has_stockrecord)
 
-    def get_applicable_lines(self, basket):
+    def get_applicable_lines(self, basket, most_expensive_first=True):
         """
         Return line data for the lines that can be consumed by this condition
         """
@@ -246,6 +246,8 @@ class Condition(models.Model):
             if not price:
                 continue
             line_tuples.append((price, line))
+        if most_expensive_first:
+            return sorted(line_tuples, reverse=True)
         return sorted(line_tuples)
 
 
@@ -494,12 +496,12 @@ class CountCondition(Condition):
         num_consumed = 0
         for line, __, quantity in affected_lines:
             num_consumed += quantity
-
         to_consume = max(0, self.value - num_consumed)
         if to_consume == 0:
             return
 
-        for __, line in self.get_applicable_lines(basket):
+        for __, line in self.get_applicable_lines(basket,
+                                                  most_expensive_first=True):
             quantity_to_consume = min(line.quantity_without_discount,
                                       to_consume)
             line.consume(quantity_to_consume)
@@ -659,7 +661,8 @@ class ValueCondition(Condition):
         if to_consume == 0:
             return
 
-        for price, line in self.get_applicable_lines(basket):
+        for price, line in self.get_applicable_lines(basket,
+                                                     most_expensive_first=True):
             quantity_to_consume = min(
                 line.quantity_without_discount,
                 (to_consume / price).quantize(D(1), ROUND_UP))
