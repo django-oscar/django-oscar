@@ -40,7 +40,7 @@
     <div class="row-fluid">
         <h4 class="span6">{% trans "Items to buy now" %}</h4>
         <h4 class="span5">{% trans "Quantity" %}</h4>
-        <h4 class="span1">{% trans "Price" %}</h4>
+        <h4 class="span1 align-right">{% trans "Price" %}</h4>
     </div>
 </div>
 
@@ -79,7 +79,7 @@
     		    </div>
     	    </div>
     	    <div class="span1">
-    		    <p class="price">{{ form.instance.unit_price_incl_tax|currency }}<p>
+    		    <p class="price_color align-right">{{ form.instance.unit_price_incl_tax|currency }}<p>
     	    </div>
         </div>
     </div>
@@ -150,22 +150,22 @@
 					{% endif %}
 					<tr>
                         <th>{% trans "Basket total (after discounts)" %}</th>
-						<td>{{ basket.total_incl_tax|currency }}</td>
+						<td class="align-right">{{ basket.total_incl_tax|currency }}</td>
 					</tr>
 				{% else %}
 					<tr>
                         <th>{% trans "Basket total" %}</th>
-						<td>{{ basket.total_incl_tax|currency }}</td>
+						<td class="align-right">{{ basket.total_incl_tax|currency }}</td>
 					</tr>
 				{% endif %}
 				{% endwith %}
 				<tr>
                     <th>{% trans "Shipping" %} ({{ shipping_method.name }})</th>
-					<td>{{ shipping_charge_incl_tax|currency }}</td>
+					<td class="align-right">{{ shipping_charge_incl_tax|currency }}</td>
 				</tr>
 				<tr>
                     <th class="total"><h4>{% trans "Order total" %}</h4></th>
-					<td class="total"><h4>{{ order_total_incl_tax|currency }}</h4></td>
+					<td class="total align-right"><h4 class="price_color">{{ order_total_incl_tax|currency }}</h4></td>
 				</tr>
 				</tbody>
 			</table>
@@ -184,7 +184,7 @@
 {% else %}
     {% block emptybasket %}
     <p>{% trans "Your basket is empty, you should probably add some items to buy." %}</p>
-    <a href="/" class="btn btn-primary">{% trans "Continue shopping" %}</a>
+    <p><a href="/" class="btn btn-primary">{% trans "Continue shopping" %}</a></p>
     {% endblock %}
 {% endif %}
 
@@ -200,7 +200,8 @@
     {% else %}
     <div class="row-fluid basket-title">
         <h4 class="span8">{% trans "To buy an item now, click 'Move to basket'" %}</h4>
-        <h4 class="span4">{% trans "Price" %}</h4>
+        <h4 class="span2 align-center">{% trans "Price" %}</h4>
+        <div class="span2">&nbsp;</div>
     </div>
     <form action="{% url basket:saved %}" method="post" class="form-stacked later_summary" id="saved_basket_formset">
         {% csrf_token %}
@@ -224,7 +225,7 @@
     				{{ form.DELETE }}
     			</div>
     		</div>
-            <div class="span2"><p class="price">{{ form.instance.unit_price_incl_tax|currency }}</p></div>
+            <div class="span2 align-center"><p class="price_color">{{ form.instance.unit_price_incl_tax|currency }}</p></div>
             <div class="span2"><a href="#" data-id="{{ forloop.counter0 }}" class="btn btn-success pull-right" data-behaviours="move">{% trans "Move to basket" %}</a></div>
         </div>
         {% endfor %}

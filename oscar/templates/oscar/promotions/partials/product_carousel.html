@@ -4,26 +4,15 @@
 
 <article class="product_pod">
     <div class="image_container">
-		{% with image=product.primary_image %}
-		{% thumbnail image.original "400x400" upscale=False as thumb %}
-		<a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
-		{% endthumbnail %}
-		{% endwith %}
-    </div>    
-
-    <h3><a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a></h3>
-    {% if product.is_group %}
-        <h4 class="group-price"><span>From</span> <strong>{{ product.min_variant_price_incl_tax|currency }}</strong></h4>
-        <div class="product_price">
-    {% else %}
-        <div class="product_price">
-            {% if product.has_stockrecord %} 
-                <h4><span>{{ product.stockrecord.price_incl_tax|currency }}</span></h4>
-                <p class="app-ico {{ product.stockrecord.availability_code }} avaliability ">{{ product.stockrecord.availability|truncatewords:2 }}</p>
-            {% else %}
-			<p class="app-ico avaliability outofstock">{% trans "Not available" %}</p>
-			<button class="btn">{% trans "Notify me" %}</button>
-            {% endif %}
-    {% endif %}
-        </div>
+        {% with image=product.primary_image %}
+        {% thumbnail image.original "400x400" upscale=False as thumb %}
+        <a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
+        {% endthumbnail %}
+        {% endwith %}
+    </div>
+    <h3><a href="{{ product.get_absolute_url }}">{{ product.get_title|truncatewords:4 }}</a></h3>
+    <div class="product_price">
+        {% include "catalogue/partials/stock_record.html" %}
+        {% include "catalogue/partials/add_to_basket_form_compact.html" %}
+    </div>
 </article>

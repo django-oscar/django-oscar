@@ -6,6 +6,8 @@
 {% trans 'My account' %} | {{ block.super }}
 {% endblock %}
 
+{% block body_class %}account-profile{% endblock %}
+
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
@@ -26,7 +28,7 @@
 
 <div class="tabbable">
 
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-tabs nav-profile">
 		<li {% if active_tab == 'profile' %}class="active"{% endif %}><a href="#profile" data-toggle="tab">{% trans 'Profile' %}</a></li>
         <li {% if active_tab == 'orders' %}class="active"{% endif %}><a href="#orders" data-toggle="tab">{% trans 'Order History' %}</a></li>
         <li {% if active_tab == 'addresses' %}class="active"{% endif %}><a href="#addresses" data-toggle="tab">{% trans 'Address Book' %}</a></li>

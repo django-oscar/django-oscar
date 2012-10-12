@@ -110,9 +110,6 @@
     margin-left: 0;
     margin-right: 0;
   }
-  .navbar.accounts {
-    margin-bottom: 30px;
-  }
   .navbar.primary {
     .pull-left,
     .pull-right {
@@ -127,6 +124,9 @@
     small {
       display:block;
       margin-top:10px;
+    }
+    .page_inner {
+      padding:30px 0;
     }
   }
 
@@ -218,6 +218,11 @@
   }
   
   // Product
+  .thumbnail {
+    border:0;
+    padding:0;
+    .border-radius(0);
+  }
   .products,
   .es-carousel > ul {
     li {
@@ -274,8 +279,9 @@
             .btn {
               width:auto;
               display:block;
-              padding: 5px 14px 6px;
+              padding: 5px 0 6px;
               margin-top:5px;
+              width:100%;
             }
           }
           
@@ -284,7 +290,7 @@
           width:@quart;
           float:right;
           margin-left:15px;
-          margin-bottom:0px;
+          margin-bottom:20px;
         }
       }
     }

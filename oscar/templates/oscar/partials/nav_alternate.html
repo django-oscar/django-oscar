@@ -4,12 +4,12 @@
 <div class="navbar primary navbar-static-top navbar-inverse">
     <div class="navbar-inner">
             
-        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".primary-collapse">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </a>
-        <a class="btn btn-navbar btn-cart hidden-desktop" href="{% url checkout:index %}">
+        <a class="btn btn-navbar btn-cart visible-phone" href="{% url checkout:index %}">
 			<strong>{% trans "Basket" %}
             {% if not request.basket.is_empty %}
 			{% trans "Total:" %} {{ basket.total_incl_tax|currency }}
@@ -17,12 +17,12 @@
             </strong>
         </a>
 		
-         <div class="nav-collapse">
+         <div class="nav-collapse primary-collapse">
               <!-- Added 'open' to dropdown so below menu will display - only on home page -->
               <div id="browse" class="dropdown pull-left open">
                 {% if categories %}
                     <!-- Removed data-toggle="dropdown" from the anchor so the dropdown doesn't work on the home page -->
-					<button class="btn btn-primary visible-desktop dropdown-toggle">
+					<button class="btn btn-primary hidden-phone dropdown-toggle">
                         {% trans "Browse Store" %} 
                         <span class="caret"></span>
                     </button>

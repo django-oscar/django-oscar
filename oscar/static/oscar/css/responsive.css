@@ -712,6 +712,9 @@
   input.span1, textarea.span1, .uneditable-input.span1 {
     width: 28px;
   }
+  .header .page_inner {
+    padding: 50px 20px 40px;
+  }
 }
 @media (max-width: 767px) {
   body {
@@ -807,9 +810,6 @@
     margin-left: 0;
     margin-right: 0;
   }
-  .navbar.accounts {
-    margin-bottom: 30px;
-  }
   .navbar.primary .pull-left,
   .navbar.primary .pull-right {
     float: none;
@@ -820,6 +820,9 @@
   .header small {
     display: block;
     margin-top: 10px;
+  }
+  .header .page_inner {
+    padding: 30px 0;
   }
 }
 @media (max-width: 480px) {
@@ -881,6 +884,13 @@
     margin: 0px;
     width: auto;
     height: auto;
+  }
+  .thumbnail {
+    border: 0;
+    padding: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
   }
   .products li,
   .es-carousel > ul li {
@@ -956,15 +966,16 @@
   .es-carousel > ul li .product_pod .product_price form .btn {
     width: auto;
     display: block;
-    padding: 5px 14px 6px;
+    padding: 5px 0 6px;
     margin-top: 5px;
+    width: 100%;
   }
   .products li .product_pod .image_container,
   .es-carousel > ul li .product_pod .image_container {
     width: 25%;
     float: right;
     margin-left: 15px;
-    margin-bottom: 0px;
+    margin-bottom: 20px;
   }
   .star {
     padding-left: 70px;
