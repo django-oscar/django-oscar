@@ -17,11 +17,9 @@ oscar/share
 dist/
 *.DS_Store
 sites/sandbox/*.sqlite
-sites/sandbox/assets/*
 sites/sandbox/public/
 sites/sandbox/whoosh_index/
 sites/demo/*.sqlite
-sites/demo/assets/*
 sites/demo/public/
 sites/demo/whoosh_index/
 .idea
