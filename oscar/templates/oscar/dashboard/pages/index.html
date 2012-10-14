@@ -22,7 +22,7 @@
     <h3>{% trans "Search" %}</h3>
     <form action="." method="get" class="form-inline">
         {% include "partials/form_fields_inline.html" with form=form %}
-        <input type="submit" value="Search" class="btn btn-primary"/>
+        <input type="submit" value="{% trans "Search" %}" class="btn btn-primary"/>
     </form>
 </div>
 {% endblock header %}
