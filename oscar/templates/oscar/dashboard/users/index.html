@@ -45,8 +45,8 @@
             <th>{% trans "Email" %}</th>
             <th>{% trans "First name" %}</th>
             <th>{% trans "Last name" %}</th>
-            <th>{% trans "Active" %}</th>
-            <th>{% trans "Staff status" %}</th>
+            <td>{{ user.is_active|yesno:_("True,False") }}</td>
+            <td>{{ user.is_staff|yesno:_("True,False") }}</td>
             <th>{% trans "Date registered" %}</th>
             <th>{% trans "Num Orders" %}</th>
             <th></th>

@@ -27,7 +27,7 @@
 {% block dashboard_content %}
 
 <div class="well well-danger">
-    <h3 class="app-ico ico_view icon">View by page</h3>
+    <h3 class="app-ico ico_view icon">{% trans "View by page" %}</h3>
 	<a href="{% url dashboard:promotion-list %}" class="btn btn-primary">{% trans "View all content blocks" %}</a>
 	<a href="{% url dashboard:promotion-list-by-page %}" class="btn">{% trans "View content blocks by page" %}</a>
 </div>

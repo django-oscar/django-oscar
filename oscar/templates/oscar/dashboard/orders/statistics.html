@@ -33,7 +33,7 @@
     <form method="get" action="{% url dashboard:order-stats %}" class="form-inline">
         <h3 class="app-ico ico_magnify icon">Filter</h3>
         {% include "partials/form_fields_inline.html" with form=form %}
-		<button type="submit" class="btn btn-primary">Filter result</button>
+		<button type="submit" class="btn btn-primary">{% trans "Filter result" %}</button>
 		<a href="{% url dashboard:order-stats %}" class="btn">{% trans "Reset" %}</a>
     </form>
 </div>
