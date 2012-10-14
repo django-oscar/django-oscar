@@ -7,8 +7,8 @@
     {{ basket_form.as_p }}
     
     {% if product.is_available_to_buy %}
-        <button type="submit" class="btn btn-primary">{% trans "Add to basket" %}</button>
+        <button type="submit" class="btn btn-primary btn-full">{% trans "Add to basket" %}</button>
     {% else %}
-        <a href="{{ product.get_absolute_url }}" class="btn btn-notify">{% trans "Notify me" %}</a>
+        <a href="{{ product.get_absolute_url }}" class="btn btn-notify btn-full">{% trans "Notify me" %}</a>
     {% endif %}
 </form>

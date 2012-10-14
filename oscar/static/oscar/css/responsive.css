@@ -814,6 +814,20 @@
   .navbar.primary .pull-right {
     float: none;
   }
+  .pull-left.btn-full,
+  .pull-right.btn-full {
+    float: none;
+  }
+  .btn-full {
+    padding-left: 0;
+    padding-right: 0;
+    width: 100%;
+    float: none;
+  }
+  a.btn-full {
+    display: block;
+    width: auto!important;
+  }
   .header h1 {
     text-align: center;
   }
@@ -823,6 +837,33 @@
   }
   .header .page_inner {
     padding: 30px 0;
+  }
+  .basket-items {
+    padding: 0;
+  }
+  .basket-items [class*="span"] .image_container {
+    width: 20%;
+    float: right;
+    min-height: 100px;
+    line-height: 100px;
+    margin: 0;
+  }
+  .basket-items [class*="span"] .image_container img {
+    max-height: 100px;
+    margin: 0;
+    float: right;
+  }
+  .basket-items a.btn {
+    margin-bottom: 20px;
+  }
+  .basket-items .align-right,
+  .basket-items .align-center {
+    text-align: left;
+    margin-top: 20px;
+  }
+  .basket-items:nth-child(even),
+  .basket-items {
+    background: none;
   }
 }
 @media (max-width: 480px) {
@@ -958,24 +999,24 @@
   .es-carousel > ul li .product_pod .product_price h4 del {
     float: none;
   }
+  .products li .product_pod .product_price form,
+  .es-carousel > ul li .product_pod .product_price form {
+    clear: both;
+  }
   .products li .product_pod .product_price form input#id_quantity,
   .es-carousel > ul li .product_pod .product_price form input#id_quantity {
     width: auto;
   }
   .products li .product_pod .product_price form .btn,
   .es-carousel > ul li .product_pod .product_price form .btn {
-    width: auto;
-    display: block;
-    padding: 5px 0 6px;
     margin-top: 5px;
-    width: 100%;
   }
   .products li .product_pod .image_container,
   .es-carousel > ul li .product_pod .image_container {
     width: 25%;
     float: right;
     margin-left: 15px;
-    margin-bottom: 20px;
+    margin-bottom: 0;
   }
   .star {
     padding-left: 70px;

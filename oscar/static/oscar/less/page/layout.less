@@ -33,6 +33,9 @@ h4 { font-size: 16px; line-height: 20px; }
 .sub-header {
   margin: 0 0 (@baseLineHeight * 1.5);
 }
+.well .sub-header {
+  margin: 0 0 (@baseLineHeight);
+}
 .sub-header {
   padding-bottom: (@baseLineHeight / 2) - 1;
   border-bottom: 1px solid @grayLighter;
@@ -51,6 +54,16 @@ h4 { font-size: 16px; line-height: 20px; }
     margin:0;
   }
 }
+
+// PRICE SIZE/COLOR
+// -----------
+.price_color {
+  display:block;
+  color:@green;
+  font-weight:bold;
+}
+.product_pod .price_color { margin-top:0 }
+.es-carousel .price_color { font-size:20px; }
 
 
 

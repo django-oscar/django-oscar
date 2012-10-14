@@ -116,6 +116,21 @@
       float:none;
     }
   }
+  // Buttons
+  .pull-left.btn-full,
+  .pull-right.btn-full {
+    float:none;
+  }
+  .btn-full {
+    padding-left:0;
+    padding-right:0;
+    width:100%;
+    float:none;
+  }
+  a.btn-full {
+    display:block;
+    width:auto!important;
+  }
   // Header
   .header {
     h1 {
@@ -128,6 +143,34 @@
     .page_inner {
       padding:30px 0;
     }
+  }
+  //Basket
+  .basket-items {
+    padding:0;
+    [class*="span"] .image_container {
+      width: 20%;
+      float: right;
+      min-height: 100px;
+      line-height: 100px;
+      margin:0;
+      img {
+        max-height: 100px;
+        margin: 0;
+        float: right;
+      }
+    }
+    a.btn {
+      margin-bottom:@baseLineHeight;
+    }
+    .align-right,
+    .align-center {
+      text-align:left;
+      margin-top:@baseLineHeight;
+    }
+  }
+  .basket-items:nth-child(even),
+  .basket-items {
+    background:none;
   }
 
 }
@@ -273,15 +316,12 @@
             }
           }
           form {
+            clear:both;
             input#id_quantity {
               width: auto;
             }
             .btn {
-              width:auto;
-              display:block;
-              padding: 5px 0 6px;
               margin-top:5px;
-              width:100%;
             }
           }
           
@@ -290,7 +330,7 @@
           width:@quart;
           float:right;
           margin-left:15px;
-          margin-bottom:20px;
+          margin-bottom:0;
         }
       }
     }
@@ -363,5 +403,4 @@
       }
     }
   }
-
 }

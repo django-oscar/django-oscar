@@ -204,7 +204,6 @@ $(document).ready(function()
         getId = checkHash.substring(1),
         activeClass = $('.account-profile .tabbable'),
         aHref = $('a[href=' + checkHash + ']').closest('li');
-        console.log(aHref);
     if (checkHash) {
       activeClass.find('.active').removeClass('active');
       $('#' + getId).add(aHref).addClass('active');

@@ -36,7 +36,7 @@
 {% endif %}
 
 {% if not basket.is_empty %}
-<div class="basket-title">
+<div class="basket-title hidden-phone">
     <div class="row-fluid">
         <h4 class="span6">{% trans "Items to buy now" %}</h4>
         <h4 class="span5">{% trans "Quantity" %}</h4>
@@ -92,7 +92,7 @@
 		<div class="sub-header">
             <h2>{% trans "Voucher/Promo Code" %}</h2>
 		</div>
-        <p id="voucher_form_link"><a href="#voucher" class="btn">{% trans "I have a voucher code..." %}</a></p>
+        <p id="voucher_form_link"><a href="#voucher" class="btn btn-full">{% trans "I have a voucher code..." %}</a></p>
 
 	        <div id="voucher_form_container" style="display:none">
                 <h4>{% trans "Voucher code" %}</h4>
@@ -177,7 +177,7 @@
 	
 {% block formactions %}
 	<div class="form-actions clearfix" >
-        <a href="{% url checkout:index %}" class="pull-right btn btn-large btn-primary">{% trans "Proceed to checkout" %}</a>
+        <a href="{% url checkout:index %}" class="pull-right btn btn-large btn-primary btn-full">{% trans "Proceed to checkout" %}</a>
 	</div>
 {% endblock formactions %}
 
@@ -198,7 +198,7 @@
     <p>{% trans "Your saved basket is empty." %}</p>
 
     {% else %}
-    <div class="row-fluid basket-title">
+    <div class="row-fluid basket-title hidden-phone">
         <h4 class="span8">{% trans "To buy an item now, click 'Move to basket'" %}</h4>
         <h4 class="span2 align-center">{% trans "Price" %}</h4>
         <div class="span2">&nbsp;</div>
@@ -226,7 +226,7 @@
     			</div>
     		</div>
             <div class="span2 align-center"><p class="price_color">{{ form.instance.unit_price_incl_tax|currency }}</p></div>
-            <div class="span2"><a href="#" data-id="{{ forloop.counter0 }}" class="btn btn-success pull-right" data-behaviours="move">{% trans "Move to basket" %}</a></div>
+            <div class="span2"><a href="#" data-id="{{ forloop.counter0 }}" class="btn btn-success pull-right btn-full" data-behaviours="move">{% trans "Move to basket" %}</a></div>
         </div>
         {% endfor %}
     </form>
