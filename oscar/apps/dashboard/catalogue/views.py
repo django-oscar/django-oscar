@@ -235,7 +235,6 @@ class ProductUpdateView(generic.UpdateView):
 
     def form_valid(self, form):
         stockrecord_form = self.get_stockrecord_form()
-
         category_formset = ProductCategoryFormSet(self.request.POST,
                                                   instance=self.object)
         image_formset = ProductImageFormSet(self.request.POST,
@@ -252,7 +251,7 @@ class ProductUpdateView(generic.UpdateView):
         if is_valid:
             form.save()
             if self.is_stockrecord_submitted():
-                stockrecord = stockrecord_form.save()
+                stockrecord = stockrecord_form.save(commit=False)
                 stockrecord.product = self.object
                 stockrecord.save()
             category_formset.save()
