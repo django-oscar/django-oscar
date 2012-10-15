@@ -39,8 +39,8 @@
 <div class="basket-title hidden-phone">
     <div class="row-fluid">
         <h4 class="span6">{% trans "Items to buy now" %}</h4>
-        <h4 class="span5">{% trans "Quantity" %}</h4>
-        <h4 class="span1 align-right">{% trans "Price" %}</h4>
+        <h4 class="span4">{% trans "Quantity" %}</h4>
+        <h4 class="span2 align-right">{% trans "Price" %}</h4>
     </div>
 </div>
 
@@ -62,9 +62,9 @@
     		    </div>
 
     		    <h4><a href="{{ form.instance.product.get_absolute_url }}">{{ form.instance.description }}</a></h4>
-		    <p class="app-ico instock availability ">{{ form.instance.product.stockrecord.availability }}</p>
+    		    <p class="app-ico instock availability ">{{ form.instance.product.stockrecord.availability }}</p>
     	    </div>
-    	    <div class="span5">
+    	    <div class="span4">
     		    <div class="checkout-quantity">
     		        {{ form.quantity }} 
                     <button class="btn" type="submit">{% trans "Update" %}</button>
@@ -78,7 +78,7 @@
     			    </div>
     		    </div>
     	    </div>
-    	    <div class="span1">
+    	    <div class="span2">
     		    <p class="price_color align-right">{{ form.instance.unit_price_incl_tax|currency }}<p>
     	    </div>
         </div>
@@ -90,7 +90,7 @@
 	{% block vouchers %}
 	<div class="span6">
 		<div class="sub-header">
-            <h2>{% trans "Voucher/Promo Code" %}</h2>
+            <h2>{% trans "Voucher/promo code" %}</h2>
 		</div>
         <p id="voucher_form_link"><a href="#voucher" class="btn btn-full">{% trans "I have a voucher code..." %}</a></p>
 
@@ -111,7 +111,7 @@
 	{% block baskettotals %}
 	<div class="span6">
 		<div class="sub-header">
-            <h2>{% trans "Basket Totals" %}</h2>
+            <h2>{% trans "Basket totals" %}</h2>
 		</div>
 		<div id="basket_totals">
 			<table class="table table-striped table-condensed">

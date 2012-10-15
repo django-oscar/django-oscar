@@ -35,7 +35,7 @@
     <div class="side_categories" style="padding: 8px 0;">
         {% if categories %}
     	<ul class="nav nav-list">
-			<li class="nav-header">{% trans "Browse Categories" %}</li>
+			<li class="nav-header">{% trans "Browse categories" %}</li>
     	    {% for category in categories %}
             <li><a href="{{ category.0.get_absolute_url }}">{{ category.0.name }}</a>
             	{% if category.1 %}
@@ -44,7 +44,7 @@
             		<li><a href="{{ subcategory.0.get_absolute_url }}">{{ subcategory.0.name }}</a>
             		{% endfor %}
             	</ul>
-            		{% endif %}
+				{% endif %}
             </li>
             {% endfor %}
     	</ul>

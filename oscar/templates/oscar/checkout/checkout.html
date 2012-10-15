@@ -85,22 +85,22 @@
     </div>
     <div class="basket-title">
         <div class="row-fluid">
-			<h4 class="span10">{% trans "Items in basket" %}</h4>
+			<h4 class="span9">{% trans "Items in basket" %}</h4>
 			<h4 class="span1">{% trans "Quantity" %}</h4>
-			<h4 class="span1">{% trans "Price" %}</h4>
+			<h4 class="span2">{% trans "Price" %}</h4>
         </div>
     </div>
     {% for line in basket.all_lines %}
     <div class="basket-items">
         <div class="row-fluid">
-            <div class="span10">
+            <div class="span9">
                 <h4><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h4>
                 <span class="app-ico instock availability ">{{ line.product.stockrecord.availability }}</span>
             </div>
             <div class="span1">
                 {{ line.quantity }}
             </div>
-            <div class="span1">
+            <div class="span2">
                 <span class="price">{{ line.line_price_incl_tax|currency }}</span>
             </div>        
         </div>
@@ -109,8 +109,8 @@
     {% for discount in basket.discounts %}
     <div class="basket-items">
         <div class="row-fluid">
-            <h4 class="span11">{{ discount.name }}</h4>
-            <div class="span1">
+            <h4 class="span10">{{ discount.name }}</h4>
+            <div class="span2">
                 -{{ discount.discount|currency }}
             </div>
         </div>
@@ -119,8 +119,8 @@
     {% if shipping_method %}
     <div class="basket-items">
         <div class="row-fluid">
-			<h4 class="span11">{% trans "Shipping:" %}</h4>
-            <div class="span1">
+			<h4 class="span10">{% trans "Shipping:" %}</h4>
+            <div class="span2">
                 {{ shipping_method.basket_charge_incl_tax|currency }}
             </div>
         </div>
@@ -128,14 +128,14 @@
     {% endif %}
     <div class="basket-items">
         <div class="row-fluid">
-			<h4 class="span11">{% trans "Basket total:" %}</h4>
-            <div class="span1">{{ basket.total_incl_tax|currency }}</div>
+			<h4 class="span10">{% trans "Basket total:" %}</h4>
+            <div class="span2">{{ basket.total_incl_tax|currency }}</div>
         </div>
     </div>
     <div class="basket-items total">
         <div class="row-fluid">
-			<h3 class="span11">{% trans "Order total:" %}</h3>
-            <h3 class="span1">{{ order_total_incl_tax|currency }}</h3>
+			<h3 class="span10">{% trans "Order total:" %}</h3>
+            <h3 class="span2">{{ order_total_incl_tax|currency }}</h3>
         </div>
     </div>
     {% block order_contents_actions %}
