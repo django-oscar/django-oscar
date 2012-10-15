@@ -16,7 +16,7 @@
 	<a href="{% url dashboard:page-list %}">{% trans "Pages" %}</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">{% blocktrans with title=object.title %}Delete page '{{ title }}'?{% endblocktrans %}</a></li>
+	<li class="active">{% blocktrans with title=object.title %}Delete page '{{ title }}'?{% endblocktrans %}</li>
 </ul>
 {% endblock %}
 

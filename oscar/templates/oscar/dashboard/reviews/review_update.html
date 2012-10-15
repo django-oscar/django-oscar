@@ -18,7 +18,7 @@
 	<a href="{% url dashboard:reviews-list %}">{% trans "Reviews" %}</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">{% blocktrans %}Review #{{ review.id }}{% endblocktrans %}</a></li>
+	<li class="active">{% blocktrans %}Review #{{ review.id }}{% endblocktrans %}</li>
 </ul>
 {% endblock %}
 
