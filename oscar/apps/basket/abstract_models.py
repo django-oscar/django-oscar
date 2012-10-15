@@ -150,6 +150,7 @@ class AbstractBasket(models.Model):
             line.quantity += quantity
             line.save()
         self._lines = None
+    add_product.alters_data = True
 
     def get_discounts(self):
         if self.discounts is None:
@@ -193,6 +194,7 @@ class AbstractBasket(models.Model):
                                              line.quantity)
             existing_line.save()
             line.delete()
+    merge_line.alters_data = True
 
     def merge(self, basket, add_quantities=True):
         """
@@ -207,6 +209,7 @@ class AbstractBasket(models.Model):
         basket.date_merged = now()
         basket.save()
         self._lines = None
+    merge.alters_data = True
 
     def freeze(self):
         """
@@ -214,6 +217,7 @@ class AbstractBasket(models.Model):
         """
         self.status = self.FROZEN
         self.save()
+    freeze.alters_data = True
 
     def thaw(self):
         """
@@ -221,12 +225,14 @@ class AbstractBasket(models.Model):
         """
         self.status = self.OPEN
         self.save()
+    thaw.alters_data = True
 
     def set_as_submitted(self):
         """Mark this basket as submitted."""
         self.status = self.SUBMITTED
         self.date_submitted = now()
         self.save()
+    set_as_submitted.alters_data = True
 
     def set_as_tax_exempt(self):
         self.exempt_from_tax = True

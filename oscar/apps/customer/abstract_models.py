@@ -158,6 +158,7 @@ class AbstractNotification(models.Model):
     def archive(self):
         self.location = self.ARCHIVE
         self.save()
+    archive.alters_data = True
 
     @property
     def is_read(self):
@@ -231,16 +232,19 @@ class AbstractProductAlert(models.Model):
         self.status = self.ACTIVE
         self.date_confirmed = now()
         self.save()
+    confirm.alters_data = True
 
     def cancel(self):
         self.status = self.CANCELLED
         self.date_cancelled = now()
         self.save()
+    cancel.alters_data = True
 
     def close(self):
         self.status = self.CLOSED
         self.date_closed = now()
         self.save()
+    close.alters_data = True
 
     def get_email_address(self):
         if self.user:

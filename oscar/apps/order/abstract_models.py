@@ -78,6 +78,7 @@ class AbstractOrder(models.Model):
                 line.status = self.cascade[self.status]
                 line.save()
         self.save()
+    set_status.alters_data = True
 
     @property
     def is_anonymous(self):
@@ -340,6 +341,7 @@ class AbstractLine(models.Model):
                                     'new_status': new_status, 'status': self.status})
         self.status = new_status
         self.save()
+    set_status.alters_data = True
 
     @property
     def category(self):

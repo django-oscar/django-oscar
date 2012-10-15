@@ -112,6 +112,7 @@ class AbstractVoucher(models.Model):
             self.applications.create(voucher=self, order=order)
         self.num_orders += 1
         self.save()
+    record_usage.alters_data = True
 
     def record_discount(self, discount):
         """
@@ -119,6 +120,7 @@ class AbstractVoucher(models.Model):
         """
         self.total_discount += discount
         self.save()
+    record_discount.alters_data = True
 
     @property
     def benefit(self):

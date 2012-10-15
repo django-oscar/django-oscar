@@ -375,8 +375,10 @@ class AbstractProduct(models.Model):
         from oscar.apps.catalogue.categories import create_from_breadcrumbs
         category = create_from_breadcrumbs(breadcrumb)
 
-        temp = get_model('catalogue', 'ProductCategory')(category=category, product=self)
+        temp = get_model('catalogue', 'ProductCategory')(
+            category=category, product=self)
         temp.save()
+    add_category_from_breadcrumbs.alters_data = True
 
     def attribute_summary(self):
         u"""Return a string of all of a product's attributes"""

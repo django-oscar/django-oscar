@@ -174,6 +174,7 @@ class ConditionalOffer(models.Model):
         self.num_orders += 1
         self.total_discount += discount
         self.save()
+    record_usage.alters_data = True
 
 
 class Condition(models.Model):
