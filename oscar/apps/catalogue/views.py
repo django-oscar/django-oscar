@@ -98,6 +98,9 @@ def get_product_base_queryset():
         'product_options',
         'product_class__options',
         'stockrecord',
+        'stockrecord__product',
+        'stockrecord__product__product_class',
+        'stockrecord__partner',
         'images',
     ).all()
 
@@ -111,6 +114,9 @@ class ProductCategoryView(ListView):
     paginate_by = 20
 
     def get_categories(self):
+        """
+        Return a list of the current category and it's ancestors
+        """
         slug = self.kwargs['category_slug']
         try:
             category = Category.objects.get(slug=slug)
