@@ -32,8 +32,6 @@
 	<p class="pull-right"><a href="{% url checkout:index %}" class="btn btn-primary btn-small"><i class="icon-shopping-cart"></i> {% trans "Checkout" %}</a></p>
     </li>
 {% else %}
-    <li>
-	<p>{% trans "Your basket is empty, you should probably add some items to buy." %}</p>
-    </li>
+    <li><p>{% trans "Your basket is empty." %}</p></li>
 {% endif %}
 </ul>
