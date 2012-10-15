@@ -60,22 +60,13 @@ class PasswordResetForm(auth_forms.PasswordResetForm):
         ctx = {
             'user': user,
         }
-
         if extra_context:
             ctx.update(extra_context)
 
-        try:
-            event_type = CommunicationEventType.objects.get(code=code)
-        except CommunicationEventType.DoesNotExist:
-            # No event in database, attempt to find templates for this type
-            messages = CommunicationEventType.objects.get_and_render(code, ctx)
-        else:
-            # Create order event
-            messages = event_type.get_messages(ctx)
-
-        if messages and messages['body']:
-            dispatcher = Dispatcher()
-            dispatcher.dispatch_user_messages(user, messages)
+        messages = CommunicationEventType.objects.get_and_render(
+            code=code, context=ctx)
+        import ipdb; ipdb.set_trace()
+        Dispatcher().dispatch_user_messages(user, messages)
 
 
 class EmailAuthenticationForm(AuthenticationForm):

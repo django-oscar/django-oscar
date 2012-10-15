@@ -55,7 +55,7 @@ class AbstractCommunicationEventType(models.Model):
 
     # Template content for emails
     email_subject_template = models.CharField(
-        _('Email Subject Template'), max_length=255, blank=True)
+        _('Email Subject Template'), max_length=255, blank=True, null=True)
     email_body_template = models.TextField(
         _('Email Body Template'), blank=True, null=True)
     email_body_html_template = models.TextField(
@@ -108,6 +108,7 @@ class AbstractCommunicationEventType(models.Model):
                     templates[name] = get_template(template_name)
                 except TemplateDoesNotExist:
                     templates[name] = None
+
 
         # Pass base URL for serving images within HTML emails
         if ctx is None:
