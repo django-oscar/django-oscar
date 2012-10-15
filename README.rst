@@ -27,6 +27,7 @@ Further reading:
 Continuous integration status:
 
 .. image:: https://secure.travis-ci.org/tangentlabs/django-oscar.png
+    :target: http://travis-ci.org/#!/tangentlabs/django-oscar
 
 .. _`Official homepage`: http://oscarcommerce.com
 .. _`Sandbox site`: http://sandbox.oscar.tangentlabs.co.uk
