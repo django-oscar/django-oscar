@@ -1,8 +1,26 @@
 <div id="messages">
 {% for message in messages %}
     <div class="alert fade in alert-{{ message.tags }}">
-        <a class="close" data-dismiss="alert">x</a>
-        {{ message|linebreaks }}
+        <a class="close" data-dismiss="alert" href="#">&times;</a>
+		{# Include an icon #}
+		{% if 'success' in message.tags %}
+			<i class="icon-ok-sign"></i>
+		{% endif %}
+		{% if 'info' in message.tags %}
+			<i class="icon-info-sign"></i>
+		{% endif %}
+		{% if 'warning' in message.tags %}
+			<i class="icon-warning-sign"></i>
+		{% endif %}
+		{% if 'error' in message.tags %}
+			<i class="icon-exclamation-sign"></i>
+		{% endif %}
+		{# Allow HTML to be embedded in messages #}
+		{% if 'safe' in message.tags %}
+			{{ message|safe }}
+		{% else %}
+			{{ message }}
+		{% endif %}
     </div>
 {% endfor %}
 </div>
