@@ -18,7 +18,7 @@
         <span class="divider">/</span>
     </li>
 	{% if not category %}
-	<li class="active"><a href=".">{% trans "All products" %}</a></li>
+	<li class="active">{% trans "All products" %}</li>
 	{% else %}
 		{% for category in category.get_ancestors|slice:":-1" %}
 		<li>
@@ -26,7 +26,7 @@
 			<span class="divider">/</span>
 		</li>
 		{% endfor %}
-		<li class="active"><a href=".">{{ category.name }}</a></li>
+		<li class="active">{{ category.name }}</li>
 	{% endif %}
 </ul>
 {% endblock breadcrumbs %}
