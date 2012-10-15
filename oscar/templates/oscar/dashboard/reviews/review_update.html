@@ -33,7 +33,7 @@
 	{% csrf_token %}
     <div class="well well-info">
         <div class="sub-header">
-			<h3 class="app-ico ico_expand icon">{% trans "Review information" %}</h3>
+			<h3>{% trans "Review information" %}</h3>
         </div>
         {{ form.first }}
         {% for field in form %}

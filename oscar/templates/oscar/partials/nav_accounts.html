@@ -19,7 +19,7 @@
 						<a href="{% url customer:summary %}"><i class="icon-user"></i> {% trans "Account" %}</a>
 					</li>
 					<li>
-						<a class="app-ico ico_email" href="{% url customer:notifications-inbox %}">
+						<a href="{% url customer:notifications-inbox %}">
 							<i class="icon-envelope"></i> {% trans "Notifications" %}
 							{% if num_unread_notifications > 0 %}
 								<span class="label label-important">{{ num_unread_notifications }}</span>

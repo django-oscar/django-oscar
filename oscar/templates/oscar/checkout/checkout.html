@@ -95,7 +95,7 @@
         <div class="row-fluid">
             <div class="span9">
                 <h4><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h4>
-                <span class="app-ico instock availability ">{{ line.product.stockrecord.availability }}</span>
+				<span class="availability {{ line.product.stockrecord.availability_code }}">{{ line.product.stockrecord.availability }}</span>
             </div>
             <div class="span1">
                 {{ line.quantity }}
