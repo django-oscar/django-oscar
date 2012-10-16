@@ -25,7 +25,7 @@
 	<h2>{{ commtype.name }}</h2>
 </div>
 
-<form method="post" action=".">
+<form method="post" action="." class="form-horizontal">
 <div class="tabbable">
 	 {% if preview %}
 	 <ul class="nav nav-tabs">
@@ -41,10 +41,12 @@
 				 <p>These fields are rendered using Django's template system.</p>
 				 <p>You can use the following variables:</p>
 				 <dl>
-					 <dt><code>{{ user.get_full_name }}</code></dt>
-					 <dd>The user who the email is sent to.</dd>
-					 <dt><code>{{ user.email }}</code></dt>
-					 <dd>The user who the email is sent to.</dd>
+					 <dt><code>{% templatetag openvariable %} user.get_full_name {% templatetag closevariable %}</code></dt>
+					 <dd>The full name of the user (if they have one)</dd>
+					 <dt><code>{% templatetag openvariable %} user.email {% templatetag closevariable %}</code></dt>
+					 <dd>The user's email address</dd>
+					 <dt><code>{% templatetag openvariable %} site.name {% templatetag closevariable %}</code></dt>
+					 <dd>The name of the site (eg example.com)</dd>
 				 </dl>
 				 {% include 'partials/form_field.html' with field=form.email_subject_template %}
 				 {% include 'partials/form_field.html' with field=form.email_body_template %}
@@ -64,7 +66,7 @@
 				</tr>
 				 <tr>
 					 <th>{% trans "Body text" %}</th>
-					 <td>{{ preview.body }}</td>
+					 <td><pre>{{ preview.body }}</pre></td>
 				</tr>
 				 <tr>
 					 <th>{% trans "Body HTML" %}</th>

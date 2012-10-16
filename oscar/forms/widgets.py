@@ -1,4 +1,5 @@
 from django.conf import settings
+from django import forms
 from django.template import Context
 from django.forms.widgets import FileInput
 from django.utils.encoding import force_unicode
@@ -43,3 +44,12 @@ class ImageInput(FileInput):
             'image_url': image_url,
             'image_id': "%s-image" % final_attrs['id'],
         }))
+
+
+class WYSIWYGTextArea(forms.Textarea):
+
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('attrs', {})
+        kwargs['attrs'].setdefault('class', '')
+        kwargs['attrs']['class'] += ' wysiwyg'
+        super(WYSIWYGTextArea, self).__init__(*args, **kwargs)
