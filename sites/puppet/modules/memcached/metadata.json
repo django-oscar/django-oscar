@@ -1,0 +1,31 @@
+{
+  "license": "Apache License, Version 2.0",
+  "source": "git://github.com/saz/puppet-memcached.git",
+  "description": "Manage memcached via Puppet",
+  "dependencies": [
+
+  ],
+  "summary": "UNKNOWN",
+  "types": [
+
+  ],
+  "author": "saz",
+  "version": "2.0.2",
+  "name": "saz-memcached",
+  "checksums": {
+    "templates/memcached_sysconfig.erb": "fdcbb4381b08683291fe7da542a6435f",
+    "templates/memcached.conf.erb": "c86e1c762e655461c0651e16e094b52e",
+    "README-DEVELOPER": "d45048731ddb158a56a1b26293fb5dbf",
+    "spec/fixtures/manifests/site.pp": "d41d8cd98f00b204e9800998ecf8427e",
+    "spec/classes/memcached_spec.rb": "abaa4afe238f7cf599bea859a8d37bfa",
+    "tests/init.pp": "e798f4999ba392f3c0fce0d5290c263f",
+    "Rakefile": "5e1b5fb743446de634dbba3093a255cf",
+    "README.md": "02b0390847cb84c98c2c53c042f97b62",
+    "spec/spec.opts": "a600ded995d948e393fbe2320ba8e51c",
+    "manifests/params.pp": "6eafeac3502dec0a85b13aa9b7b2bac2",
+    "Modulefile": "41b0bfec37d8a4d807352b7d94b2e76e",
+    "manifests/init.pp": "0030a2858c6866425183adbd651d17e7",
+    "spec/spec_helper.rb": "983ae671e9a03e34b55b16e0476bf1c8"
+  },
+  "project_page": "https://github.com/saz/puppet-memcached"
+}
