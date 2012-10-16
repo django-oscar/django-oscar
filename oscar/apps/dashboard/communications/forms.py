@@ -6,6 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from oscar.forms import widgets
 
 CommunicationEventType = get_model('customer', 'CommunicationEventType')
+Order = get_model('order', 'Order')
 
 
 class CommunicationEventTypeForm(forms.ModelForm):
@@ -17,8 +18,18 @@ class CommunicationEventTypeForm(forms.ModelForm):
     email_body_html_template = forms.CharField(
         label=_("Email body HTML template"), required=True,
         widget=widgets.WYSIWYGTextArea)
+
+    preview_order_number = forms.CharField(
+        label=_("Order number"), required=False)
     preview_email = forms.EmailField(label=_("Preview email"),
                                      required=False)
+
+    def __init__(self, data=None, *args, **kwargs):
+        self.is_preview = False
+        if data:
+            self.is_preview = ('show_preview' in data or
+                               'send_preview' in data)
+        super(CommunicationEventTypeForm, self).__init__(data, *args, **kwargs)
 
     def validate_template(self, value):
         try:
@@ -40,6 +51,32 @@ class CommunicationEventTypeForm(forms.ModelForm):
         body = self.cleaned_data['email_body_html_template']
         self.validate_template(body)
         return body
+
+    def clean_preview_order_number(self):
+        number = self.cleaned_data['preview_order_number'].strip()
+        if not self.is_preview:
+            return number
+        try:
+            self.preview_order = Order.objects.get(number=number)
+        except Order.DoesNotExist:
+            raise forms.ValidationError(_(
+                "No order found with this number"))
+        return number
+
+    def clean_preview_email(self):
+        email = self.cleaned_data['preview_email'].strip()
+        if not self.is_preview:
+            return email
+        if not email:
+            raise forms.ValidationError(_(
+                "Please enter an email address"))
+        return email
+
+    def get_preview_context(self):
+        ctx = {}
+        if hasattr(self, 'preview_order'):
+            ctx['order'] = self.preview_order
+        return ctx
 
     class Meta:
         model = CommunicationEventType

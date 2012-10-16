@@ -39,13 +39,18 @@ class UpdateView(generic.UpdateView):
         messages.success(self.request, _("Email saved"))
         return super(UpdateView, self).form_valid(form)
 
+    def get_messages_context(self, form):
+        ctx = {'user': self.request.user,
+               'site': get_current_site(self.request)}
+        ctx.update(form.get_preview_context())
+        return ctx
+
     def show_preview(self, form):
-        commtype = form.save(commit=False)
-        commtype_ctx = {}
-        commtype_ctx = {'user': self.request.user,
-                        'site': get_current_site(self.request)}
         ctx = super(UpdateView, self).get_context_data()
         ctx['form'] = form
+
+        commtype = form.save(commit=False)
+        commtype_ctx = self.get_messages_context(form)
         try:
             msgs = commtype.get_messages(commtype_ctx)
         except TemplateSyntaxError, e:
@@ -57,12 +62,11 @@ class UpdateView(generic.UpdateView):
         return self.render_to_response(ctx)
 
     def send_preview(self, form):
-        commtype = form.save(commit=False)
-        commtype_ctx = {}
-        commtype_ctx = {'user': self.request.user,
-                        'site': get_current_site(self.request)}
         ctx = super(UpdateView, self).get_context_data()
         ctx['form'] = form
+
+        commtype = form.save(commit=False)
+        commtype_ctx = self.get_messages_context(form)
         try:
             msgs = commtype.get_messages(commtype_ctx)
         except TemplateSyntaxError, e:
