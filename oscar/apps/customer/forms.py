@@ -2,6 +2,7 @@ import string
 import random
 
 from django.contrib.auth.forms import AuthenticationForm
+from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist
 from django import forms
@@ -34,7 +35,8 @@ def generate_username():
 class PasswordResetForm(auth_forms.PasswordResetForm):
     communication_type_code = "PASSWORD_RESET"
 
-    def save(self, subject_template_name='registration/password_reset_subject.txt',
+    def save(self, domain_override=None,
+             subject_template_name='registration/password_reset_subject.txt',
              email_template_name='registration/password_reset_email.html',
              use_https=False, token_generator=default_token_generator,
              from_email=None, request=None, **kwargs):
@@ -42,40 +44,23 @@ class PasswordResetForm(auth_forms.PasswordResetForm):
         Generates a one-use only link for resetting password and sends to the
         user.
         """
+        site = get_current_site(request)
+        if domain_override is not None:
+            site.domain = site.name = domain_override
         for user in self.users_cache:
-            current_site = get_current_site(request)
+            # Build reset url
+            reset_url = "%s://%s%s" % (
+                'https' if use_https else 'http',
+                site.domain,
+                reverse('password-reset-confirm', kwargs={
+                    'uidb36': int_to_base36(user.id),
+                    'token': token_generator.make_token(user)}))
             ctx = {
-                'email': user.email,
-                'domain': current_site.domain,
-                'site_name': current_site.name,
-                'uid': int_to_base36(user.id),
-                'token': token_generator.make_token(user),
-                'protocol': use_https and 'https' or 'http',
-                'site': current_site,
-            }
-            self.send_reset_email(user, ctx)
-
-    def send_reset_email(self, user, extra_context=None):
-        code = self.communication_type_code
-        ctx = {
-            'user': user,
-        }
-
-        if extra_context:
-            ctx.update(extra_context)
-
-        try:
-            event_type = CommunicationEventType.objects.get(code=code)
-        except CommunicationEventType.DoesNotExist:
-            # No event in database, attempt to find templates for this type
-            messages = CommunicationEventType.objects.get_and_render(code, ctx)
-        else:
-            # Create order event
-            messages = event_type.get_messages(ctx)
-
-        if messages and messages['body']:
-            dispatcher = Dispatcher()
-            dispatcher.dispatch_user_messages(user, messages)
+                'site': site,
+                'reset_url': reset_url}
+            messages = CommunicationEventType.objects.get_and_render(
+                code=self.communication_type_code, context=ctx)
+            Dispatcher().dispatch_user_messages(user, messages)
 
 
 class EmailAuthenticationForm(AuthenticationForm):
