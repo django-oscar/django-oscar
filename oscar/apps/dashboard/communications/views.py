@@ -31,6 +31,12 @@ class UpdateView(generic.UpdateView):
         return get_object_or_404(self.model,
                                  code=self.kwargs['code'].upper())
 
+    def form_invalid(self, form):
+        messages.error(self.request,
+            _("The submitted form was not valid, please correct "
+              "the errors and resubmit"))
+        return super(UpdateView, self).form_invalid(form)
+
     def form_valid(self, form):
         if 'send_preview' in self.request.POST:
             return self.send_preview(form)
@@ -73,8 +79,10 @@ class UpdateView(generic.UpdateView):
             form.errors['__all__'] = form.error_class([e.message])
             return self.render_to_response(ctx)
 
+        email = form.cleaned_data['preview_email']
         dispatch = Dispatcher()
-        dispatch.send_email_messages(
-            form.cleaned_data['preview_email'], msgs)
+        dispatch.send_email_messages(email, msgs)
+        messages.success(self.request,
+                         _("A preview email has been sent to %s") % email)
 
         return self.render_to_response(ctx)

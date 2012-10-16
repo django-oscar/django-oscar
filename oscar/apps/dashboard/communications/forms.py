@@ -25,10 +25,11 @@ class CommunicationEventTypeForm(forms.ModelForm):
                                      required=False)
 
     def __init__(self, data=None, *args, **kwargs):
-        self.is_preview = False
+        self.show_preview = False
+        self.send_preview = False
         if data:
-            self.is_preview = ('show_preview' in data or
-                               'send_preview' in data)
+            self.show_preview = 'show_preview' in data
+            self.send_preview = 'send_preview' in data
         super(CommunicationEventTypeForm, self).__init__(data, *args, **kwargs)
 
     def validate_template(self, value):
@@ -54,7 +55,9 @@ class CommunicationEventTypeForm(forms.ModelForm):
 
     def clean_preview_order_number(self):
         number = self.cleaned_data['preview_order_number'].strip()
-        if not self.is_preview:
+        if not self.instance.is_order_related():
+            return number
+        if not self.show_preview and not self.send_preview:
             return number
         try:
             self.preview_order = Order.objects.get(number=number)
@@ -65,7 +68,7 @@ class CommunicationEventTypeForm(forms.ModelForm):
 
     def clean_preview_email(self):
         email = self.cleaned_data['preview_email'].strip()
-        if not self.is_preview:
+        if not self.send_preview:
             return email
         if not email:
             raise forms.ValidationError(_(
