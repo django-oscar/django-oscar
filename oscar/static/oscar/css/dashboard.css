@@ -2252,3 +2252,14 @@ textarea {
 .modal > form {
   margin-bottom: 0;
 }
+.wysihtml5-toolbar {
+  *zoom: 1;
+}
+.wysihtml5-toolbar:before,
+.wysihtml5-toolbar:after {
+  display: table;
+  content: "";
+}
+.wysihtml5-toolbar:after {
+  clear: both;
+}
