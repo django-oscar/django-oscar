@@ -5,10 +5,16 @@
 @import "dashboard/variables.less"; // Modify this for custom colors, font-sizes, etc
 @import "dashboard/mixins.less";
 
+// Components: Icons / Fonts
+@import "font-awesome/font-awesome.less"; // Replaced sprites with font-awesome
+@import "font-awesome/font-awesome-ie7.less";
+
+
 // TYPES CHANGES
 // -----------
 h1, h2, h3, h4, h5, h6 {
   margin-bottom:@baseLineHeight / 2;
+  margin-top:0;
   font-weight:normal;
 }
 h2 {
@@ -633,4 +639,11 @@ caption {
 textarea {
 	width: 500px;
 	height: 400px;
+}
+// MODALS
+// -----
+.modal {
+  > form {
+    margin-bottom:0;
+  }
 }
