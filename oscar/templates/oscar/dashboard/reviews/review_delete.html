@@ -16,7 +16,7 @@
 	<a href="{% url dashboard:reviews-list %}">{% trans "Reviews" %}</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">{% blocktrans with title=review.title|truncatechars:30 %}Delete review "{{ title }}"?{% endblocktrans %}</a></li>
+	<li class="active">{% blocktrans with title=review.title|truncatechars:30 %}Delete review "{{ title }}"?{% endblocktrans %}</li>
 </ul>
 {% endblock %}
 

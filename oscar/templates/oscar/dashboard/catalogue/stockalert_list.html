@@ -14,7 +14,7 @@
 	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">{% trans "Stock alerts" %}</a></li>
+	<li class="active">{% trans "Stock alerts" %}</li>
 </ul>
 {% endblock %}
 
@@ -24,7 +24,7 @@
 {% block dashboard_content %}
 
 <div class="well well-info">
-	<h3 class="app-ico ico_sync icon">Filter</h3>
+	<h3><i class="icon-filter"></i> {% trans "Filter" %}</h3>
     <p>
 	<a class="btn btn-info" href="{% url dashboard:stock-alert-list %}">{% trans "All" %}</a>
 	<a class="btn btn-info" href="{% url dashboard:stock-alert-list %}?status=Open">{% trans "Open" %}</a>

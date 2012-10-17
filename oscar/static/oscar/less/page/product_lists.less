@@ -29,7 +29,7 @@
 .product_pod {
   padding:8%;
   position:relative;
-  height:375px;
+  height:405px;
   overflow:hidden;
   text-align:center;
   .clearfix();
@@ -44,25 +44,24 @@
       line-height:@baseLineHeight;
     }
   }
+  .price_color {
+    min-height:50px;
+  }
   h4 {
     .clearfix();
     margin-bottom: @baseLineHeight;
     margin-top: @baseLineHeight / 2;
     line-height:@baseLineHeight;
     font-size:@baseFontSize + 3;
-    /*span {
-          float:right;
-        }
-        del {
-          float:left;
-          font-size:0.611em;
-          font-weight:normal;
-          color:lighten(@grayDark, 40%);
-        }*/
   }
-  .avaliability {
+  form p {
+    min-height:40px;
+  }
+  .availability {
     margin-bottom:@baseLineHeight / 2;
     text-align:center;
+    min-height:30px;
+    white-space:nowrap;
   }
   button {
     width:100%;
@@ -72,6 +71,7 @@
     bottom:8%;
     left:8%;
     width:84%;
+    min-height:130px;
     form {
       margin-bottom:0px;
       input#id_quantity,
@@ -89,84 +89,22 @@
     }
   }
 }
-/* carosel product list mods */
-.es-carousel {
-  .product_pod {
-    height:250px;
-    .product_price {
-      bottom:0px;
-    }
-  } 
-}
 /* Product list image container */
 .image_container {
   width:100%;
-  height:125px;
+  min-height:155px;
   overflow:hidden;
   text-align: center;
   margin-bottom: @baseLineHeight / 2;
   position:relative;
   img {
-/*    height:100%;*/
-    max-height:125px;
+    max-height:155px;
     width:auto;
     margin:0px auto;
   }
 }
-/* For vertical product lists ADD class vertical */
-.products.vertical {
-  li {
-    margin-bottom:@baseLineHeight;
-    .product_pod {
-      padding:0px;
-      .image_container {
-        width:@quart;
-        float:left;
-        margin-right:15px;
-        margin-bottom:0px;
-      }
-      .avaliability {
-        text-align:left;
-      }
-      .product_price {
-        position:static;
-        width:auto;
-        h4 {
-          display:inline;
-          span, del {
-            float:none;
-          }
-        }
-        .btn {
-           width:auto;
-           display:block;
-           padding: 5px 14px 6px;
-           margin-top:5px;
-        }
-      }
-    }
-  }
-}
-.products.three.vertical,
-.products.four.vertical,
-.products.five.vertical {
-  li {
-    width:auto;
-    float:none;
-    border-bottom:1px solid @grayLighter;
-    padding-bottom:@baseLineHeight;
-      .product_pod {
-        height: auto;
-      }
-  }
-}
-.products.two.vertical {
-  li {
-    .product_pod {
-      height: auto;
-    }
-  }
-  li:nth-child(2n-1) {
-    clear:both;
-  }
+// Add a hover state for thumbnail
+a:hover .thumbnail {
+  border-color: @linkColor;
+  .box-shadow(0 1px 4px rgba(0,105,214,.25));
 }

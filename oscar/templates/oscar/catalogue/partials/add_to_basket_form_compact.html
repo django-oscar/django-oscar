@@ -1,11 +1,11 @@
 {% load basket_tags %}
 {% load i18n %}
 
-{% if product.is_available_to_buy %}
 {% basket_form request.basket product as basket_form single %}
 <form action="{% url basket:add %}" method="post">
     {% csrf_token %}
     {{ basket_form.as_p }}
-	<button type="submit" class="btn btn-primary">{% trans "Add to basket" %}</button>
+    {% if product.is_available_to_buy %}
+        <button type="submit" class="btn btn-primary btn-full">{% trans "Add to basket" %}</button>
+    {% endif %}
 </form>
-{% endif %}

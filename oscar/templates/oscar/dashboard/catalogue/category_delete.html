@@ -11,7 +11,7 @@
 		<a href="{% if parent %}{% url dashboard:catalogue-category-detail-list pk=parent.pk %}{% else %}{% url dashboard:catalogue-category-list %}{% endif %}">{% trans "Categories" %}</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">{% trans "Delete category?" %}</a></li>
+	<li class="active">{% trans "Delete category?" %}</li>
 </ul>
 {% endblock %}
 

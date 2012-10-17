@@ -16,7 +16,7 @@
 	<a href="{% url dashboard:voucher-list %}">{% trans "Vouchers" %}</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">{% blocktrans with name=voucher.name %}Delete voucher '{{ name }}'?{% endblocktrans %}</a></li>
+	<li class="active">{% blocktrans with name=voucher.name %}Delete voucher '{{ name }}'?{% endblocktrans %}</li>
 </ul>
 {% endblock %}
 
