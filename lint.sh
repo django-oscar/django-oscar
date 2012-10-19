@@ -1,7 +1,7 @@
 #/usr/bin/env bash
 
 ERRORFILE="violations.txt"
-THRESHOLD=1050
+THRESHOLD=862
 IGNORE="W292,E202"
 
 flake8 --ignore=$IGNORE oscar | perl -ple "s/: /: [E] /" | grep -v migrations > $ERRORFILE
