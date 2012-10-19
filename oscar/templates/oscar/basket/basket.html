@@ -27,12 +27,14 @@
 {% endif %}
 
 {% if upsell_messages %}
-<h2>{% trans "You could be missing out on offers!" %}</h2>
+<div class="well">
+	<h2>{% trans "You could be missing out on offers!" %}</h2>
 	{% for upsell in upsell_messages %}
     {% blocktrans with message=upsell.message url=upsell.offer.get_absolute_url offer_name=upsell.offer.name %}
-	<div class="warning">{{ upsell_message }} to qualify for the <a href="{{ url }}">{{ offer_name }}</a> special offer</div>
+	<div class="warning">{{ message }} to qualify for the <a href="{{ url }}">{{ offer_name }}</a> special offer</div>
     {% endblocktrans %}
 	{% endfor %}
+</div>
 {% endif %}
 
 {% if not basket.is_empty %}
