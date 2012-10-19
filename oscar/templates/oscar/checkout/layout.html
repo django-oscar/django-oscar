@@ -8,9 +8,11 @@
     {% include "partials/nav_accounts.html" %}
 
     <header class="header container-fluid">
-        <div class="row-fluid">
-            {% include "partials/brand.html" with hide_basket=1 %}
-        </div><!-- /row-fluid -->
+        <div class="page_inner">
+            <div class="row-fluid">
+                {% include "partials/brand.html" with hide_basket=1 %}
+            </div><!-- /row-fluid -->
+        </div>
         {% include "partials/nav_checkout.html" %}
     </header><!-- /header -->
     <div class="container-fluid page">

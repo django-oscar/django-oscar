@@ -1,6 +1,9 @@
 {% load form_tags %}
 
-{# Make the field widget type available to templates #}
+{% comment %}
+Make the field widget type available to templates so we can mark-up
+checkboxes differently to other widgets.
+{% endcomment %}
 {% annotate_form_field field %}
 
 <div class="control-group {% for error in field.errors %}error{% endfor %}">
@@ -10,11 +13,11 @@
 		{# Check if field is a checkbox as we mark these up differently #}
 		{% if field.widget_type == 'CheckboxInput' %}
 			<div class="controls">
-    			<label for="{{ field.auto_id }}" class="control-label checkbox {% if field.field.required %}required{% endif %}">{{ field.label }}{% if field.field.required %} <span>*</span>{% endif %}
+			<label for="{{ field.auto_id }}" class="checkbox {% if field.field.required %}required{% endif %}">{{ field.label }}{% if field.field.required %} <span>*</span>{% endif %}
     				{{ field }}
     			</label>
 				{% for error in field.errors %}
-					<span class="help-block">{{ error }}</span>
+                    <span class="help-block"><i class="icon-exclamation-sign"></i> {{ error }}</span>
 				{% endfor %}
 				{% if field.help_text %}
 					<span class='help-block'>
@@ -28,7 +31,7 @@
 			<div class="controls">
 				{{ field }}
 				{% for error in field.errors %}
-					<span class="help-block">{{ error }}</span>
+					<span class="help-block"><i class="icon-exclamation-sign"></i> {{ error }}</span>
 				{% endfor %}
 				{% if field.help_text %}
 					<span class='help-block'>

@@ -208,13 +208,12 @@ class ProductUpdateView(generic.UpdateView):
         stock record it will be passed into the form as
         ``instance``.
         """
-        if not self.is_stockrecord_submitted():
-            return StockRecordForm(self.object.product_class)
-
         stockrecord = None
         if self.object.has_stockrecord:
             stockrecord = self.object.stockrecord
-
+        if not self.is_stockrecord_submitted():
+            return StockRecordForm(self.object.product_class,
+                                   instance=stockrecord)
         return StockRecordForm(
             self.object.product_class,
             self.request.POST,
@@ -236,7 +235,6 @@ class ProductUpdateView(generic.UpdateView):
 
     def form_valid(self, form):
         stockrecord_form = self.get_stockrecord_form()
-
         category_formset = ProductCategoryFormSet(self.request.POST,
                                                   instance=self.object)
         image_formset = ProductImageFormSet(self.request.POST,
@@ -253,7 +251,7 @@ class ProductUpdateView(generic.UpdateView):
         if is_valid:
             form.save()
             if self.is_stockrecord_submitted():
-                stockrecord = stockrecord_form.save()
+                stockrecord = stockrecord_form.save(commit=False)
                 stockrecord.product = self.object
                 stockrecord.save()
             category_formset.save()

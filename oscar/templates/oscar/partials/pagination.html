@@ -1,7 +1,7 @@
 {% load display_tags %}
 {% load i18n %}
 
-{% if total_pages > 1 %}
+{% if paginator.num_pages > 1 %}
 	<div>
 		<ul class="pager">
 			{% if page_obj.has_previous %}

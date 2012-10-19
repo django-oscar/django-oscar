@@ -1,17 +1,20 @@
 // import base bootstrap - separate from frontend
 @import url("bootstrap.min.css");
 
-// Unique Fonts
-@import url("snowcone.css");
-
 // Core variables and mixins separate from frontend variables and mixins
 @import "dashboard/variables.less"; // Modify this for custom colors, font-sizes, etc
 @import "dashboard/mixins.less";
+
+// Components: Icons / Fonts
+@import "font-awesome/font-awesome.less"; // Replaced sprites with font-awesome
+@import "font-awesome/font-awesome-ie7.less";
+
 
 // TYPES CHANGES
 // -----------
 h1, h2, h3, h4, h5, h6 {
   margin-bottom:@baseLineHeight / 2;
+  margin-top:0;
   font-weight:normal;
 }
 h2 {
@@ -632,8 +635,26 @@ caption {
  .jspVerticalBar .jspArrow:focus{outline:0}
  .jspCorner{background:#eeeef4;float:left;height:100%}
  * html .jspCorner{margin:0 -3px 0 0}
+
 /* Changes for wysihtml5 */
 textarea {
 	width: 500px;
 	height: 400px;
+}
+// MODALS
+// -----
+.modal {
+  > form {
+    margin-bottom:0;
+  }
+}
+// WYSIHTML5
+// ---------
+
+.wysihtml5-toolbar {
+  .clearfix();
+}
+
+textarea.plain {
+	font-family: monospace;
 }

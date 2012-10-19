@@ -1,4 +1,4 @@
-{% extends 'layout.html' %}
+{% extends "layout_2_col.html" %}
 {% load currency_filters %}
 {% load thumbnail %}
 {% load i18n %}
@@ -17,8 +17,29 @@
 	{% trans "Search" %}
 	<span class="divider">/</span>
 	</li>
-	<li class="active"><a href=".">{% blocktrans with q=query%}"{{ q }}"{% endblocktrans %}</a></li>
+	<li class="active">{% blocktrans with q=query%}"{{ q }}"{% endblocktrans %}</li>
 </ul>
+{% endblock %}
+
+{% block column_left %}
+    <div class="side_categories" style="padding: 8px 0;">
+        {% if categories %}
+	<ul class="nav nav-list">
+			<li class="nav-header">{% trans "Browse Categories" %}</li>
+	    {% for category in categories %}
+            <li><a href="{{ category.0.get_absolute_url }}">{{ category.0.name }}</a>
+		{% if category.1 %}
+		<ul>
+			{% for subcategory in category.1 %}
+			<li><a href="{{ subcategory.0.get_absolute_url }}">{{ subcategory.0.name }}</a>
+			{% endfor %}
+		</ul>
+			{% endif %}
+            </li>
+            {% endfor %}
+	</ul>
+	{% endif %}
+    </div>
 {% endblock %}
 
 {% block header%}
@@ -34,17 +55,23 @@
 {% endif %}
 
 {% if page.object_list %}
-<ol class="products vertical three">
-	{% for result in page.object_list %}
-	{% include "catalogue/partials/product.html" with product=result.object %}
-	{% endfor %}
-</ol>
+<section>
+	<div class="mod">
+		{% if page_obj %}
+			{% include "catalogue/partials/pagination.html" %}
+		{% endif %}
+		<ol class="products four">
+			{% for result in page.object_list %}
+			<li>{% include "catalogue/partials/product.html" with product=result.object %}</li>
+			{% endfor %}
+		</ol>
+		{% if page_obj %}
+			{% include "catalogue/partials/pagination.html" %}
+		{% endif %}
+	</div>
+</section>
 {% else %}
 <p>{% trans 'No search results found.' %}</p>
-{% endif %}
-
-{% if page_obj %}
-{% include "partials/pagination.html" %}
 {% endif %}
 
 {% endblock %}

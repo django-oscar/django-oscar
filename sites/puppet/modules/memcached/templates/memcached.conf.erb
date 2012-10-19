@@ -1,0 +1,46 @@
+# File managed by puppet
+
+# Run memcached as a daemon.
+-d
+
+# pidfile
+-P /var/run/memcached.pid
+
+# Log memcached's output
+logfile <%= logfile %>
+
+<% if @verbosity -%>
+# Verbosity
+-<%= verbosity %>
+<% end -%>
+
+# Use <num> MB memory max to use for object storage.
+<% if max_memory -%>
+-m <%= max_memory %>
+<% else -%>
+-m <%= ((memorysize.to_f*1024)*0.95).floor %>
+<% end -%>
+
+<% if @unix_socket -%>
+# UNIX socket path to listen on
+-s <%= unix_socket %>
+<% else -%>
+
+# IP to listen on
+-l <%= listen_ip %>
+
+# TCP port to listen on
+-p <%= tcp_port %>
+
+# UDP port to listen on
+-U <%= udp_port %>
+<% end -%>
+
+# Run daemon as user
+-u <%= user %>
+
+# Limit the number of simultaneous incoming connections.
+-c <%= max_connections %>
+
+# Number of threads to use to process incoming requests.
+-t <%= processorcount %>

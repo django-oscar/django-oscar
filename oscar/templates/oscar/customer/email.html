@@ -3,6 +3,8 @@
 {% load thumbnail %}
 {% load i18n %}
 
+{% block body_class %}account-pages{% endblock %}
+
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
@@ -17,7 +19,7 @@
         <a href="{% url customer:email-list %}">{% trans 'Email history' %}</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">'{{ email.subject }}'</a></li>
+	<li class="active">'{{ email.subject }}'</li>
 </ul>
 {% endblock %}
 
@@ -28,9 +30,19 @@
 
 {% block header %}
 <div class="page-header">
-    <h2>{% trans 'Email:' %} '{{ email.subject }}'</h2>
+    <h2>{% trans 'Account' %}</h2>
 </div>
 {% endblock header %}
+
+{% block subnavigation %}
+    {% include "partials/nav_profile.html" with email_history="active" %}
+{% endblock %}
+
+{% block subheader %}
+<div class="sub-header">
+    <h2>{% trans 'Email:' %} '{{ email.subject }}'</h2>
+</div>
+{% endblock subheader %}
 
 
 {% block content %}

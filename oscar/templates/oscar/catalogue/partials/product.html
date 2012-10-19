@@ -6,7 +6,7 @@
     <div class="image_container">
 		{% with image=product.primary_image %}
 		{% thumbnail image.original "400x400" upscale=False as thumb %}
-		<a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
+		<a href="{{ product.get_absolute_url }}"><img src="{{ thumb.url }}" alt="{{ product.get_title }}" class="thumbnail"></a>
 		{% endthumbnail %}
 		{% endwith %}
     </div>
@@ -24,7 +24,7 @@
         {% endwith %}
     {% endblock product_review %}
     
-    <h3><a href="{{ product.get_absolute_url }}">{{ product.get_title|truncatewords:7 }}</a></h3>
+    <h3><a href="{{ product.get_absolute_url }}">{{ product.get_title|truncatewords:5 }}</a></h3>
     
     <div class="product_price">
         {% include "catalogue/partials/stock_record.html" %}

@@ -1,18 +1,20 @@
 {% load currency_filters %}
 {% load i18n %}
 
-<h1 class="span6"><a href="{% url promotions:home %}">{% block brand_title %}{{ shop_name }}</a><small> {{ shop_tagline }}</small>{% endblock %}</h1>
+<h1 class="span7"><a href="{% url promotions:home %}">{% block brand_title %}{{ shop_name }}</a><small> {{ shop_tagline }}</small>{% endblock %}</h1>
 {% if not hide_basket %}
-<ul class="cart span6">
-    <li>
-        <div class="btn-group">
-			<a class="btn" href="{% url basket:summary %}">{% trans "View Basket" %}</a>
-            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"> <span class="caret"></span> </a>
-            <ul class="dropdown-menu span9">
-                <li> {% include "basket/partials/basket_quick.html" %} </li>
-            </ul>
-        </div>
-    </li>
-	<li class="cart_summary"><strong>{% trans "Basket total:" %} <span>{{ request.basket.total_incl_tax|currency }}</span></strong></li>
-</ul><!-- /cart -->
+	<ul class="cart span5 hidden-phone">
+		<li>
+			<div class="btn-group">
+				<a class="btn" href="{% url basket:summary %}">{% trans "View Basket" %}</a>
+				<button class="btn dropdown-toggle" data-toggle="dropdown">
+					<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu pull-right">
+					<li>{% include "basket/partials/basket_quick.html" %}</li>
+				</ul>
+			</div>
+		</li>
+		<li class="cart_summary"><strong>{% trans "Basket total:" %} <span>{{ request.basket.total_incl_tax|currency }}</span></strong></li>
+	</ul><!-- /cart -->
 {% endif %}

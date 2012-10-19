@@ -249,8 +249,15 @@ HAYSTACK_CONNECTIONS = {
     },
 }
 
+# Allow internal IPs to see the debug toolbar.  This is just for Tangent's QA
+# department to be able to create better issues when something goes wrong.
+def is_internal(request):
+    ip_addr = request.META['REMOTE_ADDR']
+    return ip_addr in INTERNAL_IPS or ip_addr.startswith('192.168')
+
 DEBUG_TOOLBAR_CONFIG = {
     'INTERCEPT_REDIRECTS': False,
+    'SHOW_TOOLBAR_CALLBACK': is_internal
 }
 
 AUTH_PROFILE_MODULE = 'user.Profile'

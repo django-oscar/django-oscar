@@ -18,20 +18,7 @@
     		</div>    
     	</div>
     	<div class="span9">
-    	    <h3>{{ product.title }}</h3>
-    		<div class="product_price">
-    			{% if product.is_group %}
-				<p>{% trans "From" %} {{ product.min_variant_price_incl_tax|currency }}</p>
-    			{% else %}
-    				{% if product.has_stockrecord %} 
-    					<h4><span>{{ product.stockrecord.price_incl_tax|currency }}</span></h4>
-						<p class="app-ico {{ product.stockrecord.availability_code }} avaliability">{{ product.stockrecord.availability|truncatewords:2 }}</p>
-    				{% else %}
-					<p class="app-ico notavailable avaliability">{% trans "Not available" %}</p>
-					<button class="btn">{% trans "Notify me" %}</button>
-    				{% endif %}
-    			{% endif %}
-    		</div>
+	    <h3><a href="{{ product.get_absolute_url }}">{{ product.title }}</a></h3>
     	    {% block product_review %}
     		    {% with reviews=product.reviews.all %}
     		        {% if reviews %}
@@ -45,6 +32,19 @@
     		        {% endif %}
     		    {% endwith %}
     		{% endblock product_review %}
+		<div class="product_price">
+			{% if product.is_group %}
+				<h2 class="price_color">{% trans "From" %} {{ product.min_variant_price_incl_tax|currency }}</h2>
+			{% else %}
+				{% if product.has_stockrecord %}
+					<h2 class="price_color">{{ product.stockrecord.price_incl_tax|currency }}</h2>
+                        <p class="{{ product.stockrecord.availability_code }} availability "><i class="icon-ok"></i>{{ product.stockrecord.availability|truncatewords:2 }}</p>
+				{% else %}
+					<p class="notavailable availability">{% trans "Not available" %}</p>
+					<button class="btn">{% trans "Notify me" %}</button>
+				{% endif %}
+			{% endif %}
+		</div>
     		<p>{{ promotion.description }}</p>
     	</div>
     </div>

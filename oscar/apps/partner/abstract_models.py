@@ -123,6 +123,7 @@ class AbstractStockRecord(models.Model):
             self.num_allocated = 0
         self.num_allocated += quantity
         self.save()
+    allocate.alters_data = True
 
     def is_allocation_consumption_possible(self, quantity):
         return quantity <= min(self.num_allocated, self.num_in_stock)
@@ -139,12 +140,14 @@ class AbstractStockRecord(models.Model):
         self.num_allocated -= quantity
         self.num_in_stock -= quantity
         self.save()
+    consume_allocation.alters_data = True
 
     def cancel_allocation(self, quantity):
         # We ignore requests that request a cancellation of more than the amount already
         # allocated.
         self.num_allocated -= min(self.num_allocated, quantity)
         self.save()
+    cancel_allocation.alters_data = True
 
     @property
     def net_stock_level(self):
@@ -169,6 +172,7 @@ class AbstractStockRecord(models.Model):
         """
         self.price_excl_tax = price
         self.save()
+    set_discount_price.alters_data = True
 
     # Price retrieval methods - these default to no tax being applicable
     # These are intended to be overridden.
@@ -271,6 +275,7 @@ class AbstractStockAlert(models.Model):
     def close(self):
         self.status = self.CLOSED
         self.save()
+    close.alters_data = True
 
     def __unicode__(self):
         return _('<stockalert for "%(stock)s" status %(status)s>') % {'stock': self.stockrecord, 'status': self.status}

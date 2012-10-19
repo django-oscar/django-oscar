@@ -17,14 +17,14 @@
 	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">{% trans "Content blocks" %}</a></li>
+	<li class="active">{% trans "Content blocks" %}</li>
 </ul>
 {% endblock %}
 
 {% block dashboard_content %}
 
 <div class="well well-success">
-	<h3 class="app-ico ico_expand icon">{% trans "Create a new content block" %}</h3>
+	<h3><i class="icon-file"></i> {% trans "Create a new content block" %}</h3>
     <form action="{% url dashboard:promotion-create-redirect %}" method="get" class="form-inline">
         {% include "partials/form_fields_inline.html" with form=select_form %}
 		<button type="submit" class="btn btn-primary">{% trans "Create block" %}</button>

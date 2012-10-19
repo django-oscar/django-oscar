@@ -7,14 +7,18 @@
         {% csrf_token %}
         {% include "partials/form_fields.html" with form=basket_form %}
         <div class="form-actions">
-			<button type="submit" class="btn btn-large btn-primary" value="Add to basket">{% trans "Add to basket" %}</button>
+			<button type="submit" class="btn btn-large btn-primary btn-full" value="Add to basket">{% trans "Add to basket" %}</button>
         </div>
     </form>
 {% else %}
+	{% if has_active_alert %}
+	<p>{% trans "You have an active stock alert for this product." %}</p>
+	{% else %}
 	<form id="alert_form" method="post" action="{% url customer:alert-create product.id %}">
         {% csrf_token %}
 		<p>{% trans "You can get an email alert when this product is back in stock." %}</p>
         {% include "partials/form_fields.html" with form=alert_form %}
-        <button type="submit" class="btn btn-large btn-info">{% trans "Notify me" %}</button>
+        <button type="submit" class="btn btn-large btn-info btn-full">{% trans "Notify me" %}</button>
     </form>
+	{% endif %}
 {% endif %}

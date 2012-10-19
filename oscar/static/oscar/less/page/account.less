@@ -1,70 +1,24 @@
 // OSCAR ACCOUNTS UNIQUE STYLES
 // -----------
-/* Account Navbar */
-.navbar.accounts {
-  .nav {
-    div {
-      padding: 10px 10px 11px;
-      line-height: 19px;
-      display: block;
-      color: @grayLight;
-      em {
-
-      }
-    } 
-  }
-}
-
-/* Account Styles */
-.account_settings,
-.new_address {
- .well(); 
-}
 .login_form, .register_form {
   form {
     .well();
-    h2 {
-      margin-bottom: @baseLineHeight;
-      font-size: @baseFontSize + 5;
-    }
   }
 }
-
-.tabbable.dashboard {
-  .nav {
-    margin-bottom:0px;
-  }
-  .nav-tabs > li > a {
-    background: #f5f5f5;
-    #gradient > .vertical(#ccc, #fff);
-    border: 1px solid #DDD;
-    margin: 6px 10px 0 0;
-    color: @gray;
-    font-weight: bold;
-    text-shadow: 1px 1px 0 #fff;
-  }
-  .nav-tabs > li.active a,
-  .nav-tabs > li > a:hover {
-    background: #f5f5f5;
-    border-bottom-color: transparent;
-    #gradient > .vertical(@grayLighter, #fff);
-    border-bottom: 1px solid #fff;
-    outline: none;
-    font-weight: bold;
-    color: #0088CC;
-    margin-top: 0;
-    height: 20px;
-  }
-  .tab-content {
-    padding:@baseLineHeight;
-    border:1px solid darken(@grayLighter, 5%);
-    border-top-width:0px;
-    background:#fff;
-    -webkit-border-bottom-right-radius: 5px;
-    -webkit-border-bottom-left-radius: 5px;
-    -moz-border-radius-bottomright: 5px;
-    -moz-border-radius-bottomleft: 5px;
-    border-bottom-right-radius: 5px;
-    border-bottom-left-radius: 5px;
-  }
+.nav-profile {
+  margin-bottom:0;
+}
+.account-pages .content,
+.account-profile .tab-content {
+   padding:@baseLineHeight + 10px;
+   border:1px solid darken(@grayLighter, 5%);
+   border-top-width:0;
+}
+.nav-stacked .icon-chevron-right {
+  margin-top: 5px;
+  margin-right: -6px;
+  .opacity(50);
+}
+.nav-stacked .active .icon-chevron-right {
+  .opacity(100);
 }

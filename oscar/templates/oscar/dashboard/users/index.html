@@ -17,13 +17,13 @@
 	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">{% trans "Customers" %}</a></li>
+	<li class="active">{% trans "Customers" %}</li>
 </ul>
 {% endblock %}
 
 {% block dashboard_content %}
 <div class="well well-info">
-	<h3>{% trans "Search" %}</h3>
+    <h3><i class="icon-search"></i> {% trans "Search" %}</h3>
     <form action="." method="get" class="form-inline">
         {% include "partials/form_fields_inline.html" with form=form %}
 		<input type="submit" value="{% trans "Search" %}" class="btn"/>
@@ -45,8 +45,8 @@
             <th>{% trans "Email" %}</th>
             <th>{% trans "First name" %}</th>
             <th>{% trans "Last name" %}</th>
-            <th>{% trans "Active" %}</th>
-            <th>{% trans "Staff status" %}</th>
+            <td>{{ user.is_active|yesno:_("True,False") }}</td>
+            <td>{{ user.is_staff|yesno:_("True,False") }}</td>
             <th>{% trans "Date registered" %}</th>
             <th>{% trans "Num Orders" %}</th>
             <th></th>
@@ -68,7 +68,7 @@
         {% endfor %}
     </table>
     <div class="well">
-        <h3 class="app-ico ico_sync icon">{% trans "Bulk Actions" %}</h3>
+        <h3><i class="icon-refresh"></i> {% trans "Bulk Actions" %}</h3>
         <label for="inlineCheckboxes">{% trans "With selected customers:" %}</label>
         <label>
             <input type="radio" name="action" value="make_active" /> {% trans "Make active" %}

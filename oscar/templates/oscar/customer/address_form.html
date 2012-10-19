@@ -6,6 +6,8 @@
 {{ title }} | {{ block.super }}
 {% endblock %}
 
+{% block body_class %}account-pages{% endblock %}
+
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
@@ -20,15 +22,25 @@
         <a href="{% url customer:address-list %}">{% trans 'Address book' %}</a>
         <span class="divider">/</span>
     </li>
-    <li class="active"><a href=".">{{ title }}</a></li>
+    <li class="active">{{ title }}</li>
 </ul>
 {% endblock %}
 
 {% block header %}
 <div class="page-header">
-    <h2>{{ title }}</h2>
+    <h2>{% trans 'Account' %}</h2>
 </div>
 {% endblock header %}
+
+{% block subnavigation %}
+    {% include "partials/nav_profile.html" with address_book="active" %}
+{% endblock %}
+
+{% block subheader %}
+<div class="sub-header">
+    <h2>{{ title }}</h2>
+</div>
+{% endblock subheader %}
 
 {% block content %}
 <form action="." method="post" class="form-horizontal" data-behaviours="lock">

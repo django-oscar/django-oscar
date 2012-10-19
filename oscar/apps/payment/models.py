@@ -8,12 +8,16 @@ from django.conf import settings
 
 class Transaction(models.Model):
     """
-    A transaction for payment sources which need a secondary 'transaction' to actually take the money
+    A transaction for payment sources which need a secondary 'transaction' to
+    actually take the money
 
-    This applies mainly to credit card sources which can be a pre-auth for the money.  A 'complete'
-    needs to be run later to debit the money from the account.
+    This applies mainly to credit card sources which can be a pre-auth for the
+    money.  A 'complete' needs to be run later to debit the money from the
+    account.
     """
-    source = models.ForeignKey('payment.Source', related_name='transactions', verbose_name=_("Source"))
+    source = models.ForeignKey(
+        'payment.Source', related_name='transactions',
+        verbose_name=_("Source"))
 
     # We define some sample types
     AUTHORISE, DEBIT, REFUND = 'Authorise', 'Debit', 'Refund'
@@ -24,7 +28,8 @@ class Transaction(models.Model):
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
     def __unicode__(self):
-        return _("%(type)s of %(amount).2f") % {'type': self.txn_type, 'amount': self.amount}
+        return _("%(type)s of %(amount).2f") % {
+            'type': self.txn_type, 'amount': self.amount}
 
     class Meta:
         verbose_name = _("Transaction")
@@ -40,18 +45,28 @@ class Source(models.Model):
     multiple sources such as cheque, credit accounts, gift cards.  Each payment
     source will have its own entry.
     """
-    order = models.ForeignKey('order.Order', related_name='sources', verbose_name=_("Order"))
-    source_type = models.ForeignKey('payment.SourceType', verbose_name=_("Source Type"))
-    currency = models.CharField(_("Currency"), max_length=12, default=settings.OSCAR_DEFAULT_CURRENCY)
+    order = models.ForeignKey('order.Order',
+                              related_name='sources', verbose_name=_("Order"))
+    source_type = models.ForeignKey('payment.SourceType',
+                                    verbose_name=_("Source Type"))
+    currency = models.CharField(_("Currency"), max_length=12,
+                                default=settings.OSCAR_DEFAULT_CURRENCY)
 
     # Track the various amounts associated with this source
-    amount_allocated = models.DecimalField(_("Amount Allocated"), decimal_places=2, max_digits=12, default=Decimal('0.00'))
-    amount_debited = models.DecimalField(_("Amount Debited"), decimal_places=2, max_digits=12, default=Decimal('0.00'))
-    amount_refunded = models.DecimalField(_("Amount Refunded"), decimal_places=2, max_digits=12, default=Decimal('0.00'))
+    amount_allocated = models.DecimalField(
+        _("Amount Allocated"), decimal_places=2, max_digits=12,
+        default=Decimal('0.00'))
+    amount_debited = models.DecimalField(
+        _("Amount Debited"), decimal_places=2, max_digits=12,
+        default=Decimal('0.00'))
+    amount_refunded = models.DecimalField(
+        _("Amount Refunded"), decimal_places=2, max_digits=12,
+        default=Decimal('0.00'))
 
-    # Reference number for this payment source.  This is often used to look up a
-    # transaction model for a particular payment partner.
-    reference = models.CharField(_("Reference"), max_length=128, blank=True, null=True)
+    # Reference number for this payment source.  This is often used to look up
+    # a transaction model for a particular payment partner.
+    reference = models.CharField(_("Reference"), max_length=128,
+                                 blank=True, null=True)
 
     # A customer-friendly label for the source, eg XXXX-XXXX-XXXX-1234
     label = models.CharField(_("Label"), max_length=128, blank=True, null=True)
@@ -82,19 +97,22 @@ class Source(models.Model):
                 self._create_transaction(*txn)
 
     def balance(self):
-        return self.amount_allocated - self.amount_debited + self.amount_refunded
+        return (self.amount_allocated - self.amount_debited +
+                self.amount_refunded)
 
-    def create_deferred_transaction(self, txn_type, amount, reference=None, status=None):
+    def create_deferred_transaction(self, txn_type, amount, reference=None,
+                                    status=None):
         """
         Register the data for a transaction that can't be created yet due to FK
-        constraints.  This happens at checkout where create an payment source and a
-        transaction but can't save them until the order model exists.
+        constraints.  This happens at checkout where create an payment source
+        and a transaction but can't save them until the order model exists.
         """
         if self.deferred_txns is None:
             self.deferred_txns = []
         self.deferred_txns.append((txn_type, amount, reference, status))
 
-    def _create_transaction(self, txn_type, amount, reference=None, status=None):
+    def _create_transaction(self, txn_type, amount, reference=None,
+                            status=None):
         Transaction.objects.create(source=self,
                                    txn_type=txn_type,
                                    amount=amount,
@@ -107,7 +125,9 @@ class Source(models.Model):
         """
         self.amount_allocated += amount
         self.save()
-        self._create_transaction(Transaction.AUTHORISE, amount, reference, status)
+        self._create_transaction(
+            Transaction.AUTHORISE, amount, reference, status)
+    allocate.alters_data = True
 
     def debit(self, amount=None, reference=None, status=None):
         """
@@ -118,6 +138,7 @@ class Source(models.Model):
         self.amount_debited += amount
         self.save()
         self._create_transaction(Transaction.DEBIT, amount, reference, status)
+    debit.alters_data = True
 
     def refund(self, amount, reference=None, status=None):
         """
@@ -126,6 +147,7 @@ class Source(models.Model):
         self.amount_refunded += amount
         self.save()
         self._create_transaction(Transaction.REFUND, amount, reference, status)
+    refund.alters_data = True
 
     @property
     def amount_available_for_refund(self):
@@ -143,8 +165,8 @@ class SourceType(models.Model):
     or an internal source such as a managed account.i
     """
     name = models.CharField(_("Name"), max_length=128)
-    code = models.SlugField(_("Code"), max_length=128, help_text=_("""This is used within
-        forms to identify this source type"""))
+    code = models.SlugField(_("Code"), max_length=128,
+       help_text=_("This is used within forms to identify this source type"))
 
     class Meta:
         verbose_name = _("Source Type")
@@ -160,14 +182,16 @@ class SourceType(models.Model):
 
 
 class Bankcard(models.Model):
-    user = models.ForeignKey('auth.User', related_name='bankcards', verbose_name=_("User"))
+    user = models.ForeignKey('auth.User', related_name='bankcards',
+                             verbose_name=_("User"))
     card_type = models.CharField(_("Card Type"), max_length=128)
     name = models.CharField(_("Name"), max_length=255)
     number = models.CharField(_("Number"), max_length=32)
     expiry_date = models.DateField(_("Expiry Date"))
 
     # For payment partners who are storing the full card details for us
-    partner_reference = models.CharField(_("Partner Reference"), max_length=255, null=True, blank=True)
+    partner_reference = models.CharField(
+        _("Partner Reference"), max_length=255, null=True, blank=True)
 
     class Meta:
         verbose_name = _("Bankcard")

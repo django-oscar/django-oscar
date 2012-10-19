@@ -30,8 +30,8 @@ class Contributor(AbstractContributor):
 
 class ProductContributor(AbstractProductContributor):
     pass
-    
-    
+
+
 class ProductAttribute(AbstractProductAttribute):
     pass
 
@@ -62,4 +62,3 @@ class Option(AbstractOption):
 
 class ProductImage(AbstractProductImage):
     pass
-

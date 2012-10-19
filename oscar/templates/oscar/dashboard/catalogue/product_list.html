@@ -14,7 +14,7 @@
 	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">{% trans "Product Management" %}</a></li>
+	<li class="active">{% trans "Product Management" %}</li>
 </ul>
 {% endblock %}
 
@@ -23,14 +23,14 @@
 
 {% block dashboard_content %}
 <div class="well well-info">
-    <h3 class="app-ico ico_magnify icon">{% trans "Search Products" %}</h3>
+	<h3><i class="icon-search"></i> {% trans "Search Products" %}</h3>
     <form action="." method="get" class="form-inline">
 		{% include "partials/form_fields_inline.html" with form=form %}
         <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
     </form>
 </div>
 <div class="well well-success">
-	<h3 class="app-ico ico_expand icon">{% trans "Create new product" %}</h3>
+    <h3><i class="icon-file"></i> {% trans "Create new product" %}</h3>
     <form action="{% url dashboard:catalogue-product-create %}" method="get" class="form-inline">
         <span class="control-group">
             <label for="id_promotion_type">{% trans "Create a new product of type" %}</label>
@@ -41,7 +41,7 @@
                 {% endfor %}
             </select>
         </span>
-        <input type="submit" value="{% trans "New Product" %}" class="btn-primary" />
+        <input type="submit" value="{% trans "New Product" %}" class="btn btn-primary" />
     </form>
 </div>
 

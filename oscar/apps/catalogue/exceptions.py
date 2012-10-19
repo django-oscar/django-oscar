@@ -7,4 +7,4 @@ class IdenticalImageError(Exception):
 
 
 class InvalidImageArchive(Exception):
-    pass    
+    pass

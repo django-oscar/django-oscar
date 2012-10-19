@@ -13,7 +13,7 @@
 	<a href="{% url dashboard:promotion-list %}">{% trans "Content blocks" %}</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">{{ heading }}</a></li>
+	<li class="active">{{ heading }}</li>
 </ul>
 {% endblock %}
 
@@ -41,7 +41,7 @@
 
 {% if promotion %}
 <div class="well">
-	<h3 class="app-ico ico_favourite icon">{% trans "Pages displaying this content block" %}</h3>
+	<h3>{% trans "Pages displaying this content block" %}</h3>
     {% if links %}
     <table class="table table-bordered">
     	<thead>
@@ -76,12 +76,11 @@
 </div>
 
 <div class="well">
-	<h3 class="app-ico ico_favourite icon">{% trans "Add to a page" %}</h3>
+	<h3>{% trans "Add to a page" %}</h3>
     <form action="." method="post" class="form-inline">
     	{% csrf_token %}
     	<input type="hidden" name="action" value="add_to_page" />
     	{% include "partials/form_fields_inline.html" with form=link_form %}
-        <!-- {{ link_form.as_table }} -->
 		<button type="submit" class="btn btn-success">{% trans "Add to page" %}</button>
     </form>
 </div>

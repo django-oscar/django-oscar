@@ -27,20 +27,22 @@
 {% endif %}
 
 {% if upsell_messages %}
-<h2>{% trans "You could be missing out on offers!" %}</h2>
+<div class="well">
+	<h2>{% trans "You could be missing out on offers!" %}</h2>
 	{% for upsell in upsell_messages %}
     {% blocktrans with message=upsell.message url=upsell.offer.get_absolute_url offer_name=upsell.offer.name %}
-	<div class="warning">{{ upsell_message }} to qualify for the <a href="{{ url }}">{{ offer_name }}</a> special offer</div>
+	<div class="warning">{{ message }} to qualify for the <a href="{{ url }}">{{ offer_name }}</a> special offer</div>
     {% endblocktrans %}
 	{% endfor %}
+</div>
 {% endif %}
 
 {% if not basket.is_empty %}
-<div class="basket-title">
+<div class="basket-title hidden-phone">
     <div class="row-fluid">
         <h4 class="span6">{% trans "Items to buy now" %}</h4>
-        <h4 class="span5">{% trans "Quantity" %}</h4>
-        <h4 class="span1">{% trans "Price" %}</h4>
+        <h4 class="span4">{% trans "Quantity" %}</h4>
+        <h4 class="span2 align-right">{% trans "Price" %}</h4>
     </div>
 </div>
 
@@ -59,13 +61,13 @@
 					<a href="{{ form.instance.product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
 					{% endthumbnail %}
 					{% endwith %}
-    		    </div>
+		    </div>
 
-    		    <h4><a href="{{ form.instance.product.get_absolute_url }}">{{ form.instance.description }}</a></h4>
-    		    <p class="app-ico instock avaliability ">{{ form.instance.product.stockrecord.availability }}</p>
-    	    </div>
-    	    <div class="span5">
-    		    <div class="checkout-quantity">
+		    <h4><a href="{{ form.instance.product.get_absolute_url }}">{{ form.instance.description }}</a></h4>
+				<p class="availability {{ form.instance.product.stockrecord.availability_code }}">{{ form.instance.product.stockrecord.availability }}</p>
+	    </div>
+	    <div class="span4">
+		    <div class="checkout-quantity">
     		        {{ form.quantity }} 
                     <button class="btn" type="submit">{% trans "Update" %}</button>
                     <a href="#" data-id="{{ forloop.counter0 }}" data-behaviours="remove" class="inline">{% trans "Remove" %}</a>
@@ -75,12 +77,12 @@
     			    <div style="display:none">
     				    {{ form.save_for_later }}
     				    {{ form.DELETE }}
-    			    </div>
-    		    </div>
-    	    </div>
-    	    <div class="span1">
-    		    <p class="price">{{ form.instance.unit_price_incl_tax|currency }}<p>
-    	    </div>
+			    </div>
+		    </div>
+	    </div>
+	    <div class="span2">
+		    <p class="price_color align-right">{{ form.instance.unit_price_incl_tax|currency }}<p>
+	    </div>
         </div>
     </div>
     {% endfor %}
@@ -90,9 +92,9 @@
 	{% block vouchers %}
 	<div class="span6">
 		<div class="sub-header">
-            <h2>{% trans "Voucher/Promo Code" %}</h2>
+            <h2>{% trans "Voucher/promo code" %}</h2>
 		</div>
-        <p id="voucher_form_link"><a href="#voucher" class="btn">{% trans "I have a voucher code..." %}</a></p>
+        <p id="voucher_form_link"><a href="#voucher" class="btn btn-full">{% trans "I have a voucher code..." %}</a></p>
 
 	        <div id="voucher_form_container" style="display:none">
                 <h4>{% trans "Voucher code" %}</h4>
@@ -111,7 +113,7 @@
 	{% block baskettotals %}
 	<div class="span6">
 		<div class="sub-header">
-            <h2>{% trans "Basket Totals" %}</h2>
+            <h2>{% trans "Basket totals" %}</h2>
 		</div>
 		<div id="basket_totals">
 			<table class="table table-striped table-condensed">
@@ -150,22 +152,22 @@
 					{% endif %}
 					<tr>
                         <th>{% trans "Basket total (after discounts)" %}</th>
-						<td>{{ basket.total_incl_tax|currency }}</td>
+						<td class="align-right">{{ basket.total_incl_tax|currency }}</td>
 					</tr>
 				{% else %}
 					<tr>
                         <th>{% trans "Basket total" %}</th>
-						<td>{{ basket.total_incl_tax|currency }}</td>
+						<td class="align-right">{{ basket.total_incl_tax|currency }}</td>
 					</tr>
 				{% endif %}
 				{% endwith %}
 				<tr>
                     <th>{% trans "Shipping" %} ({{ shipping_method.name }})</th>
-					<td>{{ shipping_charge_incl_tax|currency }}</td>
+					<td class="align-right">{{ shipping_charge_incl_tax|currency }}</td>
 				</tr>
 				<tr>
                     <th class="total"><h4>{% trans "Order total" %}</h4></th>
-					<td class="total"><h4>{{ order_total_incl_tax|currency }}</h4></td>
+					<td class="total align-right"><h4 class="price_color">{{ order_total_incl_tax|currency }}</h4></td>
 				</tr>
 				</tbody>
 			</table>
@@ -177,14 +179,14 @@
 	
 {% block formactions %}
 	<div class="form-actions clearfix" >
-        <a href="{% url checkout:index %}" class="pull-right btn btn-large btn-primary">{% trans "Proceed to checkout" %}</a>
+        <a href="{% url checkout:index %}" class="pull-right btn btn-large btn-primary btn-full">{% trans "Proceed to checkout" %}</a>
 	</div>
 {% endblock formactions %}
 
 {% else %}
     {% block emptybasket %}
-    <p>{% trans "Your basket is empty, you should probably add some items to buy." %}</p>
-    <a href="/" class="btn btn-primary">{% trans "Continue shopping" %}</a>
+    <p>{% trans "Your basket is empty." %}</p>
+    <p><a href="/" class="btn btn-primary">{% trans "Continue shopping" %}</a></p>
     {% endblock %}
 {% endif %}
 
@@ -198,9 +200,10 @@
     <p>{% trans "Your saved basket is empty." %}</p>
 
     {% else %}
-    <div class="row-fluid basket-title">
+    <div class="row-fluid basket-title hidden-phone">
         <h4 class="span8">{% trans "To buy an item now, click 'Move to basket'" %}</h4>
-        <h4 class="span4">{% trans "Price" %}</h4>
+        <h4 class="span2 align-center">{% trans "Price" %}</h4>
+        <div class="span2">&nbsp;</div>
     </div>
     <form action="{% url basket:saved %}" method="post" class="form-stacked later_summary" id="saved_basket_formset">
         {% csrf_token %}
@@ -217,15 +220,15 @@
 					{% endwith %}
     		    </div>
     			<h4><a href="{{ form.instance.product.get_absolute_url }}">{{ form.instance.description }}</a></h4>
-                <p class="app-ico {{ form.instance.product.stockrecord.availability_code }}">{{ form.instance.product.stockrecord.availability }}</p>
+                <p class="availability {{ form.instance.product.stockrecord.availability_code }}">{{ form.instance.product.stockrecord.availability }}</p>
                 <a href="#" data-id="{{ forloop.counter0 }}" data-behaviours="remove">{% trans "Remove" %}</a>
     			<div style="display:none">
     				{{ form.move_to_basket }}
     				{{ form.DELETE }}
     			</div>
     		</div>
-            <div class="span2"><p class="price">{{ form.instance.unit_price_incl_tax|currency }}</p></div>
-            <div class="span2"><a href="#" data-id="{{ forloop.counter0 }}" class="btn btn-success pull-right" data-behaviours="move">{% trans "Move to basket" %}</a></div>
+            <div class="span2 align-center"><p class="price_color">{{ form.instance.unit_price_incl_tax|currency }}</p></div>
+            <div class="span2"><a href="#" data-id="{{ forloop.counter0 }}" class="btn btn-success pull-right btn-full" data-behaviours="move">{% trans "Move to basket" %}</a></div>
         </div>
         {% endfor %}
     </form>

@@ -26,3 +26,6 @@ cp deploy/nginx/sandbox.conf /etc/nginx/sites-enabled/sandbox.oscar.tangentlabs.
 
 cp deploy/apache2/sandbox.conf /etc/apache2/sites-enabled/sandbox.oscar.tangentlabs.co.uk
 /etc/init.d/apache2 reload > /dev/null
+
+# Copy down cronjob file
+cp deploy/cron.d/oscar /etc/cron.d/oscar-sandbox

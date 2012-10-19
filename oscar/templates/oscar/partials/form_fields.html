@@ -1,4 +1,8 @@
 <span class="help-block">{{ form.non_field_errors }}</span>
 {% for field in form %}
+	{% comment %} 
+	We use a separate template for each field so that forms can be rendered
+	field-by-field easily #}
+	{% endcomment %}
 	{% include 'partials/form_field.html' with field=field %}
 {% endfor %}

@@ -1,0 +1,96 @@
+{% extends 'dashboard/layout.html' %}
+{% load i18n %}
+
+{% block title %}
+{{ commtype.name }} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="{% url dashboard:comms-list %}">{% trans "Emails" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active"><a href=".">{{ commtype.name }}</a></li>
+</ul>
+{% endblock %}
+
+{% block dashboard_content %}
+
+<div class="sub-header">
+    <h2>{{ commtype.name }}</h2>
+</div>
+
+<form method="post" action="." class="form-horizontal">
+<div class="tabbable">
+     {% if preview %}
+     <ul class="nav nav-tabs">
+         <li><a href="#email_form" data-toggle="tab">{% trans "Edit" %}</a></li>
+         <li class="active"><a href="#email_preview" data-toggle="tab">{% trans "Preview" %}</a></li>
+     </ul>
+     {% endif %}
+     <div class="tab-content">
+         <div class="tab-pane {% if not preview %}active{% endif %}" id="email_form">
+             {% csrf_token %}
+             {% include 'partials/form_field.html' with field=form.name %}
+             <div class="well">
+				 <h4>{% trans "Email content" %}</h4>
+				 <p>{% trans "These fields are rendered using Django's template system." %}</p>
+				 <p>{% trans "You can use the following variables:" %}</p>
+                 <dl>
+                     <dt><code>{% templatetag openvariable %} user.get_full_name {% templatetag closevariable %}</code></dt>
+					 <dd>{% trans "The full name of the user (if they have one)" %}</dd>
+                     <dt><code>{% templatetag openvariable %} user.email {% templatetag closevariable %}</code></dt>
+					 <dd>{% trans "The user's email address" %}</dd>
+                     <dt><code>{% templatetag openvariable %} site.name {% templatetag closevariable %}</code></dt>
+					 <dd>{% trans "The name of the site (eg example.com)" %}</dd>
+                     {% if commtype.is_order_related %}
+                        <dt><code>{% templatetag openvariable %} order.number {% templatetag closevariable %}</code></dt>
+						<dd>{% trans "Order number" %}</dd>
+                     {% endif %}
+                 </dl>
+             </div>
+             {% include 'partials/form_field.html' with field=form.email_subject_template %}
+             {% include 'partials/form_field.html' with field=form.email_body_template %}
+             {% include 'partials/form_field.html' with field=form.email_body_html_template %}
+             <div class="well">
+                 <h3>Preview</h3>
+                 {% if commtype.is_order_related %}
+				 <p>{% trans "View a preview of this email using order:" %}</p>
+                 {% include 'partials/form_field.html' with field=form.preview_order_number %}
+                 {% endif %}
+                 <button type="submit" class="btn btn-primary btn-large" name="show_preview">{% trans "View preview" %}</button>
+				 <p>{% trans "or send a preview to:" %}</p>
+                 {% include 'partials/form_field.html' with field=form.preview_email %}
+                 <button type="submit" class="btn btn-primary btn-large" name="send_preview">{% trans "Send preview email" %}</button>
+             </div>
+         </div>
+         <div class="tab-pane {% if preview %}active{% endif %}" id="email_preview">
+             <table>
+                 <tr>
+                     <th>{% trans "Subject" %}</th>
+                     <td>{{ preview.subject }}</td>
+                 </tr>
+                 <tr>
+                     <th>{% trans "Body text" %}</th>
+                     <td><pre>{{ preview.body }}</pre></td>
+                 </tr>
+                 <tr>
+                     <th>{% trans "Body HTML" %}</th>
+                     <td>{{ preview.html }}</td>
+                 </tr>
+             </table>
+         </div>
+     </div>
+</div>
+<div class="well">
+    <button type="submit" class="btn btn-primary btn-large">{% trans "Save" %}</button>
+    {% trans "or" %} <a href="{% url dashboard:comms-list %}">{% trans "cancel" %}</a>.
+</div>
+</form>
+
+{% endblock dashboard_content %}

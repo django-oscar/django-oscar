@@ -22,7 +22,7 @@ Order {{ number }} - Line #{{ id }}
 		<a href="{% url dashboard:order-detail order.number %}">#{{ order.number }}</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">{% blocktrans with id=line.id %}Line #{{ id }}{% endblocktrans %}</a></li>
+	<li class="active">{% blocktrans with id=line.id %}Line #{{ id }}{% endblocktrans %}</li>
 </ul>
 {% endblock %}
 

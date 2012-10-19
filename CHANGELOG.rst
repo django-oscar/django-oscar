@@ -2,12 +2,54 @@
 Changelog
 =========
 
-0.4 (not released yet)
-----------------------
+0.4 - 2012-10-19
+----------------
+
+Quite a big release this one.  Several new features have been added since the
+0.3 release series:
+
 * Better support for digital products.  Additional fields added to product class
   model.
+* HTML editing within the dashboard
+* A new email dashboard
 * Major refactor of the offers module and test suite  
-* Product stock alerts
+* Product stock alerts: customers can request an alert when when a product comes
+  back into stock
+* Customer notifications: an API and inbox for sending users notifications
+
+Upgrading
+~~~~~~~~~
+
+Four apps have new migrations.  If you subclass these apps in your project, you
+will need to create a new schema migration for each to pick up the upstream
+changes.
+
+* Basket: 
+  
+  - A ``price_excl_tax`` has been added to ``basket.Line``.  This is
+    useful for applications that use dynamic pricing where both the price with and
+    without tax needs to be stored. 
+
+* Catalogue:
+
+  - A ``requires_shipping`` field has been added to ``catalogue.ProductClass``
+    to facilitate better support for digital products (that don't require
+    shipping).
+
+  - The ``code`` field of ``catalogue.Option`` now has a unique index.
+
+* Customer: 
+
+  - New models for stock alerts and notifications
+  - The ``email_subject_template`` field from
+    ``customer.CommunicationEventType`` is now nullable.
+
+* Order:
+
+  - An ``offer_name`` field has been added to ``order.OrderDiscount`` so retain
+    audit information on discounts after offers are deleted.
+
+Please ask on the mailing list if any other problems are encountered.
 
 0.3.3 - 2012-08-24
 -------------------

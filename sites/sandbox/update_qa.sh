@@ -21,6 +21,8 @@ touch deploy/wsgi/qa.wsgi
 # Copy down server config files
 cp deploy/nginx/qa.conf /etc/nginx/sites-enabled/qa.oscar.tangentlabs.co.uk
 /etc/init.d/nginx configtest && /etc/init.d/nginx force-reload
-
 cp deploy/apache2/qa.conf /etc/apache2/sites-enabled/qa.oscar.tangentlabs.co.uk
 /etc/init.d/apache2 reload
+
+# Copy down cronjob file
+cp deploy/cron.d/oscar /etc/cron.d/oscar-qa

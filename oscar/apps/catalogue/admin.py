@@ -20,42 +20,56 @@ ProductCategory = get_model('catalogue', 'ProductCategory')
 class AttributeInline(admin.TabularInline):
     model = ProductAttributeValue
 
+
 class ProductRecommendationInline(admin.TabularInline):
     model = ProductRecommendation
     fk_name = 'primary'
-    
+
+
 class CategoryInline(admin.TabularInline):
     model = ProductCategory
     extra = 1
 
+
 class ProductClassAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
-    
+
+
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('get_title', 'upc', 'get_product_class', 'is_top_level', 'is_group', 'is_variant', 'attribute_summary', 'date_created')
+    list_display = ('get_title', 'upc', 'get_product_class', 'is_top_level',
+                    'is_group', 'is_variant', 'attribute_summary',
+                    'date_created')
     prepopulated_fields = {"slug": ("title",)}
     inlines = [AttributeInline, CategoryInline, ProductRecommendationInline]
-    
+
+
 class ProductAttributeAdmin(admin.ModelAdmin):
     prepopulated_fields = {"code": ("name", )}
-    
+
+
 class OptionAdmin(admin.ModelAdmin):
     exclude = ['code']
-    
+
+
 class ProductAttributeValueAdmin(admin.ModelAdmin):
     list_display = ('product', 'attribute', 'value')
 
+
 class AttributeOptionInline(admin.TabularInline):
     model = AttributeOption
-    
+
+
 class AttributeOptionGroupAdmin(admin.ModelAdmin):
     inlines = [AttributeOptionInline, ]
-        
+
+
 class AttributeEntityAdmin(admin.ModelAdmin):
     list_display = ('name', )
-                 
+
+
 class CategoryAdmin(TreeAdmin):
     pass
+
 
 admin.site.register(ProductClass, ProductClassAdmin)
 admin.site.register(Product, ProductAdmin)

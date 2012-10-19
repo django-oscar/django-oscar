@@ -2,60 +2,70 @@
 {% load category_tags %}
 {% load i18n %}
 
-<div class="navbar primary">
+<div class="navbar primary navbar-static-top navbar-inverse">
     <div class="navbar-inner">
-        <div class="container" style="width: auto;">
-            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </a>
-            <a class="btn btn-navbar app-ico ico_shop_bag btn-cart hidden" href="{% url checkout:index %}">
-				<strong>{% trans "Basket" %}
-                {% if request.basket.all_lines.count %}
-				{% trans "Total:" %} {{ basket.total_incl_tax|currency }}
+
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".primary-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </a>
+        <a class="btn btn-navbar btn-cart visible-phone" href="{% url checkout:index %}">
+            <i class="icon-shopping-cart"></i>
+			<strong>{% trans "Basket" %}
+            {% if request.basket.all_lines.count %}
+			{% trans "Total:" %} {{ basket.total_incl_tax|currency }}
+            {% endif %}
+            </strong>
+        </a>
+
+        <div class="nav-collapse primary-collapse">
+            <div id="browse" class="dropdown pull-left">
+                {% if categories %}
+                    <button class="btn btn-primary dropdown-toggle hidden-phone" data-toggle="dropdown">
+                        {% trans "Browse Store" %}
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+						<li><a tabindex="-1" href="{% url catalogue:index %}">{% trans "All Products" %}</a></li>
+						<li class="divider"></li>
+                    {% for category in categories %}
+                        <li class="dropdown-submenu">
+                            <a tabindex="-1" href="{{ category.0.get_absolute_url }}">{{ category.0.name }} {% if category.1 %}{% endif %}</a>
+                        {% if category.1 %}
+                            <ul class="dropdown-menu">
+                            {% for subcategory in category.1 %}
+                                <li><a tabindex="-1" href="{{ subcategory.0.get_absolute_url }}"> {{ subcategory.0.name }}</a></li>
+                            {% endfor %}
+                            </ul>
+                        {% endif %}
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <button class="btn dropdown-toggle visible-desktop" data-toggle="dropdown">
+                        {% trans "Browse Store" %}
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+						<li><a tabindex="-1" href="{% url catalogue:index %}">{% trans "All Products" %}</a></li>
+						<li class="divider"></li>
+                        <li class="dropdown-submenu">
+						    <a tabindex="-1" href="#" >{% trans "Contains a Submenu" %}</a>
+                            <ul class="dropdown-menu">
+								<li><a href="#" tabindex="-1">{% trans "Submenu Link" %}</a></li>
+								<li><a href="#" tabindex="-1">{% trans "Submenu Link" %}</a></li>
+								<li><a href="#" tabindex="-1">{% trans "Submenu Link" %}</a></li>
+								<li><a href="#" tabindex="-1">{% trans "Submenu Link" %}</a></li>
+                            </ul>
+                        </li>
+                        <li class="divider"></li>
+						<li><a tabindex="-1" href="{% url promotions:home %}">{% trans "Go Home!" %}</a></li>
+                    </ul>
                 {% endif %}
-                </strong>
-            </a>
-			<a class="brand hidden" href="{% url promotions:home %}">{{ shop_name }}</a>
-            <div class="nav-collapse">
-                <div id="browse" class="nav dropdown">
-                    
-                    {% if categories %}
-					<a href="#browse" class="dropdown-toggle" data-toggle="dropdown">{% trans "Browse Store" %}</a>
-                        <ul class="dropdown-menu nav-tabs nav-stacked">
-							<li><a href="{% url catalogue:index %}">{% trans "All Products" %}</a></li>
-                        {% for category in categories %}
-                            <li><a href="{{ category.0.get_absolute_url }}">{{ category.0.name }} {% if category.1 %}<span class="app-ico ico_fill_right"></span>{% endif %}</a>
-                            {% if category.1 %}
-                                <ul class="sub-nav dropdown-menu nav nav-tabs nav-stacked span3">
-                                {% for subcategory in category.1 %}
-                                    <li><a href="{{ subcategory.0.get_absolute_url }}" class="app-ico ico_outline_right"> {{ subcategory.0.name }}</a></li>
-                                {% endfor %}
-                                </ul>
-                            {% endif %}
-                            </li>
-                        {% endfor %}
-                        </ul>
-                    {% else %}
-					<a href="#browse" class="dropdown-toggle" data-toggle="dropdown">{% trans "Browse Store" %}</a>
-                        <ul class="dropdown-menu nav-tabs nav-stacked">
-							<li><a href="{% url catalogue:index %}">{% trans "All Products" %}</a></li>
-                            <li>
-							<a href="#" >{% trans "Contains a Submenu" %}  <span class="app-ico ico_fill_right"></span></a>
-                                <ul class="sub-nav dropdown-menu nav nav-tabs nav-stacked span3">
-									<li><a href="#" class="app-ico ico_outline_right">{% trans "Submenu Link" %}</a></li>
-									<li><a href="#" class="app-ico ico_outline_right">{% trans "Submenu Link" %}</a></li>
-									<li><a href="#" class="app-ico ico_outline_right">{% trans "Submenu Link" %}</a></li>
-									<li><a href="#" class="app-ico ico_outline_right">{% trans "Submenu Link" %}</a></li>
-                                </ul>
-                            </li>
-							<li><a href="{% url promotions:home %}">{% trans "Go Home!" %}</a></li>
-                        </ul>
-                    {% endif %}
-                </div>
-                {% include "partials/search.html" %}
-            </div><!-- /.nav-collapse -->
-        </div>
+            </div>
+            {% include "partials/search.html" %}
+        </div><!-- /.nav-collapse -->
+
     </div><!-- /navbar-inner -->
 </div><!-- /navbar -->

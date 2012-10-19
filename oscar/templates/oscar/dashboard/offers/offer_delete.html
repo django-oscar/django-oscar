@@ -16,7 +16,7 @@
 	<a href="{% url dashboard:offer-list %}">{% trans "Offers" %}</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">{% trans "Delete offer?" %}</a></li>
+	<li class="active">{% trans "Delete offer?" %}</li>
 </ul>
 {% endblock %}
 
@@ -29,20 +29,10 @@
 {% block dashboard_content %}
 <form action="." method="post" class="">
 	{% csrf_token %}
-
-	<table class="table">
-		<tbody>
-			<tr><th>{% trans "Name" %}</th><td>{{ offer.name }}</td></tr>
-			<tr><th>{% trans "Description" %}</th><td>{{ offer.description }}</td></tr>
-			<tr><th>{% trans "Start date" %}</th><td>{{ offer.start_date }}</td></tr>
-			<tr><th>{% trans "End date" %}</th><td>{{ offer.end_date }}</td></tr>
-			<tr><th>{% trans "Condition" %}</th><td>{{ offer.condition.description }}</td></tr>
-			<tr><th>{% trans "Benefit" %}</th><td>{{ offer.benefit.description }}</td></tr>
-		</tbody>
-	</table>
+	{% include 'dashboard/offers/partials/offer.html' %}
 
 	<div class="form-actions">
-		<button class="btn btn-danger" type="submit">{% trans "Delete" %}</button> or
+		<button class="btn btn-large btn-danger" type="submit">{% trans "Delete" %}</button> or
 		<a href="{% url dashboard:offer-list %}">{% trans "cancel" %}</a>
 	</div>
 </form>

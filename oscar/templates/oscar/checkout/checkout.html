@@ -1,5 +1,6 @@
 {% extends "checkout/layout.html" %}
 {% load currency_filters %}
+{% load thumbnail %}
 {% load i18n %}
 
 {% block title %}
@@ -21,7 +22,7 @@
 	</div>
 {% endif %}
 
-<div class="row-fluid">
+<div class="row-fluid shipping-payment">
     {% block shipping_address %}
     <div class="span6">
         <div class="sub-header">
@@ -85,23 +86,30 @@
     </div>
     <div class="basket-title">
         <div class="row-fluid">
-			<h4 class="span10">{% trans "Items in basket" %}</h4>
-			<h4 class="span1">{% trans "Quantity" %}</h4>
-			<h4 class="span1">{% trans "Price" %}</h4>
+			<h4 class="span9">{% trans "Items in basket" %}</h4>
+			<h4 class="span1 align-center">{% trans "Quantity" %}</h4>
+			<h4 class="span2 align-right">{% trans "Price" %}</h4>
         </div>
     </div>
     {% for line in basket.all_lines %}
     <div class="basket-items">
         <div class="row-fluid">
-            <div class="span10">
+            <div class="span9">
+                <div class="image_container">
+					{% with image=line.product.primary_image %}
+					{% thumbnail image.original "200x200" upscale=False as thumb %}
+					<a href="{{ form.instance.product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
+					{% endthumbnail %}
+					{% endwith %}
+		    </div>
                 <h4><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h4>
-                <span class="app-ico instock avaliability ">{{ line.product.stockrecord.availability }}</span>
+				<span class="availability {{ line.product.stockrecord.availability_code }}">{{ line.product.stockrecord.availability }}</span>
             </div>
-            <div class="span1">
+            <div class="span1 align-center">
                 {{ line.quantity }}
             </div>
-            <div class="span1">
-                <span class="price">{{ line.line_price_incl_tax|currency }}</span>
+            <div class="span2 align-right">
+                <p class="price_color">{{ line.line_price_incl_tax|currency }}</p>
             </div>        
         </div>
     </div>
@@ -109,8 +117,8 @@
     {% for discount in basket.discounts %}
     <div class="basket-items">
         <div class="row-fluid">
-            <h4 class="span11">{{ discount.name }}</h4>
-            <div class="span1">
+            <h4 class="span10 align-right">{{ discount.name }}</h4>
+            <div class="span2 align-right">
                 -{{ discount.discount|currency }}
             </div>
         </div>
@@ -118,24 +126,24 @@
     {% endfor %}
     {% if shipping_method %}
     <div class="basket-items">
-        <div class="row-fluid">
-			<h4 class="span11">{% trans "Shipping:" %}</h4>
-            <div class="span1">
+        <div class="row-fluid align-right">
+			<h4 class="span10">{% trans "Shipping:" %}</h4>
+            <h5 class="span2">
                 {{ shipping_method.basket_charge_incl_tax|currency }}
-            </div>
+            </h5>
         </div>
     </div>
     {% endif %}
     <div class="basket-items">
-        <div class="row-fluid">
-			<h4 class="span11">{% trans "Basket total:" %}</h4>
-            <div class="span1">{{ basket.total_incl_tax|currency }}</div>
+        <div class="row-fluid align-right">
+			<h4 class="span10">{% trans "Basket total:" %}</h4>
+            <h5 class="span2">{{ basket.total_incl_tax|currency }}</h5>
         </div>
     </div>
     <div class="basket-items total">
-        <div class="row-fluid">
-			<h3 class="span11">{% trans "Order total:" %}</h3>
-            <h3 class="span1">{{ order_total_incl_tax|currency }}</h3>
+        <div class="row-fluid align-right">
+			<h3 class="span10">{% trans "Order total:" %}</h3>
+            <h3 class="span2 price_color">{{ order_total_incl_tax|currency }}</h3>
         </div>
     </div>
     {% block order_contents_actions %}
