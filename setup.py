@@ -27,7 +27,7 @@ setup(name='django-oscar',
       install_requires=[
           'django>=1.4',
           'PIL==1.1.7',
-          'South==0.7.6',
+          'South>=0.7.6',
           'django-extra-views>=0.2.0,<0.3',
           'django-haystack==2.0.0-beta',
           'django-treebeard==1.61',
