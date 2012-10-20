@@ -2,4 +2,4 @@ SHELL=/bin/bash
 MAILTO=david.winterbottom@tangentlabs.co.uk
 
 # Clean up alerts
-15 0 * * * root source /var/www/oscar/builds/sandbox/sites/sandbox/manage.py oscar_cleanup_alerts > /dev/null
+15 0 * * * root source /var/www/oscar/virtualenvs/sandbox/bin/activate && /var/www/oscar/builds/sandbox/sites/sandbox/manage.py oscar_cleanup_alerts > /dev/null
