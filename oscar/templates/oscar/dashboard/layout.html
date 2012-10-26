@@ -16,7 +16,7 @@
     {% block navbar %}
     <div class="navbar navbar-fixed-top navbar-inverse">
         <div class="navbar-inner">
-            <div class="container" style="width: auto;">
+            <div class="container-fluid dashboard">
                 <a href="{% url promotions:home %}" class="brand">{{ shop_name }}</a>
                 <ul class="nav pull-right">
                     {% if user.is_authenticated %}
@@ -35,7 +35,7 @@
         <div class="row-fluid">
             {% dashboard_navigation request.user %}
             <div class="subnav subnav-fixed">
-                <ul class="nav nav-pills">
+                <ul class="nav nav-pills container-fluid dashboard">
                     {% for item in nav_items %}
                         <li class="{{ item.label }} dropdown">
                         {% if item.is_heading %}

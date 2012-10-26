@@ -8,7 +8,10 @@
 // Components: Icons / Fonts
 @import "font-awesome/font-awesome.less"; // Replaced sprites with font-awesome
 @import "font-awesome/font-awesome-ie7.less";
+@import url("http://fonts.googleapis.com/css?family=Open+Sans:700,300");
 
+// FONT FOR THE DASHBOARD
+// -----------------------------
 
 // TYPES CHANGES
 // -----------
@@ -21,7 +24,8 @@ h2 {
     font-size: 18px;
 }
 body {
-  font-family: @baseFontFamily;
+  font-family: @dashFontFamily;
+  font-size: 12px;
 }
 h3.app-ico:before {
     display: none;
@@ -105,35 +109,59 @@ h3.app-ico:before {
 // OSCAR DASHBOARD UNIQUE STYLES
 // -----------
 body {
-  background:#fff;
+  background: url("../img/ui/dashboard/bg_subtle_dots.png") repeat scroll 0 0 #fff;
 }
-.container-fluid {
-  padding-left: @gridGutterWidth;
-  padding-right: @gridGutterWidth;
-  max-width:100%;
+.container-fluid.dashboard {
+  margin: 0 auto;
+  max-width: 1170px;
+  position: relative;
 }
 .navbar-fixed-top .navbar-inner {
   padding-left:  20px;
   padding-right: 20px;
+  min-height: 50px;
+  font-size: 12px;
+  #gradient > .vertical(#373737, #242424);
+  border: none;
+  .brand {
+    background: url("../img/ui/dashboard/logo_oscar.png") no-repeat scroll 0 0 transparent;
+    text-indent: -9999px;
+    display: block;
+    width: 60px;
+    height: 38px;
+    padding: 0;
+    margin-left: 0;
+    margin-top: 5px;
+  }
+  .nav {
+    top: 5px;
+  }
+  .nav > li > a {
+    color: #C1C1C1;
+  }
 }
 .navbar .nav > li span {
     display:block;
     padding:10px;
+}
+.navbar-inverse {
+  color: #DCDCDC;
 }
 .subnav-fixed {
   position: fixed;
   right: 0;
   left: 0;
   z-index: @zindexFixedNavbar;
-  top:40px;
+  top: 50px;
   .box-shadow(0 1px 5px rgba(0,0,0,.1));
   border-bottom:1px solid #D5D5D5;
 }
 .subnav {
-  #gradient > .vertical(#f5f5f5, #eee);
+  #gradient > .vertical(#353535, #373737);
   filter: progid:DXImageTransform.Microsoft.gradient(enabled=false) !important;
-  height:36px;
+  height: 45px;
   width: 100%;
+  border-top: 1px solid #5B5B5B;
 }
 .subnav {
   .nav {
@@ -142,29 +170,104 @@ body {
     > li {
       > a {
         margin: 0;
-        padding-top: 11px;
-        padding-bottom: 11px;
-        border-left: 1px solid #f5f5f5;
-        border-right: 1px solid #E5E5E5;
+        border-left: 1px solid #444;
+        border-right: 1px solid @grayDarker;
         .border-radius(0);
+        color: #DCDCDC;
+        font-size: 12px;
+        padding: 15px 15px 15px 30px;
+        .caret {
+          border-top-color: #DCDCDC;
+          border-bottom-color: #DCDCDC;
+          margin-top: 4px;
+        }
       }
     }
   }
 }
+.subnav .nav {
+  > li {
+    [class^="icon-"],
+    [class*=" icon-"] {
+      display: inline-block;
+      width: 1.25em;
+      text-align: center;
+    }
+    .icon-large:before,
+    .icon-large:before {
+      /* 1.5 increased font size for icon-large * 1.25 width */
+      width: 1.5*1.25em;
+    }
+    &.Catalogue:before,
+    &.Content:before,
+    &.Customers:before,
+    &.Reviews:before,
+    &.Communications:before,
+    &.Offers:before,
+    &.Vouchers:before,
+    &.Ranges:before,
+    &.Orders:before,
+    &.Reports:before {
+      color: @white;      
+      float: left;
+      font-family: 'FontAwesome';
+      padding: 12px 0 12px 10px;
+      font-size: 16px;
+    }
+    &.Catalogue:before {
+      content: "\f0e8";
+    }
+    &.Content:before {
+      content: "\f07b";
+    }
+    &.Customers:before {
+      content: "\f0c0";
+    }
+    &.Reviews:before {
+      content: "\f087";
+    }
+    &.Communications:before {
+      content: "\f0ac";
+    }
+    &.Offers:before {
+      content: "\f06b";
+    }
+    &.Vouchers:before {
+      content: "\f0d6";
+    }
+    &.Ranges:before {
+      content: "\f0c9";
+    }
+    &.Orders:before {
+      content: "\f07a";
+    }
+    &.Reports:before {
+      content: "\f080";
+    }
+  }
+}
+
 .reports .subnav li.Reports > a,
 .orders .subnav li.Manage.orders > a,
 .users .subnav li.Users > a,
 .content-blocks .subnav li.Content.blocks > a,
 .catalogue .subnav li.Catalogue > a,
 .subnav .nav > .active > a,
-.subnav .nav > .active > a:hover {
-  padding-left: 13px;
-  color: #777;
-  background-color: #E9E9E9;
-  border-right-color: #DDD;
-  border-left: 0;
+.subnav .nav > .active > a:hover,
+.subnav .nav > li > a:hover,
+.nav-pills .open .dropdown-toggle {
+  color: #B2DEF2;
+  background-color: #373737;
+  border-right-color: @grayDarker;
   .box-shadow(inset 0 3px 5px rgba(0,0,0,.05));
+  #gradient > .vertical(#1F1F1F, #373737);
 }
+
+.subnav .nav > li > a:hover .caret {
+  border-top-color: #B2DEF2;
+  border-bottom-color: #B2DEF2;
+}
+
 .breadcrumb {
   margin-top:100px;
 }
@@ -180,10 +283,23 @@ button {
   margin-bottom: 0;
   border-bottom: 0;
 }
+caption [class^="icon-"],
+caption [class*=" icon-"] {
+    display: inline-block;
+    text-align: center;
+    width: 2em;
+}
 caption {
   font-weight: bold;
   font-size: 14px;
-  margin-bottom: 8px;
+  margin-bottom: 0;
+  border: 1px solid #ccc;
+  border-bottom: none;
+  #gradient > .vertical(#F8F8F8, #e5e5e5);
+  color: #242424;
+  padding: 8px 0 8px 10px;
+  .border-radius(3px 3px 0 0);
+  text-align: left;
 }
 .search-adv {
   margin:0;
