@@ -9,17 +9,6 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">
-    <li>
-	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
-        <span class="divider">/</span>
-    </li>
-    <li>
-	<a href="{% url dashboard:reviews-list %}">{% trans "Reviews" %}</a>
-        <span class="divider">/</span>
-    </li>
-	<li class="active">{% blocktrans %}Review #{{ review.id }}{% endblocktrans %}</li>
-</ul>
 {% endblock %}
 
 {% block header %}

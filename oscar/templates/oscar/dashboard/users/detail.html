@@ -9,17 +9,6 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">
-    <li>
-	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
-        <span class="divider">/</span>
-    </li>
-    <li>
-	<a href="{% url dashboard:users-index %}">{% trans "Customers" %}</a>
-        <span class="divider">/</span>
-    </li>
-	<li class="active">{% blocktrans with email=customer.email %}{{ email }}{% endblocktrans %}</li>
-</ul>
 {% endblock %}
 
 {% block header %}

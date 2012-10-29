@@ -2,17 +2,6 @@
 {% load i18n %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">
-    <li>
-		<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
-        <span class="divider">/</span>
-    </li>
-    <li>
-		<a href="{% if parent %}{% url dashboard:catalogue-category-detail-list pk=parent.pk %}{% else %}{% url dashboard:catalogue-category-list %}{% endif %}">{% trans "Categories" %}</a>
-        <span class="divider">/</span>
-    </li>
-	<li class="active">{% trans "Delete category?" %}</li>
-</ul>
 {% endblock %}
 
 {% block header %}

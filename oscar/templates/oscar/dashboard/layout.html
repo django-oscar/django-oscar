@@ -17,7 +17,7 @@
     <div class="navbar navbar-fixed-top navbar-inverse">
         <div class="navbar-inner">
             <div class="container-fluid dashboard">
-                <a href="{% url promotions:home %}" class="brand">{{ shop_name }}</a>
+                <a href="/dashboard/" class="brand">{{ shop_name }}</a>
                 <ul class="nav pull-right">
                     {% if user.is_authenticated %}
 						<li><span>{% trans "Welcome" %} <em>{{ request.user.get_full_name|default:'Guest' }}</em></span></li>
@@ -36,6 +36,7 @@
             {% dashboard_navigation request.user %}
             <div class="subnav subnav-fixed">
                 <ul class="nav nav-pills container-fluid dashboard">
+                    <li class="dash"><a href="/dashboard/" class="dropdown-toggle">Dashboard</a></li>
                     {% for item in nav_items %}
                         <li class="{{ item.label }} dropdown">
                         {% if item.is_heading %}
@@ -58,9 +59,6 @@
 		{% endblock %}
 
         {% block breadcrumbs %}
-        <ul class="breadcrumb">
-            <li><a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a> <span class="divider">/</span></li>
-        </ul>
         {% endblock %}
             
         <div class="content">

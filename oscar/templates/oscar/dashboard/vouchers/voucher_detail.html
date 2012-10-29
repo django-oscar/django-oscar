@@ -7,17 +7,6 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">
-    <li>
-	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
-        <span class="divider">/</span>
-    </li>
-    <li>
-	<a href="{% url dashboard:voucher-list %}">{% trans "Vouchers" %}</a>
-        <span class="divider">/</span>
-    </li>
-	<li class="active">{% blocktrans with name=voucher.name %}Voucher '{{ name }}'{% endblocktrans %}</li>
-</ul>
 {% endblock %}
 
 {% block header %}

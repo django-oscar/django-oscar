@@ -27,6 +27,12 @@ body {
   font-family: @dashFontFamily;
   font-size: 12px;
 }
+label, input, button, select, textarea {
+  font-size: 12px;
+}
+h3 {
+  font-size: 20px;
+}
 h3.app-ico:before {
     display: none;
 }
@@ -53,6 +59,9 @@ h3.app-ico:before {
 }
 .btn + a {
   margin-left:10px;
+}
+table .btn + a {
+  margin: 4px 0 0 0;
 }
 // FORM CHANGES
 // -----------
@@ -102,6 +111,9 @@ h3.app-ico:before {
 .table-bordered td  {
   border-color:#bbb;
 }
+.table {
+  background-color: @white;
+}
 .table-striped tbody tr:nth-child(odd) td,
 .table-striped tbody tr:nth-child(odd) th {
   background-color: #efefef;
@@ -115,6 +127,9 @@ body {
   margin: 0 auto;
   max-width: 1170px;
   position: relative;
+}
+.page-content {
+  margin-top: 150px;
 }
 .navbar-fixed-top .navbar-inner {
   padding-left:  20px;
@@ -182,6 +197,9 @@ body {
           margin-top: 4px;
         }
       }
+      .dropdown-menu {
+        .border-radius(0);
+      }
     }
   }
 }
@@ -192,6 +210,9 @@ body {
       display: inline-block;
       width: 1.25em;
       text-align: center;
+      &:hover {
+        color: red;
+      }
     }
     .icon-large:before,
     .icon-large:before {
@@ -207,8 +228,9 @@ body {
     &.Vouchers:before,
     &.Ranges:before,
     &.Orders:before,
-    &.Reports:before {
-      color: @white;      
+    &.Reports:before,
+    &.dash:before {
+      color: #dcdcdc;      
       float: left;
       font-family: 'FontAwesome';
       padding: 12px 0 12px 10px;
@@ -244,7 +266,14 @@ body {
     &.Reports:before {
       content: "\f080";
     }
+    &.dash:before {
+      content: "\f015";
+    }
   }
+}
+
+.subnav .nav > li.Catalogue:hover {
+  color: red;
 }
 
 .reports .subnav li.Reports > a,
@@ -271,17 +300,19 @@ body {
 .breadcrumb {
   margin-top:100px;
 }
-.content {
-  background:#fff;
+.order .sub-header h2 {
+  
 }
 button {
   background-color:transparent;
 }
 .page-header {
-  background-color: @white;
   padding: 10px 20px 10px 0;
   margin-bottom: 0;
   border-bottom: 0;
+  h1 {
+    display: none;
+  }
 }
 caption [class^="icon-"],
 caption [class*=" icon-"] {
@@ -289,7 +320,8 @@ caption [class*=" icon-"] {
     text-align: center;
     width: 2em;
 }
-caption {
+caption,
+.header-dash {
   font-weight: bold;
   font-size: 14px;
   margin-bottom: 0;
@@ -297,9 +329,62 @@ caption {
   border-bottom: none;
   #gradient > .vertical(#F8F8F8, #e5e5e5);
   color: #242424;
-  padding: 8px 0 8px 10px;
+  padding: 6px 10px;
   .border-radius(3px 3px 0 0);
   text-align: left;
+  line-height: 28px;
+  p {
+    float: right;
+    margin: 0;
+  }
+  .btn {
+    background-color: #e7e7e7;
+    font-weight: normal;
+    #gradient > .vertical(#fff, #E7E7E7);
+    color: #333;
+    font-size: 12px;
+    margin-bottom: 0;
+    text-transform: inherit;
+    &:hover {
+      #gradient > .vertical(#E7E7E7, #fff);
+      background-position: 0 0;
+      background-color: darken(#e7e7e7, 10%) e("\9");
+      color: @grayDark;
+    }
+  }
+  i {
+    padding-right: 10px;
+  }
+}
+.content-block {
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: @white;
+  .order-graph-details {
+    label {
+      background-color: #F8F8F8;
+      border: 1px solid #ccc;
+      .clearfix();
+      display:block;
+      margin-bottom: 15px;
+      padding: 12px;
+      color: #878787;
+      font-size: 12px;
+      span {
+        display: inline-block;
+        font-weight: bold;
+        width: 30%;
+        font-size: 16px;
+        color: #242424;
+      }
+      i {
+        color: #0D84AE;
+        margin-right: 5px;
+        font-size: 18px;
+      }
+    }
+  }
 }
 .search-adv {
   margin:0;
@@ -416,13 +501,16 @@ caption {
     width: 99%;
     height: @graphHeight;
 }
-.bar-caption{
-    position: absolute;
-    color: @grayLight;
-    text-align: center;
-    opacity: 0.4;
-    top: 50%;
-    left: 50%;
+.bar-caption {
+  position: relative;
+  text-align: center;
+  top: 0;
+  h1 {
+    font-size: 18px;
+    color: #242424;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
 }
 .bar-y-axis{
     position: absolute;
@@ -437,6 +525,7 @@ caption {
     list-style:none;
     height: @graphSegmentsHeight;
     float: right;
+    color: #868686;
 }
 .bar-chart, .bar-chart dt, .bar-chart dd{
     margin:0;
@@ -462,48 +551,34 @@ caption {
     position: absolute;
     bottom: -2em;
     right: 0;
+    font-style: inherit;
+    color: #868686;
 }
 .bar-chart span{
     position: absolute;
     display: block;
-    width: 90%;
+    width: 30%;
     bottom: 0;
-    left: 0;
+    right: 0;
     z-index: 1;
     color: @gray;
     text-align: center;
     text-decoration: none;
 }
-.bar-chart span p{
+.bar-chart span p {
     position: relative;
     top: 1em;
-    display: inline;
+    display: none;
     padding: 3px;
     color: @grayDark;
     z-index: 2;
     background-color: @white;
     font-weight: bold;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    -khtml-border-radius: 3px;
-    border-radius: 3px;
+    .border-radius(3px);
 }
-.bar-layer:hover span p {
-}
-.bar-chart span{
+.bar-chart span {
     height: 50%;
-    background: #87e0fd; /* Old browsers */
-    background: -moz-linear-gradient(-45deg, #87e0fd 0%, #53cbf1 40%, #05abe0 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,#87e0fd), color-stop(40%,#53cbf1), color-stop(100%,#05abe0)); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(-45deg, #87e0fd 0%,#53cbf1 40%,#05abe0 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(-45deg, #87e0fd 0%,#53cbf1 40%,#05abe0 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(-45deg, #87e0fd 0%,#53cbf1 40%,#05abe0 100%); /* IE10+ */
-    background: linear-gradient(-45deg, #87e0fd 0%,#53cbf1 40%,#05abe0 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#87e0fd', endColorstr='#05abe0',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
-    -khtml-border-radius: 5px;
-    border-radius: 5px;
+    #gradient > .vertical(#0e91bf, #0b759b);
 }
 // ORDER SUMMARY
 // ----------------
