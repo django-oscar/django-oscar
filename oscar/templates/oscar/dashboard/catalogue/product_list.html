@@ -74,7 +74,7 @@
 			{% endwith %}
 			<td>
 				<a class="btn btn-info" href="{% url dashboard:catalogue-product product.id %}">{% trans "Edit" %}</a>
-				<a class="btn btn-success" href="{{ product.get_absolute_url }}">{% trans "View on site" %}</a>
+				<a class="btn btn-success top-spacer" href="{{ product.get_absolute_url }}">{% trans "View on site" %}</a>
 			</td>
 	    </tr>
 	    {% endfor %}

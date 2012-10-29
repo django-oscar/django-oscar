@@ -60,9 +60,9 @@ h3.app-ico:before {
 .btn + a {
   margin-left:10px;
 }
-table .btn + a {
-  margin: 4px 0 0 0;
-}
+/*.btn.top-spacer {
+  margin: 4px 0 0; 
+}*/
 // FORM CHANGES
 // -----------
 .form-horizontal .control-group {
@@ -125,11 +125,14 @@ body {
 }
 .container-fluid.dashboard {
   margin: 0 auto;
-  max-width: 1170px;
+/*  max-width: 1170px;*/
   position: relative;
 }
-.page-content {
+.dashboard > .content {
   margin-top: 150px;
+}
+.fancypages .dashboard > .content {
+  margin-top: 96px;
 }
 .navbar-fixed-top .navbar-inner {
   padding-left:  20px;
@@ -284,7 +287,12 @@ body {
 .subnav .nav > .active > a,
 .subnav .nav > .active > a:hover,
 .subnav .nav > li > a:hover,
-.nav-pills .open .dropdown-toggle {
+.nav-pills .open .dropdown-toggle,
+.subnav .nav > li,
+.orders > li.dash > a,
+.users .subnav li.Customers > a,
+.reviews .subnav li.Reviews > a,
+.content-blocks .subnav li.Content > a {
   color: #B2DEF2;
   background-color: #373737;
   border-right-color: @grayDarker;
@@ -334,6 +342,7 @@ caption,
   text-align: left;
   line-height: 28px;
   p {
+    display: inline-block;
     float: right;
     margin: 0;
   }
