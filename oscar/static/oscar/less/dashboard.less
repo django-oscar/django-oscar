@@ -213,9 +213,6 @@ body {
       display: inline-block;
       width: 1.25em;
       text-align: center;
-      &:hover {
-        color: red;
-      }
     }
     .icon-large:before,
     .icon-large:before {
@@ -289,10 +286,11 @@ body {
 .subnav .nav > li > a:hover,
 .nav-pills .open .dropdown-toggle,
 .subnav .nav > li,
-.orders > li.dash > a,
+.home .subnav li.dash > a,
 .users .subnav li.Customers > a,
 .reviews .subnav li.Reviews > a,
-.content-blocks .subnav li.Content > a {
+.content-blocks .subnav li.Content > a,
+.fancypages .subnav li.Page > a {
   color: #B2DEF2;
   background-color: #373737;
   border-right-color: @grayDarker;
@@ -306,10 +304,8 @@ body {
 }
 
 .breadcrumb {
-  margin-top:100px;
-}
-.order .sub-header h2 {
-  
+  /*margin-top:100px;*/
+  display: none;
 }
 button {
   background-color:transparent;

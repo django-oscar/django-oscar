@@ -1681,10 +1681,6 @@ body {
   width: 1.25em;
   text-align: center;
 }
-.subnav .nav > li [class^="icon-"]:hover,
-.subnav .nav > li [class*=" icon-"]:hover {
-  color: red;
-}
 .subnav .nav > li .icon-large:before,
 .subnav .nav > li .icon-large:before {
   /* 1.5 increased font size for icon-large * 1.25 width */
@@ -1754,10 +1750,11 @@ body {
 .subnav .nav > li > a:hover,
 .nav-pills .open .dropdown-toggle,
 .subnav .nav > li,
-.orders > li.dash > a,
+.home .subnav li.dash > a,
 .users .subnav li.Customers > a,
 .reviews .subnav li.Reviews > a,
-.content-blocks .subnav li.Content > a {
+.content-blocks .subnav li.Content > a,
+.fancypages .subnav li.Page > a {
   color: #B2DEF2;
   background-color: #373737;
   border-right-color: #222222;
@@ -1779,7 +1776,9 @@ body {
   border-bottom-color: #B2DEF2;
 }
 .breadcrumb {
-  margin-top: 100px;
+  /*margin-top:100px;*/
+
+  display: none;
 }
 button {
   background-color: transparent;
