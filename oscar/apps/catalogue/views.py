@@ -97,7 +97,6 @@ def get_product_base_queryset():
         'variants',
         'product_options',
         'product_class__options',
-        'stockrecord',
         'stockrecord__product',
         'stockrecord__product__product_class',
         'stockrecord__partner',
