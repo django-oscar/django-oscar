@@ -25,11 +25,12 @@
     </p>
 </div>
 
-<div class="sub-header">
+<div class="table-header">
 	<h2>{{ description }}</h2>
 </div>
-{% if alerts %}
-<table class="table table-striped table-bordered">
+
+<table class="table table-striped table-bordered table-hover">
+    {% if alerts %}
     <tr>
 		<th>{% trans "Product" %}</th>
 		<th>{% trans "Partner" %}</th>
@@ -52,12 +53,14 @@
 		</td>
     </tr>
     {% endfor %}
+    
+    {% else %}
+
+    <tr><td>{% trans "No stock alerts found." %}</td></tr>
+
+    {% endif %}
 </table>
 
-{% else %}
 
-<p>{% trans "No stock alerts found." %}</p>
-
-{% endif %}
 
 {% endblock dashboard_content %}

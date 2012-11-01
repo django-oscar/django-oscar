@@ -19,14 +19,14 @@
 {% block dashboard_content %}
 {% include 'dashboard/users/alerts/partials/alert.html' %}
 
-<h2>{% trans "Change status" %}</h2>
-<form action="." method="post">
-    {% csrf_token %}
-
-	{% include 'partials/form_fields.html' %}
-    <div class="form-actions">
+<div class="well">
+    <h2><i class="icon-refresh"></i> {% trans "Change status" %}</h2>
+    <form action="." method="post" class="form-inline">
+        {% csrf_token %}
+    	{% include 'partials/form_fields_inline.html' %}
 		<button type='submit' class="btn btn-large btn-primary">{% trans "Save" %}</button> {% trans "or" %}
         <a href="{% url dashboard:user-alert-list %}">{% trans "cancel" %}</a>
-    </div>
-</form>
+    </form>
+</div>
+
 {% endblock dashboard_content %}

@@ -24,7 +24,7 @@
     </form>
 </div>
 {% if queryset_description != "All users" %}
-<div class="alert alert-info">
+<div class="table-header">
   <strong>{{ queryset_description }}</strong>
 </div>
 {% endif %}
@@ -32,7 +32,7 @@
 {% if user_list.count %}
 <form action="." method="post" class="form-inline">
     {% csrf_token %}
-    <table class="table table-striped table-bordered">
+    <table class="table table-striped table-bordered table-hover">
         <tr>
             <th></th>
             <th>{% trans "Email" %}</th>
@@ -75,8 +75,9 @@
 </form>
 
 {% else %}
-
-<p>{% trans "No customers found." %}</p>
+<table class="table table-striped table-bordered table-hover">
+    <tr><td>{% trans "No customers found." %}</td></tr>
+</table>
 
 {% endif %}
 
