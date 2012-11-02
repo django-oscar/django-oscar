@@ -3,8 +3,9 @@
 {% load i18n %}
 
 {% block report %}
-{% if objects %}
-	<table class="table table-striped table-bordered">
+
+	<table class="table table-striped table-bordered table-hover">
+	    {% if objects %}
 		<tr>
 			<th>{% trans "Order number" %}</th>
 			<th>{% trans "User" %}</th>
@@ -23,11 +24,12 @@
 			</td>
 		</tr>
 		{% endfor %}
+		{% else %}
+        <tr><td>{% trans "No results found." %}</td></tr>
+        {% endif %}
 	</table>
     {% if page_obj %}
         {% include "partials/pagination.html" %}
     {% endif %}
-{% else %}
-<p>{% trans "No results found." %}</p>
-{% endif %}
+
 {% endblock %}

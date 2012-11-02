@@ -1448,6 +1448,7 @@ h3.app-ico:before {
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
   filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
   color: inherit;
+  *color: #333;
 }
 .btn-warning:hover,
 .btn-danger:hover,
@@ -1490,6 +1491,7 @@ h3.app-ico:before {
 .btn-success:active,
 .btn-info:active {
   color: inherit;
+  *color: #333;
 }
 .btn-primary {
   background-color: #006fb5;
@@ -1504,6 +1506,7 @@ h3.app-ico:before {
   border-color: #005096 #005096 #00274a;
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
   filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  font-weight: bold;
 }
 .btn-primary:hover,
 .btn-primary:active,
@@ -1516,9 +1519,12 @@ h3.app-ico:before {
 .btn-primary.active {
   background-color: #003563 \9;
 }
-.btn + a {
-  margin-left: 10px;
+td .btn-toolbar {
+  margin: 0;
 }
+/*.btn + a {
+  margin-left:10px;
+}*/
 .icon-large:before {
   font-size: 18px;
 }
@@ -1661,6 +1667,8 @@ body {
     width: 100%;*/
 
   border-top: 1px solid #5B5B5B;
+  *position: relative;
+  *z-index: 10;
 }
 .navbar-primary .nav.nav-pills .open .dropdown-toggle {
   border-color: #444;
@@ -1925,13 +1933,18 @@ caption > i,
 .tabs.product_managment li.active a {
   background-color: #efefef;
 }
-.tabbable.dashboard .nav {
-  padding-left: 5px;
+.tabbable.dashboard {
+  margin-bottom: 18px;
+}
+.tabbable.dashboard .navbar {
+  margin-bottom: 0;
 }
 .tabbable.dashboard .tab-content {
   display: block;
   width: auto;
+  border: 1px #E1E1E1 solid;
   border-top-width: 0;
+  padding: 30px;
 }
 .fields-full input[type=text],
 .fields-full textarea {
@@ -2028,7 +2041,8 @@ caption > i,
   left: 0;
   width: 98%;
   height: 300px;
-  padding-left: 5em;
+  /*    padding-left: 5em;*/
+
 }
 .bar-chart dd {
   position: relative;
@@ -2488,9 +2502,14 @@ textarea {
 textarea.plain {
   font-family: monospace;
 }
-@media (max-width: 1400px) {
+@media (max-width: 1100px) {
   .navbar-primary .nav > li a:before {
     display: none;
+  }
+  table .btn {
+    padding: 3px 9px;
+    font-size: 11px;
+    line-height: 16px;
   }
 }
 @media (max-width: 979px) {

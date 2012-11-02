@@ -18,15 +18,16 @@
 
 
 {% block dashboard_content %}
-<form method="get" action="." class="form-horizontal">
-    {% include "partials/form_fields.html" with form=form %}
-    <div class="form-actions">
+<div class="well well-success">
+    <h3><i class="icon-bar-chart"></i> Reporting dashboard</h3>
+    <form method="get" action="." class="form-horizontal">
+        {% include "partials/form_fields.html" with form=form %}
 		<button type="submit" class="btn btn-primary">{% trans "Generate report" %}</button>
-    </div>
-</form>
+    </form>
+</div>
 
 {% if description %}
-<div class="sub-header">
+<div class="table-header">
 	<h3>{{ description }}</h3>
 </div>
 {% endif %}

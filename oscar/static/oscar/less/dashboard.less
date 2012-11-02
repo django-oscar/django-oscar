@@ -52,17 +52,23 @@ h3.app-ico:before {
 .btn-info {
   .buttonBackground(@white, darken(@white, 10%));
   color: inherit;
+  *color: #333;
   &:hover,
   &:active {
-   color:inherit; 
+   color:inherit;
+   *color: #333; 
   }
 }
 .btn-primary {
   .buttonBackground(#0083C9, #005096);
+  font-weight:bold;
 }
-.btn + a {
+td .btn-toolbar {
+  margin:0;
+}
+/*.btn + a {
   margin-left:10px;
-}
+}*/
 //ICONS
 .icon-large:before {
   font-size: 18px;
@@ -199,6 +205,8 @@ body {
 /*    height: 45px;
     width: 100%;*/
     border-top: 1px solid #5B5B5B;
+    *position:relative;
+    *z-index:10;
   }
 }
 .navbar-primary {
@@ -436,13 +444,16 @@ caption,
   }
 }
 .tabbable.dashboard {
-  .nav {
-    padding-left:5px;
+  margin-bottom:@baseLineHeight;
+  .navbar {
+    margin-bottom:0;
   }
   .tab-content {
     display:block;
-    width:auto;      
+    width:auto;
+    border:1px #E1E1E1 solid;      
     border-top-width:0;
+    padding:30px;
   }
 }
 .fields-full {
@@ -537,7 +548,7 @@ caption,
 
     width: 98%;
     height: @barHeight;
-    padding-left: 5em;
+/*    padding-left: 5em;*/
 }
 .bar-chart dd{
     position: relative;
@@ -850,11 +861,16 @@ textarea.plain {
 }
 // RESPONSIVE
 // ---------
-@media (max-width: 1400px) {
+@media (max-width: 1100px) {
   .navbar-primary .nav {
     > li a:before {
       display:none;
     }
+  }
+  table .btn {
+    padding: 3px 9px;
+    font-size: @baseFontSize - 2px;
+    line-height: @baseLineHeight - 2px;
   }
 }
 @media (max-width: 979px) {

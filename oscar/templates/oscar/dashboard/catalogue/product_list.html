@@ -73,8 +73,18 @@
 				<td>{{ stockrecord.num_allocated }}</td>
 			{% endwith %}
 			<td>
-				<a class="btn btn-info" href="{% url dashboard:catalogue-product product.id %}">{% trans "Edit" %}</a>
-				<a class="btn btn-success top-spacer" href="{{ product.get_absolute_url }}">{% trans "View on site" %}</a>
+			    <div class="btn-toolbar">
+                    <div class="btn-group">
+                      <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                        Actions
+                        <span class="caret"></span>
+                      </a>
+                      <ul class="dropdown-menu pull-right">
+                          <li><a href="{% url dashboard:catalogue-product product.id %}">{% trans "Edit" %}</a></li>
+          				  <li><a href="{{ product.get_absolute_url }}">{% trans "View on site" %}</a></li>
+                      </ul>
+                    </div>
+                </div>
 			</td>
 	    </tr>
 	    {% endfor %}

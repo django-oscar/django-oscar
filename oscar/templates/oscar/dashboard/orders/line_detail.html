@@ -21,7 +21,9 @@ Order {{ number }} - Line #{{ id }}
 
 <div class="row-fluid">
     <div class="span4">
-		<h3>{% trans "Product details" %}</h3>
+        <div class="table-header">
+            <h3>{% trans "Product details" %}</h3>
+        </div>
         <table class="table table-striped table-bordered">
             <tr>
 				<th>{% trans "Title" %}</th><td>{{ line.title }}</td>
@@ -38,7 +40,9 @@ Order {{ number }} - Line #{{ id }}
         </table>
     </div>
     <div class="span4">
-		<h3>{% trans "Partner details" %}</h3>
+        <div class="table-header">
+            <h3>{% trans "Partner details" %}</h3>
+        </div>
         <table class="table table-striped table-bordered">
             <tr>
 				<th>{% trans "Status" %}</th><td>{{ line.status|default:"-" }}</td>
@@ -52,7 +56,9 @@ Order {{ number }} - Line #{{ id }}
         </table>
     </div>
     <div class="span4">
-		<h3>{% trans "Shipping details" %}</h3>
+        <div class="table-header">
+            <h3>{% trans "Shipping details" %}</h3>
+        </div>
         <table class="table table-striped table-bordered">
         	<tr>
 				<th>{% trans "Partner reference number" %}</th><td>{{ line.partner_line_reference|default:"-" }}</td>

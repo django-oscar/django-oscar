@@ -52,9 +52,19 @@
                 <td>{{ page.title}}</td>
                 <td>{{ page.url}}</td>
                 <td>
-                    <a class="btn btn-info" href="{{ page.get_absolute_url }}">{% trans "View" %}</a>
-                    <a class="btn btn-success" href="{% url dashboard:page-update page.id %}">{% trans "Edit" %}</a>
-                    <a class="btn btn-danger" href="{% url dashboard:page-delete page.id %}">{% trans "Delete" %}</a>
+                    <div class="btn-toolbar">
+                        <div class="btn-group">
+                          <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                            Actions
+                            <span class="caret"></span>
+                          </a>
+                          <ul class="dropdown-menu pull-right">
+                              <li><a href="{{ page.get_absolute_url }}">{% trans "View" %}</a></li>
+                              <li><a href="{% url dashboard:page-update page.id %}">{% trans "Edit" %}</a></li>
+                              <li><a href="{% url dashboard:page-delete page.id %}">{% trans "Delete" %}</a></li>
+                          </ul>
+                        </div>
+                    </div>
                 </td>
             </tr>
             {% endfor %}

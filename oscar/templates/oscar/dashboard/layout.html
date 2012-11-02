@@ -55,9 +55,8 @@
                         <span class="icon-bar"></span>
                     </a>
 
-                    <div class="nav-collapse nav-primary collapse">
+                    <div class="nav-collapse nav-primary">
                         <ul class="nav nav-pills dashboard">
-                            <li class="dash"><a href="/dashboard/" class="dropdown-toggle">Dashboard</a></li>
                             {% for item in nav_items %}
                             <li class="{{ item.label }} dropdown">
                                 {% if item.is_heading %}
