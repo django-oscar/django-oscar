@@ -381,10 +381,15 @@ class AbstractProduct(models.Model):
         Test whether to show an add-to-basket button for this product
         """
         if self.is_group:
+            # If any one of this product's variants is available, then we treat
+            # this product as available.
             for variant in self.variants.select_related('stockrecord').all():
                 if variant.is_available_to_buy:
                     return True
             return False
+
+        if not self.product_class.track_stock:
+            return True
         return self.has_stockrecord and self.stockrecord.is_available_to_buy
 
     @property
@@ -399,12 +404,15 @@ class AbstractProduct(models.Model):
 
     @property
     def has_stockrecord(self):
-        """Return True if a product has a stock record, False if not"""
+        """
+        Test if this product has a stock record
+        """
         try:
             self.stockrecord
-            return True
         except ObjectDoesNotExist:
             return False
+        else:
+            return True
 
     def is_purchase_permitted(self, user, quantity):
         """
