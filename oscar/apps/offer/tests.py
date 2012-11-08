@@ -491,6 +491,30 @@ class MultibuyDiscountBenefitTest(OfferTest):
         condition = CountCondition(range=self.range, type="Count", value=3)
         self.benefit.apply(self.basket, condition)
 
+    def test_correct_products_are_consumed_when_ranges_overlap(self):
+        product1 = create_product(price=Decimal(10), title='P1', upc='upc_1')
+        product2 = create_product(price=Decimal(20), title='P2', upc='upc_2')
+        product3 = create_product(price=Decimal(30), title='P3', upc='upc_3')
+        range1 = Range.objects.create(name="Range1")
+        range1.included_products.add(product1)
+        range1.included_products.add(product2)
+        self.basket.add_product(product1, 2)
+        self.basket.add_product(product2, 1)
+        self.basket.add_product(product3, 1)
+        condition = CountCondition(range=range1, type="Count", value=2)
+        benefit = MultibuyDiscountBenefit(range=range1, type="Multibuy", value=1)
+        self.assertTrue(condition.is_satisfied(self.basket))
+        first_discount = benefit.apply(self.basket, condition=condition)
+        self.assertEquals(Decimal('10'), first_discount)
+        # verify that one product1 is consumed by benefit
+        line1 = [l for l in self.basket.all_lines() if l.product == product1][0]
+        self.assertEquals(1, line1._affected_quantity)
+        # and one product2 is consumed by the condition
+        line2 = [l for l in self.basket.all_lines() if l.product == product2][0]
+        self.assertEquals(1, line2._affected_quantity)
+        line3 = [l for l in self.basket.all_lines() if l.product == product3][0]
+        self.assertEquals(0, line3._affected_quantity)
+
 
 class FixedPriceBenefitTest(OfferTest):
 
