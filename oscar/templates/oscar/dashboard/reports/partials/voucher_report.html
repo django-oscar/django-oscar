@@ -20,10 +20,8 @@
     </tr>
     {% endfor %}
 </table>
-{% if page_obj %}
-	{% include "partials/pagination.html" %}
-{% endif %}
+{% include "partials/pagination.html" %}
 {% else %}
-<p>{% trans "No vouchers were used in this period" %}</p>
+	<p>{% trans "No vouchers were used in this period" %}</p>
 {% endif %}
 {% endblock %}

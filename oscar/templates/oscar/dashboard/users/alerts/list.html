@@ -77,9 +77,7 @@
         {% endfor %}
     </table>
 
-    {% if page_obj %}
-        {% include "catalogue/partials/pagination.html" %}
-    {% endif %}
+	{% include "partials/pagination.html" %}
 
 {% else %}
 	<p>{% trans "No alerts found." %}</p>

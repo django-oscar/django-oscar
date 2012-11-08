@@ -68,17 +68,13 @@
     {% if products.count %}
 		<section>
 			<div class="mod">
-				{% if page_obj %}
-					{% include "catalogue/partials/pagination.html" %}
-				{% endif %}
+				{% include "partials/pagination.html" %}
 				<ol class="products four">
 					{% for product in products %}
 					<li>{% include "catalogue/partials/product.html" %}</li>
 					{% endfor %}
 				</ol>
-				{% if page_obj %}
-					{% include "catalogue/partials/pagination.html" %}
-				{% endif %}
+				{% include "partials/pagination.html" %}
 			</div>
 		</section>
     {% else %}

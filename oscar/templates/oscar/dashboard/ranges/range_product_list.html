@@ -110,9 +110,7 @@
 				<button type="submit" class="btn btn-danger">{% trans "Remove selected products" %}</button>
 			</div>
 
-			{% if page_obj %}
-				{% include "partials/pagination.html" %}
-			{% endif %}
+			{% include "partials/pagination.html" %}
 		</form>
 	{% else %}
 	<p>{% trans "No products found." %}</p>

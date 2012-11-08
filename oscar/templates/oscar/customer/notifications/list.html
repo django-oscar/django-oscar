@@ -33,9 +33,7 @@
 </ul>
 
 {% if notifications %}
-{% if page_obj %}
     {% include "partials/pagination.html" %}
-{% endif %}
 
 <form action="{% url customer:notifications-update %}" method="post">
 	{% csrf_token %}
@@ -75,9 +73,7 @@
 	<button type="submit" class="btn btn-danger" name="action" value="delete">{% trans "Delete" %}</button>
 </form>
 
-{% if page_obj %}
-    {% include "partials/pagination.html" %}
-{% endif %}
+{% include "partials/pagination.html" %}
 
 {% else %}
 <p>{% trans "There are no notifications to display." %}</p>
