@@ -11,6 +11,7 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 
 from oscar.apps.offer.managers import ActiveOfferManager
+from oscar.templatetags.currency_filters import currency
 from oscar.models.fields import PositiveDecimalField, ExtendedURLField
 
 
@@ -176,6 +177,9 @@ class ConditionalOffer(models.Model):
                 total=models.Sum('frequency'))
         return aggregates['total'] if aggregates['total'] is not None else 0
 
+    def shipping_discount(self, charge):
+        return self._proxy_benefit().shipping_discount(charge)
+
     def _proxy_condition(self):
         """
         Returns the appropriate proxy model for the condition
@@ -207,6 +211,7 @@ class ConditionalOffer(models.Model):
             self.benefit.FIXED: AbsoluteDiscountBenefit,
             self.benefit.MULTIBUY: MultibuyDiscountBenefit,
             self.benefit.FIXED_PRICE: FixedPriceBenefit,
+            self.benefit.SHIPPING_ABSOLUTE: ShippingAbsoluteDiscountBenefit,
             self.benefit.SHIPPING_PERCENTAGE: ShippingPercentageDiscountBenefit}
         if self.benefit.type in klassmap:
             return klassmap[self.benefit.type](**field_dict)
@@ -262,8 +267,9 @@ class Condition(models.Model):
         elif self.type == self.COVERAGE:
             return _("Basket includes %(count)d distinct products from %(range)s") % {
                 'count': self.value, 'range': unicode(self.range).lower()}
-        return _("Basket includes %(count)d value from %(range)s") % {
-                'count': self.value, 'range': unicode(self.range).lower()}
+        return _("Basket includes %(amount)s from %(range)s") % {
+            'amount': currency(self.value),
+            'range': unicode(self.range).lower()}
 
     description = __unicode__
 
@@ -320,14 +326,16 @@ class Benefit(models.Model):
         'offer.Range', null=True, blank=True, verbose_name=_("Range"))
 
     # Benefit types
-    PERCENTAGE, FIXED, MULTIBUY, FIXED_PRICE, SHIPPING_PERCENTAGE = (
-        "Percentage", "Absolute", "Multibuy", "Fixed price",
-        "Shipping percentage")
+    PERCENTAGE, FIXED, MULTIBUY, FIXED_PRICE = (
+        "Percentage", "Absolute", "Multibuy", "Fixed price")
+    SHIPPING_PERCENTAGE, SHIPPING_ABSOLUTE = (
+        'Shipping percentage', 'Shipping absolute')
     TYPE_CHOICES = (
         (PERCENTAGE, _("Discount is a % of the product's value")),
         (FIXED, _("Discount is a fixed amount off the product's value")),
         (MULTIBUY, _("Discount is to give the cheapest product for free")),
         (FIXED_PRICE, _("Get the products that meet the condition for a fixed price")),
+        (SHIPPING_ABSOLUTE, _("Discount is a fixed amount off the shipping cost")),
         (SHIPPING_PERCENTAGE, _("Discount is a % off the shipping cost")),
     )
     type = models.CharField(_("Type"), max_length=128, choices=TYPE_CHOICES)
@@ -347,17 +355,26 @@ class Benefit(models.Model):
 
     def __unicode__(self):
         if self.type == self.PERCENTAGE:
-            desc = _("%(value)s%% discount on %(range)s") % {'value': self.value, 'range': unicode(self.range).lower()}
+            desc = _("%(value)s%% discount on %(range)s") % {
+                'value': self.value,
+                'range': unicode(self.range).lower()}
         elif self.type == self.MULTIBUY:
-            desc = _("Cheapest product is free from %s") % unicode(self.range).lower()
+            desc = _("Cheapest product is free from %s") % (
+                unicode(self.range).lower(),)
         elif self.type == self.FIXED_PRICE:
-            desc = _("The products that meet the condition are sold for %s") % self.value
+            desc = _("The products that meet the condition are "
+                     "sold for %(amount)s") % {
+                         'amount': currency(self.value)}
         elif self.type == self.SHIPPING_PERCENTAGE:
             desc = _("%(value)s%% off shipping cost") % {
                 'value': self.value}
+        elif self.type == self.SHIPPING_ABSOLUTE:
+            desc = _("%(amount)s off shipping cost") % {
+                'amount': currency(self.value)}
         else:
-            desc = _("%(value).2f discount on %(range)s") % {'value': float(self.value),
-                                                             'range': unicode(self.range).lower()}
+            desc = _("%(amount)s discount on %(range)s") % {
+                'amount': currency(self.value),
+                'range': unicode(self.range).lower()}
 
         if self.max_affected_items:
             desc += ungettext(" (max %d item)", " (max %d items)", self.max_affected_items) % self.max_affected_items
@@ -395,6 +412,19 @@ class Benefit(models.Model):
         if self.value > 100:
             raise ValidationError(
                 _("Percentage discount cannot be greater than 100"))
+
+    def clean_shipping_absolute(self):
+        if not self.value:
+            raise ValidationError(
+                _("A discount value is required"))
+        if self.range:
+            raise ValidationError(
+                _("No range should be selected as this benefit does not "
+                  "apply to products"))
+        if self.max_affected_items:
+            raise ValidationError(
+                _("Shipping discounts don't require a 'max affected items' "
+                  "attribute"))
 
     def clean_shipping_percentage(self):
         if self.value > 100:
@@ -467,6 +497,9 @@ class Benefit(models.Model):
 
         # We sort lines to be cheapest first to ensure consistent applications
         return sorted(line_tuples)
+
+    def shipping_discount(self, charge):
+        return D('0.00')
 
 
 class Range(models.Model):
@@ -949,12 +982,12 @@ class MultibuyDiscountBenefit(Benefit):
         return discount
 
 
-class ShippingPercentageDiscountBenefit(Benefit):
+# =================
+# Shipping benefits
+# =================
 
-    class Meta:
-        proxy = True
-        verbose_name = _("Free shipping benefit")
-        verbose_name_plural = _("Free shipping benefits")
+
+class ShippingBenefit(Benefit):
 
     def apply(self, basket, condition, offer=None):
         # Attach offer to basket to indicate that it qualifies for a shipping
@@ -964,3 +997,25 @@ class ShippingPercentageDiscountBenefit(Benefit):
 
         condition.consume_items(basket, affected_lines=())
         return D('0.00')
+
+
+class ShippingAbsoluteDiscountBenefit(ShippingBenefit):
+
+    class Meta:
+        proxy = True
+        verbose_name = _("Shipping absolute discount benefit")
+        verbose_name_plural = _("Shipping absolute discount benefits")
+
+    def shipping_discount(self, charge):
+        return min(charge, self.value)
+
+
+class ShippingPercentageDiscountBenefit(ShippingBenefit):
+
+    class Meta:
+        proxy = True
+        verbose_name = _("Shipping percentage discount benefit")
+        verbose_name_plural = _("Shipping percentage discount benefits")
+
+    def shipping_discount(self, charge):
+        return charge * self.value / 100

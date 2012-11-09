@@ -3,7 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 
 
 from oscar.apps.shipping.methods import (
-    Free, NoShippingRequired, PercentageDiscount)
+    Free, NoShippingRequired, OfferDiscount)
 
 
 class Repository(object):
@@ -53,7 +53,7 @@ class Repository(object):
         """
         method.set_basket(basket)
         if basket.shipping_offer:
-            return PercentageDiscount(method, basket.shipping_offer)
+            return OfferDiscount(method, basket.shipping_offer)
         return method
 
     def find_by_code(self, code, basket):
