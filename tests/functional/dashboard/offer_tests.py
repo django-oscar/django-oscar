@@ -63,7 +63,7 @@ class OfferCreationTests(ClientTestCase):
         response = self.client.post(reverse('dashboard:offer-benefit'),
                                             {'range': self.range.id,
                                              'type': 'Multibuy',
-                                             'value': '1',})
+                                             'value': '',})
         self.assertIsRedirect(response, reverse('dashboard:offer-preview'))
 
         # Preview
@@ -129,7 +129,7 @@ class OfferUpdatingTests(ClientTestCase):
         response = self.client.post(benefit_url,
                                     {'range': self.range.id,
                                      'type': 'Multibuy',
-                                     'value': '1',})
+                                     'value': '',})
         self.assertIsRedirect(response)
 
         preview_url = reverse('dashboard:offer-preview', kwargs={'pk': self.offer.id})
