@@ -29,7 +29,9 @@
     <div class="row-fluid">
         <div class="span9">
             <h4>{{ method.name }}</h4>
-			<p>{% trans "Description:" %} {{ method.description }}</p>
+			{% if method.description %}
+			<p>{{ method.description }}</p>
+			{% endif %}
         </div>
         <div class="span1">
             {{ method.basket_charge_incl_tax|currency }}
