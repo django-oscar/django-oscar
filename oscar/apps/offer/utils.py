@@ -21,7 +21,7 @@ class Applicator(object):
         """
         Apply all relevant offers to the given basket.
 
-        The request and user is passed too as sometimes the available offers
+        The request and user are passed too as sometimes the available offers
         are dependent on the user (eg session-based offers).
         """
         offers = self.get_offers(request, basket)

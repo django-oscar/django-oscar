@@ -12,10 +12,10 @@ class Free(ShippingMethod):
     """
     code = 'free-shipping'
     name = _('Free shipping')
-    
+
     def basket_charge_incl_tax(self):
         return D('0.00')
-    
+
     def basket_charge_excl_tax(self):
         return D('0.00')
 
@@ -23,21 +23,49 @@ class Free(ShippingMethod):
 class NoShippingRequired(Free):
     code = 'no-shipping-required'
     name = _('No shipping required')
-    
+
 
 class FixedPrice(ShippingMethod):
     code = 'fixed-price-shipping'
     name = _('Fixed price shipping')
-    
+
     def __init__(self, charge_incl_tax, charge_excl_tax=None):
         self.charge_incl_tax = charge_incl_tax
         if not charge_excl_tax:
             charge_excl_tax = charge_incl_tax
         self.charge_excl_tax = charge_excl_tax
-    
+
     def basket_charge_incl_tax(self):
         return self.charge_incl_tax
-    
+
     def basket_charge_excl_tax(self):
         return self.charge_excl_tax
 
+
+class PercentageDiscount(ShippingMethod):
+    is_discounted = True
+
+    @property
+    def code(self):
+        return self.method.code
+
+    @property
+    def name(self):
+        return self.method.name
+
+    @property
+    def description(self):
+        return self.method.description
+
+    def __init__(self, method, percentage):
+        self.method = method
+        self.percentage = percentage
+
+    def discount(self, value):
+        return (1 - self.percentage / 100) * value
+
+    def basket_charge_incl_tax(self):
+        return self.discount(self.method.basket_charge_incl_tax())
+
+    def basket_charge_excl_tax(self):
+        return self.discount(self.method.basket_charge_excl_tax())

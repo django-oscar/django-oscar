@@ -205,7 +205,8 @@ class ConditionalOffer(models.Model):
             self.benefit.PERCENTAGE: PercentageDiscountBenefit,
             self.benefit.FIXED: AbsoluteDiscountBenefit,
             self.benefit.MULTIBUY: MultibuyDiscountBenefit,
-            self.benefit.FIXED_PRICE: FixedPriceBenefit}
+            self.benefit.FIXED_PRICE: FixedPriceBenefit,
+            self.benefit.SHIPPING_PERCENTAGE: ShippingPercentageBenefit}
         if self.benefit.type in klassmap:
             return klassmap[self.benefit.type](**field_dict)
         return self.benefit
@@ -265,7 +266,7 @@ class Condition(models.Model):
 
     description = __unicode__
 
-    def consume_items(self, basket, lines):
+    def consume_items(self, basket, affected_lines):
         raise NotImplementedError("This method should never be called - "
                                   "ensure you are using the correct proxy model")
 
@@ -314,22 +315,30 @@ class Condition(models.Model):
 
 
 class Benefit(models.Model):
-    PERCENTAGE, FIXED, MULTIBUY, FIXED_PRICE = ("Percentage", "Absolute", "Multibuy", "Fixed price")
+    range = models.ForeignKey(
+        'offer.Range', null=True, blank=True, verbose_name=_("Range"))
+
+    # Benefit types
+    PERCENTAGE, FIXED, MULTIBUY, FIXED_PRICE, SHIPPING_PERCENTAGE = (
+        "Percentage", "Absolute", "Multibuy", "Fixed price",
+        "Shipping percentage")
     TYPE_CHOICES = (
         (PERCENTAGE, _("Discount is a % of the product's value")),
         (FIXED, _("Discount is a fixed amount off the product's value")),
         (MULTIBUY, _("Discount is to give the cheapest product for free")),
         (FIXED_PRICE, _("Get the products that meet the condition for a fixed price")),
+        (SHIPPING_PERCENTAGE, _("Discount is a % off the shipping cost")),
     )
-    range = models.ForeignKey('offer.Range', null=True, blank=True, verbose_name=_("Range"))
     type = models.CharField(_("Type"), max_length=128, choices=TYPE_CHOICES)
     value = PositiveDecimalField(_("Value"), decimal_places=2, max_digits=12,
                                  null=True, blank=True)
 
     # If this is not set, then there is no upper limit on how many products
     # can be discounted by this benefit.
-    max_affected_items = models.PositiveIntegerField(_("Max Affected Items"), blank=True, null=True,
-        help_text=_("Set this to prevent the discount consuming all items within the range that are in the basket."))
+    max_affected_items = models.PositiveIntegerField(
+        _("Max Affected Items"), blank=True, null=True,
+        help_text=_("Set this to prevent the discount consuming all items "
+                    "within the range that are in the basket."))
 
     class Meta:
         verbose_name = _("Benefit")
@@ -342,6 +351,9 @@ class Benefit(models.Model):
             desc = _("Cheapest product is free from %s") % unicode(self.range).lower()
         elif self.type == self.FIXED_PRICE:
             desc = _("The products that meet the condition are sold for %s") % self.value
+        elif self.type == self.SHIPPING_PERCENTAGE:
+            desc = _("%(value)s%% off shipping cost") % {
+                'value': self.value}
         else:
             desc = _("%(value).2f discount on %(range)s") % {'value': float(self.value),
                                                              'range': unicode(self.range).lower()}
@@ -361,12 +373,20 @@ class Benefit(models.Model):
             if not self.type:
                 raise ValidationError(_("Benefit requires a value"))
             elif self.type != self.MULTIBUY:
-                raise ValidationError(_("Benefits of type %s need a value") % self.type)
-        elif self.value > 100 and self.type == 'Percentage':
-            raise ValidationError(_("Percentage benefit value can't be greater than 100"))
-        # All benefits need a range apart from FIXED_PRICE
-        if self.type and self.type != self.FIXED_PRICE and not self.range:
-            raise ValidationError(_("Benefits of type %s need a range") % self.type)
+                raise ValidationError(
+                    _("Benefits of type '%s' need a value") % self.type)
+        elif self.value > 100 and self.type in (self.PERCENTAGE,
+                                                self.SHIPPING_PERCENTAGE):
+            raise ValidationError(
+                _("Percentage benefit value can't be greater than 100"))
+
+        # All benefits need a range apart from FIXED_PRICE and
+        # SHIPPING_PERCENTAGE
+        if (self.type and
+            self.type not in (self.SHIPPING_PERCENTAGE, self.FIXED_PRICE) and
+            not self.range):
+            raise ValidationError(
+                _("Benefits of type '%s' need a range") % self.type)
 
     def round(self, amount):
         """
@@ -895,3 +915,19 @@ class MultibuyDiscountBenefit(Benefit):
         condition.consume_items(basket, affected_lines)
 
         return discount
+
+
+class ShippingPercentageBenefit(Benefit):
+
+    class Meta:
+        proxy = True
+        verbose_name = _("Free shipping benefit")
+        verbose_name_plural = _("Free shipping benefits")
+
+    def apply(self, basket, condition):
+        # Set an attribute on the basket to indicate that it qualifies for free
+        # shipping.
+        basket.shipping_discount = self.value
+
+        condition.consume_items(basket, affected_lines=())
+        return D('0.00')
