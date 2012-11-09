@@ -162,7 +162,12 @@
 				{% endif %}
 				{% endwith %}
 				<tr>
-                    <th>{% trans "Shipping" %} ({{ shipping_method.name }})</th>
+					<th>
+						{% trans "Shipping" %} ({{ shipping_method.name }})
+						{% if shipping_method.is_discounted %}
+						<br/>This includes a discount
+						{% endif %}
+					</th>
 					<td class="align-right">{{ shipping_charge_incl_tax|currency }}</td>
 				</tr>
 				<tr>
