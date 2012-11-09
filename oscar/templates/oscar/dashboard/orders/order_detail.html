@@ -76,6 +76,8 @@
                 <p>{{ order.status|default:"N/A" }}</p>
             </div>
         </div>
+        {% block additional_order_information %}
+        {% endblock additional_order_information %}
     </div>
 
 
