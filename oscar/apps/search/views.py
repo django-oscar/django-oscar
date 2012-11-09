@@ -93,3 +93,11 @@ class MultiFacetedSearchView(FacetedSearchView):
                     'value' : facet[1].strip('"')
                 })
         return extra
+
+    def get_results(self):
+        """
+        Limit results to Product objects
+        """
+        results = super(MultiFacetedSearchView, self).get_results()
+
+        return results.models(product_models.Product)
