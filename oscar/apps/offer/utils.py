@@ -24,6 +24,10 @@ class Applicator(object):
         The request and user are passed too as sometimes the available offers
         are dependent on the user (eg session-based offers).
         """
+        # Flush any existing discounts to make sure they are recalculated
+        # correctly
+        basket.remove_discounts()
+
         offers = self.get_offers(request, basket)
         logger.debug("Found %d offers to apply to basket %d",
                      len(offers), basket.id)

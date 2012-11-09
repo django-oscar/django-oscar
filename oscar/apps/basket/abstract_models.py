@@ -57,6 +57,7 @@ class AbstractBasket(models.Model):
     saved = SavedBasketManager()
 
     _lines = None
+    shipping_offer = None
 
     def __init__(self, *args, **kwargs):
         super(AbstractBasket, self).__init__(*args, **kwargs)
@@ -157,6 +158,16 @@ class AbstractBasket(models.Model):
             self.discounts = []
         return self.discounts
 
+    def get_discount_offers(self):
+        """
+        Return a dict of offers used in discounts for this basket
+        """
+        offers = dict([(d['offer'].id, d['offer']) for d in
+                       self.get_discounts()])
+        if self.shipping_offer:
+            offers[self.shipping_offer.id] = self.shipping_offer
+        return offers
+
     def set_discounts(self, discounts):
         """
         Sets the discounts that apply to this basket.
@@ -171,6 +182,7 @@ class AbstractBasket(models.Model):
         """
         self.discounts = []
         self._lines = None
+        self.shipping_offer = None
 
     def merge_line(self, line, add_quantities=True):
         """
