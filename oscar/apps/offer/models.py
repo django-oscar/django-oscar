@@ -145,7 +145,8 @@ class ConditionalOffer(models.Model):
         """
         if not self.is_condition_satisfied(basket):
             return D('0.00')
-        return self._proxy_benefit().apply(basket, self._proxy_condition())
+        return self._proxy_benefit().apply(basket, self._proxy_condition(),
+                                           self)
 
     def set_voucher(self, voucher):
         self._voucher = voucher
@@ -365,7 +366,7 @@ class Benefit(models.Model):
 
     description = __unicode__
 
-    def apply(self, basket, condition):
+    def apply(self, basket, condition, offer=None):
         return D('0.00')
 
     def clean(self):
@@ -799,7 +800,7 @@ class PercentageDiscountBenefit(Benefit):
         verbose_name = _("Percentage discount benefit")
         verbose_name_plural = _("Percentage discount benefits")
 
-    def apply(self, basket, condition):
+    def apply(self, basket, condition, offer=None):
         line_tuples = self.get_applicable_lines(basket)
 
         discount = D('0.00')
@@ -834,7 +835,7 @@ class AbsoluteDiscountBenefit(Benefit):
         verbose_name = _("Absolute discount benefit")
         verbose_name_plural = _("Absolute discount benefits")
 
-    def apply(self, basket, condition):
+    def apply(self, basket, condition, offer=None):
         line_tuples = self.get_applicable_lines(basket)
         if not line_tuples:
             return self.round(D('0.00'))
@@ -881,7 +882,7 @@ class FixedPriceBenefit(Benefit):
         verbose_name = _("Fixed price benefit")
         verbose_name_plural = _("Fixed price benefits")
 
-    def apply(self, basket, condition):
+    def apply(self, basket, condition, offer=None):
         if isinstance(condition, ValueCondition):
             return self.round(D('0.00'))
 
@@ -933,7 +934,7 @@ class MultibuyDiscountBenefit(Benefit):
         verbose_name = _("Multibuy discount benefit")
         verbose_name_plural = _("Multibuy discount benefits")
 
-    def apply(self, basket, condition):
+    def apply(self, basket, condition, offer=None):
         line_tuples = self.get_applicable_lines(basket)
         if not line_tuples:
             return self.round(D('0.00'))
@@ -955,10 +956,11 @@ class ShippingPercentageDiscountBenefit(Benefit):
         verbose_name = _("Free shipping benefit")
         verbose_name_plural = _("Free shipping benefits")
 
-    def apply(self, basket, condition):
-        # Set an attribute on the basket to indicate that it qualifies for free
-        # shipping.
-        basket.shipping_discount = self.value
+    def apply(self, basket, condition, offer=None):
+        # Attach offer to basket to indicate that it qualifies for a shipping
+        # discount.  At this point, we only allow one shipping offer per
+        # basket.
+        basket.shipping_offer = offer
 
         condition.consume_items(basket, affected_lines=())
         return D('0.00')

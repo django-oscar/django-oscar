@@ -59,6 +59,7 @@ class TestSuccessfulOrderCreation(TestCase):
     def test_defaults_to_setting_totals_to_basket_totals(self):
         self.basket.add_product(create_product(price=D('12.00')))
         method = Mock()
+        method.is_discounted = False
         method.basket_charge_incl_tax = Mock(return_value=D('2.00'))
         method.basket_charge_excl_tax = Mock(return_value=D('2.00'))
 

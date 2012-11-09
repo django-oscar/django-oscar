@@ -57,15 +57,26 @@ class PercentageDiscount(ShippingMethod):
     def description(self):
         return self.method.description
 
-    def __init__(self, method, percentage):
+    def __init__(self, method, offer):
         self.method = method
-        self.percentage = percentage
+        self.offer = offer
 
-    def discount(self, value):
-        return (1 - self.percentage / 100) * value
+    def get_discount(self):
+        # Return a 'discount' dictionary in the same form as regular product
+        # offers do
+        return {
+            'name': self.offer.name,
+            'offer': self.offer,
+            'voucher': self.offer.get_voucher(),
+            'freq': 1,
+            'discount': (self.method.basket_charge_incl_tax() -
+                         self.basket_charge_incl_tax())}
+
+    def apply_discount(self, value):
+        return (1 - self.offer.benefit.value / 100) * value
 
     def basket_charge_incl_tax(self):
-        return self.discount(self.method.basket_charge_incl_tax())
+        return self.apply_discount(self.method.basket_charge_incl_tax())
 
     def basket_charge_excl_tax(self):
-        return self.discount(self.method.basket_charge_excl_tax())
+        return self.apply_discount(self.method.basket_charge_excl_tax())
