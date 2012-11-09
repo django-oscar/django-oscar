@@ -42,7 +42,11 @@ class FixedPrice(ShippingMethod):
         return self.charge_excl_tax
 
 
-class PercentageDiscount(ShippingMethod):
+class OfferDiscount(ShippingMethod):
+    """
+    Wrapper class that applies a discount to an existing shipping method's
+    charges
+    """
     is_discounted = True
 
     @property
@@ -64,19 +68,25 @@ class PercentageDiscount(ShippingMethod):
     def get_discount(self):
         # Return a 'discount' dictionary in the same form as regular product
         # offers do
+        parent_charge = self.method.basket_charge_incl_tax()
         return {
             'name': self.offer.name,
             'offer': self.offer,
             'voucher': self.offer.get_voucher(),
             'freq': 1,
-            'discount': (self.method.basket_charge_incl_tax() -
-                         self.basket_charge_incl_tax())}
-
-    def apply_discount(self, value):
-        return (1 - self.offer.benefit.value / 100) * value
+            'discount': self.offer.benefit.shipping_discount(parent_charge)
+        }
 
     def basket_charge_incl_tax(self):
-        return self.apply_discount(self.method.basket_charge_incl_tax())
+        parent_charge = self.method.basket_charge_incl_tax()
+        discount = self.offer.shipping_discount(parent_charge)
+        return parent_charge - discount
 
     def basket_charge_excl_tax(self):
-        return self.apply_discount(self.method.basket_charge_excl_tax())
+        # Adjust tax exclusive rate using the ratio of the two tax inclusive
+        # charges
+        parent_charge_excl_tax = self.method.basket_charge_excl_tax()
+        parent_charge_incl_tax = self.method.basket_charge_incl_tax()
+        charge_incl_tax = self.basket_charge_incl_tax()
+        return parent_charge_excl_tax * (charge_incl_tax /
+                                         parent_charge_incl_tax)

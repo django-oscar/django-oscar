@@ -20,6 +20,9 @@ Repository = get_class('shipping.repository', ('Repository'))
 
 
 def apply_messages(offers_before, request, default_msg=None):
+    """
+    Set flash messages triggered by changes to the basket
+    """
     # Re-apply offers to see if any new ones are now available
     Applicator().apply(request, request.basket)
     offers_after = request.basket.get_discount_offers()
