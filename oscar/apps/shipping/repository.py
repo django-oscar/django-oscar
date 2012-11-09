@@ -52,7 +52,7 @@ class Repository(object):
         Prime an individual method instance
         """
         method.set_basket(basket)
-        if hasattr(basket, 'shipping_offer'):
+        if basket.shipping_offer:
             return PercentageDiscount(method, basket.shipping_offer)
         return method
 

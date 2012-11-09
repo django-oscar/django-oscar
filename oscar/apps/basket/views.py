@@ -19,6 +19,30 @@ BasketLineForm, AddToBasketForm, BasketVoucherForm, \
 Repository = get_class('shipping.repository', ('Repository'))
 
 
+def apply_messages(offers_before, request, default_msg=None):
+    # Re-apply offers to see if any new ones are now available
+    Applicator().apply(request, request.basket)
+    offers_after = request.basket.get_discount_offers()
+
+    # Look for changes in offers
+    offers_lost = set(offers_before.keys()).difference(
+        set(offers_after.keys()))
+    offers_gained = set(offers_after.keys()).difference(
+        set(offers_before.keys()))
+    for offer_id in offers_lost:
+        offer = offers_before[offer_id]
+        messages.warning(
+            request,
+            _("Your basket no longer qualifies for the '%s' offer") % offer)
+    for offer_id in offers_gained:
+        offer = offers_after[offer_id]
+        messages.success(
+            request,
+            _("Your basket now qualifies for the '%s' offer") % offer)
+    if not offers_lost and not offers_gained:
+        messages.info(request, default_msg)
+
+
 class BasketView(ModelFormSetView):
     model = get_model('basket', 'Line')
     basket_model = get_model('basket', 'Basket')
@@ -52,8 +76,7 @@ class BasketView(ModelFormSetView):
             if offer.is_condition_partially_satisfied(basket):
                 data = {
                     'message': offer.get_upsell_message(basket),
-                    'offer': offer
-                }
+                    'offer': offer}
                 msgs.append(data)
         return msgs
 
@@ -89,10 +112,12 @@ class BasketView(ModelFormSetView):
         return context
 
     def get_success_url(self):
-        messages.success(self.request, _("Basket updated"))
         return self.request.META.get('HTTP_REFERER', reverse('basket:summary'))
 
     def formset_valid(self, formset):
+        # Store offers before any changes are made so we can inform the user of
+        # any changes
+        offers_before = self.request.basket.get_discount_offers()
         save_for_later = False
         for form in formset:
             if (hasattr(form, 'cleaned_data') and
@@ -113,8 +138,15 @@ class BasketView(ModelFormSetView):
 
         if save_for_later:
             # No need to call super if we're moving lines to the saved basket
-            return HttpResponseRedirect(self.get_success_url())
-        return super(BasketView, self).formset_valid(formset)
+            response = HttpResponseRedirect(self.get_success_url())
+        else:
+            # Save changes to basket as per normal
+            response = super(BasketView, self).formset_valid(formset)
+
+        apply_messages(offers_before, self.request,
+                       default_msg=_("Basket updated"))
+
+        return response
 
     def move_line_to_saved_basket(self, line):
         saved_basket, _ = get_model('basket', 'basket').saved.get_or_create(
@@ -174,10 +206,14 @@ class BasketAddView(FormView):
         return url
 
     def form_valid(self, form):
+        offers_before = self.request.basket.get_discount_offers()
         self.request.basket.add_product(
             form.instance, form.cleaned_data['quantity'],
             form.cleaned_options())
         messages.success(self.request, self.get_success_message(form))
+
+        # Check for additional offer messages
+        apply_messages(offers_before, self.request)
 
         # Send signal for basket addition
         self.add_signal.send(
@@ -234,7 +270,6 @@ class VoucherAddView(FormView):
                              voucher=voucher)
 
         # Recalculate discounts to see if the voucher gives any
-        self.request.basket.remove_discounts()
         Applicator().apply(self.request, self.request.basket)
         discounts_after = self.request.basket.get_discounts()
 
@@ -339,6 +374,8 @@ class SavedView(ModelFormSetView):
         return kwargs
 
     def formset_valid(self, formset):
+        offers_before = self.request.basket.get_discount_offers()
+
         is_move = False
         for form in formset:
             if form.cleaned_data['move_to_basket']:
@@ -348,7 +385,9 @@ class SavedView(ModelFormSetView):
                 messages.info(self.request, msg)
                 real_basket = self.request.basket
                 real_basket.merge_line(form.instance)
+
         if is_move:
+            apply_messages(offers_before, self.request)
             return HttpResponseRedirect(self.get_success_url())
 
         return super(SavedView, self).formset_valid(formset)
