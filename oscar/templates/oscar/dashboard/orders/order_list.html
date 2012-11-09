@@ -110,7 +110,7 @@
         <td>{{ order.total_incl_tax|currency }}</td>
 		<td>{{ order.date_placed }}</td>
 		<td>{{ order.num_items }}</td>
-        <td>{{ order.status }}</td>
+        <td>{{ order.status|default:"-" }}</td>
         <td>{{ order.email }}</td>
         <td>{{ order.shipping_address|default:"-" }}</td>
         <td>{{ order.billing_address|default:"-" }}</td>
