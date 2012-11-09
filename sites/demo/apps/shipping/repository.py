@@ -1,28 +1,31 @@
-from oscar.apps.shipping.methods import Free, NoShippingRequired
+from decimal import Decimal as D
+from oscar.apps.shipping.methods import FixedPrice, NoShippingRequired
 from oscar.apps.shipping.repository import Repository as CoreRepository
 
 # Dummy shipping methods
-free1 = Free()
-free1.code = 'free1'
-free1.description = 'Ship by van'
+method1 = FixedPrice(D('12.00'))
+method1.code = 'method1'
+method1.name = 'Ship by van'
 
-free2 = Free()
-free2.code = 'free2'
-free2.description = 'Ship by boat'
+method2 = FixedPrice(D('24.00'))
+method2.code = 'method2'
+method2.name = 'Ship by pigeon'
+method2.description = 'Here is a description of this shipping method'
 
 
 class Repository(CoreRepository):
-
     methods = {
-        free1.code: free1,
-        free2.code: free2
+        method1.code: method1,
+        method2.code: method2,
     }
 
     def get_shipping_methods(self, user, basket, shipping_addr=None, **kwargs):
         methods = self.methods.values()
-        return self.add_basket_to_methods(basket, methods)
+        return self.prime_methods(basket, methods)
 
-    def find_by_code(self, code):
+    def find_by_code(self, code, basket):
         if code == NoShippingRequired.code:
-            return NoShippingRequired()
-        return self.methods.get(code, None)
+            method = NoShippingRequired()
+        else:
+            method = self.methods.get(code, None)
+        return self.prime_method(basket, method)
