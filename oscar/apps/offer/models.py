@@ -206,7 +206,7 @@ class ConditionalOffer(models.Model):
             self.benefit.FIXED: AbsoluteDiscountBenefit,
             self.benefit.MULTIBUY: MultibuyDiscountBenefit,
             self.benefit.FIXED_PRICE: FixedPriceBenefit,
-            self.benefit.SHIPPING_PERCENTAGE: ShippingPercentageBenefit}
+            self.benefit.SHIPPING_PERCENTAGE: ShippingPercentageDiscountBenefit}
         if self.benefit.type in klassmap:
             return klassmap[self.benefit.type](**field_dict)
         return self.benefit
@@ -369,24 +369,55 @@ class Benefit(models.Model):
         return D('0.00')
 
     def clean(self):
-        if self.value is None:
-            if not self.type:
-                raise ValidationError(_("Benefit requires a value"))
-            elif self.type != self.MULTIBUY:
-                raise ValidationError(
-                    _("Benefits of type '%s' need a value") % self.type)
-        elif self.value > 100 and self.type in (self.PERCENTAGE,
-                                                self.SHIPPING_PERCENTAGE):
-            raise ValidationError(
-                _("Percentage benefit value can't be greater than 100"))
+        if not self.type:
+            raise ValidationError(_("Benefit requires a value"))
+        method_name = 'clean_%s' % self.type.lower().replace(' ', '_')
+        if hasattr(self, method_name):
+            getattr(self, method_name)()
 
-        # All benefits need a range apart from FIXED_PRICE and
-        # SHIPPING_PERCENTAGE
-        if (self.type and
-            self.type not in (self.SHIPPING_PERCENTAGE, self.FIXED_PRICE) and
-            not self.range):
+    def clean_multibuy(self):
+        if not self.range:
             raise ValidationError(
-                _("Benefits of type '%s' need a range") % self.type)
+                _("Multibuy benefits require a product range"))
+        if self.value:
+            raise ValidationError(
+                _("Multibuy benefits don't require a value"))
+        if self.max_affected_items:
+            raise ValidationError(
+                _("Multibuy benefits don't require a 'max affected items' "
+                  "attribute"))
+
+    def clean_percentage(self):
+        if not self.range:
+            raise ValidationError(
+                _("Percentage benefits require a product range"))
+        if self.value > 100:
+            raise ValidationError(
+                _("Percentage discount cannot be greater than 100"))
+
+    def clean_shipping_percentage(self):
+        if self.value > 100:
+            raise ValidationError(
+                _("Percentage discount cannot be greater than 100"))
+        if self.range:
+            raise ValidationError(
+                _("No range should be selected as this benefit does not "
+                  "apply to products"))
+        if self.max_affected_items:
+            raise ValidationError(
+                _("Shipping discounts don't require a 'max affected items' "
+                  "attribute"))
+
+    def clean_fixed_price(self):
+        if self.range:
+            raise ValidationError(
+                _("No range should be selected as the condition range will "
+                  "be used instead."))
+
+    def clean_absolute(self):
+        if not self.range:
+            raise ValidationError(
+                _("Percentage benefits require a product range"))
 
     def round(self, amount):
         """
@@ -917,7 +948,7 @@ class MultibuyDiscountBenefit(Benefit):
         return discount
 
 
-class ShippingPercentageBenefit(Benefit):
+class ShippingPercentageDiscountBenefit(Benefit):
 
     class Meta:
         proxy = True
