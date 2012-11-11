@@ -34,7 +34,7 @@ class PromotionsDashboardApplication(Application):
         urlpatterns = patterns('',
             url(r'^$', self.list_view.as_view(), name='promotion-list'),
             url(r'^pages/$', self.page_list.as_view(), name='promotion-list-by-page'),
-            url(r'^pages/(?P<path>.+)/$', self.page_detail.as_view(), name='promotion-list-by-url'),
+            url(r'^page/(?P<path>/([\w-]+(/[\w-]+)*/)?)$', self.page_detail.as_view(), name='promotion-list-by-url'),
             url(r'^create/$', 
                 self.create_redirect_view.as_view(), 
                 name='promotion-create-redirect'),
