@@ -55,7 +55,7 @@
                         <td><a href="{{ page.page_url }}">{{ page.page_url }}</a></td>
                         <td>{{ page.freq }}</td>
                         <td>
-                            <a href="{% url 'dashboard:promotion-list-by-url' page.page_url|urlencode:"" %}" class="btn btn-success">{% trans "Edit" %}</a>
+                            <a href="{% url 'dashboard:promotion-list-by-url' page.page_url %}" class="btn btn-success">{% trans "Edit" %}</a>
                         </td>
                         <td> </td>
                     </tr>
