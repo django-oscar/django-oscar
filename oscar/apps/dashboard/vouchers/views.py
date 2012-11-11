@@ -137,18 +137,22 @@ class VoucherUpdateView(FormView):
 
     def get_initial(self):
         voucher = self.get_voucher()
-        offer = voucher.offers.all()[0]
-        benefit = offer.benefit
-        return {
+        kwargs = {
             'name': voucher.name,
             'code': voucher.code,
             'start_date': voucher.start_date,
             'end_date': voucher.end_date,
             'usage': voucher.usage,
-            'benefit_type': benefit.type,
-            'benefit_range': benefit.range,
-            'benefit_value': benefit.value,
         }
+        if voucher.offers.count():
+            offer = voucher.offers.all()[0]
+            benefit = offer.benefit
+            kwargs.update({
+                'benefit_type': benefit.type,
+                'benefit_range': benefit.range,
+                'benefit_value': benefit.value,
+            })
+        return kwargs
 
     def form_valid(self, form):
         voucher = self.get_voucher()
