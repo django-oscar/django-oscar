@@ -12,7 +12,7 @@ class TestACustomer(WebTestCase):
 
     def test_can_add_a_review_when_anonymous(self):
         detail_page = self.app.get(self.product.get_absolute_url())
-        add_review_page = detail_page.click('Write a review')
+        add_review_page = detail_page.click(linkid='write_review')
         form = add_review_page.forms['add_review_form']
         form['title'] = 'This is great!'
         form['score'] = 5
@@ -27,7 +27,7 @@ class TestACustomer(WebTestCase):
         user = G(User)
         detail_page = self.app.get(self.product.get_absolute_url(),
                                    user=user)
-        add_review_page = detail_page.click('Write a review')
+        add_review_page = detail_page.click(linkid="write_review")
         form = add_review_page.forms['add_review_form']
         form['title'] = 'This is great!'
         form['score'] = 5

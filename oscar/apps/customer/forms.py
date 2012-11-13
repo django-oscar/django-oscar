@@ -2,14 +2,25 @@ import string
 import random
 
 from django.contrib.auth.forms import AuthenticationForm
+from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist
 from django import forms
+from django.db.models import get_model
 from django.contrib.auth.models import User
+from django.contrib.auth import forms as auth_forms
 from django.conf import settings
 from django.core import validators
+from django.core.exceptions import ValidationError
+from django.utils.http import int_to_base36
+from django.contrib.sites.models import get_current_site
+from django.contrib.auth.tokens import default_token_generator
 
-from oscar.core.loading import get_profile_class
+from oscar.core.loading import get_profile_class, get_class
+
+Dispatcher = get_class('customer.utils', 'Dispatcher')
+CommunicationEventType = get_model('customer', 'communicationeventtype')
+ProductAlert = get_model('customer', 'ProductAlert')
 
 
 def generate_username():
@@ -19,6 +30,37 @@ def generate_username():
         return generate_username()
     except User.DoesNotExist:
         return uname
+
+
+class PasswordResetForm(auth_forms.PasswordResetForm):
+    communication_type_code = "PASSWORD_RESET"
+
+    def save(self, domain_override=None,
+             subject_template_name='registration/password_reset_subject.txt',
+             email_template_name='registration/password_reset_email.html',
+             use_https=False, token_generator=default_token_generator,
+             from_email=None, request=None, **kwargs):
+        """
+        Generates a one-use only link for resetting password and sends to the
+        user.
+        """
+        site = get_current_site(request)
+        if domain_override is not None:
+            site.domain = site.name = domain_override
+        for user in self.users_cache:
+            # Build reset url
+            reset_url = "%s://%s%s" % (
+                'https' if use_https else 'http',
+                site.domain,
+                reverse('password-reset-confirm', kwargs={
+                    'uidb36': int_to_base36(user.id),
+                    'token': token_generator.make_token(user)}))
+            ctx = {
+                'site': site,
+                'reset_url': reset_url}
+            messages = CommunicationEventType.objects.get_and_render(
+                code=self.communication_type_code, context=ctx)
+            Dispatcher().dispatch_user_messages(user, messages)
 
 
 class EmailAuthenticationForm(AuthenticationForm):
@@ -155,7 +197,33 @@ class SearchByDateRangeForm(forms.Form):
         return {}
 
 
-class UserForm(forms.ModelForm):
+class CleanEmailMixin(object):
+
+    def clean_email(self):
+        """
+        Make sure that the email address is aways unique as it is
+        used instead of the username. This is necessary because the
+        unique-ness of email addresses is *not* enforced on the model
+        level in ``django.contrib.auth.models.User``.
+        """
+        email = self.cleaned_data['email']
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            # this email address is unique so we don't have to worry
+            # about it
+            return email
+
+        if self.instance and self.instance.id != user.id:
+            raise ValidationError(
+                _("A user with this email address already exists")
+            )
+
+        return email
+
+
+class UserForm(forms.ModelForm, CleanEmailMixin):
 
     def __init__(self, user, *args, **kwargs):
         self.user = user
@@ -173,7 +241,7 @@ if hasattr(settings, 'AUTH_PROFILE_MODULE'):
 
     Profile = get_profile_class()
 
-    class UserAndProfileForm(forms.ModelForm):
+    class UserAndProfileForm(forms.ModelForm, CleanEmailMixin):
 
         first_name = forms.CharField(label=_('First name'), max_length=128)
         last_name = forms.CharField(label=_('Last name'), max_length=128)
@@ -220,3 +288,60 @@ if hasattr(settings, 'AUTH_PROFILE_MODULE'):
     ProfileForm = UserAndProfileForm
 else:
     ProfileForm = UserForm
+
+
+class ProductAlertForm(forms.ModelForm):
+    email = forms.EmailField(required=True, label=_(u'Send notification to'),
+                             widget=forms.TextInput(attrs={
+                                 'placeholder': _('Enter your email')
+                             }))
+
+    def __init__(self, user, product, *args, **kwargs):
+        self.user = user
+        self.product = product
+        super(ProductAlertForm, self).__init__(*args, **kwargs)
+
+        # Only show email field to unauthenticated users
+        if user and user.is_authenticated():
+            self.fields['email'].widget = forms.HiddenInput()
+            self.fields['email'].required = False
+
+    def save(self, commit=True):
+        alert = super(ProductAlertForm, self).save(commit=False)
+        if self.user.is_authenticated():
+            alert.user = self.user
+        alert.product = self.product
+        if commit:
+            alert.save()
+        return alert
+
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        email = cleaned_data.get('email')
+        if email:
+            try:
+                ProductAlert.objects.get(
+                    product=self.product, email=email,
+                    status=ProductAlert.ACTIVE)
+            except ProductAlert.DoesNotExist:
+                pass
+            else:
+                raise forms.ValidationError(_(
+                    "There is already an active stock alert for %s") % email)
+        elif self.user.is_authenticated():
+            try:
+                ProductAlert.objects.get(product=self.product,
+                                         user=self.user,
+                                         status=ProductAlert.ACTIVE)
+            except ProductAlert.DoesNotExist:
+                pass
+            else:
+                raise forms.ValidationError(_(
+                    "You already have an active alert for this product"))
+        return cleaned_data
+
+    class Meta:
+        model = ProductAlert
+        exclude = ('user', 'key',
+                   'status', 'date_confirmed', 'date_cancelled', 'date_closed',
+                   'product')

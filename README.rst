@@ -17,8 +17,6 @@ Further reading:
   experimental but feel free to explore and get a feel for the base Oscar
   install.  Dashboard access coming soon!) 
 * `Documentation`_ on the excellent `readthedocs.org`_
-* `Trello board managing current tasks`_ - note for features that you'd like
-  prioritsed!
 * `Google Group`_ - the mailing list is django-oscar@googlegroups.com
 * `Continuous integration homepage`_ on `travis-ci.org`_
 * `Twitter account for news and updates`_
@@ -29,10 +27,10 @@ Further reading:
 Continuous integration status:
 
 .. image:: https://secure.travis-ci.org/tangentlabs/django-oscar.png
+    :target: http://travis-ci.org/#!/tangentlabs/django-oscar
 
 .. _`Official homepage`: http://oscarcommerce.com
 .. _`Sandbox site`: http://sandbox.oscar.tangentlabs.co.uk
-.. _`Trello board managing current tasks`: https://trello.com/b/VDIVW8Xc
 .. _`Documentation`: http://django-oscar.readthedocs.org/en/latest/
 .. _`readthedocs.org`: http://readthedocs.org
 .. _`Continuous integration homepage`: http://travis-ci.org/#!/tangentlabs/django-oscar 
@@ -66,7 +64,7 @@ The following extensions are stable and ready for use:
 * django-oscar-jirafe_ - Integration with the Jirafe_ analytics package
 * django-oscar-paymentexpress_ - Integration with the `Payment Express`_ payment
   gateway
-* django-oscar-accounts - Managed accounts (can be used for giftcard
+* django-oscar-accounts_ - Managed accounts (can be used for giftcard
   functionality and loyalty schemes)
 
 .. _django-oscar-datacash: https://github.com/tangentlabs/django-oscar-datacash
@@ -112,11 +110,12 @@ Tangent projects:
 
 * Tata Group - http://www.landmarkonthenet.com
 * Carlsberg - Their global "We Deliver More" platform is powered by Oscar (but
-  is a B2B site so it not browsable by the public).
+  is a B2B site and not browsable by the public).
 * The UK Labour party - http://shop.labour.org.uk
 
 Non-Tangent:
 
 * Dolbeau - http://www.dolbeau.ca/
+* Sobusa - http://www.sobusa.fr/
 
 Many more on the way.  If you use Oscar in production, please let us know.

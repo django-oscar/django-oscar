@@ -4,7 +4,7 @@ from django.conf import settings, global_settings
 from oscar import OSCAR_CORE_APPS, OSCAR_MAIN_TEMPLATE_DIR
 
 
-def configure(nose_args):
+def configure(nose_args=None):
     if not settings.configured:
         from oscar.defaults import OSCAR_SETTINGS
 
@@ -36,6 +36,7 @@ def configure(nose_args):
                 "django.core.context_processors.static",
                 "django.contrib.messages.context_processors.messages",
                 'oscar.apps.search.context_processors.search_form',
+                'oscar.apps.customer.notifications.context_processors.notifications',
                 'oscar.apps.promotions.context_processors.promotions',
                 'oscar.apps.checkout.context_processors.checkout',
                 ),

@@ -12,6 +12,7 @@ from oscar.apps.dashboard.offers.app import application as offers_app
 from oscar.apps.dashboard.ranges.app import application as ranges_app
 from oscar.apps.dashboard.reviews.app import application as reviews_app
 from oscar.apps.dashboard.vouchers.app import application as vouchers_app
+from oscar.apps.dashboard.communications.app import application as comms_app
 from oscar.apps.dashboard import views
 
 
@@ -29,6 +30,7 @@ class DashboardApplication(Application):
     ranges_app = ranges_app
     reviews_app = reviews_app
     vouchers_app = vouchers_app
+    comms_app = comms_app
 
     def get_urls(self):
         urlpatterns = patterns('',
@@ -43,6 +45,7 @@ class DashboardApplication(Application):
             url(r'^ranges/', include(self.ranges_app.urls)),
             url(r'^reviews/', include(self.reviews_app.urls)),
             url(r'^vouchers/', include(self.vouchers_app.urls)),
+            url(r'^comms/', include(self.comms_app.urls)),
         )
         return self.post_process_urls(urlpatterns)
 

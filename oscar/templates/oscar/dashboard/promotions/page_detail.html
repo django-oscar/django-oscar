@@ -17,7 +17,7 @@
 	<a href="{% url dashboard:promotion-list %}">{% trans "Content blocks" %}</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">{% blocktrans %}Content blocks on page '{{ page_url }}'{% endblocktrans %}</a></li>
+	<li class="active">{% blocktrans %}Content blocks on page '{{ page_url }}'{% endblocktrans %}</li>
 </ul>
 {% endblock %}
 
@@ -31,7 +31,7 @@
 
 {% for position in positions %}
 <div class="well {% if position.promotions %}well-info{% endif%}">
-	<h3 class="app-ico ico_favourite icon">{% blocktrans with name=position.name %}Edit promotions in position '{{ name }}'{% endblocktrans %}</h3>
+	<h3>{% blocktrans with name=position.name %}Edit promotions in position '{{ name }}'{% endblocktrans %}</h3>
     {% if position.promotions %}
     <table class="table table-bordered">
     	<thead>

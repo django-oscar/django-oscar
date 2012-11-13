@@ -1,0 +1,47 @@
+[
+    {
+        "pk": 1, 
+        "model": "customer.communicationeventtype", 
+        "fields": {
+            "category": "User related", 
+            "email_body_html_template": "Thank you for registering", 
+            "code": "REGISTRATION", 
+            "sms_template": "", 
+            "name": "Newly registered user", 
+            "email_subject_template": "Welcome to {{ site.name }}", 
+            "date_updated": "2012-10-16T15:09:55.813Z", 
+            "email_body_template": "Thank you for registering", 
+            "date_created": "2012-10-11T15:09:56.317Z"
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "customer.communicationeventtype", 
+        "fields": {
+            "category": "User related", 
+            "email_body_html_template": "You're receiving this e-mail because you requested a password reset for your user account at {{ site.name }}.\r\n\r\n<br><br>Please go to the following page and choose a new password:\r\n{{ reset_url }} \r\n\r\n<br><br>Thanks for using our site!\r\nThe {{ site.name }} team", 
+            "code": "PASSWORD_RESET", 
+            "sms_template": "", 
+            "name": "Forgotten password", 
+            "email_subject_template": "Resetting your password at {{ site.name }}", 
+            "date_updated": "2012-10-16T10:55:03.987Z", 
+            "email_body_template": "You're receiving this e-mail because you requested a password reset for your user account at {{ site.name }}.\r\n\r\nPlease go to the following page and choose a new password:\r\n{{ reset_url }} \r\n\r\nThanks for using our site!\r\nThe {{ site.name }} team", 
+            "date_created": "2012-10-16T09:47:43.471Z"
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "customer.communicationeventtype", 
+        "fields": {
+            "category": "Order related", 
+            "email_body_html_template": "{% load currency_filters %}Hello,<br><br>We are pleased to confirm your order {{ order.number }} has been received and will be processed shortly.<br><br>Your order contains:<br><br>{% for line in order.lines.all %}* {{ line.title }} - quantity: {{ line.quantity }} - price: {{ line.line_price_incl_tax|currency }}<br>{% endfor %}<br><br>Basket total: {{ order.basket_total_incl_tax|currency }}<br>Shipping: {{ order.shipping_incl_tax|currency }}<br>Order Total: {{ order.total_incl_tax|currency }}<br><br>Shipping address:<br><br>{% for field in order.shipping_address.active_address_fields %}&nbsp; {{ field }}<br>{% endfor %}<br><br>The {{ site.name }} team.<br>", 
+            "code": "ORDER_PLACED", 
+            "sms_template": "", 
+            "name": "Order confirmation", 
+            "email_subject_template": "Confirmation of order {{ order.number }}", 
+            "date_updated": "2012-10-16T11:27:09.349Z", 
+            "email_body_template": "{% load currency_filters %}Hello,\r\n\r\nWe are pleased to confirm your order {{ order.number }} has been received and will be processed shortly.\r\n\r\nYour order contains:\r\n\r\n{% for line in order.lines.all %}* {{ line.title }} - quantity: {{ line.quantity }} - price: {{ line.line_price_incl_tax|currency }}\r\n{% endfor %}\r\n\r\nBasket total: {{ order.basket_total_incl_tax|currency }}\r\nShipping: {{ order.shipping_incl_tax|currency }}\r\nOrder Total: {{ order.total_incl_tax|currency }}\r\n\r\nShipping address:\r\n\r\n{% for field in order.shipping_address.active_address_fields %}  {{ field }}\r\n{% endfor %}\r\n\r\nThe {{ site.name }} team.", 
+            "date_created": "2012-10-16T11:02:13.297Z"
+        }
+    }
+]

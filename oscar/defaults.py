@@ -44,6 +44,17 @@ OSCAR_PROMOTION_MERCHANDISING_BLOCK_TYPES = (
 OSCAR_ALLOW_ANON_REVIEWS = True
 OSCAR_MODERATE_REVIEWS = False
 
+# This enables sending alert notifications/emails
+# instantly when products get back in stock
+# by listening to stock record update signals
+# this might impact performace for large numbers
+# stock record updates.
+# Alternatively, the management command
+# ``oscar_send_alerts`` can be used to
+# run periodically, e.g. as a cronjob. In this case
+# instant alerts should be disabled.
+OSCAR_EAGER_ALERTS = True
+
 # Registration
 OSCAR_SEND_REGISTRATION_EMAIL = True
 OSCAR_FROM_EMAIL = 'oscar@example.com'

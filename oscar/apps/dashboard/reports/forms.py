@@ -18,7 +18,7 @@ class ReportForm(forms.Form):
     date_from = forms.DateField(label=_("Date from"))
     date_to = forms.DateField(label=_("Date to"),
                               help_text=_("The report is inclusive of this date"))
-    download = forms.BooleanField(required=False)
+    download = forms.BooleanField(label=_("Download"), required=False)
 
     def clean(self):
         if 'date_from' in self.cleaned_data and 'date_to' in self.cleaned_data and self.cleaned_data['date_from'] > self.cleaned_data['date_to']:

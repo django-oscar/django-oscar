@@ -11,7 +11,8 @@ from django.core.exceptions import FieldError
 from django.db.models import get_model
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.apps.catalogue.exceptions import ImageImportError, IdenticalImageError, InvalidImageArchive
+from oscar.apps.catalogue.exceptions import (
+    ImageImportError, IdenticalImageError, InvalidImageArchive)
 
 Category = get_model('catalogue', 'category')
 Product = get_model('catalogue', 'product')
@@ -30,8 +31,7 @@ class Importer(object):
         stats = {
             'num_processed': 0,
             'num_skipped': 0,
-            'num_invalid': 0
-        }
+            'num_invalid': 0}
         image_dir, filenames = self._get_image_files(dirname)
         if image_dir:
             for filename in filenames:

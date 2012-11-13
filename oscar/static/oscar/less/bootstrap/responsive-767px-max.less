@@ -1,0 +1,406 @@
+//
+// Responsive: Landscape phone to desktop/tablet
+// --------------------------------------------------
+
+
+@media (max-width: 767px) {
+
+  // Padding to set content in a bit
+  body {
+/*    padding-left: 20px;
+    padding-right: 20px;*/
+  }
+  // Negative indent the now static "fixed" navbar
+  .navbar-fixed-top,
+  .navbar-fixed-bottom,
+  .navbar-static-top {
+    margin-left: -20px;
+    margin-right: -20px;
+  }
+  // Remove padding on container given explicit padding set on body
+  .container-fluid {
+    padding: 0;
+  }
+
+  // TYPOGRAPHY
+  // ----------
+  // Reset horizontal dl
+  .dl-horizontal {
+    dt {
+      float: none;
+      clear: none;
+      width: auto;
+      text-align: left;
+    }
+    dd {
+      margin-left: 0;
+    }
+  }
+
+  // GRID & CONTAINERS
+  // -----------------
+  // Remove width from containers
+  .container {
+    width: auto;
+  }
+  // Fluid rows
+  .row-fluid {
+    width: 100%;
+  }
+  // Undo negative margin on rows and thumbnails
+  .row,
+  .thumbnails {
+    margin-left: 0;
+  }
+  .thumbnails > li {
+    float: none;
+    margin-left: 0; // Reset the default margin for all li elements when no .span* classes are present
+  }
+  // Make all grid-sized elements block level again
+  [class*="span"],
+  .row-fluid [class*="span"] {
+    float: none;
+    display: block;
+    width: 100%;
+    margin-left: 0;
+    .box-sizing(border-box);
+  }
+  .span12,
+  .row-fluid .span12 {
+    width: 100%;
+    .box-sizing(border-box);
+  }
+
+  // FORM FIELDS
+  // -----------
+  // Make span* classes full width
+  .input-large,
+  .input-xlarge,
+  .input-xxlarge,
+  input[class*="span"],
+  select[class*="span"],
+  textarea[class*="span"],
+  .uneditable-input {
+    .input-block-level();
+  }
+  // But don't let it screw up prepend/append inputs
+  .input-prepend input,
+  .input-append input,
+  .input-prepend input[class*="span"],
+  .input-append input[class*="span"] {
+    display: inline-block; // redeclare so they don't wrap to new lines
+    width: auto;
+  }
+  .controls-row [class*="span"] + [class*="span"] {
+    margin-left: 0;
+  }
+
+  // Modals
+  .modal {
+    position: fixed;
+    top:   20px;
+    left:  20px;
+    right: 20px;
+    width: auto;
+    margin: 0;
+    &.fade.in { top: auto; }
+  }
+  // Navs
+  .navbar-static-top {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .navbar.primary {
+    .pull-left,
+    .pull-right {
+      float:none;
+    }
+  }
+  // Buttons
+  .pull-left.btn-full,
+  .pull-right.btn-full {
+    float:none;
+  }
+  .btn-full {
+    padding-left:0;
+    padding-right:0;
+    width:100%;
+    float:none;
+  }
+  a.btn-full {
+    display:block;
+    width:auto!important;
+  }
+  // Header
+  .header {
+    h1 {
+      text-align:center;
+    }
+    small {
+      display:block;
+      margin-top:10px;
+    }
+    .page_inner {
+      padding:30px 0;
+    }
+  }
+  //Basket
+  .basket-items {
+    padding:0;
+    [class*="span"] .image_container {
+      width: 20%;
+      float: right;
+      min-height: 100px;
+      line-height: 100px;
+      margin:0;
+      img {
+        max-height: 100px;
+        margin: 0;
+        float: right;
+      }
+    }
+    a.btn {
+      margin-bottom:@baseLineHeight;
+    }
+    .align-right,
+    .align-center {
+      text-align:left;
+      margin-top:@baseLineHeight;
+    }
+  }
+  .basket-items:nth-child(even),
+  .basket-items {
+    background:none;
+  }
+
+}
+
+
+
+// UP TO LANDSCAPE PHONE
+// ---------------------
+
+@media (max-width: 480px) {
+
+  // Smooth out the collapsing/expanding nav
+  .nav-collapse {
+    -webkit-transform: translate3d(0, 0, 0); // activate the GPU
+  }
+
+  // Block level the page header small tag for readability
+  .page-header h1 small {
+    display: block;
+    line-height: @baseLineHeight;
+  }
+
+  // Update checkboxes for iOS
+  input[type="checkbox"],
+  input[type="radio"] {
+    border: 1px solid #ccc;
+  }
+
+  // Remove the horizontal form styles
+  .form-horizontal {
+    .control-label {
+      float: none;
+      width: auto;
+      padding-top: 0;
+      text-align: left;
+    }
+    // Move over all input controls and content
+    .controls {
+      margin-left: 0;
+    }
+    // Move the options list down to align with labels
+    .control-list {
+      padding-top: 0; // has to be padding because margin collaspes
+    }
+    // Move over buttons in .form-actions to align with .controls
+    .form-actions {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  }
+
+  // Modals
+  .modal {
+    top:   10px;
+    left:  10px;
+    right: 10px;
+  }
+  .modal-header .close {
+    padding: 10px;
+    margin: -10px;
+  }
+
+  // Carousel
+  .carousel-caption {
+    position: static;
+  }
+
+  // Product floats
+  .product_title,
+  .product_assets,
+  .product_description,
+  .product_related,
+  .review_content,
+  .review_votes,
+  .main,
+  .products li,
+  .five li,
+  .four li,
+  .three li,
+  .two li,
+  .product_pod .product_price,
+  .footer_links li,
+  .footer_links .top_page {
+    float:none;
+    margin:0px;
+    width:auto;
+    height:auto;
+  }
+
+  // Product
+  .thumbnail {
+    border:0;
+    padding:0;
+    .border-radius(0);
+  }
+  .products,
+  .es-carousel > ul {
+    li {
+      border-bottom:1px solid @grayLighter;
+      padding-bottom:@baseLineHeight;
+      margin-bottom:@baseLineHeight;
+      .product_pod {
+        margin-bottom:0px;
+        height:auto!important;
+        padding:0px;
+        text-align:left;
+        .star {
+          clear:none;
+          margin:0px;
+        }
+        .availability {
+          text-align:left;
+        }
+        .group-price {
+          position:static;
+          border:none;
+          color:@orange;
+          text-transform:capitalize;
+          background-color:none;
+          .border-radius(none);
+          .box-shadow(none);
+          background:none;
+          margin:0px;
+          span {
+            display:inline;
+            font-size:@baseFontSize;
+            background:none;
+            padding:0px;
+            color:inherit;
+          }
+          strong {
+            padding:0px;
+            display:inline;
+          }
+        }
+        .product_price {
+          position:static;
+          h4 {
+            margin-bottom:0px;
+            display:inline;
+            span, del {
+              float:none;
+            }
+          }
+          form {
+            clear:both;
+            input#id_quantity {
+              width: auto;
+            }
+            .btn {
+              margin-top:5px;
+            }
+          }
+
+        }
+        .image_container {
+          width:@quart;
+          float:right;
+          margin-left:15px;
+          margin-bottom:0;
+        }
+      }
+    }
+  }
+  // Reviews
+  .star {
+    padding-left:70px;
+	background:url(../img/ui/bg-stars-small.png) 0px -4px no-repeat;
+	height:11px;
+	line-height:11px;
+  }
+  .star.One {
+	background-position: 0px -18px;
+  }
+  .star.Two {
+	background-position: 0px -32px;
+  }
+  .star.Three {
+	background-position: 0px -47px;
+  }
+  .star.Four {
+	background-position: 0px -61px;
+  }
+  .star.Five {
+	background-position: 0px -75px;
+  }
+  .review_content {
+    div {
+     border:none;
+    }
+  }
+  .review_votes {
+    div {
+      padding:0px;
+    }
+  }
+  // Footer
+  .footer_links {
+    border-bottom:none;
+    li {
+      border-left:none;
+      margin:0px;
+      padding:0px;
+      a {
+        display:block;
+        padding:10px 0;
+        border-bottom:1px solid lighten(@grayLight, 25%);
+      }
+    }
+  }
+  // Alerts
+  .alert {
+  /*  Position alerts at the bottom of the browser window*/
+    position: static;
+    width: auto;
+    margin-bottom:0px;
+  }
+  // Carousel
+  .es-carousel-wrapper {
+    padding:0px;
+    border:0px;
+  }
+  .es-carousel {
+    border:0px;
+    ul {
+      display:block;
+      margin:0;
+      li {
+        float:none;
+      }
+    }
+  }
+}

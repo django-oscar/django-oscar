@@ -1,4 +1,7 @@
 {% extends 'dashboard/layout.html' %}
+{% block body_class %}
+create-page default
+{% endblock %}
 {% load currency_filters %}
 {% load i18n %}
 
@@ -16,7 +19,7 @@
 	<a href="{% url dashboard:voucher-list %}">{% trans "Vouchers" %}</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">{{ title }}</a></li>
+	<li class="active">{{ title }}</li>
 </ul>
 {% endblock %}
 

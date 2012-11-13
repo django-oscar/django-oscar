@@ -4,6 +4,4 @@ python:
   - 2.7
 install:
 script:
-  - pip install -r requirements.txt
-  - ./setup.py develop
-  - ./runtests.py
+  - make travis

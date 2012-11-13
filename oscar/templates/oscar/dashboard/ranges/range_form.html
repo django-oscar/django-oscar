@@ -1,4 +1,7 @@
 {% extends 'dashboard/layout.html' %}
+{% block body_class %}
+create-page
+{% endblock %}
 {% load currency_filters %}
 {% load i18n %}
 
@@ -16,7 +19,7 @@
 	<a href="{% url dashboard:range-list %}">{% trans "Ranges" %}</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">{{ title }}</a></li>
+	<li class="active">{{ title }}</li>
 </ul>
 {% endblock %}
 
@@ -27,7 +30,7 @@
 {% endblock header %}
 
 {% block dashboard_content %}
-<form action="." method="post" class="well form-horizontal">
+<form action="." method="post" class="well">
 	{% csrf_token %}
 	{% include "partials/form_fields.html" with form=form %}
 	{% block form_actions %}

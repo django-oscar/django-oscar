@@ -183,6 +183,7 @@ class OrderListView(ListView, BulkEditMixin):
             queryset = queryset.filter(status=data['status'])
             desc_ctx['status_filter'] = _(" with status %s") % data['status']
 
+        self.description = self.desc_template % desc_ctx
         return queryset
 
     def sort_queryset(self, queryset):

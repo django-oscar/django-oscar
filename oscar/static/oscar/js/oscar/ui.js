@@ -12,6 +12,21 @@ oscar.messages = {
     warning: function(msg) { oscar.messages.addMessage('warning', msg); },
     error: function(msg) { oscar.messages.addMessage('error:', msg); }
 };
+oscar.notifications = {
+    init: function() {
+        $('a[data-behaviours~="archive"]').click(function() {
+            oscar.notifications.checkAndSubmit($(this), 'archive');
+        });
+        $('a[data-behaviours~="delete"]').click(function() {
+            oscar.notifications.checkAndSubmit($(this), 'delete');
+        });
+    },
+    checkAndSubmit: function($ele, btn_val) {
+        $ele.closest('tr').find('input').attr('checked', 'checked');
+        $ele.closest('form').find('button[value="' + btn_val + '"]').click();
+        return false;
+    }
+};
 oscar.forms = {
     init: function() {
         // Forms with this behaviour are 'locked' once they are submitted to 
@@ -90,9 +105,9 @@ $(document).ready(function()
     var window_width = $(window).width(), // Width of the window
         $sidebar = $('aside.span3'), // Width of main navigation
         $browse = $('#browse > .dropdown-menu'), // Height of main navigation
-        $browse_open = $browse.parent().find('> a[data-toggle]');
+        $browse_open = $browse.parent().find('> button[data-toggle]');
     
-        if (window_width > 480) {
+        if (window_width > 767) {
             // This activates elastislide
             var es_carousel = $('.es-carousel-wrapper'),
             product_page = $('.product_page').length;
@@ -117,7 +132,7 @@ $(document).ready(function()
             }
         }
 
-    if (window_width > 980) {
+    if (window_width > 767) {
       // set width of nav dropdown on the homepage
       $browse.css('width', $sidebar.outerWidth());
       // Remove click on browse button if menu is currently open
@@ -184,6 +199,16 @@ $(document).ready(function()
         e.preventDefault();
     });
     
+    //Account / Profile navigation
+    var checkHash = document.location.hash,
+        getId = checkHash.substring(1),
+        activeClass = $('.account-profile .tabbable'),
+        aHref = $('a[href=' + checkHash + ']').closest('li');
+    if (checkHash) {
+      activeClass.find('.active').removeClass('active');
+      $('#' + getId).add(aHref).addClass('active');
+    }
+
     //For IE - sets the width of a select in an overflow hidden container
     var selectBox = $('.product_pod select'),
         isIE = navigator.userAgent.toLowerCase().indexOf("msie");

@@ -4,7 +4,6 @@ from django.conf import settings
 from django.db.models import get_model
 
 from oscar.core.loading import get_class
-from oscar.apps.basket.abstract_models import OPEN
 
 Applicator = get_class('offer.utils', 'Applicator')
 Basket = get_model('basket', 'basket')
@@ -20,8 +19,8 @@ class BasketMiddleware(object):
 
     def get_basket(self, request):
         manager = Basket.open
-        cookie_basket = self.get_cookie_basket(settings.OSCAR_BASKET_COOKIE_OPEN,
-                                               request, manager)
+        cookie_basket = self.get_cookie_basket(
+            settings.OSCAR_BASKET_COOKIE_OPEN, request, manager)
 
         if hasattr(request, 'user') and request.user.is_authenticated():
             # Signed-in user: if they have a cookie basket too, it means
@@ -39,7 +38,8 @@ class BasketMiddleware(object):
 
             if cookie_basket:
                 self.merge_baskets(basket, cookie_basket)
-                request.cookies_to_delete.append(settings.OSCAR_BASKET_COOKIE_OPEN)
+                request.cookies_to_delete.append(
+                    settings.OSCAR_BASKET_COOKIE_OPEN)
         elif cookie_basket:
             # Anonymous user with a basket tied to the cookie
             basket = cookie_basket
@@ -68,7 +68,8 @@ class BasketMiddleware(object):
         if hasattr(request, 'basket') and request.basket.id > 0 \
             and not request.user.is_authenticated() \
             and settings.OSCAR_BASKET_COOKIE_OPEN not in request.COOKIES:
-            cookie = "%s_%s" % (request.basket.id, self.get_basket_hash(request.basket.id))
+            cookie = "%s_%s" % (
+                request.basket.id, self.get_basket_hash(request.basket.id))
             response.set_cookie(settings.OSCAR_BASKET_COOKIE_OPEN,
                                 cookie,
                                 max_age=settings.OSCAR_BASKET_COOKIE_LIFETIME,
@@ -98,7 +99,7 @@ class BasketMiddleware(object):
             if basket_hash == self.get_basket_hash(basket_id):
                 try:
                     basket = Basket.objects.get(pk=basket_id, owner=None,
-                                                status=OPEN)
+                                                status=Basket.OPEN)
                 except Basket.DoesNotExist:
                     request.cookies_to_delete.append(cookie_key)
             else:
@@ -110,4 +111,4 @@ class BasketMiddleware(object):
             Applicator().apply(request, basket)
 
     def get_basket_hash(self, basket_id):
-        return str(zlib.crc32(str(basket_id)+settings.SECRET_KEY))
+        return str(zlib.crc32(str(basket_id) + settings.SECRET_KEY))

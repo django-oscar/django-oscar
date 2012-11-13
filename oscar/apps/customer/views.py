@@ -33,6 +33,7 @@ UserAddress = get_model('address', 'UserAddress')
 Email = get_model('customer', 'email')
 UserAddress = get_model('address', 'UserAddress')
 CommunicationEventType = get_model('customer', 'communicationeventtype')
+ProductAlert = get_model('customer', 'ProductAlert')
 
 
 class LogoutView(RedirectView):
@@ -71,12 +72,17 @@ class AccountSummaryView(TemplateView):
 
     def get_context_data(self, **kwargs):
         ctx = super(AccountSummaryView, self).get_context_data(**kwargs)
+        # Delegate data fetching to separate methods so they are easy to
+        # override.
         ctx['addressbook_size'] = self.request.user.addresses.all().count()
         ctx['default_shipping_address'] = self.get_default_shipping_address(self.request.user)
         ctx['default_billing_address'] = self.get_default_billing_address(self.request.user)
-        ctx['emails'] = Email.objects.filter(user=self.request.user)
         ctx['orders'] = self.get_orders(self.request.user)
+        ctx['emails'] = self.get_emails(self.request.user)
+        ctx['alerts'] = self.get_product_alerts(self.request.user)
         self.add_profile_fields(ctx)
+
+        ctx['active_tab'] = self.request.GET.get('tab', 'profile')
         return ctx
 
     def get_orders(self, user):
@@ -105,6 +111,33 @@ class AccountSummaryView(TemplateView):
             })
         ctx['profile_fields'] = field_data
         ctx['profile'] = profile
+
+    def post(self, request, *args, **kwargs):
+        # A POST means an attempt to change the status of an alert
+        if 'cancel_alert' in request.POST:
+            return self.cancel_alert(request.POST.get('cancel_alert'))
+        return super(AccountSummaryView, self).post(request, *args, **kwargs)
+
+    def cancel_alert(self, alert_id):
+        try:
+            alert = ProductAlert.objects.get(user=self.request.user, pk=alert_id)
+        except ProductAlert.DoesNotExist:
+            messages.error(self.request, _("No alert found"))
+        else:
+            alert.cancel()
+            messages.success(self.request, _("Alert cancelled"))
+        return HttpResponseRedirect(
+            reverse('customer:summary')+'?tab=alerts'
+        )
+
+    def get_emails(self, user):
+        return Email.objects.filter(user=user)
+
+    def get_product_alerts(self, user):
+        return ProductAlert.objects.select_related().filter(
+            user=self.request.user,
+            date_closed=None,
+        )
 
     def get_default_billing_address(self, user):
         return self.get_user_address(user, is_default_for_billing=True)
@@ -152,18 +185,10 @@ class AccountRegistrationView(TemplateView):
         code = self.communication_type_code
         ctx = {'user': user,
                'site': get_current_site(self.request)}
-        try:
-            event_type = CommunicationEventType.objects.get(code=code)
-        except CommunicationEventType.DoesNotExist:
-            # No event in database, attempt to find templates for this type
-            messages = CommunicationEventType.objects.get_and_render(code, ctx)
-        else:
-            # Create order event
-            messages = event_type.get_messages(ctx)
-
+        messages = CommunicationEventType.objects.get_and_render(
+            code, ctx)
         if messages and messages['body']:
-            dispatcher = Dispatcher()
-            dispatcher.dispatch_user_messages(user, messages)
+            Dispatcher().dispatch_user_messages(user, messages)
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(*args, **kwargs)
@@ -196,8 +221,7 @@ class AccountRegistrationView(TemplateView):
         Register a new user from the data in *form*. If
         ``OSCAR_SEND_REGISTRATION_EMAIL`` is set to ``True`` a
         registration email will be send to the provided email address.
-        A new user account is created and the user is then logged
-        in.
+        A new user account is created and the user is then logged in.
         """
         user = form.save()
 

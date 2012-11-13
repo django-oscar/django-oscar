@@ -1,10 +1,9 @@
 from decimal import Decimal as D
-import datetime
 
 from django.test import TestCase
 
 from oscar.test.helpers import create_product
-from oscar.apps.partner.abstract_models import partner_wrappers
+from oscar.apps.partner import abstract_models
 
 
 class DummyWrapper(object):
@@ -66,40 +65,22 @@ class TestStockRecord(TestCase):
         self.assertEqual(10, self.stockrecord.max_purchase_quantity())
 
 
-class DefaultWrapperTests(TestCase):
-
-    def test_default_wrapper_for_in_stock(self):
-        product = create_product(price=D('10.00'), partner="Acme", num_in_stock=10)
-        self.assertEquals("In stock (10 available)", product.stockrecord.availability)
-        self.assertEqual("instock", product.stockrecord.availability_code)
-
-    def test_default_wrapper_for_out_of_stock(self):
-        product = create_product(price=D('10.00'), partner="Acme", num_in_stock=0)
-        self.assertEquals(u"Not available",
-                          unicode(product.stockrecord.availability))
-        self.assertEqual("outofstock", product.stockrecord.availability_code)
-
-    def test_dispatch_date_for_in_stock(self):
-        product = create_product(price=D('10.00'), partner="Acme", num_in_stock=1)
-        self.assertIsNone(product.stockrecord.dispatch_date)
-
-    def test_dispatch_date_for_out_of_stock(self):
-        product = create_product(price=D('10.00'), partner="Acme", num_in_stock=0)
-        self.assertIsNone(product.stockrecord.dispatch_date)
-
-
 class CustomWrapperTests(TestCase):
 
     def setUp(self):
-        partner_wrappers['Acme'] = DummyWrapper()
+        abstract_models.partner_wrappers = {1: DummyWrapper()}
 
     def tearDown(self):
-        del partner_wrappers['Acme']
+        abstract_models.partner_wrappers = None
 
     def test_wrapper_availability_gets_called(self):
-        product = create_product(price=D('10.00'), partner="Acme", num_in_stock=10)
-        self.assertEquals(u"Dummy response", unicode(product.stockrecord.availability))
+        product = create_product(
+            price=D('10.00'), partner="Acme", num_in_stock=10)
+        self.assertEquals(u"Dummy response",
+                          unicode(product.stockrecord.availability))
 
     def test_wrapper_dispatch_date_gets_called(self):
-        product = create_product(price=D('10.00'), partner="Acme", num_in_stock=10)
-        self.assertEquals("Another dummy response", product.stockrecord.dispatch_date)
+        product = create_product(
+            price=D('10.00'), partner="Acme", num_in_stock=10)
+        self.assertEquals("Another dummy response",
+                          product.stockrecord.dispatch_date)

@@ -1,6 +1,6 @@
 {% load currency_filters i18n %}<p xmlns="http://www.w3.org/1999/html">{% trans 'Hello,' %}</p>
 
-<p>{% blocktrans %}We are pleased to confirm your order {{ order.number }} has been received and
+<p>{% blocktrans with order_number=order.number %}We are pleased to confirm your order {{ order_number }} has been received and
 will be processed shortly.{% endblocktrans %}</p>
 
 <p>{% trans 'Your order contains:' %}</p>

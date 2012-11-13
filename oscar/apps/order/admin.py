@@ -66,7 +66,7 @@ class OrderNoteAdmin(admin.ModelAdmin):
 
 
 class OrderDiscountAdmin(admin.ModelAdmin):
-    readonly_fields = ('order' ,'offer_id', 'voucher_id', 'voucher_code', 'amount')
+    readonly_fields = ('order' ,'offer_id', 'offer_name', 'voucher_id', 'voucher_code', 'amount')
     list_display = ('order', 'offer', 'voucher', 'voucher_code', 'amount')
 
 

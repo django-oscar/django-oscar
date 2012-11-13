@@ -1,7 +1,7 @@
 {% load thumbnail %}
 {% load i18n %}
 
-{% with product.images.all as all_images %}
+{% with all_images=product.images.all %}
     {# use length rather then count as the images get queried anyways #}
 
     {% if all_images|length > 1 %}

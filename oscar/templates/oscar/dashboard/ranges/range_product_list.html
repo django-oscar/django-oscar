@@ -3,7 +3,7 @@
 {% load i18n %}
 
 {% block title %}
-{% blocktrans %}Products in range '{{ range.name }}'{% endblocktrans %} | {{ block.super }}
+{% blocktrans with name=range.name %}Products in range '{{ name }}'{% endblocktrans %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -20,7 +20,7 @@
 	<a href="{% url dashboard:range-update range.id %}">'{{ range.name }}'</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">{% trans "Products" %}</a></li>
+	<li class="active">{% trans "Products" %}</li>
 </ul>
 {% endblock %}
 
@@ -110,9 +110,7 @@
 				<button type="submit" class="btn btn-danger">{% trans "Remove selected products" %}</button>
 			</div>
 
-			{% if page_obj %}
-				{% include "catalogue/partials/pagination.html" %}
-			{% endif %}
+			{% include "partials/pagination.html" %}
 		</form>
 	{% else %}
 	<p>{% trans "No products found." %}</p>

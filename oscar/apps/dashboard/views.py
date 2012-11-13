@@ -1,12 +1,12 @@
+from datetime import timedelta
 from decimal import Decimal as D, ROUND_UP
-from datetime import datetime, timedelta
 
+from django.utils.timezone import now
 from django.views.generic import TemplateView
 from django.db.models.loading import get_model
 from django.db.models import Avg, Sum, Count
 from django.contrib.auth.models import User
 
-from oscar.apps.basket.abstract_models import OPEN as basket_OPEN
 from oscar.apps.promotions.models import AbstractPromotion
 
 ConditionalOffer = get_model('offer', 'ConditionalOffer')
@@ -32,7 +32,7 @@ class IndexView(TemplateView):
         ``Queryset`` of site offers is filtered by end date greater then
         the current date.
         """
-        return ConditionalOffer.objects.filter(end_date__gt=datetime.now(),
+        return ConditionalOffer.objects.filter(end_date__gt=now(),
                                                offer_type=ConditionalOffer.SITE)
 
     def get_active_vouchers(self):
@@ -40,7 +40,7 @@ class IndexView(TemplateView):
         Get all active vouchers. The returned ``Queryset`` of vouchers
         is filtered by end date greater then the current date.
         """
-        return Voucher.objects.filter(end_date__gt=datetime.now())
+        return Voucher.objects.filter(end_date__gt=now())
 
     def get_number_of_promotions(self, abstract_base=AbstractPromotion):
         """
@@ -64,7 +64,7 @@ class IndexView(TemplateView):
         """
         if filters is None:
             filters = {}
-        filters['status'] = basket_OPEN
+        filters['status'] = Basket.OPEN
         return Basket.objects.filter(**filters)
 
     def get_hourly_report(self, hours=24, segments=10):
@@ -78,7 +78,7 @@ class IndexView(TemplateView):
         when generating the y-axis labels (default=10).
         """
         # Get datetime for 24 hours agao
-        time_now = datetime.now().replace(minute=0, second=0)
+        time_now = now().replace(minute=0, second=0)
         start_time = time_now - timedelta(hours=hours-1)
 
         orders_last_day = Order.objects.filter(date_placed__gt=start_time)
@@ -125,7 +125,7 @@ class IndexView(TemplateView):
         return ctx
 
     def get_stats(self):
-        datetime_24hrs_ago = datetime.now() - timedelta(hours=24)
+        datetime_24hrs_ago = now() - timedelta(hours=24)
 
         orders = Order.objects.filter()
         orders_last_day = orders.filter(date_placed__gt=datetime_24hrs_ago)

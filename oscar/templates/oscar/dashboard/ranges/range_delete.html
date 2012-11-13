@@ -16,7 +16,7 @@
 	<a href="{% url dashboard:range-list %}">{% trans "Ranges" %}</a>
         <span class="divider">/</span>
     </li>
-	<li class="active"><a href=".">{% blocktrans with name=range.name %}Delete range '{{ name }}'?{% endblocktrans %}</a></li>
+	<li class="active">{% blocktrans with name=range.name %}Delete range '{{ name }}'?{% endblocktrans %}</li>
 </ul>
 {% endblock %}
 

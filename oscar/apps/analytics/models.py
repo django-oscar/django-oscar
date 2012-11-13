@@ -1,5 +1,6 @@
-from oscar.apps.analytics.abstract_models import (AbstractProductRecord, AbstractUserRecord,
-                                                  AbstractUserProductView, AbstractUserSearch)
+from oscar.apps.analytics.abstract_models import (
+    AbstractProductRecord, AbstractUserRecord,
+    AbstractUserProductView, AbstractUserSearch)
 
 
 class ProductRecord(AbstractProductRecord):

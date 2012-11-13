@@ -10,7 +10,6 @@
 {% endblock %}
 
 {% block place_order %}
-<h3>{% trans "Please review the information above, then click 'Place Order'" %}</h3>
 <form method="post" action="{% url checkout:preview %}" id="place-order-form">
 	<input type="hidden" name="action" value="place_order" />
 	{% csrf_token %}

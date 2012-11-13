@@ -1,7 +1,8 @@
+from datetime import timedelta
 from decimal import Decimal as D
-import datetime
 
 from django.test import TestCase
+from django.utils import timezone
 import mock
 
 from oscar.apps.address.models import Country
@@ -11,7 +12,8 @@ from oscar.apps.order.models import ShippingAddress, Order, Line, \
         OrderDiscount
 from oscar.apps.order.exceptions import (InvalidOrderStatus, InvalidLineStatus,
                                          InvalidShippingEvent)
-from oscar.test.helpers import create_order, create_product, create_offer
+from oscar.test.helpers import create_order, create_product, create_offer, \
+                               create_voucher
 
 ORDER_PLACED = 'order_placed'
 
@@ -71,15 +73,6 @@ class OrderStatusPipelineTests(TestCase):
             self.assertEqual('SHIPPED', line.status)
 
 
-class MockDateTime(datetime.datetime):
-
-    @classmethod
-    def stub(cls, method_name, return_value):
-        mocked_method = mock.Mock()
-        mocked_method.return_value = return_value
-        setattr(cls, method_name, mocked_method)
-
-
 class OrderNoteTests(TestCase):
 
     def setUp(self):
@@ -97,9 +90,10 @@ class OrderNoteTests(TestCase):
         OrderNote.editable_lifetime = 1
         note = self.order.notes.create(message='test')
         self.assertTrue(note.is_editable())
-        now = datetime.datetime.now()
-        with mock.patch('datetime.datetime', MockDateTime) as mock_datetime:
-            mock_datetime.stub('now', now + datetime.timedelta(seconds=30))
+
+        now = timezone.now()
+        with mock.patch.object(timezone, 'now') as mock_timezone:
+            mock_timezone.return_value = now + timedelta(seconds=30)
             self.assertFalse(note.is_editable())
 
 
@@ -274,17 +268,71 @@ class ShippingEventQuantityTests(TestCase):
                                              quantity=1)
 
 
-class OrderDiscountTests(TestCase):
+class TestOrderDiscount(TestCase):
 
-    def test_creation_without_offer_or_voucher(self):
+    def test_can_be_created_without_offer_or_voucher(self):
         order = create_order(number='100002')
         discount = OrderDiscount.objects.create(order=order, amount=D('10.00'))
+
         self.assertTrue(discount.voucher is None)
         self.assertTrue(discount.offer is None)
 
-    def test_creation_with_offer(self):
+        self.assertEquals(discount.description(), u'')
+
+    def test_can_be_created_with_an_offer(self):
         offer = create_offer()
         order = create_order(number='100002')
         discount = OrderDiscount.objects.create(order=order, amount=D('10.00'),
                                                 offer_id=offer.id)
         self.assertEqual(offer.id, discount.offer.id)
+        self.assertEqual(offer.name, discount.offer_name)
+
+    def test_can_be_created_with_an_offer_and_specified_offer_name(self):
+        offer = create_offer(name="My offer")
+        order = create_order(number='100002')
+        discount = OrderDiscount.objects.create(order=order, amount=D('10.00'),
+                                                offer_id=offer.id,
+                                                offer_name="Your offer")
+        self.assertEqual(offer.id, discount.offer.id)
+        self.assertEqual("Your offer", discount.offer_name)
+
+    def test_can_be_created_with_a_voucher(self):
+        voucher = create_voucher()
+        order = create_order(number='100002')
+        discount = OrderDiscount.objects.create(order=order, amount=D('10.00'),
+                                                voucher_id=voucher.id)
+        self.assertEqual(voucher.id, discount.voucher.id)
+        self.assertEqual(voucher.code, discount.voucher_code)
+
+    def test_can_be_created_with_a_voucher_and_specidied_voucher_code(self):
+        voucher = create_voucher()
+        order = create_order(number='100002')
+        discount = OrderDiscount.objects.create(order=order, amount=D('10.00'),
+                                                voucher_id=voucher.id,
+                                                voucher_code="anothercode")
+        self.assertEqual(voucher.id, discount.voucher.id)
+        self.assertEqual('anothercode', discount.voucher_code)
+
+    def test_contains_offer_details_after_offer_is_deleted(self):
+        offer = create_offer(name="Get 200% off")
+        order = create_order(number='100002')
+        discount = OrderDiscount.objects.create(order=order, amount=D('10.00'),
+                                                offer_id=offer.id)
+        offer.delete()
+
+        self.assertTrue(discount.voucher is None)
+        self.assertTrue(discount.offer is None)
+
+        self.assertEquals(discount.description(), u'Get 200% off')
+
+    def test_contains_voucher_details_after_voucher_is_deleted(self):
+        voucher = create_voucher()
+        order = create_order(number='100002')
+        discount = OrderDiscount.objects.create(order=order, amount=D('10.00'),
+                                                voucher_id=voucher.id)
+        voucher.delete()
+
+        self.assertTrue(discount.voucher is None)
+        self.assertTrue(discount.offer is None)
+
+        self.assertEquals(discount.description(), voucher.code)

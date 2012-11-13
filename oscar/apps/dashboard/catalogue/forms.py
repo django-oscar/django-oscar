@@ -6,6 +6,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from treebeard.forms import MoveNodeForm
 
+from oscar.forms.widgets import ImageInput
+
 Product = get_model('catalogue', 'Product')
 Category = get_model('catalogue', 'Category')
 StockRecord = get_model('partner', 'StockRecord')
@@ -69,6 +71,15 @@ class StockRecordForm(forms.ModelForm):
                                     label=_("Partner"))
     partner_sku = forms.CharField(required=False,
                                   label=_("Partner SKU"))
+
+    def __init__(self, product_class, *args, **kwargs):
+        self.product_class = product_class
+        super(StockRecordForm, self).__init__(*args, **kwargs)
+
+        # If not tracking stock, we hide the fields
+        if not self.product_class.track_stock:
+            del self.fields['num_in_stock']
+            del self.fields['low_stock_threshold']
 
     class Meta:
         model = StockRecord
@@ -191,7 +202,10 @@ class ProductForm(forms.ModelForm):
             raise forms.ValidationError(_("This field is required"))
         elif 'parent' in data and data['parent'] is None and not data['title']:
             raise forms.ValidationError(_("Parent products must have a title"))
-        return data
+        # calling the clean() method of BaseForm here is required to apply checks
+        # for 'unique' field. This prevents e.g. the UPC field from raising 
+        # a DatabaseError.
+        return super(ProductForm, self).clean()
 
 
 class StockAlertSearchForm(forms.Form):
@@ -224,6 +238,7 @@ class ProductCategoryFormSet(BaseInlineFormSet):
                 num_categories += 1
         return num_categories
 
+
 ProductCategoryFormSet = inlineformset_factory(Product, ProductCategory,
                                                form=ProductCategoryForm,
                                                formset=ProductCategoryFormSet,
@@ -234,6 +249,12 @@ class ProductImageForm(forms.ModelForm):
     class Meta:
         model = ProductImage
         exclude = ('display_order',)
+        # use ImageInput widget to create HTML displaying the
+        # actual uploaded image and providing the upload dialog
+        # when clicking on the actual image.
+        widgets = {
+            'original': ImageInput(),
+        }
 
     def save(self, *args, **kwargs):
         # We infer the display order of the image based on the order of the image fields

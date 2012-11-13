@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from oscar.apps.shipping.methods import OrderAndItemCharges, WeightBand, WeightBased
+from oscar.apps.shipping.models import (
+    OrderAndItemCharges, WeightBand, WeightBased)
 
 
 class OrderChargesAdmin(admin.ModelAdmin):

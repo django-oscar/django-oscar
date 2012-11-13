@@ -37,6 +37,7 @@ class LinkedPromotion(models.Model):
     def record_click(self):
         self.clicks += 1
         self.save()
+    record_click.alters_data = True
 
 
 class PagePromotion(LinkedPromotion):
@@ -156,9 +157,9 @@ class RawHTML(AbstractPromotion):
 
 class Image(AbstractPromotion):
     """
-    An image promotion is simply a named image which has an optional 
+    An image promotion is simply a named image which has an optional
     link to another part of the site (or another site).
-    
+
     This can be used to model both banners and pods.
     """
     _type = 'Image'
@@ -179,7 +180,7 @@ class Image(AbstractPromotion):
 class MultiImage(AbstractPromotion):
     """
     A multi-image promotion is simply a collection of image promotions
-    that are rendered in a specific way.  This models things like 
+    that are rendered in a specific way.  This models things like
     rotating banners.
     """
     _type = 'Multi-image'

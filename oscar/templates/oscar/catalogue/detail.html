@@ -3,14 +3,19 @@
 {% load history_tags %}
 {% load i18n %}
 
+{% block extrahead %}
+	<!-- Colorbox for image galleries -->
+	<link rel="stylesheet" href="{{ STATIC_URL }}oscar/js/colorbox/colorbox.css" type="text/css" media="screen" charset="utf-8"/>
+{% endblock %}
+
 {% block title %}
 {{ product.title }} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
-    <li>
-	<a href="{% url promotions:home %}">{% trans "Home" %}</a>
+	<li> 
+		<a href="{% url promotions:home %}">{% trans "Home" %}</a>
         <span class="divider">/</span>
     </li>
 	{% with category=product.categories.all.0 %}
@@ -20,9 +25,7 @@
 			<span class="divider">/</span>
 		</li>
 		{% endfor %}
-		<li class="active">
-			<a href=".">{{ product.title }}</a>
-		</li>
+		<li class="active">{{ product.title }}</li>
     {% endwith %}
 </ul>
 {% endblock %}
@@ -32,17 +35,19 @@
 
 {% block content %}
 <article class="product_page"><!-- Start of product page -->
+
     {% if user.is_authenticated and user.is_staff %}
     <div class="row-fluid">
         <div class="well">
-			<a href="{% url dashboard:catalogue-product product.id %}"><button class="btn btn-success">{% trans "Edit this product" %}</button></a>
+			<a href="{% url dashboard:catalogue-product product.id %}"><button class="btn btn-success btn-full">{% trans "Edit this product" %}</button></a>
         </div>
     </div>
     {% endif %}
+
     <div class="row-fluid">
         <div class="span6">
             {% include "catalogue/partials/gallery.html" %}
-        </div><!-- /span6 -->
+        </div>
         <div class="span6">
             <h1>{{ product.get_title }}</h1>
             
@@ -52,24 +57,15 @@
 				<ul class="review_count">
 					{% for review in reviews %}
 					<li class="{{ review.score }}">{{ review.score }}</li>
-			{% endfor %}
+					{% endfor %}
 				</ul>
 			{% else %}
-			<p class="star">{% trans "No Rating" %}
-			
-			<a href="{% url catalogue:reviews-add product.slug product.id %}#addreview">{% trans "Add review" %}</a>
-			</p>
+				<p class="star">
+					<a id="write_review" href="{% url catalogue:reviews-add product.slug product.id %}#addreview" class="btn btn-success btn-small">{% trans "Write a review" %}</a>
+				</p>
 			{% endif %}
-            
-			<p><strong>{% trans "Product Code:" %}</strong> <code>{{ product.upc }}</code></p>
              
             <hr/>
-
-			{% if product.description %}
-            <ul>
-				<li><a href="#product_description">{% trans "Read the full description" %}</a></li>
-            </ul>
-			{% endif %}
 
             {% include "catalogue/partials/add_to_basket_form.html" %}
         </div><!-- /span6 -->
@@ -80,15 +76,15 @@
     <div id="product_description" class="sub-header">
 		<h2>{% trans "Product Description" %}</h2>
     </div>
-    <p>{{ product.description }}</p>
+    <p>{{ product.description|safe }}</p>
 	{% endif %}
 	{% endblock %}
     
 	{% block product_info %}
 	<div class="sub-header">
-		<h2>Product Information</h2>
+		<h2>{% trans "Product Information" %}</h2>
 	</div>
-    <table class="table table-condensed">
+    <table class="table table-striped table-condensed">
 		{% if product.upc %}
         <tr>
 			<th>{% trans "UPC" %}</th><td>{{ product.upc }}</td>
@@ -137,7 +133,7 @@
 		<p>{% trans "Be the first to review this product." %}</p>
 		{% endif %}
        <div class="review_read">
-		   <a href="{% url catalogue:reviews-add product.slug product.id %}#addreview" class="btn btn-success">{% trans "Write a review" %}</a>
+		   <a href="{% url catalogue:reviews-add product.slug product.id %}#addreview" class="btn btn-success btn-full">{% trans "Write a review" %}</a>
        </div>
 
         {% if reviews %}
@@ -211,7 +207,9 @@
             </div>
         </div>
         {% endif %}
-    {% recently_viewed_products %}
+
+		{% recently_viewed_products %}
+
     </div>
 </article><!-- End of product page -->
 {% endblock content %}
