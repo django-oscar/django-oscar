@@ -21,8 +21,10 @@
             <tr><td>{% trans "No results found." %}</td></tr>
         {% endif %}
 	</table>
+
     {% if page_obj %}
         {% include "partials/pagination.html" %}
     {% endif %}
+
 
 {% endblock %}

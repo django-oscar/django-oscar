@@ -79,8 +79,6 @@
                 <tr><td>{% trans "No offers found." %}</td></tr>
                 {% endif %}
             </table>
-            {% if page_obj %}
-                {% include "partials/pagination.html" %}
-            {% endif %}
+			{% include "partials/pagination.html" %}
         </form>
 {% endblock dashboard_content %}

@@ -67,11 +67,7 @@
 {% endif %}
 
 <div class="form-actions"><a href="{% url customer:address-create %}" class="btn btn-primary">{% trans 'Add a New Address' %}</a></div>
-
-{% if page_obj %}
-    {% include "partials/pagination.html" %}
-{% endif %}
-
+{% include "partials/pagination.html" %}
 
 {% endblock content %}
 

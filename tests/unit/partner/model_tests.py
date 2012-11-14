@@ -3,7 +3,7 @@ from decimal import Decimal as D
 from django.test import TestCase
 
 from oscar.test.helpers import create_product
-from oscar.apps.partner.abstract_models import partner_wrappers
+from oscar.apps.partner import abstract_models
 
 
 class DummyWrapper(object):
@@ -68,15 +68,19 @@ class TestStockRecord(TestCase):
 class CustomWrapperTests(TestCase):
 
     def setUp(self):
-        partner_wrappers['Acme'] = DummyWrapper()
+        abstract_models.partner_wrappers = {1: DummyWrapper()}
 
     def tearDown(self):
-        del partner_wrappers['Acme']
+        abstract_models.partner_wrappers = None
 
     def test_wrapper_availability_gets_called(self):
-        product = create_product(price=D('10.00'), partner="Acme", num_in_stock=10)
-        self.assertEquals(u"Dummy response", unicode(product.stockrecord.availability))
+        product = create_product(
+            price=D('10.00'), partner="Acme", num_in_stock=10)
+        self.assertEquals(u"Dummy response",
+                          unicode(product.stockrecord.availability))
 
     def test_wrapper_dispatch_date_gets_called(self):
-        product = create_product(price=D('10.00'), partner="Acme", num_in_stock=10)
-        self.assertEquals("Another dummy response", product.stockrecord.dispatch_date)
+        product = create_product(
+            price=D('10.00'), partner="Acme", num_in_stock=10)
+        self.assertEquals("Another dummy response",
+                          product.stockrecord.dispatch_date)

@@ -110,11 +110,12 @@ Tangent projects:
 
 * Tata Group - http://www.landmarkonthenet.com
 * Carlsberg - Their global "We Deliver More" platform is powered by Oscar (but
-  is a B2B site so it not browsable by the public).
+  is a B2B site and not browsable by the public).
 * The UK Labour party - http://shop.labour.org.uk
 
 Non-Tangent:
 
 * Dolbeau - http://www.dolbeau.ca/
+* Sobusa - http://www.sobusa.fr/
 
 Many more on the way.  If you use Oscar in production, please let us know.

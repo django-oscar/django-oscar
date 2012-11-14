@@ -68,9 +68,7 @@
         {% endfor %}
     </table>
 
-    {% if page_obj %}
-        {% include "catalogue/partials/pagination.html" %}
-    {% endif %}
+	{% include "partials/pagination.html" %}
 
 {% else %}
     <table class="table table-striped table-bordered table-hover">

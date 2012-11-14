@@ -28,8 +28,15 @@
         <tr><td>{% trans "No results found." %}</td></tr>
         {% endif %}
 	</table>
+<<<<<<< HEAD
     {% if page_obj %}
         {% include "partials/pagination.html" %}
     {% endif %}
 
+=======
+	{% include "partials/pagination.html" %}
+{% else %}
+	<p>{% trans "No results found." %}</p>
+{% endif %}
+>>>>>>> 9594060a3e9ef71ba0c48eb580c5d5be7cb905b7
 {% endblock %}

@@ -31,7 +31,5 @@
     </tr>
     {% endfor %}
 </table>
-    {% if page_obj %}
-        {% include "partials/pagination.html" %}
-    {% endif %}
+{% include "partials/pagination.html" %}
 {% endblock %}
