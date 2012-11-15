@@ -4,9 +4,10 @@ import sys
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.utils.importlib import import_module
+from django.test.utils import override_settings
 
 from oscar.test.helpers import create_product, create_voucher
-from oscar.test import ClientTestCase, patch_settings
+from oscar.test import ClientTestCase
 from oscar.apps.basket.models import Basket
 from oscar.apps.order.models import Order
 from oscar.apps.address.models import Country
@@ -92,14 +93,14 @@ class EnabledAnonymousCheckoutViewsTests(ClientTestCase, CheckoutMixin):
                                                  'quantity': 1})
 
     def test_shipping_address_does_require_session_email_address(self):
-        with patch_settings(OSCAR_ALLOW_ANON_CHECKOUT=True):
+        with override_settings(OSCAR_ALLOW_ANON_CHECKOUT=True):
             self.reload_urlconf()
             url = reverse('checkout:shipping-address')
             response = self.client.get(url)
             self.assertIsRedirect(response)
 
     def test_email_address_is_saved_with_order(self):
-        with patch_settings(OSCAR_ALLOW_ANON_CHECKOUT=True):
+        with override_settings(OSCAR_ALLOW_ANON_CHECKOUT=True):
             self.reload_urlconf()
             self.add_product_to_basket()
             self.complete_guest_email_form('barry@example.com')

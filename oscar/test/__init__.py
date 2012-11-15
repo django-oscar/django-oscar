@@ -1,5 +1,4 @@
 import httplib
-from contextlib import contextmanager
 
 from django.test import TestCase
 from django.test.client import Client
@@ -7,19 +6,6 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django_webtest import WebTest
 from purl import URL
-
-
-@contextmanager
-def patch_settings(**kwargs):
-    from django.conf import settings
-    backup = {}
-    for key, value in kwargs.items():
-        if hasattr(settings, key):
-            backup[key] = getattr(settings, key)
-        setattr(settings, key, value)
-    yield
-    for key, value in backup.items():
-        setattr(settings, key, value)
 
 
 class ClientTestCase(TestCase):
