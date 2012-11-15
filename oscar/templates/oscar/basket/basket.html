@@ -143,7 +143,7 @@
 								{{ discount.voucher.name }} ({{ discount.voucher.code }})
 								<form action="{% url basket:vouchers-remove discount.voucher.id %}" method="POST">
 									{% csrf_token %}
-									<input type="submit" value="Remove" class="btn btn-small btn-danger"/>
+									<input type="submit" value="{% trans "Remove" %}" class="btn btn-small btn-danger"/>
 								</form>
 							</td>
 							<td>-{{ discount.discount|currency }}</td>
@@ -166,6 +166,9 @@
 						{% trans "Shipping" %} ({{ shipping_method.name }})
 						{% if shipping_method.is_discounted %}
 						<br/>This includes a discount
+						{% endif %}
+						{% if shipping_methods|length > 1 %}
+						<p><small>Alternative shipping methods can be chosen during checkout</small></p>
 						{% endif %}
 					</th>
 					<td class="align-right">{{ shipping_charge_incl_tax|currency }}</td>
