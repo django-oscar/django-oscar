@@ -788,7 +788,9 @@ class ValueCondition(Condition):
 
     def get_upsell_message(self, basket):
         value_of_matches = self._get_value_of_matches(basket)
-        return _('Spend %(value)s more from %(range)s') % {'value': value_of_matches, 'range': self.range}
+        return _('Spend %(value)s more from %(range)s') % {
+            'value': currency(self.value - value_of_matches),
+            'range': self.range}
 
     def consume_items(self, basket, affected_lines):
         """
