@@ -6,9 +6,8 @@ from django.core.urlresolvers import reverse
 from django.template import Template, Context
 from django_dynamic_fixture import get
 
-
-from oscar.test import ClientTestCase
-from oscar.test.helpers import create_order
+from oscar_testsupport.testcases import ClientTestCase
+from oscar_testsupport.factories import create_order
 from oscar.apps.order.models import Order, OrderNote
 
 

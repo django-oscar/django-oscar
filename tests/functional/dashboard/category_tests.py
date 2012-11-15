@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from django_dynamic_fixture import G
 
-from oscar.test import WebTestCase, ClientTestCase
+from oscar_testsupport.testcases import WebTestCase, ClientTestCase
 from oscar.apps.catalogue.models import Category
 from oscar.apps.dashboard.catalogue.forms import CategoryForm
 from oscar.apps.catalogue.categories import create_from_breadcrumbs

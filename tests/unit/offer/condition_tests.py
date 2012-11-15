@@ -4,7 +4,7 @@ from django.test import TestCase
 
 from oscar.apps.offer import models
 from oscar.apps.basket.models import Basket
-from oscar.test.helpers import create_product
+from oscar_testsupport.factories import create_product
 from tests.unit.offer import OfferTest
 
 

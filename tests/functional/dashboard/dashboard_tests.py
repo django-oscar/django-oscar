@@ -3,8 +3,8 @@ from decimal import Decimal as D
 from django.core.urlresolvers import reverse
 
 from oscar.apps.dashboard.views import IndexView
-from oscar.test import ClientTestCase
-from oscar.test.helpers import create_order
+from oscar_testsupport.testcases import ClientTestCase
+from oscar_testsupport.factories import create_order
 
 
 class TestDashboardIndexForAnonUser(ClientTestCase):

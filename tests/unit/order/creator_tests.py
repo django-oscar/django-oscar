@@ -6,7 +6,7 @@ from mock import Mock
 
 from oscar.apps.basket.models import Basket
 from oscar.apps.order.models import Order
-from oscar.test.helpers import create_product
+from oscar_testsupport.factories import create_product
 from oscar.apps.order.utils import OrderCreator
 
 

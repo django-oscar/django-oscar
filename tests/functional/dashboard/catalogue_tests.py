@@ -1,7 +1,7 @@
 from django.db.models import get_model
 from django.core.urlresolvers import reverse
 
-from oscar.test import ClientTestCase
+from oscar_testsupport.testcases import ClientTestCase
 
 from django_webtest import WebTest
 from django_dynamic_fixture import G

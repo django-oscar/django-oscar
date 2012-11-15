@@ -3,7 +3,7 @@ from django.core import mail
 from django.contrib.auth.models import User
 
 from oscar.apps.customer.utils import Dispatcher
-from oscar.test.helpers import create_order
+from oscar_testsupport.factories import create_order
 from oscar.apps.customer.models import CommunicationEventType
 
 

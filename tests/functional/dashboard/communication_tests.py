@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.core import mail
 
-from oscar.test import WebTestCase
+from oscar_testsupport.testcases import WebTestCase
 from oscar.apps.customer.models import CommunicationEventType
 
 
