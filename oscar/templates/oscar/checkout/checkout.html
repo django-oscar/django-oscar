@@ -124,22 +124,32 @@
         </div>
     </div>
     {% endfor %}
-    {% if shipping_method %}
-    <div class="basket-items">
-        <div class="row-fluid align-right">
-			<h4 class="span10">{% trans "Shipping:" %}</h4>
-            <h5 class="span2">
-                {{ shipping_method.basket_charge_incl_tax|currency }}
-            </h5>
-        </div>
-    </div>
-    {% endif %}
     <div class="basket-items">
         <div class="row-fluid align-right">
 			<h4 class="span10">{% trans "Basket total:" %}</h4>
             <h5 class="span2">{{ basket.total_incl_tax|currency }}</h5>
         </div>
     </div>
+    {% if shipping_method %}
+    <div class="basket-items">
+        <div class="row-fluid align-right">
+			<h4 class="span10">{% trans "Shipping:" %}
+			{% if shipping_method.is_discounted %}
+			<br/><small>
+				{% with discount=shipping_method.get_discount %}
+				{% blocktrans with amount=discount.discount|currency %}
+				This includes a discount of {{ amount }}
+				{% endblocktrans %}
+				{% endwith %}
+			</small>
+			{% endif %}
+			</h4>
+            <h5 class="span2">
+                {{ shipping_method.basket_charge_incl_tax|currency }}
+            </h5>
+        </div>
+    </div>
+    {% endif %}
     <div class="basket-items total">
         <div class="row-fluid align-right">
 			<h3 class="span10">{% trans "Order total:" %}</h3>

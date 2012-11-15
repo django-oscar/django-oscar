@@ -32,6 +32,16 @@
 			{% if method.description %}
 			<p>{{ method.description }}</p>
 			{% endif %}
+			{% if method.is_discounted %}
+				<small>
+				{% with discount=method.get_discount %}
+				{% blocktrans with amount=discount.discount|currency name=discount.name %}
+				This includes a discount of {{ amount }} as
+				your basket qualifies for the '{{ name }}' offer.
+				{% endblocktrans %}
+				{% endwith %}
+				</small>
+			{% endif %}
         </div>
         <div class="span1">
             {{ method.basket_charge_incl_tax|currency }}

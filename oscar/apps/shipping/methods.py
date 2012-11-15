@@ -74,8 +74,14 @@ class OfferDiscount(ShippingMethod):
             'offer': self.offer,
             'voucher': self.offer.get_voucher(),
             'freq': 1,
-            'discount': self.offer.benefit.shipping_discount(parent_charge)
+            'discount': self.offer.shipping_discount(parent_charge)
         }
+
+    def basket_charge_incl_tax_before_discount(self):
+        return self.method.basket_charge_incl_tax()
+
+    def basket_charge_excl_tax_before_discount(self):
+        return self.method.basket_charge_excl_tax()
 
     def basket_charge_incl_tax(self):
         parent_charge = self.method.basket_charge_incl_tax()
