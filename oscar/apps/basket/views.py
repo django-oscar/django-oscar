@@ -97,7 +97,6 @@ class BasketView(ModelFormSetView):
         # estimated order total is beforehand.
         method = self.get_default_shipping_method(self.request.basket)
         context['shipping_method'] = method
-        context['shipping_charge_incl_tax'] = method.basket_charge_incl_tax()
         context['shipping_methods'] = self.get_shipping_methods(
             self.request.basket)
 
