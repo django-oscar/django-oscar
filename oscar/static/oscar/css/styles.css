@@ -1181,6 +1181,7 @@ form:after{clear:both;}
 .basket-items [class*="span"] img{max-height:100px;}
 .basket-items:nth-child(even){background:#f8f8f8;}
 .basket-items .price_color{font-size:16px;font-weight:bold;}
+#basket_totals th small{font-weight:normal;}
 .order_summary{margin:0px 0px;padding:0px;*zoom:1;padding-top:0px;}.order_summary:before,.order_summary:after{display:table;content:"";line-height:0;}
 .order_summary:after{clear:both;}
 .order_summary li{display:block;}

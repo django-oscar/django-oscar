@@ -57,6 +57,10 @@ class BasketView(ModelFormSetView):
     def get_queryset(self):
         return self.request.basket.all_lines()
 
+    def get_shipping_methods(self, basket):
+        return Repository().get_shipping_methods(
+            self.request.user, self.request.basket)
+
     def get_default_shipping_method(self, basket):
         return Repository().get_default_shipping_method(
             self.request.user, self.request.basket)
@@ -86,9 +90,17 @@ class BasketView(ModelFormSetView):
     def get_context_data(self, **kwargs):
         context = super(BasketView, self).get_context_data(**kwargs)
         context['voucher_form'] = BasketVoucherForm()
+
+        # Shipping information is included to give an idea of the total order
+        # cost.  It is also important for PayPal Express where the customer
+        # gets redirected away from the basket page and needs to see what the
+        # estimated order total is beforehand.
         method = self.get_default_shipping_method(self.request.basket)
         context['shipping_method'] = method
         context['shipping_charge_incl_tax'] = method.basket_charge_incl_tax()
+        context['shipping_methods'] = self.get_shipping_methods(
+            self.request.basket)
+
         context['order_total_incl_tax'] = (
             self.request.basket.total_incl_tax +
             method.basket_charge_incl_tax())
