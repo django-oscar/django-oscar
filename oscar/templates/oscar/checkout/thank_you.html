@@ -102,15 +102,6 @@
 </div>
 {% endfor %}
 
-{% for discount in order.discounts.all %}
-<div class="basket-items">
-    <div class="row-fluid align-right">
-        <h4 class="span10">{{ discount.offer }}</h4>
-        <h5 class="span2">- {{ discount.amount|currency }}</h5>
-    </div>
-</div>
-{% endfor %}
-
 <div class="basket-items">
     <div class="row-fluid align-right">
 		<h4 class="span10">{% trans "Basket total" %}</h4>
@@ -123,6 +114,20 @@
         <h5 class="span2">{{ order.shipping_incl_tax|currency }}</h5>
     </div>
 </div>
+
+{% with discounts=order.basket_discounts %}
+{% if discounts %}
+<div class="basket-items">
+	{% for discount in order.basket_discounts %}
+    <div class="row-fluid align-right">
+        <h5 class="span10">{{ discount.offer }}</h5>
+        <h5 class="span2">- {{ discount.amount|currency }}</h5>
+    </div>
+	{% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+
 <div class="basket-items total">
     <div class="row-fluid align-right">
 		<h3 class="span10">{% trans "Order total" %}</h3>
