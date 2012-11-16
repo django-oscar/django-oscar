@@ -4,6 +4,11 @@
 
 {% block body_class %}orders home{% endblock %}
 
+{% block extrahead %}
+    {{ block.super }}
+	<meta http-equiv="refresh" content="300">
+{% endblock %}
+
 {% block breadcrumbs %}
 {% endblock %}
 
@@ -14,7 +19,6 @@
 
 <div class="table-header">
 	<i class="icon-signal icon-large"></i>{% trans "Your Store Statistics" %}
-	<!-- <p><a href="{% url dashboard:order-list %}" class="btn pull-right"><i class="icon-redo"></i>{% trans "Update" %}</a></p> -->
 </div>
 
 <div class="content-block">
