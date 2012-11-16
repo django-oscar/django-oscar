@@ -10,16 +10,16 @@ create-page
 {% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">
-    <li>
-	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
-        <span class="divider">/</span>
-    </li>
-    <li>
-	<a href="{% url dashboard:offer-list %}">{% trans "Offers" %}</a>
-        <span class="divider">/</span>
-    </li>
-	<li class="active">{{ title }}</li>
+<ul class="breadcrumb">   	
+    <li>   	
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>   	
+        <span class="divider">/</span>   	
+    </li>   	
+    <li>   	
+        <a href="{% url dashboard:offer-list %}">{% trans "Offers" %}</a>   	
+        <span class="divider">/</span>   	
+    </li>   	
+    <li class="active">{{ title }}</li>   	
 </ul>
 {% endblock %}
 
@@ -30,14 +30,17 @@ create-page
 {% endblock header %}
 
 {% block dashboard_content %}
-<form action="." method="post" class="form-horizontal well wysiwyg">
+<div class="table-header">
+    <h3><i class="icon-gift icon-large"></i>{{ title }}</h3>
+</div>
+<form action="." method="post" class="form-stacked well wysiwyg">
 	{% csrf_token %}
 	{% include "partials/form_fields.html" with form=form %}
 	{% block form_extradata %}{% endblock %}
 	{% block form_actions %}
 	<div class="form-actions">
 		{% if back_url %}
-		<a href="{{ back_url }}" class="btn btn-primary">{% trans "Back" %}</a> {% trans "or" %}
+		<a href="{{ back_url }}" class="btn">{% trans "Back" %}</a> {% trans "or" %}
 		{% endif %}
 		<button class="btn btn-primary" type="submit">{% trans "Continue" %}</button> {% trans "or" %}
 		<a href="{% url dashboard:offer-list %}">{% trans "cancel" %}</a>

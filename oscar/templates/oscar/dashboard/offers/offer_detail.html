@@ -8,17 +8,17 @@
 {% endblocktrans %} | {{ block.super }}
 {% endblock %}
 
-{% block breadcrumbs %}
-<ul class="breadcrumb">
-    <li>
-	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
-        <span class="divider">/</span>
-    </li>
-    <li>
-	<a href="{% url dashboard:offer-list %}">{% trans "Offers" %}</a>
-        <span class="divider">/</span>
-    </li>
-    <li class="active">'{{ offer.name }}'</li>
+{% block breadcrumbs %} 	
+<ul class="breadcrumb">   	
+    <li>  	
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>   	
+        <span class="divider">/</span>   	
+    </li>   	
+    <li>   	
+        <a href="{% url dashboard:offer-list %}">{% trans "Offers" %}</a>   	
+        <span class="divider">/</span>   	
+    </li>   	
+    <li class="active">'{{ offer.name }}'</li>   	
 </ul>
 {% endblock %}
 

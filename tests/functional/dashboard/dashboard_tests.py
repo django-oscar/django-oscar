@@ -30,7 +30,7 @@ class TestDashboardIndexForStaffUser(ClientTestCase):
         report = IndexView().get_hourly_report()
         self.assertItemsEqual(report, ['order_total_hourly', 'max_revenue',
                                        'y_range'])
-        self.assertEquals(len(report['order_total_hourly']), 24)
+        self.assertEquals(len(report['order_total_hourly']), 12)
         self.assertEquals(len(report['y_range']), 0)
         self.assertEquals(report['max_revenue'], 0)
 
@@ -39,7 +39,7 @@ class TestDashboardIndexForStaffUser(ClientTestCase):
         create_order(total_incl_tax=D('21.90'), total_excl_tax=D('21.90'))
         report = IndexView().get_hourly_report()
 
-        self.assertEquals(len(report['order_total_hourly']), 24)
+        self.assertEquals(len(report['order_total_hourly']), 12)
         self.assertEquals(len(report['y_range']), 11)
         self.assertEquals(report['max_revenue'], D('60'))
 

@@ -84,8 +84,8 @@ class IndexView(TemplateView):
         orders_last_day = Order.objects.filter(date_placed__gt=start_time)
 
         order_total_hourly = []
-        for hour in range(0, hours):
-            end_time = start_time + timedelta(hours=1)
+        for hour in range(0, hours, 2):
+            end_time = start_time + timedelta(hours=2)
             hourly_orders = orders_last_day.filter(date_placed__gt=start_time,
                                                    date_placed__lt=end_time)
             total = hourly_orders.aggregate(

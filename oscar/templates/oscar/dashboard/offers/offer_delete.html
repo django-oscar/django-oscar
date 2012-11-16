@@ -2,21 +2,25 @@
 {% load currency_filters %}
 {% load i18n %}
 
+{% block body_class %}
+create-page
+{% endblock %}
+
 {% block title %}
 {% trans "Delete offer" %} | {% trans "Offer management" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">
-    <li>
-	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
-        <span class="divider">/</span>
-    </li>
-    <li>
-	<a href="{% url dashboard:offer-list %}">{% trans "Offers" %}</a>
-        <span class="divider">/</span>
-    </li>
-	<li class="active">{% trans "Delete offer?" %}</li>
+<ul class="breadcrumb">	  	
+    <li>	  	
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>	  	
+        <span class="divider">/</span>	  	
+    </li>	  	
+    <li>	  	
+        <a href="{% url dashboard:offer-list %}">{% trans "Offers" %}</a>	  	
+        <span class="divider">/</span>	  	
+    </li>	 	
+    <li class="active">{% trans "Delete offer?" %}</li>
 </ul>
 {% endblock %}
 
@@ -27,7 +31,10 @@
 {% endblock header %}
 
 {% block dashboard_content %}
-<form action="." method="post" class="">
+<div class="table-header">
+    <h2>{% trans "Offer" %}</h2>
+</div>
+<form action="." method="post" class="well">
 	{% csrf_token %}
 	{% include 'dashboard/offers/partials/offer.html' %}
 

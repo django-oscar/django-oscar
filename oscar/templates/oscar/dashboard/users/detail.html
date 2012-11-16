@@ -9,16 +9,16 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">
-    <li>
-	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
-        <span class="divider">/</span>
-    </li>
-    <li>
-	<a href="{% url dashboard:users-index %}">{% trans "Customers" %}</a>
-        <span class="divider">/</span>
-    </li>
-	<li class="active">{% blocktrans with email=customer.email %}{{ email }}{% endblocktrans %}</li>
+<ul class="breadcrumb">	  	
+    <li>	  	
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>	  	
+        <span class="divider">/</span>	  	
+    </li>	  	
+    <li>	  	
+        <a href="{% url dashboard:users-index %}">{% trans "Customers" %}</a>	  	
+        <span class="divider">/</span>	  	
+    </li>	  	
+    <li class="active">{% blocktrans with email=customer.email %}{{ email }}{% endblocktrans %}</li>	  	
 </ul>
 {% endblock %}
 
@@ -31,8 +31,10 @@
 {% block dashboard_content %}
 <div class="row-fluid">
     <div class="span3">
-		<h2>{% trans "General" %}</h2>
-        <div id="user_details" class="well well-info">
+        <div class="table-header">
+            <h2>{% trans "General" %}</h2>
+        </div>
+        <div id="user_details" class="well">
             <ul>
 				<li>{% trans "Email:" %} {{ customer.email }}</li>
 				<li>{% trans "First name:" %} {{ customer.first_name|default:"-" }}</li>
@@ -52,40 +54,36 @@
     </div>
 
     <div class="span9">
-		<h2>{% trans "Detailed information" %}</h2>
-        <div id="user_order_details" class="row-fluid">
-            <div class="span4">
-                <div class="well well-info">
-					<h3>{% trans "General" %}</h3>
+        <table class="table table-striped table-bordered table-hover">
+            <caption>{% trans "Detailed information" %}</caption>
+            <tr>
+                <th>{% trans "General" %}</th>
+                <th>{% trans "Orders" %}</th>
+                <th>{% trans "Reviews" %}</th>
+            </tr>
+            <tr>
+                <td>
                     <ul>
-						<li>{% trans "Last login:" %} {{ customer.last_login }}</li>
-						<li>{% trans "Date joined:" %} {{ customer.date_joined }}</li>
-						<li>{% trans "Number of viewed products:" %} {{ customer.userrecord.num_product_views|default:0 }}</li>
+                        <li>{% trans "Last login:" %} {{ customer.last_login }}</li>
+                        <li>{% trans "Date joined:" %} {{ customer.date_joined }}</li>
+                        <li>{% trans "Number of viewed products:" %} {{ customer.userrecord.num_product_views|default:0 }}</li>
                     </ul>
-                </div>
-            </div>
-
-            <div class="span4">
-                <div class="well well-info">
-					<h3>{% trans "Orders" %}</h3>
+                </td>
+                <td>
                     <ul>
-						<li>{% trans "Number of orders:" %} {{ customer.userrecord.num_orders|default:0 }}</li>
-						<li>{% trans "Number of ordered items:" %} {{ customer.userrecord.num_order_items|default:0 }}</li>
-						<li>{% trans "Total spent:" %} {{ customer.userrecord.total_spent|default:0|currency }}</li>
-						<li>{% trans "Date of last order:" %} {{ customer.userrecord.date_last_order|default:"-" }}</li>
+                        <li>{% trans "Number of orders:" %} {{ customer.userrecord.num_orders|default:0 }}</li>
+                        <li>{% trans "Number of ordered items:" %} {{ customer.userrecord.num_order_items|default:0 }}</li>
+                        <li>{% trans "Total spent:" %} {{ customer.userrecord.total_spent|default:0|currency }}</li>
+                        <li>{% trans "Date of last order:" %} {{ customer.userrecord.date_last_order|default:"-" }}</li>
                     </ul>
-                </div>
-            </div>
-
-            <div class="span4">
-                <div class="well well-info">
-					<h3>{% trans "Reviews" %}</h3>
+                </td>
+                <td>
                     <ul>
-						<li>{% trans "Number of reviews:" %} {{ customer.reviews.count }}</li>
+                        <li>{% trans "Number of reviews:" %} {{ customer.reviews.count }}</li>
                     </ul>
-                </div>
-            </div>
-        </div>
+                </td>
+            </tr>
+        </table>
     </div>
 </div>
 
@@ -99,9 +97,9 @@
 
 	<div class="tab-content">
         <div id="user_orders" class="tab-pane active">
-			<h2>{% trans "Orders" %}</h2>
-            {% if customer.orders.count %}
-             <table class="table table-striped table-bordered">
+             <table class="table table-striped table-bordered table-hover">
+                 <caption>{% trans "Orders" %}</caption>
+                 {% if customer.orders.count %}
                  <tr>
 					 <th>{% trans "Order Number" %}</th>
 					 <th>{% trans "Num items" %}</th>
@@ -120,10 +118,11 @@
 					 <td><a href="{% url dashboard:order-detail order.number %}" class="btn btn-info">{% trans "View" %}</a></td>
                  </tr>
                  {% endfor %}
+                 {% else %}
+     			    <tr><td>{% trans "This customer has not placed any orders yet." %}</td></tr>
+                 {% endif %}
              </table>
-            {% else %}
-			<p>{% trans "This customer has not placed any orders yet." %}</p>
-            {% endif %}
+
         </div>
 
         <div id="user_addresses" class="tab-pane">
@@ -151,11 +150,9 @@
         </div>
 
         <div id="user_reviews" class="tab-pane">
-            <div class="sub-header">
-				<h2>{% trans "Reviews" %}</h2>
-            </div>
-            {% if customer.reviews.count %}
-            <table class="table table-striped table-bordered">
+            <table class="table table-striped table-bordered table-hover">
+                <caption>{% trans "Reviews" %}</caption>
+                {% if customer.reviews.count %}
                 <tr>
 					<th>{% trans "Product ID" %}</th>
 					<th>{% trans "Score" %}</th>
@@ -172,10 +169,11 @@
                     <td>{{ review.date_created }}</td>
                 </tr>
                 {% endfor %}
+                {% else %}
+    			<tr><td>{% trans "This customer has not written any reviews yet." %}</td></tr>
+                {% endif %}
             </table>
-            {% else %}
-			<p>{% trans "This customer has not written any reviews yet." %}</p>
-            {% endif %}
+
         </div>
 
     </div>
