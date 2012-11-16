@@ -1403,6 +1403,9 @@ h6 {
   margin-top: 0;
   font-weight: normal;
 }
+h1 {
+  font-size: 30px;
+}
 h2 {
   font-size: 18px;
 }
@@ -1432,7 +1435,6 @@ h3.app-ico:before {
   font-size: 12px;
 }
 .btn-warning,
-.btn-danger,
 .btn-success,
 .btn-info {
   background-color: #f5f5f5;
@@ -1451,43 +1453,34 @@ h3.app-ico:before {
   *color: #333;
 }
 .btn-warning:hover,
-.btn-danger:hover,
 .btn-success:hover,
 .btn-info:hover,
 .btn-warning:active,
-.btn-danger:active,
 .btn-success:active,
 .btn-info:active,
 .btn-warning.active,
-.btn-danger.active,
 .btn-success.active,
 .btn-info.active,
 .btn-warning.disabled,
-.btn-danger.disabled,
 .btn-success.disabled,
 .btn-info.disabled,
 .btn-warning[disabled],
-.btn-danger[disabled],
 .btn-success[disabled],
 .btn-info[disabled] {
   background-color: #e6e6e6;
 }
 .btn-warning:active,
-.btn-danger:active,
 .btn-success:active,
 .btn-info:active,
 .btn-warning.active,
-.btn-danger.active,
 .btn-success.active,
 .btn-info.active {
   background-color: #cccccc \9;
 }
 .btn-warning:hover,
-.btn-danger:hover,
 .btn-success:hover,
 .btn-info:hover,
 .btn-warning:active,
-.btn-danger:active,
 .btn-success:active,
 .btn-info:active {
   color: inherit;
@@ -1506,7 +1499,6 @@ h3.app-ico:before {
   border-color: #005096 #005096 #00274a;
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
   filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
-  font-weight: bold;
 }
 .btn-primary:hover,
 .btn-primary:active,
@@ -1518,6 +1510,10 @@ h3.app-ico:before {
 .btn-primary:active,
 .btn-primary.active {
   background-color: #003563 \9;
+}
+.btn-primary,
+.btn-danger {
+  font-weight: bold;
 }
 td .btn-toolbar {
   margin: 0;
@@ -1533,20 +1529,91 @@ td .btn-toolbar {
   top: 2px;
   padding-right: 5px;
 }
-.form-horizontal .control-group {
+.form-horizontal .control-label,
+.form-stacked .control-label {
+  text-align: left;
+}
+.form-horizontal .control-group,
+.form-stacked .control-group {
   margin-bottom: 9px;
 }
-.form-horizontal .control-label {
-  text-align: left;
+.form-horizontal input[type=text],
+.form-stacked input[type=text],
+.form-horizontal textarea,
+.form-stacked textarea,
+.form-horizontal select,
+.form-stacked select {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  font-size: 12px;
+  min-height: 35px;
+}
+.form-horizontal textarea,
+.form-stacked textarea {
+  max-height: 200px;
 }
 .form-inline {
   margin-bottom: 0;
+}
+.form-inline .help-block:first-child {
+  display: none;
 }
 .form-inline label {
   margin-right: 5px;
 }
 .form-inline .control-group {
   margin-right: 10px;
+}
+.fields-full input[type=text],
+.fields-full textarea {
+  width: 100%;
+}
+.well .form-actions,
+.tabbable.dashboard .tab-content .form-actions {
+  margin-bottom: 0;
+  position: relative;
+  bottom: -19px;
+  left: -19px;
+  width: 100%;
+  padding: 19px;
+  border-top-color: #ccc;
+}
+.tabbable.dashboard .tab-content .form-actions {
+  bottom: -29px;
+  left: -29px;
+  padding-left: 29px;
+  padding-right: 29px;
+}
+.well form .form-actions {
+  bottom: -39px;
+}
+.create-page .form-horizontal input[type=text],
+.create-page .form-stacked input[type=text],
+.create-page .form-horizontal textarea,
+.create-page .form-stacked textarea,
+.create-page .form-horizontal select,
+.create-page .form-stacked select {
+  width: 95%;
+}
+.create-page .form-stacked .form-inline input[type=text],
+.create-page .form-stacked .form-inline textarea,
+.create-page .form-stacked .form-inline select {
+  width: auto;
+}
+.create-page label {
+  font-weight: bold;
+}
+input[type=text].hasDatepicker,
+.create-page input[type=text].hasDatepicker,
+.form-inline input[type=text].hasDatepicker,
+.form-horizontal input[type=text].hasDatepicker,
+.form-stacked input[type=text].hasDatepicker {
+  width: 85px;
+}
+.wysihtml5-sandbox {
+  border: 1px solid #ccc!important;
 }
 /* ADDITIONAL ERRORS */
 .errorlist {
@@ -1786,23 +1853,19 @@ body {
   border-bottom-color: #B2DEF2;
 }
 .breadcrumb {
-  /*margin-top:100px;*/
-
-  display: none;
+  margin-top: 20px;
 }
 button {
   background-color: transparent;
 }
 .page-header {
-  padding: 10px 20px 10px 0;
+  padding: 0 20px 10px 0;
   margin-bottom: 0;
   border-bottom: 0;
 }
-.page-header h1 {
-  display: none;
-}
 caption,
 .table-header {
+  *zoom: 1;
   font-weight: bold;
   font-size: 14px;
   margin-bottom: 0;
@@ -1824,6 +1887,17 @@ caption,
   border-radius: 3px 3px 0 0;
   text-align: left;
   line-height: 28px;
+}
+caption:before,
+.table-header:before,
+caption:after,
+.table-header:after {
+  display: table;
+  content: "";
+}
+caption:after,
+.table-header:after {
+  clear: both;
 }
 caption h2,
 .table-header h2,
@@ -1902,9 +1976,6 @@ caption > i,
 .search-adv ul {
   margin: 0;
 }
-.product-new .form-inline.pull-left {
-  margin-right: 15px;
-}
 .no-float {
   float: none;
 }
@@ -1936,7 +2007,8 @@ caption > i,
 .tabbable.dashboard {
   margin-bottom: 18px;
 }
-.tabbable.dashboard .navbar {
+.tabbable.dashboard .navbar,
+.tabbable.dashboard .nav-tabs {
   margin-bottom: 0;
 }
 .tabbable.dashboard .tab-content {
@@ -1945,10 +2017,6 @@ caption > i,
   border: 1px #E1E1E1 solid;
   border-top-width: 0;
   padding: 30px;
-}
-.fields-full input[type=text],
-.fields-full textarea {
-  width: 99%;
 }
 .well,
 .alert,
@@ -1961,7 +2029,7 @@ caption > i,
   *zoom: 1;
   box-shadow: none;
   background-color: #efefef;
-  border-color: #dddbdb;
+  border-color: #bbb;
 }
 .well:before,
 .well:after {
@@ -1990,7 +2058,6 @@ caption > i,
 .create-page .well,
 .promotions .well-info {
   background-color: #ffffff;
-  border-color: rgba(0, 0, 0, 0.1);
 }
 .alert {
   background-color: #fff49f;
@@ -2238,13 +2305,6 @@ caption > i,
   width: 15px;
   font-weight: bold;
   text-align: center;
-}
-.product-new textarea {
-  width: 100%;
-  display: block;
-  margin: 0 auto;
-  color: #000;
-  font-family: "Myriad Pro", Myriad, "Gill Sans", "Gill Sans MT", "DejaVu Sans Condensed", "Liberation Sans", "Nimbus Sans L", Tahoma, Geneva, "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 .upload-image {
   *zoom: 1;
@@ -2502,7 +2562,7 @@ textarea {
 textarea.plain {
   font-family: monospace;
 }
-@media (max-width: 1100px) {
+@media (max-width: 1300px) {
   .navbar-primary .nav > li a:before {
     display: none;
   }

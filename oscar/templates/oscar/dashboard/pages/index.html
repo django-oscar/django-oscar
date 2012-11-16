@@ -9,29 +9,43 @@
 {% endblock %}
 
 {% block breadcrumbs %}
+<ul class="breadcrumb">   	
+    <li>       	
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>       	
+        <span class="divider">/</span>       	
+    </li>       	
+    <li class="active">{% trans "Pages" %}</li>       	
+</ul>
 {% endblock %}
 
 {% block header %}
-<div class="well well-info">
-    <h3><i class="icon-search"></i> Search</h3>
+<div class="page-header">
+    <h1>{% trans "Page Management" %}</h1>
+</div>
+{% endblock header %}
+
+{% block dashboard_content %}
+<div class="table-header">
+    <h3><i class="icon-search icon-large"></i>Search</h3>
+</div>
+<div class="well">
     <form action="." method="get" class="form-inline">
         {% include "partials/form_fields_inline.html" with form=form %}
         <input type="submit" value="{% trans "Search" %}" class="btn btn-primary"/>
     </form>
 </div>
-{% endblock header %}
 
-{% block dashboard_content %}
-
-<div class="well well-success">
-    <h3><i class="icon-file"></i> Create new page</h3>
+<div class="table-header">
+    <h3><i class="icon-file icon-large"></i>Create new page</h3>
+</div>
+<div class="well">
     <form action="{% url dashboard:page-create %}" method="get" class="form-inline">
-        <input type="submit" value="{% trans "Create" %}" class="btn btn-primary" />
+        <button type="submit" class="btn btn-primary"><i class="icon-plus"></i> {% trans "Create page" %}</button>
     </form>
 </div>
 
 <div class="table-header">
-    <h2>{{ queryset_description }}</h2>
+    <h2><i class="icon-file icon-large"></i>{{ queryset_description }}</h2>
 </div>
 
 

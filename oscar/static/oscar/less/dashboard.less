@@ -20,6 +20,9 @@ h1, h2, h3, h4, h5, h6 {
   margin-top:0;
   font-weight:normal;
 }
+h1 {
+    font-size: 30px;
+}
 h2 {
     font-size: 18px;
 }
@@ -47,7 +50,6 @@ h3.app-ico:before {
   font-size:12px;
 }
 .btn-warning,
-.btn-danger,
 .btn-success,
 .btn-info {
   .buttonBackground(@white, darken(@white, 10%));
@@ -61,6 +63,9 @@ h3.app-ico:before {
 }
 .btn-primary {
   .buttonBackground(#0083C9, #005096);
+}
+.btn-primary,
+.btn-danger {
   font-weight:bold;
 }
 td .btn-toolbar {
@@ -83,20 +88,99 @@ td .btn-toolbar {
 
 // FORM CHANGES
 // -----------
-.form-horizontal .control-group {
-  margin-bottom:@baseLineHeight / 2;
-}
-.form-horizontal .control-label {
-    text-align: left;
+.form-horizontal, 
+.form-stacked {
+  .control-label {
+      text-align: left;
+  }
+  .control-group {
+    margin-bottom:@baseLineHeight / 2;
+  }
+  input[type=text],
+  textarea,
+  select {
+    .box-sizing(border-box);
+    font-size:12px;
+    min-height: 35px;
+  }
+  textarea {
+    max-height:200px;
+  }
 }
 .form-inline {
   margin-bottom: 0;
+  .help-block:first-child {
+    display:none;
+  }
   label {
     margin-right: 5px;
   }
   .control-group {
     margin-right:10px;
   }
+}
+.fields-full {
+  input[type=text],
+  textarea {
+    width:100%;
+  }
+}
+.well,
+.tabbable.dashboard .tab-content {
+  .form-actions {
+    margin-bottom:0;
+    position:relative;
+    bottom:-19px;
+    left:-19px;
+    width:100%;
+    padding: 19px;
+    border-top-color: #ccc;
+  }
+}
+.tabbable.dashboard .tab-content {
+  .form-actions {
+    bottom:-29px;
+    left:-29px;
+    padding-left: 29px;
+    padding-right: 29px;
+  }
+}
+.well form {
+  .form-actions {
+    bottom:-39px;
+  }
+}
+.create-page {
+  .form-horizontal, 
+  .form-stacked {
+    input[type=text],
+    textarea,
+    select {
+      width:95%;
+    }
+  }
+  .form-stacked {
+    .form-inline {
+      input[type=text],
+      textarea,
+      select {
+        width:auto;
+      }
+    }
+  }
+  label {
+    font-weight:bold;
+  }
+}
+input[type=text].hasDatepicker,
+.create-page input[type=text].hasDatepicker,
+.form-inline input[type=text].hasDatepicker,
+.form-horizontal input[type=text].hasDatepicker,
+.form-stacked input[type=text].hasDatepicker   {
+  width:85px;
+}
+.wysihtml5-sandbox {
+  border:1px solid #ccc!important;
 }
 /* ADDITIONAL ERRORS */
 .errorlist {
@@ -319,22 +403,19 @@ body {
 }
 
 .breadcrumb {
-  /*margin-top:100px;*/
-  display: none;
+  margin-top:20px;
 }
 button {
   background-color:transparent;
 }
 .page-header {
-  padding: 10px 20px 10px 0;
+  padding: 0 20px 10px 0;
   margin-bottom: 0;
   border-bottom: 0;
-  h1 {
-    display: none;
-  }
 }
 caption,
 .table-header {
+  .clearfix();
   h2,h3 {
     font-weight: bold;
     font-size: 14px;
@@ -406,11 +487,6 @@ caption,
     margin:0;
   }
 }
-.product-new {
-  .form-inline.pull-left {
-    margin-right:15px;
-  }
-}
 .no-float {
   float:none;
 }
@@ -445,7 +521,7 @@ caption,
 }
 .tabbable.dashboard {
   margin-bottom:@baseLineHeight;
-  .navbar {
+  .navbar, .nav-tabs {
     margin-bottom:0;
   }
   .tab-content {
@@ -454,12 +530,6 @@ caption,
     border:1px #E1E1E1 solid;      
     border-top-width:0;
     padding:30px;
-  }
-}
-.fields-full {
-  input[type=text],
-  textarea {
-    width:99%;
   }
 }
 // WELLS
@@ -473,7 +543,7 @@ caption,
   .clearfix();
   box-shadow: none;
   background-color: #efefef;
-  border-color: #dddbdb;
+  border-color: #bbb;
 }
 .well-success {
   background-color: @successBackground;
@@ -494,7 +564,6 @@ caption,
 .create-page .well,
 .promotions .well-info {
     background-color: @white;
-    border-color: rgba(0,0,0,.1);
 }
 // ALERTS
 // -----
@@ -701,13 +770,6 @@ caption,
     text-align: center;
   }
 }
-.product-new textarea {
-  width: 100%;
-  display:block;
-  margin:0 auto;
-  color:#000;
-  font-family:@baseFontFamily;
-}
 .upload-image {
   .clearfix();
   margin:0;
@@ -861,7 +923,7 @@ textarea.plain {
 }
 // RESPONSIVE
 // ---------
-@media (max-width: 1100px) {
+@media (max-width: 1300px) {
   .navbar-primary .nav {
     > li a:before {
       display:none;

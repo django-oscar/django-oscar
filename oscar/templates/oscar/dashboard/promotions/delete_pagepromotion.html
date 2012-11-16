@@ -1,6 +1,10 @@
 {% extends 'dashboard/layout.html' %}
 {% load i18n %}
 
+{% block body_class %}
+create-page
+{% endblock %}
+
 {% block header %}
 <div class="page-header">
 	<h1>{% trans "Remove promotion from page?" %}</h1>
@@ -8,7 +12,10 @@
 {% endblock header%}
 
 {% block dashboard_content %}
-<form action="." method="post">
+<div class="table-header">
+    {% trans "Remove promotion" %}
+</div>
+<form action="." method="post" class="well">
 	{% csrf_token %}
 	<p>{% blocktrans %}Remove {{ object.content_object.type }} content block <strong>{{ object.name }}</strong> from page <strong>{{ object.page_url }}</strong> - are you sure?{% endblocktrans %}</p>
     
