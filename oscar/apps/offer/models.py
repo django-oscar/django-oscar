@@ -212,6 +212,7 @@ class ConditionalOffer(models.Model):
             self.benefit.MULTIBUY: MultibuyDiscountBenefit,
             self.benefit.FIXED_PRICE: FixedPriceBenefit,
             self.benefit.SHIPPING_ABSOLUTE: ShippingAbsoluteDiscountBenefit,
+            self.benefit.SHIPPING_FIXED_PRICE: ShippingFixedPriceBenefit,
             self.benefit.SHIPPING_PERCENTAGE: ShippingPercentageDiscountBenefit}
         if self.benefit.type in klassmap:
             return klassmap[self.benefit.type](**field_dict)
@@ -328,14 +329,15 @@ class Benefit(models.Model):
     # Benefit types
     PERCENTAGE, FIXED, MULTIBUY, FIXED_PRICE = (
         "Percentage", "Absolute", "Multibuy", "Fixed price")
-    SHIPPING_PERCENTAGE, SHIPPING_ABSOLUTE = (
-        'Shipping percentage', 'Shipping absolute')
+    SHIPPING_PERCENTAGE, SHIPPING_ABSOLUTE, SHIPPING_FIXED_PRICE = (
+        'Shipping percentage', 'Shipping absolute', 'Shipping fixed price')
     TYPE_CHOICES = (
         (PERCENTAGE, _("Discount is a % of the product's value")),
         (FIXED, _("Discount is a fixed amount off the product's value")),
         (MULTIBUY, _("Discount is to give the cheapest product for free")),
         (FIXED_PRICE, _("Get the products that meet the condition for a fixed price")),
         (SHIPPING_ABSOLUTE, _("Discount is a fixed amount off the shipping cost")),
+        (SHIPPING_FIXED_PRICE, _("Get shipping for a fixed price")),
         (SHIPPING_PERCENTAGE, _("Discount is a % off the shipping cost")),
     )
     type = models.CharField(_("Type"), max_length=128, choices=TYPE_CHOICES)
@@ -370,6 +372,9 @@ class Benefit(models.Model):
                 'value': self.value}
         elif self.type == self.SHIPPING_ABSOLUTE:
             desc = _("%(amount)s off shipping cost") % {
+                'amount': currency(self.value)}
+        elif self.type == self.SHIPPING_FIXED_PRICE:
+            desc = _("Get shipping for %(amount)s") % {
                 'amount': currency(self.value)}
         else:
             desc = _("%(amount)s discount on %(range)s") % {
@@ -430,6 +435,16 @@ class Benefit(models.Model):
         if self.value > 100:
             raise ValidationError(
                 _("Percentage discount cannot be greater than 100"))
+        if self.range:
+            raise ValidationError(
+                _("No range should be selected as this benefit does not "
+                  "apply to products"))
+        if self.max_affected_items:
+            raise ValidationError(
+                _("Shipping discounts don't require a 'max affected items' "
+                  "attribute"))
+
+    def clean_shipping_fixed_price(self):
         if self.range:
             raise ValidationError(
                 _("No range should be selected as this benefit does not "
@@ -1010,6 +1025,19 @@ class ShippingAbsoluteDiscountBenefit(ShippingBenefit):
 
     def shipping_discount(self, charge):
         return min(charge, self.value)
+
+
+class ShippingFixedPriceBenefit(ShippingBenefit):
+
+    class Meta:
+        proxy = True
+        verbose_name = _("Fixed price shipping benefit")
+        verbose_name_plural = _("Fixed price shipping benefits")
+
+    def shipping_discount(self, charge):
+        if charge < self.value:
+            return D('0.00')
+        return charge - self.value
 
 
 class ShippingPercentageDiscountBenefit(ShippingBenefit):
