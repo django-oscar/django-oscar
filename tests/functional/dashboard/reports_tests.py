@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 
-from oscar.test import ClientTestCase
+from oscar_testsupport.testcases import ClientTestCase
 
 
 class ReportsDashboardTests(ClientTestCase):

@@ -4,8 +4,8 @@ from decimal import Decimal as D
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 
-from oscar.test.helpers import create_product, create_order
-from oscar.test import ClientTestCase, WebTestCase
+from oscar_testsupport.factories import create_product, create_order
+from oscar_testsupport.testcases import ClientTestCase, WebTestCase
 from oscar.apps.basket.models import Basket
 
 

@@ -2,7 +2,7 @@ from django.test import TestCase
 
 from oscar.apps.order.processing import EventHandler
 from oscar.apps.order import models
-from oscar.test.helpers import create_order
+from oscar_testsupport.factories import create_order
 
 
 class TestEventHandler(TestCase):

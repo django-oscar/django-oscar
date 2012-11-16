@@ -6,7 +6,7 @@ from django.core import mail
 from django.core.urlresolvers import reverse
 from django_webtest import WebTest
 
-from oscar.test import WebTestCase
+from oscar_testsupport.testcases import WebTestCase
 
 
 class TestAUserWhoseForgottenHerPassword(WebTest):
