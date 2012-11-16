@@ -192,7 +192,6 @@ class AbstractOrder(models.Model):
         verbose_name = _("Order")
         verbose_name_plural = _("Orders")
 
-
     def __unicode__(self):
         return u"#%s" % (self.number,)
 
@@ -204,6 +203,10 @@ class AbstractOrder(models.Model):
         if not self.user:
             return self.guest_email
         return self.user.email
+
+    def basket_discounts(self):
+        return self.discounts.filter(
+            category='Basket')
 
 
 class AbstractOrderNote(models.Model):
@@ -673,6 +676,10 @@ class AbstractOrderDiscount(models.Model):
     """
     order = models.ForeignKey(
         'order.Order', related_name="discounts", verbose_name=_("Order"))
+    # We need to distinguish between basket discounts and shipping discounts
+    BASKET, SHIPPING = "Basket", "Shipping"
+    category = models.CharField(_("Discount category"), default=BASKET,
+                                max_length=64)
     offer_id = models.PositiveIntegerField(
         _("Offer ID"), blank=True, null=True)
     offer_name = models.CharField(

@@ -158,13 +158,16 @@ class AbstractBasket(models.Model):
             self.discounts = []
         return self.discounts
 
-    def get_discount_offers(self):
+    def get_discount_offers(self, include_shipping=True):
         """
-        Return a dict of offers used in discounts for this basket
+        Return a dict of offers used in discounts for this basket AND shipping.
+
+        This is used to compare offers before and after a basket change to see
+        if there is a difference.
         """
         offers = dict([(d['offer'].id, d['offer']) for d in
                        self.get_discounts()])
-        if self.shipping_offer:
+        if include_shipping and self.shipping_offer:
             offers[self.shipping_offer.id] = self.shipping_offer
         return offers
 
@@ -330,7 +333,8 @@ class AbstractBasket(models.Model):
     @property
     def offer_discounts(self):
         """
-        Return discounts from non-voucher sources.
+        Return basket discounts from non-voucher sources.  Does not include
+        shipping discounts.
         """
         offer_discounts = []
         for discount in self.get_discounts():

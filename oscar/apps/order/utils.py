@@ -72,11 +72,13 @@ class OrderCreator(object):
             self.update_stock_records(line)
 
         # Record discounts (including any on the shipping method)
-        discounts = basket.get_discounts()
-        if shipping_method.is_discounted:
-            discounts.append(shipping_method.get_discount())
-        for discount in discounts:
+        for discount in basket.get_discounts():
             self.create_discount_model(order, discount)
+            self.record_discount(discount)
+        if shipping_method.is_discounted:
+            discount = shipping_method.get_discount()
+            self.create_discount_model(order, discount,
+                                       is_shipping_discount=True)
             self.record_discount(discount)
 
         for voucher in basket.vouchers.all():
@@ -203,7 +205,7 @@ class OrderCreator(object):
                                                   type=attr.option.code,
                                                   value=attr.value)
 
-    def create_discount_model(self, order, discount):
+    def create_discount_model(self, order, discount, is_shipping_discount=False):
         """
         Creates an order discount model for each discount attached to the
         basket.
@@ -212,6 +214,8 @@ class OrderCreator(object):
                                        offer_id=discount['offer'].id,
                                        frequency=discount['freq'],
                                        amount=discount['discount'])
+        if is_shipping_discount:
+            order_discount.category = OrderDiscount.SHIPPING
         voucher = discount.get('voucher', None)
         if voucher:
             order_discount.voucher_id = voucher.id
