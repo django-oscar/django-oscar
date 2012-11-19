@@ -1,7 +1,7 @@
 Web services
 ============
 
-Django-oscar exposes three different RESTful webservices for administration:
+Oscar exposes three different RESTful webservices for administration:
 
 .. toctree::
    :maxdepth: 2

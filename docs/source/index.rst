@@ -17,7 +17,7 @@ much easier.
 Features:
 
 * Any product type can be handled, including downloadable products,
-  subscriptions, variant products (eg a T-shirt in different sizes and colours).
+  subscriptions, variant products (e.g., a T-shirt in different sizes and colours).
 
 * Customisable products, such as T-shirts with personalised messages.
 
@@ -26,10 +26,10 @@ Features:
 
 * Multiple fulfillment partners for the same product.
 
-* Range of merchandising blocks for promoting products throughuout your site.
+* Range of merchandising blocks for promoting products throughout your site.
 
 * Sophisticated offers that support virtually any kind of offer you can think
-  of - multibuys, bundles, buy X get 50% of Y etc
+  of - multi-buys, bundles, buy X get 50% off Y etc
 
 * Vouchers
 
@@ -45,8 +45,8 @@ difficult to apply in other frameworks.
 
 Example requirements that Oscar applications already handle:
 
-* Paying for an order with multiple payment sources (eg using a bankcard,
-  voucher, giftcard and business account).
+* Paying for an order with multiple payment sources (e.g., using a bankcard,
+  voucher, gift card and business account).
 
 * Complex access control rules governing who can view and order what.
 
@@ -57,10 +57,10 @@ Example requirements that Oscar applications already handle:
 
 Oscar is developed by `Tangent Labs`_, a London-based digital agency.  It is
 used in production in several applications to sell everything from beer mats to
-ipads.  The `source is on Github`_ - contributions welcome.
+ipads.  The `source is on GitHub`_ - contributions welcome.
 
 .. _`Tangent Labs`: http://www.tangentlabs.co.uk
-.. _`source is on Github`: https://github.com/tangentlabs/django-oscar
+.. _`source is on GitHub`: https://github.com/tangentlabs/django-oscar
 
 .. toctree::
    :maxdepth: 2

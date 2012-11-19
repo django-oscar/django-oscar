@@ -2,8 +2,8 @@
 How to customise an app
 =======================
 
-A core part of how oscar can be customised is to create a local version of one
-of oscar's apps so that it can be modified and extended.  Creating a local
+A core part of how Oscar can be customised is to create a local version of one
+of Oscar's apps so that it can be modified and extended.  Creating a local
 version of an app allows customisation of any of the classes within the
 corresponding app in oscar.
 
@@ -15,12 +15,12 @@ Method
 1. Create an app within your project with the same "app label" as an app in oscar.  Eg,
    to create a local version of ``oscar.apps.order``, create something like ``myproject.order``.
 
-2. Ensure the ``models.py`` in your local app imports all the models from oscar's version::
+2. Ensure the ``models.py`` in your local app imports all the models from Oscar's version::
 
    # models.py
    from oscar.apps.order.models import *
 
-3. Replace oscar's version of the app with your new version in ``INSTALLED_APPS``.
+3. Replace Oscar's version of the app with your new version in ``INSTALLED_APPS``.
 
 
 Worked example
@@ -31,7 +31,7 @@ Suppose you want to modify the homepage view class, which by default is defined 
 ``PromotionsApplication`` class in ``oscar.apps.promotions.app`` - hence we need to 
 override this application class to be able to use a different view.
 
-By default, your base ``urls.py`` should include oscar's URLs as so::
+By default, your base ``urls.py`` should include Oscar's URLs as so::
 
     # urls.py
     from oscar.app import application
@@ -42,7 +42,7 @@ By default, your base ``urls.py`` should include oscar's URLs as so::
     )
 
 To get control over the mapping between URLs and views, you need to use a local
-``application`` instance, that (optionally) subclasses oscar's.  Hence, create 
+``application`` instance, that (optionally) subclasses Oscar's.  Hence, create 
 ``myproject/app.py`` with contents::
 
     # myproject/app.py
@@ -81,7 +81,7 @@ Now replace ``oscar.apps.promotions`` with ``myproject.promotions`` in the ``INS
 setting in your settings file.
 
 Now create a new homepage view class in ``myproject.promotions.views`` - you can subclass
-oscar's view if you like::
+Oscar's view if you like::
 
     from oscar.apps.promotions.views import HomeView as CoreHomeView
 
@@ -120,13 +120,13 @@ the app in question.
 Other points of note
 --------------------
 
-One pain point with replacing one of oscar's apps with a local one in ``INSTALLED_APPS`` is
+One pain point with replacing one of Oscar's apps with a local one in ``INSTALLED_APPS`` is
 that template tags are lost from the original app and need to be manually imported.  This can be
 done by creating a local version of the template tags files::
 
     mkdir myproject/templatetags
     
-and importing the tags from oscar's corresponding file::
+and importing the tags from Oscar's corresponding file::
 
     # myproject/promotions/templatetags/promotion_tags.py
     from oscar.apps.promotions.templatetags.promotion_tags import *

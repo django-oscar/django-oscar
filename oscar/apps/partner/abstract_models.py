@@ -224,7 +224,7 @@ class AbstractStockRecord(models.Model):
     def availability(self):
         """
         Return a product's availability as a string that can be displayed to the
-        user.  For example, "In stock", "Unavailabl".
+        user.  For example, "In stock", "Unavailable".
         """
         return get_partner_wrapper(self.partner_id).availability(self)
 
