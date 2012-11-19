@@ -5,7 +5,7 @@ Search within Oscar
 
 Oscar makes use of Solr for searching, faceting and 'more like this' handling.
 
-This guide details the process of install solr on debian based systems.
+This guide details the process of installing Solr on Debian-based systems.
 
 
 Installing Solr

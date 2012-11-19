@@ -28,7 +28,7 @@ In your overriding ``models.py``, ensure that you import Oscar's models *after*
 your custom ones have been defined.
 
 If other modules need to import these models then import from your local module,
-not from Oscar directly
+not from Oscar directly.
 
 Mailing list threads
 --------------------

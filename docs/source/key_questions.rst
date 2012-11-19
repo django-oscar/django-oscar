@@ -5,7 +5,7 @@ Building an e-commerce site: the key questions
 When building an e-commerce site, there are several components whose
 implementation is strongly domain-specific.  That is, every site will have
 different requirements for how such a component should operate.  As such, these
-components cannot easily be modelled using a generic system - no configurable
+components cannot easily be modeled using a generic system - no configurable
 system will be able to accurately capture all the domain-specific behaviour
 required.
 
@@ -25,7 +25,7 @@ Catalogue
 What are your product types?
 ----------------------------
 
-Are you selling books, DVDs, clothing, downloads or fruit and veg?  You will
+Are you selling books, DVDs, clothing, downloads, or fruit and vegetables?  You will
 need to capture the attributes of your product types within your models.  Oscar
 divides products into 'product classes' which each have their own set of
 attributes.  
@@ -39,11 +39,11 @@ How is your catalogue organised?
 How are products organised within the site?  A common pattern is to have a
 single category tree where each product belongs to one category which sits
 within a tree structure of other categories.  However, there are lots of other
-options such as having several separate taxonomy trees (eg split by brand, by
+options such as having several separate taxonomy trees (e.g., split by brand, by
 theme, by product type).  Other questions to consider:
 
 * Can a product belong to more than one category?
-* Can a category sit in more than one place within the tree?  (eg a "children's fiction" category
+* Can a category sit in more than one place within the tree?  (e.g., a "children's fiction" category
   might sit beneath "children's books" and "fiction").
 
 * :doc:`recipes/how_to_customise_an_app`
@@ -69,7 +69,7 @@ How is tax calculated?
 What availability messages are shown to customers?
 --------------------------------------------------
 
-Based on the stock information from a fulfilment partner, what messaging should be
+Based on the stock information from a fulfillment partner, what messaging should be
 displayed on the site?  
 
 * :doc:`recipes/how_to_configure_stock_messaging`
@@ -105,13 +105,13 @@ Which shipping methods are available?
 There's often also an issue of which shipping methods are available, as
 this can depend on:
 
-* The shipping address (eg overseas orders have higher charges)
-* The contents of the basket (eg free shipping for downloadable products)
-* Who the user is (eg sales reps get free shipping)
+* The shipping address (e.g., overseas orders have higher charges)
+* The contents of the basket (e.g., free shipping for downloadable products)
+* Who the user is (e.g., sales reps get free shipping)
 
 Oscar provides classes for free shipping, fixed charge shipping, pre-order and
 per-product item charges and weight-based charges.  It is provides a mechanism
-for determing which shipping methods are available to the user.
+for determining which shipping methods are available to the user.
 
 Recipes:
 
@@ -127,7 +127,7 @@ How are customers going to pay for orders?
 Often a shop will have a single mechanism for taking payment, such
 as integrating with a payment gateway or using PayPal.  However more
 complicated projects will allow users to combine several different payment
-sources such as bankcards, business accounts and giftcards.
+sources such as bankcards, business accounts and gift cards.
 
 Possible payment sources include:
 
@@ -136,12 +136,12 @@ Possible payment sources include:
 * PayPal
 * Business account
 * Managed budget
-* Giftcard
+* Gift card
 * No upfront payment but send invoices later
 
-The checkout app within django-oscar is suitable flexible that all of these
+The checkout app within ``django-oscar`` is suitable flexible that all of these
 methods (and in any combination) is supported.  However, you will need to
-implement the logic for your domain by subclassing the relevant view/util
+implement the logic for your domain by subclassing the relevant ``view/util``
 classes.
 
 Domain logic is often required to:
@@ -158,7 +158,7 @@ When will payment be taken?
 ---------------------------
 
 A common pattern is to 'pre-auth' a bankcard at the point of checkout then
-'settle' for the appropriate amouts when the items actually ship.  However,
+'settle' for the appropriate amounts when the items actually ship.  However,
 sometimes payment is taken up front.  Often you won't have a choice due to
 limitations of the payment partner you need to integrate with.
 

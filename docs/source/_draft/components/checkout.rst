@@ -11,9 +11,9 @@ The checkout process comprises the following steps:
     or checking out anonymously.  Signed in users will be automatically redirected to the next
     step.
 
-2.  **Shipping address** - Enter or chooose a shipping address.
+2.  **Shipping address** - Enter or choose a shipping address.
 
-3.  **Shipping method** - Chooose a shipping method.  If only one shipping method is available
+3.  **Shipping method** - Choose a shipping method.  If only one shipping method is available
     then it is automatically chosen and the user is redirected onto the next step.  
 
 4.  **Payment method** - Choose the method of payment plus any allocations if payment is to be
@@ -35,4 +35,4 @@ Customisation
 -------------
 
 The checkout can be customised in many ways as you can extend and override and class from
-oscar's core using the overriding core classes technique detailed previously.
+Oscar's core using the overriding core classes technique detailed previously.

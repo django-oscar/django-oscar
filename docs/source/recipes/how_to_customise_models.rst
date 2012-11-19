@@ -4,7 +4,7 @@ How to customise models
 
 You must first create a local version of the app that you wish to customise.  This
 involves creating a local app with the same name and importing the equivalent models
-from oscar into it.
+from Oscar into it.
 
 Example
 -------
@@ -15,7 +15,7 @@ has an additional field.
 
 The first step is to create a local version of the "catalogue" app.  At a minimum, this 
 involves creating ``catalogue/models.py`` within your project and changing ``INSTALLED_APPS``
-to point to your local version rather than oscar's.  
+to point to your local version rather than Oscar's.  
 
 Next, you can modify the ``Product`` model through subclassing::
 

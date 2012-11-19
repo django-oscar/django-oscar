@@ -17,7 +17,7 @@ It only has two customisations on top of Oscar's core:
 
 * Two shipping methods are specified so that the shipping method step of
   checkout is not skipped.  If there is only one shipping method (which is true of core
-  oscar) then the shipping method step is skipped as there is no choice to be
+  Oscar) then the shipping method step is skipped as there is no choice to be
   made.
 
 * A profile class is specified which defines a few simple fields.  This is to
@@ -55,9 +55,9 @@ as they are domain-specific.  For instance:
 I've found a problem!
 ---------------------
 
-Good for you - please `report them in Github's issue tracker`_.
+Good for you - please `report them in GitHub's issue tracker`_.
 
-.. _`report them in Github's issue tracker`: https://github.com/tangentlabs/django-oscar/issues
+.. _`report them in GitHub's issue tracker`: https://github.com/tangentlabs/django-oscar/issues
 
 Browse some real Oscar implementations
 ======================================
