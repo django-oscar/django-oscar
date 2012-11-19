@@ -33,7 +33,7 @@ class TestOfferApplicator(TestCase):
         self.basket.add_product(self.product, 5)
         offer = models.ConditionalOffer(
             id="test", condition=self.condition, benefit=self.benefit,
-            max_applications=1)
+            max_basket_applications=1)
         discounts = self.applicator.get_basket_discounts(
             self.basket, [offer])
         self.assertEqual(1, discounts["test"]['freq'])

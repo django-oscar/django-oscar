@@ -60,17 +60,20 @@ class ConditionalOffer(models.Model):
         help_text=_("Offers are not active on their end date, only "
                     "the days preceding"))
 
+    # Use this field to limit the number of times this offer can be applied in
+    # total.  Note that a single order can apply an offer multiple times so
+    # this is not the same as the number of orders that can use it.
     max_global_applications = models.PositiveIntegerField(
         _("Max global applications"),
         help_text=_("The number of times this offer can be used before it "
           "is unavailable"), blank=True, null=True)
 
     # Use this field to limit the number of times this offer can be applied to
-    # a basket.
-    max_applications = models.PositiveIntegerField(
+    # a basket (and hence a single order).
+    max_basket_applications = models.PositiveIntegerField(
         blank=True, null=True,
-        help_text=_("This controls the maximum times an offer can "
-                    "be applied to a single basket"))
+        help_text=_("The number of times this offer can be applied to a "
+                    "basket (and order)"))
 
     # TRACKING
 
@@ -146,8 +149,8 @@ class ConditionalOffer(models.Model):
         """
         Return the number of times this offer can be applied to a basket
         """
-        if self.max_applications:
-            return self.max_applications
+        if self.max_basket_applications:
+            return self.max_basket_applications
         if self.max_global_applications:
             return max(0, self.max_global_applications - self.num_applications)
         return 10000
