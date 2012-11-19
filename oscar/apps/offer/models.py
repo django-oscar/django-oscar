@@ -18,9 +18,9 @@ class ConditionalOffer(models.Model):
     """
     A conditional offer (eg buy 1, get 10% off)
     """
-    name = models.CharField(_("Name"), max_length=128, unique=True,
-                            help_text=_("""This is displayed within the customer's
-                            basket"""))
+    name = models.CharField(
+        _("Name"), max_length=128, unique=True,
+        help_text=_("This is displayed within the customer's basket"))
     slug = models.SlugField(_("Slug"), max_length=128, unique=True, null=True)
     description = models.TextField(_("Description"), blank=True, null=True)
 
@@ -29,10 +29,10 @@ class ConditionalOffer(models.Model):
     #     3-for-2 offer.
     # (b) Offers that are linked to a voucher, and only become available once
     #     that voucher has been applied to the basket
-    # (c) Offers that are linked to a user.  Eg, all students get 10% off.  The code
-    #     to apply this offer needs to be coded
-    # (d) Session offers - these are temporarily available to a user after some trigger
-    #     event.  Eg, users coming from some affiliate site get 10% off.
+    # (c) Offers that are linked to a user.  Eg, all students get 10% off.  The
+    #     code to apply this offer needs to be coded
+    # (d) Session offers - these are temporarily available to a user after some
+    #     trigger event.  Eg, users coming from some affiliate site get 10% off.
     SITE, VOUCHER, USER, SESSION = ("Site", "Voucher", "User", "Session")
     TYPE_CHOICES = (
         (SITE, _("Site offer - available to all users")),
@@ -45,17 +45,25 @@ class ConditionalOffer(models.Model):
     condition = models.ForeignKey('offer.Condition', verbose_name=_("Condition"))
     benefit = models.ForeignKey('offer.Benefit', verbose_name=_("Benefit"))
 
-    # Range of availability.  Note that if this is a voucher offer, then these
-    # dates are ignored and only the dates from the voucher are used to determine
-    # availability.
-    start_date = models.DateField(_("Start Date"), blank=True, null=True)
-    end_date = models.DateField(_("End Date"), blank=True, null=True,
-                                help_text=_("Offers are not active on their end "
-                                            "date, only the days preceding"))
-
     # Some complicated situations require offers to be applied in a set order.
     priority = models.IntegerField(_("Priority"), default=0,
         help_text=_("The highest priority offers are applied first"))
+
+    # AVAILABILITY
+
+    # Range of availability.  Note that if this is a voucher offer, then these
+    # dates are ignored and only the dates from the voucher are used to
+    # determine availability.
+    start_date = models.DateField(_("Start Date"), blank=True, null=True)
+    end_date = models.DateField(
+        _("End Date"), blank=True, null=True,
+        help_text=_("Offers are not active on their end date, only "
+                    "the days preceding"))
+
+    max_global_applications = models.PositiveIntegerField(
+        _("Max global applications"),
+        help_text=_("The number of times this offer can be used before it "
+          "is unavailable"), blank=True, null=True)
 
     # Use this field to limit the number of times this offer can be applied to
     # a basket.
@@ -64,14 +72,17 @@ class ConditionalOffer(models.Model):
         help_text=_("This controls the maximum times an offer can "
                     "be applied to a single basket"))
 
-    # We track some information on usage
-    total_discount = models.DecimalField(_("Total Discount"),
-                                         decimal_places=2, max_digits=12,
-                                         default=D('0.00'))
-    num_orders = models.PositiveIntegerField(_("Number of Orders"), default=0)
+    # TRACKING
+
+    total_discount = models.DecimalField(
+        _("Total Discount"), decimal_places=2, max_digits=12,
+        default=D('0.00'))
+    num_applications = models.PositiveIntegerField(
+        _("Number of applications"), default=0)
+    num_orders = models.PositiveIntegerField(
+        _("Number of Orders"), default=0)
 
     redirect_url = ExtendedURLField(_("URL redirect (optional)"), blank=True)
-
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
     objects = models.Manager()
@@ -102,6 +113,8 @@ class ConditionalOffer(models.Model):
             raise exceptions.ValidationError(_('End date should be later than start date'))
 
     def is_active(self, test_date=None):
+        if not self.start_date and not self.end_date:
+            return self.get_max_applications() > 0
         if not test_date:
             test_date = datetime.date.today()
         return self.start_date <= test_date and test_date < self.end_date
@@ -130,10 +143,14 @@ class ConditionalOffer(models.Model):
         return self._voucher
 
     def get_max_applications(self):
-        if self.max_applications is None:
-            # Default value to prevent infinite loops
-            return 10000
-        return self.max_applications
+        """
+        Return the number of times this offer can be applied to a basket
+        """
+        if self.max_applications:
+            return self.max_applications
+        if self.max_global_applications:
+            return max(0, self.max_global_applications - self.num_applications)
+        return 10000
 
     def _proxy_condition(self):
         """
@@ -171,10 +188,24 @@ class ConditionalOffer(models.Model):
         return self.benefit
 
     def record_usage(self, discount):
+        self.num_applications += discount['freq']
+        self.total_discount += discount['discount']
         self.num_orders += 1
-        self.total_discount += discount
         self.save()
     record_usage.alters_data = True
+
+    def availability_description(self):
+        if self.max_global_applications:
+            desc = _(
+                "Can be used %(total)d times "
+                "(%(remainder)d remaining)") % {
+                    'total': self.max_global_applications,
+                    'remainder': self.max_global_applications - self.num_applications}
+        else:
+            desc = _("Available between %(start)s and %(end)s") % {
+                    'start': self.start_date,
+                    'end': self.end_date}
+        return desc
 
 
 class Condition(models.Model):

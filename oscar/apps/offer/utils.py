@@ -3,7 +3,6 @@ from itertools import chain
 import logging
 
 from django.db.models import get_model
-from django.utils.translation import ugettext_lazy as _
 
 ConditionalOffer = get_model('offer', 'ConditionalOffer')
 
@@ -12,25 +11,6 @@ logger = logging.getLogger('oscar.offers')
 
 class OfferApplicationError(Exception):
     pass
-
-
-# This needs hooking into the offer application system.
-class Discount(object):
-
-    def __init__(self, offer):
-        self.offer = offer
-        self.discount = Decimal('0.00')
-        self.frequency = 0
-
-    def discount(self, discount):
-        self.discount += discount
-        self.frequency += 1
-
-    def is_voucher_discount(self):
-        return bool(self.offer.get_voucher())
-
-    def get_voucher(self):
-        return self.offer.get_voucher()
 
 
 class Applicator(object):
@@ -83,26 +63,33 @@ class Applicator(object):
         """
         Return all offers to apply to the basket.
 
-        This method should be subclassed and extended to provide more sophisticated
-        behaviour.  For instance, you could load extra offers based on the session or
-        the user type.
+        This method should be subclassed and extended to provide more
+        sophisticated behaviour.  For instance, you could load extra offers
+        based on the session or the user type.
         """
         site_offers = self.get_site_offers()
         basket_offers = self.get_basket_offers(basket, request.user)
         user_offers = self.get_user_offers(request.user)
         session_offers = self.get_session_offers(request)
 
-        return list(chain(session_offers, basket_offers, user_offers, site_offers))
+        return list(chain(
+            session_offers, basket_offers, user_offers, site_offers))
 
     def get_site_offers(self):
         """
         Return site offers that are available to all users
         """
-        return ConditionalOffer.active.filter(offer_type="Site")
+        date_based_offers = ConditionalOffer.active.filter(
+            offer_type=ConditionalOffer.SITE)
+        nondate_based_offers = ConditionalOffer.objects.filter(
+            offer_type=ConditionalOffer.SITE, start_date=None, end_date=None)
+        return list(chain(date_based_offers, nondate_based_offers))
 
     def get_basket_offers(self, basket, user):
         """
-        Return basket-linked offers such as those associated with a voucher code"""
+        Return basket-linked offers such as those associated with a voucher
+        code
+        """
         offers = []
         if not basket.id:
             return offers
@@ -130,4 +117,3 @@ class Applicator(object):
         Eg: visitors coming from an affiliate site get a 10% discount
         """
         return []
-
