@@ -7,7 +7,7 @@ Flow
 
 The checkout process comprises the following steps:
 
-1.  **Gateway** - For anonymous users, they are offered the choice of logging in, registering
+1.  **Gateway** -  Anonymous users are offered the choice of logging in, registering,
     or checking out anonymously.  Signed in users will be automatically redirected to the next
     step.
 
@@ -22,7 +22,7 @@ The checkout process comprises the following steps:
 
 5.  **Preview** - The prospective order can be previewed.
 
-6.  **Payment details** - If any sensitive payment details are required (eg bankcard number), 
+6.  **Payment details** - If any sensitive payment details are required (e.g., bankcard number), 
     then a form is presented within this step.  This has to be the last step before submission
     so that sensitive details don't have to be stored in the session.
 

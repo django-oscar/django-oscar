@@ -7,7 +7,7 @@ There are several ways to get a feel for Oscar and what it can do.
 Browse the sandbox site
 =======================
 
-There is a demo Oscar site, built hourly from HEAD of the master branch (unstable):
+There is a demo Oscar site built hourly from HEAD of the master branch (unstable):
 http://sandbox.oscar.tangentlabs.co.uk
 
 It is intended to be a vanilla install of Oscar, using the default templates and
@@ -28,7 +28,7 @@ Running the sandbox locally
 ===========================
 
 It's pretty straightforward to get the sandbox site running locally so you can
-play around with the sourcecode.
+play around with the source code.
 
 Install Oscar and its dependencies within a virtualenv::
 

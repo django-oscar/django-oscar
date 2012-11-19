@@ -40,7 +40,7 @@ database (we use SQLite for simplicity)::
         }
     }
 
-then add ``oscar.apps.basket.middleware.BasketMiddleware`` to ``MIDDLEWARE_CLASSES``, and
+Then, add ``oscar.apps.basket.middleware.BasketMiddleware`` to ``MIDDLEWARE_CLASSES``, and
 set ``TEMPLATE_CONTEXT_PROCESSORS`` to::
 
     TEMPLATE_CONTEXT_PROCESSORS = (

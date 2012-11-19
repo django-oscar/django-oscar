@@ -8,7 +8,7 @@ Some ground rules:
   (django-oscar@googlegroups.com) before serious work starts. 
 
 * Write tests! Pull requests will be rejected if sufficient tests aren't
-  provided.  See the guidance below on the testing conventions that Oscar uses
+  provided.  See the guidance below on the testing conventions that Oscar uses.
 
 * Write docs! Please update the documentation when altering behaviour or introducing new features.
 
@@ -43,7 +43,7 @@ commands will run the same set of tests::
     ./runtests.py tests/unit/order
     ./runtests.py tests.unit.order
 
-To run an individual test class use one of::
+To run an individual test class, use one of::
 
     ./runtests.py tests/unit/order:TestSuccessfulOrderCreation
     ./runtests.py tests.unit.order:TestSuccessfulOrderCreation
@@ -141,4 +141,4 @@ Classes should be named according to::
     '%s%sView' % (class_name, verb)
 
 For example, ``ProductUpdateView``, ``OfferCreateView`` and
-``PromotionDeleteView``.  This doesn't fit all situations but it's a good basis.
+``PromotionDeleteView``.  This doesn't fit all situations, but it's a good basis.

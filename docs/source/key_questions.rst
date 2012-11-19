@@ -148,7 +148,7 @@ Domain logic is often required to:
 
 * Determine which payment methods are available to an order;
 * Determine if payment can be split across sources and in which combinations;
-* Determine the order in which to take payment
+* Determine the order in which to take payment;
 * Determine how to handle failing payments (this can get complicated when using
   multiple payment sources to pay for an order).
 
