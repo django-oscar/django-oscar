@@ -39,7 +39,7 @@ class Applicator(object):
             # For each offer, we keep trying to apply it until the
             # discount is 0
             applications = 0
-            while applications < offer.get_max_applications():
+            while applications < offer.get_max_applications(basket.owner):
                 discount = offer.apply_benefit(basket)
                 applications += 1
                 logger.debug("Found discount %.2f for basket %d from offer %d",

@@ -68,6 +68,14 @@ class ConditionalOffer(models.Model):
         help_text=_("The number of times this offer can be used before it "
           "is unavailable"), blank=True, null=True)
 
+    # Use this field to limit the number of times this offer can be used by a
+    # single user.  This only works for signed-in users - it doesn't really
+    # make sense for sites that allow anonymous checkout.
+    max_user_applications = models.PositiveIntegerField(
+        _("Max user applications"),
+        help_text=_("The number of times a single user can use this offer"),
+        blank=True, null=True)
+
     # Use this field to limit the number of times this offer can be applied to
     # a basket (and hence a single order).
     max_basket_applications = models.PositiveIntegerField(
@@ -145,15 +153,27 @@ class ConditionalOffer(models.Model):
     def get_voucher(self):
         return self._voucher
 
-    def get_max_applications(self):
+    def get_max_applications(self, user=None):
         """
         Return the number of times this offer can be applied to a basket
         """
+        limits = [10000]
+        if self.max_user_applications and user:
+            limits.append(max(0, self.max_user_applications -
+                          self.get_num_user_applications(user)))
         if self.max_basket_applications:
-            return self.max_basket_applications
+            limits.append(self.max_basket_applications)
         if self.max_global_applications:
-            return max(0, self.max_global_applications - self.num_applications)
-        return 10000
+            limits.append(
+                max(0, self.max_global_applications - self.num_applications))
+        return min(limits)
+
+    def get_num_user_applications(self, user):
+        OrderDiscount = models.get_model('order', 'OrderDiscount')
+        aggregates = OrderDiscount.objects.filter(
+            offer_id=self.id, order__user=user).aggregate(
+                total=models.Sum('frequency'))
+        return aggregates['total'] if aggregates['total'] is not None else 0
 
     def _proxy_condition(self):
         """
@@ -204,6 +224,13 @@ class ConditionalOffer(models.Model):
                 "(%(remainder)d remaining)") % {
                     'total': self.max_global_applications,
                     'remainder': self.max_global_applications - self.num_applications}
+        elif self.max_user_applications:
+            if self.max_user_applications == 1:
+                desc = _("Can be used once per user")
+            else:
+                desc = _(
+                    "Can be used %(total)d times per user") % {
+                        'total': self.max_user_applications}
         else:
             desc = _("Available between %(start)s and %(end)s") % {
                     'start': self.start_date,
