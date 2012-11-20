@@ -174,7 +174,7 @@ class ConditionalOffer(models.Model):
 
     def _proxy_benefit(self):
         """
-        Returns the appropriate proxy model for the condition
+        Returns the appropriate proxy model for the benefit
         """
         field_dict = dict(self.benefit.__dict__)
         for field in field_dict.keys():
