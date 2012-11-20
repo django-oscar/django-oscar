@@ -10,7 +10,7 @@ The simplest way is to use a string which represents the breadcrumbs::
         'Food > Cheese',
         'Food > Meat',
         'Clothes > Man > Jackets',
-        'Clothes > Womam > Skirts',
+        'Clothes > Woman > Skirts',
     )
     for breadcrumbs in categories:
         create_from_breadcrumbs(breadcrumbs)
