@@ -1,10 +1,12 @@
+from settings import *
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'oscar',
-        'USER': 'oscar_vagrant',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'oscar_vagrant',
+        'USER': 'oscar_user',
         'PASSWORD': 'oscar_password',
-        'HOST': '',
+        'HOST': '127.0.0.1',
         'PORT': '',
     }
 }
