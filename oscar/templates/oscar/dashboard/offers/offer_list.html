@@ -52,6 +52,8 @@
                     <th>{% trans "Availability" %}</th>
                     <th>{% trans "Condition" %}</th>
                     <th>{% trans "Benefit" %}</th>
+                    <th>{% trans "Applications" %}</th>
+                    <th>{% trans "Total discount" %}</th>
                     <th>{% trans "Date created" %}</th>
                     <th></th>
                 </tr>
@@ -67,6 +69,8 @@
                     <td>{{ offer.availability_description }}</td>
                     <td>{{ offer.condition.description }}</td>
                     <td>{{ offer.benefit.description }}</td>
+                    <td>{{ offer.num_applications }}</td>
+                    <td>{{ offer.total_discount|currency }}</td>
                     <td>{{ offer.date_created }}</td>
                     <td>
                         <div class="btn-toolbar">
