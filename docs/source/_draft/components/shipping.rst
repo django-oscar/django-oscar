@@ -5,11 +5,11 @@ Shipping
 Shipping can be very complicated.  Depending on the domain, a wide variety of shipping
 scenarios are found in the wild.  For instance, calculation of shipping costs can depend on:
 
-* Shipping method (eg standard, courier)
+* Shipping method (e.g., standard, courier)
 * Shipping address
-* Time of day of order (eg if requesting next-day delivery)
+* Time of day of order (e.g., if requesting next-day delivery)
 * Weight of items in basket
-* Customer type (eg business accounts get discounted shipping rates)
+* Customer type (e.g., business accounts get discounted shipping rates)
 * Offers and vouchers that give free or discounted shipping
 
 Further complications can arise such as:
@@ -19,11 +19,11 @@ Further complications can arise such as:
   
 Oscar can handle all of these shipping scenarios. 
 
-Shipping in oscar
+Shipping in Oscar
 -----------------
 
 Shipping is handled using "method" objects which represent a means of shipping
-an order (eg "standard" or "next-day" delivery).  Each method is essentially a
+an order (e.g., "standard" or "next-day" delivery).  Each method is essentially a
 named calculator that takes a basket and is able to calculate the shipping
 costs with and without tax.  
 
@@ -68,8 +68,8 @@ Shipping method classes
 
 Each method object must subclass ``ShippingMethod`` from
 ``oscar.shipping.methods`` which provides the required interface. Note that the interface
-does not depend on the many other factors that can affect shipping (eg shipping address).  The
-way to handle this is within your "factory" method which returns availables shipping methods. 
+does not depend on the many other factors that can affect shipping (e.g., shipping address).  The
+way to handle this is within your "factory" method which returns available shipping methods. 
 
 Writing your own shipping method
 --------------------------------

@@ -2,8 +2,8 @@
 How to enforce stock rules
 ==========================
 
-You can enfore stock validation rules using signals.  You just need to register a listener to 
-the BasketLine pre_save signal that checks the line is valid. For example::
+You can enforce stock validation rules using signals.  You just need to register a listener to 
+the ``BasketLine`` ``pre_save`` signal that checks the line is valid. For example::
 
     @receiver(pre_save, sender=Line)
     def handle_line_save(sender, **kwargs):

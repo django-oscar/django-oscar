@@ -2,14 +2,14 @@
 Design decisions
 ================
 
-The central aim of oscar is to provide a solid core of an e-commerce project that can be
-extended and customised to suit the domain at hand.  This is acheived in several ways:
+The central aim of Oscar is to provide a solid core of an e-commerce project that can be
+extended and customised to suit the domain at hand.  This is achieved in several ways:
 
 Core models are abstract
 ------------------------
 
 Online shops can vary wildly, selling everything from turnips to concert
-tickets.  Trying to define a set of Django models capable for modelling all such
+tickets.  Trying to define a set of Django models capable for modeling all such
 scenarios is impossible - customisation is what matters.
 
 One way to model your domain is to have enormous models that have fields for
@@ -24,14 +24,14 @@ where all the fields are meaningful within any e-commerce domain.  Oscar then
 provides a mechanism for subclassing these models within your application so
 domain-specific fields can be added.
 
-Specifically, in many of oscar's apps, there is an ``abstract_models.py`` module which
+Specifically, in many of Oscar's apps, there is an ``abstract_models.py`` module which
 defines these abstract classes.  There is also an accompanying ``models.py`` which provides an
 empty but concrete implementation of each abstract model.
 
 Classes are loaded dynamically
 ------------------------------
 
-To enable sub-apps to be overridden, oscar classes are loading generically
+To enable sub-apps to be overridden, Oscar classes are loading generically
 using a special ``get_class`` function.  This looks at the
 ``INSTALLED_APPS`` tuple to determine the appropriate app to load a class from.
 
@@ -50,7 +50,7 @@ function to work with arbitrary classes.
     
 The ``get_class`` function looks through your ``INSTALLED_APPS`` for a matching module to
 the one specified and will load the classes from there.  If the matching module is
-not from oscar's core, then it will also fall back to the equivalent module if the
+not from Oscar's core, then it will also fall back to the equivalent module if the
 class cannot be found.
 
 This structure enables a project to create a local ``shipping.repository`` module and 
@@ -67,4 +67,4 @@ Templates can be overridden
 
 This is a common technique relying on the fact that the template loader can be
 configured to look in your project first for templates, before it uses the defaults
-from oscar.
+from Oscar.

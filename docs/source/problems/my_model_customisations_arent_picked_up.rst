@@ -27,8 +27,8 @@ Find and remove the import statement that is importing Oscar's models.
 In your overriding ``models.py``, ensure that you import Oscar's models *after*
 your custom ones have been defined.
 
-If other modules need to import these models then import from your local module,
-not from Oscar directly
+If other modules need to import these models, then import from your local module,
+not from Oscar directly.
 
 Mailing list threads
 --------------------

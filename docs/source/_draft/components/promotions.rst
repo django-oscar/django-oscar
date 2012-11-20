@@ -11,5 +11,5 @@ Examples include:
 * A biography of an author (featuring an image and a block of HTML) shown at the top of the search
   results page when the search query includes the author's surname.
 
-These are modelled using a base "promotion" model, which contains the image fieids and the link
-destination, and two "linking" models which link promotions to either a page URL, or a particular keyword.
+These are modeled using a base ``promotion`` model, which contains image fields, the link
+destination, and two "linking" models which link promotions to either a page URL or a particular keyword.

@@ -1,6 +1,6 @@
-=======================================
-Installing django-oscar for development
-=======================================
+================================
+Installing Oscar for development
+================================
 
 Note that these instructions assume you are developing on Ubuntu.
 
@@ -18,15 +18,15 @@ Reload bash to add the virtualenvwrapper commands to your path::
 
     . ~/.bashrc
 
-Create a virtualenv for developement::
+Create a virtualenv for development::
 
     mkvirtualenv --no-site-packages oscar
     workon oscar
 
-Forking django-oscar
---------------------
+Forking Oscar
+-------------
 
-Sign in to github, navigate to https://github.com/tangentlabs/django-oscar and click "Fork".  This will create a 
+Sign in to GitHub, navigate to https://github.com/tangentlabs/django-oscar and click "Fork".  This will create a 
 copy of the repository in your account.
 
 Now clone the remote repository to your machine::
@@ -34,24 +34,24 @@ Now clone the remote repository to your machine::
     cd workspace
     git clone git@github.com:username/django-oscar.git
     
-See the github guide to forking for more details (http://help.github.com/fork-a-repo/).      
+See the GitHub guide to forking for more details (http://help.github.com/fork-a-repo/).      
 
-Install django-oscar and dependencies
--------------------------------------
+Install Oscar and dependencies
+------------------------------
 
-Install django and the packages from the requirements file, which aren't essential but are useful
+Install Django and the packages from the requirements file, which aren't essential but are useful
 for testing and development::
 
-    pip install django
+    pip install Django
     pip install -r requirements-dev.txt
 
-Install oscar in development mode within your virtualenv::
+Install Oscar in development mode within your virtualenv::
 
     cd django-oscar
     python setup.py develop
 
 Note: In case of gcc crashing and complaining in-between installation process,
-make sure you have appropriate -devel packages installed (ie. mysql-devel) in
+make sure you have appropriate ``-devel`` packages installed (i.e., ``mysql-devel``) in
 your system.
 
 Now create a ``settings_local.py`` file which contains details of your local database
@@ -60,13 +60,13 @@ that you want to use for development.  At a minimum, this needs to define the ``
 Developing
 ----------
 
-Developing oscar normally involves working on a django project which uses oscar
+Developing Oscar normally involves working on a Django project which uses Oscar
 as a installed app.  There are several such projects within the ``examples`` folder:
 
-* The ``vanilla`` project does not customise oscar at all and uses everything in its 
-  default format.  It represents a blank canvas for an ecommerce shop.
-* The ``demo`` project does customise oscar, and is intended to demonstrate the range 
-  of features in oscar.   
+* The ``vanilla`` project does not customise Oscar at all and uses everything in its 
+  default format.  It represents a blank canvas for an e-commerce shop.
+* The ``demo`` project does customise Oscar, and is intended to demonstrate the range 
+  of features in Oscar.   
 
 Each example shop has its own ``manage.py`` executable which you can use to create 
 your database::
@@ -88,7 +88,7 @@ following commands::
 Helper scripts
 -------------- 
     
-There is a shortcut script for dropping all of a projects's apps and rerunning `syncdb` in
+There is a shortcut script for dropping all of a projects's apps and rerunning ``syncdb`` in
 the `examples` folder - you need to specify which project to act on::
 
     ./recreate_project_tables.sh vanilla

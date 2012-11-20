@@ -20,9 +20,9 @@ Determining the methods available to a user
 At the shipping method stage, we use a repository object to look up the
 shipping methods available to the user.  These methods typically depend on:
 
-* the user in question (eg. staff get cheaper shipping rates)
-* the basket (eg. shipping is charged based on the weight of the basket)
-* the shipping address (eg. overseas shipping is more expensive)
+* the user in question (e.g., staff get cheaper shipping rates)
+* the basket (e.g., shipping is charged based on the weight of the basket)
+* the shipping address (e.g., overseas shipping is more expensive)
 
 The default repository is ``oscar.apps.shipping.repository.Repository``, which 
 has a method ``get_shipping_methods`` for returning all available methods.  By
@@ -45,7 +45,7 @@ A shipping method class must define two methods::
     method.basket_charge_incl_tax()
     method.basket_charge_excl_tax()
 
-whose responsibilies should be clear.  You can subclass ``oscar.apps.shipping.base.ShippingMethod``
+whose responsibilities should be clear.  You can subclass ``oscar.apps.shipping.base.ShippingMethod``
 to provide the basic functionality.
 
 Built-in shipping methods

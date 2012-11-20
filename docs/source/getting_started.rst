@@ -40,7 +40,7 @@ database (we use SQLite for simplicity)::
         }
     }
 
-then add ``oscar.apps.basket.middleware.BasketMiddleware`` to ``MIDDLEWARE_CLASSES``, and
+Then, add ``oscar.apps.basket.middleware.BasketMiddleware`` to ``MIDDLEWARE_CLASSES``, and
 set ``TEMPLATE_CONTEXT_PROCESSORS`` to::
 
     TEMPLATE_CONTEXT_PROCESSORS = (
@@ -138,7 +138,7 @@ shipping of an order.
 The order status pipeline is different for every shop which means that
 changing it is fairly straightforward in Oscar. The pipeline is defined in
 your ``settings.py`` file using the ``OSCAR_ORDER_STATUS_PIPELINE`` setting.
-You also need to specify the inital status for an order and a line item in
+You also need to specify the initial status for an order and a line item in
 ``OSCAR_INITIAL_ORDER_STATUS`` and ``OSCAR_INITIAL_LINE_STATUS``
 respectively.
 
@@ -155,20 +155,20 @@ at the Oscar sandbox settings::
 
 Defining the order status pipeline is simply a dictionary of where each
 status is given as a key. Possible transitions into other statuses can be
-specified as an interable of status names. An empty iterable defines an
+specified as an iterable of status names. An empty iterable defines an
 end point in the pipeline.
 
 With these three settings defined in your project you'll be able to see
 the different statuses in the order management dashboard.
 
 
-Install using Tangent's boilerplate django project
+Install using Tangent's boilerplate Django project
 ==================================================
 
-The easiest way to get started is to use Tangent's `template django project`_
+The easiest way to get started is to use Tangent's `template Django project`_
 although it is tailored to an agency structure which may not suit everyone.
 
-.. _`template django project`: https://github.com/tangentlabs/tangent-django-boilerplate
+.. _`template Django project`: https://github.com/tangentlabs/tangent-django-boilerplate
 
 Set up a virtualenv, and create a new project using the ``startproject``
 management command::
