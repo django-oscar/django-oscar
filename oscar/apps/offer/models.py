@@ -6,6 +6,7 @@ from django.core import exceptions
 from django.template.defaultfilters import slugify
 from django.db import models
 from django.utils.translation import ungettext, ugettext as _
+from django.utils.importlib import import_module
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.conf import settings
@@ -531,6 +532,11 @@ class Range(models.Model):
         verbose_name=_("Product Classes"))
     included_categories = models.ManyToManyField('catalogue.Category', related_name='includes', blank=True,
         verbose_name=_("Included Categories"))
+
+    # Allow a custom range instance to be specified
+    proxy_class = models.CharField(_("Custom class"), null=True, blank=True,
+                                    max_length=512, default=None, unique=True)
+
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
     __included_product_ids = None
@@ -544,6 +550,22 @@ class Range(models.Model):
     def __unicode__(self):
         return self.name
 
+    def load_proxy(self):
+        """
+        Load proxy class
+        """
+        module, classname = self.proxy_class.rsplit('.', 1)
+        try:
+            mod = import_module(module)
+        except ImportError, e:
+            raise exceptions.ImproperlyConfigured(
+                "Error importing module %s: %s" % (module, e))
+        try:
+            return getattr(mod, classname)()
+        except AttributeError:
+            raise exceptions.ImproperlyConfigured(
+                "Module %s does not define a %s" % (module, classname))
+
     def contains_product(self, product):
         """
         Check whether the passed product is part of this range
@@ -554,6 +576,11 @@ class Range(models.Model):
         if settings.OSCAR_OFFER_BLACKLIST_PRODUCT and \
             settings.OSCAR_OFFER_BLACKLIST_PRODUCT(product):
             return False
+
+        # Delegate to a proxy class if one is provided
+        if self.proxy_class:
+            return self.load_proxy().contains_product(product)
+
         excluded_product_ids = self._excluded_product_ids()
         if product.id in excluded_product_ids:
             return False
@@ -594,6 +621,13 @@ class Range(models.Model):
         if self.includes_all_products:
             return None
         return self.included_products.all().count()
+
+    @property
+    def is_editable(self):
+        """
+        Test whether this product can be edited in the dashboard
+        """
+        return self.proxy_class is None
 
 # ==========
 # Conditions

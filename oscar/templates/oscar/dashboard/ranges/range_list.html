@@ -55,10 +55,12 @@
                     <span class="caret"></span>
                   </a>
                   <ul class="dropdown-menu pull-right">
+				      {% if range.is_editable %}
                       <li><a href="{% url dashboard:range-update range.id %}">{% trans "Edit" %}</a></li>
                       {% if not range.includes_all_products %}
                       <li><a href="{% url dashboard:range-products range.id %}">{% trans "Edit products" %}</a></li>
                       {% endif %}
+					  {% endif %}
                       <li><a href="{% url dashboard:range-delete range.id %}">{% trans "Delete" %}</a></li>
                   </ul>
                 </div>

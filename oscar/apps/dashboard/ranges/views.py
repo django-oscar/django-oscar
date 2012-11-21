@@ -3,6 +3,7 @@ from django.views.generic import (ListView, DeleteView, CreateView, UpdateView)
 from django.utils.translation import ungettext, ugettext_lazy as _
 from django.db.models.loading import get_model
 from django.core.urlresolvers import reverse
+from django.core import exceptions
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
@@ -32,7 +33,8 @@ class RangeCreateView(CreateView):
 
     def get_success_url(self):
         if 'action' in self.request.POST:
-            return reverse('dashboard:range-products', kwargs={'pk': self.object.id})
+            return reverse('dashboard:range-products',
+                           kwargs={'pk': self.object.id})
         else:
             messages.success(self.request, _("Range created"))
             return reverse('dashboard:range-list')
@@ -48,9 +50,16 @@ class RangeUpdateView(UpdateView):
     template_name = 'dashboard/ranges/range_form.html'
     form_class = RangeForm
 
+    def get_object(self):
+        obj = super(RangeUpdateView, self).get_object()
+        if not obj.is_editable:
+            raise exceptions.PermissionDenied("Not allowed")
+        return obj
+
     def get_success_url(self):
         if 'action' in self.request.POST:
-            return reverse('dashboard:range-products', kwargs={'pk': self.object.id})
+            return reverse('dashboard:range-products',
+                           kwargs={'pk': self.object.id})
         else:
             messages.success(self.request, _("Range updated"))
             return reverse('dashboard:range-list')
@@ -114,7 +123,8 @@ class RangeProductListView(ListView, BulkEditMixin):
         range = self.get_range()
         form = self.form_class(range, request.POST, request.FILES)
         if not form.is_valid():
-            ctx = self.get_context_data(form=form, object_list=self.object_list)
+            ctx = self.get_context_data(form=form,
+                                        object_list=self.object_list)
             return self.render_to_response(ctx)
 
         self.handle_query_products(request, range, form)
@@ -146,7 +156,7 @@ class RangeProductListView(ListView, BulkEditMixin):
 
     def handle_file_products(self, request, range, form):
         if not 'file_upload' in request.FILES:
-            return 
+            return
         upload = self.create_upload_object(request, range)
         upload.process()
         if not upload.was_processing_successful():
