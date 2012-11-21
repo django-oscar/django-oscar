@@ -99,10 +99,27 @@ Oscar using a browser.  Set it up by::
 This will create the database and load some fixtures for categories and shipping
 countries.
 
+Vagrant
+=======
+
+Oscar ships with a Vagrant virtual machine that can be used to test integration
+with various services in a controlled environment.  For instance, it is used to
+test that the migrations run correctly in both MySQL and Postgres.
+
+To create the machine, first ensure that vagrant and puppet are installed, then run::
+
+    make puppet
+
+to fetch the required puppet modules for provisioning.  Finally, run::
+
+    vagrant up
+
+to create the virtual machine and provision it. 
+
 Writing docs
 ============
 
-There's a helper script for building the docs locally::
+here's a helper script for building the docs locally::
 
     cd docs
     ./test_docs.sh
