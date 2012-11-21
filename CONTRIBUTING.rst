@@ -99,6 +99,73 @@ Oscar using a browser.  Set it up by::
 This will create the database and load some fixtures for categories and shipping
 countries.
 
+Vagrant
+=======
+
+Oscar ships with a Vagrant_ virtual machine that can be used to test integration
+with various services in a controlled environment.  For instance, it is used to
+test that the migrations run correctly in both MySQL and Postgres.
+
+.. _Vagrant: http://vagrantup.com/
+
+Building the Vagrant machine
+----------------------------
+
+To create the machine, first ensure that vagrant_ and puppet_ are installed.  You will require a
+puppet version that supports ``puppet module install``, that is > 2.7.14.  Now
+run::
+
+    make puppet
+
+.. _vagrant: http://vagrantup.com/v1/docs/getting-started/index.html
+.. _puppet: http://docs.puppetlabs.com/guides/installation.html
+
+to fetch the required puppet modules for provisioning.  Finally, run::
+
+    vagrant up
+
+to create the virtual machine and provision it.
+
+Testing migrations against MySQL and Postgres
+---------------------------------------------
+
+To test the migrations against MySQL and Postgres, do the following:
+
+1.  SSH onto the VM::
+
+    vagrant ssh
+
+2.  Change to sandbox folder and activate virtualenv::
+
+    cd /vagrant/sites/sandbox
+    source /var/www/virtualenv/bin/activate
+
+3.  Run helper script::
+
+    ./test_migrations.sh
+
+    This will recreate the Oscar database in both MySQL and Postgres and rebuild
+    it using ``syncdb`` and ``migrate``.
+
+Testing WSGI server configurations
+----------------------------------
+
+You can browse the Oscar sandbox site in two ways:
+
+* Start Django's development server on port 8000::
+
+    vagrant ssh
+    cd /vagrant/sites/sandbox
+    source /var/www/virtualenv/bin/activate
+    ./manage.py runserver 0.0.0.0:8000
+
+  The Vagrant machine forwards port 8000 to post 8080 and so the site can be
+  accessed at http://localhost:8080 on your host machine.
+
+* The Vagrant machine install Apache2 and mod_wsgi.  You can browse the site
+  through Apache at http://localhost:8081 on your host machine.
+
+
 Writing docs
 ============
 
