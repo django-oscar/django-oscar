@@ -13,6 +13,7 @@ class python_dependencies {
 		"python-imaging",
 		"python-memcache",
 		"postgresql-server-dev-9.1",
+		"libmysqlclient-dev",
     ]
     package {
         $packages: ensure => installed,
@@ -46,6 +47,18 @@ node precise64 {
 		encoding => "UTF8",
 	}
 
+	# MySQL
+	class {"mysql::python": }
+	class {"mysql::server":
+	    config_hash => {"root_password" => "root_password"}
+	}
+	mysql::db {$database_name:
+		user => $user,
+		password => $password,
+		host => "localhost",
+		grant => ["all"],
+	}
+
 	# Python
 	# - set-up a virtualenv
 	# - install testing requirements
@@ -56,8 +69,11 @@ node precise64 {
 	python::venv::isolate { $virtualenv:
 	    requirements => "/vagrant/requirements.txt"
 	}
+	python::pip::requirements {"/vagrant/requirements_vagrant.txt":
+	    venv => $virtualenv,
+	}
     exec {"install-oscar":
-	    command => "$virtualenv/bin/python setup.py develop",
+	    command => "$virtualenv/bin/python /vagrant/setup.py develop",
 		require => Python::Venv::Isolate[$virtualenv]
 	}
 }
