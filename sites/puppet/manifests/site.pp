@@ -26,6 +26,13 @@ node precise64 {
 	include python_dependencies
 	include userconfig
 
+	# Apache
+	class {"apache": }
+	class {"apache::mod::wsgi": }
+	file {"/etc/apache2/sites-enabled/vagrant.conf":
+	    source => "/vagrant/sites/sandbox/deploy/apache2/vagrant.conf"
+	}
+
 	# Memcached
 	class {"memcached": max_memory => 64 }
 
