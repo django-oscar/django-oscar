@@ -41,9 +41,9 @@ class Migration(SchemaMigration):
             ('numchild', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=255, db_index=True)),
             ('slug',
-             self.gf('django.db.models.fields.SlugField')(max_length=500, db_index=True)),
+             self.gf('django.db.models.fields.SlugField')(max_length=255, db_index=True)),
             ('full_name',
-             self.gf('django.db.models.fields.CharField')(max_length=500, db_index=True)),
+             self.gf('django.db.models.fields.CharField')(max_length=255, db_index=True)),
         ))
         db.send_create_signal('catalogue', ['Category'])
 
@@ -290,13 +290,13 @@ class Migration(SchemaMigration):
             'Meta': {'ordering': "['name']", 'object_name': 'Category'},
             'depth': ('django.db.models.fields.PositiveIntegerField', [], {}),
             'full_name': ('django.db.models.fields.CharField', [],
-                          {'max_length': '500', 'db_index': 'True'}),
+                          {'max_length': '255', 'db_index': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255', 'db_index': 'True'}),
             'numchild': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'path': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '255'}),
             'slug': ('django.db.models.fields.SlugField', [], {'max_length':
-                                                               '500', 'db_index': 'True'})
+                                                               '255', 'db_index': 'True'})
         },
         'catalogue.contributor': {
             'Meta': {'object_name': 'Contributor'},
