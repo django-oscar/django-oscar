@@ -14,6 +14,9 @@ from oscar import get_version
 
 PROJECT_DIR = os.path.dirname(__file__)
 
+# Change to the current directory to solve an issue installing Oscar on the Vagrant machine.
+os.chdir(PROJECT_DIR)
+
 setup(name='django-oscar',
       version=get_version().replace(' ', '-'),
       url='https://github.com/tangentlabs/django-oscar',
