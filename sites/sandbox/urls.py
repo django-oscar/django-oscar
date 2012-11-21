@@ -6,7 +6,7 @@ from django.conf.urls.static import static
 from django.views.generic import TemplateView
 
 from oscar.app import shop
-from oscar.views import handler500, handler404
+from oscar.views import handler500, handler404, handler403
 
 admin.autodiscover()
 
