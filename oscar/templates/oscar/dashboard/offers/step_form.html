@@ -35,7 +35,9 @@ create-page
 </div>
 <form action="." method="post" class="form-stacked well wysiwyg">
 	{% csrf_token %}
-	{% include "partials/form_fields.html" with form=form %}
+	{% block form_fields %}
+		{% include "partials/form_fields.html" with form=form %}
+	{% endblock %}
 	{% block form_extradata %}{% endblock %}
 	{% block form_actions %}
 	<div class="form-actions">

@@ -201,10 +201,12 @@ class OrderCreator(object):
 
     def create_discount_model(self, order, discount):
         """
-        Creates an order discount model for each discount attached to the basket.
+        Creates an order discount model for each discount attached to the
+        basket.
         """
         order_discount = OrderDiscount(order=order,
                                        offer_id=discount['offer'].id,
+                                       frequency=discount['freq'],
                                        amount=discount['discount'])
         voucher = discount.get('voucher', None)
         if voucher:
@@ -213,9 +215,9 @@ class OrderCreator(object):
         order_discount.save()
 
     def record_discount(self, discount):
-        discount['offer'].record_usage(discount['discount'])
+        discount['offer'].record_usage(discount)
         if 'voucher' in discount and discount['voucher']:
-            discount['voucher'].record_discount(discount['discount'])
+            discount['voucher'].record_discount(discount)
 
     def record_voucher_usage(self, order, voucher, user):
         """

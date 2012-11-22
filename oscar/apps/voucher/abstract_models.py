@@ -118,7 +118,7 @@ class AbstractVoucher(models.Model):
         """
         Record a discount that this offer has given
         """
-        self.total_discount += discount
+        self.total_discount += discount['discount']
         self.save()
     record_discount.alters_data = True
 

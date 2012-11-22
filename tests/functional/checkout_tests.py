@@ -6,12 +6,14 @@ from django.conf import settings
 from django.utils.importlib import import_module
 from django.test.utils import override_settings
 
-from oscar_testsupport.factories import create_product, create_voucher
+from oscar_testsupport.factories import (
+    create_product, create_voucher, create_offer)
 from oscar_testsupport.testcases import ClientTestCase
 from oscar.apps.basket.models import Basket
 from oscar.apps.order.models import Order
 from oscar.apps.address.models import Country
 from oscar.apps.voucher.models import Voucher
+from oscar.apps.offer.models import ConditionalOffer
 
 
 class CheckoutMixin(object):
@@ -278,3 +280,24 @@ class TestPlacingOrderUsingAVoucher(ClientTestCase, CheckoutMixin):
 
     def test_records_discount(self):
         self.assertEquals(1, self.voucher.num_orders)
+
+
+class TestPlacingOrderUsingAnOffer(ClientTestCase, CheckoutMixin):
+
+    def setUp(self):
+        offer = create_offer()
+        self.login()
+        self.add_product_to_basket()
+        self.complete_shipping_address()
+        self.complete_shipping_method()
+        self.response = self.submit()
+
+        # Reload offer
+        self.offer = ConditionalOffer.objects.get(id=offer.id)
+
+    def test_is_successful(self):
+        self.assertRedirectUrlName(self.response, 'checkout:thank-you')
+
+    def test_records_use(self):
+        self.assertEquals(1, self.offer.num_orders)
+        self.assertEquals(1, self.offer.num_applications)
