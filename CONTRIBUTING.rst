@@ -111,7 +111,9 @@ test that the migrations run correctly in both MySQL and Postgres.
 Building the Vagrant machine
 ----------------------------
 
-To create the machine, first ensure that vagrant_ and puppet_ are installed, then run::
+To create the machine, first ensure that vagrant_ and puppet_ are installed.  You will require a 
+puppet version that supports ``puppet module install``, that is > 2.7.14.  Now
+run::
 
     make puppet
 
@@ -160,14 +162,14 @@ You can browse the Oscar sandbox site in two ways:
   The Vagrant machine forwards port 8000 to post 8080 and so the site can be
   accessed at http://localhost:8080 on your host machine.
 
-* The Vagrant machine install Apach2 and mod_wsgi.  You can browse the site
+* The Vagrant machine install Apache2 and mod_wsgi.  You can browse the site
   through Apache at http://localhost:8081 on your host machine.
 
 
 Writing docs
 ============
 
-here's a helper script for building the docs locally::
+There's a helper script for building the docs locally::
 
     cd docs
     ./test_docs.sh
