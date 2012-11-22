@@ -16,6 +16,20 @@ from oscar.templatetags.currency_filters import currency
 from oscar.models.fields import PositiveDecimalField, ExtendedURLField
 
 
+def load_proxy(proxy_class):
+    module, classname = proxy_class.rsplit('.', 1)
+    try:
+        mod = import_module(module)
+    except ImportError, e:
+        raise exceptions.ImproperlyConfigured(
+            "Error importing module %s: %s" % (module, e))
+    try:
+        return getattr(mod, classname)
+    except AttributeError:
+        raise exceptions.ImproperlyConfigured(
+            "Module %s does not define a %s" % (module, classname))
+
+
 class ConditionalOffer(models.Model):
     """
     A conditional offer (eg buy 1, get 10% off)
@@ -190,6 +204,9 @@ class ConditionalOffer(models.Model):
             if field.startswith('_'):
                 del field_dict[field]
 
+        if self.condition.proxy_class:
+            klass = load_proxy(self.condition.proxy_class)
+            return klass(**field_dict)
         klassmap = {
             self.condition.COUNT: CountCondition,
             self.condition.VALUE: ValueCondition,
@@ -250,19 +267,29 @@ class ConditionalOffer(models.Model):
 class Condition(models.Model):
     COUNT, VALUE, COVERAGE = ("Count", "Value", "Coverage")
     TYPE_CHOICES = (
-        (COUNT, _("Depends on number of items in basket that are in condition range")),
-        (VALUE, _("Depends on value of items in basket that are in condition range")),
-        (COVERAGE, _("Needs to contain a set number of DISTINCT items from the condition range"))
-    )
-    range = models.ForeignKey('offer.Range', verbose_name=_("Range"))
-    type = models.CharField(_('Type'), max_length=128, choices=TYPE_CHOICES)
-    value = PositiveDecimalField(_('Value'), decimal_places=2, max_digits=12)
+        (COUNT, _("Depends on number of items in basket that are in "
+                  "condition range")),
+        (VALUE, _("Depends on value of items in basket that are in "
+                  "condition range")),
+        (COVERAGE, _("Needs to contain a set number of DISTINCT items "
+                     "from the condition range")))
+    range = models.ForeignKey(
+        'offer.Range', verbose_name=_("Range"), null=True, blank=True)
+    type = models.CharField(_('Type'), max_length=128, choices=TYPE_CHOICES,
+                            null=True, blank=True)
+    value = PositiveDecimalField(_('Value'), decimal_places=2, max_digits=12,
+                                 null=True, blank=True)
+
+    proxy_class = models.CharField(_("Custom class"), null=True, blank=True,
+                                   max_length=512, unique=True, default=None)
 
     class Meta:
         verbose_name = _("Condition")
         verbose_name_plural = _("Conditions")
 
     def __unicode__(self):
+        if self.proxy_class:
+            return load_proxy(self.proxy_class).name
         if self.type == self.COUNT:
             return _("Basket includes %(count)d item(s) from %(range)s") % {
                 'count': self.value, 'range': unicode(self.range).lower()}
@@ -276,8 +303,7 @@ class Condition(models.Model):
     description = __unicode__
 
     def consume_items(self, basket, affected_lines):
-        raise NotImplementedError("This method should never be called - "
-                                  "ensure you are using the correct proxy model")
+        pass
 
     def is_satisfied(self, basket):
         """
@@ -550,22 +576,6 @@ class Range(models.Model):
     def __unicode__(self):
         return self.name
 
-    def load_proxy(self):
-        """
-        Load proxy class
-        """
-        module, classname = self.proxy_class.rsplit('.', 1)
-        try:
-            mod = import_module(module)
-        except ImportError, e:
-            raise exceptions.ImproperlyConfigured(
-                "Error importing module %s: %s" % (module, e))
-        try:
-            return getattr(mod, classname)()
-        except AttributeError:
-            raise exceptions.ImproperlyConfigured(
-                "Module %s does not define a %s" % (module, classname))
-
     def contains_product(self, product):
         """
         Check whether the passed product is part of this range
@@ -579,7 +589,7 @@ class Range(models.Model):
 
         # Delegate to a proxy class if one is provided
         if self.proxy_class:
-            return self.load_proxy().contains_product(product)
+            return load_proxy(self.proxy_class)().contains_product(product)
 
         excluded_product_ids = self._excluded_product_ids()
         if product.id in excluded_product_ids:

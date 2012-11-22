@@ -12,17 +12,21 @@ class OfferDetailView(ListView):
     paginate_by = 20
 
     def get(self, request, *args, **kwargs):
-        self.offer = get_object_or_404(ConditionalOffer, slug=self.kwargs['slug'])
+        self.offer = get_object_or_404(
+            ConditionalOffer, slug=self.kwargs['slug'])
         return super(OfferDetailView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         ctx = super(OfferDetailView, self).get_context_data(**kwargs)
         ctx['offer'] = self.offer
-        ctx['upsell_message'] = self.offer.get_upsell_message(self.request.basket)
+        ctx['upsell_message'] = self.offer.get_upsell_message(
+            self.request.basket)
         return ctx
 
     def get_queryset(self):
         range = self.offer.condition.range
+        if not range:
+            return Product.objects.none()
         if range.includes_all_products:
             return Product.browsable.filter(is_discountable=True)
         return range.included_products.filter(is_discountable=True)

@@ -197,7 +197,12 @@ class SearchByDateRangeForm(forms.Form):
         return {}
 
 
-class CleanEmailMixin(object):
+class UserForm(forms.ModelForm):
+
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        kwargs['instance'] = user
+        super(UserForm, self).__init__(*args, **kwargs)
 
     def clean_email(self):
         """
@@ -207,28 +212,15 @@ class CleanEmailMixin(object):
         level in ``django.contrib.auth.models.User``.
         """
         email = self.cleaned_data['email']
-
         try:
-            user = User.objects.get(email=email)
+            User.objects.exclude(
+                id=self.user.id).get(email=email)
         except User.DoesNotExist:
-            # this email address is unique so we don't have to worry
-            # about it
             return email
-
-        if self.instance and self.instance.id != user.id:
+        else:
             raise ValidationError(
                 _("A user with this email address already exists")
             )
-
-        return email
-
-
-class UserForm(forms.ModelForm, CleanEmailMixin):
-
-    def __init__(self, user, *args, **kwargs):
-        self.user = user
-        kwargs['instance'] = user
-        super(UserForm, self).__init__(*args, **kwargs)
 
     class Meta:
         model = User

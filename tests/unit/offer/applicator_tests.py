@@ -17,7 +17,7 @@ class TestOfferApplicator(TestCase):
         self.product = create_product(price=D('100'))
         rng = G(models.Range, includes_all_products=True)
         self.condition = G(models.Condition, range=rng, type="Value",
-                           value=D('100'))
+                           value=D('100'), proxy_class=None)
         self.benefit = G(models.Benefit, range=rng, type="Absolute",
                          value=D('10'))
 

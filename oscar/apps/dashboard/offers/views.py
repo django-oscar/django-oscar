@@ -62,8 +62,8 @@ class OfferWizardStepView(FormView):
     update = False
     url_name = None
 
-    # Keep a reference to previous view class to allow checks to be made on whether
-    # prior steps have been completed
+    # Keep a reference to previous view class to allow checks to be made on
+    # whether prior steps have been completed
     previous_view = None
 
     def get(self, request, *args, **kwargs):
@@ -127,7 +127,8 @@ class OfferWizardStepView(FormView):
             form_kwargs['instance'] = self.get_instance()
         session_kwargs = self._fetch_form_kwargs()
         form_kwargs.update(session_kwargs)
-        parent_kwargs = super(OfferWizardStepView, self).get_form_kwargs(*args, **kwargs)
+        parent_kwargs = super(OfferWizardStepView, self).get_form_kwargs(
+            *args, **kwargs)
         form_kwargs.update(parent_kwargs)
         return form_kwargs
 
@@ -151,8 +152,7 @@ class OfferWizardStepView(FormView):
         if self.update:
             return _("Edit %(step_name)s for offer #%(offer_id)d") % {
                 'step_name': self.step_name,
-                'offer_id': self.offer.id
-            }
+                'offer_id': self.offer.id}
         return _('Create new offer: %s') % self.step_name
 
     def form_valid(self, form):
