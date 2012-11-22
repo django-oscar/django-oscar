@@ -49,21 +49,28 @@
                 <tr>
                     <th>{% trans "Offer name" %}</th>
                     <th>{% trans "Status" %}</th>
-                    <th>{% trans "Start date" %}</th>
-                    <th>{% trans "End date" %}</th>
+                    <th>{% trans "Availability" %}</th>
                     <th>{% trans "Condition" %}</th>
                     <th>{% trans "Benefit" %}</th>
+                    <th>{% trans "Applications" %}</th>
+                    <th>{% trans "Total discount" %}</th>
                     <th>{% trans "Date created" %}</th>
                     <th></th>
                 </tr>
                 {% for offer in offers %}
                 <tr>
                     <td><a href="{{ offer.get_absolute_url }}">{{ offer.name }}</a></td>
-                    <td>{% if offer.is_active %}{% trans "Active" %}{% else %}{% trans "Inactive" %}{% endif %}</td>
-                    <td>{{ offer.start_date }}</td>
-                    <td>{{ offer.end_date }}</td>
+					<td>{% if offer.is_active %}
+						<span class="label label-success">{% trans "Active" %}</span>
+						{% else %}
+						<span class="label">{% trans "Inactive" %}</span>
+						{% endif %}
+					</td>
+                    <td>{{ offer.availability_description }}</td>
                     <td>{{ offer.condition.description }}</td>
                     <td>{{ offer.benefit.description }}</td>
+                    <td>{{ offer.num_applications }}</td>
+                    <td>{{ offer.total_discount|currency }}</td>
                     <td>{{ offer.date_created }}</td>
                     <td>
                         <div class="btn-toolbar">

@@ -667,15 +667,23 @@ class AbstractOrderDiscount(models.Model):
     """
     A discount against an order.
 
-    Normally only used for display purposes so an order can be listed with discounts displayed
-    separately even though in reality, the discounts are applied at the line level.
+    Normally only used for display purposes so an order can be listed with
+    discounts displayed separately even though in reality, the discounts are
+    applied at the line level.
     """
-    order = models.ForeignKey('order.Order', related_name="discounts", verbose_name=_("Order"))
-    offer_id = models.PositiveIntegerField(_("Offer ID"), blank=True, null=True)
-    offer_name = models.CharField(_("Offer name"), max_length=128, db_index=True, null=True)
-    voucher_id = models.PositiveIntegerField(_("Voucher ID"), blank=True, null=True)
-    voucher_code = models.CharField(_("Code"), max_length=128, db_index=True, null=True)
-    amount = models.DecimalField(_("Amount"), decimal_places=2, max_digits=12, default=0)
+    order = models.ForeignKey(
+        'order.Order', related_name="discounts", verbose_name=_("Order"))
+    offer_id = models.PositiveIntegerField(
+        _("Offer ID"), blank=True, null=True)
+    offer_name = models.CharField(
+        _("Offer name"), max_length=128, db_index=True, null=True)
+    voucher_id = models.PositiveIntegerField(
+        _("Voucher ID"), blank=True, null=True)
+    voucher_code = models.CharField(
+        _("Code"), max_length=128, db_index=True, null=True)
+    frequency = models.PositiveIntegerField(_("Frequency"), null=True)
+    amount = models.DecimalField(
+        _("Amount"), decimal_places=2, max_digits=12, default=0)
 
     class Meta:
         abstract = True
