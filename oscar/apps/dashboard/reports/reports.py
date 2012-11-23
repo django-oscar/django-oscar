@@ -1,6 +1,7 @@
 from django.template.defaultfilters import date
 from django.http import HttpResponse
 from django.utils.translation import ugettext_lazy as _
+from oscar.apps.dashboard.reports.csv_utils import CsvUnicodeWriter
 
 
 class ReportGenerator(object):
@@ -21,7 +22,7 @@ class ReportGenerator(object):
         self.formatter = self.formatters['%s_formatter' % kwargs['formatter']]()
 
     def report_description(self):
-        return _(u'%(report_filter)s between %(start_date)s and %(end_date)s') % {
+        return _('%(report_filter)s between %(start_date)s and %(end_date)s') % {
             'report_filter': self.description,
             'start_date': self.start_date,
             'end_date': self.end_date,
@@ -56,6 +57,9 @@ class ReportFormatter(object):
 
 
 class ReportCSVFormatter(ReportFormatter):
+
+    def get_csv_writer(self, file_handle, **kwargs):
+        return CsvUnicodeWriter(file_handle, **kwargs)
 
     def generate_response(self, objects, **kwargs):
         response = HttpResponse(mimetype='text/csv')
