@@ -78,7 +78,7 @@ class OrderListView(ListView, BulkEditMixin):
     current_view = 'dashboard:order-list'
 
     def get(self, request, *args, **kwargs):
-        if 'order_number' in request.GET and request.GET.get('response_format', None) == 'html':
+        if 'order_number' in request.GET and request.GET.get('response_format', 'html') == 'html':
             try:
                 order = Order.objects.get(number=request.GET['order_number'])
             except Order.DoesNotExist:
