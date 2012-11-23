@@ -4,7 +4,7 @@ from decimal import Decimal as D
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.catalogue.categories import create_from_breadcrumbs
-from oscar.apps.dashboard.reports.utils import CsvUnicodeReader
+from oscar.apps.dashboard.reports.csv_utils import CsvUnicodeReader
 from oscar.core.loading import get_class, get_classes
 ImportError = get_class('partner.exceptions', 'ImportError')
 Partner, StockRecord = get_classes('partner.models', ('Partner', 'StockRecord'))
