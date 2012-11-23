@@ -165,8 +165,8 @@ class EmailUserCreationForm(forms.ModelForm):
 
 
 class SearchByDateRangeForm(forms.Form):
-    date_from = forms.DateField(required=False, label="From")
-    date_to = forms.DateField(required=False, label="To")
+    date_from = forms.DateField(required=False, label=_("From"))
+    date_to = forms.DateField(required=False, label=_("To"))
 
     def clean(self):
         if self.is_valid() and not self.cleaned_data['date_from'] and not self.cleaned_data['date_to']:
@@ -175,15 +175,17 @@ class SearchByDateRangeForm(forms.Form):
 
     def description(self):
         if not self.is_bound or not self.is_valid():
-            return 'All orders'
+            return _('All orders')
         date_from = self.cleaned_data['date_from']
         date_to = self.cleaned_data['date_to']
         if date_from and date_to:
-            return 'Orders placed between %s and %s' % (date_from, date_to)
+            return _('Orders placed between %(date_from)s and %(date_to)s') % {
+                'date_from': date_from,
+                'date_to': date_to }
         elif date_from and not date_to:
-            return 'Orders placed since %s' % date_from
+            return _('Orders placed since %s') % date_from
         elif not date_from and date_to:
-            return 'Orders placed until %s' % date_to
+            return _('Orders placed until %s') % date_to
 
     def get_filters(self):
         date_from = self.cleaned_data['date_from']
