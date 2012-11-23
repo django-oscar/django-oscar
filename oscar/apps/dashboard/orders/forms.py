@@ -87,6 +87,8 @@ class OrderSearchForm(forms.Form):
         elif len(args) > 0:
             data = args[0]
             args = args[1:]
+        else:
+            data = {}
 
         if data.get('response_format', None) not in self.format_choices:
             # handle POST/GET dictionaries, whose are unmutable
