@@ -1841,7 +1841,7 @@ msgstr "Alerty ze statusem '%s'"
 
 #: apps/dashboard/catalogue/views.py:293
 msgid "All alerts"
-msgstr "Wszystkie alarmy"
+msgstr "Wszystkie alerty"
 
 #: apps/dashboard/communications/app.py:9
 msgid "Communications"
@@ -3552,7 +3552,7 @@ msgstr "Data zamknięcia"
 #: apps/partner/abstract_models.py:299
 #, python-format
 msgid "<stockalert for \"%(stock)s\" status %(status)s>"
-msgstr "<alarm stanu dla \"%(stock)s\" status %(status)s>"
+msgstr "<alert stanu dla \"%(stock)s\" status %(status)s>"
 
 #: apps/partner/abstract_models.py:303
 msgid "Stock Alert"
@@ -5420,7 +5420,7 @@ msgstr "Przychód"
 
 #: templates/oscar/dashboard/index.html:76
 msgid "Average order costs"
-msgstr "Średnia wsrtość zamówienia"
+msgstr "Średnia wartość zamówienia"
 
 #: templates/oscar/dashboard/index.html:84
 msgid "Orders - All Time"
@@ -5470,7 +5470,7 @@ msgstr "Wszystkich produktów"
 #: templates/oscar/dashboard/index.html:142
 #: templates/oscar/dashboard/index.html:146
 msgid "stock alerts"
-msgstr "alarmy stanów magazynowych"
+msgstr "alerty stanów magazynowych"
 
 #: templates/oscar/dashboard/index.html:154
 msgid "Offers, vouchers and promotions"
@@ -5661,7 +5661,7 @@ msgstr "Dostępny stan magazynowy"
 
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:58
 msgid "Date alert raised"
-msgstr "Data alarmu"
+msgstr "Data alertu"
 
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:78
 msgid "No stock alerts found."
@@ -6626,7 +6626,7 @@ msgstr "resetuj"
 #: templates/oscar/dashboard/users/alerts/list.html:53
 #: templates/oscar/dashboard/users/alerts/partials/alert.html:40
 msgid "Date alert sent"
-msgstr "Data wysłania alarmu"
+msgstr "Data wysłania alertu"
 
 #: templates/oscar/dashboard/users/alerts/list.html:65
 msgid "(Anonymous)"
