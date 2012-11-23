@@ -1,9 +1,9 @@
 import httplib
 
 from django.core.urlresolvers import reverse
+from oscar_testsupport.testcases import WebTestCase
 
-from oscar.test import WebTestCase
-from oscar.test.helpers import create_product
+from oscar_testsupport.factories import create_product
 from oscar.apps.catalogue.views import ProductListView
 
 

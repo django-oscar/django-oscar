@@ -2,21 +2,25 @@
 {% load currency_filters %}
 {% load i18n %}
 
+{% block body_class %}
+create-page
+{% endblock %}
+
 {% block title %}
 {% blocktrans with name=range.id %}Delete range '{{ name }}'?{% endblocktrans %} | {% trans "Range management" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">
-    <li>
-	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
-        <span class="divider">/</span>
-    </li>
-    <li>
-	<a href="{% url dashboard:range-list %}">{% trans "Ranges" %}</a>
-        <span class="divider">/</span>
-    </li>
-	<li class="active">{% blocktrans with name=range.name %}Delete range '{{ name }}'?{% endblocktrans %}</li>
+<ul class="breadcrumb">	  	
+    <li>	  	
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>	  	
+        <span class="divider">/</span>	  	
+    </li>	  	
+    <li>	  	
+        <a href="{% url dashboard:range-list %}">{% trans "Ranges" %}</a>	  	
+        <span class="divider">/</span>	  	
+    </li>	  	
+    <li class="active">{% blocktrans with name=range.name %}Delete range '{{ name }}'?{% endblocktrans %}</li>	  	
 </ul>
 {% endblock %}
 
@@ -27,10 +31,14 @@
 {% endblock header %}
 
 {% block dashboard_content %}
-<form action="." method="post" class="">
+<div class="table-header">
+   {% trans "Delete range" %}
+</div>
+<form action="." method="post" class="well">
+    <p>{% trans "Are you sure you want to delete range" %} <strong>{% blocktrans with name=range.name %}'{{ name }}'?{% endblocktrans %}</strong></p>
 	{% csrf_token %}
 	<div class="form-actions">
-		<button class="btn btn-danger btn-large" type="submit">{% trans "Delete" %}</button> {% trans "or" %}
+		<button class="btn btn-danger" type="submit">{% trans "Delete" %}</button> {% trans "or" %}
 		<a href="{% url dashboard:range-list %}">{% trans "cancel" %}</a>
 	</div>
 </form>

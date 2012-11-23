@@ -3,7 +3,7 @@ import datetime
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
-from oscar.test import ClientTestCase
+from oscar_testsupport.testcases import ClientTestCase
 from oscar.apps.offer.models import Range, ConditionalOffer, Condition, Benefit
 from oscar.apps.dashboard.offers.forms import MetaDataForm
 

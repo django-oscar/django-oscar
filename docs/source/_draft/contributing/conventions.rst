@@ -15,7 +15,7 @@ General guidelines
 ------------------
 
 The following are a set of design conventions that should be followed when
-writing apps for oscar:
+writing apps for Oscar:
 
 * When referencing managers of model classes, use ``_default_manager`` rather than
   ``objects``.  This allows projects to override the default manager to provide

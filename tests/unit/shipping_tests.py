@@ -8,8 +8,8 @@ from oscar.apps.shipping.models import OrderAndItemCharges, WeightBased
 from oscar.apps.shipping.repository import Repository
 from oscar.apps.shipping import Scales
 from oscar.apps.basket.models import Basket
-from oscar.test.helpers import create_product
-from oscar.test.decorators import dataProvider
+from oscar_testsupport.factories import create_product
+from oscar_testsupport.decorators import dataProvider
 
 
 class FreeTest(TestCase):

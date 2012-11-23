@@ -66,9 +66,9 @@ class AbstractCategory(MP_Node):
     description = models.TextField(_('Description'), blank=True, null=True)
     image = models.ImageField(_('Image'), upload_to='categories', blank=True,
                               null=True)
-    slug = models.SlugField(_('Slug'), max_length=1024, db_index=True,
+    slug = models.SlugField(_('Slug'), max_length=255, db_index=True,
                             editable=False)
-    full_name = models.CharField(_('Full Name'), max_length=1024,
+    full_name = models.CharField(_('Full Name'), max_length=255,
                                  db_index=True, editable=False)
 
     _slug_separator = '/'

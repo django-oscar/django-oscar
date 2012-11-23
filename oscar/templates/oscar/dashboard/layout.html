@@ -4,6 +4,7 @@
 {% load dashboard_tags %}
 {% load i18n %}
 
+
 {% block mainstylesheet %}
     <link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/dashboard.css" />
 {% endblock %}
@@ -14,52 +15,76 @@
 
 {% block layout %}
     {% block navbar %}
-    <div class="navbar navbar-fixed-top navbar-inverse">
+    <div class="navbar navbar-static-top navbar-inverse navbar-accounts">
         <div class="navbar-inner">
-            <div class="container" style="width: auto;">
-                <a href="{% url promotions:home %}" class="brand">{{ shop_name }}</a>
-                <ul class="nav pull-right">
-                    {% if user.is_authenticated %}
-						<li><span>{% trans "Welcome" %} <em>{{ request.user.get_full_name|default:'Guest' }}</em></span></li>
-						<li><a href="{% url customer:summary %}"><i class="icon-user"></i> {% trans "Account" %}</a></li>
-						<li><a href="{% url customer:logout %}"><i class="icon-signout"></i> {% trans "Logout" %}</a></li>
-                    {% endif %}
-                </ul>
+            <div class="dashboard">
+                <a href="/dashboard/" class="brand">{{ shop_name }}</a>
+                
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-accounts">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                
+                <div class="nav-collapse nav-accounts collapse">
+                    <ul class="nav pull-right">
+                        {% if user.is_authenticated %}
+    						<li><span>{% trans "Welcome" %} <em>{{ request.user.get_full_name|default:'Guest' }}</em></span></li>
+    						<li><a href="{% url customer:summary %}"><i class="icon-user"></i> {% trans "Account" %}</a></li>
+    						<li><a href="{% url customer:logout %}"><i class="icon-signout"></i> {% trans "Logout" %}</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
             </div>
         </div><!-- /navbar-inner -->
     </div><!-- /navbar -->
     {% endblock navbar %}
+    
+    {% block dashboard_nav %}
+        {% dashboard_navigation request.user %}
+        
+        <div class="navbar navbar-static-top navbar-inverse navbar-primary">
+            <div class="navbar-inner">
+                <div class="dashboard">
+
+                    <!-- <div class="subnav subnav-fixed"> -->
+
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-primary">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+
+                    <div class="nav-collapse nav-primary">
+                        <ul class="nav nav-pills dashboard">
+                            {% for item in nav_items %}
+                            <li class="{{ item.label }} dropdown">
+                                {% if item.is_heading %}
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ item.label }} <b class="caret"></b></a>
+                                {% else %}
+                                <a href="{{ item.url }}">{{ item.label }}</a>
+                                {% endif %}
+                                {% if item.has_children %}
+                                <ul class="dropdown-menu">
+                                    {% for subitem in item.children %}
+                                    <li><a href="{{ subitem.url }}">{{ subitem.label }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                                {% endif %}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+	{% endblock %}
 
     <div class="container-fluid dashboard">
-        {% block dashboard_nav %}
-        <div class="row-fluid">
-            {% dashboard_navigation request.user %}
-            <div class="subnav subnav-fixed">
-                <ul class="nav nav-pills">
-                    {% for item in nav_items %}
-                        <li class="{{ item.label }} dropdown">
-                        {% if item.is_heading %}
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ item.label }} <b class="caret"></b></a>
-                        {% else %}
-                            <a href="{{ item.url }}">{{ item.label }}</a>
-                        {% endif %}
-                        {% if item.has_children %}
-                            <ul class="dropdown-menu">
-                                {% for subitem in item.children %}
-                                <li><a href="{{ subitem.url }}">{{ subitem.label }}</a></li>
-                                {% endfor %}
-                            </ul>
-                        {% endif %}
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-		</div>
-		{% endblock %}
-
         {% block breadcrumbs %}
-        <ul class="breadcrumb">
-            <li><a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a> <span class="divider">/</span></li>
+        <ul class="breadcrumb">        	  	
+            <li><a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a> <span class="divider">/</span></li>        	  	
         </ul>
         {% endblock %}
             

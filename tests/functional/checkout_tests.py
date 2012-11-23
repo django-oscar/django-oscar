@@ -4,13 +4,16 @@ import sys
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.utils.importlib import import_module
+from django.test.utils import override_settings
 
-from oscar.test.helpers import create_product, create_voucher
-from oscar.test import ClientTestCase, patch_settings
+from oscar_testsupport.factories import (
+    create_product, create_voucher, create_offer)
+from oscar_testsupport.testcases import ClientTestCase
 from oscar.apps.basket.models import Basket
 from oscar.apps.order.models import Order
 from oscar.apps.address.models import Country
 from oscar.apps.voucher.models import Voucher
+from oscar.apps.offer.models import ConditionalOffer
 
 
 class CheckoutMixin(object):
@@ -92,14 +95,14 @@ class EnabledAnonymousCheckoutViewsTests(ClientTestCase, CheckoutMixin):
                                                  'quantity': 1})
 
     def test_shipping_address_does_require_session_email_address(self):
-        with patch_settings(OSCAR_ALLOW_ANON_CHECKOUT=True):
+        with override_settings(OSCAR_ALLOW_ANON_CHECKOUT=True):
             self.reload_urlconf()
             url = reverse('checkout:shipping-address')
             response = self.client.get(url)
             self.assertIsRedirect(response)
 
     def test_email_address_is_saved_with_order(self):
-        with patch_settings(OSCAR_ALLOW_ANON_CHECKOUT=True):
+        with override_settings(OSCAR_ALLOW_ANON_CHECKOUT=True):
             self.reload_urlconf()
             self.add_product_to_basket()
             self.complete_guest_email_form('barry@example.com')
@@ -277,3 +280,24 @@ class TestPlacingOrderUsingAVoucher(ClientTestCase, CheckoutMixin):
 
     def test_records_discount(self):
         self.assertEquals(1, self.voucher.num_orders)
+
+
+class TestPlacingOrderUsingAnOffer(ClientTestCase, CheckoutMixin):
+
+    def setUp(self):
+        offer = create_offer()
+        self.login()
+        self.add_product_to_basket()
+        self.complete_shipping_address()
+        self.complete_shipping_method()
+        self.response = self.submit()
+
+        # Reload offer
+        self.offer = ConditionalOffer.objects.get(id=offer.id)
+
+    def test_is_successful(self):
+        self.assertRedirectUrlName(self.response, 'checkout:thank-you')
+
+    def test_records_use(self):
+        self.assertEquals(1, self.offer.num_orders)
+        self.assertEquals(1, self.offer.num_applications)

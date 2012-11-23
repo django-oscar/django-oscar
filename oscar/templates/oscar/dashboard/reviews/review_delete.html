@@ -2,21 +2,25 @@
 {% load currency_filters %}
 {% load i18n %}
 
+{% block body_class %}
+create-page
+{% endblock %}
+
 {% block title %}
 {% blocktrans with title=review.title|truncatechars:30 %}Delete review '{{ title }}'?{% endblocktrans %} | {% trans "Review management" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">
+<ul class="breadcrumb"> 	
     <li>
-	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
-        <span class="divider">/</span>
-    </li>
-    <li>
-	<a href="{% url dashboard:reviews-list %}">{% trans "Reviews" %}</a>
-        <span class="divider">/</span>
-    </li>
-	<li class="active">{% blocktrans with title=review.title|truncatechars:30 %}Delete review "{{ title }}"?{% endblocktrans %}</li>
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>	
+        <span class="divider">/</span>	  	
+    </li>	  	
+    <li>	  	
+        <a href="{% url dashboard:reviews-list %}">{% trans "Reviews" %}</a>	  	
+        <span class="divider">/</span>	  	
+    </li>	  	
+    <li class="active">{% blocktrans with title=review.title|truncatechars:30 %}Delete review "{{ title }}"?{% endblocktrans %}</li>	  	
 </ul>
 {% endblock %}
 
@@ -27,10 +31,13 @@
 {% endblock header %}
 
 {% block dashboard_content %}
-<form action="." method="post" class="">
+<div class="table-header">
+    <h2>Review</h2>
+</div>
+<form action="." method="post" class="well">
 	{% csrf_token %}
 
-	<table class="table">
+	<table class="table table-striped table-bordered table-hover">
             <tbody> 
 				<tr><th>{% trans "Review Title" %}</th><td>{{ review.title }}</td></tr>
 				<tr><th>{% trans "Product" %}</th><td>{{ review.product.title }}</td></tr>

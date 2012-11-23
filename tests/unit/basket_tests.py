@@ -6,7 +6,7 @@ from django.test.client import RequestFactory
 
 from oscar.apps.basket.models import Basket
 from oscar.apps.basket.middleware import BasketMiddleware
-from oscar.test.helpers import create_product
+from oscar_testsupport.factories import create_product
 from oscar.apps.basket.reports import (
     OpenBasketReportGenerator, SubmittedBasketReportGenerator)
 from oscar.apps.catalogue.models import Option

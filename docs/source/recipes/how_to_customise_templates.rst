@@ -2,10 +2,10 @@
 How to customise templates
 ==========================
 
-Assuming you want to use oscar's templates in your project, there are two
+Assuming you want to use Oscar's templates in your project, there are two
 options.  You don't have to though - you could write all your own templates if
 you like.  If you do this, it's probably best to start with a straight copy of
-all of oscar's templates so you know all the files that you need to
+all of Oscar's templates so you know all the files that you need to
 re-implement.
 
 Anyway - here are the two options for customising.
@@ -31,24 +31,24 @@ as so::
         location('templates'),
     )
 
-Next copy oscar's ``base.html`` into your templates directory and customise it
+Next copy Oscar's ``base.html`` into your templates directory and customise it
 to suit your needs.
 
 The downsides of this method are that it involves duplicating the file from
-oscar in a way that breaks the link with upstream.  Hence, changes to oscar's
+Oscar in a way that breaks the link with upstream.  Hence, changes to Oscar's
 ``base.html`` won't be picked up by your project as you will have your own
 version.
 
 Method 2 - Subclass parent but use same template path
 -----------------------------------------------------
 
-There is a trick you can perform whereby oscar's templates can be accessed via
-two paths.  This is outlined in the `django wiki`_.
+There is a trick you can perform whereby Oscar's templates can be accessed via
+two paths.  This is outlined in the `Django wiki`_.
 
-.. _`django wiki`: https://code.djangoproject.com/wiki/ExtendingTemplates
+.. _`Django wiki`: https://code.djangoproject.com/wiki/ExtendingTemplates
 
 This basically means you can have a ``base.html`` in your local templates folder
-that extends oscar's ``base.html`` but only customises the blocks that it needs
+that extends Oscar's ``base.html`` but only customises the blocks that it needs
 to.
 
 Oscar provides a helper variable to make this easy.  First, set up your
@@ -67,7 +67,7 @@ template configuration as so::
         OSCAR_PARENT_TEMPLATE_DIR,
     )
 
-The ``OSCAR_PARENT_TEMPLATE_DIR`` points to the directory above oscar's normal
+The ``OSCAR_PARENT_TEMPLATE_DIR`` points to the directory above Oscar's normal
 templates directory.  This means that ``path/to/oscar/template.html`` can also
 be reached via ``templates/path/to/oscar/template.html``.
 

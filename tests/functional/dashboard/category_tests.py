@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from django_dynamic_fixture import G
 
-from oscar.test import WebTestCase, ClientTestCase
+from oscar_testsupport.testcases import WebTestCase, ClientTestCase
 from oscar.apps.catalogue.models import Category
 from oscar.apps.dashboard.catalogue.forms import CategoryForm
 from oscar.apps.catalogue.categories import create_from_breadcrumbs
@@ -104,6 +104,6 @@ class TestCategoryDashboard(WebTestCase):
         dashboard_index = self.app.get(reverse('dashboard:index'),
                                        user=self.staff)
         category_index = dashboard_index.click("Categories")
-        category_add = category_index.click("Create a new category")
+        category_add = category_index.click("New category")
         response = category_add.form.submit()
         self.assertEqual(200, response.status_code)

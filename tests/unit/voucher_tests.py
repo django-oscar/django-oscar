@@ -31,7 +31,7 @@ class TestVoucher(TestCase):
                                             start_date=end,
                                             end_date=start)
             voucher.clean()
-    
+
     def test_is_active_between_start_and_end_dates(self):
         start = datetime.date(2011, 01, 01)
         test = datetime.date(2011, 01, 10)
@@ -48,9 +48,9 @@ class TestVoucher(TestCase):
 
     def test_increments_total_discount_when_recording_usage(self):
         voucher = G(Voucher)
-        voucher.record_discount(D('10.00'))
+        voucher.record_discount({'discount': D('10.00')})
         self.assertEqual(voucher.total_discount, D('10.00'))
-        voucher.record_discount(D('10.00'))
+        voucher.record_discount({'discount': D('10.00')})
         self.assertEqual(voucher.total_discount, D('20.00'))
 
 

@@ -2,14 +2,14 @@
 {% load i18n %}
 {% load currency_filters %}
 
-{% block body_class %}catalogue{% endblock %}
+{% block body_class %}create-page catalogue{% endblock %}
 
 {% block title %}
 {% trans "Update product" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">
+<ul class="breadcrumb">  	
     <li>
         <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
@@ -24,17 +24,17 @@
 
 {% block header %}
 <div class="page-header">
-<h1>{{ title }}</h1>
+    <h1>{{ title }}</h1>
 </div>
 {% endblock header %}
 
 {% block dashboard_content %}
-<form action="." method="post" class="product-new form-horizontal wysiwyg" enctype="multipart/form-data">
+<form action="." method="post" class="form-stacked wysiwyg" enctype="multipart/form-data">
 {% csrf_token %}
-    <div class="well well-blank product-details">
-        <div class="sub-header">
-            <h3>{% trans "Product Details" %}</h3>
-        </div>
+    <div class="table-header">
+        <h3>{% trans "Product Details" %}</h3>
+    </div>
+    <div class="well product-details">
         <span class="help-block">{{ form.non_field_errors }}</span>
         {% for field in form %}
             {% if field.is_hidden %}
@@ -64,10 +64,10 @@
         {% endif %}
         {% endfor %}
     </div>
-    <div class="well well-blank">
-        <div class="sub-header">
-            <h3>{% trans "Product Attributes" %}</h3>
-        </div>
+    <div class="table-header">
+        <h3>{% trans "Product Attributes" %}</h3>
+    </div>
+    <div class="well">
         <div class="control-group">
             <label class="control-label">{% trans "Product class" %}</label>
             <div class="controls">
@@ -101,11 +101,11 @@
             {% endif %}
         {% endfor %}
     </div>
-
-    <div class="well well-blank form-inline">
-        <div class="sub-header">
-            <h3>{% trans "Category" %}</h3>
-        </div>
+    
+    <div class="table-header">
+        <h3>{% trans "Category" %}</h3>
+    </div>
+    <div class="well form-inline"> 
         {{ category_formset.management_form }}
 		{{ category_formset.non_form_errors }}
         {% for category_form in category_formset %}
@@ -114,10 +114,10 @@
     </div>
 </div>
 
-<div class="well well-blank">
-    <div class="sub-header">
-        <h3>{% trans "Upload, change or remove images" %}</h3>
-    </div>
+<div class="table-header">
+    <h3>{% trans "Upload, change or remove images" %}</h3>
+</div>
+<div class="well">
     {{ image_formset.management_form }}
     {{ image_formset.non_form_errors }}
     <ol class='upload-image'>
@@ -126,10 +126,11 @@
         {% endfor %}
     </ol>
 </div>
-<div class="well well-blank fields-full stock-pricing">
-    <div class="sub-header">
-        <h3>{% trans "Stock and price information" %}</h3>
-    </div>
+
+<div class="table-header">
+    <h3>{% trans "Stock and price information" %}</h3>
+</div>
+<div class="well stock-pricing">
     {{ stockrecord_form.non_field_errors }}
     <div class="row-fluid">
         <div class="span3">
@@ -158,8 +159,8 @@
         </div>
     </div>
 </div>
-<hr/>
-<div class="control-group">
+
+<div class="form-actions control-group">
     <div class="pull-right">
         <a href="{% url dashboard:catalogue-product-list %}">{% trans "Cancel" %}</a> {% trans "or" %} <button class="btn btn-primary btn-large" type="submit">{% trans "Save Product" %}</button>
     </div>

@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django_dynamic_fixture import get
 
-from oscar.test import ClientTestCase
+from oscar_testsupport.testcases import ClientTestCase
 
 ProductReview = get_model('reviews', 'productreview')
 

@@ -6,7 +6,7 @@ from django_dynamic_fixture import G
 from oscar.apps.offer.utils import Applicator
 from oscar.apps.offer import models
 from oscar.apps.basket.models import Basket
-from oscar.test.helpers import create_product
+from oscar_testsupport.factories import create_product
 
 
 class TestOfferApplicator(TestCase):
@@ -33,7 +33,7 @@ class TestOfferApplicator(TestCase):
         self.basket.add_product(self.product, 5)
         offer = models.ConditionalOffer(
             id="test", condition=self.condition, benefit=self.benefit,
-            max_applications=1)
+            max_basket_applications=1)
         discounts = self.applicator.get_basket_discounts(
             self.basket, [offer])
         self.assertEqual(1, discounts["test"]['freq'])

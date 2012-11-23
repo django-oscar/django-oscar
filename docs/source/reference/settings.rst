@@ -28,10 +28,10 @@ The tagline that is displayed next to the shop name and in the browser title
 OSCAR_ORDER_STATUS_PIPELINE
 ---------------------------
 
-The pipline defines the statuses that an order or line item can have and what
-transitions are allowed in any given status. The pipline is defined as a
+The pipeline defines the statuses that an order or line item can have and what
+transitions are allowed in any given status. The pipeline is defined as a
 dictionary where the keys are the available statuses. Allowed transitions are
-defined as iterable values for the corresponding status. A sample pipline
+defined as iterable values for the corresponding status. A sample pipeline
 (as used in the Oscar sandbox) might look like this::
 
     OSCAR_INITIAL_ORDER_STATUS = 'Pending'
@@ -108,7 +108,7 @@ Default: ``True``
 
 This enables sending alert notifications/emails instantly when products get
 back in stock by listening to stock record update signals this might impact
-performace for large numbers stock record updates.
+performance for large numbers stock record updates.
 Alternatively, the management command ``oscar_send_alerts`` can be used to
 run periodically, e.g. as a cronjob. In this case instant alerts should be
 disabled.
@@ -232,7 +232,7 @@ OSCAR_MISSING_IMAGE_URL
 
 Default: ``image_not_found.jpg``
 
-Copy this image from oscar/static/img to your MEDIA_ROOT folder. It needs to
+Copy this image from ``oscar/static/img`` to your ``MEDIA_ROOT`` folder. It needs to
 be there so Sorl can resize it.
 
 OSCAR_UPLOAD_ROOT
@@ -243,4 +243,4 @@ Default: ``/tmp``
 Deprecated settings
 ===================
 
-There are currently no deprecated settings in oscar
+There are currently no deprecated settings in Oscar.

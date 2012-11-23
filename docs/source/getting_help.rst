@@ -18,7 +18,7 @@ Solutions to common problems
 
     problems/my_model_customisations_arent_picked_up
 
-If you find a bug, please report it in the `Github issue tracker`_
+If you find a bug, please report it in the `GitHub issue tracker`_
 
-.. _`Github issue tracker`: https://github.com/tangentlabs/django-oscar/issues
+.. _`GitHub issue tracker`: https://github.com/tangentlabs/django-oscar/issues
 

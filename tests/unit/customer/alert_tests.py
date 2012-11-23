@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django_dynamic_fixture import G
 
 from oscar.apps.customer.models import ProductAlert
-from oscar.test.helpers import create_product
+from oscar_testsupport.factories import create_product
 
 
 class TestAnAlertForARegisteredUser(TestCase):

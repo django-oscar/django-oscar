@@ -8,7 +8,7 @@ Some ground rules:
   (django-oscar@googlegroups.com) before serious work starts. 
 
 * Write tests! Pull requests will be rejected if sufficient tests aren't
-  provided.  See the guidance below on the testing conventions that oscar uses
+  provided.  See the guidance below on the testing conventions that Oscar uses.
 
 * Write docs! Please update the documentation when altering behaviour or introducing new features.
 
@@ -43,7 +43,7 @@ commands will run the same set of tests::
     ./runtests.py tests/unit/order
     ./runtests.py tests.unit.order
 
-To run an individual test class use one of::
+To run an individual test class, use one of::
 
     ./runtests.py tests/unit/order:TestSuccessfulOrderCreation
     ./runtests.py tests.unit.order:TestSuccessfulOrderCreation
@@ -99,6 +99,73 @@ Oscar using a browser.  Set it up by::
 This will create the database and load some fixtures for categories and shipping
 countries.
 
+Vagrant
+=======
+
+Oscar ships with a Vagrant_ virtual machine that can be used to test integration
+with various services in a controlled environment.  For instance, it is used to
+test that the migrations run correctly in both MySQL and Postgres.
+
+.. _Vagrant: http://vagrantup.com/
+
+Building the Vagrant machine
+----------------------------
+
+To create the machine, first ensure that vagrant_ and puppet_ are installed.  You will require a
+puppet version that supports ``puppet module install``, that is > 2.7.14.  Now
+run::
+
+    make puppet
+
+.. _vagrant: http://vagrantup.com/v1/docs/getting-started/index.html
+.. _puppet: http://docs.puppetlabs.com/guides/installation.html
+
+to fetch the required puppet modules for provisioning.  Finally, run::
+
+    vagrant up
+
+to create the virtual machine and provision it.
+
+Testing migrations against MySQL and Postgres
+---------------------------------------------
+
+To test the migrations against MySQL and Postgres, do the following:
+
+1.  SSH onto the VM::
+
+    vagrant ssh
+
+2.  Change to sandbox folder and activate virtualenv::
+
+    cd /vagrant/sites/sandbox
+    source /var/www/virtualenv/bin/activate
+
+3.  Run helper script::
+
+    ./test_migrations.sh
+
+    This will recreate the Oscar database in both MySQL and Postgres and rebuild
+    it using ``syncdb`` and ``migrate``.
+
+Testing WSGI server configurations
+----------------------------------
+
+You can browse the Oscar sandbox site in two ways:
+
+* Start Django's development server on port 8000::
+
+    vagrant ssh
+    cd /vagrant/sites/sandbox
+    source /var/www/virtualenv/bin/activate
+    ./manage.py runserver 0.0.0.0:8000
+
+  The Vagrant machine forwards port 8000 to post 8080 and so the site can be
+  accessed at http://localhost:8080 on your host machine.
+
+* The Vagrant machine install Apache2 and mod_wsgi.  You can browse the site
+  through Apache at http://localhost:8081 on your host machine.
+
+
 Writing docs
 ============
 
@@ -118,20 +185,20 @@ General
 URLs
 ----
 
-* List pages should use plurals, eg ``/products/``, ``/notifications/``
+* List pages should use plurals; e.g. ``/products/``, ``/notifications/``
 
-* Detail pages should simply be a PK/slug on top of the list page, eg
+* Detail pages should simply be a PK/slug on top of the list page; e.g.
   ``/products/the-bible/``, ``/notifications/1/``
   
-* Create pages should have 'create' as the final path segment, eg
+* Create pages should have 'create' as the final path segment; e.g.
   ``/dashboard/notifications/create/``
 
-* Update pages are sometimes the same as detail pages (ie when in the
+* Update pages are sometimes the same as detail pages (i.e., when in the
   dashboard).  In those cases, just use the detail convention, eg
   ``/dashboard/notifications/3/``.  If there is a distinction between the detail
   page and the update page, use ``/dashboard/notifications/3/update/``.
 
-* Delete pages, eg ``/dashboard/notifications/3/delete/``
+* Delete pages; e.g., ``/dashboard/notifications/3/delete/``
 
 View class names
 ----------------
@@ -141,4 +208,4 @@ Classes should be named according to::
     '%s%sView' % (class_name, verb)
 
 For example, ``ProductUpdateView``, ``OfferCreateView`` and
-``PromotionDeleteView``.  This doesn't fit all situations but it's a good basis.
+``PromotionDeleteView``.  This doesn't fit all situations, but it's a good basis.

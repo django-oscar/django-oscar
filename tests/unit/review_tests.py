@@ -8,7 +8,7 @@ from django.db import IntegrityError
 from django.core.urlresolvers import reverse
 
 from oscar.apps.catalogue.reviews.models import ProductReview, Vote
-from oscar.test.helpers import create_product
+from oscar_testsupport.factories import create_product
 
 
 class ProductReviewTests(TestCase):

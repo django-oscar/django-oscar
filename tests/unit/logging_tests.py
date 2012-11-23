@@ -2,14 +2,14 @@ from logging import LogRecord
 
 from django.test import TestCase
 
-from oscar.test.decorators import dataProvider
+from oscar_testsupport.decorators import dataProvider
 from oscar.core.logging.formatters import PciFormatter
 
 
 class PciFormatterTests(TestCase):
 
     def setUp(self):
-        self.formatter = PciFormatter() 
+        self.formatter = PciFormatter()
 
     def test_a_basic_string_is_unchanged(self):
         msg = 'some string'
@@ -25,16 +25,16 @@ class PciFormatterTests(TestCase):
     @dataProvider(bankcard_strings)
     def test_a_sensitive_strings_are_filtered(self, sensitive, filtered):
         record = self.create_log_record(sensitive)
-        self.assertEquals(filtered, self.formatter.format(record))    
-        
+        self.assertEquals(filtered, self.formatter.format(record))
+
     def create_log_record(self, msg):
-        return LogRecord(name=None, 
-                         level=None, 
-                         pathname='', 
+        return LogRecord(name=None,
+                         level=None,
+                         pathname='',
                          lineno=0,
-                         msg=msg, 
-                         args=None, 
+                         msg=msg,
+                         args=None,
                          exc_info=None)
-        
-        
-    
+
+
+

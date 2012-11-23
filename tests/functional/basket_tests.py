@@ -7,7 +7,7 @@ from django.conf import settings
 from django.test import TestCase, Client
 from django.core.urlresolvers import reverse
 
-from oscar.test.helpers import create_product
+from oscar_testsupport.factories import create_product
 from oscar.apps.basket.models import Basket
 from oscar.apps.basket import reports
 

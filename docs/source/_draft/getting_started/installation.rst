@@ -1,6 +1,6 @@
-=======================
-Installing django-oscar
-=======================
+================
+Installing Oscar
+================
 
 Environment
 -----------
@@ -28,7 +28,7 @@ environment set-up.
 Installation
 ------------
 
-Install oscar and its dependencies::
+Install Oscar and its dependencies::
 
     pip install -e git+git://github.com/tangentlabs/django-oscar.git#egg=django-oscar
 
@@ -94,9 +94,9 @@ Configure ``settings.py``
     HAYSTACK_SOLR_URL = 'http://127.0.0.1:8080/solr'
     HAYSTACK_INCLUDE_SPELLING = True
 
-Now fill in the normal settings (not related to django-oscar) within ``settings.py`` - eg ``DATABASES``, ``TIME_ZONE`` etc
+Now fill in the normal settings (not related to Oscar) within ``settings.py`` - e.g., ``DATABASES``, ``TIME_ZONE`` etc
 
-A vanilla install of django-oscar is now ready, you could now finish the process by running::
+A vanilla install of Oscar is now ready, you could now finish the process by running::
 
     ./manage.py syncdb
 
@@ -107,10 +107,10 @@ Configure URLs
 --------------
 
 Oscar comes with a number of urls and views out of the box.  These are
-recommendations rather than a requirement but you easily use them in your
-e-commerce site by adding the oscar urls to your projects local ``urls.py``::
+recommendations rather than a requirement, but you easily use them in your
+e-commerce site by adding the Oscar urls to your projects local ``urls.py``::
 
     (r'^', include('oscar.urls')),
 
-This will bring in all of oscar's defined urls. Of course you can pull in the
+This will bring in all of Oscar's defined urls. Of course you can pull in the
 urls for the individual apps if you prefer or simply define your own

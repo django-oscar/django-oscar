@@ -6,21 +6,25 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">
-    <li>
-	<a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
-        <span class="divider">/</span>
-    </li>
-	<li class="active"><a href=".">{% trans "Emails" %}</a></li>
+<ul class="breadcrumb">	  	
+    <li>	  	
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>	  	
+        <span class="divider">/</span>	  	
+    </li>	  	
+    <li class="active"><a href=".">{% trans "Emails" %}</a></li>	  	
 </ul>
 {% endblock %}
 
-{% block dashboard_content %}
-<div class="sub-header">
-	<h2>{% trans "Emails" %}</h2>
+{% block header %}
+<div class="page-header"> 	
+    <h1>{% trans "Emails" %}</h1>
 </div>
-{% if commtypes %}
-<table class="table table-striped table-bordered">
+{% endblock header %}
+
+{% block dashboard_content %}
+<table class="table table-striped table-bordered table-hover">
+    <caption><i class="icon-envelope icon-large"></i>{% trans "Emails" %}</caption>
+    {% if commtypes %}
 	<thead>
 		<tr>
 			<th>{% trans "Code" %}</th>
@@ -41,9 +45,13 @@
 		</tr>
 		{% endfor %}
 	</tbody>
+	
+	{% else %}
+    <tbody>
+        <tr><td>{% trans "There are no defined emails to edit." %}</td></tr>
+    </tbody>
+    {% endif %}
 </table>
 {% include "partials/pagination.html" %}
-{% else %}
-<p>{% trans "There are no defined emails to edit." %}</p>
-{% endif %}
+
 {% endblock dashboard_content %}

@@ -7,7 +7,7 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        
+
         # Adding field 'Product.status'
         db.add_column('catalogue_product', 'status', self.gf('django.db.models.fields.CharField')(db_index=True, max_length=128, null=True, blank=True), keep_default=False)
 
@@ -19,7 +19,7 @@ class Migration(SchemaMigration):
 
 
     def backwards(self, orm):
-        
+
         # Deleting field 'Product.status'
         db.delete_column('catalogue_product', 'status')
 
@@ -59,13 +59,13 @@ class Migration(SchemaMigration):
             'Meta': {'ordering': "['name']", 'object_name': 'Category'},
             'depth': ('django.db.models.fields.PositiveIntegerField', [], {}),
             'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'full_name': ('django.db.models.fields.CharField', [], {'max_length': '1024', 'db_index': 'True'}),
+            'full_name': ('django.db.models.fields.CharField', [], {'max_length': '255', 'db_index': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'image': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255', 'db_index': 'True'}),
             'numchild': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'path': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '255'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'max_length': '1024', 'db_index': 'True'})
+            'slug': ('django.db.models.fields.SlugField', [], {'max_length': '255', 'db_index': 'True'})
         },
         'catalogue.contributor': {
             'Meta': {'object_name': 'Contributor'},

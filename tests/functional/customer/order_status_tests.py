@@ -2,8 +2,8 @@ import httplib
 
 from django.core.urlresolvers import reverse
 
-from oscar.test.helpers import create_order
-from oscar.test import WebTestCase
+from oscar_testsupport.factories import create_order
+from oscar_testsupport.testcases import WebTestCase
 
 
 class TestAnAnonymousUser(WebTestCase):
