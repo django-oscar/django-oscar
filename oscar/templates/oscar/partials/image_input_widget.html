@@ -1,7 +1,8 @@
+{% load i18n %}
 <div id="{{ image_id }}" class="image-input">
     <img src="{{ image_url }}" alt="thumbnail"/>
     {% if not image_url %}
-    <button class="btn btn-primary">Upload Image</button>
+    <button class="btn btn-primary">{% trans "Upload Image" %}</button>
     {% endif %}
     <div class="input-field">
         <input {{ input_attrs|safe }} />
