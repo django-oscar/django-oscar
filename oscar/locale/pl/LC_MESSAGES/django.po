@@ -2,21 +2,22 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-24 01:19+0100\n"
+"POT-Creation-Date: 2012-11-24 01:26+0100\n"
 "PO-Revision-Date: 2012-11-24 01:21\n"
 "Last-Translator: Janusz Harkot <jh@jerzyk.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: \n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2)\n"
 "X-Translated-Using: django-rosetta 0.6.8\n"
 
 #: apps/address/abstract_models.py:20
@@ -530,12 +531,12 @@ msgstr "koszyk %(status)s (właściciel: %(owner)s, pozycji: %(num_lines)d)"
 #: apps/basket/abstract_models.py:94 apps/basket/forms.py:168
 #, python-format
 msgid ""
-"Due to technical limitations we are not able to ship more than %(threshold)d"
-" items in one order. Your basket currently has %(basket)d items."
+"Due to technical limitations we are not able to ship more than %(threshold)d "
+"items in one order. Your basket currently has %(basket)d items."
 msgstr ""
 "Ograniczenie techniczne nie pozwana na wysłanie więcej niż %(threshold)d "
-"produktów w jednym zamówieniu. Twoje zamówienia ma już %(basket)d "
-"produkty(ów)."
+"produktów w jednym zamówieniu. Twoje zamówienia ma już %(basket)d produkty"
+"(ów)."
 
 #: apps/basket/abstract_models.py:453
 msgid "Line Reference"
@@ -583,8 +584,8 @@ msgstr "Nie możesz modyfikować koszyka %s"
 #: apps/basket/abstract_models.py:662
 #, python-format
 msgid ""
-"The price of '%(product)s' has increased from %(old_price)s to %(new_price)s"
-" since you added it to your basket"
+"The price of '%(product)s' has increased from %(old_price)s to %(new_price)s "
+"since you added it to your basket"
 msgstr ""
 "Cena produktu '%(product)s' wzrosła z %(old_price)s do %(new_price)s od "
 "czasu, kiedy produkt został dodany do koszyka."
@@ -592,8 +593,8 @@ msgstr ""
 #: apps/basket/abstract_models.py:668
 #, python-format
 msgid ""
-"The price of '%(product)s' has decreased from %(old_price)s to %(new_price)s"
-" since you added it to your basket"
+"The price of '%(product)s' has decreased from %(old_price)s to %(new_price)s "
+"since you added it to your basket"
 msgstr ""
 "Cena produktu '%(product)s' spadła z %(old_price)s do %(new_price)s od "
 "czasu, kiedy produkt został dodany do koszyka."
@@ -1475,8 +1476,8 @@ msgid ""
 "been taken.  Please try again contact customer services if this problem "
 "persists"
 msgstr ""
-"Wystąpił problem przy przetwarzaniu płatności za to zamówienie. Nie dokonano"
-" jeszcze płatności. Prosimy o kontakt z obsługą klienta jeżeli ten problem "
+"Wystąpił problem przy przetwarzaniu płatności za to zamówienie. Nie dokonano "
+"jeszcze płatności. Prosimy o kontakt z obsługą klienta jeżeli ten problem "
 "będzie wystepował dalej."
 
 #: apps/checkout/views.py:620
@@ -1924,8 +1925,8 @@ msgstr "Podaj adres email"
 msgid ""
 "The submitted form was not valid, please correct the errors and resubmit"
 msgstr ""
-"Przesłane dane są błędne - prosimy o poprawienie poniższych błędów i ponowne"
-" przesłanie formularza"
+"Przesłane dane są błędne - prosimy o poprawienie poniższych błędów i ponowne "
+"przesłanie formularza"
 
 #: apps/dashboard/communications/views.py:46
 msgid "Email saved"
@@ -2221,8 +2222,7 @@ msgstr "'%(status)s' nie jest dozwolony dla pozycji %(line_id)d"
 #: apps/dashboard/orders/views.py:406
 #, python-format
 msgid ""
-"Status of line #%(line_id)d changed from '%(old_status)s' to "
-"'%(new_status)s'"
+"Status of line #%(line_id)d changed from '%(old_status)s' to '%(new_status)s'"
 msgstr ""
 "Status linii %(line_id)d zmieniony z '%(old_status)s' na '%(new_status)s'"
 
@@ -2239,8 +2239,7 @@ msgstr "Nie można utwórzyć zdarzenia dostawy: %s"
 #: apps/dashboard/orders/views.py:436
 #, python-format
 msgid "Unable to create shipping event due to payment error: %s"
-msgstr ""
-"Nie można utworzyć zdarzenia dostawy, gdyż wystąpił błąd płatności: %s"
+msgstr "Nie można utworzyć zdarzenia dostawy, gdyż wystąpił błąd płatności: %s"
 
 #: apps/dashboard/orders/views.py:438
 msgid "Shipping event created"
@@ -2812,8 +2811,7 @@ msgstr "Data końca"
 
 #: apps/offer/abstract_models.py:53 apps/offer/models.py:60
 msgid "Offers are not active on their end date, only the days preceding"
-msgstr ""
-"Oferty nie są aktywne w dniu daty końca, tylko do dnia poprzedzającego"
+msgstr "Oferty nie są aktywne w dniu daty końca, tylko do dnia poprzedzającego"
 
 #: apps/offer/abstract_models.py:57 apps/offer/models.py:49
 msgid "Priority"
@@ -2876,7 +2874,7 @@ msgstr "Koszyk zawiera %(count)d unikalnch produktów z %(range)s"
 msgid "Basket includes %(count)d value from %(range)s"
 msgstr "Koszyk zawiera produkty na kwotę %(count)d z %(range)s"
 
-#: apps/offer/abstract_models.py:232
+#: apps/offer/abstract_models.py:232 apps/offer/models.py:319
 #, python-format
 msgid "Discount is a %% of the product's value"
 msgstr "Upust jest procentem wartości produktu"
@@ -3018,11 +3016,6 @@ msgstr "Może być użyty %(total)d razy przez użytkownika"
 #, python-format
 msgid "Available between %(start)s and %(end)s"
 msgstr "Dostępne pomiędzy %(start)s i %(end)s"
-
-#: apps/offer/models.py:319
-#, python-format
-msgid "Discount is a % of the product's value"
-msgstr "Upust jest procentem wartości produktu"
 
 #: apps/offer/models.py:350
 #, python-format
@@ -3170,8 +3163,8 @@ msgstr "Adres email gościa"
 #: apps/order/abstract_models.py:70
 #, python-format
 msgid ""
-"'%(new_status)s' is not a valid status for order %(number)s (current status:"
-" '%(status)s')"
+"'%(new_status)s' is not a valid status for order %(number)s (current status: "
+"'%(status)s')"
 msgstr ""
 "nowy status '%(new_status)s' nie jest poprawny dla zamówienia numer "
 "%(number)s (obecny status: '%(status)s')"
@@ -3432,8 +3425,7 @@ msgid "Is Required"
 msgstr "Jest wymagane"
 
 #: apps/order/abstract_models.py:642
-msgid ""
-"This event must be passed before the next shipping event can take place"
+msgid "This event must be passed before the next shipping event can take place"
 msgstr ""
 "To zdarzenie musi być przesłane zanim pojawi się następne zdarzenie dostawy"
 
@@ -3845,8 +3837,7 @@ msgstr "Typ wyświetlenia"
 
 #: apps/promotions/models.py:146
 msgid ""
-"This can be used to have different types of HTML blocks (eg different "
-"widths)"
+"This can be used to have different types of HTML blocks (eg different widths)"
 msgstr ""
 "Może być użyte do oznaczenia różych typów bloków HTML (np. dla różnych "
 "szerokości)"
@@ -4039,8 +4030,10 @@ msgstr "Górny limit"
 #: apps/shipping/models.py:141
 msgid ""
 "Enter upper limit of this\n"
-"                                                weight band in Kg, the lower\n"
-"                                                limit will be determine by the\n"
+"                                                weight band in Kg, the "
+"lower\n"
+"                                                limit will be determine by "
+"the\n"
 "                                                other weight bands"
 msgstr "Podaj górny limit dla pasm wagowych w kg"
 
@@ -4212,11 +4205,13 @@ msgstr "Sprawdź, czy nie przegapisz promocji!"
 #, python-format
 msgid ""
 "\n"
-"\t<div class=\"warning\">%(message)s to qualify for the <a href=\"%(url)s\">%(offer_name)s</a> special offer</div>\n"
+"\t<div class=\"warning\">%(message)s to qualify for the <a href=\"%(url)s\">"
+"%(offer_name)s</a> special offer</div>\n"
 "    "
 msgstr ""
 "\n"
-"\t<div class=\"warning\">%(message)s by zakwalifikować się do oferty specjalnej <a href=\"%(url)s\">%(offer_name)s</a></div>\n"
+"\t<div class=\"warning\">%(message)s by zakwalifikować się do oferty "
+"specjalnej <a href=\"%(url)s\">%(offer_name)s</a></div>\n"
 "    "
 
 #: templates/oscar/basket/basket.html:43
@@ -5215,15 +5210,18 @@ msgid ""
 "http://%(site)s%(path)s\n"
 msgstr ""
 "\n"
-"Mamy przyjemność poinformować, że produkt '%(product)s' jest już dostępny: http://%(site)s%(path)s\n"
+"Mamy przyjemność poinformować, że produkt '%(product)s' jest już dostępny: "
+"http://%(site)s%(path)s\n"
 
 #: templates/oscar/customer/alerts/emails/alert_body.txt:5
 msgid ""
 "\n"
-"Beware that the amount of items in stock is limited. Be quick or someone might get there first.\n"
+"Beware that the amount of items in stock is limited. Be quick or someone "
+"might get there first.\n"
 msgstr ""
 "\n"
-"Prosimy mieć na uwadzem że ilość produktów na stani jest ograniczona i należy pospieszyć się, by kto inny nie był pierwszy.\n"
+"Prosimy mieć na uwadzem że ilość produktów na stani jest ograniczona i "
+"należy pospieszyć się, by kto inny nie był pierwszy.\n"
 
 #: templates/oscar/customer/alerts/emails/alert_body.txt:7
 #, python-format
@@ -5236,7 +5234,8 @@ msgid ""
 "The %(site_name)s Team\n"
 msgstr ""
 "\n"
-"Potwierdzamy, że alert został usunięty i nie będą wysyłane żadne kolejne emaile dotyczące tego produktu.\n"
+"Potwierdzamy, że alert został usunięty i nie będą wysyłane żadne kolejne "
+"emaile dotyczące tego produktu.\n"
 "\n"
 "Dziękujemy za zainteresowanie,\n"
 "Zespół Serwisu %(site_name)s\n"
@@ -5263,9 +5262,12 @@ msgid ""
 "The %(site)s Team\n"
 msgstr ""
 "Witaj,\n"
-"Ktoś (mamy nadzieję że Ty) poprosił o email, kiedy produkt '%(product)s' pojawi się znów w sprzedaży. Prosimy o potwierdzenie tego alertu klikając w link: http://%(domain)s%(confirm_path)s\n"
+"Ktoś (mamy nadzieję że Ty) poprosił o email, kiedy produkt '%(product)s' "
+"pojawi się znów w sprzedaży. Prosimy o potwierdzenie tego alertu klikając w "
+"link: http://%(domain)s%(confirm_path)s\n"
 "\n"
-"Po potwierdzeniu, alert będzie mógł być w każdym momencie usunięty klikając  w ten link: http://%(domain)s%(cancel_path)s\n"
+"Po potwierdzeniu, alert będzie mógł być w każdym momencie usunięty klikając  "
+"w ten link: http://%(domain)s%(cancel_path)s\n"
 "\n"
 "Dziękujemy za zainteresowanie,\n"
 "Zespół Serwisu %(site)s\n"
@@ -5311,11 +5313,11 @@ msgstr "Adres dostawy:"
 #: templates/oscar/customer/emails/commtype_order_placed_body.html:24
 #, python-format
 msgid ""
-"You can view the status of this order by clicking <a href=\"%(status_url)s\""
-" title=\"order status\">here</a>"
+"You can view the status of this order by clicking <a href=\"%(status_url)s\" "
+"title=\"order status\">here</a>"
 msgstr ""
-"Aktualny status zamówienia można zobaczyć klikają na <a "
-"href=\"%(status_url)s\" title=\"order status\">ten link</a>."
+"Aktualny status zamówienia można zobaczyć klikają na <a href=\"%(status_url)s"
+"\" title=\"order status\">ten link</a>."
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.html:27
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:24
@@ -5353,8 +5355,8 @@ msgstr "Potwierdzenie zamówienia %(number)s"
 #: templates/oscar/customer/emails/commtype_password_reset_body.txt:2
 #, python-format
 msgid ""
-"You're receiving this e-mail because you requested a password reset for your"
-" user account at %(name)s."
+"You're receiving this e-mail because you requested a password reset for your "
+"user account at %(name)s."
 msgstr ""
 "Otrzymałeś(aś) ten email, gdyż zażądano zmiany hasła dla Twojego konta w "
 "serwisie %(name)s."
@@ -6191,8 +6193,8 @@ msgid ""
 "Delete %(object.type)s content block <strong>%(object.name)s</strong> - are "
 "you sure?"
 msgstr ""
-"Czy na pewno chcesz usunąć blok %(object.type)s "
-"<strong>%(object.name)s</strong>?"
+"Czy na pewno chcesz usunąć blok %(object.type)s <strong>%(object.name)s</"
+"strong>?"
 
 #: templates/oscar/dashboard/promotions/delete_pagepromotion.html:10
 msgid "Remove promotion from page?"
@@ -6205,13 +6207,12 @@ msgstr "Usuń promocję"
 #: templates/oscar/dashboard/promotions/delete_pagepromotion.html:20
 #, python-format
 msgid ""
-"Remove %(object.content_object.type)s content block "
-"<strong>%(object.name)s</strong> from page "
-"<strong>%(object.page_url)s</strong> - are you sure?"
+"Remove %(object.content_object.type)s content block <strong>%(object.name)s</"
+"strong> from page <strong>%(object.page_url)s</strong> - are you sure?"
 msgstr ""
 "Czy na pewno chcesz usunąć blok treści %(object.content_object.type)s "
-"<strong>%(object.name)s</strong> ze strony "
-"<strong>%(object.page_url)s</strong>?"
+"<strong>%(object.name)s</strong> ze strony <strong>%(object.page_url)s</"
+"strong>?"
 
 #: templates/oscar/dashboard/promotions/form.html:49
 msgid "Pages displaying this content blocks"
@@ -6879,8 +6880,7 @@ msgid ""
 "used.  Please request a new password reset."
 msgstr ""
 "Wprowadzony link do zmiany hasła jest nieprawidłowy. Prawdopodobnie został "
-"już użyty. Jeżeli chcesz zresetować hasło, musisz ponownie zażądać nowy "
-"link."
+"już użyty. Jeżeli chcesz zresetować hasło, musisz ponownie zażądać nowy link."
 
 #: templates/oscar/registration/password_reset_done.html:4
 #: templates/oscar/registration/password_reset_done.html:19
