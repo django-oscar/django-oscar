@@ -123,6 +123,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'oscar.apps.basket.middleware.BasketMiddleware',
+    'oscar.middleware.profiling.ProfileMiddleware',
 )
 
 INTERNAL_IPS = ('127.0.0.1',)
