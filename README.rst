@@ -15,7 +15,7 @@ Further reading:
 * `Official homepage`_ 
 * `Sandbox site`_ (an hourly build of the unstable master branch - it's
   experimental but feel free to explore and get a feel for the base Oscar
-  install.  Dashboard access coming soon!) 
+  install.  Polished demo site coming soon) 
 * `Documentation`_ on the excellent `readthedocs.org`_
 * `Google Group`_ - the mailing list is django-oscar@googlegroups.com
 * `Continuous integration homepage`_ on `travis-ci.org`_
@@ -60,12 +60,12 @@ The following extensions are stable and ready for use:
 * django-oscar-datacash_ - Integration with the DataCash_ payment gateway
 * django-oscar-paypal_ - Integration with PayPal.  This currently supports both
   `Express Checkout`_ and `PayFlow Pro`_.
-* django-oscar-gocardless_ - Integration with the GoCardless_ payment gateway
-* django-oscar-jirafe_ - Integration with the Jirafe_ analytics package
 * django-oscar-paymentexpress_ - Integration with the `Payment Express`_ payment
   gateway
 * django-oscar-accounts_ - Managed accounts (can be used for giftcard
   functionality and loyalty schemes)
+* django-oscar-stores_ - Physical stores integration (opening hours, store
+  locator etc)
 
 .. _django-oscar-datacash: https://github.com/tangentlabs/django-oscar-datacash
 .. _django-oscar-paymentexpress: https://github.com/tangentlabs/django-oscar-paymentexpress
@@ -82,8 +82,8 @@ The following extensions are stable and ready for use:
 
 The following extensions are in development:
 
-* django-oscar-stores_ - Physical stores integration (opening hours, store
-  locator etc)
+* django-oscar-gocardless_ - Integration with the GoCardless_ payment gateway
+* django-oscar-jirafe_ - Integration with the Jirafe_ analytics package
 * django-oscar-parachute_ - Import scripts for migrating away from non-Oscar
   platforms.
 * django-oscar-approval_ - Approval workflow for authorising new
@@ -92,6 +92,8 @@ The following extensions are in development:
 .. _django-oscar-stores: https://github.com/tangentlabs/django-oscar-stores
 .. _django-oscar-parachute: https://github.com/tangentlabs/django-oscar-parachute
 .. _django-oscar-approval: https://github.com/tangentlabs/django-oscar-approval
+
+Let us know if you're writing a new one!
 
 License
 -------
@@ -110,8 +112,9 @@ Tangent projects:
 
 * Tata Group - http://www.landmarkonthenet.com
 * Carlsberg - Their global "We Deliver More" platform is powered by Oscar (but
-  is a B2B site and not browsable by the public).
+  is a B2B site and not browsable by the public)
 * The UK Labour party - http://shop.labour.org.uk
+* Chocolate Box - https://www.thechocolatebox.com.au
 
 Non-Tangent:
 
@@ -119,3 +122,11 @@ Non-Tangent:
 * Sobusa - http://www.sobusa.fr/
 
 Many more on the way.  If you use Oscar in production, please let us know.
+
+Would you like to work on Oscar?
+--------------------------------
+
+Tangent Labs are currently looking for python hackers to work on Oscar as well
+as some of other internal products and e-commerce projects.  If this sounds
+interesting, please get in touch with @codeinthehole through Github or Twitter.
+The position is in Tangent's London offices.
