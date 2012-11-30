@@ -32,54 +32,6 @@ class MetadataFormTests(TestCase):
         self.assertFalse(form.is_valid())
 
 
-class OfferCreationTests(ClientTestCase):
-    is_staff = True
-
-    def setUp(self):
-        super(OfferCreationTests, self).setUp()
-        self.range = Range.objects.create(name='All products',
-                                          includes_all_products=True)
-
-    def tearDown(self):
-        ConditionalOffer.objects.all().delete()
-
-    def test_happy_path(self):
-        # Metadata
-        response = self.client.post(reverse('dashboard:offer-metadata'),
-                                            {'name': 'my offer',
-                                             'description': 'offers are nice',
-                                             'start_date': '2012-01-01',
-                                             'end_date': '2013-01-01'})
-        self.assertIsRedirect(response, reverse('dashboard:offer-condition'))
-
-        # Condition
-        response = self.client.post(reverse('dashboard:offer-condition'),
-                                            {'range': self.range.id,
-                                             'type': 'Count',
-                                             'value': '3',})
-        self.assertIsRedirect(response, reverse('dashboard:offer-benefit'))
-
-        # Benefit
-        response = self.client.post(reverse('dashboard:offer-benefit'),
-                                            {'range': self.range.id,
-                                             'type': 'Multibuy',
-                                             'value': '',})
-        self.assertIsRedirect(response, reverse('dashboard:offer-preview'))
-
-        # Preview
-        response = self.client.post(reverse('dashboard:offer-preview'), {})
-        self.assertIsRedirect(response, reverse('dashboard:offer-list'))
-
-        offers = ConditionalOffer.objects.all()
-        self.assertEqual(1, len(offers))
-        offer = offers[0]
-        self.assertEqual('my offer', offer.name)
-
-    def test_cannot_jump_to_condition_step(self):
-        response = self.client.get(reverse('dashboard:offer-condition'))
-        self.assertIsRedirect(response)
-
-
 class OfferUpdatingTests(ClientTestCase):
     is_staff = True
 
