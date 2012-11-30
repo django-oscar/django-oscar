@@ -10,7 +10,7 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
         # Adding field 'Condition.proxy_class'
         db.add_column('offer_condition', 'proxy_class',
-                      self.gf('django.db.models.fields.CharField')(max_length=512, unique=True, null=True, blank=True),
+                      self.gf('django.db.models.fields.CharField')(max_length=255, unique=True, null=True, blank=True),
                       keep_default=False)
 
 
@@ -160,7 +160,7 @@ class Migration(SchemaMigration):
         'offer.condition': {
             'Meta': {'object_name': 'Condition'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'proxy_class': ('django.db.models.fields.CharField', [], {'max_length': '512', 'unique': 'True', 'null': 'True', 'blank': 'True'}),
+            'proxy_class': ('django.db.models.fields.CharField', [], {'max_length': '255', 'unique': 'True', 'null': 'True', 'blank': 'True'}),
             'range': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['offer.Range']", 'null': 'True', 'blank': 'True'}),
             'type': ('django.db.models.fields.CharField', [], {'max_length': '128', 'null': 'True', 'blank': 'True'}),
             'value': ('oscar.models.fields.PositiveDecimalField', [], {'null': 'True', 'max_digits': '12', 'decimal_places': '2', 'blank': 'True'})
@@ -193,7 +193,7 @@ class Migration(SchemaMigration):
             'included_products': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "'includes'", 'blank': 'True', 'to': "orm['catalogue.Product']"}),
             'includes_all_products': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '128'}),
-            'proxy_class': ('django.db.models.fields.CharField', [], {'max_length': '512', 'null': 'True', 'blank': 'True'})
+            'proxy_class': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'})
         }
     }
 

@@ -281,7 +281,7 @@ class Condition(models.Model):
                                  null=True, blank=True)
 
     proxy_class = models.CharField(_("Custom class"), null=True, blank=True,
-                                   max_length=512, unique=True, default=None)
+                                   max_length=255, unique=True, default=None)
 
     class Meta:
         verbose_name = _("Condition")
@@ -561,7 +561,7 @@ class Range(models.Model):
 
     # Allow a custom range instance to be specified
     proxy_class = models.CharField(_("Custom class"), null=True, blank=True,
-                                    max_length=512, default=None, unique=True)
+                                    max_length=255, default=None, unique=True)
 
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
