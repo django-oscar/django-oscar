@@ -14,6 +14,7 @@ class python_dependencies {
 		"python-memcache",
 		"postgresql-server-dev-9.1",
 		"libmysqlclient-dev",
+		"git-core",
     ]
     package {
         $packages: ensure => installed,
@@ -78,6 +79,7 @@ node precise64 {
 	}
 	python::pip::requirements {"/vagrant/requirements_vagrant.txt":
 	    venv => $virtualenv,
+		require => Python::Venv::Isolate[$virtualenv]
 	}
     exec {"install-oscar":
 	    command => "$virtualenv/bin/python /vagrant/setup.py develop",
