@@ -230,13 +230,13 @@ class UserForm(forms.ModelForm):
 
 
 if hasattr(settings, 'AUTH_PROFILE_MODULE'):
-
     Profile = get_profile_class()
 
-    class UserAndProfileForm(forms.ModelForm, CleanEmailMixin):
-
-        first_name = forms.CharField(label=_('First name'), max_length=128)
-        last_name = forms.CharField(label=_('Last name'), max_length=128)
+    class UserAndProfileForm(forms.ModelForm):
+        first_name = forms.CharField(
+            label=_('First name'), max_length=128, required=False)
+        last_name = forms.CharField(
+            label=_('Last name'), max_length=128, required=False)
         email = forms.EmailField(label=_('Email address'))
 
         # Fields from user model
@@ -269,13 +269,25 @@ if hasattr(settings, 'AUTH_PROFILE_MODULE'):
             model = Profile
             exclude = ('user',)
 
+        def clean_email(self):
+            email = self.cleaned_data['email']
+            try:
+                User.objects.exclude(
+                    id=self.user.id).get(email=email)
+            except User.DoesNotExist:
+                return email
+            else:
+                raise ValidationError(
+                    _("A user with this email address already exists")
+                )
+
         def save(self, *args, **kwargs):
             user = self.instance.user
             user.first_name = self.cleaned_data['first_name']
             user.last_name = self.cleaned_data['last_name']
             user.email = self.cleaned_data['email']
             user.save()
-            return super(ProfileForm, self).save(*args,**kwargs)
+            return super(ProfileForm, self).save(*args, **kwargs)
 
     ProfileForm = UserAndProfileForm
 else:

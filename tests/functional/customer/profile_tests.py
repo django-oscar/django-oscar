@@ -26,6 +26,16 @@ class TestASignedInUser(WebTestCase):
         self.assertEqual(200, response.status_code)
         self.assertTrue(self.email in response.content)
 
+    def test_can_update_their_name(self):
+        profile_form_page = self.app.get(reverse('customer:profile-update'),
+                                user=self.user)
+        self.assertEqual(200, profile_form_page.status_code)
+        form = profile_form_page.forms['profile_form']
+        form['first_name'] = 'Barry'
+        form['last_name'] = 'Chuckle'
+        response = form.submit()
+        self.assertRedirects(response, reverse('customer:summary'))
+
     def test_can_update_their_email_address_and_name(self):
         profile_form_page = self.app.get(reverse('customer:profile-update'),
                                 user=self.user)
