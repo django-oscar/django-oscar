@@ -1,5 +1,3 @@
-import datetime
-
 from django.conf import settings
 from django.test import TestCase
 
@@ -10,7 +8,7 @@ from oscar_testsupport.factories import create_product
 class TestWholeSiteRangeWithGlobalBlacklist(TestCase):
 
     def setUp(self):
-        self.range = models.Range.objects.create(
+        self.range = models.Range(
             name="All products", includes_all_products=True)
 
     def tearDown(self):
@@ -22,12 +20,14 @@ class TestWholeSiteRangeWithGlobalBlacklist(TestCase):
         self.assertFalse(self.range.contains_product(prod))
 
     def test_blacklisting_can_use_product_class(self):
-        settings.OSCAR_OFFER_BLACKLIST_PRODUCT = lambda p: p.product_class.name == 'giftcard'
+        settings.OSCAR_OFFER_BLACKLIST_PRODUCT = (
+            lambda p: p.product_class.name == 'giftcard')
         prod = create_product(product_class="giftcard")
         self.assertFalse(self.range.contains_product(prod))
 
     def test_blacklisting_doesnt_exlude_everything(self):
-        settings.OSCAR_OFFER_BLACKLIST_PRODUCT = lambda p: p.product_class.name == 'giftcard'
+        settings.OSCAR_OFFER_BLACKLIST_PRODUCT = (
+            lambda p: p.product_class.name == 'giftcard')
         prod = create_product(product_class="book")
         self.assertTrue(self.range.contains_product(prod))
 
@@ -35,7 +35,8 @@ class TestWholeSiteRangeWithGlobalBlacklist(TestCase):
 class TestWholeSiteRange(TestCase):
 
     def setUp(self):
-        self.range = models.Range.objects.create(name="All products", includes_all_products=True)
+        self.range = models.Range.objects.create(
+            name="All products", includes_all_products=True)
         self.prod = create_product()
 
     def test_all_products_range(self):

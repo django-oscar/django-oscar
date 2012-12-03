@@ -660,6 +660,8 @@ class Range(models.Model):
         return self.__included_product_ids
 
     def _excluded_product_ids(self):
+        if not self.id:
+            return []
         if None == self.__excluded_product_ids:
             self.__excluded_product_ids = [row['id'] for row in self.excluded_products.values('id')]
         return self.__excluded_product_ids

@@ -12,8 +12,8 @@ class TestCountCondition(OfferTest):
 
     def setUp(self):
         super(TestCountCondition, self).setUp()
-        self.condition = models.CountCondition(range=self.range,
-                                          type="Count", value=2)
+        self.condition = models.CountCondition(
+            range=self.range, type="Count", value=2)
 
     def test_is_not_satified_by_empty_basket(self):
         self.assertFalse(self.condition.is_satisfied(self.basket))
