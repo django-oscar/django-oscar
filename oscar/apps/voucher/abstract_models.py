@@ -35,8 +35,8 @@ class AbstractVoucher(models.Model):
     usage = models.CharField(_("Usage"), max_length=128,
                              choices=USAGE_CHOICES, default=MULTI_USE)
 
-    start_date = models.DateField(_('Start Date'))
-    end_date = models.DateField(_('End Date'))
+    start_date = models.DateField(_('Start date'))
+    end_date = models.DateField(_('End date'))
 
     # Audit information
     num_basket_additions = models.PositiveIntegerField(
@@ -73,7 +73,7 @@ class AbstractVoucher(models.Model):
         """
         if not test_date:
             test_date = datetime.date.today()
-        return self.start_date <= test_date and test_date < self.end_date
+        return self.start_date <= test_date <= self.end_date
 
     def is_available_to_user(self, user=None):
         """
