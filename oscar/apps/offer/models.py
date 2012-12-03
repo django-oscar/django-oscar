@@ -80,11 +80,10 @@ class ConditionalOffer(models.Model):
     # Range of availability.  Note that if this is a voucher offer, then these
     # dates are ignored and only the dates from the voucher are used to
     # determine availability.
-    start_date = models.DateField(_("Start Date"), blank=True, null=True)
+    start_date = models.DateField(_("Start date"), blank=True, null=True)
     end_date = models.DateField(
-        _("End Date"), blank=True, null=True,
-        help_text=_("Offers are not active on their end date, only "
-                    "the days preceding"))
+        _("End date"), blank=True, null=True,
+        help_text=_("Offers are active until the end of the 'end date'"))
 
     # Use this field to limit the number of times this offer can be applied in
     # total.  Note that a single order can apply an offer multiple times so
@@ -167,8 +166,10 @@ class ConditionalOffer(models.Model):
         return self.name
 
     def clean(self):
-        if self.start_date and self.end_date and self.start_date > self.end_date:
-            raise exceptions.ValidationError(_('End date should be later than start date'))
+        if (self.start_date and self.end_date and
+            self.start_date > self.end_date):
+            raise exceptions.ValidationError(
+                _('End date should be later than start date'))
 
     @property
     def is_open(self):
