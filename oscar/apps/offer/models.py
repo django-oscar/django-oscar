@@ -99,6 +99,15 @@ class ConditionalOffer(models.Model):
         help_text=_("The number of times this offer can be applied to a "
                     "basket (and order)"))
 
+    # Use this field to limit the amount of discount an offer can lead to.
+    # This can be helpful with budgeting.
+    max_discount = models.DecimalField(
+        _("Max discount"), decimal_places=2, max_digits=12, null=True,
+        blank=True,
+        help_text=_("When an offer has given more discount to orders "
+                    "than this threshold, then the offer becomes "
+                    "unavailable"))
+
     # TRACKING
 
     total_discount = models.DecimalField(
@@ -140,11 +149,19 @@ class ConditionalOffer(models.Model):
             raise exceptions.ValidationError(_('End date should be later than start date'))
 
     def is_active(self, test_date=None):
-        if not self.start_date and not self.end_date:
-            return self.get_max_applications() > 0
-        if not test_date:
+        """
+        Test whether this offer is active and can be used by customers
+        """
+        if test_date is None:
             test_date = datetime.date.today()
-        return self.start_date <= test_date and test_date < self.end_date
+        predicates = [self.get_max_applications() > 0]
+        if self.start_date:
+            predicates.append(self.start_date <= test_date)
+        if self.end_date:
+            predicates.append(test_date < self.end_date)
+        if self.max_discount:
+            predicates.append(self.total_discount < self.max_discount)
+        return all(predicates)
 
     def is_condition_satisfied(self, basket):
         return self._proxy_condition().is_satisfied(basket)
@@ -244,24 +261,49 @@ class ConditionalOffer(models.Model):
     record_usage.alters_data = True
 
     def availability_description(self):
+        """
+        Return a description of when this offer is available
+        """
+        sentences = []
         if self.max_global_applications:
             desc = _(
                 "Can be used %(total)d times "
                 "(%(remainder)d remaining)") % {
                     'total': self.max_global_applications,
                     'remainder': self.max_global_applications - self.num_applications}
-        elif self.max_user_applications:
+            sentences.append(desc)
+        if self.max_user_applications:
             if self.max_user_applications == 1:
                 desc = _("Can be used once per user")
             else:
                 desc = _(
                     "Can be used %(total)d times per user") % {
                         'total': self.max_user_applications}
-        else:
+            sentences.append(desc)
+        if self.max_basket_applications:
+            if self.max_user_applications == 1:
+                desc = _("Can be used once per basket")
+            else:
+                desc = _(
+                    "Can be used %(total)d times per basket") % {
+                        'total': self.max_basket_applications}
+            sentences.append(desc)
+        if self.start_date and self.end_date:
             desc = _("Available between %(start)s and %(end)s") % {
                     'start': self.start_date,
                     'end': self.end_date}
-        return desc
+            sentences.append(desc)
+        elif self.start_date:
+            sentences.append(_("Available until %(start)s") % {
+                'start': self.start_date})
+        elif self.end_date:
+            sentences.append(_("Available until %(end)s") % {
+                'end': self.end_date})
+        if self.max_discount:
+            sentences.append(_("Available until a discount of %(max)s "
+                               "has been awarded") % {
+                'max': currency(self.max_discount)})
+        return "<br/>".join(sentences)
 
 
 class Condition(models.Model):
@@ -907,7 +949,7 @@ class PercentageDiscountBenefit(Benefit):
             quantity_affected = min(line.quantity_without_discount,
                                     max_affected_items - affected_items)
             line_discount = self.round(self.value / D('100.0') * price
-                                        * int(quantity_affected))
+                                       * int(quantity_affected))
             line.discount(line_discount, quantity_affected)
 
             affected_lines.append((line, line_discount, quantity_affected))

@@ -65,4 +65,3 @@ class TestACountConditionWithPercentageDiscount(TestCase):
         discount = self.offer.apply_benefit(basket)
         self.assertTrue(discount > 0)
         self.assertEqual(6, basket.num_items_with_discount)
-        self.assertEqual(0, basket.num_items_without_discount)

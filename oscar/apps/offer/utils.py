@@ -40,6 +40,8 @@ class Applicator(object):
     def get_basket_discounts(self, basket, offers):
         discounts = {}
         for offer in offers:
+            if not offer.is_active():
+                continue
             # For each offer, we keep trying to apply it until the
             # discount is 0
             applications = 0

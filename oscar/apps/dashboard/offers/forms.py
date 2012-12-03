@@ -18,7 +18,7 @@ class MetaDataForm(forms.ModelForm):
         model = ConditionalOffer
         fields = ('name', 'description', 'start_date', 'end_date',
                   'max_basket_applications', 'max_user_applications',
-                  'max_global_applications')
+                  'max_global_applications', 'max_discount')
 
 
 class ConditionForm(forms.ModelForm):

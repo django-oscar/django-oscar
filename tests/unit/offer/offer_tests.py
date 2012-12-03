@@ -1,3 +1,4 @@
+from decimal import Decimal as D
 import datetime
 
 from django.contrib.auth.models import User
@@ -86,3 +87,22 @@ class TestAPerUserConditionalOffer(TestCase):
         order = create_order(user=self.user)
         G(OrderDiscount, order=order, offer_id=self.offer.id, frequency=5)
         self.assertEqual(0, self.offer.get_max_applications(self.user))
+
+
+class TestCappedDiscountConditionalOffer(TestCase):
+
+    def setUp(self):
+        self.offer = models.ConditionalOffer(
+            max_discount=D('100.00'),
+            total_discount=D('0.00'))
+
+    def test_is_active_when_below_threshold(self):
+        self.assertTrue(self.offer.is_active())
+
+    def test_is_inactive_when_on_threshold(self):
+        self.offer.total_discount = self.offer.max_discount
+        self.assertFalse(self.offer.is_active())
+
+    def test_is_inactive_when_above_threshold(self):
+        self.offer.total_discount = self.offer.max_discount + D('10.00')
+        self.assertFalse(self.offer.is_active())
