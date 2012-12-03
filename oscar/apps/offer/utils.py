@@ -40,8 +40,6 @@ class Applicator(object):
     def get_basket_discounts(self, basket, offers):
         discounts = {}
         for offer in offers:
-            if not offer.is_active():
-                continue
             # For each offer, we keep trying to apply it until the
             # discount is 0
             applications = 0
@@ -86,9 +84,12 @@ class Applicator(object):
         Return site offers that are available to all users
         """
         date_based_offers = ConditionalOffer.active.filter(
-            offer_type=ConditionalOffer.SITE)
+            offer_type=ConditionalOffer.SITE,
+            status=ConditionalOffer.OPEN)
         nondate_based_offers = ConditionalOffer.objects.filter(
-            offer_type=ConditionalOffer.SITE, start_date=None, end_date=None)
+            offer_type=ConditionalOffer.SITE,
+            status=ConditionalOffer.OPEN,
+            start_date=None, end_date=None)
         return list(chain(date_based_offers, nondate_based_offers))
 
     def get_basket_offers(self, basket, user):

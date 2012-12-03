@@ -18,20 +18,20 @@ class TestADateBasedConditionalOffer(TestCase):
         self.offer = models.ConditionalOffer(start_date=self.start,
                                              end_date=self.end)
 
-    def test_is_active_during_date_range(self):
+    def test_is_available_during_date_range(self):
         test = datetime.date(2011, 01, 10)
-        self.assertTrue(self.offer.is_active(test))
+        self.assertTrue(self.offer.is_available(test_date=test))
 
     def test_is_inactive_before_date_range(self):
         test = datetime.date(2010, 03, 10)
-        self.assertFalse(self.offer.is_active(test))
+        self.assertFalse(self.offer.is_available(test_date=test))
 
     def test_is_inactive_after_date_range(self):
         test = datetime.date(2011, 03, 10)
-        self.assertFalse(self.offer.is_active(test))
+        self.assertFalse(self.offer.is_available(test_date=test))
 
-    def test_is_inactive_on_end_date(self):
-        self.assertFalse(self.offer.is_active(self.end))
+    def test_is_active_on_end_date(self):
+        self.assertTrue(self.offer.is_available(test_date=self.end))
 
 
 class TestAConsumptionFrequencyBasedConditionalOffer(TestCase):
@@ -39,20 +39,20 @@ class TestAConsumptionFrequencyBasedConditionalOffer(TestCase):
     def setUp(self):
         self.offer = models.ConditionalOffer(max_global_applications=4)
 
-    def test_is_active_with_no_applications(self):
-        self.assertTrue(self.offer.is_active())
+    def test_is_available_with_no_applications(self):
+        self.assertTrue(self.offer.is_available())
 
-    def test_is_active_with_fewer_applications_than_max(self):
+    def test_is_available_with_fewer_applications_than_max(self):
         self.offer.num_applications = 3
-        self.assertTrue(self.offer.is_active())
+        self.assertTrue(self.offer.is_available())
 
     def test_is_inactive_with_equal_applications_to_max(self):
         self.offer.num_applications = 4
-        self.assertFalse(self.offer.is_active())
+        self.assertFalse(self.offer.is_available())
 
     def test_is_inactive_with_more_applications_than_max(self):
         self.offer.num_applications = 4
-        self.assertFalse(self.offer.is_active())
+        self.assertFalse(self.offer.is_available())
 
     def test_restricts_number_of_applications_correctly_with_no_applications(self):
         self.assertEqual(4, self.offer.get_max_applications())
@@ -72,8 +72,8 @@ class TestAPerUserConditionalOffer(TestCase):
         self.offer = models.ConditionalOffer(max_user_applications=1)
         self.user = G(User)
 
-    def test_is_active_with_no_applications(self):
-        self.assertTrue(self.offer.is_active())
+    def test_is_available_with_no_applications(self):
+        self.assertTrue(self.offer.is_available())
 
     def test_max_applications_is_correct_when_no_applications(self):
         self.assertEqual(1, self.offer.get_max_applications(self.user))
@@ -96,13 +96,13 @@ class TestCappedDiscountConditionalOffer(TestCase):
             max_discount=D('100.00'),
             total_discount=D('0.00'))
 
-    def test_is_active_when_below_threshold(self):
-        self.assertTrue(self.offer.is_active())
+    def test_is_available_when_below_threshold(self):
+        self.assertTrue(self.offer.is_available())
 
     def test_is_inactive_when_on_threshold(self):
         self.offer.total_discount = self.offer.max_discount
-        self.assertFalse(self.offer.is_active())
+        self.assertFalse(self.offer.is_available())
 
     def test_is_inactive_when_above_threshold(self):
         self.offer.total_discount = self.offer.max_discount + D('10.00')
-        self.assertFalse(self.offer.is_active())
+        self.assertFalse(self.offer.is_available())

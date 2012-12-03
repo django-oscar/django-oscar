@@ -27,8 +27,8 @@
 
 {% block content %}
 
-	{% if not offer.is_active %}
-	<div class="alert alert-error">{% trans " This offer has expired " %}</div>
+	{% if not offer.is_available %}
+	<div class="alert alert-error">{% trans " This offer is no longer available." %}</div>
 	{% endif %}
 
     {% if offer.description %}
