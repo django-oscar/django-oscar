@@ -50,6 +50,7 @@
                     <th>{% trans "Offer name" %}</th>
                     <th>{% trans "Status" %}</th>
                     <th>{% trans "Availability" %}</th>
+                    <th>{% trans "Is available?" %}</th>
                     <th>{% trans "Condition" %}</th>
                     <th>{% trans "Benefit" %}</th>
                     <th>{% trans "Applications" %}</th>
@@ -60,13 +61,24 @@
                 {% for offer in offers %}
                 <tr>
                     <td><a href="{{ offer.get_absolute_url }}">{{ offer.name }}</a></td>
-					<td>{% if offer.is_active %}
-						<span class="label label-success">{% trans "Active" %}</span>
+					<td>
+						{% if offer.is_open %}
+						<span class="label label-info">{% trans "Open" %}</span>
 						{% else %}
-						<span class="label">{% trans "Inactive" %}</span>
+							{% if offer.is_suspended %}
+							<span class="label label-important">{% trans "Suspended" %}</span>
+							{% else %}
+							<span class="label label-inverse">{% trans "Consumed" %}</span>
+							{% endif %}
 						{% endif %}
 					</td>
                     <td>{{ offer.availability_description }}</td>
+					<td>{% if offer.is_available %}
+						<span class="label label-success">{% trans "Yes" %}</span>
+						{% else %}
+						<span class="label label-important">{% trans "No" %}</span>
+						{% endif %}
+					</td>
                     <td>{{ offer.condition.description }}</td>
                     <td>{{ offer.benefit.description }}</td>
                     <td>{{ offer.num_applications }}</td>

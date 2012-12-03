@@ -48,17 +48,27 @@ class ConditionalOffer(models.Model):
     # (c) Offers that are linked to a user.  Eg, all students get 10% off.  The
     #     code to apply this offer needs to be coded
     # (d) Session offers - these are temporarily available to a user after some
-    #     trigger event.  Eg, users coming from some affiliate site get 10% off.
+    #     trigger event.  Eg, users coming from some affiliate site get 10%
+    #     off.
     SITE, VOUCHER, USER, SESSION = ("Site", "Voucher", "User", "Session")
     TYPE_CHOICES = (
         (SITE, _("Site offer - available to all users")),
-        (VOUCHER, _("Voucher offer - only available after entering the appropriate voucher code")),
+        (VOUCHER, _("Voucher offer - only available after entering "
+                    "the appropriate voucher code")),
         (USER, _("User offer - available to certain types of user")),
-        (SESSION, _("Session offer - temporary offer, available for a user for the duration of their session")),
+        (SESSION, _("Session offer - temporary offer, available for "
+                    "a user for the duration of their session")),
     )
-    offer_type = models.CharField(_("Type"), choices=TYPE_CHOICES, default=SITE, max_length=128)
+    offer_type = models.CharField(
+        _("Type"), choices=TYPE_CHOICES, default=SITE, max_length=128)
 
-    condition = models.ForeignKey('offer.Condition', verbose_name=_("Condition"))
+    # We track a status variable so it's easier to load offers that are
+    # 'available' in some sense.
+    OPEN, SUSPENDED, CONSUMED = "Open", "Suspended", "Consumed"
+    status = models.CharField(_("Status"), max_length=64, default=OPEN)
+
+    condition = models.ForeignKey(
+        'offer.Condition', verbose_name=_("Condition"))
     benefit = models.ForeignKey('offer.Benefit', verbose_name=_("Benefit"))
 
     # Some complicated situations require offers to be applied in a set order.
@@ -130,12 +140,24 @@ class ConditionalOffer(models.Model):
 
     class Meta:
         ordering = ['-priority']
-        verbose_name = _("Conditional Offer")
-        verbose_name_plural = _("Conditional Offers")
+        verbose_name = _("Conditional offer")
+        verbose_name_plural = _("Conditional offers")
+
+        # The way offers are looked up involves the fields
+        # (offer_type, status, start_date, end_date).  Ideally, you want
+        # a DB index that covers these 4 fields (will add support for this in
+        # Django 1.5)
 
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
+
+        # Check to see if consumption thresholds have been broken
+        if self.get_max_applications() == 0:
+            self.status = self.CONSUMED
+        else:
+            self.status = self.OPEN
+
         return super(ConditionalOffer, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
@@ -148,20 +170,29 @@ class ConditionalOffer(models.Model):
         if self.start_date and self.end_date and self.start_date > self.end_date:
             raise exceptions.ValidationError(_('End date should be later than start date'))
 
-    def is_active(self, test_date=None):
+    @property
+    def is_open(self):
+        return self.status == self.OPEN
+
+    @property
+    def is_suspended(self):
+        return self.status == self.SUSPENDED
+
+    def is_available(self, user=None, test_date=None):
         """
-        Test whether this offer is active and can be used by customers
+        Test whether this offer is available to be used
         """
+        # Check whether we are within the date range first
         if test_date is None:
             test_date = datetime.date.today()
-        predicates = [self.get_max_applications() > 0]
+        predicates = []
         if self.start_date:
-            predicates.append(self.start_date <= test_date)
+            predicates.append(self.start_date > test_date)
         if self.end_date:
-            predicates.append(test_date < self.end_date)
-        if self.max_discount:
-            predicates.append(self.total_discount < self.max_discount)
-        return all(predicates)
+            predicates.append(test_date > self.end_date)
+        if any(predicates):
+            return 0
+        return self.get_max_applications(user) > 0
 
     def is_condition_satisfied(self, basket):
         return self._proxy_condition().is_satisfied(basket)
@@ -189,8 +220,14 @@ class ConditionalOffer(models.Model):
 
     def get_max_applications(self, user=None):
         """
-        Return the number of times this offer can be applied to a basket
+        Return the number of times this offer can be applied to a basket for a
+        given user.
         """
+        if self.max_discount and self.total_discount >= self.max_discount:
+            return 0
+
+        # Hard-code a maximum value as we need some sensible upper limit for
+        # when there are not other caps.
         limits = [10000]
         if self.max_user_applications and user:
             limits.append(max(0, self.max_user_applications -
