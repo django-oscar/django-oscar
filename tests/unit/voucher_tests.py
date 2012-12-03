@@ -16,40 +16,31 @@ END_DATE = datetime.date(2012, 01, 01)
 class TestVoucher(TestCase):
 
     def test_saves_code_as_uppercase(self):
-        start = datetime.date(2011, 01, 01)
-        end = datetime.date(2012, 01, 01)
         voucher = Voucher.objects.create(code='lower',
-                                         start_date=start,
-                                         end_date=end)
+                                         start_date=START_DATE,
+                                         end_date=END_DATE)
         self.assertEqual('LOWER', voucher.code)
 
     def test_checks_dates_are_sensible(self):
-        start = datetime.date(2011, 01, 01)
-        end = datetime.date(2012, 01, 01)
         with self.assertRaises(exceptions.ValidationError):
             voucher = Voucher.objects.create(code='lower',
-                                            start_date=end,
-                                            end_date=start)
+                                            start_date=END_DATE,
+                                            end_date=START_DATE)
             voucher.clean()
 
     def test_is_active_between_start_and_end_dates(self):
-        start = datetime.date(2011, 01, 01)
         test = datetime.date(2011, 01, 10)
-        end = datetime.date(2011, 02, 01)
-        voucher = Voucher(start_date=start, end_date=end)
+        voucher = Voucher(start_date=START_DATE, end_date=END_DATE)
         self.assertTrue(voucher.is_active(test))
 
     def test_is_active_on_end_date(self):
-        start = datetime.date(2011, 01, 01)
-        end = test = datetime.date(2011, 02, 01)
-        voucher = Voucher(start_date=start, end_date=end)
+        test = END_DATE
+        voucher = Voucher(start_date=START_DATE, end_date=END_DATE)
         self.assertTrue(voucher.is_active(test))
 
     def test_is_inactive_outside_of_start_and_end_dates(self):
-        start = datetime.date(2011, 01, 01)
-        test = datetime.date(2011, 03, 10)
-        end = datetime.date(2011, 02, 01)
-        voucher = Voucher(start_date=start, end_date=end)
+        test = datetime.date(2012, 03, 10)
+        voucher = Voucher(start_date=START_DATE, end_date=END_DATE)
         self.assertFalse(voucher.is_active(test))
 
     def test_increments_total_discount_when_recording_usage(self):
