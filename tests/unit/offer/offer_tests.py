@@ -29,8 +29,8 @@ class TestADateBasedConditionalOffer(TestCase):
         test = datetime.date(2011, 03, 10)
         self.assertFalse(self.offer.is_active(test))
 
-    def test_is_inactive_on_end_date(self):
-        self.assertFalse(self.offer.is_active(self.end))
+    def test_is_active_on_end_date(self):
+        self.assertTrue(self.offer.is_active(self.end))
 
 
 class TestAConsumptionFrequencyBasedConditionalOffer(TestCase):
