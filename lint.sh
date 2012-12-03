@@ -1,9 +1,20 @@
 #/usr/bin/env bash
+#
+# Run static analysis of the codebase
+#
+# This is run on Travis to ensure that pull requests conform to the project coding standards.
 
-ERRORFILE="violations.txt"
-THRESHOLD=862
+# Ideally, this figure should be < 100.  I'll keep reducing it as the 
+# codebase gets tidied up incrementally.
+THRESHOLD=795
+
+# Some warnings aren't worth worrying about...
 IGNORE="W292,E202"
 
+# Run flake8 and convert the output into a format that the "violations" plugin 
+# for Jenkins/Hudson can understand.  Ignore warnings from migrations we we don't
+# really care about those.
+ERRORFILE="violations.txt"
 flake8 --ignore=$IGNORE oscar | perl -ple "s/: /: [E] /" | grep -v migrations > $ERRORFILE
 
 # Check that the number of violations is acceptable
