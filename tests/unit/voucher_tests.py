@@ -39,6 +39,12 @@ class TestVoucher(TestCase):
         voucher = Voucher(start_date=start, end_date=end)
         self.assertTrue(voucher.is_active(test))
 
+    def test_is_active_on_end_date(self):
+        start = datetime.date(2011, 01, 01)
+        end = test = datetime.date(2011, 02, 01)
+        voucher = Voucher(start_date=start, end_date=end)
+        self.assertTrue(voucher.is_active(test))
+
     def test_is_inactive_outside_of_start_and_end_dates(self):
         start = datetime.date(2011, 01, 01)
         test = datetime.date(2011, 03, 10)
