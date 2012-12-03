@@ -44,7 +44,7 @@ class OfferListView(ListView):
             self.description = _("Offers matching '%s'") % data['name']
         if data['is_active']:
             today = datetime.date.today()
-            qs = qs.filter(start_date__lte=today, end_date__gt=today)
+            qs = qs.filter(start_date__lte=today, end_date__gte=today)
 
         return qs
 
