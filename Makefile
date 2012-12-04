@@ -6,7 +6,7 @@ install:
 	pip install -r requirements.txt
 
 sandbox: install
-	[ -f sites/sandbox/db.sqlite ] && rm sites/sandbox/db.sqlite || true
+	-rm -f sites/sandbox/db.sqlite
 	# Create database
 	sites/sandbox/manage.py syncdb --noinput
 	sites/sandbox/manage.py migrate
@@ -17,7 +17,7 @@ sandbox: install
 	sites/sandbox/manage.py rebuild_index --noinput
 
 demo: install
-	[ -f sites/demo/db.sqlite ] && rm sites/demo/db.sqlite || true
+	-rm -f sites/demo/db.sqlite
 	# Create database
 	sites/demo/manage.py syncdb --noinput
 	sites/demo/manage.py migrate
