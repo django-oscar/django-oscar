@@ -1,6 +1,6 @@
-import csv
 import datetime
 from decimal import Decimal as D, InvalidOperation
+from django.conf import settings
 
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
@@ -17,6 +17,7 @@ from django.views.generic import ListView, DetailView, UpdateView, FormView
 from oscar.core.loading import get_class
 from oscar.apps.dashboard.orders import forms
 from oscar.views.generic import BulkEditMixin
+from oscar.apps.dashboard.reports.csv_utils import CsvUnicodeWriter
 from oscar.apps.payment.exceptions import PaymentError
 from oscar.apps.order.exceptions import InvalidShippingEvent, InvalidStatus
 
@@ -78,7 +79,7 @@ class OrderListView(ListView, BulkEditMixin):
     current_view = 'dashboard:order-list'
 
     def get(self, request, *args, **kwargs):
-        if 'order_number' in request.GET and request.GET.get('response_format', None) == 'html':
+        if 'order_number' in request.GET and request.GET.get('response_format', 'html') == 'html':
             try:
                 order = Order.objects.get(number=request.GET['order_number'])
             except Order.DoesNotExist:
@@ -136,12 +137,22 @@ class OrderListView(ListView, BulkEditMixin):
         if data['name']:
             # If the value is two words, then assume they are first name and last name
             parts = data['name'].split()
-            if len(parts) == 2:
-                queryset = queryset.filter(Q(user__first_name__istartswith=parts[0]) |
-                                           Q(user__last_name__istartswith=parts[1])).distinct()
+            allow_anon = getattr(settings, 'OSCAR_ALLOW_ANON_CHECKOUT', False)
+
+            if len(parts) == 1:
+                parts = [data['name'], data['name']]
             else:
-                queryset = queryset.filter(Q(user__first_name__istartswith=data['name']) |
-                                           Q(user__last_name__istartswith=data['name'])).distinct()
+                parts = [parts[0], parts[1:]]
+
+            filter = Q(user__first_name__istartswith=parts[0]) |\
+                     Q(user__last_name__istartswith=parts[1])
+            if allow_anon:
+                filter |= Q(billing_address__first_name__istartswith=parts[0]) |\
+                          Q(shipping_address__first_name__istartswith=parts[0]) |\
+                          Q(billing_address__last_name__istartswith=parts[1]) |\
+                          Q(shipping_address__last_name__istartswith=parts[1])
+
+            queryset = queryset.filter(filter).distinct()
             desc_ctx['name_filter'] = _(" with customer name matching '%s'") % data['name']
 
         if data['product_title']:
@@ -221,7 +232,7 @@ class OrderListView(ListView, BulkEditMixin):
     def download_selected_orders(self, request, orders):
         response = HttpResponse(mimetype='text/csv')
         response['Content-Disposition'] = 'attachment; filename=%s' % self.get_download_filename(request)
-        writer = csv.writer(response, delimiter=',')
+        writer = CsvUnicodeWriter(response, delimiter=',')
 
         meta_data = (('number', _('Order number')),
                      ('value', _('Order value')),

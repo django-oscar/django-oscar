@@ -1,10 +1,10 @@
 import os
-import csv
 from decimal import Decimal as D
 
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.catalogue.categories import create_from_breadcrumbs
+from oscar.apps.dashboard.reports.csv_utils import CsvUnicodeReader
 from oscar.core.loading import get_class, get_classes
 ImportError = get_class('partner.exceptions', 'ImportError')
 Partner, StockRecord = get_classes('partner.models', ('Partner', 'StockRecord'))
@@ -39,7 +39,7 @@ class StockImporter(object):
                  'unchanged_items': 0,
                  'unmatched_items': 0}
         row_number = 0
-        for row in csv.reader(open(file_path, 'rb'), delimiter=self._delimiter, quotechar='"', escapechar='\\'):
+        for row in CsvUnicodeReader(open(file_path, 'rb'), delimiter=self._delimiter, quotechar='"', escapechar='\\'):
             row_number += 1
             self._import_row(row_number, row, stats)
         msg = "\tUpdated items: %d\n\tUnchanged items: %d\n\tUnmatched items: %d" % (
@@ -121,7 +121,7 @@ class CatalogueImporter(object):
         stats = {'new_items': 0,
                  'updated_items': 0}
         row_number = 0
-        for row in csv.reader(open(file_path,'rb'), delimiter=self._delimiter, quotechar='"', escapechar='\\'):
+        for row in CsvUnicodeReader(open(file_path,'rb'), delimiter=self._delimiter, quotechar='"', escapechar='\\'):
             row_number += 1
             self._import_row(row_number, row, stats)
         msg = "New items: %d, updated items: %d" % (stats['new_items'], stats['updated_items'])

@@ -1,5 +1,3 @@
-import csv
-
 from django.db.models import get_model
 from django.utils.translation import ugettext_lazy as _
 
@@ -18,7 +16,7 @@ class ProductReportCSVFormatter(ReportCSVFormatter):
     filename_template = 'conditional-offer-performance.csv'
 
     def generate_csv(self, response, products):
-        writer = csv.writer(response)
+        writer = self.get_csv_writer(response)
         header_row = [_('Product'),
                       _('Views'),
                       _('Basket additions'),
@@ -60,7 +58,7 @@ class UserReportCSVFormatter(ReportCSVFormatter):
     filename_template = 'user-analytics.csv'
 
     def generate_csv(self, response, users):
-        writer = csv.writer(response)
+        writer = self.get_csv_writer(response)
         header_row = [_('Name'),
                       _('Date registered'),
                       _('Product views'),
