@@ -1,5 +1,3 @@
-import csv
-
 from django.db.models import get_model
 from django.utils.translation import ugettext_lazy as _
 from oscar.core.loading import get_class
@@ -16,7 +14,7 @@ class OpenBasketReportCSVFormatter(ReportCSVFormatter):
     filename_template = 'open-baskets-%s-%s.csv'
 
     def generate_csv(self, response, baskets):
-        writer = csv.writer(response)
+        writer = self.get_csv_writer(response)
         header_row = [_('User ID'),
                       _('Name'),
                       _('Email'),
@@ -77,7 +75,7 @@ class SubmittedBasketReportCSVFormatter(ReportCSVFormatter):
     filename_template = 'submitted_baskets-%s-%s.csv'
 
     def generate_csv(self, response, baskets):
-        writer = csv.writer(response)
+        writer = self.get_csv_writer(response)
         header_row = [_('User ID'),
                       _('User'),
                       _('Basket status'),

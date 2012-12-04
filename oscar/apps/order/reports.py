@@ -1,4 +1,3 @@
-import csv
 import datetime
 
 from django.db.models import get_model
@@ -15,7 +14,7 @@ class OrderReportCSVFormatter(ReportCSVFormatter):
     filename_template = 'orders-%s-to-%s.csv'
 
     def generate_csv(self, response, orders):
-        writer = csv.writer(response)
+        writer = self.get_csv_writer(response)
         header_row = [_('Order number'),
                       _('User'),
                       _('Total incl. tax'),
