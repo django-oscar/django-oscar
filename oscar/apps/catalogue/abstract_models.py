@@ -455,12 +455,23 @@ class AbstractProduct(models.Model):
             return self.parent.product_class
         return None
 
+    def get_missing_image(self):
+        """
+        Returns a missing image object.
+        """
+        # This class should have a 'name' property so it mimics the Django file
+        # field.
+        return MissingProductImage()
+
     def primary_image(self):
         images = self.images.all()
         if images.count():
             return images[0]
+        # We return a dict with fields that mirror the key properties of the
+        # ProductImage class so this missing image can be used interchangably
+        # in templates.  Strategy pattern ftw!
         return {
-            'original': MissingProductImage(),
+            'original': self.get_missing_image(),
             'caption': '',
             'is_missing': True}
 
