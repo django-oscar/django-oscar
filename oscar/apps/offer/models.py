@@ -302,14 +302,23 @@ class ConditionalOffer(models.Model):
         """
         Return a description of when this offer is available
         """
-        sentences = []
+        restrictions = self.availability_restrictions()
+        descriptions = [r['description'] for r in restrictions]
+        return "<br/>".join(descriptions)
+
+    def availability_restrictions(self):
+        restrictions = []
         if self.max_global_applications:
+            remaining = self.max_global_applications - self.num_applications
             desc = _(
                 "Can be used %(total)d times "
                 "(%(remainder)d remaining)") % {
                     'total': self.max_global_applications,
-                    'remainder': self.max_global_applications - self.num_applications}
-            sentences.append(desc)
+                    'remainder': remaining}
+            restrictions.append({
+                'description': desc,
+                'is_satisfied': remaining > 0})
+
         if self.max_user_applications:
             if self.max_user_applications == 1:
                 desc = _("Can be used once per user")
@@ -317,7 +326,10 @@ class ConditionalOffer(models.Model):
                 desc = _(
                     "Can be used %(total)d times per user") % {
                         'total': self.max_user_applications}
-            sentences.append(desc)
+            restrictions.append({
+                'description': desc,
+                'is_satisfied': True})
+
         if self.max_basket_applications:
             if self.max_user_applications == 1:
                 desc = _("Can be used once per basket")
@@ -325,23 +337,38 @@ class ConditionalOffer(models.Model):
                 desc = _(
                     "Can be used %(total)d times per basket") % {
                         'total': self.max_basket_applications}
-            sentences.append(desc)
-        if self.start_date and self.end_date:
-            desc = _("Available between %(start)s and %(end)s") % {
-                    'start': self.start_date,
+            restrictions.append({
+                'description': desc,
+                'is_satisfied': True})
+
+        if self.start_date or self.end_date:
+            today = datetime.date.today()
+            if self.start_date and self.end_date:
+                desc = _("Available between %(start)s and %(end)s") % {
+                        'start': self.start_date,
+                        'end': self.end_date}
+                is_satisfied = self.start_date <= today <= self.end_date
+            elif self.start_date:
+                desc = _("Available from %(start)s") % {
+                    'start': self.start_date}
+                is_satisfied = today >= self.start_date
+            elif self.end_date:
+                desc = _("Available until %(end)s") % {
                     'end': self.end_date}
-            sentences.append(desc)
-        elif self.start_date:
-            sentences.append(_("Available until %(start)s") % {
-                'start': self.start_date})
-        elif self.end_date:
-            sentences.append(_("Available until %(end)s") % {
-                'end': self.end_date})
+                is_satisfied = today <= self.end_date
+            restrictions.append({
+                'description': desc,
+                'is_satisfied': is_satisfied})
+
         if self.max_discount:
-            sentences.append(_("Available until a discount of %(max)s "
-                               "has been awarded") % {
-                'max': currency(self.max_discount)})
-        return "<br/>".join(sentences)
+            desc = _("Available until a discount of %(max)s "
+                     "has been awarded") % {
+                'max': currency(self.max_discount)}
+            restrictions.append({
+                'description': desc,
+                'is_satisfied': self.total_discount < self.max_discount})
+
+        return restrictions
 
 
 class Condition(models.Model):
