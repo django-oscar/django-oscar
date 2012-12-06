@@ -438,7 +438,7 @@ class Benefit(models.Model):
     SHIPPING_PERCENTAGE, SHIPPING_ABSOLUTE, SHIPPING_FIXED_PRICE = (
         'Shipping percentage', 'Shipping absolute', 'Shipping fixed price')
     TYPE_CHOICES = (
-        (PERCENTAGE, _("Discount is a %% of the product's value")),
+        (PERCENTAGE, _("Discount is a % of the product's value")),
         (FIXED, _("Discount is a fixed amount off the product's value")),
         (MULTIBUY, _("Discount is to give the cheapest product for free")),
         (FIXED_PRICE, _("Get the products that meet the condition for a fixed price")),
