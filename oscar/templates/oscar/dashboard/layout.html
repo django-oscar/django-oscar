@@ -17,7 +17,7 @@
     <div class="navbar navbar-static-top navbar-inverse navbar-accounts">
         <div class="navbar-inner">
             <div class="dashboard">
-                <a href="/dashboard/" class="brand">{{ shop_name }}</a>
+                <span class="brand">{{ shop_name }}</span>
                 
                 <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-accounts">
                     <span class="icon-bar"></span>
@@ -27,11 +27,10 @@
                 
                 <div class="nav-collapse nav-accounts collapse">
                     <ul class="nav pull-right">
-                        {% if user.is_authenticated %}
-    						<li><span>{% trans "Welcome" %} <em>{{ request.user.get_full_name|default:'Guest' }}</em></span></li>
-    						<li><a href="{% url customer:summary %}"><i class="icon-user"></i> {% trans "Account" %}</a></li>
-    						<li><a href="{% url customer:logout %}"><i class="icon-signout"></i> {% trans "Logout" %}</a></li>
-                        {% endif %}
+                        <li><span>{% trans "Welcome" %} <em>{{ request.user.get_full_name|default:'Guest' }}</em></span></li>
+                        <li><a href="{% url promotions:home %}"><i class="icon-home"></i> {% trans "Return to site" %}</a></li>
+                        <li><a href="{% url customer:summary %}"><i class="icon-user"></i> {% trans "Account" %}</a></li>
+                        <li><a href="{% url customer:logout %}"><i class="icon-signout"></i> {% trans "Log out" %}</a></li>
                     </ul>
                 </div>
             </div>
@@ -46,8 +45,6 @@
             <div class="navbar-inner">
                 <div class="dashboard">
 
-                    <!-- <div class="subnav subnav-fixed"> -->
-
                     <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-primary">
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
@@ -56,6 +53,7 @@
 
                     <div class="nav-collapse nav-primary">
                         <ul class="nav nav-pills dashboard">
+                            <li class="Dashboard"><a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a></li>
                             {% for item in nav_items %}
                             <li class="{{ item.label }} dropdown">
                                 {% if item.is_heading %}
@@ -74,7 +72,6 @@
                             {% endfor %}
                         </ul>
                     </div>
-
                 </div>
             </div>
         </div>
