@@ -43,42 +43,42 @@
                 {% if offers.count %}
                 <tr>
                     <th>{% trans "Offer name" %}</th>
-                    <th>{% trans "Status" %}</th>
-                    <th>{% trans "Availability" %}</th>
-                    <th>{% trans "Is available?" %}</th>
+                    <th>{% trans "Start date" %}</th>
+                    <th>{% trans "End date" %}</th>
+                    <th>{% trans "Incentive" %}</th>
                     <th>{% trans "Condition" %}</th>
-                    <th>{% trans "Benefit" %}</th>
-                    <th>{% trans "Applications" %}</th>
-                    <th>{% trans "Total discount" %}</th>
-                    <th>{% trans "Date created" %}</th>
+                    <th>{% trans "Is available?" %}</th>
+                    <th>{% trans "Restrictions" %}</th>
+                    <th>{% trans "Uses" %}</th>
+                    <th>{% trans "Cost" %}</th>
                     <th></th>
                 </tr>
                 {% for offer in offers %}
                 <tr>
-                    <td><a href="{{ offer.get_absolute_url }}">{{ offer.name }}</a></td>
-					<td>
-						{% if offer.is_open %}
-						<span class="label label-info">{% trans "Open" %}</span>
-						{% else %}
-							{% if offer.is_suspended %}
-							<span class="label label-important">{% trans "Suspended" %}</span>
-							{% else %}
-							<span class="label label-inverse">{% trans "Consumed" %}</span>
-							{% endif %}
-						{% endif %}
-					</td>
-                    <td>{{ offer.availability_description }}</td>
+                    <td><a href="{% url dashboard:offer-detail offer.pk %}">{{ offer.name }}</a></td>
+                    <td>{{ offer.start_date|default:"-" }}</td>
+                    <td>{{ offer.end_date|default:"-" }}</td>
+                    <td>{{ offer.benefit.description }}</td>
+                    <td>{{ offer.condition.description }}</td>
 					<td>{% if offer.is_available %}
 						<span class="label label-success">{% trans "Yes" %}</span>
 						{% else %}
 						<span class="label label-important">{% trans "No" %}</span>
 						{% endif %}
 					</td>
-                    <td>{{ offer.condition.description }}</td>
-                    <td>{{ offer.benefit.description }}</td>
+                    <td>
+                        {% for restriction in offer.availability_restrictions %}
+                                {% if not restriction.is_satisfied %}
+                                <label class="label label-important">
+                                    {{ restriction.description }}
+                                </label>
+                                {% else %}
+                                {{ restriction.description }}</br>
+                                {% endif %}
+                        {% endfor %}
+                    </td>
                     <td>{{ offer.num_applications }}</td>
                     <td>{{ offer.total_discount|currency }}</td>
-                    <td>{{ offer.date_created }}</td>
                     <td>
                         <div class="btn-toolbar">
                             <div class="btn-group">
