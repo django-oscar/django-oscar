@@ -412,13 +412,35 @@ class AbstractLine(models.Model):
         if not quantity:
             quantity = self.quantity
         for name, event_dict in self.shipping_event_breakdown().items():
-            if name == event_type.name and event_dict['quantity'] == self.quantity:
+            if name == event_type.name and event_dict['quantity'] == quantity:
                 return True
         return False
 
     @property
     def is_product_deleted(self):
-        return self.product == None
+        return self.product is None
+
+    def is_available_to_reorder(self, basket, user):
+        Line = models.get_model('basket', 'Line')
+        warnings = []
+        if not self.product:
+            warnings.append(_("'%s' unavailable for re-order") % self.title)
+
+        try:
+            basket_line = basket.lines.get(product=self.product)
+        except Line.DoesNotExist:
+            desired_qty = self.quantity
+        else:
+            desired_qty = basket_line.quantity + self.quantity
+
+        is_available, reason = self.product.is_purchase_permitted(
+            user=user,
+            quantity=desired_qty)
+
+        if not is_available:
+            warnings.append(reason)
+
+        return warnings == [], warnings
 
     def shipping_event_breakdown(self):
         """
