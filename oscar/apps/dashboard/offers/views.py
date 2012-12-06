@@ -30,9 +30,13 @@ class OfferListView(ListView):
     form_class = OfferSearchForm
 
     def get_queryset(self):
-        qs = self.model._default_manager.filter(offer_type=ConditionalOffer.SITE)
+        qs = self.model._default_manager.filter(
+            offer_type=ConditionalOffer.SITE)
         self.description = _("All offers")
 
+        # We track whether the queryset is filtered to determine whether we
+        # show the search form 'reset' button.
+        self.is_filtered = False
         self.form = self.form_class(self.request.GET)
         if not self.form.is_valid():
             return qs
@@ -42,7 +46,9 @@ class OfferListView(ListView):
         if data['name']:
             qs = qs.filter(name__icontains=data['name'])
             self.description = _("Offers matching '%s'") % data['name']
+            self.is_filtered = True
         if data['is_active']:
+            self.is_filtered = True
             today = datetime.date.today()
             qs = qs.filter(start_date__lte=today, end_date__gte=today)
 
@@ -52,6 +58,7 @@ class OfferListView(ListView):
         ctx = super(OfferListView, self).get_context_data(**kwargs)
         ctx['queryset_description'] = self.description
         ctx['form'] = self.form
+        ctx['is_filtered'] = self.is_filtered
         return ctx
 
 
