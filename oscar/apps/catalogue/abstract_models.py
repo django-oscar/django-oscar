@@ -339,6 +339,8 @@ class AbstractProduct(models.Model):
     objects = models.Manager()
     browsable = BrowsableProductManager()
 
+    missing_image = None
+
     # Properties
 
     @property
@@ -455,12 +457,21 @@ class AbstractProduct(models.Model):
             return self.parent.product_class
         return None
 
+    def get_missing_image(self):
+        """
+        Returns a missing image object
+        """
+        missing_image = getattr(self, 'missing_image', None)
+        if missing_image is not None:
+            return missing_image
+        return MissingProductImage()
+
     def primary_image(self):
         images = self.images.all()
         if images.count():
             return images[0]
         return {
-            'original': MissingProductImage(),
+            'original': self.get_missing_image(),
             'caption': '',
             'is_missing': True}
 
