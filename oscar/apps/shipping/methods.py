@@ -3,7 +3,6 @@ from decimal import Decimal as D
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.shipping.base import ShippingMethod
-from oscar.apps.shipping import Scales
 
 
 class Free(ShippingMethod):
@@ -47,7 +46,12 @@ class OfferDiscount(ShippingMethod):
     Wrapper class that applies a discount to an existing shipping method's
     charges
     """
-    is_discounted = True
+    @property
+    def is_discounted(self):
+        # We check to see if the discount is non-zero.  It is possible to have
+        # zero shipping already in which case this the offer does not lead to
+        # any further discount.
+        return self.get_discount()['discount'] > 0
 
     @property
     def code(self):
@@ -74,8 +78,7 @@ class OfferDiscount(ShippingMethod):
             'offer': self.offer,
             'voucher': self.offer.get_voucher(),
             'freq': 1,
-            'discount': self.offer.shipping_discount(parent_charge)
-        }
+            'discount': self.offer.shipping_discount(parent_charge)}
 
     def basket_charge_incl_tax_before_discount(self):
         return self.method.basket_charge_incl_tax()
@@ -90,9 +93,11 @@ class OfferDiscount(ShippingMethod):
 
     def basket_charge_excl_tax(self):
         # Adjust tax exclusive rate using the ratio of the two tax inclusive
-        # charges
+        # charges.
         parent_charge_excl_tax = self.method.basket_charge_excl_tax()
         parent_charge_incl_tax = self.method.basket_charge_incl_tax()
         charge_incl_tax = self.basket_charge_incl_tax()
+        if parent_charge_incl_tax == 0:
+            return D('0.00')
         return parent_charge_excl_tax * (charge_incl_tax /
                                          parent_charge_incl_tax)
