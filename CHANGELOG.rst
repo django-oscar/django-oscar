@@ -2,6 +2,11 @@
 Changelog
 =========
 
+0.4.1 - 2012-12-06
+------------------
+
+Nano-release to bump dependency versions.
+
 0.4 - 2012-10-19
 ----------------
 
