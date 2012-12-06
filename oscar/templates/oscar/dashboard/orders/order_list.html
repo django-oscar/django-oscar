@@ -75,7 +75,7 @@
     {% include "dashboard/orders/partials/bulk_edit_form.html" with status=active_status %}
 
 <table class="table table-striped table-bordered table-hover">
-    {% if queryset_description != "All orders" %}
+
     <caption>
         <h3 class="pull-left"><i class="icon-shopping-cart icon-large"></i>{{ queryset_description }}</h3>
         <div class="pull-right">
@@ -86,7 +86,7 @@
             </div>
         </div>
     </caption>
-    {% endif %}
+
     <thead>
         <tr>
             <th>

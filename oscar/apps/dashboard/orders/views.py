@@ -12,6 +12,7 @@ from django.shortcuts import get_object_or_404
 from django.template.defaultfilters import date as format_date
 from django.utils.datastructures import SortedDict
 from django.views.generic import ListView, DetailView, UpdateView, FormView
+from django.conf import settings
 
 from oscar.core.loading import get_class
 from oscar.apps.dashboard.orders import forms
