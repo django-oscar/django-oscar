@@ -28,14 +28,18 @@
     <form action="." method="get" class="form-inline">
         {% include 'partials/form_fields_inline.html' with form=form %}
         <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
-        <a href="{% url dashboard:offer-list %}" class="btn">{% trans "Reset" %}</a>
     </form>
 </div>
 
         <form action="." method="post" class="order_table">
             {% csrf_token %}
             <table class="table table-striped table-bordered">
-                <caption><i class="icon-gift icon-large"></i>{{ queryset_description }}</caption>
+                <caption>
+                    <i class="icon-gift icon-large"></i>{{ queryset_description }}
+                    {% if is_filtered %}
+                    <a href="{% url dashboard:offer-list %}" >{% trans "Reset" %}</a>
+                    {% endif %}
+                </caption>
                 {% if offers.count %}
                 <tr>
                     <th>{% trans "Offer name" %}</th>
