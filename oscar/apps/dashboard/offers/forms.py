@@ -1,3 +1,5 @@
+import datetime
+
 from django import forms
 
 from django.db.models.loading import get_model
@@ -9,10 +11,16 @@ Benefit = get_model('offer', 'Benefit')
 
 
 class MetaDataForm(forms.ModelForm):
-    start_date = forms.DateField(widget=forms.DateInput(format='%Y-%m-%d'),
-                                 label=_("Start date"), required=False)
-    end_date = forms.DateField(widget=forms.DateInput(format='%Y-%m-%d'),
+    format = '%Y-%m-%d'
+    start_date = forms.DateField(widget=forms.DateInput(format=format),
+                                 label=_("Start date"), required=True)
+    end_date = forms.DateField(widget=forms.DateInput(format=format),
                                label=_("End date"), required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(MetaDataForm, self).__init__(*args, **kwargs)
+        today = datetime.date.today()
+        self.fields['start_date'].initial = today.strftime(self.format)
 
     class Meta:
         model = ConditionalOffer
