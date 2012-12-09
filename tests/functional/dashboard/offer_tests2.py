@@ -16,7 +16,7 @@ class TestAnAdmin(testcases.WebTestCase):
     def test_can_create_an_offer(self):
         list_page = self.get(reverse('dashboard:offer-list'))
 
-        metadata_page = list_page.click('Create offer')
+        metadata_page = list_page.click('Create new offer')
         metadata_form = metadata_page.form
         metadata_form['name'] = "Test offer"
         metadata_form['start_date'] = "2012-01-01"
