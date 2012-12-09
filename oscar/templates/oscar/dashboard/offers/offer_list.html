@@ -1,5 +1,6 @@
 {% extends 'dashboard/layout.html' %}
 {% load currency_filters %}
+{% load sorting_tags %}
 {% load i18n %}
 
 {% block title %}
@@ -37,20 +38,20 @@
                 <caption>
                     <i class="icon-gift icon-large"></i>{{ queryset_description }}
                     {% if is_filtered %}
-                    <a href="{% url dashboard:offer-list %}" >{% trans "Reset" %}</a>
+                        <a href="{% url dashboard:offer-list %}" >{% trans "Reset" %}</a>
                     {% endif %}
                 </caption>
                 {% if offers.count %}
                 <tr>
-                    <th>{% trans "Offer name" %}</th>
-                    <th>{% trans "Start date" %}</th>
-                    <th>{% trans "End date" %}</th>
+                    <th>{% anchor 'name' _('Offer name') %}</th>
+                    <th>{% anchor 'start_date' _('Start date') %}</th>
+                    <th>{% anchor 'end_date' _('End date') %}</th>
                     <th>{% trans "Incentive" %}</th>
                     <th>{% trans "Condition" %}</th>
                     <th>{% trans "Is available?" %}</th>
                     <th>{% trans "Restrictions" %}</th>
-                    <th>{% trans "Uses" %}</th>
-                    <th>{% trans "Cost" %}</th>
+                    <th>{% anchor 'num_applications' _('Uses') %}</th>
+                    <th>{% anchor 'total_discount' _('Cost') %}</th>
                     <th></th>
                 </tr>
                 {% for offer in offers %}
