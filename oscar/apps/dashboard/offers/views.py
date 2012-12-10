@@ -1,6 +1,6 @@
 import datetime
 
-from django.views.generic import (ListView, FormView, DeleteView, DetailView,
+from django.views.generic import (ListView, FormView, DeleteView,
                                   CreateView, UpdateView)
 from django.db.models.loading import get_model
 from django.core.urlresolvers import reverse
@@ -9,10 +9,10 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.core.loading import get_classes
+from oscar.core.loading import get_classes, get_class
 
 ConditionalOffer = get_model('offer', 'ConditionalOffer')
-Condition= get_model('offer', 'Condition')
+Condition = get_model('offer', 'Condition')
 Range = get_model('offer', 'Range')
 Product = get_model('catalogue', 'Product')
 OrderDiscount = get_model('order', 'OrderDiscount')
@@ -21,6 +21,8 @@ MetaDataForm, ConditionForm, BenefitForm, PreviewForm, OfferSearchForm = get_cla
     'dashboard.offers.forms', [
         'MetaDataForm', 'ConditionForm', 'BenefitForm', 'PreviewForm',
         'OfferSearchForm'])
+OrderDiscountCSVFormatter = get_class(
+    'dashboard.offers.reports', 'OrderDiscountCSVFormatter')
 
 
 class OfferListView(ListView):
@@ -302,6 +304,13 @@ class OfferDetailView(ListView):
         ctx = super(OfferDetailView, self).get_context_data(**kwargs)
         ctx['offer'] = self.offer
         return ctx
+
+    def render_to_response(self, context):
+        if self.request.GET.get('format') == 'csv':
+            formatter = OrderDiscountCSVFormatter()
+            return formatter.generate_response(context['order_discounts'],
+                                               offer=self.offer)
+        return super(OfferDetailView, self).render_to_response(context)
 
 
 class RangeListView(ListView):
