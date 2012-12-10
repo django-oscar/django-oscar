@@ -66,7 +66,8 @@ class RangeUpdateView(UpdateView):
 
     def get_context_data(self, **kwargs):
         ctx = super(RangeUpdateView, self).get_context_data(**kwargs)
-        ctx['title'] = _("Update range")
+        ctx['range'] = self.object
+        ctx['title'] = self.object.name
         return ctx
 
 

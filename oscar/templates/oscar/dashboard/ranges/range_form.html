@@ -16,23 +16,28 @@ create-page
         <span class="divider">/</span>	  	
     </li>	  	
     <li>	  	
-        <a href="{% url dashboard:range-list %}">{% trans "Ranges" %}</a>	  	
+        <a href="{% url dashboard:range-list %}">{% trans "Range management" %}</a>
         <span class="divider">/</span>	  	
     </li>	  	
-    <li class="active">{{ title }}</li>	  	
+    {% if range %}
+        <li class="active">'{{ range.name }}'</li>
+    {% else %}
+        <li class="active">{{ title }}</li>
+    {% endif %}
 </ul>
 {% endblock %}
 
 {% block header %}
 <div class="page-header">
-	<h1>{{ title }}</h1>
+    {% if range %}
+    <h1>{{ range.name }}</h1>
+    {% else %}
+    <h1>{% trans "Create new range" %}</h1>
+    {% endif %}
 </div>
 {% endblock header %}
 
 {% block dashboard_content %}
-<div class="table-header">
-    <h3><i  class="icon-reorder icon-large"></i>New range</h3>
-</div>
 <form action="." method="post" class="form-stacked well">
 	{% csrf_token %}
 	{% include "partials/form_fields.html" with form=form %}

@@ -15,7 +15,7 @@
         <span class="divider">/</span>	  	
     </li>	  	
     <li>	  	
-        <a href="{% url dashboard:range-list %}">{% trans "Ranges" %}</a>	  	
+        <a href="{% url dashboard:range-list %}">{% trans "Range management" %}</a>
         <span class="divider">/</span>	  	
     </li>	  	
     <li>	  	
@@ -28,7 +28,7 @@
 
 {% block header %}
 <div class="page-header">
-	<h1>{% blocktrans %}Products in range {{ range.name }}{% endblocktrans %}</h1>
+    <h1>{{ range.name }}: {% trans "products" %}</h1>
 </div>
 {% endblock header %}
 
