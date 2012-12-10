@@ -15,9 +15,15 @@
         <span class="divider">/</span>   	
     </li>   	
     <li>   	
-        <a href="{% url dashboard:offer-list %}">{% trans "Offers" %}</a>   	
+        <a href="{% url dashboard:offer-list %}">{% trans "Offer management" %}</a>
         <span class="divider">/</span>   	
     </li>   	
+    {% if offer.pk %}
+    <li>
+        <a href="{% url dashboard:offer-detail offer.pk %}">'{{ offer.name }}'</a>
+        <span class="divider">/</span>
+    </li>
+    {% endif %}
     <li class="active">{{ title }}</li>   	
 </ul>
 {% endblock %}
