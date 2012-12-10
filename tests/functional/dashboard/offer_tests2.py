@@ -1,5 +1,5 @@
 from django.core.urlresolvers import reverse
-from oscar_testsupport import testcases
+from oscar_testsupport import testcases, factories
 
 from oscar.apps.offer import models
 
@@ -50,3 +50,30 @@ class TestAnAdmin(testcases.WebTestCase):
                          'dashboard:offer-preview'):
             response = self.get(reverse(url_name))
             self.assertEqual(302, response.status_code)
+
+    def test_can_suspend_an_offer(self):
+        # Create an offer
+        offer = factories.create_offer()
+        self.assertFalse(offer.is_suspended)
+
+        detail_page = self.get(reverse('dashboard:offer-detail',
+                                       kwargs={'pk': offer.pk}))
+        form = detail_page.forms['status_form']
+        form.submit('suspend')
+
+        reloaded_offer = models.ConditionalOffer.objects.get(pk=offer.pk)
+        self.assertTrue(reloaded_offer.is_suspended)
+
+    def test_can_reinstate_a_suspended_offer(self):
+        # Create a suspended offer
+        offer = factories.create_offer()
+        offer.suspend()
+        self.assertTrue(offer.is_suspended)
+
+        detail_page = self.get(reverse('dashboard:offer-detail',
+                                       kwargs={'pk': offer.pk}))
+        form = detail_page.forms['status_form']
+        form.submit('unsuspend')
+
+        reloaded_offer = models.ConditionalOffer.objects.get(pk=offer.pk)
+        self.assertFalse(reloaded_offer.is_suspended)
