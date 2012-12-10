@@ -25,19 +25,33 @@ class OffersDashboardApplication(Application):
         urlpatterns = patterns('',
             url(r'^$', self.list_view.as_view(), name='offer-list'),
             # Creation
-            url(r'^metadata/$', self.metadata_view.as_view(), name='offer-metadata'),
-            url(r'^condition/$', self.condition_view.as_view(), name='offer-condition'),
-            url(r'^benefit/$', self.benefit_view.as_view(), name='offer-benefit'),
-            url(r'^preview/$', self.preview_view.as_view(), name='offer-preview'),
+            url(r'^metadata/$', self.metadata_view.as_view(),
+                name='offer-metadata'),
+            url(r'^condition/$', self.condition_view.as_view(),
+                name='offer-condition'),
+            url(r'^benefit/$', self.benefit_view.as_view(),
+                name='offer-benefit'),
+            url(r'^preview/$', self.preview_view.as_view(),
+                name='offer-preview'),
             # Update
-            url(r'^(?P<pk>\d+)/metadata/$', self.metadata_view.as_view(update=True), name='offer-metadata'),
-            url(r'^(?P<pk>\d+)/condition/$', self.condition_view.as_view(update=True), name='offer-condition'),
-            url(r'^(?P<pk>\d+)/benefit/$', self.benefit_view.as_view(update=True), name='offer-benefit'),
-            url(r'^(?P<pk>\d+)/preview/$', self.preview_view.as_view(update=True), name='offer-preview'),
+            url(r'^(?P<pk>\d+)/metadata/$',
+                self.metadata_view.as_view(update=True),
+                name='offer-metadata'),
+            url(r'^(?P<pk>\d+)/condition/$',
+                self.condition_view.as_view(update=True),
+                name='offer-condition'),
+            url(r'^(?P<pk>\d+)/benefit/$',
+                self.benefit_view.as_view(update=True),
+                name='offer-benefit'),
+            url(r'^(?P<pk>\d+)/preview/$',
+                self.preview_view.as_view(update=True),
+                name='offer-preview'),
             # Delete
-            url(r'^(?P<pk>\d+)/delete/$', self.delete_view.as_view(), name='offer-delete'),
+            url(r'^(?P<pk>\d+)/delete/$',
+                self.delete_view.as_view(), name='offer-delete'),
             # Stats
-            url(r'^(?P<pk>\d+)/$', self.detail_view.as_view(), name='offer-detail'),
+            url(r'^(?P<pk>\d+)/$', self.detail_view.as_view(),
+                name='offer-detail'),
         )
         return self.post_process_urls(urlpatterns)
 
