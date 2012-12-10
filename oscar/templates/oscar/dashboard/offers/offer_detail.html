@@ -70,12 +70,12 @@
             </tr>
             <tr>
                 <th>{% trans "Incentive" %}</th>
-                <td>{{ offer.benefit.description }}</td>
+                <td>{{ offer.benefit.description|safe }}</td>
                 <td><a href="{% url dashboard:offer-benefit offer.pk %}" class="btn">Edit</a></td>
             </tr>
             <tr>
                 <th>{% trans "Condition" %}</th>
-                <td>{{ offer.condition.description }}</td>
+                <td>{{ offer.condition.description|safe }}</td>
                 <td><a href="{% url dashboard:offer-condition offer.pk %}" class="btn">Edit</a></td>
             </tr>
             <tr>
