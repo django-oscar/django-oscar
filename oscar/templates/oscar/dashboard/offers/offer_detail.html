@@ -24,10 +24,14 @@
 
 {% block header %}
 <div class="page-header">
-    <form class="pull-right" method="post">
+    <form id="status_form" class="pull-right" method="post" action=".">
         {% csrf_token %}
-        <button class="btn">{% trans "Suspend offer" %}</button>
-        <button class="btn btn-danger">{% trans "Delete offer" %}</button>
+        {% if offer.is_suspended %}
+        <button type="submit" class="btn btn-success" name="unsuspend">{% trans "Reinstate offer" %}</button>
+        {% else %}
+        <button type="submit" class="btn" name="suspend">{% trans "Suspend offer" %}</button>
+        {% endif %}
+        <a class="btn btn-danger" href="{% url dashboard:offer-delete offer.pk %}">{% trans "Delete offer" %}</a>
     </form>
     <h1>{{ offer.name }}</h1>
 </div>

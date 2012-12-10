@@ -152,10 +152,11 @@ class ConditionalOffer(models.Model):
             self.slug = slugify(self.name)
 
         # Check to see if consumption thresholds have been broken
-        if self.get_max_applications() == 0:
-            self.status = self.CONSUMED
-        else:
-            self.status = self.OPEN
+        if not self.is_suspended:
+            if self.get_max_applications() == 0:
+                self.status = self.CONSUMED
+            else:
+                self.status = self.OPEN
 
         return super(ConditionalOffer, self).save(*args, **kwargs)
 
@@ -179,11 +180,22 @@ class ConditionalOffer(models.Model):
     def is_suspended(self):
         return self.status == self.SUSPENDED
 
+    def suspend(self):
+        self.status = self.SUSPENDED
+        self.save()
+    suspend.alters_data = True
+
+    def unsuspend(self):
+        self.status = self.OPEN
+        self.save()
+    suspend.alters_data = True
+
     def is_available(self, user=None, test_date=None):
         """
         Test whether this offer is available to be used
         """
-        # Check whether we are within the date range first
+        if self.is_suspended:
+            return False
         if test_date is None:
             test_date = datetime.date.today()
         predicates = []
@@ -308,6 +320,11 @@ class ConditionalOffer(models.Model):
 
     def availability_restrictions(self):
         restrictions = []
+        if self.is_suspended:
+            restrictions.append({
+                'description': _("Offer is suspended"),
+                'is_satisfied': False})
+
         if self.max_global_applications:
             remaining = self.max_global_applications - self.num_applications
             desc = _(
