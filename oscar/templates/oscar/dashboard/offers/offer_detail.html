@@ -62,7 +62,7 @@
             <tr>
                 <th>{% trans "Name" %}</th>
                 <td>{{ offer.name }}</td>
-                <td rowspan="2"><a href="{% url dashboard:offer-metadata offer.pk %}" class="btn">Edit</a></td>
+                <td rowspan="2"><a id="edit_metadata" href="{% url dashboard:offer-metadata offer.pk %}" class="btn">Edit</a></td>
             </tr>
             <tr>
                 <th>{% trans "Description" %}</th>
