@@ -311,7 +311,7 @@ class ConditionalOffer(models.Model):
         if self.max_global_applications:
             remaining = self.max_global_applications - self.num_applications
             desc = _(
-                "Can be used %(total)d times "
+                "Limited to %(total)d uses "
                 "(%(remainder)d remaining)") % {
                     'total': self.max_global_applications,
                     'remainder': remaining}
@@ -321,10 +321,10 @@ class ConditionalOffer(models.Model):
 
         if self.max_user_applications:
             if self.max_user_applications == 1:
-                desc = _("Can be used once per user")
+                desc = _("Limited to 1 use per user")
             else:
                 desc = _(
-                    "Can be used %(total)d times per user") % {
+                    "Limited to %(total)d user per user") % {
                         'total': self.max_user_applications}
             restrictions.append({
                 'description': desc,
@@ -332,10 +332,10 @@ class ConditionalOffer(models.Model):
 
         if self.max_basket_applications:
             if self.max_user_applications == 1:
-                desc = _("Can be used once per basket")
+                desc = _("Limited to 1 use per basket")
             else:
                 desc = _(
-                    "Can be used %(total)d times per basket") % {
+                    "Limited to %(total)d uses per basket") % {
                         'total': self.max_basket_applications}
             restrictions.append({
                 'description': desc,
@@ -361,8 +361,7 @@ class ConditionalOffer(models.Model):
                 'is_satisfied': is_satisfied})
 
         if self.max_discount:
-            desc = _("Available until a discount of %(max)s "
-                     "has been awarded") % {
+            desc = _("Limited to a cost of %(max)s") % {
                 'max': currency(self.max_discount)}
             restrictions.append({
                 'description': desc,
