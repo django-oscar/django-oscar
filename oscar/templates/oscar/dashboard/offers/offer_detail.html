@@ -94,7 +94,7 @@
 
     {% if order_discounts %}
     <div class="table-header">
-        <h2>{% trans "Recent orders" %}</h2>
+        <h2>{% trans "Orders that used this offer" %}</h2>
     </div>
 	<table class="table table-bordered table-striped">
 		<thead>
@@ -116,6 +116,7 @@
 			{% endfor %}
 		</tbody>
 	</table>
+    {% include 'partials/pagination.html' %}
     {% endif %}
 
 {% endblock dashboard_content %}
