@@ -94,6 +94,7 @@
 
     {% if order_discounts %}
     <div class="table-header">
+        <a class="pull-right btn" href=".?format=csv">{% trans "Export to CSV" %}</a>
         <h2>{% trans "Orders that used this offer" %}</h2>
     </div>
 	<table class="table table-bordered table-striped">
