@@ -284,14 +284,23 @@ class OfferDeleteView(DeleteView):
         return reverse('dashboard:offer-list')
 
 
-class OfferDetailView(DetailView):
-    model = ConditionalOffer
+class OfferDetailView(ListView):
+    # Slightly odd, but we treat the offer detail view as a list view so the
+    # order discounts can be browsed.
+    model = OrderDiscount
     template_name = 'dashboard/offers/offer_detail.html'
-    context_object_name = 'offer'
+    context_object_name = 'order_discounts'
+
+    def get(self, request, *args, **kwargs):
+        self.offer = get_object_or_404(ConditionalOffer, pk=kwargs['pk'])
+        return super(OfferDetailView, self).get(request, *args, **kwargs)
+
+    def get_queryset(self):
+        return self.model.objects.filter(offer_id=self.offer.pk)
 
     def get_context_data(self, **kwargs):
         ctx = super(OfferDetailView, self).get_context_data(**kwargs)
-        ctx['order_discounts'] = OrderDiscount.objects.filter(offer_id=self.object.id).order_by('-id')
+        ctx['offer'] = self.offer
         return ctx
 
 
