@@ -7,8 +7,8 @@
 			<tr><th>{% trans "Name" %}</th><td>{{ offer.name }}</td></tr>
 			<tr><th>{% trans "Description" %}</th><td>{{ offer.description|safe }}</td></tr>
 			<tr><th>{% trans "Availability" %}</th><td>{{ offer.availability_description|safe }}</td></tr>
-			<tr><th>{% trans "Condition" %}</th><td>{{ condition.description }}</td></tr>
-			<tr><th>{% trans "Benefit" %}</th><td>{{ benefit.description }}</td></tr>
+			<tr><th>{% trans "Condition" %}</th><td>{{ condition.description|safe }}</td></tr>
+			<tr><th>{% trans "Benefit" %}</th><td>{{ benefit.description|safe }}</td></tr>
 		</tbody>
 	</table>
 {% endblock %}

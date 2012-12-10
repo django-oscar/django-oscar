@@ -59,8 +59,8 @@
                     <td><a href="{% url dashboard:offer-detail offer.pk %}">{{ offer.name }}</a></td>
                     <td>{{ offer.start_date|default:"-" }}</td>
                     <td>{{ offer.end_date|default:"-" }}</td>
-                    <td>{{ offer.benefit.description }}</td>
-                    <td>{{ offer.condition.description }}</td>
+                    <td>{{ offer.benefit.description|safe }}</td>
+                    <td>{{ offer.condition.description|safe }}</td>
 					<td>{% if offer.is_available %}
 						<span class="label label-success">{% trans "Yes" %}</span>
 						{% else %}
