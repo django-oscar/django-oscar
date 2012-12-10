@@ -4,7 +4,7 @@
 
 {% block title %}
 {% blocktrans with name=offer.name %}
-'{{ name }}' | Offer management
+{{ name }} | Offer management
 {% endblocktrans %} | {{ block.super }}
 {% endblock %}
 
@@ -15,47 +15,107 @@
         <span class="divider">/</span>   	
     </li>   	
     <li>   	
-        <a href="{% url dashboard:offer-list %}">{% trans "Offers" %}</a>   	
+        <a href="{% url dashboard:offer-list %}">{% trans "Offer management" %}</a>
         <span class="divider">/</span>   	
     </li>   	
-    <li class="active">'{{ offer.name }}'</li>   	
+    <li class="active">{{ offer.name }}</li>
 </ul>
 {% endblock %}
 
-{% block dashboard_content %}
-	{% include 'dashboard/offers/partials/offer.html' %}
+{% block header %}
+<div class="page-header">
+    <form class="pull-right" method="post">
+        {% csrf_token %}
+        <button class="btn">{% trans "Suspend offer" %}</button>
+        <button class="btn btn-danger">{% trans "Delete offer" %}</button>
+    </form>
+    <h1>{{ offer.name }}</h1>
+</div>
+{% endblock header %}
 
-	<h2>{% trans "Recent orders" %}</h2>
-	{% if not order_discounts %}
-	<p>{% trans "No orders have been placed that use this offer." %}</p>
-	{% else %}
-	<p>{% trans "We show a maximum of 20 orders sorted by recency." %}</p>
-	<table class="table">
+{% block dashboard_content %}
+
+    {% if offer.is_available %}
+        <div class="alert alert-success">{% trans "Offer currently available" %}</div>
+    {% else %}
+        <div class="alert alert-error">{% trans "Offer not available due to restrictions!" %}</div>
+    {% endif %}
+
+    <table class="table table-bordered">
+        <tr>
+            <td>{% trans "Total cost:" %} <strong>{{ offer.total_discount|currency }}</strong></td>
+            <td>{% trans "Number of orders:" %} <strong>{{ offer.num_orders|currency }}</strong></td>
+            <td>{% trans "Number of uses:" %} <strong>{{ offer.num_applications|currency }}</strong></td>
+        </tr>
+    </table>
+
+    <div class="table-header">
+        <div class="pull-right" style="font-weight: normal">Date created: {{ offer.date_created }}</div>
+        <h2>{% trans "Offer details" %}</h2>
+    </div>
+    <table class="table table-striped table-bordered">
+        <tbody>
+            <tr>
+                <th>{% trans "Name" %}</th>
+                <td>{{ offer.name }}</td>
+                <td rowspan="2"><a href="{% url dashboard:offer-metadata offer.pk %}" class="btn">Edit</a></td>
+            </tr>
+            <tr>
+                <th>{% trans "Description" %}</th>
+                <td>{{ offer.description|safe }}</td>
+            </tr>
+            <tr>
+                <th>{% trans "Incentive" %}</th>
+                <td>{{ offer.benefit.description }}</td>
+                <td><a href="{% url dashboard:offer-benefit offer.pk %}" class="btn">Edit</a></td>
+            </tr>
+            <tr>
+                <th>{% trans "Condition" %}</th>
+                <td>{{ offer.condition.description }}</td>
+                <td><a href="{% url dashboard:offer-condition offer.pk %}" class="btn">Edit</a></td>
+            </tr>
+            <tr>
+                <th>{% trans "Restrictions" %}</th>
+                <td>
+                    {% for restriction in offer.availability_restrictions %}
+                        {% if not restriction.is_satisfied %}
+                        <label class="label label-important">
+                            {{ restriction.description }}
+                        </label>
+                        {% else %}
+                            {{ restriction.description }}</br>
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td><a href="{% url dashboard:offer-metadata offer.pk %}" class="btn">Edit</a></td>
+            </tr>
+        </tbody>
+    </table>
+
+    {% if order_discounts %}
+    <div class="table-header">
+        <h2>{% trans "Recent orders" %}</h2>
+    </div>
+	<table class="table table-bordered table-striped">
 		<thead>
 			<th>{% trans "Order number" %}</th>
+			<th>{% trans "Order date" %}</th>
 			<th>{% trans "Order total" %}</th>
-			<th>{% trans "Discount" %}</th>
-			<th></th>
+			<th>{% trans "Cost" %}</th>
 		</thead>
 		<tbody>
 			{% for discount in order_discounts %}
 			{% with order=discount.order %}
 				<tr>
-					<td>{{ order.number }}</td>
+                    <td><a href="{% url dashboard:order-detail order.number %}">{{ order.number }}</a></td>
+					<td>{{ order.date_placed }}</td>
 					<td>{{ order.total_incl_tax|currency }}</td>
 					<td>{{ discount.amount|currency }}</td>
-					<td><a href="{% url dashboard:order-detail order.number %}" class="btn btn-info">{% trans "View" %}</a></td>
 				</tr>
 			{% endwith %}
 			{% endfor %}
 		</tbody>
 	</table>
-	{% endif %}
-
-	<div class="form-actions">
-		<a class="btn btn-primary" href="{% url dashboard:offer-metadata offer.id %}">{% trans "Edit" %}</a> {% trans "or" %}
-		<a class="btn btn-danger" href="{% url dashboard:offer-delete offer.id %}">{% trans "Delete" %}</a> {% trans "or" %}
-		<a href="{% url dashboard:offer-list %}">{% trans "cancel" %}</a>
-	</div>
+    {% endif %}
 
 {% endblock dashboard_content %}
