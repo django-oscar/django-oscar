@@ -189,16 +189,6 @@ $(document).ready(function()
         e.preventDefault();
     });
     
-    //Account / Profile navigation
-    var checkHash = document.location.hash,
-        getId = checkHash.substring(1),
-        activeClass = $('.account-profile .tabbable'),
-        aHref = $('a[href=' + checkHash + ']').closest('li');
-    if (checkHash) {
-      activeClass.find('.active').removeClass('active');
-      $('#' + getId).add(aHref).addClass('active');
-    }
-
     //For IE - sets the width of a select in an overflow hidden container
     var selectBox = $('.product_pod select'),
         isIE = navigator.userAgent.toLowerCase().indexOf("msie");
