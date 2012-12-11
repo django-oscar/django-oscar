@@ -5,7 +5,12 @@
 {% block body_class %}create-page{% endblock %}
 
 {% block title %}
-{{ title }} | {% trans "Offer management" %} | {{ block.super }}
+    {% if offer.pk %}
+        {{ offer.name }}:
+    {% else %}
+        {% trans "Create new offer" %}:
+    {% endif %}
+    {{ title }} | {% trans "Offer management" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -19,8 +24,13 @@
         <span class="divider">/</span>   	
     </li>   	
     {% if offer.pk %}
+    <li>   	
+        <a href="{% url dashboard:offer-detail offer.pk %}">'{{ offer.name }}'</a>   	
+        <span class="divider">/</span>   	
+    </li>   	
+    {% else %}
     <li>
-        <a href="{% url dashboard:offer-detail offer.pk %}">'{{ offer.name }}'</a>
+        {% trans "Create new offer" %}
         <span class="divider">/</span>
     </li>
     {% endif %}
@@ -30,28 +40,36 @@
 
 {% block header %}
 <div class="page-header">
-	<h1>{{ title }}</h1>
+    {% if not offer.pk %}
+    <h1>{% trans "Create new offer" %}</h1>
+    {% else %}
+	<h1>{{ offer.name }}</h1>
+    {% endif %}
 </div>
 {% endblock header %}
 
 {% block dashboard_content %}
-<div class="table-header">
-    <h3><i class="icon-gift icon-large"></i>{{ title }}</h3>
-</div>
-<form action="." method="post" class="form-stacked well wysiwyg">
-	{% csrf_token %}
-	{% block form_fields %}
-		{% include "partials/form_fields.html" with form=form %}
-	{% endblock %}
-	{% block form_extradata %}{% endblock %}
-	{% block form_actions %}
-	<div class="form-actions">
-		{% if back_url %}
-		<a href="{{ back_url }}" class="btn">{% trans "Back" %}</a> {% trans "or" %}
-		{% endif %}
-		<button class="btn btn-primary" type="submit">{% trans "Continue" %}</button> {% trans "or" %}
-		<a href="{% url dashboard:offer-list %}">{% trans "cancel" %}</a>
-	</div>
-	{% endblock form_actions %}
-</form>
+
+    {% block progress %}
+        {% include 'dashboard/offers/progress.html' %}
+    {% endblock %}
+
+    {% block summary %}
+        {% include 'dashboard/offers/summary.html' %}
+    {% endblock %}
+
+    <form action="." method="post" class="form-stacked wysiwyg">
+        {% csrf_token %}
+        <p>{% trans "Fields marked with * are mandatory." %}</p>
+        {% block form_fields %}
+            {% include "partials/form_fields.html" with form=form %}
+        {% endblock %}
+        {% block form_extradata %}{% endblock %}
+        {% block form_actions %}
+            <div class="form-actions">
+                <button class="btn btn-primary" type="submit">{% block submittext %}{% trans "Continue" %}{% endblock %}</button> {% trans "or" %}
+                <a href="{% url dashboard:offer-list %}">{% trans "cancel" %}</a>
+            </div>
+        {% endblock form_actions %}
+    </form>
 {% endblock dashboard_content %}

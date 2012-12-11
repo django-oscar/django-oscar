@@ -1,0 +1,36 @@
+{% load i18n %}
+
+<nav class="checkoutNav">
+    <ul class="nav row-fluid">
+        <li class="step1 {% if step == 1 %}active{% else %}{% if step > 1 %}visited{% else %}disabled{% endif %}{% endif %} span3">
+            <h3>
+                {% if step == 2 or step == 3 or step == 4 %}
+                <a href="{% if session_offer.pk %}{% url dashboard:offer-metadata session_offer.pk %}{% else %}{% url dashboard:offer-metadata %}{% endif %}">{% trans "Step 1. Name and description" %}</a>
+                {% else %}
+                    {% trans "Step 1. Name and description" %}
+                {% endif %}
+            </h3>
+        </li>
+        <li class="step2 {% if step == 2 %}active{% else %}{% if step > 2 %}visited{% else %}disabled{% endif %}{% endif %} span3">
+            <h3>
+                {% if step == 3 or step == 4 %}
+                <a href="{% if session_offer.pk %}{% url dashboard:offer-benefit session_offer.pk %}{% else %}{% url dashboard:offer-benefit %}{% endif %}">{% trans "2. Incentive" %}</a>
+                {% else %}
+                {% trans "2. Incentive" %}
+                {% endif %}
+            </h3>
+        </li>
+        <li class="step3 {% if step == 3 %}active{% else %}{% if step > 3 %}visited{% else %}disabled{% endif %}{% endif %} span3">
+            <h3>
+                {% if step == 4 %}
+                <a href="{% if session_offer.pk %}{% url dashboard:offer-condition session_offer.pk %}{% else %}{% url dashboard:offer-condition %}{% endif %}">{% trans "3. Condition" %}</a>
+                {% else %}
+                {% trans "3. Condition" %}
+                {% endif %}
+            </h3>
+        </li>
+        <li class="step4 {% if step == 4 %}active{% else %}disabled{% endif %} span3">
+            <h3>{% trans "4. Restrictions" %}</h3>
+        </li>
+    </ul>
+</nav>

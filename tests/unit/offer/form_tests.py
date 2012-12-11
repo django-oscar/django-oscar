@@ -2,10 +2,10 @@ import datetime
 
 from django.test import TestCase
 
-from oscar.apps.dashboard.offers.forms import MetaDataForm
+from oscar.apps.dashboard.offers import forms
 
 
-class TestMetadataFormEnforces(TestCase):
+class TestRestrictionsFormEnforces(TestCase):
 
     def test_cronological_dates(self):
         start_date = datetime.date(2012, 1, 1)
@@ -14,5 +14,5 @@ class TestMetadataFormEnforces(TestCase):
                 'description': 'dummy',
                 'start_date': start_date,
                 'end_date': end_date}
-        form = MetaDataForm(post)
+        form = forms.RestrictionsForm(post)
         self.assertFalse(form.is_valid())
