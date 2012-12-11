@@ -30,6 +30,12 @@ def load_proxy(proxy_class):
             "Module %s does not define a %s" % (module, classname))
 
 
+def range_anchor(range):
+    return '<a href="%s">%s</a>' % (
+        reverse('dashboard:range-update', kwargs={'pk': range.pk}),
+        range.name)
+
+
 class ConditionalOffer(models.Model):
     """
     A conditional offer (eg buy 1, get 10% off)
@@ -38,7 +44,9 @@ class ConditionalOffer(models.Model):
         _("Name"), max_length=128, unique=True,
         help_text=_("This is displayed within the customer's basket"))
     slug = models.SlugField(_("Slug"), max_length=128, unique=True, null=True)
-    description = models.TextField(_("Description"), blank=True, null=True)
+    description = models.TextField(
+        _("Description"), blank=True, null=True,
+        help_text=_("This is displayed on the offer browsing page"))
 
     # Offers come in a few different types:
     # (a) Offers that are available to all customers on the site.  Eg a
@@ -152,10 +160,11 @@ class ConditionalOffer(models.Model):
             self.slug = slugify(self.name)
 
         # Check to see if consumption thresholds have been broken
-        if self.get_max_applications() == 0:
-            self.status = self.CONSUMED
-        else:
-            self.status = self.OPEN
+        if not self.is_suspended:
+            if self.get_max_applications() == 0:
+                self.status = self.CONSUMED
+            else:
+                self.status = self.OPEN
 
         return super(ConditionalOffer, self).save(*args, **kwargs)
 
@@ -179,11 +188,22 @@ class ConditionalOffer(models.Model):
     def is_suspended(self):
         return self.status == self.SUSPENDED
 
+    def suspend(self):
+        self.status = self.SUSPENDED
+        self.save()
+    suspend.alters_data = True
+
+    def unsuspend(self):
+        self.status = self.OPEN
+        self.save()
+    suspend.alters_data = True
+
     def is_available(self, user=None, test_date=None):
         """
         Test whether this offer is available to be used
         """
-        # Check whether we are within the date range first
+        if self.is_suspended:
+            return False
         if test_date is None:
             test_date = datetime.date.today()
         predicates = []
@@ -196,13 +216,13 @@ class ConditionalOffer(models.Model):
         return self.get_max_applications(user) > 0
 
     def is_condition_satisfied(self, basket):
-        return self._proxy_condition().is_satisfied(basket)
+        return self.condition.proxy().is_satisfied(basket)
 
     def is_condition_partially_satisfied(self, basket):
-        return self._proxy_condition().is_partially_satisfied(basket)
+        return self.condition.proxy().is_partially_satisfied(basket)
 
     def get_upsell_message(self, basket):
-        return self._proxy_condition().get_upsell_message(basket)
+        return self.condition.proxy().get_upsell_message(basket)
 
     def apply_benefit(self, basket):
         """
@@ -210,8 +230,8 @@ class ConditionalOffer(models.Model):
         """
         if not self.is_condition_satisfied(basket):
             return D('0.00')
-        return self._proxy_benefit().apply(basket, self._proxy_condition(),
-                                           self)
+        return self.benefit.proxy().apply(basket, self.condition.proxy(),
+                                          self)
 
     def set_voucher(self, voucher):
         self._voucher = voucher
@@ -248,48 +268,7 @@ class ConditionalOffer(models.Model):
         return aggregates['total'] if aggregates['total'] is not None else 0
 
     def shipping_discount(self, charge):
-        return self._proxy_benefit().shipping_discount(charge)
-
-    def _proxy_condition(self):
-        """
-        Returns the appropriate proxy model for the condition
-        """
-        field_dict = dict(self.condition.__dict__)
-        for field in field_dict.keys():
-            if field.startswith('_'):
-                del field_dict[field]
-
-        if self.condition.proxy_class:
-            klass = load_proxy(self.condition.proxy_class)
-            return klass(**field_dict)
-        klassmap = {
-            self.condition.COUNT: CountCondition,
-            self.condition.VALUE: ValueCondition,
-            self.condition.COVERAGE: CoverageCondition}
-        if self.condition.type in klassmap:
-            return klassmap[self.condition.type](**field_dict)
-        return self.condition
-
-    def _proxy_benefit(self):
-        """
-        Returns the appropriate proxy model for the benefit
-        """
-        field_dict = dict(self.benefit.__dict__)
-        for field in field_dict.keys():
-            if field.startswith('_'):
-                del field_dict[field]
-
-        klassmap = {
-            self.benefit.PERCENTAGE: PercentageDiscountBenefit,
-            self.benefit.FIXED: AbsoluteDiscountBenefit,
-            self.benefit.MULTIBUY: MultibuyDiscountBenefit,
-            self.benefit.FIXED_PRICE: FixedPriceBenefit,
-            self.benefit.SHIPPING_ABSOLUTE: ShippingAbsoluteDiscountBenefit,
-            self.benefit.SHIPPING_FIXED_PRICE: ShippingFixedPriceBenefit,
-            self.benefit.SHIPPING_PERCENTAGE: ShippingPercentageDiscountBenefit}
-        if self.benefit.type in klassmap:
-            return klassmap[self.benefit.type](**field_dict)
-        return self.benefit
+        return self.benefit.proxy().shipping_discount(charge)
 
     def record_usage(self, discount):
         self.num_applications += discount['freq']
@@ -302,46 +281,77 @@ class ConditionalOffer(models.Model):
         """
         Return a description of when this offer is available
         """
-        sentences = []
+        restrictions = self.availability_restrictions()
+        descriptions = [r['description'] for r in restrictions]
+        return "<br/>".join(descriptions)
+
+    def availability_restrictions(self):
+        restrictions = []
+        if self.is_suspended:
+            restrictions.append({
+                'description': _("Offer is suspended"),
+                'is_satisfied': False})
+
         if self.max_global_applications:
+            remaining = self.max_global_applications - self.num_applications
             desc = _(
-                "Can be used %(total)d times "
+                "Limited to %(total)d uses "
                 "(%(remainder)d remaining)") % {
                     'total': self.max_global_applications,
-                    'remainder': self.max_global_applications - self.num_applications}
-            sentences.append(desc)
+                    'remainder': remaining}
+            restrictions.append({
+                'description': desc,
+                'is_satisfied': remaining > 0})
+
         if self.max_user_applications:
             if self.max_user_applications == 1:
-                desc = _("Can be used once per user")
+                desc = _("Limited to 1 use per user")
             else:
                 desc = _(
-                    "Can be used %(total)d times per user") % {
+                    "Limited to %(total)d user per user") % {
                         'total': self.max_user_applications}
-            sentences.append(desc)
+            restrictions.append({
+                'description': desc,
+                'is_satisfied': True})
+
         if self.max_basket_applications:
             if self.max_user_applications == 1:
-                desc = _("Can be used once per basket")
+                desc = _("Limited to 1 use per basket")
             else:
                 desc = _(
-                    "Can be used %(total)d times per basket") % {
+                    "Limited to %(total)d uses per basket") % {
                         'total': self.max_basket_applications}
-            sentences.append(desc)
-        if self.start_date and self.end_date:
-            desc = _("Available between %(start)s and %(end)s") % {
-                    'start': self.start_date,
+            restrictions.append({
+                'description': desc,
+                'is_satisfied': True})
+
+        if self.start_date or self.end_date:
+            today = datetime.date.today()
+            if self.start_date and self.end_date:
+                desc = _("Available between %(start)s and %(end)s") % {
+                        'start': self.start_date,
+                        'end': self.end_date}
+                is_satisfied = self.start_date <= today <= self.end_date
+            elif self.start_date:
+                desc = _("Available from %(start)s") % {
+                    'start': self.start_date}
+                is_satisfied = today >= self.start_date
+            elif self.end_date:
+                desc = _("Available until %(end)s") % {
                     'end': self.end_date}
-            sentences.append(desc)
-        elif self.start_date:
-            sentences.append(_("Available until %(start)s") % {
-                'start': self.start_date})
-        elif self.end_date:
-            sentences.append(_("Available until %(end)s") % {
-                'end': self.end_date})
+                is_satisfied = today <= self.end_date
+            restrictions.append({
+                'description': desc,
+                'is_satisfied': is_satisfied})
+
         if self.max_discount:
-            sentences.append(_("Available until a discount of %(max)s "
-                               "has been awarded") % {
-                'max': currency(self.max_discount)})
-        return "<br/>".join(sentences)
+            desc = _("Limited to a cost of %(max)s") % {
+                'max': currency(self.max_discount)}
+            restrictions.append({
+                'description': desc,
+                'is_satisfied': self.total_discount < self.max_discount})
+
+        return restrictions
 
 
 class Condition(models.Model):
@@ -367,20 +377,32 @@ class Condition(models.Model):
         verbose_name = _("Condition")
         verbose_name_plural = _("Conditions")
 
-    def __unicode__(self):
-        if self.proxy_class:
-            return load_proxy(self.proxy_class).name
-        if self.type == self.COUNT:
-            return _("Basket includes %(count)d item(s) from %(range)s") % {
-                'count': self.value, 'range': unicode(self.range).lower()}
-        elif self.type == self.COVERAGE:
-            return _("Basket includes %(count)d distinct products from %(range)s") % {
-                'count': self.value, 'range': unicode(self.range).lower()}
-        return _("Basket includes %(amount)s from %(range)s") % {
-            'amount': currency(self.value),
-            'range': unicode(self.range).lower()}
+    def proxy(self):
+        """
+        Return the proxy model
+        """
+        field_dict = dict(self.__dict__)
+        for field in field_dict.keys():
+            if field.startswith('_'):
+                del field_dict[field]
 
-    description = __unicode__
+        if self.proxy_class:
+            klass = load_proxy(self.proxy_class)
+            return klass(**field_dict)
+        klassmap = {
+            self.COUNT: CountCondition,
+            self.VALUE: ValueCondition,
+            self.COVERAGE: CoverageCondition}
+        if self.type in klassmap:
+            return klassmap[self.type](**field_dict)
+        return self
+
+    def __unicode__(self):
+        return self.proxy().__unicode__()
+
+    @property
+    def description(self):
+        return self.proxy().description
 
     def consume_items(self, basket, affected_lines):
         pass
@@ -462,38 +484,34 @@ class Benefit(models.Model):
         verbose_name = _("Benefit")
         verbose_name_plural = _("Benefits")
 
+    def proxy(self):
+        field_dict = dict(self.__dict__)
+        for field in field_dict.keys():
+            if field.startswith('_'):
+                del field_dict[field]
+
+        klassmap = {
+            self.PERCENTAGE: PercentageDiscountBenefit,
+            self.FIXED: AbsoluteDiscountBenefit,
+            self.MULTIBUY: MultibuyDiscountBenefit,
+            self.FIXED_PRICE: FixedPriceBenefit,
+            self.SHIPPING_ABSOLUTE: ShippingAbsoluteDiscountBenefit,
+            self.SHIPPING_FIXED_PRICE: ShippingFixedPriceBenefit,
+            self.SHIPPING_PERCENTAGE: ShippingPercentageDiscountBenefit}
+        if self.type in klassmap:
+            return klassmap[self.type](**field_dict)
+        return self
+
     def __unicode__(self):
-        if self.type == self.PERCENTAGE:
-            desc = _("%(value)s%% discount on %(range)s") % {
-                'value': self.value,
-                'range': unicode(self.range).lower()}
-        elif self.type == self.MULTIBUY:
-            desc = _("Cheapest product is free from %s") % (
-                unicode(self.range).lower(),)
-        elif self.type == self.FIXED_PRICE:
-            desc = _("The products that meet the condition are "
-                     "sold for %(amount)s") % {
-                         'amount': currency(self.value)}
-        elif self.type == self.SHIPPING_PERCENTAGE:
-            desc = _("%(value)s%% off shipping cost") % {
-                'value': self.value}
-        elif self.type == self.SHIPPING_ABSOLUTE:
-            desc = _("%(amount)s off shipping cost") % {
-                'amount': currency(self.value)}
-        elif self.type == self.SHIPPING_FIXED_PRICE:
-            desc = _("Get shipping for %(amount)s") % {
-                'amount': currency(self.value)}
-        else:
-            desc = _("%(amount)s discount on %(range)s") % {
-                'amount': currency(self.value),
-                'range': unicode(self.range).lower()}
-
+        desc = self.proxy().__unicode__()
         if self.max_affected_items:
-            desc += ungettext(" (max %d item)", " (max %d items)", self.max_affected_items) % self.max_affected_items
-
+            desc += ungettext(
+                " (max %d item)", " (max %d items)", self.max_affected_items) % self.max_affected_items
         return desc
 
-    description = __unicode__
+    @property
+    def description(self):
+        return self.proxy().description
 
     def apply(self, basket, condition, offer=None):
         return D('0.00')
@@ -721,14 +739,29 @@ class Range(models.Model):
         """
         return self.proxy_class is None
 
+
 # ==========
 # Conditions
 # ==========
 
+
 class CountCondition(Condition):
     """
-    An offer condition dependent on the NUMBER of matching items from the basket.
+    An offer condition dependent on the NUMBER of matching items from the
+    basket.
     """
+    _description = _("Basket includes %(count)d item(s) from %(range)s")
+
+    def __unicode__(self):
+        return self._description % {
+            'count': self.value,
+            'range': unicode(self.range).lower()}
+
+    @property
+    def description(self):
+        return self._description % {
+            'count': self.value,
+            'range': range_anchor(self.range)}
 
     class Meta:
         proxy = True
@@ -802,11 +835,23 @@ class CoverageCondition(Condition):
     """
     An offer condition dependent on the number of DISTINCT matching items from the basket.
     """
+    _description = _("Basket includes %(count)d distinct item(s) from %(range)s")
+
+    def __unicode__(self):
+        return self._description % {
+            'count': self.value,
+            'range': unicode(self.range).lower()}
+
+    @property
+    def description(self):
+        return self._description % {
+            'count': self.value,
+            'range': range_anchor(self.range)}
+
     class Meta:
         proxy = True
         verbose_name = _("Coverage Condition")
         verbose_name_plural = _("Coverage Conditions")
-
 
     def is_satisfied(self, basket):
         """
@@ -889,6 +934,18 @@ class ValueCondition(Condition):
     An offer condition dependent on the VALUE of matching items from the
     basket.
     """
+    _description = _("Basket includes %(amount)s from %(range)s")
+
+    def __unicode__(self):
+        return self._description % {
+            'amount': currency(self.value),
+            'range': unicode(self.range).lower()}
+
+    @property
+    def description(self):
+        return self._description % {
+            'amount': currency(self.value),
+            'range': range_anchor(self.range)}
 
     class Meta:
         proxy = True
@@ -961,6 +1018,7 @@ class ValueCondition(Condition):
             if to_consume == 0:
                 break
 
+
 # ========
 # Benefits
 # ========
@@ -970,6 +1028,18 @@ class PercentageDiscountBenefit(Benefit):
     """
     An offer benefit that gives a percentage discount
     """
+    _description = _("%(value)s%% discount on %(range)s")
+
+    def __unicode__(self):
+        return self._description % {
+            'value': self.value,
+            'range': self.range.name.lower()}
+
+    @property
+    def description(self):
+        return self._description % {
+            'value': self.value,
+            'range': range_anchor(self.range)}
 
     class Meta:
         proxy = True
@@ -1005,6 +1075,18 @@ class AbsoluteDiscountBenefit(Benefit):
     """
     An offer benefit that gives an absolute discount
     """
+    _description = _("%(value)s discount on %(range)s")
+
+    def __unicode__(self):
+        return self._description % {
+            'value': currency(self.value),
+            'range': self.range.name.lower()}
+
+    @property
+    def description(self):
+        return self._description % {
+            'value': currency(self.value),
+            'range': range_anchor(self.range)}
 
     class Meta:
         proxy = True
@@ -1053,6 +1135,17 @@ class FixedPriceBenefit(Benefit):
 
     We also ignore the max_affected_items setting.
     """
+    _description = _("The products that meet the condition are sold "
+                     "for %(amount)s")
+
+    def __unicode__(self):
+        return self._description % {
+            'amount': currency(self.value)}
+
+    @property
+    def description(self):
+        return self.__unicode__()
+
     class Meta:
         proxy = True
         verbose_name = _("Fixed price benefit")
@@ -1104,6 +1197,16 @@ class FixedPriceBenefit(Benefit):
 
 
 class MultibuyDiscountBenefit(Benefit):
+    _description = _("Cheapest product from %(range)s is free")
+
+    def __unicode__(self):
+        return self._description % {
+            'range': self.range.name.lower()}
+
+    @property
+    def description(self):
+        return self._description % {
+            'range': range_anchor(self.range)}
 
     class Meta:
         proxy = True
@@ -1143,6 +1246,15 @@ class ShippingBenefit(Benefit):
 
 
 class ShippingAbsoluteDiscountBenefit(ShippingBenefit):
+    _description = _("%(amount)s off shipping cost")
+
+    def __unicode__(self):
+        return self._description % {
+            'amount': currency(self.value)}
+
+    @property
+    def description(self):
+        return self.__unicode__()
 
     class Meta:
         proxy = True
@@ -1154,6 +1266,15 @@ class ShippingAbsoluteDiscountBenefit(ShippingBenefit):
 
 
 class ShippingFixedPriceBenefit(ShippingBenefit):
+    _description = _("Get shipping for %(amount)s")
+
+    def __unicode__(self):
+        return self._description % {
+            'amount': currency(self.value)}
+
+    @property
+    def description(self):
+        return self.__unicode__()
 
     class Meta:
         proxy = True
@@ -1167,6 +1288,15 @@ class ShippingFixedPriceBenefit(ShippingBenefit):
 
 
 class ShippingPercentageDiscountBenefit(ShippingBenefit):
+    _description = _("%(value)s%% off shipping cost")
+
+    def __unicode__(self):
+        return self._description % {
+            'value': self.value}
+
+    @property
+    def description(self):
+        return self.__unicode__()
 
     class Meta:
         proxy = True

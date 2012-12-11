@@ -28,7 +28,6 @@ class ReportGenerator(object):
             'end_date': self.end_date,
         }
 
-
     def generate(self, response):
         pass
 

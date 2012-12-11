@@ -1,6 +1,14 @@
 {% extends 'dashboard/offers/step_form.html' %}
 {% load i18n %}
 
+{% block summary %}
+    {% include 'dashboard/offers/summary.html' %}
+{% endblock %}
+
+{% block progress %}
+    {% include 'dashboard/offers/progress.html' with step=3 %}
+{% endblock %}
+
 {% block form_fields %}
 	<span class="help-block">{{ form.non_field_errors }}</span>
 
@@ -17,5 +25,4 @@
 	{% endif %}
 {% endblock %}
 
-{% block form_extradata %}
-{% endblock form_extradata %}
+{% block submittext %}Continue to step 4{% endblock %}
