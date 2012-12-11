@@ -215,6 +215,7 @@
 {% endblock content %}
 
 {% block extrascripts %}
+{{ block.super }}
 <!-- Responsive gallery js -->
 <script src="{{ STATIC_URL }}oscar/js/colorbox/jquery.colorbox-min.js" type="text/javascript" charset="utf-8"></script>
 <script src="{{ STATIC_URL }}oscar/js/responsivegallery/jquery.tmpl.min.js" type="text/javascript" charset="utf-8"></script>

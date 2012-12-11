@@ -123,31 +123,6 @@ $(document).ready(function()
         $sidebar = $('aside.span3'), // Width of main navigation
         $browse = $('#browse > .dropdown-menu'), // Height of main navigation
         $browse_open = $browse.parent().find('> button[data-toggle]');
-    
-        if (window_width > 767) {
-            // This activates elastislide
-            var es_carousel = $('.es-carousel-wrapper'),
-            product_page = $('.product_page').length;
-            // on prodct page
-            if (es_carousel.length && product_page > 0) {
-                es_carousel.elastislide({
-                    imageW: 175,
-                    minItems: 5,
-                    onClick:  true
-                });
-                // This activates colorbox on the product page
-                var lightbox_elements = $('a[rel=lightbox]');
-                if (lightbox_elements.length) {
-                    lightbox_elements.colorbox();
-                }
-            } else if (es_carousel.length) {
-                es_carousel.elastislide({
-                    imageW: 200,
-                    minItems: 4,
-                    onClick:  true
-                });
-            }
-        }
 
     if (window_width > 767) {
       // set width of nav dropdown on the homepage
