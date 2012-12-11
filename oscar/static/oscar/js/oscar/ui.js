@@ -44,65 +44,47 @@ oscar.forms = {
         $form.data('locked', true);
     }
 };
-$(function(){oscar.forms.init();});
+oscar.catalogue = {
+    init: function() {
+        // Product star rating -- must improve this in python -- this is 
+        // one of the worst things I have ever come across.  It will die in raging fire
+        // very soon.
+        $('.product_pod, .span6, .promotion_single').each(function() 
+        {
+            var sum_total_reviews = $(this).find(".review_count li").length * 5,
+                sum_rating_count = 0;
+            $(this).find('.review_count li').each(function() {
+                sum_rating_count += parseFloat($(this).text());
+            });
+            var ave_rating = sum_rating_count / sum_total_reviews *10;
+            if (ave_rating <= 2) {
+                ave_rating = 'One';
+            } else if (ave_rating <= 4) {
+                ave_rating = 'Two';
+            } else if (ave_rating <= 6) {
+                ave_rating = 'Three';
+            } else if (ave_rating <= 8) {
+                ave_rating = 'Four';
+            } else if (ave_rating <= 10) {
+                ave_rating = 'Five';
+            }
+            $(this).find('.review_count')
+                .after('<p class=\"star ' + ave_rating + '\"></p>')
+                .remove();
+        });
+    }
+};
+oscar.init = function() {
+    oscar.catalogue.init();
+    oscar.forms.init();
+};
+$(function(){oscar.init();});
 
 
 // TODO - rewrite the below JS to git into the oscar object, splitting the functionality 
 // into SRP methods.
 $(document).ready(function()
 {   
-    // Product star rating  -- must improve this in python
-    $('.product_pod, .span6, .promotion_single').each(function() 
-    {
-        var sum_total_reviews = $(this).find(".review_count li").length * 5,
-            sum_rating_count = 0;
-        $(this).find('.review_count li').each(function() 
-        {
-            sum_rating_count += parseFloat($(this).text());
-        });
-        var ave_rating = sum_rating_count / sum_total_reviews *10;
-        if (ave_rating <= 2) {
-            ave_rating = 'One';
-        } else if (ave_rating <= 4) {
-            ave_rating = 'Two';
-        } else if (ave_rating <= 6) {
-            ave_rating = 'Three';
-        } else if (ave_rating <= 8) {
-            ave_rating = 'Four';
-        } else if (ave_rating <= 10) {
-            ave_rating = 'Five';
-        }
-        $(this).find('.review_count')
-          .after('<p class=\"star ' + ave_rating + '\">' + ave_rating + ' star(s) by user reviews. <a href=\"#reviews\">Add review</a></p>')
-          .remove();
-    });
-
-    // Product star rating each review -- must improve this in python
-    $('.review').each(function()
-    {
-        var user_rating = 0;
-        $(this).find('span').each(function() 
-        {
-            user_rating += parseFloat($(this).text());
-        });
-        if (user_rating == 1) {
-            user_rating = 'One';
-        }
-        else if (user_rating == 2) {
-            user_rating = 'Two';
-        }
-        else if (user_rating == 3) {
-            user_rating = 'Three';
-        }
-        else if (user_rating == 4) {
-            user_rating = 'Four';
-        }
-        else if (user_rating == 5) {
-            user_rating = 'Five';
-        }
-        $(this).find('h3').addClass(user_rating).end().find('span').remove();
-    });
-    
     var window_width = $(window).width(), // Width of the window
         $sidebar = $('aside.span3'), // Width of main navigation
         $browse = $('#browse > .dropdown-menu'), // Height of main navigation
