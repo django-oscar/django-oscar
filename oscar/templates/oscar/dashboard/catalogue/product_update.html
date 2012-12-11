@@ -29,144 +29,179 @@
 {% endblock header %}
 
 {% block dashboard_content %}
-<form action="." method="post" class="form-stacked wysiwyg" enctype="multipart/form-data">
-{% csrf_token %}
-    <div class="table-header">
-        <h3>{% trans "Product Details" %}</h3>
-    </div>
-    <div class="well product-details">
-        <span class="help-block">{{ form.non_field_errors }}</span>
-        {% for field in form %}
-            {% if field.is_hidden %}
-                {{ field }}
-            {% endif %}
-        {% if 'attr' not in field.id_for_label %}
-        <div class="control-group {% for error in field.errors %}error{% endfor %}">
-            {% if field.is_hidden %}
-                {{ field }}
-            {% else %}
-            <label for="{{ field.auto_id }}" class="control-label {% if field.field.required %}required{% endif %}">{{ field.label }}{% if field.field.required %} <span>*</span>{% endif %}</label>
-            <div class="controls">
-                {{ field }}
-                {% for error in field.errors %}
-                <span class="help-block">
-                    {{ error }}
-                </span>
-                {% endfor %}
-                {% if field.help_text %}
-                <span class='help-block'>
-                    {{ field.help_text }}
-                </span>
-                {% endif %}
-            </div>
-            {% endif %}
-        </div>
-        {% endif %}
-        {% endfor %}
-    </div>
-    <div class="table-header">
-        <h3>{% trans "Product Attributes" %}</h3>
-    </div>
-    <div class="well">
-        <div class="control-group">
-            <label class="control-label">{% trans "Product class" %}</label>
-            <div class="controls">
-                <select id="select01">
-                    <option>{{ product.product_class }}</option>
-                </select>
-            </div>
-        </div>
-        {% for field in form %}
-            {% if 'attr' in field.id_for_label %}
-            <div class="control-group {% for error in field.errors %}error{% endfor %}">
-                {% if field.is_hidden %}
-                {{ field }}
-                {% else %}
-                <label for="{{ field.auto_id }}" class="control-label {% if field.field.required %}required{% endif %}">{{ field.label }}{% if field.field.required %} <span>*</span>{% endif %}</label>
-                <div class="controls">
-                    {{ field }}
-                    {% for error in field.errors %}
-                    <span class="help-block">
-                        {{ error }}
-                    </span>
-                    {% endfor %}
-                    {% if field.help_text %}
-                    <span class='help-block'>
-                        {{ field.help_text }}
-                    </span>
-                    {% endif %}
-                </div>
-                {% endif %}
-            </div>
-            {% endif %}
-        {% endfor %}
-    </div>
-    
-    <div class="table-header">
-        <h3>{% trans "Category" %}</h3>
-    </div>
-    <div class="well form-inline"> 
-        {{ category_formset.management_form }}
-		{{ category_formset.non_form_errors }}
-        {% for category_form in category_formset %}
-            {% include "partials/form_fields_inline.html" with form=category_form %}
-        {% endfor %}
-    </div>
-</div>
+<form action="." method="post" class="form-stacked wysiwyg fixed-actions" enctype="multipart/form-data" data-behaviour="affix-nav-errors">
+    {% csrf_token %}
 
-<div class="table-header">
-    <h3>{% trans "Upload, change or remove images" %}</h3>
-</div>
-<div class="well">
-    {{ image_formset.management_form }}
-    {{ image_formset.non_form_errors }}
-    <ol class='upload-image'>
-        {% for image_form in image_formset %}
-            {% include "dashboard/partials/product_images.html" with form=image_form %}
-        {% endfor %}
-    </ol>
-</div>
-
-<div class="table-header">
-    <h3>{% trans "Stock and price information" %}</h3>
-</div>
-<div class="well stock-pricing">
-    {{ stockrecord_form.non_field_errors }}
     <div class="row-fluid">
         <div class="span3">
-            <h4>{% trans "Partner" %}</h4>
-            {% for field in stockrecord_form %}
-                {% if "partner" in field.id_for_label %}
-                    {% include "dashboard/partials/stock_info.html" %}
-                {% endif %}
-            {% endfor %}
+            <div data-spy="affix" class="affix-top" data-offset-top="200">
+                <div class="table-header">
+                    <h3>{% trans "Sections" %}</h3>
+                </div>
+                <ul class="nav nav-list bs-docs-sidenav" id="product_update_tabs">
+                    <li class="active"><a href="#product_details">Product details</a></li>
+                    <li><a href="#product_attributes">Product attributes</a></li>
+                    <li><a href="#product_category">Product category</a></li>
+                    <li><a href="#product_images">Product images</a></li>
+                    <li><a href="#product_stock">Product stock</a></li>
+                </ul>
+            </div>
         </div>
-        <div class="span3">
-            <h4>{% trans "Price" %}</h4>
-            {% for field in stockrecord_form %}
-                {% if "price" in field.id_for_label %}
-                    {% include "dashboard/partials/stock_info.html" %}
-                {% endif %}
-            {% endfor %}
-        </div>
-        <div class="span3">
-            <h4>{% trans "Stock levels" %}</h4>
-            {% for field in stockrecord_form %}
-                {% if "stock" in field.id_for_label %}
-                    {% include "dashboard/partials/stock_info.html" %}
-                {% endif %}
-            {% endfor %}
-        </div>
-    </div>
-</div>
+        <div class="span9">
+            <div class="tab-content">
+                <div class="tab-pane active" id="product_details">
+                    <div class="table-header">
+                        <h3>{% trans "Product Details" %}</h3>
+                    </div>
+                    <div class="well product-details">
+                        <span class="help-block">{{ form.non_field_errors }}</span>
+                        {% for field in form %}
+                        {% if field.is_hidden %}
+                        {{ field }}
+                        {% endif %}
+                        {% if 'attr' not in field.id_for_label %}
+                        <div class="control-group {% for error in field.errors %}error{% endfor %}">
+                            {% if field.is_hidden %}
+                            {{ field }}
+                            {% else %}
+                            <label for="{{ field.auto_id }}" class="control-label {% if field.field.required %}required{% endif %}">{{ field.label }}{% if field.field.required %} <span>*</span>{% endif %}</label>
+                            <div class="controls">
+                                {{ field }}
+                                {% for error in field.errors %}
+                                <span class="help-block">
+                                    {{ error }}
+                                </span>
+                                {% endfor %}
+                                {% if field.help_text %}
+                                <span class='help-block'>
+                                    {{ field.help_text }}
+                                </span>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
 
-<div class="form-actions control-group">
-    <div class="pull-right">
-        <a href="{% url dashboard:catalogue-product-list %}">{% trans "Cancel" %}</a> {% trans "or" %} <button class="btn btn-primary btn-large" type="submit">{% trans "Save Product" %}</button>
+                <div class="tab-pane" id="product_attributes">
+                    <div class="table-header">
+                        <h3>{% trans "Product Attributes" %}</h3>
+                    </div>
+                    <div class="well">
+                        <div class="control-group">
+                            <label class="control-label">{% trans "Product class" %}</label>
+                            <div class="controls">
+                                <select id="select01">
+                                    <option>{{ product.product_class }}</option>
+                                </select>
+                            </div>
+                        </div>
+                        {% for field in form %}
+                        {% if 'attr' in field.id_for_label %}
+                        <div class="control-group {% for error in field.errors %}error{% endfor %}">
+                            {% if field.is_hidden %}
+                            {{ field }}
+                            {% else %}
+                            <label for="{{ field.auto_id }}" class="control-label {% if field.field.required %}required{% endif %}">{{ field.label }}{% if field.field.required %} <span>*</span>{% endif %}</label>
+                            <div class="controls">
+                                {{ field }}
+                                {% for error in field.errors %}
+                                <span class="help-block">
+                                    {{ error }}
+                                </span>
+                                {% endfor %}
+                                {% if field.help_text %}
+                                <span class='help-block'>
+                                    {{ field.help_text }}
+                                </span>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="tab-pane" id="product_category">
+                    <div class="table-header">
+                        <h3>{% trans "Category" %}</h3>
+                    </div>
+                    <div class="well"> 
+                        <div class="form-inline">
+                            {{ category_formset.management_form }}
+                            {{ category_formset.non_form_errors }}
+                            {% for category_form in category_formset %}
+                            {% include "partials/form_fields_inline.html" with form=category_form %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div> 
+
+                <div class="tab-pane" id="product_images">
+                    <div class="table-header">
+                        <h3>{% trans "Upload, change or remove images" %}</h3>
+                    </div>
+                    <div class="well">
+                        {{ image_formset.management_form }}
+                        {{ image_formset.non_form_errors }}
+                        <ol class='upload-image'>
+                            {% for image_form in image_formset %}
+                            {% include "dashboard/partials/product_images.html" with form=image_form %}
+                            {% endfor %}
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="tab-pane" id="product_stock">
+                    <div class="table-header">
+                        <h3>{% trans "Stock and price information" %}</h3>
+                    </div>
+                    <div class="well stock-pricing">
+                        {{ stockrecord_form.non_field_errors }}
+                        <div class="row-fluid">
+                            <div class="span3">
+                                <h4>{% trans "Partner" %}</h4>
+                                {% for field in stockrecord_form %}
+                                {% if "partner" in field.id_for_label %}
+                                {% include "dashboard/partials/stock_info.html" %}
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div class="span3">
+                                <h4>{% trans "Price" %}</h4>
+                                {% for field in stockrecord_form %}
+                                {% if "price" in field.id_for_label %}
+                                {% include "dashboard/partials/stock_info.html" %}
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div class="span3">
+                                <h4>{% trans "Stock levels" %}</h4>
+                                {% for field in stockrecord_form %}
+                                {% if "stock" in field.id_for_label %}
+                                {% include "dashboard/partials/stock_info.html" %}
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    {% if product %}
-        <a class="btn btn-success btn-large" href="{{ product.get_absolute_url }}">{% trans "View on site" %}</a>
-    {% endif %}
-</div>
+
+    <div class="fixed-actions-group">
+        <div class="form-actions">
+            <div class="pull-right">
+                <a href="{% url dashboard:catalogue-product-list %}">{% trans "Cancel" %}</a> {% trans "or" %} <button class="btn btn-primary btn-large" type="submit">{% trans "Save Product" %}</button>
+            </div>
+            {% if product %}
+            <a class="btn btn-success btn-large" href="{{ product.get_absolute_url }}">{% trans "View on site" %}</a>
+            {% endif %}
+        </div>
+    </div>
 </form>
 {% endblock dashboard_content %}

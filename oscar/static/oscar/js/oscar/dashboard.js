@@ -35,6 +35,18 @@ oscar.dashboard = {
             }
             return false;
         });
+        
+        //Add tabs for product update page
+        $('#product_update_tabs a').click(function (e) {
+          e.preventDefault();
+          $(this).tab('show');
+        });
+        
+        //Adds error icon if there are erros in the product form
+        $('[data-behaviour="affix-nav-errors"] .errorlist').add('[data-behaviour="affix-nav-errors"] .error').each(function(){
+          var productErrorListener = $(this).closest('.tab-pane').attr('id');
+          $('[data-spy="affix"] a[href="#' + productErrorListener + '"]').append('<i class="icon-info-sign pull-right"></i>');
+        });
 
         oscar.dashboard.filereader.init();
     },
