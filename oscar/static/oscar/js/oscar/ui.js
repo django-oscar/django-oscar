@@ -93,6 +93,7 @@ $(document).ready(function()
           .after('<p class=\"star ' + ave_rating + '\">' + ave_rating + ' star(s) by user reviews. <a href=\"#reviews\">Add review</a></p>')
           .remove();
     });
+
     // Product star rating each review -- must improve this in python
     $('.review').each(function()
     {
@@ -144,9 +145,6 @@ $(document).ready(function()
     $('#myCarousel').carousel({
         interval: 6000
     });
-    
-    // This activates the Typeahead function in the search  
-    $('.typeahead').typeahead();
 
     // Acordion - remove the first in the list as it is duplication.
     var n = $('.accordion dt').length;
