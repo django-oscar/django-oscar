@@ -43,8 +43,8 @@ oscar.dashboard = {
         });
         
         //Adds error icon if there are erros in the product form
-        $('[data-behaviour="affix-nav-errors"] .errorlist').add('[data-behaviour="affix-nav-errors"] .error').each(function(){
-          var productErrorListener = $(this).closest('.tab-pane').attr('id');
+        $('[data-behaviour="affix-nav-errors"] .tab-pane').each(function(){
+          var productErrorListener = $(this).find('[class*="error"]').closest('.tab-pane').attr('id');
           $('[data-spy="affix"] a[href="#' + productErrorListener + '"]').append('<i class="icon-info-sign pull-right"></i>');
         });
 
