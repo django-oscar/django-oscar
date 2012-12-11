@@ -19,23 +19,21 @@ class TestAnAdmin(testcases.WebTestCase):
         metadata_page = list_page.click('Create new offer')
         metadata_form = metadata_page.form
         metadata_form['name'] = "Test offer"
-        metadata_form['start_date'] = "2012-01-01"
-        metadata_form['end_date'] = "2014-01-01"
 
-        condition_page = metadata_form.submit().follow()
-        condition_form = condition_page.form
-        condition_form['range'] = self.range.id
-        condition_form['type'] = "Count"
-        condition_form['value'] = "3"
-
-        benefit_page = condition_form.submit().follow()
+        benefit_page = metadata_form.submit().follow()
         benefit_form = benefit_page.form
         benefit_form['range'] = self.range.id
         benefit_form['type'] = "Percentage"
         benefit_form['value'] = "25"
 
-        preview_page = benefit_form.submit().follow()
-        preview_page.form.submit()
+        condition_page = benefit_form.submit().follow()
+        condition_form = condition_page.form
+        condition_form['range'] = self.range.id
+        condition_form['type'] = "Count"
+        condition_form['value'] = "3"
+
+        restrictions_page = condition_form.submit().follow()
+        restrictions_page.form.submit()
 
         offers = models.ConditionalOffer.objects.all()
         self.assertEqual(1, len(offers))
@@ -54,14 +52,14 @@ class TestAnAdmin(testcases.WebTestCase):
         metadata_form = metadata_page.form
         metadata_form['name'] = "Offer A+"
 
-        condition_page = metadata_form.submit().follow()
-        condition_form = condition_page.form
-
-        benefit_page = condition_form.submit().follow()
+        benefit_page = metadata_form.submit().follow()
         benefit_form = benefit_page.form
 
-        preview_page = benefit_form.submit().follow()
-        preview_page.form.submit()
+        condition_page = benefit_form.submit().follow()
+        condition_form = condition_page.form
+
+        restrictions_page = condition_form.submit().follow()
+        restrictions_page.form.submit()
 
         models.ConditionalOffer.objects.get(name="Offer A+")
 
@@ -74,7 +72,7 @@ class TestAnAdmin(testcases.WebTestCase):
     def test_cannot_jump_to_intermediate_step(self):
         for url_name in ('dashboard:offer-condition',
                          'dashboard:offer-benefit',
-                         'dashboard:offer-preview'):
+                         'dashboard:offer-restrictions'):
             response = self.get(reverse(url_name))
             self.assertEqual(302, response.status_code)
 

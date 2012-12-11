@@ -44,7 +44,9 @@ class ConditionalOffer(models.Model):
         _("Name"), max_length=128, unique=True,
         help_text=_("This is displayed within the customer's basket"))
     slug = models.SlugField(_("Slug"), max_length=128, unique=True, null=True)
-    description = models.TextField(_("Description"), blank=True, null=True)
+    description = models.TextField(
+        _("Description"), blank=True, null=True,
+        help_text=_("This is displayed on the offer browsing page"))
 
     # Offers come in a few different types:
     # (a) Offers that are available to all customers on the site.  Eg a
