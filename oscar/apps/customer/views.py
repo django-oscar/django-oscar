@@ -434,12 +434,11 @@ class OrderLineView(DetailView, PostActionMixin):
                                     args=(int(self.kwargs['order_number']),)))
         basket = self.request.basket
 
-        line_available_to_reorder, warnings = line.is_available_to_reorder(basket,
+        line_available_to_reorder, reason = line.is_available_to_reorder(basket,
             self.request.user)
 
         if not line_available_to_reorder:
-            for warning in warnings:
-                messages.warning(self.request, warning)
+            messages.warning(self.request, reason)
             return
 
         # We need to pass response to the get_or_create... method
