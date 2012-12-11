@@ -5,54 +5,58 @@
     {# use length rather then count as the images get queried anyways #}
 
     {% if all_images|length > 1 %}
-    <script id="img-wrapper-tmpl" type="text/x-jquery-tmpl">
-        <div class="rg-image-wrapper">
-            <div class="rg-image-nav">
-				<a href="#" class="rg-image-nav-prev">{% trans "Previous Image" %}</a>
-				<a href="#" class="rg-image-nav-next">{% trans "Next Image" %}</a>
-            </div>
-            <div class="rg-image"></div>
-            <div class="rg-loading"></div>
-            <div class="rg-caption-wrapper">
-                <div class="rg-caption" style="display:none;">
-                    <p></p>
+        <script id="img-wrapper-tmpl" type="text/x-jquery-tmpl">
+            <div class="rg-image-wrapper">
+                <div class="rg-image-nav">
+                    <a href="#" class="rg-image-nav-prev">{% trans "Previous Image" %}</a>
+                    <a href="#" class="rg-image-nav-next">{% trans "Next Image" %}</a>
+                </div>
+                <div class="rg-image"></div>
+                <div class="rg-loading"></div>
+                <div class="rg-caption-wrapper">
+                    <div class="rg-caption" style="display:none;">
+                        <p></p>
+                    </div>
                 </div>
             </div>
-        </div>
-    </script>
-    <div id="rg-gallery" class="rg-gallery">
+        </script>
+
+        <div id="rg-gallery" class="rg-gallery">
             <div class="rg-thumbs">
-                    <!-- Elastislide Carousel Thumbnail Viewer -->
-                    <div class="es-carousel-wrapper">
-                            <div class="es-nav">
-								<span class="es-nav-prev">{% trans "Previous" %}</span>
-								<span class="es-nav-next">{% trans "Next" %}</span>
-                            </div>
-                            <div class="es-carousel">
-                                    <ul>
-                                        {% for image in all_images %}
-                                            <li>
-											{% thumbnail image.original "250x400" upscale=False as thumb %}
-                                                <a href="{{ image.original.url }}" rel="lightbox"> <img src="{{ thumb.url }}" data-large="{{ image.original.url }}" alt="image02" data-description="{% if image.caption %}{{ image.caption }}{% endif %}" /> </a>
-											{% endthumbnail %}
-                                            </li>
-										{% endfor %}
-                                    </ul>
-                            </div>
+                <!-- Elastislide Carousel Thumbnail Viewer -->
+                <div class="es-carousel-wrapper">
+                    <div class="es-nav">
+                        <span class="es-nav-prev">{% trans "Previous" %}</span>
+                        <span class="es-nav-next">{% trans "Next" %}</span>
                     </div>
-                    <!-- End Elastislide Carousel Thumbnail Viewer -->
+                    <div class="es-carousel">
+                        <ul>
+                            {% for image in all_images %}
+                            <li>
+                                {% thumbnail image.original "250x400" upscale=False as thumb %}
+                                <a href="{{ image.original.url }}" rel="lightbox"><img src="{{ thumb.url }}" data-large="{{ image.original.url }}" alt="image02" data-description="{% if image.caption %}{{ image.caption }}{% endif %}" /> </a>
+                                {% endthumbnail %}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
             </div><!-- rg-thumbs -->
-    </div><!-- rg-gallery -->
+        </div><!-- rg-gallery -->
 
     {% else %}
+
+        {# Only one image to show #}
+
 		{% with image=product.primary_image %}
 		    {% thumbnail image.original "400x400" upscale=False as thumb %}
 			{% if not image.is_missing %}
-			<a href="{{ image.original.url }}" rel="lightbox"><img src="{{ thumb.url }}" data-large="{{ image.original.url }}" alt="image02" data-description="{% if image.caption %}{{ image.caption }}{% endif %}" /></a>
+                <a href="{{ image.original.url }}" rel="lightbox"><img src="{{ thumb.url }}" data-large="{{ image.original.url }}" alt="image02" data-description="{% if image.caption %}{{ image.caption }}{% endif %}" /></a>
 			{% else %}
-			<img src="{{ thumb.url }}" alt="image02" />
+                <img src="{{ thumb.url }}" alt="image02" />
 			{% endif %}
 			{% endthumbnail %}
 		{% endwith %}
+
     {% endif %}
 {% endwith %}
