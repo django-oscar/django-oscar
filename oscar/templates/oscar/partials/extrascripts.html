@@ -1,12 +1,6 @@
+{# These scripts are included on every page - use sparingly! #}
+
 <!-- Elastislide carousel js -->
 <script src="{{ STATIC_URL }}oscar/js/elastislide/jquery.elastislide.js" type="text/javascript" charset="utf-8"></script>    
-<!-- Responsive gallery js -->
-{% if product %}
-<script src="{{ STATIC_URL }}oscar/js/colorbox/jquery.colorbox-min.js" type="text/javascript" charset="utf-8"></script> 
-    {% if product.images.all.count > 1 %}
-        <script src="{{ STATIC_URL }}oscar/js/responsivegallery/jquery.tmpl.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="{{ STATIC_URL }}oscar/js/responsivegallery/gallery.js" type="text/javascript" charset="utf-8"></script>
-    {% endif %}
-{% endif %}
-<!-- Front end js -->
+
 <script src="{{ STATIC_URL }}oscar/js/oscar/ui.js" type="text/javascript" charset="utf-8"></script>
