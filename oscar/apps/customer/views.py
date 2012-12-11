@@ -38,6 +38,7 @@ ProductAlert = get_model('customer', 'ProductAlert')
 
 class LogoutView(RedirectView):
     url = '/'
+    permanent = False
 
     def get(self, request, *args, **kwargs):
         auth_logout(request)
