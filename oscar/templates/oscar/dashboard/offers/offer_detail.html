@@ -39,12 +39,6 @@
 
 {% block dashboard_content %}
 
-    {% if offer.is_available %}
-        <div class="alert alert-success">{% trans "Offer currently available" %}</div>
-    {% else %}
-        <div class="alert alert-error">{% trans "Offer not available due to restrictions!" %}</div>
-    {% endif %}
-
     <table class="table table-bordered">
         <tr>
             <td>{% trans "Total cost:" %} <strong>{{ offer.total_discount|currency }}</strong></td>
@@ -62,7 +56,17 @@
             <tr>
                 <th>{% trans "Name" %}</th>
                 <td>{{ offer.name }}</td>
-                <td rowspan="2"><a id="edit_metadata" href="{% url dashboard:offer-metadata offer.pk %}" class="btn">Edit</a></td>
+                <td rowspan="3"><a id="edit_metadata" href="{% url dashboard:offer-metadata offer.pk %}" class="btn">Edit</a></td>
+            </tr>
+            <tr>
+                <th>{% trans "Status" %}</th>
+                <td>
+                    {% if offer.is_available %}
+                        <span class="label label-success">{% trans "Offer currently available" %}</span>
+                    {% else %}
+                        <span class="label label-important">{% trans "Offer not available due to restrictions!" %}</span>
+                    {% endif %}
+                </td>
             </tr>
             <tr>
                 <th>{% trans "Description" %}</th>
@@ -83,9 +87,9 @@
                 <td>
                     {% for restriction in offer.availability_restrictions %}
                         {% if not restriction.is_satisfied %}
-                        <label class="label label-important">
+                        <span class="label label-important">
                             {{ restriction.description }}
-                        </label>
+                        </span>
                         {% else %}
                             {{ restriction.description }}</br>
                         {% endif %}
