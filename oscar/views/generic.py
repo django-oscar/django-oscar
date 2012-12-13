@@ -1,6 +1,9 @@
-from django.utils.encoding import smart_str
+import os
+
+from django.conf import settings
 from django.contrib import messages
 from django.http import HttpResponseRedirect
+from django.utils.encoding import smart_str
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -85,3 +88,30 @@ class BulkEditMixin(object):
 
     def get_object_dict(self, ids):
         return self.model.objects.in_bulk(ids)
+
+
+class CountersMixin(object):
+    """Allows easily override per view list of templates for counters."""
+    counters_templates_prefix = 'oscar/partials/'
+
+    def get_context_data(self, **kwargs):
+        context = super(CountersMixin, self).get_context_data(**kwargs)
+        context['counters_templates'] = self.get_counters_list()
+        context['counters_settings'] = self.get_counters_settings()
+        return context
+
+    def get_counters_list(self):
+        counters_templates = settings.OSCAR_COUNTERS_TEMPLATES
+
+        prefix = self.get_counters_templates_prefix()
+        if prefix:
+            counters_templates = [
+                os.path.join(prefix, tmpl) for tmpl in counters_templates]
+
+        return counters_templates
+
+    def get_counters_templates_prefix(self):
+        return self.counters_templates_prefix
+
+    def get_counters_settings(self):
+        return settings.OSCAR_COUNTERS_SETTINGS

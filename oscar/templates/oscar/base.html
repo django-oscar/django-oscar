@@ -31,10 +31,9 @@
         {% block layout %}{% endblock %}
 
         {% block tracking %}
-            {# Default to using Google analytics #}
-            {% if google_analytics_id %}
-                {% include 'partials/google_analytics.html' %}
-            {% endif %}
+            {% for template in counters_templates %}
+                {% include template %}
+            {% endfor %}
         {% endblock %}
 
         {# In production, you should collate and minify these scripts using django-compressor or something similar #}

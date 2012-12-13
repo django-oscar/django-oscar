@@ -10,6 +10,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from extra_views import ModelFormSetView
 from oscar.apps.basket.signals import basket_addition, voucher_addition
 from oscar.core.loading import get_class, get_classes
+from oscar.views import generic
+
+
 Applicator = get_class('offer.utils', 'Applicator')
 BasketLineForm, AddToBasketForm, BasketVoucherForm, \
         SavedLineFormSet, SavedLineForm, ProductSelectionForm = get_classes(
@@ -46,7 +49,7 @@ def apply_messages(offers_before, request, default_msg=None):
         messages.info(request, default_msg)
 
 
-class BasketView(ModelFormSetView):
+class BasketView(generic.CountersMixin, ModelFormSetView):
     model = get_model('basket', 'Line')
     basket_model = get_model('basket', 'Basket')
     form_class = BasketLineForm
@@ -178,7 +181,7 @@ class BasketView(ModelFormSetView):
         return super(BasketView, self).formset_invalid(formset)
 
 
-class BasketAddView(FormView):
+class BasketAddView(generic.CountersMixin, FormView):
     """
     Handles the add-to-basket operation, shouldn't be accessed via
     GET because there's nothing sensible to render.
@@ -255,7 +258,7 @@ class BasketAddView(FormView):
             self.request.META.get('HTTP_REFERER', reverse('basket:summary')))
 
 
-class VoucherAddView(FormView):
+class VoucherAddView(generic.CountersMixin, FormView):
     form_class = BasketVoucherForm
     voucher_model = get_model('voucher', 'voucher')
     add_signal = voucher_addition
@@ -333,7 +336,7 @@ class VoucherAddView(FormView):
         return HttpResponseRedirect(reverse('basket:summary') + '#voucher')
 
 
-class VoucherRemoveView(View):
+class VoucherRemoveView(generic.CountersMixin, View):
     voucher_model = get_model('voucher', 'voucher')
 
     def get(self, request, *args, **kwargs):
@@ -358,7 +361,7 @@ class VoucherRemoveView(View):
         return HttpResponseRedirect(reverse('basket:summary'))
 
 
-class SavedView(ModelFormSetView):
+class SavedView(generic.CountersMixin, ModelFormSetView):
     model = get_model('basket', 'line')
     basket_model = get_model('basket', 'basket')
     formset_class = SavedLineFormSet

@@ -151,7 +151,5 @@
 {% endblock content %}
 
 {% block extratracking %}
-    {% if google_analytics_id %}
-        {% include 'partials/google_analytics_transaction.html' %}
-    {% endif %}
+    {% include 'partials/google_analytics_transaction.html' %}
 {% endblock %}
