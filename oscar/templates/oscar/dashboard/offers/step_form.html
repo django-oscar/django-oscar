@@ -58,10 +58,7 @@
         <div class="{% if session_offer %}span6{% else %}span9{% endif %}">
             <form action="." method="post" class="form-stacked wysiwyg fixed-actions">
                 <div class="table-header">
-                    {% comment %}
-                        Need dynamic content here for the step titles
-                    {% endcomment %}
-                    <h3>Step</h3>
+                    <h3>{{ title }}</h3>
                 </div>
                 <div class="well">
                     {% csrf_token %}
@@ -70,7 +67,6 @@
                         {% include "partials/form_fields.html" with form=form %}
                     {% endblock %}
                     {% block form_extradata %}{% endblock %}
-                    
                 </div>
                 {% block form_actions %}
                 
