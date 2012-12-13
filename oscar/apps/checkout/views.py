@@ -6,11 +6,14 @@ from django.contrib import messages
 from django.contrib.auth import login
 from django.db.models import get_model
 from django.utils.translation import ugettext as _
-from django.views.generic import DetailView, TemplateView, FormView, \
-                                 DeleteView, UpdateView, CreateView
+from django.views.generic import (
+    DetailView, TemplateView, FormView, DeleteView, UpdateView, CreateView)
 
 from oscar.apps.shipping.methods import NoShippingRequired
 from oscar.core.loading import get_class, get_classes
+from oscar.views import generic
+
+
 ShippingAddressForm, GatewayForm = get_classes('checkout.forms', ['ShippingAddressForm', 'GatewayForm'])
 OrderTotalCalculator = get_class('checkout.calculators', 'OrderTotalCalculator')
 CheckoutSessionData = get_class('checkout.utils', 'CheckoutSessionData')
@@ -40,7 +43,7 @@ CommunicationEventType = get_model('customer', 'CommunicationEventType')
 logger = logging.getLogger('oscar.checkout')
 
 
-class IndexView(CheckoutSessionMixin, FormView):
+class IndexView(generic.CountersMixin, CheckoutSessionMixin, FormView):
     """
     First page of the checkout.  We prompt user to either sign in, or
     to proceed as a guest (where we still collect their email address).
@@ -163,7 +166,7 @@ class ShippingAddressView(CheckoutSessionMixin, FormView):
         return reverse('checkout:shipping-method')
 
 
-class UserAddressCreateView(CheckoutSessionMixin, CreateView):
+class UserAddressCreateView(generic.CountersMixin, CheckoutSessionMixin, CreateView):
     """
     Add a USER address to the user's addressbook.
 
@@ -190,7 +193,7 @@ class UserAddressCreateView(CheckoutSessionMixin, CreateView):
         return HttpResponseRedirect(reverse('checkout:shipping-address'))
 
 
-class UserAddressUpdateView(CheckoutSessionMixin, UpdateView):
+class UserAddressUpdateView(generic.CountersMixin, CheckoutSessionMixin, UpdateView):
     """
     Update a user address
     """
@@ -210,7 +213,7 @@ class UserAddressUpdateView(CheckoutSessionMixin, UpdateView):
         return reverse('checkout:shipping-address')
 
 
-class UserAddressDeleteView(CheckoutSessionMixin, DeleteView):
+class UserAddressDeleteView(generic.CountersMixin, CheckoutSessionMixin, DeleteView):
     """
     Delete an address from a user's addressbook.
     """
@@ -229,7 +232,7 @@ class UserAddressDeleteView(CheckoutSessionMixin, DeleteView):
 # ===============
 
 
-class ShippingMethodView(CheckoutSessionMixin, TemplateView):
+class ShippingMethodView(generic.CountersMixin, CheckoutSessionMixin, TemplateView):
     """
     View for allowing a user to choose a shipping method.
 
@@ -316,7 +319,7 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
 # ==============
 
 
-class PaymentMethodView(CheckoutSessionMixin, TemplateView):
+class PaymentMethodView(generic.CountersMixin, CheckoutSessionMixin, TemplateView):
     """
     View for a user to choose which payment method(s) they want to use.
 
@@ -353,7 +356,7 @@ class PaymentMethodView(CheckoutSessionMixin, TemplateView):
 # ================
 
 
-class PaymentDetailsView(OrderPlacementMixin, TemplateView):
+class PaymentDetailsView(generic.CountersMixin, OrderPlacementMixin, TemplateView):
     """
     For taking the details of payment and creating the order
 
@@ -597,7 +600,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
 # =========
 
 
-class ThankYouView(DetailView):
+class ThankYouView(generic.CountersMixin, DetailView):
     """
     Displays the 'thank you' page which summarises the order just submitted.
     """

@@ -7,18 +7,21 @@ from django.db.models import get_model
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import get_classes
+from oscar.views import generic
+
+
 SignedInUserProductReviewForm, AnonymousUserProductReviewForm, VoteForm = get_classes(
     'catalogue.reviews.forms', ['SignedInUserProductReviewForm', 'AnonymousUserProductReviewForm', 'VoteForm'])
 Vote = get_model('reviews', 'vote')
 
 
-class CreateProductReview(CreateView):
+class CreateProductReview(generic.CountersMixin, CreateView):
     template_name = "reviews/add_review.html"
     model = get_model('reviews', 'productreview')
     product_model = get_model('catalogue', 'product')
     review_form = SignedInUserProductReviewForm
     anonymous_review_form = AnonymousUserProductReviewForm
-    
+
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated():
             product = self.get_product()
@@ -28,21 +31,21 @@ class CreateProductReview(CreateView):
                 return HttpResponseRedirect(product.get_absolute_url())
             except self.model.DoesNotExist:
                 pass
-        return super(CreateProductReview, self).get(request, *args, **kwargs)        
-    
+        return super(CreateProductReview, self).get(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super(CreateProductReview, self).get_context_data(**kwargs)
         context['product'] = self.get_product()
         return context
-    
+
     def get_product(self):
         return get_object_or_404(self.product_model, pk=self.kwargs['product_pk'])
-    
+
     def get_form_class(self):
         if not self.request.user.is_authenticated():
             return self.anonymous_review_form
         return self.review_form
-    
+
     def get_form_kwargs(self):
         kwargs = super(CreateProductReview, self).get_form_kwargs()
         review = self.model(product=self.get_product())
@@ -50,7 +53,7 @@ class CreateProductReview(CreateView):
             review.user = self.request.user
         kwargs['instance'] = review
         return kwargs
-    
+
     def get_success_url(self):
         messages.success(self.request, _("Thank you for reviewing this product"))
         return self.object.product.get_absolute_url()
@@ -61,14 +64,14 @@ class CreateProductReviewComplete(DetailView):
     context_object_name = 'review'
     model = get_model('reviews', 'productreview')
     product_model = get_model('catalogue', 'product')
-    
+
     def get_context_data(self, **kwargs):
         context = super(CreateProductReviewComplete, self).get_context_data(**kwargs)
         context['product'] = get_object_or_404(self.product_model, pk=self.kwargs['product_pk'])
-        return context    
+        return context
 
 
-class ProductReviewDetail(DetailView):
+class ProductReviewDetail(generic.CountersMixin, DetailView):
     """
     Places each review on its own page
     """
@@ -76,13 +79,13 @@ class ProductReviewDetail(DetailView):
     context_object_name = 'review'
     model = get_model('reviews', 'productreview')
     product_model = get_model('catalogue', 'product')
-    
+
     def get_context_data(self, **kwargs):
         context = super(ProductReviewDetail, self).get_context_data(**kwargs)
         context['product'] = get_object_or_404(self.product_model, pk=self.kwargs['product_pk'])
         return context
-    
-    def post(self, request, *args, **kwargs ):
+
+    def post(self, request, *args, **kwargs):
         review = self.get_object()
         response = HttpResponseRedirect(request.META.get('HTTP_REFERER',
                                                          review.get_absolute_url()))
@@ -106,26 +109,26 @@ class ProductReviewDetail(DetailView):
             messages.info(request, _("We couldn't process your vote"))
         return response
 
-    
-class ProductReviewList(ListView):
+
+class ProductReviewList(generic.CountersMixin, ListView):
     """
     A list of reviews for a particular product
      The review browsing page allows reviews to be sorted by score, or recency.
-    """    
+    """
     template_name = 'reviews/reviews.html'
     context_object_name = "reviews"
     model = get_model('reviews', 'productreview')
-    product_model = get_model('catalogue', 'product')    
+    product_model = get_model('catalogue', 'product')
     paginate_by = 20
-     
+
     def get_queryset(self):
         qs = self.model.approved.filter(product=self.kwargs['product_pk'])
         if 'sort_by' in self.request.GET and self.request.GET['sort_by'] == 'score':
             return qs.order_by('-score')
         return qs.order_by('-date_created')
-     
+
     def get_context_data(self, **kwargs):
         context = super(ProductReviewList, self).get_context_data(**kwargs)
-        context['product'] = get_object_or_404(self.product_model, pk=self.kwargs['product_pk'])  
-        context['avg_score'] = self.object_list.aggregate(Avg('score'))           
+        context['product'] = get_object_or_404(self.product_model, pk=self.kwargs['product_pk'])
+        context['avg_score'] = self.object_list.aggregate(Avg('score'))
         return context

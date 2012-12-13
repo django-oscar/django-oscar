@@ -5,6 +5,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import get_class
 from oscar.apps.catalogue.signals import product_viewed, product_search
+from oscar.views import generic
+
 
 Product = get_model('catalogue', 'product')
 ProductReview = get_model('reviews', 'ProductReview')
@@ -14,7 +16,7 @@ ProductAlertForm = get_class('customer.forms',
                              'ProductAlertForm')
 
 
-class ProductDetailView(DetailView):
+class ProductDetailView(generic.CountersMixin, DetailView):
     context_object_name = 'product'
     model = Product
     view_signal = product_viewed
@@ -103,7 +105,7 @@ def get_product_base_queryset():
     ).all()
 
 
-class ProductCategoryView(ListView):
+class ProductCategoryView(generic.CountersMixin, ListView):
     """
     Browse products in a given category
     """
@@ -139,7 +141,7 @@ class ProductCategoryView(ListView):
         ).distinct()
 
 
-class ProductListView(ListView):
+class ProductListView(generic.CountersMixin, ListView):
     """
     A list of products
     """

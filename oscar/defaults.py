@@ -68,5 +68,10 @@ OSCAR_MAX_BASKET_QUANTITY_THRESHOLD = None
 # Cookies
 OSCAR_COOKIES_DELETE_ON_LOGOUT = ['oscar_recently_viewed_products', ]
 
+# List of default temples which would be included by default in counters block.
+OSCAR_COUNTERS_TEMPLATES = ['google_analytics.html']
+# And list of default settings for them.
+OSCAR_COUNTERS_SETTINGS = {}  # e.g. {'google_analytics_id': 'ID_OF_GA', ...}
+
 OSCAR_SETTINGS = dict(
     [(k, v) for k, v in locals().items() if k.startswith('OSCAR_')])

@@ -7,13 +7,14 @@ from django import http
 
 from oscar.core.loading import get_class
 from oscar.apps.customer.alerts import utils
+from oscar.views import generic as oscar_generic
 
 Product = get_model('catalogue', 'Product')
 ProductAlert = get_model('customer', 'ProductAlert')
 ProductAlertForm = get_class('customer.forms', 'ProductAlertForm')
 
 
-class ProductAlertCreateView(generic.CreateView):
+class ProductAlertCreateView(oscar_generic.CountersMixin, generic.CreateView):
     """
     View to create a new product alert based on a registered user
     or an email address provided by an anonymous user.

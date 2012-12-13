@@ -7,10 +7,13 @@ from haystack.query import SearchQuerySet
 from haystack.views import FacetedSearchView
 
 from oscar.core.loading import import_module
+from oscar.views import generic
+
+
 product_models = import_module('catalogue.models', ['Product'])
 
 
-class SuggestionsView(View):
+class SuggestionsView(generic.CountersMixin, View):
     u"""
     Auto suggest view
 
@@ -28,7 +31,7 @@ class SuggestionsView(View):
         '''
         Creates a list of suggestions
         '''
-        query_term = self.request.GET['query_term'];
+        query_term = self.request.GET['query_term']
         query_set = SearchQuerySet().filter(text__contains=query_term)[:self.suggest_limit]
         context = []
         for item in query_set:
@@ -53,7 +56,7 @@ class SuggestionsView(View):
         return json.dumps(context)
 
 
-class MultiFacetedSearchView(FacetedSearchView):
+class MultiFacetedSearchView(generic.CountersMixin, FacetedSearchView):
     """
     Search view for multifaceted searches
     """
@@ -90,6 +93,6 @@ class MultiFacetedSearchView(FacetedSearchView):
                 facet = f.split(":")
                 extra['facets_applied'].append({
                     'facet': facet[0][:-6], # removing the _exact suffix that haystack uses for some reason
-                    'value' : facet[1].strip('"')
+                    'value': facet[1].strip('"'),
                 })
         return extra

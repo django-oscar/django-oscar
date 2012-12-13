@@ -3,10 +3,13 @@ from django.shortcuts import get_object_or_404
 from django.db.models import get_model
 
 from oscar.apps.offer.models import ConditionalOffer
+from oscar.views import generic
+
+
 Product = get_model('catalogue', 'Product')
 
 
-class OfferDetailView(ListView):
+class OfferDetailView(generic.CountersMixin, ListView):
     context_object_name = 'products'
     template_name = 'offer/detail.html'
     paginate_by = 20

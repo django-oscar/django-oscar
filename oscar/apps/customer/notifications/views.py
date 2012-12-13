@@ -6,12 +6,13 @@ from django import http
 from django.views import generic
 from django.db.models import get_model
 
-from oscar.views.generic import BulkEditMixin
+from oscar.views import generic as oscar_generic
+
 
 Notification = get_model('customer', 'Notification')
 
 
-class NotificationListView(generic.ListView):
+class NotificationListView(oscar_generic.CountersMixin, generic.ListView):
     model = Notification
     template_name = 'customer/notifications/list.html'
     context_object_name = 'notifications'
@@ -53,7 +54,7 @@ class ArchiveView(NotificationListView):
             location=self.model.ARCHIVE)
 
 
-class DetailView(generic.DetailView):
+class DetailView(oscar_generic.CountersMixin, generic.DetailView):
     model = Notification
     template_name = 'customer/notifications/detail.html'
     context_object_name = 'notification'
@@ -63,7 +64,7 @@ class DetailView(generic.DetailView):
             recipient=self.request.user)
 
 
-class UpdateView(BulkEditMixin, generic.RedirectView):
+class UpdateView(oscar_generic.BulkEditMixin, generic.RedirectView):
     model = Notification
     actions = ('archive', 'delete')
     checkbox_object_name = 'notification'

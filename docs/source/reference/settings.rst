@@ -240,6 +240,25 @@ OSCAR_UPLOAD_ROOT
 
 Default: ``/tmp``
 
+OSCAR_COUNTERS_TEMPLATES
+-----------------------
+
+Default: ``['google_analytics.html']``
+
+A list of templates to include in counters block. Defaul value is
+``['google_analytics.html']``, every record in the list would be prefixed by
+``CountersMixin.get_templates_prefix()``, which by default setted to
+``"oscar/partials/"``. Result would be available in the template context as
+``counters_templates`` variable.
+
+OSCAR_COUNTERS_SETTINGS
+-----------------------
+
+Default: ``{}``
+
+A dict with counters settings, e.g. ``{'google_analytics_id': 'GA-ID'}``.
+Available in the context as ``counters_settings``.
+
 Deprecated settings
 ===================
 
