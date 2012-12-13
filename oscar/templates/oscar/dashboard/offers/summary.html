@@ -1,34 +1,34 @@
 {% load i18n %}
 
-{% if session_offer %}
-<div class="pull-right">
-    <h4>{% trans "Offer summary" %}</h4>
+
+<div class="table-header">
+    <h3>{% trans "Offer summary" %}</h3>
+</div>
+<div class="well-stacked">
     {% if session_offer.name %}
         <div class="well">
-            <a href="{% if session_offer.pk %}{% url dashboard:offer-metadata session_offer.pk %}{% else %}{% url dashboard:offer-metadata %}{% endif %}" class="pull-right">{% trans "Edit" %}</a>
-            {% trans "Name" %}:<br/>
-            {{ session_offer.name }}
+            <a href="{% if session_offer.pk %}{% url dashboard:offer-metadata session_offer.pk %}{% else %}{% url dashboard:offer-metadata %}{% endif %}" class="btn pull-right">{% trans "Edit" %}</a>
+            <p><strong>{% trans "Name" %}:</strong><br /> {{ session_offer.name }}</p>
         </div>
     {% endif %}
     {% if session_offer.benefit %}
         <div class="well">
-            <a href="{% if session_offer.pk %}{% url dashboard:offer-benefit session_offer.pk %}{% else %}{% url dashboard:offer-benefit %}{% endif %}" class="pull-right">{% trans "Edit" %}</a>
-            {% trans "Incentive" %}:<br/>
-            {{ session_offer.benefit }}
+            <a href="{% if session_offer.pk %}{% url dashboard:offer-benefit session_offer.pk %}{% else %}{% url dashboard:offer-benefit %}{% endif %}" class="btn pull-right">{% trans "Edit" %}</a>
+            <p><strong>{% trans "Incentive" %}:</strong><br /> {{ session_offer.benefit }}</p>
+
         </div>
     {% endif %}
     {% if session_offer.condition %}
         <div class="well">
-            <a href="{% if session_offer.pk %}{% url dashboard:offer-condition session_offer.pk %}{% else %}{% url dashboard:offer-condition %}{% endif %}" class="pull-right">{% trans "Edit" %}</a>
-            {% trans "Condition" %}:<br/>
-            {{ session_offer.condition }}
+            <a href="{% if session_offer.pk %}{% url dashboard:offer-condition session_offer.pk %}{% else %}{% url dashboard:offer-condition %}{% endif %}" class="btn pull-right">{% trans "Edit" %}</a>
+            <p><strong>{% trans "Condition" %}:</strong><br/>{{ session_offer.condition }}</p>
         </div>
     {% endif %}
     {% if session_offer.pk %}
         <div class="well">
-            <a href="{% if session_offer.pk %}{% url dashboard:offer-restrictions session_offer.pk %}{% else %}{% url dashboard:offer-restrictions %}{% endif %}" class="pull-right">{% trans "Edit" %}</a>
-            {% trans "Restrictions" %}:<br/>
-            {% if offer.availability_restrictions %}
+            <a href="{% if session_offer.pk %}{% url dashboard:offer-restrictions session_offer.pk %}{% else %}{% url dashboard:offer-restrictions %}{% endif %}" class="btn pull-right">{% trans "Edit" %}</a>
+            <p><strong>{% trans "Restrictions" %}:</strong> <br/> {% if offer.availability_restrictions %}</p>
+
                 <ul>
                 {% for restriction in offer.availability_restrictions %}
                 <li>{{ restriction.description }}</li>
@@ -40,4 +40,3 @@
         </div>
     {% endif %}
 </div>
-{% endif %}

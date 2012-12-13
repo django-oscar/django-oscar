@@ -49,27 +49,45 @@
 {% endblock header %}
 
 {% block dashboard_content %}
+    <div class="row-fluid">
+        <div class="span3">
+            {% block progress %}
+                {% include 'dashboard/offers/progress.html' %}
+            {% endblock %}
+        </div>
+        <div class="{% if session_offer %}span6{% else %}span9{% endif %}">
+            <form action="." method="post" class="form-stacked wysiwyg fixed-actions">
+                <div class="table-header">
+                    <h3>{{ title }}</h3>
+                </div>
+                <div class="well">
+                    {% csrf_token %}
+                    <p>{% trans "Fields marked with * are mandatory." %}</p>
+                    {% block form_fields %}
+                        {% include "partials/form_fields.html" with form=form %}
+                    {% endblock %}
+                    {% block form_extradata %}{% endblock %}
+                </div>
+                {% block form_actions %}
 
-    {% block progress %}
-        {% include 'dashboard/offers/progress.html' %}
-    {% endblock %}
+                    <div class="fixed-actions-group">
+                        <div class="form-actions">
+                            <div class="pull-right">
+                                <button class="btn btn-primary" type="submit">{% block submittext %}{% trans "Continue" %}{% endblock %}</button>
+                            </div>
+                            <a class="btn" href="{% url dashboard:offer-list %}">{% trans "cancel" %}</a>
+                        </div>
+                    </div>
 
-    {% block summary %}
-        {% include 'dashboard/offers/summary.html' %}
-    {% endblock %}
-
-    <form action="." method="post" class="form-stacked wysiwyg">
-        {% csrf_token %}
-        <p>{% trans "Fields marked with * are mandatory." %}</p>
-        {% block form_fields %}
-            {% include "partials/form_fields.html" with form=form %}
-        {% endblock %}
-        {% block form_extradata %}{% endblock %}
-        {% block form_actions %}
-            <div class="form-actions">
-                <button class="btn btn-primary" type="submit">{% block submittext %}{% trans "Continue" %}{% endblock %}</button> {% trans "or" %}
-                <a href="{% url dashboard:offer-list %}">{% trans "cancel" %}</a>
-            </div>
-        {% endblock form_actions %}
-    </form>
+                {% endblock form_actions %}
+            </form>
+        </div>
+        {% if session_offer %}
+        <div class="span3">
+            {% block summary %}
+                {% include 'dashboard/offers/summary.html' %}
+            {% endblock %}
+        </div>
+        {% endif %}
+    </div>
 {% endblock dashboard_content %}
