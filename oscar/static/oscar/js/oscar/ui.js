@@ -122,10 +122,37 @@ var oscar = (function(o, $) {
         }
     };
 
+    o.responsive = {
+        init: function() {
+            var width = $(window).width();
+            if (width > 767) {
+                o.responsive.initNav();
+            }
+        },
+        initNav: function() {
+            var $sidebar = $('aside.span3'),
+                $browse = $('#browse > .dropdown-menu'),
+                $browseOpen = $browse.parent().find('> button[data-toggle]');
+            // Set width of nav dropdown on the homepage
+            $browse.css('width', $sidebar.outerWidth());
+            // Remove click on browse button if menu is currently open
+            if ($browseOpen.length < 1) {
+                $browse.parent().find('> a').on('click', function() {
+                    return false;
+                });
+                // Set margin top of aside allow space for open navigation
+                $sidebar.css({
+                    marginTop: $browse.outerHeight()
+                });
+            }
+        }
+    };
+
     o.init = function() {
         o.catalogue.init();
         o.forms.init();
         o.page.init();
+        o.responsive.init();
     };
 
     return o;
@@ -139,28 +166,6 @@ $(function(){oscar.init();});
 // into SRP methods.
 $(document).ready(function()
 {   
-    var window_width = $(window).width(), // Width of the window
-        $sidebar = $('aside.span3'), // Width of main navigation
-        $browse = $('#browse > .dropdown-menu'), // Height of main navigation
-        $browse_open = $browse.parent().find('> button[data-toggle]');
-
-    if (window_width > 767) {
-      // set width of nav dropdown on the homepage
-      $browse.css('width', $sidebar.outerWidth());
-      // Remove click on browse button if menu is currently open
-      if  ($browse_open.length < 1) {
-        $browse.parent().find('> a').on('click', function()
-        {
-          return false;
-        });
-        // set margin top of aside allow space for open navigation
-        $sidebar.css({
-          marginTop: $browse.outerHeight()
-        }); 
-      }
-    }
-    
-    
     //For IE - sets the width of a select in an overflow hidden container
     var selectBox = $('.product_pod select'),
         isIE = navigator.userAgent.toLowerCase().indexOf("msie");
