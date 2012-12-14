@@ -12,6 +12,13 @@ oscar.messages = {
     warning: function(msg) { oscar.messages.addMessage('warning', msg); },
     error: function(msg) { oscar.messages.addMessage('error:', msg); }
 };
+oscar.promotions = {
+    init: function() {
+        $('#myCarousel').carousel({
+            interval: 6000
+        });
+    }
+};
 oscar.notifications = {
     init: function() {
         $('a[data-behaviours~="archive"]').click(function() {
@@ -119,9 +126,6 @@ $(document).ready(function()
     }
     
     // This activates the promotional banner carousel
-    $('#myCarousel').carousel({
-        interval: 6000
-    });
 
     // Acordion - remove the first in the list as it is duplication.
     var n = $('.accordion dt').length;
