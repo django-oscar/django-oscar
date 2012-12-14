@@ -437,7 +437,7 @@ class ValueCondition(Condition):
                                           int(((value - value_of_matches) / price).quantize(Decimal(1),
                                                                                             ROUND_UP)))
                 value_of_matches += price * quantity_to_consume
-                quantity_to_consume -= already_consumed
+                quantity_to_consume -= min(already_consumed, quantity_to_consume)
                 line.consume(quantity_to_consume)
                 consumed_products.extend((line.product,) * int(quantity_to_consume))
             if value_of_matches >= value:
