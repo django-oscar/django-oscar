@@ -120,28 +120,6 @@ $(document).ready(function()
       }
     }
     
-    // This activates the promotional banner carousel
-    $('#myCarousel').carousel({
-        interval: 6000
-    });
-
-    // Acordion - remove the first in the list as it is duplication.
-    var n = $('.accordion dt').length;
-    if (n > 1) {
-        $('.accordion dt:first, .accordion dd:first,').hide();
-    }
-    // Acordion
-    $('.accordion dd').each(function(index) 
-    {
-        $(this).css('height', $(this).height());
-    });
-    $(".accordion dt").click(function(){
-        $(this).next("dd").slideToggle("slow").siblings("dd:visible").slideUp("slow");
-        $(this).toggleClass("open");
-        $(this).siblings("dt").removeClass("open");
-    });
-    $(".accordion dd").hide();
-
     /* scroll to sections */
     $('.top_page a').click(function (e) {
         var section = $(this).attr('href');
