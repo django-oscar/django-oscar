@@ -65,6 +65,7 @@ class ProductListView(generic.ListView):
 
 
 class ProductCreateRedirectView(generic.RedirectView):
+    permanent = False
 
     def get_redirect_url(self, **kwargs):
         product_class_id = self.request.GET.get('product_class', None)
