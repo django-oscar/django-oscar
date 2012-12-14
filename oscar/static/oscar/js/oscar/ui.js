@@ -44,6 +44,18 @@ oscar.forms = {
         $form.data('locked', true);
     }
 };
+oscar.account = {
+    init: function() {
+        if (document.location.hash) {
+            // Ensure the right tab is open if it is specified in the hash.
+            var hash = document.location.hash.substring(1),
+            $activeClass = $('.account-profile .tabbable'),
+            $li = $('a[href=#' + hash + ']').closest('li');
+            $activeClass.find('.active').removeClass('active');
+            $('#' + hash).add($li).addClass('active');
+        }
+    }
+};
 oscar.catalogue = {
     init: function() {
         // Product star rating -- must improve this in python -- this is 
