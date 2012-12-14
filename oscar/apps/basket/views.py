@@ -1,5 +1,7 @@
 from urlparse import urlparse
+
 from django.contrib import messages
+from django.shortcuts import render
 from django.core.urlresolvers import reverse, resolve
 from django.db.models import get_model
 from django.http import HttpResponseRedirect, Http404
@@ -156,6 +158,27 @@ class BasketView(ModelFormSetView):
         else:
             # Save changes to basket as per normal
             response = super(BasketView, self).formset_valid(formset)
+
+        # If AJAX submission, don't redirect but reload the basket content HTML
+        if self.request.is_ajax():
+            # Reload basket and apply offers again
+            self.request.basket = get_model('basket', 'Basket').objects.get(
+                id=self.request.basket.id)
+            Applicator().apply(self.request, self.request.basket)
+
+            # Reload formset - we have to remove the POST fields from the
+            # kwargs as, if they are left in, the formset won't construct
+            # correctly as there will be a state mismatch between the
+            # management form and the database.
+            kwargs = self.get_formset_kwargs()
+            del kwargs['data']
+            del kwargs['files']
+            formset = self.get_formset()(queryset=self.get_queryset(),
+                                         **kwargs)
+            ctx = self.get_context_data(formset=formset,
+                                        basket=self.request.basket)
+            return render(
+                self.request, 'basket/partials/basket_content.html', ctx)
 
         apply_messages(offers_before, self.request,
                        default_msg=_("Basket updated"))

@@ -24,7 +24,8 @@
             <div class="content">
                 {% block subheader %}{% endblock subheader %}
                 {% block flatpage %}{% endblock %}
-                {% block content %}{% endblock %}
+                {# Div exists for AJAX updates to entire content section #}
+                <div id="content_inner">{% block content %}{% endblock %}</div>
             </div>
         </div>
     </div>
