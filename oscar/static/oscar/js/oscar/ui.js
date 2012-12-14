@@ -105,10 +105,36 @@ oscar.page = {
         });
     }
 };
+oscar.responsive = {
+    init: function() {
+        var width = $(window).width();
+        if (width > 767) {
+            oscar.responsive.initNav();
+        }
+    },
+    initNav: function() {
+        var $sidebar = $('aside.span3'), 
+            $browse = $('#browse > .dropdown-menu'), 
+            $browseOpen = $browse.parent().find('> button[data-toggle]');
+        // Set width of nav dropdown on the homepage
+        $browse.css('width', $sidebar.outerWidth());
+        // Remove click on browse button if menu is currently open
+        if ($browseOpen.length < 1) {
+            $browse.parent().find('> a').on('click', function() {
+                return false;
+            });
+            // Set margin top of aside allow space for open navigation
+            $sidebar.css({
+                marginTop: $browse.outerHeight()
+            }); 
+        }
+    }
+};
 oscar.init = function() {
     oscar.catalogue.init();
     oscar.forms.init();
     oscar.page.init();
+    oscar.responsive.init();
 };
 $(function(){oscar.init();});
 
@@ -117,27 +143,6 @@ $(function(){oscar.init();});
 // into SRP methods.
 $(document).ready(function()
 {   
-    var window_width = $(window).width(), // Width of the window
-        $sidebar = $('aside.span3'), // Width of main navigation
-        $browse = $('#browse > .dropdown-menu'), // Height of main navigation
-        $browse_open = $browse.parent().find('> button[data-toggle]');
-
-    if (window_width > 767) {
-      // set width of nav dropdown on the homepage
-      $browse.css('width', $sidebar.outerWidth());
-      // Remove click on browse button if menu is currently open
-      if  ($browse_open.length < 1) {
-        $browse.parent().find('> a').on('click', function()
-        {
-          return false;
-        });
-        // set margin top of aside allow space for open navigation
-        $sidebar.css({
-          marginTop: $browse.outerHeight()
-        }); 
-      }
-    }
-    
     // Acordion - remove the first in the list as it is duplication.
     var n = $('.accordion dt').length;
     if (n > 1) {
