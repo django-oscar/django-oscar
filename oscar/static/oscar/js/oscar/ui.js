@@ -93,9 +93,22 @@ oscar.catalogue = {
         });
     }
 };
+oscar.page = {
+    init: function() {
+        // Scroll to sections 
+        $('.top_page a').click(function(e) {
+            var href = $(this).attr('href');
+            $('html, body').animate({
+                scrollTop: $(href).offset().top
+            }, 500); 
+            e.preventDefault();
+        });
+    }
+};
 oscar.init = function() {
     oscar.catalogue.init();
     oscar.forms.init();
+    oscar.page.init();
 };
 $(function(){oscar.init();});
 
@@ -125,8 +138,6 @@ $(document).ready(function()
       }
     }
     
-    // This activates the promotional banner carousel
-
     // Acordion - remove the first in the list as it is duplication.
     var n = $('.accordion dt').length;
     if (n > 1) {
@@ -144,31 +155,7 @@ $(document).ready(function()
     });
     $(".accordion dd").hide();
 
-    /* scroll to sections */
-    $('.top_page a').click(function (e) {
-        var section = $(this).attr('href');
-        var sectionPosition = Math.floor($(section).offset().top);
-        var currentPosition = Math.floor($(document).scrollTop());
-        // when scrolling downwards
-        if (sectionPosition > currentPosition) {
-            $('html, body').animate({
-                scrollTop: sectionPosition}, 500, function() {
-                $('html, body').animate({
-                    scrollTop: sectionPosition
-                });
-            });
-        }
-        // when scrolling upwards
-        else if (sectionPosition < currentPosition) {
-            $('html, body').animate({
-                scrollTop: sectionPosition}, 500, function() {
-                $('html, body').animate({
-                    scrollTop: sectionPosition
-                });
-            });         
-        }
-        e.preventDefault();
-    });
+
     
     //For IE - sets the width of a select in an overflow hidden container
     var selectBox = $('.product_pod select'),
