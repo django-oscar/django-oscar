@@ -323,7 +323,7 @@ class CountCondition(Condition):
         lines = lines or basket.all_lines()
         consumed_products = []
         consumed = consumed or {}
-        value = self.value - sum(consumed.values(), 0)
+        value = max(self.value - sum(consumed.values(), 0), 0)
         for line in lines:
             if self.range.contains_product(line.product):
                 quantity_to_consume = min(line.quantity_without_discount,
