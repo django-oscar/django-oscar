@@ -109,11 +109,30 @@ var oscar = (function(o, $) {
         }
     };
 
+    o.page = {
+        init: function() {
+            // Scroll to sections
+            $('.top_page a').click(function(e) {
+                var href = $(this).attr('href');
+                $('html, body').animate({
+                    scrollTop: $(href).offset().top
+                }, 500);
+                e.preventDefault();
+            });
+        }
+    };
+
+    o.init = function() {
+        o.catalogue.init();
+        o.forms.init();
+        o.page.init();
+    };
+
     return o;
 
 })(oscar || {}, jQuery);
 
-$(function(){oscar.forms.init();});
+$(function(){oscar.init();});
 
 
 // TODO - rewrite the below JS to git into the oscar object, splitting the functionality 
@@ -141,31 +160,6 @@ $(document).ready(function()
       }
     }
     
-    /* scroll to sections */
-    $('.top_page a').click(function (e) {
-        var section = $(this).attr('href');
-        var sectionPosition = Math.floor($(section).offset().top);
-        var currentPosition = Math.floor($(document).scrollTop());
-        // when scrolling downwards
-        if (sectionPosition > currentPosition) {
-            $('html, body').animate({
-                scrollTop: sectionPosition}, 500, function() {
-                $('html, body').animate({
-                    scrollTop: sectionPosition
-                });
-            });
-        }
-        // when scrolling upwards
-        else if (sectionPosition < currentPosition) {
-            $('html, body').animate({
-                scrollTop: sectionPosition}, 500, function() {
-                $('html, body').animate({
-                    scrollTop: sectionPosition
-                });
-            });         
-        }
-        e.preventDefault();
-    });
     
     //For IE - sets the width of a select in an overflow hidden container
     var selectBox = $('.product_pod select'),
