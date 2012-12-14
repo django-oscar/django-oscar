@@ -2,6 +2,11 @@
 Changelog
 =========
 
+0.4.2 - 2012-12-14
+------------------
+
+Nano-release to fix logout redirect bug
+
 0.4.1 - 2012-12-06
 ------------------
 
