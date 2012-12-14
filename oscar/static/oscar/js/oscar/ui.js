@@ -21,6 +21,14 @@ var oscar = (function(o, $) {
         error: function(msg) { o.messages.addMessage('error:', msg); }
     };
 
+    o.promotions = {
+        init: function() {
+            $('#myCarousel').carousel({
+                interval: 6000
+            });
+        }
+    };
+
     // Notifications inbox within 'my account' section.
     o.notifications = {
         init: function() {
