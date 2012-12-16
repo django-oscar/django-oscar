@@ -12,6 +12,13 @@ oscar.messages = {
     warning: function(msg) { oscar.messages.addMessage('warning', msg); },
     error: function(msg) { oscar.messages.addMessage('error:', msg); }
 };
+oscar.promotions = {
+    init: function() {
+        $('#myCarousel').carousel({
+            interval: 6000
+        });
+    }
+};
 oscar.notifications = {
     init: function() {
         $('a[data-behaviours~="archive"]').click(function() {
@@ -44,6 +51,18 @@ oscar.forms = {
         $form.data('locked', true);
     }
 };
+oscar.account = {
+    init: function() {
+        if (document.location.hash) {
+            // Ensure the right tab is open if it is specified in the hash.
+            var hash = document.location.hash.substring(1),
+            $activeClass = $('.account-profile .tabbable'),
+            $li = $('a[href=#' + hash + ']').closest('li');
+            $activeClass.find('.active').removeClass('active');
+            $('#' + hash).add($li).addClass('active');
+        }
+    }
+};
 oscar.catalogue = {
     init: function() {
         // Product star rating -- must improve this in python -- this is 
@@ -74,9 +93,48 @@ oscar.catalogue = {
         });
     }
 };
+oscar.page = {
+    init: function() {
+        // Scroll to sections 
+        $('.top_page a').click(function(e) {
+            var href = $(this).attr('href');
+            $('html, body').animate({
+                scrollTop: $(href).offset().top
+            }, 500); 
+            e.preventDefault();
+        });
+    }
+};
+oscar.responsive = {
+    init: function() {
+        var width = $(window).width();
+        if (width > 767) {
+            oscar.responsive.initNav();
+        }
+    },
+    initNav: function() {
+        var $sidebar = $('aside.span3'), 
+            $browse = $('#browse > .dropdown-menu'), 
+            $browseOpen = $browse.parent().find('> button[data-toggle]');
+        // Set width of nav dropdown on the homepage
+        $browse.css('width', $sidebar.outerWidth());
+        // Remove click on browse button if menu is currently open
+        if ($browseOpen.length < 1) {
+            $browse.parent().find('> a').on('click', function() {
+                return false;
+            });
+            // Set margin top of aside allow space for open navigation
+            $sidebar.css({
+                marginTop: $browse.outerHeight()
+            }); 
+        }
+    }
+};
 oscar.init = function() {
     oscar.catalogue.init();
     oscar.forms.init();
+    oscar.page.init();
+    oscar.responsive.init();
 };
 $(function(){oscar.init();});
 
@@ -85,27 +143,6 @@ $(function(){oscar.init();});
 // into SRP methods.
 $(document).ready(function()
 {   
-    var window_width = $(window).width(), // Width of the window
-        $sidebar = $('aside.span3'), // Width of main navigation
-        $browse = $('#browse > .dropdown-menu'), // Height of main navigation
-        $browse_open = $browse.parent().find('> button[data-toggle]');
-
-    if (window_width > 767) {
-      // set width of nav dropdown on the homepage
-      $browse.css('width', $sidebar.outerWidth());
-      // Remove click on browse button if menu is currently open
-      if  ($browse_open.length < 1) {
-        $browse.parent().find('> a').on('click', function()
-        {
-          return false;
-        });
-        // set margin top of aside allow space for open navigation
-        $sidebar.css({
-          marginTop: $browse.outerHeight()
-        }); 
-      }
-    }
-    
     /* scroll to sections */
     $('.top_page a').click(function (e) {
         var section = $(this).attr('href');
