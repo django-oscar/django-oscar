@@ -83,10 +83,9 @@ var oscar = (function(o, $) {
             // Product star rating -- must improve this in python -- this is
             // one of the worst things I have ever come across.  It will die in raging fire
             // very soon.
-            $('.product_pod, .span6, .promotion_single').each(function()
-            {
+            $('.product_pod, .span6, .promotion_single').each(function() {
                 var sum_total_reviews = $(this).find(".review_count li").length * 5,
-                    sum_rating_count = 0;
+                sum_rating_count = 0;
                 $(this).find('.review_count li').each(function() {
                     sum_rating_count += parseFloat($(this).text());
                 });
@@ -102,9 +101,7 @@ var oscar = (function(o, $) {
                 } else if (ave_rating <= 10) {
                     ave_rating = 'Five';
                 }
-                $(this).find('.review_count')
-                    .after('<p class=\"star ' + ave_rating + '\"></p>')
-                    .remove();
+                $(this).find('.review_count').after('<p class="star ' + ave_rating + '"></p>').remove();
             });
         }
     };
@@ -124,27 +121,40 @@ var oscar = (function(o, $) {
 
     o.responsive = {
         init: function() {
-            var width = $(window).width();
-            if (width > 767) {
+            if (o.responsive.isDesktop()) {
                 o.responsive.initNav();
+                o.responsive.initCarousel();
             }
         },
+        isDesktop: function() {
+            return document.body.clientWidth > 767;
+        },
         initNav: function() {
-            var $sidebar = $('aside.span3'),
-                $browse = $('#browse > .dropdown-menu'),
+            // Initial navigation for desktop
+            var $sidebar = $('aside.span3'), 
+                $browse = $('#browse > .dropdown-menu'), 
                 $browseOpen = $browse.parent().find('> button[data-toggle]');
-            // Set width of nav dropdown on the homepage
+            // Set width of nav dropdown to be same as sidebar
             $browse.css('width', $sidebar.outerWidth());
             // Remove click on browse button if menu is currently open
-            if ($browseOpen.length < 1) {
-                $browse.parent().find('> a').on('click', function() {
-                    return false;
-                });
+            if (!$browseOpen.length) {
+                $browse.parent().find('> a').off('click');
                 // Set margin top of aside allow space for open navigation
-                $sidebar.css({
-                    marginTop: $browse.outerHeight()
-                });
+                $sidebar.css({ marginTop: $browse.outerHeight() });
             }
+        },
+        initCarousel: function() {
+            $('.es-carousel-wrapper').each(function(){
+                var gallery = $(this).parent('.rg-thumbs').length;
+                // Don't apply this to the gallery carousel
+                if (gallery <= 0) {
+                    $(this).elastislide({
+                        imageW: 175,
+                        minItems: 4,
+                        onClick: true
+                    });
+                }
+            });
         }
     };
 
