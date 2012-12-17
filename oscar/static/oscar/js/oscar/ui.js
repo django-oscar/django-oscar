@@ -93,24 +93,24 @@ oscar.catalogue = {
         });
     }
 };
-oscar.page = {
-    init: function() {
-        // Scroll to sections 
-        $('.top_page a').click(function(e) {
-            var href = $(this).attr('href');
-            $('html, body').animate({
-                scrollTop: $(href).offset().top
-            }, 500); 
-            e.preventDefault();
-        });
-    }
-};
 oscar.responsive = {
     init: function() {
-        var width = $(window).width();
-        if (width > 767) {
-            oscar.responsive.initNav();
+      var sw = document.body.clientWidth,
+          breakpoint = 767,
+          mobile = true;
+          
+      checkMobile();
+      
+      //Check if Mobile
+      function checkMobile() {
+        mobile = (sw > breakpoint) ? false : true;
+        if (!mobile) { //If Not Mobile
+          oscar.responsive.initNav();
+          oscar.responsive.initCarousel();
+          } else { //Hide 
+
         }
+      }
     },
     initNav: function() {
         var $sidebar = $('aside.span3'), 
@@ -128,12 +128,25 @@ oscar.responsive = {
                 marginTop: $browse.outerHeight()
             }); 
         }
+    },
+    initCarousel: function() {
+      $('.es-carousel-wrapper').each(function(){
+        var gallery = $(this).parent('.rg-thumbs').length,
+            galleryCarousel = (gallery > 0) ? true : false;
+        //Don't apply this to the gallery carousel    
+        if (!galleryCarousel) {
+          $(this).elastislide({ 	
+            imageW: 175,
+            minItems: 4,
+            onClick:  true
+          });
+        }
+      });
     }
 };
 oscar.init = function() {
     oscar.catalogue.init();
     oscar.forms.init();
-    oscar.page.init();
     oscar.responsive.init();
 };
 $(function(){oscar.init();});
@@ -143,32 +156,6 @@ $(function(){oscar.init();});
 // into SRP methods.
 $(document).ready(function()
 {   
-    /* scroll to sections */
-    $('.top_page a').click(function (e) {
-        var section = $(this).attr('href');
-        var sectionPosition = Math.floor($(section).offset().top);
-        var currentPosition = Math.floor($(document).scrollTop());
-        // when scrolling downwards
-        if (sectionPosition > currentPosition) {
-            $('html, body').animate({
-                scrollTop: sectionPosition}, 500, function() {
-                $('html, body').animate({
-                    scrollTop: sectionPosition
-                });
-            });
-        }
-        // when scrolling upwards
-        else if (sectionPosition < currentPosition) {
-            $('html, body').animate({
-                scrollTop: sectionPosition}, 500, function() {
-                $('html, body').animate({
-                    scrollTop: sectionPosition
-                });
-            });         
-        }
-        e.preventDefault();
-    });
-    
     //For IE - sets the width of a select in an overflow hidden container
     var selectBox = $('.product_pod select'),
         isIE = navigator.userAgent.toLowerCase().indexOf("msie");
