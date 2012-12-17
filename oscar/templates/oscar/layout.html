@@ -8,7 +8,8 @@
         <div class="page_inner">
             <div class="row-fluid">
                 {% include "partials/brand.html" %}
-                {% include "partials/mini_basket.html" %}
+                {# Mini-basket wrapped in a block so some templates can now display it #}
+                {% block mini_basket %}{% include "partials/mini_basket.html" %}{% endblock %}
             </div>
         </div>
         {% category_tree depth=2 as categories %}

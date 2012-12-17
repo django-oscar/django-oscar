@@ -7,9 +7,8 @@
 {% trans "Basket" %} | {{ block.super }}
 {% endblock %}
 
-{% block checkout-nav %}
-{% include 'checkout/nav.html' with step=1 %}
-{% endblock %}
+{# Hide mini-basket so we don't have two baskets to keep in sync #}
+{% block mini_basket %}{% endblock %}
 
 {% block header %}
 <div class="page-header action">
