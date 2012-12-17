@@ -1,4 +1,7 @@
+import collections
+
 from django.core.urlresolvers import reverse
+from django.core.exceptions import ImproperlyConfigured
 
 _nodes = []
 
@@ -41,20 +44,38 @@ class Node(object):
     def has_children(self):
         return len(self.children) > 0
 
+
 def register(node, display_order=5):
     # We use tuples so we can sort later on.  The lower the display order, the
     # closer to the left the node appears.
     _nodes.append((display_order, node))
 
 def flush():
+    global _nodes
     _nodes = []
 
 def get_nodes(user):
     nodes = []
-    for _, node in sorted(_nodes):
+    for __, node in sorted(_nodes):
         filtered_node = node.filter(user)
         if filtered_node:
             nodes.append(node)
     return nodes
 
+def create_menu(menu_items, parent=None):
+    for (name, content) in menu_items:
+        if isinstance(content, basestring):
+            node = Node(name, content)
+        elif isinstance(content, collections.Iterable):
+            node = Node(name)
+            create_menu(content, parent=node)
+        else:
+            raise ImproperlyConfigured(
+                "menu item must provide reverse URL string or "
+                "an iterable containing sub-menu items."
+            )
 
+        if parent is None:
+            register(node, len(_nodes))
+        else:
+            parent.add_child(node)

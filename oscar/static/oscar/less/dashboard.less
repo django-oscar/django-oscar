@@ -71,9 +71,6 @@ h3.app-ico:before {
 td .btn-toolbar {
   margin:0;
 }
-/*.btn + a {
-  margin-left:10px;
-}*/
 //ICONS
 .icon-large:before {
   font-size: 18px;
@@ -238,7 +235,6 @@ body {
   margin-top: @baseLineHeight;
 }
 .fancypages .dashboard > .content {
-/*  margin-top: 96px;*/
 }
 .navbar-accounts {
   .navbar-inner {
@@ -286,8 +282,6 @@ body {
   .navbar-inner {
     #gradient > .vertical(#353535, #373737);
     filter: progid:DXImageTransform.Microsoft.gradient(enabled=false) !important;
-/*    height: 45px;
-    width: 100%;*/
     border-top: 1px solid #5B5B5B;
     *position:relative;
     *z-index:10;
@@ -333,6 +327,8 @@ body {
     }
   }
 }
+
+
 .navbar-primary .nav {
   > li a:before {
     color: #dcdcdc; 
@@ -373,29 +369,15 @@ body {
   .dash > a:before {
     content: "\f015";
   }
+  .Promotions > a:before {
+    content: "\f0a1";
+  }
+  .Fulfilment > a:before {
+    content: "\f07a"; }
+  .Stores > a:before {
+    content: "\f072";
+  }
 }
-
-/*.reports .subnav li.Reports > a,
-.orders .subnav li.Manage.orders > a,
-.users .subnav li.Users > a,
-.content-blocks .subnav li.Content.blocks > a,
-.catalogue .subnav li.Catalogue > a,
-.subnav .nav > .active > a,
-.subnav .nav > .active > a:hover,
-.subnav .nav > li > a:hover,
-.nav-pills .open .dropdown-toggle,
-.subnav .nav > li,
-.home .subnav li.dash > a,
-.users .subnav li.Customers > a,
-.reviews .subnav li.Reviews > a,
-.content-blocks .subnav li.Content > a,
-.fancypages .subnav li.Page > a {
-  color: #B2DEF2;
-  background-color: #373737;
-  border-right-color: @grayDarker;
-  .box-shadow(inset 0 3px 5px rgba(0,0,0,.05));
-  #gradient > .vertical(#1F1F1F, #373737);
-}*/
 
 .navbar-primary .nav > li > a:hover .caret {
   border-top-color: #B2DEF2;
@@ -617,7 +599,6 @@ caption,
 
     width: 98%;
     height: @barHeight;
-/*    padding-left: 5em;*/
 }
 .bar-chart dd{
     position: relative;

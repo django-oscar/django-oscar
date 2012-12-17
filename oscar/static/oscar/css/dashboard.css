@@ -479,7 +479,6 @@ input[type=text].hasDatepicker,.create-page input[type=text].hasDatepicker,.form
 body{background:url("../img/ui/dashboard/bg_subtle_dots.png") repeat scroll 0 0 #ffffff;}
 .container-fluid.dashboard{margin:0 auto;position:relative;}
 .dashboard>.content{margin-top:18px;}
-.fancypages .dashboard>.content{}
 .navbar-accounts .navbar-inner{padding-left:20px;padding-right:20px;min-height:50px;font-size:12px;background-color:#2f2f2f;background-image:-moz-linear-gradient(top, #373737, #242424);background-image:-ms-linear-gradient(top, #373737, #242424);background-image:-webkit-gradient(linear, 0 0, 0 100%, from(#373737), to(#242424));background-image:-webkit-linear-gradient(top, #373737, #242424);background-image:-o-linear-gradient(top, #373737, #242424);background-image:linear-gradient(top, #373737, #242424);background-repeat:repeat-x;filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#373737', endColorstr='#242424', GradientType=0);border:none;}.navbar-accounts .navbar-inner .brand{background:url("../img/ui/dashboard/logo_oscar.png") no-repeat scroll 0 0 transparent;text-indent:-9999px;display:block;width:60px;height:38px;padding:0;margin-left:0;margin-top:5px;}
 .navbar-accounts .navbar-inner .nav{top:5px;}
 .navbar-accounts .navbar-inner .nav>li>a{color:#C1C1C1;}
@@ -503,6 +502,9 @@ body{background:url("../img/ui/dashboard/bg_subtle_dots.png") repeat scroll 0 0 
 .navbar-primary .nav .Orders>a:before{content:"\f07a";}
 .navbar-primary .nav .Reports>a:before{content:"\f080";}
 .navbar-primary .nav .dash>a:before{content:"\f015";}
+.navbar-primary .nav .Promotions>a:before{content:"\f0a1";}
+.navbar-primary .nav .Fulfilment>a:before{content:"\f07a";}
+.navbar-primary .nav .Stores>a:before{content:"\f072";}
 .navbar-primary .nav>li>a:hover .caret{border-top-color:#B2DEF2;border-bottom-color:#B2DEF2;}
 .breadcrumb{margin-top:20px;}
 button{background-color:transparent;}

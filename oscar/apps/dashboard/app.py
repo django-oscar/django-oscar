@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.conf.urls import patterns, url, include
 from oscar.views.decorators import staff_member_required
 
@@ -31,6 +32,17 @@ class DashboardApplication(Application):
     reviews_app = reviews_app
     vouchers_app = vouchers_app
     comms_app = comms_app
+
+    def __init__(self, app_name=None, **kwargs):
+        super(DashboardApplication, self).__init__(app_name, **kwargs)
+        self.override_dashboard_navigation()
+
+    def override_dashboard_navigation(self):
+        dashboard_nav = getattr(settings, 'OSCAR_DASHBOARD_NAVIGATION', None)
+        if dashboard_nav:
+            from oscar.apps.dashboard import nav
+            nav.flush()
+            nav.create_menu(dashboard_nav)
 
     def get_urls(self):
         urlpatterns = patterns('',

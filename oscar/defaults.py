@@ -1,3 +1,5 @@
+from django.utils.translation import ugettext_lazy as _
+
 OSCAR_SHOP_NAME = 'Oscar'
 OSCAR_SHOP_TAGLINE = 'Domain-driven e-Commerce for Django'
 
@@ -67,6 +69,39 @@ OSCAR_MAX_BASKET_QUANTITY_THRESHOLD = None
 
 # Cookies
 OSCAR_COOKIES_DELETE_ON_LOGOUT = ['oscar_recently_viewed_products', ]
+
+# Menu structure of the dashboard navigation
+OSCAR_DASHBOARD_NAVIGATION = [
+    (_('Catalogue'), [
+        (_('Products'), 'dashboard:catalogue-product-list'),
+        (_('Categories'), 'dashboard:catalogue-category-list'),
+        (_('Ranges'), 'dashboard:range-list'),
+        (_('Reviews'), 'dashboard:reviews-list'),
+        (_('Stock alerts'), 'dashboard:stock-alert-list'),
+    ]),
+    (_('Content'), [
+        (_('Re-usable content blocks'), 'dashboard:promotion-list'),
+        (_('Content blocks by page'), 'dashboard:promotion-list-by-page'),
+        (_('Pages'), 'dashboard:page-list'),
+    ]),
+    (_('Promotions'), [
+        (_('Offers'), 'dashboard:offer-list'),
+        (_('Vouchers'), 'dashboard:voucher-list'),
+    ]),
+    (_('Fulfilment'), [
+        (_('Orders'), 'dashboard:order-list'),
+        (_('Statistics'), 'dashboard:order-stats'),
+    ]),
+    (_('Communications'), [
+        (_('Site emails'), 'dashboard:comms-list'),
+        (_('Support'), 'ticketing-dashboard:ticket-list'),
+    ]),
+    (_('Customers'), [
+        (_('Customers'), 'dashboard:users-index'),
+        (_('Alerts'), 'dashboard:user-alert-list'),
+    ]),
+    (_('Reports'), 'dashboard:reports-index'),
+]
 
 OSCAR_SETTINGS = dict(
     [(k, v) for k, v in locals().items() if k.startswith('OSCAR_')])
