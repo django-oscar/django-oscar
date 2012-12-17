@@ -1,15 +1,8 @@
 from django.conf.urls import patterns, url
-from oscar.views.decorators import staff_member_required
-from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.application import Application
+from oscar.views.decorators import staff_member_required
 from oscar.apps.dashboard.users import views
-from oscar.apps.dashboard.nav import register, Node
-
-node = Node(_('Customers'))
-node.add_child(Node(_('Customers'), 'dashboard:users-index'))
-node.add_child(Node(_('Alerts'), 'dashboard:user-alert-list'))
-register(node, 30)
 
 
 class UserManagementApplication(Application):

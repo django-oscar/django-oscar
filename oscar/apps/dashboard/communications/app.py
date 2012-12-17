@@ -1,14 +1,8 @@
 from django.conf.urls import patterns, url
-from django.utils.translation import ugettext_lazy as _
 from oscar.views.decorators import staff_member_required
 
 from oscar.core.application import Application
 from oscar.apps.dashboard.communications import views
-from oscar.apps.dashboard.nav import register, Node
-
-node = Node(_('Communications'))
-node.add_child(Node(_('Emails'), 'dashboard:comms-list'))
-register(node, 35)
 
 
 class CommsDashboardApplication(Application):

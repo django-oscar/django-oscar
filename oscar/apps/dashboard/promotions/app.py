@@ -1,17 +1,9 @@
 from django.conf.urls import patterns, url
-from oscar.views.decorators import staff_member_required
-from django.utils.translation import ugettext_lazy as _
 
+from oscar.views.decorators import staff_member_required
 from oscar.core.application import Application
 from oscar.apps.dashboard.promotions import views
 from oscar.apps.promotions.conf import PROMOTION_CLASSES
-from oscar.apps.dashboard.nav import register, Node
-
-node = Node(_('Content'))
-node.add_child(Node(_('Re-usable content blocks'), 'dashboard:promotion-list'))
-node.add_child(Node(_('Content blocks by page'), 'dashboard:promotion-list-by-page'))
-node.add_child(Node(_('Pages'), 'dashboard:page-list'))
-register(node, 20)
 
 
 class PromotionsDashboardApplication(Application):
@@ -35,10 +27,10 @@ class PromotionsDashboardApplication(Application):
             url(r'^$', self.list_view.as_view(), name='promotion-list'),
             url(r'^pages/$', self.page_list.as_view(), name='promotion-list-by-page'),
             url(r'^pages/(?P<path>.+)/$', self.page_detail.as_view(), name='promotion-list-by-url'),
-            url(r'^create/$', 
-                self.create_redirect_view.as_view(), 
+            url(r'^create/$',
+                self.create_redirect_view.as_view(),
                 name='promotion-create-redirect'),
-            url(r'^page-promotion/(?P<pk>\d+)/$', 
+            url(r'^page-promotion/(?P<pk>\d+)/$',
                 self.delete_page_promotion_view.as_view(), name='pagepromotion-delete')
             )
 
