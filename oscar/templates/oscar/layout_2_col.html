@@ -1,60 +1,39 @@
-{% extends "base.html" %}
-{% load currency_filters %}
-{% load category_tags %}
+{% extends "layout.html" %}
 {% load promotion_tags %}
 
-{% block layout %}
-    {% include "partials/nav_accounts.html" %}
-    <header class="header container-fluid">
-        <div class="page_inner">
-            <div class="row-fluid">
-                {% include "partials/brand.html" %}
-            </div><!-- /row-fluid -->
-        </div>
-        {% category_tree depth=2 as categories %}
-        {% block navigation %}
-            {% include "partials/nav_primary.html" %}
-        {% endblock %}
-    </header><!-- /header -->
-    <div class="container-fluid page">
-        <div class="page_inner">	
-            {% block breadcrumbs %}{% endblock %}
-            {% include "partials/alert_messages.html" %}
-            <div class="row-fluid">
-                <aside class="sidebar span3">
-                    <div id="promotions_left">
-                        {% for promotion in promotions_left %}
-                        {% render_promotion promotion %}
-                        {% endfor %}
-                    </div>
-                    {% block column_left %}
-                    {% endblock %}
-                </aside><!-- /span3 -->
+{% block content_wrapper %}
+<div class="container-fluid page">
+    <div class="page_inner">
+        {% block breadcrumbs %}{% endblock %}
+        {% include "partials/alert_messages.html" %}
+        <div class="row-fluid">
+            <aside class="sidebar span3">
+                <div id="promotions_left">
+                    {% for promotion in promotions_left %}
+                    {% render_promotion promotion %}
+                    {% endfor %}
+                </div>
+                {% block column_left %}
+                {% endblock %}
+            </aside><!-- /span3 -->
 
-                <div class="span9">
-                    {% block header %}
-                    {% endblock %}
+            <div class="span9">
+                {% block header %}
+                {% endblock %}
 
-                    <div id="promotions">
-                        {% for promotion in promotions_page %}
-                        {% render_promotion promotion %}
-                        {% endfor %}
-                    </div>
+                <div id="promotions">
+                    {% for promotion in promotions_page %}
+                    {% render_promotion promotion %}
+                    {% endfor %}
+                </div>
 
-                    {% block flatpage %}
-                    {% endblock %}
+                {% block flatpage %}
+                {% endblock %}
 
-                    {% block content %}
-                    {% endblock %}
-                </div><!-- /span9 -->
-            </div><!-- /row-fluid -->
-        </div><!-- /page_inner -->
-    </div><!-- /container-fluid -->
-    {% include "partials/footer.html" %}
-{% endblock %}
-
-{# Block for additional scripts #}
-{% block extrascripts %}
-    {% include "partials/extrascripts.html" %}
-    {{ block.super }}
+                {% block content %}
+                {% endblock %}
+            </div><!-- /span9 -->
+        </div><!-- /row-fluid -->
+    </div><!-- /page_inner -->
+</div><!-- /container-fluid -->
 {% endblock %}
