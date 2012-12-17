@@ -30,11 +30,20 @@ oscar.basket = {
         }
     },
     submitForm: function(e) {
-        var form = $('#basket_formset').serializeArray();
-        $('#content_inner').load('/basket/', form, function() {
-            oscar.basket.init();
-        });
+        $('#messages').html('');
+        var payload = $('#basket_formset').serializeArray();
+        $.post('/basket/', payload, oscar.basket.submitFormSuccess, 'json');
         e.preventDefault();
+    },
+    submitFormSuccess: function(data) {
+        $('#content_inner').html(data.content_html);
+        $('#messages').html('');
+        for (var level in data.messages) {
+            for (var i=0; i<data.messages[level].length; i++) {
+                oscar.messages[level](data.messages[level][i]);
+            }
+        }
+        oscar.basket.init();
     },
     showVoucherForm: function() {
         $('#voucher_form_container').show();

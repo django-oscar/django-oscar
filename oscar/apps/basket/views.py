@@ -1,16 +1,19 @@
 from urlparse import urlparse
 
 from django.contrib import messages
-from django.shortcuts import render
+from django.template.loader import render_to_string
+from django.template import RequestContext
 from django.core.urlresolvers import reverse, resolve
+from django.utils import simplejson as json
 from django.db.models import get_model
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect, Http404, HttpResponse
 from django.views.generic import FormView, View
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist
 
 from extra_views import ModelFormSetView
 from oscar.apps.basket.signals import basket_addition, voucher_addition
+from oscar.templatetags.currency_filters import currency
 from oscar.core.loading import get_class, get_classes
 Applicator = get_class('offer.utils', 'Applicator')
 BasketLineForm, AddToBasketForm, BasketVoucherForm, \
@@ -21,7 +24,35 @@ BasketLineForm, AddToBasketForm, BasketVoucherForm, \
 Repository = get_class('shipping.repository', ('Repository'))
 
 
-def apply_messages(offers_before, request, default_msg=None):
+def get_messages(basket, offers_before, offers_after):
+    """
+    Return the messages about offer changes
+    """
+    # Look for changes in offers
+    offers_lost = set(offers_before.keys()).difference(
+        set(offers_after.keys()))
+    offers_gained = set(offers_after.keys()).difference(
+        set(offers_before.keys()))
+    offer_messages = {messages.INFO: [],
+                      messages.SUCCESS: [],
+                      messages.WARNING: []}
+    for offer_id in offers_lost:
+        offer = offers_before[offer_id]
+        offer_messages[messages.WARNING].append(
+            _("Your basket no longer qualifies for the '%s' offer") % offer)
+    for offer_id in offers_gained:
+        offer = offers_after[offer_id]
+        offer_messages[messages.SUCCESS].append(
+            _("Your basket now qualifies for the '%s' offer") % offer)
+    if not offers_lost and not offers_gained:
+        msg = _("Basket total now %(total)s") % {
+            'total': currency(basket.total_incl_tax)}
+        offer_messages[messages.INFO].append(msg)
+
+    return offer_messages
+
+
+def apply_messages(request, offers_before):
     """
     Set flash messages triggered by changes to the basket
     """
@@ -29,23 +60,10 @@ def apply_messages(offers_before, request, default_msg=None):
     Applicator().apply(request, request.basket)
     offers_after = request.basket.get_discount_offers()
 
-    # Look for changes in offers
-    offers_lost = set(offers_before.keys()).difference(
-        set(offers_after.keys()))
-    offers_gained = set(offers_after.keys()).difference(
-        set(offers_before.keys()))
-    for offer_id in offers_lost:
-        offer = offers_before[offer_id]
-        messages.warning(
-            request,
-            _("Your basket no longer qualifies for the '%s' offer") % offer)
-    for offer_id in offers_gained:
-        offer = offers_after[offer_id]
-        messages.success(
-            request,
-            _("Your basket now qualifies for the '%s' offer") % offer)
-    if not offers_lost and not offers_gained:
-        messages.info(request, default_msg)
+    for level, msgs in get_messages(request.basket,
+                                    offers_before, offers_after).items():
+        for msg in msgs:
+            messages.add_message(request, level, msg)
 
 
 class BasketView(ModelFormSetView):
@@ -165,6 +183,7 @@ class BasketView(ModelFormSetView):
             self.request.basket = get_model('basket', 'Basket').objects.get(
                 id=self.request.basket.id)
             Applicator().apply(self.request, self.request.basket)
+            offers_after = self.request.basket.get_discount_offers()
 
             # Reload formset - we have to remove the POST fields from the
             # kwargs as, if they are left in, the formset won't construct
@@ -177,11 +196,26 @@ class BasketView(ModelFormSetView):
                                          **kwargs)
             ctx = self.get_context_data(formset=formset,
                                         basket=self.request.basket)
-            return render(
-                self.request, 'basket/partials/basket_content.html', ctx)
 
-        apply_messages(offers_before, self.request,
-                       default_msg=_("Basket updated"))
+            basket_html = render_to_string(
+                'basket/partials/basket_content.html',
+                RequestContext(self.request, ctx))
+
+            # Get flash messages and convert into JSON structure that the
+            # client-side JS can easily deal with.
+            msg_payload = {}
+            for level, msgs in get_messages(self.request.basket, offers_before,
+                                            offers_after).items():
+                tag = messages.DEFAULT_TAGS.get(level, 'info')
+                msg_payload[tag] = map(unicode, msgs)
+
+            payload = {
+                'content_html': basket_html,
+                'messages': msg_payload}
+            return HttpResponse(json.dumps(payload),
+                                mimetype="application/json")
+
+        apply_messages(self.request, offers_before)
 
         return response
 
@@ -250,7 +284,7 @@ class BasketAddView(FormView):
         messages.success(self.request, self.get_success_message(form))
 
         # Check for additional offer messages
-        apply_messages(offers_before, self.request)
+        apply_messages(self.request, offers_before)
 
         # Send signal for basket addition
         self.add_signal.send(
@@ -424,7 +458,7 @@ class SavedView(ModelFormSetView):
                 real_basket.merge_line(form.instance)
 
         if is_move:
-            apply_messages(offers_before, self.request)
+            apply_messages(self.request, offers_before)
             return HttpResponseRedirect(self.get_success_url())
 
         return super(SavedView, self).formset_valid(formset)
