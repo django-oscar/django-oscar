@@ -170,13 +170,15 @@ although it is tailored to an agency structure which may not suit everyone.
 
 .. _`template Django project`: https://github.com/tangentlabs/tangent-django-boilerplate
 
-Set up a virtualenv, and create a new project using the ``startproject``
+Set up a virtualenv_, and create a new project using the ``startproject``
 management command::
 
-    mkvirtualenv frobshop
+    mkvirtualenv frobshop # using virtualenvwrapper
     pip install Django
     django-admin.py startproject frobshop \
         --template=https://github.com/tangentlabs/tangent-django-boilerplate/zipball/master 
+
+.. _virtualenv: http://www.virtualenv.org/en/latest/
 
 This will create a folder ``frobshop`` which is an entire templated project that
 follows Tangent's conventions.  The structure is::

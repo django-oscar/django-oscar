@@ -25,7 +25,7 @@ After forking, run::
 
     git clone git@github.com:<username>/django-oscar.git
     cd django-oscar
-    mkvirtualenv oscar  # optional but recommended
+    mkvirtualenv oscar  # using virtualenvwrapper
     make install
 
 Running tests
