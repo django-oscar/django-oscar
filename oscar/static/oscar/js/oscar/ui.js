@@ -1,56 +1,66 @@
-var oscar = oscar || {};
-oscar.messages = {
-    icons: {
-        'info': '<i class="icon-info-sign"></i>',
-        'success': '<i class="icon-ok-sign"></i>',
-        'warning': '<i class="icon-warning-sign"></i>',
-        'error': '<i class="icon-exclamation-sign"></i>'
-    },
-    addMessage: function(tag, msg) {
-        var iconHTML = oscar.messages.icons[tag],
-            msgHTML = '<div class="alert fade in alert-' + tag + '">' +
-            '<a href="#" class="close" data-dismiss="alert">x</a>' + iconHTML + " " + msg +
-            '</div>';
-        $('#messages').append($(msgHTML));
-    },
-    debug: function(msg) { oscar.messages.addMessage('debug', msg); },
-    info: function(msg) { oscar.messages.addMessage('info', msg); },
-    success: function(msg) { oscar.messages.addMessage('success', msg); },
-    warning: function(msg) { oscar.messages.addMessage('warning', msg); },
-    error: function(msg) { oscar.messages.addMessage('error:', msg); }
-};
-oscar.notifications = {
-    init: function() {
-        $('a[data-behaviours~="archive"]').click(function() {
-            oscar.notifications.checkAndSubmit($(this), 'archive');
-        });
-        $('a[data-behaviours~="delete"]').click(function() {
-            oscar.notifications.checkAndSubmit($(this), 'delete');
-        });
-    },
-    checkAndSubmit: function($ele, btn_val) {
-        $ele.closest('tr').find('input').attr('checked', 'checked');
-        $ele.closest('form').find('button[value="' + btn_val + '"]').click();
-        return false;
-    }
-};
-oscar.forms = {
-    init: function() {
-        // Forms with this behaviour are 'locked' once they are submitted to 
-        // prevent multiple submissions
-        $('form[data-behaviours~="lock"]').submit(oscar.forms.submitIfNotLocked);
+var oscar = (function(o, $) {
+    // Replicate Django's flash messages so they can be used by AJAX callbacks.
+    o.messages = {
+        icons: {
+            'info': '<i class="icon-info-sign"></i>',
+            'success': '<i class="icon-ok-sign"></i>',
+            'warning': '<i class="icon-warning-sign"></i>',
+            'error': '<i class="icon-exclamation-sign"></i>'
+        },
+        addMessage: function(tag, msg) {
+            var iconHTML = o.messages.icons[tag],
+                msgHTML = '<div class="alert fade in alert-' + tag + '">' +
+                '<a href="#" class="close" data-dismiss="alert">x</a>' + iconHTML + " " + msg +
+                '</div>';
+            $('#messages').append($(msgHTML));
+        },
+        debug: function(msg) { o.messages.addMessage('debug', msg); },
+        info: function(msg) { o.messages.addMessage('info', msg); },
+        success: function(msg) { o.messages.addMessage('success', msg); },
+        warning: function(msg) { o.messages.addMessage('warning', msg); },
+        error: function(msg) { o.messages.addMessage('error:', msg); }
+    };
 
-        // Disable buttons when they are clicked
-        $('.js-disable-on-click').click(function(){$(this).button('loading');});
-    },
-    submitIfNotLocked: function(event) {
-        $form = $(this);
-        if ($form.data('locked')) {
+    // Notifications inbox within 'my account' section.
+    o.notifications = {
+        init: function() {
+            $('a[data-behaviours~="archive"]').click(function() {
+                o.notifications.checkAndSubmit($(this), 'archive');
+            });
+            $('a[data-behaviours~="delete"]').click(function() {
+                o.notifications.checkAndSubmit($(this), 'delete');
+            });
+        },
+        checkAndSubmit: function($ele, btn_val) {
+            $ele.closest('tr').find('input').attr('checked', 'checked');
+            $ele.closest('form').find('button[value="' + btn_val + '"]').click();
             return false;
         }
-        $form.data('locked', true);
-    }
-};
+    };
+
+    // Site-wide forms events
+    o.forms = {
+        init: function() {
+            // Forms with this behaviour are 'locked' once they are submitted to
+            // prevent multiple submissions
+            $('form[data-behaviours~="lock"]').submit(o.forms.submitIfNotLocked);
+
+            // Disable buttons when they are clicked
+            $('.js-disable-on-click').click(function(){$(this).button('loading');});
+        },
+        submitIfNotLocked: function(event) {
+            $form = $(this);
+            if ($form.data('locked')) {
+                return false;
+            }
+            $form.data('locked', true);
+        }
+    };
+
+    return o;
+
+})(oscar || {}, jQuery);
+
 $(function(){oscar.forms.init();});
 
 
