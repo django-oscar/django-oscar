@@ -191,6 +191,10 @@ class BasketView(ModelFormSetView):
             Applicator().apply(self.request, self.request.basket)
             offers_after = self.request.basket.get_discount_offers()
 
+            for level, msgs in get_messages(self.request.basket, offers_before,
+                                            offers_after).items():
+                flash_messages.add_messages(level, msgs)
+
             # Reload formset - we have to remove the POST fields from the
             # kwargs as, if they are left in, the formset won't construct
             # correctly as there will be a state mismatch between the
@@ -202,26 +206,21 @@ class BasketView(ModelFormSetView):
                                          **kwargs)
             ctx = self.get_context_data(formset=formset,
                                         basket=self.request.basket)
-
-            basket_html = render_to_string(
-                'basket/partials/basket_content.html',
-                RequestContext(self.request, ctx))
-
-            # Get flash messages and convert into JSON structure that the
-            # client-side JS can easily deal with.
-            for level, msgs in get_messages(self.request.basket, offers_before,
-                                            offers_after).items():
-                flash_messages.add_messages(level, msgs)
-
-            payload = {
-                'content_html': basket_html,
-                'messages': flash_messages.to_json()}
-            return HttpResponse(json.dumps(payload),
-                                mimetype="application/json")
+            return self.json_response(ctx, flash_messages)
 
         apply_messages(self.request, offers_before)
 
         return response
+
+    def json_response(self, ctx, flash_messages):
+        basket_html = render_to_string(
+            'basket/partials/basket_content.html',
+            RequestContext(self.request, ctx))
+        payload = {
+            'content_html': basket_html,
+            'messages': flash_messages.to_json()}
+        return HttpResponse(json.dumps(payload),
+                            mimetype="application/json")
 
     def move_line_to_saved_basket(self, line):
         saved_basket, _ = get_model('basket', 'basket').saved.get_or_create(
@@ -229,8 +228,15 @@ class BasketView(ModelFormSetView):
         saved_basket.merge_line(line)
 
     def formset_invalid(self, formset):
-        msg = _("Your basket couldn't be updated")
-        messages.warning(self.request, msg)
+        flash_messages = ajax.FlashMessages()
+        flash_messages.warning(_("Your basket couldn't be updated"))
+
+        if self.request.is_ajax():
+            ctx = self.get_context_data(formset=formset,
+                                        basket=self.request.basket)
+            return self.json_response(ctx, flash_messages)
+
+        flash_messages.apply_to_request(self.request)
         return super(BasketView, self).formset_invalid(formset)
 
 
