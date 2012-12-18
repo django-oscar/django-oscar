@@ -49,17 +49,22 @@
 				<p class="availability {{ form.instance.product.stockrecord.availability_code }}">{{ form.instance.product.stockrecord.availability }}</p>
             </div>
             <div class="span4">
-                <div class="checkout-quantity">
-                        {{ form.quantity }}
-                        <button class="btn" type="submit">{% trans "Update" %}</button>
-                        <a href="#" data-id="{{ forloop.counter0 }}" data-behaviours="remove" class="inline">{% trans "Remove" %}</a>
-                        {% if request.user.is_authenticated %}
-                        | <a href="#" data-id="{{ forloop.counter0 }}" data-behaviours="save" class="inline">{% trans "Save for later" %}</a>
-                        {% endif %}
-                        <div style="display:none">
-                            {{ form.save_for_later }}
-                            {{ form.DELETE }}
+                <div class="checkout-quantity control-group {% if form.errors %}error{% endif %}">
+                    {{ form.quantity }}
+                    <button class="btn" type="submit">{% trans "Update" %}</button>
+                    <a href="#" data-id="{{ forloop.counter0 }}" data-behaviours="remove" class="inline">{% trans "Remove" %}</a>
+                    {% if request.user.is_authenticated %}
+                    | <a href="#" data-id="{{ forloop.counter0 }}" data-behaviours="save" class="inline">{% trans "Save for later" %}</a>
+                    {% endif %}
+                    <div style="display:none">
+                        {{ form.save_for_later }}
+                        {{ form.DELETE }}
                     </div>
+                    {% for field_errors in form.errors.values %}
+                        {% for error in field_errors %}
+                        <span class="help-block"><i class="icon-exclamation-sign"></i> {{ error }}</span>
+                        {% endfor %}
+                    {% endfor %}
                 </div>
             </div>
             <div class="span2">

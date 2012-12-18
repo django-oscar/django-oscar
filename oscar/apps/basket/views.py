@@ -229,12 +229,7 @@ class BasketView(ModelFormSetView):
         saved_basket.merge_line(line)
 
     def formset_invalid(self, formset):
-        errors = []
-        for error_dict in formset.errors:
-            errors += [error_list.as_text()
-                       for error_list in error_dict.values()]
-        msg = _("Your basket couldn't be updated because:\n%s") % (
-            "\n".join(errors),)
+        msg = _("Your basket couldn't be updated")
         messages.warning(self.request, msg)
         return super(BasketView, self).formset_invalid(formset)
 
