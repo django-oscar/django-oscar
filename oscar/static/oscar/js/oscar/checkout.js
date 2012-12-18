@@ -2,38 +2,39 @@ var oscar = oscar || {};
 oscar.basket = {
     is_form_being_submitted: false,
     init: function() {
-        $('#basket_formset a[data-behaviours~="remove"]').click(function() {
+        $('#content_inner').on('click', '#basket_formset a[data-behaviours~="remove"]', function(event) {
             oscar.basket.checkAndSubmit($(this), 'form', 'DELETE');
+            event.preventDefault();
         });
-        $('#basket_formset a[data-behaviours~="save"]').click(function() {
+        $('#content_inner').on('click', '#basket_formset a[data-behaviours~="save"]', function(event) {
             oscar.basket.checkAndSubmit($(this), 'form', 'save_for_later');
+            event.preventDefault();
         });
-        $('#basket_formset').submit(oscar.basket.submitForm);
-        $('#saved_basket_formset a[data-behaviours~="move"]').click(function() {
+        $('#content_inner').on('click', '#saved_basket_formset a[data-behaviours~="move"]', function(event) {
             oscar.basket.checkAndSubmit($(this), 'saved', 'move_to_basket');
-            e.preventDefault();
         });
-        $('#saved_basket_formset a[data-behaviours~="remove"]').click(function() {
+        $('#content_inner').on('click', '#saved_basket_formset a[data-behaviours~="remove"]', function(event) {
             oscar.basket.checkAndSubmit($(this), 'saved', 'DELETE');
-            e.preventDefault();
+            event.preventDefault();
         });
-        $('#voucher_form_link a').click(function(e) {
+        $('#content_inner').on('click', '#voucher_form_link a', function(event) {
             oscar.basket.showVoucherForm();
-            e.preventDefault();
+            event.preventDefault();
         });
-        $('#voucher_form_cancel').click(function(e) {
+        $('#content_inner').on('click', '#voucher_form_cancel', function(event) {
             oscar.basket.hideVoucherForm();
-            e.preventDefault();
+            event.preventDefault();
         });
+        $('#content_inner').on('submit', '#basket_formset', oscar.basket.submitBasketForm);
         if (window.location.hash == '#voucher') {
             oscar.basket.showVoucherForm();
         }
     },
-    submitForm: function(e) {
+    submitBasketForm: function(event) {
         $('#messages').html('');
         var payload = $('#basket_formset').serializeArray();
         $.post('/basket/', payload, oscar.basket.submitFormSuccess, 'json');
-        e.preventDefault();
+        event.preventDefault();
     },
     submitFormSuccess: function(data) {
         $('#content_inner').html(data.content_html);
@@ -43,7 +44,7 @@ oscar.basket = {
                 oscar.messages[level](data.messages[level][i]);
             }
         }
-        oscar.basket.init();
+        oscar.basket.is_form_being_submitted = false;
     },
     showVoucherForm: function() {
         $('#voucher_form_container').show();
