@@ -222,7 +222,7 @@
 
     {% else %}
     <div class="row-fluid basket-title hidden-phone">
-        <h4 class="span8">{% trans "To buy an item now, click 'Move to basket'" %}</h4>
+        <h4 class="span8">{% trans "Items" %}</h4>
         <h4 class="span2 align-center">{% trans "Price" %}</h4>
         <div class="span2">&nbsp;</div>
     </div>
@@ -249,7 +249,7 @@
 			</div>
 		</div>
             <div class="span2 align-center"><p class="price_color">{{ form.instance.unit_price_incl_tax|currency }}</p></div>
-            <div class="span2"><a href="#" data-id="{{ forloop.counter0 }}" class="btn btn-success pull-right btn-full" data-behaviours="move">{% trans "Move to basket" %}</a></div>
+            <div class="span2"><a href="#" data-id="{{ forloop.counter0 }}" class="btn pull-right btn-full" data-behaviours="move">{% trans "Move to basket" %}</a></div>
         </div>
         {% endfor %}
     </form>
