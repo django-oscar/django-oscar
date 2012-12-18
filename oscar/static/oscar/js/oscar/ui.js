@@ -1,9 +1,16 @@
 var oscar = oscar || {};
 oscar.messages = {
+    icons: {
+        'info': '<i class="icon-info-sign"></i>',
+        'success': '<i class="icon-ok-sign"></i>',
+        'warning': '<i class="icon-warning-sign"></i>',
+        'error': '<i class="icon-exclamation-sign"></i>'
+    },
     addMessage: function(tag, msg) {
-        var msgHTML = '<div class="alert fade in alert-' + tag + '">' +
-        '<a href="#" class="close" data-dismiss="alert">x</a>' + msg +
-        '</div>';
+        var iconHTML = oscar.messages.icons[tag],
+            msgHTML = '<div class="alert fade in alert-' + tag + '">' +
+            '<a href="#" class="close" data-dismiss="alert">x</a>' + iconHTML + " " + msg +
+            '</div>';
         $('#messages').append($(msgHTML));
     },
     debug: function(msg) { oscar.messages.addMessage('debug', msg); },
