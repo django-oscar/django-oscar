@@ -12,6 +12,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist
 
 from extra_views import ModelFormSetView
+from oscar.core import ajax
 from oscar.apps.basket.signals import basket_addition, voucher_addition
 from oscar.templatetags.currency_filters import currency
 from oscar.core.loading import get_class, get_classes
@@ -153,21 +154,26 @@ class BasketView(ModelFormSetView):
         # any changes
         offers_before = self.request.basket.get_discount_offers()
         save_for_later = False
+
+        # Keep a list of messages - we don't immediately call
+        # django.contrib.messages as we may be returning an AJAX response in
+        # which case we pass the messages back in a JSON payload.
+        flash_messages = ajax.FlashMessages()
+
         for form in formset:
             if (hasattr(form, 'cleaned_data') and
                 form.cleaned_data['save_for_later']):
                 line = form.instance
                 if self.request.user.is_authenticated():
                     self.move_line_to_saved_basket(line)
-                    messages.info(
-                        self.request,
-                        _(u"'%(title)s' has been saved for later") % {
-                            'title': line.product})
+                    msg = _(u"'%(title)s' has been saved for later") % {
+                            'title': line.product}
+                    flash_messages.info(msg)
                     save_for_later = True
                 else:
-                    messages.error(
-                        self.request,
-                        _("You can't save an item for later if you're not logged in!"))
+                    msg = _("You can't save an item for later if you're "
+                            "not logged in!")
+                    messages.error(self.request, msg)
                     return HttpResponseRedirect(self.get_success_url())
 
         if save_for_later:
@@ -203,15 +209,13 @@ class BasketView(ModelFormSetView):
 
             # Get flash messages and convert into JSON structure that the
             # client-side JS can easily deal with.
-            msg_payload = {}
             for level, msgs in get_messages(self.request.basket, offers_before,
                                             offers_after).items():
-                tag = messages.DEFAULT_TAGS.get(level, 'info')
-                msg_payload[tag] = map(unicode, msgs)
+                flash_messages.add_messages(level, msgs)
 
             payload = {
                 'content_html': basket_html,
-                'messages': msg_payload}
+                'messages': flash_messages.to_json()}
             return HttpResponse(json.dumps(payload),
                                 mimetype="application/json")
 
@@ -458,10 +462,13 @@ class SavedView(ModelFormSetView):
                 real_basket.merge_line(form.instance)
 
         if is_move:
+            # As we're changing the basket, we need to check if it qualifies
+            # for any new offers.
             apply_messages(self.request, offers_before)
-            return HttpResponseRedirect(self.get_success_url())
-
-        return super(SavedView, self).formset_valid(formset)
+            response = HttpResponseRedirect(self.get_success_url())
+        else:
+            response = super(SavedView, self).formset_valid(formset)
+        return response
 
     def formset_invalid(self, formset):
         messages.error(
