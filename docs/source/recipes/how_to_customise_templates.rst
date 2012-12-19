@@ -80,3 +80,27 @@ Hence to customise ``base.html``, you can have an implementation like::
 
 No real downsides to this one other than getting your front-end people to
 understand it.
+
+Example: changing the analytics package
+---------------------------------------
+
+Support you want to use an alternative analytics package to Google analytics.
+We can achieve this by overriding templates where the analytics urchin is loaded
+and called.
+
+The main template ``base.html`` has a 'tracking' block which includes a Google
+Analytics partial.  We want to replace this with our own code.  To do this,
+create a new ``base.html`` in your project that subclasses the original::
+
+    # yourproject/templates/base.html
+    {% extends oscar/base.html %}
+
+    {% block tracking %}
+    <script type="javascript">
+        ... [custom analytics here] ...
+    </script>
+    {% endblock %}
+
+Doing this will mean all templates that inherit from ``base.html`` will include
+your custom tracking.
+
