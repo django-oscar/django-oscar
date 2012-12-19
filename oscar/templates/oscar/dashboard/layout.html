@@ -4,7 +4,6 @@
 {% load dashboard_tags %}
 {% load i18n %}
 
-
 {% block mainstylesheet %}
     <link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/dashboard.css" />
 {% endblock %}
@@ -106,12 +105,15 @@
 
 {% block extrascripts %}
     {{ block.super }}
-    <script src="{{ STATIC_URL }}oscar/js/plugins/plugins.js" type="text/javascript" charset="utf-8"></script>
+
+    {# jQuery plugins #}
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
+    <script src="{{ STATIC_URL }}oscar/js/mousewheel/jquery.mousewheel.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="{{ STATIC_URL }}oscar/js/scrollpane/jquery.jscrollpane.min.js" type="text/javascript" charset="utf-8"></script>
 
 	{# WYSIHTML5 #}
     <script src="{{ STATIC_URL }}oscar/js/bootstrap-wysihtml5/wysihtml5-0.3.0_rc2.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="{{ STATIC_URL }}oscar/js/bootstrap-wysihtml5/bootstrap-wysihtml5-0.0.2.js" type="text/javascript" charset="utf-8"></script>
 
     <script src="{{ STATIC_URL }}oscar/js/oscar/dashboard.js" type="text/javascript" charset="utf-8"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
 {% endblock %}
