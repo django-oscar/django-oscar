@@ -95,53 +95,40 @@ oscar.catalogue = {
 };
 oscar.responsive = {
     init: function() {
-      var sw = document.body.clientWidth,
-          breakpoint = 767,
-          mobile = true;
-          
-      checkMobile();
-      
-      //Check if Mobile
-      function checkMobile() {
-        mobile = (sw > breakpoint) ? false : true;
-        if (!mobile) { //If Not Mobile
-          oscar.responsive.initNav();
-          oscar.responsive.initCarousel();
-          } else { //Hide 
-
+        if (oscar.responsive.isDesktop()) {
+            oscar.responsive.initNav();
+            oscar.responsive.initCarousel();
         }
-      }
+    },
+    isDesktop: function() {
+        return document.body.clientWidth > 767;
     },
     initNav: function() {
+        // Initial navigation for desktop
         var $sidebar = $('aside.span3'), 
             $browse = $('#browse > .dropdown-menu'), 
             $browseOpen = $browse.parent().find('> button[data-toggle]');
-        // Set width of nav dropdown on the homepage
+        // Set width of nav dropdown to be same as sidebar
         $browse.css('width', $sidebar.outerWidth());
         // Remove click on browse button if menu is currently open
-        if ($browseOpen.length < 1) {
-            $browse.parent().find('> a').on('click', function() {
-                return false;
-            });
+        if (!$browseOpen.length) {
+            $browse.parent().find('> a').off('click');
             // Set margin top of aside allow space for open navigation
-            $sidebar.css({
-                marginTop: $browse.outerHeight()
-            }); 
+            $sidebar.css({ marginTop: $browse.outerHeight() }); 
         }
     },
     initCarousel: function() {
-      $('.es-carousel-wrapper').each(function(){
-        var gallery = $(this).parent('.rg-thumbs').length,
-            galleryCarousel = (gallery > 0) ? true : false;
-        //Don't apply this to the gallery carousel    
-        if (!galleryCarousel) {
-          $(this).elastislide({ 	
-            imageW: 175,
-            minItems: 4,
-            onClick:  true
-          });
-        }
-      });
+        $('.es-carousel-wrapper').each(function(){
+            var gallery = $(this).parent('.rg-thumbs').length;
+            // Don't apply this to the gallery carousel    
+            if (gallery <= 0) {
+                $(this).elastislide({ 
+                    imageW: 175,
+                    minItems: 4,
+                    onClick: true
+                });
+            }
+        });
     }
 };
 oscar.init = function() {
