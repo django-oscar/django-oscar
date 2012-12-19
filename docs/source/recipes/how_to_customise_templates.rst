@@ -61,20 +61,20 @@ template configuration as so::
 
     import os
     location = lambda x: os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', x)
-    from oscar import OSCAR_PARENT_TEMPLATE_DIR
+    from oscar import OSCAR_MAIN_TEMPLATE_DIR
     TEMPLATE_DIRS = (
         location('templates'),
-        OSCAR_PARENT_TEMPLATE_DIR,
+        OSCAR_MAIN_TEMPLATE_DIR,
     )
 
-The ``OSCAR_PARENT_TEMPLATE_DIR`` points to the directory above Oscar's normal
+The ``OSCAR_MAIN_TEMPLATE_DIR`` points to the directory above Oscar's normal
 templates directory.  This means that ``path/to/oscar/template.html`` can also
 be reached via ``templates/path/to/oscar/template.html``.
 
 Hence to customise ``base.html``, you can have an implementation like::
 
     # base.html
-    {% extends 'templates/base.html' %}
+    {% extends 'oscar/base.html' %}
 
     ...
 
