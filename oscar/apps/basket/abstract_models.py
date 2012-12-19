@@ -242,12 +242,17 @@ class AbstractBasket(models.Model):
         self.save()
     thaw.alters_data = True
 
-    def set_as_submitted(self):
-        """Mark this basket as submitted."""
+    def submit(self):
+        """
+        Mark this basket as submitted
+        """
         self.status = self.SUBMITTED
         self.date_submitted = now()
         self.save()
-    set_as_submitted.alters_data = True
+    submit.alters_data = True
+
+    # Kept for backwards compatibility
+    set_as_submitted = submit
 
     def set_as_tax_exempt(self):
         self.exempt_from_tax = True
