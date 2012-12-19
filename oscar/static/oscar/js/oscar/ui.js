@@ -158,11 +158,31 @@ var oscar = (function(o, $) {
         }
     };
 
+    o.compatibility = {
+        init: function() {
+            if (!o.compatibility.isIE()) return;
+            // Set the width of a select in an overflow hidden container.
+            // This is for add-to-basket forms within browing pages
+            $('.product_pod select').on({
+                mousedown: function(){
+                    $(this).addClass("select-open");
+                },
+                change: function(){
+                    $(this).removeClass("select-open");
+                }
+            });
+        },
+        isIE: function() {
+            return navigator.userAgent.toLowerCase().indexOf("msie") > -1;
+        }
+    };
+
     o.init = function() {
         o.catalogue.init();
         o.forms.init();
         o.page.init();
         o.responsive.init();
+        o.compatibility.init();
     };
 
     return o;
@@ -170,23 +190,3 @@ var oscar = (function(o, $) {
 })(oscar || {}, jQuery);
 
 $(function(){oscar.init();});
-
-
-// TODO - rewrite the below JS to git into the oscar object, splitting the functionality 
-// into SRP methods.
-$(document).ready(function()
-{   
-    //For IE - sets the width of a select in an overflow hidden container
-    var selectBox = $('.product_pod select'),
-        isIE = navigator.userAgent.toLowerCase().indexOf("msie");
-    if (isIE > -1) {
-      selectBox.on({
-        mousedown: function(){
-          $(this).addClass("select-open");
-        },
-        change: function(){
-          $(this).removeClass("select-open");
-        }
-      });
-    }
-});
