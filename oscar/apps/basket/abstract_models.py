@@ -37,7 +37,7 @@ class AbstractBasket(models.Model):
                               choices=STATUS_CHOICES)
 
     vouchers = models.ManyToManyField('voucher.Voucher', null=True,
-                                      verbose_name=_("Vouchers"))
+                                      verbose_name=_("Vouchers"), blank=True)
 
     date_created = models.DateTimeField(_("Date created"), auto_now_add=True)
     date_merged = models.DateTimeField(_("Date merged"), null=True, blank=True)
