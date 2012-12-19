@@ -180,6 +180,12 @@ LOGGING = {
              'filename': 'errors.log',
              'formatter': 'verbose'
         },
+        'sorl_file': {
+             'level': 'INFO',
+             'class': 'oscar.core.logging.handlers.EnvFileHandler',
+             'filename': 'sorl.log',
+             'formatter': 'verbose'
+        },
         'mail_admins': {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler',
@@ -203,6 +209,11 @@ LOGGING = {
         },
         'gateway': {
             'handlers': ['gateway_file'],
+            'propagate': True,
+            'level': 'INFO',
+        },
+        'sorl.thumbnail': {
+            'handlers': ['sorl_file'],
             'propagate': True,
             'level': 'INFO',
         },
