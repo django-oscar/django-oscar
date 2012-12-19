@@ -44,6 +44,8 @@
             <script>window.jQuery || document.write('<script src="{{ STATIC_URL }}oscar/js/jquery/jquery-1.7.2.js"><\/script>')</script>
             <!-- Twitter Bootstrap -->
             <script type="text/javascript" src="{{ STATIC_URL }}oscar/js/bootstrap/bootstrap.min.js"></script>
+            <!-- Oscar -->
+            <script src="{{ STATIC_URL }}oscar/js/oscar/ui.js" type="text/javascript" charset="utf-8"></script>
         {% endblock %}
         
         {# Block for additional scripts #}
@@ -52,6 +54,7 @@
         {# Block for body onload functions #}
         <script type="text/javascript">
             $(function() {
+                oscar.init();
                 {% block onbodyload %}{% endblock %}
             });
         </script>

@@ -158,6 +158,7 @@ var oscar = (function(o, $) {
         }
     };
 
+    // IE compabibility hacks
     o.compatibility = {
         init: function() {
             if (!o.compatibility.isIE()) return;
@@ -188,5 +189,3 @@ var oscar = (function(o, $) {
     return o;
 
 })(oscar || {}, jQuery);
-
-$(function(){oscar.init();});
