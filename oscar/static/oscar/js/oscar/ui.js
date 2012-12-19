@@ -155,4 +155,3 @@ oscar.init = function() {
     oscar.responsive.init();
     oscar.compatibility.init();
 };
-$(function(){oscar.init();});
