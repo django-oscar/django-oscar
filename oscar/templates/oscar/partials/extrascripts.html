@@ -1,4 +1,6 @@
-{# These scripts are included on every page - use sparingly! #}
-
-<!-- Elastislide carousel js -->
+{% comment %}
+Elastislide is used in several places where there are carousels, such as list
+content blocks and product images.  As the content blocks could be on any page,
+we need to load the script everywhere - hence why it is here.
+{% endcomment %}
 <script src="{{ STATIC_URL }}oscar/js/elastislide/jquery.elastislide.js" type="text/javascript" charset="utf-8"></script>    
