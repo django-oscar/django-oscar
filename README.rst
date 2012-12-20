@@ -36,7 +36,7 @@ Continuous integration status:
     :target: http://travis-ci.org/#!/tangentlabs/django-oscar
 
 .. _`Official homepage`: http://oscarcommerce.com
-.. _`Sandbox site`: http://sandbox.oscar.tangentlabs.co.uk
+.. _`Sandbox site`: http://latest.oscarcommerce.com
 .. _`Documentation`: http://django-oscar.readthedocs.org/en/latest/
 .. _`readthedocs.org`: http://readthedocs.org
 .. _`Continuous integration homepage`: http://travis-ci.org/#!/tangentlabs/django-oscar 
@@ -92,7 +92,7 @@ at: http://localhost:8000.  Want to make changes?  Check out the
 .. _`contributing guidelines`: http://django-oscar.readthedocs.org/en/latest/contributing.html#playing-in-the-sandbox
 
 Note that the sandbox site is also available to browse at 
-http://sandbox.oscarcommerce.com
+http://latest.oscarcommerce.com
 
 Extensions
 ----------
