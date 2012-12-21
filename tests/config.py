@@ -56,7 +56,7 @@ def configure(nose_args=None):
                     'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
                 }
             },
-            ROOT_URLCONF='tests.site.urls',
+            ROOT_URLCONF='tests._site.urls',
             LOGIN_REDIRECT_URL='/accounts/',
             DEBUG=False,
             SITE_ID=1,
