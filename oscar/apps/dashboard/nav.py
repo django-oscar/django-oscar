@@ -1,5 +1,3 @@
-import collections
-
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ImproperlyConfigured
 
@@ -8,8 +6,10 @@ _nodes = []
 
 class Node(object):
 
-    def __init__(self, label, url_name=None, url_args=None, url_kwargs=None, access_fn=None):
+    def __init__(self, label, url_name=None, url_args=None, url_kwargs=None,
+                 access_fn=None, icon=None):
         self.label = label
+        self.icon = icon
         self.url_name = url_name
         self.url_args = url_args
         self.url_kwargs = url_kwargs
@@ -22,7 +22,8 @@ class Node(object):
 
     @property
     def url(self):
-        return reverse(self.url_name, args=self.url_args, kwargs=self.url_kwargs)
+        return reverse(self.url_name, args=self.url_args,
+                       kwargs=self.url_kwargs)
 
     def add_child(self, node):
         self.children.append(node)
@@ -63,17 +64,24 @@ def get_nodes(user):
     return nodes
 
 def create_menu(menu_items, parent=None):
-    for (name, content) in menu_items:
-        if isinstance(content, basestring):
-            node = Node(name, content)
-        elif isinstance(content, collections.Iterable):
-            node = Node(name)
-            create_menu(content, parent=node)
-        else:
+    for menu_dict in menu_items:
+
+        try:
+            label = menu_dict['label']
+        except KeyError:
             raise ImproperlyConfigured(
-                "menu item must provide reverse URL string or "
-                "an iterable containing sub-menu items."
+                "no label specified for menu item in dashboard"
             )
+
+        children = menu_dict.get('children', [])
+        if children:
+            node = Node(label=label, icon=menu_dict.get('icon', None))
+            create_menu(children, parent=node)
+        else:
+            node = Node(label=label, icon=menu_dict.get('icon', None),
+                        url_name=menu_dict.get('url_name', None),
+                        url_kwargs=menu_dict.get('url_kwargs', None),
+                        url_args=menu_dict.get('url_args', None))
 
         if parent is None:
             register(node, len(_nodes))

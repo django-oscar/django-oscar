@@ -16,6 +16,7 @@ Customisation
     recipes/how_to_override_a_core_class
     recipes/how_to_customise_templates
     recipes/how_to_disable_an_app
+    recipes/how_to_configure_the_dashboard_navigation
 
 Catalogue
 ---------
