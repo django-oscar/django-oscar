@@ -33,7 +33,6 @@
         {% include "catalogue/partials/stock_record.html" %}
 
         {% if product.is_group %}
-            <p class="availability"></p>
             <a class="btn btn-full"
                href="{% url catalogue:detail product.slug product.id %}">
                 {% trans "View variants" %}
