@@ -5,9 +5,14 @@
     <h2 class="price_color">{% blocktrans with product.min_variant_price_incl_tax|currency as price %}From {{ price }}{% endblocktrans %}</h2>
 {% else %}
     <h2 class="price_color">{{ product.stockrecord.price_incl_tax|currency }}</h2>
-    {% if product.is_available_to_buy %} 
-        <p class="{{ product.stockrecord.availability_code }} availability "><i class="icon-ok"></i> {{ product.stockrecord.availability|truncatewords:2 }}</p>
-    {% else %}
-	    <p class="availability outofstock"><i class="icon-remove"></i> {% trans "Not available" %}</p>
-    {% endif %}
+{% endif %}
+
+{% if product.is_available_to_buy %}
+    <p class="{{ product.stockrecord.availability_code }} availability ">
+        <i class="icon-ok"></i> {{ product.stockrecord.availability|truncatewords:2 }}
+    </p>
+{% else %}
+    <p class="availability outofstock">
+        <i class="icon-remove"></i> {% trans "Not available" %}
+    </p>
 {% endif %}
