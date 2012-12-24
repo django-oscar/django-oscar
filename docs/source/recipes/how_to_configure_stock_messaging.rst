@@ -10,11 +10,11 @@ has the following methods for messaging:
 
 Both these methods delegate to a "partner wrapper" instance.  These are defined
 in the ``OSCAR_PARTNER_WRAPPERS`` setting which is a dict mapping from partner
-name to a class path, for instance::
+code to a class path, for instance::
 
     # settings.py
     OSCAR_PARTNER_WRAPPERS = {
-        'Partner A': 'myproject.wrappers.PartnerAWrapper',
+        'partner-a': 'myproject.wrappers.PartnerAWrapper',
     }
 
 The default wrapper is :class:`oscar.apps.partner.wrappers.DefaultWrapper`,

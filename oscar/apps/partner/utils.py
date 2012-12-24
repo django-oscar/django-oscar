@@ -165,7 +165,7 @@ class CatalogueImporter(object):
                             price_excl_tax, num_in_stock, stats):
         # Create partner and stock record
         partner, _ = Partner.objects.get_or_create(
-            name=partner_name, defaults={'display_name': partner_name})
+            name=partner_name)
         try:
             stock = StockRecord.objects.get(partner_sku=partner_sku)
         except StockRecord.DoesNotExist:

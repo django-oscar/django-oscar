@@ -80,7 +80,7 @@
                 <td>{{ product.product_class.name }}</td>
                 <td>{{ product.status|default:"-" }}</td>
                 {% with stockrecord=product.stockrecord %}
-                    <td>{{ stockrecord.partner.name }}</td>
+                    <td>{{ stockrecord.partner.display_name }}</td>
                     <td>{{ stockrecord.partner_sku }}</td>
                     <td>{{ stockrecord.price_excl_tax|currency }}</td>
                     <td>{{ stockrecord.price_incl_tax|currency }}</td>

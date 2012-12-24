@@ -1,23 +1,22 @@
 # -*- coding: utf-8 -*-
 import datetime
 from south.db import db
-from south.v2 import SchemaMigration
+from south.v2 import DataMigration
 from django.db import models
+from django.template.defaultfilters import slugify
 
-
-class Migration(SchemaMigration):
+class Migration(DataMigration):
 
     def forwards(self, orm):
-        # Adding field 'Partner.display_name'
-        db.add_column('partner_partner', 'display_name',
-                      self.gf('django.db.models.fields.CharField')(default='', max_length=128),
-                      keep_default=False)
-
+        "Write your forwards methods here."
+        # Note: Remember to use orm['appname.ModelName'] rather than "from appname.models..."
+        Partner = orm['partner.Partner']
+        for partner in Partner.objects.all():
+            partner.code = slugify(partner.name)
+            partner.save()
 
     def backwards(self, orm):
-        # Deleting field 'Partner.display_name'
-        db.delete_column('partner_partner', 'display_name')
-
+        "Write your backwards methods here."
 
     models = {
         'auth.group': {
@@ -178,7 +177,7 @@ class Migration(SchemaMigration):
         },
         'partner.partner': {
             'Meta': {'object_name': 'Partner'},
-            'display_name': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
+            'code': ('django.db.models.fields.SlugField', [], {'max_length': '128'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '128'}),
             'users': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'partners'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['auth.User']"})
@@ -206,3 +205,4 @@ class Migration(SchemaMigration):
     }
 
     complete_apps = ['partner']
+    symmetrical = True
