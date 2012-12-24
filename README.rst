@@ -175,6 +175,12 @@ Non-Tangent:
 * Dolbeau - http://www.dolbeau.ca/
 * Sobusa - http://www.sobusa.fr/
 
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/dolbeau.thumb.png
+    :target: http://www.dolbeau.ca
+
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/sobusa.thumb.png
+    :target: http://www.sobusa.fr
+
 Many more on the way.  If you use Oscar in production, please let us know.
 
 Would you like to work on Oscar?
