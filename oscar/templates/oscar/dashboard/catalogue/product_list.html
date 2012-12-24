@@ -9,12 +9,12 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">	
-    <li>	
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a> 	
-        <span class="divider">/</span>	
-    </li> 	
-    <li class="active">{% trans "Product Management" %}</li> 	
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active">{% trans "Product Management" %}</li>
 </ul>
 {% endblock %}
 
@@ -61,46 +61,59 @@
     {% csrf_token %}
 	<table class="table table-striped table-bordered">
 	    <tr>
-			<th>{% trans "UPC" %}</th>
-			<th>{% trans "Title" %}</th>
-			<th>{% trans "Product class" %}</th>
-			<th>{% trans "Status" %}</th>
-			<th>{% trans "Partner" %}</th>
-			<th>{% trans "Partner SKU" %}</th>
-			<th>{% trans "Price excl. tax" %}</th>
-			<th>{% trans "Price incl. tax" %}</th>
-			<th>{% trans "Number in stock" %}</th>
-			<th>{% trans "Number allocated" %}</th>
+                <th>{% trans "UPC" %}</th>
+                <th>{% trans "Title" %}</th>
+                <th>{% trans "Product class" %}</th>
+                <th>{% trans "Status" %}</th>
+                <th>{% trans "Partner" %}</th>
+                <th>{% trans "Partner SKU" %}</th>
+                <th>{% trans "Price excl. tax" %}</th>
+                <th>{% trans "Price incl. tax" %}</th>
+                <th>{% trans "Number in stock" %}</th>
+                <th>{% trans "Number allocated" %}</th>
 	        <th></th>
 	    </tr>
 	    {% for product in products %}
 	    <tr>
-			<td>{{ product.upc|default:"-" }}</td>
+                <td>{{ product.upc|default:"-" }}</td>
 	        <td>{{ product.get_title }}</td>
-			<td>{{ product.product_class.name }}</td>
-			<td>{{ product.status|default:"-" }}</td>
-			{% with stockrecord=product.stockrecord %}
-				<td>{{ stockrecord.partner.name }}</td>
-				<td>{{ stockrecord.partner_sku }}</td>
-				<td>{{ stockrecord.price_excl_tax|currency }}</td>
-				<td>{{ stockrecord.price_incl_tax|currency }}</td>
-				<td>{{ stockrecord.num_in_stock }}</td>
-				<td>{{ stockrecord.num_allocated }}</td>
-			{% endwith %}
-			<td>
-			    <div class="btn-toolbar">
-                    <div class="btn-group">
-                      <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                        {% trans "Actions" %}
-                        <span class="caret"></span>
-                      </a>
-                      <ul class="dropdown-menu pull-right">
-                          <li><a href="{% url dashboard:catalogue-product product.id %}">{% trans "Edit" %}</a></li>
-          				  <li><a href="{{ product.get_absolute_url }}">{% trans "View on site" %}</a></li>
-                      </ul>
+                <td>{{ product.product_class.name }}</td>
+                <td>{{ product.status|default:"-" }}</td>
+                {% with stockrecord=product.stockrecord %}
+                    <td>{{ stockrecord.partner.name }}</td>
+                    <td>{{ stockrecord.partner_sku }}</td>
+                    <td>{{ stockrecord.price_excl_tax|currency }}</td>
+                    <td>{{ stockrecord.price_incl_tax|currency }}</td>
+                    <td>{{ stockrecord.num_in_stock }}</td>
+                    <td>{{ stockrecord.num_allocated }}</td>
+                {% endwith %}
+                <td>
+		    <div class="btn-toolbar">
+                        <div class="btn-group">
+                            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                                {% trans "Actions" %}
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                                <li>
+                                    <a href="{% url dashboard:catalogue-product product.id %}">
+                                        {% trans "Edit" %}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ product.get_absolute_url }}">
+                                        {% trans "View on site" %}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{% url dashboard:catalogue-product-delete product.id %}">
+                                        {% trans "Delete" %}
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-			</td>
+                </td>
 	    </tr>
 	    {% endfor %}
 	</table>
