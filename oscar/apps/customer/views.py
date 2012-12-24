@@ -53,6 +53,7 @@ class LogoutView(RedirectView):
 class ProfileUpdateView(FormView):
     form_class = ProfileForm
     template_name = 'customer/profile_form.html'
+    communication_type_code = 'EMAIL_CHANGED'
 
     def get_form_kwargs(self):
         kwargs = super(ProfileUpdateView, self).get_form_kwargs()
@@ -60,8 +61,23 @@ class ProfileUpdateView(FormView):
         return kwargs
 
     def form_valid(self, form):
-        form.save()
+        try:
+            old_user = User.objects.get(id=self.request.user.id)
+        except User.DoesNotExist:
+            old_user = None
+
+        user = form.save()
         messages.success(self.request, "Profile updated")
+
+        if old_user and user.email != old_user.email:
+            ctx = {
+                'site': get_current_site(self.request),
+                'new_email': user.email,
+            }
+            msgs = CommunicationEventType.objects.get_and_render(
+                code=self.communication_type_code, context=ctx)
+            Dispatcher().dispatch_user_messages(old_user, msgs)
+
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):

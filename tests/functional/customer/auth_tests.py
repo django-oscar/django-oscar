@@ -64,6 +64,20 @@ class TestARegisteredUser(WebTestCase):
         self.assertEquals(len(mail.outbox), 1)
         self.assertIn("you're password has been changed", mail.outbox[0].body)
 
+    def test_receives_an_email_when_their_email_address_is_changed(self):
+        page = self.get(reverse('customer:profile-update'))
+        form = page.forms['profile_form']
+
+        new_email = 'a.new.email@user.com'
+        form['email'] = new_email
+        page = form.submit()
+
+        self.assertEquals(len(mail.outbox), 1)
+        self.assertEquals(mail.outbox[0].to[0], self.email)
+        self.assertEquals(User.objects.get(id=self.user.id).email, new_email)
+        self.assertIn("you're email address has been changed",
+                      mail.outbox[0].body)
+
 
 class TestAnAnonymousUser(WebTestCase):
 
