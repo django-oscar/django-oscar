@@ -538,6 +538,7 @@ class AnonymousOrderDetailView(DetailView):
 class ChangePasswordView(FormView):
     form_class = PasswordChangeForm
     template_name = 'customer/change_password_form.html'
+    communication_type_code = 'PASSWORD_CHANGED'
 
     def get_form_kwargs(self):
         kwargs = super(ChangePasswordView, self).get_form_kwargs()
@@ -547,6 +548,14 @@ class ChangePasswordView(FormView):
     def form_valid(self, form):
         form.save()
         messages.success(self.request, _("Password updated"))
+
+        ctx = {
+            'site': get_current_site(self.request),
+        }
+        msgs = CommunicationEventType.objects.get_and_render(
+            code=self.communication_type_code, context=ctx)
+        Dispatcher().dispatch_user_messages(self.request.user, msgs)
+
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):

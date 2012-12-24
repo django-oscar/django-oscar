@@ -19,7 +19,6 @@ OrderNumberGenerator, OrderCreator = get_classes('order.utils', ['OrderNumberGen
 UserAddressForm = get_class('address.forms', 'UserAddressForm')
 Repository = get_class('shipping.repository', 'Repository')
 AccountAuthView = get_class('customer.views', 'AccountAuthView')
-Dispatcher = get_class('customer.utils', 'Dispatcher')
 RedirectRequired, UnableToTakePayment, PaymentError = get_classes(
     'payment.exceptions', ['RedirectRequired', 'UnableToTakePayment', 'PaymentError'])
 UnableToPlaceOrder = get_class('order.exceptions', 'UnableToPlaceOrder')
