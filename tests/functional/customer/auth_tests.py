@@ -50,6 +50,35 @@ class TestAUserWhoseForgottenHerPassword(WebTest):
         self.assertEqual(302, response.status_code)
 
 
+class TestARegisteredUser(WebTestCase):
+    is_anonymous = False
+
+    def test_receives_an_email_when_their_password_is_changed(self):
+        page = self.get(reverse('customer:change-password'))
+        form = page.forms['change_password_form']
+        form['old_password'] = self.password
+        form['new_password1'] = u'anotherfancypassword'
+        form['new_password2'] = u'anotherfancypassword'
+        page = form.submit()
+
+        self.assertEquals(len(mail.outbox), 1)
+        self.assertIn("your password has been changed", mail.outbox[0].body)
+
+    def test_receives_an_email_when_their_email_address_is_changed(self):
+        page = self.get(reverse('customer:profile-update'))
+        form = page.forms['profile_form']
+
+        new_email = 'a.new.email@user.com'
+        form['email'] = new_email
+        page = form.submit()
+
+        self.assertEquals(len(mail.outbox), 1)
+        self.assertEquals(mail.outbox[0].to[0], self.email)
+        self.assertEquals(User.objects.get(id=self.user.id).email, new_email)
+        self.assertIn("your email address has been changed",
+                      mail.outbox[0].body)
+
+
 class TestAnAnonymousUser(WebTestCase):
 
     def test_can_login(self):

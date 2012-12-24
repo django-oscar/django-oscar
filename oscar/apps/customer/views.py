@@ -18,7 +18,9 @@ from django.conf import settings
 from django.db.models import get_model
 
 from oscar.views.generic import PostActionMixin
+from oscar.apps.customer.utils import get_password_reset_url
 from oscar.core.loading import get_class, get_profile_class, get_classes
+
 Dispatcher = get_class('customer.utils', 'Dispatcher')
 EmailAuthenticationForm, EmailUserCreationForm, SearchByDateRangeForm = get_classes(
     'customer.forms', ['EmailAuthenticationForm', 'EmailUserCreationForm',
@@ -53,6 +55,7 @@ class LogoutView(RedirectView):
 class ProfileUpdateView(FormView):
     form_class = ProfileForm
     template_name = 'customer/profile_form.html'
+    communication_type_code = 'EMAIL_CHANGED'
 
     def get_form_kwargs(self):
         kwargs = super(ProfileUpdateView, self).get_form_kwargs()
@@ -60,7 +63,32 @@ class ProfileUpdateView(FormView):
         return kwargs
 
     def form_valid(self, form):
+        # Grab current user instance before we save form.  We may need this to
+        # send a warning email if the email address is changed.
+        try:
+            old_user = User.objects.get(id=self.request.user.id)
+        except User.DoesNotExist:
+            old_user = None
+
         form.save()
+
+        # We have to look up the email address from the form's
+        # cleaned data because the object created by form.save() can
+        # either be a user or profile depending on AUTH_PROFILE_MODULE
+        new_email = form.cleaned_data['email']
+        if old_user and new_email != old_user.email:
+            # Email address has changed - send a confirmation email to the old
+            # address including a password reset link in case this is a
+            # suspicious change.
+            ctx = {
+                'site': get_current_site(self.request),
+                'reset_url': get_password_reset_url(old_user),
+                'new_email': new_email,
+            }
+            msgs = CommunicationEventType.objects.get_and_render(
+                code=self.communication_type_code, context=ctx)
+            Dispatcher().dispatch_user_messages(old_user, msgs)
+
         messages.success(self.request, "Profile updated")
         return HttpResponseRedirect(self.get_success_url())
 
@@ -538,6 +566,7 @@ class AnonymousOrderDetailView(DetailView):
 class ChangePasswordView(FormView):
     form_class = PasswordChangeForm
     template_name = 'customer/change_password_form.html'
+    communication_type_code = 'PASSWORD_CHANGED'
 
     def get_form_kwargs(self):
         kwargs = super(ChangePasswordView, self).get_form_kwargs()
@@ -547,6 +576,15 @@ class ChangePasswordView(FormView):
     def form_valid(self, form):
         form.save()
         messages.success(self.request, _("Password updated"))
+
+        ctx = {
+            'site': get_current_site(self.request),
+            'reset_url': get_password_reset_url(self.request.user),
+        }
+        msgs = CommunicationEventType.objects.get_and_render(
+            code=self.communication_type_code, context=ctx)
+        Dispatcher().dispatch_user_messages(self.request.user, msgs)
+
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
