@@ -8,13 +8,21 @@ from django.utils.translation import ugettext_lazy as _
 from oscar.apps.dashboard.catalogue import forms
 from oscar.core.loading import get_classes
 
-ProductForm, CategoryForm, StockRecordForm, StockAlertSearchForm, ProductCategoryFormSet, ProductImageFormSet = get_classes(
-    'dashboard.catalogue.forms', ('ProductForm', 'CategoryForm', 'StockRecordForm',
-                                  'StockAlertSearchForm',
-                                  'ProductCategoryFormSet',
-                                  'ProductImageFormSet'))
+(ProductForm,
+ CategoryForm,
+ StockRecordForm,
+ StockAlertSearchForm,
+ ProductCategoryFormSet,
+ ProductImageFormSet) = get_classes('dashboard.catalogue.forms',
+                                    ('ProductForm',
+                                     'CategoryForm',
+                                     'StockRecordForm',
+                                     'StockAlertSearchForm',
+                                     'ProductCategoryFormSet',
+                                     'ProductImageFormSet'))
 Product = get_model('catalogue', 'Product')
 Category = get_model('catalogue', 'Category')
+ProductImage = get_model('catalogue', 'ProductImage')
 ProductCategory = get_model('catalogue', 'ProductCategory')
 ProductClass = get_model('catalogue', 'ProductClass')
 StockRecord = get_model('partner', 'StockRecord')
@@ -268,6 +276,17 @@ class ProductUpdateView(generic.UpdateView):
     def get_success_url(self):
         messages.success(self.request, _("Updated product '%s'") %
                          self.object.title)
+        return reverse('dashboard:catalogue-product-list')
+
+
+class ProductDeleteView(generic.DeleteView):
+    template_name = 'dashboard/catalogue/product_delete.html'
+    model = Product
+    context_object_name = 'product'
+
+    def get_success_url(self):
+        msg =_("Deleted product '%s'") % self.object.title
+        messages.success(self.request, msg)
         return reverse('dashboard:catalogue-product-list')
 
 
