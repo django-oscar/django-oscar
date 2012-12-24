@@ -1,8 +1,9 @@
 from decimal import Decimal as D
 
+from django.db import models
 from django.conf import settings
 from django.db.models import get_model
-from django.db import models
+from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
 from django.utils.importlib import import_module as django_import_module
 
@@ -31,9 +32,9 @@ def _load_partner_wrappers():
     global partner_wrappers
     partner_wrappers = {}
     Partner = get_model('partner', 'Partner')
-    for partner_name, class_str in settings.OSCAR_PARTNER_WRAPPERS.items():
+    for partner_slug, class_str in settings.OSCAR_PARTNER_WRAPPERS.items():
         try:
-            partner = Partner.objects.get(name=partner_name)
+            partner = Partner.objects.get(slug=partner_slug)
         except Partner.DoesNotExist:
             continue
         else:
@@ -46,12 +47,25 @@ class AbstractPartner(models.Model):
     """
     Fulfillment partner
     """
-    name = models.CharField(_("Name"), max_length=128, unique=True)
+    name = models.CharField(_("Name"), max_length=128, null=True, blank=True)
+    slug = models.SlugField(_("Code"), max_length=128, unique=True)
 
     # A partner can have users assigned to it.  These can be used
     # to provide authentication for webservices etc.
-    users = models.ManyToManyField('auth.User', related_name="partners", blank=True, null=True,
-        verbose_name=_("Users"))
+    users = models.ManyToManyField('auth.User', related_name="partners",
+                                   blank=True, null=True,
+                                   verbose_name=_("Users"))
+
+    @property
+    def display_name(self):
+        if not self.name:
+            return self.slug
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super(AbstractPartner, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = _('Fulfillment Partner')
@@ -269,10 +283,10 @@ class AbstractStockRecord(models.Model):
 
     def __unicode__(self):
         if self.partner_sku:
-            return "%s (%s): %s" % (self.partner.name,
+            return "%s (%s): %s" % (self.partner.display_name,
                                     self.partner_sku, self.product.title)
         else:
-            return "%s: %s" % (self.partner.name, self.product.title)
+            return "%s: %s" % (self.partner.display_name, self.product.title)
 
 
 class AbstractStockAlert(models.Model):

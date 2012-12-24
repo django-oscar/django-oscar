@@ -14,7 +14,7 @@
         <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
-    <li class="active">{% trans "Stock alerts" %}</li>	
+    <li class="active">{% trans "Stock alerts" %}</li>
 </ul>
 {% endblock %}
 
@@ -51,35 +51,33 @@
 <table class="table table-striped table-bordered table-hover">
     {% if alerts %}
     <tr>
-		<th>{% trans "Product" %}</th>
-		<th>{% trans "Partner" %}</th>
-		<th>{% trans "Low stock threshold" %}</th>
-		<th>{% trans "Current available stock" %}</th>
-		<th>{% trans "Date alert raised" %}</th>
-		<th>{% trans "Status" %}</th>
+        <th>{% trans "Product" %}</th>
+        <th>{% trans "Partner" %}</th>
+        <th>{% trans "Low stock threshold" %}</th>
+        <th>{% trans "Current available stock" %}</th>
+        <th>{% trans "Date alert raised" %}</th>
+        <th>{% trans "Status" %}</th>
         <th></th>
     </tr>
     {% for alert in alerts %}
     <tr>
-		<td>{{ alert.stockrecord.product.get_title }}</td>
-        <td>{{ alert.stockrecord.partner.name }}</td>
-		<td>{{ alert.stockrecord.low_stock_threshold }}</td>
-		<td>{{ alert.stockrecord.net_stock_level }}</td>
-		<td>{{ alert.date_created }}</td>
-		<td>{{ alert.status }}</td>
-		<td>
-			<a class="btn btn-info" href="{% url dashboard:catalogue-product alert.stockrecord.product.id %}">{% trans "Update" %}</a>
-		</td>
+        <td>{{ alert.stockrecord.product.get_title }}</td>
+        <td>{{ alert.stockrecord.partner.display_name }}</td>
+        <td>{{ alert.stockrecord.low_stock_threshold }}</td>
+        <td>{{ alert.stockrecord.net_stock_level }}</td>
+        <td>{{ alert.date_created }}</td>
+        <td>{{ alert.status }}</td>
+        <td>
+            <a class="btn btn-info" href="{% url dashboard:catalogue-product alert.stockrecord.product.id %}">{% trans "Update" %}</a>
+        </td>
     </tr>
     {% endfor %}
-    
+
     {% else %}
 
     <tr><td>{% trans "No stock alerts found." %}</td></tr>
 
     {% endif %}
 </table>
-
-
 
 {% endblock dashboard_content %}
