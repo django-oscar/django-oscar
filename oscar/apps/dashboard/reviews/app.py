@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, url
-from django.contrib.admin.views.decorators import staff_member_required
+from oscar.views.decorators import staff_member_required
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.application import Application
