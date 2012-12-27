@@ -1,7 +1,7 @@
 {% load i18n %}
 {% autoescape off %}
 {% blocktrans with email=new_email %}
-You're receiving this e-mail because you're email address has been changed to {{ email }}.
+You're receiving this e-mail because your email address has been changed to {{ email }}.
 {% endblocktrans %}
 
 {% trans "If it wasn't you who changed it, please reset your password immediately and correct your email address:" %}
