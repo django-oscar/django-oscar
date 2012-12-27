@@ -66,13 +66,18 @@ class ProfileUpdateView(FormView):
         except User.DoesNotExist:
             old_user = None
 
-        user = form.save()
+        form.save()
+
+        # we have to look up the email address from the form's
+        # cleaned data because the object created by form.save() can
+        # either be a user or profile depending on AUTH_PROFILE_MODULE
+        new_email = form.cleaned_data['email']
         messages.success(self.request, "Profile updated")
 
-        if old_user and user.email != old_user.email:
+        if old_user and new_email != old_user.email:
             ctx = {
                 'site': get_current_site(self.request),
-                'new_email': user.email,
+                'new_email': new_email,
             }
             msgs = CommunicationEventType.objects.get_and_render(
                 code=self.communication_type_code, context=ctx)
