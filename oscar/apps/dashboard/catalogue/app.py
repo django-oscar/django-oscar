@@ -1,10 +1,10 @@
 from django.conf.urls import patterns, url
-from django.contrib.admin.views.decorators import staff_member_required
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.application import Application
 from oscar.apps.dashboard.catalogue import views
 from oscar.apps.dashboard.nav import register, Node
+from oscar.views.decorators import staff_member_required
 
 node = Node(_('Catalogue'))
 node.add_child(Node(_('Products'), 'dashboard:catalogue-product-list'))
