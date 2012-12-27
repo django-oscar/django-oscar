@@ -1,10 +1,10 @@
 from django.conf.urls import patterns, url
-from django.contrib.admin.views.decorators import staff_member_required
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.application import Application
 from oscar.apps.dashboard.catalogue import views
 from oscar.apps.dashboard.nav import register, Node
+from oscar.views.decorators import staff_member_required
 
 node = Node(_('Catalogue'))
 node.add_child(Node(_('Products'), 'dashboard:catalogue-product-list'))
@@ -20,7 +20,7 @@ class CatalogueApplication(Application):
     product_create_redirect_view = views.ProductCreateRedirectView
     product_create_view = views.ProductCreateView
     product_update_view = views.ProductUpdateView
-    
+
     category_list_view = views.CategoryListView
     category_detail_list_view = views.CategoryDetailListView
     category_create_view = views.CategoryCreateView
