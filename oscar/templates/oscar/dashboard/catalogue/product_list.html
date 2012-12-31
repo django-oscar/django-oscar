@@ -5,7 +5,7 @@
 {% block body_class %}catalogue{% endblock %}
 
 {% block title %}
-{% trans "Catalogue management" %} | {{ block.super }}
+{% trans "Product management" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -14,7 +14,7 @@
         <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
-    <li class="active">{% trans "Product Management" %}</li>
+    <li class="active">{% trans "Product management" %}</li>
 </ul>
 {% endblock %}
 

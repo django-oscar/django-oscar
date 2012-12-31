@@ -5,7 +5,7 @@
 {% block body_class %}create-page catalogue{% endblock %}
 
 {% block title %}
-{% trans "Update product" %} | {{ block.super }}
+{{ title }} | {% trans "Product management" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -15,10 +15,11 @@
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="{% url dashboard:catalogue-product-list %}">{% trans "Catalogue" %}</a>
+        <a href="{% url dashboard:catalogue-product-list %}">{% trans "Product management" %}</a>
         <span class="divider">/</span>
     </li>
     <li class="active">{{ title }}</li>
+
 </ul>
 {% endblock %}
 

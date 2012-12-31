@@ -1,6 +1,13 @@
 {% extends 'dashboard/layout.html' %}
 {% load i18n %}
 
+{% block title %}
+{% blocktrans with title=product.get_title %}
+Delete {{ title}}?
+{% endblocktrans %} |
+{{ block.super }}
+{% endblock %}
+
 {% block body_class %}
 create-page
 {% endblock %}
@@ -12,10 +19,14 @@ create-page
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="{% url dashboard:catalogue-product-list %}">{% trans "Products" %}</a>
+        <a href="{% url dashboard:catalogue-product-list %}">{% trans "Product management" %}</a>
         <span class="divider">/</span>
     </li>
-    <li class="active">{% trans "Delete product?" %}</li>
+    <li>
+        <a href="{% url dashboard:catalogue-product product.pk %}">{{ product.title }}</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active">{% trans "Delete?" %}</li>
 </ul>
 {% endblock %}
 

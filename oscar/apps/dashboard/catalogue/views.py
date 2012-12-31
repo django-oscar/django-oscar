@@ -199,7 +199,7 @@ class ProductUpdateView(generic.UpdateView):
             ctx['category_formset'] = ProductCategoryFormSet(instance=self.object)
         if 'image_formset' not in ctx:
             ctx['image_formset'] = ProductImageFormSet(instance=self.object)
-        ctx['title'] = _('Update product')
+        ctx['title'] = ctx['product'].get_title()
         return ctx
 
     def get_form_kwargs(self):
