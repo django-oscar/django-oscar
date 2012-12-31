@@ -308,7 +308,7 @@ class ConditionalOffer(models.Model):
                 desc = _("Limited to 1 use per user")
             else:
                 desc = _(
-                    "Limited to %(total)d user per user") % {
+                    "Limited to %(total)d uses per user") % {
                         'total': self.max_user_applications}
             restrictions.append({
                 'description': desc,

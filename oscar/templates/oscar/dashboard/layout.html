@@ -114,3 +114,7 @@
 
     <script src="{{ STATIC_URL }}oscar/js/oscar/dashboard.js" type="text/javascript" charset="utf-8"></script>
 {% endblock %}
+
+{% block onbodyload %}
+oscar.dashboard.init();
+{% endblock %}
