@@ -152,7 +152,7 @@ var oscar = (function(o, $) {
                     $(this).elastislide({
                         imageW: 175,
                         minItems: 4,
-                        onClick: true
+                        onClick: function() {return true;}
                     });
                 }
             });

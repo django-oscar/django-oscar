@@ -69,7 +69,6 @@
     {% if products.count %}
     <section>
         <div class="mod">
-            {% include "partials/pagination.html" %}
             <ol class="products four">
                 {% for product in products %}
                 <li>{% include "catalogue/partials/product.html" %}</li>
