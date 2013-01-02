@@ -6,6 +6,8 @@ from django.core.urlresolvers import reverse
 from oscar.apps.catalogue.models import Product, ProductClass, Category
 from oscar.apps.catalogue.utils import breadcrumbs_to_category
 
+import mock
+
 
 class CategoryTests(TestCase):
     
@@ -87,3 +89,17 @@ class SingleProductViewTest(TestCase):
         wrong_url = reverse('catalogue:detail', kwargs=args)
         response = self.client.get(wrong_url)
         self.assertEquals(301, response.status_code)
+
+
+class ProductAttributesTests(TestCase):
+    fixtures = ['sample-products']
+
+    @mock.patch("oscar.apps.catalogue.abstract_models.ENABLE_ATTRIBUTE_BINDING")
+    def test_existence_of_attribute(self, attribute_binding):
+
+        def get_fake_attribute(product):
+            return product.attr.fake_attribute
+
+        product = Product.objects.get(pk=1)
+
+        self.assertRaises(AttributeError, get_fake_attribute, product)
