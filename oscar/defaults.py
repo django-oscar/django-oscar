@@ -94,21 +94,59 @@ OSCAR_DASHBOARD_NAVIGATION = [
                 'url_name': 'dashboard:range-list',
             },
             {
-                'label': _('Reviews'),
-                'url_name': 'dashboard:reviews-list',
-            },
-            {
-                'label': _('Stock alerts'),
+                'label': _('Low stock alerts'),
                 'url_name': 'dashboard:stock-alert-list',
             },
          ]
+    },
+    {
+        'label': _('Fulfilment'),
+        'icon': 'icon-shopping-cart',
+        'children': [
+            {
+                'label': _('Order management'),
+                'url_name': 'dashboard:order-list',
+            },
+            {
+                'label': _('Statistics'),
+                'url_name': 'dashboard:order-stats',
+            },
+        ]
+    },
+    {
+        'label': _('Customers'),
+        'icon': 'icon-group',
+        'children': [
+            {
+                'label': _('Customer management'),
+                'url_name': 'dashboard:users-index',
+            },
+            {
+                'label': _('Stock alert requests'),
+                'url_name': 'dashboard:user-alert-list',
+            },
+        ]
+    },
+    {
+        'label': _('Offers'),
+        'icon': 'icon-bullhorn',
+        'children': [
+            {
+                'label': _('Offer management'),
+                'url_name': 'dashboard:offer-list',
+            },
+            {
+                'label': _('Vouchers'),
+                'url_name': 'dashboard:voucher-list',
+            },
+        ],
     },
     {
         'label': _('Content'),
         'icon': 'icon-folder-close',
         'children': [
             {
-                'label': _('Re-usable content blocks'),
+                'label': _('Content blocks'),
                 'url_name': 'dashboard:promotion-list',
             },
             {
@@ -119,61 +157,13 @@ OSCAR_DASHBOARD_NAVIGATION = [
                 'label': _('Pages'),
                 'url_name': 'dashboard:page-list',
             },
-        ]
-    },
-    {
-        'label': _('Promotions'),
-        'icon': 'icon-bullhorn',
-        'children': [
             {
-                'label': _('Offers'),
-                'url_name': 'dashboard:offer-list',
-            },
-            {
-                'label': _('Vouchers'),
-                'url_name': 'dashboard:voucher-list',
-            },
-        ],
-    },
-    {
-        'label': _('Fulfilment'),
-        'icon': 'icon-shopping-cart',
-        'children': [
-            {
-                'label': _('Orders'),
-                'url_name': 'dashboard:order-list',
-            },
-            {
-                'label': _('Statistics'),
-                'url_name': 'dashboard:order-stats',
-            },
-        ]
-    },
-    {
-        'label': _('Communications'),
-        'icon': 'icon-globe',
-        'children': [
-            {
-                'label': _('Site emails'),
+                'label': _('Email templates'),
                 'url_name': 'dashboard:comms-list',
             },
             {
-                'label': _('Support'),
-                'url_name': 'ticketing-dashboard:ticket-list',
-            },
-        ]
-    },
-    {
-        'label': _('Customers'),
-        'icon': 'icon-group',
-        'children': [
-            {
-                'label': _('Customers'),
-                'url_name': 'dashboard:users-index',
-            },
-            {
-                'label': _('Alerts'),
-                'url_name': 'dashboard:user-alert-list',
+                'label': _('Reviews'),
+                'url_name': 'dashboard:reviews-list',
             },
         ]
     },

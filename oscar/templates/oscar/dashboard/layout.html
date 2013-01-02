@@ -52,7 +52,6 @@
 
                     <div class="nav-collapse nav-primary">
                         <ul class="nav nav-pills dashboard">
-                            <li class="Dashboard"><a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a></li>
                             {% for item in nav_items %}
                             <li class="dropdown">
                                 {% if item.is_heading %}
