@@ -62,8 +62,10 @@ Screenshots
 -----------
 
 These are a few screenshots from the 'sandbox' example site that ships with
-Oscar.  It sports a simple design built with Twitter's Bootstrap.  It provides a
+Oscar.  It sports a simple design built with Twitter's Bootstrap_.  It provides a
 good starting point for quickly building elegant e-commerce sites.
+
+.. _Bootstrap: http://twitter.github.com/bootstrap/
 
 .. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/browse.thumb.png
     :target: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/browse.png
@@ -91,7 +93,7 @@ at: http://localhost:8000.  Want to make changes?  Check out the
 
 .. _`contributing guidelines`: http://django-oscar.readthedocs.org/en/latest/contributing.html#playing-in-the-sandbox
 
-Note that the sandbox site is also available to browse at 
+The sandbox site is also available to browse at 
 http://latest.oscarcommerce.com
 
 Extensions
@@ -108,6 +110,7 @@ The following extensions are stable and ready for use:
   functionality and loyalty schemes)
 * django-oscar-stores_ - Physical stores integration (opening hours, store
   locator etc)
+* django-oscar-testsupport_ - Testing utilities for Oscar extensions.
 
 .. _django-oscar-datacash: https://github.com/tangentlabs/django-oscar-datacash
 .. _django-oscar-paymentexpress: https://github.com/tangentlabs/django-oscar-paymentexpress
@@ -121,6 +124,7 @@ The following extensions are stable and ready for use:
 .. _django-oscar-jirafe: https://github.com/tangentlabs/django-oscar-jirafe
 .. _Jirafe: https://jirafe.com/
 .. _django-oscar-accounts: https://github.com/tangentlabs/django-oscar-accounts
+.. _django-oscar-testsupport: https://github.com/tangentlabs/django-oscar-testsupport
 
 The following extensions are in development:
 
