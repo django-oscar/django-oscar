@@ -50,7 +50,7 @@ class TestAUserWhoseForgottenHerPassword(WebTest):
         self.assertEqual(302, response.status_code)
 
 
-class TestARegisteredUser(WebTestCase):
+class TestAnAuthenticatedUser(WebTestCase):
     is_anonymous = False
 
     def test_receives_an_email_when_their_password_is_changed(self):
@@ -63,6 +63,17 @@ class TestARegisteredUser(WebTestCase):
 
         self.assertEquals(len(mail.outbox), 1)
         self.assertIn("your password has been changed", mail.outbox[0].body)
+
+    def test_cannot_access_reset_password_page(self):
+        response = self.get(reverse('password-reset'), status=403)
+        self.assertEqual(403, response.status_code)
+
+    def test_does_not_receive_an_email_when_their_profile_is_updated_but_email_address_not_changed(self):
+        page = self.get(reverse('customer:profile-update'))
+        form = page.forms['profile_form']
+        form['first_name'] = "Terry"
+        form.submit()
+        self.assertEquals(len(mail.outbox), 0)
 
     def test_receives_an_email_when_their_email_address_is_changed(self):
         page = self.get(reverse('customer:profile-update'))

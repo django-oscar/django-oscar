@@ -1,8 +1,9 @@
 import urlparse
 from functools import wraps
 
-from django.contrib import messages
 from django.contrib.auth import REDIRECT_FIELD_NAME
+from django.shortcuts import render
+from django.contrib import messages
 from django.contrib.auth.views import redirect_to_login
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse_lazy
@@ -44,5 +45,19 @@ def staff_member_required(view_func, login_url=None):
         else:
             # User does not have permission to view this page
             raise PermissionDenied
+
+    return _checklogin
+
+
+def login_forbidden(view_func, template_name='login_forbidden.html',
+                    status=403):
+    """
+    Only allow anonymous users to access this view.
+    """
+    @wraps(view_func)
+    def _checklogin(request, *args, **kwargs):
+        if not request.user.is_authenticated():
+            return view_func(request, *args, **kwargs)
+        return render(request, template_name, status=status)
 
     return _checklogin
