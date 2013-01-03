@@ -12,8 +12,8 @@ Product = get_model('catalogue', 'product')
 
 
 class BasketLineForm(forms.ModelForm):
-    save_for_later = forms.BooleanField(initial=False, required=False,
-                                        label=_('Save for Later'))
+    save_for_later = forms.BooleanField(
+        initial=False, required=False, label=_('Save for Later'))
 
     def clean_quantity(self):
         qty = self.cleaned_data['quantity']
@@ -22,14 +22,15 @@ class BasketLineForm(forms.ModelForm):
         return qty
 
     def check_max_allowed_quantity(self, qty):
-        is_allowed, reason = self.instance.basket.is_quantity_allowed(qty)
+        is_allowed, reason = self.instance.basket.is_quantity_allowed(
+            qty)
         if not is_allowed:
             raise forms.ValidationError(reason)
 
     def check_permission(self, qty):
         product = self.instance.product
-        is_available, reason = product.is_purchase_permitted(user=None,
-                                                             quantity=qty)
+        is_available, reason = product.is_purchase_permitted(
+            user=None, quantity=qty)
         if not is_available:
             raise forms.ValidationError(reason)
 
