@@ -5,7 +5,11 @@
 {% load i18n %}
 
 {% block mainstylesheet %}
-    <link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/dashboard.css" />
+    {% if debug %}
+        <link rel="stylesheet" type="text/less" href="{{ STATIC_URL }}oscar/less/dashboard.less" />
+    {% else %}
+        <link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/dashboard.css" />
+    {% endif %}
 {% endblock %}
 
 {% block title %}
