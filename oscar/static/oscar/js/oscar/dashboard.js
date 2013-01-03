@@ -17,8 +17,9 @@ var oscar = (function(o, $) {
         init: function() {
             // Run initialisation that should take place on every page of the dashboard.
 
-            // Use datepicker for all intputs that have 'date' in the name
+            // Use datepicker for all inputs that have 'date' or 'datetime' in the name
             $('input[name^="date"], input[name$="date"]').datepicker({dateFormat: 'yy-mm-dd'});
+            $('input[name$="datetime"]').datetimepicker({dateFormat: 'yy-mm-dd'});
 
             // Use WYSIHTML5 widget on textareas
             var options = {

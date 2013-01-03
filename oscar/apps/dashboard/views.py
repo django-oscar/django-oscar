@@ -32,7 +32,7 @@ class IndexView(TemplateView):
         ``Queryset`` of site offers is filtered by end date greater then
         the current date.
         """
-        return ConditionalOffer.objects.filter(end_date__gt=now(),
+        return ConditionalOffer.objects.filter(end_datetime__gt=now(),
                                                offer_type=ConditionalOffer.SITE)
 
     def get_active_vouchers(self):

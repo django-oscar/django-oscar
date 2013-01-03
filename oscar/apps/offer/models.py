@@ -1,10 +1,10 @@
 from decimal import Decimal as D, ROUND_DOWN, ROUND_UP
 import math
-import datetime
 
 from django.core import exceptions
 from django.template.defaultfilters import slugify
 from django.db import models
+from django.utils.timezone import now
 from django.utils.translation import ungettext, ugettext as _
 from django.utils.importlib import import_module
 from django.core.exceptions import ValidationError
@@ -88,8 +88,8 @@ class ConditionalOffer(models.Model):
     # Range of availability.  Note that if this is a voucher offer, then these
     # dates are ignored and only the dates from the voucher are used to
     # determine availability.
-    start_date = models.DateField(_("Start date"), blank=True, null=True)
-    end_date = models.DateField(
+    start_datetime = models.DateTimeField(_("Start date"), blank=True, null=True)
+    end_datetime = models.DateTimeField(
         _("End date"), blank=True, null=True,
         help_text=_("Offers are active until the end of the 'end date'"))
 
@@ -151,7 +151,7 @@ class ConditionalOffer(models.Model):
         verbose_name_plural = _("Conditional offers")
 
         # The way offers are looked up involves the fields
-        # (offer_type, status, start_date, end_date).  Ideally, you want
+        # (offer_type, status, start_datetime, end_datetime).  Ideally, you want
         # a DB index that covers these 4 fields (will add support for this in
         # Django 1.5)
 
@@ -175,8 +175,8 @@ class ConditionalOffer(models.Model):
         return self.name
 
     def clean(self):
-        if (self.start_date and self.end_date and
-            self.start_date > self.end_date):
+        if (self.start_datetime and self.end_datetime and
+            self.start_datetime > self.end_datetime):
             raise exceptions.ValidationError(
                 _('End date should be later than start date'))
 
@@ -205,12 +205,12 @@ class ConditionalOffer(models.Model):
         if self.is_suspended:
             return False
         if test_date is None:
-            test_date = datetime.date.today()
+            test_date = now()
         predicates = []
-        if self.start_date:
-            predicates.append(self.start_date > test_date)
-        if self.end_date:
-            predicates.append(test_date > self.end_date)
+        if self.start_datetime:
+            predicates.append(self.start_datetime > test_date)
+        if self.end_datetime:
+            predicates.append(test_date > self.end_datetime)
         if any(predicates):
             return 0
         return self.get_max_applications(user) > 0
@@ -325,21 +325,21 @@ class ConditionalOffer(models.Model):
                 'description': desc,
                 'is_satisfied': True})
 
-        if self.start_date or self.end_date:
-            today = datetime.date.today()
-            if self.start_date and self.end_date:
+        if self.start_datetime or self.end_datetime:
+            today = now()
+            if self.start_datetime and self.end_datetime:
                 desc = _("Available between %(start)s and %(end)s") % {
-                        'start': self.start_date,
-                        'end': self.end_date}
-                is_satisfied = self.start_date <= today <= self.end_date
-            elif self.start_date:
+                        'start': self.start_datetime,
+                        'end': self.end_datetime}
+                is_satisfied = self.start_datetime <= today <= self.end_datetime
+            elif self.start_datetime:
                 desc = _("Available from %(start)s") % {
-                    'start': self.start_date}
-                is_satisfied = today >= self.start_date
-            elif self.end_date:
+                    'start': self.start_datetime}
+                is_satisfied = today >= self.start_datetime
+            elif self.end_datetime:
                 desc = _("Available until %(end)s") % {
-                    'end': self.end_date}
-                is_satisfied = today <= self.end_date
+                    'end': self.end_datetime}
+                is_satisfied = today <= self.end_datetime
             restrictions.append({
                 'description': desc,
                 'is_satisfied': is_satisfied})
