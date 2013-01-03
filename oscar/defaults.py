@@ -7,6 +7,7 @@ OSCAR_SHOP_TAGLINE = 'Domain-driven e-Commerce for Django'
 OSCAR_BASKET_COOKIE_LIFETIME = 7 * 24 * 60 * 60
 OSCAR_BASKET_COOKIE_OPEN = 'oscar_open_basket'
 OSCAR_BASKET_COOKIE_SAVED = 'oscar_saved_basket'
+OSCAR_MAX_BASKET_QUANTITY_THRESHOLD = 10000
 
 # Currency
 OSCAR_DEFAULT_CURRENCY = 'GBP'
@@ -64,8 +65,6 @@ OSCAR_FROM_EMAIL = 'oscar@example.com'
 # Offers
 OSCAR_OFFER_BLACKLIST_PRODUCT = None
 
-# Max total number of items in basket
-OSCAR_MAX_BASKET_QUANTITY_THRESHOLD = None
 
 # Cookies
 OSCAR_COOKIES_DELETE_ON_LOGOUT = ['oscar_recently_viewed_products', ]

@@ -93,10 +93,8 @@ class AbstractBasket(models.Model):
             if qty > max_allowed:
                 return False, _(
                     "Due to technical limitations we are not able "
-                    "to ship more than %(threshold)d items in one order."
-                    " Your basket currently has %(basket)d items.") % {
+                    "to ship more than %(threshold)d items in one order.") % {
                         'threshold': basket_threshold,
-                        'basket': total_basket_quantity,
                     }
         return True, None
 
