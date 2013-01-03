@@ -14,11 +14,24 @@ var oscar = (function(o, $) {
     };
 
     o.dashboard = {
+        dateFormat: 'yy-mm-dd',
+        datepickerOptions: {},
+        datetimepickerOptions: {
+            timeFormat: 'HH:mm',
+            stepMinute: 15
+        },
         init: function() {
             // Run initialisation that should take place on every page of the dashboard.
 
-            // Use datepicker for all intputs that have 'date' in the name
-            $('input[name^="date"], input[name$="date"]').datepicker({dateFormat: 'yy-mm-dd'});
+            // Use datepicker for all inputs that have 'date' or 'datetime' in the name
+            if ($.datepicker) {
+                o.dashboard.datepickerOptions.dateFormat = o.dashboard.dateFormat;
+                $('input[name^="date"], input[name$="date"]').datepicker(o.dashboard.datepickerOptions);
+            }
+            if ($.ui.timepicker) {
+                o.dashboard.datetimepickerOptions.dateFormat = o.dashboard.dateFormat;
+                $('input[name$="datetime"]').datetimepicker(o.dashboard.datetimepickerOptions);
+            }
 
             // Use WYSIHTML5 widget on textareas
             var options = {

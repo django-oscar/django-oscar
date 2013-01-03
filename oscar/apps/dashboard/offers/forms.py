@@ -17,22 +17,32 @@ class MetaDataForm(forms.ModelForm):
 
 
 class RestrictionsForm(forms.ModelForm):
-    format = '%Y-%m-%d'
-    start_date = forms.DateField(widget=forms.DateInput(format=format),
-                                 label=_("Start date"), required=False)
-    end_date = forms.DateField(widget=forms.DateInput(format=format),
+    format = '%Y-%m-%d %H:%M'
+    start_datetime = forms.DateTimeField(
+        widget=forms.DateTimeInput(format=format),
+        label=_("Start date"), required=False)
+    end_datetime = forms.DateTimeField(widget=forms.DateTimeInput(format=format),
                                label=_("End date"), required=False)
 
     def __init__(self, *args, **kwargs):
         super(RestrictionsForm, self).__init__(*args, **kwargs)
         today = datetime.date.today()
-        self.fields['start_date'].initial = today.strftime(self.format)
+        self.fields['start_datetime'].initial = today.strftime(self.format)
 
     class Meta:
         model = ConditionalOffer
-        fields = ('start_date', 'end_date',
+        fields = ('start_datetime', 'end_datetime',
                   'max_basket_applications', 'max_user_applications',
                   'max_global_applications', 'max_discount')
+
+    def clean(self):
+        cleaned_data = super(RestrictionsForm, self).clean()
+        start = cleaned_data['start_datetime']
+        end = cleaned_data['end_datetime']
+        if start and end and end < start:
+            raise forms.ValidationError(_(
+                "The end date must be after the start date"))
+        return cleaned_data
 
 
 class ConditionForm(forms.ModelForm):

@@ -13,15 +13,16 @@ class ConditionAdmin(admin.ModelAdmin):
 
 class BenefitAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'type', 'value', 'range')
-    
-    
+
+
 class ConditionalOfferAdmin(admin.ModelAdmin):
-    list_display = ('name', 'offer_type', 'start_date', 'end_date', 'condition', 'benefit', 'total_discount')
+    list_display = ('name', 'offer_type', 'start_datetime', 'end_datetime', 'condition', 'benefit', 'total_discount')
     list_filter = ('offer_type',)
     readonly_fields = ('total_discount', 'num_orders')
     fieldsets = (
         (None, {
-            'fields': ('name', 'description', 'offer_type', 'condition', 'benefit', 'start_date', 'end_date', 'priority')
+            'fields': ('name', 'description', 'offer_type', 'condition',
+                       'benefit', 'start_datetime', 'end_datetime', 'priority')
         }),
         ('Usage', {
             'fields': ('total_discount', 'num_orders')
