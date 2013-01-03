@@ -15,8 +15,8 @@ class TestADateBasedConditionalOffer(TestCase):
     def setUp(self):
         self.start = datetime.date(2011, 01, 01)
         self.end = datetime.date(2011, 02, 01)
-        self.offer = models.ConditionalOffer(start_date=self.start,
-                                             end_date=self.end)
+        self.offer = models.ConditionalOffer(start_datetime=self.start,
+                                             end_datetime=self.end)
 
     def test_is_available_during_date_range(self):
         test = datetime.date(2011, 01, 10)
@@ -30,7 +30,7 @@ class TestADateBasedConditionalOffer(TestCase):
         test = datetime.date(2011, 03, 10)
         self.assertFalse(self.offer.is_available(test_date=test))
 
-    def test_is_active_on_end_date(self):
+    def test_is_active_on_end_datetime(self):
         self.assertTrue(self.offer.is_available(test_date=self.end))
 
 
