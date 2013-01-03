@@ -64,3 +64,8 @@ puppet:
 	git clone git://github.com/akumria/puppet-postgresql.git sites/puppet/modules/postgresql
 	git clone git://github.com/uggedal/puppet-module-python.git sites/puppet/modules/python
 	git clone git://github.com/codeinthehole/puppet-userconfig.git sites/puppet/modules/userconfig
+
+css:
+	lessc oscar/static/oscar/less/styles.less > oscar/static/oscar/css/styles.css
+	lessc oscar/static/oscar/less/responsive.less > oscar/static/oscar/css/responsive.css
+	lessc oscar/static/oscar/less/dashboard.less > oscar/static/oscar/css/dashboard.css
