@@ -12,11 +12,12 @@ register(node, 90)
 
 class ReportsApplication(Application):
     name = None
-    index_view = views.IndexView
+    index_view = views.ReportIndexView
 
     def get_urls(self):
         urlpatterns = patterns('',
             url(r'^$', self.index_view.as_view(), name='reports-index'),
+            url(r'^(?P<report_slug>[-\w]+)/$', views.ReportGeneratorView.as_view(), name='report-generator-view'),
         )
         return self.post_process_urls(urlpatterns)
 
