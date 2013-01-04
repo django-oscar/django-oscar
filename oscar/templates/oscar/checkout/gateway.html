@@ -19,9 +19,9 @@
 <form action="." method="post" class="form-stacked well">
 	{% csrf_token %}
 	{{ form.non_field_errors }}
-	
+
 	<div class="control-group {% for error in form.username.errors %}error{% endfor %}">
-		<label for="id_username" class="control-label {% if form.username.field.required %}required{% endif %}">Your email address{% if form.username.field.required %} <span>*</span>{% endif %}</label>
+		<label for="id_username" class="control-label {% if form.username.field.required %}required{% endif %}">{% trans "Your email address" %}{% if form.username.field.required %} <span>*</span>{% endif %}</label>
 		<div class="controls">
 		    {{ form.username }}
 		    {% for error in form.username.errors %}
@@ -31,7 +31,7 @@
             {% endfor %}
 		</div>
 	</div>
-	
+
 	<div class="control-group">
 		{{ form.options.errors }}
 		<div class="controls">
@@ -41,7 +41,7 @@
 			</label>
 		</div>
 	</div>
-	
+
 	<div class="control-group {% for error in form.password.errors %}error{% endfor %}">
 		<div class="controls">
 		    {{ form.password }}
@@ -51,10 +51,10 @@
 				</span>
             {% endfor %}
 		</div>
-	</div>	
-			
+	</div>
+
 	<p><a href="{% url password-reset %}">{% trans "Get a password reminder" %}</a></p>
-	
+
 	<div class="control-group">
 		<div class="controls">
 			<label class="radio">
@@ -63,7 +63,7 @@
 			</label>
 		</div>
 	</div>
-		
+
 	<div class="form-actions">
 		<button type="submit" class="btn btn-large btn-primary">{% trans "Continue" %}</button>
 		{% trans "Alternatively" %} <a href="{% url customer:register %}?next={% url checkout:index %}">{% trans "create an account" %}</a> {% trans "before you checkout." %}
