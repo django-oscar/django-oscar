@@ -5,7 +5,6 @@
 {% load category_tags %}
 
 {% block layout %}
-    {% include "partials/nav_accounts.html" %}
 
     <header class="header container-fluid">
         <div class="page_inner">
@@ -15,6 +14,7 @@
         </div>
         {% include "partials/nav_checkout.html" %}
     </header><!-- /header -->
+
     <div class="container-fluid page">
         {% include 'partials/alert_messages.html' %}
         {% block header %}{% endblock %}

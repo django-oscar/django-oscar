@@ -11,6 +11,7 @@ from django.views.generic import DetailView, TemplateView, FormView, \
 
 from oscar.apps.shipping.methods import NoShippingRequired
 from oscar.core.loading import get_class, get_classes
+
 ShippingAddressForm, GatewayForm = get_classes('checkout.forms', ['ShippingAddressForm', 'GatewayForm'])
 OrderTotalCalculator = get_class('checkout.calculators', 'OrderTotalCalculator')
 CheckoutSessionData = get_class('checkout.utils', 'CheckoutSessionData')
@@ -48,8 +49,8 @@ class IndexView(CheckoutSessionMixin, FormView):
     form_class = GatewayForm
 
     def get(self, request, *args, **kwargs):
-        # We redirect immediately to shipping address stage if the user is signed in or
-        # has already filled out the anonymous checkout form.
+        # We redirect immediately to shipping address stage if the user is
+        # signed in or has already filled out the anonymous checkout form.
         if request.user.is_authenticated() or self.checkout_session.get_guest_email():
             return self.get_success_response()
         return super(IndexView, self).get(request, *args, **kwargs)
