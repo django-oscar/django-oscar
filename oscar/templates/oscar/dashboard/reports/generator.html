@@ -11,9 +11,9 @@
 <ul class="breadcrumb">	  	
     <li>	  	
         <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>	  	
-        <span class="divider">/</span>	  	
+        <span class="divider">/</span>
+        <a href="{% url dashboard:reports-index %}">{% trans "Reporting Dashboard" %}</a>	  	
     </li>	  	
-    <li class="active">{% trans "Reporting Dashboard" %}</li>	  	
 </ul>
 {% endblock %}
 
@@ -29,13 +29,11 @@
     <h3><i class="icon-bar-chart icon-large"></i>{% trans "Reporting dashboard" %}</h3>
 </div>
 <div class="well">
-
-    <ul> 
-    {% for key, generator in report_generator_map.iteritems %} 
-        <li><a href="{% url dashboard:report-generator-view key %}">{{ generator.title }}</a></li>
-    {% endfor %}    
-    </ul>
-    
+    <form method="POST" action="." enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit">Generate</button>
+    </form>     
 </div>
 
 {% if description %}
