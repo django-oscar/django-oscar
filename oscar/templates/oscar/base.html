@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n compress %}
 <!DOCTYPE html> 
 <!--[if lt IE 7]>      <html lang="{{ lang|default:"en-gb" }}" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html lang="{{ lang|default:"en-gb" }}" class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -6,11 +6,12 @@
 <!--[if gt IE 8]><!--> <html lang="{{ lang|default:"en-gb" }}" class="no-js"> <!--<![endif]-->
     <head>
         <title>{% if display_version %}[{% trans "Build" %} {{ version }}] {% endif %}{% block title %}{{ shop_name }} - {{ shop_tagline }}{% endblock %}</title>
+
         <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-        <meta name="created" content='{% now "jS M Y h:i" %}' />
+        <meta name="created" content="{% now "jS M Y h:i" %}" />
         <meta name="description" content="{% block description %}{% endblock %}" />
         <meta name="keywords" content="{% block keywords %}{% endblock %}" />
-        <meta name="viewport" content="{% block viewpre %}width=device-width"{% endblock %}>
+        <meta name="viewport" content="{% block viewport %}width=device-width"{% endblock %}>
         
         <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
         <!--[if lt IE 9]>
@@ -21,16 +22,30 @@
             <link rel="shortcut icon" href="{{ STATIC_URL }}oscar/favicon.ico" />
         {% endblock %}
 
-        {% block mainstylesheet %}
-            {# Use JS-compiled LESS when developing #}
-            {% if debug %}
+        {% if use_less %}
+            {# LESS - use in debug mode #}
+            {% block less %}
                 <link rel="stylesheet/less" type="text/css" href="{{ STATIC_URL }}oscar/less/styles.less" />
                 <link rel="stylesheet/less" type="text/css" href="{{ STATIC_URL }}oscar/less/responsive.less" />
-            {% else %}
-                <link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/styles.css" />
-                <link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/responsive.css" />
-            {% endif %}
-        {% endblock %}
+            {% endblock %}
+        {% else %}
+            {% compress css %}
+                {% comment %}
+                Only include CSS files that are generated from LESS here. Use the extrastyles block
+                for additional CSS files.
+                {% endcomment %}
+
+                {% block styles %}
+                    <link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/styles.css" />
+                    <link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/responsive.css" />
+                {% endblock %}
+            {% endcompress %}
+        {% endif %}
+
+        {# Additional CSS - specific to certain pages #}
+        {% compress css %}
+        {% block extrastyles %}{% endblock %}
+        {% endcompress %}
 
         {% if debug %}
             <script type="text/javascript">
@@ -55,19 +70,28 @@
             {% endif %}
         {% endblock %}
 
-        {# In production, you should collate and minify these scripts using django-compressor or something similar #}
-        {% block scripts %}
+        {% comment %}
+        Scripts loaded from a CDN.  These can't be wrapped by the 'compress' tag and so we
+        use a separate block for them.
+        {% endcomment %}
+        {% block cdn_scripts %}
             <!-- jQuery -->
             <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
             <script>window.jQuery || document.write('<script src="{{ STATIC_URL }}oscar/js/jquery/jquery-1.7.2.min.js"><\/script>')</script>
-            <!-- Twitter Bootstrap -->
-            <script type="text/javascript" src="{{ STATIC_URL }}oscar/js/bootstrap/bootstrap.min.js"></script>
-            <!-- Oscar -->
-            <script src="{{ STATIC_URL }}oscar/js/oscar/ui.js" type="text/javascript" charset="utf-8"></script>
         {% endblock %}
-        
-        {# Block for additional scripts #}
-        {% block extrascripts %}{% endblock %}
+
+        {% compress js %}
+            {# Local scripts #}
+            {% block scripts %}
+                <!-- Twitter Bootstrap -->
+                <script type="text/javascript" src="{{ STATIC_URL }}oscar/js/bootstrap/bootstrap.min.js"></script>
+                <!-- Oscar -->
+                <script src="{{ STATIC_URL }}oscar/js/oscar/ui.js" type="text/javascript" charset="utf-8"></script>
+            {% endblock %}
+
+            {# Additional JS scripts #}
+            {% block extrascripts %}{% endblock %}
+        {% endcompress %}
 
         {# Block for body onload functions #}
         <script type="text/javascript">

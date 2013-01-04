@@ -3,13 +3,19 @@
 {% load category_tags %}
 {% load dashboard_tags %}
 {% load i18n %}
+{% load compress %}
 
-{% block mainstylesheet %}
-    {% if debug %}
-        <link rel="stylesheet" type="text/less" href="{{ STATIC_URL }}oscar/less/dashboard.less" />
-    {% else %}
-        <link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/dashboard.css" />
-    {% endif %}
+{% block less %}
+    <link rel="stylesheet" type="text/less" href="{{ STATIC_URL }}oscar/less/dashboard.less" />
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/dashboard.css" />
+{% endblock %}
+
+{% block extrastyles %}
+    <link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="{{ STATIC_URL }}oscar/js/bootstrap-wysihtml5/bootstrap-wysihtml5-0.0.2.css" />
 {% endblock %}
 
 {% block title %}
@@ -113,15 +119,16 @@
     </div><!-- /container -->
 {% endblock %}
 
-{% block extrahead %}
-	<link rel="stylesheet" href="{{ STATIC_URL }}oscar/js/bootstrap-wysihtml5/bootstrap-wysihtml5-0.0.2.css" />
+{% block cdn_scripts %}
+    {{ block.super }}
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
+    <script>window.jQuery.ui || document.write('<script src="{{ STATIC_URL }}oscar/js/jquery/jquery-ui-1.8.23.min.js"><\/script>')</script>
 {% endblock %}
 
 {% block extrascripts %}
     {{ block.super }}
 
     {# jQuery plugins #}
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
     <script src="{{ STATIC_URL }}oscar/js/mousewheel/jquery.mousewheel.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="{{ STATIC_URL }}oscar/js/scrollpane/jquery.jscrollpane.min.js" type="text/javascript" charset="utf-8"></script>
 
