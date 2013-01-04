@@ -1,0 +1,43 @@
+{% extends 'dashboard/layout.html' %}
+{% load currency_filters %}
+{% load i18n %}
+
+{% block body_class %}reports{% endblock %}
+{% block title %}
+{% trans "Reports" %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">	  	
+    <li>	  	
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>	  	
+        <span class="divider">/</span>
+        <a href="{% url dashboard:reports-index %}">{% trans "Reporting Dashboard" %}</a>	  	
+    </li>	  	
+</ul>
+{% endblock %}
+
+{% block header %}
+<div class="page-header">
+	<h1>{% trans "Product Report" %}</h1>
+</div>
+{% endblock header %}
+
+{% block dashboard_content%}
+    <table class="table table-striped table-bordered table-hover">
+    <tr>
+        <th>{% trans "UPC" %}</th>
+        <th>{% trans "Title" %}</th>
+        <th>{% trans "Product class" %}</th>
+        <th>{% trans "Status" %}</th>
+    </td>
+    {% for row in data %}
+        <tr> 
+            <td>{{ row.upc }}</td>
+            <td>{{ row.title }}</td>
+            <td>{{ row.product_class }}</td>
+            <td>{{ row.status }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}
