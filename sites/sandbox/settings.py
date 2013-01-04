@@ -84,8 +84,13 @@ MEDIA_URL = '/media/'
 #ADMIN_MEDIA_PREFIX = '/media/admin/'
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = ()
 STATIC_ROOT = location('public/static')
+STATICFILES_DIRS = ()
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
+)
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '$)a7n&o80u!6y5t-+jrd3)3!%vh&shg$wqpjpxc!ar&p#!)n1a'
@@ -239,6 +244,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'south',
     'rosetta',  # For i18n testing
+    'compressor',
     'apps.user',  # For profile testing
     'apps.gateway',  # For allowing dashboard access
 ]
@@ -291,6 +297,8 @@ OSCAR_SHOP_NAME = 'Oscar Sandbox'
 OSCAR_SHOP_TAGLINE = 'e-Commerce for Django'
 
 GOOGLE_ANALYTICS_ID = 'UA-XXXXX-Y'
+
+COMPRESS_ENABLED = True
 
 LOG_ROOT = location('logs')
 # Ensure log root exists
