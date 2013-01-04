@@ -4,7 +4,6 @@ from django.template import RequestContext
 
 from .generators import Generator
 
-
 class ReportView(generic.edit.FormView):
     """
     This class is meant to be used when creating a report view

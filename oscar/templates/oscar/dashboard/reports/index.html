@@ -31,8 +31,8 @@
 <div class="well">
 
     <ul> 
-    {% for key, gen in report_generator_dict.iteritems %} 
-        <li><a href="{% url dashboard:report-generator-view key %}">{{ gen.title }}</a></li>
+    {% for key, generator in report_generator_map.iteritems %} 
+        <li><a href="{% url dashboard:report-generator-view key %}">{{ generator.title }}</a></li>
     {% endfor %}    
     </ul>
     
