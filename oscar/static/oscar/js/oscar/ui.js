@@ -117,6 +117,8 @@ var oscar = (function(o, $) {
                 }, 500);
                 e.preventDefault();
             });
+            // Tooltips
+            $('[rel="tooltip"]').tooltip();
         }
     };
 
