@@ -30,6 +30,7 @@ nosetests.xml
 settings_local.py
 .vagrant
 sites/sandbox/*.sqlite
+sites/sandbox/assets/
 sites/sandbox/public/
 sites/sandbox/whoosh_index/
 sites/demo/*.sqlite
