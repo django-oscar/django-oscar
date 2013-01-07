@@ -22,11 +22,7 @@
 </ul>
 {% endblock %}
 
-{% block header %}
-<div class="page-header">
-<h1>{{ title }}</h1>
-</div>
-{% endblock header %}
+{% block headertext %}{{ title }}{% endblock %}
 
 {% block dashboard_content %}
 <form action="." method="post" class="product-new form-horizontal wysiwyg" enctype="multipart/form-data">

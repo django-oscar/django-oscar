@@ -21,11 +21,7 @@
 </ul>
 {% endblock %}
 
-{% block header %}
-<div class="page-header action">
-	<h1>{{ title }}</h1>
-</div>
-{% endblock header %}
+{% block headertext %}{{ title }}{% endblock %}
 
 {% block dashboard_content %}
 	{% include 'partials/form.html' with includes_files=1 class='wysiwyg' %}

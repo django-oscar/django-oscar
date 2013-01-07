@@ -3,11 +3,9 @@
 {% load currency_filters %}
 {% load i18n %}
 
-{% block header %}
-<div class="page-header">
-    <h1>{{ flatpage.title }}</h1>
-</div>
-{% endblock header %}
+{% block headertext %}
+{{ flatpage.title }}
+{% endblock %}
 
 {% block flatpage %}
 <article>

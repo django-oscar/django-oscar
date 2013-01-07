@@ -26,11 +26,9 @@
 </ul>
 {% endblock %}
 
-{% block header %}
-<div class="page-header">
-    <h1>{% trans 'Account' %}</h1>
-</div>
-{% endblock header %}
+{% block headertext %}
+{% trans 'Account' %}
+{% endblock %}
 
 {% block subnavigation %}
     {% include "partials/nav_profile.html" with order_history="active" %}

@@ -1,15 +1,9 @@
 {% extends "layout.html" %}
 
-{% load currency_filters %}
-
-{% block header %}
-<div class="page-header">
-    <h1>{{ flatpage.title }}</h1>
-</div>
-{% endblock header %}
+{% block headertext %}
+{{ flatpage.title }}
+{% endblock %}
 
 {% block flatpage %}
-<article>
-    {{ flatpage.content|linebreaks }}
-</article>
+<article>{{ flatpage.content|linebreaks }}</article>
 {% endblock %}

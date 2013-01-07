@@ -20,11 +20,9 @@
 </ul>
 {% endblock %}
 
-{% block header %}
-<div class="page-header">
-	<h1>{% blocktrans with name=range.name %}Delete range '{{ name }}'?{% endblocktrans %}</h1>
-</div>
-{% endblock header %}
+{% block headertext %}
+	{% blocktrans with name=range.name %}Delete range '{{ name }}'?{% endblocktrans %}
+{% endblock %}
 
 {% block dashboard_content %}
 <form action="." method="post" class="">

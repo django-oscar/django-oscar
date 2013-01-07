@@ -11,11 +11,9 @@
 {% include 'checkout/nav.html' with step=1 %}
 {% endblock %}
 
-{% block header %}
-<div class="page-header action">
-    <h1>{% trans "Basket" %}</h1>
-</div>
-{% endblock header %}
+{% block headertext %}
+{% trans "Basket" %}
+{% endblock %}
 
 {% block content %}
 

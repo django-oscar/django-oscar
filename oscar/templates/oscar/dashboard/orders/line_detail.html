@@ -26,11 +26,9 @@ Order {{ number }} - Line #{{ id }}
 </ul>
 {% endblock %}
 
-{% block header %}
-<div class="page-header">
-	<h1>{% blocktrans with number=order.number id=line.id %}Order #{{ number }} - Line #{{ id }}{% endblocktrans %}</h1>
-</div>
-{% endblock header %}
+{% block headertext %}
+{% blocktrans with number=order.number id=line.id %}Order #{{ number }} - Line #{{ id }}{% endblocktrans %}
+{% endblock %}
 
 {% block dashboard_content %}
 
