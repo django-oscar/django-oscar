@@ -17,9 +17,12 @@
                 {% endblock %}
             </aside><!-- /span3 -->
 
-            <div class="span9">
-                {% block header %}
-                {% endblock %}
+                <div class="span9">
+                    {% block header %}
+                    <div class="page-header action">
+                        <h1>{% block headertext %}{% endblock %}</h1>
+                    </div>
+                    {% endblock %}
 
                 <div id="promotions">
                     {% for promotion in promotions_page %}

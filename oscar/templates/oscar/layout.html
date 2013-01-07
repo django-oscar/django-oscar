@@ -25,7 +25,11 @@
 	<div class="container-fluid page">
         <div class="page_inner">
             {% block breadcrumbs %}{% endblock %}
-			{% block header %}{% endblock %}
+            {% block header %}
+            <div class="page-header action">
+                <h1>{% block headertext %}{% endblock %}</h1>
+            </div>
+            {% endblock %}
             {% include "partials/alert_messages.html" %}
             {% block subnavigation %}{% endblock %}
             <div class="content">

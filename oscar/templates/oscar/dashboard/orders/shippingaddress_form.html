@@ -23,11 +23,9 @@
 </ul>
 {% endblock %}
 
-{% block header %}
-<div class="page-header">
-	<h2>{% blocktrans %}Edit shipping address for order {{ order.number }}{% endblocktrans %}</h2>
-</div>
-{% endblock header %}
+{% block headertext %}
+	{% blocktrans %}Edit shipping address for order {{ order.number }}{% endblocktrans %}
+{% endblock  %}
 
 {% block content %}
 

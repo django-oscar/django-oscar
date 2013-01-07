@@ -28,11 +28,9 @@ create-page
 </ul>
 {% endblock %}
 
-{% block header %}
-<div class="page-header">
-    <h1>{{ offer.name }}</h1>
-</div>
-{% endblock header %}
+{% block headertext %}
+{{ offer.name }}
+{% endblock %}
 
 {% block dashboard_content %}
 <form action="." method="post">

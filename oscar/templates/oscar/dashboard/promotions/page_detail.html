@@ -21,10 +21,8 @@
 </ul>
 {% endblock %}
 
-{% block header %}
-<div class="page-header">
-	<h1>{% blocktrans %}Content blocks for page {{ page_url }}{% endblocktrans %}</h1>
-</div>
+{% block headertext %}
+{% blocktrans %}Content blocks for page {{ page_url }}{% endblocktrans %}
 {% endblock %}
 
 {% block dashboard_content %}

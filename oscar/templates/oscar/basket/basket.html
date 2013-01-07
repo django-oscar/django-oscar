@@ -10,11 +10,9 @@
 {# Hide mini-basket so we don't have two baskets to keep in sync #}
 {% block mini_basket %}{% endblock %}
 
-{% block header %}
-<div class="page-header action">
-    <h1>{% trans "Basket" %}</h1>
-</div>
-{% endblock header %}
+{% block headertext %}
+{% trans "Basket" %}
+{% endblock %}
 
 {% block content %}
     {# Use a partial template so that AJAX can be used to re-render basket #}

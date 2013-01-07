@@ -27,15 +27,9 @@ create-page
 </ul>
 {% endblock %}
 
-{% block header %}
-<div class="page-header">
-    {% if range %}
-    <h1>{{ range.name }}</h1>
-    {% else %}
-    <h1>{% trans "Create new range" %}</h1>
-    {% endif %}
-</div>
-{% endblock header %}
+{% block headertext %}
+    {% if range %}{{ range.name }}{% else %}{% trans "Create new range" %}{% endif %}
+{% endblock %}
 
 {% block dashboard_content %}
 <form action="." method="post" class="form-stacked well">

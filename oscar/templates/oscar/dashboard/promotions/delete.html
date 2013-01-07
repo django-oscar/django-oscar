@@ -24,11 +24,9 @@ create-page
 </ul>
 {% endblock %}
 
-{% block header %}
-<div class="page-header">
-	<h1>{% blocktrans with name=object.name %}Delete content block '{{ name }}'?"{% endblocktrans %}</h1>
-</div>
-{% endblock header%}
+{% block headertext %}
+{% blocktrans with name=object.name %}Delete content block '{{ name }}'?"{% endblocktrans %}
+{% endblock %}
 
 {% block dashboard_content %}
 <div class="table-header">

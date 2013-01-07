@@ -14,6 +14,9 @@
                 </aside><!-- /span3 -->
                 <div class="span6">
                     {% block header %}
+                    <div class="page-header action">
+                        <h1>{% block headertext %}{% endblock %}</h1>
+                    </div>
                     {% endblock %}
 
                     {% block flatpage %}

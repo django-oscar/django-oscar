@@ -3,11 +3,9 @@
 {% load currency_filters %}
 {% load i18n %}
 
-{% block header %}
-<div class="page-header">
-    <h2>{% blocktrans with number=order.number %}Order #{{ number }}{% endblocktrans %}</h2>
-</div>
-{% endblock header %}
+{% block headertext %}
+{% blocktrans with number=order.number %}Order #{{ number }}{% endblocktrans %}
+{% endblock %}
 
 {% block content %}
 <div class="sub-header">

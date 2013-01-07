@@ -95,7 +95,11 @@
 
         <div class="content">
             {% include 'partials/alert_messages.html' %}
-            {% block header %}{% endblock %}
+            {% block header %}
+            <div class="page-header action">
+                <h1>{% block headertext %}{% endblock %}</h1>
+            </div>
+            {% endblock %}
             <div class="page-content">
                 {% block content %}
                     {% block dashboard_content %}{% endblock dashboard_content %}

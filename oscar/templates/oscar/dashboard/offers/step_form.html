@@ -38,15 +38,13 @@
 </ul>
 {% endblock %}
 
-{% block header %}
-<div class="page-header">
+{% block headertext %}
     {% if not offer.pk %}
-    <h1>{% trans "Create new offer" %}</h1>
+        {% trans "Create new offer" %}
     {% else %}
-	<h1>{{ offer.name }}</h1>
+        {{ offer.name }}
     {% endif %}
-</div>
-{% endblock header %}
+{% endblock %}
 
 {% block dashboard_content %}
     <div class="row-fluid">

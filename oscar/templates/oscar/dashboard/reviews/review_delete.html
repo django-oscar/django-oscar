@@ -24,11 +24,9 @@ create-page
 </ul>
 {% endblock %}
 
-{% block header %}
-<div class="page-header">
-	<h1>{% blocktrans with title=review.title|truncatechars:30 %}Delete review "{{ title }}"?{% endblocktrans %}</h1>
-</div>
-{% endblock header %}
+{% block headertext %}
+	{% blocktrans with title=review.title|truncatechars:30 %}Delete review "{{ title }}"?{% endblocktrans %}
+{% endblock %}
 
 {% block dashboard_content %}
 <div class="table-header">
