@@ -63,6 +63,14 @@ Offers
     recipes/how_to_create_a_custom_range
     recipes/how_to_create_a_custom_condition
 
+Appearance
+----------
+
+.. toctree::
+    :maxdepth: 1
+
+    recipes/how_to_handle_statics
+
 Contributing
 ------------
 
