@@ -231,8 +231,8 @@ class ConditionalOffer(models.Model):
         """
         if not self.is_condition_satisfied(basket):
             return D('0.00')
-        return self.benefit.proxy().apply(basket, self.condition.proxy(),
-                                          self)
+        return self.benefit.proxy().apply(
+            basket, self.condition.proxy(), self)
 
     def set_voucher(self, voucher):
         self._voucher = voucher
@@ -471,14 +471,22 @@ class Benefit(models.Model):
         (PERCENTAGE, _("Discount is a % of the product's value")),
         (FIXED, _("Discount is a fixed amount off the product's value")),
         (MULTIBUY, _("Discount is to give the cheapest product for free")),
-        (FIXED_PRICE, _("Get the products that meet the condition for a fixed price")),
-        (SHIPPING_ABSOLUTE, _("Discount is a fixed amount off the shipping cost")),
+        (FIXED_PRICE,
+         _("Get the products that meet the condition for a fixed price")),
+        (SHIPPING_ABSOLUTE,
+         _("Discount is a fixed amount off the shipping cost")),
         (SHIPPING_FIXED_PRICE, _("Get shipping for a fixed price")),
         (SHIPPING_PERCENTAGE, _("Discount is a % off the shipping cost")),
     )
-    type = models.CharField(_("Type"), max_length=128, choices=TYPE_CHOICES)
-    value = PositiveDecimalField(_("Value"), decimal_places=2, max_digits=12,
-                                 null=True, blank=True)
+    type = models.CharField(
+        _("Type"), max_length=128, choices=TYPE_CHOICES, null=True,
+        blank=True)
+
+    # The value to use with the designated type.  This can be either an integer
+    # (eg for multibuy) or a decimal (eg an amount) which is slightly
+    # confusing.
+    value = PositiveDecimalField(
+        _("Value"), decimal_places=2, max_digits=12, null=True, blank=True)
 
     # If this is not set, then there is no upper limit on how many products
     # can be discounted by this benefit.
@@ -486,6 +494,11 @@ class Benefit(models.Model):
         _("Max Affected Items"), blank=True, null=True,
         help_text=_("Set this to prevent the discount consuming all items "
                     "within the range that are in the basket."))
+
+    # A custom benefit class can be used instead.  This means the
+    # type/value/max_affected_items fields should all be None.
+    proxy_class = models.CharField(_("Custom class"), null=True, blank=True,
+                                   max_length=255, unique=True, default=None)
 
     class Meta:
         verbose_name = _("Benefit")
@@ -497,6 +510,9 @@ class Benefit(models.Model):
             if field.startswith('_'):
                 del field_dict[field]
 
+        if self.proxy_class:
+            klass = load_proxy(self.proxy_class)
+            return klass(**field_dict)
         klassmap = {
             self.PERCENTAGE: PercentageDiscountBenefit,
             self.FIXED: AbsoluteDiscountBenefit,
@@ -507,13 +523,15 @@ class Benefit(models.Model):
             self.SHIPPING_PERCENTAGE: ShippingPercentageDiscountBenefit}
         if self.type in klassmap:
             return klassmap[self.type](**field_dict)
-        return self
+        raise RuntimeError("Unrecognised benefit type (%s)" % self.type)
 
     def __unicode__(self):
-        desc = self.proxy().__unicode__()
+        desc = self.description
         if self.max_affected_items:
             desc += ungettext(
-                " (max %d item)", " (max %d items)", self.max_affected_items) % self.max_affected_items
+                " (max %d item)",
+                " (max %d items)",
+                self.max_affected_items) % self.max_affected_items
         return desc
 
     @property
@@ -525,7 +543,7 @@ class Benefit(models.Model):
 
     def clean(self):
         if not self.type:
-            raise ValidationError(_("Benefit requires a value"))
+            return
         method_name = 'clean_%s' % self.type.lower().replace(' ', '_')
         if hasattr(self, method_name):
             getattr(self, method_name)()
@@ -1255,13 +1273,10 @@ class ShippingBenefit(Benefit):
 class ShippingAbsoluteDiscountBenefit(ShippingBenefit):
     _description = _("%(amount)s off shipping cost")
 
-    def __unicode__(self):
-        return self._description % {
-            'amount': currency(self.value)}
-
     @property
     def description(self):
-        return self.__unicode__()
+        return self._description % {
+            'amount': currency(self.value)}
 
     class Meta:
         proxy = True
@@ -1275,13 +1290,10 @@ class ShippingAbsoluteDiscountBenefit(ShippingBenefit):
 class ShippingFixedPriceBenefit(ShippingBenefit):
     _description = _("Get shipping for %(amount)s")
 
-    def __unicode__(self):
-        return self._description % {
-            'amount': currency(self.value)}
-
     @property
     def description(self):
-        return self.__unicode__()
+        return self._description % {
+            'amount': currency(self.value)}
 
     class Meta:
         proxy = True
@@ -1297,13 +1309,10 @@ class ShippingFixedPriceBenefit(ShippingBenefit):
 class ShippingPercentageDiscountBenefit(ShippingBenefit):
     _description = _("%(value)s%% off shipping cost")
 
-    def __unicode__(self):
-        return self._description % {
-            'value': self.value}
-
     @property
     def description(self):
-        return self.__unicode__()
+        return self._description % {
+            'value': self.value}
 
     class Meta:
         proxy = True
