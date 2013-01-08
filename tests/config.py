@@ -26,6 +26,7 @@ def configure(nose_args=None):
                 'django.contrib.sites',
                 'django.contrib.flatpages',
                 'sorl.thumbnail',
+                'compressor',
                 ] + OSCAR_CORE_APPS,
             TEMPLATE_CONTEXT_PROCESSORS=(
                 "django.contrib.auth.context_processors.auth",
@@ -58,6 +59,8 @@ def configure(nose_args=None):
             },
             ROOT_URLCONF='tests._site.urls',
             LOGIN_REDIRECT_URL='/accounts/',
+            STATIC_URL='/static/',
+            COMPRESS_ENABLED=False,
             DEBUG=False,
             SITE_ID=1,
             APPEND_SLASH=True,
