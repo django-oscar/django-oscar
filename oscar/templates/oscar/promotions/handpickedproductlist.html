@@ -4,7 +4,8 @@
     <div class="sub-header">
         <h2>{{ promotion.name }}</h2>
     </div>
-    <p>{{ promotion.description }}</p>
+
+    {{ promotion.description|safe }}
 
     <div class="es-carousel-wrapper">
         <div class="es-carousel">
@@ -17,6 +18,6 @@
     </div>
 
 	{% if block.link_url %}
-	<a href="{{ block.link_url }}">{% trans "See more" %}</a>
+        <a href="{{ block.link_url }}">{% trans "See more" %}</a>
 	{% endif %}
 </section>
