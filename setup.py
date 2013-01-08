@@ -40,6 +40,7 @@ setup(name='django-oscar',
           'sorl-thumbnail==11.12',
           'python-memcached==1.48',
           'Babel==0.9.6',
+          'django-compressor==1.2'
           ],
       dependency_links=['http://github.com/toastdriven/django-haystack/tarball/master#egg=django-haystack-2.0.0-beta'],
       # See http://pypi.python.org/pypi?%3Aaction=list_classifiers
