@@ -1,0 +1,108 @@
+[
+    {
+        "pk": 1, 
+        "model": "promotions.pagepromotion", 
+        "fields": {
+            "display_order": 0, 
+            "object_id": 1, 
+            "content_type": 89, 
+            "date_created": "2013-01-08T17:12:25.591Z", 
+            "position": "page", 
+            "clicks": 0, 
+            "page_url": "/"
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "promotions.pagepromotion", 
+        "fields": {
+            "display_order": 0, 
+            "object_id": 1, 
+            "content_type": 92, 
+            "date_created": "2013-01-08T17:15:01.631Z", 
+            "position": "page", 
+            "clicks": 0, 
+            "page_url": "/"
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "promotions.pagepromotion", 
+        "fields": {
+            "display_order": 0, 
+            "object_id": 1, 
+            "content_type": 93, 
+            "date_created": "2013-01-08T17:20:10.691Z", 
+            "position": "page", 
+            "clicks": 0, 
+            "page_url": "/"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "promotions.rawhtml", 
+        "fields": {
+            "body": "Welcome to Oscar's sandbox site.&nbsp; This is a example install of Oscar, making very few customisations to the core.&nbsp; It is intended as a playground for experimenting with Oscar's features.<br><br>You can get access to the dashboard <a href=\"http://sandbox.oscarcommerce.com/gateway/\" rel=\"nofollow\">using this form</a>.", 
+            "date_created": "2013-01-08T17:12:09.526Z", 
+            "name": "Welcome!", 
+            "display_type": null
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "promotions.singleproduct", 
+        "fields": {
+            "date_created": "2013-01-08T17:14:56.664Z", 
+            "product": 89, 
+            "name": "Recommended reading", 
+            "description": "Commodo sed artisan before they sold out veniam aute sint you probably haven't heard of them pour-over, +1 delectus street art direct trade. Enim craft beer odd future single-origin coffee gluten-free artisan, salvia consectetur master cleanse vegan eiusmod carles. Yr proident ennui VHS, art party direct trade veniam est try-hard voluptate. Authentic irure aliqua, pariatur ad whatever sunt banjo esse letterpress plaid bicycle rights mollit quinoa you probably haven't heard of them. Farm-to-table keytar duis, craft beer carles lomo est accusamus single-origin coffee. Swag twee magna, literally meh cred cray. Aute deserunt ullamco, you probably haven't heard of them nisi synth DIY food truck.<br>"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "promotions.handpickedproductlist", 
+        "fields": {
+            "date_created": "2013-01-08T17:19:57.759Z", 
+            "link_url": "", 
+            "link_text": "", 
+            "name": "Other good books", 
+            "description": "Commodo sed artisan before they sold out veniam aute sint you probably haven't heard of them pour-over, +1 delectus street art direct trade. Enim craft beer odd future single-origin coffee gluten-free artisan, salvia consectetur master cleanse vegan eiusmod carles. Yr proident ennui VHS, art party direct trade veniam est try-hard voluptate. Authentic irure aliqua, pariatur ad whatever sunt banjo esse letterpress plaid bicycle rights mollit quinoa you probably haven't heard of them. Farm-to-table keytar duis, craft beer carles lomo est accusamus single-origin coffee. Swag twee magna, literally meh cred cray. Aute deserunt ullamco, you probably haven't heard of them nisi synth DIY food truck.<br><br>"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "promotions.orderedproduct", 
+        "fields": {
+            "product": 25, 
+            "list": 1, 
+            "display_order": 0
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "promotions.orderedproduct", 
+        "fields": {
+            "product": 51, 
+            "list": 1, 
+            "display_order": 0
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "promotions.orderedproduct", 
+        "fields": {
+            "product": 95, 
+            "list": 1, 
+            "display_order": 0
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "promotions.orderedproduct", 
+        "fields": {
+            "product": 13, 
+            "list": 1, 
+            "display_order": 0
+        }
+    }
+]
