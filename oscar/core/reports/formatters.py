@@ -5,6 +5,23 @@ from django.utils.html import mark_safe
 
 
 class Formatter(object):
+    """
+    """
+
+    paginator_class = None
+    paginated_by = None
+
+    def get_paginator_class(self):
+        return self.paginator_class
+
+    def get_data_chunk(self, data, page=None):
+        paginator_class = self.get_paginator_class()
+        if not paginator_class:
+            # if there is no paginator return everything
+            return data
+        paginated_data = paginator_class(data, self.paginated_by)
+        chunk = paginated_data.page(page)
+        return chunk.object_list
 
     def __init__(self, context={}):
         self.context = context
@@ -28,7 +45,7 @@ class CSVFormatter(Formatter):
         fd = StringIO.StringIO()
         output_file = csv.writer(fd, delimiter=',', quotechar='"')
         output_file.writerow(self.fields)
-        for row in data:
+        for row in self.get_data_chunk(data):
             output_row = [_getattr(row, field) for field in self.fields]
             output_file.writerow(output_row)
         output = fd.getvalue()
@@ -41,6 +58,6 @@ class HTMLFormatter(Formatter):
     template_name = ''
 
     def render(self, data):
-        self.context.update({self.data_context_name: data})
+        self.context.update({self.data_context_name: self.get_data_chunk(data)})
         return mark_safe(render_to_string(self.template_name, self.context))
 
