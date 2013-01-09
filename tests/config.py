@@ -57,6 +57,7 @@ def configure(nose_args=None):
                     'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
                 }
             },
+            PASSWORD_HASHERS=['django.contrib.auth.hashers.MD5PasswordHasher'],
             ROOT_URLCONF='tests._site.urls',
             LOGIN_REDIRECT_URL='/accounts/',
             STATIC_URL='/static/',
