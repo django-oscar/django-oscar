@@ -30,4 +30,9 @@ Next, you can modify the ``Product`` model through subclassing::
 
 Now, running ``./manage.py syncdb`` will create the product model with your additional field
 
+Customising Products
+--------------------
+
+You should inherit from AbstractProduct as above to alter behavior for all your products. Further subclassing is not recommended, because wherever ``Product`` instances are used in Oscar, any access to attributes and methods of the subclass will not be available without casting. Instead, use ``ProductClass`` and ``Attribute``.
+
 
