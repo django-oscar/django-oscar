@@ -34,10 +34,10 @@ class BasketMiddleware(object):
                 old_baskets = list(manager.filter(owner=request.user))
                 basket = old_baskets[0]
                 for other_basket in old_baskets[1:]:
-                    self.merge_baskets(basket, other_basket)
+                    self.merge_baskets(basket, other_basket, request=request)
                 
             if cookie_basket:
-                self.merge_baskets(basket, cookie_basket)
+                self.merge_baskets(basket, cookie_basket, request=request)
                 self.cookies_to_delete.append(settings.OSCAR_BASKET_COOKIE_OPEN)
         elif cookie_basket:
             # Anonymous user with a basket tied to the cookie
@@ -48,7 +48,7 @@ class BasketMiddleware(object):
             basket = basket_model() 
         return basket 
             
-    def merge_baskets(self, master, slave):
+    def merge_baskets(self, master, slave, request=None):
         """
         Merge one basket into another.
         
