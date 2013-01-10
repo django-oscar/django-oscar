@@ -22,6 +22,7 @@
             <link rel="shortcut icon" href="{{ STATIC_URL }}oscar/favicon.ico" />
         {% endblock %}
 
+        {% block mainstylesheet %}
         {% if use_less %}
             {# LESS - use in debug mode #}
             {% block less %}
@@ -41,6 +42,7 @@
                 {% endblock %}
             {% endcompress %}
         {% endif %}
+        {% endblock %}
 
         {# Additional CSS - specific to certain pages #}
         {% compress css %}
