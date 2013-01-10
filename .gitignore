@@ -1,38 +1,43 @@
-/.vagrant
+# Packaging
 *.pyc
+*.egg-info
+dist/
+
+# Vagrant
+.vagrant
+
+# Temporary/OS files
 *.swp
 *.swo
 *.*~
+.~lock.*
+*.DS_Store
+
+# IDE files
 .project
 .pydevproject
 .settings
-django_oscar.egg-info/
-docs/build/*
-nbproject
-oscar/bin
-oscar/include
-oscar/lib
-oscar/src
-oscar/share
-.~lock.*
-dist/
-*.DS_Store
 .idea
-TODO
-.coverage
-htmlcov/*
-logs/
-build/
+
+# Docs
+docs/build/*
 *.pdf
+TODO
+
+# Test files
+.coverage
 coverage.xml
 violations.txt
 nosetests.xml
+htmlcov/*
+
+# Example sites
 settings_local.py
-.vagrant
 sites/sandbox/*.sqlite
 sites/sandbox/assets/
 sites/sandbox/public/
 sites/sandbox/whoosh_index/
 sites/demo/*.sqlite
+sites/demo/assets/
 sites/demo/public/
 sites/demo/whoosh_index/
