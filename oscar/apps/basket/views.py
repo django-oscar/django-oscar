@@ -17,11 +17,11 @@ from oscar.apps.basket.signals import basket_addition, voucher_addition
 from oscar.templatetags.currency_filters import currency
 from oscar.core.loading import get_class, get_classes
 Applicator = get_class('offer.utils', 'Applicator')
-BasketLineForm, AddToBasketForm, BasketVoucherForm, \
-        SavedLineFormSet, SavedLineForm, ProductSelectionForm = get_classes(
-            'basket.forms', ('BasketLineForm', 'AddToBasketForm',
-                             'BasketVoucherForm', 'SavedLineFormSet',
-                             'SavedLineForm', 'ProductSelectionForm'))
+(BasketLineForm, AddToBasketForm, BasketVoucherForm,
+ SavedLineFormSet, SavedLineForm, ProductSelectionForm) = get_classes(
+     'basket.forms', ('BasketLineForm', 'AddToBasketForm',
+                      'BasketVoucherForm', 'SavedLineFormSet',
+                      'SavedLineForm', 'ProductSelectionForm'))
 Repository = get_class('shipping.repository', ('Repository'))
 
 
@@ -162,12 +162,12 @@ class BasketView(ModelFormSetView):
 
         for form in formset:
             if (hasattr(form, 'cleaned_data') and
-                form.cleaned_data['save_for_later']):
+                    form.cleaned_data['save_for_later']):
                 line = form.instance
                 if self.request.user.is_authenticated():
                     self.move_line_to_saved_basket(line)
                     msg = _(u"'%(title)s' has been saved for later") % {
-                            'title': line.product}
+                        'title': line.product}
                     flash_messages.info(msg)
                     save_for_later = True
                 else:

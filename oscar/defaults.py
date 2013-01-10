@@ -96,7 +96,7 @@ OSCAR_DASHBOARD_NAVIGATION = [
                 'label': _('Low stock alerts'),
                 'url_name': 'dashboard:stock-alert-list',
             },
-         ]
+        ]
     },
     {
         'label': _('Fulfilment'),

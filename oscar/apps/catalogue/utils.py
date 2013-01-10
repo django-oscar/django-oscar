@@ -21,7 +21,7 @@ ProductImage = get_model('catalogue', 'productimage')
 
 class Importer(object):
 
-    allowed_extensions = ['.jpeg','.jpg','.gif','.png']
+    allowed_extensions = ['.jpeg', '.jpg', '.gif', '.png']
 
     def __init__(self, logger, field):
         self.logger = logger

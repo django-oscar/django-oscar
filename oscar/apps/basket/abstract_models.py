@@ -25,7 +25,7 @@ class AbstractBasket(models.Model):
     # - Frozen is for when a basket is in the process of being submitted
     #   and we need to prevent any changes to it.
     OPEN, MERGED, SAVED, FROZEN, SUBMITTED = (
-    "Open", "Merged", "Saved", "Frozen", "Submitted")
+        "Open", "Merged", "Saved", "Frozen", "Submitted")
     STATUS_CHOICES = (
         (OPEN, _("Open - currently active")),
         (MERGED, _("Merged - superceded by another basket")),
@@ -677,17 +677,21 @@ class AbstractLine(models.Model):
 
         current_price_incl_tax = self.product.stockrecord.price_incl_tax
         if current_price_incl_tax > self.price_incl_tax:
-            return _(
-                u"The price of '%(product)s' has increased from %(old_price)s to %(new_price)s since you added it to your basket") % {
-                    'product': self.product.get_title(),
-                    'old_price': currency(self.price_incl_tax),
-                    'new_price': currency(current_price_incl_tax)}
+            msg = ("The price of '%(product)s' has increased from "
+                   "%(old_price)s to %(new_price)s since you added it "
+                   "to your basket")
+            return _(msg) % {
+                'product': self.product.get_title(),
+                'old_price': currency(self.price_incl_tax),
+                'new_price': currency(current_price_incl_tax)}
         if current_price_incl_tax < self.price_incl_tax:
-            return _(
-                u"The price of '%(product)s' has decreased from %(old_price)s to %(new_price)s since you added it to your basket") % {
-                    'product': self.product.get_title(),
-                    'old_price': currency(self.price_incl_tax),
-                    'new_price': currency(current_price_incl_tax)}
+            msg = ("The price of '%(product)s' has decreased from "
+                   "%(old_price)s to %(new_price)s since you added it "
+                   "to your basket")
+            return _(msg) % {
+                'product': self.product.get_title(),
+                'old_price': currency(self.price_incl_tax),
+                'new_price': currency(current_price_incl_tax)}
 
 
 class AbstractLineAttribute(models.Model):

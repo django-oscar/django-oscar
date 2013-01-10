@@ -9,7 +9,7 @@
 THRESHOLD=795
 
 # Some warnings aren't worth worrying about...
-IGNORE="W292,E202"
+IGNORE="W292,E202,E128,E124"
 
 # Run flake8 and convert the output into a format that the "violations" plugin 
 # for Jenkins/Hudson can understand.  Ignore warnings from migrations we we don't
