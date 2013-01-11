@@ -42,7 +42,7 @@
         "pk": 1, 
         "model": "promotions.rawhtml", 
         "fields": {
-            "body": "Welcome to Oscar's sandbox site.&nbsp; This is a example install of Oscar, making very few customisations to the core.&nbsp; It is intended as a playground for experimenting with Oscar's features.<br><br>You can get access to the dashboard <a href=\"http://sandbox.oscarcommerce.com/gateway/\" rel=\"nofollow\">using this form</a>.", 
+            "body": "Welcome to Oscar's sandbox site.&nbsp; This is a example install of Oscar, making very few customisations to the core.&nbsp; It is intended as a playground for experimenting with Oscar's features.<br><br>You can get access to the dashboard <a href=\"http://latest.oscarcommerce.com/gateway/\" rel=\"nofollow\">using this form</a>.", 
             "date_created": "2013-01-08T17:12:09.526Z", 
             "name": "Welcome!", 
             "display_type": null
