@@ -2,7 +2,7 @@
 .PHONY: contribute ci test i18n lint travis
 
 install:
-	python setup.py develop
+	python setup.py develop --upgrade
 	pip install -r requirements.txt
 
 sandbox: install
