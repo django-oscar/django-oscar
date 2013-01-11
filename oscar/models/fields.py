@@ -18,11 +18,17 @@ class ExtendedURLField(CharField):
     description = _("URL")
 
     def __init__(self, verbose_name=None, name=None,
-                 verify_exists=True, **kwargs):
+                 verify_exists=None, **kwargs):
         kwargs['max_length'] = kwargs.get('max_length', 200)
         CharField.__init__(self, verbose_name, name, **kwargs)
-        validator = validators.ExtendedURLValidator(
-            verify_exists=verify_exists)
+        # 'verify_exists' was deprecated in Django 1.4. To ensure backwards
+        # compatibility, it is still accepted here, but only passed
+        # on to the parent class if it was specified.
+        if verify_exists is not None:
+            validator = validators.ExtendedURLValidator(
+                verify_exists=verify_exists)
+        else:
+            validator = validators.ExtendedURLValidator()
         self.validators.append(validator)
 
     def formfield(self, **kwargs):
