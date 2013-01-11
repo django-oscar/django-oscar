@@ -18,7 +18,11 @@
         <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>	  	
         <span class="divider">/</span>	  	
     </li>	  	
-    <li class="active">{% trans "Content block management" %}</li>	  	
+    <li>    	  	
+        <a href="{% url dashboard:promotion-list %}">{% trans "Content block management" %}</a>    	  	
+        <span class="divider">/</span>    	  	
+    </li>    	  	
+    <li class="active">{% trans "Content blocks by page" %}</li>	  	
 </ul>
 {% endblock %}
 
