@@ -9,13 +9,21 @@ class ExtendedURLField(fields.URLField):
     validating local relative URLs, ie. '/product/'
     """
 
-    def __init__(self, max_length=None, min_length=None, verify_exists=False,
+    def __init__(self, max_length=None, min_length=None, verify_exists=None,
             *args, **kwargs):
-        # intentionally skip one step when calling super()
+        # not supplying verify_exists, ExtendedURLValidator deals with it
         super(fields.URLField, self).__init__(max_length, min_length, *args,
                                               **kwargs)
-        validator = validators.ExtendedURLValidator(
-            verify_exists=verify_exists)
+        """
+        verify_exists was deprecated in Django 1.4. To ensure backwards 
+        compatibility, it is still accepted, but only passed
+        on to the parent class if it was specified.
+        """
+        if verify_exists is not None:
+            validator = validators.ExtendedURLValidator(
+                verify_exists=verify_exists)
+        else:
+            validator = validators.ExtendedURLValidator()
         self.validators.append(validator)
 
     def to_python(self, value):
