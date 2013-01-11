@@ -33,7 +33,7 @@ test:
 ci: install lint
 	# Run continous tests and generate lint reports
 	./runtests.py --with-coverage --with-xunit
-	coverage xml
+	coverage xml -i
 
 lint:
 	./lint.sh
