@@ -33,21 +33,23 @@ setup(name='django-oscar',
       install_requires=[
           'django>=1.4',
           'PIL==1.1.7',
-          'South>=0.7.6',
+          'South>=0.7.6,<0.8',
           'django-extra-views>=0.2,<0.6',
           'django-haystack==2.0.0-beta',
-          'django-treebeard==1.61',
+          'django-treebeard>=1.61,<1.62',
           'sorl-thumbnail==11.12',
-          'python-memcached==1.48',
-          'Babel==0.9.6',
-          'django-compressor==1.2'
-          ],
+          'python-memcached>=1.48,<1.49',
+          'Babel>=0.9,<0.10',
+          'django-compressor>=1.2,<1.3'],
       dependency_links=['http://github.com/toastdriven/django-haystack/tarball/master#egg=django-haystack-2.0.0-beta'],
       # See http://pypi.python.org/pypi?%3Aaction=list_classifiers
-      classifiers=['Environment :: Web Environment',
-                   'Framework :: Django',
-                   'Intended Audience :: Developers',
-                   'License :: OSI Approved :: BSD License',
-                   'Operating System :: Unix',
-                   'Programming Language :: Python']
+      classifiers=[
+          'Development Status :: 4 - Beta',
+          'Environment :: Web Environment',
+          'Framework :: Django',
+          'Intended Audience :: Developers',
+          'License :: OSI Approved :: BSD License',
+          'Operating System :: Unix',
+          'Programming Language :: Python',
+          'Topic :: Other/Nonlisted Topic']
       )
