@@ -5,7 +5,7 @@
         "fields": {
             "display_order": 0, 
             "object_id": 1, 
-            "content_type": 89, 
+            "content_type": ["promotions", "rawhtml"],
             "date_created": "2013-01-08T17:12:25.591Z", 
             "position": "page", 
             "clicks": 0, 
@@ -18,7 +18,7 @@
         "fields": {
             "display_order": 0, 
             "object_id": 1, 
-            "content_type": 92, 
+            "content_type": ["promotions", "singleproduct"],
             "date_created": "2013-01-08T17:15:01.631Z", 
             "position": "page", 
             "clicks": 0, 
@@ -31,7 +31,7 @@
         "fields": {
             "display_order": 0, 
             "object_id": 1, 
-            "content_type": 93, 
+            "content_type": ["promotions", "handpickedproductlist"],
             "date_created": "2013-01-08T17:20:10.691Z", 
             "position": "page", 
             "clicks": 0, 
