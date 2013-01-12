@@ -22,7 +22,7 @@ class ExtendedURLValidator(validators.URLValidator):
         """
         try:
             value = self.fix_local_url(value)
-            if self.verify_exists:
+            if getattr(self, 'verify_exists', False):
                 resolve(value)
             self.is_local_url = True
         except Http404:
