@@ -38,12 +38,13 @@ Pricing, stock and availability
     recipes/enforcing_stock_rules
     recipes/how_to_configure_stock_messaging
 
-Tax
----
+Payment
+-------
 
 .. toctree::
     :maxdepth: 1
 
+    recipes/how_to_integrate_payment
     recipes/how_to_apply_tax_exemptions
 
 Shipping
