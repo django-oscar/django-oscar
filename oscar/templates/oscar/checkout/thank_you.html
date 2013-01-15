@@ -1,4 +1,5 @@
 {% extends "checkout/layout.html" %}
+{% load url from future %}
 {% load currency_filters %}
 {% load thumbnail %}
 {% load i18n %}
@@ -140,7 +141,7 @@
 		<h4>{% trans "Tracking your order" %}</h4>
     </div>
 	<p>{% trans "You can" %}
-		<a href="{% url customer:anon-order order.number order.verification_hash %}">{% trans "track the status of your order" %}</a>.</p>
+		<a href="{% url "customer:anon-order" order.number order.verification_hash %}">{% trans "track the status of your order" %}</a>.</p>
 	</p>
 {% endif %}
 

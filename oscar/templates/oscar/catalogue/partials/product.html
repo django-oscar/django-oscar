@@ -1,4 +1,5 @@
 {% load currency_filters %}
+{% load url from future %}
 {% load thumbnail %}
 {% load i18n %}
 
@@ -34,7 +35,7 @@
 
         {% if product.is_group %}
             <a class="btn btn-full"
-               href="{% url catalogue:detail product.slug product.id %}">
+               href="{% url "catalogue:detail" product.slug product.id %}">
                 {% trans "View" %}
             </a>
         {% else %}

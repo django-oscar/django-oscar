@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% load url from future %}
 {% load currency_filters %}
 {% load history_tags %}
 {% load thumbnail %}
@@ -11,7 +12,7 @@
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-	<a href="{% url promotions:home %}">{% trans "Home" %}</a>
+	<a href="{% url "promotions:home" %}">{% trans "Home" %}</a>
         <span class="divider">/</span>
     </li>
     <li>
@@ -36,7 +37,7 @@
         <div class='span9'>
             <div class="well">
 				<p>{% trans "Read customer reviews on this product." %}</p>
-				<p><a href="{% url catalogue:reviews-add product.slug product.id %}" class="btn btn-primary">{% trans "Add a review" %}</a></p>
+				<p><a href="{% url "catalogue:reviews-add" product.slug product.id %}" class="btn btn-primary">{% trans "Add a review" %}</a></p>
             </div>
             {% if reviews %}
 			<h4>{% trans "Sort by:" %}</h4>

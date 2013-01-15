@@ -1,4 +1,5 @@
 {% extends 'dashboard/layout.html' %}
+{% load url from future %}
 {% load i18n %}
 {% load currency_filters %}
 
@@ -11,11 +12,11 @@
 {% block breadcrumbs %}
 <ul class="breadcrumb">  	
     <li>
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <a href="{% url "dashboard:index" %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="{% url dashboard:catalogue-product-list %}">{% trans "Product management" %}</a>
+        <a href="{% url "dashboard:catalogue-product-list" %}">{% trans "Product management" %}</a>
         <span class="divider">/</span>
     </li>
     <li class="active">{{ title }}</li>
@@ -159,7 +160,7 @@
 
 <div class="form-actions control-group">
     <div class="pull-right">
-        <a href="{% url dashboard:catalogue-product-list %}">{% trans "Cancel" %}</a> {% trans "or" %} <button class="btn btn-primary btn-large" type="submit">{% trans "Save Product" %}</button>
+        <a href="{% url "dashboard:catalogue-product-list" %}">{% trans "Cancel" %}</a> {% trans "or" %} <button class="btn btn-primary btn-large" type="submit">{% trans "Save Product" %}</button>
     </div>
     {% if product %}
         <a class="btn btn-success btn-large" href="{{ product.get_absolute_url }}">{% trans "View on site" %}</a>

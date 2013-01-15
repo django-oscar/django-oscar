@@ -1,4 +1,5 @@
 {% extends "checkout/checkout.html" %}
+{% load url from future %}
 {% load currency_filters %}
 {% load i18n %}
 
@@ -28,7 +29,7 @@
 			<li><a href="https://github.com/tangentlabs/django-oscar-gocardless">django-oscar-gocardless</a></li>
 			<li><a href="https://github.com/tangentlabs/django-oscar-paymentexpress">django-oscar-paymentexpress</a></li>
 		</ul>
-		<a href="{% url checkout:preview %}" class="btn btn-primary btn-large">{% trans "Continue" %}</a>
+		<a href="{% url "checkout:preview" %}" class="btn btn-primary btn-large">{% trans "Continue" %}</a>
 	{% endblock payment_details_content %}
 
 {% endblock payment_details %}

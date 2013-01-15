@@ -7,6 +7,12 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class ExtendedURLValidator(validators.URLValidator):
+
+    def __init__(self, *args, **kwargs):
+        new_kwargs = kwargs.copy()
+        self.verify_exists = new_kwargs.pop('verify_exists', False)
+        super(ExtendedURLValidator, self).__init__(*args, **new_kwargs)
+
     def __call__(self, value):
         try:
             super(ExtendedURLValidator, self).__call__(value)
@@ -22,7 +28,7 @@ class ExtendedURLValidator(validators.URLValidator):
         """
         try:
             value = self.fix_local_url(value)
-            if self.verify_exists:
+            if getattr(self, 'verify_exists', False):
                 resolve(value)
             self.is_local_url = True
         except Http404:
