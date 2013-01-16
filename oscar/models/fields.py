@@ -24,6 +24,7 @@ class ExtendedURLField(CharField):
         # 'verify_exists' was deprecated in Django 1.4. To ensure backwards
         # compatibility, it is still accepted here, but only passed
         # on to the parent class if it was specified.
+        self.verify_exists = verify_exists
         if verify_exists is not None:
             validator = validators.ExtendedURLValidator(
                 verify_exists=verify_exists)
@@ -36,6 +37,7 @@ class ExtendedURLField(CharField):
         # twice.
         defaults = {
             'form_class': fields.ExtendedURLField,
+            'verify_exists': self.verify_exists
         }
         defaults.update(kwargs)
         return super(ExtendedURLField, self).formfield(**defaults)
