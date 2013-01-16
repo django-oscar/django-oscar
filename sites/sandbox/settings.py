@@ -157,6 +157,11 @@ LOGGING = {
             'format': '[%(asctime)s] %(message)s'
         },
     },
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
     'handlers': {
         'null': {
             'level': 'DEBUG',
@@ -168,32 +173,33 @@ LOGGING = {
             'formatter': 'verbose'
         },
         'checkout_file': {
-             'level': 'INFO',
-             'class': 'oscar.core.logging.handlers.EnvFileHandler',
-             'filename': 'checkout.log',
-             'formatter': 'verbose'
+            'level': 'INFO',
+            'class': 'oscar.core.logging.handlers.EnvFileHandler',
+            'filename': 'checkout.log',
+            'formatter': 'verbose'
         },
         'gateway_file': {
-             'level': 'INFO',
-             'class': 'oscar.core.logging.handlers.EnvFileHandler',
-             'filename': 'gateway.log',
-             'formatter': 'simple'
+            'level': 'INFO',
+            'class': 'oscar.core.logging.handlers.EnvFileHandler',
+            'filename': 'gateway.log',
+            'formatter': 'simple'
         },
         'error_file': {
-             'level': 'INFO',
-             'class': 'oscar.core.logging.handlers.EnvFileHandler',
-             'filename': 'errors.log',
-             'formatter': 'verbose'
+            'level': 'INFO',
+            'class': 'oscar.core.logging.handlers.EnvFileHandler',
+            'filename': 'errors.log',
+            'formatter': 'verbose'
         },
         'sorl_file': {
-             'level': 'INFO',
-             'class': 'oscar.core.logging.handlers.EnvFileHandler',
-             'filename': 'sorl.log',
-             'formatter': 'verbose'
+            'level': 'INFO',
+            'class': 'oscar.core.logging.handlers.EnvFileHandler',
+            'filename': 'sorl.log',
+            'formatter': 'verbose'
         },
         'mail_admins': {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler',
+            'filters': ['require_debug_false'],
         },
     },
     'loggers': {
