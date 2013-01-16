@@ -43,7 +43,8 @@ class PagePromotion(LinkedPromotion):
     """
     A promotion embedded on a particular page.
     """
-    page_url = ExtendedURLField(_('Page URL'), max_length=128, db_index=True)
+    page_url = ExtendedURLField(
+        _('Page URL'), max_length=128, db_index=True, verify_exists=True)
 
     def __unicode__(self):
         return u"%s on %s" % (self.content_object, self.page_url)
