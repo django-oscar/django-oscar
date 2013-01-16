@@ -41,10 +41,10 @@ class PageViewTests(ClientTestCase):
         self.assertEquals(FlatPage.objects.count(), 2)
 
         self.client.post('/dashboard/pages/create/', data={
-                                        'title': 'Test Page',
-                                        'url': '/test/page/',
-                                        'content': "<h1> Content </h1>"
-                                    }, follow=True)
+            'title': 'Test Page',
+            'url': '/test/page/',
+            'content': "<h1> Content </h1>"
+        }, follow=True)
 
         self.assertEquals(FlatPage.objects.count(), 3)
 
