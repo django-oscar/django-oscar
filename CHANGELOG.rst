@@ -2,6 +2,11 @@
 Changelog
 =========
 
+0.4.3 - 2013-01-16
+------------------
+
+Pin django-haystack version as backwards-incompatiable changes are happening
+
 0.4.2 - 2012-12-14
 ------------------
 
