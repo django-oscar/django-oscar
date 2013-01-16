@@ -61,8 +61,9 @@ class URLDoesNotExistValidator(ExtendedURLValidator):
 
     def __call__(self, value):
         """
-        Validate that the URL in *value* does not already exist. The
-        URL will be verified first and raises ``ValidationError`` when
+        Validate that the URLdoes not already exist.
+
+        The URL will be verified first and raises ``ValidationError`` when
         it is invalid. A valid URL is checked for existance and raises
         ``ValidationError`` if the URL already exists. Setting attribute
         ``verify_exists`` has no impact on validation.
@@ -71,25 +72,10 @@ class URLDoesNotExistValidator(ExtendedURLValidator):
 
         Returns ``None`` if URL is valid and does not exist.
         """
-        self.verify_exists = False
-
-        # calling ExtendedURLValidator twice instead of replicating its code
-        # and invert the cases when a ValidationError is returned seemes to
-        # be a much cleaner solution. Although this might not be the most
-        # efficient way of handling this, it should have not much of an impact
-        # due to its current application in flatpage creation.
         try:
-            super(URLDoesNotExistValidator, self).__call__(value)
+            self.validate_local_url(value)
         except ValidationError:
-            raise ValidationError(_('Specified page does already exist'),
-                                  code='invalid')
-
-        # check if URL exists since it seems to be valid
-        try:
-            self.verify_exists = True
-            super(URLDoesNotExistValidator, self).__call__(value)
-        except ValidationError:
+            # Page exists - that is what we want
             return
-
-        raise ValidationError(_('Specified page does already exist'),
-                              code='invalid')
+        raise ValidationError(
+            _('Specified page already exists!'), code='invalid')
