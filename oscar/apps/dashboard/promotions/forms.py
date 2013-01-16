@@ -5,7 +5,6 @@ from django.utils.translation import ugettext_lazy as _
 
 from oscar.forms.fields import ExtendedURLField
 from oscar.core.loading import get_classes
-from oscar.apps.promotions.conf import PROMOTION_CLASSES
 
 RawHTML, SingleProduct, PagePromotion, HandPickedProductList, OrderedProduct = get_classes('promotions.models',
     ['RawHTML', 'SingleProduct', 'PagePromotion', 'HandPickedProductList',
@@ -37,10 +36,11 @@ OrderedProductFormSet = inlineformset_factory(HandPickedProductList,
 
 
 class PagePromotionForm(forms.ModelForm):
-    page_url = ExtendedURLField(label=_("URL"))
-    position = forms.CharField(widget=forms.Select(choices=settings.OSCAR_PROMOTION_POSITIONS),
-                               label=_("Position"),
-                               help_text=_("Where in the page this content block will appear"))
+    page_url = ExtendedURLField(label=_("URL"), verify_exists=True)
+    position = forms.CharField(
+        widget=forms.Select(choices=settings.PROMOTION_POSITIONS),
+        label=_("Position"),
+        help_text=_("Where in the page this content block will appear"))
 
     class Meta:
         model = PagePromotion
@@ -49,7 +49,6 @@ class PagePromotionForm(forms.ModelForm):
     def clean_page_url(self):
         page_url = self.cleaned_data.get('page_url')
         if (page_url and page_url.startswith('/') and
-            not page_url.endswith('/')):
+                not page_url.endswith('/')):
             page_url += '/'
         return page_url
-
