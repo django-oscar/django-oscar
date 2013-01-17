@@ -19,13 +19,19 @@ def get_class(module_label, classname):
 
 def get_classes(module_label, classnames):
     """
-    For dynamically importing classes from a module.
+    Import classes that are found in a given module
 
-    Eg. calling get_classes('catalogue.models', ['Product']) will search
-    INSTALLED_APPS for the relevant product app (default is
-    'oscar.apps.catalogue') and then import the classes from there.  If the
-    class can't be found in the overriding module, then we attempt to import it
-    from within oscar.
+    Usage:
+
+        Product, Category = get_classes('catalogue.models', ['Product', 'Category'])
+
+    This will look for the app in INSTALLED_APPS that matches 'catalogue'.  If
+    you are not overriding Oscar's catalogue app, this will match
+    'oscar.apps.catalogue' but if you are overriding, then it will match
+    something like 'myproject.apps.catalogue'.
+
+    It is smart enough to take some classes from the local module and some from
+    Oscar's equivalent module if you choose to only override one.
 
     This is very similar to django.db.models.get_model although that is only
     for loading models while this method will load any class.
@@ -41,27 +47,35 @@ def get_classes(module_label, classnames):
         imported_module = __import__(module_path, fromlist=classnames)
         return _pluck_classes([imported_module], classnames)
 
-    # App must be local - check if module is in local app (it could be in
-    # oscar's)
+    # App must be local - check if the requested module is in local app.  It
+    # may not be as the local app may not override any classes in this module.
     app_label = module_label.split('.')[0]
     base_package = app_module_path.rsplit('.' + app_label, 1)[0]
-    local_app = "%s.%s" % (base_package, module_label)
+    local_module_path = "%s.%s" % (base_package, module_label)
     try:
-        imported_local_module = __import__(local_app, fromlist=classnames)
+        imported_local_module = __import__(local_module_path,
+                                           fromlist=classnames)
     except ImportError:
         # Module not in local app
         imported_local_module = {}
-    oscar_app = "oscar.apps.%s" % module_label
+
+    # Attempt to import the classes form Oscar's core app too to patch any gaps
+    oscar_module_path = "oscar.apps.%s" % module_label
     try:
-        imported_oscar_module = __import__(oscar_app, fromlist=classnames)
-        imported_modules = [imported_local_module, imported_oscar_module]
+        imported_oscar_module = __import__(oscar_module_path,
+                                           fromlist=classnames)
     except ImportError:
         imported_modules = [imported_local_module]
+    else:
+        imported_modules = [imported_local_module, imported_oscar_module]
 
     return _pluck_classes(imported_modules, classnames)
 
 
 def _pluck_classes(modules, classnames):
+    """
+    Build a list of classes taken from the passed list of modules
+    """
     klasses = []
     for classname in classnames:
         klass = None
