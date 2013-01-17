@@ -52,10 +52,13 @@ def get_classes(module_label, classnames):
         # Module not in local app
         imported_local_module = {}
     oscar_app = "oscar.apps.%s" % module_label
-    imported_oscar_module = __import__(oscar_app, fromlist=classnames)
+    try:
+        imported_oscar_module = __import__(oscar_app, fromlist=classnames)
+        imported_modules = [imported_local_module, imported_oscar_module]
+    except ImportError:
+        imported_modules = [imported_local_module]
 
-    return _pluck_classes([imported_local_module, imported_oscar_module],
-                          classnames)
+    return _pluck_classes(imported_modules, classnames)
 
 
 def _pluck_classes(modules, classnames):
