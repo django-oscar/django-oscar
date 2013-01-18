@@ -99,6 +99,13 @@ Oscar using a browser.  Set it up by::
 This will create the database and load some fixtures for categories and shipping
 countries.
 
+Note that Oscar uses PIL_ and Sorl_ for thumbnailing, and so you will need
+``libjpeg-dev`` installed in your OS so that your PIL installation supports
+JPEGS.
+
+.. _PIL: http://www.pythonware.com/products/pil/
+.. _Sorl: http://sorl-thumbnail.readthedocs.org/en/latest/
+
 Vagrant
 =======
 

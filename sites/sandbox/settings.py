@@ -127,8 +127,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # Oscar middleware
     'oscar.apps.basket.middleware.BasketMiddleware',
-    'oscar.middleware.profiling.ProfileMiddleware',
+    #'oscar.middleware.profiling.ProfileMiddleware',
 )
 
 INTERNAL_IPS = ('127.0.0.1',)
