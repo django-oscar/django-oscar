@@ -23,10 +23,10 @@
         {% endblock %}
 
         {% block mainstyles %}
-            {% block less %}
+            {% compress css %}
                 <link rel="stylesheet" type="text/less" href="{{ STATIC_URL }}oscar/less/styles.less" />
                 <link rel="stylesheet" type="text/less" href="{{ STATIC_URL }}oscar/less/responsive.less" />
-            {% endblock %}
+            {% endcompress %}
         {% endblock %}
 
         {# Additional CSS - specific to certain pages #}
