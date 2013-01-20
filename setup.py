@@ -42,7 +42,7 @@ setup(name='django-oscar',
           'Babel>=0.9,<0.10',
           'django-compressor>=1.2,<1.3',
           'virtual-node>=0.0.1',
-          'virtual-less>=0.0.1a'],
+          'virtual-less>=0.0.1-1.3.3'],
       dependency_links=['git+git://github.com/toastdriven/django-haystack.git@0e95d8696f8ba770f9c60152136aba32f5591fd6#egg=django-haystack-2.0.0-beta'],
       #dependency_links=['http://github.com/toastdriven/django-haystack/tarball/master@0e95d8696f8ba770f9c60152136aba32f5591fd6#egg=django-haystack-2.0.0-beta'],
       # See http://pypi.python.org/pypi?%3Aaction=list_classifiers
