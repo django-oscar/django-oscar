@@ -24,8 +24,15 @@
 
         {% block mainstyles %}
             {% compress css %}
-                <link rel="stylesheet" type="text/less" href="{{ STATIC_URL }}oscar/less/styles.less" />
-                <link rel="stylesheet" type="text/less" href="{{ STATIC_URL }}oscar/less/responsive.less" />
+                {% comment %}
+                Only include CSS files that are generated from LESS here. Use the extrastyles block
+                for additional CSS files.
+                {% endcomment %}
+
+                {% block styles %}
+                    <link rel="stylesheet" type="text/less" href="{{ STATIC_URL }}oscar/less/styles.less" />
+                    <link rel="stylesheet" type="text/less" href="{{ STATIC_URL }}oscar/less/responsive.less" />
+                {% endblock %}
             {% endcompress %}
         {% endblock %}
 
