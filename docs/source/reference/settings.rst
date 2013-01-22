@@ -188,13 +188,6 @@ Default: 604800 (1 week in seconds)
 
 The time to live for the basket cookie in seconds
 
-OSCAR_IMAGE_FOLDER
-------------------
-
-Default: ``images/products/%Y/%m/``
-
-The path for uploading images to.
-
 OSCAR_RECENTLY_VIEWED_PRODUCTS
 ------------------------------
 
