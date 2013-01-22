@@ -28,6 +28,29 @@ Next, you can modify the ``Product`` model through subclassing::
     class Product(AbstractProduct):
         video_url = models.URLField()
 
-Now, running ``./manage.py syncdb`` will create the product model with your additional field
 
+The last thing you need to do now is make Django update the database schema and
+create a new column in the product table. We recommend to use South migrations 
+for this (internally Oscar already uses it) so all you need to do is create a
+new schema migration. Depending on your setup you should follow one of these
+two options:
 
+1. You **have not** run ``./manage.py migrate`` before
+
+   You can simply generate a new initial migration using::
+
+    ./manage.py schemamigration catalogue --initial
+
+2. You **have** run ``./manage.py migrate`` before
+
+   You have to copy the ``migrations`` directory from ``oscar/apps/catalogue``
+   (the same as the ``models.py`` you just copied) and put it into your
+   ``catalogue`` app.
+   Now create a new (additional) schemamigration using the ``schemamigration``
+   management command and follow the instructions::
+
+    ./manage.py schemamigration catalogue --auto
+
+To apply the migration you just created, all you have to do is run
+``./manage.py migrate catalogue`` and the new column is added to the product
+table in the database.
