@@ -2,7 +2,7 @@
 Oscar specific settings
 =======================
 
-Oscar provides a number of configurable settings used to confugre the system.
+Oscar provides a number of settings used to configure the system.
 
 .. contents::
     :local:
