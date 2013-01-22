@@ -54,3 +54,14 @@ two options:
 To apply the migration you just created, all you have to do is run
 ``./manage.py migrate catalogue`` and the new column is added to the product
 table in the database.
+
+
+Customising Products
+--------------------
+
+You should inherit from ``AbstractProduct`` as above to alter behaviour for all
+your products. Further subclassing is not recommended, because using methods
+and attributes of concrete subclasses of ``Product`` are not available unless
+explicitly casted to that class.
+To model different classes of products, use ``ProductClass`` and
+``ProductAttribute`` instead.
