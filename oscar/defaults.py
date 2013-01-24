@@ -70,3 +70,7 @@ OSCAR_COOKIES_DELETE_ON_LOGOUT = ['oscar_recently_viewed_products', ]
 
 OSCAR_SETTINGS = dict(
     [(k, v) for k, v in locals().items() if k.startswith('OSCAR_')])
+
+# Root packages for use by get_classes. Please put most specific ones in front:
+# e.g: ('cc', 'blakey.apps', 'oscar.apps')
+ROOT_PACKAGES = ('oscar.apps',)
