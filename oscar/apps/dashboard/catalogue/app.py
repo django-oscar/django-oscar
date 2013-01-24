@@ -46,7 +46,7 @@ class CatalogueApplication(Application):
                 name='catalogue-category-detail-list'),
             url(r'^categories/create/$', self.category_create_view.as_view(),
                 name='catalogue-category-create'),
-            url(r'^categories/(?P<pk>\d+)/$',
+            url(r'^categories/(?P<pk>\d+)/update/$',
                 self.category_update_view.as_view(),
                 name='catalogue-category-update'),
             url(r'^categories/(?P<pk>\d+)/delete/$',
