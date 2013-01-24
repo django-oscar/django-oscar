@@ -10,13 +10,15 @@ scratch and have decided to use Oscar.  Let's call this shop 'frobshop'
     You can always review the set-up of the `Sandbox site`_ in case you have
     trouble with the below instructions.
 
-.. _`Sandbox site`: https://github.com/tangentlabs/django-oscar/tree/releases/0.2/sandbox
+.. _`Sandbox site`: https://github.com/tangentlabs/django-oscar/tree/master/sites/sandbox
 
 Install by hand
 ===============
 
 Install Oscar (which will install Django as a dependency), then create the
-project::
+project:
+
+.. code-block:: bash
 
     pip install django-oscar
     django-admin.py startproject frobshop
@@ -27,7 +29,9 @@ Settings
 --------
 
 Now edit your settings file ``frobshop.frobshop.settings.py`` to specify a
-database (we use SQLite for simplicity)::
+database (we use SQLite for simplicity):
+
+.. code-block:: django
 
     DATABASES = {
         'default': {
@@ -40,8 +44,13 @@ database (we use SQLite for simplicity)::
         }
     }
 
-Then, add ``oscar.apps.basket.middleware.BasketMiddleware`` to ``MIDDLEWARE_CLASSES``, and
-set ``TEMPLATE_CONTEXT_PROCESSORS`` to::
+Then, add ``oscar.apps.basket.middleware.BasketMiddleware`` to
+``MIDDLEWARE_CLASSES``.  It is also recommended to use
+``django.middleware.transaction.TransactionMiddleware`` too
+
+Now set ``TEMPLATE_CONTEXT_PROCESSORS`` to:
+
+.. code-block:: django
 
     TEMPLATE_CONTEXT_PROCESSORS = (
         "django.contrib.auth.context_processors.auth",
@@ -99,12 +108,16 @@ Now set your auth backends to:
 
 to allow customers to sign in using an email address rather than a username.
 
-Modify your ``TEMPLATE_DIRS`` to include the main Oscar template directory::
+Modify your ``TEMPLATE_DIRS`` to include the main Oscar template directory:
+
+.. code-block:: django
 
     from oscar import OSCAR_MAIN_TEMPLATE_DIR
     TEMPLATE_DIRS = TEMPLATE_DIRS + (OSCAR_MAIN_TEMPLATE_DIR,) 
 
-Oscar currently uses Haystack for search so you need to specify::
+Oscar currently uses Haystack for search so you need to specify:
+
+.. code-block:: django
 
     HAYSTACK_CONNECTIONS = {
         'default': {
@@ -115,14 +128,18 @@ Oscar currently uses Haystack for search so you need to specify::
 When moving towards production, you'll obviously need to switch to a real search
 backend.
 
-The last addition to the settings file is to import all of Oscar's default settings::
+The last addition to the settings file is to import all of Oscar's default settings:
+
+.. code-block:: django
 
     from oscar.defaults import *
 
 URLs
 ----
 
-Alter your ``frobshop/urls.py`` to include Oscar's URLs::
+Alter your ``frobshop/urls.py`` to include Oscar's URLs:
+
+.. code-block:: django
 
     from django.conf.urls import patterns, include, url
     from oscar.app import shop
@@ -134,7 +151,9 @@ Alter your ``frobshop/urls.py`` to include Oscar's URLs::
 Database
 --------
 
-Then create the database and the shop should be browsable::
+Then create the database and the shop should be browsable:
+
+.. code-block:: bash
 
     python manage.py syncdb --noinput
     python manage.py migrate
@@ -158,7 +177,9 @@ You also need to specify the initial status for an order and a line item in
 respectively.
 
 To give you an idea of what an order pipeline might look like take a look
-at the Oscar sandbox settings::
+at the Oscar sandbox settings:
+
+.. code-block:: django
 
     OSCAR_INITIAL_ORDER_STATUS = 'Pending'
     OSCAR_INITIAL_LINE_STATUS = 'Pending'
@@ -186,7 +207,9 @@ although it is tailored to an agency structure which may not suit everyone.
 .. _`template Django project`: https://github.com/tangentlabs/tangent-django-boilerplate
 
 Set up a virtualenv_, and create a new project using the ``startproject``
-management command::
+management command:
+
+.. code-block:: bash
 
     mkvirtualenv frobshop # using virtualenvwrapper
     pip install Django
@@ -219,18 +242,24 @@ follows Tangent's conventions.  The structure is::
         deploy-to-prod.sh
 
 Replace a few files with Oscar-specific versions (the templated project can be
-used for non-Oscar projects too)::
+used for non-Oscar projects too):
+
+.. code-block:: bash
 
     mv frobshop/www/urls{_oscar,}.py
     mv frobshop/www/deploy/requirements{_oscar,}.txt
     mv frobshop/www/conf/default{_oscar,}.py
 
-Install dependencies::
+Install dependencies:
+
+.. code-block:: bash
 
     cd frobshop/www
     pip install -r deploy/requirements.txt
 
-Create database::
+Create database:
+
+.. code-block:: bash
 
     python manage.py syncdb --noinput
     python manage.py migrate
