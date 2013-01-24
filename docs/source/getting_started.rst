@@ -58,9 +58,13 @@ set ``TEMPLATE_CONTEXT_PROCESSORS`` to::
         'oscar.core.context_processors.metadata',
     ) 
 
-Next, modify ``INSTALLED_APPS`` to be a list, add ``South`` and append Oscar's core apps::
+Next, modify ``INSTALLED_APPS`` to be a list, add ``South`` and ``compressor``
+and append Oscar's core apps:
+
+.. code-block:: django
 
     from oscar import get_core_apps
+
     INSTALLED_APPS = [
         'django.contrib.auth',
         'django.contrib.contenttypes',
@@ -70,12 +74,23 @@ Next, modify ``INSTALLED_APPS`` to be a list, add ``South`` and append Oscar's c
         'django.contrib.flatpages',
         ...
         'south',
+        'compressor',
     ] + get_core_apps()
 
 Note that Oscar requires ``django.contrib.messages`` and
 ``django.contrib.flatpages`` which aren't included by default.
 
-Now set your auth backends to::
+.. tip::
+
+    Oscar's default templates use django-compressor_ but it's optional really.
+    You may decide to use your own templates that don't use compressor.  Hence
+    why it is not one of the 'core apps'.
+
+.. _django-compressor: https://github.com/jezdez/django_compressor
+
+Now set your auth backends to:
+
+.. code-block:: django
 
     AUTHENTICATION_BACKENDS = (
         'oscar.apps.customer.auth_backends.Emailbackend',
