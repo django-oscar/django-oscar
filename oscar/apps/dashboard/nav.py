@@ -2,8 +2,6 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import ImproperlyConfigured
 from django.conf import settings
 
-_nodes = []
-
 
 class Node(object):
 
@@ -47,36 +45,24 @@ class Node(object):
         return len(self.children) > 0
 
 
-def register(node, display_order=5):
-    # We use tuples so we can sort later on.  The lower the display order, the
-    # closer to the left the node appears.
-    _nodes.append((display_order, node))
-
-
-def flush():
-    global _nodes
-    _nodes = []
-
-
 def get_nodes(user):
     """
     Return the visible navigation nodes for the passed user
     """
-    if not _nodes:
-        dashboard_nav = settings.OSCAR_DASHBOARD_NAVIGATION
-        create_menu(dashboard_nav)
-    nodes = []
-    for __, node in sorted(_nodes):
+    all_nodes = create_menu(settings.OSCAR_DASHBOARD_NAVIGATION)
+    visible_nodes = []
+    for node in all_nodes:
         filtered_node = node.filter(user)
         if filtered_node:
-            nodes.append(node)
-    return nodes
+            visible_nodes.append(node)
+    return visible_nodes
 
 
 def create_menu(menu_items, parent=None):
     """
     Create the navigation nodes based on a passed list of dicts
     """
+    nodes = []
     for menu_dict in menu_items:
         try:
             label = menu_dict['label']
@@ -94,6 +80,7 @@ def create_menu(menu_items, parent=None):
                         url_kwargs=menu_dict.get('url_kwargs', None),
                         url_args=menu_dict.get('url_args', None))
         if parent is None:
-            register(node, len(_nodes))
+            nodes.append(node)
         else:
             parent.add_child(node)
+    return nodes
