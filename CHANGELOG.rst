@@ -2,6 +2,11 @@
 Changelog
 =========
 
+0.4.4 - 2013-01-25
+------------------
+
+Extend ``get_class`` to support loading from non-Oscar packages
+
 0.4.4 - 2013-01-16
 ------------------
 
