@@ -118,13 +118,12 @@ test that the migrations run correctly in both MySQL and Postgres.
 Building the Vagrant machine
 ----------------------------
 
-To create the machine, first ensure that vagrant_ and puppet_ are installed.  You will require a
+To create the machine, first ensure that Vagrant and puppet_ are installed.  You will require a
 puppet version that supports ``puppet module install``, that is > 2.7.14.  Now
 run::
 
     make puppet
 
-.. _vagrant: http://vagrantup.com/v1/docs/getting-started/index.html
 .. _puppet: http://docs.puppetlabs.com/guides/installation.html
 
 to fetch the required puppet modules for provisioning.  Finally, run::
@@ -138,16 +137,16 @@ Testing migrations against MySQL and Postgres
 
 To test the migrations against MySQL and Postgres, do the following:
 
-1.  SSH onto the VM::
+1. SSH onto the VM::
 
     vagrant ssh
 
-2.  Change to sandbox folder and activate virtualenv::
+2. Change to sandbox folder and activate virtualenv::
 
     cd /vagrant/sites/sandbox
     source /var/www/virtualenv/bin/activate
 
-3.  Run helper script::
+3. Run helper script::
 
     ./test_migrations.sh
 
