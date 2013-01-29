@@ -16,14 +16,19 @@ urlpatterns = patterns('',
     (r'', include(shop.urls)),
 )
 
+# Allow rosetta to be used to add translations
 if 'rosetta' in settings.INSTALLED_APPS:
     urlpatterns += patterns('',
         (r'^rosetta/', include('rosetta.urls')),
     )
 
 if settings.DEBUG:
+    # Server statics
     urlpatterns += staticfiles_urlpatterns()
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    # Serve uploaded media
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)
+    # Test error pages
     urlpatterns += patterns('',
         url(r'^403$', TemplateView.as_view(template_name='403.html')),
         url(r'^404$', TemplateView.as_view(template_name='404.html')),

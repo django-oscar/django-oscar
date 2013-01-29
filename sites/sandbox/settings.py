@@ -52,12 +52,20 @@ TIME_ZONE = 'Europe/London'
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en-us'
 
+# This should match the locale folders in oscar/locale
 LANGUAGES = (
+    ('da', 'Danish'),
     ('de', 'German'),
+    ('es', 'Spanish'),
     ('fr', 'French'),
+    ('it', 'Italian'),
+    ('ja', 'Japanese'),
+    ('pl', 'Polish'),
+    ('ru', 'Russian'),
 )
 ROSETTA_STORAGE_CLASS = 'rosetta.storage.SessionRosettaStorage'
 ROSETTA_ENABLE_TRANSLATION_SUGGESTIONS = True
+ROSETTA_REQUIRES_AUTH = False
 
 SITE_ID = 1
 
