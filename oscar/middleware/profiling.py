@@ -1,4 +1,5 @@
 import sys
+import os
 import tempfile
 import hotshot
 import hotshot.stats
@@ -16,7 +17,17 @@ class BaseMiddleware(object):
 
     def process_request(self, request):
         if self.show_profile(request):
-            self.tmpfile = tempfile.NamedTemporaryFile()
+            if 'prof_file' in request.GET:
+                # It's sometimes useful to generate a file of output that can
+                # converted for use with kcachegrind.  To convert this file,
+                # use:
+                #
+                #     pyprof2calltree -o /tmp/callgrind.stats -i /tmp/out.stats
+                #
+                # then open the file in kcachegrind.
+                self.tmpfile = open('/tmp/out.stats', 'w')
+            else:
+                self.tmpfile = tempfile.NamedTemporaryFile()
             self.profile = self.profiler()
 
     def profiler(self):
@@ -33,18 +44,20 @@ class BaseMiddleware(object):
         if self.show_profile(request):
             stats = self.stats()
 
-            # Capture STDOUT temporarily
-            old_stdout = sys.stdout
-            sys.stdout = StringIO()
-
             if 'prof_strip' in request.GET:
                 stats.strip_dirs()
             if 'prof_sort' in request.GET:
                 stats.sort_stats(*request.GET['prof_sort'].split(','))
             else:
                 stats.sort_stats('time', 'calls')
+
+            # Capture STDOUT temporarily
+            old_stdout = sys.stdout
+            out = StringIO()
+            sys.stdout = out
             stats.print_stats()
-            stats_str = sys.stdout.getvalue()
+
+            stats_str = out.getvalue()
             sys.stdout.close()
             sys.stdout = old_stdout
 
