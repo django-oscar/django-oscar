@@ -2,12 +2,14 @@ from django.db.models import get_model
 from django.core.urlresolvers import reverse
 
 from oscar_testsupport.testcases import ClientTestCase
+from oscar_testsupport.factories import create_product
 
-from django_webtest import WebTest
 from django_dynamic_fixture import G
+from oscar_testsupport.testcases import WebTestCase
 
-User = get_model('auth', 'user')
-Product = get_model('catalogue', 'product')
+User = get_model('auth', 'User')
+Product = get_model('catalogue', 'Product')
+ProductCategory = get_model('catalogue', 'ProductCategory')
 Category = get_model('catalogue', 'Category')
 StockRecord = get_model('partner', 'stockrecord')
 
@@ -24,24 +26,13 @@ class TestCatalogueViews(ClientTestCase):
             self.assertIsOk(self.client.get(url))
 
 
-class TestAStaffUser(WebTest):
-    email = 'test@test.com'
-    password = 'mypassword'
-
-    def setUp(self):
-        user = User.objects.create_user('_', self.email, self.password)
-        user.is_staff = True
-        user.save()
-
-        form = self.app.get(reverse('customer:login')).forms['login_form']
-        form['login-username'] = self.email
-        form['login-password'] = self.password
-        form.submit('login_submit')
+class TestAStaffUser(WebTestCase):
+    is_staff = True
 
     def test_can_submit_an_invalid_product_update_and_returns_to_update_page(self):
         product = G(Product, ignore_fields=['stockrecord'], parent=None)
 
-        form = self.app.get(
+        form = self.get(
             reverse('dashboard:catalogue-product',
                     kwargs={'pk': product.id})
         ).forms[0]
@@ -54,7 +45,7 @@ class TestAStaffUser(WebTest):
         category = G(Category)
         product = G(Product, ignore_fields=['stockrecord'], parent=None)
 
-        page = self.app.get(
+        page = self.get(
             reverse('dashboard:catalogue-product',
                     kwargs={'pk': product.id})
         )
@@ -71,3 +62,56 @@ class TestAStaffUser(WebTest):
         else:
             if product.has_stockrecord:
                 self.fail('product has stock record but should not')
+
+    def test_can_delete_an_individual_product(self):
+        product = create_product()
+        stockrecord = product.stockrecord
+
+        category = Category.add_root(name='Test Category')
+        product_category = ProductCategory.objects.create(category=category,
+                                                          product=product)
+
+        page = self.get(reverse('dashboard:catalogue-product-delete',
+                                args=(product.id,))).form.submit()
+
+        self.assertRedirects(page, reverse('dashboard:catalogue-product-list'))
+
+        self.assertEquals(Product.objects.count(), 0)
+        self.assertEquals(StockRecord.objects.count(), 0)
+        self.assertEquals(ProductCategory.objects.count(), 0)
+
+        self.assertRaises(Product.DoesNotExist,
+                          Product.objects.get, id=product.id)
+        self.assertRaises(StockRecord.DoesNotExist,
+                          StockRecord.objects.get, id=stockrecord.id)
+        self.assertRaises(ProductCategory.DoesNotExist,
+                          ProductCategory.objects.get, id=product_category.id)
+
+    def test_can_delete_a_canonical_product(self):
+        canonical_product = create_product(title="Canonical Product")
+
+        product = create_product(title="Variant 1", parent=canonical_product)
+        stockrecord = product.stockrecord
+
+        category = Category.add_root(name='Test Category')
+        product_category = ProductCategory.objects.create(category=category,
+                                                          product=product)
+
+        page = self.get(reverse('dashboard:catalogue-product-delete',
+                                args=(canonical_product.id,))).form.submit()
+
+        self.assertRedirects(page, reverse('dashboard:catalogue-product-list'))
+
+        self.assertEquals(Product.objects.count(), 0)
+        self.assertEquals(StockRecord.objects.count(), 0)
+        self.assertEquals(ProductCategory.objects.count(), 0)
+
+        self.assertRaises(Product.DoesNotExist,
+                          Product.objects.get, id=canonical_product.id)
+
+        self.assertRaises(Product.DoesNotExist,
+                          Product.objects.get, id=product.id)
+        self.assertRaises(StockRecord.DoesNotExist,
+                          StockRecord.objects.get, id=stockrecord.id)
+        self.assertRaises(ProductCategory.DoesNotExist,
+                          ProductCategory.objects.get, id=product_category.id)

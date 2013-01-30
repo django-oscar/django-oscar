@@ -9,15 +9,16 @@ def configure(nose_args=None):
         from oscar.defaults import OSCAR_SETTINGS
 
         # Helper function to extract absolute path
-        location = lambda x: os.path.join(os.path.dirname(os.path.realpath(__file__)), x)
+        location = lambda x: os.path.join(
+            os.path.dirname(os.path.realpath(__file__)), x)
 
         settings.configure(
             DATABASES={
                 'default': {
                     'ENGINE': 'django.db.backends.sqlite3',
                     'NAME': ':memory:',
-                    }
-                },
+                }
+            },
             INSTALLED_APPS=[
                 'django.contrib.auth',
                 'django.contrib.admin',
@@ -26,7 +27,8 @@ def configure(nose_args=None):
                 'django.contrib.sites',
                 'django.contrib.flatpages',
                 'sorl.thumbnail',
-                ] + OSCAR_CORE_APPS,
+                'compressor',
+            ] + OSCAR_CORE_APPS,
             TEMPLATE_CONTEXT_PROCESSORS=(
                 "django.contrib.auth.context_processors.auth",
                 "django.core.context_processors.request",
@@ -39,25 +41,28 @@ def configure(nose_args=None):
                 'oscar.apps.customer.notifications.context_processors.notifications',
                 'oscar.apps.promotions.context_processors.promotions',
                 'oscar.apps.checkout.context_processors.checkout',
-                ),
+            ),
             TEMPLATE_DIRS=(
                 location('templates'),
                 OSCAR_MAIN_TEMPLATE_DIR,
-                ),
+            ),
             MIDDLEWARE_CLASSES=global_settings.MIDDLEWARE_CLASSES + (
                 'oscar.apps.basket.middleware.BasketMiddleware',
-                ),
+            ),
             AUTHENTICATION_BACKENDS=(
                 'oscar.apps.customer.auth_backends.Emailbackend',
                 'django.contrib.auth.backends.ModelBackend',
-                ),
+            ),
             HAYSTACK_CONNECTIONS={
                 'default': {
                     'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
                 }
             },
-            ROOT_URLCONF='tests.site.urls',
+            PASSWORD_HASHERS=['django.contrib.auth.hashers.MD5PasswordHasher'],
+            ROOT_URLCONF='tests._site.urls',
             LOGIN_REDIRECT_URL='/accounts/',
+            STATIC_URL='/static/',
+            COMPRESS_ENABLED=False,
             DEBUG=False,
             SITE_ID=1,
             APPEND_SLASH=True,

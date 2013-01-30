@@ -2,7 +2,7 @@
 .PHONY: contribute ci test i18n lint travis
 
 install:
-	python setup.py develop
+	python setup.py develop --upgrade
 	pip install -r requirements.txt
 
 sandbox: install
@@ -33,7 +33,7 @@ test:
 ci: install lint
 	# Run continous tests and generate lint reports
 	./runtests.py --with-coverage --with-xunit
-	coverage xml
+	coverage xml -i
 
 lint:
 	./lint.sh

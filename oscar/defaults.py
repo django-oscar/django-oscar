@@ -1,3 +1,5 @@
+from django.utils.translation import ugettext_lazy as _
+
 OSCAR_SHOP_NAME = 'Oscar'
 OSCAR_SHOP_TAGLINE = 'Domain-driven e-Commerce for Django'
 
@@ -5,6 +7,7 @@ OSCAR_SHOP_TAGLINE = 'Domain-driven e-Commerce for Django'
 OSCAR_BASKET_COOKIE_LIFETIME = 7 * 24 * 60 * 60
 OSCAR_BASKET_COOKIE_OPEN = 'oscar_open_basket'
 OSCAR_BASKET_COOKIE_SAVED = 'oscar_saved_basket'
+OSCAR_MAX_BASKET_QUANTITY_THRESHOLD = 10000
 
 # Currency
 OSCAR_DEFAULT_CURRENCY = 'GBP'
@@ -62,11 +65,113 @@ OSCAR_FROM_EMAIL = 'oscar@example.com'
 # Offers
 OSCAR_OFFER_BLACKLIST_PRODUCT = None
 
-# Max total number of items in basket
-OSCAR_MAX_BASKET_QUANTITY_THRESHOLD = None
 
 # Cookies
 OSCAR_COOKIES_DELETE_ON_LOGOUT = ['oscar_recently_viewed_products', ]
+
+# Menu structure of the dashboard navigation
+OSCAR_DASHBOARD_NAVIGATION = [
+    {
+        'label': _('Dashboard'),
+        'icon': 'icon-th-list',
+        'url_name': 'dashboard:index',
+    },
+    {
+        'label': _('Catalogue'),
+        'icon': 'icon-sitemap',
+        'children': [
+            {
+                'label': _('Products'),
+                'url_name': 'dashboard:catalogue-product-list',
+            },
+            {
+                'label': _('Categories'),
+                'url_name': 'dashboard:catalogue-category-list',
+            },
+            {
+                'label': _('Ranges'),
+                'url_name': 'dashboard:range-list',
+            },
+            {
+                'label': _('Low stock alerts'),
+                'url_name': 'dashboard:stock-alert-list',
+            },
+        ]
+    },
+    {
+        'label': _('Fulfilment'),
+        'icon': 'icon-shopping-cart',
+        'children': [
+            {
+                'label': _('Order management'),
+                'url_name': 'dashboard:order-list',
+            },
+            {
+                'label': _('Statistics'),
+                'url_name': 'dashboard:order-stats',
+            },
+        ]
+    },
+    {
+        'label': _('Customers'),
+        'icon': 'icon-group',
+        'children': [
+            {
+                'label': _('Customer management'),
+                'url_name': 'dashboard:users-index',
+            },
+            {
+                'label': _('Stock alert requests'),
+                'url_name': 'dashboard:user-alert-list',
+            },
+        ]
+    },
+    {
+        'label': _('Offers'),
+        'icon': 'icon-bullhorn',
+        'children': [
+            {
+                'label': _('Offer management'),
+                'url_name': 'dashboard:offer-list',
+            },
+            {
+                'label': _('Vouchers'),
+                'url_name': 'dashboard:voucher-list',
+            },
+        ],
+    },
+    {
+        'label': _('Content'),
+        'icon': 'icon-folder-close',
+        'children': [
+            {
+                'label': _('Content blocks'),
+                'url_name': 'dashboard:promotion-list',
+            },
+            {
+                'label': _('Content blocks by page'),
+                'url_name': 'dashboard:promotion-list-by-page',
+            },
+            {
+                'label': _('Pages'),
+                'url_name': 'dashboard:page-list',
+            },
+            {
+                'label': _('Email templates'),
+                'url_name': 'dashboard:comms-list',
+            },
+            {
+                'label': _('Reviews'),
+                'url_name': 'dashboard:reviews-list',
+            },
+        ]
+    },
+    {
+        'label': _('Reports'),
+        'icon': 'icon-bar-chart',
+        'url_name': 'dashboard:reports-index',
+    },
+]
 
 OSCAR_SETTINGS = dict(
     [(k, v) for k, v in locals().items() if k.startswith('OSCAR_')])

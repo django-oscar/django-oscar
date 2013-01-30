@@ -1,0 +1,14 @@
+{% load i18n %}
+{% autoescape off %}
+{% blocktrans with email=new_email %}
+You're receiving this email because your email address has been changed to {{ email }}.
+{% endblocktrans %}
+
+{% trans "If it wasn't you who changed it, please reset your password immediately and correct your email address:" %}
+http://{{ site.domain }}{{ reset_url }}
+
+{% trans "If it was you who changed the email address, you can ignore this email." %}
+
+{% trans "Thanks for using our site!" %}
+{% blocktrans with name=site.name %}The {{ name }} team{% endblocktrans %}
+{% endautoescape %}

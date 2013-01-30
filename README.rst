@@ -10,6 +10,12 @@ customised to suit the needs of your project.  This allows a wide range of
 e-commerce requirements to be handled, from large-scale B2C sites to complex B2B
 sites rich in domain-specific business logic.
 
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/oscarcommerce.thumb.png
+    :target: http://oscarcommerce.com
+
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/readthedocs.thumb.png
+    :target: http://django-oscar.readthedocs.org/en/latest/
+
 Further reading:
 
 * `Official homepage`_ 
@@ -30,7 +36,7 @@ Continuous integration status:
     :target: http://travis-ci.org/#!/tangentlabs/django-oscar
 
 .. _`Official homepage`: http://oscarcommerce.com
-.. _`Sandbox site`: http://sandbox.oscar.tangentlabs.co.uk
+.. _`Sandbox site`: http://latest.oscarcommerce.com
 .. _`Documentation`: http://django-oscar.readthedocs.org/en/latest/
 .. _`readthedocs.org`: http://readthedocs.org
 .. _`Continuous integration homepage`: http://travis-ci.org/#!/tangentlabs/django-oscar 
@@ -52,6 +58,44 @@ and maintained by `Tangent Labs`_, a London-based digital agency, with help from
 .. _`Tangent Labs`: http://www.tangentlabs.co.uk
 .. _`Mirumee`: http://mirumee.com/
 
+Screenshots
+-----------
+
+These are a few screenshots from the 'sandbox' example site that ships with
+Oscar.  It sports a simple design built with Twitter's Bootstrap_.  It provides a
+good starting point for quickly building elegant e-commerce sites.
+
+.. _Bootstrap: http://twitter.github.com/bootstrap/
+
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/browse.thumb.png
+    :target: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/browse.png
+
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/detail.thumb.png
+    :target: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/detail.png
+
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/basket.thumb.png
+    :target: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/basket.png
+
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/dashboard.thumb.png
+    :target: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/dashboard.png
+
+You can have this sample shop running on your machine in 5 commands::
+
+    $ git clone git@github.com:tangentlabs/django-oscar.git
+    $ cd django-oscar
+    $ mkvirtualenv oscar
+    $ make sandbox
+    $ sites/sandbox/manage.py runserver
+
+The sandbox site (initialised with a sample set of products) will be available
+at: http://localhost:8000.  Want to make changes?  Check out the 
+`contributing guidelines`_.
+
+.. _`contributing guidelines`: http://django-oscar.readthedocs.org/en/latest/contributing.html#playing-in-the-sandbox
+
+The sandbox site is also available to browse at 
+http://latest.oscarcommerce.com
+
 Extensions
 ----------
 
@@ -66,6 +110,7 @@ The following extensions are stable and ready for use:
   functionality and loyalty schemes)
 * django-oscar-stores_ - Physical stores integration (opening hours, store
   locator etc)
+* django-oscar-testsupport_ - Testing utilities for Oscar extensions.
 
 .. _django-oscar-datacash: https://github.com/tangentlabs/django-oscar-datacash
 .. _django-oscar-paymentexpress: https://github.com/tangentlabs/django-oscar-paymentexpress
@@ -79,6 +124,7 @@ The following extensions are stable and ready for use:
 .. _django-oscar-jirafe: https://github.com/tangentlabs/django-oscar-jirafe
 .. _Jirafe: https://jirafe.com/
 .. _django-oscar-accounts: https://github.com/tangentlabs/django-oscar-accounts
+.. _django-oscar-testsupport: https://github.com/tangentlabs/django-oscar-testsupport
 
 The following extensions are in development:
 
@@ -113,13 +159,31 @@ Tangent projects:
 * Tata Group - http://www.landmarkonthenet.com
 * Carlsberg - Their global "We Deliver More" platform is powered by Oscar (but
   is a B2B site and not browsable by the public)
-* The UK Labour party - http://shop.labour.org.uk
 * Chocolate Box - https://www.thechocolatebox.com.au
+* The UK Labour party - http://shop.labour.org.uk
+
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/landmark.thumb.png
+    :target: http://www.landmarkonthenet.com
+
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/carlsberg.cch.thumb.png
+    :target: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/carlsberg.cch.png
+
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/chocolatebox.thumb.png
+    :target: https://www.thechocolatebox.com.au
+
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/labourshop.thumb.png
+    :target: https://shop.labour.org.uk
 
 Non-Tangent:
 
 * Dolbeau - http://www.dolbeau.ca/
 * Sobusa - http://www.sobusa.fr/
+
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/dolbeau.thumb.png
+    :target: http://www.dolbeau.ca
+
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/sobusa.thumb.png
+    :target: http://www.sobusa.fr
 
 Many more on the way.  If you use Oscar in production, please let us know.
 

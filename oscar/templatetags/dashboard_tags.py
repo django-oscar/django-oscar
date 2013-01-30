@@ -34,8 +34,7 @@ def dashboard_navigation(parser, token):
 class DashboardNavigationNode(template.Node):
 
     def render(self, context):
-        user = context['user']
-        context['nav_items'] = get_nodes(user)
+        context['nav_items'] = get_nodes(context['user'])
         return ''
 
 

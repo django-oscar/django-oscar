@@ -52,12 +52,20 @@ TIME_ZONE = 'Europe/London'
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en-us'
 
+# This should match the locale folders in oscar/locale
 LANGUAGES = (
+    ('da', 'Danish'),
     ('de', 'German'),
+    ('es', 'Spanish'),
     ('fr', 'French'),
+    ('it', 'Italian'),
+    ('ja', 'Japanese'),
+    ('pl', 'Polish'),
+    ('ru', 'Russian'),
 )
 ROSETTA_STORAGE_CLASS = 'rosetta.storage.SessionRosettaStorage'
 ROSETTA_ENABLE_TRANSLATION_SUGGESTIONS = True
+ROSETTA_REQUIRES_AUTH = False
 
 SITE_ID = 1
 
@@ -84,8 +92,13 @@ MEDIA_URL = '/media/'
 #ADMIN_MEDIA_PREFIX = '/media/admin/'
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = ()
 STATIC_ROOT = location('public/static')
+STATICFILES_DIRS = ()
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
+)
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '$)a7n&o80u!6y5t-+jrd3)3!%vh&shg$wqpjpxc!ar&p#!)n1a'
@@ -122,7 +135,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # Oscar middleware
     'oscar.apps.basket.middleware.BasketMiddleware',
+    #'oscar.middleware.profiling.ProfileMiddleware',
 )
 
 INTERNAL_IPS = ('127.0.0.1',)
@@ -179,6 +194,12 @@ LOGGING = {
              'filename': 'errors.log',
              'formatter': 'verbose'
         },
+        'sorl_file': {
+             'level': 'INFO',
+             'class': 'oscar.core.logging.handlers.EnvFileHandler',
+             'filename': 'sorl.log',
+             'formatter': 'verbose'
+        },
         'mail_admins': {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler',
@@ -205,6 +226,11 @@ LOGGING = {
             'propagate': True,
             'level': 'INFO',
         },
+        'sorl.thumbnail': {
+            'handlers': ['sorl_file'],
+            'propagate': True,
+            'level': 'INFO',
+        },
         'django.db.backends': {
             'handlers': ['null'],
             'propagate': False,
@@ -227,6 +253,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'south',
     'rosetta',  # For i18n testing
+    'compressor',
     'apps.user',  # For profile testing
     'apps.gateway',  # For allowing dashboard access
 ]
@@ -279,6 +306,8 @@ OSCAR_SHOP_NAME = 'Oscar Sandbox'
 OSCAR_SHOP_TAGLINE = 'e-Commerce for Django'
 
 GOOGLE_ANALYTICS_ID = 'UA-XXXXX-Y'
+
+COMPRESS_ENABLED = True
 
 LOG_ROOT = location('logs')
 # Ensure log root exists

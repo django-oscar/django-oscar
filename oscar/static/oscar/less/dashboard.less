@@ -1,6 +1,3 @@
-// import base bootstrap - separate from frontend
-@import url("bootstrap.min.css");
-
 // Core variables and mixins separate from frontend variables and mixins
 @import "dashboard/variables.less"; // Modify this for custom colors, font-sizes, etc
 @import "dashboard/mixins.less";
@@ -44,7 +41,7 @@ h3.app-ico:before {
 .btn {
   font-weight:normal;
 }
-.btn-group > .btn, 
+.btn-group > .btn,
 .btn-group > .dropdown-menu,
 .btn {
   font-size:12px;
@@ -58,7 +55,7 @@ h3.app-ico:before {
   &:hover,
   &:active {
    color:inherit;
-   *color: #333; 
+   *color: #333;
   }
 }
 .btn-primary {
@@ -71,9 +68,6 @@ h3.app-ico:before {
 td .btn-toolbar {
   margin:0;
 }
-/*.btn + a {
-  margin-left:10px;
-}*/
 //ICONS
 .icon-large:before {
   font-size: 18px;
@@ -88,7 +82,7 @@ td .btn-toolbar {
 
 // FORM CHANGES
 // -----------
-.form-horizontal, 
+.form-horizontal,
 .form-stacked {
   .control-label {
       text-align: left;
@@ -151,7 +145,7 @@ td .btn-toolbar {
   }
 }
 .create-page {
-  .form-horizontal, 
+  .form-horizontal,
   .form-stacked {
     input[type=text],
     textarea,
@@ -220,7 +214,7 @@ input[type=text].hasDatepicker,
 .table-striped tbody tr:nth-child(odd) th {
   background-color: #efefef;
 }
-.table-hover tbody tr:hover td, 
+.table-hover tbody tr:hover td,
 .table-hover tbody tr:hover th {
 background-color: #FFF49F;
 }
@@ -238,7 +232,6 @@ body {
   margin-top: @baseLineHeight;
 }
 .fancypages .dashboard > .content {
-/*  margin-top: 96px;*/
 }
 .navbar-accounts {
   .navbar-inner {
@@ -286,8 +279,6 @@ body {
   .navbar-inner {
     #gradient > .vertical(#353535, #373737);
     filter: progid:DXImageTransform.Microsoft.gradient(enabled=false) !important;
-/*    height: 45px;
-    width: 100%;*/
     border-top: 1px solid #5B5B5B;
     *position:relative;
     *z-index:10;
@@ -333,69 +324,16 @@ body {
     }
   }
 }
+
+
 .navbar-primary .nav {
-  > li a:before {
-    color: #dcdcdc; 
+  > li i {
+    color: #dcdcdc;
     font-family: 'FontAwesome';
     padding-right: 12px;
     font-size: 16px;
   }
-  .Catalogue > a:before {
-    content: "\f0e8";
-  }
-  .Content > a:before {
-    content: "\f07b";
-  }
-  .Customers > a:before {
-    content: "\f0c0";
-  }
-  .Reviews > a:before {
-    content: "\f087";
-  }
-  .Communications > a:before {
-    content: "\f0ac";
-  }
-  .Offers > a:before {
-    content: "\f06b";
-  }
-  .Vouchers > a:before {
-    content: "\f0d6";
-  }
-  .Ranges > a:before {
-    content: "\f0c9";
-  }
-  .Orders > a:before {
-    content: "\f07a";
-  }
-  .Reports > a:before {
-    content: "\f080";
-  }
-  .dash > a:before {
-    content: "\f015";
-  }
 }
-
-/*.reports .subnav li.Reports > a,
-.orders .subnav li.Manage.orders > a,
-.users .subnav li.Users > a,
-.content-blocks .subnav li.Content.blocks > a,
-.catalogue .subnav li.Catalogue > a,
-.subnav .nav > .active > a,
-.subnav .nav > .active > a:hover,
-.subnav .nav > li > a:hover,
-.nav-pills .open .dropdown-toggle,
-.subnav .nav > li,
-.home .subnav li.dash > a,
-.users .subnav li.Customers > a,
-.reviews .subnav li.Reviews > a,
-.content-blocks .subnav li.Content > a,
-.fancypages .subnav li.Page > a {
-  color: #B2DEF2;
-  background-color: #373737;
-  border-right-color: @grayDarker;
-  .box-shadow(inset 0 3px 5px rgba(0,0,0,.05));
-  #gradient > .vertical(#1F1F1F, #373737);
-}*/
 
 .navbar-primary .nav > li > a:hover .caret {
   border-top-color: #B2DEF2;
@@ -527,7 +465,7 @@ caption,
   .tab-content {
     display:block;
     width:auto;
-    border:1px #E1E1E1 solid;      
+    border:1px #E1E1E1 solid;
     border-top-width:0;
     padding:30px;
   }
@@ -617,7 +555,6 @@ caption,
 
     width: 98%;
     height: @barHeight;
-/*    padding-left: 5em;*/
 }
 .bar-chart dd{
     position: relative;
@@ -831,6 +768,102 @@ caption,
     width: 200px;
     height: 200px;
   }
+}
+// SIDE NAV CREATE PAGES
+// ----------------
+div[data-spy="affix"] {
+  width:266px;
+}
+div[data-spy="affix"].affix {
+  top:@baseLineHeight;
+}
+.bs-docs-sidenav {
+  padding: 0;
+  background-color: #fff;
+  -webkit-box-shadow: 0 1px 4px rgba(0,0,0,.065);
+     -moz-box-shadow: 0 1px 4px rgba(0,0,0,.065);
+          box-shadow: 0 1px 4px rgba(0,0,0,.065);
+}
+.bs-docs-sidenav > li > a,
+.bs-docs-sidenav > li > span {
+  display: block;
+  width: 190px \9;
+  margin: 0 0 -1px;
+  padding: 8px 14px;
+  border: 1px solid #e5e5e5;
+  color:@linkColor;
+  &:hover {
+   background:#f1faff;
+  }
+  i.icon-info-sign {
+    color:#ea0001;
+    font-size:16px;
+  }
+}
+.bs-docs-sidenav > li > span {
+  color:#333;
+}
+.bs-docs-sidenav > .active > a,
+.bs-docs-sidenav > .active > span {
+  font-weight:bold;
+  position: relative;
+  color:@linkColor;
+  background:#f1faff;
+  z-index: 2;
+  padding: 9px 15px;
+  border-left: 0;
+  border-right: 0;
+  text-shadow: 0 1px 0 rgba(0,0,0,.15);
+  -webkit-box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
+     -moz-box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
+          box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
+  &:hover {
+    background:#f1faff;
+    color:@linkColor;
+  }
+  &:after {
+    border-bottom: 10px solid transparent;
+    border-left: 10px solid #f1faff;
+    border-top: 10px solid transparent;
+    content: "";
+    display: inline-block;
+    position: absolute;
+    right: -9px;
+    top: 9px;
+  }
+  &:before {
+    border-bottom: 11px solid transparent;
+    border-left: 11px solid #ccc;
+    border-top: 11px solid transparent;
+    content: "";
+    display: inline-block;
+    position: absolute;
+    right: -10px;
+    top: 8px;
+  }
+}
+.fixed-actions {
+  margin-bottom:150px;
+  .fixed-actions-group {
+    margin:0;
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+  }
+  .form-actions {
+    margin:0;
+    background:#2a2a2a;
+  }
+}
+.well-stacked {
+  .well {
+    margin-bottom:0;
+    border-top-width:0;
+    &:first-child {
+      border-top-width:1px;
+    }
+  }
 }
 
 

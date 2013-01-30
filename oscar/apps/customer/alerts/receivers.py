@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db.models import get_model
 from django.db.models.signals import post_save
+from django.db import connection
 from django.contrib.auth.models import User
 
 
@@ -14,9 +15,17 @@ def migrate_alerts_to_user(sender, instance, created, **kwargs):
     Transfer any active alerts linked to a user's email address to the newly
     registered user.
     """
-    if created:
-        ProductAlert = get_model('customer', 'ProductAlert')
-        alerts = ProductAlert.objects.filter(email=instance.email, status=ProductAlert.ACTIVE)
+    if not created:
+        return
+    ProductAlert = get_model('customer', 'ProductAlert')
+
+    # This signal will be raised when creating a superuser as part of syncdb,
+    # at which point only a subset of tables will be created.  Thus, we test if
+    # the alert table exists before trying to exercise the ORM.
+    table = ProductAlert._meta.db_table
+    if table in connection.introspection.table_names():
+        alerts = ProductAlert.objects.filter(
+            email=instance.email, status=ProductAlert.ACTIVE)
         alerts.update(user=instance, key=None, email=None)
 
 

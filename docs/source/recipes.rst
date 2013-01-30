@@ -16,6 +16,7 @@ Customisation
     recipes/how_to_override_a_core_class
     recipes/how_to_customise_templates
     recipes/how_to_disable_an_app
+    recipes/how_to_configure_the_dashboard_navigation
 
 Catalogue
 ---------
@@ -60,3 +61,11 @@ Offers
 
     recipes/how_to_create_a_custom_range
     recipes/how_to_create_a_custom_condition
+
+Contributing
+------------
+
+.. toctree::
+    :maxdepth: 1
+
+    recipes/how_do_i_translate_oscar

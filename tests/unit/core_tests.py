@@ -55,12 +55,12 @@ class ClassLoadingWithLocalOverrideTests(TestCase):
 
     def setUp(self):
         self.installed_apps = list(settings.INSTALLED_APPS)
-        self.installed_apps[self.installed_apps.index('oscar.apps.shipping')] = 'tests.site.shipping'
+        self.installed_apps[self.installed_apps.index('oscar.apps.shipping')] = 'tests._site.shipping'
 
     def test_loading_class_defined_in_local_module(self):
         with override_settings(INSTALLED_APPS=self.installed_apps):
             (Free,) = get_classes('shipping.methods', ('Free',))
-            self.assertEqual('tests.site.shipping.methods', Free.__module__)
+            self.assertEqual('tests._site.shipping.methods', Free.__module__)
 
     def test_loading_class_which_is_not_defined_in_local_module(self):
         with override_settings(INSTALLED_APPS=self.installed_apps):
@@ -75,7 +75,7 @@ class ClassLoadingWithLocalOverrideTests(TestCase):
     def test_loading_classes_defined_in_both_local_and_oscar_modules(self):
         with override_settings(INSTALLED_APPS=self.installed_apps):
             (Free, FixedPrice) = get_classes('shipping.methods', ('Free', 'FixedPrice'))
-            self.assertEqual('tests.site.shipping.methods', Free.__module__)
+            self.assertEqual('tests._site.shipping.methods', Free.__module__)
             self.assertEqual('oscar.apps.shipping.methods', FixedPrice.__module__)
 
 
@@ -138,12 +138,12 @@ class ClassLoadingWithLocalOverrideWithMultipleSegmentsTests(TestCase):
 
     def setUp(self):
         self.installed_apps = list(settings.INSTALLED_APPS)
-        self.installed_apps[self.installed_apps.index('oscar.apps.shipping')] = 'tests.site.apps.shipping'
+        self.installed_apps[self.installed_apps.index('oscar.apps.shipping')] = 'tests._site.apps.shipping'
 
     def test_loading_class_defined_in_local_module(self):
         with override_settings(INSTALLED_APPS=self.installed_apps):
             (Free,) = get_classes('shipping.methods', ('Free',))
-            self.assertEqual('tests.site.apps.shipping.methods', Free.__module__)
+            self.assertEqual('tests._site.apps.shipping.methods', Free.__module__)
 
 
 class TestGetCoreAppsFunction(TestCase):

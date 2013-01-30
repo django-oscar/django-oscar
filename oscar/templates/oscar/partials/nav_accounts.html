@@ -12,9 +12,6 @@
 		<div class="container-fluid">
 			<ul class="nav pull-right">
 				{% if user.is_authenticated %}
-				    {% if user.get_full_name %}
-						<li><div>{% trans "Welcome" %} <em>{{ user.get_full_name }}</em></div></li>
-					{% endif %}
 					<li>
 						<a href="{% url customer:summary %}"><i class="icon-user"></i> {% trans "Account" %}</a>
 					</li>

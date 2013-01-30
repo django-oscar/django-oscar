@@ -28,15 +28,13 @@ class TestGatewayPage(ProductWebTest):
         url = reverse('dashboard:catalogue-product-create')
         response = self.get(url)
         self.assertRedirects(response,
-                             reverse('dashboard:catalogue-product-list'),
-                             status_code=301)
+                             reverse('dashboard:catalogue-product-list'))
 
     def test_redirects_to_list_page_when_invalid_query_param(self):
         url = reverse('dashboard:catalogue-product-create')
         response = self.get(url + '?product_class=bad')
         self.assertRedirects(response,
-                             reverse('dashboard:catalogue-product-list'),
-                             status_code=301)
+                             reverse('dashboard:catalogue-product-list'))
 
     def test_redirects_to_form_page_when_valid_query_param(self):
         pclass = G(ProductClass)
@@ -44,8 +42,7 @@ class TestGatewayPage(ProductWebTest):
         response = self.get(url + '?product_class=%d' % pclass.id)
         self.assertRedirects(response,
                              reverse('dashboard:catalogue-product-create',
-                                     kwargs={'product_class_id': pclass.id}),
-                             status_code=301)
+                                     kwargs={'product_class_id': pclass.id}))
 
 
 class TestCreateGroupProduct(ProductWebTest):

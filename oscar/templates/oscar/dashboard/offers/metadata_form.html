@@ -1,14 +1,8 @@
 {% extends 'dashboard/offers/step_form.html' %}
 {% load i18n %}
 
-{% block form_fields %}
-	{% include "partials/form_field.html" with field=form.name %}
-	{% include "partials/form_field.html" with field=form.description %}
-	<h3>{% trans "Availability" %}</h3>
-	{% include "partials/form_field.html" with field=form.start_date %}
-	{% include "partials/form_field.html" with field=form.end_date %}
-	{% include "partials/form_field.html" with field=form.max_global_applications %}
-	{% include "partials/form_field.html" with field=form.max_user_applications %}
-	{% include "partials/form_field.html" with field=form.max_basket_applications %}
-	{% include "partials/form_field.html" with field=form.max_discount %}
+{% block progress %}
+    {% include 'dashboard/offers/progress.html' with step=1 %}
 {% endblock %}
+
+{% block submittext %}{% trans "Continue to step 2" %}{% endblock %}

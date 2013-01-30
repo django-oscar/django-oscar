@@ -2,7 +2,7 @@
 Oscar specific settings
 =======================
 
-Oscar provides a number of configurable settings used to confugre the system.
+Oscar provides a number of settings used to configure the system.
 
 .. contents::
     :local:
@@ -187,13 +187,6 @@ OSCAR_BASKET_COOKIE_LIFETIME
 Default: 604800 (1 week in seconds)
 
 The time to live for the basket cookie in seconds
-
-OSCAR_IMAGE_FOLDER
-------------------
-
-Default: ``images/products/%Y/%m/``
-
-The path for uploading images to.
 
 OSCAR_RECENTLY_VIEWED_PRODUCTS
 ------------------------------

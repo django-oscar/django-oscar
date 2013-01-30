@@ -173,7 +173,7 @@ class AbstractShippingAddress(AbstractAddress):
     notes = models.TextField(
         blank=True, null=True,
         verbose_name=_('Courier instructions'),
-        help_text=_("For example, leave the parcel in the wheelie bin " \
+        help_text=_("For example, leave the parcel in the wheelie bin "
                     "if I'm not in."))
 
     class Meta:

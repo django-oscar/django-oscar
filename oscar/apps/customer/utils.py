@@ -1,8 +1,11 @@
 import logging
 
 from django.core.mail import EmailMessage, EmailMultiAlternatives
+from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.db.models import get_model
+from django.utils.http import int_to_base36
+from django.contrib.auth.tokens import default_token_generator
 
 CommunicationEvent = get_model('order', 'CommunicationEvent')
 Email = get_model('customer', 'Email')
@@ -23,7 +26,8 @@ class Dispatcher(object):
         if messages['subject'] and messages['body']:
             self.send_email_messages(recipient, messages)
 
-    def dispatch_order_messages(self, order, messages, event_type=None, **kwargs):
+    def dispatch_order_messages(self, order, messages, event_type=None,
+                                **kwargs):
         """
         Dispatch order-related messages to the customer
         """
@@ -99,3 +103,11 @@ class Dispatcher(object):
     def send_text_message(self, user, event_type):
         raise NotImplementedError
 
+
+def get_password_reset_url(user, token_generator=default_token_generator):
+    """
+    Generate a password-reset URL for a given user
+    """
+    return reverse('password-reset-confirm', kwargs={
+        'uidb36': int_to_base36(user.id),
+        'token': default_token_generator.make_token(user)})

@@ -5,11 +5,23 @@
 create-page
 {% endblock %}
 
-{% block header %}
-<div class="page-header">
-	<h1>{% trans "Remove promotion from page?" %}</h1>
-</div>
-{% endblock header%}
+{% block breadcrumbs %}
+<ul class="breadcrumb">        	
+    <li>        	
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>    	  	
+        <span class="divider">/</span>    	  	
+    </li>    	  	
+    <li>    	  	
+        <a href="{% url dashboard:promotion-list %}">{% trans "Content block management" %}</a>    	  	
+        <span class="divider">/</span>    	  	
+    </li>    	  	
+    <li class="active">{% trans "Remove promotion from page?" %}</li>    	  	
+</ul>
+{% endblock %}
+
+{% block headertext %}
+{% trans "Remove promotion from page?" %}
+{% endblock %}
 
 {% block dashboard_content %}
 <div class="table-header">

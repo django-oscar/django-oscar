@@ -17,27 +17,25 @@ create-page
         <span class="divider">/</span>	  	
     </li>	  	
     <li>	  	
-        <a href="{% url dashboard:offer-list %}">{% trans "Offers" %}</a>	  	
+        <a href="{% url dashboard:offer-list %}">{% trans "Offer management" %}</a>
         <span class="divider">/</span>	  	
     </li>	 	
-    <li class="active">{% trans "Delete offer?" %}</li>
+    <li>
+        <a href="{% url dashboard:offer-detail offer.pk %}">'{{ offer.name }}'</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active">{% trans "Delete?" %}</li>
 </ul>
 {% endblock %}
 
-{% block header %}
-<div class="page-header">
-	<h1>{% trans "Delete offer?" %}</h1>
-</div>
-{% endblock header %}
+{% block headertext %}
+{{ offer.name }}
+{% endblock %}
 
 {% block dashboard_content %}
-<div class="table-header">
-    <h2>{% trans "Offer" %}</h2>
-</div>
-<form action="." method="post" class="well">
+<form action="." method="post">
 	{% csrf_token %}
-	{% include 'dashboard/offers/partials/offer.html' %}
-
+    <p>{% trans "Are you sure you want to delete this offer?" %}</p>
 	<div class="form-actions">
 		<button class="btn btn-large btn-danger" type="submit">{% trans "Delete" %}</button> or
 		<a href="{% url dashboard:offer-list %}">{% trans "cancel" %}</a>

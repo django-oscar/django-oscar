@@ -1,0 +1,12 @@
+{% extends 'dashboard/offers/step_form.html' %}
+{% load i18n %}
+
+{% block summary %}
+    {% include 'dashboard/offers/summary.html' %}
+{% endblock %}
+
+{% block progress %}
+    {% include 'dashboard/offers/progress.html' with step=4 %}
+{% endblock %}
+
+{% block submittext %}{% trans "Save this offer" %}{% endblock %}

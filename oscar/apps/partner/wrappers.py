@@ -23,8 +23,8 @@ class DefaultWrapper(object):
 
     def is_purchase_permitted(self, stockrecord, user=None, quantity=1):
         """
-        Test whether a particular purchase is possible (is a user buying a given
-        quantity of the product)
+        Test whether a particular purchase is possible (is a user buying a
+        given quantity of the product)
         """
         if not self.is_available_to_buy(stockrecord):
             return False, _("'%s' is not available to purchase") % stockrecord.product.title
@@ -32,9 +32,8 @@ class DefaultWrapper(object):
         if max_qty is None:
             return True, None
         if max_qty < quantity:
-            return False, _("'%(title)s' - A maximum of %(max)d can be bought" %
-                            {'title': stockrecord.product.title,
-                             'max': max_qty})
+            return False, _("A maximum of %(max)d can be bought" %
+                            {'max': max_qty})
         return True, None
 
     def max_purchase_quantity(self, stockrecord, user=None):

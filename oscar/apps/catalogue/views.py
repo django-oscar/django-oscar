@@ -98,7 +98,6 @@ def get_product_base_queryset():
         'product_options',
         'product_class__options',
         'stockrecord',
-        'stockrecord__partner',
         'images',
     ).all()
 

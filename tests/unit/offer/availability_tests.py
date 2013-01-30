@@ -106,3 +106,17 @@ class TestCappedDiscountConditionalOffer(TestCase):
     def test_is_inactive_when_above_threshold(self):
         self.offer.total_discount = self.offer.max_discount + D('10.00')
         self.assertFalse(self.offer.is_available())
+
+
+class TestASuspendedOffer(TestCase):
+
+    def setUp(self):
+        self.offer = models.ConditionalOffer(
+            status=models.ConditionalOffer.SUSPENDED)
+
+    def test_is_unavailable(self):
+        self.assertFalse(self.offer.is_available())
+
+    def test_lists_suspension_as_an_availability_restriction(self):
+        restrictions = self.offer.availability_restrictions()
+        self.assertEqual(1, len(restrictions))

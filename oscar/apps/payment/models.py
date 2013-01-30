@@ -8,20 +8,22 @@ from django.conf import settings
 
 class Transaction(models.Model):
     """
-    A transaction for payment sources which need a secondary 'transaction' to
-    actually take the money
+    A transaction with a payment gateway
 
-    This applies mainly to credit card sources which can be a pre-auth for the
-    money.  A 'complete' needs to be run later to debit the money from the
-    account.
+    For example:
+    * A 'pre-auth' with a bankcard gateway
+    * A 'settle' with a credit provider (see django-oscar-accounts)
     """
     source = models.ForeignKey(
         'payment.Source', related_name='transactions',
         verbose_name=_("Source"))
 
-    # We define some sample types
+    # We define some sample types but don't constrain txn_type to be one of
+    # these as there will be domain-specific ones that we can't anticipate
+    # here.
     AUTHORISE, DEBIT, REFUND = 'Authorise', 'Debit', 'Refund'
     txn_type = models.CharField(_("Type"), max_length=128, blank=True)
+
     amount = models.DecimalField(_("Amount"), decimal_places=2, max_digits=12)
     reference = models.CharField(_("Reference"), max_length=128, null=True)
     status = models.CharField(_("Status"), max_length=128, null=True)
@@ -72,7 +74,7 @@ class Source(models.Model):
     label = models.CharField(_("Label"), max_length=128, blank=True, null=True)
 
     # A dictionary of submission data that is stored as part of the
-    # checkout process.
+    # checkout process, where we need to pass an instance of this class around
     submission_data = None
 
     # We keep a list of deferred transactions that are only actually saved when
@@ -162,7 +164,7 @@ class SourceType(models.Model):
     A type of payment source.
 
     This could be an external partner like PayPal or DataCash,
-    or an internal source such as a managed account.i
+    or an internal source such as a managed account.
     """
     name = models.CharField(_("Name"), max_length=128)
     code = models.SlugField(_("Code"), max_length=128,

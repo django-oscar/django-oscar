@@ -22,11 +22,9 @@
 </ul>
 {% endblock %}
 
-{% block header %}
-    <div class="page-header">
-		<h1>{% blocktrans with email=customer.email %}{{ email }}{% endblocktrans %}</h1>
-    </div>
-{% endblock header %}
+{% block headertext %}
+{% blocktrans with email=customer.email %}{{ email }}{% endblocktrans %}
+{% endblock %}
 
 {% block dashboard_content %}
 <div class="row-fluid">

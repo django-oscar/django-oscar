@@ -1,21 +1,14 @@
-{% extends "base.html" %}
+{% extends "error.html" %}
 {% load i18n %}
 
 {% block title %}
 {% trans 'Page not found' %} | {{ block.super }}
 {% endblock %}
 
-{% block layout %}
-{% include "partials/nav_accounts.html" %}
+{% block error_heading %}
+{% trans "Page not found!" %}
+{% endblock %}
 
-<div class="container-fluid">
-    <div class="hero-unit">
-        <h1>{% trans 'Oops, page not found!' %}</h1>
-        <p>{% trans "The page you are looking for isn't here. Please try again, use the navigation above or feel free to send us your feedback. Thank you." %}</p>
-        <p>
-            <a class="btn btn-primary btn-large" onClick="javascript:history.go(-1);">{% trans 'Go back to previous page' %}</a>
-			<a class="btn btn-primary btn-large" href="/">{% trans "Homepage" %}</a>
-        </p>
-    </div>
-</div>
+{% block error_message %}
+<p>{% trans "We're sorry but the page you are looking for can't be found." %}</p>
 {% endblock %}

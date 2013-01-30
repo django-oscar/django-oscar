@@ -22,11 +22,9 @@
 </ul>
 {% endblock %}
 
-{% block header %}
-<div class="page-header">
-	<h1>{% blocktrans %}Review #{{ review.id }}{% endblocktrans %}</h1>
-</div>
-{% endblock header %}
+{% block headertext %}
+	{% blocktrans %}Review #{{ review.id }}{% endblocktrans %}
+{% endblock %}
 
 {% block dashboard_content %}
 <form action="." method="post" class="form-stacked" enctype="multipart/form-data">

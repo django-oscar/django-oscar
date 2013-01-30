@@ -25,7 +25,7 @@ After forking, run::
 
     git clone git@github.com:<username>/django-oscar.git
     cd django-oscar
-    mkvirtualenv oscar  # optional but recommended
+    mkvirtualenv oscar  # using virtualenvwrapper
     make install
 
 Running tests
@@ -99,6 +99,13 @@ Oscar using a browser.  Set it up by::
 This will create the database and load some fixtures for categories and shipping
 countries.
 
+Note that Oscar uses PIL_ and Sorl_ for thumbnailing, and so you will need
+``libjpeg-dev`` installed in your OS so that your PIL installation supports
+JPEGS.
+
+.. _PIL: http://www.pythonware.com/products/pil/
+.. _Sorl: http://sorl-thumbnail.readthedocs.org/en/latest/
+
 Vagrant
 =======
 
@@ -111,13 +118,12 @@ test that the migrations run correctly in both MySQL and Postgres.
 Building the Vagrant machine
 ----------------------------
 
-To create the machine, first ensure that vagrant_ and puppet_ are installed.  You will require a
+To create the machine, first ensure that Vagrant and puppet_ are installed.  You will require a
 puppet version that supports ``puppet module install``, that is > 2.7.14.  Now
 run::
 
     make puppet
 
-.. _vagrant: http://vagrantup.com/v1/docs/getting-started/index.html
 .. _puppet: http://docs.puppetlabs.com/guides/installation.html
 
 to fetch the required puppet modules for provisioning.  Finally, run::
@@ -131,16 +137,16 @@ Testing migrations against MySQL and Postgres
 
 To test the migrations against MySQL and Postgres, do the following:
 
-1.  SSH onto the VM::
+1. SSH onto the VM::
 
     vagrant ssh
 
-2.  Change to sandbox folder and activate virtualenv::
+2. Change to sandbox folder and activate virtualenv::
 
     cd /vagrant/sites/sandbox
     source /var/www/virtualenv/bin/activate
 
-3.  Run helper script::
+3. Run helper script::
 
     ./test_migrations.sh
 

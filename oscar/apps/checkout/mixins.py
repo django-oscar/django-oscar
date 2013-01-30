@@ -49,7 +49,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         """
         order = self.place_order(order_number, basket, total_incl_tax,
                                  total_excl_tax, user, **kwargs)
-        basket.set_as_submitted()
+        basket.submit()
         return self.handle_successful_order(order)
 
     def add_payment_source(self, source):

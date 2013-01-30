@@ -61,22 +61,46 @@ template configuration as so::
 
     import os
     location = lambda x: os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', x)
-    from oscar import OSCAR_PARENT_TEMPLATE_DIR
+    from oscar import OSCAR_MAIN_TEMPLATE_DIR
     TEMPLATE_DIRS = (
         location('templates'),
-        OSCAR_PARENT_TEMPLATE_DIR,
+        OSCAR_MAIN_TEMPLATE_DIR,
     )
 
-The ``OSCAR_PARENT_TEMPLATE_DIR`` points to the directory above Oscar's normal
+The ``OSCAR_MAIN_TEMPLATE_DIR`` points to the directory above Oscar's normal
 templates directory.  This means that ``path/to/oscar/template.html`` can also
 be reached via ``templates/path/to/oscar/template.html``.
 
 Hence to customise ``base.html``, you can have an implementation like::
 
     # base.html
-    {% extends 'templates/base.html' %}
+    {% extends 'oscar/base.html' %}
 
     ...
 
 No real downsides to this one other than getting your front-end people to
 understand it.
+
+Example: changing the analytics package
+---------------------------------------
+
+Support you want to use an alternative analytics package to Google analytics.
+We can achieve this by overriding templates where the analytics urchin is loaded
+and called.
+
+The main template ``base.html`` has a 'tracking' block which includes a Google
+Analytics partial.  We want to replace this with our own code.  To do this,
+create a new ``base.html`` in your project that subclasses the original::
+
+    # yourproject/templates/base.html
+    {% extends oscar/base.html %}
+
+    {% block tracking %}
+    <script type="javascript">
+        ... [custom analytics here] ...
+    </script>
+    {% endblock %}
+
+Doing this will mean all templates that inherit from ``base.html`` will include
+your custom tracking.
+

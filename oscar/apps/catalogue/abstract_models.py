@@ -570,16 +570,16 @@ class ProductAttributesContainer(object):
             value = getattr(self, attribute.code, None)
             if value is None:
                 if attribute.required:
-                    raise ValidationError(_("%(attr)s attribute cannot " \
-                                            "be blank") % \
-                                            {'attr': attribute.code})
+                    raise ValidationError(
+                        _("%(attr)s attribute cannot be blanke") %
+                        {'attr': attribute.code})
             else:
                 try:
                     attribute.validate_value(value)
                 except ValidationError, e:
-                    raise ValidationError(_("%(attr)s attribute %(err)s") % \
-                                            {'attr': attribute.code,
-                                             'err': e})
+                    raise ValidationError(
+                        _("%(attr)s attribute %(err)s") %
+                        {'attr': attribute.code, 'err': e})
 
     def get_values(self):
         return self.product.attribute_values.all()
@@ -688,9 +688,9 @@ class AbstractProductAttribute(models.Model):
         valid_values = self.option_group.options.values_list('option',
                                                              flat=True)
         if value.option not in valid_values:
-            raise ValidationError(_("%(enum)s is not a valid choice "
-                                        "for %(attr)s") % \
-                                       {'enum': value, 'attr': self})
+            raise ValidationError(
+                _("%(enum)s is not a valid choice for %(attr)s") %
+                {'enum': value, 'attr': self})
 
     def get_validator(self):
         DATATYPE_VALIDATORS = {
@@ -716,11 +716,11 @@ class AbstractProductAttribute(models.Model):
         try:
             value_obj = product.attribute_values.get(attribute=self)
         except get_model('catalogue', 'ProductAttributeValue').DoesNotExist:
-            if value == None or value == '':
+            if value is None or value == '':
                 return
             model = get_model('catalogue', 'ProductAttributeValue')
             value_obj = model.objects.create(product=product, attribute=self)
-        if value == None or value == '':
+        if value is None or value == '':
             value_obj.delete()
             return
         if value != value_obj.value:

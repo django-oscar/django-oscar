@@ -14,17 +14,15 @@
         <span class="divider">/</span>	  	
     </li>	  	
     <li>	  	
-        <a href="{% url dashboard:promotion-list %}">{% trans "Content blocks" %}</a>	  	
+        <a href="{% url dashboard:promotion-list %}">{% trans "Content block management" %}</a>	  	
         <span class="divider">/</span>	  	
     </li>	  	
     <li class="active">{% blocktrans %}Content blocks on page '{{ page_url }}'{% endblocktrans %}</li>	  	
 </ul>
 {% endblock %}
 
-{% block header %}
-<div class="page-header">
-	<h1>{% blocktrans %}Content blocks for page {{ page_url }}{% endblocktrans %}</h1>
-</div>
+{% block headertext %}
+{% blocktrans %}Content blocks for page {{ page_url }}{% endblocktrans %}
 {% endblock %}
 
 {% block dashboard_content %}

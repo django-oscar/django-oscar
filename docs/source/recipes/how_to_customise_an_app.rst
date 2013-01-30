@@ -117,18 +117,15 @@ Finally, hook up the new view to the homepage URL::
 Quite long-winded, but once this step is done, you have lots of freedom to customise
 the app in question.
 
-Other points of note
---------------------
+Django admin
+------------
 
-One pain point with replacing one of Oscar's apps with a local one in ``INSTALLED_APPS`` is
-that template tags are lost from the original app and need to be manually imported.  This can be
-done by creating a local version of the template tags files::
+One pain point with replacing one of Oscar's apps with a local one in
+``INSTALLED_APPS`` is that admin integration is lost from the original 
+app. If you'd like to use the Django admin functionality you just need 
+to run the register code in the replaced app's ``admin.py``::
 
-    mkdir myproject/templatetags
-    
-and importing the tags from Oscar's corresponding file::
-
-    # myproject/promotions/templatetags/promotion_tags.py
-    from oscar.apps.promotions.templatetags.promotion_tags import *
+    # myprojects/promotions/admin.py
+    import oscar.apps.promotions.admin
 
 This isn't great but we haven't found a better way as of yet.

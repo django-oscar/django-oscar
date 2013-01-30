@@ -21,11 +21,9 @@
 </ul>
 {% endblock %}
 
-{% block header %}
-    <div class="page-header">
-        <h1>{% blocktrans with id=alert.id %}Delete alert #{{ id }}?{% endblocktrans %}</h1>
-    </div>
-{% endblock header %}
+{% block headertext %}
+{% blocktrans with id=alert.id %}Delete alert #{{ id }}?{% endblocktrans %}
+{% endblock %}
 
 {% block dashboard_content %}
     <div class="table-header">

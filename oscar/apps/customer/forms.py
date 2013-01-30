@@ -12,11 +12,11 @@ from django.contrib.auth import forms as auth_forms
 from django.conf import settings
 from django.core import validators
 from django.core.exceptions import ValidationError
-from django.utils.http import int_to_base36
 from django.contrib.sites.models import get_current_site
 from django.contrib.auth.tokens import default_token_generator
 
 from oscar.core.loading import get_profile_class, get_class
+from oscar.apps.customer.utils import get_password_reset_url
 
 Dispatcher = get_class('customer.utils', 'Dispatcher')
 CommunicationEventType = get_model('customer', 'communicationeventtype')
@@ -52,9 +52,7 @@ class PasswordResetForm(auth_forms.PasswordResetForm):
             reset_url = "%s://%s%s" % (
                 'https' if use_https else 'http',
                 site.domain,
-                reverse('password-reset-confirm', kwargs={
-                    'uidb36': int_to_base36(user.id),
-                    'token': token_generator.make_token(user)}))
+                get_password_reset_url(user))
             ctx = {
                 'site': site,
                 'reset_url': reset_url}
