@@ -5,16 +5,17 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.apps.dashboard.catalogue import forms
 from oscar.core.loading import get_classes
 
 (ProductForm,
+ ProductSearchForm,
  CategoryForm,
  StockRecordForm,
  StockAlertSearchForm,
  ProductCategoryFormSet,
  ProductImageFormSet) = get_classes('dashboard.catalogue.forms',
                                     ('ProductForm',
+                                     'ProductSearchForm',
                                      'CategoryForm',
                                      'StockRecordForm',
                                      'StockAlertSearchForm',
@@ -33,7 +34,7 @@ class ProductListView(generic.ListView):
     template_name = 'dashboard/catalogue/product_list.html'
     model = Product
     context_object_name = 'products'
-    form_class = forms.ProductSearchForm
+    form_class = ProductSearchForm
     description_template = _(u'Products %(upc_filter)s %(title_filter)s')
     paginate_by = 20
 
