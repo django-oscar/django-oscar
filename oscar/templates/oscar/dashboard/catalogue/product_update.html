@@ -297,92 +297,49 @@
                     <table class="table table-striped table-bordered">
                         <caption>{% trans "Stock and price information" %}</caption>
                         <tr>
-                            <th colspan="2">{% trans "Partner" %}</th>
+                            {% for field in stockrecord_form %}
+                                {% if "partner" in field.id_for_label %}
+                                    <th>{{ field.label }}{% if field.field.required %} <span>*</span>{% endif %}</th>
+                                {% endif %}
+                                {% if "price" in field.id_for_label %}
+                                    <th>{{ field.label }}{% if field.field.required %} <span>*</span>{% endif %}</th>
+                                {% endif %}
+                                {% if "stock" in field.id_for_label %}
+                                    <th>{{ field.label }}{% if field.field.required %} <span>*</span>{% endif %}</th>
+                                {% endif %}
+                            {% endfor %} 
                         </tr>
-                        {% for field in stockrecord_form %}
-                        {% if "partner" in field.id_for_label %}
                         <tr>
-                            <td width="20%">
-                                {{ field.label }}{% if field.field.required %} <span>*</span>{% endif %}
-                            </td>
-                            <td>
-                                {% if field.is_hidden %}
-                                {{ field }}
-                                {% else %}
-                                {{ field }}
-                                {% for error in field.errors %}
-                                <span class="help-block">
-                                    {{ error }}
-                                </span>
-                                {% endfor %}
-                                {% if field.help_text %}
-                                <span class='help-block'>
-                                    {{ field.help_text }}
-                                </span>
+                            {% for field in stockrecord_form %}
+                                {% if "partner" in field.id_for_label %}
+                                    <td>
+                                        {% if field.is_hidden %}
+                                            {{ field }}
+                                        {% else %}
+                                            {{ field }}
+                                        {% endif %}
+                                    </td>
                                 {% endif %}
+                                {% if "price" in field.id_for_label %}
+                                    <td>
+                                        {% if field.is_hidden %}
+                                            {{ field }}
+                                        {% else %}
+                                            {{ field }}
+                                        {% endif %}
+                                    </td>
                                 {% endif %}
-                            </td>
+                                {% if "stock" in field.id_for_label %}
+                                    <td>
+                                        {% if field.is_hidden %}
+                                            {{ field }}
+                                        {% else %}
+                                            {{ field }}
+                                        {% endif %}
+                                    </td>
+                                {% endif %}
+                            {% endfor %}
                         </tr>
-                        {% endif %}
-                        {% endfor %}
-                        <tr>
-                            <th colspan="2">{% trans "Price" %}</th>
-                        </tr>
-                        {% for field in stockrecord_form %}
-                        {% if "price" in field.id_for_label %}
-                        <tr>
-                            <td width="20%">
-                                {{ field.label }}{% if field.field.required %} <span>*</span>{% endif %}
-                            </td>
-                            <td>
-                                {% if field.is_hidden %}
-                                {{ field }}
-                                {% else %}
-                                {{ field }}
-                                {% for error in field.errors %}
-                                <span class="help-block">
-                                    {{ error }}
-                                </span>
-                                {% endfor %}
-                                {% if field.help_text %}
-                                <span class='help-block'>
-                                    {{ field.help_text }}
-                                </span>
-                                {% endif %}
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% endif %}
-                        {% endfor %}
-                        <tr>
-                            <th colspan="2">{% trans "Stock levels" %}</th>
-                        </tr>
-                        {% for field in stockrecord_form %}
-                        {% if "stock" in field.id_for_label %}
-                        <tr>
-                            <td width="20%">
-                                {{ field.label }}{% if field.field.required %} <span>*</span>{% endif %}
-                            </td>
-                            <td>
-                                {% if field.is_hidden %}
-                                {{ field }}
-                                {% else %}
-                                {{ field }}
-                                {% for error in field.errors %}
-                                <span class="help-block">
-                                    {{ error }}
-                                </span>
-                                {% endfor %}
-                                {% if field.help_text %}
-                                <span class='help-block'>
-                                    {{ field.help_text }}
-                                </span>
-                                {% endif %}
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% endif %}
-                        {% endfor %}
                     </table>
                 </div>
             </div>
