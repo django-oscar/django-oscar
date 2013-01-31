@@ -89,6 +89,10 @@ class StockRecordForm(forms.ModelForm):
 def _attr_text_field(attribute):
     return forms.CharField(label=attribute.name,
                            required=attribute.required)
+def _attr_textarea_field(attribute):
+    return forms.CharField(label=attribute.name,
+			   widget=forms.Textarea(),
+                           required=attribute.required)
 
 def _attr_integer_field(attribute):
     return forms.IntegerField(label=attribute.name,
@@ -134,7 +138,7 @@ class ProductForm(forms.ModelForm):
 
     FIELD_FACTORIES = {
         "text": _attr_text_field,
-        "richtext": _attr_text_field,
+        "richtext": _attr_textarea_field,
         "integer": _attr_integer_field,
         "boolean": _attr_boolean_field,
         "float": _attr_float_field,
