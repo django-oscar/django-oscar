@@ -39,17 +39,13 @@ var oscar = (function(o, $) {
                 return false;
             });
             
-            //Add tabs for product update page
-            $('#product_update_tabs a').click(function (e) {
-              e.preventDefault();
-              $(this).tab('show');
-            });
-
-            //Adds error icon if there are erros in the product form
+            //Adds error icon if there are errors in the product update form
             $('[data-behaviour="affix-nav-errors"] .tab-pane').each(function(){
               var productErrorListener = $(this).find('[class*="error"]').closest('.tab-pane').attr('id');
               $('[data-spy="affix"] a[href="#' + productErrorListener + '"]').append('<i class="icon-info-sign pull-right"></i>');
             });
+            
+            $('#product_category select').chosen();
 
             o.dashboard.filereader.init();
         },

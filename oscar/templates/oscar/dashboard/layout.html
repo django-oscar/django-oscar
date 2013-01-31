@@ -5,16 +5,18 @@
 {% load i18n %}
 {% load compress %}
 
-{% block less %}
-    <link rel="stylesheet" type="text/less" href="{{ STATIC_URL }}oscar/less/dashboard.less" />
-{% endblock %}
+{% block mainstylesheet %}
+    <link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/bootstrap.min.css" />
+    {% block less %}
+        <link rel="stylesheet" type="text/less" href="{{ STATIC_URL }}oscar/less/dashboard.less" />
+    {% endblock %}
 
-{% block styles %}
-    <link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/dashboard.css" />
+    {% block styles %}
+        <link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/dashboard.css" />
+    {% endblock %}
 {% endblock %}
 
 {% block extrastyles %}
-    <link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="{{ STATIC_URL }}oscar/js/bootstrap-wysihtml5/bootstrap-wysihtml5-0.0.2.css" />
 {% endblock %}
 
