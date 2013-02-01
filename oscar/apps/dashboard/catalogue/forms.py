@@ -15,6 +15,7 @@ Partner = get_model('partner', 'Partner')
 ProductAttributeValue = get_model('catalogue', 'ProductAttributeValue')
 ProductCategory = get_model('catalogue', 'ProductCategory')
 ProductImage = get_model('catalogue', 'ProductImage')
+ProductRecommendation = get_model('catalogue', 'ProductRecommendation')
 
 
 class CategoryForm(MoveNodeForm):
@@ -154,6 +155,7 @@ class ProductForm(forms.ModelForm):
         self.set_initial_attribute_values(kwargs)
         super(ProductForm, self).__init__(*args, **kwargs)
         self.add_attribute_fields()
+        self.fields['related_products'].queryset = Product.objects.all().order_by('title')
 
     def set_initial_attribute_values(self, kwargs):
         if kwargs.get('instance', None) is None:
@@ -179,8 +181,8 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         exclude = ('slug', 'status', 'score', 'product_class',
-                   'recommended_products', 'related_products',
-                   'product_options', 'attributes', 'categories')
+                   'recommended_products', 'product_options',
+                   'attributes', 'categories')
 
     def save(self):
         object = super(ProductForm, self).save(False)
@@ -277,3 +279,8 @@ class ProductImageForm(forms.ModelForm):
 ProductImageFormSet = inlineformset_factory(Product, ProductImage,
                                             form=ProductImageForm,
                                             extra=2)
+
+ProductRecommendationFormSet = inlineformset_factory(Product,
+                                                     ProductRecommendation,
+                                                     extra=5,
+                                                     fk_name="primary")

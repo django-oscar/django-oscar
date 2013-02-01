@@ -33,7 +33,7 @@
 {% block headertext %}{{ title }}{% endblock %}
 
 {% block dashboard_content %}
-<form action="." method="post" class="form-stacked wysiwyg fixed-actions" enctype="multipart/form-data" data-behaviour="affix-nav-errors">
+<form action="{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}" method="post" class="form-stacked wysiwyg fixed-actions" enctype="multipart/form-data" data-behaviour="affix-nav-errors">
     {% csrf_token %}
 
     <div class="row-fluid">
@@ -56,6 +56,7 @@
                     <li><a href="#product_category" data-toggle="tab">Product category</a></li>
                     <li><a href="#product_images" data-toggle="tab">Product images</a></li>
                     <li><a href="#product_stock" data-toggle="tab">Product stock</a></li>
+                    <li><a href="#product_recommended" data-toggle="tab">Recommended Products</a></li>
                 </ul>
             </div>
         </div>
@@ -385,6 +386,23 @@
                         {% endfor %}
                     </table>
                 </div>
+
+                <div class="tab-pane" id="product_recommended">
+                    <div class="table-header">
+                        <h3>{% trans "Recommended products" %}</h3>
+                    </div>
+                    <div class="well">
+                        {{ recommended_formset.management_form }}
+                        {{ recommended_formset.non_form_errors }}
+
+                        {% for recommended_form in recommended_formset %}
+                        <div class="control-group">
+                            {% include "partials/form_fields_inline.html" with form=recommended_form %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -392,7 +410,10 @@
     <div class="fixed-actions-group">
         <div class="form-actions">
             <div class="pull-right">
-                <a href="{% url dashboard:catalogue-product-list %}">{% trans "Cancel" %}</a> {% trans "or" %} <button class="btn btn-primary btn-large" type="submit">{% trans "Save Product" %}</button>
+                <a href="{% url dashboard:catalogue-product-list %}">{% trans "Cancel" %}</a>
+                {% trans "or" %}
+                <button class="btn btn-secondary btn-large" name="action" type="submit" value="continue">{% trans "Save and continue editing" %}</button>
+                <button class="btn btn-primary btn-large" name="action" type="submit" value="save">{% trans "Save" %}</button>
             </div>
             {% if product %}
             <a class="btn btn-success btn-large" href="{{ product.get_absolute_url }}">{% trans "View on site" %}</a>
