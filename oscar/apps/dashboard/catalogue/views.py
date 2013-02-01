@@ -13,13 +13,15 @@ from oscar.core.loading import get_classes
  StockRecordForm,
  StockAlertSearchForm,
  ProductCategoryFormSet,
- ProductImageFormSet) = get_classes('dashboard.catalogue.forms',
+ ProductImageFormSet,
+ ProductRecommendationFormSet) = get_classes('dashboard.catalogue.forms',
                                     ('ProductForm',
                                      'CategoryForm',
                                      'StockRecordForm',
                                      'StockAlertSearchForm',
                                      'ProductCategoryFormSet',
-                                     'ProductImageFormSet'))
+                                     'ProductImageFormSet',
+                                     'ProductRecommendationFormSet'))
 Product = get_model('catalogue', 'Product')
 Category = get_model('catalogue', 'Category')
 ProductImage = get_model('catalogue', 'ProductImage')
@@ -105,6 +107,8 @@ class ProductCreateView(generic.CreateView):
             ctx['category_formset'] = ProductCategoryFormSet()
         if 'image_formset' not in ctx:
             ctx['image_formset'] = ProductImageFormSet()
+        if 'recommended_formset' not in ctx:
+            ctx['recommended_formset'] = ProductRecommendationFormSet()
         ctx['title'] = _('Create new %s product') % pclass.name
         ctx['product_class'] = pclass
         return ctx
@@ -130,6 +134,9 @@ class ProductCreateView(generic.CreateView):
     def form_invalid(self, form):
         category_formset = ProductCategoryFormSet(self.request.POST)
         image_formset = ProductImageFormSet(self.request.POST, self.request.FILES)
+        recommended_formset = ProductRecommendationFormSet(self.request.POST,
+                                            self.request.FILES)
+
 
         messages.error(self.request,
                        _("Your submitted data was not valid - please "
@@ -137,7 +144,8 @@ class ProductCreateView(generic.CreateView):
         ctx = self.get_context_data(form=form,
                                     stockrecord_form=self.get_stockrecord_form(),
                                     category_formset=category_formset,
-                                    image_formset=image_formset)
+                                    image_formset=image_formset,
+                                    recommended_formset=recommended_formset)
         return self.render_to_response(ctx)
 
     def form_valid(self, form):
@@ -147,16 +155,21 @@ class ProductCreateView(generic.CreateView):
         image_formset = ProductImageFormSet(self.request.POST,
                                             self.request.FILES,
                                             instance=product)
+        recommended_formset = ProductRecommendationFormSet(self.request.POST,
+                                            self.request.FILES,
+                                            instance=product)
 
         stockrecord_form = self.get_stockrecord_form()
 
         if self.is_stockrecord_submitted():
             is_valid = all([stockrecord_form.is_valid(),
                             category_formset.is_valid(),
-                            image_formset.is_valid()])
+                            image_formset.is_valid(),
+                            recommended_formset.is_valid()])
         else:
             is_valid = all([category_formset.is_valid(),
-                            image_formset.is_valid()])
+                            image_formset.is_valid(),
+                            recommended_formset.is_valid()])
         if is_valid:
             if self.is_stockrecord_submitted():
                 # Save stock record
@@ -166,6 +179,8 @@ class ProductCreateView(generic.CreateView):
             # Save formsets
             category_formset.save()
             image_formset.save()
+            recommended_formset.save()
+
             return HttpResponseRedirect(self.get_success_url(product))
 
         messages.error(self.request,
@@ -177,12 +192,23 @@ class ProductCreateView(generic.CreateView):
         ctx = self.get_context_data(form=form,
                                     stockrecord_form=stockrecord_form,
                                     category_formset=category_formset,
-                                    image_formset=image_formset)
+                                    image_formset=image_formset,
+                                    recommended_formset=recommended_formset)
         return self.render_to_response(ctx)
+
+    def get_url_with_querystring(self, url):
+        url_parts = [url]
+        if self.request.GET.urlencode():
+            url_parts += [self.request.GET.urlencode()]
+        return "?".join(url_parts)
 
     def get_success_url(self, product):
         messages.success(self.request, _("Created product '%s'") % product.title)
-        return reverse('dashboard:catalogue-product-list')
+        url = reverse('dashboard:catalogue-product-list')
+        if self.request.POST.get('action') == 'continue':
+            url = reverse('dashboard:catalogue-product',
+                           kwargs={"pk":self.object.id}) 
+        return self.get_url_with_querystring(url)
 
 
 class ProductUpdateView(generic.UpdateView):
@@ -199,6 +225,8 @@ class ProductUpdateView(generic.UpdateView):
             ctx['category_formset'] = ProductCategoryFormSet(instance=self.object)
         if 'image_formset' not in ctx:
             ctx['image_formset'] = ProductImageFormSet(instance=self.object)
+        if 'recommended_formset' not in ctx:
+            ctx['recommended_formset'] = ProductRecommendationFormSet(instance=self.object)
         ctx['title'] = ctx['product'].get_title()
         return ctx
 
@@ -236,10 +264,14 @@ class ProductUpdateView(generic.UpdateView):
         image_formset = ProductImageFormSet(self.request.POST,
                                             self.request.FILES,
                                             instance=self.object)
+        recommended_formset = ProductRecommendationFormSet(self.request.POST,
+                                            self.request.FILES,
+                                            instance=self.object)
         ctx = self.get_context_data(form=form,
                                     stockrecord_form=stockrecord_form,
                                     category_formset=category_formset,
-                                    image_formset=image_formset)
+                                    image_formset=image_formset,
+                                    recommended_formset=recommended_formset)
         return self.render_to_response(ctx)
 
     def form_valid(self, form):
@@ -249,13 +281,18 @@ class ProductUpdateView(generic.UpdateView):
         image_formset = ProductImageFormSet(self.request.POST,
                                             self.request.FILES,
                                             instance=self.object)
+        recommended_formset = ProductRecommendationFormSet(self.request.POST,
+                                            self.request.FILES,
+                                            instance=self.object)
         if self.is_stockrecord_submitted():
             is_valid = all([stockrecord_form.is_valid(),
                             category_formset.is_valid(),
-                            image_formset.is_valid()])
+                            image_formset.is_valid(),
+                            recommended_formset.is_valid()])
         else:
             is_valid = all([category_formset.is_valid(),
-                            image_formset.is_valid()])
+                            image_formset.is_valid(),
+                            recommended_formset.is_valid()])
 
         if is_valid:
             form.save()
@@ -265,18 +302,30 @@ class ProductUpdateView(generic.UpdateView):
                 stockrecord.save()
             category_formset.save()
             image_formset.save()
+            recommended_formset.save()
             return HttpResponseRedirect(self.get_success_url())
 
         ctx = self.get_context_data(form=form,
                                     stockrecord_form=stockrecord_form,
                                     category_formset=category_formset,
-                                    image_formset=image_formset)
+                                    image_formset=image_formset,
+                                    recommended_formset=recommended_formset)
         return self.render_to_response(ctx)
+
+    def get_url_with_querystring(self, url):
+        url_parts = [url]
+        if self.request.GET.urlencode():
+            url_parts += [self.request.GET.urlencode()]
+        return "?".join(url_parts)
 
     def get_success_url(self):
         messages.success(self.request, _("Updated product '%s'") %
                          self.object.title)
-        return reverse('dashboard:catalogue-product-list')
+        url = reverse('dashboard:catalogue-product-list')
+        if self.request.POST.get('action') == 'continue':
+            url = reverse('dashboard:catalogue-product',
+                           kwargs={"pk":self.object.id}) 
+        return self.get_url_with_querystring(url)
 
 
 class ProductDeleteView(generic.DeleteView):

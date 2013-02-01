@@ -96,7 +96,7 @@
                             </a>
                             <ul class="dropdown-menu pull-right">
                                 <li>
-                                    <a href="{% url dashboard:catalogue-product product.id %}">
+                                    <a href="{% url dashboard:catalogue-product product.id %}{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}">
                                         {% trans "Edit" %}
                                     </a>
                                 </li>
