@@ -45,7 +45,8 @@ var oscar = (function(o, $) {
               $('[data-spy="affix"] a[href="#' + productErrorListener + '"]').append('<i class="icon-info-sign pull-right"></i>');
             });
             
-            $('#product_category select').chosen();
+            //Adds type/search for select fields
+            $('select').chosen();
 
             o.dashboard.filereader.init();
         },

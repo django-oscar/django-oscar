@@ -6,11 +6,6 @@
 
 {% block body_class %}create-page catalogue{% endblock %}
 
-{% block extrahead %}
-    {{ block.super }}
-    <link rel="stylesheet" href="{{ STATIC_URL }}oscar/js/chosen/chosen.css" type="text/css" media="screen" title="no title" charset="utf-8">
-{% endblock %}
-
 {% block title %}
 {{ title }} | {% trans "Product management" %} | {{ block.super }}
 {% endblock %}
@@ -299,7 +294,7 @@
                         <tr>
                             {% for field in stockrecord_form %}
                                 {% if "partner" in field.id_for_label %}
-                                    <th>{{ field.label }}{% if field.field.required %} <span>*</span>{% endif %}</th>
+                                    <th width="20%">{{ field.label }}{% if field.field.required %} <span>*</span>{% endif %}</th>
                                 {% endif %}
                                 {% if "price" in field.id_for_label %}
                                     <th>{{ field.label }}{% if field.field.required %} <span>*</span>{% endif %}</th>
@@ -358,8 +353,3 @@
     </div>
 </form>
 {% endblock dashboard_content %}
-
-{% block extrascripts %}
-    {{ block.super }}
-    <script src="{{ STATIC_URL }}oscar/js/chosen/chosen.jquery.min.js" type="text/javascript" charset="utf-8"></script>
-{% endblock %}

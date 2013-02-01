@@ -101,6 +101,15 @@ td .btn-toolbar {
     max-height:200px;
   }
 }
+select,
+.create-page select {
+  min-width:95%;
+}
+.form-inline {
+  select {
+    min-width:200px;
+  }
+}
 .form-inline {
   margin-bottom: 0;
   .help-block:first-child {
@@ -148,16 +157,14 @@ td .btn-toolbar {
   .form-horizontal,
   .form-stacked {
     input[type=text],
-    textarea,
-    select {
+    textarea {
       width:95%;
     }
   }
   .form-stacked {
     .form-inline {
       input[type=text],
-      textarea,
-      select {
+      textarea {
         width:auto;
       }
     }
@@ -195,8 +202,7 @@ input[type=text].hasDatepicker,
       color:#B94A48;
     }
   }
-  input[type=text],
-  select {
+  input[type=text] {
     width: 140px;
   }
 }
@@ -978,8 +984,7 @@ div[data-spy="affix"].affix {
 }
 .product-details,
 .product-details + .well {
-    input[type=text],
-    select {
+    input[type=text] {
         width: 50%;
     }
 }
