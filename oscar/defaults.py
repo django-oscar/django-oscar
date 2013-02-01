@@ -27,6 +27,9 @@ OSCAR_UPLOAD_ROOT = '/tmp'
 # Search settings
 OSCAR_SEARCH_SUGGEST_LIMIT = 10
 
+# Product list settings
+OSCAR_PRODUCTS_PAGINATE_BY = 20
+
 # Checkout
 OSCAR_ALLOW_ANON_CHECKOUT = False
 
