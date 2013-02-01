@@ -41,7 +41,7 @@
     {% else %}
 	    <tr><td>{% trans "Customer checked out anonymously." %}</td></tr>
 	{% endif %}
-</table>  
+</table>
 
 <table class="table table-striped table-bordered table-hover">
     <caption><i class="icon-shopping-cart icon-large"></i>{% trans "Order information" %}</caption>
@@ -57,7 +57,7 @@
         <td>{{ order.date_placed|date:"H:s" }}</td>
         <td>{{ order.status|default:"N/A" }}</td>
     </tr>
-</table>  
+</table>
 
 {% block additional_order_information %}
 {% endblock additional_order_information %}
@@ -67,7 +67,7 @@
 </div>
 
 <div class="tabbable dashboard">
-    
+
     <ul class="nav nav-tabs">
         {% block nav_tabs %}
         <li class="{% if active_tab == 'lines' %}active{% endif %}"><a href="#lines" data-toggle="tab">{% trans "Order contents" %}</a></li>
@@ -78,7 +78,7 @@
         <li class="{% if active_tab == 'notes' %}active{% endif %}"><a href="#notes" data-toggle="tab">{% trans "Notes" %}</a></li>
         {% endblock nav_tabs %}
     </ul>
-    
+
 	<div class="tab-content">
 		<div class="tab-pane {% if active_tab == 'lines' %}active{% endif %}" id="lines">
 			<div class="table-header">
@@ -240,7 +240,7 @@
                 </tbody>
     			{% endif %}
 			</table>
-			
+
 			{% endwith %}
 
 			<div class="table-header">
@@ -330,7 +330,7 @@
 			<div class="table-header">
 				<h3 >{% trans "Payment sources" %}</h3>
 			</div>
-			
+
 				<table class="table table-striped table-bordered table-hover">
 				    {% if sources %}
     					<thead>
@@ -340,9 +340,9 @@
     							<th>{% trans "Amount debited" %}</th>
     							<th>{% trans "Amount refunded" %}</th>
     							<th>{% trans "Reference" %}</th>
-    						</tr>  
-    					</thead>	
-    					<tbody> 
+    						</tr>
+    					</thead>
+    					<tbody>
     						{% for source in sources %}
     						<tr>
     							<td>{{ source.source_type }}</td>
@@ -356,19 +356,49 @@
 					{% else %}
                         <tbody>
                             <tr><td>{% trans "No payment sources" %}</td></tr>
-                        </tbody> 
+                        </tbody>
         			{% endif %}
 				</table>
 			{% endwith %}
 
 			{% block tab_transactions %}
-			<div class="table-header">
-				<h3>{% trans "Transactions" %}</h3>
-			</div>
-			<table class="table table-striped table-bordered table-hover">
+            <div class="table-header">
+                <h3>{% trans "Transactions" %}</h3>
+            </div>
+            {% with sources=order.sources.all %}
+            <table class="table table-striped table-bordered table-hover">
+            {% if sources %}
+                <thead>
+                    <tr>
+                        <th>{% trans "Amount" %}</th>
+                        <th>{% trans "Date" %}</th>
+                        <th>{% trans "Reference" %}</th>
+                        <th>{% trans "Status" %}</th>
+                    </tr>
+                </thead>
+
+                {% for source in sources %}
+                <tbody>
+                    {% ifchanged source %}
+                    <tr><td colspan="4">{{ source.source_type }}</td></tr>
+                    {% endifchanged %}
+
+                    {% for transaction in source.transactions.all %}
+                    <tr>
+                        <td>{{ transaction.amount }}</td>
+                        <td>{{ transaction.date_created }}</td>
+                        <td>{{ transaction.reference }}</td>
+                        <td>{{ transaction.status }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                {% endfor %}
+            {% else %}
                 <tr><td>{% trans "No transaction data available." %}</td></tr>
+            {% endif %}
             </table>
-			{% endblock %}
+            {% endwith %}
+            {% endblock %}
 
 		</div>
 
@@ -378,7 +408,7 @@
 					<h3>{% trans "Discounts" %}</h3>
 				</div>
 				{% with discounts=order.discounts.all %}
-				
+
 					<table class="table table-striped table-bordered table-hover">
 					    {% if discounts %}
     						<thead>
@@ -425,7 +455,7 @@
 				<h3>{% trans "Notes" %}</h3>
 			</div>
 			{% with notes=order.notes.all %}
-			
+
 			<table class="table table-striped table-bordered table-hover">
 			    {% if notes %}
 				<tr>
@@ -460,7 +490,7 @@
                 </tr>
 				{% endif %}
 			</table>
-			
+
 			{% endwith %}
 
 			<form action=".?note={{ note_id }}" method="post" class="form-stacked">
