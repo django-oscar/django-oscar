@@ -239,7 +239,7 @@ class ProductCategoryForm(forms.ModelForm):
         model = ProductCategory
 
 
-class ProductCategoryFormSet(BaseInlineFormSet):
+class BaseProductCategoryFormSet(BaseInlineFormSet):
 
     def clean(self):
         if self.instance.is_top_level and self.get_num_categories() == 0:
@@ -262,7 +262,7 @@ class ProductCategoryFormSet(BaseInlineFormSet):
 
 ProductCategoryFormSet = inlineformset_factory(
     Product, ProductCategory, form=ProductCategoryForm,
-    formset=ProductCategoryFormSet, fields=('category',), extra=1,
+    formset=BaseProductCategoryFormSet, fields=('category',), extra=1,
     can_delete=False)
 
 
