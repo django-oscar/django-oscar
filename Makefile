@@ -32,10 +32,11 @@ travis: install test lint
 i18n:
 	# Create the .po files used for i18n 
 	cd oscar; \
-		../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=de; \
-		../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=fr; \
-		../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=pl; \
-		../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=ru; \
-		../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=es; \
-		../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=it; \
-		../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=da
+	../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=de; \
+	../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=fr; \
+	../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=pl; \
+	../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=ru; \
+	../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=es; \
+	../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=it; \
+	../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=da; \
+	../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=sk
