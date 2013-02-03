@@ -27,7 +27,7 @@ demo: install
 	sites/demo/manage.py loaddata countries.json sites/_fixtures/pages.json sites/_fixtures/auth.json
 	sites/demo/manage.py rebuild_index --noinput
 
-test: 
+test:
 	./runtests.py tests/
 
 ci: install lint
@@ -41,15 +41,16 @@ lint:
 travis: install test lint
 
 i18n:
-	# Create the .po files used for i18n 
+	# Create the .po files used for i18n
 	cd oscar; \
-		../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=de; \
-		../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=fr; \
-		../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=pl; \
-		../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=ru; \
-		../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=es; \
-		../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=it; \
-		../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=da
+	../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=de; \
+	../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=fr; \
+	../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=pl; \
+	../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=ru; \
+	../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=es; \
+	../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=it; \
+	../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=da; \
+	../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=sk
 
 puppet:
 	# Install puppet modules required to set-up a Vagrant box
