@@ -109,7 +109,7 @@ class ProductCategoryView(ListView):
     """
     context_object_name = "products"
     template_name = 'catalogue/browse.html'
-    paginate_by = settings.OSCAR_PRODUCTS_PAGINATE_BY
+    paginate_by = settings.OSCAR_PRODUCTS_PER_PAGE
 
     def get_categories(self):
         """
@@ -145,7 +145,7 @@ class ProductListView(ListView):
     """
     context_object_name = "products"
     template_name = 'catalogue/browse.html'
-    paginate_by = settings.OSCAR_PRODUCTS_PAGINATE_BY
+    paginate_by = settings.OSCAR_PRODUCTS_PER_PAGE
     search_signal = product_search
     model = Product
 
