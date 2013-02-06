@@ -142,10 +142,10 @@ Alter your ``frobshop/urls.py`` to include Oscar's URLs:
 .. code-block:: django
 
     from django.conf.urls import patterns, include, url
-    from oscar.app import shop
+    from oscar.app import application
 
     urlpatterns = patterns('',
-        (r'', include(shop.urls))
+        (r'', include(application.urls))
     )
 
 Database
