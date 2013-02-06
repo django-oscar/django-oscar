@@ -6,7 +6,6 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist
 from django import forms
 from django.db.models import get_model
-from django.contrib.auth.models import User
 from django.contrib.auth import forms as auth_forms
 from django.conf import settings
 from django.core import validators
@@ -15,11 +14,13 @@ from django.contrib.sites.models import get_current_site
 from django.contrib.auth.tokens import default_token_generator
 
 from oscar.core.loading import get_profile_class, get_class
+from oscar.core.compat import get_user_model
 from oscar.apps.customer.utils import get_password_reset_url
 
 Dispatcher = get_class('customer.utils', 'Dispatcher')
 CommunicationEventType = get_model('customer', 'communicationeventtype')
 ProductAlert = get_model('customer', 'ProductAlert')
+User = get_user_model()
 
 
 def generate_username():

@@ -5,6 +5,7 @@ from django.conf import settings
 from django.db.models import get_model
 from django.utils.translation import ugettext_lazy as _
 from django.utils.importlib import import_module as django_import_module
+from oscar.core.compat import AUTH_USER_MODEL
 
 from oscar.core.utils import slugify
 from oscar.core.loading import get_class
@@ -58,8 +59,8 @@ class AbstractPartner(models.Model):
     #: A partner can have users assigned to it.  These can be used
     #: to provide authentication for webservices etc.
     users = models.ManyToManyField(
-        'auth.User', related_name="partners", blank=True, null=True,
-        verbose_name=_("Users"))
+        AUTH_USER_MODEL, related_name="partners",
+        blank=True, null=True, verbose_name=_("Users"))
 
     @property
     def display_name(self):

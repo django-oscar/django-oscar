@@ -2,12 +2,14 @@ from datetime import datetime, timedelta
 
 from django.db.models import get_model
 from django.core.urlresolvers import reverse
-from django.contrib.auth.models import User
+from oscar.core.compat import get_user_model
 from django_dynamic_fixture import get
 
 from oscar_testsupport.testcases import ClientTestCase
 
+
 ProductReview = get_model('reviews', 'productreview')
+User = get_user_model()
 
 
 class ReviewsDashboardTests(ClientTestCase):

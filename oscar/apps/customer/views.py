@@ -13,13 +13,13 @@ from django.contrib.auth import (authenticate, login as auth_login,
                                  logout as auth_logout)
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.sites.models import get_current_site
-from django.contrib.auth.models import User
 from django.conf import settings
 from django.db.models import get_model
 
 from oscar.views.generic import PostActionMixin
 from oscar.apps.customer.utils import get_password_reset_url
 from oscar.core.loading import get_class, get_profile_class, get_classes
+from oscar.core.compat import get_user_model
 
 Dispatcher = get_class('customer.utils', 'Dispatcher')
 EmailAuthenticationForm, EmailUserCreationForm, SearchByDateRangeForm = get_classes(
@@ -36,7 +36,7 @@ Email = get_model('customer', 'Email')
 UserAddress = get_model('address', 'UserAddress')
 CommunicationEventType = get_model('customer', 'CommunicationEventType')
 ProductAlert = get_model('customer', 'ProductAlert')
-
+User = get_user_model()
 
 class LogoutView(RedirectView):
     url = '/'

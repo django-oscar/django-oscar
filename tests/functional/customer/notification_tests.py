@@ -1,9 +1,11 @@
-from django.contrib.auth.models import User
 from django_dynamic_fixture import G
 
 from oscar_testsupport.testcases import WebTestCase
+from oscar.core.compat import get_user_model
 from oscar.apps.customer.notifications import services
 
+
+User = get_user_model()
 
 class TestAUserWithUnreadNotifications(WebTestCase):
 

@@ -4,6 +4,7 @@ from django.db import models
 from django.utils.translation import ugettext as _
 from django.conf import settings
 
+from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.utils import slugify
 
 
@@ -204,7 +205,7 @@ class AbstractSourceType(models.Model):
 
 
 class AbstractBankcard(models.Model):
-    user = models.ForeignKey('auth.User', related_name='bankcards',
+    user = models.ForeignKey(AUTH_USER_MODEL, related_name='bankcards',
                              verbose_name=_("User"))
     card_type = models.CharField(_("Card Type"), max_length=128)
     name = models.CharField(_("Name"), max_length=255)

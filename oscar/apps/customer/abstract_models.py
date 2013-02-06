@@ -10,6 +10,7 @@ from django.utils.timezone import now
 from django.core.urlresolvers import reverse
 
 from oscar.apps.customer.managers import CommunicationTypeManager
+from oscar.core.compat import AUTH_USER_MODEL
 
 
 class AbstractEmail(models.Model):
@@ -17,7 +18,7 @@ class AbstractEmail(models.Model):
     This is a record of all emails sent to a customer.
     Normally, we only record order-related emails.
     """
-    user = models.ForeignKey('auth.User', related_name='emails', verbose_name=_("User"))
+    user = models.ForeignKey(AUTH_USER_MODEL, related_name='emails', verbose_name=_("User"))
     subject = models.TextField(_('Subject'), max_length=255)
     body_text = models.TextField(_("Body Text"))
     body_html = models.TextField(_("Body HTML"), blank=True, null=True)
@@ -136,11 +137,11 @@ class AbstractCommunicationEventType(models.Model):
 
 
 class AbstractNotification(models.Model):
-    recipient = models.ForeignKey('auth.User', related_name='notifications',
+    recipient = models.ForeignKey(AUTH_USER_MODEL, related_name='notifications',
                                   db_index=True)
 
     # Not all notifications will have a sender.
-    sender = models.ForeignKey('auth.User', null=True)
+    sender = models.ForeignKey(AUTH_USER_MODEL, null=True)
 
     # HTML is allowed in this field as it can contain links
     subject = models.CharField(max_length=255)
@@ -186,7 +187,7 @@ class AbstractProductAlert(models.Model):
     # A user is only required if the notification is created by a
     # registered user, anonymous users will only have an email address
     # attached to the notification
-    user = models.ForeignKey('auth.User', db_index=True, blank=True, null=True,
+    user = models.ForeignKey(AUTH_USER_MODEL, db_index=True, blank=True, null=True,
                              related_name="alerts", verbose_name=_('User'))
     email = models.EmailField(_("Email"), db_index=True, blank=True, null=True)
 

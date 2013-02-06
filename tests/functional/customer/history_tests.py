@@ -1,12 +1,15 @@
 from django.test.client import Client
-from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
 from oscar_testsupport.factories import create_product
+from oscar.core.compat import get_user_model
 from oscar.apps.customer.history_helpers import get_recently_viewed_product_ids
 from oscar.templatetags.history_tags import get_back_button
 from django.http import HttpRequest
+
+
+User = get_user_model()
 
 
 class HistoryHelpersTest(TestCase):

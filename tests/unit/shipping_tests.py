@@ -1,14 +1,17 @@
 from decimal import Decimal as D
 
 from django.test import TestCase
-from django.contrib.auth.models import User
 
 from oscar.apps.shipping.methods import Free, FixedPrice
 from oscar.apps.shipping.models import OrderAndItemCharges, WeightBased
 from oscar.apps.shipping.repository import Repository
 from oscar.apps.shipping import Scales
 from oscar.apps.basket.models import Basket
+from oscar.core.compat import get_user_model
 from oscar_testsupport.factories import create_product
+
+
+User = get_user_model()
 
 
 class FreeTest(TestCase):
