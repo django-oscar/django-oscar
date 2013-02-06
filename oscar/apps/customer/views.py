@@ -13,7 +13,7 @@ from django.contrib.auth import (authenticate, login as auth_login,
                                  logout as auth_logout)
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.sites.models import get_current_site
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.conf import settings
 from django.db.models import get_model
 
@@ -36,7 +36,7 @@ Email = get_model('customer', 'email')
 UserAddress = get_model('address', 'UserAddress')
 CommunicationEventType = get_model('customer', 'communicationeventtype')
 ProductAlert = get_model('customer', 'ProductAlert')
-
+User = get_user_model()
 
 class LogoutView(RedirectView):
     url = '/'

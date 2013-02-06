@@ -1,10 +1,11 @@
 from django.test import TestCase
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django_dynamic_fixture import G
 
 from oscar.apps.customer.models import ProductAlert
 from oscar_testsupport.factories import create_product
 
+User = get_user_model()
 
 class TestAnAlertForARegisteredUser(TestCase):
 

@@ -175,3 +175,5 @@ OSCAR_DASHBOARD_NAVIGATION = [
 
 OSCAR_SETTINGS = dict(
     [(k, v) for k, v in locals().items() if k.startswith('OSCAR_')])
+
+AUTH_USER_MODEL = 'auth.User'

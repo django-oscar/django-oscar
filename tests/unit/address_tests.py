@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 
 from oscar.apps.address.models import Country, UserAddress
 from oscar.apps.order.models import ShippingAddress
 
+User = get_user_model()
 
 class UserAddressTest(TestCase):
     

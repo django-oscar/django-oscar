@@ -33,7 +33,7 @@ class AbstractProductReview(models.Model):
     body = models.TextField(_("Body"))
 
     # User information.  We include fields to handle anonymous users
-    user = models.ForeignKey('auth.User', related_name='reviews', null=True, blank=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='reviews', null=True, blank=True)
     name = models.CharField(_("Name"), max_length=255, null=True, blank=True)
     email = models.EmailField(_("Email"), null=True, blank=True)
     homepage = models.URLField(_("URL"), null=True, blank=True)
@@ -116,7 +116,7 @@ class AbstractVote(models.Model):
     * Each user can vote only once.
     """
     review = models.ForeignKey('reviews.ProductReview', related_name='votes')
-    user = models.ForeignKey('auth.User', related_name='review_votes')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='review_votes')
     UP, DOWN = 1, -1
     VOTE_CHOICES = (
         (UP, _("Up")),

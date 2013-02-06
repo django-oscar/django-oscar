@@ -1,10 +1,11 @@
 from django.test import TestCase
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django_dynamic_fixture import G
 
 from oscar.apps.offer import custom, models
 from oscar.apps.basket.models import Basket
 
+User = get_user_model()
 
 class BasketOwnerCalledBarry(models.Condition):
 

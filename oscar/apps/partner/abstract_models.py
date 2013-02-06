@@ -50,7 +50,7 @@ class AbstractPartner(models.Model):
 
     # A partner can have users assigned to it.  These can be used
     # to provide authentication for webservices etc.
-    users = models.ManyToManyField('auth.User', related_name="partners", blank=True, null=True,
+    users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="partners", blank=True, null=True,
         verbose_name=_("Users"))
 
     class Meta:

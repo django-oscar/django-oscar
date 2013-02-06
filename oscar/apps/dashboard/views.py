@@ -5,7 +5,7 @@ from django.utils.timezone import now
 from django.views.generic import TemplateView
 from django.db.models.loading import get_model
 from django.db.models import Avg, Sum, Count
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 
 from oscar.apps.promotions.models import AbstractPromotion
 
@@ -16,7 +16,7 @@ StockAlert = get_model('partner', 'StockAlert')
 Product = get_model('catalogue', 'Product')
 Order = get_model('order', 'Order')
 Line = get_model('order', 'Line')
-
+User = get_user_model()
 
 class IndexView(TemplateView):
     template_name = 'dashboard/index.html'

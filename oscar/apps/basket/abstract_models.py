@@ -18,7 +18,7 @@ class AbstractBasket(models.Model):
     """
     # Baskets can be anonymously owned - hence this field is nullable.  When a
     # anon user signs in, their two baskets are merged.
-    owner = models.ForeignKey('auth.User', related_name='baskets',
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='baskets',
                               null=True, verbose_name=_("Owner"))
 
     # Basket statuses

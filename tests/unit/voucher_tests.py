@@ -3,12 +3,13 @@ from decimal import Decimal as D
 
 from django.test import TestCase
 from django.core import exceptions
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django_dynamic_fixture import G
 
 from oscar.apps.voucher.models import Voucher
 from oscar.apps.order.models import Order
 
+User = get_user_model()
 START_DATE = datetime.date(2011, 01, 01)
 END_DATE = datetime.date(2012, 01, 01)
 

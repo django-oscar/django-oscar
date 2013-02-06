@@ -184,7 +184,7 @@ class SourceType(models.Model):
 
 
 class Bankcard(models.Model):
-    user = models.ForeignKey('auth.User', related_name='bankcards',
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='bankcards',
                              verbose_name=_("User"))
     card_type = models.CharField(_("Card Type"), max_length=128)
     name = models.CharField(_("Name"), max_length=255)

@@ -1,11 +1,12 @@
 from django_dynamic_fixture import G
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 from django.core import mail
 
 from oscar_testsupport.testcases import WebTestCase
 from oscar.apps.customer.models import CommunicationEventType
 
+User = get_user_model()
 
 class TestAnAdmin(WebTestCase):
 

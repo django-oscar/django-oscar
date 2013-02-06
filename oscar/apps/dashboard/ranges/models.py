@@ -1,5 +1,6 @@
 import os
 import re
+from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from django.utils.timezone import now
@@ -11,7 +12,7 @@ class RangeProductFileUpload(models.Model):
     range = models.ForeignKey('offer.Range', related_name='file_uploads', verbose_name=_("Range"))
     filepath = models.CharField(_("File Path"), max_length=255)
     size = models.PositiveIntegerField(_("Size"))
-    uploaded_by = models.ForeignKey('auth.User', verbose_name=_("Uploaded By"))
+    uploaded_by = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("Uploaded By"))
     date_uploaded = models.DateTimeField(_("Date Uploaded"), auto_now_add=True)
 
     PENDING, FAILED, PROCESSED = 'Pending', 'Failed', 'Processed'

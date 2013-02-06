@@ -7,7 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist
 from django import forms
 from django.db.models import get_model
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.contrib.auth import forms as auth_forms
 from django.conf import settings
 from django.core import validators
@@ -21,7 +21,7 @@ from oscar.apps.customer.utils import get_password_reset_url
 Dispatcher = get_class('customer.utils', 'Dispatcher')
 CommunicationEventType = get_model('customer', 'communicationeventtype')
 ProductAlert = get_model('customer', 'ProductAlert')
-
+User = get_user_model()
 
 def generate_username():
     uname = ''.join([random.choice(string.letters + string.digits + '_') for i in range(30)])

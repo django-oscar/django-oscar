@@ -1,5 +1,6 @@
 from django.db.models import get_model
 from django.core.urlresolvers import reverse
+from django.contrib.auth import get_user_model
 
 from oscar_testsupport.testcases import ClientTestCase
 from oscar_testsupport.factories import create_product
@@ -7,7 +8,7 @@ from oscar_testsupport.factories import create_product
 from django_dynamic_fixture import G
 from oscar_testsupport.testcases import WebTestCase
 
-User = get_model('auth', 'User')
+User = get_user_model()
 Product = get_model('catalogue', 'Product')
 ProductCategory = get_model('catalogue', 'ProductCategory')
 Category = get_model('catalogue', 'Category')

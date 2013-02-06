@@ -1,7 +1,7 @@
 from decimal import Decimal as D
 import datetime
 
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django_dynamic_fixture import G
 
@@ -9,6 +9,7 @@ from oscar.apps.offer import models
 from oscar.apps.order.models import OrderDiscount
 from oscar_testsupport.factories import create_order
 
+User = get_user_model()
 
 class TestADateBasedConditionalOffer(TestCase):
 
