@@ -1,5 +1,5 @@
 from django.core.urlresolvers import reverse
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django_dynamic_fixture import G
 
@@ -8,6 +8,7 @@ from oscar.apps.catalogue.models import Category
 from oscar.apps.dashboard.catalogue.forms import CategoryForm
 from oscar.apps.catalogue.categories import create_from_breadcrumbs
 
+User = get_user_model()
 
 def create_test_category_tree():
     trail = 'A > B > C'

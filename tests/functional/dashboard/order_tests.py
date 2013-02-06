@@ -1,7 +1,7 @@
 import httplib
 
 from django.test import TestCase
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 from django.template import Template, Context
 from django_dynamic_fixture import get
@@ -10,6 +10,7 @@ from oscar_testsupport.testcases import ClientTestCase
 from oscar_testsupport.factories import create_order
 from oscar.apps.order.models import Order, OrderNote
 
+User = get_user_model()
 
 class OrderListTests(ClientTestCase):
     is_staff = True

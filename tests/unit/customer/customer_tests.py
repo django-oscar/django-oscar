@@ -1,11 +1,12 @@
 from django.test import TestCase
 from django.core import mail
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 
 from oscar.apps.customer.utils import Dispatcher
 from oscar_testsupport.factories import create_order
 from oscar.apps.customer.models import CommunicationEventType
 
+User = get_user_model()
 
 class CommunicationTypeTest(TestCase):
     keys = ('body', 'html', 'sms', 'subject')

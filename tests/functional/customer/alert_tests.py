@@ -1,5 +1,5 @@
 from django_webtest import WebTest
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 from django.core import mail
 from django_dynamic_fixture import G
@@ -7,6 +7,7 @@ from django_dynamic_fixture import G
 from oscar_testsupport.factories import create_product
 from oscar.apps.customer.models import ProductAlert
 
+User = get_user_model()
 
 class TestAUser(WebTest):
 

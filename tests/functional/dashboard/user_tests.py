@@ -1,10 +1,11 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 from django_dynamic_fixture import get
 from oscar_testsupport.testcases import ClientTestCase
 
 from oscar.apps.dashboard.users.views import IndexView
 
+User = get_user_model()
 
 class IndexViewTests(ClientTestCase):
     is_staff = True

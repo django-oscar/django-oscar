@@ -1,5 +1,6 @@
 import zlib
 
+from django.conf import settings
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -202,7 +203,7 @@ class AbstractUserAddress(AbstractShippingAddress):
     model, we allow users the ability to add/edit/delete from their address
     book without affecting orders already placed.
     """
-    user = models.ForeignKey('auth.User', related_name='addresses',
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='addresses',
                              verbose_name=_("User"))
 
     # Customers can set defaults
