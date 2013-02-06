@@ -7,7 +7,6 @@ from oscar_testsupport.factories import create_product
 from django_dynamic_fixture import G
 from oscar_testsupport.testcases import WebTestCase
 
-User = get_model('auth', 'User')
 Product = get_model('catalogue', 'Product')
 ProductClass = get_model('catalogue', 'ProductClass')
 ProductCategory = get_model('catalogue', 'ProductCategory')

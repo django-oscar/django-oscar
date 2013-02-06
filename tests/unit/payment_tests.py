@@ -1,11 +1,14 @@
 import datetime
 
 from django.test import TestCase
-from django.contrib.auth.models import User
 
+from oscar.core.compat import get_user_model
 from oscar.apps.payment.models import Bankcard
 from oscar.apps.payment.forms import (bankcard_type, VISA, MASTERCARD, AMEX, DISCOVER, 
                                       BankcardNumberField, BankcardExpiryMonthField, luhn)
+
+
+User = get_user_model()
 
 
 class BankcardTest(TestCase):

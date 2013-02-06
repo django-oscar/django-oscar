@@ -3,12 +3,16 @@ from sys import maxint
 
 from django.test import TestCase, Client
 from django.core.exceptions import ValidationError
-from django.contrib.auth.models import User, AnonymousUser
+from oscar.core.compat import get_user_model
+from django.contrib.auth.models import AnonymousUser
 from django.db import IntegrityError
 from django.core.urlresolvers import reverse
 
 from oscar.apps.catalogue.reviews.models import ProductReview, Vote
 from oscar_testsupport.factories import create_product
+
+
+User = get_user_model()
 
 
 class ProductReviewTests(TestCase):
