@@ -24,10 +24,9 @@ Process
 Code
 ----
 
-Below is the snippet of code with a short example of data it handles. By no means it should be treated as copy-pastable, it's there just to demonstrate how one can proceed in a quick and dirty way with loading of catalogue.
-
-
-    #!/usr/bin/env python
+Below is the snippet of code with a short example of data it handles. 
+By no means it should be treated as copy-pastable, it's there just to 
+demonstrate how one can proceed in a quick and dirty way with loading of catalogue::
 
     import csv
     import re
