@@ -1,4 +1,5 @@
 {% load i18n compress %}
+{% load staticfiles %}
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html lang="{{ lang|default:"en-gb" }}" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html lang="{{ lang|default:"en-gb" }}" class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -19,7 +20,7 @@
         <![endif]-->
 
         {% block favicon %}
-            <link rel="shortcut icon" href="{{ STATIC_URL }}oscar/favicon.ico" />
+            <link rel="shortcut icon" href="{% static "oscar/favicon.ico" %}" />
         {% endblock %}
 
         {% block mainstyles %}
@@ -30,8 +31,8 @@
                 {% endcomment %}
 
                 {% block styles %}
-                    <link rel="stylesheet" type="text/less" href="{{ STATIC_URL }}oscar/less/styles.less" />
-                    <link rel="stylesheet" type="text/less" href="{{ STATIC_URL }}oscar/less/responsive.less" />
+                    <link rel="stylesheet" type="text/less" href="{% static "oscar/less/styles.less" %}" />
+                    <link rel="stylesheet" type="text/less" href="{% static "oscar/less/responsive.less" %}" />
                 {% endblock %}
             {% endcompress %}
         {% endblock %}
@@ -62,16 +63,16 @@
         {% block cdn_scripts %}
             <!-- jQuery -->
             <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-            <script>window.jQuery || document.write('<script src="{{ STATIC_URL }}oscar/js/jquery/jquery-1.9.1.min.js"><\/script>')</script>
+            <script>window.jQuery || document.write('<script src="{% static "oscar/js/jquery/jquery-1.9.1.min.js" %}"><\/script>')</script>
         {% endblock %}
 
         {% compress js %}
             {# Local scripts #}
             {% block scripts %}
                 <!-- Twitter Bootstrap -->
-                <script type="text/javascript" src="{{ STATIC_URL }}oscar/js/bootstrap/bootstrap.min.js"></script>
+                <script type="text/javascript" src="{% static "oscar/js/bootstrap/bootstrap.min.js" %}"></script>
                 <!-- Oscar -->
-                <script src="{{ STATIC_URL }}oscar/js/oscar/ui.js" type="text/javascript" charset="utf-8"></script>
+                <script src="{% static "oscar/js/oscar/ui.js" %}" type="text/javascript" charset="utf-8"></script>
             {% endblock %}
 
             {# Additional JS scripts #}

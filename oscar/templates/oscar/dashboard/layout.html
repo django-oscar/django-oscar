@@ -4,14 +4,15 @@
 {% load dashboard_tags %}
 {% load i18n %}
 {% load compress %}
+{% load staticfiles %}
 
 {% block styles %}
-    <link rel="stylesheet" type="text/less" href="{{ STATIC_URL }}oscar/less/dashboard.less" />
+    <link rel="stylesheet" type="text/less" href="{% static "oscar/less/dashboard.less" %}" />
 {% endblock %}
 
 {% block extrastyles %}
-    <link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="{{ STATIC_URL }}oscar/js/bootstrap-wysihtml5/bootstrap-wysihtml5-0.0.2.css" />
+    <link rel="stylesheet" href="{% static "oscar/css/bootstrap.min.css" %}" />
+    <link rel="stylesheet" href="{% static "oscar/js/bootstrap-wysihtml5/bootstrap-wysihtml5-0.0.2.css" %}" />
     <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/base/jquery-ui.css" />
 {% endblock %}
 
@@ -119,21 +120,21 @@
 {% block cdn_scripts %}
     {{ block.super }}
     <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
-    <script>window.jQuery.ui || document.write('<script src="{{ STATIC_URL }}oscar/js/jquery/jquery-ui-1.8.23.min.js"><\/script>')</script>
+    <script>window.jQuery.ui || document.write('<script src="{% static "oscar/js/jquery/jquery-ui-1.8.23.min.js" %}"><\/script>')</script>
 {% endblock %}
 
 {% block extrascripts %}
     {{ block.super }}
 
     {# jQuery plugins #}
-    <script src="{{ STATIC_URL }}oscar/js/mousewheel/jquery.mousewheel.min.js" type="text/javascript" charset="utf-8"></script>
-    <script src="{{ STATIC_URL }}oscar/js/scrollpane/jquery.jscrollpane.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "oscar/js/mousewheel/jquery.mousewheel.min.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "oscar/js/scrollpane/jquery.jscrollpane.min.js" %}" type="text/javascript" charset="utf-8"></script>
 
 	{# WYSIHTML5 #}
-    <script src="{{ STATIC_URL }}oscar/js/bootstrap-wysihtml5/wysihtml5-0.3.0.js" type="text/javascript" charset="utf-8"></script>
-    <script src="{{ STATIC_URL }}oscar/js/bootstrap-wysihtml5/bootstrap-wysihtml5-0.0.2.js" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "oscar/js/bootstrap-wysihtml5/wysihtml5-0.3.0.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "oscar/js/bootstrap-wysihtml5/bootstrap-wysihtml5-0.0.2.js" %}" type="text/javascript" charset="utf-8"></script>
 
-    <script src="{{ STATIC_URL }}oscar/js/oscar/dashboard.js" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "oscar/js/oscar/dashboard.js" %}" type="text/javascript" charset="utf-8"></script>
 {% endblock %}
 
 {% block onbodyload %}

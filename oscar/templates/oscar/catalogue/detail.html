@@ -1,11 +1,12 @@
 {% extends "layout.html" %}
 {% load currency_filters %}
 {% load history_tags %}
+{% load staticfiles %}
 {% load i18n %}
 
 {% block extrastyles %}
 	<!-- Colorbox (a lightbox plugin) for image galleries -->
-	<link rel="stylesheet" href="{{ STATIC_URL }}oscar/js/colorbox/colorbox.css" type="text/css" media="screen" charset="utf-8"/>
+        <link rel="stylesheet" href="{% static "oscar/js/colorbox/colorbox.css" %}" type="text/css" media="screen" charset="utf-8"/>
 {% endblock %}
 
 {% block title %}
@@ -217,7 +218,7 @@
 {% block extrascripts %}
 {{ block.super }}
 <!-- Responsive gallery js -->
-<script src="{{ STATIC_URL }}oscar/js/colorbox/jquery.colorbox-min.js" type="text/javascript" charset="utf-8"></script>
-<script src="{{ STATIC_URL }}oscar/js/responsivegallery/jquery.tmpl.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="{{ STATIC_URL }}oscar/js/responsivegallery/gallery.js" type="text/javascript" charset="utf-8"></script>
+<script src="{% static "oscar/js/colorbox/jquery.colorbox-min.js" %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static "oscar/js/responsivegallery/jquery.tmpl.min.js" %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static "oscar/js/responsivegallery/gallery.js" %}" type="text/javascript" charset="utf-8"></script>
 {% endblock %}
