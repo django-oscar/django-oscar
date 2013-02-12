@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load compress %}
 {% load category_tags %}
 
 {% block layout %}
@@ -45,6 +46,8 @@
 {% endblock %}
 
 {% block extrascripts %}
+    {% compress css %}
     {% include "partials/extrascripts.html" %}
     {{ block.super }}
+    {% endcompress %}
 {% endblock %}

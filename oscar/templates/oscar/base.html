@@ -24,23 +24,16 @@
         {% endblock %}
 
         {% block mainstyles %}
-            {% compress css %}
-                {% comment %}
-                Only include CSS files that are generated from LESS here. Use the extrastyles block
-                for additional CSS files.
-                {% endcomment %}
-
                 {% block styles %}
+                    {% compress css %}
                     <link rel="stylesheet" type="text/less" href="{% static "oscar/less/styles.less" %}" />
                     <link rel="stylesheet" type="text/less" href="{% static "oscar/less/responsive.less" %}" />
+                    {% endcompress %}
                 {% endblock %}
-            {% endcompress %}
         {% endblock %}
 
         {# Additional CSS - specific to certain pages #}
-        {% compress css %}
         {% block extrastyles %}{% endblock %}
-        {% endcompress %}
 
         {% block extrahead %}{% endblock %}
     </head>
@@ -66,18 +59,18 @@
             <script>window.jQuery || document.write('<script src="{% static "oscar/js/jquery/jquery-1.9.1.min.js" %}"><\/script>')</script>
         {% endblock %}
 
-        {% compress js %}
             {# Local scripts #}
             {% block scripts %}
+                {% compress js %}
                 <!-- Twitter Bootstrap -->
                 <script type="text/javascript" src="{% static "oscar/js/bootstrap/bootstrap.min.js" %}"></script>
                 <!-- Oscar -->
                 <script src="{% static "oscar/js/oscar/ui.js" %}" type="text/javascript" charset="utf-8"></script>
+                {% endcompress %}
             {% endblock %}
 
             {# Additional JS scripts #}
             {% block extrascripts %}{% endblock %}
-        {% endcompress %}
 
         {# Block for body onload functions #}
         <script type="text/javascript">
