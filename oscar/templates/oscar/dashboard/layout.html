@@ -6,15 +6,15 @@
 {% load compress %}
 {% load staticfiles %}
 
-{% block styles %}
+{% block mainstyles %}
     {% compress css %}
     <link rel="stylesheet" type="text/less" href="{% static "oscar/less/dashboard.less" %}" />
     {% endcompress %}
 {% endblock %}
 
 {% block extrastyles %}
+    {{ block.super }}
     {% compress css %}
-        {{ block.super }}
         <link rel="stylesheet" href="{% static "oscar/css/bootstrap.min.css" %}" />
         <link rel="stylesheet" href="{% static "oscar/js/bootstrap-wysihtml5/bootstrap-wysihtml5-0.0.2.css" %}" />
         <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/base/jquery-ui.css" />
@@ -129,8 +129,8 @@
 {% endblock %}
 
 {% block extrascripts %}
-    {% compress js %}
     {{ block.super }}
+    {% compress js %}
     {# jQuery plugins #}
     <script src="{% static "oscar/js/mousewheel/jquery.mousewheel.min.js" %}" type="text/javascript" charset="utf-8"></script>
     <script src="{% static "oscar/js/scrollpane/jquery.jscrollpane.min.js" %}" type="text/javascript" charset="utf-8"></script>
