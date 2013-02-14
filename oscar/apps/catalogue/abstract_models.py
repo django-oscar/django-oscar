@@ -554,13 +554,10 @@ class ProductAttributesContainer(object):
     def __getattr__(self, name):
         if not name.startswith('_') and not self.initialised:
             values = list(self.get_values().select_related('attribute'))
-            result = None
             for v in values:
                 setattr(self, v.attribute.code, v.value)
-                if v.attribute.code == name:
-                    result = v.value
             self.initialised = True
-            return result
+            return getattr(self, name)
         raise AttributeError(
             _("%(obj)s has no attribute named '%(attr)s'") % {
                 'obj': self.product.product_class, 'attr': name})
