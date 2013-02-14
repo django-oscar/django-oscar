@@ -10,6 +10,10 @@ class Emailbackend(ModelBackend):
                 return None
             email = kwargs['username']
 
+        # Check if we're dealing with an email address
+        if '@' not in email:
+            return None
+
         # We lowercase the host part as this is what Django does when saving a
         # user
         local, host = email.split('@')
