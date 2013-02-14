@@ -85,7 +85,7 @@
                                         {% if product.has_stockrecord %} 
                                             {{ product.stockrecord.partner.name }}
                                         {% else %}
-                                            Out of stock
+                                        {% trans "Out of stock" %}
                                         {% endif %}
                                     </span>
                                 </p>
@@ -104,7 +104,7 @@
                                 <tr><td>{{ category.full_name }}</tr>
                                 {% endfor %}
                                 {% else %}
-                                <tr><td>No categories setup for this product</td></tr>
+                                <tr><td>{% trans "No categories setup for this product" %}</td></tr>
                                 {% endif %}
                             </table>
                         </div>
@@ -118,7 +118,7 @@
                                 <tr><td><a href="{% url dashboard:range-update range.id %}" alt="{{ range.name }}">{{ range.name }}</a></td></tr>
                                 {% endfor %}
                                 {% else %}
-                                <tr><td>No ranges setup for this product</td></tr>
+                                <tr><td>{% trans "No ranges setup for this product" %}</td></tr>
                                 {% endif %}
                             </table>
                         </div>
@@ -132,7 +132,7 @@
                                 <tr><td>{{ offer.name }}</td></tr>
                                 {% endfor %}
                                 {% else %}
-                                <tr><td>No offers setup for this product</td></tr>
+                                <tr><td>{% trans "No offers setup for this product" %}</td></tr>
                                 {% endif %}
                             </table>
                         </div>
@@ -176,7 +176,7 @@
                         {% with parent=product.parent %}
                         {% if parent %}
                         <div class="control-group">
-                            <label class="control-label">Parent</label>
+                            <label class="control-label">{% trans "Parent" %}</label>
                             <div class="controls">
                                 <a href="{% url dashboard:catalogue-product parent.id %}" title="Edit {{ parent.title }}">{{ parent.title }}</a>
                             </div>
