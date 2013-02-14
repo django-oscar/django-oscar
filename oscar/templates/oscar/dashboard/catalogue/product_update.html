@@ -78,18 +78,36 @@
                                 {% endif %}
                             </div>
                             <div class="span9">
-                                <p><strong>{% trans "Number of open baskets" %}</strong><br /> <span class="product-count">{{ open_baskets }}</span></p>
                                 <p>
-                                    <strong>{% trans "Current preferred supply partner" %}</strong> <br />
+                                    <strong>{% trans "Fulfilment partner" %}</strong> <br />
                                     <span class="product-count">
                                         {% if product.has_stockrecord %} 
                                             {{ product.stockrecord.partner.name }}
                                         {% else %}
-                                        {% trans "Out of stock" %}
+                                            {% trans "Out of stock" %}
                                         {% endif %}
                                     </span>
                                 </p>
                                 <p><strong>{% trans "Description" %}</strong><br /> {{ product.description|safe }}</p>
+
+                                {% with stats=product.stats %}
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <th>{% trans "Views" %}</th>
+                                            <td>{{ stats.num_views }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>{% trans "Baskets" %}</th>
+                                            <td>{{ stats.num_basket_additions }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>{% trans "Purchases" %}</th>
+                                            <td>{{ stats.num_purchases }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                {% endwith %}
                             </div>
                         </div>
                     </div>
@@ -110,7 +128,7 @@
                         </div>
                         <div class="span4">
                             <div class="table-header">
-                                <h3>{% trans "Product ranges" %}</h3>
+                                <h3>{% trans "Ranges" %}</h3>
                             </div>
                             <table class="table table-striped table-bordered">
                                 {% if ranges.count > 0 %}
@@ -118,13 +136,13 @@
                                 <tr><td><a href="{% url dashboard:range-update range.id %}" alt="{{ range.name }}">{{ range.name }}</a></td></tr>
                                 {% endfor %}
                                 {% else %}
-                                <tr><td>{% trans "No ranges setup for this product" %}</td></tr>
+                                <tr><td>{% trans "No ranges currently include this product for this product" %}</td></tr>
                                 {% endif %}
                             </table>
                         </div>
                         <div class="span4">
                             <div class="table-header">
-                                <h3>{% trans "Product offers" %}</h3>
+                                <h3>{% trans "Offers" %}</h3>
                             </div>
                             <table class="table table-striped table-bordered">
                                 {% if offers.count > 0 %}
@@ -132,7 +150,7 @@
                                 <tr><td>{{ offer.name }}</td></tr>
                                 {% endfor %}
                                 {% else %}
-                                <tr><td>{% trans "No offers setup for this product" %}</td></tr>
+                                <tr><td>{% trans "No offers currently include this product" %}</td></tr>
                                 {% endif %}
                             </table>
                         </div>
