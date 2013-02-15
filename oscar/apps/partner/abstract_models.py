@@ -104,7 +104,8 @@ class AbstractStockRecord(models.Model):
     cost_price = models.DecimalField(_("Cost Price"), decimal_places=2, max_digits=12, blank=True, null=True)
 
     # Stock level information
-    num_in_stock = models.PositiveIntegerField(_("Number in stock"), default=0, blank=True, null=True)
+    num_in_stock = models.PositiveIntegerField(
+        _("Number in stock"), blank=True, null=True)
 
     # Threshold for low-stock alerts
     low_stock_threshold = models.PositiveIntegerField(_("Low Stock Threshold"), blank=True, null=True)
