@@ -41,6 +41,23 @@ var oscar = (function(o, $) {
 
             o.dashboard.filereader.init();
         },
+        offers: {
+            init: function() {
+                oscar.dashboard.offers.adjustBenefitForm();
+                $('#id_type').change(function() {
+                    oscar.dashboard.offers.adjustBenefitForm();
+                });
+            },
+            adjustBenefitForm: function() {
+                var type = $('#id_type').val(),
+                    $valueContainer = $('#id_value').parents('.control-group');
+                if (type == 'Multibuy') {
+                    $valueContainer.hide();
+                } else {
+                    $valueContainer.show();
+                }
+            }
+        },
         ranges: {
             init: function() {
                 $('[data-behaviours~="remove"]').click(function() {
