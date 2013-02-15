@@ -32,6 +32,7 @@ class CategoryInline(admin.TabularInline):
 
 
 class ProductClassAdmin(admin.ModelAdmin):
+    list_display = ('name', 'requires_shipping', 'track_stock')
     prepopulated_fields = {"slug": ("name",)}
 
 
