@@ -1,26 +1,41 @@
-<div id="messages">
-{% for message in messages %}
-    <div class="alert fade in alert-{{ message.tags }}">
-        <a class="close" data-dismiss="alert" href="#">&times;</a>
-		{# Include an icon #}
-		{% if 'success' in message.tags %}
-			<i class="icon-ok-sign"></i>
-		{% endif %}
-		{% if 'info' in message.tags %}
-			<i class="icon-info-sign"></i>
-		{% endif %}
-		{% if 'warning' in message.tags %}
-			<i class="icon-warning-sign"></i>
-		{% endif %}
-		{% if 'error' in message.tags %}
-			<i class="icon-exclamation-sign"></i>
-		{% endif %}
-		{# Allow HTML to be embedded in messages #}
-		{% if 'safe' in message.tags %}
-			{{ message|safe }}
-		{% else %}
-			{{ message }}
-		{% endif %}
+{% load string_filters %}
+
+{% comment %}
+Use message tags to control these alerts.  Available tags include:
+- safe: allow HTML in the message
+- block: for longer messages - this adds extra padding
+- noicon: don't show an icon
+- error/success/info - these change the connotation of the alert
+{% endcomment %}
+
+{% if messages %}
+    <div id="messages">
+        {% for message in messages %}
+        <div class="alert {% for tag in message.tags|split %}alert-{{ tag }} {% endfor %} fade in">
+                <a class="close" data-dismiss="alert" href="#">&times;</a>
+                {% if 'noicon' not in message.tags %}
+                    {# Include an icon by default #}
+                    {% if 'success' in message.tags %}
+                        <i class="icon-ok-sign"></i>
+                    {% endif %}
+                    {% if 'info' in message.tags %}
+                        <i class="icon-info-sign"></i>
+                    {% endif %}
+                    {% if 'warning' in message.tags %}
+                        <i class="icon-warning-sign"></i>
+                    {% endif %}
+                    {% if 'error' in message.tags %}
+                        <i class="icon-exclamation-sign"></i>
+                    {% endif %}
+                {% endif %}
+
+                {# Allow HTML to be embedded in messages #}
+                {% if 'safe' in message.tags %}
+                    {{ message|safe }}
+                {% else %}
+                    {{ message }}
+                {% endif %}
+            </div>
+        {% endfor %}
     </div>
-{% endfor %}
-</div>
+{% endif %}

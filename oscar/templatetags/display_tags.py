@@ -36,4 +36,5 @@ class GetParametersNode(template.Node):
 
         return get_params
 
+
 get_parameters = register.tag(get_parameters)
