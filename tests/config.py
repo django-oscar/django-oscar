@@ -26,6 +26,7 @@ def configure(nose_args=None):
                 'django.contrib.sessions',
                 'django.contrib.sites',
                 'django.contrib.flatpages',
+                'django.contrib.staticfiles',
                 'sorl.thumbnail',
                 'compressor',
             ] + OSCAR_CORE_APPS,
