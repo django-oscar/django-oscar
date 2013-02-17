@@ -6,6 +6,8 @@ from django.contrib.auth.models import User
 
 
 def send_product_alerts(sender, instance, created, **kwargs):
+    if kwargs.get('raw', False):
+        return
     from oscar.apps.customer.alerts import utils
     utils.send_product_alerts(instance.product)
 

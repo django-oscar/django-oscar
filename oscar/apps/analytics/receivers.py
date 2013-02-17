@@ -101,23 +101,31 @@ def _record_user_product_search(user, query):
 
 @receiver(product_viewed)
 def receive_product_view(sender, product, user, **kwargs):
+    if kwargs.get('raw', False):
+        return
     _record_product_view(product)
     _record_user_product_view(user, product)
 
 
 @receiver(product_search)
 def receive_product_search(sender, query, user, **kwargs):
+    if kwargs.get('raw', False):
+        return
     _record_user_product_search(user, query)
 
 
 @receiver(basket_addition)
 def receive_basket_addition(sender, product, user, **kwargs):
+    if kwargs.get('raw', False):
+        return
     _record_basket_addition(product)
     _record_user_basket_addition(user, product)
 
 
 @receiver(order_placed)
 def receive_order_placed(sender, order, user, **kwargs):
+    if kwargs.get('raw', False):
+        return
     _record_products_in_order(order)
     if user:
         _record_user_order(user, order)
