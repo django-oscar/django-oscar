@@ -27,15 +27,17 @@ Changing a URL pattern
 Create a subclass of ``Shop``, copy the ``get_urls`` method and change the name
 of the URL pattern::
 
+    # myproject/urls.py
     from oscar.app import Shop as CoreShop
 
     class MyShop(CoreShop):
-        def get_urls(self):
-        urlpatterns = patterns('',
-            (r'^catalog/', include(self.catalogue_app.urls)),
 
-            ... # all the remaining URLs, removed to simplify
-        )
-        return urlpatterns
+        def get_urls(self):
+            urlpatterns = patterns('',
+                (r'^catalog/', include(self.catalogue_app.urls)),
+
+                ... # all the remaining URLs, removed to simplify
+            )
+            return urlpatterns
 
 All URLs containing ``catalogue`` previously are now displayed as ``catalog``.
