@@ -2,42 +2,58 @@
 How to change an existing URL pattern
 =====================================
 
-Oscar comes with a lot of different URLs set up for different parts of the
-site. Some of these names might not be the right naming for your specific
-project or you would like to switch the British spelling to the American one
-as in ``catalogue`` to ``catalog``.
+Oscar has many views and associated URLs.  Often you want to customised these
+URLs for your domain.  For instance, you might want to use American spellings
+rather than British (``catalog`` instead of ``catalogue``).
 
-Taking this example, changing the URL from ``catalogue`` to ``catalog`` is
-very simple. All you have to do is find the ``Application`` object that defines
-the URL. In this case it's in ``oscar.app.py`` and contains the ``Shop`` class
-that you are using in your projects ``urls.py`` to `register Oscar's URLs`_.
+URLs in Oscar
+-------------
 
-The ``Shop`` application defines its URLs in a method called ``get_urls`` and
-all you have to do is change the patterns defined by this function. To do this,
-just create a subclass of ``Shop`` and change the URL patterns to your hearts
-contempt.
+Oscar's views and URLs use a tree of 'app' instances, each of which subclass
+``oscar.core.application.Application`` and provide ``urls`` property.  Oscar has
+a root app instance in ``oscar/app.py`` which can be imported into your
+``urls.py``::
 
+    # urls.py
+    from oscar.app import application
 
-.. _`register Oscar's URLs`: http://django-oscar.readthedocs.org/en/latest/getting_started.html#urls
+    urlpatterns = patterns('',
+       ... # Your other URLs
+       (r'', include(application.urls)),
+    )
 
+Customising
+-----------
 
-Changing a URL pattern
-----------------------
+In order to customise Oscar's URLs, you need to use a custom app instance in
+your root ``urls.py`` instead of Oscar's default instance.  Hence, to use
+``catalog`` instead of ``catalogue``, create a subclass of Oscar's main
+``Application`` class and override the ``get_urls`` method::
 
-Create a subclass of ``Shop``, copy the ``get_urls`` method and change the name
-of the URL pattern::
+    # myproject/app.py
+    from oscar import app
 
-    # myproject/urls.py
-    from oscar.app import Shop as CoreShop
+    class MyShop(app.Shop):
 
-    class MyShop(CoreShop):
-
+        # Override get_urls method
         def get_urls(self):
             urlpatterns = patterns('',
                 (r'^catalog/', include(self.catalogue_app.urls)),
 
-                ... # all the remaining URLs, removed to simplify
+                ... # all the remaining URLs, removed for simplicity
             )
             return urlpatterns
+
+    application = MyShop()
+
+Now modify your root ``urls.py`` to use your new application instance::
+
+    # urls.py
+    from myproject.app import application
+
+    urlpatterns = patterns('',
+       ... # Your other URLs
+       (r'', include(application.urls)),
+    )
 
 All URLs containing ``catalogue`` previously are now displayed as ``catalog``.
