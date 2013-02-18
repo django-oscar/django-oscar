@@ -26,8 +26,8 @@
         {% if use_less %}
             {# LESS - use in debug mode #}
             {% block less %}
-                <link rel="stylesheet/less" type="text/css" href="{{ STATIC_URL }}oscar/less/styles.less" />
-                <link rel="stylesheet/less" type="text/css" href="{{ STATIC_URL }}oscar/less/responsive.less" />
+                <link rel="stylesheet" type="text/less" href="{{ STATIC_URL }}oscar/less/styles.less" />
+                <link rel="stylesheet" type="text/less" href="{{ STATIC_URL }}oscar/less/responsive.less" />
             {% endblock %}
         {% else %}
             {% compress css %}
@@ -37,8 +37,8 @@
                 {% endcomment %}
 
                 {% block styles %}
-                    <link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/styles.css" />
-                    <link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/responsive.css" />
+                    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}oscar/css/styles.css" />
+                    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}oscar/css/responsive.css" />
                 {% endblock %}
             {% endcompress %}
         {% endif %}
