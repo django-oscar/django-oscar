@@ -21,3 +21,4 @@ django-webtest==1.5.4
 pyflakes==0.5.0
 django-oscar-testsupport==0.2
 pyprof2calltree==1.1.0
+transifex-client==0.8
