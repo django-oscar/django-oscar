@@ -17,8 +17,8 @@ Method
 
 2. Ensure the ``models.py`` in your local app imports all the models from Oscar's version::
 
-   # models.py
-   from oscar.apps.order.models import *
+    # models.py
+    from oscar.apps.order.models import *
 
 3. Replace Oscar's version of the app with your new version in ``INSTALLED_APPS``.
 
