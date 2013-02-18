@@ -96,6 +96,10 @@ at: http://localhost:8000.  Want to make changes?  Check out the
 The sandbox site is also available to browse at 
 http://latest.oscarcommerce.com
 
+Translations can be contributed using Transifex_.
+
+.. _Transifex: https://www.transifex.com/projects/p/django-oscar/
+
 Extensions
 ----------
 
