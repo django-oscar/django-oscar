@@ -8,7 +8,7 @@ more generally useful for anyone trying to customise Oscar and looking for the
 right approach.
 
 Overview
-========
+--------
 
 Oscar ships with a set of HTML templates and a collection of static files
 (eg images, javascript).  Oscar's default CSS is generated from LESS
