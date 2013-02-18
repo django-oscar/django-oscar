@@ -152,7 +152,7 @@
                             </div>
                             <div class="span4 review_votes">
                                 <div>
-                		            {% include 'reviews/_vote_bit.html' %}
+                		            {% include 'catalogue/reviews/vote_bit.html' %}
 									{% if review.has_votes %}
 									<p>{{ review.num_up_votes }} customer{{ review.num_up_votes|pluralize }} found this review helpful.</p>
                                     {% endif %}
