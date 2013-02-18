@@ -49,6 +49,8 @@ Oscar uses `Font Awesome`_ for its icons which makes it very simple to
 an icon to your dashboard menu. All you need to do is find the right icon
 for your menu item. Check out `the icon list`_ to find one.
 
+.. _`the icon list`: http://fortawesome.github.com/Font-Awesome/#icons-web-app
+
 Now that you have decided for an icon to use, all you need to do add the
 icon class for the icon to your menu heading::
 
