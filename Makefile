@@ -52,6 +52,9 @@ i18n:
 	../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=da; \
 	../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=sk
 
+tx:
+	tx pull
+
 puppet:
 	# Install puppet modules required to set-up a Vagrant box
 	rm -rf sites/puppet/modules/*
