@@ -110,5 +110,5 @@ and replace the 'less' block::
     # project/base.html
 
     {% block less %}
-        <link rel="stylesheet/less" type="text/css" href="{{ STATIC_URL }}myproject/less/styles.less" />
+        <link rel="stylesheet" type="text/less" href="{{ STATIC_URL }}myproject/less/styles.less" />
     {% endblock %}
