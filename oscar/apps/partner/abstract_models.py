@@ -81,43 +81,62 @@ class AbstractStockRecord(models.Model):
     We deliberately don't store tax information to allow each project
     to subclass this model and put its own fields for convey tax.
     """
-    product = models.OneToOneField('catalogue.Product', related_name="stockrecord", verbose_name=_("Product"))
+    product = models.OneToOneField(
+        'catalogue.Product', related_name="stockrecord",
+        verbose_name=_("Product"))
     partner = models.ForeignKey('partner.Partner', verbose_name=_("Partner"))
 
     # The fulfilment partner will often have their own SKU for a product, which
-    # we store here.
+    # we store here.  This will sometimes be the same the product's UPC but not
+    # always.  It should be unique per partner.
     partner_sku = models.CharField(_("Partner SKU"), max_length=128)
 
     # Price info:
-    price_currency = models.CharField(_("Currency"), max_length=12, default=settings.OSCAR_DEFAULT_CURRENCY)
+    price_currency = models.CharField(
+        _("Currency"), max_length=12, default=settings.OSCAR_DEFAULT_CURRENCY)
 
-    # This is the base price for calculations - tax should be applied
-    # by the appropriate method.  We don't store it here as its calculation is
-    # highly domain-specific.  It is NULLable because some items don't have a fixed
-    # price.
-    price_excl_tax = models.DecimalField(_("Price (excl. tax)"), decimal_places=2, max_digits=12, blank=True, null=True)
+    # This is the base price for calculations - tax should be applied by the
+    # appropriate method.  We don't store tax here as its calculation is highly
+    # domain-specific.  It is NULLable because some items don't have a fixed
+    # price but require a runtime calculation (possible from an external
+    # service).
+    price_excl_tax = models.DecimalField(
+        _("Price (excl. tax)"), decimal_places=2, max_digits=12,
+        blank=True, null=True)
 
-    # Retail price for this item
-    price_retail = models.DecimalField(_("Price (retail)"), decimal_places=2, max_digits=12, blank=True, null=True)
+    # Retail price for this item.  This is simply the recommended price from
+    # the manufacturer.  If this is used, it is for display purposes only.
+    # This prices is the NOT the price charged to the customer.
+    price_retail = models.DecimalField(
+        _("Price (retail)"), decimal_places=2, max_digits=12,
+        blank=True, null=True)
 
-    # Cost price is optional as not all partners supply it
-    cost_price = models.DecimalField(_("Cost Price"), decimal_places=2, max_digits=12, blank=True, null=True)
+    # Cost price is the price charged by the fulfilment partner.  It is not
+    # used (by default) in any price calculations but is often used in
+    # reporting so merchants can report on their profit margin.
+    cost_price = models.DecimalField(
+        _("Cost Price"), decimal_places=2, max_digits=12,
+        blank=True, null=True)
 
-    # Stock level information
+    # Number of items in stock
     num_in_stock = models.PositiveIntegerField(
         _("Number in stock"), blank=True, null=True)
 
-    # Threshold for low-stock alerts
-    low_stock_threshold = models.PositiveIntegerField(_("Low Stock Threshold"), blank=True, null=True)
+    # Threshold for low-stock alerts.  When stock goes beneath this threshold,
+    # an alert is triggered so warehouse managers can order more.
+    low_stock_threshold = models.PositiveIntegerField(
+        _("Low Stock Threshold"), blank=True, null=True)
 
     # The amount of stock allocated to orders but not fed back to the master
     # stock system.  A typical stock update process will set the num_in_stock
     # variable to a new value and reset num_allocated to zero
-    num_allocated = models.IntegerField(_("Number of Allocated"), default=0, blank=True, null=True)
+    num_allocated = models.IntegerField(
+        _("Number allocated"), default=0, blank=True, null=True)
 
     # Date information
-    date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
-    date_updated = models.DateTimeField(_("Date Updated"), auto_now=True, db_index=True)
+    date_created = models.DateTimeField(_("Date created"), auto_now_add=True)
+    date_updated = models.DateTimeField(_("Date updated"), auto_now=True,
+                                        db_index=True)
 
     class Meta:
         abstract = True
