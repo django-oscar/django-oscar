@@ -309,7 +309,7 @@ GOOGLE_ANALYTICS_ID = 'UA-XXXXX-Y'
 
 COMPRESS_ENABLED = True
 COMPRESS_PRECOMPILERS = (
-        ('text/less', 'lessc {infile} {outfile}'),
+    ('text/less', 'lessc {infile} {outfile}'),
 )
 
 LOG_ROOT = location('logs')
