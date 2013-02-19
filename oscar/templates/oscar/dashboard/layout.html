@@ -11,7 +11,10 @@
 
 {% block styles %}
     <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}oscar/css/dashboard.css" />
-    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/base/jquery-ui.css" />
+{% endblock %}
+
+{% block extrahead %}
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/base/jquery-ui.css" />
 {% endblock %}
 
 {% block extrastyles %}
