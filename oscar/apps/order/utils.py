@@ -71,8 +71,10 @@ class OrderCreator(object):
             self.create_line_models(order, line)
             self.update_stock_records(line)
 
+        # Trigger any deferred benefits from offers
         # Record discounts (including any on the shipping method)
         for discount in basket.offer_applications:
+            discount['offer'].apply_deferred_benefit(basket)
             self.create_discount_model(order, discount)
             self.record_discount(discount)
         if shipping_method.is_discounted:
@@ -205,15 +207,15 @@ class OrderCreator(object):
                                                   type=attr.option.code,
                                                   value=attr.value)
 
-    def create_discount_model(self, order, discount, is_shipping_discount=False):
+    def create_discount_model(self, order, discount,
+                              is_shipping_discount=False):
         """
         Creates an order discount model for each discount attached to the
         basket.
         """
-        order_discount = OrderDiscount(order=order,
-                                       offer_id=discount['offer'].id,
-                                       frequency=discount['freq'],
-                                       amount=discount['discount'])
+        order_discount = OrderDiscount(
+            order=order, offer_id=discount['offer'].id,
+            frequency=discount['freq'], amount=discount['discount'])
         if is_shipping_discount:
             order_discount.category = OrderDiscount.SHIPPING
         voucher = discount.get('voucher', None)

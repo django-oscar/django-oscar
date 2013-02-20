@@ -114,22 +114,67 @@
         </div>
     </div>
     {% endfor %}
-    {% for discount in basket.discounts %}
-    <div class="basket-items">
-        <div class="row-fluid">
-            <h4 class="span10 align-right">{{ discount.name }}</h4>
-            <div class="span2 align-right">
-                -{{ discount.discount|currency }}
+
+    {% with offer_discounts=basket.offer_discounts voucher_discounts=basket.grouped_voucher_discounts %}
+    {% if offer_discounts or voucher_discounts %}
+        <div class="basket-items">
+            <div class="row-fluid">
+                <h4 class="span10 align-right">{% trans "Basket total (before discounts)" %}</h4>
+                <div class="span2 align-right">
+                    {{ basket.total_incl_tax_excl_discounts|currency }}
+                </div>
             </div>
         </div>
-    </div>
-    {% endfor %}
-    <div class="basket-items">
-        <div class="row-fluid align-right">
-			<h4 class="span10">{% trans "Basket total:" %}</h4>
-            <h5 class="span2">{{ basket.total_incl_tax|currency }}</h5>
+        {% for discount in offer_discounts %}
+        <div class="basket-items">
+            <div class="row-fluid">
+                <p class="span10 align-right">
+                    {% trans "Special offer:" %} {{ discount.name }}
+                    {% if discount.description %}
+                    <br/><small>{{ discount.description }}</small>
+                    {% endif %}
+                </p>
+                <div class="span2 align-right">
+                    - {{ discount.discount|currency }}
+                </div>
+            </div>
         </div>
-    </div>
+        {% endfor %}
+        {% for discount in voucher_discounts %}
+        <div class="basket-items">
+            <div class="row-fluid">
+                <p class="span10 align-right">
+                    {% trans "Voucher:" %} {{ discount.voucher.name }}
+                    {% if discount.description %}
+                    <br/><small>{{ discount.description }}</small>
+                    {% endif %}
+                </p>
+                <div class="span2 align-right">
+                    - {{ discount.discount|currency }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        <div class="basket-items">
+            <div class="row-fluid">
+                <h4 class="span10 align-right">{% trans "Basket total (after discounts)" %}</h4>
+                <div class="span2 align-right">
+                    {{ basket.total_incl_tax|currency }}
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="basket-items">
+            <div class="row-fluid">
+                <h4 class="span10 align-right">{% trans "Basket total" %}</h4>
+                <h5 class="span2 align-right">
+                    {{ basket.total_incl_tax|currency }}
+                </h5>
+            </div>
+        </div>
+    {% endif %}
+    {% endwith %}
+
     {% if shipping_method %}
     <div class="basket-items">
         <div class="row-fluid align-right">
@@ -150,17 +195,31 @@
         </div>
     </div>
     {% endif %}
+
+    {% if basket.post_order_actions %}
+    <div class="basket-items">
+        <div class="row-fluid align-right">
+			<h4 class="span10">{% trans "Post order actions:" %}
+            {% for discount in basket.post_order_actions %}
+            <h5 class="span2">{{ discount.description }}</h5>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
     <div class="basket-items total">
         <div class="row-fluid align-right">
 			<h3 class="span10">{% trans "Order total:" %}</h3>
             <h3 class="span2 price_color">{{ order_total_incl_tax|currency }}</h3>
         </div>
     </div>
+
     {% block order_contents_actions %}
     <div class="form-actions">
 		<a href="{% url basket:summary %}" class="btn">{% trans "Edit order contents" %}</a>
     </div>
     {% endblock %}
+
 {% endblock order_contents %}
 
 

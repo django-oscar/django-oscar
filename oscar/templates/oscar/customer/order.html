@@ -85,7 +85,7 @@
 					{% for discount in order.discounts.all %}
 					<tr>
 						<td colspan="4">{{ discount.description }}</td>
-						<td>-{{ discount.amount|currency }}</td>
+						<td colspan="2">-{{ discount.amount|currency }}</td>
 					</tr>
 					{% endfor %}
 					<tr>
