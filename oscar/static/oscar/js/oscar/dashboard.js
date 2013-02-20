@@ -59,7 +59,9 @@ var oscar = (function(o, $) {
             });
             
             //Adds type/search for select fields
-            $('select').chosen();
+            $('.form-stacked select').css('width', '95%');
+            $('.form-inline select').css('width', '300px');
+            $('select').select2();
 
             o.dashboard.filereader.init();
         },
