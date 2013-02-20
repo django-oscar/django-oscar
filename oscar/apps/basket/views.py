@@ -202,6 +202,7 @@ class BasketView(ModelFormSetView):
             kwargs = self.get_formset_kwargs()
             del kwargs['data']
             del kwargs['files']
+            del kwargs['queryset']
             formset = self.get_formset()(queryset=self.get_queryset(),
                                          **kwargs)
             ctx = self.get_context_data(formset=formset,
