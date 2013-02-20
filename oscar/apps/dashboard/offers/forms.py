@@ -117,9 +117,9 @@ class BenefitForm(forms.ModelForm):
             if benefit:
                 self.fields['custom_benefit'].initial = benefit.id
         else:
-            # No custom benefit and so the type/range/value fields
+            # No custom benefit and so the type/value fields
             # are no longer optional
-            for field in ('type', 'range', 'value'):
+            for field in ('type', 'value'):
                 self.fields[field].required = True
 
     class Meta:

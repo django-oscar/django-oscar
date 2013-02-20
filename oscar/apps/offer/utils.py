@@ -13,15 +13,77 @@ class OfferApplicationError(Exception):
     pass
 
 
+class OfferApplications(object):
+    """
+    A collection of offer applications and the discounts that they give.
+    """
+    def __init__(self):
+        self.applications = {}
+
+    def __iter__(self):
+        return self.applications.values().__iter__()
+
+    def add(self, offer, result):
+        if offer.id not in self.applications:
+            self.applications[offer.id] = {
+                'offer': offer,
+                'result': result,
+                'name': offer.name,
+                'description': result.description,
+                'voucher': offer.get_voucher(),
+                'freq': 0,
+                'discount': Decimal('0.00')}
+        self.applications[offer.id]['discount'] += result.discount
+        self.applications[offer.id]['freq'] += 1
+
+    @property
+    def offer_discounts(self):
+        """
+        Return basket discounts from offers (but not voucher offers)
+        """
+        discounts = []
+        for application in self.applications.values():
+            if not application['voucher'] and application['discount'] > 0:
+                discounts.append(application)
+        return discounts
+
+    @property
+    def voucher_discounts(self):
+        """
+        Return basket discounts from vouchers.
+        """
+        discounts = []
+        for application in self.applications.values():
+            if application['voucher'] and application['discount'] > 0:
+                discounts.append(application)
+        return discounts
+
+    @property
+    def application_messages(self):
+        """
+        Return successful offer applications which didn't lead to a discount
+        """
+        applications = []
+        for application in self.applications.values():
+            if not application['discount']:
+                applications.append(application)
+        return applications
+
+    def offers(self):
+        return dict([(a['offer'].id, a['offer']) for a in
+                     self.applications.values()])
+
+
 class Applicator(object):
     """
     Apply offers to a basket.
     """
+
     def apply(self, request, basket):
         """
         Apply all relevant offers to the given basket.
 
-        The request and user are passed too as sometimes the available offers
+        The request is passed too as sometimes the available offers
         are dependent on the user (eg session-based offers).
         """
         # Flush any existing discounts to make sure they are recalculated
@@ -31,37 +93,30 @@ class Applicator(object):
         offers = self.get_offers(request, basket)
         logger.debug("Found %d offers to apply to basket %d",
                      len(offers), basket.id)
-        discounts = self.get_basket_discounts(basket, offers)
+        applications = self.apply_offers(basket, offers)
 
         # Store this list of discounts with the basket so it can be
         # rendered in templates
-        basket.set_discounts(list(discounts.values()))
+        basket.set_discounts(applications)
 
-    def get_basket_discounts(self, basket, offers):
-        discounts = {}
+    def apply_offers(self, basket, offers):
+        applications = OfferApplications()
         for offer in offers:
-            # For each offer, we keep trying to apply it until the
-            # discount is 0
-            applications = 0
-            while applications < offer.get_max_applications(basket.owner):
-                discount = offer.apply_benefit(basket)
-                applications += 1
-                logger.debug("Found discount %.2f for basket %d from offer %d",
-                             discount, basket.id, offer.id)
-                if discount > 0:
-                    if offer.id not in discounts:
-                        discounts[offer.id] = {'name': offer.name,
-                                               'offer': offer,
-                                               'voucher': offer.get_voucher(),
-                                               'freq': 0,
-                                               'discount': Decimal('0.00')}
-                    discounts[offer.id]['discount'] += discount
-                    discounts[offer.id]['freq'] += 1
-                else:
+            num_applications = 0
+            # Keep applying the offer until either
+            # (a) We reach the max number of applications for the offer.
+            # (b) The benefit can't be applied successfully.
+            while num_applications < offer.get_max_applications(basket.owner):
+                result = offer.apply_benefit(basket)
+                num_applications += 1
+                if not result.is_successful:
+                    break
+                applications.add(offer, result)
+                if result.is_final:
                     break
 
         logger.debug("Finished applying offers to basket %d", basket.id)
-        return discounts
+        return applications
 
     def get_offers(self, request, basket):
         """

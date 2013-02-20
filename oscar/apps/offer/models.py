@@ -230,7 +230,7 @@ class ConditionalOffer(models.Model):
         Applies the benefit to the given basket and returns the discount.
         """
         if not self.is_condition_satisfied(basket):
-            return D('0.00')
+            return ZERO_DISCOUNT
         return self.benefit.proxy().apply(
             basket, self.condition.proxy(), self)
 
@@ -539,7 +539,7 @@ class Benefit(models.Model):
         return self.proxy().description
 
     def apply(self, basket, condition, offer=None):
-        return D('0.00')
+        return ApplicationResult(D('0.00'))
 
     def clean(self):
         if not self.type:
@@ -1033,15 +1033,53 @@ class ValueCondition(Condition):
         if to_consume == 0:
             return
 
-        for price, line in self.get_applicable_lines(basket,
-                                                     most_expensive_first=True):
+        for price, line in self.get_applicable_lines(
+                basket, most_expensive_first=True):
             quantity_to_consume = min(
                 line.quantity_without_discount,
                 (to_consume / price).quantize(D(1), ROUND_UP))
             line.consume(quantity_to_consume)
             to_consume -= price * quantity_to_consume
-            if to_consume == 0:
+            if to_consume <= 0:
                 break
+
+
+# ============
+# Result types
+# ============
+
+
+class ApplicationResult(object):
+    is_final = is_successful = False
+    discount = D('0.00')
+    description = None
+
+
+class BasketDiscount(ApplicationResult):
+    """
+    For when an offer application leads to a simple discount off the basket's
+    total
+    """
+    def __init__(self, amount):
+        self.discount = amount
+
+    @property
+    def is_successful(self):
+        return self.discount > 0
+
+
+# Helper global as returning zero discount is quite common
+ZERO_DISCOUNT = BasketDiscount(D('0.00'))
+
+
+class ShippingDiscount(ApplicationResult):
+    """
+    For when an offer application leads to a discount from the shipping cost
+    """
+    is_successful = is_final = True
+
+
+SHIPPING_DISCOUNT = ShippingDiscount()
 
 
 # ========
@@ -1093,7 +1131,7 @@ class PercentageDiscountBenefit(Benefit):
 
         if discount > 0:
             condition.consume_items(basket, affected_lines)
-        return discount
+        return BasketDiscount(discount)
 
 
 class AbsoluteDiscountBenefit(Benefit):
@@ -1121,7 +1159,7 @@ class AbsoluteDiscountBenefit(Benefit):
     def apply(self, basket, condition, offer=None):
         line_tuples = self.get_applicable_lines(basket)
         if not line_tuples:
-            return self.round(D('0.00'))
+            return ZERO_DISCOUNT
 
         discount = D('0.00')
         affected_items = 0
@@ -1146,7 +1184,7 @@ class AbsoluteDiscountBenefit(Benefit):
         if discount > 0:
             condition.consume_items(basket, affected_lines)
 
-        return discount
+        return BasketDiscount(discount)
 
 
 class FixedPriceBenefit(Benefit):
@@ -1178,11 +1216,11 @@ class FixedPriceBenefit(Benefit):
 
     def apply(self, basket, condition, offer=None):
         if isinstance(condition, ValueCondition):
-            return self.round(D('0.00'))
+            return ZERO_DISCOUNT
 
         line_tuples = self.get_applicable_lines(basket, range=condition.range)
         if not line_tuples:
-            return self.round(D('0.00'))
+            return ZERO_DISCOUNT
 
         # Determine the lines to consume
         num_permitted = int(condition.value)
@@ -1203,7 +1241,7 @@ class FixedPriceBenefit(Benefit):
                 break
         discount = max(value_affected - self.value, D('0.00'))
         if not discount:
-            return self.round(discount)
+            return ZERO_DISCOUNT
 
         # Apply discount to the affected lines
         discount_applied = D('0.00')
@@ -1218,7 +1256,7 @@ class FixedPriceBenefit(Benefit):
                     discount * (price * quantity) / value_affected)
             line.discount(line_discount, quantity)
             discount_applied += line_discount
-        return discount
+        return BasketDiscount(discount)
 
 
 class MultibuyDiscountBenefit(Benefit):
@@ -1241,7 +1279,7 @@ class MultibuyDiscountBenefit(Benefit):
     def apply(self, basket, condition, offer=None):
         line_tuples = self.get_applicable_lines(basket)
         if not line_tuples:
-            return self.round(D('0.00'))
+            return ZERO_DISCOUNT
 
         # Cheapest line gives free product
         discount, line = line_tuples[0]
@@ -1250,7 +1288,7 @@ class MultibuyDiscountBenefit(Benefit):
         affected_lines = [(line, discount, 1)]
         condition.consume_items(basket, affected_lines)
 
-        return discount
+        return BasketDiscount(discount)
 
 
 # =================
@@ -1267,7 +1305,7 @@ class ShippingBenefit(Benefit):
         basket.shipping_offer = offer
 
         condition.consume_items(basket, affected_lines=())
-        return D('0.00')
+        return SHIPPING_DISCOUNT
 
 
 class ShippingAbsoluteDiscountBenefit(ShippingBenefit):

@@ -163,8 +163,9 @@ class AbstractBasket(models.Model):
         This is used to compare offers before and after a basket change to see
         if there is a difference.
         """
-        offers = dict([(d['offer'].id, d['offer']) for d in
-                       self.get_discounts()])
+        if not self.discounts:
+            return {}
+        offers = self.discounts.offers()
         if include_shipping and self.shipping_offer:
             offers[self.shipping_offer.id] = self.shipping_offer
         return offers
@@ -341,22 +342,14 @@ class AbstractBasket(models.Model):
         Return basket discounts from non-voucher sources.  Does not include
         shipping discounts.
         """
-        offer_discounts = []
-        for discount in self.get_discounts():
-            if not discount['voucher']:
-                offer_discounts.append(discount)
-        return offer_discounts
+        return self.discounts.offer_discounts
 
     @property
     def voucher_discounts(self):
         """
         Return discounts from vouchers
         """
-        voucher_discounts = []
-        for discount in self.get_discounts():
-            if discount['voucher']:
-                voucher_discounts.append(discount)
-        return voucher_discounts
+        return self.discounts.voucher_discounts
 
     @property
     def grouped_voucher_discounts(self):

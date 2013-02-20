@@ -1,7 +1,6 @@
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import ugettext_lazy as _
 
-
 from oscar.apps.shipping.methods import (
     Free, NoShippingRequired, OfferDiscount)
 

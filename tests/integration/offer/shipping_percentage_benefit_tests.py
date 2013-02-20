@@ -26,8 +26,8 @@ class TestAPercentageDiscountAppliedWithCountCondition(TestCase):
         self.basket = G(Basket)
 
     def test_applies_correctly_to_empty_basket(self):
-        discount = self.benefit.apply(self.basket, self.condition, self.offer)
-        self.assertEqual(D('0.00'), discount)
+        result = self.benefit.apply(self.basket, self.condition, self.offer)
+        self.assertEqual(D('0.00'), result.discount)
         self.assertEqual(0, self.basket.num_items_with_discount)
         self.assertEqual(0, self.basket.num_items_without_discount)
         self.assertEqual(50, self.basket.shipping_offer.benefit.value)
