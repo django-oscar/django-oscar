@@ -9,6 +9,7 @@ from django.utils.translation import ugettext as _
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 
 from oscar.apps.basket.managers import OpenBasketManager, SavedBasketManager
+from oscar.apps.offer import results
 from oscar.templatetags.currency_filters import currency
 
 
@@ -62,7 +63,7 @@ class AbstractBasket(models.Model):
     def __init__(self, *args, **kwargs):
         super(AbstractBasket, self).__init__(*args, **kwargs)
         self._lines = None  # Cached queryset of lines
-        self.discounts = None  # Dictionary of discounts
+        self.offer_applications = results.OfferApplications()
         self.exempt_from_tax = False
 
     def __unicode__(self):
@@ -151,11 +152,6 @@ class AbstractBasket(models.Model):
         self._lines = None
     add_product.alters_data = True
 
-    def get_discounts(self):
-        if self.discounts is None:
-            self.discounts = []
-        return self.discounts
-
     def get_discount_offers(self, include_shipping=True):
         """
         Return a dict of offers used in discounts for this basket AND shipping.
@@ -163,26 +159,18 @@ class AbstractBasket(models.Model):
         This is used to compare offers before and after a basket change to see
         if there is a difference.
         """
-        if not self.discounts:
+        if not self.offer_applications:
             return {}
-        offers = self.discounts.offers()
+        offers = self.offer_applications.offers()
         if include_shipping and self.shipping_offer:
             offers[self.shipping_offer.id] = self.shipping_offer
         return offers
 
-    def set_discounts(self, discounts):
-        """
-        Sets the discounts that apply to this basket.
-
-        This should be a list of dictionaries
-        """
-        self.discounts = discounts
-
-    def remove_discounts(self):
+    def reset_offer_applications(self):
         """
         Remove any discounts so they get recalculated
         """
-        self.discounts = []
+        self.offer_applications = []
         self._lines = None
         self.shipping_offer = None
 
@@ -342,14 +330,14 @@ class AbstractBasket(models.Model):
         Return basket discounts from non-voucher sources.  Does not include
         shipping discounts.
         """
-        return self.discounts.offer_discounts
+        return self.offer_applications.offer_discounts
 
     @property
     def voucher_discounts(self):
         """
         Return discounts from vouchers
         """
-        return self.discounts.voucher_discounts
+        return self.offer_applications.voucher_discounts
 
     @property
     def grouped_voucher_discounts(self):

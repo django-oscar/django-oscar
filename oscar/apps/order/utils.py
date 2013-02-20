@@ -72,7 +72,7 @@ class OrderCreator(object):
             self.update_stock_records(line)
 
         # Record discounts (including any on the shipping method)
-        for discount in basket.get_discounts():
+        for discount in basket.offer_applications:
             self.create_discount_model(order, discount)
             self.record_discount(discount)
         if shipping_method.is_discounted:
