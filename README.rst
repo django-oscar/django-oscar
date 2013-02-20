@@ -96,6 +96,10 @@ at: http://localhost:8000.  Want to make changes?  Check out the
 The sandbox site is also available to browse at 
 http://latest.oscarcommerce.com
 
+Translations can be contributed using Transifex_.
+
+.. _Transifex: https://www.transifex.com/projects/p/django-oscar/
+
 Extensions
 ----------
 
@@ -161,6 +165,7 @@ Tangent projects:
   is a B2B site and not browsable by the public)
 * Chocolate Box - https://www.thechocolatebox.com.au
 * The UK Labour party - http://shop.labour.org.uk
+* Meridian Audio - http://www.meridian-audio.co.uk
 
 .. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/landmark.thumb.png
     :target: http://www.landmarkonthenet.com
@@ -173,6 +178,9 @@ Tangent projects:
 
 .. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/labourshop.thumb.png
     :target: https://shop.labour.org.uk
+
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/meridian.thumb.png
+    :target: http://www.meridian-audio.co.uk
 
 Non-Tangent:
 

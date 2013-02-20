@@ -55,7 +55,7 @@
                     <p>{{ review.date_created }}<p>
                     <p>{{ review.body|linebreaks }}</p>
                     <p><a href="{{ review.get_absolute_url }}">Permalink</a>
-					{% include 'reviews/_vote_bit.html' %}
+					{% include 'catalogue/reviews/vote_bit.html' %}
                     {% if review.has_votes %}
 					<p>{% blocktrans count review.num_up_votes as counter %}
 					1 customer agreed.

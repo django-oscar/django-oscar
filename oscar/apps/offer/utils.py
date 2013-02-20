@@ -89,7 +89,7 @@ class Applicator(object):
         nondate_based_offers = ConditionalOffer.objects.filter(
             offer_type=ConditionalOffer.SITE,
             status=ConditionalOffer.OPEN,
-            start_date=None, end_date=None)
+            start_datetime=None, end_datetime=None)
         return list(chain(date_based_offers, nondate_based_offers))
 
     def get_basket_offers(self, basket, user):

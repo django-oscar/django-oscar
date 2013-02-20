@@ -92,16 +92,28 @@ class TestAnAuthenticatedUser(WebTestCase):
 
 class TestAnAnonymousUser(WebTestCase):
 
-    def test_can_login(self):
-        email, password = 'd@d.com', 'mypassword'
-        User.objects.create_user('_', email, password)
-
+    def assertCanLogin(self, email, password):
         url = reverse('customer:login')
         form = self.app.get(url).forms['login_form']
         form['login-username'] = email
         form['login-password'] = password
         response = form.submit('login_submit')
         self.assertRedirectsTo(response, 'customer:summary')
+
+    def test_can_login(self):
+        email, password = 'd@d.com', 'mypassword'
+        User.objects.create_user('_', email, password)
+        self.assertCanLogin(email, password)
+
+    def test_can_login_with_email_containing_capitals_in_local_part(self):
+        email, password = 'Andrew.Smith@test.com', 'mypassword'
+        User.objects.create_user('_', email, password)
+        self.assertCanLogin(email, password)
+
+    def test_can_login_with_email_containing_capitals_in_host(self):
+        email, password = 'Andrew.Smith@teSt.com', 'mypassword'
+        User.objects.create_user('_', email, password)
+        self.assertCanLogin(email, password)
 
     def test_can_register(self):
         url = reverse('customer:register')

@@ -378,7 +378,7 @@ class AbstractProduct(models.Model):
     @property
     def is_available_to_buy(self):
         """
-        Test whether to show an add-to-basket button for this product
+        Test whether this product is available to be purchased
         """
         if self.is_group:
             # If any one of this product's variants is available, then we treat
@@ -387,7 +387,6 @@ class AbstractProduct(models.Model):
                 if variant.is_available_to_buy:
                     return True
             return False
-
         if not self.product_class.track_stock:
             return True
         return self.has_stockrecord and self.stockrecord.is_available_to_buy
@@ -554,13 +553,10 @@ class ProductAttributesContainer(object):
     def __getattr__(self, name):
         if not name.startswith('_') and not self.initialised:
             values = list(self.get_values().select_related('attribute'))
-            result = None
             for v in values:
                 setattr(self, v.attribute.code, v.value)
-                if v.attribute.code == name:
-                    result = v.value
             self.initialised = True
-            return result
+            return getattr(self, name)
         raise AttributeError(
             _("%(obj)s has no attribute named '%(attr)s'") % {
                 'obj': self.product.product_class, 'attr': name})

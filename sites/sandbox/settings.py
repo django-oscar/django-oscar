@@ -305,9 +305,13 @@ OSCAR_ORDER_STATUS_PIPELINE = {
 OSCAR_SHOP_NAME = 'Oscar Sandbox'
 OSCAR_SHOP_TAGLINE = 'e-Commerce for Django'
 
-GOOGLE_ANALYTICS_ID = 'UA-XXXXX-Y'
+# Enter Google Analytics ID for the tracking to be included in the templates
+#GOOGLE_ANALYTICS_ID = 'UA-XXXXX-Y'
 
 COMPRESS_ENABLED = True
+COMPRESS_PRECOMPILERS = (
+    ('text/less', 'lessc {infile} {outfile}'),
+)
 
 LOG_ROOT = location('logs')
 # Ensure log root exists

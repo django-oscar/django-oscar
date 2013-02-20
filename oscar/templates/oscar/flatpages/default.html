@@ -1,9 +1,13 @@
 {% extends "layout.html" %}
 
+{% block title %}
+{{ flatpage.title}} | {{ block.super }}
+{% endblock %}
+
 {% block headertext %}
 {{ flatpage.title }}
 {% endblock %}
 
-{% block flatpage %}
+{% block content %}
 <article>{{ flatpage.content|linebreaks }}</article>
 {% endblock %}

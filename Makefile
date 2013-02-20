@@ -27,7 +27,7 @@ demo: install
 	sites/demo/manage.py loaddata countries.json sites/_fixtures/pages.json sites/_fixtures/auth.json
 	sites/demo/manage.py rebuild_index --noinput
 
-test: 
+test:
 	./runtests.py tests/
 
 ci: install lint
@@ -41,15 +41,19 @@ lint:
 travis: install test lint
 
 i18n:
-	# Create the .po files used for i18n 
+	# Create the .po files used for i18n
 	cd oscar; \
-		../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=de; \
-		../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=fr; \
-		../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=pl; \
-		../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=ru; \
-		../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=es; \
-		../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=it; \
-		../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=da
+	../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=de; \
+	../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=fr; \
+	../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=pl; \
+	../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=ru; \
+	../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=es; \
+	../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=it; \
+	../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=da; \
+	../sites/sandbox/manage.py makemessages --ignore=sandbox/ --locale=sk
+
+tx:
+	tx pull
 
 puppet:
 	# Install puppet modules required to set-up a Vagrant box
@@ -60,3 +64,8 @@ puppet:
 	git clone git://github.com/akumria/puppet-postgresql.git sites/puppet/modules/postgresql
 	git clone git://github.com/uggedal/puppet-module-python.git sites/puppet/modules/python
 	git clone git://github.com/codeinthehole/puppet-userconfig.git sites/puppet/modules/userconfig
+
+css:
+	lessc oscar/static/oscar/less/styles.less > oscar/static/oscar/css/styles.css
+	lessc oscar/static/oscar/less/responsive.less > oscar/static/oscar/css/responsive.css
+	lessc oscar/static/oscar/less/dashboard.less > oscar/static/oscar/css/dashboard.css
