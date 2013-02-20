@@ -47,7 +47,7 @@ class OfferApplications(object):
         return discounts
 
     @property
-    def application_messages(self):
+    def post_order_actions(self):
         """
         Return successful offer applications which didn't lead to a discount
         """

@@ -1060,6 +1060,7 @@ class BasketDiscount(ApplicationResult):
     For when an offer application leads to a simple discount off the basket's
     total
     """
+
     def __init__(self, amount):
         self.discount = amount
 
@@ -1080,6 +1081,17 @@ class ShippingDiscount(ApplicationResult):
 
 
 SHIPPING_DISCOUNT = ShippingDiscount()
+
+
+class PostOrderAction(ApplicationResult):
+    """
+    For when an offer condition is met but the benefit is deferred until after
+    the order has been placed.  Eg buy 2 books and get 100 loyalty points.
+    """
+    is_final = is_successful = True
+
+    def __init__(self, description):
+        self.description = description
 
 
 # ========

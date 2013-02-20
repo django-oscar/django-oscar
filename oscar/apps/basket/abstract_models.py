@@ -340,6 +340,13 @@ class AbstractBasket(models.Model):
         return self.offer_applications.voucher_discounts
 
     @property
+    def post_order_actions(self):
+        """
+        Return discounts from vouchers
+        """
+        return self.offer_applications.post_order_actions
+
+    @property
     def grouped_voucher_discounts(self):
         """
         Return discounts from vouchers but grouped so that a voucher which

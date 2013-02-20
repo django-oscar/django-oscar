@@ -114,7 +114,11 @@
 					{% if offer_discounts %}
 						{% for discount in offer_discounts %}
 						<tr>
-                            <td class="basket-discount">{% trans "Special offer:" %} {{ discount.name }}</td>
+                            <td class="basket-discount">{% trans "Special offer:" %} {{ discount.name }}
+                                {% if discount.description %}
+                                <br/><small>{{ discount.description }}</small>
+                                {% endif %}
+                            </td>
 							<td class="align-right">-{{ discount.discount|currency }}</td>
 						</tr>
 						{% endfor %}
@@ -190,6 +194,22 @@
 					<td></td>
 				</tr>
 				{% endif %}
+
+                {% if basket.post_order_actions %}
+                    <tr>
+                        <th>{% trans "Post order actions" %}</th>
+                        <td></td>
+                    </tr>
+                    {% for discount in basket.post_order_actions %}
+                    <tr>
+                        <td colspan="2">
+                            {{ discount.description }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                {% endif %}
+
 
 				<tr>
                     <th class="total"><h4>{% trans "Order total" %}</h4></th>
