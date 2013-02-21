@@ -16,14 +16,14 @@
     {% if session_offer.benefit %}
         <div class="well">
             <a href="{% if session_offer.pk %}{% url dashboard:offer-benefit session_offer.pk %}{% else %}{% url dashboard:offer-benefit %}{% endif %}" class="btn pull-right">{% trans "Edit" %}</a>
-            <p><strong>{% trans "Incentive" %}:</strong><br /> {{ session_offer.benefit }}</p>
+            <p><strong>{% trans "Incentive" %}:</strong><br /> {{ session_offer.benefit.description|safe }}</p>
 
         </div>
     {% endif %}
     {% if session_offer.condition %}
         <div class="well">
             <a href="{% if session_offer.pk %}{% url dashboard:offer-condition session_offer.pk %}{% else %}{% url dashboard:offer-condition %}{% endif %}" class="btn pull-right">{% trans "Edit" %}</a>
-            <p><strong>{% trans "Condition" %}:</strong><br/>{{ session_offer.condition }}</p>
+            <p><strong>{% trans "Condition" %}:</strong><br/>{{ session_offer.condition.description|safe }}</p>
         </div>
     {% endif %}
     {% if session_offer.pk %}
