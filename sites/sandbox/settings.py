@@ -324,7 +324,7 @@ OSCAR_SHOP_TAGLINE = 'e-Commerce for Django'
 #GOOGLE_ANALYTICS_ID = 'UA-XXXXX-Y'
 
 # Use Less to compile CSS
-COMPRESS_ENABLED = True
+COMPRESS_ENABLED = False
 COMPRESS_PRECOMPILERS = (
     ('text/less', 'lessc {infile} {outfile}'),
 )
