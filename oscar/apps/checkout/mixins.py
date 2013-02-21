@@ -159,12 +159,13 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         shipping_addr.save()
         return shipping_addr
 
-    def create_user_address(self, addr_data):
+    def create_user_address(self, session_addr_data):
         """
         For signed-in users, we create a user address model which will go
         into their address book.
         """
         if self.request.user.is_authenticated():
+            addr_data = session_addr_data.copy()
             addr_data['user_id'] = self.request.user.id
             user_addr = UserAddress(**addr_data)
             # Check that this address isn't already in the db as we don't want
