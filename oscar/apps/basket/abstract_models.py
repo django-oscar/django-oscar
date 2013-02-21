@@ -152,25 +152,20 @@ class AbstractBasket(models.Model):
         self._lines = None
     add_product.alters_data = True
 
-    def get_discount_offers(self, include_shipping=True):
+    def applied_offers(self):
         """
-        Return a dict of offers used in discounts for this basket AND shipping.
+        Return a dict of offers successfully applied to the basket.
 
         This is used to compare offers before and after a basket change to see
         if there is a difference.
         """
-        if not self.offer_applications:
-            return {}
-        offers = self.offer_applications.offers()
-        if include_shipping and self.shipping_offer:
-            offers[self.shipping_offer.id] = self.shipping_offer
-        return offers
+        return self.offer_applications.offers
 
     def reset_offer_applications(self):
         """
         Remove any discounts so they get recalculated
         """
-        self.offer_applications = []
+        self.offer_applications = results.OfferApplications()
         self._lines = None
         self.shipping_offer = None
 
@@ -352,18 +347,7 @@ class AbstractBasket(models.Model):
         Return discounts from vouchers but grouped so that a voucher which
         links to multiple offers is aggregated into one object.
         """
-        voucher_discounts = {}
-        for discount in self.voucher_discounts:
-            voucher = discount['voucher']
-            if voucher.code not in voucher_discounts:
-                voucher_discounts[voucher.code] = {
-                    'voucher': voucher,
-                    'discount': discount['discount'],
-                }
-            else:
-                voucher_discounts[voucher.code] += discount.discount
-
-        return voucher_discounts.values()
+        return self.offer_applications.grouped_voucher_discounts
 
     @property
     def total_excl_tax_excl_discounts(self):

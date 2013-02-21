@@ -47,6 +47,26 @@ class OfferApplications(object):
         return discounts
 
     @property
+    def grouped_voucher_discounts(self):
+        """
+        Return voucher discounts aggregated up to the voucher level.
+
+        This is different to the voucher_discounts property as a voucher can
+        have multiple offers associated with it.
+        """
+        voucher_discounts = {}
+        for application in self.voucher_discounts:
+            voucher = application['voucher']
+            if voucher.code not in voucher_discounts:
+                voucher_discounts[voucher.code] = {
+                    'voucher': voucher,
+                    'discount': application['discount'],
+                }
+            else:
+                voucher_discounts[voucher.code] += application.discount
+        return voucher_discounts.values()
+
+    @property
     def post_order_actions(self):
         """
         Return successful offer applications which didn't lead to a discount
@@ -57,6 +77,10 @@ class OfferApplications(object):
                 applications.append(application)
         return applications
 
+    @property
     def offers(self):
+        """
+        Return a dict of offers that were successfully applied
+        """
         return dict([(a['offer'].id, a['offer']) for a in
                      self.applications.values()])
