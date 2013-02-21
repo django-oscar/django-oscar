@@ -37,7 +37,7 @@ class Node(object):
             return None
         node = Node(self.label, self.url_name, self.access_fn)
         for child in self.children:
-            if child.is_visible(node):
+            if child.is_visible(user):
                 node.add_child(child)
         return node
 
