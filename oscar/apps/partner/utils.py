@@ -14,18 +14,18 @@ ProductClass, Product, Category, ProductCategory = get_classes(
 
 
 class StockImporter(object):
-    
+
     def __init__(self, logger, partner, delimiter):
         self.logger = logger
         self._delimiter = delimiter
-        
+
         try:
             self._partner = Partner.objects.get(name=partner)
         except Partner.DoesNotExist:
             name_list = ", ".join([d['name'] for d in Partner.objects.values('name')])
             raise ImportError(_("Partner named '%(partner)s' does not exist (existing partners: %(list)s)") % {
                               'partner': partner, 'list': name_list})
-        
+
     def handle(self, file_path=None):
         u"""Handles the actual import process"""
         if not file_path:
@@ -47,40 +47,40 @@ class StockImporter(object):
             stats['unchanged_items'],
             stats['unmatched_items'])
         self.logger.info(msg)
-    
+
     def _import_row(self, row_number, row, stats):
         if len(row) != 3:
             self.logger.error("Row number %d has an invalid number of fields, skipping..." % row_number)
         else:
             self._update_stockrecord(*row[:3], row_number=row_number, stats=stats)
-    
+
     def _update_stockrecord(self, partner_sku, price_excl_tax, num_in_stock, row_number, stats):
-        try:         
+        try:
             stock = StockRecord.objects.get(partner=self._partner, partner_sku=partner_sku)
         except StockRecord.DoesNotExist:
             stats['unmatched_items'] += 1
             self.logger.error("\t - Row %d: StockRecord for partner '%s' and sku '%s' does not exist, skipping..." % (row_number, self._partner, partner_sku))
             return
-        
+
         price_changed = False
         if stock.price_excl_tax != D(price_excl_tax):
             stock.price_excl_tax = D(price_excl_tax)
             price_changed = True
-            
-        stock_changed = False    
+
+        stock_changed = False
         if stock.num_in_stock != int(num_in_stock):
             stock.num_in_stock = num_in_stock
             stock_changed = True
-        
+
         if price_changed or stock_changed:
             stock.save()
-            
+
             msg = " SKU %s:" % (partner_sku)
             if price_changed:
                 msg += '\n - Price set to %s' % (price_excl_tax)
             if stock_changed:
                 msg += '\n - Stock set to %s' % num_in_stock
-            self.logger.info(msg)            
+            self.logger.info(msg)
             stats['updated_items'] += 1
         else:
             stats['unchanged_items'] += 1
@@ -91,14 +91,14 @@ class CatalogueImporter(object):
     """
     A catalogue importer object
     """
-    
+
     _flush = False
-    
+
     def __init__(self, logger, delimiter=",", flush=False):
         self.logger = logger
         self._delimiter = delimiter
         self._flush = flush
-    
+
     def handle(self, file_path=None):
         u"""Handles the actual import process"""
         if not file_path:
@@ -108,7 +108,7 @@ class CatalogueImporter(object):
             self.logger.info(" - Flushing product data before import")
             self._flush_product_data()
         self._import(file_path)
-        
+
     def _flush_product_data(self):
         u"""Flush out product and stock models"""
         ProductClass.objects.all().delete()
@@ -126,7 +126,7 @@ class CatalogueImporter(object):
             self._import_row(row_number, row, stats)
         msg = "New items: %d, updated items: %d" % (stats['new_items'], stats['updated_items'])
         self.logger.info(msg)
-    
+
     def _import_row(self, row_number, row, stats):
         if len(row) != 4 and len(row) != 8:
             self.logger.error("Row number %d has an invalid number of fields (%d), skipping..." % (row_number, len(row)))
@@ -135,7 +135,7 @@ class CatalogueImporter(object):
         if len(row) == 8:
             # With stock data
             self._create_stockrecord(item, *row[4:8], stats=stats)
-            
+
     def _create_item(self, upc, title, description, product_class, stats):
         # Ignore any entries that are NULL
         if description == 'NULL':
@@ -158,42 +158,44 @@ class CatalogueImporter(object):
         # Category
         cat = create_from_breadcrumbs('Books > Fiction')
         ProductCategory.objects.create(product=item, category=cat)
-        
+
         return item
-        
-    def _create_stockrecord(self, item, partner_name, partner_sku, price_excl_tax, num_in_stock, stats):            
+
+    def _create_stockrecord(self, item, partner_name, partner_sku,
+                            price_excl_tax, num_in_stock, stats):
         # Create partner and stock record
-        partner, _ = Partner.objects.get_or_create(name=partner_name)
+        partner, _ = Partner.objects.get_or_create(
+            name=partner_name, defaults={'display_name': partner_name})
         try:
             stock = StockRecord.objects.get(partner_sku=partner_sku)
         except StockRecord.DoesNotExist:
             stock = StockRecord()
-        
+
         stock.product = item
         stock.partner = partner
         stock.partner_sku = partner_sku
         stock.price_excl_tax = D(price_excl_tax)
         stock.num_in_stock = num_in_stock
-        stock.save()    
-    
-        
+        stock.save()
+
+
 class Validator(object):
-    
+
     def validate(self, file_path):
         self._exists(file_path)
         self._is_file(file_path)
         self._is_readable(file_path)
-    
+
     def _exists(self, file_path):
         u"""Check whether a file exists"""
         if not os.path.exists(file_path):
             raise ImportError(_("%s does not exist") % (file_path))
-        
+
     def _is_file(self, file_path):
         u"""Check whether file is actually a file type"""
         if not os.path.isfile(file_path):
             raise ImportError(_("%s is not a file") % (file_path))
-        
+
     def _is_readable(self, file_path):
         u"""Check file is readable"""
         try:

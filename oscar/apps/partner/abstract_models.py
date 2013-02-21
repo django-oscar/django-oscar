@@ -46,16 +46,21 @@ class AbstractPartner(models.Model):
     """
     Fulfillment partner
     """
+    # Name shouldn't be translated or displayed to customers as it is used as
+    # the lookup key for partner wrappers, which provide availability
+    # information.
     name = models.CharField(_("Name"), max_length=128, unique=True)
+    display_name = models.CharField(_("Display name"), max_length=128)
 
     # A partner can have users assigned to it.  These can be used
     # to provide authentication for webservices etc.
-    users = models.ManyToManyField('auth.User', related_name="partners", blank=True, null=True,
+    users = models.ManyToManyField(
+        'auth.User', related_name="partners", blank=True, null=True,
         verbose_name=_("Users"))
 
     class Meta:
-        verbose_name = _('Fulfillment Partner')
-        verbose_name_plural = _('Fulfillment Partners')
+        verbose_name = _('Fulfillment partner')
+        verbose_name_plural = _('Fulfillment partners')
         abstract = True
         permissions = (
             ("can_edit_stock_records", _("Can edit stock records")),
