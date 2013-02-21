@@ -73,7 +73,7 @@ class OfferApplications(object):
         """
         applications = []
         for application in self.applications.values():
-            if not application['discount']:
+            if application['result'].affects_post_order:
                 applications.append(application)
         return applications
 

@@ -111,6 +111,7 @@
                         <th>{% trans "Basket total (before discounts)" %}</th>
 						<td class="align-right">{{ basket.total_incl_tax_excl_discounts|currency }}</td>
 					</tr>
+
 					{% if offer_discounts %}
 						{% for discount in offer_discounts %}
 						<tr>
@@ -123,6 +124,7 @@
 						</tr>
 						{% endfor %}
 					{% endif %}
+
 					{% if voucher_discounts %}
 						<tr>
                             <th>{% trans "Vouchers" %}</th>
@@ -141,6 +143,7 @@
 						</tr>
 						{% endfor %}
 					{% endif %}
+
 					<tr>
                         <th class="total">{% trans "Basket total (after discounts)" %}</th>
 						<th class="total align-right">{{ basket.total_incl_tax|currency }}</th>
@@ -203,6 +206,7 @@
                     {% for discount in basket.post_order_actions %}
                     <tr>
                         <td colspan="2">
+                            {{ discount }}
                             {{ discount.description }}
                         </td>
                     </tr>

@@ -1061,8 +1061,28 @@ class ValueCondition(Condition):
 
 class ApplicationResult(object):
     is_final = is_successful = False
+    # Basket discount
     discount = D('0.00')
     description = None
+
+    # Offer applications can affect 3 distinct things
+    # (a) Give a discount off the BASKET total
+    # (b) Give a discount off the SHIPPING total
+    # (a) Trigger a post-order action
+    BASKET, SHIPPING, POST_ORDER = range(0, 3)
+    affects = None
+
+    @property
+    def affects_basket(self):
+        return self.affects == self.BASKET
+
+    @property
+    def affects_shipping(self):
+        return self.affects == self.SHIPPING
+
+    @property
+    def affects_post_order(self):
+        return self.affects == self.POST_ORDER
 
 
 class BasketDiscount(ApplicationResult):
@@ -1070,6 +1090,7 @@ class BasketDiscount(ApplicationResult):
     For when an offer application leads to a simple discount off the basket's
     total
     """
+    affects = ApplicationResult.BASKET
 
     def __init__(self, amount):
         self.discount = amount
@@ -1088,6 +1109,7 @@ class ShippingDiscount(ApplicationResult):
     For when an offer application leads to a discount from the shipping cost
     """
     is_successful = is_final = True
+    affects = ApplicationResult.SHIPPING
 
 
 SHIPPING_DISCOUNT = ShippingDiscount()
@@ -1099,6 +1121,7 @@ class PostOrderAction(ApplicationResult):
     the order has been placed.  Eg buy 2 books and get 100 loyalty points.
     """
     is_final = is_successful = True
+    affects = ApplicationResult.POST_ORDER
 
     def __init__(self, description):
         self.description = description
