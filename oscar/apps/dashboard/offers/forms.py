@@ -84,8 +84,9 @@ class ConditionForm(forms.ModelForm):
                   "select a custom condition"))
 
         if not data['custom_condition']:
-            if not data['range']:
-                raise
+            if not data.get('range', None):
+                raise forms.ValidationError(
+                    _("A range is required"))
 
         return data
 
@@ -117,10 +118,9 @@ class BenefitForm(forms.ModelForm):
             if benefit:
                 self.fields['custom_benefit'].initial = benefit.id
         else:
-            # No custom benefit and so the type/value fields
+            # No custom benefit and so the type fields
             # are no longer optional
-            for field in ('type', 'value'):
-                self.fields[field].required = True
+            self.fields['type'].required = True
 
     class Meta:
         model = Benefit
