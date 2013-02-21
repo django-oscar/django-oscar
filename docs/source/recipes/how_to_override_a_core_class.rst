@@ -14,17 +14,43 @@ matches the module path from oscar: ``order.utils.OrderNumberGenerator``.  This
 could subclass the class from oscar or not.  An example implementation is::
 
     # yourproject/order/utils.py
-    
+
     from oscar.apps.order.utils import OrderNumberGenerator as CoreOrderNumberGenerator
 
 
     class OrderNumberGenerator(CoreOrderNumberGenerator):
-        
+
         def order_number(self, basket=None):
             num = super(OrderNumberGenerator, self).order_number(basket)
             return "SHOP-%s" % num
 
-the same module path as the one from oscar, that is, 
+the same module path as the one from oscar, that is, ``yourproject.order.utils``.
+
+INSTALLED_APPS tweak
+--------------------
+
+You will need to add your app that contains the overriding class, into INSTALLED_APPS
+in ``settings.py``, as well as let Oscar know that you're replacing the stock-standard
+app with yours.
+You can do that by supplying an extra argument to ``get_core_apps`` function::
+
+    # settings.py
+
+    from oscar import get_core_apps
+    # ...
+    INSTALLED_APPS = [
+        # all your apps in here as usual, EXCLUDING yourproject.order
+    ] + get_core_apps(['yourproject.order'])
+
+Testing
+-------
+
+You can test whether your overriding worked by trying to get a class from your module::
+
+    # in REPL
+
+    from oscar.core.loading import get_class
+    get_class('order.utils', ('OrderNumberGenerator'))
 
 Discussion
 ----------
