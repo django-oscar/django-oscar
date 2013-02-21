@@ -207,21 +207,23 @@ class AbstractBasket(models.Model):
                                              line.quantity)
             existing_line.save()
             line.delete()
+        finally:
+            self._lines = None
     merge_line.alters_data = True
 
     def merge(self, basket, add_quantities=True):
         """
         Merges another basket with this one.
 
-        :basket: The basket to merge into this one
+        :basket: The basket to merge into this one.
         :add_quantities: Whether to add line quantities when they are merged.
         """
         for line_to_merge in basket.all_lines():
             self.merge_line(line_to_merge, add_quantities)
         basket.status = self.MERGED
         basket.date_merged = now()
+        basket._lines = None
         basket.save()
-        self._lines = None
     merge.alters_data = True
 
     def freeze(self):
