@@ -11,7 +11,7 @@ product_viewed
 .. data:: oscar.apps.catalogue.signals.product_viewed
     :class:
 
-Raised when a product detail page is viewed.  
+Raised when a product detail page is viewed.
 
 Arguments sent with this signal:
 
@@ -117,3 +117,25 @@ Arguments sent with this signal:
 ``user``
     The user creating the order (not necessarily the user linked to the order
     instance!)
+
+review_creatd
+--------------
+
+.. data:: oscar.apps.catalogue.reviews.signals.review_added
+    :class:
+
+Raised when a product detail page is viewed.
+
+Arguments sent with this signal:
+
+``review``
+    The review that was created
+
+``user``
+    The user performing the action
+
+``request``
+    The request instance
+
+``response``
+    The response instance
