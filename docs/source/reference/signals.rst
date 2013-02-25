@@ -118,7 +118,7 @@ Arguments sent with this signal:
     The user creating the order (not necessarily the user linked to the order
     instance!)
 
-review_creatd
+review_created
 --------------
 
 .. data:: oscar.apps.catalogue.reviews.signals.review_added
