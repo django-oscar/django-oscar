@@ -38,6 +38,7 @@ sites/sandbox/*.sqlite
 sites/sandbox/assets/
 sites/sandbox/public/
 sites/sandbox/whoosh_index/
+sites/sandbox/logs/
 sites/demo/*.sqlite
 sites/demo/assets/
 sites/demo/public/

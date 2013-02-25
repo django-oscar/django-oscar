@@ -78,10 +78,10 @@
     <h3>{% trans "Add to a page" %}</h3>
 </div>
 <div class="well">
-    <form action="." method="post" class="form-inline">
+    <form action="." method="post" class="form-stacked">
     	{% csrf_token %}
     	<input type="hidden" name="action" value="add_to_page" />
-    	{% include "partials/form_fields_inline.html" with form=link_form %}
+    	{% include "partials/form_fields.html" with form=link_form %}
 		<button type="submit" class="btn btn-success">{% trans "Add to page" %}</button>
     </form>
 </div>

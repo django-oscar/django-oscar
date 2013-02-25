@@ -102,6 +102,11 @@ td .btn-toolbar {
   }
 }
 .form-inline {
+  select {
+    min-width:200px;
+  }
+}
+.form-inline {
   margin-bottom: 0;
   .help-block:first-child {
     display:none;
@@ -148,16 +153,14 @@ td .btn-toolbar {
   .form-horizontal,
   .form-stacked {
     input[type=text],
-    textarea,
-    select {
+    textarea {
       width:95%;
     }
   }
   .form-stacked {
     .form-inline {
       input[type=text],
-      textarea,
-      select {
+      textarea {
         width:auto;
       }
     }
@@ -195,8 +198,7 @@ input[type=text].hasDatepicker,
       color:#B94A48;
     }
   }
-  input[type=text],
-  select {
+  input[type=text] {
     width: 140px;
   }
 }
@@ -707,6 +709,14 @@ caption,
     text-align: center;
   }
 }
+#product_category {
+  select {
+    width:350px;
+  }
+}
+.catalogue .tab-content {
+  overflow:visible;
+}
 .upload-image {
   .clearfix();
   margin:0;
@@ -787,7 +797,6 @@ div[data-spy="affix"].affix {
 .bs-docs-sidenav > li > a,
 .bs-docs-sidenav > li > span {
   display: block;
-  width: 190px \9;
   margin: 0 0 -1px;
   padding: 8px 14px;
   border: 1px solid #e5e5e5;
@@ -843,9 +852,10 @@ div[data-spy="affix"].affix {
   }
 }
 .fixed-actions {
-  margin-bottom:150px;
+  margin-bottom:180px;
   .fixed-actions-group {
     margin:0;
+    z-index:1010;
     position:fixed;
     bottom:0;
     left:0;
@@ -866,43 +876,79 @@ div[data-spy="affix"].affix {
   }
 }
 
-.stock-pricing {
-    label,
-    .control-group div {
-      display: inline-block;
-    }
-    label,
-    .control-group div {
-      width:100px;
-    }
-    select {
-      width:130px;
-    }
-    input[type=text] {
-       width:120px;
-    }
+
+/* Sidenav for Docs
+-------------------------------------------------- */
+div[data-spy="affix"] {
+  width:266px;
 }
-.product-details,
-.product-details + .well {
-    input[type=text],
-    select {
-        width: 50%;
-    }
+div[data-spy="affix"].affix {
+  top:@baseLineHeight;
 }
+
+.bs-docs-sidenav {
+  padding: 0;
+  background-color: #fff;
+  -webkit-box-shadow: 0 1px 4px rgba(0,0,0,.065);
+     -moz-box-shadow: 0 1px 4px rgba(0,0,0,.065);
+          box-shadow: 0 1px 4px rgba(0,0,0,.065);
+}
+.bs-docs-sidenav > li > a {
+  display: block;
+  width: 190px \9;
+  margin: 0 0 -1px;
+  padding: 8px 14px;
+  border: 1px solid #e5e5e5;
+  color:@linkColor;
+  &:hover {
+   background:#f1faff;
+  }
+  i.icon-info-sign {
+    color:#ea0001;
+    font-size:16px;
+  }
+}
+.bs-docs-sidenav > .active > a {
+  font-weight:bold;
+  position: relative;
+  color:@linkColor;
+  background:#f1faff;
+  z-index: 2;
+  padding: 9px 15px;
+  border-left: 0;
+  border-right: 0;
+  text-shadow: 0 1px 0 rgba(0,0,0,.15);
+  -webkit-box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
+     -moz-box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
+          box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
+  &:hover {
+    background:#f1faff;
+    color:@linkColor;
+  }
+  &:after {
+    border-bottom: 10px solid transparent;
+    border-left: 10px solid #f1faff;
+    border-top: 10px solid transparent;
+    content: "";
+    display: inline-block;
+    position: absolute;
+    right: -9px;
+    top: 9px;
+  }
+  &:before {
+    border-bottom: 11px solid transparent;
+    border-left: 11px solid #ccc;
+    border-top: 11px solid transparent;
+    content: "";
+    display: inline-block;
+    position: absolute;
+    right: -10px;
+    top: 8px;
+  }
+}
+
 // PLUGINS
 // -----
- /* date picker */
- #ui-datepicker-div {background:#FFFFFF;width:218px;box-shadow:2px 2px 2px #AAAAAA;}
- #ui-datepicker-div .ui-datepicker-header {position:relative;padding:5px;text-align:center;background:#dddddd;font-weight:bold;}
- #ui-datepicker-div .ui-datepicker-prev {position:absolute;top:6px;left:6px;cursor:pointer;}
- #ui-datepicker-div .ui-datepicker-next {position:absolute;top:6px;right:6px;cursor:pointer;}
- #ui-datepicker-div table {width:100%;}
- #ui-datepicker-div th,
- #ui-datepicker-div td {padding:0px;text-align:center;}
- #ui-datepicker-div th {padding:4px;}
- #ui-datepicker-div td a {padding:4px;display:block;}
- #ui-datepicker-div td .ui-state-highlight {background:#eeeeee;}
- #ui-datepicker-div td .ui-state-active {color:#FFFFFF;background:#0088CC;}
 
 /* TINY SCROLL BAR */
  .scroll-pane {
