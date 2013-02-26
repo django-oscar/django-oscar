@@ -155,7 +155,9 @@ class ProductForm(forms.ModelForm):
         self.set_initial_attribute_values(kwargs)
         super(ProductForm, self).__init__(*args, **kwargs)
         self.add_attribute_fields()
-        self.fields['related_products'].queryset = Product.objects.all().order_by('title')
+        related_products = self.fields.get('related_products', None)
+        if related_products is not None:
+            related_products.queryset = self.get_related_products_queryset()
 
     def set_initial_attribute_values(self, kwargs):
         if kwargs.get('instance', None) is None:
@@ -177,6 +179,9 @@ class ProductForm(forms.ModelForm):
 
     def get_attribute_field(self, attribute):
         return self.FIELD_FACTORIES[attribute.type](attribute)
+
+    def get_related_products_queryset(self):
+        return Product.objects.all().order_by('title')
 
     class Meta:
         model = Product
