@@ -181,7 +181,7 @@ class ProductForm(forms.ModelForm):
         return self.FIELD_FACTORIES[attribute.type](attribute)
 
     def get_related_products_queryset(self):
-        return Product.objects.all().order_by('title')
+        return Product.browsable.order_by('title')
 
     class Meta:
         model = Product
