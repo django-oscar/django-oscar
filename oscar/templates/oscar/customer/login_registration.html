@@ -20,7 +20,7 @@
 
 <div class="row-fluid">
     <div class="span6 login_form">
-        <form id="login_form" action="{{ request.get_full_path }}" method="post" class="form-stacked">
+        <form id="login_form" action="{{ request.get_full_path }}" method="post" class="form-stacked" >
             <h2>{% trans 'Log In' %}</h2>
             {% csrf_token %}
             {% include "partials/form_fields.html" with form=login_form %}
