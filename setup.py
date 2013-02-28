@@ -9,12 +9,14 @@ To release a new version to PyPi:
 
 from setuptools import setup, find_packages
 import os
+import sys
 
 from oscar import get_version
 
 PROJECT_DIR = os.path.dirname(__file__)
 
-# Change to the current directory to solve an issue installing Oscar on the Vagrant machine.
+# Change to the current directory to solve an issue installing Oscar on the
+# Vagrant machine.
 if PROJECT_DIR:
     os.chdir(PROJECT_DIR)
 
@@ -55,3 +57,16 @@ setup(name='django-oscar',
           'Programming Language :: Python',
           'Topic :: Other/Nonlisted Topic']
       )
+
+# Show contributing instructions if being installed in 'develop' mode
+if len(sys.argv) > 1 and sys.argv[1] == 'develop':
+    url = 'http://django-oscar.readthedocs.org/en/latest/contributing.html'
+    msg = (
+        "You're installing Oscar in 'develop' mode so I presume you're thinking\n"
+        "of contributing:\n\n"
+        "(a) That's brilliant - thank you for your time\n"
+        "(b) If you have any questions, please use the mailing list:\n    django-oscar@googlegroups.com\n"
+        "(c) There are more detailed contributing guidelines that you should "
+        "have a look at:\n    %s\n\nHappy hacking!") % url
+    line = '=' * 82
+    print "\n%s\n%s\n%s" % (line, msg, line)
