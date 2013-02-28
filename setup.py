@@ -31,7 +31,7 @@ setup(name='django-oscar',
       packages=find_packages(exclude=["sandbox*", "tests*"]),
       include_package_data=True,
       install_requires=[
-          'django>=1.4',
+          'django>=1.4,<1.5',
           'PIL==1.1.7',
           'South>=0.7.6,<0.8',
           'django-extra-views>=0.2,<0.6',
