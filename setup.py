@@ -9,12 +9,14 @@ To release a new version to PyPi:
 
 from setuptools import setup, find_packages
 import os
+import sys
 
 from oscar import get_version
 
 PROJECT_DIR = os.path.dirname(__file__)
 
-# Change to the current directory to solve an issue installing Oscar on the Vagrant machine.
+# Change to the current directory to solve an issue installing Oscar on the
+# Vagrant machine.
 if PROJECT_DIR:
     os.chdir(PROJECT_DIR)
 
@@ -55,3 +57,23 @@ setup(name='django-oscar',
           'Programming Language :: Python',
           'Topic :: Other/Nonlisted Topic']
       )
+
+# Show contributing instructions if being installed in 'develop' mode
+if len(sys.argv) > 1 and sys.argv[1] == 'develop':
+    docs_url = 'http://django-oscar.readthedocs.org/en/latest/contributing.html'
+    mailing_list = 'django-oscar@googlegroups.com'
+    mailing_list_url = 'https://groups.google.com/forum/?fromgroups#!forum/django-oscar'
+    twitter_url = 'https://twitter.com/django_oscar'
+    msg = (
+        "You're installing Oscar in 'develop' mode so I presume you're thinking\n"
+        "of contributing:\n\n"
+        "(a) That's brilliant - thank you for your time\n"
+        "(b) If you have any questions, please use the mailing list:\n    %s\n"
+        "    %s\n"
+        "(c) There are more detailed contributing guidelines that you should "
+        "have a look at:\n    %s\n"
+        "(d) Consider following @django_oscar on Twitter to stay up-to-date\n"
+        "    %s\n\nHappy hacking!") % (mailing_list, mailing_list_url,
+                                       docs_url, twitter_url)
+    line = '=' * 82
+    print "\n%s\n%s\n%s" % (line, msg, line)
