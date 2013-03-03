@@ -22,3 +22,4 @@ pyflakes==0.5.0
 django-oscar-testsupport==0.2
 pyprof2calltree==1.1.0
 transifex-client==0.8
+django-haystack>=1.2.4,<=1.2.7
