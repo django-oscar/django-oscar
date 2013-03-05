@@ -8,6 +8,10 @@ from oscar.apps.shipping import Scales
 
 
 class ShippingMethod(models.Model):
+    """
+    Fields from shipping.base.ShippingMethod must be added here manually.
+    """
+
     code = models.SlugField(_("Slug"), max_length=128, unique=True)
     name = models.CharField(_("Name"), max_length=128, unique=True)
     description = models.TextField(_("Description"), blank=True)
@@ -16,6 +20,7 @@ class ShippingMethod(models.Model):
     countries = models.ManyToManyField('address.Country', null=True,
                                        blank=True, verbose_name=_("Countries"))
 
+    is_discounted = False
     _basket = None
 
     class Meta:

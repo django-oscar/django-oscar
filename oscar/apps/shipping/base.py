@@ -1,6 +1,10 @@
 class ShippingMethod(object):
     """
-    Superclass for all shipping method objects
+    Superclass for all shipping method objects.
+
+    It is an actual superclass to the classes in methods.py, and a de-facto
+    superclass to the classes in models.py. This allows using all
+    shipping methods interchangeably.
     """
     code = '__default__'
     name = 'Default shipping'
