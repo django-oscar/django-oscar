@@ -62,3 +62,5 @@ class Option(AbstractOption):
 
 class ProductImage(AbstractProductImage):
     pass
+
+from .receivers import *
