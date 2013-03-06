@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 
@@ -24,6 +25,13 @@ class TestCategory(TestCase):
     def test_enforces_slug_uniqueness(self):
         with self.assertRaises(ValidationError):
             self.products.add_child(name="Books")
+
+
+class TestANonAsciiCategory(TestCase):
+
+    def test_has_a_nonempty_slug(self):
+        cat = models.Category.add_root(name=u'διακριτικός')
+        self.assertTrue(len(cat.slug) > 0)
 
 
 class TestMovingACategory(TestCase):

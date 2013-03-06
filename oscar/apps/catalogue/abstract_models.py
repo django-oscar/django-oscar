@@ -7,10 +7,10 @@ from django.db.models import get_model
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
-from django.template.defaultfilters import slugify
 from django.core.exceptions import ObjectDoesNotExist
 from treebeard.mp_tree import MP_Node
 
+from oscar.core.utils import slugify
 from oscar.core.loading import get_class
 BrowsableProductManager = get_class('catalogue.managers',
                                     'BrowsableProductManager')

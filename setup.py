@@ -43,6 +43,8 @@ setup(name='django-oscar',
           'python-memcached>=1.48,<1.49',
           'Babel>=0.9,<0.10',
           'django-compressor>=1.2,<1.3',
+          # For converting non-ASCII to ASCII when creating slugs
+          'Unidecode>=0.04.12,<0.05',
           'virtual-node>=0.0.1',
           'virtual-less>=0.0.1-1.3.3'],
       dependency_links=['https://github.com/toastdriven/django-haystack/tarball/f91a9a7ce6fb26093f4ecf09b28d71cf4b59283c#egg=django-haystack-2.0.0-beta'],
