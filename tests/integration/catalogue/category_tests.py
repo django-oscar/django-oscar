@@ -26,7 +26,7 @@ class TestCategory(TestCase):
             self.products.add_child(name="Books")
 
 
-class TestCategoryTree(TestCase):
+class TestMovingACategory(TestCase):
 
     def setUp(self):
         breadcrumbs = (
@@ -40,31 +40,34 @@ class TestCategoryTree(TestCase):
         for trail in breadcrumbs:
             create_from_breadcrumbs(trail)
 
+        horror = models.Category.objects.get(name="Horror")
+        programming = models.Category.objects.get(name="Programming")
+        horror.move(programming)
+
+        # Reload horror instance to pick up changes
+        self.horror = models.Category.objects.get(name="Horror")
+
     def print_tree(self, tree=None):
+        """
+        Print out the category tree
+        """
         if tree is None:
             tree = models.Category.objects.filter(depth=1)
         for node in tree:
             print node
             self.print_tree(node.get_children())
 
-    def test_snoke(self):
-        self.print_tree()
-        horror = models.Category.objects.get(name="Horror")
-        programming = models.Category.objects.get(name="Programming")
-        # Move horror to be a sibling of programming
-        horror.move(programming)
-        self.print_tree()
-
-        # Reload horror to pick up changes
-        horror_reloaded = models.Category.objects.get(name="Horror")
+    def test_updates_instance_name(self):
         self.assertEqual('Books > Non-fiction > Horror',
-                         horror_reloaded.full_name)
+                         self.horror.full_name)
 
-        # Check subtree is updated
+    def test_updates_subtree_names(self):
         teen = models.Category.objects.get(name="Teen")
         self.assertEqual('Books > Non-fiction > Horror > Teen',
                          teen.full_name)
-
+        gothic = models.Category.objects.get(name="Gothic")
+        self.assertEqual('Books > Non-fiction > Horror > Gothic',
+                         gothic.full_name)
 
 
 class TestCategoryFactory(TestCase):
