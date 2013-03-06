@@ -20,6 +20,8 @@ UserAddress = get_model('address', 'UserAddress')
 Basket = get_model('basket', 'Basket')
 CommunicationEventType = get_model('customer', 'CommunicationEventType')
 
+post_checkout = get_class('checkout.signals', 'post_checkout')
+
 # Standard logger for checkout events
 logger = logging.getLogger('oscar.checkout')
 
@@ -37,6 +39,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
 
     # Default code for the email to send after successful checkout
     communication_type_code = 'ORDER_PLACED'
+    view_signal = post_checkout
 
     def handle_order_placement(self, order_number, basket, total_incl_tax,
                                total_excl_tax, user=None, **kwargs):
@@ -82,7 +85,13 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         # Save order id in session so thank-you page can load it
         self.request.session['checkout_order_id'] = order.id
 
-        return HttpResponseRedirect(self.get_success_url())
+        response = HttpResponseRedirect(self.get_success_url())
+        self.send_signal(self.request, response, order)
+        return response
+
+    def send_signal(self, request, response, order):
+        self.view_signal.send(sender=self, order=order, user=request.user,
+                              request=request, response=response)
 
     def get_success_url(self):
         return reverse('checkout:thank-you')
