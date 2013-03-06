@@ -3,4 +3,8 @@ from django.template import defaultfilters
 
 
 def slugify(value):
-    return defaultfilters.slugify(unidecode(value))
+    """
+    Slugify a string (even if it contains non-ASCII chars)
+    """
+    return defaultfilters.slugify(
+        unidecode(unicode(value)))

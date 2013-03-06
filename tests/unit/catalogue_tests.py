@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.core.exceptions import ValidationError
 
 from oscar.apps.catalogue.models import (Product, ProductClass,
                                          ProductAttribute,
