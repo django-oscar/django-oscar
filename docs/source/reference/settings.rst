@@ -220,6 +220,15 @@ Default: ``images/promotions/``
 
 The folder within ``MEDIA_ROOT`` used for uploaded promotion images.
 
+OSCAR_PROMOTION_POSITIONS
+-----------------------------------------
+
+Default::
+
+    OSCAR_PROMOTION_POSITIONS = (('page', 'Page'),
+                                 ('right', 'Right-hand sidebar'),
+                                 ('left', 'Left-hand sidebar'))
+
 OSCAR_MISSING_IMAGE_URL
 -----------------------
 
