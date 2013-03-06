@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.db.models.loading import get_model
 from django.http import HttpResponseRedirect
-from django.template.defaultfilters import slugify
+from oscar.core.utils import slugify
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
