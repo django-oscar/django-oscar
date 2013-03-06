@@ -7,18 +7,64 @@ from oscar.apps.catalogue.categories import create_from_breadcrumbs
 
 class TestCategory(TestCase):
 
+    def setUp(self):
+        self.products = models.Category.add_root(name="Products")
+        self.books = self.products.add_child(name="Books")
+
+    def test_includes_parents_name_in_full_name(self):
+        self.assertTrue('Products' in self.books.full_name)
+
+    def test_includes_slug_in_slug(self):
+        self.assertTrue(self.products.slug in self.books.slug)
+
     def test_supports_has_children_method(self):
-        """Supports has_children method"""
-        root = models.Category.add_root(name="Products")
-        self.assertFalse(root.has_children())
-        root.add_child(name="Books")
-        self.assertTrue(root.has_children())
+        """supports has_children method"""
+        self.assertTrue(self.products.has_children())
 
     def test_enforces_slug_uniqueness(self):
-        root = models.Category.add_root(name="Products")
-        root.add_child(name="Books")
         with self.assertRaises(ValidationError):
-            root.add_child(name="Books")
+            self.products.add_child(name="Books")
+
+
+class TestCategoryTree(TestCase):
+
+    def setUp(self):
+        breadcrumbs = (
+            'Books > Fiction > Horror > Teen',
+            'Books > Fiction > Horror > Gothic',
+            'Books > Fiction > Comedy',
+            'Books > Non-fiction > Biography',
+            'Books > Non-fiction > Programming',
+            'Books > Childrens',
+        )
+        for trail in breadcrumbs:
+            create_from_breadcrumbs(trail)
+
+    def print_tree(self, tree=None):
+        if tree is None:
+            tree = models.Category.objects.filter(depth=1)
+        for node in tree:
+            print node
+            self.print_tree(node.get_children())
+
+    def test_snoke(self):
+        self.print_tree()
+        horror = models.Category.objects.get(name="Horror")
+        programming = models.Category.objects.get(name="Programming")
+        # Move horror to be a sibling of programming
+        horror.move(programming)
+        self.print_tree()
+
+        # Reload horror to pick up changes
+        horror_reloaded = models.Category.objects.get(name="Horror")
+        self.assertEqual('Books > Non-fiction > Horror',
+                         horror_reloaded.full_name)
+
+        # Check subtree is updated
+        teen = models.Category.objects.get(name="Teen")
+        self.assertEqual('Books > Non-fiction > Horror > Teen',
+                         teen.full_name)
+
 
 
 class TestCategoryFactory(TestCase):
