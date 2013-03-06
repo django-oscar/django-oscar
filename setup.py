@@ -34,15 +34,28 @@ setup(name='django-oscar',
       include_package_data=True,
       install_requires=[
           'django>=1.4,<1.5',
+          # PIL is required for image fields
           'PIL==1.1.7',
+          # Oscar ships with migraations
           'South>=0.7.6,<0.8',
+          # We use the ModelFormSetView from django-extra-views for the basket page
           'django-extra-views>=0.2,<0.6',
+          # We ship a simple Haystack implementation (that needs to be
+          # improved).  We are using the 2.0-beta release from Github and
+          # eagerly anticipating a stable 2.0 release on PyPI.
           'django-haystack==2.0.0-beta',
+          # Treebeard is used for categories
           'django-treebeard>=1.61,<1.62',
+          # Sorl is used as the default thumbnailer
           'sorl-thumbnail==11.12',
           'python-memcached>=1.48,<1.49',
+          # Babel is used for currency formatting
           'Babel>=0.9,<0.10',
+          # Oscar's default templates use compressor (but you can override
+          # this)
           'django-compressor>=1.2,<1.3',
+          # Oscar's default CSS is generated from Less and so we need node.js
+          # and lessc to be available to compile the Less files.
           'virtual-node>=0.0.1',
           'virtual-less>=0.0.1-1.3.3'],
       dependency_links=['https://github.com/toastdriven/django-haystack/tarball/f91a9a7ce6fb26093f4ecf09b28d71cf4b59283c#egg=django-haystack-2.0.0-beta'],
