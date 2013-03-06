@@ -67,22 +67,6 @@ OSCAR_PARTNER_WRAPPERS
 
 Default: ``{}``
 
-OSCAR_PROMOTION_MERCHANDISING_BLOCK_TYPES
------------------------------------------
-
-Default::
-
-    COUNTDOWN, LIST, SINGLE_PRODUCT, TABBED_BLOCK = (
-        'Countdown', 'List', 'SingleProduct', 'TabbedBlock')
-    OSCAR_PROMOTION_MERCHANDISING_BLOCK_TYPES = (
-        (COUNTDOWN, "Vertical list"),
-        (LIST, "Horizontal list"),
-        (TABBED_BLOCK, "Tabbed block"),
-        (SINGLE_PRODUCT, "Single product"),
-    )
-
-Defines the available promotion block types that can be used in Oscar.
-
 OSCAR_ALLOW_ANON_REVIEWS
 ------------------------
 
@@ -220,12 +204,40 @@ The folder name can contain date format strings as described in the `Django Docs
 
 .. _`Django Docs`: https://docs.djangoproject.com/en/dev/ref/models/fields/#filefield
 
+OSCAR_PROMOTION_MERCHANDISING_BLOCK_TYPES
+-----------------------------------------
+
+Default::
+
+    COUNTDOWN, LIST, SINGLE_PRODUCT, TABBED_BLOCK = (
+        'Countdown', 'List', 'SingleProduct', 'TabbedBlock')
+    OSCAR_PROMOTION_MERCHANDISING_BLOCK_TYPES = (
+        (COUNTDOWN, "Vertical list"),
+        (LIST, "Horizontal list"),
+        (TABBED_BLOCK, "Tabbed block"),
+        (SINGLE_PRODUCT, "Single product"),
+    )
+
+Defines the available promotion block types that can be used in Oscar.
+
 OSCAR_PROMOTION_FOLDER
 ----------------------
 
 Default: ``images/promotions/``
 
 The folder within ``MEDIA_ROOT`` used for uploaded promotion images.
+
+OSCAR_PROMOTION_POSITIONS
+-------------------------
+
+Default::
+
+    OSCAR_PROMOTION_POSITIONS = (('page', 'Page'),
+                                 ('right', 'Right-hand sidebar'),
+                                 ('left', 'Left-hand sidebar'))
+
+The choice of display locations available when editing a promotion. Only 
+useful when using a new set of templates.
 
 OSCAR_MISSING_IMAGE_URL
 -----------------------
