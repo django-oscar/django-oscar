@@ -2,8 +2,8 @@ from decimal import Decimal as D
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from django.template.defaultfilters import slugify
 
+from oscar.core.utils import slugify
 from oscar.apps.shipping import Scales
 
 

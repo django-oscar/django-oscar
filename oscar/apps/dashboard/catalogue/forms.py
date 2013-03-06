@@ -1,7 +1,7 @@
 from django import forms
 from django.forms.models import inlineformset_factory, BaseInlineFormSet
 from django.db.models import get_model
-from django.template.defaultfilters import slugify
+from oscar.core.utils import slugify
 from django.utils.translation import ugettext_lazy as _
 
 from treebeard.forms import MoveNodeForm
@@ -214,7 +214,7 @@ class ProductForm(forms.ModelForm):
         elif 'parent' in data and data['parent'] is None and not data['title']:
             raise forms.ValidationError(_("Parent products must have a title"))
         # calling the clean() method of BaseForm here is required to apply checks
-        # for 'unique' field. This prevents e.g. the UPC field from raising 
+        # for 'unique' field. This prevents e.g. the UPC field from raising
         # a DatabaseError.
         return super(ProductForm, self).clean()
 
