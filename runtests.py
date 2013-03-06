@@ -24,19 +24,26 @@ if __name__ == '__main__':
                       action='store_true')
     parser.add_option('--with-xunit', dest='xunit', default=False,
                       action='store_true')
+    parser.add_option('--collect-only', dest='collect', default=False,
+                      action='store_true')
     options, args = parser.parse_args()
 
-    # If no args, then use 'progressive' plugin to keep the screen real estate
-    # used down to a minimum.  Otherwise, use the spec plugin
-    nose_args = ['-s', '-x',
-                 '--with-progressive' if not args else '--with-spec']
+    if options.collect:
+        # Show tests only so a bash autocompleter can use the results
+        configure(['-v'])
+        run_tests()
+    else:
+        # If no args, then use 'progressive' plugin to keep the screen real estate
+        # used down to a minimum.  Otherwise, use the spec plugin
+        nose_args = ['-s', '-x',
+                    '--with-progressive' if not args else '--with-spec']
 
-    if options.coverage:
-        # Nose automatically uses any options passed to runtests.py, which is
-        # why the coverage trigger uses '--with-coverage' and why we don't need
-        # to explicitly include it here.
-        nose_args.extend([
-            '--cover-package=oscar', '--cover-html',
-            '--cover-html-dir=htmlcov'])
-    configure(nose_args)
-    run_tests(*args)
+        if options.coverage:
+            # Nose automatically uses any options passed to runtests.py, which is
+            # why the coverage trigger uses '--with-coverage' and why we don't need
+            # to explicitly include it here.
+            nose_args.extend([
+                '--cover-package=oscar', '--cover-html',
+                '--cover-html-dir=htmlcov'])
+        configure(nose_args)
+        run_tests(*args)
