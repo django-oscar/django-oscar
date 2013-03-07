@@ -186,12 +186,20 @@ Non-Tangent:
 
 * Dolbeau - http://www.dolbeau.ca/
 * Sobusa - http://www.sobusa.fr/
+* Laivee - http://laivee.pl
+* Colinss - http://colinss.com
 
 .. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/dolbeau.thumb.png
     :target: http://www.dolbeau.ca
 
 .. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/sobusa.thumb.png
     :target: http://www.sobusa.fr
+
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/laivee.thumb.png
+    :target: http://www.laivee.pl
+
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/colinss.thumb.png
+    :target: http://www.colinss
 
 Many more on the way.  If you use Oscar in production, please let us know.
 
