@@ -199,7 +199,7 @@ Non-Tangent:
     :target: http://www.laivee.pl
 
 .. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/colinss.thumb.png
-    :target: http://www.colinss
+    :target: http://www.colinss.com
 
 Many more on the way.  If you use Oscar in production, please let us know.
 
