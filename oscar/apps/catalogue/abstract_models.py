@@ -551,7 +551,9 @@ class ProductAttributesContainer(object):
         self.initialised = False
 
     def __getattr__(self, name):
-        if not name.startswith('_') and not self.initialised:
+        if not name.startswith('_') and not object.__getattr__(
+            self, 'initialised', False):
+
             values = list(self.get_values().select_related('attribute'))
             for v in values:
                 setattr(self, v.attribute.code, v.value)
