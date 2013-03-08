@@ -58,7 +58,7 @@ var oscar = (function(o, $) {
             $('.js-disable-on-click').click(function(){$(this).button('loading');});
         },
         submitIfNotLocked: function(event) {
-            $form = $(this);
+            var $form = $(this);
             if ($form.data('locked')) {
                 return false;
             }
