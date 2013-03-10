@@ -118,6 +118,27 @@ Arguments sent with this signal:
     The user creating the order (not necessarily the user linked to the order
     instance!)
 
+post_checkout
+-------------
+
+.. data:: oscar.apps.checkout.signals.post_checkout
+    :class:
+
+Raised by the :class:`oscar.apps.checkout.mixins.OrderPlacementMixin` class
+when a customer completes the checkout process.
+
+``order``
+    The order created
+
+``user``
+    The user who completed the checkout
+
+``request``
+    The request instance
+
+``response``
+    The response instance
+
 review_created
 --------------
 
