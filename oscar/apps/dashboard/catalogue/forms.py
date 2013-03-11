@@ -262,7 +262,8 @@ class ProductCategoryFormSet(BaseInlineFormSet):
 
 ProductCategoryFormSet = inlineformset_factory(
     Product, ProductCategory, form=ProductCategoryForm,
-    formset=ProductCategoryFormSet, fields=('category',), extra=1)
+    formset=ProductCategoryFormSet, fields=('category',), extra=1,
+    can_delete=False)
 
 
 class ProductImageForm(forms.ModelForm):
