@@ -1,12 +1,13 @@
 from django import forms
+from django.conf import settings
 from django.forms.models import inlineformset_factory
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.forms.fields import ExtendedURLField
 from oscar.core.loading import get_classes
-from oscar.apps.promotions.conf import PROMOTION_CLASSES, PROMOTION_POSITIONS
+from oscar.apps.promotions.conf import PROMOTION_CLASSES
 
-RawHTML, SingleProduct, PagePromotion, HandPickedProductList, OrderedProduct = get_classes('promotions.models', 
+RawHTML, SingleProduct, PagePromotion, HandPickedProductList, OrderedProduct = get_classes('promotions.models',
     ['RawHTML', 'SingleProduct', 'PagePromotion', 'HandPickedProductList',
      'OrderedProduct'])
 
@@ -37,7 +38,7 @@ OrderedProductFormSet = inlineformset_factory(HandPickedProductList,
 
 class PagePromotionForm(forms.ModelForm):
     page_url = ExtendedURLField(label=_("URL"))
-    position = forms.CharField(widget=forms.Select(choices=PROMOTION_POSITIONS),
+    position = forms.CharField(widget=forms.Select(choices=settings.OSCAR_PROMOTION_POSITIONS),
                                label=_("Position"),
                                help_text=_("Where in the page this content block will appear"))
 
