@@ -94,15 +94,15 @@
                                     <tbody>
                                         <tr>
                                             <th>{% trans "Views" %}</th>
-                                            <td>{{ stats.num_views }}</td>
+                                            <td>{{ stats.num_views|default:0 }}</td>
                                         </tr>
                                         <tr>
                                             <th>{% trans "Baskets" %}</th>
-                                            <td>{{ stats.num_basket_additions }}</td>
+                                            <td>{{ stats.num_basket_additions|default:0 }}</td>
                                         </tr>
                                         <tr>
                                             <th>{% trans "Purchases" %}</th>
-                                            <td>{{ stats.num_purchases }}</td>
+                                            <td>{{ stats.num_purchases|default:0 }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
