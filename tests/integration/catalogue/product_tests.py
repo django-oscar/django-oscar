@@ -7,22 +7,6 @@ from oscar.apps.catalogue.models import (Product, ProductClass,
                                          AttributeOption)
 
 
-class TestProductClassModel(TestCase):
-
-    def test_slug_is_auto_created(self):
-        books = ProductClass.objects.create(
-            name="Book",
-        )
-        self.assertEqual('book', books.slug)
-
-    def test_has_attribute_for_whether_shipping_is_required(self):
-        ""
-        ProductClass.objects.create(
-            name="Download",
-            requires_shipping=False
-        )
-
-
 class ProductTests(TestCase):
 
     def setUp(self):
@@ -110,3 +94,4 @@ class ProductAttributeCreationTests(TestCase):
         invalid_option.option = 'invalid option'
         self.assertRaises(ValidationError, pa.get_validator(),
                           invalid_option)
+
