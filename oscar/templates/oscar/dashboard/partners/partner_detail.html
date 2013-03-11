@@ -1,0 +1,32 @@
+{% extends 'dashboard/layout.html' %}
+{% load i18n %}
+
+{% block title %}
+{% blocktrans with name=partner.name %}
+{{ name }} | Partner management
+{% endblocktrans %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="{% url dashboard:partner-list %}">{% trans "Partner management" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active">'{{ partner.name }}'</li>
+</ul>
+{% endblock %}
+
+{% block header %}
+<div class="page-header">
+    <form id="status_form" class="pull-right" method="post" action=".">
+        {% csrf_token %}
+        <a class="btn btn-danger" href="{% url dashboard:partner-delete partner.pk %}">{% trans "Delete partner" %}</a>
+    </form>
+    <h1>{{ partner.name }}</h1>
+</div>
+{% endblock header %}
