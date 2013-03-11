@@ -2,7 +2,7 @@ from decimal import Decimal as D, ROUND_DOWN, ROUND_UP
 import math
 
 from django.core import exceptions
-from django.template.defaultfilters import slugify, date
+from django.template.defaultfilters import date
 from django.db import models
 from django.utils.timezone import now
 from django.utils.translation import ungettext, ugettext as _
@@ -11,6 +11,7 @@ from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.conf import settings
 
+from oscar.core.utils import slugify
 from oscar.apps.offer.managers import ActiveOfferManager
 from oscar.templatetags.currency_filters import currency
 from oscar.models.fields import PositiveDecimalField, ExtendedURLField

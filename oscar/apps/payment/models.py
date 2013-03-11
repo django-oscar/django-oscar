@@ -1,7 +1,7 @@
 from decimal import Decimal
 
 from django.db import models
-from django.template.defaultfilters import slugify
+from oscar.core.utils import slugify
 from django.utils.translation import ugettext as _
 from django.conf import settings
 

@@ -54,6 +54,8 @@ setup(name='django-oscar',
           # Oscar's default templates use compressor (but you can override
           # this)
           'django-compressor>=1.2,<1.3',
+          # For converting non-ASCII to ASCII when creating slugs
+          'Unidecode>=0.04.12,<0.05',
           # Oscar's default CSS is generated from Less and so we need node.js
           # and lessc to be available to compile the Less files.
           'virtual-node>=0.0.1',

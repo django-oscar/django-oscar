@@ -20,9 +20,9 @@ class TestACustomRange(TestCase):
         self.rng = custom.create_range(CustomRange)
 
     def test_correctly_includes_match(self):
-        test_product = create_product(title="A tale")
+        test_product = create_product(title=u"A tale")
         self.assertTrue(self.rng.contains_product(test_product))
 
     def test_correctly_excludes_nonmatch(self):
-        test_product = create_product(title="B tale")
+        test_product = create_product(title=u"B tale")
         self.assertFalse(self.rng.contains_product(test_product))
