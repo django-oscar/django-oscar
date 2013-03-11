@@ -65,7 +65,7 @@ Now set ``TEMPLATE_CONTEXT_PROCESSORS`` to:
         'oscar.apps.checkout.context_processors.checkout',
         'oscar.apps.customer.notifications.context_processors.notifications',
         'oscar.core.context_processors.metadata',
-    ) 
+    )
 
 Next, modify ``INSTALLED_APPS`` to be a list, add ``South`` and ``compressor``
 and append Oscar's core apps:
@@ -88,6 +88,20 @@ and append Oscar's core apps:
 
 Note that Oscar requires ``django.contrib.messages`` and
 ``django.contrib.flatpages`` which aren't included by default.
+
+Next, add ``django.contrib.flatpages.middleware.FlatpageFallbackMiddleware`` to
+your ``MIDDLEWARE_CLASSES`` setting:
+
+.. code-block:: django
+
+    MIDDLEWARE_CLASSES = (
+        ...
+        'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+    )
+
+More info about `django-flatpages installation`_ at the django-project website.
+
+.. _`django-flatpages installation`: https://docs.djangoproject.com/en/dev/ref/contrib/flatpages/#installation
 
 .. tip::
 
@@ -113,7 +127,7 @@ Modify your ``TEMPLATE_DIRS`` to include the main Oscar template directory:
 .. code-block:: django
 
     from oscar import OSCAR_MAIN_TEMPLATE_DIR
-    TEMPLATE_DIRS = TEMPLATE_DIRS + (OSCAR_MAIN_TEMPLATE_DIR,) 
+    TEMPLATE_DIRS = TEMPLATE_DIRS + (OSCAR_MAIN_TEMPLATE_DIR,)
 
 Oscar currently uses Haystack for search so you need to specify:
 
@@ -214,7 +228,7 @@ management command:
     mkvirtualenv frobshop # using virtualenvwrapper
     pip install Django
     django-admin.py startproject frobshop \
-        --template=https://github.com/tangentlabs/tangent-django-boilerplate/zipball/master 
+        --template=https://github.com/tangentlabs/tangent-django-boilerplate/zipball/master
 
 .. _virtualenv: http://www.virtualenv.org/en/latest/
 
