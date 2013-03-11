@@ -56,6 +56,7 @@ LANGUAGE_CODE = 'en-us'
 
 # This should match the locale folders in oscar/locale
 LANGUAGES = (
+    ('en-us', 'English'),         
     ('da', 'Danish'),
     ('de', 'German'),
     ('es', 'Spanish'),
@@ -137,6 +138,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     # Ensure a valid basket is added to the request instance for every request
     'oscar.apps.basket.middleware.BasketMiddleware',
     # Enable the ProfileMiddleware, then add ?cprofile to any
