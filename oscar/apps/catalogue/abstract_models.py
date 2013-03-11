@@ -548,6 +548,7 @@ class ProductAttributesContainer(object):
     """
 
     def __setstate__(self, state):
+        self.__dict__ = state
         self.initialised = False
 
     def __init__(self, product):

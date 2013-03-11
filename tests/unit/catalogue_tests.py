@@ -197,6 +197,30 @@ class ProductAttributeCreationTests(TestCase):
         self.option_1 = AttributeOption.objects.create(group=self.option_group, option='first')
         self.option_2 = AttributeOption.objects.create(group=self.option_group, option='second')
 
+    def test_product_pickling_does_not_cause_runtime_error(self):
+        import pickle
+        from StringIO import StringIO
+        src = StringIO()
+        pickler = pickle.Pickler(src)
+
+        product = Product.objects.create(title='test_product_pickling',
+                                         product_class=self.product_class)
+
+        try:
+            pickler.dump(product)
+        except RuntimeError:
+            self.fail("Pickling caused a RuntimeError to occur")
+
+        dst = StringIO(src.getvalue())
+        unpickler = pickle.Unpickler(dst)
+        try:
+            product2 = unpickler.load()
+        except RuntimeError:
+            self.fail("UnPickling caused a RuntimeError to occur")
+
+        assert product2 == product, \
+                "Product not unpickled correctly"
+
     def test_validating_option_attribute(self):
         pa = ProductAttribute.objects.create(product_class=self.product_class,
                                              name='test group',
