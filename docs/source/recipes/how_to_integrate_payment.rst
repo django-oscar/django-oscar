@@ -42,15 +42,33 @@ Integration into checkout
 -------------------------
 
 By default, Oscar's checkout does not provide any payment integration as it is
-domain-specific.  However, the core checkout classes do provide methods for
-creating payment sources.
+domain-specific.  However, the core checkout classes  provide methods for
+communicating with payment gateways and creating the appropriate payment models.
 
-Payment logic is normally implemented by overriding the ``handle_payment``
-method.  When payment has completed, there's a few things to do:
+Payment logic is normally implemented by using a customised version of
+``PaymentDetailsView``, where the ``handle_payment`` method is overridden.  This
+method will be given the order number and order total plus any custom keyword
+arguments initially passed to ``submit`` (as ``payment_kwargs``).  If payment is
+successful, then nothing needs to be returned.  However, Oscar defines a few
+common exceptions which can occur:
 
-* Create the appropriate Source instance and pass it to ``add_payment_source``.
-  The instance is passed unsaved as it can't be saved until there is a valid
-  order instance to foreign key to.
+* ``oscar.apps.payment.exceptions.RedirectRequired``  For payment integrations
+  that require redirecting the user to a 3rd-party site.  This exception class
+  has a ``url`` attribute that needs to be set.
+
+* ``oscar.apps.payment.exceptions.UnableToTakePayment`` For _anticipated_ payment
+  problems such as invalid bankcard number, not enough funds in account - that kind
+  of thing. 
+
+* ``oscar.apps.payment.exceptions.PaymentError``  For _unanticipated_ payment
+  errors such as the payment gateway not responding or being badly configured.
+
+When payment has completed, there's a few things to do:
+
+* Create the appropriate ``oscar.apps.payment.models.Source`` instance and pass
+  it to ``add_payment_source``.  The instance is passed unsaved as it requires a
+  valid order instance to foreign key to.  Once the order is placed (and an
+  order instance is created), the payment source instances will be saved.
 
 * Record a 'payment event' so your application can track which lines have been
   paid for.  The ``add_payment_event`` method assumes all lines are paid for by
@@ -59,20 +77,27 @@ method.  When payment has completed, there's a few things to do:
   
 For example::
 
+    from oscar.apps.checkout import views
     from oscar.apps.payment import models
 
-    def handle_payment(self, order_number, total_incl_tax, **kwargs):
-        # Talk to payment gateway.  If unsuccessful/error, raise an exception
-        reference = gateway.pre_auth(order_number, total_incl_tax, kwargs['bankcard'])
+    
+    # Subclass the core Oscar view so we can customise
+    class PaymentDetailsView(views.PaymentDetailsView):
 
-        # Record payment source
-        source_type, __ = models.SourceType.objects.get_or_create(
-            name="SomeGateway")
-        source = models.Source(
-            source_type=source_type,
-            amount_allocated=total_incl_tax,
-            reference=reference)
-        self.add_payment_source(source)
+        def handle_payment(self, order_number, total_incl_tax, **kwargs):
+            # Talk to payment gateway.  If unsuccessful/error, raise a
+            # PaymentError exception which we allow to percolate up to be caught
+            # and handled by the core PaymentDetailsView.
+            reference = gateway.pre_auth(order_number, total_incl_tax, kwargs['bankcard'])
 
-        # Record payment event
-        self.add_payment_event('pre-auth', total_incl_tax)
+            # Payment successful! Record payment source
+            source_type, __ = models.SourceType.objects.get_or_create(
+                name="SomeGateway")
+            source = models.Source(
+                source_type=source_type,
+                amount_allocated=total_incl_tax,
+                reference=reference)
+            self.add_payment_source(source)
+
+            # Record payment event
+            self.add_payment_event('pre-auth', total_incl_tax)

@@ -523,7 +523,9 @@ class AbstractLinePrice(models.Model):
 
 class AbstractPaymentEventType(models.Model):
     """
-    Payment events are things like 'Paid', 'Failed', 'Refunded'
+    Payment event types are things like 'Paid', 'Failed', 'Refunded'.
+
+    These are effectively the transaction types.
     """
     name = models.CharField(_("Name"), max_length=128, unique=True)
     code = models.SlugField(_("Code"), max_length=128, unique=True)
@@ -546,13 +548,20 @@ class AbstractPaymentEventType(models.Model):
 
 class AbstractPaymentEvent(models.Model):
     """
-    An event is something which happens to a line such as
-    payment being taken for 2 items, or 1 item being dispatched.
+    A payment event for an order
+
+    For example:
+
+    * All lines have been paid for
+    * 2 lines have been refunded
     """
-    order = models.ForeignKey('order.Order', related_name='payment_events', verbose_name=_("Order"))
+    order = models.ForeignKey(
+        'order.Order', related_name='payment_events', verbose_name=_("Order"))
     amount = models.DecimalField(_("Amount"), decimal_places=2, max_digits=12)
-    lines = models.ManyToManyField('order.Line', through='PaymentEventQuantity', verbose_name=_("Lines"))
-    event_type = models.ForeignKey('order.PaymentEventType', verbose_name=_("Event Type"))
+    lines = models.ManyToManyField(
+        'order.Line', through='PaymentEventQuantity', verbose_name=_("Lines"))
+    event_type = models.ForeignKey(
+        'order.PaymentEventType', verbose_name=_("Event Type"))
     date = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
     class Meta:
