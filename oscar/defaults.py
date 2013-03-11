@@ -110,6 +110,10 @@ OSCAR_DASHBOARD_NAVIGATION = [
                 'label': _('Statistics'),
                 'url_name': 'dashboard:order-stats',
             },
+            {
+                'label': _('Partners'),
+                'url_name': 'dashboard:partner-list',
+            },
         ]
     },
     {
