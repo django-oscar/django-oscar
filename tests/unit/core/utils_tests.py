@@ -10,3 +10,8 @@ class TestSlugify(TestCase):
         mapping = {'c++': 'cpp'}
         with override_settings(OSCAR_SLUG_MAP=mapping):
             self.assertEqual('cpp', slugify('c++'))
+
+    def test_uses_blacklist(self):
+        blacklist = ['the']
+        with override_settings(OSCAR_SLUG_BLACKLIST=blacklist):
+            self.assertEqual('bible', slugify('The Bible'))
