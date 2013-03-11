@@ -195,6 +195,13 @@ Default: 20
 
 The number of recently viewed products to store
 
+OSCAR_PRODUCTS_PER_PAGE
+------------------------------
+
+Default: 20
+
+The number of products to paginate by
+
 OSCAR_SEARCH_SUGGEST_LIMIT
 --------------------------
 
