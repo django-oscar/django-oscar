@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.http import HttpResponsePermanentRedirect, Http404
 from django.views.generic import ListView, DetailView
 from django.db.models import get_model
@@ -108,7 +109,7 @@ class ProductCategoryView(ListView):
     """
     context_object_name = "products"
     template_name = 'catalogue/browse.html'
-    paginate_by = 20
+    paginate_by = settings.OSCAR_PRODUCTS_PER_PAGE
 
     def get_categories(self):
         """
@@ -144,7 +145,7 @@ class ProductListView(ListView):
     """
     context_object_name = "products"
     template_name = 'catalogue/browse.html'
-    paginate_by = 20
+    paginate_by = settings.OSCAR_PRODUCTS_PER_PAGE
     search_signal = product_search
     model = Product
 
