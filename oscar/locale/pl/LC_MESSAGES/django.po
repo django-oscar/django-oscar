@@ -707,7 +707,7 @@ msgstr "Referencja pozycji"
 #: templates/oscar/dashboard/orders/line_detail.html:51
 #: templates/oscar/dashboard/orders/order_detail.html:93
 msgid "Quantity"
-msgstr "Ilość"
+msgstr "Liczba"
 
 #: apps/basket/abstract_models.py:484
 msgid "Price excl. Tax"
@@ -4493,7 +4493,7 @@ msgstr "Przenieś do koszyka"
 
 #: templates/oscar/basket/partials/basket_quick.html:24
 msgid "Qty"
-msgstr "Ilość"
+msgstr "Liczba"
 
 #: templates/oscar/basket/partials/basket_quick.html:30
 msgid "Total Excl Tax:"
@@ -5636,7 +5636,7 @@ msgstr "Nowi klienci"
 
 #: templates/oscar/dashboard/index.html:30
 msgid "Total Customers"
-msgstr "Ilość klientów"
+msgstr "Liczba klientów"
 
 #: templates/oscar/dashboard/index.html:31
 msgid "Total Products"
@@ -5732,11 +5732,11 @@ msgstr "Witaj!"
 
 #: templates/oscar/dashboard/layout.html:40
 msgid "Return to site"
-msgstr ""
+msgstr "Powrót do strony"
 
 #: templates/oscar/dashboard/layout.html:42
 msgid "Log out"
-msgstr ""
+msgstr "Wyloguj"
 
 #: templates/oscar/dashboard/catalogue/category_delete.html:18
 #: templates/oscar/dashboard/catalogue/category_delete.html:23
@@ -5801,21 +5801,21 @@ msgstr ""
 #: templates/oscar/dashboard/catalogue/product_update.html:8
 #: templates/oscar/dashboard/catalogue/product_update.html:18
 msgid "Product management"
-msgstr ""
+msgstr "Zarządzanie produktami"
 
 #: templates/oscar/dashboard/catalogue/product_delete.html:29
 #: templates/oscar/dashboard/offers/offer_delete.html:27
 #: templates/oscar/dashboard/ranges/range_delete.html:27
 msgid "Delete?"
-msgstr ""
+msgstr "Usunąć?"
 
 #: templates/oscar/dashboard/catalogue/product_delete.html:35
 msgid "Delete product?"
-msgstr ""
+msgstr "Usunąć produkt?"
 
 #: templates/oscar/dashboard/catalogue/product_delete.html:41
 msgid "Delete product"
-msgstr ""
+msgstr "Usuń produkt"
 
 #: templates/oscar/dashboard/catalogue/product_delete.html:46
 #, python-format
@@ -5827,7 +5827,7 @@ msgstr ""
 
 #: templates/oscar/dashboard/catalogue/product_delete.html:51
 msgid "This will also delete the following variant products:"
-msgstr ""
+msgstr "Ta operacja usunie również poniższe warianty produktu:"
 
 #: templates/oscar/dashboard/catalogue/product_list.html:23
 msgid "Catalogue management"
@@ -5980,7 +5980,7 @@ msgstr ""
 
 #: templates/oscar/dashboard/offers/benefit_form.html:21
 msgid "Continue to step 3"
-msgstr ""
+msgstr "Przejdź do kroku 3."
 
 #: templates/oscar/dashboard/offers/condition_form.html:15
 msgid "Build a new condition"
@@ -5992,11 +5992,11 @@ msgstr ""
 
 #: templates/oscar/dashboard/offers/condition_form.html:28
 msgid "Continue to step 4"
-msgstr ""
+msgstr "Przejdź do kroku 4."
 
 #: templates/oscar/dashboard/offers/metadata_form.html:8
 msgid "Continue to step 2"
-msgstr ""
+msgstr "Przejdź do kroku 2."
 
 #: templates/oscar/dashboard/offers/offer_delete.html:10
 #: templates/oscar/dashboard/offers/offer_detail.html:34
