@@ -104,10 +104,16 @@
 
 <div class="basket-items">
     <div class="row-fluid align-right">
-		<h4 class="span10">{% trans "Basket total" %}</h4>
+		<h4 class="span10">{% trans "Basket total (before discounts)" %}</h4>
+        <h5 class="span2">{{ order.basket_total_before_discounts_incl_tax|currency }}</h5>
+
+
+
+		<h4 class="span10">{% trans "Basket total (after discounts)" %}</h4>
         <h5 class="span2">{{ order.basket_total_incl_tax|currency }}</h5>
     </div>
 </div>
+
 <div class="basket-items">
     <div class="row-fluid align-right">
 		<h4 class="span10">{% trans "Shipping" %}</h4>

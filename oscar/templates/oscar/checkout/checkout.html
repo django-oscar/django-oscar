@@ -30,36 +30,37 @@
         </div>
         <div class="well well-info">
 			{% if shipping_address %}
-            <dl>
-				<dt>{% trans "Address" %}</dt>
-                <dd>
+                <h4>{% trans "Address" %}</h4>
+                <p>
                     {% for field in shipping_address.active_address_fields %}
                     {{ field }}<br/>
                     {% endfor %}
-                </dd>
+                </p>
                 {% if shipping_address.phone_number %}
-				<dt>{% trans "Contact number" %}</dt>
-                <dd>{{ shipping_address.phone_number }}</dd>
+                    <p>{% trans "Contact number" %}: {{ shipping_address.phone_number }}</p>
                 {% endif %}
+
                 {% if shipping_address.notes %}
-				<dt>{% trans "Shipping notes" %}</dt>
-                <dd>{{ shipping_address.notes }}</dd>
+                    <p>{% trans "Shipping notes" %}</p>
+                    <p>{{ shipping_address.notes|linebreaks }}</p>
                 {% endif %}
-				<dt>{% trans "Shipping method" %}</dt>
-				<dd>{{ shipping_method.name }} 
+
+				<h4>{% trans "Shipping method" %}</h4>
+				<p>{{ shipping_method.name }}
 					{% if shipping_method.description %}
 					- {{ shipping_method.description }}
 					{% endif %}
-				</dd>
-				</dd>
+				</p>
             </dl>
+
             {% block shipping_address_actions %}
             <div class="alert-actions">
 				<a href="{% url checkout:shipping-address %}" class="btn">{% trans "Change shipping address" %}</a>
             </div>
             {% endblock %}
+
 			{% else %}
-			{% trans "No shipping is required for this order" %}
+                {% trans "No shipping is required for this order" %}
 			{% endif %}
         </div>
     </div>

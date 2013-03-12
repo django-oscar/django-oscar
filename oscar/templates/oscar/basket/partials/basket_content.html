@@ -103,7 +103,7 @@
             <h2>{% trans "Totals" %}</h2>
 		</div>
 		<div id="basket_totals">
-			<table class="table table-striped table-condensed">
+			<table class="table table-condensed">
 				<tbody>
 				{% with offer_discounts=basket.offer_discounts voucher_discounts=basket.grouped_voucher_discounts %}
 				{% if offer_discounts or voucher_discounts %}
@@ -162,33 +162,34 @@
 				</tr>
 
 				{% if not shipping_method.is_discounted %}
-				<tr>
-					<th class="total">
-						{% trans "Shipping" %} - {{ shipping_method.name }}
-					</th>
-					<th class="total align-right">{{ shipping_method.basket_charge_incl_tax|currency }}</th>
-				</tr>
+                    <tr>
+                        <th class="total">
+                            {% trans "Shipping" %} - {{ shipping_method.name }}
+                        </th>
+                        <th class="total align-right">{{ shipping_method.basket_charge_incl_tax|currency }}</th>
+                    </tr>
 				{% else %}
-				{# As shipping is discounted, we break it down into its original charge and a discount #}
-				<tr>
-					<th>
-						{% trans "Shipping total (before discounts)" %}
-					</th>
-					<td class="align-right">{{ shipping_method.basket_charge_incl_tax_before_discount|currency }}</td>
-				</tr>
-				<tr>
-					{% with discount=shipping_method.get_discount %}
-					<td class="basket-discount">{% trans "Special offer" %}: {{ discount.name }}</td>
-					<td class="align-right">-{{ discount.discount|currency }}</td>
-					{% endwith %}
-				</tr>
-				<tr>
-					<th class="total">
-						{% trans "Shipping total (after discounts)" %}
-					</th>
-					<th class="total align-right">{{ shipping_method.basket_charge_incl_tax|currency }}</th>
-				</tr>
+                    {# As shipping is discounted, we break it down into its original charge and a discount #}
+                    <tr>
+                        <th>
+                            {% trans "Shipping total (before discounts)" %}
+                        </th>
+                        <td class="align-right">{{ shipping_method.basket_charge_incl_tax_before_discount|currency }}</td>
+                    </tr>
+                    <tr>
+                        {% with discount=shipping_method.get_discount %}
+                        <td class="basket-discount">{% trans "Special offer" %}: {{ discount.name }}</td>
+                        <td class="align-right">-{{ discount.discount|currency }}</td>
+                        {% endwith %}
+                    </tr>
+                    <tr>
+                        <th class="total">
+                            {% trans "Shipping total (after discounts)" %}
+                        </th>
+                        <th class="total align-right">{{ shipping_method.basket_charge_incl_tax|currency }}</th>
+                    </tr>
 				{% endif %}
+
 				{% if shipping_methods|length > 1 %}
 				<tr>
 					<th>
@@ -200,17 +201,20 @@
 
                 {% if basket.post_order_actions %}
                     <tr>
-                        <th>{% trans "Post order actions" %}</th>
+                        <th>{% trans "Post order actions" %}<br/><small>{% trans "These will be applied once your order is placed." %}</small></th>
                         <td></td>
                     </tr>
                     {% for discount in basket.post_order_actions %}
                     <tr>
-                        <td colspan="2">
-                            {{ discount }}
+                        <td class="total align-right" colspan="2">
                             {{ discount.description }}
                         </td>
                     </tr>
                     {% endfor %}
+                    <tr>
+                        <th>&nbsp;</th>
+                        <td></td>
+                    </tr>
                 {% endif %}
 
 				<tr>
