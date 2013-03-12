@@ -1352,6 +1352,9 @@ class ShippingBenefit(Benefit):
         condition.consume_items(basket, affected_lines=())
         return SHIPPING_DISCOUNT
 
+    class Meta:
+        proxy = True
+
 
 class ShippingAbsoluteDiscountBenefit(ShippingBenefit):
     _description = _("%(amount)s off shipping cost")
