@@ -7,6 +7,8 @@ from django.db.models import get_model
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import get_classes
+from oscar.apps.catalogue.reviews.signals import review_added
+
 SignedInUserProductReviewForm, AnonymousUserProductReviewForm, VoteForm = get_classes(
     'catalogue.reviews.forms', ['SignedInUserProductReviewForm', 'AnonymousUserProductReviewForm', 'VoteForm'])
 Vote = get_model('reviews', 'vote')
@@ -18,6 +20,7 @@ class CreateProductReview(CreateView):
     product_model = get_model('catalogue', 'product')
     review_form = SignedInUserProductReviewForm
     anonymous_review_form = AnonymousUserProductReviewForm
+    view_signal = review_added
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated():
@@ -29,6 +32,12 @@ class CreateProductReview(CreateView):
             except self.model.DoesNotExist:
                 pass
         return super(CreateProductReview, self).get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        response = super(CreateProductReview, self).post(request, *args, **kwargs)
+        if self.object:
+            self.send_signal(request, response, self.object)
+        return response
 
     def get_context_data(self, **kwargs):
         context = super(CreateProductReview, self).get_context_data(**kwargs)
@@ -54,6 +63,10 @@ class CreateProductReview(CreateView):
     def get_success_url(self):
         messages.success(self.request, _("Thank you for reviewing this product"))
         return self.object.product.get_absolute_url()
+
+    def send_signal(self, request, response, review):
+        self.view_signal.send(sender=self, review=review, user=request.user,
+                              request=request, response=response)
 
 
 class CreateProductReviewComplete(DetailView):
