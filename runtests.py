@@ -33,15 +33,18 @@ if __name__ == '__main__':
         configure(['-v'])
         run_tests()
     else:
-        # If no args, then use 'progressive' plugin to keep the screen real estate
-        # used down to a minimum.  Otherwise, use the spec plugin
-        nose_args = ['-s', '-x',
-                    '--with-progressive' if not args else '--with-spec']
+        # If no args, then use 'progressive' plugin to keep the screen real
+        # estate used down to a minimum.  Otherwise, use the spec plugin
+        nose_args = ['-s', '-x']
+        if args:
+            nose_args.extend(['--with-specplugin'])
+        else:
+            nose_args.append('--with-progressive')
 
         if options.coverage:
-            # Nose automatically uses any options passed to runtests.py, which is
-            # why the coverage trigger uses '--with-coverage' and why we don't need
-            # to explicitly include it here.
+            # Nose automatically uses any options passed to runtests.py, which
+            # is why the coverage trigger uses '--with-coverage' and why we
+            # don't need to explicitly include it here.
             nose_args.extend([
                 '--cover-package=oscar', '--cover-html',
                 '--cover-html-dir=htmlcov'])
