@@ -6,6 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from oscar.apps.shipping.methods import Free
 from oscar.apps.order.exceptions import UnableToPlaceOrder
 from oscar.core.loading import get_class
+
 ShippingAddress = get_model('order', 'ShippingAddress')
 Order = get_model('order', 'Order')
 Line = get_model('order', 'Line')

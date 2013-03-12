@@ -85,6 +85,26 @@ class AbstractOrder(models.Model):
         return self.user is None
 
     @property
+    def basket_total_before_discounts_incl_tax(self):
+        """
+        Return basket total including tax but before discounts are applied
+        """
+        total = D('0.00')
+        for line in self.lines.all():
+            total += line.line_price_before_discounts_incl_tax
+        return total
+
+    @property
+    def basket_total_before_discounts_excl_tax(self):
+        """
+        Return basket total excluding tax but before discounts are applied
+        """
+        total = D('0.00')
+        for line in self.lines.all():
+            total += line.line_price_before_discounts_excl_tax
+        return total
+
+    @property
     def basket_total_incl_tax(self):
         """
         Return basket total including tax
@@ -100,19 +120,13 @@ class AbstractOrder(models.Model):
 
     @property
     def total_before_discounts_incl_tax(self):
-        total = D('0.00')
-        for line in self.lines.all():
-            total += line.line_price_before_discounts_incl_tax
-        total += self.shipping_incl_tax
-        return total
+        return (self.basket_total_before_discounts_incl_tax +
+                self.shipping_incl_tax)
 
     @property
     def total_before_discounts_excl_tax(self):
-        total = D('0.00')
-        for line in self.lines.all():
-            total += line.line_price_before_discounts_excl_tax
-        total += self.shipping_excl_tax
-        return total
+        return (self.basket_total_before_discounts_excl_tax +
+                self.shipping_excl_tax)
 
     @property
     def total_discount_incl_tax(self):
@@ -706,13 +720,19 @@ class AbstractOrderDiscount(models.Model):
     Normally only used for display purposes so an order can be listed with
     discounts displayed separately even though in reality, the discounts are
     applied at the line level.
+
+    This has evolved to be a slightly misleading class name as this really
+    track benefit applications which aren't necessarily discounts.
     """
     order = models.ForeignKey(
         'order.Order', related_name="discounts", verbose_name=_("Order"))
-    # We need to distinguish between basket discounts and shipping discounts
-    BASKET, SHIPPING = "Basket", "Shipping"
-    category = models.CharField(_("Discount category"), default=BASKET,
-                                max_length=64)
+
+    # We need to distinguish between basket discounts, shipping discounts and
+    # 'deferred' discounts.
+    BASKET, SHIPPING, DEFERRED = "Basket", "Shipping", "Deferred"
+    category = models.CharField(
+        _("Discount category"), default=BASKET, max_length=64)
+
     offer_id = models.PositiveIntegerField(
         _("Offer ID"), blank=True, null=True)
     offer_name = models.CharField(
