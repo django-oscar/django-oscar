@@ -10,7 +10,7 @@ def update_stock_alerts(sender, instance, created, **kwargs):
     """
     Update low-stock alerts
     """
-    if created:
+    if created or kwargs.get('raw', False):
         return
     stockrecord = instance
     try:
