@@ -5636,7 +5636,7 @@ msgstr "Nowi klienci"
 
 #: templates/oscar/dashboard/index.html:30
 msgid "Total Customers"
-msgstr "Ilość klientów"
+msgstr "Liczba klientów"
 
 #: templates/oscar/dashboard/index.html:31
 msgid "Total Products"
