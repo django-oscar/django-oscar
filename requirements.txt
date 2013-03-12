@@ -19,6 +19,8 @@ pinocchio>=0.3.1,<0.4
 django-oscar-testsupport>=0.2.1,<0.3
 WebTest>=2.0,<2.1
 django-webtest>=1.5.7,<1.6
+tox>=1.4.3,<1.5
+flake8>=2.0,<2.1
 
 # i18n
 transifex-client>=0.8,<0.9

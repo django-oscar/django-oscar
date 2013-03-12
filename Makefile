@@ -2,8 +2,12 @@
 .PHONY: contribute ci test i18n lint travis
 
 install:
-	python setup.py develop --upgrade
+	python setup.py develop
 	pip install -r requirements.txt
+
+upgrade:
+	python setup.py develop --upgrade
+	pip install --upgrade -r requirements.txt
 
 sandbox: install
 	-rm -f sites/sandbox/db.sqlite
@@ -28,17 +32,21 @@ demo: install
 	sites/demo/manage.py rebuild_index --noinput
 
 test:
-	./runtests.py tests/
+	tox
 
-ci: install lint
-	# Run continous tests and generate lint reports
+ci: upgrade lint
+	# Run continuous tests and generate lint reports
 	./runtests.py --with-coverage --with-xunit
 	coverage xml -i
 
 lint:
 	./lint.sh
 
-travis: install test lint
+travis: install lint
+	# It is important that this target only depends on install
+	# (instead of upgrade) because we install Django in the .travis.yml
+	# and upgrade would overwrite it
+	./runtests.py
 
 i18n:
 	# Create the .po files used for i18n

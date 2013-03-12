@@ -31,6 +31,7 @@ coverage.xml
 violations.txt
 nosetests.xml
 htmlcov/*
+.tox/*
 
 # Example sites
 settings_local.py
