@@ -51,6 +51,9 @@ class Repository(object):
         Prime an individual method instance
         """
         method.set_basket(basket)
+        # If the basket has a shipping offer, wrap the shipping method with a
+        # decorating class that applies the offer discount to the shipping
+        # charge.
         if basket.shipping_offer:
             return OfferDiscount(method, basket.shipping_offer)
         return method
