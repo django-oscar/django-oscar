@@ -208,7 +208,7 @@ class ProductCreateView(generic.CreateView):
         url = reverse('dashboard:catalogue-product-list')
         if self.request.POST.get('action') == 'continue':
             url = reverse('dashboard:catalogue-product',
-                           kwargs={"pk":self.object.id}) 
+                           kwargs={"pk": product.id})
         return self.get_url_with_querystring(url)
 
 

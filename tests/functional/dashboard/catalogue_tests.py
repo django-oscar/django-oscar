@@ -9,6 +9,7 @@ from oscar_testsupport.testcases import WebTestCase
 
 User = get_model('auth', 'User')
 Product = get_model('catalogue', 'Product')
+ProductClass = get_model('catalogue', 'ProductClass')
 ProductCategory = get_model('catalogue', 'ProductCategory')
 Category = get_model('catalogue', 'Category')
 StockRecord = get_model('partner', 'stockrecord')
@@ -40,6 +41,36 @@ class TestAStaffUser(WebTestCase):
 
         page = form.submit()
         self.assertFalse(page.context['stockrecord_form'].is_valid())
+
+    def test_can_create_a_product_without_stockrecord(self):
+        category = G(Category)
+        product_class = ProductClass.objects.create(name="Book")
+        page = self.get(reverse('dashboard:catalogue-product-create',
+                                args=(product_class.id,)))
+        form = page.form
+        form['upc'] = '123456'
+        form['title'] = 'new product'
+        form['productcategory_set-0-category'] = category.id
+        page = form.submit()
+
+        self.assertEquals(Product.objects.count(), 1)
+
+    def test_can_create_and_continue_editing_a_product(self):
+        category = G(Category)
+        product_class = ProductClass.objects.create(name="Book")
+        page = self.get(reverse('dashboard:catalogue-product-create',
+                                args=(product_class.id,)))
+        form = page.form
+        form['upc'] = '123456'
+        form['title'] = 'new product'
+        form['productcategory_set-0-category'] = category.id
+        page = form.submit('action', index=0)
+
+        self.assertEquals(Product.objects.count(), 1)
+
+        product = Product.objects.all()[0]
+        self.assertRedirects(page, reverse('dashboard:catalogue-product',
+                                           kwargs={'pk': product.id}))
 
     def test_can_update_a_product_without_stockrecord(self):
         category = G(Category)
