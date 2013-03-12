@@ -1,4 +1,0 @@
-Create product catalogue
-========================
-
-...

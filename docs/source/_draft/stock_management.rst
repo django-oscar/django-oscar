@@ -1,3 +1,0 @@
-Stock management REST services
-==============================
-
