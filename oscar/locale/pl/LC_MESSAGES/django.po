@@ -707,7 +707,7 @@ msgstr "Referencja pozycji"
 #: templates/oscar/dashboard/orders/line_detail.html:51
 #: templates/oscar/dashboard/orders/order_detail.html:93
 msgid "Quantity"
-msgstr "Ilość"
+msgstr "Liczba"
 
 #: apps/basket/abstract_models.py:484
 msgid "Price excl. Tax"
@@ -4493,7 +4493,7 @@ msgstr "Przenieś do koszyka"
 
 #: templates/oscar/basket/partials/basket_quick.html:24
 msgid "Qty"
-msgstr "Ilość"
+msgstr "Liczba"
 
 #: templates/oscar/basket/partials/basket_quick.html:30
 msgid "Total Excl Tax:"
