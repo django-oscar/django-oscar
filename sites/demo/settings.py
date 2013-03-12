@@ -250,8 +250,8 @@ from oscar.defaults import *
 OSCAR_RECENTLY_VIEWED_PRODUCTS = 20
 OSCAR_ALLOW_ANON_CHECKOUT = True
 
-OSCAR_SHOP_NAME = 'Oscar Demo'
-OSCAR_SHOP_TAGLINE = 'e-Commerce for Django'
+OSCAR_SHOP_NAME = 'Oscar'
+OSCAR_SHOP_TAGLINE = 'Demo site'
 
 #GOOGLE_ANALYTICS_ID = 'UA-XXXXX-Y'
 
