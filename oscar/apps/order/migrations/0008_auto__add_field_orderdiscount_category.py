@@ -87,13 +87,13 @@ class Migration(SchemaMigration):
             'Meta': {'ordering': "['full_name']", 'object_name': 'Category'},
             'depth': ('django.db.models.fields.PositiveIntegerField', [], {}),
             'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'full_name': ('django.db.models.fields.CharField', [], {'max_length': '1024', 'db_index': 'True'}),
+            'full_name': ('django.db.models.fields.CharField', [], {'max_length': '255', 'db_index': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'image': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255', 'db_index': 'True'}),
             'numchild': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'path': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '255'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'max_length': '1024'})
+            'slug': ('django.db.models.fields.SlugField', [], {'max_length': '255'})
         },
         'catalogue.option': {
             'Meta': {'object_name': 'Option'},
@@ -277,6 +277,7 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'OrderDiscount'},
             'amount': ('django.db.models.fields.DecimalField', [], {'default': '0', 'max_digits': '12', 'decimal_places': '2'}),
             'category': ('django.db.models.fields.CharField', [], {'default': "'Basket'", 'max_length': '64'}),
+            'frequency': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'offer_id': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True', 'blank': 'True'}),
             'offer_name': ('django.db.models.fields.CharField', [], {'max_length': '128', 'null': 'True', 'db_index': 'True'}),
@@ -360,8 +361,9 @@ class Migration(SchemaMigration):
         },
         'partner.partner': {
             'Meta': {'object_name': 'Partner'},
+            'code': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '128'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '128'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '128', 'null': 'True', 'blank': 'True'}),
             'users': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'partners'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['auth.User']"})
         },
         'sites.site': {
