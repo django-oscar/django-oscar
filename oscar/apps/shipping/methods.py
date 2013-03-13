@@ -46,6 +46,11 @@ class OfferDiscount(ShippingMethod):
     Wrapper class that applies a discount to an existing shipping method's
     charges
     """
+
+    def __init__(self, method, offer):
+        self.method = method
+        self.offer = offer
+
     @property
     def is_discounted(self):
         # We check to see if the discount is non-zero.  It is possible to have
@@ -64,10 +69,6 @@ class OfferDiscount(ShippingMethod):
     @property
     def description(self):
         return self.method.description
-
-    def __init__(self, method, offer):
-        self.method = method
-        self.offer = offer
 
     def get_discount(self):
         # Return a 'discount' dictionary in the same form as regular product

@@ -167,7 +167,6 @@ class AbstractBasket(models.Model):
         """
         self.offer_applications = results.OfferApplications()
         self._lines = None
-        self.shipping_offer = None
 
     def merge_line(self, line, add_quantities=True):
         """
@@ -333,6 +332,13 @@ class AbstractBasket(models.Model):
         Return discounts from vouchers
         """
         return self.offer_applications.voucher_discounts
+
+    @property
+    def shipping_discounts(self):
+        """
+        Return discounts from vouchers
+        """
+        return self.offer_applications.shipping_discounts
 
     @property
     def post_order_actions(self):

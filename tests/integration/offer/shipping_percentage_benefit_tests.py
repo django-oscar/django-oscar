@@ -8,7 +8,7 @@ from oscar.apps.basket.models import Basket
 from oscar_testsupport.factories import create_product
 
 
-class TestAPercentageDiscountAppliedWithCountCondition(TestCase):
+class TestAShippingPercentageDiscountAppliedWithCountCondition(TestCase):
 
     def setUp(self):
         range = models.Range.objects.create(
@@ -30,20 +30,20 @@ class TestAPercentageDiscountAppliedWithCountCondition(TestCase):
         self.assertEqual(D('0.00'), result.discount)
         self.assertEqual(0, self.basket.num_items_with_discount)
         self.assertEqual(0, self.basket.num_items_without_discount)
-        self.assertEqual(50, self.basket.shipping_offer.benefit.value)
+        self.assertTrue(result.affects_shipping)
 
     def test_applies_correctly_to_basket_which_matches_condition(self):
         for product in [create_product(price=D('12.00'))]:
             self.basket.add_product(product, 2)
-        self.benefit.apply(self.basket, self.condition, self.offer)
+        result = self.benefit.apply(self.basket, self.condition, self.offer)
         self.assertEqual(2, self.basket.num_items_with_discount)
         self.assertEqual(0, self.basket.num_items_without_discount)
-        self.assertEqual(50, self.basket.shipping_offer.benefit.value)
+        self.assertTrue(result.affects_shipping)
 
     def test_applies_correctly_to_basket_which_exceeds_condition(self):
         for product in [create_product(price=D('12.00'))]:
             self.basket.add_product(product, 3)
-        self.benefit.apply(self.basket, self.condition, self.offer)
+        result = self.benefit.apply(self.basket, self.condition, self.offer)
         self.assertEqual(2, self.basket.num_items_with_discount)
         self.assertEqual(1, self.basket.num_items_without_discount)
-        self.assertEqual(50, self.basket.shipping_offer.benefit.value)
+        self.assertTrue(result.affects_shipping)

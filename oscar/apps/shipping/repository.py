@@ -54,8 +54,10 @@ class Repository(object):
         # If the basket has a shipping offer, wrap the shipping method with a
         # decorating class that applies the offer discount to the shipping
         # charge.
-        if basket.shipping_offer:
-            return OfferDiscount(method, basket.shipping_offer)
+        if basket.offer_applications.shipping_discounts:
+            # We assume their is only one shipping discount available
+            discount = basket.offer_applications.shipping_discounts[0]
+            return OfferDiscount(method, discount['offer'])
         return method
 
     def find_by_code(self, code, basket):

@@ -1344,11 +1344,6 @@ class MultibuyDiscountBenefit(Benefit):
 class ShippingBenefit(Benefit):
 
     def apply(self, basket, condition, offer=None):
-        # Attach offer to basket to indicate that it qualifies for a shipping
-        # discount.  At this point, we only allow one shipping offer per
-        # basket.
-        basket.shipping_offer = offer
-
         condition.consume_items(basket, affected_lines=())
         return SHIPPING_DISCOUNT
 

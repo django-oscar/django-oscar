@@ -11,6 +11,9 @@ class OfferApplications(object):
     def __iter__(self):
         return self.applications.values().__iter__()
 
+    def __len__(self):
+        return len(self.applications)
+
     def add(self, offer, result):
         if offer.id not in self.applications:
             self.applications[offer.id] = {
@@ -43,6 +46,17 @@ class OfferApplications(object):
         discounts = []
         for application in self.applications.values():
             if application['voucher'] and application['discount'] > 0:
+                discounts.append(application)
+        return discounts
+
+    @property
+    def shipping_discounts(self):
+        """
+        Return shipping discounts
+        """
+        discounts = []
+        for application in self.applications.values():
+            if application['result'].affects_shipping:
                 discounts.append(application)
         return discounts
 
