@@ -71,12 +71,14 @@ class OfferDiscount(ShippingMethod):
         return self.method.description
 
     def get_discount(self):
-        # Return a 'discount' dictionary in the same form as regular product
-        # offers do
+        # Return a 'discount' dictionary in the same form as that used by the
+        # OfferApplications class
         parent_charge = self.method.basket_charge_incl_tax()
         return {
-            'name': self.offer.name,
             'offer': self.offer,
+            'result': None,
+            'name': self.offer.name,
+            'description': '',
             'voucher': self.offer.get_voucher(),
             'freq': 1,
             'discount': self.offer.shipping_discount(parent_charge)}
