@@ -19,8 +19,9 @@ class AbstractBasket(models.Model):
     """
     # Baskets can be anonymously owned - hence this field is nullable.  When a
     # anon user signs in, their two baskets are merged.
-    owner = models.ForeignKey('auth.User', related_name='baskets',
-                              null=True, verbose_name=_("Owner"))
+    owner = models.ForeignKey(
+        'auth.User', related_name='baskets', null=True,
+        verbose_name=_("Owner"))
 
     # Basket statuses
     # - Frozen is for when a basket is in the process of being submitted
@@ -34,11 +35,14 @@ class AbstractBasket(models.Model):
         (FROZEN, _("Frozen - the basket cannot be modified")),
         (SUBMITTED, _("Submitted - has been ordered at the checkout")),
     )
-    status = models.CharField(_("Status"), max_length=128, default=OPEN,
-                              choices=STATUS_CHOICES)
+    status = models.CharField(
+        _("Status"), max_length=128, default=OPEN, choices=STATUS_CHOICES)
 
-    vouchers = models.ManyToManyField('voucher.Voucher', null=True,
-                                      verbose_name=_("Vouchers"), blank=True)
+    # A basket can have many vouchers attached to it.  However, it is common
+    # for sites to only allow one voucher per basket - this will need to be
+    # enforced in the project's codebase.
+    vouchers = models.ManyToManyField(
+        'voucher.Voucher', null=True, verbose_name=_("Vouchers"), blank=True)
 
     date_created = models.DateTimeField(_("Date created"), auto_now_add=True)
     date_merged = models.DateTimeField(_("Date merged"), null=True, blank=True)
@@ -57,11 +61,13 @@ class AbstractBasket(models.Model):
     open = OpenBasketManager()
     saved = SavedBasketManager()
 
-    _lines = None
-    shipping_offer = None
-
     def __init__(self, *args, **kwargs):
         super(AbstractBasket, self).__init__(*args, **kwargs)
+        # We keep a cached copy of the basket lines as we refer to them often
+        # within the same request cycle.  Also, applying offers will append
+        # discount data to the basket lines which isn't persisted to the DB and
+        # so we want to avoid reloading them as this would drop the discount
+        # information.
         self._lines = None  # Cached queryset of lines
         self.offer_applications = results.OfferApplications()
         self.exempt_from_tax = False
