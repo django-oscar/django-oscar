@@ -58,12 +58,16 @@ LANGUAGE_CODE = 'en-us'
 LANGUAGES = (
     ('da', 'Danish'),
     ('de', 'German'),
+    ('el_GR', 'Greek'),
+    ('en', 'English'),
     ('es', 'Spanish'),
     ('fr', 'French'),
     ('it', 'Italian'),
     ('ja', 'Japanese'),
     ('pl', 'Polish'),
+    ('pt_BR', 'Portugese'),
     ('ru', 'Russian'),
+    ('sk', 'Slovakian'),
 )
 ROSETTA_STORAGE_CLASS = 'rosetta.storage.SessionRosettaStorage'
 ROSETTA_ENABLE_TRANSLATION_SUGGESTIONS = True
