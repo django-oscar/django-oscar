@@ -12,8 +12,9 @@ class ChangesOwnerName(models.Benefit):
             "You will have your name changed to Barry!")
 
     def apply_deferred(self, basket):
-        basket.owner.first_name = "Barry"
-        basket.owner.save()
+        if basket.owner:
+            basket.owner.first_name = "Barry"
+            basket.owner.save()
 
     @property
     def description(self):
