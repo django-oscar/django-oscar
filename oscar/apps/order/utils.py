@@ -65,24 +65,19 @@ class OrderCreator(object):
             raise ValueError(_("There is already an order with number %s") % order_number)
 
         # Ok - everything seems to be in order, let's place the order
-        order = self.create_order_model(user, basket, shipping_address,
-                                        shipping_method, billing_address, total_incl_tax,
-                                        total_excl_tax, order_number, status, **kwargs)
+        order = self.create_order_model(
+            user, basket, shipping_address, shipping_method, billing_address,
+            total_incl_tax, total_excl_tax, order_number, status, **kwargs)
         for line in basket.all_lines():
             self.create_line_models(order, line)
             self.update_stock_records(line)
 
-        # Trigger any deferred benefits from offers
-        # Record discounts (including any on the shipping method)
-        for discount in basket.offer_applications:
-            discount['offer'].apply_deferred_benefit(basket)
-            self.create_discount_model(order, discount)
-            self.record_discount(discount)
-        if shipping_method.is_discounted:
-            discount = shipping_method.get_discount()
-            self.create_discount_model(order, discount,
-                                       is_shipping_discount=True)
-            self.record_discount(discount)
+        for application in basket.offer_applications:
+            # Trigger any deferred benefits from offers
+            application['offer'].apply_deferred_benefit(basket)
+            # Record offer application results
+            self.create_discount_model(order, application)
+            self.record_discount(application)
 
         for voucher in basket.vouchers.all():
             self.record_voucher_usage(order, voucher, user)
@@ -208,17 +203,22 @@ class OrderCreator(object):
                                                   type=attr.option.code,
                                                   value=attr.value)
 
-    def create_discount_model(self, order, discount,
-                              is_shipping_discount=False):
+    def create_discount_model(self, order, discount):
+
         """
-        Creates an order discount model for each discount attached to the
-        basket.
+        Create an order discount model for each offer application attached to
+        the basket.
         """
         order_discount = OrderDiscount(
-            order=order, offer_id=discount['offer'].id,
-            frequency=discount['freq'], amount=discount['discount'])
-        if is_shipping_discount:
+            order=order,
+            offer_id=discount['offer'].id,
+            frequency=discount['freq'],
+            amount=discount['discount'])
+        result = discount['result']
+        if result.affects_shipping:
             order_discount.category = OrderDiscount.SHIPPING
+        elif result.affects_post_order:
+            order_discount.category = OrderDiscount.DEFERRED
         voucher = discount.get('voucher', None)
         if voucher:
             order_discount.voucher_id = voucher.id

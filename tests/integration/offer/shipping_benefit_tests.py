@@ -7,6 +7,7 @@ import mock
 
 from oscar.apps.offer import models, utils
 from oscar.apps.basket.models import Basket
+from oscar.apps.order.utils import OrderCreator
 from oscar.apps.shipping.repository import Repository
 from oscar.apps.shipping.methods import FixedPrice
 from oscar_testsupport.factories import create_product
@@ -71,3 +72,18 @@ class TestAnOfferWithAShippingBenefit(TestCase):
         method = methods[0]
         self.assertTrue(method.is_discounted)
         self.assertEqual(D('1.00'), method.basket_charge_incl_tax())
+
+    def test_is_recorded_correctly_when_order_is_placed(self):
+        for product in [create_product(price=D('12.00'))]:
+            self.basket.add_product(product, 1)
+        apply_offers(self.basket)
+        methods = StubRepository().get_shipping_methods(self.basket)
+        method = methods[0]
+        creator = OrderCreator()
+        order = creator.place_order(self.basket, shipping_method=method)
+
+        discounts = order.discounts.all()
+        self.assertEqual(1, len(discounts))
+
+        discount = discounts[0]
+        self.assertTrue(discount.is_shipping_discount)

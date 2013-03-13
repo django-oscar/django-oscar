@@ -4,6 +4,12 @@ from decimal import Decimal as D
 class OfferApplications(object):
     """
     A collection of offer applications and the discounts that they give.
+
+    Each offer application is stored as a dict which has fields for:
+
+    * The offer that led to the successful applicatio
+    * The result instance
+    * The number of times the offer was successfully applied
     """
     def __init__(self):
         self.applications = {}

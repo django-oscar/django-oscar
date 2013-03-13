@@ -745,6 +745,18 @@ class AbstractOrderDiscount(models.Model):
     amount = models.DecimalField(
         _("Amount"), decimal_places=2, max_digits=12, default=0)
 
+    @property
+    def is_basket_discount(self):
+        return self.category == self.BASKET
+
+    @property
+    def is_shipping_discount(self):
+        return self.category == self.SHIPPING
+
+    @property
+    def is_post_order_action(self):
+        return self.category == self.DEFERRED
+
     class Meta:
         abstract = True
         verbose_name = _("Order Discount")
