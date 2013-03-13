@@ -762,8 +762,14 @@ class AbstractOrderDiscount(models.Model):
     # We need to distinguish between basket discounts, shipping discounts and
     # 'deferred' discounts.
     BASKET, SHIPPING, DEFERRED = "Basket", "Shipping", "Deferred"
+    CATEGORY_CHOICES = (
+        (BASKET, _(BASKET)),
+        (SHIPPING, _(SHIPPING)),
+        (DEFERRED, _(DEFERRED)),
+    )
     category = models.CharField(
-        _("Discount category"), default=BASKET, max_length=64)
+        _("Discount category"), default=BASKET, max_length=64,
+        choices=CATEGORY_CHOICES)
 
     offer_id = models.PositiveIntegerField(
         _("Offer ID"), blank=True, null=True)
@@ -812,7 +818,8 @@ class AbstractOrderDiscount(models.Model):
         super(AbstractOrderDiscount, self).save(**kwargs)
 
     def __unicode__(self):
-        return _("Discount of %(amount)r from order %(order)s") % {'amount': self.amount, 'order': self.order}
+        return _("Discount of %(amount)r from order %(order)s") % {
+            'amount': self.amount, 'order': self.order}
 
     @property
     def offer(self):
