@@ -59,7 +59,7 @@ def apply_messages(request, offers_before):
     """
     # Re-apply offers to see if any new ones are now available
     Applicator().apply(request, request.basket)
-    offers_after = request.basket.get_discount_offers()
+    offers_after = request.basket.applied_offers()
 
     for level, msgs in get_messages(request.basket,
                                     offers_before, offers_after).items():
@@ -152,7 +152,7 @@ class BasketView(ModelFormSetView):
     def formset_valid(self, formset):
         # Store offers before any changes are made so we can inform the user of
         # any changes
-        offers_before = self.request.basket.get_discount_offers()
+        offers_before = self.request.basket.applied_offers()
         save_for_later = False
 
         # Keep a list of messages - we don't immediately call
@@ -189,7 +189,7 @@ class BasketView(ModelFormSetView):
             self.request.basket = get_model('basket', 'Basket').objects.get(
                 id=self.request.basket.id)
             Applicator().apply(self.request, self.request.basket)
-            offers_after = self.request.basket.get_discount_offers()
+            offers_after = self.request.basket.applied_offers()
 
             for level, msgs in get_messages(self.request.basket, offers_before,
                                             offers_after).items():
@@ -202,6 +202,8 @@ class BasketView(ModelFormSetView):
             kwargs = self.get_formset_kwargs()
             del kwargs['data']
             del kwargs['files']
+            if 'queryset' in kwargs:
+                del kwargs['queryset']
             formset = self.get_formset()(queryset=self.get_queryset(),
                                          **kwargs)
             ctx = self.get_context_data(formset=formset,
@@ -282,7 +284,7 @@ class BasketAddView(FormView):
         return url
 
     def form_valid(self, form):
-        offers_before = self.request.basket.get_discount_offers()
+        offers_before = self.request.basket.applied_offers()
         self.request.basket.add_product(
             form.instance, form.cleaned_data['quantity'],
             form.cleaned_options())
@@ -347,7 +349,7 @@ class VoucherAddView(FormView):
 
         # Recalculate discounts to see if the voucher gives any
         Applicator().apply(self.request, self.request.basket)
-        discounts_after = self.request.basket.get_discounts()
+        discounts_after = self.request.basket.offer_applications
 
         # Look for discounts from this new voucher
         found_discount = False
@@ -450,7 +452,7 @@ class SavedView(ModelFormSetView):
         return kwargs
 
     def formset_valid(self, formset):
-        offers_before = self.request.basket.get_discount_offers()
+        offers_before = self.request.basket.applied_offers()
 
         is_move = False
         for form in formset:

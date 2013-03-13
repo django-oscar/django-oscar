@@ -1,6 +1,6 @@
 from django.core import exceptions
 
-from oscar.apps.offer.models import Range, Condition
+from oscar.apps.offer.models import Range, Condition, Benefit
 
 
 def _class_path(klass):
@@ -25,3 +25,16 @@ def create_condition(condition_class):
     """
     return Condition.objects.create(
         proxy_class=_class_path(condition_class))
+
+
+def create_benefit(benefit_class):
+    """
+    Create a custom benefit instance
+    """
+    # The custom benefit_class must override __unicode__ and description to
+    # avoid a recursion error
+    if benefit_class.description is Benefit.description:
+        raise RuntimeError("Your custom benefit must implement its own "
+                           "'description' property")
+    return Benefit.objects.create(
+        proxy_class=_class_path(benefit_class))

@@ -24,16 +24,16 @@ class TestAnAbsoluteDiscountAppliedWithCountCondition(TestCase):
         self.basket = G(Basket)
 
     def test_applies_correctly_to_empty_basket(self):
-        discount = self.benefit.apply(self.basket, self.condition)
-        self.assertEqual(D('0.00'), discount)
+        result = self.benefit.apply(self.basket, self.condition)
+        self.assertEqual(D('0.00'), result.discount)
         self.assertEqual(0, self.basket.num_items_with_discount)
         self.assertEqual(0, self.basket.num_items_without_discount)
 
     def test_applies_correctly_to_basket_which_matches_condition(self):
         for product in [create_product(price=D('12.00'))]:
             self.basket.add_product(product, 2)
-        discount = self.benefit.apply(self.basket, self.condition)
-        self.assertEqual(D('3.00'), discount)
+        result = self.benefit.apply(self.basket, self.condition)
+        self.assertEqual(D('3.00'), result.discount)
         self.assertEqual(2, self.basket.num_items_with_discount)
         self.assertEqual(0, self.basket.num_items_without_discount)
 
@@ -41,8 +41,8 @@ class TestAnAbsoluteDiscountAppliedWithCountCondition(TestCase):
         for product in [create_product(price=D('12.00')),
                         create_product(price=D('10.00'))]:
             self.basket.add_product(product, 2)
-        discount = self.benefit.apply(self.basket, self.condition)
-        self.assertEqual(D('3.00'), discount)
+        result = self.benefit.apply(self.basket, self.condition)
+        self.assertEqual(D('3.00'), result.discount)
         self.assertEqual(2, self.basket.num_items_with_discount)
         self.assertEqual(2, self.basket.num_items_without_discount)
 
@@ -50,8 +50,8 @@ class TestAnAbsoluteDiscountAppliedWithCountCondition(TestCase):
         for product in [create_product(price=D('2.00')),
                         create_product(price=D('4.00'))]:
             self.basket.add_product(product, 2)
-        discount = self.benefit.apply(self.basket, self.condition)
-        self.assertEqual(D('3.00'), discount)
+        result = self.benefit.apply(self.basket, self.condition)
+        self.assertEqual(D('3.00'), result.discount)
         self.assertEqual(2, self.basket.num_items_with_discount)
         self.assertEqual(2, self.basket.num_items_without_discount)
 
@@ -59,8 +59,8 @@ class TestAnAbsoluteDiscountAppliedWithCountCondition(TestCase):
         for product in [create_product(price=D('4.00')),
                         create_product(price=D('2.00'))]:
             self.basket.add_product(product, 2)
-        discount = self.benefit.apply(self.basket, self.condition)
-        self.assertEqual(D('3.00'), discount)
+        result = self.benefit.apply(self.basket, self.condition)
+        self.assertEqual(D('3.00'), result.discount)
         self.assertEqual(2, self.basket.num_items_with_discount)
         self.assertEqual(2, self.basket.num_items_without_discount)
 
@@ -82,16 +82,16 @@ class TestAnAbsoluteDiscountWithMaxItemsSetAppliedWithCountCondition(TestCase):
         self.basket = G(Basket)
 
     def test_applies_correctly_to_empty_basket(self):
-        discount = self.benefit.apply(self.basket, self.condition)
-        self.assertEqual(D('0.00'), discount)
+        result = self.benefit.apply(self.basket, self.condition)
+        self.assertEqual(D('0.00'), result.discount)
         self.assertEqual(0, self.basket.num_items_with_discount)
         self.assertEqual(0, self.basket.num_items_without_discount)
 
     def test_applies_correctly_to_basket_which_matches_condition(self):
         for product in [create_product(price=D('12.00'))]:
             self.basket.add_product(product, 2)
-        discount = self.benefit.apply(self.basket, self.condition)
-        self.assertEqual(D('3.00'), discount)
+        result = self.benefit.apply(self.basket, self.condition)
+        self.assertEqual(D('3.00'), result.discount)
         self.assertEqual(2, self.basket.num_items_with_discount)
         self.assertEqual(0, self.basket.num_items_without_discount)
 
@@ -99,8 +99,8 @@ class TestAnAbsoluteDiscountWithMaxItemsSetAppliedWithCountCondition(TestCase):
         for product in [create_product(price=D('12.00')),
                         create_product(price=D('10.00'))]:
             self.basket.add_product(product, 2)
-        discount = self.benefit.apply(self.basket, self.condition)
-        self.assertEqual(D('3.00'), discount)
+        result = self.benefit.apply(self.basket, self.condition)
+        self.assertEqual(D('3.00'), result.discount)
         self.assertEqual(2, self.basket.num_items_with_discount)
         self.assertEqual(2, self.basket.num_items_without_discount)
 
@@ -108,8 +108,8 @@ class TestAnAbsoluteDiscountWithMaxItemsSetAppliedWithCountCondition(TestCase):
         for product in [create_product(price=D('2.00')),
                         create_product(price=D('1.00'))]:
             self.basket.add_product(product, 2)
-        discount = self.benefit.apply(self.basket, self.condition)
-        self.assertEqual(D('1.00'), discount)
+        result = self.benefit.apply(self.basket, self.condition)
+        self.assertEqual(D('1.00'), result.discount)
         self.assertEqual(2, self.basket.num_items_with_discount)
         self.assertEqual(2, self.basket.num_items_without_discount)
 
@@ -130,40 +130,40 @@ class TestAnAbsoluteDiscountAppliedWithValueCondition(TestCase):
         self.basket = G(Basket)
 
     def test_applies_correctly_to_empty_basket(self):
-        discount = self.benefit.apply(self.basket, self.condition)
-        self.assertEqual(D('0.00'), discount)
+        result = self.benefit.apply(self.basket, self.condition)
+        self.assertEqual(D('0.00'), result.discount)
         self.assertEqual(0, self.basket.num_items_with_discount)
         self.assertEqual(0, self.basket.num_items_without_discount)
 
     def test_applies_correctly_to_single_item_basket_which_matches_condition(self):
         for product in [create_product(price=D('10.00'))]:
             self.basket.add_product(product, 1)
-        discount = self.benefit.apply(self.basket, self.condition)
-        self.assertEqual(D('3.00'), discount)
+        result = self.benefit.apply(self.basket, self.condition)
+        self.assertEqual(D('3.00'), result.discount)
         self.assertEqual(1, self.basket.num_items_with_discount)
         self.assertEqual(0, self.basket.num_items_without_discount)
 
     def test_applies_correctly_to_multi_item_basket_which_matches_condition(self):
         for product in [create_product(price=D('5.00'))]:
             self.basket.add_product(product, 2)
-        discount = self.benefit.apply(self.basket, self.condition)
-        self.assertEqual(D('3.00'), discount)
+        result = self.benefit.apply(self.basket, self.condition)
+        self.assertEqual(D('3.00'), result.discount)
         self.assertEqual(2, self.basket.num_items_with_discount)
         self.assertEqual(0, self.basket.num_items_without_discount)
 
     def test_applies_correctly_to_multi_item_basket_which_exceeds_condition(self):
         for product in [create_product(price=D('4.00'))]:
             self.basket.add_product(product, 3)
-        discount = self.benefit.apply(self.basket, self.condition)
-        self.assertEqual(D('3.00'), discount)
+        result = self.benefit.apply(self.basket, self.condition)
+        self.assertEqual(D('3.00'), result.discount)
         self.assertEqual(3, self.basket.num_items_with_discount)
         self.assertEqual(0, self.basket.num_items_without_discount)
 
     def test_applies_correctly_to_multi_item_basket_which_exceeds_condition_but_matches_boundary(self):
         for product in [create_product(price=D('5.00'))]:
             self.basket.add_product(product, 3)
-        discount = self.benefit.apply(self.basket, self.condition)
-        self.assertEqual(D('3.00'), discount)
+        result = self.benefit.apply(self.basket, self.condition)
+        self.assertEqual(D('3.00'), result.discount)
         self.assertEqual(2, self.basket.num_items_with_discount)
         self.assertEqual(1, self.basket.num_items_without_discount)
 
@@ -185,47 +185,47 @@ class TestAnAbsoluteDiscountWithMaxItemsSetAppliedWithValueCondition(TestCase):
         self.basket = G(Basket)
 
     def test_applies_correctly_to_empty_basket(self):
-        discount = self.benefit.apply(self.basket, self.condition)
-        self.assertEqual(D('0.00'), discount)
+        result = self.benefit.apply(self.basket, self.condition)
+        self.assertEqual(D('0.00'), result.discount)
         self.assertEqual(0, self.basket.num_items_with_discount)
         self.assertEqual(0, self.basket.num_items_without_discount)
 
     def test_applies_correctly_to_single_item_basket_which_matches_condition(self):
         for product in [create_product(price=D('10.00'))]:
             self.basket.add_product(product, 1)
-        discount = self.benefit.apply(self.basket, self.condition)
-        self.assertEqual(D('3.00'), discount)
+        result = self.benefit.apply(self.basket, self.condition)
+        self.assertEqual(D('3.00'), result.discount)
         self.assertEqual(1, self.basket.num_items_with_discount)
         self.assertEqual(0, self.basket.num_items_without_discount)
 
     def test_applies_correctly_to_multi_item_basket_which_matches_condition(self):
         for product in [create_product(price=D('5.00'))]:
             self.basket.add_product(product, 2)
-        discount = self.benefit.apply(self.basket, self.condition)
-        self.assertEqual(D('3.00'), discount)
+        result = self.benefit.apply(self.basket, self.condition)
+        self.assertEqual(D('3.00'), result.discount)
         self.assertEqual(2, self.basket.num_items_with_discount)
         self.assertEqual(0, self.basket.num_items_without_discount)
 
     def test_applies_correctly_to_multi_item_basket_which_exceeds_condition(self):
         for product in [create_product(price=D('4.00'))]:
             self.basket.add_product(product, 3)
-        discount = self.benefit.apply(self.basket, self.condition)
-        self.assertEqual(D('3.00'), discount)
+        result = self.benefit.apply(self.basket, self.condition)
+        self.assertEqual(D('3.00'), result.discount)
         self.assertEqual(3, self.basket.num_items_with_discount)
         self.assertEqual(0, self.basket.num_items_without_discount)
 
     def test_applies_correctly_to_multi_item_basket_which_exceeds_condition_but_matches_boundary(self):
         for product in [create_product(price=D('5.00'))]:
             self.basket.add_product(product, 3)
-        discount = self.benefit.apply(self.basket, self.condition)
-        self.assertEqual(D('3.00'), discount)
+        result = self.benefit.apply(self.basket, self.condition)
+        self.assertEqual(D('3.00'), result.discount)
         self.assertEqual(2, self.basket.num_items_with_discount)
         self.assertEqual(1, self.basket.num_items_without_discount)
 
     def test_applies_correctly_to_multi_item_basket_which_matches_condition_but_with_lower_prices_than_discount(self):
         for product in [create_product(price=D('2.00'))]:
             self.basket.add_product(product, 6)
-        discount = self.benefit.apply(self.basket, self.condition)
-        self.assertEqual(D('2.00'), discount)
+        result = self.benefit.apply(self.basket, self.condition)
+        self.assertEqual(D('2.00'), result.discount)
         self.assertEqual(5, self.basket.num_items_with_discount)
         self.assertEqual(1, self.basket.num_items_without_discount)

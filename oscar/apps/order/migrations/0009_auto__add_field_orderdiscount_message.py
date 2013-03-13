@@ -8,15 +8,15 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding field 'OrderDiscount.category'
-        db.add_column('order_orderdiscount', 'category',
-                      self.gf('django.db.models.fields.CharField')(default='Basket', max_length=64),
+        # Adding field 'OrderDiscount.message'
+        db.add_column('order_orderdiscount', 'message',
+                      self.gf('django.db.models.fields.TextField')(null=True, blank=True),
                       keep_default=False)
 
 
     def backwards(self, orm):
-        # Deleting field 'OrderDiscount.category'
-        db.delete_column('order_orderdiscount', 'category')
+        # Deleting field 'OrderDiscount.message'
+        db.delete_column('order_orderdiscount', 'message')
 
 
     models = {
@@ -279,6 +279,7 @@ class Migration(SchemaMigration):
             'category': ('django.db.models.fields.CharField', [], {'default': "'Basket'", 'max_length': '64'}),
             'frequency': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'message': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'offer_id': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True', 'blank': 'True'}),
             'offer_name': ('django.db.models.fields.CharField', [], {'max_length': '128', 'null': 'True', 'db_index': 'True'}),
             'order': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'discounts'", 'to': "orm['order.Order']"}),

@@ -10,4 +10,5 @@ class ActiveOfferManager(models.Manager):
     def get_query_set(self):
         cutoff = now()
         return super(ActiveOfferManager, self).get_query_set().filter(
-            start_datetime__lte=cutoff, end_datetime__gte=cutoff)
+            models.Q(end_datetime__gte=cutoff) | models.Q(end_datetime=None),
+            start_datetime__lte=cutoff)

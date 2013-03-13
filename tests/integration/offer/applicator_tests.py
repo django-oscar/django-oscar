@@ -25,15 +25,13 @@ class TestOfferApplicator(TestCase):
         self.basket.add_product(self.product, 5)
         offer = models.ConditionalOffer(
             id="test", condition=self.condition, benefit=self.benefit)
-        discounts = self.applicator.get_basket_discounts(
-            self.basket, [offer])
-        self.assertEqual(5, discounts["test"]['freq'])
+        self.applicator.apply_offers(self.basket, [offer])
+        self.assertEqual(5, self.basket.offer_applications.applications["test"]['freq'])
 
     def test_respects_maximum_applications_field(self):
         self.basket.add_product(self.product, 5)
         offer = models.ConditionalOffer(
             id="test", condition=self.condition, benefit=self.benefit,
             max_basket_applications=1)
-        discounts = self.applicator.get_basket_discounts(
-            self.basket, [offer])
-        self.assertEqual(1, discounts["test"]['freq'])
+        self.applicator.apply_offers(self.basket, [offer])
+        self.assertEqual(1, self.basket.offer_applications.applications["test"]['freq'])

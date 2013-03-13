@@ -12,10 +12,9 @@
 {% block form_fields %}
 	<span class="help-block">{{ form.non_field_errors }}</span>
 
-	{% if form.fields.custom_condition.choices %}
+    {% if form.fields.custom_condition.choices %}
 	<h4>{% trans "Build a new condition" %}</h4>
     {% endif %}
-
 	{% include "partials/form_field.html" with field=form.range %}
 	<p>{% trans "Ranges can be created and edited from within the " %}
 		<a href="{% url dashboard:range-list %}">{% trans "range dashboard" %}</a>.</p>

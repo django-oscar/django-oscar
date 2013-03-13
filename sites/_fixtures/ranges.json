@@ -1,0 +1,32 @@
+[
+    {
+        "pk": 1,
+        "model": "offer.range",
+        "fields": {
+            "included_categories": [],
+            "name": "Whole site",
+            "included_products": [],
+            "proxy_class": null,
+            "excluded_products": [],
+            "classes": [],
+            "date_created": "2013-02-21T16:25:27.633Z",
+            "includes_all_products": true
+        }
+    },
+    {
+        "pk": 2,
+        "model": "offer.range",
+        "fields": {
+            "included_categories": [
+                2
+            ],
+            "name": "Fiction books",
+            "included_products": [],
+            "proxy_class": null,
+            "excluded_products": [],
+            "classes": [],
+            "date_created": "2013-02-21T16:25:38.805Z",
+            "includes_all_products": false
+        }
+    }
+]

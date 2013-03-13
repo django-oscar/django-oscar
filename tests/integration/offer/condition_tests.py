@@ -68,10 +68,10 @@ class TestCountCondition(OfferTest):
         condition = models.CountCondition(range=product_range, type="Count", value=2)
 
         first_discount = benefit.apply(self.basket, condition=condition)
-        self.assertEquals(Decimal('10.00'), first_discount)
+        self.assertEquals(Decimal('10.00'), first_discount.discount)
 
         second_discount = benefit.apply(self.basket, condition=condition)
-        self.assertEquals(Decimal('10.00'), second_discount)
+        self.assertEquals(Decimal('10.00'), second_discount.discount)
 
 
 class ValueConditionTest(OfferTest):

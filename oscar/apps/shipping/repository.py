@@ -1,7 +1,6 @@
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import ugettext_lazy as _
 
-
 from oscar.apps.shipping.methods import (
     Free, NoShippingRequired, OfferDiscount)
 
@@ -52,8 +51,13 @@ class Repository(object):
         Prime an individual method instance
         """
         method.set_basket(basket)
-        if basket.shipping_offer:
-            return OfferDiscount(method, basket.shipping_offer)
+        # If the basket has a shipping offer, wrap the shipping method with a
+        # decorating class that applies the offer discount to the shipping
+        # charge.
+        if basket.offer_applications.shipping_discounts:
+            # We assume there is only one shipping discount available
+            discount = basket.offer_applications.shipping_discounts[0]
+            return OfferDiscount(method, discount['offer'])
         return method
 
     def find_by_code(self, code, basket):
