@@ -239,7 +239,7 @@ class ConditionalOffer(models.Model):
         Applies any deferred benefits.  These are things like adding loyalty
         points to somone's account.
         """
-        self.benefit.proxy().apply_deferred(basket)
+        return self.benefit.proxy().apply_deferred(basket)
 
     def set_voucher(self, voucher):
         self._voucher = voucher
@@ -549,7 +549,7 @@ class Benefit(models.Model):
         return ZERO_DISCOUNT
 
     def apply_deferred(self, basket):
-        pass
+        return None
 
     def clean(self):
         if not self.type:

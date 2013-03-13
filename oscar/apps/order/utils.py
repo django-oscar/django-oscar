@@ -73,10 +73,13 @@ class OrderCreator(object):
             self.update_stock_records(line)
 
         for application in basket.offer_applications:
-            # Trigger any deferred benefits from offers
-            application['offer'].apply_deferred_benefit(basket)
+            # Trigger any deferred benefits from offers and capture the
+            # resulting message
+            application['message'] = application['offer'].apply_deferred_benefit(basket)
             # Record offer application results
             if application['result'].affects_shipping:
+                # If a shipping offer, we need to grab the actual discount off
+                # the shipping method instance
                 application['discount'] = shipping_method.get_discount()['discount']
             self.create_discount_model(order, application)
             self.record_discount(application)
@@ -213,6 +216,7 @@ class OrderCreator(object):
         """
         order_discount = OrderDiscount(
             order=order,
+            message=discount['message'],
             offer_id=discount['offer'].id,
             frequency=discount['freq'],
             amount=discount['discount'])

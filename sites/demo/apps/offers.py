@@ -43,6 +43,8 @@ class ChangesOwnerName(models.Benefit):
         if basket.owner:
             basket.owner.first_name = "Barry"
             basket.owner.save()
+            return "Name changed to Barry!"
+        return "We tried to apply benefit but couldn't"
 
     @property
     def description(self):

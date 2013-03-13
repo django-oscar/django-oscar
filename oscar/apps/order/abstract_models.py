@@ -772,6 +772,10 @@ class AbstractOrderDiscount(models.Model):
     amount = models.DecimalField(
         _("Amount"), decimal_places=2, max_digits=12, default=0)
 
+    # Post-order offer applications can return a message to indicate what
+    # action was taken after the order was placed.
+    message = models.TextField(blank=True, null=True)
+
     @property
     def is_basket_discount(self):
         return self.category == self.BASKET
