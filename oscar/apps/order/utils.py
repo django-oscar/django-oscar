@@ -76,6 +76,8 @@ class OrderCreator(object):
             # Trigger any deferred benefits from offers
             application['offer'].apply_deferred_benefit(basket)
             # Record offer application results
+            if application['result'].affects_shipping:
+                application['discount'] = shipping_method.get_discount()['discount']
             self.create_discount_model(order, application)
             self.record_discount(application)
 

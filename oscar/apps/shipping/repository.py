@@ -55,7 +55,7 @@ class Repository(object):
         # decorating class that applies the offer discount to the shipping
         # charge.
         if basket.offer_applications.shipping_discounts:
-            # We assume their is only one shipping discount available
+            # We assume there is only one shipping discount available
             discount = basket.offer_applications.shipping_discounts[0]
             return OfferDiscount(method, discount['offer'])
         return method

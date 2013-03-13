@@ -73,7 +73,7 @@ class TestAnOfferWithAShippingBenefit(TestCase):
         self.assertTrue(method.is_discounted)
         self.assertEqual(D('1.00'), method.basket_charge_incl_tax())
 
-    def test_is_recorded_correctly_when_order_is_placed(self):
+    def test_has_discount_recorded_correctly_when_order_is_placed(self):
         for product in [create_product(price=D('12.00'))]:
             self.basket.add_product(product, 1)
         apply_offers(self.basket)
@@ -87,3 +87,4 @@ class TestAnOfferWithAShippingBenefit(TestCase):
 
         discount = discounts[0]
         self.assertTrue(discount.is_shipping_discount)
+        self.assertEqual(D('9.00'), discount.amount)
