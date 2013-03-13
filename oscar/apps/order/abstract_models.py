@@ -249,6 +249,11 @@ class AbstractOrder(models.Model):
         return self.discounts.filter(
             category=AbstractOrderDiscount.SHIPPING)
 
+    @property
+    def post_order_actions(self):
+        return self.discounts.filter(
+            category=AbstractOrderDiscount.DEFERRED)
+
 
 class AbstractOrderNote(models.Model):
     """

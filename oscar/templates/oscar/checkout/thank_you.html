@@ -163,6 +163,17 @@
     {% endif %}
 </div>
 
+{% with actions=order.post_order_actions %}
+    {% if actions %}
+        {% for action in order.post_order_actions %}
+        <div class="basket-items">
+            <div class="row-fluid align-right">
+                <h3 class="span12">{{ action.message }}</h3>
+            </div>
+        </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
 
 <div class="basket-items total">
     <div class="row-fluid align-right">
