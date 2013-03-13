@@ -9,7 +9,6 @@
 
 {% block checkout-nav %}{% endblock %}
 
-
 {% block content %}
 <div class="sub-header">
 	<h1>{% blocktrans with order_num=order.number %}
@@ -102,37 +101,68 @@
 </div>
 {% endfor %}
 
-<div class="basket-items">
-    <div class="row-fluid align-right">
-		<h4 class="span10">{% trans "Basket total (before discounts)" %}</h4>
-        <h5 class="span2">{{ order.basket_total_before_discounts_incl_tax|currency }}</h5>
-
-
-
-		<h4 class="span10">{% trans "Basket total (after discounts)" %}</h4>
-        <h5 class="span2">{{ order.basket_total_incl_tax|currency }}</h5>
-    </div>
-</div>
-
-<div class="basket-items">
-    <div class="row-fluid align-right">
-		<h4 class="span10">{% trans "Shipping" %}</h4>
-        <h5 class="span2">{{ order.shipping_incl_tax|currency }}</h5>
-    </div>
-</div>
-
 {% with discounts=order.basket_discounts %}
-{% if discounts %}
-<div class="basket-items">
-	{% for discount in order.basket_discounts %}
-    <div class="row-fluid align-right">
-        <h5 class="span10">{{ discount.offer }}</h5>
-        <h5 class="span2">- {{ discount.amount|currency }}</h5>
-    </div>
-	{% endfor %}
-</div>
-{% endif %}
+    {% if discounts %}
+        <div class="basket-items">
+            <div class="row-fluid align-right">
+                <h3 class="span10">{% trans "Basket total (before discounts)" %}</h3>
+                <h3 class="span2 price_color">{{ order.basket_total_before_discounts_incl_tax|currency }}</h3>
+            </div>
+        </div>
+        <div class="basket-items">
+            {% for discount in discounts %}
+                <div class="row-fluid align-right">
+                    <h5 class="span10"><span class="label label-success">{% trans "Discount" %}</span> {{ discount.offer }}</h5>
+                    <h5 class="span2">- {{ discount.amount|currency }}</h5>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="basket-items">
+            <div class="row-fluid align-right">
+                <h3 class="span10">{% trans "Basket total (after discounts)" %}</h3>
+                <h3 class="span2 price_color">{{ order.basket_total_incl_tax|currency }}</h3>
+            </div>
+        </div>
+    {% else %}
+        <div class="basket-items">
+            <div class="row-fluid align-right">
+                <h3 class="span10">{% trans "Basket total" %}</h3>
+                <h3 class="span2 price_color">{{ order.basket_total_incl_tax|currency }}</h3>
+            </div>
+        </div>
+    {% endif %}
 {% endwith %}
+
+<div class="basket-items">
+    <div class="row-fluid align-right">
+        <h3 class="span10">{% trans "Shipping method" %}</h3>
+        <h3 class="span2 price_color">{{ order.shipping_method }}</h3>
+    </div>
+    {% if order.has_shipping_discounts %}
+        <div class="row-fluid align-right">
+            <h3 class="span10">{% trans "Shipping charge (before discounts)" %}</h3>
+            <h3 class="span2 price_color">{{ order.shipping_before_discounts_incl_tax|currency }}</h3>
+        </div>
+        <div class="basket-items">
+            {% for discount in order.shipping_discounts %}
+                <div class="row-fluid align-right">
+                    <h5 class="span10"><span class="label label-success">{% trans "Discount" %}</span> {{ discount.offer }}</h5>
+                    <h5 class="span2">- {{ discount.amount|currency }}</h5>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="row-fluid align-right">
+            <h3 class="span10">{% trans "Shipping charge (after discounts)" %}</h3>
+            <h3 class="span2 price_color">{{ order.shipping_incl_tax|currency }}</h3>
+        </div>
+    {% else %}
+        <div class="row-fluid align-right">
+            <h3 class="span10">{% trans "Shipping charge" %}</h3>
+            <h3 class="span2 price_color">{{ order.shipping_incl_tax|currency }}</h3>
+        </div>
+    {% endif %}
+</div>
+
 
 <div class="basket-items total">
     <div class="row-fluid align-right">
@@ -143,7 +173,7 @@
  
 {% if not order.user %}
     <div class="sub-header">
-		<h4>{% trans "Tracking your order" %}</h4>
+		<h2>{% trans "Tracking your order" %}</h2>
     </div>
 	<p>{% trans "You can" %}
 		<a href="{% url customer:anon-order order.number order.verification_hash %}">{% trans "track the status of your order" %}</a>.

@@ -35,14 +35,20 @@ class AbstractOrder(models.Model):
     total_excl_tax = models.DecimalField(_("Order total (excl. tax)"), decimal_places=2, max_digits=12)
 
     # Shipping charges
-    shipping_incl_tax = models.DecimalField(_("Shipping charge (inc. tax)"), decimal_places=2, max_digits=12, default=0)
-    shipping_excl_tax = models.DecimalField(_("Shipping charge (excl. tax)"), decimal_places=2, max_digits=12, default=0)
+    shipping_incl_tax = models.DecimalField(
+        _("Shipping charge (inc. tax)"), decimal_places=2, max_digits=12,
+        default=0)
+    shipping_excl_tax = models.DecimalField(
+        _("Shipping charge (excl. tax)"), decimal_places=2, max_digits=12,
+        default=0)
 
     # Not all lines are actually shipped (such as downloads), hence shipping address
     # is not mandatory.
-    shipping_address = models.ForeignKey('order.ShippingAddress', null=True, blank=True,
+    shipping_address = models.ForeignKey(
+        'order.ShippingAddress', null=True, blank=True,
         verbose_name=_("Shipping Address"))
-    shipping_method = models.CharField(_("Shipping method"), max_length=128, null=True, blank=True)
+    shipping_method = models.CharField(
+        _("Shipping method"), max_length=128, null=True, blank=True)
 
     # Use this field to indicate that an order is on hold / awaiting payment
     status = models.CharField(_("Status"), max_length=100, null=True, blank=True)
@@ -184,6 +190,19 @@ class AbstractOrder(models.Model):
                 status = event_name
         return status
 
+    @property
+    def has_shipping_discounts(self):
+        return len(self.shipping_discounts) > 0
+
+    @property
+    def shipping_before_discounts_incl_tax(self):
+        # We can construct what shipping would have been before discounts by
+        # adding the discounts back onto the final shipping charge.
+        total = D('0.00')
+        for discount in self.shipping_discounts:
+            total += discount.amount
+        return self.shipping_incl_tax + total
+
     def _is_event_complete(self, event_quantites):
         # Form map of line to quantity
         map = {}
@@ -218,9 +237,17 @@ class AbstractOrder(models.Model):
             return self.guest_email
         return self.user.email
 
+    @property
     def basket_discounts(self):
+        # This includes both offer- and voucher- discounts.  For orders we
+        # don't need to treat them differently like we do for baskets.
         return self.discounts.filter(
-            category='Basket')
+            category=AbstractOrderDiscount.BASKET)
+
+    @property
+    def shipping_discounts(self):
+        return self.discounts.filter(
+            category=AbstractOrderDiscount.SHIPPING)
 
 
 class AbstractOrderNote(models.Model):
