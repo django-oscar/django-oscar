@@ -3,7 +3,7 @@ Recipes
 =======
 
 Recipes are simple guides to solving common problems that occur when creating
-e-commerce projects.
+Oscar sites.  
 
 Customisation
 -------------
@@ -38,6 +38,14 @@ Pricing, stock and availability
     recipes/enforcing_stock_rules
     recipes/how_to_configure_stock_messaging
 
+Shipping
+--------
+
+.. toctree::
+    :maxdepth: 1
+
+    recipes/how_to_configure_shipping
+
 Payment
 -------
 
@@ -47,14 +55,6 @@ Payment
     recipes/how_to_integrate_payment
     recipes/how_to_apply_tax_exemptions
 
-Shipping
---------
-
-.. toctree::
-    :maxdepth: 1
-
-    recipes/how_to_configure_shipping
-
 Offers
 ------
 
@@ -63,6 +63,7 @@ Offers
 
     recipes/how_to_create_a_custom_range
     recipes/how_to_create_a_custom_condition
+    recipes/how_to_create_a_custom_benefit
 
 Appearance
 ----------
