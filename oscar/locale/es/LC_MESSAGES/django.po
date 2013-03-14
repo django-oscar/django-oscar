@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
 # Juan Saavedra <jsaavedra@trea.uy>, 2013.
 msgid ""
@@ -9,14 +9,13 @@ msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-03-13 11:06+0000\n"
-"PO-Revision-Date: 2013-03-12 03:07+0000\n"
+"PO-Revision-Date: 2013-03-13 22:54+0000\n"
 "Last-Translator: paqueteuy <jsaavedra@trea.uy>\n"
-"Language-Team: Spanish (http://www.transifex.com/projects/p/django-oscar/"
-"language/es/)\n"
-"Language: es\n"
+"Language-Team: Spanish (http://www.transifex.com/projects/p/django-oscar/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: defaults.py:78 templates/oscar/dashboard/index.html:16
@@ -338,11 +337,11 @@ msgstr ""
 #: templates/oscar/dashboard/orders/order_list.html:101
 #: templates/oscar/dashboard/orders/shippingaddress_form.html:5
 msgid "Shipping address"
-msgstr ""
+msgstr "Dirección de envío"
 
 #: apps/address/abstract_models.py:182
 msgid "Shipping addresses"
-msgstr ""
+msgstr "Direcciones de envío"
 
 #: apps/address/abstract_models.py:206 apps/analytics/abstract_models.py:44
 #: apps/analytics/abstract_models.py:72 apps/analytics/abstract_models.py:88
@@ -357,23 +356,23 @@ msgstr ""
 #: templates/oscar/dashboard/users/alerts/list.html:48
 #: templates/oscar/dashboard/users/alerts/partials/alert.html:10
 msgid "User"
-msgstr ""
+msgstr "Usuario"
 
 #: apps/address/abstract_models.py:210
 msgid "Default shipping address?"
-msgstr ""
+msgstr "¿Dirección de envío predeterminada?"
 
 #: apps/address/abstract_models.py:212
 msgid "Default billing address?"
-msgstr ""
+msgstr "¿Dirección de cobro predeterminada?"
 
 #: apps/address/abstract_models.py:217 apps/offer/models.py:137
 msgid "Number of Orders"
-msgstr ""
+msgstr "Cantidad de órdenes"
 
 #: apps/address/abstract_models.py:221
 msgid "Address Hash"
-msgstr ""
+msgstr "Código de dirección"
 
 #: apps/address/abstract_models.py:222 apps/analytics/abstract_models.py:74
 #: apps/analytics/abstract_models.py:90 apps/basket/abstract_models.py:491
@@ -384,25 +383,25 @@ msgstr ""
 #: apps/partner/abstract_models.py:324 apps/payment/models.py:30
 #: apps/promotions/models.py:28 apps/promotions/models.py:317
 msgid "Date Created"
-msgstr ""
+msgstr "Fecha de creación"
 
 #: apps/address/abstract_models.py:257
 msgid "User address"
-msgstr ""
+msgstr "Dirección de usuario"
 
 #: apps/address/abstract_models.py:258
 msgid "User addresses"
-msgstr ""
+msgstr "Direcciones de usuario"
 
 #: apps/address/abstract_models.py:266
 #: templates/oscar/dashboard/orders/order_detail.html:320
 #: templates/oscar/dashboard/orders/order_list.html:102
 msgid "Billing address"
-msgstr ""
+msgstr "Dirección de cobro"
 
 #: apps/address/abstract_models.py:267
 msgid "Billing addresses"
-msgstr ""
+msgstr "Direcciones de cobro"
 
 #: apps/analytics/abstract_models.py:16 apps/analytics/abstract_models.py:73
 #: apps/analytics/reports.py:20 apps/basket/abstract_models.py:479
@@ -420,13 +419,13 @@ msgstr ""
 #: templates/oscar/dashboard/users/alerts/list.html:47
 #: templates/oscar/dashboard/users/alerts/partials/alert.html:6
 msgid "Product"
-msgstr ""
+msgstr "Producto"
 
 #: apps/analytics/abstract_models.py:20 apps/analytics/reports.py:21
 #: templates/oscar/dashboard/catalogue/product_update.html:96
 #: templates/oscar/dashboard/reports/partials/product_report.html:9
 msgid "Views"
-msgstr ""
+msgstr "Vistas"
 
 #: apps/analytics/abstract_models.py:22 apps/analytics/abstract_models.py:50
 msgid "Basket Additions"
@@ -434,7 +433,7 @@ msgstr ""
 
 #: apps/analytics/abstract_models.py:24
 msgid "Purchaes"
-msgstr ""
+msgstr "Compras"
 
 #: apps/analytics/abstract_models.py:27 apps/catalogue/abstract_models.py:297
 #: apps/catalogue/reviews/abstract_models.py:31
@@ -443,24 +442,24 @@ msgstr ""
 #: templates/oscar/dashboard/reviews/review_list.html:59
 #: templates/oscar/dashboard/users/detail.html:156
 msgid "Score"
-msgstr ""
+msgstr "Puntaje"
 
 #: apps/analytics/abstract_models.py:32
 msgid "Product record"
-msgstr ""
+msgstr "Registro de producto"
 
 #: apps/analytics/abstract_models.py:33
 msgid "Product records"
-msgstr ""
+msgstr "Registros de productos"
 
 #: apps/analytics/abstract_models.py:36
 #, python-format
 msgid "Record for '%s'"
-msgstr ""
+msgstr "Registro para '%s'"
 
 #: apps/analytics/abstract_models.py:48
 msgid "Product Views"
-msgstr ""
+msgstr "Vistas de producto"
 
 #: apps/analytics/abstract_models.py:54 apps/analytics/reports.py:66
 #: apps/order/abstract_models.py:193
@@ -473,52 +472,52 @@ msgstr ""
 #: templates/oscar/dashboard/users/detail.html:91
 #: templates/oscar/dashboard/users/detail.html:99
 msgid "Orders"
-msgstr ""
+msgstr "Pedidos"
 
 #: apps/analytics/abstract_models.py:56 apps/order/abstract_models.py:467
 msgid "Order Lines"
-msgstr ""
+msgstr "Líneas del pedido"
 
 #: apps/analytics/abstract_models.py:58
 msgid "Order Items"
-msgstr ""
+msgstr "Elementos del pedido"
 
 #: apps/analytics/abstract_models.py:59
 msgid "Total Spent"
-msgstr ""
+msgstr "Total gastado"
 
 #: apps/analytics/abstract_models.py:62
 msgid "Last Order Date"
-msgstr ""
+msgstr "Fecha de último pedido"
 
 #: apps/analytics/abstract_models.py:66
 msgid "User Record"
-msgstr ""
+msgstr "Historial de usuario"
 
 #: apps/analytics/abstract_models.py:67
 msgid "User Records"
-msgstr ""
+msgstr "Historiales de usuarios"
 
 #: apps/analytics/abstract_models.py:78 apps/basket/abstract_models.py:52
 #: apps/basket/abstract_models.py:468 templates/oscar/basket/basket.html:7
 #: templates/oscar/basket/basket.html:14
 #: templates/oscar/partials/nav_primary.html:16
 msgid "Basket"
-msgstr ""
+msgstr "Canasto"
 
 #: apps/analytics/abstract_models.py:79 apps/basket/abstract_models.py:53
 #: templates/oscar/dashboard/catalogue/product_update.html:100
 msgid "Baskets"
-msgstr ""
+msgstr "Canastos"
 
 #: apps/analytics/abstract_models.py:82
 #, python-format
 msgid "%(user)s viewed '%(product)s'"
-msgstr ""
+msgstr "%(user)s vió '%(product)s'"
 
 #: apps/analytics/abstract_models.py:89
 msgid "Search term"
-msgstr ""
+msgstr "Término de búsqueda"
 
 #: apps/analytics/abstract_models.py:94
 msgid "User search queries"
@@ -695,8 +694,8 @@ msgstr ""
 #: apps/basket/abstract_models.py:95
 #, python-format
 msgid ""
-"Due to technical limitations we are not able to ship more than %(threshold)d "
-"items in one order."
+"Due to technical limitations we are not able to ship more than %(threshold)d"
+" items in one order."
 msgstr ""
 
 #: apps/basket/abstract_models.py:474
@@ -808,8 +807,8 @@ msgstr ""
 #: apps/basket/forms.py:169
 #, python-format
 msgid ""
-"Due to technical limitations we are not able to ship more than %(threshold)d "
-"items in one order. Your basket currently has %(basket)d items."
+"Due to technical limitations we are not able to ship more than %(threshold)d"
+" items in one order. Your basket currently has %(basket)d items."
 msgstr ""
 
 #: apps/basket/forms.py:193
@@ -2356,7 +2355,8 @@ msgstr ""
 #: apps/dashboard/orders/views.py:408
 #, python-format
 msgid ""
-"Status of line #%(line_id)d changed from '%(old_status)s' to '%(new_status)s'"
+"Status of line #%(line_id)d changed from '%(old_status)s' to "
+"'%(new_status)s'"
 msgstr ""
 
 #: apps/dashboard/orders/views.py:425 apps/dashboard/orders/views.py:458
@@ -3287,8 +3287,8 @@ msgstr ""
 #: apps/order/abstract_models.py:70
 #, python-format
 msgid ""
-"'%(new_status)s' is not a valid status for order %(number)s (current status: "
-"'%(status)s')"
+"'%(new_status)s' is not a valid status for order %(number)s (current status:"
+" '%(status)s')"
 msgstr ""
 
 #: apps/order/abstract_models.py:167
@@ -3551,7 +3551,8 @@ msgid "Is Required"
 msgstr ""
 
 #: apps/order/abstract_models.py:678
-msgid "This event must be passed before the next shipping event can take place"
+msgid ""
+"This event must be passed before the next shipping event can take place"
 msgstr ""
 
 #: apps/order/abstract_models.py:689
@@ -3968,7 +3969,8 @@ msgstr ""
 
 #: apps/promotions/models.py:145
 msgid ""
-"This can be used to have different types of HTML blocks (eg different widths)"
+"This can be used to have different types of HTML blocks (eg different "
+"widths)"
 msgstr ""
 
 #: apps/promotions/models.py:150 apps/promotions/models.py:151
@@ -4158,10 +4160,8 @@ msgstr ""
 #: apps/shipping/models.py:146
 msgid ""
 "Enter upper limit of this\n"
-"                                                weight band in Kg, the "
-"lower\n"
-"                                                limit will be determine by "
-"the\n"
+"                                                weight band in Kg, the lower\n"
+"                                                limit will be determine by the\n"
 "                                                other weight bands"
 msgstr ""
 
@@ -4345,8 +4345,7 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"\t<div class=\"warning\">%(message)s to qualify for the <a href=\"%(url)s\">"
-"%(offer_name)s</a> special offer</div>\n"
+"\t<div class=\"warning\">%(message)s to qualify for the <a href=\"%(url)s\">%(offer_name)s</a> special offer</div>\n"
 "    "
 msgstr ""
 
@@ -5404,8 +5403,7 @@ msgstr ""
 #: templates/oscar/customer/alerts/emails/alert_body.txt:5
 msgid ""
 "\n"
-"Beware that the amount of items in stock is limited. Be quick or someone "
-"might get there first.\n"
+"Beware that the amount of items in stock is limited. Be quick or someone might get there first.\n"
 msgstr ""
 
 #: templates/oscar/customer/alerts/emails/alert_body.txt:7
@@ -5449,8 +5447,7 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"    You're receiving this email because your email address has been changed "
-"to <strong>%(email)s</strong>.\n"
+"    You're receiving this email because your email address has been changed to <strong>%(email)s</strong>.\n"
 "    "
 msgstr ""
 
@@ -5463,7 +5460,8 @@ msgstr ""
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.html:14
 #: templates/oscar/customer/emails/commtype_email_changed_body.txt:10
-msgid "If it was you who changed the email address, you can ignore this email."
+msgid ""
+"If it was you who changed the email address, you can ignore this email."
 msgstr ""
 
 #: templates/oscar/customer/emails/commtype_email_changed_body.html:16
@@ -5489,8 +5487,7 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"You're receiving this email because your email address has been changed to "
-"%(email)s.\n"
+"You're receiving this email because your email address has been changed to %(email)s.\n"
 msgstr ""
 
 #: templates/oscar/customer/emails/commtype_email_changed_subject.txt:1
@@ -5533,8 +5530,8 @@ msgstr ""
 #: templates/oscar/customer/emails/commtype_order_placed_body.html:24
 #, python-format
 msgid ""
-"You can view the status of this order by clicking <a href=\"%(status_url)s\" "
-"title=\"order status\">here</a>"
+"You can view the status of this order by clicking <a href=\"%(status_url)s\""
+" title=\"order status\">here</a>"
 msgstr ""
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.html:27
@@ -5567,8 +5564,7 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"    You're receiving this e-mail because your password has been changed at "
-"%(name)s.\n"
+"    You're receiving this e-mail because your password has been changed at %(name)s.\n"
 "    "
 msgstr ""
 
@@ -5587,8 +5583,7 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"You're receiving this email because your password has been changed at "
-"%(name)s.\n"
+"You're receiving this email because your password has been changed at %(name)s.\n"
 msgstr ""
 
 #: templates/oscar/customer/emails/commtype_password_changed_subject.txt:1
@@ -5600,8 +5595,8 @@ msgstr ""
 #: templates/oscar/customer/emails/commtype_password_reset_body.txt:2
 #, python-format
 msgid ""
-"You're receiving this e-mail because you requested a password reset for your "
-"user account at %(name)s."
+"You're receiving this e-mail because you requested a password reset for your"
+" user account at %(name)s."
 msgstr ""
 
 #: templates/oscar/customer/emails/commtype_password_reset_body.html:6
@@ -5891,9 +5886,8 @@ msgid "Sections"
 msgstr ""
 
 #: templates/oscar/dashboard/catalogue/product_update.html:62
-#, fuzzy
 msgid "Overview"
-msgstr "Comentarios"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/product_update.html:81
 msgid "Fulfilment partner"
@@ -5924,9 +5918,8 @@ msgid "Variants"
 msgstr ""
 
 #: templates/oscar/dashboard/catalogue/product_update.html:243
-#, fuzzy
 msgid "Product class:"
-msgstr "Productos"
+msgstr ""
 
 #: templates/oscar/dashboard/catalogue/product_update.html:246
 msgid "Attribute name"
@@ -6535,8 +6528,9 @@ msgstr ""
 #: templates/oscar/dashboard/promotions/delete_pagepromotion.html:32
 #, python-format
 msgid ""
-"Remove %(object.content_object.type)s content block <strong>%(object.name)s</"
-"strong> from page <strong>%(object.page_url)s</strong> - are you sure?"
+"Remove %(object.content_object.type)s content block "
+"<strong>%(object.name)s</strong> from page "
+"<strong>%(object.page_url)s</strong> - are you sure?"
 msgstr ""
 
 #: templates/oscar/dashboard/promotions/form.html:47
