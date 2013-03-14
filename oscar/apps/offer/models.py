@@ -468,13 +468,13 @@ class Benefit(models.Model):
     SHIPPING_PERCENTAGE, SHIPPING_ABSOLUTE, SHIPPING_FIXED_PRICE = (
         'Shipping percentage', 'Shipping absolute', 'Shipping fixed price')
     TYPE_CHOICES = (
-        (PERCENTAGE, _("Discount is a % of the product's value")),
+        (PERCENTAGE, _("Discount is a percentage of the product's value")),
         (FIXED, _("Discount is a fixed amount off the product's value")),
         (MULTIBUY, _("Discount is to give the cheapest product for free")),
         (FIXED_PRICE, _("Get the products that meet the condition for a fixed price")),
         (SHIPPING_ABSOLUTE, _("Discount is a fixed amount off the shipping cost")),
         (SHIPPING_FIXED_PRICE, _("Get shipping for a fixed price")),
-        (SHIPPING_PERCENTAGE, _("Discount is a % off the shipping cost")),
+        (SHIPPING_PERCENTAGE, _("Discount is a percentage of the shipping cost")),
     )
     type = models.CharField(_("Type"), max_length=128, choices=TYPE_CHOICES)
     value = PositiveDecimalField(_("Value"), decimal_places=2, max_digits=12,
