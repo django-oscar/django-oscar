@@ -4,7 +4,7 @@ import tarfile
 import zipfile
 import tempfile
 import shutil
-import Image as PImage
+from PIL import Image
 
 from django.core.files import File
 from django.core.exceptions import FieldError
@@ -106,7 +106,7 @@ class Importer(object):
 
     def _process_image(self, dirname, filename, lookup_value):
         file_path = os.path.join(dirname, filename)
-        trial_image = PImage.open(file_path)
+        trial_image = Image.open(file_path)
         trial_image.verify()
 
         kwargs = {self._field: lookup_value}
