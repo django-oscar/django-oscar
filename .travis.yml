@@ -2,6 +2,9 @@ language: python
 python:
   - 2.6
   - 2.7
+env:
+    - TARGET="travis"
+    - TARGET="sandbox"
 install:
 script:
-  - make travis
+  - make $TARGET
