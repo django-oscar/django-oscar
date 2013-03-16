@@ -58,9 +58,9 @@ setup(name='django-oscar',
           'Unidecode>=0.04.12,<0.05',
           # Oscar's default CSS is generated from Less and so we need node.js
           # and lessc to be available to compile the Less files.
-          'virtual-node>=0.0.1',
+          'virtual-node>=0.0.2-0.8.11',
           'virtual-less>=0.0.1-1.3.3'],
-      dependency_links=['https://github.com/toastdriven/django-haystack/tarball/f91a9a7ce6fb26093f4ecf09b28d71cf4b59283c#egg=django-haystack-2.0.0-beta'],
+      dependency_links=['https://github.com/toastdriven/django-haystack/tarball/fd83d3f449c2197f93040bb3d7bc6083ea8e48b7#egg=django-haystack-2.0.0-beta'],
       # See http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
           'Development Status :: 4 - Beta',
