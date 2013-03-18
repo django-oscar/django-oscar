@@ -3,11 +3,11 @@
 
 install:
 	python setup.py develop
-	pip install -r requirements.txt
+	pip install -r requirements.txt --use-mirrors
 
 upgrade:
 	python setup.py develop --upgrade
-	pip install --upgrade -r requirements.txt
+	pip install --upgrade -r requirements.txt --use-mirrors
 
 sandbox: install
 	-rm -f sites/sandbox/db.sqlite
@@ -32,21 +32,22 @@ demo: install
 	sites/demo/manage.py rebuild_index --noinput
 
 test:
-	tox
+	./runtests.py
 
 ci: upgrade lint
-	# Run continuous tests and generate lint reports
+	# Run continuous tests and generate lint reports.  This is for Hudson which has 
+	# coverage and xunit plugins.
 	./runtests.py --with-coverage --with-xunit
 	coverage xml -i
 
 lint:
 	./lint.sh
 
-travis: install lint
-	# It is important that this target only depends on install
-	# (instead of upgrade) because we install Django in the .travis.yml
-	# and upgrade would overwrite it
-	./runtests.py
+# It is important that this target only depends on install
+# (instead of upgrade) because we install Django in the .travis.yml
+# and upgrade would overwrite it.  We also build the sandbox as part of this target
+# to catch any errors that might come from that build process.
+travis: install lint test sandbox
 
 i18n:
 	# Create the .po files used for i18n
