@@ -5,7 +5,7 @@
 {% block body_class %}orders{% endblock %}
 
 {% block title %}
-{% blocktrans with number=order.number %}Order {{ number }}{% endblocktrans %} | {{ block.super }}
+    {% blocktrans with number=order.number %}Order {{ number }}{% endblocktrans %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -23,7 +23,7 @@
 {% endblock %}
 
 {% block headertext %}
-{% blocktrans with number=order.number %}Order #{{ number }}{% endblocktrans %}
+    {% blocktrans with number=order.number %}Order #{{ number }}{% endblocktrans %}
 {% endblock  %}
 
 {% block dashboard_content %}
@@ -73,7 +73,7 @@
         <li class="{% if active_tab == 'lines' %}active{% endif %}"><a href="#lines" data-toggle="tab">{% trans "Order contents" %}</a></li>
         <li class="{% if active_tab == 'shipping' %}active{% endif %}"><a href="#shipping" data-toggle="tab">{% trans "Shipping" %}</a></li>
         <li class="{% if active_tab == 'payment' %}active{% endif %}"><a href="#payment" data-toggle="tab">{% trans "Payment" %}</a></li>
-        <li class="{% if active_tab == 'discounts' %}active{% endif %}"><a href="#discounts" data-toggle="tab">{% trans "Discounts" %}</a></li>
+        <li class="{% if active_tab == 'discounts' %}active{% endif %}"><a href="#discounts" data-toggle="tab">{% trans "Offers" %}</a></li>
         <li class="{% if active_tab == 'emails' %}active{% endif %}"><a href="#emails" data-toggle="tab">{% trans "Emails" %}</a></li>
         <li class="{% if active_tab == 'notes' %}active{% endif %}"><a href="#notes" data-toggle="tab">{% trans "Notes" %}</a></li>
         {% endblock nav_tabs %}
@@ -115,28 +115,90 @@
 							<td>{{ line.partner_name }}</td>
 							<td>{{ line.partner_sku }}</td>
 							<td>{{ line.est_dispatch_date|default:"-" }}</td>
-							<td>{{ line.line_price_before_discounts_incl_tax|currency }}</td>
+							<td style="text-align: right">{{ line.line_price_before_discounts_incl_tax|currency }}</td>
 							<td>
 								<a href="{% url dashboard:order-line-detail order.number line.id %}" class="btn btn-info">{% trans "View" %}</a>
 							</td>
 						</tr>
 						{% endfor %}
+
 						<tr>
 							<td colspan="7"></td>
 							<th>{% trans "Discount" %}</th>
-							<td>{{ order.total_discount_incl_tax|currency }}</td>
+							<td style="text-align: right">{{ order.total_discount_incl_tax|currency }}</td>
 							<td></td>
 						</tr>
+                        {% with discounts=order.basket_discounts %}
+                            {% if discounts %}
+                                <tr>
+                                    <td colspan="7"></td>
+                                    <th>{% trans "Basket total (excl. discounts)" %}</th>
+                                    <td style="text-align: right">{{ order.basket_total_before_discounts_incl_tax|currency }}</td>
+                                    <td></td>
+                                </tr>
+                                {% for discount in discounts %}
+                                <tr>
+                                    <td colspan="7"></td>
+                                    <td>
+                                        <span class="label label-success">{% trans "Discount" %}</span>
+                                        {{ discount.offer_name }}
+                                    </td>
+                                    <td style="text-align: right">- {{ discount.amount|currency }}</td>
+                                    <td></td>
+                                </tr>
+                                {% endfor %}
+                                <tr>
+                                    <td colspan="7"></td>
+                                    <th>{% trans "Basket total (inc. discounts)" %}</th>
+                                    <th style="text-align: right">{{ order.basket_total_incl_tax|currency }}</th>
+                                    <td></td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="7"></td>
+                                    <th>{% trans "Basket total" %}</th>
+                                    <th style="text-align: right">{{ order.basket_total_incl_tax|currency }}</th>
+                                    <td></td>
+                                </tr>
+                            {% endif %}
+                        {% endwith %}
+
+                        {% if order.has_shipping_discounts %}
+                            <tr>
+                                <td colspan="7"></td>
+                                <td>{% trans "Shipping total (excl. discounts)" %}</td>
+                                <td style="text-align: right">{{ order.shipping_before_discounts_incl_tax|currency }}</td>
+                                <td></td>
+                            </tr>
+                            {% for discount in order.shipping_discounts %}
+                            <tr>
+                                <td colspan="7"></td>
+                                <td>
+                                    <span class="label label-success">{% trans "Discount" %}</span>
+                                    {{ discount.offer_name }}
+                                </td>
+                                <td style="text-align: right">- {{ discount.amount|currency }}</td>
+                                <td></td>
+                            </tr>
+                            {% endfor %}
+                            <tr>
+                                <td colspan="7"></td>
+                                <th>{% trans "Shipping total (inc. discounts)" %}</th>
+                                <th style="text-align: right">{{ order.shipping_incl_tax|currency }}</th>
+                                <td></td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <th>{% trans "Shipping total" %}</th>
+                                <th style="text-align: right">{{ order.shipping_incl_Tax|currency }}</th>
+                                <td></td>
+                            </tr>
+                        {% endif %}
+
 						<tr>
 							<td colspan="7"></td>
-							<th>{% trans "Shipping charge" %}</th>
-							<td>{{ order.shipping_incl_tax|currency }}</td>
-							<td></td>
-						</tr>
-						<tr>
-							<td colspan="7"></td>
-							<th>{% trans "Total" %}</th>
-							<td>{{ order.total_incl_tax|currency }}</td>
+							<th>{% trans "Order total" %}</th>
+							<th style="text-align: right">{{ order.total_incl_tax|currency }}</th>
 							<td></td>
 						</tr>
 					</tbody>
@@ -374,37 +436,45 @@
 
 		<div class="tab-pane {% if active_tab == 'discounts' %}active{% endif %}" id="discounts">
 			{% block tab_discounts %}
-				<div class="table-header">
-					<h3>{% trans "Discounts" %}</h3>
-				</div>
-				{% with discounts=order.discounts.all %}
-				
-					<table class="table table-striped table-bordered table-hover">
-					    {% if discounts %}
-    						<thead>
-    							<tr>
-    								<th>{% trans "Voucher code" %}</th>
-    								<th>{% trans "Offer name" %}</th>
-    								<th>{% trans "Amount" %}</th>
-    							</tr>
-    						</thead>
-    						<tbody>
-    						{% for discount in discounts %}
-    						<tr>
-    							<td>{{ discount.voucher_code|default:"-" }}</td>
-    							<td>{{ discount.offer.name }}</td>
-    							<td>{{ discount.amount|currency}}</td>
-    						</tr>
-    						{% endfor %}
-    						</tbody>
-						{% else %}
-                            <tbody>
-                                <tr><td>{% trans "No discounts were applied in this order." %}</td></tr>
-                            </tbody>
-        				{% endif %}
-					</table>
 
-				{% endwith %}
+                {% with discounts=order.discounts.all %}
+				<div class="table-header">
+					<h3>{% trans "Offer applications" %}</h3>
+				</div>
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>{% trans "Type" %}</th>
+                            <th>{% trans "Voucher" %}</th>
+                            <th>{% trans "Offer name" %}</th>
+                            <th>{% trans "Frequency" %}</th>
+                            <th>{% trans "Message" %}</th>
+                            <th>{% trans "Amount" %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for discount in discounts %}
+                        <tr>
+                            <td>{{ discount.get_category_display }}</td>
+                            <td>
+                                {{ discount.voucher.code|default:"-" }}
+                            </td>
+                            <td>
+                                {% if discount.offer %}
+                                <a href="{% url dashboard:offer-detail discount.offer.id %}">{{ discount.offer.name }}</a>
+                                {% else %}
+                                {{ discount.offer_name }}
+                                {% endif %}
+                            </td>
+                            <td>{{ discount.frequency }}</td>
+                            <td>{{ discount.message|default:"-" }}</td>
+                            <td>{{ discount.amount|currency}}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% endwith %}
+
 			{% endblock %}
 		</div>
 

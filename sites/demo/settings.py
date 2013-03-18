@@ -2,7 +2,10 @@ import os
 
 # Django settings for oscar project.
 PROJECT_DIR = os.path.dirname(__file__)
-location = lambda x: os.path.join(os.path.dirname(os.path.realpath(__file__)), x)
+location = lambda x: os.path.join(
+    os.path.dirname(os.path.realpath(__file__)), x)
+
+USE_TZ = True
 
 DEBUG = True
 TEMPLATE_DEBUG = True
@@ -76,6 +79,11 @@ MEDIA_URL = '/media/'
 STATIC_URL = '/static/'
 STATICFILES_DIRS = ()
 STATIC_ROOT = location('public/static')
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
+)
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '$)a7n&o80u!6y5t-+jrd3)3!%vh&shg$wqpjpxc!ar&p#!)n1a'
@@ -99,8 +107,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'oscar.apps.search.context_processors.search_form',
     'oscar.apps.promotions.context_processors.promotions',
     'oscar.apps.checkout.context_processors.checkout',
-    'oscar.apps.customer.notifications.context_processors.notifications',
     'oscar.core.context_processors.metadata',
+    'oscar.apps.customer.notifications.context_processors.notifications',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -202,14 +210,16 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.flatpages',
     'django.contrib.staticfiles',
+    'south',
     # External apps
     'django_extensions',
-    'haystack',
     'debug_toolbar',
-    'south',
+    'compressor',
     # For profile testing
     'apps.user',
 ]
+
+# Include a shipping override app to provide some shipping methods
 from oscar import get_core_apps
 INSTALLED_APPS = INSTALLED_APPS + get_core_apps(['apps.shipping'])
 
@@ -240,15 +250,22 @@ from oscar.defaults import *
 OSCAR_RECENTLY_VIEWED_PRODUCTS = 20
 OSCAR_ALLOW_ANON_CHECKOUT = True
 
-OSCAR_SHOP_NAME = 'Oscar Demo'
-OSCAR_SHOP_TAGLINE = 'e-Commerce for Django'
+OSCAR_SHOP_NAME = 'Oscar'
+OSCAR_SHOP_TAGLINE = 'Demo site'
 
-GOOGLE_ANALYTICS_ID = 'UA-XXXXX-Y'
+#GOOGLE_ANALYTICS_ID = 'UA-XXXXX-Y'
+
+COMPRESS_ENABLED = False
+COMPRESS_PRECOMPILERS = (
+    ('text/less', 'lessc {infile} {outfile}'),
+)
 
 LOG_ROOT = location('logs')
-DISPLAY_VERSION = False
+# Ensure log root exists
+if not os.path.exists(LOG_ROOT):
+    os.mkdir(LOG_ROOT)
 
-THUMBNAIL_DEBUG = False
+DISPLAY_VERSION = False
 
 USE_TZ = True
 

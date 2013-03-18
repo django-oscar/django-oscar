@@ -45,21 +45,21 @@
                     {% endfor %}
                 </ul>
             </div>
-            <div class="sub-header">
-				<h3>{% trans "Or a new address?" %}</h3>
-    		</div>
+            <h3>{% trans "Or a new address?" %}</h3>
         {% endif %}
 	</div>
     {% endif %}
 
-    <div class="well well-info">
-    	<form action="{% url checkout:shipping-address %}" method="post" class="form-horizontal">
+    <form action="{% url checkout:shipping-address %}" method="post" class="form-horizontal">
+        <div class="well well-info">
             {% csrf_token %}
             {% include "partials/form_fields.html" with form=form %}
-			<div class="form-actions"><button type="submit" class="btn btn-large btn-primary">{% trans "Continue" %}</button>
-				{% trans "or" %} <a href="{% url basket:summary %}">{% trans "return to basket" %}</a></div>
-        </form>
-    </div>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-large btn-primary">{% trans "Continue" %}</button>
+            {% trans "or" %} <a href="{% url basket:summary %}">{% trans "return to basket" %}</a>
+        </div>
+    </form>
 {% endblock shipping_address %}
 
 {% block shipping_method %}{% endblock %}

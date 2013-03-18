@@ -230,9 +230,16 @@ class ConditionalOffer(models.Model):
         Applies the benefit to the given basket and returns the discount.
         """
         if not self.is_condition_satisfied(basket):
-            return D('0.00')
-        return self.benefit.proxy().apply(basket, self.condition.proxy(),
-                                          self)
+            return ZERO_DISCOUNT
+        return self.benefit.proxy().apply(
+            basket, self.condition.proxy(), self)
+
+    def apply_deferred_benefit(self, basket):
+        """
+        Applies any deferred benefits.  These are things like adding loyalty
+        points to somone's account.
+        """
+        return self.benefit.proxy().apply_deferred(basket)
 
     def set_voucher(self, voucher):
         self._voucher = voucher
@@ -471,14 +478,22 @@ class Benefit(models.Model):
         (PERCENTAGE, _("Discount is a percentage off of the product's value")),
         (FIXED, _("Discount is a fixed amount off of the product's value")),
         (MULTIBUY, _("Discount is to give the cheapest product for free")),
-        (FIXED_PRICE, _("Get the products that meet the condition for a fixed price")),
-        (SHIPPING_ABSOLUTE, _("Discount is a fixed amount off of the shipping cost")),
+        (FIXED_PRICE,
+         _("Get the products that meet the condition for a fixed price")),
+        (SHIPPING_ABSOLUTE,
+         _("Discount is a fixed amount of the shipping cost")),
         (SHIPPING_FIXED_PRICE, _("Get shipping for a fixed price")),
         (SHIPPING_PERCENTAGE, _("Discount is a percentage off of the shipping cost")),
     )
-    type = models.CharField(_("Type"), max_length=128, choices=TYPE_CHOICES)
-    value = PositiveDecimalField(_("Value"), decimal_places=2, max_digits=12,
-                                 null=True, blank=True)
+    type = models.CharField(
+        _("Type"), max_length=128, choices=TYPE_CHOICES, null=True,
+        blank=True)
+
+    # The value to use with the designated type.  This can be either an integer
+    # (eg for multibuy) or a decimal (eg an amount) which is slightly
+    # confusing.
+    value = PositiveDecimalField(
+        _("Value"), decimal_places=2, max_digits=12, null=True, blank=True)
 
     # If this is not set, then there is no upper limit on how many products
     # can be discounted by this benefit.
@@ -486,6 +501,11 @@ class Benefit(models.Model):
         _("Max Affected Items"), blank=True, null=True,
         help_text=_("Set this to prevent the discount consuming all items "
                     "within the range that are in the basket."))
+
+    # A custom benefit class can be used instead.  This means the
+    # type/value/max_affected_items fields should all be None.
+    proxy_class = models.CharField(_("Custom class"), null=True, blank=True,
+                                   max_length=255, unique=True, default=None)
 
     class Meta:
         verbose_name = _("Benefit")
@@ -497,6 +517,9 @@ class Benefit(models.Model):
             if field.startswith('_'):
                 del field_dict[field]
 
+        if self.proxy_class:
+            klass = load_proxy(self.proxy_class)
+            return klass(**field_dict)
         klassmap = {
             self.PERCENTAGE: PercentageDiscountBenefit,
             self.FIXED: AbsoluteDiscountBenefit,
@@ -507,13 +530,15 @@ class Benefit(models.Model):
             self.SHIPPING_PERCENTAGE: ShippingPercentageDiscountBenefit}
         if self.type in klassmap:
             return klassmap[self.type](**field_dict)
-        return self
+        raise RuntimeError("Unrecognised benefit type (%s)" % self.type)
 
     def __unicode__(self):
-        desc = self.proxy().__unicode__()
+        desc = self.description
         if self.max_affected_items:
             desc += ungettext(
-                " (max %d item)", " (max %d items)", self.max_affected_items) % self.max_affected_items
+                " (max %d item)",
+                " (max %d items)",
+                self.max_affected_items) % self.max_affected_items
         return desc
 
     @property
@@ -521,11 +546,14 @@ class Benefit(models.Model):
         return self.proxy().description
 
     def apply(self, basket, condition, offer=None):
-        return D('0.00')
+        return ZERO_DISCOUNT
+
+    def apply_deferred(self, basket):
+        return None
 
     def clean(self):
         if not self.type:
-            raise ValidationError(_("Benefit requires a value"))
+            return
         method_name = 'clean_%s' % self.type.lower().replace(' ', '_')
         if hasattr(self, method_name):
             getattr(self, method_name)()
@@ -1015,15 +1043,88 @@ class ValueCondition(Condition):
         if to_consume == 0:
             return
 
-        for price, line in self.get_applicable_lines(basket,
-                                                     most_expensive_first=True):
+        for price, line in self.get_applicable_lines(
+                basket, most_expensive_first=True):
             quantity_to_consume = min(
                 line.quantity_without_discount,
                 (to_consume / price).quantize(D(1), ROUND_UP))
             line.consume(quantity_to_consume)
             to_consume -= price * quantity_to_consume
-            if to_consume == 0:
+            if to_consume <= 0:
                 break
+
+
+# ============
+# Result types
+# ============
+
+
+class ApplicationResult(object):
+    is_final = is_successful = False
+    # Basket discount
+    discount = D('0.00')
+    description = None
+
+    # Offer applications can affect 3 distinct things
+    # (a) Give a discount off the BASKET total
+    # (b) Give a discount off the SHIPPING total
+    # (a) Trigger a post-order action
+    BASKET, SHIPPING, POST_ORDER = range(0, 3)
+    affects = None
+
+    @property
+    def affects_basket(self):
+        return self.affects == self.BASKET
+
+    @property
+    def affects_shipping(self):
+        return self.affects == self.SHIPPING
+
+    @property
+    def affects_post_order(self):
+        return self.affects == self.POST_ORDER
+
+
+class BasketDiscount(ApplicationResult):
+    """
+    For when an offer application leads to a simple discount off the basket's
+    total
+    """
+    affects = ApplicationResult.BASKET
+
+    def __init__(self, amount):
+        self.discount = amount
+
+    @property
+    def is_successful(self):
+        return self.discount > 0
+
+
+# Helper global as returning zero discount is quite common
+ZERO_DISCOUNT = BasketDiscount(D('0.00'))
+
+
+class ShippingDiscount(ApplicationResult):
+    """
+    For when an offer application leads to a discount from the shipping cost
+    """
+    is_successful = is_final = True
+    affects = ApplicationResult.SHIPPING
+
+
+SHIPPING_DISCOUNT = ShippingDiscount()
+
+
+class PostOrderAction(ApplicationResult):
+    """
+    For when an offer condition is met but the benefit is deferred until after
+    the order has been placed.  Eg buy 2 books and get 100 loyalty points.
+    """
+    is_final = is_successful = True
+    affects = ApplicationResult.POST_ORDER
+
+    def __init__(self, description):
+        self.description = description
 
 
 # ========
@@ -1075,7 +1176,7 @@ class PercentageDiscountBenefit(Benefit):
 
         if discount > 0:
             condition.consume_items(basket, affected_lines)
-        return discount
+        return BasketDiscount(discount)
 
 
 class AbsoluteDiscountBenefit(Benefit):
@@ -1103,7 +1204,7 @@ class AbsoluteDiscountBenefit(Benefit):
     def apply(self, basket, condition, offer=None):
         line_tuples = self.get_applicable_lines(basket)
         if not line_tuples:
-            return self.round(D('0.00'))
+            return ZERO_DISCOUNT
 
         discount = D('0.00')
         affected_items = 0
@@ -1128,7 +1229,7 @@ class AbsoluteDiscountBenefit(Benefit):
         if discount > 0:
             condition.consume_items(basket, affected_lines)
 
-        return discount
+        return BasketDiscount(discount)
 
 
 class FixedPriceBenefit(Benefit):
@@ -1160,11 +1261,11 @@ class FixedPriceBenefit(Benefit):
 
     def apply(self, basket, condition, offer=None):
         if isinstance(condition, ValueCondition):
-            return self.round(D('0.00'))
+            return ZERO_DISCOUNT
 
         line_tuples = self.get_applicable_lines(basket, range=condition.range)
         if not line_tuples:
-            return self.round(D('0.00'))
+            return ZERO_DISCOUNT
 
         # Determine the lines to consume
         num_permitted = int(condition.value)
@@ -1185,7 +1286,7 @@ class FixedPriceBenefit(Benefit):
                 break
         discount = max(value_affected - self.value, D('0.00'))
         if not discount:
-            return self.round(discount)
+            return ZERO_DISCOUNT
 
         # Apply discount to the affected lines
         discount_applied = D('0.00')
@@ -1200,7 +1301,7 @@ class FixedPriceBenefit(Benefit):
                     discount * (price * quantity) / value_affected)
             line.discount(line_discount, quantity)
             discount_applied += line_discount
-        return discount
+        return BasketDiscount(discount)
 
 
 class MultibuyDiscountBenefit(Benefit):
@@ -1223,7 +1324,7 @@ class MultibuyDiscountBenefit(Benefit):
     def apply(self, basket, condition, offer=None):
         line_tuples = self.get_applicable_lines(basket)
         if not line_tuples:
-            return self.round(D('0.00'))
+            return ZERO_DISCOUNT
 
         # Cheapest line gives free product
         discount, line = line_tuples[0]
@@ -1232,7 +1333,7 @@ class MultibuyDiscountBenefit(Benefit):
         affected_lines = [(line, discount, 1)]
         condition.consume_items(basket, affected_lines)
 
-        return discount
+        return BasketDiscount(discount)
 
 
 # =================
@@ -1243,25 +1344,20 @@ class MultibuyDiscountBenefit(Benefit):
 class ShippingBenefit(Benefit):
 
     def apply(self, basket, condition, offer=None):
-        # Attach offer to basket to indicate that it qualifies for a shipping
-        # discount.  At this point, we only allow one shipping offer per
-        # basket.
-        basket.shipping_offer = offer
-
         condition.consume_items(basket, affected_lines=())
-        return D('0.00')
+        return SHIPPING_DISCOUNT
+
+    class Meta:
+        proxy = True
 
 
 class ShippingAbsoluteDiscountBenefit(ShippingBenefit):
     _description = _("%(amount)s off shipping cost")
 
-    def __unicode__(self):
-        return self._description % {
-            'amount': currency(self.value)}
-
     @property
     def description(self):
-        return self.__unicode__()
+        return self._description % {
+            'amount': currency(self.value)}
 
     class Meta:
         proxy = True
@@ -1275,13 +1371,10 @@ class ShippingAbsoluteDiscountBenefit(ShippingBenefit):
 class ShippingFixedPriceBenefit(ShippingBenefit):
     _description = _("Get shipping for %(amount)s")
 
-    def __unicode__(self):
-        return self._description % {
-            'amount': currency(self.value)}
-
     @property
     def description(self):
-        return self.__unicode__()
+        return self._description % {
+            'amount': currency(self.value)}
 
     class Meta:
         proxy = True
@@ -1297,13 +1390,10 @@ class ShippingFixedPriceBenefit(ShippingBenefit):
 class ShippingPercentageDiscountBenefit(ShippingBenefit):
     _description = _("%(value)s%% off of shipping cost")
 
-    def __unicode__(self):
-        return self._description % {
-            'value': self.value}
-
     @property
     def description(self):
-        return self.__unicode__()
+        return self._description % {
+            'value': self.value}
 
     class Meta:
         proxy = True

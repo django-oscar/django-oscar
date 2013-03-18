@@ -30,36 +30,37 @@
         </div>
         <div class="well well-info">
 			{% if shipping_address %}
-            <dl>
-				<dt>{% trans "Address" %}</dt>
-                <dd>
+                <h4>{% trans "Address" %}</h4>
+                <p>
                     {% for field in shipping_address.active_address_fields %}
                     {{ field }}<br/>
                     {% endfor %}
-                </dd>
+                </p>
                 {% if shipping_address.phone_number %}
-				<dt>{% trans "Contact number" %}</dt>
-                <dd>{{ shipping_address.phone_number }}</dd>
+                    <p>{% trans "Contact number" %}: {{ shipping_address.phone_number }}</p>
                 {% endif %}
+
                 {% if shipping_address.notes %}
-				<dt>{% trans "Shipping notes" %}</dt>
-                <dd>{{ shipping_address.notes }}</dd>
+                    <p>{% trans "Shipping notes" %}</p>
+                    <p>{{ shipping_address.notes|linebreaks }}</p>
                 {% endif %}
-				<dt>{% trans "Shipping method" %}</dt>
-				<dd>{{ shipping_method.name }} 
+
+				<h4>{% trans "Shipping method" %}</h4>
+				<p>{{ shipping_method.name }}
 					{% if shipping_method.description %}
 					- {{ shipping_method.description }}
 					{% endif %}
-				</dd>
-				</dd>
+				</p>
             </dl>
+
             {% block shipping_address_actions %}
             <div class="alert-actions">
 				<a href="{% url checkout:shipping-address %}" class="btn">{% trans "Change shipping address" %}</a>
             </div>
             {% endblock %}
+
 			{% else %}
-			{% trans "No shipping is required for this order" %}
+                {% trans "No shipping is required for this order" %}
 			{% endif %}
         </div>
     </div>
@@ -114,53 +115,20 @@
         </div>
     </div>
     {% endfor %}
-    {% for discount in basket.discounts %}
-    <div class="basket-items">
-        <div class="row-fluid">
-            <h4 class="span10 align-right">{{ discount.name }}</h4>
-            <div class="span2 align-right">
-                -{{ discount.discount|currency }}
-            </div>
+
+    <div class="row-fluid">
+        <div class="span6">&nbsp;</div>
+        <div class="span6">
+            {% include 'basket/partials/basket_totals.html' %}
         </div>
     </div>
-    {% endfor %}
-    <div class="basket-items">
-        <div class="row-fluid align-right">
-			<h4 class="span10">{% trans "Basket total:" %}</h4>
-            <h5 class="span2">{{ basket.total_incl_tax|currency }}</h5>
-        </div>
-    </div>
-    {% if shipping_method %}
-    <div class="basket-items">
-        <div class="row-fluid align-right">
-			<h4 class="span10">{% trans "Shipping:" %}
-			{% if shipping_method.is_discounted %}
-			<br/><small>
-				{% with discount=shipping_method.get_discount %}
-				{% blocktrans with amount=discount.discount|currency %}
-				This includes a discount of {{ amount }}
-				{% endblocktrans %}
-				{% endwith %}
-			</small>
-			{% endif %}
-			</h4>
-            <h5 class="span2">
-                {{ shipping_method.basket_charge_incl_tax|currency }}
-            </h5>
-        </div>
-    </div>
-    {% endif %}
-    <div class="basket-items total">
-        <div class="row-fluid align-right">
-			<h3 class="span10">{% trans "Order total:" %}</h3>
-            <h3 class="span2 price_color">{{ order_total_incl_tax|currency }}</h3>
-        </div>
-    </div>
+
     {% block order_contents_actions %}
     <div class="form-actions">
 		<a href="{% url basket:summary %}" class="btn">{% trans "Edit order contents" %}</a>
     </div>
     {% endblock %}
+
 {% endblock order_contents %}
 
 

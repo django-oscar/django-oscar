@@ -9,6 +9,7 @@ from django.utils.translation import ugettext as _
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 
 from oscar.apps.basket.managers import OpenBasketManager, SavedBasketManager
+from oscar.apps.offer import results
 from oscar.templatetags.currency_filters import currency
 
 
@@ -18,8 +19,9 @@ class AbstractBasket(models.Model):
     """
     # Baskets can be anonymously owned - hence this field is nullable.  When a
     # anon user signs in, their two baskets are merged.
-    owner = models.ForeignKey('auth.User', related_name='baskets',
-                              null=True, verbose_name=_("Owner"))
+    owner = models.ForeignKey(
+        'auth.User', related_name='baskets', null=True,
+        verbose_name=_("Owner"))
 
     # Basket statuses
     # - Frozen is for when a basket is in the process of being submitted
@@ -33,11 +35,14 @@ class AbstractBasket(models.Model):
         (FROZEN, _("Frozen - the basket cannot be modified")),
         (SUBMITTED, _("Submitted - has been ordered at the checkout")),
     )
-    status = models.CharField(_("Status"), max_length=128, default=OPEN,
-                              choices=STATUS_CHOICES)
+    status = models.CharField(
+        _("Status"), max_length=128, default=OPEN, choices=STATUS_CHOICES)
 
-    vouchers = models.ManyToManyField('voucher.Voucher', null=True,
-                                      verbose_name=_("Vouchers"), blank=True)
+    # A basket can have many vouchers attached to it.  However, it is common
+    # for sites to only allow one voucher per basket - this will need to be
+    # enforced in the project's codebase.
+    vouchers = models.ManyToManyField(
+        'voucher.Voucher', null=True, verbose_name=_("Vouchers"), blank=True)
 
     date_created = models.DateTimeField(_("Date created"), auto_now_add=True)
     date_merged = models.DateTimeField(_("Date merged"), null=True, blank=True)
@@ -56,13 +61,15 @@ class AbstractBasket(models.Model):
     open = OpenBasketManager()
     saved = SavedBasketManager()
 
-    _lines = None
-    shipping_offer = None
-
     def __init__(self, *args, **kwargs):
         super(AbstractBasket, self).__init__(*args, **kwargs)
+        # We keep a cached copy of the basket lines as we refer to them often
+        # within the same request cycle.  Also, applying offers will append
+        # discount data to the basket lines which isn't persisted to the DB and
+        # so we want to avoid reloading them as this would drop the discount
+        # information.
         self._lines = None  # Cached queryset of lines
-        self.discounts = None  # Dictionary of discounts
+        self.offer_applications = results.OfferApplications()
         self.exempt_from_tax = False
 
     def __unicode__(self):
@@ -151,39 +158,21 @@ class AbstractBasket(models.Model):
         self._lines = None
     add_product.alters_data = True
 
-    def get_discounts(self):
-        if self.discounts is None:
-            self.discounts = []
-        return self.discounts
-
-    def get_discount_offers(self, include_shipping=True):
+    def applied_offers(self):
         """
-        Return a dict of offers used in discounts for this basket AND shipping.
+        Return a dict of offers successfully applied to the basket.
 
         This is used to compare offers before and after a basket change to see
         if there is a difference.
         """
-        offers = dict([(d['offer'].id, d['offer']) for d in
-                       self.get_discounts()])
-        if include_shipping and self.shipping_offer:
-            offers[self.shipping_offer.id] = self.shipping_offer
-        return offers
+        return self.offer_applications.offers
 
-    def set_discounts(self, discounts):
-        """
-        Sets the discounts that apply to this basket.
-
-        This should be a list of dictionaries
-        """
-        self.discounts = discounts
-
-    def remove_discounts(self):
+    def reset_offer_applications(self):
         """
         Remove any discounts so they get recalculated
         """
-        self.discounts = []
+        self.offer_applications = results.OfferApplications()
         self._lines = None
-        self.shipping_offer = None
 
     def merge_line(self, line, add_quantities=True):
         """
@@ -341,22 +330,28 @@ class AbstractBasket(models.Model):
         Return basket discounts from non-voucher sources.  Does not include
         shipping discounts.
         """
-        offer_discounts = []
-        for discount in self.get_discounts():
-            if not discount['voucher']:
-                offer_discounts.append(discount)
-        return offer_discounts
+        return self.offer_applications.offer_discounts
 
     @property
     def voucher_discounts(self):
         """
         Return discounts from vouchers
         """
-        voucher_discounts = []
-        for discount in self.get_discounts():
-            if discount['voucher']:
-                voucher_discounts.append(discount)
-        return voucher_discounts
+        return self.offer_applications.voucher_discounts
+
+    @property
+    def shipping_discounts(self):
+        """
+        Return discounts from vouchers
+        """
+        return self.offer_applications.shipping_discounts
+
+    @property
+    def post_order_actions(self):
+        """
+        Return discounts from vouchers
+        """
+        return self.offer_applications.post_order_actions
 
     @property
     def grouped_voucher_discounts(self):
@@ -364,18 +359,7 @@ class AbstractBasket(models.Model):
         Return discounts from vouchers but grouped so that a voucher which
         links to multiple offers is aggregated into one object.
         """
-        voucher_discounts = {}
-        for discount in self.voucher_discounts:
-            voucher = discount['voucher']
-            if voucher.code not in voucher_discounts:
-                voucher_discounts[voucher.code] = {
-                    'voucher': voucher,
-                    'discount': discount['discount'],
-                }
-            else:
-                voucher_discounts[voucher.code] += discount.discount
-
-        return voucher_discounts.values()
+        return self.offer_applications.grouped_voucher_discounts
 
     @property
     def total_excl_tax_excl_discounts(self):

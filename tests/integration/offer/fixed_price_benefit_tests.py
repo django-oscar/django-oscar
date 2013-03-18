@@ -24,31 +24,31 @@ class TestAFixedPriceDiscountAppliedWithCountCondition(TestCase):
         self.basket = G(Basket)
 
     def test_applies_correctly_to_empty_basket(self):
-        discount = self.benefit.apply(self.basket, self.condition)
-        self.assertEqual(D('0.00'), discount)
+        result = self.benefit.apply(self.basket, self.condition)
+        self.assertEqual(D('0.00'), result.discount)
         self.assertEqual(0, self.basket.num_items_with_discount)
         self.assertEqual(0, self.basket.num_items_without_discount)
 
     def test_applies_correctly_to_basket_which_is_worth_less_than_value(self):
         for product in [create_product(price=D('6.00'))]:
             self.basket.add_product(product, 3)
-        discount = self.benefit.apply(self.basket, self.condition)
-        self.assertEqual(D('0.00'), discount)
+        result = self.benefit.apply(self.basket, self.condition)
+        self.assertEqual(D('0.00'), result.discount)
         self.assertEqual(0, self.basket.num_items_with_discount)
         self.assertEqual(3, self.basket.num_items_without_discount)
 
     def test_applies_correctly_to_basket_which_is_worth_the_same_as_value(self):
         for product in [create_product(price=D('5.00'))]:
             self.basket.add_product(product, 4)
-        discount = self.benefit.apply(self.basket, self.condition)
-        self.assertEqual(D('0.00'), discount)
+        result = self.benefit.apply(self.basket, self.condition)
+        self.assertEqual(D('0.00'), result.discount)
         self.assertEqual(0, self.basket.num_items_with_discount)
         self.assertEqual(4, self.basket.num_items_without_discount)
 
     def test_applies_correctly_to_basket_which_is_more_than_value(self):
         for product in [create_product(price=D('8.00'))]:
             self.basket.add_product(product, 4)
-        discount = self.benefit.apply(self.basket, self.condition)
-        self.assertEqual(D('4.00'), discount)
+        result = self.benefit.apply(self.basket, self.condition)
+        self.assertEqual(D('4.00'), result.discount)
         self.assertEqual(3, self.basket.num_items_with_discount)
         self.assertEqual(1, self.basket.num_items_without_discount)

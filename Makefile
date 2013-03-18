@@ -17,7 +17,7 @@ sandbox: install
 	# Import some fixtures
 	sites/sandbox/manage.py oscar_import_catalogue sites/_fixtures/books-catalogue.csv
 	sites/sandbox/manage.py oscar_import_catalogue_images sites/_fixtures/books-images.tar.gz
-	sites/sandbox/manage.py loaddata countries.json sites/_fixtures/pages.json sites/_fixtures/auth.json
+	sites/sandbox/manage.py loaddata countries.json sites/_fixtures/pages.json sites/_fixtures/auth.json sites/_fixtures/ranges.json
 	sites/sandbox/manage.py rebuild_index --noinput
 
 demo: install
@@ -28,7 +28,7 @@ demo: install
 	# Import some fixtures
 	sites/demo/manage.py oscar_import_catalogue sites/_fixtures/books-catalogue.csv
 	sites/demo/manage.py oscar_import_catalogue_images sites/_fixtures/books-images.tar.gz
-	sites/demo/manage.py loaddata countries.json sites/_fixtures/pages.json sites/_fixtures/auth.json
+	sites/demo/manage.py loaddata countries.json sites/_fixtures/pages.json sites/_fixtures/auth.json sites/_fixtures/ranges.json
 	sites/demo/manage.py rebuild_index --noinput
 
 test:

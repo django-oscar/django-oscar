@@ -56,3 +56,20 @@ offers (see above).  Note that you can have any number of vouchers attached to
 a basket.
 
 
+Basket discounts
+----------------
+
+* *Multibuy* - This gives the cheapest product in the condition range for free.
+  This is normally used to build 3-for-2 offers and similar.
+
+* *Percentage discount* - A percentage discount off the basket products that are
+  in the benefit range.
+
+* *Absolute discount* - An absolute discount off the basket products in the
+  benefit range.
+
+* *Fixed price* - 
+
+* 
+
+

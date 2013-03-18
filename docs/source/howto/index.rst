@@ -63,6 +63,7 @@ Offers
 
     how_to_create_a_custom_range
     how_to_create_a_custom_condition
+    how_to_create_a_custom_benefit
 
 Appearance
 ----------

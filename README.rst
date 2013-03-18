@@ -88,7 +88,13 @@ You can have this sample shop running on your machine in 5 commands::
     $ sites/sandbox/manage.py runserver
 
 The sandbox site (initialised with a sample set of products) will be available
-at: http://localhost:8000.  Want to make changes?  Check out the 
+at: http://localhost:8000.  A sample superuser is installed with credentials::
+
+    username: superuser
+    email: superuser@example.com
+    password: testing
+
+Want to make changes?  Check out the
 `contributing guidelines`_.
 
 .. _`contributing guidelines`: http://django-oscar.readthedocs.org/en/latest/contributing.html#playing-in-the-sandbox
