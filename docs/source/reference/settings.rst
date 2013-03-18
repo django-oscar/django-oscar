@@ -62,6 +62,13 @@ Default: ``False``
 Specifies if an anonymous user can buy products without creating an account.
 If set to ``False`` a registered user is required to check out.
 
+OSCAR_REQUIRED_ADDRESS_FIELDS
+-----------------------------
+
+Default: ``('first_name', 'last_name', 'line1', 'city', 'postcode', 'country')``
+
+List of form fields that a user has to fill out to validate an address field.
+
 OSCAR_PARTNER_WRAPPERS
 ----------------------
 

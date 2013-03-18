@@ -24,6 +24,10 @@ OSCAR_PROMOTION_FOLDER = 'images/promotions/'
 OSCAR_MISSING_IMAGE_URL = 'image_not_found.jpg'
 OSCAR_UPLOAD_ROOT = '/tmp'
 
+# Address settings
+OSCAR_REQUIRED_ADDRESS_FIELDS = ('first_name', 'last_name', 'line1',
+                                 'city', 'postcode', 'country')
+
 # Search settings
 OSCAR_SEARCH_SUGGEST_LIMIT = 10
 
