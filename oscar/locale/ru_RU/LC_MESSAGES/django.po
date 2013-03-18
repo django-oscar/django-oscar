@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-03-13 11:06+0000\n"
-"PO-Revision-Date: 2013-03-14 08:11+0000\n"
+"PO-Revision-Date: 2013-03-18 16:21+0000\n"
 "Last-Translator: Eugene MechanisM <contact@mechanism.name>\n"
 "Language-Team: Russian (Russia) (http://www.transifex.com/projects/p/django-oscar/language/ru_RU/)\n"
 "MIME-Version: 1.0\n"
@@ -78,7 +78,7 @@ msgstr "Каталог"
 #: templates/oscar/dashboard/promotions/handpickedproductlist_form.html:5
 #: templates/oscar/dashboard/ranges/range_product_list.html:25
 msgid "Products"
-msgstr "Продукты"
+msgstr "Товары"
 
 #: defaults.py:91 apps/catalogue/abstract_models.py:141
 #: apps/catalogue/abstract_models.py:307
@@ -93,7 +93,7 @@ msgstr "Категории"
 #: templates/oscar/dashboard/catalogue/product_update.html:130
 #: templates/oscar/dashboard/ranges/range_list.html:29
 msgid "Ranges"
-msgstr "Ассортиментs"
+msgstr "Диапазон"
 
 #: defaults.py:99
 msgid "Low stock alerts"
@@ -1290,7 +1290,7 @@ msgstr ""
 #: apps/catalogue/abstract_models.py:660
 #, python-format
 msgid "%(enum)s is not a valid choice for %(attr)s"
-msgstr ""
+msgstr "%(enum)s неправильный выбор для %(attr)s"
 
 #: apps/catalogue/abstract_models.py:721
 msgid "Attribute"
@@ -1385,11 +1385,11 @@ msgstr ""
 
 #: apps/catalogue/abstract_models.py:911
 msgid "Product Image"
-msgstr ""
+msgstr "Изображение Товара"
 
 #: apps/catalogue/abstract_models.py:912
 msgid "Product Images"
-msgstr ""
+msgstr "Изображения Товара"
 
 #: apps/catalogue/utils.py:52
 #, python-format
