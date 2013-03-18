@@ -23,8 +23,8 @@ class VoucherForm(forms.Form):
         queryset=Range.objects.all(),
     )
     type_choices = (
-        (Benefit.PERCENTAGE, _('% off products in range')),
-        (Benefit.FIXED, _('Fixed amount off products in range')),
+        (Benefit.PERCENTAGE, _('Percentage off of products in range')),
+        (Benefit.FIXED, _('Fixed amount off of products in range')),
     )
     benefit_type = forms.ChoiceField(
         choices=type_choices,
