@@ -14,11 +14,14 @@ django-dynamic-fixture>=1.6.4,<1.7
 mock>=1.0.1,<1.1
 coverage>=3.6,<3.7
 django-nose>=1.1,<1.2
-nose-progressive>=1.4,<1.5
+nose<1.2
+# Use a slightly older version of nose-progressive to play nicely
+# with spec plugin which requires nose<1.2 until the 0.10 version
+nose-progressive<=1.4
+spec>=0.9.7,<0.10
 django-oscar-testsupport>=0.2.1,<0.3
 WebTest>=2.0,<2.1
 django-webtest>=1.5.7,<1.6
-spec>=0.9.7,<0.10
 tox>=1.4.3,<1.5
 
 # i18n
