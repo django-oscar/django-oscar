@@ -5,6 +5,7 @@ import re
 from django import forms
 from django.db.models import get_model
 from django.utils.translation import ugettext_lazy as _
+from oscar.apps.address.forms import AbstractAddressForm
 
 from oscar.core.loading import get_class
 
@@ -227,7 +228,7 @@ class BankcardForm(forms.ModelForm):
         return Bankcard(**kwargs)
 
 
-class BillingAddressForm(forms.ModelForm):
+class BillingAddressForm(AbstractAddressForm):
 
     def __init__(self, *args, **kwargs):
         super(BillingAddressForm,self ).__init__(*args, **kwargs)

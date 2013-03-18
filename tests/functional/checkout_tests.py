@@ -42,6 +42,7 @@ class CheckoutMixin(object):
         )
         response = self.client.post(reverse('checkout:shipping-address'),
                                      {'last_name': 'Doe',
+                                      'first_name': 'John',
                                       'line1': '1 Egg Street',
                                       'postcode': 'N1 9RT',
                                       'country': 'GB',
@@ -128,6 +129,7 @@ class TestShippingAddressView(ClientTestCase, CheckoutMixin):
     def test_create_shipping_address_adds_address_to_session(self):
         response = self.client.post(reverse('checkout:shipping-address'),
                                             {'last_name': 'Doe',
+                                             'first_name': 'John',
                                              'line1': '1 Egg Street',
                                              'postcode': 'N1 9RT',
                                              'country': 'GB',
@@ -137,6 +139,16 @@ class TestShippingAddressView(ClientTestCase, CheckoutMixin):
         self.assertEqual('Doe', session_address['last_name'])
         self.assertEqual('1 Egg Street', session_address['line1'])
         self.assertEqual('N1 9RT', session_address['postcode'])
+
+    def test_invalid_shipping_address_fails(self):
+        response = self.client.post(reverse('checkout:shipping-address'),
+                                    {'last_name': 'Doe',
+                                     'first_name': 'John',
+                                     'postcode': 'N1 9RT',
+                                     'country': 'GB',
+                                     })
+        self.assertIsOk(response)  # no redirect
+
 
     def test_user_must_have_a_nonempty_basket(self):
         response = self.client.get(reverse('checkout:shipping-address'))
