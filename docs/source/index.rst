@@ -1,7 +1,3 @@
-.. sphinx-quickstart on Mon Feb  7 13:16:33 2011.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 .. image:: http://img692.imageshack.us/img692/6498/logovf.png
 
 ===================================
@@ -62,22 +58,37 @@ ipads.  The `source is on GitHub`_ - contributions welcome.
 .. _`Tangent Labs`: http://www.tangentlabs.co.uk
 .. _`source is on GitHub`: https://github.com/tangentlabs/django-oscar
 
+Table of contents
+=================
+
+First steps
+-----------
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
-   take_a_peek
-   getting_started
-   key_questions
-   recipes
-   getting_help
-   design_decisions
-   reference
-   contributing
+   internals/take_a_peek
+   internals/getting_started
+   internals/getting_help
+   topics/key_questions
 
-Indices and tables
-==================
+Using Oscar
+-----------
+All you need to start developing apps with Oscar.
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+.. toctree::
+   :maxdepth: 1
 
+   howto/index
+   ref/apps/index
+   ref/settings
+   ref/signals
+
+The Oscar open-source project
+-----------------------------
+Learn about the ideas behind Oscar and how you can contribute.
+
+.. toctree::
+   :maxdepth: 1
+
+   internals/contributing
+   internals/design_decisions

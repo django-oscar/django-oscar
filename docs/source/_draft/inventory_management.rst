@@ -1,3 +1,0 @@
-Inventory management REST services
-==================================
-

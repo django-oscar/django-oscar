@@ -30,8 +30,8 @@ need to capture the attributes of your product types within your models.  Oscar
 divides products into 'product classes' which each have their own set of
 attributes.  
 
-* :doc:`recipes/how_to_model_your_catalogue`
-* :doc:`recipes/importing_a_catalogue`
+* :doc:`/howto/how_to_model_your_catalogue`
+* :doc:`/howto/importing_a_catalogue`
 
 How is your catalogue organised?
 --------------------------------
@@ -46,9 +46,9 @@ theme, by product type).  Other questions to consider:
 * Can a category sit in more than one place within the tree?  (e.g., a "children's fiction" category
   might sit beneath "children's books" and "fiction").
 
-* :doc:`recipes/how_to_customise_an_app`
-* :doc:`recipes/how_to_customise_models`
-* :doc:`recipes/how_to_override_a_core_class`
+* :doc:`/howto/how_to_customise_an_app`
+* :doc:`/howto/how_to_customise_models`
+* :doc:`/howto/how_to_override_a_core_class`
 
 How are products managed?
 -------------------------
@@ -57,7 +57,7 @@ Is the catalogue managed by a admin using a dashboard, or though an automated
 process, such as processing feeds from a fulfillment system?  Where are your
 product images going to be served from?
 
-* :doc:`recipes/how_to_disable_an_app`
+* :doc:`/howto/how_to_disable_an_app`
 
 
 Pricing, stock and availability
@@ -72,7 +72,7 @@ What availability messages are shown to customers?
 Based on the stock information from a fulfillment partner, what messaging should be
 displayed on the site?  
 
-* :doc:`recipes/how_to_configure_stock_messaging`
+* :doc:`/howto/how_to_configure_stock_messaging`
 
 Do you allow pre- and back-orders
 ---------------------------------
@@ -97,7 +97,7 @@ associated charges can take a variety of forms, including:
 
 Recipes:
 
-* :doc:`recipes/how_to_configure_shipping`
+* :doc:`/howto/how_to_configure_shipping`
 
 Which shipping methods are available?
 -------------------------------------
@@ -115,7 +115,7 @@ for determining which shipping methods are available to the user.
 
 Recipes:
 
-* :doc:`recipes/how_to_configure_shipping`
+* :doc:`/howto/how_to_configure_shipping`
 
 
 Payment
@@ -152,7 +152,7 @@ Domain logic is often required to:
 * Determine how to handle failing payments (this can get complicated when using
   multiple payment sources to pay for an order).
 
-* :doc:`recipes/how_to_configure_shipping`
+* :doc:`/howto/how_to_configure_shipping`
 
 When will payment be taken?
 ---------------------------
