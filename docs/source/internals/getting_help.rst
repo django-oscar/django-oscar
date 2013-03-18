@@ -10,7 +10,9 @@ the solution as a recipe.
 
 .. _`Google Groups archive`: https://groups.google.com/forum/?fromgroups#!forum/django-oscar
 
-If you find a bug, please report it in the `GitHub issue tracker`_
+If you think you found a bug, please read
+:doc:`Reporting bugs <contributing/bugs-and-features>` and report it
+in the `GitHub issue tracker`_.
 
 .. _`GitHub issue tracker`: https://github.com/tangentlabs/django-oscar/issues
 

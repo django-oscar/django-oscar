@@ -90,5 +90,5 @@ Learn about the ideas behind Oscar and how you can contribute.
 .. toctree::
    :maxdepth: 1
 
-   internals/contributing
-   internals/design_decisions
+   internals/contributing/index
+   
