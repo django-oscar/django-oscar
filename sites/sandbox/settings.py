@@ -52,23 +52,25 @@ TIME_ZONE = 'Europe/London'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en-GB'
 
 # This should match the locale folders in oscar/locale
+gettext = lambda s: s  # to mark strings translatable
 LANGUAGES = (
-    ('da', 'Danish'),
-    ('de', 'German'),
-    ('el_GR', 'Greek'),
-    ('en', 'English'),
-    ('es', 'Spanish'),
-    ('fr', 'French'),
-    ('it', 'Italian'),
-    ('ja', 'Japanese'),
-    ('pl', 'Polish'),
-    ('pt_BR', 'Portugese'),
-    ('ru_RU', 'Russian'),
-    ('sk', 'Slovakian'),
+    ('da', gettext('Danish')),
+    ('de', gettext('German')),
+    ('el-gr', gettext('Greek')),
+    ('en-gb', gettext('British English')),
+    ('es', gettext('Spanish')),
+    ('fr', gettext('French')),
+    ('it', gettext('Italian')),
+    ('ja', gettext('Japanese')),
+    ('pl', gettext('Polish')),
+    ('pt-br', gettext('Brazilian Portugese')),
+    ('ru', gettext('Russian')),
+    ('sk', gettext('Slovakian')),
 )
+
 ROSETTA_STORAGE_CLASS = 'rosetta.storage.SessionRosettaStorage'
 ROSETTA_ENABLE_TRANSLATION_SUGGESTIONS = True
 ROSETTA_REQUIRES_AUTH = False
