@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.db.models import get_model
 
 Product = get_model('catalogue', 'Product')
@@ -13,10 +13,9 @@ class Command(BaseCommand):
               rating."""
 
     def handle(self, *args, **options):
-        # go through all Products (not just ones with reviews)
+        # Iterate over all Products (not just ones with reviews)
         products = Product.objects.all()
         for product in products:
             ProductReview.update_product_rating(product)
-
         self.stdout.write('Successfully updated %s products\n'
                           % products.count())
