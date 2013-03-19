@@ -17,7 +17,7 @@ django-nose>=1.1,<1.2
 nose<1.2
 # Use a slightly older version of nose-progressive to play nicely
 # with spec plugin which requires nose<1.2 until the 0.10 version
-nose-progressive<=1.4
+nose-progressive<1.4
 spec>=0.9.7,<0.10
 django-oscar-testsupport>=0.2.1,<0.3
 WebTest>=2.0,<2.1
