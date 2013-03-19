@@ -518,6 +518,10 @@ class ProductAttributesContainer(object):
     Stolen liberally from django-eav, but simplified to be product-specific
     """
 
+    def __setstate__(self, state):
+        self.__dict__ = state
+        self.initialised = False
+
     def __init__(self, product):
         self.product = product
         self.initialised = False
