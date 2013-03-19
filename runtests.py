@@ -37,7 +37,7 @@ if __name__ == '__main__':
         # estate used down to a minimum.  Otherwise, use the spec plugin
         nose_args = ['-s', '-x']
         if args:
-            nose_args.extend(['--with-specplugin'])
+            nose_args.extend(['--with-spec'])
         else:
             nose_args.append('--with-progressive')
 

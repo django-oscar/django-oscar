@@ -33,3 +33,5 @@ flake8>=2.0,<2.1
 pyprof2calltree==1.1.0
 ipdb>=0.7,<0.8
 ipython>=0.13.1,<0.14
+Unidecode==0.04.12
+describe==0.1.2
