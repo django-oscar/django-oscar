@@ -15,7 +15,7 @@ Vote = get_model('reviews', 'vote')
 
 
 class CreateProductReview(CreateView):
-    template_name = "catalogue/reviews/add_review.html"
+    template_name = "catalogue/reviews/review_form.html"
     model = get_model('reviews', 'productreview')
     product_model = get_model('catalogue', 'product')
     review_form = SignedInUserProductReviewForm
@@ -27,7 +27,8 @@ class CreateProductReview(CreateView):
             product = self.get_product()
             try:
                 self.model.objects.get(user=request.user, product=product)
-                messages.info(self.request, _("You have already reviewed this product!"))
+                messages.warning(
+                    self.request, _("You have already reviewed this product!"))
                 return HttpResponseRedirect(product.get_absolute_url())
             except self.model.DoesNotExist:
                 pass
@@ -45,7 +46,8 @@ class CreateProductReview(CreateView):
         return context
 
     def get_product(self):
-        return get_object_or_404(self.product_model, pk=self.kwargs['product_pk'])
+        return get_object_or_404(
+            self.product_model, pk=self.kwargs['product_pk'])
 
     def get_form_class(self):
         if not self.request.user.is_authenticated():
@@ -61,7 +63,8 @@ class CreateProductReview(CreateView):
         return kwargs
 
     def get_success_url(self):
-        messages.success(self.request, _("Thank you for reviewing this product"))
+        messages.success(
+            self.request, _("Thank you for reviewing this product"))
         return self.object.product.get_absolute_url()
 
     def send_signal(self, request, response, review):
@@ -69,36 +72,22 @@ class CreateProductReview(CreateView):
                               request=request, response=response)
 
 
-class CreateProductReviewComplete(DetailView):
-    template_name = "catalogue/reviews/add_review_complete.html"
-    context_object_name = 'review'
-    model = get_model('reviews', 'productreview')
-    product_model = get_model('catalogue', 'product')
-
-    def get_context_data(self, **kwargs):
-        context = super(CreateProductReviewComplete, self).get_context_data(**kwargs)
-        context['product'] = get_object_or_404(self.product_model, pk=self.kwargs['product_pk'])
-        return context
-
-
 class ProductReviewDetail(DetailView):
-    """
-    Places each review on its own page
-    """
-    template_name = "catalogue/reviews/review.html"
+    template_name = "catalogue/reviews/review_detail.html"
     context_object_name = 'review'
     model = get_model('reviews', 'productreview')
     product_model = get_model('catalogue', 'product')
 
     def get_context_data(self, **kwargs):
         context = super(ProductReviewDetail, self).get_context_data(**kwargs)
-        context['product'] = get_object_or_404(self.product_model, pk=self.kwargs['product_pk'])
+        context['product'] = get_object_or_404(
+            self.product_model, pk=self.kwargs['product_pk'])
         return context
 
-    def post(self, request, *args, **kwargs ):
+    def post(self, request, *args, **kwargs):
         review = self.get_object()
-        response = HttpResponseRedirect(request.META.get('HTTP_REFERER',
-                                                         review.get_absolute_url()))
+        response = HttpResponseRedirect(
+            request.META.get('HTTP_REFERER', review.get_absolute_url()))
         if review.user == request.user:
             messages.error(request, _("You cannot vote on your own reviews"))
             return response
@@ -114,18 +103,17 @@ class ProductReviewDetail(DetailView):
         form = VoteForm(request.POST, instance=vote)
         if form.is_valid():
             form.save()
-            messages.info(request, _("Thanks for voting!"))
+            messages.success(request, _("Thanks for voting!"))
         else:
-            messages.info(request, _("We couldn't process your vote"))
+            messages.error(request, _("We couldn't process your vote"))
         return response
 
 
 class ProductReviewList(ListView):
     """
-    A list of reviews for a particular product
-     The review browsing page allows reviews to be sorted by score, or recency.
+    Browse reviews for a product
     """
-    template_name = 'catalogue/reviews/reviews.html'
+    template_name = 'catalogue/reviews/review_list.html'
     context_object_name = "reviews"
     model = get_model('reviews', 'productreview')
     product_model = get_model('catalogue', 'product')
@@ -139,6 +127,6 @@ class ProductReviewList(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(ProductReviewList, self).get_context_data(**kwargs)
-        context['product'] = get_object_or_404(self.product_model, pk=self.kwargs['product_pk'])
-        context['avg_score'] = self.object_list.aggregate(Avg('score'))
+        context['product'] = get_object_or_404(
+            self.product_model, pk=self.kwargs['product_pk'])
         return context

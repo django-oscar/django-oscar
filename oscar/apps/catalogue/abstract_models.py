@@ -1,19 +1,18 @@
 from itertools import chain
 from datetime import datetime, date
 
-from django.db import models
-from django.core.validators import RegexValidator
-from django.db.models import get_model
 from django.conf import settings
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.core.validators import RegexValidator
+from django.db import models
+from django.db.models import Sum, Count, get_model
+from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
-from django.core.exceptions import ObjectDoesNotExist
 from treebeard.mp_tree import MP_Node
 
-from oscar.core.utils import slugify
 from oscar.core.loading import get_class
-BrowsableProductManager = get_class('catalogue.managers',
-                                    'BrowsableProductManager')
+BrowsableProductManager = get_class(
+    'catalogue.managers', 'BrowsableProductManager')
 
 
 class AbstractProductClass(models.Model):
@@ -293,8 +292,11 @@ class AbstractProduct(models.Model):
         'catalogue.Product', through='ProductRecommendation', blank=True,
         verbose_name=_("Recommended Products"))
 
-    # Product score
+    # Product score - used by analytics app
     score = models.FloatField(_('Score'), default=0.00, db_index=True)
+    # Denormalised product rating - used by reviews app.
+    # Product has no ratings if rating is None
+    rating = models.FloatField(_('Rating'), null=True, editable=False)
 
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
@@ -495,6 +497,23 @@ class AbstractProduct(models.Model):
 
         # Finally, save attributes
         self.attr.save()
+
+    def update_rating(self):
+        """
+        Update rating field
+        """
+        ProductReview = get_model('reviews', 'ProductReview')
+        result = self.reviews.filter(
+            status=ProductReview.APPROVED
+        ).aggregate(
+            sum=Sum('score'), count=Count('id'))
+        reviews_sum = result['sum'] or 0
+        reviews_count = result['count'] or 0
+        if reviews_count > 0:
+            self.rating = float(reviews_sum) / reviews_count
+        else:
+            self.rating = None
+        self.save()
 
 
 class ProductRecommendation(models.Model):

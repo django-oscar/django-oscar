@@ -29,7 +29,7 @@ class ReviewsApplication(Application):
     def get_urls(self):
         urlpatterns = super(ReviewsApplication, self).get_urls()
         urlpatterns += patterns('',
-            url(r'^(?P<product_slug>[\w-]*)-(?P<product_pk>\d+)/reviews/',
+            url(r'^(?P<product_slug>[\w-]*)_(?P<product_pk>\d+)/reviews/',
                 include(self.reviews_app.urls)),
         )
         return self.post_process_urls(urlpatterns)

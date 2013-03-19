@@ -8,8 +8,7 @@
 {{ summary }} | {{ block.super }}
 {% endblock %}
 
-{% block header %}
-{% endblock header %}
+{% block headertext %}{{ summary }}{% endblock  %}
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
@@ -18,7 +17,7 @@
         <span class="divider">/</span>
     </li>
     {% if not category %}
-    <li class="active">{% trans "All products" %}</li>
+        <li class="active">{% trans "All products" %}</li>
     {% else %}
         {% for category in category.get_ancestors|slice:":-1" %}
         <li>
@@ -41,10 +40,10 @@
             	{% if category.1 %}
             	<ul>
                     {% for subcategory in category.1 %}
-                    <li><a href="{{ subcategory.0.get_absolute_url }}">{{ subcategory.0.name }}</a>
+                        <li><a href="{{ subcategory.0.get_absolute_url }}">{{ subcategory.0.name }}</a>
                     {% endfor %}
             	</ul>
-		{% endif %}
+                {% endif %}
             </li>
             {% endfor %}
     	</ul>
@@ -53,13 +52,9 @@
 {% endblock %}
 
 {% block content %}
-    <div class="sub-header">
-        <h1>{{ summary }}</h1>
-    </div>
     {% if category.description %}
         <div class="row-fluid">
             <div class="span9"><p>{{ category.description|safe }}</p></div>
-
             {% if category.image %}
                 <div class="span3"><img src="{{ category.image.url }}" alt="{{ summary }}" /></div>
             {% endif %}
@@ -71,13 +66,13 @@
         <div class="mod">
             <ol class="products four">
                 {% for product in products %}
-                <li>{% include "catalogue/partials/product.html" %}</li>
+                    <li>{% include "catalogue/partials/product.html" %}</li>
                 {% endfor %}
             </ol>
             {% include "partials/pagination.html" %}
         </div>
     </section>
     {% else %}
-	<p class="nonefound">{% trans "No products found." %}</p>
+        <p class="nonefound">{% trans "No products found." %}</p>
     {% endif %}
 {% endblock content %}
