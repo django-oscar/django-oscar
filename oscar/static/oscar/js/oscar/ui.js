@@ -79,33 +79,6 @@ var oscar = (function(o, $) {
         }
     };
 
-    o.catalogue = {
-        init: function() {
-            // Product star rating -- must improve this in python -- this is
-            // one of the worst things I have ever come across.  It will die in raging fire
-            // very soon.
-            $('.product_pod, .span6, .promotion_single').each(function() {
-                var sum_total_reviews = $(this).find(".review_count li").length * 5,
-                sum_rating_count = 0;
-                $(this).find('.review_count li').each(function() {
-                    sum_rating_count += parseFloat($(this).text());
-                });
-                var ave_rating = sum_rating_count / sum_total_reviews *10;
-                if (ave_rating <= 2) {
-                    ave_rating = 'One';
-                } else if (ave_rating <= 4) {
-                    ave_rating = 'Two';
-                } else if (ave_rating <= 6) {
-                    ave_rating = 'Three';
-                } else if (ave_rating <= 8) {
-                    ave_rating = 'Four';
-                } else if (ave_rating <= 10) {
-                    ave_rating = 'Five';
-                }
-                $(this).find('.review_count').after('<p class="star ' + ave_rating + '"></p>').remove();
-            });
-        }
-    };
 
     o.page = {
         init: function() {

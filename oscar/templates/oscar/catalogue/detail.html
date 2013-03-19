@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% load currency_filters %}
 {% load history_tags %}
+{% load reviews_tags %}
 {% load staticfiles %}
 {% load i18n %}
 
@@ -54,12 +55,8 @@
             
             {% include "catalogue/partials/stock_record.html" %}
             
-			{% if reviews %}
-				<ul class="review_count">
-					{% for review in reviews %}
-					<li class="{{ review.score }}">{{ review.score }}</li>
-					{% endfor %}
-				</ul>
+			{% if product.rating != None %}
+                <p class="star {{ product.rating|as_stars }}"></p>
 			{% else %}
 				<p class="star">
 					<a id="write_review" href="{% url catalogue:reviews-add product.slug product.id %}#addreview" class="btn btn-success btn-small">{% trans "Write a review" %}</a>
@@ -142,7 +139,7 @@
                 {% for review in reviews|slice:":3" %}
                     <article class="review">
                         <header>
-                            <h3 class="star"><a href="{{ review.get_absolute_url }}">{{ review.title }} <span>{{ review.score }}</span></a></h3>
+                            <h3 class="star {{ review.score|as_stars }}"><a href="{{ review.get_absolute_url }}">{{ review.title }} <span>{{ review.score }}</span></a></h3>
 							<h4>{% trans "Reviewed by" %} {{ review.get_reviewer_name }} <small>({{ review.date_created }})</small></h4>
                         </header>
                         <div class="row-fluid">

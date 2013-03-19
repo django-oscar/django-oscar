@@ -11,7 +11,7 @@ from oscar.apps.catalogue.reviews.managers import (ApprovedReviewsManager)
 class AbstractProductReview(models.Model):
     """
     Superclass ProductReview. Some key aspects have been implemented from the original spec.
-    * Each product can have reviews attached to it. Each review has a title, a body and a score from 1-5.
+    * Each product can have reviews attached to it. Each review has a title, a body and a score from 0-5.
     * Signed in users can always submit reviews, anonymous users can only submit reviews if a setting
       OSCAR_ALLOW_ANON_REVIEWS is set to true - it should default to false.
     * If anon users can submit reviews, then we require their name, email address and an (optional) URL.
@@ -82,6 +82,11 @@ class AbstractProductReview(models.Model):
         if self.score is None:
             raise ValidationError(_("Reviews must have a score"))
         super(AbstractProductReview, self).save(*args, **kwargs)
+        self.update_product_rating(self.product)
+
+    def delete(self, *args, **kwargs):
+        super(AbstractProductReview, self).delete(*args, **kwargs)
+        self.update_product_rating(self.product)
 
     def has_votes(self):
         return self.total_votes > 0
@@ -94,9 +99,28 @@ class AbstractProductReview(models.Model):
         """Returns the total down votes"""
         return int((self.total_votes - self.delta_votes) / 2)
 
+    @staticmethod
+    def update_product_rating(product):
+        """
+        Updates the denormalised rating field on AbstractProduct.
+        Override this function to implement e.g. weighted rating.
+        """
+        # can't access ApprovedReviewsManager here :(
+        reviews = product.reviews.filter(status=AbstractProductReview.APPROVED)
+        result = reviews.aggregate(sum=Sum('score'),
+                                   count=Count('id'))
+        reviews_sum = result['sum'] or 0
+        reviews_count = result['count'] or 0
+        if reviews_count > 0:
+            product.rating = float(reviews_sum) / reviews_count
+        else:
+            product.rating = None
+        product.save()
+
     def update_totals(self):
         """Updates total and delta votes"""
-        result = self.votes.aggregate(score=Sum('delta'),total_votes=Count('id'))
+        result = self.votes.aggregate(score=Sum('delta'),
+                                      total_votes=Count('id'))
         self.total_votes = result['total_votes'] or 0
         self.delta_votes = result['score'] or 0
         self.save()

@@ -1,6 +1,8 @@
 {% load currency_filters %}
+{% load reviews_tags %}
 {% load thumbnail %}
 {% load i18n %}
+
 
 <article class="product_pod">
     <div class="image_container">
@@ -14,17 +16,7 @@
     </div>
 
     {% block product_review %}
-        {% with reviews=product.reviews.all %}
-            {% if reviews %}
-                <ul class="review_count">
-                {% for review in reviews %}
-                    <li class="{{ review.score }}">{{ review.score }}</li>
-                {% endfor %}
-                </ul>
-            {% else %}
-			<p class="star">{% trans "No Rating" %}</p>
-            {% endif %}
-        {% endwith %}
+        <p class="star {{ product.rating|as_stars }}"></p>
     {% endblock product_review %}
 
     <h3><a href="{{ product.get_absolute_url }}">{{ product.get_title|truncatewords:5 }}</a></h3>
