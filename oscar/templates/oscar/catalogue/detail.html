@@ -7,11 +7,11 @@
 
 {% block extrastyles %}
 	<!-- Colorbox (a lightbox plugin) for image galleries -->
-        <link rel="stylesheet" href="{% static "oscar/js/colorbox/colorbox.css" %}" type="text/css" media="screen" charset="utf-8"/>
+    <link rel="stylesheet" href="{% static "oscar/js/colorbox/colorbox.css" %}" type="text/css" media="screen" charset="utf-8"/>
 {% endblock %}
 
 {% block title %}
-{{ product.title }} | {{ block.super }}
+    {{ product.title }} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -38,12 +38,16 @@
 {% block content %}
 <article class="product_page"><!-- Start of product page -->
 
+    {% comment %}
+    This is a but clunky here.  Better to have some kind of JS-driven dashboard menu that
+    pops out when clicked.  A bit like the Django-Debug-Toolbar button
+    {% endcomment %}
     {% if user.is_authenticated and user.is_staff %}
-    <div class="row-fluid">
-        <div class="well">
-			<a href="{% url dashboard:catalogue-product product.id %}"><button class="btn btn-success btn-full">{% trans "Edit this product" %}</button></a>
+        <div class="row-fluid">
+            <div class="well">
+                <a href="{% url dashboard:catalogue-product product.id %}"><button class="btn btn-success btn-full">{% trans "Edit this product" %}</button></a>
+            </div>
         </div>
-    </div>
     {% endif %}
 
     <div class="row-fluid">
@@ -70,12 +74,12 @@
     </div><!-- /row-fluid -->
               
 	{% block product_description %}
-	{% if product.description %}
-    <div id="product_description" class="sub-header">
-		<h2>{% trans "Product Description" %}</h2>
-    </div>
-    <p>{{ product.description|safe }}</p>
-	{% endif %}
+        {% if product.description %}
+        <div id="product_description" class="sub-header">
+            <h2>{% trans "Product Description" %}</h2>
+        </div>
+        <p>{{ product.description|safe }}</p>
+        {% endif %}
 	{% endblock %}
     
 	{% block product_info %}
@@ -111,7 +115,7 @@
         {% endfor %}
         <tr>
 			<th>{% trans "Num reviews" %}</th>
-            <td>{{ reviews.count }}</td>
+            <td>{{ reviews.count|default:0 }}</td>
         </tr>
         <tr>
             <td></td>

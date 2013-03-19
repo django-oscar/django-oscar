@@ -3,15 +3,12 @@
 {% load thumbnail %}
 {% load i18n %}
 
-
 <article class="product_pod">
     <div class="image_container">
 		{% with image=product.primary_image %}
-		{% thumbnail image.original "400x400" upscale=False as thumb %}
-                <a href="{{ product.get_absolute_url }}">
-                    <img src="{{ thumb.url }}" alt="{{ product.get_title }}" class="thumbnail">
-                </a>
-		{% endthumbnail %}
+            {% thumbnail image.original "400x400" upscale=False as thumb %}
+                <a href="{{ product.get_absolute_url }}"><img src="{{ thumb.url }}" alt="{{ product.get_title }}" class="thumbnail"></a>
+            {% endthumbnail %}
 		{% endwith %}
     </div>
 
@@ -25,10 +22,7 @@
         {% include "catalogue/partials/stock_record.html" %}
 
         {% if product.is_group %}
-            <a class="btn btn-full"
-               href="{% url catalogue:detail product.slug product.id %}">
-                {% trans "View" %}
-            </a>
+            <a class="btn btn-full" href="{% url catalogue:detail product.slug product.id %}">{% trans "View" %}</a>
         {% else %}
             {% include "catalogue/partials/add_to_basket_form_compact.html" %}
         {% endif %}
