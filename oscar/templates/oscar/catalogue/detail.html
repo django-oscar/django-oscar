@@ -38,8 +38,8 @@
 {% block content %}
 <article class="product_page"><!-- Start of product page -->
 
-    {% comment %}
-    This is a but clunky here.  Better to have some kind of JS-driven dashboard menu that
+    {% comment %} 
+    This is a but clunky here.  Better to have some kind of JS-driven dashboard menu that 
     pops out when clicked.  A bit like the Django-Debug-Toolbar button
     {% endcomment %}
     {% if user.is_authenticated and user.is_staff %}
@@ -60,7 +60,17 @@
             {% include "catalogue/partials/stock_record.html" %}
             
 			{% if product.rating != None %}
-                <p class="star {{ product.rating|as_stars }}"></p>
+            <p class="star {{ product.rating|as_stars }}">
+                <small><a href="{% url catalogue:reviews-list product.slug product.id %}">
+                        {% blocktrans count reviews|length as num_reviews %}
+                        1 custom review
+                        {% plural %}
+                        {{ num_reviews }} customer reviews
+                        {% endblocktrans %}
+                </a></small>
+                &nbsp;
+                <a id="write_review" href="{% url catalogue:reviews-add product.slug product.id %}#addreview" class="btn btn-success btn-small">{% trans "Write a review" %}</a>
+            </p>
 			{% else %}
 				<p class="star">
 					<a id="write_review" href="{% url catalogue:reviews-add product.slug product.id %}#addreview" class="btn btn-success btn-small">{% trans "Write a review" %}</a>
@@ -127,45 +137,22 @@
     {% block product_review %}
     <section>
         <div id="reviews" class="sub-header">
+            {% if reviews %}
+                <a href="{% url catalogue:reviews-list product.slug product.id %}" class="btn pull-right">{% trans "See all reviews" %}</a>
+            {% endif %}
 			<h2>{% trans "Customer Reviews" %}</h2>
         </div>
-		{% if reviews %}
-		<p>{% trans "Read customer reviews on this product." %}</p>
-		{% else %}
-		<p>{% trans "Be the first to review this product." %}</p>
-		{% endif %}
-       <div class="review_read">
-		   <a href="{% url catalogue:reviews-add product.slug product.id %}#addreview" class="btn btn-success btn-full">{% trans "Write a review" %}</a>
-       </div>
 
-        {% if reviews %}
+        {% if not reviews %}
+            <p>
+                {% trans "This product does not have any reviews yet" %} - 
+                <a href="{% url catalogue:reviews-add product.slug product.id %}#addreview">{% trans "be the first to write one" %}</a>.
+            </p>
+        {% else %}
             <div>
                 {% for review in reviews|slice:":3" %}
-                    <article class="review">
-                        <header>
-                            <h3 class="star {{ review.score|as_stars }}"><a href="{{ review.get_absolute_url }}">{{ review.title }} <span>{{ review.score }}</span></a></h3>
-							<h4>{% trans "Reviewed by" %} {{ review.get_reviewer_name }} <small>({{ review.date_created }})</small></h4>
-                        </header>
-                        <div class="row-fluid">
-                            <div class="span8 review_content">  
-                                <div>  
-                                    <p>{{ review.body|linebreaks }}</p>
-                                </div>
-                            </div>
-                            <div class="span4 review_votes">
-                                <div>
-                		            {% include 'catalogue/reviews/vote_bit.html' %}
-									{% if review.has_votes %}
-									<p>{{ review.num_up_votes }} customer{{ review.num_up_votes|pluralize }} found this review helpful.</p>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-                    </article>
+                    {% include 'catalogue/partials/review.html' %}
                 {% endfor %}
-                <div class="review_all">
-					<a href="{% url catalogue:reviews-list product.slug product.id %}" class="btn">{% trans "See all reviews" %}</a>
-                </div>
             </div>
         {% endif %}
     </section>    
