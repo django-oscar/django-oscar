@@ -13,7 +13,7 @@ Vote = get_model('reviews', 'vote')
 
 
 class CreateProductReview(CreateView):
-    template_name = "catalogue/reviews/add_review.html"
+    template_name = "catalogue/reviews/review_form.html"
     model = get_model('reviews', 'productreview')
     product_model = get_model('catalogue', 'product')
     review_form = SignedInUserProductReviewForm
@@ -72,7 +72,7 @@ class ProductReviewDetail(DetailView):
     """
     Places each review on its own page
     """
-    template_name = "catalogue/reviews/review.html"
+    template_name = "catalogue/reviews/review_detail.html"
     context_object_name = 'review'
     model = get_model('reviews', 'productreview')
     product_model = get_model('catalogue', 'product')
@@ -112,7 +112,7 @@ class ProductReviewList(ListView):
     A list of reviews for a particular product
      The review browsing page allows reviews to be sorted by score, or recency.
     """
-    template_name = 'catalogue/reviews/reviews.html'
+    template_name = 'catalogue/reviews/review_list.html'
     context_object_name = "reviews"
     model = get_model('reviews', 'productreview')
     product_model = get_model('catalogue', 'product')
