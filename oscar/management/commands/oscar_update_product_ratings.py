@@ -4,7 +4,6 @@ from django.core.management.base import BaseCommand
 from django.db.models import get_model
 
 Product = get_model('catalogue', 'Product')
-ProductReview = get_model('reviews', 'ProductReview')
 
 
 class Command(BaseCommand):
@@ -16,6 +15,6 @@ class Command(BaseCommand):
         # Iterate over all Products (not just ones with reviews)
         products = Product.objects.all()
         for product in products:
-            ProductReview.update_product_rating(product)
-        self.stdout.write('Successfully updated %s products\n'
-                          % products.count())
+            product.update_rating()
+        self.stdout.write(
+            'Successfully updated %s products\n' % products.count())
