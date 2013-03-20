@@ -1,4 +1,4 @@
-from decimal import Decimal
+from decimal import Decimal, ROUND_UP
 import datetime
 
 from django.conf import settings
@@ -26,13 +26,13 @@ class ApplicatorTest(TestCase):
         item = create_product(price=Decimal('100'))
         basket.add_product(item, 5)
         cond = ValueCondition(range=rng, type="Value", value=Decimal('100.00'))
-        benefit = AbsoluteDiscountBenefit(range=rng, type="Absolute", value=Decimal('10.00'))
+        benefit = MultibuyDiscountBenefit(range=rng, type="Multibuy")
         offer = CustomConditionalOffer(id='test', condition=cond, benefit=benefit)
         applicator = Applicator()
         discounts = applicator.get_basket_discounts(basket, [offer])
         discount = discounts['test']
         self.assertEquals(discount['freq'], 3)
-        self.assertEquals(discount['discount'], Decimal('30'))
+        self.assertEquals(discount['discount'], Decimal('300'))
 
 
 class WholeSiteRangeWithGlobalBlacklistTest(TestCase):
@@ -134,17 +134,17 @@ class CountConditionTest(OfferTest):
         self.assertFalse(self.cond.is_satisfied(self.basket))
 
     def test_count_condition_is_applied_multpile_times(self):
-        benefit = AbsoluteDiscountBenefit(range=self.range, type="Absolute", value=Decimal('10.00'))
+        benefit = MultibuyDiscountBenefit(range=self.range, type="Multibuy")
         for i in range(10):
             self.basket.add_product(create_product(price=Decimal('5.00'), upc='upc_%i' % i), 1)
         product_range = Range.objects.create(name="All products", includes_all_products=True)
         condition = CountCondition(range=product_range, type="Count", value=2)
 
         first_discount = benefit.apply(self.basket, condition=condition)
-        self.assertEquals(Decimal('10.00'), first_discount)
+        self.assertEquals(Decimal('5.00'), first_discount)
 
         second_discount = benefit.apply(self.basket, condition=condition)
-        self.assertEquals(Decimal('10.00'), second_discount)
+        self.assertEquals(Decimal('5.00'), second_discount)
 
 
 class ValueConditionTest(OfferTest):
@@ -314,7 +314,10 @@ class AbsoluteDiscountBenefitTest(OfferTest):
     def test_discount_for_multi_item_basket_with_max_affected_items_set(self):
         self.basket.add_product(self.item, 3)
         self.benefit.max_affected_items = 1
-        self.assertEquals(Decimal('5.00'), self.benefit.apply(self.basket))
+        total_price = self.basket.total_incl_tax_excl_discounts
+        product_after_discount = (((Decimal(self.benefit.value) / total_price) * Decimal('5'))
+                                  .quantize(Decimal('1.', ROUND_UP)))
+        self.assertEquals(product_after_discount, self.benefit.apply(self.basket))
 
     def test_discount_can_only_be_applied_once(self):
         # Add 3 items to make total 15.00
@@ -323,28 +326,7 @@ class AbsoluteDiscountBenefitTest(OfferTest):
         self.assertEquals(Decimal('10.00'), first_discount)
 
         second_discount = self.benefit.apply(self.basket)
-        self.assertEquals(Decimal('5.00'), second_discount)
-
-    def test_absolute_does_not_consume_twice(self):
-        product = create_product(Decimal('25000'))
-        rng = Range.objects.create(name='Dummy')
-        rng.included_products.add(product)
-        condition = ValueCondition(range=rng, type='Value', value=Decimal('5000'))
-        basket = Basket.objects.create()
-        basket.add_product(product, 5)
-        benefit = AbsoluteDiscountBenefit(range=rng, type='Absolute', value=Decimal('100'))
-        self.assertTrue(condition.is_satisfied(basket))
-        self.assertEquals(Decimal('100'), benefit.apply(basket, condition))
-        self.assertTrue(condition.is_satisfied(basket))
-        self.assertEquals(Decimal('100'), benefit.apply(basket, condition))
-        self.assertTrue(condition.is_satisfied(basket))
-        self.assertEquals(Decimal('100'), benefit.apply(basket, condition))
-        self.assertTrue(condition.is_satisfied(basket))
-        self.assertEquals(Decimal('100'), benefit.apply(basket, condition))
-        self.assertTrue(condition.is_satisfied(basket))
-        self.assertEquals(Decimal('100'), benefit.apply(basket, condition))
-        self.assertFalse(condition.is_satisfied(basket))
-        self.assertEquals(Decimal('0'), benefit.apply(basket, condition))
+        self.assertEquals(Decimal('0.00'), second_discount)
 
     def test_absolute_consumes_all(self):
         product1 = create_product(Decimal('150'))
