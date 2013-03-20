@@ -41,7 +41,7 @@
     {% else %}
 	    <tr><td>{% trans "Customer checked out anonymously." %}</td></tr>
 	{% endif %}
-</table>  
+</table>
 
 <table class="table table-striped table-bordered table-hover">
     <caption><i class="icon-shopping-cart icon-large"></i>{% trans "Order information" %}</caption>
@@ -57,7 +57,7 @@
         <td>{{ order.date_placed|date:"H:s" }}</td>
         <td>{{ order.status|default:"N/A" }}</td>
     </tr>
-</table>  
+</table>
 
 {% block additional_order_information %}
 {% endblock additional_order_information %}
@@ -67,7 +67,7 @@
 </div>
 
 <div class="tabbable dashboard">
-    
+
     <ul class="nav nav-tabs">
         {% block nav_tabs %}
         <li class="{% if active_tab == 'lines' %}active{% endif %}"><a href="#lines" data-toggle="tab">{% trans "Order contents" %}</a></li>
@@ -78,7 +78,7 @@
         <li class="{% if active_tab == 'notes' %}active{% endif %}"><a href="#notes" data-toggle="tab">{% trans "Notes" %}</a></li>
         {% endblock nav_tabs %}
     </ul>
-    
+
 	<div class="tab-content">
 		<div class="tab-pane {% if active_tab == 'lines' %}active{% endif %}" id="lines">
 			<div class="table-header">
@@ -190,8 +190,9 @@
                             </tr>
                         {% else %}
                             <tr>
+                                <th colspan="7"></th>
                                 <th>{% trans "Shipping total" %}</th>
-                                <th style="text-align: right">{{ order.shipping_incl_Tax|currency }}</th>
+                                <th style="text-align: right">{{ order.shipping_incl_tax|currency }}</th>
                                 <td></td>
                             </tr>
                         {% endif %}
@@ -208,7 +209,7 @@
 
 				{% block line_actions %}
                 <div class="well">
-    				<h3><i class="icon-refresh"></i> With selected lines:</h3>
+    				<h3><i class="icon-refresh"></i> {% trans "With selected lines" %}:</h3>
 
     				<div class="control-group">
     					<div class="controls">
@@ -239,7 +240,7 @@
     							</select>
     						</label>
     						<label class="radio inline">
-    							with reference <input type="text" name="reference" value="" />
+    							{% trans "with reference" %} <input type="text" name="reference" value="" />
     						</label>
     					</div>
     				</div>
@@ -257,7 +258,7 @@
     							</select>
     						</label>
     						<label class="radio inline">
-    							with amount <input type="text" name="amount" value="" />
+    							{% trans "with amount" %} <input type="text" name="amount" value="" />
     						</label>
     					</div>
     				</div>
@@ -299,12 +300,12 @@
 				{% else %}
                 <tbody>
                     <tr>
-                        <td>No shipping events.</td>
+                        <td>{% trans "No shipping events." %}</td>
                     </tr>
                 </tbody>
     			{% endif %}
 			</table>
-			
+
 			{% endwith %}
 
 			<div class="table-header">
@@ -394,7 +395,7 @@
 			<div class="table-header">
 				<h3 >{% trans "Payment sources" %}</h3>
 			</div>
-			
+
 				<table class="table table-striped table-bordered table-hover">
 				    {% if sources %}
     					<thead>
@@ -404,9 +405,9 @@
     							<th>{% trans "Amount debited" %}</th>
     							<th>{% trans "Amount refunded" %}</th>
     							<th>{% trans "Reference" %}</th>
-    						</tr>  
-    					</thead>	
-    					<tbody> 
+    						</tr>
+    					</thead>
+    					<tbody>
     						{% for source in sources %}
     						<tr>
     							<td>{{ source.source_type }}</td>
@@ -420,7 +421,7 @@
 					{% else %}
                         <tbody>
                             <tr><td>{% trans "No payment sources" %}</td></tr>
-                        </tbody> 
+                        </tbody>
         			{% endif %}
 				</table>
 			{% endwith %}
@@ -497,7 +498,7 @@
 				<h3>{% trans "Notes" %}</h3>
 			</div>
 			{% with notes=order.notes.all %}
-			
+
 			<table class="table table-striped table-bordered table-hover">
 			    {% if notes %}
 				<tr>
@@ -532,7 +533,7 @@
                 </tr>
 				{% endif %}
 			</table>
-			
+
 			{% endwith %}
 
 			<form action=".?note={{ note_id }}" method="post" class="form-stacked">
