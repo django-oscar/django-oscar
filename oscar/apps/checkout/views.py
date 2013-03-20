@@ -504,7 +504,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         # handle_payment method raise an exception, which should be caught
         # within handle_POST and the appropriate forms redisplayed.
         error_msg = _("A problem occurred while processing payment for this "
-                      "order.  No payment has been taken.  Please try again "
+                      "order - no payment has been taken.  Please "
                       "contact customer services if this problem persists")
         pre_payment.send_robust(sender=self, view=self)
         total_incl_tax, total_excl_tax = self.get_order_totals(basket)
