@@ -2,12 +2,12 @@
 .PHONY: contribute ci test i18n lint travis
 
 install:
-	python setup.py develop
 	pip install -r requirements.txt --use-mirrors
+	python setup.py develop
 
 upgrade:
-	python setup.py develop --upgrade
 	pip install --upgrade -r requirements.txt --use-mirrors
+	python setup.py develop --upgrade
 
 sandbox: install
 	-rm -f sites/sandbox/db.sqlite
