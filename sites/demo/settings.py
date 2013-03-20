@@ -50,7 +50,24 @@ TIME_ZONE = 'Europe/London'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en-gb'
+
+# This should match the locale folders in oscar/locale
+gettext = lambda s: s  # to mark strings translatable
+LANGUAGES = (
+    ('da', gettext('Danish')),
+    ('de', gettext('German')),
+    ('el-gr', gettext('Greek')),
+    ('en-gb', gettext('British English')),
+    ('es', gettext('Spanish')),
+    ('fr', gettext('French')),
+    ('it', gettext('Italian')),
+    ('ja', gettext('Japanese')),
+    ('pl', gettext('Polish')),
+    ('pt-br', gettext('Brazilian Portugese')),
+    ('ru', gettext('Russian')),
+    ('sk', gettext('Slovakian')),
+)
 
 SITE_ID = 1
 
