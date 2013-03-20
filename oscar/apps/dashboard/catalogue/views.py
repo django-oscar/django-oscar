@@ -325,7 +325,7 @@ class ProductUpdateView(generic.UpdateView):
         url = reverse('dashboard:catalogue-product-list')
         if self.request.POST.get('action') == 'continue':
             url = reverse('dashboard:catalogue-product',
-                           kwargs={"pk":self.object.id}) 
+                           kwargs={"pk":self.object.id})
         return self.get_url_with_querystring(url)
 
 
@@ -404,7 +404,7 @@ class CategoryCreateView(CategoryListMixin, generic.CreateView):
 
     def get_context_data(self, **kwargs):
         ctx = super(CategoryCreateView, self).get_context_data(**kwargs)
-        ctx['title'] = "Add a new category"
+        ctx['title'] = _("Add a new category")
         return ctx
 
     def get_success_url(self):
@@ -437,5 +437,5 @@ class CategoryDeleteView(CategoryListMixin, generic.DeleteView):
         return ctx
 
     def get_success_url(self):
-        messages.info(self.request, "Category deleted successfully")
+        messages.info(self.request, _("Category deleted successfully"))
         return super(CategoryDeleteView, self).get_success_url()
