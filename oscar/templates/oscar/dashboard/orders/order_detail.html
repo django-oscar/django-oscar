@@ -209,7 +209,7 @@
 
 				{% block line_actions %}
                 <div class="well">
-    				<h3><i class="icon-refresh"></i> With selected lines:</h3>
+				<h3><i class="icon-refresh"></i> {% trans "With selected lines" %}:</h3>
 
     				<div class="control-group">
     					<div class="controls">
@@ -240,7 +240,7 @@
     							</select>
     						</label>
     						<label class="radio inline">
-    							with reference <input type="text" name="reference" value="" />
+							{% trans "with reference" %} <input type="text" name="reference" value="" />
     						</label>
     					</div>
     				</div>
@@ -258,7 +258,7 @@
     							</select>
     						</label>
     						<label class="radio inline">
-    							with amount <input type="text" name="amount" value="" />
+							{% trans "with amount" %} <input type="text" name="amount" value="" />
     						</label>
     					</div>
     				</div>
@@ -300,7 +300,7 @@
 				{% else %}
                 <tbody>
                     <tr>
-                        <td>No shipping events.</td>
+                        <td>{% trans "No shipping events." %}</td>
                     </tr>
                 </tbody>
     			{% endif %}

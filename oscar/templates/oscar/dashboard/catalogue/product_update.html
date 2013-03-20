@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">  	
+<ul class="breadcrumb">
     <li>
         <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
@@ -38,19 +38,19 @@
                 </div>
                 <ul class="nav nav-list bs-docs-sidenav" id="product_update_tabs">
                     {% if product %}
-                    <li class="active"><a href="#overview" data-toggle="tab">Overview</a></li>
+                    <li class="active"><a href="#overview" data-toggle="tab">{% trans 'Overview' %}</a></li>
                     {% endif %}
-                    <li {% if not product %}class="active"{% endif %}><a href="#product_details" data-toggle="tab">Product details</a></li>
-                    <li><a href="#product_recommended" data-toggle="tab">Recommended Products</a></li>
+                    <li {% if not product %}class="active"{% endif %}><a href="#product_details" data-toggle="tab">{% trans 'Product details' %}</a></li>
+                    <li><a href="#product_recommended" data-toggle="tab">{% trans 'Recommended Products' %}</a></li>
                     {% with variants=product.variants.all %}
                     {% if variants|length > 0 %}
-                    <li><a href="#product_variants" data-toggle="tab">Product variants</a></li>
+                    <li><a href="#product_variants" data-toggle="tab">{% trans 'Product variants' %}</a></li>
                     {% endif %}
                     {% endwith %}
-                    <li><a href="#product_attributes" data-toggle="tab">Product attributes</a></li>
-                    <li><a href="#product_category" data-toggle="tab">Product category</a></li>
-                    <li><a href="#product_images" data-toggle="tab">Product images</a></li>
-                    <li><a href="#product_stock" data-toggle="tab">Product stock</a></li>
+                    <li><a href="#product_attributes" data-toggle="tab">{% trans 'Product attributes' %}</a></li>
+                    <li><a href="#product_category" data-toggle="tab">{% trans 'Product category' %}</a></li>
+                    <li><a href="#product_images" data-toggle="tab">{% trans 'Product images' %}</a></li>
+                    <li><a href="#product_stock" data-toggle="tab">{% trans 'Product stock' %}</a></li>
                 </ul>
             </div>
         </div>
@@ -80,7 +80,7 @@
                                 <p>
                                     <strong>{% trans "Fulfilment partner" %}</strong> <br />
                                     <span class="product-count">
-                                        {% if product.has_stockrecord %} 
+                                        {% if product.has_stockrecord %}
                                             {{ product.stockrecord.partner.name }}
                                         {% else %}
                                             {% trans "Out of stock" %}
@@ -189,7 +189,7 @@
                         </div>
                         {% endif %}
                         {% endfor %}
-                        
+
                         {% with parent=product.parent %}
                         {% if parent %}
                         <div class="control-group">
@@ -202,7 +202,7 @@
                         {% endwith %}
                     </div>
                 </div>
-               
+
                 {% with variants=product.variants.all %}
                 {% if variants|length > 0 %}
                 <div class="tab-pane" id="product_variants">
@@ -235,7 +235,7 @@
                 </div>
                 {% endif %}
                 {% endwith %}
-                
+
 
                 <div class="tab-pane" id="product_attributes">
                     <table class="table table-striped table-bordered">
@@ -288,7 +288,7 @@
                         </tr>
                         {% endfor %}
                     </table>
-                </div> 
+                </div>
 
                 <div class="tab-pane" id="product_images">
                     <div class="table-header">
@@ -320,7 +320,7 @@
                                 {% if "stock" in field.id_for_label %}
                                     <th>{{ field.label }}{% if field.field.required %} <span>*</span>{% endif %}</th>
                                 {% endif %}
-                            {% endfor %} 
+                            {% endfor %}
                         </tr>
                         <tr>
                             {% for field in stockrecord_form %}
