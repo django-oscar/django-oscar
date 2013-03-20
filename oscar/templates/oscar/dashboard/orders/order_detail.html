@@ -190,8 +190,9 @@
                             </tr>
                         {% else %}
                             <tr>
+                                <td colspan="7"></td>
                                 <th>{% trans "Shipping total" %}</th>
-                                <th style="text-align: right">{{ order.shipping_incl_Tax|currency }}</th>
+                                <th style="text-align: right">{{ order.shipping_incl_tax|currency }}</th>
                                 <td></td>
                             </tr>
                         {% endif %}
