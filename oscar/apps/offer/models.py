@@ -494,6 +494,14 @@ class AbsoluteDiscountBenefit(Benefit):
         benefit_consumed = {}
         max_affected_items = self._effective_max_affected_items()
 
+        total_price = basket.total_incl_tax_excl_discounts
+        percentage = Decimal('0.00')
+        if total_price:
+            if self.value >= total_price:
+                percentage = Decimal('1')
+            else:
+                percentage = Decimal(self.value) / total_price
+
         for line in basket.all_lines():
             if affected_items >= max_affected_items:
                 break
@@ -503,18 +511,15 @@ class AbsoluteDiscountBenefit(Benefit):
                 if not price:
                     # Avoid zero price products
                     continue
-                remaining_discount = self.value - discount
-                quantity_affected = int(min(line.quantity_without_discount,
-                                        max_affected_items - affected_items,
-                                        math.ceil(remaining_discount / price)))
+                quantity = min(line.quantity_without_discount,
+                               max_affected_items - affected_items)
 
                 # Update line with discounts
-                line_discount = self.round(min(remaining_discount, quantity_affected * price))
-                line.discount(line_discount, quantity_affected)
+                line_discount = (percentage * price * int(quantity)).quantize(Decimal('1.', ROUND_UP))
+                line.discount(line_discount, quantity)
                 # Update loop vars
-                affected_items += quantity_affected
-                benefit_consumed[line.id] = quantity_affected
-                remaining_discount -= line_discount
+                affected_items += quantity
+                benefit_consumed[line.id] = quantity
                 discount += line_discount
         if discount > 0 and condition:
             condition.consume_items(basket, consumed=benefit_consumed)
