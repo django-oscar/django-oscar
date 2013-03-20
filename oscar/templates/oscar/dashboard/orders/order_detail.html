@@ -370,25 +370,23 @@
             {% if sources %}
                 <thead>
                     <tr>
+                        <th>{% trans "Source" %}</th>
                         <th>{% trans "Amount" %}</th>
-                        <th>{% trans "Date" %}</th>
                         <th>{% trans "Reference" %}</th>
                         <th>{% trans "Status" %}</th>
+                        <th>{% trans "Date" %}</th>
                     </tr>
                 </thead>
 
                 {% for source in sources %}
                 <tbody>
-                    {% ifchanged source %}
-                    <tr><td colspan="4">{{ source.source_type }}</td></tr>
-                    {% endifchanged %}
-
                     {% for transaction in source.transactions.all %}
                     <tr>
+                        <td>{{ source.source_type }}</td>
                         <td>{{ transaction.amount|currency }}</td>
+                        <td>{{ transaction.reference|default:"-" }}</td>
+                        <td>{{ transaction.status|default:"-" }}</td>
                         <td>{{ transaction.date_created }}</td>
-                        <td>{{ transaction.reference }}</td>
-                        <td>{{ transaction.status }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
