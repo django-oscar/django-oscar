@@ -75,7 +75,7 @@ class OrderSearchForm(forms.Form):
 
     format_choices = (('html', _('HTML')),
                       ('csv', _('CSV')),)
-    response_format = forms.ChoiceField(widget=forms.RadioSelect,
+    response_format = forms.ChoiceField(widget=forms.RadioSelect, required=False,
             choices=format_choices, initial='html', label=_("Get results as"))
 
     def __init__(self, *args, **kwargs):
