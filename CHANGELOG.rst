@@ -2,6 +2,13 @@
 Changelog
 =========
 
+0.4.7 - 2013-03-20
+------------------
+
+Fix bug with order dashboard searching (`#587`_)
+
+.. _`#587`: https://github.com/tangentlabs/django-oscar/pull/587
+
 0.4.6 - 2013-03-05
 ------------------
 
