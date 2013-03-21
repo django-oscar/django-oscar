@@ -299,8 +299,11 @@ class AbstractCommunicationEvent(models.Model):
     An order-level event involving a communication to the customer, such
     as an confirmation email being sent.
     """
-    order = models.ForeignKey('order.Order', related_name="communication_events", verbose_name=_("Order"))
-    event_type = models.ForeignKey('customer.CommunicationEventType', verbose_name=_("Event Type"))
+    order = models.ForeignKey(
+        'order.Order', related_name="communication_events",
+        verbose_name=_("Order"))
+    event_type = models.ForeignKey(
+        'customer.CommunicationEventType', verbose_name=_("Event Type"))
     date = models.DateTimeField(_("Date"), auto_now_add=True)
 
     class Meta:

@@ -281,13 +281,15 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             event_type = CommunicationEventType.objects.get(code=code)
         except CommunicationEventType.DoesNotExist:
             # No event-type in database, attempt to find templates for this
-            # type and render them immediately to get the messages
+            # type and render them immediately to get the messages.  Since we
+            # have not CommunicationEventType to link to, we can't create a
+            # CommunicationEvent instance.
             messages = CommunicationEventType.objects.get_and_render(code, ctx)
             event_type = None
         else:
-            # Create order event
-            CommunicationEvent._default_manager.create(order=order,
-                                                       event_type=event_type)
+            # Create CommunicationEvent
+            CommunicationEvent._default_manager.create(
+                order=order, event_type=event_type)
             messages = event_type.get_messages(ctx)
 
         if messages and messages['body']:
