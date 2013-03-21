@@ -1,6 +1,0 @@
-<form class="pull-right" action="/i18n/setlang/" method="POST">
-	{% csrf_token %}
-	{% for language in LANGUAGES %}
-		<button {% if LANGUAGE_CODE == language.0 %}class="btn-primary"{% endif %} name="language" value="{{ language.0 }}">{{ language.1 }}</button>
-	{% endfor %}
-</form>
