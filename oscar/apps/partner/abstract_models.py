@@ -3,10 +3,10 @@ from decimal import Decimal as D
 from django.db import models
 from django.conf import settings
 from django.db.models import get_model
-from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
 from django.utils.importlib import import_module as django_import_module
 
+from oscar.core.utils import slugify
 from oscar.core.loading import get_class
 from oscar.apps.partner.exceptions import InvalidStockAdjustment
 DefaultWrapper = get_class('partner.wrappers', 'DefaultWrapper')
