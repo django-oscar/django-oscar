@@ -305,11 +305,35 @@ DEBUG_TOOLBAR_CONFIG = {
 
 AUTH_PROFILE_MODULE = 'user.Profile'
 
+
+# ==============
 # Oscar settings
+# ==============
+
+
 from oscar.defaults import *
+
+
+# Meta
+# ====
+
+OSCAR_SHOP_NAME = 'Oscar Sandbox'
+OSCAR_SHOP_TAGLINE = 'e-Commerce for Django'
+
+# Enter Google Analytics ID for the tracking to be included in the templates
+#GOOGLE_ANALYTICS_ID = 'UA-XXXXX-Y'
 
 OSCAR_RECENTLY_VIEWED_PRODUCTS = 20
 OSCAR_ALLOW_ANON_CHECKOUT = True
+
+# This is added to each template context by the core context processor.  It is
+# useful for test/stage/qa sites where you want to show the version of the site
+# in the page title.
+DISPLAY_VERSION = False
+
+
+# Order processing
+# ================
 
 # Some sample order/line status settings
 OSCAR_INITIAL_ORDER_STATUS = 'Pending'
@@ -320,30 +344,35 @@ OSCAR_ORDER_STATUS_PIPELINE = {
     'Cancelled': (),
 }
 
-OSCAR_SHOP_NAME = 'Oscar Sandbox'
-OSCAR_SHOP_TAGLINE = 'e-Commerce for Django'
 
-# Enter Google Analytics ID for the tracking to be included in the templates
-#GOOGLE_ANALYTICS_ID = 'UA-XXXXX-Y'
+# LESS/CSS/statics
+# ================
 
-# Use Less to compile CSS
-COMPRESS_ENABLED = False
+# We default to using CSS files, rather than the LESS files that generate them.
+# If you want to develop Oscar's CSS, then set USE_LESS=True and
+# COMPRESS_ENABLED=False in your settings_local module and ensure you have
+# 'lessc' installed.  You can do this by running:
+#
+#    pip install -r requirements_less.txt
+#
+# which will install node.js and less in your virtualenv.
+
+USE_LESS = False
+
+COMPRESS_ENABLED = True
 COMPRESS_PRECOMPILERS = (
     ('text/less', 'lessc {infile} {outfile}'),
 )
+
+
+# Logging
+# =======
 
 LOG_ROOT = location('logs')
 # Ensure log root exists
 if not os.path.exists(LOG_ROOT):
     os.mkdir(LOG_ROOT)
 
-# This is added to each template context by the core context processor.  It is
-# useful for test/stage/qa sites where you want to show the version of the site
-# in the page title.
-DISPLAY_VERSION = False
-
-# Must be within MEDIA_ROOT for sorl to work which is a bit annoying.
-OSCAR_MISSING_IMAGE_URL = 'image_not_found.jpg'
 
 # Try and import local settings which can be used to override any of the above.
 try:
