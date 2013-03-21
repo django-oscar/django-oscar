@@ -60,19 +60,6 @@ class TestCountCondition(OfferTest):
         self.condition.consume_items(self.basket, [])
         self.assertFalse(self.condition.is_satisfied(self.basket))
 
-    def test_count_condition_is_applied_multpile_times(self):
-        benefit = models.AbsoluteDiscountBenefit(range=self.range, type="Absolute", value=Decimal('10.00'))
-        for i in range(10):
-            self.basket.add_product(create_product(price=Decimal('5.00'), upc='upc_%i' % i), 1)
-        product_range = models.Range.objects.create(name="All products", includes_all_products=True)
-        condition = models.CountCondition(range=product_range, type="Count", value=2)
-
-        first_discount = benefit.apply(self.basket, condition=condition)
-        self.assertEquals(Decimal('10.00'), first_discount.discount)
-
-        second_discount = benefit.apply(self.basket, condition=condition)
-        self.assertEquals(Decimal('10.00'), second_discount.discount)
-
 
 class ValueConditionTest(OfferTest):
     def setUp(self):
