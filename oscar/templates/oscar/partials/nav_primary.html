@@ -41,6 +41,8 @@
                         {% endif %}
                     </li>
                     {% endfor %}
+                    <li class="divider"></li>
+                    <li><a href="{% url offer:list %}">{% trans "Offers" %}</a></li>
                 </ul>
             </div>
             {% include "partials/search.html" %}
