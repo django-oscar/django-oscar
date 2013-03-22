@@ -243,7 +243,6 @@ var oscar = (function(o, $) {
     };
 
     o.init = function() {
-        o.catalogue.init();
         o.forms.init();
         o.page.init();
         o.responsive.init();
