@@ -171,6 +171,26 @@ You can browse the Oscar sandbox site in two ways:
 * The Vagrant machine install Apache2 and mod_wsgi.  You can browse the site
   through Apache at http://localhost:8081 on your host machine.
 
+Writing LESS/CSS
+================
+
+The sandbox Oscar site defaults to serving the CSS files directly, bypassing
+LESS compilation.  If you want to develop the LESS files, set::
+
+    USE_LESS = True
+    COMPRESS_ENABLED = False
+
+in ``sites/sandbox/settings_local.py``.  You will also need to ensure that
+``lessc`` is installed.  This can be acheived by running::
+
+    pip install -r requirements_less.txt
+
+which will install the `virtual-node`_ and `virtual-less`_ packages, which will
+install node.js and LESS in your virtualenv.
+
+.. _`virtual-node`: https://github.com/elbaschid/virtual-node
+.. _`virtual-less`: https://github.com/elbaschid/virtual-less
+
 
 Writing docs
 ============

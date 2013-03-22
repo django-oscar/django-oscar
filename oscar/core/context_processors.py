@@ -9,6 +9,6 @@ def metadata(request):
             'version': getattr(settings, 'VERSION', 'N/A'),
             'shop_name': settings.OSCAR_SHOP_NAME,
             'shop_tagline': settings.OSCAR_SHOP_TAGLINE,
-            'use_less': getattr(settings, 'USE_LESS', True),
+            'use_less': getattr(settings, 'USE_LESS', False),
             'google_analytics_id': getattr(settings,
                                            'GOOGLE_ANALYTICS_ID', None)}
