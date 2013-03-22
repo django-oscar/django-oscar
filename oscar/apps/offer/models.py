@@ -682,19 +682,25 @@ class Range(models.Model):
     Represents a range of products that can be used within an offer
     """
     name = models.CharField(_("Name"), max_length=128, unique=True)
-    includes_all_products = models.BooleanField(_('Includes All Products'), default=False)
-    included_products = models.ManyToManyField('catalogue.Product', related_name='includes', blank=True,
+    includes_all_products = models.BooleanField(
+        _('Includes All Products'), default=False)
+    included_products = models.ManyToManyField(
+        'catalogue.Product', related_name='includes', blank=True,
         verbose_name=_("Included Products"))
-    excluded_products = models.ManyToManyField('catalogue.Product', related_name='excludes', blank=True,
+    excluded_products = models.ManyToManyField(
+        'catalogue.Product', related_name='excludes', blank=True,
         verbose_name=_("Excluded Products"))
-    classes = models.ManyToManyField('catalogue.ProductClass', related_name='classes', blank=True,
+    classes = models.ManyToManyField(
+        'catalogue.ProductClass', related_name='classes', blank=True,
         verbose_name=_("Product Classes"))
-    included_categories = models.ManyToManyField('catalogue.Category', related_name='includes', blank=True,
+    included_categories = models.ManyToManyField(
+        'catalogue.Category', related_name='includes', blank=True,
         verbose_name=_("Included Categories"))
 
     # Allow a custom range instance to be specified
-    proxy_class = models.CharField(_("Custom class"), null=True, blank=True,
-                                    max_length=255, default=None, unique=True)
+    proxy_class = models.CharField(
+        _("Custom class"), null=True, blank=True, max_length=255,
+        default=None, unique=True)
 
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
@@ -746,14 +752,14 @@ class Range(models.Model):
     contains = contains_product
 
     def _included_product_ids(self):
-        if None == self.__included_product_ids:
+        if self.__included_product_ids is None:
             self.__included_product_ids = [row['id'] for row in self.included_products.values('id')]
         return self.__included_product_ids
 
     def _excluded_product_ids(self):
         if not self.id:
             return []
-        if None == self.__excluded_product_ids:
+        if self.__excluded_product_ids is None:
             self.__excluded_product_ids = [row['id'] for row in self.excluded_products.values('id')]
         return self.__excluded_product_ids
 

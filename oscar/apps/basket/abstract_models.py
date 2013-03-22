@@ -84,12 +84,15 @@ class AbstractBasket(models.Model):
         Return a cached set of basket lines.
 
         This is important for offers as they alter the line models and you
-        don't want to reload them from the DB.
+        don't want to reload them from the DB as that information would be
+        lost.
         """
         if self.id is None:
             return query.EmptyQuerySet(model=self.__class__)
         if self._lines is None:
-            self._lines = self.lines.all()
+            self._lines = self.lines.select_related(
+                'product', 'product__stockrecord'
+            ).all().prefetch_related('attributes', 'product__images')
         return self._lines
 
     def is_quantity_allowed(self, qty):

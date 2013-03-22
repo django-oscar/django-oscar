@@ -23,9 +23,6 @@ class Applicator(object):
         The request is passed too as sometimes the available offers
         are dependent on the user (eg session-based offers).
         """
-        # Flush any existing discounts to make sure they are recalculated
-        # correctly
-        basket.reset_offer_applications()
         offers = self.get_offers(request, basket)
         self.apply_offers(basket, offers)
 
@@ -69,13 +66,18 @@ class Applicator(object):
         """
         Return site offers that are available to all users
         """
-        date_based_offers = ConditionalOffer.active.filter(
-            offer_type=ConditionalOffer.SITE,
-            status=ConditionalOffer.OPEN)
-        nondate_based_offers = ConditionalOffer.objects.filter(
-            offer_type=ConditionalOffer.SITE,
-            status=ConditionalOffer.OPEN,
-            start_datetime=None, end_datetime=None)
+        # Using select_related with the condition/benefit ranges doesn't seem
+        # to work.  I think this is because both the related objects have the
+        # FK to range with the same name.
+        date_based_offers = ConditionalOffer.active.select_related(
+            'condition', 'condition__range', 'benefit').filter(
+                offer_type=ConditionalOffer.SITE,
+                status=ConditionalOffer.OPEN)
+        nondate_based_offers = ConditionalOffer.objects.select_related(
+            'condition', 'condition__range', 'benefit').filter(
+                offer_type=ConditionalOffer.SITE,
+                status=ConditionalOffer.OPEN,
+                start_datetime=None, end_datetime=None)
         return list(chain(date_based_offers, nondate_based_offers))
 
     def get_basket_offers(self, basket, user):

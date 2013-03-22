@@ -36,6 +36,10 @@ class BasketMiddleware(object):
                 for other_basket in old_baskets[1:]:
                     self.merge_baskets(basket, other_basket)
 
+            # Assign user onto basket to prevent further SQL queries when
+            # basket.owner is accessed.
+            basket.owner = request.user
+
             if cookie_basket:
                 self.merge_baskets(basket, cookie_basket)
                 request.cookies_to_delete.append(
