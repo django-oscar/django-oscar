@@ -1202,32 +1202,52 @@ class AbsoluteDiscountBenefit(Benefit):
         verbose_name_plural = _("Absolute discount benefits")
 
     def apply(self, basket, condition, offer=None):
+        # Fetch basket lines that are in the range and available to be used in
+        # an offer.
         line_tuples = self.get_applicable_lines(basket)
         if not line_tuples:
             return ZERO_DISCOUNT
 
-        discount = D('0.00')
-        affected_items = 0
+        # Determine which lines can have the discount applied to them
         max_affected_items = self._effective_max_affected_items()
-        affected_lines = []
+        num_affected_items = 0
+        affected_items_total = D('0.00')
+        lines_to_discount = []
         for price, line in line_tuples:
-            if affected_items >= max_affected_items:
+            if num_affected_items >= max_affected_items:
                 break
-            remaining_discount = self.value - discount
-            quantity_affected = min(
-                line.quantity_without_discount,
-                max_affected_items - affected_items,
-                int(math.ceil(remaining_discount / price)))
-            line_discount = self.round(min(remaining_discount,
-                                            quantity_affected * price))
-            line.discount(line_discount, quantity_affected)
+            qty = min(line.quantity_without_discount,
+                      max_affected_items - num_affected_items)
+            lines_to_discount.append((line, price, qty))
+            num_affected_items += qty
+            affected_items_total += qty * price
 
-            affected_lines.append((line, line_discount, quantity_affected))
-            affected_items += quantity_affected
-            discount += line_discount
+        # Guard against zero price products causing problems
+        if not affected_items_total:
+            return ZERO_DISCOUNT
 
-        if discount > 0:
-            condition.consume_items(basket, affected_lines)
+        # Ensure we don't try to apply a discount larger than the total of the
+        # matching items.
+        discount = min(self.value, affected_items_total)
+
+        # Apply discount equally amongst them
+        affected_lines = []
+        applied_discount = D('0.00')
+        for i, (line, price, qty) in enumerate(lines_to_discount):
+            if i == len(lines_to_discount) - 1:
+                # If last line, then take the delta as the discount to ensure
+                # the total discount is correct and doesn't mismatch due to
+                # rounding.
+                line_discount = discount - applied_discount
+            else:
+                # Calculate a weighted discount for the line
+                line_discount = self.round(
+                    ((price * qty) / affected_items_total) * discount)
+            line.discount(line_discount, qty)
+            affected_lines.append((line, line_discount, qty))
+            applied_discount += line_discount
+
+        condition.consume_items(basket, affected_lines)
 
         return BasketDiscount(discount)
 
@@ -1263,6 +1283,8 @@ class FixedPriceBenefit(Benefit):
         if isinstance(condition, ValueCondition):
             return ZERO_DISCOUNT
 
+        # Fetch basket lines that are in the range and available to be used in
+        # an offer.
         line_tuples = self.get_applicable_lines(basket, range=condition.range)
         if not line_tuples:
             return ZERO_DISCOUNT
