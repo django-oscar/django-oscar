@@ -25,7 +25,8 @@ Applicator = get_class('offer.utils', 'Applicator')
 Repository = get_class('shipping.repository', ('Repository'))
 
 
-def get_messages(basket, offers_before, offers_after):
+def get_messages(basket, offers_before, offers_after,
+                 include_buttons=True):
     """
     Return the messages about offer changes
     """
@@ -34,21 +35,32 @@ def get_messages(basket, offers_before, offers_after):
         set(offers_after.keys()))
     offers_gained = set(offers_after.keys()).difference(
         set(offers_before.keys()))
-    offer_messages = {messages.INFO: [],
-                      messages.SUCCESS: [],
-                      messages.WARNING: []}
+
+    # Build a list of (level, msg) tuples
+    offer_messages = []
     for offer_id in offers_lost:
         offer = offers_before[offer_id]
-        offer_messages[messages.WARNING].append(
-            _("Your basket no longer qualifies for the '%s' offer") % offer)
+        msg = render_to_string(
+            'basket/messages/offer_lost.html',
+            {'offer': offer})
+        offer_messages.append((
+            messages.WARNING, msg))
     for offer_id in offers_gained:
         offer = offers_after[offer_id]
-        offer_messages[messages.SUCCESS].append(
-            _("Your basket now qualifies for the '%s' offer") % offer)
-    if not offers_lost and not offers_gained:
-        msg = _("Basket total now %(total)s") % {
-            'total': currency(basket.total_incl_tax)}
-        offer_messages[messages.INFO].append(msg)
+        msg = render_to_string(
+            'basket/messages/offer_gained.html',
+            {'offer': offer})
+        offer_messages.append((
+            messages.SUCCESS, msg))
+
+    # We use the 'include_buttons' parameter to determine whether to show the
+    # 'Checkout now' buttons.  We don't want to show these on the basket page.
+    msg = render_to_string(
+        'basket/messages/new_total.html',
+        {'basket': basket,
+         'include_buttons': include_buttons})
+    offer_messages.append((
+        messages.INFO, msg))
 
     return offer_messages
 
@@ -58,13 +70,14 @@ def apply_messages(request, offers_before):
     Set flash messages triggered by changes to the basket
     """
     # Re-apply offers to see if any new ones are now available
+    request.basket.reset_offer_applications()
     Applicator().apply(request, request.basket)
     offers_after = request.basket.applied_offers()
 
-    for level, msgs in get_messages(request.basket,
-                                    offers_before, offers_after).items():
-        for msg in msgs:
-            messages.add_message(request, level, msg)
+    for level, msg in get_messages(
+            request.basket, offers_before, offers_after):
+        messages.add_message(
+            request, level, msg, extra_tags='safe noicon')
 
 
 class BasketView(ModelFormSetView):
@@ -166,9 +179,12 @@ class BasketView(ModelFormSetView):
                 line = form.instance
                 if self.request.user.is_authenticated():
                     self.move_line_to_saved_basket(line)
-                    msg = _(u"'%(title)s' has been saved for later") % {
-                        'title': line.product}
+
+                    msg = render_to_string(
+                        'basket/messages/line_saved.html',
+                        {'line': line})
                     flash_messages.info(msg)
+
                     save_for_later = True
                 else:
                     msg = _("You can't save an item for later if you're "
@@ -191,9 +207,10 @@ class BasketView(ModelFormSetView):
             Applicator().apply(self.request, self.request.basket)
             offers_after = self.request.basket.applied_offers()
 
-            for level, msgs in get_messages(self.request.basket, offers_before,
-                                            offers_after).items():
-                flash_messages.add_messages(level, msgs)
+            for level, msg in get_messages(
+                    self.request.basket, offers_before,
+                    offers_after, include_buttons=False):
+                flash_messages.add_message(level, msg)
 
             # Reload formset - we have to remove the POST fields from the
             # kwargs as, if they are left in, the formset won't construct
@@ -288,7 +305,9 @@ class BasketAddView(FormView):
         self.request.basket.add_product(
             form.instance, form.cleaned_data['quantity'],
             form.cleaned_options())
-        messages.success(self.request, self.get_success_message(form))
+
+        messages.success(self.request, self.get_success_message(form),
+                         extra_tags='safe noicon')
 
         # Check for additional offer messages
         apply_messages(self.request, offers_before)
@@ -300,15 +319,10 @@ class BasketAddView(FormView):
         return super(BasketAddView, self).form_valid(form)
 
     def get_success_message(self, form):
-        qty = form.cleaned_data['quantity']
-        title = form.instance.get_title()
-        if qty == 1:
-            return _("'%(title)s' has been added to your basket") % {
-                'title': title}
-        else:
-            return _(
-                "'%(title)s' (quantity %(quantity)d) has been added to your"
-                "basket") % {'title': title, 'quantity': qty}
+        return render_to_string(
+            'basket/messages/addition.html',
+            {'product': form.instance,
+             'quantity': form.cleaned_data['quantity']})
 
     def form_invalid(self, form):
         msgs = []
@@ -458,9 +472,10 @@ class SavedView(ModelFormSetView):
         for form in formset:
             if form.cleaned_data['move_to_basket']:
                 is_move = True
-                msg = _("'%(product)s' has been moved back to your basket") % {
-                    'product': form.instance.product}
-                messages.info(self.request, msg)
+                msg = render_to_string(
+                    'basket/messages/line_restored.html',
+                    {'line': form.instance})
+                messages.info(self.request, msg, extra_tags='safe noicon')
                 real_basket = self.request.basket
                 real_basket.merge_line(form.instance)
 

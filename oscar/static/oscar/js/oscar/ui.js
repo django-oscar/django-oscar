@@ -1,16 +1,9 @@
 var oscar = (function(o, $) {
     // Replicate Django's flash messages so they can be used by AJAX callbacks.
     o.messages = {
-        icons: {
-            'info': '<i class="icon-info-sign"></i>',
-            'success': '<i class="icon-ok-sign"></i>',
-            'warning': '<i class="icon-warning-sign"></i>',
-            'error': '<i class="icon-exclamation-sign"></i>'
-        },
         addMessage: function(tag, msg) {
-            var iconHTML = o.messages.icons[tag],
-                msgHTML = '<div class="alert fade in alert-' + tag + '">' +
-                '<a href="#" class="close" data-dismiss="alert">x</a>' + iconHTML + " " + msg +
+            var msgHTML = '<div class="alert fade in alert-' + tag + '">' +
+                '<a href="#" class="close" data-dismiss="alert">x</a>'  + msg +
                 '</div>';
             $('#messages').append($(msgHTML));
         },

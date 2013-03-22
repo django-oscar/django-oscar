@@ -158,7 +158,7 @@ class AbstractBasket(models.Model):
         else:
             line.quantity += quantity
             line.save()
-        self._lines = None
+        self.reset_offer_applications()
     add_product.alters_data = True
 
     def applied_offers(self):
