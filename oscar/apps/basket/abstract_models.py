@@ -487,9 +487,9 @@ class AbstractLine(models.Model):
 
     def __unicode__(self):
         return _(
-            u"%(basket)s, Product '%(product)s', quantity %(quantity)d") % {
-                'basket': self.basket,
-                'product': self.product,
+            u"Basket #%(basket_id)d, Product #%(product_id)d, quantity %(quantity)d") % {
+                'basket_id': self.basket.pk,
+                'product_id': self.product.pk,
                 'quantity': self.quantity}
 
     def save(self, *args, **kwargs):
@@ -519,10 +519,18 @@ class AbstractLine(models.Model):
         self._affected_quantity = 0
 
     def discount(self, discount_value, affected_quantity):
+        """
+        Apply a discount
+        """
         self._discount += discount_value
         self._affected_quantity += int(affected_quantity)
 
     def consume(self, quantity):
+        """
+        Mark all or part of the line as 'consumed'
+
+        Consumed items are no longer available to be used in offers.
+        """
         if quantity > self.quantity - self._affected_quantity:
             inc = self.quantity - self._affected_quantity
         else:
@@ -531,8 +539,10 @@ class AbstractLine(models.Model):
 
     def get_price_breakdown(self):
         """
-        Returns a breakdown of line prices after discounts have
-        been applied.
+        Return a breakdown of line prices after discounts have been applied.
+
+        Returns a list of (unit_price_incl_tx, unit_price_excl_tax, quantity)
+        tuples.
         """
         prices = []
         if not self.has_discount:
