@@ -1,5 +1,5 @@
 # These targets are not files
-.PHONY: contribute ci test i18n lint travis
+.PHONY: install upgrade sandbox demo test ci i18n lint travis docs
 
 install:
 	pip install -r requirements.txt --use-mirrors
@@ -31,6 +31,10 @@ demo: install
 	sites/demo/manage.py loaddata countries.json sites/_fixtures/pages.json sites/_fixtures/auth.json sites/_fixtures/ranges.json
 	sites/demo/manage.py rebuild_index --noinput
 
+docs:
+	cd docs && make html
+	open docs/build/html/index.html &
+
 test:
 	./runtests.py
 
@@ -49,12 +53,13 @@ lint:
 # to catch any errors that might come from that build process.
 travis: install lint test sandbox
 
-i18n:
+messages:
 	# Create the .po files used for i18n
 	cd oscar; django-admin.py makemessages -a
 
-tx:
-	tx pull
+gettext:
+	# Compile the gettext files
+	cd oscar; django-admin.py compilemessages
 
 puppet:
 	# Install puppet modules required to set-up a Vagrant box
@@ -67,6 +72,7 @@ puppet:
 	git clone git://github.com/codeinthehole/puppet-userconfig.git sites/puppet/modules/userconfig
 
 css:
+	# Compile CSS files from LESS
 	lessc oscar/static/oscar/less/styles.less > oscar/static/oscar/css/styles.css
 	lessc oscar/static/oscar/less/responsive.less > oscar/static/oscar/css/responsive.css
 	lessc oscar/static/oscar/less/dashboard.less > oscar/static/oscar/css/dashboard.css
