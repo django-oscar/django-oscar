@@ -38,7 +38,8 @@ setup(name='django-oscar',
           'pillow>=1.7.8,<2.0.0',
           # Oscar ships with migraations
           'South>=0.7.6,<0.8',
-          # We use the ModelFormSetView from django-extra-views for the basket page
+          # We use the ModelFormSetView from django-extra-views for the basket
+          # page
           'django-extra-views>=0.2,<0.6',
           # We ship a simple Haystack implementation (that needs to be
           # improved).  We are using the 2.0-beta release from Github and
@@ -56,10 +57,7 @@ setup(name='django-oscar',
           'django-compressor>=1.2,<1.3',
           # For converting non-ASCII to ASCII when creating slugs
           'Unidecode>=0.04.12,<0.05',
-          # Oscar's default CSS is generated from Less and so we need node.js
-          # and lessc to be available to compile the Less files.
-          'virtual-node>=0.0.2-0.8.11',
-          'virtual-less>=0.0.1-1.3.3'],
+      ],
       dependency_links=['https://github.com/toastdriven/django-haystack/tarball/fd83d3f449c2197f93040bb3d7bc6083ea8e48b7#egg=django-haystack-2.0.0-beta'],
       # See http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
