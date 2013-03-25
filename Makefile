@@ -1,5 +1,5 @@
 # These targets are not files
-.PHONY: install upgrade sandbox demo test ci i18n lint travis docs
+.PHONY: install upgrade sandbox demo coverage ci i18n lint travis docs
 
 install:
 	pip install -r requirements.txt --use-mirrors
@@ -34,14 +34,11 @@ demo: install
 docs:
 	cd docs && make html
 
-test:
-	./runtests.py
-
-ci: upgrade lint
-	# Run continuous tests and generate lint reports.  This is for Hudson which has 
-	# coverage and xunit plugins.
-	./runtests.py --with-coverage --with-xunit
+coverage:
+	./runtests.py --with-coverage --cover-package=oscar --cover-html --cover-html-dir=htmlcov --with-xunit
 	coverage xml -i
+
+ci: upgrade lint coverage
 
 lint:
 	./lint.sh
@@ -50,7 +47,7 @@ lint:
 # (instead of upgrade) because we install Django in the .travis.yml
 # and upgrade would overwrite it.  We also build the sandbox as part of this target
 # to catch any errors that might come from that build process.
-travis: install lint test sandbox
+travis: install lint coverage sandbox
 
 messages:
 	# Create the .po files used for i18n

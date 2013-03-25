@@ -19,34 +19,21 @@ def run_tests(*test_args):
 
 
 if __name__ == '__main__':
-    parser = OptionParser()
-    parser.add_option('--with-coverage', dest='coverage', default=False,
-                      action='store_true')
-    parser.add_option('--with-xunit', dest='xunit', default=False,
-                      action='store_true')
-    parser.add_option('--collect-only', dest='collect', default=False,
-                      action='store_true')
-    options, args = parser.parse_args()
+    args = sys.argv[1:]
 
-    if options.collect:
-        # Show tests only so a bash autocompleter can use the results
-        configure(['-v'])
-        run_tests()
-    else:
+    if not args:
         # If no args, then use 'progressive' plugin to keep the screen real
         # estate used down to a minimum.  Otherwise, use the spec plugin
-        nose_args = ['-s', '-x']
-        if args:
-            nose_args.extend(['--with-specplugin'])
+        args = ['-s', '-x', '--with-progressive']
+    else:
+        # Some args specified.  Check to see if any nose options have been
+        # specified.  If they have, then don't set any
+        has_options = any(map(lambda x: x.startswith('--'), args))
+        if not has_options:
+            args.extend(['-s', '-x', '--with-specplugin'])
         else:
-            nose_args.append('--with-progressive')
+            # Remove options as nose will pick these up from sys.argv
+            args = [arg for arg in args if not arg.startswith('-')]
 
-        if options.coverage:
-            # Nose automatically uses any options passed to runtests.py, which
-            # is why the coverage trigger uses '--with-coverage' and why we
-            # don't need to explicitly include it here.
-            nose_args.extend([
-                '--cover-package=oscar', '--cover-html',
-                '--cover-html-dir=htmlcov'])
-        configure(nose_args)
-        run_tests(*args)
+    configure()
+    run_tests(*args)
