@@ -30,6 +30,7 @@ Next, you can modify the ``Product`` model through subclassing::
 
     from oscar.apps.catalogue.models import *
 
+Make sure to import the remaining Oscar models at the bottom of your file. 
 
 The last thing you need to do now is make Django update the database schema and
 create a new column in the product table. We recommend to use South migrations 
@@ -73,16 +74,14 @@ Model customisations are not picked up
 
 It's a common problem that you're trying to customise one of Oscar's models,
 but your new fields don't seem to get picked up. That is usually caused by
-Oscar's models being imported before your customised ones. Due to the way
-model registration works with Django, the order in which models are imported is
-important.
-
-Somewhere in your codebase is an import from ``oscar.apps.*.models``
-that is being executed before your models are parsed. That has to be removed.
+Oscar's models being imported before your customised ones. Django's model 
+registration disregards all further model declarations.
 
 In your overriding ``models.py``, ensure that you import Oscar's models *after*
-your custom ones have been defined.
+your custom ones have been defined. If that doesn't help, you have an import 
+from ``oscar.apps.*.models`` somewhere that is being executed before your models 
+are parsed. One trick for finding that import: put ``assert False`` in the relevant 
+Oscar's models.py, and the stack trace will show you the importing module.
 
-If other modules need to import these models, then import from your local module,
+If other modules need to import your models, then import from your local module,
 not from Oscar directly.
-
