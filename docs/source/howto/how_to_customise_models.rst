@@ -28,6 +28,8 @@ Next, you can modify the ``Product`` model through subclassing::
     class Product(AbstractProduct):
         video_url = models.URLField()
 
+    from oscar.apps.catalogue.models import *
+
 
 The last thing you need to do now is make Django update the database schema and
 create a new column in the product table. We recommend to use South migrations 
@@ -65,3 +67,22 @@ and attributes of concrete subclasses of ``Product`` are not available unless
 explicitly casted to that class.
 To model different classes of products, use ``ProductClass`` and
 ``ProductAttribute`` instead.
+
+Model customisations are not picked up
+--------------------------------------
+
+It's a common problem that you're trying to customise one of Oscar's models,
+but your new fields don't seem to get picked up. That is usually caused by
+Oscar's models being imported before your customised ones. Due to the way
+model registration works with Django, the order in which models are imported is
+important.
+
+Somewhere in your codebase is an import from ``oscar.apps.*.models``
+that is being executed before your models are parsed. That has to be removed.
+
+In your overriding ``models.py``, ensure that you import Oscar's models *after*
+your custom ones have been defined.
+
+If other modules need to import these models, then import from your local module,
+not from Oscar directly.
+

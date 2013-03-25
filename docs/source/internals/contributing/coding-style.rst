@@ -5,7 +5,15 @@ Coding Style
 General
 -------
 
-* PEP8 everywhere while remaining sensible
+Please follow these conventions while remaining sensible:
+
+* `PEP8 -- Style Guide for Python Code <http://www.python.org/dev/peps/pep-0008/>`_
+* `PEP257 -- Docstring Conventions <http://www.python.org/dev/peps/pep-0257/>`_
+* `Django Coding Style <http://docs.djangoproject.com/en/dev/internals/contributing/writing-code/coding-style/>`_
+
+`Code Like a Pythonista`_ is recommended reading.
+
+.. _Code Like a Pythonista: http://python.net/~goodger/projects/pycon/2007/idiomatic/handout.html
 
 URLs
 ----
@@ -34,3 +42,9 @@ Classes should be named according to::
 
 For example, ``ProductUpdateView``, ``OfferCreateView`` and
 ``PromotionDeleteView``.  This doesn't fit all situations, but it's a good basis.
+
+Referencing managers
+--------------------
+
+Use ``_default_manager`` rather than ``objects``.  This allows projects to
+override the default manager to provide domain-specific behaviour.
