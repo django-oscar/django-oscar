@@ -33,7 +33,6 @@ demo: install
 
 docs:
 	cd docs && make html
-	open docs/build/html/index.html &
 
 test:
 	./runtests.py
