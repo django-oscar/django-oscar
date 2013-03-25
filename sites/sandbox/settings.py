@@ -59,15 +59,15 @@ LANGUAGES = (
     ('en-gb', 'English'),
     ('da', 'Danish'),
     ('de', 'German'),
-    ('el_GR', 'Greek'),
+    ('el', 'Greek'),
     ('en', 'English'),
     ('es', 'Spanish'),
     ('fr', 'French'),
     ('it', 'Italian'),
     ('ja', 'Japanese'),
     ('pl', 'Polish'),
-    ('pt_BR', 'Portugese'),
-    ('ru_RU', 'Russian'),
+    ('pt', 'Portugese'),
+    ('ru', 'Russian'),
     ('sk', 'Slovakian'),
 )
 ROSETTA_STORAGE_CLASS = 'rosetta.storage.SessionRosettaStorage'
