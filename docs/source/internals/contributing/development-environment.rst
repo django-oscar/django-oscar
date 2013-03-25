@@ -9,26 +9,9 @@ Fork the repo and run::
     mkvirtualenv oscar  # using virtualenvwrapper
     make install
 
-Playing in the sandbox
-======================
-
-Oscar ships with a 'sandbox' site which can be run locally to play around with
-Oscar using a browser. Set it up by::
-
-   make sandbox 
-   cd sites/sandbox 
-   ./manage.py runserver
-
-This will create the database and load some fixtures for categories and shipping
-countries.
-
-Note that Oscar uses PIL_ and Sorl_ for thumbnailing, and so you will need
-``libjpeg-dev`` installed in your OS so that your PIL installation supports
-JPEGS.
-
-.. _PIL: http://www.pythonware.com/products/pil/
-.. _Sorl: http://sorl-thumbnail.readthedocs.org/en/latest/
-
+The :doc:`sandbox <../sandbox>` sandbox is a good way to check that everything
+went well, and it takes just one ``make sandbox``.
+    
 Writing LESS/CSS
 ================
 
