@@ -4,13 +4,14 @@ from django.views import generic
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
+from django.conf import settings
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.db.models import Count
 from django.shortcuts import HttpResponse
 
 from oscar.core.loading import get_classes
-from oscar.apps.promotions.conf import PROMOTION_CLASSES, PROMOTION_POSITIONS
+from oscar.apps.promotions.conf import PROMOTION_CLASSES
 
 SingleProduct, RawHTML, Image, MultiImage, \
     AutomaticProductList, PagePromotion, \
@@ -74,7 +75,7 @@ class PageDetailView(generic.TemplateView):
 
     def get_positions_context_data(self, path):
         ctx = []
-        for code, name in PROMOTION_POSITIONS:
+        for code, name in settings.OSCAR_PROMOTION_POSITIONS:
             promotions = PagePromotion._default_manager.select_related() \
                                                        .filter(page_url=path,
                                                                position=code) \

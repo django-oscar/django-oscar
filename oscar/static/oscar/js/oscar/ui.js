@@ -1,16 +1,9 @@
 var oscar = (function(o, $) {
     // Replicate Django's flash messages so they can be used by AJAX callbacks.
     o.messages = {
-        icons: {
-            'info': '<i class="icon-info-sign"></i>',
-            'success': '<i class="icon-ok-sign"></i>',
-            'warning': '<i class="icon-warning-sign"></i>',
-            'error': '<i class="icon-exclamation-sign"></i>'
-        },
         addMessage: function(tag, msg) {
-            var iconHTML = o.messages.icons[tag],
-                msgHTML = '<div class="alert fade in alert-' + tag + '">' +
-                '<a href="#" class="close" data-dismiss="alert">x</a>' + iconHTML + " " + msg +
+            var msgHTML = '<div class="alert fade in alert-' + tag + '">' +
+                '<a href="#" class="close" data-dismiss="alert">x</a>'  + msg +
                 '</div>';
             $('#messages').append($(msgHTML));
         },
@@ -58,7 +51,7 @@ var oscar = (function(o, $) {
             $('.js-disable-on-click').click(function(){$(this).button('loading');});
         },
         submitIfNotLocked: function(event) {
-            $form = $(this);
+            var $form = $(this);
             if ($form.data('locked')) {
                 return false;
             }
@@ -79,33 +72,6 @@ var oscar = (function(o, $) {
         }
     };
 
-    o.catalogue = {
-        init: function() {
-            // Product star rating -- must improve this in python -- this is
-            // one of the worst things I have ever come across.  It will die in raging fire
-            // very soon.
-            $('.product_pod, .span6, .promotion_single').each(function() {
-                var sum_total_reviews = $(this).find(".review_count li").length * 5,
-                sum_rating_count = 0;
-                $(this).find('.review_count li').each(function() {
-                    sum_rating_count += parseFloat($(this).text());
-                });
-                var ave_rating = sum_rating_count / sum_total_reviews *10;
-                if (ave_rating <= 2) {
-                    ave_rating = 'One';
-                } else if (ave_rating <= 4) {
-                    ave_rating = 'Two';
-                } else if (ave_rating <= 6) {
-                    ave_rating = 'Three';
-                } else if (ave_rating <= 8) {
-                    ave_rating = 'Four';
-                } else if (ave_rating <= 10) {
-                    ave_rating = 'Five';
-                }
-                $(this).find('.review_count').after('<p class="star ' + ave_rating + '"></p>').remove();
-            });
-        }
-    };
 
     o.page = {
         init: function() {
@@ -270,7 +236,6 @@ var oscar = (function(o, $) {
     };
 
     o.init = function() {
-        o.catalogue.init();
         o.forms.init();
         o.page.init();
         o.responsive.init();

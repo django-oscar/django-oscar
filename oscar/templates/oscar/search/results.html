@@ -57,13 +57,13 @@
 {% if page.object_list %}
 <section>
 	<div class="mod">
-		{% include "partials/pagination.html" %}
+		{% include "search/partials/pagination.html" %}
 		<ol class="products four">
 			{% for result in page.object_list %}
 			<li>{% include "catalogue/partials/product.html" with product=result.object %}</li>
 			{% endfor %}
 		</ol>
-		{% include "partials/pagination.html" %}
+		{% include "search/partials/pagination.html" %}
 	</div>
 </section>
 {% else %}

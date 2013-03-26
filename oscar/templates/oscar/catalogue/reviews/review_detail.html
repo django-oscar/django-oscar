@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+{% load currency_filters %}
+{% load history_tags %}
+{% load thumbnail %}
+{% load i18n %}
+
+{% block title %}
+{{ review.title }} | {% trans "Reviews" %} | {{ product.title }} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+	<a href="{% url promotions:home %}">{% trans "Home" %}</a>
+        <span class="divider">/</span>
+    </li>
+	{% with category=product.categories.all.0 %}
+		{% for c in category.get_ancestors %}
+		<li>
+			<a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
+			<span class="divider">/</span>
+		</li>
+		{% endfor %}
+        <li>
+            <a href="{{ product.get_absolute_url }}">{{ product.title }}</a>
+			<span class="divider">/</span>
+        </li>
+        <li>
+            <a href="{% url catalogue:reviews-list product.slug product.pk %}">{% trans "Reviews" %}</a>
+			<span class="divider">/</span>
+        </li>
+    {% endwith %}
+    <li class="active">{{ review.title }}</li>
+</ul>
+{% endblock %}
+
+{% block headertext %}
+{{ product.get_title }}
+{% endblock  %}
+
+{% block content %}
+
+<article>
+    <a href="{% url catalogue:reviews-add product.slug product.id %}" class="btn btn-primary btn-large pull-right">{% trans "Write a review" %}</a>
+    <h2>{% trans "Customer review" %}</h2>
+
+    <div class="row-fluid">
+        <div class='span9'>
+            {% include 'catalogue/partials/review.html' %}
+        </div>
+
+        <div class="span3" style="text-align: center">
+            <div class="thumbnail">
+				{% with image=product.primary_image %}
+                    {% thumbnail image.original "400x400" upscale=False as thumb %}
+                        <a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
+                    {% endthumbnail %}
+				{% endwith %}
+            </div>
+            <div>
+                <h2><a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a></h2>
+                {% include "catalogue/partials/stock_record.html" %}
+            </div>
+        </div>
+    </div>
+</article>
+{% endblock %}

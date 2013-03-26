@@ -9,7 +9,6 @@ from django.utils.translation import ugettext_lazy as _
 
 from oscar.models.fields import ExtendedURLField
 
-Product = get_model('catalogue', 'Product')
 Item = get_model('product', 'Item')
 
 
@@ -281,6 +280,7 @@ class AutomaticProductList(AbstractProductList):
     num_products = models.PositiveSmallIntegerField(_('Number of Products'), default=4)
 
     def get_queryset(self):
+        Product = get_model('catalogue', 'Product')
         if self.method == self.BESTSELLING:
             return (Product.browsable.all()
                     .select_related('stockrecord__partner')

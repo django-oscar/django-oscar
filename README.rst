@@ -18,10 +18,10 @@ sites rich in domain-specific business logic.
 
 Further reading:
 
-* `Official homepage`_ 
+* `Official homepage`_
 * `Sandbox site`_ (an hourly build of the unstable master branch - it's
   experimental but feel free to explore and get a feel for the base Oscar
-  install.  Polished demo site coming soon) 
+  install.  Polished demo site coming soon)
 * `Documentation`_ on the excellent `readthedocs.org`_
 * `Google Group`_ - the mailing list is django-oscar@googlegroups.com
 * `Continuous integration homepage`_ on `travis-ci.org`_
@@ -29,6 +29,7 @@ Further reading:
 * `Twitter account of all commits`_
 * `crate.io page`_
 * `PyPI page`_
+* `Transifex project`_ - translating Oscar made easy
 
 Continuous integration status:
 
@@ -39,13 +40,14 @@ Continuous integration status:
 .. _`Sandbox site`: http://latest.oscarcommerce.com
 .. _`Documentation`: http://django-oscar.readthedocs.org/en/latest/
 .. _`readthedocs.org`: http://readthedocs.org
-.. _`Continuous integration homepage`: http://travis-ci.org/#!/tangentlabs/django-oscar 
+.. _`Continuous integration homepage`: http://travis-ci.org/#!/tangentlabs/django-oscar
 .. _`travis-ci.org`: http://travis-ci.org/
 .. _`Twitter account for news and updates`: https://twitter.com/#!/django_oscar
 .. _`Twitter account of all commits`: https://twitter.com/#!/oscar_django
 .. _`Google Group`: https://groups.google.com/forum/?fromgroups#!forum/django-oscar
 .. _`crate.io page`: https://crate.io/packages/django-oscar/
 .. _`PyPI page`: http://pypi.python.org/pypi/django-oscar/
+.. _`Transifex project`: https://www.transifex.com/projects/p/django-oscar/
 
 Oscar was written by `David Winterbottom`_ (`@codeinthehole`_) and is developed
 and maintained by `Tangent Labs`_, a London-based digital agency, with help from
@@ -88,13 +90,22 @@ You can have this sample shop running on your machine in 5 commands::
     $ sites/sandbox/manage.py runserver
 
 The sandbox site (initialised with a sample set of products) will be available
-at: http://localhost:8000.  Want to make changes?  Check out the 
-`contributing guidelines`_.
+at: http://localhost:8000.  A sample superuser is installed with credentials::
+
+    username: superuser
+    email: superuser@example.com
+    password: testing
+
+Want to make changes?  Check out the `contributing guidelines`_.
 
 .. _`contributing guidelines`: http://django-oscar.readthedocs.org/en/latest/contributing.html#playing-in-the-sandbox
 
-The sandbox site is also available to browse at 
+The sandbox site is also available to browse at
 http://latest.oscarcommerce.com
+
+Translations can be contributed using Transifex_.
+
+.. _Transifex: https://www.transifex.com/projects/p/django-oscar/
 
 Extensions
 ----------
@@ -161,6 +172,7 @@ Tangent projects:
   is a B2B site and not browsable by the public)
 * Chocolate Box - https://www.thechocolatebox.com.au
 * The UK Labour party - http://shop.labour.org.uk
+* Meridian Audio - http://www.meridian-audio.co.uk
 
 .. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/landmark.thumb.png
     :target: http://www.landmarkonthenet.com
@@ -174,16 +186,27 @@ Tangent projects:
 .. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/labourshop.thumb.png
     :target: https://shop.labour.org.uk
 
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/meridian.thumb.png
+    :target: http://www.meridian-audio.co.uk
+
 Non-Tangent:
 
 * Dolbeau - http://www.dolbeau.ca/
 * Sobusa - http://www.sobusa.fr/
+* Laivee - http://laivee.pl
+* Colinss - http://colinss.com
 
 .. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/dolbeau.thumb.png
     :target: http://www.dolbeau.ca
 
 .. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/sobusa.thumb.png
     :target: http://www.sobusa.fr
+
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/laivee.thumb.png
+    :target: http://www.laivee.pl
+
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/colinss.thumb.png
+    :target: http://www.colinss.com
 
 Many more on the way.  If you use Oscar in production, please let us know.
 

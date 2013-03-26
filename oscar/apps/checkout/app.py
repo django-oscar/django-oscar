@@ -46,4 +46,5 @@ class CheckoutApplication(Application):
             return login_required
         return None
 
+
 application = CheckoutApplication()

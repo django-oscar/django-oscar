@@ -19,13 +19,13 @@
 
 {% block header %}
 <div class="page-header">    	  	
+    <a href="{% url dashboard:offer-metadata %}" class="btn btn-primary btn-large pull-right"><i class="icon-plus"></i> {% trans "Create new offer" %}</a>
     <h1>{% trans "Offer management" %}</h1>    	  	
 </div>
 {% endblock header %}
 
 {% block dashboard_content %}
 <div class="well">
-    <a href="{% url dashboard:offer-metadata %}" class="btn btn-primary pull-right"><i class="icon-plus"></i> {% trans "Create new offer" %}</a>
     <form action="." method="get" class="form-inline">
         {% include 'partials/form_fields_inline.html' with form=form %}
         <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>

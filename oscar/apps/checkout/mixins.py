@@ -20,6 +20,8 @@ UserAddress = get_model('address', 'UserAddress')
 Basket = get_model('basket', 'Basket')
 CommunicationEventType = get_model('customer', 'CommunicationEventType')
 
+post_checkout = get_class('checkout.signals', 'post_checkout')
+
 # Standard logger for checkout events
 logger = logging.getLogger('oscar.checkout')
 
@@ -37,6 +39,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
 
     # Default code for the email to send after successful checkout
     communication_type_code = 'ORDER_PLACED'
+    view_signal = post_checkout
 
     def handle_order_placement(self, order_number, basket, total_incl_tax,
                                total_excl_tax, user=None, **kwargs):
@@ -82,7 +85,13 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         # Save order id in session so thank-you page can load it
         self.request.session['checkout_order_id'] = order.id
 
-        return HttpResponseRedirect(self.get_success_url())
+        response = HttpResponseRedirect(self.get_success_url())
+        self.send_signal(self.request, response, order)
+        return response
+
+    def send_signal(self, request, response, order):
+        self.view_signal.send(sender=self, order=order, user=request.user,
+                              request=request, response=response)
 
     def get_success_url(self):
         return reverse('checkout:thank-you')
@@ -159,12 +168,13 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         shipping_addr.save()
         return shipping_addr
 
-    def create_user_address(self, addr_data):
+    def create_user_address(self, session_addr_data):
         """
         For signed-in users, we create a user address model which will go
         into their address book.
         """
         if self.request.user.is_authenticated():
+            addr_data = session_addr_data.copy()
             addr_data['user_id'] = self.request.user.id
             user_addr = UserAddress(**addr_data)
             # Check that this address isn't already in the db as we don't want
@@ -271,13 +281,15 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             event_type = CommunicationEventType.objects.get(code=code)
         except CommunicationEventType.DoesNotExist:
             # No event-type in database, attempt to find templates for this
-            # type and render them immediately to get the messages
+            # type and render them immediately to get the messages.  Since we
+            # have not CommunicationEventType to link to, we can't create a
+            # CommunicationEvent instance.
             messages = CommunicationEventType.objects.get_and_render(code, ctx)
             event_type = None
         else:
-            # Create order event
-            CommunicationEvent._default_manager.create(order=order,
-                                                       event_type=event_type)
+            # Create CommunicationEvent
+            CommunicationEvent._default_manager.create(
+                order=order, event_type=event_type)
             messages = event_type.get_messages(ctx)
 
         if messages and messages['body']:

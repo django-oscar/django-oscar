@@ -1,8 +1,9 @@
-from decimal import Decimal
 from itertools import chain
 import logging
 
 from django.db.models import get_model
+
+from oscar.apps.offer import results
 
 ConditionalOffer = get_model('offer', 'ConditionalOffer')
 
@@ -14,54 +15,36 @@ class OfferApplicationError(Exception):
 
 
 class Applicator(object):
-    """
-    Apply offers to a basket.
-    """
+
     def apply(self, request, basket):
         """
         Apply all relevant offers to the given basket.
 
-        The request and user are passed too as sometimes the available offers
+        The request is passed too as sometimes the available offers
         are dependent on the user (eg session-based offers).
         """
-        # Flush any existing discounts to make sure they are recalculated
-        # correctly
-        basket.remove_discounts()
-
         offers = self.get_offers(request, basket)
-        logger.debug("Found %d offers to apply to basket %d",
-                     len(offers), basket.id)
-        discounts = self.get_basket_discounts(basket, offers)
+        self.apply_offers(basket, offers)
+
+    def apply_offers(self, basket, offers):
+        applications = results.OfferApplications()
+        for offer in offers:
+            num_applications = 0
+            # Keep applying the offer until either
+            # (a) We reach the max number of applications for the offer.
+            # (b) The benefit can't be applied successfully.
+            while num_applications < offer.get_max_applications(basket.owner):
+                result = offer.apply_benefit(basket)
+                num_applications += 1
+                if not result.is_successful:
+                    break
+                applications.add(offer, result)
+                if result.is_final:
+                    break
 
         # Store this list of discounts with the basket so it can be
         # rendered in templates
-        basket.set_discounts(list(discounts.values()))
-
-    def get_basket_discounts(self, basket, offers):
-        discounts = {}
-        for offer in offers:
-            # For each offer, we keep trying to apply it until the
-            # discount is 0
-            applications = 0
-            while applications < offer.get_max_applications(basket.owner):
-                discount = offer.apply_benefit(basket)
-                applications += 1
-                logger.debug("Found discount %.2f for basket %d from offer %d",
-                             discount, basket.id, offer.id)
-                if discount > 0:
-                    if offer.id not in discounts:
-                        discounts[offer.id] = {'name': offer.name,
-                                               'offer': offer,
-                                               'voucher': offer.get_voucher(),
-                                               'freq': 0,
-                                               'discount': Decimal('0.00')}
-                    discounts[offer.id]['discount'] += discount
-                    discounts[offer.id]['freq'] += 1
-                else:
-                    break
-
-        logger.debug("Finished applying offers to basket %d", basket.id)
-        return discounts
+        basket.offer_applications = applications
 
     def get_offers(self, request, basket):
         """
@@ -83,13 +66,18 @@ class Applicator(object):
         """
         Return site offers that are available to all users
         """
-        date_based_offers = ConditionalOffer.active.filter(
-            offer_type=ConditionalOffer.SITE,
-            status=ConditionalOffer.OPEN)
-        nondate_based_offers = ConditionalOffer.objects.filter(
-            offer_type=ConditionalOffer.SITE,
-            status=ConditionalOffer.OPEN,
-            start_date=None, end_date=None)
+        # Using select_related with the condition/benefit ranges doesn't seem
+        # to work.  I think this is because both the related objects have the
+        # FK to range with the same name.
+        date_based_offers = ConditionalOffer.active.select_related(
+            'condition', 'condition__range', 'benefit').filter(
+                offer_type=ConditionalOffer.SITE,
+                status=ConditionalOffer.OPEN)
+        nondate_based_offers = ConditionalOffer.objects.select_related(
+            'condition', 'condition__range', 'benefit').filter(
+                offer_type=ConditionalOffer.SITE,
+                status=ConditionalOffer.OPEN,
+                start_datetime=None, end_datetime=None)
         return list(chain(date_based_offers, nondate_based_offers))
 
     def get_basket_offers(self, basket, user):

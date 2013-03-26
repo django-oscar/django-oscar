@@ -4,7 +4,7 @@ from django.conf import settings, global_settings
 from oscar import OSCAR_CORE_APPS, OSCAR_MAIN_TEMPLATE_DIR
 
 
-def configure(nose_args=None):
+def configure():
     if not settings.configured:
         from oscar.defaults import OSCAR_SETTINGS
 
@@ -26,6 +26,7 @@ def configure(nose_args=None):
                 'django.contrib.sessions',
                 'django.contrib.sites',
                 'django.contrib.flatpages',
+                'django.contrib.staticfiles',
                 'sorl.thumbnail',
                 'compressor',
             ] + OSCAR_CORE_APPS,
@@ -66,6 +67,5 @@ def configure(nose_args=None):
             DEBUG=False,
             SITE_ID=1,
             APPEND_SLASH=True,
-            NOSE_ARGS=nose_args,
             **OSCAR_SETTINGS
         )

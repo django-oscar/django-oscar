@@ -2,11 +2,9 @@ import logging
 import os
 import shutil
 
-from django.db.models import get_model
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 
-ProductAlert = get_model('customer', 'ProductAlert')
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +30,7 @@ class Command(BaseCommand):
 
         source = os.path.realpath(
             os.path.join(os.path.dirname(__file__), '../../static'))
-        print "Copying Oscar's static files to %s" % (source, destination)
+        print "Copying Oscar's static files to %s" % (destination,)
         shutil.copytree(source, destination)
 
         # Check if this new folder is in STATICFILES_DIRS

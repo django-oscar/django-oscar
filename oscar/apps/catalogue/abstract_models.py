@@ -1,19 +1,18 @@
 from itertools import chain
 from datetime import datetime, date
 
-from django.db import models
-from django.core.validators import RegexValidator
-from django.db.models import get_model
 from django.conf import settings
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.core.validators import RegexValidator
+from django.db import models
+from django.db.models import Sum, Count, get_model
 from django.utils.translation import ugettext_lazy as _
-from django.template.defaultfilters import slugify
-from django.core.exceptions import ObjectDoesNotExist
 from treebeard.mp_tree import MP_Node
 
+from oscar.core.utils import slugify
 from oscar.core.loading import get_class
-BrowsableProductManager = get_class('catalogue.managers',
-                                    'BrowsableProductManager')
+BrowsableProductManager = get_class(
+    'catalogue.managers', 'BrowsableProductManager')
 
 
 class AbstractProductClass(models.Model):
@@ -81,12 +80,12 @@ class AbstractCategory(MP_Node):
         if update_slugs:
             parent = self.get_parent()
             slug = slugify(self.name)
+            # If category has a parent, includes the parents slug in this one
             if parent:
-                self.slug = '%s%s%s' % (parent.slug,
-                                        self._slug_separator, slug)
-                self.full_name = '%s%s%s' % (parent.full_name,
-                                             self._full_name_separator,
-                                             self.name)
+                self.slug = '%s%s%s' % (
+                    parent.slug, self._slug_separator, slug)
+                self.full_name = '%s%s%s' % (
+                    parent.full_name, self._full_name_separator, self.name)
             else:
                 self.slug = slug
                 self.full_name = self.name
@@ -102,54 +101,26 @@ class AbstractCategory(MP_Node):
                 raise ValidationError(
                     _("A category with slug '%(slug)s' already exists") % {
                         'slug': self.slug})
+
         super(AbstractCategory, self).save(*args, **kwargs)
 
     def move(self, target, pos=None):
+        """
+        Moves the current node and all its descendants to a new position
+        relative to another node.
+
+        See https://tabo.pe/projects/django-treebeard/docs/1.61/api.html#treebeard.models.Node.move
+        """
         super(AbstractCategory, self).move(target, pos)
 
+        # Update the slugs and full names of all nodes in the new subtree.
+        # We need to reload self as 'move' doesn't update the current instance,
+        # then we iterate over the subtree and call save which automatically
+        # updates slugs.
         reloaded_self = self.__class__.objects.get(pk=self.pk)
         subtree = self.__class__.get_tree(parent=reloaded_self)
-        if subtree:
-            slug_parts = []
-            name_parts = []
-            curr_depth = 0
-            parent = reloaded_self.get_parent()
-            if parent:
-                slug_parts = [parent.slug]
-                name_parts = [parent.full_name]
-                curr_depth = parent.depth
-            self.__class__.update_subtree_properties(
-                list(subtree), slug_parts, name_parts, curr_depth=curr_depth)
-
-    @classmethod
-    def update_subtree_properties(cls, nodes, slug_parts, name_parts,
-                                  curr_depth):
-        """
-        Update slugs and full_names of children in a subtree.
-        Assumes nodes were originally in DFS order.
-        """
-        if nodes == []:
-            return
-
-        node = nodes[0]
-        if node.depth > curr_depth:
-            slug = slugify(node.name)
-            slug_parts.append(slug)
-            name_parts.append(node.name)
-
-            node.slug = cls._slug_separator.join(slug_parts)
-            node.full_name = cls._full_name_separator.join(name_parts)
-            node.save(update_slugs=False)
-            curr_depth += 1
-            nodes = nodes[1:]
-
-        else:
-            slug_parts = slug_parts[:-1]
-            name_parts = name_parts[:-1]
-            curr_depth -= 1
-
-        cls.update_subtree_properties(
-            nodes, slug_parts, name_parts, curr_depth)
+        for node in subtree:
+            node.save()
 
     def get_ancestors(self, include_self=True):
         ancestors = list(super(AbstractCategory, self).get_ancestors())
@@ -321,8 +292,11 @@ class AbstractProduct(models.Model):
         'catalogue.Product', through='ProductRecommendation', blank=True,
         verbose_name=_("Recommended Products"))
 
-    # Product score
+    # Product score - used by analytics app
     score = models.FloatField(_('Score'), default=0.00, db_index=True)
+    # Denormalised product rating - used by reviews app.
+    # Product has no ratings if rating is None
+    rating = models.FloatField(_('Rating'), null=True, editable=False)
 
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
@@ -378,7 +352,7 @@ class AbstractProduct(models.Model):
     @property
     def is_available_to_buy(self):
         """
-        Test whether to show an add-to-basket button for this product
+        Test whether this product is available to be purchased
         """
         if self.is_group:
             # If any one of this product's variants is available, then we treat
@@ -387,7 +361,6 @@ class AbstractProduct(models.Model):
                 if variant.is_available_to_buy:
                     return True
             return False
-
         if not self.product_class.track_stock:
             return True
         return self.has_stockrecord and self.stockrecord.is_available_to_buy
@@ -525,6 +498,23 @@ class AbstractProduct(models.Model):
         # Finally, save attributes
         self.attr.save()
 
+    def update_rating(self):
+        """
+        Update rating field
+        """
+        ProductReview = get_model('reviews', 'ProductReview')
+        result = self.reviews.filter(
+            status=ProductReview.APPROVED
+        ).aggregate(
+            sum=Sum('score'), count=Count('id'))
+        reviews_sum = result['sum'] or 0
+        reviews_count = result['count'] or 0
+        if reviews_count > 0:
+            self.rating = float(reviews_sum) / reviews_count
+        else:
+            self.rating = None
+        self.save()
+
 
 class ProductRecommendation(models.Model):
     """
@@ -547,6 +537,10 @@ class ProductAttributesContainer(object):
     Stolen liberally from django-eav, but simplified to be product-specific
     """
 
+    def __setstate__(self, state):
+        self.__dict__ = state
+        self.initialised = False
+
     def __init__(self, product):
         self.product = product
         self.initialised = False
@@ -554,13 +548,10 @@ class ProductAttributesContainer(object):
     def __getattr__(self, name):
         if not name.startswith('_') and not self.initialised:
             values = list(self.get_values().select_related('attribute'))
-            result = None
             for v in values:
                 setattr(self, v.attribute.code, v.value)
-                if v.attribute.code == name:
-                    result = v.value
             self.initialised = True
-            return result
+            return getattr(self, name)
         raise AttributeError(
             _("%(obj)s has no attribute named '%(attr)s'") % {
                 'obj': self.product.product_class, 'attr': name})

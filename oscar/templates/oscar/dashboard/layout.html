@@ -4,22 +4,33 @@
 {% load dashboard_tags %}
 {% load i18n %}
 {% load compress %}
+{% load staticfiles %}
 
-{% block less %}
-    <link rel="stylesheet" type="text/less" href="{{ STATIC_URL }}oscar/less/dashboard.less" />
-{% endblock %}
-
-{% block styles %}
-    <link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/dashboard.css" />
+{% block mainstyles %}
+    {% if use_less %}
+        {% compress css %}
+        <link rel="stylesheet" href="{% static "oscar/css/bootstrap.min.css" %}" />
+        <link rel="stylesheet" type="text/less" href="{% static "oscar/less/dashboard.less" %}" />
+        {% endcompress %}
+    {% else %}
+        {% compress css %}
+        <link rel="stylesheet" href="{% static "oscar/css/bootstrap.min.css" %}" />
+        <link rel="stylesheet" type="text/css" href="{% static "oscar/css/dashboard.css" %}" />
+        {% endcompress %}
+    {% endif %}
 {% endblock %}
 
 {% block extrastyles %}
-    <link rel="stylesheet" href="{{ STATIC_URL }}oscar/css/bootstrap.min.css" />
-	<link rel="stylesheet" href="{{ STATIC_URL }}oscar/js/bootstrap-wysihtml5/bootstrap-wysihtml5-0.0.2.css" />
+    {{ block.super }}
+    {% compress css %}
+        <link rel="stylesheet" href="{% static "oscar/js/bootstrap-wysihtml5/bootstrap-wysihtml5-0.0.2.css" %}" />
+        <link rel="stylesheet" href="{% static "oscar/js/select2/select2.css" %}" />
+        <link rel="stylesheet" href="{% static "oscar/js/jquery/bootstrap-datepicker.css" %}" />
+    {% endcompress %}
 {% endblock %}
 
 {% block title %}
-{% trans "Dashboard" %} | {{ block.super }}
+    {% trans "Dashboard" %} | {{ block.super }}
 {% endblock %}
 
 {% block layout %}
@@ -121,22 +132,23 @@
 
 {% block cdn_scripts %}
     {{ block.super }}
-    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
-    <script>window.jQuery.ui || document.write('<script src="{{ STATIC_URL }}oscar/js/jquery/jquery-ui-1.8.23.min.js"><\/script>')</script>
+    <!-- Custom Jquery UI, only contains date picker -->
+    <script src="{% static "oscar/js/jquery/jquery-ui-1.10.1.custom.min.js" %}" type="text/javascript" charset="utf-8"></script>
 {% endblock %}
 
 {% block extrascripts %}
     {{ block.super }}
-
+    {% compress js %}
     {# jQuery plugins #}
-    <script src="{{ STATIC_URL }}oscar/js/mousewheel/jquery.mousewheel.min.js" type="text/javascript" charset="utf-8"></script>
-    <script src="{{ STATIC_URL }}oscar/js/scrollpane/jquery.jscrollpane.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "oscar/js/mousewheel/jquery.mousewheel.min.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "oscar/js/scrollpane/jquery.jscrollpane.min.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "oscar/js/select2/select2.js" %}" type="text/javascript" charset="utf-8"></script>
+    {# WYSIHTML5 #}
+    <script src="{% static "oscar/js/bootstrap-wysihtml5/wysihtml5-0.3.0.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "oscar/js/bootstrap-wysihtml5/bootstrap-wysihtml5-0.0.2.js" %}" type="text/javascript" charset="utf-8"></script>
 
-	{# WYSIHTML5 #}
-    <script src="{{ STATIC_URL }}oscar/js/bootstrap-wysihtml5/wysihtml5-0.3.0.js" type="text/javascript" charset="utf-8"></script>
-    <script src="{{ STATIC_URL }}oscar/js/bootstrap-wysihtml5/bootstrap-wysihtml5-0.0.2.js" type="text/javascript" charset="utf-8"></script>
-
-    <script src="{{ STATIC_URL }}oscar/js/oscar/dashboard.js" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "oscar/js/oscar/dashboard.js" %}" type="text/javascript" charset="utf-8"></script>
+    {% endcompress %}
 {% endblock %}
 
 {% block onbodyload %}
