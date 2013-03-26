@@ -8,16 +8,16 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">	  	
-    <li>	  	
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>	  	
-        <span class="divider">/</span>	  	
-    </li>	  	
-    <li>	  	
-        <a href="{% url dashboard:page-list %}">{% trans "Pages" %}</a>	  	
-        <span class="divider">/</span>	  	
-    </li>	  	
-    <li class="active">{{ title }}</li>	  	
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="{% url dashboard:page-list %}">{% trans "Pages" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active">{{ title }}</li>
 </ul>
 {% endblock %}
 
@@ -33,11 +33,6 @@
 <form action="." method="post" class="well form-stacked wysiwyg" enctype="multipart/form-data">
 	{% csrf_token %}
     {% include 'partials/form.html' %}
-
-	<div class="form-actions">
-		<button class="btn btn-large btn-primary" type="submit">{% trans "Save" %}</button> {% trans "or" %}
-		<a href="{% url dashboard:page-list %}">{% trans "cancel" %}</a>
-	</div>
 </form>
 
 {% endblock dashboard_content %}
