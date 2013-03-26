@@ -160,6 +160,10 @@ class ProductForm(forms.ModelForm):
         super(ProductForm, self).__init__(*args, **kwargs)
         self.add_attribute_fields()
         related_products = self.fields.get('related_products', None)
+        if self.instance.pk is not None:
+            # prevent selecting itself as parent
+            parent = self.fields['parent']
+            parent.queryset = parent.queryset.exclude(pk=self.instance.pk)
         if related_products is not None:
             related_products.queryset = self.get_related_products_queryset()
 
