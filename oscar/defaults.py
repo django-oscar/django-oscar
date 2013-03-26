@@ -45,6 +45,9 @@ OSCAR_PROMOTION_MERCHANDISING_BLOCK_TYPES = (
     (TABBED_BLOCK, "Tabbed block"),
     (SINGLE_PRODUCT, "Single product"),
 )
+OSCAR_PROMOTION_POSITIONS = (('page', 'Page'),
+                             ('right', 'Right-hand sidebar'),
+                             ('left', 'Left-hand sidebar'))
 
 # Reviews
 OSCAR_ALLOW_ANON_REVIEWS = True
