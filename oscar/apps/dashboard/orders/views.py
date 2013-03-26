@@ -90,13 +90,8 @@ class OrderListView(ListView, BulkEditMixin):
                 return HttpResponseRedirect(reverse('dashboard:order-detail', kwargs={'number': order.number}))
         return super(OrderListView, self).get(request, *args, **kwargs)
 
-    def get_queryset(self):
-        """
-        Build the queryset for this list and also update the title that
-        describes the queryset
-        """
-        queryset = self.model.objects.all().order_by('-date_placed')
-        queryset = self.sort_queryset(queryset)
+    def get_desc_context(self, data=None):
+        """Update the title that describes the queryset"""
         desc_ctx = {
             'main_filter': _('All orders'),
             'name_filter': '',
@@ -109,20 +104,69 @@ class OrderListView(ListView, BulkEditMixin):
             'status_filter': '',
         }
 
+        if 'order_status' in self.request.GET:
+            status = self.request.GET['order_status']
+            if status.lower() == 'none':
+                desc_ctx['main_filter'] = _("Orders without an order status")
+            else:
+                desc_ctx['main_filter'] = _("Orders with status '%s'") % status
+        if data is None:
+            return desc_ctx
+
+        if data['order_number']:
+            desc_ctx['main_filter'] = _('Orders with number starting with "%s"') % data['order_number']
+
+        if data['name']:
+            desc_ctx['name_filter'] = _(" with customer name matching '%s'") % data['name']
+
+        if data['product_title']:
+            desc_ctx['title_filter'] = _(" including an item with title matching '%s'") % data['product_title']
+
+        if data['upc']:
+            desc_ctx['upc_filter'] = _(" including an item with UPC '%s'") % data['upc']
+
+        if data['partner_sku']:
+            desc_ctx['upc_filter'] = _(" including an item with ID '%s'") % data['partner_sku']
+
+        if data['date_from'] and data['date_to']:
+            desc_ctx['date_filter'] = _(" placed between %(start_date)s and %(end_date)s") % {
+                'start_date': format_date(data['date_from']),
+                'end_date': format_date(data['date_to'])}
+        elif data['date_from']:
+            desc_ctx['date_filter'] = _(" placed since %s") % format_date(data['date_from'])
+        elif data['date_to']:
+            date_to = data['date_to'] + datetime.timedelta(days=1)
+            desc_ctx['date_filter'] = _(" placed before %s") % format_date(data['date_to'])
+
+        if data['voucher']:
+            desc_ctx['voucher_filter'] = _(" using voucher '%s'") % data['voucher']
+
+        if data['payment_method']:
+            desc_ctx['payment_filter'] = _(" paid for by %s") % data['payment_method']
+
+        if data['status']:
+            desc_ctx['status_filter'] = _(" with status %s") % data['status']
+
+        return desc_ctx
+
+    def get_queryset(self):
+        """
+        Build the queryset for this list.
+        """
+        queryset = self.model.objects.all().order_by('-date_placed')
+        queryset = self.sort_queryset(queryset)
+
         # Look for shortcut query filters
         if 'order_status' in self.request.GET:
             self.form = self.form_class()
             status = self.request.GET['order_status']
             if status.lower() == 'none':
-                desc_ctx['main_filter'] = _("Orders without an order status")
                 status = None
-            else:
-                desc_ctx['main_filter'] = _("Orders with status '%s'") % status
-            self.description = self.desc_template % desc_ctx
+            self.description = self.desc_template % self.get_desc_context()
             return self.model.objects.filter(status=status)
 
         if 'order_number' not in self.request.GET:
-            self.description = self.desc_template % desc_ctx
+            self.description = self.desc_template % self.get_desc_context()
             self.form = self.form_class()
             return queryset
 
@@ -134,7 +178,6 @@ class OrderListView(ListView, BulkEditMixin):
 
         if data['order_number']:
             queryset = self.model.objects.filter(number__istartswith=data['order_number'])
-            desc_ctx['main_filter'] = _('Orders with number starting with "%s"') % data['order_number']
 
         if data['name']:
             # If the value is two words, then assume they are first name and last name
@@ -155,48 +198,36 @@ class OrderListView(ListView, BulkEditMixin):
                           Q(shipping_address__last_name__istartswith=parts[1])
 
             queryset = queryset.filter(filter).distinct()
-            desc_ctx['name_filter'] = _(" with customer name matching '%s'") % data['name']
 
         if data['product_title']:
             queryset = queryset.filter(lines__title__istartswith=data['product_title']).distinct()
-            desc_ctx['title_filter'] = _(" including an item with title matching '%s'") % data['product_title']
 
         if data['upc']:
             queryset = queryset.filter(lines__upc=data['upc'])
-            desc_ctx['upc_filter'] = _(" including an item with UPC '%s'") % data['upc']
 
         if data['partner_sku']:
             queryset = queryset.filter(lines__partner_sku=data['partner_sku'])
-            desc_ctx['upc_filter'] = _(" including an item with ID '%s'") % data['partner_sku']
 
         if data['date_from'] and data['date_to']:
             # Add 24 hours to make search inclusive
             date_to = data['date_to'] + datetime.timedelta(days=1)
             queryset = queryset.filter(date_placed__gte=data['date_from']).filter(date_placed__lt=date_to)
-            desc_ctx['date_filter'] = _(" placed between %(start_date)s and %(end_date)s") % {
-                'start_date': format_date(data['date_from']),
-                'end_date': format_date(data['date_to'])}
         elif data['date_from']:
             queryset = queryset.filter(date_placed__gte=data['date_from'])
-            desc_ctx['date_filter'] = _(" placed since %s") % format_date(data['date_from'])
         elif data['date_to']:
             date_to = data['date_to'] + datetime.timedelta(days=1)
             queryset = queryset.filter(date_placed__lt=date_to)
-            desc_ctx['date_filter'] = _(" placed before %s") % format_date(data['date_to'])
 
         if data['voucher']:
             queryset = queryset.filter(discounts__voucher_code=data['voucher']).distinct()
-            desc_ctx['voucher_filter'] = _(" using voucher '%s'") % data['voucher']
 
         if data['payment_method']:
             queryset = queryset.filter(sources__source_type__code=data['payment_method']).distinct()
-            desc_ctx['payment_filter'] = _(" paid for by %s") % data['payment_method']
 
         if data['status']:
             queryset = queryset.filter(status=data['status'])
-            desc_ctx['status_filter'] = _(" with status %s") % data['status']
 
-        self.description = self.desc_template % desc_ctx
+        self.description = self.desc_template % self.get_desc_context(data)
         return queryset
 
     def sort_queryset(self, queryset):
