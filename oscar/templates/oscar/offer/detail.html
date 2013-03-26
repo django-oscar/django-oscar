@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% load i18n %}
+{% load product_tags %}
 
 {% block title %}
 {{ offer.name }} | {{ block.super }}
@@ -48,7 +49,7 @@
 				{% include "partials/pagination.html" %}
 				<ol class="products four">
 					{% for product in products %}
-					<li>{% include "catalogue/partials/product.html" %}</li>
+                    <li>{% render_product product %}</li>
 					{% endfor %}
 				</ol>
 				{% include "partials/pagination.html" %}
