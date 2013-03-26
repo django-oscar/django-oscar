@@ -41,6 +41,22 @@ system. All other requirements are downloaded automatically.
 
 .. _tox: http://tox.readthedocs.org/en/latest/
 
+Kinds of tests
+--------------
+
+Tests are split into 3 folders:
+
+* unit - These are for tests that exercise a single unit of functionality, like
+  a single model.  Ideally, these should not write to the database at all - all
+  operations should be in memory.
+
+* integration - These are for tests that exercise a collection or chain of
+  units, like testing a template tag.  
+
+* functional - These should be as close to "end-to-end" as possible.  Most of
+  these tests should use WebTest to simulate the behaviour of a user browsing
+  the site.
+
 Naming tests
 ------------
 
