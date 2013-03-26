@@ -3,6 +3,7 @@
 {% load history_tags %}
 {% load reviews_tags %}
 {% load staticfiles %}
+{% load product_tags %}
 {% load i18n %}
 
 {% block extrastyles %}
@@ -169,7 +170,7 @@
                     <ul>
                         {% for product in product.related_products.all %}
                         <li>
-                            {% include "promotions/partials/product_carousel.html" %}
+                            {% render_product product %}
                         </li>
                         {% endfor %}
                     </ul>
@@ -188,7 +189,7 @@
                     <ul>
                         {% for product in product.recommended_products.all %}
                         <li>
-                            {% include "promotions/partials/product_carousel.html" %}
+	                        {% render_product product %}
                         </li>
                         {% endfor %}
                     </ul>

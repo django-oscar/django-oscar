@@ -2,6 +2,7 @@
 {% load currency_filters %}
 {% load basket_tags %}
 {% load promotion_tags %}
+{% load product_tags %}
 {% load i18n %}
 
 {% block title %}
@@ -66,7 +67,7 @@
         <div class="mod">
             <ol class="products four">
                 {% for product in products %}
-                    <li>{% include "catalogue/partials/product.html" %}</li>
+                    <li>{% render_product product %}</li>
                 {% endfor %}
             </ol>
             {% include "partials/pagination.html" %}

@@ -16,7 +16,7 @@
         <p class="star {{ product.rating|as_stars }}"></p>
     {% endblock product_review %}
 
-    <h3><a href="{{ product.get_absolute_url }}">{{ product.get_title|truncatewords:5 }}</a></h3>
+    <h3><a href="{{ product.get_absolute_url }}">{{ product.get_title|truncatewords:4 }}</a></h3>
 
     <div class="product_price">
         {% include "catalogue/partials/stock_record.html" %}
