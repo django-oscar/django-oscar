@@ -32,10 +32,8 @@ Overview
 .. toctree::
    :maxdepth: 1
    
-   development-environment
    bugs-and-features
    coding-style
-   design-decisions
    submitting-pull-requests
    running-tests
    writing-documentation

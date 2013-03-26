@@ -64,6 +64,7 @@ First steps
    :maxdepth: 1
 
    internals/sandbox
+   internals/development-environment
    internals/getting_help
    internals/getting_started
    topics/key_questions
@@ -87,5 +88,6 @@ Learn about the ideas behind Oscar and how you can contribute.
 .. toctree::
    :maxdepth: 1
 
+   internals/design-decisions
    internals/contributing/index
    

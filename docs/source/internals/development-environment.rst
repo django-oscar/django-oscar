@@ -9,7 +9,7 @@ Fork the repo and run::
     mkvirtualenv oscar  # using virtualenvwrapper
     make install
 
-The :doc:`sandbox <../sandbox>` sandbox is a good way to check that everything
+The :doc:`sandbox <sandbox>` sandbox is a good way to check that everything
 went well, and it takes just one ``make sandbox``.
     
 Writing LESS/CSS
