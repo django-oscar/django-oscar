@@ -66,11 +66,6 @@ class ProductSearchForm(forms.Form):
 
 
 class StockRecordForm(forms.ModelForm):
-    partner = forms.ModelChoiceField(queryset=Partner.objects.all(),
-                                    required=False,
-                                    label=_("Partner"))
-    partner_sku = forms.CharField(required=False,
-                                  label=_("Partner SKU"))
 
     def __init__(self, product_class, *args, **kwargs):
         self.product_class = product_class
@@ -165,6 +160,10 @@ class ProductForm(forms.ModelForm):
         super(ProductForm, self).__init__(*args, **kwargs)
         self.add_attribute_fields()
         related_products = self.fields.get('related_products', None)
+        if self.instance.pk is not None:
+            # prevent selecting itself as parent
+            parent = self.fields['parent']
+            parent.queryset = parent.queryset.exclude(pk=self.instance.pk)
         if related_products is not None:
             related_products.queryset = self.get_related_products_queryset()
 

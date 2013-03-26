@@ -46,9 +46,9 @@ def _get_list_from_json_string(cookie_value):
     u""" Simple function to convert lists to json """
     return json.loads(cookie_value)
 
-def _get_json_string_from_list(list):
+def _get_json_string_from_list(lst):
     """ Simple function to convert json to a python list """
-    return json.dumps(list)
+    return json.dumps(lst)
 
 
 # Receivers

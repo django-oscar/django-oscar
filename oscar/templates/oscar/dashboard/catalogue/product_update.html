@@ -40,7 +40,7 @@
                     {% if product %}
                     <li class="active"><a href="#overview" data-toggle="tab">{% trans 'Overview' %}</a></li>
                     {% endif %}
-                    <li {% if not product %}class="active"{% endif %}><a href="#product_details" data-toggle="tab">{% trans 'Product details' %}</a></li>
+                    <li{% if not product %} class="active"{% endif %}><a href="#product_details" data-toggle="tab">{% trans 'Product details' %}</a></li>
                     <li><a href="#product_recommended" data-toggle="tab">{% trans 'Recommended Products' %}</a></li>
                     {% with variants=product.variants.all %}
                     {% if variants|length > 0 %}
@@ -94,15 +94,15 @@
                                     <tbody>
                                         <tr>
                                             <th>{% trans "Views" %}</th>
-                                            <td>{{ stats.num_views }}</td>
+                                            <td>{{ stats.num_views|default:0 }}</td>
                                         </tr>
                                         <tr>
                                             <th>{% trans "Baskets" %}</th>
-                                            <td>{{ stats.num_basket_additions }}</td>
+                                            <td>{{ stats.num_basket_additions|default:0 }}</td>
                                         </tr>
                                         <tr>
                                             <th>{% trans "Purchases" %}</th>
-                                            <td>{{ stats.num_purchases }}</td>
+                                            <td>{{ stats.num_purchases|default:0 }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -326,29 +326,20 @@
                             {% for field in stockrecord_form %}
                                 {% if "partner" in field.id_for_label %}
                                     <td>
-                                        {% if field.is_hidden %}
-                                            {{ field }}
-                                        {% else %}
-                                            {{ field }}
-                                        {% endif %}
+                                        {{ field }}
+                                        {{ field.errors }}
                                     </td>
                                 {% endif %}
                                 {% if "price" in field.id_for_label %}
                                     <td>
-                                        {% if field.is_hidden %}
-                                            {{ field }}
-                                        {% else %}
-                                            {{ field }}
-                                        {% endif %}
+                                        {{ field }}
+                                        {{ field.errors }}
                                     </td>
                                 {% endif %}
                                 {% if "stock" in field.id_for_label %}
                                     <td>
-                                        {% if field.is_hidden %}
-                                            {{ field }}
-                                        {% else %}
-                                            {{ field }}
-                                        {% endif %}
+                                        {{ field }}
+                                        {{ field.errors }}
                                     </td>
                                 {% endif %}
                             {% endfor %}

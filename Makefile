@@ -38,7 +38,10 @@ coverage:
 	./runtests.py --with-coverage --cover-package=oscar --cover-html --cover-html-dir=htmlcov --with-xunit
 	coverage xml -i
 
-ci: upgrade lint coverage
+# We probably should use upgrade instead of install here but we have a conflict
+# around django versions which conflicts with tox.  Use install for now until
+# upgrade can run without conflict.
+ci: install lint coverage
 
 lint:
 	./lint.sh

@@ -10,8 +10,7 @@ class CatalogueApplication(Application):
 
     product_list_view = views.ProductListView
     product_create_redirect_view = views.ProductCreateRedirectView
-    product_create_view = views.ProductCreateView
-    product_update_view = views.ProductUpdateView
+    product_createupdate_view = views.ProductCreateUpdateView
     product_delete_view = views.ProductDeleteView
 
     category_list_view = views.CategoryListView
@@ -24,13 +23,13 @@ class CatalogueApplication(Application):
 
     def get_urls(self):
         urlpatterns = patterns('',
-            url(r'^products/(?P<pk>\d+)/$', self.product_update_view.as_view(),
+            url(r'^products/(?P<pk>\d+)/$', self.product_createupdate_view.as_view(),
                 name='catalogue-product'),
             url(r'^products/create/$',
                 self.product_create_redirect_view.as_view(),
                 name='catalogue-product-create'),
             url(r'^products/create/(?P<product_class_id>\d+)/$',
-                self.product_create_view.as_view(),
+                self.product_createupdate_view.as_view(),
                 name='catalogue-product-create'),
             url(r'^products/(?P<pk>\d+)/delete/$',
                 self.product_delete_view.as_view(),
