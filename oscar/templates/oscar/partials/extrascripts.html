@@ -4,4 +4,8 @@ content blocks and product images.  As the content blocks could be on any page,
 we need to load the script everywhere - hence why it is here.
 {% endcomment %}
 {% load staticfiles %}
-<script src="{% static "oscar/js/elastislide/jquery.elastislide.js" %}" type="text/javascript" charset="utf-8"></script>
+{% load compress %}
+
+{% compress js %}
+    <script src="{% static "oscar/js/elastislide/jquery.elastislide.js" %}" type="text/javascript" charset="utf-8"></script>
+{% endcompress %}
