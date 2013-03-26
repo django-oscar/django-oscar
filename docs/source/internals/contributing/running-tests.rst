@@ -1,30 +1,48 @@
-=============
+==========
+Test suite
+==========
+
 Running tests
-=============
+-------------
 
 Oscar uses a nose_ testrunner which can be invoked using::
 
-    ./runtests.py
+    $ ./runtests.py
 
 .. _nose: http://nose.readthedocs.org/en/latest/
 
 To run a subset of tests, you can use filesystem or module paths.  These two
 commands will run the same set of tests::
 
-    ./runtests.py tests/unit/order
-    ./runtests.py tests.unit.order
+    $ ./runtests.py tests/unit/order
+    $ ./runtests.py tests.unit.order
 
 To run an individual test class, use one of::
 
-    ./runtests.py tests/unit/order:TestSuccessfulOrderCreation
-    ./runtests.py tests.unit.order:TestSuccessfulOrderCreation
+    $ ./runtests.py tests/unit/order:TestSuccessfulOrderCreation
+    $ ./runtests.py tests.unit.order:TestSuccessfulOrderCreation
 
 (Note the ':'.)
 
 To run an individual test, use one of::
 
-    ./runtests.py tests/unit/order:TestSuccessfulOrderCreation.test_creates_order_and_line_models
-    ./runtests.py tests.unit.order:TestSuccessfulOrderCreation.test_creates_order_and_line_models
+    $ ./runtests.py tests/unit/order:TestSuccessfulOrderCreation.test_creates_order_and_line_models
+    $ ./runtests.py tests.unit.order:TestSuccessfulOrderCreation.test_creates_order_and_line_models
+
+Testing against different setups
+--------------------------------
+
+To run all tests against multiple versions of Django and Python, use tox_::
+
+    $ tox
+
+You need to have all Python interpreters to test against installed on your 
+system. All other requirements are downloaded automatically.
+
+.. _tox: http://tox.readthedocs.org/en/latest/
+
+Naming tests
+------------
 
 Oscar's testrunner uses the progressive_ plugin when running all tests, but uses
 the spec_ plugin when running a subset.  It is a good practice to name your test
