@@ -7,17 +7,15 @@
 {% load staticfiles %}
 
 {% block mainstyles %}
-    {% if use_less %}
-        {% compress css %}
-        <link rel="stylesheet" href="{% static "oscar/css/bootstrap.min.css" %}" />
-        <link rel="stylesheet" type="text/less" href="{% static "oscar/less/dashboard.less" %}" />
-        {% endcompress %}
-    {% else %}
-        {% compress css %}
-        <link rel="stylesheet" href="{% static "oscar/css/bootstrap.min.css" %}" />
-        <link rel="stylesheet" type="text/css" href="{% static "oscar/css/dashboard.css" %}" />
-        {% endcompress %}
-    {% endif %}
+    {% compress css %}
+        {% if use_less %}
+            <link rel="stylesheet" href="{% static "oscar/css/bootstrap.min.css" %}" />
+            <link rel="stylesheet" type="text/less" href="{% static "oscar/less/dashboard.less" %}" />
+        {% else %}
+            <link rel="stylesheet" href="{% static "oscar/css/bootstrap.min.css" %}" />
+            <link rel="stylesheet" type="text/css" href="{% static "oscar/css/dashboard.css" %}" />
+        {% endif %}
+    {% endcompress %}
 {% endblock %}
 
 {% block extrastyles %}
