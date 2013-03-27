@@ -37,17 +37,15 @@
                 executable is available and you have COMPRESS_PRECOMPILERS specified
                 correctly.
                 {% endcomment %}
-                {% if use_less %}
-                    {% compress css %}
+                {% compress css %}
+                    {% if use_less %}
                         <link rel="stylesheet" type="text/less" href="{% static "oscar/less/styles.less" %}" />
                         <link rel="stylesheet" type="text/less" href="{% static "oscar/less/responsive.less" %}" />
-                    {% endcompress %}
-                {% else %}
-                    {% compress css %}
+                    {% else %}
                         <link rel="stylesheet" type="text/css" href="{% static "oscar/css/styles.css" %}" />
                         <link rel="stylesheet" type="text/css" href="{% static "oscar/css/responsive.css" %}" />
-                    {% endcompress %}
-                {% endif %}
+                    {% endif %}
+                {% endcompress %}
             {% endblock %}
         {% endblock %}
 
