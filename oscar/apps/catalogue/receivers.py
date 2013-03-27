@@ -3,7 +3,9 @@ from django.db.models import get_model
 
 from django.db import models
 from django.db.models.signals import post_delete
+
 from sorl import thumbnail
+from sorl.thumbnail.helpers import ThumbnailError
 
 ProductImage = get_model('catalogue', 'ProductImage')
 Category = get_model('catalogue', 'Category')
@@ -19,7 +21,10 @@ def delete_image_files(sender, instance, **kwargs):
         if isinstance(field, image_fields):
             # Make Django return ImageFieldFile instead of ImageField
             fieldfile = getattr(instance, field.name)
-            thumbnail.delete(fieldfile)
+            try:
+                thumbnail.delete(fieldfile)
+            except ThumbnailError:
+                pass
 
 # connect for all models with ImageFields - add as needed
 models_with_images = [ProductImage, Category]
