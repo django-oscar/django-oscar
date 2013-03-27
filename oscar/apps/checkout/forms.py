@@ -2,9 +2,10 @@ from django import forms
 from django.db.models import get_model
 from django.contrib.auth.forms import AuthenticationForm
 from django.utils.translation import ugettext_lazy as _
+from oscar.apps.address.forms import AbstractAddressForm
 
 
-class ShippingAddressForm(forms.ModelForm):
+class ShippingAddressForm(AbstractAddressForm):
     
     def __init__(self, *args, **kwargs):
         super(ShippingAddressForm,self ).__init__(*args, **kwargs)
