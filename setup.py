@@ -54,7 +54,7 @@ setup(name='django-oscar',
           'Babel>=0.9,<0.10',
           # Oscar's default templates use compressor (but you can override
           # this)
-          'django-compressor>=1.2,<1.3',
+          'django-compressor>=1.2,<1.4',
           # For converting non-ASCII to ASCII when creating slugs
           'Unidecode>=0.04.12,<0.05',
       ],

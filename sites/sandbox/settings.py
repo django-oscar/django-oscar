@@ -357,12 +357,17 @@ OSCAR_ORDER_STATUS_PIPELINE = {
 #
 # which will install node.js and less in your virtualenv.
 
-USE_LESS = False
+USE_LESS = True
 
 COMPRESS_ENABLED = True
 COMPRESS_PRECOMPILERS = (
     ('text/less', 'lessc {infile} {outfile}'),
 )
+
+COMPRESS_OFFLINE_CONTEXT = {
+    'STATIC_URL': 'STATIC_URL',
+    'use_less': USE_LESS,
+}
 
 
 # Logging
