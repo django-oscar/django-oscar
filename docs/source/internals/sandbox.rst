@@ -47,5 +47,5 @@ Note that some things are deliberately not implemented within core Oscar
 as they are domain-specific.  For instance:
 
 * All tax is set to zero
-* The two shipping methods are both free
-* No payment is required to submit an order
+* No shipping methods are specified.  The default is free shipping.
+* No payment is required to submit an order as part of the checkout process

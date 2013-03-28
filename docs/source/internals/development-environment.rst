@@ -9,28 +9,46 @@ Fork the repo and run::
     mkvirtualenv oscar  # using virtualenvwrapper
     make install
 
-The :doc:`sandbox <sandbox>` sandbox is a good way to check that everything
-went well, and it takes just one ``make sandbox``.
+The :doc:`sandbox <sandbox>` site can be used to test our changes in a browser.
+It is easily created with ``make sandbox``.
     
 Writing LESS/CSS
 ================
 
-The sandbox Oscar site defaults to serving the CSS files directly, bypassing
-LESS compilation.  If you want to develop the LESS files, set::
+Oscar's CSS files are build using LESS_.  However, the sandbox defaults to
+serving CSS files directly, bypassing LESS compilation.
+
+.. _LESS: http://lesscss.org/
+
+If you want to develop the LESS files, set::
 
     USE_LESS = True
     COMPRESS_ENABLED = False
 
-in ``sites/sandbox/settings_local.py``.  You will also need to ensure that
-``lessc`` is installed.  This can be acheived by running::
+in ``sites/sandbox/settings_local.py``.  This will cause Oscar to use
+`django-compressor`_ to compile the LESS files as they are requested.  For this to
+work, you will need to ensure that the LESS compiler ``lessc`` is installed.
+This can be acheived by running::
 
     pip install -r requirements_less.txt
 
+.. _`django-compressor`: http://django_compressor.readthedocs.org/en/latest/
+
 which will install the `virtual-node`_ and `virtual-less`_ packages, which will
-install node.js and LESS in your virtualenv.
+install node.js and LESS in your virtualenv.  
 
 .. _`virtual-node`: https://github.com/elbaschid/virtual-node
 .. _`virtual-less`: https://github.com/elbaschid/virtual-less
+
+If you have npm installed already,
+you install LESS using::
+
+    npm install less
+
+.. warning::
+
+    If you do submit a pull request that changes the LESS files.  Please also
+    recompile the CSS files and include them in your pull request.
 
 Vagrant
 =======
@@ -94,5 +112,5 @@ You can browse the Oscar sandbox site in two ways:
   The Vagrant machine forwards port 8000 to post 8080 and so the site can be
   accessed at http://localhost:8080 on your host machine.
 
-* The Vagrant machine install Apache2 and mod_wsgi.  You can browse the site
+* The Vagrant machine installs Apache2 and mod_wsgi.  You can browse the site
   through Apache at http://localhost:8081 on your host machine.
