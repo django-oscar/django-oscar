@@ -259,6 +259,18 @@ OSCAR_UPLOAD_ROOT
 
 Default: ``/tmp``
 
+OSCAR_SLUG_FUNCTION
+-----------------
+
+Default: django.template.defaultfilters.slugify
+
+Slugify function
+
+Example:
+    def some_slugify(value)
+        pass
+    OSCAR_SLUG_FUNCTION = some_slugify
+
 Deprecated settings
 ===================
 
