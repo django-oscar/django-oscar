@@ -210,6 +210,8 @@ class ProductCreateUpdateView(generic.UpdateView):
             ])
 
         if is_valid:
+            if not self.creating:
+                self.object = form.save()
             return self.forms_valid(form, stockrecord_form, category_formset,
                                     image_formset, recommended_formset)
         else:
