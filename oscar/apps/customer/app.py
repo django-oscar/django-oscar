@@ -15,15 +15,19 @@ class CustomerApplication(Application):
     order_detail_view = views.OrderDetailView
     anon_order_detail_view = views.AnonymousOrderDetailView
     order_line_view = views.OrderLineView
+
     address_list_view = views.AddressListView
     address_create_view = views.AddressCreateView
     address_update_view = views.AddressUpdateView
     address_delete_view = views.AddressDeleteView
+    address_change_status_view = views.AddressChangeStatusView
+
     email_list_view = views.EmailHistoryView
     email_detail_view = views.EmailDetailView
     login_view = views.AccountAuthView
     logout_view = views.LogoutView
     register_view = views.AccountRegistrationView
+    profile_view = views.ProfileView
     profile_update_view = views.ProfileUpdateView
     change_password_view = views.ChangePasswordView
 
@@ -31,6 +35,7 @@ class CustomerApplication(Application):
     notification_archive_view = notification_views.ArchiveView
     notification_update_view = notification_views.UpdateView
 
+    alert_list_view = alert_views.ProductAlertListView
     alert_create_view = alert_views.ProductAlertCreateView
     alert_confirm_view = alert_views.ProductAlertConfirmView
     alert_cancel_view = alert_views.ProductAlertCancelView
@@ -47,6 +52,9 @@ class CustomerApplication(Application):
 
             # Profile
             url(r'^profile/$',
+                login_required(self.profile_view.as_view()),
+                name='profile-view'),
+            url(r'^profile/edit/$',
                 login_required(self.profile_update_view.as_view()),
                 name='profile-update'),
 
@@ -76,6 +84,9 @@ class CustomerApplication(Application):
             url(r'^addresses/(?P<pk>\d+)/delete/$',
                 login_required(self.address_delete_view.as_view()),
                 name='address-delete'),
+            url(r'^addresses/(?P<pk>\d+)/(?P<action>default_for_(billing|shipping))/$',
+                login_required(self.address_change_status_view.as_view()),
+                name='address-change-status'),
 
             # Email history
             url(r'^emails/$',
@@ -99,14 +110,19 @@ class CustomerApplication(Application):
                 name='notifications-update'),
 
             # Alerts
+            url(r'^alerts/$', self.alert_list_view.as_view(),
+                name='alerts-list'),
             url(r'^alerts/create/(?P<pk>\d+)/$', self.alert_create_view.as_view(),
                 name='alert-create'),
             url(r'^alerts/confirm/(?P<key>[a-z0-9]+)/$',
                 self.alert_confirm_view.as_view(),
                 name='alerts-confirm'),
-            url(r'^alerts/cancel/(?P<key>[a-z0-9]+)/$',
+            url(r'^alerts/cancel/key/(?P<key>[a-z0-9]+)/$',
                 self.alert_cancel_view.as_view(),
-                name='alerts-cancel'),
+                name='alerts-cancel-by-key'),
+            url(r'^alerts/cancel/(?P<pk>[a-z0-9]+)/$',
+                login_required(self.alert_cancel_view.as_view()),
+                name='alerts-cancel-by-pk'),
             )
         return self.post_process_urls(urlpatterns)
 

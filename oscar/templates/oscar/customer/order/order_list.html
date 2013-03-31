@@ -1,42 +1,8 @@
-{% extends "layout.html" %}
-{% load currency_filters %}
+{% extends "customer/baseaccountpage.html" %}
 {% load i18n %}
+{% load currency_filters %}
 
-{% block body_class %}account-pages{% endblock %}
-
-{% block breadcrumbs %}
-<ul class="breadcrumb">
-    <li>
-        <a href="{% url promotions:home %}">{% trans 'Home' %}</a>
-        <span class="divider">/</span>
-    </li>
-    <li>
-        <a href="{% url customer:summary %}">{% trans 'Account' %}</a>
-        <span class="divider">/</span>
-    </li>
-    <li class="active">{% trans 'Order history' %}</li>
-</ul>
-{% endblock %}
-
-{% block title %}
-{% trans 'Order history' %} | {{ block.super }}
-{% endblock %}
-
-{% block headertext %}
-{% trans 'Account' %}
-{% endblock %}
-
-{% block subnavigation %}
-    {% include "partials/nav_profile.html" with order_history="active" %}
-{% endblock %}
-
-{% block subheader %}
-<div class="sub-header">
-    <h2>{% trans 'Order history' %}</h2>
-</div>
-{% endblock subheader %}
-
-{% block content %}
+{% block tabcontent %}
 
 <h3>{% trans 'Search in orders' %}</h3>
 <form action="." method="get">
@@ -77,5 +43,5 @@
 
 {% include "partials/pagination.html" %}
 
-{% endblock content %}
+{% endblock tabcontent %}
 
