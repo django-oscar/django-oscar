@@ -496,7 +496,7 @@ class AddressListView(PageTitleMixin, ListView):
     page_title = 'Address Book'
 
     def get_queryset(self):
-        """Return a customer's addresses"""
+        """Return customer's addresses"""
         return UserAddress._default_manager.filter(user=self.request.user)
 
 
@@ -544,6 +544,20 @@ class AddressDeleteView(PageTitleMixin, DeleteView):
 
     def get_success_url(self):
         return reverse('customer:address-list')
+
+
+class AddressChangeStatusView(RedirectView):
+    """
+    Sets an address as default_for_(billing|shipping)
+    """
+    url = reverse_lazy('customer:address-list')
+
+    def get(self, request, pk=None, action=None, *args, **kwargs):
+        address = get_object_or_404(UserAddress, user=self.request.user,
+                                    pk=pk)
+        setattr(address, 'is_%s' % action, True)
+        address.save()
+        return super(AddressChangeStatusView, self).get(request, *args, **kwargs)
 
 
 class AnonymousOrderDetailView(DetailView):
