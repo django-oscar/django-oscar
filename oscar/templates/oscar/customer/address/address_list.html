@@ -1,42 +1,7 @@
-{% extends "layout.html" %}
-{% load currency_filters %}
+{% extends "customer/baseaccountpage.html" %}
 {% load i18n %}
 
-{% block title %}
-{% trans 'Address book' %} | {{ block.super }}
-{% endblock %}
-
-{% block body_class %}account-pages{% endblock %}
-
-{% block breadcrumbs %}
-<ul class="breadcrumb">
-    <li>
-        <a href="{% url promotions:home %}">{% trans 'Home' %}</a>
-        <span class="divider">/</span>
-    </li>
-    <li>
-        <a href="{% url customer:summary %}">{% trans 'Account' %}</a>
-        <span class="divider">/</span>
-    </li>
-    <li class="active">{% trans 'Address book' %}</li>
-</ul>
-{% endblock %}
-
-{% block headertext %}
-{% trans 'Account' %}
-{% endblock %}
-
-{% block subnavigation %}
-    {% include "partials/nav_profile.html" with address_book="active" %}
-{% endblock %}
-
-{% block subheader %}
-<div class="sub-header">
-    <h2>{% trans 'Address Book' %}</h2>
-</div>
-{% endblock subheader %}
-
-{% block content %}
+{% block tabcontent %}
 
 {% if addresses %}
     <table class="table table-striped table-condensed table-bordered">
@@ -67,5 +32,5 @@
 <div class="form-actions"><a href="{% url customer:address-create %}" class="btn btn-primary">{% trans 'Add a New Address' %}</a></div>
 {% include "partials/pagination.html" %}
 
-{% endblock content %}
+{% endblock tabcontent %}
 

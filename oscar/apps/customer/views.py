@@ -4,11 +4,11 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import (TemplateView, ListView, DetailView,
                                   CreateView, UpdateView, DeleteView,
                                   FormView, RedirectView)
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect, Http404
 from django.contrib import messages
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth import (authenticate, login as auth_login,
                                  logout as auth_logout)
 from django.contrib.auth.forms import PasswordChangeForm
@@ -20,6 +20,7 @@ from django.db.models import get_model
 from oscar.views.generic import PostActionMixin
 from oscar.apps.customer.utils import get_password_reset_url
 from oscar.core.loading import get_class, get_profile_class, get_classes
+from .mixins import PageTitleMixin
 
 Dispatcher = get_class('customer.utils', 'Dispatcher')
 EmailAuthenticationForm, EmailUserCreationForm, SearchByDateRangeForm = get_classes(
@@ -52,10 +53,48 @@ class LogoutView(RedirectView):
         return response
 
 
-class ProfileUpdateView(FormView):
+class AccountSummaryView(RedirectView):
+    url = reverse_lazy(settings.OSCAR_ACCOUNTS_REDIRECT_URL)
+
+
+class ProfileView(PageTitleMixin, TemplateView):
+    template_name = 'customer/profile/profile.html'
+    page_title = _('Profile')
+    active_tab = 'profile'
+
+    def get_context_data(self, **kwargs):
+        ctx = super(ProfileView, self).get_context_data(**kwargs)
+        if not hasattr(settings, 'AUTH_PROFILE_MODULE'):
+            return
+        try:
+            profile = self.request.user.get_profile()
+        except ObjectDoesNotExist:
+            profile = get_profile_class()()
+
+        field_data = []
+        for field_name in profile._meta.get_all_field_names():
+            if field_name in ('user', 'id'):
+                continue
+            field = profile._meta.get_field(field_name)
+            if field.choices:
+                value = getattr(profile, 'get_%s_display' % field_name)()
+            else:
+                value = getattr(profile, field_name)
+            field_data.append({
+                'name': getattr(field, 'verbose_name'),
+                'value': value,
+                })
+        ctx['profile_fields'] = field_data
+        ctx['profile'] = profile
+        return ctx
+
+
+class ProfileUpdateView(PageTitleMixin, FormView):
     form_class = ProfileForm
-    template_name = 'customer/profile_form.html'
+    template_name = 'customer/profile/profile_form.html'
     communication_type_code = 'EMAIL_CHANGED'
+    page_title = _('Edit Profile')
+    active_tab = 'profile'
 
     def get_form_kwargs(self):
         kwargs = super(ProfileUpdateView, self).get_form_kwargs()
@@ -93,92 +132,37 @@ class ProfileUpdateView(FormView):
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
-        return reverse('customer:summary')
+        return reverse('customer:profile-view')
 
 
-class AccountSummaryView(TemplateView):
-    template_name = 'customer/profile.html'
+class ChangePasswordView(PageTitleMixin, FormView):
+    form_class = PasswordChangeForm
+    template_name = 'customer/profile/change_password_form.html'
+    communication_type_code = 'PASSWORD_CHANGED'
+    page_title = _('Change Password')
+    active_tab = 'profile'
 
-    def get_context_data(self, **kwargs):
-        ctx = super(AccountSummaryView, self).get_context_data(**kwargs)
-        # Delegate data fetching to separate methods so they are easy to
-        # override.
-        ctx['addressbook_size'] = self.request.user.addresses.all().count()
-        ctx['default_shipping_address'] = self.get_default_shipping_address(self.request.user)
-        ctx['default_billing_address'] = self.get_default_billing_address(self.request.user)
-        ctx['orders'] = self.get_orders(self.request.user)
-        ctx['emails'] = self.get_emails(self.request.user)
-        ctx['alerts'] = self.get_product_alerts(self.request.user)
-        self.add_profile_fields(ctx)
+    def get_form_kwargs(self):
+        kwargs = super(ChangePasswordView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
 
-        ctx['active_tab'] = self.request.GET.get('tab', 'profile')
-        return ctx
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, _("Password updated"))
 
-    def get_orders(self, user):
-        return Order._default_manager.filter(user=user)[0:5]
+        ctx = {
+            'site': get_current_site(self.request),
+            'reset_url': get_password_reset_url(self.request.user),
+            }
+        msgs = CommunicationEventType.objects.get_and_render(
+            code=self.communication_type_code, context=ctx)
+        Dispatcher().dispatch_user_messages(self.request.user, msgs)
 
-    def add_profile_fields(self, ctx):
-        if not hasattr(settings, 'AUTH_PROFILE_MODULE'):
-            return
-        try:
-            profile = self.request.user.get_profile()
-        except ObjectDoesNotExist:
-            profile = get_profile_class()()
+        return HttpResponseRedirect(self.get_success_url())
 
-        field_data = []
-        for field_name in profile._meta.get_all_field_names():
-            if field_name in ('user', 'id'):
-                continue
-            field = profile._meta.get_field(field_name)
-            if field.choices:
-                value = getattr(profile, 'get_%s_display' % field_name)()
-            else:
-                value = getattr(profile, field_name)
-            field_data.append({
-                'name': getattr(field, 'verbose_name'),
-                'value': value,
-            })
-        ctx['profile_fields'] = field_data
-        ctx['profile'] = profile
-
-    def post(self, request, *args, **kwargs):
-        # A POST means an attempt to change the status of an alert
-        if 'cancel_alert' in request.POST:
-            return self.cancel_alert(request.POST.get('cancel_alert'))
-        return super(AccountSummaryView, self).post(request, *args, **kwargs)
-
-    def cancel_alert(self, alert_id):
-        try:
-            alert = ProductAlert.objects.get(user=self.request.user, pk=alert_id)
-        except ProductAlert.DoesNotExist:
-            messages.error(self.request, _("No alert found"))
-        else:
-            alert.cancel()
-            messages.success(self.request, _("Alert cancelled"))
-        return HttpResponseRedirect(
-            reverse('customer:summary')+'?tab=alerts'
-        )
-
-    def get_emails(self, user):
-        return Email.objects.filter(user=user)
-
-    def get_product_alerts(self, user):
-        return ProductAlert.objects.select_related().filter(
-            user=self.request.user,
-            date_closed=None,
-        )
-
-    def get_default_billing_address(self, user):
-        return self.get_user_address(user, is_default_for_billing=True)
-
-    def get_default_shipping_address(self, user):
-        return self.get_user_address(user, is_default_for_shipping=True)
-
-    def get_user_address(self, user, **filters):
-        try:
-            return user.addresses.get(**filters)
-        except UserAddress.DoesNotExist:
-            return None
+    def get_success_url(self):
+        return reverse('customer:profile-view')
 
 
 class AccountRegistrationView(TemplateView):
@@ -322,37 +306,46 @@ class AccountAuthView(AccountRegistrationView):
         return self.render_to_response(context)
 
 
-class EmailHistoryView(ListView):
+class EmailHistoryView(PageTitleMixin, ListView):
     """Customer email history"""
     context_object_name = "emails"
-    template_name = 'customer/email_list.html'
+    template_name = 'customer/email/email_list.html'
     paginate_by = 20
+    page_title = _('Email History')
+    active_tab = 'emails'
 
     def get_queryset(self):
-        """Return a customer's orders"""
+        """Return a customer's emails"""
         return Email._default_manager.filter(user=self.request.user)
 
 
-class EmailDetailView(DetailView):
-    """Customer order details"""
-    template_name = "customer/email.html"
+class EmailDetailView(PageTitleMixin, DetailView):
+    """Customer email"""
+    template_name = "customer/email/email.html"
     context_object_name = 'email'
+    active_tab = 'emails'
 
     def get_object(self, queryset=None):
         """Return an order object or 404"""
         return get_object_or_404(Email, user=self.request.user,
                                  id=self.kwargs['email_id'])
 
+    def get_page_title(self):
+        """Append email subject to page title"""
+        return u'%s: %s' % (_('Email'), self.object.subject)
 
-class OrderHistoryView(ListView):
+
+class OrderHistoryView(PageTitleMixin, ListView):
     """
     Customer order history
     """
     context_object_name = "orders"
-    template_name = 'customer/order_list.html'
+    template_name = 'customer/order/order_list.html'
     paginate_by = 20
     model = Order
     form_class = SearchByDateRangeForm
+    page_title = _('Order History')
+    active_tab = 'orders'
 
     def get(self, request, *args, **kwargs):
         if 'date_from' in request.GET:
@@ -377,12 +370,17 @@ class OrderHistoryView(ListView):
         return ctx
 
 
-class OrderDetailView(DetailView, PostActionMixin):
+class OrderDetailView(PageTitleMixin, DetailView, PostActionMixin):
     """Customer order details"""
     model = Order
+    active_tab = 'orders'
 
     def get_template_names(self):
-        return ["customer/order.html"]
+        return ["customer/order/order.html"]
+
+    def get_page_title(self):
+        """ Order number as page title """
+        return u'%s #%s' % (_('Order'), self.object.number)
 
     def get_object(self, queryset=None):
         return get_object_or_404(self.model, user=self.request.user,
@@ -489,26 +487,25 @@ class OrderLineView(DetailView, PostActionMixin):
         messages.info(self.request, msg)
 
 
-class AddressListView(ListView):
+class AddressListView(PageTitleMixin, ListView):
     """Customer address book"""
     context_object_name = "addresses"
-    template_name = 'customer/address_list.html'
+    template_name = 'customer/address/address_list.html'
     paginate_by = 40
+    active_tab = 'addresses'
+    page_title = 'Address Book'
 
     def get_queryset(self):
         """Return a customer's addresses"""
         return UserAddress._default_manager.filter(user=self.request.user)
 
 
-class AddressCreateView(CreateView):
+class AddressCreateView(PageTitleMixin, CreateView):
     form_class = UserAddressForm
     mode = UserAddress
-    template_name = 'customer/address_form.html'
-
-    def get_context_data(self, **kwargs):
-        ctx = super(AddressCreateView, self).get_context_data(**kwargs)
-        ctx['title'] = _('Add a new address')
-        return ctx
+    template_name = 'customer/address/address_form.html'
+    active_tab = 'addresses'
+    page_title = _('Add a new address')
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
@@ -521,15 +518,12 @@ class AddressCreateView(CreateView):
         return reverse('customer:address-list')
 
 
-class AddressUpdateView(UpdateView):
+class AddressUpdateView(PageTitleMixin, UpdateView):
     form_class = UserAddressForm
     model = UserAddress
-    template_name = 'customer/address_form.html'
-
-    def get_context_data(self, **kwargs):
-        ctx =  super(AddressUpdateView, self).get_context_data(**kwargs)
-        ctx['title'] = _('Edit address')
-        return ctx
+    template_name = 'customer/address/address_form.html'
+    active_tab = 'addresses'
+    page_title = _('Edit address')
 
     def get_queryset(self):
         return UserAddress._default_manager.filter(user=self.request.user)
@@ -539,9 +533,11 @@ class AddressUpdateView(UpdateView):
         return reverse('customer:address-detail', kwargs={'pk': self.get_object().pk })
 
 
-class AddressDeleteView(DeleteView):
+class AddressDeleteView(PageTitleMixin, DeleteView):
     model = UserAddress
-    template_name = "customer/address_delete.html"
+    template_name = "customer/address/address_delete.html"
+    page_title = _('Delete address?')
+    active_tab = 'addresses'
 
     def get_queryset(self):
         return UserAddress._default_manager.filter(user=self.request.user)
@@ -563,29 +559,3 @@ class AnonymousOrderDetailView(DetailView):
         return order
 
 
-class ChangePasswordView(FormView):
-    form_class = PasswordChangeForm
-    template_name = 'customer/change_password_form.html'
-    communication_type_code = 'PASSWORD_CHANGED'
-
-    def get_form_kwargs(self):
-        kwargs = super(ChangePasswordView, self).get_form_kwargs()
-        kwargs['user'] = self.request.user
-        return kwargs
-
-    def form_valid(self, form):
-        form.save()
-        messages.success(self.request, _("Password updated"))
-
-        ctx = {
-            'site': get_current_site(self.request),
-            'reset_url': get_password_reset_url(self.request.user),
-        }
-        msgs = CommunicationEventType.objects.get_and_render(
-            code=self.communication_type_code, context=ctx)
-        Dispatcher().dispatch_user_messages(self.request.user, msgs)
-
-        return HttpResponseRedirect(self.get_success_url())
-
-    def get_success_url(self):
-        return reverse('customer:summary')

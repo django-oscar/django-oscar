@@ -53,6 +53,9 @@ OSCAR_PROMOTION_POSITIONS = (('page', 'Page'),
 OSCAR_ALLOW_ANON_REVIEWS = True
 OSCAR_MODERATE_REVIEWS = False
 
+# Accounts
+OSCAR_ACCOUNTS_REDIRECT_URL = 'customer:profile-view'
+
 # This enables sending alert notifications/emails
 # instantly when products get back in stock
 # by listening to stock record update signals
