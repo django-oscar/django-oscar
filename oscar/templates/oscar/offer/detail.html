@@ -20,25 +20,20 @@
 </ul>
 {% endblock %}
 
-{% block headertext %}
-{{ offer.name }}
-{% endblock %}
-
 {% block content %}
 
 	{% if not offer.is_available %}
 	<div class="alert alert-error">{% trans " This offer is no longer available." %}</div>
 	{% endif %}
 
-    {% if offer.description %}
-	<div class="well">
-		{{ offer.description|safe }}
-	</div>
-    {% endif %}
-
     {% if upsell_message %}
     <div class="well">
-        <h3>{% trans "What you need to do" %}</h3>
+        <h1>{{ offer.name }}</h1>
+        {% if offer.description %}
+            <p>{{ offer.description|safe }}</p>
+        {% endif %}
+        <hr/>
+        <h3><i class="icon-exclamation-sign icon-large"></i> {% trans "What you need to do" %}</h3>
         <p>{{ upsell_message }}</p>
     </div>
     {% endif %}
