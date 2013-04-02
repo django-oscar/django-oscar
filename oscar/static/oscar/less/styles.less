@@ -1,5 +1,5 @@
 /*!
- * Bootstrap v2.1.1
+ * Bootstrap v2.3.1
  *
  * Copyright 2012 Twitter, Inc
  * Licensed under the Apache License v2.0
@@ -8,15 +8,15 @@
  * Designed and built with all the love in the world @twitter by @mdo and @fat.
  */
 
-// CSS Reset
-@import "bootstrap/reset.less";
-
 // Core variables and mixins
 @import "bootstrap/variables.less"; // Modify this for custom colors, font-sizes, etc
 @import "bootstrap/mixins.less";
 
 // Oscar variables and mixins
 @import "page/mixins.less"; // Kept separtate for bootstrap updates - but should be imported into bootstap mixins.
+
+// CSS Reset
+@import "bootstrap/reset.less";
 
 // Grid system and page structure
 @import "bootstrap/scaffolding.less";
@@ -58,6 +58,7 @@
 
 // Components: Misc
 @import "bootstrap/thumbnails.less";
+@import "bootstrap/media.less";
 @import "bootstrap/labels-badges.less";
 @import "bootstrap/progress-bars.less";
 @import "bootstrap/accordion.less";
