@@ -13,22 +13,6 @@
         <div class="nav-collapse account-collapse">
             <div class="container-fluid">
                 <ul class="nav pull-right">
-                    {% if LANGUAGES|length > 1 %}
-                    <li id="language_selector">
-                        <div>
-                            <i class="icon-comment"></i>
-                            <form action="/i18n/setlang/" method="post">
-                                {% csrf_token %}
-                                <select name="language">
-                                    {% for language in LANGUAGES %}
-                                    <option value="{{ language.0 }}" {% if LANGUAGE_CODE == language.0 %}selected="selected"{% endif %}>{{ language.1 }}</option>
-                                    {% endfor %}
-                                </select>
-                                <button class="btn btn-small" type="submit">Go</button>
-                            </form>
-                        </div>
-                    </li>
-                    {% endif %}
                     {% if user.is_authenticated %}
                         <li>
                             <a href="{% url customer:summary %}"><i class="icon-user"></i> {% trans "Account" %}</a>
@@ -46,6 +30,19 @@
                         <li><a href="{% url customer:logout %}"><i class="icon-signout"></i> {% trans "Logout" %}</a></li>
                     {% else %}
                         <li><a href="{% url customer:login %}"><i class="icon-signin"></i> {% trans "Login or register" %}</a></li>
+                    {% endif %}
+                    {% if LANGUAGES|length > 1 %}
+                    <li id="language_selector">
+                        <form class="navbar-form" action="/i18n/setlang/" method="post">
+                            {% csrf_token %}
+                            <select name="language">
+                                {% for language in LANGUAGES %}
+                                <option value="{{ language.0 }}" {% if LANGUAGE_CODE == language.0 %}selected="selected"{% endif %}>{{ language.1 }}</option>
+                                {% endfor %}
+                            </select>
+                            <button class="btn" type="submit">Go</button>
+                        </form>
+                    </li>
                     {% endif %}
                 </ul>
             </div>
