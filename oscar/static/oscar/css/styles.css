@@ -6839,6 +6839,7 @@ form:after {
 }
 .image_container img {
   max-height: 155px;
+  max-width: 90%;
   width: auto;
   margin: 0px auto;
 }
@@ -7031,7 +7032,6 @@ a:hover .thumbnail {
 }
 .es-carousel ul li a img {
   display: block;
-  max-width: 100%;
 }
 .es-nav span {
   position: absolute;
