@@ -12,21 +12,17 @@
 
         <div class="nav-collapse account-collapse">
             <div class="container-fluid">
-                <ul class="nav pull-left">
-                    {% if LANGUAGES|length > 1 %}
-                    <li id="language_selector">
-                        <form class="navbar-form" action="/i18n/setlang/" method="post">
-                            {% csrf_token %}
-                            <select name="language">
-                                {% for language in LANGUAGES %}
-                                <option value="{{ language.0 }}" {% if LANGUAGE_CODE == language.0 %}selected="selected"{% endif %}>{{ language.1 }}</option>
-                                {% endfor %}
-                            </select>
-                            <button class="btn" type="submit">Go</button>
-                        </form>
-                    </li>
-                    {% endif %}
-                </ul>
+                {% if LANGUAGES|length > 1 %}
+                    <form id="language_selector" class="pull-left navbar-form" action="/i18n/setlang/" method="post">
+                        {% csrf_token %}
+                        <select name="language">
+                            {% for language in LANGUAGES %}
+                            <option value="{{ language.0 }}" {% if LANGUAGE_CODE == language.0 %}selected="selected"{% endif %}>{{ language.1 }}</option>
+                            {% endfor %}
+                        </select>
+                        <button class="btn" type="submit">Go</button>
+                    </form>
+                {% endif %}
                 <ul class="nav pull-right">
                     {% if user.is_authenticated %}
                         <li>
