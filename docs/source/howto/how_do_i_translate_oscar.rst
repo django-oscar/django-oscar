@@ -1,5 +1,5 @@
 =========================
-How to I translate Oscar?
+How do I translate Oscar?
 =========================
 
 Before doing any translation work, ensure you are famility with `Django's i18n

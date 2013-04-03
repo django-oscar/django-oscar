@@ -73,7 +73,7 @@ setup(name='django-oscar',
 
 # Show contributing instructions if being installed in 'develop' mode
 if len(sys.argv) > 1 and sys.argv[1] == 'develop':
-    docs_url = 'http://django-oscar.readthedocs.org/en/latest/contributing.html'
+    docs_url = 'http://django-oscar.readthedocs.org/en/latest/internals/contributing/index.html'
     mailing_list = 'django-oscar@googlegroups.com'
     mailing_list_url = 'https://groups.google.com/forum/?fromgroups#!forum/django-oscar'
     twitter_url = 'https://twitter.com/django_oscar'
