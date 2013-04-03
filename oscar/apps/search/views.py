@@ -12,12 +12,11 @@ product_models = import_module('catalogue.models', ['Product'])
 
 class SuggestionsView(View):
     """
-    Auto suggest view
+    Auto-suggest view
 
-    Returns the suggestions in JSON format (especially suited for consumption
-    by jQuery autocomplete)
+    Return JSON search suggestions for integration with Javascript autocomplete
+    plugins.
     """
-
     suggest_limit = settings.OSCAR_SEARCH_SUGGEST_LIMIT
 
     def get(self, request):
@@ -28,36 +27,30 @@ class SuggestionsView(View):
         """
         Creates a list of suggestions
         """
-        query_term = self.request.GET['query_term']
-        query_set = SearchQuerySet().filter(text__contains=query_term)[
-            :self.suggest_limit]
+        query = self.request.GET.get('q', '').strip()
+        if not query:
+            return self.render_to_response([])
+
+        qs = self.get_search_queryset(query)[:self.suggest_limit]
         context = []
-        for item in query_set:
+        for item in qs:
             context.append({
-                'label': item.object.title,
+                'title': item.object.title,
+                'description': item.object.description,
                 'url':  item.object.get_absolute_url(),
             })
         return context
 
+    def get_search_queryset(self, query):
+        """
+        Return the SearchQuerySet for the given query
+        """
+        return SearchQuerySet().filter(text__contains=query)
+
     def render_to_response(self, context):
-        """
-        Returns a JSON response containing 'context' as payload
-        """
-        return self.get_json_response(self.convert_context_to_json(context))
-
-    def get_json_response(self, content, **httpresponse_kwargs):
-        """
-        Construct an `HttpResponse` object
-        """
+        payload = json.dumps(context)
         return HttpResponse(
-            content, content_type='application/json',
-            **httpresponse_kwargs)
-
-    def convert_context_to_json(self, context):
-        """
-        Convert the context into a JSON object
-        """
-        return json.dumps(context)
+            payload, content_type='application/json')
 
 
 class MultiFacetedSearchView(FacetedSearchView):
