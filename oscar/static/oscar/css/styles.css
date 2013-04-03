@@ -6517,6 +6517,9 @@ form:after {
   opacity: 1;
   filter: alpha(opacity=100);
 }
+#language_selector select {
+  width: 100px;
+}
 .basket_summary,
 .later_summary {
   padding-left: 0px;
