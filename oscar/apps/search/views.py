@@ -7,7 +7,9 @@ from django.db.models import get_model
 from haystack.query import SearchQuerySet
 from haystack.views import FacetedSearchView
 
+from oscar.core.loading import get_class
 Product = get_model('catalogue', 'Product')
+MultiFacetedSearchForm = get_class('search.forms', 'MultiFacetedSearchForm')
 
 
 class SuggestionsView(View):
@@ -57,6 +59,7 @@ class MultiFacetedSearchView(FacetedSearchView):
     """
     Search view for multifaceted searches
     """
+    form_class = MultiFacetedSearchForm
     template = 'search/results.html'
 
     def __call__(self, request, *args, **kwargs):

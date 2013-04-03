@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, url
 
 from oscar.core.application import Application
-from . import views, forms
+from . import views
 
 
 class SearchApplication(Application):
@@ -11,8 +11,7 @@ class SearchApplication(Application):
 
     def get_urls(self):
         urlpatterns = patterns('',
-            url(r'^$', self.search_view(
-                form_class=forms.MultiFacetedSearchForm), name='search'),
+            url(r'^$', self.search_view(), name='search'),
             url(r'^suggest/$', self.suggestions_view.as_view(),
                 name='suggest'),
         )
