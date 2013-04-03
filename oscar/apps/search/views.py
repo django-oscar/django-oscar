@@ -3,11 +3,11 @@ import json
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic.base import View
 from django.conf import settings
+from django.db.models import get_model
 from haystack.query import SearchQuerySet
 from haystack.views import FacetedSearchView
 
-from oscar.core.loading import import_module
-product_models = import_module('catalogue.models', ['Product'])
+Product = get_model('catalogue', 'Product')
 
 
 class SuggestionsView(View):
@@ -68,9 +68,9 @@ class MultiFacetedSearchView(FacetedSearchView):
         # Look for UPC match
         query = request.GET.get('q', '').strip()
         try:
-            item = product_models.Product._default_manager.get(upc=query)
+            item = Product._default_manager.get(upc=query)
             return HttpResponseRedirect(item.get_absolute_url())
-        except product_models.Product.DoesNotExist:
+        except Product.DoesNotExist:
             pass
         return super(MultiFacetedSearchView, self).__call__(
             request, *args, **kwargs)
