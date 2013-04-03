@@ -1,6 +1,6 @@
-===============
-Oscar Core Apps
-===============
+=========================
+Oscar Core Apps explained
+=========================
 
 Oscar is split up in multiple, mostly independent apps.
 

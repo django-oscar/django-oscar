@@ -7,10 +7,9 @@ scratch and have decided to use Oscar.  Let's call this shop 'frobshop'
 
 .. tip::
 
-    You can always review the set-up of the `Sandbox site`_ in case you have
-    trouble with the below instructions.
-
-.. _`Sandbox site`: https://github.com/tangentlabs/django-oscar/tree/master/sites/sandbox
+    You can always review the set-up of the
+    :doc:`Sandbox site <sandbox>` in case you have trouble with
+    the below instructions.
 
 Install by hand
 ===============
