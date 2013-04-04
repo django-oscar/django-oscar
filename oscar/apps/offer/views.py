@@ -38,13 +38,4 @@ class OfferDetailView(ListView):
         return ctx
 
     def get_queryset(self):
-        cond_range = self.offer.condition.range
-        if not cond_range:
-            return Product.objects.none()
-        if cond_range.includes_all_products:
-            return Product.browsable.select_related(
-                'product_class', 'stockrecord').filter(
-                    is_discountable=True).prefetch_related(
-                        'variants', 'images', 'product_class__options',
-                        'product_options')
-        return cond_range.included_products.filter(is_discountable=True)
+        return self.offer.products()
