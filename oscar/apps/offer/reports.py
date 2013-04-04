@@ -23,7 +23,7 @@ class OfferReportCSVFormatter(ReportCSVFormatter):
         writer.writerow(header_row)
 
         for offer in offers:
-            row = [offer, offer.total_discount]
+            row = [offer, offer['total_discount']]
             writer.writerow(row)
 
 
