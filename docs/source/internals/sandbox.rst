@@ -2,14 +2,9 @@
 Playing in the sandbox
 ======================
 
-Browse the sandbox site
-=======================
-
-There is a demo Oscar site built hourly from HEAD of the master branch (unstable):
-http://latest.oscarcommerce.com
-
-It is intended to be a vanilla install of Oscar, using the default templates and
-styles.  This is the blank canvas upon which you an build your application.
+Oscar ships with a 'sandbox' site, which is a vanilla install of Oscar using the
+default templates and styles.  It is useful for exploring Oscar's functionality
+and developing new features.
 
 It only has two customisations on top of Oscar's core:
 
@@ -21,6 +16,32 @@ It only has two customisations on top of Oscar's core:
 * A profile class is specified which defines a few simple fields.  This is to
   demonstrate the account section of Oscar, which introspects the profile class
   to build a combined User and Profile form.
+
+Note that some things are deliberately not implemented within core Oscar as they
+are domain-specific.  For instance:
+
+* All tax is set to zero
+* No shipping methods are specified.  The default is free shipping.
+* No payment is required to submit an order as part of the checkout process
+
+The sandbox is, in effect, the blank canvas upon which you can build your site.
+
+Browse the external sandbox site
+================================
+
+An instance of the sandbox site is build hourly from master branch and made
+available at http://latest.oscarcommerce.com 
+
+.. warning::
+    
+    It is possible for users to access the dashboard and edit the site content.
+    Hence, the data can get quite messy.  It is periodically cleaned up.
+
+.. warning::
+    
+    Since this site is built from the unstable branch, occasionally things won't
+    be fully stable.  A more stable 'demo' site is in preparation, which will be
+    more suitable for impressing clients/management.
 
 Running the sandbox locally
 ===========================
@@ -43,9 +64,3 @@ at: http://localhost:8000.  A sample superuser is installed with credentials::
     email: superuser@example.com
     password: testing
 
-Note that some things are deliberately not implemented within core Oscar
-as they are domain-specific.  For instance:
-
-* All tax is set to zero
-* No shipping methods are specified.  The default is free shipping.
-* No payment is required to submit an order as part of the checkout process
