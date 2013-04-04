@@ -81,31 +81,16 @@ good starting point for quickly building elegant e-commerce sites.
 .. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/dashboard.thumb.png
     :target: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/dashboard.png
 
-You can have this sample shop running on your machine in 5 commands::
-
-    $ git clone git@github.com:tangentlabs/django-oscar.git
-    $ cd django-oscar
-    $ mkvirtualenv oscar
-    $ make sandbox
-    $ sites/sandbox/manage.py runserver
-
-The sandbox site (initialised with a sample set of products) will be available
-at: http://localhost:8000.  A sample superuser is installed with credentials::
-
-    username: superuser
-    email: superuser@example.com
-    password: testing
-
-Want to make changes?  Check out the `contributing guidelines`_.
-
-.. _`contributing guidelines`: http://django-oscar.readthedocs.org/en/latest/contributing.html#playing-in-the-sandbox
-
 The sandbox site is also available to browse at
 http://latest.oscarcommerce.com
 
-Translations can be contributed using Transifex_.
+You can have this sample shop running on your machine `in 5 commands`_.
 
-.. _Transifex: https://www.transifex.com/projects/p/django-oscar/
+.. _`in 5 commands`: http://django-oscar.readthedocs.org/en/latest/internals/sandbox.html#running-the-sandbox-locally
+
+Want to make changes?  Check out the `contributing guidelines`_.
+
+.. _`contributing guidelines`: http://django-oscar.readthedocs.org/en/latest/contributing/index.html
 
 Extensions
 ----------

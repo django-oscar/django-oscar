@@ -58,21 +58,19 @@ ipads.  The `source is on GitHub`_ - contributions welcome.
 .. _`Tangent Labs`: http://www.tangentlabs.co.uk
 .. _`source is on GitHub`: https://github.com/tangentlabs/django-oscar
 
-Table of contents
-=================
-
 First steps
------------
+===========
 .. toctree::
    :maxdepth: 1
 
-   internals/take_a_peek
-   internals/getting_started
+   internals/sandbox
+   internals/development-environment
    internals/getting_help
+   internals/getting_started
    topics/key_questions
 
 Using Oscar
------------
+===========
 All you need to start developing apps with Oscar.
 
 .. toctree::
@@ -85,11 +83,12 @@ All you need to start developing apps with Oscar.
    ref/upgrading
 
 The Oscar open-source project
------------------------------
+=============================
 Learn about the ideas behind Oscar and how you can contribute.
 
 .. toctree::
    :maxdepth: 1
 
-   internals/contributing
-   internals/design_decisions
+   internals/design-decisions
+   internals/contributing/index
+   

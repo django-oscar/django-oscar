@@ -1,6 +1,6 @@
-================
-Design decisions
-================
+======================
+Oscar Design Decisions
+======================
 
 The central aim of Oscar is to provide a solid core of an e-commerce project that can be
 extended and customised to suit the domain at hand.  This is achieved in several ways:
