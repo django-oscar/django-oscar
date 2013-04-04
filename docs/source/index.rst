@@ -82,6 +82,7 @@ All you need to start developing apps with Oscar.
    ref/apps/index
    ref/settings
    ref/signals
+   ref/upgrading
 
 The Oscar open-source project
 -----------------------------
