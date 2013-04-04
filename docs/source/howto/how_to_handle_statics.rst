@@ -8,19 +8,19 @@ more generally useful for anyone trying to customise Oscar and looking for the
 right approach.
 
 Overview
---------
+========
 
 Oscar ships with a set of HTML templates and a collection of static files
 (eg images, javascript).  Oscar's default CSS is generated from LESS
 files.
 
 Templates
-~~~~~~~~~
+---------
 
 Oscar's default templates use the mark-up conventions from Twitter's Bootstrap project.
 
 LESS/CSS
-~~~~~~~~
+--------
 
 Oscar contains three main LESS files:
 
@@ -46,7 +46,7 @@ setting like::
     )
 
 Using offline compression
-+++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Django compressor also provides a way of running offline compression which can
 be used during deployment to automatically generate CSS files from your LESS
@@ -63,7 +63,7 @@ this to your settings file::
 
 
 Javascript
-~~~~~~~~~~
+----------
 
 Oscar uses javascript for progressive enhancements.
 
