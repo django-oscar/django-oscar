@@ -56,7 +56,7 @@ messages:
 	# Create the .po files used for i18n
 	cd oscar; django-admin.py makemessages -a
 
-gettext:
+compiledmessages:
 	# Compile the gettext files
 	cd oscar; django-admin.py compilemessages
 
