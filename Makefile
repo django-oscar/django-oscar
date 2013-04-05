@@ -35,7 +35,7 @@ docs:
 	cd docs && make html
 
 coverage:
-	./runtests.py --with-coverage --cover-package=oscar --cover-html --cover-html-dir=htmlcov --with-xunit
+	coverage run ./runtests.py
 	coverage xml -i
 
 # We probably should use upgrade instead of install here but we have a conflict

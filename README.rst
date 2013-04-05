@@ -36,6 +36,10 @@ Continuous integration status:
 .. image:: https://secure.travis-ci.org/tangentlabs/django-oscar.png
     :target: http://travis-ci.org/#!/tangentlabs/django-oscar
 
+.. image:: https://coveralls.io/repos/tangentlabs/django-oscar/badge.png?branch=master
+    :alt: Coverage
+    :target: https://coveralls.io/r/tangentlabs/django-oscar
+
 .. _`Official homepage`: http://oscarcommerce.com
 .. _`Sandbox site`: http://latest.oscarcommerce.com
 .. _`Documentation`: http://django-oscar.readthedocs.org/en/latest/
