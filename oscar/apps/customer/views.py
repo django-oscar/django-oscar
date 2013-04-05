@@ -493,7 +493,7 @@ class AddressListView(PageTitleMixin, ListView):
     template_name = 'customer/address/address_list.html'
     paginate_by = 40
     active_tab = 'addresses'
-    page_title = 'Address Book'
+    page_title = _('Address Book')
 
     def get_queryset(self):
         """Return customer's addresses"""
@@ -502,7 +502,7 @@ class AddressListView(PageTitleMixin, ListView):
 
 class AddressCreateView(PageTitleMixin, CreateView):
     form_class = UserAddressForm
-    mode = UserAddress
+    model = UserAddress
     template_name = 'customer/address/address_form.html'
     active_tab = 'addresses'
     page_title = _('Add a new address')
