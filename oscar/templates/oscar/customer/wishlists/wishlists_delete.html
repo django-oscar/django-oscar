@@ -1,0 +1,18 @@
+{% extends "customer/baseaccountpage.html" %}
+{% load i18n %}
+
+{% block tabcontent %}
+<form action="." method="post">
+    {% csrf_token %}
+    <p>
+	    {% blocktrans with name=wishlist.name %}
+	        Are you sure you want to delete {{ name }}?
+	    {% endblocktrans %}
+    </p>
+
+    <div class="form-actions">
+        <button type="submit" value="Delete wish list" class="btn btn-danger btn-large">{% trans 'Delete' %}</button> {% trans 'or' %} <a href="{% url customer:wishlists-list %}">{% trans 'cancel' %}</a>
+    </div>
+</form>
+{% endblock tabcontent %}
+

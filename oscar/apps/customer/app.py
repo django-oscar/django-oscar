@@ -5,6 +5,7 @@ from django.views import generic
 from oscar.apps.customer import views
 from oscar.apps.customer.notifications import views as notification_views
 from oscar.apps.customer.alerts import views as alert_views
+from oscar.apps.customer.wishlists import views as wishlists_views
 from oscar.core.application import Application
 
 
@@ -40,6 +41,15 @@ class CustomerApplication(Application):
     alert_create_view = alert_views.ProductAlertCreateView
     alert_confirm_view = alert_views.ProductAlertConfirmView
     alert_cancel_view = alert_views.ProductAlertCancelView
+
+    wishlists_list_view = wishlists_views.WishListListView
+    wishlists_detail_view = wishlists_views.WishListDetailView
+    wishlists_create_view = wishlists_views.WishListCreateView
+    wishlists_update_view = wishlists_views.WishListUpdateView
+    wishlists_delete_view = wishlists_views.WishListDeleteView
+    wishlists_add_product_view = wishlists_views.WishListAddProduct
+    wishlists_delete_product = wishlists_views.WishListDeleteProduct
+    wishlists_move_product_to_another = wishlists_views.WishListMoveProductToAnotherWishList
 
     def get_urls(self):
         urlpatterns = patterns('',
@@ -127,6 +137,34 @@ class CustomerApplication(Application):
             url(r'^alerts/cancel/(?P<pk>[a-z0-9]+)/$',
                 login_required(self.alert_cancel_view.as_view()),
                 name='alerts-cancel-by-pk'),
+
+            # Wishlists
+            url(r'wishlists/$',
+                login_required(self.wishlists_list_view.as_view()),
+                name='wishlists-list'),
+            url(r'wishlists/add/$',
+                login_required(self.wishlists_create_view.as_view()),
+                name='wishlists-create'),
+            url(r'wishlists/(?P<key>[a-z0-9]+)/update/$',
+                login_required(self.wishlists_update_view.as_view()),
+                name='wishlists-update'),
+            url(r'wishlists/(?P<key>[a-z0-9]+)/delete/$',
+                login_required(self.wishlists_delete_view.as_view()),
+                name='wishlists-delete'),
+            url(r'wishlists/(?P<key>[a-z0-9]+)/add_product/(?P<pk>\d+)/',
+                login_required(self.wishlists_add_product_view.as_view()),
+                name='wishlists-add-product'),
+            url(r'wishlists/add_product/(?P<pk>\d+)/',
+                login_required(self.wishlists_add_product_view.as_view()),
+                name='wishlists-add-product'),
+            url(r'wishlists/(?P<key>[a-z0-9]+)/delete_product/(?P<pk>\d+)/',
+                login_required(self.wishlists_delete_product.as_view()),
+                name='wishlists-delete-product'),
+            url(r'wishlists/(?P<key>[a-z0-9]+)/move/(?P<pk>\d+)/to/(?P<to_key>[a-z0-9]+)/$',
+                login_required(self.wishlists_move_product_to_another.as_view()),
+                name='wishlists-move-product-to-another'),
+            url(r'wishlists/(?P<key>[a-z0-9]+)/$',
+                self.wishlists_detail_view.as_view(), name='wishlists-detail'),
             )
         return self.post_process_urls(urlpatterns)
 

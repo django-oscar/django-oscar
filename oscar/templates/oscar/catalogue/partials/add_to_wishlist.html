@@ -1,0 +1,36 @@
+{% load i18n %}
+{% load url from future %}
+
+{% if in_user_wishlists %}
+	<p>{% trans 'Product is in one of your wish lists.' %}</p>
+{% else %}
+<div class="btn-group">
+	{% if wishlists.count == 0 %}
+		<a class="btn" href="{% url 'customer:wishlists-add-product' product.pk %}">
+			{% trans 'Add to new wish list' %}
+		</a>
+	{% else %}
+		{% for wishlist in wishlists %}
+			{% if forloop.first %}
+				<a class="btn" href="{% url 'customer:wishlists-add-product' wishlist.key product.pk %}">
+					{% blocktrans with name=wishlists.0.name %}
+					Add to wish list {{ name }}
+					{% endblocktrans %}
+				</a>
+				<button class="btn dropdown-toggle" data-toggle="dropdown">
+					<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu">
+			{% else %}
+				<a href="{% url 'customer:wishlists-add-product' wishlist.key product.pk %}">
+					{% blocktrans with name=wishlist.name %}
+					Add to wish list {{ name }}
+					{% endblocktrans %}
+				</a>
+			{% endif %}
+		{% endfor %}
+		<a href="{% url 'customer:wishlists-add-product' product.pk %}">{% trans 'Add to new wish list' %}</a>
+		</ul>
+	{% endif %}
+</div>
+{% endif %}

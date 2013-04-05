@@ -395,6 +395,12 @@ class AbstractProduct(models.Model):
             return False, _("No stock available")
         return self.stockrecord.is_purchase_permitted(user, quantity)
 
+    def in_wishlists(self, user):
+        """
+        Return user's wish lists that this product appears in.
+        """
+        return user.wishlists.filter(lines__product=self)
+
     def add_category_from_breadcrumbs(self, breadcrumb):
         from oscar.apps.catalogue.categories import create_from_breadcrumbs
         category = create_from_breadcrumbs(breadcrumb)
