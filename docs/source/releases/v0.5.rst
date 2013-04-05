@@ -62,6 +62,11 @@ Most of the new features in 0.5 are around offers.
     - An offer can be restricted to give a maximum total discount.  After this
       amount of discount has been awarded, the offer becomes unavailable.
 
+.. figure:: screenshots/0.5/offer-restrictions.png
+    :scale: 50%
+    
+    The restrictions editing page for an offer within the dashboard.
+
 * Offers can now be suspended and reinstated.
 
 * The offers dashboard has been rewritten.
@@ -75,6 +80,10 @@ The design of the dashboard has been reworked, offering a better user experience
 throughout the dashboard.  This work is still ongoing, further improvements in
 how the dashboard pages are laid out will appear in 0.6.
 
+.. figure:: screenshots/0.5/dashboard-nav.png
+    
+    The new dashboard navigation.
+
 Internationalisation
 ~~~~~~~~~~~~~~~~~~~~
 
@@ -83,6 +92,11 @@ considerable number of new languages are now supported (although many have
 partial coverage).  
 
 .. _Transifex: https://www.transifex.com/projects/p/django-oscar/
+
+.. figure:: screenshots/0.5/transifex.png
+    :scale: 80%
+    
+    A snippet from the Oscar Transifex page.
 
 Oscar's default templates also now support a simple language picker.
 
@@ -100,7 +114,7 @@ There are several noteworthy smaller improvements
 * Oscar's documentation has been reorganised and improved.  This is part of an
   ongoing effort to improve it.  Watch this space.
 
-* Oscar's template now use django-compressor_ to comrpess CSS and JS assets.
+* Oscar's template now use django-compressor_ to compress CSS and JS assets.
 
 * Products can now be deleted using the catalogue dashboard.
 
@@ -136,21 +150,25 @@ projects):
 * Customers are notified if changes to their basket lead to new offers being
   applied (or if previously applied offers are no longer available).
 
+.. figure:: screenshots/0.5/html_flash_msg.png
+
+    A flash message indicating that the customer's basket has now qualified for
+    a new offer.
+
 * Some testing utilities have been extracted into a new package,
   django-oscar-testsupport_, so they can be used by Oscar extensions.
 
 * A Vagrant_ manifest is provided for testing Oscar against different database
   vendors.
-
-.. _django-oscar-testsupport: https://github.com/tangentlabs/django-oscar-testsupport
-.. _tox: http://testrun.org/tox/latest/
-.. _Vagrant: http://www.vagrantup.com/
-
 * Oscar's javascript has been rewritten to be cleaner and more extensible.
 
 * Coverage data is now submitted to coveralls.io_
 
 .. _coveralls.io: https://coveralls.io/r/tangentlabs/django-oscar
+.. _django-oscar-testsupport: https://github.com/tangentlabs/django-oscar-testsupport
+.. _tox: http://testrun.org/tox/latest/
+.. _Vagrant: http://www.vagrantup.com/
+
 
 Upgrading 
 =========
