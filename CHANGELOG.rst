@@ -2,6 +2,8 @@
 Changelog
 =========
 
+For releases after 0.4, see the release notes in the docs.
+
 0.4 - 2012-10-19
 ----------------
 

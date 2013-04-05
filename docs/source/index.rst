@@ -102,5 +102,6 @@ Learn about the ideas behind Oscar and how you can contribute.
    :maxdepth: 1
 
    internals/design-decisions
+   releases/index
    internals/contributing/index
    
