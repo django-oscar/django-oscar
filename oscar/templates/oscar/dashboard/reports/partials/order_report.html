@@ -15,7 +15,7 @@
 	{% for order in objects %}
 	<tr>
 		<td>{{ order.number }}</td>
-		<td>{{ order.user }}</td>
+		<td>{{ order.user|default:"-" }}</td>
 		<td>{{ order.total_incl_tax|currency }}</td>
 		<td>{{ order.date_placed }}</td>
 		<td>
