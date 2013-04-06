@@ -1,5 +1,5 @@
 import re
-
+from django.conf import settings
 from django import forms
 from django.db.models import get_model, Q
 from django.utils.translation import ugettext_lazy as _
@@ -23,7 +23,8 @@ class RangeProductForm(forms.Form):
                             required=False,
                             help_text=_("You can paste in a selection of SKUs or UPCs"))
     file_upload = forms.FileField(label=_("File of SKUs or UPCs"), required=False,
-                                  help_text=_('Either comma-separated, or one identifier per line'))
+                                  help_text=_('Either comma-separated, or one identifier per line'),
+                                  max_length=settings.OSCAR_FILEFIELD_MAXLENGTH)
 
     def __init__(self, range, *args, **kwargs):
         self.range = range

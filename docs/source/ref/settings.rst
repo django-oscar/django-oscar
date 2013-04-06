@@ -252,6 +252,14 @@ OSCAR_UPLOAD_ROOT
 
 Default: ``/tmp``
 
+OSCAR_FILEFIELD_MAXLENGTH
+-----------------
+
+Default: 100
+
+Django file path max length param
+https://docs.djangoproject.com/en/1.4/ref/models/fields/#filefield
+
 Deprecated settings
 ===================
 
