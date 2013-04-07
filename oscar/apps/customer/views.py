@@ -247,7 +247,7 @@ class AccountRegistrationView(TemplateView):
 
     def _register_user(self, form):
         """
-        Register a new user from the data in *form*. If
+        Register and return a new user from the data in *form*. If
         ``OSCAR_SEND_REGISTRATION_EMAIL`` is set to ``True`` a
         registration email will be send to the provided email address.
         A new user account is created and the user is then logged in.
@@ -277,6 +277,8 @@ class AccountRegistrationView(TemplateView):
         auth_login(self.request, user)
         if self.request.session.test_cookie_worked():
             self.request.session.delete_test_cookie()
+
+        return user
 
 
 class AccountAuthView(AccountRegistrationView):
