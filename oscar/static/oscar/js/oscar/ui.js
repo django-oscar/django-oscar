@@ -117,9 +117,14 @@ var oscar = (function(o, $) {
                 var gallery = $(this).parent('.rg-thumbs').length;
                 // Don't apply this to the gallery carousel
                 if (gallery <= 0) {
+                    var imageWidth = 175,
+                        minProducts = 4;
+                    if ($(this).hasClass('wide')) {
+                        minProducts = 5;
+                    }
                     $(this).elastislide({
-                        imageW: 175,
-                        minItems: 4,
+                        imageW: imageWidth,
+                        minItems: minProducts,
                         onClick: function() {return true;}
                     });
                 }
