@@ -179,8 +179,8 @@ OSCAR_DASHBOARD_NAVIGATION = [
     },
 ]
 
-# Default max_length filepath see: https://docs.djangoproject.com/en/1.4/ref/models/fields/#filepathfield
-OSCAR_FILEFIELD_MAXLENGTH = 100
+# Default filepath max_length see: https://docs.djangoproject.com/en/1.4/ref/models/fields/#filepathfield
+OSCAR_FILEFIELD_MAXLENGTH = 255
 
 OSCAR_SETTINGS = dict(
     [(k, v) for k, v in locals().items() if k.startswith('OSCAR_')])
