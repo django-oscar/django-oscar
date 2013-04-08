@@ -255,7 +255,7 @@ Default: ``/tmp``
 OSCAR_FILEFIELD_MAXLENGTH
 -----------------
 
-Default: 100
+Default: 255
 
 Django file path max length param
 https://docs.djangoproject.com/en/1.4/ref/models/fields/#filefield
