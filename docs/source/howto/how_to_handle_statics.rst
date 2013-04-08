@@ -8,19 +8,19 @@ more generally useful for anyone trying to customise Oscar and looking for the
 right approach.
 
 Overview
---------
+========
 
 Oscar ships with a set of HTML templates and a collection of static files
 (eg images, javascript).  Oscar's default CSS is generated from LESS
 files.
 
 Templates
-~~~~~~~~~
+---------
 
 Oscar's default templates use the mark-up conventions from Twitter's Bootstrap project.
 
 LESS/CSS
-~~~~~~~~
+--------
 
 Oscar contains three main LESS files:
 
@@ -45,9 +45,25 @@ setting like::
         ('text/less', 'lessc {infile} {outfile}'),
     )
 
+Using offline compression
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Django compressor also provides a way of running offline compression which can
+be used during deployment to automatically generate CSS files from your LESS
+files. To make sure that compressor is obeying the ``USE_LESS`` setting and
+is not trying to compress CSS files that are not available, the setting has to
+be passed into the ``COMPRESS_OFFLINE_CONTEXT``. You should add something like
+this to your settings file::
+
+    COMPRESS_OFFLINE_CONTEXT = {
+        # this is the only default value from compressor itself
+        'STATIC_URL': 'STATIC_URL',
+        'use_less': USE_LESS,
+    }
+
 
 Javascript
-~~~~~~~~~~
+----------
 
 Oscar uses javascript for progressive enhancements.
 

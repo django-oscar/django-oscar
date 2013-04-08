@@ -1,7 +1,7 @@
 from decimal import Decimal as D, ROUND_DOWN, ROUND_UP
-import math
 
 from django.core import exceptions
+from django.db.models import get_model
 from django.template.defaultfilters import date
 from django.db import models
 from django.utils.timezone import now
@@ -151,10 +151,9 @@ class ConditionalOffer(models.Model):
         verbose_name = _("Conditional offer")
         verbose_name_plural = _("Conditional offers")
 
-        # The way offers are looked up involves the fields
-        # (offer_type, status, start_datetime, end_datetime).  Ideally, you want
-        # a DB index that covers these 4 fields (will add support for this in
-        # Django 1.5)
+        # The way offers are looked up involves the fields (offer_type, status,
+        # start_datetime, end_datetime).  Ideally, you want a DB index that
+        # covers these 4 fields (will add support for this in Django 1.5)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -366,6 +365,28 @@ class ConditionalOffer(models.Model):
                 'is_satisfied': self.total_discount < self.max_discount})
 
         return restrictions
+
+    @property
+    def has_products(self):
+        return self.condition.range is not None
+
+    def products(self):
+        """
+        Return a queryset of products in this offer
+        """
+        Product = get_model('catalogue', 'Product')
+        if not self.has_products:
+            return Product.objects.none()
+
+        cond_range = self.condition.range
+        if cond_range.includes_all_products:
+            # Return ALL the products
+            return Product.browsable.select_related(
+                'product_class', 'stockrecord').filter(
+                    is_discountable=True).prefetch_related(
+                        'variants', 'images', 'product_class__options',
+                        'product_options')
+        return cond_range.included_products.filter(is_discountable=True)
 
 
 class Condition(models.Model):

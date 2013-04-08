@@ -37,7 +37,7 @@ class AbstractAddress(models.Model):
     line4 = models.CharField(_("City"), max_length=255, blank=True, null=True)
     state = models.CharField(_("State/County"), max_length=255, blank=True,
                              null=True)
-    postcode = models.CharField(_("Post/Zip-code"), max_length=64)
+    postcode = models.CharField(_("Post/Zip-code"), max_length=64, blank=True, null=True)
     country = models.ForeignKey('address.Country', verbose_name=_("Country"))
 
     # A field only used for searching addresses - this contains all the

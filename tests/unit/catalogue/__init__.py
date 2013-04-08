@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-
 from django.test import TestCase
 
-from oscar.apps.catalogue.models import Product, ProductClass
+from oscar.apps.catalogue.models import Product, ProductClass, Category
 
 
 class TestProductPickling(TestCase):
@@ -28,3 +27,11 @@ class TestProductPickling(TestCase):
         product_pickle = unpickler.load()
 
         pickler.dump(product_pickle)
+
+
+class TestReceivingDeleteImageSignal(TestCase):
+
+    def test_doesnt_fail_for_empty_image_field(self):
+        category = Category.add_root(name='Test Category')
+        from oscar.apps.catalogue.receivers import delete_image_files
+        delete_image_files(Category, category)

@@ -222,6 +222,12 @@ class ProductCreateUpdateView(generic.UpdateView):
 
     def forms_valid(self, form, stockrecord_form, category_formset,
                     image_formset, recommended_formset):
+        """
+        Save all changes and display a success url.
+        """
+        if not self.creating:
+            # a just created product was already saved in process_all_forms()
+            self.object = form.save()
         if self.is_stockrecord_submitted():
             # Save stock record
             stockrecord = stockrecord_form.save(commit=False)

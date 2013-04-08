@@ -3,6 +3,7 @@
 {% load history_tags %}
 {% load reviews_tags %}
 {% load staticfiles %}
+{% load product_tags %}
 {% load i18n %}
 
 {% block extrastyles %}
@@ -51,13 +52,20 @@
     {% endif %}
 
     <div class="row-fluid">
+
+        {% block product_gallery %}
         <div class="span6">
             {% include "catalogue/partials/gallery.html" %}
         </div>
+        {% endblock %}
+
+        {% block product_main %}
         <div class="span6">
             <h1>{{ product.get_title }}</h1>
             
+            {% block product_stock_record %}
             {% include "catalogue/partials/stock_record.html" %}
+            {% endblock %}
             
 			{% if product.rating != None %}
             <p class="star {{ product.rating|as_stars }}">
@@ -79,8 +87,12 @@
              
             <hr/>
 
+            {% block product_basket_form %}
             {% include "catalogue/partials/add_to_basket_form.html" %}
+            {% endblock %}
         </div><!-- /span6 -->
+        {% endblock %}
+
     </div><!-- /row-fluid -->
               
 	{% block product_description %}
@@ -169,7 +181,7 @@
                     <ul>
                         {% for product in product.related_products.all %}
                         <li>
-                            {% include "promotions/partials/product_carousel.html" %}
+                            {% render_product product %}
                         </li>
                         {% endfor %}
                     </ul>
@@ -188,7 +200,7 @@
                     <ul>
                         {% for product in product.recommended_products.all %}
                         <li>
-                            {% include "promotions/partials/product_carousel.html" %}
+	                        {% render_product product %}
                         </li>
                         {% endfor %}
                     </ul>

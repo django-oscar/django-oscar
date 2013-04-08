@@ -34,20 +34,18 @@
                 If you are developing Oscar's CSS, or overriding Oscar's CSS
                 files in your project, then set USE_LESS = True in your
                 settings file.  You will also need to ensure that the 'lessc'
-                executable is available and you have COMPRESS_PRECOMPILERES specified
+                executable is available and you have COMPRESS_PRECOMPILERS specified
                 correctly.
                 {% endcomment %}
-                {% if use_less %}
-                    {% compress css %}
+                {% compress css %}
+                    {% if use_less %}
                         <link rel="stylesheet" type="text/less" href="{% static "oscar/less/styles.less" %}" />
                         <link rel="stylesheet" type="text/less" href="{% static "oscar/less/responsive.less" %}" />
-                    {% endcompress %}
-                {% else %}
-                    {% compress css %}
+                    {% else %}
                         <link rel="stylesheet" type="text/css" href="{% static "oscar/css/styles.css" %}" />
                         <link rel="stylesheet" type="text/css" href="{% static "oscar/css/responsive.css" %}" />
-                    {% endcompress %}
-                {% endif %}
+                    {% endif %}
+                {% endcompress %}
             {% endblock %}
         {% endblock %}
 
@@ -78,18 +76,18 @@
             <script>window.jQuery || document.write('<script src="{% static "oscar/js/jquery/jquery-1.9.1.min.js" %}"><\/script>')</script>
         {% endblock %}
 
-            {# Local scripts #}
-            {% block scripts %}
-                {% compress js %}
-                <!-- Twitter Bootstrap -->
-                <script type="text/javascript" src="{% static "oscar/js/bootstrap/bootstrap.min.js" %}"></script>
-                <!-- Oscar -->
-                <script src="{% static "oscar/js/oscar/ui.js" %}" type="text/javascript" charset="utf-8"></script>
-                {% endcompress %}
-            {% endblock %}
+        {# Local scripts #}
+        {% block scripts %}
+            {% compress js %}
+            <!-- Twitter Bootstrap -->
+            <script type="text/javascript" src="{% static "oscar/js/bootstrap/bootstrap.min.js" %}"></script>
+            <!-- Oscar -->
+            <script src="{% static "oscar/js/oscar/ui.js" %}" type="text/javascript" charset="utf-8"></script>
+            {% endcompress %}
+        {% endblock %}
 
-            {# Additional JS scripts #}
-            {% block extrascripts %}{% endblock %}
+        {# Additional JS scripts #}
+        {% block extrascripts %}{% endblock %}
 
         {# Block for body onload functions #}
         <script type="text/javascript">

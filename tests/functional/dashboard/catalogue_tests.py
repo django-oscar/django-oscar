@@ -73,6 +73,7 @@ class TestAStaffUser(WebTestCase):
                                            kwargs={'pk': product.id}))
 
     def test_can_update_a_product_without_stockrecord(self):
+        new_title = u'foobar'
         category = G(Category)
         product = G(Product, ignore_fields=['stockrecord'], parent=None)
 
@@ -83,6 +84,8 @@ class TestAStaffUser(WebTestCase):
         form = page.forms[0]
         form['productcategory_set-0-category'] = category.id
         assert form['partner'].value == u''
+        assert form['title'].value != new_title
+        form['title'] = new_title
 
         form.submit()
 
@@ -91,6 +94,7 @@ class TestAStaffUser(WebTestCase):
         except Product.DoesNotExist:
             pass
         else:
+            self.assertTrue(product.title == new_title)
             if product.has_stockrecord:
                 self.fail('product has stock record but should not')
 

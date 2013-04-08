@@ -4,6 +4,7 @@
 {% load i18n %}
 
 <article class="product_pod">
+    {% block product_image %}
     <div class="image_container">
 		{% with image=product.primary_image %}
             {% thumbnail image.original "400x400" upscale=False as thumb %}
@@ -11,13 +12,17 @@
             {% endthumbnail %}
 		{% endwith %}
     </div>
+    {% endblock %}
 
     {% block product_review %}
         <p class="star {{ product.rating|as_stars }}"></p>
-    {% endblock product_review %}
+    {% endblock %}
 
-    <h3><a href="{{ product.get_absolute_url }}">{{ product.get_title|truncatewords:5 }}</a></h3>
+    {% block product_title %}
+    <h3><a href="{{ product.get_absolute_url }}">{{ product.get_title|truncatewords:4 }}</a></h3>
+    {% endblock %}
 
+    {% block product_price %}
     <div class="product_price">
         {% include "catalogue/partials/stock_record.html" %}
 
@@ -27,4 +32,5 @@
             {% include "catalogue/partials/add_to_basket_form_compact.html" %}
         {% endif %}
    </div>
+    {% endblock %}
 </article>

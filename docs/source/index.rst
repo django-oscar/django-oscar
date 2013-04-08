@@ -22,18 +22,24 @@ Features:
 
 * Multiple fulfillment partners for the same product.
 
-* Range of merchandising blocks for promoting products throughout your site.
+* A range of merchandising blocks for promoting products throughout your site.
 
 * Sophisticated offers that support virtually any kind of offer you can think
   of - multi-buys, bundles, buy X get 50% off Y etc
 
-* Vouchers
+* Vouchers (built on top of the offers framework)
 
 * Comprehensive dashboard
 
-* Support for split payment orders
+* Support for complex order processing such split payment orders, multi-batch
+  shipping, order status pipelines.
 
-* Extension libraries available for PayPal, GoCardless, DataCash and more
+* Extension libraries available for many payment gateways, including PayPal_,
+  GoCardless_, DataCash_ and more.
+
+.. _PayPal: https://github.com/tangentlabs/django-oscar-paypal
+.. _GoCardless: https://github.com/tangentlabs/django-oscar-gocardless
+.. _DataCash: https://github.com/tangentlabs/django-oscar-datacash
 
 Oscar is a good choice if your domain has non-trivial business logic.  Oscar's
 flexibility means it's straightforward to implement business rules that would be
@@ -47,9 +53,14 @@ Example requirements that Oscar applications already handle:
 * Complex access control rules governing who can view and order what.
 
 * Supporting a hierarchy of customers, sales reps and sales directors - each
-  being able to "masquerade" as their subordinate users.
+  being able to "masquerade" as their subordinates.
 
-* Multi-lingual products and categories
+* Multi-lingual products and categories.
+
+* Digital products.
+
+* Dynamically priced products (eg where the price is provided by an external
+  service).
 
 Oscar is developed by `Tangent Labs`_, a London-based digital agency.  It is
 used in production in several applications to sell everything from beer mats to
@@ -64,14 +75,14 @@ First steps
    :maxdepth: 1
 
    internals/sandbox
-   internals/development-environment
-   internals/getting_help
    internals/getting_started
    topics/key_questions
+   internals/getting_help
 
 Using Oscar
 ===========
-All you need to start developing apps with Oscar.
+
+All you need to start developing an Oscar project.
 
 .. toctree::
    :maxdepth: 1
@@ -80,14 +91,17 @@ All you need to start developing apps with Oscar.
    ref/apps/index
    ref/settings
    ref/signals
+   ref/upgrading
 
 The Oscar open-source project
 =============================
+
 Learn about the ideas behind Oscar and how you can contribute.
 
 .. toctree::
    :maxdepth: 1
 
    internals/design-decisions
+   releases/index
    internals/contributing/index
    
