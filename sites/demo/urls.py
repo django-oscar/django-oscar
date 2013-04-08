@@ -3,6 +3,8 @@ from django.conf import settings
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls.static import static
+from stores.app import application as stores_app
+from stores.dashboard.app import application as dashboard_app
 
 from apps.app import application
 
@@ -13,6 +15,11 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     (r'^admin/', include(admin.site.urls)),
+
+    # Stores extension
+    (r'^stores/', include(stores_app.urls)),
+    (r'^dashboard/stores/', include(dashboard_app.urls)),
+
     (r'', include(application.urls)),
 )
 

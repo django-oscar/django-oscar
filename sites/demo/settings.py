@@ -1,3 +1,14 @@
+"""
+Settings for Oscar's demo site.
+
+Notes:
+
+* The demo site uses the stores extension which requires a spatial database.
+  The DATABASES settings is not set in this module.  Instead, you should add
+  the appropriate details to your settings_local module.
+
+"""
+
 import os
 
 # Django settings for oscar project.
@@ -17,17 +28,6 @@ EMAIL_SUBJECT_PREFIX = '[Oscar demo] '
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 MANAGERS = ADMINS
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(os.path.dirname(__file__), 'db.sqlite'),
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
-    }
-}
 
 CACHES = {
     'default': {
@@ -50,15 +50,16 @@ TIME_ZONE = 'Europe/London'
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en-us'
 
+LANGUAGES = (
+    ('en-gb', 'English'),
+    ('pl', 'Polish'),
+)
+
 SITE_ID = 1
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
 USE_I18N = True
-
-# If you set this to False, Django will not format dates, numbers and
-# calendars according to the current locale
-USE_L10N = True
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
@@ -117,7 +118,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    #'debug_toolbar.middleware.DebugToolbarMiddleware',
     'oscar.apps.basket.middleware.BasketMiddleware',
 )
 
@@ -208,11 +209,15 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.flatpages',
     'django.contrib.staticfiles',
+    'django.contrib.gis',
+    # Oscar dependencies
+    'compressor',
     'south',
+    # Oscar extensions
+    'stores',
     # External apps
     'django_extensions',
     'debug_toolbar',
-    'compressor',
     # For profile testing
     'apps.user',
 ]
@@ -269,6 +274,26 @@ USE_TZ = True
 
 # Must be within MEDIA_ROOT for sorl to work
 OSCAR_MISSING_IMAGE_URL = 'image_not_found.jpg'
+
+# Add stores node to navigation
+from django.utils.translation import ugettext_lazy as _
+OSCAR_DASHBOARD_NAVIGATION.append(
+    {
+        'label': _('Stores'),
+        'icon': 'icon-shopping-cart',
+        'children': [
+            {
+                'label': _('Stores'),
+                'url_name': 'stores-dashboard:store-list',
+            },
+            {
+                'label': _('Store groups'),
+                'url_name': 'stores-dashboard:store-group-list',
+            },
+        ]
+    })
+
+GEOIP_PATH = os.path.join(os.path.dirname(__file__), 'geoip')
 
 try:
     from settings_local import *

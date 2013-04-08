@@ -20,7 +20,12 @@ sandbox: install
 	sites/sandbox/manage.py loaddata countries.json sites/_fixtures/pages.json sites/_fixtures/auth.json sites/_fixtures/ranges.json sites/_fixtures/offers.json
 	sites/sandbox/manage.py rebuild_index --noinput
 
-demo: install
+geoip:
+	wget http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz
+	gunzip GeoLiteCity.dat.gz
+	mv GeoLiteCity.dat sites/demo/geoip
+
+demo: install geoip
 	pip install -r requirements_demo.txt --use-mirrors
 	-rm -f sites/demo/db.sqlite
 	# Create database
