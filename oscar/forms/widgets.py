@@ -16,6 +16,7 @@ class ImageInput(FileInput):
     dialog and allow for selecting a new or replacing image file.
     """
     template_name = 'partials/image_input_widget.html'
+    attrs = {'accept': 'image/*'}
 
     def render(self, name, value, attrs=None):
         """
