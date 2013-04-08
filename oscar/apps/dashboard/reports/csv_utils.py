@@ -22,8 +22,21 @@ class CsvUnicodeWriter(object):
         # Write BOM into file
         self.stream.write(codecs.BOM_UTF8)
 
+    def cast_to_str(self, obj):
+        if isinstance(obj, unicode):
+            return obj.encode('utf-8')
+        elif isinstance(obj, str):
+            return obj
+        elif hasattr(obj, '__unicode__'):
+            return unicode(obj).encode('utf-8')
+        elif hasattr(obj, '__str__'):
+            return str(obj)
+        else:
+            raise TypeError('Expecting unicode, str, or object castable'
+                            ' to unicode or string, got: %r' % type(obj))
+
     def writerow(self, row):
-        self.writer.writerow([unicode(s).encode("utf-8") for s in row])
+        self.writer.writerow([self.cast_to_str(s) for s in row])
         # Fetch UTF-8 output from the queue ...
         data = self.queue.getvalue()
         data = data.decode("utf-8")
