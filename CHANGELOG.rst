@@ -2,6 +2,13 @@
 Changelog
 =========
 
+0.4.8 - 2013-04-08
+------------------
+
+Fix bug with order dashboard line editing (`#622`_)
+
+.. _`#622`: https://github.com/tangentlabs/django-oscar/pull/622
+
 0.4.7 - 2013-03-20
 ------------------
 
