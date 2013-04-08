@@ -21,6 +21,7 @@ sandbox: install
 	sites/sandbox/manage.py rebuild_index --noinput
 
 demo: install
+	pip install -r requirements_demo.txt --use-mirrors
 	-rm -f sites/demo/db.sqlite
 	# Create database
 	sites/demo/manage.py syncdb --noinput
