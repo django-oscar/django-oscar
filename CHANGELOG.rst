@@ -2,6 +2,10 @@
 Changelog
 =========
 
+0.3.6 - 2013--04-08
+-------------------
+* Fix line-handling bug in order dashboard.
+
 0.3.5 - 2012-09-28
 ------------------
 A couple of minor adjustments for Tangent projects
