@@ -222,6 +222,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     # For profile testing
     'apps.user',
+    'apps.bigbang',
 ]
 
 # Include a shipping override app to provide some shipping methods

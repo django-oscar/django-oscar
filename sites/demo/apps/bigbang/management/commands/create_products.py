@@ -3,9 +3,7 @@ from optparse import make_option
 
 from django.core.management.base import BaseCommand, CommandError
 
-from oscar.core.loading import get_class
-CatalogueImporter = get_class('partner.utils', 'CatalogueImporter')
-CatalogueImportError = get_class('partner.exceptions', 'CatalogueImportError')
+from demo.apps.bigbang import utils
 
 
 class Command(BaseCommand):
@@ -13,26 +11,23 @@ class Command(BaseCommand):
     help = 'For creating product catalogues based on a CSV file'
 
     option_list = BaseCommand.option_list + (
-        make_option('--flush', action='store_true', dest='flush',
-                    default=False, help='Flush tables before importing'),
-        make_option('--delimiter', dest='delimiter', default=",",
-                    help='Delimiter used within CSV file(s)'))
+        make_option('--class', dest='product_class',
+                    help='Product class'),)
 
     def handle(self, *args, **options):
         logger = self._get_logger()
         if not args:
             raise CommandError("Please select a CSV file to import")
 
-        logger.info("Starting catalogue import")
-        importer = CatalogueImporter(
-            logger, delimiter=options.get('delimiter'),
-            flush=options.get('flush'))
+        product_class = options['product_class']
+        if not product_class:
+            raise CommandError("Please specify a product class name")
+
+        logger.info("Starting %s catalogue import", product_class)
+        importer = utils.Importer(logger)
         for file_path in args:
             logger.info(" - Importing records from '%s'" % file_path)
-            try:
-                importer.handle(file_path)
-            except CatalogueImportError, e:
-                raise CommandError(str(e))
+            importer.handle(product_class, file_path)
 
     def _get_logger(self):
         logger = logging.getLogger(__file__)

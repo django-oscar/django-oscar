@@ -26,16 +26,17 @@ geoip:
 	mv GeoLiteCity.dat sites/demo/geoip
 
 demo: install
+	# Install additional requirements
 	pip install -r requirements_demo.txt --use-mirrors
-	-rm -f sites/demo/db.sqlite
 	# Create database
+	sites/demo/manage.py reset_db --router=default --noinput
 	sites/demo/manage.py syncdb --noinput
 	sites/demo/manage.py migrate
-	# Import some fixtures
-	sites/demo/manage.py oscar_import_catalogue sites/_fixtures/books-catalogue.csv
-	sites/demo/manage.py oscar_import_catalogue_images sites/_fixtures/books-images.tar.gz
-	sites/demo/manage.py loaddata countries.json sites/_fixtures/pages.json sites/_fixtures/auth.json sites/_fixtures/ranges.json
-	sites/demo/manage.py rebuild_index --noinput
+	# Import some core fixtures
+	sites/demo/manage.py loaddata countries.json sites/_fixtures/pages.json sites/_fixtures/auth.json
+	# Create catalogue (create product classes from fixture than import CSV files)
+	sites/demo/manage.py loaddata sites/demo/fixtures/product-classes.json sites/demo/fixtures/product-attributes.json
+	sites/demo/manage.py create_products --class=Books sites/demo/fixtures/books.csv
 
 docs:
 	cd docs && make html

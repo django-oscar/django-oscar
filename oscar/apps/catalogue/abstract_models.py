@@ -774,7 +774,7 @@ class AbstractProductAttributeValue(models.Model):
     class Meta:
         abstract = True
         verbose_name = _('Product Attribute Value')
-        verbose_name_plural = _('Product Attribut Values')
+        verbose_name_plural = _('Product Attribute Values')
 
     def __unicode__(self):
         return u"%s: %s" % (self.attribute.name, self.value)
