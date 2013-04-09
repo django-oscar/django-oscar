@@ -45,8 +45,7 @@ class ConditionalOffer(models.Model):
         _("Name"), max_length=128, unique=True,
         help_text=_("This is displayed within the customer's basket"))
     slug = models.SlugField(_("Slug"), max_length=128, unique=True, null=True)
-    description = models.TextField(
-        _("Description"), blank=True, null=True,
+    description = models.TextField(_("Description"), blank=True,
         help_text=_("This is displayed on the offer browsing page"))
 
     # Offers come in a few different types:
@@ -508,8 +507,7 @@ class Benefit(models.Model):
         (SHIPPING_PERCENTAGE, _("Discount is a percentage off of the shipping cost")),
     )
     type = models.CharField(
-        _("Type"), max_length=128, choices=TYPE_CHOICES, null=True,
-        blank=True)
+        _("Type"), max_length=128, choices=TYPE_CHOICES, blank=True)
 
     # The value to use with the designated type.  This can be either an integer
     # (eg for multibuy) or a decimal (eg an amount) which is slightly
