@@ -1,0 +1,152 @@
+// OSCAR PAGE STRUCTURE
+// -----------
+body {
+  background-color: @grayLighter;
+}
+.container-fluid {
+  //Unique styles
+  padding:0px;
+  margin:0px auto;
+  max-width:960px;
+}
+.page {
+  background:@white;
+  -webkit-border-radius: 0 0 6px 6px;
+  -moz-border-radius: 0 0 6px 6px;
+  border-radius: 0 0 6px 6px;
+  -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+  -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+  box-shadow: 0 1px 2px rgba(0,0,0,.15);
+}
+.page_inner {
+   padding:@gridGutterWidth;
+   .clearfix();
+}
+// FONTS MODIFICATIONS
+// -----------
+h1 { font-size: 30px; line-height: 40px; }
+h2 { font-size: 24px; line-height: 40px; }
+h3 { font-size: 18px; line-height: 20px; }
+h4 { font-size: 16px; line-height: 20px; }
+
+.page-header,
+.sub-header {
+  margin: 0 0 (@baseLineHeight * 1.5);
+}
+.well .sub-header {
+  margin: 0 0 (@baseLineHeight);
+}
+.sub-header {
+  padding-bottom: (@baseLineHeight / 2) - 1;
+  border-bottom: 1px solid @grayLighter;
+}
+.page-header {
+  h1,h2 {
+    font-size: 30px;
+    line-height: 40px;
+    margin:0;
+  }
+}
+.sub-header {
+  h2,h3,h4 {
+    font-size: 22px;
+    line-height: 24px;
+    margin:0;
+  }
+}
+
+// PRICE SIZE/COLOR
+// -----------
+.price_color {
+  display:block;
+  color:@green;
+  font-weight:bold;
+}
+.product_pod .price_color { margin-top:0 }
+.es-carousel .price_color { font-size:20px; }
+
+
+
+// OSCAR NAV BAR MODIFICATIONS
+// -----------
+.navbar.primary {
+  margin-bottom:0px;
+  .brand.hidden {
+    display: none;
+  }
+  .form-search {
+    .btn {
+      margin-top: 0px; // make buttons vertically centered in navbar
+    }
+  }
+}
+.header {
+  .page_inner {
+    padding:50px 0 40px;
+  }
+}
+// WELLS
+// -----
+.well {
+  .clearfix();
+}
+.well-success {
+  background-color: @successBackground;
+  border-color: @successBorder;  
+}
+.well-danger {
+  background-color: @errorBackground;
+  border-color: @errorBorder;
+}
+.well-info {
+  background-color: @infoBackground;
+  border-color: @infoBorder;
+}
+.well-blank {
+  background-color: @white;
+  border-color: rgba(0,0,0,.1);
+}
+.well-rm-padding {
+  padding:19px 0;
+}
+// UTILITY CLASSES
+// ---------------
+.pull-clear {
+  clear: both;
+}
+.align-right,
+.table .align-right,
+.table .align-right {
+  text-align:right;
+}
+
+.align-center,
+.table .align-center,
+.table .align-center {
+  text-align:center;
+}
+// FORMS
+// ------------
+form {
+  .clearfix();
+}
+//For IE: adds width for selects inside overflow hidden containers
+.select-open {
+  width:300px!important;
+}
+
+// ADDITIONAL ERRORS
+.errorlist {
+    margin:0;
+    padding:0 0 10px 0;
+    color:#B94A48;
+    li {
+        padding:0 0 5px 0;
+        list-style:none;
+    }
+}
+
+.control-label.required span {
+    color: #FF0000;
+}
+

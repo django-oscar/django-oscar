@@ -1,0 +1,120 @@
+// OSCAR HEADER
+// -----------
+.header {
+  position:relative;
+  z-index:2;
+  h1 {
+    line-height:inherit;
+    margin:0;
+    font-size:30px;
+  }
+}
+.cart {
+  margin:0px;
+  .clearfix();
+  .cart_summary {
+    strong {
+      padding: 4px 10px 4px;
+      display:block;
+      span {
+        font-weight:normal;
+      }
+    }
+  }
+  li {
+    display:block;
+    float:right;
+    .btn-group {
+      white-space: normal;
+      .dropdown-menu {
+        width:400px;
+        padding-bottom:0px;
+        max-width:none;
+        li {
+          float:none;
+          display:block;
+        }
+      }
+    }
+  }
+}
+.basket_item {
+  margin:0px;
+  li {
+    width:auto;
+    border-top:1px solid @grayLighter;
+    padding:10px 15px;
+    &:first-child { border-top:none; }
+  }
+  .image_container {
+    min-height: 70px;
+    img {
+      max-height: 70px;
+    }
+    a {
+      padding:0;
+    }
+  }
+  .form-actions {
+    -webkit-border-radius: 0 0px 6px 6px;
+    -moz-border-radius: 0 0px 6px 6px;
+    border-radius: 0 0px 6px 6px;
+    p {
+     .clearfix();
+     .btn {
+       float:right;
+     }
+    }
+    margin:0px;
+    h4 {
+      text-align:right;
+      margin-bottom:@baseFontSize;
+      small {
+        display:block;
+      }
+    }
+  }
+  a {
+    color:@linkColor;
+    font-weight:inherit;
+    white-space:normal;
+    &.btn {
+      color:#fff;
+    }
+  }
+  h4 {
+    font-size:14px;
+    margin:0;
+    a {
+      padding:0px;
+    }
+  }
+}
+// OSCAR FOOTER UNIQUE STYLES
+// -----------
+.footer_links {
+  .horiz_col();
+  .clearfix();
+  border-bottom:1px solid lighten(@black, 80%);
+  padding:@baseFontSize;
+  margin-bottom:@baseLineHeight;
+  li {
+    margin-left:10px;
+    padding-left:10px;
+    border-left:1px solid lighten(@black, 80%);
+  }
+  li:first-child,
+  li:last-child {
+    margin-left:0px;
+    padding-left:0px;
+    border-left:none;
+  }
+  .top_page {
+    float:right;
+  }
+}
+// OSCAR DROPDOWN NAVBAR
+// -----------
+#browse > .dropdown-menu {
+  top: 109%;
+}

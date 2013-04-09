@@ -1,0 +1,33 @@
+// OSC PRODUCT WIDTHS
+// --------------------------------------------------
+@fifth: 20%;
+@quart: 25%;
+@third: 33.33333333333333%;
+@half: 50%;
+@three_quart: 75%;
+@full:100%;
+
+// OSC MIXINS
+// --------------------------------------------------
+.remove_bullets() {
+  margin: 0;
+  padding: 0;
+  li {
+    padding: 0;
+    list-style:none;
+  }
+}
+.horiz_col() {
+  padding:0px;
+  margin:0px;
+  .clearfix();
+  > li {
+    list-style:none;
+  }
+  li { 
+    float:left; 
+    li {
+      float:none;
+    }
+  }
+}
