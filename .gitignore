@@ -44,3 +44,4 @@ sites/demo/*.sqlite
 sites/demo/assets/
 sites/demo/public/
 sites/demo/whoosh_index/
+sites/puppet/modules/

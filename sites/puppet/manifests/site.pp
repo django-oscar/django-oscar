@@ -34,6 +34,23 @@ node precise64 {
 	    source => "/vagrant/sites/sandbox/deploy/apache2/vagrant.conf"
 	}
 
+	# Nginx in front of Apache
+	class { "nginx": }
+	nginx::resource::vhost { 'apache_rp':
+	  ensure => present,
+	  listen_port => 9001,
+	}
+	nginx::resource::location { 'apache-root':
+	  ensure => present,
+	  vhost => 'apache_rp',
+	  location => '/',
+	  proxy => 'http://localhost',
+	  proxy_set_headers => {
+	  'REMOTE_ADDR' => '$remote_addr',
+	  'HTTP_HOST' => '$http_host',
+	  },
+	}
+
 	# Memcached
 	class {"memcached": max_memory => 64 }
 
@@ -78,6 +95,10 @@ node precise64 {
 	    requirements => "/vagrant/requirements.txt"
 	}
 	python::pip::requirements {"/vagrant/requirements_vagrant.txt":
+	    venv => $virtualenv,
+		require => Python::Venv::Isolate[$virtualenv]
+	}
+	python::pip::requirements {"/vagrant/requirements_less.txt":
 	    venv => $virtualenv,
 		require => Python::Venv::Isolate[$virtualenv]
 	}
