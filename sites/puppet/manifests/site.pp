@@ -27,6 +27,11 @@ node precise64 {
 	include python_dependencies
 	include userconfig
 
+	# Dev server on port 8080
+	exec { "dev-server":
+	  command => "bash -c \"source /var/www/virtualenv/bin/activate && /vagrant/sites/sandbox/manage.py runserver 0.0.0.0:8080 &\"",
+    }
+
 	# Apache serving WSGI on port 80 (would prefer 8081)
 	class {"apache": }
 	class {"apache::mod::wsgi": }
@@ -42,11 +47,11 @@ node precise64 {
 	  src => "/vagrant/sites/sandbox",
     }
 
-	# Nginx in front of Apache (port 9001)
+	# Nginx in front of Apache (port 8082)
 	class { "nginx": }
 	nginx::resource::vhost { 'apache_rp':
 	  ensure => present,
-	  listen_port => 9001,
+	  listen_port => 8082,
 	}
 	nginx::resource::location { 'apache-root':
 	  ensure => present,
@@ -59,10 +64,10 @@ node precise64 {
 	  },
 	}
 
-	# Nginx in front of gunicorn (port 9002)
+	# Nginx in front of gunicorn (port 8083)
 	nginx::resource::vhost { 'gunicorn_rp':
 	  ensure => present,
-	  listen_port => 9002,
+	  listen_port => 8083,
 	}
 	nginx::resource::location { 'gunicorn-root':
 	  ensure => present,
