@@ -166,6 +166,9 @@ class ProductForm(forms.ModelForm):
             parent.queryset = parent.queryset.exclude(pk=self.instance.pk)
         if related_products is not None:
             related_products.queryset = self.get_related_products_queryset()
+        if 'title' in self.fields:
+            self.fields['title'].widget = forms.TextInput(
+                attrs={'autocompete': 'off'})
 
     def set_initial_attribute_values(self, kwargs):
         if kwargs.get('instance', None) is None:
