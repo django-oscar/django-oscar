@@ -38,6 +38,7 @@ demo: install
 	sites/demo/manage.py loaddata sites/demo/fixtures/product-classes.json sites/demo/fixtures/product-attributes.json
 	sites/demo/manage.py create_products --class=Books sites/demo/fixtures/books.csv
 	sites/demo/manage.py create_products --class=Downloads sites/demo/fixtures/downloads.csv
+	sites/demo/manage.py create_products --class=Clothing sites/demo/fixtures/clothing.csv
 	sites/demo/manage.py import_product_images sites/demo/fixtures/images/
 
 docs:

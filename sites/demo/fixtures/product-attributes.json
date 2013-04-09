@@ -94,5 +94,18 @@
             "type": "text", 
             "name": "Publisher"
         }
+    }, 
+    {
+        "pk": 6, 
+        "model": "catalogue.productattribute", 
+        "fields": {
+            "code": "size", 
+            "product_class": 4, 
+            "entity_type": null, 
+            "option_group": null, 
+            "required": false, 
+            "type": "text", 
+            "name": "Size"
+        }
     }
 ]
