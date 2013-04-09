@@ -73,10 +73,3 @@ Appearance
 
     how_to_handle_statics
 
-Contributing
-------------
-
-.. toctree::
-    :maxdepth: 1
-
-    how_do_i_translate_oscar

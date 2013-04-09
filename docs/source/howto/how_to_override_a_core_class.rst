@@ -2,7 +2,7 @@
 How to override a core class
 ============================
 
-Much of Oscar's functionality is implemented using classes, when when a module
+Much of Oscar's functionality is implemented using classes, when a module
 function might seem a better choice.  This is to allow functionality to be
 customised.  Oscar uses a dynamic class loading mechanism that can be used to
 override Oscar's core classes and use custom versions.

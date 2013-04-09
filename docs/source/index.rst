@@ -92,6 +92,7 @@ All you need to start developing an Oscar project.
    ref/settings
    ref/signals
    ref/upgrading
+   topics/translation
 
 The Oscar open-source project
 =============================
