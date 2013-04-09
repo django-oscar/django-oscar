@@ -168,7 +168,6 @@ var oscar = (function(o, $) {
                             return function(e) {
                                 var imgDiv = $("#"+imgId);
                                 imgDiv.children('img').attr('src', e.target.result);
-                                imgDiv.children('button').remove();
                             };
                         })();
                         reader.readAsDataURL(evt.target.files[0]);
