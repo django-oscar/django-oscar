@@ -562,7 +562,7 @@ class ProductAttributesContainer(object):
             if value is None:
                 if attribute.required:
                     raise ValidationError(
-                        _("%(attr)s attribute cannot be blanke") %
+                        _("%(attr)s attribute cannot be blank") %
                         {'attr': attribute.code})
             else:
                 try:
@@ -635,6 +635,10 @@ class AbstractProductAttribute(models.Model):
         ordering = ['code']
         verbose_name = _('Product Attribute')
         verbose_name_plural = _('Product Attributes')
+
+    @property
+    def is_option(self):
+        return self.type == "option"
 
     def _validate_text(self, value):
         if not (type(value) == unicode or type(value) == str):

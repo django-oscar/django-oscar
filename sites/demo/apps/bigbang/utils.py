@@ -36,6 +36,16 @@ class Importer(object):
         product.title = title
         product.description = description
         product.product_class = product_class
+
+        # Attributes
+        for code, value in zip(attribute_codes, row[8:]):
+            # Need to check if the attribute requires an Option instance
+            attr = product_class.attributes.get(
+                code=code)
+            if attr.is_option:
+                value = attr.option_group.options.get(option=value)
+            setattr(product.attr, code, value)
+
         product.save()
 
         # Category information
@@ -55,11 +65,7 @@ class Importer(object):
         record.partner = partner
         record.partner_sku = sku
         record.price_excl_tax = D(price)
-        record.num_in_stock = stock
+        if stock != 'NULL':
+            record.num_in_stock = stock
         record.save()
 
-        # Attributes
-        for code, value in zip(attribute_codes, row[8:]):
-            attr = product_class.attributes.get(
-                code=code)
-            attr.save_value(product, value)
