@@ -385,7 +385,8 @@ stripped.  For instance::
 
 Default: ``django.template.defaultfilters.slugify``
 
-The slugify function to use.
+The slugify function to use.  Note that is used within Oscar's slugify wrapper
+(in ``oscar.core.utils``) which applies the custom map and blacklist.
 
 Example::
 

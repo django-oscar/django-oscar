@@ -1,5 +1,4 @@
 import sys
-import os
 import tempfile
 import hotshot
 import hotshot.stats
@@ -7,6 +6,23 @@ from cStringIO import StringIO
 
 import cProfile
 import pstats
+
+
+def profile_this(fn):
+    def profiled_fn(*args, **kwargs):
+        filepath = "/tmp/%s.profile" % fn.__name__
+        prof = cProfile.Profile()
+        ret = prof.runcall(fn, *args, **kwargs)
+        print "Writing to %s" % filepath
+        prof.dump_stats(filepath)
+
+        print "Printing stats"
+        stats = pstats.Stats(filepath)
+        stats.sort_stats('cumulative')
+        stats.print_stats()
+
+        return ret
+    return profiled_fn
 
 
 class BaseMiddleware(object):
@@ -18,8 +34,8 @@ class BaseMiddleware(object):
     def process_request(self, request):
         if self.show_profile(request):
             if 'prof_file' in request.GET:
-                # It's sometimes useful to generate a file of output that can
-                # converted for use with kcachegrind.  To convert this file,
+                # It's sometimes useful to generate a file of output that can
+                # converted for use with kcachegrind.  To convert this file,
                 # use:
                 #
                 #     pyprof2calltree -o /tmp/callgrind.stats -i /tmp/out.stats
@@ -47,6 +63,8 @@ class BaseMiddleware(object):
             if 'prof_strip' in request.GET:
                 stats.strip_dirs()
             if 'prof_sort' in request.GET:
+                # See # http://docs.python.org/2/library/profile.html#pstats.Stats.sort_stats
+                # for the fields you can sort on.
                 stats.sort_stats(*request.GET['prof_sort'].split(','))
             else:
                 stats.sort_stats('time', 'calls')

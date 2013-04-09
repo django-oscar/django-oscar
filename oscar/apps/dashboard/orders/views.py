@@ -326,7 +326,10 @@ class OrderDetailView(DetailView):
                 return self.reload_page_response()
             else:
                 line_ids = request.POST.getlist('selected_line')
-                line_quantities = [int(qty) for qty in request.POST.getlist('selected_line_qty')]
+                line_quantities = []
+                for line_id in line_ids:
+                    qty = request.POST.get('selected_line_qty_%s' % line_id)
+                    line_quantities.append(int(qty))
                 lines = order.lines.filter(id__in=line_ids)
                 if lines.count() == 0:
                     messages.error(self.request, _("You must select some lines to act on"))

@@ -111,6 +111,10 @@ class ProductCategoryView(ListView):
     template_name = 'catalogue/browse.html'
     paginate_by = settings.OSCAR_PRODUCTS_PER_PAGE
 
+    def get(self, request, *args, **kwargs):
+        self.categories = self.get_categories()
+        return super(ProductCategoryView, self).get(request, *args, **kwargs)
+
     def get_categories(self):
         """
         Return a list of the current category and it's ancestors
@@ -127,15 +131,14 @@ class ProductCategoryView(ListView):
     def get_context_data(self, **kwargs):
         context = super(ProductCategoryView, self).get_context_data(**kwargs)
 
-        categories = self.get_categories()
-        context['categories'] = categories
-        context['category'] = categories[-1]
-        context['summary'] = categories[-1].name
+        context['categories'] = self.categories
+        context['category'] = self.categories[-1]
+        context['summary'] = self.categories[-1].name
         return context
 
     def get_queryset(self):
         return get_product_base_queryset().filter(
-            categories__in=self.get_categories()
+            categories__in=self.categories
         ).distinct()
 
 

@@ -118,10 +118,10 @@ var oscar = (function(o, $) {
                 // Don't apply this to the gallery carousel
                 if (gallery <= 0) {
                     var imageWidth = 175,
-                        minProducts =  4;
-                    if( $(this).hasClass('wide') ) {
-                        minProducts =  5;
-                    }    
+                        minProducts = 4;
+                    if ($(this).hasClass('wide')) {
+                        minProducts = 5;
+                    }
                     $(this).elastislide({
                         imageW: imageWidth,
                         minItems: minProducts,
