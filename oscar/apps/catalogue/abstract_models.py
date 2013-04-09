@@ -422,6 +422,7 @@ class AbstractProduct(models.Model):
         if not title and self.parent_id:
             title = self.parent.title
         return title
+    get_title.short_description = _("Title")
 
     def get_product_class(self):
         """
@@ -432,6 +433,7 @@ class AbstractProduct(models.Model):
         if self.parent and self.parent.product_class:
             return self.parent.product_class
         return None
+    get_product_class.short_description = _("Product class")
 
     def get_missing_image(self):
         """
