@@ -62,6 +62,7 @@ compiledmessages:
 
 puppet:
 	# Install puppet modules required to set-up a Vagrant box
+	mkdir -p sites/puppet/modules
 	rm -rf sites/puppet/modules/*
 	puppet module install --target-dir sites/puppet/modules/ saz-memcached -v 2.0.2
 	puppet module install --target-dir sites/puppet/modules/ puppetlabs/mysql
