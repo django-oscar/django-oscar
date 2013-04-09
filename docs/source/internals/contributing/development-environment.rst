@@ -100,17 +100,14 @@ To test the migrations against MySQL and Postgres, do the following:
 Testing WSGI server configurations
 ----------------------------------
 
-You can browse the Oscar sandbox site in two ways:
+You can browse the Oscar sandbox site with different deployment setups. Just
+open up http://localhost:808x on your host machine.
 
-* Start Django's development server on port 8000::
+* Django's development server runs on port 8080.
 
-    vagrant ssh
-    cd /vagrant/sites/sandbox
-    source /var/www/virtualenv/bin/activate
-    ./manage.py runserver 0.0.0.0:8000
+* The Vagrant machine runs Apache2 and mod_wsgi on port 8081.
 
-  The Vagrant machine forwards port 8000 to post 8080 and so the site can be
-  accessed at http://localhost:8080 on your host machine.
+* Nginx acts as a reverse proxy to Apache on port 8082.
 
-* The Vagrant machine installs Apache2 and mod_wsgi.  You can browse the site
-  through Apache at http://localhost:8081 on your host machine.
+* Nginx acts as a reverse proxy to gunicorn on port 8083.
+
