@@ -1,0 +1,11 @@
+{% load i18n %}
+<footer class="footer container-fluid">
+    {% block footer %}
+        <ul class="footer_links">   
+			<li><a href="/about/">{% trans "About" %}</a></li>
+            {# Add link to stores page #}
+			<li><a href="/stores/">{% trans "Stores" %}</a></li>
+            <li class="top_page"><a href="#top_page"><i class="icon-sort-up hidden-phone"></i> {% trans "Top of the page" %}</a></li>
+        </ul>
+    {% endblock %}
+</footer>

@@ -25,7 +25,7 @@ geoip:
 	gunzip GeoLiteCity.dat.gz
 	mv GeoLiteCity.dat sites/demo/geoip
 
-demo: install geoip
+demo: install
 	pip install -r requirements_demo.txt --use-mirrors
 	-rm -f sites/demo/db.sqlite
 	# Create database

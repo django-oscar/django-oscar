@@ -1,4 +1,5 @@
 # We link directly to the master branch of stores to pick up a few Oscar 0.5 fixes.
--e git+https://github.com/tangentlabs/django-oscar-stores@3532f03f9f27b708b6b3f84c7aa917a5712fdd1e#egg=django_oscar_stores-dev
+-e git+https://github.com/tangentlabs/django-oscar-stores@master#egg=django_oscar_stores-dev
 
+# We need PostGIS and all that jazz
 psycopg2==2.5
