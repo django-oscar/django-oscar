@@ -27,14 +27,22 @@ node precise64 {
 	include python_dependencies
 	include userconfig
 
-	# Apache
+	# Apache serving WSGI on port 80 (would prefer 8081)
 	class {"apache": }
 	class {"apache::mod::wsgi": }
 	file {"/etc/apache2/sites-enabled/vagrant.conf":
 	    source => "/vagrant/sites/sandbox/deploy/apache2/vagrant.conf"
 	}
 
-	# Nginx in front of Apache
+	# gunicorn serving WSGI on unix socket
+	class { "python::gunicorn": owner => "root", group => "root" }
+	python::gunicorn::instance { "oscar":
+	  venv => "/var/www/virtualenv",
+	  django => true,
+	  src => "/vagrant/sites/sandbox",
+    }
+
+	# Nginx in front of Apache (port 9001)
 	class { "nginx": }
 	nginx::resource::vhost { 'apache_rp':
 	  ensure => present,
@@ -50,6 +58,28 @@ node precise64 {
 	  'HTTP_HOST' => '$http_host',
 	  },
 	}
+
+	# Nginx in front of gunicorn (port 9002)
+	nginx::resource::vhost { 'gunicorn_rp':
+	  ensure => present,
+	  listen_port => 9002,
+	}
+	nginx::resource::location { 'gunicorn-root':
+	  ensure => present,
+	  vhost => 'gunicorn_rp',
+	  location => '/',
+	  proxy => 'http://app1',
+	  proxy_set_headers => {
+	  'REMOTE_ADDR' => '$remote_addr',
+	  'HTTP_HOST' => '$http_host',
+	  },
+	}
+	nginx::resource::upstream { 'app1':
+       ensure => present,
+       members => [
+       'unix:/run/gunicorn/oscar.sock weight=10',
+       ],
+    }
 
 	# Memcached
 	class {"memcached": max_memory => 64 }

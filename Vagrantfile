@@ -13,6 +13,7 @@ Vagrant::Config.run do |config|
 	config.vm.forward_port 8000, 8080
 	config.vm.forward_port 80, 8081
 	config.vm.forward_port 9001, 9001
+	config.vm.forward_port 9002, 9002
 	#config.vm.boot_mode = :gui
     config.vm.provision :puppet do |puppet|
         puppet.manifests_path = "sites/puppet/manifests"
