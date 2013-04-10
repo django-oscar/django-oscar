@@ -37,21 +37,10 @@
         "model": "catalogue.productclass", 
         "fields": {
             "track_stock": false, 
-            "options": [
-                1
-            ], 
+            "options": [], 
             "requires_shipping": false, 
             "name": "Downloads", 
             "slug": "downloads"
-        }
-    }, 
-    {
-        "pk": 1, 
-        "model": "catalogue.option", 
-        "fields": {
-            "code": "format", 
-            "type": "Required", 
-            "name": "Format"
         }
     }
 ]
