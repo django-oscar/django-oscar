@@ -25,7 +25,7 @@
                     <li><a tabindex="-1" href="{% url catalogue:index %}">{% trans "All" %}</a></li>
                     {% for category in categories %}
                     <li class="dropdown">
-                        <a tabindex="-1" href="{{ category.0.get_absolute_url }}" data-toggle="dropdown" class="dropdown-toggle">{{ category.0.name }} {% if category.1 %}<b class="caret"></b>{% endif %}</a>
+                        <a tabindex="-1" href="{{ category.0.get_absolute_url }}" data-toggle="dropdown" class="dropdown-toggle">{{ category.0.name }} {% if category.1 %}<i class="icon-chevron-down"></i>{% endif %}</a>
                         {% if category.1 %}
                         <ul class="dropdown-menu">
                         {% for subcategory in category.1 %}
