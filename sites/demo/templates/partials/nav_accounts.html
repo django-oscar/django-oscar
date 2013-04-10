@@ -26,21 +26,21 @@
                     <ul class="nav pull-right">
                         {% if user.is_authenticated %}
                             <li>
-                                <a href="{% url customer:summary %}"><i class="icon-user"></i> {% trans "Account" %}</a>
+                                <a href="{% url customer:summary %}">{% trans "Account" %}</a>
                             </li>
                             <li>
                                 <a href="{% url customer:notifications-inbox %}">
-                                    <i class="icon-envelope"></i> {% trans "Notifications" %}
+                                    {% trans "Notifications" %}
                                     {% if num_unread_notifications > 0 %}
                                         <span class="label label-important">{{ num_unread_notifications }}</span>
                                     {% endif %}</a>
                             </li>
                             {% if user.is_staff %}
-                                <li><a href="{% url dashboard:index %}"><i class="icon-list-ul"></i> {% trans "Dashboard" %}</a></li>
+                                <li><a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a></li>
                             {% endif %}
-                            <li><a href="{% url customer:logout %}"><i class="icon-signout"></i> {% trans "Logout" %}</a></li>
+                            <li><a href="{% url customer:logout %}">{% trans "Logout" %}</a></li>
                         {% else %}
-                            <li><a href="{% url customer:login %}"><i class="icon-signin"></i> {% trans "Login or register" %}</a></li>
+                            <li><a href="{% url customer:login %}">{% trans "Login or register" %}</a></li>
                         {% endif %}
                     </ul>
                 </div>

@@ -6,5 +6,25 @@
 
 .navbar-static-top.accounts {
     position: relative;
+    font-size: @fontSizeSmall;
     z-index: 1;
+
+    .nav > li {
+      margin-left: 15px;
+      padding: 15px 0;
+
+      a {
+        padding: 0 0 0 15px;
+        border-left: 1px solid #dedede;
+        color: #6b8ea4;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+
+      &:first-child a {
+        border-left: none;
+      }
+    }
 }
