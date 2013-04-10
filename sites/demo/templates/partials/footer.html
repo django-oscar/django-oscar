@@ -1,11 +1,64 @@
 {% load i18n %}
-<footer class="footer container-fluid">
+<footer class="footer">
+    <div class="container-fluid">
     {% block footer %}
-        <ul class="footer_links">   
-			<li><a href="/about/">{% trans "About" %}</a></li>
-            {# Add link to stores page #}
-			<li><a href="/stores/">{% trans "Stores" %}</a></li>
-            <li class="top_page"><a href="#top_page"><i class="icon-sort-up hidden-phone"></i> {% trans "Top of the page" %}</a></li>
+        <ul class="footer-links"> 
+            <li>
+                <h3>{% trans "About" %}</h3>
+                <ul>
+                    <li><a href="#">{% trans "All" %}</a></li>
+                    <li><a href="#">{% trans "Gill" %}</a></li>
+                    <li><a href="#">{% trans "Henro Lloyd" %}</a></li>
+                    <li><a href="#">{% trans "Zhik" %}</a></li>
+                    <li><a href="#">{% trans "Magic" %}</a></li>
+                </ul>
+            </li>
+            <li>
+                <h3>{% trans "About" %}</h3>
+                <ul>
+                    <li><a href="#">{% trans "All" %}</a></li>
+                    <li><a href="#">{% trans "Gill" %}</a></li>
+                    <li><a href="#">{% trans "Henro Lloyd" %}</a></li>
+                    <li><a href="#">{% trans "Zhik" %}</a></li>
+                    <li><a href="#">{% trans "Magic" %}</a></li>
+                </ul>
+            </li>
+            <li>
+                <h3>{% trans "About" %}</h3>
+                <ul>
+                    <li><a href="#">{% trans "All" %}</a></li>
+                    <li><a href="#">{% trans "Gill" %}</a></li>
+                    <li><a href="#">{% trans "Henro Lloyd" %}</a></li>
+                    <li><a href="#">{% trans "Zhik" %}</a></li>
+                    <li><a href="#">{% trans "Magic" %}</a></li>
+                </ul>
+            </li>
+            <li>
+                <h3>{% trans "About" %}</h3>
+                <ul>
+                    <li><a href="#">{% trans "All" %}</a></li>
+                    <li><a href="#">{% trans "Gill" %}</a></li>
+                    <li><a href="#">{% trans "Henro Lloyd" %}</a></li>
+                    <li><a href="#">{% trans "Zhik" %}</a></li>
+                    <li><a href="#">{% trans "Magic" %}</a></li>
+                </ul>
+            </li>
+            <li>
+                <h3>{% trans "About" %}</h3>
+                <ul>
+                    <li><a href="#">{% trans "All" %}</a></li>
+                    <li><a href="#">{% trans "Gill" %}</a></li>
+                    <li><a href="#">{% trans "Henro Lloyd" %}</a></li>
+                    <li><a href="/about/">{% trans "About" %}</a></li>
+                    <li><a href="/stores/">{% trans "Stores" %}</a></li>
+                </ul>
+            </li>
         </ul>
     {% endblock %}
+    </div>
+    <div class="footer-disclaimer">
+        <div class="container-fluid">
+            <a href="#">Site by Tangent Snowball Australia</a>
+        </div>
+    </div>
 </footer>

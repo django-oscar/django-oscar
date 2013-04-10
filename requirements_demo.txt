@@ -3,3 +3,5 @@
 
 # We need PostGIS and all that jazz
 psycopg2==2.5
+
+git+git://github.com/tinio/pysqlite.git@extension-enabled#egg=pysqlite

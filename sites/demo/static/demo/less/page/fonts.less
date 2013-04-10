@@ -1,0 +1,52 @@
+// FONTS MODIFICATIONS
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,300,700);
+
+@sansFontFamily: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+@headingsFontWeight:    700;
+
+@headingOneSize: 48px;
+@headingTwoSize: 32px;
+@headingThreeSize: 24px;
+@headingFourSize: 16px;
+
+h1 { font-size: @headingOneSize; line-height: 58px; }
+h2 { font-size: @headingTwoSize; line-height: 38px; }
+h3 { font-size: @headingThreeSize; line-height: 30px; }
+h4 { font-size: @headingFourSize; line-height: 20px; }
+
+h1, h2, h3, h4, p {
+    margin:0 0 30px;
+}
+
+h1, h2, h3 {
+    color:@navbarInverseBackground;
+}
+
+h3 {
+    text-transform: uppercase;
+}
+
+
+
+//special cases
+.page-header,
+.sub-header {
+  margin: 0 0 (@baseLineHeight * 1.5);
+}
+.well .sub-header {
+  margin: 0 0 (@baseLineHeight);
+}
+.sub-header {
+  padding-bottom: (@baseLineHeight / 2) - 1;
+  border-bottom: 1px solid @grayLighter;
+}
+.page-header {
+  h1,h2 {
+    margin:0;
+  }
+}
+.sub-header {
+  h2,h3,h4 {
+    margin:0;
+  }
+}

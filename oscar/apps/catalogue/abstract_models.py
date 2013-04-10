@@ -361,7 +361,7 @@ class AbstractProduct(models.Model):
                 if variant.is_available_to_buy:
                     return True
             return False
-        if not self.product_class.track_stock:
+        if self.get_product_class().track_stock:
             return True
         return self.has_stockrecord and self.stockrecord.is_available_to_buy
 
@@ -405,9 +405,14 @@ class AbstractProduct(models.Model):
     add_category_from_breadcrumbs.alters_data = True
 
     def attribute_summary(self):
-        u"""Return a string of all of a product's attributes"""
-        return ", ".join([
-            attribute.__unicode__() for attribute in self.attributes.all()])
+        """
+        Return a string of all of a product's attributes
+        """
+        pairs = []
+        for value in self.attribute_values.select_related().all():
+            pairs.append("%s: %s" % (value.attribute.name,
+                                     value.value))
+        return ", ".join(pairs)
 
     def get_title(self):
         """
@@ -417,6 +422,7 @@ class AbstractProduct(models.Model):
         if not title and self.parent_id:
             title = self.parent.title
         return title
+    get_title.short_description = _("Title")
 
     def get_product_class(self):
         """
@@ -427,6 +433,7 @@ class AbstractProduct(models.Model):
         if self.parent and self.parent.product_class:
             return self.parent.product_class
         return None
+    get_product_class.short_description = _("Product class")
 
     def get_missing_image(self):
         """
@@ -562,7 +569,7 @@ class ProductAttributesContainer(object):
             if value is None:
                 if attribute.required:
                     raise ValidationError(
-                        _("%(attr)s attribute cannot be blanke") %
+                        _("%(attr)s attribute cannot be blank") %
                         {'attr': attribute.code})
             else:
                 try:
@@ -635,6 +642,10 @@ class AbstractProductAttribute(models.Model):
         ordering = ['code']
         verbose_name = _('Product Attribute')
         verbose_name_plural = _('Product Attributes')
+
+    @property
+    def is_option(self):
+        return self.type == "option"
 
     def _validate_text(self, value):
         if not (type(value) == unicode or type(value) == str):
