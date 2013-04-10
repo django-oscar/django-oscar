@@ -29,20 +29,17 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
             return categories[0].full_name
 
     def prepare_price(self, obj):
-        if obj.has_stockrecord:
+        if obj.is_top_level and obj.has_stockrecord:
             return obj.stockrecord.price_incl_tax
+        elif obj.is_group:
+            return obj.min_variant_price_incl_tax
 
     def prepare_num_in_stock(self, obj):
         if obj.has_stockrecord:
             return obj.stockrecord.num_in_stock
 
     def index_queryset(self, using=None):
-        """
-        Used when the entire index for model is updated.
-
-        Orders by the most recently updated so that new objects are indexed
-        first
-        """
+        # Only index browsable products (not each individual variant)
         return self.get_model().browsable.order_by('-date_updated')
 
     def get_updated_field(self):
