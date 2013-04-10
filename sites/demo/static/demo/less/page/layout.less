@@ -1,0 +1,54 @@
+//Colors Reset
+@green: #4CA84C;
+@blue: #337ABF;
+@blueDark:#024872;
+@gray: #8E8E8E;
+@grayOff:#97A5A3;
+@textColor: #595959;
+@linkColor: @blue;
+@bodyBackground:  @white;
+@navbarInverseBackground:#10283F;
+@navbarBackground: @white;
+
+// OSCAR PAGE STRUCTURE
+// -----------
+.container-fluid {
+  //Unique styles
+  padding:0px;
+  margin:0px auto;
+  max-width:1170px;
+}
+.page {
+}
+.page_inner {
+   padding:@gridGutterWidth;
+   .clearfix();
+}
+
+// PRICE SIZE/COLOR
+.price_color {
+  display:block;
+  color:@green;
+  font-weight:bold;
+}
+.product_pod .price_color { margin-top:0 }
+.es-carousel .price_color { font-size:20px; }
+
+
+// UTILITY CLASSES
+// ---------------
+.pull-clear {
+  clear: both;
+}
+.align-right,
+.table .align-right,
+.table .align-right {
+  text-align:right;
+}
+
+.align-center,
+.table .align-center,
+.table .align-center {
+  text-align:center;
+}
+

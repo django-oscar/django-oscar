@@ -1,12 +1,35 @@
 // OSCAR HEADER
 // -----------
 .header {
-  position:relative;
-  z-index:2;
-  h1 {
-    line-height:inherit;
+  
+}
+.header-content {
+  height:108px;
+  position: relative;
+  margin-bottom:20px;
+  h3 {
+    font-weight: 300;
+    text-transform: capitalize;
+    font-size: @baseFontSize;
+    line-height: @baseFontSize;
     margin:0;
-    font-size:30px;
+    margin-left:160px;
+    position: absolute;
+    bottom:0;
+  }
+  .logo {
+    float:left;
+  }
+  > div {
+    .clearfix();
+    width:50%;
+    position:absolute;
+    bottom:0;
+    right:0;
+    &:first-child {
+      right:auto;
+      left:0;
+    }
   }
 }
 .cart {
@@ -92,29 +115,36 @@
 }
 // OSCAR FOOTER UNIQUE STYLES
 // -----------
-.footer_links {
-  .horiz_col();
-  .clearfix();
-  border-bottom:1px solid lighten(@black, 80%);
-  padding:@baseFontSize;
-  margin-bottom:@baseLineHeight;
-  li {
-    margin-left:10px;
-    padding-left:10px;
-    border-left:1px solid lighten(@black, 80%);
-  }
-  li:first-child,
-  li:last-child {
-    margin-left:0px;
-    padding-left:0px;
-    border-left:none;
-  }
-  .top_page {
-    float:right;
+.footer {
+  background: url(/static/demo/img/ui/wavecut-blue.png) 0 0 repeat @blueDark;
+  a {
+    color:@white;
   }
 }
-// OSCAR DROPDOWN NAVBAR
-// -----------
-#browse > .dropdown-menu {
-  top: 109%;
+.footer-links {
+  padding:40px 0;
+  margin-left:0;
+  .clearfix();
+  a {
+    display:block;
+    padding:5px 0;
+  }
+  h3{
+    font-size: @headingFourSize;
+    color:@white;
+    margin-bottom:20px;
+  }
+  ul {
+    margin-left: 0;
+  }
+  li {
+    list-style: none;
+  }
+    > li {
+    float:left;
+    width:20%;
+  }
+}
+.footer-disclaimer {
+  background:#091624;
 }
