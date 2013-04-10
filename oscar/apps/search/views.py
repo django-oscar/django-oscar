@@ -3,20 +3,20 @@ import json
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic.base import View
 from django.conf import settings
+from django.db.models import get_model
 from haystack.query import SearchQuerySet
-from haystack.views import FacetedSearchView
+from haystack import views
+from purl import URL
 
-from oscar.core.loading import import_module
-product_models = import_module('catalogue.models', ['Product'])
+Product = get_model('catalogue', 'Product')
 
 
 class SuggestionsView(View):
-    u"""
+    """
     Auto suggest view
 
-    Returns the suggestions in JSON format (especially suited for consumption by
-    jQuery autocomplete)
-    """
+    Returns the suggestions in JSON format (especially suited for consumption
+    by jQuery autocomplete) """
 
     suggest_limit = settings.OSCAR_SEARCH_SUGGEST_LIMIT
 
@@ -28,8 +28,9 @@ class SuggestionsView(View):
         '''
         Creates a list of suggestions
         '''
-        query_term = self.request.GET['query_term'];
-        query_set = SearchQuerySet().filter(text__contains=query_term)[:self.suggest_limit]
+        query_term = self.request.GET['query_term']
+        query_set = SearchQuerySet().filter(text__contains=query_term)[
+            :self.suggest_limit]
         context = []
         for item in query_set:
             context.append({
@@ -53,6 +54,43 @@ class SuggestionsView(View):
         return json.dumps(context)
 
 
+class FacetedSearchView(views.FacetedSearchView):
+
+    def extra_context(self):
+        extra = super(FacetedSearchView, self).extra_context()
+
+        # Convert facet data into a more useful datastructure
+        facet_data = {}
+        base_url = URL(self.request.get_full_path())
+        selected = dict(
+            map(lambda x: x.split(':'), self.form.selected_facets))
+        for field, facets in extra['facets']['fields'].items():
+            facet_data[field] = []
+            for name, count in facets:
+                field_filter = '%s_exact' % field
+                datum = {
+                    'name': name,
+                    'count': count}
+                if selected.get(field_filter, None) == name:
+                    # This filter is selected - build the 'deselect' URL
+                    datum['selected'] = True
+                    url = base_url.remove_query_param(
+                        'selected_facets', '%s:%s' % (
+                            field_filter, name))
+                    datum['deselect_url'] = url.as_string()
+                else:
+                    # This filter is not selected - built the 'select' URL
+                    datum['selected'] = False
+                    url = base_url.append_query_param(
+                        'selected_facets', '%s:%s' % (
+                            field_filter, name))
+                    datum['select_url'] = url.as_string()
+                facet_data[field].append(datum)
+        extra['facet_data'] = facet_data
+
+        return extra
+
+
 class MultiFacetedSearchView(FacetedSearchView):
     """
     Search view for multifaceted searches
@@ -68,9 +106,9 @@ class MultiFacetedSearchView(FacetedSearchView):
         # Look for UPC match
         query = request.GET.get('q', '').strip()
         try:
-            item = product_models.Product._default_manager.get(upc=query)
+            item = Product._default_manager.get(upc=query)
             return HttpResponseRedirect(item.get_absolute_url())
-        except product_models.Product.DoesNotExist:
+        except Product.DoesNotExist:
             pass
         return super(MultiFacetedSearchView, self).__call__(request, *args, **kwargs)
 
@@ -79,9 +117,9 @@ class MultiFacetedSearchView(FacetedSearchView):
         return "MultiFacetedSearchView"
 
     def extra_context(self):
-        '''
+        """
         Adds details about the facets applied
-        '''
+        """
         extra = super(MultiFacetedSearchView, self).extra_context()
 
         if hasattr(self.form, 'cleaned_data') and 'selected_facets' in self.form.cleaned_data:

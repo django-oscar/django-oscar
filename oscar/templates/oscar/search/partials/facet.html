@@ -1,0 +1,14 @@
+<dt>{{ name }}</dt>
+{% for item in items %}
+<dd>
+    {% if item.selected %}
+        <strong>{{ item.name }} ({{ item.count }})</strong>
+        <a href="{{ item.deselect_url }}">Remove</a>
+    {% else %}
+        {% if item.count > 0 %}
+            <a href="{{ item.select_url }}">{{ item.name }}</a> ({{ item.count }})</dd>
+        {% endif %}
+    {% endif %}
+</dd>
+{% endfor %}
+

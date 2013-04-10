@@ -313,6 +313,10 @@ class AbstractProduct(models.Model):
     objects = models.Manager()
     browsable = BrowsableProductManager()
 
+    def __init__(self, *args, **kwargs):
+        super(AbstractProduct, self).__init__(*args, **kwargs)
+        self.attr = ProductAttributesContainer(product=self)
+
     # Properties
 
     @property
@@ -367,7 +371,9 @@ class AbstractProduct(models.Model):
 
     @property
     def min_variant_price_incl_tax(self):
-        """Return minimum variant price including tax"""
+        """
+        Return minimum variant price including tax
+        """
         return self._min_variant_price('price_incl_tax')
 
     @property
@@ -458,7 +464,9 @@ class AbstractProduct(models.Model):
     # Helpers
 
     def _min_variant_price(self, property):
-        u"""Return minimum variant price"""
+        """
+        Return minimum variant price
+        """
         prices = []
         for variant in self.variants.all():
             if variant.has_stockrecord:
@@ -485,10 +493,6 @@ class AbstractProduct(models.Model):
         return ('catalogue:detail', (), {
             'product_slug': self.slug,
             'pk': self.id})
-
-    def __init__(self, *args, **kwargs):
-        super(AbstractProduct, self).__init__(*args, **kwargs)
-        self.attr = ProductAttributesContainer(product=self)
 
     def save(self, *args, **kwargs):
         if self.is_top_level and not self.title:
