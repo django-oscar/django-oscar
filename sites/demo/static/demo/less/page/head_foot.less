@@ -1,7 +1,7 @@
 // OSCAR HEADER
 // -----------
 .header {
-  
+
 }
 .header-content {
   height:108px;
@@ -115,7 +115,14 @@
 }
 // OSCAR FOOTER UNIQUE STYLES
 // -----------
+#faux-foot {
+  height: @footer-height;
+}
+
 .footer {
+  position: relative;
+  clear: both;
+  height: @footer-height;
   background: url(/static/demo/img/ui/wavecut-blue.png) 0 0 repeat @blueDark;
   a {
     color:@white;
@@ -146,5 +153,8 @@
   }
 }
 .footer-disclaimer {
-  background:#091624;
+  font-size: @fontSizeSmall;
+  line-height: @baseLineHeight * 2;
+  text-align: right;
+  background: #091624;
 }

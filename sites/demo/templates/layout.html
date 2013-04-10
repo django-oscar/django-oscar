@@ -4,47 +4,51 @@
 {% load i18n %}
 
 {% block layout %}
-    <header class="header">
-        {% include "partials/nav_accounts.html" %}
-        <div class="container-fluid">
-            <div class="header-content">
-                <div>
-                    {% include "partials/brand.html" %}
-                    {% block brand_title %}<h3>{% trans "The largest ranges of nautical accessories online" %}{{ shop_tagline }}</h3>{% endblock %}               
-                </div>
-                <div>
-                    {# Mini-basket wrapped in a block so some templates can now display it #}
-                    {% block mini_basket %}{% include "partials/mini_basket.html" %}{% endblock %}
-                </div>
-             </div>
-        </div>
-        {% category_tree depth=2 as categories %}
-        {% block navigation %}
-            {% include "partials/nav_primary.html" %}
-        {% endblock %}
-    </header>
+    <div id="layout">
+        <header class="header">
+            {% include "partials/nav_accounts.html" %}
+            <div class="container-fluid">
+                <div class="header-content">
+                    <div>
+                        {% include "partials/brand.html" %}
+                        {% block brand_title %}<h3>{% trans "The largest ranges of nautical accessories online" %}{{ shop_tagline }}</h3>{% endblock %}
+                    </div>
+                    <div>
+                        {# Mini-basket wrapped in a block so some templates can now display it #}
+                        {% block mini_basket %}{% include "partials/mini_basket.html" %}{% endblock %}
+                    </div>
+                 </div>
+            </div>
+            {% category_tree depth=2 as categories %}
+            {% block navigation %}
+                {% include "partials/nav_primary.html" %}
+            {% endblock %}
+        </header>
 
-    {% block content_wrapper %}
-    <div class="page">
-        <div class="container-fluid">
-            <div class="page_inner">
-                {% block breadcrumbs %}{% endblock %}
-                {% block header %}
-                <div class="page-header action">
-                    <h1>{% block headertext %}{% endblock %}</h1>
-                </div>
-                {% endblock %}
-                {% include "partials/alert_messages.html" %}
-                {% block subnavigation %}{% endblock %}
-                <div class="content">
-                    {% block subheader %}{% endblock subheader %}
-                    {# Div exists for AJAX updates to entire content section #}
-                    <div id="content_inner">{% block content %}{% endblock %}</div>
+        {% block content_wrapper %}
+        <div class="page">
+            <div class="container-fluid">
+                <div class="page_inner">
+                    {% block breadcrumbs %}{% endblock %}
+                    {% block header %}
+                    <div class="page-header action">
+                        <h1>{% block headertext %}{% endblock %}</h1>
+                    </div>
+                    {% endblock %}
+                    {% include "partials/alert_messages.html" %}
+                    {% block subnavigation %}{% endblock %}
+                    <div class="content">
+                        {% block subheader %}{% endblock subheader %}
+                        {# Div exists for AJAX updates to entire content section #}
+                        <div id="content_inner">{% block content %}{% endblock %}</div>
+                    </div>
                 </div>
             </div>
         </div>
+        {% endblock %}
+
+        <div id="faux-foot"></div>
     </div>
-    {% endblock %}
 
     {% include "partials/footer.html" %}
 {% endblock %}
