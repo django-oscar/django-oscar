@@ -216,6 +216,7 @@ INSTALLED_APPS = [
     'south',
     # Oscar extensions
     'stores',
+    'paypal',
     # External apps
     'django_extensions',
     'debug_toolbar',

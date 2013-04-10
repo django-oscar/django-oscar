@@ -20,6 +20,9 @@ urlpatterns = patterns('',
     (r'^stores/', include(stores_app.urls)),
     (r'^dashboard/stores/', include(dashboard_app.urls)),
 
+    # PayPal extension
+    (r'^checkout/paypal/', include('paypal.express.urls')),
+
     (r'', include(application.urls)),
 )
 
