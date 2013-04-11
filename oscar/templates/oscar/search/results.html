@@ -29,13 +29,10 @@
                 {% include 'search/partials/facet.html' with name='Category' items=facet_data.category %}
             {% endif %}
 
-            {% if facet_data.num_in_stock %}
-                {% include 'search/partials/facet.html' with name='Stock level' items=facet_data.num_in_stock %}
+            {% if facet_data.price_range %}
+                {% include 'search/partials/facet.html' with name='Price range' items=facet_data.price_range %}
             {% endif %}
 
-            {% if facet_data.price %}
-                {% include 'search/partials/facet.html' with name='Price' items=facet_data.price %}
-            {% endif %}
         </dl>
     </div>
 {% endblock %}

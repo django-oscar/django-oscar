@@ -86,6 +86,19 @@ class FacetedSearchView(views.FacetedSearchView):
                             field_filter, name))
                     datum['select_url'] = url.as_string()
                 facet_data[field].append(datum)
+
+        # Price ranges
+        facet_data['price_range'] = []
+        for query, count in extra['facets']['queries'].items():
+            datum = {
+                'name': query,
+                'count': count}
+            datum['selected'] = False
+            url = base_url.append_query_param(
+                'selected_facets', 'price_exact:%s' % query)
+            datum['select_url'] = url.as_string()
+            facet_data['price_range'].append(datum)
+
         extra['facet_data'] = facet_data
 
         return extra
