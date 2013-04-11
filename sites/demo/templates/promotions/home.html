@@ -1,1 +1,15 @@
 {% extends "layout.html" %}
+{% load staticfiles %}
+
+{% block page_promotions %}
+<div id="homepage-carousel" class="flexslider">
+    <ul class="slides">
+        <li>
+            <a href="#"><img src="{% static "demo/img/carousel/homepage-banners-01.jpg" %}" class="logo" alt="{{ shop_name }} - {{ shop_tagline }}"  width="140" height="108" /></a>
+        </li>
+        <li>
+            <a href="#"><img src="{% static "demo/img/carousel/homepage-banners-02.jpg" %}" class="logo" alt="{{ shop_name }} - {{ shop_tagline }}"  width="140" height="108" /></a>
+        </li>
+    </ul>
+</div>
+{% endblock %}

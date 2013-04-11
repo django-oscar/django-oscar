@@ -7,7 +7,13 @@
 .navbar-static-top.accounts {
     position: relative;
     font-size: @fontSizeSmall;
+    margin-bottom:-40px;
     z-index: 1;
+
+    .navbar-inner {
+        background:transparent;
+        filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+    }
 
     .nav > li {
         margin-left: 15px;
@@ -32,6 +38,11 @@
 .navbar.primary {
     .navbar-inner {
         min-height: 60px;
+    }
+
+    .nav > li > a,
+    .dropdown-menu > li > a {
+        font-weight: bold;
     }
 
     .nav > li > a {
@@ -74,9 +85,20 @@
     .dropdown-menu > li > a {
         padding: (@baseLineHeight / 2) @baseLineHeight;
         color: @white;
+        position: relative;
+        padding-right:30px;
 
         &:hover {
             background: #0e263f;
+            i {
+                display:inline-block;
+            }
+        }
+        i {
+            position: absolute;
+            right:12px;
+            top:12px;
+            display:none;
         }
     }
 }

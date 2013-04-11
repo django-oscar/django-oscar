@@ -20,6 +20,30 @@
   .logo {
     float:left;
   }
+  .btn {
+    padding:4px 16px;
+    background: @blueDark;
+    span {
+      font-weight: normal;
+      margin-right:5px;
+    }
+  }
+  i {
+    font-size: @headingThreeSize;
+    color:@blue;
+    margin-right:5px;
+    vertical-align: top;
+  }
+  i, span {
+    display:inline-block;
+  }
+  p {
+    font-weight: 300;
+    float:right;
+    margin-bottom:0;
+    line-height: @baseFontSize;
+    margin-left:20px;
+  }
   > div {
     .clearfix();
     width:50%;
@@ -29,87 +53,6 @@
     &:first-child {
       right:auto;
       left:0;
-    }
-  }
-}
-.cart {
-  margin:0px;
-  .clearfix();
-  .cart_summary {
-    strong {
-      padding: 4px 10px 4px;
-      display:block;
-      span {
-        font-weight:normal;
-      }
-    }
-  }
-  li {
-    display:block;
-    float:right;
-    .btn-group {
-      white-space: normal;
-      .dropdown-menu {
-        width:400px;
-        padding-bottom:0px;
-        max-width:none;
-        li {
-          float:none;
-          display:block;
-        }
-      }
-    }
-  }
-}
-.basket_item {
-  margin:0px;
-  li {
-    width:auto;
-    border-top:1px solid @grayLighter;
-    padding:10px 15px;
-    &:first-child { border-top:none; }
-  }
-  .image_container {
-    min-height: 70px;
-    img {
-      max-height: 70px;
-    }
-    a {
-      padding:0;
-    }
-  }
-  .form-actions {
-    -webkit-border-radius: 0 0px 6px 6px;
-    -moz-border-radius: 0 0px 6px 6px;
-    border-radius: 0 0px 6px 6px;
-    p {
-     .clearfix();
-     .btn {
-       float:right;
-     }
-    }
-    margin:0px;
-    h4 {
-      text-align:right;
-      margin-bottom:@baseFontSize;
-      small {
-        display:block;
-      }
-    }
-  }
-  a {
-    color:@linkColor;
-    font-weight:inherit;
-    white-space:normal;
-    &.btn {
-      color:#fff;
-    }
-  }
-  h4 {
-    font-size:14px;
-    margin:0;
-    a {
-      padding:0px;
     }
   }
 }
@@ -124,6 +67,7 @@
   clear: both;
   height: @footer-height;
   background: url(/static/demo/img/ui/wavecut-blue.png) 0 0 repeat @blueDark;
+  color:@white;
   a {
     color:@white;
   }
@@ -132,24 +76,37 @@
   padding:40px 0;
   margin-left:0;
   .clearfix();
-  a {
-    display:block;
-    padding:5px 0;
-  }
   h3{
     font-size: @headingFourSize;
     color:@white;
     margin-bottom:20px;
+    text-transform: capitalize;
   }
   ul {
     margin-left: 0;
   }
   li {
     list-style: none;
+    > a {
+      display:block;
+      padding:5px 0;
+    }
   }
-    > li {
+  > li {
     float:left;
     width:20%;
+  }
+  strong {
+    display:block;
+    margin-top:10px;
+  }
+}
+.social-icons {
+  font-size:@headingTwoSize;
+  a {
+    &:hover {
+      text-decoration: none;
+    } 
   }
 }
 .footer-disclaimer {
