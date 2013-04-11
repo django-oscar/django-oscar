@@ -1,4 +1,5 @@
 from decimal import Decimal as D
+import datetime
 
 from oscar.apps.dashboard.reports.csv_utils import CsvUnicodeReader
 from oscar.apps.catalogue import models, categories
@@ -52,6 +53,8 @@ class Importer(object):
                     code=code)
                 if attr.is_option:
                     value = attr.option_group.options.get(option=value)
+                if attr.type == 'date':
+                    value = datetime.datetime.strptime(value, "%d/%m/%Y").date()
                 setattr(product.attr, code, value)
 
         # Assign parent for variants

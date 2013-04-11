@@ -31,6 +31,19 @@
         }
     }, 
     {
+        "pk": 8,
+        "model": "catalogue.productattribute",
+        "fields": {
+            "code": "author",
+            "product_class": 2,
+            "entity_type": null,
+            "option_group": null,
+            "required": false,
+            "type": "text",
+            "name": "Author"
+        }
+    },
+    {
         "pk": 1, 
         "model": "catalogue.productattribute", 
         "fields": {
@@ -83,6 +96,19 @@
         }
     }, 
     {
+        "pk": 6,
+        "model": "catalogue.productattribute",
+        "fields": {
+            "code": "publication_date",
+            "product_class": 2,
+            "entity_type": null,
+            "option_group": null,
+            "required": false,
+            "type": "date",
+            "name": "Publication Date"
+        }
+    },
+    {
         "pk": 5, 
         "model": "catalogue.productattribute", 
         "fields": {
@@ -96,7 +122,7 @@
         }
     }, 
     {
-        "pk": 6, 
+        "pk": 9,
         "model": "catalogue.productattribute", 
         "fields": {
             "code": "size", 
@@ -106,6 +132,19 @@
             "required": false, 
             "type": "text", 
             "name": "Size"
+        }
+    },
+    {
+        "pk": 7,
+        "model": "catalogue.productattribute",
+        "fields": {
+            "code": "weight",
+            "product_class": 2,
+            "entity_type": null,
+            "option_group": null,
+            "required": false,
+            "type": "integer",
+            "name": "Weight"
         }
     }
 ]
