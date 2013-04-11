@@ -1,5 +1,6 @@
-// OSCAR PLUGINS STYLES
-// -----------
+//We might delete most of this as will probably use 
+//flexslider for every carousel, which default style are almost spot on.
+
 /* Elastislide Style */
 .es-carousel-wrapper {
   padding:1px 20px;
@@ -257,4 +258,25 @@
 .product_pod .star.Five,
 .promotion_single .star.Five {
 	background-position: 0px -75px;
+}
+
+//Flexslider Overrides
+#homepage-carousel {
+    .flex-control-nav { 
+        bottom: 30px; 
+    }
+    .flex-direction-nav a { 
+        width: 67px; 
+        height: 67px; 
+        background: url(/static/demo/js/flexslider/homepage-nav.png) no-repeat 0 0; 
+        top: 45%;
+    }
+    .flex-direction-nav .flex-next {
+        background-position: 100% 0; 
+        right: 20px; 
+    }
+    .flex-direction-nav .flex-prev {
+        left: 20px;
+    }
+
 }
