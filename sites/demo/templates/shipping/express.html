@@ -1,0 +1,8 @@
+{% load currency_filters %}
+This is express shipping.  Should reach you within 48 hours.
+
+<p>
+    {% with cost=1.50 %}
+    It costs {{ cost|currency }} per item.
+    {% endwith %}
+</p>
