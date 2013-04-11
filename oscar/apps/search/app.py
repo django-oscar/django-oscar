@@ -1,4 +1,5 @@
 from django.conf.urls import patterns, url
+from django.conf import settings
 
 from oscar.core.application import Application
 from oscar.apps.search import views, forms
@@ -11,13 +12,13 @@ class SearchApplication(Application):
     search_view = views.MultiFacetedSearchView
 
     def get_urls(self):
-        # Set the fields to facet on
-        sqs = (SearchQuerySet().facet('price')
-                               .facet('num_in_stock')
-                               .facet('category')
-                               .query_facet('price_exact', '[0 TO 20]')
-                               .query_facet('price_exact', '[20 TO 40]')
-                               .query_facet('price_exact', '[40 TO 60]'))
+        # Build SQS
+        sqs = SearchQuerySet()
+        for facet in settings.OSCAR_SEARCH_FACETS['fields'].values():
+            sqs = sqs.facet(facet['field'])
+        for facet in settings.OSCAR_SEARCH_FACETS['queries'].values():
+            for query in facet['queries']:
+                sqs = sqs.query_facet(facet['field'], query[1])
 
         # The form class has to be passed to the __init__ method as that is how
         # Haystack works.  It's slightly different to normal CBVs.

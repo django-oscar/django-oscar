@@ -60,6 +60,8 @@ class FacetedSearchView(views.FacetedSearchView):
         extra = super(FacetedSearchView, self).extra_context()
 
         # Convert facet data into a more useful datastructure
+
+        # Field facets
         facet_data = {}
         base_url = URL(self.request.get_full_path())
         selected = dict(
@@ -67,6 +69,9 @@ class FacetedSearchView(views.FacetedSearchView):
         for field, facets in extra['facets']['fields'].items():
             facet_data[field] = []
             for name, count in facets:
+                # Ignore zero-count facets for field
+                if count == 0:
+                    continue
                 field_filter = '%s_exact' % field
                 datum = {
                     'name': name,
@@ -87,17 +92,34 @@ class FacetedSearchView(views.FacetedSearchView):
                     datum['select_url'] = url.as_string()
                 facet_data[field].append(datum)
 
-        # Price ranges
-        facet_data['price_range'] = []
-        for query, count in extra['facets']['queries'].items():
-            datum = {
-                'name': query,
-                'count': count}
-            datum['selected'] = False
-            url = base_url.append_query_param(
-                'selected_facets', 'price_exact:%s' % query)
-            datum['select_url'] = url.as_string()
-            facet_data['price_range'].append(datum)
+        # Query facets
+        for key, facet in settings.OSCAR_SEARCH_FACETS['queries'].items():
+            facet_data[key] = []
+            for name, query in facet['queries']:
+                field_filter = '%s_exact' % facet['field']
+                match = '%s_exact:%s' % (facet['field'], query)
+                if not match in extra['facets']['queries']:
+                    datum = {
+                        'name': name,
+                        'count': 0,
+                    }
+                else:
+                    datum = {
+                        'name': name,
+                        'count': extra['facets']['queries'][match],
+                    }
+                    if selected.get(field_filter, None) == query:
+                        # Selected
+                        datum['selected'] = True
+                        url = base_url.remove_query_param(
+                            'selected_facets', match)
+                        datum['deselect_url'] = url.as_string()
+                    else:
+                        datum['selected'] = False
+                        url = base_url.append_query_param(
+                            'selected_facets', match)
+                        datum['select_url'] = url.as_string()
+                    facet_data[key].append(datum)
 
         extra['facet_data'] = facet_data
 

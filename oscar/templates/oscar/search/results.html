@@ -23,22 +23,23 @@
 {% endblock %}
 
 {% block column_left %}
-    <div>
-        <dl>
-            {% if facet_data.category %}
-                {% include 'search/partials/facet.html' with name='Category' items=facet_data.category %}
-            {% endif %}
+    {# TODO - generate this block automatically using the facets setting #}
+    <h4>{% trans "Refine your search" %}</h4>
+    <dl>
+        {% if facet_data.category %}
+            {% include 'search/partials/facet.html' with name='Category' items=facet_data.category %}
+        {% endif %}
 
-            {% if facet_data.price_range %}
-                {% include 'search/partials/facet.html' with name='Price range' items=facet_data.price_range %}
-            {% endif %}
-
-        </dl>
-    </div>
+        {% if facet_data.price_range %}
+            {% include 'search/partials/facet.html' with name='Price range' items=facet_data.price_range %}
+        {% endif %}
+    </dl>
 {% endblock %}
 
 {% block headertext %}
-	{% trans 'Search for' %} '{{ query }}'
+    {% blocktrans with q=query %}
+    Products matching "{{ q }}"
+    {% endblocktrans %}
 {% endblock %}
 
 {% block content %}
