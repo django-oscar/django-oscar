@@ -1,0 +1,19 @@
+{% extends 'oscar/checkout/payment_details.html' %}
+{% load i18n %}
+
+{% block payment_details_content %}
+    <h3>Pay with a bankcard</h3>
+    <form action="{% url checkout:preview %}" class="form-horizontal" method="post">
+        <div class="well well-info">
+            {% csrf_token %}
+            {% include 'partials/form_fields.html' with form=bankcard_form %}
+            <div class="form-actions">
+                <button type="submit" class="btn btn-large btn-primary">{% trans "Continue" %}</button>
+            </div>
+            <div class="alert alert-warning">
+                <h4>{% trans "Help" %}</h4>
+                <p>{% trans "You can use a magic card number of 1000010000000007." %}</p>
+            </div>
+        </div>
+    </form>
+{% endblock %}

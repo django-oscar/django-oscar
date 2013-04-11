@@ -119,7 +119,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
-    #'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'oscar.apps.basket.middleware.BasketMiddleware',
 )
 
@@ -217,6 +217,7 @@ INSTALLED_APPS = [
     # Oscar extensions
     'stores',
     'paypal',
+    'datacash',
     # External apps
     'django_extensions',
     'debug_toolbar',
@@ -281,7 +282,8 @@ OSCAR_MISSING_IMAGE_URL = 'image_not_found.jpg'
 
 # Add stores node to navigation
 from django.utils.translation import ugettext_lazy as _
-OSCAR_DASHBOARD_NAVIGATION.append(
+new_nav = OSCAR_DASHBOARD_NAVIGATION
+new_nav.append(
     {
         'label': _('Stores'),
         'icon': 'icon-shopping-cart',
@@ -296,6 +298,18 @@ OSCAR_DASHBOARD_NAVIGATION.append(
             },
         ]
     })
+new_nav.append(
+    {
+        'label': 'Datacash',
+        'icon': 'icon-globe',
+        'children': [
+            {
+                'label': 'Transactions',
+                'url_name': 'datacash-transaction-list',
+            },
+        ]
+    })
+OSCAR_DASHBOARD_NAVIGATION = new_nav
 
 GEOIP_PATH = os.path.join(os.path.dirname(__file__), 'geoip')
 
