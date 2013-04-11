@@ -522,6 +522,8 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             msg = unicode(e)
             logger.warning("Order #%s: unable to take payment (%s) - restoring basket", order_number, msg)
             self.restore_frozen_basket()
+            # We re-render the payment details view
+            self.preview = False
             return self.render_to_response(self.get_context_data(error=msg))
         except PaymentError, e:
             # A general payment error - Something went wrong which wasn't
@@ -533,6 +535,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             msg = unicode(e)
             logger.error("Order #%s: payment error (%s)", order_number, msg)
             self.restore_frozen_basket()
+            self.preview = False
             return self.render_to_response(self.get_context_data(error=error_msg))
         except Exception, e:
             # Unhandled exception - hopefully, you will only ever see this in
@@ -540,6 +543,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             logger.error("Order #%s: unhandled exception while taking payment (%s)", order_number, e)
             logger.exception(e)
             self.restore_frozen_basket()
+            self.preview = False
             return self.render_to_response(self.get_context_data(error=error_msg))
         post_payment.send_robust(sender=self, view=self)
 
