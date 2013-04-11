@@ -30,7 +30,7 @@ need to capture the attributes of your product types within your models.  Oscar
 divides products into 'product classes' which each have their own set of
 attributes.  
 
-* :doc:`/howto/how_to_model_your_catalogue`
+* :doc:`/howto/how_to_customise_models`
 * :doc:`/howto/importing_a_catalogue`
 
 How is your catalogue organised?
@@ -46,9 +46,7 @@ theme, by product type).  Other questions to consider:
 * Can a category sit in more than one place within the tree?  (e.g., a "children's fiction" category
   might sit beneath "children's books" and "fiction").
 
-* :doc:`/howto/how_to_customise_an_app`
-* :doc:`/howto/how_to_customise_models`
-* :doc:`/howto/how_to_override_a_core_class`
+* :doc:`/topics/customisation`
 
 How are products managed?
 -------------------------

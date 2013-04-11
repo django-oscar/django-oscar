@@ -26,7 +26,6 @@ Catalogue
     :maxdepth: 1
 
     how_to_create_categories
-    how_to_model_your_catalogue
     importing_a_catalogue
 
 Pricing, stock and availability
