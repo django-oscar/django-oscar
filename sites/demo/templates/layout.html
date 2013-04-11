@@ -1,7 +1,13 @@
 {% extends "base.html" %}
 {% load compress %}
 {% load category_tags %}
+{% load staticfiles %}
 {% load i18n %}
+
+{% block extrahead %}
+    <script src="{% static "demo/js/modernizr/modernizr.js" %}" type="text/javascript" charset="utf-8"></script>    
+    <!--[if lte IE 7]><script src="{% static "demo/fonts/lte-ie7.js" %}"></script><![endif]-->
+{% endblock %}
 
 {% block layout %}
     <div id="layout">
@@ -14,8 +20,9 @@
                         {% block brand_title %}<h3>{% trans "The largest ranges of nautical accessories online" %}{{ shop_tagline }}</h3>{% endblock %}
                     </div>
                     <div>
-                        {# Mini-basket wrapped in a block so some templates can now display it #}
-                        {% block mini_basket %}{% include "partials/mini_basket.html" %}{% endblock %}
+                        {% block mini_basket %}<p><i class="icon-cart"></i>{% include "partials/mini_basket.html" %}</p>{% endblock %}
+                        <p><i class="icon-mobile"></i> <span>{% trans "Customer Service" %} <br/> <strong>1-800-424-1324</strong></span></p>
+                        <p><i class="icon-lock"></i> <span>{% trans "Secure by" %} <br/> <strong>{% trans "VeriSign" %}</strong></span></p>
                     </div>
                  </div>
             </div>
@@ -26,6 +33,7 @@
         </header>
 
         {% block content_wrapper %}
+        {% block page_promotions %}{% endblock %}   
         <div class="page">
             <div class="container-fluid">
                 <div class="page_inner">
@@ -54,6 +62,7 @@
 {% endblock %}
 
 {% block extrascripts %}
+{% compress js %}
     {% include "partials/extrascripts.html" %}
-    {{ block.super }}
+{% endcompress %}
 {% endblock %}

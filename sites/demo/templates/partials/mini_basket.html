@@ -1,17 +1,4 @@
 {% load currency_filters %}
 {% load i18n %}
 
-<ul class="cart hidden-phone">
-    <li>
-        <div class="btn-group">
-            <a class="btn" href="{% url basket:summary %}">{% trans "View Basket" %}</a>
-            <button class="btn dropdown-toggle" data-toggle="dropdown">
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu pull-right">
-                <li>{% include "basket/partials/basket_quick.html" %}</li>
-            </ul>
-        </div>
-    </li>
-    <li class="cart_summary"><strong>{% trans "Basket total:" %} <span>{{ request.basket.total_incl_tax|currency }}</span></strong></li>
-</ul><!-- /cart -->
+<a href="{% url basket:summary %}" class="btn"><span>{{ request.basket.total_incl_tax|currency }}</span> {% trans "12 items" %}</a>

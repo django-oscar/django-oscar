@@ -25,14 +25,14 @@
                     <li><a tabindex="-1" href="{% url catalogue:index %}">{% trans "All" %}</a></li>
                     {% for category in categories %}
                     <li class="dropdown">
-                        <a tabindex="-1" href="{{ category.0.get_absolute_url }}" data-toggle="dropdown" class="dropdown-toggle">{{ category.0.name }} {% if category.1 %}<i class="icon-chevron-down"></i>{% endif %}</a>
+                        <a tabindex="-1" href="{{ category.0.get_absolute_url }}" data-toggle="dropdown" class="dropdown-toggle">{{ category.0.name }} {% if category.1 %}<i class="icon-arrow-down"></i>{% endif %}</a>
                         {% if category.1 %}
                         <ul class="dropdown-menu">
                         {% for subcategory in category.1 %}
-                            <li><a tabindex="-1" href="{{ subcategory.0.get_absolute_url }}"> {{ subcategory.0.name }}</a></li>
+                            <li><a tabindex="-1" href="{{ subcategory.0.get_absolute_url }}"> {{ subcategory.0.name }} <i class="icon-arrow-right"></i></a></li>
                         {% endfor %}
                             <li class="divider"></li>
-                            <li><a tabindex="-1" href="{{ category.0.get_absolute_url }}">All {{ category.0.name }}</a></li>
+                            <li><a tabindex="-1" href="{{ category.0.get_absolute_url }}">All {{ category.0.name }} <i class="icon-arrow-right"></i></a></li>
                         </ul>
                         {% endif %}
                     </li>
