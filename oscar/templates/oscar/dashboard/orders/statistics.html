@@ -1,4 +1,7 @@
 {% extends 'dashboard/layout.html' %}
+
+{% load url from future %}
+
 {% load currency_filters %}
 {% load i18n %}
 
@@ -11,11 +14,11 @@
 {% block breadcrumbs %}
 <ul class="breadcrumb">   	
     <li>   	
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>   	
+        <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>   	
         <span class="divider">/</span>   	
     </li>   	
     <li>   	
-        <a href="{% url dashboard:order-list %}">{% trans "Orders" %}</a>  	
+        <a href="{% url 'dashboard:order-list' %}">{% trans "Orders" %}</a>  	
         <span class="divider">/</span>   	
     </li>   	
     <li class="active">{% trans "Statistics" %}</li>  	
@@ -29,10 +32,10 @@
     <h3><i class="icon-filter icon-large"></i> {% trans "Filter" %}</h3>
 </div>
 <div class="well">
-    <form method="get" action="{% url dashboard:order-stats %}" class="form-inline">
+    <form method="get" action="{% url 'dashboard:order-stats' %}" class="form-inline">
         {% include "partials/form_fields_inline.html" with form=form %}
 		<button type="submit" class="btn btn-primary">{% trans "Filter result" %}</button>
-		<a href="{% url dashboard:order-stats %}" class="btn">{% trans "Reset" %}</a>
+		<a href="{% url 'dashboard:order-stats' %}" class="btn">{% trans "Reset" %}</a>
     </form>
 </div>
 
@@ -61,7 +64,7 @@
 	</tr>
 	{% for dict in order_status_breakdown %}
 	<tr>
-		<td><a href="{% url dashboard:order-list %}?order_status={{ dict.status }}">{{ dict.status }}</a></td>
+		<td><a href="{% url 'dashboard:order-list' %}?order_status={{ dict.status }}">{{ dict.status }}</a></td>
 		<td>{{ dict.freq }}</td>
 	</tr>
 	{% endfor %}

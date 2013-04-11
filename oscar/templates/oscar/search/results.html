@@ -1,4 +1,7 @@
 {% extends "layout_2_col.html" %}
+
+{% load url from future %}
+
 {% load currency_filters %}
 {% load thumbnail %}
 {% load product_tags %}
@@ -11,7 +14,7 @@
 {% block breadcrumbs %}
 <ul class="breadcrumb">
 	<li>
-	<a href="{% url promotions:home %}">{% trans "Home" %}</a>
+	<a href="{% url 'promotions:home' %}">{% trans "Home" %}</a>
 	<span class="divider">/</span>
 	</li>
 	<li>
@@ -52,7 +55,7 @@
 {% block content %}
 
 {% if suggestion %}
-    {% trans 'Did you mean' %} <a href="{% url search:search %}?q={{ suggestion }}">{{ suggestion }}</a>?
+    {% trans 'Did you mean' %} <a href="{% url 'search:search' %}?q={{ suggestion }}">{{ suggestion }}</a>?
 {% endif %}
 
 {% if page.object_list %}

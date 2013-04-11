@@ -1,4 +1,7 @@
 {% extends 'dashboard/layout.html' %}
+
+{% load url from future %}
+
 {% block body_class %}
 create-page default
 {% endblock %}
@@ -12,11 +15,11 @@ create-page default
 {% block breadcrumbs %}
 <ul class="breadcrumb">   	
     <li> 	
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>   	
+        <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>   	
         <span class="divider">/</span>   	
     </li>   	
     <li>   	
-        <a href="{% url dashboard:voucher-list %}">{% trans "Vouchers" %}</a>   	
+        <a href="{% url 'dashboard:voucher-list' %}">{% trans "Vouchers" %}</a>   	
         <span class="divider">/</span>   	
     </li>   	
     <li class="active">{{ title }}</li>   	
@@ -35,7 +38,7 @@ create-page default
 	{% block form_actions %}
 	<div class="form-actions">
 		<button class="btn btn-primary btn-large" type="submit">{% trans "Save" %}</button> {% trans "or" %}
-		<a href="{% url dashboard:voucher-list %}">{% trans "cancel" %}</a>
+		<a href="{% url 'dashboard:voucher-list' %}">{% trans "cancel" %}</a>
 	</div>
 	{% endblock form_actions %}
 </form>

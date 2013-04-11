@@ -1,4 +1,7 @@
 {% extends "checkout/checkout.html" %}
+
+{% load url from future %}
+
 {% load i18n %}
 
 {% block title %}
@@ -10,7 +13,7 @@
 {% endblock %}
 
 {% block place_order %}
-<form method="post" action="{% url checkout:preview %}" id="place-order-form">
+<form method="post" action="{% url 'checkout:preview' %}" id="place-order-form">
 	<input type="hidden" name="action" value="place_order" />
 	{% csrf_token %}
     <div class="form-actions">

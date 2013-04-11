@@ -1,4 +1,7 @@
 {% extends 'dashboard/layout.html' %}
+
+{% load url from future %}
+
 {% load dashboard_tags %}
 {% load i18n %}
 
@@ -17,7 +20,7 @@
 {% block breadcrumbs %}
 <ul class="breadcrumb">	  	
     <li>	  	
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>	  	
+        <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>	  	
         <span class="divider">/</span>	  	
     </li>	  	
     <li class="active">{% trans "Customers" %}</li>	  	
@@ -32,7 +35,7 @@
     <form action="." method="get" class="form-inline">
         {% include "partials/form_fields_inline.html" with form=form %}
 		<input type="submit" value="{% trans "Search" %}" class="btn btn-primary"/>
-		<a href="{% url dashboard:users-index %}" class="btn">{% trans "Reset" %}</a>
+		<a href="{% url 'dashboard:users-index' %}" class="btn">{% trans "Reset" %}</a>
     </form>
 </div>
 
@@ -84,7 +87,7 @@
             <td>{{ user.date_joined|date:"d/m/y H:s" }}</td>
             <td>{% num_orders user %}</td>
             <td>
-                <a href="{% url dashboard:user-detail user.id %}" class="btn btn-info">{% trans "View" %}</a>
+                <a href="{% url 'dashboard:user-detail' user.id %}" class="btn btn-info">{% trans "View" %}</a>
             </td>
         </tr>
         {% endfor %}

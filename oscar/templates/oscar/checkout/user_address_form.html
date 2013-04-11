@@ -1,4 +1,7 @@
 {% extends "checkout/checkout.html" %}
+
+{% load url from future %}
+
 {% load i18n %}
 
 {% block order_contents %}{% endblock %}
@@ -18,7 +21,7 @@
         {% include "partials/form_fields.html" with form=form %}
         <div class="form-actions">
 			<button type="submit" class="btn btn-large btn-primary">{% trans "Save"	%}</button>
-			{% trans "or" %} <a href="{% url checkout:shipping-address %}">{% trans "cancel" %}</a>.
+			{% trans "or" %} <a href="{% url 'checkout:shipping-address' %}">{% trans "cancel" %}</a>.
         </div>
     </form>
 {% endblock shipping_address %}

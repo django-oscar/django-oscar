@@ -1,4 +1,7 @@
 {% extends "layout.html" %}
+
+{% load url from future %}
+
 {% load i18n %}
 
 {% block body_class %}account-pages{% endblock %}
@@ -6,11 +9,11 @@
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url promotions:home %}">{% trans 'Home' %}</a>
+        <a href="{% url 'promotions:home' %}">{% trans 'Home' %}</a>
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="{% url customer:summary %}">{% trans 'Account' %}</a>
+        <a href="{% url 'customer:summary' %}">{% trans 'Account' %}</a>
         <span class="divider">/</span>
     </li>
     <li class="active">{% trans 'Edit profile' %}</li>
@@ -41,7 +44,7 @@
 	{% include 'partials/form_fields.html' with form=form %}
 	<div class="form-actions">
 		<button type="submit" class="btn btn-primary btn-large">{% trans 'Save' %}</button>
-		{% trans 'or' %} <a href="{% url customer:summary %}">{% trans 'cancel' %}</a>.
+		{% trans 'or' %} <a href="{% url 'customer:summary' %}">{% trans 'cancel' %}</a>.
 	</div>
 </form>
 {% endblock content %}

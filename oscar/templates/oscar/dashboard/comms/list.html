@@ -1,4 +1,7 @@
 {% extends 'dashboard/layout.html' %}
+
+{% load url from future %}
+
 {% load i18n %}
 
 {% block title %}
@@ -8,7 +11,7 @@
 {% block breadcrumbs %}
 <ul class="breadcrumb">	  	
     <li>	  	
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>	  	
+        <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>	  	
         <span class="divider">/</span>	  	
     </li>	  	
     <li class="active"><a href=".">{% trans "Emails" %}</a></li>	  	
@@ -40,7 +43,7 @@
 			<td>{{ commtype.name }}</td>
 			<td>{{ commtype.category }}</td>
 			<td>
-				<a class="btn btn-success" href="{% url dashboard:comms-update commtype.code|lower %}">{% trans "Edit" %}</a>
+				<a class="btn btn-success" href="{% url 'dashboard:comms-update' commtype.code|lower %}">{% trans "Edit" %}</a>
 			</td>
 		</tr>
 		{% endfor %}

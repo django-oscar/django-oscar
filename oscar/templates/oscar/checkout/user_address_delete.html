@@ -1,4 +1,7 @@
 {% extends "checkout/checkout.html" %}
+
+{% load url from future %}
+
 {% load i18n %}
 
 {% block order_contents %}{% endblock %}
@@ -17,7 +20,7 @@
     {% csrf_token %}
 	{{ object.summary }}
 	<p>{% trans "Are you sure you want to delete this address?" %} <button type="submit" class="btn btn-danger">{% trans "Yes!" %}</button>
-	{% trans "or" %} <a href="{% url checkout:shipping-address %}">{% trans "cancel" %}</a>.</p>
+	{% trans "or" %} <a href="{% url 'checkout:shipping-address' %}">{% trans "cancel" %}</a>.</p>
 </form>
 
 {% endblock shipping_address %}

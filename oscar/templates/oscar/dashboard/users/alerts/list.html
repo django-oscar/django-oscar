@@ -1,4 +1,7 @@
 {% extends 'dashboard/layout.html' %}
+
+{% load url from future %}
+
 {% load i18n %}
 {% load currency_filters %}
 
@@ -11,11 +14,11 @@
 {% block breadcrumbs %}
 <ul class="breadcrumb">   	
     <li>   	
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>   	
+        <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>   	
         <span class="divider">/</span>
     </li>   	
     <li class="active">  	
-        <a href="{% url dashboard:user-alert-list %}">{% trans "Product alerts" %}</a>  	
+        <a href="{% url 'dashboard:user-alert-list' %}">{% trans "Product alerts" %}</a>  	
     </li>  	
 </ul>
 {% endblock %}
@@ -33,7 +36,7 @@
 		{% include "partials/form_fields_inline.html" with form=form %}
 	<button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
 	{% trans "or" %}
-		<a href="{% url dashboard:user-alert-list %}" class="btn">{% trans "reset" %}</a>
+		<a href="{% url 'dashboard:user-alert-list' %}" class="btn">{% trans "reset" %}</a>
     </form>
 </div>
 
@@ -58,7 +61,7 @@
             </td>
             <td>
                 {% if alert.user %}
-				<a href="{% url dashboard:user-detail alert.user.id %}">{{ alert.user.email }}</a>
+				<a href="{% url 'dashboard:user-detail' alert.user.id %}">{{ alert.user.email }}</a>
 				{% else %}
 				{{ alert.email }} {% trans "(Anonymous)" %}
 				{% endif %}
@@ -76,8 +79,8 @@
                         <span class="caret"></span>
                       </a>
                       <ul class="dropdown-menu pull-right">
-                          <li><a href="{% url dashboard:user-alert-update alert.id %}">{% trans "Edit" %}</a></li>
-                          <li><a href="{% url dashboard:user-alert-delete alert.id %}">{% trans "Delete" %}</a></li>
+                          <li><a href="{% url 'dashboard:user-alert-update' alert.id %}">{% trans "Edit" %}</a></li>
+                          <li><a href="{% url 'dashboard:user-alert-delete' alert.id %}">{% trans "Delete" %}</a></li>
                       </ul>
                     </div>
                 </div>

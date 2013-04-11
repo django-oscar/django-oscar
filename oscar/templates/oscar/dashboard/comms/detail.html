@@ -1,4 +1,7 @@
 {% extends 'dashboard/layout.html' %}
+
+{% load url from future %}
+
 {% load i18n %}
 {% block body_class %}
 create-page default
@@ -11,11 +14,11 @@ create-page default
 {% block breadcrumbs %}
 <ul class="breadcrumb">   	
     <li>
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="{% url dashboard:comms-list %}">{% trans "Emails" %}</a>
+        <a href="{% url 'dashboard:comms-list' %}">{% trans "Emails" %}</a>
         <span class="divider">/</span>  	
     </li>  	
     <li class="active"><a href=".">{{ commtype.name }}</a></li>  	
@@ -103,7 +106,7 @@ create-page default
          </div>
          <div class="form-actions">
              <button type="submit" class="btn btn-primary btn-large">{% trans "Save" %}</button>
-             {% trans "or" %} <a href="{% url dashboard:comms-list %}">{% trans "cancel" %}</a>.
+             {% trans "or" %} <a href="{% url 'dashboard:comms-list' %}">{% trans "cancel" %}</a>.
          </div>
      </div>
 

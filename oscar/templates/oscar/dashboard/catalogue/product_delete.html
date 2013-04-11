@@ -1,4 +1,7 @@
 {% extends 'dashboard/layout.html' %}
+
+{% load url from future %}
+
 {% load i18n %}
 
 {% block title %}
@@ -15,15 +18,15 @@ create-page
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="{% url dashboard:catalogue-product-list %}">{% trans "Product management" %}</a>
+        <a href="{% url 'dashboard:catalogue-product-list' %}">{% trans "Product management" %}</a>
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="{% url dashboard:catalogue-product product.pk %}">{{ product.title }}</a>
+        <a href="{% url 'dashboard:catalogue-product' product.pk %}">{{ product.title }}</a>
         <span class="divider">/</span>
     </li>
     <li class="active">{% trans "Delete?" %}</li>
@@ -60,7 +63,7 @@ create-page
     <div class="form-actions">
         <button type="submit" class="btn btn-danger">{% trans "Delete" %}</button>
         {% trans "or" %}
-        <a href="{% url dashboard:catalogue-product-list %}">{% trans "cancel" %}</a>
+        <a href="{% url 'dashboard:catalogue-product-list' %}">{% trans "cancel" %}</a>
     </div>
 </form>
 {% endblock %}

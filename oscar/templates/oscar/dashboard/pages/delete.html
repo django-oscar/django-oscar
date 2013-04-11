@@ -1,4 +1,7 @@
 {% extends 'dashboard/layout.html' %}
+
+{% load url from future %}
+
 {% load i18n %}
 
 {% block body_class %}
@@ -13,11 +16,11 @@ create-page
 {% block breadcrumbs %}
 <ul class="breadcrumb"> 	
     <li>	  	
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>	  	
+        <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>	  	
         <span class="divider">/</span>	  	
     </li>	  	
     <li>	  	
-        <a href="{% url dashboard:page-list %}">{% trans "Pages" %}</a>	  	
+        <a href="{% url 'dashboard:page-list' %}">{% trans "Pages" %}</a>	  	
         <span class="divider">/</span>	  	
     </li>	  	
     <li class="active">{% blocktrans with title=object.title %}Delete page '{{ title }}'?{% endblocktrans %}</li>	  	
@@ -38,7 +41,7 @@ create-page
 	<p>{% blocktrans with title=object.title %}Delete page <strong>{{ title }}</strong> - are you sure?{% endblocktrans %}</p>
 	<div class="form-actions">
 		<button type="submit" class="btn btn-danger">{% trans "Delete" %}</button>
-		{% trans "or" %} <a href="{% url dashboard:page-list %}">{% trans "cancel" %}</a>.
+		{% trans "or" %} <a href="{% url 'dashboard:page-list' %}">{% trans "cancel" %}</a>.
 	</div>
 </form>
 {% endblock %}

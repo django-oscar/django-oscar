@@ -1,4 +1,7 @@
 {% extends 'dashboard/layout.html' %}
+
+{% load url from future %}
+
 {% load currency_filters %}
 {% load i18n %}
 
@@ -17,7 +20,7 @@
 {% block breadcrumbs %}
 <ul class="breadcrumb">	  	
     <li>	  	
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>	  	
+        <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>	  	
         <span class="divider">/</span>	  	
     </li>	  	
     <li class="active">{% trans "Content block management" %}</li> 	
@@ -29,7 +32,7 @@
     <h3><i class="icon-folder-close icon-large"></i>{% trans "Create a new content block" %}</h3>
 </div>
 <div class="well">
-    <form action="{% url dashboard:promotion-create-redirect %}" method="get" class="form-inline">
+    <form action="{% url 'dashboard:promotion-create-redirect' %}" method="get" class="form-inline">
         {% include "partials/form_fields_inline.html" with form=select_form %}
         <button type="submit" class="btn btn-primary"><i class="icon-plus"></i> {% trans "Create block" %}</button>
     </form>
@@ -51,7 +54,7 @@
 	<tbody>
 		{% for promotion in promotions %}
 		<tr>
-			<td><a href="{% url dashboard:promotion-update promotion.code promotion.id %}">{{ promotion.name }}</a></td>
+			<td><a href="{% url 'dashboard:promotion-update' promotion.code promotion.id %}">{{ promotion.name }}</a></td>
 			<td>{{ promotion.type }}</td>
 			<td>{{ promotion.num_times_used }}</td>
 			<td>{{ promotion.date_created }}</td>
@@ -63,8 +66,8 @@
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu pull-right">
-                            <li><a href="{% url dashboard:promotion-update promotion.code promotion.id %}">{% trans "Edit" %}</a></li>
-                            <li><a href="{% url dashboard:promotion-delete promotion.code promotion.id %}">{% trans "Delete" %}</a></li>
+                            <li><a href="{% url 'dashboard:promotion-update' promotion.code promotion.id %}">{% trans "Edit" %}</a></li>
+                            <li><a href="{% url 'dashboard:promotion-delete' promotion.code promotion.id %}">{% trans "Delete" %}</a></li>
                         </ul>
                     </div>
                 </div>
