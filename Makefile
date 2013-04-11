@@ -18,7 +18,8 @@ sandbox: install
 	sites/sandbox/manage.py oscar_import_catalogue sites/_fixtures/books-catalogue.csv
 	sites/sandbox/manage.py oscar_import_catalogue_images sites/_fixtures/books-images.tar.gz
 	sites/sandbox/manage.py loaddata countries.json sites/_fixtures/pages.json sites/_fixtures/auth.json sites/_fixtures/ranges.json sites/_fixtures/offers.json
-	sites/sandbox/manage.py rebuild_index --noinput
+	sites/sandbox/manage.py clear_index --noinput
+	sites/sandbox/manage.py update_index catalogue
 
 geoip:
 	wget http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz
@@ -41,8 +42,8 @@ demo: install
 	sites/demo/manage.py create_products --class=Clothing sites/demo/fixtures/clothing.csv
 	sites/demo/manage.py import_product_images sites/demo/fixtures/images/
 	# Update search index
-	sites/sandbox/manage.py clear_index
-	sites/sandbox/manage.py update_index catalogue
+	sites/demo/manage.py clear_index --noinput
+	sites/demo/manage.py update_index catalogue
 
 docs:
 	cd docs && make html
