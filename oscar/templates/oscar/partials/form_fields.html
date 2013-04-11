@@ -1,5 +1,8 @@
 <span class="help-block">{{ form.non_field_errors }}</span>
-{% for field in form %}
+{% for field in form.hidden_fields %}
+    {{ field }}
+{% endfor %}
+{% for field in form.visible_fields %}
 	{% comment %} 
 	We use a separate template for each field so that forms can be rendered
 	field-by-field easily #}
