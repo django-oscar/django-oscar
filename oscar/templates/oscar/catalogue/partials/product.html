@@ -1,3 +1,4 @@
+{% load url from future %}
 {% load currency_filters %}
 {% load reviews_tags %}
 {% load thumbnail %}
@@ -29,7 +30,7 @@
     <div class="product_price">
         {% include "catalogue/partials/stock_record.html" %}
         {% if product.is_group %}
-            <a class="btn btn-full" href="{% url catalogue:detail product.slug product.id %}">{% trans "View" %}</a>
+            <a class="btn btn-full" href="{% url 'catalogue:detail' product.slug product.id %}">{% trans "View" %}</a>
         {% else %}
             {% include "catalogue/partials/add_to_basket_form_compact.html" %}
         {% endif %}

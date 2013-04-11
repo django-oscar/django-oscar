@@ -1,3 +1,4 @@
+{% load url from future %}
 {% load i18n %}
 
 <div class="navbar nav-profile">
@@ -11,11 +12,11 @@
             <span class="brand visible-phone" href="#">{% trans "Account" %}</span>
             <div class="nav-collapse profile-collapse">
                 <ul class="nav nav-tabs">
-                    <li class="{{ profile }}"><a href="{% url customer:summary %}#profile" >{% trans "Profile" %}</a></li>
-                    <li class="{{ order_history }}"><a href="{% url customer:summary %}#orders"  >{% trans "Order History" %}</a></li>
-                    <li class="{{ address_book }}"><a href="{% url customer:summary %}#addresses" >{% trans "Address Book" %}</a></li>
-                    <li class="{{ email_history }}"><a href="{% url customer:summary %}#emails" >{% trans "Email History" %}</a></li>
-                    <li class="{{ alerts }}"><a href="{% url customer:summary %}#alerts" >{% trans "Alerts" %}</a></li>
+                    <li class="{{ profile }}"><a href="{% url 'customer:summary' %}#profile" >{% trans "Profile" %}</a></li>
+                    <li class="{{ order_history }}"><a href="{% url 'customer:summary' %}#orders"  >{% trans "Order History" %}</a></li>
+                    <li class="{{ address_book }}"><a href="{% url 'customer:summary' %}#addresses" >{% trans "Address Book" %}</a></li>
+                    <li class="{{ email_history }}"><a href="{% url 'customer:summary' %}#emails" >{% trans "Email History" %}</a></li>
+                    <li class="{{ alerts }}"><a href="{% url 'customer:summary' %}#alerts" >{% trans "Alerts" %}</a></li>
                 </ul>
             </div>
         </div>

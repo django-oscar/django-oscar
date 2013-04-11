@@ -1,4 +1,7 @@
 {% extends "layout.html" %}
+
+{% load url from future %}
+
 {% load i18n %}
 {% load product_tags %}
 
@@ -9,7 +12,7 @@
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-    <a href="{% url promotions:home %}">{% trans "Home" %}</a>
+	<a href="{% url 'promotions:home' %}">{% trans "Home" %}</a>
         <span class="divider">/</span>
     </li>
     <li class="active">{% trans "Offers" %}</li>
@@ -40,7 +43,7 @@
                 </div>
             </div>
             <p>
-                <a class="btn" href="{% url offer:detail offer.slug %}">{% trans "Browse products in offer" %}</a>
+                <a class="btn" href="{% url 'offer:detail' offer.slug %}">{% trans "Browse products in offer" %}</a>
             </p>
         {% endif %}
         <hr/>

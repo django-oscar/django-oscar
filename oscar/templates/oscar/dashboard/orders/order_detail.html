@@ -1,4 +1,7 @@
 {% extends 'dashboard/layout.html' %}
+
+{% load url from future %}
+
 {% load currency_filters %}
 {% load i18n %}
 
@@ -9,17 +12,17 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-    <ul class="breadcrumb">
-        <li>
-            <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
-            <span class="divider">/</span>
-        </li>
-        <li>
-            <a href="{% url dashboard:order-list %}">{% trans "Orders" %}</a>
-            <span class="divider">/</span>
-        </li>
-        <li class="active">#{{ order.number }}</li>
-    </ul>
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="{% url 'dashboard:order-list' %}">{% trans "Orders" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active">#{{ order.number }}</li>
+</ul>
 {% endblock %}
 
 {% block headertext %}
@@ -118,7 +121,7 @@
                                         <td>{{ line.est_dispatch_date|default:"-" }}</td>
                                         <td style="text-align: right">{{ line.line_price_before_discounts_incl_tax|currency }}</td>
                                         <td>
-                                            <a href="{% url dashboard:order-line-detail order.number line.id %}" class="btn btn-info">{% trans "View" %}</a>
+                                            <a href="{% url 'dashboard:order-line-detail' order.number line.id %}" class="btn btn-info">{% trans "View" %}</a>
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -495,7 +498,7 @@
                                     </td>
                                     <td>
                                         {% if discount.offer %}
-                                            <a href="{% url dashboard:offer-detail discount.offer.id %}">{{ discount.offer.name }}</a>
+                                            <a href="{% url 'dashboard:offer-detail' discount.offer.id %}">{{ discount.offer.name }}</a>
                                         {% else %}
                                             {{ discount.offer_name }}
                                         {% endif %}
@@ -547,7 +550,7 @@
                                     <td>{{ note.message|linebreaks }}</td>
                                     <td class="span2">
                                         {% if note.is_editable %}
-                                            &nbsp;<a href="{% url dashboard:order-detail-note order.number note.id %}#notes" class="btn btn-info">{% trans "Edit" %}</a>
+                                            &nbsp;<a href="{% url 'dashboard:order-detail-note' order.number note.id %}#notes" class="btn btn-info">{% trans "Edit" %}</a>
                                             <form action="." method="post" class="pull-left">
                                                 {% csrf_token %}
                                                 <input type="hidden" name="order_action" value="delete_note" />

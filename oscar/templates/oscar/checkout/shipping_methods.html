@@ -1,4 +1,7 @@
 {% extends "checkout/checkout.html" %}
+
+{% load url from future %}
+
 {% load currency_filters %}
 {% load i18n %}
 
@@ -47,7 +50,7 @@
             {{ method.basket_charge_incl_tax|currency }}
         </div>
         <div class="span2">
-            <form method="post" action="{% url checkout:shipping-method %}">
+            <form method="post" action="{% url 'checkout:shipping-method' %}">
                 {% csrf_token %}
                 <input type="hidden" name="method_code" value="{{ method.code }}" class="btn" />
                 <button type="submit" class="btn btn-large btn-primary pull-right">{% trans "Select option" %}</button>

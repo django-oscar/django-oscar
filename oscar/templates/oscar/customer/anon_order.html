@@ -1,5 +1,8 @@
 {% extends "layout.html" %}
 
+{% load url from future %}
+
+
 {% load currency_filters %}
 {% load i18n %}
 
@@ -67,7 +70,7 @@
         <td>{{ line.line_price_before_discounts_incl_tax|currency }}</td>
         <td>{{ line.shipping_status }}</td>
         <td>
-            <a href="{% url catalogue:reviews-add line.product.slug line.product.id %}">{% trans 'Write a review' %}</a>
+            <a href="{% url 'catalogue:reviews-add' line.product.slug line.product.id %}">{% trans 'Write a review' %}</a>
         </td>
     </tr>
     {% endfor %}

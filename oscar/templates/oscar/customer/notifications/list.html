@@ -1,85 +1,86 @@
 {% extends "layout.html" %}
+{% load url from future %}
 {% load i18n %}
 
 {% block title %}
-{{ title }} | {{ block.super }}
+    {{ title }} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">
-    <li>
-        <a href="{% url promotions:home %}">{% trans 'Home' %}</a>
-        <span class="divider">/</span>
-    </li>
-    <li>
-        <a href="{% url customer:summary %}">{% trans 'Account' %}</a>
-        <span class="divider">/</span>
-    </li>
-    <li class="active">{{ title }}</li>
-</ul>
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'promotions:home' %}">{% trans 'Home' %}</a>
+            <span class="divider">/</span>
+        </li>
+        <li>
+            <a href="{% url 'customer:summary' %}">{% trans 'Account' %}</a>
+            <span class="divider">/</span>
+        </li>
+        <li class="active">{{ title }}</li>
+    </ul>
 {% endblock %}
 
 {% block headertext %}
-{{ title }}
+    {{ title }}
 {% endblock %}
 
 {% block content %}
 
-<ul class="nav nav-tabs">
-    <li class="{% if list_type == 'inbox' %}active{% endif %}"><a href="{% url customer:notifications-inbox %}">{% trans "Inbox" %}</a></li>
-    <li class="{% if list_type == 'archive' %}active{% endif %}"><a href="{% url customer:notifications-archive %}">{% trans "Archive" %}</a></li>
-</ul>
+    <ul class="nav nav-tabs">
+        <li class="{% if list_type == 'inbox' %}active{% endif %}"><a href="{% url 'customer:notifications-inbox' %}">{% trans "Inbox" %}</a></li>
+        <li class="{% if list_type == 'archive' %}active{% endif %}"><a href="{% url 'customer:notifications-archive' %}">{% trans "Archive" %}</a></li>
+    </ul>
 
-{% if notifications %}
-    {% include "partials/pagination.html" %}
+    {% if notifications %}
+        {% include "partials/pagination.html" %}
 
-<form action="{% url customer:notifications-update %}" method="post">
-    {% csrf_token %}
-    <table class="table">
-        <tbody>
-        {% for notification in notifications %}
-        <tr>
-            <td>
-                <input type="checkbox" name="selected_notification"
-                value="{{ notification.id }}"/>
-            </td>
-            <td>
-                {% if notification.is_new %}
-                    <i class="icon-envelope"></i>
-                {% else %}
-                    <i class="icon-envelope"></i>
-                {% endif %}
-            </td>
-            <td>
-                {{ notification.subject|safe }} <br/>
-                <em>{{ notification.date_sent }}</em>
-            </td>
-            <td>
-                {% if list_type == 'inbox' %}
-                <a class="btn btn-success btn-small" href="#" data-behaviours="archive">{% trans "Archive" %}</a>
-                {% endif %}
-                <a class="btn btn-danger btn-small "href="#" data-behaviours="delete">{% trans "Delete" %}</a>
-            </td>
-        </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    {% trans "With selected items:" %}
-    {% if list_type == 'inbox' %}
-    <button type="submit" class="btn btn-success" name="action" value="archive">{% trans "Archive" %}</button>
+        <form action="{% url 'customer:notifications-update' %}" method="post">
+            {% csrf_token %}
+            <table class="table">
+                <tbody>
+                    {% for notification in notifications %}
+                        <tr>
+                            <td>
+                                <input type="checkbox" name="selected_notification"
+                                value="{{ notification.id }}"/>
+                            </td>
+                            <td>
+                                {% if notification.is_new %}
+                                    <i class="icon-envelope"></i>
+                                {% else %}
+                                    <i class="icon-envelope"></i>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {{ notification.subject|safe }} <br/>
+                                <em>{{ notification.date_sent }}</em>
+                            </td>
+                            <td>
+                                {% if list_type == 'inbox' %}
+                                    <a class="btn btn-success btn-small" href="#" data-behaviours="archive">{% trans "Archive" %}</a>
+                                {% endif %}
+                                <a class="btn btn-danger btn-small "href="#" data-behaviours="delete">{% trans "Delete" %}</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% trans "With selected items:" %}
+            {% if list_type == 'inbox' %}
+                <button type="submit" class="btn btn-success" name="action" value="archive">{% trans "Archive" %}</button>
+            {% endif %}
+            <button type="submit" class="btn btn-danger" name="action" value="delete">{% trans "Delete" %}</button>
+        </form>
+
+        {% include "partials/pagination.html" %}
+
+    {% else %}
+        <p>{% trans "There are no notifications to display." %}</p>
     {% endif %}
-    <button type="submit" class="btn btn-danger" name="action" value="delete">{% trans "Delete" %}</button>
-</form>
-
-{% include "partials/pagination.html" %}
-
-{% else %}
-<p>{% trans "There are no notifications to display." %}</p>
-{% endif %}
 
 {% endblock content %}
 
 {% block onbodyload %}
-oscar.notifications.init();
+    oscar.notifications.init();
 {% endblock %}
 

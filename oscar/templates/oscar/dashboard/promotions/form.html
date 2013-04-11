@@ -1,4 +1,5 @@
 {% extends 'dashboard/layout.html' %}
+{% load url from future %}
 {% load i18n %}
 
 {% block body_class %}create-page promotions{% endblock %}
@@ -6,11 +7,11 @@
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="{% url dashboard:promotion-list %}">{% trans "Content block management" %}</a>
+        <a href="{% url 'dashboard:promotion-list' %}">{% trans "Content block management" %}</a>
         <span class="divider">/</span>
     </li>
     <li class="active">{{ heading }}</li>
@@ -36,7 +37,7 @@
 
     <div class="form-actions">
         <button type="submit" class="btn btn-primary">{% trans "Save" %}</button>
-        {% trans "or" %} <a href="{% url dashboard:promotion-list %}">{% trans "cancel" %}</a>
+		{% trans "or" %} <a href="{% url 'dashboard:promotion-list' %}">{% trans "cancel" %}</a>
     </div>
 </form>
 
@@ -60,18 +61,18 @@
                 <td>{{ link.position }}</td>
                 <td>
                     <form action="." method="post" >
-                        {% csrf_token %}
-                        <input type="hidden" name="action" value="remove_from_page" />
-                        <input type="hidden" name="pagepromotion_id" value="{{ link.id }}" />
-                        <a href="{% url dashboard:promotion-list-by-url link.page_url|urlencode:"" %}" class="btn btn-info">{% trans "View all blocks on this page" %}</a>
-                        <button class="btn" type="submit">{% trans "Remove from page" %}</button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    {% else %}
-        <tr><td>{% trans "This promotion is not displayed anywhere at the moment." %}</td></tr>
+					{% csrf_token %}
+					<input type="hidden" name="action" value="remove_from_page" />
+					<input type="hidden" name="pagepromotion_id" value="{{ link.id }}" />
+						<a href="{% url 'dashboard:promotion-list-by-url' link.page_url|urlencode:"" %}" class="btn btn-info">{% trans "View all blocks on this page" %}</a>
+						<button class="btn" type="submit">{% trans "Remove from page" %}</button>
+				</form>
+			</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+	{% else %}
+	    <tr><td>{% trans "This promotion is not displayed anywhere at the moment." %}</td></tr>
     {% endif %}
 </table>
 <div class="table-header">

@@ -1,4 +1,5 @@
 {% extends 'dashboard/layout.html' %}
+{% load url from future %}
 {% load currency_filters %}
 {% load i18n %}
 
@@ -15,11 +16,11 @@
 {% block breadcrumbs %}
     <ul class="breadcrumb">
         <li>
-            <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
             <span class="divider">/</span>
         </li>
         <li>
-            <a href="{% url dashboard:promotion-list %}">{% trans "Content block management" %}</a>
+            <a href="{% url 'dashboard:promotion-list' %}">{% trans "Content block management" %}</a>
             <span class="divider">/</span>
         </li>
         <li class="active">{% trans "Content blocks by page" %}</li>
@@ -31,8 +32,8 @@
         <h3><i class="icon-folder-open icon-large"></i>{% trans "View by page" %}</h3>
     </div>
     <div class="well">
-        <a href="{% url dashboard:promotion-list %}" class="btn btn-primary">{% trans "View all content blocks" %}</a>
-        <a href="{% url dashboard:promotion-list-by-page %}" class="btn">{% trans "View content blocks by page" %}</a>
+        <a href="{% url 'dashboard:promotion-list' %}" class="btn btn-primary">{% trans "View all content blocks" %}</a>
+        <a href="{% url 'dashboard:promotion-list-by-page' %}" class="btn">{% trans "View content blocks by page" %}</a>
     </div>
 
     <div class="table-header">
@@ -54,19 +55,14 @@
                         <td><a href="{{ page.page_url }}">{{ page.page_url }}</a></td>
                         <td>{{ page.freq }}</td>
                         <td>
-                            <a href="{% url dashboard:promotion-list-by-url page.page_url|urlencode:"" %}" class="btn btn-success">{% trans "Edit" %}</a>
+                            <a href="{% url 'dashboard:promotion-list-by-url' page.page_url|urlencode:"" %}" class="btn btn-success">{% trans "Edit" %}</a>
                         </td>
                         <td> </td>
                     </tr>
                 {% endfor %}
             </tbody>
-
         {% else %}
-
             <tr><td>{% trans "No content blocks found." %}</td></tr>
-
         {% endif %}
     </table>
-
-
 {% endblock dashboard_content %}

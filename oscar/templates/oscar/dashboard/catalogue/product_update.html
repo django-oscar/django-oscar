@@ -1,4 +1,5 @@
 {% extends 'dashboard/layout.html' %}
+{% load url from future %}
 {% load i18n %}
 {% load currency_filters %}
 {% load thumbnail %}
@@ -13,11 +14,11 @@
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="{% url dashboard:catalogue-product-list %}">{% trans "Product management" %}</a>
+        <a href="{% url 'dashboard:catalogue-product-list' %}">{% trans "Product management" %}</a>
         <span class="divider">/</span>
     </li>
     <li class="active">{{ title }}</li>
@@ -132,7 +133,7 @@
                             <table class="table table-striped table-bordered">
                                 {% if ranges.count > 0 %}
                                 {% for range in ranges %}
-                                <tr><td><a href="{% url dashboard:range-update range.id %}" alt="{{ range.name }}">{{ range.name }}</a></td></tr>
+                                <tr><td><a href="{% url 'dashboard:range-update' range.id %}" alt="{{ range.name }}">{{ range.name }}</a></td></tr>
                                 {% endfor %}
                                 {% else %}
                                 <tr><td>{% trans "No ranges currently include this product for this product" %}</td></tr>
@@ -195,7 +196,7 @@
                         <div class="control-group">
                             <label class="control-label">{% trans "Parent" %}</label>
                             <div class="controls">
-                                <a href="{% url dashboard:catalogue-product parent.id %}" title="Edit {{ parent.title }}">{{ parent.title }}</a>
+                                <a href="{% url 'dashboard:catalogue-product' parent.id %}" title="Edit {{ parent.title }}">{{ parent.title }}</a>
                             </div>
                         </div>
                         {% endif %}
@@ -216,7 +217,7 @@
                         </tr>
                         <tr>
                             <td>{{ parent.title }}</td>
-                            <td><a href="{% url dashboard:catalogue-product parent.id %}" class="btn btn-primary" title="Edit {{ parent.title }}">{% trans "Edit" %}</a></td>
+                            <td><a href="{% url 'dashboard:catalogue-product' parent.id %}" class="btn btn-primary" title="Edit {{ parent.title }}">{% trans "Edit" %}</a></td>
                         </tr>
                         {% endif %}
                         {% endwith %}
@@ -228,7 +229,7 @@
                         {% for variant in variants %}
                         <tr>
                             <td>{{ variant.title }}</td>
-                            <td><a href="{% url dashboard:catalogue-product variant.id %}" class="btn btn-primary">{% trans "Edit" %}</a></td>
+                            <td><a href="{% url 'dashboard:catalogue-product' variant.id %}" class="btn btn-primary">{% trans "Edit" %}</a></td>
                         </tr>
                         {% endfor %}
                     </table>
@@ -369,7 +370,7 @@
     <div class="fixed-actions-group">
         <div class="form-actions">
             <div class="pull-right">
-                <a href="{% url dashboard:catalogue-product-list %}">{% trans "Cancel" %}</a>
+                <a href="{% url 'dashboard:catalogue-product-list' %}">{% trans "Cancel" %}</a>
                 {% trans "or" %}
                 <button class="btn btn-secondary btn-large" name="action" type="submit" value="continue">{% trans "Save and continue editing" %}</button>
                 <button class="btn btn-primary btn-large" name="action" type="submit" value="save">{% trans "Save" %}</button>

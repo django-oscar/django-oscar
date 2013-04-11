@@ -1,4 +1,6 @@
 {% extends "layout.html" %}
+
+{% load url from future %}
 {% load currency_filters %}
 {% load history_tags %}
 {% load reviews_tags %}
@@ -18,8 +20,8 @@
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
-    <li>
-        <a href="{% url promotions:home %}">{% trans "Home" %}</a>
+	<li>
+		<a href="{% url 'promotions:home' %}">{% trans "Home" %}</a>
         <span class="divider">/</span>
     </li>
     {% with category=product.categories.all.0 %}
@@ -50,7 +52,6 @@
 
 <article class="product_page"><!-- Start of product page -->
 
-
     <div class="row-fluid">
 
         {% block product_gallery %}
@@ -66,7 +67,7 @@
             pops out when clicked.  A bit like the Django-Debug-Toolbar button
             {% endcomment %}
             {% if user.is_authenticated and user.is_staff %}
-                <a class="pull-right" href="{% url dashboard:catalogue-product product.id %}"><small><i class="icon-edit"></i> {% trans "Edit this product" %}</small></a>
+                <a class="pull-right" href="{% url 'dashboard:catalogue-product' product.id %}"><small><i class="icon-edit"></i> {% trans "Edit this product" %}</small></a>
             {% endif %}
             <h1>{{ product.get_title }}</h1>
 
@@ -77,7 +78,7 @@
             {% iffeature "reviews" %}
                 {% if product.rating != None %}
                 <p class="star {{ product.rating|as_stars }}">
-                    <small><a href="{% url catalogue:reviews-list product.slug product.id %}">
+                    <small><a href="{% url 'catalogue:reviews-list' product.slug product.id %}">
                             {% blocktrans count reviews|length as num_reviews %}
                             1 custom review
                             {% plural %}
@@ -85,11 +86,11 @@
                             {% endblocktrans %}
                     </a></small>
                     &nbsp;
-                    <a id="write_review" href="{% url catalogue:reviews-add product.slug product.id %}#addreview" class="btn btn-success btn-small">{% trans "Write a review" %}</a>
+                    <a id="write_review" href="{% url 'catalogue:reviews-add' product.slug product.id %}#addreview" class="btn btn-success btn-small">{% trans "Write a review" %}</a>
                 </p>
                 {% else %}
                     <p class="star">
-                        <a id="write_review" href="{% url catalogue:reviews-add product.slug product.id %}#addreview" class="btn btn-success btn-small">{% trans "Write a review" %}</a>
+                        <a id="write_review" href="{% url 'catalogue:reviews-add' product.slug product.id %}#addreview" class="btn btn-success btn-small">{% trans "Write a review" %}</a>
                     </p>
                 {% endif %}
             {% endiffeature %}
@@ -162,7 +163,7 @@
         <section>
             <div id="reviews" class="sub-header">
                 {% if reviews %}
-                    <a href="{% url catalogue:reviews-list product.slug product.id %}" class="btn pull-right">{% trans "See all reviews" %}</a>
+                    <a href="{% url 'catalogue:reviews-list' product.slug product.id %}" class="btn pull-right">{% trans "See all reviews" %}</a>
                 {% endif %}
                 <h2>{% trans "Customer Reviews" %}</h2>
             </div>
@@ -170,7 +171,7 @@
             {% if not reviews %}
                 <p>
                     {% trans "This product does not have any reviews yet" %} -
-                    <a href="{% url catalogue:reviews-add product.slug product.id %}#addreview">{% trans "be the first to write one" %}</a>.
+                    <a href="{% url 'catalogue:reviews-add' product.slug product.id %}#addreview">{% trans "be the first to write one" %}</a>.
                 </p>
             {% else %}
                 <div>

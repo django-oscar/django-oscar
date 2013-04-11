@@ -1,4 +1,7 @@
 {% extends "checkout/layout.html" %}
+
+{% load url from future %}
+
 {% load currency_filters %}
 {% load i18n %}
 
@@ -34,7 +37,7 @@
         <div class="control-group {% for error in form.password.errors %}error{% endfor %}">
             <div class="controls">
                 {{ form.password }}
-                <small><a href="{% url password-reset %}">{% trans "Get a password reminder" %}</a></small>
+                <small><a href="{% url 'password-reset' %}">{% trans "Get a password reminder" %}</a></small>
                 {% for error in form.password.errors %}
                     <span class="help-block">
                         {{ error }}

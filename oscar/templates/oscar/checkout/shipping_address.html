@@ -1,12 +1,13 @@
 {% extends "checkout/checkout.html" %}
+{% load url from future %}
 {% load i18n %}
 
 {% block title %}
-{% trans "Shipping address" %} | {{ block.super }}
+    {% trans "Shipping address" %} | {{ block.super }}
 {% endblock %}
 
 {% block checkout-nav %}
-{% include 'checkout/nav.html' with step=1 %}
+    {% include 'checkout/nav.html' with step=1 %}
 {% endblock %}
 
 {% block order_contents %}{% endblock %}
@@ -23,21 +24,21 @@
             <div class="choose-block">
                 <ul class="row-fluid">
                     {% for address in addresses %}
-                    <li class="span3">
-                        <div class="well well-info {% if address.is_default_for_shipping %}default-address{% endif %}">
-                            <address>{% for field in address.active_address_fields %}
-                            {{ field }}<br/>
-                            {% endfor %}</address>
-                            <form action="{% url checkout:shipping-address %}" method="post">
-                                {% csrf_token %}
-                                <input type="hidden" name="action" value="ship_to" />
-                                <input type="hidden" name="address_id" value="{{ address.id }}" />
-                                <button type="submit" class="btn btn-primary btn-full ship-address">{% trans "Ship to this address" %}</button>
-                                <a class="btn btn-small btn-info" href="{% url checkout:user-address-update address.id %}">{% trans "Edit" %}</a>
-                                <a href="{% url checkout:user-address-delete address.id %}" class="btn btn-small btn-danger">{% trans "Delete" %}</a>
-                            </form>
-                        </div>
-                    </li>
+					<li class="span3">
+						<div class="well well-info {% if address.is_default_for_shipping %}default-address{% endif %}">
+							<address>{% for field in address.active_address_fields %}
+							{{ field }}<br/>
+							{% endfor %}</address>
+							<form action="{% url 'checkout:shipping-address' %}" method="post">
+								{% csrf_token %}
+								<input type="hidden" name="action" value="ship_to" />
+								<input type="hidden" name="address_id" value="{{ address.id }}" />
+								<button type="submit" class="btn btn-primary btn-full ship-address">{% trans "Ship to this address" %}</button>
+								<a class="btn btn-small btn-info" href="{% url 'checkout:user-address-update' address.id %}">{% trans "Edit" %}</a>
+								<a href="{% url 'checkout:user-address-delete' address.id %}" class="btn btn-small btn-danger">{% trans "Delete" %}</a>
+							</form>
+						</div>
+					</li>
                     {% if forloop.counter|divisibleby:4 %}
                         </ul>
                         {% if not forloop.last %}<ul class="row-fluid">{% endif %}
@@ -50,14 +51,14 @@
     </div>
     {% endif %}
 
-    <form action="{% url checkout:shipping-address %}" method="post" class="form-horizontal">
+    <form action="{% url 'checkout:shipping-address' %}" method="post" class="form-horizontal">
         <div class="well well-info">
             {% csrf_token %}
             {% include "partials/form_fields.html" with form=form %}
         </div>
         <div class="form-actions">
             <button type="submit" class="btn btn-large btn-primary">{% trans "Continue" %}</button>
-            {% trans "or" %} <a href="{% url basket:summary %}">{% trans "return to basket" %}</a>
+            {% trans "or" %} <a href="{% url 'basket:summary' %}">{% trans "return to basket" %}</a>
         </div>
     </form>
 {% endblock shipping_address %}

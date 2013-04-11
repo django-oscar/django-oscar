@@ -1,4 +1,7 @@
 {% extends 'dashboard/offers/step_form.html' %}
+
+{% load url from future %}
+
 {% load i18n %}
 
 {% block summary %}
@@ -15,11 +18,11 @@
     {% if form.fields.custom_condition.choices %}
     <h4>{% trans "Build a new condition" %}</h4>
     {% endif %}
-    {% include "partials/form_field.html" with field=form.range %}
-    <p>{% trans "Ranges can be created and edited from within the " %}
-        <a href="{% url dashboard:range-list %}">{% trans "range dashboard" %}</a>.</p>
-    {% include "partials/form_field.html" with field=form.type %}
-    {% include "partials/form_field.html" with field=form.value %}
+	{% include "partials/form_field.html" with field=form.range %}
+	<p>{% trans "Ranges can be created and edited from within the " %}
+		<a href="{% url 'dashboard:range-list' %}">{% trans "range dashboard" %}</a>.</p>
+	{% include "partials/form_field.html" with field=form.type %}
+	{% include "partials/form_field.html" with field=form.value %}
 
     {% if form.fields.custom_condition.choices %}
         <h4>{% trans "...or choose a pre-defined one" %}</h4>

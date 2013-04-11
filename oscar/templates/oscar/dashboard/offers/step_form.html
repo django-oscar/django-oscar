@@ -1,4 +1,7 @@
 {% extends 'dashboard/layout.html' %}
+
+{% load url from future %}
+
 {% load currency_filters %}
 {% load i18n %}
 
@@ -16,16 +19,16 @@
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="{% url dashboard:offer-list %}">{% trans "Offer management" %}</a>
+        <a href="{% url 'dashboard:offer-list' %}">{% trans "Offer management" %}</a>
         <span class="divider">/</span>
     </li>
     {% if offer.pk %}
     <li>
-        <a href="{% url dashboard:offer-detail offer.pk %}">{{ offer.name }}</a>
+        <a href="{% url 'dashboard:offer-detail' offer.pk %}">{{ offer.name }}</a>
         <span class="divider">/</span>
     </li>
     {% else %}
@@ -73,7 +76,7 @@
                             <div class="pull-right">
                                 <button class="btn btn-primary" type="submit">{% block submittext %}{% trans "Continue" %}{% endblock %}</button>
                             </div>
-                            <a class="btn" href="{% url dashboard:offer-list %}">{% trans "cancel" %}</a>
+                            <a class="btn" href="{% url 'dashboard:offer-list' %}">{% trans "cancel" %}</a>
                         </div>
                     </div>
 

@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% load url from future %}
 {% load currency_filters %}
 {% load display_tags %}
 {% load i18n %}
@@ -12,15 +13,15 @@
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url promotions:home %}">{% trans 'Home' %}</a>
+        <a href="{% url 'promotions:home' %}">{% trans 'Home' %}</a>
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="{% url customer:summary %}">{% trans 'Account' %}</a>
+        <a href="{% url 'customer:summary' %}">{% trans 'Account' %}</a>
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="{% url customer:order-list %}">{% trans 'Order history' %}</a>
+        <a href="{% url 'customer:order-list' %}">{% trans 'Order history' %}</a>
         <span class="divider">/</span>
     </li>
     <li class="active">{% blocktrans with number=order.number %}Order #{{ number }}{% endblocktrans %}</li>
@@ -75,12 +76,12 @@
                         <td>{{ line.line_price_before_discounts_incl_tax|currency }}</td>
                         <td>
                             {% if line.product %}
-                            <form id="line_form_{{ line.id }}" action="{% url customer:order-line order.number line.id %}" method="POST">
+                            <form id="line_form_{{ line.id }}" action="{% url 'customer:order-line' order.number line.id %}" method="POST">
                                 {% csrf_token %}
                                 <input type="hidden" name="action" value="reorder" />
                                 <button class="btn btn-success" type="submit">{% trans 'Re-order' %}</button>
                                 {% iffeature "reviews" %}
-                                    <a class="btn btn-info" href="{% url catalogue:reviews-add line.product.slug line.product.id %}">{% trans 'Write a review' %}</a>
+                                    <a class="btn btn-info" href="{% url 'catalogue:reviews-add' line.product.slug line.product.id %}">{% trans 'Write a review' %}</a>
                                 {% endiffeature %}
                             </form>
                             {% else %}

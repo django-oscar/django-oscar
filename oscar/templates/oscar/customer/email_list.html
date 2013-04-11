@@ -1,29 +1,30 @@
 {% extends "layout.html" %}
 
+{% load url from future %}
 {% load i18n %}
 
 {% block title %}
-{% trans 'Email history' %} | {{ block.super }}
+    {% trans 'Email history' %} | {{ block.super }}
 {% endblock %}
 
 {% block body_class %}account-pages{% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">
-    <li>
-        <a href="{% url promotions:home %}">{% trans 'Home' %}</a>
-        <span class="divider">/</span>
-    </li>
-    <li>
-        <a href="{% url customer:summary %}">{% trans 'Account' %}</a>
-        <span class="divider">/</span>
-    </li>
-    <li class="active">{% trans 'Email history' %}</li>
-</ul>
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'promotions:home' %}">{% trans 'Home' %}</a>
+            <span class="divider">/</span>
+        </li>
+        <li>
+            <a href="{% url 'customer:summary' %}">{% trans 'Account' %}</a>
+            <span class="divider">/</span>
+        </li>
+        <li class="active">{% trans 'Email history' %}</li>
+    </ul>
 {% endblock %}
 
 {% block headertext %}
-{% trans 'Account' %}
+    {% trans 'Account' %}
 {% endblock %}
 
 {% block subnavigation %}
@@ -31,9 +32,9 @@
 {% endblock %}
 
 {% block subheader %}
-<div class="sub-header">
-    <h2>{% trans 'Email history' %}</h2>
-</div>
+    <div class="sub-header">
+        <h2>{% trans 'Email history' %}</h2>
+    </div>
 {% endblock subheader %}
 
 {% block content %}
@@ -44,14 +45,13 @@
             <th></th>
         </tr>
         {% for email in emails %}
-        <tr>
-            <td>{{ email.date_sent }}</td>
-            <td>{{ email.subject }}</td>
-            <td>
-                <a href="{% url customer:email-detail email.id %}" class="btn btn-info">{% trans 'View' %}</a>
-            </td>
-        </tr>
+            <tr>
+                <td>{{ email.date_sent }}</td>
+                <td>{{ email.subject }}</td>
+                <td>
+                    <a href="{% url 'customer:email-detail' email.id %}" class="btn btn-info">{% trans 'View' %}</a>
+                </td>
+            </tr>
         {% endfor %}
     </table>
 {% endblock content %}
-

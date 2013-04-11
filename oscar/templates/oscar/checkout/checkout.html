@@ -1,10 +1,11 @@
 {% extends "checkout/layout.html" %}
+{% load url from future %}
 {% load currency_filters %}
 {% load thumbnail %}
 {% load i18n %}
 
 {% block title %}
-{% trans "Checkout" %} | {{ block.super }}
+    {% trans "Checkout" %} | {{ block.super }}
 {% endblock %}
 
 {% block header %}
@@ -55,7 +56,7 @@
 
             {% block shipping_address_actions %}
             <div class="alert-actions">
-                <a href="{% url checkout:shipping-address %}" class="btn">{% trans "Change shipping address" %}</a>
+				<a href="{% url 'checkout:shipping-address' %}" class="btn">{% trans "Change shipping address" %}</a>
             </div>
             {% endblock %}
 
@@ -74,7 +75,7 @@
         <div class="well well-success">
             <p>{% trans "Payment details to go here" %}</p>
             <div class="alert-actions">
-                <a href="{% url checkout:payment-details %}" class="btn">{% trans "Change payment details" %}</a>
+				<a href="{% url 'checkout:payment-details' %}" class="btn">{% trans "Change payment details" %}</a>
             </div>
         </div>    
     </div>
@@ -124,9 +125,9 @@
     </div>
 
     {% block order_contents_actions %}
-    <div class="form-actions">
-        <a href="{% url basket:summary %}" class="btn">{% trans "Edit order contents" %}</a>
-    </div>
+        <div class="form-actions">
+            <a href="{% url 'basket:summary' %}" class="btn">{% trans "Edit order contents" %}</a>
+        </div>
     {% endblock %}
 
 {% endblock order_contents %}

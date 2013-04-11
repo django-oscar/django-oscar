@@ -1,3 +1,4 @@
+{% load url from future %}
 {% load i18n %}
 {% load thumbnail %}
 {% load currency_filters %}
@@ -89,7 +90,7 @@
 
                 <div id="voucher_form_container" style="display:none">
                     <h4>{% trans "Voucher code" %}</h4>
-                <form action="{% url basket:vouchers-add %}" method="post" class="form-horizontal">
+                <form action="{% url 'basket:vouchers-add' %}" method="post" class="form-horizontal">
                     {% csrf_token %}
                     {% include "partials/form_fields.html" with form=voucher_form %}
                     <div class="form-actions">
@@ -114,7 +115,7 @@
 
     {% block formactions %}
         <div class="form-actions clearfix" >
-            <a href="{% url checkout:index %}" class="pull-right btn btn-large btn-primary btn-full">{% trans "Proceed to checkout" %}</a>
+            <a href="{% url 'checkout:index' %}" class="pull-right btn btn-large btn-primary btn-full">{% trans "Proceed to checkout" %}</a>
         </div>
     {% endblock formactions %}
 
@@ -136,7 +137,7 @@
         <h4 class="span2 align-center">{% trans "Price" %}</h4>
         <div class="span2">&nbsp;</div>
     </div>
-    <form action="{% url basket:saved %}" method="post" class="form-stacked later_summary" id="saved_basket_formset">
+    <form action="{% url 'basket:saved' %}" method="post" class="form-stacked later_summary" id="saved_basket_formset">
         {% csrf_token %}
         {{ saved_formset.management_form }}
         {% for form in saved_formset %}

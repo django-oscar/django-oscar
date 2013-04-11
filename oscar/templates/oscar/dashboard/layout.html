@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+
+{% load url from future %}
+
 {% load currency_filters %}
 {% load category_tags %}
 {% load dashboard_tags %}
@@ -45,9 +48,9 @@
                 <div class="nav-collapse nav-accounts collapse">
                     <ul class="nav pull-right">
                         <li><span>{% trans "Welcome" %} <em>{{ request.user.get_full_name|default:'Guest' }}</em></span></li>
-                        <li><a href="{% url promotions:home %}"><i class="icon-home"></i> {% trans "Return to site" %}</a></li>
-                        <li><a href="{% url customer:summary %}"><i class="icon-user"></i> {% trans "Account" %}</a></li>
-                        <li><a href="{% url customer:logout %}"><i class="icon-signout"></i> {% trans "Log out" %}</a></li>
+                        <li><a href="{% url 'promotions:home' %}"><i class="icon-home"></i> {% trans "Return to site" %}</a></li>
+                        <li><a href="{% url 'customer:summary' %}"><i class="icon-user"></i> {% trans "Account" %}</a></li>
+                        <li><a href="{% url 'customer:logout' %}"><i class="icon-signout"></i> {% trans "Log out" %}</a></li>
                     </ul>
                 </div>
             </div>
@@ -107,7 +110,7 @@
     <div class="container-fluid dashboard">
         {% block breadcrumbs %}
         <ul class="breadcrumb">
-            <li><a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a> <span class="divider">/</span></li>
+            <li><a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a> <span class="divider">/</span></li>
         </ul>
         {% endblock %}
 

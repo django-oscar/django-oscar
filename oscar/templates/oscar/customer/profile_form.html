@@ -1,28 +1,29 @@
 {% extends "layout.html" %}
+{% load url from future %}
 {% load i18n %}
 
 {% block body_class %}account-pages{% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">
-    <li>
-        <a href="{% url promotions:home %}">{% trans 'Home' %}</a>
-        <span class="divider">/</span>
-    </li>
-    <li>
-        <a href="{% url customer:summary %}">{% trans 'Account' %}</a>
-        <span class="divider">/</span>
-    </li>
-    <li class="active">{% trans 'Edit profile' %}</li>
-</ul>
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'promotions:home' %}">{% trans 'Home' %}</a>
+            <span class="divider">/</span>
+        </li>
+        <li>
+            <a href="{% url 'customer:summary' %}">{% trans 'Account' %}</a>
+            <span class="divider">/</span>
+        </li>
+        <li class="active">{% trans 'Edit profile' %}</li>
+    </ul>
 {% endblock %}
 
 {% block title %}
-{% trans 'Edit profile' %} | {{ block.super }}
+    {% trans 'Edit profile' %} | {{ block.super }}
 {% endblock %}
 
 {% block headertext %}
-{% trans 'Account' %}
+    {% trans 'Account' %}
 {% endblock %}
 
 {% block subnavigation %}
@@ -30,18 +31,18 @@
 {% endblock %}
 
 {% block subheader %}
-<div class="sub-header">
-    <h2>{% trans 'Edit profiles' %}</h2>
-</div>
+    <div class="sub-header">
+        <h2>{% trans 'Edit profiles' %}</h2>
+    </div>
 {% endblock subheader %}
 
 {% block content %}
-<form id="profile_form" action="." method="post">
-    {% csrf_token %}
-    {% include 'partials/form_fields.html' with form=form %}
-    <div class="form-actions">
-        <button type="submit" class="btn btn-primary btn-large">{% trans 'Save' %}</button>
-        {% trans 'or' %} <a href="{% url customer:summary %}">{% trans 'cancel' %}</a>.
-    </div>
-</form>
+    <form id="profile_form" action="." method="post">
+        {% csrf_token %}
+        {% include 'partials/form_fields.html' with form=form %}
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary btn-large">{% trans 'Save' %}</button>
+            {% trans 'or' %} <a href="{% url 'customer:summary' %}">{% trans 'cancel' %}</a>.
+        </div>
+    </form>
 {% endblock content %}

@@ -1,3 +1,4 @@
+{% load url from future %}
 {% load currency_filters %}
 {% load category_tags %}
 {% load i18n %}
@@ -11,7 +12,7 @@
             <span class="icon-bar"></span>
         </a>
 
-        <a class="btn btn-navbar btn-cart visible-phone" href="{% url checkout:index %}">
+        <a class="btn btn-navbar btn-cart visible-phone" href="{% url 'checkout:index' %}">
             <i class="icon-shopping-cart"></i>
             <strong>{% trans "Basket" %}
                 {% if request.basket.all_lines.count %}
@@ -28,7 +29,7 @@
                 </button>
                 {% category_tree depth=2 as tree_categories %}
                 <ul class="dropdown-menu" role="menu">
-                    <li><a tabindex="-1" href="{% url catalogue:index %}">{% trans "All Products" %}</a></li>
+                    <li><a tabindex="-1" href="{% url 'catalogue:index' %}">{% trans "All Products" %}</a></li>
                     {% if tree_categories %}
                         <li class="divider"></li>
                         {% for tree_category, info in tree_categories %}
@@ -46,7 +47,7 @@
                         {% endfor %}
                     {% endif %}
                     <li class="divider"></li>
-                    <li><a href="{% url offer:list %}">{% trans "Offers" %}</a></li>
+                    <li><a href="{% url 'offer:list' %}">{% trans "Offers" %}</a></li>
                 </ul>
             </div>
             {% include "partials/search.html" %}
