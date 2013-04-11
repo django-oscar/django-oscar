@@ -59,6 +59,10 @@ class FacetedSearchView(views.FacetedSearchView):
     def extra_context(self):
         extra = super(FacetedSearchView, self).extra_context()
 
+        if 'fields'  not in extra['facets']:
+            # Looks like Solr is not responding correctly
+            return extra
+
         # Convert facet data into a more useful datastructure
 
         # Field facets
