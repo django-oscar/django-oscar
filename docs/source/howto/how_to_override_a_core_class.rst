@@ -4,8 +4,14 @@ How to override a core class
 
 Much of Oscar's functionality is implemented using classes, when a module
 function might seem a better choice.  This is to allow functionality to be
-customised.  Oscar uses a dynamic class loading mechanism that can be used to
-override Oscar's core classes and use custom versions.
+customised.  This How-to describes how Oscar's dynamic class loading mechanism
+can be used to override Oscar's core classes and use custom versions.
+
+It builds upon the steps described in :doc:`/topics/customisation`. Please
+read it first and ensure that you've:
+
+* Created an app with the same label
+* Overridden the Oscar app with your own
 
 Example
 -------
@@ -29,24 +35,13 @@ could subclass the class from oscar or not.  An example implementation is::
             num = super(OrderNumberGenerator, self).order_number(basket)
             return "SHOP-%s" % num
 
-``INSTALLED_APPS`` tweak
-------------------------
 
 You will need to add your app that contains the overriding class to
 ``INSTALLED_APPS``, as well as let Oscar know that you're replacing the
 corresponding core app with yours.  You can do that by supplying an extra
 argument to ``get_core_apps`` function::
 
-    # settings.py
-
-    from oscar import get_core_apps
-    # ...
-    INSTALLED_APPS = [
-        # all your apps in here as usual, EXCLUDING yourproject.order
-    ] + get_core_apps(['yourproject.order'])
-
-The ``get_core_apps`` function will replace ``oscar.apps.order`` with
-``yourproject.order``.
+TODO LINK
 
 Testing
 -------
