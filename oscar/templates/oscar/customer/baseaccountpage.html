@@ -33,7 +33,9 @@
     <div class="tab-content">
 		<div class="tab-pane active">
 			<div class="sub-header">
-				<h3>{{ page_title }}</h3>
+                {% block tabheader %}
+                    <h3>{{ page_title }}</h3>
+                {% endblock %}
 			</div>
 			{% block tabcontent %}
 			{% endblock tabcontent %}
