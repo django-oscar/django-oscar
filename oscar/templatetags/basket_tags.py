@@ -24,14 +24,14 @@ def do_basket_form(parse, token):
             "{%% basket_form request product_var as "
             "form_var %%}" % tokens[0])
 
-    request, product_var, form_var = tokens[1], tokens[2], tokens[4]
+    request_var, product_var, form_var = tokens[1], tokens[2], tokens[4]
 
     quantity_type = tokens[5] if len(tokens) == 6 else QNT_MULTIPLE
     if quantity_type not in (QNT_SINGLE, QNT_MULTIPLE):
         raise template.TemplateSyntaxError(
             "%r tag only accepts the following quantity types: "
             "'single', 'multiple'" % tokens[0])
-    return BasketFormNode(request, product_var, form_var, quantity_type)
+    return BasketFormNode(request_var, product_var, form_var, quantity_type)
 
 
 class BasketFormNode(template.Node):
@@ -44,7 +44,7 @@ class BasketFormNode(template.Node):
 
     def render(self, context):
         try:
-            request = self.request_var.resolve(context)
+            self.request = self.request_var.resolve(context)
             product = self.product_var.resolve(context)
         except template.VariableDoesNotExist:
             return ''
@@ -53,6 +53,15 @@ class BasketFormNode(template.Node):
             initial = {}
             if not product.is_group:
                 initial['product_id'] = product.id
-            context[self.form_var] = self.form_class(
-                request, instance=product, initial=initial)
+            self.form = self.form_class(
+                self.request, instance=product, initial=initial)
+
+            user = self.request.user
+            is_permitted, reason = self.form.is_purchase_permitted(user,
+                                                                product, 1)
+
+            self.form.purchase_permitted = is_permitted
+            self.form.reason = reason
+
+            context[self.form_var] = self.form
         return ''

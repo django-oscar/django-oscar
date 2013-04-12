@@ -127,9 +127,9 @@ class AddToBasketForm(forms.Form):
             else:
                 self._create_product_fields(instance)
 
-    def is_allowed_to_purchase(self, product, desired_qty):
-        return product.is_purchase_permitted(user=self.request.user,
-                                                quantity=desired_qty)
+
+    def is_purchase_permitted(self, user, product, desired_qty):
+        return product.is_purchase_permitted(user=user, quantity=desired_qty)
 
     def cleaned_options(self):
         """
@@ -156,9 +156,10 @@ class AddToBasketForm(forms.Form):
                                                 self.cleaned_options())
         desired_qty = current_qty + self.cleaned_data.get('quantity', 1)
 
-        is_available, reason = self.is_allowed_to_purchase(product, desired_qty)
+        is_permitted, reason = self.is_purchase_permitted(self.request.user,
+                                                    product, desired_qty)
 
-        if not is_available:
+        if not is_permitted:
             raise forms.ValidationError(reason)
         return self.cleaned_data
 
