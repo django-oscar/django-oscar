@@ -1,16 +1,10 @@
 #!/usr/bin/env bash
 
 cd /var/www/oscar/builds/demo/
-
-# Update any dependencies
 source ../../virtualenvs/demo/bin/activate
-python setup.py develop
-pip install -r requirements.txt
+make demo
 
-# Run any new migrations
 cd sites/demo
-./manage.py syncdb --noinput
-./manage.py migrate
 ./manage.py collectstatic --noinput
 
 # Re-compile python code
