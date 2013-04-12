@@ -5,6 +5,7 @@ source ../../virtualenvs/demo/bin/activate
 make demo
 
 cd sites/demo
+./manage.py thumbnail clear
 ./manage.py collectstatic --noinput
 
 # Re-compile python code
