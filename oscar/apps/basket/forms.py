@@ -116,17 +116,20 @@ class AddToBasketForm(forms.Form):
                                     min_value=1, label=_("Product ID"))
     quantity = forms.IntegerField(initial=1, min_value=1, label=_('Quantity'))
 
-    def __init__(self, request, user, instance, *args, **kwargs):
+    def __init__(self, request, instance, *args, **kwargs):
         super(AddToBasketForm, self).__init__(*args, **kwargs)
         self.request = request
         self.basket = request.basket
-        self.user = user
         self.instance = instance
         if instance:
             if instance.is_group:
                 self._create_group_product_fields(instance)
             else:
                 self._create_product_fields(instance)
+
+    def is_allowed_to_purchase(self, product, desired_qty):
+        return product.is_purchase_permitted(user=self.request.user,
+                                                quantity=desired_qty)
 
     def cleaned_options(self):
         """
@@ -153,8 +156,8 @@ class AddToBasketForm(forms.Form):
                                                 self.cleaned_options())
         desired_qty = current_qty + self.cleaned_data.get('quantity', 1)
 
-        is_available, reason = product.is_purchase_permitted(
-            user=self.user, quantity=desired_qty)
+        is_available, reason = self.is_allowed_to_purchase(product, desired_qty)
+
         if not is_available:
             raise forms.ValidationError(reason)
         return self.cleaned_data

@@ -35,8 +35,8 @@ def do_basket_form(parse, token):
 
 
 class BasketFormNode(template.Node):
-    def __init__(self, request, product_var, form_var, quantity_type):
-        self.request = template.Variable(request)
+    def __init__(self, request_var, product_var, form_var, quantity_type):
+        self.request_var = template.Variable(request_var)
         self.product_var = template.Variable(product_var)
         self.form_var = form_var
         self.form_class = (AddToBasketForm if quantity_type == QNT_MULTIPLE
@@ -44,7 +44,7 @@ class BasketFormNode(template.Node):
 
     def render(self, context):
         try:
-            request = self.request.resolve(context)
+            request = self.request_var.resolve(context)
             product = self.product_var.resolve(context)
         except template.VariableDoesNotExist:
             return ''
@@ -54,5 +54,5 @@ class BasketFormNode(template.Node):
             if not product.is_group:
                 initial['product_id'] = product.id
             context[self.form_var] = self.form_class(
-                request, user=None, instance=product, initial=initial)
+                request, instance=product, initial=initial)
         return ''
