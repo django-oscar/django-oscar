@@ -116,9 +116,10 @@ class AddToBasketForm(forms.Form):
                                     min_value=1, label=_("Product ID"))
     quantity = forms.IntegerField(initial=1, min_value=1, label=_('Quantity'))
 
-    def __init__(self, basket, user, instance, *args, **kwargs):
+    def __init__(self, request, user, instance, *args, **kwargs):
         super(AddToBasketForm, self).__init__(*args, **kwargs)
-        self.basket = basket
+        self.request = request
+        self.basket = request.basket
         self.user = user
         self.instance = instance
         if instance:
