@@ -34,8 +34,9 @@ demo: install
 	sites/demo/manage.py syncdb --noinput
 	sites/demo/manage.py migrate
 	# Import some core fixtures
-	sites/demo/manage.py loaddata countries.json sites/_fixtures/pages.json sites/_fixtures/auth.json
+	sites/demo/manage.py loaddata countries.json sites/_fixtures/pages.json
 	# Create catalogue (create product classes from fixture than import CSV files)
+	sites/demo/manage.py loaddata sites/demo/fixtures/auth.json sites/demo/fixtures/offers.json
 	sites/demo/manage.py loaddata sites/demo/fixtures/product-classes.json sites/demo/fixtures/product-attributes.json
 	sites/demo/manage.py create_products --class=Books sites/demo/fixtures/books.csv
 	sites/demo/manage.py create_products --class=Downloads sites/demo/fixtures/downloads.csv
@@ -89,3 +90,8 @@ css:
 	lessc oscar/static/oscar/less/styles.less > oscar/static/oscar/css/styles.css
 	lessc oscar/static/oscar/less/responsive.less > oscar/static/oscar/css/responsive.css
 	lessc oscar/static/oscar/less/dashboard.less > oscar/static/oscar/css/dashboard.css
+
+demo_css:
+	# Compile CSS for demo site
+	lessc sites/demo/static/demo/less/styles.less > sites/demo/static/demo/css/styles.css
+	lessc sites/demo/static/demo/less/responsive.less > sites/demo/static/demo/css/responsive.css
