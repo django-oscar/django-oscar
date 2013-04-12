@@ -17,6 +17,7 @@
 		<a href="{% url customer:summary %}">{% trans 'Account' %}</a>
 		<span class="divider">/</span>
 	</li>
+    {% block extra_breadcrumbs %}{% endblock %}
 	<li class="active">{{ page_title }}</li>
 </ul>
 {% endblock %}

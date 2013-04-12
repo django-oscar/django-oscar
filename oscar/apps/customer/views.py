@@ -538,6 +538,7 @@ class AddressDeleteView(PageTitleMixin, DeleteView):
     template_name = "customer/address/address_delete.html"
     page_title = _('Delete address?')
     active_tab = 'addresses'
+    context_object_name = 'address'
 
     def get_queryset(self):
         return UserAddress._default_manager.filter(user=self.request.user)
