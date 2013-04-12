@@ -203,6 +203,37 @@
   }
 }
 /* Star Rating Default */
+.star-rating {
+    letter-spacing: -1px;
+    color:#CBCBCB;
+}
+.star-rating.One {
+    i:first-child {
+        color:#E6CE31;
+    }
+}
+.star-rating.Two {
+    i:first-child, i:first-child + i {
+        color:#E6CE31;
+    }
+}
+.star-rating.Three {
+    i:first-child, i:first-child + i, i:first-child + i + i {
+        color:#E6CE31;
+    }
+}
+.star-rating.Four {
+    i:first-child, i:first-child + i, i:first-child + i + i, i:first-child + i + i + i {
+        color:#E6CE31;
+    }
+}
+.star-rating.Five {
+    i {
+        color:#E6CE31;
+    }
+}
+
+
 .star {
 	clear:both;
 	display:block;
@@ -237,7 +268,7 @@
 	width: 65px;
 }
 .product_pod .star {
-  margin: 0px auto 4px;
+  margin-bottom: 4px;
 }
 .product_pod .star.One,
 .promotion_single .star.One {
