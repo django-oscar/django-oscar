@@ -89,3 +89,8 @@ css:
 	lessc oscar/static/oscar/less/styles.less > oscar/static/oscar/css/styles.css
 	lessc oscar/static/oscar/less/responsive.less > oscar/static/oscar/css/responsive.css
 	lessc oscar/static/oscar/less/dashboard.less > oscar/static/oscar/css/dashboard.css
+
+demo_css:
+	# Compile CSS for demo site
+	lessc sites/demo/static/demo/less/styles.less > sites/demo/static/demo/css/styles.css
+	lessc sites/demo/static/demo/less/responsive.less > sites/demo/static/demo/css/responsive.css
