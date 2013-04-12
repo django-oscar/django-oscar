@@ -182,5 +182,32 @@ OSCAR_DASHBOARD_NAVIGATION = [
     },
 ]
 
+# Search facets
+c = lambda x: u'\xa3%.0f' % x
+OSCAR_SEARCH_FACETS = {
+    'fields': {
+        # The key for these dicts will be used when passing facet data
+        # to the template. Same for the 'queries' dict below.
+        'category': {
+            'name': _('Category'),
+            'field': 'category'
+        }
+    },
+    'queries': {
+        'price_range': {
+            'name': _('Price range'),
+            'field': 'price',
+            'queries': [
+                # This is a list of (name, query) tuples where the name will
+                # be displayed on the front-end.
+                (_('%s to %s' % (c(0), c(20))), '[0 TO 20]'),
+                (_('%s to %s' % (c(20), c(40))), '[20 TO 40]'),
+                (_('%s to %s' % (c(40), c(60))), '[40 TO 60]'),
+                (_('%s+' % c(60)), '[60 TO *]')
+            ]
+        }
+    }
+}
+
 OSCAR_SETTINGS = dict(
     [(k, v) for k, v in locals().items() if k.startswith('OSCAR_')])

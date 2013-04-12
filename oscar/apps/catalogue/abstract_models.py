@@ -313,6 +313,10 @@ class AbstractProduct(models.Model):
     objects = models.Manager()
     browsable = BrowsableProductManager()
 
+    def __init__(self, *args, **kwargs):
+        super(AbstractProduct, self).__init__(*args, **kwargs)
+        self.attr = ProductAttributesContainer(product=self)
+
     # Properties
 
     @property
@@ -367,7 +371,9 @@ class AbstractProduct(models.Model):
 
     @property
     def min_variant_price_incl_tax(self):
-        """Return minimum variant price including tax"""
+        """
+        Return minimum variant price including tax
+        """
         return self._min_variant_price('price_incl_tax')
 
     @property
@@ -405,9 +411,14 @@ class AbstractProduct(models.Model):
     add_category_from_breadcrumbs.alters_data = True
 
     def attribute_summary(self):
-        u"""Return a string of all of a product's attributes"""
-        return ", ".join([
-            attribute.__unicode__() for attribute in self.attributes.all()])
+        """
+        Return a string of all of a product's attributes
+        """
+        pairs = []
+        for value in self.attribute_values.select_related().all():
+            pairs.append("%s: %s" % (value.attribute.name,
+                                     value.value))
+        return ", ".join(pairs)
 
     def get_title(self):
         """
@@ -417,6 +428,7 @@ class AbstractProduct(models.Model):
         if not title and self.parent_id:
             title = self.parent.title
         return title
+    get_title.short_description = _("Title")
 
     def get_product_class(self):
         """
@@ -427,6 +439,7 @@ class AbstractProduct(models.Model):
         if self.parent and self.parent.product_class:
             return self.parent.product_class
         return None
+    get_product_class.short_description = _("Product class")
 
     def get_missing_image(self):
         """
@@ -451,7 +464,9 @@ class AbstractProduct(models.Model):
     # Helpers
 
     def _min_variant_price(self, property):
-        u"""Return minimum variant price"""
+        """
+        Return minimum variant price
+        """
         prices = []
         for variant in self.variants.all():
             if variant.has_stockrecord:
@@ -478,10 +493,6 @@ class AbstractProduct(models.Model):
         return ('catalogue:detail', (), {
             'product_slug': self.slug,
             'pk': self.id})
-
-    def __init__(self, *args, **kwargs):
-        super(AbstractProduct, self).__init__(*args, **kwargs)
-        self.attr = ProductAttributesContainer(product=self)
 
     def save(self, *args, **kwargs):
         if self.is_top_level and not self.title:
@@ -562,7 +573,7 @@ class ProductAttributesContainer(object):
             if value is None:
                 if attribute.required:
                     raise ValidationError(
-                        _("%(attr)s attribute cannot be blanke") %
+                        _("%(attr)s attribute cannot be blank") %
                         {'attr': attribute.code})
             else:
                 try:
@@ -635,6 +646,10 @@ class AbstractProductAttribute(models.Model):
         ordering = ['code']
         verbose_name = _('Product Attribute')
         verbose_name_plural = _('Product Attributes')
+
+    @property
+    def is_option(self):
+        return self.type == "option"
 
     def _validate_text(self, value):
         if not (type(value) == unicode or type(value) == str):
@@ -774,7 +789,7 @@ class AbstractProductAttributeValue(models.Model):
     class Meta:
         abstract = True
         verbose_name = _('Product Attribute Value')
-        verbose_name_plural = _('Product Attribut Values')
+        verbose_name_plural = _('Product Attribute Values')
 
     def __unicode__(self):
         return u"%s: %s" % (self.attribute.name, self.value)

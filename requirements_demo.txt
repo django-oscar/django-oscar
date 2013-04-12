@@ -1,0 +1,12 @@
+# We link directly to the master branch of stores to pick up a few Oscar 0.5 fixes.
+-e git+https://github.com/tangentlabs/django-oscar-stores@master#egg=django_oscar_stores-dev
+
+# Similarly, we use the master of django-oscar-paypal and django-oscar-datacash
+-e git+https://github.com/tangentlabs/django-oscar-paypal@master#egg=django_oscar_paypal-dev
+-e git+https://github.com/tangentlabs/django-oscar-datacash@master#egg=django_oscar_datacash-dev
+
+# We need PostGIS and all that jazz
+psycopg2==2.5
+
+git+git://github.com/tinio/pysqlite.git@extension-enabled#egg=pysqlite
+pysolr>=2.0.13,<2.1

@@ -1,0 +1,9 @@
+{% load currency_filters %}
+This is standard shipping.
+
+<p>
+    {% with cost=0.99 total=12.00 %}
+    It costs {{ cost|currency }} per item but is free for orders over
+    {{ total|currency }}.
+    {% endwith %}
+</p>

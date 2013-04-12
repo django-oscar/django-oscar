@@ -1,0 +1,4 @@
+{% load currency_filters %}
+{% load i18n %}
+
+<a href="{% url basket:summary %}" class="btn"><span>{{ request.basket.total_incl_tax|currency }}</span> {% trans "12 items" %}</a>

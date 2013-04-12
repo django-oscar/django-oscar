@@ -1,0 +1,84 @@
+// OSCAR PRODUCTS UNIQUE STYLES
+// -----------
+.availability {
+/*  text-align:center;*/
+  &.outofstock {
+    color:@red;
+  }
+  &.instock {
+   color:@green;
+  }
+}
+/* Product View image container */
+.images {
+  img {
+    width:100%;
+    height:auto;
+  }
+}
+.basic {
+  label {
+    width:auto;
+  }
+  .input {
+    margin:0px;
+    input {
+      margin:0px 10px;
+    }
+  }
+}
+.promo_related {
+  .well();
+  height:250px;
+}
+/* review styles */
+.review {
+  border-bottom:1px solid @grayLight;
+  .clearfix();
+  h3 {
+    margin-top:10px;
+    margin-bottom: 10px;
+    font-size: @baseFontSize + 3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    small {
+      font-size: @baseFontSize - 1;
+    }
+  }
+  h4 {
+    border-top:1px solid @grayLighter;
+    border-bottom:1px solid @grayLight;
+    font-size: @baseFontSize + 1;
+  }
+}
+.review_content {
+  div {
+    padding:15px;
+    padding-left:0px;
+    border-right:dotted 1px @grayLight;
+  }
+}
+.review_votes {
+  div {
+    padding:15px;
+    padding-left:0px;
+    padding-bottom:0px;
+  }
+  .vote_agree {
+    float:left;
+    margin-right:10px;
+  }
+  form {
+    padding-bottom:10px;
+    margin-bottom:0px;
+    input {
+/*      width:70px;*/
+    }
+  }
+}
+.review_add,
+.review_all,
+.review_read,
+.side_categories {
+  .well();
+}

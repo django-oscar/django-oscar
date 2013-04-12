@@ -4,8 +4,11 @@ class ShippingMethod(object):
 
     It is an actual superclass to the classes in methods.py, and a de-facto
     superclass to the classes in models.py. This allows using all
-    shipping methods interchangeably.
+    shipping methods interchangeably (aka polymorphism).
     """
+
+    # This is the interface that all shipping methods must implement
+
     code = '__default__'
     name = 'Default shipping'
     description = ''

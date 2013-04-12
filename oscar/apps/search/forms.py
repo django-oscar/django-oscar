@@ -14,6 +14,32 @@ class SearchInput(Input):
     input_type = 'search'
 
 
+class PriceRangeSearchForm(FacetedSearchForm):
+
+    def search(self):
+        # We replace the 'search' method from FacetedSearchForm, so that we can
+        # handle range queries
+
+        # Note, we call super on a parent class
+        sqs = super(FacetedSearchForm, self).search()
+
+        # We need to process each facet to ensure that the field name and the
+        # value are quoted correctly and separately:
+        for facet in self.selected_facets:
+            if ":" not in facet:
+                continue
+            field, value = facet.split(":", 1)
+            if value:
+                if field == 'price_exact':
+                    # Don't wrap value in speech marks and don't clean value
+                    sqs = sqs.narrow(u'%s:%s' % (field, value))
+                else:
+                    sqs = sqs.narrow(u'%s:"%s"' % (field, sqs.query.clean(value)))
+
+        return sqs
+
+
+
 class MultiFacetedSearchForm(FacetedSearchForm):
     '''
     An extension of the regular faceted search form to alow for multiple facets

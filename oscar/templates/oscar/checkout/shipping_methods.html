@@ -30,7 +30,7 @@
         <div class="span9">
             <h4>{{ method.name }}</h4>
 			{% if method.description %}
-                <p>{{ method.description }}</p>
+                <p>{{ method.description|safe }}</p>
 			{% endif %}
 			{% if method.is_discounted %}
 				<small>
