@@ -269,6 +269,7 @@ INSTALLED_APPS = [
     'compressor',
     'apps.user',        # For profile testing
     'apps.gateway',     # For allowing dashboard access
+    'ajax_select',      # django-ajax-selects for admin site
 ]
 from oscar import get_core_apps
 INSTALLED_APPS = INSTALLED_APPS + get_core_apps()
@@ -363,6 +364,16 @@ COMPRESS_ENABLED = True
 COMPRESS_PRECOMPILERS = (
     ('text/less', 'lessc {infile} {outfile}'),
 )
+
+# django-ajax-selects
+# ===================
+# Read more at: https://github.com/crucialfelix/django-ajax-selects
+# We are using django-ajax-selects in admin site only.
+AJAX_LOOKUP_CHANNELS = {
+    'product': ('oscar.apps.catalogue.admin', 'ProductLookup'),
+}
+AJAX_SELECT_BOOTSTRAP = True
+AJAX_SELECT_INLINES = 'inline'
 
 
 # Logging

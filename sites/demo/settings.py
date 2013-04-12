@@ -217,6 +217,8 @@ INSTALLED_APPS = [
     'compressor',
     # For profile testing
     'apps.user',
+    # django-ajax-selects for admin page:
+    'ajax_select',
 ]
 
 # Include a shipping override app to provide some shipping methods
@@ -271,6 +273,13 @@ USE_TZ = True
 
 # Must be within MEDIA_ROOT for sorl to work
 OSCAR_MISSING_IMAGE_URL = 'image_not_found.jpg'
+
+# django-ajax-selects for admin page:
+AJAX_LOOKUP_CHANNELS = {
+    'product': ('oscar.apps.catalogue.admin', 'ProductLookup'),
+}
+AJAX_SELECT_BOOTSTRAP = True
+AJAX_SELECT_INLINES = 'inline'
 
 try:
     from settings_local import *

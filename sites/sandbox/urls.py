@@ -4,6 +4,7 @@ from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls.static import static
 
+from ajax_select import urls as ajax_select_urls
 from oscar.app import shop
 
 # These simply need to be imported into this namespace.  Ignore the PEP8
@@ -13,6 +14,7 @@ from oscar.views import handler500, handler404, handler403
 admin.autodiscover()
 
 urlpatterns = patterns('',
+    (r'^admin/lookups/', include(ajax_select_urls)),
     (r'^admin/', include(admin.site.urls)),
     # Custom functionality to allow dashboard users to be created
     (r'^gateway/', include('apps.gateway.urls')),

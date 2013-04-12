@@ -5,6 +5,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
 
+from ajax_select import urls as ajax_select_urls
 from apps.app import application
 
 # These need to be imported into this namespace
@@ -13,6 +14,7 @@ from oscar.views import handler500, handler404, handler403
 admin.autodiscover()
 
 urlpatterns = patterns('',
+    (r'^admin/lookups/', include(ajax_select_urls)),
     (r'^admin/', include(admin.site.urls)),
     (r'', include(application.urls)),
 )

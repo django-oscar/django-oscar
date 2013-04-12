@@ -1,4 +1,5 @@
 from django.contrib import admin
+from ajax_select import make_ajax_form
 
 from oscar.apps.promotions.models import Image, MultiImage, RawHTML, HandPickedProductList, OrderedProduct, AutomaticProductList, TabbedBlock, \
                                   PagePromotion, KeywordPromotion, SingleProduct
@@ -6,9 +7,13 @@ from oscar.apps.promotions.models import Image, MultiImage, RawHTML, HandPickedP
 
 class OrderProductInline(admin.TabularInline):
     model = OrderedProduct
+    form = make_ajax_form(OrderedProduct, {'product': 'product'},
+                          show_help_text=True)
     
+
 class HandPickedProductListAdmin(admin.ModelAdmin):
     inlines = [OrderProductInline]
+
 
 class PagePromotionAdmin(admin.ModelAdmin):
     list_display = ['page_url', 'content_object', 'position']
@@ -20,9 +25,14 @@ class PagePromotionAdmin(admin.ModelAdmin):
         form.base_fields['content_type'].queryset = form.base_fields['content_type'].queryset.filter(app_label='promotions')
         return form
 
+
 class KeywordPromotionAdmin(admin.ModelAdmin):
     list_display = ['keyword', 'position', 'clicks']
     readonly_fields = ['clicks']
+
+
+class SingleProductAdmin(admin.ModelAdmin):
+    form = make_ajax_form(SingleProduct, {'product': 'product'})
 
 
 admin.site.register(Image)
@@ -33,6 +43,4 @@ admin.site.register(AutomaticProductList)
 admin.site.register(TabbedBlock)
 admin.site.register(PagePromotion, PagePromotionAdmin)
 admin.site.register(KeywordPromotion, KeywordPromotionAdmin)
-admin.site.register(SingleProduct)
-
-
+admin.site.register(SingleProduct, SingleProductAdmin)
