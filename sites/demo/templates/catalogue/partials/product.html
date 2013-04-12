@@ -1,0 +1,56 @@
+{% load currency_filters %}
+{% load reviews_tags %}
+{% load thumbnail %}
+{% load i18n %}
+
+<article class="product_pod">
+    {% block product_image %}
+    <div class="image_container">
+        {% with image=product.primary_image %}
+            {% thumbnail image.original "150x150" upscale=False as thumb %}
+                <a href="{{ product.get_absolute_url }}">
+                    <img src="{{ thumb.url }}" alt="{{ product.get_title }}">
+                    {% if not product.is_available_to_buy %}<i class="unavailable"></i>{% endif %}
+                </a>
+            {% endthumbnail %}
+        {% endwith %}  
+    </div>
+    {% endblock %}
+
+    {% block product_title %}
+    <h3>
+        <span>
+            {% if product.has_stockrecord %}
+                {{ product.stockrecord.partner.name|truncatechars:19 }}
+            {% else %}
+                {% trans "Out of stock" %}
+            {% endif %}
+        </span>
+        <a href="{{ product.get_absolute_url }}">{{ product.get_title|truncatechars:30 }}</a>
+    </h3>
+    {% endblock %}
+
+    {% block product_review %}
+        <p class="star-rating {{ product.rating|as_stars }}">
+            <i class="icon-star"></i>
+            <i class="icon-star"></i>
+            <i class="icon-star"></i>
+            <i class="icon-star"></i>
+            <i class="icon-star"></i>
+        </p>
+    {% endblock %}
+
+    {% block product_price %}
+    <div class="product_price">
+        {% include "catalogue/partials/stock_record.html" %}
+        
+        {% if product.is_group %}
+            <a class="btn btn-block" href="{% url catalogue:detail product.slug product.id %}">{% trans "View range" %}</a>
+        {% else %}
+            {% include "catalogue/partials/add_to_basket_form_compact.html" %}
+        {% endif %}
+        
+    </div>
+    {% endblock %}
+    
+</article>
