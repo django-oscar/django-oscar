@@ -1,5 +1,5 @@
 {% load i18n %}
-<form class="form-stacked {{ class }}" method="{{ method|default:"post" }}"
+<form class="form-{{ style|default:"stacked" }} {{ class }}" method="{{ method|default:"post" }}"
     {% if action %}action="{{ action }}"{% endif %}
     {% if includes_files %}enctype="multipart/form-data"{% endif %}>
 	{% if not method == "get" %}{% csrf_token %}{% endif %}
