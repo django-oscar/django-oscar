@@ -34,8 +34,9 @@ demo: install
 	sites/demo/manage.py syncdb --noinput
 	sites/demo/manage.py migrate
 	# Import some core fixtures
-	sites/demo/manage.py loaddata countries.json sites/_fixtures/pages.json sites/_fixtures/auth.json
+	sites/demo/manage.py loaddata countries.json sites/_fixtures/pages.json
 	# Create catalogue (create product classes from fixture than import CSV files)
+	sites/demo/manage.py loaddata sites/demo/fixtures/auth.json
 	sites/demo/manage.py loaddata sites/demo/fixtures/product-classes.json sites/demo/fixtures/product-attributes.json
 	sites/demo/manage.py create_products --class=Books sites/demo/fixtures/books.csv
 	sites/demo/manage.py create_products --class=Downloads sites/demo/fixtures/downloads.csv
