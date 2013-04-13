@@ -77,8 +77,20 @@ The ``models.py`` file should import all models from the oscar app being overrid
     # myproject/promotions/models.py
     from oscar.apps.promotions.models import *
 
-Now replace ``oscar.apps.promotions`` with ``myproject.promotions`` in the ``INSTALLED_APPS``
-setting in your settings file.
+Now replace ``oscar.apps.promotions`` with ``myproject.promotions``  in the
+``INSTALLED_APPS`` setting in your settings file. To do it, you will need to let
+Oscar know that you're replacing the corresponding core app with yours.  You can
+do that by supplying an extra argument to ``get_core_apps`` function::
+
+    # myproject/settings.py
+
+    from oscar import get_core_apps
+    # ...
+    INSTALLED_APPS = [
+    ] + get_core_apps(['myproject.promotions'])
+
+The ``get_core_apps`` function will replace ``oscar.apps.promotions`` with
+``myproject.promotions``.
 
 Now create a new homepage view class in ``myproject.promotions.views`` - you can subclass
 Oscar's view if you like::
@@ -91,11 +103,22 @@ Oscar's view if you like::
 In this example, we set a new template location but it's possible to customise the view
 in any imaginable way.
 
+Now create the alternative template ``new-homeview.html``.  This could either be
+in a project-level ``templates`` folder that is added to your ``TEMPLATE_DIRS``
+settings, or a app-level ``templates`` folder within your 'promotions' app.  For
+now, put something simple in there, such as::
+
+    <html>
+        <body>
+            <p>You have successfully overridden the homepage template.</p>
+        </body>
+    </html>
+
 Next, create a new ``app.py`` for your local promotions app which maps your new ``HomeView``
 class to the homepage URL::
 
     # myproject/promotions/app.py
-    from oscar.apps.promotions import PromotionsApplication as CorePromotionsApplication
+    from oscar.apps.promotions.app import PromotionsApplication as CorePromotionsApplication
 
     from myproject.promotions.views import HomeView
 
@@ -113,6 +136,8 @@ Finally, hook up the new view to the homepage URL::
 
     class BaseApplication(Shop):
         promotions_app = promotions_app
+
+    application = BaseApplication()
 
 Quite long-winded, but once this step is done, you have lots of freedom to customise
 the app in question.
