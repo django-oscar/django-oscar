@@ -95,7 +95,7 @@ Next, create a new ``app.py`` for your local promotions app which maps your new 
 class to the homepage URL::
 
     # myproject/promotions/app.py
-    from oscar.apps.promotions import PromotionsApplication as CorePromotionsApplication
+    from oscar.apps.promotions.app import PromotionsApplication as CorePromotionsApplication
 
     from myproject.promotions.views import HomeView
 
@@ -113,6 +113,8 @@ Finally, hook up the new view to the homepage URL::
 
     class BaseApplication(Shop):
         promotions_app = promotions_app
+
+    application = BaseApplication()
 
 Quite long-winded, but once this step is done, you have lots of freedom to customise
 the app in question.
