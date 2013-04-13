@@ -77,8 +77,20 @@ The ``models.py`` file should import all models from the oscar app being overrid
     # myproject/promotions/models.py
     from oscar.apps.promotions.models import *
 
-Now replace ``oscar.apps.promotions`` with ``myproject.promotions`` in the ``INSTALLED_APPS``
-setting in your settings file.
+Now replace ``oscar.apps.promotions`` with  in the ``INSTALLED_APPS``
+setting in your settings file. To do it, you will need to let Oscar know that 
+you're replacing the corresponding core app with yours.  
+You can do that by supplying an extra argument to ``get_core_apps`` function::
+
+    # myproject/settings.py
+
+    from oscar import get_core_apps
+    # ...
+    INSTALLED_APPS = [
+    ] + get_core_apps(['myproject.promotions'])
+
+The ``get_core_apps`` function will replace ``oscar.apps.promotions`` with
+``myproject.promotions``.
 
 Now create a new homepage view class in ``myproject.promotions.views`` - you can subclass
 Oscar's view if you like::
