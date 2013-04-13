@@ -91,6 +91,18 @@ Oscar's view if you like::
 In this example, we set a new template location but it's possible to customise the view
 in any imaginable way.
 
+Now create a ``templates`` directory inside of ``myproject.promotions``. This should not be a 
+python package but rather a plain directory without the ``__init__.py`` file. Inside of this 
+directory create another directory called ``promotions``. Finally, inside of that directory
+create a new HTML template called ``new-homeview.html``. For now, put something simple
+in there, such as::
+
+    <html>
+    <body>
+    <p>You have successfully overridden the homepage template.</p>
+    </body>
+    </html>
+
 Next, create a new ``app.py`` for your local promotions app which maps your new ``HomeView``
 class to the homepage URL::
 
