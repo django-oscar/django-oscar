@@ -15,3 +15,13 @@
         {% endcompress %}
     {% endblock %}
 {% endblock %}
+
+
+{% block scripts %}
+{% compress js %}
+<!-- Twitter Bootstrap -->
+<script type="text/javascript" src="{% static "oscar/js/bootstrap/bootstrap.min.js" %}"></script>
+<!-- Oscar -->
+<script src="{% static "demo/js/oscar/ui.js" %}" type="text/javascript" charset="utf-8"></script>
+{% endcompress %}
+{% endblock scripts %}

@@ -92,7 +92,6 @@ var oscar = (function(o, $) {
         init: function() {
             if (o.responsive.isDesktop()) {
                 o.responsive.initNav();
-                o.responsive.initCarousel();
             }
         },
         isDesktop: function() {
