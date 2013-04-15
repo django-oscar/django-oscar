@@ -35,7 +35,7 @@ docs:
 	cd docs && make html
 
 coverage:
-	coverage run ./runtests.py
+	coverage run ./runtests.py --with-xunit
 	coverage xml -i
 
 # We probably should use upgrade instead of install here but we have a conflict
