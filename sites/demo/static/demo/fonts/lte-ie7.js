@@ -20,7 +20,10 @@ window.onload = function() {
 			'icon-mail' : '&#xe008;',
 			'icon-plus' : '&#x2b;',
 			'icon-noun_project_62' : '&#x21;',
-			'icon-arrow-down' : '&#x22;'
+			'icon-arrow-down' : '&#x22;',
+			'icon-check-alt' : '&#x23;',
+			'icon-x-altx-alt' : '&#x24;',
+			'icon-checkout-half-wheel' : '&#x25;'
 		},
 		els = document.getElementsByTagName('*'),
 		i, attr, html, c, el;

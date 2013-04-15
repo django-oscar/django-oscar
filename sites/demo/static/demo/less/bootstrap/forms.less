@@ -9,6 +9,7 @@
 // Make all forms have space below them
 form {
   margin: 0 0 @baseLineHeight;
+  .clearfix();
 }
 
 fieldset {
@@ -55,6 +56,8 @@ textarea {
 label {
   display: block;
   margin-bottom: 5px;
+  color:@navbarInverseBackground;
+  font-weight: bold;
 }
 
 // Form controls
@@ -79,13 +82,12 @@ input[type="tel"],
 input[type="color"],
 .uneditable-input {
   display: inline-block;
-  height: @baseLineHeight;
-  padding: 4px 6px;
-  margin-bottom: @baseLineHeight / 2;
-  font-size: @baseFontSize;
-  line-height: @baseLineHeight;
+  height: @headingThreeSize;
+  padding: 6px;
+  margin-bottom: @headingThreeSize / 2;
+  font-size: @headingFourSize;
+  line-height: @headingThreeSize;
   color: @gray;
-  .border-radius(@inputBorderRadius);
   vertical-align: middle;
 }
 
@@ -119,7 +121,6 @@ input[type="color"],
 .uneditable-input {
   background-color: @inputBackground;
   border: 1px solid @inputBorder;
-  .box-shadow(inset 0 1px 1px rgba(0,0,0,.075));
   .transition(~"border linear .2s, box-shadow linear .2s");
 
   // Focus state
@@ -596,6 +597,18 @@ input.search-query {
     display: none;
   }
 }
+.form-stacked {
+  input,
+  textarea,
+  select {
+    .input-block-level();
+  }
+  .checkbox, .radio {
+    input {
+      width:auto;
+    }
+  }
+}
 .form-search label,
 .form-inline label,
 .form-search .btn-group,
@@ -631,7 +644,7 @@ input.search-query {
 
 // Margin to space out fieldsets
 .control-group {
-  margin-bottom: @baseLineHeight / 2;
+  margin-bottom: 10px;
 }
 
 // Legend collapses margin, so next element is responsible for spacing
@@ -687,4 +700,24 @@ legend + .control-group {
   .form-actions {
     padding-left: @horizontalComponentOffset;
   }
+}
+
+//For IE: adds width for selects inside overflow hidden containers
+.select-open {
+  width:300px!important;
+}
+
+// ADDITIONAL ERRORS
+.errorlist {
+    margin:0;
+    padding:0 0 10px 0;
+    color:#B94A48;
+    li {
+        padding:0 0 5px 0;
+        list-style:none;
+    }
+}
+
+.control-label.required span {
+    color: #FF0000;
 }
