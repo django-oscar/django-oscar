@@ -19,6 +19,7 @@
       margin-bottom: 18px;
   }
 }
+//Basket column names
 .basket-title {
   clear:both;
   border:1px solid #ddd;
@@ -40,6 +41,7 @@
     border-bottom-width:1px;
   }
 }
+//Basket list item
 .basket-items {
   border-bottom:1px solid lighten(@grayLight, 30%);
   padding:15px 0;
@@ -95,52 +97,35 @@
 .checkout-proceed {
   float:right;
   text-align: right;
-  > span {
+  margin-bottom:30px;
+  span {
+    display:inline-block;
+    text-align: left;
+    margin:0 20px;
+  }
+  .credit-cards {
+    margin:0;
+  }
+  > strong {
     font-size:@headingFourSize;
     text-transform: uppercase;
     display:block;
     margin:20px 0;
   }
 }
-
-.shipping_address {
-  h2 {
-    margin-bottom: @baseLineHeight;
-  }
-}
+//Shipping addresses
 .choose-block {
-  margin-top:10px;
   ul {
     .remove_bullets();
     .clearfix();
     li {
-        width: @third;
-        float: left;
         .default-address {
             background-color: @grayLighter;
       }
     }
   }
-  .well {
-    position:relative;
-    form {
-      position:relative;
-      padding-bottom:35px;
-      margin-bottom:0;
-      .ship-address {
-          bottom: 0;
-          position: absolute;
-      }
-    }
-    .remove-item {
-      position:absolute;
-      bottom: 10px;
-      right: 19px;
-      margin-bottom: 0;
-      input {
-          margin-bottom: 0;
-        }
-    }
+  form {
+    margin-bottom:0;
   }
   .well-info.default-address {
     background-color: @successBackground;
@@ -160,35 +145,34 @@
     }
   } 
 }
-
-.total {
-  background-color:#FDF5D9!important;
+.shipping-payment {
+  .span6 > .well {
+    min-height:380px;
+  }
 }
+//Checkout navigation
 .checkoutNav {
+  .container-fluid {
+    max-width: 960px;
+  }
   position: relative;
-  margin:30px 0 60px;
-  hr {
-    margin:0;
-    border-top:2px solid @navbarInverseBackground;
-    position: absolute;
-    bottom:0;
-    left:0;
-    width:100%;
-  }
+  margin:30px 0 50px;
+  background:#F2F2F2;
+  padding:5px 0; 
+  border-top:2px solid @navbarInverseBackground;
+  border-bottom:1px solid #DDD;
   i {
-    font-size: @headingTwoSize;
-    line-height: @headingFourSize;
-    vertical-align: middle;
-    position: relative;
-    top:5px;
-  }
-  div {
-    height:25px;
-    overflow: hidden;
+    display:none;
+    vertical-align: bottom;
+    position: absolute;
+    width:100%;
+    left:0;
+    top:-25px;
   }
   ul {
     .clearfix();
     li {
+      position: relative;
       list-style: none;
       display:block;
       text-align: center;
@@ -199,11 +183,45 @@
       text-transform: uppercase;
       color:@navbarInverseBackground;
       font-size: 18px;
+      &.visited {
+        color:@green;
+        i:first-child + i {
+          display:inline-block;
+          font-size: @headingThreeSize;
+          line-height: @headingThreeSize;
+        }
+        a {
+          color:@green;
+        }
+      }
       &.active {
-        color:@blue;
-        border-bottom:2px solid yellow;
+        i:first-child {
+          display:inline-block;
+          font-size: @headingTwoSize;
+          line-height: @headingTwoSize;
+          height:32px;
+          overflow: hidden;
+          top:-38px;
+        }
       }
     }
   }
+}
+//Footer and Checkout images
+.credit-cards,
+.verisign {
+  display:inline-block;
+  vertical-align: middle;
+  margin:0 4px;
+}
+.credit-cards {
+  width:178px;
+  height:21px;
+  background: url(/static/demo/img/ui/sprite.png) 0 -49px repeat transparent;
+}
+.verisign {
+  width:100px;
+  height:49px;
+  background: url(/static/demo/img/ui/sprite.png) 0 0 repeat transparent;
 }
 

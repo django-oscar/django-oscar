@@ -93,11 +93,15 @@
 {% block formactions %}
 <hr/>
 <div class="row-fluid">
-    <p class="checkout-proceed">
-        <a href="{% url checkout:index %}" class="btn btn-large btn-primary">Proceed to checkout</a>
-        <span>{% trans "or" %}</span>
+    <div class="checkout-proceed">
+        <div>
+            <a href="https://www.verisign.com.au" target="_blank" title="https://www.verisign.com.au"><i class="verisign"></i></a>
+            <span>{% trans "We accept" %} <br><i class="credit-cards"></i></span>
+            <a href="{% url checkout:index %}" class="btn btn-large btn-primary">Proceed to checkout</a>
+        </div>
+        <strong>{% trans "or" %}</strong>
         <a href="{% url paypal-redirect %}"><img src="https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif"></a>
-    </p>
+    </div>
 </div>
 <div class="alert alert-warning">
     <h4>{% trans "Demo site help" %}</h4>

@@ -59,6 +59,21 @@
         });
     }
 
+    function matchHeight(hasChanged) {
+      if (!hasChanged) {
+        return;
+      }
+      var matchHeight = $('[data-behaviours~="match-height"]');
+
+      if(matchHeight.length > 1) {
+        var rowHeight = matchHeight.closest('.row-fluid').height() - 40;
+
+        matchHeight.each(function() {
+          $(this).css('min-height', rowHeight);
+        });
+      }    
+    }
+
 
     // Register modernizr function against all viewports
     site.responsive.register(svgModernizr);
@@ -71,6 +86,5 @@
     site.responsive.register(megaCarousel, ['desktop', 'tablet']);
     site.responsive.register(productCarousel, ['desktop', 'tablet']);
     site.responsive.register(productSingleCarousel, ['desktop', 'tablet']);
-    // site.responsive.register(productAffix, ['desktop', 'tablet']);
 
 }(site, jQuery));

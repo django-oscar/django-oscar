@@ -3,8 +3,16 @@
 {% load currency_filters %}
 {% load promotion_tags %}
 {% load category_tags %}
+{% load compress %}
+{% load staticfiles %}
+{% load i18n %}
 
 {% block body_class %}checkout-page{% endblock body_class %}
+
+{% block extrahead %}
+    <script src="{% static "demo/js/modernizr/modernizr.js" %}" type="text/javascript" charset="utf-8"></script>    
+    <!--[if lte IE 7]><script src="{% static "demo/fonts/lte-ie7.js" %}"></script><![endif]-->
+{% endblock %}
 
 {% block layout %}
 <div id="layout">
@@ -13,6 +21,10 @@
             <div class="header-content">
                 <div>
                     {% include "partials/brand.html" %}
+                </div>
+                <div>
+                    <p><a href="https://www.verisign.com.au" target="_blank" title="https://www.verisign.com.au"><i class="verisign"></i></a></p>
+                    <p>{% trans "We accept" %} <br/> <i class="credit-cards"></i></p>
                 </div>
              </div>
         </div>
@@ -59,4 +71,10 @@
 </div>
 
 {% include "partials/footer.html" %}
+{% endblock %}
+
+{% block extrascripts %}
+{% compress js %}
+    {% include "partials/extrascripts.html" %}
+{% endcompress %}
 {% endblock %}
