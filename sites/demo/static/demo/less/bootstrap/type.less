@@ -53,6 +53,9 @@ a.text-success:focus { color: darken(@successText, 10%); }
 .text-center         { text-align: center; }
 
 
+
+
+
 // Headings
 // -------------------------
 
@@ -66,7 +69,6 @@ h1, h2, h3, h4, h5, h6 {
   small {
     font-weight: normal;
     line-height: 1;
-    color: @grayLight;
   }
 }
 
@@ -86,14 +88,67 @@ h2 small { font-size: @baseFontSize * 1.25; } // ~18px
 h3 small { font-size: @baseFontSize; }
 h4 small { font-size: @baseFontSize; }
 
+//Rewrite below or above rather than overwrite.
+
+@headingsFontWeight:    700;
+
+@headingOneSize: 48px;
+@headingTwoSize: 32px;
+@headingThreeSize: 24px;
+@headingFourSize: 16px;
+
+h1 { font-size: @headingOneSize; line-height: 58px; }
+h2 { font-size: @headingTwoSize; line-height: 38px; }
+h3 { font-size: @headingThreeSize; line-height: 30px; }
+h4 { font-size: @headingFourSize; line-height: 20px; }
+
+h1, h2, h3, h4, p, .promotion-block {
+    margin:0 0 30px;
+}
+
+h1, h2, h3 {
+  color:@navbarInverseBackground;
+}
+
+h3 {
+  text-transform: uppercase;
+}
+
 
 // Page header
 // -------------------------
 
 .page-header {
+  .clearfix();
+  margin: 0 0 (@baseLineHeight * 1.5);
+  h1 {
+    font-size:@headingTwoSize;
+    line-height: 38px;
+    text-transform: uppercase;
+  }
+  .verisign {
+    position: relative;
+    top:-10px;
+    float:right;
+  }
+}
+.well .sub-header {
+  margin: 0 0 (@baseLineHeight);
+}
+.sub-header {
   padding-bottom: (@baseLineHeight / 2) - 1;
-  margin: @baseLineHeight 0 (@baseLineHeight * 1.5);
   border-bottom: 1px solid @grayLighter;
+  margin: 0 0 (@baseLineHeight);
+}
+.page-header {
+  h1,h2 {
+    margin:0;
+  }
+}
+.sub-header {
+  h2,h3,h4 {
+    margin:0;
+  }
 }
 
 
@@ -172,8 +227,7 @@ dd {
 hr {
   margin: @baseLineHeight 0;
   border: 0;
-  border-top: 1px solid @hrBorder;
-  border-bottom: 1px solid @white;
+  border-top: 1px solid #DDDDDD;
 }
 
 // Abbreviations and acronyms

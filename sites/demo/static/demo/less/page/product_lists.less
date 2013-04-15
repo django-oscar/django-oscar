@@ -1,14 +1,17 @@
-//Breadcrumb mods
-.breadcrumb {
-  padding: 8px 15px;
-  margin: 0 0 20px;
-  list-style: none;
-  background: none;
-  .border-radius(0);
+// Price Color
+.price_color {
+  display:block;
+  color:@green;
+  font-weight:bold;
 }
-/*  Procduct columns*/
+//Procduct list columns -- you will need to add a no-margin class divisible by the column number
 .five li {
-    width:@fifth;
+    @totalGutter: 10%;
+    @productColumns: 5;
+    @productGutters: 4;
+    @productGutter: @totalGutter / @productGutters;
+    width:(100 - @productGutters * @productGutter) / @productColumns;
+    margin-right:@productGutter;
 }
 .four li {
     @totalGutter: 10%;
@@ -19,10 +22,20 @@
     margin-right:@productGutter;
 }
 .three li {
-    width:@third;
+    @totalGutter: 10%;
+    @productColumns: 3;
+    @productGutters: 2;
+    @productGutter: @totalGutter / @productGutters;
+    width:(100 - @productGutters * @productGutter) / @productColumns;
+    margin-right:@productGutter;
 }
 .two li {
-    width:@half
+    @totalGutter: 10%;
+    @productColumns: 2;
+    @productGutters: 1;
+    @productGutter: @totalGutter / @productGutters;
+    width:(100 - @productGutters * @productGutter) / @productColumns;
+    margin-right:@productGutter;
 }
 .one li {
     width:@full;
@@ -79,14 +92,6 @@
       position: absolute;
       bottom:0;
     }
-    i {
-      display:block;
-      color:@gray;
-      font-style: normal;
-    }
-    del {
-      color:@gray;
-    }
   }
   .image_container {
     border:1px solid #C7DAD7;
@@ -96,15 +101,27 @@
   }
   .product_price {
     position:absolute;
-    bottom:0;
+    bottom:20px;
     left:0;
     width:100%;
-    min-height:130px;
+    // min-height:130px;
     form {
       margin-bottom:0px;
     }
   }
 }
+//Price (i = variant)
+.price_color {
+  i {
+    display:block;
+    color:@gray;
+    font-style: normal;
+  }
+  del {
+    color:@gray;
+  }
+}
+
 /* Product list image container */
 .image_container {
   min-height:200px;
@@ -120,7 +137,7 @@
     margin:0px auto;
   }
 }
-
+//Category page title and description
 .category-title {
   background:#244761;
   height:250px;
@@ -154,8 +171,5 @@
     height:250px;
     right:0;
     top:0;
-  }
-  i {
-
   }
 }

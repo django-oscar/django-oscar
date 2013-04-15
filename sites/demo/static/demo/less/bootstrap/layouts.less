@@ -2,15 +2,24 @@
 // Layouts
 // --------------------------------------------------
 
-
-// Container (centered, fixed-width layouts)
-.container {
-  .container-fixed();
+// Demo page structure
+html,
+body {
+  height: 100%;
 }
 
-// Fluid layouts (left aligned, with sidebar, min- & max-width content)
+#layout {
+  min-height: 100%;
+  margin-bottom: -(@footer-height);
+}
+
 .container-fluid {
-  padding-right: @gridGutterWidth;
-  padding-left: @gridGutterWidth;
-  .clearfix();
+  padding:0px;
+  margin:0px auto;
+  max-width:1170px;
+}
+
+.page_inner {
+   padding:@gridGutterWidth 0 50px;
+   .clearfix();
 }
