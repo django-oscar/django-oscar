@@ -20,6 +20,27 @@
 </div>
 {% endblock  %}
 
+{% block column_left %}
+    <div class="side_categories">
+        {% if categories %}
+        <ul class="nav nav-list">
+            <li class="nav-header">{% trans "Browse" %}</li>
+            {% for category in categories %}
+            <li><a href="{{ category.0.get_absolute_url }}">{{ category.0.name }} <i class="icon-arrow-right"></i></a>
+                {% if category.1 %}
+                <ul>
+                    {% for subcategory in category.1 %}
+                        <li><a href="{{ subcategory.0.get_absolute_url }}">{{ subcategory.0.name }} <i class="icon-arrow-right"></i></a>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+{% endblock %}
+
 {% block content %}
 
 {% if products.count %}
