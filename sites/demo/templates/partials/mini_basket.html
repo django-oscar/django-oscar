@@ -1,4 +1,5 @@
 {% load currency_filters %}
 {% load i18n %}
 
-<a href="{% url basket:summary %}" class="btn"><span>{{ request.basket.total_incl_tax|currency }}</span> {% trans "12 items" %}</a>
+<a href="{% url basket:summary %}" class="btn"><span>{{ request.basket.total_incl_tax|currency }}</span> 
+    {% blocktrans count counter=request.basket.num_items %}1 item{% plural %}{{ counter }} items{% endblocktrans %}</a>
