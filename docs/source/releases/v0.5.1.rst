@@ -1,0 +1,21 @@
+=========================
+Oscar 0.5.1 release notes
+=========================
+
+This is a bugfix release for Oscar 0.5, backporting a few issues discovered
+during development of Oscar's demo site.
+
+This release contains fixes for the following issues:
+
+* The ``is_available_to_buy`` method was failing for variant products where the
+  product class is defined on the parent product.  Fixed in 7fd62f2af0_.
+
+* The stockrecord partial ``catalogue/partials/stock_record.html`` incorrectly
+  handled group products.  Fixed in 5594bcccd6_.
+
+* The checkout thank-you template ``checkout/thank_you.html`` incorrectly looked
+  up the line product URL.  Fixed in cc5f63d827_.
+
+.. _7fd62f2af0: https://github.com/tangentlabs/django-oscar/commit/7fd62f2af078f950eeb278b97d01153b90b08e73
+.. _5594bcccd6: https://github.com/tangentlabs/django-oscar/commit/5594bcccd67bfca6ec052ee635f0f0cbddc5dce5
+.. _cc5f63d827: https://github.com/tangentlabs/django-oscar/commit/cc5f63d827ce943e0ba1e7daa509cbd37b284c64 
