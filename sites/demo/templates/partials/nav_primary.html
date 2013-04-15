@@ -11,15 +11,6 @@
                 <span class="icon-bar"></span>
             </a>
 
-            <a class="btn btn-navbar btn-cart visible-phone" href="{% url checkout:index %}">
-                <i class="icon-shopping-cart"></i>
-                <strong>{% trans "Basket" %}
-                {% if request.basket.all_lines.count %}
-                {% trans "Total:" %} {{ basket.total_incl_tax|currency }}
-                {% endif %}
-                </strong>
-            </a>
-
             <div class="nav-collapse primary-collapse">
                 <ul class="nav">
                     <li><a tabindex="-1" href="{% url catalogue:index %}">{% trans "All" %}</a></li>

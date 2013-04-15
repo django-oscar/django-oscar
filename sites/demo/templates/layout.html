@@ -17,12 +17,12 @@
                 <div class="header-content">
                     <div>
                         {% include "partials/brand.html" %}
-                        {% block brand_title %}<h3>{% trans "The largest ranges of nautical accessories online" %}{{ shop_tagline }}</h3>{% endblock %}
+                        {% block brand_title %}<h3 class="hidden-phone">{% trans "The largest ranges of nautical accessories online" %}{{ shop_tagline }}</h3>{% endblock %}
                     </div>
                     <div>
                         {% block mini_basket %}<p><i class="icon-cart"></i>{% include "partials/mini_basket.html" %}</p>{% endblock %}
-                        <p><i class="icon-mobile"></i> <span>{% trans "Customer Service" %} <br/> <strong>1-800-424-1324</strong></span></p>
-                        <p><i class="icon-lock"></i> <span>{% trans "Secure by" %} <br/> <strong>{% trans "VeriSign" %}</strong></span></p>
+                        <p class="hidden-phone"><i class="icon-mobile"></i> <span>{% trans "Customer Service" %} <br/> <strong>1-800-424-1324</strong></span></p>
+                        <p class="hidden-phone"><i class="icon-lock"></i> <span>{% trans "Secure by" %} <br/> <strong>{% trans "VeriSign" %}</strong></span></p>
                     </div>
                  </div>
             </div>
