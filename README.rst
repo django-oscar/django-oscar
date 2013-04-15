@@ -206,7 +206,7 @@ Tangent
 Want an Oscar project?
 ~~~~~~~~~~~~~~~~~~~~~~
 
-.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/logos/tangentlabs.png
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/logos/tangentlabs.jpg
     :target: http://www.tangentlabs.co.uk/
 
 If you are interested in having an Oscar project built for you, Tangent can
