@@ -200,14 +200,11 @@ Non-Tangent:
 
 Many more on the way.  If you use Oscar in production, please let us know.
 
-Tangent
--------
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/logos/tangentlabs.jpg
+    :target: http://www.tangentlabs.co.uk/
 
 Want an Oscar project?
 ~~~~~~~~~~~~~~~~~~~~~~
-
-.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/logos/tangentlabs.jpg
-    :target: http://www.tangentlabs.co.uk/
 
 If you are interested in having an Oscar project built for you, Tangent can
 help.  Please get in touch with us via `oscar@tangentlabs.co.uk`_
