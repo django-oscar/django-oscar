@@ -1,4 +1,5 @@
-.. image:: http://img692.imageshack.us/img692/6498/logovf.png
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/logos/oscar.png
+    :target: http://oscarcommerce.com
 
 ===================================
 Domain-driven e-commerce for Django
@@ -199,10 +200,28 @@ Non-Tangent:
 
 Many more on the way.  If you use Oscar in production, please let us know.
 
-Would you like to work on Oscar?
---------------------------------
+Tangent
+-------
 
-Tangent Labs are currently looking for python hackers to work on Oscar as well
+Want an Oscar project?
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/logos/tangentlabs.png
+    :target: http://www.tangentlabs.co.uk/
+
+If you are interested in having an Oscar project built for you, Tangent can
+help.  Please get in touch with us via `oscar@tangentlabs.co.uk`_
+
+.. _`oscar@tangentlabs.co.uk`: mailto:oscar@tangentlabs.co.uk
+
+Work on Oscar?
+~~~~~~~~~~~~~~
+
+`Tangent Labs`_ are currently looking for python hackers to work on Oscar as well
 as some of other internal products and e-commerce projects.  If this sounds
-interesting, please get in touch with @codeinthehole through Github or Twitter.
-The position is in Tangent's London offices.
+interesting, please email `recruitment@tangentlabs.co.uk`_.
+
+The position is in Tangent's London offices and you must have the appropriate
+visas to work here.
+
+.. _`recruitment@tangentlabs.co.uk`: mailto:recruitment@tangentlabs.co.uk
