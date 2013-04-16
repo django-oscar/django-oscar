@@ -237,6 +237,8 @@ class ProductCreateUpdateView(generic.UpdateView):
         image_formset.save()
         recommended_formset.save()
 
+        form.save()
+
         return HttpResponseRedirect(self.get_success_url())
 
     def forms_invalid(self, form, stockrecord_form, category_formset,
