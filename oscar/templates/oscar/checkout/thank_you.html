@@ -197,8 +197,6 @@
 </div>
 {% endblock content %}
 
-{% block extratracking %}
-    {% if google_analytics_id %}
-        {% include 'partials/google_analytics_transaction.html' %}
-    {% endif %}
+{% block tracking %}
+{% include "partials/google_analytics_transaction.html" %}
 {% endblock %}
