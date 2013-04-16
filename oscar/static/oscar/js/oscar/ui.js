@@ -100,8 +100,8 @@ var oscar = (function(o, $) {
         },
         initNav: function() {
             // Initial navigation for desktop
-            var $sidebar = $('aside.span3'), 
-                $browse = $('#browse > .dropdown-menu'), 
+            var $sidebar = $('aside.span3'),
+                $browse = $('#browse > .dropdown-menu'),
                 $browseOpen = $browse.parent().find('> button[data-toggle]');
             // Set width of nav dropdown to be same as sidebar
             $browse.css('width', $sidebar.outerWidth());
@@ -186,7 +186,7 @@ var oscar = (function(o, $) {
         submitBasketForm: function(event) {
             $('#messages').html('');
             var payload = $('#basket_formset').serializeArray();
-            $.post('/basket/', payload, o.basket.submitFormSuccess, 'json');
+            $.post(document.URL, payload, o.basket.submitFormSuccess, 'json');
             event.preventDefault();
         },
         submitFormSuccess: function(data) {
