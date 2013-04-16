@@ -5,6 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from treebeard.forms import MoveNodeForm
 
 from oscar.core.utils import slugify
+from oscar.core.loading import get_class
 from oscar.forms.widgets import ImageInput
 
 Product = get_model('catalogue', 'Product')
@@ -15,6 +16,8 @@ ProductAttributeValue = get_model('catalogue', 'ProductAttributeValue')
 ProductCategory = get_model('catalogue', 'ProductCategory')
 ProductImage = get_model('catalogue', 'ProductImage')
 ProductRecommendation = get_model('catalogue', 'ProductRecommendation')
+ProductSelect = get_class('dashboard.catalogue.widgets', 'ProductSelect')
+ProductSelectMultiple = get_class('dashboard.catalogue.widgets', 'ProductSelectMultiple')
 
 
 class CategoryForm(MoveNodeForm):
@@ -154,6 +157,16 @@ class ProductForm(forms.ModelForm):
         "numeric": _attr_numeric_field,
     }
 
+    class Meta:
+        model = Product
+        exclude = ('slug', 'status', 'score', 'product_class',
+                   'recommended_products', 'product_options',
+                   'attributes', 'categories')
+        widgets = {
+            'parent': ProductSelect,
+            'related_products': ProductSelectMultiple,
+        }
+
     def __init__(self, product_class, *args, **kwargs):
         self.product_class = product_class
         self.set_initial_attribute_values(kwargs)
@@ -192,12 +205,6 @@ class ProductForm(forms.ModelForm):
     def get_related_products_queryset(self):
         return Product.browsable.order_by('title')
 
-    class Meta:
-        model = Product
-        exclude = ('slug', 'status', 'score', 'product_class',
-                   'recommended_products', 'product_options',
-                   'attributes', 'categories')
-
     def save(self):
         object = super(ProductForm, self).save(False)
         object.product_class = self.product_class
@@ -207,8 +214,7 @@ class ProductForm(forms.ModelForm):
         if not object.upc:
             object.upc = None
         object.save()
-        if hasattr(self, 'save_m2m'):
-            self.save_m2m()
+        self.save_m2m()
         return object
 
     def save_attributes(self, object):
@@ -293,5 +299,14 @@ ProductImageFormSet = inlineformset_factory(
     Product, ProductImage, form=ProductImageForm, extra=2)
 
 
+class ProductRecommendationForm(forms.ModelForm):
+    class Meta:
+        model = ProductRecommendation
+        widgets = {
+            'recommendation': ProductSelect,
+        }
+
+
 ProductRecommendationFormSet = inlineformset_factory(
-    Product, ProductRecommendation, extra=5, fk_name="primary")
+    Product, ProductRecommendation, form=ProductRecommendationForm,
+    extra=5, fk_name="primary")
