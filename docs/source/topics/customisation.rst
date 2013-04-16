@@ -132,8 +132,8 @@ of the app with yours.  You can do that by supplying an extra argument to
         # all your non-Oscar apps
     ] + get_core_apps(['yourproject.order'])
 
-``get_core_apps([])`` will return a list of Oscar core apps. If you supply
-additional apps, they will be used to replace the Oscar core apps.
+``get_core_apps([])`` will return a list of Oscar core apps. If you supply a
+list of additional apps, they will be used to replace the Oscar core apps.
 In the above example, ``yourproject.order`` will be returned instead of
 ``oscar.apps.order``.
 

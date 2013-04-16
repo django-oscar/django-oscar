@@ -24,10 +24,22 @@ Oscar's view if you like::
 In this example, we set a new template location but it's possible to customise the view
 in any imaginable way.
 
+If you want to change the template, create the alternative template
+``new-homeview.html``.  This could either be
+in a project-level ``templates`` folder that is added to your ``TEMPLATE_DIRS``
+settings, or a app-level ``templates`` folder within your 'promotions' app.  For
+now, put something simple in there, such as::
+
+    <html>
+        <body>
+            <p>You have successfully overridden the homepage template.</p>
+        </body>
+    </html>
+
 Now you can hook it up in your local ``app.py``::
 
     # myproject/promotions/app.py
-    from oscar.apps.promotions import PromotionsApplication as CorePromotionsApplication
+    from oscar.apps.promotions.app import PromotionsApplication as CorePromotionsApplication
 
     from myproject.promotions.views import HomeView
 
