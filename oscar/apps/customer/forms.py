@@ -2,7 +2,6 @@ import string
 import random
 
 from django.contrib.auth.forms import AuthenticationForm
-from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist
 from django import forms
@@ -162,39 +161,53 @@ class EmailUserCreationForm(forms.ModelForm):
         return user
 
 
-class SearchByDateRangeForm(forms.Form):
+class OrderSearchForm(forms.Form):
     date_from = forms.DateField(required=False, label=_("From"))
     date_to = forms.DateField(required=False, label=_("To"))
+    order_number = forms.CharField(required=False, label=_("Order number"))
 
     def clean(self):
-        if self.is_valid() and not self.cleaned_data['date_from'] and not self.cleaned_data['date_to']:
-            raise forms.ValidationError(_("At least one date field is required."))
-        return super(SearchByDateRangeForm, self).clean()
+        if self.is_valid() and not any([self.cleaned_data['date_from'],
+                                        self.cleaned_data['date_to'],
+                                        self.cleaned_data['order_number']]):
+            raise forms.ValidationError(_("At least one field is required."))
+        return super(OrderSearchForm, self).clean()
 
     def description(self):
         if not self.is_bound or not self.is_valid():
             return _('All orders')
         date_from = self.cleaned_data['date_from']
         date_to = self.cleaned_data['date_to']
+        order_number = self.cleaned_data['order_number']
+        desc = None
         if date_from and date_to:
-            return _('Orders placed between %(date_from)s and %(date_to)s') % {
+            desc = _('Orders placed between %(date_from)s and %(date_to)s') % {
                 'date_from': date_from,
                 'date_to': date_to}
         elif date_from:
-            return _('Orders placed since %s') % date_from
+            desc = _('Orders placed since %s') % date_from
         elif date_to:
-            return _('Orders placed until %s') % date_to
+            desc = _('Orders placed until %s') % date_to
+        if order_number and desc is None:
+            desc = _('Orders with order number containing %s') % order_number
+        elif order_number and desc is not None:
+            desc += _(' and order number containing %s') % order_number
+        return desc
 
     def get_filters(self):
         date_from = self.cleaned_data['date_from']
         date_to = self.cleaned_data['date_to']
+        order_number = self.cleaned_data['order_number']
+        kwargs = {}
         if date_from and date_to:
-            return {'date_placed__range': [date_from, date_to]}
+            kwargs['date_placed__range'] = [date_from, date_to]
         elif date_from and not date_to:
-            return {'date_placed__gt': date_from}
+            kwargs['date_placed__gt'] = date_from
         elif not date_from and date_to:
-            return {'date_placed__lt': date_to}
-        return {}
+            kwargs['date_placed__lt'] = date_to
+        if order_number:
+            kwargs['number__contains'] = order_number
+        return kwargs
 
 
 class UserForm(forms.ModelForm):

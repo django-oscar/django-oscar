@@ -23,9 +23,9 @@ from oscar.core.loading import get_class, get_profile_class, get_classes
 from .mixins import PageTitleMixin
 
 Dispatcher = get_class('customer.utils', 'Dispatcher')
-EmailAuthenticationForm, EmailUserCreationForm, SearchByDateRangeForm = get_classes(
+EmailAuthenticationForm, EmailUserCreationForm, OrderSearchForm = get_classes(
     'customer.forms', ['EmailAuthenticationForm', 'EmailUserCreationForm',
-                       'SearchByDateRangeForm'])
+                       'OrderSearchForm'])
 ProfileForm = get_class('customer.forms', 'ProfileForm')
 UserAddressForm = get_class('address.forms', 'UserAddressForm')
 user_registered = get_class('customer.signals', 'user_registered')
@@ -343,19 +343,19 @@ class OrderHistoryView(PageTitleMixin, ListView):
     template_name = 'customer/order/order_list.html'
     paginate_by = 20
     model = Order
-    form_class = SearchByDateRangeForm
+    form_class = OrderSearchForm
     page_title = _('Order History')
     active_tab = 'orders'
 
     def get(self, request, *args, **kwargs):
         if 'date_from' in request.GET:
-            self.form = SearchByDateRangeForm(self.request.GET)
+            self.form = OrderSearchForm(self.request.GET)
             if not self.form.is_valid():
                 self.object_list = self.get_queryset()
                 ctx = self.get_context_data(object_list=self.object_list)
                 return self.render_to_response(ctx)
         else:
-            self.form = SearchByDateRangeForm()
+            self.form = OrderSearchForm()
         return super(OrderHistoryView, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
