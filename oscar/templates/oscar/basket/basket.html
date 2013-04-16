@@ -20,5 +20,9 @@
 {% endblock content %}
 
 {% block onbodyload %}
-oscar.basket.init();
+{# We pass in the URL to send AJAX requests to #}
+var options = {
+    'basketURL': '{% url basket:summary %}'
+};
+oscar.basket.init(options);
 {% endblock %}
