@@ -6,7 +6,8 @@ env:
 # NOTE: easy_install *will* downgrade if setup.py specifies a max version
 # This leads to seemingly passing tests
   - DJANGO_VERSION=1.4.5
-install: 
+  - DJANGO_VERSION=1.5
+install:
   - easy_install Django==$DJANGO_VERSION
 script:
   - make travis
