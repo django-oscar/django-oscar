@@ -76,3 +76,8 @@ css:
 	lessc oscar/static/oscar/less/styles.less > oscar/static/oscar/css/styles.css
 	lessc oscar/static/oscar/less/responsive.less > oscar/static/oscar/css/responsive.css
 	lessc oscar/static/oscar/less/dashboard.less > oscar/static/oscar/css/dashboard.css
+
+clean:
+	# Remove files not in source control
+	find . -type f -name "*.pyc" -delete
+	rm -rf nosetests.xml coverage.xml htmlcov *.egg-info *.pdf dist violations.txt
