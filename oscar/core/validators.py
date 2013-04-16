@@ -12,8 +12,9 @@ class ExtendedURLValidator(validators.URLValidator):
         # 'verify_exists' has been removed in Django 1.5 and so we no longer
         # pass it up to the core validator class
         self.is_local_url = False
-        self.verify_exists = kwargs.pop('verify_exists', False)
+        verify_exists = kwargs.pop('verify_exists', False)
         super(ExtendedURLValidator, self).__init__(*args, **kwargs)
+        self.verify_exists = verify_exists
 
     def __call__(self, value):
         try:
