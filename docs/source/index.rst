@@ -87,11 +87,13 @@ All you need to start developing an Oscar project.
 .. toctree::
    :maxdepth: 1
 
+   topics/customisation
    howto/index
    ref/apps/index
    ref/settings
    ref/signals
    ref/upgrading
+   topics/translation
 
 The Oscar open-source project
 =============================

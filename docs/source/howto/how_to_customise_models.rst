@@ -2,9 +2,14 @@
 How to customise models
 =======================
 
-You must first create a local version of the app that you wish to customise.  This
-involves creating a local app with the same name and importing the equivalent models
-from Oscar into it.
+This How-to describes how to replace Oscar models with your own. This allows you
+to add fields and custom methods.
+It builds upon the steps described in :doc:`/topics/customisation`. Please
+read it first and ensure that you've:
+
+* Created an app with the same label
+* Created a custom main Shop class
+* Created a custom ``app.py``
 
 Example
 -------

@@ -11,12 +11,12 @@ Customisation
 .. toctree::
     :maxdepth: 1
 
-    how_to_customise_an_app
     how_to_customise_models
     how_to_override_a_core_class
     how_to_customise_templates
     how_to_disable_an_app
     how_to_change_a_url
+    how_to_customise_a_view
     how_to_configure_the_dashboard_navigation
 
 Catalogue
@@ -26,7 +26,6 @@ Catalogue
     :maxdepth: 1
 
     how_to_create_categories
-    how_to_model_your_catalogue
     importing_a_catalogue
 
 Pricing, stock and availability
@@ -73,10 +72,3 @@ Appearance
 
     how_to_handle_statics
 
-Contributing
-------------
-
-.. toctree::
-    :maxdepth: 1
-
-    how_do_i_translate_oscar

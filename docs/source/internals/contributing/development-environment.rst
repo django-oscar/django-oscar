@@ -9,8 +9,8 @@ Fork the repo and run::
     mkvirtualenv oscar  # using virtualenvwrapper
     make install
 
-The :doc:`sandbox <sandbox>` site can be used to test our changes in a browser.
-It is easily created with ``make sandbox``.
+The :doc:`sandbox </internals/sandbox>` site can be used to test our changes in
+a browser. It is easily created with ``make sandbox``.
     
 Writing LESS/CSS
 ================
