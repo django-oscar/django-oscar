@@ -1,0 +1,25 @@
+=======================
+Oscar 0.6 release notes
+=======================
+
+Welcome to Oscar 0.6!
+
+These release notes cover the `new features`_ as well as `upgrading advice`_.
+
+.. _`new features`: `What's new in Oscar 0.6?`_
+.. _`upgrading advice`: `Upgrading`_
+
+Overview
+========
+
+...
+
+What's new in Oscar 0.6?
+========================
+
+...
+
+Upgrading 
+=========
+
+...
