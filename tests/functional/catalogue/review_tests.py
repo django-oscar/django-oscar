@@ -1,14 +1,15 @@
 from django_dynamic_fixture import G
-from django.contrib.auth.models import User
 
 from mock import Mock
 import contextlib
 
 from oscar_testsupport.testcases import WebTestCase
 from oscar_testsupport.factories import create_product
-
+from oscar.core.compat import get_user_model
 from oscar.apps.catalogue.reviews.signals import review_added
 
+
+User = get_user_model()
 
 @contextlib.contextmanager
 def mock_signal_receiver(signal, wraps=None, **kwargs):

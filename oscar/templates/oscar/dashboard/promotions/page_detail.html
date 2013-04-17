@@ -1,4 +1,7 @@
 {% extends 'dashboard/layout.html' %}
+
+{% load url from future %}
+
 {% load i18n %}
 
 {% block body_class %}promotions{% endblock %}
@@ -10,11 +13,11 @@
 {% block breadcrumbs %}
 <ul class="breadcrumb">	  	
     <li>	  	
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>	  	
+        <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>	  	
         <span class="divider">/</span>	  	
     </li>	  	
     <li>	  	
-        <a href="{% url dashboard:promotion-list %}">{% trans "Content block management" %}</a>	  	
+        <a href="{% url 'dashboard:promotion-list' %}">{% trans "Content block management" %}</a>	  	
         <span class="divider">/</span>	  	
     </li>	  	
     <li class="active">{% blocktrans %}Content blocks on page '{{ page_url }}'{% endblocktrans %}</li>	  	
@@ -51,8 +54,8 @@
                         <span class="caret"></span>
                       </a>
                       <ul class="dropdown-menu pull-right">
-                        <li><a href="{% url dashboard:promotion-update promotion.content_object.code promotion.content_object.id %}">{% trans "Edit" %}</a></li>
-          				<li><a href="{% url dashboard:pagepromotion-delete promotion.id %}">{% trans "Remove" %}</a></li>
+                        <li><a href="{% url 'dashboard:promotion-update' promotion.content_object.code promotion.content_object.id %}">{% trans "Edit" %}</a></li>
+          				<li><a href="{% url 'dashboard:pagepromotion-delete' promotion.id %}">{% trans "Remove" %}</a></li>
                       </ul>
                     </div>
                     <a href="#" class="btn btn-info btn-handle"><i class="icon-move icon-large"></i> {% trans "Re-order" %}</a>

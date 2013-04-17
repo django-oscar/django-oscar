@@ -1,4 +1,7 @@
 {% extends 'dashboard/reports/index.html' %}
+
+{% load url from future %}
+
 {% load currency_filters %}
 {% load i18n %}
 
@@ -19,7 +22,7 @@
 		<td>{{ order.total_incl_tax|currency }}</td>
 		<td>{{ order.date_placed }}</td>
 		<td>
-			<a class="btn btn-info" href="{% url dashboard:order-detail order.number %}">{% trans "View" %}</a>
+			<a class="btn btn-info" href="{% url 'dashboard:order-detail' order.number %}">{% trans "View" %}</a>
 		</td>
 	</tr>
 	{% endfor %}

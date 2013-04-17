@@ -1,5 +1,8 @@
 {% extends "layout.html" %}
 
+{% load url from future %}
+
+
 {% load i18n %}
 
 {% block title %}
@@ -11,11 +14,11 @@
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url promotions:home %}">{% trans 'Home' %}</a>
+        <a href="{% url 'promotions:home' %}">{% trans 'Home' %}</a>
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="{% url customer:summary %}">{% trans 'Account' %}</a>
+        <a href="{% url 'customer:summary' %}">{% trans 'Account' %}</a>
         <span class="divider">/</span>
     </li>
 	<li class="active">{% trans 'Email history' %}</li>
@@ -48,7 +51,7 @@
 			<td>{{ email.date_sent }}</td>
 			<td>{{ email.subject }}</td>
 			<td>
-				<a href="{% url customer:email-detail email.id %}" class="btn btn-info">{% trans 'View' %}</a>
+				<a href="{% url 'customer:email-detail' email.id %}" class="btn btn-info">{% trans 'View' %}</a>
 			</td>
 		</tr>
 		{% endfor %}

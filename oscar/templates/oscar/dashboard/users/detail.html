@@ -1,4 +1,7 @@
 {% extends 'dashboard/layout.html' %}
+
+{% load url from future %}
+
 {% load currency_filters %}
 {% load i18n %}
 
@@ -11,11 +14,11 @@
 {% block breadcrumbs %}
 <ul class="breadcrumb">	  	
     <li>	  	
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>	  	
+        <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>	  	
         <span class="divider">/</span>	  	
     </li>	  	
     <li>	  	
-        <a href="{% url dashboard:users-index %}">{% trans "Customers" %}</a>	  	
+        <a href="{% url 'dashboard:users-index' %}">{% trans "Customers" %}</a>	  	
         <span class="divider">/</span>	  	
     </li>	  	
     <li class="active">{% blocktrans with email=customer.email %}{{ email }}{% endblocktrans %}</li>	  	
@@ -113,7 +116,7 @@
                      <td>{{ order.basket_total_incl_tax|currency }}</td>
                      <td>{{ order.date_placed|date:"d/m/y H:s" }}</td>
                      <td>{{ order.status }}</td>
-					 <td><a href="{% url dashboard:order-detail order.number %}" class="btn btn-info">{% trans "View" %}</a></td>
+					 <td><a href="{% url 'dashboard:order-detail' order.number %}" class="btn btn-info">{% trans "View" %}</a></td>
                  </tr>
                  {% endfor %}
                  {% else %}

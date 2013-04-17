@@ -1,4 +1,7 @@
 {% extends "layout.html" %}
+
+{% load url from future %}
+
 {% load currency_filters %}
 {% load i18n %}
 
@@ -11,15 +14,15 @@
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url promotions:home %}">{% trans 'Home' %}</a>
+        <a href="{% url 'promotions:home' %}">{% trans 'Home' %}</a>
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="{% url customer:summary %}">{% trans 'Account' %}</a>
+        <a href="{% url 'customer:summary' %}">{% trans 'Account' %}</a>
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="{% url customer:address-list %}">{% trans 'Address book' %}</a>
+        <a href="{% url 'customer:address-list' %}">{% trans 'Address book' %}</a>
         <span class="divider">/</span>
     </li>
     <li class="active">{{ title }}</li>
@@ -47,7 +50,7 @@
     <div class="form-actions">
         <button type="submit" value="Save" class="btn btn-primary btn-large">{% trans 'Save' %}</button>
         {% trans 'or' %}
-        <a href="{% url customer:address-list %}">{% trans 'cancel' %}</a>
+        <a href="{% url 'customer:address-list' %}">{% trans 'cancel' %}</a>
     </div>
 </form>
 

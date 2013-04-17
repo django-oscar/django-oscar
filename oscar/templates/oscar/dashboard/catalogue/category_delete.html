@@ -1,4 +1,7 @@
 {% extends 'dashboard/layout.html' %}
+
+{% load url from future %}
+
 {% load i18n %}
 
 {% block body_class %}
@@ -8,11 +11,11 @@ create-page
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="{% if parent %}{% url dashboard:catalogue-category-detail-list pk=parent.pk %}{% else %}{% url dashboard:catalogue-category-list %}{% endif %}">{% trans "Categories" %}</a>
+        <a href="{% if parent %}{% url 'dashboard:catalogue-category-detail-list' pk=parent.pk %}{% else %}{% url 'dashboard:catalogue-category-list' %}{% endif %}">{% trans "Categories" %}</a>
         <span class="divider">/</span>
     </li>
     <li class="active">{% trans "Delete category?" %}</li>
@@ -35,7 +38,7 @@ create-page
 	{% endblocktrans %}
     <div class="form-actions">
 		<button type="submit" class="btn btn-danger">{% trans "Delete" %}</button>
-		{% trans "or" %} <a href="{% if parent %}{% url dashboard:catalogue-category-detail-list pk=parent.pk %}{% else %}{% url dashboard:catalogue-category-list %}{% endif %}">{% trans "cancel" %}</a>
+		{% trans "or" %} <a href="{% if parent %}{% url 'dashboard:catalogue-category-detail-list' pk=parent.pk %}{% else %}{% url 'dashboard:catalogue-category-list' %}{% endif %}">{% trans "cancel" %}</a>
     </div>
 </form>
 {% endblock %}

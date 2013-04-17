@@ -1,4 +1,7 @@
 {% extends 'dashboard/layout.html' %}
+
+{% load url from future %}
+
 {% load i18n %}
 
 {% block body_class %}users{% endblock %}
@@ -10,11 +13,11 @@
 {% block breadcrumbs %}
 <ul class="breadcrumb"> 	
     <li>	  	
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>	  	
+        <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>	  	
         <span class="divider">/</span>	  	
     </li>	  	
     <li>	  	
-        <a href="{% url dashboard:user-alert-list %}">{% trans "Product alerts" %}</a>	  	
+        <a href="{% url 'dashboard:user-alert-list' %}">{% trans "Product alerts" %}</a>	  	
         <span class="divider">/</span>	  	
     </li>	  	
     <li class="active">{% blocktrans with id=alert.id %}Alert #{{ id }}{% endblocktrans %}</li>	  	
@@ -33,7 +36,7 @@
             {% csrf_token %}
         	{% include 'partials/form_fields_inline.html' %}
     		<button type='submit' class="btn btn-primary">{% trans "Save" %}</button>
-            <a href="{% url dashboard:user-alert-list %}" class="btn">{% trans "cancel" %}</a>
+            <a href="{% url 'dashboard:user-alert-list' %}" class="btn">{% trans "cancel" %}</a>
         </form>
     </div>
 </div>

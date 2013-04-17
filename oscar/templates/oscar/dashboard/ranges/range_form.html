@@ -1,4 +1,7 @@
 {% extends 'dashboard/layout.html' %}
+
+{% load url from future %}
+
 {% block body_class %}
 create-page
 {% endblock %}
@@ -12,11 +15,11 @@ create-page
 {% block breadcrumbs %}
 <ul class="breadcrumb">	  	
     <li>	  	
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>	  	
+        <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>	  	
         <span class="divider">/</span>	  	
     </li>	  	
     <li>	  	
-        <a href="{% url dashboard:range-list %}">{% trans "Range management" %}</a>
+        <a href="{% url 'dashboard:range-list' %}">{% trans "Range management" %}</a>
         <span class="divider">/</span>	  	
     </li>	  	
     {% if range %}
@@ -41,7 +44,7 @@ create-page
 		{# This is an input so we distinguish between which button was pressed #}
 		<input class="btn btn-primary btn-large" type="submit" name="action" value="{% trans "Save and edit products" %}"/>
 		{% trans "or" %}
-		<a href="{% url dashboard:range-list %}">{% trans "cancel" %}</a>
+		<a href="{% url 'dashboard:range-list' %}">{% trans "cancel" %}</a>
 	</div>
 	{% endblock form_actions %}
 </form>

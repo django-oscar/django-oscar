@@ -1,4 +1,7 @@
 {% extends 'dashboard/layout.html' %}
+
+{% load url from future %}
+
 {% load currency_filters %}
 {% load i18n %}
 
@@ -13,15 +16,15 @@ create-page
 {% block breadcrumbs %}
 <ul class="breadcrumb">	  	
     <li>	  	
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>	  	
+        <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>	  	
         <span class="divider">/</span>	  	
     </li>	  	
     <li>	  	
-        <a href="{% url dashboard:offer-list %}">{% trans "Offer management" %}</a>
+        <a href="{% url 'dashboard:offer-list' %}">{% trans "Offer management" %}</a>
         <span class="divider">/</span>	  	
     </li>	 	
     <li>
-        <a href="{% url dashboard:offer-detail offer.pk %}">'{{ offer.name }}'</a>
+        <a href="{% url 'dashboard:offer-detail' offer.pk %}">'{{ offer.name }}'</a>
         <span class="divider">/</span>
     </li>
     <li class="active">{% trans "Delete?" %}</li>
@@ -38,7 +41,7 @@ create-page
     <p>{% trans "Are you sure you want to delete this offer?" %}</p>
 	<div class="form-actions">
 		<button class="btn btn-large btn-danger" type="submit">{% trans "Delete" %}</button> or
-		<a href="{% url dashboard:offer-list %}">{% trans "cancel" %}</a>
+		<a href="{% url 'dashboard:offer-list' %}">{% trans "cancel" %}</a>
 	</div>
 </form>
 {% endblock dashboard_content %}

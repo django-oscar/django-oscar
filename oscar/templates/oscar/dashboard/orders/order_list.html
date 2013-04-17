@@ -1,4 +1,7 @@
 {% extends 'dashboard/layout.html' %}
+
+{% load url from future %}
+
 {% load currency_filters %}
 {% load sorting_tags %}
 {% load i18n %}
@@ -11,7 +14,7 @@
 {% block breadcrumbs %}
 <ul class="breadcrumb">	  	
     <li>	  	
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>	  	
+        <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>	  	
         <span class="divider">/</span>	  	
     </li>	  	
     <li class="active">{% trans "Order management" %}</li>	  	
@@ -115,7 +118,7 @@
         <td>{{ order.shipping_address|default:"-" }}</td>
         <td>{{ order.billing_address|default:"-" }}</td>
         <td>
-			<a class="btn btn-info" href="{% url dashboard:order-detail order.number %}">{% trans "View" %}</a>
+			<a class="btn btn-info" href="{% url 'dashboard:order-detail' order.number %}">{% trans "View" %}</a>
         </td>
     </tr>
     {% endfor %}

@@ -1,4 +1,7 @@
 {% extends 'dashboard/layout.html' %}
+
+{% load url from future %}
+
 {% load currency_filters %}
 {% load i18n %}
 
@@ -9,7 +12,7 @@
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
     <li class="active">{% trans "Range management" %}</li>
@@ -18,7 +21,7 @@
 
 {% block header %}
 <div class="page-header">
-    <a href="{% url dashboard:range-create %}" class="btn btn-primary btn-large pull-right"><i class="icon-plus"></i> {% trans "Create new range" %}</a>
+    <a href="{% url 'dashboard:range-create' %}" class="btn btn-primary btn-large pull-right"><i class="icon-plus"></i> {% trans "Create new range" %}</a>
     <h1>{% trans "Range management" %}</h1>
 </div>
 {% endblock header %}
@@ -51,12 +54,12 @@
                   </a>
                   <ul class="dropdown-menu pull-right">
 				      {% if range.is_editable %}
-                      <li><a href="{% url dashboard:range-update range.id %}">{% trans "Edit" %}</a></li>
+                      <li><a href="{% url 'dashboard:range-update' range.id %}">{% trans "Edit" %}</a></li>
                       {% if not range.includes_all_products %}
-                      <li><a href="{% url dashboard:range-products range.id %}">{% trans "Edit products" %}</a></li>
+                      <li><a href="{% url 'dashboard:range-products' range.id %}">{% trans "Edit products" %}</a></li>
                       {% endif %}
 					  {% endif %}
-                      <li><a href="{% url dashboard:range-delete range.id %}">{% trans "Delete" %}</a></li>
+                      <li><a href="{% url 'dashboard:range-delete' range.id %}">{% trans "Delete" %}</a></li>
                   </ul>
                 </div>
             </div>

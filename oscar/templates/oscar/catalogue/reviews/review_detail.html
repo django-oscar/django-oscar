@@ -1,4 +1,7 @@
 {% extends "layout.html" %}
+
+{% load url from future %}
+
 {% load currency_filters %}
 {% load history_tags %}
 {% load thumbnail %}
@@ -11,7 +14,7 @@
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-	<a href="{% url promotions:home %}">{% trans "Home" %}</a>
+	<a href="{% url 'promotions:home' %}">{% trans "Home" %}</a>
         <span class="divider">/</span>
     </li>
 	{% with category=product.categories.all.0 %}
@@ -26,7 +29,7 @@
 			<span class="divider">/</span>
         </li>
         <li>
-            <a href="{% url catalogue:reviews-list product.slug product.pk %}">{% trans "Reviews" %}</a>
+            <a href="{% url 'catalogue:reviews-list' product.slug product.pk %}">{% trans "Reviews" %}</a>
 			<span class="divider">/</span>
         </li>
     {% endwith %}
@@ -41,7 +44,7 @@
 {% block content %}
 
 <article>
-    <a href="{% url catalogue:reviews-add product.slug product.id %}" class="btn btn-primary btn-large pull-right">{% trans "Write a review" %}</a>
+    <a href="{% url 'catalogue:reviews-add' product.slug product.id %}" class="btn btn-primary btn-large pull-right">{% trans "Write a review" %}</a>
     <h2>{% trans "Customer review" %}</h2>
 
     <div class="row-fluid">

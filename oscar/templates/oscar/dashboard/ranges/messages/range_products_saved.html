@@ -1,3 +1,4 @@
+{% load url from future %}
 {% load i18n %}
 {% blocktrans with range_name=range.name filename=upload.filename %}
 <p>File <strong>{{ filename }}</strong> processed.</p>
@@ -15,6 +16,6 @@
     {% endif %}
 </ul>
 <p>
-    <a href="{% url dashboard:range-update range.pk %}" class="btn btn-success">{% trans "Edit range metadata" %}</a>
-    <a href="{% url dashboard:range-list %}" class="btn btn-success">{% trans "Return to ranges homepage" %}</a>
+    <a href="{% url 'dashboard:range-update' range.pk %}" class="btn btn-success">{% trans "Edit range metadata" %}</a>
+    <a href="{% url 'dashboard:range-list' %}" class="btn btn-success">{% trans "Return to ranges homepage" %}</a>
 </p>

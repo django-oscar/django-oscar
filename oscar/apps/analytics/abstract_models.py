@@ -2,6 +2,7 @@ from decimal import Decimal
 
 from django.db import models
 from django.utils.translation import ugettext as _
+from oscar.core.compat import AUTH_USER_MODEL
 
 
 class AbstractProductRecord(models.Model):
@@ -41,7 +42,7 @@ class AbstractUserRecord(models.Model):
     A record of a user's activity.
     """
 
-    user = models.OneToOneField('auth.User', verbose_name=_("User"))
+    user = models.OneToOneField(AUTH_USER_MODEL, verbose_name=_("User"))
 
     # Browsing stats
     num_product_views = models.PositiveIntegerField(
@@ -69,7 +70,7 @@ class AbstractUserRecord(models.Model):
 
 class AbstractUserProductView(models.Model):
 
-    user = models.ForeignKey('auth.User', verbose_name=_("User"))
+    user = models.ForeignKey(AUTH_USER_MODEL, verbose_name=_("User"))
     product = models.ForeignKey('catalogue.Product', verbose_name=_("Product"))
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
@@ -85,7 +86,7 @@ class AbstractUserProductView(models.Model):
 
 class AbstractUserSearch(models.Model):
 
-    user = models.ForeignKey('auth.User', verbose_name=_("User"))
+    user = models.ForeignKey(AUTH_USER_MODEL, verbose_name=_("User"))
     query = models.CharField(_("Search term"), max_length=255, db_index=True)
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 

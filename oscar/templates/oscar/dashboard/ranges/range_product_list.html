@@ -1,4 +1,7 @@
 {% extends 'dashboard/layout.html' %}
+
+{% load url from future %}
+
 {% load currency_filters %}
 {% load i18n %}
 
@@ -11,15 +14,15 @@
 {% block breadcrumbs %}
 <ul class="breadcrumb">	  	
     <li>	  	
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>	  	
+        <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>	  	
         <span class="divider">/</span>	  	
     </li>	  	
     <li>	  	
-        <a href="{% url dashboard:range-list %}">{% trans "Range management" %}</a>
+        <a href="{% url 'dashboard:range-list' %}">{% trans "Range management" %}</a>
         <span class="divider">/</span>	  	
     </li>	  	
     <li>	  	
-        <a href="{% url dashboard:range-update range.id %}">'{{ range.name }}'</a>	  	
+        <a href="{% url 'dashboard:range-update' range.id %}">'{{ range.name }}'</a>	  	
         <span class="divider">/</span>	  	
     </li>	  	
     <li class="active">{% trans "Products" %}</li>	  	
@@ -129,8 +132,8 @@
 	{% endif %}
 
 	<div class="form-actions">
-		<a href="{% url dashboard:range-update range.id %}" class="btn btn-large btn-primary">{% trans "Edit range" %}</a> {% trans "or" %}
-		<a href="{% url dashboard:range-list %}" class="">{% trans "return to range list" %}</a>
+		<a href="{% url 'dashboard:range-update' range.id %}" class="btn btn-large btn-primary">{% trans "Edit range" %}</a> {% trans "or" %}
+		<a href="{% url 'dashboard:range-list' %}" class="">{% trans "return to range list" %}</a>
 	</div>
 
 </div>

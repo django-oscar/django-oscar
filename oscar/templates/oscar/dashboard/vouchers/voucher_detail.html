@@ -1,4 +1,7 @@
 {% extends 'dashboard/layout.html' %}
+
+{% load url from future %}
+
 {% load currency_filters %}
 {% load i18n %}
 
@@ -9,11 +12,11 @@
 {% block breadcrumbs %}
 <ul class="breadcrumb">	  	
     <li>	  	
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>	  	
+        <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>	  	
         <span class="divider">/</span>	  	
     </li>	  	
     <li>	  	
-        <a href="{% url dashboard:voucher-list %}">{% trans "Vouchers" %}</a>	  	
+        <a href="{% url 'dashboard:voucher-list' %}">{% trans "Vouchers" %}</a>	  	
         <span class="divider">/</span>	  	
     </li>	  	
     <li class="active">{% blocktrans with name=voucher.name %}Voucher '{{ name }}'{% endblocktrans %}</li>	  	
@@ -74,7 +77,7 @@
 				<td>{{ order.total_incl_tax|currency }}</td>
 				<td>{{ discount.amount|currency }}</td>
 				<td>{{ order.date_placed }}</td>
-				<td><a href="{% url dashboard:order-detail order.number %}" class="btn btn-info">{% trans "View" %}</a></td>
+				<td><a href="{% url 'dashboard:order-detail' order.number %}" class="btn btn-info">{% trans "View" %}</a></td>
 			</tr>
 		{% endwith %}
 		{% endfor %}
@@ -84,9 +87,9 @@
 
 
 <div class="form-actions">
-	<a class="btn btn-primary" href="{% url dashboard:voucher-update voucher.id %}">{% trans "Edit" %}</a> {% trans "or" %}
-	<a class="btn btn-danger" href="{% url dashboard:voucher-delete voucher.id %}">{% trans "Delete" %}</a> {% trans "or" %}
-	<a href="{% url dashboard:voucher-list %}">{% trans "cancel" %}</a>
+	<a class="btn btn-primary" href="{% url 'dashboard:voucher-update' voucher.id %}">{% trans "Edit" %}</a> {% trans "or" %}
+	<a class="btn btn-danger" href="{% url 'dashboard:voucher-delete' voucher.id %}">{% trans "Delete" %}</a> {% trans "or" %}
+	<a href="{% url 'dashboard:voucher-list' %}">{% trans "cancel" %}</a>
 </div>
 
 

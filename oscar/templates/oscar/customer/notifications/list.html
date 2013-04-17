@@ -1,4 +1,7 @@
 {% extends "layout.html" %}
+
+{% load url from future %}
+
 {% load i18n %}
 
 {% block title %}
@@ -8,11 +11,11 @@
 {% block breadcrumbs %}
 <ul class="breadcrumb">
     <li>
-        <a href="{% url promotions:home %}">{% trans 'Home' %}</a>
+        <a href="{% url 'promotions:home' %}">{% trans 'Home' %}</a>
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="{% url customer:summary %}">{% trans 'Account' %}</a>
+        <a href="{% url 'customer:summary' %}">{% trans 'Account' %}</a>
         <span class="divider">/</span>
     </li>
 	<li class="active">{{ title }}</li>
@@ -26,14 +29,14 @@
 {% block content %}
 
 <ul class="nav nav-tabs">
-	<li class="{% if list_type == 'inbox' %}active{% endif %}"><a href="{% url customer:notifications-inbox %}">Inbox</a></li>
-	<li class="{% if list_type == 'archive' %}active{% endif %}"><a href="{% url customer:notifications-archive %}">Archive</a></li>
+	<li class="{% if list_type == 'inbox' %}active{% endif %}"><a href="{% url 'customer:notifications-inbox' %}">Inbox</a></li>
+	<li class="{% if list_type == 'archive' %}active{% endif %}"><a href="{% url 'customer:notifications-archive' %}">Archive</a></li>
 </ul>
 
 {% if notifications %}
     {% include "partials/pagination.html" %}
 
-<form action="{% url customer:notifications-update %}" method="post">
+<form action="{% url 'customer:notifications-update' %}" method="post">
 	{% csrf_token %}
 	<table class="table">
 		<tbody>

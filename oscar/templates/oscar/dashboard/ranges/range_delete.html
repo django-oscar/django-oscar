@@ -1,4 +1,7 @@
 {% extends 'dashboard/layout.html' %}
+
+{% load url from future %}
+
 {% load currency_filters %}
 {% load i18n %}
 
@@ -13,15 +16,15 @@ create-page
 {% block breadcrumbs %}
 <ul class="breadcrumb">	  	
     <li>	  	
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>	  	
+        <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>	  	
         <span class="divider">/</span>	  	
     </li>	  	
     <li>	  	
-        <a href="{% url dashboard:range-list %}">{% trans "Range management" %}</a>
+        <a href="{% url 'dashboard:range-list' %}">{% trans "Range management" %}</a>
         <span class="divider">/</span>	  	
     </li>	  	
     <li>
-        <a href="{% url dashboard:range-update range.pk %}">'{{ range.name }}'</a>
+        <a href="{% url 'dashboard:range-update' range.pk %}">'{{ range.name }}'</a>
         <span class="divider">/</span>
     </li>
     <li class="active">{% trans "Delete?" %}</li>
@@ -38,7 +41,7 @@ create-page
 	{% csrf_token %}
 	<div class="form-actions">
 		<button class="btn btn-danger" type="submit">{% trans "Delete" %}</button> {% trans "or" %}
-		<a href="{% url dashboard:range-list %}">{% trans "cancel" %}</a>
+		<a href="{% url 'dashboard:range-list' %}">{% trans "cancel" %}</a>
 	</div>
 </form>
 {% endblock dashboard_content %}

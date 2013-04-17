@@ -4,7 +4,7 @@ import hashlib
 
 from django.db import models
 from django.utils import timezone
-from django.contrib.auth.models import User
+from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.utils import slugify
 from django.utils.translation import ugettext_lazy as _
 from django.db.models import Sum
@@ -23,7 +23,7 @@ class AbstractOrder(models.Model):
     site = models.ForeignKey('sites.Site', verbose_name=_("Site"))
     basket_id = models.PositiveIntegerField(_("Basket ID"), null=True, blank=True)
     # Orders can be anonymous so we don't always have a customer ID
-    user = models.ForeignKey(User, related_name='orders', null=True, blank=True, verbose_name=_("User"))
+    user = models.ForeignKey(AUTH_USER_MODEL, related_name='orders', null=True, blank=True, verbose_name=_("User"))
     # Billing address is not always required (eg paying by gift card)
     billing_address = models.ForeignKey('order.BillingAddress', null=True, blank=True,
         verbose_name=_("Billing Address"))
@@ -266,7 +266,7 @@ class AbstractOrderNote(models.Model):
 
     # These are sometimes programatically generated so don't need a
     # user everytime
-    user = models.ForeignKey('auth.User', null=True, verbose_name=_("User"))
+    user = models.ForeignKey(AUTH_USER_MODEL, null=True, verbose_name=_("User"))
 
     # We allow notes to be classified although this isn't always needed
     INFO, WARNING, ERROR, SYSTEM = 'Info', 'Warning', 'Error', 'System'

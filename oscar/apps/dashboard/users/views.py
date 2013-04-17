@@ -1,19 +1,19 @@
 from django.db.models import Q, get_model
 from django.contrib import messages
-from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views.generic import ListView, DetailView, DeleteView, UpdateView
 
 from oscar.views.generic import BulkEditMixin
+from oscar.core.compat import get_user_model
 from oscar.core.loading import get_classes
 
 UserSearchForm, ProductAlertSearchForm, ProductAlertUpdateForm  = get_classes(
     'dashboard.users.forms', ('UserSearchForm', 'ProductAlertSearchForm',
                               'ProductAlertUpdateForm'))
 ProductAlert = get_model('customer', 'ProductAlert')
-
+User = get_user_model()
 
 class IndexView(ListView, BulkEditMixin):
     template_name = 'dashboard/users/index.html'

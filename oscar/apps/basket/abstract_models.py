@@ -10,6 +10,7 @@ from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 
 from oscar.apps.basket.managers import OpenBasketManager, SavedBasketManager
 from oscar.apps.offer import results
+from oscar.core.compat import AUTH_USER_MODEL
 from oscar.templatetags.currency_filters import currency
 
 
@@ -20,7 +21,7 @@ class AbstractBasket(models.Model):
     # Baskets can be anonymously owned - hence this field is nullable.  When a
     # anon user signs in, their two baskets are merged.
     owner = models.ForeignKey(
-        'auth.User', related_name='baskets', null=True,
+        AUTH_USER_MODEL, related_name='baskets', null=True,
         verbose_name=_("Owner"))
 
     # Basket statuses
