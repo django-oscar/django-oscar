@@ -514,7 +514,8 @@ class AddressCreateView(PageTitleMixin, CreateView):
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
-        messages.success(self.request, _("Address saved"))
+        messages.success(self.request,
+                         _("Address '%s' created") % self.object.summary)
         return reverse('customer:address-list')
 
 
@@ -529,7 +530,8 @@ class AddressUpdateView(PageTitleMixin, UpdateView):
         return UserAddress._default_manager.filter(user=self.request.user)
 
     def get_success_url(self):
-        messages.success(self.request, _("Address saved"))
+        messages.success(self.request,
+                         _("Address '%s' updated") % self.object.summary)
         return reverse('customer:address-detail', kwargs={'pk': self.get_object().pk })
 
 
@@ -544,6 +546,8 @@ class AddressDeleteView(PageTitleMixin, DeleteView):
         return UserAddress._default_manager.filter(user=self.request.user)
 
     def get_success_url(self):
+        messages.success(self.request,
+                         _("Address '%s' deleted") % self.object.summary)
         return reverse('customer:address-list')
 
 
