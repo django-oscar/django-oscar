@@ -2,7 +2,8 @@
 {% load i18n %}
 
 {% if product.is_available_to_buy %}
-    {% basket_form request.basket product as basket_form %}
+    {% basket_form request product as basket_form %}
+    {% if basket_form.purchase_permitted %}
     <form action="{% url basket:add %}" method="post" class="form-stacked">
         {% csrf_token %}
         {% include "partials/form_fields.html" with form=basket_form %}
@@ -10,6 +11,9 @@
 			<button type="submit" class="btn btn-large btn-primary btn-full" value="Add to basket">{% trans "Add to basket" %}</button>
         </div>
     </form>
+    {% else %}
+        {{ basket_form.reason }}
+    {% endif %}
 {% else %}
 	{% if has_active_alert %}
 	<p>{% trans "You have an active stock alert for this product." %}</p>
