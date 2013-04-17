@@ -280,8 +280,7 @@ class BasketAddView(FormView):
             kwargs['instance'] = product_select_form.cleaned_data['product_id']
         else:
             kwargs['instance'] = None
-        kwargs['user'] = self.request.user
-        kwargs['basket'] = self.request.basket
+        kwargs['request'] = self.request
         return kwargs
 
     def get_success_url(self):
