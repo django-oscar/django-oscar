@@ -361,7 +361,7 @@ class AbstractProduct(models.Model):
                 if variant.is_available_to_buy:
                     return True
             return False
-        if not self.product_class.track_stock:
+        if not self.get_product_class().track_stock:
             return True
         return self.has_stockrecord and self.stockrecord.is_available_to_buy
 

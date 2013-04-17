@@ -154,7 +154,11 @@ var oscar = (function(o, $) {
 
     o.basket = {
         is_form_being_submitted: false,
-        init: function() {
+        init: function(options) {
+            if (typeof options == 'undefined') {
+                options = {'basketURL': document.URL};
+            }
+            o.basket.url = options.basketURL || document.URL;
             $('#content_inner').on('click', '#basket_formset a[data-behaviours~="remove"]', function(event) {
                 o.basket.checkAndSubmit($(this), 'form', 'DELETE');
                 event.preventDefault();
@@ -186,7 +190,7 @@ var oscar = (function(o, $) {
         submitBasketForm: function(event) {
             $('#messages').html('');
             var payload = $('#basket_formset').serializeArray();
-            $.post('/basket/', payload, o.basket.submitFormSuccess, 'json');
+            $.post(o.basket.url, payload, o.basket.submitFormSuccess, 'json');
             event.preventDefault();
         },
         submitFormSuccess: function(data) {

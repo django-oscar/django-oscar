@@ -23,9 +23,8 @@ class TestSavingAVoucher(TestCase):
 
     def test_verifies_dates_are_sensible(self):
         with self.assertRaises(exceptions.ValidationError):
-            voucher = Voucher.objects.create(code='lower',
-                                            start_date=END_DATE,
-                                            end_date=START_DATE)
+            voucher = Voucher.objects.create(
+                code='lower', start_date=END_DATE, end_date=START_DATE)
             voucher.clean()
 
 
