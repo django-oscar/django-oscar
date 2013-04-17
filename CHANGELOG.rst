@@ -2,6 +2,13 @@
 Changelog
 =========
 
+0.4.9 - 2013-04-17
+------------------
+
+Make ``AbstractStockRecord`` abstract (`#645`)
+
+.. _`#645`: https://github.com/tangentlabs/django-oscar/pull/645
+
 0.4.8 - 2013-04-08
 ------------------
 
