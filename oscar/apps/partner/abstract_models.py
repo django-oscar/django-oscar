@@ -333,6 +333,7 @@ class AbstractStockAlert(models.Model):
         return _('<stockalert for "%(stock)s" status %(status)s>') % {'stock': self.stockrecord, 'status': self.status}
 
     class Meta:
+        abstract = True
         ordering = ('-date_created',)
         verbose_name = _('Stock Alert')
         verbose_name_plural = _('Stock Alerts')
