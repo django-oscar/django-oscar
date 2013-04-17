@@ -31,6 +31,9 @@
 					<li{% if active_tab == 'alerts' %} class="active"{% endif %}>
 						<a href="{% url 'customer:alerts-list' %}">{% trans "Product Alerts" %}</a>
 					</li>
+					<li{% if active_tab == 'notifications' %} class="active"{% endif %}>
+						<a href="{% url 'customer:notifications-inbox' %}">{% trans "Notifications" %}</a>
+					</li>
 					{% block extra_tabs_nav %}
 					{% endblock %}
 				</ul>

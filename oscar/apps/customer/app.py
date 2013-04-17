@@ -34,6 +34,7 @@ class CustomerApplication(Application):
     notification_inbox_view = notification_views.InboxView
     notification_archive_view = notification_views.ArchiveView
     notification_update_view = notification_views.UpdateView
+    notification_detail_view = notification_views.DetailView
 
     alert_list_view = alert_views.ProductAlertListView
     alert_create_view = alert_views.ProductAlertCreateView
@@ -108,6 +109,9 @@ class CustomerApplication(Application):
             url(r'^notifications/update/$',
                 login_required(self.notification_update_view.as_view()),
                 name='notifications-update'),
+            url(r'^notifications/(?P<pk>\d+)/$',
+                login_required(self.notification_detail_view.as_view()),
+                name='notifications-detail'),
 
             # Alerts
             url(r'^alerts/$', self.alert_list_view.as_view(),

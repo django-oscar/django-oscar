@@ -1,39 +1,18 @@
-{% extends "layout.html" %}
+{% extends "customer/baseaccountpage.html" %}
 {% load i18n %}
+{% load url from future %}
 
-{% block title %}
-{{ title }} | {{ block.super }}
-{% endblock %}
-
-{% block breadcrumbs %}
-<ul class="breadcrumb">
-    <li>
-        <a href="{% url promotions:home %}">{% trans 'Home' %}</a>
-        <span class="divider">/</span>
-    </li>
-    <li>
-        <a href="{% url customer:summary %}">{% trans 'Account' %}</a>
-        <span class="divider">/</span>
-    </li>
-	<li class="active">{{ title }}</li>
-</ul>
-{% endblock %}
-
-{% block headertext %}
-{{ title }}
-{% endblock %}
-
-{% block content %}
+{% block tabcontent %}
 
 <ul class="nav nav-tabs">
-	<li class="{% if list_type == 'inbox' %}active{% endif %}"><a href="{% url customer:notifications-inbox %}">Inbox</a></li>
-	<li class="{% if list_type == 'archive' %}active{% endif %}"><a href="{% url customer:notifications-archive %}">Archive</a></li>
+	<li class="{% if list_type == 'inbox' %}active{% endif %}"><a href="{% url 'customer:notifications-inbox' %}">Inbox</a></li>
+	<li class="{% if list_type == 'archive' %}active{% endif %}"><a href="{% url 'customer:notifications-archive' %}">Archive</a></li>
 </ul>
 
 {% if notifications %}
     {% include "partials/pagination.html" %}
 
-<form action="{% url customer:notifications-update %}" method="post">
+<form action="{% url 'customer:notifications-update' %}" method="post">
 	{% csrf_token %}
 	<table class="table">
 		<tbody>
@@ -55,10 +34,11 @@
 				<em>{{ notification.date_sent }}</em> 
 			</td>
 			<td>
+				<a href="{% url 'customer:notifications-detail' notification.pk %}" class="btn btn-info btn-small">{% trans 'View' %}</a>
 				{% if list_type == 'inbox' %}
-				<a class="btn btn-success btn-small" href="#" data-behaviours="archive">Archive</a>
+				<a class="btn btn-success btn-small" href="#" data-behaviours="archive">{% trans 'Archive' %}</a>
 				{% endif %}
-				<a class="btn btn-danger btn-small "href="#" data-behaviours="delete">Delete</a>
+				<a class="btn btn-danger btn-small "href="#" data-behaviours="delete">{% trans 'Delete' %}</a>
 			</td>
 		</tr>
 		{% endfor %}
@@ -77,7 +57,7 @@
 <p>{% trans "There are no notifications to display." %}</p>
 {% endif %}
 
-{% endblock content %}
+{% endblock tabcontent %}
 
 {% block onbodyload %}
 oscar.notifications.init();
