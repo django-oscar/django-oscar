@@ -36,7 +36,7 @@
 		<tr><th>{% trans "Start date" %}</th><td>{{ voucher.start_date }}</td></tr>
 		<tr><th>{% trans "End date" %}</th><td>{{ voucher.end_date }}</td></tr>
 		<tr><th>{% trans "Usage" %}</th><td>{{ voucher.usage }}</td></tr>
-		<tr><th>{% trans "Discount" %}</th><td>{{ voucher.benefit.description }}</td></tr>
+		<tr><th>{% trans "Discount" %}</th><td>{{ voucher.benefit.description|safe }}</td></tr>
 	</tbody>
 </table>
 
