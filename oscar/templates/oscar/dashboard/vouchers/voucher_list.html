@@ -60,7 +60,7 @@
     	<tr>
     		<td>{{ voucher.name }}</td>
     		<td>{{ voucher.code }}</td>
-    		<td>{{ voucher.is_active }}</td>
+		<td>{{ voucher.is_active|yesno:_("True,False") }}</td>
     		<td>{{ voucher.num_basket_additions }}</td>
     		<td>{{ voucher.num_orders }}</td>
     		<td>{{ voucher.date_created }}</td>
@@ -68,7 +68,7 @@
                 <div class="btn-toolbar">
                     <div class="btn-group">
                       <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                        Actions
+                        {% trans "Actions" %}
                         <span class="caret"></span>
                       </a>
                       <ul class="dropdown-menu pull-right">

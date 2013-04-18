@@ -113,6 +113,7 @@ class ConditionalOffer(models.Model):
     # Use this field to limit the number of times this offer can be applied to
     # a basket (and hence a single order).
     max_basket_applications = models.PositiveIntegerField(
+        _("Max basket applications"),
         blank=True, null=True,
         help_text=_("The number of times this offer can be applied to a "
                     "basket (and order)"))
