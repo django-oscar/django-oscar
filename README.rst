@@ -163,6 +163,7 @@ Tangent projects:
 * Chocolate Box - https://www.thechocolatebox.com.au
 * The UK Labour party - http://shop.labour.org.uk
 * Meridian Audio - http://www.meridian-audio.co.uk
+* Which Rightchoice - http://www.whichrightchoice.com
 
 .. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/landmark.thumb.png
     :target: http://www.landmarkonthenet.com
@@ -178,6 +179,9 @@ Tangent projects:
 
 .. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/meridian.thumb.png
     :target: http://www.meridian-audio.co.uk
+
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/rightchoice.thumb.png
+    :target: http://www.whichrightchoice.com
 
 Non-Tangent:
 
