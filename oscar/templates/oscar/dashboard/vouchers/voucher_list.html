@@ -60,7 +60,7 @@
     	<tr>
     		<td>{{ voucher.name }}</td>
     		<td>{{ voucher.code }}</td>
-    		<td>{{ voucher.is_active }}</td>
+    		<td>{{ voucher.is_active|yesno:_("True,False") }}</td>
     		<td>{{ voucher.num_basket_additions }}</td>
     		<td>{{ voucher.num_orders }}</td>
     		<td>{{ voucher.date_created }}</td>
