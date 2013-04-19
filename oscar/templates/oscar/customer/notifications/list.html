@@ -26,8 +26,8 @@
 {% block content %}
 
 <ul class="nav nav-tabs">
-	<li class="{% if list_type == 'inbox' %}active{% endif %}"><a href="{% url customer:notifications-inbox %}">Inbox</a></li>
-	<li class="{% if list_type == 'archive' %}active{% endif %}"><a href="{% url customer:notifications-archive %}">Archive</a></li>
+	<li class="{% if list_type == 'inbox' %}active{% endif %}"><a href="{% url customer:notifications-inbox %}">{% trans "Inbox" %}</a></li>
+	<li class="{% if list_type == 'archive' %}active{% endif %}"><a href="{% url customer:notifications-archive %}">{% trans "Archive" %}</a></li>
 </ul>
 
 {% if notifications %}
@@ -56,9 +56,9 @@
 			</td>
 			<td>
 				{% if list_type == 'inbox' %}
-				<a class="btn btn-success btn-small" href="#" data-behaviours="archive">Archive</a>
+				<a class="btn btn-success btn-small" href="#" data-behaviours="archive">{% trans "Archive" %}</a>
 				{% endif %}
-				<a class="btn btn-danger btn-small "href="#" data-behaviours="delete">Delete</a>
+				<a class="btn btn-danger btn-small "href="#" data-behaviours="delete">{% trans "Delete" %}</a>
 			</td>
 		</tr>
 		{% endfor %}

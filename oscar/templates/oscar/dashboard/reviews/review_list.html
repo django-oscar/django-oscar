@@ -86,7 +86,7 @@
 				{% endif %}
             </td>
             <td>
-                {{ review.score|floatformat:1 }} / 5.0
+                {{ review.score|floatformat:1 }} / {{ 5.0|floatformat:1 }}
             </td>
             <td>{{ review.total_votes }}</td>
             <td>
@@ -105,7 +105,7 @@
                 <div class="btn-toolbar">
                     <div class="btn-group">
                         <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                            Actions
+                            {% trans "Actions" %}
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu pull-right">
