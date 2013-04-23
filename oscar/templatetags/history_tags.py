@@ -46,19 +46,19 @@ def get_back_button(context):
 
     referrer = request.META.get('HTTP_REFERER', None)
     if not referrer:
-        return False
+        return None
 
     try:
         url = urlparse.urlparse(referrer)
     except:
-        return False
+        return None
 
     if request.get_host() != url.netloc:
         try:
             Site.objects.get(domain=url.netloc)
         except Site.DoesNotExist:
             # Came from somewhere else, don't show back button:
-            return False
+            return None
 
     try:
         match = resolve(url.path)
