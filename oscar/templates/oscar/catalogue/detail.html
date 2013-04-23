@@ -37,7 +37,15 @@
 {% endblock header %}
 
 {% block content %}
+{% get_back_button as backbutton %}
+
 <article class="product_page"><!-- Start of product page -->
+    {% if backbutton %}
+        <a href="{{ backbutton.url }}" class="pull-right">
+            <i class="icon-arrow-left"></i>
+            {{ backbutton.title }}
+        </a>
+    {% endif %}
 
     {% comment %} 
     This is a but clunky here.  Better to have some kind of JS-driven dashboard menu that 
