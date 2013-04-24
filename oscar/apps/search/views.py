@@ -3,21 +3,22 @@ import json
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic.base import View
 from django.conf import settings
+from django.db.models import get_model
 from haystack.query import SearchQuerySet
 from haystack.views import FacetedSearchView
 
-from oscar.core.loading import import_module
-product_models = import_module('catalogue.models', ['Product'])
+from oscar.core.loading import get_class
+Product = get_model('catalogue', 'Product')
+MultiFacetedSearchForm = get_class('search.forms', 'MultiFacetedSearchForm')
 
 
 class SuggestionsView(View):
-    u"""
-    Auto suggest view
-
-    Returns the suggestions in JSON format (especially suited for consumption by
-    jQuery autocomplete)
     """
+    Auto-suggest view
 
+    Return JSON search suggestions for integration with Javascript autocomplete
+    plugins.
+    """
     suggest_limit = settings.OSCAR_SEARCH_SUGGEST_LIMIT
 
     def get(self, request):
@@ -25,38 +26,40 @@ class SuggestionsView(View):
         return self.render_to_response(context)
 
     def get_context_data(self):
-        '''
+        """
         Creates a list of suggestions
-        '''
-        query_term = self.request.GET['query_term'];
-        query_set = SearchQuerySet().filter(text__contains=query_term)[:self.suggest_limit]
+        """
+        query = self.request.GET.get('q', '').strip()
+        if not query:
+            return self.render_to_response([])
+
+        qs = self.get_search_queryset(query)[:self.suggest_limit]
         context = []
-        for item in query_set:
+        for item in qs:
             context.append({
-                'label': item.object.title,
+                'title': item.object.title,
+                'description': item.object.description,
                 'url':  item.object.get_absolute_url(),
             })
         return context
 
+    def get_search_queryset(self, query):
+        """
+        Return the SearchQuerySet for the given query
+        """
+        return SearchQuerySet().filter(text__contains=query)
+
     def render_to_response(self, context):
-        "Returns a JSON response containing 'context' as payload"
-        return self.get_json_response(self.convert_context_to_json(context))
-
-    def get_json_response(self, content, **httpresponse_kwargs):
-        "Construct an `HttpResponse` object."
-        return HttpResponse(content,
-                            content_type='application/json',
-                            **httpresponse_kwargs)
-
-    def convert_context_to_json(self, context):
-        "Convert the context into a JSON object"
-        return json.dumps(context)
+        payload = json.dumps(context)
+        return HttpResponse(
+            payload, content_type='application/json')
 
 
 class MultiFacetedSearchView(FacetedSearchView):
     """
     Search view for multifaceted searches
     """
+    form_class = MultiFacetedSearchForm
     template = 'search/results.html'
 
     def __call__(self, request, *args, **kwargs):
@@ -68,20 +71,21 @@ class MultiFacetedSearchView(FacetedSearchView):
         # Look for UPC match
         query = request.GET.get('q', '').strip()
         try:
-            item = product_models.Product._default_manager.get(upc=query)
+            item = Product._default_manager.get(upc=query)
             return HttpResponseRedirect(item.get_absolute_url())
-        except product_models.Product.DoesNotExist:
+        except Product.DoesNotExist:
             pass
-        return super(MultiFacetedSearchView, self).__call__(request, *args, **kwargs)
+        return super(MultiFacetedSearchView, self).__call__(
+            request, *args, **kwargs)
 
     @property
     def __name__(self):
         return "MultiFacetedSearchView"
 
     def extra_context(self):
-        '''
+        """
         Adds details about the facets applied
-        '''
+        """
         extra = super(MultiFacetedSearchView, self).extra_context()
 
         if hasattr(self.form, 'cleaned_data') and 'selected_facets' in self.form.cleaned_data:
@@ -89,7 +93,8 @@ class MultiFacetedSearchView(FacetedSearchView):
             for f in self.form.cleaned_data['selected_facets'].split("|"):
                 facet = f.split(":")
                 extra['facets_applied'].append({
-                    'facet': facet[0][:-6], # removing the _exact suffix that haystack uses for some reason
-                    'value' : facet[1].strip('"')
+                    # removing the _exact suffix that haystack uses for some reason
+                    'facet': facet[0][:-6],
+                    'value': facet[1].strip('"')
                 })
         return extra
