@@ -354,6 +354,21 @@ class OrderHistoryView(PageTitleMixin, ListView):
                 self.object_list = self.get_queryset()
                 ctx = self.get_context_data(object_list=self.object_list)
                 return self.render_to_response(ctx)
+            data = self.form.cleaned_data
+
+            # If the user has just entered an order number, try and look it up
+            # and redirect immediately to the order detail page.
+            if data['order_number'] and not (data['date_to'] or
+                                             data['date_from']):
+                try:
+                    order = Order.objects.get(
+                        number=data['order_number'], user=self.request.user)
+                except Order.DoesNotExist:
+                    pass
+                else:
+                    return HttpResponseRedirect(
+                        reverse('customer:order',
+                                kwargs={'order_number': order.number}))
         else:
             self.form = OrderSearchForm()
         return super(OrderHistoryView, self).get(request, *args, **kwargs)
