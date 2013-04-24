@@ -86,7 +86,7 @@
                                     
                                     <div class="variant-form">
                                         {% if variant.is_available_to_buy %}
-                                        {% basket_form basket variant as basket_form %}
+                                        {% basket_form request variant as basket_form %}
                                         <form action="{% url basket:add %}" method="post" class="form-inline">
                                             {% csrf_token %}
                                             {% include "partials/form_fields_inline.html" with form=basket_form %}

@@ -22,4 +22,10 @@ What's new in Oscar 0.6?
 Upgrading 
 =========
 
-...
+Templatetags:
+
+* The ``basket_form`` templatetag has been altered to take the ``request`` as the
+  first argument, not ``request.basket``.
+
+Templates:
+
