@@ -127,10 +127,12 @@ class CommonPasswordValidator(validators.BaseValidator):
 
 class EmailUserCreationForm(forms.ModelForm):
     email = forms.EmailField(label=_('Email Address'))
-    password1 = forms.CharField(label=_('Password'), widget=forms.PasswordInput,
-                                validators=[validators.MinLengthValidator(6),
-                                CommonPasswordValidator()])
-    password2 = forms.CharField(label=_('Confirm Password'), widget=forms.PasswordInput)
+    password1 = forms.CharField(
+        label=_('Password'), widget=forms.PasswordInput,
+        validators=[validators.MinLengthValidator(6),
+                    CommonPasswordValidator()])
+    password2 = forms.CharField(
+        label=_('Confirm Password'), widget=forms.PasswordInput)
 
     class Meta:
         model = User
@@ -138,11 +140,13 @@ class EmailUserCreationForm(forms.ModelForm):
 
     def clean_email(self):
         email = self.cleaned_data['email'].lower()
-        try:
-            User.objects.get(email=email)
-        except User.DoesNotExist:
-            return email
-        raise forms.ValidationError(_("A user with that email address already exists."))
+        local, host = email.split('@')
+        clean_email = local + '@' + host.lower()
+        users = User.objects.filter(email=clean_email)
+        if len(users) > 0:
+            raise forms.ValidationError(
+                _("A user with that email address already exists."))
+        return clean_email
 
     def clean_password2(self):
         password1 = self.cleaned_data.get('password1', '')
