@@ -40,7 +40,7 @@ class DefaultWrapper(object):
         """
         Return the maximum available purchase quantity for a given user
         """
-        if not stockrecord.product.product_class.track_stock:
+        if not stockrecord.product.get_product_class().track_stock:
             return None
         if stockrecord.num_in_stock is None:
             return None
