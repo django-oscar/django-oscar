@@ -64,6 +64,7 @@ def configure():
             LOGIN_REDIRECT_URL='/accounts/',
             STATIC_URL='/static/',
             COMPRESS_ENABLED=False,
+            ADMINS=('admin@example.com',),
             DEBUG=False,
             SITE_ID=1,
             APPEND_SLASH=True,
