@@ -1,6 +1,8 @@
+from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.db.models import get_model
 from django import forms
+from oscar.apps.customer.forms import EmailUserCreationForm
 
 
 Partner = get_model('partner', 'Partner')
@@ -14,3 +16,9 @@ class PartnerCreateForm(forms.ModelForm):
     class Meta:
         model = Partner
         fields = ('name',)
+
+
+class UserForm(EmailUserCreationForm):
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'email', 'password1', 'password2')
