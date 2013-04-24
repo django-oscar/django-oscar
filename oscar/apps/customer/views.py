@@ -326,7 +326,7 @@ class EmailHistoryView(PageTitleMixin, ListView):
 
 class EmailDetailView(PageTitleMixin, DetailView):
     """Customer email"""
-    template_name = "customer/email/email.html"
+    template_name = "customer/email/email_detail.html"
     context_object_name = 'email'
     active_tab = 'emails'
 
@@ -394,15 +394,16 @@ class OrderHistoryView(PageTitleMixin, ListView):
 
 
 class OrderDetailView(PageTitleMixin, DetailView, PostActionMixin):
-    """Customer order details"""
     model = Order
     active_tab = 'orders'
 
     def get_template_names(self):
-        return ["customer/order/order.html"]
+        return ["customer/order/order_detail.html"]
 
     def get_page_title(self):
-        """ Order number as page title """
+        """
+        Order number as page title
+        """
         return u'%s #%s' % (_('Order'), self.object.number)
 
     def get_object(self, queryset=None):
