@@ -37,9 +37,11 @@ def recently_viewed_products(context):
 
 @register.assignment_tag(takes_context=True)
 def get_back_button(context):
-    """Show back button, custom title available for different urls, for
+    """
+    Show back button, custom title available for different urls, for
     example 'Back to search results', no back button if user came from other
-    site"""
+    site
+    """
     request = context.get('request', None)
     if not request:
         raise Exception('Cannot get request from context')
@@ -65,6 +67,7 @@ def get_back_button(context):
     except Resolver404:
         return None
 
+    # This dict can be extended to link back to other browsing pages
     titles = {
         'search:search': _('Back to search results'),
     }
