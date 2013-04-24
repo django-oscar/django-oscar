@@ -17,7 +17,38 @@ Overview
 What's new in Oscar 0.6?
 ========================
 
-...
+Search
+~~~~~~
+
+Multi-partner dashboard
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Demo site
+~~~~~~~~~
+
+Oscar now ships with a demo site along side the sandbox site.  While the sandbox
+is a minimal Django project that uses Oscar with all its defaults, the demo site
+is a more realistic example of an Oscar project.  It has a custom skin and makes
+many alterations to the default Oscar behaviour.  
+
+It's features include:
+
+* A range of different product types: books, downloads, clothing
+* PayPal Express integration using django-oscar-paypal_
+* Datacash integration using django-oscar-datacash_
+
+.. _django-oscar-paypal: https://github.com/tangentlabs/django-oscar-paypal
+.. _django-oscar-datacash: https://github.com/tangentlabs/django-oscar-datacash
+
+Further reading:
+
+* :doc:`The demo site <internals/sandbox>`.
+
+Accounts 
+~~~~~~~~
+
+The views and templates of the accounts section have been reworked to be clearer
+and easier to extend.
 
 Upgrading 
 =========
@@ -28,4 +59,10 @@ Templatetags:
   first argument, not ``request.basket``.
 
 Templates:
+
+* The template ``customer/email/email.html`` has been renamed to
+  ``customer/email/email_detail.html``.
+
+* The template ``customer/orders/order.html`` has been renamed to
+  ``customer/orders/order_detail.html``.
 

@@ -1,9 +1,16 @@
-======================
-Playing in the sandbox
-======================
+=====================
+Sample Oscar projects
+=====================
 
-Oscar ships with a 'sandbox' site, which is a vanilla install of Oscar using the
-default templates and styles.  It is useful for exploring Oscar's functionality
+Oscar ships with two sample projects: a 'sandbox' site, which is a vanilla install of Oscar using the
+default templates and styles, and a fully featured 'demo' site which demonstrates how Oscan can be
+re-skinned and customised to model a domain. 
+
+The sandbox site
+----------------
+
+The sandbox site is a minimal implementation of Oscar, where everything is left
+in its default state.  It is useful for exploring Oscar's functionality
 and developing new features.
 
 It only has two customisations on top of Oscar's core:
@@ -26,6 +33,23 @@ are domain-specific.  For instance:
 
 The sandbox is, in effect, the blank canvas upon which you can build your site.
 
+The demo site
+-------------
+
+The demo site is *the* reference Oscar project as it illustates how Oscar can be
+redesigned and customised to build a e-commerce store.  The demo site is a
+sailing store selling a range of different product types.
+
+The customisations on top of core Oscar include:
+
+* A new skin
+* A variety of product types including books, clothing and downloads
+* Payment with PayPal Express using django-oscar-paypal_.
+* Payment with bankcards using Datacash using django-oscar-datacash_.
+
+.. _django-oscar-paypal: https://github.com/tangentlabs/django-oscar-paypal
+.. _django-oscar-datacash: https://github.com/tangentlabs/django-oscar-datacash
+
 Browse the external sandbox site
 ================================
 
@@ -37,11 +61,11 @@ available at http://latest.oscarcommerce.com
     It is possible for users to access the dashboard and edit the site content.
     Hence, the data can get quite messy.  It is periodically cleaned up.
 
-.. warning::
-    
-    Since this site is built from the unstable branch, occasionally things won't
-    be fully stable.  A more stable 'demo' site is in preparation, which will be
-    more suitable for impressing clients/management.
+Browse the external demo site
+=============================
+
+An instance of the demo site is built periodically (but not automatically) and
+available at http://demo.oscarcommerce.com
 
 Running the sandbox locally
 ===========================
