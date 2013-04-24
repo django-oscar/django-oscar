@@ -31,14 +31,13 @@
                     {% endif %}
                     {% if user.is_authenticated %}
                         <li>
-                            <a href="{% url customer:summary %}"><i class="icon-user"></i> {% trans "Account" %}</a>
-                        </li>
-                        <li>
-                            <a href="{% url customer:notifications-inbox %}">
-                                <i class="icon-envelope"></i> {% trans "Notifications" %}
-                                {% if num_unread_notifications > 0 %}
-                                    <span class="label label-important">{{ num_unread_notifications }}</span>
-                                {% endif %}</a>
+                            {% if num_unread_notifications > 0 %}
+                                {# If user has new notifications - we change account link to go to inbox #}
+                                <a href="{% url customer:notifications-inbox %}"><i class="icon-user"></i> {% trans "Account" %}</a>
+                                <span class="label label-important">{{ num_unread_notifications }}</span>
+                            {% else %}
+                                <a href="{% url customer:summary %}"><i class="icon-user"></i> {% trans "Account" %}</a>
+                            {% endif %}</a>
                         </li>
                         {% if user.is_staff %}
                             <li><a href="{% url dashboard:index %}"><i class="icon-list-ul"></i> {% trans "Dashboard" %}</a></li>
