@@ -20,7 +20,7 @@ create-page
         <span class="divider">/</span>
     </li>
     <li>
-        <a href="{% url dashboard:partner-detail partner.pk %}">'{{ partner.name }}'</a>
+        <a href="{% url dashboard:partner-update partner.pk %}">'{{ partner.name }}'</a>
         <span class="divider">/</span>
     </li>
     <li class="active">{% trans "Delete?" %}</li>

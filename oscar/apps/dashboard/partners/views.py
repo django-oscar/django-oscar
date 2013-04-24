@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy
 from django.db.models import get_model
 from django.utils.translation import ugettext_lazy as _
@@ -55,11 +56,6 @@ class PartnerListView(generic.ListView, BulkEditMixin):
         return ctx
 
 
-class PartnerDetailView(generic.DetailView):
-    model = Partner
-    template_name = 'dashboard/partners/partner_detail.html'
-
-
 class PartnerCreateView(generic.CreateView):
     model = Partner
     template_name = 'dashboard/partners/partner_form.html'
@@ -71,10 +67,21 @@ class PartnerUpdateView(generic.UpdateView):
     model = Partner
     template_name = 'dashboard/partners/partner_form.html'
     form_class = PartnerCreateForm
-    success_url = reverse_lazy('dashboard:partner-list')
+
+    def get_success_url(self):
+        messages.success(self.request,
+                         _("Partner '%s' was updated successfully.") %
+                         self.object.name)
+        return reverse_lazy('dashboard:partner-list')
 
 
 class PartnerDeleteView(generic.DeleteView):
     model = Partner
     template_name = 'dashboard/partners/partner_delete.html'
-    success_url = reverse_lazy('dashboard:partner-list')
+
+    def get_success_url(self):
+        messages.success(self.request,
+                         _("Partner '%s' was deleted successfully.") %
+                         self.object.name)
+        return reverse_lazy('dashboard:partner-list')
+

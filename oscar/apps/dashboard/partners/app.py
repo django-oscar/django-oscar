@@ -8,7 +8,6 @@ from oscar.apps.dashboard.partners import views
 class PartnersDashboardApplication(Application):
     name = None
     list_view = views.PartnerListView
-    detail_view = views.PartnerDetailView
     create_view = views.PartnerCreateView
     update_view = views.PartnerUpdateView
     delete_view = views.PartnerDeleteView
@@ -16,8 +15,6 @@ class PartnersDashboardApplication(Application):
     def get_urls(self):
         urlpatterns = patterns('',
             url(r'^$', self.list_view.as_view(), name='partner-list'),
-            url(r'^(?P<pk>\d+)/$', self.detail_view.as_view(),
-                name='partner-detail'),
             url(r'^create/$', self.create_view.as_view(),
                 name='partner-create'),
             url(r'^(?P<pk>\d+)/update/$', self.update_view.as_view(),
