@@ -5,6 +5,7 @@ from django.test import TestCase
 
 from oscar_testsupport.factories import create_product
 from oscar.apps.customer.history_helpers import get_recently_viewed_product_ids
+from oscar.templatetags.history_tags import get_back_button
 from django.http import HttpRequest
 
 
@@ -23,6 +24,20 @@ class HistoryHelpersTest(TestCase):
         request = HttpRequest()
         request.COOKIES['oscar_recently_viewed_products'] = response.cookies['oscar_recently_viewed_products'].value
         self.assertTrue(self.product.id in get_recently_viewed_product_ids(request))
+
+    def test_get_back_button(self):
+        request = HttpRequest()
+
+        request.META['SERVER_NAME'] = 'test'
+        request.META['SERVER_PORT'] = 8000
+        request.META['HTTP_REFERER'] = 'http://www.google.com'
+        backbutton = get_back_button({'request': request})
+        self.assertEqual(backbutton, None)
+
+        request.META['HTTP_REFERER'] = 'http://test:8000/search/'
+        backbutton = get_back_button({'request': request})
+        self.assertTrue(backbutton)
+        self.assertEqual(backbutton['title'], 'Back to search results')
 
 
 class TestAUserWhoLogsOut(TestCase):

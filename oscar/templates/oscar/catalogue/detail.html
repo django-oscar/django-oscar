@@ -29,6 +29,15 @@
 		</li>
 		{% endfor %}
 		<li class="active">{{ product.title }}</li>
+
+        {% get_back_button as backbutton %}
+        {% if backbutton %}
+            <li class="pull-right">
+                <a href="{{ backbutton.url }}">
+                    <i class="icon-arrow-left"></i> {{ backbutton.title }}
+                </a>
+            </li>
+        {% endif %}
     {% endwith %}
 </ul>
 {% endblock %}
@@ -37,8 +46,8 @@
 {% endblock header %}
 
 {% block content %}
-<article class="product_page"><!-- Start of product page -->
 
+<article class="product_page"><!-- Start of product page -->
     {% comment %} 
     This is a but clunky here.  Better to have some kind of JS-driven dashboard menu that 
     pops out when clicked.  A bit like the Django-Debug-Toolbar button
