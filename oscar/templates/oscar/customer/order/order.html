@@ -2,8 +2,14 @@
 {% load currency_filters %}
 {% load i18n %}
 
-{% block tabcontent %}
+{% block extra_breadcrumbs %}
+    <li>
+        <a href="{% url customer:summary %}">{% trans 'Order history' %}</a>
+        <span class="divider">/</span>
+    </li>
+{% endblock %}
 
+{% block tabcontent %}
 <div class="row-fluid">
     <div class="span3">
         <ul class="nav nav-tabs nav-stacked">
@@ -103,6 +109,13 @@
 					</tr>
 				</tbody>
                 </table>
+
+                <form id="order_form_{{ order.id }}" action="{% url customer:order order.number %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="order_id" value="{{ order.id }}" />
+                    <input type="hidden" name="action" value="reorder" />
+                    <button type="submit" class="btn btn-success">{% trans 'Re-order all items' %}</button>
+                </form>
             </div>
 
             <div class="tab-pane" id="2">

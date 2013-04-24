@@ -2,11 +2,6 @@
 {% load i18n %}
 {% load url from future %}
 
-{% block tabheader %}
-    <a href="{% url 'customer:address-create' %}" class="btn btn-primary pull-right">{% trans 'Add a New Address' %}</a>
-    <h3>{{ page_title }}</h3>
-{% endblock %}
-
 {% block tabcontent %}
 
     {% if addresses %}
@@ -50,11 +45,10 @@
                 {% endfor %}
             </tbody>
         </table>
+        {% include "partials/pagination.html" %}
     {% else %}
         {% trans 'There are no addresses in your address book.' %}
     {% endif %}
-
-    {% include "partials/pagination.html" %}
-
+    <a href="{% url 'customer:address-create' %}" class="btn btn-primary">{% trans 'Add a New Address' %}</a>
 {% endblock tabcontent %}
 

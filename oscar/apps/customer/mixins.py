@@ -8,6 +8,7 @@ class PageTitleMixin(object):
     page_title = None
     active_tab = None
 
+    # Use a method that can be overridden and customised
     def get_page_title(self):
         return self.page_title
 

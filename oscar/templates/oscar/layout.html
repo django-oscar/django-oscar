@@ -47,7 +47,7 @@
 
 {% block extrascripts %}
     {% compress js %}
-    {% include "partials/extrascripts.html" %}
+        {% include "partials/extrascripts.html" %}
     {% endcompress %}
     {{ block.super }}
 {% endblock %}
