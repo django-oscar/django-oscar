@@ -44,3 +44,4 @@ settings_local.py
 /sites/demo/assets/
 /sites/demo/public/
 /sites/demo/whoosh_index/
+/sites/demo/logs/

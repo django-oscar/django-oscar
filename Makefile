@@ -18,18 +18,33 @@ sandbox: install
 	sites/sandbox/manage.py oscar_import_catalogue sites/_fixtures/books-catalogue.csv
 	sites/sandbox/manage.py oscar_import_catalogue_images sites/_fixtures/books-images.tar.gz
 	sites/sandbox/manage.py loaddata countries.json sites/_fixtures/pages.json sites/_fixtures/auth.json sites/_fixtures/ranges.json sites/_fixtures/offers.json
-	sites/sandbox/manage.py rebuild_index --noinput
+	sites/sandbox/manage.py clear_index --noinput
+	sites/sandbox/manage.py update_index catalogue
+
+geoip:
+	wget http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz
+	gunzip GeoLiteCity.dat.gz
+	mv GeoLiteCity.dat sites/demo/geoip
 
 demo: install
-	-rm -f sites/demo/db.sqlite
+	# Install additional requirements
+	pip install -r requirements_demo.txt --use-mirrors
 	# Create database
+	sites/demo/manage.py reset_db --router=default --noinput
 	sites/demo/manage.py syncdb --noinput
 	sites/demo/manage.py migrate
-	# Import some fixtures
-	sites/demo/manage.py oscar_import_catalogue sites/_fixtures/books-catalogue.csv
-	sites/demo/manage.py oscar_import_catalogue_images sites/_fixtures/books-images.tar.gz
-	sites/demo/manage.py loaddata countries.json sites/_fixtures/pages.json sites/_fixtures/auth.json sites/_fixtures/ranges.json
-	sites/demo/manage.py rebuild_index --noinput
+	# Import some core fixtures
+	sites/demo/manage.py loaddata countries.json sites/_fixtures/pages.json
+	# Create catalogue (create product classes from fixture than import CSV files)
+	sites/demo/manage.py loaddata sites/demo/fixtures/auth.json sites/demo/fixtures/offers.json
+	sites/demo/manage.py loaddata sites/demo/fixtures/product-classes.json sites/demo/fixtures/product-attributes.json
+	sites/demo/manage.py create_products --class=Books sites/demo/fixtures/books.csv
+	sites/demo/manage.py create_products --class=Downloads sites/demo/fixtures/downloads.csv
+	sites/demo/manage.py create_products --class=Clothing sites/demo/fixtures/clothing.csv
+	sites/demo/manage.py import_product_images sites/demo/fixtures/images/
+	# Update search index
+	sites/demo/manage.py clear_index --noinput
+	sites/demo/manage.py update_index catalogue
 
 docs:
 	cd docs && make html
@@ -76,6 +91,11 @@ css:
 	lessc oscar/static/oscar/less/styles.less > oscar/static/oscar/css/styles.css
 	lessc oscar/static/oscar/less/responsive.less > oscar/static/oscar/css/responsive.css
 	lessc oscar/static/oscar/less/dashboard.less > oscar/static/oscar/css/dashboard.css
+
+demo_css:
+	# Compile CSS for demo site
+	lessc sites/demo/static/demo/less/styles.less > sites/demo/static/demo/css/styles.css
+	lessc sites/demo/static/demo/less/responsive.less > sites/demo/static/demo/css/responsive.css
 
 clean:
 	# Remove files not in source control

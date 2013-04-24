@@ -1,11 +1,20 @@
+"""
+Settings for Oscar's demo site.
+
+Notes:
+
+* The demo site uses the stores extension which requires a spatial database.
+  The DATABASES settings is not set in this module.  Instead, you should add
+  the appropriate details to your settings_local module.
+
+"""
+
 import os
 
 # Django settings for oscar project.
 PROJECT_DIR = os.path.dirname(__file__)
 location = lambda x: os.path.join(
     os.path.dirname(os.path.realpath(__file__)), x)
-
-USE_TZ = True
 
 DEBUG = True
 TEMPLATE_DEBUG = True
@@ -19,17 +28,6 @@ EMAIL_SUBJECT_PREFIX = '[Oscar demo] '
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 MANAGERS = ADMINS
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(os.path.dirname(__file__), 'db.sqlite'),
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
-    }
-}
 
 CACHES = {
     'default': {
@@ -52,19 +50,19 @@ TIME_ZONE = 'Europe/London'
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en-us'
 
+LANGUAGES = (
+    ('en-gb', 'English'),
+)
+
 SITE_ID = 1
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
 USE_I18N = True
 
-# If you set this to False, Django will not format dates, numbers and
-# calendars according to the current locale
-USE_L10N = True
-
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = location("assets/media")
+MEDIA_ROOT = location("public/media")
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
@@ -77,7 +75,9 @@ MEDIA_URL = '/media/'
 #ADMIN_MEDIA_PREFIX = '/media/admin/'
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = ()
+STATICFILES_DIRS = (
+    location('static'),
+)
 STATIC_ROOT = location('public/static')
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -151,25 +151,25 @@ LOGGING = {
     },
     'handlers': {
         'null': {
-            'level':'DEBUG',
-            'class':'django.utils.log.NullHandler',
+            'level': 'DEBUG',
+            'class': 'django.utils.log.NullHandler',
         },
-        'console':{
-            'level':'DEBUG',
-            'class':'logging.StreamHandler',
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
             'formatter': 'verbose'
         },
         'checkout_file': {
-             'level': 'INFO',
-             'class': 'oscar.core.logging.handlers.EnvFileHandler',
-             'filename': 'checkout.log',
-             'formatter': 'verbose'
+            'level': 'INFO',
+            'class': 'oscar.core.logging.handlers.EnvFileHandler',
+            'filename': 'checkout.log',
+            'formatter': 'verbose'
         },
         'error_file': {
-             'level': 'INFO',
-             'class': 'oscar.core.logging.handlers.EnvFileHandler',
-             'filename': 'errors.log',
-             'formatter': 'verbose'
+            'level': 'INFO',
+            'class': 'oscar.core.logging.handlers.EnvFileHandler',
+            'filename': 'errors.log',
+            'formatter': 'verbose'
         },
         'mail_admins': {
             'level': 'ERROR',
@@ -178,9 +178,9 @@ LOGGING = {
     },
     'loggers': {
         'django': {
-            'handlers':['null'],
+            'handlers': ['null'],
             'propagate': True,
-            'level':'INFO',
+            'level': 'INFO',
         },
         'django.request': {
             'handlers': ['mail_admins', 'error_file'],
@@ -190,12 +190,12 @@ LOGGING = {
         'oscar.checkout': {
             'handlers': ['console', 'checkout_file'],
             'propagate': True,
-            'level':'INFO',
+            'level': 'INFO',
         },
         'django.db.backends': {
-            'handlers':['null'],
+            'handlers': ['null'],
             'propagate': False,
-            'level':'DEBUG',
+            'level': 'DEBUG',
         },
     }
 }
@@ -210,13 +210,20 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.flatpages',
     'django.contrib.staticfiles',
+    'django.contrib.gis',
+    # Oscar dependencies
+    'compressor',
     'south',
+    # Oscar extensions
+    'stores',
+    'paypal',
+    'datacash',
     # External apps
     'django_extensions',
     'debug_toolbar',
-    'compressor',
     # For profile testing
     'apps.user',
+    'apps.bigbang',
 ]
 
 # Include a shipping override app to provide some shipping methods
@@ -234,7 +241,8 @@ APPEND_SLASH = True
 # Haystack settings
 HAYSTACK_CONNECTIONS = {
     'default': {
-        'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
+        'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
+        'URL': 'http://127.0.0.1:8983/solr',
     },
 }
 
@@ -271,6 +279,39 @@ USE_TZ = True
 
 # Must be within MEDIA_ROOT for sorl to work
 OSCAR_MISSING_IMAGE_URL = 'image_not_found.jpg'
+
+# Add stores node to navigation
+from django.utils.translation import ugettext_lazy as _
+new_nav = OSCAR_DASHBOARD_NAVIGATION
+new_nav.append(
+    {
+        'label': _('Stores'),
+        'icon': 'icon-shopping-cart',
+        'children': [
+            {
+                'label': _('Stores'),
+                'url_name': 'stores-dashboard:store-list',
+            },
+            {
+                'label': _('Store groups'),
+                'url_name': 'stores-dashboard:store-group-list',
+            },
+        ]
+    })
+new_nav.append(
+    {
+        'label': 'Datacash',
+        'icon': 'icon-globe',
+        'children': [
+            {
+                'label': 'Transactions',
+                'url_name': 'datacash-transaction-list',
+            },
+        ]
+    })
+OSCAR_DASHBOARD_NAVIGATION = new_nav
+
+GEOIP_PATH = os.path.join(os.path.dirname(__file__), 'geoip')
 
 try:
     from settings_local import *

@@ -1,0 +1,175 @@
+// Price Color
+.price_color {
+  display:block;
+  color:@green;
+  font-weight:bold;
+}
+//Procduct list columns -- you will need to add a no-margin class divisible by the column number
+.five li {
+    @totalGutter: 10%;
+    @productColumns: 5;
+    @productGutters: 4;
+    @productGutter: @totalGutter / @productGutters;
+    width:(100 - @productGutters * @productGutter) / @productColumns;
+    margin-right:@productGutter;
+}
+.four li {
+    @totalGutter: 10%;
+    @productColumns: 4;
+    @productGutters: 3;
+    @productGutter: @totalGutter / @productGutters;
+    width:(100 - @productGutters * @productGutter) / @productColumns;
+    margin-right:@productGutter;
+}
+.three li {
+    @totalGutter: 10%;
+    @productColumns: 3;
+    @productGutters: 2;
+    @productGutter: @totalGutter / @productGutters;
+    width:(100 - @productGutters * @productGutter) / @productColumns;
+    margin-right:@productGutter;
+}
+.two li {
+    @totalGutter: 10%;
+    @productColumns: 2;
+    @productGutters: 1;
+    @productGutter: @totalGutter / @productGutters;
+    width:(100 - @productGutters * @productGutter) / @productColumns;
+    margin-right:@productGutter;
+}
+.one li {
+    width:@full;
+}
+.five li,
+.four li,
+.three li,
+.two li,
+.one li {
+  &.no-margin {
+    margin-right:0;
+  }
+  li {
+    width:auto;
+  }
+}
+.products {
+  .horiz_col;
+}
+.product_pod {
+  position:relative;
+  height:430px;
+  overflow:hidden;
+  .clearfix();
+  & p {
+    margin-bottom:0;
+  }
+  .unavailable {
+    width:113px;
+    height:86px;
+    position:absolute;
+    right:0;
+    top:0;
+    background:url(/static/demo/img/ui/unavailable.png) 0 0;
+  }
+  h3 {
+    font-size:@headingFourSize;
+    margin-bottom:0;
+    line-height:@baseLineHeight;
+    color:@gray;
+    span {
+    }
+    a {
+      display:block;
+      text-transform: none;
+      min-height:50px;
+    }
+  }
+  .price_color {
+    min-height:40px;
+    margin-bottom:20px;
+    position: relative;
+    span {
+      position: absolute;
+      bottom:0;
+    }
+  }
+  .image_container {
+    border:1px solid #C7DAD7;
+    a {
+      display:block;
+    }
+  }
+  .product_price {
+    position:absolute;
+    bottom:20px;
+    left:0;
+    width:100%;
+    // min-height:130px;
+    form {
+      margin-bottom:0px;
+    }
+  }
+}
+//Price (i = variant)
+.price_color {
+  i {
+    display:block;
+    color:@gray;
+    font-style: normal;
+  }
+  del {
+    color:@gray;
+  }
+}
+
+/* Product list image container */
+.image_container {
+  min-height:200px;
+  line-height:200px;
+  overflow:hidden;
+  text-align: center;
+  margin-bottom: @baseLineHeight / 2;
+  position:relative;
+  img {
+    max-height:150px;
+    max-width:90%;
+    width:auto;
+    margin:0px auto;
+  }
+}
+//Category page title and description
+.category-title {
+  background:#244761;
+  height:250px;
+  overflow:hidden;
+  position: relative;
+  color:@white;
+  margin-bottom:30px;
+  h1 {
+    color:@white;
+    text-transform: uppercase;
+    margin-bottom:0;
+    font-size:@headingTwoSize;
+    margin: 50px 350px 0 30px;
+  }
+  p {
+    border-top:2px solid @white;
+    padding-top:10px;
+    margin: 0 350px 0 30px;
+  }
+  div {
+    position: relative;
+    background:url(/static/demo/img/ui/bg-category-title.png) -200px 0 no-repeat;
+    position: absolute;
+    top:0;
+    left:0px;
+    height:250px;
+  }
+  img {
+    position: absolute;
+    width:auto;
+    height:250px;
+    right:0;
+    top:0;
+  }
+}
