@@ -43,9 +43,9 @@ Continuous integration status:
 
 PyPI status:
 
-.. image:: http://pypip.in/v/django-oscar/badge.png
+.. image:: https://pypip.in/v/django-oscar/badge.png
 
-.. image:: http://pypip.in/d/django-oscar/badge.png
+.. image:: https://pypip.in/d/django-oscar/badge.png
 
 .. _`Official homepage`: http://oscarcommerce.com
 .. _`Sandbox site`: http://latest.oscarcommerce.com
