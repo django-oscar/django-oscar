@@ -41,6 +41,12 @@ Continuous integration status:
     :alt: Coverage
     :target: https://coveralls.io/r/tangentlabs/django-oscar
 
+PyPI status:
+
+.. image:: http://pypip.in/v/django-oscar/badge.png
+
+.. image:: http://pypip.in/d/django-oscar/badge.png
+
 .. _`Official homepage`: http://oscarcommerce.com
 .. _`Sandbox site`: http://latest.oscarcommerce.com
 .. _`Documentation`: http://django-oscar.readthedocs.org/en/latest/
