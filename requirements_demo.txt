@@ -1,8 +1,5 @@
-# We link directly to the master branch of stores to pick up a few Oscar 0.5
-# fixes.  This should be changed when oscar-stores 0.4 is released.
--e git+https://github.com/tangentlabs/django-oscar-stores@master#egg=django_oscar_stores-dev
-
-# Similarly, we use the master of django-oscar-paypal and django-oscar-datacash
+# Osar extensions
+django-oscar-stores>=0.4,<0.5
 django-oscar-paypal>=0.4,<0.5
 django-oscar-datacash>=0.4,<0.5
 
