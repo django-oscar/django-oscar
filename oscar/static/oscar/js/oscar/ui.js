@@ -11,7 +11,13 @@ var oscar = (function(o, $) {
         info: function(msg) { o.messages.addMessage('info', msg); },
         success: function(msg) { o.messages.addMessage('success', msg); },
         warning: function(msg) { o.messages.addMessage('warning', msg); },
-        error: function(msg) { o.messages.addMessage('error:', msg); }
+        error: function(msg) { o.messages.addMessage('error:', msg); },
+        clear: function() {
+            $('#messages').html('');
+        },
+        scrollTo: function() {
+            $('html').animate({scrollTop: $('#messages').offset().top});
+        }
     };
 
     // This block may need removing after reworking of promotions app
