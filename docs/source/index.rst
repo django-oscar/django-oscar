@@ -78,6 +78,7 @@ First steps
    internals/getting_started
    topics/key_questions
    internals/getting_help
+   ref/glossary
 
 Using Oscar
 ===========
