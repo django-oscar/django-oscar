@@ -168,10 +168,21 @@ Then create the database and the shop should be browsable:
 
 .. code-block:: bash
 
-    python manage.py syncdb --noinput
-    python manage.py migrate
+    $ python manage.py syncdb --noinput
+    $ python manage.py migrate
+    $ python manage.py runserver
 
 You should now have a running Oscar install that you can browse.
+
+Creating product classes and fulfillment partners
+-------------------------------------------------
+
+Every Oscar deployment needs at least one
+:class:`product class <oscar.apps.catalogue.abstract_models.AbstractProductClass>`
+and one
+:class:`fulfillment partner <oscar.apps.partner.abstract_models.AbstractPartner>`.
+The quickest way to set them up is to log into the Django admin
+interface at http://127.0.0.1:8000/admin/ and create instances of both there.
 
 Defining the order pipeline
 ---------------------------
@@ -214,4 +225,4 @@ Next steps
 ==========
 
 The next step is to implement the business logic of your domain on top of
-Oscar.  The fun part.
+Oscar. The fun part.

@@ -10,22 +10,10 @@ to provide shipping and billing address models.
 Abstract models
 ---------------
 
-.. autoclass:: oscar.apps.address.abstract_models.AbstractAddress
+.. automodule:: oscar.apps.address.abstract_models
     :members:
     :show-inheritance:
 
-.. autoclass:: oscar.apps.address.abstract_models.AbstractShippingAddress
-    :members:
-    :show-inheritance:
-
-.. autoclass:: oscar.apps.address.abstract_models.AbstractUserAddress
-    :members:
-    :show-inheritance:
-
-.. autoclass:: oscar.apps.address.abstract_models.AbstractBillingAddress
-    :members:
-    :show-inheritance:
-
-.. autoclass:: oscar.apps.address.abstract_models.AbstractCountry
-    :members:
-    :show-inheritance:
+Views
+-----
+None.
