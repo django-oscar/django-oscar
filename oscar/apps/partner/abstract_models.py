@@ -45,13 +45,18 @@ def _load_partner_wrappers():
 
 class AbstractPartner(models.Model):
     """
-    Fulfillment partner
+    A fulfillment partner. An individual or company who can fulfil products.
+    E.g. for physical goods, somebody with a warehouse and means of delivery.
+
+    Creating one or more instances of the Partner model is a required step in
+    setting up an Oscar deployment. Many Oscar deployments will only have one
+    fulfillment partner.
     """
     code = models.SlugField(_("Code"), max_length=128, unique=True)
     name = models.CharField(_("Name"), max_length=128, null=True, blank=True)
 
-    # A partner can have users assigned to it.  These can be used
-    # to provide authentication for webservices etc.
+    #: A partner can have users assigned to it.  These can be used
+    #: to provide authentication for webservices etc.
     users = models.ManyToManyField(
         'auth.User', related_name="partners", blank=True, null=True,
         verbose_name=_("Users"))
@@ -100,9 +105,10 @@ class AbstractStockRecord(models.Model):
         verbose_name=_("Product"))
     partner = models.ForeignKey('partner.Partner', verbose_name=_("Partner"))
 
-    # The fulfilment partner will often have their own SKU for a product, which
-    # we store here.  This will sometimes be the same the product's UPC but not
-    # always.  It should be unique per partner.
+    #: The fulfilment partner will often have their own SKU for a product, which
+    #: we store here.  This will sometimes be the same the product's UPC but not
+    #: always.  It should be unique per partner.
+    #: See also http://en.wikipedia.org/wiki/Stock-keeping_unit
     partner_sku = models.CharField(_("Partner SKU"), max_length=128)
 
     # Price info:
@@ -118,32 +124,32 @@ class AbstractStockRecord(models.Model):
         _("Price (excl. tax)"), decimal_places=2, max_digits=12,
         blank=True, null=True)
 
-    # Retail price for this item.  This is simply the recommended price from
-    # the manufacturer.  If this is used, it is for display purposes only.
-    # This prices is the NOT the price charged to the customer.
+    #: Retail price for this item.  This is simply the recommended price from
+    #: the manufacturer.  If this is used, it is for display purposes only.
+    #: This prices is the NOT the price charged to the customer.
     price_retail = models.DecimalField(
         _("Price (retail)"), decimal_places=2, max_digits=12,
         blank=True, null=True)
 
-    # Cost price is the price charged by the fulfilment partner.  It is not
-    # used (by default) in any price calculations but is often used in
-    # reporting so merchants can report on their profit margin.
+    #: Cost price is the price charged by the fulfilment partner.  It is not
+    #: used (by default) in any price calculations but is often used in
+    #: reporting so merchants can report on their profit margin.
     cost_price = models.DecimalField(
         _("Cost Price"), decimal_places=2, max_digits=12,
         blank=True, null=True)
 
-    # Number of items in stock
+    #: Number of items in stock
     num_in_stock = models.PositiveIntegerField(
         _("Number in stock"), blank=True, null=True)
 
-    # Threshold for low-stock alerts.  When stock goes beneath this threshold,
-    # an alert is triggered so warehouse managers can order more.
+    #: Threshold for low-stock alerts.  When stock goes beneath this threshold,
+    #: an alert is triggered so warehouse managers can order more.
     low_stock_threshold = models.PositiveIntegerField(
         _("Low Stock Threshold"), blank=True, null=True)
 
-    # The amount of stock allocated to orders but not fed back to the master
-    # stock system.  A typical stock update process will set the num_in_stock
-    # variable to a new value and reset num_allocated to zero
+    #: The amount of stock allocated to orders but not fed back to the master
+    #: stock system.  A typical stock update process will set the num_in_stock
+    #: variable to a new value and reset num_allocated to zero
     num_allocated = models.IntegerField(
         _("Number allocated"), default=0, blank=True, null=True)
 
@@ -310,6 +316,9 @@ class AbstractStockRecord(models.Model):
 
 
 class AbstractStockAlert(models.Model):
+    """
+    A stock alert. E.g. used to notify users when a product is 'back in stock'.
+    """
     stockrecord = models.ForeignKey(
         'partner.StockRecord', related_name='alerts',
         verbose_name=_("Stock Record"))

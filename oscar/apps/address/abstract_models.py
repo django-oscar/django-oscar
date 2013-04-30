@@ -40,8 +40,8 @@ class AbstractAddress(models.Model):
     postcode = models.CharField(_("Post/Zip-code"), max_length=64, blank=True, null=True)
     country = models.ForeignKey('address.Country', verbose_name=_("Country"))
 
-    # A field only used for searching addresses - this contains all the
-    # relevant fields
+    #: A field only used for searching addresses - this contains all the
+    #: relevant fields
     search_text = models.CharField(
         _("Search text - used only for searching addresses"),
         max_length=1000)
@@ -213,13 +213,13 @@ class AbstractUserAddress(AbstractShippingAddress):
     is_default_for_billing = models.BooleanField(
         _("Default billing address?"), default=False)
 
-    # We keep track of the number of times an address has been used
-    # as a shipping address so we can show the most popular ones
-    # first at the checkout.
+    #: We keep track of the number of times an address has been used
+    #: as a shipping address so we can show the most popular ones
+    #: first at the checkout.
     num_orders = models.PositiveIntegerField(_("Number of Orders"), default=0)
 
-    # A hash is kept to try and avoid duplicate addresses being added
-    # to the address book.
+    #: A hash is kept to try and avoid duplicate addresses being added
+    #: to the address book.
     hash = models.CharField(_("Address Hash"), max_length=255, db_index=True)
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 

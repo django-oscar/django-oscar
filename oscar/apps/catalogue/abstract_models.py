@@ -17,26 +17,29 @@ BrowsableProductManager = get_class(
 
 class AbstractProductClass(models.Model):
     """
-    Defines the options and attributes for a group of products, e.g. Books,
-    DVDs and Toys.
+    Used for defining options and attributes for a subset of products.
+    E.g. Books, DVDs and Toys. A product can only belong to one product class.
+
+    At least one product class must be created when setting up a new
+    Oscar deployment.
 
     Not necessarily equivalent to top-level categories but usually will be.
     """
     name = models.CharField(_('Name'), max_length=128)
     slug = models.SlugField(_('Slug'), max_length=128, unique=True)
 
-    # Some product type don't require shipping (eg digital products) - we use
-    # this field to take some shortcuts in the checkout.
+    #: Some product type don't require shipping (eg digital products) - we use
+    #: this field to take some shortcuts in the checkout.
     requires_shipping = models.BooleanField(_("Requires shipping?"),
                                             default=True)
 
-    # Digital products generally don't require their stock levels to be
-    # tracked.
+    #: Digital products generally don't require their stock levels to be
+    #: tracked.
     track_stock = models.BooleanField(_("Track stock levels?"), default=True)
 
-    # These are the options (set by the user when they add to basket) for this
-    # item class.  For instance, a product class of "SMS message" would always
-    # require a message to be specified before it could be bought.
+    #: These are the options (set by the user when they add to basket) for this
+    #: item class.  For instance, a product class of "SMS message" would always
+    #: require a message to be specified before it could be bought.
     options = models.ManyToManyField('catalogue.Option', blank=True,
                                      verbose_name=_("Options"))
 
@@ -230,15 +233,15 @@ class AbstractProductContributor(models.Model):
 class AbstractProduct(models.Model):
     """
     The base product object
-    """
-    # If an item has no parent, then it is the "canonical" or abstract version
-    # of a product which essentially represents a set of products.  If a
-    # product has a parent then it is a specific version of a catalogue.
-    #
-    # For example, a canonical product would have a title like "Green fleece"
-    # while its children would be "Green fleece - size L".
 
-    # Universal product code
+    If an item has no parent, then it is the "canonical" or abstract version
+    of a product which essentially represents a set of products.  If a
+    product has a parent then it is a specific version of a catalogue.
+
+    For example, a canonical product would have a title like "Green fleece"
+    while its children would be "Green fleece - size L".
+    """
+    #: Universal product code
     upc = models.CharField(_("UPC"), max_length=64, blank=True, null=True,
                            unique=True,
         help_text=_("Universal Product Code (UPC) is an identifier for "
@@ -260,8 +263,8 @@ class AbstractProduct(models.Model):
     slug = models.SlugField(_('Slug'), max_length=255, unique=False)
     description = models.TextField(_('Description'), blank=True, null=True)
 
-    # Use this field to indicate if the product is inactive or awaiting
-    # approval
+    #: Use this field to indicate if the product is inactive or awaiting
+    #: approval
     status = models.CharField(_('Status'), max_length=128, blank=True,
                               null=True, db_index=True)
     product_class = models.ForeignKey(
@@ -287,7 +290,6 @@ class AbstractProduct(models.Model):
                     "same book.  Grouping them together allows better linking "
                     "betwen products on the site."))
 
-    # Recommended products
     recommended_products = models.ManyToManyField(
         'catalogue.Product', through='ProductRecommendation', blank=True,
         verbose_name=_("Recommended Products"))
@@ -936,7 +938,7 @@ class AbstractProductImage(models.Model):
     caption = models.CharField(
         _("Caption"), max_length=200, blank=True, null=True)
 
-    # Use display_order to determine which is the "primary" image
+    #: Use display_order to determine which is the "primary" image
     display_order = models.PositiveIntegerField(_("Display Order"), default=0,
         help_text=_("""An image with a display order of
                        zero will be the primary image for a product"""))
