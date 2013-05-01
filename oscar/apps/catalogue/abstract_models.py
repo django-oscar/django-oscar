@@ -401,7 +401,7 @@ class AbstractProduct(models.Model):
         """
         if not self.has_stockrecord:
             return False, _("No stock available")
-        return self.stockrecord.is_purchase_permitted(user, quantity)
+        return self.stockrecord.is_purchase_permitted(user, quantity, self)
 
     def add_category_from_breadcrumbs(self, breadcrumb):
         from oscar.apps.catalogue.categories import create_from_breadcrumbs

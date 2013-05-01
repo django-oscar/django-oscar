@@ -238,12 +238,12 @@ class AbstractStockRecord(models.Model):
         """
         return get_partner_wrapper(self.partner_id).is_available_to_buy(self)
 
-    def is_purchase_permitted(self, user=None, quantity=1):
+    def is_purchase_permitted(self, user=None, quantity=1, product=None):
         """
         Return whether this stockrecord allows the product to be purchased by a
         specific user and quantity
         """
-        return get_partner_wrapper(self.partner_id).is_purchase_permitted(self, user, quantity)
+        return get_partner_wrapper(self.partner_id).is_purchase_permitted(self, user, quantity, product)
 
     @property
     def is_below_threshold(self):
