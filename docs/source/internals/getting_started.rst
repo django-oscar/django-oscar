@@ -1,6 +1,6 @@
-============================
-Start building your own shop
-============================
+======================
+Building your own shop
+======================
 
 For simplicity, let's assume you're building a new e-commerce project from
 scratch and have decided to use Oscar.  Let's call this shop 'frobshop'
@@ -19,10 +19,24 @@ project:
 
 .. code-block:: bash
 
-    pip install django-oscar
-    django-admin.py startproject frobshop
+    $ mkvirtualenv oscar
+    $ pip install django-oscar
+    $ django-admin.py startproject frobshop
 
-This will create a folder ``frobshop`` for your project.
+This will create a folder ``frobshop`` for your project. It is highly
+recommended to install Oscar in a virtualenv.
+
+.. attention::
+
+    Please ensure that ``pillow``, a fork of the the Python Imaging Library
+    (PIL), gets installed with JPEG support. Supported formats are printed
+    when ``pillow`` is first installed.
+    Instructions_ on how to get JPEG support are highly platform specific,
+    but guides for ``PIL`` should work for ``pillow`` as well. Generally
+    speaking, you need to ensure that ``libjpeg-dev`` is installed and found
+    during installation.
+
+    .. _Instructions: http://www.google.com/search?q=install+pil+with+jpeg+support
 
 Settings
 --------
@@ -120,6 +134,25 @@ Now set your auth backends to:
     )
 
 to allow customers to sign in using an email address rather than a username.
+
+Set ``MEDIA_ROOT`` and ``MEDIA_URL`` to your environment, and make sure the
+path in ``MEDIA_ROOT`` exists. An example from the Sandbox site:
+
+.. code-block:: django
+
+
+    PROJECT_DIR = os.path.dirname(__file__)
+    location = lambda x: os.path.join(
+        os.path.dirname(os.path.realpath(__file__)), x)
+    MEDIA_ROOT = location("public/media")
+    MEDIA_URL = '/media/'
+
+Verify your ``staticfiles`` settings and ensure that files in ``MEDIA_ROOT``
+get served:
+
+* `staticfiles in Django 1.3 and 1.4 <https://docs.djangoproject.com/en/1.3/howto/static-files/#serving-other-directories>`_
+* `staticfiles in Django 1.5 <https://docs.djangoproject.com/en/1.5/howto/static-files/#serving-files-uploaded-by-a-user>`_
+
 
 Modify your ``TEMPLATE_DIRS`` to include the main Oscar template directory:
 
