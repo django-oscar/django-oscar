@@ -10,9 +10,8 @@ This How-to describes how to do just that.
 It builds upon the steps described in :doc:`/topics/customisation`. Please
 read it first and ensure that you've:
 
-* Created an app with the same label
-* Overridden the Oscar app with your own
-* Created a custom ``app.py``
+* Created a Python module with the the same label
+* Added it as Django app
 
 Example
 -------

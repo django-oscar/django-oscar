@@ -7,16 +7,15 @@ to add fields and custom methods.
 It builds upon the steps described in :doc:`/topics/customisation`. Please
 read it first and ensure that you've:
 
-* Created an app with the same label
-* Created a custom main Shop class
-* Created a custom ``app.py``
+* Created a Python module with the the same label
+* Added it as Django app
 
 Example
 -------
 
-Suppose you want to add a video_url field to the core product model.  This means that
-you want your application to use a subclass of ``oscar.apps.catalogue.models.Product`` which
-has an additional field.
+Suppose you want to add a video_url field to the core product model.  This means
+that you want your application to use a subclass of
+:class:`oscar.apps.catalogue.models.Product` which has an additional field.
 
 The first step is to create a local version of the "catalogue" app.  At a minimum, this 
 involves creating ``catalogue/models.py`` within your project and changing ``INSTALLED_APPS``

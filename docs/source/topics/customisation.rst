@@ -22,10 +22,9 @@ help you to figure out what needs to be done.
 ==================================  ====================  ====================================  ========================
 Goals vs. necessary steps           Override model class  Override view class (or change URLs)  Override any other class
 ==================================  ====================  ====================================  ========================
-Create app with same label          Necessary             Necessary                             Necessary
-Custom Shop class                   Not necessary         Necessary                             Not necessary
-Custom Application class            Not necessary         Necessary                             Not necessary
-Override app in ``INSTALLED_APPS``  Necessary             Not necessary                         Necessary
+Python module with same label       Necessary             Necessary                             Necessary
+Custom root and local ``app.py``    Not necessary         Necessary                             Not necessary
+Add as Django app                   Necessary             Not necessary                         Necessary
 ==================================  ====================  ====================================  ========================
 
 If more complex changes are desired, it is usually easiest to do all of the
@@ -37,10 +36,10 @@ Please also refer to the following how-tos for further instructions and examples
 * :doc:`/howto/how_to_customise_a_view`
 * :doc:`/howto/how_to_override_a_core_class`
 
-Create app with same label
-==========================
+Python module with same label
+=============================
 
-All advanced customisation requires creating an a Python package with the same
+All advanced customisation requires creating an a Python module with the same
 "app label" as the Oscar app you want to extend.
 E.g., to create a local version of ``oscar.apps.order``, do the following::
 
@@ -48,13 +47,16 @@ E.g., to create a local version of ``oscar.apps.order``, do the following::
     $ touch yourproject/order/__init__.py
 
 
-Custom Shop class
-=================
+Custom root and local ``app.py``
+================================
+
+Root ``app.py``
+---------------
 
 Oscar's views and URLs use a tree of 'app' instances, each of which subclass
-``oscar.core.application.Application`` and provide ``urls`` property.  Oscar has
-a root app instance in ``oscar/app.py`` which can be imported into your
-``urls.py``::
+:class:`oscar.core.application.Application` and provide ``urls`` property.
+Oscar has a root app instance in ``oscar/app.py`` which can be imported into
+your ``urls.py``::
 
     # urls.py
     from oscar.app import application
@@ -77,7 +79,7 @@ To get control over the mapping between URLs and views, you need to use a local
     application = BaseApplication()
 
 
-Now hook this up in your ``urls.py``::
+Now hook this up in your ``urls.py`` instead::
 
     # urls.py
     from yourproject.app import application
@@ -88,10 +90,10 @@ Now hook this up in your ``urls.py``::
     )
 
 This step only needs to be done once. All customisation will only entail
-overriding parts of the newly created ``BaseApplication``.
+overriding parts of the newly added ``BaseApplication``.
 
-Custom application class
-========================
+Local ``app.py``
+----------------
 
 If you want to modify a view or change a URL, you need to create an ``app.py``
 for your local app. It will usually inherit from Oscar's version::
@@ -105,7 +107,7 @@ for your local app. It will usually inherit from Oscar's version::
 
     application = PromotionsApplication()
 
-and hook it up in your main ``app.py``::
+and hook it up in your root ``app.py``::
 
     # yourproject/app.py
     from oscar.app import Shop
@@ -116,11 +118,18 @@ and hook it up in your main ``app.py``::
         promotions_app = promotions_app
 
 
-Override app in INSTALLED_APPS
-==============================
+Add as Django app
+=================
 
-You will need to add your app ``INSTALLED_APPS`` to override Oscar's version
-of the app with yours.  You can do that by supplying an extra argument to
+You will need to let Django know that you intend to replace one of Oscar's core
+apps. This means overriding it in ``INSTALLED_APPS`` and creating a few hooks
+back to the replaced Oscar app.
+
+``INSTALLED_APPS`` override
+---------------------------
+
+You will need to replace Oscar's version of the app with yours in
+``INSTALLED_APPS`` .  You can do that by supplying an extra argument to
 ``get_core_apps`` function::
 
     # settings.py
@@ -155,6 +164,10 @@ the oscar app being overridden::
 If two models with the same name are declared within an app, Django will only
 use the first one. That means that if you wish to customise Oscar's models, you
 must declare your custom ones before importing Oscar's models for that app.
+
+If you're using South, you probably have to copy the ``migrations`` directory
+from ``oscar/apps/order`` and put it into your ``order`` app. Detailed
+instructions are available in :doc:`/howto/how_to_customise_models`.
 
 admin.py
 --------

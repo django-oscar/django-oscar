@@ -27,6 +27,6 @@ This is a work-in-progress list of commonly used terms when discussing Oscar.
     Universal Product Code
        A code uniquely identifying a product worldwide.
 
-       .. seealso:: `Wikipedia <http://en.wikipedia.org/wiki/Universal_Product_Code>`
+       .. seealso:: `Wikipedia <http://en.wikipedia.org/wiki/Universal_Product_Code>`_
 
 

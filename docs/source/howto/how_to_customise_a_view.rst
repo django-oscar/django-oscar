@@ -6,9 +6,8 @@ Oscar has many views. This How-to describes how to customise one of them for
 your project.  It builds upon the steps described in
 :doc:`/topics/customisation`. Please read it first and ensure that you've:
 
-* Created an app with the same label
-* Overridden the Oscar app with your own
-* Created a custom ``app.py``
+* Created a Python module with the the same label
+* Use custom root and local ``app.py``
 
 Example
 -------
