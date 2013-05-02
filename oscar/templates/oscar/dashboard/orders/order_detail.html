@@ -267,84 +267,87 @@
 			</div>
 			{% endblock line_actions %}
 
-			<div class="table-header">
-				<h3>{% trans "Shipping Events" %}</h3>
-			</div>
-			{% with events=order.shipping_events.all %}
-			<table class="table table-striped table-bordered table-hover">
-			    {% if events %}
-    				<thead>
-    					<tr>
-    						<th>{% trans "Date" %}</th>
-    						<th>{% trans "Event" %}</th>
-    						<th>{% trans "Lines" %}</th>
-    						<th>{% trans "Notes" %}</th>
-    					</tr>
-    				</thead>
-    				<tbody>
-    					{% for event in events %}
-    					{% with line_qtys=event.line_quantities.all %}
-    					<tr>
-    						<td rowspan="{{ line_qtys|length }}">{{ event.date }}</td>
-    						<td rowspan="{{ line_qtys|length }}">{{ event.event_type.name }}</td>
-    						<td>
-    							{% for line_qty in event.line_quantities.all %}
-    							{% trans "Product:" %} {{ line_qty.line.title }} - {% trans "quantity" %} {{ line_qty.quantity }}</br>
-    							{% endfor %}
-    						</td>
-    						<td>{{ event.notes }}</td>
-    					</tr>
-    					{% endwith %}
-    					{% endfor %}
-    				</tbody>
-				{% else %}
-                <tbody>
-                    <tr>
-                        <td>{% trans "No shipping events." %}</td>
-                    </tr>
-                </tbody>
-    			{% endif %}
-			</table>
+            {% block shipping_events %}
+                <div class="table-header">
+                    <h3>{% trans "Shipping Events" %}</h3>
+                </div>
+                {% with events=order.shipping_events.all %}
+                    <table class="table table-striped table-bordered table-hover">
+                        {% if events %}
+                            <thead>
+                                <tr>
+                                    <th>{% trans "Date" %}</th>
+                                    <th>{% trans "Event" %}</th>
+                                    <th>{% trans "Lines" %}</th>
+                                    <th>{% trans "Notes" %}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for event in events %}
+                                    {% with line_qtys=event.line_quantities.all %}
+                                        <tr>
+                                            <td rowspan="{{ line_qtys|length }}">{{ event.date }}</td>
+                                            <td rowspan="{{ line_qtys|length }}">{{ event.event_type.name }}</td>
+                                            <td>
+                                                {% for line_qty in event.line_quantities.all %}
+                                                    {% trans "Product:" %} {{ line_qty.line.title }} - {% trans "quantity" %} {{ line_qty.quantity }}</br>
+                                                {% endfor %}
+                                            </td>
+                                            <td>{{ event.notes }}</td>
+                                        </tr>
+                                    {% endwith %}
+                                {% endfor %}
+                            </tbody>
+                        {% else %}
+                            <tbody>
+                                <tr>
+                                    <td>{% trans "No shipping events." %}</td>
+                                </tr>
+                            </tbody>
+                        {% endif %}
+                    </table>
+                {% endwith %}
+            {% endblock %}
 
-			{% endwith %}
-
-			<div class="table-header">
-				<h3 >{% trans "Payment Events" %}</h3>
-			</div>
-			{% with events=order.payment_events.all %}
-			<table class="table table-striped table-bordered table-hover">
-			    {% if events %}
-    				<thead>
-    					<tr>
-    						<th>{% trans "Date" %}</th>
-    						<th>{% trans "Event" %}</th>
-    						<th>{% trans "Amount" %}</th>
-    						<th>{% trans "Lines" %}</th>
-    					</tr>
-    				</thead>
-    				<tbody>
-    					{% for event in events %}
-    					{% with line_qtys=event.line_quantities.all %}
-    					<tr>
-    						<td >{{ event.date }}</td>
-    						<td >{{ event.event_type.name }}</td>
-    						<td >{{ event.amount|currency }}</td>
-    						<td>
-    							{% for line_qty in event.line_quantities.all %}
-    							{% trans "Product:" %} {{ line_qty.line.title }} - {% trans "quantity" %} {{ line_qty.quantity }}</br>
-    							{% endfor %}
-    						</td>
-    					</tr>
-    					{% endwith %}
-    					{% endfor %}
-    				</tbody>
-				{% else %}
-                    <tbody>
-                        <tr><td>{% trans "No payment events." %}</td></tr>
-                    </tbody>
-    			{% endif %}
-    			{% endwith %}
-			</table>
+            {% block payment_events %}
+                <div class="table-header">
+                    <h3 >{% trans "Payment Events" %}</h3>
+                </div>
+                {% with events=order.payment_events.all %}
+                    <table class="table table-striped table-bordered table-hover">
+                        {% if events %}
+                            <thead>
+                                <tr>
+                                    <th>{% trans "Date" %}</th>
+                                    <th>{% trans "Event" %}</th>
+                                    <th>{% trans "Amount" %}</th>
+                                    <th>{% trans "Lines" %}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for event in events %}
+                                    {% with line_qtys=event.line_quantities.all %}
+                                        <tr>
+                                            <td >{{ event.date }}</td>
+                                            <td >{{ event.event_type.name }}</td>
+                                            <td >{{ event.amount|currency }}</td>
+                                            <td>
+                                                {% for line_qty in event.line_quantities.all %}
+                                                    {% trans "Product:" %} {{ line_qty.line.title }} - {% trans "quantity" %} {{ line_qty.quantity }}</br>
+                                                {% endfor %}
+                                            </td>
+                                        </tr>
+                                    {% endwith %}
+                                {% endfor %}
+                            </tbody>
+                        {% else %}
+                            <tbody>
+                                <tr><td>{% trans "No payment events." %}</td></tr>
+                            </tbody>
+                        {% endif %}
+                    </table>
+                {% endwith %}
+            {% endblock }
 		</div>
 
 		<div class="tab-pane {% if active_tab == 'shipping' %}active{% endif %}" id="shipping">
