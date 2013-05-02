@@ -214,8 +214,13 @@ Every Oscar deployment needs at least one
 :class:`product class <oscar.apps.catalogue.abstract_models.AbstractProductClass>`
 and one
 :class:`fulfillment partner <oscar.apps.partner.abstract_models.AbstractPartner>`.
+These aren't created automatically as they're highly specific to the shop you
+want to build.
 The quickest way to set them up is to log into the Django admin
 interface at http://127.0.0.1:8000/admin/ and create instances of both there.
+For a deployment setup, we recommend creating them as `data migration`_.
+
+.. _data migration: http://codeinthehole.com/writing/prefer-data-migrations-to-initial-data/
 
 Defining the order pipeline
 ---------------------------
