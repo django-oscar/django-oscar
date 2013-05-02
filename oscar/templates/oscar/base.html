@@ -61,9 +61,7 @@
 
         {% block tracking %}
             {# Default to using Google analytics #}
-            {% if google_analytics_id %}
-                {% include 'partials/google_analytics.html' %}
-            {% endif %}
+            {% include "partials/google_analytics.html" %}
         {% endblock %}
 
         {% comment %}
