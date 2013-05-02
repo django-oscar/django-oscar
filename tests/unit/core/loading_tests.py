@@ -1,3 +1,4 @@
+from os.path import dirname
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 from django.conf import settings
@@ -9,6 +10,7 @@ from oscar.core.loading import import_module, AppNotFoundError, \
         get_classes, get_class, ClassNotFoundError
 from oscar.core.validators import ExtendedURLValidator
 from oscar.core.validators import URLDoesNotExistValidator
+from tests import temporary_python_path
 
 
 class TestImportModule(TestCase):
@@ -77,6 +79,15 @@ class ClassLoadingWithLocalOverrideTests(TestCase):
             (Free, FixedPrice) = get_classes('shipping.methods', ('Free', 'FixedPrice'))
             self.assertEqual('tests._site.shipping.methods', Free.__module__)
             self.assertEqual('oscar.apps.shipping.methods', FixedPrice.__module__)
+
+    def test_loading_classes_with_root_app(self):
+        import tests._site.shipping
+        path = dirname(dirname(tests._site.shipping.__file__))
+        with temporary_python_path([path]):
+            self.installed_apps[self.installed_apps.index('tests._site.shipping')] = 'shipping'
+            with override_settings(INSTALLED_APPS=self.installed_apps):
+                (Free,) = get_classes('shipping.methods', ('Free',))
+                self.assertEqual('shipping.methods', Free.__module__)
 
 
 class TestExtendedURLValidator(TestCase):
