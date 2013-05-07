@@ -10,8 +10,6 @@ class AbstractAddress(models.Model):
 
     This is subclassed and extended to provide models for
     user, shipping and billing addresses.
-
-    The only required fields are last_name, line1 and postcode.
     """
     # @todo: Need a way of making these choice lists configurable
     # per project
@@ -39,12 +37,14 @@ class AbstractAddress(models.Model):
     line4 = models.CharField(_("City"), max_length=255, blank=True, null=True)
     state = models.CharField(_("State/County"), max_length=255, blank=True,
                              null=True)
-    postcode = models.CharField(_("Post/Zip-code"), max_length=64)
+    postcode = models.CharField(_("Post/Zip-code"), max_length=64, blank=True, null=True)
     country = models.ForeignKey('address.Country', verbose_name=_("Country"))
 
     # A field only used for searching addresses - this contains all the
     # relevant fields
-    search_text = models.CharField(_("Search text"), max_length=1000)
+    search_text = models.CharField(
+        _("Search text - used only for searching addresses"),
+        max_length=1000)
 
     class Meta:
         abstract = True
@@ -163,7 +163,7 @@ class AbstractCountry(models.Model):
 
 class AbstractShippingAddress(AbstractAddress):
     """
-    Shipping address.
+    A shipping address.
 
     A shipping address should not be edited once the order has been placed -
     it should be read-only after that.
@@ -173,7 +173,7 @@ class AbstractShippingAddress(AbstractAddress):
     notes = models.TextField(
         blank=True, null=True,
         verbose_name=_('Courier instructions'),
-        help_text=_("For example, leave the parcel in the wheelie bin " \
+        help_text=_("For example, leave the parcel in the wheelie bin "
                     "if I'm not in."))
 
     class Meta:
@@ -194,9 +194,10 @@ class AbstractShippingAddress(AbstractAddress):
 
 class AbstractUserAddress(AbstractShippingAddress):
     """
-    A user address which forms an "AddressBook" for a user.
+    A user's address.  A user can have many of these and together they form an
+    'address book' of sorts for the user.
 
-    We use a separate model to shipping and billing (even though there will be
+    We use a separate model for shipping and billing (even though there will be
     some data duplication) because we don't want shipping/billing addresses
     changed or deleted once an order has been placed.  By having a separate
     model, we allow users the ability to add/edit/delete from their address
@@ -208,6 +209,7 @@ class AbstractUserAddress(AbstractShippingAddress):
     # Customers can set defaults
     is_default_for_shipping = models.BooleanField(
         _("Default shipping address?"), default=False)
+    #: Whether this address should be the default for billing.
     is_default_for_billing = models.BooleanField(
         _("Default billing address?"), default=False)
 

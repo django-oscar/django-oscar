@@ -1,47 +1,75 @@
 from decimal import Decimal as D
 
-from django.conf import settings
 from django.db import models
+from django.conf import settings
+from django.db.models import get_model
 from django.utils.translation import ugettext_lazy as _
 from django.utils.importlib import import_module as django_import_module
 
+from oscar.core.utils import slugify
 from oscar.core.loading import get_class
 from oscar.apps.partner.exceptions import InvalidStockAdjustment
 DefaultWrapper = get_class('partner.wrappers', 'DefaultWrapper')
 
 
-# Cache the partners for quicklookups
+# Cache dict of partner_id => availability wrapper instance
+partner_wrappers = None
+
 default_wrapper = DefaultWrapper()
-partner_wrappers = {}
-for partner, class_str in settings.OSCAR_PARTNER_WRAPPERS.items():
-    bits = class_str.split('.')
-    class_name = bits.pop()
-    module_str = '.'.join(bits)
-    module = django_import_module(module_str)
-    partner_wrappers[partner] = getattr(module, class_name)()
 
 
-def get_partner_wrapper(partner_name):
+def get_partner_wrapper(partner_id):
     """
-    Returns the appropriate partner wrapper given the partner name
+    Returns the appropriate partner wrapper given the partner's PK
     """
-    return partner_wrappers.get(partner_name, default_wrapper)
+    if partner_wrappers is None:
+        _load_partner_wrappers()
+    return partner_wrappers.get(partner_id, default_wrapper)
+
+
+def _load_partner_wrappers():
+    # Prime cache of partner wrapper dict
+    global partner_wrappers
+    partner_wrappers = {}
+    Partner = get_model('partner', 'Partner')
+    for code, class_str in settings.OSCAR_PARTNER_WRAPPERS.items():
+        try:
+            partner = Partner.objects.get(code=code)
+        except Partner.DoesNotExist:
+            continue
+        else:
+            module_path, klass = class_str.rsplit('.', 1)
+            module = django_import_module(module_path)
+            partner_wrappers[partner.id] = getattr(module, klass)()
 
 
 class AbstractPartner(models.Model):
     """
     Fulfillment partner
     """
-    name = models.CharField(_("Name"), max_length=128, unique=True)
+    code = models.SlugField(_("Code"), max_length=128, unique=True)
+    name = models.CharField(_("Name"), max_length=128, null=True, blank=True)
 
     # A partner can have users assigned to it.  These can be used
     # to provide authentication for webservices etc.
-    users = models.ManyToManyField('auth.User', related_name="partners", blank=True, null=True,
+    users = models.ManyToManyField(
+        'auth.User', related_name="partners", blank=True, null=True,
         verbose_name=_("Users"))
 
+    @property
+    def display_name(self):
+        if not self.name:
+            return self.code
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.code:
+            self.code = slugify(self.name)
+        super(AbstractPartner, self).save(*args, **kwargs)
+
     class Meta:
-        verbose_name = _('Fulfillment Partner')
-        verbose_name_plural = _('Fulfillment Partners')
+        verbose_name = _('Fulfillment partner')
+        verbose_name_plural = _('Fulfillment partners')
         abstract = True
         permissions = (
             ("can_edit_stock_records", _("Can edit stock records")),
@@ -67,42 +95,62 @@ class AbstractStockRecord(models.Model):
     We deliberately don't store tax information to allow each project
     to subclass this model and put its own fields for convey tax.
     """
-    product = models.OneToOneField('catalogue.Product', related_name="stockrecord", verbose_name=_("Product"))
+    product = models.OneToOneField(
+        'catalogue.Product', related_name="stockrecord",
+        verbose_name=_("Product"))
     partner = models.ForeignKey('partner.Partner', verbose_name=_("Partner"))
 
     # The fulfilment partner will often have their own SKU for a product, which
-    # we store here.
+    # we store here.  This will sometimes be the same the product's UPC but not
+    # always.  It should be unique per partner.
     partner_sku = models.CharField(_("Partner SKU"), max_length=128)
 
     # Price info:
-    price_currency = models.CharField(_("Currency"), max_length=12, default=settings.OSCAR_DEFAULT_CURRENCY)
+    price_currency = models.CharField(
+        _("Currency"), max_length=12, default=settings.OSCAR_DEFAULT_CURRENCY)
 
-    # This is the base price for calculations - tax should be applied
-    # by the appropriate method.  We don't store it here as its calculation is
-    # highly domain-specific.  It is NULLable because some items don't have a fixed
-    # price.
-    price_excl_tax = models.DecimalField(_("Price (excl. tax)"), decimal_places=2, max_digits=12, blank=True, null=True)
+    # This is the base price for calculations - tax should be applied by the
+    # appropriate method.  We don't store tax here as its calculation is highly
+    # domain-specific.  It is NULLable because some items don't have a fixed
+    # price but require a runtime calculation (possible from an external
+    # service).
+    price_excl_tax = models.DecimalField(
+        _("Price (excl. tax)"), decimal_places=2, max_digits=12,
+        blank=True, null=True)
 
-    # Retail price for this item
-    price_retail = models.DecimalField(_("Price (retail)"), decimal_places=2, max_digits=12, blank=True, null=True)
+    # Retail price for this item.  This is simply the recommended price from
+    # the manufacturer.  If this is used, it is for display purposes only.
+    # This prices is the NOT the price charged to the customer.
+    price_retail = models.DecimalField(
+        _("Price (retail)"), decimal_places=2, max_digits=12,
+        blank=True, null=True)
 
-    # Cost price is optional as not all partners supply it
-    cost_price = models.DecimalField(_("Cost Price"), decimal_places=2, max_digits=12, blank=True, null=True)
+    # Cost price is the price charged by the fulfilment partner.  It is not
+    # used (by default) in any price calculations but is often used in
+    # reporting so merchants can report on their profit margin.
+    cost_price = models.DecimalField(
+        _("Cost Price"), decimal_places=2, max_digits=12,
+        blank=True, null=True)
 
-    # Stock level information
-    num_in_stock = models.PositiveIntegerField(_("Number in stock"), default=0, blank=True, null=True)
+    # Number of items in stock
+    num_in_stock = models.PositiveIntegerField(
+        _("Number in stock"), blank=True, null=True)
 
-    # Threshold for low-stock alerts
-    low_stock_threshold = models.PositiveIntegerField(_("Low Stock Threshold"), blank=True, null=True)
+    # Threshold for low-stock alerts.  When stock goes beneath this threshold,
+    # an alert is triggered so warehouse managers can order more.
+    low_stock_threshold = models.PositiveIntegerField(
+        _("Low Stock Threshold"), blank=True, null=True)
 
     # The amount of stock allocated to orders but not fed back to the master
     # stock system.  A typical stock update process will set the num_in_stock
     # variable to a new value and reset num_allocated to zero
-    num_allocated = models.IntegerField(_("Number of Allocated"), default=0, blank=True, null=True)
+    num_allocated = models.IntegerField(
+        _("Number allocated"), default=0, blank=True, null=True)
 
     # Date information
-    date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
-    date_updated = models.DateTimeField(_("Date Updated"), auto_now=True, db_index=True)
+    date_created = models.DateTimeField(_("Date created"), auto_now_add=True)
+    date_updated = models.DateTimeField(_("Date updated"), auto_now=True,
+                                        db_index=True)
 
     class Meta:
         abstract = True
@@ -182,14 +230,14 @@ class AbstractStockRecord(models.Model):
         """
         Return whether this stockrecord allows the product to be purchased
         """
-        return get_partner_wrapper(self.partner.name).is_available_to_buy(self)
+        return get_partner_wrapper(self.partner_id).is_available_to_buy(self)
 
     def is_purchase_permitted(self, user=None, quantity=1):
         """
         Return whether this stockrecord allows the product to be purchased by a
         specific user and quantity
         """
-        return get_partner_wrapper(self.partner.name).is_purchase_permitted(self, user, quantity)
+        return get_partner_wrapper(self.partner_id).is_purchase_permitted(self, user, quantity)
 
     @property
     def is_below_threshold(self):
@@ -204,15 +252,15 @@ class AbstractStockRecord(models.Model):
         to the overall availability mark-up.  For example, "instock",
         "unavailable".
         """
-        return get_partner_wrapper(self.partner.name).availability_code(self)
+        return get_partner_wrapper(self.partner_id).availability_code(self)
 
     @property
     def availability(self):
         """
         Return a product's availability as a string that can be displayed to the
-        user.  For example, "In stock", "Unavailabl".
+        user.  For example, "In stock", "Unavailable".
         """
-        return get_partner_wrapper(self.partner.name).availability(self)
+        return get_partner_wrapper(self.partner_id).availability(self)
 
     def max_purchase_quantity(self, user=None):
         """
@@ -220,18 +268,18 @@ class AbstractStockRecord(models.Model):
 
         :param user: (optional) The user who wants to purchase
         """
-        return get_partner_wrapper(self.partner.name).max_purchase_quantity(self, user)
+        return get_partner_wrapper(self.partner_id).max_purchase_quantity(self, user)
 
     @property
     def dispatch_date(self):
         """
         Return the estimated dispatch date for a line
         """
-        return get_partner_wrapper(self.partner.name).dispatch_date(self)
+        return get_partner_wrapper(self.partner_id).dispatch_date(self)
 
     @property
     def lead_time(self):
-        return get_partner_wrapper(self.partner.name).lead_time(self)
+        return get_partner_wrapper(self.partner_id).lead_time(self)
 
     @property
     def price_incl_tax(self):
@@ -251,24 +299,28 @@ class AbstractStockRecord(models.Model):
         """
         Return a product's tax value
         """
-        return get_partner_wrapper(self.partner.name).calculate_tax(self)
+        return get_partner_wrapper(self.partner_id).calculate_tax(self)
 
     def __unicode__(self):
         if self.partner_sku:
-            return "%s (%s): %s" % (self.partner.name, self.partner_sku, self.product.title)
+            return "%s (%s): %s" % (self.partner.display_name,
+                                    self.partner_sku, self.product.title)
         else:
-            return "%s: %s" % (self.partner.name, self.product.title)
+            return "%s: %s" % (self.partner.display_name, self.product.title)
 
 
 class AbstractStockAlert(models.Model):
-    stockrecord = models.ForeignKey('partner.StockRecord', related_name='alerts', verbose_name=_("Stock Record"))
+    stockrecord = models.ForeignKey(
+        'partner.StockRecord', related_name='alerts',
+        verbose_name=_("Stock Record"))
     threshold = models.PositiveIntegerField(_("Threshold"))
     OPEN, CLOSED = "Open", "Closed"
     status_choices = (
         (OPEN, _("Open")),
         (CLOSED, _("Closed")),
     )
-    status = models.CharField(_("Status"), max_length=128, default=OPEN, choices=status_choices)
+    status = models.CharField(_("Status"), max_length=128, default=OPEN,
+                              choices=status_choices)
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
     date_closed = models.DateTimeField(_("Date Closed"), blank=True, null=True)
 
@@ -281,6 +333,7 @@ class AbstractStockAlert(models.Model):
         return _('<stockalert for "%(stock)s" status %(status)s>') % {'stock': self.stockrecord, 'status': self.status}
 
     class Meta:
+        abstract = True
         ordering = ('-date_created',)
         verbose_name = _('Stock Alert')
         verbose_name_plural = _('Stock Alerts')

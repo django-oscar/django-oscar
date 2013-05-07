@@ -1,0 +1,36 @@
+=========================
+Oscar 0.5.1 release notes
+=========================
+
+This is a bugfix release for Oscar 0.5, backporting a few issues discovered
+during development of Oscar's demo site and fixing a couple of other bugs.
+
+This release contains fixes for the following issues:
+
+* The ``is_available_to_buy`` method was failing for variant products where the
+  product class is defined on the parent product.  Fixed in 7fd62f2af0_ and …
+  80384a4007_.
+
+* The stockrecord partial ``catalogue/partials/stock_record.html`` incorrectly
+  handled group products.  Fixed in 5594bcccd6_.
+
+* The checkout thank-you template ``checkout/thank_you.html`` incorrectly looked
+  up the line product URL.  Fixed in cc5f63d827_.
+
+* The basket URL used for AJAX requests is no longer hard-coded.  Fixed in …
+  fd256b63b1_.
+
+* The dashboard voucher form now correctly validates when no start- or end-dates
+  are entered.  Fixed in 02b3644e3c_
+
+* The ``AbstractStockRecord`` model was not declared abstract.  A migration has
+  been added that cleans up the unnecessary database table.  Fixed in …
+  610de82eb2_
+
+.. _7fd62f2af0: https://github.com/tangentlabs/django-oscar/commit/7fd62f2af078f950eeb278b97d01153b90b08e73
+.. _80384a4007: https://github.com/tangentlabs/django-oscar/commit/80384a40079590e1fb09d57f26095fa4e030fb27
+.. _5594bcccd6: https://github.com/tangentlabs/django-oscar/commit/5594bcccd67bfca6ec052ee635f0f0cbddc5dce5
+.. _cc5f63d827: https://github.com/tangentlabs/django-oscar/commit/cc5f63d827ce943e0ba1e7daa509cbd37b284c64 
+.. _fd256b63b1: https://github.com/tangentlabs/django-oscar/commit/fd256b63b184e08e33aa2802136a68d47bf4636e
+.. _02b3644e3c: https://github.com/tangentlabs/django-oscar/commit/02b3644e3c1f02959c3316d4291ec1c819c2baf7
+.. _610de82eb2: https://github.com/tangentlabs/django-oscar/commit/610de82eb25d00871ab1b30d01817c94d08bb96a

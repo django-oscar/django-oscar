@@ -1,13 +1,13 @@
 from decimal import Decimal as D
 
 from django.test import TestCase
+from django.test.utils import override_settings
 from mock import Mock
 
 from oscar.apps.basket.models import Basket
 from oscar.apps.order.models import Order
-from oscar.test.helpers import create_product
+from oscar_testsupport.factories import create_product
 from oscar.apps.order.utils import OrderCreator
-from oscar.test import patch_settings
 
 
 class TestOrderCreatorErrorCases(TestCase):
@@ -59,6 +59,7 @@ class TestSuccessfulOrderCreation(TestCase):
     def test_defaults_to_setting_totals_to_basket_totals(self):
         self.basket.add_product(create_product(price=D('12.00')))
         method = Mock()
+        method.is_discounted = False
         method.basket_charge_incl_tax = Mock(return_value=D('2.00'))
         method.basket_charge_excl_tax = Mock(return_value=D('2.00'))
 
@@ -69,14 +70,14 @@ class TestSuccessfulOrderCreation(TestCase):
 
     def test_uses_default_order_status_from_settings(self):
         self.basket.add_product(create_product(price=D('12.00')))
-        with patch_settings(OSCAR_INITIAL_ORDER_STATUS='A'):
+        with override_settings(OSCAR_INITIAL_ORDER_STATUS='A'):
             self.creator.place_order(basket=self.basket, order_number='1234')
         order = Order.objects.get(number='1234')
         self.assertEqual('A', order.status)
 
     def test_uses_default_line_status_from_settings(self):
         self.basket.add_product(create_product(price=D('12.00')))
-        with patch_settings(OSCAR_INITIAL_LINE_STATUS='A'):
+        with override_settings(OSCAR_INITIAL_LINE_STATUS='A'):
             self.creator.place_order(basket=self.basket, order_number='1234')
         order = Order.objects.get(number='1234')
         line = order.lines.all()[0]

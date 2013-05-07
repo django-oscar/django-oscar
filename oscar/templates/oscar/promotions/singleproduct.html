@@ -12,40 +12,17 @@
     		<div class="image_container"> 
 				{% with image=product.primary_image %}
 				{% thumbnail image.original "400x400" upscale=False as thumb %}
-				<a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
+                    <a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
 				{% endthumbnail %}
 				{% endwith %}
     		</div>    
     	</div>
     	<div class="span9">
-	    <h3><a href="{{ product.get_absolute_url }}">{{ product.title }}</a></h3>
-    	    {% block product_review %}
-    		    {% with reviews=product.reviews.all %}
-    		        {% if reviews %}
-    		            <ul class="review_count">       
-    			            {% for review in reviews %}
-        			            <li class="{{ review.score }}">{{ review.score }}</li>
-        			        {% endfor %}
-    		            </ul>
-    		        {% else %}
-					<p class="star">{% trans "No rating" %}</p>
-    		        {% endif %}
-    		    {% endwith %}
-    		{% endblock product_review %}
-		<div class="product_price">
-			{% if product.is_group %}
-				<h2 class="price_color">{% trans "From" %} {{ product.min_variant_price_incl_tax|currency }}</h2>
-			{% else %}
-				{% if product.has_stockrecord %}
-					<h2 class="price_color">{{ product.stockrecord.price_incl_tax|currency }}</h2>
-                        <p class="{{ product.stockrecord.availability_code }} availability "><i class="icon-ok"></i>{{ product.stockrecord.availability|truncatewords:2 }}</p>
-				{% else %}
-					<p class="notavailable availability">{% trans "Not available" %}</p>
-					<button class="btn">{% trans "Notify me" %}</button>
-				{% endif %}
-			{% endif %}
-		</div>
-    		<p>{{ promotion.description }}</p>
+            <h3><a href="{{ product.get_absolute_url }}">{{ product.title }}</a></h3>
+            <div class="product_price">
+                {% include "catalogue/partials/stock_record.html" %}
+            </div>
+            {{ promotion.description|safe }}
     	</div>
     </div>
 </article>

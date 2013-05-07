@@ -1,6 +1,6 @@
 import os
 
-# Django settings for oscar project.
+# Path helper
 PROJECT_DIR = os.path.dirname(__file__)
 location = lambda x: os.path.join(
     os.path.dirname(os.path.realpath(__file__)), x)
@@ -10,7 +10,8 @@ USE_TZ = True
 DEBUG = True
 TEMPLATE_DEBUG = True
 SQL_DEBUG = True
-SEND_BROKEN_LINK_EMAILS = True
+SEND_BROKEN_LINK_EMAILS = False
+THUMBNAIL_DEBUG = True
 
 ADMINS = (
     ('David Winterbottom', 'david.winterbottom@tangentlabs.co.uk'),
@@ -20,6 +21,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 MANAGERS = ADMINS
 
+# Use a Sqlite database by default
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -50,14 +52,27 @@ TIME_ZONE = 'Europe/London'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en-gb'
 
+# This should match the locale folders in oscar/locale
 LANGUAGES = (
+    ('en-gb', 'English'),
+    ('da', 'Danish'),
     ('de', 'German'),
+    ('el', 'Greek'),
+    ('en', 'English'),
+    ('es', 'Spanish'),
     ('fr', 'French'),
+    ('it', 'Italian'),
+    ('ja', 'Japanese'),
+    ('pl', 'Polish'),
+    ('pt', 'Portugese'),
+    ('ru', 'Russian'),
+    ('sk', 'Slovakian'),
 )
 ROSETTA_STORAGE_CLASS = 'rosetta.storage.SessionRosettaStorage'
 ROSETTA_ENABLE_TRANSLATION_SUGGESTIONS = True
+ROSETTA_REQUIRES_AUTH = False
 
 SITE_ID = 1
 
@@ -71,7 +86,7 @@ USE_L10N = True
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = location("assets/media")
+MEDIA_ROOT = location("public/media")
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
@@ -84,8 +99,13 @@ MEDIA_URL = '/media/'
 #ADMIN_MEDIA_PREFIX = '/media/admin/'
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = ()
 STATIC_ROOT = location('public/static')
+STATICFILES_DIRS = ()
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
+)
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '$)a7n&o80u!6y5t-+jrd3)3!%vh&shg$wqpjpxc!ar&p#!)n1a'
@@ -114,21 +134,29 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 MIDDLEWARE_CLASSES = (
-    'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    #'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # Allow languages to be selected
+    'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    # Ensure a valid basket is added to the request instance for every request
     'oscar.apps.basket.middleware.BasketMiddleware',
+    # Enable the ProfileMiddleware, then add ?cprofile to any
+    # URL path to print out profile details
+    #'oscar.profiling.middleware.ProfileMiddleware',
 )
 
 INTERNAL_IPS = ('127.0.0.1',)
 
 ROOT_URLCONF = 'urls'
 
+# Add another path to Oscar's templates.  This allows templates to be
+# customised easily.
 from oscar import OSCAR_MAIN_TEMPLATE_DIR
 TEMPLATE_DIRS = (
     location('templates'),
@@ -162,22 +190,28 @@ LOGGING = {
             'formatter': 'verbose'
         },
         'checkout_file': {
-             'level': 'INFO',
-             'class': 'oscar.core.logging.handlers.EnvFileHandler',
-             'filename': 'checkout.log',
-             'formatter': 'verbose'
+            'level': 'INFO',
+            'class': 'oscar.core.logging.handlers.EnvFileHandler',
+            'filename': 'checkout.log',
+            'formatter': 'verbose'
         },
         'gateway_file': {
-             'level': 'INFO',
-             'class': 'oscar.core.logging.handlers.EnvFileHandler',
-             'filename': 'gateway.log',
-             'formatter': 'simple'
+            'level': 'INFO',
+            'class': 'oscar.core.logging.handlers.EnvFileHandler',
+            'filename': 'gateway.log',
+            'formatter': 'simple'
         },
         'error_file': {
-             'level': 'INFO',
-             'class': 'oscar.core.logging.handlers.EnvFileHandler',
-             'filename': 'errors.log',
-             'formatter': 'verbose'
+            'level': 'INFO',
+            'class': 'oscar.core.logging.handlers.EnvFileHandler',
+            'filename': 'errors.log',
+            'formatter': 'verbose'
+        },
+        'sorl_file': {
+            'level': 'INFO',
+            'class': 'oscar.core.logging.handlers.EnvFileHandler',
+            'filename': 'sorl.log',
+            'formatter': 'verbose'
         },
         'mail_admins': {
             'level': 'ERROR',
@@ -205,6 +239,11 @@ LOGGING = {
             'propagate': True,
             'level': 'INFO',
         },
+        'sorl.thumbnail': {
+            'handlers': ['sorl_file'],
+            'propagate': True,
+            'level': 'INFO',
+        },
         'django.db.backends': {
             'handlers': ['null'],
             'propagate': False,
@@ -226,13 +265,16 @@ INSTALLED_APPS = [
     'django_extensions',
     'debug_toolbar',
     'south',
-    'rosetta',  # For i18n testing
-    'apps.user',  # For profile testing
-    'apps.gateway',  # For allowing dashboard access
+    'rosetta',          # For i18n testing
+    'compressor',
+    'apps.user',        # For profile testing
+    'apps.gateway',     # For allowing dashboard access
 ]
 from oscar import get_core_apps
 INSTALLED_APPS = INSTALLED_APPS + get_core_apps()
 
+# Add Oscar's custom auth backend so users can sign in using their email
+# address.
 AUTHENTICATION_BACKENDS = (
     'oscar.apps.customer.auth_backends.Emailbackend',
     'django.contrib.auth.backends.ModelBackend',
@@ -249,6 +291,7 @@ HAYSTACK_CONNECTIONS = {
     },
 }
 
+
 # Allow internal IPs to see the debug toolbar.  This is just for Tangent's QA
 # department to be able to create better issues when something goes wrong.
 def is_internal(request):
@@ -262,12 +305,37 @@ DEBUG_TOOLBAR_CONFIG = {
 
 AUTH_PROFILE_MODULE = 'user.Profile'
 
+
+# ==============
 # Oscar settings
+# ==============
+
+
 from oscar.defaults import *
 
 
+# Meta
+# ====
+
+OSCAR_SHOP_NAME = 'Oscar Sandbox'
+OSCAR_SHOP_TAGLINE = 'e-Commerce for Django'
+
+# Enter Google Analytics ID for the tracking to be included in the templates
+#GOOGLE_ANALYTICS_ID = 'UA-XXXXX-Y'
+
 OSCAR_RECENTLY_VIEWED_PRODUCTS = 20
 OSCAR_ALLOW_ANON_CHECKOUT = True
+
+# This is added to each template context by the core context processor.  It is
+# useful for test/stage/qa sites where you want to show the version of the site
+# in the page title.
+DISPLAY_VERSION = False
+
+
+# Order processing
+# ================
+
+# Some sample order/line status settings
 OSCAR_INITIAL_ORDER_STATUS = 'Pending'
 OSCAR_INITIAL_LINE_STATUS = 'Pending'
 OSCAR_ORDER_STATUS_PIPELINE = {
@@ -276,23 +344,41 @@ OSCAR_ORDER_STATUS_PIPELINE = {
     'Cancelled': (),
 }
 
-OSCAR_SHOP_NAME = 'Oscar Sandbox'
-OSCAR_SHOP_TAGLINE = 'e-Commerce for Django'
 
-GOOGLE_ANALYTICS_ID = 'UA-XXXXX-Y'
+# LESS/CSS/statics
+# ================
+
+# We default to using CSS files, rather than the LESS files that generate them.
+# If you want to develop Oscar's CSS, then set USE_LESS=True and
+# COMPRESS_ENABLED=False in your settings_local module and ensure you have
+# 'lessc' installed.  You can do this by running:
+#
+#    pip install -r requirements_less.txt
+#
+# which will install node.js and less in your virtualenv.
+
+USE_LESS = False
+
+COMPRESS_ENABLED = True
+COMPRESS_PRECOMPILERS = (
+    ('text/less', 'lessc {infile} {outfile}'),
+)
+COMPRESS_OFFLINE_CONTEXT = {
+    'STATIC_URL': 'STATIC_URL',
+    'use_less': USE_LESS,
+}
+
+
+# Logging
+# =======
 
 LOG_ROOT = location('logs')
 # Ensure log root exists
 if not os.path.exists(LOG_ROOT):
     os.mkdir(LOG_ROOT)
 
-DISPLAY_VERSION = False
 
-THUMBNAIL_DEBUG = True
-
-# Must be within MEDIA_ROOT for sorl to work
-OSCAR_MISSING_IMAGE_URL = 'image_not_found.jpg'
-
+# Try and import local settings which can be used to override any of the above.
 try:
     from settings_local import *
 except ImportError:

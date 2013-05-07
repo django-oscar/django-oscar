@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.http import HttpResponsePermanentRedirect, Http404
 from django.views.generic import ListView, DetailView
 from django.db.models import get_model
@@ -98,9 +99,6 @@ def get_product_base_queryset():
         'product_options',
         'product_class__options',
         'stockrecord',
-        'stockrecord__product',
-        'stockrecord__product__product_class',
-        'stockrecord__partner',
         'images',
     ).all()
 
@@ -111,7 +109,11 @@ class ProductCategoryView(ListView):
     """
     context_object_name = "products"
     template_name = 'catalogue/browse.html'
-    paginate_by = 20
+    paginate_by = settings.OSCAR_PRODUCTS_PER_PAGE
+
+    def get(self, request, *args, **kwargs):
+        self.categories = self.get_categories()
+        return super(ProductCategoryView, self).get(request, *args, **kwargs)
 
     def get_categories(self):
         """
@@ -129,15 +131,14 @@ class ProductCategoryView(ListView):
     def get_context_data(self, **kwargs):
         context = super(ProductCategoryView, self).get_context_data(**kwargs)
 
-        categories = self.get_categories()
-        context['categories'] = categories
-        context['category'] = categories[-1]
-        context['summary'] = categories[-1].name
+        context['categories'] = self.categories
+        context['category'] = self.categories[-1]
+        context['summary'] = self.categories[-1].name
         return context
 
     def get_queryset(self):
         return get_product_base_queryset().filter(
-            categories__in=self.get_categories()
+            categories__in=self.categories
         ).distinct()
 
 
@@ -147,7 +148,7 @@ class ProductListView(ListView):
     """
     context_object_name = "products"
     template_name = 'catalogue/browse.html'
-    paginate_by = 20
+    paginate_by = settings.OSCAR_PRODUCTS_PER_PAGE
     search_signal = product_search
     model = Product
 

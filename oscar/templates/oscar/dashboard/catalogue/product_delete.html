@@ -1,0 +1,66 @@
+{% extends 'dashboard/layout.html' %}
+{% load i18n %}
+
+{% block title %}
+{% blocktrans with title=product.get_title %}
+Delete {{ title}}?
+{% endblocktrans %} |
+{{ block.super }}
+{% endblock %}
+
+{% block body_class %}
+create-page
+{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="{% url dashboard:catalogue-product-list %}">{% trans "Product management" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="{% url dashboard:catalogue-product product.pk %}">{{ product.title }}</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active">{% trans "Delete?" %}</li>
+</ul>
+{% endblock %}
+
+{% block header %}
+<div class="page-header">
+	<h1>{% trans "Delete product?" %}</h1>
+</div>
+{% endblock header%}
+
+{% block dashboard_content %}
+<div class="table-header">
+    <h2>{% trans "Delete product" %}</h2>
+</div>
+<form action="." method="post" class="well">
+    {% csrf_token %}
+
+    {% blocktrans with title=product.title %}
+    <p>Delete product <strong>{{ title }}</strong> - are you sure?</p>
+    {% endblocktrans %}
+
+    {% if product.is_group %}
+    <p> {% trans "This will also delete the following variant products:" %}
+        <ul>
+            {% for variant in product.variants.all %}
+            <li><strong>{{ variant.title }}</strong></li>
+            {% endfor %}
+        </ul>
+    </p>
+    {% endif %}
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-danger">{% trans "Delete" %}</button>
+        {% trans "or" %}
+        <a href="{% url dashboard:catalogue-product-list %}">{% trans "cancel" %}</a>
+    </div>
+</form>
+{% endblock %}

@@ -7,7 +7,7 @@ from oscar.apps.partner.utils import CatalogueImporter
 from oscar.apps.partner.exceptions import ImportError
 from oscar.apps.catalogue.models import ProductClass, Product
 from oscar.apps.partner.models import Partner, StockRecord
-from oscar.test.helpers import create_product
+from oscar_testsupport.factories import create_product
 
 TEST_BOOKS_CSV = os.path.join(os.path.dirname(__file__), 'fixtures/books-small.csv')
 TEST_BOOKS_SEMICOLON_CSV = os.path.join(os.path.dirname(__file__), 'fixtures/books-small-semicolon.csv')

@@ -1,0 +1,8 @@
+[main]
+host = https://www.transifex.com
+
+[django-oscar.oscar]
+file_filter = oscar/locale/<lang>/LC_MESSAGES/django.po
+source_file = oscar/locale/en/LC_MESSAGES/django.po
+source_lang = en
+type = PO

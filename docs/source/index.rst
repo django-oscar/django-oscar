@@ -1,7 +1,3 @@
-.. sphinx-quickstart on Mon Feb  7 13:16:33 2011.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 .. image:: http://img692.imageshack.us/img692/6498/logovf.png
 
 ===================================
@@ -17,7 +13,7 @@ much easier.
 Features:
 
 * Any product type can be handled, including downloadable products,
-  subscriptions, variant products (eg a T-shirt in different sizes and colours).
+  subscriptions, variant products (e.g., a T-shirt in different sizes and colours).
 
 * Customisable products, such as T-shirts with personalised messages.
 
@@ -26,18 +22,24 @@ Features:
 
 * Multiple fulfillment partners for the same product.
 
-* Range of merchandising blocks for promoting products throughuout your site.
+* A range of merchandising blocks for promoting products throughout your site.
 
 * Sophisticated offers that support virtually any kind of offer you can think
-  of - multibuys, bundles, buy X get 50% of Y etc
+  of - multi-buys, bundles, buy X get 50% off Y etc
 
-* Vouchers
+* Vouchers (built on top of the offers framework)
 
 * Comprehensive dashboard
 
-* Support for split payment orders
+* Support for complex order processing such split payment orders, multi-batch
+  shipping, order status pipelines.
 
-* Extension libraries available for PayPal, GoCardless, DataCash and more
+* Extension libraries available for many payment gateways, including PayPal_,
+  GoCardless_, DataCash_ and more.
+
+.. _PayPal: https://github.com/tangentlabs/django-oscar-paypal
+.. _GoCardless: https://github.com/tangentlabs/django-oscar-gocardless
+.. _DataCash: https://github.com/tangentlabs/django-oscar-datacash
 
 Oscar is a good choice if your domain has non-trivial business logic.  Oscar's
 flexibility means it's straightforward to implement business rules that would be
@@ -45,39 +47,63 @@ difficult to apply in other frameworks.
 
 Example requirements that Oscar applications already handle:
 
-* Paying for an order with multiple payment sources (eg using a bankcard,
-  voucher, giftcard and business account).
+* Paying for an order with multiple payment sources (e.g., using a bankcard,
+  voucher, gift card and business account).
 
 * Complex access control rules governing who can view and order what.
 
 * Supporting a hierarchy of customers, sales reps and sales directors - each
-  being able to "masquerade" as their subordinate users.
+  being able to "masquerade" as their subordinates.
 
-* Multi-lingual products and categories
+* Multi-lingual products and categories.
+
+* Digital products.
+
+* Dynamically priced products (eg where the price is provided by an external
+  service).
 
 Oscar is developed by `Tangent Labs`_, a London-based digital agency.  It is
 used in production in several applications to sell everything from beer mats to
-ipads.  The `source is on Github`_ - contributions welcome.
+ipads.  The `source is on GitHub`_ - contributions welcome.
 
 .. _`Tangent Labs`: http://www.tangentlabs.co.uk
-.. _`source is on Github`: https://github.com/tangentlabs/django-oscar
+.. _`source is on GitHub`: https://github.com/tangentlabs/django-oscar
+
+First steps
+===========
+.. toctree::
+   :maxdepth: 1
+
+   internals/sandbox
+   internals/getting_started
+   topics/key_questions
+   internals/getting_help
+
+Using Oscar
+===========
+
+All you need to start developing an Oscar project.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
-   take_a_peek
-   getting_started
-   key_questions
-   recipes
-   getting_help
-   design_decisions
-   reference
-   contributing
+   topics/customisation
+   howto/index
+   ref/apps/index
+   ref/settings
+   ref/signals
+   ref/upgrading
+   topics/translation
 
-Indices and tables
-==================
+The Oscar open-source project
+=============================
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+Learn about the ideas behind Oscar and how you can contribute.
 
+.. toctree::
+   :maxdepth: 1
+
+   internals/design-decisions
+   releases/index
+   internals/contributing/index
+   

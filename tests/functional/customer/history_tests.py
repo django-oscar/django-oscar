@@ -1,15 +1,9 @@
-import re
-
-from django.contrib.auth import models
 from django.test.client import Client
 from django.contrib.auth.models import User
-from django.core import mail
 from django.core.urlresolvers import reverse
 from django.test import TestCase
-from django_webtest import WebTest
 
-from oscar.test.helpers import create_product
-from oscar.test import WebTestCase
+from oscar_testsupport.factories import create_product
 from oscar.apps.customer.history_helpers import get_recently_viewed_product_ids
 from django.http import HttpRequest
 

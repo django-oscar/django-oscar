@@ -1,0 +1,20 @@
+{% load i18n %}
+{% blocktrans with range_name=range.name filename=upload.filename %}
+<p>File <strong>{{ filename }}</strong> processed.</p>
+{% endblocktrans %}
+
+<ul>
+    {% if upload.num_new_skus %}
+    <li><strong>{{ upload.num_new_skus }}</strong> products added</li>
+    {% endif %}
+    {% if upload.num_duplicate_skus %}
+    <li>There were <strong>{{ upload.num_duplicate_skus }}</strong> duplicate products in the file</li>
+    {% endif %}
+    {% if upload.num_unknown_skus %}
+    <li>There were <strong>{{ upload.num_unknown_skus }}</strong> products in the file that couldn't be found in the catalogue</li>
+    {% endif %}
+</ul>
+<p>
+    <a href="{% url dashboard:range-update range.pk %}" class="btn btn-success">{% trans "Edit range metadata" %}</a>
+    <a href="{% url dashboard:range-list %}" class="btn btn-success">{% trans "Return to ranges homepage" %}</a>
+</p>

@@ -18,7 +18,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     def get_model(self):
         return get_model('catalogue', 'Product')
 
-    def index_queryset(self):
+    def index_queryset(self, using=None):
         """
         Used when the entire index for model is updated.
 
@@ -33,5 +33,3 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
         Can be used to filter the query set when updating the index
         """
         return 'date_updated'
-
-

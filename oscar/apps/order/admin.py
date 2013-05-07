@@ -23,9 +23,11 @@ class LineInline(admin.TabularInline):
 
 
 class OrderAdmin(admin.ModelAdmin):
-    raw_id_fields = ['user','billing_address','shipping_address', ]
-    list_display = ('number', 'total_incl_tax', 'site', 'user', 'billing_address', 'date_placed')
-    readonly_fields = ('number', 'total_incl_tax', 'total_excl_tax', 'shipping_incl_tax', 'shipping_excl_tax')
+    raw_id_fields = ['user', 'billing_address', 'shipping_address', ]
+    list_display = ('number', 'total_incl_tax', 'site', 'user',
+                    'billing_address', 'date_placed')
+    readonly_fields = ('number', 'total_incl_tax', 'total_excl_tax',
+                       'shipping_incl_tax', 'shipping_excl_tax')
     inlines = [LineInline]
 
 
@@ -48,7 +50,8 @@ class PaymentEventQuantityInline(admin.TabularInline):
 
 
 class PaymentEventAdmin(admin.ModelAdmin):
-    list_display = 'order', 'event_type', 'amount', 'num_affected_lines', 'date'
+    list_display = ('order', 'event_type', 'amount', 'num_affected_lines',
+                    'date')
     inlines = [PaymentEventQuantityInline]
 
 
@@ -66,8 +69,10 @@ class OrderNoteAdmin(admin.ModelAdmin):
 
 
 class OrderDiscountAdmin(admin.ModelAdmin):
-    readonly_fields = ('order' ,'offer_id', 'offer_name', 'voucher_id', 'voucher_code', 'amount')
-    list_display = ('order', 'offer', 'voucher', 'voucher_code', 'amount')
+    readonly_fields = ('order', 'category', 'offer_id', 'offer_name',
+                       'voucher_id', 'voucher_code', 'amount')
+    list_display = ('order', 'category', 'offer', 'voucher',
+                    'voucher_code', 'amount')
 
 
 admin.site.register(Order, OrderAdmin)

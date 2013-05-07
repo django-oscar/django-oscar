@@ -8,8 +8,8 @@ from oscar.apps.shipping.models import OrderAndItemCharges, WeightBased
 from oscar.apps.shipping.repository import Repository
 from oscar.apps.shipping import Scales
 from oscar.apps.basket.models import Basket
-from oscar.test.helpers import create_product
-from oscar.test.decorators import dataProvider
+from oscar_testsupport.factories import create_product
+from oscar_testsupport.decorators import dataProvider
 
 
 class FreeTest(TestCase):
@@ -222,6 +222,29 @@ class WeightBasedMethodTests(TestCase):
         self.standard.set_basket(basket)
         charge = self.standard.basket_charge_incl_tax()
         self.assertEqual(D('0.00'), charge)
+
+
+class OfferDiscountTest(TestCase):
+    """
+    Should test a discounted shipping method against a non-discounted one.
+    So far only checks if the is_discounted field is present on all
+    methods
+    """
+
+    def setUp(self):
+        self.non_discount_methods = [
+            Free(),
+            FixedPrice(D('10.00'), D('10.00')),
+            OrderAndItemCharges(price_per_order=D('5.00'), price_per_item=D('1.00'))]
+        self.discount_methods = []
+
+    def test_is_discounted_present_and_reasonable(self):
+        for method in self.non_discount_methods + self.discount_methods:
+            self.assertTrue(hasattr(method, 'is_discounted'))
+        for method in self.non_discount_methods:
+            self.assertFalse(method.is_discounted)
+        for method in self.discount_methods:
+            self.assertTrue(method.is_discounted)
 
 
 class RepositoryTests(TestCase):

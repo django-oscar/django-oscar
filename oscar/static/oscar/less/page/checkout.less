@@ -49,25 +49,12 @@
     font-weight:bold;
   }
 }
-.order_summary {
-  .vertical_list();
-  .tier_one();
-  li {
-    border-color:@grayDark;
-    border-style:dashed;
-    .clearfix();
-    strong {
-      float:left;
-      color:@grayDark;
-    }
-    span {
-      float:right;
-    }
-    .total {
-      background-color:transparent;
-    }
-  }
+#basket_totals {
+	th small {
+		font-weight: normal;
+	}
 }
+
 .shipping_address {
   h2 {
     margin-bottom: @baseLineHeight;
@@ -188,9 +175,4 @@
     color: #fff;
     text-align: center;
     font-size: 12px;
-}
-.shipping-payment {
-  .well {
-    min-height:330px;
-  }
 }

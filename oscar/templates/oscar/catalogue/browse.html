@@ -2,14 +2,14 @@
 {% load currency_filters %}
 {% load basket_tags %}
 {% load promotion_tags %}
+{% load product_tags %}
 {% load i18n %}
 
 {% block title %}
 {{ summary }} | {{ block.super }}
 {% endblock %}
 
-{% block header %}
-{% endblock header %}
+{% block headertext %}{{ summary }}{% endblock  %}
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
@@ -17,17 +17,17 @@
         <a href="{% url promotions:home %}">{% trans "Home" %}</a>
         <span class="divider">/</span>
     </li>
-	{% if not category %}
-	<li class="active">{% trans "All products" %}</li>
-	{% else %}
-		{% for category in category.get_ancestors|slice:":-1" %}
-		<li>
-			<a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
-			<span class="divider">/</span>
-		</li>
-		{% endfor %}
-		<li class="active">{{ category.name }}</li>
-	{% endif %}
+    {% if not category %}
+        <li class="active">{% trans "All products" %}</li>
+    {% else %}
+        {% for category in category.get_ancestors|slice:":-1" %}
+        <li>
+            <a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
+            <span class="divider">/</span>
+        </li>
+        {% endfor %}
+        <li class="active">{{ category.name }}</li>
+    {% endif %}
 </ul>
 {% endblock breadcrumbs %}
 
@@ -40,11 +40,11 @@
             <li><a href="{{ category.0.get_absolute_url }}">{{ category.0.name }}</a>
             	{% if category.1 %}
             	<ul>
-            		{% for subcategory in category.1 %}
-            		<li><a href="{{ subcategory.0.get_absolute_url }}">{{ subcategory.0.name }}</a>
-            		{% endfor %}
+                    {% for subcategory in category.1 %}
+                        <li><a href="{{ subcategory.0.get_absolute_url }}">{{ subcategory.0.name }}</a>
+                    {% endfor %}
             	</ul>
-				{% endif %}
+                {% endif %}
             </li>
             {% endfor %}
     	</ul>
@@ -53,35 +53,27 @@
 {% endblock %}
 
 {% block content %}
-    <div class="sub-header">
-        <h1>{{ summary }}</h1>
-    </div>
     {% if category.description %}
         <div class="row-fluid">
             <div class="span9"><p>{{ category.description|safe }}</p></div>
-			{% if category.image %}
-				<div class="span3"><img src="{{ category.image.url }}" alt="{{ summary }}" /></div>
-			{% endif %}
+            {% if category.image %}
+                <div class="span3"><img src="{{ category.image.url }}" alt="{{ summary }}" /></div>
+            {% endif %}
         </div>
     {% endif %}
 
     {% if products.count %}
-		<section>
-			<div class="mod">
-				{% if page_obj %}
-					{% include "catalogue/partials/pagination.html" %}
-				{% endif %}
-				<ol class="products four">
-					{% for product in products %}
-					<li>{% include "catalogue/partials/product.html" %}</li>
-					{% endfor %}
-				</ol>
-				{% if page_obj %}
-					{% include "catalogue/partials/pagination.html" %}
-				{% endif %}
-			</div>
-		</section>
+    <section>
+        <div class="mod">
+            <ol class="products four">
+                {% for product in products %}
+                    <li>{% render_product product %}</li>
+                {% endfor %}
+            </ol>
+            {% include "partials/pagination.html" %}
+        </div>
+    </section>
     {% else %}
-	<p class="nonefound">{% trans "No products found." %}</p>
+        <p class="nonefound">{% trans "No products found." %}</p>
     {% endif %}
 {% endblock content %}

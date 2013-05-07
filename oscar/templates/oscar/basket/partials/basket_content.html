@@ -1,0 +1,172 @@
+{% load i18n %}
+{% load thumbnail %}
+{% load currency_filters %}
+
+{% if basket_warnings %}
+    <h5>{% trans "Important messages about items in your basket" %}</h5>
+	{% for warning in basket_warnings %}
+	<div class="alert">{{ warning }}</div>
+	{% endfor %}
+{% endif %}
+
+{% if upsell_messages %}
+<div class="well">
+	<h2>{% trans "You could be missing out on offers!" %}</h2>
+	{% for upsell in upsell_messages %}
+    {% blocktrans with message=upsell.message url=upsell.offer.get_absolute_url offer_name=upsell.offer.name %}
+	<div class="warning">{{ message }} to qualify for the <a href="{{ url }}">{{ offer_name }}</a> special offer</div>
+    {% endblocktrans %}
+	{% endfor %}
+</div>
+{% endif %}
+
+{% if not basket.is_empty %}
+    {% block basket_form_headers %}
+    <div class="basket-title hidden-phone">
+        <div class="row-fluid">
+            <h4 class="span6">{% trans "Items to buy now" %}</h4>
+            <h4 class="span4">{% trans "Quantity" %}</h4>
+            <h4 class="span2 align-right">{% trans "Price" %}</h4>
+        </div>
+    </div>
+    {% endblock %}
+
+    {% block basket_form_main %}
+    <form action="." method="post" class="basket_summary" id="basket_formset">
+        {% csrf_token %}
+        {{ formset.management_form }}
+
+        {% for form in formset %}
+        <div class="basket-items">
+            <div class="row-fluid">
+            <div class="span6">
+                {{ form.id }}
+                <div class="image_container">
+                        {% with image=form.instance.product.primary_image %}
+                        {% thumbnail image.original "200x200" upscale=False as thumb %}
+                        <a href="{{ form.instance.product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
+                        {% endthumbnail %}
+                        {% endwith %}
+                    </div>
+                    <h4><a href="{{ form.instance.product.get_absolute_url }}">{{ form.instance.description }}</a></h4>
+                    <p class="availability {{ form.instance.product.stockrecord.availability_code }}">{{ form.instance.product.stockrecord.availability }}</p>
+                </div>
+                <div class="span4">
+                    <div class="checkout-quantity control-group {% if form.errors %}error{% endif %}">
+                        {{ form.quantity }}
+                        <button class="btn" type="submit">{% trans "Update" %}</button>
+                        <a href="#" data-id="{{ forloop.counter0 }}" data-behaviours="remove" class="inline">{% trans "Remove" %}</a>
+                        {% if request.user.is_authenticated %}
+                        | <a href="#" data-id="{{ forloop.counter0 }}" data-behaviours="save" class="inline">{% trans "Save for later" %}</a>
+                        {% endif %}
+                        <div style="display:none">
+                            {{ form.save_for_later }}
+                            {{ form.DELETE }}
+                        </div>
+                        {% for field_errors in form.errors.values %}
+                            {% for error in field_errors %}
+                            <span class="help-block"><i class="icon-exclamation-sign"></i> {{ error }}</span>
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="span2">
+                    <p class="price_color align-right">{{ form.instance.unit_price_incl_tax|currency }}<p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </form>
+    {% endblock %}
+
+    <div class="row-fluid">
+        {% block vouchers %}
+        <div class="span6">
+            <div class="sub-header">
+                <h2>{% trans "Voucher/promo code" %}</h2>
+            </div>
+            <p id="voucher_form_link"><a href="#voucher" class="btn btn-full">{% trans "I have a voucher code..." %}</a></p>
+
+                <div id="voucher_form_container" style="display:none">
+                    <h4>{% trans "Voucher code" %}</h4>
+                <form action="{% url basket:vouchers-add %}" method="post" class="form-horizontal">
+                    {% csrf_token %}
+                    {% include "partials/form_fields.html" with form=voucher_form %}
+                    <div class="form-actions">
+                            <button type="submit" class="btn btn-info">{% trans "Add voucher" %}</button>
+                            or <a href="#" id="voucher_form_cancel">{% trans "cancel" %}</a>
+                    </div>
+                </form>
+                </div>
+        </div>
+        {% endblock vouchers %}
+
+        {% block baskettotals %}
+        <div class="span6">
+            <div class="sub-header">
+                <h2>{% trans "Totals" %}</h2>
+            </div>
+            {% include 'basket/partials/basket_totals.html' with editable=1 %}
+        </div>
+        {% endblock baskettotals %}
+    </div>
+
+
+    {% block formactions %}
+        <div class="form-actions clearfix" >
+            <a href="{% url checkout:index %}" class="pull-right btn btn-large btn-primary btn-full">{% trans "Proceed to checkout" %}</a>
+        </div>
+    {% endblock formactions %}
+
+{% else %}
+    {% block emptybasket %}
+    <p>{% trans "Your basket is empty." %}</p>
+    <p><a href="/" class="btn btn-primary">{% trans "Continue shopping" %}</a></p>
+    {% endblock %}
+{% endif %}
+
+{% if request.user.is_authenticated %}
+<div class="well">
+    <div class="sub-header">
+        <h3>{% trans "To buy later" %}</h3>
+    </div>
+
+    {% if not saved_formset %}
+    <p>{% trans "Your saved basket is empty." %}</p>
+
+    {% else %}
+    <div class="row-fluid basket-title hidden-phone">
+        <h4 class="span8">{% trans "Items" %}</h4>
+        <h4 class="span2 align-center">{% trans "Price" %}</h4>
+        <div class="span2">&nbsp;</div>
+    </div>
+    <form action="{% url basket:saved %}" method="post" class="form-stacked later_summary" id="saved_basket_formset">
+        {% csrf_token %}
+        {{ saved_formset.management_form }}
+        {% for form in saved_formset %}
+        <div class="row-fluid basket-items">
+	    <div class="span8">
+			{{ form.id }}
+		    <div class="image_container">
+					{% with image=form.instance.product.primary_image %}
+					{% thumbnail image.original "200x200" upscale=False as thumb %}
+					<a href="{{ form.instance.product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
+					{% endthumbnail %}
+					{% endwith %}
+		    </div>
+			<h4><a href="{{ form.instance.product.get_absolute_url }}">{{ form.instance.description }}</a></h4>
+                <p class="availability {{ form.instance.product.stockrecord.availability_code }}">{{ form.instance.product.stockrecord.availability }}</p>
+                <a href="#" data-id="{{ forloop.counter0 }}" data-behaviours="remove">{% trans "Remove" %}</a>
+			<div style="display:none">
+				{{ form.move_to_basket }}
+				{{ form.DELETE }}
+			</div>
+		</div>
+            <div class="span2 align-center"><p class="price_color">{{ form.instance.unit_price_incl_tax|currency }}</p></div>
+            <div class="span2"><a href="#" data-id="{{ forloop.counter0 }}" class="btn pull-right btn-full" data-behaviours="move">{% trans "Move to basket" %}</a></div>
+        </div>
+        {% endfor %}
+    </form>
+    {% endif %}
+</div>
+{% endif %}

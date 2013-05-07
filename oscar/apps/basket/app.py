@@ -1,18 +1,17 @@
 from django.conf.urls import patterns, url
 from django.contrib.auth.decorators import login_required
 
-from oscar.apps.basket.views import (BasketView, SavedView,
-    VoucherAddView, BasketAddView, VoucherRemoveView)
+from oscar.apps.basket import views
 from oscar.core.application import Application
 
 
 class BasketApplication(Application):
     name = 'basket'
-    summary_view = BasketView
-    saved_view = SavedView
-    add_view = BasketAddView
-    add_voucher_view = VoucherAddView
-    remove_voucher_view = VoucherRemoveView
+    summary_view = views.BasketView
+    saved_view = views.SavedView
+    add_view = views.BasketAddView
+    add_voucher_view = views.VoucherAddView
+    remove_voucher_view = views.VoucherRemoveView
 
     def get_urls(self):
         urlpatterns = patterns('',

@@ -11,6 +11,7 @@ from django.views.generic import DetailView, TemplateView, FormView, \
 
 from oscar.apps.shipping.methods import NoShippingRequired
 from oscar.core.loading import get_class, get_classes
+
 ShippingAddressForm, GatewayForm = get_classes('checkout.forms', ['ShippingAddressForm', 'GatewayForm'])
 OrderTotalCalculator = get_class('checkout.calculators', 'OrderTotalCalculator')
 CheckoutSessionData = get_class('checkout.utils', 'CheckoutSessionData')
@@ -19,7 +20,6 @@ OrderNumberGenerator, OrderCreator = get_classes('order.utils', ['OrderNumberGen
 UserAddressForm = get_class('address.forms', 'UserAddressForm')
 Repository = get_class('shipping.repository', 'Repository')
 AccountAuthView = get_class('customer.views', 'AccountAuthView')
-Dispatcher = get_class('customer.utils', 'Dispatcher')
 RedirectRequired, UnableToTakePayment, PaymentError = get_classes(
     'payment.exceptions', ['RedirectRequired', 'UnableToTakePayment', 'PaymentError'])
 UnableToPlaceOrder = get_class('order.exceptions', 'UnableToPlaceOrder')
@@ -49,8 +49,8 @@ class IndexView(CheckoutSessionMixin, FormView):
     form_class = GatewayForm
 
     def get(self, request, *args, **kwargs):
-        # We redirect immediately to shipping address stage if the user is signed in or
-        # has already filled out the anonymous checkout form.
+        # We redirect immediately to shipping address stage if the user is
+        # signed in or has already filled out the anonymous checkout form.
         if request.user.is_authenticated() or self.checkout_session.get_guest_email():
             return self.get_success_response()
         return super(IndexView, self).get(request, *args, **kwargs)
@@ -504,7 +504,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         # handle_payment method raise an exception, which should be caught
         # within handle_POST and the appropriate forms redisplayed.
         error_msg = _("A problem occurred while processing payment for this "
-                      "order.  No payment has been taken.  Please try again "
+                      "order - no payment has been taken.  Please "
                       "contact customer services if this problem persists")
         pre_payment.send_robust(sender=self, view=self)
         total_incl_tax, total_excl_tax = self.get_order_totals(basket)

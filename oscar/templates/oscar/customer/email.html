@@ -23,16 +23,13 @@
 </ul>
 {% endblock %}
 
-
 {% block title %}
 {% trans 'Email detail' %} | {{ block.super }}
 {% endblock %}
 
-{% block header %}
-<div class="page-header">
-    <h2>{% trans 'Account' %}</h2>
-</div>
-{% endblock header %}
+{% block headertext %}
+{% trans 'Account' %}
+{% endblock %}
 
 {% block subnavigation %}
     {% include "partials/nav_profile.html" with email_history="active" %}

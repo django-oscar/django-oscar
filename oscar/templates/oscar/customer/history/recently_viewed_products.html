@@ -1,4 +1,6 @@
-{% if products %}{% load i18n %}
+{% if products %}
+{% load i18n %}
+{% load product_tags %}
 <div class="sub-header">
     <h2>{% trans 'Products you recently viewed' %}</h2>
 </div>
@@ -8,7 +10,7 @@
         <ul>
             {% for product in products %}
             <li>
-                {% include "promotions/partials/product_carousel.html" %}
+                {% render_product product %}
             </li>
             {% endfor %}
         </ul>

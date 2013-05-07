@@ -1,4 +1,3 @@
-import csv
 from decimal import Decimal as D
 import datetime
 
@@ -17,14 +16,14 @@ class OfferReportCSVFormatter(ReportCSVFormatter):
     filename_template = 'conditional-offer-performance.csv'
 
     def generate_csv(self, response, offers):
-        writer = csv.writer(response)
+        writer = self.get_csv_writer(response)
         header_row = [_('Offer'),
                       _('Total discount')
                      ]
         writer.writerow(header_row)
 
         for offer in offers:
-            row = [offer, offer.total_discount]
+            row = [offer, offer['total_discount']]
             writer.writerow(row)
 
 

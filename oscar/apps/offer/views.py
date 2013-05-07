@@ -1,9 +1,20 @@
 from django.views.generic import ListView
-from django.shortcuts import get_object_or_404
 from django.db.models import get_model
+from django import http
 
 from oscar.apps.offer.models import ConditionalOffer
+
 Product = get_model('catalogue', 'Product')
+
+
+class OfferListView(ListView):
+    model = ConditionalOffer
+    context_object_name = 'offers'
+    template_name = 'offer/list.html'
+
+    def get_queryset(self):
+        return ConditionalOffer.active.filter(
+            offer_type=ConditionalOffer.SITE)
 
 
 class OfferDetailView(ListView):
@@ -12,17 +23,19 @@ class OfferDetailView(ListView):
     paginate_by = 20
 
     def get(self, request, *args, **kwargs):
-        self.offer = get_object_or_404(ConditionalOffer, slug=self.kwargs['slug'])
+        try:
+            self.offer = ConditionalOffer.objects.select_related().get(
+                slug=self.kwargs['slug'])
+        except ConditionalOffer.DoesNotExist:
+            raise http.Http404
         return super(OfferDetailView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         ctx = super(OfferDetailView, self).get_context_data(**kwargs)
         ctx['offer'] = self.offer
-        ctx['upsell_message'] = self.offer.get_upsell_message(self.request.basket)
+        ctx['upsell_message'] = self.offer.get_upsell_message(
+            self.request.basket)
         return ctx
 
     def get_queryset(self):
-        range = self.offer.condition.range
-        if range.includes_all_products:
-            return Product.browsable.filter(is_discountable=True)
-        return range.included_products.filter(is_discountable=True)
+        return self.offer.products()

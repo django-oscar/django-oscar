@@ -9,11 +9,12 @@ source ../../virtualenvs/sandbox/bin/activate
 python setup.py develop
 pip install -r requirements.txt
 
-# Run any new migrations
 cd sites/sandbox
 ./manage.py syncdb --noinput
 ./manage.py migrate
 ./manage.py collectstatic --noinput
+./manage.py loaddata ../_fixtures/promotions.json
+./manage.py thumbnail clear
 ./manage.py rebuild_index --noinput
 chown -R www-data:www-data whoosh_index
 

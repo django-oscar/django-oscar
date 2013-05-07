@@ -12,7 +12,8 @@ class RangeForm(forms.ModelForm):
 
     class Meta:
         model = Range
-        exclude = ('included_products', 'excluded_products', 'classes')
+        exclude = ('included_products', 'excluded_products', 'classes',
+                   'proxy_class')
 
 
 class RangeProductForm(forms.Form):

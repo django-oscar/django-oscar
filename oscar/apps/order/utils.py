@@ -6,6 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from oscar.apps.shipping.methods import Free
 from oscar.apps.order.exceptions import UnableToPlaceOrder
 from oscar.core.loading import get_class
+
 ShippingAddress = get_model('order', 'ShippingAddress')
 Order = get_model('order', 'Order')
 Line = get_model('order', 'Line')
@@ -64,16 +65,24 @@ class OrderCreator(object):
             raise ValueError(_("There is already an order with number %s") % order_number)
 
         # Ok - everything seems to be in order, let's place the order
-        order = self.create_order_model(user, basket, shipping_address,
-                                        shipping_method, billing_address, total_incl_tax,
-                                        total_excl_tax, order_number, status, **kwargs)
+        order = self.create_order_model(
+            user, basket, shipping_address, shipping_method, billing_address,
+            total_incl_tax, total_excl_tax, order_number, status, **kwargs)
         for line in basket.all_lines():
             self.create_line_models(order, line)
             self.update_stock_records(line)
 
-        for discount in basket.get_discounts():
-            self.create_discount_model(order, discount)
-            self.record_discount(discount)
+        for application in basket.offer_applications:
+            # Trigger any deferred benefits from offers and capture the
+            # resulting message
+            application['message'] = application['offer'].apply_deferred_benefit(basket)
+            # Record offer application results
+            if application['result'].affects_shipping:
+                # If a shipping offer, we need to grab the actual discount off
+                # the shipping method instance
+                application['discount'] = shipping_method.get_discount()['discount']
+            self.create_discount_model(order, application)
+            self.record_discount(application)
 
         for voucher in basket.vouchers.all():
             self.record_voucher_usage(order, voucher, user)
@@ -200,12 +209,22 @@ class OrderCreator(object):
                                                   value=attr.value)
 
     def create_discount_model(self, order, discount):
+
         """
-        Creates an order discount model for each discount attached to the basket.
+        Create an order discount model for each offer application attached to
+        the basket.
         """
-        order_discount = OrderDiscount(order=order,
-                                       offer_id=discount['offer'].id,
-                                       amount=discount['discount'])
+        order_discount = OrderDiscount(
+            order=order,
+            message=discount['message'],
+            offer_id=discount['offer'].id,
+            frequency=discount['freq'],
+            amount=discount['discount'])
+        result = discount['result']
+        if result.affects_shipping:
+            order_discount.category = OrderDiscount.SHIPPING
+        elif result.affects_post_order:
+            order_discount.category = OrderDiscount.DEFERRED
         voucher = discount.get('voucher', None)
         if voucher:
             order_discount.voucher_id = voucher.id
@@ -213,9 +232,9 @@ class OrderCreator(object):
         order_discount.save()
 
     def record_discount(self, discount):
-        discount['offer'].record_usage(discount['discount'])
+        discount['offer'].record_usage(discount)
         if 'voucher' in discount and discount['voucher']:
-            discount['voucher'].record_discount(discount['discount'])
+            discount['voucher'].record_discount(discount)
 
     def record_voucher_usage(self, order, voucher, user):
         """

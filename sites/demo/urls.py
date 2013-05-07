@@ -8,7 +8,7 @@ from django.views.generic import TemplateView
 from apps.app import application
 
 # These need to be imported into this namespace
-from oscar.views import handler500, handler404
+from oscar.views import handler500, handler404, handler403
 
 admin.autodiscover()
 

@@ -13,14 +13,15 @@ class AbstractProductRecord(models.Model):
     """
 
     product = models.OneToOneField(
-        'catalogue.Product', verbose_name=_("Product"))
+        'catalogue.Product', verbose_name=_("Product"),
+        related_name='stats')
 
     # Data used for generating a score
     num_views = models.PositiveIntegerField(_('Views'), default=0)
     num_basket_additions = models.PositiveIntegerField(
         _('Basket Additions'), default=0)
     num_purchases = models.PositiveIntegerField(
-        _('Purchaes'), default=0, db_index=True)
+        _('Purchases'), default=0, db_index=True)
 
     # Product score - used within search
     score = models.FloatField(_('Score'), default=0.00)

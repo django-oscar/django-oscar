@@ -1,9 +1,9 @@
 import httplib
 
 from django.core.urlresolvers import reverse
+from oscar_testsupport.testcases import WebTestCase
 
-from oscar.test import WebTestCase
-from oscar.test.helpers import create_product
+from oscar_testsupport.factories import create_product
 from oscar.apps.catalogue.views import ProductListView
 
 
@@ -39,7 +39,7 @@ class TestProductListView(WebTestCase):
 
     def test_shows_pagination_navigation_for_multiple_pages(self):
         per_page = ProductListView.paginate_by
-        title = "Product #%d"
+        title = u"Product #%d"
         for idx in range(0, int(1.5 * per_page)):
             create_product(title=title % idx)
 

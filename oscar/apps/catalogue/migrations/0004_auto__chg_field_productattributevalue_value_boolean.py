@@ -7,13 +7,13 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        
+
         # Changing field 'ProductAttributeValue.value_boolean'
         db.alter_column('catalogue_productattributevalue', 'value_boolean', self.gf('django.db.models.fields.NullBooleanField')(null=True))
 
 
     def backwards(self, orm):
-        
+
         # Changing field 'ProductAttributeValue.value_boolean'
         db.alter_column('catalogue_productattributevalue', 'value_boolean', self.gf('django.db.models.fields.BooleanField')())
 
@@ -47,13 +47,13 @@ class Migration(SchemaMigration):
             'Meta': {'ordering': "['full_name']", 'object_name': 'Category'},
             'depth': ('django.db.models.fields.PositiveIntegerField', [], {}),
             'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'full_name': ('django.db.models.fields.CharField', [], {'max_length': '1024', 'db_index': 'True'}),
+            'full_name': ('django.db.models.fields.CharField', [], {'max_length': '255', 'db_index': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'image': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255', 'db_index': 'True'}),
             'numchild': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'path': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '255'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'max_length': '1024', 'db_index': 'True'})
+            'slug': ('django.db.models.fields.SlugField', [], {'max_length': '255', 'db_index': 'True'})
         },
         'catalogue.contributor': {
             'Meta': {'object_name': 'Contributor'},

@@ -4,13 +4,14 @@ from django.views import generic
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
+from django.conf import settings
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.db.models import Count
 from django.shortcuts import HttpResponse
 
 from oscar.core.loading import get_classes
-from oscar.apps.promotions.conf import PROMOTION_CLASSES, PROMOTION_POSITIONS
+from oscar.apps.promotions.conf import PROMOTION_CLASSES
 
 SingleProduct, RawHTML, Image, MultiImage, \
     AutomaticProductList, PagePromotion, \
@@ -59,7 +60,8 @@ class PageListView(generic.TemplateView):
     template_name = 'dashboard/promotions/pagepromotion_list.html'
 
     def get_context_data(self, *args, **kwargs):
-        pages = PagePromotion.objects.all().values('page_url').distinct().annotate(freq=Count('id'))
+        pages = PagePromotion.objects.all().values(
+            'page_url').distinct().annotate(freq=Count('id'))
         return {'pages': pages}
 
 
@@ -68,14 +70,12 @@ class PageDetailView(generic.TemplateView):
 
     def get_context_data(self, *args, **kwargs):
         path = self.kwargs['path']
-        ctx = {'page_url': path,
-               'positions': self.get_positions_context_data(path),
-              }
-        return ctx
+        return {'page_url': path,
+                'positions': self.get_positions_context_data(path), }
 
     def get_positions_context_data(self, path):
         ctx = []
-        for code, name in PROMOTION_POSITIONS:
+        for code, name in settings.OSCAR_PROMOTION_POSITIONS:
             promotions = PagePromotion._default_manager.select_related() \
                                                        .filter(page_url=path,
                                                                position=code) \
@@ -97,7 +97,7 @@ class PageDetailView(generic.TemplateView):
         return HttpResponse(status=200)
 
     def _save_page_order(self, data):
-        """ 
+        """
         Save the order of the pages. This gets used when an ajax request
         posts backa new order for promotions within page regions.
         """
@@ -120,7 +120,7 @@ class DeletePagePromotionView(generic.DeleteView):
     model = PagePromotion
 
     def get_success_url(self):
-        messages.info(self.request, _("Promotion removed successfully"))
+        messages.info(self.request, _("Content block removed successfully"))
         return reverse('dashboard:promotion-list-by-url',
                        kwargs={'path': self.object.page_url})
 
@@ -133,7 +133,7 @@ class DeletePagePromotionView(generic.DeleteView):
 class CreateView(PromotionMixin, generic.CreateView):
 
     def get_success_url(self):
-        messages.success(self.request, _("Promotion created successfully"))
+        messages.success(self.request, _("Content block created successfully"))
         return reverse('dashboard:promotion-update',
                        kwargs={'ptype': self.model.classname(),
                                'pk': self.object.id})
@@ -185,7 +185,7 @@ class CreateHandPickedProductListView(CreateView):
             promotion.save()
             product_formset.save()
             self.object = promotion
-            messages.success(self.request, _('Product list promotion created'))
+            messages.success(self.request, _('Product list content block created'))
             return HttpResponseRedirect(self.get_success_url())
 
         ctx = self.get_context_data(product_formset=product_formset)
@@ -219,7 +219,7 @@ class UpdateView(PromotionMixin, generic.UpdateView):
         return super(UpdateView, self).post(request, *args, **kwargs)
 
     def get_success_url(self):
-        messages.info(self.request, _("Promotion updated successfully"))
+        messages.info(self.request, _("Content block updated successfully"))
         return reverse('dashboard:promotion-list')
 
     def add_to_page(self, promotion, request, *args, **kwargs):
@@ -247,7 +247,7 @@ class UpdateView(PromotionMixin, generic.UpdateView):
         else:
             page_url = link.page_url
             link.delete()
-            messages.success(request, _("Promotion removed from page '%s'") % page_url)
+            messages.success(request, _("Content block removed from page '%s'") % page_url)
         return HttpResponseRedirect(reverse('dashboard:promotion-update', kwargs=kwargs))
 
 
@@ -294,7 +294,6 @@ class UpdateHandPickedProductListView(UpdateView):
         return self.render_response(ctx)
 
 
-
 # ============
 # DELETE VIEWS
 # ============
@@ -304,7 +303,7 @@ class DeleteView(generic.DeleteView):
     template_name = 'dashboard/promotions/delete.html'
 
     def get_success_url(self):
-        messages.info(self.request, _("Promotion deleted successfully"))
+        messages.info(self.request, _("Content block deleted successfully"))
         return reverse('dashboard:promotion-list')
 
 

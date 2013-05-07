@@ -32,7 +32,7 @@ class IndexView(TemplateView):
         ``Queryset`` of site offers is filtered by end date greater then
         the current date.
         """
-        return ConditionalOffer.objects.filter(end_date__gt=now(),
+        return ConditionalOffer.objects.filter(end_datetime__gt=now(),
                                                offer_type=ConditionalOffer.SITE)
 
     def get_active_vouchers(self):
@@ -84,8 +84,8 @@ class IndexView(TemplateView):
         orders_last_day = Order.objects.filter(date_placed__gt=start_time)
 
         order_total_hourly = []
-        for hour in range(0, hours):
-            end_time = start_time + timedelta(hours=1)
+        for hour in range(0, hours, 2):
+            end_time = start_time + timedelta(hours=2)
             hourly_orders = orders_last_day.filter(date_placed__gt=start_time,
                                                    date_placed__lt=end_time)
             total = hourly_orders.aggregate(

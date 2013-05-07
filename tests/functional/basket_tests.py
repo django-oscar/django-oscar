@@ -7,7 +7,7 @@ from django.conf import settings
 from django.test import TestCase, Client
 from django.core.urlresolvers import reverse
 
-from oscar.test.helpers import create_product
+from oscar_testsupport.factories import create_product
 from oscar.apps.basket.models import Basket
 from oscar.apps.basket import reports
 
@@ -62,9 +62,6 @@ class BasketSummaryViewTests(TestCase):
 
     def test_shipping_method_in_context(self):
         self.assertTrue('shipping_method' in self.response.context)
-
-    def test_shipping_charge_in_context(self):
-        self.assertTrue('shipping_charge_incl_tax' in self.response.context)
 
     def test_order_total_in_context(self):
         self.assertTrue('order_total_incl_tax' in self.response.context)

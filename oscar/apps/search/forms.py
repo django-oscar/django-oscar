@@ -18,7 +18,12 @@ class MultiFacetedSearchForm(FacetedSearchForm):
     '''
     An extension of the regular faceted search form to alow for multiple facets
     '''
-    q = forms.CharField(required=False, label=_('Search'), widget=SearchInput({"placeholder": _('Search')}))
+    # Use a tabindex of 1 so that users can hit tab on any page and it will
+    # focus on the search widget.
+    q = forms.CharField(
+        required=False, label=_('Search'),
+        widget=SearchInput({"placeholder": _('Search'),
+                            "tabindex": "1"}))
 
     def search(self):
         '''

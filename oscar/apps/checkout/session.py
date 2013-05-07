@@ -46,14 +46,12 @@ class CheckoutSessionMixin(object):
         return None
 
     def get_shipping_method(self, basket=None):
-        method = self.checkout_session.shipping_method()
-        if method:
-            if not basket:
-                basket = self.request.basket
-            method.set_basket(basket)
-        else:
-            # We default to using free shipping
+        method = self.checkout_session.shipping_method(basket)
+
+        # We default to using free shipping
+        if not method:
             method = Free()
+
         return method
 
     def get_order_totals(self, basket=None, shipping_method=None, **kwargs):

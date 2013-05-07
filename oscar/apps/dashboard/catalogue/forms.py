@@ -1,11 +1,10 @@
 from django import forms
 from django.forms.models import inlineformset_factory, BaseInlineFormSet
 from django.db.models import get_model
-from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
-
 from treebeard.forms import MoveNodeForm
 
+from oscar.core.utils import slugify
 from oscar.forms.widgets import ImageInput
 
 Product = get_model('catalogue', 'Product')
@@ -15,6 +14,7 @@ Partner = get_model('partner', 'Partner')
 ProductAttributeValue = get_model('catalogue', 'ProductAttributeValue')
 ProductCategory = get_model('catalogue', 'ProductCategory')
 ProductImage = get_model('catalogue', 'ProductImage')
+ProductRecommendation = get_model('catalogue', 'ProductRecommendation')
 
 
 class CategoryForm(MoveNodeForm):
@@ -66,11 +66,6 @@ class ProductSearchForm(forms.Form):
 
 
 class StockRecordForm(forms.ModelForm):
-    partner = forms.ModelChoiceField(queryset=Partner.objects.all(),
-                                    required=False,
-                                    label=_("Partner"))
-    partner_sku = forms.CharField(required=False,
-                                  label=_("Partner SKU"))
 
     def __init__(self, product_class, *args, **kwargs):
         self.product_class = product_class
@@ -90,22 +85,33 @@ def _attr_text_field(attribute):
     return forms.CharField(label=attribute.name,
                            required=attribute.required)
 
+
+def _attr_textarea_field(attribute):
+    return forms.CharField(label=attribute.name,
+               widget=forms.Textarea(),
+                           required=attribute.required)
+
+
 def _attr_integer_field(attribute):
     return forms.IntegerField(label=attribute.name,
                               required=attribute.required)
+
 
 def _attr_boolean_field(attribute):
     return forms.BooleanField(label=attribute.name,
                               required=attribute.required)
 
+
 def _attr_float_field(attribute):
     return forms.FloatField(label=attribute.name,
                             required=attribute.required)
+
 
 def _attr_date_field(attribute):
     return forms.DateField(label=attribute.name,
                            required=attribute.required,
                            widget=forms.widgets.DateInput)
+
 
 def _attr_option_field(attribute):
     return forms.ModelChoiceField(
@@ -113,17 +119,20 @@ def _attr_option_field(attribute):
         required=attribute.required,
         queryset=attribute.option_group.options.all())
 
+
 def _attr_multi_option_field(attribute):
     return forms.ModelMultipleChoiceField(
         label=attribute.name,
         required=attribute.required,
         queryset=attribute.option_group.options.all())
 
+
 def _attr_entity_field(attribute):
     return forms.ModelChoiceField(
         label=attribute.name,
         required=attribute.required,
         queryset=attribute.entity_type.entities.all())
+
 
 def _attr_numeric_field(attribute):
     return forms.FloatField(label=attribute.name,
@@ -134,15 +143,15 @@ class ProductForm(forms.ModelForm):
 
     FIELD_FACTORIES = {
         "text": _attr_text_field,
-        "richtext": _attr_text_field,
+        "richtext": _attr_textarea_field,
         "integer": _attr_integer_field,
         "boolean": _attr_boolean_field,
         "float": _attr_float_field,
         "date": _attr_date_field,
         "option": _attr_option_field,
-        "multi_option" : _attr_multi_option_field,
+        "multi_option": _attr_multi_option_field,
         "entity": _attr_entity_field,
-        "numeric" : _attr_numeric_field,
+        "numeric": _attr_numeric_field,
     }
 
     def __init__(self, product_class, *args, **kwargs):
@@ -150,6 +159,16 @@ class ProductForm(forms.ModelForm):
         self.set_initial_attribute_values(kwargs)
         super(ProductForm, self).__init__(*args, **kwargs)
         self.add_attribute_fields()
+        related_products = self.fields.get('related_products', None)
+        if self.instance.pk is not None:
+            # prevent selecting itself as parent
+            parent = self.fields['parent']
+            parent.queryset = parent.queryset.exclude(pk=self.instance.pk)
+        if related_products is not None:
+            related_products.queryset = self.get_related_products_queryset()
+        if 'title' in self.fields:
+            self.fields['title'].widget = forms.TextInput(
+                attrs={'autocompete': 'off'})
 
     def set_initial_attribute_values(self, kwargs):
         if kwargs.get('instance', None) is None:
@@ -158,7 +177,8 @@ class ProductForm(forms.ModelForm):
             kwargs['initial'] = {}
         for attribute in self.product_class.attributes.all():
             try:
-                value = kwargs['instance'].attribute_values.get(attribute=attribute).value
+                value = kwargs['instance'].attribute_values.get(
+                    attribute=attribute).value
             except ProductAttributeValue.DoesNotExist:
                 pass
             else:
@@ -172,11 +192,14 @@ class ProductForm(forms.ModelForm):
     def get_attribute_field(self, attribute):
         return self.FIELD_FACTORIES[attribute.type](attribute)
 
+    def get_related_products_queryset(self):
+        return Product.browsable.order_by('title')
+
     class Meta:
         model = Product
         exclude = ('slug', 'status', 'score', 'product_class',
-                   'recommended_products', 'related_products',
-                   'product_options', 'attributes', 'categories')
+                   'recommended_products', 'product_options',
+                   'attributes', 'categories')
 
     def save(self):
         object = super(ProductForm, self).save(False)
@@ -202,9 +225,9 @@ class ProductForm(forms.ModelForm):
             raise forms.ValidationError(_("This field is required"))
         elif 'parent' in data and data['parent'] is None and not data['title']:
             raise forms.ValidationError(_("Parent products must have a title"))
-        # calling the clean() method of BaseForm here is required to apply checks
-        # for 'unique' field. This prevents e.g. the UPC field from raising 
-        # a DatabaseError.
+        # Calling the clean() method of BaseForm here is required to apply
+        # checks for 'unique' field. This prevents e.g. the UPC field from
+        # raising a DatabaseError.
         return super(ProductForm, self).clean()
 
 
@@ -218,7 +241,7 @@ class ProductCategoryForm(forms.ModelForm):
         model = ProductCategory
 
 
-class ProductCategoryFormSet(BaseInlineFormSet):
+class BaseProductCategoryFormSet(BaseInlineFormSet):
 
     def clean(self):
         if self.instance.is_top_level and self.get_num_categories() == 0:
@@ -239,10 +262,10 @@ class ProductCategoryFormSet(BaseInlineFormSet):
         return num_categories
 
 
-ProductCategoryFormSet = inlineformset_factory(Product, ProductCategory,
-                                               form=ProductCategoryForm,
-                                               formset=ProductCategoryFormSet,
-                                               fields=('category',), extra=1)
+ProductCategoryFormSet = inlineformset_factory(
+    Product, ProductCategory, form=ProductCategoryForm,
+    formset=BaseProductCategoryFormSet, fields=('category',), extra=1,
+    can_delete=False)
 
 
 class ProductImageForm(forms.ModelForm):
@@ -257,8 +280,8 @@ class ProductImageForm(forms.ModelForm):
         }
 
     def save(self, *args, **kwargs):
-        # We infer the display order of the image based on the order of the image fields
-        # within the formset.
+        # We infer the display order of the image based on the order of the
+        # image fields within the formset.
         kwargs['commit'] = False
         obj = super(ProductImageForm, self).save(*args, **kwargs)
         obj.display_order = self.get_display_order()
@@ -269,7 +292,9 @@ class ProductImageForm(forms.ModelForm):
         return self.prefix.split('-').pop()
 
 
+ProductImageFormSet = inlineformset_factory(
+    Product, ProductImage, form=ProductImageForm, extra=2)
 
-ProductImageFormSet = inlineformset_factory(Product, ProductImage,
-                                            form=ProductImageForm,
-                                            extra=2)
+
+ProductRecommendationFormSet = inlineformset_factory(
+    Product, ProductRecommendation, extra=5, fk_name="primary")

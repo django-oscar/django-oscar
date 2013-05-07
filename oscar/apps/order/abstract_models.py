@@ -5,7 +5,7 @@ import hashlib
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
-from django.template.defaultfilters import slugify
+from oscar.core.utils import slugify
 from django.utils.translation import ugettext_lazy as _
 from django.db.models import Sum
 from django.conf import settings
@@ -35,14 +35,20 @@ class AbstractOrder(models.Model):
     total_excl_tax = models.DecimalField(_("Order total (excl. tax)"), decimal_places=2, max_digits=12)
 
     # Shipping charges
-    shipping_incl_tax = models.DecimalField(_("Shipping charge (inc. tax)"), decimal_places=2, max_digits=12, default=0)
-    shipping_excl_tax = models.DecimalField(_("Shipping charge (excl. tax)"), decimal_places=2, max_digits=12, default=0)
+    shipping_incl_tax = models.DecimalField(
+        _("Shipping charge (inc. tax)"), decimal_places=2, max_digits=12,
+        default=0)
+    shipping_excl_tax = models.DecimalField(
+        _("Shipping charge (excl. tax)"), decimal_places=2, max_digits=12,
+        default=0)
 
     # Not all lines are actually shipped (such as downloads), hence shipping address
     # is not mandatory.
-    shipping_address = models.ForeignKey('order.ShippingAddress', null=True, blank=True,
+    shipping_address = models.ForeignKey(
+        'order.ShippingAddress', null=True, blank=True,
         verbose_name=_("Shipping Address"))
-    shipping_method = models.CharField(_("Shipping method"), max_length=128, null=True, blank=True)
+    shipping_method = models.CharField(
+        _("Shipping method"), max_length=128, null=True, blank=True)
 
     # Use this field to indicate that an order is on hold / awaiting payment
     status = models.CharField(_("Status"), max_length=100, null=True, blank=True)
@@ -85,6 +91,26 @@ class AbstractOrder(models.Model):
         return self.user is None
 
     @property
+    def basket_total_before_discounts_incl_tax(self):
+        """
+        Return basket total including tax but before discounts are applied
+        """
+        total = D('0.00')
+        for line in self.lines.all():
+            total += line.line_price_before_discounts_incl_tax
+        return total
+
+    @property
+    def basket_total_before_discounts_excl_tax(self):
+        """
+        Return basket total excluding tax but before discounts are applied
+        """
+        total = D('0.00')
+        for line in self.lines.all():
+            total += line.line_price_before_discounts_excl_tax
+        return total
+
+    @property
     def basket_total_incl_tax(self):
         """
         Return basket total including tax
@@ -100,19 +126,13 @@ class AbstractOrder(models.Model):
 
     @property
     def total_before_discounts_incl_tax(self):
-        total = D('0.00')
-        for line in self.lines.all():
-            total += line.line_price_before_discounts_incl_tax
-        total += self.shipping_incl_tax
-        return total
+        return (self.basket_total_before_discounts_incl_tax +
+                self.shipping_incl_tax)
 
     @property
     def total_before_discounts_excl_tax(self):
-        total = D('0.00')
-        for line in self.lines.all():
-            total += line.line_price_before_discounts_excl_tax
-        total += self.shipping_excl_tax
-        return total
+        return (self.basket_total_before_discounts_excl_tax +
+                self.shipping_excl_tax)
 
     @property
     def total_discount_incl_tax(self):
@@ -170,6 +190,19 @@ class AbstractOrder(models.Model):
                 status = event_name
         return status
 
+    @property
+    def has_shipping_discounts(self):
+        return len(self.shipping_discounts) > 0
+
+    @property
+    def shipping_before_discounts_incl_tax(self):
+        # We can construct what shipping would have been before discounts by
+        # adding the discounts back onto the final shipping charge.
+        total = D('0.00')
+        for discount in self.shipping_discounts:
+            total += discount.amount
+        return self.shipping_incl_tax + total
+
     def _is_event_complete(self, event_quantites):
         # Form map of line to quantity
         map = {}
@@ -192,7 +225,6 @@ class AbstractOrder(models.Model):
         verbose_name = _("Order")
         verbose_name_plural = _("Orders")
 
-
     def __unicode__(self):
         return u"#%s" % (self.number,)
 
@@ -204,6 +236,23 @@ class AbstractOrder(models.Model):
         if not self.user:
             return self.guest_email
         return self.user.email
+
+    @property
+    def basket_discounts(self):
+        # This includes both offer- and voucher- discounts.  For orders we
+        # don't need to treat them differently like we do for baskets.
+        return self.discounts.filter(
+            category=AbstractOrderDiscount.BASKET)
+
+    @property
+    def shipping_discounts(self):
+        return self.discounts.filter(
+            category=AbstractOrderDiscount.SHIPPING)
+
+    @property
+    def post_order_actions(self):
+        return self.discounts.filter(
+            category=AbstractOrderDiscount.DEFERRED)
 
 
 class AbstractOrderNote(models.Model):
@@ -250,8 +299,11 @@ class AbstractCommunicationEvent(models.Model):
     An order-level event involving a communication to the customer, such
     as an confirmation email being sent.
     """
-    order = models.ForeignKey('order.Order', related_name="communication_events", verbose_name=_("Order"))
-    event_type = models.ForeignKey('customer.CommunicationEventType', verbose_name=_("Event Type"))
+    order = models.ForeignKey(
+        'order.Order', related_name="communication_events",
+        verbose_name=_("Order"))
+    event_type = models.ForeignKey(
+        'customer.CommunicationEventType', verbose_name=_("Event Type"))
     date = models.DateTimeField(_("Date"), auto_now_add=True)
 
     class Meta:
@@ -409,13 +461,37 @@ class AbstractLine(models.Model):
         if not quantity:
             quantity = self.quantity
         for name, event_dict in self.shipping_event_breakdown().items():
-            if name == event_type.name and event_dict['quantity'] == self.quantity:
+            if name == event_type.name and event_dict['quantity'] == quantity:
                 return True
         return False
 
     @property
     def is_product_deleted(self):
-        return self.product == None
+        return self.product is None
+
+    def is_available_to_reorder(self, basket, user):
+        """
+        Test if this line can be re-ordered by the passed user, using the
+        passed basket.
+        """
+        if not self.product:
+            return False, _("'%(title)s' is no longer available "
+                            "for purchase") % {'title': self.title}
+
+        Line = models.get_model('basket', 'Line')
+        try:
+            basket_line = basket.lines.get(product=self.product)
+        except Line.DoesNotExist:
+            desired_qty = self.quantity
+        else:
+            desired_qty = basket_line.quantity + self.quantity
+
+        is_available, reason = self.product.is_purchase_permitted(
+            user=user,
+            quantity=desired_qty)
+        if not is_available:
+            return False, reason
+        return True, None
 
     def shipping_event_breakdown(self):
         """
@@ -496,7 +572,9 @@ class AbstractLinePrice(models.Model):
 
 class AbstractPaymentEventType(models.Model):
     """
-    Payment events are things like 'Paid', 'Failed', 'Refunded'
+    Payment event types are things like 'Paid', 'Failed', 'Refunded'.
+
+    These are effectively the transaction types.
     """
     name = models.CharField(_("Name"), max_length=128, unique=True)
     code = models.SlugField(_("Code"), max_length=128, unique=True)
@@ -519,13 +597,20 @@ class AbstractPaymentEventType(models.Model):
 
 class AbstractPaymentEvent(models.Model):
     """
-    An event is something which happens to a line such as
-    payment being taken for 2 items, or 1 item being dispatched.
+    A payment event for an order
+
+    For example:
+
+    * All lines have been paid for
+    * 2 lines have been refunded
     """
-    order = models.ForeignKey('order.Order', related_name='payment_events', verbose_name=_("Order"))
+    order = models.ForeignKey(
+        'order.Order', related_name='payment_events', verbose_name=_("Order"))
     amount = models.DecimalField(_("Amount"), decimal_places=2, max_digits=12)
-    lines = models.ManyToManyField('order.Line', through='PaymentEventQuantity', verbose_name=_("Lines"))
-    event_type = models.ForeignKey('order.PaymentEventType', verbose_name=_("Event Type"))
+    lines = models.ManyToManyField(
+        'order.Line', through='PaymentEventQuantity', verbose_name=_("Lines"))
+    event_type = models.ForeignKey(
+        'order.PaymentEventType', verbose_name=_("Event Type"))
     date = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
     class Meta:
@@ -667,15 +752,55 @@ class AbstractOrderDiscount(models.Model):
     """
     A discount against an order.
 
-    Normally only used for display purposes so an order can be listed with discounts displayed
-    separately even though in reality, the discounts are applied at the line level.
+    Normally only used for display purposes so an order can be listed with
+    discounts displayed separately even though in reality, the discounts are
+    applied at the line level.
+
+    This has evolved to be a slightly misleading class name as this really
+    track benefit applications which aren't necessarily discounts.
     """
-    order = models.ForeignKey('order.Order', related_name="discounts", verbose_name=_("Order"))
-    offer_id = models.PositiveIntegerField(_("Offer ID"), blank=True, null=True)
-    offer_name = models.CharField(_("Offer name"), max_length=128, db_index=True, null=True)
-    voucher_id = models.PositiveIntegerField(_("Voucher ID"), blank=True, null=True)
-    voucher_code = models.CharField(_("Code"), max_length=128, db_index=True, null=True)
-    amount = models.DecimalField(_("Amount"), decimal_places=2, max_digits=12, default=0)
+    order = models.ForeignKey(
+        'order.Order', related_name="discounts", verbose_name=_("Order"))
+
+    # We need to distinguish between basket discounts, shipping discounts and
+    # 'deferred' discounts.
+    BASKET, SHIPPING, DEFERRED = "Basket", "Shipping", "Deferred"
+    CATEGORY_CHOICES = (
+        (BASKET, _(BASKET)),
+        (SHIPPING, _(SHIPPING)),
+        (DEFERRED, _(DEFERRED)),
+    )
+    category = models.CharField(
+        _("Discount category"), default=BASKET, max_length=64,
+        choices=CATEGORY_CHOICES)
+
+    offer_id = models.PositiveIntegerField(
+        _("Offer ID"), blank=True, null=True)
+    offer_name = models.CharField(
+        _("Offer name"), max_length=128, db_index=True, null=True)
+    voucher_id = models.PositiveIntegerField(
+        _("Voucher ID"), blank=True, null=True)
+    voucher_code = models.CharField(
+        _("Code"), max_length=128, db_index=True, null=True)
+    frequency = models.PositiveIntegerField(_("Frequency"), null=True)
+    amount = models.DecimalField(
+        _("Amount"), decimal_places=2, max_digits=12, default=0)
+
+    # Post-order offer applications can return a message to indicate what
+    # action was taken after the order was placed.
+    message = models.TextField(blank=True, null=True)
+
+    @property
+    def is_basket_discount(self):
+        return self.category == self.BASKET
+
+    @property
+    def is_shipping_discount(self):
+        return self.category == self.SHIPPING
+
+    @property
+    def is_post_order_action(self):
+        return self.category == self.DEFERRED
 
     class Meta:
         abstract = True
@@ -696,7 +821,8 @@ class AbstractOrderDiscount(models.Model):
         super(AbstractOrderDiscount, self).save(**kwargs)
 
     def __unicode__(self):
-        return _("Discount of %(amount)r from order %(order)s") % {'amount': self.amount, 'order': self.order}
+        return _("Discount of %(amount)r from order %(order)s") % {
+            'amount': self.amount, 'order': self.order}
 
     @property
     def offer(self):

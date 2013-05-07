@@ -1,12 +1,16 @@
 import os
-from django.views.generic import (ListView, DeleteView, CreateView, UpdateView)
-from django.utils.translation import ungettext, ugettext_lazy as _
-from django.db.models.loading import get_model
-from django.core.urlresolvers import reverse
-from django.contrib import messages
-from django.shortcuts import get_object_or_404
-from django.http import HttpResponseRedirect
+
 from django.conf import settings
+from django.contrib import messages
+from django.core import exceptions
+from django.core.urlresolvers import reverse
+from django.db.models.loading import get_model
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
+from django.template.loader import render_to_string
+from django.utils.translation import ungettext, ugettext_lazy as _
+from django.views.generic import (ListView, DeleteView, CreateView, UpdateView)
+
 
 from oscar.views.generic import BulkEditMixin
 from oscar.core.loading import get_classes
@@ -15,7 +19,6 @@ Range = get_model('offer', 'Range')
 Product = get_model('catalogue', 'Product')
 RangeForm, RangeProductForm = get_classes('dashboard.ranges.forms',
                                           ['RangeForm', 'RangeProductForm'])
-
 RangeProductFileUpload = get_model('ranges', 'RangeProductFileUpload')
 
 
@@ -32,9 +35,13 @@ class RangeCreateView(CreateView):
 
     def get_success_url(self):
         if 'action' in self.request.POST:
-            return reverse('dashboard:range-products', kwargs={'pk': self.object.id})
+            return reverse('dashboard:range-products',
+                           kwargs={'pk': self.object.id})
         else:
-            messages.success(self.request, _("Range created"))
+            msg = render_to_string(
+                'dashboard/ranges/messages/range_saved.html',
+                {'range': self.object})
+            messages.success(self.request, msg, extra_tags='safe noicon')
             return reverse('dashboard:range-list')
 
     def get_context_data(self, **kwargs):
@@ -48,16 +55,27 @@ class RangeUpdateView(UpdateView):
     template_name = 'dashboard/ranges/range_form.html'
     form_class = RangeForm
 
+    def get_object(self):
+        obj = super(RangeUpdateView, self).get_object()
+        if not obj.is_editable:
+            raise exceptions.PermissionDenied("Not allowed")
+        return obj
+
     def get_success_url(self):
         if 'action' in self.request.POST:
-            return reverse('dashboard:range-products', kwargs={'pk': self.object.id})
+            return reverse('dashboard:range-products',
+                           kwargs={'pk': self.object.id})
         else:
-            messages.success(self.request, _("Range updated"))
+            msg = render_to_string(
+                'dashboard/ranges/messages/range_saved.html',
+                {'range': self.object})
+            messages.success(self.request, msg, extra_tags='safe noicon')
             return reverse('dashboard:range-list')
 
     def get_context_data(self, **kwargs):
         ctx = super(RangeUpdateView, self).get_context_data(**kwargs)
-        ctx['title'] = _("Update range")
+        ctx['range'] = self.object
+        ctx['title'] = self.object.name
         return ctx
 
 
@@ -114,7 +132,8 @@ class RangeProductListView(ListView, BulkEditMixin):
         range = self.get_range()
         form = self.form_class(range, request.POST, request.FILES)
         if not form.is_valid():
-            ctx = self.get_context_data(form=form, object_list=self.object_list)
+            ctx = self.get_context_data(form=form,
+                                        object_list=self.object_list)
             return self.render_to_response(ctx)
 
         self.handle_query_products(request, range, form)
@@ -146,23 +165,17 @@ class RangeProductListView(ListView, BulkEditMixin):
 
     def handle_file_products(self, request, range, form):
         if not 'file_upload' in request.FILES:
-            return 
+            return
         upload = self.create_upload_object(request, range)
         upload.process()
         if not upload.was_processing_successful():
             messages.error(request, upload.error_message)
         else:
-            msg = _("File processed: %(new_skus)d products added, "
-                    "%(dupe_skus)d duplicate identifiers, "
-                    "%(unknown_skus)d identifiers were not found") % {
-                        'new_skus': upload.num_new_skus,
-                        'dupe_skus': upload.num_duplicate_skus,
-                        'unknown_skus': upload.num_unknown_skus
-                    }
-            if upload.num_new_skus:
-                messages.success(request, msg)
-            else:
-                messages.warning(request, msg)
+            msg = render_to_string(
+                'dashboard/ranges/messages/range_products_saved.html',
+                {'range': range,
+                 'upload': upload})
+            messages.success(request, msg, extra_tags='safe noicon block')
         upload.delete_file()
 
     def create_upload_object(self, request, range):

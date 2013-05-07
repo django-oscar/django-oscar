@@ -1,148 +1,104 @@
-import datetime
-
 from django.core.urlresolvers import reverse
-from django.test import TestCase
+from oscar_testsupport import testcases, factories
 
-from oscar.test import ClientTestCase
-from oscar.apps.offer.models import Range, ConditionalOffer, Condition, Benefit
-from oscar.apps.dashboard.offers.forms import MetaDataForm
+from oscar.apps.offer import models
 
 
-class ViewTests(ClientTestCase):
-    is_staff = True
-
-    def test_pages_exist(self):
-        urls = [reverse('dashboard:offer-list'),
-                reverse('dashboard:offer-metadata'),
-               ]
-        for url in urls:
-            self.assertIsOk(self.client.get(url))
-
-
-class MetadataFormTests(TestCase):
-
-    def test_dates_must_be_cronological(self):
-        start_date = datetime.date(2012, 1, 1)
-        end_date = datetime.date(2011, 1, 1)
-        post = {'name': 'dummy',
-                'description': 'dummy',
-                'start_date': start_date,
-                'end_date': end_date,}
-        form = MetaDataForm(post)
-        self.assertFalse(form.is_valid())
-
-
-class OfferCreationTests(ClientTestCase):
+class TestAnAdmin(testcases.WebTestCase):
+    # New version of offer tests buy using WebTest
     is_staff = True
 
     def setUp(self):
-        super(OfferCreationTests, self).setUp()
-        self.range = Range.objects.create(name='All products',
-                                          includes_all_products=True)
+        super(TestAnAdmin, self).setUp()
+        self.range = models.Range.objects.create(
+            name="All products", includes_all_products=True)
 
-    def tearDown(self):
-        ConditionalOffer.objects.all().delete()
+    def test_can_create_an_offer(self):
+        list_page = self.get(reverse('dashboard:offer-list'))
 
-    def test_happy_path(self):
-        # Metadata
-        response = self.client.post(reverse('dashboard:offer-metadata'),
-                                            {'name': 'my offer',
-                                             'description': 'offers are nice',
-                                             'start_date': '2012-01-01',
-                                             'end_date': '2013-01-01'})
-        self.assertIsRedirect(response, reverse('dashboard:offer-condition'))
+        metadata_page = list_page.click('Create new offer')
+        metadata_form = metadata_page.form
+        metadata_form['name'] = "Test offer"
 
-        # Condition
-        response = self.client.post(reverse('dashboard:offer-condition'),
-                                            {'range': self.range.id,
-                                             'type': 'Count',
-                                             'value': '3',})
-        self.assertIsRedirect(response, reverse('dashboard:offer-benefit'))
+        benefit_page = metadata_form.submit().follow()
+        benefit_form = benefit_page.form
+        benefit_form['range'] = self.range.id
+        benefit_form['type'] = "Percentage"
+        benefit_form['value'] = "25"
 
-        # Benefit
-        response = self.client.post(reverse('dashboard:offer-benefit'),
-                                            {'range': self.range.id,
-                                             'type': 'Multibuy',
-                                             'value': '1',})
-        self.assertIsRedirect(response, reverse('dashboard:offer-preview'))
+        condition_page = benefit_form.submit().follow()
+        condition_form = condition_page.form
+        condition_form['range'] = self.range.id
+        condition_form['type'] = "Count"
+        condition_form['value'] = "3"
 
-        # Preview
-        response = self.client.post(reverse('dashboard:offer-preview'), {})
-        self.assertIsRedirect(response, reverse('dashboard:offer-list'))
+        restrictions_page = condition_form.submit().follow()
+        restrictions_page.form.submit()
 
-        offers = ConditionalOffer.objects.all()
+        offers = models.ConditionalOffer.objects.all()
         self.assertEqual(1, len(offers))
         offer = offers[0]
-        self.assertEqual('my offer', offer.name)
+        self.assertEqual("Test offer", offer.name)
+        self.assertEqual(3, offer.condition.value)
+        self.assertEqual(25, offer.benefit.value)
 
-    def test_cannot_jump_to_condition_step(self):
-        response = self.client.get(reverse('dashboard:offer-condition'))
-        self.assertIsRedirect(response)
+    def test_can_update_an_existing_offer(self):
+        factories.create_offer(name="Offer A")
 
+        list_page = self.get(reverse('dashboard:offer-list'))
+        detail_page = list_page.click('Offer A')
 
-class OfferUpdatingTests(ClientTestCase):
-    is_staff = True
+        metadata_page = detail_page.click(linkid="edit_metadata")
+        metadata_form = metadata_page.form
+        metadata_form['name'] = "Offer A+"
 
-    def setUp(self):
-        super(OfferUpdatingTests, self).setUp()
-        self.range = Range.objects.create(name='All products',
-                                          includes_all_products=True)
-        condition = Condition.objects.create(range=self.range,
-                                             type='Count',
-                                             value=3)
-        benefit = Benefit.objects.create(range=self.range,
-                                         type='Multibuy',
-                                         value=1)
+        benefit_page = metadata_form.submit().follow()
+        benefit_form = benefit_page.form
 
-        start_date = datetime.date(2012, 1, 1)
-        end_date = datetime.date(2013, 1, 1)
-        self.offer = ConditionalOffer.objects.create(name='my offer',
-                                                     description='something',
-                                                     start_date=start_date,
-                                                     end_date=end_date,
-                                                     condition=condition,
-                                                     benefit=benefit)
+        condition_page = benefit_form.submit().follow()
+        condition_form = condition_page.form
 
-    def tearDown(self):
-        ConditionalOffer.objects.all().delete()
+        restrictions_page = condition_form.submit().follow()
+        restrictions_page.form.submit()
 
-    def test_happy_path(self):
-        metadata_url = reverse('dashboard:offer-metadata', kwargs={'pk': self.offer.id})
-        response = self.client.get(metadata_url)
-        self.assertTrue('my offer' in response.content)
+        models.ConditionalOffer.objects.get(name="Offer A+")
 
-        response = self.client.post(metadata_url,
-                                    {'name': 'my new offer',
-                                     'description': 'something',
-                                     'start_date': '2012-01-01',
-                                     'end_date': '2013-01-01'})
-        self.assertIsRedirect(response)
+    def test_can_jump_to_intermediate_step_for_existing_offer(self):
+        offer = factories.create_offer()
+        url = reverse('dashboard:offer-condition',
+                      kwargs={'pk': offer.id})
+        self.assertEqual(200, self.get(url).status_code)
 
-        condition_url = reverse('dashboard:offer-condition', kwargs={'pk': self.offer.id})
-        response = self.client.post(condition_url,
-                                    {'range': self.range.id,
-                                     'type': 'Count',
-                                     'value': '3',})
-        self.assertIsRedirect(response)
+    def test_cannot_jump_to_intermediate_step(self):
+        for url_name in ('dashboard:offer-condition',
+                         'dashboard:offer-benefit',
+                         'dashboard:offer-restrictions'):
+            response = self.get(reverse(url_name))
+            self.assertEqual(302, response.status_code)
 
-        benefit_url = reverse('dashboard:offer-benefit', kwargs={'pk': self.offer.id})
-        response = self.client.post(benefit_url,
-                                    {'range': self.range.id,
-                                     'type': 'Multibuy',
-                                     'value': '1',})
-        self.assertIsRedirect(response)
+    def test_can_suspend_an_offer(self):
+        # Create an offer
+        offer = factories.create_offer()
+        self.assertFalse(offer.is_suspended)
 
-        preview_url = reverse('dashboard:offer-preview', kwargs={'pk': self.offer.id})
-        response = self.client.get(preview_url)
-        self.assertTrue('my new offer' in response.content)
+        detail_page = self.get(reverse('dashboard:offer-detail',
+                                       kwargs={'pk': offer.pk}))
+        form = detail_page.forms['status_form']
+        form.submit('suspend')
 
-        response = self.client.post(preview_url)
-        self.assertIsRedirect(response)
+        reloaded_offer = models.ConditionalOffer.objects.get(pk=offer.pk)
+        self.assertTrue(reloaded_offer.is_suspended)
 
-        offer = ConditionalOffer.objects.get(id=self.offer.id)
-        self.assertEqual('my new offer', offer.name)
+    def test_can_reinstate_a_suspended_offer(self):
+        # Create a suspended offer
+        offer = factories.create_offer()
+        offer.suspend()
+        self.assertTrue(offer.is_suspended)
 
-    def test_can_jump_to_condition_step(self):
-        response = self.client.get(reverse('dashboard:offer-condition',
-                                           kwargs={'pk': self.offer.id}))
-        self.assertIsOk(response)
+        detail_page = self.get(reverse('dashboard:offer-detail',
+                                       kwargs={'pk': offer.pk}))
+        form = detail_page.forms['status_form']
+        form.submit('unsuspend')
+
+        reloaded_offer = models.ConditionalOffer.objects.get(pk=offer.pk)
+        self.assertFalse(reloaded_offer.is_suspended)

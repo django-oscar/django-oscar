@@ -4,8 +4,8 @@ from decimal import Decimal as D
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 
-from oscar.test.helpers import create_product, create_order
-from oscar.test import ClientTestCase, WebTestCase
+from oscar_testsupport.factories import create_product, create_order
+from oscar_testsupport.testcases import ClientTestCase, WebTestCase
 from oscar.apps.basket.models import Basket
 
 
@@ -25,6 +25,16 @@ class TestASignedInUser(WebTestCase):
                                 user=self.user)
         self.assertEqual(200, response.status_code)
         self.assertTrue(self.email in response.content)
+
+    def test_can_update_their_name(self):
+        profile_form_page = self.app.get(reverse('customer:profile-update'),
+                                user=self.user)
+        self.assertEqual(200, profile_form_page.status_code)
+        form = profile_form_page.forms['profile_form']
+        form['first_name'] = 'Barry'
+        form['last_name'] = 'Chuckle'
+        response = form.submit()
+        self.assertRedirects(response, reverse('customer:summary'))
 
     def test_can_update_their_email_address_and_name(self):
         profile_form_page = self.app.get(reverse('customer:profile-update'),
@@ -68,15 +78,17 @@ class TestASignedInUser(WebTestCase):
                             'A user with this email address already exists')
 
     def test_can_change_their_password(self):
+        new_password = 'bubblesgopop'
         password_form_page = self.app.get(reverse('customer:change-password'),
                                           user=self.user)
         self.assertEqual(200, password_form_page.status_code)
         form = password_form_page.forms['change_password_form']
         form['old_password'] = self.password
-        form['new_password1'] = 'bubblesgopop'
-        form['new_password2'] = 'bubblesgopop'
+        form['new_password1'] = form['new_password2'] = new_password
         response = form.submit()
         self.assertRedirects(response, reverse('customer:summary'))
+        updated_user = User.objects.get(pk=self.user.pk)
+        self.assertTrue(updated_user.check_password(new_password))
 
     def test_can_reorder_a_previous_order(self):
         order_history_page = self.app.get(reverse('customer:order-list'),

@@ -22,11 +22,9 @@
 {% trans 'Order history' %} | {{ block.super }}
 {% endblock %}
 
-{% block header %}
-<div class="page-header">
-    <h2>{% trans 'Account' %}</h2>
-</div>
-{% endblock header %}
+{% block headertext %}
+{% trans 'Account' %}
+{% endblock %}
 
 {% block subnavigation %}
     {% include "partials/nav_profile.html" with order_history="active" %}
@@ -77,9 +75,7 @@
 <p>{% trans 'No orders found' %}</p>
 {% endif %}
 
-{% if page_obj %}
 {% include "partials/pagination.html" %}
-{% endif %}
 
 {% endblock content %}
 

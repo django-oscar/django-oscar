@@ -1,0 +1,14 @@
+{% extends "error.html" %}
+{% load i18n %}
+
+{% block title %}
+{% trans 'Permission denied!' %} | {{ block.super }}
+{% endblock %}
+
+{% block error_heading %}
+{% trans "Permission denied!" %}
+{% endblock %}
+
+{% block error_message %}
+<p>{% trans "We're sorry but you are not permitted to access this page." %}</p>
+{% endblock %}

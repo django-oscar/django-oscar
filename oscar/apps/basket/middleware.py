@@ -36,6 +36,10 @@ class BasketMiddleware(object):
                 for other_basket in old_baskets[1:]:
                     self.merge_baskets(basket, other_basket)
 
+            # Assign user onto basket to prevent further SQL queries when
+            # basket.owner is accessed.
+            basket.owner = request.user
+
             if cookie_basket:
                 self.merge_baskets(basket, cookie_basket)
                 request.cookies_to_delete.append(
@@ -65,9 +69,9 @@ class BasketMiddleware(object):
 
         # If a basket has had products added to it, but the user is anonymous
         # then we need to assign it to a cookie
-        if hasattr(request, 'basket') and request.basket.id > 0 \
-            and not request.user.is_authenticated() \
-            and settings.OSCAR_BASKET_COOKIE_OPEN not in request.COOKIES:
+        if (hasattr(request, 'basket') and request.basket.id > 0
+            and not request.user.is_authenticated()
+            and settings.OSCAR_BASKET_COOKIE_OPEN not in request.COOKIES):
             cookie = "%s_%s" % (
                 request.basket.id, self.get_basket_hash(request.basket.id))
             response.set_cookie(settings.OSCAR_BASKET_COOKIE_OPEN,

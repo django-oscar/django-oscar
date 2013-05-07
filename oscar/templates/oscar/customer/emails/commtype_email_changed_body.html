@@ -1,0 +1,18 @@
+{% extends "customer/emails/base.html" %}
+{% load i18n %}
+
+{% block body %}{% autoescape off %}
+<p>
+    {% blocktrans with email=new_email %}
+    You're receiving this email because your email address has been changed to <strong>{{ email }}</strong>.
+    {% endblocktrans %}
+</p>
+
+<p>
+{% trans "If it wasn't you who changed it, please reset your password immediately and correct your email address:" %}
+http://{{ site.domain }}{{ reset_url }}
+</p>
+
+<p>{% trans "If it was you who changed the email address, you can ignore this email." %}</p>
+
+{% endautoescape %}{% endblock %}

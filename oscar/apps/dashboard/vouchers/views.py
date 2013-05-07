@@ -1,13 +1,14 @@
 import datetime
 
-from django.views.generic import (ListView, FormView, DetailView, DeleteView)
-from django.utils.translation import ugettext_lazy as _
-from django.db.models.loading import get_model
-from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.core.urlresolvers import reverse
+from django.db.models.loading import get_model
+from django.http import HttpResponseRedirect
+from django.utils.translation import ugettext_lazy as _
+from django.views.generic import (ListView, FormView, DetailView, DeleteView)
 
 from oscar.core.loading import get_class
+
 VoucherForm = get_class('dashboard.vouchers.forms', 'VoucherForm')
 VoucherSearchForm = get_class('dashboard.vouchers.forms', 'VoucherSearchForm')
 Voucher = get_model('voucher', 'Voucher')
@@ -48,7 +49,7 @@ class VoucherListView(ListView):
             self.description_ctx['code_filter'] = _("with code '%s'") % data['code']
         if data['is_active']:
             today = datetime.date.today()
-            qs = qs.filter(start_date__lte=today, end_date__gt=today)
+            qs = qs.filter(start_date__lte=today, end_date__gte=today)
             self.description_ctx['main_filter'] = _('Active vouchers')
 
         return qs

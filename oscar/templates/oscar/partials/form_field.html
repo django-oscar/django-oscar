@@ -6,7 +6,7 @@ checkboxes differently to other widgets.
 {% endcomment %}
 {% annotate_form_field field %}
 
-<div class="control-group {% for error in field.errors %}error{% endfor %}">
+<div class="control-group {% if field.errors %}error{% endif %}">
     {% if field.is_hidden %}
         {{ field }}
     {% else %}

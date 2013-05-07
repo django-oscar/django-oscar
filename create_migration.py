@@ -20,5 +20,10 @@ if __name__ == '__main__':
                       action='store_true', default=False)
     parser.add_option('-a', '--auto', dest='auto',
                       action='store_true', default=False)
+    parser.add_option('-e', '--empty', dest='empty',
+                      action='store_true', default=False)
+    parser.add_option('-n', '--name', dest='name', default='')
     (options, args) = parser.parse_args()
-    create_migration(args[0], initial=options.initial, auto=options.auto)
+    create_migration(args[0], initial=options.initial,
+                     auto=options.auto, empty=options.empty,
+                     name=options.name)

@@ -1,0 +1,3 @@
+[run]
+source = oscar
+omit = *migrations*

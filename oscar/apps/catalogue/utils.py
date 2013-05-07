@@ -4,7 +4,7 @@ import tarfile
 import zipfile
 import tempfile
 import shutil
-import Image as PImage
+from PIL import Image
 
 from django.core.files import File
 from django.core.exceptions import FieldError
@@ -21,7 +21,7 @@ ProductImage = get_model('catalogue', 'productimage')
 
 class Importer(object):
 
-    allowed_extensions = ['.jpeg','.jpg','.gif','.png']
+    allowed_extensions = ['.jpeg', '.jpg', '.gif', '.png']
 
     def __init__(self, logger, field):
         self.logger = logger
@@ -106,13 +106,13 @@ class Importer(object):
 
     def _process_image(self, dirname, filename, lookup_value):
         file_path = os.path.join(dirname, filename)
-        trial_image = PImage.open(file_path)
+        trial_image = Image.open(file_path)
         trial_image.verify()
 
         kwargs = {self._field: lookup_value}
         item = Product._default_manager.get(**kwargs)
 
-        new_data = open(file_path).read()
+        new_data = open(file_path, 'rb').read()
         next_index = 0
         for existing in item.images.all():
             next_index = existing.display_order + 1
@@ -123,7 +123,7 @@ class Importer(object):
                 # File probably doesn't exist
                 existing.delete()
 
-        new_file = File(open(file_path))
+        new_file = File(open(file_path, 'rb'))
         im = ProductImage(product=item, display_order=next_index)
         im.original.save(filename, new_file, save=False)
         im.save()
