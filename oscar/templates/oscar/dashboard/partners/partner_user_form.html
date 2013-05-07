@@ -5,7 +5,7 @@
 {% block body_class %}create-page partner{% endblock %}
 
 {% block title %}
-    {% trans "Add user" %} | {{ partner.name }} {% trans "Partner management" %} | {{ block.super }}
+    {% trans "Update user" %} | {{ partner.name }} {% trans "Partner management" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -18,15 +18,11 @@
             <a href="{% url dashboard:partner-list %}">{% trans "Partner management" %}</a>
             <span class="divider">/</span>
         </li>
-        <li>
-            <a href="{% url dashboard:partner-update partner.id %}">{{ partner.name }}</a>
-            <span class="divider">/</span>
-        </li>
-        <li class="active">{% trans "Add user" %}</li>
+        <li class="active">{% trans "Update user" %}</li>
     </ul>
 {% endblock %}
 
-{% block headertext %}Add partner user{% endblock %}
+{% block headertext %}{% trans "Update partner user" %}{% endblock %}
 
 {% block dashboard_content %}
     {% include "partials/form.html" %}

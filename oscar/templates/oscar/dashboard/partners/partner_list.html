@@ -57,7 +57,7 @@
                                     <ul>
                                         {% for user in users %}
                                             <li>
-                                                <a href="{% url dashboard:partner-update-user user.id %}" title="{% trans "Edit the user's details" %}">
+                                                <a href="{% url dashboard:partner-user-update user.id %}" title="{% trans "Edit the user's details" %}">
                                                     {{ user.get_full_name|default:user.email }}
                                                 </a>
                                             </li>
@@ -79,9 +79,9 @@
                                         <li><a href="{% url dashboard:partner-update partner.pk %}">{% trans "Edit" %}</a></li>
                                         <li><a href="{% url dashboard:partner-delete partner.pk %}">{% trans "Delete" %}</a></li>
                                         {% if partner.users.count %}
-                                            <li><a href="{% url dashboard:partner-manage-users partner.pk %}">{% trans "Manage users" %}</a></li>
+                                            <li><a href="{% url dashboard:partner-user-list partner.pk %}">{% trans "Manage users" %}</a></li>
                                         {% endif %}
-                                        <li><a href="{% url dashboard:partner-create-user partner.pk %}">{% trans "Link a new user" %}</a></li>
+                                        <li><a href="{% url dashboard:partner-user-create partner.pk %}">{% trans "Link a new user" %}</a></li>
                                     </ul>
                                 </div>
                             </div>

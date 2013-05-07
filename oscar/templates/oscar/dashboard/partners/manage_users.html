@@ -26,7 +26,7 @@
 
 {% block header %}
     <div class="page-header">
-        <a href="{% url dashboard:partner-create-user partner.pk %}" class="btn btn-large btn-primary pull-right"><i class="icon-plus"></i> {% trans "Link a new user" %}</a>
+        <a href="{% url dashboard:partner-user-create partner.pk %}" class="btn btn-large btn-primary pull-right"><i class="icon-plus"></i> {% trans "Link a new user" %}</a>
         <h1>{% trans "Manage users" %}</h1>
     </div>
 {% endblock header %}
@@ -45,11 +45,11 @@
             <tbody>
                 {% for user in users %}
                     <tr>
-                        <td><a href="{% url dashboard:partner-update-user user.id %}">{{ user.email }}</a></td>
+                        <td><a href="{% url dashboard:partner-user-update user.id %}">{{ user.email }}</a></td>
                         <td>{{ user.first_name }}</td>
                         <td>{{ user.last_name }}</td>
                         <td>
-                            <form action="{% url dashboard:partner-unlink-user user.id partner.pk %}" method="post">
+                            <form action="{% url dashboard:partner-user-unlink user.id partner.pk %}" method="post">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-danger">{% trans 'Unlink user' %}</button>
                             </form>
