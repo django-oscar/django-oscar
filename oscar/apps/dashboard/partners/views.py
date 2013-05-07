@@ -6,13 +6,14 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
-from oscar.apps.dashboard.partners.forms import UserForm
 
+from oscar.apps.dashboard.partners.forms import UserForm
 from oscar.core.loading import get_classes
 from oscar.views.generic import BulkEditMixin
 
 Partner = get_model('partner', 'Partner')
-PartnerSearchForm, PartnerCreateForm = get_classes('dashboard.partners.forms', ['PartnerSearchForm', 'PartnerCreateForm'])
+PartnerSearchForm, PartnerCreateForm = get_classes(
+    'dashboard.partners.forms', ['PartnerSearchForm', 'PartnerCreateForm'])
 
 
 class PartnerListView(generic.ListView, BulkEditMixin):
@@ -82,10 +83,11 @@ class PartnerUpdateView(generic.UpdateView):
     model = Partner
     template_name = 'dashboard/partners/partner_form.html'
     form_class = PartnerCreateForm
+    context_object_name = 'partner'
 
     def get_context_data(self, **kwargs):
         ctx = super(PartnerUpdateView, self).get_context_data(**kwargs)
-        ctx['title'] = _("Partner '%s'") % self.object.name
+        ctx['title'] = self.object.name
         return ctx
 
     def get_success_url(self):
@@ -106,19 +108,25 @@ class PartnerDeleteView(generic.DeleteView):
         return reverse_lazy('dashboard:partner-list')
 
 
+# =============
+# Partner users
+# =============
+
+
 class PartnerCreateUserView(generic.CreateView):
     model = User
     template_name = 'dashboard/partners/partner_user_form.html'
     form_class = UserForm
 
     def dispatch(self, request, *args, **kwargs):
-        self.partner = get_object_or_404(Partner,
-                                         pk=kwargs.get('partner_pk', None))
-        return super(PartnerCreateUserView, self).dispatch(request, *args, **kwargs)
+        self.partner = get_object_or_404(
+            Partner, pk=kwargs.get('partner_pk', None))
+        return super(PartnerCreateUserView, self).dispatch(
+            request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         ctx = super(PartnerCreateUserView, self).get_context_data(**kwargs)
-        ctx['title'] = _("Create user for partner '%s'") % self.partner.name
+        ctx['partner'] = self.partner
         return ctx
 
     def form_valid(self, form):
@@ -157,14 +165,13 @@ class PartnerManageUsers(generic.ListView):
     context_object_name = 'users'
 
     def dispatch(self, request, *args, **kwargs):
-        self.partner = get_object_or_404(Partner,
-                                         pk=kwargs.get('pk', None))
+        self.partner = get_object_or_404(
+            Partner, pk=kwargs.get('pk', None))
         return super(PartnerManageUsers, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         ctx = super(PartnerManageUsers, self).get_context_data(**kwargs)
         ctx['partner'] = self.partner
-        ctx['title'] = _("Manage users for partner '%s'") % self.partner.name
         return ctx
 
     def get_queryset(self):
