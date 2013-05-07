@@ -46,8 +46,8 @@
                 {% for user in users %}
                     <tr>
                         <td><a href="{% url dashboard:partner-user-update user.id %}">{{ user.email }}</a></td>
-                        <td>{{ user.first_name }}</td>
-                        <td>{{ user.last_name }}</td>
+                        <td>{{ user.first_name|default:"-" }}</td>
+                        <td>{{ user.last_name|default:"-" }}</td>
                         <td>
                             <form action="{% url dashboard:partner-user-unlink user.id partner.pk %}" method="post">
                                 {% csrf_token %}

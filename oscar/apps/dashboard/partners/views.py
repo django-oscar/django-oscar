@@ -113,7 +113,7 @@ class PartnerDeleteView(generic.DeleteView):
 # =============
 
 
-class PartnerCreateUserView(generic.CreateView):
+class PartnerUserCreateView(generic.CreateView):
     model = User
     template_name = 'dashboard/partners/partner_user_form.html'
     form_class = UserForm
@@ -121,16 +121,16 @@ class PartnerCreateUserView(generic.CreateView):
     def dispatch(self, request, *args, **kwargs):
         self.partner = get_object_or_404(
             Partner, pk=kwargs.get('partner_pk', None))
-        return super(PartnerCreateUserView, self).dispatch(
+        return super(PartnerUserCreateView, self).dispatch(
             request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        ctx = super(PartnerCreateUserView, self).get_context_data(**kwargs)
+        ctx = super(PartnerUserCreateView, self).get_context_data(**kwargs)
         ctx['partner'] = self.partner
         return ctx
 
     def form_valid(self, form):
-        ret = super(PartnerCreateUserView, self).form_valid(form)
+        ret = super(PartnerUserCreateView, self).form_valid(form)
         self.partner.users.add(self.object)
         return ret
 
@@ -141,14 +141,14 @@ class PartnerCreateUserView(generic.CreateView):
         return reverse_lazy('dashboard:partner-list')
 
 
-class PartnerUpdateUserView(generic.UpdateView):
+class PartnerUserUpdateView(generic.UpdateView):
     model = User
     template_name = 'dashboard/partners/partner_user_form.html'
     form_class = UserForm
 
     def get_context_data(self, **kwargs):
         name = self.object.get_full_name() or self.object.email
-        ctx = super(PartnerUpdateUserView, self).get_context_data(**kwargs)
+        ctx = super(PartnerUserUpdateView, self).get_context_data(**kwargs)
         ctx['title'] = _("Edit user '%s'") % name
         return ctx
 
@@ -159,18 +159,19 @@ class PartnerUpdateUserView(generic.UpdateView):
         return reverse_lazy('dashboard:partner-list')
 
 
-class PartnerManageUsers(generic.ListView):
+class PartnerUserListView(generic.ListView):
     model = User
-    template_name = 'dashboard/partners/manage_users.html'
+    template_name = 'dashboard/partners/partner_user_list.html'
     context_object_name = 'users'
 
     def dispatch(self, request, *args, **kwargs):
         self.partner = get_object_or_404(
             Partner, pk=kwargs.get('pk', None))
-        return super(PartnerManageUsers, self).dispatch(request, *args, **kwargs)
+        return super(PartnerUserListView, self).dispatch(
+            request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        ctx = super(PartnerManageUsers, self).get_context_data(**kwargs)
+        ctx = super(PartnerUserListView, self).get_context_data(**kwargs)
         ctx['partner'] = self.partner
         return ctx
 
@@ -178,7 +179,7 @@ class PartnerManageUsers(generic.ListView):
         return self.partner.users.all()
 
 
-class PartnerUnlinkUserView(generic.View):
+class PartnerUserUnlinkView(generic.View):
 
     def post(self, request, user_pk, partner_pk):
         user = get_object_or_404(User, pk=user_pk)
@@ -188,11 +189,9 @@ class PartnerUnlinkUserView(generic.View):
         if user in users:
             partner.users.remove(user)
             messages.success(request, _("User '%s' was unlinked from '%s'") %
-                                      (name, partner.name))
+                             (name, partner.name))
         else:
             messages.error(request, _("User '%s' is not linked to '%s'") %
-                                    (name, partner.name))
+                           (name, partner.name))
         return HttpResponseRedirect(reverse('dashboard:partner-manage-users',
                                             kwargs={'pk': partner_pk}))
-
-

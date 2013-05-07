@@ -13,11 +13,11 @@ class PartnersDashboardApplication(Application):
     update_view = views.PartnerUpdateView
     delete_view = views.PartnerDeleteView
 
-    manage_users_view = views.PartnerManageUsers
-    unlink_user_view = views.PartnerUnlinkUserView
-    create_user_view = views.PartnerCreateUserView
+    user_list_view = views.PartnerUserListView
+    user_unlink_view = views.PartnerUserUnlinkView
+    user_create_view = views.PartnerUserCreateView
 
-    update_user_view = views.PartnerUpdateUserView
+    user_update_view = views.PartnerUserUpdateView
 
     def get_urls(self):
         urlpatterns = patterns('',
@@ -30,16 +30,16 @@ class PartnersDashboardApplication(Application):
                 name='partner-delete'),
 
             url(r'^(?P<pk>\d+)/users/$',
-                self.manage_users_view.as_view(),
+                self.user_list_view.as_view(),
                 name='partner-user-list'),
             url(r'^(?P<partner_pk>\d+)/users/add/$',
-                self.create_user_view.as_view(),
+                self.user_create_view.as_view(),
                 name='partner-user-create'),
             url(r'^(?P<partner_pk>\d+)/users/(?P<user_pk>\d+)/unlink/$',
-                self.unlink_user_view.as_view(), name='partner-user-unlink'),
+                self.user_unlink_view.as_view(), name='partner-user-unlink'),
 
             url(r'^users/(?P<pk>\d+)/update/$',
-                self.update_user_view.as_view(),
+                self.user_update_view.as_view(),
                 name='partner-user-update'),
         )
         return self.post_process_urls(urlpatterns)
