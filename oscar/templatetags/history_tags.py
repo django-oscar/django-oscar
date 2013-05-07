@@ -1,4 +1,5 @@
 import urlparse
+
 from django import template
 from django.db.models import get_model
 from django.utils.translation import ugettext_lazy as _
@@ -8,8 +9,8 @@ from oscar.core.loading import get_class
 
 Product = get_model('catalogue', 'Product')
 Site = get_model('sites', 'Site')
-get_recently_viewed_product_ids = get_class('customer.history_helpers',
-                                            'get_recently_viewed_product_ids')
+get_recently_viewed_product_ids = get_class(
+    'customer.history_helpers', 'get_recently_viewed_product_ids')
 
 register = template.Library()
 
@@ -24,7 +25,7 @@ def recently_viewed_products(context):
     product_ids = get_recently_viewed_product_ids(request)
 
     current_product = context.get('product', None)
-    if current_product.id in product_ids:
+    if current_product and current_product.id in product_ids:
         product_ids.remove(current_product.id)
 
     # Reordering as the id order gets messed up in the query
