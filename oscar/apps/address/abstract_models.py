@@ -3,7 +3,7 @@ import zlib
 import string
 
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 from django.core import exceptions
 
 from oscar.core.compat import AUTH_USER_MODEL
@@ -210,8 +210,8 @@ class AbstractAddress(models.Model):
     }
 
     title = models.CharField(
-        _("Title"), max_length=64, choices=TITLE_CHOICES,
-        blank=True, null=True)
+        pgettext_lazy(u"Treatment Pronouns for the customer", u"Title"),
+        max_length=64, choices=TITLE_CHOICES, blank=True, null=True)
     first_name = models.CharField(
         _("First name"), max_length=255, blank=True, null=True)
     last_name = models.CharField(_("Last name"), max_length=255, blank=True)
