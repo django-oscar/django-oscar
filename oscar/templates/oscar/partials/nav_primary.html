@@ -26,11 +26,12 @@
                     {% trans "Browse Store" %}
                     <span class="caret"></span>
                 </button>
+                {% category_tree depth=2 as tree_categories %}
                 <ul class="dropdown-menu" role="menu">
                     <li><a tabindex="-1" href="{% url catalogue:index %}">{% trans "All Products" %}</a></li>
-                    {% if categories %}
+                    {% if tree_categories %}
                         <li class="divider"></li>
-                        {% for category in categories %}
+                        {% for category in tree_categories %}
                             {% if category.1 %}
                                 <li class="dropdown-submenu">
                                     <a tabindex="-1" href="{{ category.0.get_absolute_url }}">{{ category.0.name }}</a>

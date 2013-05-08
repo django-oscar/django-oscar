@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% load compress %}
-{% load category_tags %}
 
 {% block layout %}
     {# Top-horizontal bar with account, notifictions, dashboard links #}
@@ -15,7 +14,6 @@
                 {% block mini_basket %}{% include "partials/mini_basket.html" %}{% endblock %}
             </div>
         </div>
-        {% category_tree depth=2 as categories %}
         {% block navigation %}
             {% include "partials/nav_primary.html" %}
         {% endblock %}

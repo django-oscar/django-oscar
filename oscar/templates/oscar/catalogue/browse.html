@@ -2,6 +2,7 @@
 {% load currency_filters %}
 {% load basket_tags %}
 {% load promotion_tags %}
+{% load category_tags %}
 {% load product_tags %}
 {% load i18n %}
 
@@ -32,11 +33,12 @@
 {% endblock breadcrumbs %}
 
 {% block column_left %}
-    {% if categories %}
+    {% category_tree depth=2 as tree_categories %}
+    {% if tree_categories %}
         <div class="side_categories" style="padding: 8px 0;">
             <ul class="nav nav-list">
                 <li class="nav-header">{% trans "Browse categories" %}</li>
-                {% for category in categories %}
+                {% for category in tree_categories %}
                     <li>
                         <a href="{{ category.0.get_absolute_url }}">{{ category.0.name }}</a>
                         {% if category.1 %}
