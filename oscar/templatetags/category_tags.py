@@ -4,6 +4,10 @@ from django.db.models import get_model
 register = template.Library()
 Category = get_model('catalogue', 'category')
 
+# Since the category_tree template tag can be used multiple times in the same
+# set of templates, we use a cache to avoid creating the node multile times.
+NODE_CACHE = {}
+
 
 @register.tag(name="category_tree")
 def do_category_list(parse, token):
@@ -24,7 +28,13 @@ def do_category_list(parse, token):
     else:
         raise template.TemplateSyntaxError(error_msg)
 
-    return CategoryTreeNode(depth_var, as_var)
+    # Use a per-process cache of the CategoryTreeNode instance
+    key = depth_var + as_var
+    if key in NODE_CACHE:
+        return NODE_CACHE[key]
+
+    NODE_CACHE[key] = CategoryTreeNode(depth_var, as_var)
+    return NODE_CACHE[key]
 
 
 class CategoryTreeNode(template.Node):
@@ -49,7 +59,6 @@ class CategoryTreeNode(template.Node):
         categories = self.get_category_queryset(depth)
 
         category_buckets = [[] for i in range(depth)]
-
         for c in categories:
             category_buckets[c.depth - 1].append(c)
         category_subtree = []
