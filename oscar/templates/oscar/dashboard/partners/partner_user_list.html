@@ -17,16 +17,24 @@
             <span class="divider">/</span>
         </li>
         <li>
-            <a href="{% url dashboard:partner-update partner.id %}">{{ partner.name }}</a>
-            <span class="divider">/</span>
+            <a href="{% url dashboard:partner-manage partner.id %}">{{ partner.name }}</a>
         </li>
-        <li class="active">{% trans "Manage users" %}</li>
     </ul>
 {% endblock %}
 
 {% block header %}
     <div class="page-header">
-        <a href="{% url dashboard:partner-user-create partner.pk %}" class="btn btn-large btn-primary pull-right"><i class="icon-plus"></i> {% trans "Link a new user" %}</a>
+        <div class="btn-group pull-right">
+            <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+                <i class="icon-plus"></i>
+                {% trans 'Link a user' %}
+                <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a href="{% url dashboard:partner-user-create partner.pk %}" >{% trans "Link a new user" %}</a></li>
+                <li><a href="{% url dashboard:partner-user-select partner.pk %}" >{% trans "Link an existing user" %}</a></li>
+            </ul>
+        </div>
         <h1>{% trans "Manage users" %}</h1>
     </div>
 {% endblock header %}
@@ -45,11 +53,11 @@
             <tbody>
                 {% for user in users %}
                     <tr>
-                        <td><a href="{% url dashboard:partner-user-update user.id %}">{{ user.email }}</a></td>
+                        <td><a href="{% url dashboard:partner-user-update partner.pk user.id %}">{{ user.email }}</a></td>
                         <td>{{ user.first_name|default:"-" }}</td>
                         <td>{{ user.last_name|default:"-" }}</td>
                         <td>
-                            <form action="{% url dashboard:partner-user-unlink user.id partner.pk %}" method="post">
+                            <form action="{% url dashboard:partner-user-unlink partner.id user.id %}" method="post">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-danger">{% trans 'Unlink user' %}</button>
                             </form>
@@ -59,7 +67,10 @@
             </tbody>
         </table>
     {% else %}
-        <tr><td>{% trans "No users linked." %}</td></tr>
+        <p>{% trans "No users linked." %}</p>
     {% endif %}
     {% include "partials/pagination.html" %}
+
+    <h1>{% trans "Update details" %}</h1>
+    {% include 'partials/form.html' %}
 {% endblock dashboard_content %}

@@ -5,9 +5,10 @@ from django.db.models import get_model
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
+from django.template.loader import render_to_string
 from django.views import generic
 
-from oscar.apps.dashboard.partners.forms import UserForm
+from oscar.apps.dashboard.partners.forms import UserEmailForm, ExistingUserForm, NewUserForm
 from oscar.core.loading import get_classes
 from oscar.views.generic import BulkEditMixin
 
@@ -79,15 +80,20 @@ class PartnerCreateView(generic.CreateView):
         return reverse_lazy('dashboard:partner-list')
 
 
-class PartnerUpdateView(generic.UpdateView):
+class PartnerManageView(generic.UpdateView):
+    """
+    Is a merge of an UpdateView to update the name of the partner,
+    and a ListView to list associated users.
+    """
     model = Partner
-    template_name = 'dashboard/partners/partner_form.html'
+    template_name = 'dashboard/partners/partner_user_list.html'
     form_class = PartnerCreateForm
     context_object_name = 'partner'
 
     def get_context_data(self, **kwargs):
-        ctx = super(PartnerUpdateView, self).get_context_data(**kwargs)
+        ctx = super(PartnerManageView, self).get_context_data(**kwargs)
         ctx['title'] = self.object.name
+        ctx['users'] = self.object.users.all()
         return ctx
 
     def get_success_url(self):
@@ -116,7 +122,7 @@ class PartnerDeleteView(generic.DeleteView):
 class PartnerUserCreateView(generic.CreateView):
     model = User
     template_name = 'dashboard/partners/partner_user_form.html'
-    form_class = UserForm
+    form_class = NewUserForm
 
     def dispatch(self, request, *args, **kwargs):
         self.partner = get_object_or_404(
@@ -127,12 +133,13 @@ class PartnerUserCreateView(generic.CreateView):
     def get_context_data(self, **kwargs):
         ctx = super(PartnerUserCreateView, self).get_context_data(**kwargs)
         ctx['partner'] = self.partner
+        ctx['title'] = _('Create user')
         return ctx
 
-    def form_valid(self, form):
-        ret = super(PartnerUserCreateView, self).form_valid(form)
-        self.partner.users.add(self.object)
-        return ret
+    def get_form_kwargs(self):
+        kwargs = super(PartnerUserCreateView, self).get_form_kwargs()
+        kwargs['partner'] = self.partner
+        return kwargs
 
     def get_success_url(self):
         name = self.object.get_full_name() or self.object.email
@@ -142,9 +149,14 @@ class PartnerUserCreateView(generic.CreateView):
 
 
 class PartnerUserUpdateView(generic.UpdateView):
-    model = User
     template_name = 'dashboard/partners/partner_user_form.html'
-    form_class = UserForm
+    form_class = ExistingUserForm
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(User,
+                                 pk=self.kwargs['user_pk'],
+                                 partners__pk=self.kwargs['partner_pk'],
+                                 is_staff=True)
 
     def get_context_data(self, **kwargs):
         name = self.object.get_full_name() or self.object.email
@@ -159,24 +171,57 @@ class PartnerUserUpdateView(generic.UpdateView):
         return reverse_lazy('dashboard:partner-list')
 
 
-class PartnerUserListView(generic.ListView):
-    model = User
-    template_name = 'dashboard/partners/partner_user_list.html'
+class PartnerUserSelectView(generic.ListView):
+    template_name = 'dashboard/partners/partner_user_select.html'
+    form_class = UserEmailForm
     context_object_name = 'users'
 
     def dispatch(self, request, *args, **kwargs):
-        self.partner = get_object_or_404(
-            Partner, pk=kwargs.get('pk', None))
-        return super(PartnerUserListView, self).dispatch(
+        self.partner = get_object_or_404(Partner,
+                                         pk=kwargs.get('partner_pk', None))
+        if 'email' in request.GET:
+            data = request.GET
+        else:
+            data = None
+        self.form = UserEmailForm(data)
+        return super(PartnerUserSelectView, self).dispatch(
             request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        ctx = super(PartnerUserListView, self).get_context_data(**kwargs)
+        ctx = super(PartnerUserSelectView, self).get_context_data(**kwargs)
         ctx['partner'] = self.partner
+        ctx['form'] = self.form
+        ctx['is_filtered'] = self.is_filtered
         return ctx
 
     def get_queryset(self):
-        return self.partner.users.all()
+        email = self.form.data.get('email', '')
+        self.is_filtered = bool(email)
+        if self.is_filtered:
+            return User.objects.filter(is_staff=True, email__icontains=email)
+        else:
+            return User.objects.none()
+
+
+class PartnerUserLinkView(generic.View):
+
+    def get(self, request, user_pk, partner_pk):
+        # need to allow GET to make Undo link in PartnerUserUnlinkView work
+        return self.post(request, user_pk, partner_pk)
+
+    def post(self, request, user_pk, partner_pk):
+        user = get_object_or_404(User, pk=user_pk)
+        partner = get_object_or_404(Partner, pk=partner_pk)
+        name = user.get_full_name() or user.email
+        if not partner.users.filter(pk=user_pk).exists():
+            partner.users.add(user)
+            messages.success(request, _("User '%s' was linked to '%s'") %
+                             (name, partner.name))
+        else:
+            messages.error(request, _("User '%s' is already linked to '%s'") %
+                           (name, partner.name))
+        return HttpResponseRedirect(reverse('dashboard:partner-manage',
+                                            kwargs={'pk': partner_pk}))
 
 
 class PartnerUserUnlinkView(generic.View):
@@ -185,13 +230,17 @@ class PartnerUserUnlinkView(generic.View):
         user = get_object_or_404(User, pk=user_pk)
         name = user.get_full_name() or user.email
         partner = get_object_or_404(Partner, pk=partner_pk)
-        users = partner.users.all()
-        if user in users:
+        if partner.users.filter(pk=user_pk).exists():
             partner.users.remove(user)
-            messages.success(request, _("User '%s' was unlinked from '%s'") %
-                             (name, partner.name))
+            msg = render_to_string(
+                'dashboard/partners/messages/user_unlinked.html',
+                {'user_name': name,
+                 'partner_name': partner.name,
+                 'user_pk': user_pk,
+                 'partner_pk': partner_pk })
+            messages.success(self.request, msg, extra_tags='safe')
         else:
             messages.error(request, _("User '%s' is not linked to '%s'") %
                            (name, partner.name))
-        return HttpResponseRedirect(reverse('dashboard:partner-manage-users',
+        return HttpResponseRedirect(reverse('dashboard:partner-manage',
                                             kwargs={'pk': partner_pk}))
