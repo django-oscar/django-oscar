@@ -128,10 +128,10 @@
         </tr>
         {% if product.stockrecord %}
         <tr>
-			<th>{% trans "Price (excl. tax)" %}</th><td>{{ product.stockrecord.price_incl_tax|currency }}</td>
+			<th>{% trans "Price (excl. tax)" %}</th><td>{{ product.stockrecord.price_excl_tax|currency }}</td>
         </tr>
         <tr>
-			<th>{% trans "Price (incl. tax)" %}</th><td>{{ product.stockrecord.price_excl_tax|currency }}</td>
+			<th>{% trans "Price (incl. tax)" %}</th><td>{{ product.stockrecord.price_incl_tax|currency }}</td>
         </tr>
         <tr>
 			<th>{% trans "Availability" %}</th>
