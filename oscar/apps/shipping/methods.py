@@ -59,6 +59,10 @@ class OfferDiscount(ShippingMethod):
         return self.get_discount()['discount'] > 0
 
     @property
+    def discount(self):
+        return self.get_discount()['discount']
+
+    @property
     def code(self):
         return self.method.code
 

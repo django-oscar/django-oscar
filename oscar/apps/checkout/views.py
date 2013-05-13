@@ -550,9 +550,9 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         # If all is ok with payment, try and place order
         logger.info("Order #%s: payment successful, placing order", order_number)
         try:
-            return self.handle_order_placement(order_number, basket,
-                                               total_incl_tax, total_excl_tax,
-                                               **order_kwargs)
+            return self.handle_order_placement(
+                order_number, basket, total_incl_tax, total_excl_tax,
+                **order_kwargs)
         except UnableToPlaceOrder, e:
             # It's possible that something will go wrong while trying to
             # actually place an order.  Not a good situation to be in, but needs

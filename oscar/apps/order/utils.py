@@ -79,8 +79,9 @@ class OrderCreator(object):
             # Record offer application results
             if application['result'].affects_shipping:
                 # If a shipping offer, we need to grab the actual discount off
-                # the shipping method instance
-                application['discount'] = shipping_method.get_discount()['discount']
+                # the shipping method instance, which should be wrapped in an
+                # OfferDiscount instance.
+                application['discount'] = shipping_method.discount
             self.create_discount_model(order, application)
             self.record_discount(application)
 

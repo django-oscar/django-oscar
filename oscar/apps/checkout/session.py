@@ -40,8 +40,9 @@ class CheckoutSessionMixin(object):
             try:
                 return UserAddress._default_manager.get(pk=addr_id)
             except UserAddress.DoesNotExist:
-                # This can happen if you reset all your tables and you still have
-                # session data that refers to addresses that no longer exist
+                # This can happen if you reset all your tables and you still
+                # have session data that refers to addresses that no longer
+                # exist.
                 pass
         return None
 

@@ -1,3 +1,6 @@
+from decimal import Decimal as D
+
+
 class ShippingMethod(object):
     """
     Superclass for all shipping method objects.
@@ -13,6 +16,7 @@ class ShippingMethod(object):
     name = 'Default shipping'
     description = ''
     is_discounted = False
+    discount = D('0.00')
 
     def __init__(self, *args, **kwargs):
         self.exempt_from_tax = False
