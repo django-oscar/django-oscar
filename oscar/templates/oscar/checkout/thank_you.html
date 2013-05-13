@@ -54,9 +54,9 @@
         <div class="well well-success">
 			<h3>{% trans "Payment" %}</h3>
             {% for source in order.sources.all %}
-            {{ source }}
+                {{ source }}
 			{% empty %}
-			{% trans "No payment was required for this order." %}
+                {% trans "No payment was required for this order." %}
             {% endfor %}
         </div>
 		{% endblock %}
