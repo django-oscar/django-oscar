@@ -3,11 +3,12 @@ from decimal import Decimal as D
 from django.test import TestCase
 from django.test.utils import override_settings
 from mock import Mock
+from oscar_testsupport.factories import create_product
 
 from oscar.apps.basket.models import Basket
 from oscar.apps.order.models import Order
-from oscar_testsupport.factories import create_product
 from oscar.apps.order.utils import OrderCreator
+from oscar.apps.catalogue.models import ProductClass, Product
 
 
 class TestOrderCreatorErrorCases(TestCase):
@@ -82,3 +83,25 @@ class TestSuccessfulOrderCreation(TestCase):
         order = Order.objects.get(number='1234')
         line = order.lines.all()[0]
         self.assertEqual('A', line.status)
+
+
+class TestPlacingOrderForDigitalGoods(TestCase):
+
+    def setUp(self):
+        self.creator = OrderCreator()
+        self.basket = Basket.objects.create()
+
+    def test_does_not_allocate_stock(self):
+        ProductClass.objects.create(
+            name="Digital", track_stock=False)
+        product = create_product(
+            price=D('9.99'), product_class="Digital", num_in_stock=None)
+        self.assertTrue(product.stockrecord.num_in_stock is None)
+        self.assertTrue(product.stockrecord.num_allocated is None)
+
+        self.basket.add_product(product)
+        self.creator.place_order(basket=self.basket, order_number='1234')
+
+        product_ = Product.objects.get(id=product.id)
+        self.assertTrue(product_.stockrecord.num_in_stock is None)
+        self.assertTrue(product_.stockrecord.num_allocated is None)

@@ -151,7 +151,7 @@ class AbstractStockRecord(models.Model):
     #: stock system.  A typical stock update process will set the num_in_stock
     #: variable to a new value and reset num_allocated to zero
     num_allocated = models.IntegerField(
-        _("Number allocated"), default=0, blank=True, null=True)
+        _("Number allocated"), blank=True, null=True)
 
     # Date information
     date_created = models.DateTimeField(_("Date created"), auto_now_add=True)
