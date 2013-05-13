@@ -1,5 +1,6 @@
 from decimal import Decimal as D
 
+from django.core import exceptions
 from django.test import TestCase
 from django_dynamic_fixture import G
 
@@ -294,3 +295,15 @@ class TestAnAbsoluteDiscountWithMaxItemsSetAppliedWithValueCondition(TestCase):
         self.assertEqual(D('2.00'), result.discount)
         self.assertEqual(5, self.basket.num_items_with_discount)
         self.assertEqual(1, self.basket.num_items_without_discount)
+
+
+class TestAnAbsoluteDiscountBenefit(TestCase):
+
+    def test_requires_a_benefit_value(self):
+        rng = models.Range.objects.create(
+            name="", includes_all_products=True)
+        benefit = models.Benefit.objects.create(
+            type=models.Benefit.FIXED, range=rng
+        )
+        with self.assertRaises(exceptions.ValidationError):
+            benefit.clean()

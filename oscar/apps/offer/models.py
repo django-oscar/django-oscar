@@ -645,7 +645,10 @@ class Benefit(models.Model):
     def clean_absolute(self):
         if not self.range:
             raise ValidationError(
-                _("Percentage benefits require a product range"))
+                _("Fixed discount benefits require a product range"))
+        if not self.value:
+            raise ValidationError(
+                _("Fixed discount benefits require a value"))
 
     def round(self, amount):
         """
