@@ -261,12 +261,12 @@ OSCAR_ALLOW_ANON_CHECKOUT = True
 OSCAR_SHOP_NAME = 'Oscar'
 OSCAR_SHOP_TAGLINE = 'Demo site'
 
-#GOOGLE_ANALYTICS_ID = 'UA-XXXXX-Y'
-
 COMPRESS_ENABLED = False
 COMPRESS_PRECOMPILERS = (
     ('text/less', 'lessc {infile} {outfile}'),
 )
+
+THUMBNAIL_KEY_PREFIX = 'oscar-demo'
 
 LOG_ROOT = location('logs')
 # Ensure log root exists

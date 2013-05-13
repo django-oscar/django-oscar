@@ -11,7 +11,6 @@ DEBUG = True
 TEMPLATE_DEBUG = True
 SQL_DEBUG = True
 SEND_BROKEN_LINK_EMAILS = False
-THUMBNAIL_DEBUG = True
 
 ADMINS = (
     ('David Winterbottom', 'david.winterbottom@tangentlabs.co.uk'),
@@ -387,6 +386,12 @@ LOG_ROOT = location('logs')
 # Ensure log root exists
 if not os.path.exists(LOG_ROOT):
     os.mkdir(LOG_ROOT)
+
+# Sorl
+# ====
+
+THUMBNAIL_DEBUG = True
+THUMBNAIL_KEY_PREFIX = 'oscar-sandbox'
 
 
 # Try and import local settings which can be used to override any of the above.
