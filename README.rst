@@ -20,9 +20,10 @@ sites rich in domain-specific business logic.
 Further reading:
 
 * `Official homepage`_
+* `Demo site`_ (a reference build of an Oscar project)
 * `Sandbox site`_ (an hourly build of the unstable master branch - it's
   experimental but feel free to explore and get a feel for the base Oscar
-  install.  Polished demo site coming soon)
+  install.)
 * `Documentation`_ on the excellent `readthedocs.org`_
 * `Google Group`_ - the mailing list is django-oscar@googlegroups.com
 * `Continuous integration homepage`_ on `travis-ci.org`_
@@ -51,6 +52,7 @@ PyPI status:
 
 .. _`Official homepage`: http://oscarcommerce.com
 .. _`Sandbox site`: http://latest.oscarcommerce.com
+.. _`Demo site`: http://demo.oscarcommerce.com
 .. _`Documentation`: http://django-oscar.readthedocs.org/en/latest/
 .. _`readthedocs.org`: http://readthedocs.org
 .. _`Continuous integration homepage`: http://travis-ci.org/#!/tangentlabs/django-oscar
@@ -97,13 +99,23 @@ good starting point for quickly building elegant e-commerce sites.
 The sandbox site is also available to browse at
 http://latest.oscarcommerce.com
 
-You can have this sample shop running on your machine `in 5 commands`_.
+You can have this sample shop running on your machine `in 5 commands`_.  Want to
+make changes?  Check out the `contributing guidelines`_.
 
 .. _`in 5 commands`: http://django-oscar.readthedocs.org/en/latest/internals/sandbox.html#running-the-sandbox-locally
-
-Want to make changes?  Check out the `contributing guidelines`_.
-
 .. _`contributing guidelines`: http://django-oscar.readthedocs.org/en/latest/contributing/index.html
+
+Oscar also ships with a demo site, which is a reference build of an Oscar
+project.
+
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/demo.home.thumb.png
+    :target: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/demo.home.png
+
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/demo.browse.thumb.png
+    :target: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/screenshots/demo.browse.png
+
+The demo site is also available to browse at
+http://demo.oscarcommerce.com
 
 Extensions
 ----------
