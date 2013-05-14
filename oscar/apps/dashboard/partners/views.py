@@ -86,7 +86,7 @@ class PartnerManageView(generic.UpdateView):
     and a ListView to list associated users.
     """
     model = Partner
-    template_name = 'dashboard/partners/partner_user_list.html'
+    template_name = 'dashboard/partners/partner_manage.html'
     form_class = PartnerCreateForm
     context_object_name = 'partner'
 
@@ -148,56 +148,33 @@ class PartnerUserCreateView(generic.CreateView):
         return reverse_lazy('dashboard:partner-list')
 
 
-class PartnerUserUpdateView(generic.UpdateView):
-    template_name = 'dashboard/partners/partner_user_form.html'
-    form_class = ExistingUserForm
-
-    def get_object(self, queryset=None):
-        return get_object_or_404(User,
-                                 pk=self.kwargs['user_pk'],
-                                 partners__pk=self.kwargs['partner_pk'],
-                                 is_staff=True)
-
-    def get_context_data(self, **kwargs):
-        name = self.object.get_full_name() or self.object.email
-        ctx = super(PartnerUserUpdateView, self).get_context_data(**kwargs)
-        ctx['title'] = _("Edit user '%s'") % name
-        return ctx
-
-    def get_success_url(self):
-        name = self.object.get_full_name() or self.object.email
-        messages.success(self.request,
-                         _("User '%s' was updated successfully.") % name)
-        return reverse_lazy('dashboard:partner-list')
-
-
 class PartnerUserSelectView(generic.ListView):
     template_name = 'dashboard/partners/partner_user_select.html'
     form_class = UserEmailForm
     context_object_name = 'users'
 
     def dispatch(self, request, *args, **kwargs):
-        self.partner = get_object_or_404(Partner,
-                                         pk=kwargs.get('partner_pk', None))
-        if 'email' in request.GET:
-            data = request.GET
-        else:
-            data = None
-        self.form = UserEmailForm(data)
+        self.partner = get_object_or_404(
+            Partner, pk=kwargs.get('partner_pk', None))
         return super(PartnerUserSelectView, self).dispatch(
             request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        data = None
+        if 'email' in request.GET:
+            data = request.GET
+        self.form = self.form_class(data)
+        return super(PartnerUserSelectView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         ctx = super(PartnerUserSelectView, self).get_context_data(**kwargs)
         ctx['partner'] = self.partner
         ctx['form'] = self.form
-        ctx['is_filtered'] = self.is_filtered
         return ctx
 
     def get_queryset(self):
-        email = self.form.data.get('email', '')
-        self.is_filtered = bool(email)
-        if self.is_filtered:
+        if self.form.is_valid():
+            email = self.form.cleaned_data['email']
             return User.objects.filter(is_staff=True, email__icontains=email)
         else:
             return User.objects.none()
@@ -244,3 +221,33 @@ class PartnerUserUnlinkView(generic.View):
                            (name, partner.name))
         return HttpResponseRedirect(reverse('dashboard:partner-manage',
                                             kwargs={'pk': partner_pk}))
+
+
+# =====
+# Users
+# =====
+
+
+class PartnerUserUpdateView(generic.UpdateView):
+    template_name = 'dashboard/partners/partner_user_form.html'
+    form_class = ExistingUserForm
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(User,
+                                 pk=self.kwargs['user_pk'],
+                                 partners__pk=self.kwargs['partner_pk'],
+                                 is_staff=True)
+
+    def get_context_data(self, **kwargs):
+        ctx = super(PartnerUserUpdateView, self).get_context_data(**kwargs)
+        name = self.object.get_full_name() or self.object.email
+        ctx['title'] = _("Edit user '%s'") % name
+        return ctx
+
+    def get_success_url(self):
+        name = self.object.get_full_name() or self.object.email
+        messages.success(self.request,
+                         _("User '%s' was updated successfully.") % name)
+        return reverse_lazy('dashboard:partner-list')
+
+

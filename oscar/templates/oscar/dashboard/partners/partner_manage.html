@@ -20,24 +20,13 @@
     </ul>
 {% endblock %}
 
-{% block header %}
-    <div class="page-header">
-        <div class="btn-group pull-right">
-            <a class="btn btn-large btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
-                <i class="icon-plus"></i>
-                {% trans 'Link a user' %}
-                <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu">
-                <li><a href="{% url dashboard:partner-user-create partner.pk %}" >{% trans "Link a new user" %}</a></li>
-                <li><a href="{% url dashboard:partner-user-select partner.pk %}" >{% trans "Link an existing user" %}</a></li>
-            </ul>
-        </div>
-        <h1>{% trans "Manage users" %}</h1>
-    </div>
-{% endblock header %}
+{% block headertext %}{{ partner.name }}{% endblock %}
 
 {% block dashboard_content %}
+    <h2>{% trans "Details" %}</h2>
+    {% include 'partials/form.html' %}
+
+    <h2>{% trans "Manage users" %}</h2>
     {% if users.count %}
         <table class="table table-striped table-bordered">
             <thead>
@@ -68,7 +57,9 @@
         <p>{% trans "No users linked." %}</p>
     {% endif %}
     {% include "partials/pagination.html" %}
+    <div class="form-actions">
+        <a class="btn btn-info" href="{% url dashboard:partner-user-create partner.pk %}" >{% trans "Link a new user" %}</a>
+        <a class="btn btn-info" href="{% url dashboard:partner-user-select partner.pk %}" >{% trans "Link an existing user" %}</a>
+    </div>
 
-    <h1>{% trans "Update details" %}</h1>
-    {% include 'partials/form.html' %}
 {% endblock dashboard_content %}

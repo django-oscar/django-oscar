@@ -5,7 +5,7 @@
 {% block body_class %}create-page partner{% endblock %}
 
 {% block title %}
-    {{ title }} | {{ partner.name }} {% trans "Partner management" %} | {{ block.super }}
+    {{ title }} | {{ partner.name }} | {% trans "Partner management" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -18,6 +18,12 @@
             <a href="{% url dashboard:partner-list %}">{% trans "Partner management" %}</a>
             <span class="divider">/</span>
         </li>
+        {% if partner %}
+            <li>
+                <a href="{% url dashboard:partner-manage partner.id %}">{{ partner.name }}</a>
+                <span class="divider">/</span>
+            </li>
+        {% endif %}
         <li class="active">{{ title }}</li>
     </ul>
 {% endblock %}

@@ -77,4 +77,6 @@ class ExistingUserForm(forms.ModelForm):
 
 
 class UserEmailForm(forms.Form):
-    email = forms.CharField(max_length=100)
+    # We use a CharField so that a partial email address can be entered
+    email = forms.CharField(
+        label=_("Email address"), max_length=100)
