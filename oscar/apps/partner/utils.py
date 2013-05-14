@@ -128,21 +128,21 @@ class CatalogueImporter(object):
         self.logger.info(msg)
 
     def _import_row(self, row_number, row, stats):
-        if len(row) != 4 and len(row) != 8:
+        if len(row) != 5 and len(row) != 9:
             self.logger.error("Row number %d has an invalid number of fields (%d), skipping..." % (row_number, len(row)))
             return
-        item = self._create_item(*row[:4], stats=stats)
-        if len(row) == 8:
+        item = self._create_item(*row[:5], stats=stats)
+        if len(row) == 9:
             # With stock data
-            self._create_stockrecord(item, *row[4:8], stats=stats)
+            self._create_stockrecord(item, *row[5:9], stats=stats)
 
-    def _create_item(self, upc, title, description, product_class, stats):
+    def _create_item(self, product_class, category_str, upc, title, description, stats):
         # Ignore any entries that are NULL
         if description == 'NULL':
             description = ''
 
         # Create item class and item
-        product_class,_ = ProductClass.objects.get_or_create(name=product_class)
+        product_class, __ = ProductClass.objects.get_or_create(name=product_class)
         try:
             item = Product.objects.get(upc=upc)
             stats['updated_items'] += 1
@@ -156,7 +156,7 @@ class CatalogueImporter(object):
         item.save()
 
         # Category
-        cat = create_from_breadcrumbs('Books > Fiction')
+        cat = create_from_breadcrumbs(category_str)
         ProductCategory.objects.create(product=item, category=cat)
 
         return item
