@@ -12,9 +12,11 @@ from oscar_testsupport.factories import create_product
 TEST_BOOKS_CSV = os.path.join(os.path.dirname(__file__), 'fixtures/books-small.csv')
 TEST_BOOKS_SEMICOLON_CSV = os.path.join(os.path.dirname(__file__), 'fixtures/books-small-semicolon.csv')
 
+
 class NullHandler(logging.Handler):
     def emit(self, record):
         pass
+
 
 logger = logging.getLogger("Null")
 logger.addHandler(NullHandler())
@@ -48,7 +50,6 @@ class ImportSmokeTest(TestCase):
     #
     # Second row is (has no stock data):
     # "9780955337819","Better Photography",NULL,"Book"
-
 
     def setUp(self):
         self.importer = CatalogueImporter(logger)
