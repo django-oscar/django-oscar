@@ -312,7 +312,7 @@ class AbstractCommunicationEvent(models.Model):
         verbose_name_plural = _("Communication Events")
 
     def __unicode__(self):
-        return _("'%(type)s' event for order #%(number)s") % {'type': self.type.name, 'number': self.order.number}
+        return _("'%(type)s' event for order #%(number)s") % {'type': self.event_type.name, 'number': self.order.number}
 
 
 class AbstractLine(models.Model):
