@@ -14,7 +14,7 @@ def do_category_list(parse, token):
     tokens = token.split_contents()
     error_msg = ("%r tag uses the following syntax: {%% category_tree "
                  "[depth=n] as categories %%}" % tokens[0])
-    depth_var = '1'
+    depth_var = '0'
 
     if len(tokens) == 4:
         if tokens[2] != 'as':
@@ -42,28 +42,43 @@ class CategoryTreeNode(template.Node):
         self.depth_var = template.Variable(depth_var)
         self.as_var = as_var
 
-    def _build_tree(self, root, parent, data, depth):
-        for category in data[depth]:
-            if not parent or category.is_child_of(parent):
-                node = (category, [])
-                if depth < len(data) - 1:
-                    self._build_tree(node[1], category, data, depth + 1)
-                root.append(node)
-        return root
+    def get_annotated_list(self, max_depth=None):
+        """
+        Gets an annotated list from a tree branch.
 
-    def get_category_queryset(self, depth):
-        return Category.objects.filter(depth__lte=depth)
+        Borrows heavily from treebeard's get_annotated_list
+        """
+        result, info = [], {}
+        start_depth, prev_depth = (None, None)
+
+        for node in Category.get_tree():
+            depth = node.get_depth()
+            if start_depth is None:
+                start_depth = depth
+
+            if max_depth is not None and depth > max_depth:
+                continue
+
+            # annotate previous node's info
+            info['has_children'] = depth > prev_depth
+            if depth < prev_depth:
+                info['num_to_close'] = range(0, prev_depth - depth)
+
+            info = {'open': depth > prev_depth,  # is going down a level
+                    'num_to_close': [],                 # is going up len(close) levels
+                    'level': depth - start_depth}
+
+            result.append((node, info,))
+            prev_depth = depth
+
+        if prev_depth is not None:
+            # close last leaf
+            info['num_to_close'] = range(0, prev_depth - start_depth)
+            info['has_children'] = prev_depth > prev_depth
+        return result
 
     def render(self, context):
         depth = int(self.depth_var.resolve(context))
-        categories = self.get_category_queryset(depth)
-
-        category_buckets = [[] for i in range(depth)]
-        for c in categories:
-            category_buckets[c.depth - 1].append(c)
-        category_subtree = []
-
-        self._build_tree(category_subtree, None, category_buckets, 0)
-
-        context[self.as_var] = category_subtree
+        annotated_list = self.get_annotated_list(max_depth=depth or None)
+        context[self.as_var] = annotated_list
         return ''
