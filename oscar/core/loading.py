@@ -109,3 +109,11 @@ def get_profile_class():
     if not profile_class:
         raise ImproperlyConfigured("Can't import profile model")
     return profile_class
+
+
+def feature_hidden(feature_name):
+    """
+    Test if a certain Oscar feature is disabled.
+    """
+    return (feature_name is not None and
+            feature_name in settings.OSCAR_HIDDEN_FEATURES)
