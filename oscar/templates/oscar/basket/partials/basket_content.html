@@ -4,19 +4,19 @@
 
 {% if basket_warnings %}
     <h5>{% trans "Important messages about items in your basket" %}</h5>
-	{% for warning in basket_warnings %}
-	<div class="alert">{{ warning }}</div>
-	{% endfor %}
+    {% for warning in basket_warnings %}
+    <div class="alert">{{ warning }}</div>
+    {% endfor %}
 {% endif %}
 
 {% if upsell_messages %}
 <div class="well">
-	<h2>{% trans "You could be missing out on offers!" %}</h2>
-	{% for upsell in upsell_messages %}
+    <h2>{% trans "You could be missing out on offers!" %}</h2>
+    {% for upsell in upsell_messages %}
     {% blocktrans with message=upsell.message url=upsell.offer.get_absolute_url offer_name=upsell.offer.name %}
-	<div class="warning">{{ message }} to qualify for the <a href="{{ url }}">{{ offer_name }}</a> special offer</div>
+    <div class="warning">{{ message }} to qualify for the <a href="{{ url }}">{{ offer_name }}</a> special offer</div>
     {% endblocktrans %}
-	{% endfor %}
+    {% endfor %}
 </div>
 {% endif %}
 
@@ -145,23 +145,23 @@
         {{ saved_formset.management_form }}
         {% for form in saved_formset %}
         <div class="row-fluid basket-items">
-	    <div class="span8">
-			{{ form.id }}
-		    <div class="image_container">
-					{% with image=form.instance.product.primary_image %}
-					{% thumbnail image.original "200x200" upscale=False as thumb %}
-					<a href="{{ form.instance.product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
-					{% endthumbnail %}
-					{% endwith %}
-		    </div>
-			<h4><a href="{{ form.instance.product.get_absolute_url }}">{{ form.instance.description }}</a></h4>
+        <div class="span8">
+            {{ form.id }}
+            <div class="image_container">
+                    {% with image=form.instance.product.primary_image %}
+                    {% thumbnail image.original "200x200" upscale=False as thumb %}
+                    <a href="{{ form.instance.product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
+                    {% endthumbnail %}
+                    {% endwith %}
+            </div>
+            <h4><a href="{{ form.instance.product.get_absolute_url }}">{{ form.instance.description }}</a></h4>
                 <p class="availability {{ form.instance.product.stockrecord.availability_code }}">{{ form.instance.product.stockrecord.availability }}</p>
                 <a href="#" data-id="{{ forloop.counter0 }}" data-behaviours="remove">{% trans "Remove" %}</a>
-			<div style="display:none">
-				{{ form.move_to_basket }}
-				{{ form.DELETE }}
-			</div>
-		</div>
+            <div style="display:none">
+                {{ form.move_to_basket }}
+                {{ form.DELETE }}
+            </div>
+        </div>
             <div class="span2 align-center"><p class="price_color">{{ form.instance.unit_price_incl_tax|currency }}</p></div>
             <div class="span2"><a href="#" data-id="{{ forloop.counter0 }}" class="btn pull-right btn-full" data-behaviours="move">{% trans "Move to basket" %}</a></div>
         </div>
