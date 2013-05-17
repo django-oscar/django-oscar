@@ -12,7 +12,7 @@
         <a href="{% url promotions:home %}">{% trans 'Home' %}</a>
         <span class="divider">/</span>
     </li>
-	<li class="active">{% trans 'Login or register' %}</li>
+    <li class="active">{% trans 'Login or register' %}</li>
 </ul>
 {% endblock %}
 
@@ -26,7 +26,7 @@
             <h2>{% trans 'Log In' %}</h2>
             {% csrf_token %}
             {% include "partials/form_fields.html" with form=login_form %}
-			<p><a href="{% url password-reset %}">{% trans "I've forgotten my password" %}</a></p>
+            <p><a href="{% url password-reset %}">{% trans "I've forgotten my password" %}</a></p>
             <button name="login_submit" type="submit" value="Log In" class="btn btn-large btn-primary">{% trans 'Log In' %}</button>
         </form>
     </div>

@@ -61,7 +61,7 @@
         <td>{{ order.date_placed }}</td>
         <td>
             <a class="btn btn-info" href="{% url customer:order order.number %}">{% trans 'View' %}</a>
-			<form id="order_form_{{ order.id }}" action="{% url customer:order order.number %}" method="post">
+            <form id="order_form_{{ order.id }}" action="{% url customer:order order.number %}" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="order_id" value="{{ order.id }}" />
                 <input type="hidden" name="action" value="reorder" />

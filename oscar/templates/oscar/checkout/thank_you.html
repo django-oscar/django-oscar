@@ -11,9 +11,9 @@
 
 {% block content %}
 <div class="sub-header">
-	<h1>{% blocktrans with order_num=order.number %}
-		Confirmation for order #{{ order_num }}
-		{% endblocktrans %}</h1>
+    <h1>{% blocktrans with order_num=order.number %}
+        Confirmation for order #{{ order_num }}
+        {% endblocktrans %}</h1>
 </div>
 <p>{% trans "Your order has been placed and a confirmation email has ben sent - your order number is" %}
 <span class="label label-success">{{ order.number }}</span></p>
@@ -21,57 +21,57 @@
 
 <div class="row-fluid shipping-payment">
     <div class="span6">
-		{% block shipping_info %}
+        {% block shipping_info %}
         <div class="well well-info">
-			<h3>{% trans "Shipping" %}</h3>
-			{% if order.shipping_address %}
-				<dl>
-					<dt>{% trans "Address" %}</dt>
-					<dd>
-						{% for field in order.shipping_address.active_address_fields %}
-						{{ field }}<br/>
-						{% endfor %}
-					</dd>
-					{% if order.shipping_address.phone_number %}
-					<dt>{% trans "Contact number" %}</dt>
-					<dd>{{ order.shipping_address.phone_number }}</dd>
-					{% endif %}
-					{% if order.shipping_address.notes %}
-					<dt>{% trans "Shipping notes" %}</dt>
-					<dd>{{ order.shipping_address.notes }}</dd>
-					{% endif %}
-					<dt>{% trans "Shipping method" %}</dt>
-					<dd>{{ order.shipping_method }}</dd>
-				</dl>
-			{% else %}
-				{% trans "No shipping is required for this order." %}
-			{% endif %}
+            <h3>{% trans "Shipping" %}</h3>
+            {% if order.shipping_address %}
+                <dl>
+                    <dt>{% trans "Address" %}</dt>
+                    <dd>
+                        {% for field in order.shipping_address.active_address_fields %}
+                        {{ field }}<br/>
+                        {% endfor %}
+                    </dd>
+                    {% if order.shipping_address.phone_number %}
+                    <dt>{% trans "Contact number" %}</dt>
+                    <dd>{{ order.shipping_address.phone_number }}</dd>
+                    {% endif %}
+                    {% if order.shipping_address.notes %}
+                    <dt>{% trans "Shipping notes" %}</dt>
+                    <dd>{{ order.shipping_address.notes }}</dd>
+                    {% endif %}
+                    <dt>{% trans "Shipping method" %}</dt>
+                    <dd>{{ order.shipping_method }}</dd>
+                </dl>
+            {% else %}
+                {% trans "No shipping is required for this order." %}
+            {% endif %}
         </div>
-		{% endblock %}
+        {% endblock %}
     </div>
     <div class="span6">
-		{% block payment_info %}
+        {% block payment_info %}
         <div class="well well-success">
-			<h3>{% trans "Payment" %}</h3>
+            <h3>{% trans "Payment" %}</h3>
             {% for source in order.sources.all %}
                 {{ source }}
-			{% empty %}
+            {% empty %}
                 {% trans "No payment was required for this order." %}
             {% endfor %}
         </div>
-		{% endblock %}
+        {% endblock %}
     </div>
 </div>
 <div class="sub-header">
-	<h3>{% trans "Order details" %}</h3>
+    <h3>{% trans "Order details" %}</h3>
 </div>
 
 <div class="basket-title">
     <div class="row-fluid">
-		<h4 class="span6">{% trans "Items purchased" %}</h4>
-		<h4 class="span3 align-center">{% trans "Estimated dispatch date" %}</h4>
-		<h4 class="span1 align-center">{% trans "Quantity" %}</h4>
-		<h4 class="span2 align-right">{% trans "Cost" %}</h4>
+        <h4 class="span6">{% trans "Items purchased" %}</h4>
+        <h4 class="span3 align-center">{% trans "Estimated dispatch date" %}</h4>
+        <h4 class="span1 align-center">{% trans "Quantity" %}</h4>
+        <h4 class="span2 align-right">{% trans "Cost" %}</h4>
     </div>
 </div>
 
@@ -80,12 +80,12 @@
     <div class="row-fluid">
         <div class="span6">
             <div class="image_container">
-				{% with image=line.product.primary_image %}
-				{% thumbnail image.original "200x200" upscale=False as thumb %}
-				<a href="{{ line.product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
-				{% endthumbnail %}
-				{% endwith %}
-		    </div>
+                {% with image=line.product.primary_image %}
+                {% thumbnail image.original "200x200" upscale=False as thumb %}
+                <a href="{{ line.product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
+                {% endthumbnail %}
+                {% endwith %}
+            </div>
             <h4><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h4>
         </div>
         <div class="span3 align-center">
@@ -183,7 +183,7 @@
                     <th colspan="2">&nbsp;</th>
                 </tr>
                 <tr>
-                	<td class="total"><h4>{% trans "Order total" %}</h4></td>
+                    <td class="total"><h4>{% trans "Order total" %}</h4></td>
                     <td class="total align-right"><h4 class="price_color">{{ order.total_incl_tax|currency }}</h4></td>
                 </tr>
 
@@ -195,16 +195,16 @@
 
 {% if not order.user %}
     <div class="sub-header">
-		<h2>{% trans "Tracking your order" %}</h2>
+        <h2>{% trans "Tracking your order" %}</h2>
     </div>
-	<p>{% trans "You can" %}
-		<a href="{% url customer:anon-order order.number order.verification_hash %}">{% trans "track the status of your order" %}</a>.
-	</p>
+    <p>{% trans "You can" %}
+        <a href="{% url customer:anon-order order.number order.verification_hash %}">{% trans "track the status of your order" %}</a>.
+    </p>
 {% endif %}
 
 <div class="form-actions">
-	<a onclick="window.print()" href="#" class="btn btn-primary btn-large">{% trans "Print this page" %}</a>
-	<a href="/" class="btn btn-primary btn-large pull-right">{% trans "Continue shopping" %}</a>
+    <a onclick="window.print()" href="#" class="btn btn-primary btn-large">{% trans "Print this page" %}</a>
+    <a href="/" class="btn btn-primary btn-large pull-right">{% trans "Continue shopping" %}</a>
 </div>
 {% endblock content %}
 

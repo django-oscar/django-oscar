@@ -17,19 +17,19 @@
 {% block content %}
 
 {% if error %}
-	<div class="alert alert-error">
-		{{ error }}
-	</div>
+    <div class="alert alert-error">
+        {{ error }}
+    </div>
 {% endif %}
 
 <div class="row-fluid shipping-payment">
     {% block shipping_address %}
     <div class="span6">
         <div class="sub-header">
-			<h2>{% trans "Shipping" %}</h2>
+            <h2>{% trans "Shipping" %}</h2>
         </div>
         <div class="well well-info">
-			{% if shipping_address %}
+            {% if shipping_address %}
                 <h4>{% trans "Address" %}</h4>
                 <p>
                     {% for field in shipping_address.active_address_fields %}
@@ -45,23 +45,23 @@
                     <p>{{ shipping_address.notes|linebreaks }}</p>
                 {% endif %}
 
-				<h4>{% trans "Shipping method" %}</h4>
-				<p>{{ shipping_method.name }}
-					{% if shipping_method.description %}
-					- {{ shipping_method.description }}
-					{% endif %}
-				</p>
+                <h4>{% trans "Shipping method" %}</h4>
+                <p>{{ shipping_method.name }}
+                    {% if shipping_method.description %}
+                    - {{ shipping_method.description }}
+                    {% endif %}
+                </p>
             </dl>
 
             {% block shipping_address_actions %}
             <div class="alert-actions">
-				<a href="{% url checkout:shipping-address %}" class="btn">{% trans "Change shipping address" %}</a>
+                <a href="{% url checkout:shipping-address %}" class="btn">{% trans "Change shipping address" %}</a>
             </div>
             {% endblock %}
 
-			{% else %}
+            {% else %}
                 {% trans "No shipping is required for this order" %}
-			{% endif %}
+            {% endif %}
         </div>
     </div>
     {% endblock shipping_address %}
@@ -69,12 +69,12 @@
     {% block payment_method %}
    <div class="span6">
        <div class="sub-header">
-		   <h2>{% trans "Payment" %}</h2>
+           <h2>{% trans "Payment" %}</h2>
         </div>
         <div class="well well-success">
-			<p>{% trans "Payment details to go here" %}</p>
+            <p>{% trans "Payment details to go here" %}</p>
             <div class="alert-actions">
-				<a href="{% url checkout:payment-details %}" class="btn">{% trans "Change payment details" %}</a>
+                <a href="{% url checkout:payment-details %}" class="btn">{% trans "Change payment details" %}</a>
             </div>
         </div>    
     </div>
@@ -83,13 +83,13 @@
 
 {% block order_contents %}
     <div class="sub-header">
-		<h2>{% trans "Order contents" %}</h2>
+        <h2>{% trans "Order contents" %}</h2>
     </div>
     <div class="basket-title">
         <div class="row-fluid">
-			<h4 class="span9">{% trans "Items in basket" %}</h4>
-			<h4 class="span1 align-center">{% trans "Quantity" %}</h4>
-			<h4 class="span2 align-right">{% trans "Price" %}</h4>
+            <h4 class="span9">{% trans "Items in basket" %}</h4>
+            <h4 class="span1 align-center">{% trans "Quantity" %}</h4>
+            <h4 class="span2 align-right">{% trans "Price" %}</h4>
         </div>
     </div>
     {% for line in basket.all_lines %}
@@ -97,14 +97,14 @@
         <div class="row-fluid">
             <div class="span9">
                 <div class="image_container">
-					{% with image=line.product.primary_image %}
-					{% thumbnail image.original "200x200" upscale=False as thumb %}
-					<a href="{{ form.instance.product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
-					{% endthumbnail %}
-					{% endwith %}
-		    </div>
+                    {% with image=line.product.primary_image %}
+                    {% thumbnail image.original "200x200" upscale=False as thumb %}
+                    <a href="{{ form.instance.product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
+                    {% endthumbnail %}
+                    {% endwith %}
+            </div>
                 <h4><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h4>
-				<span class="availability {{ line.product.stockrecord.availability_code }}">{{ line.product.stockrecord.availability }}</span>
+                <span class="availability {{ line.product.stockrecord.availability_code }}">{{ line.product.stockrecord.availability }}</span>
             </div>
             <div class="span1 align-center">
                 {{ line.quantity }}
@@ -125,7 +125,7 @@
 
     {% block order_contents_actions %}
     <div class="form-actions">
-		<a href="{% url basket:summary %}" class="btn">{% trans "Edit order contents" %}</a>
+        <a href="{% url basket:summary %}" class="btn">{% trans "Edit order contents" %}</a>
     </div>
     {% endblock %}
 

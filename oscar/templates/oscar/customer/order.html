@@ -54,34 +54,34 @@
         <div class="tab-content">
             <div class="tab-pane active" id="1">
                 <table class="table table-striped table-bordered">
-				<thead>
-					<tr>
-						<th>{% trans 'Product' %}</th>
-						<th>{% trans 'Dispatch date' %}</th>
-						<th>{% trans 'Quantity' %}</th>
-						<th>{% trans 'Line price excl tax' %}</th>
-						<th>{% trans 'Line price incl tax' %}</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for line in order.lines.all %}
-					<tr>
-						<td><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></td>
-						<td>{{ line.est_dispatch_date|default:"-" }}</td>
-						<td>{{ line.quantity }}</td>
-						<td>{{ line.line_price_before_discounts_excl_tax|currency }}</td>
-						<td>{{ line.line_price_before_discounts_incl_tax|currency }}</td>
-						<td>
-							<form id="line_form_{{ line.id }}" action="{% url customer:order-line order.number line.id %}" method="POST">
-								{% csrf_token %}
-								<input type="hidden" name="action" value="reorder" />
-								<button class="btn btn-success" type="submit">{% trans 'Re-order' %}</button>
-								<a class="btn btn-info" href="{% url catalogue:reviews-add line.product.slug line.product.id %}">{% trans 'Write a review' %}</a>
-							</form>
-						</td>
-					</tr>
-					{% endfor %}
+                <thead>
+                    <tr>
+                        <th>{% trans 'Product' %}</th>
+                        <th>{% trans 'Dispatch date' %}</th>
+                        <th>{% trans 'Quantity' %}</th>
+                        <th>{% trans 'Line price excl tax' %}</th>
+                        <th>{% trans 'Line price incl tax' %}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for line in order.lines.all %}
+                    <tr>
+                        <td><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></td>
+                        <td>{{ line.est_dispatch_date|default:"-" }}</td>
+                        <td>{{ line.quantity }}</td>
+                        <td>{{ line.line_price_before_discounts_excl_tax|currency }}</td>
+                        <td>{{ line.line_price_before_discounts_incl_tax|currency }}</td>
+                        <td>
+                            <form id="line_form_{{ line.id }}" action="{% url customer:order-line order.number line.id %}" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="reorder" />
+                                <button class="btn btn-success" type="submit">{% trans 'Re-order' %}</button>
+                                <a class="btn btn-info" href="{% url catalogue:reviews-add line.product.slug line.product.id %}">{% trans 'Write a review' %}</a>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
 
                     {% with discounts=order.basket_discounts %}
                         {% if discounts %}
@@ -135,11 +135,11 @@
                         </tr>
                     {% endif %}
 
-					<tr>
-						<th colspan="4">{% trans 'Order total' %}</th>
-						<td colspan="2">{{ order.total_incl_tax|currency }}</td>
-					</tr>
-				</tbody>
+                    <tr>
+                        <th colspan="4">{% trans 'Order total' %}</th>
+                        <td colspan="2">{{ order.total_incl_tax|currency }}</td>
+                    </tr>
+                </tbody>
                 </table>
             </div>
 
@@ -148,7 +148,7 @@
             </div>
 
             <div class="tab-pane" id="3">
-			<div class="row-fluid">
+            <div class="row-fluid">
                     <div class="span4">
                         <div class="well well-info">
                             <h4>{% trans 'Address:' %}</h4>
