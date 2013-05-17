@@ -2,21 +2,21 @@
 {% load i18n %}
 
 {% block title %}
-	{% trans "Emails" %} | {{ block.super }}
+    {% trans "Emails" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">	  	
-    <li>	  	
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>	  	
-        <span class="divider">/</span>	  	
-    </li>	  	
-    <li class="active"><a href=".">{% trans "Emails" %}</a></li>	  	
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active"><a href=".">{% trans "Emails" %}</a></li>
 </ul>
 {% endblock %}
 
 {% block header %}
-<div class="page-header"> 	
+<div class="page-header">
     <h1>{% trans "Emails" %}</h1>
 </div>
 {% endblock header %}
@@ -25,28 +25,28 @@
 <table class="table table-striped table-bordered table-hover">
     <caption><i class="icon-envelope icon-large"></i>{% trans "Emails" %}</caption>
     {% if commtypes %}
-	<thead>
-		<tr>
-			<th>{% trans "Code" %}</th>
-			<th>{% trans "Name" %}</th>
-			<th>{% trans "Category" %}</th>
-			<th></th>
-		</tr>
-	</thead>
-	<tbody>
-		{% for commtype in commtypes %}
-		<tr>
-			<td>{{ commtype.code }}</td>
-			<td>{{ commtype.name }}</td>
-			<td>{{ commtype.category }}</td>
-			<td>
-				<a class="btn btn-success" href="{% url dashboard:comms-update commtype.code|lower %}">{% trans "Edit" %}</a>
-			</td>
-		</tr>
-		{% endfor %}
-	</tbody>
-	
-	{% else %}
+    <thead>
+        <tr>
+            <th>{% trans "Code" %}</th>
+            <th>{% trans "Name" %}</th>
+            <th>{% trans "Category" %}</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for commtype in commtypes %}
+        <tr>
+            <td>{{ commtype.code }}</td>
+            <td>{{ commtype.name }}</td>
+            <td>{{ commtype.category }}</td>
+            <td>
+                <a class="btn btn-success" href="{% url dashboard:comms-update commtype.code|lower %}">{% trans "Edit" %}</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+
+    {% else %}
     <tbody>
         <tr><td>{% trans "There are no defined emails to edit." %}</td></tr>
     </tbody>

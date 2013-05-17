@@ -6,16 +6,16 @@ create-page
 {% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">        	
-    <li>        	
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>    	  	
-        <span class="divider">/</span>    	  	
-    </li>    	  	
-    <li>    	  	
-        <a href="{% url dashboard:promotion-list %}">{% trans "Content block management" %}</a>    	  	
-        <span class="divider">/</span>    	  	
-    </li>    	  	
-    <li class="active">{% trans "Remove promotion from page?" %}</li>    	  	
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="{% url dashboard:promotion-list %}">{% trans "Content block management" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active">{% trans "Remove promotion from page?" %}</li>
 </ul>
 {% endblock %}
 
@@ -28,12 +28,12 @@ create-page
     {% trans "Remove promotion" %}
 </div>
 <form action="." method="post" class="well">
-	{% csrf_token %}
-	<p>{% blocktrans %}Remove {{ object.content_object.type }} content block <strong>{{ object.name }}</strong> from page <strong>{{ object.page_url }}</strong> - are you sure?{% endblocktrans %}</p>
+    {% csrf_token %}
+    <p>{% blocktrans %}Remove {{ object.content_object.type }} content block <strong>{{ object.name }}</strong> from page <strong>{{ object.page_url }}</strong> - are you sure?{% endblocktrans %}</p>
     
-	<div class="form-actions">
-		<button type="submit" class="btn btn-danger">{% trans "Remove" %}</button>
-		{% trans "or" %} <a href="{% url dashboard:promotion-list-by-url object.page_url  %}">{% trans "cancel" %}</a>
-	</div>
+    <div class="form-actions">
+        <button type="submit" class="btn btn-danger">{% trans "Remove" %}</button>
+        {% trans "or" %} <a href="{% url dashboard:promotion-list-by-url object.page_url  %}">{% trans "cancel" %}</a>
+    </div>
 </form>
 {% endblock %}

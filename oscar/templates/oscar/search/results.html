@@ -10,14 +10,14 @@
 
 {% block breadcrumbs %}
 <ul class="breadcrumb">
-	<li>
+    <li>
         <a href="{% url promotions:home %}">{% trans "Home" %}</a>
         <span class="divider">/</span>
-	</li>
-	<li>
+    </li>
+    <li>
         {% trans "Search" %}
         <span class="divider">/</span>
-	</li>
+    </li>
     <li class="active">"{{ query }}"</li>
 </ul>
 {% endblock %}
@@ -50,15 +50,15 @@
 
 {% if page.object_list %}
 <section>
-	<div class="mod">
-		{% include "search/partials/pagination.html" %}
-		<ol class="products four">
-			{% for result in page.object_list %}
+    <div class="mod">
+        {% include "search/partials/pagination.html" %}
+        <ol class="products four">
+            {% for result in page.object_list %}
                 <li>{% render_product result.object %}</li>
-			{% endfor %}
-		</ol>
-		{% include "search/partials/pagination.html" %}
-	</div>
+            {% endfor %}
+        </ol>
+        {% include "search/partials/pagination.html" %}
+    </div>
 </section>
 {% else %}
     <p>{% trans 'No search results found.' %}</p>

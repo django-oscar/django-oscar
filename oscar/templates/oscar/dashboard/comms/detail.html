@@ -9,16 +9,16 @@ create-page default
 {% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">   	
+<ul class="breadcrumb">
     <li>
         <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
         <span class="divider">/</span>
     </li>
     <li>
         <a href="{% url dashboard:comms-list %}">{% trans "Emails" %}</a>
-        <span class="divider">/</span>  	
-    </li>  	
-    <li class="active"><a href=".">{{ commtype.name }}</a></li>  	
+        <span class="divider">/</span>
+    </li>
+    <li class="active"><a href=".">{{ commtype.name }}</a></li>
 </ul>
 {% endblock %}
 
@@ -53,18 +53,18 @@ create-page default
                 <h3>{% trans "Email content" %}</h3>
              </div>
              <div class="well">
-				 <p>{% trans "These fields are rendered using Django's template system." %}</p>
-				 <p>{% trans "You can use the following variables:" %}</p>
+                 <p>{% trans "These fields are rendered using Django's template system." %}</p>
+                 <p>{% trans "You can use the following variables:" %}</p>
                  <dl>
                      <dt><code>{% templatetag openvariable %} user.get_full_name {% templatetag closevariable %}</code></dt>
-					 <dd>{% trans "The full name of the user (if they have one)" %}</dd>
+                     <dd>{% trans "The full name of the user (if they have one)" %}</dd>
                      <dt><code>{% templatetag openvariable %} user.email {% templatetag closevariable %}</code></dt>
-					 <dd>{% trans "The user's email address" %}</dd>
+                     <dd>{% trans "The user's email address" %}</dd>
                      <dt><code>{% templatetag openvariable %} site.name {% templatetag closevariable %}</code></dt>
-					 <dd>{% trans "The name of the site (eg example.com)" %}</dd>
+                     <dd>{% trans "The name of the site (eg example.com)" %}</dd>
                      {% if commtype.is_order_related %}
                         <dt><code>{% templatetag openvariable %} order.number {% templatetag closevariable %}</code></dt>
-						<dd>{% trans "Order number" %}</dd>
+                        <dd>{% trans "Order number" %}</dd>
                      {% endif %}
                  </dl>
              </div>
@@ -76,11 +76,11 @@ create-page default
              </div>
              <div class="well">
                  {% if commtype.is_order_related %}
-				 <p>{% trans "View a preview of this email using order:" %}</p>
+                 <p>{% trans "View a preview of this email using order:" %}</p>
                  {% include 'partials/form_field.html' with field=form.preview_order_number %}
                  {% endif %}
                  <button type="submit" class="btn btn-primary btn-large" name="show_preview">{% trans "View preview" %}</button>
-				 <p>{% trans "or send a preview to:" %}</p>
+                 <p>{% trans "or send a preview to:" %}</p>
                  {% include 'partials/form_field.html' with field=form.preview_email %}
                  <button type="submit" class="btn" name="send_preview">{% trans "Send preview email" %}</button>
              </div>

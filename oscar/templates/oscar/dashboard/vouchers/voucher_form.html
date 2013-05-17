@@ -10,16 +10,16 @@ create-page default
 {% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">   	
-    <li> 	
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>   	
-        <span class="divider">/</span>   	
-    </li>   	
-    <li>   	
-        <a href="{% url dashboard:voucher-list %}">{% trans "Vouchers" %}</a>   	
-        <span class="divider">/</span>   	
-    </li>   	
-    <li class="active">{{ title }}</li>   	
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="{% url dashboard:voucher-list %}">{% trans "Vouchers" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active">{{ title }}</li>
 </ul>
 {% endblock %}
 
@@ -30,13 +30,13 @@ create-page default
     <h2><i class="icon-money icon-large"></i>{{ title }}</h2>
 </div>
 <form action="." method="post" class="well form-stacked">
-	{% csrf_token %}
-	{% include "partials/form_fields.html" with form=form %}
-	{% block form_actions %}
-	<div class="form-actions">
-		<button class="btn btn-primary btn-large" type="submit">{% trans "Save" %}</button> {% trans "or" %}
-		<a href="{% url dashboard:voucher-list %}">{% trans "cancel" %}</a>
-	</div>
-	{% endblock form_actions %}
+    {% csrf_token %}
+    {% include "partials/form_fields.html" with form=form %}
+    {% block form_actions %}
+    <div class="form-actions">
+        <button class="btn btn-primary btn-large" type="submit">{% trans "Save" %}</button> {% trans "or" %}
+        <a href="{% url dashboard:voucher-list %}">{% trans "cancel" %}</a>
+    </div>
+    {% endblock form_actions %}
 </form>
 {% endblock dashboard_content %}

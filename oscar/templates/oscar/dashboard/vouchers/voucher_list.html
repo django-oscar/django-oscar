@@ -7,12 +7,12 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">	  	
-    <li>	  	
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>	  	
-        <span class="divider">/</span>	  	
-    </li>	  	
-    <li class="active">{{ description }}</li>	  	
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active">{{ description }}</li>
 </ul>
 {% endblock %}
 
@@ -29,9 +29,9 @@
 </div>
 <div class="well">
     <form action="." method="get" class="form-inline">
-		{% include 'partials/form_fields_inline.html' with form=form %}
-		<button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
-		<a href="{% url dashboard:voucher-list %}" class="btn">{% trans "Reset" %}</a>
+        {% include 'partials/form_fields_inline.html' with form=form %}
+        <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
+        <a href="{% url dashboard:voucher-list %}" class="btn">{% trans "Reset" %}</a>
     </form>
 </div>
 
@@ -47,24 +47,24 @@
         <caption><i class="icon-money icon-large"></i>{{ description }}</caption>
     {% endif %}
     {% if vouchers.count %}
-	<tr>
-		<th>{% trans "Name" %}</th>
-		<th>{% trans "Code" %}</th>
-		<th>{% trans "Is active?" %}</th>
-		<th>{% trans "Num baskets" %}</th>
-		<th>{% trans "Num orders" %}</th>
-		<th>{% trans "Date created" %}</th>
-		<th></th>
-	</tr>
-    	{% for voucher in vouchers %}
-    	<tr>
-    		<td>{{ voucher.name }}</td>
-    		<td>{{ voucher.code }}</td>
-		<td>{{ voucher.is_active|yesno:_("True,False") }}</td>
-    		<td>{{ voucher.num_basket_additions }}</td>
-    		<td>{{ voucher.num_orders }}</td>
-    		<td>{{ voucher.date_created }}</td>
-    		<td>
+    <tr>
+        <th>{% trans "Name" %}</th>
+        <th>{% trans "Code" %}</th>
+        <th>{% trans "Is active?" %}</th>
+        <th>{% trans "Num baskets" %}</th>
+        <th>{% trans "Num orders" %}</th>
+        <th>{% trans "Date created" %}</th>
+        <th></th>
+    </tr>
+        {% for voucher in vouchers %}
+        <tr>
+            <td>{{ voucher.name }}</td>
+            <td>{{ voucher.code }}</td>
+        <td>{{ voucher.is_active|yesno:_("True,False") }}</td>
+            <td>{{ voucher.num_basket_additions }}</td>
+            <td>{{ voucher.num_orders }}</td>
+            <td>{{ voucher.date_created }}</td>
+            <td>
                 <div class="btn-toolbar">
                     <div class="btn-group">
                       <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
@@ -78,12 +78,12 @@
                       </ul>
                     </div>
                 </div>
-    		</td>
-    	</tr>
-    	{% endfor %}
-	{% else %}
-	<tr><td>{% trans "No vouchers found." %}</td></tr>
-	{% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    {% else %}
+    <tr><td>{% trans "No vouchers found." %}</td></tr>
+    {% endif %}
 </table>
 {% include "partials/pagination.html" %}
 {% endblock dashboard_content %}

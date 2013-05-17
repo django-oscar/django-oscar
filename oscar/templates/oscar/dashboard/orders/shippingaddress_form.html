@@ -6,36 +6,36 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">   	
-    <li> 	
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>   	
-        <span class="divider">/</span>   	
-    </li>   	
-    <li>   	
-        <a href="{% url dashboard:order-list %}">{% trans "Orders" %}</a>  	
-        <span class="divider">/</span>  	
-    </li>  	
-    <li>   	
-        <a href="{% url dashboard:order-detail order.number %}">{{ order.number }}</a>   	
-        <span class="divider">/</span>   	
-    </li>   	
-    <li class="active">{% trans "Edit shipping address" %}</li>  	
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="{% url dashboard:order-list %}">{% trans "Orders" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="{% url dashboard:order-detail order.number %}">{{ order.number }}</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active">{% trans "Edit shipping address" %}</li>
 </ul>
 {% endblock %}
 
 {% block headertext %}
-	{% blocktrans %}Edit shipping address for order {{ order.number }}{% endblocktrans %}
+    {% blocktrans %}Edit shipping address for order {{ order.number }}{% endblocktrans %}
 {% endblock  %}
 
 {% block content %}
 
 <form action="." method="post" class="well form-horizontal">
-	{% csrf_token %}
-	{% include "partials/form_fields.html" with form=form %}
-	<div class="form-actions">
-		<button type="submit" class="btn btn-primary">{% trans "Update address" %}</button>
-		or <a href="{% url dashboard:order-detail order.number %}">{% trans "cancel" %}</a>
-	</div>
+    {% csrf_token %}
+    {% include "partials/form_fields.html" with form=form %}
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">{% trans "Update address" %}</button>
+        or <a href="{% url dashboard:order-detail order.number %}">{% trans "cancel" %}</a>
+    </div>
 </form>
 
 {% endblock content %}

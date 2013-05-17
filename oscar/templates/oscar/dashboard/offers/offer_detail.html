@@ -8,13 +8,13 @@
 {% endblocktrans %} | {{ block.super }}
 {% endblock %}
 
-{% block breadcrumbs %} 	
-<ul class="breadcrumb">   	
-    <li>  	
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>   	
-        <span class="divider">/</span>   	
-    </li>   	
-    <li>   	
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
         <a href="{% url dashboard:offer-list %}">{% trans "Offer management" %}</a>
         <span class="divider">/</span>
     </li>
@@ -102,26 +102,26 @@
         <a class="pull-right btn" href=".?format=csv">{% trans "Export to CSV" %}</a>
         <h2>{% trans "Orders that used this offer" %}</h2>
     </div>
-	<table class="table table-bordered table-striped">
-		<thead>
-			<th>{% trans "Order number" %}</th>
-			<th>{% trans "Order date" %}</th>
-			<th>{% trans "Order total" %}</th>
-			<th>{% trans "Cost" %}</th>
-		</thead>
-		<tbody>
-			{% for discount in order_discounts %}
-			{% with order=discount.order %}
-				<tr>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <th>{% trans "Order number" %}</th>
+            <th>{% trans "Order date" %}</th>
+            <th>{% trans "Order total" %}</th>
+            <th>{% trans "Cost" %}</th>
+        </thead>
+        <tbody>
+            {% for discount in order_discounts %}
+            {% with order=discount.order %}
+                <tr>
                     <td><a href="{% url dashboard:order-detail order.number %}">{{ order.number }}</a></td>
-					<td>{{ order.date_placed }}</td>
-					<td>{{ order.total_incl_tax|currency }}</td>
-					<td>{{ discount.amount|currency }}</td>
-				</tr>
-			{% endwith %}
-			{% endfor %}
-		</tbody>
-	</table>
+                    <td>{{ order.date_placed }}</td>
+                    <td>{{ order.total_incl_tax|currency }}</td>
+                    <td>{{ discount.amount|currency }}</td>
+                </tr>
+            {% endwith %}
+            {% endfor %}
+        </tbody>
+    </table>
     {% include 'partials/pagination.html' %}
     {% endif %}
 

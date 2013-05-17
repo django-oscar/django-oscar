@@ -8,16 +8,16 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb"> 	
-    <li>	  	
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>	  	
-        <span class="divider">/</span>	  	
-    </li>	  	
-    <li>	  	
-        <a href="{% url dashboard:user-alert-list %}">{% trans "Product alerts" %}</a>	  	
-        <span class="divider">/</span>	  	
-    </li>	  	
-    <li class="active">{% blocktrans with id=alert.id %}Alert #{{ id }}{% endblocktrans %}</li>	  	
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="{% url dashboard:user-alert-list %}">{% trans "Product alerts" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active">{% blocktrans with id=alert.id %}Alert #{{ id }}{% endblocktrans %}</li>
 </ul>
 {% endblock %}
 
@@ -31,8 +31,8 @@
     <div class="pull-right">
         <form action="." method="post" class="form-inline">
             {% csrf_token %}
-        	{% include 'partials/form_fields_inline.html' %}
-    		<button type='submit' class="btn btn-primary">{% trans "Save" %}</button>
+            {% include 'partials/form_fields_inline.html' %}
+            <button type='submit' class="btn btn-primary">{% trans "Save" %}</button>
             <a href="{% url dashboard:user-alert-list %}" class="btn">{% trans "cancel" %}</a>
         </form>
     </div>

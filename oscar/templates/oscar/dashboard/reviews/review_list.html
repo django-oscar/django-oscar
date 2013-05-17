@@ -8,12 +8,12 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">       	
-    <li>       	
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>       	
-        <span class="divider">/</span>       	
-    </li>       	
-    <li class="active">{% trans "Reviews" %}</li>      	
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active">{% trans "Reviews" %}</li>
 </ul>
 {% endblock %}
 
@@ -31,7 +31,7 @@
 <div class="well">
     <form action="." method="get" class="form-inline">
         {% include 'partials/form_fields_inline.html' with form=form %}
-    	<button type="submit" class="btn btn-primary top-spacer">{% trans "Search" %}</button>
+        <button type="submit" class="btn btn-primary top-spacer">{% trans "Search" %}</button>
     </form>
 </div>
 
@@ -53,37 +53,37 @@
         </caption>
         <tr>
             <th></th>
-			<th>{% trans "Review Title" %}</th>
-			<th>{% trans "Review For Product" %}</th>
-			<th>{% trans "User" %}</th>
-			<th>{% trans "Score" %}</th>
-			<th>{% trans "Votes" %}</th>
-			<th>{% trans "Status" %}</th>
-			<th>{% trans "Date created" %}</th>
+            <th>{% trans "Review Title" %}</th>
+            <th>{% trans "Review For Product" %}</th>
+            <th>{% trans "User" %}</th>
+            <th>{% trans "Score" %}</th>
+            <th>{% trans "Votes" %}</th>
+            <th>{% trans "Status" %}</th>
+            <th>{% trans "Date created" %}</th>
             <th></th>
         </tr>
         {% for review in review_list %}
         <tr>
             <td><input type="checkbox" name="selected_review" class="selected_review" value="{{ review.id }}"/>
                 <td>
-					{% if review.product %}
-						<a href="{% url catalogue:reviews-detail review.product.slug review.product.id review.id %}">{{ review.title }}</a>
-					{% else %}
-						{{ review.title }}
-					{% endif %}
+                    {% if review.product %}
+                        <a href="{% url catalogue:reviews-detail review.product.slug review.product.id review.id %}">{{ review.title }}</a>
+                    {% else %}
+                        {{ review.title }}
+                    {% endif %}
                 </td>
             <td>
-				{% if review.product %}
-					<a href='{% url catalogue:detail review.product.slug review.product.id %}'>{{ review.product.title }}</a> </td>
-				{% else %}
-					[Product deleted]
-				{% endif %}
+                {% if review.product %}
+                    <a href='{% url catalogue:detail review.product.slug review.product.id %}'>{{ review.product.title }}</a> </td>
+                {% else %}
+                    [Product deleted]
+                {% endif %}
             <td>
-				{% if review.user %}
+                {% if review.user %}
                 <a href="{% url dashboard:user-detail review.user.id %}">{{ review.get_reviewer_name }}</a>
-				{% else %}
-				{{ review.name }}
-				{% endif %}
+                {% else %}
+                {{ review.name }}
+                {% endif %}
             </td>
             <td>
                 {{ review.score|floatformat:1 }} / {{ 5.0|floatformat:1 }}

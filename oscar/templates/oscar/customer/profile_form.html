@@ -37,11 +37,11 @@
 
 {% block content %}
 <form id="profile_form" action="." method="post">
-	{% csrf_token %}
-	{% include 'partials/form_fields.html' with form=form %}
-	<div class="form-actions">
-		<button type="submit" class="btn btn-primary btn-large">{% trans 'Save' %}</button>
-		{% trans 'or' %} <a href="{% url customer:summary %}">{% trans 'cancel' %}</a>.
-	</div>
+    {% csrf_token %}
+    {% include 'partials/form_fields.html' with form=form %}
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn-large">{% trans 'Save' %}</button>
+        {% trans 'or' %} <a href="{% url customer:summary %}">{% trans 'cancel' %}</a>.
+    </div>
 </form>
 {% endblock content %}

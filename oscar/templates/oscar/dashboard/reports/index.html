@@ -8,12 +8,12 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">	  	
-    <li>	  	
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>	  	
-        <span class="divider">/</span>	  	
-    </li>	  	
-    <li class="active">{% trans "Reporting Dashboard" %}</li>	  	
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active">{% trans "Reporting Dashboard" %}</li>
 </ul>
 {% endblock %}
 
@@ -36,7 +36,7 @@
 
 {% if description %}
 <div class="table-header">
-	<h3><i class="icon-bar-chart icon-large"></i>{{ description }}</h3>
+    <h3><i class="icon-bar-chart icon-large"></i>{{ description }}</h3>
 </div>
 {% endif %}
 

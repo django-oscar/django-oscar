@@ -8,16 +8,16 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">	  	
-    <li>	  	
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>	  	
-        <span class="divider">/</span>	  	
-    </li>	  	
-    <li>	  	
-        <a href="{% url dashboard:user-alert-list %}">{% trans "Product alerts" %}</a>	  	
-        <span class="divider">/</span>	  	
-    </li>	  	
-    <li class="active">{% blocktrans with id=alert.id %}Alert #{{ id }}{% endblocktrans %}</li>	  	
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="{% url dashboard:user-alert-list %}">{% trans "Product alerts" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active">{% blocktrans with id=alert.id %}Alert #{{ id }}{% endblocktrans %}</li>
 </ul>
 {% endblock %}
 
@@ -34,7 +34,7 @@
         <form action="." method="post" >
             {% csrf_token %}
             <div class="form-actions">
-    		<p>{% trans "Are you sure that you want to delete this alert?" %}</p>
+            <p>{% trans "Are you sure that you want to delete this alert?" %}</p>
                 <button type='submit' class="btn btn-large btn-danger">{% trans "Delete" %}</button> or
                 <a href="{% url dashboard:user-alert-list %}">{% trans "cancel" %}</a>
             </div>

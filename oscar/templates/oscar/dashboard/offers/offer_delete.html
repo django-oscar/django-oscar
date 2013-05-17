@@ -11,15 +11,15 @@ create-page
 {% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">	  	
-    <li>	  	
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>	  	
-        <span class="divider">/</span>	  	
-    </li>	  	
-    <li>	  	
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
         <a href="{% url dashboard:offer-list %}">{% trans "Offer management" %}</a>
-        <span class="divider">/</span>	  	
-    </li>	 	
+        <span class="divider">/</span>
+    </li>
     <li>
         <a href="{% url dashboard:offer-detail offer.pk %}">'{{ offer.name }}'</a>
         <span class="divider">/</span>
@@ -34,11 +34,11 @@ create-page
 
 {% block dashboard_content %}
 <form action="." method="post">
-	{% csrf_token %}
+    {% csrf_token %}
     <p>{% trans "Are you sure you want to delete this offer?" %}</p>
-	<div class="form-actions">
-		<button class="btn btn-large btn-danger" type="submit">{% trans "Delete" %}</button> or
-		<a href="{% url dashboard:offer-list %}">{% trans "cancel" %}</a>
-	</div>
+    <div class="form-actions">
+        <button class="btn btn-large btn-danger" type="submit">{% trans "Delete" %}</button> or
+        <a href="{% url dashboard:offer-list %}">{% trans "cancel" %}</a>
+    </div>
 </form>
 {% endblock dashboard_content %}

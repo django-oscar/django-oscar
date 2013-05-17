@@ -18,7 +18,7 @@
         <a href="{% url customer:summary %}">{% trans 'Account' %}</a>
         <span class="divider">/</span>
     </li>
-	<li class="active">{% trans 'Email history' %}</li>
+    <li class="active">{% trans 'Email history' %}</li>
 </ul>
 {% endblock %}
 
@@ -37,21 +37,21 @@
 {% endblock subheader %}
 
 {% block content %}
-	<table class="table table-striped table-bordered">
-		<tr>
-			<th>{% trans 'Date sent' %}</th>
-			<th>{% trans 'Subject' %}</th>
-			<th></th>
-		</tr>
-		{% for email in emails %}
-		<tr>
-			<td>{{ email.date_sent }}</td>
-			<td>{{ email.subject }}</td>
-			<td>
-				<a href="{% url customer:email-detail email.id %}" class="btn btn-info">{% trans 'View' %}</a>
-			</td>
-		</tr>
-		{% endfor %}
-	</table>
+    <table class="table table-striped table-bordered">
+        <tr>
+            <th>{% trans 'Date sent' %}</th>
+            <th>{% trans 'Subject' %}</th>
+            <th></th>
+        </tr>
+        {% for email in emails %}
+        <tr>
+            <td>{{ email.date_sent }}</td>
+            <td>{{ email.subject }}</td>
+            <td>
+                <a href="{% url customer:email-detail email.id %}" class="btn btn-info">{% trans 'View' %}</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
 {% endblock content %}
 

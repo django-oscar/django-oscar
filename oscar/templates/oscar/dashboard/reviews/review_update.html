@@ -9,28 +9,28 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">	  	
-    <li>	  	
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>	  	
-        <span class="divider">/</span>	  	
-    </li>	  	
-    <li>	  	
-        <a href="{% url dashboard:reviews-list %}">{% trans "Reviews" %}</a>	  	
-        <span class="divider">/</span>	  	
-    </li>	  	
-    <li class="active">{% blocktrans %}Review #{{ review.id }}{% endblocktrans %}</li>	  	
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="{% url dashboard:reviews-list %}">{% trans "Reviews" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active">{% blocktrans %}Review #{{ review.id }}{% endblocktrans %}</li>
 </ul>
 {% endblock %}
 
 {% block headertext %}
-	{% blocktrans %}Review #{{ review.id }}{% endblocktrans %}
+    {% blocktrans %}Review #{{ review.id }}{% endblocktrans %}
 {% endblock %}
 
 {% block dashboard_content %}
 <form action="." method="post" class="form-stacked" enctype="multipart/form-data">
-	{% csrf_token %}
-	<div class="table-header">
-		<h3>{% trans "Review information" %}</h3>
+    {% csrf_token %}
+    <div class="table-header">
+        <h3>{% trans "Review information" %}</h3>
     </div>
     <div class="well">
         <div class="clearfix">
@@ -66,20 +66,20 @@
                         <span class="control-group {% if field.errors %}error{% endif %}">
                             {{ field.label_tag }}
                             {{ field }}
-    						{% for error in field.errors %}
-    								<ul class="help-block">
-    										<li>{{ error|escape }}</li>
-    								</ul>
-    						{% endfor %}
-        				</span>
+                            {% for error in field.errors %}
+                                    <ul class="help-block">
+                                            <li>{{ error|escape }}</li>
+                                    </ul>
+                            {% endfor %}
+                        </span>
                     {% endif %}
-            	</div>
+                </div>
             {% endif %}
         {% endfor %}
         </div>
         <div class="form-actions">
-    		<button class="btn btn-primary btn-large" type="submit">{% trans "Save" %}</button> {% trans "or" %}
-    		<a href="{% url dashboard:reviews-list %}">{% trans "cancel" %}</a>
+            <button class="btn btn-primary btn-large" type="submit">{% trans "Save" %}</button> {% trans "or" %}
+            <a href="{% url dashboard:reviews-list %}">{% trans "cancel" %}</a>
         </div>
     </div>
 </form>

@@ -9,12 +9,12 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">	  	
-    <li>	  	
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>	  	
-        <span class="divider">/</span>	  	
-    </li>	  	
-    <li class="active">{% trans "Order management" %}</li>	  	
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active">{% trans "Order management" %}</li>
 </ul>
 {% endblock %}
 
@@ -80,9 +80,9 @@
         <h3 class="pull-left"><i class="icon-shopping-cart icon-large"></i>{{ queryset_description }}</h3>
         <div class="pull-right">
             <div class="form-inline">
-            	<label>{% trans "Download selected orders as a CSV" %}</label>
-            	<input type="hidden" name="action" value="download_selected_orders" />
-            	<button type="submit" class="btn btn-primary">{% trans "Download" %}</button>
+                <label>{% trans "Download selected orders as a CSV" %}</label>
+                <input type="hidden" name="action" value="download_selected_orders" />
+                <button type="submit" class="btn btn-primary">{% trans "Download" %}</button>
             </div>
         </div>
     </caption>
@@ -91,15 +91,15 @@
         <tr>
             <th>
                 {% trans "Select all" %}
-    		</th>
+            </th>
             <th>{% anchor 'number' _("Order number") %}</th>
-    		<th>{% trans "Total inc tax" %}</th>
-    		<th>{% trans "Date of purchase" %}</th>
-    		<th>{% trans "Number of items" %}</th>
-    		<th>{% trans "Status" %}</th>
-    		<th>{% trans "Customer" %}</th>
-    		<th>{% trans "Shipping address" %}</th>
-    		<th>{% trans "Billing address" %}</th>
+            <th>{% trans "Total inc tax" %}</th>
+            <th>{% trans "Date of purchase" %}</th>
+            <th>{% trans "Number of items" %}</th>
+            <th>{% trans "Status" %}</th>
+            <th>{% trans "Customer" %}</th>
+            <th>{% trans "Shipping address" %}</th>
+            <th>{% trans "Billing address" %}</th>
             <th></th>
         </tr>
     </thead>
@@ -108,14 +108,14 @@
         <td><input type="checkbox" name="selected_order" class="selected_order" value="{{ order.id }}"/>
         <td>{{ order.number }}</td>
         <td>{{ order.total_incl_tax|currency }}</td>
-		<td>{{ order.date_placed }}</td>
-		<td>{{ order.num_items }}</td>
+        <td>{{ order.date_placed }}</td>
+        <td>{{ order.num_items }}</td>
         <td>{{ order.status|default:"-" }}</td>
         <td>{{ order.email }}</td>
         <td>{{ order.shipping_address|default:"-" }}</td>
         <td>{{ order.billing_address|default:"-" }}</td>
         <td>
-			<a class="btn btn-info" href="{% url dashboard:order-detail order.number %}">{% trans "View" %}</a>
+            <a class="btn btn-info" href="{% url dashboard:order-detail order.number %}">{% trans "View" %}</a>
         </td>
     </tr>
     {% endfor %}

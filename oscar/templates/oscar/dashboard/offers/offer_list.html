@@ -8,19 +8,19 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">	  	
-    <li>	  	
-        <a href="{% url promotions:home %}">{% trans "Dashboard" %}</a>	  	
-        <span class="divider">/</span>	  	
-    </li>	  	
-    <li class="active">{% trans "Offer management" %}</li>	  	
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url promotions:home %}">{% trans "Dashboard" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active">{% trans "Offer management" %}</li>
 </ul>
 {% endblock %}
 
 {% block header %}
-<div class="page-header">    	  	
+<div class="page-header">
     <a href="{% url dashboard:offer-metadata %}" class="btn btn-primary btn-large pull-right"><i class="icon-plus"></i> {% trans "Create new offer" %}</a>
-    <h1>{% trans "Offer management" %}</h1>    	  	
+    <h1>{% trans "Offer management" %}</h1>
 </div>
 {% endblock header %}
 
@@ -61,12 +61,12 @@
                     <td>{{ offer.end_date|default:"-" }}</td>
                     <td>{{ offer.benefit.description|safe }}</td>
                     <td>{{ offer.condition.description|safe }}</td>
-					<td>{% if offer.is_available %}
-						<span class="label label-success">{% trans "Yes" %}</span>
-						{% else %}
-						<span class="label label-important">{% trans "No" %}</span>
-						{% endif %}
-					</td>
+                    <td>{% if offer.is_available %}
+                        <span class="label label-success">{% trans "Yes" %}</span>
+                        {% else %}
+                        <span class="label label-important">{% trans "No" %}</span>
+                        {% endif %}
+                    </td>
                     <td>
                         {% for restriction in offer.availability_restrictions %}
                                 {% if not restriction.is_satisfied %}
@@ -103,6 +103,6 @@
                 <tr><td>{% trans "No offers found." %}</td></tr>
                 {% endif %}
             </table>
-			{% include "partials/pagination.html" %}
+            {% include "partials/pagination.html" %}
         </form>
 {% endblock dashboard_content %}

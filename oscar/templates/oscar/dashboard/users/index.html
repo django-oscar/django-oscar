@@ -9,18 +9,18 @@
 {% endblock %}
 
 {% block header %}
-<div class="page-header"> 	
+<div class="page-header">
     <h1>{% trans "Customers" %}</h1>
 </div>
 {% endblock header %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">	  	
-    <li>	  	
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>	  	
-        <span class="divider">/</span>	  	
-    </li>	  	
-    <li class="active">{% trans "Customers" %}</li>	  	
+<ul class="breadcrumb">
+    <li>
+        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active">{% trans "Customers" %}</li>
 </ul>
 {% endblock %}
 
@@ -31,8 +31,8 @@
 <div class="well">
     <form action="." method="get" class="form-inline">
         {% include "partials/form_fields_inline.html" with form=form %}
-		<input type="submit" value="{% trans "Search" %}" class="btn btn-primary"/>
-		<a href="{% url dashboard:users-index %}" class="btn">{% trans "Reset" %}</a>
+        <input type="submit" value="{% trans "Search" %}" class="btn btn-primary"/>
+        <a href="{% url dashboard:users-index %}" class="btn">{% trans "Reset" %}</a>
     </form>
 </div>
 
@@ -67,8 +67,8 @@
             <th>{% trans "Email" %}</th>
             <th>{% trans "First name" %}</th>
             <th>{% trans "Last name" %}</th>
-	        <th>{% trans "Is active?" %}</th>
-	        <th>{% trans "Is staff user?" %}</th>
+            <th>{% trans "Is active?" %}</th>
+            <th>{% trans "Is staff user?" %}</th>
             <th>{% trans "Date registered" %}</th>
             <th>{% trans "Num Orders" %}</th>
             <th></th>
@@ -79,8 +79,8 @@
             <td>{{ user.email }}</td>
             <td>{{ user.first_name }}</td>
             <td>{{ user.last_name }}</td>
-	        <td>{{ user.is_active|yesno:_("True,False") }}</td>
-	        <td>{{ user.is_staff|yesno:_("True,False") }}</td>
+            <td>{{ user.is_active|yesno:_("True,False") }}</td>
+            <td>{{ user.is_staff|yesno:_("True,False") }}</td>
             <td>{{ user.date_joined|date:"d/m/y H:s" }}</td>
             <td>{% num_orders user %}</td>
             <td>

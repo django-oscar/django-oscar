@@ -9,15 +9,15 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-    <ul class="breadcrumb">	  	
-        <li>	  	
-            <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>	  	
-            <span class="divider">/</span>	  	
-        </li>	  	
-        <li>	  	
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+            <span class="divider">/</span>
+        </li>
+        <li>
             <a href="{% url dashboard:range-list %}">{% trans "Range management" %}</a>
-            <span class="divider">/</span>	  	
-        </li>	  	
+            <span class="divider">/</span>
+        </li>
         {% if range %}
             <li class="active">{{ range.name }}</li>
         {% else %}
