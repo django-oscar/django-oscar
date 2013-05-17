@@ -2,6 +2,7 @@
 {% load reviews_tags %}
 {% load thumbnail %}
 {% load i18n %}
+{% load display_tags %}
 
 <article class="product_pod">
     {% block product_image %}
@@ -15,7 +16,9 @@
     {% endblock %}
 
     {% block product_review %}
-        <p class="star {{ product.rating|as_stars }}"></p>
+        {% iffeature "reviews" %}
+            <p class="star {{ product.rating|as_stars }}"></p>
+        {% endiffeature %}
     {% endblock %}
 
     {% block product_title %}
@@ -25,7 +28,6 @@
     {% block product_price %}
     <div class="product_price">
         {% include "catalogue/partials/stock_record.html" %}
-
         {% if product.is_group %}
             <a class="btn btn-full" href="{% url catalogue:detail product.slug product.id %}">{% trans "View" %}</a>
         {% else %}

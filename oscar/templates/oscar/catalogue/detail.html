@@ -4,6 +4,7 @@
 {% load reviews_tags %}
 {% load staticfiles %}
 {% load product_tags %}
+{% load display_tags %}
 {% load i18n %}
 
 {% block extrastyles %}
@@ -68,27 +69,31 @@
                 <a class="pull-right" href="{% url dashboard:catalogue-product product.id %}"><small><i class="icon-edit"></i> {% trans "Edit this product" %}</small></a>
             {% endif %}
             <h1>{{ product.get_title }}</h1>
-            
+
             {% block product_stock_record %}
             {% include "catalogue/partials/stock_record.html" %}
             {% endblock %}
-            
-            {% if product.rating != None %}
-            <p class="star {{ product.rating|as_stars }}">
-                <small><a href="{% url catalogue:reviews-list product.slug product.id %}">
-                        {% blocktrans count reviews|length as num_reviews %}
-                        1 custom review {% plural %} {{ num_reviews }} customer reviews
-                        {% endblocktrans %}
-                </a></small>
-                &nbsp;
-                <a id="write_review" href="{% url catalogue:reviews-add product.slug product.id %}#addreview" class="btn btn-success btn-small">{% trans "Write a review" %}</a>
-            </p>
-            {% else %}
-                <p class="star">
+
+            {% iffeature "reviews" %}
+                {% if product.rating != None %}
+                <p class="star {{ product.rating|as_stars }}">
+                    <small><a href="{% url catalogue:reviews-list product.slug product.id %}">
+                            {% blocktrans count reviews|length as num_reviews %}
+                            1 custom review
+                            {% plural %}
+                            {{ num_reviews }} customer reviews
+                            {% endblocktrans %}
+                    </a></small>
+                    &nbsp;
                     <a id="write_review" href="{% url catalogue:reviews-add product.slug product.id %}#addreview" class="btn btn-success btn-small">{% trans "Write a review" %}</a>
                 </p>
-            {% endif %}
-             
+                {% else %}
+                    <p class="star">
+                        <a id="write_review" href="{% url catalogue:reviews-add product.slug product.id %}#addreview" class="btn btn-success btn-small">{% trans "Write a review" %}</a>
+                    </p>
+                {% endif %}
+            {% endiffeature %}
+
             <hr/>
 
             {% block product_basket_form %}
@@ -98,7 +103,7 @@
         {% endblock %}
 
     </div><!-- /row-fluid -->
-              
+
     {% block product_description %}
         {% if product.description %}
         <div id="product_description" class="sub-header">
@@ -107,7 +112,7 @@
         <p>{{ product.description|safe }}</p>
         {% endif %}
     {% endblock %}
-    
+
     {% block product_info %}
     <div class="sub-header">
         <h2>{% trans "Product Information" %}</h2>
@@ -139,10 +144,12 @@
             <td>{{ av.value }}</td>
         </tr>
         {% endfor %}
-        <tr>
-            <th>{% trans "Num reviews" %}</th>
-            <td>{{ reviews.count|default:0 }}</td>
-        </tr>
+        {% iffeature "reviews" %}
+            <tr>
+                <th>{% trans "Num reviews" %}</th>
+                <td>{{ reviews.count|default:0 }}</td>
+            </tr>
+        {% endiffeature %}
         <tr>
             <td></td>
             <td></td>
@@ -150,30 +157,32 @@
     </table>
     {% endblock %}
 
-    {% block product_review %}
-    <section>
-        <div id="reviews" class="sub-header">
-            {% if reviews %}
-                <a href="{% url catalogue:reviews-list product.slug product.id %}" class="btn pull-right">{% trans "See all reviews" %}</a>
-            {% endif %}
-            <h2>{% trans "Customer Reviews" %}</h2>
-        </div>
-
-        {% if not reviews %}
-            <p>
-                {% trans "This product does not have any reviews yet" %} - 
-                <a href="{% url catalogue:reviews-add product.slug product.id %}#addreview">{% trans "be the first to write one" %}</a>.
-            </p>
-        {% else %}
-            <div>
-                {% for review in reviews|slice:":3" %}
-                    {% include 'catalogue/partials/review.html' %}
-                {% endfor %}
+    {% iffeature "reviews" %}
+        {% block product_review %}
+        <section>
+            <div id="reviews" class="sub-header">
+                {% if reviews %}
+                    <a href="{% url catalogue:reviews-list product.slug product.id %}" class="btn pull-right">{% trans "See all reviews" %}</a>
+                {% endif %}
+                <h2>{% trans "Customer Reviews" %}</h2>
             </div>
-        {% endif %}
-    </section>    
-    {% endblock product_review %}
-    
+
+            {% if not reviews %}
+                <p>
+                    {% trans "This product does not have any reviews yet" %} -
+                    <a href="{% url catalogue:reviews-add product.slug product.id %}#addreview">{% trans "be the first to write one" %}</a>.
+                </p>
+            {% else %}
+                <div>
+                    {% for review in reviews|slice:":3" %}
+                        {% include 'catalogue/partials/review.html' %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </section>
+        {% endblock product_review %}
+    {% endiffeature %}
+
     <div class="row-fluid">
         {% if product.related_products.count %}
         <div class="span6">
@@ -220,9 +229,9 @@
 {% endblock content %}
 
 {% block extrascripts %}
-{{ block.super }}
-<!-- Responsive gallery js -->
-<script src="{% static "oscar/js/colorbox/jquery.colorbox-min.js" %}" type="text/javascript" charset="utf-8"></script>
-<script src="{% static "oscar/js/responsivegallery/jquery.tmpl.min.js" %}" type="text/javascript" charset="utf-8"></script>
-<script src="{% static "oscar/js/responsivegallery/gallery.js" %}" type="text/javascript" charset="utf-8"></script>
+    {{ block.super }}
+    <!-- Responsive gallery js -->
+    <script src="{% static "oscar/js/colorbox/jquery.colorbox-min.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "oscar/js/responsivegallery/jquery.tmpl.min.js" %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static "oscar/js/responsivegallery/gallery.js" %}" type="text/javascript" charset="utf-8"></script>
 {% endblock %}
