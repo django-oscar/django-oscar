@@ -453,15 +453,16 @@ class AbstractProduct(models.Model):
 
     def primary_image(self):
         images = self.images.all()
-        if images.count():
+        try:
             return images[0]
-        # We return a dict with fields that mirror the key properties of the
-        # ProductImage class so this missing image can be used interchangably
-        # in templates.  Strategy pattern ftw!
-        return {
-            'original': self.get_missing_image(),
-            'caption': '',
-            'is_missing': True}
+        except IndexError:
+            # We return a dict with fields that mirror the key properties of the
+            # ProductImage class so this missing image can be used interchangably
+            # in templates.  Strategy pattern ftw!
+            return {
+                'original': self.get_missing_image(),
+                'caption': '',
+                'is_missing': True}
 
     # Helpers
 
