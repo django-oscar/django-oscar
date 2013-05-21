@@ -241,6 +241,7 @@ class ProductForm(forms.ModelForm):
 
 class ProductRecommendationForm(forms.ModelForm):
     recommendation = product_autocomplete_field
+
     class Meta:
         get_model = ProductRecommendation
 

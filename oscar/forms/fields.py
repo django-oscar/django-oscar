@@ -67,4 +67,6 @@ class InfiniteChoiceField(fields.Field):
     def prepare_value(self, value):
         if value is not None and hasattr(value, '__iter__') and self.multiple:
             return u','.join(unicode(v.pk) for v in value)
-        return unicode(value)
+        if value:
+            value = unicode(value)
+        return value
