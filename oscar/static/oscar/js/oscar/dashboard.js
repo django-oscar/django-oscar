@@ -59,9 +59,86 @@ var oscar = (function(o, $) {
             });
             
             //Adds type/search for select fields
-            $('.form-stacked select').css('width', '95%');
-            $('.form-inline select').css('width', '300px');
+            $('.form-stacked select, .form-stacked input[data-autocomplete-url]').css('width', '95%');
+            $('.form-inline select, .form-inline input[data-autocomplete-url]').css('width', '300px');
             $('select').select2();
+
+            var beauty_select_formaters = {
+                result: function (item) {
+                    var result = item.text;
+                    if (item.image) {
+                        result = '<img src="' + item.image + '" /> ' + result;
+                    }
+                    return result;
+                },
+                selection: function(item) {
+                    return item.text;
+                }
+            }
+
+            $('input[data-autocomplete-url]').each(function(key, elem){
+                var $element = $(elem);
+                var data = $element.data();
+                var multiple = data['multiple'];
+                var allowClear = !data['required'];
+                var minimumInputLength = data['minimumInputLength'] || 3;
+                var placeholder = data['placeholder'];
+
+                if (data['disabled'] == 'true')
+                {
+                    $element.select2('disabled');
+                } else {
+                    var params = {
+                        allowClear: allowClear,
+                        multiple: multiple,
+                        placeholder: placeholder,
+                        minimumInputLength: minimumInputLength,
+                        formatResult: beauty_select_formaters.result,
+                        formatSelection: beauty_select_formaters.selection,
+                        initSelection: function(element, callback) {
+                            // the input tag has a value attribute preloaded that points to a preselected movie's id
+                            // this function resolves that id attribute to an object that select2 can render
+                            // using its formatResult renderer - that way the movie name is shown preselected
+                            var ids = $element.val();
+                            if (ids !== "") {
+                                $.ajax(data['autocompleteUrl'], {
+                                    data: {
+                                        ids: ids
+                                    },
+                                    dataType: "json"
+                                }).done(function(data){
+                                        var result = data.result;
+                                        var data = data.result;
+                                        if (!multiple) {
+                                            if (data.length > 0)
+                                                data = data[0]
+                                        }
+                                        callback(data);
+                                    });
+                            }
+                        },
+                        ajax: {
+                            url: data['autocompleteUrl'],
+                            dataType: 'json',
+                            quietMillis: 100,
+                            data: function (term, page) { // page is the one-based page number tracked by Select2
+                                return {
+                                    title: term, //search term
+                                    page_limit: 20, // page size
+                                    page: page // page number
+                                };
+                            },
+                            results: function (data, page) {
+                                var more = (page * 20) < data.total; // whether or not there are more results available
+
+                                // notice we return the value of more so Select2 knows if more results can be loaded
+                                return {results: data.result, more: more};
+                            }
+                        }
+                    };
+                    $element.select2(params);
+                }
+            });
 
             o.dashboard.filereader.init();
         },

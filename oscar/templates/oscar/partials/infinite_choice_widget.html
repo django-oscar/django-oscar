@@ -1,0 +1,8 @@
+<input type="hidden"
+       {% for key,value in attrs.iteritems %}
+           {{key}}="{{value}}"
+       {% endfor %}
+       name="{{input_name}}"
+       value="{{current_value}}"
+       data-multiple="{{multiple|yesno:'true,false,false'}}"
+/>
