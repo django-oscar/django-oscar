@@ -5,8 +5,10 @@ from django.http import HttpResponseRedirect, Http404
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
+from sorl.thumbnail import get_thumbnail
 
 from oscar.core.loading import get_classes
+from oscar.core.ajax import JSONResponseMixin
 
 (ProductForm,
  ProductSearchForm,
@@ -72,8 +74,36 @@ class ProductListView(generic.ListView):
             queryset = queryset.filter(title__icontains=data['title']).distinct()
             description_ctx['title_filter'] = _(" including an item with title matching '%s'") % data['title']
 
+        if data['ids']:
+            queryset = queryset.filter(pk__in=data['ids'].split(','))
+            description_ctx['ids_filter'] = _(" including an item with ids matching '%s'") % data['title']
+
         self.description = self.description_template % description_ctx
         return queryset
+
+
+class AutocompleteProductListView(JSONResponseMixin, ProductListView):
+    '''
+    Product list represente
+    '''
+    def get_context_data(self, **kwargs):
+        parent_ctx = super(AutocompleteProductListView, self).get_context_data(**kwargs)
+        paginator = parent_ctx['paginator']
+        object_list = parent_ctx['object_list']
+        thumbnail_options = {'crop': 'center', 'quality': 90}
+        result_list = []
+        for obj in object_list:
+            item = {'id': obj.pk, 'text': obj.title}
+            if hasattr(obj.primary_image(), 'original'):
+                img_file = obj.primary_image().original
+            else:
+                img_file = obj.primary_image()['original']
+            thumb = get_thumbnail(img_file, '25x25', **thumbnail_options)
+            item['image'] = thumb.url
+            result_list.append(item)
+        ctx = {'result': result_list, 'total': paginator.count}
+        return ctx
+
 
 
 class ProductCreateRedirectView(generic.RedirectView):

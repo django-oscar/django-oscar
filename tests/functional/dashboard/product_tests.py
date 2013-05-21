@@ -115,7 +115,7 @@ class TestCreateChildProduct(ProductWebTest):
 
         product_form = page.form
         product_form['title'] = 'Nice T-Shirt'
-        product_form['parent'] = self.parent.id
+        product_form['parent'] = unicode(self.parent.id)
         page = product_form.submit()
 
         try:
