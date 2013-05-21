@@ -91,10 +91,16 @@ class AutocompleteProductListView(JSONResponseMixin, ProductListView):
         paginator = parent_ctx['paginator']
         object_list = parent_ctx['object_list']
         thumbnail_options = {'crop': 'center', 'quality': 90}
-        result_list = [{'id': item.pk, 'text': item.title,
-                        'image': get_thumbnail(item.primary_image().original,
-                                               '25x25', **thumbnail_options).url}
-                       for item in object_list]
+        result_list = []
+        for obj in object_list:
+            item = {'id': obj.pk, 'text': obj.title}
+            if hasattr(obj.primary_image(), 'original'):
+                img_file = obj.primary_image().original
+            else:
+                img_file = obj.primary_image()['original']
+            thumb = get_thumbnail(img_file, '25x25', **thumbnail_options)
+            item['image'] = thumb.url
+            result_list.append(item)
         ctx = {'result': result_list, 'total': paginator.count}
         return ctx
 
