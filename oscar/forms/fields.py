@@ -3,6 +3,7 @@ from django.core.validators import URL_VALIDATOR_USER_AGENT
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from oscar.forms.widgets import InfiniteChoiceWidget
+from django.utils.encoding import smart_unicode
 
 from oscar.core import validators
 
@@ -47,7 +48,7 @@ class InfiniteChoiceField(fields.Field):
         super(InfiniteChoiceField, self).__init__(widget=widget, **kwargs)
 
     def to_python(self, value):
-        empty_values = validators.validators.EMPTY_VALUES + (u'None', 'None')
+        empty_values = validators.validators.EMPTY_VALUES
         if value in empty_values:
             return None
         if self.multiple:
@@ -65,8 +66,8 @@ class InfiniteChoiceField(fields.Field):
                 raise ValidationError(self.error_messages['invalid_choice'] % {'value': value})
 
     def prepare_value(self, value):
-        if value is not None and hasattr(value, '__iter__') and self.multiple:
-            return u','.join(unicode(v.pk) for v in value)
+        if value is not None and self.multiple and hasattr(value, '__iter__'):
+            return u','.join(smart_unicode(v.pk) for v in value)
         if value:
-            value = unicode(value)
+            value = smart_unicode(value)
         return value

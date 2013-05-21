@@ -141,12 +141,11 @@ def _attr_numeric_field(attribute):
     return forms.FloatField(label=attribute.name,
                             required=attribute.required)
 
-product_autocomplete_field = InfiniteChoiceField(
-    Product, autocomplete_url=('dashboard:catalogue-product-list-autocomplete',),
-    required=False)
 
 class ProductForm(forms.ModelForm):
-    parent = product_autocomplete_field
+    parent = InfiniteChoiceField(
+        Product, autocomplete_url=('dashboard:catalogue-product-list-autocomplete',),
+        required=False)
 
     FIELD_FACTORIES = {
         "text": _attr_text_field,
@@ -240,7 +239,9 @@ class ProductForm(forms.ModelForm):
 
 
 class ProductRecommendationForm(forms.ModelForm):
-    recommendation = product_autocomplete_field
+    recommendation = InfiniteChoiceField(
+        Product, autocomplete_url=('dashboard:catalogue-product-list-autocomplete',),
+        required=True)
 
     class Meta:
         get_model = ProductRecommendation

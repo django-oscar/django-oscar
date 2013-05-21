@@ -75,7 +75,6 @@ class InfiniteChoiceWidget(Widget):
         self.attrs = attrs
         if self.attrs is None:
             self.attrs = {}
-
         self.attrs['data-placeholder'] = _('Select from choices')
         self.attrs['data-required'] = yesno(kwargs.get('required'), 'true,false,false')
 
