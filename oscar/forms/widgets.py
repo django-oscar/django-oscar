@@ -5,6 +5,11 @@ from django.forms.widgets import FileInput
 from django.utils.encoding import force_unicode
 from django.template.loader import render_to_string
 from django.forms.util import flatatt
+from django.forms.widgets import Widget
+from django.utils.safestring import mark_safe
+from django.core.urlresolvers import reverse
+from django.utils.translation import ugettext_lazy as _
+from django.template.defaultfilters import yesno
 
 
 class ImageInput(FileInput):
@@ -54,3 +59,32 @@ class WYSIWYGTextArea(forms.Textarea):
         kwargs['attrs'].setdefault('class', '')
         kwargs['attrs']['class'] += ' wysiwyg'
         super(WYSIWYGTextArea, self).__init__(*args, **kwargs)
+
+
+class InfiniteChoiceWidget(Widget):
+    '''
+        Infinite choice widget, based on Select2 jQuery-plugin (http://ivaynberg.github.io/select2/)
+        See params here http://ivaynberg.github.io/select2/
+    '''
+    template_name = 'partials/infinite_choice_widget.html'
+    attrs = None
+    def __init__(self, autocomplete_url, multiple=None, attrs=None, **kwargs):
+        super(InfiniteChoiceWidget, self).__init__(attrs)
+        self.autocomplete_url = autocomplete_url
+        self.multiple = multiple
+        self.attrs = attrs
+        if self.attrs is None:
+            self.attrs = {}
+
+        self.attrs['data-placeholder'] = _('Select from choices')
+        self.attrs['data-required'] = yesno(kwargs.get('required'), 'true,false,false')
+
+    def render(self, name, value, attrs=None):
+        attrs['data-autocomplete-url'] = reverse(*self.autocomplete_url)
+        attrs.update(self.attrs)
+        return mark_safe(render_to_string(self.template_name,
+                                          {"attrs": attrs,
+                                           "input_name": name,
+                                           "multiple": self.multiple,
+                                           "current_value": value if value else "",
+                                           }))
