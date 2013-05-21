@@ -6,6 +6,7 @@ from treebeard.forms import MoveNodeForm
 
 from oscar.core.utils import slugify
 from oscar.forms.widgets import ImageInput
+from oscar.forms.fields import InfiniteChoiceField
 
 Product = get_model('catalogue', 'Product')
 Category = get_model('catalogue', 'Category')
@@ -63,6 +64,8 @@ class CategoryForm(MoveNodeForm):
 class ProductSearchForm(forms.Form):
     upc = forms.CharField(max_length=16, required=False, label=_('UPC'))
     title = forms.CharField(max_length=255, required=False, label=_('Title'))
+    ids = forms.CharField(max_length=65536, required=False, label=_('IDs'))
+
 
 
 class StockRecordForm(forms.ModelForm):
@@ -138,8 +141,12 @@ def _attr_numeric_field(attribute):
     return forms.FloatField(label=attribute.name,
                             required=attribute.required)
 
+product_autocomplete_field = InfiniteChoiceField(
+    Product, autocomplete_url=('dashboard:catalogue-product-list-autocomplete',),
+    required=False)
 
 class ProductForm(forms.ModelForm):
+    parent = product_autocomplete_field
 
     FIELD_FACTORIES = {
         "text": _attr_text_field,
@@ -163,7 +170,8 @@ class ProductForm(forms.ModelForm):
         if self.instance.pk is not None:
             # prevent selecting itself as parent
             parent = self.fields['parent']
-            parent.queryset = parent.queryset.exclude(pk=self.instance.pk)
+            if hasattr(parent, 'queryset'):
+                parent.queryset = parent.queryset.exclude(pk=self.instance.pk)
         if related_products is not None:
             related_products.queryset = self.get_related_products_queryset()
         if 'title' in self.fields:
@@ -231,6 +239,11 @@ class ProductForm(forms.ModelForm):
         return super(ProductForm, self).clean()
 
 
+class ProductRecommendationForm(forms.ModelForm):
+    recommendation = product_autocomplete_field
+    class Meta:
+        get_model = ProductRecommendation
+
 class StockAlertSearchForm(forms.Form):
     status = forms.CharField(label=_('Status'))
 
@@ -297,4 +310,4 @@ ProductImageFormSet = inlineformset_factory(
 
 
 ProductRecommendationFormSet = inlineformset_factory(
-    Product, ProductRecommendation, extra=5, fk_name="primary")
+    Product, ProductRecommendation, form=ProductRecommendationForm, extra=5, fk_name="primary")

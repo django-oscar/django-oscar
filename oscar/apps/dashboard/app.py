@@ -15,6 +15,7 @@ from oscar.apps.dashboard.reviews.app import application as reviews_app
 from oscar.apps.dashboard.vouchers.app import application as vouchers_app
 from oscar.apps.dashboard.communications.app import application as comms_app
 from oscar.apps.dashboard import views
+from oscar.forms.views import infinite_choice_data
 
 
 class DashboardApplication(Application):
@@ -49,6 +50,9 @@ class DashboardApplication(Application):
             url(r'^reviews/', include(self.reviews_app.urls)),
             url(r'^vouchers/', include(self.vouchers_app.urls)),
             url(r'^comms/', include(self.comms_app.urls)),
+            url(r'^autocomplete/(?P<app_name>[\w\d_]+)/(?P<model_name>[\w\d_]+)/$',
+                           view=infinite_choice_data,
+                           name='infinite_choice_data'),
         )
         return self.post_process_urls(urlpatterns)
 
