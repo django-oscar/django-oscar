@@ -516,6 +516,13 @@ class AbstractProduct(models.Model):
         """
         Update rating field
         """
+        self.rating = self.calculate_rating()
+        self.save()
+
+    def calculate_rating(self):
+        """
+        Calculate rating value
+        """
         ProductReview = get_model('reviews', 'ProductReview')
         result = self.reviews.filter(
             status=ProductReview.APPROVED
@@ -523,11 +530,11 @@ class AbstractProduct(models.Model):
             sum=Sum('score'), count=Count('id'))
         reviews_sum = result['sum'] or 0
         reviews_count = result['count'] or 0
+        rating = None
         if reviews_count > 0:
-            self.rating = float(reviews_sum) / reviews_count
-        else:
-            self.rating = None
-        self.save()
+            rating = float(reviews_sum) / reviews_count
+        return rating
+
 
 
 class ProductRecommendation(models.Model):
