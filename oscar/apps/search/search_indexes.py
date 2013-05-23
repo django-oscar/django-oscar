@@ -16,6 +16,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     category = indexes.CharField(null=True, faceted=True)
     price = indexes.DecimalField(null=True, faceted=True)
     num_in_stock = indexes.IntegerField(null=True, faceted=True)
+    rating = indexes.FloatField(model_attr="rating", null=True, faceted=True)
 
     date_created = indexes.DateTimeField(model_attr='date_created')
     date_updated = indexes.DateTimeField(model_attr='date_updated')

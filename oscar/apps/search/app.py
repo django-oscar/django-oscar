@@ -11,15 +11,20 @@ class SearchApplication(Application):
     name = 'search'
     search_view = views.MultiFacetedSearchView
 
-    def get_urls(self):
-        # Build SQS
+    def get_search_queryset(self):
+        """
+        Build SQS
+        """
         sqs = SearchQuerySet()
         for facet in settings.OSCAR_SEARCH_FACETS['fields'].values():
             sqs = sqs.facet(facet['field'])
         for facet in settings.OSCAR_SEARCH_FACETS['queries'].values():
             for query in facet['queries']:
                 sqs = sqs.query_facet(facet['field'], query[1])
+        return sqs
 
+    def get_urls(self):
+        sqs = self.get_search_queryset()
         # The form class has to be passed to the __init__ method as that is how
         # Haystack works.  It's slightly different to normal CBVs.
         urlpatterns = patterns('',

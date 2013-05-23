@@ -19,24 +19,43 @@ class SuggestionsView(View):
     by jQuery autocomplete) """
 
     suggest_limit = settings.OSCAR_SEARCH_SUGGEST_LIMIT
+    query_term_field = 'query_term'
 
     def get(self, request):
         context = self.get_context_data()
         return self.render_to_response(context)
 
+    def get_search_queryset(self):
+        """
+        Build SQS
+        """
+        return SearchQuerySet()
+
+    def apply_filter(self, sqs):
+        """
+        Apply filter and return limited list
+
+        @rtype: list
+        """
+        query_term = self.request.GET.get(self.query_term_field, None)
+        if query_term:
+            sqs = sqs.filter(text__contains=query_term)
+        return sqs[:self.suggest_limit]
+
+    def get_item_dict(self, item):
+        """
+        Return item dict
+        """
+        return {'label': item.object.title, 'url': item.object.get_absolute_url()}
+
     def get_context_data(self):
         '''
         Creates a list of suggestions
         '''
-        query_term = self.request.GET['query_term']
-        query_set = SearchQuerySet().filter(text__contains=query_term)[
-            :self.suggest_limit]
+        query_set = self.apply_filter(self.get_search_queryset())
         context = []
         for item in query_set:
-            context.append({
-                'label': item.object.title,
-                'url':  item.object.get_absolute_url(),
-            })
+            context.append(self.get_item_dict(item))
         return context
 
     def render_to_response(self, context):
