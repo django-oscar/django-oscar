@@ -475,8 +475,8 @@ class AbstractLine(models.Model):
         passed basket.
         """
         if not self.product:
-            return False, _("'%(title)s' is no longer available "
-                            "for purchase") % {'title': self.title}
+            return False, (_("'%(title)s' is no longer available") %
+                           {'title': self.title})
 
         Line = models.get_model('basket', 'Line')
         try:

@@ -73,12 +73,16 @@
 						<td>{{ line.line_price_before_discounts_excl_tax|currency }}</td>
 						<td>{{ line.line_price_before_discounts_incl_tax|currency }}</td>
 						<td>
-							<form id="line_form_{{ line.id }}" action="{% url customer:order-line order.number line.id %}" method="POST">
-								{% csrf_token %}
-								<input type="hidden" name="action" value="reorder" />
-								<button class="btn btn-success" type="submit">{% trans 'Re-order' %}</button>
-								<a class="btn btn-info" href="{% url catalogue:reviews-add line.product.slug line.product.id %}">{% trans 'Write a review' %}</a>
-							</form>
+                            {% if line.product %}
+                                <form id="line_form_{{ line.id }}" action="{% url customer:order-line order.number line.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="reorder" />
+                                    <button class="btn btn-success" type="submit">{% trans 'Re-order' %}</button>
+                                    <a class="btn btn-info" href="{% url catalogue:reviews-add line.product.slug line.product.id %}">{% trans 'Write a review' %}</a>
+                                </form>
+                            {% else %}
+                                {% trans 'Not available anymore' %}
+                            {% endif %}
 						</td>
 					</tr>
 					{% endfor %}
