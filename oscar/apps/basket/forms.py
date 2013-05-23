@@ -46,8 +46,7 @@ class SavedLineForm(forms.ModelForm):
 
     class Meta:
         model = Line
-        exclude = ('basket', 'product', 'line_reference', 'quantity',
-                   'price_excl_tax', 'price_incl_tax')
+        fields = ('id', 'move_to_basket')
 
     def __init__(self, user, basket, *args, **kwargs):
         self.user = user
@@ -56,6 +55,9 @@ class SavedLineForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super(SavedLineForm, self).clean()
+        if not cleaned_data['move_to_basket']:
+            # skip further validation (see issue #666)
+            return cleaned_data
         try:
             line = self.basket.lines.get(product=self.instance.product)
         except Line.DoesNotExist:
