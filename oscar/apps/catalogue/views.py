@@ -94,7 +94,6 @@ def get_product_base_queryset():
     return Product.browsable.select_related(
         'product_class',
     ).prefetch_related(
-        'reviews',
         'variants',
         'product_options',
         'product_class__options',
