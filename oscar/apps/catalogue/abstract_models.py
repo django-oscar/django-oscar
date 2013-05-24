@@ -393,7 +393,7 @@ class AbstractProduct(models.Model):
         except ObjectDoesNotExist:
             return False
         else:
-            return True
+            return isinstance(self.stockrecord, get_class('partner.models', 'StockRecord'))
 
     def is_purchase_permitted(self, user, quantity):
         """
