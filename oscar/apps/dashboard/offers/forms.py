@@ -18,11 +18,18 @@ class MetaDataForm(forms.ModelForm):
 
 class RestrictionsForm(forms.ModelForm):
     format = '%Y-%m-%d %H:%M'
+
+    # We use data attributes to specify the date and time formats in a notation
+    # that the JS datepicker uses.
+    widget = forms.DateTimeInput(
+        format=format, attrs={
+            'data-dateFormat': 'yy-mm-dd',
+            'data-timeFormat': 'HH:mm'
+        })
     start_datetime = forms.DateTimeField(
-        widget=forms.DateTimeInput(format=format),
-        label=_("Start date"), required=False)
-    end_datetime = forms.DateTimeField(widget=forms.DateTimeInput(format=format),
-                               label=_("End date"), required=False)
+        widget=widget, label=_("Start date"), required=False)
+    end_datetime = forms.DateTimeField(
+        widget=widget, label=_("End date"), required=False)
 
     def __init__(self, *args, **kwargs):
         super(RestrictionsForm, self).__init__(*args, **kwargs)
