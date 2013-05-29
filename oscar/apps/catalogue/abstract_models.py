@@ -242,16 +242,15 @@ class AbstractProduct(models.Model):
     while its children would be "Green fleece - size L".
     """
     #: Universal product code
-    upc = models.CharField(_("UPC"), max_length=64, blank=True, null=True,
-                           unique=True,
+    upc = models.CharField(
+        _("UPC"), max_length=64, blank=True, null=True, unique=True,
         help_text=_("Universal Product Code (UPC) is an identifier for "
                     "a product which is not specific to a particular "
                     " supplier. Eg an ISBN for a book."))
 
     # No canonical product should have a stock record as they cannot be bought.
-    parent = models.ForeignKey('self', null=True, blank=True,
-                               related_name='variants',
-                               verbose_name=_("Parent"),
+    parent = models.ForeignKey(
+        'self', null=True, blank=True, related_name='variants', verbose_name=_("Parent"),
         help_text=_("Only choose a parent product if this is a 'variant' of "
                     "a canonical catalogue.  For example if this is a size "
                     "4 of a particular t-shirt.  Leave blank if this is a "
@@ -534,7 +533,6 @@ class AbstractProduct(models.Model):
         if reviews_count > 0:
             rating = float(reviews_sum) / reviews_count
         return rating
-
 
 
 class ProductRecommendation(models.Model):

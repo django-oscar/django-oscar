@@ -27,8 +27,8 @@ class CategoryForm(MoveNodeForm):
         pos = cleaned_data.get('_position')
 
         if name and self.is_slug_conflicting(name, ref_node_pk, pos):
-            raise forms.ValidationError(_('Category with the given path'
-                                          ' already exists.'))
+            raise forms.ValidationError(
+                _('Category with the given path already exists.'))
         return cleaned_data
 
     def is_slug_conflicting(self, name, ref_node_pk, position):
@@ -88,7 +88,7 @@ def _attr_text_field(attribute):
 
 def _attr_textarea_field(attribute):
     return forms.CharField(label=attribute.name,
-               widget=forms.Textarea(),
+                           widget=forms.Textarea(),
                            required=attribute.required)
 
 
@@ -161,9 +161,10 @@ class ProductForm(forms.ModelForm):
         self.add_attribute_fields()
         related_products = self.fields.get('related_products', None)
         if self.instance.pk is not None:
-            # prevent selecting itself as parent
+            # Prevent selecting itself as parent
             parent = self.fields['parent']
-            parent.queryset = parent.queryset.exclude(pk=self.instance.pk)
+            parent.queryset = parent.queryset.exclude(
+                pk=self.instance.pk).filter(parent=None)
         if related_products is not None:
             related_products.queryset = self.get_related_products_queryset()
         if 'title' in self.fields:
