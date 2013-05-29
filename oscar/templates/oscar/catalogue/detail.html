@@ -48,17 +48,7 @@
 {% block content %}
 
 <article class="product_page"><!-- Start of product page -->
-    {% comment %} 
-    This is a but clunky here.  Better to have some kind of JS-driven dashboard menu that 
-    pops out when clicked.  A bit like the Django-Debug-Toolbar button
-    {% endcomment %}
-    {% if user.is_authenticated and user.is_staff %}
-        <div class="row-fluid">
-            <div class="well">
-                <a href="{% url dashboard:catalogue-product product.id %}"><button class="btn btn-success btn-full">{% trans "Edit this product" %}</button></a>
-            </div>
-        </div>
-    {% endif %}
+
 
     <div class="row-fluid">
 
@@ -70,6 +60,13 @@
 
         {% block product_main %}
         <div class="span6">
+            {% comment %} 
+            This is a but clunky here.  Better to have some kind of JS-driven dashboard menu that 
+            pops out when clicked.  A bit like the Django-Debug-Toolbar button
+            {% endcomment %}
+            {% if user.is_authenticated and user.is_staff %}
+                <a class="pull-right" href="{% url dashboard:catalogue-product product.id %}"><small><i class="icon-edit"></i> {% trans "Edit this product" %}</small></a>
+            {% endif %}
             <h1>{{ product.get_title }}</h1>
             
             {% block product_stock_record %}
@@ -80,9 +77,7 @@
             <p class="star {{ product.rating|as_stars }}">
                 <small><a href="{% url catalogue:reviews-list product.slug product.id %}">
                         {% blocktrans count reviews|length as num_reviews %}
-                        1 custom review
-                        {% plural %}
-                        {{ num_reviews }} customer reviews
+                        1 custom review {% plural %} {{ num_reviews }} customer reviews
                         {% endblocktrans %}
                 </a></small>
                 &nbsp;
@@ -97,7 +92,7 @@
             <hr/>
 
             {% block product_basket_form %}
-            {% include "catalogue/partials/add_to_basket_form.html" %}
+                {% include "catalogue/partials/add_to_basket_form.html" %}
             {% endblock %}
         </div><!-- /span6 -->
         {% endblock %}
