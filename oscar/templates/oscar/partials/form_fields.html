@@ -3,9 +3,9 @@
     {{ field }}
 {% endfor %}
 {% for field in form.visible_fields %}
-	{% comment %} 
-	We use a separate template for each field so that forms can be rendered
-	field-by-field easily #}
-	{% endcomment %}
-	{% include 'partials/form_field.html' with field=field %}
+    {% comment %}
+        We use a separate template for each field so that forms can be rendered
+        field-by-field easily #}
+    {% endcomment %}
+    {% include 'partials/form_field.html' with field=field %}
 {% endfor %}
