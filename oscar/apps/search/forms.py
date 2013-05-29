@@ -56,7 +56,7 @@ class MultiFacetedSearchForm(FacetedSearchForm):
         Overriding the search method to allow for multiple facets
         '''
         sqs = super(FacetedSearchForm, self).search()
-        if hasattr(self, 'cleaned_data') and 'selected_facets' in self.cleaned_data:
-            for f in self.cleaned_data['selected_facets'].split("|"):
+        if self.selected_facets:
+            for f in self.selected_facets:
                 sqs = sqs.narrow(f)
         return sqs
