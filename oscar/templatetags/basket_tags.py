@@ -2,6 +2,7 @@ from django import template
 from django.db.models import get_model
 
 from oscar.core.loading import get_class
+
 AddToBasketForm = get_class('basket.forms', 'AddToBasketForm')
 SimpleAddToBasketForm = get_class('basket.forms', 'SimpleAddToBasketForm')
 Product = get_model('catalogue', 'product')
@@ -44,24 +45,29 @@ class BasketFormNode(template.Node):
 
     def render(self, context):
         try:
-            self.request = self.request_var.resolve(context)
+            request = self.request_var.resolve(context)
             product = self.product_var.resolve(context)
         except template.VariableDoesNotExist:
             return ''
 
-        if isinstance(product, Product):
-            initial = {}
-            if not product.is_group:
-                initial['product_id'] = product.id
-            self.form = self.form_class(
-                self.request, instance=product, initial=initial)
+        if not isinstance(product, Product):
+            return ''
 
-            user = self.request.user
-            is_permitted, reason = self.form.is_purchase_permitted(user,
-                                                                product, 1)
+        initial = {}
+        if not product.is_group:
+            initial['product_id'] = product.id
+        form = self.form_class(
+            request, instance=product, initial=initial)
 
-            self.form.purchase_permitted = is_permitted
-            self.form.reason = reason
+        # Check that the user has permission to add at least one product to his
+        # basket.
+        if not product.is_group:
+            is_permitted, reason = form.is_purchase_permitted(
+                request.user, product, 1)
+        else:
+            is_permitted, reason = True, ''
+        form.purchase_permitted = is_permitted
+        form.reason = reason
 
-            context[self.form_var] = self.form
+        context[self.form_var] = form
         return ''
