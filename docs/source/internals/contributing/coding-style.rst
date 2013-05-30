@@ -48,3 +48,8 @@ Referencing managers
 
 Use ``_default_manager`` rather than ``objects``.  This allows projects to
 override the default manager to provide domain-specific behaviour.
+
+HTML
+----
+
+Please indent with four spaces.
