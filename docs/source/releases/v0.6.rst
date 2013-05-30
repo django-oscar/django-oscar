@@ -17,6 +17,9 @@ Overview
 What's new in Oscar 0.6?
 ========================
 
+The payment models have been split into abstract- and concrete versions.  This
+brings them inline with other Oscar apps and allows them to be customised.
+
 Search
 ~~~~~~
 
