@@ -1,9 +1,10 @@
 from decimal import Decimal
 
 from django.db import models
-from oscar.core.utils import slugify
 from django.utils.translation import ugettext as _
 from django.conf import settings
+
+from oscar.core.utils import slugify
 
 
 class AbstractTransaction(models.Model):
@@ -48,13 +49,16 @@ class AbstractSource(models.Model):
     amount, but some applications will allow orders to be paid for using
     multiple sources such as cheque, credit accounts, gift cards.  Each payment
     source will have its own entry.
+
+    This source object tracks how much money has been authorised, debited and
+    refunded, which is useful when payment takes place in multiple stages.
     """
-    order = models.ForeignKey('order.Order',
-                              related_name='sources', verbose_name=_("Order"))
-    source_type = models.ForeignKey('payment.SourceType',
-                                    verbose_name=_("Source Type"))
-    currency = models.CharField(_("Currency"), max_length=12,
-                                default=settings.OSCAR_DEFAULT_CURRENCY)
+    order = models.ForeignKey(
+        'order.Order', related_name='sources', verbose_name=_("Order"))
+    source_type = models.ForeignKey(
+        'payment.SourceType', verbose_name=_("Source Type"))
+    currency = models.CharField(
+        _("Currency"), max_length=12, default=settings.OSCAR_DEFAULT_CURRENCY)
 
     # Track the various amounts associated with this source
     amount_allocated = models.DecimalField(
@@ -100,10 +104,6 @@ class AbstractSource(models.Model):
             for txn in self.deferred_txns:
                 self._create_transaction(*txn)
 
-    def balance(self):
-        return (self.amount_allocated - self.amount_debited +
-                self.amount_refunded)
-
     def create_deferred_transaction(self, txn_type, amount, reference=None,
                                     status=None):
         """
@@ -120,6 +120,10 @@ class AbstractSource(models.Model):
         AbstractTransaction.objects.create(
             source=self, txn_type=txn_type, amount=amount,
             reference=reference, status=status)
+
+    # =======
+    # Actions
+    # =======
 
     def allocate(self, amount, reference=None, status=None):
         """
@@ -152,6 +156,18 @@ class AbstractSource(models.Model):
         self._create_transaction(
             AbstractTransaction.REFUND, amount, reference, status)
     refund.alters_data = True
+
+    # ==========
+    # Properties
+    # ==========
+
+    @property
+    def balance(self):
+        """
+        Return the balance of this source
+        """
+        return (self.amount_allocated - self.amount_debited +
+                self.amount_refunded)
 
     @property
     def amount_available_for_refund(self):

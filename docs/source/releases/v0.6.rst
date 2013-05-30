@@ -69,3 +69,6 @@ Templates:
 * The template ``customer/orders/order.html`` has been renamed to
   ``customer/orders/order_detail.html``.
 
+Payment app:
+
+* The `balance` method on the source object is not a property not a method.
