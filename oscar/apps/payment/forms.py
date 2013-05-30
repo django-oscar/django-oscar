@@ -5,60 +5,15 @@ import re
 from django import forms
 from django.db.models import get_model
 from django.utils.translation import ugettext_lazy as _
-from oscar.apps.address.forms import AbstractAddressForm
 
+from oscar.apps.address.forms import AbstractAddressForm
 from oscar.core.loading import get_class
+from . import bankcards
 
 Country = get_model('address', 'Country')
 BillingAddress = get_model('order', 'BillingAddress')
 BankcardModel = get_model('payment', 'Bankcard')
 Bankcard = get_class('payment.utils', 'Bankcard')
-
-VISA, MASTERCARD, AMEX, MAESTRO, DISCOVER = ('Visa', 'Mastercard', 'American Express', 'Maestro', 'Discover')
-
-
-def bankcard_type(number):
-    u"""
-    Returns the type of a bankcard based on its number.
-    """
-    number = str(number)
-    if len(number) == 13:
-        if number[0] == "4":
-            return VISA
-    elif len(number) == 14:
-        if number[:2] == "36":
-            return MASTERCARD
-    elif len(number) == 15:
-        if number[:2] in ("34", "37"):
-            return AMEX
-    elif len(number) == 16:
-        if number[:4] == "6011":
-            return DISCOVER
-        if number[:2] in ("51", "52", "53", "54", "55"):
-            return MASTERCARD
-        if number[0] == "4":
-            return VISA
-    return None
-
-
-def luhn(card_number):
-    u"""
-    Tests whether a bankcard number passes the Luhn algorithm.
-    """
-    card_number = str(card_number)
-    sum = 0
-    num_digits = len(card_number)
-    odd_even = num_digits & 1
-
-    for i in range(0, num_digits):
-        digit = int(card_number[i])
-        if not (( i & 1 ) ^ odd_even ):
-            digit = digit * 2
-        if digit > 9:
-            digit = digit - 9
-        sum = sum + digit
-
-    return (sum % 10) == 0
 
 
 class BankcardNumberField(forms.CharField):
@@ -69,7 +24,7 @@ class BankcardNumberField(forms.CharField):
         non_decimal = re.compile(r'\D+')
         value = non_decimal.sub('', value.strip())
 
-        if value and not luhn(value):
+        if value and not bankcards.luhn(value):
             raise forms.ValidationError(_("Please enter a valid credit card number."))
         return super(BankcardNumberField, self).clean(value)
 
