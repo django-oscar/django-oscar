@@ -14,9 +14,9 @@
     <div class="btn-group">
         <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
             {% if in_user_wishlists %}
-                Add to or remove from wish list
+                {% trans 'Add to or remove from wish list' %}
             {% else %}
-                Add to wish list
+                {% trans 'Add to wish list' %}
             {% endif %}
             <span class="caret"></span>
         </a>
@@ -38,7 +38,7 @@
                 {% endif %}
              </li>
         {% endfor %}
-        <li><a href="{% url 'customer:wishlists-add-product' product_pk=product.pk %}">{% trans 'Add to new wish list' %}</a></li>
+        <li><a href="{% url 'customer:wishlists-create' product_pk=product.pk %}">{% trans 'Add to new wish list' %}</a></li>
         </ul>
     </div>
 {% endif %}

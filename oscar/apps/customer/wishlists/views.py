@@ -118,7 +118,8 @@ class WishListUpdateView(PageTitleMixin, UpdateView):
                                  key=self.kwargs['key'])
 
     def get_success_url(self):
-        messages.success(self.request, _("Changes saved"))
+        messages.success(self.request, _("Changes to wish list '%s' saved") %
+                         self.object.name)
         return reverse('customer:wishlists-list')
 
 
@@ -135,7 +136,8 @@ class WishListDeleteView(PageTitleMixin, DeleteView):
                                  key=self.kwargs['key'])
 
     def get_success_url(self):
-        messages.success(self.request, _("Wish list deleted"))
+        messages.success(self.request, _("Wish list '%s' deleted") %
+                                       self.object.name)
         return reverse('customer:wishlists-list')
 
 
