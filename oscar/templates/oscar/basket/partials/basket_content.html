@@ -125,16 +125,12 @@
     {% endblock %}
 {% endif %}
 
-{% if request.user.is_authenticated %}
+{% if request.user.is_authenticated and saved_formset %}
 <div class="well">
     <div class="sub-header">
         <h3>{% trans "To buy later" %}</h3>
     </div>
 
-    {% if not saved_formset %}
-    <p>{% trans "Your saved basket is empty." %}</p>
-
-    {% else %}
     <div class="row-fluid basket-title hidden-phone">
         <h4 class="span8">{% trans "Items" %}</h4>
         <h4 class="span2 align-center">{% trans "Price" %}</h4>
@@ -167,6 +163,5 @@
         </div>
         {% endfor %}
     </form>
-    {% endif %}
 </div>
 {% endif %}
