@@ -23,8 +23,9 @@ class Migration(SchemaMigration):
         db.create_table('wishlists_line', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('wishlist', self.gf('django.db.models.fields.related.ForeignKey')(related_name='lines', to=orm['wishlists.WishList'])),
-            ('product', self.gf('django.db.models.fields.related.ForeignKey')(related_name='wishlists_lines', to=orm['catalogue.Product'])),
+            ('product', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='wishlists_lines', null=True, on_delete=models.SET_NULL, to=orm['catalogue.Product'])),
             ('quantity', self.gf('django.db.models.fields.PositiveIntegerField')(default=1)),
+            ('title', self.gf('django.db.models.fields.CharField')(max_length=255)),
         ))
         db.send_create_signal('wishlists', ['Line'])
 
@@ -195,8 +196,9 @@ class Migration(SchemaMigration):
         'wishlists.line': {
             'Meta': {'unique_together': "(('wishlist', 'product'),)", 'object_name': 'Line'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'product': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'wishlists_lines'", 'to': "orm['catalogue.Product']"}),
+            'product': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'wishlists_lines'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': "orm['catalogue.Product']"}),
             'quantity': ('django.db.models.fields.PositiveIntegerField', [], {'default': '1'}),
+            'title': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'wishlist': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'lines'", 'to': "orm['wishlists.WishList']"})
         },
         'wishlists.wishlist': {

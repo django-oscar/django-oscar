@@ -77,12 +77,21 @@ class AbstractLine(models.Model):
     wishlist = models.ForeignKey('wishlists.WishList', related_name='lines',
                                  verbose_name=_('Wish List'))
     product = models.ForeignKey('catalogue.Product', verbose_name=_('Product'),
-                                related_name='wishlists_lines')
+        related_name='wishlists_lines', on_delete=models.SET_NULL,
+        blank=True, null=True)
     quantity = models.PositiveIntegerField(_('Quantity'), default=1)
+    #: Store the title in case product gets deleted
+    title = models.CharField(_("Title"), max_length=255)
 
     def __unicode__(self):
-        return u'%sx %s on %s' % (self.quantity, self.product,
+        return u'%sx %s on %s' % (self.quantity, self.title,
                                   self.wishlist.name)
+
+    def get_title(self):
+        if self.product:
+            return self.product.get_title()
+        else:
+            return self.title
 
     class Meta:
         abstract = True

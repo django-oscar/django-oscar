@@ -142,7 +142,8 @@ class WishListAddProduct(View):
             try:
                 line = wishlist.lines.get(product=product)
             except ObjectDoesNotExist:
-                line = Line.objects.create(product=product, wishlist=wishlist)
+                line = Line.objects.create(product=product, wishlist=wishlist,
+                                           title=product.get_title())
                 msg = _("'%s' was added to your wish list.")
             else:
                 line.quantity += 1

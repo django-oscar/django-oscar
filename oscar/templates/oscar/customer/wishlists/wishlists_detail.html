@@ -17,9 +17,9 @@
 		</tr>
 
 		{% for form in form %}
-			{% with product=form.instance.product %}
+			{% with line=form.instance %}
 			<tr>
-				<td>{{ product }}</td>
+				<td>{{ line.get_title }}</td>
 				<td>
 					{% for field in form %}
 						{{ field }}
@@ -31,8 +31,9 @@
 					{% endfor %}
 				<td>
 					<div class="btn-group">
-						<a class="btn" href="{{ product.get_absolute_url }}">
-							{% trans 'View' %}</a>
+                        {% if line.product %}
+						    <a class="btn" href="{{ line.product.get_absolute_url }}">{% trans 'View' %}</a>
+                        {% endif %}
 						<button class="btn dropdown-toggle" data-toggle="dropdown">
 							<span class="caret"></span>
 						</button>
