@@ -84,10 +84,23 @@ class WishListCreateView(PageTitleMixin, CreateView):
         self.object = form.save(commit=False)
         self.object.owner = self.request.user
         self.object.save()
+        if 'product_pk' in self.kwargs:
+            try:
+                product = Product.objects.get(pk=self.kwargs['product_pk'])
+            except (ObjectDoesNotExist, MultipleObjectsReturned):
+                pass
+            else:
+                title = product.get_title()
+                line = Line.objects.create(product=product,
+                                           wishlist=self.object,
+                                           title=title)
+                messages.success(self.request,
+                                 _("'%s' was added to your wish list.") % title)
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
-        messages.success(self.request, _("New wish list saved"))
+        messages.success(self.request, _("Wish list '%s' created") %
+                                       self.object.name)
         return reverse('customer:wishlists-list')
 
 
@@ -134,25 +147,20 @@ class WishListAddProduct(View):
 
     def get(self, request, *args, **kwargs):
         product = get_object_or_404(Product, pk=kwargs['product_pk'])
-        if 'key' in kwargs:
-            wishlist = get_object_or_404(WishList, owner=request.user,
-                                         key=kwargs['key'])
-            if not wishlist.is_allowed_to_edit(self.request.user):
-                raise Http404
-            try:
-                line = wishlist.lines.get(product=product)
-            except ObjectDoesNotExist:
-                line = Line.objects.create(product=product, wishlist=wishlist,
-                                           title=product.get_title())
-                msg = _("'%s' was added to your wish list.")
-            else:
-                line.quantity += 1
-                line.save()
-                msg = _("The quantity of '%s' in your wish list was increased.")
+        wishlist = get_object_or_404(WishList, owner=request.user,
+                                     key=kwargs['key'])
+        if not wishlist.is_allowed_to_edit(self.request.user):
+            raise Http404
+        try:
+            line = wishlist.lines.get(product=product)
+        except ObjectDoesNotExist:
+            line = Line.objects.create(product=product, wishlist=wishlist,
+                                       title=product.get_title())
+            msg = _("'%s' was added to your wish list.")
         else:
-            wishlist = WishList.objects.create(owner=self.request.user)
-            line = Line.objects.create(product=product, wishlist=wishlist)
-            msg = _("'%s' was added to a new wish list")
+            line.quantity += 1
+            line.save()
+            msg = _("The quantity of '%s' in your wish list was increased.")
 
         messages.success(self.request, msg % product)
         return HttpResponseRedirect(product.get_absolute_url())
