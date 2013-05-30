@@ -38,11 +38,11 @@
 							<span class="caret"></span>
 						</button>
 						<ul class="dropdown-menu">
-							<a href="{% url 'customer:wishlists-remove-product' wishlist.pk line.pk %}">
+							<a href="{% url 'customer:wishlists-remove-product' key=wishlist.key line_pk=line.pk %}">
 								{% trans 'Remove from wishlist' %}
 							</a>
 							{% for other_wishlist in other_wishlists %}
-								<a href="{% url 'customer:wishlists-move-product-to-another' line.pk other_wishlist.key %}">
+								<a href="{% url 'customer:wishlists-move-product-to-another' key=wishlist.key line_pk=line.pk to_key=other_wishlist.key %}">
 									{% blocktrans with name=other_wishlist.name %}
 									Move to {{ name }}
 									{% endblocktrans %}

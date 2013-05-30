@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.contrib import messages
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.core.urlresolvers import reverse
 from django.db.models import get_model
 from django.http import Http404, HttpResponseRedirect
@@ -133,7 +133,7 @@ class WishListAddProduct(View):
     """
 
     def get(self, request, *args, **kwargs):
-        product = get_object_or_404(Product, pk=kwargs['pk'])
+        product = get_object_or_404(Product, pk=kwargs['product_pk'])
         if 'key' in kwargs:
             wishlist = get_object_or_404(WishList, owner=request.user,
                                          key=kwargs['key'])
@@ -162,17 +162,24 @@ class LineMixin(object):
     """
     Handles fetching both a wish list and a product
     Views using this mixin must be passed two keyword arguments:
-    * pk: The primary key of the wish list line
     * key: The key of a wish list
+
+    * line_pk: The primary key of the wish list line
+    or
+    * product_pk: The primary key of the product
     """
 
     def dispatch(self, request, *args, **kwargs):
         self.wishlist = get_object_or_404(WishList, owner=request.user,
                                           key=kwargs['key'])
         try:
-            self.line = self.wishlist.lines.get(pk=kwargs['pk'])
-        except ObjectDoesNotExist:
+            if 'line_pk' in kwargs:
+                self.line = self.wishlist.lines.get(pk=kwargs['line_pk'])
+            elif 'product_pk' in kwargs:
+                self.line = self.wishlist.lines.get(product_id=kwargs['product_pk'])
+        except (ObjectDoesNotExist, MultipleObjectsReturned):
             raise Http404
+
         self.product = self.line.product
         return super(LineMixin, self).dispatch(request, *args, **kwargs)
 
@@ -181,9 +188,12 @@ class WishListRemoveProduct(LineMixin, View):
 
     def get(self, request, *args, **kwargs):
         self.line.delete()
-        messages.success(self.request, _('Product removed from wish list'))
-        return HttpResponseRedirect(reverse('customer:wishlists-detail',
-                                    kwargs= {'key': self.wishlist.key}))
+        messages.success(self.request, _('Product removed from wish list %s') %
+                         self.wishlist.name)
+        default_url = reverse('customer:wishlists-detail',
+                              kwargs= {'key': self.wishlist.key})
+        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER',
+                                                          default_url))
 
 
 class WishListMoveProductToAnotherWishList(LineMixin, View):
@@ -196,8 +206,10 @@ class WishListMoveProductToAnotherWishList(LineMixin, View):
         self.line.save()
         messages.success(self.request,
                          _('Product moved to wish list %s') % to_wishlist.name)
-        return HttpResponseRedirect(reverse('customer:wishlists-detail',
-                                            kwargs= {'key': self.wishlist.key}))
+        default_url = reverse('customer:wishlists-detail',
+                              kwargs= {'key': self.wishlist.key})
+        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER',
+                                                          default_url))
 
 
 
