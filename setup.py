@@ -46,7 +46,7 @@ setup(name='django-oscar',
           # eagerly anticipating a stable 2.0 release on PyPI.
           'django-haystack==2.0.0-beta',
           # Treebeard is used for categories
-          'django-treebeard>=1.61,<1.62',
+          'django-treebeard==2.0b1',
           # Sorl is used as the default thumbnailer
           'sorl-thumbnail==11.12',
           'python-memcached>=1.48,<1.52',

@@ -2,7 +2,7 @@ from django import forms
 from django.forms.models import inlineformset_factory, BaseInlineFormSet
 from django.db.models import get_model
 from django.utils.translation import ugettext_lazy as _
-from treebeard.forms import MoveNodeForm
+from treebeard.forms import MoveNodeForm, movenodeform_factory
 
 from oscar.core.utils import slugify
 from oscar.forms.widgets import ImageInput
@@ -17,10 +17,10 @@ ProductImage = get_model('catalogue', 'ProductImage')
 ProductRecommendation = get_model('catalogue', 'ProductRecommendation')
 
 
-class CategoryForm(MoveNodeForm):
+class BaseCategoryForm(MoveNodeForm):
 
     def clean(self):
-        cleaned_data = super(CategoryForm, self).clean()
+        cleaned_data = super(BaseCategoryForm, self).clean()
 
         name = cleaned_data.get('name')
         ref_node_pk = cleaned_data.get('_ref_node_id')
@@ -56,8 +56,7 @@ class CategoryForm(MoveNodeForm):
                 return True
         return False
 
-    class Meta(MoveNodeForm.Meta):
-        model = Category
+CategoryForm = movenodeform_factory(Category, form=BaseCategoryForm)
 
 
 class ProductSearchForm(forms.Form):
