@@ -29,7 +29,7 @@ var oscar = (function(o, $) {
                 $('input[name^="date"], input[name$="date"]').each(function(ind, ele) {
                     var $ele = $(ele),
                         config = $.extend({}, defaultDatepickerConfig, {
-                            'dateFormat': $ele.date('dateformat')
+                            'dateFormat': $ele.data('dateformat')
                         });
                     $ele.datepicker(config);
                 });            
