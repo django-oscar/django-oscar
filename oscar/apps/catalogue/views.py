@@ -23,6 +23,10 @@ class ProductDetailView(DetailView):
     def get(self, request, **kwargs):
         # Ensure that the correct URL is used
         product = self.get_object()
+
+        if product.is_variant:
+            return HttpResponsePermanentRedirect(product.parent.get_absolute_url())
+
         correct_path = product.get_absolute_url()
         if correct_path != request.path:
             return HttpResponsePermanentRedirect(correct_path)
@@ -83,7 +87,7 @@ class ProductDetailView(DetailView):
             '%s/detail-for-upc-%s.html' % (
                 self.template_folder, product.upc),
             '%s/detail-for-class-%s.html' % (
-                self.template_folder, product.product_class.name.lower()),
+                self.template_folder, product.get_product_class().name.lower()),
             '%s/detail.html' % (self.template_folder)]
 
 
