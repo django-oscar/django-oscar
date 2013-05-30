@@ -8,11 +8,13 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View, FormView
 from django.utils.translation import ugettext_lazy as _
 from oscar.apps.customer.mixins import PageTitleMixin
-from .forms import WishListForm, LineFormset
+from oscar.core.loading import get_classes
 
 WishList = get_model('wishlists', 'WishList')
 Line = get_model('wishlists', 'Line')
 Product = get_model('catalogue', 'Product')
+WishListForm, LineFormset = get_classes('wishlists.forms',
+                                        ['WishListForm', 'LineFormset'])
 
 
 class WishListListView(PageTitleMixin, ListView):
