@@ -21,7 +21,7 @@ class RangeProductFileUpload(models.Model):
         (PROCESSED, PROCESSED),
     )
     status = models.CharField(_("Status"), max_length=32, choices=choices, default=PENDING)
-    error_message = models.CharField(_("Error Message"), max_length=255, null=True)
+    error_message = models.CharField(_("Error Message"), max_length=255, blank=True)
 
     # Post-processing audit fields
     date_processed = models.DateTimeField(_("Date Processed"), null=True)

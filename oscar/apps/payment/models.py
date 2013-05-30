@@ -25,8 +25,8 @@ class Transaction(models.Model):
     txn_type = models.CharField(_("Type"), max_length=128, blank=True)
 
     amount = models.DecimalField(_("Amount"), decimal_places=2, max_digits=12)
-    reference = models.CharField(_("Reference"), max_length=128, null=True)
-    status = models.CharField(_("Status"), max_length=128, null=True)
+    reference = models.CharField(_("Reference"), max_length=128, blank=True)
+    status = models.CharField(_("Status"), max_length=128, blank=True)
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
     def __unicode__(self):
@@ -67,11 +67,10 @@ class Source(models.Model):
 
     # Reference number for this payment source.  This is often used to look up
     # a transaction model for a particular payment partner.
-    reference = models.CharField(_("Reference"), max_length=128,
-                                 blank=True, null=True)
+    reference = models.CharField(_("Reference"), max_length=128, blank=True)
 
     # A customer-friendly label for the source, eg XXXX-XXXX-XXXX-1234
-    label = models.CharField(_("Label"), max_length=128, blank=True, null=True)
+    label = models.CharField(_("Label"), max_length=128, blank=True)
 
     # A dictionary of submission data that is stored as part of the
     # checkout process, where we need to pass an instance of this class around
@@ -193,7 +192,7 @@ class Bankcard(models.Model):
 
     # For payment partners who are storing the full card details for us
     partner_reference = models.CharField(
-        _("Partner Reference"), max_length=255, null=True, blank=True)
+        _("Partner Reference"), max_length=255, blank=True)
 
     class Meta:
         verbose_name = _("Bankcard")
