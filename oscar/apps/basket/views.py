@@ -470,7 +470,7 @@ class SavedView(ModelFormSetView):
 
         is_move = False
         for form in formset:
-            if form.cleaned_data['move_to_basket']:
+            if form.cleaned_data.get('move_to_basket', False):
                 is_move = True
                 msg = render_to_string(
                     'basket/messages/line_restored.html',
