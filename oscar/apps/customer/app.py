@@ -48,7 +48,7 @@ class CustomerApplication(Application):
     wishlists_update_view = wishlists_views.WishListUpdateView
     wishlists_delete_view = wishlists_views.WishListDeleteView
     wishlists_add_product_view = wishlists_views.WishListAddProduct
-    wishlists_delete_product = wishlists_views.WishListDeleteProduct
+    wishlists_remove_product = wishlists_views.WishListRemoveProduct
     wishlists_move_product_to_another = wishlists_views.WishListMoveProductToAnotherWishList
 
     def get_urls(self):
@@ -158,8 +158,8 @@ class CustomerApplication(Application):
                 login_required(self.wishlists_add_product_view.as_view()),
                 name='wishlists-add-product'),
             url(r'wishlists/(?P<key>[a-z0-9]+)/delete_product/(?P<pk>\d+)/',
-                login_required(self.wishlists_delete_product.as_view()),
-                name='wishlists-delete-product'),
+                login_required(self.wishlists_remove_product.as_view()),
+                name='wishlists-remove-product'),
             url(r'wishlists/(?P<key>[a-z0-9]+)/move/(?P<pk>\d+)/to/(?P<to_key>[a-z0-9]+)/$',
                 login_required(self.wishlists_move_product_to_another.as_view()),
                 name='wishlists-move-product-to-another'),

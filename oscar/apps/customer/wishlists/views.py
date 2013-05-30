@@ -162,7 +162,7 @@ class LineMixin(object):
     """
     Handles fetching both a wish list and a product
     Views using this mixin must be passed two keyword arguments:
-    * pk: The primary key of a Product
+    * pk: The primary key of the wish list line
     * key: The key of a wish list
     """
 
@@ -170,18 +170,18 @@ class LineMixin(object):
         self.wishlist = get_object_or_404(WishList, owner=request.user,
                                           key=kwargs['key'])
         try:
-            self.line = self.wishlist.lines.get(product=kwargs['pk'])
+            self.line = self.wishlist.lines.get(pk=kwargs['pk'])
         except ObjectDoesNotExist:
             raise Http404
         self.product = self.line.product
         return super(LineMixin, self).dispatch(request, *args, **kwargs)
 
 
-class WishListDeleteProduct(LineMixin, View):
+class WishListRemoveProduct(LineMixin, View):
 
     def get(self, request, *args, **kwargs):
         self.line.delete()
-        messages.success(self.request, _('Product deleted from wish list'))
+        messages.success(self.request, _('Product removed from wish list'))
         return HttpResponseRedirect(reverse('customer:wishlists-detail',
                                     kwargs= {'key': self.wishlist.key}))
 
