@@ -2,6 +2,10 @@ from django.conf import settings
 
 
 def get_user_model():
+    """
+    Using this function instead of Django 1.5's get_user_model allows backwards
+    compatibility with Django 1.4.
+    """
     try:
         # Django 1.5+
         from django.contrib.auth import get_user_model

@@ -1,7 +1,12 @@
 from django.contrib.auth.backends import ModelBackend
+from django.core.exceptions import ImproperlyConfigured
 from oscar.core.compat import get_user_model
 
 User = get_user_model()
+
+if User._meta.get_field('email').blank:
+    raise ImproperlyConfigured("Emailbackend: Your User model must have an email"
+                               " field with blank=False")
 
 
 class Emailbackend(ModelBackend):
