@@ -18,6 +18,23 @@ class TestProductDetailView(WebTestCase):
         response = self.app.get(wrong_url)
         self.assertEquals(httplib.MOVED_PERMANENTLY, response.status_code)
 
+    def test_variant_to_parent_redirect(self):
+        parent_product = create_product()
+        kwargs = {'product_slug': parent_product.slug,
+                  'pk': parent_product.id}
+        parent_product_url = reverse('catalogue:detail', kwargs=kwargs)
+
+        variant = create_product(title="Variant 1", parent=parent_product)
+        kwargs = {'product_slug': variant.slug,
+                  'pk': variant.id}
+        variant_url = reverse('catalogue:detail', kwargs=kwargs)
+
+        response = self.app.get(parent_product_url)
+        self.assertEquals(httplib.OK, response.status_code)
+
+        response = self.app.get(variant_url)
+        self.assertEquals(httplib.MOVED_PERMANENTLY, response.status_code)
+
 
 class TestProductListView(WebTestCase):
 
