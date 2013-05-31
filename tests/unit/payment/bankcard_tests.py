@@ -11,10 +11,11 @@ fixture_data = {
 }
 
 
-def test_bankcard_type_sniffing():
+def compare(number, type):
+    nose.tools.eq_(bankcards.bankcard_type(number), type)
 
-    def compare(number, type):
-        nose.tools.eq_(bankcards.bankcard_type(number), type)
+
+def test_bankcard_type_sniffing():
 
     for bankcard_type, numbers in fixture_data.items():
         for number in numbers:
@@ -34,13 +35,17 @@ invalid_numbers = [
     '340000000000005']
 
 
+def is_valid(n):
+    assert bankcards.luhn(n) is True
+
+
+def is_not_valid(n):
+    assert bankcards.luhn(n) is False
+
+
 def test_luhn_check():
-    def is_valid(n):
-        assert bankcards.luhn(n) is True
     for number in valid_numbers:
         yield is_valid, number
 
-    def is_not_valid(n):
-        assert bankcards.luhn(n) is False
     for number in invalid_numbers:
         yield is_not_valid, number
