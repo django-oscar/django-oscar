@@ -36,8 +36,8 @@ setup(name='django-oscar',
           'django>=1.4,<1.5',
           # PIL is required for image fields, Pillow is the "friendly" PIL fork
           'pillow>=1.7.8,<2.0.0',
-          # Oscar ships with migraations
-          'South>=0.7.6,<0.8',
+          # Oscar ships with migrations
+          'South>=0.7.6,<0.9',
           # We use the ModelFormSetView from django-extra-views for the basket
           # page
           'django-extra-views>=0.2,<0.6',
@@ -49,7 +49,7 @@ setup(name='django-oscar',
           'django-treebeard>=1.61,<1.62',
           # Sorl is used as the default thumbnailer
           'sorl-thumbnail==11.12',
-          'python-memcached>=1.48,<1.49',
+          'python-memcached>=1.48,<1.52',
           # Babel is used for currency formatting
           'Babel>=0.9,<0.10',
           # Oscar's default templates use compressor (but you can override
