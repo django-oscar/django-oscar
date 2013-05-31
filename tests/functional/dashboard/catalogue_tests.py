@@ -1,11 +1,11 @@
 from django.db.models import get_model
 from django.core.urlresolvers import reverse
 
-from oscar_testsupport.testcases import ClientTestCase
-from oscar_testsupport.factories import create_product
+from oscar.test.testcases import ClientTestCase
+from oscar.test.factories import create_product
 
 from django_dynamic_fixture import G
-from oscar_testsupport.testcases import WebTestCase
+from oscar.test.testcases import WebTestCase
 
 Product = get_model('catalogue', 'Product')
 ProductClass = get_model('catalogue', 'ProductClass')

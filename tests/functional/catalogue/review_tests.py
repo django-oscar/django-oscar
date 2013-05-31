@@ -3,8 +3,8 @@ from django_dynamic_fixture import G
 from mock import Mock
 import contextlib
 
-from oscar_testsupport.testcases import WebTestCase
-from oscar_testsupport.factories import create_product
+from oscar.test.testcases import WebTestCase
+from oscar.test.factories import create_product
 from oscar.core.compat import get_user_model
 from oscar.apps.catalogue.reviews.signals import review_added
 

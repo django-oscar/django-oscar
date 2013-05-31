@@ -3,7 +3,7 @@ from django_dynamic_fixture import G
 
 from oscar.apps.customer.models import ProductAlert
 from oscar.core.compat import get_user_model
-from oscar_testsupport.factories import create_product
+from oscar.test.factories import create_product
 
 
 User = get_user_model()

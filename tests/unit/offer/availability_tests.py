@@ -7,7 +7,7 @@ from django_dynamic_fixture import G
 from oscar.apps.offer import models
 from oscar.apps.order.models import OrderDiscount
 from oscar.core.compat import get_user_model
-from oscar_testsupport.factories import create_order
+from oscar.test.factories import create_order
 
 
 User = get_user_model()

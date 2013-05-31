@@ -3,8 +3,8 @@ from decimal import Decimal as D
 
 from django.core.urlresolvers import reverse
 
-from oscar_testsupport.factories import create_product, create_order
-from oscar_testsupport.testcases import ClientTestCase, WebTestCase
+from oscar.test.factories import create_product, create_order
+from oscar.test.testcases import ClientTestCase, WebTestCase
 from oscar.core.compat import get_user_model
 from oscar.apps.basket.models import Basket
 

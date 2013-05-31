@@ -2,7 +2,7 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django_dynamic_fixture import G
 
-from oscar_testsupport.testcases import WebTestCase, ClientTestCase
+from oscar.test.testcases import WebTestCase
 from oscar.core.compat import get_user_model
 from oscar.apps.catalogue.models import Category
 from oscar.apps.dashboard.catalogue.forms import CategoryForm

@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from oscar.core.compat import get_user_model
 from django_dynamic_fixture import get
 
-from oscar_testsupport.testcases import ClientTestCase
+from oscar.test.testcases import ClientTestCase
 
 
 ProductReview = get_model('reviews', 'productreview')

@@ -2,7 +2,7 @@ from logging import LogRecord
 
 from django.test import TestCase
 
-from oscar_testsupport.decorators import dataProvider
+from oscar.test.decorators import dataProvider
 from oscar.core.logging.formatters import PciFormatter
 
 

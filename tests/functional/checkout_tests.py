@@ -6,9 +6,9 @@ from django.conf import settings
 from django.utils.importlib import import_module
 from django.test.utils import override_settings
 
-from oscar_testsupport.factories import (
+from oscar.test.factories import (
     create_product, create_voucher, create_offer)
-from oscar_testsupport.testcases import ClientTestCase
+from oscar.test.testcases import ClientTestCase
 from oscar.apps.basket.models import Basket
 from oscar.apps.order.models import Order
 from oscar.apps.address.models import Country
