@@ -60,9 +60,9 @@ Tests are split into 3 folders:
 Naming tests
 ------------
 
-Oscar's testrunner uses the progressive_ plugin when running all tests, but uses
-the spec_ plugin when running a subset.  It is a good practice to name your test
-cases and methods so that the spec output reads well.  For example::
+When running a subset of tests, Oscar uses the spec_ plugin.  It is a good
+practice to name your test cases and methods so that the spec output reads well.
+For example::
 
     $ ./runtests.py tests/unit/offer/benefit_tests.py:TestAbsoluteDiscount
     nosetests --verbosity 1 tests/unit/offer/benefit_tests.py:TestAbsoluteDiscount -s -x --with-spec
@@ -88,5 +88,4 @@ cases and methods so that the spec output reads well.  For example::
     ----------------------------------------------------------------------
     Ran 15 tests in 0.295s
 
-.. _progressive: http://pypi.python.org/pypi/nose-progressive/
-.. _spec: http://darcs.idyll.org/~t/projects/pinocchio/doc/#spec-generate-test-description-from-test-class-method-names
+.. _spec: https://github.com/bitprophet/spec

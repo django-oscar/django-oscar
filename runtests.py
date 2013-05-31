@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import sys
 import logging
-from optparse import OptionParser
 
 from tests.config import configure
 
@@ -22,9 +21,7 @@ if __name__ == '__main__':
     args = sys.argv[1:]
 
     if not args:
-        # If no args, then use 'progressive' plugin to keep the screen real
-        # estate used down to a minimum.  Otherwise, use the spec plugin
-        args = ['-s', '-x', '--with-progressive']
+        args = ['-s', '-x', '--processes=4']
     else:
         # Some args specified.  Check to see if any nose options have been
         # specified.  If they have, then don't set any
