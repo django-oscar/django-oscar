@@ -2,10 +2,14 @@ import httplib
 
 from django.test import TestCase
 from django.test.client import Client
-from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django_webtest import WebTest
 from purl import URL
+
+from oscar.core.compat import get_user_model
+
+
+User = get_user_model()
 
 
 class ClientTestCase(TestCase):
