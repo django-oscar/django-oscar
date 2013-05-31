@@ -9,7 +9,6 @@ from oscar.apps.shipping.repository import Repository
 from oscar.apps.shipping import Scales
 from oscar.apps.basket.models import Basket
 from oscar_testsupport.factories import create_product
-from oscar_testsupport.decorators import dataProvider
 
 
 class FreeTest(TestCase):
@@ -46,17 +45,13 @@ class FixedPriceTest(TestCase):
         method.set_basket(basket)
         self.assertEquals(D('10.00'), method.basket_charge_excl_tax())
 
-    shipping_values = lambda: [('1.00',),
-                               ('5.00',),
-                               ('10.00',),
-                               ('12.00',)]
-
-    @dataProvider(shipping_values)
-    def test_different_values(self, value):
-        method = FixedPrice(D(value))
-        basket = Basket()
-        method.set_basket(basket)
-        self.assertEquals(D(value), method.basket_charge_excl_tax())
+    def test_different_values(self):
+        shipping_values = ['1.00', '5.00', '10.00', '12.00']
+        for value in shipping_values:
+            basket = Basket()
+            method = FixedPrice(D(value))
+            method.set_basket(basket)
+            self.assertEquals(D(value), method.basket_charge_excl_tax())
 
 
 class OrderAndItemChargesTests(TestCase):
