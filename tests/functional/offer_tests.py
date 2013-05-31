@@ -1,4 +1,4 @@
-from oscar_testsupport.testcases import WebTestCase
+from oscar.test.testcases import WebTestCase
 
 
 class TestTheOfferListPage(WebTestCase):

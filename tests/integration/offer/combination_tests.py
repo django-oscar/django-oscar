@@ -3,7 +3,7 @@ from django_dynamic_fixture import G
 
 from oscar.apps.offer import models
 from oscar.apps.basket.models import Basket
-from oscar_testsupport.factories import create_product
+from oscar.test.factories import create_product
 
 
 class TestACountConditionWithPercentageDiscount(TestCase):

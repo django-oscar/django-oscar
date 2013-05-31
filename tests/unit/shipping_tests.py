@@ -8,7 +8,7 @@ from oscar.apps.shipping.repository import Repository
 from oscar.apps.shipping import Scales
 from oscar.apps.basket.models import Basket
 from oscar.core.compat import get_user_model
-from oscar_testsupport.factories import create_product
+from oscar.test.factories import create_product
 
 
 User = get_user_model()

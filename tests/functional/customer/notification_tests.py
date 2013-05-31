@@ -1,6 +1,6 @@
 from django_dynamic_fixture import G
 
-from oscar_testsupport.testcases import WebTestCase
+from oscar.test.testcases import WebTestCase
 from oscar.core.compat import get_user_model
 from oscar.apps.customer.notifications import services
 

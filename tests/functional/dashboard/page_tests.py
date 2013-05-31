@@ -1,6 +1,6 @@
 from django.core.urlresolvers import reverse
 from django.contrib.flatpages.models import FlatPage
-from oscar_testsupport.testcases import ClientTestCase
+from oscar.test.testcases import ClientTestCase
 
 
 class PageViewTests(ClientTestCase):

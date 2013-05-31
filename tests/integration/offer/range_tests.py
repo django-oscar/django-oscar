@@ -2,7 +2,7 @@ from django.conf import settings
 from django.test import TestCase
 
 from oscar.apps.offer import models
-from oscar_testsupport.factories import create_product
+from oscar.test.factories import create_product
 
 
 class TestWholeSiteRangeWithGlobalBlacklist(TestCase):

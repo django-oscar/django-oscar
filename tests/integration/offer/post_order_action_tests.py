@@ -8,10 +8,7 @@ import mock
 from oscar.apps.offer import models, utils, custom
 from oscar.apps.basket.models import Basket
 from oscar.apps.order.utils import OrderCreator
-from oscar.apps.shipping.repository import Repository
-from oscar.apps.shipping.methods import FixedPrice
-from oscar_testsupport.factories import create_product
-
+from oscar.test.factories import create_product
 
 
 class CustomAction(models.Benefit):

@@ -4,7 +4,7 @@ from django.core import mail
 from django.core.urlresolvers import reverse
 from django_webtest import WebTest
 
-from oscar_testsupport.testcases import WebTestCase
+from oscar.test.testcases import WebTestCase
 from oscar.core.compat import get_user_model
 
 

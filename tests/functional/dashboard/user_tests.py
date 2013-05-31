@@ -1,6 +1,6 @@
 from django.core.urlresolvers import reverse
 from django_dynamic_fixture import get
-from oscar_testsupport.testcases import ClientTestCase
+from oscar.test.testcases import ClientTestCase
 
 from oscar.apps.dashboard.users.views import IndexView
 from oscar.core.compat import get_user_model

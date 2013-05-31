@@ -1,5 +1,5 @@
 from django.test import TestCase
-from oscar_testsupport.factories import create_product
+from oscar.test.factories import create_product
 
 from oscar.apps.offer import custom
 

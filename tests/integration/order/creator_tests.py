@@ -3,10 +3,10 @@ from decimal import Decimal as D
 from django.test import TestCase
 from django.test.utils import override_settings
 from mock import Mock
-from oscar_testsupport.factories import create_product
 
 from oscar.apps.basket.models import Basket
 from oscar.apps.order.models import Order
+from oscar.test.factories import create_product
 from oscar.apps.order.utils import OrderCreator
 from oscar.apps.catalogue.models import ProductClass, Product
 

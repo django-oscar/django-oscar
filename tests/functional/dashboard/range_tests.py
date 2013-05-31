@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 from oscar.apps.dashboard.ranges import forms
-from oscar_testsupport.factories import create_product
+from oscar.test.factories import create_product
 from oscar.apps.offer.models import Range
 
 
