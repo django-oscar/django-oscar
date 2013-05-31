@@ -1,5 +1,6 @@
 import os
 from decimal import Decimal as D
+from django.db.transaction import commit_on_success
 
 from django.utils.translation import ugettext_lazy as _
 
@@ -116,6 +117,7 @@ class CatalogueImporter(object):
         Partner.objects.all().delete()
         StockRecord.objects.all().delete()
 
+    @commit_on_success
     def _import(self, file_path):
         u"""Imports given file"""
         stats = {'new_items': 0,

@@ -9,6 +9,7 @@ from PIL import Image
 from django.core.files import File
 from django.core.exceptions import FieldError
 from django.db.models import get_model
+from django.db.transaction import commit_on_success
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.catalogue.exceptions import (
@@ -27,6 +28,7 @@ class Importer(object):
         self.logger = logger
         self._field = field
 
+    @commit_on_success
     def handle(self, dirname):
         stats = {
             'num_processed': 0,
