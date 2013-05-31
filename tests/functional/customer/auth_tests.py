@@ -1,6 +1,5 @@
 import re
 
-from django.contrib.auth import models
 from django.core import mail
 from django.core.urlresolvers import reverse
 from django_webtest import WebTest
@@ -16,8 +15,7 @@ class TestAUserWhoseForgottenHerPassword(WebTest):
 
     def test_can_reset_her_password(self):
         username, email, password = 'lucy', 'lucy@example.com', 'password'
-        models.User.objects.create_user(
-            username, email, password)
+        User.objects.create_user(username, email, password)
 
         # Fill in password reset form
         page = self.app.get(reverse('password-reset'))

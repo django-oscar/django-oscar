@@ -6,7 +6,7 @@ from oscar.core.compat import get_user_model
 
 User = get_user_model()
 
-if User._meta.get_field('email').blank:
+if hasattr(User, 'REQUIRED_FIELDS') and 'email' not in User.REQUIRED_FIELDS:
     raise ImproperlyConfigured("Emailbackend: Your User model must have an email"
                                " field with blank=False")
 
