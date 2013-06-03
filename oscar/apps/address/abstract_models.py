@@ -75,9 +75,9 @@ class AbstractAddress(models.Model):
 
     def _update_search_text(self):
         search_fields = filter(
-            lambda x: x, [self.first_name, self.last_name,
-                          self.line1, self.line2, self.line3, self.line4,
-                          self.state, self.postcode, self.country.name])
+            bool, [self.first_name, self.last_name,
+                   self.line1, self.line2, self.line3, self.line4,
+                   self.state, self.postcode, self.country.name])
         self.search_text = ' '.join(search_fields)
 
     @property
