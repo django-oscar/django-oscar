@@ -12,6 +12,9 @@ OSCAR_MAX_BASKET_QUANTITY_THRESHOLD = 10000
 # Currency
 OSCAR_DEFAULT_CURRENCY = 'GBP'
 
+# Country
+OSCAR_DEFAULT_COUNTRY = '826'
+
 # Max number of products to keep on the user's history
 OSCAR_RECENTLY_VIEWED_PRODUCTS = 20
 
