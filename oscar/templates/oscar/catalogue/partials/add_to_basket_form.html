@@ -1,7 +1,7 @@
 {% load basket_tags %}
 {% load i18n %}
 
-{% if product.is_available_to_buy %}
+{% if product.is_available_to_buy and product.active %}
     {% basket_form request product as basket_form %}
     {% if basket_form.purchase_permitted %}
         <form action="{% url basket:add %}" method="post" class="form-stacked">

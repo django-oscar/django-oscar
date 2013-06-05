@@ -266,6 +266,7 @@ class AbstractProduct(models.Model):
     #: approval
     status = models.CharField(_('Status'), max_length=128, blank=True,
                               null=True, db_index=True)
+    active = models.BooleanField(_('Active'), default=True)
     product_class = models.ForeignKey(
         'catalogue.ProductClass', verbose_name=_('Product Class'), null=True,
         help_text=_("""Choose what type of product this is"""))
