@@ -216,6 +216,7 @@ class AbstractBankcard(models.Model):
         _("Partner Reference"), max_length=255, blank=True)
 
     class Meta:
+        abstract = True
         verbose_name = _("Bankcard")
         verbose_name_plural = _("Bankcards")
 
