@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load compress %}
+{% load promotion_tags %}
 
 {% block layout %}
     {# Top-horizontal bar with account, notifictions, dashboard links #}
@@ -33,6 +34,14 @@
             {% block subnavigation %}{% endblock %}
             <div class="content">
                 {% block subheader %}{% endblock subheader %}
+
+                {# Render promotions #}
+                <div id="promotions">
+                    {% for promotion in promotions_page %}
+                        {% render_promotion promotion %}
+                    {% endfor %}
+                </div>
+
                 {# Div exists for AJAX updates to entire content section #}
                 <div id="content_inner">{% block content %}{% endblock %}</div>
             </div>
