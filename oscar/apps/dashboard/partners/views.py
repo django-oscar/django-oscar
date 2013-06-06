@@ -192,11 +192,13 @@ class PartnerUserLinkView(generic.View):
         name = user.get_full_name() or user.email
         if not partner.users.filter(pk=user_pk).exists():
             partner.users.add(user)
-            messages.success(request, _("User '%s' was linked to '%s'") %
-                             (name, partner.name))
+            messages.success(
+                request, _("User '%(name)s' was linked to '%(partner_name)s'") %
+                {'name': name, 'partner_name': partner.name})
         else:
-            messages.error(request, _("User '%s' is already linked to '%s'") %
-                           (name, partner.name))
+            messages.error(
+                request, _("User '%(name)s' is already linked to '%(partner_name)s'") %
+                {'name': name, 'partner_name': partner.name})
         return HttpResponseRedirect(reverse('dashboard:partner-manage',
                                             kwargs={'pk': partner_pk}))
 
@@ -217,8 +219,9 @@ class PartnerUserUnlinkView(generic.View):
                  'partner_pk': partner_pk })
             messages.success(self.request, msg, extra_tags='safe')
         else:
-            messages.error(request, _("User '%s' is not linked to '%s'") %
-                           (name, partner.name))
+            messages.error(
+                request, _("User '%(name)s' is not linked to '%(partner_name)s'") %
+                {'name': name, 'partner_name': partner.name})
         return HttpResponseRedirect(reverse('dashboard:partner-manage',
                                             kwargs={'pk': partner_pk}))
 
