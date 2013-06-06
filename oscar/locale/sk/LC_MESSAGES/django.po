@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django-oscar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-05 16:34+0100\n"
+"POT-Creation-Date: 2013-06-06 16:31+0100\n"
 "PO-Revision-Date: 2013-05-07 09:57+0200\n"
 "Last-Translator: Róbert Čerňanský <openhs@users.sourceforge.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -42,6 +42,13 @@ msgstr ""
 #: templates/oscar/dashboard/pages/delete.html:16
 #: templates/oscar/dashboard/pages/index.html:14
 #: templates/oscar/dashboard/pages/update.html:13
+#: templates/oscar/dashboard/partners/partner_delete.html:15
+#: templates/oscar/dashboard/partners/partner_form.html:14
+#: templates/oscar/dashboard/partners/partner_list.html:12
+#: templates/oscar/dashboard/partners/partner_manage.html:12
+#: templates/oscar/dashboard/partners/partner_user_form.html:14
+#: templates/oscar/dashboard/partners/partner_user_list.html:12
+#: templates/oscar/dashboard/partners/partner_user_select.html:12
 #: templates/oscar/dashboard/promotions/delete.html:16
 #: templates/oscar/dashboard/promotions/delete_pagepromotion.html:11
 #: templates/oscar/dashboard/promotions/form.html:9
@@ -49,7 +56,7 @@ msgstr ""
 #: templates/oscar/dashboard/promotions/pagepromotion_list.html:18
 #: templates/oscar/dashboard/promotions/promotion_list.html:20
 #: templates/oscar/dashboard/ranges/range_delete.html:16
-#: templates/oscar/dashboard/ranges/range_form.html:15
+#: templates/oscar/dashboard/ranges/range_form.html:14
 #: templates/oscar/dashboard/ranges/range_list.html:12
 #: templates/oscar/dashboard/ranges/range_product_list.html:14
 #: templates/oscar/dashboard/reports/index.html:13
@@ -73,15 +80,15 @@ msgstr "Panel"
 msgid "Catalogue"
 msgstr "Katalóg"
 
-#: defaults.py:93 apps/catalogue/abstract_models.py:468
+#: defaults.py:93 apps/catalogue/abstract_models.py:485
 #: apps/promotions/models.py:246
 #: templates/oscar/dashboard/promotions/handpickedproductlist_form.html:5
 #: templates/oscar/dashboard/ranges/range_product_list.html:25
 msgid "Products"
 msgstr "Produkty"
 
-#: defaults.py:97 apps/catalogue/abstract_models.py:140
-#: apps/catalogue/abstract_models.py:309
+#: defaults.py:97 apps/catalogue/abstract_models.py:143
+#: apps/catalogue/abstract_models.py:310
 #: templates/oscar/dashboard/catalogue/category_delete.html:15
 #: templates/oscar/dashboard/catalogue/category_form.html:17
 #: templates/oscar/dashboard/catalogue/category_list.html:17
@@ -90,7 +97,7 @@ msgstr "Produkty"
 msgid "Categories"
 msgstr "Kategórie"
 
-#: defaults.py:101 apps/offer/models.py:734
+#: defaults.py:101 apps/offer/models.py:736
 #: templates/oscar/dashboard/catalogue/product_update.html:130
 #: templates/oscar/dashboard/ranges/range_list.html:29
 msgid "Ranges"
@@ -114,7 +121,12 @@ msgstr "Správa objednávok"
 msgid "Statistics"
 msgstr "Štatistiky"
 
-#: defaults.py:125 templates/oscar/dashboard/index.html:107
+#: defaults.py:123
+#, fuzzy
+msgid "Partners"
+msgstr "Obch. partner"
+
+#: defaults.py:129 templates/oscar/dashboard/index.html:107
 #: templates/oscar/dashboard/users/detail.html:18
 #: templates/oscar/dashboard/users/index.html:8
 #: templates/oscar/dashboard/users/index.html:13
@@ -122,25 +134,25 @@ msgstr "Štatistiky"
 msgid "Customers"
 msgstr "Zákazníci"
 
-#: defaults.py:129
+#: defaults.py:133
 msgid "Customer management"
 msgstr "Správa zákazníkov"
 
-#: defaults.py:133
+#: defaults.py:137
 msgid "Stock alert requests"
 msgstr ""
 
-#: defaults.py:139 apps/voucher/abstract_models.py:26
+#: defaults.py:143 apps/voucher/abstract_models.py:26
 #: templates/oscar/dashboard/index.html:157
 #: templates/oscar/dashboard/catalogue/product_update.html:144
 #: templates/oscar/dashboard/orders/order_detail.html:76
 #: templates/oscar/offer/detail.html:16 templates/oscar/offer/list.html:6
 #: templates/oscar/offer/list.html.py:15 templates/oscar/offer/list.html:20
-#: templates/oscar/partials/nav_primary.html:45
+#: templates/oscar/partials/nav_primary.html:50
 msgid "Offers"
 msgstr "Ponuky"
 
-#: defaults.py:143 templates/oscar/dashboard/offers/offer_delete.html:10
+#: defaults.py:147 templates/oscar/dashboard/offers/offer_delete.html:10
 #: templates/oscar/dashboard/offers/offer_delete.html:20
 #: templates/oscar/dashboard/offers/offer_detail.html:18
 #: templates/oscar/dashboard/offers/offer_list.html:7
@@ -151,7 +163,7 @@ msgstr "Ponuky"
 msgid "Offer management"
 msgstr "Správa ponúk"
 
-#: defaults.py:147 apps/basket/abstract_models.py:45
+#: defaults.py:151 apps/basket/abstract_models.py:45
 #: apps/voucher/abstract_models.py:55
 #: templates/oscar/basket/partials/basket_totals.html:33
 #: templates/oscar/dashboard/index.html:161
@@ -162,22 +174,22 @@ msgstr "Správa ponúk"
 msgid "Vouchers"
 msgstr "Kupóny"
 
-#: defaults.py:153
+#: defaults.py:157
 msgid "Content"
 msgstr "Obsah"
 
-#: defaults.py:157 templates/oscar/dashboard/promotions/promotion_list.html:8
+#: defaults.py:161 templates/oscar/dashboard/promotions/promotion_list.html:8
 #: templates/oscar/dashboard/promotions/promotion_list.html:13
 #: templates/oscar/dashboard/promotions/promotion_list.html:40
 msgid "Content blocks"
 msgstr "Obsahové bloky"
 
-#: defaults.py:161
+#: defaults.py:165
 #: templates/oscar/dashboard/promotions/pagepromotion_list.html:25
 msgid "Content blocks by page"
 msgstr "Obsahové bloky podľa stránok"
 
-#: defaults.py:165 apps/promotions/models.py:90
+#: defaults.py:169 apps/promotions/models.py:90
 #: templates/oscar/dashboard/pages/delete.html:20
 #: templates/oscar/dashboard/pages/index.html:8
 #: templates/oscar/dashboard/pages/index.html:17
@@ -185,11 +197,11 @@ msgstr "Obsahové bloky podľa stránok"
 msgid "Pages"
 msgstr "Stránky"
 
-#: defaults.py:169
+#: defaults.py:173
 msgid "Email templates"
 msgstr "Šablóny emailov"
 
-#: defaults.py:173 templates/oscar/catalogue/reviews/review_detail.html:8
+#: defaults.py:177 templates/oscar/catalogue/reviews/review_detail.html:8
 #: templates/oscar/catalogue/reviews/review_detail.html:29
 #: templates/oscar/dashboard/reviews/review_delete.html:20
 #: templates/oscar/dashboard/reviews/review_list.html:7
@@ -201,9 +213,31 @@ msgstr "Šablóny emailov"
 msgid "Reviews"
 msgstr "Recenzie"
 
-#: defaults.py:179 templates/oscar/dashboard/reports/index.html:7
+#: defaults.py:183 templates/oscar/dashboard/reports/index.html:7
 msgid "Reports"
 msgstr "Zostavy"
+
+#: defaults.py:198 apps/catalogue/abstract_models.py:142
+#: apps/catalogue/abstract_models.py:158 apps/customer/abstract_models.py:53
+#: templates/oscar/dashboard/catalogue/product_update.html:280
+#: templates/oscar/dashboard/comms/list.html:32
+msgid "Category"
+msgstr "Kategória"
+
+#: defaults.py:204
+#, fuzzy
+msgid "Price range"
+msgstr "Vytvor výber"
+
+#: defaults.py:209 defaults.py:210 defaults.py:211
+#, python-format
+msgid "%(low)s to %(high)s"
+msgstr ""
+
+#: defaults.py:212
+#, python-format
+msgid "%(upper)s+"
+msgstr ""
 
 #: apps/address/abstract_models.py:18
 msgid "Mr"
@@ -225,10 +259,10 @@ msgstr "slečna"
 msgid "Dr"
 msgstr ""
 
-#: apps/address/abstract_models.py:24 apps/catalogue/abstract_models.py:259
-#: apps/dashboard/catalogue/forms.py:65 apps/dashboard/pages/forms.py:14
-#: apps/order/abstract_models.py:335 apps/promotions/models.py:221
-#: apps/promotions/models.py:316
+#: apps/address/abstract_models.py:24 apps/catalogue/abstract_models.py:261
+#: apps/catalogue/abstract_models.py:432 apps/dashboard/catalogue/forms.py:65
+#: apps/dashboard/pages/forms.py:14 apps/order/abstract_models.py:335
+#: apps/promotions/models.py:221 apps/promotions/models.py:316
 #: templates/oscar/dashboard/catalogue/product_list.html:67
 #: templates/oscar/dashboard/orders/line_detail.html:42
 #: templates/oscar/dashboard/pages/index.html:58
@@ -237,12 +271,18 @@ msgstr ""
 msgid "Title"
 msgstr "Názov"
 
-#: apps/address/abstract_models.py:26 apps/customer/forms.py:237
+#: apps/address/abstract_models.py:26 apps/customer/forms.py:240
+#: templates/oscar/dashboard/partners/partner_manage.html:35
+#: templates/oscar/dashboard/partners/partner_user_list.html:46
+#: templates/oscar/dashboard/partners/partner_user_select.html:50
 #: templates/oscar/dashboard/users/index.html:68
 msgid "First name"
 msgstr "Meno"
 
-#: apps/address/abstract_models.py:28 apps/customer/forms.py:239
+#: apps/address/abstract_models.py:28 apps/customer/forms.py:242
+#: templates/oscar/dashboard/partners/partner_manage.html:36
+#: templates/oscar/dashboard/partners/partner_user_list.html:47
+#: templates/oscar/dashboard/partners/partner_user_select.html:51
 #: templates/oscar/dashboard/users/index.html:69
 msgid "Last name"
 msgstr "Priezvisko"
@@ -283,7 +323,7 @@ msgstr "Vyhľadávací text - používaný iba pre vyľadávanie adries"
 #: templates/oscar/checkout/checkout.html:33
 #: templates/oscar/checkout/thank_you.html:29
 #: templates/oscar/customer/anon_order.html:21
-#: templates/oscar/dashboard/orders/order_detail.html:370
+#: templates/oscar/dashboard/orders/order_detail.html:373
 msgid "Address"
 msgstr "Adresa"
 
@@ -355,8 +395,8 @@ msgstr "Dodacie adresy"
 #: apps/basket/reports.py:80 apps/customer/abstract_models.py:20
 #: apps/customer/abstract_models.py:190 apps/order/abstract_models.py:26
 #: apps/order/abstract_models.py:269 apps/order/reports.py:19
-#: apps/payment/models.py:188 apps/voucher/abstract_models.py:141
-#: templates/oscar/dashboard/orders/order_detail.html:534
+#: apps/payment/abstract_models.py:208 apps/voucher/abstract_models.py:141
+#: templates/oscar/dashboard/orders/order_detail.html:537
 #: templates/oscar/dashboard/reports/partials/order_report.html:10
 #: templates/oscar/dashboard/reviews/review_delete.html:42
 #: templates/oscar/dashboard/reviews/review_list.html:58
@@ -383,11 +423,11 @@ msgstr ""
 
 #: apps/address/abstract_models.py:224 apps/analytics/abstract_models.py:74
 #: apps/analytics/abstract_models.py:90 apps/basket/abstract_models.py:478
-#: apps/catalogue/abstract_models.py:301 apps/catalogue/abstract_models.py:928
+#: apps/catalogue/abstract_models.py:302 apps/catalogue/abstract_models.py:951
 #: apps/customer/abstract_models.py:69 apps/offer/models.py:140
-#: apps/offer/models.py:726 apps/order/abstract_models.py:276
+#: apps/offer/models.py:728 apps/order/abstract_models.py:276
 #: apps/order/abstract_models.py:614 apps/order/abstract_models.py:654
-#: apps/partner/abstract_models.py:324 apps/payment/models.py:30
+#: apps/partner/abstract_models.py:333 apps/payment/abstract_models.py:31
 #: apps/promotions/models.py:28 apps/promotions/models.py:317
 msgid "Date Created"
 msgstr "Dátum vytvorenia"
@@ -401,7 +441,7 @@ msgid "User addresses"
 msgstr "Používateľské adresy"
 
 #: apps/address/abstract_models.py:268
-#: templates/oscar/dashboard/orders/order_detail.html:385
+#: templates/oscar/dashboard/orders/order_detail.html:388
 #: templates/oscar/dashboard/orders/order_list.html:102
 msgid "Billing address"
 msgstr "Účtovná adresa"
@@ -412,10 +452,10 @@ msgstr "Účtovné adresy"
 
 #: apps/analytics/abstract_models.py:16 apps/analytics/abstract_models.py:73
 #: apps/analytics/reports.py:20 apps/basket/abstract_models.py:466
-#: apps/catalogue/abstract_models.py:153 apps/catalogue/abstract_models.py:215
-#: apps/catalogue/abstract_models.py:467 apps/catalogue/abstract_models.py:747
-#: apps/catalogue/abstract_models.py:918 apps/order/abstract_models.py:341
-#: apps/partner/abstract_models.py:100 apps/promotions/models.py:262
+#: apps/catalogue/abstract_models.py:156 apps/catalogue/abstract_models.py:218
+#: apps/catalogue/abstract_models.py:484 apps/catalogue/abstract_models.py:770
+#: apps/catalogue/abstract_models.py:941 apps/order/abstract_models.py:341
+#: apps/partner/abstract_models.py:105 apps/promotions/models.py:262
 #: templates/oscar/customer/anon_order.html:53
 #: templates/oscar/customer/order.html:59
 #: templates/oscar/customer/profile.html:214
@@ -438,11 +478,13 @@ msgstr "Zobrazenia"
 msgid "Basket Additions"
 msgstr "Pridania do košíka"
 
-#: apps/analytics/abstract_models.py:24
-msgid "Purchaes"
+#: apps/analytics/abstract_models.py:24 apps/analytics/reports.py:23
+#: templates/oscar/dashboard/catalogue/product_update.html:104
+#: templates/oscar/dashboard/reports/partials/product_report.html:11
+msgid "Purchases"
 msgstr "Nákupy"
 
-#: apps/analytics/abstract_models.py:27 apps/catalogue/abstract_models.py:296
+#: apps/analytics/abstract_models.py:27 apps/catalogue/abstract_models.py:297
 #: apps/catalogue/reviews/abstract_models.py:38
 #: templates/oscar/catalogue/reviews/review_list.html:49
 #: templates/oscar/dashboard/reviews/review_delete.html:43
@@ -543,30 +585,24 @@ msgstr ""
 msgid "Basket additions"
 msgstr "Pridania do košíka"
 
-#: apps/analytics/reports.py:23
-#: templates/oscar/dashboard/catalogue/product_update.html:104
-#: templates/oscar/dashboard/reports/partials/product_report.html:11
-msgid "Purchases"
-msgstr "Nákupy"
-
 #: apps/analytics/reports.py:40
 msgid "Product analytics"
 msgstr "Produktová analytika"
 
 #: apps/analytics/reports.py:62 apps/basket/reports.py:19
-#: apps/catalogue/abstract_models.py:25 apps/catalogue/abstract_models.py:64
-#: apps/catalogue/abstract_models.py:174 apps/catalogue/abstract_models.py:197
-#: apps/catalogue/abstract_models.py:615 apps/catalogue/abstract_models.py:789
-#: apps/catalogue/abstract_models.py:823 apps/catalogue/abstract_models.py:848
-#: apps/catalogue/abstract_models.py:878
+#: apps/catalogue/abstract_models.py:28 apps/catalogue/abstract_models.py:67
+#: apps/catalogue/abstract_models.py:177 apps/catalogue/abstract_models.py:200
+#: apps/catalogue/abstract_models.py:634 apps/catalogue/abstract_models.py:812
+#: apps/catalogue/abstract_models.py:846 apps/catalogue/abstract_models.py:871
+#: apps/catalogue/abstract_models.py:901
 #: apps/catalogue/reviews/abstract_models.py:46
 #: apps/customer/abstract_models.py:47 apps/dashboard/users/forms.py:11
 #: apps/dashboard/vouchers/forms.py:15 apps/dashboard/vouchers/forms.py:74
-#: apps/offer/models.py:45 apps/offer/models.py:705
+#: apps/offer/models.py:45 apps/offer/models.py:707
 #: apps/order/abstract_models.py:579 apps/order/abstract_models.py:723
-#: apps/partner/abstract_models.py:51 apps/payment/models.py:169
-#: apps/payment/models.py:190 apps/promotions/models.py:137
-#: apps/promotions/models.py:165 apps/promotions/models.py:186
+#: apps/partner/abstract_models.py:56 apps/payment/abstract_models.py:187
+#: apps/payment/abstract_models.py:210 apps/promotions/models.py:137
+#: apps/promotions/models.py:164 apps/promotions/models.py:186
 #: apps/promotions/models.py:200 apps/shipping/models.py:16
 #: apps/voucher/abstract_models.py:18 templates/oscar/customer/profile.html:66
 #: templates/oscar/dashboard/catalogue/category_list.html:50
@@ -644,15 +680,16 @@ msgstr "Zmrazený - košík nemôže byt modifikovaný"
 msgid "Submitted - has been ordered at the checkout"
 msgstr "Odovzdaný - bol zaradený do pokladne"
 
-#: apps/basket/abstract_models.py:39 apps/catalogue/abstract_models.py:265
-#: apps/catalogue/abstract_models.py:886
+#: apps/basket/abstract_models.py:39 apps/catalogue/abstract_models.py:267
+#: apps/catalogue/abstract_models.py:909
 #: apps/catalogue/reviews/abstract_models.py:58
-#: apps/customer/abstract_models.py:210 apps/dashboard/catalogue/forms.py:232
+#: apps/customer/abstract_models.py:210 apps/dashboard/catalogue/forms.py:236
 #: apps/dashboard/orders/forms.py:67 apps/dashboard/ranges/models.py:23
 #: apps/dashboard/reviews/forms.py:13 apps/dashboard/reviews/forms.py:26
-#: apps/offer/models.py:77 apps/order/abstract_models.py:54
-#: apps/order/abstract_models.py:374 apps/partner/abstract_models.py:322
-#: apps/payment/models.py:29 templates/oscar/customer/anon_order.html:12
+#: apps/offer/models.py:76 apps/order/abstract_models.py:54
+#: apps/order/abstract_models.py:374 apps/partner/abstract_models.py:331
+#: apps/payment/abstract_models.py:30
+#: templates/oscar/customer/anon_order.html:12
 #: templates/oscar/customer/anon_order.html:58
 #: templates/oscar/customer/profile.html:215
 #: templates/oscar/dashboard/catalogue/product_list.html:69
@@ -660,7 +697,7 @@ msgstr "Odovzdaný - bol zaradený do pokladne"
 #: templates/oscar/dashboard/orders/line_detail.html:61
 #: templates/oscar/dashboard/orders/order_detail.html:52
 #: templates/oscar/dashboard/orders/order_detail.html:97
-#: templates/oscar/dashboard/orders/order_detail.html:441
+#: templates/oscar/dashboard/orders/order_detail.html:444
 #: templates/oscar/dashboard/orders/order_list.html:99
 #: templates/oscar/dashboard/orders/statistics.html:59
 #: templates/oscar/dashboard/reviews/review_delete.html:45
@@ -672,7 +709,7 @@ msgid "Status"
 msgstr "Stav"
 
 #: apps/basket/abstract_models.py:47 apps/basket/reports.py:85
-#: apps/customer/abstract_models.py:213 apps/partner/abstract_models.py:151
+#: apps/customer/abstract_models.py:213 apps/partner/abstract_models.py:157
 #: templates/oscar/customer/profile.html:216
 #: templates/oscar/dashboard/promotions/promotion_list.html:47
 #: templates/oscar/dashboard/ranges/range_list.html:35
@@ -714,8 +751,8 @@ msgstr ""
 msgid "Line Reference"
 msgstr "Referencia na riadok"
 
-#: apps/basket/abstract_models.py:467 apps/basket/forms.py:117
-#: apps/basket/forms.py:215 apps/order/abstract_models.py:342
+#: apps/basket/abstract_models.py:467 apps/basket/forms.py:119
+#: apps/basket/forms.py:222 apps/order/abstract_models.py:342
 #: apps/order/abstract_models.py:553 apps/order/abstract_models.py:634
 #: apps/order/abstract_models.py:676
 #: templates/oscar/basket/partials/basket_content.html:28
@@ -760,14 +797,14 @@ msgstr "Nemôžete meniť %s košík"
 msgid "Line"
 msgstr "Riadok"
 
-#: apps/basket/abstract_models.py:702 apps/catalogue/abstract_models.py:610
-#: apps/catalogue/abstract_models.py:808 apps/catalogue/abstract_models.py:891
+#: apps/basket/abstract_models.py:702 apps/catalogue/abstract_models.py:629
+#: apps/catalogue/abstract_models.py:831 apps/catalogue/abstract_models.py:914
 #: apps/order/abstract_models.py:530 apps/order/abstract_models.py:551
 msgid "Option"
 msgstr "Voľba"
 
 #: apps/basket/abstract_models.py:703 apps/basket/reports.py:24
-#: apps/basket/reports.py:84 apps/offer/models.py:405 apps/offer/models.py:517
+#: apps/basket/reports.py:84 apps/offer/models.py:405 apps/offer/models.py:516
 #: apps/order/abstract_models.py:532
 #: templates/oscar/dashboard/reports/partials/open_basket_report.html:12
 #: templates/oscar/dashboard/reports/partials/submitted_basket_report.html:12
@@ -790,12 +827,12 @@ msgstr "Uchovať na neskôr"
 msgid "Move to Basket"
 msgstr "Presunúť do košíka"
 
-#: apps/basket/forms.py:91 apps/catalogue/abstract_models.py:617
-#: apps/catalogue/abstract_models.py:879 apps/customer/abstract_models.py:43
+#: apps/basket/forms.py:93 apps/catalogue/abstract_models.py:636
+#: apps/catalogue/abstract_models.py:902 apps/customer/abstract_models.py:43
 #: apps/dashboard/vouchers/forms.py:16 apps/dashboard/vouchers/forms.py:75
 #: apps/order/abstract_models.py:580 apps/order/abstract_models.py:725
-#: apps/order/abstract_models.py:784 apps/partner/abstract_models.py:50
-#: apps/payment/models.py:170 apps/voucher/abstract_models.py:21
+#: apps/order/abstract_models.py:784 apps/partner/abstract_models.py:55
+#: apps/payment/abstract_models.py:189 apps/voucher/abstract_models.py:21
 #: templates/oscar/dashboard/comms/list.html:30
 #: templates/oscar/dashboard/vouchers/voucher_delete.html:39
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:35
@@ -803,20 +840,20 @@ msgstr "Presunúť do košíka"
 msgid "Code"
 msgstr "Kód"
 
-#: apps/basket/forms.py:101 apps/basket/forms.py:116
+#: apps/basket/forms.py:103 apps/basket/forms.py:118
 #: templates/oscar/dashboard/users/detail.html:155
 msgid "Product ID"
 msgstr "ID produktu"
 
-#: apps/basket/forms.py:110
+#: apps/basket/forms.py:112
 msgid "This product is not available for purchase"
 msgstr "Produkt nie je možné zakúpiť"
 
-#: apps/basket/forms.py:149
+#: apps/basket/forms.py:154
 msgid "Please select a valid product"
 msgstr "Vyberte prosím platný produkt"
 
-#: apps/basket/forms.py:169
+#: apps/basket/forms.py:176
 #, python-format
 msgid ""
 "Due to technical limitations we are not able to ship more than %(threshold)d "
@@ -826,7 +863,7 @@ msgstr ""
 "položiek v jednej objednávke.  Váš košík momentálne obsahuje %(basket)d "
 "položiek."
 
-#: apps/basket/forms.py:193
+#: apps/basket/forms.py:200
 msgid "Variant"
 msgstr "Varianta"
 
@@ -837,6 +874,9 @@ msgstr "ID používateľa"
 #: apps/basket/reports.py:20 apps/catalogue/reviews/abstract_models.py:47
 #: apps/customer/abstract_models.py:28 apps/customer/abstract_models.py:191
 #: apps/dashboard/users/forms.py:10
+#: templates/oscar/dashboard/partners/partner_manage.html:34
+#: templates/oscar/dashboard/partners/partner_user_list.html:45
+#: templates/oscar/dashboard/partners/partner_user_select.html:49
 #: templates/oscar/dashboard/reports/partials/open_basket_report.html:8
 #: templates/oscar/dashboard/reports/partials/submitted_basket_report.html:8
 #: templates/oscar/dashboard/reports/partials/user_report.html:8
@@ -884,11 +924,11 @@ msgstr "Čas medzi vytvorením a odovzdaním."
 msgid "Submitted baskets"
 msgstr "Odovzdane kosiky"
 
-#: apps/basket/views.py:190
+#: apps/basket/views.py:191
 msgid "You can't save an item for later if you're not logged in!"
 msgstr "Nemôžete uchovať položku, ak nie ste prihlásený"
 
-#: apps/basket/views.py:251
+#: apps/basket/views.py:252
 msgid "Your basket couldn't be updated"
 msgstr "Košík nebolo možné zaktualizovať"
 
@@ -930,36 +970,36 @@ msgstr "Nebol nájdený kupón s id '%d'"
 msgid "Voucher '%s' removed from basket"
 msgstr "Kupón '%s' bol odobraný z košíka"
 
-#: apps/catalogue/abstract_models.py:26 apps/catalogue/abstract_models.py:68
-#: apps/catalogue/abstract_models.py:198 apps/catalogue/abstract_models.py:260
-#: apps/catalogue/abstract_models.py:825 apps/catalogue/abstract_models.py:850
+#: apps/catalogue/abstract_models.py:29 apps/catalogue/abstract_models.py:71
+#: apps/catalogue/abstract_models.py:201 apps/catalogue/abstract_models.py:262
+#: apps/catalogue/abstract_models.py:848 apps/catalogue/abstract_models.py:873
 #: apps/offer/models.py:47 apps/shipping/models.py:15
 msgid "Slug"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:30
+#: apps/catalogue/abstract_models.py:33
 msgid "Requires shipping?"
 msgstr "Vyžaduje zaslanie?"
 
-#: apps/catalogue/abstract_models.py:35
+#: apps/catalogue/abstract_models.py:38
 msgid "Track stock levels?"
 msgstr "Sledovať stav zásob"
 
-#: apps/catalogue/abstract_models.py:41 apps/catalogue/abstract_models.py:892
+#: apps/catalogue/abstract_models.py:44 apps/catalogue/abstract_models.py:915
 msgid "Options"
 msgstr "Možnosti"
 
-#: apps/catalogue/abstract_models.py:46 apps/catalogue/abstract_models.py:268
-#: apps/catalogue/abstract_models.py:614
+#: apps/catalogue/abstract_models.py:49 apps/catalogue/abstract_models.py:270
+#: apps/catalogue/abstract_models.py:633
 msgid "Product Class"
 msgstr "Trieda produktu"
 
-#: apps/catalogue/abstract_models.py:47 apps/offer/models.py:716
+#: apps/catalogue/abstract_models.py:50 apps/offer/models.py:718
 msgid "Product Classes"
 msgstr "Triedy produktu"
 
-#: apps/catalogue/abstract_models.py:65 apps/catalogue/abstract_models.py:261
-#: apps/offer/models.py:49 apps/promotions/models.py:202
+#: apps/catalogue/abstract_models.py:68 apps/catalogue/abstract_models.py:263
+#: apps/offer/models.py:48 apps/promotions/models.py:202
 #: apps/promotions/models.py:222 apps/shipping/models.py:17
 #: templates/oscar/dashboard/catalogue/category_list.html:51
 #: templates/oscar/dashboard/catalogue/product_update.html:90
@@ -968,71 +1008,64 @@ msgstr "Triedy produktu"
 msgid "Description"
 msgstr "Popis"
 
-#: apps/catalogue/abstract_models.py:66 apps/promotions/models.py:168
+#: apps/catalogue/abstract_models.py:69 apps/promotions/models.py:168
 #: apps/promotions/models.py:175 apps/promotions/models.py:176
 #: templates/oscar/dashboard/catalogue/product_list.html:66
 msgid "Image"
 msgstr "Obrázok"
 
-#: apps/catalogue/abstract_models.py:70
+#: apps/catalogue/abstract_models.py:73
 msgid "Full Name"
 msgstr "Celé meno"
 
-#: apps/catalogue/abstract_models.py:102
+#: apps/catalogue/abstract_models.py:105
 #, python-format
 msgid "A category with slug '%(slug)s' already exists"
 msgstr "Kategória so slugom '%(slug)s' už existuje"
 
-#: apps/catalogue/abstract_models.py:139 apps/catalogue/abstract_models.py:155
-#: apps/customer/abstract_models.py:53
-#: templates/oscar/dashboard/catalogue/product_update.html:280
-#: templates/oscar/dashboard/comms/list.html:32
-msgid "Category"
-msgstr "Kategória"
-
-#: apps/catalogue/abstract_models.py:156
+#: apps/catalogue/abstract_models.py:159
 msgid "Is Cannonical"
 msgstr "Je kanonický"
 
-#: apps/catalogue/abstract_models.py:162
+#: apps/catalogue/abstract_models.py:165
 msgid "Product Category"
 msgstr "Kategória produktu"
 
-#: apps/catalogue/abstract_models.py:163
+#: apps/catalogue/abstract_models.py:166
 msgid "Product Categories"
 msgstr "Kategórie produktu"
 
-#: apps/catalogue/abstract_models.py:175
+#: apps/catalogue/abstract_models.py:178
 msgid "Name Plural"
 msgstr "Plurál mena"
 
-#: apps/catalogue/abstract_models.py:183 apps/catalogue/abstract_models.py:219
+#: apps/catalogue/abstract_models.py:186 apps/catalogue/abstract_models.py:222
 msgid "Contributor Role"
 msgstr "Rola prispievateľa"
 
-#: apps/catalogue/abstract_models.py:184
+#: apps/catalogue/abstract_models.py:187
 msgid "Contributor Roles"
 msgstr "Roly prispievateľa"
 
-#: apps/catalogue/abstract_models.py:205 apps/catalogue/abstract_models.py:217
+#: apps/catalogue/abstract_models.py:208 apps/catalogue/abstract_models.py:220
 msgid "Contributor"
 msgstr "Prispievateľ"
 
-#: apps/catalogue/abstract_models.py:206
+#: apps/catalogue/abstract_models.py:209
 msgid "Contributors"
 msgstr "Prispievatelia"
 
-#: apps/catalogue/abstract_models.py:226
+#: apps/catalogue/abstract_models.py:229
 msgid "Product Contributor"
 msgstr "Prispievateľ produktu"
 
-#: apps/catalogue/abstract_models.py:227
+#: apps/catalogue/abstract_models.py:230
 msgid "Product Contributors"
 msgstr "Prispievatelia produktu"
 
-#: apps/catalogue/abstract_models.py:242 apps/dashboard/catalogue/forms.py:64
+#: apps/catalogue/abstract_models.py:246 apps/dashboard/catalogue/forms.py:64
 #: apps/dashboard/orders/forms.py:63 apps/order/abstract_models.py:336
-#: templates/oscar/catalogue/detail.html:115
+#: templates/oscar/catalogue/detail.html:119
 #: templates/oscar/dashboard/catalogue/product_list.html:65
 #: templates/oscar/dashboard/orders/line_detail.html:48
 #: templates/oscar/dashboard/orders/order_detail.html:96
@@ -1040,7 +1073,7 @@ msgstr "Prispievatelia produktu"
 msgid "UPC"
 msgstr "Kód produktu (UPC)"
 
-#: apps/catalogue/abstract_models.py:244
+#: apps/catalogue/abstract_models.py:247
 msgid ""
 "Universal Product Code (UPC) is an identifier for a product which is not "
 "specific to a particular  supplier. Eg an ISBN for a book."
@@ -1048,14 +1081,14 @@ msgstr ""
 "Univerzálny kód produktu (UPC) je identifikátor produktu, ktorý\n"
 "nie je špecifický pre konkrétneho výrobcu.  Napr. ISBN pre knihu."
 
-#: apps/catalogue/abstract_models.py:251
+#: apps/catalogue/abstract_models.py:253
 #: templates/oscar/dashboard/catalogue/product_list.html:76
 #: templates/oscar/dashboard/catalogue/product_update.html:196
 #: templates/oscar/dashboard/catalogue/product_update.html:214
 msgid "Parent"
 msgstr "Rodič"
 
-#: apps/catalogue/abstract_models.py:252
+#: apps/catalogue/abstract_models.py:254
 msgid ""
 "Only choose a parent product if this is a 'variant' of a canonical "
 "catalogue.  For example if this is a size 4 of a particular t-shirt.  Leave "
@@ -1070,15 +1103,15 @@ msgstr ""
 "tohto \n"
 "produktu)."
 
-#: apps/catalogue/abstract_models.py:269
+#: apps/catalogue/abstract_models.py:271
 msgid "Choose what type of product this is"
 msgstr "Vyberte akého typu je tento produkt"
 
-#: apps/catalogue/abstract_models.py:273
+#: apps/catalogue/abstract_models.py:275
 msgid "Attributes"
 msgstr "Atribúty"
 
-#: apps/catalogue/abstract_models.py:274
+#: apps/catalogue/abstract_models.py:276
 msgid ""
 "A product attribute is something that this product MUST have, such as a "
 "size, as specified by its class"
@@ -1086,11 +1119,11 @@ msgstr ""
 "Atribút produktu je niečo, čo tento produkt MUSÍ mať (ako napr. \n"
 "veľkosť), podľa toho, ako je to špecifikované jeho triedou"
 
-#: apps/catalogue/abstract_models.py:277
+#: apps/catalogue/abstract_models.py:279
 msgid "Product Options"
 msgstr "Možnosti produktu"
 
-#: apps/catalogue/abstract_models.py:278
+#: apps/catalogue/abstract_models.py:280
 msgid ""
 "Options are values that can be associated with a item when it is added to a "
 "customer's basket.  This could be something like a personalised message to "
@@ -1101,11 +1134,11 @@ msgstr ""
 "košíka zákazníka.  Môže to byť niečo ako osobná správa, ktorá má byť \n"
 "vytlačená na tričko."
 
-#: apps/catalogue/abstract_models.py:285
+#: apps/catalogue/abstract_models.py:287
 msgid "Related Products"
 msgstr "Príbuzné produkty"
 
-#: apps/catalogue/abstract_models.py:286
+#: apps/catalogue/abstract_models.py:288
 msgid ""
 "Related items are things like different formats of the same book.  Grouping "
 "them together allows better linking betwen products on the site."
@@ -1114,275 +1147,283 @@ msgstr ""
 "zoskupenie \n"
 "umožňuje lepšie väzby medzi produktami na stránke."
 
-#: apps/catalogue/abstract_models.py:293
+#: apps/catalogue/abstract_models.py:294
 #: templates/oscar/dashboard/catalogue/product_update.html:44
 msgid "Recommended Products"
 msgstr "Odporúčané produkty"
 
-#: apps/catalogue/abstract_models.py:299
+#: apps/catalogue/abstract_models.py:300
 msgid "Rating"
 msgstr "Hodnotenie"
 
-#: apps/catalogue/abstract_models.py:304 apps/customer/abstract_models.py:70
+#: apps/catalogue/abstract_models.py:305 apps/customer/abstract_models.py:70
 #: apps/order/abstract_models.py:277
 msgid "Date Updated"
 msgstr "Dátum aktualizácie"
 
-#: apps/catalogue/abstract_models.py:311
+#: apps/catalogue/abstract_models.py:312
 msgid "Is Discountable"
 msgstr "Je možná zľava"
 
-#: apps/catalogue/abstract_models.py:395
+#: apps/catalogue/abstract_models.py:402
 msgid "No stock available"
 msgstr "Nie sú žiadne zásoby"
 
-#: apps/catalogue/abstract_models.py:488
+#: apps/catalogue/abstract_models.py:443
+#: templates/oscar/catalogue/detail.html:123
+#: templates/oscar/dashboard/catalogue/product_list.html:68
+#: templates/oscar/dashboard/orders/line_detail.html:45
+msgid "Product class"
+msgstr "Trieda produktu"
+
+#: apps/catalogue/abstract_models.py:501
 msgid "Canonical products must have a title"
 msgstr "Kanonické produkty musia mať názov"
 
-#: apps/catalogue/abstract_models.py:525
+#: apps/catalogue/abstract_models.py:544
 msgid "Primary Product"
 msgstr "Primárny produkt"
 
-#: apps/catalogue/abstract_models.py:527
+#: apps/catalogue/abstract_models.py:546
 msgid "Recommended Product"
 msgstr "Odporúčaný produkt"
 
-#: apps/catalogue/abstract_models.py:528
+#: apps/catalogue/abstract_models.py:547
 msgid "Ranking"
 msgstr "Ohodnotenie"
 
-#: apps/catalogue/abstract_models.py:531
+#: apps/catalogue/abstract_models.py:550
 msgid "Product Recommendation"
 msgstr "Odporučenie produktu"
 
-#: apps/catalogue/abstract_models.py:532
+#: apps/catalogue/abstract_models.py:551
 msgid "Product Recomendations"
 msgstr "Odporúčania produktu"
 
-#: apps/catalogue/abstract_models.py:556
+#: apps/catalogue/abstract_models.py:575
 #, python-format
 msgid "%(obj)s has no attribute named '%(attr)s'"
 msgstr "%(obj)s namé atribút s názvom '%(attr)s'"
 
-#: apps/catalogue/abstract_models.py:565
+#: apps/catalogue/abstract_models.py:584
 #, python-format
-msgid "%(attr)s attribute cannot be blanke"
+msgid "%(attr)s attribute cannot be blank"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:572
+#: apps/catalogue/abstract_models.py:591
 #, python-format
 msgid "%(attr)s attribute %(err)s"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:604 apps/catalogue/abstract_models.py:749
+#: apps/catalogue/abstract_models.py:623 apps/catalogue/abstract_models.py:772
 msgid "Text"
 msgstr "Text"
 
-#: apps/catalogue/abstract_models.py:605 apps/catalogue/abstract_models.py:750
+#: apps/catalogue/abstract_models.py:624 apps/catalogue/abstract_models.py:773
 msgid "Integer"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:606
+#: apps/catalogue/abstract_models.py:625
 msgid "True / False"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:607 apps/catalogue/abstract_models.py:752
+#: apps/catalogue/abstract_models.py:626 apps/catalogue/abstract_models.py:775
 msgid "Float"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:608
+#: apps/catalogue/abstract_models.py:627
 msgid "Rich Text"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:609 apps/catalogue/abstract_models.py:754
+#: apps/catalogue/abstract_models.py:628 apps/catalogue/abstract_models.py:777
 #: apps/order/abstract_models.py:307
-#: templates/oscar/dashboard/orders/order_detail.html:278
-#: templates/oscar/dashboard/orders/order_detail.html:319
-#: templates/oscar/dashboard/orders/order_detail.html:442
-#: templates/oscar/dashboard/orders/order_detail.html:533
+#: templates/oscar/dashboard/orders/order_detail.html:279
+#: templates/oscar/dashboard/orders/order_detail.html:321
+#: templates/oscar/dashboard/orders/order_detail.html:445
+#: templates/oscar/dashboard/orders/order_detail.html:536
 msgid "Date"
 msgstr "Dátum"
 
-#: apps/catalogue/abstract_models.py:611
+#: apps/catalogue/abstract_models.py:630
 msgid "Entity"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:619
+#: apps/catalogue/abstract_models.py:638
 msgid "Code must match ^[a-zA-Z_][0-9a-zA-Z_]*$"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:622 apps/catalogue/abstract_models.py:828
-#: apps/offer/models.py:72 apps/offer/models.py:403 apps/offer/models.py:510
-#: apps/order/abstract_models.py:531 apps/payment/models.py:25
-#: templates/oscar/dashboard/orders/order_detail.html:478
-#: templates/oscar/dashboard/orders/order_detail.html:535
+#: apps/catalogue/abstract_models.py:641 apps/catalogue/abstract_models.py:851
+#: apps/offer/models.py:71 apps/offer/models.py:403 apps/offer/models.py:510
+#: apps/order/abstract_models.py:531 apps/payment/abstract_models.py:26
+#: templates/oscar/dashboard/orders/order_detail.html:481
+#: templates/oscar/dashboard/orders/order_detail.html:538
 #: templates/oscar/dashboard/promotions/page_detail.html:37
 #: templates/oscar/dashboard/promotions/promotion_list.html:45
 msgid "Type"
 msgstr "Typ"
 
-#: apps/catalogue/abstract_models.py:625
+#: apps/catalogue/abstract_models.py:644
 msgid "Option Group"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:626
+#: apps/catalogue/abstract_models.py:645
 msgid "Select an option group if using type \"Option\""
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:629
+#: apps/catalogue/abstract_models.py:648
 msgid "Entity Type"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:630
+#: apps/catalogue/abstract_models.py:649
 msgid "Select an entity type if using type \"Entity\""
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:631
+#: apps/catalogue/abstract_models.py:650
 msgid "Required"
 msgstr "Povinný"
 
-#: apps/catalogue/abstract_models.py:636
+#: apps/catalogue/abstract_models.py:655
 msgid "Product Attribute"
 msgstr "Atribút produktu"
 
-#: apps/catalogue/abstract_models.py:637
+#: apps/catalogue/abstract_models.py:656
 #: templates/oscar/dashboard/catalogue/product_update.html:243
 msgid "Product Attributes"
 msgstr "Atribúty produktu"
 
-#: apps/catalogue/abstract_models.py:641
+#: apps/catalogue/abstract_models.py:664
 msgid "Must be str or unicode"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:647
+#: apps/catalogue/abstract_models.py:670
 msgid "Must be a float"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:653
+#: apps/catalogue/abstract_models.py:676
 msgid "Must be an integer"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:657
+#: apps/catalogue/abstract_models.py:680
 msgid "Must be a date or datetime"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:661
+#: apps/catalogue/abstract_models.py:684
 msgid "Must be a boolean"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:666
+#: apps/catalogue/abstract_models.py:689
 msgid "Must be an AttributeEntity model object instance"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:668
+#: apps/catalogue/abstract_models.py:691
 msgid "Model has not been saved yet"
 msgstr "Model ešte nebol uložený"
 
-#: apps/catalogue/abstract_models.py:671
+#: apps/catalogue/abstract_models.py:694
 #, python-format
 msgid "Entity must be of type %s"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:676
+#: apps/catalogue/abstract_models.py:699
 msgid "Must be an AttributeOption model object instance"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:678
+#: apps/catalogue/abstract_models.py:701
 msgid "AttributeOption has not been saved yet"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:683
+#: apps/catalogue/abstract_models.py:706
 #, python-format
 msgid "%(enum)s is not a valid choice for %(attr)s"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:744
+#: apps/catalogue/abstract_models.py:767
 msgid "Attribute"
 msgstr "Atribút"
 
-#: apps/catalogue/abstract_models.py:751
+#: apps/catalogue/abstract_models.py:774
 msgid "Boolean"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:753
+#: apps/catalogue/abstract_models.py:776
 msgid "Richtext"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:757
+#: apps/catalogue/abstract_models.py:780
 msgid "Value Option"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:760
+#: apps/catalogue/abstract_models.py:783
 msgid "Value Entity"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:776
+#: apps/catalogue/abstract_models.py:799
 msgid "Product Attribute Value"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:777
-msgid "Product Attribut Values"
-msgstr ""
+#: apps/catalogue/abstract_models.py:800
+#, fuzzy
+msgid "Product Attribute Values"
+msgstr "Atribúty produktu"
 
-#: apps/catalogue/abstract_models.py:796
+#: apps/catalogue/abstract_models.py:819
 msgid "Attribute Option Group"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:797
+#: apps/catalogue/abstract_models.py:820
 msgid "Attribute Option Groups"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:807
+#: apps/catalogue/abstract_models.py:830
 msgid "Group"
 msgstr "Skupina"
 
-#: apps/catalogue/abstract_models.py:815
+#: apps/catalogue/abstract_models.py:838
 msgid "Attribute Option"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:816
+#: apps/catalogue/abstract_models.py:839
 msgid "Attribute Options"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:835
+#: apps/catalogue/abstract_models.py:858
 msgid "Attribute Entity"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:836
+#: apps/catalogue/abstract_models.py:859
 msgid "Attribute Entities"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:857
+#: apps/catalogue/abstract_models.py:880
 msgid "Attribute Entity Type"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:858
+#: apps/catalogue/abstract_models.py:881
 msgid "Attribute Entity Types"
 msgstr ""
 
-#: apps/catalogue/abstract_models.py:883
+#: apps/catalogue/abstract_models.py:906
 msgid "Required - a value for this option must be specified"
 msgstr "Povinná - hodnota pre túto voľbu musí byť špecifikovaná"
 
-#: apps/catalogue/abstract_models.py:884
+#: apps/catalogue/abstract_models.py:907
 msgid "Optional - a value for this option can be omitted"
 msgstr "Nepovinná - hodnota pre túto voľbu môže byť vynechaná"
 
-#: apps/catalogue/abstract_models.py:920
+#: apps/catalogue/abstract_models.py:943
 msgid "Original"
 msgstr "Originál"
 
-#: apps/catalogue/abstract_models.py:922
+#: apps/catalogue/abstract_models.py:945
 msgid "Caption"
 msgstr "Popisok"
 
-#: apps/catalogue/abstract_models.py:925 apps/promotions/models.py:26
+#: apps/catalogue/abstract_models.py:948 apps/promotions/models.py:26
 #: apps/promotions/models.py:263 apps/promotions/models.py:305
 msgid "Display Order"
 msgstr "Poradie zobrazenia"
 
-#: apps/catalogue/abstract_models.py:926
+#: apps/catalogue/abstract_models.py:949
 msgid ""
 "An image with a display order of\n"
 "                       zero will be the primary image for a product"
@@ -1390,29 +1431,29 @@ msgstr ""
 "Obrázok s nulovým poradím zobrazenia\n"
 "                       bude primárny pobrázok produktu"
 
-#: apps/catalogue/abstract_models.py:934
+#: apps/catalogue/abstract_models.py:957
 msgid "Product Image"
 msgstr "Obrázok produktu"
 
-#: apps/catalogue/abstract_models.py:935
+#: apps/catalogue/abstract_models.py:958
 msgid "Product Images"
 msgstr "Obrázky produktu"
 
-#: apps/catalogue/utils.py:52
+#: apps/catalogue/utils.py:54
 #, python-format
 msgid "%(filename)s is not a valid image (%(error)s)"
 msgstr "%(filename)s nie je platný obrázok (%(error)s)"
 
-#: apps/catalogue/utils.py:61
+#: apps/catalogue/utils.py:63
 #, python-format
 msgid "%s is not a valid image archive"
 msgstr "%s nie je platný archív obrázku"
 
-#: apps/catalogue/views.py:169 templates/oscar/catalogue/browse.html:21
+#: apps/catalogue/views.py:177 templates/oscar/catalogue/browse.html:22
 msgid "All products"
 msgstr "Všetky produkty"
 
-#: apps/catalogue/views.py:171
+#: apps/catalogue/views.py:179
 #, python-format
 msgid "Products matching '%(query)s'"
 msgstr "Produkty vyhovujúce '%(query)s'"
@@ -1502,7 +1543,7 @@ msgid "Votes"
 msgstr "Hlasy"
 
 #: apps/catalogue/reviews/forms.py:11 apps/catalogue/reviews/forms.py:20
-#: apps/catalogue/reviews/forms.py:37 apps/dashboard/catalogue/forms.py:222
+#: apps/catalogue/reviews/forms.py:37 apps/dashboard/catalogue/forms.py:226
 msgid "This field is required"
 msgstr "Toto pole je povinné"
 
@@ -1579,7 +1620,7 @@ msgid "Address deleted from your address book"
 msgstr "Adresa bola vymazaná z vášho adresára"
 
 #: apps/checkout/views.py:188 apps/checkout/views.py:209
-#: apps/customer/views.py:520 apps/customer/views.py:538
+#: apps/customer/views.py:522 apps/customer/views.py:540
 msgid "Address saved"
 msgstr "Adresa uložená"
 
@@ -1614,11 +1655,12 @@ msgid ""
 "A problem occurred while processing payment for this order - no payment has "
 "been taken.  Please contact customer services if this problem persists"
 msgstr ""
-"Vyskytol sa problém pri spracovaní platby pre túto objednávku - nebola prijatá\n"
+"Vyskytol sa problém pri spracovaní platby pre túto objednávku - nebola "
+"prijatá\n"
 "žiadna platba.  Skúste znovu a ak bude problém pretrvávať, kontaktujte\n"
 "zákaznícky servis"
 
-#: apps/checkout/views.py:620
+#: apps/checkout/views.py:624
 msgid "No order found"
 msgstr "Nebola nájdená žiadna objednávka"
 
@@ -1649,7 +1691,7 @@ msgstr "Dátum odoslania"
 #: templates/oscar/dashboard/comms/list.html:20
 #: templates/oscar/dashboard/comms/list.html:26
 #: templates/oscar/dashboard/orders/order_detail.html:77
-#: templates/oscar/dashboard/orders/order_detail.html:515
+#: templates/oscar/dashboard/orders/order_detail.html:518
 msgid "Emails"
 msgstr "Email-y"
 
@@ -1720,7 +1762,7 @@ msgstr "Aktívne"
 msgid "Cancelled"
 msgstr "Zrušené"
 
-#: apps/customer/abstract_models.py:208 apps/partner/abstract_models.py:320
+#: apps/customer/abstract_models.py:208 apps/partner/abstract_models.py:329
 #: templates/oscar/dashboard/index.html:147
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:41
 msgid "Closed"
@@ -1740,85 +1782,86 @@ msgstr "Dátum zrušenia"
 msgid "Date closed"
 msgstr "Dátum uzatvorenia"
 
-#: apps/customer/forms.py:70 apps/customer/forms.py:129
+#: apps/customer/forms.py:69 apps/customer/forms.py:128
 msgid "Email Address"
 msgstr "Email-ová adresa"
 
-#: apps/customer/forms.py:111
+#: apps/customer/forms.py:110
 msgid "Please choose a less common password"
 msgstr "Vyberte prosím menej bežné heslo"
 
-#: apps/customer/forms.py:130
+#: apps/customer/forms.py:130 apps/dashboard/partners/forms.py:48
 msgid "Password"
 msgstr "Heslo"
 
-#: apps/customer/forms.py:133
+#: apps/customer/forms.py:134 apps/dashboard/partners/forms.py:55
 msgid "Confirm Password"
 msgstr "Potvrďte heslo"
 
-#: apps/customer/forms.py:145
+#: apps/customer/forms.py:147
 msgid "A user with that email address already exists."
 msgstr "Používateľ s touto email-ovou adresou už existuje"
 
-#: apps/customer/forms.py:152
+#: apps/customer/forms.py:155 apps/dashboard/partners/forms.py:63
 msgid "The two password fields didn't match."
 msgstr "Dve zadané heslá sa nezhodujú"
 
-#: apps/customer/forms.py:166 apps/dashboard/orders/forms.py:16
+#: apps/customer/forms.py:169 apps/dashboard/orders/forms.py:16
 msgid "From"
 msgstr "Od"
 
-#: apps/customer/forms.py:167 apps/dashboard/orders/forms.py:17
+#: apps/customer/forms.py:170 apps/dashboard/orders/forms.py:17
 msgid "To"
 msgstr "Do"
 
-#: apps/customer/forms.py:171
+#: apps/customer/forms.py:174
 msgid "At least one date field is required."
 msgstr "Minimálne jedno dátumové pole je povinné"
 
-#: apps/customer/forms.py:176 apps/dashboard/orders/forms.py:23
-#: apps/dashboard/orders/forms.py:46 apps/dashboard/orders/views.py:101
+#: apps/customer/forms.py:179 apps/dashboard/orders/forms.py:23
+#: apps/dashboard/orders/forms.py:46 apps/dashboard/orders/views.py:96
 msgid "All orders"
 msgstr "Všetky ostatné"
 
-#: apps/customer/forms.py:180 apps/dashboard/orders/forms.py:35
+#: apps/customer/forms.py:183 apps/dashboard/orders/forms.py:35
 #, python-format
 msgid "Orders placed between %(date_from)s and %(date_to)s"
 msgstr "Objednávky podané medzi %(date_from)s a %(date_to)s"
 
-#: apps/customer/forms.py:184 apps/dashboard/orders/forms.py:40
+#: apps/customer/forms.py:187 apps/dashboard/orders/forms.py:40
 #, python-format
 msgid "Orders placed since %s"
 msgstr "Objednávky podané od %s"
 
-#: apps/customer/forms.py:186 apps/dashboard/orders/forms.py:43
+#: apps/customer/forms.py:189 apps/dashboard/orders/forms.py:43
 #, python-format
 msgid "Orders placed until %s"
 msgstr "Objednávky podané do %s"
 
-#: apps/customer/forms.py:222 apps/customer/forms.py:281
+#: apps/customer/forms.py:225 apps/customer/forms.py:284
 msgid "A user with this email address already exists"
 msgstr "Používateľ s touto email-ovou adresou už existuje"
 
-#: apps/customer/forms.py:240 templates/oscar/customer/profile.html:70
+#: apps/customer/forms.py:243 apps/dashboard/partners/forms.py:82
+#: templates/oscar/customer/profile.html:70
 #: templates/oscar/dashboard/orders/order_detail.html:35
 msgid "Email address"
 msgstr "Email-ová adresa"
 
-#: apps/customer/forms.py:298
+#: apps/customer/forms.py:301
 msgid "Send notification to"
 msgstr "Posielať oznámenia na"
 
-#: apps/customer/forms.py:300
+#: apps/customer/forms.py:303
 msgid "Enter your email"
 msgstr "Vložte svoj email"
 
-#: apps/customer/forms.py:334
+#: apps/customer/forms.py:337
 #, python-format
 msgid "There is already an active stock alert for %s"
 msgstr "Pre %s už existuje aktívne upozornenie na stav zásob"
 
-#: apps/customer/forms.py:344
+#: apps/customer/forms.py:347
 msgid "You already have an active alert for this product"
 msgstr "Pre tento produkt už máte aktívne upozornenie"
 
@@ -1830,38 +1873,38 @@ msgstr "Žiadne upozornenie nebolo nájdené"
 msgid "Alert cancelled"
 msgstr "Upozornenie zrušené"
 
-#: apps/customer/views.py:439
+#: apps/customer/views.py:441
 #, python-format
 msgid ""
 "All available lines from order %(number)s have been added to your basket"
 msgstr "Všetky dostupné riadky z objednávky %(number)s boli pridané do košíka"
 
-#: apps/customer/views.py:446
+#: apps/customer/views.py:448
 #, python-format
 msgid ""
 "It is not possible to re-order order %(number)s as none of its lines are "
 "available to purchase"
 msgstr ""
 
-#: apps/customer/views.py:484
+#: apps/customer/views.py:486
 #, python-format
 msgid "%(qty)d copies of '%(product)s' have been added to your basket"
 msgstr "%(qty)d kópií produktu '%(product)s' bolo pridaných do košíka"
 
-#: apps/customer/views.py:487
+#: apps/customer/views.py:489
 #, python-format
 msgid "'%s' has been added to your basket"
 msgstr "Produkt '%s' bol pridaný do košíka"
 
-#: apps/customer/views.py:510
+#: apps/customer/views.py:512
 msgid "Add a new address"
 msgstr "Pridaj novú adresu"
 
-#: apps/customer/views.py:531
+#: apps/customer/views.py:533
 msgid "Edit address"
 msgstr "Upraviť adresu"
 
-#: apps/customer/views.py:578
+#: apps/customer/views.py:580
 msgid "Password updated"
 msgstr "Heslo zaktualizované"
 
@@ -1914,19 +1957,19 @@ msgstr[0] "%(count)d oznámenie vymazané"
 msgstr[1] "%(count)d oznámenia vymazané"
 msgstr[2] "%(count)d oznámení vymazaných"
 
-#: apps/dashboard/catalogue/forms.py:30
+#: apps/dashboard/catalogue/forms.py:31
 msgid "Category with the given path already exists."
 msgstr "Kategória s danou cestou už existuje"
 
-#: apps/dashboard/catalogue/forms.py:224
+#: apps/dashboard/catalogue/forms.py:228
 msgid "Parent products must have a title"
 msgstr "Rodičovský produkt musí mať názov"
 
-#: apps/dashboard/catalogue/forms.py:246
+#: apps/dashboard/catalogue/forms.py:250
 msgid "A top-level product must have at least one category"
 msgstr "Produkt najvyššej úrovne musí mať aspoň jednu kategóriu"
 
-#: apps/dashboard/catalogue/forms.py:249
+#: apps/dashboard/catalogue/forms.py:253
 msgid "A variant product should not have categories"
 msgstr "Produktová varianta by nemala mať kategórie"
 
@@ -1935,12 +1978,12 @@ msgstr "Produktová varianta by nemala mať kategórie"
 msgid "Products %(upc_filter)s %(title_filter)s"
 msgstr "Produkty %(upc_filter)s %(title_filter)s"
 
-#: apps/dashboard/catalogue/views.py:69 apps/dashboard/orders/views.py:166
+#: apps/dashboard/catalogue/views.py:69 apps/dashboard/orders/views.py:126
 #, python-format
 msgid " including an item with UPC '%s'"
 msgstr ""
 
-#: apps/dashboard/catalogue/views.py:73 apps/dashboard/orders/views.py:162
+#: apps/dashboard/catalogue/views.py:73 apps/dashboard/orders/views.py:123
 #, python-format
 msgid " including an item with title matching '%s'"
 msgstr ""
@@ -1954,52 +1997,52 @@ msgstr "Vyberte prosím triedu produktu"
 msgid "Create new %s product"
 msgstr "Vytvor nový produkt triedy %s"
 
-#: apps/dashboard/catalogue/views.py:251
+#: apps/dashboard/catalogue/views.py:252
 msgid "Your submitted data was not valid - please correct the below errors"
 msgstr "Údaje, ktoré ste zadali nie sú validné; opravte prosím chyby nižšie"
 
-#: apps/dashboard/catalogue/views.py:268
+#: apps/dashboard/catalogue/views.py:269
 #, python-format
 msgid "Created product '%s'"
 msgstr "Vytvorený produkt '%s'"
 
-#: apps/dashboard/catalogue/views.py:270
+#: apps/dashboard/catalogue/views.py:271
 #, python-format
 msgid "Updated product '%s'"
 msgstr "Zaktualizovaný produkt '%s'"
 
-#: apps/dashboard/catalogue/views.py:285
+#: apps/dashboard/catalogue/views.py:286
 #, python-format
 msgid "Deleted product '%s'"
 msgstr "Vymazaný produkt '%s'"
 
-#: apps/dashboard/catalogue/views.py:307
+#: apps/dashboard/catalogue/views.py:308
 #, python-format
 msgid "Alerts with status \"%s\""
 msgstr "Upozornenia so stavom \"%s\""
 
-#: apps/dashboard/catalogue/views.py:310
+#: apps/dashboard/catalogue/views.py:311
 msgid "All alerts"
 msgstr "Všetky upozornenia"
 
-#: apps/dashboard/catalogue/views.py:354
+#: apps/dashboard/catalogue/views.py:355
 msgid "Add a new category"
 msgstr "Pridaj novú kategóriu"
 
-#: apps/dashboard/catalogue/views.py:358
+#: apps/dashboard/catalogue/views.py:359
 msgid "Category created successfully"
 msgstr "Kategória bola úspešne vytvorená"
 
-#: apps/dashboard/catalogue/views.py:369
+#: apps/dashboard/catalogue/views.py:370
 #, python-format
 msgid "Update category '%s'"
 msgstr "Zaktualizuj kategóriu '%s'"
 
-#: apps/dashboard/catalogue/views.py:373
+#: apps/dashboard/catalogue/views.py:374
 msgid "Category updated successfully"
 msgstr "Kategória úspešne zaktualizovaná"
 
-#: apps/dashboard/catalogue/views.py:387
+#: apps/dashboard/catalogue/views.py:388
 msgid "Category deleted successfully"
 msgstr "Kategória úspešne vymazaná"
 
@@ -2017,11 +2060,12 @@ msgstr "Šablóna HTML tela správy"
 
 #: apps/dashboard/communications/forms.py:23
 #: apps/dashboard/offers/reports.py:13 apps/dashboard/orders/forms.py:60
-#: apps/dashboard/orders/views.py:239 apps/order/abstract_models.py:21
+#: apps/dashboard/orders/views.py:270 apps/order/abstract_models.py:21
 #: apps/order/reports.py:18 templates/oscar/customer/order_list.html:52
 #: templates/oscar/customer/profile.html:104
 #: templates/oscar/dashboard/comms/detail.html:67
 #: templates/oscar/dashboard/offers/offer_detail.html:107
+#: templates/oscar/dashboard/orders/order_list.html:95
 #: templates/oscar/dashboard/reports/partials/order_report.html:9
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:63
 msgid "Order number"
@@ -2055,7 +2099,7 @@ msgid "A preview email has been sent to %s"
 msgstr ""
 
 #: apps/dashboard/offers/forms.py:23 apps/dashboard/vouchers/forms.py:17
-#: apps/offer/models.py:92 apps/voucher/abstract_models.py:38
+#: apps/offer/models.py:91 apps/voucher/abstract_models.py:38
 #: templates/oscar/dashboard/offers/offer_list.html:47
 #: templates/oscar/dashboard/vouchers/voucher_delete.html:40
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:36
@@ -2063,7 +2107,7 @@ msgid "Start date"
 msgstr "Počiatočný dátum"
 
 #: apps/dashboard/offers/forms.py:25 apps/dashboard/vouchers/forms.py:18
-#: apps/offer/models.py:94 apps/voucher/abstract_models.py:39
+#: apps/offer/models.py:93 apps/voucher/abstract_models.py:39
 #: templates/oscar/dashboard/offers/offer_list.html:48
 #: templates/oscar/dashboard/vouchers/voucher_delete.html:41
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:37
@@ -2102,11 +2146,12 @@ msgstr ""
 
 #: apps/dashboard/offers/forms.py:157 apps/order/abstract_models.py:780
 #: templates/oscar/dashboard/offers/offer_list.html:46
-#: templates/oscar/dashboard/orders/order_detail.html:480
+#: templates/oscar/dashboard/orders/order_detail.html:483
 msgid "Offer name"
 msgstr "Meno ponuky"
 
 #: apps/dashboard/offers/forms.py:158
+#: templates/oscar/dashboard/users/index.html:70
 #: templates/oscar/dashboard/vouchers/voucher_list.html:53
 msgid "Is active?"
 msgstr "Je aktívna"
@@ -2120,7 +2165,7 @@ msgstr ""
 #: templates/oscar/basket/partials/basket_totals.html:132
 #: templates/oscar/checkout/thank_you.html:186
 #: templates/oscar/customer/anon_order.html:93
-#: templates/oscar/customer/order.html:139
+#: templates/oscar/customer/order.html:143
 #: templates/oscar/dashboard/offers/offer_detail.html:109
 #: templates/oscar/dashboard/orders/order_detail.html:202
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:64
@@ -2129,7 +2174,6 @@ msgstr "Objednávka celkom"
 
 #: apps/dashboard/offers/reports.py:16
 #: templates/oscar/checkout/shipping_methods.html:24
-#: templates/oscar/checkout/thank_you.html:74
 #: templates/oscar/dashboard/offers/offer_detail.html:110
 #: templates/oscar/dashboard/offers/offer_list.html:54
 msgid "Cost"
@@ -2218,7 +2262,7 @@ msgid "Product name"
 msgstr "Meno produktu"
 
 #: apps/dashboard/orders/forms.py:64 apps/order/abstract_models.py:333
-#: apps/partner/abstract_models.py:106
+#: apps/partner/abstract_models.py:112
 #: templates/oscar/dashboard/catalogue/product_list.html:71
 #: templates/oscar/dashboard/orders/line_detail.html:67
 #: templates/oscar/dashboard/ranges/range_product_list.html:96
@@ -2244,7 +2288,7 @@ msgstr "Kód kupónu"
 msgid "Payment method"
 msgstr "Spôsob platby"
 
-#: apps/dashboard/orders/forms.py:78 apps/promotions/models.py:146
+#: apps/dashboard/orders/forms.py:78 apps/promotions/models.py:145
 msgid "HTML"
 msgstr "HTML"
 
@@ -2264,181 +2308,181 @@ msgid ""
 "%(status_filter)s"
 msgstr ""
 
-#: apps/dashboard/orders/views.py:117
+#: apps/dashboard/orders/views.py:110
 msgid "Orders without an order status"
 msgstr "Objednávky bez stavu"
 
-#: apps/dashboard/orders/views.py:120
+#: apps/dashboard/orders/views.py:112
 #, python-format
 msgid "Orders with status '%s'"
 msgstr "Objednávky so stavom '%s'"
 
-#: apps/dashboard/orders/views.py:137
+#: apps/dashboard/orders/views.py:117
 #, python-format
 msgid "Orders with number starting with \"%s\""
 msgstr "Objednávky s číslom začínajúcim \"%s\""
 
-#: apps/dashboard/orders/views.py:158 apps/dashboard/reviews/views.py:117
+#: apps/dashboard/orders/views.py:120 apps/dashboard/reviews/views.py:117
 #: apps/dashboard/users/views.py:131
 #, python-format
 msgid " with customer name matching '%s'"
 msgstr " s menom zákazníka vyhovujúcim '%s'"
 
-#: apps/dashboard/orders/views.py:170
+#: apps/dashboard/orders/views.py:129
 #, python-format
 msgid " including an item with ID '%s'"
 msgstr " vrátane položky s ID '%s'"
 
-#: apps/dashboard/orders/views.py:176
+#: apps/dashboard/orders/views.py:132
 #, python-format
 msgid " placed between %(start_date)s and %(end_date)s"
 msgstr " podané medzi %(start_date)s a %(end_date)s"
 
-#: apps/dashboard/orders/views.py:181
+#: apps/dashboard/orders/views.py:136
 #, python-format
 msgid " placed since %s"
 msgstr " podané od %s"
 
-#: apps/dashboard/orders/views.py:185
+#: apps/dashboard/orders/views.py:139
 #, python-format
 msgid " placed before %s"
 msgstr " podané pred %s"
 
-#: apps/dashboard/orders/views.py:189
+#: apps/dashboard/orders/views.py:142
 #, python-format
 msgid " using voucher '%s'"
 msgstr " za použitia kupónu '%s'"
 
-#: apps/dashboard/orders/views.py:193
+#: apps/dashboard/orders/views.py:145
 #, python-format
 msgid " paid for by %s"
 msgstr " zaplatené %s"
 
-#: apps/dashboard/orders/views.py:197
+#: apps/dashboard/orders/views.py:148
 #, python-format
 msgid " with status %s"
 msgstr " so stavom %s"
 
-#: apps/dashboard/orders/views.py:240
+#: apps/dashboard/orders/views.py:271
 msgid "Order value"
 msgstr "Hodnota objednávky"
 
-#: apps/dashboard/orders/views.py:241
+#: apps/dashboard/orders/views.py:272
 #: templates/oscar/dashboard/orders/order_detail.html:50
 #: templates/oscar/dashboard/orders/order_list.html:97
 msgid "Date of purchase"
 msgstr "Dátum nákupu"
 
-#: apps/dashboard/orders/views.py:242
+#: apps/dashboard/orders/views.py:273
 #: templates/oscar/dashboard/orders/order_list.html:98
 msgid "Number of items"
 msgstr "Počet položiek"
 
-#: apps/dashboard/orders/views.py:243
+#: apps/dashboard/orders/views.py:274
 msgid "Order status"
 msgstr "Stav objednávky"
 
-#: apps/dashboard/orders/views.py:244
+#: apps/dashboard/orders/views.py:275
 msgid "Customer email address"
 msgstr "Email-ová adresa zákazníka"
 
-#: apps/dashboard/orders/views.py:245
+#: apps/dashboard/orders/views.py:276
 msgid "Deliver to name"
 msgstr "Doručiť na meno"
 
-#: apps/dashboard/orders/views.py:246
+#: apps/dashboard/orders/views.py:277
 msgid "Bill to name"
 msgstr "Vyúčtovať na meno"
 
-#: apps/dashboard/orders/views.py:316 views/generic.py:66
+#: apps/dashboard/orders/views.py:347 views/generic.py:66
 msgid "Invalid action"
 msgstr "Neplatná akcia"
 
-#: apps/dashboard/orders/views.py:332
+#: apps/dashboard/orders/views.py:366
 msgid "You must select some lines to act on"
 msgstr "Musíte vybrať nejaké riadky, na ktorých má prebehnúť akcia"
 
-#: apps/dashboard/orders/views.py:336
+#: apps/dashboard/orders/views.py:370
 msgid "No valid action submitted"
 msgstr "Nebola zadaná žiadna platná akcia"
 
-#: apps/dashboard/orders/views.py:347
+#: apps/dashboard/orders/views.py:381
 msgid "Note saved"
 msgstr "Poznámka uložená"
 
-#: apps/dashboard/orders/views.py:362
+#: apps/dashboard/orders/views.py:396
 msgid "Note cannot be deleted"
 msgstr "Poznámka nemôže byť vymazaná"
 
-#: apps/dashboard/orders/views.py:364
+#: apps/dashboard/orders/views.py:398
 msgid "Note deleted"
 msgstr "Poznámka vymazaná"
 
-#: apps/dashboard/orders/views.py:371 apps/dashboard/orders/views.py:394
+#: apps/dashboard/orders/views.py:405 apps/dashboard/orders/views.py:428
 #, python-format
 msgid "The new status '%s' is not valid"
 msgstr "Nový stav '%s' nie je platný"
 
-#: apps/dashboard/orders/views.py:374
+#: apps/dashboard/orders/views.py:408
 #, python-format
 msgid "The new status '%s' is not valid for this order"
 msgstr "Nový stav '%s' nie je platný pre túto objednávku"
 
-#: apps/dashboard/orders/views.py:381 apps/dashboard/orders/views.py:464
+#: apps/dashboard/orders/views.py:415 apps/dashboard/orders/views.py:498
 #, python-format
 msgid "Unable to change order status due to payment error: %s"
 msgstr "Nie je možné zmeniť stav objednávky kvôli chybe pri platbe: %s"
 
-#: apps/dashboard/orders/views.py:383
+#: apps/dashboard/orders/views.py:417
 #, python-format
 msgid "Order status changed from '%(old_status)s' to '%(new_status)s'"
 msgstr "Stav objednávky zmenený z '%(old_status)s' na '%(new_status)s'"
 
-#: apps/dashboard/orders/views.py:399
+#: apps/dashboard/orders/views.py:433
 #, python-format
 msgid "'%(status)s' is not a valid new status for line %(line_id)d"
 msgstr "'%(status)s' nie je platný nový stav pre riadok %(line_id)d"
 
-#: apps/dashboard/orders/views.py:408
+#: apps/dashboard/orders/views.py:442
 #, python-format
 msgid ""
 "Status of line #%(line_id)d changed from '%(old_status)s' to '%(new_status)s'"
 msgstr ""
 "Stav riadku č. %(line_id)d bol zmenený z '%(old_status)s' na '%(new_status)s'"
 
-#: apps/dashboard/orders/views.py:425 apps/dashboard/orders/views.py:458
+#: apps/dashboard/orders/views.py:459 apps/dashboard/orders/views.py:492
 #, python-format
 msgid "The event type '%s' is not valid"
 msgstr "Typ udalosti '%s' nie je validný"
 
-#: apps/dashboard/orders/views.py:434 apps/dashboard/orders/views.py:436
+#: apps/dashboard/orders/views.py:468 apps/dashboard/orders/views.py:470
 #, python-format
 msgid "Unable to create shipping event: %s"
 msgstr "Nie je možné vytvoriť udalosť doručenia: %s"
 
-#: apps/dashboard/orders/views.py:438
+#: apps/dashboard/orders/views.py:472
 #, python-format
 msgid "Unable to create shipping event due to payment error: %s"
 msgstr "Nie je možné vytvoriť udalosť doručenia kvôli chybe platby: %s"
 
-#: apps/dashboard/orders/views.py:440
+#: apps/dashboard/orders/views.py:474
 msgid "Shipping event created"
 msgstr "Udalosť doručenia vytvorená"
 
-#: apps/dashboard/orders/views.py:448 apps/dashboard/orders/views.py:481
+#: apps/dashboard/orders/views.py:482 apps/dashboard/orders/views.py:515
 msgid "Please choose a valid amount"
 msgstr "Vyberte prosím platnú čiastku"
 
-#: apps/dashboard/orders/views.py:466
+#: apps/dashboard/orders/views.py:500
 msgid "Payment event created"
 msgstr "Platobná udalosť vytvorená"
 
-#: apps/dashboard/orders/views.py:528
+#: apps/dashboard/orders/views.py:562
 #, python-format
 msgid "%(field)s changed from '%(old_value)s' to '%(new_value)s'"
 msgstr "Pole %(field)s sa zmenilo z '%(old_value)s' na '%(new_value)s'"
 
-#: apps/dashboard/orders/views.py:554
+#: apps/dashboard/orders/views.py:588
 #, python-format
 msgid ""
 "Delivery address updated:\n"
@@ -2447,14 +2491,16 @@ msgstr ""
 "Adresa doručenia zaktualizovaná:\n"
 "%s"
 
-#: apps/dashboard/orders/views.py:560
+#: apps/dashboard/orders/views.py:594
 msgid "Delivery address updated"
 msgstr "Adresa doručenia zaktualizovaná"
 
 #: apps/dashboard/pages/forms.py:24
 msgid ""
 "Example: '/about/contact/'. Make sure to have leading and trailing slashes."
-msgstr "Príklad: '/about/contact/'. Uistite sa, že máte lomky na začiatku aj na konci."
+msgstr ""
+"Príklad: '/about/contact/'. Uistite sa, že máte lomky na začiatku aj na "
+"konci."
 
 #: apps/dashboard/pages/views.py:37
 msgid "All pages"
@@ -2473,6 +2519,77 @@ msgstr "Vytvor novú stránku"
 #, python-format
 msgid "Deleted page '%s'"
 msgstr "Vymazaná stránka '%s'"
+
+#: apps/dashboard/partners/forms.py:13 apps/order/abstract_models.py:332
+#: templates/oscar/dashboard/partners/partner_list.html:45
+msgid "Partner name"
+msgstr "Meno obch. partnera"
+
+#: apps/dashboard/partners/views.py:30
+#, fuzzy
+msgid "All partners"
+msgstr "Všetky stránky"
+
+#: apps/dashboard/partners/views.py:43
+#, fuzzy, python-format
+msgid "Partners matching '%s'"
+msgstr "Ponuky vyhovujúce '%s'"
+
+#: apps/dashboard/partners/views.py:73
+#: templates/oscar/dashboard/partners/partner_list.html:21
+#, fuzzy
+msgid "Create new partner"
+msgstr "Vytvoriť nový výber"
+
+#: apps/dashboard/partners/views.py:78
+#, fuzzy, python-format
+msgid "Partner '%s' was created successfully."
+msgstr "Kategória bola úspešne vytvorená"
+
+#: apps/dashboard/partners/views.py:101
+#, fuzzy, python-format
+msgid "Partner '%s' was updated successfully."
+msgstr "Kategória úspešne zaktualizovaná"
+
+#: apps/dashboard/partners/views.py:112
+#, fuzzy, python-format
+msgid "Partner '%s' was deleted successfully."
+msgstr "Kategória úspešne vymazaná"
+
+#: apps/dashboard/partners/views.py:136
+#, fuzzy
+msgid "Create user"
+msgstr "Vytvor kupón"
+
+#: apps/dashboard/partners/views.py:147
+#, fuzzy, python-format
+msgid "User '%s' was created successfully."
+msgstr "Kategória bola úspešne vytvorená"
+
+#: apps/dashboard/partners/views.py:196
+#, python-format
+msgid "User '%(name)s' was linked to '%(partner_name)s'"
+msgstr ""
+
+#: apps/dashboard/partners/views.py:200
+#, python-format
+msgid "User '%(name)s' is already linked to '%(partner_name)s'"
+msgstr ""
+
+#: apps/dashboard/partners/views.py:223
+#, python-format
+msgid "User '%(name)s' is not linked to '%(partner_name)s'"
+msgstr ""
+
+#: apps/dashboard/partners/views.py:247
+#, fuzzy, python-format
+msgid "Edit user '%s'"
+msgstr " za použitia kupónu '%s'"
+
+#: apps/dashboard/partners/views.py:253
+#, fuzzy, python-format
+msgid "User '%s' was updated successfully."
+msgstr "Kategória úspešne zaktualizovaná"
 
 #: apps/dashboard/promotions/forms.py:20
 msgid "Promotion type"
@@ -2564,7 +2681,7 @@ msgid "No products exist with a SKU or UPC matching %s"
 msgstr "Neexistujú žiadne produkty s SKU alebo UPC vyhovujúcim %s"
 
 #: apps/dashboard/ranges/models.py:11 apps/offer/models.py:402
-#: apps/offer/models.py:491 apps/offer/models.py:733
+#: apps/offer/models.py:491 apps/offer/models.py:735
 msgid "Range"
 msgstr "Výber"
 
@@ -2849,24 +2966,24 @@ msgstr "Kupón vymazaný"
 msgid "This is displayed within the customer's basket"
 msgstr ""
 
-#: apps/offer/models.py:50
+#: apps/offer/models.py:49
 msgid "This is displayed on the offer browsing page"
 msgstr ""
 
-#: apps/offer/models.py:64
+#: apps/offer/models.py:63
 msgid "Site offer - available to all users"
 msgstr "Ponuka stránky - prístupná všetkým používateľom"
 
-#: apps/offer/models.py:65
+#: apps/offer/models.py:64
 msgid ""
 "Voucher offer - only available after entering the appropriate voucher code"
 msgstr "Kupónová ponuka - prístupná iba po zadaní príslušného kupónového kódu"
 
-#: apps/offer/models.py:67
+#: apps/offer/models.py:66
 msgid "User offer - available to certain types of user"
 msgstr "Používateľská ponuka - prístupná iba určitým typom používateľov"
 
-#: apps/offer/models.py:68
+#: apps/offer/models.py:67
 msgid ""
 "Session offer - temporary offer, available for a user for the duration of "
 "their session"
@@ -2874,44 +2991,49 @@ msgstr ""
 "Relačná ponuka - dočasná ponuka, prístupná pre používateľa počas trvania "
 "jeho relácie"
 
-#: apps/offer/models.py:80 apps/offer/models.py:412
+#: apps/offer/models.py:79 apps/offer/models.py:412
 #: templates/oscar/dashboard/offers/offer_detail.html:78
 #: templates/oscar/dashboard/offers/offer_list.html:50
 #: templates/oscar/dashboard/offers/summary.html:26
 msgid "Condition"
 msgstr "Podmienka"
 
-#: apps/offer/models.py:81 apps/offer/models.py:532
+#: apps/offer/models.py:80 apps/offer/models.py:531
 msgid "Benefit"
 msgstr "Benefit"
 
-#: apps/offer/models.py:84
+#: apps/offer/models.py:83
 msgid "Priority"
 msgstr "Priorita"
 
-#: apps/offer/models.py:85
+#: apps/offer/models.py:84
 msgid "The highest priority offers are applied first"
 msgstr "Ponuky s najvyššou prioritou sú použité ako prvé"
 
-#: apps/offer/models.py:95
+#: apps/offer/models.py:94
 msgid "Offers are active until the end of the 'end date'"
 msgstr ""
 
-#: apps/offer/models.py:101
+#: apps/offer/models.py:100
 msgid "Max global applications"
 msgstr ""
 
-#: apps/offer/models.py:102
+#: apps/offer/models.py:101
 msgid "The number of times this offer can be used before it is unavailable"
 msgstr ""
 
-#: apps/offer/models.py:109
+#: apps/offer/models.py:108
 msgid "Max user applications"
 msgstr ""
 
-#: apps/offer/models.py:110
+#: apps/offer/models.py:109
 msgid "The number of times a single user can use this offer"
 msgstr ""
+
+#: apps/offer/models.py:115
+#, fuzzy
+msgid "Max basket applications"
+msgstr "Pridania do košíka"
 
 #: apps/offer/models.py:117
 msgid "The number of times this offer can be applied to a basket (and order)"
@@ -3011,7 +3133,7 @@ msgid ""
 "Needs to contain a set number of DISTINCT items from the condition range"
 msgstr ""
 
-#: apps/offer/models.py:408 apps/offer/models.py:528 apps/offer/models.py:723
+#: apps/offer/models.py:408 apps/offer/models.py:527 apps/offer/models.py:725
 msgid "Custom class"
 msgstr ""
 
@@ -3047,21 +3169,21 @@ msgstr ""
 msgid "Discount is a percentage off of the shipping cost"
 msgstr ""
 
-#: apps/offer/models.py:522
+#: apps/offer/models.py:521
 msgid "Max Affected Items"
 msgstr ""
 
-#: apps/offer/models.py:523
+#: apps/offer/models.py:522
 msgid ""
 "Set this to prevent the discount consuming all items within the range that "
 "are in the basket."
 msgstr ""
 
-#: apps/offer/models.py:533
+#: apps/offer/models.py:532
 msgid "Benefits"
 msgstr "Benefity"
 
-#: apps/offer/models.py:560
+#: apps/offer/models.py:559
 #, python-format
 msgid " (max %d item)"
 msgid_plural " (max %d items)"
@@ -3069,73 +3191,82 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: apps/offer/models.py:585
+#: apps/offer/models.py:584
 msgid "Multibuy benefits require a product range"
 msgstr ""
 
-#: apps/offer/models.py:588
+#: apps/offer/models.py:587
 msgid "Multibuy benefits don't require a value"
 msgstr ""
 
-#: apps/offer/models.py:591
+#: apps/offer/models.py:590
 msgid "Multibuy benefits don't require a 'max affected items' attribute"
 msgstr ""
 
-#: apps/offer/models.py:597 apps/offer/models.py:647
+#: apps/offer/models.py:596
 msgid "Percentage benefits require a product range"
 msgstr ""
 
-#: apps/offer/models.py:600 apps/offer/models.py:618
+#: apps/offer/models.py:599 apps/offer/models.py:617
 msgid "Percentage discount cannot be greater than 100"
 msgstr ""
 
-#: apps/offer/models.py:605
+#: apps/offer/models.py:604
 msgid "A discount value is required"
 msgstr ""
 
-#: apps/offer/models.py:608 apps/offer/models.py:621 apps/offer/models.py:631
+#: apps/offer/models.py:607 apps/offer/models.py:620 apps/offer/models.py:630
 msgid "No range should be selected as this benefit does not apply to products"
 msgstr ""
 
-#: apps/offer/models.py:612 apps/offer/models.py:625 apps/offer/models.py:635
+#: apps/offer/models.py:611 apps/offer/models.py:624 apps/offer/models.py:634
 msgid "Shipping discounts don't require a 'max affected items' attribute"
 msgstr ""
 
-#: apps/offer/models.py:641
+#: apps/offer/models.py:640
 msgid ""
 "No range should be selected as the condition range will be used instead."
 msgstr ""
 
-#: apps/offer/models.py:707
+#: apps/offer/models.py:646
+#, fuzzy
+msgid "Fixed discount benefits require a product range"
+msgstr "Fixné množstvo z produktov vo výbere"
+
+#: apps/offer/models.py:649
+msgid "Fixed discount benefits require a value"
+msgstr ""
+
+#: apps/offer/models.py:709
 msgid "Includes All Products"
 msgstr "Obsahuje všetky produkty"
 
-#: apps/offer/models.py:710
+#: apps/offer/models.py:712
 msgid "Included Products"
 msgstr "Zahrnuté produkty"
 
-#: apps/offer/models.py:713
+#: apps/offer/models.py:715
 msgid "Excluded Products"
 msgstr "Vylúčené produkty"
 
-#: apps/offer/models.py:719
+#: apps/offer/models.py:721
 msgid "Included Categories"
 msgstr "Zahrnuté kategórie"
 
-#: apps/offer/models.py:815
+#: apps/offer/models.py:817
 #, python-format
 msgid "Basket includes %(count)d item(s) from %(range)s"
 msgstr "Košík obsahuje %(count)d položku/y/iek z výberu %(range)s"
 
-#: apps/offer/models.py:830
+#: apps/offer/models.py:832
 msgid "Count Condition"
 msgstr ""
 
-#: apps/offer/models.py:831
+#: apps/offer/models.py:833
 msgid "Count Conditions"
 msgstr ""
 
-#: apps/offer/models.py:864 apps/offer/models.py:945
+#: apps/offer/models.py:866 apps/offer/models.py:947
 #, python-format
 msgid "Buy %(delta)d more product from %(range)s"
 msgid_plural "Buy %(delta)d more products from %(range)s"
@@ -3143,125 +3274,125 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: apps/offer/models.py:900
+#: apps/offer/models.py:902
 #, python-format
 msgid "Basket includes %(count)d distinct item(s) from %(range)s"
 msgstr ""
 
-#: apps/offer/models.py:915
+#: apps/offer/models.py:917
 msgid "Coverage Condition"
 msgstr ""
 
-#: apps/offer/models.py:916
+#: apps/offer/models.py:918
 msgid "Coverage Conditions"
 msgstr ""
 
-#: apps/offer/models.py:999
+#: apps/offer/models.py:1001
 #, python-format
 msgid "Basket includes %(amount)s from %(range)s"
 msgstr ""
 
-#: apps/offer/models.py:1014
+#: apps/offer/models.py:1016
 msgid "Value Condition"
 msgstr ""
 
-#: apps/offer/models.py:1015
+#: apps/offer/models.py:1017
 msgid "Value Conditions"
 msgstr ""
 
-#: apps/offer/models.py:1051
+#: apps/offer/models.py:1053
 #, python-format
 msgid "Spend %(value)s more from %(range)s"
 msgstr ""
 
-#: apps/offer/models.py:1166
+#: apps/offer/models.py:1168
 #, python-format
 msgid "%(value)s%% discount on %(range)s"
 msgstr ""
 
-#: apps/offer/models.py:1181
+#: apps/offer/models.py:1183
 msgid "Percentage discount benefit"
 msgstr ""
 
-#: apps/offer/models.py:1182
+#: apps/offer/models.py:1184
 msgid "Percentage discount benefits"
 msgstr ""
 
-#: apps/offer/models.py:1213
+#: apps/offer/models.py:1215
 #, python-format
 msgid "%(value)s discount on %(range)s"
 msgstr ""
 
-#: apps/offer/models.py:1228
+#: apps/offer/models.py:1230
 msgid "Absolute discount benefit"
 msgstr ""
 
-#: apps/offer/models.py:1229
+#: apps/offer/models.py:1231
 msgid "Absolute discount benefits"
 msgstr ""
 
-#: apps/offer/models.py:1293
+#: apps/offer/models.py:1295
 #, python-format
 msgid "The products that meet the condition are sold for %(amount)s"
 msgstr ""
 
-#: apps/offer/models.py:1306
+#: apps/offer/models.py:1308
 msgid "Fixed price benefit"
 msgstr ""
 
-#: apps/offer/models.py:1307
+#: apps/offer/models.py:1309
 msgid "Fixed price benefits"
 msgstr ""
 
-#: apps/offer/models.py:1357
+#: apps/offer/models.py:1359
 #, python-format
 msgid "Cheapest product from %(range)s is free"
 msgstr ""
 
-#: apps/offer/models.py:1370
+#: apps/offer/models.py:1372
 msgid "Multibuy discount benefit"
 msgstr ""
 
-#: apps/offer/models.py:1371
+#: apps/offer/models.py:1373
 msgid "Multibuy discount benefits"
 msgstr ""
 
-#: apps/offer/models.py:1404
+#: apps/offer/models.py:1406
 #, python-format
 msgid "%(amount)s off shipping cost"
 msgstr ""
 
-#: apps/offer/models.py:1413
+#: apps/offer/models.py:1415
 msgid "Shipping absolute discount benefit"
 msgstr ""
 
-#: apps/offer/models.py:1414
+#: apps/offer/models.py:1416
 msgid "Shipping absolute discount benefits"
 msgstr ""
 
-#: apps/offer/models.py:1421
+#: apps/offer/models.py:1423
 #, python-format
 msgid "Get shipping for %(amount)s"
 msgstr ""
 
-#: apps/offer/models.py:1430
+#: apps/offer/models.py:1432
 msgid "Fixed price shipping benefit"
 msgstr ""
 
-#: apps/offer/models.py:1431
+#: apps/offer/models.py:1433
 msgid "Fixed price shipping benefits"
 msgstr ""
 
-#: apps/offer/models.py:1440
+#: apps/offer/models.py:1442
 #, python-format
 msgid "%(value)s%% off of shipping cost"
 msgstr ""
 
-#: apps/offer/models.py:1449
+#: apps/offer/models.py:1451
 msgid "Shipping percentage discount benefit"
 msgstr ""
 
-#: apps/offer/models.py:1450
+#: apps/offer/models.py:1452
 msgid "Shipping percentage discount benefits"
 msgstr ""
 
@@ -3349,7 +3480,7 @@ msgstr "Môže prezerať objednávky (napr. pre zostavy)"
 #: apps/order/abstract_models.py:225 apps/order/abstract_models.py:265
 #: apps/order/abstract_models.py:304 apps/order/abstract_models.py:325
 #: apps/order/abstract_models.py:608 apps/order/abstract_models.py:649
-#: apps/order/abstract_models.py:763 apps/payment/models.py:51
+#: apps/order/abstract_models.py:763 apps/payment/abstract_models.py:57
 #: apps/voucher/abstract_models.py:142 templates/oscar/customer/order.html:6
 #: templates/oscar/dashboard/orders/shippingaddress_form.html:5
 msgid "Order"
@@ -3360,8 +3491,8 @@ msgid "Note Type"
 msgstr "Typ poznámky"
 
 #: apps/order/abstract_models.py:275
-#: templates/oscar/dashboard/orders/order_detail.html:482
-#: templates/oscar/dashboard/orders/order_detail.html:536
+#: templates/oscar/dashboard/orders/order_detail.html:485
+#: templates/oscar/dashboard/orders/order_detail.html:539
 msgid "Message"
 msgstr "Správa"
 
@@ -3391,7 +3522,7 @@ msgstr "Komunikačné udalosti"
 msgid "'%(type)s' event for order #%(number)s"
 msgstr "Udalosť '%(type)s' pre objednávku č. %(number)s"
 
-#: apps/order/abstract_models.py:331 apps/partner/abstract_models.py:101
+#: apps/order/abstract_models.py:331 apps/partner/abstract_models.py:106
 #: templates/oscar/dashboard/catalogue/product_list.html:70
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:55
 #: templates/oscar/dashboard/orders/line_detail.html:64
@@ -3399,17 +3530,13 @@ msgstr "Udalosť '%(type)s' pre objednávku č. %(number)s"
 msgid "Partner"
 msgstr "Obch. partner"
 
-#: apps/order/abstract_models.py:332
-msgid "Partner name"
-msgstr "Meno obch. partnera"
-
 #: apps/order/abstract_models.py:346 apps/order/abstract_models.py:554
 msgid "Price (inc. tax)"
 msgstr "Cena (s DPH)"
 
 #: apps/order/abstract_models.py:347 apps/order/abstract_models.py:555
-#: apps/partner/abstract_models.py:118
-#: templates/oscar/catalogue/detail.html:123
+#: apps/partner/abstract_models.py:124
+#: templates/oscar/catalogue/detail.html:127
 msgid "Price (excl. tax)"
 msgstr "Cena (bez DPH)"
 
@@ -3459,8 +3586,8 @@ msgid "'%(new_status)s' is not a valid status (current status: '%(status)s')"
 msgstr "Stav '%(new_status)s' nie je validný (súčasný stav: '%(status)s')"
 
 #: apps/order/abstract_models.py:478
-#, python-format
-msgid "'%(title)s' is no longer available for purchase"
+#, fuzzy, python-format
+msgid "'%(title)s' is no longer available"
 msgstr "Produkt '%(title)s' už nie je možné objednať"
 
 #: apps/order/abstract_models.py:515
@@ -3518,16 +3645,16 @@ msgid "Payment Event Types"
 msgstr "Typy platobnej udalosti"
 
 #: apps/order/abstract_models.py:609 apps/order/abstract_models.py:787
-#: apps/payment/models.py:27
-#: templates/oscar/dashboard/orders/order_detail.html:321
-#: templates/oscar/dashboard/orders/order_detail.html:439
-#: templates/oscar/dashboard/orders/order_detail.html:483
+#: apps/payment/abstract_models.py:28
+#: templates/oscar/dashboard/orders/order_detail.html:323
+#: templates/oscar/dashboard/orders/order_detail.html:442
+#: templates/oscar/dashboard/orders/order_detail.html:486
 msgid "Amount"
 msgstr "Množstvo"
 
 #: apps/order/abstract_models.py:611 apps/order/abstract_models.py:650
-#: templates/oscar/dashboard/orders/order_detail.html:280
-#: templates/oscar/dashboard/orders/order_detail.html:322
+#: templates/oscar/dashboard/orders/order_detail.html:281
+#: templates/oscar/dashboard/orders/order_detail.html:324
 msgid "Lines"
 msgstr "Riadky"
 
@@ -3536,7 +3663,7 @@ msgid "Payment Event"
 msgstr "Platobná udalosť"
 
 #: apps/order/abstract_models.py:619
-#: templates/oscar/dashboard/orders/order_detail.html:312
+#: templates/oscar/dashboard/orders/order_detail.html:314
 msgid "Payment Events"
 msgstr "Platobné udalosti"
 
@@ -3546,8 +3673,8 @@ msgid "Payment event for order %s"
 msgstr "Platobná udalosť pre objednávku %s"
 
 #: apps/order/abstract_models.py:632 apps/order/abstract_models.py:674
-#: templates/oscar/dashboard/orders/order_detail.html:279
-#: templates/oscar/dashboard/orders/order_detail.html:320
+#: templates/oscar/dashboard/orders/order_detail.html:280
+#: templates/oscar/dashboard/orders/order_detail.html:322
 msgid "Event"
 msgstr "Udalosť"
 
@@ -3572,7 +3699,7 @@ msgid "Shipping Event"
 msgstr "Udalosť doručenia"
 
 #: apps/order/abstract_models.py:659
-#: templates/oscar/dashboard/orders/order_detail.html:271
+#: templates/oscar/dashboard/orders/order_detail.html:272
 msgid "Shipping Events"
 msgstr "Udalosti doručenia"
 
@@ -3634,7 +3761,7 @@ msgid "Voucher ID"
 msgstr "ID kupónu"
 
 #: apps/order/abstract_models.py:785
-#: templates/oscar/dashboard/orders/order_detail.html:481
+#: templates/oscar/dashboard/orders/order_detail.html:484
 #: templates/oscar/dashboard/orders/statistics.html:60
 msgid "Frequency"
 msgstr "Frekvencia"
@@ -3677,117 +3804,118 @@ msgstr "Prázdne košíky nemôžu byť odoslané"
 msgid "There is already an order with number %s"
 msgstr "Objednávka s číslom %s už existuje"
 
-#: apps/order/utils.py:129
+#: apps/order/utils.py:130
 #, python-format
 msgid "No partner found for product '%s'"
 msgstr "Nebol nájdený obch. partner pre produkt '%s'"
 
-#: apps/partner/abstract_models.py:57
+#: apps/partner/abstract_models.py:62
+#: templates/oscar/dashboard/partners/partner_list.html:46
 msgid "Users"
 msgstr "Používatelia"
 
-#: apps/partner/abstract_models.py:71
+#: apps/partner/abstract_models.py:76
 msgid "Fulfillment partner"
 msgstr "Zmluvný partner"
 
-#: apps/partner/abstract_models.py:72
+#: apps/partner/abstract_models.py:77
 msgid "Fulfillment partners"
 msgstr "Zmluvní partneri"
 
-#: apps/partner/abstract_models.py:75
+#: apps/partner/abstract_models.py:80
 msgid "Can edit stock records"
 msgstr "Môže upravovať stav zásob"
 
-#: apps/partner/abstract_models.py:76
+#: apps/partner/abstract_models.py:81
 msgid "Can view stock records"
 msgstr "Môže prezerať stav zásob"
 
-#: apps/partner/abstract_models.py:77
+#: apps/partner/abstract_models.py:82
 msgid "Can edit product range"
 msgstr "Môže upravovať výber produktov"
 
-#: apps/partner/abstract_models.py:78
+#: apps/partner/abstract_models.py:83
 msgid "Can view product range"
 msgstr "Môže prezerať výber produktov"
 
-#: apps/partner/abstract_models.py:79
+#: apps/partner/abstract_models.py:84
 msgid "Can edit order lines"
 msgstr "Môže upravovať riadky objednávok"
 
-#: apps/partner/abstract_models.py:80
+#: apps/partner/abstract_models.py:85
 msgid "Can view order lines"
 msgstr "Môže prezerať riadky objednávok"
 
-#: apps/partner/abstract_models.py:110 apps/payment/models.py:54
+#: apps/partner/abstract_models.py:116 apps/payment/abstract_models.py:61
 msgid "Currency"
 msgstr "Mena"
 
-#: apps/partner/abstract_models.py:125
+#: apps/partner/abstract_models.py:131
 msgid "Price (retail)"
 msgstr "Cena (maloobchodná)"
 
-#: apps/partner/abstract_models.py:132
+#: apps/partner/abstract_models.py:138
 msgid "Cost Price"
 msgstr "Nákupná cena"
 
-#: apps/partner/abstract_models.py:137
+#: apps/partner/abstract_models.py:143
 #: templates/oscar/dashboard/catalogue/product_list.html:74
 msgid "Number in stock"
 msgstr "Množstvo na sklade"
 
-#: apps/partner/abstract_models.py:142
+#: apps/partner/abstract_models.py:148
 msgid "Low Stock Threshold"
 msgstr "Spodná hranica zásob"
 
-#: apps/partner/abstract_models.py:148
+#: apps/partner/abstract_models.py:154
 #: templates/oscar/dashboard/catalogue/product_list.html:75
 msgid "Number allocated"
 msgstr "Počet alokovaných"
 
-#: apps/partner/abstract_models.py:152
+#: apps/partner/abstract_models.py:158
 msgid "Date updated"
 msgstr "Dátum aktualizácie"
 
-#: apps/partner/abstract_models.py:158 apps/partner/abstract_models.py:315
+#: apps/partner/abstract_models.py:164 apps/partner/abstract_models.py:324
 msgid "Stock Record"
 msgstr "Stav zásob"
 
-#: apps/partner/abstract_models.py:159
+#: apps/partner/abstract_models.py:165
 msgid "Stock Records"
 msgstr "Stavy zásob"
 
-#: apps/partner/abstract_models.py:187
+#: apps/partner/abstract_models.py:193
 msgid "Invalid stock consumption request"
 msgstr "Neplatná žiadosť o odber zásob"
 
-#: apps/partner/abstract_models.py:316
+#: apps/partner/abstract_models.py:325
 msgid "Threshold"
 msgstr "Hranica"
 
-#: apps/partner/abstract_models.py:319
+#: apps/partner/abstract_models.py:328
 #: templates/oscar/dashboard/index.html:143
 #: templates/oscar/dashboard/catalogue/stockalert_list.html:40
 msgid "Open"
 msgstr "Otvorené"
 
-#: apps/partner/abstract_models.py:325
+#: apps/partner/abstract_models.py:334
 msgid "Date Closed"
 msgstr "Dátum zatvorenia"
 
-#: apps/partner/abstract_models.py:333
+#: apps/partner/abstract_models.py:342
 #, python-format
 msgid "<stockalert for \"%(stock)s\" status %(status)s>"
 msgstr "<upozornenie na stav zásob pre \"%(stock)s\" stav %(status)s>"
 
-#: apps/partner/abstract_models.py:337
+#: apps/partner/abstract_models.py:347
 msgid "Stock Alert"
 msgstr "Upozornenie na stav zásob"
 
-#: apps/partner/abstract_models.py:338
+#: apps/partner/abstract_models.py:348
 msgid "Stock Alerts"
 msgstr "Upozornenia na stav zásob"
 
-#: apps/partner/utils.py:26
+#: apps/partner/utils.py:27
 #, python-format
 msgid ""
 "Partner named '%(partner)s' does not exist (existing partners: %(list)s)"
@@ -3795,186 +3923,187 @@ msgstr ""
 "Obch. partner s menom '%(partner)s' neexistuje (existujúci obch. partneri: "
 "%(list)s)"
 
-#: apps/partner/utils.py:32 apps/partner/utils.py:105
+#: apps/partner/utils.py:33 apps/partner/utils.py:106
 msgid "No file path supplied"
 msgstr "Nebola zadaná cesta k súboru"
 
-#: apps/partner/utils.py:192
+#: apps/partner/utils.py:194
 #, python-format
 msgid "%s does not exist"
 msgstr "%s neexistuje"
 
-#: apps/partner/utils.py:197
+#: apps/partner/utils.py:199
 #, python-format
 msgid "%s is not a file"
 msgstr "%s nie je súbor"
 
-#: apps/partner/utils.py:205
+#: apps/partner/utils.py:207
 #, python-format
 msgid "%s is not readable"
 msgstr "%s nie je možné čítať"
 
-#: apps/partner/wrappers.py:30
+#: apps/partner/wrappers.py:32
 #, python-format
 msgid "'%s' is not available to purchase"
 msgstr "'%s' nie je možné objednať"
 
-#: apps/partner/wrappers.py:35
+#: apps/partner/wrappers.py:37
 #, python-format
 msgid "A maximum of %(max)d can be bought"
 msgstr ""
 
-#: apps/partner/wrappers.py:70
+#: apps/partner/wrappers.py:73
 #, python-format
 msgid "In stock (%d available)"
 msgstr "Na sklade (%d k dispozícii)"
 
-#: apps/partner/wrappers.py:72
+#: apps/partner/wrappers.py:75
+#: templates/oscar/catalogue/partials/stock_record.html:13
 msgid "Available"
 msgstr "Dostupný"
 
-#: apps/partner/wrappers.py:73
-#: templates/oscar/catalogue/partials/stock_record.html:16
+#: apps/partner/wrappers.py:76
+#: templates/oscar/catalogue/partials/stock_record.html:22
 #: templates/oscar/promotions/default.html:19
 msgid "Not available"
 msgstr "Nedostupný"
 
-#: apps/payment/forms.py:73
-msgid "Please enter a valid credit card number."
-msgstr "Prosím vložte platné číslo kreditnej karty."
-
-#: apps/payment/forms.py:94
-msgid "Enter a valid month."
-msgstr "Vložte platný mesiac."
-
-#: apps/payment/forms.py:95
-msgid "Enter a valid year."
-msgstr "Vložte platný rok."
-
-#: apps/payment/forms.py:139
-msgid "The expiration date you entered is in the past."
-msgstr "Zadaný dátum vypršania je v minulosti."
-
-#: apps/payment/forms.py:172
-msgid "The starting date you entered is in the future."
-msgstr "Zadaný počiatočný dátum je v budúcnosti"
-
-#: apps/payment/forms.py:191
-msgid "Card number"
-msgstr "Číslo karty"
-
-#: apps/payment/forms.py:193
-msgid "Name on card"
-msgstr "Meno na karte"
-
-#: apps/payment/forms.py:196
-msgid "CVV Number"
-msgstr "CVV kód"
-
-#: apps/payment/forms.py:199
-msgid "This is the 3 or 4 digit security number on the back of your bankcard"
-msgstr ""
-"3 alebo 4-miestne bezpečnostné číslo na zadnej strane vašej bankovej karty"
-
-#: apps/payment/forms.py:200
-msgid "Valid from"
-msgstr "Platní od"
-
-#: apps/payment/forms.py:201
-msgid "Valid to"
-msgstr "Platí do"
-
-#: apps/payment/models.py:19 apps/payment/models.py:85
-#: templates/oscar/dashboard/orders/order_detail.html:403
-#: templates/oscar/dashboard/orders/order_detail.html:438
+#: apps/payment/abstract_models.py:20 apps/payment/abstract_models.py:91
+#: templates/oscar/dashboard/orders/order_detail.html:406
+#: templates/oscar/dashboard/orders/order_detail.html:441
 msgid "Source"
 msgstr "Zdroj"
 
-#: apps/payment/models.py:28 apps/payment/models.py:70
-#: templates/oscar/dashboard/orders/order_detail.html:407
-#: templates/oscar/dashboard/orders/order_detail.html:440
+#: apps/payment/abstract_models.py:29 apps/payment/abstract_models.py:76
+#: templates/oscar/dashboard/orders/order_detail.html:410
+#: templates/oscar/dashboard/orders/order_detail.html:443
 msgid "Reference"
 msgstr "Referencia"
 
-#: apps/payment/models.py:33
+#: apps/payment/abstract_models.py:34
 #, python-format
 msgid "%(type)s of %(amount).2f"
 msgstr ""
 
-#: apps/payment/models.py:37
+#: apps/payment/abstract_models.py:40
 msgid "Transaction"
 msgstr "Transakcia"
 
-#: apps/payment/models.py:38
-#: templates/oscar/dashboard/orders/order_detail.html:431
+#: apps/payment/abstract_models.py:41
+#: templates/oscar/dashboard/orders/order_detail.html:434
 msgid "Transactions"
 msgstr "Transakcie"
 
-#: apps/payment/models.py:53 apps/payment/models.py:174
+#: apps/payment/abstract_models.py:59 apps/payment/abstract_models.py:194
 msgid "Source Type"
 msgstr "Typ zdroja"
 
-#: apps/payment/models.py:59
+#: apps/payment/abstract_models.py:65
 msgid "Amount Allocated"
 msgstr "Poukázané množstvo"
 
-#: apps/payment/models.py:62
+#: apps/payment/abstract_models.py:68
 msgid "Amount Debited"
 msgstr "Stiahnuté množstvo"
 
-#: apps/payment/models.py:65
+#: apps/payment/abstract_models.py:71
 msgid "Amount Refunded"
 msgstr "Vrátené množstvo"
 
-#: apps/payment/models.py:74
+#: apps/payment/abstract_models.py:79
 msgid "Label"
 msgstr "Názov"
 
-#: apps/payment/models.py:86
+#: apps/payment/abstract_models.py:92
 msgid "Sources"
 msgstr "Zdroje"
 
-#: apps/payment/models.py:89
+#: apps/payment/abstract_models.py:95
 #, python-format
 msgid "Allocation of %(amount).2f from type %(type)s"
 msgstr "Poukázanie %(amount).2f z typu %(type)s"
 
-#: apps/payment/models.py:92
+#: apps/payment/abstract_models.py:98
 #, python-format
 msgid " (reference: %s)"
 msgstr " (referencia: %s)"
 
-#: apps/payment/models.py:171
+#: apps/payment/abstract_models.py:190
 msgid "This is used within forms to identify this source type"
 msgstr "Používané vo formulároch na identifikáciu typu tohto zdroja"
 
-#: apps/payment/models.py:175
+#: apps/payment/abstract_models.py:195
 msgid "Source Types"
 msgstr "Typy zdrojov"
 
-#: apps/payment/models.py:189
+#: apps/payment/abstract_models.py:209
 msgid "Card Type"
 msgstr "Typ karty"
 
-#: apps/payment/models.py:191
+#: apps/payment/abstract_models.py:211
 msgid "Number"
 msgstr "Číslo"
 
-#: apps/payment/models.py:192
+#: apps/payment/abstract_models.py:212
 msgid "Expiry Date"
 msgstr "Dátum splatnosti"
 
-#: apps/payment/models.py:196
+#: apps/payment/abstract_models.py:216
 msgid "Partner Reference"
 msgstr "Referencia obch. partnera"
 
-#: apps/payment/models.py:199
+#: apps/payment/abstract_models.py:220
 msgid "Bankcard"
 msgstr "Banková karta"
 
-#: apps/payment/models.py:200
+#: apps/payment/abstract_models.py:221
 msgid "Bankcards"
 msgstr "Bankové karty"
+
+#: apps/payment/forms.py:28
+msgid "Please enter a valid credit card number."
+msgstr "Prosím vložte platné číslo kreditnej karty."
+
+#: apps/payment/forms.py:49
+msgid "Enter a valid month."
+msgstr "Vložte platný mesiac."
+
+#: apps/payment/forms.py:50
+msgid "Enter a valid year."
+msgstr "Vložte platný rok."
+
+#: apps/payment/forms.py:94
+msgid "The expiration date you entered is in the past."
+msgstr "Zadaný dátum vypršania je v minulosti."
+
+#: apps/payment/forms.py:127
+msgid "The starting date you entered is in the future."
+msgstr "Zadaný počiatočný dátum je v budúcnosti"
+
+#: apps/payment/forms.py:146
+msgid "Card number"
+msgstr "Číslo karty"
+
+#: apps/payment/forms.py:148
+msgid "Name on card"
+msgstr "Meno na karte"
+
+#: apps/payment/forms.py:151
+msgid "CVV Number"
+msgstr "CVV kód"
+
+#: apps/payment/forms.py:154
+msgid "This is the 3 or 4 digit security number on the back of your bankcard"
+msgstr ""
+"3 alebo 4-miestne bezpečnostné číslo na zadnej strane vašej bankovej karty"
+
+#: apps/payment/forms.py:155
+msgid "Valid from"
+msgstr "Platní od"
+
+#: apps/payment/forms.py:156
+msgid "Valid to"
+msgstr "Platí do"
 
 #: apps/promotions/models.py:27
 msgid "Clicks"
@@ -4031,13 +4160,13 @@ msgstr "Propagácie"
 msgid "Display type"
 msgstr "Typ zobrazenia"
 
-#: apps/promotions/models.py:145
+#: apps/promotions/models.py:144
 msgid ""
 "This can be used to have different types of HTML blocks (eg different widths)"
 msgstr ""
 "Môže byť použité na možnosť mať rôzne typy HTML blokov (napr. rôzne šírky)"
 
-#: apps/promotions/models.py:150 apps/promotions/models.py:151
+#: apps/promotions/models.py:149 apps/promotions/models.py:150
 msgid "Raw HTML"
 msgstr "Priame HTML"
 
@@ -4045,10 +4174,9 @@ msgstr "Priame HTML"
 msgid "Link URL"
 msgstr "URL odkazu"
 
-#: apps/promotions/models.py:166
-msgid ""
-"This is\n"
-"        where this promotion links to"
+#: apps/promotions/models.py:167
+#, fuzzy
+msgid "This is where this promotion links to"
 msgstr "Kde táto propagácia odkazuje"
 
 #: apps/promotions/models.py:194
@@ -4101,7 +4229,7 @@ msgstr "Nedávno pridné produkty"
 
 #: apps/promotions/models.py:279 apps/shipping/models.py:145
 #: templates/oscar/checkout/shipping_methods.html:23
-#: templates/oscar/dashboard/orders/order_detail.html:358
+#: templates/oscar/dashboard/orders/order_detail.html:361
 msgid "Method"
 msgstr "Spôsob"
 
@@ -4133,13 +4261,15 @@ msgstr "Zoznamy zoradených produktov"
 msgid "Tabbed Blocks"
 msgstr ""
 
-#: apps/search/forms.py:24 apps/search/forms.py:25
+#: apps/search/forms.py:50 apps/search/forms.py:51
 #: templates/oscar/dashboard/catalogue/product_list.html:35
 #: templates/oscar/dashboard/offers/offer_list.html:31
 #: templates/oscar/dashboard/orders/order_list.html:29
 #: templates/oscar/dashboard/orders/order_list.html:50
 #: templates/oscar/dashboard/orders/order_list.html:66
 #: templates/oscar/dashboard/pages/index.html:34
+#: templates/oscar/dashboard/partners/partner_list.html:30
+#: templates/oscar/dashboard/partners/partner_user_select.html:35
 #: templates/oscar/dashboard/reviews/review_list.html:34
 #: templates/oscar/dashboard/users/index.html:29
 #: templates/oscar/dashboard/users/index.html:34
@@ -4292,7 +4422,7 @@ msgid "Times on orders"
 msgstr "Počet na objednávku"
 
 #: apps/voucher/abstract_models.py:54 apps/voucher/abstract_models.py:136
-#: templates/oscar/dashboard/orders/order_detail.html:479
+#: templates/oscar/dashboard/orders/order_detail.html:482
 msgid "Voucher"
 msgstr "Kupón"
 
@@ -4384,13 +4514,15 @@ msgstr "Je nám to ľúto, ale niečo sa veľmi pokazilo."
 msgid ""
 "This incident has been logged and will be addressed by an engineer as soon "
 "as possible."
-msgstr "Táto udalosť bola zaznamenaná, a akonáhle to bude možné sa ňou bude zaoberať technik."
+msgstr ""
+"Táto udalosť bola zaznamenaná, a akonáhle to bude možné sa ňou bude zaoberať "
+"technik."
 
 #: templates/oscar/base.html:9
 msgid "Build"
 msgstr ""
 
-#: templates/oscar/base.html:104
+#: templates/oscar/base.html:102
 msgid "Version:"
 msgstr "Verzia:"
 
@@ -4439,14 +4571,18 @@ msgstr ""
 msgid ""
 "\n"
 "<strong>%(title)s</strong> has been moved back to your basket.\n"
-msgstr "\nProdukt <strong>%(title)s</strong> bol presunutý naspäť do košíka.\n"
+msgstr ""
+"\n"
+"Produkt <strong>%(title)s</strong> bol presunutý naspäť do košíka.\n"
 
 #: templates/oscar/basket/messages/line_saved.html:3
 #, python-format
 msgid ""
 "\n"
 "<strong>%(title)s</strong> has been saved for later\n"
-msgstr "\nProdukt <strong>%(title)s</strong> bol uchovaný na neskôr\n"
+msgstr ""
+"\n"
+"Produkt <strong>%(title)s</strong> bol uchovaný na neskôr\n"
 
 #: templates/oscar/basket/messages/new_total.html:6
 msgid "Your basket is now empty"
@@ -4499,8 +4635,8 @@ msgstr "Mohli by ste zmeškať ponuky!"
 #, python-format
 msgid ""
 "\n"
-"\t<div class=\"warning\">%(message)s to qualify for the <a href=\"%(url)s\">"
-"%(offer_name)s</a> special offer</div>\n"
+"    <div class=\"warning\">%(message)s to qualify for the <a href=\"%(url)s"
+"\">%(offer_name)s</a> special offer</div>\n"
 "    "
 msgstr ""
 
@@ -4509,7 +4645,7 @@ msgid "Items to buy now"
 msgstr "Položky k zakúpeniu"
 
 #: templates/oscar/basket/partials/basket_content.html:29
-#: templates/oscar/basket/partials/basket_content.html:140
+#: templates/oscar/basket/partials/basket_content.html:136
 #: templates/oscar/checkout/checkout.html:92
 #: templates/oscar/dashboard/ranges/range_product_list.html:97
 msgid "Price"
@@ -4522,11 +4658,12 @@ msgid "Update"
 msgstr "Aktualizovať"
 
 #: templates/oscar/basket/partials/basket_content.html:58
-#: templates/oscar/basket/partials/basket_content.html:159
+#: templates/oscar/basket/partials/basket_content.html:155
 #: templates/oscar/basket/partials/basket_totals.html:42
 #: templates/oscar/dashboard/promotions/delete_pagepromotion.html:35
 #: templates/oscar/dashboard/promotions/page_detail.html:55
 #: templates/oscar/dashboard/ranges/range_product_list.html:113
+#: templates/oscar/search/partials/facet.html:8
 msgid "Remove"
 msgstr "Odstrániť"
 
@@ -4561,11 +4698,12 @@ msgstr "Pridaj kupón"
 #: templates/oscar/dashboard/offers/step_form.html:76
 #: templates/oscar/dashboard/orders/shippingaddress_form.html:37
 #: templates/oscar/dashboard/pages/delete.html:41
+#: templates/oscar/dashboard/partners/partner_delete.html:40
 #: templates/oscar/dashboard/promotions/delete.html:41
 #: templates/oscar/dashboard/promotions/delete_pagepromotion.html:36
 #: templates/oscar/dashboard/promotions/form.html:39
 #: templates/oscar/dashboard/ranges/range_delete.html:41
-#: templates/oscar/dashboard/ranges/range_form.html:44
+#: templates/oscar/dashboard/ranges/range_form.html:43
 #: templates/oscar/dashboard/reviews/review_delete.html:52
 #: templates/oscar/dashboard/reviews/review_update.html:82
 #: templates/oscar/dashboard/users/alerts/delete.html:39
@@ -4601,14 +4739,10 @@ msgid "To buy later"
 msgstr "Kúpiť neskôr"
 
 #: templates/oscar/basket/partials/basket_content.html:135
-msgid "Your saved basket is empty."
-msgstr "Váš uložený košík je prázdny"
-
-#: templates/oscar/basket/partials/basket_content.html:139
 msgid "Items"
 msgstr "Položky"
 
-#: templates/oscar/basket/partials/basket_content.html:166
+#: templates/oscar/basket/partials/basket_content.html:162
 msgid "Move to basket"
 msgstr "Presunúť do košíka"
 
@@ -4644,8 +4778,8 @@ msgstr "Košík celkom (pred zľavami)"
 #: templates/oscar/basket/partials/basket_totals.html:96
 #: templates/oscar/checkout/thank_you.html:122
 #: templates/oscar/checkout/thank_you.html:152
-#: templates/oscar/customer/order.html:95
-#: templates/oscar/customer/order.html:121
+#: templates/oscar/customer/order.html:99
+#: templates/oscar/customer/order.html:125
 #: templates/oscar/dashboard/orders/order_detail.html:128
 #: templates/oscar/dashboard/orders/order_detail.html:144
 #: templates/oscar/dashboard/orders/order_detail.html:178
@@ -4662,7 +4796,7 @@ msgstr "Košík celkom (po zľavách)"
 
 #: templates/oscar/basket/partials/basket_totals.html:58
 #: templates/oscar/checkout/thank_you.html:132
-#: templates/oscar/customer/order.html:107
+#: templates/oscar/customer/order.html:111
 #: templates/oscar/dashboard/orders/order_detail.html:160
 msgid "Basket total"
 msgstr "Košík celkom"
@@ -4697,7 +4831,7 @@ msgstr "Akcie po ukončení objednávky"
 msgid "These will be applied once your order is placed."
 msgstr "Budú aplikované po tom, ako bude vaša objednávka odoslaná."
 
-#: templates/oscar/catalogue/browse.html:17
+#: templates/oscar/catalogue/browse.html:18
 #: templates/oscar/catalogue/detail.html:21
 #: templates/oscar/catalogue/reviews/review_detail.html:14
 #: templates/oscar/catalogue/reviews/review_list.html:14
@@ -4723,109 +4857,101 @@ msgstr "Budú aplikované po tom, ako bude vaša objednávka odoslaná."
 msgid "Home"
 msgstr "Domov"
 
-#: templates/oscar/catalogue/browse.html:38
+#: templates/oscar/catalogue/browse.html:40
 msgid "Browse categories"
 msgstr "Prechádzanie kategórií"
 
-#: templates/oscar/catalogue/browse.html:77
+#: templates/oscar/catalogue/browse.html:80
 #: templates/oscar/dashboard/catalogue/product_list.html:150
 #: templates/oscar/dashboard/ranges/range_product_list.html:127
 #: templates/oscar/offer/detail.html:55
 msgid "No products found."
 msgstr "Neboli nájdené žiadne produkty"
 
-#: templates/oscar/catalogue/detail.html:50
+#: templates/oscar/catalogue/detail.html:69
 msgid "Edit this product"
 msgstr "Upraviť produkt"
 
-#: templates/oscar/catalogue/detail.html:74
+#: templates/oscar/catalogue/detail.html:80
 #, python-format
 msgid ""
 "\n"
-"                        1 custom review\n"
-"                        "
+"                        1 custom review "
 msgid_plural ""
-"\n"
-"                        %(num_reviews)s customer reviews\n"
+" %(num_reviews)s customer reviews\n"
 "                        "
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: templates/oscar/catalogue/detail.html:81
 #: templates/oscar/catalogue/detail.html:85
+#: templates/oscar/catalogue/detail.html:89
 #: templates/oscar/catalogue/reviews/review_detail.html:44
 #: templates/oscar/catalogue/reviews/review_list.html:40
 #: templates/oscar/customer/anon_order.html:70
-#: templates/oscar/customer/order.html:80
+#: templates/oscar/customer/order.html:81
 msgid "Write a review"
 msgstr "Napísať recenziu"
 
-#: templates/oscar/catalogue/detail.html:102
+#: templates/oscar/catalogue/detail.html:106
 msgid "Product Description"
 msgstr "Popis produktu"
 
-#: templates/oscar/catalogue/detail.html:110
+#: templates/oscar/catalogue/detail.html:114
 msgid "Product Information"
 msgstr "Informácie o produkte"
 
-#: templates/oscar/catalogue/detail.html:119
-#: templates/oscar/dashboard/catalogue/product_list.html:68
-#: templates/oscar/dashboard/orders/line_detail.html:45
-msgid "Product class"
-msgstr "Trieda produktu"
-
-#: templates/oscar/catalogue/detail.html:126
+#: templates/oscar/catalogue/detail.html:130
 msgid "Price (incl. tax)"
 msgstr "Cena (s DPH)"
 
-#: templates/oscar/catalogue/detail.html:129
+#: templates/oscar/catalogue/detail.html:133
 #: templates/oscar/customer/anon_order.html:54
 msgid "Availability"
 msgstr "Dostupnosť"
 
-#: templates/oscar/catalogue/detail.html:140
+#: templates/oscar/catalogue/detail.html:144
 msgid "Num reviews"
 msgstr "Poč. recenzií"
 
-#: templates/oscar/catalogue/detail.html:154
+#: templates/oscar/catalogue/detail.html:158
 msgid "See all reviews"
 msgstr "Pozrieť všetky recenzie"
 
-#: templates/oscar/catalogue/detail.html:156
+#: templates/oscar/catalogue/detail.html:160
 msgid "Customer Reviews"
 msgstr "Recenzie od zákazníkov"
 
-#: templates/oscar/catalogue/detail.html:161
+#: templates/oscar/catalogue/detail.html:165
 msgid "This product does not have any reviews yet"
 msgstr "Produkt nemá zatiaľ žiadne recenzie"
 
-#: templates/oscar/catalogue/detail.html:162
+#: templates/oscar/catalogue/detail.html:166
 msgid "be the first to write one"
 msgstr "buďte prvý, kto nejakú napíše."
 
-#: templates/oscar/catalogue/detail.html:178
+#: templates/oscar/catalogue/detail.html:182
 msgid "Related items"
 msgstr "Príbuzné položky"
 
-#: templates/oscar/catalogue/detail.html:197
+#: templates/oscar/catalogue/detail.html:201
 msgid "Recommended items"
 msgstr "Odporúčané položky"
 
-#: templates/oscar/catalogue/partials/add_to_basket_form.html:10
-#: templates/oscar/catalogue/partials/add_to_basket_form_compact.html:9
+#: templates/oscar/catalogue/partials/add_to_basket_form.html:11
+#: templates/oscar/catalogue/partials/add_to_basket_form_compact.html:11
 msgid "Add to basket"
 msgstr "Pridať do košíka"
 
-#: templates/oscar/catalogue/partials/add_to_basket_form.html:15
+#: templates/oscar/catalogue/partials/add_to_basket_form.html:19
 msgid "You have an active stock alert for this product."
 msgstr "Pre tento produkt už máte aktívne upozornenie na stav zásob"
 
-#: templates/oscar/catalogue/partials/add_to_basket_form.html:19
+#: templates/oscar/catalogue/partials/add_to_basket_form.html:23
 msgid "You can get an email alert when this product is back in stock."
 msgstr "Môžete dostať upozornenie email-om, keď bude produkt znovu na sklade."
 
-#: templates/oscar/catalogue/partials/add_to_basket_form.html:21
+#: templates/oscar/catalogue/partials/add_to_basket_form.html:25
 msgid "Notify me"
 msgstr "Upozorni ma"
 
@@ -4936,8 +5062,8 @@ msgstr "Odoslať"
 #: templates/oscar/dashboard/promotions/delete_pagepromotion.html:36
 #: templates/oscar/dashboard/promotions/form.html:39
 #: templates/oscar/dashboard/ranges/range_delete.html:40
-#: templates/oscar/dashboard/ranges/range_form.html:40
-#: templates/oscar/dashboard/ranges/range_form.html:43
+#: templates/oscar/dashboard/ranges/range_form.html:39
+#: templates/oscar/dashboard/ranges/range_form.html:42
 #: templates/oscar/dashboard/ranges/range_product_list.html:132
 #: templates/oscar/dashboard/reviews/review_delete.html:51
 #: templates/oscar/dashboard/reviews/review_update.html:81
@@ -5072,11 +5198,11 @@ msgstr ""
 msgid "Order preview"
 msgstr "Náhľad objednávky"
 
-#: templates/oscar/checkout/preview.html:17
+#: templates/oscar/checkout/preview.html:29
 msgid "Submitting..."
 msgstr "Odosielam..."
 
-#: templates/oscar/checkout/preview.html:17
+#: templates/oscar/checkout/preview.html:29
 msgid "Place order"
 msgstr "Objednať"
 
@@ -5100,7 +5226,7 @@ msgstr "Doručiť na túto adresu"
 #: templates/oscar/dashboard/offers/summary.html:18
 #: templates/oscar/dashboard/offers/summary.html:25
 #: templates/oscar/dashboard/offers/summary.html:31
-#: templates/oscar/dashboard/orders/order_detail.html:547
+#: templates/oscar/dashboard/orders/order_detail.html:550
 #: templates/oscar/dashboard/pages/index.html:77
 #: templates/oscar/dashboard/promotions/page_detail.html:54
 #: templates/oscar/dashboard/promotions/pagepromotion_list.html:57
@@ -5116,6 +5242,7 @@ msgstr "Upraviť"
 #: templates/oscar/checkout/shipping_address.html:37
 #: templates/oscar/customer/address_delete.html:51
 #: templates/oscar/customer/address_list.html:57
+#: templates/oscar/customer/notifications/list.html:61
 #: templates/oscar/customer/notifications/list.html:71
 #: templates/oscar/dashboard/catalogue/category_delete.html:37
 #: templates/oscar/dashboard/catalogue/category_list.html:73
@@ -5125,6 +5252,7 @@ msgstr "Upraviť"
 #: templates/oscar/dashboard/offers/offer_list.html:94
 #: templates/oscar/dashboard/pages/delete.html:40
 #: templates/oscar/dashboard/pages/index.html:78
+#: templates/oscar/dashboard/partners/partner_delete.html:39
 #: templates/oscar/dashboard/promotions/delete.html:40
 #: templates/oscar/dashboard/promotions/promotion_list.html:67
 #: templates/oscar/dashboard/ranges/range_delete.html:40
@@ -5155,9 +5283,9 @@ msgstr "Vyberte spôsob prepravy"
 #, python-format
 msgid ""
 "\n"
-"\t\t\t\tThis includes a discount of %(amount)s as\n"
-"\t\t\t\tyour basket qualifies for the '%(name)s' offer.\n"
-"\t\t\t\t"
+"                This includes a discount of %(amount)s as\n"
+"                your basket qualifies for the '%(name)s' offer.\n"
+"                "
 msgstr ""
 
 #: templates/oscar/checkout/shipping_methods.html:53
@@ -5169,11 +5297,11 @@ msgid "Confirmation of order"
 msgstr "Potvrdenie objednávky"
 
 #: templates/oscar/checkout/thank_you.html:14
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "\n"
-"\t\tConfirmation for order #%(order_num)s\n"
-"\t\t"
+"        Confirmation for order #%(order_num)s\n"
+"        "
 msgstr ""
 "\n"
 "\t\tPotvrdenie pre objednávku č. %(order_num)s\n"
@@ -5215,6 +5343,12 @@ msgstr "Objednaných položiek"
 #: templates/oscar/checkout/thank_you.html:72
 msgid "Estimated dispatch date"
 msgstr "Odhadovaný dátum vybavenia"
+
+#: templates/oscar/checkout/thank_you.html:74
+#: templates/oscar/dashboard/index.html:99
+#: templates/oscar/dashboard/index.html:117
+msgid "Total"
+msgstr "Celkom"
 
 #: templates/oscar/checkout/thank_you.html:147
 msgid "Shipping charge (before discounts)"
@@ -5263,7 +5397,7 @@ msgstr "Vložte adresu do vášho adresára"
 #: templates/oscar/dashboard/catalogue/product_update.html:375
 #: templates/oscar/dashboard/comms/detail.html:105
 #: templates/oscar/dashboard/promotions/form.html:38
-#: templates/oscar/dashboard/ranges/range_form.html:40
+#: templates/oscar/dashboard/ranges/range_form.html:39
 #: templates/oscar/dashboard/reviews/review_update.html:81
 #: templates/oscar/dashboard/users/alerts/update.html:35
 #: templates/oscar/dashboard/vouchers/voucher_form.html:37
@@ -5389,17 +5523,17 @@ msgstr "Vratiť sa do histórie email-ov"
 msgid "Login or register"
 msgstr "Prihlásiť alebo zaregistrovať sa"
 
-#: templates/oscar/customer/login_registration.html:24
-#: templates/oscar/customer/login_registration.html:28
+#: templates/oscar/customer/login_registration.html:26
+#: templates/oscar/customer/login_registration.html:30
 msgid "Log In"
 msgstr "Prihlásiť sa"
 
-#: templates/oscar/customer/login_registration.html:27
+#: templates/oscar/customer/login_registration.html:29
 msgid "I've forgotten my password"
 msgstr "Zabudol som svoje heslo"
 
-#: templates/oscar/customer/login_registration.html:33
-#: templates/oscar/customer/login_registration.html:36
+#: templates/oscar/customer/login_registration.html:35
+#: templates/oscar/customer/login_registration.html:38
 #: templates/oscar/customer/registration.html:5
 #: templates/oscar/customer/registration.html:14
 #: templates/oscar/customer/registration.html:23
@@ -5407,7 +5541,7 @@ msgstr "Zabudol som svoje heslo"
 msgid "Register"
 msgstr "Zaregistrovať"
 
-#: templates/oscar/customer/login_registration.html:36
+#: templates/oscar/customer/login_registration.html:38
 #: templates/oscar/customer/registration.html:26
 msgid "Registering..."
 msgstr "Registrujem..."
@@ -5432,47 +5566,52 @@ msgstr "Cena riadku (bez DPH)"
 msgid "Line price incl tax"
 msgstr "Cena riadku (s DPH)"
 
-#: templates/oscar/customer/order.html:79
+#: templates/oscar/customer/order.html:80
 #: templates/oscar/customer/order_list.html:68
 #: templates/oscar/customer/profile.html:120
 #: templates/oscar/dashboard/promotions/page_detail.html:58
 msgid "Re-order"
 msgstr "Objednať znovu"
 
-#: templates/oscar/customer/order.html:89
+#: templates/oscar/customer/order.html:84
+#, fuzzy
+msgid "Not available anymore"
+msgstr "Nedostupný"
+
+#: templates/oscar/customer/order.html:93
 #: templates/oscar/dashboard/orders/order_detail.html:136
 msgid "Basket total (excl. discounts)"
 msgstr "Košík celkom (bez zliav)"
 
-#: templates/oscar/customer/order.html:102
+#: templates/oscar/customer/order.html:106
 #: templates/oscar/dashboard/orders/order_detail.html:153
 msgid "Basket total (inc. discounts)"
 msgstr "Košík celkom (so zľavami)"
 
-#: templates/oscar/customer/order.html:115
+#: templates/oscar/customer/order.html:119
 #: templates/oscar/dashboard/orders/order_detail.html:170
 msgid "Shipping total (excl. discounts)"
 msgstr "Preprava celkom (bez zliav)"
 
-#: templates/oscar/customer/order.html:128
+#: templates/oscar/customer/order.html:132
 #: templates/oscar/dashboard/orders/order_detail.html:187
 msgid "Shipping total (inc. discounts)"
 msgstr "Preprava celkom (so zľavami)"
 
-#: templates/oscar/customer/order.html:133
+#: templates/oscar/customer/order.html:137
 #: templates/oscar/dashboard/orders/order_detail.html:194
 msgid "Shipping total"
 msgstr "Preprava celkom"
 
-#: templates/oscar/customer/order.html:154
+#: templates/oscar/customer/order.html:158
 msgid "Address:"
 msgstr "Adresa:"
 
-#: templates/oscar/customer/order.html:162
+#: templates/oscar/customer/order.html:166
 msgid "Contact Number:"
 msgstr "Kontaktné číslo:"
 
-#: templates/oscar/customer/order.html:168
+#: templates/oscar/customer/order.html:172
 msgid "Shipping Notes:"
 msgstr "Poznámky pre prepravcu:"
 
@@ -5487,6 +5626,8 @@ msgstr "Filtrovať výsledky"
 #: templates/oscar/customer/order_list.html:45
 #: templates/oscar/dashboard/offers/offer_list.html:41
 #: templates/oscar/dashboard/orders/statistics.html:35
+#: templates/oscar/dashboard/partners/partner_list.html:32
+#: templates/oscar/dashboard/partners/partner_user_select.html:37
 #: templates/oscar/dashboard/users/index.html:35
 #: templates/oscar/dashboard/vouchers/voucher_list.html:34
 msgid "Reset"
@@ -5595,7 +5736,7 @@ msgid "Dear %(name)s,"
 msgstr "%(name)s,"
 
 #: templates/oscar/customer/alerts/emails/alert_body.txt:1
-#: templates/oscar/customer/emails/commtype_order_placed_body.html:1
+#: templates/oscar/customer/emails/commtype_order_placed_body.html:4
 msgid "Hello,"
 msgstr "Dobrý deň"
 
@@ -5677,7 +5818,18 @@ msgstr ""
 msgid "Confirmation required for stock alert"
 msgstr "Upozornenie na stav zásob vyžaduje potvrdenie"
 
-#: templates/oscar/customer/emails/commtype_email_changed_body.html:4
+#: templates/oscar/customer/emails/base.html:5
+#: templates/oscar/customer/emails/base.txt:3
+msgid "Thanks for using our site!"
+msgstr "Ďakujeme, že používate našu stránku!"
+
+#: templates/oscar/customer/emails/base.html:6
+#: templates/oscar/customer/emails/base.txt:4
+#, python-format
+msgid "The %(name)s team"
+msgstr "Tím %(name)s"
+
+#: templates/oscar/customer/emails/commtype_email_changed_body.html:6
 #, python-format
 msgid ""
 "\n"
@@ -5686,12 +5838,13 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"    Tento email ste dostali preto, lebo vaša emailová adresa bola zmenená na\n"
+"    Tento email ste dostali preto, lebo vaša emailová adresa bola zmenená "
+"na\n"
 "<strong>%(email)s</strong>.\n"
 "    "
 
-#: templates/oscar/customer/emails/commtype_email_changed_body.html:10
-#: templates/oscar/customer/emails/commtype_email_changed_body.txt:7
+#: templates/oscar/customer/emails/commtype_email_changed_body.html:12
+#: templates/oscar/customer/emails/commtype_email_changed_body.txt:6
 msgid ""
 "If it wasn't you who changed it, please reset your password immediately and "
 "correct your email address:"
@@ -5699,36 +5852,18 @@ msgstr ""
 "Ak ste to neboli vy, kto ju zmenil, prosím neodkladne si vynulujte heslo a\n"
 "opravte vašu emailovú adresu:"
 
-#: templates/oscar/customer/emails/commtype_email_changed_body.html:14
-#: templates/oscar/customer/emails/commtype_email_changed_body.txt:10
-msgid "If it was you who changed the email address, you can ignore this email."
-msgstr "Ak ste to boli vy, kto emailovú adresu zmenil, tak môžete tento email ignorovať."
-
 #: templates/oscar/customer/emails/commtype_email_changed_body.html:16
-#: templates/oscar/customer/emails/commtype_email_changed_body.txt:12
-#: templates/oscar/customer/emails/commtype_password_changed_body.html:16
-#: templates/oscar/customer/emails/commtype_password_changed_body.txt:12
-#: templates/oscar/customer/emails/commtype_password_reset_body.html:9
-#: templates/oscar/customer/emails/commtype_password_reset_body.txt:7
-msgid "Thanks for using our site!"
-msgstr "Ďakujeme, že používate našu stránku!"
+#: templates/oscar/customer/emails/commtype_email_changed_body.txt:9
+msgid "If it was you who changed the email address, you can ignore this email."
+msgstr ""
+"Ak ste to boli vy, kto emailovú adresu zmenil, tak môžete tento email "
+"ignorovať."
 
-#: templates/oscar/customer/emails/commtype_email_changed_body.html:17
-#: templates/oscar/customer/emails/commtype_email_changed_body.txt:13
-#: templates/oscar/customer/emails/commtype_password_changed_body.html:17
-#: templates/oscar/customer/emails/commtype_password_changed_body.txt:13
-#: templates/oscar/customer/emails/commtype_password_reset_body.html:10
-#: templates/oscar/customer/emails/commtype_password_reset_body.txt:8
-#, python-format
-msgid "The %(name)s team"
-msgstr "Tím %(name)s"
-
-#: templates/oscar/customer/emails/commtype_email_changed_body.txt:3
-#, python-format
+#: templates/oscar/customer/emails/commtype_email_changed_body.txt:4
+#, fuzzy, python-format
 msgid ""
-"\n"
 "You're receiving this email because your email address has been changed to "
-"%(email)s.\n"
+"%(email)s."
 msgstr ""
 "\n"
 "Tento email ste dostali preto, lebo vaša emailová adresa bola zmenená na\n"
@@ -5739,7 +5874,7 @@ msgstr ""
 msgid "Your email address has changed at %(site_name)s."
 msgstr "Vaša emailová adresa na stránke %(site_name)s bola zmenená."
 
-#: templates/oscar/customer/emails/commtype_order_placed_body.html:3
+#: templates/oscar/customer/emails/commtype_order_placed_body.html:6
 #, python-format
 msgid ""
 "We are pleased to confirm your order %(order_number)s has been received and\n"
@@ -5748,43 +5883,43 @@ msgstr ""
 "S potešením potvrdzujeme, že Vaša objednávka %(order_number)s bola prijatá\n"
 "a bude čoskoro spracovaná."
 
-#: templates/oscar/customer/emails/commtype_order_placed_body.html:6
+#: templates/oscar/customer/emails/commtype_order_placed_body.html:9
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:6
 msgid "Your order contains:"
 msgstr "Vaša objednávka obsahuje:"
 
-#: templates/oscar/customer/emails/commtype_order_placed_body.html:10
+#: templates/oscar/customer/emails/commtype_order_placed_body.html:13
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:8
 msgid "quantity:"
 msgstr "množstvo:"
 
-#: templates/oscar/customer/emails/commtype_order_placed_body.html:10
+#: templates/oscar/customer/emails/commtype_order_placed_body.html:13
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:8
 msgid "price:"
 msgstr "cena:"
 
-#: templates/oscar/customer/emails/commtype_order_placed_body.html:14
+#: templates/oscar/customer/emails/commtype_order_placed_body.html:17
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:10
 #: templates/oscar/partials/mini_basket.html:16
 msgid "Basket total:"
 msgstr "Košík celkom:"
 
-#: templates/oscar/customer/emails/commtype_order_placed_body.html:15
+#: templates/oscar/customer/emails/commtype_order_placed_body.html:18
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:11
 msgid "Shipping:"
 msgstr "Preprava:"
 
-#: templates/oscar/customer/emails/commtype_order_placed_body.html:16
+#: templates/oscar/customer/emails/commtype_order_placed_body.html:19
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:12
 msgid "Order Total:"
 msgstr "Objednávka celkom:"
 
-#: templates/oscar/customer/emails/commtype_order_placed_body.html:19
+#: templates/oscar/customer/emails/commtype_order_placed_body.html:22
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:14
 msgid "Shipping address:"
 msgstr "Dodacia adresa:"
 
-#: templates/oscar/customer/emails/commtype_order_placed_body.html:24
+#: templates/oscar/customer/emails/commtype_order_placed_body.html:27
 #, python-format
 msgid ""
 "You can view the status of this order by clicking <a href=\"%(status_url)s\" "
@@ -5792,11 +5927,6 @@ msgid ""
 msgstr ""
 "Stav tejto objednávky si môžete pozrieť kliknutím <a href=\"%(status_url)s\" "
 "title=\"stav objednávky\">tu</a>"
-
-#: templates/oscar/customer/emails/commtype_order_placed_body.html:27
-#: templates/oscar/customer/emails/commtype_order_placed_body.txt:24
-msgid "The team"
-msgstr "Tím"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:1
 #, python-format
@@ -5820,12 +5950,16 @@ msgstr ""
 "Stav tejto objednávky si môžete pozrieť na URL adrese nižšie:\n"
 "%(status_url)s\""
 
+#: templates/oscar/customer/emails/commtype_order_placed_body.txt:24
+msgid "The team"
+msgstr "Tím"
+
 #: templates/oscar/customer/emails/commtype_order_placed_subject.txt:1
 #, python-format
 msgid "Confirmation of order %(number)s"
 msgstr "Potvrdenie objednávky %(number)s"
 
-#: templates/oscar/customer/emails/commtype_password_changed_body.html:4
+#: templates/oscar/customer/emails/commtype_password_changed_body.html:5
 #, python-format
 msgid ""
 "\n"
@@ -5834,35 +5968,40 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"    Tento email ste dostali preto, lebo vaše heslo na %(name)s bolo zmenené.\n"
+"    Tento email ste dostali preto, lebo vaše heslo na %(name)s bolo "
+"zmenené.\n"
 "    "
 
-#: templates/oscar/customer/emails/commtype_password_changed_body.html:10
-#: templates/oscar/customer/emails/commtype_password_changed_body.txt:7
+#: templates/oscar/customer/emails/commtype_password_changed_body.html:11
+#: templates/oscar/customer/emails/commtype_password_changed_body.txt:8
 msgid ""
 "If it wasn't you who changed it, please reset your password immediately:"
-msgstr "Ak ste to neboli vy, kto ho zmenil, tak si prosím neodkladne vaše heslo vynulujte:"
+msgstr ""
+"Ak ste to neboli vy, kto ho zmenil, tak si prosím neodkladne vaše heslo "
+"vynulujte:"
 
-#: templates/oscar/customer/emails/commtype_password_changed_body.html:14
-#: templates/oscar/customer/emails/commtype_password_changed_body.txt:10
+#: templates/oscar/customer/emails/commtype_password_changed_body.html:15
+#: templates/oscar/customer/emails/commtype_password_changed_body.txt:11
 msgid "Otherwise, you can ignore this email."
 msgstr "V opačnom prípade môžete tento email ignorovať."
 
-#: templates/oscar/customer/emails/commtype_password_changed_body.txt:3
+#: templates/oscar/customer/emails/commtype_password_changed_body.txt:4
 #, python-format
 msgid ""
 "\n"
 "You're receiving this email because your password has been changed at "
 "%(name)s.\n"
-msgstr "\nTento email ste dostali preto, lebo vaše heslo na %(name)s bolo zmenené.\n"
+msgstr ""
+"\n"
+"Tento email ste dostali preto, lebo vaše heslo na %(name)s bolo zmenené.\n"
 
 #: templates/oscar/customer/emails/commtype_password_changed_subject.txt:1
 #, python-format
 msgid "Your password changed at %(site_name)s."
 msgstr "Vaše heslo na stránke %(site_name)s bolo zmenené."
 
-#: templates/oscar/customer/emails/commtype_password_reset_body.html:3
-#: templates/oscar/customer/emails/commtype_password_reset_body.txt:2
+#: templates/oscar/customer/emails/commtype_password_reset_body.html:7
+#: templates/oscar/customer/emails/commtype_password_reset_body.txt:5
 #, python-format
 msgid ""
 "You're receiving this e-mail because you requested a password reset for your "
@@ -5871,8 +6010,8 @@ msgstr ""
 "Tento email ste dostali pretože ste požiadali o vynulovanie hesla pre váš\n"
 "používateľský účet na %(name)s."
 
-#: templates/oscar/customer/emails/commtype_password_reset_body.html:6
-#: templates/oscar/customer/emails/commtype_password_reset_body.txt:4
+#: templates/oscar/customer/emails/commtype_password_reset_body.html:10
+#: templates/oscar/customer/emails/commtype_password_reset_body.txt:7
 msgid "Please go to the following page and choose a new password:"
 msgstr "Chďte prosím na nasledovnú stránku a vyberte si nové heslo:"
 
@@ -5887,17 +6026,23 @@ msgstr "Vynulovanie Vášho hesla na %(site_name)s."
 msgid "Thank you for registering."
 msgstr "Ďakujeme Vám za registráciu."
 
-#: templates/oscar/customer/history/recently_viewed_products.html:5
+#: templates/oscar/customer/history/recently_viewed_products.html:6
 msgid "Products you recently viewed"
 msgstr "Produkty, ktoré ste nedávno videl"
+
+#: templates/oscar/customer/notifications/list.html:29
+msgid "Inbox"
+msgstr ""
+
+#: templates/oscar/customer/notifications/list.html:30
+#: templates/oscar/customer/notifications/list.html:59
+#: templates/oscar/customer/notifications/list.html:69
+msgid "Archive"
+msgstr "Archív"
 
 #: templates/oscar/customer/notifications/list.html:67
 msgid "With selected items:"
 msgstr "S vybranými položkami:"
-
-#: templates/oscar/customer/notifications/list.html:69
-msgid "Archive"
-msgstr "Archív"
 
 #: templates/oscar/customer/notifications/list.html:77
 msgid "There are no notifications to display."
@@ -5964,11 +6109,6 @@ msgstr "Spravovať"
 
 #: templates/oscar/dashboard/index.html:99
 #: templates/oscar/dashboard/index.html:117
-msgid "Total"
-msgstr "Celkom"
-
-#: templates/oscar/dashboard/index.html:99
-#: templates/oscar/dashboard/index.html:117
 msgid "open"
 msgstr "otvorené"
 
@@ -6028,11 +6168,11 @@ msgid "Delete category"
 msgstr "Vymazať kategóriu"
 
 #: templates/oscar/dashboard/catalogue/category_delete.html:33
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "\n"
 "    <p>Delete category <strong>%(name)s</strong> - are you sure?</p>\n"
-"\t"
+"    "
 msgstr ""
 "\n"
 "    <p>Vymazať kategóriu <strong>%(name)s</strong> - ste si istý?</p>\n"
@@ -6080,7 +6220,9 @@ msgstr "Zobraziť na stránke"
 msgid ""
 "\n"
 "Delete %(title)s?\n"
-msgstr "\nVymazať %(title)s?\n"
+msgstr ""
+"\n"
+"Vymazať %(title)s?\n"
 
 #: templates/oscar/dashboard/catalogue/product_delete.html:22
 #: templates/oscar/dashboard/catalogue/product_list.html:9
@@ -6093,6 +6235,7 @@ msgstr "Správa produktov"
 
 #: templates/oscar/dashboard/catalogue/product_delete.html:29
 #: templates/oscar/dashboard/offers/offer_delete.html:27
+#: templates/oscar/dashboard/partners/partner_delete.html:26
 #: templates/oscar/dashboard/ranges/range_delete.html:27
 msgid "Delete?"
 msgstr "Vymazať?"
@@ -6160,6 +6303,9 @@ msgstr "Potomkovia"
 #: templates/oscar/dashboard/promotions/page_detail.html:38
 #: templates/oscar/dashboard/promotions/pagepromotion_list.html:48
 #: templates/oscar/dashboard/promotions/promotion_list.html:48
+#: templates/oscar/dashboard/ranges/range_list.html:49
+#: templates/oscar/dashboard/reviews/review_list.html:108
+#: templates/oscar/dashboard/vouchers/voucher_list.html:71
 msgid "Actions"
 msgstr "Akcie"
 
@@ -6555,8 +6701,8 @@ msgid "Order Details"
 msgstr "Detaily objednávky"
 
 #: templates/oscar/dashboard/orders/order_detail.html:78
-#: templates/oscar/dashboard/orders/order_detail.html:281
-#: templates/oscar/dashboard/orders/order_detail.html:526
+#: templates/oscar/dashboard/orders/order_detail.html:282
+#: templates/oscar/dashboard/orders/order_detail.html:529
 msgid "Notes"
 msgstr "Poznámky"
 
@@ -6623,69 +6769,69 @@ msgstr "s čiastkou"
 msgid "Go!"
 msgstr "Vykonať!"
 
-#: templates/oscar/dashboard/orders/order_detail.html:292
-#: templates/oscar/dashboard/orders/order_detail.html:334
+#: templates/oscar/dashboard/orders/order_detail.html:293
+#: templates/oscar/dashboard/orders/order_detail.html:336
 msgid "Product:"
 msgstr "Produkt:"
 
-#: templates/oscar/dashboard/orders/order_detail.html:292
-#: templates/oscar/dashboard/orders/order_detail.html:334
+#: templates/oscar/dashboard/orders/order_detail.html:293
+#: templates/oscar/dashboard/orders/order_detail.html:336
 msgid "quantity"
 msgstr "množstvo"
 
-#: templates/oscar/dashboard/orders/order_detail.html:303
+#: templates/oscar/dashboard/orders/order_detail.html:304
 msgid "No shipping events."
 msgstr "Žiadne udalosti doručenia."
 
-#: templates/oscar/dashboard/orders/order_detail.html:343
+#: templates/oscar/dashboard/orders/order_detail.html:345
 msgid "No payment events."
 msgstr "Žiadne platobné udalosti."
 
-#: templates/oscar/dashboard/orders/order_detail.html:362
+#: templates/oscar/dashboard/orders/order_detail.html:365
 msgid "Charge (incl tax)"
 msgstr "Poplatok (s DPH)"
 
-#: templates/oscar/dashboard/orders/order_detail.html:366
+#: templates/oscar/dashboard/orders/order_detail.html:369
 msgid "Charge (excl tax)"
 msgstr "Poplatok (bez DPH)"
 
-#: templates/oscar/dashboard/orders/order_detail.html:396
+#: templates/oscar/dashboard/orders/order_detail.html:399
 msgid "Payment sources"
 msgstr "Platobné zdroje"
 
-#: templates/oscar/dashboard/orders/order_detail.html:404
+#: templates/oscar/dashboard/orders/order_detail.html:407
 msgid "Allocation"
 msgstr "Poukázanie"
 
-#: templates/oscar/dashboard/orders/order_detail.html:405
+#: templates/oscar/dashboard/orders/order_detail.html:408
 msgid "Amount debited"
 msgstr "Stiahnuté množstvo"
 
-#: templates/oscar/dashboard/orders/order_detail.html:406
+#: templates/oscar/dashboard/orders/order_detail.html:409
 msgid "Amount refunded"
 msgstr "Vrátené množstvo"
 
-#: templates/oscar/dashboard/orders/order_detail.html:423
+#: templates/oscar/dashboard/orders/order_detail.html:426
 msgid "No payment sources"
 msgstr "Žiadne platobné zdroje"
 
-#: templates/oscar/dashboard/orders/order_detail.html:460
+#: templates/oscar/dashboard/orders/order_detail.html:463
 msgid "No transaction data available."
 msgstr "Nie sú dostupné žiadne údaje o transakcii"
 
-#: templates/oscar/dashboard/orders/order_detail.html:473
+#: templates/oscar/dashboard/orders/order_detail.html:476
 msgid "Offer applications"
 msgstr ""
 
-#: templates/oscar/dashboard/orders/order_detail.html:518
+#: templates/oscar/dashboard/orders/order_detail.html:521
 msgid "No email data available."
 msgstr "Žiadne údaje o email-och nie sú dostupné."
 
-#: templates/oscar/dashboard/orders/order_detail.html:560
+#: templates/oscar/dashboard/orders/order_detail.html:563
 msgid "No notes available."
 msgstr "Nie sú dostupné žiadne poznámky."
 
-#: templates/oscar/dashboard/orders/order_detail.html:574
+#: templates/oscar/dashboard/orders/order_detail.html:576
 msgid "Notes are only editable for 5 minutes after being saved."
 msgstr "Poznámky možno upravovať počas 5-tich minút po uložení."
 
@@ -6793,12 +6939,140 @@ msgstr "Neboli nájdené žiadne stránky."
 msgid ""
 "\n"
 "Page <strong>%(title)s</strong> saved!\n"
-msgstr "\nStránka <strong>%(title)s</strong> uložená!\n"
+msgstr ""
+"\n"
+"Stránka <strong>%(title)s</strong> uložená!\n"
 
 #: templates/oscar/dashboard/pages/messages/saved.html:9
 #: templates/oscar/dashboard/ranges/messages/range_saved.html:6
 msgid "Edit again"
 msgstr "Znovu upraviť"
+
+#: templates/oscar/dashboard/partners/partner_delete.html:9
+#: templates/oscar/dashboard/partners/partner_list.html:80
+#, fuzzy
+msgid "Delete partner"
+msgstr "Vymazať stránku"
+
+#: templates/oscar/dashboard/partners/partner_delete.html:9
+#: templates/oscar/dashboard/partners/partner_delete.html:19
+#: templates/oscar/dashboard/partners/partner_form.html:8
+#: templates/oscar/dashboard/partners/partner_form.html:18
+#: templates/oscar/dashboard/partners/partner_list.html:6
+#: templates/oscar/dashboard/partners/partner_list.html:15
+#: templates/oscar/dashboard/partners/partner_list.html:22
+#: templates/oscar/dashboard/partners/partner_manage.html:6
+#: templates/oscar/dashboard/partners/partner_manage.html:16
+#: templates/oscar/dashboard/partners/partner_user_form.html:8
+#: templates/oscar/dashboard/partners/partner_user_form.html:18
+#: templates/oscar/dashboard/partners/partner_user_list.html:6
+#: templates/oscar/dashboard/partners/partner_user_list.html:16
+#: templates/oscar/dashboard/partners/partner_user_select.html:6
+#: templates/oscar/dashboard/partners/partner_user_select.html:16
+#, fuzzy
+msgid "Partner management"
+msgstr "Správa objednávok"
+
+#: templates/oscar/dashboard/partners/partner_delete.html:37
+#, fuzzy
+msgid "Are you sure you want to delete this partner?"
+msgstr "Ste si istý, že chcete vymazať túto adresu?"
+
+#: templates/oscar/dashboard/partners/partner_list.html:60
+#, fuzzy
+msgid "Edit the user's details"
+msgstr "Email-ová adresa používateľa"
+
+#: templates/oscar/dashboard/partners/partner_list.html:67
+#, fuzzy
+msgid "No users associated."
+msgstr "Počet alokovaných"
+
+#: templates/oscar/dashboard/partners/partner_list.html:79
+msgid "Manage partner and users"
+msgstr ""
+
+#: templates/oscar/dashboard/partners/partner_list.html:81
+#: templates/oscar/dashboard/partners/partner_manage.html:62
+#: templates/oscar/dashboard/partners/partner_user_list.html:33
+#: templates/oscar/dashboard/partners/partner_user_select.html:23
+#: templates/oscar/dashboard/partners/partner_user_select.html:28
+msgid "Link an existing user"
+msgstr ""
+
+#: templates/oscar/dashboard/partners/partner_list.html:82
+#: templates/oscar/dashboard/partners/partner_manage.html:61
+#: templates/oscar/dashboard/partners/partner_user_list.html:32
+msgid "Link a new user"
+msgstr ""
+
+#: templates/oscar/dashboard/partners/partner_list.html:90
+#, fuzzy
+msgid "No partners found."
+msgstr "Neboli nájdené žiadne stránky."
+
+#: templates/oscar/dashboard/partners/partner_manage.html:26
+#, fuzzy
+msgid "Details"
+msgstr "Detaily objednávky"
+
+#: templates/oscar/dashboard/partners/partner_manage.html:29
+#: templates/oscar/dashboard/partners/partner_user_list.html:36
+#, fuzzy
+msgid "Manage users"
+msgstr "Spravovať"
+
+#: templates/oscar/dashboard/partners/partner_manage.html:49
+#: templates/oscar/dashboard/partners/partner_user_list.html:60
+#, fuzzy
+msgid "Unlink user"
+msgstr "Všetci používatelia"
+
+#: templates/oscar/dashboard/partners/partner_manage.html:57
+#: templates/oscar/dashboard/partners/partner_user_list.html:68
+#, fuzzy
+msgid "No users linked."
+msgstr "Neboli nájdení žiadni zákazníci."
+
+#: templates/oscar/dashboard/partners/partner_user_list.html:28
+#, fuzzy
+msgid "Link a user"
+msgstr "Text odkazu"
+
+#: templates/oscar/dashboard/partners/partner_user_list.html:72
+#, fuzzy
+msgid "Update details"
+msgstr "Detaily obch. partnera"
+
+#: templates/oscar/dashboard/partners/partner_user_select.html:63
+#, python-format
+msgid ""
+"\n"
+"                                            User is already linked to "
+"%(name)s.\n"
+"                                        "
+msgstr ""
+
+#: templates/oscar/dashboard/partners/partner_user_select.html:69
+#, fuzzy
+msgid "Link user"
+msgstr "Text odkazu"
+
+#: templates/oscar/dashboard/partners/partner_user_select.html:80
+#, fuzzy
+msgid "No users found."
+msgstr "Neboli nájdení žiadni zákazníci."
+
+#: templates/oscar/dashboard/partners/messages/user_unlinked.html:2
+#, python-format
+msgid ""
+"\n"
+"User %(user_name)s was unlinked from %(partner_name)s.\n"
+msgstr ""
+
+#: templates/oscar/dashboard/partners/messages/user_unlinked.html:5
+msgid "Undo"
+msgstr ""
 
 #: templates/oscar/dashboard/promotions/delete.html:9
 #: templates/oscar/dashboard/promotions/delete.html:23
@@ -6949,8 +7223,8 @@ msgstr "Vymazať výber '%(name)s'?"
 
 #: templates/oscar/dashboard/ranges/range_delete.html:10
 #: templates/oscar/dashboard/ranges/range_delete.html:20
-#: templates/oscar/dashboard/ranges/range_form.html:9
-#: templates/oscar/dashboard/ranges/range_form.html:19
+#: templates/oscar/dashboard/ranges/range_form.html:8
+#: templates/oscar/dashboard/ranges/range_form.html:18
 #: templates/oscar/dashboard/ranges/range_list.html:6
 #: templates/oscar/dashboard/ranges/range_list.html:15
 #: templates/oscar/dashboard/ranges/range_list.html:22
@@ -6962,12 +7236,12 @@ msgstr "Správa výberov"
 msgid "Are you sure you want to delete this range?"
 msgstr ""
 
-#: templates/oscar/dashboard/ranges/range_form.html:31
+#: templates/oscar/dashboard/ranges/range_form.html:30
 #: templates/oscar/dashboard/ranges/range_list.html:21
 msgid "Create new range"
 msgstr "Vytvoriť nový výber"
 
-#: templates/oscar/dashboard/ranges/range_form.html:42
+#: templates/oscar/dashboard/ranges/range_form.html:41
 msgid "Save and edit products"
 msgstr "Uložiť a upraviť produkty"
 
@@ -7046,7 +7320,9 @@ msgstr "vrátiť sa na zoznam výberov"
 msgid ""
 "\n"
 "<p>File <strong>%(filename)s</strong> processed.</p>\n"
-msgstr "\n<p>Súbor <strong>%(filename)s</strong> spracovaný.</p>\n"
+msgstr ""
+"\n"
+"<p>Súbor <strong>%(filename)s</strong> spracovaný.</p>\n"
 
 #: templates/oscar/dashboard/ranges/messages/range_products_saved.html:18
 msgid "Edit range metadata"
@@ -7061,7 +7337,9 @@ msgstr "Vrátiť sa na domovskú stránku výberov"
 msgid ""
 "\n"
 "<p>Range <strong>%(name)s</strong> saved.</p>\n"
-msgstr "\n<p>Výber <strong>%(name)s</strong> uložený.</p>\n"
+msgstr ""
+"\n"
+"<p>Výber <strong>%(name)s</strong> uložený.</p>\n"
 
 #: templates/oscar/dashboard/ranges/messages/range_saved.html:7
 msgid "Edit included products"
@@ -7243,14 +7521,19 @@ msgstr "Zmeniť na aktívnych"
 msgid "Make inactive"
 msgstr "Zmeniť na neaktívnych"
 
-#: templates/oscar/dashboard/users/index.html:70
 #: templates/oscar/dashboard/users/index.html:71
-msgid "True,False"
+msgid "Is staff user?"
 msgstr ""
 
 #: templates/oscar/dashboard/users/index.html:73
 msgid "Num Orders"
 msgstr "Poč. objednávok"
+
+#: templates/oscar/dashboard/users/index.html:82
+#: templates/oscar/dashboard/users/index.html:83
+#: templates/oscar/dashboard/vouchers/voucher_list.html:63
+msgid "True,False"
+msgstr ""
 
 #: templates/oscar/dashboard/users/index.html:98
 msgid "No customers found."
@@ -7321,6 +7604,7 @@ msgid "Delete voucher '%(name)s'?"
 msgstr "Vymazať kupón '%(name)s'?"
 
 #: templates/oscar/dashboard/vouchers/voucher_delete.html:33
+#: templates/oscar/dashboard/vouchers/voucher_detail.html:30
 msgid "Voucher details"
 msgstr "Detaily kupónu"
 
@@ -7383,7 +7667,7 @@ msgstr "Čo potrebujete urobiť"
 msgid "There are no site offers at the moment."
 msgstr "Nie sú nadefinované žiadne ponuky stránky."
 
-#: templates/oscar/offer/list.html:44
+#: templates/oscar/offer/list.html:43
 msgid "Browse products in offer"
 msgstr ""
 
@@ -7395,7 +7679,11 @@ msgstr "Informácie"
 msgid "Top of the page"
 msgstr "Vrch stránky"
 
-#: templates/oscar/partials/image_input_widget.html:5
+#: templates/oscar/partials/image_input_widget.html:8
+msgid "Unrecognized image type!"
+msgstr ""
+
+#: templates/oscar/partials/image_input_widget.html:9
 msgid "Upload Image"
 msgstr "Nahrať obrázok"
 
@@ -7411,7 +7699,7 @@ msgstr "Odhlásiť"
 msgid "Browse Store"
 msgstr "Prechádzať obchod"
 
-#: templates/oscar/partials/nav_primary.html:30
+#: templates/oscar/partials/nav_primary.html:31
 msgid "All Products"
 msgstr "Všetky produkty"
 
@@ -7422,11 +7710,11 @@ msgstr "predchádzajúci"
 
 #: templates/oscar/partials/pagination.html:11
 #: templates/oscar/search/partials/pagination.html:11
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "\n"
-"\t\t\t\tPage %(page_num)s of %(total_pages)s\n"
-"\t\t\t"
+"                Page %(page_num)s of %(total_pages)s\n"
+"            "
 msgstr ""
 "\n"
 "\t\t\t\tStrana %(page_num)s z %(total_pages)s\n"
@@ -7538,25 +7826,30 @@ msgstr "Pošli email na vynulovanie"
 msgid "Password reset on %(site_name)s"
 msgstr "Vynulovanie hesla na %(site_name)s"
 
-#: templates/oscar/search/results.html:21
-#, python-format
-msgid "\"%(q)s\""
-msgstr "\"%(q)s\""
+#: templates/oscar/search/results.html:27
+#, fuzzy
+msgid "Refine your search"
+msgstr "Vyhľadávanie v recenziách"
 
-#: templates/oscar/search/results.html:29
-msgid "Browse Categories"
-msgstr "Prechádzanie kategórií"
+#: templates/oscar/search/results.html:40
+#, fuzzy, python-format
+msgid ""
+"\n"
+"    Products matching \"%(q)s\"\n"
+"    "
+msgstr "Produkty vyhovujúce '%(query)s'"
 
 #: templates/oscar/search/results.html:48
-msgid "Search for"
-msgstr "Vyľadávanie"
-
-#: templates/oscar/search/results.html:55
 msgid "Did you mean"
 msgstr "Mysleli ste"
 
-#: templates/oscar/search/results.html:71
+#: templates/oscar/search/results.html:64
 msgid "No search results found."
+msgstr "Neboli nájdené žiadne výsledky."
+
+#: templatetags/history_tags.py:73
+#, fuzzy
+msgid "Back to search results"
 msgstr "Neboli nájdené žiadne výsledky."
 
 #: views/decorators.py:43
@@ -7571,3 +7864,18 @@ msgstr "Neplatné odoslanie formulára"
 #, python-format
 msgid "You need to select some %ss"
 msgstr "Musíte vybrať nejaký/ú/é %ss"
+
+#~ msgid "Purchaes"
+#~ msgstr "Nákupy"
+
+#~ msgid "Your saved basket is empty."
+#~ msgstr "Váš uložený košík je prázdny"
+
+#~ msgid "\"%(q)s\""
+#~ msgstr "\"%(q)s\""
+
+#~ msgid "Browse Categories"
+#~ msgstr "Prechádzanie kategórií"
+
+#~ msgid "Search for"
+#~ msgstr "Vyľadávanie"
