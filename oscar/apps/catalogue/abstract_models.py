@@ -147,8 +147,8 @@ class AbstractCategory(MP_Node):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('catalogue:category', (), {
-                'category_slug': self.slug})
+        return ('catalogue:category', (),
+                {'category_slug': self.slug, 'pk': self.pk})
 
     class Meta:
         abstract = True

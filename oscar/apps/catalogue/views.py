@@ -1,5 +1,6 @@
 from django.conf import settings
-from django.http import HttpResponsePermanentRedirect, Http404
+from django.http import HttpResponsePermanentRedirect
+from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView
 from django.db.models import get_model
 from django.utils.translation import ugettext_lazy as _
@@ -111,12 +112,28 @@ def get_product_base_queryset():
 class ProductCategoryView(ListView):
     """
     Browse products in a given category
+
+    Category URLs used to be based on solely the slug. Renaming the category
+    or any of the parent categories would break the URL. Hence, the new URLs
+    consist of both the slug and category PK (compare product URLs).
+    The legacy way still works to not break existing systems.
     """
     context_object_name = "products"
     template_name = 'catalogue/browse.html'
     paginate_by = settings.OSCAR_PRODUCTS_PER_PAGE
 
+    def get_object(self):
+        if 'pk' in self.kwargs:
+            self.category = get_object_or_404(Category, pk=self.kwargs['pk'])
+        else:
+            self.category = get_object_or_404(Category,
+                                              slug=self.kwargs['category_slug'])
+
     def get(self, request, *args, **kwargs):
+        self.get_object()
+        correct_path = self.category.get_absolute_url()
+        if correct_path != request.path:
+            return HttpResponsePermanentRedirect(correct_path)
         self.categories = self.get_categories()
         return super(ProductCategoryView, self).get(request, *args, **kwargs)
 
@@ -124,21 +141,16 @@ class ProductCategoryView(ListView):
         """
         Return a list of the current category and it's ancestors
         """
-        slug = self.kwargs['category_slug']
-        try:
-            category = Category.objects.get(slug=slug)
-        except Category.DoesNotExist:
-            raise Http404()
-        categories = list(category.get_descendants())
-        categories.append(category)
+        categories = list(self.category.get_descendants())
+        categories.append(self.category)
         return categories
 
     def get_context_data(self, **kwargs):
         context = super(ProductCategoryView, self).get_context_data(**kwargs)
 
         context['categories'] = self.categories
-        context['category'] = self.categories[-1]
-        context['summary'] = self.categories[-1].name
+        context['category'] = self.category
+        context['summary'] = self.category.name
         return context
 
     def get_queryset(self):
