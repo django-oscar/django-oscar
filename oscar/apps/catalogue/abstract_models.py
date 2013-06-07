@@ -80,19 +80,33 @@ class AbstractCategory(MP_Node):
     def __unicode__(self):
         return self.full_name
 
+    def update_slug(self, commit=True):
+        """
+        Updates the instance's slug. Use update_children_slugs for updating
+        the rest of the tree.
+        """
+        parent = self.get_parent()
+        slug = slugify(self.name)
+        # If category has a parent, includes the parents slug in this one
+        if parent:
+            self.slug = '%s%s%s' % (
+                parent.slug, self._slug_separator, slug)
+            self.full_name = '%s%s%s' % (
+                parent.full_name, self._full_name_separator, self.name)
+        else:
+            self.slug = slug
+            self.full_name = self.name
+        if commit:
+            self.save()
+
+    def update_children_slugs(self):
+        for child in self.get_children():
+            child.update_slug()
+            child.update_children_slugs()
+
     def save(self, update_slugs=True, *args, **kwargs):
         if update_slugs:
-            parent = self.get_parent()
-            slug = slugify(self.name)
-            # If category has a parent, includes the parents slug in this one
-            if parent:
-                self.slug = '%s%s%s' % (
-                    parent.slug, self._slug_separator, slug)
-                self.full_name = '%s%s%s' % (
-                    parent.full_name, self._full_name_separator, self.name)
-            else:
-                self.slug = slug
-                self.full_name = self.name
+            self.update_slug(commit=False)
 
         # Enforce slug uniqueness here as MySQL can't handle a unique index on
         # the slug field
@@ -107,6 +121,7 @@ class AbstractCategory(MP_Node):
                         'slug': self.slug})
 
         super(AbstractCategory, self).save(*args, **kwargs)
+        self.update_children_slugs()
 
     def move(self, target, pos=None):
         """
@@ -117,14 +132,12 @@ class AbstractCategory(MP_Node):
         """
         super(AbstractCategory, self).move(target, pos)
 
-        # Update the slugs and full names of all nodes in the new subtree.
         # We need to reload self as 'move' doesn't update the current instance,
         # then we iterate over the subtree and call save which automatically
         # updates slugs.
         reloaded_self = self.__class__.objects.get(pk=self.pk)
-        subtree = self.__class__.get_tree(parent=reloaded_self)
-        for node in subtree:
-            node.save()
+        reloaded_self.update_slug()
+        reloaded_self.update_children_slugs()
 
     def get_ancestors(self, include_self=True):
         ancestors = list(super(AbstractCategory, self).get_ancestors())
