@@ -5,6 +5,6 @@ Page <strong>{{ title }}</strong> saved!
 {% endblocktrans %}
 </p>
 <p>
-<a href="{{ page.url }}" class="btn btn-success">{% trans "View on site" %}</a> 
+<a href="{{ page.get_absolute_url }}" class="btn btn-success">{% trans "View on site" %}</a>
 <a href="{% url dashboard:page-update page.pk %}" class="btn btn-success">{% trans "Edit again" %}</a> 
 </p>
