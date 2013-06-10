@@ -78,8 +78,33 @@ Install Oscar and its dependencies within a virtualenv::
     $ git clone git@github.com:tangentlabs/django-oscar.git
     $ cd django-oscar
     $ mkvirtualenv oscar
-    $ make sandbox
-    $ sites/sandbox/manage.py runserver
+    (oscar) $ make sandbox
+    (oscar) $ sites/sandbox/manage.py runserver
+
+The sandbox site (initialised with a sample set of products) will be available
+at: http://localhost:8000.  A sample superuser is installed with credentials::
+
+    username: superuser
+    email: superuser@example.com
+    password: testing
+
+Running the demo locally
+========================
+
+Assuming you've already set-up the sandbox site, the only prerequisite to get
+the demo site running is to have a spatially aware database.  PostGIS is
+probably the best option as it is relatively easy to set-up.
+
+Once you have database configured, create a local settings file from a template
+to house your creds::
+    
+    (oscar) $ cp sites/demo/settings_local{.sample,}.py
+    (oscar) $ vim sites/demo/settings_local.py  # Add DB creds
+
+Now build the demo site::
+
+    (oscar) $ make demo
+    (oscar) $ sites/demo/manage.py runserver
 
 The sandbox site (initialised with a sample set of products) will be available
 at: http://localhost:8000.  A sample superuser is installed with credentials::
