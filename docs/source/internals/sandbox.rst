@@ -91,11 +91,16 @@ at: http://localhost:8000.  A sample superuser is installed with credentials::
 Running the demo locally
 ========================
 
-Assuming you've already set-up the sandbox site, the only prerequisite to get
-the demo site running is to have a spatially aware database.  PostGIS is
-probably the best option as it is relatively easy to set-up.
+Assuming you've already set-up the sandbox site, there are two further services
+required to run the demo site:
 
-Once you have database configured, create a local settings file from a template
+* A spatially aware database such as PostGIS.  The demo site uses
+  django-oscar-stores which requires a spatial capabilities for store searching.
+
+* A search backend that supports faceting, such as Solr.  You should use the
+  sample schema file from ``sites/demo/deploy/solr/schema.xml``.
+
+Once you have set up these services, create a local settings file from a template
 to house your creds::
     
     (oscar) $ cp sites/demo/settings_local{.sample,}.py
@@ -106,10 +111,5 @@ Now build the demo site::
     (oscar) $ make demo
     (oscar) $ sites/demo/manage.py runserver
 
-The sandbox site (initialised with a sample set of products) will be available
-at: http://localhost:8000.  A sample superuser is installed with credentials::
-
-    username: superuser
-    email: superuser@example.com
-    password: testing
-
+The demo (initialised with a sample set of products) will be available
+at: http://localhost:8000.
