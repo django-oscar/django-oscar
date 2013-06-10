@@ -150,7 +150,6 @@ MIDDLEWARE_CLASSES = (
     #'oscar.profiling.middleware.ProfileMiddleware',
 )
 
-INTERNAL_IPS = ('127.0.0.1',)
 
 ROOT_URLCONF = 'urls'
 
@@ -290,6 +289,14 @@ HAYSTACK_CONNECTIONS = {
     },
 }
 
+AUTH_PROFILE_MODULE = 'user.Profile'
+
+# =============
+# Debug Toolbar
+# =============
+
+INTERNAL_IPS = ('127.0.0.1',)
+
 
 # Allow internal IPs to see the debug toolbar.  This is just for Tangent's QA
 # department to be able to create better issues when something goes wrong.
@@ -313,16 +320,11 @@ DEBUG_TOOLBAR_PANELS = (
     'debug_toolbar.panels.logger.LoggingPanel',
 )
 
-AUTH_PROFILE_MODULE = 'user.Profile'
-
-
 # ==============
 # Oscar settings
 # ==============
 
-
 from oscar.defaults import *
-
 
 # Meta
 # ====
