@@ -2,19 +2,20 @@ from django import forms
 from django.db.models import get_model
 from django.contrib.auth.forms import AuthenticationForm
 from django.utils.translation import ugettext_lazy as _
+
 from oscar.apps.address.forms import AbstractAddressForm
 
 
 class ShippingAddressForm(AbstractAddressForm):
-    
+
     def __init__(self, *args, **kwargs):
-        super(ShippingAddressForm,self ).__init__(*args, **kwargs)
-        self.set_country_queryset() 
-        
+        super(ShippingAddressForm, self).__init__(*args, **kwargs)
+        self.set_country_queryset()
+
     def set_country_queryset(self):
         self.fields['country'].queryset = get_model('address', 'country')._default_manager.filter(
             is_shipping_country=True)
-    
+
     class Meta:
         model = get_model('order', 'shippingaddress')
         exclude = ('user', 'search_text')

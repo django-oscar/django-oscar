@@ -4,6 +4,7 @@ from django.db.models import get_model
 
 UserAddress = get_model('address', 'useraddress')
 
+
 class AbstractAddressForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
