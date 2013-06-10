@@ -45,6 +45,10 @@ you install LESS using::
 
     npm install less
 
+You can manually compile the CSS files by running::
+
+    make css
+
 .. warning::
 
     If you do submit a pull request that changes the LESS files.  Please also
