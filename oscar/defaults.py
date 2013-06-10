@@ -187,9 +187,6 @@ OSCAR_DASHBOARD_NAVIGATION = [
 ]
 
 # Search facets
-# TODO - stop hard-coding stuff into here
-c = lambda x: u'\xa3%.0f' % x
-
 OSCAR_SEARCH_FACETS = {
     'fields': {
         # The key for these dicts will be used when passing facet data
@@ -206,10 +203,10 @@ OSCAR_SEARCH_FACETS = {
             'queries': [
                 # This is a list of (name, query) tuples where the name will
                 # be displayed on the front-end.
-                (_('%(low)s to %(high)s') % {'low': c(0), 'high': c(20)}, '[0 TO 20]'),
-                (_('%(low)s to %(high)s') % {'low': c(20), 'high': c(40)}, '[20 TO 40]'),
-                (_('%(low)s to %(high)s') % {'low': c(40), 'high': c(60)}, '[40 TO 60]'),
-                (_('%(upper)s+') % {'upper': c(60)}, '[60 TO *]')
+                (_('0 to 40'), '[0 TO 20]'),
+                (_('20 to 40'), '[20 TO 40]'),
+                (_('40 to 60'), '[40 TO 60]'),
+                (_('60+'), '[60 TO *]'),
             ]
         }
     }
