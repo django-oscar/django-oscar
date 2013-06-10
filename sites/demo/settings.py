@@ -29,6 +29,18 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 MANAGERS = ADMINS
 
+# Use settings_local to specify your own PostGIS database and creds
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'oscar_demo',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '127.0.0.1',
+        'PORT': '',
+    },
+}
+
 CACHES = {
     'default': {
         'BACKEND':
@@ -281,19 +293,18 @@ USE_TZ = True
 OSCAR_MISSING_IMAGE_URL = 'image_not_found.jpg'
 
 # Add stores node to navigation
-from django.utils.translation import ugettext_lazy as _
 new_nav = OSCAR_DASHBOARD_NAVIGATION
 new_nav.append(
     {
-        'label': _('Stores'),
+        'label': 'Stores',
         'icon': 'icon-shopping-cart',
         'children': [
             {
-                'label': _('Stores'),
+                'label': 'Stores',
                 'url_name': 'stores-dashboard:store-list',
             },
             {
-                'label': _('Store groups'),
+                'label': 'Store groups',
                 'url_name': 'stores-dashboard:store-group-list',
             },
         ]
