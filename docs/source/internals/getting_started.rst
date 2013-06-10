@@ -153,7 +153,6 @@ get served:
 * `staticfiles in Django 1.3 and 1.4 <https://docs.djangoproject.com/en/1.3/howto/static-files/#serving-other-directories>`_
 * `staticfiles in Django 1.5 <https://docs.djangoproject.com/en/1.5/howto/static-files/#serving-files-uploaded-by-a-user>`_
 
-
 Modify your ``TEMPLATE_DIRS`` to include the main Oscar template directory:
 
 .. code-block:: django
@@ -206,6 +205,31 @@ Then create the database and the shop should be browsable:
     $ python manage.py runserver
 
 You should now have a running Oscar install that you can browse.
+
+Fixtures
+--------
+
+The default checkout process requires a shipping address with a country.  Oscar
+uses a model for countries with flags that indicate which are valid shipping
+countries and so the ``address_country`` database table must be populated before
+a customer can check out.
+
+This is easily achieved using fixtures.  Oscar ships with a ``countries.json``
+fixture that loads most countries from the `ISO 3166 standard`_.  This can loaded
+via::
+
+    $ python manage.py loaddata countries
+
+Note however that this file only sets the UK as a valid shipping country.  If
+you want other countries to be available, it would make more sense to take a
+copy of Oscar's countries fixture and edit it as you see it before loading it.
+
+Further, a simple way of loading countries for your project is to use a `data
+migration`_.
+
+.. _`ISO 3166 standard`: http://en.wikipedia.org/wiki/ISO_3166
+.. _`data migration`: http://codeinthehole.com/writing/prefer-data-migrations-to-initial-data/
+
 
 Creating product classes and fulfillment partners
 -------------------------------------------------
