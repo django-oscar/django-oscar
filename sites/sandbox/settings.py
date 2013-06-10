@@ -380,6 +380,11 @@ COMPRESS_OFFLINE_CONTEXT = {
     'use_less': USE_LESS,
 }
 
+# We do this to work around an issue in compressor where the LESS files are
+# compiled but compression isn't enabled.  When this happens, the relative URL
+# is wrong between the generated CSS file and other assets:
+# https://github.com/jezdez/django_compressor/issues/226
+COMPRESS_OUTPUT_DIR = 'oscar'
 
 # Logging
 # =======
