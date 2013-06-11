@@ -2,7 +2,7 @@ from decimal import Decimal
 import zlib
 
 from django.db import models
-from django.db.models import query
+from django.db.models import query, Sum
 from django.conf import settings
 from django.utils.timezone import now
 from django.utils.translation import ugettext as _
@@ -432,6 +432,16 @@ class AbstractBasket(models.Model):
             return False
         else:
             return True
+
+    def product_quantity(self, product):
+        """
+        Return the quantity of a product.
+        The basket can contain multiple lines with the same product, but
+        different options. Those quantities are summed up.
+        """
+        matching_lines = self.lines.filter(product=product)
+        quantity = matching_lines.aggregate(Sum('quantity'))['quantity__sum']
+        return quantity or 0
 
     def line_quantity(self, product, options=None):
         """

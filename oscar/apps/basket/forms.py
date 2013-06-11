@@ -155,8 +155,7 @@ class AddToBasketForm(forms.Form):
 
         # Check user has permission to this the desired quantity to their
         # basket.
-        current_qty = self.basket.line_quantity(
-            product, self.cleaned_options())
+        current_qty = self.basket.product_quantity(product)
         desired_qty = current_qty + self.cleaned_data.get('quantity', 1)
         is_permitted, reason = self.is_purchase_permitted(
             self.request.user, product, desired_qty)
