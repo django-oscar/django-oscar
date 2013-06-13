@@ -10,14 +10,13 @@ from django.views import generic
 
 from oscar.apps.dashboard.partners.forms import UserEmailForm, ExistingUserForm, NewUserForm
 from oscar.core.loading import get_classes
-from oscar.views.generic import BulkEditMixin
 
 Partner = get_model('partner', 'Partner')
 PartnerSearchForm, PartnerCreateForm = get_classes(
     'dashboard.partners.forms', ['PartnerSearchForm', 'PartnerCreateForm'])
 
 
-class PartnerListView(generic.ListView, BulkEditMixin):
+class PartnerListView(generic.ListView):
     model = Partner
     context_object_name = 'partners'
     template_name = 'dashboard/partners/partner_list.html'
