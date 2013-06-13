@@ -22,7 +22,7 @@
 
         <div class="nav-collapse primary-collapse">
             <div id="browse" class="dropdown pull-left {% if expand_dropdown %}open{% endif %}">
-                <button class="btn btn-primary dropdown-toggle hidden-phone" {% if not expand_dropdown %}data-toggle="dropdown"{% endif %}>
+                <button class="btn btn-primary dropdown-toggle hidden-phone"{% if not expand_dropdown %} data-toggle="dropdown"{% endif %}>
                     {% trans "Browse Store" %}
                     <span class="caret"></span>
                 </button>
@@ -31,19 +31,18 @@
                     <li><a tabindex="-1" href="{% url catalogue:index %}">{% trans "All Products" %}</a></li>
                     {% if tree_categories %}
                         <li class="divider"></li>
-                        {% for category in tree_categories %}
-                            {% if category.1 %}
+                        {% for tree_category, info in tree_categories %}
+                            {% if info.children %}
                                 <li class="dropdown-submenu">
-                                    <a tabindex="-1" href="{{ category.0.get_absolute_url }}">{{ category.0.name }}</a>
-                                        <ul class="dropdown-menu">
-                                            {% for subcategory in category.1 %}
-                                                <li><a tabindex="-1" href="{{ subcategory.0.get_absolute_url }}"> {{ subcategory.0.name }}</a></li>
-                                            {% endfor %}
-                                        </ul>
-                                </li>
+                                <a tabindex="-1" href="{{ tree_category.get_absolute_url }}">{{ tree_category.name }}</a>
+                                <ul class="dropdown-menu">
                             {% else %}
-                                <li><a tabindex="-1" href="{{ category.0.get_absolute_url }}">{{ category.0.name }}</a></li>
+                                <li><a tabindex="-1" href="{{ tree_category.get_absolute_url }}">{{ tree_category.name }}</a></li>
                             {% endif %}
+
+                            {% for close in info.close %}
+                                </ul></li>
+                            {% endfor %}
                         {% endfor %}
                     {% endif %}
                     <li class="divider"></li>
