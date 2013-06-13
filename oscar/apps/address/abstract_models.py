@@ -1,7 +1,7 @@
 import zlib
 
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 
 
 class AbstractAddress(models.Model):
@@ -21,7 +21,7 @@ class AbstractAddress(models.Model):
         (MS, _("Ms")),
         (DR, _("Dr")),
     )
-    title = models.CharField(_("Title"), max_length=64, choices=TITLE_CHOICES,
+    title = models.CharField(pgettext_lazy("Treatment Pronouns for the customer", "Title"), max_length=64, choices=TITLE_CHOICES,
                              blank=True, null=True)
     first_name = models.CharField(_("First name"), max_length=255, blank=True,
                                   null=True)
