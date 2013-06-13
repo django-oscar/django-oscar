@@ -58,7 +58,7 @@ setup(name='django-oscar',
           # For converting non-ASCII to ASCII when creating slugs
           'Unidecode>=0.04.12,<0.05',
           # For manipulating search URLs
-          'purl>=0.6'
+          'purl>=0.7'
       ],
       dependency_links=['https://github.com/toastdriven/django-haystack/tarball/fd83d3f449c2197f93040bb3d7bc6083ea8e48b7#egg=django-haystack-2.0.0-beta'],
       # See http://pypi.python.org/pypi?%3Aaction=list_classifiers
