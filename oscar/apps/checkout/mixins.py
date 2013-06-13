@@ -267,7 +267,8 @@ class OrderPlacementMixin(CheckoutSessionMixin):
 
     def send_confirmation_message(self, order, **kwargs):
         code = self.communication_type_code
-        ctx = {'order': order,
+        ctx = {'user': self.request.user,
+               'order': order,
                'lines': order.lines.all()}
 
         if not self.request.user.is_authenticated():
