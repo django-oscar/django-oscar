@@ -2,9 +2,9 @@
 Offers
 ======
 
-Oscar ships with a powerful and flexible offers engine.  It is based around the
-concept of 'conditional offers' - that is, a basket must satisfy some condition
-in order to qualify for a benefit.
+Oscar ships with a powerful and flexible offers engine which is contained in the
+offers app.  It is based around the concept of 'conditional offers' - that is,
+a basket must satisfy some condition in order to qualify for a benefit.
 
 Oscar's dashboard can be used to administer offers.
 
@@ -129,3 +129,17 @@ Here's some example offers:
     3. Use a **fixed discount** benefit that links to the DVD range and has a value of 5.
 
 More to come...
+
+Models
+-------
+
+Please note that models in this app are not abstract.
+
+.. automodule:: oscar.apps.offer.models
+    :members:
+
+Views
+-----
+
+.. automodule:: oscar.apps.offer.views
+    :members:
