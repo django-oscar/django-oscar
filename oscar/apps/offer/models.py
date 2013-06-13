@@ -433,7 +433,11 @@ class Condition(models.Model):
         return self
 
     def __unicode__(self):
-        return self.proxy().__unicode__()
+        return self.proxy().name
+
+    @property
+    def name(self):
+        return self.description
 
     @property
     def description(self):
@@ -553,13 +557,17 @@ class Benefit(models.Model):
         raise RuntimeError("Unrecognised benefit type (%s)" % self.type)
 
     def __unicode__(self):
-        desc = self.description
+        name = self.proxy().name
         if self.max_affected_items:
-            desc += ungettext(
+            name += ungettext(
                 " (max %d item)",
                 " (max %d items)",
                 self.max_affected_items) % self.max_affected_items
-        return desc
+        return name
+
+    @property
+    def name(self):
+        return self.description
 
     @property
     def description(self):
@@ -816,7 +824,8 @@ class CountCondition(Condition):
     """
     _description = _("Basket includes %(count)d item(s) from %(range)s")
 
-    def __unicode__(self):
+    @property
+    def name(self):
         return self._description % {
             'count': self.value,
             'range': unicode(self.range).lower()}
@@ -901,7 +910,8 @@ class CoverageCondition(Condition):
     """
     _description = _("Basket includes %(count)d distinct item(s) from %(range)s")
 
-    def __unicode__(self):
+    @property
+    def name(self):
         return self._description % {
             'count': self.value,
             'range': unicode(self.range).lower()}
@@ -1000,7 +1010,8 @@ class ValueCondition(Condition):
     """
     _description = _("Basket includes %(amount)s from %(range)s")
 
-    def __unicode__(self):
+    @property
+    def name(self):
         return self._description % {
             'amount': currency(self.value),
             'range': unicode(self.range).lower()}
@@ -1167,7 +1178,8 @@ class PercentageDiscountBenefit(Benefit):
     """
     _description = _("%(value)s%% discount on %(range)s")
 
-    def __unicode__(self):
+    @property
+    def name(self):
         return self._description % {
             'value': self.value,
             'range': self.range.name.lower()}
@@ -1214,7 +1226,8 @@ class AbsoluteDiscountBenefit(Benefit):
     """
     _description = _("%(value)s discount on %(range)s")
 
-    def __unicode__(self):
+    @property
+    def name(self):
         return self._description % {
             'value': currency(self.value),
             'range': self.range.name.lower()}
@@ -1358,7 +1371,8 @@ class FixedPriceBenefit(Benefit):
 class MultibuyDiscountBenefit(Benefit):
     _description = _("Cheapest product from %(range)s is free")
 
-    def __unicode__(self):
+    @property
+    def name(self):
         return self._description % {
             'range': self.range.name.lower()}
 
