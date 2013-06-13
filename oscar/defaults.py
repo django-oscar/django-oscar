@@ -12,6 +12,9 @@ OSCAR_MAX_BASKET_QUANTITY_THRESHOLD = 10000
 # Currency
 OSCAR_DEFAULT_CURRENCY = 'GBP'
 
+# Country
+OSCAR_DEFAULT_COUNTRY = '826'
+
 # Max number of products to keep on the user's history
 OSCAR_RECENTLY_VIEWED_PRODUCTS = 20
 
@@ -26,7 +29,7 @@ OSCAR_UPLOAD_ROOT = '/tmp'
 
 # Address settings
 OSCAR_REQUIRED_ADDRESS_FIELDS = ('first_name', 'last_name', 'line1',
-                                 'city', 'postcode', 'country')
+                                 'line4', 'postcode', 'country')
 
 # Search settings
 OSCAR_SEARCH_SUGGEST_LIMIT = 10

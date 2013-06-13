@@ -67,6 +67,7 @@
             <th>{% trans "Title" %}</th>
             <th>{% trans "Product class" %}</th>
             <th>{% trans "Status" %}</th>
+            <th>{% trans "Active" %}</th>
             <th>{% trans "Partner" %}</th>
             <th>{% trans "Partner SKU" %}</th>
             <th>{% trans "Price excl. tax" %}</th>
@@ -96,6 +97,7 @@
                 <td>{{ product.get_title }}</td>
                 <td>{{ product.product_class.name }}</td>
                 <td>{{ product.status|default:"-" }}</td>
+                <td>{{ product.active }}</td>
                 {% with stockrecord=product.stockrecord %}
                     <td>{{ stockrecord.partner.name }}</td>
                     <td>{{ stockrecord.partner_sku }}</td>

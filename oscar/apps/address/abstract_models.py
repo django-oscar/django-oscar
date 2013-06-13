@@ -2,6 +2,8 @@ import zlib
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
+from django.db.models import get_model
 
 
 class AbstractAddress(models.Model):
@@ -11,6 +13,16 @@ class AbstractAddress(models.Model):
     This is subclassed and extended to provide models for
     user, shipping and billing addresses.
     """
+    def get_default_country():
+        """
+        Returns default country if are available in AddressCountry
+        """
+        Country = get_model('address', 'Country')
+        country = Country.objects.get(iso_3166_1_numeric=settings.OSCAR_DEFAULT_COUNTRY)
+        if country:
+            return country
+        return None
+
     # @todo: Need a way of making these choice lists configurable
     # per project
     MR, MISS, MRS, MS, DR = ('Mr', 'Miss', 'Mrs', 'Ms', 'Dr')
@@ -38,7 +50,8 @@ class AbstractAddress(models.Model):
     state = models.CharField(_("State/County"), max_length=255, blank=True,
                              null=True)
     postcode = models.CharField(_("Post/Zip-code"), max_length=64, blank=True, null=True)
-    country = models.ForeignKey('address.Country', verbose_name=_("Country"))
+    country = models.ForeignKey('address.Country', verbose_name=_("Country"),
+                             default=get_default_country)
 
     #: A field only used for searching addresses - this contains all the
     #: relevant fields

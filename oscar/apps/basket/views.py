@@ -302,6 +302,14 @@ class BasketAddView(FormView):
 
     def form_valid(self, form):
         offers_before = self.request.basket.applied_offers()
+
+        product = form.instance
+
+        if not product.active:
+            warning = _('Product "%s" is not active and you can not add in your basket' % product.title)
+            messages.warning(self.request, warning)
+            return super(BasketAddView, self).form_valid(form)
+
         self.request.basket.add_product(
             form.instance, form.cleaned_data['quantity'],
             form.cleaned_options())
