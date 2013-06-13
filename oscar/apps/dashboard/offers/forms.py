@@ -1,9 +1,10 @@
 import datetime
 
 from django import forms
-
 from django.db.models.loading import get_model
 from django.utils.translation import ugettext_lazy as _
+
+from oscar.forms import widgets
 
 ConditionalOffer = get_model('offer', 'ConditionalOffer')
 Condition = get_model('offer', 'Condition')
@@ -17,17 +18,19 @@ class MetaDataForm(forms.ModelForm):
 
 
 class RestrictionsForm(forms.ModelForm):
-    format = '%Y-%m-%d %H:%M'
+
     start_datetime = forms.DateTimeField(
-        widget=forms.DateTimeInput(format=format),
+        widget=widgets.DateTimePickerInput(),
         label=_("Start date"), required=False)
-    end_datetime = forms.DateTimeField(widget=forms.DateTimeInput(format=format),
-                               label=_("End date"), required=False)
+    end_datetime = forms.DateTimeField(
+        widget=widgets.DateTimePickerInput(),
+        label=_("End date"), required=False)
 
     def __init__(self, *args, **kwargs):
         super(RestrictionsForm, self).__init__(*args, **kwargs)
         today = datetime.date.today()
-        self.fields['start_datetime'].initial = today.strftime(self.format)
+        self.fields['start_datetime'].initial = today.strftime(
+            self.fields['start_datetime'].widget.format)
 
     class Meta:
         model = ConditionalOffer
