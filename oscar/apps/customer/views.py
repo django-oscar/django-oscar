@@ -32,9 +32,9 @@ Order = get_model('order', 'Order')
 Line = get_model('basket', 'Line')
 Basket = get_model('basket', 'Basket')
 UserAddress = get_model('address', 'UserAddress')
-Email = get_model('customer', 'email')
+Email = get_model('customer', 'Email')
 UserAddress = get_model('address', 'UserAddress')
-CommunicationEventType = get_model('customer', 'communicationeventtype')
+CommunicationEventType = get_model('customer', 'CommunicationEventType')
 ProductAlert = get_model('customer', 'ProductAlert')
 
 
@@ -81,6 +81,7 @@ class ProfileUpdateView(FormView):
             # address including a password reset link in case this is a
             # suspicious change.
             ctx = {
+                'user': self.request.user,
                 'site': get_current_site(self.request),
                 'reset_url': get_password_reset_url(old_user),
                 'new_email': new_email,
@@ -580,6 +581,7 @@ class ChangePasswordView(FormView):
         messages.success(self.request, _("Password updated"))
 
         ctx = {
+            'user': self.request.user,
             'site': get_current_site(self.request),
             'reset_url': get_password_reset_url(self.request.user),
         }

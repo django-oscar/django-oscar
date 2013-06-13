@@ -53,6 +53,7 @@ class PasswordResetForm(auth_forms.PasswordResetForm):
                 site.domain,
                 get_password_reset_url(user))
             ctx = {
+                'user': user,
                 'site': site,
                 'reset_url': reset_url}
             messages = CommunicationEventType.objects.get_and_render(
