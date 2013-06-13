@@ -675,7 +675,7 @@ class Benefit(models.Model):
 
         :basket: The basket
         :range: The range of products to use for filtering.  The fixed-price
-        benefit ignores its range and uses the condition range
+                benefit ignores its range and uses the condition range
         """
         if range is None:
             range = self.range
@@ -874,7 +874,7 @@ class CountCondition(Condition):
 
         :basket: The basket
         :affected_lines: The lines that have been affected by the discount.
-        This should be list of tuples (line, discount, qty)
+                         This should be list of tuples (line, discount, qty)
         """
         # We need to count how many items have already been consumed as part of
         # applying the benefit, so we don't consume too many items.

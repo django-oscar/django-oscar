@@ -45,7 +45,7 @@ It's features include:
 
 Further reading:
 
-* :doc:`The demo site <internals/sandbox>`.
+* :doc:`The demo site </internals/sandbox>`.
 
 Accounts 
 ~~~~~~~~
