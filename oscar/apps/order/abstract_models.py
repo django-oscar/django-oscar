@@ -203,10 +203,10 @@ class AbstractOrder(models.Model):
             total += discount.amount
         return self.shipping_incl_tax + total
 
-    def _is_event_complete(self, event_quantites):
+    def _is_event_complete(self, event_quantities):
         # Form map of line to quantity
         map = {}
-        for event_quantity in event_quantites:
+        for event_quantity in event_quantities:
             line_id = event_quantity.line_id
             map.setdefault(line_id, 0)
             map[line_id] += event_quantity.quantity
