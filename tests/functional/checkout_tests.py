@@ -44,6 +44,7 @@ class CheckoutMixin(object):
                                      {'last_name': 'Doe',
                                       'first_name': 'John',
                                       'line1': '1 Egg Street',
+                                      'line4': 'City',
                                       'postcode': 'N1 9RT',
                                       'country': 'GB',
                                      })
@@ -131,6 +132,7 @@ class TestShippingAddressView(ClientTestCase, CheckoutMixin):
                                             {'last_name': 'Doe',
                                              'first_name': 'John',
                                              'line1': '1 Egg Street',
+                                             'line4': 'City',
                                              'postcode': 'N1 9RT',
                                              'country': 'GB',
                                             })
