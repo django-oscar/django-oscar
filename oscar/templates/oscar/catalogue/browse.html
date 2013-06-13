@@ -41,18 +41,13 @@
                 {% for tree_category, info in tree_categories %}
                     <li>
                     {% if tree_category.pk == category.pk %}
-                        {{ tree_category.name }}
+                        <strong>{{ tree_category.name }}</strong>
                     {% else %}
                         <a href="{{ tree_category.get_absolute_url }}">{{ tree_category.name }}</a>
                     {% endif %}
 
-                    {% if info.children %}
-                        <ul>
-                    {% else %}
-                        </li>
-                    {% endif %}
-
-                    {% for close in info.close %}
+                    {% if info.has_children %}<ul>{% else %}</li>{% endif %}
+                    {% for n in info.num_to_close %}
                         </ul></li>
                     {% endfor %}
                 {% endfor %}

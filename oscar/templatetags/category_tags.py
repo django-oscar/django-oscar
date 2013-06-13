@@ -60,22 +60,21 @@ class CategoryTreeNode(template.Node):
                 continue
 
             # annotate previous node's info
-            info['children'] = depth > prev_depth
+            info['has_children'] = depth > prev_depth
             if depth < prev_depth:
-                info['close'] = range(0, prev_depth - depth)
+                info['num_to_close'] = range(0, prev_depth - depth)
 
             info = {'open': depth > prev_depth,  # is going down a level
-                    'close': [],                 # is going up len(close) levels
-                    'level': depth - start_depth,
-                   }
+                    'num_to_close': [],                 # is going up len(close) levels
+                    'level': depth - start_depth}
 
             result.append((node, info,))
             prev_depth = depth
 
         if prev_depth is not None:
             # close last leaf
-            info['close'] = range(0, prev_depth - start_depth)
-            info['children'] = prev_depth > prev_depth
+            info['num_to_close'] = range(0, prev_depth - start_depth)
+            info['has_children'] = prev_depth > prev_depth
         return result
 
     def render(self, context):
