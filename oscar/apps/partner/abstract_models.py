@@ -77,14 +77,6 @@ class AbstractPartner(models.Model):
         verbose_name = _('Fulfillment partner')
         verbose_name_plural = _('Fulfillment partners')
         abstract = True
-        permissions = (
-            ("can_edit_stock_records", _("Can edit stock records")),
-            ("can_view_stock_records", _("Can view stock records")),
-            ("can_edit_product_range", _("Can edit product range")),
-            ("can_view_product_range", _("Can view product range")),
-            ("can_edit_order_lines", _("Can edit order lines")),
-            ("can_view_order_lines", _("Can view order lines"))
-        )
 
     def __unicode__(self):
         return self.name
