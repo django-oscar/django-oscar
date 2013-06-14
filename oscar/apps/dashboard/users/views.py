@@ -9,11 +9,12 @@ from oscar.views.generic import BulkEditMixin
 from oscar.core.compat import get_user_model
 from oscar.core.loading import get_classes
 
-UserSearchForm, ProductAlertSearchForm, ProductAlertUpdateForm  = get_classes(
+UserSearchForm, ProductAlertSearchForm, ProductAlertUpdateForm = get_classes(
     'dashboard.users.forms', ('UserSearchForm', 'ProductAlertSearchForm',
                               'ProductAlertUpdateForm'))
 ProductAlert = get_model('customer', 'ProductAlert')
 User = get_user_model()
+
 
 class IndexView(ListView, BulkEditMixin):
     template_name = 'dashboard/users/index.html'

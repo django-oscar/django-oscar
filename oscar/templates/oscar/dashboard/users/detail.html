@@ -38,8 +38,7 @@
         <div id="user_details" class="well">
             <ul>
 				<li>{% trans "Email:" %} {{ customer.email }}</li>
-				<li>{% trans "First name:" %} {{ customer.first_name|default:"-" }}</li>
-				<li>{% trans "Last name:" %} {{ customer.last_name|default:"-" }}</li>
+				<li>{% trans "Name" %} {{ customer.get_full_name|default:"-" }}</li>
 				<li>
 					{% if customer.is_active %}
 					{% trans "This customer is active" %}
