@@ -38,6 +38,7 @@ CommunicationEventType = get_model('customer', 'communicationeventtype')
 ProductAlert = get_model('customer', 'ProductAlert')
 User = get_user_model()
 
+
 class LogoutView(RedirectView):
     url = '/'
     permanent = False
@@ -122,6 +123,11 @@ class AccountSummaryView(TemplateView):
     def get_profile_fields(self, user):
         field_data = []
 
+        # Check for custom user model
+        for field_name in User._meta.additional_fields:
+            field_data.append(
+                self.get_model_field_data(user, field_name))
+
         # Check for profile class
         profile_class = get_profile_class()
         if profile_class:
@@ -135,11 +141,6 @@ class AccountSummaryView(TemplateView):
                     continue
                 field_data.append(
                     self.get_model_field_data(profile, field_name))
-
-        # Check for custom user model
-        for field_name in User._meta.additional_fields:
-            field_data.append(
-                self.get_model_field_data(user, field_name))
 
         return field_data
 

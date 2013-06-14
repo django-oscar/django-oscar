@@ -66,10 +66,6 @@
             <table class="table table-striped table-bordered">
                 <tbody>
                     <tr>
-                        <th>{% trans 'Name' %}</th>
-                        <td>{{ request.user.get_full_name|default:'-' }}</td>
-                    </tr>
-                    <tr>
                         <th>{% trans 'Email address' %}</th>
                         <td>{{ user.email }}</td>
                     </tr>
@@ -81,10 +77,12 @@
                         </tr>
                         {% endfor %}
                     {% endblock %}
-                    <tr>
-                        <th>{% trans 'Date registered' %}</th>
-                        <td>{{ user.date_joined }}</td>
-                    </tr>
+                    {% if user.date_joined %}
+                        <tr>
+                            <th>{% trans 'Date registered' %}</th>
+                            <td>{{ user.date_joined }}</td>
+                        </tr>
+                    {% endif %}
                 </tbody>
             </table>
 
