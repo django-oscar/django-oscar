@@ -110,7 +110,7 @@ def get_profile_class():
 
 def feature_hidden(feature_name):
     """
-    Returns True if a certain Oscar feature is disabled.
+    Test if a certain Oscar feature is disabled.
     """
-    return feature_name in settings.OSCAR_HIDDEN_FEATURES
-
+    return (feature_name is not None and
+            feature_name in settings.OSCAR_HIDDEN_FEATURES)
