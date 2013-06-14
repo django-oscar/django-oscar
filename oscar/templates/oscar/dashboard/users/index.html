@@ -37,7 +37,6 @@
         </form>
     </div>
 
-
     {% if user_list.count %}
         <form action="." method="post" class="form-inline">
             {% csrf_token %}
@@ -66,38 +65,36 @@
                 <tr>
                     <th></th>
                     <th>{% trans "Email" %}</th>
-                    <th>{% trans "First name" %}</th>
-                    <th>{% trans "Last name" %}</th>
-                    <th>{% trans "Is active?" %}</th>
-                    <th>{% trans "Is staff user?" %}</th>
+                    <th>{% trans "Name" %}</th>
+                    <td>{{ user.is_active|yesno:_("True,False") }}</td>
+                    <td>{{ user.is_staff|yesno:_("True,False") }}</td>
                     <th>{% trans "Date registered" %}</th>
                     <th>{% trans "Num Orders" %}</th>
                     <th></th>
                 </tr>
                 {% for user in user_list %}
                     <tr>
-                        <td><input type="checkbox" name="selected_user" class="selected_user" value="{{ user.id }}"/>
-                            <td>{{ user.email }}</td>
-                            <td>{{ user.first_name }}</td>
-                            <td>{{ user.last_name }}</td>
-                            <td>{{ user.is_active|yesno:_("True,False") }}</td>
-                            <td>{{ user.is_staff|yesno:_("True,False") }}</td>
-                            <td>{{ user.date_joined|date:"d/m/y H:s" }}</td>
-                            <td>{% num_orders user %}</td>
-                            <td>
-                                <a href="{% url 'dashboard:user-detail' user.id %}" class="btn btn-info">{% trans "View" %}</a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </table>
-                {% include "partials/pagination.html" %}
-            </form>
-
-        {% else %}
-            <table class="table table-striped table-bordered table-hover">
-                <caption>{{ queryset_description }}</caption>
-                <tr><td>{% trans "No customers found." %}</td></tr>
+                        <td><input type="checkbox" name="selected_user" class="selected_user" value="{{ user.id }}"/></td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.get_full_name }}</td>
+                        <td>{{ user.is_active }}</td>
+                        <td>{{ user.is_staff }}</td>
+                        <td>{{ user.date_joined|date:"d/m/y H:s" }}</td>
+                        <td>{% num_orders user %}</td>
+                        <td>
+                            <a href="{% url 'dashboard:user-detail' user.id %}" class="btn btn-info">{% trans "View" %}</a>
+                        </td>
+                    </tr>
+                {% endfor %}
             </table>
-        {% endif %}
+            {% include "partials/pagination.html" %}
+        </form>
 
-    {% endblock dashboard_content %}
+    {% else %}
+        <table class="table table-striped table-bordered table-hover">
+            <caption>{{ queryset_description }}</caption>
+            <tr><td>{% trans "No customers found." %}</td></tr>
+        </table>
+    {% endif %}
+
+{% endblock dashboard_content %}
