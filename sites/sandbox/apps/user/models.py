@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.contrib.auth import models as auth_models
 
 from oscar.core import compat
+from oscar.apps.customer import abstract_models
 
 
 class Profile(models.Model):
@@ -56,3 +57,8 @@ class CustomUserModel(auth_models.AbstractBaseUser):
         return self.name
 
     get_short_name = get_full_name
+
+
+# A simple extension of the core Oscar User model
+class ExtendedOscarUserModel(abstract_models.AbstractUser):
+    twitter_username = models.CharField(max_length=255, unique=True)

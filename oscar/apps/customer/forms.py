@@ -160,7 +160,9 @@ class EmailUserCreationForm(forms.ModelForm):
     def save(self, commit=True):
         user = super(EmailUserCreationForm, self).save(commit=False)
         user.set_password(self.cleaned_data['password1'])
-        user.username = generate_username()
+
+        if 'username' in User._meta.fields:
+            user.username = generate_username()
 
         if commit:
             user.save()
