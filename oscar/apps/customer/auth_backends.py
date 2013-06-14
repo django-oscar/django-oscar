@@ -6,12 +6,19 @@ from oscar.core.compat import get_user_model
 
 User = get_user_model()
 
-if hasattr(User, 'REQUIRED_FIELDS') and 'email' not in User.REQUIRED_FIELDS:
-    raise ImproperlyConfigured("Emailbackend: Your User model must have an email"
-                               " field with blank=False")
+if hasattr(User, 'REQUIRED_FIELDS'):
+    if not (User.USERNAME_FIELD == 'email' or 'email' in User.REQUIRED_FIELDS):
+        raise ImproperlyConfigured(
+            "Emailbackend: Your User model must have an email"
+            " field with blank=False")
 
 
 class Emailbackend(ModelBackend):
+    """
+    Custom auth backend that users an email address
+
+    For this to work, the User model must have an 'email' field
+    """
 
     def authenticate(self, email=None, password=None, *args, **kwargs):
         if email is None:

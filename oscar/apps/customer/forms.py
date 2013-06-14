@@ -240,14 +240,7 @@ Profile = get_profile_class()
 if Profile:
 
     class UserAndProfileForm(forms.ModelForm):
-        first_name = forms.CharField(
-            label=_('First name'), max_length=128, required=False)
-        last_name = forms.CharField(
-            label=_('Last name'), max_length=128, required=False)
         email = forms.EmailField(label=_('Email address'), required=True)
-
-        # Fields from user model
-        user_fields = ('first_name', 'last_name', 'email')
 
         def __init__(self, user, *args, **kwargs):
             self.user = user
@@ -260,17 +253,34 @@ if Profile:
 
             super(UserAndProfileForm, self).__init__(*args, **kwargs)
 
-            # Add user fields
-            self.fields['first_name'].initial = self.instance.user.first_name
-            self.fields['last_name'].initial = self.instance.user.last_name
+            # Get a list of profile fields to help with ordering later
+            profile_field_names = self.fields.keys()
+            del profile_field_names[profile_field_names.index('email')]
+
             self.fields['email'].initial = self.instance.user.email
 
-            # Ensure user fields are above profile
-            order = list(self.user_fields)
-            for field_name in self.fields.keys():
-                if field_name not in self.user_fields:
-                    order.append(field_name)
-            self.fields.keyOrder = order
+            # Add user fields (we look for core user fields first)
+            core_field_names = set([f.name for f in User._meta.fields])
+            user_field_names = ['email']
+            for field_name in ('first_name', 'last_name'):
+                if field_name in core_field_names:
+                    user_field_names.append(field_name)
+            user_field_names.extend(User._meta.additional_fields)
+
+            # Store user fields so we know what to save later
+            self.user_field_names = user_field_names
+
+            # Add additional user fields
+            additional_fields = forms.fields_for_model(
+                User, fields=user_field_names)
+            self.fields.update(additional_fields)
+
+            # Set initial values
+            for field_name in user_field_names:
+                self.fields[field_name].initial = getattr(user, field_name)
+
+            # Ensure order of fields is email, user fields then profile fields
+            self.fields.keyOrder = user_field_names + profile_field_names
 
         class Meta:
             model = Profile
@@ -290,10 +300,12 @@ if Profile:
 
         def save(self, *args, **kwargs):
             user = self.instance.user
-            user.first_name = self.cleaned_data['first_name']
-            user.last_name = self.cleaned_data['last_name']
-            user.email = self.cleaned_data['email']
+
+            # Save user also
+            for field_name in self.user_field_names:
+                setattr(user, field_name, self.cleaned_data[field_name])
             user.save()
+
             return super(ProfileForm, self).save(*args, **kwargs)
 
     ProfileForm = UserAndProfileForm
