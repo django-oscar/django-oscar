@@ -203,6 +203,8 @@ class UserForm(forms.ModelForm):
         self.user = user
         kwargs['instance'] = user
         super(UserForm, self).__init__(*args, **kwargs)
+        if 'email' in self.fields:
+            self.fields['email'].required = True
 
     def clean_email(self):
         """
@@ -237,7 +239,7 @@ if hasattr(settings, 'AUTH_PROFILE_MODULE'):
             label=_('First name'), max_length=128, required=False)
         last_name = forms.CharField(
             label=_('Last name'), max_length=128, required=False)
-        email = forms.EmailField(label=_('Email address'))
+        email = forms.EmailField(label=_('Email address'), required=True)
 
         # Fields from user model
         user_fields = ('first_name', 'last_name', 'email')
