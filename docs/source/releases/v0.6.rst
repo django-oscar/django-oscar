@@ -102,6 +102,9 @@ Address app:
 * The ``UserAddress.salutation`` and ``UserAddress.name`` methods are now
   properties.
 
+* ``Country`` model's `is_highlighted` column is now integer field to allow
+  fine-grained country selection. 0 = no highlighting
+
 Payment app:
 
 * The `balance` method on the source object is not a property not a method.
@@ -118,3 +121,8 @@ There are new migrations in the following apps to be aware of.
 * Promotions:
 
     - ``0003``: Higher ``max_length`` on FileFields and ImageFields
+
+* Address:
+
+    - ``0003``: ``Country``'s ``is_highlighted`` is now an integer to allow
+                finer control.

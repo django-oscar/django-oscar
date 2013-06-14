@@ -11,6 +11,7 @@ class ShippingAddressForm(AbstractAddressForm):
     def __init__(self, *args, **kwargs):
         super(ShippingAddressForm, self).__init__(*args, **kwargs)
         self.set_country_queryset()
+        self.fields['country'].empty_label = None
 
     def set_country_queryset(self):
         self.fields['country'].queryset = get_model('address', 'country')._default_manager.filter(
