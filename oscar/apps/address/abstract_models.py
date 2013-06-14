@@ -2,6 +2,7 @@ import zlib
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext
 
 
 class AbstractAddress(models.Model):
@@ -120,7 +121,7 @@ class AbstractAddress(models.Model):
         Return the salutation
         """
         return u" ".join([part for part in [
-            self.title, self.first_name, self.last_name] if part])
+            ugettext(self.title), self.first_name, self.last_name] if part])
 
     def name(self):
         """
