@@ -252,7 +252,7 @@ if Profile:
         def __init__(self, user, *args, **kwargs):
             self.user = user
             try:
-                instance = user.get_profile()
+                instance = Profile.objects.get(user=user)
             except ObjectDoesNotExist:
                 # User has no profile, try a blank one
                 instance = Profile(user=user)

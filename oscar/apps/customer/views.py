@@ -105,12 +105,14 @@ class AccountSummaryView(TemplateView):
         # Delegate data fetching to separate methods so they are easy to
         # override.
         ctx['addressbook_size'] = self.request.user.addresses.all().count()
-        ctx['default_shipping_address'] = self.get_default_shipping_address(self.request.user)
-        ctx['default_billing_address'] = self.get_default_billing_address(self.request.user)
+        ctx['default_shipping_address'] = self.get_default_shipping_address(
+            self.request.user)
+        ctx['default_billing_address'] = self.get_default_billing_address(
+            self.request.user)
         ctx['orders'] = self.get_orders(self.request.user)
         ctx['emails'] = self.get_emails(self.request.user)
         ctx['alerts'] = self.get_product_alerts(self.request.user)
-        self.add_profile_fields(ctx)
+        ctx['profile_fields'] = self.get_profile_fields(self.request.user)
 
         ctx['active_tab'] = self.request.GET.get('tab', 'profile')
         return ctx
@@ -118,29 +120,43 @@ class AccountSummaryView(TemplateView):
     def get_orders(self, user):
         return Order._default_manager.filter(user=user)[0:5]
 
-    def add_profile_fields(self, ctx):
-        if not hasattr(settings, 'AUTH_PROFILE_MODULE'):
-            return
-        try:
-            profile = self.request.user.get_profile()
-        except ObjectDoesNotExist:
-            profile = get_profile_class()()
-
+    def get_profile_fields(self, user):
         field_data = []
-        for field_name in profile._meta.get_all_field_names():
-            if field_name in ('user', 'id'):
-                continue
-            field = profile._meta.get_field(field_name)
-            if field.choices:
-                value = getattr(profile, 'get_%s_display' % field_name)()
-            else:
-                value = getattr(profile, field_name)
-            field_data.append({
-                'name': getattr(field, 'verbose_name'),
-                'value': value,
-            })
-        ctx['profile_fields'] = field_data
-        ctx['profile'] = profile
+
+        # Check for profile class
+        profile_class = get_profile_class()
+        if profile_class:
+            try:
+                profile = profile_class.objects.get(user=user)
+            except ObjectDoesNotExist:
+                profile = profile_class(user=user)
+
+            for field_name in profile._meta.get_all_field_names():
+                if field_name in ('user', 'id'):
+                    continue
+                field_data.append(
+                    self.get_model_field_data(profile, field_name))
+
+        # Check for custom user model
+        for field_name in User._meta.additional_fields:
+            field_data.append(
+                self.get_model_field_data(user, field_name))
+
+        return field_data
+
+    def get_model_field_data(self, model_class, field_name):
+        """
+        Extract the verbose name and value for a model's field value
+        """
+        field = model_class._meta.get_field(field_name)
+        if field.choices:
+            value = getattr(model_class, 'get_%s_display' % field_name)()
+        else:
+            value = getattr(model_class, field_name)
+        return {
+            'name': getattr(field, 'verbose_name'),
+            'value': value,
+        }
 
     def post(self, request, *args, **kwargs):
         # A POST means an attempt to change the status of an alert

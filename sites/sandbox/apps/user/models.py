@@ -1,4 +1,7 @@
 from django.db import models
+
+from django.contrib.auth import models as auth_models
+
 from oscar.core import compat
 
 
@@ -14,3 +17,8 @@ class Profile(models.Model):
     gender = models.CharField(max_length=1, choices=choices,
                               verbose_name='Gender')
     age = models.PositiveIntegerField(verbose_name='Age')
+
+
+# A simple extension of the core User model
+class CustomUserModel(auth_models.AbstractUser):
+    twitter_username = models.CharField(max_length=255, unique=True)

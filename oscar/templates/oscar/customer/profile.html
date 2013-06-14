@@ -74,12 +74,12 @@
                         <td>{{ user.email }}</td>
                     </tr>
                     {% block profile_fields %}
-                    {% for field in profile_fields %}
-                    <tr>
-                        <th>{{ field.name }}</th>
-                        <td>{{ field.value|default:"-" }}</td>
-                    </tr>
-                    {% endfor %}
+                        {% for field in profile_fields %}
+                        <tr>
+                            <th>{{ field.name }}</th>
+                            <td>{{ field.value|default:"-" }}</td>
+                        </tr>
+                        {% endfor %}
                     {% endblock %}
                     <tr>
                         <th>{% trans 'Date registered' %}</th>
