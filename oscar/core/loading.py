@@ -104,6 +104,9 @@ def get_profile_class():
     """
     Return the profile model class
     """
+    setting = getattr(settings, 'AUTH_PROFILE_MODULE', None)
+    if setting is None:
+        return None
     app_label, model_name = settings.AUTH_PROFILE_MODULE.split('.')
     profile_class = get_model(app_label, model_name)
     if not profile_class:

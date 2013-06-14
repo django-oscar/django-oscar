@@ -236,8 +236,8 @@ class UserForm(forms.ModelForm):
                    'user_permissions', 'groups')
 
 
-if hasattr(settings, 'AUTH_PROFILE_MODULE'):
-    Profile = get_profile_class()
+Profile = get_profile_class()
+if Profile:
 
     class UserAndProfileForm(forms.ModelForm):
         first_name = forms.CharField(
