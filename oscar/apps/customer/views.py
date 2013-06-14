@@ -36,6 +36,8 @@ Email = get_model('customer', 'Email')
 UserAddress = get_model('address', 'UserAddress')
 CommunicationEventType = get_model('customer', 'CommunicationEventType')
 ProductAlert = get_model('customer', 'ProductAlert')
+CheckoutSessionMixin = get_class('checkout.session', 'CheckoutSessionMixin')
+
 User = get_user_model()
 
 
@@ -199,7 +201,7 @@ class AccountSummaryView(TemplateView):
             return None
 
 
-class AccountRegistrationView(TemplateView):
+class AccountRegistrationView(CheckoutSessionMixin, TemplateView):
     template_name = 'customer/registration.html'
     redirect_field_name = 'next'
     registration_prefix = 'registration'
@@ -223,6 +225,8 @@ class AccountRegistrationView(TemplateView):
         context = super(AccountRegistrationView, self).get_context_data(*args, **kwargs)
         redirect_to = self.request.REQUEST.get(self.redirect_field_name, '')
         context[self.redirect_field_name] = redirect_to
+        email_field = EmailUserCreationForm.base_fields['email']
+        email_field.initial = self.checkout_session.get_guest_email()
         context['registration_form'] = EmailUserCreationForm(
             prefix=self.registration_prefix
         )

@@ -28,7 +28,7 @@
             {{ form.options.errors }}
             <div class="controls">
                 <label class="radio">
-                    <input type="radio" id="id_options_1" name="options" value="existing" {% if form.password.errors %}checked="checked"{% endif %} />
+                    <input type="radio" id="id_options_1" name="options" value="{{ form.EXISTING }}" {% if form.password.errors or form.non_field_errors %}checked="checked"{% endif %} />
                     {% trans "I have an account and my password is" %}:
                 </label>
             </div>
@@ -49,8 +49,17 @@
         <div class="control-group">
             <div class="controls">
                 <label class="radio">
-                    <input type="radio" id="id_options_0" name="options" value="new" {% if not form.password.errors %}checked="checked"{% endif %} />
-                    {% trans "I don't have an account" %}:
+                    <input type="radio" id="id_options_0" name="options" value="{{ form.GUEST }}"  />
+                    {% trans "I want to continue without registering" %}
+                </label>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <div class="controls">
+                <label class="radio">
+                    <input type="radio" id="id_options_2" name="options" value="{{ form.NEW }}" {% if not form.password.errors and not form.non_field_errors %}checked="checked"{% endif %} />
+                    {% trans "I want to create a new account and continue (it is quick!)" %}
                 </label>
             </div>
         </div>

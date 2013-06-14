@@ -24,21 +24,25 @@ class ShippingAddressForm(AbstractAddressForm):
 
 class GatewayForm(AuthenticationForm):
     username = forms.EmailField(label=_("My email address is"))
-    NEW, EXISTING = 'new', 'existing'
-    CHOICES = ((NEW, _('No, I am a new customer')),
+    GUEST, NEW, EXISTING = 'anonymous', 'new', 'existing'
+    CHOICES = ((GUEST, _('No, continue without registering')),
+               (NEW, _('No, create my account and continue')),
                (EXISTING, _('Yes, I have a password')))
     options = forms.ChoiceField(widget=forms.widgets.RadioSelect,
                                 choices=CHOICES)
 
     def clean(self):
         cleaned_data = self.cleaned_data
-        if self.is_guest_checkout():
+        if self.is_guest_checkout() or self.is_new_account_checkout():
             if 'password' in self.errors:
                 del self.errors['password']
             return cleaned_data
         return super(GatewayForm, self).clean()
 
     def is_guest_checkout(self):
+        return self.cleaned_data.get('options', None) == self.GUEST
+
+    def is_new_account_checkout(self):
         return self.cleaned_data.get('options', None) == self.NEW
 
 
