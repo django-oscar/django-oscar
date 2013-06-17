@@ -1,7 +1,6 @@
 {% extends "layout_2_col.html" %}
 
 {% load url from future %}
-
 {% load currency_filters %}
 {% load basket_tags %}
 {% load promotion_tags %}
@@ -13,20 +12,12 @@
     {{ summary }} | {{ block.super }}
 {% endblock %}
 
-{% block headertext %}{{ summary }}{% endblock  %}
+{% block headertext %}{{ summary }}{% endblock %}
 
 {% block breadcrumbs %}
     <ul class="breadcrumb">
         <li>
-            <a href="{% url 'promotions:home' %}">{% trans "Home" %}</a>
-            <span class="divider">/</span>
-        </li>
-        {% if not category %}
-            <li class="active">{% trans "All products" %}</li>
-        {% else %}
-            {% for category in category.get_ancestors|slice:":-1" %}
-        <li>
-            <a href="{% url promotions:home %}">{% trans "Home" %}</a>
+            <a href="{% url "promotions:home" %}">{% trans "Home" %}</a>
             <span class="divider">/</span>
         </li>
         {% if not category %}
