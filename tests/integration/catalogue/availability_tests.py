@@ -17,6 +17,7 @@ class TestAStandaloneProductIsAvailableToBuyWhen(test.TestCase):
     def test_its_stockrecord_indicates_so(self):
         product_class = models.ProductClass()
         product = models.Product(
+            id=-1,  # Required so Django doesn't raise ValueError
             product_class=product_class)
 
         # Create mock version of a model that can be assigned as a FK
@@ -34,12 +35,14 @@ class TestAStandaloneProductIsNotAvailableToBuyWhen(test.TestCase):
     def test_it_has_no_stock_record(self):
         product_class = models.ProductClass()
         product = models.Product(
+            id=-1,
             product_class=product_class)
         self.assertFalse(product.is_available_to_buy)
 
     def test_its_stockrecord_indicates_so(self):
         product_class = models.ProductClass()
         product = models.Product(
+            id=-1,
             product_class=product_class)
 
         # Create mock version of a model that can be assigned as a FK

@@ -1,7 +1,8 @@
 from django.test import TestCase
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, get_user_model
 from django.core import mail
+
+User = get_user_model()
 
 
 class TestEmailAuthBackendWhenUsersShareAnEmail(TestCase):
