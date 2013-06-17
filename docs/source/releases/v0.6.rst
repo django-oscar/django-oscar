@@ -47,6 +47,25 @@ Further reading:
 
 * :doc:`The demo site </internals/sandbox>`.
 
+Django 1.5 and custom user model support
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Oscar now supports `custom user models`_, the headline new feature in Django 1.5.  These can be used standalone 
+or with a one-to-one profile model: Oscar's account forms inspect the model
+fields to dynamically pick up the fields for editing and display.
+
+There are some restrictions on what fields a custom user model must have.  For
+instance, Oscar's default auth backend requires the user model to have an email
+and password field.  New Oscar projects are encouraged to use the provided
+abstract user model as the base for their users.
+
+Further reading:
+
+* :doc:`How to use a custom user model </howto/use_a_custom_user_model>`.
+
+.. _`custom user models`: https://docs.djangoproject.com/en/dev/topics/auth/customizing/#specifying-a-custom-user-model
+.. _`documentation on user models`: https://docs.djangoproject.com/en/dev/topics/auth/customizing/#specifying-a-custom-user-model
+
 Accounts 
 ~~~~~~~~
 
