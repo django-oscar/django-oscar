@@ -2,11 +2,12 @@ import logging
 
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from django.contrib.sites.models import Site
+from django.contrib.sites.models import Site, get_current_site
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import get_model
 
 from oscar.core.loading import get_class
+
 OrderCreator = get_class('order.utils', 'OrderCreator')
 Dispatcher = get_class('customer.utils', 'Dispatcher')
 CheckoutSessionMixin = get_class('checkout.session', 'CheckoutSessionMixin')
@@ -269,6 +270,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         code = self.communication_type_code
         ctx = {'user': self.request.user,
                'order': order,
+               'site': get_current_site(self.request),
                'lines': order.lines.all()}
 
         if not self.request.user.is_authenticated():
