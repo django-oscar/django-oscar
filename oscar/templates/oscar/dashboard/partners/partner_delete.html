@@ -1,5 +1,6 @@
 {% extends 'dashboard/layout.html' %}
 {% load i18n %}
+{% load url from future %}
 
 {% block body_class %}
     create-page
@@ -12,15 +13,15 @@
 {% block breadcrumbs %}
     <ul class="breadcrumb">
         <li>
-            <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
             <span class="divider">/</span>
         </li>
         <li>
-            <a href="{% url dashboard:partner-list %}">{% trans "Partner management" %}</a>
+            <a href="{% url 'dashboard:partner-list' %}">{% trans "Partner management" %}</a>
             <span class="divider">/</span>
         </li>
         <li>
-            <a href="{% url dashboard:partner-manage partner.pk %}">{{ partner.name }}</a>
+            <a href="{% url 'dashboard:partner-manage' partner.pk %}">{{ partner.name }}</a>
             <span class="divider">/</span>
         </li>
         <li class="active">{% trans "Delete?" %}</li>
@@ -37,7 +38,7 @@
         <p>{% trans "Are you sure you want to delete this partner?" %}</p>
         <div class="form-actions">
             <button class="btn btn-large btn-danger" type="submit">{% trans "Delete" %}</button> or
-            <a href="{% url dashboard:partner-list %}">{% trans "cancel" %}</a>
+            <a href="{% url 'dashboard:partner-list' %}">{% trans "cancel" %}</a>
         </div>
     </form>
 {% endblock dashboard_content %}

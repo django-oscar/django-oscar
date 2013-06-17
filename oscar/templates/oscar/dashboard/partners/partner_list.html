@@ -1,6 +1,7 @@
 {% extends 'dashboard/layout.html' %}
 {% load sorting_tags %}
 {% load i18n %}
+{% load url from future %}
 
 {% block title %}
     {% trans "Partner management" %} | {{ block.super }}
@@ -9,7 +10,7 @@
 {% block breadcrumbs %}
     <ul class="breadcrumb">
         <li>
-            <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>
+            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
             <span class="divider">/</span>
         </li>
         <li class="active">{% trans "Partner management" %}</li>
@@ -18,7 +19,7 @@
 
 {% block header %}
     <div class="page-header">
-        <a href="{% url dashboard:partner-create %}" class="btn btn-large btn-primary pull-right"><i class="icon-plus"></i> {% trans "Create new partner" %}</a>
+        <a href="{% url 'dashboard:partner-create' %}" class="btn btn-large btn-primary pull-right"><i class="icon-plus"></i> {% trans "Create new partner" %}</a>
         <h1>{% trans "Partner management" %}</h1>
     </div>
 {% endblock header %}
@@ -29,7 +30,7 @@
             {% include 'partials/form_fields_inline.html' with form=form %}
             <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
             {% if is_filtered %}
-                <a class="btn" href="{% url dashboard:partner-list %}" >{% trans "Reset" %}</a>
+                <a class="btn" href="{% url 'dashboard:partner-list' %}" >{% trans "Reset" %}</a>
             {% endif %}
         </form>
     </div>
@@ -49,7 +50,7 @@
                 {% for partner in partners %}
                     <tr>
                         <td>
-                            <a href="{% url dashboard:partner-manage partner.pk %}">{{ partner.name }}</a>
+                            <a href="{% url 'dashboard:partner-manage' partner.pk %}">{{ partner.name }}</a>
                         </td>
                         <td>
                             {% with users=partner.users.all %}
@@ -57,7 +58,7 @@
                                     <ul>
                                         {% for user in users %}
                                             <li>
-                                                <a href="{% url dashboard:partner-user-update partner.pk user.id %}" title="{% trans "Edit the user's details" %}">
+                                                <a href="{% url 'dashboard:partner-user-update' partner.pk user.id %}" title="{% trans "Edit the user's details" %}">
                                                     {{ user.get_full_name|default:user.email }}
                                                 </a>
                                             </li>
@@ -76,10 +77,10 @@
                                         <span class="caret"></span>
                                     </a>
                                     <ul class="dropdown-menu pull-right">
-                                        <li><a href="{% url dashboard:partner-manage partner.pk %}">{% trans "Manage partner and users" %}</a></li>
-                                        <li><a href="{% url dashboard:partner-delete partner.pk %}">{% trans "Delete partner" %}</a></li>
-                                        <li><a href="{% url dashboard:partner-user-select partner.pk %}">{% trans "Link an existing user" %}</a></li>
-                                        <li><a href="{% url dashboard:partner-user-create partner.pk %}">{% trans "Link a new user" %}</a></li>
+                                        <li><a href="{% url 'dashboard:partner-manage' partner.pk %}">{% trans "Manage partner and users" %}</a></li>
+                                        <li><a href="{% url 'dashboard:partner-delete' partner.pk %}">{% trans "Delete partner" %}</a></li>
+                                        <li><a href="{% url 'dashboard:partner-user-select' partner.pk %}">{% trans "Link an existing user" %}</a></li>
+                                        <li><a href="{% url 'dashboard:partner-user-create' partner.pk %}">{% trans "Link a new user" %}</a></li>
                                     </ul>
                                 </div>
                             </div>
