@@ -39,9 +39,7 @@ could subclass the class from oscar or not.  An example implementation is::
 You will need to add your app that contains the overriding class to
 ``INSTALLED_APPS``, as well as let Oscar know that you're replacing the
 corresponding core app with yours.  You can do that by supplying an extra
-argument to ``get_core_apps`` function::
-
-TODO LINK
+argument to ``get_core_apps`` function.
 
 Testing
 -------

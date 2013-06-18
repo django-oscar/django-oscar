@@ -19,6 +19,14 @@ Customisation
     how_to_customise_a_view
     how_to_configure_the_dashboard_navigation
 
+Customers
+---------
+
+.. toctree::
+    :maxdepth: 1
+
+    use_a_custom_user_model
+
 Catalogue
 ---------
 
@@ -79,4 +87,3 @@ Complex use cases
    :maxdepth: 1
 
    multi_dealer_setup
-

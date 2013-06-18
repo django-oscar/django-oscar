@@ -5,6 +5,7 @@ Glossary
 This is a work-in-progress list of commonly used terms when discussing Oscar.
 
 .. glossary::
+
     :sorted:
 
     Partner
@@ -21,12 +22,10 @@ This is a work-in-progress list of commonly used terms when discussing Oscar.
        :term:`UPC`. It's stored as an attribute of
        :attr:`StockRecord <oscar.apps.partner.abstract_models.AbstractStockRecord.partner_sku>`
 
-       .. seealso:: `Wikipedia <http://en.wikipedia.org/wiki/Stock-keeping_unit>`_
+       .. seealso:: `Wikipedia: Stock-keeping unit <http://en.wikipedia.org/wiki/Stock-keeping_unit>`_
 
     UPC
     Universal Product Code
        A code uniquely identifying a product worldwide.
 
-       .. seealso:: `Wikipedia <http://en.wikipedia.org/wiki/Universal_Product_Code>`_
-
-
+       .. seealso:: `Wikipedia: Universal Product Code <http://en.wikipedia.org/wiki/Universal_Product_Code>`_
