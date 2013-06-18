@@ -243,16 +243,3 @@ class OfferDiscountTest(TestCase):
             self.assertFalse(method.is_discounted)
         for method in self.discount_methods:
             self.assertTrue(method.is_discounted)
-
-
-class RepositoryTests(TestCase):
-
-    def setUp(self):
-        self.repo = Repository()
-
-    def test_default_method_is_free(self):
-        user, basket = User(), Basket()
-        methods = self.repo.get_shipping_methods(user, basket)
-        self.assertEqual(1, len(methods))
-        self.assertTrue(isinstance(methods[0], Free))
-
