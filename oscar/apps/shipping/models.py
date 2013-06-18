@@ -11,7 +11,6 @@ class ShippingMethod(models.Model):
     """
     Fields from shipping.base.ShippingMethod must be added here manually.
     """
-
     code = models.SlugField(_("Slug"), max_length=128, unique=True)
     name = models.CharField(_("Name"), max_length=128, unique=True)
     description = models.TextField(_("Description"), blank=True)

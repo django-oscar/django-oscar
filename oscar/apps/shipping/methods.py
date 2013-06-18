@@ -20,6 +20,10 @@ class Free(ShippingMethod):
 
 
 class NoShippingRequired(Free):
+    """
+    This is a special shipping method that indicates that no shipping is
+    actually required (eg for digital goods).
+    """
     code = 'no-shipping-required'
     name = _('No shipping required')
 
