@@ -242,6 +242,12 @@ class AbstractBankcard(models.Model):
     issue_number = None
     ccv = None
 
+    def __unicode__(self):
+        return _(u"%(card_type)s %(number)s (Expires: %(expiry)s)") % {
+            'card_type': self.card_type,
+            'number': self.number,
+            'expiry': self.expiry_month()}
+
     def __init__(self, *args, **kwargs):
         # Pop off the temporary data
         self.start_date = kwargs.pop('start_date', None)
