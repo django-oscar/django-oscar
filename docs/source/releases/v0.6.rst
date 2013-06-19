@@ -72,6 +72,11 @@ Accounts
 The views and templates of the accounts section have been reworked to be clearer
 and easier to extend.
 
+Better bankcard handling
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The bankcard model in the payment app has been greatly improved.
+
 Upgrading 
 =========
 

@@ -256,9 +256,24 @@ class AbstractBankcard(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.number.startswith('X'):
-            # This is the first time this card instance is being saved.  We
-            # remove all sensitive data
-            self.card_type = bankcards.bankcard_type(self.number)
-            self.number = u"XXXX-XXXX-XXXX-%s" % self.number[-4:]
-            self.start_date = self.issue_number = self.ccv = None
+            self.prepare_for_save()
         super(AbstractBankcard, self).save(*args, **kwargs)
+
+    def prepare_for_save(self):
+        # This is the first time this card instance is being saved.  We
+        # remove all sensitive data
+        self.card_type = bankcards.bankcard_type(self.number)
+        if self.card_type is None:
+            self.card_type = 'Unknown card type'
+        self.number = u"XXXX-XXXX-XXXX-%s" % self.number[-4:]
+        self.start_date = self.issue_number = self.ccv = None
+
+    @property
+    def cvv(self):
+        return self.ccv
+
+    def start_month(self, format='%m/%y'):
+        return self.start_date.strftime(format)
+
+    def expiry_month(self, format='%m/%y'):
+        return self.expiry_date.strftime(format)
