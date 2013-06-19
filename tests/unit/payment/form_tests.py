@@ -3,7 +3,7 @@ import datetime
 from django.test import TestCase
 from django.forms import ValidationError
 
-from oscar.apps.payment import forms
+from oscar.apps.payment import forms, models
 
 
 class TestBankcardNumberField(TestCase):
@@ -45,7 +45,6 @@ class TestStartingMonthField(TestCase):
     def test_returns_the_first_day_of_month(self):
         start_date = self.field.clean(['01', '2010'])
         self.assertEquals(1, start_date.day)
-
 
 
 class TestExpiryMonthField(TestCase):
@@ -108,3 +107,24 @@ class TestCCVField(TestCase):
             self.assertEquals("Please enter a 3 or 4 digit number",
                               e.messages[0])
 
+
+class TestValidBankcardForm(TestCase):
+
+    def setUp(self):
+        today = datetime.date.today()
+        data = {
+            'number': '1000010000000007',
+            'ccv': '123',
+            'expiry_month_0': '01',
+            'expiry_month_1': today.year + 1,
+        }
+        self.form = forms.BankcardForm(data)
+        self.assertTrue(self.form.is_valid())
+
+    def test_has_bankcard_property(self):
+        self.assertTrue(isinstance(self.form.bankcard, models.Bankcard))
+
+    def test_returns_bankcard_with_sensitive_data_intact(self):
+        bankcard = self.form.bankcard
+        self.assertFalse(bankcard.number.startswith('X'))
+        self.assertEquals('123', bankcard.ccv)

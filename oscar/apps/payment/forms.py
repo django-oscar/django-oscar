@@ -7,13 +7,11 @@ from django.db.models import get_model
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.address.forms import AbstractAddressForm
-from oscar.core.loading import get_class
 from . import bankcards
 
 Country = get_model('address', 'Country')
 BillingAddress = get_model('order', 'BillingAddress')
-BankcardModel = get_model('payment', 'Bankcard')
-Bankcard = get_class('payment.utils', 'Bankcard')
+Bankcard = get_model('payment', 'Bankcard')
 
 
 class BankcardNumberField(forms.CharField):
@@ -193,33 +191,38 @@ class BankcardCCVField(forms.RegexField):
             r'^\d{3,4}$', *args, **_kwargs)
 
     def clean(self, value):
-        value = value.strip()
+        if value is not None:
+            value = value.strip()
         return super(BankcardCCVField, self).clean(value)
 
 
 class BankcardForm(forms.ModelForm):
     number = BankcardNumberField()
-    cvv_number = BankcardCCVField()
+    ccv = BankcardCCVField()
     start_month = BankcardStartingMonthField()
     expiry_month = BankcardExpiryMonthField()
 
     class Meta:
-        model = BankcardModel
-        fields = ('number', 'start_month', 'expiry_month', 'cvv_number')
+        model = Bankcard
+        fields = ('number', 'start_month', 'expiry_month', 'ccv')
 
-    def get_bankcard_obj(self):
+    def save(self, *args, **kwargs):
+        # It doesn't really make sense to save directly from the form as saving
+        # will obfuscate some of the card details which you normally need to
+        # pass to a payment gateway.  Better to use the bankcard property below
+        # to get the cleaned up data, then once you've used the sensitive
+        # details, you can save.
+        raise RuntimeError("Don't save bankcards directly from form")
+
+    @property
+    def bankcard(self):
         """
-        Returns a Bankcard object for use in payment processing.
+        Return an instance of the Bankcard model (unsaved)
         """
-        kwargs = {
-            'name': self.cleaned_data['name'],
-            'card_number': self.cleaned_data['number'],
-            'expiry_date': self.cleaned_data['expiry_month'].strftime("%m/%y"),
-            'cvv': self.cleaned_data['cvv_number'],
-        }
-        if self.cleaned_data['start_month']:
-            kwargs['start_date'] = self.cleaned_data['start_month'].strftime("%m/%y")
-        return Bankcard(**kwargs)
+        return Bankcard(number=self.cleaned_data['number'],
+                        expiry_date=self.cleaned_data['expiry_month'],
+                        start_date=self.cleaned_data['start_month'],
+                        ccv=self.cleaned_data['ccv'])
 
 
 class BillingAddressForm(AbstractAddressForm):

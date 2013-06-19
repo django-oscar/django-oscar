@@ -7,6 +7,8 @@ from django.conf import settings
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.utils import slugify
 
+from . import bankcards
+
 
 class AbstractTransaction(models.Model):
     """
@@ -205,16 +207,47 @@ class AbstractSourceType(models.Model):
 
 
 class AbstractBankcard(models.Model):
+    """
+    Model representing a user's bankcard.  This is used for two purposes:
+
+        1.  The bankcard form will return an instance of this model that can be
+            used with payment gateways.  In this scenario, the instance will
+            have additional attributes (start_date, issue_number, ccv) that
+            payment gateways need but that we don't save.
+
+        2.  To keep a record of a user's bankcards and allow them to be
+            re-used.  This is normally done using the 'partner reference'.
+    """
     user = models.ForeignKey(AUTH_USER_MODEL, related_name='bankcards',
                              verbose_name=_("User"))
     card_type = models.CharField(_("Card Type"), max_length=128)
-    name = models.CharField(_("Name"), max_length=255)
+
+    # Often you don't actually need the name on the bankcard
+    name = models.CharField(_("Name"), max_length=255, blank=True)
+
+    # We store an obfuscated version of the card number, just showing the last
+    # 4 digits.
     number = models.CharField(_("Number"), max_length=32)
+
+    # We store a date even though only the month is visible.  Bankcards are
+    # valid until the last day of the month.
     expiry_date = models.DateField(_("Expiry Date"))
 
     # For payment partners who are storing the full card details for us
     partner_reference = models.CharField(
         _("Partner Reference"), max_length=255, blank=True)
+
+    # Temporary data not persisted to the DB
+    start_date = None
+    issue_number = None
+    ccv = None
+
+    def __init__(self, *args, **kwargs):
+        # Pop off the temporary data
+        self.start_date = kwargs.pop('start_date', None)
+        self.issue_number = kwargs.pop('issue_number', None)
+        self.ccv = kwargs.pop('ccv', None)
+        super(AbstractBankcard, self).__init__(*args, **kwargs)
 
     class Meta:
         abstract = True
@@ -222,8 +255,10 @@ class AbstractBankcard(models.Model):
         verbose_name_plural = _("Bankcards")
 
     def save(self, *args, **kwargs):
-        self.number = self._get_obfuscated_number()
+        if not self.number.startswith('X'):
+            # This is the first time this card instance is being saved.  We
+            # remove all sensitive data
+            self.card_type = bankcards.bankcard_type(self.number)
+            self.number = u"XXXX-XXXX-XXXX-%s" % self.number[-4:]
+            self.start_date = self.issue_number = self.ccv = None
         super(AbstractBankcard, self).save(*args, **kwargs)
-
-    def _get_obfuscated_number(self):
-        return u"XXXX-XXXX-XXXX-%s" % self.number[-4:]
