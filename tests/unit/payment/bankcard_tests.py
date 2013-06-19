@@ -8,6 +8,7 @@ fixture_data = {
     bankcards.MASTERCARD: ('5500000000000004',),
     bankcards.DISCOVER: ('6011000000000004',),
     bankcards.AMEX: ('340000000000009',),
+    None: ('1000010000000007',)  # Magic number
 }
 
 
