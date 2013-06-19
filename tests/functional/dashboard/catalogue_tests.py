@@ -99,7 +99,7 @@ class TestAStaffUser(WebTestCase):
                 self.fail('product has stock record but should not')
 
     def test_can_delete_an_individual_product(self):
-        product = create_product()
+        product = create_product(partner_users=[self.user, ])
         stockrecord = product.stockrecord
 
         category = Category.add_root(name='Test Category')
@@ -123,7 +123,8 @@ class TestAStaffUser(WebTestCase):
                           ProductCategory.objects.get, id=product_category.id)
 
     def test_can_delete_a_canonical_product(self):
-        canonical_product = create_product(title="Canonical Product")
+        canonical_product = create_product(title="Canonical Product",
+                                           partner_users=[self.user,])
 
         product = create_product(title="Variant 1", parent=canonical_product)
         stockrecord = product.stockrecord
@@ -154,7 +155,8 @@ class TestAStaffUser(WebTestCase):
 class TestANonStaffUser(TestAStaffUser):
     is_staff = False
     is_anonymous = False
-    permissions = ['partner.dashboard_access', 'catalogue.change_product']
+    permissions = ['partner.dashboard_access', 'catalogue.change_product',
+                   'catalogue.delete_product']
 
     def setUp(self):
         super(TestANonStaffUser, self).setUp()
@@ -166,3 +168,4 @@ class TestANonStaffUser(TestAStaffUser):
             perm = Permission.objects.get(content_type__app_label=app_label,
                                           codename=codename)
             self.user.user_permissions.add(perm)
+

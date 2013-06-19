@@ -1,4 +1,4 @@
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.views import generic
 from django.db.models import get_model
 from django.http import HttpResponseRedirect, Http404
@@ -281,6 +281,20 @@ class ProductDeleteView(generic.DeleteView):
     template_name = 'dashboard/catalogue/product_delete.html'
     model = Product
     context_object_name = 'product'
+
+    def get_object(self, queryset=None):
+        object = super(ProductDeleteView, self).get_object(queryset)
+        try:
+            access_allowed = (self.request.user.is_staff or
+                              object.stockrecord.partner.users.filter(
+                                  pk=self.request.user.pk).exists())
+        except (AttributeError, ObjectDoesNotExist):
+            raise PermissionDenied
+        else:
+            if access_allowed:
+                return object
+            else:
+                raise PermissionDenied
 
     def get_success_url(self):
         msg =_("Deleted product '%s'") % self.object.title
