@@ -1,12 +1,13 @@
 from django.conf.urls import patterns, url
 
 from oscar.core.application import Application
-from oscar.views.decorators import staff_member_required
 from oscar.apps.dashboard.users import views
 
 
 class UserManagementApplication(Application):
     name = None
+    default_permissions = ['is_staff', ]
+
     index_view = views.IndexView
     user_detail_view = views.UserDetailView
     alert_list_view = views.ProductAlertListView
@@ -33,9 +34,6 @@ class UserManagementApplication(Application):
 
         )
         return self.post_process_urls(urlpatterns)
-
-    def get_url_decorator(self, url_name):
-        return staff_member_required
 
 
 application = UserManagementApplication()

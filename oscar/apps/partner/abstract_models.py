@@ -74,6 +74,7 @@ class AbstractPartner(models.Model):
         super(AbstractPartner, self).save(*args, **kwargs)
 
     class Meta:
+        permissions = (('dashboard_access', _('Can access dashboard')), )
         verbose_name = _('Fulfillment partner')
         verbose_name_plural = _('Fulfillment partners')
         abstract = True

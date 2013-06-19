@@ -1,5 +1,4 @@
 from django.conf.urls import patterns, url
-from oscar.views.decorators import staff_member_required
 
 from oscar.core.application import Application
 from oscar.apps.dashboard.offers import views
@@ -7,6 +6,8 @@ from oscar.apps.dashboard.offers import views
 
 class OffersDashboardApplication(Application):
     name = None
+    default_permissions = ['is_staff', ]
+
     list_view = views.OfferListView
 
     metadata_view = views.OfferMetaDataView
@@ -49,9 +50,6 @@ class OffersDashboardApplication(Application):
                 name='offer-detail'),
         )
         return self.post_process_urls(urlpatterns)
-
-    def get_url_decorator(self, url_name):
-        return staff_member_required
 
 
 application = OffersDashboardApplication()

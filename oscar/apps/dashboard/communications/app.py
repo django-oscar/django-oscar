@@ -1,5 +1,4 @@
 from django.conf.urls import patterns, url
-from oscar.views.decorators import staff_member_required
 
 from oscar.core.application import Application
 from oscar.apps.dashboard.communications import views
@@ -7,6 +6,8 @@ from oscar.apps.dashboard.communications import views
 
 class CommsDashboardApplication(Application):
     name = None
+    default_permissions = ['is_staff', ]
+
     list_view = views.ListView
     update_view = views.UpdateView
 
@@ -17,9 +18,6 @@ class CommsDashboardApplication(Application):
                 name='comms-update'),
         )
         return self.post_process_urls(urlpatterns)
-
-    def get_url_decorator(self, url_name):
-        return staff_member_required
 
 
 application = CommsDashboardApplication()

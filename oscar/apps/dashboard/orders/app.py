@@ -1,12 +1,13 @@
 from django.conf.urls import patterns, url
 
-from oscar.views.decorators import staff_member_required
 from oscar.core.application import Application
 from oscar.apps.dashboard.orders import views
 
 
 class OrdersDashboardApplication(Application):
     name = None
+    default_permissions = ['is_staff', ]
+
     order_list_view = views.OrderListView
     order_detail_view = views.OrderDetailView
     shipping_address_view = views.ShippingAddressUpdateView
@@ -27,9 +28,6 @@ class OrdersDashboardApplication(Application):
                 self.shipping_address_view.as_view(), name='order-shipping-address'),
         )
         return self.post_process_urls(urlpatterns)
-
-    def get_url_decorator(self, url_name):
-        return staff_member_required
 
 
 application = OrdersDashboardApplication()

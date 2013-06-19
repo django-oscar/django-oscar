@@ -1,12 +1,12 @@
 from django.conf.urls import patterns, url
 
-from oscar.views.decorators import staff_member_required
 from oscar.core.application import Application
 from oscar.apps.dashboard.ranges import views
 
 
 class RangeDashboardApplication(Application):
     name = None
+    default_permissions = ['is_staff', ]
 
     list_view = views.RangeListView
     create_view = views.RangeCreateView
@@ -23,9 +23,6 @@ class RangeDashboardApplication(Application):
             url(r'^(?P<pk>\d+)/products/$', self.products_view.as_view(), name='range-products'),
         )
         return self.post_process_urls(urlpatterns)
-
-    def get_url_decorator(self, url_name):
-        return staff_member_required
 
 
 application = RangeDashboardApplication()

@@ -1,3 +1,4 @@
+from django.contrib.auth.models import Permission
 from django.db.models import get_model
 from django.core.urlresolvers import reverse
 
@@ -149,3 +150,19 @@ class TestAStaffUser(WebTestCase):
                           StockRecord.objects.get, id=stockrecord.id)
         self.assertRaises(ProductCategory.DoesNotExist,
                           ProductCategory.objects.get, id=product_category.id)
+
+class TestANonStaffUser(TestAStaffUser):
+    is_staff = False
+    is_anonymous = False
+    permissions = ['partner.dashboard_access', 'catalogue.change_product']
+
+    def setUp(self):
+        super(TestANonStaffUser, self).setUp()
+        self.add_permissions()
+
+    def add_permissions(self):
+        for permission in self.permissions:
+            app_label, _, codename = permission.partition('.')
+            perm = Permission.objects.get(content_type__app_label=app_label,
+                                          codename=codename)
+            self.user.user_permissions.add(perm)
