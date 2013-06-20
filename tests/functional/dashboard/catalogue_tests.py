@@ -152,6 +152,14 @@ class TestAStaffUser(WebTestCase):
         self.assertRaises(ProductCategory.DoesNotExist,
                           ProductCategory.objects.get, id=product_category.id)
 
+    def test_can_list_her_products(self):
+        product1 = create_product(partner_users=[self.user, ])
+        product2 = create_product(partner="sneaky", partner_users=[])
+        page = self.get(reverse('dashboard:catalogue-product-list'))
+        assert product1 in page.context['object_list']
+        assert product2 in page.context['object_list']
+
+
 class TestANonStaffUser(TestAStaffUser):
     is_staff = False
     is_anonymous = False
@@ -168,4 +176,11 @@ class TestANonStaffUser(TestAStaffUser):
             perm = Permission.objects.get(content_type__app_label=app_label,
                                           codename=codename)
             self.user.user_permissions.add(perm)
+
+    def test_can_list_her_products(self):
+        product1 = create_product(partner_users=[self.user, ])
+        product2 = create_product(partner="sneaky", partner_users=[])
+        page = self.get(reverse('dashboard:catalogue-product-list'))
+        assert product1 in page.context['object_list']
+        assert product2 not in page.context['object_list']
 

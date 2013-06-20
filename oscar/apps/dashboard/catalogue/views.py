@@ -48,6 +48,13 @@ class ProductListView(generic.ListView):
         ctx['queryset_description'] = self.description
         return ctx
 
+    def get_queryset_for_user(self, user):
+        if user.is_staff:
+            return self.model._default_manager.all()
+        else:
+            return self.model._default_manager.filter(
+                stockrecord__partner__users__pk=user.pk)
+
     def get_queryset(self):
         """
         Build the queryset for this list and also update the title that
@@ -55,7 +62,8 @@ class ProductListView(generic.ListView):
         """
         description_ctx = {'upc_filter': '',
                            'title_filter': ''}
-        queryset = self.model.objects.all().order_by('-date_created').prefetch_related(
+        queryset = self.get_queryset_for_user(self.request.user)
+        queryset = queryset.order_by('-date_created').prefetch_related(
             'product_class', 'stockrecord__partner')
         self.form = self.form_class(self.request.GET)
         if not self.form.is_valid():
@@ -66,11 +74,14 @@ class ProductListView(generic.ListView):
 
         if data['upc']:
             queryset = queryset.filter(upc=data['upc'])
-            description_ctx['upc_filter'] = _(" including an item with UPC '%s'") % data['upc']
+            description_ctx['upc_filter'] = _(
+                " including an item with UPC '%s'") % data['upc']
 
         if data['title']:
-            queryset = queryset.filter(title__icontains=data['title']).distinct()
-            description_ctx['title_filter'] = _(" including an item with title matching '%s'") % data['title']
+            queryset = queryset.filter(
+                title__icontains=data['title']).distinct()
+            description_ctx['title_filter'] = _(
+                " including an item with title matching '%s'") % data['title']
 
         self.description = self.description_template % description_ctx
         return queryset
