@@ -130,43 +130,21 @@ class EventHandler(object):
                     qty_consumed += qty_to_include
         return total
 
-    def has_any_line_passed_shipping_event(self, order, lines, line_quantities,
-                                           event_type_name):
-        """
-        Test whether any one of the lines passed has been through the event
-        specified.  That is, the entire quantity of any line has been involved
-        in a shipping event of the passed type.
-        """
-        # Determine quantity of each line NOT involved in this shipping event
-        # and create a dict of line.id -> remaining qty
-        remaining_qtys = [line.quantity - qty for line, qty in zip(lines, line_quantities)]
-        spare_line_qtys = dict(zip([line.id for line in lines], remaining_qtys))
-
-        events = order.shipping_events.filter(
-            event_type__name=event_type_name)
-        for event in events:
-            for line_qty in event.line_quantities.all():
-                line_id = line_qty.line.id
-                if line_id in spare_line_qtys:
-                    spare_line_qtys[line_id] -= line_qty.quantity
-        return any(map(lambda x: x < 0, spare_line_qtys.values()))
-
-    def have_lines_passed_shipping_event(self, order, lines, line_quantities, event_name):
+    def have_lines_passed_shipping_event(self, order, lines, line_quantities,
+                                         event_type):
         """
         Test whether the passed lines and quantities have been through the
         specified shipping event.
 
-        This is useful for validating if certain shipping events are allowed (ie
-        you can't return something before it has shipped).
+        This is useful for validating if certain shipping events are allowed
+        (ie you can't return something before it has shipped).
         """
-        events = order.shipping_events.filter(event_type__name=event_name)
-        required_line_qtys = dict(zip([line.id for line in lines], line_quantities))
-        for event in events:
-            for line_qty in event.line_quantities.all():
-                line_id = line_qty.line.id
-                if line_id in required_line_qtys:
-                    required_line_qtys[line_id] -= line_qty.quantity
-        return not any(map(lambda x: x > 0, required_line_qtys.values()))
+        for line, line_qty in zip(lines, line_quantities):
+            if line.shipping_event_quantity(event_type) < line_qty:
+                return False
+        return True
+
+    # Stock stuff
 
     def are_stock_allocations_available(self, lines, line_quantities):
         """

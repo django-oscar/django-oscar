@@ -588,7 +588,9 @@ class AbstractLine(models.Model):
 
 
 class AbstractLineAttribute(models.Model):
-    """An attribute of a line."""
+    """
+    An attribute of a line
+    """
     line = models.ForeignKey(
         'order.Line', related_name='attributes',
         verbose_name=_("Line"))

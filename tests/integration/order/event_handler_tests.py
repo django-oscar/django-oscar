@@ -27,6 +27,22 @@ class TestEventHandler(TestCase):
         event = events[0]
         self.assertEqual('Shipped', event.event_type.name)
 
+    def test_verifies_lines_has_passed_shipping_event(self):
+        basket = Basket.objects.create()
+        basket.add_product(create_product(price=D('10.00')), 5)
+        order = create_order(basket=basket)
+
+        lines = order.lines.all()
+        self.handler.handle_shipping_event(
+            order, self.shipped, lines, [4])
+
+        self.assertTrue(self.handler.have_lines_passed_shipping_event(
+            order, lines, [3], self.shipped))
+        self.assertTrue(self.handler.have_lines_passed_shipping_event(
+            order, lines, [4], self.shipped))
+        self.assertFalse(self.handler.have_lines_passed_shipping_event(
+            order, lines, [5], self.shipped))
+
     def test_prevents_event_quantities_higher_than_original_line(self):
         basket = Basket.objects.create()
         basket.add_product(create_product(price=D('10.00')), 5)
