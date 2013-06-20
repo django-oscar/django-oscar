@@ -16,6 +16,8 @@ class UserManagementApplication(Application):
     def get_urls(self):
         urlpatterns = patterns('',
             url(r'^$', self.index_view.as_view(), name='users-index'),
+            url(r'^(?P<pk>\w+)/$',
+                self.user_detail_view.as_view(), name='user-detail'),
 
             # Alerts
             url(r'^alerts/(?P<pk>\d+)/delete/$',
@@ -27,10 +29,6 @@ class UserManagementApplication(Application):
             url(r'^alerts/$',
                 self.alert_list_view.as_view(),
                 name='user-alert-list'),
-
-            url(r'^(?P<pk>[-\w]+)/$',
-                self.user_detail_view.as_view(), name='user-detail'),
-
         )
         return self.post_process_urls(urlpatterns)
 

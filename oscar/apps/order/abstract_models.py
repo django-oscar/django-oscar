@@ -322,12 +322,14 @@ class AbstractLine(models.Model):
     Not using a line model as it's difficult to capture and payment
     information when it splits across a line.
     """
-    order = models.ForeignKey('order.Order', related_name='lines', verbose_name=_("Order"))
+    order = models.ForeignKey(
+        'order.Order', related_name='lines', verbose_name=_("Order"))
 
-    # We store the partner, their SKU and the title for cases where the product has been
-    # deleted from the catalogue.  We also store the partner name in case the partner
-    # gets deleted at a later date.
-    partner = models.ForeignKey('partner.Partner', related_name='order_lines', blank=True, null=True,
+    # We store the partner, their SKU and the title for cases where the product
+    # has been deleted from the catalogue.  We also store the partner name in
+    # case the partner gets deleted at a later date.
+    partner = models.ForeignKey(
+        'partner.Partner', related_name='order_lines', blank=True, null=True,
         on_delete=models.SET_NULL, verbose_name=_("Partner"))
     partner_name = models.CharField(_("Partner name"), max_length=128)
     partner_sku = models.CharField(_("Partner SKU"), max_length=128)
@@ -335,48 +337,77 @@ class AbstractLine(models.Model):
     title = models.CharField(_("Title"), max_length=255)
     upc = models.CharField(_("UPC"), max_length=128, blank=True, null=True)
 
-    # We don't want any hard links between orders and the products table so we allow
-    # this link to be NULLable.
-    product = models.ForeignKey('catalogue.Product', on_delete=models.SET_NULL, blank=True, null=True,
+    # We don't want any hard links between orders and the products table so we
+    # allow this link to be NULLable.
+    product = models.ForeignKey(
+        'catalogue.Product', on_delete=models.SET_NULL, blank=True, null=True,
         verbose_name=_("Product"))
     quantity = models.PositiveIntegerField(_("Quantity"), default=1)
 
     # Price information (these fields are actually redundant as the information
     # can be calculated from the LinePrice models
-    line_price_incl_tax = models.DecimalField(_("Price (inc. tax)"), decimal_places=2, max_digits=12)
-    line_price_excl_tax = models.DecimalField(_("Price (excl. tax)"), decimal_places=2, max_digits=12)
+    line_price_incl_tax = models.DecimalField(
+        _("Price (inc. tax)"), decimal_places=2, max_digits=12)
+    line_price_excl_tax = models.DecimalField(
+        _("Price (excl. tax)"), decimal_places=2, max_digits=12)
 
     # Price information before discounts are applied
-    line_price_before_discounts_incl_tax = models.DecimalField(_("Price before discounts (inc. tax)"),
+    line_price_before_discounts_incl_tax = models.DecimalField(
+        _("Price before discounts (inc. tax)"),
         decimal_places=2, max_digits=12)
-    line_price_before_discounts_excl_tax = models.DecimalField(_("Price before discounts (excl. tax)"),
+    line_price_before_discounts_excl_tax = models.DecimalField(
+        _("Price before discounts (excl. tax)"),
         decimal_places=2, max_digits=12)
 
     # REPORTING FIELDS
-    # Cost price (the price charged by the fulfilment partner for this product).
-    unit_cost_price = models.DecimalField(_("Unit Cost Price"), decimal_places=2, max_digits=12, blank=True, null=True)
+    # Cost price (the price charged by the fulfilment partner for this
+    # product).
+    unit_cost_price = models.DecimalField(
+        _("Unit Cost Price"), decimal_places=2, max_digits=12, blank=True,
+        null=True)
     # Normal site price for item (without discounts)
-    unit_price_incl_tax = models.DecimalField(_("Unit Price (inc. tax)"),decimal_places=2, max_digits=12,
+    unit_price_incl_tax = models.DecimalField(
+        _("Unit Price (inc. tax)"), decimal_places=2, max_digits=12,
         blank=True, null=True)
-    unit_price_excl_tax = models.DecimalField(_("Unit Price (excl. tax)"), decimal_places=2, max_digits=12,
+    unit_price_excl_tax = models.DecimalField(
+        _("Unit Price (excl. tax)"), decimal_places=2, max_digits=12,
         blank=True, null=True)
     # Retail price at time of purchase
-    unit_retail_price = models.DecimalField(_("Unit Retail Price"), decimal_places=2, max_digits=12,
+    unit_retail_price = models.DecimalField(
+        _("Unit Retail Price"), decimal_places=2, max_digits=12,
         blank=True, null=True)
 
     # Partner information
-    partner_line_reference = models.CharField(_("Partner reference"), max_length=128, blank=True, null=True,
-        help_text=_("This is the item number that the partner uses within their system"))
-    partner_line_notes = models.TextField(_("Partner Notes"), blank=True, null=True)
+    partner_line_reference = models.CharField(
+        _("Partner reference"), max_length=128, blank=True, null=True,
+        help_text=_("This is the item number that the partner uses "
+                    "within their system"))
+    partner_line_notes = models.TextField(
+        _("Partner Notes"), blank=True, null=True)
 
-    # Partners often want to assign some status to each line to help with their own
-    # business processes.
-    status = models.CharField(_("Status"), max_length=255, null=True, blank=True)
+    # Partners often want to assign some status to each line to help with their
+    # own business processes.
+    status = models.CharField(_("Status"), max_length=255,
+                              null=True, blank=True)
 
     # Estimated dispatch date - should be set at order time
-    est_dispatch_date = models.DateField(_("Estimated Dispatch Date"), blank=True, null=True)
+    est_dispatch_date = models.DateField(
+        _("Estimated Dispatch Date"), blank=True, null=True)
 
     pipeline = getattr(settings,  'OSCAR_LINE_STATUS_PIPELINE', {})
+
+    class Meta:
+        abstract = True
+        verbose_name = _("Order Line")
+        verbose_name_plural = _("Order Lines")
+
+    def __unicode__(self):
+        if self.product:
+            title = self.product.title
+        else:
+            title = _('<missing product>')
+        return _("Product '%(name)s', quantity '%(qty)s'") % {
+            'name': title, 'qty': self.quantity}
 
     @classmethod
     def all_statuses(cls):
@@ -432,10 +463,14 @@ class AbstractLine(models.Model):
     def unit_price_tax(self):
         return self.unit_price_incl_tax - self.unit_price_excl_tax
 
+    # Shipping status helpers
+
     @property
     def shipping_status(self):
-        """Returns a string summary of the shipping status of this line"""
-        status_map = self.shipping_event_breakdown()
+        """
+        Returns a string summary of the shipping status of this line
+        """
+        status_map = self.shipping_event_breakdown
         if not status_map:
             return ''
 
@@ -446,8 +481,9 @@ class AbstractLine(models.Model):
                 events.append(event_dict['name'])
                 last_complete_event_name = event_dict['name']
             else:
-                events.append("%s (%d/%d items)" % (event_dict['name'],
-                                                    event_dict['quantity'], self.quantity))
+                events.append("%s (%d/%d items)" % (
+                    event_dict['name'], event_dict['quantity'],
+                    self.quantity))
 
         if last_complete_event_name == status_map.values()[-1]['name']:
             return last_complete_event_name
@@ -460,10 +496,28 @@ class AbstractLine(models.Model):
         """
         if not quantity:
             quantity = self.quantity
-        for name, event_dict in self.shipping_event_breakdown().items():
+        for name, event_dict in self.shipping_event_breakdown.items():
             if name == event_type.name and event_dict['quantity'] == quantity:
                 return True
         return False
+
+    @property
+    def shipping_event_breakdown(self):
+        """
+        Returns a dict of shipping events that this line has been through
+        """
+        status_map = {}
+        for event in self.shipping_events.all():
+            event_type = event.event_type
+            event_name = event_type.name
+            event_quantity = event.line_quantities.get(line=self).quantity
+            if event_name in status_map:
+                status_map[event_name]['quantity'] += event_quantity
+            else:
+                status_map[event_name] = {'event_type': event_type,
+                                          'name': event_name,
+                                          'quantity': event_quantity}
+        return status_map
 
     @property
     def is_product_deleted(self):
@@ -493,38 +547,9 @@ class AbstractLine(models.Model):
             return False, reason
         return True, None
 
-    def shipping_event_breakdown(self):
-        """
-        Returns a dict of shipping events that this line has been through
-        """
-        status_map = {}
-        for event in self.shippingevent_set.all():
-            event_type = event.event_type
-            event_name = event_type.name
-            event_quantity = event.line_quantities.get(line=self).quantity
-            if event_name in status_map:
-                status_map[event_name]['quantity'] += event_quantity
-            else:
-                status_map[event_name] = {'name': event_name,
-                                          'event_type': event.event_type,
-                                          'quantity': event_quantity}
-        return status_map
-
-    class Meta:
-        abstract = True
-        verbose_name = _("Order Line")
-        verbose_name_plural = _("Order Lines")
-
-    def __unicode__(self):
-        if self.product:
-            title = self.product.title
-        else:
-            title = _('<missing product>')
-        return _("Product '%(name)s', quantity '%(qty)s'") % {'name': title, 'qty': self.quantity}
-
 
 class AbstractLineAttribute(models.Model):
-    u"""An attribute of a line."""
+    """An attribute of a line."""
     line = models.ForeignKey('order.Line', related_name='attributes', verbose_name=_("Line"))
     option = models.ForeignKey('catalogue.Option', null=True, on_delete=models.SET_NULL,
         related_name="line_attributes", verbose_name=_("Option"))
@@ -541,7 +566,7 @@ class AbstractLineAttribute(models.Model):
 
 
 class AbstractLinePrice(models.Model):
-    u"""
+    """
     For tracking the prices paid for each unit within a line.
 
     This is necessary as offers can lead to units within a line
@@ -605,10 +630,13 @@ class AbstractPaymentEvent(models.Model):
     * 2 lines have been refunded
     """
     order = models.ForeignKey(
-        'order.Order', related_name='payment_events', verbose_name=_("Order"))
-    amount = models.DecimalField(_("Amount"), decimal_places=2, max_digits=12)
+        'order.Order', related_name='payment_events',
+        verbose_name=_("Order"))
+    amount = models.DecimalField(
+        _("Amount"), decimal_places=2, max_digits=12)
     lines = models.ManyToManyField(
-        'order.Line', through='PaymentEventQuantity', verbose_name=_("Lines"))
+        'order.Line', through='PaymentEventQuantity',
+        verbose_name=_("Lines"))
     event_type = models.ForeignKey(
         'order.PaymentEventType', verbose_name=_("Event Type"))
     date = models.DateTimeField(_("Date Created"), auto_now_add=True)
@@ -629,8 +657,12 @@ class PaymentEventQuantity(models.Model):
     """
     A "through" model linking lines to payment events
     """
-    event = models.ForeignKey('order.PaymentEvent', related_name='line_quantities', verbose_name=_("Event"))
-    line = models.ForeignKey('order.Line', verbose_name=_("Line"))
+    event = models.ForeignKey(
+        'order.PaymentEvent', related_name='line_quantities',
+        verbose_name=_("Event"))
+    line = models.ForeignKey(
+        'order.Line', related_name="payment_event_quantities",
+        verbose_name=_("Line"))
     quantity = models.PositiveIntegerField(_("Quantity"))
 
     class Meta:
@@ -646,10 +678,15 @@ class AbstractShippingEvent(models.Model):
     An event is something which happens to a group of lines such as
     1 item being dispatched.
     """
-    order = models.ForeignKey('order.Order', related_name='shipping_events', verbose_name=_("Order"))
-    lines = models.ManyToManyField('order.Line', through='ShippingEventQuantity', verbose_name=_("Lines"))
-    event_type = models.ForeignKey('order.ShippingEventType', verbose_name=_("Event Type"))
-    notes = models.TextField(_("Event notes"), blank=True, null=True,
+    order = models.ForeignKey(
+        'order.Order', related_name='shipping_events', verbose_name=_("Order"))
+    lines = models.ManyToManyField(
+        'order.Line', related_name='shipping_events',
+        through='ShippingEventQuantity', verbose_name=_("Lines"))
+    event_type = models.ForeignKey(
+        'order.ShippingEventType', verbose_name=_("Event Type"))
+    notes = models.TextField(
+        _("Event notes"), blank=True, null=True,
         help_text=_("This could be the dispatch reference, or a tracking number"))
     date = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
@@ -671,8 +708,12 @@ class ShippingEventQuantity(models.Model):
     """
     A "through" model linking lines to shipping events
     """
-    event = models.ForeignKey('order.ShippingEvent', related_name='line_quantities', verbose_name=_("Event"))
-    line = models.ForeignKey('order.Line', verbose_name=_("Line"))
+    event = models.ForeignKey(
+        'order.ShippingEvent', related_name='line_quantities',
+        verbose_name=_("Event"))
+    line = models.ForeignKey(
+        'order.Line', related_name="shipping_event_quantities",
+        verbose_name=_("Line"))
     quantity = models.PositiveIntegerField(_("Quantity"))
 
     class Meta:

@@ -1,12 +1,11 @@
 {% extends 'dashboard/layout.html' %}
-
 {% load url from future %}
-
 {% load currency_filters %}
 {% load sorting_tags %}
 {% load i18n %}
 
 {% block body_class %}orders{% endblock %}
+
 {% block title %}
     {% trans "Order management" %} | {{ block.super }}
 {% endblock %}
@@ -92,31 +91,35 @@
 
                 <thead>
                     <tr>
-                        <th>
-                            {% trans "Select all" %}
-                        </th>
+                        <th>{% trans "Select all" %}</th>
                         <th>{% anchor 'number' _("Order number") %}</th>
-                        <th>{% trans "Total inc tax" %}</th>
-                        <th>{% trans "Date of purchase" %}</th>
+                        <th>{% anchor 'total_incl_tax' _("Total inc tax") %}</th>
                         <th>{% trans "Number of items" %}</th>
                         <th>{% trans "Status" %}</th>
                         <th>{% trans "Customer" %}</th>
                         <th>{% trans "Shipping address" %}</th>
                         <th>{% trans "Billing address" %}</th>
+                        <th>{% trans "Date of purchase" %}</th>
                         <th></th>
                     </tr>
                 </thead>
                 {% for order in orders %}
                     <tr>
                         <td><input type="checkbox" name="selected_order" class="selected_order" value="{{ order.id }}"/>
-                            <td>{{ order.number }}</td>
+                            <td><a href="{% url 'dashboard:order-detail' order.number %}">{{ order.number }}</a></td>
                             <td>{{ order.total_incl_tax|currency }}</td>
-                            <td>{{ order.date_placed }}</td>
                             <td>{{ order.num_items }}</td>
                             <td>{{ order.status|default:"-" }}</td>
-                            <td>{{ order.email }}</td>
+                            <td>
+                                {% if order.is_anonymous %}
+                                    <a href="{% url 'dashboard:user-detail' order.user.id %}">{{ order.user.get_full_name }}</a>
+                                {% else %}
+                                    {{ order.email }}
+                                {% endif %}
+                            </td>
                             <td>{{ order.shipping_address|default:"-" }}</td>
                             <td>{{ order.billing_address|default:"-" }}</td>
+                            <td>{{ order.date_placed }}</td>
                             <td>
                                 <a class="btn btn-info" href="{% url 'dashboard:order-detail' order.number %}">{% trans "View" %}</a>
                             </td>

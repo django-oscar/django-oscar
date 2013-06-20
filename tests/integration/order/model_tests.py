@@ -124,7 +124,7 @@ class LineTests(TestCase):
     def test_shipping_event_history(self):
         self.event(self.order_placed, 3)
         self.event(self.dispatched, 1)
-        history = self.line.shipping_event_breakdown()
+        history = self.line.shipping_event_breakdown
         self.assertEqual(3, history['Order placed']['quantity'])
         self.assertEqual(1, history['Dispatched']['quantity'])
 

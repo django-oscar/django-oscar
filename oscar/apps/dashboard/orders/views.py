@@ -232,7 +232,7 @@ class OrderListView(ListView, BulkEditMixin):
 
     def sort_queryset(self, queryset):
         sort = self.request.GET.get('sort', None)
-        allowed_sorts = ['number',]
+        allowed_sorts = ['number', 'total_incl_tax']
         if sort in allowed_sorts:
             direction = self.request.GET.get('dir', 'desc')
             sort = ('-' if direction == 'desc' else '') + sort
@@ -525,15 +525,7 @@ class LineDetailView(DetailView):
     template_name = 'dashboard/orders/line_detail.html'
 
     def get_object(self, queryset=None):
-        try:
-            return self.model.objects.get(pk=self.kwargs['line_id'])
-        except self.model.DoesNotExist:
-            raise Http404()
-
-    def get_context_data(self, **kwargs):
-        ctx = super(LineDetailView, self).get_context_data(**kwargs)
-        ctx['order'] = self.object.order
-        return ctx
+        return get_object_or_404(self.model, pk=self.kwargs['line_id'])
 
 
 def get_changes_between_models(model1, model2, excludes=None):

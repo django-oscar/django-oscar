@@ -7,6 +7,12 @@ PaymentEventQuantity = get_model('order', 'PaymentEventQuantity')
 
 
 class EventHandler(object):
+    """
+    Handle requested order events.
+
+    This is an important class: it houses the core logic of your shop's order
+    processing pipeline.
+    """
 
     def handle_order_status_change(self, order, new_status):
         """
@@ -18,32 +24,42 @@ class EventHandler(object):
         """
         Handle a shipping event for a given order.
 
-        This might involve taking payment, sending messages and 
+        This might involve taking payment, sending messages and
         creating the event models themeselves.  You will generally want to
         override this method to implement the specifics of you order processing
         pipeline.
         """
         self.create_shipping_event(order, event_type, lines, line_quantities, **kwargs)
 
-    def has_any_line_passed_shipping_event(self, order, lines, line_quantities, event_name):
+    # Query methods
+    # -------------
+    # These are to help determine the status of lines
+
+    def has_any_line_passed_shipping_event(self, order, lines, line_quantities,
+                                           event_type_name):
         """
         Test whether any one of the lines passed has been through the event
-        specified.
+        specified.  That is, the entire quantity of any line has been involved
+        in a shipping event of the passed type.
         """
-        events = order.shipping_events.filter(event_type__name=event_name)
+        # Determine quantity of each line NOT involved in this shipping event
+        # and create a dict of line.id -> remaining qty
         remaining_qtys = [line.quantity - qty for line, qty in zip(lines, line_quantities)]
         spare_line_qtys = dict(zip([line.id for line in lines], remaining_qtys))
+
+        events = order.shipping_events.filter(
+            event_type__name=event_type_name)
         for event in events:
             for line_qty in event.line_quantities.all():
                 line_id = line_qty.line.id
                 if line_id in spare_line_qtys:
                     spare_line_qtys[line_id] -= line_qty.quantity
-        return any(map(lambda x: x<0, spare_line_qtys.values()))
+        return any(map(lambda x: x < 0, spare_line_qtys.values()))
 
     def have_lines_passed_shipping_event(self, order, lines, line_quantities, event_name):
         """
         Test whether the passed lines and quantities have been through the
-        specified shipping event.  
+        specified shipping event.
 
         This is useful for validating if certain shipping events are allowed (ie
         you can't return something before it has shipped).
@@ -55,7 +71,18 @@ class EventHandler(object):
                 line_id = line_qty.line.id
                 if line_id in required_line_qtys:
                     required_line_qtys[line_id] -= line_qty.quantity
-        return not any(map(lambda x: x>0, required_line_qtys.values()))
+        return not any(map(lambda x: x > 0, required_line_qtys.values()))
+
+    def get_line_quantity_passed_payment_event(self, line, event_type_name):
+        """
+        Return the quantity of a line that has been involved in the passed
+        event type.
+
+        This can be used to determine what quantity of a line has already been
+        paid for (eg been involved in a SETTLE payment event).
+        """
+        eqs = line.payment_event_quantities.all()
+        return sum([e.quantity for e in eqs])
 
     def handle_payment_event(self, order, event_type, amount, lines=None,
                              line_quantities=None, **kwargs):
@@ -89,7 +116,9 @@ class EventHandler(object):
         """
         for line, qty in zip(lines, line_quantities):
             line.product.stockrecord.cancel_allocation(qty)
-    
+
+    # Create event instances
+
     def create_shipping_event(self, order, event_type, lines, line_quantities,
                               **kwargs):
         reference = kwargs.get('reference', None)
