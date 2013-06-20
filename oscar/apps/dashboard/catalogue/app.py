@@ -9,7 +9,7 @@ class CatalogueApplication(Application):
 
     default_permissions = ['is_staff', ], ['partner.dashboard_access']
     permissions_map = _map = {
-        'catalogue-product-create': (['is_staff'], ['partner.dashboard_access', 'catalogue.change_product']),
+        'catalogue-product-create': (['is_staff'], ['partner.dashboard_access', ]),
         'catalogue-product-list':   (['is_staff'], ['partner.dashboard_access', ]),
         'catalogue-product-delete': (['is_staff'], ['partner.dashboard_access', 'catalogue.delete_product']),
     }

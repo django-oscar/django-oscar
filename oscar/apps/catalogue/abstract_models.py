@@ -402,6 +402,15 @@ class AbstractProduct(models.Model):
             return False, _("No stock available")
         return self.stockrecord.is_purchase_permitted(user, quantity, self)
 
+    def user_in_partner_users(self, user):
+        """
+        Test whether the user is in this product partner's users
+        """
+        try:
+            return self.stockrecord.partner.users.filter(pk=user.pk).exists()
+        except (AttributeError, ObjectDoesNotExist):
+            return False
+
     def add_category_from_breadcrumbs(self, breadcrumb):
         from oscar.apps.catalogue.categories import create_from_breadcrumbs
         category = create_from_breadcrumbs(breadcrumb)

@@ -1,4 +1,4 @@
-from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
+from django.core.exceptions import ObjectDoesNotExist, PermissionDenied, ImproperlyConfigured
 from django.views import generic
 from django.db.models import get_model
 from django.http import HttpResponseRedirect, Http404
@@ -31,6 +31,7 @@ ProductCategory = get_model('catalogue', 'ProductCategory')
 ProductClass = get_model('catalogue', 'ProductClass')
 StockRecord = get_model('partner', 'StockRecord')
 StockAlert = get_model('partner', 'StockAlert')
+Partner = get_model('partner', 'Partner')
 
 
 class ProductListView(generic.ListView):
@@ -123,11 +124,10 @@ class ProductCreateUpdateView(generic.UpdateView):
         is that self.object is None. We emulate this behavior.
         Additionally, self.product_class is set.
         """
-        if 'pk' in self.kwargs:  # UpdateView
-            obj = super(ProductCreateUpdateView, self).get_object(queryset)
-            self.product_class = obj.product_class
-            return obj
-        else:  # CreateView
+        user = self.request.user
+        self.require_user_stockrecord = not user.is_staff
+        self.creating = not 'pk' in self.kwargs
+        if self.creating:
             try:
                 product_class_id = self.kwargs.get('product_class_id', None)
                 self.product_class = ProductClass.objects.get(
@@ -135,7 +135,17 @@ class ProductCreateUpdateView(generic.UpdateView):
             except ObjectDoesNotExist:
                 raise Http404
             else:
+                if not (user.is_staff or user.has_perm('catalogue.add_product')):
+                    raise PermissionDenied
                 return None  # success
+        else:
+            obj = super(ProductCreateUpdateView, self).get_object(queryset)
+            self.product_class = obj.product_class
+            if user.is_staff or (user.has_perm('catalogue.change_product') and
+                                     obj.user_in_partner_users(user)):
+                return obj
+            else:
+                raise PermissionDenied
 
     def get_context_data(self, **kwargs):
         ctx = super(ProductCreateUpdateView, self).get_context_data(**kwargs)
@@ -176,15 +186,23 @@ class ProductCreateUpdateView(generic.UpdateView):
         stock record it will be passed into the form as
         ``instance``.
         """
+        form_kwargs = {'product_class': self.product_class, }
         try:
-            stockrecord = self.object.stockrecord
+            form_kwargs['instance'] = self.object.stockrecord
         except (AttributeError, StockRecord.DoesNotExist):
             # either self.object is None, or no stockrecord
-            stockrecord = None
-        return self.stockrecord_form(
-            product_class=self.product_class,
-            data=self.request.POST if self.is_stockrecord_submitted() else None,
-            instance=stockrecord)
+            form_kwargs['instance'] = None
+        if self.request.method == 'POST':
+            form_kwargs['data'] = self.request.POST
+        form = self.stockrecord_form(**form_kwargs)
+        if self.require_user_stockrecord:
+            # only show partners that have current user in their users
+            partners = Partner._default_manager.filter(users__pk=
+                                                       self.request.user.pk)
+            if len(partners) == 0:  # len instead of .count() -> only one query
+                raise ImproperlyConfigured("User can't set a valid stock record. Add her to at least one partner")
+            form.fields['partner'].queryset = partners
+        return form
 
     def form_valid(self, form):
         return self.process_all_forms(form)
@@ -197,8 +215,6 @@ class ProductCreateUpdateView(generic.UpdateView):
         Short-circuits the regular logic to have one place to have our
         logic to check all forms
         """
-        self.creating = self.object is None
-
         # Need to create the product here because the inline forms need it
         # can't use commit=False because ProductForm does not support it
         if self.creating and form.is_valid():
@@ -218,7 +234,9 @@ class ProductCreateUpdateView(generic.UpdateView):
             category_formset.is_valid(),
             image_formset.is_valid(),
             recommended_formset.is_valid(),
-            not self.is_stockrecord_submitted() or stockrecord_form.is_valid(),
+            # enforce if self.require_user_stockrecord, skip if not submitted
+            stockrecord_form.is_valid() or
+            (not self.require_user_stockrecord and not self.is_stockrecord_submitted()),
             ])
 
         if is_valid:
@@ -294,18 +312,16 @@ class ProductDeleteView(generic.DeleteView):
     context_object_name = 'product'
 
     def get_object(self, queryset=None):
+        """
+        Check permissions before returning product. The user having the
+        catalogue.delete_product permission is enforced in dashboard's app.py
+        """
         object = super(ProductDeleteView, self).get_object(queryset)
-        try:
-            access_allowed = (self.request.user.is_staff or
-                              object.stockrecord.partner.users.filter(
-                                  pk=self.request.user.pk).exists())
-        except (AttributeError, ObjectDoesNotExist):
-            raise PermissionDenied
+        user = self.request.user
+        if user.is_staff or object.user_in_partner_users(user):
+            return object
         else:
-            if access_allowed:
-                return object
-            else:
-                raise PermissionDenied
+            raise PermissionDenied
 
     def get_success_url(self):
         msg =_("Deleted product '%s'") % self.object.title

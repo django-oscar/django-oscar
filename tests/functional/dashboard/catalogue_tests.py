@@ -13,6 +13,7 @@ ProductClass = get_model('catalogue', 'ProductClass')
 ProductCategory = get_model('catalogue', 'ProductCategory')
 Category = get_model('catalogue', 'Category')
 StockRecord = get_model('partner', 'stockrecord')
+Partner = get_model('partner', 'partner')
 
 
 class TestCatalogueViews(ClientTestCase):
@@ -29,6 +30,10 @@ class TestCatalogueViews(ClientTestCase):
 
 class TestAStaffUser(WebTestCase):
     is_staff = True
+
+    def setUp(self):
+        super(TestAStaffUser, self).setUp()
+        self.partner = G(Partner)
 
     def test_can_submit_an_invalid_product_update_and_returns_to_update_page(self):
         product = G(Product, ignore_fields=['stockrecord'], parent=None)
@@ -64,11 +69,13 @@ class TestAStaffUser(WebTestCase):
         form['upc'] = '123456'
         form['title'] = 'new product'
         form['productcategory_set-0-category'] = category.id
+        form['partner'] = self.partner.id
+        form['partner_sku'] = '14'
         page = form.submit('action', index=0)
 
         self.assertEquals(Product.objects.count(), 1)
-
         product = Product.objects.all()[0]
+        self.assertEquals(product.stockrecord.partner, self.partner)
         self.assertRedirects(page, reverse('dashboard:catalogue-product',
                                            kwargs={'pk': product.id}))
 
@@ -164,11 +171,12 @@ class TestANonStaffUser(TestAStaffUser):
     is_staff = False
     is_anonymous = False
     permissions = ['partner.dashboard_access', 'catalogue.change_product',
-                   'catalogue.delete_product']
+                   'catalogue.delete_product', 'catalogue.add_product']
 
     def setUp(self):
         super(TestANonStaffUser, self).setUp()
         self.add_permissions()
+        self.partner.users.add(self.user)
 
     def add_permissions(self):
         for permission in self.permissions:
@@ -183,4 +191,14 @@ class TestANonStaffUser(TestAStaffUser):
         page = self.get(reverse('dashboard:catalogue-product-list'))
         assert product1 in page.context['object_list']
         assert product2 not in page.context['object_list']
+
+    def test_can_create_a_product_without_stockrecord(self):
+        pass
+
+    def test_can_update_a_product_without_stockrecord(self):
+        pass
+
+    def test_can_submit_an_invalid_product_update_and_returns_to_update_page(self):
+        pass
+
 
