@@ -490,16 +490,33 @@ class AbstractLine(models.Model):
 
         return ', '.join(events)
 
+    def is_shipping_event_permitted(self, event_type, quantity):
+        """
+        Test whether a shipping event with the given quantity is permitted
+        """
+        current_qty = self.shipping_event_quantity(event_type)
+        return (current_qty + quantity) <= self.quantity
+
+    def shipping_event_quantity(self, event_type):
+        """
+        Return the quantity of this line that has been involved in a shipping
+        event of the passed type.
+        """
+        result = self.shipping_event_quantities.filter(
+            event__event_type=event_type).aggregate(
+                Sum('quantity'))
+        if result['quantity__sum'] is None:
+            return 0
+        else:
+            return result['quantity__sum']
+
     def has_shipping_event_occurred(self, event_type, quantity=None):
         """
-        Check whether this line has passed a given shipping event
+        Test whether this line has passed a given shipping event
         """
         if not quantity:
             quantity = self.quantity
-        for name, event_dict in self.shipping_event_breakdown.items():
-            if name == event_type.name and event_dict['quantity'] == quantity:
-                return True
-        return False
+        return self.shipping_event_quantity(event_type) == quantity
 
     @property
     def shipping_event_breakdown(self):
@@ -687,7 +704,8 @@ class AbstractShippingEvent(models.Model):
         'order.ShippingEventType', verbose_name=_("Event Type"))
     notes = models.TextField(
         _("Event notes"), blank=True, null=True,
-        help_text=_("This could be the dispatch reference, or a tracking number"))
+        help_text=_("This could be the dispatch reference, or a "
+                    "tracking number"))
     date = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
     class Meta:
@@ -698,7 +716,8 @@ class AbstractShippingEvent(models.Model):
 
     def __unicode__(self):
         return _("Order #%(number)s, type %(type)s") % {
-                'number': self.order.number, 'type': self.event_type}
+            'number': self.order.number,
+            'type': self.event_type}
 
     def num_affected_lines(self):
         return self.lines.count()
@@ -720,52 +739,38 @@ class ShippingEventQuantity(models.Model):
         verbose_name = _("Shipping Event Quantity")
         verbose_name_plural = _("Shipping Event Quantities")
 
-    def _check_previous_events_are_complete(self):
-        """
-        Checks whether previous shipping events have passed
-        """
-        # Quantity of the proposd event must have occurred for
-        # the previous events in the sequence.
-        previous_event_types = self.event.event_type.get_prerequisites()
-        for event_type in previous_event_types:
-            quantity = ShippingEventQuantity._default_manager.filter(
-                line=self.line,
-                event__event_type=event_type).aggregate(Sum('quantity'))['quantity__sum']
-            if quantity is None or quantity < int(self.quantity):
-                raise InvalidShippingEvent(_("This shipping event is not permitted"))
-
-    def _check_new_quantity(self):
-        quantity_row = ShippingEventQuantity._default_manager.filter(line=self.line,
-                                                                     event__event_type=self.event.event_type).aggregate(Sum('quantity'))
-        previous_quantity = quantity_row['quantity__sum']
-        if previous_quantity == None:
-            previous_quantity = 0
-        if previous_quantity + self.quantity > self.line.quantity:
-            raise ValueError(_("Invalid quantity (%d) for event type (total exceeds line total)") % self.quantity)
-
     def save(self, *args, **kwargs):
         # Default quantity to full quantity of line
         if not self.quantity:
             self.quantity = self.line.quantity
-        self.quantity = int(self.quantity)
-        self._check_previous_events_are_complete()
-        self._check_new_quantity()
+        # Ensure we don't violate quantities constraint
+        if not self.line.is_shipping_event_permitted(
+                self.event.event_type, self.quantity):
+            raise InvalidShippingEvent
         super(ShippingEventQuantity, self).save(*args, **kwargs)
 
     def __unicode__(self):
-        return _("%(product)s - quantity %(qty)d") % {'product': self.line.product, 'qty': self.quantity}
+        return _("%(product)s - quantity %(qty)d") % {
+            'product': self.line.product,
+            'qty': self.quantity}
 
 
 class AbstractShippingEventType(models.Model):
     """
-    Shipping events are things like 'OrderPlaced', 'Acknowledged', 'Dispatched', 'Refunded'
+    A type of shipping/fulfillment event
+
+    Eg: 'Shipped', 'Cancelled', 'Returned'
     """
     # Name is the friendly description of an event
     name = models.CharField(_("Name"), max_length=255, unique=True)
+
     # Code is used in forms
     code = models.SlugField(_("Code"), max_length=128, unique=True)
-    is_required = models.BooleanField(_("Is Required"), default=True,
-        help_text=_("This event must be passed before the next shipping event can take place"))
+    is_required = models.BooleanField(
+        _("Is Required"), default=False,
+        help_text=_("This event must be passed before the next "
+                    "shipping event can take place"))
+
     # The normal order in which these shipping events take place
     sequence_number = models.PositiveIntegerField(_("Sequence"), default=0)
 
@@ -784,9 +789,13 @@ class AbstractShippingEventType(models.Model):
         return self.name
 
     def get_prerequisites(self):
+        """
+        Return event types that must be complete before this one
+        """
         return self.__class__._default_manager.filter(
             is_required=True,
-            sequence_number__lt=self.sequence_number).order_by('sequence_number')
+            sequence_number__lt=self.sequence_number).order_by(
+                'sequence_number')
 
 
 class AbstractOrderDiscount(models.Model):

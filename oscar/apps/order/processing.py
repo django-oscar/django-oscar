@@ -1,4 +1,5 @@
 from django.db.models.loading import get_model
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.order.exceptions import InvalidShippingEvent
 
@@ -14,13 +15,11 @@ class EventHandler(object):
     processing pipeline.
     """
 
-    def handle_order_status_change(self, order, new_status):
-        """
-        Handle a requested order status change
-        """
-        order.set_status(new_status)
+    # Core API
+    # --------
 
-    def handle_shipping_event(self, order, event_type, lines, line_quantities, **kwargs):
+    def handle_shipping_event(self, order, event_type, lines,
+                              line_quantities, **kwargs):
         """
         Handle a shipping event for a given order.
 
@@ -29,7 +28,51 @@ class EventHandler(object):
         override this method to implement the specifics of you order processing
         pipeline.
         """
-        self.create_shipping_event(order, event_type, lines, line_quantities, **kwargs)
+        self.validate_shipping_event(
+            order, event_type, lines, line_quantities, **kwargs)
+        self.create_shipping_event(
+            order, event_type, lines, line_quantities, **kwargs)
+
+    def handle_payment_event(self, order, event_type, amount, lines=None,
+                             line_quantities=None, **kwargs):
+        """
+        Handle a payment event for a given order.
+        """
+        self.create_payment_event(order, event_type, amount, lines,
+                                  line_quantities, **kwargs)
+
+    def handle_order_status_change(self, order, new_status):
+        """
+        Handle a requested order status change
+        """
+        order.set_status(new_status)
+
+    # Validation methods
+    # ------------------
+
+    def validate_shipping_event(self, order, event_type, lines,
+                                line_quantities, **kwargs):
+        """
+        Test if the requested shipping event is permitted.
+
+        If not, raise InvalidShippingEvent
+        """
+        self.validate_shipping_event_quantities(
+            order, event_type, lines, line_quantities, **kwargs)
+
+    def validate_shipping_event_quantities(
+            self, order, event_type, lines, line_quantities, **kwargs):
+        """
+        Test if the proposed quantities of the event are valid
+        """
+        errors = []
+        for line, qty in zip(lines, line_quantities):
+            if not line.is_shipping_event_permitted(event_type, qty):
+                msg = _("The selected quantity for line #%(line_id)s is too large") % {
+                    'line_id': line.id}
+                errors.append(msg)
+        if errors:
+            raise InvalidShippingEvent(", ".join(errors))
 
     # Query methods
     # -------------
@@ -84,13 +127,6 @@ class EventHandler(object):
         eqs = line.payment_event_quantities.all()
         return sum([e.quantity for e in eqs])
 
-    def handle_payment_event(self, order, event_type, amount, lines=None,
-                             line_quantities=None, **kwargs):
-        """
-        Handle a payment event for a given order.
-        """
-        self.create_payment_event(order, event_type, amount, lines, line_quantities, **kwargs)
-
     def are_stock_allocations_available(self, lines, line_quantities):
         """
         Check whether stock records still have enough stock to honour the
@@ -122,25 +158,24 @@ class EventHandler(object):
     def create_shipping_event(self, order, event_type, lines, line_quantities,
                               **kwargs):
         reference = kwargs.get('reference', None)
-        event = order.shipping_events.create(event_type=event_type,
-                                             notes=reference)
+        event = order.shipping_events.create(
+            event_type=event_type, notes=reference)
         try:
             for line, quantity in zip(lines, line_quantities):
-                ShippingEventQuantity.objects.create(event=event,
-                                                     line=line,
-                                                     quantity=quantity)
+                event.line_quantities.create(
+                    line=line, quantity=quantity)
         except InvalidShippingEvent:
             event.delete()
             raise
 
     def create_payment_event(self, order, event_type, amount, lines=None,
                              line_quantities=None, **kwargs):
-        event = order.payment_events.create(event_type=event_type, amount=amount)
+        event = order.payment_events.create(
+            event_type=event_type, amount=amount)
         if lines and line_quantities:
             for line, quantity in zip(lines, line_quantities):
-                PaymentEventQuantity.objects.create(event=event,
-                                                    line=line,
-                                                    quantity=quantity)
+                PaymentEventQuantity.objects.create(
+                    event=event, line=line, quantity=quantity)
 
     def create_communication_event(self, order, event_type):
         order.communication_events.create(event_type=event_type)

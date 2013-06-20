@@ -77,6 +77,11 @@ Better bankcard handling
 
 The bankcard model in the payment app has been greatly improved.
 
+Order processing changes
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+There are changes to order processing methods
+
 Upgrading 
 =========
 
