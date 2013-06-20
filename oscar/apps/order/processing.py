@@ -1,7 +1,9 @@
+from decimal import Decimal as D
+
 from django.db.models.loading import get_model
 from django.utils.translation import ugettext_lazy as _
 
-from oscar.apps.order.exceptions import InvalidShippingEvent
+from oscar.apps.order import exceptions
 
 ShippingEventQuantity = get_model('order', 'ShippingEventQuantity')
 PaymentEventQuantity = get_model('order', 'PaymentEventQuantity')
@@ -22,6 +24,9 @@ class EventHandler(object):
                               line_quantities, **kwargs):
         """
         Handle a shipping event for a given order.
+
+        This is most common entry point to this class - most of your order
+        processing should be modelled around shipping events.
 
         This might involve taking payment, sending messages and
         creating the event models themeselves.  You will generally want to
@@ -72,11 +77,58 @@ class EventHandler(object):
                     'line_id': line.id}
                 errors.append(msg)
         if errors:
-            raise InvalidShippingEvent(", ".join(errors))
+            raise exceptions.InvalidShippingEvent(", ".join(errors))
 
     # Query methods
     # -------------
     # These are to help determine the status of lines
+
+    def calculate_payment_event_subtotal(self, event_type, lines,
+                                         line_quantities):
+        """
+        Calculate the total charge for the passed event type, lines and line
+        quantities.
+
+        This takes into account the previous prices that have been charged for
+        this event.
+        """
+        total = D('0.00')
+        for line, qty_to_consume in zip(lines, line_quantities):
+            # This part is quite fiddly.  We need to skip the prices that have
+            # already been settled.  This involves keeping a load of counters.
+
+            # Count how many of this line have already been involved in an
+            # event of this type.
+            qty_to_skip = line.payment_event_quantity(event_type)
+
+            # Test if request is sensible
+            if qty_to_skip + qty_to_consume > line.quantity:
+                raise exceptions.InvalidPaymentEvent
+
+            # Consume prices in order of ID (this is the default but it's
+            # better to be explicit)
+            qty_consumed = 0
+            for price in line.prices.all().order_by('id'):
+                if qty_consumed == qty_to_consume:
+                    # We've accounted for the asked-for quantity: we're done
+                    break
+
+                qty_available = price.quantity - qty_to_skip
+                if qty_available <= 0:
+                    # Skip the whole quantity of this price instance
+                    qty_to_skip -= price.quantity
+                else:
+                    # Need to account for some of this price instance and
+                    # track how many we needed to skip and how many we settled
+                    # for.
+                    qty_to_include = min(
+                        qty_to_consume - qty_consumed, qty_available)
+                    total += qty_to_include * price.price_incl_tax
+                    # There can't be any left to skip if we've included some in
+                    # our total
+                    qty_to_skip = 0
+                    qty_consumed += qty_to_include
+        return total
 
     def has_any_line_passed_shipping_event(self, order, lines, line_quantities,
                                            event_type_name):
@@ -116,17 +168,6 @@ class EventHandler(object):
                     required_line_qtys[line_id] -= line_qty.quantity
         return not any(map(lambda x: x > 0, required_line_qtys.values()))
 
-    def get_line_quantity_passed_payment_event(self, line, event_type_name):
-        """
-        Return the quantity of a line that has been involved in the passed
-        event type.
-
-        This can be used to determine what quantity of a line has already been
-        paid for (eg been involved in a SETTLE payment event).
-        """
-        eqs = line.payment_event_quantities.all()
-        return sum([e.quantity for e in eqs])
-
     def are_stock_allocations_available(self, lines, line_quantities):
         """
         Check whether stock records still have enough stock to honour the
@@ -164,7 +205,7 @@ class EventHandler(object):
             for line, quantity in zip(lines, line_quantities):
                 event.line_quantities.create(
                     line=line, quantity=quantity)
-        except InvalidShippingEvent:
+        except exceptions.InvalidShippingEvent:
             event.delete()
             raise
 

@@ -536,6 +536,28 @@ class AbstractLine(models.Model):
                                           'quantity': event_quantity}
         return status_map
 
+    # Payment event helpers
+
+    def is_payment_event_permitted(self, event_type, quantity):
+        """
+        Test whether a payment event with the given quantity is permitted
+        """
+        current_qty = self.payment_event_quantity(event_type)
+        return (current_qty + quantity) <= self.quantity
+
+    def payment_event_quantity(self, event_type):
+        """
+        Return the quantity of this line that has been involved in a payment
+        event of the passed type.
+        """
+        result = self.payment_event_quantities.filter(
+            event__event_type=event_type).aggregate(
+                Sum('quantity'))
+        if result['quantity__sum'] is None:
+            return 0
+        else:
+            return result['quantity__sum']
+
     @property
     def is_product_deleted(self):
         return self.product is None
@@ -567,8 +589,11 @@ class AbstractLine(models.Model):
 
 class AbstractLineAttribute(models.Model):
     """An attribute of a line."""
-    line = models.ForeignKey('order.Line', related_name='attributes', verbose_name=_("Line"))
-    option = models.ForeignKey('catalogue.Option', null=True, on_delete=models.SET_NULL,
+    line = models.ForeignKey(
+        'order.Line', related_name='attributes',
+        verbose_name=_("Line"))
+    option = models.ForeignKey(
+        'catalogue.Option', null=True, on_delete=models.SET_NULL,
         related_name="line_attributes", verbose_name=_("Option"))
     type = models.CharField(_("Type"), max_length=128)
     value = models.CharField(_("Value"), max_length=255)
@@ -590,13 +615,19 @@ class AbstractLinePrice(models.Model):
     having different prices.  For example, one product may be sold at
     50% off as it's part of an offer while the remainder are full price.
     """
-    order = models.ForeignKey('order.Order', related_name='line_prices', verbose_name=_("Option"))
-    line = models.ForeignKey('order.Line', related_name='prices', verbose_name=_("Line"))
+    order = models.ForeignKey(
+        'order.Order', related_name='line_prices', verbose_name=_("Option"))
+    line = models.ForeignKey(
+        'order.Line', related_name='prices', verbose_name=_("Line"))
     quantity = models.PositiveIntegerField(_("Quantity"), default=1)
-    price_incl_tax = models.DecimalField(_("Price (inc. tax)"), decimal_places=2, max_digits=12)
-    price_excl_tax = models.DecimalField(_("Price (excl. tax)"), decimal_places=2, max_digits=12)
-    shipping_incl_tax = models.DecimalField(_("Shiping (inc. tax)"), decimal_places=2, max_digits=12, default=0)
-    shipping_excl_tax = models.DecimalField(_("Shipping (excl. tax)"), decimal_places=2, max_digits=12, default=0)
+    price_incl_tax = models.DecimalField(
+        _("Price (inc. tax)"), decimal_places=2, max_digits=12)
+    price_excl_tax = models.DecimalField(
+        _("Price (excl. tax)"), decimal_places=2, max_digits=12)
+    shipping_incl_tax = models.DecimalField(
+        _("Shiping (inc. tax)"), decimal_places=2, max_digits=12, default=0)
+    shipping_excl_tax = models.DecimalField(
+        _("Shipping (excl. tax)"), decimal_places=2, max_digits=12, default=0)
 
     class Meta:
         abstract = True
@@ -606,7 +637,9 @@ class AbstractLinePrice(models.Model):
 
     def __unicode__(self):
         return _("Line '%(number)s' (quantity %(qty)d) price %(price)s") % {
-            'number': self.line, 'qty': self.quantity, 'price': self.price_incl_tax}
+            'number': self.line,
+            'qty': self.quantity,
+            'price': self.price_incl_tax}
 
 
 # PAYMENT EVENTS
@@ -725,7 +758,10 @@ class AbstractShippingEvent(models.Model):
 
 class ShippingEventQuantity(models.Model):
     """
-    A "through" model linking lines to shipping events
+    A "through" model linking lines to shipping events.
+
+    This exists to track the quantity of a line that is involved in a
+    particular shipping event.
     """
     event = models.ForeignKey(
         'order.ShippingEvent', related_name='line_quantities',
