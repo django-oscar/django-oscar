@@ -1,102 +1,101 @@
 {% extends "layout.html" %}
 
 {% load url from future %}
-
-
 {% load currency_filters %}
 {% load i18n %}
 
 {% block headertext %}
-{% blocktrans with number=order.number %}Order #{{ number }}{% endblocktrans %}
+    {% blocktrans with number=order.number %}Order #{{ number }}{% endblocktrans %}
 {% endblock %}
 
 {% block content %}
-<div class="sub-header">
-    <h3>{% trans 'Status' %}</h3>
-</div>
-<p>{{ order.status }}</p>
-
-<div class="sub-header">
-    <h3>{% trans 'Shipping address' %}</h3>
-</div>
-<table class="table table-striped table-bordered">
-    <tr>
-        <th>{% trans 'Address' %}</th>
-        <td>
-            {% for field in order.shipping_address.active_address_fields %}
-            {{ field }}<br/>
-            {% endfor %}
-        </td>
-    </tr>
-    {% if order.shipping_address.phone_number %}
-    <tr>
-        <th>{% trans 'Contact number' %}</th>
-        <td>{{ shipping_address.phone_number }}</td>
-    </tr>
+    {% if order.status %}
+        <div class="sub-header">
+            <h3>{% trans 'Status' %}</h3>
+        </div>
+        <p>{{ order.status }}</p>
     {% endif %}
-    {% if order.shipping_address.notes %}
-    <tr>
-        <th>{% trans 'Shipping notes' %}</th>
-        <td>{{ shipping_address.notes }}</td>
-    </tr>
-    {% endif %} 
-</table>
 
-<div class="sub-header">
-    <h3>{% trans 'Shipping method' %}</h3>
-</div>
-<p>{{ order.shipping_method }}</p>
+    <div class="sub-header">
+        <h3>{% trans 'Shipping address' %}</h3>
+    </div>
+    <table class="table table-striped table-bordered">
+        <tr>
+            <th>{% trans 'Address' %}</th>
+            <td>
+                {% for field in order.shipping_address.active_address_fields %}
+                    {{ field }}<br/>
+                {% endfor %}
+            </td>
+        </tr>
+        {% if order.shipping_address.phone_number %}
+            <tr>
+                <th>{% trans 'Contact number' %}</th>
+                <td>{{ shipping_address.phone_number }}</td>
+            </tr>
+        {% endif %}
+        {% if order.shipping_address.notes %}
+            <tr>
+                <th>{% trans 'Shipping notes' %}</th>
+                <td>{{ shipping_address.notes }}</td>
+            </tr>
+        {% endif %} 
+    </table>
 
-<div class="sub-header">
-    <h3>{% trans 'Order contents' %}</h3>
-</div>
-{% csrf_token %}
-<table class="table table-striped table-bordered">
-    <tr>
-        <th>{% trans 'Product' %}</th>
-        <th>{% trans 'Availability' %}</th>
-        <th>{% trans 'Quantity' %}</th>
-        <th>{% trans 'Line price excl. tax' %} tax</th>
-        <th>{% trans 'Line price incl. tax' %}</th>
-        <th>{% trans 'Status' %}</th>
-        <th></th>
-    </tr>
-    {% for line in order.lines.all %}
-    <tr>
-        <td><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></td>
-        <td>{{ line.product.stockrecord.availability }}</td>
-        <td>{{ line.quantity }}</td>
-        <td>{{ line.line_price_before_discounts_excl_tax|currency }}</td>
-        <td>{{ line.line_price_before_discounts_incl_tax|currency }}</td>
-        <td>{{ line.shipping_status }}</td>
-        <td>
-            <a href="{% url 'catalogue:reviews-add' line.product.slug line.product.id %}">{% trans 'Write a review' %}</a>
-        </td>
-    </tr>
-    {% endfor %}
-    {% for discount in order.discounts.all %}
-    <tr>
-        <td colspan="4">{{ discount.description }}</td>
-        <td>-{{ discount.amount|currency }}</td>
-    </tr>
-    {% endfor %}
-</table>
+    <div class="sub-header">
+        <h3>{% trans 'Shipping method' %}</h3>
+    </div>
+    <p>{{ order.shipping_method }}</p>
 
-<table class="table table-striped table-bordered">
-    <caption>{% trans 'Totals' %}</caption>
-    <tr>
-        <th>{% trans 'Basket total (inc. tax)' %}</th>
-        <td>{{ order.basket_total_incl_tax|currency }}</td>
-    </tr>
-    <tr>
-        <th>{% trans 'Shipping charge (inc. tax)' %}</th>
-        <td>{{ order.shipping_incl_tax|currency }}</td>
-    </tr>
-    <tr>
-        <th>{% trans 'Order total' %}</th>
-        <td>{{ order.total_incl_tax|currency }}</td>
-    </tr>
-</table>
+    <div class="sub-header">
+        <h3>{% trans 'Order contents' %}</h3>
+    </div>
+    {% csrf_token %}
+    <table class="table table-striped table-bordered">
+        <tr>
+            <th>{% trans 'Product' %}</th>
+            <th>{% trans 'Availability' %}</th>
+            <th>{% trans 'Quantity' %}</th>
+            <th>{% trans 'Line price excl. tax' %} tax</th>
+            <th>{% trans 'Line price incl. tax' %}</th>
+            <th>{% trans 'Status' %}</th>
+            <th></th>
+        </tr>
+        {% for line in order.lines.all %}
+            <tr>
+                <td><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></td>
+                <td>{{ line.product.stockrecord.availability }}</td>
+                <td>{{ line.quantity }}</td>
+                <td>{{ line.line_price_before_discounts_excl_tax|currency }}</td>
+                <td>{{ line.line_price_before_discounts_incl_tax|currency }}</td>
+                <td>{{ line.shipping_status|default:"-" }}</td>
+                <td>
+                    <a href="{% url 'catalogue:reviews-add' line.product.slug line.product.id %}">{% trans 'Write a review' %}</a>
+                </td>
+            </tr>
+        {% endfor %}
+        {% for discount in order.discounts.all %}
+            <tr>
+                <td colspan="4">{{ discount.description }}</td>
+                <td>-{{ discount.amount|currency }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <table class="table table-striped table-bordered">
+        <caption>{% trans 'Totals' %}</caption>
+        <tr>
+            <th>{% trans 'Basket total (inc. tax)' %}</th>
+            <td>{{ order.basket_total_incl_tax|currency }}</td>
+        </tr>
+        <tr>
+            <th>{% trans 'Shipping charge (inc. tax)' %}</th>
+            <td>{{ order.shipping_incl_tax|currency }}</td>
+        </tr>
+        <tr>
+            <th>{% trans 'Order total' %}</th>
+            <td>{{ order.total_incl_tax|currency }}</td>
+        </tr>
+    </table>
 
 {% endblock content %}
-
