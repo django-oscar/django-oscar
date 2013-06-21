@@ -42,6 +42,11 @@ class EventHandler(object):
                              line_quantities=None, **kwargs):
         """
         Handle a payment event for a given order.
+
+        These should normally be called as part of handling a shipping event.
+        It is rare to call to this method directly.  It does make sense for
+        refunds though where the payment event may be unrelated to a particualr
+        shipping event and doesn't directly correspond to a set of lines.
         """
         self.create_payment_event(order, event_type, amount, lines,
                                   line_quantities, **kwargs)
@@ -62,16 +67,11 @@ class EventHandler(object):
 
         If not, raise InvalidShippingEvent
         """
-        self.validate_shipping_event_quantities(
-            order, event_type, lines, line_quantities, **kwargs)
-
-    def validate_shipping_event_quantities(
-            self, order, event_type, lines, line_quantities, **kwargs):
-        """
-        Test if the proposed quantities of the event are valid
-        """
         errors = []
         for line, qty in zip(lines, line_quantities):
+            # The core logic should be in the model.  Ensure you override
+            # 'is_shipping_event_permitted' and enforce the correct order of
+            # shipping events.
             if not line.is_shipping_event_permitted(event_type, qty):
                 msg = _("The selected quantity for line #%(line_id)s is too large") % {
                     'line_id': line.id}

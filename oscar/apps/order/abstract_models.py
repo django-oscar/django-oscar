@@ -10,8 +10,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.db.models import Sum
 from django.conf import settings
 
-from oscar.apps.order.exceptions import (InvalidOrderStatus, InvalidLineStatus,
-                                         InvalidShippingEvent)
+from . import exceptions
 
 
 class AbstractOrder(models.Model):
@@ -73,7 +72,7 @@ class AbstractOrder(models.Model):
         if new_status == self.status:
             return
         if new_status not in self.available_statuses():
-            raise InvalidOrderStatus(_("'%(new_status)s' is not a valid status for order %(number)s "
+            raise exceptions.InvalidOrderStatus(_("'%(new_status)s' is not a valid status for order %(number)s "
                                        "(current status: '%(status)s')") % {
                                             'new_status': new_status,
                                             'number': self.number,
@@ -315,6 +314,9 @@ class AbstractCommunicationEvent(models.Model):
         return _("'%(type)s' event for order #%(number)s") % {'type': self.event_type.name, 'number': self.order.number}
 
 
+# LINES
+
+
 class AbstractLine(models.Model):
     """
     A order line (basically a product and a quantity)
@@ -420,7 +422,7 @@ class AbstractLine(models.Model):
         if new_status == self.status:
             return
         if new_status not in self.available_statuses():
-            raise InvalidLineStatus(_("'%(new_status)s' is not a valid status (current status: '%(status)s')") % {
+            raise exceptions.InvalidLineStatus(_("'%(new_status)s' is not a valid status (current status: '%(status)s')") % {
                                     'new_status': new_status, 'status': self.status})
         self.status = new_status
         self.save()
@@ -493,7 +495,13 @@ class AbstractLine(models.Model):
     def is_shipping_event_permitted(self, event_type, quantity):
         """
         Test whether a shipping event with the given quantity is permitted
+
+        This method should normally be overriden to ensure that the
+        prerequisite shipping events have been passed for this line.
         """
+        # Note, this calculation is simplistic - normally, you will also need
+        # to check if previous shipping events have occurred.  Eg, you can't
+        # return lines until they have been shipped.
         current_qty = self.shipping_event_quantity(event_type)
         return (current_qty + quantity) <= self.quantity
 
@@ -784,7 +792,7 @@ class ShippingEventQuantity(models.Model):
         # Ensure we don't violate quantities constraint
         if not self.line.is_shipping_event_permitted(
                 self.event.event_type, self.quantity):
-            raise InvalidShippingEvent
+            raise exceptions.InvalidShippingEvent
         super(ShippingEventQuantity, self).save(*args, **kwargs)
 
     def __unicode__(self):
@@ -834,6 +842,9 @@ class AbstractShippingEventType(models.Model):
             is_required=True,
             sequence_number__lt=self.sequence_number).order_by(
                 'sequence_number')
+
+
+# DISCOUNTS
 
 
 class AbstractOrderDiscount(models.Model):
