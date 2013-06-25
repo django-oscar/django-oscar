@@ -87,7 +87,7 @@ class ProductDetailView(DetailView):
             '%s/detail-for-upc-%s.html' % (
                 self.template_folder, product.upc),
             '%s/detail-for-class-%s.html' % (
-                self.template_folder, product.get_product_class().name.lower()),
+                self.template_folder, product.get_product_class().slug),
             '%s/detail.html' % (self.template_folder)]
 
 

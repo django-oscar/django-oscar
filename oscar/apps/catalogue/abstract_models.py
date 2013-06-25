@@ -11,6 +11,7 @@ from treebeard.mp_tree import MP_Node
 
 from oscar.core.utils import slugify
 from oscar.core.loading import get_class
+
 BrowsableProductManager = get_class(
     'catalogue.managers', 'BrowsableProductManager')
 
