@@ -88,7 +88,7 @@ Apart from overriding ``catalogue/partials/product.html`` to change the looks
 for all products, you can also override it for individual products by placing
 templates in ``catalogue/partials/product/upc-%s.html`` or
 ``catalogue/partials/product/class-%s.html``, where ``%s`` is the product's UPC
-or product class in lower case, respectively.
+or class's slug, respectively.
 
 Example: Changing the analytics package
 ---------------------------------------

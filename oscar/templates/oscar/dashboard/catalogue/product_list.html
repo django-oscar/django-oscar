@@ -95,7 +95,7 @@
                 {% endif %}
                 </td>
                 <td>{{ product.get_title }}</td>
-                <td>{{ product.product_class.name }}</td>
+                <td>{{ product.get_product_class.name }}</td>
                 <td>{{ product.status|default:"-" }}</td>
                 {% with stockrecord=product.stockrecord %}
                     <td>{{ stockrecord.partner.name }}</td>
