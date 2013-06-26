@@ -84,7 +84,8 @@ class BasketMiddleware(object):
         if hasattr(response, 'context_data'):
             if response.context_data is None:
                 response.context_data = {}
-            response.context_data['basket'] = request.basket
+            # setdefault allows passing in other baskets
+            response.context_data.setdefault('basket', request.basket)
         return response
 
     def get_cookie_basket(self, cookie_key, request, manager):
