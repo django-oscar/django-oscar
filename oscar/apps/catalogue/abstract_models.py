@@ -1,8 +1,11 @@
 from itertools import chain
 from datetime import datetime, date
+import logging
+import os
 
 from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.contrib.staticfiles.finders import find
+from django.core.exceptions import ObjectDoesNotExist, ValidationError, ImproperlyConfigured
 from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models import Sum, Count, get_model
@@ -943,8 +946,40 @@ class AbstractOption(models.Model):
 
 class MissingProductImage(object):
 
+    """
+    Mimics a Django file field by having a name property.
+
+    sorl-thumbnail requires all it's images to be in MEDIA_ROOT. This class
+    tries symlinking the default "missing image" image in STATIC_ROOT
+    into MEDIA_ROOT for convenience, as that is necessary every time an Oscar
+    project is setup. This avoids the less helpful NotFound IOError that would
+    be raised when sorl-thumbnail tries to access it.
+    """
+
     def __init__(self, name=None):
         self.name = name if name else settings.OSCAR_MISSING_IMAGE_URL
+        media_file_path = os.path.join(settings.MEDIA_ROOT, self.name)
+        # don't try to symlink if MEDIA_ROOT is not set (e.g. running tests)
+        if settings.MEDIA_ROOT and not os.path.exists(media_file_path):
+            self.symlink_missing_image(media_file_path)
+
+    def symlink_missing_image(self, media_file_path):
+        static_file_path = find('oscar/img/%s' % self.name)
+        if static_file_path is not None:
+            try:
+                os.symlink(static_file_path, media_file_path)
+            except OSError:
+                raise ImproperlyConfigured((
+                    "Please copy/symlink the "
+                    "'missing image' image at %s into your MEDIA_ROOT at %s. "
+                    "This exception was raised because Oscar was unable to "
+                    "symlink it for you.") % (media_file_path,
+                                              settings.MEDIA_ROOT))
+            else:
+                logging.info((
+                    "Symlinked the 'missing image' image at %s into your "
+                    "MEDIA_ROOT at %s") % (media_file_path,
+                                           settings.MEDIA_ROOT))
 
 
 class AbstractProductImage(models.Model):
