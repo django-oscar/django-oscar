@@ -30,7 +30,7 @@ class TestAStaffUser(WebTestCase):
     is_staff = True
 
     def test_can_submit_an_invalid_product_update_and_returns_to_update_page(self):
-        product = G(Product, ignore_fields=['stockrecord'], parent=None)
+        product = G(Product, ignore_fields=['stockrecords'], parent=None)
 
         form = self.get(
             reverse('dashboard:catalogue-product',
@@ -74,7 +74,7 @@ class TestAStaffUser(WebTestCase):
     def test_can_update_a_product_without_stockrecord(self):
         new_title = u'foobar'
         category = G(Category)
-        product = G(Product, ignore_fields=['stockrecord'], parent=None)
+        product = G(Product, ignore_fields=['stockrecords'], parent=None)
 
         page = self.get(
             reverse('dashboard:catalogue-product',

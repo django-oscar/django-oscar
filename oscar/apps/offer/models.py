@@ -382,7 +382,7 @@ class ConditionalOffer(models.Model):
         if cond_range.includes_all_products:
             # Return ALL the products
             return Product.browsable.select_related(
-                'product_class', 'stockrecord').filter(
+                'product_class', 'stockrecords').filter(
                     is_discountable=True).prefetch_related(
                         'variants', 'images', 'product_class__options',
                         'product_options')
