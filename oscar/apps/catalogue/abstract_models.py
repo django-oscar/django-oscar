@@ -2,7 +2,7 @@ from itertools import chain
 from datetime import datetime, date
 
 from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models import Sum, Count, get_model
@@ -13,6 +13,8 @@ from oscar.core.utils import slugify
 from oscar.core.loading import get_class
 BrowsableProductManager = get_class(
     'catalogue.managers', 'BrowsableProductManager')
+OneStockRecordController = get_class('partner.controllers',
+                                     'OneStockRecordController')
 
 
 class AbstractProductClass(models.Model):
@@ -314,6 +316,10 @@ class AbstractProduct(models.Model):
     objects = models.Manager()
     browsable = BrowsableProductManager()
 
+    @property
+    def stockrecord(self):
+        raise NotImplementedError("Change all the code!")
+
     def __init__(self, *args, **kwargs):
         super(AbstractProduct, self).__init__(*args, **kwargs)
         self.attr = ProductAttributesContainer(product=self)
@@ -362,13 +368,11 @@ class AbstractProduct(models.Model):
         if self.is_group:
             # If any one of this product's variants is available, then we treat
             # this product as available.
-            for variant in self.variants.select_related('stockrecord').all():
-                if variant.is_available_to_buy:
-                    return True
-            return False
+            return any([variant.is_available_to_buy
+                        for variant in self.variants.all()])
         if not self.get_product_class().track_stock:
             return True
-        return self.has_stockrecord and self.stockrecord.is_available_to_buy
+        return self.stockrecord_controller.is_available_to_buy
 
     @property
     def min_variant_price_incl_tax(self):
@@ -383,24 +387,35 @@ class AbstractProduct(models.Model):
         return self._min_variant_price('price_excl_tax')
 
     @property
+    def stockrecord_controller(self):
+        """
+        Return the stockrecord controller for this product.
+        Overwrite this to be able to dynamically chose between different
+        controllers depending on the product.
+        """
+        return OneStockRecordController(self)
+
+    @property
     def has_stockrecord(self):
         """
         Test if this product has a stock record
         """
-        try:
-            self.stockrecord
-        except ObjectDoesNotExist:
-            return False
-        else:
-            return self.stockrecord is not None
+        return self.stockrecord_controller.has_stockrecord
 
-    def is_purchase_permitted(self, user, quantity):
+    def is_purchase_permitted(self, user=None, quantity=1):
         """
         Test whether this product can be bought by the passed user.
+
+        Convenience function
         """
-        if not self.has_stockrecord:
-            return False, _("No stock available")
-        return self.stockrecord.is_purchase_permitted(user, quantity, self)
+        return self.stockrecord_controller.is_purchase_permitted(user,
+                                                                 quantity)
+
+    def select_stockrecord(self, user=None, quantity=1):
+        """
+        Convenience function
+        """
+        return self.stockrecord_controller.select_stockrecord(user, quantity)
 
     def add_category_from_breadcrumbs(self, breadcrumb):
         from oscar.apps.catalogue.categories import create_from_breadcrumbs
@@ -456,8 +471,8 @@ class AbstractProduct(models.Model):
             return images[0]
         except IndexError:
             # We return a dict with fields that mirror the key properties of the
-            # ProductImage class so this missing image can be used interchangably
-            # in templates.  Strategy pattern ftw!
+            # ProductImage class so this missing image can be used
+            # interchangeably in templates. Strategy pattern ftw!
             return {
                 'original': self.get_missing_image(),
                 'caption': '',
@@ -472,7 +487,7 @@ class AbstractProduct(models.Model):
         prices = []
         for variant in self.variants.all():
             if variant.has_stockrecord:
-                prices.append(getattr(variant.stockrecord, property))
+                prices.append(getattr(variant.select_stockrecord(), property))
         if not prices:
             return None
         prices.sort()
