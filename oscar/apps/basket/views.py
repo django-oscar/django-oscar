@@ -14,7 +14,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from extra_views import ModelFormSetView
 from oscar.core import ajax
 from oscar.apps.basket.signals import basket_addition, voucher_addition
-from oscar.templatetags.currency_filters import currency
 from oscar.core.loading import get_class, get_classes
 Applicator = get_class('offer.utils', 'Applicator')
 (BasketLineForm, AddToBasketForm, BasketVoucherForm,
@@ -152,7 +151,7 @@ class BasketView(ModelFormSetView):
             else:
                 if not saved_basket.is_empty:
                     saved_queryset = saved_basket.all_lines().select_related(
-                        'product', 'product__stockrecord')
+                        'product', 'product__stockrecords')
                     formset = SavedLineFormSet(user=self.request.user,
                                                basket=self.request.basket,
                                                queryset=saved_queryset,
@@ -451,7 +450,7 @@ class SavedView(ModelFormSetView):
         try:
             saved_basket = self.basket_model.saved.get(owner=self.request.user)
             return saved_basket.all_lines().select_related(
-                'product', 'product__stockrecord')
+                'product', 'product__stockrecords')
         except self.basket_model.DoesNotExist:
             return []
 
