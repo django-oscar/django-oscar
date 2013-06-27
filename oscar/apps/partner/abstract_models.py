@@ -101,8 +101,8 @@ class AbstractStockRecord(models.Model):
     We deliberately don't store tax information to allow each project
     to subclass this model and put its own fields for convey tax.
     """
-    product = models.OneToOneField(
-        'catalogue.Product', related_name="stockrecord",
+    product = models.ForeignKey(
+        'catalogue.Product', related_name="stockrecords",
         verbose_name=_("Product"))
     partner = models.ForeignKey('partner.Partner', verbose_name=_("Partner"))
 
