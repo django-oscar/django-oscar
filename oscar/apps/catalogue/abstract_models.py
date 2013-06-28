@@ -949,22 +949,23 @@ class MissingProductImage(object):
             self.symlink_missing_image(media_file_path)
 
     def symlink_missing_image(self, media_file_path):
+        # Assume
         static_file_path = find('oscar/img/%s' % self.name)
         if static_file_path is not None:
             try:
                 os.symlink(static_file_path, media_file_path)
             except OSError:
-                raise ImproperlyConfigured(
-                    """Please copy/symlink the
-                    "missing image" image at %s into your MEDIA_ROOT at %s.
-                    This exception was raised because Oscar was unable to
-                    symlink it for you."""
-                    % (media_file_path, settings.MEDIA_ROOT))
+                raise ImproperlyConfigured((
+                    "Please copy/symlink the "
+                    "'missing image' image at %s into your MEDIA_ROOT at %s. "
+                    "This exception was raised because Oscar was unable to "
+                    "symlink it for you.") % (media_file_path,
+                                              settings.MEDIA_ROOT))
             else:
-                logging.info(
-                    """Symlinked the "missing image" image at %s into your
-                    MEDIA_ROOT at %s""" %
-                    (media_file_path, settings.MEDIA_ROOT))
+                logging.info((
+                    "Symlinked the 'missing image' image at %s into your "
+                    "MEDIA_ROOT at %s") % (media_file_path,
+                                           settings.MEDIA_ROOT))
 
 
 class AbstractProductImage(models.Model):
