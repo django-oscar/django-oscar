@@ -93,6 +93,10 @@ Templates:
 * The template ``customer/orders/order.html`` has been renamed to
   ``customer/orders/order_detail.html``.
 
+* Alternative product class templates now use ``slug` field instead of
+   ``name.lower()`` to determine their filename.  If you have templates for
+   specific product classes, please update your filenames accordingly
+
 Payment app:
 
 * The `balance` method on the source object is not a property not a method.

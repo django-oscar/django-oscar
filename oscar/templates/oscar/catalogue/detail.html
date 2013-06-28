@@ -125,7 +125,7 @@
         </tr>
         {% endif %}
         <tr>
-            <th>{% trans "Product class" %}</th><td>{{ product.product_class.name }}</td>
+            <th>{% trans "Product class" %}</th><td>{{ product.get_product_class.name }}</td>
         </tr>
         {% if product.stockrecord %}
         <tr>

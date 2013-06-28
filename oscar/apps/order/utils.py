@@ -176,7 +176,7 @@ class OrderCreator(object):
 
     def update_stock_records(self, line):
         product = line.product
-        if product.product_class.track_stock:
+        if product.get_product_class().track_stock:
             line.product.stockrecord.allocate(line.quantity)
 
     def create_additional_line_models(self, order, order_line, basket_line):

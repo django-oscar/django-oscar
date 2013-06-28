@@ -11,6 +11,7 @@ from treebeard.mp_tree import MP_Node
 
 from oscar.core.utils import slugify
 from oscar.core.loading import get_class
+
 BrowsableProductManager = get_class(
     'catalogue.managers', 'BrowsableProductManager')
 
@@ -573,7 +574,7 @@ class ProductAttributesContainer(object):
             return getattr(self, name)
         raise AttributeError(
             _("%(obj)s has no attribute named '%(attr)s'") % {
-                'obj': self.product.product_class, 'attr': name})
+                'obj': self.product.get_product_class(), 'attr': name})
 
     def validate_attributes(self):
         for attribute in self.get_all_attributes():
