@@ -23,8 +23,9 @@ class ShippingAddressTest(TestCase):
 
     def test_titleless_salutation_is_stripped(self):
         country = Country.objects.get(iso_3166_1_a2='GB')
-        a = ShippingAddress.objects.create(last_name='Barrington', line1="75 Smith Road", postcode="N4 8TY", country=country)
-        self.assertEquals("Barrington", a.salutation())
+        a = ShippingAddress.objects.create(
+            last_name='Barrington', line1="75 Smith Road", postcode="N4 8TY", country=country)
+        self.assertEquals("Barrington", a.salutation)
 
 
 class OrderStatusPipelineTests(TestCase):
