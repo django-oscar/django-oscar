@@ -48,6 +48,8 @@ class EventHandler(object):
         refunds though where the payment event may be unrelated to a particualr
         shipping event and doesn't directly correspond to a set of lines.
         """
+        self.validate_payment_event(
+            order, event_type, amount, lines, line_quantities, **kwargs)
         self.create_payment_event(order, event_type, amount, lines,
                                   line_quantities, **kwargs)
 
@@ -79,9 +81,36 @@ class EventHandler(object):
         if errors:
             raise exceptions.InvalidShippingEvent(", ".join(errors))
 
+    def validate_payment_event(self, order, event_type, lines,
+                               line_quantities, **kwargs):
+        errors = []
+        for line, qty in zip(lines, line_quantities):
+            if not line.is_payment_event_permitted(event_type, qty):
+                msg = _("The selected quantity for line #%(line_id)s is too large") % {
+                    'line_id': line.id}
+                errors.append(msg)
+        if errors:
+            raise exceptions.InvalidPaymentEvent(", ".join(errors))
+
     # Query methods
     # -------------
     # These are to help determine the status of lines
+
+    def have_lines_passed_shipping_event(self, order, lines, line_quantities,
+                                         event_type):
+        """
+        Test whether the passed lines and quantities have been through the
+        specified shipping event.
+
+        This is useful for validating if certain shipping events are allowed
+        (ie you can't return something before it has shipped).
+        """
+        for line, line_qty in zip(lines, line_quantities):
+            if line.shipping_event_quantity(event_type) < line_qty:
+                return False
+        return True
+
+    # Payment stuff
 
     def calculate_payment_event_subtotal(self, event_type, lines,
                                          line_quantities):
@@ -130,20 +159,6 @@ class EventHandler(object):
                     qty_consumed += qty_to_include
         return total
 
-    def have_lines_passed_shipping_event(self, order, lines, line_quantities,
-                                         event_type):
-        """
-        Test whether the passed lines and quantities have been through the
-        specified shipping event.
-
-        This is useful for validating if certain shipping events are allowed
-        (ie you can't return something before it has shipped).
-        """
-        for line, line_qty in zip(lines, line_quantities):
-            if line.shipping_event_quantity(event_type) < line_qty:
-                return False
-        return True
-
     # Stock stuff
 
     def are_stock_allocations_available(self, lines, line_quantities):
@@ -186,6 +201,7 @@ class EventHandler(object):
         except exceptions.InvalidShippingEvent:
             event.delete()
             raise
+        return event
 
     def create_payment_event(self, order, event_type, amount, lines=None,
                              line_quantities=None, **kwargs):
@@ -195,9 +211,10 @@ class EventHandler(object):
             for line, quantity in zip(lines, line_quantities):
                 PaymentEventQuantity.objects.create(
                     event=event, line=line, quantity=quantity)
+        return event
 
     def create_communication_event(self, order, event_type):
-        order.communication_events.create(event_type=event_type)
+        return order.communication_events.create(event_type=event_type)
 
     def create_note(self, order, message, note_type='System'):
-        order.notes.create(message=message, note_type=note_type)
+        return order.notes.create(message=message, note_type=note_type)
