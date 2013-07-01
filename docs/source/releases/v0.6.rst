@@ -97,6 +97,11 @@ Templates:
    ``name.lower()`` to determine their filename.  If you have templates for
    specific product classes, please update your filenames accordingly
 
+Address app:
+
+* The ``UserAddress.salutation`` and ``UserAddress.name`` methods are now
+  properties.
+
 Payment app:
 
 * The `balance` method on the source object is not a property not a method.
