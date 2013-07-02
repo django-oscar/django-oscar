@@ -303,12 +303,13 @@ class AbstractCommunicationEvent(models.Model):
         verbose_name=_("Order"))
     event_type = models.ForeignKey(
         'customer.CommunicationEventType', verbose_name=_("Event Type"))
-    date = models.DateTimeField(_("Date"), auto_now_add=True)
+    date_created = models.DateTimeField(_("Date"), auto_now_add=True)
 
     class Meta:
         abstract = True
         verbose_name = _("Communication Event")
         verbose_name_plural = _("Communication Events")
+        ordering = ['-date_created']
 
     def __unicode__(self):
         return _("'%(type)s' event for order #%(number)s") % {'type': self.event_type.name, 'number': self.order.number}
@@ -699,12 +700,13 @@ class AbstractPaymentEvent(models.Model):
         verbose_name=_("Lines"))
     event_type = models.ForeignKey(
         'order.PaymentEventType', verbose_name=_("Event Type"))
-    date = models.DateTimeField(_("Date Created"), auto_now_add=True)
+    date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
     class Meta:
         abstract = True
         verbose_name = _("Payment Event")
         verbose_name_plural = _("Payment Events")
+        ordering = ['-date_created']
 
     def __unicode__(self):
         return _("Payment event for order %s") % self.order
@@ -749,13 +751,13 @@ class AbstractShippingEvent(models.Model):
         _("Event notes"), blank=True, null=True,
         help_text=_("This could be the dispatch reference, or a "
                     "tracking number"))
-    date = models.DateTimeField(_("Date Created"), auto_now_add=True)
+    date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
     class Meta:
         abstract = True
         verbose_name = _("Shipping Event")
         verbose_name_plural = _("Shipping Events")
-        ordering = ['-date']
+        ordering = ['-date_created']
 
     def __unicode__(self):
         return _("Order #%(number)s, type %(type)s") % {

@@ -292,7 +292,7 @@
                                     {% for event in events %}
                                         {% with line_qtys=event.line_quantities.all %}
                                             <tr>
-                                                <td rowspan="{{ line_qtys|length }}">{{ event.date }}</td>
+                                                <td rowspan="{{ line_qtys|length }}">{{ event.date_created }}</td>
                                                 <td rowspan="{{ line_qtys|length }}">{{ event.event_type.name }}</td>
                                                 <td>
                                                     {% for line_qty in event.line_quantities.all %}
@@ -338,7 +338,7 @@
                                     {% for event in events %}
                                         {% with line_qtys=event.line_quantities.all %}
                                             <tr>
-                                                <td >{{ event.date }}</td>
+                                                <td >{{ event.date_created }}</td>
                                                 <td >{{ event.event_type.name }}</td>
                                                 <td >{{ event.amount|currency }}</td>
                                                 <td>

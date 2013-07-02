@@ -101,3 +101,9 @@ Templates:
 Payment app:
 
 * The `balance` method on the source object is not a property not a method.
+
+Order app:
+
+* The `date` field of the ``order.AbstractCommunicationEvent``, ``order.AbstractPaymentEvent`` and
+  ``order.AbstractShippingEvent`` models have been renamed to ``date_created`` for
+  consistency with the rest of Oscar.
