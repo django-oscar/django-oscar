@@ -12,7 +12,12 @@ from . import bankcards
 
 class AbstractTransaction(models.Model):
     """
-    A transaction with a payment gateway
+    A transaction for a particular payment source.
+
+    These are similar to the payment events within the order app but model a
+    slightly different aspect of payment.  Crucially, payment sources and
+    transactions have nothing to do with the lines of the order while payment
+    events do.
 
     For example:
     * A 'pre-auth' with a bankcard gateway
@@ -120,8 +125,8 @@ class AbstractSource(models.Model):
 
     def _create_transaction(self, txn_type, amount, reference=None,
                             status=None):
-        AbstractTransaction.objects.create(
-            source=self, txn_type=txn_type, amount=amount,
+        self.transactions.create(
+            txn_type=txn_type, amount=amount,
             reference=reference, status=status)
 
     # =======

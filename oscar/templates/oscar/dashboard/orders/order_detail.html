@@ -289,14 +289,14 @@
                                     {% for event in events %}
                                         {% with line_qtys=event.line_quantities.all %}
                                             <tr>
-                                                <td rowspan="{{ line_qtys|length }}">{{ event.date }}</td>
-                                                <td rowspan="{{ line_qtys|length }}">{{ event.event_type.name }}</td>
+                                                <td>{{ event.date }}</td>
+                                                <td>{{ event.event_type.name }}</td>
                                                 <td>
                                                     {% for line_qty in event.line_quantities.all %}
                                                         {% trans "Product:" %} {{ line_qty.line.title }} - {% trans "quantity" %} {{ line_qty.quantity }}</br>
                                                     {% endfor %}
                                                 </td>
-                                                <td>{{ event.notes }}</td>
+                                                <td>{{ event.notes|default:"-" }}</td>
                                             </tr>
                                         {% endwith %}
                                     {% endfor %}
@@ -442,6 +442,7 @@
                             <thead>
                                 <tr>
                                     <th>{% trans "Source" %}</th>
+                                    <th>{% trans "Transaction" %}</th>
                                     <th>{% trans "Amount" %}</th>
                                     <th>{% trans "Reference" %}</th>
                                     <th>{% trans "Status" %}</th>
@@ -454,6 +455,7 @@
                                     {% for transaction in source.transactions.all %}
                                         <tr>
                                             <td>{{ source.source_type }}</td>
+                                            <td>{{ transaction.txn_type }}</td>
                                             <td>{{ transaction.amount|currency }}</td>
                                             <td>{{ transaction.reference|default:"-" }}</td>
                                             <td>{{ transaction.status|default:"-" }}</td>
@@ -511,7 +513,6 @@
                         </tbody>
                     </table>
                 {% endwith %}
-
             {% endblock %}
         </div>
 
