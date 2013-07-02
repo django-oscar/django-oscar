@@ -26,12 +26,11 @@ class EventHandler(object):
         Handle a shipping event for a given order.
 
         This is most common entry point to this class - most of your order
-        processing should be modelled around shipping events.
+        processing should be modelled around shipping events.  Shipping events
+        can be used to trigger payment and communication events.
 
-        This might involve taking payment, sending messages and
-        creating the event models themeselves.  You will generally want to
-        override this method to implement the specifics of you order processing
-        pipeline.
+        You will generally want to override this method to implement the
+        specifics of you order processing pipeline.
         """
         self.validate_shipping_event(
             order, event_type, lines, line_quantities, **kwargs)
@@ -56,6 +55,10 @@ class EventHandler(object):
     def handle_order_status_change(self, order, new_status):
         """
         Handle a requested order status change
+
+        This method is not normally called directly by client code.  The main
+        use-case is when an order is cancelled, which in some ways could be
+        viewed as a shipping event affecting all lines.
         """
         order.set_status(new_status)
 
@@ -111,6 +114,7 @@ class EventHandler(object):
         return True
 
     # Payment stuff
+    # -------------
 
     def calculate_payment_event_subtotal(self, event_type, lines,
                                          line_quantities):
@@ -120,6 +124,9 @@ class EventHandler(object):
 
         This takes into account the previous prices that have been charged for
         this event.
+
+        Note that shipping is not including in this subtotal.  You need to
+        subclass and extend this method if you want to include shipping costs.
         """
         total = D('0.00')
         for line, qty_to_consume in zip(lines, line_quantities):
@@ -159,7 +166,8 @@ class EventHandler(object):
                     qty_consumed += qty_to_include
         return total
 
-    # Stock stuff
+    # Stock
+    # -----
 
     def are_stock_allocations_available(self, lines, line_quantities):
         """
@@ -187,7 +195,8 @@ class EventHandler(object):
         for line, qty in zip(lines, line_quantities):
             line.product.stockrecord.cancel_allocation(qty)
 
-    # Create event instances
+    # Model instance creation
+    # -----------------------
 
     def create_shipping_event(self, order, event_type, lines, line_quantities,
                               **kwargs):
