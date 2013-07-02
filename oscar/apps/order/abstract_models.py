@@ -695,6 +695,10 @@ class AbstractPaymentEvent(models.Model):
         verbose_name=_("Order"))
     amount = models.DecimalField(
         _("Amount"), decimal_places=2, max_digits=12)
+    # The reference should refer to the transaction ID of the payment gateway
+    # that was used for this event.
+    reference = models.CharField(
+        _("Reference"), max_length=128, blank=True)
     lines = models.ManyToManyField(
         'order.Line', through='PaymentEventQuantity',
         verbose_name=_("Lines"))

@@ -49,8 +49,8 @@ class EventHandler(object):
         """
         self.validate_payment_event(
             order, event_type, amount, lines, line_quantities, **kwargs)
-        self.create_payment_event(order, event_type, amount, lines,
-                                  line_quantities, **kwargs)
+        self.create_payment_event(
+            order, event_type, amount, lines, line_quantities, **kwargs)
 
     def handle_order_status_change(self, order, new_status):
         """
@@ -214,12 +214,13 @@ class EventHandler(object):
 
     def create_payment_event(self, order, event_type, amount, lines=None,
                              line_quantities=None, **kwargs):
+        reference = kwargs.get('reference', "")
         event = order.payment_events.create(
-            event_type=event_type, amount=amount)
+            event_type=event_type, amount=amount, reference=reference)
         if lines and line_quantities:
             for line, quantity in zip(lines, line_quantities):
-                PaymentEventQuantity.objects.create(
-                    event=event, line=line, quantity=quantity)
+                event.line_quantities.create(
+                    line=line, quantity=quantity)
         return event
 
     def create_communication_event(self, order, event_type):

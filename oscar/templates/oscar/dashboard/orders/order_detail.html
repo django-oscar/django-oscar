@@ -332,6 +332,7 @@
                                         <th>{% trans "Event" %}</th>
                                         <th>{% trans "Amount" %}</th>
                                         <th>{% trans "Lines" %}</th>
+                                        <th>{% trans "Reference" %}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -346,6 +347,7 @@
                                                         {% trans "Product:" %} {{ line_qty.line.title }} - {% trans "quantity" %} {{ line_qty.quantity }}</br>
                                                     {% endfor %}
                                                 </td>
+                                                <td >{{ event.reference|default:"-" }}</td>
                                             </tr>
                                         {% endwith %}
                                     {% endfor %}
