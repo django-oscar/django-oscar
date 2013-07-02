@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.test import TestCase
 from django.core.exceptions import ValidationError
+from django import template
 
 from oscar.apps.catalogue import models
 from oscar.apps.catalogue.categories import create_from_breadcrumbs
@@ -169,3 +170,104 @@ class TestCategoryFactory(TestCase):
         child = models.Category.objects.get(name='F')
         self.assertEqual(child.slug, 'e/f')
         self.assertEqual(child.full_name, 'E > F')
+
+
+class TestCategoryTemplateTags(TestCase):
+
+    def __init__(self, *args, **kwargs):
+        super(TestCategoryTemplateTags, self).__init__(*args, **kwargs)
+        self.template = """
+          {% if tree_categories %}
+              <ul>
+              {% for tree_category, info in tree_categories %}
+                  <li>
+                  {% if tree_category.pk == category.pk %}
+                      <strong>{{ tree_category.name }}</strong>
+                  {% else %}
+                      <a href="{{ tree_category.get_absolute_url }}">
+                          {{ tree_category.name }}</a>
+                  {% endif %}
+                  {% if info.has_children %}<ul>{% else %}</li>{% endif %}
+                  {% for n in info.num_to_close %}
+                      </ul></li>
+                  {% endfor %}
+              {% endfor %}
+              </ul>
+          {% endif %}
+        """
+
+    def setUp(self):
+        breadcrumbs = (
+            'Books > Fiction > Horror > Teen',
+            'Books > Fiction > Horror > Gothic',
+            'Books > Fiction > Comedy',
+            'Books > Non-fiction > Biography',
+            'Books > Non-fiction > Programming',
+            'Books > Childrens',
+        )
+        for trail in breadcrumbs:
+            create_from_breadcrumbs(trail)
+
+    def render_template(self, template_string, context={}):
+        """
+        Return the rendered string or raise an exception.
+        """
+        tpl = template.Template(template_string)
+        ctxt = template.Context(context)
+        return tpl.render(ctxt)
+
+    def test_all_categories(self):
+        template = """
+        {% load category_tags %}
+        {% category_tree as tree_categories %}
+        """ + self.template
+        rendered = self.render_template(template)
+        categories_exists = set(('Books', 'Fiction', 'Horror', 'Teen',
+            'Gothic', 'Comedy', 'Non-fiction', 'Biography', 'Programming',
+            'Childrens'))
+        for c in categories_exists:
+            self.assertTrue(c in rendered)
+
+    def test_categories_depth(self):
+        template = """
+        {% load category_tags %}
+        {% category_tree depth=1 as tree_categories %}
+        """ + self.template
+        rendered = self.render_template(template)
+        categories_exists = set(('Books', ))
+        for c in categories_exists:
+            self.assertTrue(c in rendered)
+        categories_missed = set(('Fiction', 'Horror', 'Teen', 'Gothic',
+            'Comedy', 'Non-fiction', 'Biography', 'Programming', 'Childrens'))
+        for c in categories_missed:
+            self.assertFalse(c in rendered)
+
+    def test_categories_parent(self):
+        template = """
+        {% load category_tags %}
+        {% category_tree parent=category as tree_categories %}
+        """ + self.template
+        rendered = self.render_template(template,
+            context={'category': models.Category.objects.get(name="Fiction")})
+        categories_exists = set(('Horror', 'Teen', 'Gothic', 'Comedy'))
+        for c in categories_exists:
+            self.assertTrue(c in rendered)
+        categories_missed = set(('Books', 'Fiction', 'Non-fiction',
+            'Biography', 'Programming', 'Childrens'))
+        for c in categories_missed:
+            self.assertFalse(c in rendered)
+
+    def test_categories_depth_parent(self):
+        template = """
+        {% load category_tags %}
+        {% category_tree depth=1 parent=category as tree_categories %}
+        """ + self.template
+        rendered = self.render_template(template,
+            context={'category': models.Category.objects.get(name="Fiction")})
+        categories_exists = set(('Horror', 'Comedy'))
+        for c in categories_exists:
+            self.assertTrue(c in rendered)
+        categories_missed = set(('Books', 'Fiction', 'Teen', 'Gothic',
+            'Non-fiction', 'Biography', 'Programming', 'Childrens'))
+        for c in categories_missed:
+            self.assertFalse(c in rendered)
