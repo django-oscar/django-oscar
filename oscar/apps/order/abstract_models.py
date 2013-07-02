@@ -704,7 +704,13 @@ class AbstractPaymentEvent(models.Model):
         verbose_name=_("Lines"))
     event_type = models.ForeignKey(
         'order.PaymentEventType', verbose_name=_("Event Type"))
-    date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
+    # Allow payment events to be linked to shipping events.  Often a shipping
+    # event will trigger a payment event and so we can use this FK to capture
+    # the relationship.
+    shipping_event = models.ForeignKey(
+        'order.ShippingEvent', related_name='payment_events',
+        null=True)
+    date_created = models.DateTimeField(_("Date created"), auto_now_add=True)
 
     class Meta:
         abstract = True
