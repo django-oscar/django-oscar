@@ -2,7 +2,11 @@
 Changelog
 =========
 
-0.3.6 - 2013--04-08
+0.3.7 - 2013-07-03
+------------------
+* Extend number of years in bankcard expiry field
+
+0.3.6 - 2013-04-08
 -------------------
 * Fix line-handling bug in order dashboard.
 
