@@ -126,6 +126,8 @@ class BankcardExpiryMonthField(BankcardMonthField):
     """
     Expiry month
     """
+    num_years = 10
+
     def month_choices(self):
         return [("%.2d" % x, "%.2d" % x) for x in xrange(1, 13)]
 
