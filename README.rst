@@ -123,7 +123,6 @@ http://demo.oscarcommerce.com
 
 .. _stores: https://github.com/tangentlabs/django-oscar-stores
 .. _PayPal: https://github.com/tangentlabs/django-oscar-paypal
-.. _Datacash: https://github.com/tangentlabs/django-oscar-datacash
 
 Extensions
 ----------
@@ -174,8 +173,21 @@ The following extensions are in development by Tangent:
 .. _django-oscar-stores: https://github.com/tangentlabs/django-oscar-stores
 .. _django-oscar-parachute: https://github.com/tangentlabs/django-oscar-parachute
 .. _django-oscar-approval: https://github.com/tangentlabs/django-oscar-approval
+.. _Stripe: https://stripe.com
+
+The following are community-written extensions:
+
+* django-oscar-unicredit_ - Integration with the Unicredit payment gateway
+* django-oscar-payments_ - Pluggable payments for Oscar
+* django-oscar-recurly_ - Integration with the Recurly payment gateway
+* django-oscar-erp_ 
 
 Let us know if you're writing a new one!
+
+.. _django-oscar-unicredit: https://bitbucket.org/marsim/django-oscar-unicredit/
+.. _django-oscar-erp: https://bitbucket.org/zikzakmedia/django-oscar_erp
+.. _django-oscar-payments: https://github.com/Lacrymology/django-oscar-payments
+.. _django-oscar-recurly: https://github.com/mynameisgabe/django-oscar-recurly
 
 License
 -------
