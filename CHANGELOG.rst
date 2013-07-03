@@ -2,6 +2,11 @@
 Changelog
 =========
 
+0.4.10 - 2013-07-03
+-------------------
+
+Extend range of bankcard expiry month field.
+
 0.4.9 - 2013-04-17
 ------------------
 
