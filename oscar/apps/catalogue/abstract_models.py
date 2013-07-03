@@ -2,7 +2,7 @@ from itertools import chain
 from datetime import datetime, date
 
 from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models import Sum, Count, get_model
@@ -14,6 +14,8 @@ from oscar.core.loading import get_class
 
 BrowsableProductManager = get_class(
     'catalogue.managers', 'BrowsableProductManager')
+StockRecordController = get_class('partner.controllers',
+                                  'StockRecordController')
 
 
 class AbstractProductClass(models.Model):
@@ -363,13 +365,11 @@ class AbstractProduct(models.Model):
         if self.is_group:
             # If any one of this product's variants is available, then we treat
             # this product as available.
-            for variant in self.variants.select_related('stockrecord').all():
-                if variant.is_available_to_buy:
-                    return True
-            return False
+            return any([variant.is_available_to_buy
+                        for variant in self.variants.all()])
         if not self.get_product_class().track_stock:
             return True
-        return self.has_stockrecord and self.stockrecord.is_available_to_buy
+        return self.get_stockrecord_controller().is_available_to_buy()
 
     @property
     def min_variant_price_incl_tax(self):
@@ -387,21 +387,20 @@ class AbstractProduct(models.Model):
     def has_stockrecord(self):
         """
         Test if this product has a stock record
+
+        This is an potentially expensive call, so avoid patterns as
+            if product.has_stockrecord:
+                stockrecord = product.get_stockrecord()
+        Instead, just use get_stockrecord() directly and test for None
         """
-        try:
-            self.stockrecord
-        except ObjectDoesNotExist:
-            return False
-        else:
-            return self.stockrecord is not None
+        return self.get_stockrecord_controller().has_stockrecord(self)
 
     def is_purchase_permitted(self, user, quantity):
         """
         Test whether this product can be bought by the passed user.
         """
-        if not self.has_stockrecord:
-            return False, _("No stock available")
-        return self.stockrecord.is_purchase_permitted(user, quantity, self)
+        return self.get_stockrecord_controller().is_purchase_permitted(
+            self, user, quantity)
 
     def add_category_from_breadcrumbs(self, breadcrumb):
         from oscar.apps.catalogue.categories import create_from_breadcrumbs
@@ -443,6 +442,17 @@ class AbstractProduct(models.Model):
         return None
     get_product_class.short_description = _("Product class")
 
+    def get_stockrecord_controller(self):
+        """
+        Return the stockrecord controller for this product.
+        Overwrite this to be able to dynamically chose between different
+        controllers depending on the product.
+        """
+        return StockRecordController()
+
+    def get_stockrecord(self):
+        return self.get_stockrecord_controller().select_stockrecord_for(self)
+
     def get_missing_image(self):
         """
         Returns a missing image object.
@@ -457,8 +467,8 @@ class AbstractProduct(models.Model):
             return images[0]
         except IndexError:
             # We return a dict with fields that mirror the key properties of the
-            # ProductImage class so this missing image can be used interchangably
-            # in templates.  Strategy pattern ftw!
+            # ProductImage class so this missing image can be used
+            # interchangeably in templates. Strategy pattern ftw!
             return {
                 'original': self.get_missing_image(),
                 'caption': '',

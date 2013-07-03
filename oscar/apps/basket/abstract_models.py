@@ -92,7 +92,7 @@ class AbstractBasket(models.Model):
             return query.EmptyQuerySet(model=self.__class__)
         if self._lines is None:
             self._lines = self.lines.select_related(
-                'product', 'product__stockrecord'
+                'product', 'product__stockrecords'
             ).all().prefetch_related('attributes', 'product__images')
         return self._lines
 
@@ -140,11 +140,10 @@ class AbstractBasket(models.Model):
         # Determine price to store (if one exists).  It is only stored for
         # audit and sometimes caching.
         price_excl_tax, price_incl_tax = None, None
-        if product.has_stockrecord:
-            stockrecord = product.stockrecord
-            if stockrecord:
-                price_excl_tax = getattr(stockrecord, 'price_excl_tax', None)
-                price_incl_tax = getattr(stockrecord, 'price_incl_tax', None)
+        stockrecord = product.get_stockrecord()
+        if stockrecord is not None:
+            price_excl_tax = getattr(stockrecord, 'price_excl_tax', None)
+            price_incl_tax = getattr(stockrecord, 'price_incl_tax', None)
 
         line, created = self.lines.get_or_create(
             line_reference=line_ref,
@@ -582,10 +581,11 @@ class AbstractLine(models.Model):
     # =======
 
     def _get_stockrecord_property(self, property):
-        if not self.product.stockrecord:
+        stockrecord = self.product.get_stockrecord()
+        if stockrecord is None:
             return Decimal('0.00')
         else:
-            attr = getattr(self.product.stockrecord, property)
+            attr = getattr(stockrecord, property)
             if attr is None:
                 attr = Decimal('0.00')
             return attr
@@ -681,11 +681,12 @@ class AbstractLine(models.Model):
         """
         if not self.price_incl_tax:
             return
-        if not self.product.has_stockrecord:
+        stockrecord = self.product.get_stockrecord()
+        if stockrecord is None:
             msg = u"'%(product)s' is no longer available"
             return _(msg) % {'product': self.product.get_title()}
 
-        current_price_incl_tax = self.product.stockrecord.price_incl_tax
+        current_price_incl_tax = stockrecord.price_incl_tax
         if current_price_incl_tax > self.price_incl_tax:
             msg = ("The price of '%(product)s' has increased from "
                    "%(old_price)s to %(new_price)s since you added it "

@@ -103,7 +103,7 @@ def get_product_base_queryset():
         'variants',
         'product_options',
         'product_class__options',
-        'stockrecord',
+        'stockrecords',
         'images',
     ).all()
 

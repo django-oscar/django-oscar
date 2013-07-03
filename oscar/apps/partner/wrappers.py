@@ -1,6 +1,43 @@
 from decimal import Decimal as D
 
+from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
+from django.utils.importlib import import_module as django_import_module
+from django.db.models import get_model
+
+from oscar.core.loading import get_class
+
+
+DefaultWrapper = get_class('partner.wrappers', 'DefaultWrapper')
+
+# Cache dict of partner_id => availability wrapper instance
+partner_wrappers = None
+default_wrapper = DefaultWrapper()
+
+
+def get_partner_wrapper(partner_id):
+    """
+    Returns the appropriate partner wrapper given the partner's PK
+    """
+    if partner_wrappers is None:
+        _load_partner_wrappers()
+    return partner_wrappers.get(partner_id, default_wrapper)
+
+
+def _load_partner_wrappers():
+    # Prime cache of partner wrapper dict
+    global partner_wrappers
+    partner_wrappers = {}
+    Partner = get_model('partner', 'Partner')
+    for code, class_str in settings.OSCAR_PARTNER_WRAPPERS.items():
+        try:
+            partner = Partner.objects.get(code=code)
+        except Partner.DoesNotExist:
+            continue
+        else:
+            module_path, klass = class_str.rsplit('.', 1)
+            module = django_import_module(module_path)
+            partner_wrappers[partner.id] = getattr(module, klass)()
 
 
 class DefaultWrapper(object):

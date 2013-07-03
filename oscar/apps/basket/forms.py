@@ -187,13 +187,14 @@ class AddToBasketForm(forms.Form):
         """
         choices = []
         for variant in item.variants.all():
-            if variant.has_stockrecord:
+            stockrecord = variant.get_stockrecord()
+            if stockrecord is not None:
                 attr_summary = variant.attribute_summary()
                 if attr_summary:
                     attr_summary = "(%s)" % attr_summary
                     summary = u"%s %s - %s" % (
                         variant.get_title(), attr_summary,
-                        currency(variant.stockrecord.price_incl_tax))
+                        currency(stockrecord.price_incl_tax))
                     choices.append((variant.id, summary))
                     self.fields['product_id'] = forms.ChoiceField(
                         choices=tuple(choices), label=_("Variant"))
