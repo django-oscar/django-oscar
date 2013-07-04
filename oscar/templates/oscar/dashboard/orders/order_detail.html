@@ -546,8 +546,8 @@
                             {% for note in notes %}
                                 <tr>
                                     <td>{{ note.date_created }}</td>
-                                    <td>{{ note.user }}</td>
-                                    <td>{{ note.note_type }}</td>
+                                    <td>{{ note.user|default:"-" }}</td>
+                                    <td>{{ note.note_type|default:"-" }}</td>
                                     <td>{{ note.message|linebreaks }}</td>
                                     <td class="span2">
                                         {% if note.is_editable %}

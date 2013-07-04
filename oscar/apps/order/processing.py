@@ -8,6 +8,9 @@ PaymentEventQuantity = get_model('order', 'PaymentEventQuantity')
 
 class EventHandler(object):
 
+    def __init__(self, user=None):
+        self.user = user
+
     def handle_order_status_change(self, order, new_status):
         """
         Handle a requested order status change
@@ -18,7 +21,7 @@ class EventHandler(object):
         """
         Handle a shipping event for a given order.
 
-        This might involve taking payment, sending messages and 
+        This might involve taking payment, sending messages and
         creating the event models themeselves.  You will generally want to
         override this method to implement the specifics of you order processing
         pipeline.
@@ -43,7 +46,7 @@ class EventHandler(object):
     def have_lines_passed_shipping_event(self, order, lines, line_quantities, event_name):
         """
         Test whether the passed lines and quantities have been through the
-        specified shipping event.  
+        specified shipping event.
 
         This is useful for validating if certain shipping events are allowed (ie
         you can't return something before it has shipped).
@@ -89,7 +92,7 @@ class EventHandler(object):
         """
         for line, qty in zip(lines, line_quantities):
             line.product.stockrecord.cancel_allocation(qty)
-    
+
     def create_shipping_event(self, order, event_type, lines, line_quantities,
                               **kwargs):
         reference = kwargs.get('reference', None)
@@ -117,4 +120,5 @@ class EventHandler(object):
         order.communication_events.create(event_type=event_type)
 
     def create_note(self, order, message, note_type='System'):
-        order.notes.create(message=message, note_type=note_type)
+        order.notes.create(message=message, note_type=note_type,
+                           user=self.user)
