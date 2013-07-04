@@ -386,8 +386,8 @@ class AbstractProduct(models.Model):
     def stockrecord_controller(self):
         """
         Return the stockrecord controller for this product.
-        Overwrite this to be able to dynamically chose between different
-        controllers depending on the product.
+        Overwrite this to be able to e.g. dynamically select between different
+        controllers depending on the product class.
         """
         return OneStockRecordController(self)
 
@@ -402,12 +402,15 @@ class AbstractProduct(models.Model):
 
     def is_purchase_permitted(self, user=None, quantity=1):
         """
-        Test whether this product can be bought.
+        Test whether one or more stock records allow the product to be
+        purchased. Optionally allows constraining to a certain user or quantity.
 
         :param user: Check whether this user is allowed to purchase.
                      None for the generic case.
         :param quantity: Check whether the product can be purchased in that
                          quantity.
+        :returns: (True, None) or (False, reason) where reason is a
+                  human-readable reason as to why it's not possible.
         """
         return self.stockrecord_controller.is_purchase_permitted(user,
                                                                  quantity)

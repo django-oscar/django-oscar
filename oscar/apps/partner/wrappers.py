@@ -16,9 +16,7 @@ class DefaultWrapper(object):
 
     def is_available_to_buy(self, stockrecord):
         """
-        Test whether a product is available to buy.
-
-        This is used to determine whether to show the add-to-basket button.
+        Test whether this stockrecord allows the product to be purchased
         """
         if stockrecord.num_in_stock is None:
             return True
@@ -26,8 +24,17 @@ class DefaultWrapper(object):
 
     def is_purchase_permitted(self, stockrecord, user=None, quantity=1, product=None):
         """
-        Test whether a particular purchase is possible (is a user buying a
-        given quantity of the product)
+        Test whether this stock record allows the product to be purchased.
+        Optionally allows constraining to a certain user or quantity.
+
+        :param user: Check whether this user is allowed to purchase.
+                     None for the general case.
+        :param quantity: Check whether the product can be purchased in that
+                         quantity.
+        :param product: Allows passing the product in question to avoid the db
+                        call
+        :returns: (True, None) or (False, reason) where reason is a
+                  human-readable reason as to why it's not possible.
         """
         # check, if fetched product is provided, to avoid db call
         product = product or stockrecord.product
@@ -43,7 +50,11 @@ class DefaultWrapper(object):
 
     def max_purchase_quantity(self, stockrecord, user=None, product=None):
         """
-        Return the maximum available purchase quantity for a given user
+        Return the maximum available purchase quantity
+
+        :param user: Check for a specific user instead of the general case
+        :param product: Allows passing the product in question to avoid the db
+                        call
         """
         product = product or stockrecord.product
         if not product.get_product_class().track_stock:
@@ -54,11 +65,8 @@ class DefaultWrapper(object):
 
     def availability_code(self, stockrecord):
         """
-        Return a code for the availability of this product.
-
-        This is normally used within CSS to add icons to stock messages
-
-        :param oscar.apps.partner.models.StockRecord stockrecord: stockrecord instance
+        Return an product's availability as a code for use in CSS to add icons
+        to the overall availability mark-up.
         """
         if stockrecord.net_stock_level > 0:
             return self.CODE_IN_STOCK
@@ -68,9 +76,8 @@ class DefaultWrapper(object):
 
     def availability(self, stockrecord):
         """
-        Return an availability message for the passed stockrecord.
-
-        :param oscar.apps.partner.models.StockRecord stockrecord: stockrecord instance
+        Return an availability message that can be displayed to the user.
+        For example, "In stock", "Unavailable".
         """
         if stockrecord.net_stock_level > 0:
             return _("In stock (%d available)") % stockrecord.net_stock_level
@@ -80,6 +87,8 @@ class DefaultWrapper(object):
 
     def dispatch_date(self, stockrecord):
         """
+        Returns an estimated dispatch date or None
+
         We don't provide a default value as it could be confusing.  Subclass
         and override this method to provide estimated dispatch dates
         """
@@ -87,6 +96,8 @@ class DefaultWrapper(object):
 
     def lead_time(self, stockrecord):
         """
+        Returns an estimated lead time or None
+
         We don't provide a default value as it could be confusing.  Subclass
         and override this method to provide estimated dispatch dates
         """

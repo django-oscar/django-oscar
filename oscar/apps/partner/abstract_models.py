@@ -201,14 +201,21 @@ class AbstractStockRecord(models.Model):
     @property
     def is_available_to_buy(self):
         """
-        Return whether this stockrecord allows the product to be purchased
+        Test whether this stockrecord allows the product to be purchased
         """
         return get_partner_wrapper(self.partner_id).is_available_to_buy(self)
 
     def is_purchase_permitted(self, user=None, quantity=1, product=None):
         """
-        Return whether this stockrecord allows the product to be purchased by a
-        specific user and quantity
+        Test whether this stock record allows the product to be purchased.
+        Optionally allows constraining to a certain user or quantity.
+
+        :param user: Check whether this user is allowed to purchase.
+                     None for the general case.
+        :param quantity: Check whether the product can be purchased in that
+                         quantity.
+        :returns: (True, None) or (False, reason) where reason is a
+                  human-readable reason as to why it's not possible.
         """
         return get_partner_wrapper(self.partner_id).is_purchase_permitted(self, user, quantity, product)
 
@@ -222,36 +229,39 @@ class AbstractStockRecord(models.Model):
     def availability_code(self):
         """
         Return an product's availability as a code for use in CSS to add icons
-        to the overall availability mark-up.  For example, "instock",
-        "unavailable".
+        to the overall availability mark-up.
+        The default values are "instock", "available" and "unavailable".
         """
         return get_partner_wrapper(self.partner_id).availability_code(self)
 
     @property
     def availability(self):
         """
-        Return a product's availability as a string that can be displayed to the
-        user.  For example, "In stock", "Unavailable".
+        Return an availability message that can be displayed to the user.
+        For example, "In stock", "Unavailable".
         """
         return get_partner_wrapper(self.partner_id).availability(self)
 
     def max_purchase_quantity(self, user=None):
         """
-        Return an item's availability as a string
+        Return the maximum available purchase quantity
 
-        :param user: (optional) The user who wants to purchase
+        :param user: Check for a specific user instead of the general case
         """
         return get_partner_wrapper(self.partner_id).max_purchase_quantity(self, user)
 
     @property
     def dispatch_date(self):
         """
-        Return the estimated dispatch date for a line
+        Returns an estimated dispatch date or None
         """
         return get_partner_wrapper(self.partner_id).dispatch_date(self)
 
     @property
     def lead_time(self):
+        """
+        Returns an estimated lead time or None
+        """
         return get_partner_wrapper(self.partner_id).lead_time(self)
 
     @property
