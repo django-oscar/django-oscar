@@ -41,6 +41,10 @@ class BaseStockRecordController(object):
         raise NotImplementedError
 
     @property
+    def price_excl_tax(self):
+        raise NotImplementedError
+
+    @property
     def price_incl_tax(self):
         raise NotImplementedError
 
@@ -105,6 +109,10 @@ class OneStockRecordController(BaseStockRecordController):
     @property
     def lead_time(self):
         return self.stockrecord.lead_time
+
+    @property
+    def price_excl_tax(self):
+        return self.stockrecord.price_excl_tax
 
     @property
     def price_incl_tax(self):

@@ -44,7 +44,7 @@ class TestStockRecordWithNullStockLevel(TestCase):
         self.assertIsNone(self.wrapper.lead_time(self.record))
 
     def test_returns_zero_tax(self):
-        self.assertEqual(D('0.00'), self.wrapper.calculate_tax(self.record))
+        self.assertEqual(D('0.00'), self.wrapper.price_tax(self.record))
 
 
 class TestStockRecordOfDigitalProduct(TestCase):
@@ -81,7 +81,7 @@ class TestStockRecordOfDigitalProduct(TestCase):
         self.assertIsNone(self.wrapper.lead_time(self.record))
 
     def test_returns_zero_tax(self):
-        self.assertEqual(D('0.00'), self.wrapper.calculate_tax(self.record))
+        self.assertEqual(D('0.00'), self.wrapper.price_tax(self.record))
 
 
 class TestStockRecordOfZeroStockProduct(TestCase):
@@ -118,7 +118,7 @@ class TestStockRecordOfZeroStockProduct(TestCase):
         self.assertIsNone(self.wrapper.lead_time(self.record))
 
     def test_returns_zero_tax(self):
-        self.assertEqual(D('0.00'), self.wrapper.calculate_tax(self.record))
+        self.assertEqual(D('0.00'), self.wrapper.price_tax(self.record))
 
 
 class TestStockRecordWithPositiveStock(TestCase):
@@ -162,4 +162,4 @@ class TestStockRecordWithPositiveStock(TestCase):
         self.assertIsNone(self.wrapper.lead_time(self.record))
 
     def test_returns_zero_tax(self):
-        self.assertEqual(D('0.00'), self.wrapper.calculate_tax(self.record))
+        self.assertEqual(D('0.00'), self.wrapper.price_tax(self.record))

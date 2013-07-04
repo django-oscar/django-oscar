@@ -92,7 +92,7 @@ class DefaultWrapper(object):
         """
         return None
 
-    def calculate_tax(self, stockrecord):
+    def price_tax(self, stockrecord):
         return D('0.00')
 
 

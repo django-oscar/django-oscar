@@ -272,7 +272,7 @@ class AbstractStockRecord(models.Model):
         """
         Return a product's tax value
         """
-        return get_partner_wrapper(self.partner_id).calculate_tax(self)
+        return get_partner_wrapper(self.partner_id).price_tax(self)
 
     def __unicode__(self):
         if self.partner_sku:
