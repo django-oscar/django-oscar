@@ -470,7 +470,7 @@ class Condition(models.Model):
         Determines whether the condition can be applied to a given product
         """
         return (self.range.contains_product(product)
-                and product.is_discountable and product.has_stockrecord)
+                and product.is_discountable and product.has_stockrecords)
 
     def get_applicable_lines(self, basket, most_expensive_first=True):
         """
@@ -675,7 +675,7 @@ class Benefit(models.Model):
         """
         Determines whether the benefit can be applied to a given product
         """
-        return product.has_stockrecord and product.is_discountable
+        return product.has_stockrecords and product.is_discountable
 
     def get_applicable_lines(self, basket, range=None):
         """
@@ -1034,7 +1034,7 @@ class ValueCondition(Condition):
         value_of_matches = D('0.00')
         for line in basket.all_lines():
             product = line.product
-            if (self.can_apply_condition(product) and product.has_stockrecord
+            if (self.can_apply_condition(product) and product.has_stockrecords
                 and line.quantity_without_discount > 0):
                 price = line.unit_price_incl_tax
                 value_of_matches += price * int(line.quantity_without_discount)
@@ -1048,7 +1048,7 @@ class ValueCondition(Condition):
         value_of_matches = D('0.00')
         for line in basket.all_lines():
             product = line.product
-            if (self.can_apply_condition(product) and product.has_stockrecord
+            if (self.can_apply_condition(product) and product.has_stockrecords
                 and line.quantity_without_discount > 0):
                 price = line.unit_price_incl_tax
                 value_of_matches += price * int(line.quantity_without_discount)

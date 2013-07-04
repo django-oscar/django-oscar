@@ -29,13 +29,13 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
             return categories[0].full_name
 
     def prepare_price(self, obj):
-        if obj.is_top_level and obj.has_stockrecord:
+        if obj.is_top_level and obj.has_stockrecords:
             return obj.stockrecord.price_incl_tax
         elif obj.is_group:
             return obj.min_variant_price_incl_tax
 
     def prepare_num_in_stock(self, obj):
-        if obj.has_stockrecord:
+        if obj.has_stockrecords:
             return obj.stockrecord.num_in_stock
 
     def index_queryset(self, using=None):

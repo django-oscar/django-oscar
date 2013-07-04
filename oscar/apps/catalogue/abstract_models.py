@@ -316,10 +316,6 @@ class AbstractProduct(models.Model):
     objects = models.Manager()
     browsable = BrowsableProductManager()
 
-    @property
-    def stockrecord(self):
-        raise NotImplementedError("Change all the code!")
-
     def __init__(self, *args, **kwargs):
         super(AbstractProduct, self).__init__(*args, **kwargs)
         self.attr = ProductAttributesContainer(product=self)
@@ -395,27 +391,33 @@ class AbstractProduct(models.Model):
         """
         return OneStockRecordController(self)
 
+    # Shortcuts for frequently used functions on the stock record controller
+
     @property
-    def has_stockrecord(self):
+    def has_stockrecords(self):
         """
-        Test if this product has a stock record
+        Test if this product has one or more stock records
         """
-        return self.stockrecord_controller.has_stockrecord
+        return self.stockrecord_controller.has_stockrecords
 
     def is_purchase_permitted(self, user=None, quantity=1):
         """
-        Test whether this product can be bought by the passed user.
+        Test whether this product can be bought.
 
-        Convenience function
+        :param user: Check whether this user is allowed to purchase.
+                     None for the generic case.
+        :param quantity: Check whether the product can be purchased in that
+                         quantity.
         """
         return self.stockrecord_controller.is_purchase_permitted(user,
                                                                  quantity)
 
     def select_stockrecord(self, user=None, quantity=1):
         """
-        Convenience function
+        Select an appropriate stock record for given the constraints
         """
         return self.stockrecord_controller.select_stockrecord(user, quantity)
+
 
     def add_category_from_breadcrumbs(self, breadcrumb):
         from oscar.apps.catalogue.categories import create_from_breadcrumbs
@@ -486,7 +488,7 @@ class AbstractProduct(models.Model):
         """
         prices = []
         for variant in self.variants.all():
-            if variant.has_stockrecord:
+            if variant.has_stockrecords:
                 prices.append(getattr(variant.select_stockrecord(), property))
         if not prices:
             return None

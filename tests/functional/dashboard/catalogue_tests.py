@@ -94,7 +94,7 @@ class TestAStaffUser(WebTestCase):
             pass
         else:
             self.assertTrue(product.title == new_title)
-            if product.has_stockrecord:
+            if product.has_stockrecords:
                 self.fail('product has stock record but should not')
 
     def test_can_delete_an_individual_product(self):

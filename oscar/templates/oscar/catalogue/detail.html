@@ -127,7 +127,7 @@
         <tr>
             <th>{% trans "Product class" %}</th><td>{{ product.product_class.name }}</td>
         </tr>
-        {% if product.has_stockrecord %}
+        {% if product.has_stockrecords %}
         <tr>
             <th>{% trans "Price (excl. tax)" %}</th><td>{{ product.stockrecord_controller.price_excl_tax|currency }}</td>
         </tr>

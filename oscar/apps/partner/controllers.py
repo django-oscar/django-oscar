@@ -2,11 +2,11 @@
 from django.core.exceptions import MultipleObjectsReturned
 
 
-class AbstractStockRecordController(object):
+class BaseStockRecordController(object):
 
     # product level
     @property
-    def has_stockrecord(self):
+    def has_stockrecords(self):
         raise NotImplementedError
 
     def select_stockrecord(self, user=None, quantity=1):
@@ -49,7 +49,7 @@ class AbstractStockRecordController(object):
         raise NotImplementedError
 
 
-class OneStockRecordController(AbstractStockRecordController):
+class OneStockRecordController(BaseStockRecordController):
 
     def __init__(self, product):
         self.product = product
@@ -67,8 +67,8 @@ class OneStockRecordController(AbstractStockRecordController):
                 "only one stock record is available per product")
 
     @property
-    def has_stockrecord(self):
-        return self.product.stockrecords.count() == 1
+    def has_stockrecords(self):
+        return self.product.stockrecords.count() >= 1
 
     # straight mappings
     def select_stockrecord(self, user=None, quantity=1):

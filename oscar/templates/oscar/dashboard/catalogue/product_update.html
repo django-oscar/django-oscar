@@ -81,7 +81,7 @@
                                 <p>
                                     <strong>{% trans "Fulfilment partner" %}</strong> <br />
                                     <span class="product-count">
-                                        {% if product.has_stockrecord %}
+                                        {% if product.has_stockrecords %}
                                             {{ product.stockrecord.partner.name }}
                                         {% else %}
                                             {% trans "Out of stock" %}
