@@ -96,12 +96,12 @@ class TestPlacingOrderForDigitalGoods(TestCase):
             name="Digital", track_stock=False)
         product = create_product(
             price=D('9.99'), product_class="Digital", num_in_stock=None)
-        self.assertTrue(product.stockrecord.num_in_stock is None)
-        self.assertTrue(product.stockrecord.num_allocated is None)
+        self.assertTrue(product.select_stockrecord().num_in_stock is None)
+        self.assertTrue(product.select_stockrecord().num_allocated is None)
 
         self.basket.add_product(product)
         self.creator.place_order(basket=self.basket, order_number='1234')
 
         product_ = Product.objects.get(id=product.id)
-        self.assertTrue(product_.stockrecord.num_in_stock is None)
-        self.assertTrue(product_.stockrecord.num_allocated is None)
+        self.assertTrue(product_.select_stockrecord().num_in_stock is None)
+        self.assertTrue(product_.select_stockrecord().num_allocated is None)

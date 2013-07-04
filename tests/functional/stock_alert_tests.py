@@ -13,12 +13,13 @@ class TestPlacingAnOrder(TestCase):
 
     def setUp(self):
         self.product = create_product(price=D('12.00'), num_in_stock=5)
+        self.stockrecord = self.product.select_stockrecord()
         self.basket = Basket()
         self.basket.add_product(self.product)
 
     def set_threshold(self, threshold):
-        self.product.stockrecord.low_stock_threshold = threshold
-        self.product.stockrecord.save()
+        self.stockrecord.low_stock_threshold = threshold
+        self.stockrecord.save()
 
     def test_correctly_allocates_stock(self):
         OrderCreator().place_order(self.basket)
@@ -40,17 +41,16 @@ class TestPlacingAnOrder(TestCase):
         OrderCreator().place_order(self.basket)
 
         alerts = StockAlert.objects.filter(
-            stockrecord=self.product.stockrecord)
+            stockrecord=self.stockrecord)
         self.assertEqual(1, len(alerts))
 
     def test_only_raises_an_alert_once(self):
         self.set_threshold(5)
-        StockAlert.objects.create(stockrecord=self.product.stockrecord,
+        StockAlert.objects.create(stockrecord=self.stockrecord,
                                   threshold=10)
         OrderCreator().place_order(self.basket)
 
-        alerts = StockAlert.objects.filter(
-            stockrecord=self.product.stockrecord)
+        alerts = StockAlert.objects.filter(stockrecord=self.stockrecord)
         self.assertEqual(1, len(alerts))
 
 
@@ -58,23 +58,24 @@ class TestRestockingProduct(TestCase):
 
     def setUp(self):
         self.product = create_product(price=D('12.00'), num_in_stock=5)
+        self.stockrecord = self.product.select_stockrecord()
         self.basket = Basket()
         self.basket.add_product(self.product)
 
     def set_threshold(self, threshold):
-        self.product.stockrecord.low_stock_threshold = threshold
-        self.product.stockrecord.save()
+        self.stockrecord.low_stock_threshold = threshold
+        self.stockrecord.save()
 
     def test_closes_open_alert(self):
         self.set_threshold(5)
         OrderCreator().place_order(self.basket)
 
-        alert = StockAlert.objects.get(stockrecord=self.product.stockrecord)
+        alert = StockAlert.objects.get(stockrecord=self.stockrecord)
         self.assertEqual(StockAlert.OPEN, alert.status)
 
         # Restock product
-        self.product.stockrecord.num_in_stock = 15
-        self.product.stockrecord.save()
+        self.stockrecord.num_in_stock = 15
+        self.stockrecord.save()
 
-        alert = StockAlert.objects.get(stockrecord=self.product.stockrecord)
+        alert = StockAlert.objects.get(stockrecord=self.stockrecord)
         self.assertEqual(StockAlert.CLOSED, alert.status)

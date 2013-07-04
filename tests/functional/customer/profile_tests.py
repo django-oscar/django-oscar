@@ -115,9 +115,9 @@ class TestASignedInUser(WebTestCase):
         self.assertEqual(1, basket.all_lines().count())
 
     def test_cannot_reorder_an_out_of_stock_product(self):
-        product = self.order.lines.all()[0].product
-        product.stockrecord.num_in_stock = 0
-        product.stockrecord.save()
+        stockrecord = self.order.lines.all()[0].product.select_stockrecord()
+        stockrecord.num_in_stock = 0
+        stockrecord.save()
 
         order_history_page = self.app.get(reverse('customer:order-list'),
                                           user=self.user)

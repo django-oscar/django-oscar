@@ -93,10 +93,10 @@ class ImportSmokeTest(TestCase):
         self.assertEquals("", self.item.description)
 
     def test_price_is_imported(self):
-        self.assertEquals(D('10.32'), self.item.stockrecord.price_excl_tax)
+        self.assertEquals(D('10.32'), self.item.select_stockrecord().price_excl_tax)
 
     def test_num_in_stock_is_imported(self):
-        self.assertEquals(6, self.item.stockrecord.num_in_stock)
+        self.assertEquals(6, self.item.select_stockrecord().num_in_stock)
 
 
 class ImportSemicolonDelimitedFileTest(TestCase):
