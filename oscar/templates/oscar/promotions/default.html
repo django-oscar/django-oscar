@@ -13,8 +13,8 @@
         From {{ product.min_variant_price_incl_tax|currency }}
     {% else %}
         {% if product.has_stockrecord %} 
-            {{ product.stockrecord.price_incl_tax|currency }}<br/>
-            {{ product.stockrecord.availability }}
+            {{ product.stockrecord_controller.price_incl_tax|currency }}<br/>
+            {{ product.stockrecord_controller.availability }}
         {% else %}
         {% trans "Not available" %}
         {% endif %}

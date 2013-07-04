@@ -50,7 +50,7 @@
                         {% endwith %}
                     </div>
                     <h4><a href="{{ form.instance.product.get_absolute_url }}">{{ form.instance.description }}</a></h4>
-                    <p class="availability {{ form.instance.product.stockrecord.availability_code }}">{{ form.instance.product.stockrecord.availability }}</p>
+                    <p class="availability {{ form.instance.product.stockrecord_controller.availability_code }}">{{ form.instance.product.stockrecord_controller.availability }}</p>
                 </div>
                 <div class="span4">
                     <div class="checkout-quantity control-group {% if form.errors %}error{% endif %}">
@@ -152,7 +152,7 @@
                     {% endwith %}
             </div>
             <h4><a href="{{ form.instance.product.get_absolute_url }}">{{ form.instance.description }}</a></h4>
-                <p class="availability {{ form.instance.product.stockrecord.availability_code }}">{{ form.instance.product.stockrecord.availability }}</p>
+                <p class="availability {{ form.instance.product.stockrecord_controller.availability_code }}">{{ form.instance.product.stockrecord_controller.availability }}</p>
                 <a href="#" data-id="{{ forloop.counter0 }}" data-behaviours="remove">{% trans "Remove" %}</a>
             <div style="display:none">
                 {{ form.move_to_basket }}

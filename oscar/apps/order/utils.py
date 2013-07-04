@@ -125,9 +125,10 @@ class OrderCreator(object):
         """
         Return the partner for a product
         """
-        if product.has_stockrecord:
-            return product.stockrecord.partner
-        raise UnableToPlaceOrder(_("No partner found for product '%s'") % product)
+        try:
+            return product.select_stockrecord().partner
+        except AttributeError:
+            raise UnableToPlaceOrder(_("No partner found for product '%s'") % product)
 
     def create_line_models(self, order, basket_line, extra_line_fields=None):
         """
@@ -136,7 +137,7 @@ class OrderCreator(object):
         You can set extra fields by passing a dictionary as the extra_line_fields value
         """
         partner = self.get_partner_for_product(basket_line.product)
-        stockrecord = basket_line.product.stockrecord
+        stockrecord = basket_line.product.select_stockrecord()
         line_data = {'order': order,
                      # Partner details
                      'partner': partner,
@@ -158,7 +159,7 @@ class OrderCreator(object):
                      'unit_price_excl_tax': basket_line.unit_price_excl_tax,
                      'unit_retail_price': stockrecord.price_retail,
                      # Shipping details
-                     'est_dispatch_date':  basket_line.product.stockrecord.dispatch_date
+                     'est_dispatch_date':  basket_line.product.select_stockrecord().dispatch_date
                      }
         extra_line_fields = extra_line_fields or {}
         if hasattr(settings, 'OSCAR_INITIAL_LINE_STATUS'):
@@ -177,7 +178,7 @@ class OrderCreator(object):
     def update_stock_records(self, line):
         product = line.product
         if product.product_class.track_stock:
-            line.product.stockrecord.allocate(line.quantity)
+            line.product.select_stockrecord().allocate(line.quantity)
 
     def create_additional_line_models(self, order, order_line, basket_line):
         """

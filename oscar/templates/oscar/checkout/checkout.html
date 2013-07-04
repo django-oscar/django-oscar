@@ -105,7 +105,7 @@
                     {% endwith %}
             </div>
                 <h4><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h4>
-                <span class="availability {{ line.product.stockrecord.availability_code }}">{{ line.product.stockrecord.availability }}</span>
+                <span class="availability {{ line.product.stockrecord_controller.availability_code }}">{{ line.product.stockrecord_controller.availability }}</span>
             </div>
             <div class="span1 align-center">
                 {{ line.quantity }}

@@ -51,10 +51,8 @@ def send_product_alerts(product):
     if the product is back in stock. Add a little 'hurry' note if the
     amount of in-stock items is less then the number of notifications.
     """
-    if not product.has_stockrecord:
-        return
-    num_in_stock = product.stockrecord.num_in_stock
-    if num_in_stock == 0:
+    stockrecord = product.stockrecord_controller.select_stockrecord()
+    if stockrecord is None or stockrecord.num_in_stock == 0:
         return
 
     logger.info("Sending alerts for '%s'", product)
@@ -62,7 +60,7 @@ def send_product_alerts(product):
         product=product,
         status=ProductAlert.ACTIVE,
     )
-    hurry_mode = alerts.count() < product.stockrecord.num_in_stock
+    hurry_mode = alerts.count() < stockrecord.num_in_stock
 
     # Load templates
     message_tpl = loader.get_template('customer/alerts/message.html')

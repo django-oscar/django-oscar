@@ -14,7 +14,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from extra_views import ModelFormSetView
 from oscar.core import ajax
 from oscar.apps.basket.signals import basket_addition, voucher_addition
-from oscar.templatetags.currency_filters import currency
 from oscar.core.loading import get_class, get_classes
 Applicator = get_class('offer.utils', 'Applicator')
 (BasketLineForm, AddToBasketForm, BasketVoucherForm,

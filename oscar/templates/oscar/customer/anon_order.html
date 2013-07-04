@@ -64,7 +64,7 @@
         {% for line in order.lines.all %}
             <tr>
                 <td><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></td>
-                <td>{{ line.product.stockrecord.availability }}</td>
+                <td>{{ line.product.stockrecord_controller.availability }}</td>
                 <td>{{ line.quantity }}</td>
                 <td>{{ line.line_price_before_discounts_excl_tax|currency }}</td>
                 <td>{{ line.line_price_before_discounts_incl_tax|currency }}</td>
