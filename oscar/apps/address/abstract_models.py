@@ -165,8 +165,10 @@ class AbstractCountry(models.Model):
     name = models.CharField(_('Official name (CAPS)'), max_length=128)
     printable_name = models.CharField(_('Country name'), max_length=128)
 
-    is_highlighted = models.BooleanField(_("Is Highlighted"), default=False,
-                                         db_index=True)
+    is_highlighted = models.PositiveSmallIntegerField(_("Is Highlighted"), default=0,
+                                         db_index=True,
+                                         help_text=_('Higher the number, higher the '
+                                                     'country in the list.'))
     is_shipping_country = models.BooleanField(_("Is Shipping Country"),
                                               default=False, db_index=True)
 
