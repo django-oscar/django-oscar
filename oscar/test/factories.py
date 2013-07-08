@@ -35,8 +35,14 @@ def create_product(price=None, title=u"Dummy title",
     Helper method for creating products that are used in tests.
     """
     ic, __ = ProductClass._default_manager.get_or_create(name=product_class)
-    item = Product._default_manager.create(title=title, product_class=ic,
-                                           upc=upc, **kwargs)
+    item = Product(title=title, product_class=ic, upc=upc, **kwargs)
+
+    if attributes:
+        for key, value in attributes.items():
+            setattr(item.attr, key, value)
+
+    item.save()
+
     if price is not None or partner_sku or num_in_stock is not None:
         if not partner_sku:
             partner_sku = 'sku_%d_%d' % (item.id, random.randint(0, 10000))
@@ -48,13 +54,6 @@ def create_product(price=None, title=u"Dummy title",
                                             partner_sku=partner_sku,
                                             price_excl_tax=price,
                                             num_in_stock=num_in_stock)
-    if attributes:
-        for key, value in attributes.items():
-            attr, __ = ProductAttribute.objects.get_or_create(
-                name=key, code=key)
-            ProductAttributeValue.objects.create(
-                product=item, attribute=attr, value=value)
-
     return item
 
 
