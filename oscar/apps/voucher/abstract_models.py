@@ -141,7 +141,7 @@ class AbstractVoucherApplication(models.Model):
     user = models.ForeignKey(AUTH_USER_MODEL, blank=True, null=True,
                              verbose_name=_("User"))
     order = models.ForeignKey('order.Order', verbose_name=_("Order"))
-    date_created = models.DateField(_("Date Creted"), auto_now_add=True)
+    date_created = models.DateField(_("Date Created"), auto_now_add=True)
 
     class Meta:
         abstract = True
