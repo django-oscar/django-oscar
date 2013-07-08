@@ -1,6 +1,7 @@
 from django.contrib.auth.backends import ModelBackend
 from django.core.mail import mail_admins
 from django.core.exceptions import ImproperlyConfigured
+from oscar.apps.customer.utils import normalise_email
 
 from oscar.core.compat import get_user_model
 
@@ -24,16 +25,11 @@ class Emailbackend(ModelBackend):
         if email is None:
             if not 'username' in kwargs or kwargs['username'] is None:
                 return None
-            email = kwargs['username']
+            clean_email = normalise_email(kwargs['username'])
 
         # Check if we're dealing with an email address
-        if '@' not in email:
+        if '@' not in clean_email:
             return None
-
-        # We lowercase the host part as this is what Django does when saving a
-        # user
-        local, host = email.split('@')
-        clean_email = local + '@' + host.lower()
 
         # Since Django doesn't enforce emails to be unique, we look for all
         # matching users and try to authenticate them all.  If we get more than
