@@ -68,7 +68,7 @@ class AbstractCategory(MP_Node):
     name = models.CharField(_('Name'), max_length=255, db_index=True)
     description = models.TextField(_('Description'), blank=True, null=True)
     image = models.ImageField(_('Image'), upload_to='categories', blank=True,
-                              null=True)
+                              null=True, max_length=255)
     slug = models.SlugField(_('Slug'), max_length=255, db_index=True,
                             editable=False)
     full_name = models.CharField(_('Full Name'), max_length=255,
@@ -941,7 +941,7 @@ class AbstractProductImage(models.Model):
     product = models.ForeignKey(
         'catalogue.Product', related_name='images', verbose_name=_("Product"))
     original = models.ImageField(
-        _("Original"), upload_to=settings.OSCAR_IMAGE_FOLDER)
+        _("Original"), upload_to=settings.OSCAR_IMAGE_FOLDER, max_length=255)
     caption = models.CharField(
         _("Caption"), max_length=200, blank=True, null=True)
 
