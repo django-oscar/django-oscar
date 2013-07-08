@@ -24,33 +24,21 @@
         {{ form.non_field_errors }}
         {% include 'partials/form_field.html' with field=form.username %}
 
-        <div class="control-group">
+        <div class="control-group {% for error in form.password.errors %}error{% endfor %}">
             {{ form.options.errors }}
             <div class="controls">
                 <label class="radio">
                     <input type="radio" id="id_options_1" name="options" value="{{ form.EXISTING }}" {% if form.password.errors or form.non_field_errors %}checked="checked"{% endif %} />
-                    {% trans "I have an account and my password is" %}:
-                </label>
-            </div>
-        </div>
-
-        <div class="control-group {% for error in form.password.errors %}error{% endfor %}">
-            <div class="controls">
-                {{ form.password }}
-                <small><a href="{% url 'password-reset' %}">{% trans "Get a password reminder" %}</a></small>
-                {% for error in form.password.errors %}
-                    <span class="help-block">
-                        {{ error }}
-                    </span>
-                {% endfor %}
-            </div>
-        </div>
-
-        <div class="control-group">
-            <div class="controls">
-                <label class="radio">
-                    <input type="radio" id="id_options_0" name="options" value="{{ form.GUEST }}"  />
-                    {% trans "I want to continue without registering" %}
+                    {% trans "I am a returning customer, and my password is" %}:
+                    <div class="form-inline">
+                        {{ form.password }}
+                        <small><a href="{% url 'password-reset' %}" tabindex="-1">{% trans "Get a password reminder" %}</a></small>
+                        {% for error in form.password.errors %}
+                            <span class="help-block">
+                                {{ error }}
+                            </span>
+                        {% endfor %}
+                    </div>
                 </label>
             </div>
         </div>
@@ -59,7 +47,16 @@
             <div class="controls">
                 <label class="radio">
                     <input type="radio" id="id_options_2" name="options" value="{{ form.NEW }}" {% if not form.password.errors and not form.non_field_errors %}checked="checked"{% endif %} />
-                    {% trans "I want to create a new account and continue (it is quick!)" %}
+                    {% trans "I am a new customer and want to create an account" %}
+                </label>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <div class="controls">
+                <label class="radio">
+                    <input type="radio" id="id_options_0" name="options" value="{{ form.GUEST }}"  />
+                    {% trans "I am a new customer and want to checkout as guest" %}
                 </label>
             </div>
         </div>
