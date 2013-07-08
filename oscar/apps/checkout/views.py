@@ -9,6 +9,7 @@ from django.db.models import get_model
 from django.utils.translation import ugettext as _
 from django.views.generic import DetailView, TemplateView, FormView, \
                                  DeleteView, UpdateView, CreateView
+from oscar.apps.customer.utils import normalise_email
 
 from oscar.apps.shipping.methods import NoShippingRequired
 from oscar.core.loading import get_class, get_classes
@@ -69,7 +70,7 @@ class IndexView(CheckoutSessionMixin, FormView):
 
     def form_valid(self, form):
         if form.is_guest_checkout() or form.is_new_account_checkout():
-            email = form.cleaned_data['username']
+            email = normalise_email(form.cleaned_data['username'])
             self.checkout_session.set_guest_email(email)
 
             if form.is_new_account_checkout():

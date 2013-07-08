@@ -7,7 +7,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from django import forms
 from django.db.models import get_model
 from django.contrib.auth import forms as auth_forms
-from django.conf import settings
 from django.core import validators
 from django.core.exceptions import ValidationError
 from django.contrib.sites.models import get_current_site
@@ -15,7 +14,7 @@ from django.contrib.auth.tokens import default_token_generator
 
 from oscar.core.loading import get_profile_class, get_class
 from oscar.core.compat import get_user_model
-from oscar.apps.customer.utils import get_password_reset_url
+from oscar.apps.customer.utils import get_password_reset_url, normalise_email
 
 Dispatcher = get_class('customer.utils', 'Dispatcher')
 CommunicationEventType = get_model('customer', 'communicationeventtype')
@@ -140,14 +139,11 @@ class EmailUserCreationForm(forms.ModelForm):
         fields = ('email',)
 
     def clean_email(self):
-        email = self.cleaned_data['email'].lower()
-        local, host = email.split('@')
-        clean_email = local + '@' + host.lower()
-        users = User.objects.filter(email=clean_email)
-        if len(users) > 0:
+        email = normalise_email(self.cleaned_data['email'])
+        if User._default_manager.filter(email=email).exists():
             raise forms.ValidationError(
                 _("A user with that email address already exists."))
-        return clean_email
+        return email
 
     def clean_password2(self):
         password1 = self.cleaned_data.get('password1', '')
@@ -220,16 +216,12 @@ class UserForm(forms.ModelForm):
         unique-ness of email addresses is *not* enforced on the model
         level in ``django.contrib.auth.models.User``.
         """
-        email = self.cleaned_data['email']
-        try:
-            User.objects.exclude(
-                id=self.user.id).get(email=email)
-        except User.DoesNotExist:
-            return email
-        else:
+        email = normalise_email(self.cleaned_data['email'])
+        if User._default_manager.filter(
+                email=email).exclude(id=self.user.id).exists():
             raise ValidationError(
-                _("A user with this email address already exists")
-            )
+                _("A user with this email address already exists"))
+        return email
 
     class Meta:
         model = User
@@ -289,16 +281,12 @@ if Profile:
             exclude = ('user',)
 
         def clean_email(self):
-            email = self.cleaned_data['email']
-            try:
-                User.objects.exclude(
-                    id=self.user.id).get(email=email)
-            except User.DoesNotExist:
-                return email
-            else:
+            email = normalise_email(self.cleaned_data['email'])
+            if User._default_manager.filter(
+                    email=email).exclude(id=self.user.id).exists():
                 raise ValidationError(
-                    _("A user with this email address already exists")
-                )
+                    _("A user with this email address already exists"))
+            return email
 
         def save(self, *args, **kwargs):
             user = self.instance.user
