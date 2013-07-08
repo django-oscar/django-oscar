@@ -229,7 +229,7 @@ class AbstractNotification(models.Model):
                                 default=INBOX)
 
     date_sent = models.DateTimeField(auto_now_add=True)
-    date_read = models.DateTimeField(null=True)
+    date_read = models.DateTimeField(blank=True, null=True)
 
     class Meta:
         ordering = ('-date_sent',)
