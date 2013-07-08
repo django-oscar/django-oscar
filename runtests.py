@@ -21,7 +21,12 @@ if __name__ == '__main__':
     args = sys.argv[1:]
 
     if not args:
-        args = ['-s', '-x', '--processes=4']
+        import multiprocessing
+        try:
+            num_cores = multiprocessing.cpu_count()
+        except NotImplementedError:
+            num_cores = 4
+        args = ['-s', '-x', '--processes=%s' % num_cores]
     else:
         # Some args specified.  Check to see if any nose options have been
         # specified.  If they have, then don't set any
