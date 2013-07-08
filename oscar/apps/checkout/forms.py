@@ -4,6 +4,10 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.address.forms import AbstractAddressForm
+from oscar.apps.customer.utils import normalise_email
+from oscar.core.compat import get_user_model
+
+User = get_user_model()
 
 
 class ShippingAddressForm(AbstractAddressForm):
@@ -32,11 +36,16 @@ class GatewayForm(AuthenticationForm):
                                 choices=CHOICES)
 
     def clean(self):
-        cleaned_data = self.cleaned_data
         if self.is_guest_checkout() or self.is_new_account_checkout():
             if 'password' in self.errors:
                 del self.errors['password']
-            return cleaned_data
+            email = normalise_email(self.cleaned_data['username'])
+            if User._default_manager.filter(email=email).exists():
+                self.cleaned_data['options'] = self.EXISTING
+                raise forms.ValidationError(
+                    _("A user with that email address already exists. "
+                      "Please enter your password."))
+            return self.cleaned_data
         return super(GatewayForm, self).clean()
 
     def is_guest_checkout(self):
