@@ -330,7 +330,6 @@ class OrderDetailView(DetailView):
         return Transaction.objects.filter(
             source__order=self.object)
 
-
     def get_order_note_form(self):
         post_data = None
         kwargs = {}
@@ -415,7 +414,7 @@ class OrderDetailView(DetailView):
             messages.error(request, _("The new status '%s' is not valid for this order") % new_status)
             return self.reload_page_response()
 
-        handler = EventHandler()
+        handler = EventHandler(request.user)
         try:
             handler.handle_order_status_change(order, new_status)
         except PaymentError, e:

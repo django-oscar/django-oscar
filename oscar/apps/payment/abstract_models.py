@@ -144,7 +144,7 @@ class AbstractSource(models.Model):
             AbstractTransaction.AUTHORISE, amount, reference, status)
     allocate.alters_data = True
 
-    def debit(self, amount=None, reference=None, status=None):
+    def debit(self, amount=None, reference=None, status=''):
         """
         Convenience method for recording debits against this source
         """
