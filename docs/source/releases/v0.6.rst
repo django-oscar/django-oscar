@@ -77,6 +77,11 @@ Better bankcard handling
 
 The bankcard model in the payment app has been greatly improved.
 
+Order processing changes
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+There are changes to order processing methods
+
 Upgrading 
 =========
 
@@ -94,8 +99,8 @@ Templates:
   ``customer/orders/order_detail.html``.
 
 * Alternative product class templates now use ``slug` field instead of
-   ``name.lower()`` to determine their filename.  If you have templates for
-   specific product classes, please update your filenames accordingly
+  ``name.lower()`` to determine their filename.  If you have templates for
+  specific product classes, please update your filenames accordingly
 
 Address app:
 
@@ -125,4 +130,10 @@ There are new migrations in the following apps to be aware of.
 * Address:
 
     - ``0003``: ``Country``'s ``is_highlighted`` is now an integer to allow
-                finer control.
+      finer control.
+
+* Order app:
+
+    - The `date` field of the ``order.AbstractCommunicationEvent``, ``order.AbstractPaymentEvent`` and
+      ``order.AbstractShippingEvent`` models have been renamed to ``date_created`` for
+      consistency with the rest of Oscar.

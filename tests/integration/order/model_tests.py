@@ -105,10 +105,10 @@ class LineTests(TestCase):
         basket.add_product(create_product(price=D('10.00')), 4)
         self.order = create_order(number='100002', basket=basket)
         self.line = self.order.lines.all()[0]
-        self.order_placed,_ = ShippingEventType.objects.get_or_create(code='order_placed',
-                                                                      name='Order placed')
-        self.dispatched,_ = ShippingEventType.objects.get_or_create(code='dispatched',
-                                                                    name='Dispatched')
+        self.order_placed, __ = ShippingEventType.objects.get_or_create(
+            code='order_placed', name='Order placed')
+        self.dispatched, __ = ShippingEventType.objects.get_or_create(
+            code='dispatched', name='Dispatched')
 
     def tearDown(self):
         ShippingEventType.objects.all().delete()
@@ -118,14 +118,15 @@ class LineTests(TestCase):
         Creates a shipping event for the test line
         """
         event = ShippingEvent.objects.create(order=self.order, event_type=type)
-        if quantity == None:
+        if quantity is None:
             quantity = self.line.quantity
-        ShippingEventQuantity.objects.create(event=event, line=self.line, quantity=quantity)
+        ShippingEventQuantity.objects.create(
+            event=event, line=self.line, quantity=quantity)
 
     def test_shipping_event_history(self):
         self.event(self.order_placed, 3)
         self.event(self.dispatched, 1)
-        history = self.line.shipping_event_breakdown()
+        history = self.line.shipping_event_breakdown
         self.assertEqual(3, history['Order placed']['quantity'])
         self.assertEqual(1, history['Dispatched']['quantity'])
 
@@ -171,14 +172,14 @@ class LineTests(TestCase):
         type = self.order_placed
         self.event(type, self.line.quantity - 1)
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(InvalidShippingEvent):
             self.event(type, self.line.quantity)
 
     def test_inconsistent_shipping_quantities(self):
         type = ShippingEventType.objects.get(code='order_placed')
         self.event(type, self.line.quantity - 1)
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(InvalidShippingEvent):
             # Total quantity is too high
             self.event(type, 2)
 
@@ -251,12 +252,6 @@ class ShippingEventQuantityTests(TestCase):
         event = self.order.shipping_events.create(event_type=self.shipped)
         event_quantity = ShippingEventQuantity.objects.create(event=event, line=self.line)
         self.assertEquals(self.line.quantity, event_quantity.quantity)
-
-    def test_exception_is_raised_if_previous_events_are_not_passed(self):
-        event = self.order.shipping_events.create(event_type=self.returned)
-        with self.assertRaises(InvalidShippingEvent):
-            ShippingEventQuantity.objects.create(event=event,
-                                                 line=self.line)
 
     def test_event_is_created_ok_when_prerequisites_are_met(self):
         shipped_event = self.order.shipping_events.create(event_type=self.shipped)

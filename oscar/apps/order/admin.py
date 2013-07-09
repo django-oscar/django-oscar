@@ -51,7 +51,7 @@ class PaymentEventQuantityInline(admin.TabularInline):
 
 class PaymentEventAdmin(admin.ModelAdmin):
     list_display = ('order', 'event_type', 'amount', 'num_affected_lines',
-                    'date')
+                    'date_created')
     inlines = [PaymentEventQuantityInline]
 
 
