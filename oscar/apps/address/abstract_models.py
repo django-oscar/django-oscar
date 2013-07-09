@@ -165,10 +165,10 @@ class AbstractCountry(models.Model):
     name = models.CharField(_('Official name (CAPS)'), max_length=128)
     printable_name = models.CharField(_('Country name'), max_length=128)
 
-    is_highlighted = models.PositiveSmallIntegerField(_("Is Highlighted"), default=0,
-                                         db_index=True,
-                                         help_text=_('Higher the number, higher the '
-                                                     'country in the list.'))
+    display_order = models.PositiveSmallIntegerField(
+        _("Display order"), default=0, db_index=True,
+        help_text=_('Higher the number, higher the country in the list.'))
+
     is_shipping_country = models.BooleanField(_("Is Shipping Country"),
                                               default=False, db_index=True)
 
@@ -176,7 +176,7 @@ class AbstractCountry(models.Model):
         abstract = True
         verbose_name = _('Country')
         verbose_name_plural = _('Countries')
-        ordering = ('-is_highlighted', 'name',)
+        ordering = ('-display_order', 'name',)
 
     def __unicode__(self):
         return self.printable_name

@@ -8,19 +8,22 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # Adding field 'Country.display_order'
+        db.add_column('address_country', 'display_order',
+                      self.gf('django.db.models.fields.PositiveSmallIntegerField')(default=0, db_index=True),
+                      keep_default=False)
 
-        # Changing field 'Country.is_highlighted'
-        db.alter_column('address_country', 'is_highlighted', self.gf('django.db.models.fields.PositiveSmallIntegerField')())
 
     def backwards(self, orm):
+        # Deleting field 'Country.display_order'
+        db.delete_column('address_country', 'display_order')
 
-        # Changing field 'Country.is_highlighted'
-        db.alter_column('address_country', 'is_highlighted', self.gf('django.db.models.fields.BooleanField')())
 
     models = {
         'address.country': {
             'Meta': {'ordering': "('-is_highlighted', 'name')", 'object_name': 'Country'},
-            'is_highlighted': ('django.db.models.fields.PositiveSmallIntegerField', [], {'default': '0', 'db_index': 'True'}),
+            'display_order': ('django.db.models.fields.PositiveSmallIntegerField', [], {'default': '0', 'db_index': 'True'}),
+            'is_highlighted': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'db_index': 'True'}),
             'is_shipping_country': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'db_index': 'True'}),
             'iso_3166_1_a2': ('django.db.models.fields.CharField', [], {'max_length': '2', 'primary_key': 'True'}),
             'iso_3166_1_a3': ('django.db.models.fields.CharField', [], {'max_length': '3', 'null': 'True', 'db_index': 'True'}),
