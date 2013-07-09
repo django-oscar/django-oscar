@@ -61,12 +61,18 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             self._payment_sources = []
         self._payment_sources.append(source)
 
-    def add_payment_event(self, event_type_name, amount):
+    def add_payment_event(self, event_type_name, amount, reference=None):
+        """
+        Record a payment event for creation once the order is placed
+        """
         event_type, __ = PaymentEventType.objects.get_or_create(
             name=event_type_name)
+        # We keep a local cache of payment events
         if self._payment_events is None:
             self._payment_events = []
-        event = PaymentEvent(event_type=event_type, amount=amount)
+        event = PaymentEvent(
+            event_type=event_type, amount=amount,
+            reference=reference)
         self._payment_events.append(event)
 
     def handle_successful_order(self, order):
@@ -119,19 +125,16 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         # Set guest email address for anon checkout.   Some libraries (eg
         # PayPal) will pass this explicitly so we take care not to clobber.
         if (not self.request.user.is_authenticated() and 'guest_email'
-            not in kwargs):
+                not in kwargs):
             kwargs['guest_email'] = self.checkout_session.get_guest_email()
 
-        order = OrderCreator().place_order(basket=basket,
-                                           total_incl_tax=total_incl_tax,
-                                           total_excl_tax=total_excl_tax,
-                                           user=user,
-                                           shipping_method=shipping_method,
-                                           shipping_address=shipping_address,
-                                           billing_address=billing_address,
-                                           order_number=order_number,
-                                           status=status,
-                                           **kwargs)
+        order = OrderCreator().place_order(
+            basket=basket, total_incl_tax=total_incl_tax,
+            total_excl_tax=total_excl_tax, user=user,
+            shipping_method=shipping_method,
+            shipping_address=shipping_address,
+            billing_address=billing_address, order_number=order_number,
+            status=status, **kwargs)
         self.save_payment_details(order)
         return order
 
@@ -224,9 +227,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         # We assume all lines are involved in the initial payment event
         for line in order.lines.all():
             PaymentEventQuantity.objects.create(
-                event=event,
-                line=line,
-                quantity=line.quantity)
+                event=event, line=line, quantity=line.quantity)
 
     def save_payment_sources(self, order):
         """

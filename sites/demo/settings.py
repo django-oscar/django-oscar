@@ -204,6 +204,11 @@ LOGGING = {
             'propagate': True,
             'level': 'INFO',
         },
+        'datacash': {
+            'handlers': ['console'],
+            'propagate': True,
+            'level': 'INFO',
+        },
         'django.db.backends': {
             'handlers': ['null'],
             'propagate': False,
@@ -238,9 +243,12 @@ INSTALLED_APPS = [
     'apps.bigbang',
 ]
 
-# Include a shipping override app to provide some shipping methods
+# Include core apps with a few overrides:
+# - a shipping override app to provide some shipping methods
+# - an order app to provide order processing logic
 from oscar import get_core_apps
-INSTALLED_APPS = INSTALLED_APPS + get_core_apps(['apps.shipping'])
+INSTALLED_APPS = INSTALLED_APPS + get_core_apps(
+    ['apps.shipping', 'apps.order'])
 
 AUTHENTICATION_BACKENDS = (
     'oscar.apps.customer.auth_backends.Emailbackend',

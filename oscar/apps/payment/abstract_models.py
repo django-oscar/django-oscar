@@ -47,6 +47,7 @@ class AbstractTransaction(models.Model):
         abstract = True
         verbose_name = _("Transaction")
         verbose_name_plural = _("Transactions")
+        ordering = ['-date_created']
 
 
 class AbstractSource(models.Model):
@@ -278,6 +279,13 @@ class AbstractBankcard(models.Model):
             self.card_type = 'Unknown card type'
         self.number = u"XXXX-XXXX-XXXX-%s" % self.number[-4:]
         self.start_date = self.issue_number = self.ccv = None
+
+    @property
+    def card_number(self):
+        import warnings
+        warnings.warn(("The `card_number` property is deprecated in favour of "
+                       "`number` on the Bankcard model"), DeprecationWarning)
+        return self.number
 
     @property
     def cvv(self):
