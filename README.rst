@@ -35,7 +35,7 @@ Further reading:
 
 Continuous integration status:
 
-.. image:: https://secure.travis-ci.org/tangentlabs/django-oscar.png
+.. image:: https://secure.travis-ci.org/tangentlabs/django-oscar.png?branch=master
     :target: http://travis-ci.org/#!/tangentlabs/django-oscar
 
 .. image:: https://coveralls.io/repos/tangentlabs/django-oscar/badge.png?branch=master
