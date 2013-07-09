@@ -66,6 +66,8 @@ lint:
 # and upgrade would overwrite it.  We also build the sandbox as part of this target
 # to catch any errors that might come from that build process.
 travis: install lint coverage sandbox
+	pip install -r requirements_vagrant.txt --use-mirrors
+	cd sites/sandbox && ./test_migrations.sh
 
 messages:
 	# Create the .po files used for i18n
