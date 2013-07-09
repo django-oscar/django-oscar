@@ -571,6 +571,10 @@ class ProductRecommendation(models.Model):
 class ProductAttributesContainer(object):
     """
     Stolen liberally from django-eav, but simplified to be product-specific
+
+    To set attributes on a product, use the `attr` attribute:
+
+        product.attr.weight = 125
     """
 
     def __setstate__(self, state):
@@ -635,6 +639,15 @@ class AbstractProductAttribute(models.Model):
     Defines an attribute for a product class. (For example, number_of_pages for
     a 'book' class)
     """
+    product_class = models.ForeignKey(
+        'catalogue.ProductClass', related_name='attributes', blank=True,
+        null=True, verbose_name=_("Product Class"))
+    name = models.CharField(_('Name'), max_length=128)
+    code = models.SlugField(
+        _('Code'), max_length=128,
+        validators=[RegexValidator(
+            regex=r'^[a-zA-Z_][0-9a-zA-Z_]*$',
+            message=_("Code must match ^[a-zA-Z_][0-9a-zA-Z_]*$"))])
 
     TYPE_CHOICES = (
         ("text", _("Text")),
@@ -645,14 +658,6 @@ class AbstractProductAttribute(models.Model):
         ("date", _("Date")),
         ("option", _("Option")),
         ("entity", _("Entity")))
-    product_class = models.ForeignKey(
-        'catalogue.ProductClass', related_name='attributes', blank=True,
-        null=True, verbose_name=_("Product Class"))
-    name = models.CharField(_('Name'), max_length=128)
-    code = models.SlugField(
-        _('Code'), max_length=128,
-        validators=[RegexValidator(regex=r'^[a-zA-Z_][0-9a-zA-Z_]*$',
-        message=_("Code must match ^[a-zA-Z_][0-9a-zA-Z_]*$"))])
     type = models.CharField(
         choices=TYPE_CHOICES, default=TYPE_CHOICES[0][0],
         max_length=20, verbose_name=_("Type"))

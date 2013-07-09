@@ -29,8 +29,8 @@ Partner, StockRecord = get_classes('partner.models', ('Partner',
 
 def create_product(price=None, title=u"Dummy title",
                    product_class=u"Dummy item class",
-                   partner=u"Dummy partner", partner_sku=None, upc=None, num_in_stock=10,
-                   attributes=None, **kwargs):
+                   partner=u"Dummy partner", partner_sku=None, upc=None,
+                   num_in_stock=10, attributes=None, **kwargs):
     """
     Helper method for creating products that are used in tests.
     """
@@ -39,6 +39,9 @@ def create_product(price=None, title=u"Dummy title",
 
     if attributes:
         for key, value in attributes.items():
+            # Ensure product attribute exists
+            ProductAttribute.objects.get_or_create(
+                name=key, code=key, product_class=ic)
             setattr(item.attr, key, value)
 
     item.save()
@@ -50,10 +53,9 @@ def create_product(price=None, title=u"Dummy title",
             price = D('10.00')
 
         partner, __ = Partner._default_manager.get_or_create(name=partner)
-        StockRecord._default_manager.create(product=item, partner=partner,
-                                            partner_sku=partner_sku,
-                                            price_excl_tax=price,
-                                            num_in_stock=num_in_stock)
+        StockRecord._default_manager.create(
+            product=item, partner=partner, partner_sku=partner_sku,
+            price_excl_tax=price, num_in_stock=num_in_stock)
     return item
 
 
