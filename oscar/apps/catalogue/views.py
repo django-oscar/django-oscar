@@ -22,11 +22,14 @@ class ProductDetailView(DetailView):
     template_folder = "catalogue"
 
     def get(self, request, **kwargs):
-        # Ensure that the correct URL is used
-        product = self.get_object()
+        """
+        Ensures that the correct URL is used before rendering a response
+        """
+        self.object = product = self.get_object()
 
         if product.is_variant:
-            return HttpResponsePermanentRedirect(product.parent.get_absolute_url())
+            return HttpResponsePermanentRedirect(
+                product.parent.get_absolute_url())
 
         correct_path = product.get_absolute_url()
         if correct_path != request.path:
@@ -36,12 +39,10 @@ class ProductDetailView(DetailView):
         self.send_signal(request, response, product)
         return response
 
-    def get_object(self):
-        # Use a cached version to prevent unnecessary DB calls
-        if not hasattr(self, '_product'):
-            setattr(
-                self, '_product', super(ProductDetailView, self).get_object())
-        return self._product
+    def get_object(self, queryset=None):
+        # Check if self.object is already set to prevent unnecessary DB calls
+        return getattr(
+            self, 'object', super(ProductDetailView, self).get_object(queryset))
 
     def get_context_data(self, **kwargs):
         ctx = super(ProductDetailView, self).get_context_data(**kwargs)
@@ -83,12 +84,11 @@ class ProductDetailView(DetailView):
         This allows alternative templates to be provided for a per-product
         and a per-item-class basis.
         """
-        product = self.get_object()
         return [
             '%s/detail-for-upc-%s.html' % (
-                self.template_folder, product.upc),
+                self.template_folder, self.object.upc),
             '%s/detail-for-class-%s.html' % (
-                self.template_folder, product.get_product_class().slug),
+                self.template_folder, self.object.get_product_class().slug),
             '%s/detail.html' % (self.template_folder)]
 
 
