@@ -98,6 +98,9 @@ Templates:
 * The template ``customer/orders/order.html`` has been renamed to
   ``customer/orders/order_detail.html``.
 
+* The template ``dashboard/orders/order_detail.html`` has been reorganised.  The
+  ``tab_transactions`` block has been renamed to ``payment_transactions``.
+
 * Alternative product class templates now use ``slug` field instead of
   ``name.lower()`` to determine their filename.  If you have templates for
   specific product classes, please update your filenames accordingly

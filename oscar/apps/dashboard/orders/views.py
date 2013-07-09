@@ -24,6 +24,7 @@ from oscar.apps.order.exceptions import InvalidShippingEvent, InvalidStatus
 Order = get_model('order', 'Order')
 OrderNote = get_model('order', 'OrderNote')
 ShippingAddress = get_model('order', 'ShippingAddress')
+Transaction = get_model('payment', 'Transaction')
 Line = get_model('order', 'Line')
 ShippingEventType = get_model('order', 'ShippingEventType')
 PaymentEventType = get_model('order', 'PaymentEventType')
@@ -322,7 +323,13 @@ class OrderDetailView(DetailView):
         ctx['line_statuses'] = Line.all_statuses()
         ctx['shipping_event_types'] = ShippingEventType.objects.all()
         ctx['payment_event_types'] = PaymentEventType.objects.all()
+        ctx['payment_transactions'] = self.get_payment_transactions()
         return ctx
+
+    def get_payment_transactions(self):
+        return Transaction.objects.filter(
+            source__order=self.object)
+
 
     def get_order_note_form(self):
         post_data = None

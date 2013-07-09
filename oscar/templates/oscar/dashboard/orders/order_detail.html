@@ -395,59 +395,58 @@
             </div>
 
             <div class="tab-pane {% if active_tab == 'payment' %}active{% endif %}" id="payment">
-                {% if order.billing_address %}
-                    <div class="sub-header">
-                        <h3 >{% trans "Billing address" %}</h3>
-                    </div>
-                    <p>
-                        {% for field in order.billing_address.active_address_fields %}
-                            {{ field }}<br/>
-                        {% endfor %}
-                    </p>
-                {% endif %}
+                {% block tab_payment %}
 
-                {% with sources=order.sources.all %}
-                    <div class="table-header">
-                        <h3 >{% trans "Payment sources" %}</h3>
-                    </div>
+                    {% if order.billing_address %}
+                        <div class="sub-header">
+                            <h3 >{% trans "Billing address" %}</h3>
+                        </div>
+                        <p>
+                            {% for field in order.billing_address.active_address_fields %}
+                                {{ field }}<br/>
+                            {% endfor %}
+                        </p>
+                    {% endif %}
 
-                    <table class="table table-striped table-bordered table-hover">
-                        {% if sources %}
-                            <thead>
-                                <tr>
-                                    <th>{% trans "Source" %}</th>
-                                    <th>{% trans "Allocation" %}</th>
-                                    <th>{% trans "Amount debited" %}</th>
-                                    <th>{% trans "Amount refunded" %}</th>
-                                    <th>{% trans "Reference" %}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for source in sources %}
-                                    <tr>
-                                        <td>{{ source.source_type }}</td>
-                                        <td>{{ source.amount_allocated|currency }}</td>
-                                        <td>{{ source.amount_debited|currency }}</td>
-                                        <td>{{ source.amount_refunded|currency }}</td>
-                                        <td>{{ source.reference|default:"-" }}</td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        {% else %}
-                            <tbody>
-                                <tr><td>{% trans "No payment sources" %}</td></tr>
-                            </tbody>
-                        {% endif %}
-                    </table>
-                {% endwith %}
-
-                {% block tab_transactions %}
-                    <div class="table-header">
-                        <h3>{% trans "Transactions" %}</h3>
-                    </div>
                     {% with sources=order.sources.all %}
-                        <table class="table table-striped table-bordered table-hover">
-                            {% if sources %}
+                        {% if sources %}
+                            <div class="table-header">
+                                <h3 >{% trans "Payment sources" %}</h3>
+                            </div>
+
+                            <table class="table table-striped table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>{% trans "Source" %}</th>
+                                        <th>{% trans "Allocation" %}</th>
+                                        <th>{% trans "Amount debited" %}</th>
+                                        <th>{% trans "Amount refunded" %}</th>
+                                        <th>{% trans "Reference" %}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for source in sources %}
+                                        <tr>
+                                            <td>{{ source.source_type }}</td>
+                                            <td>{{ source.amount_allocated|currency }}</td>
+                                            <td>{{ source.amount_debited|currency }}</td>
+                                            <td>{{ source.amount_refunded|currency }}</td>
+                                            <td>{{ source.reference|default:"-" }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <p>No payment sources found for this order.</p>
+                        {% endif %}
+                    {% endwith %}
+
+                    {% block payment_transactions %}
+                        {% if payment_transactions %}
+                            <div class="table-header">
+                                <h3>{% trans "Transactions" %}</h3>
+                            </div>
+                            <table class="table table-striped table-bordered table-hover">
                                 <thead>
                                     <tr>
                                         <th>{% trans "Source" %}</th>
@@ -457,25 +456,21 @@
                                         <th>{% trans "Date" %}</th>
                                     </tr>
                                 </thead>
+                                <tbody>
+                                    {% for txn in transactions %}
+                                        <tr>
+                                            <td>{{ txn.source.source_type }}</td>
+                                            <td>{{ txn.amount|currency }}</td>
+                                            <td>{{ txn.reference|default:"-" }}</td>
+                                            <td>{{ txn.status|default:"-" }}</td>
+                                            <td>{{ txn.date_created }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% endif %}
+                    {% endblock %}
 
-                                {% for source in sources %}
-                                    <tbody>
-                                        {% for transaction in source.transactions.all %}
-                                            <tr>
-                                                <td>{{ source.source_type }}</td>
-                                                <td>{{ transaction.amount|currency }}</td>
-                                                <td>{{ transaction.reference|default:"-" }}</td>
-                                                <td>{{ transaction.status|default:"-" }}</td>
-                                                <td>{{ transaction.date_created }}</td>
-                                            </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                {% endfor %}
-                            {% else %}
-                                <tr><td>{% trans "No transaction data available." %}</td></tr>
-                            {% endif %}
-                        </table>
-                    {% endwith %}
                 {% endblock %}
             </div>
 
