@@ -192,7 +192,7 @@ class AbstractCommunicationEventType(models.Model):
             messages[name] = template.render(Context(ctx)) if template else ''
 
         # Ensure the email subject doesn't contain any newlines
-        messages['subject'] = messages['subject'].replace("\n", "")
+        messages['subject'] = messages['subject'].replace("\n", "").replace("\r", "")
 
         return messages
 
