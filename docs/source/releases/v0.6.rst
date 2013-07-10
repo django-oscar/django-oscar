@@ -113,6 +113,11 @@ Address app:
 * ``Country`` model's `is_highlighted` column is now integer field to allow
   fine-grained country selection. 0 = no highlighting
 
+Checkout app:
+
+* Checkout has a new option "Register and continue". Option value `new` in
+  `GatewayForm` has changed to `guest` as `new` option is used for this feature.
+
 Payment app:
 
 * The `balance` method on the source object is not a property not a method.

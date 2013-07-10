@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 from django.template.loader import render_to_string
 from django.views import generic
+from oscar.apps.customer.utils import normalise_email
 
 from oscar.apps.dashboard.partners.forms import UserEmailForm, ExistingUserForm, NewUserForm
 from oscar.core.loading import get_classes
@@ -173,7 +174,7 @@ class PartnerUserSelectView(generic.ListView):
 
     def get_queryset(self):
         if self.form.is_valid():
-            email = self.form.cleaned_data['email']
+            email = normalise_email(self.form.cleaned_data['email'])
             return User.objects.filter(is_staff=True, email__icontains=email)
         else:
             return User.objects.none()

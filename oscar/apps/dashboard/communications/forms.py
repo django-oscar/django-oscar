@@ -2,6 +2,7 @@ from django import forms
 from django.db.models import get_model
 from django.template import Template, TemplateSyntaxError
 from django.utils.translation import ugettext_lazy as _
+from oscar.apps.customer.utils import normalise_email
 
 from oscar.forms import widgets
 
@@ -67,7 +68,7 @@ class CommunicationEventTypeForm(forms.ModelForm):
         return number
 
     def clean_preview_email(self):
-        email = self.cleaned_data['preview_email'].strip()
+        email = normalise_email(self.cleaned_data['preview_email'])
         if not self.send_preview:
             return email
         if not email:
