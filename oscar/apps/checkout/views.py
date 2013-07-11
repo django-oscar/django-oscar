@@ -64,18 +64,22 @@ class IndexView(CheckoutSessionMixin, FormView):
         if email:
             kwargs['initial'] = {
                 'username': email,
-                'options': 'new'
             }
         return kwargs
 
     def form_valid(self, form):
         if form.is_guest_checkout() or form.is_new_account_checkout():
-            email = normalise_email(form.cleaned_data['username'])
+            email = form.cleaned_data['username']
             self.checkout_session.set_guest_email(email)
 
             if form.is_new_account_checkout():
-                self.success_url = "%s?next=%s" % (reverse('customer:register'),
-                                                   reverse('checkout:shipping-address'))
+                messages.info(
+                    self.request,
+                    _("Create your account and then you will be redirected "
+                      "back to the checkout process"))
+                self.success_url = "%s?next=%s" % (
+                    reverse('customer:register'),
+                    reverse('checkout:shipping-address'))
         else:
             user = form.get_user()
             login(self.request, user)

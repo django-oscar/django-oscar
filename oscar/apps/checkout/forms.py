@@ -18,8 +18,9 @@ class ShippingAddressForm(AbstractAddressForm):
         self.fields['country'].empty_label = None
 
     def set_country_queryset(self):
-        self.fields['country'].queryset = get_model('address', 'country')._default_manager.filter(
-            is_shipping_country=True)
+        self.fields['country'].queryset = get_model(
+            'address', 'country')._default_manager.filter(
+                is_shipping_country=True)
 
     class Meta:
         model = get_model('order', 'shippingaddress')
@@ -29,22 +30,26 @@ class ShippingAddressForm(AbstractAddressForm):
 class GatewayForm(AuthenticationForm):
     username = forms.EmailField(label=_("My email address is"))
     GUEST, NEW, EXISTING = 'anonymous', 'new', 'existing'
-    CHOICES = ((GUEST, _('No, continue without registering')),
-               (NEW, _('No, create my account and continue')),
-               (EXISTING, _('Yes, I have a password')))
+    CHOICES = (
+        (GUEST, _('I am a new customer and want to checkout as a guest')),
+        (NEW, _('I am a new customer and want to create an account '
+                'before checking out')),
+        (EXISTING, _('I am a returning customer, and my password is')))
     options = forms.ChoiceField(widget=forms.widgets.RadioSelect,
-                                choices=CHOICES)
+                                choices=CHOICES, initial=GUEST)
+
+    def clean_username(self):
+        return normalise_email(self.cleaned_data['username'])
 
     def clean(self):
         if self.is_guest_checkout() or self.is_new_account_checkout():
             if 'password' in self.errors:
                 del self.errors['password']
-            email = normalise_email(self.cleaned_data['username'])
-            if User._default_manager.filter(email=email).exists():
-                self.cleaned_data['options'] = self.EXISTING
-                raise forms.ValidationError(
-                    _("A user with that email address already exists. "
-                      "Please enter your password."))
+            if 'username' in self.cleaned_data:
+                email = normalise_email(self.cleaned_data['username'])
+                if User._default_manager.filter(email=email).exists():
+                    msg = "A user with that email address already exists"
+                    self._errors["username"] = self.error_class([msg])
             return self.cleaned_data
         return super(GatewayForm, self).clean()
 
