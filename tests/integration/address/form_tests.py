@@ -21,7 +21,7 @@ class TestUserAddressForm(TestCase):
             'last_name': "Moravcik",
             'line1': "1 Egg Street",
             'line4': "London",
-            'postcode': "N1 9RE",
+            'postcode': "N12 9RE",
             'country': self.country}
 
         # Create two addresses, which are slightly different

@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.test import TestCase
+from django.core import exceptions
+
+from nose.tools import raises
 
 from oscar.core.compat import get_user_model
 from oscar.apps.address import models
@@ -86,3 +89,48 @@ class TestUserAddress(TestCase):
             line4="London",
             postcode="n4 8ty")
         self.assertEqual('London', a.city)
+
+
+VALID_POSTCODES = [
+    ('GB', 'N1 9RT'),
+    ('SK', '991 41'),
+    ('CZ', '612 00'),
+    ('CC', '6799'),
+    ('CY', '8240'),
+    ('MC', '98000'),
+    ('SH', 'STHL 1ZZ'),
+    ('JP', '150-2345'),
+    ('PG', '314'),
+    ('HN', '41202'),
+    # It works for small cases as well
+    ('GB', 'sw2 1rw'),
+]
+
+
+INVALID_POSTCODES = [
+    ('GB', 'not-a-postcode'),
+    ('DE', '123b4'),
+]
+
+
+def assert_valid_postcode(country_value, postcode_value):
+    country = models.Country(iso_3166_1_a2=country_value)
+    address = models.UserAddress(country=country, postcode=postcode_value)
+    address.clean()
+
+
+@raises(exceptions.ValidationError)
+def assert_invalid_postcode(country_value, postcode_value):
+    country = models.Country(iso_3166_1_a2=country_value)
+    address = models.UserAddress(country=country, postcode=postcode_value)
+    address.clean()
+
+
+def test_postcode_is_validated_for_country():
+    for country, postcode in VALID_POSTCODES:
+        yield assert_valid_postcode, country, postcode
+
+
+def test_postcode_is_only_valid():
+    for country, postcode in INVALID_POSTCODES:
+        yield assert_invalid_postcode, country, postcode
