@@ -52,3 +52,17 @@ class TestAFixedPriceDiscountAppliedWithCountCondition(TestCase):
         self.assertEqual(D('4.00'), result.discount)
         self.assertEqual(3, self.basket.num_items_with_discount)
         self.assertEqual(1, self.basket.num_items_without_discount)
+
+    def test_rounding_error_for_multiple_products(self):
+        for i in range(3):
+            product = create_product(price=D('7.00'))
+            self.basket.add_product(product, 1)
+        result = self.benefit.apply(self.basket, self.condition)
+        self.assertEqual(D('1.00'), result.discount)
+        # Make sure discount together is the same as final discount
+        # Rounding error would return 0.99 instead 1.00
+        cumulative_discount = sum(
+            line.discount_value for line in self.basket.all_lines())
+        self.assertEqual(result.discount, cumulative_discount)
+        self.assertEqual(3, self.basket.num_items_with_discount)
+        self.assertEqual(0, self.basket.num_items_without_discount)

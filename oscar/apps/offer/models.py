@@ -1354,7 +1354,7 @@ class FixedPriceBenefit(Benefit):
 
         # Apply discount to the affected lines
         discount_applied = D('0.00')
-        last_line = covered_lines[-1][0]
+        last_line = covered_lines[-1][1]
         for price, line, quantity in covered_lines:
             if line == last_line:
                 # If last line, we just take the difference to ensure that
