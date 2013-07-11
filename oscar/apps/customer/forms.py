@@ -70,6 +70,21 @@ class EmailAuthenticationForm(AuthenticationForm):
     auth backend.
     """
     username = forms.EmailField(label=_('Email Address'))
+    redirect_url = forms.CharField(
+        widget=forms.HiddenInput, required=False)
+
+    def __init__(self, host, *args, **kwargs):
+        self.host = host
+        super(EmailAuthenticationForm, self).__init__(*args, **kwargs)
+
+    def clean_redirect_url(self):
+        url = self.cleaned_data['redirect_url'].strip()
+        if not url:
+            return settings.LOGIN_REDIRECT_URL
+        host = urlparse.urlparse(url)[1]
+        if host and host != self.host:
+            return settings.LOGIN_REDIRECT_URL
+        return url
 
 
 class CommonPasswordValidator(validators.BaseValidator):
@@ -136,7 +151,7 @@ class EmailUserCreationForm(forms.ModelForm):
     password2 = forms.CharField(
         label=_('Confirm password'), widget=forms.PasswordInput)
     redirect_url = forms.CharField(
-        widget=forms.HiddenInput)
+        widget=forms.HiddenInput, required=False)
 
     class Meta:
         model = User
