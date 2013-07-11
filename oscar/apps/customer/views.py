@@ -136,7 +136,8 @@ class AccountSummaryView(TemplateView):
             except ObjectDoesNotExist:
                 profile = profile_class(user=user)
 
-            for field_name in profile._meta.get_all_field_names():
+            field_names = [f.name for f in profile._meta.local_fields]
+            for field_name in field_names:
                 if field_name in ('user', 'id'):
                     continue
                 field_data.append(
