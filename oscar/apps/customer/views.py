@@ -223,13 +223,18 @@ class AccountRegistrationView(CheckoutSessionMixin, TemplateView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(AccountRegistrationView, self).get_context_data(*args, **kwargs)
+
         redirect_to = self.request.REQUEST.get(self.redirect_field_name, '')
         context[self.redirect_field_name] = redirect_to
+
         email_field = EmailUserCreationForm.base_fields['email']
         email_field.initial = self.checkout_session.get_guest_email()
         context['registration_form'] = EmailUserCreationForm(
             prefix=self.registration_prefix
         )
+
+        context['cancel_url'] = self.request.META.get('HTTP_REFERER', None)
+
         return context
 
     def send_registration_email(self, user):

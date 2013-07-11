@@ -28,7 +28,9 @@
                 {% csrf_token %}
                 {% include "partials/form_fields.html" with form=registration_form %}
                 <button name="registration_submit" type="submit" value="Register" class="btn btn-primary btn-large js-disable-on-click" data-loading-text="{%trans 'Registering...' %}">{% trans 'Register' %}</button>
-                or <a href="">cancel</a>.
+                {% if cancel_url %}
+                    {% trans "or" %} <a href="{{ cancel_url }}">{% trans "cancel" %}</a>.
+                {% endif %}
             </form>
         </div>
     </div>
