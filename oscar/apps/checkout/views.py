@@ -77,9 +77,11 @@ class IndexView(CheckoutSessionMixin, FormView):
                     self.request,
                     _("Create your account and then you will be redirected "
                       "back to the checkout process"))
-                self.success_url = "%s?next=%s" % (
+                self.success_url = "%s?next=%s&email=%s" % (
                     reverse('customer:register'),
-                    reverse('checkout:shipping-address'))
+                    reverse('checkout:shipping-address'),
+                    email
+                )
         else:
             user = form.get_user()
             login(self.request, user)

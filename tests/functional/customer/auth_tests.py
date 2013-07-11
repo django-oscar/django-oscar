@@ -119,8 +119,8 @@ class TestAnAnonymousUser(WebTestCase):
     def test_can_register(self):
         url = reverse('customer:register')
         form = self.app.get(url).forms['register_form']
-        form['registration-email'] = 'terry@boom.com'
-        form['registration-password1'] = 'hedgehog'
-        form['registration-password2'] = 'hedgehog'
+        form['email'] = 'terry@boom.com'
+        form['password1'] = 'hedgehog'
+        form['password2'] = 'hedgehog'
         response = form.submit()
         self.assertRedirectsTo(response, 'customer:summary')

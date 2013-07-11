@@ -1,16 +1,18 @@
 import string
+import urlparse
 import random
 
-from django.contrib.auth.forms import AuthenticationForm
-from django.utils.translation import ugettext_lazy as _
-from django.core.exceptions import ObjectDoesNotExist
 from django import forms
-from django.db.models import get_model
+from django.conf import settings
 from django.contrib.auth import forms as auth_forms
-from django.core import validators
-from django.core.exceptions import ValidationError
-from django.contrib.sites.models import get_current_site
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.tokens import default_token_generator
+from django.contrib.sites.models import get_current_site
+from django.core import validators
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ValidationError
+from django.db.models import get_model
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import get_profile_class, get_class
 from oscar.core.compat import get_user_model
@@ -126,17 +128,23 @@ class CommonPasswordValidator(validators.BaseValidator):
 
 
 class EmailUserCreationForm(forms.ModelForm):
-    email = forms.EmailField(label=_('Email Address'))
+    email = forms.EmailField(label=_('Email address'))
     password1 = forms.CharField(
         label=_('Password'), widget=forms.PasswordInput,
         validators=[validators.MinLengthValidator(6),
                     CommonPasswordValidator()])
     password2 = forms.CharField(
-        label=_('Confirm Password'), widget=forms.PasswordInput)
+        label=_('Confirm password'), widget=forms.PasswordInput)
+    redirect_url = forms.CharField(
+        widget=forms.HiddenInput)
 
     class Meta:
         model = User
         fields = ('email',)
+
+    def __init__(self, host, *args, **kwargs):
+        self.host = host
+        super(EmailUserCreationForm, self).__init__(*args, **kwargs)
 
     def clean_email(self):
         email = normalise_email(self.cleaned_data['email'])
@@ -148,10 +156,19 @@ class EmailUserCreationForm(forms.ModelForm):
     def clean_password2(self):
         password1 = self.cleaned_data.get('password1', '')
         password2 = self.cleaned_data.get('password2', '')
-
         if password1 != password2:
-            raise forms.ValidationError(_("The two password fields didn't match."))
+            raise forms.ValidationError(
+                _("The two password fields didn't match."))
         return password2
+
+    def clean_redirect_url(self):
+        url = self.cleaned_data['redirect_url'].strip()
+        if not url:
+            return settings.LOGIN_REDIRECT_URL
+        host = urlparse.urlparse(url)[1]
+        if host and host != self.host:
+            return settings.LOGIN_REDIRECT_URL
+        return url
 
     def save(self, commit=True):
         user = super(EmailUserCreationForm, self).save(commit=False)
@@ -159,7 +176,6 @@ class EmailUserCreationForm(forms.ModelForm):
 
         if 'username' in [f.name for f in User._meta.fields]:
             user.username = generate_username()
-
         if commit:
             user.save()
         return user
