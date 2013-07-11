@@ -126,14 +126,20 @@ class AccountSummaryView(TemplateView):
             profile = get_profile_class()()
 
         field_data = []
-        for field_name in profile._meta.get_all_field_names():
+        field_names = [f.name for f in profile._meta.local_fields]
+        for field_name in field_names:
             if field_name in ('user', 'id'):
                 continue
             field = profile._meta.get_field(field_name)
             if field.choices:
                 value = getattr(profile, 'get_%s_display' % field_name)()
             else:
-                value = getattr(profile, field_name)
+                try:
+                    value = getattr(profile, field_name)
+                except ObjectDoesNotExist:
+                    # An unsaved profile instance with a FK field will raise
+                    # DoesNotExist when we try to access it.
+                    value = ""
             field_data.append({
                 'name': getattr(field, 'verbose_name'),
                 'value': value,
