@@ -197,6 +197,13 @@ class AbstractShippingAddress(AbstractAddress):
         help_text=_("For example, leave the parcel in the wheelie bin "
                     "if I'm not in."))
 
+    def generate_hash(self):
+        """
+        Returns a hash of the address summary
+        """
+        # We use an upper-case version of the summary
+        return zlib.crc32(self.summary.strip().upper().encode('UTF8'))
+
     class Meta:
         abstract = True
         verbose_name = _("Shipping address")
@@ -244,13 +251,6 @@ class AbstractUserAddress(AbstractShippingAddress):
     #: to the address book.
     hash = models.CharField(_("Address Hash"), max_length=255, db_index=True)
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
-
-    def generate_hash(self):
-        """
-        Returns a hash of the address summary
-        """
-        # We use an upper-case version of the summary
-        return zlib.crc32(self.summary.strip().upper().encode('UTF8'))
 
     def save(self, *args, **kwargs):
         """
