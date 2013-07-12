@@ -18,6 +18,7 @@ Order = get_model('order', 'Order')
 Line = get_model('order', 'Line')
 User = get_user_model()
 
+
 class IndexView(TemplateView):
     template_name = 'dashboard/index.html'
 
