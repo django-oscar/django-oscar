@@ -365,7 +365,7 @@
             <div class="tab-pane {% if active_tab == 'shipping' %}active{% endif %}" id="shipping">
                 {% block tab_shipping %}
                     <div class="table-header">
-                        <h3>Shipping</h3>
+                        <h3>{% trans "Shipping" %}</h3>
                     </div>
                     <table class="table table-striped table-bordered table-hover">
                         <tbody>
@@ -437,7 +437,7 @@
                                 </tbody>
                             </table>
                         {% else %}
-                            <p>No payment sources found for this order.</p>
+                            <p>{% trans "No payment sources found for this order." %}</p>
                         {% endif %}
                     {% endwith %}
 
@@ -557,7 +557,7 @@
                                                     {% csrf_token %}
                                                     <input type="hidden" name="order_action" value="delete_note" />
                                                     <input type="hidden" name="note_id" value="{{ note.id }}" />
-                                                    <input type="submit" value="Delete" class="btn btn-danger" />
+                                                    <input type="submit" value="{% trans "Delete" %}" class="btn btn-danger" />
                                                 </form>
                                             {% endif %}
                                         </td>
@@ -577,7 +577,7 @@
                         {% include "partials/form_fields.html" with form=note_form %}
                         <!-- {{ note_form.as_p }} -->
                         <div class="form-actions">
-                            <input type="submit" value="Save note" class="btn btn-primary" />
+                            <input type="submit" value="{% trans "Save note" %}" class="btn btn-primary" />
                             {% trans "Notes are only editable for 5 minutes after being saved." %}
                         </div>
                     </form>

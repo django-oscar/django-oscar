@@ -33,7 +33,7 @@
 
     <div class="alert alert-info">
         <p>{% trans "You are editing:" %}
-            <strong><a href="{% url 'dashboard:catalogue-category-list' %}">Home</a></strong>
+            <strong><a href="{% url 'dashboard:catalogue-category-list' %}">{% trans "Home" %}</a></strong>
             {% if ancestors %}
                 &gt;
                 {% for ancestor in ancestors %}
@@ -63,7 +63,7 @@
                         <div class="btn-toolbar">
                             <div class="btn-group">
                                 <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                                    Actions
+                                    {% trans "Actions" %}
                                     <span class="caret"></span>
                                 </a>
                                 <ul class="nav dropdown-menu pull-right">

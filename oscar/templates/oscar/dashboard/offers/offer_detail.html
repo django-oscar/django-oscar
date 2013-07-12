@@ -56,7 +56,7 @@
     </table>
 
     <div class="table-header">
-        <div class="pull-right" style="font-weight: normal">Date created: {{ offer.date_created }}</div>
+        <div class="pull-right" style="font-weight: normal">{% trans "Date created:" %} {{ offer.date_created }}</div>
         <h2>{% trans "Offer details" %}</h2>
     </div>
     <table class="table table-striped table-bordered">
@@ -64,7 +64,7 @@
             <tr>
                 <th>{% trans "Name" %}</th>
                 <td>{{ offer.name }}</td>
-                <td rowspan="2"><a id="edit_metadata" href="{% url 'dashboard:offer-metadata' offer.pk %}" class="btn">Edit</a></td>
+                <td rowspan="2"><a id="edit_metadata" href="{% url 'dashboard:offer-metadata' offer.pk %}" class="btn">{% trans "Edit" %}</a></td>
             </tr>
             <tr>
                 <th>{% trans "Description" %}</th>
@@ -73,12 +73,12 @@
             <tr>
                 <th>{% trans "Incentive" %}</th>
                 <td>{{ offer.benefit.description|safe }}</td>
-                <td><a href="{% url 'dashboard:offer-benefit' offer.pk %}" class="btn">Edit</a></td>
+                <td><a href="{% url 'dashboard:offer-benefit' offer.pk %}" class="btn">{% trans "Edit" %}</a></td>
             </tr>
             <tr>
                 <th>{% trans "Condition" %}</th>
                 <td>{{ offer.condition.description|safe }}</td>
-                <td><a href="{% url 'dashboard:offer-condition' offer.pk %}" class="btn">Edit</a></td>
+                <td><a href="{% url 'dashboard:offer-condition' offer.pk %}" class="btn">{% trans "Edit" %}</a></td>
             </tr>
             <tr>
                 <th>{% trans "Restrictions" %}</th>
@@ -93,7 +93,7 @@
                         {% endif %}
                     {% endfor %}
                 </td>
-                <td><a href="{% url 'dashboard:offer-restrictions' offer.pk %}" class="btn">Edit</a></td>
+                <td><a href="{% url 'dashboard:offer-restrictions' offer.pk %}" class="btn">{% trans "Edit" %}</a></td>
             </tr>
         </tbody>
     </table>

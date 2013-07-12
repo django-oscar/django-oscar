@@ -44,7 +44,7 @@
                 </ul>
             {% else %}
                 <div class="table-header">
-                    <h2><i class="icon-envelope icon-large"></i>Edit email</h2>
+                    <h2><i class="icon-envelope icon-large"></i>{% trans "Edit email" %}</h2>
                 </div>
             {% endif %}
 
@@ -75,7 +75,7 @@
                 {% include 'partials/form_field.html' with field=form.email_body_template %}
                 {% include 'partials/form_field.html' with field=form.email_body_html_template %}
                 <div class="table-header">
-                    <h3>Preview</h3>
+                    <h3>{% trans "Preview" %}</h3>
                 </div>
                 <div class="well">
                     {% if commtype.is_order_related %}
