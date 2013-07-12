@@ -12,11 +12,12 @@
 {% endblock %}
 
 {% block shipping_address %}
-    <h1>{% trans "Enter an address for your addressbook" %}</h1>
-    <p> </p>
+    <h1>{% trans "Edit address" %}</h1>
     <form action="{{ form_url }}" method="post" class="form-horizontal">
-        {% csrf_token %}
-        {% include "partials/form_fields.html" with form=form %}
+        <div class="well well-info">
+            {% csrf_token %}
+            {% include "partials/form_fields.html" with form=form %}
+        </div>
         <div class="form-actions">
             <button type="submit" class="btn btn-large btn-primary">{% trans "Save"	%}</button>
             {% trans "or" %} <a href="{% url 'checkout:shipping-address' %}">{% trans "cancel" %}</a>.

@@ -19,12 +19,11 @@
     {% if request.user.is_authenticated %}
         {% if addresses %}
             
-        <h3>{% trans "An address from your addressbook?" %}</h3>
-      
+            <h3>{% trans "An address from your addressbook?" %}</h3>
             <div class="choose-block">
                 <ul class="row-fluid">
                     {% for address in addresses %}
-					<li class="span3">
+					<li class="span4">
 						<div class="well well-info {% if address.is_default_for_shipping %}default-address{% endif %}">
 							<address>{% for field in address.active_address_fields %}
 							{{ field }}<br/>
@@ -39,7 +38,7 @@
 							</form>
 						</div>
 					</li>
-                    {% if forloop.counter|divisibleby:4 %}
+                    {% if forloop.counter|divisibleby:3 %}
                         </ul>
                         {% if not forloop.last %}<ul class="row-fluid">{% endif %}
                     {% endif %}
