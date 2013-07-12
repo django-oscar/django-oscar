@@ -37,7 +37,7 @@
             {% if form.is_bound %}
                 <a class="btn" href="{% url 'dashboard:partner-user-select' partner.id %}" >{% trans "Reset" %}</a>
             {% endif %}
-            <div style="margin-top:5px">A partial email address can be entered (eg '@example.com') to match multiple addresses.</div>
+            <div style="margin-top:5px">{% trans "A partial email address can be entered (eg '@example.com') to match multiple addresses." %}</div>
         </form>
     </div>
 

@@ -20,7 +20,7 @@
 
 {% block header %}
     <div class="page-header">
-        <h1>Reviews</h1>
+        <h1>{% trans "Reviews" %}</h1>
     </div>
 {% endblock header %}
 
@@ -77,7 +77,7 @@
                             {% if review.product %}
                                 <a href='{% url 'catalogue:detail' review.product.slug review.product.id %}'>{{ review.product.title }}</a> </td>
                         {% else %}
-                            [Product deleted]
+                            {% trans "[Product deleted]" %}
                         {% endif %}
                         <td>
                             {% if review.user %}

@@ -196,7 +196,7 @@
                         <div class="control-group">
                             <label class="control-label">{% trans "Parent" %}</label>
                             <div class="controls">
-                                <a href="{% url 'dashboard:catalogue-product' parent.id %}" title="Edit {{ parent.title }}">{{ parent.title }}</a>
+                                <a href="{% url 'dashboard:catalogue-product' parent.id %}" title="{% blocktrans %}Edit {{ parent.title }}{% endblocktrans %}">{{ parent.title }}</a>
                             </div>
                         </div>
                         {% endif %}
@@ -217,7 +217,7 @@
                         </tr>
                         <tr>
                             <td>{{ parent.title }}</td>
-                            <td><a href="{% url 'dashboard:catalogue-product' parent.id %}" class="btn btn-primary" title="Edit {{ parent.title }}">{% trans "Edit" %}</a></td>
+                            <td><a href="{% url 'dashboard:catalogue-product' parent.id %}" class="btn btn-primary" title="{% blocktrans %}Edit {{ parent.title }}{% endblocktrans %}">{% trans "Edit" %}</a></td>
                         </tr>
                         {% endif %}
                         {% endwith %}
