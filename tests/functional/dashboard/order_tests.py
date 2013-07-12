@@ -14,24 +14,16 @@ from oscar.core.compat import get_user_model
 User = get_user_model()
 
 
-class TestOrderListView(ClientTestCase):
-    is_staff = True
-
-    def test_redirects_to_order_page_when_searching_for_order_number(self):
-        # Importing here as the import makes DB queries
-        from oscar.apps.dashboard.orders.forms import OrderSearchForm
-        order = create_order()
-        fields = OrderSearchForm.base_fields.keys()
-        pairs = dict(zip(fields, ['']*len(fields)))
-        pairs['order_number'] = order.number
-        pairs['response_format'] = 'html'
-        url = '%s?%s' % (reverse('dashboard:order-list'), '&'.join(['%s=%s' % (k,v) for k,v in pairs.items()]))
-        response = self.client.get(url)
-        self.assertEqual(httplib.FOUND, response.status_code)
-
-
 class TestOrderListDashboard(WebTestCase):
     is_staff = True
+
+    def test_redirects_to_detail_page(self):
+        order = create_order()
+        page = self.get(reverse('dashboard:order-list'))
+        form = page.forms['search_form']
+        form['order_number'] = order.number
+        response = form.submit()
+        self.assertEqual(httplib.FOUND, response.status_code)
 
     def test_downloads_to_csv_without_error(self):
         address = get(ShippingAddress)

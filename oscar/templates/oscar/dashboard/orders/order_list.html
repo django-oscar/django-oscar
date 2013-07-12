@@ -31,7 +31,7 @@
         <h3><i class="icon-search icon-large"></i>{% trans "Search" %}</h3>
     </div>
     <div class="well">
-        <form action="." method="get" class="form-inline">
+        <form action="." method="get" class="form-inline" id="search_form">
             {% for field in form %}
                 {% if "order" in field.id_for_label %}
                     {% if field.is_hidden %}
