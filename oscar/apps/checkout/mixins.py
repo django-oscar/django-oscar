@@ -7,6 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import get_model
 
 from oscar.core.loading import get_class
+from oscar.core.decorators import deprecated
 
 OrderCreator = get_class('order.utils', 'OrderCreator')
 Dispatcher = get_class('customer.utils', 'Dispatcher')
@@ -138,17 +139,19 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         self.save_payment_details(order)
         return order
 
-    def create_shipping_address(self, basket=None):
+    def get_shipping_address(self, basket=None):
         """
-        Create and returns the shipping address for the current order.
+        Return the shipping address for the current order.
 
         If the shipping address was entered manually, then we simply
-        write out a ShippingAddress model with the appropriate form data.  If
-        the user is authenticated, then we create a UserAddress from this data
-        too so it can be re-used in the future.
+        write out a ShippingAddress model with the appropriate form data.
 
         If the shipping address was selected from the user's address book,
         then we convert the UserAddress to a ShippingAddress.
+
+        ShippingAddress is not saved and should be used for read-only purposes.
+        See self.create_shipping_address() which also saves the address and
+        makes sure that appropriate UserAddress exists.
         """
         if not basket:
             basket = self.request.basket
@@ -158,20 +161,53 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         addr_data = self.checkout_session.new_shipping_address_fields()
         addr_id = self.checkout_session.user_address_id()
         if addr_data:
-            addr = self.create_shipping_address_from_form_fields(addr_data)
-            self.create_user_address(addr_data)
+            return ShippingAddress(**addr_data)
         elif addr_id:
-            addr = self.create_shipping_address_from_user_address(addr_id)
+            address = UserAddress._default_manager.get(pk=addr_id)
+            shipping_addr = ShippingAddress()
+            address.populate_alternative_model(shipping_addr)
+            return shipping_addr
         else:
             raise AttributeError("No shipping address data found")
+
+    def create_shipping_address(self, basket=None):
+        """
+        Create and returns the shipping address for the current order.
+
+        Compared to self.get_shipping_address(), ShippingAddress is saved and
+        makes sure that appropriate UserAddress exists.
+        """
+        addr = self.get_shipping_address(basket=basket)
+        if addr:
+            self.update_address_book(addr)
         return addr
 
+    def update_address_book(self, shipping_addr):
+        """
+        Save ShippingAddress and increase the number of orders for UserAddress.
+        """
+        shipping_addr.save()
+        if self.request.user.is_authenticated():
+            try:
+                # Bump number of orders for the existing address
+                user_addr = UserAddress._default_manager.get(
+                    hash=shipping_addr.generate_hash())
+            except ObjectDoesNotExist:
+                # Create a new user address
+                user_addr = UserAddress(user_id=self.request.user.id)
+                shipping_addr.populate_alternative_model(user_addr)
+
+            user_addr.num_orders += 1
+            user_addr.save()
+
+    @deprecated
     def create_shipping_address_from_form_fields(self, addr_data):
         """Creates a shipping address model from the saved form fields"""
         shipping_addr = ShippingAddress(**addr_data)
         shipping_addr.save()
         return shipping_addr
 
+    @deprecated
     def create_user_address(self, session_addr_data):
         """
         For signed-in users, we create a user address model which will go
@@ -189,6 +225,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             except ObjectDoesNotExist:
                 user_addr.save()
 
+    @deprecated
     def create_shipping_address_from_user_address(self, addr_id):
         """Creates a shipping address from a user address"""
         address = UserAddress._default_manager.get(pk=addr_id)
