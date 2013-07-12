@@ -60,7 +60,7 @@
                 </tr>
                 {% if line.attributes.exists %}
                     <tr>
-                        <th colspan="2">Product Options</th>
+                        <th colspan="2">{% trans "Product Options" %}</th>
                     </tr>
                     {% for attribute in line.attributes.all %}
                         <tr>

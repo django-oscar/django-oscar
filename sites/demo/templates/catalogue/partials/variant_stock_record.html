@@ -5,5 +5,5 @@
         {{ product.stockrecord.price_incl_tax|currency }}
     </p>
 {% else %}
-   <p class="price_color">Not available</p>
+   <p class="price_color">{% trans "Not available" %}</p>
 {% endif %}
