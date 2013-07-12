@@ -291,11 +291,11 @@ class OrderListView(ListView, BulkEditMixin):
             row['status'] = order.status
             row['customer'] = order.email
             if order.shipping_address:
-                row['shipping_address_name'] = order.shipping_address.name()
+                row['shipping_address_name'] = order.shipping_address.name
             else:
                 row['shipping_address_name'] = ''
             if order.billing_address:
-                row['billing_address_name'] = order.billing_address.name()
+                row['billing_address_name'] = order.billing_address.name
             else:
                 row['billing_address_name'] = ''
 

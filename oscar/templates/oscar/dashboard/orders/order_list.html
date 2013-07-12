@@ -72,7 +72,7 @@
     </div>
 
     {% if orders|length %}
-        <form action="." method="post" class="order_table">
+        <form action="." method="post" class="order_table" id="orders_form">
             {% csrf_token %}
             {% include "dashboard/orders/partials/bulk_edit_form.html" with status=active_status %}
 
@@ -84,7 +84,7 @@
                         <div class="form-inline">
                             <label>{% trans "Download selected orders as a CSV" %}</label>
                             <input type="hidden" name="action" value="download_selected_orders" />
-                            <button type="submit" class="btn btn-primary">{% trans "Download" %}</button>
+                            <button type="submit" class="btn btn-primary" name="download_selected">{% trans "Download" %}</button>
                         </div>
                     </div>
                 </caption>

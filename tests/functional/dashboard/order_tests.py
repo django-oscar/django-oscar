@@ -5,19 +5,19 @@ from django.core.urlresolvers import reverse
 from django.template import Template, Context
 from django_dynamic_fixture import get
 
-from oscar.test.testcases import ClientTestCase
+from oscar.test.testcases import ClientTestCase, WebTestCase
 from oscar.test.factories import create_order
-from oscar.apps.order.models import Order, OrderNote
+from oscar.apps.order.models import Order, OrderNote, ShippingAddress
 from oscar.core.compat import get_user_model
 
 
 User = get_user_model()
 
 
-class OrderListTests(ClientTestCase):
+class TestOrderListView(ClientTestCase):
     is_staff = True
 
-    def test_searching_for_valid_order_number_redirects_to_order_page(self):
+    def test_redirects_to_order_page_when_searching_for_order_number(self):
         # Importing here as the import makes DB queries
         from oscar.apps.dashboard.orders.forms import OrderSearchForm
         order = create_order()
@@ -28,6 +28,18 @@ class OrderListTests(ClientTestCase):
         url = '%s?%s' % (reverse('dashboard:order-list'), '&'.join(['%s=%s' % (k,v) for k,v in pairs.items()]))
         response = self.client.get(url)
         self.assertEqual(httplib.FOUND, response.status_code)
+
+
+class TestOrderListDashboard(WebTestCase):
+    is_staff = True
+
+    def test_downloads_to_csv_without_error(self):
+        address = get(ShippingAddress)
+        create_order(shipping_address=address)
+        page = self.get(reverse('dashboard:order-list'))
+        form = page.forms['orders_form']
+        form['selected_order'].checked = True
+        form.submit('download_selected')
 
 
 class OrderDetailTests(ClientTestCase):
