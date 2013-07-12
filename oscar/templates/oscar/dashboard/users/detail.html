@@ -29,61 +29,69 @@
 
 {% block dashboard_content %}
     <div class="row-fluid">
-        <div class="span3">
+        <div class="">
             <div class="table-header">
                 <h2>{% trans "General" %}</h2>
             </div>
-            <div id="user_details" class="well">
-                <ul>
-                    <li>{% trans "Email:" %} {{ customer.email }}</li>
-                    <li>{% trans "Name" %} {{ customer.get_full_name|default:"-" }}</li>
-                    <li>
-                        {% if customer.is_active %}
-                            {% trans "This customer is active" %}
-                        {% else %}
-                            {% trans "This customer is inactive" %}
-                        {% endif %}
-                    </li>
-                    {% if customer.is_superuser %}
-                        <li><strong>{% trans "Superuser" %}</strong></li>
-                    {% endif %}
-                </ul>
-            </div>
-
-            <div class="span9">
-                <table class="table table-striped table-bordered table-hover">
-                    <caption>{% trans "Detailed information" %}</caption>
-                    <tr>
-                        <th>{% trans "General" %}</th>
-                        <th>{% trans "Orders" %}</th>
-                        <th>{% trans "Reviews" %}</th>
-                    </tr>
-                    <tr>
-                        <td>
-                            <ul>
-                                <li>{% trans "Last login:" %} {{ customer.last_login }}</li>
-                                <li>{% trans "Date joined:" %} {{ customer.date_joined }}</li>
-                                <li>{% trans "Number of viewed products:" %} {{ customer.userrecord.num_product_views|default:0 }}</li>
-                            </ul>
-                        </td>
-                        <td>
-                            <ul>
-                                <li>{% trans "Number of orders:" %} {{ customer.userrecord.num_orders|default:0 }}</li>
-                                <li>{% trans "Number of ordered items:" %} {{ customer.userrecord.num_order_items|default:0 }}</li>
-                                <li>{% trans "Total spent:" %} {{ customer.userrecord.total_spent|default:0|currency }}</li>
-                                <li>{% trans "Date of last order:" %} {{ customer.userrecord.date_last_order|default:"-" }}</li>
-                            </ul>
-                        </td>
-                        <td>
-                            <ul>
-                                <li>{% trans "Number of reviews:" %} {{ customer.reviews.count }}</li>
-                            </ul>
-                        </td>
-                    </tr>
-                </table>
-            </div>
+            <table class="table table-bordered">
+                <tr>
+                    <th>Name</th>
+                    <td>{{ customer.get_full_name|default:"-" }}</td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td>{{ customer.email }}</td>
+                </tr>
+                <tr>
+                    <th>Active?</th>
+                    <td>
+                        {% if customer.is_active %}Yes{% else %}No{% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Superuser?</th>
+                    <td>{{ customer.is_superuser }}</td>
+                </tr>
+                <tr>
+                    <th>Staff?</th>
+                    <td>{{ customer.is_staff }}</td>
+                </tr>
+                <tr>
+                    <th>Last login</th>
+                    <td>{{ customer.last_login }}</td>
+                </tr>
+                <tr>
+                    <th>Date joined</th>
+                    <td>{{ customer.date_joined }}</td>
+                </tr>
+                {% with record=customer.userrecord %}
+                <tr>
+                    <th>Products viewed</th>
+                    <td>{{ record.num_product_views|default:0 }}</td>
+                </tr>
+                <tr>
+                    <th>Number of orders</th>
+                    <td>{{ record.num_orders|default:0 }}</td>
+                </tr>
+                <tr>
+                    <th>Number of ordered items</th>
+                    <td>{{ record.num_order_items|default:0 }}</td>
+                </tr>
+                <tr>
+                    <th>Total spent</th>
+                    <td>{{ record.total_spent|default:0|currency }}</td>
+                </tr>
+                <tr>
+                    <th>Reviews written</th>
+                    <td>{{ customer.reviews.count }}</td>
+                </tr>
+                <tr>
+                    <th>Date joined</th>
+                    <td>{{ customer.date_joined }}</td>
+                </tr>
+            {% endwith %}
+            </table>
         </div>
-
 
         <div class="tabbable dashboard">
             <ul class="nav nav-tabs">
