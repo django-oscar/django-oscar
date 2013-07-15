@@ -254,6 +254,11 @@ class AbstractAddress(models.Model):
             if self.__dict__[field]:
                 self.__dict__[field] = self.__dict__[field].strip()
 
+        if self.postcode:
+            # Ensure postcodes are always uppercase
+            self.postcode = self.postcode.upper()
+
+    def clean(self):
         self.clean_postcode()
 
     def clean_postcode(self):
@@ -261,10 +266,8 @@ class AbstractAddress(models.Model):
         Validate postcode given the country
         """
         if self.postcode:
-            # Ensure postcodes are always uppercase
-            self.postcode = self.postcode.upper()
-
-            postcode = self.postcode.replace(' ', '')
+            # Normalize postcode (upper case, no spaces)
+            postcode = self.postcode.upper().replace(' ', '')
             country_code = self.country.iso_3166_1_a2
             regex = self.POSTCODES_REGEX.get(country_code, None)
 

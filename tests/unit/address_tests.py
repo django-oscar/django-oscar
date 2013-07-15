@@ -52,14 +52,14 @@ INVALID_POSTCODES = [
 def assert_valid_postcode(country_value, postcode_value):
     country = Country(iso_3166_1_a2=country_value)
     address = UserAddress(country=country, postcode=postcode_value)
-    address.clean_postcode()
+    address.full_clean()
 
 
 @raises(exceptions.ValidationError)
 def assert_invalid_postcode(country_value, postcode_value):
     country = Country(iso_3166_1_a2=country_value)
     address = UserAddress(country=country, postcode=postcode_value)
-    address.clean_postcode()
+    address.full_clean()
 
 
 def test_postcode_is_validated_for_country():
