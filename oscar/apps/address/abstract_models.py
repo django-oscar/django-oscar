@@ -1,7 +1,9 @@
+import re
 import zlib
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.core import exceptions
 
 from oscar.core.compat import AUTH_USER_MODEL
 
@@ -23,6 +25,190 @@ class AbstractAddress(models.Model):
         (MS, _("Ms")),
         (DR, _("Dr")),
     )
+
+    # Regex for each country. Not listed countries don't use postcodes
+    # Based on http://en.wikipedia.org/wiki/List_of_postal_codes
+    POSTCODES_REGEX = {
+        'AC': R'^[A-Z]{4}[0-9][A-Z]$',
+        'AD': R'^AD[0-9]{3}$',
+        'AF': R'^[0-9]{4}$',
+        'AI': R'^AI-2640$',
+        'AL': R'^[0-9]{4}$',
+        'AM': R'^[0-9]{4}$',
+        'AR': R'^([0-9]{4}|[A-Z][0-9]{4}[A-Z]{3}$',
+        'AS': R'^[0-9]{5}(-[0-9]{4}|-[0-9]{6})?$',
+        'AT': R'^[0-9]{4}$',
+        'AU': R'^[0-9]{4}$',
+        'AX': R'^[0-9]{5}$',
+        'AZ': R'^AZ[0-9]{4}$',
+        'BA': R'^[0-9]{5}$',
+        'BB': R'^BB[0-9]{5}$',
+        'BD': R'^[0-9]{4}$',
+        'BE': R'^[0-9]{4}$',
+        'BG': R'^[0-9]{4}$',
+        'BH': R'^[0-9]{3,4}$',
+        'BL': R'^[0-9]{5}$',
+        'BM': R'^[A-Z]{2}([0-9]{2}|[A-Z]{2})',
+        'BN': R'^[A-Z}{2}[0-9]]{4}$',
+        'BO': R'^[0-9]{4}$',
+        'BR': R'^[0-9]{5}(-[0-9]{3})?$',
+        'BT': R'^[0-9]{3}$',
+        'BY': R'^[0-9]{6}$',
+        'CA': R'^[A-Z][0-9][A-Z][0-9][A-Z][0-9]$',
+        'CC': R'^[0-9]{4}$',
+        'CH': R'^[0-9]{4}$',
+        'CL': R'^([0-9]{7}|[0-9]{3}-[0-9]{4})$',
+        'CN': R'^[0-9]{6}$',
+        'CO': R'^[0-9]{6}$',
+        'CR': R'^[0-9]{4,5}$',
+        'CU': R'^[0-9]{5}$',
+        'CV': R'^[0-9]{4}$',
+        'CX': R'^[0-9]{4}$',
+        'CY': R'^[0-9]{4}$',
+        'CZ': R'^[0-9]{5}$',
+        'DE': R'^[0-9]{5}$',
+        'DK': R'^[0-9]{4}$',
+        'DO': R'^[0-9]{5}$',
+        'DZ': R'^[0-9]{5}$',
+        'EC': R'^EC[0-9]{6}$',
+        'EE': R'^[0-9]{5}$',
+        'EG': R'^[0-9]{5}$',
+        'ES': R'^[0-9]{5}$',
+        'ET': R'^[0-9]{4}$',
+        'FI': R'^[0-9]{5}$',
+        'FK': R'^[A-Z]{4}[0-9][A-Z]{2}$',
+        'FM': R'^[0-9]{5}(-[0-9]{4})?$',
+        'FO': R'^[0-9]{3}$',
+        'FR': R'^[0-9]{5}$',
+        'GA': R'^[0-9]{2}.*[0-9]{2}$',
+        'GB': R'^[A-Z][A-Z0-9]{1,3}[0-9][A-Z]{2}$',
+        'GE': R'^[0-9]{4}$',
+        'GF': R'^[0-9]{5}$',
+        'GG': R'^([A-Z]{2}[0-9]{2,3}[A-Z]{2}$',
+        'GI': R'^GX111AA$',
+        'GL': R'^[0-9]{4}$',
+        'GP': R'^[0-9]{5}$',
+        'GR': R'^[0-9]{5}$',
+        'GS': R'^SIQQ1ZZ$',
+        'GT': R'^[0-9]{5}$',
+        'GU': R'^[0-9]{5}$',
+        'GW': R'^[0-9]{4}$',
+        'HM': R'^[0-9]{4}$',
+        'HN': R'^[0-9]{5}$',
+        'HR': R'^[0-9]{5}$',
+        'HT': R'^[0-9]{4}$',
+        'HU': R'^[0-9]{4}$',
+        'ID': R'^[0-9]{5}$',
+        'IL': R'^[0-9]{7}$',
+        'IM': R'^IM[0-9]{2,3}[A-Z]{2}$$',
+        'IN': R'^[0-9]{6}$',
+        'IO': R'^[A-Z]{4}[0-9][A-Z]{2}$',
+        'IQ': R'^[0-9]{5}$',
+        'IR': R'^[0-9]{5}-[0-9]{5}$',
+        'IS': R'^[0-9]{3}$',
+        'IT': R'^[0-9]{5}$',
+        'JE': R'^JE[0-9]{2}[A-Z]{2}$',
+        'JM': R'^JM[A-Z]{3}[0-9]{2}$',
+        'JO': R'^[0-9]{5}$',
+        'JP': R'^[0-9]{3}-?[0-9]{4}$',
+        'KE': R'^[0-9]{5}$',
+        'KG': R'^[0-9]{6}$',
+        'KH': R'^[0-9]{5}$',
+        'KR': R'^[0-9]{3}-?[0-9]{3}$',
+        'KY': R'^KY[0-9]-[0-9]{4}$',
+        'KZ': R'^[0-9]{6}$',
+        'LA': R'^[0-9]{5}$',
+        'LB': R'^[0-9]{8}$',
+        'LI': R'^[0-9]{4}$',
+        'LK': R'^[0-9]{5}$',
+        'LR': R'^[0-9]{4}$',
+        'LS': R'^[0-9]{3}$',
+        'LT': R'^[0-9]{5}$',
+        'LU': R'^[0-9]{4}$',
+        'LV': R'^LV-[0-9]{4}$',
+        'LY': R'^[0-9]{5}$',
+        'MA': R'^[0-9]{5}$',
+        'MC': R'^980[0-9]{2}$',
+        'MD': R'^MD-?[0-9]{4}$',
+        'ME': R'^[0-9]{5}$',
+        'MF': R'^[0-9]{5}$',
+        'MG': R'^[0-9]{3}$',
+        'MH': R'^[0-9]{5}$',
+        'MK': R'^[0-9]{4}$',
+        'MM': R'^[0-9]{5}$',
+        'MN': R'^[0-9]{5}$',
+        'MP': R'^[0-9]{5}$',
+        'MQ': R'^[0-9]{5}$',
+        'MT': R'^[A-Z]{3}[0-9]{4}$',
+        'MV': R'^[0-9]{4,5}$',
+        'MX': R'^[0-9]{5}$',
+        'MY': R'^[0-9]{5}$',
+        'MZ': R'^[0-9]{4}$',
+        'NA': R'^[0-9]{5}$',
+        'NC': R'^[0-9]{5}$',
+        'NE': R'^[0-9]{4}$',
+        'NF': R'^[0-9]{4}$',
+        'NG': R'^[0-9]{6}$',
+        'NI': R'^[0-9]{3}-[0-9]{3}-[0-9]$',
+        'NL': R'^[0-9]{4}[A-Z]{2}$',
+        'NO': R'^[0-9]{4}$',
+        'NP': R'^[0-9]{5}$',
+        'NZ': R'^[0-9]{4}$',
+        'OM': R'^[0-9]{3}$',
+        'PA': R'^[0-9]{6}$',
+        'PE': R'^[0-9]{5}$',
+        'PF': R'^[0-9]{5}$',
+        'PG': R'^[0-9]{3}$',
+        'PH': R'^[0-9]{4}$',
+        'PK': R'^[0-9]{5}$',
+        'PL': R'^[0-9]{2}-?[0-9]{3}$',
+        'PM': R'^[0-9]{5}$',
+        'PN': R'^[A-Z]{4}[0-9][A-Z]{2}$',
+        'PR': R'^[0-9]{5}$',
+        'PT': R'^[0-9]{4}(-?[0-9]{3})?$',
+        'PW': R'^[0-9]{5}$',
+        'PY': R'^[0-9]{4}$',
+        'RE': R'^[0-9]{5}$',
+        'RO': R'^[0-9]{6}$',
+        'RS': R'^[0-9]{5}$',
+        'RU': R'^[0-9]{6}$',
+        'SA': R'^[0-9]{5}$',
+        'SD': R'^[0-9]{5}$',
+        'SE': R'^[0-9]{5}$',
+        'SG': R'^([0-9]{2}|[0-9]{4}|[0-9]{6})$',
+        'SH': R'^(STHL1ZZ|TDCU1ZZ)$',
+        'SI': R'^(SI-)?[0-9]{4}$',
+        'SK': R'^[0-9]{5}$',
+        'SM': R'^[0-9]{5}$',
+        'SN': R'^[0-9]{5}$',
+        'SV': R'^01101$',
+        'SZ': R'^[A-Z][0-9]{3}$',
+        'TC': R'^TKCA1ZZ$',
+        'TD': R'^[0-9]{5}$',
+        'TH': R'^[0-9]{5}$',
+        'TJ': R'^[0-9]{6}$',
+        'TM': R'^[0-9]{6}$',
+        'TN': R'^[0-9]{4}$',
+        'TR': R'^[0-9]{5}$',
+        'TT': R'^[0-9]{6}$',
+        'TW': R'^[0-9]{5}$',
+        'UA': R'^[0-9]{5}$',
+        'US': R'^[0-9]{5}(-[0-9]{4}|-[0-9]{6})?$',
+        'UY': R'^[0-9]{5}$',
+        'UZ': R'^[0-9]{6}$',
+        'VA': R'^00120$',
+        'VC': R'^VC[0-9]{4}',
+        'VE': R'^[0-9]{4}[A-Z]?$',
+        'VG': R'^VG[0-9]{4}$',
+        'VI': R'^[0-9]{5}$',
+        'VN': R'^[0-9]{6}$',
+        'WF': R'^[0-9]{5}$',
+        'XK': R'^[0-9]{5}$',
+        'YT': R'^[0-9]{5}$',
+        'ZA': R'^[0-9]{4}$',
+        'ZM': R'^[0-9]{5}$',
+    }
+
     title = models.CharField(
         _("Title"), max_length=64, choices=TITLE_CHOICES,
         blank=True, null=True)
@@ -68,9 +254,26 @@ class AbstractAddress(models.Model):
             if self.__dict__[field]:
                 self.__dict__[field] = self.__dict__[field].strip()
 
-        # Ensure postcodes are always uppercase
         if self.postcode:
+            # Ensure postcodes are always uppercase
             self.postcode = self.postcode.upper()
+
+    def clean(self):
+        self.clean_postcode()
+
+    def clean_postcode(self):
+        """
+        Validate postcode given the country
+        """
+        if self.postcode:
+            # Normalize postcode (upper case, no spaces)
+            postcode = self.postcode.upper().replace(' ', '')
+            country_code = self.country.iso_3166_1_a2
+            regex = self.POSTCODES_REGEX.get(country_code, None)
+
+            # Validate postcode against regext for the country if available
+            if regex and not re.match(regex, postcode):
+                raise exceptions.ValidationError("Invalid postcode")
 
     def _update_search_text(self):
         search_fields = filter(
