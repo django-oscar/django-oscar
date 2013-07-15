@@ -63,9 +63,9 @@
     {% csrf_token %}
     <table class="table table-striped table-bordered">
         <tr>
-            <th>{% trans "UPC" %}</th>
-            <th>{% trans "Image" %}</th>
             <th>{% trans "Title" %}</th>
+            <th>{% trans "Image" %}</th>
+            <th>{% trans "UPC" %}</th>
             <th>{% trans "Product class" %}</th>
             <th>{% trans "Status" %}</th>
             <th>{% trans "Partner" %}</th>
@@ -80,7 +80,11 @@
         </tr>
         {% for product in products %}
         <tr>
-                <td>{{ product.upc|default:"-" }}</td>
+                <td>
+                    <a href="{% url 'dashboard:catalogue-product' product.id %}{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}">
+                        {{ product.get_title }}
+                    </a>
+                </td>
                 <td>
                 {% if product.primary_image.original.url %}
                 {% with image=product.primary_image %}
@@ -94,7 +98,7 @@
                 -
                 {% endif %}
                 </td>
-                <td>{{ product.get_title }}</td>
+                <td>{{ product.upc|default:"-" }}</td>
                 <td>{{ product.get_product_class.name }}</td>
                 <td>{{ product.status|default:"-" }}</td>
                 {% with stockrecord=product.stockrecord %}

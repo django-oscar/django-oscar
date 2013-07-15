@@ -64,7 +64,11 @@
     </tr>
     {% for alert in alerts %}
     <tr>
-        <td>{{ alert.stockrecord.product.get_title }}</td>
+        <td>
+            <a href="{% url 'dashboard:catalogue-product' alert.stockrecord.product.id %}{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}">
+                {{ alert.stockrecord.product.get_title }}
+            </a>
+        </td>
         <td>{{ alert.stockrecord.partner.display_name }}</td>
         <td>{{ alert.stockrecord.low_stock_threshold }}</td>
         <td>{{ alert.stockrecord.net_stock_level }}</td>

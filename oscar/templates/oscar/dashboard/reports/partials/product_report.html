@@ -12,7 +12,9 @@
     </tr>
     {% for product in objects %}
     <tr>
-        <td>{{ product.product }}</td>
+        <td>
+        <a href="{% url 'dashboard:catalogue-product' product.product.id %}">{{ product.product }}</a>
+        </td>
         <td>{{ product.num_views }}</td>
         <td>{{ product.num_basket_additions }}</td>
         <td>{{ product.num_purchases }}</td>

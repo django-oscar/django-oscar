@@ -11,7 +11,7 @@
         </tr>
         {% for offer_discount in objects %}
         <tr>
-            <td>{{ offer_discount.offer.name }}</td>
+            <td><a href="{% url 'dashboard:offer-detail' offer_discount.offer.pk %}">{{ offer_discount.offer.name }}</a></td>
             <td>{{ offer_discount.total_discount|currency }}</td>
         </tr>
     {% endfor %}

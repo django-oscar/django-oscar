@@ -56,9 +56,9 @@
         <tbody>
             {% for category in child_categories %}
                 <tr>
-                    <td>{{ category.name }}</td>
+                    <td><a href="{% url 'dashboard:catalogue-category-update' category.id %}">{{ category.name }}</a></td>
                     <td>{{ category.description|default:""|striptags|cut:"&nbsp;"|truncatewords:6 }}</td>
-                    <td>{{ category.get_num_children }}</td>
+                    <td><a href="{% url 'dashboard:catalogue-category-detail-list' pk=category.pk %}">{{ category.get_num_children }}</a></td>
                     <td>
                         <div class="btn-toolbar">
                             <div class="btn-group">

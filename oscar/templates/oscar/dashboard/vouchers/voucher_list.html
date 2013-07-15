@@ -59,7 +59,7 @@
     </tr>
         {% for voucher in vouchers %}
         <tr>
-            <td>{{ voucher.name }}</td>
+            <td><a href="{% url 'dashboard:voucher-stats' voucher.id %}">{{ voucher.name }}</a></td>
             <td>{{ voucher.code }}</td>
         <td>{{ voucher.is_active|yesno:_("True,False") }}</td>
             <td>{{ voucher.num_basket_additions }}</td>
