@@ -112,7 +112,7 @@
                             <td>{{ order.status|default:"-" }}</td>
                             <td>
                                 {% if not order.is_anonymous %}
-                                    <a href="{% url 'dashboard:user-detail' order.user.id %}">{{ order.user.get_full_name }}</a>
+                                    <a href="{% url 'dashboard:user-detail' order.user.id %}">{{ order.user.get_full_name|default:"-" }}</a>
                                 {% else %}
                                     {{ order.email }}
                                 {% endif %}

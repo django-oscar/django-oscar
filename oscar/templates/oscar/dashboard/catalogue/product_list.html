@@ -107,7 +107,7 @@
                     <td>{{ stockrecord.price_excl_tax|currency }}</td>
                     <td>{{ stockrecord.price_incl_tax|currency }}</td>
                     <td>{{ stockrecord.num_in_stock|default:"-" }}</td>
-                    <td>{{ stockrecord.num_allocated }}</td>
+                    <td>{{ stockrecord.num_allocated|default:"-" }}</td>
                 {% endwith %}
                 <td>
                     {% if product.parent.id %}
