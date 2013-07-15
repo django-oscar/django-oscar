@@ -2,8 +2,9 @@ from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.db.models import get_model
 from django import forms
-from oscar.apps.customer.forms import EmailUserCreationForm, CommonPasswordValidator
 from django.core import validators
+
+from oscar.apps.customer.forms import EmailUserCreationForm, CommonPasswordValidator
 
 
 Partner = get_model('partner', 'Partner')

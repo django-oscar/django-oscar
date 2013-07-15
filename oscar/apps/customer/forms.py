@@ -157,7 +157,7 @@ class EmailUserCreationForm(forms.ModelForm):
         model = User
         fields = ('email',)
 
-    def __init__(self, host, *args, **kwargs):
+    def __init__(self, host=None, *args, **kwargs):
         self.host = host
         super(EmailUserCreationForm, self).__init__(*args, **kwargs)
 
@@ -181,7 +181,7 @@ class EmailUserCreationForm(forms.ModelForm):
         if not url:
             return settings.LOGIN_REDIRECT_URL
         host = urlparse.urlparse(url)[1]
-        if host and host != self.host:
+        if host and self.host and host != self.host:
             return settings.LOGIN_REDIRECT_URL
         return url
 
