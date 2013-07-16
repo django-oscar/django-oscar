@@ -66,8 +66,7 @@ class DisabledAnonymousCheckoutViewsTests(ClientTestCase):
         self.assertIsRedirect(response)
 
     def test_user_address_views_require_a_login(self):
-        urls = [reverse('checkout:user-address-create'),
-                reverse('checkout:user-address-update', kwargs={'pk': 1}),
+        urls = [reverse('checkout:user-address-update', kwargs={'pk': 1}),
                 reverse('checkout:user-address-delete', kwargs={'pk': 1}),]
         for url in urls:
             response = self.client.get(url)

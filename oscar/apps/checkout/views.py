@@ -177,27 +177,6 @@ class ShippingAddressView(CheckoutSessionMixin, FormView):
         return reverse('checkout:shipping-method')
 
 
-class UserAddressCreateView(CheckoutSessionMixin, CreateView):
-    """
-    Add a USER address to the user's addressbook.
-
-    This is not the same as creating a SHIPPING Address, although if used for
-    the order, it will be converted into a shipping address at submission-time.
-    """
-    template_name = 'checkout/user_address_form.html'
-    form_class = UserAddressForm
-
-    def get_form_kwargs(self):
-        kwargs = super(UserAddressCreateView, self).get_form_kwargs()
-        kwargs['user'] = self.request.user
-        return kwargs
-
-    def get_success_response(self):
-        messages.info(self.request, _("Address saved"))
-        # We redirect back to the shipping address page
-        return HttpResponseRedirect(reverse('checkout:shipping-address'))
-
-
 class UserAddressUpdateView(CheckoutSessionMixin, UpdateView):
     """
     Update a user address
@@ -225,7 +204,7 @@ class UserAddressDeleteView(CheckoutSessionMixin, DeleteView):
     template_name = 'checkout/user_address_delete.html'
 
     def get_queryset(self):
-        return UserAddress._default_manager.filter(user=self.request.user)
+        return self.request.user.addresses.all()
 
     def get_success_url(self):
         messages.info(self.request, _("Address deleted"))
