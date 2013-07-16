@@ -21,6 +21,7 @@ PaymentEventQuantity = get_model('order', 'PaymentEventQuantity')
 UserAddress = get_model('address', 'UserAddress')
 Basket = get_model('basket', 'Basket')
 CommunicationEventType = get_model('customer', 'CommunicationEventType')
+UnableToPlaceOrder = get_class('order.exceptions', 'UnableToPlaceOrder')
 
 post_checkout = get_class('checkout.signals', 'post_checkout')
 
@@ -163,7 +164,12 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         if addr_data:
             return ShippingAddress(**addr_data)
         elif addr_id:
-            address = UserAddress._default_manager.get(pk=addr_id)
+            try:
+                address = UserAddress._default_manager.get(pk=addr_id)
+            except UserAddress.DoesNotExist:
+                raise UnableToPlaceOrder(
+                    "The selected shipping address no longer exists. "
+                    "Please select or enter another")
             shipping_addr = ShippingAddress()
             address.populate_alternative_model(shipping_addr)
             return shipping_addr
