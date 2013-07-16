@@ -41,15 +41,6 @@ class TestUserAddress(TestCase):
         active_fields = a.active_address_fields()
         self.assertEquals("Barrington", active_fields[0])
 
-    def test_hashing_with_utf8(self):
-        a = models.UserAddress(
-            first_name=u"\u0141ukasz Smith",
-            last_name=u'Smith',
-            line1=u"75 Smith Road",
-            postcode=u"n4 8ty",
-            country=self.country)
-        a.active_address_fields()
-
     def test_ignores_whitespace_when_hashing(self):
         a1 = models.UserAddress(
             first_name=" Terry  ",

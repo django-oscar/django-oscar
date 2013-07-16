@@ -2,6 +2,7 @@ import zlib
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.core import exceptions
 
 from oscar.core.compat import AUTH_USER_MODEL
 
@@ -13,8 +14,6 @@ class AbstractAddress(models.Model):
     This is subclassed and extended to provide models for
     user, shipping and billing addresses.
     """
-    # @todo: Need a way of making these choice lists configurable
-    # per project
     MR, MISS, MRS, MS, DR = ('Mr', 'Miss', 'Mrs', 'Ms', 'Dr')
     TITLE_CHOICES = (
         (MR, _("Mr")),
@@ -49,6 +48,9 @@ class AbstractAddress(models.Model):
     search_text = models.CharField(
         _("Search text - used only for searching addresses"),
         max_length=1000)
+
+    def __unicode__(self):
+        return self.summary
 
     class Meta:
         abstract = True
@@ -105,15 +107,24 @@ class AbstractAddress(models.Model):
 
     @property
     def name(self):
-        return self.join_fields(
-            ('first_name', 'last_name'),
-            separator=u" ")
+        return self.join_fields(('first_name', 'last_name'), separator=u" ")
 
     # Helpers
 
+    def generate_hash(self):
+        """
+        Returns a hash of the address summary
+        """
+        # We use an upper-case version of the summary
+        return zlib.crc32(self.summary.strip().upper().encode('UTF8'))
+
     def join_fields(self, fields, separator=u", "):
+        """
+        Join a sequence of fields using the specified separator
+        """
         field_values = []
         for field in fields:
+            # Title is special case
             if field == 'title':
                 value = self.get_title_display()
             else:
@@ -144,12 +155,11 @@ class AbstractAddress(models.Model):
         fields = filter(
             bool, [self.salutation, self.line1, self.line2,
                    self.line3, self.line4, self.state, self.postcode])
-        if self.country:
+        try:
             fields.append(self.country.name)
+        except exceptions.ObjectDoesNotExist:
+            pass
         return fields
-
-    def __unicode__(self):
-        return self.summary
 
 
 class AbstractCountry(models.Model):
@@ -196,13 +206,6 @@ class AbstractShippingAddress(AbstractAddress):
         verbose_name=_('Courier instructions'),
         help_text=_("For example, leave the parcel in the wheelie bin "
                     "if I'm not in."))
-
-    def generate_hash(self):
-        """
-        Returns a hash of the address summary
-        """
-        # We use an upper-case version of the summary
-        return zlib.crc32(self.summary.strip().upper().encode('UTF8'))
 
     class Meta:
         abstract = True
@@ -259,6 +262,7 @@ class AbstractUserAddress(AbstractShippingAddress):
         # Save a hash of the address fields so we can check whether two
         # addresses are the same to avoid saving duplicates
         self.hash = self.generate_hash()
+
         # Ensure that each user only has one default shipping address
         # and billing address
         self._ensure_defaults_integrity()
