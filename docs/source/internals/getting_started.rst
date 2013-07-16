@@ -78,6 +78,7 @@ Now set ``TEMPLATE_CONTEXT_PROCESSORS`` to:
         "django.core.context_processors.i18n",
         "django.core.context_processors.media",
         "django.core.context_processors.static",
+        "django.core.context_processors.tz",
         "django.contrib.messages.context_processors.messages",
         'oscar.apps.search.context_processors.search_form',
         'oscar.apps.promotions.context_processors.promotions',
