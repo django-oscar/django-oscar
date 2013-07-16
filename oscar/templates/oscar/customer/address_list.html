@@ -6,27 +6,27 @@
 {% load i18n %}
 
 {% block title %}
-{% trans 'Address book' %} | {{ block.super }}
+    {% trans 'Address book' %} | {{ block.super }}
 {% endblock %}
 
 {% block body_class %}account-pages{% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">
-    <li>
-        <a href="{% url 'promotions:home' %}">{% trans 'Home' %}</a>
-        <span class="divider">/</span>
-    </li>
-    <li>
-        <a href="{% url 'customer:summary' %}">{% trans 'Account' %}</a>
-        <span class="divider">/</span>
-    </li>
-    <li class="active">{% trans 'Address book' %}</li>
-</ul>
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'promotions:home' %}">{% trans 'Home' %}</a>
+            <span class="divider">/</span>
+        </li>
+        <li>
+            <a href="{% url 'customer:summary' %}">{% trans 'Account' %}</a>
+            <span class="divider">/</span>
+        </li>
+        <li class="active">{% trans 'Address book' %}</li>
+    </ul>
 {% endblock %}
 
 {% block headertext %}
-{% trans 'Account' %}
+    {% trans 'Account' %}
 {% endblock %}
 
 {% block subnavigation %}
@@ -34,41 +34,39 @@
 {% endblock %}
 
 {% block subheader %}
-<div class="sub-header">
-    <h2>{% trans 'Address Book' %}</h2>
-</div>
+    <div class="sub-header">
+        <h2>{% trans 'Address Book' %}</h2>
+    </div>
 {% endblock subheader %}
 
 {% block content %}
-
-{% if addresses %}
-    <table class="table table-striped table-condensed table-bordered">
-        <tbody>
-            <tr>
-                <th>{% trans "Address" %}</th>
-                <th></th>
-            </tr>
-            {% for address in addresses %}
+    {% if addresses %}
+        <table class="table table-striped table-condensed table-bordered">
+            <tbody>
                 <tr>
-                    <td>
-                        <address>
-                        {{ address.summary }}
-                        </address>
-                    </td>
-                    <td>
-                        <a class="btn btn-primary" href="{% url 'customer:address-detail' address.id %}">{% trans 'Edit' %}</a>
-                        <a class="btn btn-danger" href="{% url 'customer:address-delete' address.id %}">{% trans 'Delete' %}</a>
-                    </td>
+                    <th>{% trans "Address" %}</th>
+                    <th></th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-{% else %}
-{% trans 'There are no addresses in your address book.' %}
-{% endif %}
+                {% for address in addresses %}
+                    <tr>
+                        <td>
+                            <address>
+                                {{ address.summary }}
+                            </address>
+                        </td>
+                        <td>
+                            <a class="btn btn-primary" href="{% url 'customer:address-detail' address.id %}">{% trans 'Edit' %}</a>
+                            <a class="btn btn-danger" href="{% url 'customer:address-delete' address.id %}">{% trans 'Delete' %}</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        {% trans 'There are no addresses in your address book.' %}
+    {% endif %}
 
-<div class="form-actions"><a href="{% url 'customer:address-create' %}" class="btn btn-primary">{% trans 'Add a New Address' %}</a></div>
-{% include "partials/pagination.html" %}
+    <div class="form-actions"><a href="{% url 'customer:address-create' %}" class="btn btn-primary">{% trans 'Add a New Address' %}</a></div>
+    {% include "partials/pagination.html" %}
 
 {% endblock content %}
-

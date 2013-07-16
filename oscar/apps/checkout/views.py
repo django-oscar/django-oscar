@@ -569,9 +569,12 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
                 **order_kwargs)
         except UnableToPlaceOrder, e:
             # It's possible that something will go wrong while trying to
-            # actually place an order.  Not a good situation to be in, but needs
+            # actually place an order.  Not a good situation to be in as a
+            # payment transaction may already have taken place, but needs
             # to be handled gracefully.
-            logger.error("Order #%s: unable to place order - %s", order_number, e)
+            logger.error("Order #%s: unable to place order - %s",
+                         order_number, e)
+            logger.exception(e)
             msg = unicode(e)
             self.restore_frozen_basket()
             return self.render_to_response(self.get_context_data(error=msg))
