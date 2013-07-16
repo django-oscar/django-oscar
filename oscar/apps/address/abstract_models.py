@@ -287,6 +287,18 @@ class AbstractUserAddress(AbstractShippingAddress):
         ordering = ['-num_orders']
         unique_together = ('user', 'hash')
 
+    def validate_unique(self, exclude=None):
+        super(AbstractAddress, self).validate_unique(exclude)
+        qs = self.__class__.objects.filter(
+            user=self.user,
+            hash=self.generate_hash())
+        if self.id:
+            qs = qs.exclude(id=self.id)
+        if qs.count() > 0:
+            raise exceptions.ValidationError({
+                '__all__': [_("This address is already in your addressbook")]})
+
+
 
 class AbstractBillingAddress(AbstractAddress):
 
