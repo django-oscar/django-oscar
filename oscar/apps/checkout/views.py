@@ -181,22 +181,16 @@ class UserAddressCreateView(CheckoutSessionMixin, CreateView):
     """
     Add a USER address to the user's addressbook.
 
-    This is not the same as creating a SHIPPING Address, although if used for the order,
-    it will be converted into a shipping address at submission-time.
+    This is not the same as creating a SHIPPING Address, although if used for
+    the order, it will be converted into a shipping address at submission-time.
     """
     template_name = 'checkout/user_address_form.html'
     form_class = UserAddressForm
 
-    def get_context_data(self, **kwargs):
-        kwargs = super(UserAddressCreateView, self).get_context_data(**kwargs)
-        kwargs['form_url'] = reverse('checkout:user-address-create')
+    def get_form_kwargs(self):
+        kwargs = super(UserAddressCreateView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
         return kwargs
-
-    def form_valid(self, form):
-        self.object = form.save(commit=False)
-        self.object.user = self.request.user
-        self.object.save()
-        return self.get_success_response()
 
     def get_success_response(self):
         messages.info(self.request, _("Address saved"))
@@ -212,11 +206,11 @@ class UserAddressUpdateView(CheckoutSessionMixin, UpdateView):
     form_class = UserAddressForm
 
     def get_queryset(self):
-        return UserAddress._default_manager.filter(user=self.request.user)
+        return self.request.user.addresses.all()
 
-    def get_context_data(self, **kwargs):
-        kwargs = super(UserAddressUpdateView, self).get_context_data(**kwargs)
-        kwargs['form_url'] = reverse('checkout:user-address-update', args=(str(kwargs['object'].id),))
+    def get_form_kwargs(self):
+        kwargs = super(UserAddressUpdateView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
         return kwargs
 
     def get_success_url(self):

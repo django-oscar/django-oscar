@@ -13,7 +13,7 @@
 
 {% block shipping_address %}
     <h1>{% trans "Edit address" %}</h1>
-    <form action="{{ form_url }}" method="post" class="form-horizontal">
+    <form action="." method="post" class="form-horizontal">
         <div class="well well-info">
             {% csrf_token %}
             {% include "partials/form_fields.html" with form=form %}

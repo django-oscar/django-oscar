@@ -190,7 +190,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             address.populate_alternative_model(shipping_addr)
             return shipping_addr
         else:
-            raise AttributeError("No shipping address data found")
+            raise UnableToPlaceOrder("No shipping address data found")
 
     def update_address_book(self, user, shipping_addr):
         """

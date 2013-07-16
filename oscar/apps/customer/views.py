@@ -536,6 +536,11 @@ class OrderLineView(DetailView, PostActionMixin):
         messages.info(self.request, msg)
 
 
+# ------------
+# Address book
+# ------------
+
+
 class AddressListView(ListView):
     """Customer address book"""
     context_object_name = "addresses"
@@ -552,16 +557,15 @@ class AddressCreateView(CreateView):
     mode = UserAddress
     template_name = 'customer/address_form.html'
 
+    def get_form_kwargs(self):
+        kwargs = super(AddressCreateView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
     def get_context_data(self, **kwargs):
         ctx = super(AddressCreateView, self).get_context_data(**kwargs)
         ctx['title'] = _('Add a new address')
         return ctx
-
-    def form_valid(self, form):
-        self.object = form.save(commit=False)
-        self.object.user = self.request.user
-        self.object.save()
-        return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
         messages.success(self.request, _("Address saved"))
@@ -573,17 +577,22 @@ class AddressUpdateView(UpdateView):
     model = UserAddress
     template_name = 'customer/address_form.html'
 
+    def get_form_kwargs(self):
+        kwargs = super(AddressUpdateView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
     def get_context_data(self, **kwargs):
-        ctx =  super(AddressUpdateView, self).get_context_data(**kwargs)
+        ctx = super(AddressUpdateView, self).get_context_data(**kwargs)
         ctx['title'] = _('Edit address')
         return ctx
 
     def get_queryset(self):
-        return UserAddress._default_manager.filter(user=self.request.user)
+        return self.request.user.addresses.all()
 
     def get_success_url(self):
         messages.success(self.request, _("Address saved"))
-        return reverse('customer:address-detail', kwargs={'pk': self.get_object().pk })
+        return reverse('customer:address-list')
 
 
 class AddressDeleteView(DeleteView):
@@ -595,6 +604,11 @@ class AddressDeleteView(DeleteView):
 
     def get_success_url(self):
         return reverse('customer:address-list')
+
+
+# ------------
+# Order status
+# ------------
 
 
 class AnonymousOrderDetailView(DetailView):

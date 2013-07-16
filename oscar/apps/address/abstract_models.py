@@ -189,7 +189,7 @@ class AbstractCountry(models.Model):
         ordering = ('-display_order', 'name',)
 
     def __unicode__(self):
-        return self.printable_name
+        return self.printable_name or self.name
 
 
 class AbstractShippingAddress(AbstractAddress):
@@ -285,6 +285,7 @@ class AbstractUserAddress(AbstractShippingAddress):
         verbose_name = _("User address")
         verbose_name_plural = _("User addresses")
         ordering = ['-num_orders']
+        unique_together = ('user', 'hash')
 
 
 class AbstractBillingAddress(AbstractAddress):
