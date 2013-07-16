@@ -4,6 +4,8 @@ from django.utils.translation import ugettext_lazy as _
 from oscar.apps.shipping.methods import (
     Free, NoShippingRequired, OfferDiscount)
 
+from decimal import Decimal as D
+
 
 class Repository(object):
     """
@@ -59,7 +61,8 @@ class Repository(object):
         if basket.offer_applications.shipping_discounts:
             # We assume there is only one shipping discount available
             discount = basket.offer_applications.shipping_discounts[0]
-            return OfferDiscount(method, discount['offer'])
+            if method.basket_charge_incl_tax > D('0.00'):
+                return OfferDiscount(method, discount['offer'])
         return method
 
     def find_by_code(self, code, basket):
