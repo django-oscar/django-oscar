@@ -1,3 +1,5 @@
+{% load form_tags %}
+
 <span class="help-block">{{ form.non_field_errors }}</span>
 {% for field in form.hidden_fields %}
     {{ field }}
@@ -7,5 +9,16 @@
         We use a separate template for each field so that forms can be rendered
         field-by-field easily #}
     {% endcomment %}
-    {% include 'partials/form_field.html' with field=field %}
+
+    {% comment %}
+    Make the field widget type available to templates so we can mark-up
+    checkboxes differently to other widgets.
+    {% endcomment %}
+    {% annotate_form_field field %}
+
+    {% if field.widget_type == 'CheckboxInput' %}
+        {% include 'partials/form_field_checkbox.html' with field=field %}
+    {% else %}
+        {% include 'partials/form_field.html' with field=field %}
+    {% endif %}
 {% endfor %}
