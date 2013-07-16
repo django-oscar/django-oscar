@@ -55,7 +55,7 @@ class BulkEditMixin(object):
         return request.META.get('HTTP_REFERER', '.')
 
     def get_success_url(self, request):
-        return request.META('HTTP_REFERER', '.')
+        return request.META.get('HTTP_REFERER', '.')
 
     def post(self, request, *args, **kwargs):
         # Dynamic dispatch pattern - we forward POST requests onto a method
