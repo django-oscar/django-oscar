@@ -81,6 +81,12 @@ Install Oscar and its dependencies within a virtualenv::
     (oscar) $ make sandbox
     (oscar) $ sites/sandbox/manage.py runserver
 
+If you do not have mkvirtualenv, then replace that line with
+
+    $ virtualenv oscar
+    $ . ./oscar/bin/activate
+    (oscar) $
+
 The sandbox site (initialised with a sample set of products) will be available
 at: http://localhost:8000.  A sample superuser is installed with credentials::
 
