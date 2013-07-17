@@ -1,12 +1,12 @@
-from django.contrib.auth.models import User
-from django.utils.translation import ugettext_lazy as _
-from django.db.models import get_model
 from django import forms
 from django.core import validators
+from django.db.models import get_model
+from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.customer.forms import EmailUserCreationForm, CommonPasswordValidator
+from oscar.core.compat import get_user_model
 
-
+User = get_user_model()
 Partner = get_model('partner', 'Partner')
 
 
@@ -24,10 +24,10 @@ class NewUserForm(EmailUserCreationForm):
 
     def __init__(self, partner, *args, **kwargs):
         self.partner = partner
-        super(NewUserForm, self).__init__(*args, **kwargs)
+        super(NewUserForm, self).__init__(host=None, *args, **kwargs)
 
     def save(self):
-        user = super(EmailUserCreationForm, self).save(commit=False)
+        user = super(NewUserForm, self).save(commit=False)
         user.is_staff = True
         user.save()
         self.partner.users.add(user)
