@@ -8,6 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.views.generic import (ListView, FormView, DetailView, DeleteView)
 
 from oscar.core.loading import get_class
+from oscar.views import sort_queryset
 
 VoucherForm = get_class('dashboard.vouchers.forms', 'VoucherForm')
 VoucherSearchForm = get_class('dashboard.vouchers.forms', 'VoucherSearchForm')
@@ -27,6 +28,9 @@ class VoucherListView(ListView):
 
     def get_queryset(self):
         qs = self.model.objects.all().order_by('-date_created')
+        qs = sort_queryset(qs, self.request,
+            ['num_basket_additions', 'num_orders', 'date_created'],
+            '-date_created')
         self.description_ctx = {'main_filter': _('All vouchers'),
                                 'name_filter': '',
                                 'code_filter': ''}

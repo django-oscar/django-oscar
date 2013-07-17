@@ -9,6 +9,7 @@ from django.template.defaultfilters import date as format_date
 
 from oscar.views.generic import BulkEditMixin
 from oscar.apps.dashboard.reviews import forms
+from oscar.views import sort_queryset
 
 ProductReview = get_model('reviews', 'productreview')
 
@@ -68,6 +69,7 @@ class ReviewListView(generic.ListView, BulkEditMixin):
 
     def get_queryset(self):
         queryset = self.model.objects.all()
+        queryset = sort_queryset(queryset, self.request, ['score', 'total_votes', 'date_created'])
         self.desc_ctx = {
             'main_filter': _('All reviews'),
             'date_filter': '',

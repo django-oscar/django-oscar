@@ -17,7 +17,7 @@ DEFAULT_SORT_DOWN = getattr(
 sort_directions = {
     'asc': {'icon': DEFAULT_SORT_UP, 'inverse': 'desc'},
     'desc': {'icon': DEFAULT_SORT_DOWN, 'inverse': 'asc'},
-    '': {'icon': DEFAULT_SORT_DOWN, 'inverse': 'asc'},
+    '': {'icon': DEFAULT_SORT_UP, 'inverse': 'desc'},
 }
 
 

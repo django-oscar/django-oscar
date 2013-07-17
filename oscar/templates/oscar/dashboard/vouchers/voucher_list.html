@@ -1,6 +1,7 @@
 {% extends 'dashboard/layout.html' %}
 {% load url from future %}
 {% load currency_filters %}
+{% load sorting_tags %}
 {% load i18n %}
 
 {% block title %}
@@ -46,9 +47,9 @@
         <th>{% trans "Name" %}</th>
         <th>{% trans "Code" %}</th>
         <th>{% trans "Is active?" %}</th>
-        <th>{% trans "Num baskets" %}</th>
-        <th>{% trans "Num orders" %}</th>
-        <th>{% trans "Date created" %}</th>
+        <th>{% anchor 'num_basket_additions' _("Num baskets") %}</th>
+        <th>{% anchor 'num_orders' _("Num orders") %}</th>
+        <th>{% anchor 'date_created' _("Date created") %}</th>
         <th></th>
     </tr>
         {% for voucher in vouchers %}

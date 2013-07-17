@@ -3,6 +3,7 @@
 {% load currency_filters %}
 {% load i18n %}
 {% load thumbnail %}
+{% load sorting_tags %}
 
 {% block body_class %}catalogue{% endblock %}
 
@@ -63,7 +64,7 @@
     {% csrf_token %}
     <table class="table table-striped table-bordered">
         <tr>
-            <th>{% trans "Title" %}</th>
+            <th>{% anchor 'title' _("Title") %}</th>
             <th>{% trans "Image" %}</th>
             <th>{% trans "UPC" %}</th>
             <th>{% trans "Product class" %}</th>

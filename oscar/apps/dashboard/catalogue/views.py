@@ -7,6 +7,7 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import get_classes
+from oscar.views import sort_queryset
 
 (ProductForm,
  ProductSearchForm,
@@ -55,8 +56,12 @@ class ProductListView(generic.ListView):
         """
         description_ctx = {'upc_filter': '',
                            'title_filter': ''}
-        queryset = self.model.objects.all().order_by('-date_created').prefetch_related(
+        queryset = self.model.objects.all()
+        queryset = sort_queryset(queryset, self.request,
+            ['title'], '-date_created')
+        queryset = queryset.prefetch_related(
             'product_class', 'stockrecord__partner')
+
         self.form = self.form_class(self.request.GET)
         if not self.form.is_valid():
             self.description = self.description_template % description_ctx

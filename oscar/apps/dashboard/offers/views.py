@@ -10,6 +10,7 @@ from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.core.loading import get_classes, get_class
+from oscar.views import sort_queryset
 
 ConditionalOffer = get_model('offer', 'ConditionalOffer')
 Condition = get_model('offer', 'Condition')
@@ -34,7 +35,9 @@ class OfferListView(ListView):
     def get_queryset(self):
         qs = self.model._default_manager.filter(
             offer_type=ConditionalOffer.SITE)
-        qs = self.sort_queryset(qs)
+        qs = sort_queryset(qs, self.request,
+                           ['name', 'start_date', 'end_date',
+                           'num_applications', 'total_discount'])
 
         self.description = _("All offers")
 
@@ -57,16 +60,6 @@ class OfferListView(ListView):
             qs = qs.filter(start_date__lte=today, end_date__gte=today)
 
         return qs
-
-    def sort_queryset(self, queryset):
-        sort = self.request.GET.get('sort', None)
-        allowed_sorts = ['name', 'start_date', 'end_date', 'num_applications',
-                         'total_discount']
-        if sort in allowed_sorts:
-            direction = self.request.GET.get('dir', 'desc')
-            sort = ('-' if direction == 'desc' else '') + sort
-            queryset = queryset.order_by(sort)
-        return queryset
 
     def get_context_data(self, **kwargs):
         ctx = super(OfferListView, self).get_context_data(**kwargs)
