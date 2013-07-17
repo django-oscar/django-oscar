@@ -267,8 +267,10 @@ INSTALLED_APPS = [
     'django.contrib.flatpages',
     'django.contrib.staticfiles',
     'django_extensions',
+    # Debug toolbar + extensions
     'debug_toolbar',
     'cache_panel',
+    'template_timings_panel',
     'south',
     'rosetta',          # For i18n testing
     'compressor',
@@ -322,10 +324,11 @@ DEBUG_TOOLBAR_PANELS = (
     'debug_toolbar.panels.headers.HeaderDebugPanel',
     'debug_toolbar.panels.request_vars.RequestVarsDebugPanel',
     'debug_toolbar.panels.template.TemplateDebugPanel',
-    #'debug_toolbar.panels.sql.SQLDebugPanel',  # Disabled for performance
+    'debug_toolbar.panels.sql.SQLDebugPanel',  # Disabled for performance
     'debug_toolbar.panels.signals.SignalDebugPanel',
     'debug_toolbar.panels.logger.LoggingPanel',
     'cache_panel.panel.CacheDebugPanel',
+    'template_timings_panel.panels.TemplateTimings.TemplateTimings',
 )
 
 # ==============
