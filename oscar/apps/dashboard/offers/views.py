@@ -188,7 +188,41 @@ class OfferWizardStepView(FormView):
     def form_valid(self, form):
         self._store_form_kwargs(form)
         self._store_object(form)
-        return super(OfferWizardStepView, self).form_valid(form)
+
+        if self.update and 'save' in form.data:
+            # Save changes to this offer when updating and pressed save button
+            return self.save_offer(self.offer)
+        else:
+            # Proceed to next page
+            return super(OfferWizardStepView, self).form_valid(form)
+
+    def save_offer(self, offer):
+        # We update the offer with the name/description from step 1
+        session_offer = self._fetch_session_offer()
+        offer.name = session_offer.name
+        offer.description = session_offer.description
+
+        # Working around a strange Django issue where saving the related model
+        # in place does not register it correctly and so it has to be saved and
+        # reassigned.
+        benefit = session_offer.benefit
+        benefit.save()
+        condition = session_offer.condition
+        condition.save()
+        offer.benefit = benefit
+        offer.condition = condition
+        offer.save()
+
+        self._flush_session()
+
+        if self.update:
+            msg = _("Offer '%s' updated") % offer.name
+        else:
+            msg = _("Offer '%s' created!") % offer.name
+        messages.success(self.request, msg)
+
+        return HttpResponseRedirect(reverse(
+            'dashboard:offer-detail', kwargs={'pk': offer.pk}))
 
     def get_success_url(self):
         if self.update:
@@ -254,33 +288,7 @@ class OfferRestrictionsView(OfferWizardStepView):
 
     def form_valid(self, form):
         offer = form.save(commit=False)
-
-        # We update the offer with the name/description from step 1
-        session_offer = self._fetch_session_offer()
-        offer.name = session_offer.name
-        offer.description = session_offer.description
-
-        # Working around a strange Django issue where saving the related model
-        # in place does not register it correctly and so it has to be saved and
-        # reassigned.
-        benefit = session_offer.benefit
-        benefit.save()
-        condition = session_offer.condition
-        condition.save()
-        offer.benefit = benefit
-        offer.condition = condition
-        offer.save()
-
-        self._flush_session()
-
-        if self.update:
-            msg = _("Offer '%s' updated") % offer.name
-        else:
-            msg = _("Offer '%s' created!") % offer.name
-        messages.success(self.request, msg)
-
-        return HttpResponseRedirect(reverse(
-            'dashboard:offer-detail', kwargs={'pk': offer.pk}))
+        return self.save_offer(offer)
 
     def get_instance(self):
         return self.offer
