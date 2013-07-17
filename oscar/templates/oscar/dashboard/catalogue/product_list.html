@@ -57,6 +57,10 @@
 </div>
 
 {% if products %}
+<ul class="nav nav-tabs">
+    <li{% if 'recently_edited' not in request.GET %} class="active"{% endif %}> <a href=".">All</a> </li>
+    <li{% if 'recently_edited' in request.GET %} class="active"{% endif %}> <a href="?recently_edited=1">Recently edited</a> </li>
+</ul>
 <div class="table-header">
     <h2><i class="icon-sitemap icon-large"></i>{{ queryset_description }}</h2>
 </div>
@@ -64,7 +68,8 @@
     {% csrf_token %}
     <table class="table table-striped table-bordered">
         <tr>
-            <th>{% anchor 'title' _("Title") %}</th>
+            <th>{% if 'recently_edited' in request.GET %}{% trans "Title" %}
+            {% else %}{% anchor 'title' _("Title") %}{% endif %}</th>
             <th>{% trans "Image" %}</th>
             <th>{% trans "UPC" %}</th>
             <th>{% trans "Product class" %}</th>
