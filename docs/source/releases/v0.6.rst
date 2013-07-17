@@ -122,6 +122,12 @@ Payment app:
 
 * The `balance` method on the source object is not a property not a method.
 
+URLs
+~~~~
+
+The named search URL ``search_default`` is renamed to ``search-default`` for
+consistency with the rest of Oscar.
+
 Migrations
 ~~~~~~~~~~
 
