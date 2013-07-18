@@ -81,7 +81,7 @@ Install Oscar and its dependencies within a virtualenv::
     (oscar) $ make sandbox
     (oscar) $ sites/sandbox/manage.py runserver
 
-If you do not have mkvirtualenv, then replace that line with
+If you do not have mkvirtualenv, then replace that line with::
 
     $ virtualenv oscar
     $ . ./oscar/bin/activate
