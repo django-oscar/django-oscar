@@ -82,6 +82,14 @@ Order processing changes
 
 There are changes to order processing methods
 
+Minor changes
+~~~~~~~~~~~~~
+
+* detox_ is a new dependency, which allows running `tox` tests in parallel.
+
+.. _detox: https://pypi.python.org/pypi/detox
+
+
 Upgrading 
 =========
 
