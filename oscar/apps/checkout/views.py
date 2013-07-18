@@ -8,8 +8,7 @@ from django.contrib.auth import login
 from django.db.models import get_model
 from django.utils.translation import ugettext as _
 from django.views.generic import DetailView, TemplateView, FormView, \
-                                 DeleteView, UpdateView, CreateView
-from oscar.apps.customer.utils import normalise_email
+                                 DeleteView, UpdateView
 
 from oscar.apps.shipping.methods import NoShippingRequired
 from oscar.core.loading import get_class, get_classes
@@ -342,36 +341,9 @@ class PaymentMethodView(CheckoutSessionMixin, TemplateView):
 
 class PaymentDetailsView(OrderPlacementMixin, TemplateView):
     """
-    For taking the details of payment and creating the order
-
-    The class is deliberately split into fine-grained methods, responsible for only one
-    thing.  This is to make it easier to subclass and override just one component of
-    functionality.
-
-    All projects will need to subclass and customise this class.
+    For taking the details of payment
     """
     template_name = 'checkout/payment_details.html'
-    template_name_preview = 'checkout/preview.html'
-    preview = False
-
-    def get_template_names(self):
-        return [self.template_name_preview] if self.preview else [self.template_name]
-
-    def get_error_response(self):
-        # Check that the user's basket is not empty
-        if self.request.basket.is_empty:
-            messages.error(self.request, _("You need to add some items to your basket to checkout"))
-            return HttpResponseRedirect(reverse('basket:summary'))
-
-        shipping_required = self.request.basket.is_shipping_required()
-        # Check that shipping address has been completed
-        if shipping_required and not self.checkout_session.is_shipping_address_set():
-            messages.error(self.request, _("Please choose a shipping address"))
-            return HttpResponseRedirect(reverse('checkout:shipping-address'))
-        # Check that shipping method has been set
-        if shipping_required and not self.checkout_session.is_shipping_method_set():
-            messages.error(self.request, _("Please choose a shipping method"))
-            return HttpResponseRedirect(reverse('checkout:shipping-method'))
 
     def get(self, request, *args, **kwargs):
         error_response = self.get_error_response()
@@ -380,25 +352,55 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         return super(PaymentDetailsView, self).get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        """
-        This method is designed to be overridden by subclasses which will
-        validate the forms from the payment details page.  If the forms are valid
-        then the method can call submit()
-        """
-        error_response = self.get_error_response()
-
-        if error_response:
-            return error_response
-        if self.preview:
-            # We use a custom parameter to indicate if this is an attempt to place an order.
-            # Without this, we assume a payment form is being submitted from the
-            # payment-details page
-            if request.POST.get('action', '') == 'place_order':
-                return self.submit(request.basket)
-            return self.render_preview(request)
-
         # Posting to payment-details isn't the right thing to do
         return self.get(request, *args, **kwargs)
+
+    def get_default_billing_address(self):
+        """
+        Return default billing address for user
+
+        This is useful when the payment details view includes a billing address
+        form - you can use this helper method to prepopulate the form.
+
+        Note, this isn't used in core oscar as there is no billing address form
+        by default.
+        """
+        if not self.request.user.is_authenticated():
+            return None
+        try:
+            return self.request.user.addresses.get(is_default_for_billing=True)
+        except UserAddress.DoesNotExist:
+            return None
+
+
+# =============
+# Order Preview
+# =============
+
+
+class OrderPreviewView(OrderPlacementMixin, TemplateView):
+    """
+    For previewing and creating the order
+
+    The class is deliberately split into fine-grained methods, responsible for
+    only one thing. This is to make it easier to subclass and override just one
+    component of functionality.
+    """
+    template_name = 'checkout/preview.html'
+
+    def get(self, request, *args, **kwargs):
+        error_response = self.get_error_response()
+        if error_response:
+            return error_response
+        return super(OrderPreviewView, self).get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        # We use a custom parameter to indicate if this is an attempt to place an order.
+        # Without this, we assume a payment form is being submitted from the
+        # payment-details page
+        if request.POST.get('action', '') == 'place_order':
+            return self.submit(request.basket)
+        return self.render_preview(request)
 
     def render_preview(self, request, **kwargs):
         """
@@ -419,22 +421,24 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
                 return False, reason, reverse('basket:summary')
         return True, None, None
 
-    def get_default_billing_address(self):
-        """
-        Return default billing address for user
+    def generate_order_number(self, basket):
+        generator = OrderNumberGenerator()
+        order_number = generator.order_number(basket)
+        self.checkout_session.set_order_number(order_number)
+        return order_number
 
-        This is useful when the payment details view includes a billing address
-        form - you can use this helper method to prepopulate the form.
+    def freeze_basket(self, basket):
+        # We freeze the basket to prevent it being modified once the payment
+        # process has started.  If your payment fails, then the basket will
+        # need to be "unfrozen".  We also store the basket ID in the session
+        # so the it can be retrieved by multistage checkout processes.
+        basket.freeze()
 
-        Note, this isn't used in core oscar as there is no billing address form
-        by default.
-        """
-        if not self.request.user.is_authenticated():
-            return None
-        try:
-            return self.request.user.addresses.get(is_default_for_billing=True)
-        except UserAddress.DoesNotExist:
-            return None
+    def get_context_data(self, **kwargs):
+        # Return kwargs directly instead of using 'params' as in django's TemplateView
+        ctx = super(OrderPreviewView, self).get_context_data(**kwargs)
+        ctx.update(kwargs)
+        return ctx
 
     def submit(self, basket, payment_kwargs=None, order_kwargs=None):
         """
@@ -552,19 +556,6 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             self.restore_frozen_basket()
             return self.render_to_response(self.get_context_data(error=msg))
 
-    def generate_order_number(self, basket):
-        generator = OrderNumberGenerator()
-        order_number = generator.order_number(basket)
-        self.checkout_session.set_order_number(order_number)
-        return order_number
-
-    def freeze_basket(self, basket):
-        # We freeze the basket to prevent it being modified once the payment
-        # process has started.  If your payment fails, then the basket will
-        # need to be "unfrozen".  We also store the basket ID in the session
-        # so the it can be retrieved by multistage checkout processes.
-        basket.freeze()
-
     def handle_payment(self, order_number, total, **kwargs):
         """
         Handle any payment processing and record payment sources and events.
@@ -578,13 +569,6 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         linked to the order when it is saved later on.
         """
         pass
-
-    def get_context_data(self, **kwargs):
-        # Return kwargs directly instead of using 'params' as in django's TemplateView
-        ctx = super(PaymentDetailsView, self).get_context_data(**kwargs)
-        ctx.update(kwargs)
-        return ctx
-
 
 # =========
 # Thank you
