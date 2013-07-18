@@ -1,10 +1,12 @@
 import logging
+from django.contrib import messages
 
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.sites.models import Site, get_current_site
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import get_model
+from django.utils.translation import ugettext as _
 
 from oscar.core.loading import get_class
 from oscar.core.decorators import deprecated
@@ -75,6 +77,22 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             event_type=event_type, amount=amount,
             reference=reference)
         self._payment_events.append(event)
+
+    def get_error_response(self):
+        # Check that the user's basket is not empty
+        if self.request.basket.is_empty:
+            messages.error(self.request, _("You need to add some items to your basket to checkout"))
+            return HttpResponseRedirect(reverse('basket:summary'))
+
+        shipping_required = self.request.basket.is_shipping_required()
+        # Check that shipping address has been completed
+        if shipping_required and not self.checkout_session.is_shipping_address_set():
+            messages.error(self.request, _("Please choose a shipping address"))
+            return HttpResponseRedirect(reverse('checkout:shipping-address'))
+            # Check that shipping method has been set
+        if shipping_required and not self.checkout_session.is_shipping_method_set():
+            messages.error(self.request, _("Please choose a shipping method"))
+            return HttpResponseRedirect(reverse('checkout:shipping-method'))
 
     def handle_successful_order(self, order):
         """
