@@ -8,6 +8,7 @@
 {% load product_tags %}
 {% load display_tags %}
 {% load i18n %}
+{% load stockrecord_tags %}
 
 {% block extrastyles %}
     <!-- Colorbox (a lightbox plugin) for image galleries -->
@@ -127,17 +128,24 @@
         <tr>
             <th>{% trans "Product class" %}</th><td>{{ product.get_product_class.name }}</td>
         </tr>
-        {% if product.stockrecord %}
-        <tr>
-            <th>{% trans "Price (excl. tax)" %}</th><td>{{ product.stockrecord.price_excl_tax|currency }}</td>
-        </tr>
-        <tr>
-            <th>{% trans "Price (incl. tax)" %}</th><td>{{ product.stockrecord.price_incl_tax|currency }}</td>
-        </tr>
-        <tr>
-            <th>{% trans "Availability" %}</th>
-            <td>{{ product.stockrecord.availability }}</td>
-        </tr>
+
+        {% session_strategy request product as session %}
+        {% if session.price.exists %}
+            <tr>
+                <th>{% trans "Price (excl. tax)" %}</th><td>{{ session.price.excl_tax|currency }}</td>
+            </tr>
+            {% if session.price.is_tax_known %}
+                <tr>
+                    <th>{% trans "Price (incl. tax)" %}</th><td>{{ session.price.incl_tax|currency }}</td>
+                </tr>
+                <tr>
+                    <th>{% trans "Tax" %}</th><td>{{ session.price.tax|currency }}</td>
+                </tr>
+            {% endif %}
+            <tr>
+                <th>{% trans "Availability" %}</th>
+                <td>{{ session.availability.message }}</td>
+            </tr>
         {% endif %}
         {% for av in product.attribute_values.all %}
         <tr>
