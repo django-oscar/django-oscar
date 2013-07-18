@@ -23,7 +23,7 @@ project:
     $ pip install django-oscar
     $ django-admin.py startproject frobshop
 
-If you do not have mkvirtualenv, then replace that line with
+If you do not have mkvirtualenv, then replace that line with::
 
     $ virtualenv oscar
     $ . ./oscar/bin/activate
