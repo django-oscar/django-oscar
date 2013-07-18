@@ -2,6 +2,7 @@ from itertools import chain
 from datetime import datetime, date
 import logging
 import os
+import warnings
 
 from django.conf import settings
 from django.contrib.staticfiles.finders import find
@@ -376,6 +377,9 @@ class AbstractProduct(models.Model):
         """
         Test whether this product is available to be purchased
         """
+        warnings.warn(("Product.is_available_to_buy is deprecated in favour of "
+                       "using the stockrecord template tag"),
+                      DeprecationWarning)
         if self.is_group:
             # If any one of this product's variants is available, then we treat
             # this product as available.
@@ -400,16 +404,26 @@ class AbstractProduct(models.Model):
         return self._min_variant_price('price_excl_tax')
 
     @property
+    def stockrecord(self):
+        # This is the old way of fetching a stockrecord, when they were
+        # one-to-one with a product.
+        warnings.warn(("Product.stockrecord is deprecated in favour of "
+                       "using the stockrecord template tag"),
+                      DeprecationWarning)
+        try:
+            return self.stockrecords.all()[0]
+        except IndexError:
+            return None
+
+    @property
     def has_stockrecord(self):
         """
         Test if this product has a stock record
         """
-        try:
-            self.stockrecord
-        except ObjectDoesNotExist:
-            return False
-        else:
-            return self.stockrecord is not None
+        warnings.warn(("Product.has_stockrecord is deprecated in favour of "
+                       "using the stockrecord template tag"),
+                      DeprecationWarning)
+        return self.stockrecords.all() > 0
 
     def is_purchase_permitted(self, user, quantity):
         """

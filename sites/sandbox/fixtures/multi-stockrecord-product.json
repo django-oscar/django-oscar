@@ -1,0 +1,121 @@
+[
+{
+    "pk": 1,
+    "model": "catalogue.productclass",
+    "fields": {
+        "track_stock": true,
+        "options": [],
+        "requires_shipping": true,
+        "name": "Book",
+        "slug": "book"
+    }
+},
+{
+    "pk": 1,
+    "model": "catalogue.category",
+    "fields": {
+        "description": null,
+        "numchild": 2,
+        "slug": "books",
+        "depth": 1,
+        "full_name": "Books",
+        "path": "0001",
+        "image": "",
+        "name": "Books"
+    }
+},
+{
+    "pk": 1,
+    "model": "catalogue.productcategory",
+    "fields": {
+        "category": 1,
+        "product": 1,
+        "is_canonical": false
+    }
+},
+{
+    "pk": 1,
+    "model": "catalogue.product",
+    "fields": {
+        "status": "",
+        "rating": null,
+        "description": "",
+        "parent": null,
+        "title": "David's book",
+        "date_updated": "2013-07-18T12:23:50.102Z",
+        "related_products": [],
+        "upc": "",
+        "score": 0.0,
+        "is_discountable": true,
+        "date_created": "2013-07-18T12:23:29.804Z",
+        "product_options": [],
+        "slug": "davids-book",
+        "product_class": 1
+    }
+},
+{
+    "pk": 2,
+    "model": "catalogue.product",
+    "fields": {
+        "status": "",
+        "rating": null,
+        "description": "",
+        "parent": null,
+        "title": "Other book",
+        "date_updated": "2013-07-18T14:35:52.484Z",
+        "related_products": [],
+        "upc": "ABC",
+        "score": 0.0,
+        "is_discountable": true,
+        "date_created": "2013-07-18T14:35:52.484Z",
+        "product_options": [],
+        "slug": "other-book",
+        "product_class": 1
+    }
+},
+{
+    "pk": 1,
+    "model": "partner.partner",
+    "fields": {
+        "code": "book-partner",
+        "name": "Book partner",
+        "users": []
+    }
+},
+{
+    "pk": 1,
+    "model": "partner.stockrecord",
+    "fields": {
+        "price_currency": "GBP",
+        "product": 1,
+        "partner_sku": "a1",
+        "price_retail": null,
+        "date_updated": "2013-07-18T12:25:41.107Z",
+        "num_in_stock": 5,
+        "num_allocated": null,
+        "low_stock_threshold": null,
+        "date_created": "2013-07-18T12:25:41.107Z",
+        "partner": 1,
+        "price_excl_tax": "20",
+        "cost_price": null
+    }
+},
+{
+    "pk": 2,
+    "model": "partner.stockrecord",
+    "fields": {
+        "price_currency": "GBP",
+        "product": 1,
+        "partner_sku": "a2",
+        "price_retail": null,
+        "date_updated": "2013-07-18T12:25:49.939Z",
+        "num_in_stock": 15,
+        "num_allocated": null,
+        "low_stock_threshold": null,
+        "date_created": "2013-07-18T12:25:49.939Z",
+        "partner": 1,
+        "price_excl_tax": "10",
+        "cost_price": null
+    }
+}
+]
