@@ -475,6 +475,9 @@ class AbstractLine(models.Model):
     product = models.ForeignKey(
         'catalogue.Product', related_name='basket_lines',
         verbose_name=_("Product"))
+    stockrecord = models.ForeignKey(
+        'partner.StockRecord', related_name='basket_lines',
+        null=True)
     quantity = models.PositiveIntegerField(_('Quantity'), default=1)
 
     # We store the unit price incl tax of the product when it is first added to
