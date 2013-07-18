@@ -1,11 +1,13 @@
 import re
 import zlib
+import string
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.core import exceptions
 
 from oscar.core.compat import AUTH_USER_MODEL
+from oscar.models import fields
 
 
 class AbstractAddress(models.Model):
@@ -224,7 +226,7 @@ class AbstractAddress(models.Model):
     line4 = models.CharField(_("City"), max_length=255, blank=True, null=True)
     state = models.CharField(
         _("State/County"), max_length=255, blank=True, null=True)
-    postcode = models.CharField(
+    postcode = fields.UppercaseCharField(
         _("Post/Zip-code"), max_length=64, blank=True, null=True)
     country = models.ForeignKey('address.Country', verbose_name=_("Country"))
 
@@ -354,10 +356,9 @@ class AbstractAddress(models.Model):
         Return the non-empty components of the address, but merging the
         title, first_name and last_name into a single line.
         """
-        self.clean()
-        fields = filter(
-            bool, [self.salutation, self.line1, self.line2,
-                   self.line3, self.line4, self.state, self.postcode])
+        fields = [self.salutation, self.line1, self.line2,
+                  self.line3, self.line4, self.state, self.postcode]
+        fields = map(string.strip, filter(bool, fields))
         try:
             fields.append(self.country.name)
         except exceptions.ObjectDoesNotExist:
@@ -500,7 +501,6 @@ class AbstractUserAddress(AbstractShippingAddress):
         if qs.count() > 0:
             raise exceptions.ValidationError({
                 '__all__': [_("This address is already in your addressbook")]})
-
 
 
 class AbstractBillingAddress(AbstractAddress):

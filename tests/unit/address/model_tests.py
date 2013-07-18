@@ -4,6 +4,7 @@ from django.core import exceptions
 
 from nose.tools import raises
 
+from oscar.apps.order.models import ShippingAddress
 from oscar.core.compat import get_user_model
 from oscar.apps.address import models
 
@@ -12,6 +13,10 @@ User = get_user_model()
 
 
 class TestUserAddress(TestCase):
+
+    def setUp(self):
+        self.country = models.Country(
+            iso_3166_1_a2='GB', name="UNITED KINGDOM")
 
     def test_uses_title_firstname_and_lastname_in_salutation(self):
         a = models.UserAddress(
@@ -90,6 +95,87 @@ class TestUserAddress(TestCase):
             postcode="n4 8ty")
         self.assertEqual('London', a.city)
 
+    def test_converts_postcode_to_uppercase_when_cleaning(self):
+        address = models.UserAddress(
+            last_name='Barrington',
+            line1="75 Smith Road",
+            postcode="n4 8ty",
+            country=self.country)
+        address.clean()
+        self.assertEquals("N4 8TY", address.postcode)
+
+    def test_strips_whitespace_when_cleaning(self):
+        a = models.UserAddress(
+            last_name='Barrington',
+            line1="  75 Smith Road  ",
+            postcode="  n4 8ty",
+            country=self.country)
+        a.clean()
+        self.assertEquals("N4 8TY", a.postcode)
+        self.assertEquals("75 Smith Road", a.line1)
+
+    def test_active_address_fields_skips_whitespace_only_fields(self):
+        a = models.UserAddress(
+            first_name="   ",
+            last_name='Barrington',
+            line1="  75 Smith Road  ",
+            postcode="  n4 8ty",
+            country=self.country)
+        active_fields = a.active_address_fields()
+        self.assertEquals("Barrington", active_fields[0])
+
+    def test_ignores_whitespace_when_hashing(self):
+        a1 = models.UserAddress(
+            first_name=" Terry  ",
+            last_name='Barrington',
+            line1="  75 Smith Road  ",
+            postcode="  n4 8ty",
+            country=self.country)
+        a1.clean()
+        a2 = models.UserAddress(
+            first_name=" Terry",
+            last_name='   Barrington',
+            line1="  75 Smith Road  ",
+            postcode="N4 8ty",
+            country=self.country)
+        a2.clean()
+        self.assertEquals(a1.generate_hash(), a2.generate_hash())
+
+    def test_populate_shipping_address_doesnt_set_id(self):
+        a = models.UserAddress(
+            first_name=" Terry  ",
+            last_name='Barrington',
+            line1="  75 Smith Road  ",
+            postcode="  n4 8ty",
+            country=self.country)
+        a.clean()
+        sa = ShippingAddress()
+        a.populate_alternative_model(sa)
+        self.assertIsNone(sa.id)
+
+    def test_populated_shipping_address_has_same_summary_user_address(self):
+        a = models.UserAddress(
+            first_name=" Terry  ",
+            last_name='Barrington',
+            line1="  75 Smith Road  ",
+            postcode="  n4 8ty",
+            country=self.country)
+        a.clean()
+        sa = ShippingAddress()
+        a.populate_alternative_model(sa)
+        self.assertEquals(sa.summary, a.summary)
+
+    def test_summary_is_property(self):
+        a = models.UserAddress(
+            first_name=" Terry  ",
+            last_name='Barrington',
+            line1="  75 Smith Road  ",
+            postcode="  n4 8ty",
+            country=self.country)
+        a.clean()
+        self.assertEquals(
+            u"Terry Barrington, 75 Smith Road, N4 8TY, UNITED KINGDOM",
+            a.summary)
 
 VALID_POSTCODES = [
     ('GB', 'N1 9RT'),

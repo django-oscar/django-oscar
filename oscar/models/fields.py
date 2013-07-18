@@ -46,3 +46,8 @@ class ExtendedURLField(CharField):
 class PositiveDecimalField(DecimalField):
     def formfield(self, **kwargs):
         return super(PositiveDecimalField, self).formfield(min_value=0)
+
+
+class UppercaseCharField(CharField):
+    def to_python(self, value):
+        return super(UppercaseCharField, self).to_python(value).upper()
