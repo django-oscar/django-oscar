@@ -395,12 +395,7 @@ class OrderPreviewView(OrderPlacementMixin, TemplateView):
         return super(OrderPreviewView, self).get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        # We use a custom parameter to indicate if this is an attempt to place an order.
-        # Without this, we assume a payment form is being submitted from the
-        # payment-details page
-        if request.POST.get('action', '') == 'place_order':
-            return self.submit(request.basket)
-        return self.render_preview(request)
+        return self.submit(request.basket)
 
     def render_preview(self, request, **kwargs):
         """
