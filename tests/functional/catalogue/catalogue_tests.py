@@ -1,6 +1,7 @@
 import httplib
 
 from django.core.urlresolvers import reverse
+from oscar.apps.catalogue.models import Category
 from oscar.test.testcases import WebTestCase
 
 from oscar.test.factories import create_product
@@ -11,12 +12,13 @@ class TestProductDetailView(WebTestCase):
 
     def test_enforces_canonical_url(self):
         p = create_product()
-        kwargs = {'product_slug': 'wrong-slug',
+        kwargs = {'product_slug': '1_wrong-but-valid-slug_1',
                   'pk': p.id}
         wrong_url = reverse('catalogue:detail', kwargs=kwargs)
 
         response = self.app.get(wrong_url)
         self.assertEquals(httplib.MOVED_PERMANENTLY, response.status_code)
+        self.assertTrue(p.get_absolute_url() in response.location)
 
     def test_variant_to_parent_redirect(self):
         parent_product = create_product()
@@ -63,3 +65,23 @@ class TestProductListView(WebTestCase):
         page = self.app.get(reverse('catalogue:index'))
 
         self.assertContains(page, "Page 1 of 2")
+
+
+class TestProductCategoryView(WebTestCase):
+
+    def setUp(self):
+        self.category = Category.add_root(name="Products")
+
+    def test_browsing_works(self):
+        correct_url = self.category.get_absolute_url()
+        response = self.app.get(correct_url)
+        self.assertEquals(httplib.OK, response.status_code)
+
+    def test_enforces_canonical_url(self):
+        kwargs = {'category_slug': '1_wrong-but-valid-slug_1',
+                  'pk': self.category.pk}
+        wrong_url = reverse('catalogue:category', kwargs=kwargs)
+
+        response = self.app.get(wrong_url)
+        self.assertEquals(httplib.MOVED_PERMANENTLY, response.status_code)
+        self.assertTrue(self.category.get_absolute_url() in response.location)
