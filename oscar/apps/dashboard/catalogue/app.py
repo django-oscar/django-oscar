@@ -7,8 +7,9 @@ from oscar.apps.dashboard.catalogue import views
 class CatalogueApplication(Application):
     name = None
 
-    default_permissions = ['is_staff', ], ['partner.dashboard_access']
+    default_permissions = ['is_staff', ]
     permissions_map = _map = {
+        'catalogue-product':        (['is_staff'], ['partner.dashboard_access', ]),
         'catalogue-product-create': (['is_staff'], ['partner.dashboard_access', ]),
         'catalogue-product-list':   (['is_staff'], ['partner.dashboard_access', ]),
         'catalogue-product-delete': (['is_staff'], ['partner.dashboard_access', 'catalogue.delete_product']),
