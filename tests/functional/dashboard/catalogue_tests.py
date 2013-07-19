@@ -170,8 +170,7 @@ class TestAStaffUser(WebTestCase):
 class TestANonStaffUser(TestAStaffUser):
     is_staff = False
     is_anonymous = False
-    permissions = ['partner.dashboard_access', 'catalogue.change_product',
-                   'catalogue.delete_product', 'catalogue.add_product']
+    permissions = ['partner.dashboard_access', ]
 
     def setUp(self):
         super(TestANonStaffUser, self).setUp()

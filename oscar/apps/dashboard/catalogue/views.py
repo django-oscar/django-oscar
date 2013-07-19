@@ -135,17 +135,11 @@ class ProductCreateUpdateView(generic.UpdateView):
             except ObjectDoesNotExist:
                 raise Http404
             else:
-                if not (user.is_staff or user.has_perm('catalogue.add_product')):
-                    raise PermissionDenied
                 return None  # success
         else:
             obj = super(ProductCreateUpdateView, self).get_object(queryset)
             self.product_class = obj.product_class
-            if user.is_staff or (user.has_perm('catalogue.change_product') and
-                                     obj.user_in_partner_users(user)):
-                return obj
-            else:
-                raise PermissionDenied
+            return obj
 
     def get_context_data(self, **kwargs):
         ctx = super(ProductCreateUpdateView, self).get_context_data(**kwargs)
@@ -316,10 +310,10 @@ class ProductDeleteView(generic.DeleteView):
         Check permissions before returning product. The user having the
         catalogue.delete_product permission is enforced in dashboard's app.py
         """
-        object = super(ProductDeleteView, self).get_object(queryset)
+        product = super(ProductDeleteView, self).get_object(queryset)
         user = self.request.user
-        if user.is_staff or object.user_in_partner_users(user):
-            return object
+        if user.is_staff or product.user_in_partner_users(user):
+            return product
         else:
             raise PermissionDenied
 
