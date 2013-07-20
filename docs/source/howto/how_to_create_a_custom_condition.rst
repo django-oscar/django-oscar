@@ -58,7 +58,7 @@ To make this condition available to be used in offers, do the following::
 
     create_condition(BasketOwnerCalledBarry)
 
-Now you should see this range in the dashboard when creating/updating an offer.
+Now you should see this condition in the dashboard when creating/updating an offer.
 
 Deploying custom conditions
 ---------------------------
