@@ -3,7 +3,7 @@ Sample Oscar projects
 =====================
 
 Oscar ships with two sample projects: a 'sandbox' site, which is a vanilla install of Oscar using the
-default templates and styles, and a fully featured 'demo' site which demonstrates how Oscan can be
+default templates and styles, and a fully featured 'demo' site which demonstrates how Oscar can be
 re-skinned and customised to model a domain. 
 
 The sandbox site
