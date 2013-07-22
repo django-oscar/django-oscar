@@ -344,9 +344,9 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
     """
     For taking the details of payment and creating the order
 
-    The class is deliberately split into fine-grained methods, responsible for only one
-    thing.  This is to make it easier to subclass and override just one component of
-    functionality.
+    The class is deliberately split into fine-grained methods, responsible for
+    only one thing.  This is to make it easier to subclass and override just
+    one component of functionality.
 
     All projects will need to subclass and customise this class.
     """
@@ -354,8 +354,33 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
     template_name_preview = 'checkout/preview.html'
     preview = False
 
-    def get_template_names(self):
-        return [self.template_name_preview] if self.preview else [self.template_name]
+    def get(self, request, *args, **kwargs):
+        error_response = self.get_error_response()
+        if error_response:
+            return error_response
+
+        return super(PaymentDetailsView, self).get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        """
+        This method is designed to be overridden by subclasses which will
+        validate the forms from the payment details page.  If the forms are
+        valid then the method can call submit()
+        """
+        error_response = self.get_error_response()
+        if error_response:
+            return error_response
+
+        if self.preview:
+            # We use a custom parameter to indicate if this is an attempt to
+            # place an order.  Without this, we assume a payment form is being
+            # submitted from the payment-details page
+            if request.POST.get('action', '') == 'place_order':
+                return self.submit(request.basket)
+            return self.render_preview(request)
+
+        # Posting to payment-details isn't the right thing to do
+        return self.get(request, *args, **kwargs)
 
     def get_error_response(self):
         # Check that the user's basket is not empty
@@ -364,41 +389,27 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             return HttpResponseRedirect(reverse('basket:summary'))
 
         shipping_required = self.request.basket.is_shipping_required()
+
         # Check that shipping address has been completed
         if shipping_required and not self.checkout_session.is_shipping_address_set():
             messages.error(self.request, _("Please choose a shipping address"))
             return HttpResponseRedirect(reverse('checkout:shipping-address'))
+
         # Check that shipping method has been set
         if shipping_required and not self.checkout_session.is_shipping_method_set():
             messages.error(self.request, _("Please choose a shipping method"))
             return HttpResponseRedirect(reverse('checkout:shipping-method'))
 
-    def get(self, request, *args, **kwargs):
-        error_response = self.get_error_response()
-        if error_response:
-            return error_response
-        return super(PaymentDetailsView, self).get(request, *args, **kwargs)
+    def get_context_data(self, **kwargs):
+        # Return kwargs directly instead of using 'params' as in django's
+        # TemplateView
+        ctx = super(PaymentDetailsView, self).get_context_data(**kwargs)
+        ctx.update(kwargs)
+        return ctx
 
-    def post(self, request, *args, **kwargs):
-        """
-        This method is designed to be overridden by subclasses which will
-        validate the forms from the payment details page.  If the forms are valid
-        then the method can call submit()
-        """
-        error_response = self.get_error_response()
-
-        if error_response:
-            return error_response
-        if self.preview:
-            # We use a custom parameter to indicate if this is an attempt to place an order.
-            # Without this, we assume a payment form is being submitted from the
-            # payment-details page
-            if request.POST.get('action', '') == 'place_order':
-                return self.submit(request.basket)
-            return self.render_preview(request)
-
-        # Posting to payment-details isn't the right thing to do
-        return self.get(request, *args, **kwargs)
+    def get_template_names(self):
+        return [self.template_name_preview] if self.preview else [
+            self.template_name]
 
     def render_preview(self, request, **kwargs):
         """
@@ -441,6 +452,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         Submit a basket for order placement.
 
         The process runs as follows:
+
          * Generate an order number
          * Freeze the basket so it cannot be modified any more (important when
            redirecting the user to another site for payment as it prevents the
@@ -459,12 +471,6 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         if order_kwargs is None:
             order_kwargs = {}
 
-        # Next, check that basket isn't empty
-        if basket.is_empty:
-            messages.error(self.request, _("This order cannot be submitted as the basket is empty"))
-            url = self.request.META.get('HTTP_REFERER', reverse('basket:summary'))
-            return HttpResponseRedirect(url)
-
         # Domain-specific checks on the basket
         is_valid, reason, url = self.can_basket_be_submitted(basket)
         if not is_valid:
@@ -477,6 +483,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         # checkouts (eg where we redirect to a 3rd party site and place
         # the order on a different request).
         order_number = self.generate_order_number(basket)
+        self.checkout_session.set_order_number(order_number)
         logger.info("Order #%s: beginning submission process for basket #%d", order_number, basket.id)
 
         # Freeze the basket so it cannot be manipulated while the customer is
@@ -553,12 +560,15 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             return self.render_to_response(self.get_context_data(error=msg))
 
     def generate_order_number(self, basket):
-        generator = OrderNumberGenerator()
-        order_number = generator.order_number(basket)
-        self.checkout_session.set_order_number(order_number)
-        return order_number
+        """
+        Return a new order number
+        """
+        return OrderNumberGenerator().order_number(basket)
 
     def freeze_basket(self, basket):
+        """
+        Freeze the basket so it can no longer be modified
+        """
         # We freeze the basket to prevent it being modified once the payment
         # process has started.  If your payment fails, then the basket will
         # need to be "unfrozen".  We also store the basket ID in the session
@@ -578,12 +588,6 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         linked to the order when it is saved later on.
         """
         pass
-
-    def get_context_data(self, **kwargs):
-        # Return kwargs directly instead of using 'params' as in django's TemplateView
-        ctx = super(PaymentDetailsView, self).get_context_data(**kwargs)
-        ctx.update(kwargs)
-        return ctx
 
 
 # =========
