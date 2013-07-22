@@ -260,6 +260,9 @@ class AbstractBankcard(models.Model):
         self.issue_number = kwargs.pop('issue_number', None)
         self.ccv = kwargs.pop('ccv', None)
         super(AbstractBankcard, self).__init__(*args, **kwargs)
+        self.card_type = bankcards.bankcard_type(self.number)
+        if self.card_type is None:
+            self.card_type = 'Unknown card type'
 
     class Meta:
         abstract = True
@@ -274,9 +277,6 @@ class AbstractBankcard(models.Model):
     def prepare_for_save(self):
         # This is the first time this card instance is being saved.  We
         # remove all sensitive data
-        self.card_type = bankcards.bankcard_type(self.number)
-        if self.card_type is None:
-            self.card_type = 'Unknown card type'
         self.number = u"XXXX-XXXX-XXXX-%s" % self.number[-4:]
         self.start_date = self.issue_number = self.ccv = None
 
@@ -290,6 +290,10 @@ class AbstractBankcard(models.Model):
     @property
     def cvv(self):
         return self.ccv
+
+    @property
+    def obfuscated_number(self):
+        return u'XXXX-XXXX-XXXX-%s' % self.number[-4:]
 
     def start_month(self, format='%m/%y'):
         return self.start_date.strftime(format)

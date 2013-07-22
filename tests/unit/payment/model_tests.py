@@ -12,9 +12,8 @@ class TestBankcard(TestCase):
         bankcard.prepare_for_save()
         self.assertEquals("XXXX-XXXX-XXXX-0004", bankcard.number)
 
-    def test_determines_bankcard_type_before_saving(self):
+    def test_determines_bankcard_type(self):
         bankcard = Bankcard(number="5500000000000004")
-        bankcard.prepare_for_save()
         self.assertEquals("Mastercard", bankcard.card_type)
 
     def test_provides_start_month_property(self):
