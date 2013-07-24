@@ -253,6 +253,12 @@ LOGGING = {
             'propagate': False,
             'level': 'DEBUG',
         },
+        # suppress output of this debug toolbar panel
+        'template_timings_panel': {
+            'handlers': ['null'],
+            'level': 'DEBUG',
+            'propagate': False,
+        }
     }
 }
 
