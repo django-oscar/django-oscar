@@ -500,14 +500,14 @@ class AbstractUserAddress(AbstractShippingAddress):
             qs = qs.exclude(id=self.id)
         if qs.count() > 0:
             raise exceptions.ValidationError({
-                '__all__': [_("This address is already in your addressbook")]})
+                '__all__': [_("This address is already in your address book")]})
 
 
 class AbstractBillingAddress(AbstractAddress):
 
     class Meta:
         abstract = True
-        verbose_name_plural = _("Billing address")
+        verbose_name = _("Billing address")
         verbose_name_plural = _("Billing addresses")
 
     @property
@@ -519,3 +519,17 @@ class AbstractBillingAddress(AbstractAddress):
         if not orders:
             return None
         return orders[0]
+
+
+class AbstractPartnerAddress(AbstractAddress):
+    """
+    A partner can have one or more addresses. This can be useful e.g. when
+    determining US tax which depends on the origin of the shipment.
+    """
+    partner = models.ForeignKey('partner.Partner', related_name='addresses',
+                                verbose_name=_('Partner'))
+
+    class Meta:
+        abstract = True
+        verbose_name = _("Partner address")
+        verbose_name_plural = _("Partner addresses")
