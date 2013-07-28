@@ -234,7 +234,7 @@ class AbstractAddress(models.Model):
     #: relevant fields.  This is effectively a poor man's Solr text field.
     search_text = models.CharField(
         _("Search text - used only for searching addresses"),
-        max_length=1000)
+        max_length=1000, editable=False)
 
     def __unicode__(self):
         return self.summary
@@ -456,7 +456,8 @@ class AbstractUserAddress(AbstractShippingAddress):
 
     #: A hash is kept to try and avoid duplicate addresses being added
     #: to the address book.
-    hash = models.CharField(_("Address Hash"), max_length=255, db_index=True)
+    hash = models.CharField(_("Address Hash"), max_length=255, db_index=True,
+                            editable=False)
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
     def save(self, *args, **kwargs):
