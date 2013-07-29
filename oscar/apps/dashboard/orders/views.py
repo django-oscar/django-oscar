@@ -28,6 +28,54 @@ Line = get_model('order', 'Line')
 ShippingEventType = get_model('order', 'ShippingEventType')
 PaymentEventType = get_model('order', 'PaymentEventType')
 EventHandler = get_class('order.processing', 'EventHandler')
+Partner = get_model('partner', 'Partner')
+
+
+def iterate_orders_for_nonstaff_user(user, initial_qs=None):
+    """
+    Generator to get all orders that a non-staff user is allowed to see
+
+    This default implementation only shows an order to a user if for each
+    order line, she's in the line's partner user list (in line.partner.users)
+    """
+    partners = Partner._default_manager.filter(users=user)
+    if initial_qs is not None:
+        initial = initial_qs
+    else:
+        initial = Order._default_manager.all()
+    # All orders where the user is in at least one line's partner users
+    possible_orders = initial.filter(lines__partner__in=partners)
+    # need to use a custom name for annotation because num_lines is already
+    # present as an attribute
+    possible_orders = possible_orders.annotate(line_count=Count('lines__pk'))
+    for possible_order in possible_orders:
+        line_count_for_user = possible_order.lines.filter(
+            partner__in=partners).distinct().count()
+        total_line_count = possible_order.lines.count()
+        if total_line_count == line_count_for_user:
+            yield possible_order
+
+
+def queryset_orders_for_user(user):
+    """
+    Returns a queryset of all orders that a user is allowed to access,
+    regardless of her being a staff user or not
+
+    Adds another query to the query count of iterate_orders_for_nonstaff_user,
+    but a queryset is often more useful than an iterator
+    """
+    if user.is_staff:
+        return Order._default_manager.all()
+    else:
+        orders = iterate_orders_for_nonstaff_user(user)
+        order_pks = [order.pk for order in orders]
+        return Order._default_manager.filter(pk__in=order_pks)
+
+def get_order_for_user_or_404(user, number):
+    try:
+        return queryset_orders_for_user(user).get(number=number)
+    except ObjectDoesNotExist:
+        raise Http404()
 
 
 class OrderStatsView(FormView):
@@ -55,7 +103,7 @@ class OrderStatsView(FormView):
         return ctx
 
     def get_stats(self, filters):
-        orders = Order.objects.filter(**filters)
+        orders = queryset_orders_for_user(self.request.user).filter(**filters)
         stats = {
             'total_orders': orders.count(),
             'total_lines': Line.objects.filter(order__in=orders).count(),
@@ -81,13 +129,21 @@ class OrderListView(ListView, BulkEditMixin):
     current_view = 'dashboard:order-list'
 
     def get(self, request, *args, **kwargs):
-        if 'order_number' in request.GET and request.GET.get('response_format', 'html') == 'html':
+        # base_queryset is equal to all orders the user is allowed to access
+        self.base_queryset = queryset_orders_for_user(
+            self.request.user).order_by('-date_placed')
+        if 'order_number' in request.GET and request.GET.get(
+                'response_format', 'html') == 'html':
+            # Redirect to Order detail page if valid order number is given
             try:
-                order = Order.objects.get(number=request.GET['order_number'])
+                order = self.base_queryset.get(
+                    number=request.GET['order_number'])
             except Order.DoesNotExist:
                 pass
             else:
-                return HttpResponseRedirect(reverse('dashboard:order-detail', kwargs={'number': order.number}))
+                url = reverse('dashboard:order-detail',
+                              kwargs={'number': order.number})
+                return HttpResponseRedirect(url)
         return super(OrderListView, self).get(request, *args, **kwargs)
 
     def get_desc_context(self, data=None):
@@ -153,8 +209,7 @@ class OrderListView(ListView, BulkEditMixin):
         """
         Build the queryset for this list.
         """
-        queryset = self.model.objects.all().order_by('-date_placed')
-        queryset = self.sort_queryset(queryset)
+        queryset = self.sort_queryset(self.base_queryset)
 
         # Look for shortcut query filters
         if 'order_status' in self.request.GET:
@@ -163,7 +218,7 @@ class OrderListView(ListView, BulkEditMixin):
             if status.lower() == 'none':
                 status = None
             self.description = self.desc_template % self.get_desc_context()
-            return self.model.objects.filter(status=status)
+            return self.base_queryset.filter(status=status)
 
         if 'order_number' not in self.request.GET:
             self.description = self.desc_template % self.get_desc_context()
@@ -177,7 +232,8 @@ class OrderListView(ListView, BulkEditMixin):
         data = self.form.cleaned_data
 
         if data['order_number']:
-            queryset = self.model.objects.filter(number__istartswith=data['order_number'])
+            queryset = self.base_queryset.objects.filter(
+                number__istartswith=data['order_number'])
 
         if data['name']:
             # If the value is two words, then assume they are first name and last name
@@ -313,7 +369,8 @@ class OrderDetailView(DetailView):
                     'create_payment_event')
 
     def get_object(self, queryset=None):
-        return get_object_or_404(self.model, number=self.kwargs['number'])
+        return get_order_for_user_or_404(self.request.user,
+                                         self.kwargs['number'])
 
     def get_context_data(self, **kwargs):
         ctx = super(OrderDetailView, self).get_context_data(**kwargs)
@@ -525,8 +582,10 @@ class LineDetailView(DetailView):
     template_name = 'dashboard/orders/line_detail.html'
 
     def get_object(self, queryset=None):
+        order = get_order_for_user_or_404(self.request.user,
+                                          self.kwargs['number'])
         try:
-            return self.model.objects.get(pk=self.kwargs['line_id'])
+            return order.lines.get(pk=self.kwargs['line_id'])
         except self.model.DoesNotExist:
             raise Http404()
 
@@ -573,7 +632,9 @@ class ShippingAddressUpdateView(UpdateView):
     form_class = forms.ShippingAddressForm
 
     def get_object(self, queryset=None):
-        return get_object_or_404(self.model, order__number=self.kwargs['number'])
+        order = get_order_for_user_or_404(self.request.user,
+                                          self.kwargs['number'])
+        return get_object_or_404(self.model, order=order)
 
     def get_context_data(self, **kwargs):
         ctx = super(ShippingAddressUpdateView, self).get_context_data(**kwargs)

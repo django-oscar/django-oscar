@@ -7,6 +7,14 @@ from oscar.apps.dashboard.orders import views
 class OrdersDashboardApplication(Application):
     name = None
     default_permissions = ['is_staff', ]
+    permissions_map = {
+        'order-list':             (['is_staff'], ['partner.dashboard_access']),
+        'order-stats':            (['is_staff'], ['partner.dashboard_access']),
+        'order-detail':           (['is_staff'], ['partner.dashboard_access']),
+        'order-detail-note':      (['is_staff'], ['partner.dashboard_access']),
+        'order-line-detail':      (['is_staff'], ['partner.dashboard_access']),
+        'order-shipping-address': (['is_staff'], ['partner.dashboard_access']),
+    }
 
     order_list_view = views.OrderListView
     order_detail_view = views.OrderDetailView
