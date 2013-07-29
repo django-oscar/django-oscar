@@ -1,18 +1,20 @@
-import httplib
+from django.db.models import get_model
 
-from django.test import TestCase
+from django.test import TestCase, Client
 from django.core.urlresolvers import reverse
 from django.template import Template, Context
-from django_dynamic_fixture import get
+from django_dynamic_fixture import get, G
 
 from oscar.test.testcases import ClientTestCase
-from oscar.test.factories import create_order
+from oscar.test.factories import create_order, create_product
 from oscar.apps.order.models import Order, OrderNote
 from oscar.core.compat import get_user_model
 
 
 User = get_user_model()
-
+Basket = get_model('basket', 'Basket')
+Partner = get_model('partner', 'Partner')
+ShippingAddress = get_model('order', 'ShippingAddress')
 
 class OrderListTests(ClientTestCase):
     is_staff = True
@@ -25,9 +27,93 @@ class OrderListTests(ClientTestCase):
         pairs = dict(zip(fields, ['']*len(fields)))
         pairs['order_number'] = order.number
         pairs['response_format'] = 'html'
-        url = '%s?%s' % (reverse('dashboard:order-list'), '&'.join(['%s=%s' % (k,v) for k,v in pairs.items()]))
+        url = '%s?%s' % (reverse('dashboard:order-list'),
+                         '&'.join(['%s=%s' % (k,v) for k,v in pairs.items()]))
         response = self.client.get(url)
-        self.assertEqual(httplib.FOUND, response.status_code)
+        self.assertIsRedirect(response)
+
+
+class PermissionBasedDashboardOrderTests(ClientTestCase):
+    permissions = ['partner.dashboard_access', ]
+
+    def setUp(self):
+        """
+        Two partners with one product each, and one user each.
+        Three orders: order #1 for product #1, order #2 for product #2,
+                      and order #3 for both products.
+        """
+        self.client = Client()
+        self.user1 = self.create_user(username='user1@example.com')
+        self.user2 = self.create_user(username='user2@example.com')
+        self.partner1 = G(Partner, users=[self.user1])
+        self.partner2 = G(Partner, users=[self.user2])
+        self.product1 = create_product(partner=self.partner1)
+        self.product2 = create_product(partner=self.partner2)
+        self.basket1 = Basket.objects.create()
+        self.basket2 = Basket.objects.create()
+        self.basket12 = Basket.objects.create()
+        self.basket1.add_product(self.product1)
+        self.basket2.add_product(self.product2)
+        self.basket12.add_product(self.product1)
+        self.basket12.add_product(self.product2)
+        self.address = G(ShippingAddress)
+        self.order1 = create_order(basket=self.basket1,
+                                   shipping_address=self.address)
+        self.order2 = create_order(basket=self.basket2,
+                                   shipping_address=self.address)
+        self.order12 = create_order(basket=self.basket12,
+                                    shipping_address=self.address)
+
+    def test_staff_user_can_list_all_orders(self):
+        self.is_staff = True
+        self.login()
+        orders = [self.order1, self.order2, self.order12]
+        # order-list
+        response = self.client.get(reverse('dashboard:order-list'))
+        self.assertIsOk(response)
+        self.assertEqual(set(response.context['orders']),
+                         set(orders))
+        # order-detail
+        for order in orders:
+            url = reverse('dashboard:order-detail',
+                          kwargs={'number': order.number})
+            self.assertIsOk(self.client.get(url))
+
+    def test_non_staff_can_only_list_her_orders(self):
+        # order-list user1
+        self.client.login(username='user1@example.com', password=self.password)
+        response = self.client.get(reverse('dashboard:order-list'))
+        self.assertEqual(set(response.context['orders']),
+                         set([self.order1]))
+        # order-list user2
+        self.client.login(username='user2@example.com', password=self.password)
+        response = self.client.get(reverse('dashboard:order-list'))
+        self.assertEqual(set(response.context['orders']),
+                         set([self.order2]))
+        # order-detail user2
+        url = reverse('dashboard:order-detail',
+                      kwargs={'number': self.order2.number})
+        self.assertIsOk(self.client.get(url))
+        url = reverse('dashboard:order-detail',
+                      kwargs={'number': self.order12.number})
+        self.assertNoAccess(self.client.get(url))
+        # order-line-detail user2
+        url = reverse('dashboard:order-line-detail',
+                      kwargs={'number': self.order2.number,
+                              'line_id': self.order2.lines.all()[0].pk})
+        self.assertIsOk(self.client.get(url))
+        url = reverse('dashboard:order-line-detail',
+                      kwargs={'number': self.order12.number,
+                              'line_id': self.order12.lines.all()[0].pk})
+        self.assertNoAccess(self.client.get(url))
+        # order-shipping-address
+        url = reverse('dashboard:order-shipping-address',
+                      kwargs={'number': self.order2.number})
+        self.assertIsOk(self.client.get(url))
+        url = reverse('dashboard:order-shipping-address',
+                      kwargs={'number': self.order12.number})
+        self.assertNoAccess(self.client.get(url))
+
 
 
 class OrderDetailTests(ClientTestCase):
