@@ -3,6 +3,7 @@ import httplib
 from django.test import TestCase
 from django.test.client import Client
 from django.core.urlresolvers import reverse
+from django.contrib.auth.models import Permission
 from django_webtest import WebTest
 from purl import URL
 
@@ -10,6 +11,17 @@ from oscar.core.compat import get_user_model
 
 
 User = get_user_model()
+
+
+def add_permissions(user, permissions):
+    """
+    :param permissions: e.g. ['partner.dashboard_access']
+    """
+    for permission in permissions:
+        app_label, _, codename = permission.partition('.')
+        perm = Permission.objects.get(content_type__app_label=app_label,
+                                      codename=codename)
+        user.user_permissions.add(perm)
 
 
 class ClientTestCase(TestCase):
@@ -23,6 +35,7 @@ class ClientTestCase(TestCase):
     is_anonymous = False
     is_staff = False
     is_superuser = False
+    permissions = []
 
     def setUp(self):
         self.client = Client()
@@ -34,13 +47,16 @@ class ClientTestCase(TestCase):
         self.client.login(username=self.username,
                           password=self.password)
 
-    def create_user(self):
-        user = User.objects.create_user(self.username,
-                                        self.email,
-                                        self.password)
-        user.is_staff = self.is_staff
-        user.is_superuser = self.is_superuser
+    def create_user(self, username=None, password=None, email=None,
+                    is_staff=None, is_superuser=None, permissions=None):
+        user = User.objects.create_user(username or self.username,
+                                        email or self.email,
+                                        password or self.password)
+        user.is_staff = is_staff or self.is_staff
+        user.is_superuser = is_superuser or self.is_superuser
         user.save()
+        perms = permissions if permissions is not None else self.permissions
+        add_permissions(user, perms)
         return user
 
     def assertIsRedirect(self, response, expected_url=None):

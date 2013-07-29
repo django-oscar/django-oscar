@@ -1,8 +1,7 @@
-from django.contrib.auth.models import Permission
 from django.db.models import get_model
 from django.core.urlresolvers import reverse
 
-from oscar.test.testcases import ClientTestCase
+from oscar.test.testcases import ClientTestCase, add_permissions
 from oscar.test.factories import create_product
 
 from django_dynamic_fixture import G
@@ -174,15 +173,8 @@ class TestANonStaffUser(TestAStaffUser):
 
     def setUp(self):
         super(TestANonStaffUser, self).setUp()
-        self.add_permissions()
+        add_permissions(self.user, self.permissions)
         self.partner.users.add(self.user)
-
-    def add_permissions(self):
-        for permission in self.permissions:
-            app_label, _, codename = permission.partition('.')
-            perm = Permission.objects.get(content_type__app_label=app_label,
-                                          codename=codename)
-            self.user.user_permissions.add(perm)
 
     def test_can_list_her_products(self):
         product1 = create_product(partner_users=[self.user, ])
