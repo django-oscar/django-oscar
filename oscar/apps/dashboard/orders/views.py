@@ -192,7 +192,7 @@ class OrderListView(ListView, BulkEditMixin):
             desc_ctx['date_filter'] = _(" placed since %s") % format_date(data['date_from'])
         elif data['date_to']:
             date_to = data['date_to'] + datetime.timedelta(days=1)
-            desc_ctx['date_filter'] = _(" placed before %s") % format_date(data['date_to'])
+            desc_ctx['date_filter'] = _(" placed before %s") % format_date(date_to)
 
         if data['voucher']:
             desc_ctx['voucher_filter'] = _(" using voucher '%s'") % data['voucher']
