@@ -120,9 +120,12 @@ class AbstractBasket(models.Model):
         self.lines.all().delete()
         self._lines = None
 
-    def add_product(self, product, quantity=1, options=None):
+    def add_product(self, product, partner_info, quantity=1, options=None):
         """
         Add a product to the basket
+
+        'partner_info' is the dict of price and availability data returned from
+        a partner strategy class.
 
         The 'options' list should contains dicts with keys 'option' and 'value'
         which link the relevant product.Option model and string value
@@ -135,20 +138,18 @@ class AbstractBasket(models.Model):
 
         # Line reference is used to distinguish between variations of the same
         # product (eg T-shirts with different personalisations)
-        line_ref = self._create_line_reference(product, options)
+        line_ref = self._create_line_reference(
+            product, partner_info['stockrecord'], options)
 
         # Determine price to store (if one exists).  It is only stored for
         # audit and sometimes caching.
-        price_excl_tax, price_incl_tax = None, None
-        if product.has_stockrecord:
-            stockrecord = product.stockrecord
-            if stockrecord:
-                price_excl_tax = getattr(stockrecord, 'price_excl_tax', None)
-                price_incl_tax = getattr(stockrecord, 'price_incl_tax', None)
+        price_incl_tax = partner_info['price'].incl_tax
+        price_excl_tax = partner_info['price'].excl_tax
 
         line, created = self.lines.get_or_create(
             line_reference=line_ref,
             product=product,
+            stockrecord=partner_info['stockrecord'],
             defaults={'quantity': quantity,
                       'price_excl_tax': price_excl_tax,
                       'price_incl_tax': price_incl_tax})
@@ -266,14 +267,15 @@ class AbstractBasket(models.Model):
     # Helpers
     # =======
 
-    def _create_line_reference(self, item, options):
+    def _create_line_reference(self, product, stockrecord, options):
         """
         Returns a reference string for a line based on the item
         and its options.
         """
+        base = '%s_%s' % (product.id, stockrecord.id)
         if not options:
-            return item.id
-        return "%d_%s" % (item.id, zlib.crc32(str(options)))
+            return base
+        return "%s_%s" % (base, zlib.crc32(str(options)))
 
     def _get_total(self, property):
         """
@@ -436,19 +438,20 @@ class AbstractBasket(models.Model):
 
     def product_quantity(self, product):
         """
-        Return the quantity of a product.
+        Return the quantity of a product in the basket
+
         The basket can contain multiple lines with the same product, but
-        different options. Those quantities are summed up.
+        different options and stockrecords. Those quantities are summed up.
         """
         matching_lines = self.lines.filter(product=product)
         quantity = matching_lines.aggregate(Sum('quantity'))['quantity__sum']
         return quantity or 0
 
-    def line_quantity(self, product, options=None):
+    def line_quantity(self, product, stockrecord, options=None):
         """
         Return the current quantity of a specific product and options
         """
-        ref = self._create_line_reference(product, options)
+        ref = self._create_line_reference(product, stockrecord, options)
         try:
             return self.lines.get(line_reference=ref).quantity
         except ObjectDoesNotExist:
@@ -469,15 +472,18 @@ class AbstractLine(models.Model):
     # We can't just use product.id as you can have customised products
     # which should be treated as separate lines.  Set as a
     # SlugField as it is included in the path for certain views.
-    line_reference = models.SlugField(_("Line Reference"), max_length=128,
-                                      db_index=True)
+    line_reference = models.SlugField(
+        _("Line Reference"), max_length=128, db_index=True)
 
     product = models.ForeignKey(
         'catalogue.Product', related_name='basket_lines',
         verbose_name=_("Product"))
+
+    # We store the stockrecord that should be used to fulfil this line
     stockrecord = models.ForeignKey(
         'partner.StockRecord', related_name='basket_lines',
-        null=True)
+        null=True, on_delete=models.SET_NULL)
+
     quantity = models.PositiveIntegerField(_('Quantity'), default=1)
 
     # We store the unit price incl tax of the product when it is first added to
@@ -584,15 +590,6 @@ class AbstractLine(models.Model):
     # Helpers
     # =======
 
-    def _get_stockrecord_property(self, property):
-        if not self.product.stockrecord:
-            return Decimal('0.00')
-        else:
-            attr = getattr(self.product.stockrecord, property)
-            if attr is None:
-                attr = Decimal('0.00')
-            return attr
-
     @property
     def _tax_ratio(self):
         if not self.unit_price_incl_tax:
@@ -625,40 +622,34 @@ class AbstractLine(models.Model):
 
     @property
     def unit_price_excl_tax(self):
-        """Return unit price excluding tax"""
-        return self._get_stockrecord_property('price_excl_tax')
+        return self.stockrecord.price_excl_tax
 
     @property
     def unit_price_incl_tax(self):
-        """Return unit price including tax"""
         if not self._charge_tax:
             return self.unit_price_excl_tax
-        return self._get_stockrecord_property('price_incl_tax')
+        return self.stockrecord.price_incl_tax
 
     @property
     def unit_tax(self):
-        """Return tax of a unit"""
         if not self._charge_tax:
             return Decimal('0.00')
-        return self._get_stockrecord_property('price_tax')
+        return self.stockrecord.price_tax
 
     @property
     def line_price_excl_tax(self):
-        """Return line price excluding tax"""
         return self.quantity * self.unit_price_excl_tax
 
     @property
     def line_price_excl_tax_and_discounts(self):
-        return self.line_price_excl_tax - self._discount * self._tax_ratio
+        return (self.line_price_excl_tax - self._discount) * self._tax_ratio
 
     @property
     def line_tax(self):
-        """Return line tax"""
         return self.quantity * self.unit_tax
 
     @property
     def line_price_incl_tax(self):
-        """Return line price including tax"""
         return self.quantity * self.unit_price_incl_tax
 
     @property
@@ -667,7 +658,6 @@ class AbstractLine(models.Model):
 
     @property
     def description(self):
-        """Return product description"""
         d = str(self.product)
         ops = []
         for attribute in self.attributes.all():
@@ -684,11 +674,12 @@ class AbstractLine(models.Model):
         """
         if not self.price_incl_tax:
             return
-        if not self.product.has_stockrecord:
+        if not self.stockrecord:
             msg = u"'%(product)s' is no longer available"
             return _(msg) % {'product': self.product.get_title()}
 
-        current_price_incl_tax = self.product.stockrecord.price_incl_tax
+        # Compare current price to price when added to basket
+        current_price_incl_tax = self.stockrecord.price_incl_tax
         if current_price_incl_tax > self.price_incl_tax:
             msg = ("The price of '%(product)s' has increased from "
                    "%(old_price)s to %(new_price)s since you added it "

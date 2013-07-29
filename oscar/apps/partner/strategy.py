@@ -31,4 +31,5 @@ class FirstStockrecord(Base):
         return {
             'price': prices.WrappedStockrecord(record),
             'availability': availability.WrappedStockrecord(product, record),
+            'stockrecord': record,
         }

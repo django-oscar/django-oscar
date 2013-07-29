@@ -23,10 +23,10 @@ def do_stockrecord(parse, token):
 
 
 class StrategyNode(template.Node):
-    def __init__(self, request_var, product_var, form_var):
+    def __init__(self, request_var, product_var, name_var):
         self.request_var = template.Variable(request_var)
         self.product_var = template.Variable(product_var)
-        self.name_var = form_var
+        self.name_var = name_var
 
     def render(self, context):
         try:
