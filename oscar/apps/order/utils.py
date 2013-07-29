@@ -4,7 +4,6 @@ from django.db.models import get_model
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.shipping.methods import Free
-from oscar.apps.order.exceptions import UnableToPlaceOrder
 from oscar.core.loading import get_class
 
 from decimal import Decimal as D
@@ -126,49 +125,45 @@ class OrderCreator(object):
         order.save()
         return order
 
-    def get_partner_for_product(self, product):
-        """
-        Return the partner for a product
-        """
-        if product.has_stockrecord:
-            return product.stockrecord.partner
-        raise UnableToPlaceOrder(_("No partner found for product '%s'") % product)
-
     def create_line_models(self, order, basket_line, extra_line_fields=None):
         """
         Create the batch line model.
 
-        You can set extra fields by passing a dictionary as the extra_line_fields value
+        You can set extra fields by passing a dictionary as the
+        extra_line_fields value
         """
-        partner = self.get_partner_for_product(basket_line.product)
-        stockrecord = basket_line.product.stockrecord
-        line_data = {'order': order,
-                     # Partner details
-                     'partner': partner,
-                     'partner_name': partner.name,
-                     'partner_sku': stockrecord.partner_sku,
-                     # Product details
-                     'product': basket_line.product,
-                     'title': basket_line.product.get_title(),
-                     'upc': basket_line.product.upc,
-                     'quantity': basket_line.quantity,
-                     # Price details
-                     'line_price_excl_tax': basket_line.line_price_excl_tax_and_discounts,
-                     'line_price_incl_tax': basket_line.line_price_incl_tax_and_discounts,
-                     'line_price_before_discounts_excl_tax': basket_line.line_price_excl_tax,
-                     'line_price_before_discounts_incl_tax': basket_line.line_price_incl_tax,
-                     # Reporting details
-                     'unit_cost_price': stockrecord.cost_price,
-                     'unit_price_incl_tax': basket_line.unit_price_incl_tax,
-                     'unit_price_excl_tax': basket_line.unit_price_excl_tax,
-                     'unit_retail_price': stockrecord.price_retail,
-                     # Shipping details
-                     'est_dispatch_date': stockrecord.dispatch_date
-                     }
+        product = basket_line.product
+        stockrecord = basket_line.stockrecord
+        partner = stockrecord.partner
+        line_data = {
+            'order': order,
+            # Partner details
+            'partner': partner,
+            'partner_name': partner.name,
+            'partner_sku': stockrecord.partner_sku,
+            # Product details
+            'product': product,
+            'title': product.get_title(),
+            'upc': product.upc,
+            'quantity': basket_line.quantity,
+            # Price details
+            'line_price_excl_tax': basket_line.line_price_excl_tax_and_discounts,
+            'line_price_incl_tax': basket_line.line_price_incl_tax_and_discounts,
+            'line_price_before_discounts_excl_tax': basket_line.line_price_excl_tax,
+            'line_price_before_discounts_incl_tax': basket_line.line_price_incl_tax,
+            # Reporting details
+            'unit_cost_price': stockrecord.cost_price,
+            'unit_price_incl_tax': basket_line.unit_price_incl_tax,
+            'unit_price_excl_tax': basket_line.unit_price_excl_tax,
+            'unit_retail_price': stockrecord.price_retail,
+            # Shipping details
+            'est_dispatch_date': stockrecord.dispatch_date
+        }
         extra_line_fields = extra_line_fields or {}
         if hasattr(settings, 'OSCAR_INITIAL_LINE_STATUS'):
             if not (extra_line_fields and 'status' in extra_line_fields):
-                extra_line_fields['status'] = getattr(settings, 'OSCAR_INITIAL_LINE_STATUS')
+                extra_line_fields['status'] = getattr(
+                    settings, 'OSCAR_INITIAL_LINE_STATUS')
         if extra_line_fields:
             line_data.update(extra_line_fields)
 
@@ -180,9 +175,11 @@ class OrderCreator(object):
         return order_line
 
     def update_stock_records(self, line):
-        product = line.product
-        if product.get_product_class().track_stock:
-            line.product.stockrecord.allocate(line.quantity)
+        """
+        Update any relevant stock records for this order line
+        """
+        if line.product.get_product_class().track_stock:
+            line.stockrecord.allocate(line.quantity)
 
     def create_additional_line_models(self, order, order_line, basket_line):
         """
@@ -200,21 +197,21 @@ class OrderCreator(object):
         """
         breakdown = basket_line.get_price_breakdown()
         for price_incl_tax, price_excl_tax, quantity in breakdown:
-            LinePrice._default_manager.create(order=order,
-                                              line=order_line,
-                                              quantity=quantity,
-                                              price_incl_tax=price_incl_tax,
-                                              price_excl_tax=price_excl_tax)
+            order_line.prices.create(
+                order=order,
+                quantity=quantity,
+                price_incl_tax=price_incl_tax,
+                price_excl_tax=price_excl_tax)
 
     def create_line_attributes(self, order, order_line, basket_line):
         """
         Creates the batch line attributes.
         """
         for attr in basket_line.attributes.all():
-            LineAttribute._default_manager.create(line=order_line,
-                                                  option=attr.option,
-                                                  type=attr.option.code,
-                                                  value=attr.value)
+            order_line.attributes.create(
+                option=attr.option,
+                type=attr.option.code,
+                value=attr.value)
 
     def create_discount_model(self, order, discount):
 
