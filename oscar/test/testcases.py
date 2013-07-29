@@ -74,6 +74,10 @@ class ClientTestCase(TestCase):
     def assertIsOk(self, response):
         self.assertEqual(httplib.OK, response.status_code)
 
+    def assertNoAccess(self, response):
+        self.assertTrue(response.status_code in (httplib.NOT_FOUND,
+                                                 httplib.FORBIDDEN))
+
     def assertInContext(self, response, key):
         self.assertTrue(key in response.context,
                         "Context should contain a variable '%s'" % key)
