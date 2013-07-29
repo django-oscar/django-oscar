@@ -310,10 +310,10 @@ class AbstractStockRecord(models.Model):
 
     def __unicode__(self):
         if self.partner_sku:
-            return "%s (%s): %s" % (self.partner.display_name,
-                                    self.partner_sku, self.product.title)
+            return u"%s (%s)" % (self.partner.display_name,
+                                 self.partner_sku)
         else:
-            return "%s: %s" % (self.partner.display_name, self.product.title)
+            return self.partner.display_name
 
 
 class AbstractStockAlert(models.Model):

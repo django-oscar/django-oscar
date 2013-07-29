@@ -11,10 +11,10 @@ class LineInline(admin.TabularInline):
 
 
 class LineAdmin(admin.ModelAdmin):
-    list_display = ('basket', 'line_reference', 'quantity', 'price_excl_tax',
-                    'date_created')
-    readonly_fields = ('basket', 'line_reference', 'product', 'price_excl_tax',
-                       'price_incl_tax')
+    list_display = ('id', 'basket', 'product', 'stockrecord', 'quantity',
+                    'price_excl_tax', 'date_created')
+    readonly_fields = ('basket', 'stockrecord', 'line_reference', 'product',
+                       'price_excl_tax', 'price_incl_tax', 'quantity')
 
 
 class BasketAdmin(admin.ModelAdmin):
