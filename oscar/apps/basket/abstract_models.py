@@ -494,13 +494,16 @@ class AbstractLine(models.Model):
         null=True)
     price_incl_tax = models.DecimalField(
         _('Price incl. Tax'), decimal_places=2, max_digits=12, null=True)
+
     # Track date of first addition
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
-    # Instance variables used to persist discount information
-    _discount = Decimal('0.00')
-    _affected_quantity = 0
-    _charge_tax = True
+    def __init__(self, *args, **kwargs):
+        super(AbstractLine, self).__init__(*args, **kwargs)
+        # Instance variables used to persist discount information
+        self._discount = Decimal('0.00')
+        self._affected_quantity = 0
+        self._charge_tax = True
 
     class Meta:
         abstract = True
