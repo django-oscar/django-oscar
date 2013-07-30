@@ -6,8 +6,11 @@ from django.db import models
 
 class Migration(SchemaMigration):
 
+    depends_on = (
+        ('order', '0001_initial'),
+    )
+
     def forwards(self, orm):
-        
         # Adding model 'Transaction'
         db.create_table('payment_transaction', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
@@ -56,7 +59,7 @@ class Migration(SchemaMigration):
 
 
     def backwards(self, orm):
-        
+
         # Deleting model 'Transaction'
         db.delete_table('payment_transaction')
 

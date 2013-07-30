@@ -8,6 +8,7 @@ class Migration(SchemaMigration):
     depends_on = (
         ('catalogue', '0001_initial'),
         ('voucher', '0001_initial'),
+        ('offer', '0001_initial'),
     )
 
     def forwards(self, orm):
