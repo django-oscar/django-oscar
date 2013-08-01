@@ -5,10 +5,10 @@ from django.db.models import get_model, Q
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from django.template.defaultfilters import date as format_date
 
 from oscar.views.generic import BulkEditMixin
 from oscar.apps.dashboard.reviews import forms
+from oscar.core.utils import format_datetime
 
 ProductReview = get_model('reviews', 'productreview')
 
@@ -52,17 +52,17 @@ class ReviewListView(generic.ListView, BulkEditMixin):
                 date_created__lt=date_to
             )
             self.desc_ctx['date_filter'] = _(" created between %(start_date)s and %(end_date)s") % {
-                'start_date': format_date(date_from),
-                'end_date': format_date(date_to)
+                'start_date': format_datetime(date_from),
+                'end_date': format_datetime(date_to)
             }
         elif date_from:
             queryset = queryset.filter(date_created__gte=date_from)
-            self.desc_ctx['date_filter'] =  _(" created after %s") % format_date(date_from)
+            self.desc_ctx['date_filter'] =  _(" created after %s") % format_datetime(date_from)
         elif date_to:
             # Add 24 hours to make search inclusive
             date_to = date_to + datetime.timedelta(days=1)
             queryset = queryset.filter(date_created__lt=date_to)
-            self.desc_ctx['date_filter'] = _(" created before %s") % format_date(date_to)
+            self.desc_ctx['date_filter'] = _(" created before %s") % format_datetime(date_to)
 
         return queryset
 
