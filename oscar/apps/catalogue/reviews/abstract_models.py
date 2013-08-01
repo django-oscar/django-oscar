@@ -119,13 +119,16 @@ class AbstractProductReview(models.Model):
         super(AbstractProductReview, self).delete(*args, **kwargs)
         self.product.update_rating()
 
+    @property
     def has_votes(self):
         return self.total_votes > 0
 
+    @property
     def num_up_votes(self):
         """Returns the total up votes"""
         return int((self.total_votes + self.delta_votes) / 2)
 
+    @property
     def num_down_votes(self):
         """Returns the total down votes"""
         return int((self.total_votes - self.delta_votes) / 2)
