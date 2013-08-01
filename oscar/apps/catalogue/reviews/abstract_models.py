@@ -87,13 +87,31 @@ class AbstractProductReview(models.Model):
     def __unicode__(self):
         return self.title
 
-    def save(self, *args, **kwargs):
+    def clean(self):
         if not self.user and not (self.name and self.email):
-            raise ValidationError(_("Anonymous review must have a name and an email"))
-        if not self.title:
-            raise ValidationError(_("Reviews must have a title"))
-        if self.score is None:
-            raise ValidationError(_("Reviews must have a score"))
+            raise ValidationError(
+                _("Anonymous review must have a name and an email"))
+
+    def clean_title(self):
+        title = self.title.strip()
+        if not title:
+            raise ValidationError(_("This field is required"))
+        excess = len(title) - 100
+        if excess > 0:
+            raise ValidationError(
+                _("Please enter a shorter title (with %d fewer characters)") %
+                excess)
+        return title
+
+    def clean_body(self):
+        body = self.body.strip()
+        if not body:
+            raise ValidationError(_("This field is required"))
+
+    def clean_name(self):
+        return self.name.strip()
+
+    def save(self, *args, **kwargs):
         super(AbstractProductReview, self).save(*args, **kwargs)
         self.product.update_rating()
 

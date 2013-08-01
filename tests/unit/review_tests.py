@@ -18,7 +18,8 @@ class ProductReviewTests(TestCase):
 
     def setUp(self):
         username = str(randint(0, maxint))
-        self.user = User.objects.create_user(username, '%s@users.com'%username, '%spass123'%username)
+        self.user = User.objects.create_user(
+            username, '%s@users.com'%username, '%spass123'%username)
         self.anon_user = AnonymousUser()
         self.product = create_product()
         self.review = ProductReview.objects.create(product=self.product,
@@ -27,22 +28,26 @@ class ProductReviewTests(TestCase):
                                                    user=self.user)
 
     def test_top_level_reviews_must_have_titles_and_scores(self):
-        self.assertRaises(ValidationError, ProductReview.objects.create, product=self.product,
-                          user=self.user)
+        review = ProductReview(product=self.product, user=self.user)
+        self.assertRaises(ValidationError, review.full_clean)
 
     def test_top_level_anonymous_reviews_must_have_names_and_emails(self):
-        self.assertRaises(ValidationError, ProductReview.objects.create, product=self.product,
-                          user=None, title="Anonymous review", score=3)
+        review = ProductReview(product=self.product, user=None,
+                               title="Anonymous review", score=3)
+        self.assertRaises(ValidationError, review.full_clean)
+
 
 
 class TopLevelProductReviewVoteTests(ProductReviewTests):
 
     def test_try_vote_without_login(self):
-        self.assertRaises(ValueError, Vote.objects.create, review=self.review, delta=-1, user=self.anon_user)
+        self.assertRaises(ValueError, Vote.objects.create, review=self.review,
+                          delta=-1, user=self.anon_user)
 
     def test_try_vote_more_than_once(self):
         vote1 = Vote.objects.create(review=self.review, user=self.user, delta=1)
         self.assertTrue(vote1)
-        self.assertRaises(IntegrityError, Vote.objects.create, review=self.review, delta=-1, user=self.user)
+        self.assertRaises(IntegrityError, Vote.objects.create,
+                          review=self.review, delta=-1, user=self.user)
 
 

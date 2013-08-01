@@ -8,8 +8,8 @@ from django.utils.translation import ugettext_lazy as _
 from oscar.core.loading import get_classes
 from oscar.apps.catalogue.reviews.signals import review_added
 
-SignedInUserProductReviewForm, AnonymousUserProductReviewForm, VoteForm = get_classes(
-    'catalogue.reviews.forms', ['SignedInUserProductReviewForm', 'AnonymousUserProductReviewForm', 'VoteForm'])
+ProductReviewForm, VoteForm = get_classes(
+    'catalogue.reviews.forms', ['ProductReviewForm', 'VoteForm'])
 Vote = get_model('reviews', 'vote')
 
 
@@ -17,54 +17,43 @@ class CreateProductReview(CreateView):
     template_name = "catalogue/reviews/review_form.html"
     model = get_model('reviews', 'productreview')
     product_model = get_model('catalogue', 'product')
-    review_form = SignedInUserProductReviewForm
-    anonymous_review_form = AnonymousUserProductReviewForm
+    form_class = ProductReviewForm
     view_signal = review_added
 
-    def get(self, request, *args, **kwargs):
-        if request.user.is_authenticated():
-            product = self.get_product()
-            try:
-                self.model.objects.get(user=request.user, product=product)
-                messages.warning(
-                    self.request, _("You have already reviewed this product!"))
-                return HttpResponseRedirect(product.get_absolute_url())
-            except self.model.DoesNotExist:
-                pass
-        return super(CreateProductReview, self).get(request, *args, **kwargs)
+    def dispatch(self, request, *args, **kwargs):
+        self.product = get_object_or_404(
+            self.product_model, pk=self.kwargs['product_pk'])
+        if self.product.has_review_by(request.user):
+            messages.warning(
+                self.request, _("You have already reviewed this product!"))
+            return HttpResponseRedirect(self.product.get_absolute_url())
+        return super(CreateProductReview, self).dispatch(
+            request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        response = super(CreateProductReview, self).post(request, *args, **kwargs)
+        response = super(CreateProductReview, self).post(
+            request, *args, **kwargs)
         if self.object:
             self.send_signal(request, response, self.object)
         return response
 
     def get_context_data(self, **kwargs):
         context = super(CreateProductReview, self).get_context_data(**kwargs)
-        context['product'] = self.get_product()
+        context['product'] = self.product
         return context
-
-    def get_product(self):
-        return get_object_or_404(
-            self.product_model, pk=self.kwargs['product_pk'])
-
-    def get_form_class(self):
-        if not self.request.user.is_authenticated():
-            return self.anonymous_review_form
-        return self.review_form
 
     def get_form_kwargs(self):
         kwargs = super(CreateProductReview, self).get_form_kwargs()
-        review = self.model(product=self.get_product())
+        review = self.model(product=self.product)
         if self.request.user.is_authenticated():
-            review.user = self.request.user
+            review.user = kwargs['user'] = self.request.user
         kwargs['instance'] = review
         return kwargs
 
     def get_success_url(self):
         messages.success(
             self.request, _("Thank you for reviewing this product"))
-        return self.object.product.get_absolute_url()
+        return self.product.get_absolute_url()
 
     def send_signal(self, request, response, review):
         self.view_signal.send(sender=self, review=review, user=request.user,
