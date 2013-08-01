@@ -1,6 +1,6 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, View
 from django.contrib import messages
 from django.db.models import get_model
 from django.utils.translation import ugettext_lazy as _
@@ -11,6 +11,8 @@ from oscar.apps.catalogue.reviews.signals import review_added
 ProductReviewForm, VoteForm = get_classes(
     'catalogue.reviews.forms', ['ProductReviewForm', 'VoteForm'])
 Vote = get_model('reviews', 'vote')
+ProductReview = get_model('reviews', 'ProductReview')
+Product = get_model('catalogue', 'product')
 
 
 class CreateProductReview(CreateView):
@@ -63,26 +65,28 @@ class CreateProductReview(CreateView):
 class ProductReviewDetail(DetailView):
     template_name = "catalogue/reviews/review_detail.html"
     context_object_name = 'review'
-    model = get_model('reviews', 'productreview')
-    product_model = get_model('catalogue', 'product')
+    model = ProductReview
 
     def get_context_data(self, **kwargs):
         context = super(ProductReviewDetail, self).get_context_data(**kwargs)
         context['product'] = get_object_or_404(
-            self.product_model, pk=self.kwargs['product_pk'])
+            Product, pk=self.kwargs['product_pk'])
         return context
 
+
+class AddVoteView(View):
+
     def post(self, request, *args, **kwargs):
-        review = self.get_object()
-        response = HttpResponseRedirect(
-            request.META.get('HTTP_REFERER', review.get_absolute_url()))
+        product = get_object_or_404(Product, pk=self.kwargs['product_pk'])
+        review = get_object_or_404(ProductReview, pk=self.kwargs['pk'])
         if not review.user_may_vote(request.user):
             if review.user == request.user:
-                messages.error(request, _("You cannot vote on your own reviews"))
+                error = _("You cannot vote on your own reviews")
             elif review.votes.filter(user=request.user).exists():
-                messages.error(request, _("You have already voted on this review"))
+                error =  _("You have already voted on this review")
             else:
-                messages.error(request, _("We couldn't process your vote"))
+                error = _("We couldn't process your vote")
+            messages.error(request, error)
         else:
             vote = Vote(user=request.user, review=review)
             form = VoteForm(request.POST, instance=vote)
@@ -91,7 +95,8 @@ class ProductReviewDetail(DetailView):
                 messages.success(request, _("Thanks for voting!"))
             else:
                 messages.error(request, _("We couldn't process your vote"))
-        return response
+        return HttpResponseRedirect(
+            request.META.get('HTTP_REFERER', product.get_absolute_url()))
 
 
 class ProductReviewList(ListView):
