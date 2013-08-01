@@ -1,7 +1,6 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView
-from django.db.models import Avg
 from django.contrib import messages
 from django.db.models import get_model
 from django.utils.translation import ugettext_lazy as _
@@ -88,24 +87,21 @@ class ProductReviewDetail(DetailView):
         review = self.get_object()
         response = HttpResponseRedirect(
             request.META.get('HTTP_REFERER', review.get_absolute_url()))
-        if review.user == request.user:
-            messages.error(request, _("You cannot vote on your own reviews"))
-            return response
-
-        try:
-            vote = Vote.objects.get(user=request.user, review=review)
-        except Vote.DoesNotExist:
+        if not review.user_may_vote(request.user):
+            if review.user == request.user:
+                messages.error(request, _("You cannot vote on your own reviews"))
+            elif review.votes.filter(user=request.user).exists():
+                messages.error(request, _("You have already voted on this review"))
+            else:
+                messages.error(request, _("We couldn't process your vote"))
+        else:
             vote = Vote(user=request.user, review=review)
-        else:
-            messages.error(request, _("You have already voted on this review"))
-            return response
-
-        form = VoteForm(request.POST, instance=vote)
-        if form.is_valid():
-            form.save()
-            messages.success(request, _("Thanks for voting!"))
-        else:
-            messages.error(request, _("We couldn't process your vote"))
+            form = VoteForm(request.POST, instance=vote)
+            if form.is_valid():
+                form.save()
+                messages.success(request, _("Thanks for voting!"))
+            else:
+                messages.error(request, _("We couldn't process your vote"))
         return response
 
 

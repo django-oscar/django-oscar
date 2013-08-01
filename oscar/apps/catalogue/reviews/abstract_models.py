@@ -129,6 +129,11 @@ class AbstractProductReview(models.Model):
         else:
             return self.name
 
+    def user_may_vote(self, user):
+        return (user.is_authenticated() and
+                self.user != user and
+                not self.votes.filter(user=user).exists())
+
 
 class AbstractVote(models.Model):
     """
