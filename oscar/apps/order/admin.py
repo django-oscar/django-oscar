@@ -40,7 +40,7 @@ class LinePriceAdmin(admin.ModelAdmin):
 
 
 class ShippingEventTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'is_required', 'sequence_number')
+    list_display = ('name', )
     exclude = ('code',)
 
 

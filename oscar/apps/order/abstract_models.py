@@ -664,7 +664,6 @@ class AbstractPaymentEventType(models.Model):
     """
     name = models.CharField(_("Name"), max_length=128, unique=True)
     code = models.SlugField(_("Code"), max_length=128, unique=True)
-    sequence_number = models.PositiveIntegerField(_("Sequence"), default=0)
 
     def save(self, *args, **kwargs):
         if not self.code:
@@ -675,7 +674,7 @@ class AbstractPaymentEventType(models.Model):
         abstract = True
         verbose_name = _("Payment Event Type")
         verbose_name_plural = _("Payment Event Types")
-        ordering = ('sequence_number',)
+        ordering = ('name', )
 
     def __unicode__(self):
         return self.name
@@ -821,16 +820,8 @@ class AbstractShippingEventType(models.Model):
     """
     # Name is the friendly description of an event
     name = models.CharField(_("Name"), max_length=255, unique=True)
-
     # Code is used in forms
     code = models.SlugField(_("Code"), max_length=128, unique=True)
-    is_required = models.BooleanField(
-        _("Is Required"), default=False,
-        help_text=_("This event must be passed before the next "
-                    "shipping event can take place"))
-
-    # The normal order in which these shipping events take place
-    sequence_number = models.PositiveIntegerField(_("Sequence"), default=0)
 
     def save(self, *args, **kwargs):
         if not self.code:
@@ -841,19 +832,10 @@ class AbstractShippingEventType(models.Model):
         abstract = True
         verbose_name = _("Shipping Event Type")
         verbose_name_plural = _("Shipping Event Types")
-        ordering = ('sequence_number',)
+        ordering = ('name', )
 
     def __unicode__(self):
         return self.name
-
-    def get_prerequisites(self):
-        """
-        Return event types that must be complete before this one
-        """
-        return self.__class__._default_manager.filter(
-            is_required=True,
-            sequence_number__lt=self.sequence_number).order_by(
-                'sequence_number')
 
 
 # DISCOUNTS
