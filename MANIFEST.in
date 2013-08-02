@@ -1,4 +1,6 @@
 include *.rst
+include AUTHORS
+include LICENSE
 recursive-include oscar/templates *.txt *.html
 recursive-include oscar/apps *.json
 recursive-include oscar/fixtures *.json
