@@ -78,9 +78,10 @@ class BankcardMonthField(forms.MultiValueField):
                 choices=self.year_choices(),
                 error_messages={'invalid': errors['invalid_year']}),
         )
+        if 'widget' not in kwargs:
+            kwargs['widget'] = BankcardMonthWidget(
+                widgets=[fields[0].widget, fields[1].widget])
         super(BankcardMonthField, self).__init__(fields, *args, **kwargs)
-        self.widget = BankcardMonthWidget(
-            widgets=[fields[0].widget, fields[1].widget])
 
     def month_choices(self):
         return []
