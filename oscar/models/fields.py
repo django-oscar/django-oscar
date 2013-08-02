@@ -12,7 +12,8 @@ else:
     add_introspection_rules([], ["^oscar\.models\.fields\.ExtendedURLField$"])
     add_introspection_rules([], [
         "^oscar\.models\.fields\.PositiveDecimalField$"])
-    add_introspection_rules([], ["^oscar\.models\.fields\.UppercaseCharField$"])
+    add_introspection_rules([], [
+        "^oscar\.models\.fields\.UppercaseCharField$"])
 
 
 class ExtendedURLField(CharField):
