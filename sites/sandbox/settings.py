@@ -280,7 +280,6 @@ INSTALLED_APPS = [
     'south',
     'rosetta',          # For i18n testing
     'compressor',
-    'apps.user',        # For profile testing
     'apps.gateway',     # For allowing dashboard access
 ]
 from oscar import get_core_apps
@@ -303,8 +302,6 @@ HAYSTACK_CONNECTIONS = {
         'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
     },
 }
-
-AUTH_PROFILE_MODULE = 'user.Profile'
 
 # =============
 # Debug Toolbar
