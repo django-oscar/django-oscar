@@ -262,7 +262,7 @@ Oscar resources
 
 Presentations:
 
-.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/presentations/oscan2012.png
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/presentations/oscon2012.png
     :target: https://speakerdeck.com/codeinthehole/writing-a-django-e-commerce-framework-1
 
 Looking for commercial support?
