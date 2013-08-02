@@ -3,9 +3,8 @@
 {% block label %}{% endblock %}
 
 {% block widget %}
-    <label for="{{ field.auto_id }}"
-            class="checkbox {% if field.field.required %}required{% endif %}">
-        {{ field.label }}{% if field.field.required %} <span>*</span>{% endif %}
+    <label for="{{ field.auto_id }}" class="checkbox {% if field.field.required %}required{% endif %}">
+        {{ field.label|safe }}{% if field.field.required %} <span>*</span>{% endif %}
         {{ field }}
     </label>
 {% endblock %}
