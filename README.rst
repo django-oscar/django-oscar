@@ -28,7 +28,6 @@ Further reading:
 * `Google Group`_ - the mailing list is django-oscar@googlegroups.com
 * `Continuous integration homepage`_ on `travis-ci.org`_
 * `Twitter account for news and updates`_
-* `Twitter account of all commits`_
 * `crate.io page`_
 * `PyPI page`_
 * `Transifex project`_ - translating Oscar made easy
@@ -258,22 +257,33 @@ Many more on the way.  If you use Oscar in production, please let us know.
 .. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/logos/tangentlabs.jpg
     :target: http://www.tangentlabs.co.uk/
 
-Want an Oscar project build for you?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Oscar resources
+---------------
 
-If you are interested in having an Oscar project built for you, Tangent can
-help.  Please get in touch via `oscar@tangentlabs.co.uk`_
+Presentations:
+
+.. image:: https://github.com/tangentlabs/django-oscar/raw/master/docs/images/presentations/oscan2012.png
+    :target: https://speakerdeck.com/codeinthehole/writing-a-django-e-commerce-framework-1
+
+Looking for commercial support?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you are interested in having an Oscar project built for you, or for
+development of an existing Oscar site, Tangent can
+help.  Please get in touch via `oscar@tangentlabs.co.uk`_ or via the `Tangent
+Snowball`_ site.
 
 .. _`oscar@tangentlabs.co.uk`: mailto:oscar@tangentlabs.co.uk
+.. _`Tangent Snowball`: http://www.tangentsnowball.com/products/oscar
 
-Want to work on Oscar?
-~~~~~~~~~~~~~~~~~~~~~~
+Want to get paid to work on Oscar?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 `Tangent Labs`_ are currently looking for python hackers to work on Oscar as well
 as some of other internal products and e-commerce projects.  If this sounds
 interesting, please email `recruitment@tangentlabs.co.uk`_.
 
 The position is in Tangent's London offices and you must have the appropriate
-visas to work here.
+visas to work in the UK.
 
 .. _`recruitment@tangentlabs.co.uk`: mailto:recruitment@tangentlabs.co.uk
