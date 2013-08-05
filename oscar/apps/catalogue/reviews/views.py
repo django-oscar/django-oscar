@@ -24,7 +24,7 @@ class CreateProductReview(CreateView):
 
     def dispatch(self, request, *args, **kwargs):
         self.product = get_object_or_404(
-            self.product_model, pk=self.kwargs['product_pk'])
+            self.product_model, pk=kwargs['product_pk'])
         if self.product.has_review_by(request.user):
             messages.warning(
                 self.request, _("You have already reviewed this product!"))
