@@ -80,3 +80,11 @@ class URLDoesNotExistValidator(ExtendedURLValidator):
             return
         raise ValidationError(
             _('Specified page already exists!'), code='invalid')
+
+
+def non_whitespace(value):
+    stripped = value.strip()
+    if not stripped:
+        raise ValidationError(
+            _("This field is required"))
+    return stripped

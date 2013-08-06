@@ -14,9 +14,14 @@ class ProductReviewForm(forms.ModelForm):
     def __init__(self, user=None, *args, **kwargs):
         super(ProductReviewForm, self).__init__(*args, **kwargs)
         if user is not None and user.is_authenticated():
-            self.user = user
             del self.fields['name']
             del self.fields['email']
+
+    def clean_title(self):
+        return self.cleaned_data['title'].strip()
+
+    def clean_body(self):
+        return self.cleaned_data['body'].strip()
 
     class Meta:
         model = ProductReview

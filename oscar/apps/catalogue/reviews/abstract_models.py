@@ -6,27 +6,14 @@ from django.utils.translation import ugettext as _
 
 from oscar.apps.catalogue.reviews.managers import ApprovedReviewsManager
 from oscar.core.compat import AUTH_USER_MODEL
+from oscar.core import validators
 
 
 class AbstractProductReview(models.Model):
     """
-    Superclass ProductReview.
+    A review of a product
 
-    Some key aspects have been implemented from the original spec.
-    * Each product can have reviews attached to it. Each review has a title, a
-      body and a score from 0-5.
-    * Signed in users can always submit reviews, anonymous users can only
-      submit reviews if a setting OSCAR_ALLOW_ANON_REVIEWS is set to true - it
-      should default to false.
-    * If anon users can submit reviews, then we require their name, email
-      address and an (optional) URL.
-    * By default, reviews must be approved before they are live.
-      However, if a setting OSCAR_MODERATE_REVIEWS is set to false,
-      then they don't need moderation.
-    * Each review should have a permalink, ie it has its own page.
-    * Each reviews can be voted up or down by other users
-    * Only signed in users can vote
-    * A user can only vote once on each product once
+    Reviews can belong to a user or be anonymous.
     """
 
     # Note we keep the review even if the product is deleted
@@ -38,12 +25,16 @@ class AbstractProductReview(models.Model):
     SCORE_CHOICES = tuple([(x, x) for x in range(0, 6)])
     score = models.SmallIntegerField(_("Score"), choices=SCORE_CHOICES)
 
-    title = models.CharField(max_length=255, verbose_name=_("Review title"))
+    title = models.CharField(
+        max_length=255, verbose_name=_("Review title"),
+        validators=[validators.non_whitespace])
     body = models.TextField(_("Body"))
 
-    # User information.  We include fields to handle anonymous users
+    # User information.
     user = models.ForeignKey(
         AUTH_USER_MODEL, related_name='reviews', null=True, blank=True)
+
+    # Fields to be completed if user is anonymous
     name = models.CharField(_("Name"), max_length=255, null=True, blank=True)
     email = models.EmailField(_("Email"), null=True, blank=True)
     homepage = models.URLField(_("URL"), null=True, blank=True)
@@ -74,8 +65,8 @@ class AbstractProductReview(models.Model):
         abstract = True
         ordering = ['-delta_votes']
         unique_together = (('product', 'user'),)
-        verbose_name = _('Product Review')
-        verbose_name_plural = _('Product Reviews')
+        verbose_name = _('Product review')
+        verbose_name_plural = _('Product reviews')
 
     @models.permalink
     def get_absolute_url(self):
@@ -91,25 +82,6 @@ class AbstractProductReview(models.Model):
         if not self.user and not (self.name and self.email):
             raise ValidationError(
                 _("Anonymous review must have a name and an email"))
-
-    def clean_title(self):
-        title = self.title.strip()
-        if not title:
-            raise ValidationError(_("This field is required"))
-        excess = len(title) - 100
-        if excess > 0:
-            raise ValidationError(
-                _("Please enter a shorter title (with %d fewer characters)") %
-                excess)
-        return title
-
-    def clean_body(self):
-        body = self.body.strip()
-        if not body:
-            raise ValidationError(_("This field is required"))
-
-    def clean_name(self):
-        return self.name.strip()
 
     def save(self, *args, **kwargs):
         super(AbstractProductReview, self).save(*args, **kwargs)
