@@ -18,8 +18,8 @@
     </tr>
     {% for user in objects %}
     <tr>
-        <td>{{ user.user.email }}</td>
-        <td>{{ user.user.get_full_name|default:"-" }}</td>
+        <td><a href="{% url 'dashboard:user-detail' user.user.id %}">{{ user.user.email }}</a></td>
+        <td><a href="{% url 'dashboard:user-detail' user.user.id %}">{{ user.user.get_full_name|default:"-" }}</a></td>
         <td>{{ user.user.date_joined }}</td>
         <td>{{ user.num_product_views }}</td>
         <td>{{ user.num_basket_additions }}</td>

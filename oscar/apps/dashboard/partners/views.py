@@ -11,6 +11,7 @@ from oscar.apps.customer.utils import normalise_email
 
 from oscar.apps.dashboard.partners.forms import UserEmailForm, ExistingUserForm, NewUserForm
 from oscar.core.loading import get_classes
+from oscar.views import sort_queryset
 
 Partner = get_model('partner', 'Partner')
 PartnerSearchForm, PartnerCreateForm = get_classes(
@@ -25,7 +26,7 @@ class PartnerListView(generic.ListView):
 
     def get_queryset(self):
         qs = self.model._default_manager.all()
-        qs = self.sort_queryset(qs)
+        qs = sort_queryset(qs, self.request, ['name'])
 
         self.description = _("All partners")
 
@@ -44,15 +45,6 @@ class PartnerListView(generic.ListView):
             self.is_filtered = True
 
         return qs
-
-    def sort_queryset(self, queryset):
-        sort = self.request.GET.get('sort', None)
-        allowed_sorts = ['name']
-        if sort in allowed_sorts:
-            direction = self.request.GET.get('dir', 'desc')
-            sort = ('-' if direction == 'desc' else '') + sort
-            queryset = queryset.order_by(sort)
-        return queryset
 
     def get_context_data(self, **kwargs):
         ctx = super(PartnerListView, self).get_context_data(**kwargs)
