@@ -17,8 +17,8 @@
                             Reviewed by you on {{ review_date }}
                             {% endblocktrans %}
                         {% else %}
-                            {% blocktrans with name=review.get_reviewer_name review_date=review.date_created %}
-                            Reviewed by {{ name }} on {{ review_date }}
+                            {% blocktrans with name=review.reviewer_name review_date=review.date_created %}
+                                Reviewed by <strong>{{ name }}</strong> on {{ review_date }}
                             {% endblocktrans %}
                         {% endif %}
                         | <a href="{% url 'catalogue:reviews-detail' product.slug product.pk review.pk %}">{% trans 'Permalink' %}</a>
@@ -50,6 +50,8 @@
                         {{ num_up_votes }} of {{ num_votes }} customers found this useful
                         {% endblocktrans %}
                     </p>
+                {% else %}
+                    <p>This review has no votes.</p>
                 {% endif %}
             </div>
         </div>

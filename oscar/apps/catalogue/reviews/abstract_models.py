@@ -105,6 +105,16 @@ class AbstractProductReview(models.Model):
         """Returns the total down votes"""
         return int((self.total_votes - self.delta_votes) / 2)
 
+    @property
+    def reviewer_name(self):
+        if self.user:
+            name = self.user.get_full_name()
+            return name if name else _('anonymous')
+        else:
+            return self.name
+
+    # Helpers
+
     def update_totals(self):
         """
         Update total and delta votes
@@ -115,12 +125,6 @@ class AbstractProductReview(models.Model):
         self.delta_votes = result['score'] or 0
         self.save()
 
-    def get_reviewer_name(self):
-        if self.user:
-            name = self.user.get_full_name()
-            return name if name else _('anonymous')
-        else:
-            return self.name
 
     def user_may_vote(self, user):
         return (user.is_authenticated() and
