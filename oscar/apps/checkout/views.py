@@ -149,10 +149,11 @@ class ShippingAddressView(CheckoutSessionMixin, FormView):
         return UserAddress._default_manager.filter(user=self.request.user).order_by('-is_default_for_shipping')
 
     def post(self, request, *args, **kwargs):
-        # Check if a shipping address was selected directly (eg no form was filled in)
+        # Check if a shipping address was selected directly (eg no form was
+        # filled in)
         if self.request.user.is_authenticated() and 'address_id' in self.request.POST:
-            address = UserAddress._default_manager.get(pk=self.request.POST['address_id'],
-                                                       user=self.request.user)
+            address = UserAddress._default_manager.get(
+                pk=self.request.POST['address_id'], user=self.request.user)
             action = self.request.POST.get('action', None)
             if action == 'ship_to':
                 # User has selected a previous address to ship to
@@ -166,11 +167,15 @@ class ShippingAddressView(CheckoutSessionMixin, FormView):
             else:
                 return HttpResponseBadRequest()
         else:
-            return super(ShippingAddressView, self).post(request, *args, **kwargs)
+            return super(ShippingAddressView, self).post(
+                request, *args, **kwargs)
 
     def form_valid(self, form):
         # Store the address details in the session and redirect to next step
-        self.checkout_session.ship_to_new_address(form.clean())
+        address_fields = dict(
+            (k, v) for (k, v) in form.instance.__dict__.items()
+            if not k.startswith('_'))
+        self.checkout_session.ship_to_new_address(address_fields)
         return super(ShippingAddressView, self).form_valid(form)
 
     def get_success_url(self):

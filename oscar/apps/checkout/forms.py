@@ -8,19 +8,23 @@ from oscar.apps.customer.utils import normalise_email
 from oscar.core.compat import get_user_model
 
 User = get_user_model()
+Country = get_model('address', 'Country')
 
 
 class ShippingAddressForm(AbstractAddressForm):
 
     def __init__(self, *args, **kwargs):
         super(ShippingAddressForm, self).__init__(*args, **kwargs)
-        self.set_country_queryset()
-        self.fields['country'].empty_label = None
+        countries = Country._default_manager.filter(
+            is_shipping_country=True)
 
-    def set_country_queryset(self):
-        self.fields['country'].queryset = get_model(
-            'address', 'country')._default_manager.filter(
-                is_shipping_country=True)
+        # No need to show country dropdown if there is only one option
+        if len(countries) == 1:
+            del self.fields['country']
+            self.instance.country = countries[0]
+        else:
+            self.fields['country'].queryset = countries
+            self.fields['country'].empty_label = None
 
     class Meta:
         model = get_model('order', 'shippingaddress')
