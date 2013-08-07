@@ -1,8 +1,10 @@
 from django.test import TestCase
+from nose.plugins.attrib import attr
 
 from oscar.apps.catalogue.reviews import forms
 
 
+@attr('reviews')
 class TestReviewForm(TestCase):
 
     def setUp(self):
@@ -24,13 +26,3 @@ class TestReviewForm(TestCase):
 
     def test_validates_correctly(self):
         self.assertTrue(self.form().is_valid())
-
-    def test_strips_whitespace_from_title(self):
-        form = self.form(title="   test   ")
-        self.assertTrue(form.is_valid())
-        self.assertEquals("test", form.cleaned_data['title'])
-
-    def test_strips_whitespace_from_body(self):
-        form = self.form(body="   test   ")
-        self.assertTrue(form.is_valid())
-        self.assertEquals("test", form.cleaned_data['body'])

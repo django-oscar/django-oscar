@@ -17,7 +17,7 @@ Product = get_model('catalogue', 'product')
 
 class CreateProductReview(CreateView):
     template_name = "catalogue/reviews/review_form.html"
-    model = get_model('reviews', 'productreview')
+    model = get_model('reviews', 'ProductReview')
     product_model = get_model('catalogue', 'product')
     form_class = ProductReviewForm
     view_signal = review_added
@@ -32,13 +32,6 @@ class CreateProductReview(CreateView):
         return super(CreateProductReview, self).dispatch(
             request, *args, **kwargs)
 
-    def post(self, request, *args, **kwargs):
-        response = super(CreateProductReview, self).post(
-            request, *args, **kwargs)
-        if self.object:
-            self.send_signal(request, response, self.object)
-        return response
-
     def get_context_data(self, **kwargs):
         context = super(CreateProductReview, self).get_context_data(**kwargs)
         context['product'] = self.product
@@ -51,6 +44,11 @@ class CreateProductReview(CreateView):
             review.user = kwargs['user'] = self.request.user
         kwargs['instance'] = review
         return kwargs
+
+    def form_valid(self, form):
+        response = super(CreateProductReview, self).form_valid(form)
+        self.send_signal(self.request, response, self.object)
+        return response
 
     def get_success_url(self):
         messages.success(
@@ -79,22 +77,14 @@ class AddVoteView(View):
     def post(self, request, *args, **kwargs):
         product = get_object_or_404(Product, pk=self.kwargs['product_pk'])
         review = get_object_or_404(ProductReview, pk=self.kwargs['pk'])
-        if not review.user_may_vote(request.user):
-            if review.user == request.user:
-                error = _("You cannot vote on your own reviews")
-            elif review.votes.filter(user=request.user).exists():
-                error =  _("You have already voted on this review")
-            else:
-                error = _("We couldn't process your vote")
-            messages.error(request, error)
+
+        form = VoteForm(review, request.user, data=request.POST)
+        if form.is_valid():
+            review.vote_up(request.user)
+            messages.success(request, _("Thanks for voting!"))
         else:
-            vote = Vote(user=request.user, review=review)
-            form = VoteForm(request.POST, instance=vote)
-            if form.is_valid():
-                form.save()
-                messages.success(request, _("Thanks for voting!"))
-            else:
-                messages.error(request, _("We couldn't process your vote"))
+            for error in form.errors:
+                messages.error(request, error)
         return HttpResponseRedirect(
             request.META.get('HTTP_REFERER', product.get_absolute_url()))
 

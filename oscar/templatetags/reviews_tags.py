@@ -29,7 +29,9 @@ def as_stars(value):
 
 @register.filter
 def may_vote(review, user):
-    return review.user_may_vote(user)
+    can_vote, __ = review.can_user_vote(user)
+    return can_vote
+
 
 @register.filter
 def has_review_by(product, user):

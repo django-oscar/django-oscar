@@ -1,6 +1,5 @@
 from django import forms
 from django.db.models import get_model
-from django.utils.translation import ugettext_lazy as _
 
 
 Vote = get_model('reviews', 'vote')
@@ -17,25 +16,18 @@ class ProductReviewForm(forms.ModelForm):
             del self.fields['name']
             del self.fields['email']
 
-    def clean_title(self):
-        return self.cleaned_data['title'].strip()
-
-    def clean_body(self):
-        return self.cleaned_data['body'].strip()
-
     class Meta:
         model = ProductReview
         fields = ('title', 'score', 'body', 'name', 'email')
 
 
 class VoteForm(forms.ModelForm):
-    def clean(self):
-        vote = self.instance
-        if vote.review.user == vote.user:
-            raise forms.ValidationError(
-                _("You cannot vote on your own reviews!"))
-        return self.cleaned_data
+
+    def __init__(self, review, user, *args, **kwargs):
+        super(VoteForm, self).__init__(*args, **kwargs)
+        self.instance.review = review
+        self.instance.user = user
 
     class Meta:
         model = Vote
-        fields = ('delta', )
+        fields = ()

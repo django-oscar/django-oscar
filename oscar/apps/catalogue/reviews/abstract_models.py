@@ -79,9 +79,17 @@ class AbstractProductReview(models.Model):
         return self.title
 
     def clean(self):
+        self.title = self.title.strip()
+        self.body = self.body.strip()
         if not self.user and not (self.name and self.email):
             raise ValidationError(
-                _("Anonymous review must have a name and an email"))
+                _("Anonymous reviews must include a name and an email"))
+
+    def vote_up(self, user):
+        self.votes.create(user=user, delta=AbstractVote.UP)
+
+    def vote_down(self, user):
+        self.votes.create(user=user, delta=AbstractVote.DOWN)
 
     def save(self, *args, **kwargs):
         super(AbstractProductReview, self).save(*args, **kwargs)
@@ -90,6 +98,24 @@ class AbstractProductReview(models.Model):
     def delete(self, *args, **kwargs):
         super(AbstractProductReview, self).delete(*args, **kwargs)
         self.product.update_rating()
+
+    # Properties
+
+    @property
+    def is_anonymous(self):
+        return self.user is None
+
+    @property
+    def pending_moderation(self):
+        return self.status == self.FOR_MODERATION
+
+    @property
+    def is_approved(self):
+        return self.status == self.APPROVED
+
+    @property
+    def is_rejected(self):
+        return self.status == self.REJECTED
 
     @property
     def has_votes(self):
@@ -125,16 +151,25 @@ class AbstractProductReview(models.Model):
         self.delta_votes = result['score'] or 0
         self.save()
 
-
-    def user_may_vote(self, user):
-        return (user.is_authenticated() and
-                self.user != user and
-                not self.votes.filter(user=user).exists())
+    def can_user_vote(self, user):
+        """
+        Test whether the passed user is allowed to vote on this
+        review
+        """
+        if not user.is_authenticated():
+            return False, u"Only signed in users can vote"
+        vote = self.votes.model(review=self, user=user, delta=1)
+        try:
+            vote.full_clean()
+        except ValidationError, e:
+            return False, u"%s" % e
+        return True, ""
 
 
 class AbstractVote(models.Model):
     """
     Records user ratings as yes/no vote.
+
     * Only signed-in users can vote.
     * Each user can vote only once.
     """
@@ -157,6 +192,18 @@ class AbstractVote(models.Model):
 
     def __unicode__(self):
         return u"%s vote for %s" % (self.delta, self.review)
+
+    def clean(self):
+        if not self.review.is_anonymous and self.review.user == self.user:
+            raise ValidationError(_(
+                "You cannot vote on your own reviews"))
+        if not self.user.id:
+            raise ValidationError(_(
+                "Only signed-in users can vote on reviews"))
+        previous_votes = self.review.votes.filter(user=self.user)
+        if len(previous_votes) > 0:
+            raise ValidationError(_(
+                "You can only vote once on a review"))
 
     def save(self, *args, **kwargs):
         super(AbstractVote, self).save(*args, **kwargs)
