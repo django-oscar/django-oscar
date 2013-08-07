@@ -1,7 +1,6 @@
 from django import forms
 from django.db.models import get_model
 
-
 Vote = get_model('reviews', 'vote')
 ProductReview = get_model('reviews', 'productreview')
 
@@ -22,11 +21,6 @@ class ProductReviewForm(forms.ModelForm):
 
 
 class VoteForm(forms.ModelForm):
-
-    def __init__(self, review, user, *args, **kwargs):
-        super(VoteForm, self).__init__(*args, **kwargs)
-        self.instance.review = review
-        self.instance.user = user
 
     class Meta:
         model = Vote

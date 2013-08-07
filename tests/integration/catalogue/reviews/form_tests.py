@@ -43,15 +43,17 @@ class TestVoteForm(TestCase):
             user=self.reviewer)
 
     def test_allows_real_users_to_vote(self):
-        form = forms.VoteForm(self.review, self.voter, {})
+        instance = models.Vote(review=self.review, user=self.voter)
+        form = forms.VoteForm(data={}, instance=instance)
         self.assertTrue(form.is_valid())
 
     def test_prevents_users_from_voting_more_than_once(self):
         self.review.vote_up(self.voter)
-        form = forms.VoteForm(self.review, self.voter, {})
+        instance = models.Vote(review=self.review, user=self.voter)
+        form = forms.VoteForm({}, instance=instance)
         self.assertFalse(form.is_valid())
 
     def test_prevents_users_voting_on_their_own_reviews(self):
-        form = forms.VoteForm(self.review, self.reviewer, {})
+        instance = models.Vote(review=self.review, user=self.reviewer)
+        form = forms.VoteForm({}, instance=instance)
         self.assertFalse(form.is_valid())
-
