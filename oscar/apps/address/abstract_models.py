@@ -266,6 +266,14 @@ class AbstractAddress(models.Model):
         """
         Validate postcode given the country
         """
+        if not self.postcode and self.country_id:
+            country_code = self.country.iso_3166_1_a2
+            regex = self.POSTCODES_REGEX.get(country_code, None)
+            if regex:
+                msg = ("Addresses in %(country)s require a postcode") % {
+                    'country': self.country}
+                raise exceptions.ValidationError(msg)
+
         if self.postcode and self.country_id:
             # Ensure postcodes are always uppercase
             postcode = self.postcode.upper().replace(' ', '')
@@ -275,8 +283,9 @@ class AbstractAddress(models.Model):
             # Validate postcode against regext for the country if available
             if regex and not re.match(regex, postcode):
                 msg = _("The postcode '%(postcode)s' is not valid "
-                        "for the country selected") % {
-                            'postcode': self.postcode}
+                        "for the %(country)s") % {
+                            'postcode': self.postcode,
+                            'country': self.country}
                 raise exceptions.ValidationError(msg)
 
     def _update_search_text(self):
