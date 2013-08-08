@@ -73,7 +73,8 @@ class AbstractPartner(models.Model):
             self.code = slugify(self.name)
         super(AbstractPartner, self).save(*args, **kwargs)
 
-    def get_primary_address(self):
+    @property
+    def primary_address(self):
         """
         Returns a partners primary address. Usually that will be the
         headquarters or similar.
