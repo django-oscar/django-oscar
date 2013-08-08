@@ -2,6 +2,11 @@
 Changelog
 =========
 
+0.4.11 - 2013-08-08
+-------------------
+
+Add extra blocks to order dashboard template.
+
 0.4.10 - 2013-07-03
 -------------------
 
