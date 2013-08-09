@@ -62,7 +62,7 @@ def send_product_alerts(product):
         status=ProductAlert.ACTIVE,
     )
 
-    # Determine 'hurry mode'
+    # Determine 'hurry mode'
     num_alerts = alerts.count()
     if num_stockrecords == 1:
         num_in_stock = stockrecords[0].num_in_stock
