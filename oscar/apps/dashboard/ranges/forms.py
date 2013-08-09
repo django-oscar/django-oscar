@@ -45,7 +45,7 @@ class RangeProductForm(forms.Form):
         # Check that the search matches some products
         ids = set(re.compile(r'[\w-]+').findall(raw))
         products = self.range.included_products.all()
-        existing_skus = set(products.values_list('stockrecord__partner_sku', flat=True))
+        existing_skus = set(products.values_list('stockrecords__partner_sku', flat=True))
         existing_upcs = set(products.values_list('upc', flat=True))
         existing_ids = existing_skus.union(existing_upcs)
         new_ids = ids - existing_ids
@@ -56,12 +56,14 @@ class RangeProductForm(forms.Form):
                     ', '.join(ids)))
 
         self.products = Product._default_manager.filter(
-            Q(stockrecord__partner_sku__in=new_ids) |
+            Q(stockrecords__partner_sku__in=new_ids) |
             Q(upc__in=new_ids))
         if len(self.products) == 0:
-            raise forms.ValidationError(_("No products exist with a SKU or UPC matching %s") % ", ".join(ids))
+            raise forms.ValidationError(
+                _("No products exist with a SKU or UPC matching %s") % ", ".join(ids))
 
-        found_skus = set(self.products.values_list('stockrecord__partner_sku', flat=True))
+        found_skus = set(self.products.values_list(
+            'stockrecords__partner_sku', flat=True))
         found_upcs = set(self.products.values_list('upc', flat=True))
         found_ids = found_skus.union(found_upcs)
         self.missing_skus = new_ids - found_ids
