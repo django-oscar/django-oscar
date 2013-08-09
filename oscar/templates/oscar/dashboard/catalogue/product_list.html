@@ -7,137 +7,137 @@
 {% block body_class %}catalogue{% endblock %}
 
 {% block title %}
-{% trans "Product management" %} | {{ block.super }}
+    {% trans "Product management" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">
-    <li>
-        <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
-        <span class="divider">/</span>
-    </li>
-    <li class="active">{% trans "Product management" %}</li>
-</ul>
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
+            <span class="divider">/</span>
+        </li>
+        <li class="active">{% trans "Product management" %}</li>
+    </ul>
 {% endblock %}
 
 {% block header %}
-<div class="page-header action">
-    <h1>{% trans "Product management" %}</h1>
-</div>
+    <div class="page-header action">
+        <h1>{% trans "Product management" %}</h1>
+    </div>
 {% endblock header %}
 
 {% block dashboard_content %}
-<div class="table-header">
-    <h3><i class="icon-search icon-large"></i>{% trans "Search Products" %}</h3>
-</div>
-<div class="well">
-    <form action="." method="get" class="form-inline">
-        {% include "partials/form_fields_inline.html" with form=form %}
-        <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
-    </form>
-</div>
+    <div class="table-header">
+        <h3><i class="icon-search icon-large"></i>{% trans "Search Products" %}</h3>
+    </div>
+    <div class="well">
+        <form action="." method="get" class="form-inline">
+            {% include "partials/form_fields_inline.html" with form=form %}
+            <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
+        </form>
+    </div>
 
-<div class="table-header">
-    <h3><i class="icon-sitemap icon-large"></i> {% trans "Create new product" %}</h3>
-</div>
-<div class="well">
-    <form action="{% url 'dashboard:catalogue-product-create' %}" method="get" class="form-inline">
-        <span class="control-group">
-            <label for="id_promotion_type">{% trans "Create a new product of type" %}</label>
-            <select id="id_promotion_type" name="product_class">
-                <option> -- {% trans "Choose type" %} --</option>
-                {% for product_class in product_classes %}
-                <option value="{{ product_class.id }}">{{ product_class.name }}</option>
+    <div class="table-header">
+        <h3><i class="icon-sitemap icon-large"></i> {% trans "Create new product" %}</h3>
+    </div>
+    <div class="well">
+        <form action="{% url 'dashboard:catalogue-product-create' %}" method="get" class="form-inline">
+            <span class="control-group">
+                <label for="id_promotion_type">{% trans "Create a new product of type" %}</label>
+                <select id="id_promotion_type" name="product_class">
+                    <option> -- {% trans "Choose type" %} --</option>
+                    {% for product_class in product_classes %}
+                        <option value="{{ product_class.id }}">{{ product_class.name }}</option>
+                    {% endfor %}
+                </select>
+            </span>
+            <button class="btn btn-primary" type="submit"><i class="icon-plus"></i> {% trans "New Product" %}</button>
+        </form>
+    </div>
+
+    {% if products %}
+        <div class="table-header">
+            <h2><i class="icon-sitemap icon-large"></i>{{ queryset_description }}</h2>
+        </div>
+        <form action="." method="post">
+            {% csrf_token %}
+            <table class="table table-striped table-bordered">
+                <tr>
+                    <th>{% trans "Title" %}</th>
+                    <th>{% trans "UPC" %}</th>
+                    <th>{% trans "Image" %}</th>
+                    <th>{% trans "Product class" %}</th>
+                    <th>{% trans "Status" %}</th>
+                    <th>{% trans "Parent" %}</th>
+                    <th>{% trans "Children" %}</th>
+                    <th>{% trans "Stock records" %}</th>
+                    <th></th>
+                </tr>
+                {% for product in products %}
+                    <tr>
+                        <td><a href="{% url 'dashboard:catalogue-product' product.id %}">{{ product.get_title }}</a></td>
+                        <td>{{ product.upc|default:"-" }}</td>
+                        <td>
+                            {% if product.primary_image.original.url %}
+                                {% with image=product.primary_image %}
+                                    {% thumbnail image.original "70x70" upscale=False as thumb %}
+                                    <a href="{{ image.original.url }}" rel="lightbox_{{ product.upc|default:"-" }}" class="sub-image">
+                                        <img src="{{ thumb.url }}" alt="{{ product.get_title }}" data-description="{% if image.caption %}{{ image.caption }}{% endif %}">
+                                    </a>
+                                    {% endthumbnail %}
+                                {% endwith %}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>{{ product.get_product_class.name }}</td>
+                        <td>{{ product.status|default:"-" }}</td>
+                        <td>
+                            {% if product.parent.id %}
+                                <a href="{% url 'dashboard:catalogue-product' product.parent.id %}">{{ product.parent.title }}</a>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>{{ product.variants.count }}</td>
+                        <td>{{ product.stockrecords.count }}</td>
+                        <td>
+                            <div class="btn-toolbar">
+                                <div class="btn-group">
+                                    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                                        {% trans "Actions" %}
+                                        <span class="caret"></span>
+                                    </a>
+                                    <ul class="dropdown-menu pull-right">
+                                        <li>
+                                            <a href="{% url 'dashboard:catalogue-product' product.id %}{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}">
+                                                {% trans "Edit" %}
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ product.get_absolute_url }}">
+                                                {% trans "View on site" %}
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'dashboard:catalogue-product-delete' product.id %}">
+                                                {% trans "Delete" %}
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
                 {% endfor %}
-            </select>
-        </span>
-        <button class="btn btn-primary" type="submit"><i class="icon-plus"></i> {% trans "New Product" %}</button>
-    </form>
-</div>
+            </table>
+            {% include "partials/pagination.html" %}
+        </form>
 
-{% if products %}
-<div class="table-header">
-    <h2><i class="icon-sitemap icon-large"></i>{{ queryset_description }}</h2>
-</div>
-<form action="." method="post">
-    {% csrf_token %}
-    <table class="table table-striped table-bordered">
-        <tr>
-            <th>{% trans "UPC" %}</th>
-            <th>{% trans "Image" %}</th>
-            <th>{% trans "Title" %}</th>
-            <th>{% trans "Product class" %}</th>
-            <th>{% trans "Status" %}</th>
-            <th>{% trans "Parent" %}</th>
-            <th>{% trans "Children" %}</th>
-            <th>{% trans "Stock records" %}</th>
-            <th></th>
-        </tr>
-        {% for product in products %}
-        <tr>
-                <td>{{ product.upc|default:"-" }}</td>
-                <td>
-                {% if product.primary_image.original.url %}
-                {% with image=product.primary_image %}
-                    {% thumbnail image.original "70x70" upscale=False as thumb %}
-                        <a href="{{ image.original.url }}" rel="lightbox_{{ product.upc|default:"-" }}" class="sub-image">
-                            <img src="{{ thumb.url }}" alt="{{ product.get_title }}" data-description="{% if image.caption %}{{ image.caption }}{% endif %}">
-                        </a>
-                    {% endthumbnail %}
-                {% endwith %}
-                {% else %}
-                -
-                {% endif %}
-                </td>
-                <td>{{ product.get_title }}</td>
-                <td>{{ product.get_product_class.name }}</td>
-                <td>{{ product.status|default:"-" }}</td>
-                <td>
-                    {% if product.parent.id %}
-                    <a href="{% url 'dashboard:catalogue-product' product.parent.id %}">{{ product.parent.title }}</a>
-                    {% else %}
-                    -
-                    {% endif %}
-                </td>
-                <td>{{ product.variants.count }}</td>
-                <td>{{ product.stockrecords.count }}</td>
-                <td>
-                    <div class="btn-toolbar">
-                        <div class="btn-group">
-                            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                                {% trans "Actions" %}
-                                <span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu pull-right">
-                                <li>
-                                    <a href="{% url 'dashboard:catalogue-product' product.id %}{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}">
-                                        {% trans "Edit" %}
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ product.get_absolute_url }}">
-                                        {% trans "View on site" %}
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{% url 'dashboard:catalogue-product-delete' product.id %}">
-                                        {% trans "Delete" %}
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </td>
-        </tr>
-        {% endfor %}
-    </table>
-    {% include "partials/pagination.html" %}
-</form>
+    {% else %}
 
-{% else %}
+        <p>{% trans "No products found." %}</p>
 
-<p>{% trans "No products found." %}</p>
-
-{% endif %}
+    {% endif %}
 
 {% endblock dashboard_content %}
