@@ -18,18 +18,13 @@
     {% endif %}
 {% endif %}
 
-{% if session.availability.is_available_to_buy %}
-    {% if product.is_group %}
-        <p class="instock availability ">
-            <i class="icon-ok"></i> {% trans "Available" %}
-        </p>
-    {% else %}
-        <p class="{{ session.availability.code }} availability ">
-            <i class="icon-ok"></i> {{ session.availability.message|truncatewords:2 }}
-        </p>
-    {% endif %}
+{% if product.is_group %}
+    <p class="instock availability ">
+        <i class="icon-ok"></i> {% trans "Available" %}
+    </p>
 {% else %}
-    <p class="availability outofstock">
-        <i class="icon-remove"></i> {% trans "Not available" %}
+    <p class="{{ session.availability.code }} availability">
+    <i class="icon-{% if session.availability.is_available_to_buy %}ok{% else %}remove{% endif %}"></i> 
+    {{ session.availability.message }}
     </p>
 {% endif %}

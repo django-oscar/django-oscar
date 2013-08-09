@@ -15,8 +15,8 @@ class Base(object):
 
 
 class NoStockRecord(Base):
-    availability_code = 'outofstock'
-    availability = _("Unavailable")
+    code = 'outofstock'
+    message = _("Unavailable")
 
 
 class WrappedStockrecord(Base):

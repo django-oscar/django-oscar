@@ -26,6 +26,9 @@ class Base(object):
 
 
 class FirstStockrecord(Base):
+    """
+    Always use the first (normally only) stock record for a product
+    """
 
     def fetch(self, product):
         """
