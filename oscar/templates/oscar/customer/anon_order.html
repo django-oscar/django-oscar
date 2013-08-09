@@ -1,5 +1,4 @@
 {% extends "layout.html" %}
-
 {% load url from future %}
 {% load currency_filters %}
 {% load i18n %}
@@ -16,31 +15,33 @@
         <p>{{ order.status }}</p>
     {% endif %}
 
-    <div class="sub-header">
-        <h3>{% trans 'Shipping address' %}</h3>
-    </div>
-    <table class="table table-striped table-bordered">
-        <tr>
-            <th>{% trans 'Address' %}</th>
-            <td>
-                {% for field in order.shipping_address.active_address_fields %}
-                    {{ field }}<br/>
-                {% endfor %}
-            </td>
-        </tr>
-        {% if order.shipping_address.phone_number %}
+    {% with address=order.shipping_address %}
+        <div class="sub-header">
+            <h3>{% trans 'Shipping address' %}</h3>
+        </div>
+        <table class="table table-striped table-bordered">
             <tr>
-                <th>{% trans 'Contact number' %}</th>
-                <td>{{ shipping_address.phone_number }}</td>
+                <th>{% trans 'Address' %}</th>
+                <td>
+                    {% for field in address.active_address_fields %}
+                        {{ field }}<br/>
+                    {% endfor %}
+                </td>
             </tr>
-        {% endif %}
-        {% if order.shipping_address.notes %}
-            <tr>
-                <th>{% trans 'Shipping notes' %}</th>
-                <td>{{ shipping_address.notes }}</td>
-            </tr>
-        {% endif %} 
-    </table>
+            {% if address.phone_number %}
+                <tr>
+                    <th>{% trans 'Contact number' %}</th>
+                    <td>{{ address.phone_number }}</td>
+                </tr>
+            {% endif %}
+            {% if address.notes %}
+                <tr>
+                    <th>{% trans 'Notes' %}</th>
+                    <td>{{ address.notes }}</td>
+                </tr>
+            {% endif %} 
+        </table>
+    {% endwith %}
 
     <div class="sub-header">
         <h3>{% trans 'Shipping method' %}</h3>
@@ -54,7 +55,7 @@
     <table class="table table-striped table-bordered">
         <tr>
             <th>{% trans 'Product' %}</th>
-            <th>{% trans 'Availability' %}</th>
+            <th>{% trans 'Estimatd dispatch date' %}</th>
             <th>{% trans 'Quantity' %}</th>
             <th>{% trans 'Line price excl. tax' %}</th>
             <th>{% trans 'Line price incl. tax' %}</th>
@@ -64,13 +65,13 @@
         {% for line in order.lines.all %}
             <tr>
                 <td><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></td>
-                <td>{{ line.product.stockrecord.availability }}</td>
+                <td>{{ line.est_dispatch_date|default:"-" }}</td>
                 <td>{{ line.quantity }}</td>
                 <td>{{ line.line_price_before_discounts_excl_tax|currency }}</td>
                 <td>{{ line.line_price_before_discounts_incl_tax|currency }}</td>
                 <td>{{ line.shipping_status|default:"-" }}</td>
                 <td>
-                    <a href="{% url 'catalogue:reviews-add' line.product.slug line.product.id %}">{% trans 'Write a review' %}</a>
+                    <a href="{% url 'catalogue:reviews-add' line.product.slug line.product.id %}" class="btn btn-primary">{% trans 'Write a review' %}</a>
                 </td>
             </tr>
         {% endfor %}

@@ -78,16 +78,6 @@
                                 {% endif %}
                             </div>
                             <div class="span9">
-                                <p>
-                                    <strong>{% trans "Fulfilment partner" %}</strong> <br />
-                                    <span class="product-count">
-                                        {% if product.has_stockrecord %}
-                                            {{ product.stockrecord.partner.name }}
-                                        {% else %}
-                                            {% trans "Out of stock" %}
-                                        {% endif %}
-                                    </span>
-                                </p>
                                 <p><strong>{% trans "Description" %}</strong><br /> {{ product.description|safe }}</p>
 
                                 {% with stats=product.stats %}

@@ -3,6 +3,7 @@
 {% load currency_filters %}
 {% load thumbnail %}
 {% load i18n %}
+{% load stockrecord_tags %}
 
 {% block title %}
     {% trans "Checkout" %} | {{ block.super }}
@@ -103,6 +104,7 @@
             </div>
         </div>
         {% for line in basket.all_lines %}
+            {% session_strategy request line.product as session %}
             <div class="basket-items">
                 <div class="row-fluid">
                     <div class="span9">
@@ -114,7 +116,7 @@
                             {% endwith %}
                         </div>
                         <h4><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h4>
-                        <span class="availability {{ line.product.stockrecord.availability_code }}">{{ line.product.stockrecord.availability }}</span>
+                        <span class="availability {{ session.availability.code }}">{{ session.availability.message }}</span>
                     </div>
                     <div class="span1 align-center">
                         {{ line.quantity }}
