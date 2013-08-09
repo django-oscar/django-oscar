@@ -404,6 +404,10 @@ class AbstractProduct(models.Model):
         return self._min_variant_price('price_excl_tax')
 
     @property
+    def has_stockrecords(self):
+        return self.num_stockrecords > 0
+
+    @property
     def stockrecord(self):
         # This is the old way of fetching a stockrecord, when they were
         # one-to-one with a product.
@@ -416,6 +420,10 @@ class AbstractProduct(models.Model):
             return None
 
     @property
+    def num_stockrecords(self):
+        return self.stockrecords.all().count()
+
+    @property
     def has_stockrecord(self):
         """
         Test if this product has a stock record
@@ -423,7 +431,7 @@ class AbstractProduct(models.Model):
         warnings.warn(("Product.has_stockrecord is deprecated in favour of "
                        "using the stockrecord template tag"),
                       DeprecationWarning)
-        return self.stockrecords.all() > 0
+        return self.num_stockrecords > 0
 
     def is_purchase_permitted(self, user, quantity):
         """
