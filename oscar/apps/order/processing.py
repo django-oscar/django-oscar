@@ -179,7 +179,9 @@ class EventHandler(object):
         requested allocations.
         """
         for line, qty in zip(lines, line_quantities):
-            record = line.product.stockrecord
+            record = line.stockrecord
+            if not record:
+                return False
             if not record.is_allocation_consumption_possible(qty):
                 return False
         return True
@@ -189,15 +191,16 @@ class EventHandler(object):
         Consume the stock allocations for the passed lines
         """
         for line, qty in zip(lines, line_quantities):
-            if line.product:
-                line.product.stockrecord.consume_allocation(qty)
+            if line.stockrecord:
+                line.stockrecord.consume_allocation(qty)
 
     def cancel_stock_allocations(self, order, lines, line_quantities):
         """
         Cancel the stock allocations for the passed lines
         """
         for line, qty in zip(lines, line_quantities):
-            line.product.stockrecord.cancel_allocation(qty)
+            if line.stockrecord:
+                line.stockrecord.cancel_allocation(qty)
 
     # Model instance creation
     # -----------------------

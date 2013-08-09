@@ -141,6 +141,7 @@ class OrderCreator(object):
             'partner': partner,
             'partner_name': partner.name,
             'partner_sku': stockrecord.partner_sku,
+            'stockrecord': stockrecord,
             # Product details
             'product': product,
             'title': product.get_title(),

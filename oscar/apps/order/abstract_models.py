@@ -334,6 +334,11 @@ class AbstractLine(models.Model):
     partner = models.ForeignKey(
         'partner.Partner', related_name='order_lines', blank=True, null=True,
         on_delete=models.SET_NULL, verbose_name=_("Partner"))
+    # We keep a link to the stockrecord used for this line which allows us to
+    # update stocklevels when it ships
+    stockrecord = models.ForeignKey(
+        'partner.StockRecord', on_delete=models.SET_NULL, blank=True,
+        null=True, verbose_name=_("Stock record"))
     partner_name = models.CharField(_("Partner name"), max_length=128)
     partner_sku = models.CharField(_("Partner SKU"), max_length=128)
 
@@ -391,7 +396,7 @@ class AbstractLine(models.Model):
     # Partners often want to assign some status to each line to help with their
     # own business processes.
     status = models.CharField(_("Status"), max_length=255,
-                              null=True, blank=True)
+                             null=True, blank=True)
 
     # Estimated dispatch date - should be set at order time
     est_dispatch_date = models.DateField(
