@@ -1,4 +1,8 @@
-from . import strategy
+from oscar.core.loading import get_class
+
+Selector = get_class('partner.strategy', 'Selector')
+
+selector = Selector()
 
 
 class StrategyMiddleware(object):
@@ -8,5 +12,5 @@ class StrategyMiddleware(object):
     """
 
     def process_request(self, request):
-        # Default to picking the first available stockrecord
-        request.strategy = strategy.FirstStockrecord(request)
+        request.strategy = selector.strategy(
+            request=request, user=request.user)

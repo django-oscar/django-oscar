@@ -1,6 +1,17 @@
 from . import availability, prices
 
 
+class Selector(object):
+    """
+    Responsible for returning the appropriate strategy class for a given
+    user/session.
+    """
+    def strategy(self, request=None, user=None, **kwargs):
+        # Default to the backwards-compatible strategry of picking the fist
+        # stockrecord.
+        return FirstStockrecord(request)
+
+
 class Base(object):
     """
     Responsible for picking the appropriate pricing and availability wrappers
