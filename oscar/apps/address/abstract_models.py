@@ -7,7 +7,6 @@ from django.utils.translation import ugettext_lazy as _
 from django.core import exceptions
 
 from oscar.core.compat import AUTH_USER_MODEL
-from oscar.models import fields
 
 
 class AbstractAddress(models.Model):
@@ -226,7 +225,7 @@ class AbstractAddress(models.Model):
     line4 = models.CharField(_("City"), max_length=255, blank=True, null=True)
     state = models.CharField(
         _("State/County"), max_length=255, blank=True, null=True)
-    postcode = fields.UppercaseCharField(
+    postcode = models.CharField(
         _("Post/Zip-code"), max_length=64, blank=True, null=True)
     country = models.ForeignKey('address.Country', verbose_name=_("Country"))
 
