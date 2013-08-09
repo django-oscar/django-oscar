@@ -238,6 +238,11 @@ LOGGING = {
             'propagate': True,
             'level': 'INFO',
         },
+        'oscar.catalogue.import': {
+            'handlers': ['console'],
+            'propagate': False,
+            'level': 'INFO',
+        },
         'gateway': {
             'handlers': ['gateway_file'],
             'propagate': True,
