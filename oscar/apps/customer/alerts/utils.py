@@ -7,9 +7,11 @@ from django.contrib.sites.models import Site
 from django.db.models import get_model, Max
 
 from oscar.apps.customer.notifications import services
+from oscar.core.loading import get_class
 
 ProductAlert = get_model('customer', 'ProductAlert')
 Product = get_model('catalogue', 'Product')
+Selector = get_class('partner.strategy', 'Selector')
 
 logger = logging.getLogger(__file__)
 
@@ -23,8 +25,7 @@ def send_alerts():
     ).distinct()
     logger.info("Found %d products with active alerts", products.count())
     for product in products:
-        if product.is_available_to_buy:
-            send_product_alerts(product)
+        send_product_alerts(product)
 
 
 def send_alert_confirmation(alert):
@@ -78,7 +79,14 @@ def send_product_alerts(product):
 
     emails = []
     num_notifications = 0
+    selector = Selector()
     for alert in alerts:
+        # Check if the product is available to this user
+        strategy = selector.strategy(user=alert.user)
+        data = strategy.fetch(product)
+        if not data['availability'].is_available_to_buy:
+            continue
+
         ctx = Context({
             'alert': alert,
             'site': Site.objects.get_current(),
