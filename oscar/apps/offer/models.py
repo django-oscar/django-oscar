@@ -465,12 +465,14 @@ class Condition(models.Model):
     def get_upsell_message(self, basket):
         return None
 
-    def can_apply_condition(self, product):
+    def can_apply_condition(self, line):
         """
-        Determines whether the condition can be applied to a given product
+        Determines whether the condition can be applied to a given basket line
         """
-        return (self.range.contains_product(product)
-                and product.is_discountable and product.has_stockrecord)
+        if not line.stockrecord:
+            return False
+        product = line.product
+        return self.range.contains_product(product) and product.is_discountable
 
     def get_applicable_lines(self, basket, most_expensive_first=True):
         """
@@ -478,8 +480,7 @@ class Condition(models.Model):
         """
         line_tuples = []
         for line in basket.all_lines():
-            product = line.product
-            if not self.can_apply_condition(product):
+            if not self.can_apply_condition(line):
                 continue
             price = line.unit_price_incl_tax
             if not price:
@@ -671,11 +672,11 @@ class Benefit(models.Model):
         """
         return self.max_affected_items if self.max_affected_items else 10000
 
-    def can_apply_benefit(self, product):
+    def can_apply_benefit(self, line):
         """
-        Determines whether the benefit can be applied to a given product
+        Determines whether the benefit can be applied to a given basket line
         """
-        return product.has_stockrecord and product.is_discountable
+        return line.stockrecord and line.product.is_discountable
 
     def get_applicable_lines(self, basket, range=None):
         """
@@ -691,7 +692,7 @@ class Benefit(models.Model):
         for line in basket.all_lines():
             product = line.product
             if (not range.contains(product) or
-                not self.can_apply_benefit(product)):
+                not self.can_apply_benefit(line)):
                 continue
             price = line.unit_price_incl_tax
             if not price:
@@ -847,7 +848,7 @@ class CountCondition(Condition):
         """
         num_matches = 0
         for line in basket.all_lines():
-            if (self.can_apply_condition(line.product)
+            if (self.can_apply_condition(line)
                 and line.quantity_without_discount > 0):
                 num_matches += line.quantity_without_discount
             if num_matches >= self.value:
@@ -859,7 +860,7 @@ class CountCondition(Condition):
             return getattr(self, '_num_matches')
         num_matches = 0
         for line in basket.all_lines():
-            if (self.can_apply_condition(line.product)
+            if (self.can_apply_condition(line)
                 and line.quantity_without_discount > 0):
                 num_matches += line.quantity_without_discount
         self._num_matches = num_matches
@@ -936,7 +937,7 @@ class CoverageCondition(Condition):
             if not line.is_available_for_discount:
                 continue
             product = line.product
-            if (self.can_apply_condition(product) and product.id not in covered_ids):
+            if (self.can_apply_condition(line) and product.id not in covered_ids):
                 covered_ids.append(product.id)
             if len(covered_ids) >= self.value:
                 return True
@@ -948,7 +949,7 @@ class CoverageCondition(Condition):
             if not line.is_available_for_discount:
                 continue
             product = line.product
-            if (self.can_apply_condition(product) and product.id not in covered_ids):
+            if (self.can_apply_condition(line) and product.id not in covered_ids):
                 covered_ids.append(product.id)
         return len(covered_ids)
 
@@ -978,7 +979,7 @@ class CoverageCondition(Condition):
 
         for line in basket.all_lines():
             product = line.product
-            if not self.can_apply_condition(product):
+            if not self.can_apply_condition(line):
                 continue
             if product in consumed_products:
                 continue
@@ -995,7 +996,7 @@ class CoverageCondition(Condition):
         covered_ids = []
         value = D('0.00')
         for line in basket.all_lines():
-            if (self.can_apply_condition(line.product) and line.product.id not in covered_ids):
+            if (self.can_apply_condition(line) and line.product.id not in covered_ids):
                 covered_ids.append(line.product.id)
                 value += line.unit_price_incl_tax
             if len(covered_ids) >= self.value:
@@ -1033,9 +1034,7 @@ class ValueCondition(Condition):
         """
         value_of_matches = D('0.00')
         for line in basket.all_lines():
-            product = line.product
-            if (self.can_apply_condition(product) and product.has_stockrecord
-                and line.quantity_without_discount > 0):
+            if (self.can_apply_condition(line) and line.quantity_without_discount > 0):
                 price = line.unit_price_incl_tax
                 value_of_matches += price * int(line.quantity_without_discount)
             if value_of_matches >= self.value:
@@ -1047,9 +1046,7 @@ class ValueCondition(Condition):
             return getattr(self, '_value_of_matches')
         value_of_matches = D('0.00')
         for line in basket.all_lines():
-            product = line.product
-            if (self.can_apply_condition(product) and product.has_stockrecord
-                and line.quantity_without_discount > 0):
+            if (self.can_apply_condition(line) and line.quantity_without_discount > 0):
                 price = line.unit_price_incl_tax
                 value_of_matches += price * int(line.quantity_without_discount)
         self._value_of_matches = value_of_matches

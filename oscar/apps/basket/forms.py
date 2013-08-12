@@ -186,7 +186,7 @@ class AddToBasketForm(forms.Form):
         """
         choices = []
         for variant in item.variants.all():
-            if variant.has_stockrecord:
+            if variant.has_stockrecords:
                 attr_summary = variant.attribute_summary()
                 if attr_summary:
                     attr_summary = "(%s)" % attr_summary

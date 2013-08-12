@@ -1,6 +1,11 @@
+from django.db.models import get_model, Min
 from haystack import indexes
 
-from django.db.models import get_model
+from oscar.core.loading import get_class
+
+# Load default strategy (without a user/request)
+Selector = get_class('partner.strategy', 'Selector')
+strategy = Selector().strategy()
 
 
 class ProductIndex(indexes.SearchIndex, indexes.Indexable):
@@ -29,14 +34,16 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
             return categories[0].full_name
 
     def prepare_price(self, obj):
-        if obj.is_top_level and obj.has_stockrecord:
-            return obj.stockrecord.price_incl_tax
-        elif obj.is_group:
-            return obj.min_variant_price_incl_tax
+        # Pricing is tricky as product do not necessarily have a single price
+        # (although that is the most common scenario).
+        if obj.is_top_level and obj.has_stockrecords:
+            result = strategy.fetch(obj)
+            return result.price.incl_tax
 
     def prepare_num_in_stock(self, obj):
-        if obj.has_stockrecord:
-            return obj.stockrecord.num_in_stock
+        if obj.has_stockrecords:
+            result = strategy.fetch(obj)
+            return result.availability.num_in_stock
 
     def index_queryset(self, using=None):
         # Only index browsable products (not each individual variant)

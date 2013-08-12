@@ -400,7 +400,9 @@ class AbstractProduct(models.Model):
 
     @property
     def min_variant_price_excl_tax(self):
-        """Return minimum variant price excluding tax"""
+        """
+        Return minimum variant price excluding tax
+        """
         return self._min_variant_price('price_excl_tax')
 
     @property
@@ -437,7 +439,7 @@ class AbstractProduct(models.Model):
         """
         Test whether this product can be bought by the passed user.
         """
-        if not self.has_stockrecord:
+        if not self.has_stockrecords:
             return False, _("No stock available")
         return self.stockrecord.is_purchase_permitted(user, quantity, self)
 
@@ -494,9 +496,9 @@ class AbstractProduct(models.Model):
         try:
             return images[0]
         except IndexError:
-            # We return a dict with fields that mirror the key properties of the
-            # ProductImage class so this missing image can be used interchangably
-            # in templates.  Strategy pattern ftw!
+            # We return a dict with fields that mirror the key properties of
+            # the ProductImage class so this missing image can be used
+            # interchangably in templates.  Strategy pattern ftw!
             return {
                 'original': self.get_missing_image(),
                 'caption': '',
@@ -510,7 +512,7 @@ class AbstractProduct(models.Model):
         """
         prices = []
         for variant in self.variants.all():
-            if variant.has_stockrecord:
+            if variant.has_stockrecords:
                 prices.append(getattr(variant.stockrecord, property))
         if not prices:
             return None
