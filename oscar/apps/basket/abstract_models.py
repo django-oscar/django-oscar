@@ -139,7 +139,7 @@ class AbstractBasket(models.Model):
         # Line reference is used to distinguish between variations of the same
         # product (eg T-shirts with different personalisations)
         line_ref = self._create_line_reference(
-            product, partner_info['stockrecord'], options)
+            product, partner_info.stockrecord, options)
 
         # Determine price to store (if one exists).  It is only stored for
         # audit and sometimes caching.
@@ -149,7 +149,7 @@ class AbstractBasket(models.Model):
         line, created = self.lines.get_or_create(
             line_reference=line_ref,
             product=product,
-            stockrecord=partner_info['stockrecord'],
+            stockrecord=partner_info.stockrecord,
             defaults={'quantity': quantity,
                       'price_excl_tax': price_excl_tax,
                       'price_incl_tax': price_incl_tax})

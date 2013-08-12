@@ -6,7 +6,7 @@ class Base(object):
     is_tax_known = False
 
     # Normal price properties
-    price_excl_tax = price_incl_tax = price_tax = None
+    excl_tax = incl_tax = tax = None
 
 
 class NoStockRecord(Base):
@@ -15,7 +15,7 @@ class NoStockRecord(Base):
     """
 
 
-class WrappedStockrecord(Base):
+class WrappedStockRecord(Base):
 
     def __init__(self, stockrecord):
         self.stockrecord = stockrecord

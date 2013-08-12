@@ -1,11 +1,9 @@
-from . import availability, prices
 from collections import namedtuple
 
+from . import availability, prices
 
-class StockInfo(namedtuple(
-        'StockInfo', ['price', 'availability', 'stockrecord'])):
-    def __init__(self, price, availability, stockrecord=None):
-        super(StockInfo, self).__init__(price, availability, stockrecord)
+
+StockInfo = namedtuple('StockInfo', ['price', 'availability', 'stockrecord'])
 
 
 class Selector(object):
@@ -28,7 +26,7 @@ class Selector(object):
     def strategy(self, request=None, user=None, **kwargs):
         # Default to the backwards-compatible strategry of picking the fist
         # stockrecord.
-        return FirstStockrecord(request)
+        return FirstStockRecord(request)
 
 
 class Base(object):
@@ -37,7 +35,7 @@ class Base(object):
     for a product
     """
 
-    def __init__(self, request):
+    def __init__(self, request=None):
         self.request = request
         self.user = None
         if request and request.user.is_authenticated():
@@ -47,7 +45,7 @@ class Base(object):
         pass
 
 
-class FirstStockrecord(Base):
+class FirstStockRecord(Base):
     """
     Always use the first (normally only) stock record for a product
     """
@@ -62,9 +60,10 @@ class FirstStockrecord(Base):
         except IndexError:
             return StockInfo(
                 price=prices.NoStockRecord(),
-                availability=availability.NoStockRecord())
+                availability=availability.NoStockRecord(),
+                stockrecord=None)
         return StockInfo(
-            price=prices.WrappedStockrecord(record),
-            availability=availability.WrappedStockrecord(
+            price=prices.WrappedStockRecord(record),
+            availability=availability.WrappedStockRecord(
                 product, record, self.user),
             stockrecord=record)

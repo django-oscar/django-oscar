@@ -8,12 +8,12 @@ class Base(object):
     """
 
     # Standard properties
-    is_tax_known = False
     code = ''
     message = ''
     lead_time = None
     dispatch_date = None
 
+    @property
     def is_available_to_buy(self):
         """
         Test if this product is available to be bought.
@@ -35,7 +35,7 @@ class NoStockRecord(Base):
     message = _("Unavailable")
 
 
-class WrappedStockrecord(Base):
+class WrappedStockRecord(Base):
 
     def __init__(self, product, stockrecord=None, user=None):
         self.product = product
