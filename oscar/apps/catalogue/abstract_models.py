@@ -373,6 +373,39 @@ class AbstractProduct(models.Model):
         return self.product_class.requires_shipping
 
     @property
+    def has_stockrecords(self):
+        return self.num_stockrecords > 0
+
+    @property
+    def num_stockrecords(self):
+        return self.stockrecords.all().count()
+
+
+    # Deprecated stockrecord methods
+
+    @property
+    def has_stockrecord(self):
+        """
+        Test if this product has a stock record
+        """
+        warnings.warn(("Product.has_stockrecord is deprecated in favour of "
+                       "using the stockrecord template tag.  It will be "
+                       "removed in v0.8"), DeprecationWarning)
+        return self.num_stockrecords > 0
+
+    @property
+    def stockrecord(self):
+        # This is the old way of fetching a stockrecord, when they were
+        # one-to-one with a product.
+        warnings.warn(("Product.stockrecord is deprecated in favour of "
+                       "using the stockrecord template tag.  It will be "
+                       "removed in v0.8"), DeprecationWarning)
+        try:
+            return self.stockrecords.all()[0]
+        except IndexError:
+            return None
+
+    @property
     def is_available_to_buy(self):
         """
         Test whether this product is available to be purchased
@@ -391,6 +424,17 @@ class AbstractProduct(models.Model):
             return True
         return self.has_stockrecord and self.stockrecord.is_available_to_buy
 
+    def is_purchase_permitted(self, user, quantity):
+        """
+        Test whether this product can be bought by the passed user.
+        """
+        warnings.warn(("Product.is_purchase_permitted is deprecated in favour "
+                       "of using a partner strategy.  It will be "
+                       "removed in v0.8"), DeprecationWarning)
+        if not self.has_stockrecords:
+            return False, _("No stock available")
+        return self.stockrecord.is_purchase_permitted(user, quantity, self)
+
     @property
     def min_variant_price_incl_tax(self):
         """
@@ -404,44 +448,6 @@ class AbstractProduct(models.Model):
         Return minimum variant price excluding tax
         """
         return self._min_variant_price('price_excl_tax')
-
-    @property
-    def has_stockrecords(self):
-        return self.num_stockrecords > 0
-
-    @property
-    def stockrecord(self):
-        # This is the old way of fetching a stockrecord, when they were
-        # one-to-one with a product.
-        warnings.warn(("Product.stockrecord is deprecated in favour of "
-                       "using the stockrecord template tag.  It will be "
-                       "removed in v0.8"), DeprecationWarning)
-        try:
-            return self.stockrecords.all()[0]
-        except IndexError:
-            return None
-
-    @property
-    def num_stockrecords(self):
-        return self.stockrecords.all().count()
-
-    @property
-    def has_stockrecord(self):
-        """
-        Test if this product has a stock record
-        """
-        warnings.warn(("Product.has_stockrecord is deprecated in favour of "
-                       "using the stockrecord template tag.  It will be "
-                       "removed in v0.8"), DeprecationWarning)
-        return self.num_stockrecords > 0
-
-    def is_purchase_permitted(self, user, quantity):
-        """
-        Test whether this product can be bought by the passed user.
-        """
-        if not self.has_stockrecords:
-            return False, _("No stock available")
-        return self.stockrecord.is_purchase_permitted(user, quantity, self)
 
     def add_category_from_breadcrumbs(self, breadcrumb):
         from oscar.apps.catalogue.categories import create_from_breadcrumbs

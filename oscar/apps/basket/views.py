@@ -14,12 +14,11 @@ from django.core.exceptions import ObjectDoesNotExist
 from extra_views import ModelFormSetView
 from oscar.core import ajax
 from oscar.apps.basket.signals import basket_addition, voucher_addition
-from oscar.templatetags.currency_filters import currency
 from oscar.core.loading import get_class, get_classes
 Applicator = get_class('offer.utils', 'Applicator')
-(BasketLineForm, AddToBasketForm, BasketVoucherForm,
+(BasketLineFormSet, BasketLineForm, AddToBasketForm, BasketVoucherForm,
  SavedLineFormSet, SavedLineForm, ProductSelectionForm) = get_classes(
-     'basket.forms', ('BasketLineForm', 'AddToBasketForm',
+     'basket.forms', ('BasketLineFormSet', 'BasketLineForm', 'AddToBasketForm',
                       'BasketVoucherForm', 'SavedLineFormSet',
                       'SavedLineForm', 'ProductSelectionForm'))
 Repository = get_class('shipping.repository', ('Repository'))
@@ -83,10 +82,16 @@ def apply_messages(request, offers_before):
 class BasketView(ModelFormSetView):
     model = get_model('basket', 'Line')
     basket_model = get_model('basket', 'Basket')
+    formset_class = BasketLineFormSet
     form_class = BasketLineForm
     extra = 0
     can_delete = True
     template_name = 'basket/basket.html'
+
+    def get_formset_kwargs(self):
+        kwargs = super(BasketView, self).get_formset_kwargs()
+        kwargs['strategy'] = self.request.strategy
+        return kwargs
 
     def get_queryset(self):
         return self.request.basket.all_lines()
@@ -153,7 +158,7 @@ class BasketView(ModelFormSetView):
                 if not saved_basket.is_empty:
                     saved_queryset = saved_basket.all_lines().select_related(
                         'product', 'product__stockrecord')
-                    formset = SavedLineFormSet(user=self.request.user,
+                    formset = SavedLineFormSet(strategy=self.request.strategy,
                                                basket=self.request.basket,
                                                queryset=saved_queryset,
                                                prefix='saved')

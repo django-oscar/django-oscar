@@ -576,25 +576,24 @@ class AbstractLine(models.Model):
     def is_product_deleted(self):
         return self.product is None
 
-    def is_available_to_reorder(self, basket, user):
+    def is_available_to_reorder(self, basket, strategy):
         """
-        Test if this line can be re-ordered by the passed user, using the
-        passed basket.
+        Test if this line can be re-ordered using the passed strategy and
+        basket
         """
         if not self.product:
             return False, (_("'%(title)s' is no longer available") %
                            {'title': self.title})
 
-        Line = models.get_model('basket', 'Line')
         try:
             basket_line = basket.lines.get(product=self.product)
-        except Line.DoesNotExist:
+        except basket.lines.model.DoesNotExist:
             desired_qty = self.quantity
         else:
             desired_qty = basket_line.quantity + self.quantity
 
-        is_available, reason = self.product.is_purchase_permitted(
-            user=user,
+        result = strategy.fetch(self.product)
+        is_available, reason = result['availability'].is_purchase_permitted(
             quantity=desired_qty)
         if not is_available:
             return False, reason

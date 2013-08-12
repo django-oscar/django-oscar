@@ -32,6 +32,9 @@ class Base(object):
 
     def __init__(self, request):
         self.request = request
+        self.user = None
+        if request and request.user.is_authenticated():
+            self.user = request.user
 
     def fetch(self, product):
         pass
@@ -56,6 +59,7 @@ class FirstStockrecord(Base):
             }
         return {
             'price': prices.WrappedStockrecord(record),
-            'availability': availability.WrappedStockrecord(product, record),
+            'availability': availability.WrappedStockrecord(
+                product, record, self.user),
             'stockrecord': record,
         }

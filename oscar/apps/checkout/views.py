@@ -413,8 +413,11 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         return self.render_to_response(ctx)
 
     def can_basket_be_submitted(self, basket):
+        strategy = self.request.strategy
         for line in basket.lines.all():
-            is_permitted, reason = line.product.is_purchase_permitted(self.request.user, line.quantity)
+            result = strategy.fetch(line.product)
+            is_permitted, reason = result['availability'].is_purchase_permitted(
+                line.quantity)
             if not is_permitted:
                 return False, reason, reverse('basket:summary')
         return True, None, None

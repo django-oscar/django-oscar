@@ -449,7 +449,7 @@ class OrderDetailView(DetailView, PostActionMixin):
         warnings = []
         for line in order.lines.all():
             is_available, reason = line.is_available_to_reorder(basket,
-                self.request.user)
+                self.request.strategy)
             if is_available:
                 lines_to_add.append(line)
             else:
