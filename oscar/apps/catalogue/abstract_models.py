@@ -268,7 +268,8 @@ class AbstractProduct(models.Model):
 
     # No canonical product should have a stock record as they cannot be bought.
     parent = models.ForeignKey(
-        'self', null=True, blank=True, related_name='variants', verbose_name=_("Parent"),
+        'self', null=True, blank=True, related_name='variants',
+        verbose_name=_("Parent"),
         help_text=_("Only choose a parent product if this is a 'variant' of "
                     "a canonical catalogue.  For example if this is a size "
                     "4 of a particular t-shirt.  Leave blank if this is a "
@@ -332,9 +333,42 @@ class AbstractProduct(models.Model):
     objects = models.Manager()
     browsable = BrowsableProductManager()
 
+    class Meta:
+        abstract = True
+        ordering = ['-date_created']
+        verbose_name = _('Product')
+        verbose_name_plural = _('Products')
+
     def __init__(self, *args, **kwargs):
         super(AbstractProduct, self).__init__(*args, **kwargs)
         self.attr = ProductAttributesContainer(product=self)
+
+    def __unicode__(self):
+        if self.is_variant:
+            return u"%s (%s)" % (self.get_title(), self.attribute_summary)
+        return self.get_title()
+
+    @models.permalink
+    def get_absolute_url(self):
+        u"""Return a product's absolute url"""
+        return ('catalogue:detail', (), {
+            'product_slug': self.slug,
+            'pk': self.id})
+
+    def save(self, *args, **kwargs):
+        if self.is_top_level and not self.title:
+            raise ValidationError(_("Canonical products must have a title"))
+        if not self.slug:
+            self.slug = slugify(self.get_title())
+
+        # Validate attributes if necessary
+        self.attr.validate_attributes()
+
+        # Save product
+        super(AbstractProduct, self).save(*args, **kwargs)
+
+        # Finally, save attributes
+        self.attr.save()
 
     # Properties
 
@@ -380,6 +414,16 @@ class AbstractProduct(models.Model):
     def num_stockrecords(self):
         return self.stockrecords.all().count()
 
+    @property
+    def attribute_summary(self):
+        """
+        Return a string of all of a product's attributes
+        """
+        pairs = []
+        for value in self.attribute_values.select_related().all():
+            pairs.append("%s: %s" % (value.attribute.name,
+                                     value.value))
+        return ", ".join(pairs)
 
     # Deprecated stockrecord methods
 
@@ -449,24 +493,20 @@ class AbstractProduct(models.Model):
         """
         return self._min_variant_price('price_excl_tax')
 
-    def add_category_from_breadcrumbs(self, breadcrumb):
-        from oscar.apps.catalogue.categories import create_from_breadcrumbs
-        category = create_from_breadcrumbs(breadcrumb)
-
-        temp = get_model('catalogue', 'ProductCategory')(
-            category=category, product=self)
-        temp.save()
-    add_category_from_breadcrumbs.alters_data = True
-
-    def attribute_summary(self):
+    def _min_variant_price(self, property):
         """
-        Return a string of all of a product's attributes
+        Return minimum variant price
         """
-        pairs = []
-        for value in self.attribute_values.select_related().all():
-            pairs.append("%s: %s" % (value.attribute.name,
-                                     value.value))
-        return ", ".join(pairs)
+        prices = []
+        for variant in self.variants.all():
+            if variant.has_stockrecords:
+                prices.append(getattr(variant.stockrecord, property))
+        if not prices:
+            return None
+        prices.sort()
+        return prices[0]
+
+    # Wrappers
 
     def get_title(self):
         """
@@ -489,6 +529,8 @@ class AbstractProduct(models.Model):
         return None
     get_product_class.short_description = _("Product class")
 
+    # Images
+
     def get_missing_image(self):
         """
         Returns a missing image object.
@@ -510,68 +552,22 @@ class AbstractProduct(models.Model):
                 'caption': '',
                 'is_missing': True}
 
-    # Helpers
-
-    def _min_variant_price(self, property):
-        """
-        Return minimum variant price
-        """
-        prices = []
-        for variant in self.variants.all():
-            if variant.has_stockrecords:
-                prices.append(getattr(variant.stockrecord, property))
-        if not prices:
-            return None
-        prices.sort()
-        return prices[0]
-
-    class Meta:
-        abstract = True
-        ordering = ['-date_created']
-        verbose_name = _('Product')
-        verbose_name_plural = _('Products')
-
-    def __unicode__(self):
-        if self.is_variant:
-            return u"%s (%s)" % (self.get_title(), self.attribute_summary())
-        return self.get_title()
-
-    @models.permalink
-    def get_absolute_url(self):
-        u"""Return a product's absolute url"""
-        return ('catalogue:detail', (), {
-            'product_slug': self.slug,
-            'pk': self.id})
-
-    def save(self, *args, **kwargs):
-        if self.is_top_level and not self.title:
-            raise ValidationError(_("Canonical products must have a title"))
-        if not self.slug:
-            self.slug = slugify(self.get_title())
-
-        # Validate attributes if necessary
-        self.attr.validate_attributes()
-
-        # Save product
-        super(AbstractProduct, self).save(*args, **kwargs)
-
-        # Finally, save attributes
-        self.attr.save()
+    # Updating methods
 
     def update_rating(self):
         """
-        Update rating field
+        Recalculate rating field
         """
         self.rating = self.calculate_rating()
         self.save()
+    update_rating.alters_data = True
 
     def calculate_rating(self):
         """
         Calculate rating value
         """
-        ProductReview = get_model('reviews', 'ProductReview')
         result = self.reviews.filter(
-            status=ProductReview.APPROVED
+            status=self.reviews.model.APPROVED
         ).aggregate(
             sum=Sum('score'), count=Count('id'))
         reviews_sum = result['sum'] or 0
@@ -580,6 +576,16 @@ class AbstractProduct(models.Model):
         if reviews_count > 0:
             rating = float(reviews_sum) / reviews_count
         return rating
+
+    def add_category_from_breadcrumbs(self, breadcrumb):
+        from oscar.apps.catalogue.categories import create_from_breadcrumbs
+        category = create_from_breadcrumbs(breadcrumb)
+
+        temp = get_model('catalogue', 'ProductCategory')(
+            category=category, product=self)
+        temp.save()
+    add_category_from_breadcrumbs.alters_data = True
+
 
 
 class ProductRecommendation(models.Model):

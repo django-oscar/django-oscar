@@ -441,15 +441,14 @@ class OrderDetailView(DetailView, PostActionMixin):
 
         This puts the contents of the previous order into your basket
         """
-
         # Collect lines to be added to the basket and any warnings for lines
         # that are no longer available.
         basket = self.request.basket
         lines_to_add = []
         warnings = []
         for line in order.lines.all():
-            is_available, reason = line.is_available_to_reorder(basket,
-                self.request.strategy)
+            is_available, reason = line.is_available_to_reorder(
+                basket, self.request.strategy)
             if is_available:
                 lines_to_add.append(line)
             else:
