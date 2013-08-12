@@ -593,7 +593,7 @@ class AbstractLine(models.Model):
             desired_qty = basket_line.quantity + self.quantity
 
         result = strategy.fetch(self.product)
-        is_available, reason = result['availability'].is_purchase_permitted(
+        is_available, reason = result.availability.is_purchase_permitted(
             quantity=desired_qty)
         if not is_available:
             return False, reason

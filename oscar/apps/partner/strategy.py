@@ -1,4 +1,11 @@
 from . import availability, prices
+from collections import namedtuple
+
+
+class StockInfo(namedtuple(
+        'StockInfo', ['price', 'availability', 'stockrecord'])):
+    def __init__(self, price, availability, stockrecord=None):
+        super(StockInfo, self).__init__(price, availability, stockrecord)
 
 
 class Selector(object):
@@ -53,13 +60,11 @@ class FirstStockrecord(Base):
         try:
             record = product.stockrecords.all()[0]
         except IndexError:
-            return {
-                'price': prices.NoStockRecord(),
-                'availability': availability.NoStockRecord(),
-            }
-        return {
-            'price': prices.WrappedStockrecord(record),
-            'availability': availability.WrappedStockrecord(
+            return StockInfo(
+                price=prices.NoStockRecord(),
+                availability=availability.NoStockRecord())
+        return StockInfo(
+            price=prices.WrappedStockrecord(record),
+            availability=availability.WrappedStockrecord(
                 product, record, self.user),
-            'stockrecord': record,
-        }
+            stockrecord=record)

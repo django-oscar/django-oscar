@@ -32,7 +32,7 @@ class BasketLineForm(forms.ModelForm):
 
     def check_permission(self, qty):
         result = self.strategy.fetch(self.instance.product)
-        is_available, reason = result['availability'].is_purchase_permitted(
+        is_available, reason = result.availability.is_purchase_permitted(
             quantity=qty)
         if not is_available:
             raise forms.ValidationError(reason)
@@ -85,7 +85,7 @@ class SavedLineForm(forms.ModelForm):
             desired_qty = self.instance.quantity + line.quantity
 
         result = self.strategy.fetch(self.instance.product)
-        is_available, reason = result['availability'].is_purchase_permitted(
+        is_available, reason = result.availability.is_purchase_permitted(
             quantity=desired_qty)
         if not is_available:
             raise forms.ValidationError(reason)

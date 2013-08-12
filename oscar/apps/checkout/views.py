@@ -416,7 +416,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         strategy = self.request.strategy
         for line in basket.lines.all():
             result = strategy.fetch(line.product)
-            is_permitted, reason = result['availability'].is_purchase_permitted(
+            is_permitted, reason = result.availability.is_purchase_permitted(
                 line.quantity)
             if not is_permitted:
                 return False, reason, reverse('basket:summary')

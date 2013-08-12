@@ -9,11 +9,17 @@ class Base(object):
 
     # Standard properties
     is_tax_known = False
-    is_available_to_buy = False
     code = ''
     message = ''
     lead_time = None
     dispatch_date = None
+
+    def is_available_to_buy(self):
+        """
+        Test if this product is available to be bought.
+        """
+        # We test a purchase of a single item
+        is_available, __ = self.is_purchase_permitted(1)
 
     def is_purchase_permitted(self, quantity):
         """
@@ -21,7 +27,7 @@ class Base(object):
 
         Should return a boolean and a reason
         """
-        return self.is_available_to_buy, u""
+        return False, u""
 
 
 class NoStockRecord(Base):

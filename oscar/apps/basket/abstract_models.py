@@ -143,8 +143,8 @@ class AbstractBasket(models.Model):
 
         # Determine price to store (if one exists).  It is only stored for
         # audit and sometimes caching.
-        price_incl_tax = partner_info['price'].incl_tax
-        price_excl_tax = partner_info['price'].excl_tax
+        price_incl_tax = partner_info.price.incl_tax
+        price_excl_tax = partner_info.price.excl_tax
 
         line, created = self.lines.get_or_create(
             line_reference=line_ref,
