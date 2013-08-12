@@ -377,9 +377,9 @@ class AbstractProduct(models.Model):
         """
         Test whether this product is available to be purchased
         """
-        warnings.warn(("Product.is_available_to_buy is deprecated in favour of "
-                       "using the stockrecord template tag"),
-                      DeprecationWarning)
+        warnings.warn(("Product.is_available_to_buy is deprecated in favour "
+                       "of using the stockrecord template tag.  It will be "
+                       "removed in v0.8"), DeprecationWarning)
         if self.is_group:
             # If any one of this product's variants is available, then we treat
             # this product as available.
@@ -414,8 +414,8 @@ class AbstractProduct(models.Model):
         # This is the old way of fetching a stockrecord, when they were
         # one-to-one with a product.
         warnings.warn(("Product.stockrecord is deprecated in favour of "
-                       "using the stockrecord template tag"),
-                      DeprecationWarning)
+                       "using the stockrecord template tag.  It will be "
+                       "removed in v0.8"), DeprecationWarning)
         try:
             return self.stockrecords.all()[0]
         except IndexError:
@@ -431,8 +431,8 @@ class AbstractProduct(models.Model):
         Test if this product has a stock record
         """
         warnings.warn(("Product.has_stockrecord is deprecated in favour of "
-                       "using the stockrecord template tag"),
-                      DeprecationWarning)
+                       "using the stockrecord template tag.  It will be "
+                       "removed in v0.8"), DeprecationWarning)
         return self.num_stockrecords > 0
 
     def is_purchase_permitted(self, user, quantity):
