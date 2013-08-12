@@ -1,3 +1,10 @@
+class TaxNotKnown(Exception):
+    """
+    Exception for when a tax-inclusive price is requested but we don't know
+    what the tax applicable is (yet).
+    """
+
+
 class Base(object):
     #: Whether any prices exist
     exists = False
@@ -13,6 +20,23 @@ class NoStockRecord(Base):
     """
     No stockrecord, therefore no prices
     """
+
+
+class FixedPrice(Base):
+
+    def __init__(self, excl_tax, tax=None):
+        self.excl_tax = excl_tax
+        self.tax = tax
+
+    @property
+    def incl_tax(self):
+        if self.is_tax_known:
+            return self.excl_tax + self.tax
+        raise TaxNotKnown("Can't calculate price.incl_tax as tax isn't known")
+
+    @property
+    def is_tax_known(self):
+        return self.tax is not None
 
 
 class WrappedStockRecord(Base):

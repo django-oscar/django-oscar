@@ -6,7 +6,7 @@ from django.test.client import RequestFactory
 
 from oscar.apps.basket.models import Basket
 from oscar.apps.basket.middleware import BasketMiddleware
-from oscar.test.factories import create_product
+from oscar.test import factories
 from oscar.apps.basket.reports import (
     OpenBasketReportGenerator, SubmittedBasketReportGenerator)
 from oscar.apps.catalogue.models import Option
@@ -16,7 +16,10 @@ class TestABasket(TestCase):
 
     def setUp(self):
         self.basket = Basket()
-        self.product = create_product()
+        self.product = factories.create_product()
+        self.record = factories.create_stockrecord(
+            self.product, price_excl_tax=D('10.00'))
+        self.stockinfo = factories.create_stockinfo(self.record)
 
     def test_an_empty_basket_has_zero_lines(self):
         self.assertEqual(0, self.basket.num_lines)
@@ -25,43 +28,47 @@ class TestABasket(TestCase):
         self.assertTrue(self.basket.is_empty)
 
     def test_adding_product_creates_line(self):
-        self.basket.add_product(self.product)
+        self.basket.add_product(self.product, self.stockinfo)
         self.assertEqual(1, self.basket.num_lines)
 
     def test_adding_multiproduct_line_returns_correct_number_of_items(self):
-        self.basket.add_product(self.product, 10)
+        self.basket.add_product(self.product, self.stockinfo, 10)
         self.assertEqual(self.basket.num_items, 10)
         self.assertEqual(self.basket.num_lines, 1)
 
     def test_add_product_creates_line(self):
-        self.basket.add_product(self.product)
+        self.basket.add_product(self.product, self.stockinfo)
         self.assertTrue(self.basket.num_lines == 1)
 
     def test_add_product_sets_line_prices(self):
-        self.basket.add_product(self.product)
+        self.basket.add_product(self.product, self.stockinfo)
         basket_line = self.basket.lines.all()[0]
         self.assertEqual(basket_line.price_incl_tax, D('10.00'))
         self.assertEqual(basket_line.price_excl_tax, D('10.00'))
 
     def test_flushing_basket_removes_all_lines(self):
-        self.basket.add_product(self.product, 10)
+        self.basket.add_product(self.product, self.stockinfo, 10)
         self.assertEqual(self.basket.num_items, 10)
         self.basket.flush()
         self.assertEqual(self.basket.num_items, 0)
 
     def test_returns_correct_quantity_for_missing_product(self):
-        self.assertEqual(0, self.basket.line_quantity(self.product))
+        self.assertEqual(0, self.basket.line_quantity(
+            self.product, self.record))
 
     def test_returns_correct_quantity_for_existing_product(self):
-        self.basket.add_product(self.product)
-        self.assertEqual(1, self.basket.line_quantity(self.product))
+        self.basket.add_product(self.product, self.stockinfo)
+        self.assertEqual(1, self.basket.line_quantity(
+            self.product, self.record))
 
     def test_returns_correct_quantity_for_existing_product_with_options(self):
         option = Option.objects.create(name="Message")
         options = [{"option": option, "value": "2"}]
-        self.basket.add_product(self.product, options=options)
-        self.assertEqual(0, self.basket.line_quantity(self.product))
-        self.assertEqual(1, self.basket.line_quantity(self.product, options))
+        self.basket.add_product(self.product, self.stockinfo, options=options)
+        self.assertEqual(0, self.basket.line_quantity(
+            self.product, self.record))
+        self.assertEqual(1, self.basket.line_quantity(
+            self.product, self.record, options))
         self.assertEqual(1, self.basket.product_quantity(self.product))
 
     def test_has_method_to_test_if_submitted(self):

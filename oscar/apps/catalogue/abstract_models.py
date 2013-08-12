@@ -287,6 +287,7 @@ class AbstractProduct(models.Model):
                               null=True, db_index=True)
     product_class = models.ForeignKey(
         'catalogue.ProductClass', verbose_name=_('Product Class'), null=True,
+        related_name="products",
         help_text=_("""Choose what type of product this is"""))
     attributes = models.ManyToManyField(
         'catalogue.ProductAttribute',
@@ -585,7 +586,6 @@ class AbstractProduct(models.Model):
             category=category, product=self)
         temp.save()
     add_category_from_breadcrumbs.alters_data = True
-
 
 
 class ProductRecommendation(models.Model):

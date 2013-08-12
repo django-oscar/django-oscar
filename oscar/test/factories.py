@@ -2,6 +2,7 @@ from decimal import Decimal as D
 import random
 import datetime
 
+from oscar.apps.partner import strategy, availability, prices
 from oscar.core.loading import get_class, get_classes
 
 Basket = get_class('basket.models', 'Basket')
@@ -27,38 +28,63 @@ Partner, StockRecord = get_classes('partner.models', ('Partner',
                                          'Condition', 'Benefit'))
 
 
-def create_product(price=None, title=u"Dummy title",
+def create_stockrecord(product=None, price_excl_tax=None, partner_sku=None,
+                       num_in_stock=None, partner_name="Dummy partner"):
+    if product is None:
+        product = create_product()
+    partner, __ = Partner.objects.get_or_create(
+        name=partner_name)
+    if not price_excl_tax:
+        price_excl_tax = D('9.99')
+    if not partner_sku:
+        partner_sku = 'sku_%d_%d' % (product.id, random.randint(0, 10000))
+    return product.stockrecords.create(
+        partner=partner, partner_sku=partner_sku,
+        price_excl_tax=price_excl_tax, num_in_stock=num_in_stock)
+
+
+def create_stockinfo(record):
+    return strategy.StockInfo(
+        price=prices.WrappedStockRecord(record),
+        availability=availability.WrappedStockRecord(record),
+        stockrecord=record
+    )
+
+
+def create_product(upc=None, title=u"Dummy title",
                    product_class=u"Dummy item class",
-                   partner=u"Dummy partner", partner_sku=None, upc=None,
+                   partner=u"Dummy partner", partner_sku=None, price=None,
                    num_in_stock=None, attributes=None, **kwargs):
     """
     Helper method for creating products that are used in tests.
     """
     product_class, __ = ProductClass._default_manager.get_or_create(
         name=product_class)
-    product = Product(title=title, product_class=product_class,
-                      upc=upc, **kwargs)
-
+    product = product_class.products.model(
+        product_class=product_class,
+        title=title, upc=upc, **kwargs)
     if attributes:
-        for key, value in attributes.items():
+        for code, value in attributes.items():
             # Ensure product attribute exists
-            ProductAttribute.objects.get_or_create(
-                name=key, code=key, product_class=product_class)
-            setattr(product.attr, key, value)
-
+            product_class.attributes.get_or_create(
+                name=code, code=code)
+            setattr(product.attr, code, value)
     product.save()
 
+    # Shortcut for creating stockrecord
     if price is not None or partner_sku or num_in_stock is not None:
-        if not partner_sku:
-            partner_sku = 'sku_%d_%d' % (product.id, random.randint(0, 10000))
-        if price is None:
-            price = D('10.00')
-
-        partner, __ = Partner._default_manager.get_or_create(name=partner)
-        product.stockrecords.create(
-            partner=partner, partner_sku=partner_sku,
-            price_excl_tax=price, num_in_stock=num_in_stock)
+        create_stockrecord(product, price_excl_tax=price,
+                           partner_sku=partner_sku, num_in_stock=num_in_stock)
     return product
+
+
+def create_basket():
+    basket = Basket.objects.create()
+    product = create_product()
+    stockrecord = create_stockrecord(product)
+    stockinfo = create_stockinfo(stockrecord)
+    basket.add_product(product, stockinfo)
+    return basket
 
 
 def create_order(number=None, basket=None, user=None, shipping_address=None,
@@ -69,7 +95,10 @@ def create_order(number=None, basket=None, user=None, shipping_address=None,
     """
     if not basket:
         basket = Basket.objects.create()
-        basket.add_product(create_product(price=D('10.00')))
+        product = create_product()
+        record = create_stockrecord(product, price_excl_tax=D('10.00'))
+        info = create_stockinfo(record)
+        basket.add_product(product, info)
     if not basket.id:
         basket.save()
     if shipping_method is None:

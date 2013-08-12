@@ -7,7 +7,7 @@ from oscar.apps.shipping.models import OrderAndItemCharges, WeightBased
 from oscar.apps.shipping import Scales
 from oscar.apps.basket.models import Basket
 from oscar.core.compat import get_user_model
-from oscar.test.factories import create_product
+from oscar.test import factories
 
 
 User = get_user_model()
@@ -25,8 +25,7 @@ class FreeTest(TestCase):
         self.assertEquals(D('0.00'), self.method.basket_charge_excl_tax())
 
     def test_shipping_is_free_for_nonempty_basket(self):
-        basket = Basket()
-        basket.add_product(create_product())
+        basket = factories.create_basket()
         self.method.set_basket(basket)
         self.assertEquals(D('0.00'), self.method.basket_charge_incl_tax())
         self.assertEquals(D('0.00'), self.method.basket_charge_excl_tax())
@@ -67,13 +66,16 @@ class OrderAndItemChargesTests(TestCase):
         self.assertEquals(D('5.00'), self.method.basket_charge_incl_tax())
 
     def test_single_item_basket(self):
-        p = create_product()
-        self.basket.add_product(p)
-        self.assertEquals(D('5.00') + D('1.00'), self.method.basket_charge_incl_tax())
+        record = factories.create_stockrecord()
+        info = factories.create_stockinfo(record)
+        self.basket.add_product(record.product, info)
+        self.assertEquals(D('5.00') + D('1.00'),
+                          self.method.basket_charge_incl_tax())
 
     def test_multi_item_basket(self):
-        p = create_product()
-        self.basket.add_product(p, 7)
+        record = factories.create_stockrecord()
+        info = factories.create_stockinfo(record)
+        self.basket.add_product(record.product, info, 7)
         self.assertEquals(D('5.00') + 7*D('1.00'), self.method.basket_charge_incl_tax())
 
 
@@ -88,31 +90,36 @@ class ZeroFreeThresholdTest(TestCase):
         self.assertEquals(D('0.00'), self.method.basket_charge_incl_tax())
 
     def test_free_shipping_with_nonempty_basket(self):
-        p = create_product(D('5.00'))
-        self.basket.add_product(p)
+        record = factories.create_stockrecord(price_excl_tax=D('5.00'))
+        info = factories.create_stockinfo(record)
+        self.basket.add_product(record.product, info)
         self.assertEquals(D('0.00'), self.method.basket_charge_incl_tax())
 
 
 class NonZeroFreeThresholdTest(TestCase):
 
     def setUp(self):
-        self.method = OrderAndItemCharges(price_per_order=D('10.00'), free_shipping_threshold=D('20.00'))
+        self.method = OrderAndItemCharges(
+            price_per_order=D('10.00'), free_shipping_threshold=D('20.00'))
         self.basket = Basket.objects.create()
         self.method.set_basket(self.basket)
 
     def test_basket_below_threshold(self):
-        p = create_product(D('5.00'))
-        self.basket.add_product(p)
+        record = factories.create_stockrecord(price_excl_tax=D('5.00'))
+        info = factories.create_stockinfo(record)
+        self.basket.add_product(record.product, info)
         self.assertEquals(D('10.00'), self.method.basket_charge_incl_tax())
 
     def test_basket_on_threshold(self):
-        p = create_product(D('5.00'))
-        self.basket.add_product(p, 4)
+        record = factories.create_stockrecord(price_excl_tax=D('5.00'))
+        info = factories.create_stockinfo(record)
+        self.basket.add_product(record.product, info, quantity=4)
         self.assertEquals(D('0.00'), self.method.basket_charge_incl_tax())
 
     def test_basket_above_threshold(self):
-        p = create_product(D('5.00'))
-        self.basket.add_product(p, 8)
+        record = factories.create_stockrecord(price_excl_tax=D('5.00'))
+        info = factories.create_stockinfo(record)
+        self.basket.add_product(record.product, info, quantity=8)
         self.assertEquals(D('0.00'), self.method.basket_charge_incl_tax())
 
 
@@ -120,17 +127,17 @@ class ScalesTests(TestCase):
 
     def test_simple_weight_calculation(self):
         scales = Scales(attribute_code='weight')
-        p = create_product(attributes={'weight': '1'})
+        p = factories.create_product(attributes={'weight': '1'})
         self.assertEqual(1, scales.weigh_product(p))
 
     def test_default_weight_is_used_when_attribute_is_missing(self):
         scales = Scales(attribute_code='weight', default_weight=0.5)
-        p = create_product()
+        p = factories.create_product()
         self.assertEqual(0.5, scales.weigh_product(p))
 
     def test_exception_is_raised_when_attribute_is_missing(self):
         scales = Scales(attribute_code='weight')
-        p = create_product()
+        p = factories.create_product()
         with self.assertRaises(ValueError):
             scales.weigh_product(p)
 
@@ -142,18 +149,24 @@ class ScalesTests(TestCase):
 
     def test_weight_calculation_of_basket(self):
         basket = Basket()
-        basket.add_product(create_product(attributes={'weight': '1'}))
-        basket.add_product(create_product(attributes={'weight': '2'}))
+        record = factories.create_stockrecord(price_excl_tax=D('5.00'))
+        info = factories.create_stockinfo(record)
+        basket.add_product(
+            factories.create_product(attributes={'weight': '1'}), info)
+        basket.add_product(
+            factories.create_product(attributes={'weight': '2'}), info)
 
         scales = Scales(attribute_code='weight')
         self.assertEquals(1+2, scales.weigh_basket(basket))
 
     def test_weight_calculation_of_basket_with_line_quantity(self):
         basket = Basket()
-        basket.add_product(create_product(
-            attributes={'weight': '1'}), quantity=3)
-        basket.add_product(create_product(
-            attributes={'weight': '2'}), quantity=4)
+        record = factories.create_stockrecord(price_excl_tax=D('5.00'))
+        info = factories.create_stockinfo(record)
+        basket.add_product(factories.create_product(
+            attributes={'weight': '1'}), info, quantity=3)
+        basket.add_product(factories.create_product(
+            attributes={'weight': '2'}), info, quantity=4)
 
         scales = Scales(attribute_code='weight')
         self.assertEquals(1*3+2*4, scales.weigh_basket(basket))
