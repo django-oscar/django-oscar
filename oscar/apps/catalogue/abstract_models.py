@@ -11,13 +11,12 @@ from django.db import models
 from django.db.models import Sum, Count, get_model
 from django.utils.translation import ugettext_lazy as _
 from treebeard.mp_tree import MP_Node
+from model_utils.managers import PassThroughManager
 
 from oscar.core.utils import slugify
 from oscar.core.loading import get_class
 
-BrowsableProductManager = get_class(
-    'catalogue.managers', 'BrowsableProductManager')
-
+ProductBrowsableQuerySet = get_class('catalogue.queryset', 'ProductBrowsableQuerySet')
 
 class AbstractProductClass(models.Model):
     """
@@ -329,7 +328,7 @@ class AbstractProduct(models.Model):
     is_discountable = models.BooleanField(_("Is Discountable"), default=True)
 
     objects = models.Manager()
-    browsable = BrowsableProductManager()
+    browsable = PassThroughManager.for_queryset_class(ProductBrowsableQuerySet)()
 
     def __init__(self, *args, **kwargs):
         super(AbstractProduct, self).__init__(*args, **kwargs)
