@@ -12,7 +12,8 @@ from oscar.apps.order.utils import OrderCreator
 from oscar.apps.shipping.methods import FixedPrice, Free
 from oscar.apps.shipping.repository import Repository
 from oscar.core.loading import get_class
-from oscar.test.factories import create_product, create_offer
+from oscar.test import factories
+from tests.integration.offer import add_product
 
 Range = get_class('offer.models', 'Range')
 Benefit = get_class('offer.models', 'Benefit')
@@ -29,7 +30,7 @@ class TestOrderCreatorErrorCases(TestCase):
             self.creator.place_order(basket=self.basket)
 
     def test_raises_exception_if_duplicate_order_number_passed(self):
-        self.basket.add_product(create_product(price=D('12.00')))
+        add_product(self.basket, D('12.00'))
         self.creator.place_order(basket=self.basket, order_number='1234')
         with self.assertRaises(ValueError):
             self.creator.place_order(basket=self.basket, order_number='1234')
@@ -45,27 +46,27 @@ class TestSuccessfulOrderCreation(TestCase):
         Order.objects.all().delete()
 
     def test_creates_order_and_line_models(self):
-        self.basket.add_product(create_product(price=D('12.00')))
+        add_product(self.basket, D('12.00'))
         self.creator.place_order(basket=self.basket, order_number='1234')
         order = Order.objects.get(number='1234')
         lines = order.lines.all()
         self.assertEqual(1, len(lines))
 
     def test_sets_correct_order_status(self):
-        self.basket.add_product(create_product(price=D('12.00')))
+        add_product(self.basket, D('12.00'))
         self.creator.place_order(basket=self.basket, order_number='1234', status='Active')
         order = Order.objects.get(number='1234')
         self.assertEqual('Active', order.status)
 
     def test_defaults_to_using_free_shipping(self):
-        self.basket.add_product(create_product(price=D('12.00')))
+        add_product(self.basket, D('12.00'))
         self.creator.place_order(basket=self.basket, order_number='1234')
         order = Order.objects.get(number='1234')
         self.assertEqual(order.total_incl_tax, self.basket.total_incl_tax)
         self.assertEqual(order.total_excl_tax, self.basket.total_excl_tax)
 
     def test_defaults_to_setting_totals_to_basket_totals(self):
-        self.basket.add_product(create_product(price=D('12.00')))
+        add_product(self.basket, D('12.00'))
         method = Mock()
         method.is_discounted = False
         method.basket_charge_incl_tax = Mock(return_value=D('2.00'))
@@ -77,14 +78,14 @@ class TestSuccessfulOrderCreation(TestCase):
         self.assertEqual(order.total_excl_tax, self.basket.total_excl_tax + D('2.00'))
 
     def test_uses_default_order_status_from_settings(self):
-        self.basket.add_product(create_product(price=D('12.00')))
+        add_product(self.basket, D('12.00'))
         with override_settings(OSCAR_INITIAL_ORDER_STATUS='A'):
             self.creator.place_order(basket=self.basket, order_number='1234')
         order = Order.objects.get(number='1234')
         self.assertEqual('A', order.status)
 
     def test_uses_default_line_status_from_settings(self):
-        self.basket.add_product(create_product(price=D('12.00')))
+        add_product(self.basket, D('12.00'))
         with override_settings(OSCAR_INITIAL_LINE_STATUS='A'):
             self.creator.place_order(basket=self.basket, order_number='1234')
         order = Order.objects.get(number='1234')
@@ -101,21 +102,22 @@ class TestPlacingOrderForDigitalGoods(TestCase):
     def test_does_not_allocate_stock(self):
         ProductClass.objects.create(
             name="Digital", track_stock=False)
-        product = create_product(
-            price=D('9.99'), product_class="Digital", num_in_stock=None)
-        self.assertTrue(product.stockrecord.num_in_stock is None)
-        self.assertTrue(product.stockrecord.num_allocated is None)
+        product = factories.create_product(product_class="Digital")
+        record = factories.create_stockrecord(product, num_in_stock=None)
+        self.assertTrue(record.num_allocated is None)
 
-        self.basket.add_product(product)
+        add_product(self.basket, D('12.00'), product=product)
         self.creator.place_order(basket=self.basket, order_number='1234')
 
         product_ = Product.objects.get(id=product.id)
         self.assertTrue(product_.stockrecord.num_in_stock is None)
         self.assertTrue(product_.stockrecord.num_allocated is None)
 
+
 class StubRepository(Repository):
     """ Custom shipping methods """
     methods = (FixedPrice(D('5.00')), Free())
+
 
 class TestShippingOfferForOrder(TestCase):
 
@@ -129,11 +131,11 @@ class TestShippingOfferForOrder(TestCase):
                                     includes_all_products=True)
         benefit = Benefit.objects.create(
             range=range, type=Benefit.SHIPPING_PERCENTAGE, value=20)
-        offer = create_offer(range=range, benefit=benefit)
+        offer = factories.create_offer(range=range, benefit=benefit)
         Applicator().apply_offers(self.basket, [offer])
 
     def test_shipping_offer_is_applied(self):
-        self.basket.add_product(create_product(price=D('12.00')))
+        add_product(self.basket, D('12.00'))
         self.apply_20percent_shipping_offer()
 
         # Normal shipping 5.00
@@ -150,7 +152,7 @@ class TestShippingOfferForOrder(TestCase):
         self.assertEqual(D('16.00'), order.total_incl_tax)
 
     def test_zero_shipping_discount_is_not_created(self):
-        self.basket.add_product(create_product(price=D('12.00')))
+        add_product(self.basket, D('12.00'))
         self.apply_20percent_shipping_offer()
 
         # Free shipping

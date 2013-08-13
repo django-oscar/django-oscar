@@ -114,7 +114,9 @@ class AbstractBasket(models.Model):
     # ============
 
     def flush(self):
-        """Remove all lines from basket."""
+        """
+        Remove all lines from basket.
+        """
         if self.status == self.FROZEN:
             raise PermissionDenied("A frozen basket cannot be flushed")
         self.lines.all().delete()
@@ -124,7 +126,7 @@ class AbstractBasket(models.Model):
         """
         Add a product to the basket
 
-        'partner_info' is the dict of price and availability data returned from
+        'stock_info' is the price and availability data returned from
         a partner strategy class.
 
         The 'options' list should contains dicts with keys 'option' and 'value'

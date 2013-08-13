@@ -12,8 +12,8 @@ from oscar.apps.order.models import ShippingAddress, Order, Line, \
         OrderDiscount
 from oscar.apps.order.exceptions import (InvalidOrderStatus, InvalidLineStatus,
                                          InvalidShippingEvent)
-from oscar.test.factories import create_order, create_product, create_offer, \
-                               create_voucher
+from oscar.test.factories import create_order, create_offer, create_voucher
+from tests.integration.offer import add_product
 
 ORDER_PLACED = 'order_placed'
 
@@ -102,7 +102,7 @@ class LineTests(TestCase):
 
     def setUp(self):
         basket = Basket()
-        basket.add_product(create_product(price=D('10.00')), 4)
+        add_product(basket, D('10.00'), 4)
         self.order = create_order(number='100002', basket=basket)
         self.line = self.order.lines.all()[0]
         self.order_placed, __ = ShippingEventType.objects.get_or_create(
@@ -234,16 +234,14 @@ class ShippingEventQuantityTests(TestCase):
 
     def setUp(self):
         basket = Basket()
-        basket.add_product(create_product(price=D('10.00')), 4)
+        add_product(basket, D('10.00'), 4)
         self.order = create_order(number='100002', basket=basket)
         self.line = self.order.lines.all()[0]
 
-        self.shipped,_ = ShippingEventType.objects.get_or_create(name='Shipped',
-                                                                 is_required=True,
-                                                                 sequence_number=0)
-        self.returned,_ = ShippingEventType.objects.get_or_create(name='Returned',
-                                                                 is_required=False,
-                                                                 sequence_number=1)
+        self.shipped, _ = ShippingEventType.objects.get_or_create(
+            name='Shipped', is_required=True, sequence_number=0)
+        self.returned, _ = ShippingEventType.objects.get_or_create(
+            name='Returned', is_required=False, sequence_number=1)
 
     def tearDown(self):
         ShippingEventType.objects.all().delete()

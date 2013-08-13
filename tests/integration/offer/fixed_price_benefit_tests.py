@@ -6,6 +6,7 @@ from django_dynamic_fixture import G
 from oscar.apps.offer import models
 from oscar.apps.basket.models import Basket
 from oscar.test.factories import create_product
+from . import add_product, add_products
 
 
 class TestAFixedPriceDiscountAppliedWithCountCondition(TestCase):
@@ -30,33 +31,29 @@ class TestAFixedPriceDiscountAppliedWithCountCondition(TestCase):
         self.assertEqual(0, self.basket.num_items_without_discount)
 
     def test_applies_correctly_to_basket_which_is_worth_less_than_value(self):
-        for product in [create_product(price=D('6.00'))]:
-            self.basket.add_product(product, 3)
+        add_product(self.basket, D('6.00'), 3)
         result = self.benefit.apply(self.basket, self.condition)
         self.assertEqual(D('0.00'), result.discount)
         self.assertEqual(0, self.basket.num_items_with_discount)
         self.assertEqual(3, self.basket.num_items_without_discount)
 
     def test_applies_correctly_to_basket_which_is_worth_the_same_as_value(self):
-        for product in [create_product(price=D('5.00'))]:
-            self.basket.add_product(product, 4)
+        add_product(self.basket, D('5.00'), 4)
         result = self.benefit.apply(self.basket, self.condition)
         self.assertEqual(D('0.00'), result.discount)
         self.assertEqual(0, self.basket.num_items_with_discount)
         self.assertEqual(4, self.basket.num_items_without_discount)
 
     def test_applies_correctly_to_basket_which_is_more_than_value(self):
-        for product in [create_product(price=D('8.00'))]:
-            self.basket.add_product(product, 4)
+        add_product(self.basket, D('8.00'), 4)
         result = self.benefit.apply(self.basket, self.condition)
         self.assertEqual(D('4.00'), result.discount)
         self.assertEqual(3, self.basket.num_items_with_discount)
         self.assertEqual(1, self.basket.num_items_without_discount)
 
     def test_rounding_error_for_multiple_products(self):
-        for i in range(3):
-            product = create_product(price=D('7.00'))
-            self.basket.add_product(product, 1)
+        add_products(self.basket,
+                     [(D('7.00'), 1), (D('7.00'), 1), (D('7.00'), 1)])
         result = self.benefit.apply(self.basket, self.condition)
         self.assertEqual(D('1.00'), result.discount)
         # Make sure discount together is the same as final discount

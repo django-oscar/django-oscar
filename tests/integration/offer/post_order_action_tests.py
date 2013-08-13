@@ -9,6 +9,7 @@ from oscar.apps.offer import models, utils, custom
 from oscar.apps.basket.models import Basket
 from oscar.apps.order.utils import OrderCreator
 from oscar.test.factories import create_product
+from . import add_product
 
 
 class CustomAction(models.Benefit):
@@ -53,8 +54,7 @@ class TestAnOfferWithAPostOrderAction(TestCase):
 
     def setUp(self):
         self.basket = G(Basket)
-        for product in [create_product(price=D('12.00'))]:
-            self.basket.add_product(product, 1)
+        add_product(self.basket, D('12.00'), 1)
         create_offer()
         apply_offers(self.basket)
 

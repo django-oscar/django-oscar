@@ -11,6 +11,7 @@ from oscar.apps.order.utils import OrderCreator
 from oscar.apps.shipping.repository import Repository
 from oscar.apps.shipping.methods import FixedPrice
 from oscar.test.factories import create_product
+from . import add_product
 
 
 def create_offer():
@@ -53,20 +54,17 @@ class TestAnOfferWithAShippingBenefit(TestCase):
         create_offer()
 
     def test_applies_correctly_to_basket_which_matches_condition(self):
-        for product in [create_product(price=D('12.00'))]:
-            self.basket.add_product(product, 1)
+        add_product(self.basket, D('12.00'))
         apply_offers(self.basket)
         self.assertEqual(1, len(self.basket.offer_applications))
 
     def test_applies_correctly_to_basket_which_exceeds_condition(self):
-        for product in [create_product(price=D('12.00'))]:
-            self.basket.add_product(product, 2)
+        add_product(self.basket, D('12.00'), 2)
         apply_offers(self.basket)
         self.assertEqual(1, len(self.basket.offer_applications))
 
     def test_wraps_shipping_method_from_repository(self):
-        for product in [create_product(price=D('12.00'))]:
-            self.basket.add_product(product, 1)
+        add_product(self.basket, D('12.00'), 1)
         apply_offers(self.basket)
         methods = StubRepository().get_shipping_methods(self.basket)
         method = methods[0]
@@ -74,8 +72,7 @@ class TestAnOfferWithAShippingBenefit(TestCase):
         self.assertEqual(D('1.00'), method.basket_charge_incl_tax())
 
     def test_has_discount_recorded_correctly_when_order_is_placed(self):
-        for product in [create_product(price=D('12.00'))]:
-            self.basket.add_product(product, 1)
+        add_product(self.basket, D('12.00'), 1)
         apply_offers(self.basket)
         methods = StubRepository().get_shipping_methods(self.basket)
         method = methods[0]
