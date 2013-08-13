@@ -69,13 +69,13 @@ var oscar = (function(o, $) {
                 return false;
             });
             
-            //Adds error icon if there are errors in the product update form
+            // Adds error icon if there are errors in the product update form
             $('[data-behaviour="affix-nav-errors"] .tab-pane').each(function(){
               var productErrorListener = $(this).find('[class*="error"]').closest('.tab-pane').attr('id');
               $('[data-spy="affix"] a[href="#' + productErrorListener + '"]').append('<i class="icon-info-sign pull-right"></i>');
             });
             
-            //Adds type/search for select fields
+            // Adds type/search for select fields
             $('.form-stacked select').css('width', '95%');
             $('.form-inline select').css('width', '300px');
             $('select').select2();

@@ -63,7 +63,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             self._payment_sources = []
         self._payment_sources.append(source)
 
-    def add_payment_event(self, event_type_name, amount, reference=None):
+    def add_payment_event(self, event_type_name, amount, reference=''):
         """
         Record a payment event for creation once the order is placed
         """
