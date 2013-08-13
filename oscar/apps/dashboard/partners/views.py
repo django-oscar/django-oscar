@@ -1,5 +1,4 @@
 from django.contrib import messages
-from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.db.models import get_model
 from django.http import HttpResponseRedirect
@@ -7,11 +6,13 @@ from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 from django.template.loader import render_to_string
 from django.views import generic
-from oscar.apps.customer.utils import normalise_email
 
+from oscar.apps.customer.utils import normalise_email
 from oscar.apps.dashboard.partners.forms import UserEmailForm, ExistingUserForm, NewUserForm
 from oscar.core.loading import get_classes
+from oscar.core.compat import get_user_model
 
+User = get_user_model()
 Partner = get_model('partner', 'Partner')
 PartnerSearchForm, PartnerCreateForm, PartnerAddressForm = get_classes(
     'dashboard.partners.forms',
