@@ -39,10 +39,8 @@ class TestProductDetailView(WebTestCase):
 class TestProductListView(WebTestCase):
 
     def test_shows_add_to_basket_button_for_available_product(self):
-        product = create_product()
-
+        product = create_product(num_in_stock=1)
         page = self.app.get(reverse('catalogue:index'))
-
         self.assertContains(page, product.title)
         self.assertContains(page, "Add to basket")
 

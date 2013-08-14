@@ -10,23 +10,24 @@ from oscar.test.factories import create_product
 from oscar.core.compat import get_user_model
 from oscar.apps.basket.models import Basket
 from oscar.apps.basket import reports
+from tests.integration.offer import add_product
 
 
 User = get_user_model()
 
 
-class BasketMergingTests(TestCase):
+class TestBasketMerging(TestCase):
 
     def setUp(self):
-        self.product = create_product()
+        self.product = create_product(num_in_stock=10)
         self.user_basket = Basket()
-        self.user_basket.add_product(self.product)
+        add_product(self.user_basket, product=self.product)
         self.cookie_basket = Basket()
-        self.cookie_basket.add_product(self.product, 2)
+        add_product(self.cookie_basket, quantity=2, product=self.product)
         self.user_basket.merge(self.cookie_basket, add_quantities=False)
 
     def test_cookie_basket_has_status_set(self):
-        self.assertEqual('Merged', self.cookie_basket.status)
+        self.assertEqual(Basket.MERGED, self.cookie_basket.status)
 
     def test_lines_are_moved_across(self):
         self.assertEqual(1, self.user_basket.lines.all().count())
@@ -136,10 +137,10 @@ class SavedBasketTests(TestCase):
 
         product = create_product(price=D('10.00'), num_in_stock=2)
         basket, created = Basket.open.get_or_create(owner=user)
-        basket.add_product(product=product, quantity=1)
+        add_product(basket, product=product)
 
         saved_basket, created = Basket.saved.get_or_create(owner=user)
-        saved_basket.add_product(product=product, quantity=1)
+        add_product(saved_basket, product=product)
 
         response = client.get(reverse('basket:summary'))
         saved_formset = response.context['saved_formset']
@@ -164,10 +165,10 @@ class SavedBasketTests(TestCase):
 
         product = create_product(price=D('10.00'), num_in_stock=1)
         basket, created = Basket.open.get_or_create(owner=user)
-        basket.add_product(product=product, quantity=1)
+        add_product(basket, product=product)
 
         saved_basket, created = Basket.saved.get_or_create(owner=user)
-        saved_basket.add_product(product=product, quantity=1)
+        add_product(saved_basket, product=product)
 
         response = client.get(reverse('basket:summary'))
         saved_formset = response.context['saved_formset']

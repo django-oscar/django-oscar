@@ -14,6 +14,7 @@ from oscar.apps.order.models import Order
 from oscar.apps.address.models import Country
 from oscar.apps.voucher.models import Voucher
 from oscar.apps.offer.models import ConditionalOffer
+from tests.integration.offer import add_product
 
 
 class CheckoutMixin(object):
@@ -251,11 +252,9 @@ class TestPaymentDetailsView(ClientTestCase, CheckoutMixin):
 class TestOrderPlacement(ClientTestCase, CheckoutMixin):
 
     def setUp(self):
-        Order.objects.all().delete()
-
         super(TestOrderPlacement, self).setUp()
         self.basket = Basket.objects.create(owner=self.user)
-        self.basket.add_product(create_product(price=D('12.00')))
+        add_product(self.basket, D('12.00'))
 
         self.complete_shipping_address()
         self.complete_shipping_method()

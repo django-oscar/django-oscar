@@ -96,7 +96,8 @@ def create_order(number=None, basket=None, user=None, shipping_address=None,
     if not basket:
         basket = Basket.objects.create()
         product = create_product()
-        record = create_stockrecord(product, price_excl_tax=D('10.00'))
+        record = create_stockrecord(
+            product, num_in_stock=10, price_excl_tax=D('10.00'))
         info = create_stockinfo(record)
         basket.add_product(product, info)
     if not basket.id:

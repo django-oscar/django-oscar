@@ -2,23 +2,25 @@ from decimal import Decimal as D
 
 from django.test import TestCase
 
-from oscar.test.factories import create_product
+from oscar.test.factories import create_product, create_stockrecord
 from oscar.apps.basket.models import Basket
 from oscar.apps.partner.models import StockRecord, StockAlert
 from oscar.apps.order.utils import OrderCreator
+from tests.integration.offer import add_product
 
 
-# These aren't really unit tests - move them?
 class TestPlacingAnOrder(TestCase):
 
     def setUp(self):
-        self.product = create_product(price=D('12.00'), num_in_stock=5)
+        self.product = create_product()
+        self.stockrecord = create_stockrecord(self.product, D('12.00'),
+                                              num_in_stock=5)
         self.basket = Basket()
-        self.basket.add_product(self.product)
+        add_product(self.basket, product=self.product)
 
     def set_threshold(self, threshold):
-        self.product.stockrecord.low_stock_threshold = threshold
-        self.product.stockrecord.save()
+        self.stockrecord.low_stock_threshold = threshold
+        self.stockrecord.save()
 
     def test_correctly_allocates_stock(self):
         OrderCreator().place_order(self.basket)
@@ -57,24 +59,26 @@ class TestPlacingAnOrder(TestCase):
 class TestRestockingProduct(TestCase):
 
     def setUp(self):
-        self.product = create_product(price=D('12.00'), num_in_stock=5)
+        self.product = create_product()
+        self.stockrecord = create_stockrecord(self.product, D('12.00'),
+                                              num_in_stock=5)
         self.basket = Basket()
-        self.basket.add_product(self.product)
+        add_product(self.basket, product=self.product)
 
     def set_threshold(self, threshold):
-        self.product.stockrecord.low_stock_threshold = threshold
-        self.product.stockrecord.save()
+        self.stockrecord.low_stock_threshold = threshold
+        self.stockrecord.save()
 
     def test_closes_open_alert(self):
         self.set_threshold(5)
         OrderCreator().place_order(self.basket)
 
-        alert = StockAlert.objects.get(stockrecord=self.product.stockrecord)
+        alert = StockAlert.objects.get(stockrecord=self.stockrecord)
         self.assertEqual(StockAlert.OPEN, alert.status)
 
         # Restock product
-        self.product.stockrecord.num_in_stock = 15
-        self.product.stockrecord.save()
+        self.stockrecord.num_in_stock = 15
+        self.stockrecord.save()
 
-        alert = StockAlert.objects.get(stockrecord=self.product.stockrecord)
+        alert = StockAlert.objects.get(stockrecord=self.stockrecord)
         self.assertEqual(StockAlert.CLOSED, alert.status)

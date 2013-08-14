@@ -50,6 +50,7 @@ def configure():
             ),
             'MIDDLEWARE_CLASSES': global_settings.MIDDLEWARE_CLASSES + (
                 'oscar.apps.basket.middleware.BasketMiddleware',
+                'oscar.apps.partner.middleware.StrategyMiddleware',
             ),
             'AUTHENTICATION_BACKENDS': (
                 'oscar.apps.customer.auth_backends.Emailbackend',

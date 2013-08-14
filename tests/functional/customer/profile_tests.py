@@ -17,7 +17,8 @@ class TestASignedInUser(WebTestCase):
     password = 'cheeseshop'
 
     def setUp(self):
-        self.user = User.objects.create_user('_', self.email, self.password)
+        self.user = User.objects.create_user(
+            '_', self.email, self.password)
         self.order = create_order(user=self.user)
 
     def tearDown(self):
@@ -115,12 +116,12 @@ class TestASignedInUser(WebTestCase):
         self.assertEqual(1, basket.all_lines().count())
 
     def test_cannot_reorder_an_out_of_stock_product(self):
-        product = self.order.lines.all()[0].product
-        product.stockrecord.num_in_stock = 0
-        product.stockrecord.save()
+        line = self.order.lines.all()[0]
+        line.stockrecord.num_in_stock = 0
+        line.stockrecord.save()
 
-        order_history_page = self.app.get(reverse('customer:order-list'),
-                                          user=self.user)
+        order_history_page = self.app.get(
+            reverse('customer:order-list'), user=self.user)
         form = order_history_page.forms['order_form_%d' % self.order.id]
         form.submit()
 

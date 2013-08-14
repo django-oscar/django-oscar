@@ -472,7 +472,7 @@ class SavedView(ModelFormSetView):
         kwargs = super(SavedView, self).get_formset_kwargs()
         kwargs['prefix'] = 'saved'
         kwargs['basket'] = self.request.basket
-        kwargs['user'] = self.request.user
+        kwargs['strategy'] = self.request.strategy
         return kwargs
 
     def formset_valid(self, formset):
