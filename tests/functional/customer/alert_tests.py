@@ -60,8 +60,8 @@ class TestAUserWithAnActiveStockAlert(WebTest):
         self.assertEqual(1, len(mail.outbox))
 
     def test_does_not_get_emailed_when_it_is_saved_but_still_zero_stock(self):
-        self.product.stockrecord.num_in_stock = 0
-        self.product.stockrecord.save()
+        self.stockrecord.num_in_stock = 0
+        self.stockrecord.save()
         self.assertEqual(0, len(mail.outbox))
 
 

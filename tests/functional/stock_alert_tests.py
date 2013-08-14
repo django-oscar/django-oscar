@@ -42,17 +42,17 @@ class TestPlacingAnOrder(TestCase):
         OrderCreator().place_order(self.basket)
 
         alerts = StockAlert.objects.filter(
-            stockrecord=self.product.stockrecord)
+            stockrecord=self.stockrecord)
         self.assertEqual(1, len(alerts))
 
     def test_only_raises_an_alert_once(self):
         self.set_threshold(5)
-        StockAlert.objects.create(stockrecord=self.product.stockrecord,
+        StockAlert.objects.create(stockrecord=self.stockrecord,
                                   threshold=10)
         OrderCreator().place_order(self.basket)
 
         alerts = StockAlert.objects.filter(
-            stockrecord=self.product.stockrecord)
+            stockrecord=self.stockrecord)
         self.assertEqual(1, len(alerts))
 
 

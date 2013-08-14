@@ -2,7 +2,7 @@ from decimal import Decimal as D
 
 from django.test import TestCase
 
-from oscar.test.factories import create_product
+from oscar.test.factories import create_product, create_stockrecord
 from oscar.apps.partner import abstract_models
 
 
@@ -18,21 +18,22 @@ class DummyWrapper(object):
 class TestStockRecord(TestCase):
 
     def setUp(self):
-        self.product = create_product(price=D('10.00'), num_in_stock=10)
-        self.stockrecord = self.product.stockrecord
+        self.product = create_product()
+        self.stockrecord = create_stockrecord(
+            self.product, price_excl_tax=D('10.00'), num_in_stock=10)
 
     def test_get_price_incl_tax_defaults_to_no_tax(self):
-        self.assertEquals(D('10.00'), self.product.stockrecord.price_incl_tax)
+        self.assertEquals(D('10.00'), self.stockrecord.price_incl_tax)
 
     def test_get_price_excl_tax_returns_correct_value(self):
-        self.assertEquals(D('10.00'), self.product.stockrecord.price_excl_tax)
+        self.assertEquals(D('10.00'), self.stockrecord.price_excl_tax)
 
     def test_net_stock_level_with_no_allocation(self):
-        self.assertEquals(10, self.product.stockrecord.net_stock_level)
+        self.assertEquals(10, self.stockrecord.net_stock_level)
 
     def test_net_stock_level_with_allocation(self):
-        self.product.stockrecord.allocate(5)
-        self.assertEquals(10-5, self.product.stockrecord.net_stock_level)
+        self.stockrecord.allocate(5)
+        self.assertEquals(10-5, self.stockrecord.net_stock_level)
 
     def test_allocated_does_not_alter_num_in_stock(self):
         self.stockrecord.allocate(5)
@@ -76,11 +77,13 @@ class CustomWrapperTests(TestCase):
     def test_wrapper_availability_gets_called(self):
         product = create_product(
             price=D('10.00'), partner="Acme", num_in_stock=10)
+        stockrecord = product.stockrecords.all()[0]
         self.assertEquals(u"Dummy response",
-                          unicode(product.stockrecord.availability))
+                          unicode(stockrecord.availability))
 
     def test_wrapper_dispatch_date_gets_called(self):
         product = create_product(
             price=D('10.00'), partner="Acme", num_in_stock=10)
+        stockrecord = product.stockrecords.all()[0]
         self.assertEquals("Another dummy response",
-                          product.stockrecord.dispatch_date)
+                          stockrecord.dispatch_date)
