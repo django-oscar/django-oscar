@@ -1,4 +1,5 @@
 {% load currency_filters %}
+{% load i18n %}
 {% if product.has_stockrecord %}
     <p class="price_color">
         {% if product.stockrecord.price_retail > product.stockrecord.price_incl_tax %}<del>{{ product.stockrecord.price_retail|currency }}</del>{% endif %}
