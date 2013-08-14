@@ -245,7 +245,7 @@ class BasketView(ModelFormSetView):
             'content_html': basket_html,
             'messages': flash_messages.to_json()}
         return HttpResponse(json.dumps(payload),
-                            mimetype="application/json")
+                            content_type="application/json")
 
     def move_line_to_saved_basket(self, line):
         saved_basket, _ = get_model('basket', 'basket').saved.get_or_create(

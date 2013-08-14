@@ -10,7 +10,7 @@ class ReportGenerator(object):
     report generator.
     """
     filename_template = 'report-%s-to-%s.csv'
-    mimetype = 'text/csv'
+    content_type = 'text/csv'
     code = ''
     description = '<insert report description>'
 
@@ -61,7 +61,7 @@ class ReportCSVFormatter(ReportFormatter):
         return CsvUnicodeWriter(file_handle, **kwargs)
 
     def generate_response(self, objects, **kwargs):
-        response = HttpResponse(mimetype='text/csv')
+        response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename=%s' % self.filename(**kwargs)
         self.generate_csv(response, objects)
         return response

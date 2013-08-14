@@ -264,7 +264,7 @@ class OrderListView(ListView, BulkEditMixin):
         return 'orders.csv'
 
     def download_selected_orders(self, request, orders):
-        response = HttpResponse(mimetype='text/csv')
+        response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename=%s' % self.get_download_filename(request)
         writer = CsvUnicodeWriter(response, delimiter=',')
 
