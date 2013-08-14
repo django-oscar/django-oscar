@@ -92,6 +92,13 @@ class ProductDetailView(DetailView):
             '%s/detail.html' % (self.template_folder)]
 
 
+def get_product_base_queryset():
+    """
+    Deprecated. Keep only for backwards compatibility.
+    Product.browsable.base_queryset() should be used instead.
+    """
+    return Product.browsable.base_queryset()
+
 class ProductCategoryView(ListView):
     """
     Browse products in a given category
