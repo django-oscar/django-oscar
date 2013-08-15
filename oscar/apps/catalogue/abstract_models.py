@@ -14,9 +14,10 @@ from treebeard.mp_tree import MP_Node
 from model_utils.managers import PassThroughManager
 
 from oscar.core.utils import slugify
-from oscar.core.loading import get_class
+from oscar.core.loading import get_classes
 
-ProductBrowsableQuerySet = get_class('catalogue.queryset', 'ProductBrowsableQuerySet')
+ProductBrowsableQuerySet, ProductQuerySet = get_classes(
+    'catalogue.queryset', ['ProductBrowsableQuerySet', 'ProductQuerySet'])
 
 class AbstractProductClass(models.Model):
     """
@@ -327,7 +328,7 @@ class AbstractProduct(models.Model):
 
     is_discountable = models.BooleanField(_("Is Discountable"), default=True)
 
-    objects = models.Manager()
+    objects = PassThroughManager.for_queryset_class(ProductQuerySet)()
     browsable = PassThroughManager.for_queryset_class(ProductBrowsableQuerySet)()
 
     def __init__(self, *args, **kwargs):
