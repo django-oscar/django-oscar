@@ -65,7 +65,7 @@
                         <h4>{% trans "Shipping method" %}</h4>
                         <p>{{ shipping_method.name }}
                             {% if shipping_method.description %}
-                                - {{ shipping_method.description }}
+                                - {{ shipping_method.description|safe }}
                             {% endif %}
                         </p>
 
@@ -91,7 +91,7 @@
                     <div class="alert-actions">
                         <a href="{% url 'checkout:payment-details' %}" class="btn">{% trans "Change payment details" %}</a>
                     </div>
-                </div>    
+                </div>
             </div>
         {% endblock payment_method %}
     </div>
@@ -126,7 +126,7 @@
                     </div>
                     <div class="span2 align-right">
                         <p class="price_color">{{ line.line_price_incl_tax|currency }}</p>
-                    </div>        
+                    </div>
                 </div>
             </div>
         {% endfor %}
