@@ -39,7 +39,12 @@
                         </address>
                         {% if shipping_address.phone_number %}
                             <h4>Contact</h4>
-                            <p>{% trans "Phone" %}: {{ shipping_address.phone_number }}</p>
+                            <p>
+                                {% trans "Phone" %}: {{ shipping_address.phone_number }}
+                                {% if guest_email %}
+                                    <br/>{% trans "Email" %}: {{ guest_email }}
+                                {% endif %}
+                            </p>
                         {% endif %}
 
                         {% if shipping_address.notes %}

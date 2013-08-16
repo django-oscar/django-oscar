@@ -409,6 +409,10 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         # Return kwargs directly instead of using 'params' as in django's
         # TemplateView
         ctx = super(PaymentDetailsView, self).get_context_data(**kwargs)
+
+        # Add guest email if one is set
+        ctx['guest_email'] = self.checkout_session.get_guest_email()
+
         ctx.update(kwargs)
         return ctx
 
