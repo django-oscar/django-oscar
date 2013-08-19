@@ -167,7 +167,10 @@ Modify your ``TEMPLATE_DIRS`` to include the main Oscar template directory:
 .. code-block:: django
 
     from oscar import OSCAR_MAIN_TEMPLATE_DIR
-    TEMPLATE_DIRS = TEMPLATE_DIRS + (OSCAR_MAIN_TEMPLATE_DIR,)
+    TEMPLATE_DIRS = (
+        location('templates'),
+        OSCAR_MAIN_TEMPLATE_DIR,
+    )
 
 Oscar currently uses Haystack for search so you need to specify:
 
