@@ -1,17 +1,18 @@
 <li class='sortable-handle'>
-	{% for field in form %}
-		{% if field.is_hidden %}
-			{{ field }}
-		{% elif "original" in field.id_for_label %}
-			<div>{{ field }}</div>
-		{% else %}
-			{{ field.label_tag }}
-			{{ field }}
-			{% for error in field.errors %}
-				<ul class="help-block">
-					<li>{{ error }}</li>
-				</ul>
-			{% endfor %}
-		{% endif %}
-	{% endfor %}
+    {% for field in form %}
+        {% if field.is_hidden %}
+            {{ field }}
+            {% elif "original" in field.id_for_label %}
+            <div>{{ field }}</div>
+        {% else %}
+            {{ field.label_tag }}
+            {{ field }}
+            {% for error in field.errors %}
+                <ul class="help-block">
+                    <li>{{ error }}</li>
+                </ul>
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+    {{ form.non_field_errors }}
 </li>
