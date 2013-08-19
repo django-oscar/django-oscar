@@ -101,13 +101,15 @@ and append Oscar's core apps:
         'django.contrib.sites',
         'django.contrib.messages',
         'django.contrib.flatpages',
+        'django.contrib.staticfiles',
         ...
         'south',
         'compressor',
     ] + get_core_apps()
 
-Note that Oscar requires ``django.contrib.messages`` and
-``django.contrib.flatpages`` which aren't included by default.
+Note that Oscar requires ``django.contrib.messages``,
+``django.contrib.staticfiles`` and ``django.contrib.flatpages`` which aren't
+included by default.
 
 Next, add ``django.contrib.flatpages.middleware.FlatpageFallbackMiddleware`` to
 your ``MIDDLEWARE_CLASSES`` setting:
