@@ -13,7 +13,8 @@ def add_product(basket, price=None, quantity=1, product=None):
         record = product.stockrecords.all()[0]
     else:
         record = factories.create_stockrecord(
-            product=product, price_excl_tax=price)
+            product=product, price_excl_tax=price,
+            num_in_stock=quantity + 1)
     info = factories.create_stockinfo(record)
     basket.add_product(record.product, info, quantity)
 

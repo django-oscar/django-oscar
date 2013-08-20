@@ -382,8 +382,8 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
     def post(self, request, *args, **kwargs):
         """
         This method is designed to be overridden by subclasses which will
-        validate the forms from the payment details page.  If the forms are valid
-        then the method can call submit()
+        validate the forms from the payment details page.  If the forms are
+        valid then the method can call submit()
         """
         error_response = self.get_error_response()
 
