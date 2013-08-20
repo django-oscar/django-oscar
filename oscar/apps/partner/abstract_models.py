@@ -92,14 +92,13 @@ class AbstractPartner(models.Model):
 
 class AbstractStockRecord(models.Model):
     """
-    A basic stock record.
+    A stock record.
 
-    This links a product to a partner, together with price and availability
-    information.  Most projects will need to subclass this object to add custom
-    fields such as lead_time, report_code, min_quantity.
+    This records information about a product from a fulfilment partner, such as
+    their SKU, the number they have in stock and price information.
 
-    We deliberately don't store tax information to allow each project
-    to subclass this model and put its own fields for convey tax.
+    Stockrecords are used by 'strategies' to determine availability and pricing
+    information for the customer.
     """
     product = models.ForeignKey(
         'catalogue.Product', related_name="stockrecords",
@@ -108,9 +107,9 @@ class AbstractStockRecord(models.Model):
         'partner.Partner', verbose_name=_("Partner"),
         related_name='stockrecords')
 
-    #: The fulfilment partner will often have their own SKU for a product, which
-    #: we store here.  This will sometimes be the same the product's UPC but not
-    #: always.  It should be unique per partner.
+    #: The fulfilment partner will often have their own SKU for a product,
+    #: which we store here.  This will sometimes be the same the product's UPC
+    #: but not always.  It should be unique per partner.
     #: See also http://en.wikipedia.org/wiki/Stock-keeping_unit
     partner_sku = models.CharField(_("Partner SKU"), max_length=128)
 
@@ -145,27 +144,34 @@ class AbstractStockRecord(models.Model):
     num_in_stock = models.PositiveIntegerField(
         _("Number in stock"), blank=True, null=True)
 
-    #: Threshold for low-stock alerts.  When stock goes beneath this threshold,
-    #: an alert is triggered so warehouse managers can order more.
-    low_stock_threshold = models.PositiveIntegerField(
-        _("Low Stock Threshold"), blank=True, null=True)
-
     #: The amount of stock allocated to orders but not fed back to the master
     #: stock system.  A typical stock update process will set the num_in_stock
     #: variable to a new value and reset num_allocated to zero
     num_allocated = models.IntegerField(
         _("Number allocated"), blank=True, null=True)
 
+    #: Threshold for low-stock alerts.  When stock goes beneath this threshold,
+    #: an alert is triggered so warehouse managers can order more.
+    low_stock_threshold = models.PositiveIntegerField(
+        _("Low Stock Threshold"), blank=True, null=True)
+
     # Date information
     date_created = models.DateTimeField(_("Date created"), auto_now_add=True)
     date_updated = models.DateTimeField(_("Date updated"), auto_now=True,
                                         db_index=True)
 
+    def __unicode__(self):
+        msg = u"Partner: %s, product: %s" % (
+            self.partner.display_name, self.product,)
+        if self.partner_sku:
+            msg = u"%s (%s)" % (msg, self.partner_sku)
+        return msg
+
     class Meta:
         abstract = True
         unique_together = ('partner', 'partner_sku')
-        verbose_name = _("Stock Record")
-        verbose_name_plural = _("Stock Records")
+        verbose_name = _("Stock record")
+        verbose_name_plural = _("Stock records")
 
     # 2-stage stock management model
 
@@ -193,7 +199,8 @@ class AbstractStockRecord(models.Model):
         allocation and adjust the number in stock accordingly
         """
         if not self.is_allocation_consumption_possible(quantity):
-            raise InvalidStockAdjustment(_('Invalid stock consumption request'))
+            raise InvalidStockAdjustment(
+                _('Invalid stock consumption request'))
         self.num_allocated -= quantity
         self.num_in_stock -= quantity
         self.save()
@@ -218,18 +225,6 @@ class AbstractStockRecord(models.Model):
         if self.num_allocated is None:
             return self.num_in_stock
         return self.num_in_stock - self.num_allocated
-
-    def set_discount_price(self, price):
-        """
-        A setter method for setting a new price.
-
-        This is called from within the "discount" app, which is responsible
-        for applying fixed-discount offers to products.  We use a setter method
-        so that this behaviour can be customised in projects.
-        """
-        self.price_excl_tax = price
-        self.save()
-    set_discount_price.alters_data = True
 
     @property
     def is_below_threshold(self):
@@ -267,8 +262,8 @@ class AbstractStockRecord(models.Model):
     @property
     def availability(self):
         """
-        Return a product's availability as a string that can be displayed to the
-        user.  For example, "In stock", "Unavailable".
+        Return a product's availability as a string that can be displayed to
+        the user.  For example, "In stock", "Unavailable".
         """
         return get_partner_wrapper(self.partner_id).availability(self)
 
@@ -278,7 +273,8 @@ class AbstractStockRecord(models.Model):
 
         :param user: (optional) The user who wants to purchase
         """
-        return get_partner_wrapper(self.partner_id).max_purchase_quantity(self, user)
+        return get_partner_wrapper(
+            self.partner_id).max_purchase_quantity(self, user)
 
     @property
     def dispatch_date(self):
@@ -312,13 +308,6 @@ class AbstractStockRecord(models.Model):
         Return a product's tax value
         """
         return get_partner_wrapper(self.partner_id).calculate_tax(self)
-
-    def __unicode__(self):
-        if self.partner_sku:
-            return u"%s (%s)" % (self.partner.display_name,
-                                 self.partner_sku)
-        else:
-            return self.partner.display_name
 
 
 class AbstractStockAlert(models.Model):
