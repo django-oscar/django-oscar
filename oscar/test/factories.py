@@ -46,7 +46,7 @@ def create_stockrecord(product=None, price_excl_tax=None, partner_sku=None,
 def create_stockinfo(record):
     return strategy.StockInfo(
         price=prices.WrappedStockRecord(record),
-        availability=availability.WrappedStockRecord(record),
+        availability=availability.DelegateToStockRecord(record),
         stockrecord=record
     )
 

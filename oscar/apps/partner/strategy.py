@@ -64,10 +64,10 @@ class FirstStockRecord(Base):
         except IndexError:
             return StockInfo(
                 price=prices.NoStockRecord(),
-                availability=availability.NoStockRecord(),
+                availability=availability.Unavailable(),
                 stockrecord=None)
         return StockInfo(
             price=prices.WrappedStockRecord(record),
-            availability=availability.WrappedStockRecord(
+            availability=availability.DelegateToStockRecord(
                 product, record, self.user),
             stockrecord=record)

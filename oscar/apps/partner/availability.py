@@ -30,12 +30,70 @@ class Base(object):
         return False, _("Unavailable")
 
 
-class NoStockRecord(Base):
-    code = 'outofstock'
+# Common availability policies
+
+
+class Unavailable(Base):
+    """
+    Policy for when a product is unavailable
+    """
+    code = 'unavailable'
     message = _("Unavailable")
 
 
-class WrappedStockRecord(Base):
+class Available(Base):
+    """
+    For when a product is always available, irrespective of stocklevel.
+
+    This might be appropriate for a digital product.
+    """
+    code = 'available'
+    message = _("Available")
+
+    def is_purchase_permitted(self, quantity):
+        return True, ""
+
+
+class StockRequired(Base):
+    """
+    Ensure that the num_in_stock field of the stockrecord is
+    respected.
+    """
+    CODE_IN_STOCK = 'instock'
+    CODE_OUT_OF_STOCK = 'outofstock'
+
+    def __init__(self, stockrecord=None):
+        self.stockrecord = stockrecord
+
+    def is_purchase_permitted(self, quantity):
+        num_in_stock = self.stockrecord.net_stock_level
+        if num_in_stock == 0:
+            return False, _("No stock available")
+        if quantity > num_in_stock:
+            msg = _("A maximum of %(max)d can be bought") % {
+                'max': num_in_stock}
+            return False, msg
+        return True, ""
+
+    @property
+    def code(self):
+        if self.stockrecord.net_stock_level > 0:
+            return self.CODE_IN_STOCK
+        return self.CODE_OUT_OF_STOCK
+
+    @property
+    def message(self):
+        if self.stockrecord.net_stock_level > 0:
+            return _("In stock (%d available)") % self.stockrecord.net_stock_level
+        return _("Not available")
+
+
+class DelegateToStockRecord(Base):
+    """
+    An availability class which delegates all calls to the
+    stockrecord itself.  This will exercise the deprecate methods on the
+    stockrecord that call "partner wrapper" classes.
+    """
 
     def __init__(self, product, stockrecord=None, user=None):
         self.product = product

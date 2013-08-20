@@ -287,7 +287,7 @@ class AbstractStockRecord(models.Model):
     def lead_time(self):
         return get_partner_wrapper(self.partner_id).lead_time(self)
 
-    # Price methods
+    # Price methods
 
     @property
     def price_incl_tax(self):

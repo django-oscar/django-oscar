@@ -3,7 +3,7 @@ from django.test import TestCase
 from oscar.apps.partner import availability
 
 
-class TestBaseAvailability(TestCase):
+class TestBasePolicy(TestCase):
 
     def setUp(self):
         self.availability = availability.Base()
@@ -17,10 +17,10 @@ class TestBaseAvailability(TestCase):
         self.assertFalse(result)
 
 
-class TestNoStockRecord(TestCase):
+class TestUnavailablePolicy(TestCase):
 
     def setUp(self):
-        self.availability = availability.NoStockRecord()
+        self.availability = availability.Unavailable()
 
     def test_is_unavailable(self):
         self.assertFalse(self.availability.is_available_to_buy)
@@ -34,4 +34,4 @@ class TestNoStockRecord(TestCase):
         self.assertEquals("Unavailable", msg)
 
     def test_returns_availability_code(self):
-        self.assertEquals('outofstock', self.availability.code)
+        self.assertEquals('unavailable', self.availability.code)
