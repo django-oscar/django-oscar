@@ -35,3 +35,65 @@ class TestUnavailablePolicy(TestCase):
 
     def test_returns_availability_code(self):
         self.assertEquals('unavailable', self.availability.code)
+
+
+class TestStockRequiredWrapperForRecordWithStock(TestCase):
+
+    def setUp(self):
+        self.availability = availability.StockRequired(5)
+
+    def test_is_available_to_buy(self):
+        self.assertTrue(self.availability.is_available_to_buy)
+
+    def test_permits_purchases_up_to_stock_level(self):
+        for x in range(0, 6):
+            is_permitted, __ = self.availability.is_purchase_permitted(x)
+            self.assertTrue(is_permitted)
+
+    def test_forbids_purchases_over_stock_level(self):
+        is_permitted, __ = self.availability.is_purchase_permitted(7)
+        self.assertFalse(is_permitted)
+
+    def test_returns_correct_code(self):
+        self.assertEquals('instock', self.availability.code)
+
+    def test_returns_correct_message(self):
+        self.assertEquals('In stock (5 available)', self.availability.message)
+
+
+class TestStockRequiredWrapperForRecordWithoutStock(TestCase):
+
+    def setUp(self):
+        self.availability = availability.StockRequired(0)
+
+    def test_is_available_to_buy(self):
+        self.assertFalse(self.availability.is_available_to_buy)
+
+    def test_forbids_purchases(self):
+        is_permitted, __ = self.availability.is_purchase_permitted(1)
+        self.assertFalse(is_permitted)
+
+    def test_returns_correct_code(self):
+        self.assertEquals('outofstock', self.availability.code)
+
+    def test_returns_correct_message(self):
+        self.assertEquals('Not available', self.availability.message)
+
+
+class TestAvailableWrapper(TestCase):
+
+    def setUp(self):
+        self.availability = availability.Available()
+
+    def test_is_available_to_buy(self):
+        self.assertTrue(self.availability.is_available_to_buy)
+
+    def test_permits_any_purchase(self):
+        is_permitted, __ = self.availability.is_purchase_permitted(10000)
+        self.assertTrue(is_permitted)
+
+    def test_returns_correct_code(self):
+        self.assertEquals('available', self.availability.code)
+
+    def test_returns_correct_message(self):
+        self.assertEquals('Available', self.availability.message)

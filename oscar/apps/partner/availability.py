@@ -56,35 +56,33 @@ class Available(Base):
 
 class StockRequired(Base):
     """
-    Ensure that the num_in_stock field of the stockrecord is
-    respected.
+    Enforce a given stock number
     """
     CODE_IN_STOCK = 'instock'
     CODE_OUT_OF_STOCK = 'outofstock'
 
-    def __init__(self, stockrecord=None):
-        self.stockrecord = stockrecord
+    def __init__(self, num_available):
+        self.num_available = num_available
 
     def is_purchase_permitted(self, quantity):
-        num_in_stock = self.stockrecord.net_stock_level
-        if num_in_stock == 0:
+        if self.num_available == 0:
             return False, _("No stock available")
-        if quantity > num_in_stock:
+        if quantity > self.num_available:
             msg = _("A maximum of %(max)d can be bought") % {
-                'max': num_in_stock}
+                'max': self.num_available}
             return False, msg
         return True, ""
 
     @property
     def code(self):
-        if self.stockrecord.net_stock_level > 0:
+        if self.num_available > 0:
             return self.CODE_IN_STOCK
         return self.CODE_OUT_OF_STOCK
 
     @property
     def message(self):
-        if self.stockrecord.net_stock_level > 0:
-            return _("In stock (%d available)") % self.stockrecord.net_stock_level
+        if self.num_available > 0:
+            return _("In stock (%d available)") % self.num_available
         return _("Not available")
 
 
