@@ -10,7 +10,7 @@ from oscar.test.factories import create_product
 from oscar.core.compat import get_user_model
 from oscar.apps.basket.models import Basket
 from oscar.apps.basket import reports
-from tests.integration.offer import add_product
+from oscar.test.basket import add_product
 
 
 User = get_user_model()

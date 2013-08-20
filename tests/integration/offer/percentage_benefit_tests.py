@@ -6,7 +6,7 @@ from django_dynamic_fixture import G
 from oscar.apps.offer import models
 from oscar.apps.basket.models import Basket
 from oscar.test import factories
-from . import add_product, add_products
+from oscar.test.basket import add_product, add_products
 
 
 class TestAPercentageDiscountAppliedWithCountCondition(TestCase):

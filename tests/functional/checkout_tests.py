@@ -14,7 +14,7 @@ from oscar.apps.order.models import Order
 from oscar.apps.address.models import Country
 from oscar.apps.voucher.models import Voucher
 from oscar.apps.offer.models import ConditionalOffer
-from tests.integration.offer import add_product
+from oscar.test.basket import add_product
 
 
 class CheckoutMixin(object):

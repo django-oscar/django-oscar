@@ -6,7 +6,7 @@ from oscar.test.factories import create_product, create_stockrecord
 from oscar.apps.basket.models import Basket
 from oscar.apps.partner.models import StockRecord, StockAlert
 from oscar.apps.order.utils import OrderCreator
-from tests.integration.offer import add_product
+from oscar.test.basket import add_product
 
 
 class TestPlacingAnOrder(TestCase):

@@ -5,8 +5,8 @@ from django.test import TestCase
 from oscar.apps.offer import models
 from oscar.apps.basket.models import Basket
 from oscar.test.factories import create_product
+from oscar.test.basket import add_product, add_products
 from tests.unit.offer import OfferTest
-from . import add_product, add_products
 
 
 class TestCountCondition(OfferTest):

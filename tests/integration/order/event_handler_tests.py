@@ -4,9 +4,9 @@ from django.test import TestCase
 
 from oscar.apps.order.processing import EventHandler
 from oscar.apps.order import models, exceptions
-from oscar.test.factories import create_order, create_product
+from oscar.test.factories import create_order
 from oscar.apps.basket.models import Basket
-from tests.integration.offer import add_product
+from oscar.test.basket import add_product
 
 
 class TestEventHandler(TestCase):

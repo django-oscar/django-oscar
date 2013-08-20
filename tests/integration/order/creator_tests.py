@@ -13,7 +13,7 @@ from oscar.apps.shipping.methods import FixedPrice, Free
 from oscar.apps.shipping.repository import Repository
 from oscar.core.loading import get_class
 from oscar.test import factories
-from tests.integration.offer import add_product
+from oscar.test.basket import add_product
 
 Range = get_class('offer.models', 'Range')
 Benefit = get_class('offer.models', 'Benefit')

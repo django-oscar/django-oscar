@@ -6,8 +6,7 @@ from django_dynamic_fixture import G
 from oscar.apps.offer.utils import Applicator
 from oscar.apps.offer import models
 from oscar.apps.basket.models import Basket
-
-from . import add_product
+from oscar.test.basket import add_product
 
 
 class TestOfferApplicator(TestCase):

@@ -13,7 +13,7 @@ from oscar.apps.order.models import ShippingAddress, Order, Line, \
 from oscar.apps.order.exceptions import (InvalidOrderStatus, InvalidLineStatus,
                                          InvalidShippingEvent)
 from oscar.test.factories import create_order, create_offer, create_voucher
-from tests.integration.offer import add_product
+from oscar.test.basket import add_product
 
 ORDER_PLACED = 'order_placed'
 

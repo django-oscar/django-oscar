@@ -72,7 +72,8 @@ class FirstStockRecord(Base):
         if not product.get_product_class().track_stock:
             availability_policy = availability.Available()
         else:
-            availability_policy = availability.StockRequired(record)
+            availability_policy = availability.StockRequired(
+                record.net_stock_level)
 
         # Assume zero tax
         pricing_policy = prices.FixedPrice(

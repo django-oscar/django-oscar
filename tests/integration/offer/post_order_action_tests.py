@@ -9,7 +9,7 @@ from oscar.apps.offer import models, utils, custom
 from oscar.apps.basket.models import Basket
 from oscar.apps.order.utils import OrderCreator
 from oscar.test.factories import create_product
-from . import add_product
+from oscar.test.basket import add_product
 
 
 class CustomAction(models.Benefit):
