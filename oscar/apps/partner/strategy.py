@@ -1,4 +1,5 @@
 from collections import namedtuple
+from decimal import Decimal as D
 
 from . import availability, prices
 
@@ -57,17 +58,28 @@ class FirstStockRecord(Base):
     def fetch(self, product):
         """
         Return the appropriate product price and availability information for
-        this session/user
+        this session.
         """
         try:
             record = product.stockrecords.all()[0]
         except IndexError:
             return StockInfo(
-                price=prices.NoStockRecord(),
+                price=prices.Unavailable(),
                 availability=availability.Unavailable(),
                 stockrecord=None)
+
+        # If we track stock then back-orders aren't allowed
+        if not product.get_product_class().track_stock:
+            availability_policy = availability.Available()
+        else:
+            availability_policy = availability.StockRequired(record)
+
+        # Assume zero tax
+        pricing_policy = prices.FixedPrice(
+            excl_tax=record.price_excl_tax,
+            tax=D('0.00'))
+
         return StockInfo(
-            price=prices.WrappedStockRecord(record),
-            availability=availability.DelegateToStockRecord(
-                product, record, self.user),
+            availability=availability_policy,
+            price=pricing_policy,
             stockrecord=record)
