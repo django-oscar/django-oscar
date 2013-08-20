@@ -4,10 +4,10 @@ from decimal import Decimal as D
 from oscar.apps.partner import prices, models
 
 
-class TestNoStockRecord(TestCase):
+class TestUnavailable(TestCase):
 
     def setUp(self):
-        self.price = prices.NoStockRecord()
+        self.price = prices.Unavailable()
 
     def test_means_unknown_tax(self):
         self.assertFalse(self.price.is_tax_known)
@@ -21,12 +21,12 @@ class TestNoStockRecord(TestCase):
         self.assertIsNone(self.price.tax)
 
 
-class TestWrappedStockRecord(TestCase):
+class TestDelegateToStockRecord(TestCase):
 
     def setUp(self):
         self.record = models.StockRecord(
             price_excl_tax=D('12.99'))
-        self.price = prices.WrappedStockRecord(self.record)
+        self.price = prices.DelegateToStockRecord(self.record)
 
     def test_means_unknown_tax(self):
         self.assertFalse(self.price.is_tax_known)
@@ -34,3 +34,19 @@ class TestWrappedStockRecord(TestCase):
     def test_has_correct_price(self):
         self.assertEquals(self.record.price_excl_tax,
                           self.price.excl_tax)
+
+
+class TestFixedPriceWithoutTax(TestCase):
+
+    def setUp(self):
+        self.price = prices.FixedPrice(D('9.15'))
+
+    def test_means_unknown_tax(self):
+        self.assertFalse(self.price.is_tax_known)
+
+    def test_has_correct_price(self):
+        self.assertEquals(D('9.15'), self.price.excl_tax)
+
+    def test_raises_exception_when_asking_for_price_incl_tax(self):
+        with self.assertRaises(prices.TaxNotKnown):
+            self.price.incl_tax

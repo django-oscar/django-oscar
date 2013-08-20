@@ -16,7 +16,7 @@ class Base(object):
     excl_tax = incl_tax = tax = None
 
 
-class NoStockRecord(Base):
+class Unavailable(Base):
     """
     No stockrecord, therefore no prices
     """
@@ -39,7 +39,7 @@ class FixedPrice(Base):
         return self.tax is not None
 
 
-class WrappedStockRecord(Base):
+class DelegateToStockRecord(Base):
 
     def __init__(self, stockrecord):
         self.stockrecord = stockrecord
