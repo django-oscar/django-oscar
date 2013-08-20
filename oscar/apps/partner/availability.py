@@ -19,7 +19,7 @@ class Base(object):
         Test if this product is available to be bought.
         """
         # We test a purchase of a single item
-        is_available, __ = self.is_purchase_permitted(1)
+        return self.is_purchase_permitted(1)[0]
 
     def is_purchase_permitted(self, quantity):
         """
@@ -27,7 +27,7 @@ class Base(object):
 
         Should return a boolean and a reason
         """
-        return False, u""
+        return False, _("Unavailable")
 
 
 class NoStockRecord(Base):

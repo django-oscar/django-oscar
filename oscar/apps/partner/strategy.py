@@ -42,7 +42,11 @@ class Base(object):
             self.user = request.user
 
     def fetch(self, product):
-        pass
+        raise NotImplementedError(
+            "A strategy class must define a fetch method "
+            "for returning the availability and pricing "
+            "information."
+        )
 
 
 class FirstStockRecord(Base):

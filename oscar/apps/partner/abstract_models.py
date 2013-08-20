@@ -189,8 +189,8 @@ class AbstractStockRecord(models.Model):
         """
         Consume a previous allocation
 
-        This is used when an item is shipped.  We remove the original allocation
-        and adjust the number in stock accordingly
+        This is used when an item is shipped.  We remove the original
+        allocation and adjust the number in stock accordingly
         """
         if not self.is_allocation_consumption_possible(quantity):
             raise InvalidStockAdjustment(_('Invalid stock consumption request'))
@@ -200,8 +200,8 @@ class AbstractStockRecord(models.Model):
     consume_allocation.alters_data = True
 
     def cancel_allocation(self, quantity):
-        # We ignore requests that request a cancellation of more than the amount already
-        # allocated.
+        # We ignore requests that request a cancellation of more than the
+        # amount already allocated.
         self.num_allocated -= min(self.num_allocated, quantity)
         self.save()
     cancel_allocation.alters_data = True
@@ -231,8 +231,13 @@ class AbstractStockRecord(models.Model):
         self.save()
     set_discount_price.alters_data = True
 
-    # Price retrieval methods - these default to no tax being applicable
-    # These are intended to be overridden.
+    @property
+    def is_below_threshold(self):
+        if self.low_stock_threshold is None:
+            return False
+        return self.net_stock_level < self.low_stock_threshold
+
+    # Stock wrapper methods
 
     @property
     def is_available_to_buy(self):
@@ -246,13 +251,9 @@ class AbstractStockRecord(models.Model):
         Return whether this stockrecord allows the product to be purchased by a
         specific user and quantity
         """
-        return get_partner_wrapper(self.partner_id).is_purchase_permitted(self, user, quantity, product)
-
-    @property
-    def is_below_threshold(self):
-        if self.low_stock_threshold is None:
-            return False
-        return self.net_stock_level < self.low_stock_threshold
+        return get_partner_wrapper(
+            self.partner_id).is_purchase_permitted(
+                self, user, quantity, product)
 
     @property
     def availability_code(self):
@@ -289,6 +290,8 @@ class AbstractStockRecord(models.Model):
     @property
     def lead_time(self):
         return get_partner_wrapper(self.partner_id).lead_time(self)
+
+    # Price methods
 
     @property
     def price_incl_tax(self):

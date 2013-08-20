@@ -97,6 +97,11 @@ class AbstractBasket(models.Model):
         return self._lines
 
     def is_quantity_allowed(self, qty):
+        """
+        Test whether the passed quantity of items can be added to the basket
+        """
+        # We enfore a max threshold to prevent a DOS attack via the offers
+        # system.
         basket_threshold = settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD
         if basket_threshold:
             total_basket_quantity = self.num_items
