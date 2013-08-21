@@ -207,8 +207,6 @@ class ProductForm(forms.ModelForm):
         for attribute in self.product_class.attributes.all():
             value = self.cleaned_data['attr_%s' % attribute.code]
             setattr(object.attr, attribute.code, value)
-        if not object.upc:
-            object.upc = None
         object.save()
         if hasattr(self, 'save_m2m'):
             self.save_m2m()
