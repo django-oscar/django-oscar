@@ -2,13 +2,11 @@ from decimal import Decimal as D
 
 from django.test import TestCase
 from django.test.client import RequestFactory
-from django_dynamic_fixture import G
 import mock
 
 from oscar.apps.offer import models, utils, custom
-from oscar.apps.basket.models import Basket
 from oscar.apps.order.utils import OrderCreator
-from oscar.test.factories import create_product
+from oscar.test import factories
 from oscar.test.basket import add_product
 
 
@@ -53,7 +51,7 @@ def apply_offers(basket):
 class TestAnOfferWithAPostOrderAction(TestCase):
 
     def setUp(self):
-        self.basket = G(Basket)
+        self.basket = factories.create_basket(empty=True)
         add_product(self.basket, D('12.00'), 1)
         create_offer()
         apply_offers(self.basket)

@@ -42,7 +42,7 @@ class Base(object):
         if request and request.user.is_authenticated():
             self.user = request.user
 
-    def fetch(self, product):
+    def fetch(self, product, stockrecord=None):
         raise NotImplementedError(
             "A strategy class must define a fetch method "
             "for returning the availability and pricing "
@@ -55,32 +55,33 @@ class FirstStockRecord(Base):
     Always use the first (normally only) stock record for a product
     """
 
-    def fetch(self, product):
+    def fetch(self, product, stockrecord=None):
         """
         Return the appropriate product price and availability information for
         this session.
         """
-        try:
-            record = product.stockrecords.all()[0]
-        except IndexError:
-            return StockInfo(
-                price=prices.Unavailable(),
-                availability=availability.Unavailable(),
-                stockrecord=None)
+        if stockrecord is None:
+            try:
+                stockrecord = product.stockrecords.all()[0]
+            except IndexError:
+                return StockInfo(
+                    price=prices.Unavailable(),
+                    availability=availability.Unavailable(),
+                    stockrecord=None)
 
         # If we track stock then back-orders aren't allowed
         if not product.get_product_class().track_stock:
             availability_policy = availability.Available()
         else:
             availability_policy = availability.StockRequired(
-                record.net_stock_level)
+                stockrecord.net_stock_level)
 
         # Assume zero tax
         pricing_policy = prices.FixedPrice(
-            excl_tax=record.price_excl_tax,
+            excl_tax=stockrecord.price_excl_tax,
             tax=D('0.00'))
 
         return StockInfo(
             availability=availability_policy,
             price=pricing_policy,
-            stockrecord=record)
+            stockrecord=stockrecord)

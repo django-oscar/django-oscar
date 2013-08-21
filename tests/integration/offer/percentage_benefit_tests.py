@@ -1,10 +1,8 @@
 from decimal import Decimal as D
 
 from django.test import TestCase
-from django_dynamic_fixture import G
 
 from oscar.apps.offer import models
-from oscar.apps.basket.models import Basket
 from oscar.test import factories
 from oscar.test.basket import add_product, add_products
 
@@ -22,7 +20,7 @@ class TestAPercentageDiscountAppliedWithCountCondition(TestCase):
             range=range,
             type=models.Benefit.PERCENTAGE,
             value=20)
-        self.basket = G(Basket)
+        self.basket = factories.create_basket(empty=True)
 
     def test_applies_correctly_to_empty_basket(self):
         result = self.benefit.apply(self.basket, self.condition)
@@ -67,7 +65,7 @@ class TestAPercentageDiscountWithMaxItemsSetAppliedWithCountCondition(TestCase):
             type=models.Benefit.PERCENTAGE,
             value=20,
             max_affected_items=1)
-        self.basket = G(Basket)
+        self.basket = factories.create_basket(empty=True)
 
     def test_applies_correctly_to_empty_basket(self):
         result = self.benefit.apply(self.basket, self.condition)
@@ -104,7 +102,7 @@ class TestAPercentageDiscountAppliedWithValueCondition(TestCase):
             range=range,
             type=models.Benefit.PERCENTAGE,
             value=20)
-        self.basket = G(Basket)
+        self.basket = factories.create_basket(empty=True)
 
     def test_applies_correctly_to_empty_basket(self):
         result = self.benefit.apply(self.basket, self.condition)
@@ -148,7 +146,7 @@ class TestAPercentageDiscountWithMaxItemsSetAppliedWithValueCondition(TestCase):
             type=models.Benefit.PERCENTAGE,
             value=20,
             max_affected_items=1)
-        self.basket = G(Basket)
+        self.basket = factories.create_basket(empty=True)
 
     def test_applies_correctly_to_empty_basket(self):
         result = self.benefit.apply(self.basket, self.condition)

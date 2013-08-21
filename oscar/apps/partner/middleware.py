@@ -12,5 +12,6 @@ class StrategyMiddleware(object):
     """
 
     def process_request(self, request):
-        request.strategy = selector.strategy(
+        strategy = selector.strategy(
             request=request, user=request.user)
+        request.strategy = strategy

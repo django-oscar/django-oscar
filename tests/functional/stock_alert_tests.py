@@ -7,6 +7,7 @@ from oscar.apps.basket.models import Basket
 from oscar.apps.partner.models import StockRecord, StockAlert
 from oscar.apps.order.utils import OrderCreator
 from oscar.test.basket import add_product
+from oscar.test import factories
 
 
 class TestPlacingAnOrder(TestCase):
@@ -15,7 +16,7 @@ class TestPlacingAnOrder(TestCase):
         self.product = create_product()
         self.stockrecord = create_stockrecord(self.product, D('12.00'),
                                               num_in_stock=5)
-        self.basket = Basket()
+        self.basket = factories.create_basket(empty=True)
         add_product(self.basket, product=self.product)
 
     def set_threshold(self, threshold):
@@ -62,7 +63,7 @@ class TestRestockingProduct(TestCase):
         self.product = create_product()
         self.stockrecord = create_stockrecord(self.product, D('12.00'),
                                               num_in_stock=5)
-        self.basket = Basket()
+        self.basket = factories.create_basket(empty=True)
         add_product(self.basket, product=self.product)
 
     def set_threshold(self, threshold):

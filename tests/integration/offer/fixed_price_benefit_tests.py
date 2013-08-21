@@ -1,11 +1,9 @@
 from decimal import Decimal as D
 
 from django.test import TestCase
-from django_dynamic_fixture import G
 
 from oscar.apps.offer import models
-from oscar.apps.basket.models import Basket
-from oscar.test.factories import create_product
+from oscar.test import factories
 from oscar.test.basket import add_product, add_products
 
 
@@ -22,7 +20,7 @@ class TestAFixedPriceDiscountAppliedWithCountCondition(TestCase):
             range=range,
             type=models.Benefit.FIXED_PRICE,
             value=D('20.00'))
-        self.basket = G(Basket)
+        self.basket = factories.create_basket(empty=True)
 
     def test_applies_correctly_to_empty_basket(self):
         result = self.benefit.apply(self.basket, self.condition)

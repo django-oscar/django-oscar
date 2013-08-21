@@ -64,6 +64,7 @@ class AbstractBasket(models.Model):
 
     def __init__(self, *args, **kwargs):
         super(AbstractBasket, self).__init__(*args, **kwargs)
+
         # We keep a cached copy of the basket lines as we refer to them often
         # within the same request cycle.  Also, applying offers will append
         # discount data to the basket lines which isn't persisted to the DB and
@@ -72,6 +73,21 @@ class AbstractBasket(models.Model):
         self._lines = None  # Cached queryset of lines
         self.offer_applications = results.OfferApplications()
         self.exempt_from_tax = False
+
+    def _get_strategy(self):
+        if not hasattr(self, '_strategy'):
+            raise RuntimeError(
+                "No strategy class has been assigned to this basket. "
+                "Ensure you are using "
+                "oscar.apps.partner.middleware.StrategyMiddleware "
+                "in MIDDLEWARE.  It should come before the basket "
+                "middleware")
+        return self._strategy
+
+    def _set_strategy(self, strategy):
+        self._strategy = strategy
+
+    strategy = property(_get_strategy, _set_strategy)
 
     def __unicode__(self):
         return _(
@@ -631,20 +647,27 @@ class AbstractLine(models.Model):
         return self._discount
 
     @property
+    def stockinfo(self):
+        """
+        Return the stock/price info
+        """
+        if not hasattr(self, '_info'):
+            # Cache the stockinfo
+            self._info = self.basket.strategy.fetch(
+                self.product, self.stockrecord)
+        return self._info
+
+    @property
     def unit_price_excl_tax(self):
-        return self.stockrecord.price_excl_tax
+        return self.stockinfo.price.excl_tax
 
     @property
     def unit_price_incl_tax(self):
-        if not self._charge_tax:
-            return self.unit_price_excl_tax
-        return self.stockrecord.price_incl_tax
+        return self.stockinfo.price.incl_tax
 
     @property
     def unit_tax(self):
-        if not self._charge_tax:
-            return Decimal('0.00')
-        return self.stockrecord.price_tax
+        return self.stockinfo.price.tax
 
     @property
     def line_price_excl_tax(self):
@@ -689,7 +712,7 @@ class AbstractLine(models.Model):
             return _(msg) % {'product': self.product.get_title()}
 
         # Compare current price to price when added to basket
-        current_price_incl_tax = self.stockrecord.price_incl_tax
+        current_price_incl_tax = self.stockinfo.price.incl_tax
         if current_price_incl_tax > self.price_incl_tax:
             msg = ("The price of '%(product)s' has increased from "
                    "%(old_price)s to %(new_price)s since you added it "

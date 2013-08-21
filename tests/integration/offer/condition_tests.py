@@ -4,7 +4,7 @@ from django.test import TestCase
 
 from oscar.apps.offer import models
 from oscar.apps.basket.models import Basket
-from oscar.test.factories import create_product
+from oscar.test import factories
 from oscar.test.basket import add_product, add_products
 from tests.unit.offer import OfferTest
 
@@ -20,7 +20,7 @@ class TestCountCondition(OfferTest):
         self.assertFalse(self.condition.is_satisfied(self.basket))
 
     def test_not_discountable_product_fails_condition(self):
-        prod1, prod2 = create_product(), create_product()
+        prod1, prod2 = factories.create_product(), factories.create_product()
         prod2.is_discountable = False
         prod2.save()
         add_product(self.basket, product=prod1)
@@ -67,8 +67,8 @@ class ValueConditionTest(OfferTest):
         super(ValueConditionTest, self).setUp()
         self.condition = models.ValueCondition(
             range=self.range, type="Value", value=D('10.00'))
-        self.item = create_product(price=D('5.00'))
-        self.expensive_item = create_product(price=D('15.00'))
+        self.item = factories.create_product(price=D('5.00'))
+        self.expensive_item = factories.create_product(price=D('15.00'))
 
     def test_empty_basket_fails_condition(self):
         self.assertFalse(self.condition.is_satisfied(self.basket))
@@ -81,7 +81,7 @@ class ValueConditionTest(OfferTest):
         self.assertFalse(self.condition.is_satisfied(self.basket))
 
     def test_not_discountable_item_fails_condition(self):
-        product = create_product(is_discountable=False)
+        product = factories.create_product(is_discountable=False)
         add_product(self.basket, D('15'), product=product)
         self.assertFalse(self.condition.is_satisfied(self.basket))
 
@@ -125,12 +125,12 @@ class ValueConditionTest(OfferTest):
 class TestCoverageCondition(TestCase):
 
     def setUp(self):
-        self.products = [create_product(), create_product()]
+        self.products = [factories.create_product(), factories.create_product()]
         self.range = models.Range.objects.create(name="Some products")
         for product in self.products:
             self.range.included_products.add(product)
             self.range.included_products.add(product)
-        self.basket = Basket.objects.create()
+        self.basket = factories.create_basket(empty=True)
         self.condition = models.CoverageCondition(
             range=self.range, type="Coverage", value=2)
 
@@ -190,7 +190,7 @@ class TestCoverageCondition(TestCase):
 
         # Get 4 distinct products in the basket
         self.products.extend(
-            [create_product(), create_product()])
+            [factories.create_product(), factories.create_product()])
         for product in self.products:
             add_product(self.basket, product=product)
 

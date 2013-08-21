@@ -14,6 +14,8 @@ class BasketMiddleware(object):
     def process_request(self, request):
         request.cookies_to_delete = []
         basket = self.get_basket(request)
+        if hasattr(request, 'strategy'):
+            basket.strategy = request.strategy
         self.apply_offers_to_basket(request, basket)
         request.basket = basket
 

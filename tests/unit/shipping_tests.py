@@ -59,7 +59,7 @@ class OrderAndItemChargesTests(TestCase):
 
     def setUp(self):
         self.method = OrderAndItemCharges(price_per_order=D('5.00'), price_per_item=D('1.00'))
-        self.basket = Basket.objects.create()
+        self.basket = factories.create_basket(empty=True)
         self.method.set_basket(self.basket)
 
     def test_order_level_charge_for_empty_basket(self):
@@ -83,7 +83,7 @@ class ZeroFreeThresholdTest(TestCase):
 
     def setUp(self):
         self.method = OrderAndItemCharges(price_per_order=D('10.00'), free_shipping_threshold=D('0.00'))
-        self.basket = Basket.objects.create()
+        self.basket = factories.create_basket(empty=True)
         self.method.set_basket(self.basket)
 
     def test_free_shipping_with_empty_basket(self):
@@ -101,7 +101,7 @@ class NonZeroFreeThresholdTest(TestCase):
     def setUp(self):
         self.method = OrderAndItemCharges(
             price_per_order=D('10.00'), free_shipping_threshold=D('20.00'))
-        self.basket = Basket.objects.create()
+        self.basket = factories.create_basket(empty=True)
         self.method.set_basket(self.basket)
 
     def test_basket_below_threshold(self):

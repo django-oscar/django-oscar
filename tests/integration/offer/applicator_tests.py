@@ -5,15 +5,15 @@ from django_dynamic_fixture import G
 
 from oscar.apps.offer.utils import Applicator
 from oscar.apps.offer import models
-from oscar.apps.basket.models import Basket
 from oscar.test.basket import add_product
+from oscar.test import factories
 
 
 class TestOfferApplicator(TestCase):
 
     def setUp(self):
         self.applicator = Applicator()
-        self.basket = Basket.objects.create()
+        self.basket = factories.create_basket(empty=True)
         rng = G(models.Range, includes_all_products=True)
         self.condition = G(models.Condition, range=rng, type="Value",
                            value=D('100'), proxy_class=None)

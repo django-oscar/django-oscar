@@ -1,4 +1,4 @@
-from django.db.models import get_model, Min
+from django.db.models import get_model
 from haystack import indexes
 
 from oscar.core.loading import get_class
@@ -43,7 +43,7 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     def prepare_num_in_stock(self, obj):
         if obj.has_stockrecords:
             result = strategy.fetch(obj)
-            return result.availability.num_in_stock
+            return result.stockrecord.num_in_stock
 
     def index_queryset(self, using=None):
         # Only index browsable products (not each individual variant)

@@ -2,15 +2,14 @@ from decimal import Decimal as D
 
 from django.test import TestCase
 from django.test.client import RequestFactory
-from django_dynamic_fixture import G
 import mock
 
 from oscar.apps.offer import models, utils
-from oscar.apps.basket.models import Basket
 from oscar.apps.order.utils import OrderCreator
 from oscar.apps.shipping.repository import Repository
 from oscar.apps.shipping.methods import FixedPrice
 from oscar.test.basket import add_product
+from oscar.test import factories
 
 
 def create_offer():
@@ -49,7 +48,7 @@ class StubRepository(Repository):
 class TestAnOfferWithAShippingBenefit(TestCase):
 
     def setUp(self):
-        self.basket = G(Basket)
+        self.basket = factories.create_basket(empty=True)
         create_offer()
 
     def test_applies_correctly_to_basket_which_matches_condition(self):

@@ -4,7 +4,6 @@ from django.test import TestCase
 from django.test.utils import override_settings
 from mock import Mock
 
-from oscar.apps.basket.models import Basket
 from oscar.apps.catalogue.models import ProductClass, Product
 from oscar.apps.offer.utils import Applicator
 from oscar.apps.order.models import Order
@@ -23,7 +22,7 @@ class TestOrderCreatorErrorCases(TestCase):
 
     def setUp(self):
         self.creator = OrderCreator()
-        self.basket = Basket()
+        self.basket = factories.create_basket(empty=True)
 
     def test_raises_exception_when_empty_basket_passed(self):
         with self.assertRaises(ValueError):
@@ -40,7 +39,7 @@ class TestSuccessfulOrderCreation(TestCase):
 
     def setUp(self):
         self.creator = OrderCreator()
-        self.basket = Basket.objects.create()
+        self.basket = factories.create_basket(empty=True)
 
     def tearDown(self):
         Order.objects.all().delete()
@@ -97,7 +96,7 @@ class TestPlacingOrderForDigitalGoods(TestCase):
 
     def setUp(self):
         self.creator = OrderCreator()
-        self.basket = Basket.objects.create()
+        self.basket = factories.create_basket(empty=True)
 
     def test_does_not_allocate_stock(self):
         ProductClass.objects.create(
@@ -123,7 +122,7 @@ class TestShippingOfferForOrder(TestCase):
 
     def setUp(self):
         self.creator = OrderCreator()
-        self.basket = Basket.objects.create()
+        self.basket = factories.create_basket(empty=True)
 
     def apply_20percent_shipping_offer(self):
         """Shipping offer 20% off"""

@@ -23,6 +23,7 @@ class Unavailable(Base):
 
 
 class FixedPrice(Base):
+    exists = True
 
     def __init__(self, excl_tax, tax=None):
         self.excl_tax = excl_tax

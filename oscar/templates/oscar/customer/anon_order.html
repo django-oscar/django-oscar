@@ -55,21 +55,21 @@
     <table class="table table-striped table-bordered">
         <tr>
             <th>{% trans 'Product' %}</th>
-            <th>{% trans 'Estimatd dispatch date' %}</th>
+            <th>{% trans 'Status' %}</th>
+            <th>{% trans 'Estimated dispatch date' %}</th>
             <th>{% trans 'Quantity' %}</th>
             <th>{% trans 'Line price excl. tax' %}</th>
             <th>{% trans 'Line price incl. tax' %}</th>
-            <th>{% trans 'Status' %}</th>
             <th></th>
         </tr>
         {% for line in order.lines.all %}
             <tr>
                 <td><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></td>
+                <td>{{ line.shipping_status|default:"-" }}</td>
                 <td>{{ line.est_dispatch_date|default:"-" }}</td>
                 <td>{{ line.quantity }}</td>
                 <td>{{ line.line_price_before_discounts_excl_tax|currency }}</td>
                 <td>{{ line.line_price_before_discounts_incl_tax|currency }}</td>
-                <td>{{ line.shipping_status|default:"-" }}</td>
                 <td>
                     <a href="{% url 'catalogue:reviews-add' line.product.slug line.product.id %}" class="btn btn-primary">{% trans 'Write a review' %}</a>
                 </td>
@@ -77,8 +77,9 @@
         {% endfor %}
         {% for discount in order.discounts.all %}
             <tr>
-                <td colspan="4">{{ discount.description }}</td>
+                <td colspan="5">{{ discount.description }}</td>
                 <td>-{{ discount.amount|currency }}</td>
+                <td colspan="1"></td>
             </tr>
         {% endfor %}
     </table>

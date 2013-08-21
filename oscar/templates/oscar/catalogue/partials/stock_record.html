@@ -14,7 +14,7 @@
             <h2 class="price_color">{{ session.price.excl_tax|currency }} <small>+ {% trans "tax" %}</small></h2>
         {% endif %}
     {% else %}
-            <h2 class="price_color"></h2>
+        <h2 class="price_color"></h2>
     {% endif %}
 {% endif %}
 
@@ -26,5 +26,5 @@
     <p class="{{ session.availability.code }} availability">
     <i class="icon-{% if session.availability.is_available_to_buy %}ok{% else %}remove{% endif %}"></i> 
     {{ session.availability.message }}
-    </p>
+</p>
 {% endif %}

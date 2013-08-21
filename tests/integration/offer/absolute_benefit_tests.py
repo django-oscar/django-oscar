@@ -7,6 +7,7 @@ from django_dynamic_fixture import G
 from oscar.apps.offer import models
 from oscar.apps.basket.models import Basket
 from oscar.test.basket import add_product, add_products
+from oscar.test import factories
 
 
 class TestAnAbsoluteDiscountAppliedWithCountCondition(TestCase):
@@ -22,7 +23,7 @@ class TestAnAbsoluteDiscountAppliedWithCountCondition(TestCase):
             range=range,
             type=models.Benefit.FIXED,
             value=D('3.00'))
-        self.basket = G(Basket)
+        self.basket = factories.create_basket(empty=True)
 
     def test_applies_correctly_to_empty_basket(self):
         result = self.benefit.apply(self.basket, self.condition)
@@ -109,7 +110,7 @@ class TestAnAbsoluteDiscount(TestCase):
             range=range,
             type=models.Benefit.FIXED,
             value=D('4.00'))
-        self.basket = G(Basket)
+        self.basket = factories.create_basket(empty=True)
 
     def test_applies_correctly_when_discounts_need_rounding(self):
         # Split discount across 3 lines
@@ -137,7 +138,7 @@ class TestAnAbsoluteDiscountWithMaxItemsSetAppliedWithCountCondition(TestCase):
             type=models.Benefit.FIXED,
             value=D('3.00'),
             max_affected_items=1)
-        self.basket = G(Basket)
+        self.basket = factories.create_basket(empty=True)
 
     def test_applies_correctly_to_empty_basket(self):
         result = self.benefit.apply(self.basket, self.condition)
@@ -180,7 +181,7 @@ class TestAnAbsoluteDiscountAppliedWithValueCondition(TestCase):
             range=range,
             type=models.Benefit.FIXED,
             value=D('3.00'))
-        self.basket = G(Basket)
+        self.basket = factories.create_basket(empty=True)
 
     def test_applies_correctly_to_empty_basket(self):
         result = self.benefit.apply(self.basket, self.condition)
@@ -231,7 +232,7 @@ class TestAnAbsoluteDiscountWithMaxItemsSetAppliedWithValueCondition(TestCase):
             type=models.Benefit.FIXED,
             value=D('3.00'),
             max_affected_items=1)
-        self.basket = G(Basket)
+        self.basket = factories.create_basket(empty=True)
 
     def test_applies_correctly_to_empty_basket(self):
         result = self.benefit.apply(self.basket, self.condition)

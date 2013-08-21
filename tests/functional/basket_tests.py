@@ -11,6 +11,7 @@ from oscar.core.compat import get_user_model
 from oscar.apps.basket.models import Basket
 from oscar.apps.basket import reports
 from oscar.test.basket import add_product
+from oscar.test import factories
 
 
 User = get_user_model()
@@ -137,7 +138,9 @@ class SavedBasketTests(TestCase):
         client.login(username=user.username, password='pass')
 
         product = create_product(price=D('10.00'), num_in_stock=2)
-        basket, created = Basket.open.get_or_create(owner=user)
+        basket = factories.create_basket(empty=True)
+        basket.owner = user
+        basket.save()
         add_product(basket, product=product)
 
         saved_basket, created = Basket.saved.get_or_create(owner=user)
@@ -155,7 +158,8 @@ class SavedBasketTests(TestCase):
             saved_form.add_prefix('move_to_basket'): True,
         }
         response = client.post(reverse('basket:saved'), data=data)
-        self.assertEqual(Basket.open.get(id=basket.id).lines.get(product=product).quantity, 2)
+        self.assertEqual(Basket.open.get(id=basket.id).lines.get(
+            product=product).quantity, 2)
         self.assertRedirects(response, reverse('basket:summary'))
 
     def test_moving_from_saved_basket_more_than_stocklevel_raises(self):
