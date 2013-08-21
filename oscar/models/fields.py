@@ -1,4 +1,6 @@
 from django.db.models.fields import CharField, DecimalField
+from django.db.models import SubfieldBase
+from django.utils import six
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.core import validators
@@ -51,5 +53,13 @@ class PositiveDecimalField(DecimalField):
 
 
 class UppercaseCharField(CharField):
+    # necessary for to_python to be called
+    __metaclass__ = SubfieldBase
+
     def to_python(self, value):
-        return super(UppercaseCharField, self).to_python(value).upper()
+        val = super(UppercaseCharField, self).to_python(value)
+        if isinstance(val, six.string_types):
+            return val.upper()
+        else:
+            return val
+

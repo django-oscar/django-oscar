@@ -257,9 +257,7 @@ class AbstractAddress(models.Model):
             if self.__dict__[field]:
                 self.__dict__[field] = self.__dict__[field].strip()
 
-        # Ensure postcodes are always uppercase and valid for country
-        if self.postcode:
-            self.postcode = self.postcode.upper()
+        # Ensure postcodes are valid for country
         self.ensure_postcode_is_valid_for_country()
 
     def ensure_postcode_is_valid_for_country(self):
