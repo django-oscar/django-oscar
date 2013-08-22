@@ -551,6 +551,11 @@ class AbstractProduct(models.Model):
             rating = float(reviews_sum) / reviews_count
         return rating
 
+    def has_review_by(self, user):
+        if user.is_anonymous():
+            return False
+        return self.reviews.filter(user=user).exists()
+
 
 class ProductRecommendation(models.Model):
     """
