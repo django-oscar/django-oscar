@@ -111,10 +111,22 @@
                                             <input type="text" name="selected_line_qty_{{ line.id }}" value="{{ line.quantity }}" class="span1" size="2" />
                                         </td>
                                         <td>{{ line.quantity }}</td>
-                                        <td>{{ line.title }}</td>
+                                        <td>
+                                            {% if line.product %}
+                                                <a href="{% url 'dashboard:catalogue-product' line.product.id %}">{{ line.title }}</a>
+                                            {% else %}
+                                                {{ line.title }}
+                                            {% endif %}
+                                        </td>
                                         <td>{{ line.upc|default:"-" }}</td>
                                         <td>{{ line.status|default:"-" }}</td>
-                                        <td>{{ line.partner_name }}</td>
+                                        <td>
+                                            {% if line.partner %}
+                                                <a href="{% url 'dashboard:partner-manage' line.partner.id %}">{{ line.partner_name }}</a>
+                                            {% else %}
+                                                {{ line.partner_name }}
+                                            {% endif %}
+                                        </td>
                                         <td>{{ line.partner_sku }}</td>
                                         <td>{{ line.est_dispatch_date|default:"-" }}</td>
                                         <td style="text-align: right">{{ line.line_price_before_discounts_incl_tax|currency }}</td>
