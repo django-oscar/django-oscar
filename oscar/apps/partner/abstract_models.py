@@ -1,4 +1,5 @@
 from decimal import Decimal as D
+import warnings
 
 from django.db import models
 from django.conf import settings
@@ -173,6 +174,21 @@ class AbstractStockRecord(models.Model):
         verbose_name = _("Stock record")
         verbose_name_plural = _("Stock records")
 
+    @property
+    def net_stock_level(self):
+        """
+        The effective number in stock (eg available to buy).
+
+        This is correct property to show the customer, not the num_in_stock
+        field as that doesn't account for allocations.  This can be negative in
+        some unusual circumstances
+        """
+        if self.num_in_stock is None:
+            return 0
+        if self.num_allocated is None:
+            return self.num_in_stock
+        return self.num_in_stock - self.num_allocated
+
     # 2-stage stock management model
 
     def allocate(self, quantity):
@@ -189,6 +205,9 @@ class AbstractStockRecord(models.Model):
     allocate.alters_data = True
 
     def is_allocation_consumption_possible(self, quantity):
+        """
+        Test if a proposed stock consumption is permitted
+        """
         return quantity <= min(self.num_allocated, self.num_in_stock)
 
     def consume_allocation(self, quantity):
@@ -214,31 +233,22 @@ class AbstractStockRecord(models.Model):
     cancel_allocation.alters_data = True
 
     @property
-    def net_stock_level(self):
-        """
-        Return the effective number in stock.  This is correct property to show
-        the customer, not the num_in_stock field as that doesn't account for
-        allocations.  This can be negative in some unusual circumstances
-        """
-        if self.num_in_stock is None:
-            return 0
-        if self.num_allocated is None:
-            return self.num_in_stock
-        return self.num_in_stock - self.num_allocated
-
-    @property
     def is_below_threshold(self):
         if self.low_stock_threshold is None:
             return False
         return self.net_stock_level < self.low_stock_threshold
 
-    # Stock wrapper methods
+    # Stock wrapper methods - deprecated since 0.6
 
     @property
     def is_available_to_buy(self):
         """
         Return whether this stockrecord allows the product to be purchased
         """
+        warnings.warn((
+            "StockRecord.is_available_to_buy is deprecated and will be "
+            "removed in 0.7.  Use a strategy class to determine availability "
+            "instead"), DeprecationWarning)
         return get_partner_wrapper(self.partner_id).is_available_to_buy(self)
 
     def is_purchase_permitted(self, user=None, quantity=1, product=None):
@@ -246,6 +256,10 @@ class AbstractStockRecord(models.Model):
         Return whether this stockrecord allows the product to be purchased by a
         specific user and quantity
         """
+        warnings.warn((
+            "StockRecord.is_purchase_permitted is deprecated and will be "
+            "removed in 0.7.  Use a strategy class to determine availability "
+            "instead"), DeprecationWarning)
         return get_partner_wrapper(
             self.partner_id).is_purchase_permitted(
                 self, user, quantity, product)
@@ -257,6 +271,10 @@ class AbstractStockRecord(models.Model):
         to the overall availability mark-up.  For example, "instock",
         "unavailable".
         """
+        warnings.warn((
+            "StockRecord.availability_code is deprecated and will be "
+            "removed in 0.7.  Use a strategy class to determine availability "
+            "instead"), DeprecationWarning)
         return get_partner_wrapper(self.partner_id).availability_code(self)
 
     @property
@@ -265,6 +283,10 @@ class AbstractStockRecord(models.Model):
         Return a product's availability as a string that can be displayed to
         the user.  For example, "In stock", "Unavailable".
         """
+        warnings.warn((
+            "StockRecord.availability is deprecated and will be "
+            "removed in 0.7.  Use a strategy class to determine availability "
+            "instead"), DeprecationWarning)
         return get_partner_wrapper(self.partner_id).availability(self)
 
     def max_purchase_quantity(self, user=None):
@@ -273,6 +295,10 @@ class AbstractStockRecord(models.Model):
 
         :param user: (optional) The user who wants to purchase
         """
+        warnings.warn((
+            "StockRecord.max_purchase_quantity is deprecated and will be "
+            "removed in 0.7.  Use a strategy class to determine availability "
+            "instead"), DeprecationWarning)
         return get_partner_wrapper(
             self.partner_id).max_purchase_quantity(self, user)
 
@@ -281,13 +307,21 @@ class AbstractStockRecord(models.Model):
         """
         Return the estimated dispatch date for a line
         """
+        warnings.warn((
+            "StockRecord.dispatch_date is deprecated and will be "
+            "removed in 0.7.  Use a strategy class to determine availability "
+            "instead"), DeprecationWarning)
         return get_partner_wrapper(self.partner_id).dispatch_date(self)
 
     @property
     def lead_time(self):
+        warnings.warn((
+            "StockRecord.lead_time is deprecated and will be "
+            "removed in 0.7.  Use a strategy class to determine availability "
+            "instead"), DeprecationWarning)
         return get_partner_wrapper(self.partner_id).lead_time(self)
 
-    # Price methods
+    # Price methods - deprecated in 0.6
 
     @property
     def price_incl_tax(self):
@@ -298,6 +332,10 @@ class AbstractStockRecord(models.Model):
         domain specific.  This class needs to be subclassed and tax logic
         added to this method.
         """
+        warnings.warn((
+            "StockRecord.price_incl_tax is deprecated and will be "
+            "removed in 0.7.  Use a strategy class to determine price "
+            "information instead"), DeprecationWarning, stacklevel=2)
         if self.price_excl_tax is None:
             return D('0.00')
         return self.price_excl_tax + self.price_tax
@@ -307,6 +345,10 @@ class AbstractStockRecord(models.Model):
         """
         Return a product's tax value
         """
+        warnings.warn((
+            "StockRecord.price_incl_tax is deprecated and will be "
+            "removed in 0.7.  Use a strategy class to determine price "
+            "information instead"), DeprecationWarning)
         return get_partner_wrapper(self.partner_id).calculate_tax(self)
 
 
