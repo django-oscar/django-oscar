@@ -12,6 +12,10 @@ TEMPLATE_DEBUG = True
 SQL_DEBUG = True
 SEND_BROKEN_LINK_EMAILS = False
 
+ALLOWED_HOSTS = ['latet.oscarcommerce.com',
+                 'sandbox.oscar.tangentlabs.co.uk',
+                 'master.oscarcommerce.com']
+
 ADMINS = (
     ('David Winterbottom', 'david.winterbottom@tangentlabs.co.uk'),
 )
