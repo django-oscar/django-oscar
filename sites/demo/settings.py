@@ -27,6 +27,9 @@ ADMINS = (
 EMAIL_SUBJECT_PREFIX = '[Oscar demo] '
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+ALLOWED_HOSTS = ['demo.oscarcommerce.com',
+                 'demo.oscar.tangentlabs.co.uk']
+
 MANAGERS = ADMINS
 
 # Use settings_local to specify your own PostGIS database and creds
