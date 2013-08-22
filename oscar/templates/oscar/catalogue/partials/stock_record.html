@@ -25,6 +25,6 @@
 {% else %}
     <p class="{{ session.availability.code }} availability">
     <i class="icon-{% if session.availability.is_available_to_buy %}ok{% else %}remove{% endif %}"></i> 
-    {{ session.availability.message }}
+    {{ session.availability.short_message }}
 </p>
 {% endif %}

@@ -14,6 +14,14 @@ class Base(object):
     dispatch_date = None
 
     @property
+    def short_message(self):
+        """
+        A shorter version of the availability message, suitable for showing on
+        browsing pages.
+        """
+        return self.message
+
+    @property
     def is_available_to_buy(self):
         """
         Test if this product is available to be bought.
@@ -78,6 +86,12 @@ class StockRequired(Base):
         if self.num_available > 0:
             return self.CODE_IN_STOCK
         return self.CODE_OUT_OF_STOCK
+
+    @property
+    def short_message(self):
+        if self.num_available > 0:
+            return _("In stock")
+        return _("Not available")
 
     @property
     def message(self):
