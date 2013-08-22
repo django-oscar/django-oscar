@@ -2,6 +2,7 @@ from django_dynamic_fixture import G
 
 from mock import Mock
 import contextlib
+from nose.plugins.attrib import attr
 
 from oscar.test.testcases import WebTestCase
 from oscar.test.factories import create_product
@@ -30,6 +31,7 @@ def mock_signal_receiver(signal, wraps=None, **kwargs):
     signal.disconnect(receiver)
 
 
+@attr('reviews')
 class TestACustomer(WebTestCase):
 
     def setUp(self):
