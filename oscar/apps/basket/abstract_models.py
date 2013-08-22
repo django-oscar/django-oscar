@@ -166,16 +166,18 @@ class AbstractBasket(models.Model):
 
         # Determine price to store (if one exists).  It is only stored for
         # audit and sometimes caching.
-        price_incl_tax = stock_info.price.incl_tax
-        price_excl_tax = stock_info.price.excl_tax
+        defaults = {
+            'quantity': quantity,
+            'price_excl_tax': stock_info.price.excl_tax,
+        }
+        if stock_info.price.is_tax_known:
+            defaults['price_incl_tax'] = stock_info.price.incl_tax
 
         line, created = self.lines.get_or_create(
             line_reference=line_ref,
             product=product,
             stockrecord=stock_info.stockrecord,
-            defaults={'quantity': quantity,
-                      'price_excl_tax': price_excl_tax,
-                      'price_incl_tax': price_incl_tax})
+            defaults=defaults)
         if created:
             for option_dict in options:
                 line.attributes.create(option=option_dict['option'],

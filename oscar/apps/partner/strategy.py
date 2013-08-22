@@ -141,12 +141,21 @@ class FixedRateTax(object):
             tax=stockrecord.price_excl_tax * self.rate)
 
 
+class DeferredTax(object):
+
+    def pricing_policy(self, product, stockrecord):
+        if not stockrecord:
+            return prices.Unavailable()
+        return prices.FixedPrice(
+            excl_tax=stockrecord.price_excl_tax)
+
+
 # Example strategy composed of above mixins.  For real projects, it's likely
 # you'll want to use a different pricing mixin as you'll probably want to
 # charge tax!
 
 
-class Default(UseFirstStockRecord, StockRequired, ZeroTax, Structured):
+class Default(UseFirstStockRecord, StockRequired, DeferredTax, Structured):
     """
     Default stock/price strategy that uses the first found stockrecord for a
     product, ensures that stock is available (unless the product class
