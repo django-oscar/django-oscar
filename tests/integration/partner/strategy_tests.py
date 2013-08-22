@@ -6,10 +6,10 @@ from oscar.apps.catalogue import models
 from oscar.test import factories
 
 
-class TestFirstStockRecordStrategy(TestCase):
+class TestDefaultStrategy(TestCase):
 
     def setUp(self):
-        self.strategy = strategy.FirstStockRecord()
+        self.strategy = strategy.Default()
 
     def test_no_stockrecords(self):
         product = factories.create_product()
@@ -22,6 +22,7 @@ class TestFirstStockRecordStrategy(TestCase):
         info = self.strategy.fetch(product)
         self.assertTrue(info.availability.is_available_to_buy)
         self.assertEquals(D('1.99'), info.price.excl_tax)
+        self.assertEquals(D('1.99'), info.price.incl_tax)
 
     def test_product_which_doesnt_track_stock(self):
         product_class = models.ProductClass.objects.create(

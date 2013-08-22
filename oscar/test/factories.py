@@ -80,7 +80,7 @@ def create_product(upc=None, title=u"Dummy title",
 
 def create_basket(empty=False):
     basket = Basket.objects.create()
-    basket.strategy = strategy.FirstStockRecord()
+    basket.strategy = strategy.Default()
     if not empty:
         product = create_product()
         stockrecord = create_stockrecord(product)
@@ -97,7 +97,7 @@ def create_order(number=None, basket=None, user=None, shipping_address=None,
     """
     if not basket:
         basket = Basket.objects.create()
-        basket.strategy = strategy.FirstStockRecord()
+        basket.strategy = strategy.Default()
         product = create_product()
         record = create_stockrecord(
             product, num_in_stock=10, price_excl_tax=D('10.00'))
