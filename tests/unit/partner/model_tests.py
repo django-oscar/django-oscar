@@ -107,7 +107,7 @@ class TestPartnerAddress(TestCase):
             partner=self.partner)
 
     def test_can_get_primary_address(self):
-        self.assertEqual(self.partner.get_primary_address(), self.address)
+        self.assertEqual(self.partner.primary_address, self.address)
 
     def test_fails_on_two_addresses(self):
         self.address = PartnerAddress._default_manager.create(
@@ -117,7 +117,8 @@ class TestPartnerAddress(TestCase):
             postcode = "LS1 2HA",
             country=self.country,
             partner=self.partner)
-        self.assertRaises(NotImplementedError, self.partner.get_primary_address)
+        self.assertRaises(
+            NotImplementedError, getattr, self.partner, 'primary_address')
 
 
 

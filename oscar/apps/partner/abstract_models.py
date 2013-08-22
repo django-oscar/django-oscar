@@ -91,7 +91,7 @@ class AbstractPartner(models.Model):
             return addresses[0]
         else:
             raise NotImplementedError(
-                "Oscar's default implementation of get_primary_address only "
+                "Oscar's default implementation of primary_address only "
                 "supports one PartnerAddress.")
 
     def get_address_for_stockrecord(self, stockrecord):
@@ -100,7 +100,7 @@ class AbstractPartner(models.Model):
         function allows selecting the correct PartnerAddress for the record.
         That can be useful when determining tax.
         """
-        return self.get_primary_address()
+        return self.primary_address
 
     class Meta:
         verbose_name = _('Fulfillment partner')
