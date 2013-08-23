@@ -290,7 +290,7 @@
                         {{ image_formset.non_form_errors }}
                         <ol class='upload-image'>
                             {% for image_form in image_formset %}
-                            {% include "dashboard/partials/product_images.html" with form=image_form %}
+                                {% include "dashboard/partials/product_images.html" with form=image_form %}
                             {% endfor %}
                         </ol>
                     </div>

@@ -1,3 +1,8 @@
+"""
+Sample user/profile models for testing.  These aren't enabled by default in the
+sandbox
+"""
+
 from django.db import models
 from django.utils import timezone
 

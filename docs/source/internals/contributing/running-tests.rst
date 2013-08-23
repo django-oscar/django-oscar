@@ -32,14 +32,17 @@ To run an individual test, use one of::
 Testing against different setups
 --------------------------------
 
-To run all tests against multiple versions of Django and Python, use tox_::
+To run all tests against multiple versions of Django and Python, use detox_::
 
-    $ tox
+    $ detox
 
 You need to have all Python interpreters to test against installed on your 
 system. All other requirements are downloaded automatically.
+detox_ is a wrapper around tox_, creating the environments and running the tests
+in parallel. This greatly speeds up the process.
 
 .. _tox: http://tox.readthedocs.org/en/latest/
+.. _detox: https://pypi.python.org/pypi/detox
 
 Kinds of tests
 --------------

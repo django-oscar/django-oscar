@@ -81,11 +81,11 @@ Here's a more involved example repository that has two fixed price charges::
     from oscar.apps.shipping import repository, methods as core_methods
 
     # We create subclasses so we can give them different codes and names
-    class Standard(methods.FixedPrice):
+    class Standard(core_methods.FixedPrice):
         code = 'standard'
         name = _("Standard shipping")
 
-    class Express(methods.FixedPrice):
+    class Express(core_methods.FixedPrice):
         code = 'express'
         name = _("Express shipping")
 

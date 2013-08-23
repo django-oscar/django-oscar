@@ -8,7 +8,8 @@
         {% if objects %}
             <tr>
                 <th>{% trans "Order number" %}</th>
-                <th>{% trans "User" %}</th>
+                <th>{% trans "Name" %}</th>
+                <th>{% trans "Email" %}</th>
                 <th>{% trans "Total incl. tax" %}</th>
                 <th>{% trans "Date placed" %}</th>
                 <th></th>
@@ -16,7 +17,14 @@
             {% for order in objects %}
                 <tr>
                     <td>{{ order.number }}</td>
-                    <td>{{ order.user|default:"-" }}</td>
+                        {% if not order.is_anonymous %}
+                            <td>{{ order.user.get_full_name|default:"-" }}</td>
+                            <td>{{ order.user.email }}</td>
+                        {% else %}
+                            <td>-</td>
+                            <td>{{ order.guest_email }}</td>
+                        {% endif %}
+                    </td>
                     <td>{{ order.total_incl_tax|currency }}</td>
                     <td>{{ order.date_placed }}</td>
                     <td>

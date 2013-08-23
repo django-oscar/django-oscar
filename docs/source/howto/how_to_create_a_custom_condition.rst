@@ -32,7 +32,7 @@ It can also implement:
 
 * a ``is_partially_satisfied`` method that tests to see if the customer's basket
   partially satisfies the condition (ie when you might want to show them an
-  upsel message)
+  upsell message)
 
 Silly example::
 
@@ -56,9 +56,9 @@ To make this condition available to be used in offers, do the following::
 
     from oscar.apps.offer.custom import create_condition
 
-    create_range(BasketOwnerCalledBarry)
+    create_condition(BasketOwnerCalledBarry)
 
-Now you should see this range in the dashboard when creating/updating an offer.
+Now you should see this condition in the dashboard when creating/updating an offer.
 
 Deploying custom conditions
 ---------------------------

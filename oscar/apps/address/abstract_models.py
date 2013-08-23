@@ -3,10 +3,11 @@ import zlib
 import string
 
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext_lazy as _, pgettext_lazy
 from django.core import exceptions
 
 from oscar.core.compat import AUTH_USER_MODEL
+from oscar.models.fields import UppercaseCharField
 
 
 class AbstractAddress(models.Model):
@@ -209,8 +210,8 @@ class AbstractAddress(models.Model):
     }
 
     title = models.CharField(
-        _("Title"), max_length=64, choices=TITLE_CHOICES,
-        blank=True, null=True)
+        pgettext_lazy(u"Treatment Pronouns for the customer", u"Title"),
+        max_length=64, choices=TITLE_CHOICES, blank=True, null=True)
     first_name = models.CharField(
         _("First name"), max_length=255, blank=True, null=True)
     last_name = models.CharField(_("Last name"), max_length=255, blank=True)
@@ -225,7 +226,7 @@ class AbstractAddress(models.Model):
     line4 = models.CharField(_("City"), max_length=255, blank=True, null=True)
     state = models.CharField(
         _("State/County"), max_length=255, blank=True, null=True)
-    postcode = models.CharField(
+    postcode = UppercaseCharField(
         _("Post/Zip-code"), max_length=64, blank=True, null=True)
     country = models.ForeignKey('address.Country', verbose_name=_("Country"))
 
@@ -256,9 +257,7 @@ class AbstractAddress(models.Model):
             if self.__dict__[field]:
                 self.__dict__[field] = self.__dict__[field].strip()
 
-        # Ensure postcodes are always uppercase and valid for country
-        if self.postcode:
-            self.postcode = self.postcode.upper()
+        # Ensure postcodes are valid for country
         self.ensure_postcode_is_valid_for_country()
 
     def ensure_postcode_is_valid_for_country(self):

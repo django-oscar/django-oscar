@@ -5,7 +5,6 @@ Glossary
 This is a work-in-progress list of commonly used terms when discussing Oscar.
 
 .. glossary::
-
     :sorted:
 
     Partner

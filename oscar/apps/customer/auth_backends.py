@@ -16,7 +16,7 @@ if hasattr(User, 'REQUIRED_FIELDS'):
 
 class Emailbackend(ModelBackend):
     """
-    Custom auth backend that users an email address
+    Custom auth backend that uses an email address and password
 
     For this to work, the User model must have an 'email' field
     """
@@ -26,6 +26,8 @@ class Emailbackend(ModelBackend):
             if not 'username' in kwargs or kwargs['username'] is None:
                 return None
             clean_email = normalise_email(kwargs['username'])
+        else:
+            clean_email = normalise_email(email)
 
         # Check if we're dealing with an email address
         if '@' not in clean_email:
@@ -35,7 +37,8 @@ class Emailbackend(ModelBackend):
         # matching users and try to authenticate them all.  If we get more than
         # one success, then we mail admins as this is a problem.
         authenticated_users = []
-        for user in User.objects.filter(email=clean_email):
+        matching_users = User.objects.filter(email=clean_email)
+        for user in matching_users:
             if user.check_password(password):
                 authenticated_users.append(user)
         if len(authenticated_users) == 1:

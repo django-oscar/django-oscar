@@ -12,6 +12,10 @@ TEMPLATE_DEBUG = True
 SQL_DEBUG = True
 SEND_BROKEN_LINK_EMAILS = False
 
+ALLOWED_HOSTS = ['latest.oscarcommerce.com',
+                 'sandbox.oscar.tangentlabs.co.uk',
+                 'master.oscarcommerce.com']
+
 ADMINS = (
     ('David Winterbottom', 'david.winterbottom@tangentlabs.co.uk'),
 )
@@ -113,7 +117,8 @@ SECRET_KEY = '$)a7n&o80u!6y5t-+jrd3)3!%vh&shg$wqpjpxc!ar&p#!)n1a'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+    # needed by django-treebeard for admin (and potentially other libs)
+    'django.template.loaders.eggs.Loader',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -237,6 +242,11 @@ LOGGING = {
             'propagate': True,
             'level': 'INFO',
         },
+        'oscar.catalogue.import': {
+            'handlers': ['console'],
+            'propagate': False,
+            'level': 'INFO',
+        },
         'gateway': {
             'handlers': ['gateway_file'],
             'propagate': True,
@@ -252,6 +262,12 @@ LOGGING = {
             'propagate': False,
             'level': 'DEBUG',
         },
+        # suppress output of this debug toolbar panel
+        'template_timings_panel': {
+            'handlers': ['null'],
+            'level': 'DEBUG',
+            'propagate': False,
+        }
     }
 }
 
@@ -273,7 +289,6 @@ INSTALLED_APPS = [
     'south',
     'rosetta',          # For i18n testing
     'compressor',
-    'apps.user',        # For profile testing
     'apps.gateway',     # For allowing dashboard access
 ]
 from oscar import get_core_apps
@@ -296,8 +311,6 @@ HAYSTACK_CONNECTIONS = {
         'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
     },
 }
-
-AUTH_PROFILE_MODULE = 'user.Profile'
 
 # =============
 # Debug Toolbar

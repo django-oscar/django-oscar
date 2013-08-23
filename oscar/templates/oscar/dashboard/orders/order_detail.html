@@ -401,6 +401,14 @@
                                     {% endfor %}
                                 </td>
                             </tr>
+                            <tr>
+                                <th>{% trans "Phone" %}</th>
+                                <td>{{ order.shipping_address.phone_number|default:"-" }}</td>
+                            </tr>
+                            <tr>
+                                <th>{% trans "Instructions" %}</th>
+                                <td>{{ order.shipping_address.notes|default:"-" }}</td>
+                            </tr>
                         </tbody>
                     </table>
                 {% endblock %}

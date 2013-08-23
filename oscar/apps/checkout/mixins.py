@@ -52,8 +52,9 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         isn't necessarily the correct one to use in placing the order.  This
         can happen when a basket gets frozen.
         """
-        order = self.place_order(order_number, basket, total_incl_tax,
-                                 total_excl_tax, user, **kwargs)
+        order = self.place_order(
+            order_number, basket, total_incl_tax,
+            total_excl_tax, user, **kwargs)
         basket.submit()
         return self.handle_successful_order(order)
 
@@ -62,7 +63,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             self._payment_sources = []
         self._payment_sources.append(source)
 
-    def add_payment_event(self, event_type_name, amount, reference=None):
+    def add_payment_event(self, event_type_name, amount, reference=''):
         """
         Record a payment event for creation once the order is placed
         """
@@ -111,7 +112,11 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         """
         shipping_address = self.create_shipping_address(basket)
         shipping_method = self.get_shipping_method(basket)
-        billing_address = self.create_billing_address(shipping_address)
+
+        # We pass the kwargs as they often include the billing address form
+        # which will be needed to save a billing address.
+        billing_address = self.create_billing_address(
+            shipping_address, **kwargs)
 
         if 'status' not in kwargs:
             status = self.get_initial_order_status(basket)
@@ -244,7 +249,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         shipping_addr.save()
         return shipping_addr
 
-    def create_billing_address(self, shipping_address=None):
+    def create_billing_address(self, shipping_address=None, **kwargs):
         """
         Saves any relevant billing data (eg a billing address).
         """

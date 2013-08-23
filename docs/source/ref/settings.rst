@@ -94,7 +94,8 @@ Defines the available promotion block types that can be used in Oscar.
 
 Default: see ``oscar.defaults`` (too long to include here).
 
-A list of dashboard navigation elements.
+A list of dashboard navigation elements. Usage is explained in
+:doc:`/howto/how_to_configure_the_dashboard_navigation`.
 
 Order settings
 ==============

@@ -55,6 +55,7 @@
         </form>
     </div>
 
+<<<<<<< HEAD
     {% if products %}
         <div class="table-header">
             <h2><i class="icon-sitemap icon-large"></i>{{ queryset_description }}</h2>
@@ -110,19 +111,13 @@
                                     </a>
                                     <ul class="dropdown-menu pull-right">
                                         <li>
-                                            <a href="{% url 'dashboard:catalogue-product' product.id %}{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}">
-                                                {% trans "Edit" %}
-                                            </a>
+                                            <a href="{% url 'dashboard:catalogue-product' product.id %}{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}">{% trans "Edit" %}</a>
+                                        </li>
+                                        <li> 
+                                            <a href="{{ product.get_absolute_url }}"> {% trans "View on site" %}</a>
                                         </li>
                                         <li>
-                                            <a href="{{ product.get_absolute_url }}">
-                                                {% trans "View on site" %}
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="{% url 'dashboard:catalogue-product-delete' product.id %}">
-                                                {% trans "Delete" %}
-                                            </a>
+                                            <a href="{% url 'dashboard:catalogue-product-delete' product.id %}">{% trans "Delete" %}</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -135,9 +130,7 @@
         </form>
 
     {% else %}
-
         <p>{% trans "No products found." %}</p>
-
     {% endif %}
 
 {% endblock dashboard_content %}

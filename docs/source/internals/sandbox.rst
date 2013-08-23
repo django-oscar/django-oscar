@@ -3,7 +3,7 @@ Sample Oscar projects
 =====================
 
 Oscar ships with two sample projects: a 'sandbox' site, which is a vanilla install of Oscar using the
-default templates and styles, and a fully featured 'demo' site which demonstrates how Oscan can be
+default templates and styles, and a fully featured 'demo' site which demonstrates how Oscar can be
 re-skinned and customised to model a domain. 
 
 The sandbox site
@@ -36,8 +36,8 @@ The sandbox is, in effect, the blank canvas upon which you can build your site.
 The demo site
 -------------
 
-The demo site is *the* reference Oscar project as it illustates how Oscar can be
-redesigned and customised to build a e-commerce store.  The demo site is a
+The demo site is *the* reference Oscar project as it illustrates how Oscar can
+be redesigned and customised to build an e-commerce store. The demo site is a
 sailing store selling a range of different product types.
 
 The customisations on top of core Oscar include:
@@ -49,6 +49,18 @@ The customisations on top of core Oscar include:
 
 .. _django-oscar-paypal: https://github.com/tangentlabs/django-oscar-paypal
 .. _django-oscar-datacash: https://github.com/tangentlabs/django-oscar-datacash
+
+.. note::
+
+    Both the sandbox and demo site have the Django admin interface wired up.
+    This is done as a convenience for developers to browse the database at
+    ORM level. It also serves as an easy method to manually create a product
+    class or partner.
+
+    Having said that, the Django admin interface is *unsupported* and will fail
+    or be of little use for some models. At the time of writing, editing
+    products in the admin is clunky and slow, and editing categories is
+    not supported at all.
 
 Browse the external sandbox site
 ================================

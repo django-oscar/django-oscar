@@ -48,7 +48,7 @@
                                 <div class="image_container">
                                     {% with image=product.primary_image %}
                                         {% thumbnail image.original "200x200" upscale=False as thumb %}
-                                        <a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
+                                        <a href="{{ product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"/></a>
                                         {% endthumbnail %}
                                     {% endwith %}
                                 </div>
@@ -151,14 +151,14 @@
             {% csrf_token %}
             {{ saved_formset.management_form }}
             {% for form in saved_formset %}
-                {% session_strategy request product as session %}
+                {% session_strategy request form.instance.product as session %}
                 <div class="row-fluid basket-items">
                     <div class="span8">
                         {{ form.id }}
                         <div class="image_container">
                             {% with image=form.instance.product.primary_image %}
                                 {% thumbnail image.original "200x200" upscale=False as thumb %}
-                                <a href="{{ form.instance.product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ product.get_title }}"></a>
+                                <a href="{{ form.instance.product.get_absolute_url }}"><img class="thumbnail" src="{{ thumb.url }}" alt="{{ form.instance.product.get_title }}"></a>
                                 {% endthumbnail %}
                             {% endwith %}
                         </div>

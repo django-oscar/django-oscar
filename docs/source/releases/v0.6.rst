@@ -82,6 +82,14 @@ Order processing changes
 
 There are changes to order processing methods
 
+Minor changes
+~~~~~~~~~~~~~
+
+* detox_ is a new dependency, which allows running `tox` tests in parallel.
+
+.. _detox: https://pypi.python.org/pypi/detox
+
+
 Upgrading 
 =========
 
@@ -117,6 +125,9 @@ Checkout app:
 
 * Checkout has a new option "Register and continue". Option value `new` in
   `GatewayForm` has changed to `guest` as `new` option is used for this feature.
+
+* Payment details - create_billing_address accepts kwargs so data can be passed
+  to it from the final page of checkout.
 
 Payment app:
 
