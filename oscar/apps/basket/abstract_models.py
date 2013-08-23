@@ -73,6 +73,17 @@ class AbstractBasket(models.Model):
         self._lines = None
         self.offer_applications = results.OfferApplications()
 
+    def __unicode__(self):
+        return _(
+            u"%(status)s basket (owner: %(owner)s, lines: %(num_lines)d)") % {
+                'status': self.status,
+                'owner': self.owner,
+                'num_lines': self.num_lines}
+
+    # ========
+    # Strategy
+    # ========
+
     @property
     def has_strategy(self):
         return hasattr(self, '_strategy')
@@ -91,13 +102,6 @@ class AbstractBasket(models.Model):
         self._strategy = strategy
 
     strategy = property(_get_strategy, _set_strategy)
-
-    def __unicode__(self):
-        return _(
-            u"%(status)s basket (owner: %(owner)s, lines: %(num_lines)d)") % {
-                'status': self.status,
-                'owner': self.owner,
-                'num_lines': self.num_lines}
 
     def all_lines(self):
         """
@@ -190,7 +194,6 @@ class AbstractBasket(models.Model):
             line.save()
         self.reset_offer_applications()
     add_product.alters_data = True
-
     add = add_product
 
     def applied_offers(self):
@@ -450,22 +453,31 @@ class AbstractBasket(models.Model):
 
     @property
     def contains_a_voucher(self):
+        if not self.id:
+            return False
         return self.vouchers.all().count() > 0
 
-    # =============
-    # Query methods
-    # =============
+    @property
+    def is_submitted(self):
+        return self.status == self.SUBMITTED
 
+    @property
     def can_be_edited(self):
         """
         Test if a basket can be edited
         """
         return self.status in self.editable_statuses
 
+    # =============
+    # Query methods
+    # =============
+
     def contains_voucher(self, code):
         """
         Test whether the basket contains a voucher with a given code
         """
+        if not self.id:
+            return False
         try:
             self.vouchers.get(code=code)
         except ObjectDoesNotExist:
@@ -494,8 +506,6 @@ class AbstractBasket(models.Model):
         except ObjectDoesNotExist:
             return 0
 
-    def is_submitted(self):
-        return self.status == self.SUBMITTED
 
 
 class AbstractLine(models.Model):
@@ -560,7 +570,7 @@ class AbstractLine(models.Model):
         """
         Saves a line or deletes if the quantity is 0
         """
-        if not self.basket.can_be_edited():
+        if not self.basket.can_be_edited:
             raise PermissionDenied(
                 _("You cannot modify a %s basket") % (
                     self.basket.status.lower(),))
