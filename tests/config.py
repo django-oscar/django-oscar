@@ -49,7 +49,6 @@ def configure():
                 OSCAR_MAIN_TEMPLATE_DIR,
             ),
             'MIDDLEWARE_CLASSES': global_settings.MIDDLEWARE_CLASSES + (
-                'oscar.apps.partner.middleware.StrategyMiddleware',
                 'oscar.apps.basket.middleware.BasketMiddleware',
             ),
             'AUTHENTICATION_BACKENDS': (

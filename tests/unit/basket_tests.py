@@ -3,6 +3,7 @@ from decimal import Decimal as D
 
 from django.test import TestCase
 from django.test.client import RequestFactory
+from django.contrib.auth.models import AnonymousUser
 
 from oscar.apps.basket.models import Basket
 from oscar.apps.basket.middleware import BasketMiddleware
@@ -84,9 +85,10 @@ class TestBasketMiddleware(TestCase):
         self.middleware = BasketMiddleware()
 
     def test_basket_is_attached_to_request(self):
-        req = RequestFactory().get('/')
-        self.middleware.process_request(req)
-        self.assertTrue(hasattr(req, 'basket'))
+        request = RequestFactory().get('/')
+        request.user = AnonymousUser()
+        self.middleware.process_request(request)
+        self.assertTrue(hasattr(request, 'basket'))
 
 
 class TestBasketReports(TestCase):

@@ -390,9 +390,9 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         if error_response:
             return error_response
         if self.preview:
-            # We use a custom parameter to indicate if this is an attempt to place an order.
-            # Without this, we assume a payment form is being submitted from the
-            # payment-details page
+            # We use a custom parameter to indicate if this is an attempt to
+            # place an order.  Without this, we assume a payment form is being
+            # submitted from the payment-details page
             if request.POST.get('action', '') == 'place_order':
                 return self.submit(request.basket)
             return self.render_preview(request)
@@ -413,8 +413,11 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         return self.render_to_response(ctx)
 
     def can_basket_be_submitted(self, basket):
+        """
+        Check if the basket is permitted to be submitted as an order
+        """
         strategy = self.request.strategy
-        for line in basket.lines.all():
+        for line in basket.all_lines():
             result = strategy.fetch(line.product)
             is_permitted, reason = result.availability.is_purchase_permitted(
                 line.quantity)

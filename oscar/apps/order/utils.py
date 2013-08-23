@@ -5,6 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.shipping.methods import Free
 from oscar.core.loading import get_class
+from . import exceptions
 
 from decimal import Decimal as D
 
@@ -134,6 +135,9 @@ class OrderCreator(object):
         """
         product = basket_line.product
         stockrecord = basket_line.stockrecord
+        if not stockrecord:
+            raise exceptions.UnableToPlaceOrder(
+                "Baket line #%d has no stockrecord" % basket_line.id)
         partner = stockrecord.partner
         line_data = {
             'order': order,

@@ -13,7 +13,7 @@ class LineAdmin(admin.ModelAdmin):
     list_display = ('id', 'basket', 'product', 'stockrecord', 'quantity',
                     'price_excl_tax', 'date_created')
     readonly_fields = ('basket', 'stockrecord', 'line_reference', 'product',
-                       'price_excl_tax', 'quantity')
+                       'price_incl_tax', 'price_excl_tax', 'quantity')
 
 
 class BasketAdmin(admin.ModelAdmin):

@@ -187,6 +187,8 @@ class AbstractBasket(models.Model):
         self.reset_offer_applications()
     add_product.alters_data = True
 
+    add = add_product
+
     def applied_offers(self):
         """
         Return a dict of offers successfully applied to the basket.
@@ -510,10 +512,12 @@ class AbstractLine(models.Model):
         'catalogue.Product', related_name='basket_lines',
         verbose_name=_("Product"))
 
-    # We store the stockrecord that should be used to fulfil this line
+    # We store the stockrecord that should be used to fulfil this line.  This
+    # shouldn't really be NULLable but we need to keep it so for backwards
+    # compatibility.
     stockrecord = models.ForeignKey(
         'partner.StockRecord', related_name='basket_lines',
-        null=True)
+        null=True, blank=True)
 
     quantity = models.PositiveIntegerField(_('Quantity'), default=1)
 
@@ -716,11 +720,12 @@ class AbstractLine(models.Model):
 
         This could be things like the price has changed
         """
-        if not self.price_incl_tax:
-            return
         if not self.stockrecord:
             msg = u"'%(product)s' is no longer available"
             return _(msg) % {'product': self.product.get_title()}
+
+        if not self.price_incl_tax:
+            return
 
         # Compare current price to price when added to basket
         current_price_incl_tax = self.stockinfo.price.incl_tax
