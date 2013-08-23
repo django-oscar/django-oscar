@@ -3,27 +3,25 @@
 {% load i18n %}
 
 {% block report %}
-<table class="table table-striped table-bordered table-hover">
-    <tr>
-        <th>{% trans "Email" %}</th>
-        <th>{% trans "Name" %}</th>
-        <th>{% trans "Num lines" %}</th>
-        <th>{% trans "Num items" %}</th>
-        <th>{% trans "Value" %}</th>
-        <th>{% trans "Date created" %}</th>
-        <th>{% trans "Time between creation and submission" %}</th>
-    </tr>
-    {% for basket in objects %}
-    <tr>
-        <td>{{ basket.owner.email|default:"-" }}</td>
-        <td>{{ basket.owner.get_full_name|default:"-" }}</td>
-        <td>{{ basket.num_lines }}</td>
-        <td>{{ basket.num_items }}</td>
-        <td>{{ basket.total_incl_tax|currency }}</td>
-        <td>{{ basket.date_created }}</td>
-        <td>{{ basket.time_before_submit }}</td>
-    </tr>
-    {% endfor %}
-</table>
-{% include "partials/pagination.html" %}
+    <table class="table table-striped table-bordered table-hover">
+        <tr>
+            <th>{% trans "Email" %}</th>
+            <th>{% trans "Name" %}</th>
+            <th>{% trans "Num lines" %}</th>
+            <th>{% trans "Num items" %}</th>
+            <th>{% trans "Date created" %}</th>
+            <th>{% trans "Time between creation and submission" %}</th>
+        </tr>
+        {% for basket in objects %}
+            <tr>
+                <td>{{ basket.owner.email|default:"-" }}</td>
+                <td>{{ basket.owner.get_full_name|default:"-" }}</td>
+                <td>{{ basket.num_lines }}</td>
+                <td>{{ basket.num_items }}</td>
+                <td>{{ basket.date_created }}</td>
+                <td>{{ basket.time_before_submit }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    {% include "partials/pagination.html" %}
 {% endblock %}

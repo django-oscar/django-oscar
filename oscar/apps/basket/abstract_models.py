@@ -73,8 +73,12 @@ class AbstractBasket(models.Model):
         self._lines = None
         self.offer_applications = results.OfferApplications()
 
+    @property
+    def has_strategy(self):
+        return hasattr(self, '_strategy')
+
     def _get_strategy(self):
-        if not hasattr(self, '_strategy'):
+        if not self.has_strategy:
             raise RuntimeError(
                 "No strategy class has been assigned to this basket. "
                 "Ensure you are using "
@@ -667,6 +671,8 @@ class AbstractLine(models.Model):
 
     @property
     def is_tax_known(self):
+        if not self.basket.has_strategy:
+            return False
         return self.stockinfo.price.is_tax_known
 
     @property
