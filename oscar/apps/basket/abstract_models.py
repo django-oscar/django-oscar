@@ -513,7 +513,7 @@ class AbstractLine(models.Model):
     # We store the stockrecord that should be used to fulfil this line
     stockrecord = models.ForeignKey(
         'partner.StockRecord', related_name='basket_lines',
-        null=True, on_delete=models.SET_NULL)
+        null=True)
 
     quantity = models.PositiveIntegerField(_('Quantity'), default=1)
 
