@@ -41,6 +41,7 @@ class FixedPrice(Base):
 
 
 class DelegateToStockRecord(Base):
+    is_tax_known = True
 
     def __init__(self, stockrecord):
         self.stockrecord = stockrecord

@@ -15,8 +15,13 @@
         <a class="btn btn-navbar btn-cart visible-phone" href="{% url 'checkout:index' %}">
             <i class="icon-shopping-cart"></i>
             <strong>{% trans "Basket" %}
-                {% if request.basket.all_lines.count %}
-                    {% trans "Total:" %} {{ basket.total_incl_tax|currency }}
+                {% if not request.basket.is_empty %}
+                    {% if request.basket.is_tax_known %}
+                        {% trans "Total:" %} {{ basket.total_incl_tax|currency }}
+                    {% else %}
+                        {% trans "Total:" %} {{ basket.total_excl_tax|currency }} 
+                        + {% trans "tax" %}.
+                    {% endif %}
                 {% endif %}
             </strong>
         </a>

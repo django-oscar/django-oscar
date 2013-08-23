@@ -28,8 +28,8 @@ class TestDelegateToStockRecord(TestCase):
             price_excl_tax=D('12.99'))
         self.price = prices.DelegateToStockRecord(self.record)
 
-    def test_means_unknown_tax(self):
-        self.assertFalse(self.price.is_tax_known)
+    def test_assumes_tax_is_known(self):
+        self.assertTrue(self.price.is_tax_known)
 
     def test_has_correct_price(self):
         self.assertEquals(self.record.price_excl_tax,

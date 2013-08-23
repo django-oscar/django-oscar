@@ -64,8 +64,13 @@ class CheckoutSessionMixin(object):
             basket = self.request.basket
         if not shipping_method:
             shipping_method = self.get_shipping_method(basket)
-        total_incl_tax = calc.order_total_incl_tax(basket, shipping_method, **kwargs)
-        total_excl_tax = calc.order_total_excl_tax(basket, shipping_method, **kwargs)
+        total_excl_tax = calc.order_total_excl_tax(
+            basket, shipping_method, **kwargs)
+        if basket.is_tax_known:
+            total_incl_tax = calc.order_total_incl_tax(
+                basket, shipping_method, **kwargs)
+        else:
+            total_incl_tax = None
         return total_incl_tax, total_excl_tax
 
     def get_context_data(self, **kwargs):

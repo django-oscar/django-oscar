@@ -51,13 +51,25 @@
 
             <tr>
                 <th class="total">{% trans "Basket total (after discounts)" %}</th>
-                <th class="total align-right">{{ basket.total_incl_tax|currency }}</th>
+                <th class="total align-right">
+                    {% if basket.is_tax_known %}
+                        {{ basket.total_incl_tax|currency }}
+                    {% else %}
+                        {{ basket.total_excl_tax|currency }}
+                    {% endif %}
+                </th>
             </tr>
         {% else %}
             {# No discounts to basket #}
             <tr>
                 <th class="total">{% trans "Basket total" %}</th>
-                <th class="total align-right">{{ basket.total_incl_tax|currency }}</th>
+                <th class="total align-right">
+                    {% if basket.is_tax_known %}
+                        {{ basket.total_incl_tax|currency }}
+                    {% else %}
+                        {{ basket.total_excl_tax|currency }}
+                    {% endif %}
+                </th>
             </tr>
         {% endif %}
         {% endwith %}
@@ -131,8 +143,21 @@
         </tr>
         <tr>
             <th class="total"><h4>{% trans "Order total" %}</h4></th>
-            <td class="total align-right"><h4 class="price_color">{{ order_total_incl_tax|currency }}</h4></td>
+            <td class="total align-right">
+                <h4 class="price_color">
+                    {% if basket.is_tax_known %}
+                        {{ order_total_incl_tax|currency }}
+                    {% else %}
+                        {{ order_total_excl_tax|currency }}
+                    {% endif %}
+                </h4>
+            </td>
         </tr>
+        {% if not basket.is_tax_known %}
+            <tr>
+                <td><small>Taxes will be added during checkout.</small></td>
+            </tr>
+        {% endif %}
         </tbody>
     </table>
 </div>

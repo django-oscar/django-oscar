@@ -328,8 +328,20 @@ class AbstractBasket(models.Model):
         return self.id is None or self.num_lines == 0
 
     @property
+    def is_tax_known(self):
+        """
+        Test if tax values are known for this basket
+        """
+        for line in self.all_lines():
+            if not line.is_tax_known:
+                return False
+        return True
+
+    @property
     def total_excl_tax(self):
-        """Return total line price excluding tax"""
+        """
+        Return total line price excluding tax
+    """
         return self._get_total('line_price_excl_tax_and_discounts')
 
     @property
@@ -660,6 +672,10 @@ class AbstractLine(models.Model):
         return self._info
 
     @property
+    def is_tax_known(self):
+        return self.stockinfo.price.is_tax_known
+
+    @property
     def unit_price_excl_tax(self):
         return self.stockinfo.price.excl_tax
 
@@ -677,7 +693,9 @@ class AbstractLine(models.Model):
 
     @property
     def line_price_excl_tax_and_discounts(self):
-        return (self.line_price_excl_tax - self._discount) * self._tax_ratio
+        if self.is_tax_known:
+            return (self.line_price_excl_tax - self._discount) * self._tax_ratio
+        return self.line_price_excl_tax
 
     @property
     def line_tax(self):
@@ -689,6 +707,7 @@ class AbstractLine(models.Model):
 
     @property
     def line_price_incl_tax_and_discounts(self):
+        # Discount is implicitly assumed to include tax
         return self.line_price_incl_tax - self._discount
 
     @property

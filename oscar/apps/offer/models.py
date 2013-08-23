@@ -482,6 +482,11 @@ class Condition(models.Model):
         for line in basket.all_lines():
             if not self.can_apply_condition(line):
                 continue
+
+            # We only include products where we know the tax charged
+            if not line.stockinfo.price.is_tax_known:
+                continue
+
             price = line.unit_price_incl_tax
             if not price:
                 continue
@@ -692,8 +697,9 @@ class Benefit(models.Model):
         for line in basket.all_lines():
             product = line.product
             if (not range.contains(product) or
-                not self.can_apply_benefit(line)):
+                    not self.can_apply_benefit(line)):
                 continue
+
             price = line.unit_price_incl_tax
             if not price:
                 # Avoid zero price products

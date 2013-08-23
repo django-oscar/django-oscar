@@ -6,6 +6,7 @@ from django.test.client import RequestFactory
 
 from oscar.apps.basket.models import Basket
 from oscar.apps.basket.middleware import BasketMiddleware
+from oscar.apps.partner import strategy
 from oscar.test import factories
 from oscar.apps.basket.reports import (
     OpenBasketReportGenerator, SubmittedBasketReportGenerator)
@@ -16,6 +17,7 @@ class TestABasket(TestCase):
 
     def setUp(self):
         self.basket = Basket()
+        self.basket.strategy = strategy.Default()
         self.product = factories.create_product()
         self.record = factories.create_stockrecord(
             self.product, price_excl_tax=D('10.00'))
