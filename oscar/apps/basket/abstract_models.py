@@ -70,9 +70,8 @@ class AbstractBasket(models.Model):
         # discount data to the basket lines which isn't persisted to the DB and
         # so we want to avoid reloading them as this would drop the discount
         # information.
-        self._lines = None  # Cached queryset of lines
+        self._lines = None
         self.offer_applications = results.OfferApplications()
-        self.exempt_from_tax = False
 
     def _get_strategy(self):
         if not hasattr(self, '_strategy'):
@@ -272,11 +271,6 @@ class AbstractBasket(models.Model):
 
     # Kept for backwards compatibility
     set_as_submitted = submit
-
-    def set_as_tax_exempt(self):
-        self.exempt_from_tax = True
-        for line in self.all_lines():
-            line.set_as_tax_exempt()
 
     def is_shipping_required(self):
         """
@@ -540,7 +534,6 @@ class AbstractLine(models.Model):
         # Instance variables used to persist discount information
         self._discount = Decimal('0.00')
         self._affected_quantity = 0
-        self._charge_tax = True
 
     class Meta:
         abstract = True
@@ -566,9 +559,6 @@ class AbstractLine(models.Model):
         if self.quantity == 0:
             return self.delete(*args, **kwargs)
         return super(AbstractLine, self).save(*args, **kwargs)
-
-    def set_as_tax_exempt(self):
-        self._charge_tax = False
 
     # =============
     # Offer methods

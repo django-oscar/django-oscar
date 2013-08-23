@@ -314,12 +314,11 @@ class BasketAddView(FormView):
     def form_valid(self, form):
         offers_before = self.request.basket.applied_offers()
 
-        # Fetch stockrecord for user
-        product = form.instance
-        partner_info = self.request.strategy.fetch(product)
+        # Fetch stock info for user
+        stock_info = self.request.strategy.fetch(form.instance)
 
         self.request.basket.add_product(
-            form.instance, partner_info, form.cleaned_data['quantity'],
+            form.instance, stock_info, form.cleaned_data['quantity'],
             form.cleaned_options())
 
         messages.success(self.request, self.get_success_message(form),
