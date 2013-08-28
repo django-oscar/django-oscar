@@ -689,7 +689,7 @@ class AbstractLine(models.Model):
 
     @property
     def is_tax_known(self):
-        if hasattr(self, 'strategy'):
+        if not hasattr(self, 'strategy'):
             return False
         return self.stockinfo.price.is_tax_known
 
