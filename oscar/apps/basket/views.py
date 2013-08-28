@@ -216,6 +216,7 @@ class BasketView(ModelFormSetView):
             # Reload basket and apply offers again
             self.request.basket = get_model('basket', 'Basket').objects.get(
                 id=self.request.basket.id)
+            self.request.basket.strategy = self.request.strategy
             Applicator().apply(self.request, self.request.basket)
             offers_after = self.request.basket.applied_offers()
 
