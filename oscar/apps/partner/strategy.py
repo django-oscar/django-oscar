@@ -82,7 +82,7 @@ class Structured(Base):
         """
         raise NotImplementedError(
             "A structured strategy class must define a "
-            "'pricing_policy' method")
+            "'availability_policy' method")
 
 
 # Mixins - these can be used to construct the appropriate strategy class
