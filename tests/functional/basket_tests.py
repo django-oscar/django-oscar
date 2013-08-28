@@ -12,6 +12,7 @@ from oscar.apps.basket.models import Basket
 from oscar.apps.basket import reports
 from oscar.test.basket import add_product
 from oscar.test import factories
+from oscar.apps.partner import strategy
 
 
 User = get_user_model()
@@ -22,8 +23,10 @@ class TestBasketMerging(TestCase):
     def setUp(self):
         self.product = create_product(num_in_stock=10)
         self.user_basket = Basket()
+        self.user_basket.strategy = strategy.Default()
         add_product(self.user_basket, product=self.product)
         self.cookie_basket = Basket()
+        self.cookie_basket.strategy = strategy.Default()
         add_product(self.cookie_basket, quantity=2, product=self.product)
         self.user_basket.merge(self.cookie_basket, add_quantities=False)
 
@@ -41,7 +44,8 @@ class TestBasketMerging(TestCase):
 class AnonAddToBasketViewTests(TestCase):
 
     def setUp(self):
-        self.product = create_product(price=D('10.00'))
+        self.product = create_product(
+            price=D('10.00'), num_in_stock=10)
         url = reverse('basket:add')
         post_params = {'product_id': self.product.id,
                        'action': 'add',
@@ -93,7 +97,7 @@ class BasketThresholdTest(TestCase):
         settings.OSCAR_MAX_BASKET_QUANTITY_THRESHOLD = self._old_threshold
 
     def test_adding_more_than_threshold_raises(self):
-        dummy_product = create_product(price=D('10.00'))
+        dummy_product = create_product(price=D('10.00'), num_in_stock=10)
         url = reverse('basket:add')
         post_params = {'product_id': dummy_product.id,
                        'action': 'add',

@@ -148,7 +148,7 @@ class ScalesTests(TestCase):
         self.assertEquals(0, scales.weigh_basket(basket))
 
     def test_weight_calculation_of_basket(self):
-        basket = Basket()
+        basket = factories.create_basket(empty=True)
         record = factories.create_stockrecord(price_excl_tax=D('5.00'))
         info = factories.create_stockinfo(record)
         basket.add_product(
@@ -160,7 +160,7 @@ class ScalesTests(TestCase):
         self.assertEquals(1+2, scales.weigh_basket(basket))
 
     def test_weight_calculation_of_basket_with_line_quantity(self):
-        basket = Basket()
+        basket = factories.create_basket(empty=True)
         record = factories.create_stockrecord(price_excl_tax=D('5.00'))
         info = factories.create_stockinfo(record)
         basket.add_product(factories.create_product(
@@ -230,7 +230,7 @@ class WeightBasedMethodTests(TestCase):
         self.assertEqual(D('12.00'), self.standard.get_band_for_weight(2.5).charge)
 
     def test_for_smoke_with_basket_charge(self):
-        basket = Basket()
+        basket = factories.create_basket(empty=True)
         self.standard.set_basket(basket)
         charge = self.standard.basket_charge_incl_tax()
         self.assertEqual(D('0.00'), charge)

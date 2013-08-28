@@ -117,13 +117,14 @@ class AbstractBasket(models.Model):
             self._lines = self.lines.select_related(
                 'product', 'product__stockrecord'
             ).all().prefetch_related('attributes', 'product__images')
+
+            # Assign strategy to each line so it can use it to determine
+            # prices.  This is only needed for Django 1.4.5, where accessing
+            # self.basket from within the line will create a new basket
+            # instance (with no strategy assigned).  In later version, the
+            # original basket instance is cached and keeps its strategy
+            # property.
             for line in self._lines:
-                # Assign strategy to line so it can use it to determine prices.
-                # This is only needed for Django 1.4.5, where accessing
-                # self.basket from within the line will create a new basket
-                # instance (with no strategy assigned).  In later version, the
-                # original basket instance is cached and keeps its strategy
-                # property.
                 line.strategy = self.strategy
         return self._lines
 

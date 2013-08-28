@@ -7,6 +7,7 @@ from oscar.test.factories import create_product, create_order
 from oscar.test.testcases import ClientTestCase, WebTestCase
 from oscar.core.compat import get_user_model
 from oscar.apps.basket.models import Basket
+from oscar.apps.partner import strategy
 
 
 User = get_user_model()
@@ -20,9 +21,6 @@ class TestASignedInUser(WebTestCase):
         self.user = User.objects.create_user(
             '_', self.email, self.password)
         self.order = create_order(user=self.user)
-
-    def tearDown(self):
-        Basket.objects.all().delete()
 
     def test_can_view_their_profile(self):
         response = self.app.get(reverse('customer:summary'),
@@ -101,6 +99,7 @@ class TestASignedInUser(WebTestCase):
         form.submit()
 
         basket = Basket.open.get(owner=self.user)
+        basket.strategy = strategy.Default()
         self.assertEqual(1, basket.all_lines().count())
 
     def test_can_reorder_a_previous_order_line(self):
@@ -113,6 +112,7 @@ class TestASignedInUser(WebTestCase):
         form.submit()
 
         basket = Basket.open.get(owner=self.user)
+        basket.strategy = strategy.Default()
         self.assertEqual(1, basket.all_lines().count())
 
     def test_cannot_reorder_an_out_of_stock_product(self):
@@ -137,21 +137,19 @@ class TestReorderingOrderLines(ClientTestCase):
         order = create_order(user=self.user)
         line = order.lines.all()[0]
 
-        Basket.objects.all().delete()
-        #add a product
         product = create_product(price=D('12.00'))
         self.client.post(reverse('basket:add'), {'product_id': product.id,
                                                  'quantity': 1})
 
-
         basket = Basket.objects.all()[0]
+        basket.strategy = strategy.Default()
         self.assertEquals(len(basket.all_lines()), 1)
 
-        #try to reorder a product
+        # try to reorder a product
         self.client.post(reverse('customer:order',
-                                            args=(order.number,)),
-                                    {'order_id': order.pk,
-                                     'action': 'reorder'})
+                                 args=(order.number,)),
+                         {'order_id': order.pk,
+                          'action': 'reorder'})
 
         self.assertEqual(len(basket.all_lines()), 1)
         self.assertNotEqual(line.product.pk, product.pk)
@@ -161,20 +159,18 @@ class TestReorderingOrderLines(ClientTestCase):
         order = create_order(user=self.user)
         line = order.lines.all()[0]
 
-        Basket.objects.all().delete()
-        #add a product
+        # add a product
         product = create_product(price=D('12.00'))
         self.client.post(reverse('basket:add'), {'product_id': product.id,
                                                  'quantity': 1})
 
         basket = Basket.objects.all()[0]
+        basket.strategy = strategy.Default()
         self.assertEquals(len(basket.all_lines()), 1)
 
         self.client.post(reverse('customer:order-line',
-                                            args=(order.number, line.pk)),
-                                    {'action': 'reorder'})
+                                 args=(order.number, line.pk)),
+                         {'action': 'reorder'})
 
         self.assertEquals(len(basket.all_lines()), 1)
         self.assertNotEqual(line.product.pk, product.pk)
-
-

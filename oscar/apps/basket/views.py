@@ -466,6 +466,7 @@ class SavedView(ModelFormSetView):
     def get_queryset(self):
         try:
             saved_basket = self.basket_model.saved.get(owner=self.request.user)
+            saved_basket.strategy = self.request.strategy
             return saved_basket.all_lines().select_related(
                 'product', 'product__stockrecord')
         except self.basket_model.DoesNotExist:
