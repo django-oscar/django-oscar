@@ -134,7 +134,7 @@ class AbstractCommunicationEventType(models.Model):
         help_text=_("HTML template"))
 
     # Template content for SMS messages
-    sms_template = models.CharField(_('SMS Template'), max_length=170,
+    sms_template = models.CharField(_('SMS Template'), max_length=160,
                                     blank=True, help_text=_("SMS template"))
 
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
