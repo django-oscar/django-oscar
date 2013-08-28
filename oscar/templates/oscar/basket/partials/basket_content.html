@@ -76,10 +76,10 @@
                             </div>
                             <div class="span2">
                                 <p class="price_color align-right">
-                                    {% if line.is_tax_known %}
-                                        {{ line.unit_price_incl_tax|currency }}
+                                    {% if session.price.is_tax_known %}
+                                        {{ session.price.incl_tax|currency }}
                                     {% else %}
-                                        {{ line.unit_price_excl_tax|currency }}
+                                        {{ session.price.excl_tax|currency }}
                                     {% endif %}
                                 </p>
                             </div>
