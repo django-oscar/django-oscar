@@ -344,10 +344,7 @@ class AbstractBasket(models.Model):
         """
         Test if tax values are known for this basket
         """
-        for line in self.all_lines():
-            if not line.is_tax_known:
-                return False
-        return True
+        return all([line.is_tax_known for line in self.all_lines()])
 
     @property
     def total_excl_tax(self):
@@ -485,7 +482,7 @@ class AbstractBasket(models.Model):
         """
         Test whether the basket contains a voucher with a given code
         """
-        if not self.id:
+        if self.id is None:
             return False
         try:
             self.vouchers.get(code=code)
