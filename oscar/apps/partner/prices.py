@@ -6,14 +6,21 @@ class TaxNotKnown(Exception):
 
 
 class Base(object):
+    """
+    The interface that any pricing policy must support
+    """
+
     #: Whether any prices exist
     exists = False
 
-    #: Whether tax is known for this product (and session)
+    #: Whether tax is known
     is_tax_known = False
 
-    # Normal price properties
+    #: Normal price properties
     excl_tax = incl_tax = tax = None
+
+    #: Currency prices are in
+    currency = None
 
 
 class Unavailable(Base):
@@ -61,3 +68,7 @@ class DelegateToStockRecord(Base):
     @property
     def tax(self):
         return self.stockrecord.price_tax
+
+    @property
+    def currency(self):
+        return self.stockrecord.price_currency
