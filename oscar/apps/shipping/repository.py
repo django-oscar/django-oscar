@@ -14,7 +14,8 @@ class Repository(object):
     """
     methods = (Free(),)
 
-    def get_shipping_methods(self, user, basket, shipping_addr=None, **kwargs):
+    def get_shipping_methods(self, user, basket, shipping_addr=None,
+                             request=None, **kwargs):
         """
         Return a list of all applicable shipping method objects
         for a given basket.
@@ -26,13 +27,13 @@ class Repository(object):
         return self.prime_methods(basket, self.methods)
 
     def get_default_shipping_method(self, user, basket, shipping_addr=None,
-                                    **kwargs):
+                                    request=None, **kwargs):
         """
         Return a 'default' shipping method to show on the basket page to give
         the customer an indication of what their order will cost.
         """
         methods = self.get_shipping_methods(
-            user, basket, shipping_addr, **kwargs)
+            user, basket, shipping_addr, request, **kwargs)
         if len(methods) == 0:
             raise ImproperlyConfigured(
                 _("You need to define some shipping methods"))
