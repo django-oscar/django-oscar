@@ -326,6 +326,9 @@ class AbstractProduct(models.Model):
         'catalogue.Category', through='ProductCategory',
         verbose_name=_("Categories"))
 
+    #: Determines if a product may be used in an offer. It is illegal to
+    #: discount some types of product (e.g. ebooks) and this field helps
+    #: merchants from avoiding discounting such products
     is_discountable = models.BooleanField(_("Is Discountable"), default=True)
 
     objects = models.Manager()

@@ -28,3 +28,16 @@ This is a work-in-progress list of commonly used terms when discussing Oscar.
        A code uniquely identifying a product worldwide.
 
        .. seealso:: `Wikipedia: Universal Product Code <http://en.wikipedia.org/wiki/Universal_Product_Code>`_
+
+    Product Range
+
+       A range is a subset of the product catalogue. It's another way of
+       defining groups of products other than categories and product classes.
+
+       An example would be a book shop which might define a range of "Booker
+       Prize winners".  Each product will belong to different categories within
+       the site so ranges allow them to be grouped together.
+
+       Ranges can then be used in offers (eg 10% off all booker prize winners).
+       At some point, ranges will be expanded to have their own detail pages
+       within Oscar too.​
