@@ -25,7 +25,7 @@ class Selector(object):
         Solr's index.
     """
     def strategy(self, request=None, user=None, **kwargs):
-        # Default to the backwards-compatible strategry of picking the fist
+        # Default to the backwards-compatible strategy of picking the first
         # stockrecord.
         return Default(request)
 
