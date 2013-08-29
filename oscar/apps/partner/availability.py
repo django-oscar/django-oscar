@@ -3,7 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 
 class Base(object):
     """
-    Simple based availability class which defaults to everything being
+    Simple base availability class which defaults to everything being
     unavailable.
     """
 
@@ -51,7 +51,7 @@ class Unavailable(Base):
 
 class Available(Base):
     """
-    For when a product is always available, irrespective of stocklevel.
+    For when a product is always available, irrespective of stock level.
 
     This might be appropriate for a digital product.
     """

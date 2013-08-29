@@ -4,6 +4,7 @@ from decimal import Decimal as D
 from . import availability, prices
 
 
+# a container for policies
 StockInfo = namedtuple('StockInfo', ['price', 'availability', 'stockrecord'])
 
 
@@ -32,8 +33,8 @@ class Selector(object):
 
 class Base(object):
     """
-    Responsible for picking the appropriate pricing and availability wrappers
-    for a product
+    The interface for a strategy. Only has to implement the fetch method,
+    which is responsible for returning a StockInfo instance.
     """
 
     def __init__(self, request=None):
@@ -51,6 +52,9 @@ class Base(object):
 
 
 class Structured(Base):
+    """
+    An intermediate class which should be sufficient for most use cases
+    """
 
     def fetch(self, product, stockrecord=None):
         if stockrecord is None:
