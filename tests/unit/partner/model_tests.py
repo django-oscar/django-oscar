@@ -1,9 +1,14 @@
 from decimal import Decimal as D
+from django.db.models import get_model
 
 from django.test import TestCase
 
 from oscar.test.factories import create_product
 from oscar.apps.partner import abstract_models
+
+Partner = get_model('partner', 'Partner')
+PartnerAddress = get_model('partner', 'PartnerAddress')
+Country = get_model('address', 'Country')
 
 
 class DummyWrapper(object):
@@ -84,3 +89,41 @@ class CustomWrapperTests(TestCase):
             price=D('10.00'), partner="Acme", num_in_stock=10)
         self.assertEquals("Another dummy response",
                           product.stockrecord.dispatch_date)
+
+
+class TestPartnerAddress(TestCase):
+
+    def setUp(self):
+        self.partner = Partner._default_manager.create(
+            name="Dummy partner")
+        self.country = Country._default_manager.create(
+            iso_3166_1_a2='GB', name="UNITED KINGDOM")
+        self.address = PartnerAddress._default_manager.create(
+            title="Dr",
+            first_name="Barry",
+            last_name="Barrington",
+            country=self.country,
+            postcode = "LS1 2HA",
+            partner=self.partner)
+
+    def test_can_get_primary_address(self):
+        self.assertEqual(self.partner.primary_address, self.address)
+
+    def test_fails_on_two_addresses(self):
+        self.address = PartnerAddress._default_manager.create(
+            title="Mrs",
+            first_name="Jane",
+            last_name="Barrington",
+            postcode = "LS1 2HA",
+            country=self.country,
+            partner=self.partner)
+        self.assertRaises(
+            NotImplementedError, getattr, self.partner, 'primary_address')
+
+
+
+
+
+
+
+
