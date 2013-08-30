@@ -20,11 +20,17 @@ What's new in Oscar 0.6?
 The payment models have been split into abstract- and concrete versions.  This
 brings them inline with other Oscar apps and allows them to be customised.
 
+Multiple-stockrecords, pricing, tax, availability
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 Search
 ~~~~~~
 
 Multi-partner dashboard
 ~~~~~~~~~~~~~~~~~~~~~~~
+
+Partners can now have addresses.  These are useful for US sales tax where tax
+calculations need to know the origin of a product being shipped.
 
 Demo site
 ~~~~~~~~~
@@ -88,7 +94,6 @@ Minor changes
 * detox_ is a new dependency, which allows running `tox` tests in parallel.
 
 .. _detox: https://pypi.python.org/pypi/detox
-
 
 Upgrading 
 =========
