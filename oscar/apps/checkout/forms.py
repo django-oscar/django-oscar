@@ -15,6 +15,9 @@ class ShippingAddressForm(AbstractAddressForm):
 
     def __init__(self, *args, **kwargs):
         super(ShippingAddressForm, self).__init__(*args, **kwargs)
+        self.adjust_country_field()
+
+    def adjust_country_field(self):
         countries = Country._default_manager.filter(
             is_shipping_country=True)
 
