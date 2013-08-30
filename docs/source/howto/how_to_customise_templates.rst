@@ -94,7 +94,7 @@ or class's slug, respectively.
 Example: Changing the analytics package
 ---------------------------------------
 
-Support you want to use an alternative analytics package to Google analytics.
+Suppose you want to use an alternative analytics package to Google analytics.
 We can achieve this by overriding templates where the analytics urchin is loaded
 and called.
 
