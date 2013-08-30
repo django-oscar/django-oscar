@@ -4,7 +4,7 @@
 {% load url from future %}
 
 {% block title %}
-    {% trans "Partner management" %} | {{ block.super }}
+    {{ partner.name }} | {% trans "Partner management" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -47,7 +47,7 @@
         </div>
     </div>
 
-    <h2>{% trans "Manage users" %}</h2>
+    <h2>{% trans "Users" %}</h2>
     {% if users.count %}
         <table class="table table-striped table-bordered">
             <thead>
