@@ -329,6 +329,9 @@ class AbstractProduct(models.Model):
         'catalogue.Category', through='ProductCategory',
         verbose_name=_("Categories"))
 
+    #: Determines if a product may be used in an offer. It is illegal to
+    #: discount some types of product (e.g. ebooks) and this field helps
+    #: merchants from avoiding discounting such products
     is_discountable = models.BooleanField(_("Is Discountable"), default=True)
 
     objects = models.Manager()
@@ -586,6 +589,11 @@ class AbstractProduct(models.Model):
             category=category, product=self)
         temp.save()
     add_category_from_breadcrumbs.alters_data = True
+
+    def has_review_by(self, user):
+        if user.is_anonymous():
+            return False
+        return self.reviews.filter(user=user).exists()
 
 
 class ProductRecommendation(models.Model):

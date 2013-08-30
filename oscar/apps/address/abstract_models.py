@@ -234,7 +234,7 @@ class AbstractAddress(models.Model):
     #: relevant fields.  This is effectively a poor man's Solr text field.
     search_text = models.CharField(
         _("Search text - used only for searching addresses"),
-        max_length=1000)
+        max_length=1000, editable=False)
 
     def __unicode__(self):
         return self.summary
@@ -264,6 +264,14 @@ class AbstractAddress(models.Model):
         """
         Validate postcode given the country
         """
+        if not self.postcode and self.country_id:
+            country_code = self.country.iso_3166_1_a2
+            regex = self.POSTCODES_REGEX.get(country_code, None)
+            if regex:
+                msg = ("Addresses in %(country)s require a postcode") % {
+                    'country': self.country}
+                raise exceptions.ValidationError(msg)
+
         if self.postcode and self.country_id:
             # Ensure postcodes are always uppercase
             postcode = self.postcode.upper().replace(' ', '')
@@ -273,8 +281,9 @@ class AbstractAddress(models.Model):
             # Validate postcode against regext for the country if available
             if regex and not re.match(regex, postcode):
                 msg = _("The postcode '%(postcode)s' is not valid "
-                        "for the country selected") % {
-                            'postcode': self.postcode}
+                        "for the %(country)s") % {
+                            'postcode': self.postcode,
+                            'country': self.country}
                 raise exceptions.ValidationError(msg)
 
     def _update_search_text(self):
@@ -454,7 +463,8 @@ class AbstractUserAddress(AbstractShippingAddress):
 
     #: A hash is kept to try and avoid duplicate addresses being added
     #: to the address book.
-    hash = models.CharField(_("Address Hash"), max_length=255, db_index=True)
+    hash = models.CharField(_("Address Hash"), max_length=255, db_index=True,
+                            editable=False)
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
     def save(self, *args, **kwargs):
@@ -498,14 +508,14 @@ class AbstractUserAddress(AbstractShippingAddress):
             qs = qs.exclude(id=self.id)
         if qs.count() > 0:
             raise exceptions.ValidationError({
-                '__all__': [_("This address is already in your addressbook")]})
+                '__all__': [_("This address is already in your address book")]})
 
 
 class AbstractBillingAddress(AbstractAddress):
 
     class Meta:
         abstract = True
-        verbose_name_plural = _("Billing address")
+        verbose_name = _("Billing address")
         verbose_name_plural = _("Billing addresses")
 
     @property
@@ -517,3 +527,17 @@ class AbstractBillingAddress(AbstractAddress):
         if not orders:
             return None
         return orders[0]
+
+
+class AbstractPartnerAddress(AbstractAddress):
+    """
+    A partner can have one or more addresses. This can be useful e.g. when
+    determining US tax which depends on the origin of the shipment.
+    """
+    partner = models.ForeignKey('partner.Partner', related_name='addresses',
+                                verbose_name=_('Partner'))
+
+    class Meta:
+        abstract = True
+        verbose_name = _("Partner address")
+        verbose_name_plural = _("Partner addresses")

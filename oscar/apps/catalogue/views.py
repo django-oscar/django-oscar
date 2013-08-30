@@ -41,8 +41,10 @@ class ProductDetailView(DetailView):
 
     def get_object(self, queryset=None):
         # Check if self.object is already set to prevent unnecessary DB calls
-        return getattr(
-            self, 'object', super(ProductDetailView, self).get_object(queryset))
+        if hasattr(self, 'object'):
+            return self.object
+        else:
+            return super(ProductDetailView, self).get_object(queryset)
 
     def get_context_data(self, **kwargs):
         ctx = super(ProductDetailView, self).get_context_data(**kwargs)
