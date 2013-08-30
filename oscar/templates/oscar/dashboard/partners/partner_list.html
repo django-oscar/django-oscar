@@ -45,6 +45,7 @@
                 <tr>
                     <th>{% anchor 'name' _('Partner name') %}</th>
                     <th>{% trans 'Users' %}</th>
+                    <th>{% trans 'Addresses' %}</th>
                     <th>&nbsp;</th>
                 </tr>
                 {% for partner in partners %}
@@ -67,6 +68,19 @@
                                 {% else %}
                                     {% trans 'No users associated.' %}
                                 {% endif %}
+                            {% endwith %}
+                        </td>
+                        <td>
+                            {% with addresses=partner.addresses.all %}
+                            {% if addresses %}
+                                <ul>
+                                    {% for address in addresses %}
+                                        <li>{{ address.summary }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                {% trans 'No address associated.' %}
+                            {% endif %}
                             {% endwith %}
                         </td>
                         <td>

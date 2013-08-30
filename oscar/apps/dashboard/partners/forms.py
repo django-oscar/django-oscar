@@ -8,6 +8,7 @@ from oscar.core.compat import get_user_model
 
 User = get_user_model()
 Partner = get_model('partner', 'Partner')
+PartnerAddress = get_model('partner', 'PartnerAddress')
 
 
 class PartnerSearchForm(forms.Form):
@@ -81,3 +82,11 @@ class UserEmailForm(forms.Form):
     # We use a CharField so that a partial email address can be entered
     email = forms.CharField(
         label=_("Email address"), max_length=100)
+
+
+class PartnerAddressForm(forms.ModelForm):
+
+    class Meta:
+        fields = ('line1', 'line2', 'line3', 'line4',
+                  'state', 'postcode', 'country')
+        model = PartnerAddress
