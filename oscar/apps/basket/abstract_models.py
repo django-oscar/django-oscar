@@ -254,7 +254,9 @@ class AbstractBasket(models.Model):
         :basket: The basket to merge into this one.
         :add_quantities: Whether to add line quantities when they are merged.
         """
-        for line_to_merge in basket.all_lines():
+        # Use basket.lines.all instead of all_lines as this function is called
+        # before a strategy has been assigned.
+        for line_to_merge in basket.lines.all():
             self.merge_line(line_to_merge, add_quantities)
         basket.status = self.MERGED
         basket.date_merged = now()
