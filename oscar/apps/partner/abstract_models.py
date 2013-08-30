@@ -92,7 +92,8 @@ class AbstractPartner(models.Model):
         else:
             raise NotImplementedError(
                 "Oscar's default implementation of primary_address only "
-                "supports one PartnerAddress.")
+                "supports one PartnerAddress.  You need to override the "
+                "primary_address to look up the right address")
 
     def get_address_for_stockrecord(self, stockrecord):
         """
