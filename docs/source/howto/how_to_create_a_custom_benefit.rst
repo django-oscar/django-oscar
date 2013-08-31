@@ -23,7 +23,7 @@ Custom benefits
 A custom benefit can be used by creating a benefit class and registering it so
 it is available to be used.
 
-A benefit class must by a proxy class and have the following methods::
+A benefit class must be a proxy class and have the following methods::
 
     from oscar.apps.offer import models
 
