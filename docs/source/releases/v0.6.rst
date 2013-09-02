@@ -134,6 +134,9 @@ Checkout app:
 * Payment details - create_billing_address accepts kwargs so data can be passed
   to it from the final page of checkout.
 
+* The session methods for loading shipping addresses and methods have been made
+  explicit.  The relevant basket *has* to be passed in now.
+
 Payment app:
 
 * The `balance` method on the source object is not a property not a method.

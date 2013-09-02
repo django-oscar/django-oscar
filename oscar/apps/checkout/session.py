@@ -21,9 +21,29 @@ class CheckoutSessionMixin(object):
 
     def dispatch(self, request, *args, **kwargs):
         self.checkout_session = CheckoutSessionData(request)
-        return super(CheckoutSessionMixin, self).dispatch(request, *args, **kwargs)
+        return super(CheckoutSessionMixin, self).dispatch(
+            request, *args, **kwargs)
 
-    def get_shipping_address(self):
+    def get_context_data(self, **kwargs):
+        """
+        Assign common template variables to the context.
+        """
+        ctx = super(CheckoutSessionMixin, self).get_context_data(**kwargs)
+
+        basket = self.request.basket
+        shipping_address = self.get_shipping_address(basket)
+        shipping_method = self.get_shipping_method(
+            basket, shipping_address)
+
+        ctx['shipping_address'] = shipping_address
+        ctx['shipping_method'] = shipping_method
+
+        ctx['order_total_incl_tax'], ctx['order_total_excl_tax'] = self.get_order_totals(
+            basket, shipping_method)
+
+        return ctx
+
+    def get_shipping_address(self, basket):
         """
         Return the current shipping address for this checkout session.
 
@@ -31,6 +51,9 @@ class CheckoutSessionMixin(object):
         pre-populated (not saved), or a UserAddress model which will
         need converting into a ShippingAddress model at submission
         """
+        if not basket.is_shipping_required():
+            return None
+
         addr_data = self.checkout_session.new_shipping_address_fields()
         if addr_data:
             # Load address data into a blank address model
@@ -46,7 +69,7 @@ class CheckoutSessionMixin(object):
                 pass
         return None
 
-    def get_shipping_method(self, basket=None):
+    def get_shipping_method(self, basket, shipping_address=None, **kwargs):
         method = self.checkout_session.shipping_method(basket)
 
         # We default to using free shipping
@@ -55,15 +78,11 @@ class CheckoutSessionMixin(object):
 
         return method
 
-    def get_order_totals(self, basket=None, shipping_method=None, **kwargs):
+    def get_order_totals(self, basket, shipping_method, **kwargs):
         """
         Returns the total for the order with and without tax (as a tuple)
         """
         calc = OrderTotalCalculator(self.request)
-        if not basket:
-            basket = self.request.basket
-        if not shipping_method:
-            shipping_method = self.get_shipping_method(basket)
         total_excl_tax = calc.order_total_excl_tax(
             basket, shipping_method, **kwargs)
         if basket.is_tax_known:
@@ -73,19 +92,3 @@ class CheckoutSessionMixin(object):
             total_incl_tax = None
         return total_incl_tax, total_excl_tax
 
-    def get_context_data(self, **kwargs):
-        """
-        Assign common template variables to the context.
-        """
-        ctx = super(CheckoutSessionMixin, self).get_context_data(**kwargs)
-        ctx['shipping_address'] = self.get_shipping_address()
-
-        method = self.get_shipping_method()
-        if method:
-            ctx['shipping_method'] = method
-            ctx['shipping_total_excl_tax'] = method.charge_excl_tax
-            ctx['shipping_total_incl_tax'] = method.charge_incl_tax
-
-        ctx['order_total_incl_tax'], ctx['order_total_excl_tax'] = self.get_order_totals()
-
-        return ctx

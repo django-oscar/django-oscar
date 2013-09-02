@@ -181,10 +181,10 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             return None
 
         addr_data = self.checkout_session.new_shipping_address_fields()
-        addr_id = self.checkout_session.user_address_id()
         if addr_data:
             return ShippingAddress(**addr_data)
-        elif addr_id:
+        addr_id = self.checkout_session.user_address_id()
+        if addr_id:
             try:
                 address = UserAddress._default_manager.get(pk=addr_id)
             except UserAddress.DoesNotExist:

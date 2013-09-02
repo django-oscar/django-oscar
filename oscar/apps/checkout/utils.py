@@ -125,13 +125,11 @@ class CheckoutSessionData(object):
         """
         self._set('shipping', 'method_code', code)
 
-    def shipping_method(self, basket=None):
+    def shipping_method(self, basket):
         """
         Returns the shipping method model based on the
         data stored in the session.
         """
-        if not basket:
-            basket = self.request.basket
         code = self._get('shipping', 'method_code')
         if not code:
             return None

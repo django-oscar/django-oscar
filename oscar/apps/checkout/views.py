@@ -282,7 +282,8 @@ class ShippingMethodView(CheckoutSessionMixin, TemplateView):
         # doesn't fit this system.
         return Repository().get_shipping_methods(
             user=self.request.user, basket=self.request.basket,
-            shipping_addr=self.get_shipping_address(), request=self.request)
+            shipping_addr=self.get_shipping_address(self.request.basket),
+            request=self.request)
 
     def post(self, request, *args, **kwargs):
         # Need to check that this code is valid for this user
@@ -520,7 +521,10 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
                       "order - no payment has been taken.  Please "
                       "contact customer services if this problem persists")
         pre_payment.send_robust(sender=self, view=self)
-        total_incl_tax, total_excl_tax = self.get_order_totals(basket)
+
+        shipping_method = self.get_shipping_method(basket)
+        total_incl_tax, total_excl_tax = self.get_order_totals(
+            basket, shipping_method=shipping_method)
         try:
             self.handle_payment(order_number, total_incl_tax, **payment_kwargs)
         except RedirectRequired, e:
