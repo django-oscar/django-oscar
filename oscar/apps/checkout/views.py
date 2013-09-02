@@ -360,13 +360,11 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
     template_name_preview = 'checkout/preview.html'
     preview = False
 
-    def dispatch(self, request, *args, **kwargs):
-        self.checkout_session = CheckoutSessionData(request)
+    def get(self, request, *args, **kwargs):
         error_response = self.get_error_response()
         if error_response:
             return error_response
-        return super(PaymentDetailsView, self).dispatch(
-            request, *args, **kwargs)
+        return super(PaymentDetailsView, self).get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         """
@@ -374,6 +372,10 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         validate the forms from the payment details page.  If the forms are
         valid then the method can call submit()
         """
+        error_response = self.get_error_response()
+        if error_response:
+            return error_response
+
         if self.preview:
             # We use a custom parameter to indicate if this is an attempt to
             # place an order.  Without this, we assume a payment form is being
