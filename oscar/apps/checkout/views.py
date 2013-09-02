@@ -361,6 +361,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
     preview = False
 
     def dispatch(self, request, *args, **kwargs):
+        self.checkout_session = CheckoutSessionData(request)
         error_response = self.get_error_response()
         if error_response:
             return error_response

@@ -115,7 +115,7 @@ class TestPlacingOrderForDigitalGoods(TestCase):
 
 class StubRepository(Repository):
     """ Custom shipping methods """
-    methods = (FixedPrice(D('5.00')), Free())
+    methods = (FixedPrice(D('5.00'), D('5.00')), Free())
 
 
 class TestShippingOfferForOrder(TestCase):

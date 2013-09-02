@@ -41,7 +41,7 @@ class StubRepository(Repository):
     shipping discounts to be tested.
     """
     def get_shipping_methods(self, basket):
-        methods = [FixedPrice(D('10.00'))]
+        methods = [FixedPrice(D('10.00'), D('10.00'))]
         return self.prime_methods(basket, methods)
 
 

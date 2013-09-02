@@ -28,7 +28,7 @@ class Selector(object):
     def strategy(self, request=None, user=None, **kwargs):
         # Default to the backwards-compatible strategy of picking the first
         # stockrecord.
-        return US(request)
+        return Default(request)
 
 
 class Base(object):
@@ -173,5 +173,5 @@ class Default(UseFirstStockRecord, StockRequired, NoTax, Structured):
 
 class US(UseFirstStockRecord, StockRequired, DeferredTax, Structured):
     """
-    Default strategy for the USA
+    Default strategy for the USA (just for testing really)
     """

@@ -11,8 +11,7 @@ class Repository(object):
     Repository class responsible for returning ShippingMethod
     objects for a given user, basket etc
     """
-    methods = (methods.FixedPrice(D('5.00')),
-               methods.FixedPrice(D('10.00')))
+    methods = (methods.Free(),)
 
     def get_shipping_methods(self, user, basket, shipping_addr=None,
                              request=None, **kwargs):
