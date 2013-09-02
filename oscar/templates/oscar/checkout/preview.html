@@ -10,6 +10,10 @@
     {% include 'checkout/nav.html' with step=4 %}
 {% endblock %}
 
+{% block checkout_title %}
+    {% trans "Preview order" %}
+{% endblock %}
+
 {% block place_order %}
     <form method="post" action="{% url 'checkout:preview' %}" id="place-order-form">
         {% csrf_token %}

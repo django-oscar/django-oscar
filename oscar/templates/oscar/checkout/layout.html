@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load i18n %}
 {% load currency_filters %}
 {% load promotion_tags %}
 {% load category_tags %}
@@ -16,11 +16,14 @@
     </header><!-- /header -->
 
     <div class="container-fluid page">
-        {% include 'partials/alert_messages.html' %}
-        {% block header %}{% endblock %}
 
        <div class="page_inner">
             {% block checkout_nav %}{% endblock %}
+            {% include 'partials/alert_messages.html' %}
+
+            <div class="sub-header">
+                <h1>{% block checkout_title %}{% endblock %}</h1>
+            </div>
 
             <!-- The main nav on checkout pages contain links to modal flatpages -->
             {% block modal %}

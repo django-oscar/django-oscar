@@ -12,11 +12,9 @@
     {% include 'checkout/nav.html' with step=0 %}
 {% endblock %}
 
-{% block content %}
+{% block checkout_title %}{% trans "Who are you?" %}{% endblock %}
 
-    <div class="sub-header">
-        <h1>{% trans "Who are you?" %}</h1>
-    </div>
+{% block content %}
 
     <form action="." method="post" class="form-stacked well well-info">
         {% csrf_token %}

@@ -13,14 +13,13 @@
     {% include 'checkout/nav.html' with step=2 %}
 {% endblock %}
 
+{% block checkout_title %}{% trans "Shipping method" %}{% endblock %}
+
 {% block order_contents %}{% endblock %}
 {% block shipping_address %}{% endblock %}
 {% block payment_method %}{% endblock %}
 
 {% block shipping_method %}
-    <div class="sub-header">
-        <h2>{% trans "Choose a shipping method" %}</h2>
-    </div>
     <div class="basket-title">
         <div class="row-fluid">
             <h4 class="span8">{% trans "Method" %}</h4>
