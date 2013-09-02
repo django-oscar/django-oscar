@@ -45,6 +45,15 @@ class Base(object):
     is_discounted = False
     discount = D('0.00')
 
+    def _get_tax(self):
+        return self.charge_incl_tax - self.charge_excl_tax
+
+    def _set_tax(self, value):
+        self.charge_incl_tax = self.charge_excl_tax + value
+        self.is_tax_known = True
+
+    tax = property(_get_tax, _set_tax)
+
     def set_basket(self, basket):
         self.basket = basket
 
