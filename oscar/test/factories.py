@@ -103,9 +103,9 @@ def create_order(number=None, basket=None, user=None, shipping_address=None,
     if shipping_method is None:
         shipping_method = Free()
     if total_incl_tax is None or total_excl_tax is None:
-        calc = OrderTotalCalculator()
-        total_incl_tax = calc.order_total_incl_tax(basket, shipping_method)
-        total_excl_tax = calc.order_total_excl_tax(basket, shipping_method)
+        total = OrderTotalCalculator().calculate(basket, shipping_method)
+        total_incl_tax = total.incl_tax
+        total_excl_tax = total.excl_tax
     order = OrderCreator().place_order(
         order_number=number,
         user=user,

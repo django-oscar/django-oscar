@@ -74,7 +74,7 @@ class BasketSummaryViewTests(TestCase):
         self.assertTrue('shipping_method' in self.response.context)
 
     def test_order_total_in_context(self):
-        self.assertTrue('order_total_incl_tax' in self.response.context)
+        self.assertTrue('order_total' in self.response.context)
 
     def test_view_does_not_error(self):
         self.assertEquals(httplib.OK, self.response.status_code)

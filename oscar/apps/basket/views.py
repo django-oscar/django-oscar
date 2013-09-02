@@ -22,6 +22,8 @@ Applicator = get_class('offer.utils', 'Applicator')
                       'BasketVoucherForm', 'SavedLineFormSet',
                       'SavedLineForm', 'ProductSelectionForm'))
 Repository = get_class('shipping.repository', ('Repository'))
+OrderTotalCalculator = get_class(
+    'checkout.calculators', 'OrderTotalCalculator')
 
 
 def get_messages(basket, offers_before, offers_after,
@@ -142,14 +144,8 @@ class BasketView(ModelFormSetView):
         context['shipping_methods'] = self.get_shipping_methods(
             self.request.basket)
 
-        context['order_total_excl_tax'] = (
-            self.request.basket.total_excl_tax +
-            method.charge_excl_tax)
-        # If tax is known - add tax-inclusive total
-        if self.request.basket.is_tax_known:
-            context['order_total_incl_tax'] = (
-                self.request.basket.total_incl_tax +
-                method.charge_incl_tax)
+        context['order_total'] = OrderTotalCalculator().calculate(
+            self.request.basket, method)
         context['basket_warnings'] = self.get_basket_warnings(
             self.request.basket)
         context['upsell_messages'] = self.get_upsell_messages(

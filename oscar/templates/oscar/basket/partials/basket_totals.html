@@ -155,15 +155,15 @@
                 <th class="total"><h4>{% trans "Order total" %}</h4></th>
                 <td class="total align-right">
                     <h4 class="price_color">
-                        {% if basket.is_tax_known %}
-                            {{ order_total_incl_tax|currency }}
+                        {% if order_total.is_tax_known %}
+                            {{ order_total.incl_tax|currency }}
                         {% else %}
-                            {{ order_total_excl_tax|currency }}
+                            {{ order_total.excl_tax|currency }}
                         {% endif %}
                     </h4>
                 </td>
             </tr>
-            {% if not basket.is_tax_known %}
+            {% if not order_total.is_tax_known %}
                 <tr>
                     <td><small>Taxes will be added during checkout.</small></td>
                 </tr>

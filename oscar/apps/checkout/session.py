@@ -1,17 +1,13 @@
-import logging
-
 from django.db.models import get_model
 
-from oscar.apps.shipping.methods import Free
 from oscar.core.loading import get_class
-OrderTotalCalculator = get_class('checkout.calculators', 'OrderTotalCalculator')
-CheckoutSessionData = get_class('checkout.utils', 'CheckoutSessionData')
 
+OrderTotalCalculator = get_class(
+    'checkout.calculators', 'OrderTotalCalculator')
+CheckoutSessionData = get_class(
+    'checkout.utils', 'CheckoutSessionData')
 ShippingAddress = get_model('order', 'ShippingAddress')
 UserAddress = get_model('address', 'UserAddress')
-
-# Standard logger for checkout events
-logger = logging.getLogger('oscar.checkout')
 
 
 class CheckoutSessionMixin(object):
@@ -37,9 +33,8 @@ class CheckoutSessionMixin(object):
 
         ctx['shipping_address'] = shipping_address
         ctx['shipping_method'] = shipping_method
-
-        ctx['order_total_incl_tax'], ctx['order_total_excl_tax'] = self.get_order_totals(
-            basket, shipping_method)
+        if basket and shipping_method:
+            ctx['order_total'] = self.get_order_totals(basket, shipping_method)
 
         return ctx
 
@@ -82,12 +77,5 @@ class CheckoutSessionMixin(object):
         """
         Returns the total for the order with and without tax (as a tuple)
         """
-        calc = OrderTotalCalculator(self.request)
-        total_excl_tax = calc.order_total_excl_tax(
+        return OrderTotalCalculator(self.request).calculate(
             basket, shipping_method, **kwargs)
-        if basket.is_tax_known:
-            total_incl_tax = calc.order_total_incl_tax(
-                basket, shipping_method, **kwargs)
-        else:
-            total_incl_tax = None
-        return total_incl_tax, total_excl_tax

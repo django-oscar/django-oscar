@@ -9,14 +9,11 @@ from django.db.models import get_model
 from django.utils.translation import ugettext as _
 from django.views.generic import DetailView, TemplateView, FormView, \
                                  DeleteView, UpdateView, CreateView
-from oscar.apps.customer.utils import normalise_email
 
 from oscar.apps.shipping.methods import NoShippingRequired
 from oscar.core.loading import get_class, get_classes
 
 ShippingAddressForm, GatewayForm = get_classes('checkout.forms', ['ShippingAddressForm', 'GatewayForm'])
-OrderTotalCalculator = get_class('checkout.calculators', 'OrderTotalCalculator')
-CheckoutSessionData = get_class('checkout.utils', 'CheckoutSessionData')
 pre_payment, post_payment = get_classes('checkout.signals', ['pre_payment', 'post_payment'])
 OrderNumberGenerator, OrderCreator = get_classes('order.utils', ['OrderNumberGenerator', 'OrderCreator'])
 UserAddressForm = get_class('address.forms', 'UserAddressForm')
@@ -524,10 +521,11 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         pre_payment.send_robust(sender=self, view=self)
 
         shipping_method = self.get_shipping_method(basket)
-        total_incl_tax, total_excl_tax = self.get_order_totals(
+        total = self.get_order_totals(
             basket, shipping_method=shipping_method)
         try:
-            self.handle_payment(order_number, total_incl_tax, **payment_kwargs)
+            self.handle_payment(order_number, total.incl_tax,
+                                **payment_kwargs)
         except RedirectRequired, e:
             # Redirect required (eg PayPal, 3DS)
             logger.info("Order #%s: redirecting to %s", order_number, e.url)
@@ -569,7 +567,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         logger.info("Order #%s: payment successful, placing order", order_number)
         try:
             return self.handle_order_placement(
-                order_number, basket, total_incl_tax, total_excl_tax,
+                order_number, basket, total.incl_tax, total.excl_tax,
                 **order_kwargs)
         except UnableToPlaceOrder, e:
             # It's possible that something will go wrong while trying to
