@@ -13,48 +13,6 @@ from oscar.test import factories
 User = get_user_model()
 
 
-class FreeTest(TestCase):
-
-    def setUp(self):
-        self.method = Free()
-
-    def test_shipping_is_free_for_empty_basket(self):
-        basket = Basket()
-        self.method.set_basket(basket)
-        self.assertEquals(D('0.00'), self.method.basket_charge_incl_tax())
-        self.assertEquals(D('0.00'), self.method.basket_charge_excl_tax())
-
-    def test_shipping_is_free_for_nonempty_basket(self):
-        basket = factories.create_basket()
-        self.method.set_basket(basket)
-        self.assertEquals(D('0.00'), self.method.basket_charge_incl_tax())
-        self.assertEquals(D('0.00'), self.method.basket_charge_excl_tax())
-
-
-class FixedPriceTest(TestCase):
-
-    def test_fixed_price_shipping_charges_for_empty_basket(self):
-        method = FixedPrice(D('10.00'), D('10.00'))
-        basket = Basket()
-        method.set_basket(basket)
-        self.assertEquals(D('10.00'), method.basket_charge_incl_tax())
-        self.assertEquals(D('10.00'), method.basket_charge_excl_tax())
-
-    def test_fixed_price_shipping_assumes_no_tax(self):
-        method = FixedPrice(D('10.00'))
-        basket = Basket()
-        method.set_basket(basket)
-        self.assertEquals(D('10.00'), method.basket_charge_excl_tax())
-
-    def test_different_values(self):
-        shipping_values = ['1.00', '5.00', '10.00', '12.00']
-        for value in shipping_values:
-            basket = Basket()
-            method = FixedPrice(D(value))
-            method.set_basket(basket)
-            self.assertEquals(D(value), method.basket_charge_excl_tax())
-
-
 class OrderAndItemChargesTests(TestCase):
 
     def setUp(self):
@@ -63,20 +21,20 @@ class OrderAndItemChargesTests(TestCase):
         self.method.set_basket(self.basket)
 
     def test_order_level_charge_for_empty_basket(self):
-        self.assertEquals(D('5.00'), self.method.basket_charge_incl_tax())
+        self.assertEquals(D('5.00'), self.method.charge_incl_tax)
 
     def test_single_item_basket(self):
         record = factories.create_stockrecord()
         info = factories.create_stockinfo(record)
         self.basket.add_product(record.product, info)
         self.assertEquals(D('5.00') + D('1.00'),
-                          self.method.basket_charge_incl_tax())
+                          self.method.charge_incl_tax)
 
     def test_multi_item_basket(self):
         record = factories.create_stockrecord()
         info = factories.create_stockinfo(record)
         self.basket.add_product(record.product, info, 7)
-        self.assertEquals(D('5.00') + 7*D('1.00'), self.method.basket_charge_incl_tax())
+        self.assertEquals(D('5.00') + 7*D('1.00'), self.method.charge_incl_tax)
 
 
 class ZeroFreeThresholdTest(TestCase):
@@ -87,13 +45,13 @@ class ZeroFreeThresholdTest(TestCase):
         self.method.set_basket(self.basket)
 
     def test_free_shipping_with_empty_basket(self):
-        self.assertEquals(D('0.00'), self.method.basket_charge_incl_tax())
+        self.assertEquals(D('0.00'), self.method.charge_incl_tax)
 
     def test_free_shipping_with_nonempty_basket(self):
         record = factories.create_stockrecord(price_excl_tax=D('5.00'))
         info = factories.create_stockinfo(record)
         self.basket.add_product(record.product, info)
-        self.assertEquals(D('0.00'), self.method.basket_charge_incl_tax())
+        self.assertEquals(D('0.00'), self.method.charge_incl_tax)
 
 
 class NonZeroFreeThresholdTest(TestCase):
@@ -108,19 +66,19 @@ class NonZeroFreeThresholdTest(TestCase):
         record = factories.create_stockrecord(price_excl_tax=D('5.00'))
         info = factories.create_stockinfo(record)
         self.basket.add_product(record.product, info)
-        self.assertEquals(D('10.00'), self.method.basket_charge_incl_tax())
+        self.assertEquals(D('10.00'), self.method.charge_incl_tax)
 
     def test_basket_on_threshold(self):
         record = factories.create_stockrecord(price_excl_tax=D('5.00'))
         info = factories.create_stockinfo(record)
         self.basket.add_product(record.product, info, quantity=4)
-        self.assertEquals(D('0.00'), self.method.basket_charge_incl_tax())
+        self.assertEquals(D('0.00'), self.method.charge_incl_tax)
 
     def test_basket_above_threshold(self):
         record = factories.create_stockrecord(price_excl_tax=D('5.00'))
         info = factories.create_stockinfo(record)
         self.basket.add_product(record.product, info, quantity=8)
-        self.assertEquals(D('0.00'), self.method.basket_charge_incl_tax())
+        self.assertEquals(D('0.00'), self.method.charge_incl_tax)
 
 
 class ScalesTests(TestCase):
@@ -207,11 +165,6 @@ class WeightBasedMethodTests(TestCase):
 
     def test_weight_from_for_multiple_bands(self):
         self.standard.bands.create(upper_limit=1, charge=D('4.00'))
-        band = self.standard.objects.create(upper_limit=2, charge=D('8.00'))
-        self.assertEqual(1, band.weight_from)
-
-    def test_weight_from_for_multiple_bands(self):
-        self.standard.bands.create(upper_limit=1, charge=D('4.00'))
         band = self.express.bands.create(upper_limit=2, charge=D('8.00'))
         self.assertEqual(0, band.weight_from)
 
@@ -232,7 +185,7 @@ class WeightBasedMethodTests(TestCase):
     def test_for_smoke_with_basket_charge(self):
         basket = factories.create_basket(empty=True)
         self.standard.set_basket(basket)
-        charge = self.standard.basket_charge_incl_tax()
+        charge = self.standard.charge_incl_tax
         self.assertEqual(D('0.00'), charge)
 
 

@@ -83,8 +83,8 @@ class CheckoutSessionMixin(object):
         method = self.get_shipping_method()
         if method:
             ctx['shipping_method'] = method
-            ctx['shipping_total_excl_tax'] = method.basket_charge_excl_tax()
-            ctx['shipping_total_incl_tax'] = method.basket_charge_incl_tax()
+            ctx['shipping_total_excl_tax'] = method.charge_excl_tax
+            ctx['shipping_total_incl_tax'] = method.charge_incl_tax
 
         ctx['order_total_incl_tax'], ctx['order_total_excl_tax'] = self.get_order_totals()
 

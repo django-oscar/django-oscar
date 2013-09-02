@@ -39,7 +39,7 @@ class Repository(object):
                 _("You need to define some shipping methods"))
 
         # Choose the cheapest method by default
-        return min(methods, key=lambda method: method.basket_charge_incl_tax())
+        return min(methods, key=lambda method: method.charge_excl_tax)
 
     def prime_methods(self, basket, methods):
         """
@@ -62,7 +62,7 @@ class Repository(object):
         if basket.offer_applications.shipping_discounts:
             # We assume there is only one shipping discount available
             discount = basket.offer_applications.shipping_discounts[0]
-            if method.basket_charge_incl_tax > D('0.00'):
+            if method.charge_incl_tax > D('0.00'):
                 return OfferDiscount(method, discount['offer'])
         return method
 

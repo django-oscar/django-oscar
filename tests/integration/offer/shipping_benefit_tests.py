@@ -67,7 +67,7 @@ class TestAnOfferWithAShippingBenefit(TestCase):
         methods = StubRepository().get_shipping_methods(self.basket)
         method = methods[0]
         self.assertTrue(method.is_discounted)
-        self.assertEqual(D('1.00'), method.basket_charge_incl_tax())
+        self.assertEqual(D('1.00'), method.charge_incl_tax)
 
     def test_has_discount_recorded_correctly_when_order_is_placed(self):
         add_product(self.basket, D('12.00'), 1)

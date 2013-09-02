@@ -93,7 +93,7 @@
                         <th class="total">
                             {% trans "Shipping" %} - {{ shipping_method.name }}
                         </th>
-                        <th class="total align-right">{{ shipping_method.basket_charge_incl_tax|currency }}</th>
+                        <th class="total align-right">{{ shipping_method.charge_incl_tax|currency }}</th>
                     </tr>
                 {% else %}
                     {# As shipping is discounted, we break it down into its original charge and a discount #}
@@ -103,7 +103,7 @@
                     </tr>
                     <tr>
                         <td>{% trans "Shipping total (before discounts)" %}</td>
-                        <td class="align-right">{{ shipping_method.basket_charge_incl_tax_before_discount|currency }}</td>
+                        <td class="align-right">{{ shipping_method.charge_incl_tax_before_discount|currency }}</td>
                     </tr>
                     <tr>
                         {% with discount=shipping_method.get_discount %}
@@ -115,7 +115,7 @@
                         <th class="total">
                             {% trans "Shipping total (after discounts)" %}
                         </th>
-                        <th class="total align-right">{{ shipping_method.basket_charge_incl_tax|currency }}</th>
+                        <th class="total align-right">{{ shipping_method.charge_incl_tax|currency }}</th>
                     </tr>
                 {% endif %}
             {% endblock %}

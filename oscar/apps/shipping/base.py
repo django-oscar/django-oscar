@@ -1,7 +1,8 @@
 from decimal import Decimal as D
+import warnings
 
 
-class ShippingMethod(object):
+class Base(object):
     """
     Superclass for all shipping method objects.
 
@@ -27,21 +28,28 @@ class ShippingMethod(object):
     is_discounted = False
     discount = D('0.00')
 
-    def __init__(self, *args, **kwargs):
-        self.exempt_from_tax = False
-        super(ShippingMethod, self).__init__(*args, **kwargs)
+    #: Shipping charge including taxes
+    charge_excl_tax = D('0.00')
+
+    #: Shipping charge excluding taxes
+    charge_incl_tax = None
 
     def set_basket(self, basket):
         self.basket = basket
 
-    def basket_charge_incl_tax(self):
-        """
-        Return the shipping charge including any taxes
-        """
-        raise NotImplemented()
-
+    @property
     def basket_charge_excl_tax(self):
-        """
-        Return the shipping charge excluding taxes
-        """
-        raise NotImplemented()
+        warnings.warn(
+            "Use charge_excl_tax not basket_charge_excl_tax",
+            DeprecationWarning)
+        return self.charge_excl_tax
+
+    @property
+    def basket_charge_incl_tax(self):
+        warnings.warn(
+            "Use charge_incl_tax not basket_charge_incl_tax",
+            DeprecationWarning)
+        return self.charge_incl_tax
+
+
+ShippingMethod = Base

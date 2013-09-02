@@ -68,8 +68,8 @@ class TestSuccessfulOrderCreation(TestCase):
         add_product(self.basket, D('12.00'))
         method = Mock()
         method.is_discounted = False
-        method.basket_charge_incl_tax = Mock(return_value=D('2.00'))
-        method.basket_charge_excl_tax = Mock(return_value=D('2.00'))
+        method.charge_incl_tax = D('2.00')
+        method.charge_excl_tax = D('2.00')
 
         self.creator.place_order(basket=self.basket, order_number='1234', shipping_method=method)
         order = Order.objects.get(number='1234')

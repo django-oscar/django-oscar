@@ -52,8 +52,8 @@ class OrderCreator(object):
         if not shipping_method:
             shipping_method = Free()
         if total_incl_tax is None or total_excl_tax is None:
-            total_incl_tax = basket.total_incl_tax + shipping_method.basket_charge_incl_tax()
-            total_excl_tax = basket.total_excl_tax + shipping_method.basket_charge_excl_tax()
+            total_incl_tax = basket.total_incl_tax + shipping_method.charge_incl_tax
+            total_excl_tax = basket.total_excl_tax + shipping_method.charge_excl_tax
         if not order_number:
             generator = OrderNumberGenerator()
             order_number = generator.order_number(basket)
@@ -109,8 +109,8 @@ class OrderCreator(object):
                       'site': Site._default_manager.get_current(),
                       'total_incl_tax': total_incl_tax,
                       'total_excl_tax': total_excl_tax,
-                      'shipping_incl_tax': shipping_method.basket_charge_incl_tax(),
-                      'shipping_excl_tax': shipping_method.basket_charge_excl_tax(),
+                      'shipping_incl_tax': shipping_method.charge_incl_tax,
+                      'shipping_excl_tax': shipping_method.charge_excl_tax,
                       'shipping_method': shipping_method.name}
         if shipping_address:
             order_data['shipping_address'] = shipping_address

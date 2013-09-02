@@ -144,12 +144,12 @@ class BasketView(ModelFormSetView):
 
         context['order_total_excl_tax'] = (
             self.request.basket.total_excl_tax +
-            method.basket_charge_excl_tax())
+            method.charge_excl_tax)
         # If tax is known - add tax-inclusive total
         if self.request.basket.is_tax_known:
             context['order_total_incl_tax'] = (
                 self.request.basket.total_incl_tax +
-                method.basket_charge_incl_tax())
+                method.charge_incl_tax)
         context['basket_warnings'] = self.get_basket_warnings(
             self.request.basket)
         context['upsell_messages'] = self.get_upsell_messages(
