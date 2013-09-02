@@ -1,11 +1,13 @@
 from decimal import Decimal as D
 
 from django.test import TestCase
+from nose.plugins.attrib import attr
 
 from oscar.apps.shipping.methods import Free, FixedPrice
 from oscar.apps.shipping.models import OrderAndItemCharges
 
 
+@attr('shipping')
 class TestStandardMethods(TestCase):
 
     def setUp(self):

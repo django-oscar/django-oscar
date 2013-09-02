@@ -1,11 +1,13 @@
 from decimal import Decimal as D
 
 from django.test import TestCase
+from nose.plugins.attrib import attr
 
 from oscar.apps.basket.models import Basket
 from oscar.apps.shipping import repository, methods
 
 
+@attr('shipping')
 class TestShippingRepository(TestCase):
 
     def setUp(self):

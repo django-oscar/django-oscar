@@ -1,12 +1,14 @@
 from decimal import Decimal as D
 
 from django.test import TestCase
+from nose.plugins.attrib import attr
 
 from oscar.apps.shipping import Scales
 from oscar.apps.basket.models import Basket
 from oscar.test import factories
 
 
+@attr('shipping')
 class TestScales(TestCase):
 
     def test_weighs_uses_specified_attribute(self):
