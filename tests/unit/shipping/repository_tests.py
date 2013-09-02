@@ -3,11 +3,7 @@ from decimal import Decimal as D
 from django.test import TestCase
 
 from oscar.apps.basket.models import Basket
-from oscar.core.compat import get_user_model
 from oscar.apps.shipping import repository, methods
-
-
-User = get_user_model()
 
 
 class TestShippingRepository(TestCase):

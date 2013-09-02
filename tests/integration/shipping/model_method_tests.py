@@ -2,10 +2,7 @@ from decimal import Decimal as D
 
 from django.test import TestCase
 
-from oscar.apps.shipping.methods import Free, FixedPrice
 from oscar.apps.shipping.models import OrderAndItemCharges, WeightBased
-from oscar.apps.shipping import Scales
-from oscar.apps.basket.models import Basket
 from oscar.core.compat import get_user_model
 from oscar.test import factories
 
@@ -81,55 +78,6 @@ class NonZeroFreeThresholdTest(TestCase):
         self.assertEquals(D('0.00'), self.method.charge_incl_tax)
 
 
-class ScalesTests(TestCase):
-
-    def test_simple_weight_calculation(self):
-        scales = Scales(attribute_code='weight')
-        p = factories.create_product(attributes={'weight': '1'})
-        self.assertEqual(1, scales.weigh_product(p))
-
-    def test_default_weight_is_used_when_attribute_is_missing(self):
-        scales = Scales(attribute_code='weight', default_weight=0.5)
-        p = factories.create_product()
-        self.assertEqual(0.5, scales.weigh_product(p))
-
-    def test_exception_is_raised_when_attribute_is_missing(self):
-        scales = Scales(attribute_code='weight')
-        p = factories.create_product()
-        with self.assertRaises(ValueError):
-            scales.weigh_product(p)
-
-    def test_weight_calculation_of_empty_basket(self):
-        basket = Basket()
-
-        scales = Scales(attribute_code='weight')
-        self.assertEquals(0, scales.weigh_basket(basket))
-
-    def test_weight_calculation_of_basket(self):
-        basket = factories.create_basket(empty=True)
-        record = factories.create_stockrecord(price_excl_tax=D('5.00'))
-        info = factories.create_stockinfo(record)
-        basket.add_product(
-            factories.create_product(attributes={'weight': '1'}), info)
-        basket.add_product(
-            factories.create_product(attributes={'weight': '2'}), info)
-
-        scales = Scales(attribute_code='weight')
-        self.assertEquals(1+2, scales.weigh_basket(basket))
-
-    def test_weight_calculation_of_basket_with_line_quantity(self):
-        basket = factories.create_basket(empty=True)
-        record = factories.create_stockrecord(price_excl_tax=D('5.00'))
-        info = factories.create_stockinfo(record)
-        basket.add_product(factories.create_product(
-            attributes={'weight': '1'}), info, quantity=3)
-        basket.add_product(factories.create_product(
-            attributes={'weight': '2'}), info, quantity=4)
-
-        scales = Scales(attribute_code='weight')
-        self.assertEquals(1*3+2*4, scales.weigh_basket(basket))
-
-
 class WeightBasedMethodTests(TestCase):
 
     def setUp(self):
@@ -189,24 +137,3 @@ class WeightBasedMethodTests(TestCase):
         self.assertEqual(D('0.00'), charge)
 
 
-class OfferDiscountTest(TestCase):
-    """
-    Should test a discounted shipping method against a non-discounted one.
-    So far only checks if the is_discounted field is present on all
-    methods
-    """
-
-    def setUp(self):
-        self.non_discount_methods = [
-            Free(),
-            FixedPrice(D('10.00'), D('10.00')),
-            OrderAndItemCharges(price_per_order=D('5.00'), price_per_item=D('1.00'))]
-        self.discount_methods = []
-
-    def test_is_discounted_present_and_reasonable(self):
-        for method in self.non_discount_methods + self.discount_methods:
-            self.assertTrue(hasattr(method, 'is_discounted'))
-        for method in self.non_discount_methods:
-            self.assertFalse(method.is_discounted)
-        for method in self.discount_methods:
-            self.assertTrue(method.is_discounted)
