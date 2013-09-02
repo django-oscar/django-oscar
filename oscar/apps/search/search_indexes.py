@@ -38,7 +38,9 @@ class ProductIndex(indexes.SearchIndex, indexes.Indexable):
         # (although that is the most common scenario).
         if obj.is_top_level and obj.has_stockrecords:
             result = strategy.fetch(obj)
-            return result.price.incl_tax
+            if result.price.is_tax_known:
+                return result.price.incl_tax
+            return result.price.excl_tax
 
     def prepare_num_in_stock(self, obj):
         if obj.has_stockrecords:

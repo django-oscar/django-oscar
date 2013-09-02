@@ -360,12 +360,16 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
     template_name_preview = 'checkout/preview.html'
     preview = False
 
-    def get(self, request, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
+        # Taxes must be known at this point
+        assert request.basket.is_tax_known, (
+            "Tax must be set before a user can place an order")
+
         error_response = self.get_error_response()
         if error_response:
             return error_response
-
-        return super(PaymentDetailsView, self).get(request, *args, **kwargs)
+        return super(PaymentDetailsView, self).dispatch(
+            request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         """
@@ -373,10 +377,6 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         validate the forms from the payment details page.  If the forms are
         valid then the method can call submit()
         """
-        error_response = self.get_error_response()
-        if error_response:
-            return error_response
-
         if self.preview:
             # We use a custom parameter to indicate if this is an attempt to
             # place an order.  Without this, we assume a payment form is being
@@ -394,9 +394,8 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             messages.error(self.request, _("You need to add some items to your basket to checkout"))
             return HttpResponseRedirect(reverse('basket:summary'))
 
-        shipping_required = self.request.basket.is_shipping_required()
-
         # Check that shipping address has been completed
+        shipping_required = self.request.basket.is_shipping_required()
         if shipping_required and not self.checkout_session.is_shipping_address_set():
             messages.error(self.request, _("Please choose a shipping address"))
             return HttpResponseRedirect(reverse('checkout:shipping-address'))

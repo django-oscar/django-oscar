@@ -8,6 +8,7 @@ from oscar.apps.shipping.base import Base
 class Free(Base):
     code = 'free-shipping'
     name = _('Free shipping')
+    is_tax_known = True
     charge_incl_tax = charge_excl_tax = D('0.00')
 
 
@@ -24,11 +25,11 @@ class FixedPrice(Base):
     code = 'fixed-price-shipping'
     name = _('Fixed price shipping')
 
-    def __init__(self, charge_incl_tax, charge_excl_tax=None):
-        self.charge_incl_tax = charge_incl_tax
-        if not charge_excl_tax:
-            charge_excl_tax = charge_incl_tax
+    def __init__(self, charge_excl_tax, charge_incl_tax=None):
         self.charge_excl_tax = charge_excl_tax
+        if charge_incl_tax is not None:
+            self.charge_incl_tax = charge_incl_tax
+            self.is_tax_known = True
 
 
 class OfferDiscount(Base):

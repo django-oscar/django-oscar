@@ -28,7 +28,7 @@ class Selector(object):
     def strategy(self, request=None, user=None, **kwargs):
         # Default to the backwards-compatible strategy of picking the first
         # stockrecord.
-        return Default(request)
+        return US(request)
 
 
 class Base(object):
@@ -145,6 +145,19 @@ class FixedRateTax(object):
             tax=stockrecord.price_excl_tax * self.rate)
 
 
+class DeferredTax(object):
+    """
+    For when taxes aren't known until the shipping details are entered.  Like
+    in the USA
+    """
+
+    def pricing_policy(self, product, stockrecord):
+        if not stockrecord:
+            return prices.Unavailable()
+        return prices.FixedPrice(
+            excl_tax=stockrecord.price_excl_tax)
+
+
 # Example strategy composed of above mixins.  For real projects, it's likely
 # you'll want to use a different pricing mixin as you'll probably want to
 # charge tax!
@@ -155,4 +168,10 @@ class Default(UseFirstStockRecord, StockRequired, NoTax, Structured):
     Default stock/price strategy that uses the first found stockrecord for a
     product, ensures that stock is available (unless the product class
     indicates that we don't need to track stock) and charges zero tax.
+    """
+
+
+class US(UseFirstStockRecord, StockRequired, DeferredTax, Structured):
+    """
+    Default strategy for the USA
     """

@@ -20,6 +20,11 @@ class TestFreeShippping(TestCase):
         self.assertEquals(D('0.00'), self.method.charge_incl_tax)
         self.assertEquals(D('0.00'), self.method.charge_excl_tax)
 
+    def test_includes_tax(self):
+        basket = Basket()
+        self.method.set_basket(basket)
+        self.assertTrue(self.method.is_tax_known)
+
     def test_shipping_is_free_for_nonempty_basket(self):
         basket = factories.create_basket()
         self.method.set_basket(basket)
@@ -55,16 +60,25 @@ class TestFixedPriceShippingWithoutTax(TestCase):
     def test_has_correct_charge(self):
         self.assertEquals(D('10.00'), self.method.charge_excl_tax)
 
+    def test_does_not_include_tax(self):
+        self.assertFalse(self.method.is_tax_known)
+
+    def test_does_not_know_charge_including_tax(self):
+        self.assertIsNone(self.method.charge_incl_tax)
+
 
 @attr('shipping')
 class TestFixedPriceShippingWithTax(TestCase):
 
     def setUp(self):
         self.method = methods.FixedPrice(
-            D('12.00'), D('10.00'))
+            D('10.00'), D('12.00'))
         basket = Basket()
         self.method.set_basket(basket)
 
     def test_has_correct_charge(self):
         self.assertEquals(D('10.00'), self.method.charge_excl_tax)
         self.assertEquals(D('12.00'), self.method.charge_incl_tax)
+
+    def test_does_include_tax(self):
+        self.assertTrue(self.method.is_tax_known)

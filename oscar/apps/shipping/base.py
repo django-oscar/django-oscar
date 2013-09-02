@@ -4,14 +4,17 @@ import warnings
 
 class Base(object):
     """
-    Superclass for all shipping method objects.
+    Shipping method interface class
 
-    It is an actual superclass to the classes in methods.py, and a de-facto
+    This is the superclass to the classes in methods.py, and a de-facto
     superclass to the classes in models.py. This allows using all
     shipping methods interchangeably (aka polymorphism).
+
+    The interface is all properties.
     """
 
-    # This is the interface that all shipping methods must implement
+    # CORE INTERFACE
+    # --------------
 
     #: Used to store this method in the session.  Each shipping method should
     #  have a unique code.
@@ -21,12 +24,8 @@ class Base(object):
     name = 'Default shipping'
 
     #: A more detailed description of the shipping method shown to the customer
-    # during checkout
+    # during checkout.  Can contain HTML.
     description = ''
-
-    # These are not intended to be overridden
-    is_discounted = False
-    discount = D('0.00')
 
     #: Shipping charge including taxes
     charge_excl_tax = D('0.00')
@@ -34,22 +33,37 @@ class Base(object):
     #: Shipping charge excluding taxes
     charge_incl_tax = None
 
+    #: Whether we now the shipping tax applicable (and hence whether
+    #  charge_incl_tax returns a value.
+    is_tax_known = False
+
+    # END OF CORE INTERFACE
+    # ---------------------
+
+    # These are not intended to be overridden and are used to track shipping
+    # discounts.
+    is_discounted = False
+    discount = D('0.00')
+
     def set_basket(self, basket):
         self.basket = basket
 
-    @property
     def basket_charge_excl_tax(self):
-        warnings.warn(
-            "Use charge_excl_tax not basket_charge_excl_tax",
+        warnings.warn((
+            "Use the charge_excl_tax property not basket_charge_excl_tax. "
+            "Basket.basket_charge_excl_tax will be removed "
+            "in v0.7"),
             DeprecationWarning)
         return self.charge_excl_tax
 
-    @property
     def basket_charge_incl_tax(self):
-        warnings.warn(
-            "Use charge_incl_tax not basket_charge_incl_tax",
+        warnings.warn((
+            "Use the charge_incl_tax property not basket_charge_incl_tax. "
+            "Basket.basket_charge_incl_tax will be removed "
+            "in v0.7"),
             DeprecationWarning)
         return self.charge_incl_tax
 
 
+# For backwards compatibility, keep an alias called "ShippingMethod"
 ShippingMethod = Base

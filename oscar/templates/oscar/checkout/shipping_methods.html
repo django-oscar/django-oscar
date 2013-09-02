@@ -6,7 +6,7 @@
 {% load i18n %}
 
 {% block title %}
-{% trans "Shipping method" %} | {{ block.super }}
+    {% trans "Shipping method" %} | {{ block.super }}
 {% endblock %}
 
 {% block checkout_nav %}
@@ -18,45 +18,49 @@
 {% block payment_method %}{% endblock %}
 
 {% block shipping_method %}
-<div class="sub-header">
-    <h2>{% trans "Choose a shipping method" %}</h2>
-</div>
-<div class="basket-title">
-    <div class="row-fluid">
-        <h4 class="span9">{% trans "Method" %}</h4>
-        <h4 class="span3">{% trans "Cost" %}</h4>
+    <div class="sub-header">
+        <h2>{% trans "Choose a shipping method" %}</h2>
     </div>
-</div>
-{% for method in methods %}
-<div class="basket-items">
-    <div class="row-fluid">
-        <div class="span9">
-            <h4>{{ method.name }}</h4>
-            {% if method.description %}
-                <p>{{ method.description|safe }}</p>
-            {% endif %}
-            {% if method.is_discounted %}
-                <small>
-                {% with discount=method.get_discount %}
-                {% blocktrans with amount=discount.discount|currency name=discount.name %}
-                This includes a discount of {{ amount }} as
-                your basket qualifies for the '{{ name }}' offer.
-                {% endblocktrans %}
-                {% endwith %}
-                </small>
-            {% endif %}
+    <div class="basket-title">
+        <div class="row-fluid">
+            <h4 class="span8">{% trans "Method" %}</h4>
+            <h4 class="span3">{% trans "Cost" %}</h4>
         </div>
-        <div class="span1">
-            {{ method.charge_incl_tax|currency }}
-        </div>
-        <div class="span2">
-            <form method="post" action="{% url 'checkout:shipping-method' %}">
-                {% csrf_token %}
-                <input type="hidden" name="method_code" value="{{ method.code }}" class="btn" />
-                <button type="submit" class="btn btn-large btn-primary pull-right">{% trans "Select option" %}</button>
-            </form>
-        </div>    
     </div>
-</div>
-{% endfor %}
+    {% for method in methods %}
+        <div class="basket-items">
+            <div class="row-fluid">
+                <div class="span8">
+                    <h4>{{ method.name }}</h4>
+                    {% if method.description %}
+                        <p>{{ method.description|safe }}</p>
+                    {% endif %}
+                    {% if method.is_discounted %}
+                        <small>
+                            {% with discount=method.get_discount %}
+                                {% blocktrans with amount=discount.discount|currency name=discount.name %}
+                                    This includes a discount of {{ amount }} as
+                                    your basket qualifies for the '{{ name }}' offer.
+                                {% endblocktrans %}
+                            {% endwith %}
+                        </small>
+                    {% endif %}
+                </div>
+                <div class="span1">
+                    {% if method.is_tax_known %}
+                        {{ method.charge_incl_tax|currency }}
+                    {% else %}
+                        {{ method.charge_excl_tax|currency }}
+                    {% endif %}
+                </div>
+                <div class="span3">
+                    <form method="post" action="{% url 'checkout:shipping-method' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="method_code" value="{{ method.code }}" class="btn" />
+                        <button type="submit" class="btn btn-large btn-primary pull-right">{% trans "Select option" %}</button>
+                    </form>
+                </div>    
+            </div>
+        </div>
+    {% endfor %}
 {% endblock shipping_method %}
