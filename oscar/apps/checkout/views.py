@@ -361,10 +361,6 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
     preview = False
 
     def dispatch(self, request, *args, **kwargs):
-        # Taxes must be known at this point
-        assert request.basket.is_tax_known, (
-            "Tax must be set before a user can place an order")
-
         error_response = self.get_error_response()
         if error_response:
             return error_response
@@ -486,6 +482,10 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         if order_kwargs is None:
             order_kwargs = {}
 
+        # Taxes must be known at this point
+        assert basket.is_tax_known, (
+            "Tax must be set before a user can place an order")
+
         # Domain-specific checks on the basket
         is_valid, reason, url = self.can_basket_be_submitted(basket)
         if not is_valid:
@@ -499,7 +499,8 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         # the order on a different request).
         order_number = self.generate_order_number(basket)
         self.checkout_session.set_order_number(order_number)
-        logger.info("Order #%s: beginning submission process for basket #%d", order_number, basket.id)
+        logger.info("Order #%s: beginning submission process for basket #%d",
+                    order_number, basket.id)
 
         # Freeze the basket so it cannot be manipulated while the customer is
         # completing payment on a 3rd party site.  Also, store a reference to
