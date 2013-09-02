@@ -332,7 +332,7 @@ class PaymentMethodView(CheckoutSessionMixin, TemplateView):
             return HttpResponseRedirect(reverse('checkout:shipping-address'))
 
         # Check that shipping method has been set
-        if shipping_required and not self.checkout_session.is_shipping_method_set():
+        if shipping_required and not self.checkout_session.is_shipping_method_set(self.request.basket):
             messages.error(request, _("Please choose a shipping method"))
             return HttpResponseRedirect(reverse('checkout:shipping-method'))
 
@@ -401,7 +401,8 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             return HttpResponseRedirect(reverse('checkout:shipping-address'))
 
         # Check that shipping method has been set
-        if shipping_required and not self.checkout_session.is_shipping_method_set():
+        if shipping_required and not self.checkout_session.is_shipping_method_set(
+                self.request.basket):
             messages.error(self.request, _("Please choose a shipping method"))
             return HttpResponseRedirect(reverse('checkout:shipping-method'))
 

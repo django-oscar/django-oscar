@@ -45,7 +45,7 @@ class CheckoutSessionMixin(object):
 
     def get_shipping_address(self, basket):
         """
-        Return the current shipping address for this checkout session.
+        Return the shipping address for this checkout session.
 
         This could either be a ShippingAddress model which has been
         pre-populated (not saved), or a UserAddress model which will
@@ -70,13 +70,13 @@ class CheckoutSessionMixin(object):
         return None
 
     def get_shipping_method(self, basket, shipping_address=None, **kwargs):
-        method = self.checkout_session.shipping_method(basket)
+        """
+        Return the selected shipping method instance from this checkout session
 
-        # We default to using free shipping
-        if not method:
-            method = Free()
-
-        return method
+        The shipping address is passed as this is sometimes needed to determine
+        the tax applicable on a shipping method.
+        """
+        return self.checkout_session.shipping_method(basket)
 
     def get_order_totals(self, basket, shipping_method, **kwargs):
         """
@@ -91,4 +91,3 @@ class CheckoutSessionMixin(object):
         else:
             total_incl_tax = None
         return total_incl_tax, total_excl_tax
-

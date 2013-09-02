@@ -135,8 +135,11 @@ class CheckoutSessionData(object):
             return None
         return Repository().find_by_code(code, basket)
 
-    def is_shipping_method_set(self):
-        return bool(self._get('shipping', 'method_code'))
+    def is_shipping_method_set(self, basket):
+        """
+        Test if a valid shipping method is stored in the session
+        """
+        return self.shipping_method(basket) is not None
 
     # Billing address fields
     # ======================
