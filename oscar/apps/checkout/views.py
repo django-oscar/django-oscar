@@ -379,7 +379,10 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             # place an order.  Without this, we assume a payment form is being
             # submitted from the payment-details page
             if request.POST.get('action', '') == 'place_order':
-                return self.submit(request.basket)
+                # We pull together all the things that are needed to place an
+                # order.
+                submission = self.build_submission()
+                return self.submit(**submission)
             return self.render_preview(request)
 
         # Posting to payment-details isn't the right thing to do
@@ -403,6 +406,18 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             messages.error(self.request, _("Please choose a shipping method"))
             return HttpResponseRedirect(reverse('checkout:shipping-method'))
 
+    def build_submission(self):
+        """
+        Return a dict that forms that should be submitted to create an order
+        """
+        basket = self.request.basket
+        shipping_address = self.get_shipping_address(basket)
+        shipping_method = self.get_shipping_method(
+            basket, shipping_address)
+        return {'basket': basket,
+                'shipping_address': shipping_address,
+                'shipping_method': shipping_method}
+
     def get_context_data(self, **kwargs):
         # Return kwargs directly instead of using 'params' as in django's
         # TemplateView
@@ -423,8 +438,8 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         Show a preview of the order.
 
         If sensitive data was submitted on the payment details page, you will
-        need to pass it back to the view here so it can be stored in hidden form
-        inputs.  This avoids ever writing the sensitive data to disk.
+        need to pass it back to the view here so it can be stored in hidden
+        form inputs.  This avoids ever writing the sensitive data to disk.
         """
         ctx = self.get_context_data()
         ctx.update(kwargs)
@@ -460,7 +475,8 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         except UserAddress.DoesNotExist:
             return None
 
-    def submit(self, basket, payment_kwargs=None, order_kwargs=None):
+    def submit(self, basket, shipping_address, shipping_method,
+               payment_kwargs=None, order_kwargs=None):
         """
         Submit a basket for order placement.
 
@@ -520,7 +536,6 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
                       "contact customer services if this problem persists")
         pre_payment.send_robust(sender=self, view=self)
 
-        shipping_method = self.get_shipping_method(basket)
         total = self.get_order_totals(
             basket, shipping_method=shipping_method)
         try:
@@ -564,11 +579,12 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         post_payment.send_robust(sender=self, view=self)
 
         # If all is ok with payment, try and place order
-        logger.info("Order #%s: payment successful, placing order", order_number)
+        logger.info("Order #%s: payment successful, placing order",
+                    order_number)
         try:
             return self.handle_order_placement(
-                order_number, basket, total.incl_tax, total.excl_tax,
-                **order_kwargs)
+                order_number, basket, shipping_address, shipping_method,
+                total.incl_tax, total.excl_tax, **order_kwargs)
         except UnableToPlaceOrder, e:
             # It's possible that something will go wrong while trying to
             # actually place an order.  Not a good situation to be in as a

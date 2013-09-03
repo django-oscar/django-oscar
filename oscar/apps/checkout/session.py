@@ -40,11 +40,20 @@ class CheckoutSessionMixin(object):
 
     def get_shipping_address(self, basket):
         """
-        Return the shipping address for this checkout session.
+        Return the (unsaved) shipping address for this checkout session.
 
-        This could either be a ShippingAddress model which has been
-        pre-populated (not saved), or a UserAddress model which will
-        need converting into a ShippingAddress model at submission
+        If the shipping address was entered manually, then we instanciate a
+        ShippingAddress model with the appropriate form data.
+
+        If the shipping address was selected from the user's address book,
+        then we convert the UserAddress to a ShippingAddress.
+
+        The ShippingAddress instance is not saved as sometimes you need a
+        shipping address instance before the order is placed.  For example, if
+        you are submitting fraud information as part of a payment request.
+
+        The create_shipping_address method is responsible for saving a shipping
+        address when an order is placed.
         """
         if not basket.is_shipping_required():
             return None
@@ -56,12 +65,16 @@ class CheckoutSessionMixin(object):
         addr_id = self.checkout_session.user_address_id()
         if addr_id:
             try:
-                return UserAddress._default_manager.get(pk=addr_id)
+                address = UserAddress._default_manager.get(pk=addr_id)
             except UserAddress.DoesNotExist:
                 # This can happen if you reset all your tables and you still
                 # have session data that refers to addresses that no longer
                 # exist.
                 pass
+            else:
+                shipping_addr = ShippingAddress()
+                address.populate_alternative_model(shipping_addr)
+                return shipping_addr
         return None
 
     def get_shipping_method(self, basket, shipping_address=None, **kwargs):
