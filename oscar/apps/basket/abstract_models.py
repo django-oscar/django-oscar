@@ -750,6 +750,8 @@ class AbstractLine(models.Model):
 
         if not self.price_incl_tax:
             return
+        if not self.stockinfo.price.is_tax_known:
+            return
 
         # Compare current price to price when added to basket
         current_price_incl_tax = self.stockinfo.price.incl_tax
