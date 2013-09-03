@@ -125,7 +125,13 @@
                         {{ line.quantity }}
                     </div>
                     <div class="span2 align-right">
-                        <p class="price_color">{{ line.line_price_incl_tax|currency }}</p>
+                        <p class="price_color">
+                            {% if line.is_tax_known %}
+                                {{ line.line_price_incl_tax|currency }}
+                            {% else %}
+                                {{ line.line_price_excl_tax|currency }}
+                            {% endif %}
+                        </p>
                     </div>
                 </div>
             </div>
