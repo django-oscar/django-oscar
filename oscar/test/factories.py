@@ -3,6 +3,7 @@ import random
 import datetime
 
 from django.db.models import get_model
+from django.conf import settings
 
 from oscar.apps.partner import strategy, availability, prices
 from oscar.core.loading import get_class
@@ -24,7 +25,8 @@ ProductAttributeValue = get_model('catalogue', 'ProductAttributeValue')
 
 
 def create_stockrecord(product=None, price_excl_tax=None, partner_sku=None,
-                       num_in_stock=None, partner_name="Dummy partner"):
+                       num_in_stock=None, partner_name="Dummy partner",
+                       currency=settings.OSCAR_DEFAULT_CURRENCY):
     if product is None:
         product = create_product()
     partner, __ = Partner.objects.get_or_create(
@@ -35,6 +37,7 @@ def create_stockrecord(product=None, price_excl_tax=None, partner_sku=None,
         partner_sku = 'sku_%d_%d' % (product.id, random.randint(0, 10000))
     return product.stockrecords.create(
         partner=partner, partner_sku=partner_sku,
+        price_currency=currency,
         price_excl_tax=price_excl_tax, num_in_stock=num_in_stock)
 
 
