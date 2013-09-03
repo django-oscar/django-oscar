@@ -410,13 +410,14 @@ class AbstractShippingAddress(AbstractAddress):
     A shipping address should not be edited once the order has been placed -
     it should be read-only after that.
     """
-    phone_number = models.CharField(_("Phone number"), max_length=32,
-                                    blank=True, null=True)
+    phone_number = models.CharField(
+        _("Phone number"), max_length=32, blank=True, null=True,
+        help_text=_("In case we need to call you about your order"))
     notes = models.TextField(
         blank=True, null=True,
-        verbose_name=_('Courier instructions'),
-        help_text=_("For example, leave the parcel in the wheelie bin "
-                    "if I'm not in."))
+        verbose_name=_('Instructions'),
+        help_text=_("Tell us anything we should know when delivering "
+                    "your order."))
 
     class Meta:
         abstract = True
