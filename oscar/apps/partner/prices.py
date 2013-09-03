@@ -32,7 +32,8 @@ class Unavailable(Base):
 class FixedPrice(Base):
     exists = True
 
-    def __init__(self, excl_tax, tax=None):
+    def __init__(self, currency, excl_tax, tax=None):
+        self.currency = currency
         self.excl_tax = excl_tax
         self.tax = tax
 

@@ -127,6 +127,7 @@ class NoTax(object):
         if not stockrecord:
             return prices.Unavailable()
         return prices.FixedPrice(
+            currency=stockrecord.price_currency,
             excl_tax=stockrecord.price_excl_tax,
             tax=D('0.00'))
 
@@ -142,6 +143,7 @@ class FixedRateTax(object):
         if not stockrecord:
             return prices.Unavailable()
         return prices.FixedPrice(
+            currency=stockrecord.price_currency,
             excl_tax=stockrecord.price_excl_tax,
             tax=stockrecord.price_excl_tax * self.rate)
 
@@ -156,6 +158,7 @@ class DeferredTax(object):
         if not stockrecord:
             return prices.Unavailable()
         return prices.FixedPrice(
+            currency=stockrecord.price_currency,
             excl_tax=stockrecord.price_excl_tax)
 
 

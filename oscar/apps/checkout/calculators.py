@@ -1,3 +1,4 @@
+# TODO Maybe use a generic price object (similar to partner pricing)
 class OrderTotal(object):
     is_tax_known = False
 
