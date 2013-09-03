@@ -175,6 +175,14 @@ class AbstractBasket(models.Model):
         if not self.id:
             self.save()
 
+        # Ensure that all lines are the same currency
+        price_currency = self.currency
+        if price_currency and stock_info.price.currency != price_currency:
+            raise ValueError((
+                "Basket lines must all have the same currency. Proposed "
+                "line has currency %s, while basket has currency %s") % (
+                    price_currency, stock_info.price.currency))
+
         # Line reference is used to distinguish between variations of the same
         # product (eg T-shirts with different personalisations)
         line_ref = self._create_line_reference(
@@ -185,6 +193,7 @@ class AbstractBasket(models.Model):
         defaults = {
             'quantity': quantity,
             'price_excl_tax': stock_info.price.excl_tax,
+            'price_currency': stock_info.price.currency,
         }
         if stock_info.price.is_tax_known:
             defaults['price_incl_tax'] = stock_info.price.incl_tax
@@ -425,7 +434,7 @@ class AbstractBasket(models.Model):
     @property
     def num_lines(self):
         """Return number of lines"""
-        return len(self.all_lines())
+        return self.lines.all().count()
 
     @property
     def num_items(self):
@@ -475,6 +484,13 @@ class AbstractBasket(models.Model):
         Test if a basket can be edited
         """
         return self.status in self.editable_statuses
+
+    @property
+    def currency(self):
+        # Since all lines should have the same currency, return the currency of
+        # the first one found.
+        for line in self.all_lines():
+            return line.price_currency
 
     # =============
     # Query methods
@@ -545,6 +561,8 @@ class AbstractLine(models.Model):
     # We store the unit price incl tax of the product when it is first added to
     # the basket.  This allows us to tell if a product has changed price since
     # a person first added it to their basket.
+    price_currency = models.CharField(
+        _("Currency"), max_length=12, default=settings.OSCAR_DEFAULT_CURRENCY)
     price_excl_tax = models.DecimalField(
         _('Price excl. Tax'), decimal_places=2, max_digits=12,
         null=True)

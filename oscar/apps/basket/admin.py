@@ -6,14 +6,16 @@ Line = get_model('basket', 'line')
 
 class LineInline(admin.TabularInline):
     model = Line
-    readonly_fields = ('line_reference', 'product', 'price_excl_tax',)
+    readonly_fields = ('line_reference', 'product', 'price_excl_tax',
+                       'price_incl_tax', 'price_currency', 'stockrecord')
 
 
 class LineAdmin(admin.ModelAdmin):
     list_display = ('id', 'basket', 'product', 'stockrecord', 'quantity',
-                    'price_excl_tax', 'date_created')
+                    'price_excl_tax', 'price_currency', 'date_created')
     readonly_fields = ('basket', 'stockrecord', 'line_reference', 'product',
-                       'price_incl_tax', 'price_excl_tax', 'quantity')
+                       'price_currency', 'price_incl_tax', 'price_excl_tax',
+                       'quantity')
 
 
 class BasketAdmin(admin.ModelAdmin):
