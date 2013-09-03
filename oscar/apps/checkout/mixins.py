@@ -44,8 +44,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
     view_signal = post_checkout
 
     def handle_order_placement(self, order_number, basket, shipping_address,
-                               shipping_method, total_incl_tax, total_excl_tax,
-                               user=None, **kwargs):
+                               shipping_method, total, user=None, **kwargs):
         """
         Write out the order models and return the appropriate HTTP response
 
@@ -55,13 +54,13 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         """
         order = self.place_order(
             order_number, basket, shipping_address, shipping_method,
-            total_incl_tax, total_excl_tax, user, **kwargs)
+            total, user, **kwargs)
         basket.submit()
         return self.handle_successful_order(order)
 
     def place_order(self, order_number, basket, shipping_address,
-                    shipping_method, total_incl_tax,
-                    total_excl_tax, user=None, **kwargs):
+                    shipping_method, total, total_excl_tax,
+                    user=None, **kwargs):
         """
         Writes the order out to the DB including the payment models
         """
@@ -89,11 +88,13 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             kwargs['guest_email'] = self.checkout_session.get_guest_email()
 
         order = OrderCreator().place_order(
-            basket=basket, total_incl_tax=total_incl_tax,
-            total_excl_tax=total_excl_tax, user=user,
-            shipping_method=shipping_method,
+            user=user,
+            order_number=order_number,
+            basket=basket,
             shipping_address=shipping_address,
-            billing_address=billing_address, order_number=order_number,
+            shipping_method=shipping_method,
+            total=total,
+            billing_address=billing_address,
             status=status, **kwargs)
         self.save_payment_details(order)
         return order

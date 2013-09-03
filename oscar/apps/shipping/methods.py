@@ -87,6 +87,10 @@ class OfferDiscount(Base):
         return self.method.charge_excl_tax
 
     @property
+    def is_tax_known(self):
+        return self.method.is_tax_known
+
+    @property
     def charge_incl_tax(self):
         parent_charge = self.method.charge_incl_tax
         discount = self.offer.shipping_discount(parent_charge)

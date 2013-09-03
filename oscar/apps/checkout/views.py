@@ -584,7 +584,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         try:
             return self.handle_order_placement(
                 order_number, basket, shipping_address, shipping_method,
-                total.incl_tax, total.excl_tax, **order_kwargs)
+                total, **order_kwargs)
         except UnableToPlaceOrder, e:
             # It's possible that something will go wrong while trying to
             # actually place an order.  Not a good situation to be in as a

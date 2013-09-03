@@ -1,8 +1,4 @@
-class TaxNotKnown(Exception):
-    """
-    Exception for when a tax-inclusive price is requested but we don't know
-    what the tax applicable is (yet).
-    """
+from oscar.core import prices
 
 
 class Base(object):
@@ -41,7 +37,8 @@ class FixedPrice(Base):
     def incl_tax(self):
         if self.is_tax_known:
             return self.excl_tax + self.tax
-        raise TaxNotKnown("Can't calculate price.incl_tax as tax isn't known")
+        raise prices.TaxNotKnown(
+            "Can't calculate price.incl_tax as tax isn't known")
 
     @property
     def is_tax_known(self):

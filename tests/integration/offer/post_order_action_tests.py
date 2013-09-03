@@ -64,7 +64,7 @@ class TestAnOfferWithAPostOrderAction(TestCase):
         self.assertEqual('Something will happen', action['description'])
 
     def test_has_discount_recorded_correctly_when_order_is_placed(self):
-        order = OrderCreator().place_order(self.basket)
+        order = factories.create_order(basket=self.basket)
 
         discounts = order.discounts.all()
         self.assertEqual(1, len(discounts))

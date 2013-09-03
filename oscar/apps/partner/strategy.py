@@ -29,7 +29,6 @@ class Selector(object):
         # Default to the backwards-compatible strategy of picking the first
         # stockrecord.
         return Default(request)
-        return US(request)
 
 
 class Base(object):

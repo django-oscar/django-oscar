@@ -1,6 +1,7 @@
 from django.test import TestCase
 from decimal import Decimal as D
 
+from oscar.core.prices import TaxNotKnown
 from oscar.apps.partner import prices, models
 
 
@@ -48,5 +49,5 @@ class TestFixedPriceWithoutTax(TestCase):
         self.assertEquals(D('9.15'), self.price.excl_tax)
 
     def test_raises_exception_when_asking_for_price_incl_tax(self):
-        with self.assertRaises(prices.TaxNotKnown):
+        with self.assertRaises(TaxNotKnown):
             self.price.incl_tax

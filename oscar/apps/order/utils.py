@@ -38,22 +38,18 @@ class OrderCreator(object):
     Places the order by writing out the various models
     """
 
-    def place_order(self, basket, total_incl_tax=None, total_excl_tax=None,
+    def place_order(self, basket, total,
                     user=None, shipping_method=None, shipping_address=None,
-                    billing_address=None, order_number=None, status=None, **kwargs):
+                    billing_address=None, order_number=None, status=None,
+                    **kwargs):
         """
         Placing an order involves creating all the relevant models based on the
         basket and session data.
         """
-        # Only a basket instance is required to place an order - everything else can be set
-        # to defaults
         if basket.is_empty:
             raise ValueError(_("Empty baskets cannot be submitted"))
         if not shipping_method:
             shipping_method = Free()
-        if total_incl_tax is None or total_excl_tax is None:
-            total_incl_tax = basket.total_incl_tax + shipping_method.charge_incl_tax
-            total_excl_tax = basket.total_excl_tax + shipping_method.charge_excl_tax
         if not order_number:
             generator = OrderNumberGenerator()
             order_number = generator.order_number(basket)
@@ -69,7 +65,7 @@ class OrderCreator(object):
         # Ok - everything seems to be in order, let's place the order
         order = self.create_order_model(
             user, basket, shipping_address, shipping_method, billing_address,
-            total_incl_tax, total_excl_tax, order_number, status, **kwargs)
+            total, order_number, status, **kwargs)
         for line in basket.all_lines():
             self.create_line_models(order, line)
             self.update_stock_records(line)
@@ -99,7 +95,7 @@ class OrderCreator(object):
         return order
 
     def create_order_model(self, user, basket, shipping_address, shipping_method,
-                           billing_address, total_incl_tax, total_excl_tax,
+                           billing_address, total,
                            order_number, status, **extra_order_fields):
         """
         Creates an order model.
@@ -107,8 +103,9 @@ class OrderCreator(object):
         order_data = {'basket_id': basket.id,
                       'number': order_number,
                       'site': Site._default_manager.get_current(),
-                      'total_incl_tax': total_incl_tax,
-                      'total_excl_tax': total_excl_tax,
+                      'currency': total.currency,
+                      'total_incl_tax': total.incl_tax,
+                      'total_excl_tax': total.excl_tax,
                       'shipping_incl_tax': shipping_method.charge_incl_tax,
                       'shipping_excl_tax': shipping_method.charge_excl_tax,
                       'shipping_method': shipping_method.name}

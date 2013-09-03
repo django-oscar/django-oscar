@@ -89,7 +89,7 @@ def create_basket(empty=False):
 
 def create_order(number=None, basket=None, user=None, shipping_address=None,
                  shipping_method=None, billing_address=None,
-                 total_incl_tax=None, total_excl_tax=None, **kwargs):
+                 total=None, **kwargs):
     """
     Helper method for creating an order for testing
     """
@@ -105,10 +105,8 @@ def create_order(number=None, basket=None, user=None, shipping_address=None,
         basket.save()
     if shipping_method is None:
         shipping_method = Free()
-    if total_incl_tax is None or total_excl_tax is None:
+    if total is None:
         total = OrderTotalCalculator().calculate(basket, shipping_method)
-        total_incl_tax = total.incl_tax
-        total_excl_tax = total.excl_tax
     order = OrderCreator().place_order(
         order_number=number,
         user=user,
@@ -116,8 +114,7 @@ def create_order(number=None, basket=None, user=None, shipping_address=None,
         shipping_address=shipping_address,
         shipping_method=shipping_method,
         billing_address=billing_address,
-        total_incl_tax=total_incl_tax,
-        total_excl_tax=total_excl_tax,
+        total=total,
         **kwargs)
     basket.set_as_submitted()
     return order

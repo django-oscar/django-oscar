@@ -74,8 +74,8 @@ class TestAnOfferWithAShippingBenefit(TestCase):
         apply_offers(self.basket)
         methods = StubRepository().get_shipping_methods(self.basket)
         method = methods[0]
-        creator = OrderCreator()
-        order = creator.place_order(self.basket, shipping_method=method)
+        order = factories.create_order(basket=self.basket,
+                                       shipping_method=method)
 
         discounts = order.discounts.all()
         self.assertEqual(1, len(discounts))

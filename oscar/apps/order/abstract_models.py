@@ -2,14 +2,14 @@ from itertools import chain
 from decimal import Decimal as D
 import hashlib
 
+from django.conf import settings
 from django.db import models
+from django.db.models import Sum
 from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
+
 from oscar.core.compat import AUTH_USER_MODEL
 from oscar.core.utils import slugify
-from django.utils.translation import ugettext_lazy as _
-from django.db.models import Sum
-from django.conf import settings
-
 from . import exceptions
 
 
@@ -18,20 +18,31 @@ class AbstractOrder(models.Model):
     The main order model
     """
     number = models.CharField(_("Order number"), max_length=128, db_index=True)
+
     # We track the site that each order is placed within
     site = models.ForeignKey('sites.Site', verbose_name=_("Site"))
-    basket_id = models.PositiveIntegerField(_("Basket ID"), null=True, blank=True)
+    basket_id = models.PositiveIntegerField(
+        _("Basket ID"), null=True, blank=True)
+
     # Orders can be anonymous so we don't always have a customer ID
-    user = models.ForeignKey(AUTH_USER_MODEL, related_name='orders', null=True, blank=True, verbose_name=_("User"))
+    user = models.ForeignKey(
+        AUTH_USER_MODEL, related_name='orders', null=True, blank=True,
+        verbose_name=_("User"))
+
     # Billing address is not always required (eg paying by gift card)
-    billing_address = models.ForeignKey('order.BillingAddress', null=True, blank=True,
+    billing_address = models.ForeignKey(
+        'order.BillingAddress', null=True, blank=True,
         verbose_name=_("Billing Address"))
 
     # Total price looks like it could be calculated by adding up the
     # prices of the associated lines, but in some circumstances extra
     # order-level charges are added and so we need to store it separately
-    total_incl_tax = models.DecimalField(_("Order total (inc. tax)"), decimal_places=2, max_digits=12)
-    total_excl_tax = models.DecimalField(_("Order total (excl. tax)"), decimal_places=2, max_digits=12)
+    currency = models.CharField(
+        _("Currency"), max_length=12, default=settings.OSCAR_DEFAULT_CURRENCY)
+    total_incl_tax = models.DecimalField(
+        _("Order total (inc. tax)"), decimal_places=2, max_digits=12)
+    total_excl_tax = models.DecimalField(
+        _("Order total (excl. tax)"), decimal_places=2, max_digits=12)
 
     # Shipping charges
     shipping_incl_tax = models.DecimalField(
@@ -41,8 +52,8 @@ class AbstractOrder(models.Model):
         _("Shipping charge (excl. tax)"), decimal_places=2, max_digits=12,
         default=0)
 
-    # Not all lines are actually shipped (such as downloads), hence shipping address
-    # is not mandatory.
+    # Not all lines are actually shipped (such as downloads), hence shipping
+    # address is not mandatory.
     shipping_address = models.ForeignKey(
         'order.ShippingAddress', null=True, blank=True,
         verbose_name=_("Shipping Address"))
@@ -50,9 +61,11 @@ class AbstractOrder(models.Model):
         _("Shipping method"), max_length=128, null=True, blank=True)
 
     # Use this field to indicate that an order is on hold / awaiting payment
-    status = models.CharField(_("Status"), max_length=100, null=True, blank=True)
+    status = models.CharField(
+        _("Status"), max_length=100, null=True, blank=True)
 
-    guest_email = models.EmailField(_("Guest email address"), null=True, blank=True)
+    guest_email = models.EmailField(
+        _("Guest email address"), null=True, blank=True)
 
     # Index added to this field for reporting
     date_placed = models.DateTimeField(auto_now_add=True, db_index=True)

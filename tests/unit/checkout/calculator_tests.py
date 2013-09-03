@@ -5,6 +5,7 @@ import mock
 
 from oscar.apps.checkout import calculators
 from oscar.apps.shipping import methods
+from oscar.core import prices
 
 
 class TestOrderTotalCalculator(TestCase):
@@ -20,7 +21,7 @@ class TestOrderTotalCalculator(TestCase):
 
         total = self.calculator.calculate(basket, method)
 
-        self.assertIsInstance(total, calculators.OrderTotal)
+        self.assertIsInstance(total, prices.Price)
         self.assertEquals(D('10.00') + D('5.00'), total.excl_tax)
         self.assertFalse(total.is_tax_known)
         with self.assertRaises(AttributeError):
@@ -37,7 +38,7 @@ class TestOrderTotalCalculator(TestCase):
 
         total = self.calculator.calculate(basket, method)
 
-        self.assertIsInstance(total, calculators.OrderTotal)
+        self.assertIsInstance(total, prices.Price)
         self.assertEquals(D('10.00') + D('5.00'), total.excl_tax)
         self.assertTrue(total.is_tax_known)
         self.assertEquals(D('12.00') + D('5.50'), total.incl_tax)

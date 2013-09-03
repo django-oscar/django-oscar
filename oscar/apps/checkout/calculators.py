@@ -1,13 +1,4 @@
-# TODO Maybe use a generic price object (similar to partner pricing)
-class OrderTotal(object):
-    is_tax_known = False
-
-    def __init__(self, excl_tax, incl_tax=None):
-        self.excl_tax = excl_tax
-        if incl_tax is not None:
-            self.incl_tax = incl_tax
-            self.is_tax_known = True
-            self.tax = incl_tax - excl_tax
+from oscar.core import prices
 
 
 class OrderTotalCalculator(object):
@@ -28,4 +19,6 @@ class OrderTotalCalculator(object):
             incl_tax = basket.total_incl_tax + shipping_method.charge_incl_tax
         else:
             incl_tax = None
-        return OrderTotal(excl_tax=excl_tax, incl_tax=incl_tax)
+        return prices.Price(
+            currency=basket.currency,
+            excl_tax=excl_tax, incl_tax=incl_tax)
