@@ -539,8 +539,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         total = self.get_order_totals(
             basket, shipping_method=shipping_method)
         try:
-            self.handle_payment(order_number, total.incl_tax,
-                                **payment_kwargs)
+            self.handle_payment(order_number, total, **payment_kwargs)
         except RedirectRequired, e:
             # Redirect required (eg PayPal, 3DS)
             logger.info("Order #%s: redirecting to %s", order_number, e.url)
