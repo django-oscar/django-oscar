@@ -407,9 +407,9 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             messages.error(self.request, _("Please choose a shipping method"))
             return HttpResponseRedirect(reverse('checkout:shipping-method'))
 
-    def build_submission(self):
+    def build_submission(self, **kwargs):
         """
-        Return a dict of data to submitted to create an order
+        Return a dict of data to submitted to pay for, and create an order
         """
         basket = self.request.basket
         shipping_address = self.get_shipping_address(basket)
@@ -423,7 +423,8 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             'shipping_address': shipping_address,
             'shipping_method': shipping_method,
             'order_total': total,
-            'order_kwargs': {}}
+            'order_kwargs': {},
+            'payment_kwargs': {}}
         if not submission['user'].is_authenticated():
             email = self.checkout_session.get_guest_email()
             submission['order_kwargs']['guest_email'] = email
@@ -432,7 +433,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
     def get_context_data(self, **kwargs):
         # Use the proposed submission as template context data.  Flatten the
         # order kwargs so they are easily available too.
-        ctx = self.build_submission()
+        ctx = self.build_submission(**kwargs)
         ctx.update(kwargs)
         ctx.update(ctx['order_kwargs'])
         return ctx

@@ -66,7 +66,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         """
         # Create saved shipping address instance from passed in unsaved
         # instance
-        shipping_address = self.create_shipping_address(shipping_address)
+        shipping_address = self.create_shipping_address(user, shipping_address)
 
         # We pass the kwargs as they often include the billing address form
         # which will be needed to save a billing address.
@@ -131,13 +131,14 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         return response
 
     def send_signal(self, request, response, order):
-        self.view_signal.send(sender=self, order=order, user=request.user,
-                              request=request, response=response)
+        self.view_signal.send(
+            sender=self, order=order, user=request.user,
+            request=request, response=response)
 
     def get_success_url(self):
         return reverse('checkout:thank-you')
 
-    def create_shipping_address(self, shipping_address):
+    def create_shipping_address(self, user, shipping_address):
         """
         Create and return the shipping address for the current order.
 
@@ -145,8 +146,8 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         makes sure that appropriate UserAddress exists.
         """
         shipping_address.save()
-        if self.request.user.is_authenticated():
-            self.update_address_book(self.request.user, shipping_address)
+        if user.is_authenticated():
+            self.update_address_book(user, shipping_address)
         return shipping_address
 
     def update_address_book(self, user, shipping_addr):
