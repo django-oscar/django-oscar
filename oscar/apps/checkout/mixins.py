@@ -43,8 +43,9 @@ class OrderPlacementMixin(CheckoutSessionMixin):
     communication_type_code = 'ORDER_PLACED'
     view_signal = post_checkout
 
-    def handle_order_placement(self, order_number, basket, shipping_address,
-                               shipping_method, total, user=None, **kwargs):
+    def handle_order_placement(self, order_number, user, basket,
+                               shipping_address, shipping_method,
+                               total, **kwargs):
         """
         Write out the order models and return the appropriate HTTP response
 
@@ -53,17 +54,18 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         can happen when a basket gets frozen.
         """
         order = self.place_order(
-            order_number, basket, shipping_address, shipping_method,
-            total, user, **kwargs)
+            order_number, user, basket, shipping_address, shipping_method,
+            total, **kwargs)
         basket.submit()
         return self.handle_successful_order(order)
 
-    def place_order(self, order_number, basket, shipping_address,
-                    shipping_method, total, total_excl_tax,
-                    user=None, **kwargs):
+    def place_order(self, order_number, user, basket, shipping_address,
+                    shipping_method, total, **kwargs):
         """
         Writes the order out to the DB including the payment models
         """
+        # Create saved shipping address instance from passed in unsaved
+        # instance
         shipping_address = self.create_shipping_address(shipping_address)
 
         # We pass the kwargs as they often include the billing address form
@@ -75,17 +77,6 @@ class OrderPlacementMixin(CheckoutSessionMixin):
             status = self.get_initial_order_status(basket)
         else:
             status = kwargs.pop('status')
-
-        # We allow a user to be passed in to handle cases where the order is
-        # being placed on behalf of someone else.
-        if user is None:
-            user = self.request.user
-
-        # Set guest email address for anon checkout.   Some libraries (eg
-        # PayPal) will pass this explicitly so we take care not to clobber.
-        if (not self.request.user.is_authenticated() and 'guest_email'
-                not in kwargs):
-            kwargs['guest_email'] = self.checkout_session.get_guest_email()
 
         order = OrderCreator().place_order(
             user=user,

@@ -391,7 +391,8 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
     def get_error_response(self):
         # Check that the user's basket is not empty
         if self.request.basket.is_empty:
-            messages.error(self.request, _("You need to add some items to your basket to checkout"))
+            messages.error(self.request, _(
+                "You need to add some items to your basket to checkout"))
             return HttpResponseRedirect(reverse('basket:summary'))
 
         # Check that shipping address has been completed
@@ -408,24 +409,29 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
 
     def build_submission(self):
         """
-        Return a dict that forms that should be submitted to create an order
+        Return a dict of data to submitted to create an order
         """
         basket = self.request.basket
         shipping_address = self.get_shipping_address(basket)
         shipping_method = self.get_shipping_method(
             basket, shipping_address)
-        return {'basket': basket,
-                'shipping_address': shipping_address,
-                'shipping_method': shipping_method}
+        total = self.get_order_totals(
+            basket, shipping_method=shipping_method)
+        submission = {
+            'user': self.request.user,
+            'basket': basket,
+            'shipping_address': shipping_address,
+            'shipping_method': shipping_method,
+            'total': total,
+            'order_kwargs': {}}
+        if not submission['user'].is_authenticated():
+            email = self.checkout_session.get_guest_email()
+            submission['order_kwargs']['guest_email'] = email
+        return submission
 
     def get_context_data(self, **kwargs):
-        # Return kwargs directly instead of using 'params' as in django's
-        # TemplateView
-        ctx = super(PaymentDetailsView, self).get_context_data(**kwargs)
-
-        # Add guest email if one is set
-        ctx['guest_email'] = self.checkout_session.get_guest_email()
-
+        # Use the proposed submission as template context data
+        ctx = self.build_submission()
         ctx.update(kwargs)
         return ctx
 
@@ -475,8 +481,8 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         except UserAddress.DoesNotExist:
             return None
 
-    def submit(self, basket, shipping_address, shipping_method,
-               payment_kwargs=None, order_kwargs=None):
+    def submit(self, user, basket, shipping_address, shipping_method,
+               total, payment_kwargs=None, order_kwargs=None):
         """
         Submit a basket for order placement.
 
@@ -492,8 +498,8 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
            - If payment is unsuccessful, show an appropriate error message
 
         :basket: The basket to submit.
-        :payment_kwargs: Additional kwargs to pass to the handle_payment method.
-        :order_kwargs: Additional kwargs to pass to the place_order method.
+        :payment_kwargs: Additional kwargs to pass to the handle_payment method
+        :order_kwargs: Additional kwargs to pass to the place_order method
         """
         if payment_kwargs is None:
             payment_kwargs = {}
@@ -502,7 +508,9 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
 
         # Taxes must be known at this point
         assert basket.is_tax_known, (
-            "Tax must be set before a user can place an order")
+            "Basket tax must be set before a user can place an order")
+        assert shipping_method.is_tax_known, (
+            "Shipping method tax must be set before a user can place an order")
 
         # Domain-specific checks on the basket
         is_valid, reason, url = self.can_basket_be_submitted(basket)
@@ -536,8 +544,6 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
                       "contact customer services if this problem persists")
         pre_payment.send_robust(sender=self, view=self)
 
-        total = self.get_order_totals(
-            basket, shipping_method=shipping_method)
         try:
             self.handle_payment(order_number, total, **payment_kwargs)
         except RedirectRequired, e:
@@ -550,7 +556,9 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             # thing. This type of exception is supposed to set a friendly error
             # message that makes sense to the customer.
             msg = unicode(e)
-            logger.warning("Order #%s: unable to take payment (%s) - restoring basket", order_number, msg)
+            logger.warning(
+                "Order #%s: unable to take payment (%s) - restoring basket",
+                order_number, msg)
             self.restore_frozen_basket()
             # We re-render the payment details view
             self.preview = False
@@ -566,15 +574,19 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             logger.error("Order #%s: payment error (%s)", order_number, msg)
             self.restore_frozen_basket()
             self.preview = False
-            return self.render_to_response(self.get_context_data(error=error_msg))
+            return self.render_to_response(
+                self.get_context_data(error=error_msg))
         except Exception, e:
             # Unhandled exception - hopefully, you will only ever see this in
             # development.
-            logger.error("Order #%s: unhandled exception while taking payment (%s)", order_number, e)
+            logger.error(
+                "Order #%s: unhandled exception while taking payment (%s)",
+                order_number, e)
             logger.exception(e)
             self.restore_frozen_basket()
             self.preview = False
-            return self.render_to_response(self.get_context_data(error=error_msg))
+            return self.render_to_response(
+                self.get_context_data(error=error_msg))
         post_payment.send_robust(sender=self, view=self)
 
         # If all is ok with payment, try and place order
@@ -582,7 +594,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
                     order_number)
         try:
             return self.handle_order_placement(
-                order_number, basket, shipping_address, shipping_method,
+                order_number, user, basket, shipping_address, shipping_method,
                 total, **order_kwargs)
         except UnableToPlaceOrder, e:
             # It's possible that something will go wrong while trying to
