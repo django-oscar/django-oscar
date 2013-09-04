@@ -103,7 +103,7 @@ make changes?  Check out the `contributing guidelines`_.
 
 .. _`this gateway page`: http://latest.oscarcommerce.com/gateway/
 .. _`in 5 commands`: http://django-oscar.readthedocs.org/en/latest/internals/sandbox.html#running-the-sandbox-locally
-.. _`contributing guidelines`: http://django-oscar.readthedocs.org/en/latest/contributing/index.html
+.. _`contributing guidelines`: http://django-oscar.readthedocs.org/en/latest/internals/contributing/index.html
 
 Demo
 ~~~~
