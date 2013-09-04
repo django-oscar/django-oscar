@@ -422,7 +422,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             'basket': basket,
             'shipping_address': shipping_address,
             'shipping_method': shipping_method,
-            'total': total,
+            'order_total': total,
             'order_kwargs': {}}
         if not submission['user'].is_authenticated():
             email = self.checkout_session.get_guest_email()
@@ -430,9 +430,11 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         return submission
 
     def get_context_data(self, **kwargs):
-        # Use the proposed submission as template context data
+        # Use the proposed submission as template context data.  Flatten the
+        # order kwargs so they are easily available too.
         ctx = self.build_submission()
         ctx.update(kwargs)
+        ctx.update(ctx['order_kwargs'])
         return ctx
 
     def get_template_names(self):
@@ -482,7 +484,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
             return None
 
     def submit(self, user, basket, shipping_address, shipping_method,
-               total, payment_kwargs=None, order_kwargs=None):
+               order_total, payment_kwargs=None, order_kwargs=None):
         """
         Submit a basket for order placement.
 
@@ -545,7 +547,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         pre_payment.send_robust(sender=self, view=self)
 
         try:
-            self.handle_payment(order_number, total, **payment_kwargs)
+            self.handle_payment(order_number, order_total, **payment_kwargs)
         except RedirectRequired, e:
             # Redirect required (eg PayPal, 3DS)
             logger.info("Order #%s: redirecting to %s", order_number, e.url)
@@ -595,7 +597,7 @@ class PaymentDetailsView(OrderPlacementMixin, TemplateView):
         try:
             return self.handle_order_placement(
                 order_number, user, basket, shipping_address, shipping_method,
-                total, **order_kwargs)
+                order_total, **order_kwargs)
         except UnableToPlaceOrder, e:
             # It's possible that something will go wrong while trying to
             # actually place an order.  Not a good situation to be in as a
