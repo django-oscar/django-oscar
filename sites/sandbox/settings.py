@@ -239,7 +239,7 @@ LOGGING = {
         },
         'oscar.checkout': {
             'handlers': ['console', 'checkout_file'],
-            'propagate': True,
+            'propagate': False,
             'level': 'INFO',
         },
         'oscar.catalogue.import': {
