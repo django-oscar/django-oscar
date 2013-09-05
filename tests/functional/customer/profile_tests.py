@@ -94,9 +94,10 @@ class TestASignedInUser(WebTestCase):
         self.assertTrue(updated_user.check_password(new_password))
 
     def test_can_reorder_a_previous_order(self):
-        order_history_page = self.app.get(reverse('customer:order-list'),
+        order_history_page = self.app.get(reverse('customer:order',
+                                                  args=[self.order.number]),
                                           user=self.user)
-        form = order_history_page.forms['order_form_%d' % self.order.id]
+        form = order_history_page.forms['line_form_%d' % self.order.id]
         form.submit()
 
         basket = Basket.open.get(owner=self.user)
@@ -119,9 +120,10 @@ class TestASignedInUser(WebTestCase):
         product.stockrecord.num_in_stock = 0
         product.stockrecord.save()
 
-        order_history_page = self.app.get(reverse('customer:order-list'),
+        order_history_page = self.app.get(reverse('customer:order',
+                                                  args=[self.order.number]),
                                           user=self.user)
-        form = order_history_page.forms['order_form_%d' % self.order.id]
+        form = order_history_page.forms['line_form_%d' % self.order.id]
         form.submit()
 
         basket = Basket.open.get(owner=self.user)
