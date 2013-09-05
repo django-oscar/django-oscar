@@ -203,7 +203,7 @@ class ProfileView(PageTitleMixin, TemplateView):
     def get_context_data(self, **kwargs):
         ctx = super(ProfileView, self).get_context_data(**kwargs)
         if not hasattr(settings, 'AUTH_PROFILE_MODULE'):
-            return
+            return ctx
         try:
             profile = self.request.user.get_profile()
         except ObjectDoesNotExist:
