@@ -39,101 +39,18 @@ ProductAlert = get_model('customer', 'ProductAlert')
 User = get_user_model()
 
 
-class LogoutView(RedirectView):
-    url = '/'
-    permanent = False
-
-    def get(self, request, *args, **kwargs):
-        auth_logout(request)
-        response = super(LogoutView, self).get(request, *args, **kwargs)
-
-        for cookie in settings.OSCAR_COOKIES_DELETE_ON_LOGOUT:
-            response.delete_cookie(cookie)
-
-        return response
-
-
-class ProfileUpdateView(PageTitleMixin, FormView):
-    form_class = ProfileForm
-    template_name = 'customer/profile/profile_form.html'
-    communication_type_code = 'EMAIL_CHANGED'
-    page_title = _('Edit Profile')
-    active_tab = 'profile'
-
-    def get_form_kwargs(self):
-        kwargs = super(ProfileUpdateView, self).get_form_kwargs()
-        kwargs['user'] = self.request.user
-        return kwargs
-
-    def form_valid(self, form):
-        # Grab current user instance before we save form.  We may need this to
-        # send a warning email if the email address is changed.
-        try:
-            old_user = User.objects.get(id=self.request.user.id)
-        except User.DoesNotExist:
-            old_user = None
-
-        form.save()
-
-        # We have to look up the email address from the form's
-        # cleaned data because the object created by form.save() can
-        # either be a user or profile depending on AUTH_PROFILE_MODULE
-        new_email = form.cleaned_data['email']
-        if old_user and new_email != old_user.email:
-            # Email address has changed - send a confirmation email to the old
-            # address including a password reset link in case this is a
-            # suspicious change.
-            ctx = {
-                'user': self.request.user,
-                'site': get_current_site(self.request),
-                'reset_url': get_password_reset_url(old_user),
-                'new_email': new_email,
-            }
-            msgs = CommunicationEventType.objects.get_and_render(
-                code=self.communication_type_code, context=ctx)
-            Dispatcher().dispatch_user_messages(old_user, msgs)
-
-        messages.success(self.request, "Profile updated")
-        return HttpResponseRedirect(self.get_success_url())
-
-    def get_success_url(self):
-        return reverse('customer:profile-view')
-
+# =======
+# Account
+# =======
 
 class AccountSummaryView(RedirectView):
+    """
+    View that exists for legacy reasons and customisability. It commonly gets
+    called when the user clicks on "Account" in the navbar, and can be
+    overriden to determine to what sub-page the user is directed without
+    having to change a lot of templates.
+    """
     url = reverse_lazy(settings.OSCAR_ACCOUNTS_REDIRECT_URL)
-
-
-class ProfileView(PageTitleMixin, TemplateView):
-    template_name = 'customer/profile/profile.html'
-    page_title = _('Profile')
-    active_tab = 'profile'
-
-    def get_context_data(self, **kwargs):
-        ctx = super(ProfileView, self).get_context_data(**kwargs)
-        if not hasattr(settings, 'AUTH_PROFILE_MODULE'):
-            return
-        try:
-            profile = self.request.user.get_profile()
-        except ObjectDoesNotExist:
-            profile = get_profile_class()()
-
-        field_data = []
-        for field_name in profile._meta.get_all_field_names():
-            if field_name in ('user', 'id'):
-                continue
-            field = profile._meta.get_field(field_name)
-            if field.choices:
-                value = getattr(profile, 'get_%s_display' % field_name)()
-            else:
-                value = getattr(profile, field_name)
-            field_data.append({
-                'name': getattr(field, 'verbose_name'),
-                'value': value,
-                })
-        ctx['profile_fields'] = field_data
-        ctx['profile'] = profile
-        return ctx
 
 
 class RegisterUserMixin(object):
@@ -254,12 +171,12 @@ class AccountAuthView(TemplateView, RegisterUserMixin):
         kwargs['prefix'] = self.login_prefix
         kwargs['initial'] = {
             'redirect_url': self.request.GET.get(self.redirect_field_name, ''),
-        }
+            }
         if request and request.method in ('POST', 'PUT'):
             kwargs.update({
                 'data': request.POST,
                 'files': request.FILES,
-            })
+                })
         return kwargs
 
     def get_registration_form(self, request=None):
@@ -272,12 +189,12 @@ class AccountAuthView(TemplateView, RegisterUserMixin):
         kwargs['prefix'] = self.registration_prefix
         kwargs['initial'] = {
             'redirect_url': self.request.GET.get(self.redirect_field_name, ''),
-        }
+            }
         if request and request.method in ('POST', 'PUT'):
             kwargs.update({
                 'data': request.POST,
                 'files': request.FILES,
-            })
+                })
         return kwargs
 
     def post(self, request, *args, **kwargs):
@@ -307,6 +224,138 @@ class AccountAuthView(TemplateView, RegisterUserMixin):
         return self.render_to_response(ctx)
 
 
+class LogoutView(RedirectView):
+    url = '/'
+    permanent = False
+
+    def get(self, request, *args, **kwargs):
+        auth_logout(request)
+        response = super(LogoutView, self).get(request, *args, **kwargs)
+
+        for cookie in settings.OSCAR_COOKIES_DELETE_ON_LOGOUT:
+            response.delete_cookie(cookie)
+
+        return response
+
+
+# =============
+# Profile
+# =============
+
+class ProfileView(PageTitleMixin, TemplateView):
+    template_name = 'customer/profile/profile.html'
+    page_title = _('Profile')
+    active_tab = 'profile'
+
+    def get_context_data(self, **kwargs):
+        ctx = super(ProfileView, self).get_context_data(**kwargs)
+        if not hasattr(settings, 'AUTH_PROFILE_MODULE'):
+            return
+        try:
+            profile = self.request.user.get_profile()
+        except ObjectDoesNotExist:
+            profile = get_profile_class()()
+
+        field_data = []
+        for field_name in profile._meta.get_all_field_names():
+            if field_name in ('user', 'id'):
+                continue
+            field = profile._meta.get_field(field_name)
+            if field.choices:
+                value = getattr(profile, 'get_%s_display' % field_name)()
+            else:
+                value = getattr(profile, field_name)
+            field_data.append({
+                'name': getattr(field, 'verbose_name'),
+                'value': value,
+                })
+        ctx['profile_fields'] = field_data
+        ctx['profile'] = profile
+        return ctx
+
+
+class ProfileUpdateView(PageTitleMixin, FormView):
+    form_class = ProfileForm
+    template_name = 'customer/profile/profile_form.html'
+    communication_type_code = 'EMAIL_CHANGED'
+    page_title = _('Edit Profile')
+    active_tab = 'profile'
+
+    def get_form_kwargs(self):
+        kwargs = super(ProfileUpdateView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        # Grab current user instance before we save form.  We may need this to
+        # send a warning email if the email address is changed.
+        try:
+            old_user = User.objects.get(id=self.request.user.id)
+        except User.DoesNotExist:
+            old_user = None
+
+        form.save()
+
+        # We have to look up the email address from the form's
+        # cleaned data because the object created by form.save() can
+        # either be a user or profile depending on AUTH_PROFILE_MODULE
+        new_email = form.cleaned_data['email']
+        if old_user and new_email != old_user.email:
+            # Email address has changed - send a confirmation email to the old
+            # address including a password reset link in case this is a
+            # suspicious change.
+            ctx = {
+                'user': self.request.user,
+                'site': get_current_site(self.request),
+                'reset_url': get_password_reset_url(old_user),
+                'new_email': new_email,
+            }
+            msgs = CommunicationEventType.objects.get_and_render(
+                code=self.communication_type_code, context=ctx)
+            Dispatcher().dispatch_user_messages(old_user, msgs)
+
+        messages.success(self.request, "Profile updated")
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse('customer:profile-view')
+
+
+class ChangePasswordView(PageTitleMixin, FormView):
+    form_class = PasswordChangeForm
+    template_name = 'customer/profile/change_password_form.html'
+    communication_type_code = 'PASSWORD_CHANGED'
+    page_title = _('Change Password')
+    active_tab = 'profile'
+
+    def get_form_kwargs(self):
+        kwargs = super(ChangePasswordView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, _("Password updated"))
+
+        ctx = {
+            'user': self.request.user,
+            'site': get_current_site(self.request),
+            'reset_url': get_password_reset_url(self.request.user),
+            }
+        msgs = CommunicationEventType.objects.get_and_render(
+            code=self.communication_type_code, context=ctx)
+        Dispatcher().dispatch_user_messages(self.request.user, msgs)
+
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse('customer:profile-view')
+
+
+# =============
+# Email history
+# =============
+
 class EmailHistoryView(PageTitleMixin, ListView):
     context_object_name = "emails"
     template_name = 'customer/email/email_list.html'
@@ -332,6 +381,7 @@ class EmailDetailView(PageTitleMixin, DetailView):
     def get_page_title(self):
         """Append email subject to page title"""
         return u'%s: %s' % (_('Email'), self.object.subject)
+
 
 # =============
 # Order history
@@ -505,6 +555,19 @@ class OrderLineView(DetailView, PostActionMixin):
         messages.info(self.request, msg)
 
 
+class AnonymousOrderDetailView(DetailView):
+    model = Order
+    template_name = "customer/anon_order.html"
+
+    def get_object(self, queryset=None):
+        # Check URL hash matches that for order to prevent spoof attacks
+        order = get_object_or_404(self.model, user=None,
+                                  number=self.kwargs['order_number'])
+        if self.kwargs['hash'] != order.verification_hash():
+            raise Http404()
+        return order
+
+
 # ------------
 # Address book
 # ------------
@@ -598,53 +661,5 @@ class AddressChangeStatusView(RedirectView):
                                     pk=pk)
         setattr(address, 'is_%s' % action, True)
         address.save()
-        return super(AddressChangeStatusView, self).get(request, *args, **kwargs)
-
-
-# ------------
-# Order status
-# ------------
-
-
-class AnonymousOrderDetailView(DetailView):
-    model = Order
-    template_name = "customer/anon_order.html"
-
-    def get_object(self, queryset=None):
-        # Check URL hash matches that for order to prevent spoof attacks
-        order = get_object_or_404(self.model, user=None,
-                                  number=self.kwargs['order_number'])
-        if self.kwargs['hash'] != order.verification_hash():
-            raise Http404()
-        return order
-
-
-class ChangePasswordView(PageTitleMixin, FormView):
-    form_class = PasswordChangeForm
-    template_name = 'customer/profile/change_password_form.html'
-    communication_type_code = 'PASSWORD_CHANGED'
-    page_title = _('Change Password')
-    active_tab = 'profile'
-
-    def get_form_kwargs(self):
-        kwargs = super(ChangePasswordView, self).get_form_kwargs()
-        kwargs['user'] = self.request.user
-        return kwargs
-
-    def form_valid(self, form):
-        form.save()
-        messages.success(self.request, _("Password updated"))
-
-        ctx = {
-            'user': self.request.user,
-            'site': get_current_site(self.request),
-            'reset_url': get_password_reset_url(self.request.user),
-        }
-        msgs = CommunicationEventType.objects.get_and_render(
-            code=self.communication_type_code, context=ctx)
-        Dispatcher().dispatch_user_messages(self.request.user, msgs)
-
-        return HttpResponseRedirect(self.get_success_url())
-
-    def get_success_url(self):
-        return reverse('customer:profile-view')
+        return super(AddressChangeStatusView, self).get(
+            request, *args, **kwargs)
