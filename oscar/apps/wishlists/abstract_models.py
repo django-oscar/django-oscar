@@ -2,6 +2,7 @@ import hashlib
 import random
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from oscar.core.compat import AUTH_USER_MODEL
 
 
 class AbstractWishList(models.Model):
@@ -11,7 +12,7 @@ class AbstractWishList(models.Model):
     """
 
     # Currently only authenticated users can have wishlists
-    owner = models.ForeignKey('auth.User', related_name='wishlists',
+    owner = models.ForeignKey(AUTH_USER_MODEL, related_name='wishlists',
                               verbose_name=_('Owner'))
     name = models.CharField(verbose_name=_('Name'), default=_('New Wish List'),
                             max_length=255)
