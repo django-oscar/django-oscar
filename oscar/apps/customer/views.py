@@ -7,8 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect, Http404
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth import (authenticate, login as auth_login,
-                                 logout as auth_logout)
+from django.contrib.auth import logout as auth_logout, login as auth_login
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.sites.models import get_current_site
 from django.conf import settings
@@ -18,7 +17,7 @@ from oscar.views.generic import PostActionMixin
 from oscar.apps.customer.utils import get_password_reset_url
 from oscar.core.loading import get_class, get_profile_class, get_classes
 from oscar.core.compat import get_user_model
-from .mixins import PageTitleMixin
+from .mixins import PageTitleMixin, RegisterUserMixin
 
 Dispatcher = get_class('customer.utils', 'Dispatcher')
 EmailAuthenticationForm, EmailUserCreationForm, OrderSearchForm = get_classes(
@@ -33,8 +32,8 @@ Basket = get_model('basket', 'Basket')
 UserAddress = get_model('address', 'UserAddress')
 Email = get_model('customer', 'Email')
 UserAddress = get_model('address', 'UserAddress')
-CommunicationEventType = get_model('customer', 'CommunicationEventType')
 ProductAlert = get_model('customer', 'ProductAlert')
+CommunicationEventType = get_model('customer', 'CommunicationEventType')
 
 User = get_user_model()
 
@@ -51,52 +50,6 @@ class AccountSummaryView(RedirectView):
     having to change a lot of templates.
     """
     url = reverse_lazy(settings.OSCAR_ACCOUNTS_REDIRECT_URL)
-
-
-class RegisterUserMixin(object):
-    communication_type_code = 'REGISTRATION'
-
-    def register_user(self, form):
-        """
-        Create a user instance and send a new registration email (if configured
-        to).
-        """
-        user = form.save()
-
-        if getattr(settings, 'OSCAR_SEND_REGISTRATION_EMAIL', True):
-            self.send_registration_email(user)
-
-        # Raise signal
-        user_registered.send_robust(sender=self, user=user)
-
-        # We have to authenticate before login
-        try:
-            user = authenticate(
-                username=user.email,
-                password=form.cleaned_data['password1'])
-        except User.MultipleObjectsReturned:
-            # Handle race condition where the registration request is made
-            # multiple times in quick succession.  This leads to both requests
-            # passing the uniqueness check and creating users (as the first one
-            # hasn't committed when the second one runs the check).  We retain
-            # the first one and delete the dupes.
-            users = User.objects.filter(email=user.email)
-            user = users[0]
-            for u in users[1:]:
-                u.delete()
-
-        auth_login(self.request, user)
-
-        return user
-
-    def send_registration_email(self, user):
-        code = self.communication_type_code
-        ctx = {'user': user,
-               'site': get_current_site(self.request)}
-        messages = CommunicationEventType.objects.get_and_render(
-            code, ctx)
-        if messages and messages['body']:
-            Dispatcher().dispatch_user_messages(user, messages)
 
 
 class AccountRegistrationView(FormView, RegisterUserMixin):
