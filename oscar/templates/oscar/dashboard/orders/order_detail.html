@@ -1,7 +1,7 @@
 {% extends 'dashboard/layout.html' %}
 {% load url from future %}
-{% load currency_filters %}
 {% load i18n %}
+{% load currency_tags %}
 
 {% block body_class %}orders{% endblock %}
 
@@ -53,7 +53,7 @@
             <th>{% trans "Status" %}</th>
         </tr>
         <tr>
-            <td>{{ order.total_incl_tax|currency }}</td>
+            <td>{% currency order.total_incl_tax order.currency %}</td>
             <td>{{ order.date_placed|date:"d/m/y" }}</td>
             <td>{{ order.date_placed|date:"H:s" }}</td>
             <td>{{ order.status|default:"N/A" }}</td>
@@ -129,7 +129,7 @@
                                         </td>
                                         <td>{{ line.partner_sku }}</td>
                                         <td>{{ line.est_dispatch_date|default:"-" }}</td>
-                                        <td style="text-align: right">{{ line.line_price_before_discounts_incl_tax|currency }}</td>
+                                        <td style="text-align: right">{% currency line.line_price_before_discounts_incl_tax order.currency %}</td>
                                         <td>
                                             <a href="{% url 'dashboard:order-line-detail' order.number line.id %}" class="btn btn-info">{% trans "View" %}</a>
                                         </td>
@@ -139,7 +139,7 @@
                                 <tr>
                                     <td colspan="7"></td>
                                     <th>{% trans "Discount" %}</th>
-                                    <td style="text-align: right">{{ order.total_discount_incl_tax|currency }}</td>
+                                    <td style="text-align: right">{% currency order.total_discount_incl_tax order.currency %}</td>
                                     <td></td>
                                 </tr>
                                 {% with discounts=order.basket_discounts %}
@@ -147,7 +147,7 @@
                                         <tr>
                                             <td colspan="7"></td>
                                             <th>{% trans "Basket total (excl. discounts)" %}</th>
-                                            <td style="text-align: right">{{ order.basket_total_before_discounts_incl_tax|currency }}</td>
+                                            <td style="text-align: right">{% currency order.basket_total_before_discounts_incl_tax order.currency %}</td>
                                             <td></td>
                                         </tr>
                                         {% for discount in discounts %}
@@ -157,21 +157,21 @@
                                                     <span class="label label-success">{% trans "Discount" %}</span>
                                                     {{ discount.offer_name }}
                                                 </td>
-                                                <td style="text-align: right">- {{ discount.amount|currency }}</td>
+                                                <td style="text-align: right">- {% currency discount.amount order.currency %}</td>
                                                 <td></td>
                                             </tr>
                                         {% endfor %}
                                         <tr>
                                             <td colspan="7"></td>
                                             <th>{% trans "Basket total (inc. discounts)" %}</th>
-                                            <th style="text-align: right">{{ order.basket_total_incl_tax|currency }}</th>
+                                            <th style="text-align: right">{% currency order.basket_total_incl_tax order.currency %}</th>
                                             <td></td>
                                         </tr>
                                     {% else %}
                                         <tr>
                                             <td colspan="7"></td>
                                             <th>{% trans "Basket total" %}</th>
-                                            <th style="text-align: right">{{ order.basket_total_incl_tax|currency }}</th>
+                                            <th style="text-align: right">{% currency order.basket_total_incl_tax order.currency %}</th>
                                             <td></td>
                                         </tr>
                                     {% endif %}
@@ -181,7 +181,7 @@
                                     <tr>
                                         <td colspan="7"></td>
                                         <td>{% trans "Shipping total (excl. discounts)" %}</td>
-                                        <td style="text-align: right">{{ order.shipping_before_discounts_incl_tax|currency }}</td>
+                                        <td style="text-align: right">{% currency order.shipping_before_discounts_incl_tax order.currency %}</td>
                                         <td></td>
                                     </tr>
                                     {% for discount in order.shipping_discounts %}
@@ -191,21 +191,21 @@
                                                 <span class="label label-success">{% trans "Discount" %}</span>
                                                 {{ discount.offer_name }}
                                             </td>
-                                            <td style="text-align: right">- {{ discount.amount|currency }}</td>
+                                            <td style="text-align: right">- {% currency discount.amount order.currency %}</td>
                                             <td></td>
                                         </tr>
                                     {% endfor %}
                                     <tr>
                                         <td colspan="7"></td>
                                         <th>{% trans "Shipping total (inc. discounts)" %}</th>
-                                        <th style="text-align: right">{{ order.shipping_incl_tax|currency }}</th>
+                                        <th style="text-align: right">{% currency order.shipping_incl_tax order.currency %}</th>
                                         <td></td>
                                     </tr>
                                 {% else %}
                                     <tr>
                                         <td colspan="7"></td>
                                         <th>{% trans "Shipping total" %}</th>
-                                        <th style="text-align: right">{{ order.shipping_incl_tax|currency }}</th>
+                                        <th style="text-align: right">{% currency order.shipping_incl_tax order.currency %}</th>
                                         <td></td>
                                     </tr>
                                 {% endif %}
@@ -213,7 +213,7 @@
                                 <tr>
                                     <td colspan="7"></td>
                                     <th>{% trans "Order total" %}</th>
-                                    <th style="text-align: right">{{ order.total_incl_tax|currency }}</th>
+                                    <th style="text-align: right">{% currency order.total_incl_tax order.currency %}</th>
                                     <td></td>
                                 </tr>
                             </tbody>
@@ -353,7 +353,7 @@
                                             <tr>
                                                 <td >{{ event.date_created }}</td>
                                                 <td >{{ event.event_type.name }}</td>
-                                                <td >{{ event.amount|currency }}</td>
+                                                <td >{% currency event.amount order.currency %}</td>
                                                 <td>
                                                     {% for line_qty in event.line_quantities.all %}
                                                         {% trans "Product:" %} {{ line_qty.line.title }} - {% trans "quantity" %} {{ line_qty.quantity }}</br>
@@ -387,11 +387,11 @@
                             </tr>
                             <tr>
                                 <th>{% trans "Charge (incl tax)" %}</th>
-                                <td>{{ order.shipping_incl_tax|currency }}</td>
+                                <td>{% currency order.shipping_incl_tax order.currency %}</td>
                             </tr>
                             <tr>
                                 <th>{% trans "Charge (excl tax)" %}</th>
-                                <td>{{ order.shipping_excl_tax|currency }}</td>
+                                <td>{% currency order.shipping_excl_tax order.currency %}</td>
                             </tr>
                             <tr>
                                 <th>{% trans "Address" %}</th>
@@ -448,9 +448,9 @@
                                     {% for source in sources %}
                                         <tr>
                                             <td>{{ source.source_type }}</td>
-                                            <td>{{ source.amount_allocated|currency }}</td>
-                                            <td>{{ source.amount_debited|currency }}</td>
-                                            <td>{{ source.amount_refunded|currency }}</td>
+                                            <td>{% currency source.amount_allocated order.currency %}</td>
+                                            <td>{% currency source.amount_debited order.currency %}</td>
+                                            <td>{% currency source.amount_refunded order.currency %}</td>
                                             <td>{{ source.reference|default:"-" }}</td>
                                         </tr>
                                     {% endfor %}
@@ -480,7 +480,7 @@
                                     {% for txn in transactions %}
                                         <tr>
                                             <td>{{ txn.source.source_type }}</td>
-                                            <td>{{ txn.amount|currency }}</td>
+                                            <td>{% currency txn.amount order.currency %}</td>
                                             <td>{{ txn.reference|default:"-" }}</td>
                                             <td>{{ txn.status|default:"-" }}</td>
                                             <td>{{ txn.date_created }}</td>
@@ -528,7 +528,7 @@
                                         </td>
                                         <td>{{ discount.frequency }}</td>
                                         <td>{{ discount.message|default:"-" }}</td>
-                                        <td>{{ discount.amount|currency}}</td>
+                                        <td>{% currency discount.amount order.currency %}</td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
