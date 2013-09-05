@@ -60,7 +60,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         return self.handle_successful_order(order)
 
     def place_order(self, order_number, user, basket, shipping_address,
-                    shipping_method, total, **kwargs):
+                    shipping_method, total, billing_address=None, **kwargs):
         """
         Writes the order out to the DB including the payment models
         """
@@ -71,7 +71,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         # We pass the kwargs as they often include the billing address form
         # which will be needed to save a billing address.
         billing_address = self.create_billing_address(
-            shipping_address, **kwargs)
+            billing_address, shipping_address, **kwargs)
 
         if 'status' not in kwargs:
             status = self.get_initial_order_status(basket)
@@ -202,7 +202,7 @@ class OrderPlacementMixin(CheckoutSessionMixin):
         shipping_addr.save()
         return shipping_addr
 
-    def create_billing_address(self, shipping_address=None, **kwargs):
+    def create_billing_address(self, billing_address=None, shipping_address=None, **kwargs):
         """
         Saves any relevant billing data (eg a billing address).
         """
