@@ -26,6 +26,7 @@ class BasketLineForm(forms.ModelForm):
         return qty
 
     def check_max_allowed_quantity(self, qty):
+        self.instance.basket.strategy = self.strategy
         is_allowed, reason = self.instance.basket.is_quantity_allowed(qty)
         if not is_allowed:
             raise forms.ValidationError(reason)
@@ -40,7 +41,7 @@ class BasketLineForm(forms.ModelForm):
     class Meta:
         model = Line
         exclude = ('basket', 'product', 'stockrecord', 'line_reference',
-                   'price_excl_tax', 'price_incl_tax')
+                   'price_excl_tax', 'price_incl_tax', 'price_currency')
 
 
 class BaseBasketLineFormSet(BaseModelFormSet):
