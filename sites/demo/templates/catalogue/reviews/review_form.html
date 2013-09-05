@@ -1,0 +1,37 @@
+{% extends "catalogue/detail.html" %}
+{% load i18n %}
+{% load reviews_tags %}
+
+{% block product_review %}
+<div class="review-title">
+    <h3>{% trans "Customer Reviews" %}</h3>
+    <a id="write_review" href="{% url catalogue:reviews-add product.slug product.id %}#addreview" class="btn">{% trans "Add a review" %}</a>
+    <p class="star-rating {{ product.rating|as_stars }}">
+        <i class="icon-star"></i>
+        <i class="icon-star"></i>
+        <i class="icon-star"></i>
+        <i class="icon-star"></i>
+        <i class="icon-star"></i>
+        <a href="{% url catalogue:reviews-list product.slug product.id %}">
+        {% blocktrans count reviews|length as num_reviews %}
+        1 custom review
+        {% plural %}
+        {{ num_reviews }} customer reviews
+        {% endblocktrans %}
+        </a>
+    </p> 
+</div>
+
+<div id="addreview" class="review_add">
+    <h3>{% trans "Leave a product review" %}</h3>
+    <form id="add_review_form" method="post" action="./#addreview" class="well form-stacked" >
+    <fieldset>
+            {% csrf_token %}
+            {% include "partials/form_fields.html" with form=form %}
+            <button type="submit"  class="btn btn-primary">{% trans "Submit" %}</button>
+            {% trans "or" %}
+            <a href="{{ product.get_absolute_url }}" >{% trans "cancel" %}</a>
+    </fieldset>
+    </form>
+</div>
+{% endblock %}

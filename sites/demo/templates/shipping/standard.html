@@ -1,0 +1,10 @@
+{% load currency_filters %}
+{% load i18n %}
+{% blocktrans with cost=0.99 total=12.00 %}
+This is standard shipping.
+
+<p>
+    It costs {{ cost|currency }} per item but is free for orders over
+    {{ total|currency }}.
+</p>
+{% endblocktrans %}

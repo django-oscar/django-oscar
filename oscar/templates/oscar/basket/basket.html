@@ -2,16 +2,17 @@
 {% load currency_filters %}
 {% load thumbnail %}
 {% load i18n %}
+{% load url from future %}
 
 {% block title %}
-{% trans "Basket" %} | {{ block.super }}
+    {% trans "Basket" %} | {{ block.super }}
 {% endblock %}
 
 {# Hide mini-basket so we don't have two baskets to keep in sync #}
 {% block mini_basket %}{% endblock %}
 
 {% block headertext %}
-{% trans "Basket" %}
+    {% trans "Basket" %}
 {% endblock %}
 
 {% block content %}
@@ -20,5 +21,9 @@
 {% endblock content %}
 
 {% block onbodyload %}
-oscar.basket.init();
+    {# We pass in the URL to send AJAX requests to #}
+    var options = {
+    'basketURL': '{% url 'basket:summary' %}'
+    };
+    oscar.basket.init(options);
 {% endblock %}

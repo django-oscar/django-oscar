@@ -4,6 +4,7 @@ from django import forms
 from django.db.models.loading import get_model
 from django.http import QueryDict
 from django.utils.translation import ugettext_lazy as _
+from oscar.apps.address.forms import AbstractAddressForm
 
 Order = get_model('order', 'Order')
 OrderNote = get_model('order', 'OrderNote')
@@ -111,7 +112,7 @@ class OrderNoteForm(forms.ModelForm):
         exclude = ('order', 'user', 'note_type')
 
 
-class ShippingAddressForm(forms.ModelForm):
+class ShippingAddressForm(AbstractAddressForm):
 
     class Meta:
         model = ShippingAddress

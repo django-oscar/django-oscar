@@ -2,6 +2,69 @@
 Changelog
 =========
 
+For releases after 0.4, see the release notes in the docs.
+
+0.4.11 - 2013-08-08
+-------------------
+
+Add extra blocks to order dashboard template.
+
+0.4.10 - 2013-07-03
+-------------------
+
+Extend range of bankcard expiry month field.
+
+0.4.9 - 2013-04-17
+------------------
+
+Make ``AbstractStockRecord`` abstract (`#645`)
+
+.. _`#645`: https://github.com/tangentlabs/django-oscar/pull/645
+
+0.4.8 - 2013-04-08
+------------------
+
+Fix bug with order dashboard line editing (`#622`_)
+
+.. _`#622`: https://github.com/tangentlabs/django-oscar/pull/622
+
+0.4.7 - 2013-03-20
+------------------
+
+Fix bug with order dashboard searching (`#587`_)
+
+.. _`#587`: https://github.com/tangentlabs/django-oscar/pull/587
+
+0.4.6 - 2013-03-05
+------------------
+
+Fix dependencies in ``setup.py``
+
+0.4.4 - 2013-01-25
+------------------
+
+Extend ``get_class`` to support loading from non-Oscar packages
+
+0.4.4 - 2013-01-16
+------------------
+
+Correct django-haystack in setup.py
+
+0.4.3 - 2013-01-16
+------------------
+
+Pin django-haystack version as backwards-incompatiable changes are happening
+
+0.4.2 - 2012-12-14
+------------------
+
+Nano-release to fix logout redirect bug
+
+0.4.1 - 2012-12-06
+------------------
+
+Nano-release to bump dependency versions.
+
 0.4 - 2012-10-19
 ----------------
 
@@ -50,6 +113,29 @@ changes.
     audit information on discounts after offers are deleted.
 
 Please ask on the mailing list if any other problems are encountered.
+
+0.3.7 - 2013-07-03
+------------------
+* Extend number of years in bankcard expiry field
+
+0.3.6 - 2013-04-08
+-------------------
+* Fix line-handling bug in order dashboard.
+
+0.3.5 - 2012-09-28
+------------------
+A couple of minor adjustments for Tangent projects
+
+* Add handling of custom redirect after adding to basket
+* Add recursive URL decoration
+
+0.3.4 - 2012-09-24
+------------------
+
+* Rework price lookups in offer calculations (backport of functionality from 0.4)
+* Add additional block to profile template
+
+Diff: https://github.com/tangentlabs/django-oscar/compare/0.3.3...0.3.4
 
 0.3.3 - 2012-08-24
 -------------------
@@ -108,6 +194,11 @@ instead of::
 
     # base.html
     {% extends 'templates/base.html' %}
+
+0.2.2 - 13 July 2012
+~~~~~~~~~~~~~~~~~~~~
+
+Fixes a bug with applying absolute-discount benefits
 
 
 0.2.1 - 09 July 2012

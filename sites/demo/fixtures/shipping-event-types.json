@@ -1,0 +1,32 @@
+[
+    {
+        "pk": 1, 
+        "model": "order.shippingeventtype", 
+        "fields": {
+            "is_required": false, 
+            "code": "shipped", 
+            "name": "Shipped", 
+            "sequence_number": 0
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "order.shippingeventtype", 
+        "fields": {
+            "is_required": false, 
+            "code": "returned", 
+            "name": "Returned", 
+            "sequence_number": 0
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "order.shippingeventtype", 
+        "fields": {
+            "is_required": false, 
+            "code": "cancelled", 
+            "name": "Cancelled", 
+            "sequence_number": 0
+        }
+    }
+]

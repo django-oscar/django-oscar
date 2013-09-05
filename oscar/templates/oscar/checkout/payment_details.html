@@ -1,13 +1,14 @@
 {% extends "checkout/checkout.html" %}
+{% load url from future %}
 {% load currency_filters %}
 {% load i18n %}
 
 {% block title %}
-{% trans "Payment details" %} | {{ block.super }}
+    {% trans "Payment details" %} | {{ block.super }}
 {% endblock %}
 
-{% block checkout-nav %}
-	{% include 'checkout/nav.html' with step=3 %}
+{% block checkout_nav %}
+    {% include 'checkout/nav.html' with step=3 %}
 {% endblock %}
 
 {% block order_contents %}{% endblock %}
@@ -16,9 +17,9 @@
 {% block payment_method %}{% endblock %}
 
 {% block payment_details %}
-	<div class="sub-header">
-		<h2>Enter payment details</h2>
-	</div>
+    <div class="sub-header">
+        <h2>{% trans "Enter payment details" %}</h2>
+    </div>
 
 	{% block payment_details_content %}
 		<p>{% trans "This page needs implementing within your project.  You may want to use on one of Oscar's payment gateway libraries:" %}</p>
@@ -29,7 +30,7 @@
 			<li><a href="https://github.com/tangentlabs/django-oscar-paymentexpress">django-oscar-paymentexpress</a></li>
 			<li><a href="https://github.com/tangentlabs/django-oscar-accounts">django-oscar-accounts</a></li>
 		</ul>
-		<a href="{% url checkout:preview %}" class="btn btn-primary btn-large">{% trans "Continue" %}</a>
+		<a href="{% url 'checkout:preview' %}" class="btn btn-primary btn-large">{% trans "Continue" %}</a>
 	{% endblock payment_details_content %}
 
 {% endblock payment_details %}

@@ -1,12 +1,15 @@
 from mock import patch
 from decimal import Decimal as D
 
-from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 
-from oscar_testsupport.factories import create_product, create_order
-from oscar_testsupport.testcases import ClientTestCase, WebTestCase
+from oscar.test.factories import create_product, create_order
+from oscar.test.testcases import ClientTestCase, WebTestCase
+from oscar.core.compat import get_user_model
 from oscar.apps.basket.models import Basket
+
+
+User = get_user_model()
 
 
 class TestASignedInUser(WebTestCase):
@@ -78,15 +81,17 @@ class TestASignedInUser(WebTestCase):
                             'A user with this email address already exists')
 
     def test_can_change_their_password(self):
+        new_password = 'bubblesgopop'
         password_form_page = self.app.get(reverse('customer:change-password'),
                                           user=self.user)
         self.assertEqual(200, password_form_page.status_code)
         form = password_form_page.forms['change_password_form']
         form['old_password'] = self.password
-        form['new_password1'] = 'bubblesgopop'
-        form['new_password2'] = 'bubblesgopop'
+        form['new_password1'] = form['new_password2'] = new_password
         response = form.submit()
         self.assertRedirects(response, reverse('customer:profile-view'))
+        updated_user = User.objects.get(pk=self.user.pk)
+        self.assertTrue(updated_user.check_password(new_password))
 
     def test_can_reorder_a_previous_order(self):
         order_history_page = self.app.get(reverse('customer:order-list'),

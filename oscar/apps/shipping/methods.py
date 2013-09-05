@@ -20,6 +20,10 @@ class Free(ShippingMethod):
 
 
 class NoShippingRequired(Free):
+    """
+    This is a special shipping method that indicates that no shipping is
+    actually required (eg for digital goods).
+    """
     code = 'no-shipping-required'
     name = _('No shipping required')
 
@@ -57,6 +61,10 @@ class OfferDiscount(ShippingMethod):
         # zero shipping already in which case this the offer does not lead to
         # any further discount.
         return self.get_discount()['discount'] > 0
+
+    @property
+    def discount(self):
+        return self.get_discount()['discount']
 
     @property
     def code(self):

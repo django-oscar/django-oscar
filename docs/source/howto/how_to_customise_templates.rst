@@ -23,6 +23,7 @@ as so::
     TEMPLATE_LOADERS = (
         'django.template.loaders.filesystem.Loader',
         'django.template.loaders.app_directories.Loader',
+        'django.template.loaders.eggs.Loader',
     )
 
     import os
@@ -81,10 +82,19 @@ Hence to customise ``base.html``, you can have an implementation like::
 No real downsides to this one other than getting your front-end people to
 understand it.
 
-Example: changing the analytics package
+Overriding individual products partials
 ---------------------------------------
 
-Support you want to use an alternative analytics package to Google analytics.
+Apart from overriding ``catalogue/partials/product.html`` to change the looks
+for all products, you can also override it for individual products by placing
+templates in ``catalogue/partials/product/upc-%s.html`` or
+``catalogue/partials/product/class-%s.html``, where ``%s`` is the product's UPC
+or class's slug, respectively.
+
+Example: Changing the analytics package
+---------------------------------------
+
+Suppose you want to use an alternative analytics package to Google analytics.
 We can achieve this by overriding templates where the analytics urchin is loaded
 and called.
 

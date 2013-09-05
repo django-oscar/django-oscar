@@ -1,0 +1,111 @@
+// OSCAR NAV BAR MODIFICATIONS
+.navbar-static-top .navbar-inner {
+    .box-shadow(none);
+    border:0;
+}
+
+.navbar-static-top.accounts {
+    position: relative;
+    font-size: @fontSizeSmall;
+    margin-bottom:-40px;
+    z-index: 1;
+
+    .navbar-inner {
+        background:transparent;
+        filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+    }
+
+    .nav > li {
+        margin-left: 15px;
+        padding: 15px 0;
+
+        a {
+            padding: 0 0 0 15px;
+            border-left: 1px solid #dedede;
+            color: #6b8ea4;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+
+        &:first-child a {
+            border-left: none;
+        }
+    }
+}
+
+.navbar.primary {
+    .navbar-inner {
+        min-height: 60px;
+    }
+
+    .nav > li > a,
+    .dropdown-menu > li > a {
+        font-weight: bold;
+    }
+
+    .nav > li > a {
+        padding: ((60px - @baseLineHeight) / 2) 30px ((60px - @baseLineHeight) / 2);
+        text-transform: uppercase;
+        color: @white;
+
+        &.dropdown-toggle {
+            padding: ((60px - @baseLineHeight) / 2) 25px ((60px - @baseLineHeight) / 2) 30px;
+        }
+    }
+
+    .nav li.dropdown.open > .dropdown-toggle {
+        background: #337abf;
+    }
+
+    .navbar-form {
+        input,
+        select,
+        .radio,
+        .checkbox {
+            margin-top: (60px - 30px) / 2;
+        }
+    }
+
+    .dropdown-menu {
+        margin: 0;
+        padding: 0;
+        border: none;
+        .border-radius(0);
+        color: @white;
+        background-color: #337abf;
+
+        .divider {
+            margin: 0;
+            border-bottom: none;
+        }
+    }
+
+    .dropdown-menu > li > a {
+        padding: (@baseLineHeight / 2) @baseLineHeight;
+        color: @white;
+        position: relative;
+        padding-right:30px;
+
+        &:hover {
+            background: #0e263f;
+            i {
+                display:inline-block;
+            }
+        }
+        i {
+            position: absolute;
+            right:12px;
+            top:12px;
+            display:none;
+        }
+    }
+}
+
+.navbar.primary .nav > li > .dropdown-menu {
+    &:before,
+    &:after {
+        display: none;
+    }
+}

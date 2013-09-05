@@ -1,5 +1,3 @@
-import urlparse
-
 from django.shortcuts import get_object_or_404
 from django.views.generic import (TemplateView, ListView, DetailView,
                                   CreateView, UpdateView, DeleteView,
@@ -13,13 +11,13 @@ from django.contrib.auth import (authenticate, login as auth_login,
                                  logout as auth_logout)
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.sites.models import get_current_site
-from django.contrib.auth.models import User
 from django.conf import settings
 from django.db.models import get_model
 
 from oscar.views.generic import PostActionMixin
 from oscar.apps.customer.utils import get_password_reset_url
 from oscar.core.loading import get_class, get_profile_class, get_classes
+from oscar.core.compat import get_user_model
 from .mixins import PageTitleMixin
 
 Dispatcher = get_class('customer.utils', 'Dispatcher')
@@ -33,151 +31,12 @@ Order = get_model('order', 'Order')
 Line = get_model('basket', 'Line')
 Basket = get_model('basket', 'Basket')
 UserAddress = get_model('address', 'UserAddress')
-Email = get_model('customer', 'email')
+Email = get_model('customer', 'Email')
 UserAddress = get_model('address', 'UserAddress')
-CommunicationEventType = get_model('customer', 'communicationeventtype')
+CommunicationEventType = get_model('customer', 'CommunicationEventType')
 ProductAlert = get_model('customer', 'ProductAlert')
 
-
-class AccountRegistrationView(TemplateView):
-    template_name = 'customer/registration.html'
-    redirect_field_name = 'next'
-    registration_prefix = 'registration'
-    communication_type_code = 'REGISTRATION'
-
-    def get_logged_in_redirect(self):
-        return reverse('customer:summary')
-
-    def check_redirect(self, context):
-        redirect_to = context.get(self.redirect_field_name)
-        if not redirect_to:
-            return settings.LOGIN_REDIRECT_URL
-
-        netloc = urlparse.urlparse(redirect_to)[1]
-        if netloc and netloc != self.request.get_host():
-            return settings.LOGIN_REDIRECT_URL
-
-        return redirect_to
-
-    def get_context_data(self, *args, **kwargs):
-        context = super(AccountRegistrationView, self).get_context_data(*args, **kwargs)
-        redirect_to = self.request.REQUEST.get(self.redirect_field_name, '')
-        context[self.redirect_field_name] = redirect_to
-        context['registration_form'] = EmailUserCreationForm(
-            prefix=self.registration_prefix
-        )
-        return context
-
-    def send_registration_email(self, user):
-        code = self.communication_type_code
-        ctx = {'user': user,
-               'site': get_current_site(self.request)}
-        messages = CommunicationEventType.objects.get_and_render(
-            code, ctx)
-        if messages and messages['body']:
-            Dispatcher().dispatch_user_messages(user, messages)
-
-    def get(self, request, *args, **kwargs):
-        context = self.get_context_data(*args, **kwargs)
-
-        if request.user.is_authenticated():
-            return HttpResponseRedirect(self.get_logged_in_redirect())
-
-        self.request.session.set_test_cookie()
-        return self.render_to_response(context)
-
-    def post(self, request, *args, **kwargs):
-        context = self.get_context_data(*args, **kwargs)
-        redirect_to = self.check_redirect(context)
-
-        registration_form = EmailUserCreationForm(
-            prefix=self.registration_prefix,
-            data=request.POST
-        )
-        context['registration_form'] = registration_form
-
-        if registration_form.is_valid():
-            self._register_user(registration_form)
-            return HttpResponseRedirect(redirect_to)
-
-        self.request.session.set_test_cookie()
-        return self.render_to_response(context)
-
-    def _register_user(self, form):
-        """
-        Register a new user from the data in *form*. If
-        ``OSCAR_SEND_REGISTRATION_EMAIL`` is set to ``True`` a
-        registration email will be send to the provided email address.
-        A new user account is created and the user is then logged in.
-        """
-        user = form.save()
-
-        if getattr(settings, 'OSCAR_SEND_REGISTRATION_EMAIL', True):
-            self.send_registration_email(user)
-
-        user_registered.send_robust(sender=self, user=user)
-
-        try:
-            user = authenticate(
-                username=user.email,
-                password=form.cleaned_data['password1'])
-        except User.MultipleObjectsReturned:
-            # Handle race condition where the registration request is made
-            # multiple times in quick succession.  This leads to both requests
-            # passing the uniqueness check and creating users (as the first one
-            # hasn't committed when the second one runs the check).  We retain
-            # the first one and delete the dupes.
-            users = User.objects.filter(email=user.email)
-            user = users[0]
-            for u in users[1:]:
-                u.delete()
-
-        auth_login(self.request, user)
-        if self.request.session.test_cookie_worked():
-            self.request.session.delete_test_cookie()
-
-
-class AccountAuthView(AccountRegistrationView):
-    template_name = 'customer/login_registration.html'
-    login_prefix = 'login'
-
-    def get_context_data(self, *args, **kwargs):
-        context = super(AccountAuthView, self).get_context_data(*args, **kwargs)
-        redirect_to = self.request.REQUEST.get(self.redirect_field_name, '')
-        context[self.redirect_field_name] = redirect_to
-        context['login_form'] = EmailAuthenticationForm(prefix=self.login_prefix)
-        context['registration_form'] = EmailUserCreationForm(prefix=self.registration_prefix)
-        return context
-
-    def post(self, request, *args, **kwargs):
-        context = self.get_context_data(*args, **kwargs)
-        redirect_to = self.check_redirect(context)
-
-        if u'login_submit' in self.request.POST:
-            login_form = EmailAuthenticationForm(
-                prefix=self.login_prefix,
-                data=request.POST
-            )
-            if login_form.is_valid():
-                auth_login(request, login_form.get_user())
-                if request.session.test_cookie_worked():
-                    request.session.delete_test_cookie()
-                return HttpResponseRedirect(redirect_to)
-            context['login_form'] = login_form
-
-        if u'registration_submit' in self.request.POST:
-            registration_form = EmailUserCreationForm(
-                prefix=self.registration_prefix,
-                data=request.POST
-            )
-            context['registration_form'] = registration_form
-
-            if registration_form.is_valid():
-                self._register_user(registration_form)
-                return HttpResponseRedirect(redirect_to)
-
-        self.request.session.set_test_cookie()
-        return self.render_to_response(context)
+User = get_user_model()
 
 
 class LogoutView(RedirectView):
@@ -193,9 +52,53 @@ class LogoutView(RedirectView):
 
         return response
 
-# =======
-# Profile
-# =======
+
+class ProfileUpdateView(PageTitleMixin, FormView):
+    form_class = ProfileForm
+    template_name = 'customer/profile/profile_form.html'
+    communication_type_code = 'EMAIL_CHANGED'
+    page_title = _('Edit Profile')
+    active_tab = 'profile'
+
+    def get_form_kwargs(self):
+        kwargs = super(ProfileUpdateView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        # Grab current user instance before we save form.  We may need this to
+        # send a warning email if the email address is changed.
+        try:
+            old_user = User.objects.get(id=self.request.user.id)
+        except User.DoesNotExist:
+            old_user = None
+
+        form.save()
+
+        # We have to look up the email address from the form's
+        # cleaned data because the object created by form.save() can
+        # either be a user or profile depending on AUTH_PROFILE_MODULE
+        new_email = form.cleaned_data['email']
+        if old_user and new_email != old_user.email:
+            # Email address has changed - send a confirmation email to the old
+            # address including a password reset link in case this is a
+            # suspicious change.
+            ctx = {
+                'user': self.request.user,
+                'site': get_current_site(self.request),
+                'reset_url': get_password_reset_url(old_user),
+                'new_email': new_email,
+            }
+            msgs = CommunicationEventType.objects.get_and_render(
+                code=self.communication_type_code, context=ctx)
+            Dispatcher().dispatch_user_messages(old_user, msgs)
+
+        messages.success(self.request, "Profile updated")
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse('customer:profile-view')
+
 
 class AccountSummaryView(RedirectView):
     url = reverse_lazy(settings.OSCAR_ACCOUNTS_REDIRECT_URL)
@@ -233,84 +136,175 @@ class ProfileView(PageTitleMixin, TemplateView):
         return ctx
 
 
-class ProfileUpdateView(PageTitleMixin, FormView):
-    form_class = ProfileForm
-    template_name = 'customer/profile/profile_form.html'
-    communication_type_code = 'EMAIL_CHANGED'
-    page_title = _('Edit Profile')
-    active_tab = 'profile'
+class RegisterUserMixin(object):
+    communication_type_code = 'REGISTRATION'
 
-    def get_form_kwargs(self):
-        kwargs = super(ProfileUpdateView, self).get_form_kwargs()
-        kwargs['user'] = self.request.user
-        return kwargs
+    def register_user(self, form):
+        """
+        Create a user instance and send a new registration email (if configured
+        to).
+        """
+        user = form.save()
 
-    def form_valid(self, form):
-        # Grab current user instance before we save form.  We may need this to
-        # send a warning email if the email address is changed.
+        if getattr(settings, 'OSCAR_SEND_REGISTRATION_EMAIL', True):
+            self.send_registration_email(user)
+
+        # Raise signal
+        user_registered.send_robust(sender=self, user=user)
+
+        # We have to authenticate before login
         try:
-            old_user = User.objects.get(id=self.request.user.id)
-        except User.DoesNotExist:
-            old_user = None
+            user = authenticate(
+                username=user.email,
+                password=form.cleaned_data['password1'])
+        except User.MultipleObjectsReturned:
+            # Handle race condition where the registration request is made
+            # multiple times in quick succession.  This leads to both requests
+            # passing the uniqueness check and creating users (as the first one
+            # hasn't committed when the second one runs the check).  We retain
+            # the first one and delete the dupes.
+            users = User.objects.filter(email=user.email)
+            user = users[0]
+            for u in users[1:]:
+                u.delete()
 
-        form.save()
+        auth_login(self.request, user)
 
-        # We have to look up the email address from the form's
-        # cleaned data because the object created by form.save() can
-        # either be a user or profile depending on AUTH_PROFILE_MODULE
-        new_email = form.cleaned_data['email']
-        if old_user and new_email != old_user.email:
-            # Email address has changed - send a confirmation email to the old
-            # address including a password reset link in case this is a
-            # suspicious change.
-            ctx = {
-                'site': get_current_site(self.request),
-                'reset_url': get_password_reset_url(old_user),
-                'new_email': new_email,
-            }
-            msgs = CommunicationEventType.objects.get_and_render(
-                code=self.communication_type_code, context=ctx)
-            Dispatcher().dispatch_user_messages(old_user, msgs)
+        return user
 
-        messages.success(self.request, "Profile updated")
-        return HttpResponseRedirect(self.get_success_url())
-
-    def get_success_url(self):
-        return reverse('customer:profile-view')
+    def send_registration_email(self, user):
+        code = self.communication_type_code
+        ctx = {'user': user,
+               'site': get_current_site(self.request)}
+        messages = CommunicationEventType.objects.get_and_render(
+            code, ctx)
+        if messages and messages['body']:
+            Dispatcher().dispatch_user_messages(user, messages)
 
 
-class ChangePasswordView(PageTitleMixin, FormView):
-    form_class = PasswordChangeForm
-    template_name = 'customer/profile/change_password_form.html'
-    communication_type_code = 'PASSWORD_CHANGED'
-    page_title = _('Change Password')
-    active_tab = 'profile'
+class AccountRegistrationView(FormView, RegisterUserMixin):
+    form_class = EmailUserCreationForm
+    template_name = 'customer/registration.html'
+    redirect_field_name = 'next'
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated():
+            return HttpResponseRedirect(settings.LOGIN_REDIRECT_URL)
+        return super(AccountRegistrationView, self).get(
+            request, *args, **kwargs)
+
+    def get_logged_in_redirect(self):
+        return reverse('customer:summary')
 
     def get_form_kwargs(self):
-        kwargs = super(ChangePasswordView, self).get_form_kwargs()
-        kwargs['user'] = self.request.user
+        kwargs = super(AccountRegistrationView, self).get_form_kwargs()
+        kwargs['initial'] = {
+            'email': self.request.GET.get('email', ''),
+            'redirect_url': self.request.GET.get(self.redirect_field_name, '')
+        }
+        kwargs['host'] = self.request.get_host()
         return kwargs
 
+    def get_context_data(self, *args, **kwargs):
+        ctx = super(AccountRegistrationView, self).get_context_data(
+            *args, **kwargs)
+        ctx['cancel_url'] = self.request.META.get('HTTP_REFERER', None)
+        return ctx
+
     def form_valid(self, form):
-        form.save()
-        messages.success(self.request, _("Password updated"))
+        self.register_user(form)
+        return HttpResponseRedirect(
+            form.cleaned_data['redirect_url'])
 
-        ctx = {
-            'site': get_current_site(self.request),
-            'reset_url': get_password_reset_url(self.request.user),
-            }
-        msgs = CommunicationEventType.objects.get_and_render(
-            code=self.communication_type_code, context=ctx)
-        Dispatcher().dispatch_user_messages(self.request.user, msgs)
 
-        return HttpResponseRedirect(self.get_success_url())
+class AccountAuthView(TemplateView, RegisterUserMixin):
+    """
+    This is actually a slightly odd double form view
+    """
+    template_name = 'customer/login_registration.html'
+    login_prefix, registration_prefix = 'login', 'registration'
+    login_form_class = EmailAuthenticationForm
+    registration_form_class = EmailUserCreationForm
+    redirect_field_name = 'next'
 
-    def get_success_url(self):
-        return reverse('customer:profile-view')
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated():
+            return HttpResponseRedirect(settings.LOGIN_REDIRECT_URL)
+        return super(AccountAuthView, self).get(
+            request, *args, **kwargs)
 
-# =============
-# Email history
-# =============
+    def get_context_data(self, *args, **kwargs):
+        ctx = super(AccountAuthView, self).get_context_data(*args, **kwargs)
+        ctx.update(kwargs)
+
+        # Don't pass request as we don't want to trigger validation of BOTH
+        # forms.
+        if 'login_form' not in kwargs:
+            ctx['login_form'] = self.get_login_form()
+        if 'registration_form' not in kwargs:
+            ctx['registration_form'] = self.get_registration_form()
+        return ctx
+
+    def get_login_form(self, request=None):
+        return self.login_form_class(**self.get_login_form_kwargs(request))
+
+    def get_login_form_kwargs(self, request=None):
+        kwargs = {}
+        kwargs['host'] = self.request.get_host()
+        kwargs['prefix'] = self.login_prefix
+        kwargs['initial'] = {
+            'redirect_url': self.request.GET.get(self.redirect_field_name, ''),
+        }
+        if request and request.method in ('POST', 'PUT'):
+            kwargs.update({
+                'data': request.POST,
+                'files': request.FILES,
+            })
+        return kwargs
+
+    def get_registration_form(self, request=None):
+        return self.registration_form_class(
+            **self.get_registration_form_kwargs(request))
+
+    def get_registration_form_kwargs(self, request=None):
+        kwargs = {}
+        kwargs['host'] = self.request.get_host()
+        kwargs['prefix'] = self.registration_prefix
+        kwargs['initial'] = {
+            'redirect_url': self.request.GET.get(self.redirect_field_name, ''),
+        }
+        if request and request.method in ('POST', 'PUT'):
+            kwargs.update({
+                'data': request.POST,
+                'files': request.FILES,
+            })
+        return kwargs
+
+    def post(self, request, *args, **kwargs):
+        # Use the name of the submit button to determine which form to validate
+        if u'login_submit' in request.POST:
+            return self.validate_login_form()
+        elif u'registration_submit' in request.POST:
+            return self.validate_registration_form()
+        return self.get(request)
+
+    def validate_login_form(self):
+        form = self.get_login_form(self.request)
+        if form.is_valid():
+            auth_login(self.request, form.get_user())
+            return HttpResponseRedirect(form.cleaned_data['redirect_url'])
+
+        ctx = self.get_context_data(login_form=form)
+        return self.render_to_response(ctx)
+
+    def validate_registration_form(self):
+        form = self.get_registration_form(self.request)
+        if form.is_valid():
+            self.register_user(form)
+            return HttpResponseRedirect(form.cleaned_data['redirect_url'])
+
+        ctx = self.get_context_data(registration_form=form)
+        return self.render_to_response(ctx)
 
 
 class EmailHistoryView(PageTitleMixin, ListView):
@@ -357,7 +351,7 @@ class OrderHistoryView(PageTitleMixin, ListView):
 
     def get(self, request, *args, **kwargs):
         if 'date_from' in request.GET:
-            self.form = OrderSearchForm(self.request.GET)
+            self.form = self.form_class(self.request.GET)
             if not self.form.is_valid():
                 self.object_list = self.get_queryset()
                 ctx = self.get_context_data(object_list=self.object_list)
@@ -378,7 +372,7 @@ class OrderHistoryView(PageTitleMixin, ListView):
                         reverse('customer:order',
                                 kwargs={'order_number': order.number}))
         else:
-            self.form = OrderSearchForm()
+            self.form = self.form_class()
         return super(OrderHistoryView, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
@@ -511,21 +505,9 @@ class OrderLineView(DetailView, PostActionMixin):
         messages.info(self.request, msg)
 
 
-class AnonymousOrderDetailView(DetailView):
-    model = Order
-    template_name = "customer/anon_order.html"
-
-    def get_object(self, queryset=None):
-        # Check URL hash matches that for order to prevent spoof attacks
-        order = get_object_or_404(self.model, user=None,
-                                  number=self.kwargs['order_number'])
-        if self.kwargs['hash'] != order.verification_hash():
-            raise Http404()
-        return order
-
-# ============
+# ------------
 # Address book
-# ============
+# ------------
 
 class AddressListView(PageTitleMixin, ListView):
     """Customer address book"""
@@ -547,11 +529,15 @@ class AddressCreateView(PageTitleMixin, CreateView):
     active_tab = 'addresses'
     page_title = _('Add a new address')
 
-    def form_valid(self, form):
-        self.object = form.save(commit=False)
-        self.object.user = self.request.user
-        self.object.save()
-        return HttpResponseRedirect(self.get_success_url())
+    def get_form_kwargs(self):
+        kwargs = super(AddressCreateView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        ctx = super(AddressCreateView, self).get_context_data(**kwargs)
+        ctx['title'] = _('Add a new address')
+        return ctx
 
     def get_success_url(self):
         messages.success(self.request,
@@ -566,13 +552,23 @@ class AddressUpdateView(PageTitleMixin, UpdateView):
     active_tab = 'addresses'
     page_title = _('Edit address')
 
+    def get_form_kwargs(self):
+        kwargs = super(AddressUpdateView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        ctx = super(AddressUpdateView, self).get_context_data(**kwargs)
+        ctx['title'] = _('Edit address')
+        return ctx
+
     def get_queryset(self):
-        return UserAddress._default_manager.filter(user=self.request.user)
+        return self.request.user.addresses.all()
 
     def get_success_url(self):
         messages.success(self.request,
                          _("Address '%s' updated") % self.object.summary)
-        return reverse('customer:address-detail', kwargs={'pk': self.get_object().pk })
+        return reverse('customer:address-list')
 
 
 class AddressDeleteView(PageTitleMixin, DeleteView):
@@ -605,3 +601,50 @@ class AddressChangeStatusView(RedirectView):
         return super(AddressChangeStatusView, self).get(request, *args, **kwargs)
 
 
+# ------------
+# Order status
+# ------------
+
+
+class AnonymousOrderDetailView(DetailView):
+    model = Order
+    template_name = "customer/anon_order.html"
+
+    def get_object(self, queryset=None):
+        # Check URL hash matches that for order to prevent spoof attacks
+        order = get_object_or_404(self.model, user=None,
+                                  number=self.kwargs['order_number'])
+        if self.kwargs['hash'] != order.verification_hash():
+            raise Http404()
+        return order
+
+
+class ChangePasswordView(PageTitleMixin, FormView):
+    form_class = PasswordChangeForm
+    template_name = 'customer/profile/change_password_form.html'
+    communication_type_code = 'PASSWORD_CHANGED'
+    page_title = _('Change Password')
+    active_tab = 'profile'
+
+    def get_form_kwargs(self):
+        kwargs = super(ChangePasswordView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, _("Password updated"))
+
+        ctx = {
+            'user': self.request.user,
+            'site': get_current_site(self.request),
+            'reset_url': get_password_reset_url(self.request.user),
+        }
+        msgs = CommunicationEventType.objects.get_and_render(
+            code=self.communication_type_code, context=ctx)
+        Dispatcher().dispatch_user_messages(self.request.user, msgs)
+
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse('customer:profile-view')

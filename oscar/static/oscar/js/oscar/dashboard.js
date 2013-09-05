@@ -14,30 +14,47 @@ var oscar = (function(o, $) {
     };
 
     o.dashboard = {
-        dateFormat: 'yy-mm-dd',
-        datepickerOptions: {},
-        datetimepickerOptions: {
-            timeFormat: 'HH:mm',
-            stepMinute: 15
-        },
-        init: function() {
+        init: function(options) {
             // Run initialisation that should take place on every page of the dashboard.
+            var defaults = {
+                'dateFormat': 'yy-mm-dd',
+                'timeFormat': 'HH:mm',
+                'stepMinute': 15
+            };
+            o.dashboard.options = $.extend(defaults, options);
 
             // Use datepicker for all inputs that have 'date' or 'datetime' in the name
             if ($.datepicker) {
-                o.dashboard.datepickerOptions.dateFormat = o.dashboard.dateFormat;
-                $('input[name^="date"], input[name$="date"]').datepicker(o.dashboard.datepickerOptions);
+                var defaultDatepickerConfig = {'dateFormat': o.dashboard.options.dateFormat};
+                $('input[name^="date"], input[name$="date"]').each(function(ind, ele) {
+                    var $ele = $(ele),
+                        config = $.extend({}, defaultDatepickerConfig, {
+                            'dateFormat': $ele.data('dateformat')
+                        });
+                    $ele.datepicker(config);
+                });
             }
             if ($.ui.timepicker) {
-                o.dashboard.datetimepickerOptions.dateFormat = o.dashboard.dateFormat;
-                $('input[name$="datetime"]').datetimepicker(o.dashboard.datetimepickerOptions);
+                var defaultDatetimepickerConfig = {
+                    'dateFormat': o.dashboard.options.dateFormat,
+                    'timeFormat': o.dashboard.options.timeFormat,
+                    'stepMinute': o.dashboard.options.stepMinute
+                };
+                $('input[name$="datetime"]').each(function(ind, ele) {
+                    var $ele = $(ele),
+                        config = $.extend({}, defaultDatetimepickerConfig, {
+                        'dateFormat': $ele.data('dateformat'),
+                        'timeFormat': $ele.data('timeformat'),
+                        'stepMinute': $ele.data('stepminute')});
+                    $ele.datetimepicker(config);
+                });
             }
 
             // Use WYSIHTML5 widget on textareas
-            var options = {
+            var wysiOptions = {
                 "html": true
             };
-            $('form.wysiwyg textarea, textarea.wysiwyg').wysihtml5(options);
+            $('form.wysiwyg textarea, textarea.wysiwyg').wysihtml5(wysiOptions);
 
             $('.scroll-pane').jScrollPane();
 
@@ -52,13 +69,13 @@ var oscar = (function(o, $) {
                 return false;
             });
             
-            //Adds error icon if there are errors in the product update form
+            // Adds error icon if there are errors in the product update form
             $('[data-behaviour="affix-nav-errors"] .tab-pane').each(function(){
               var productErrorListener = $(this).find('[class*="error"]').closest('.tab-pane').attr('id');
               $('[data-spy="affix"] a[href="#' + productErrorListener + '"]').append('<i class="icon-info-sign pull-right"></i>');
             });
             
-            //Adds type/search for select fields
+            // Adds type/search for select fields
             $('.form-stacked select').css('width', '95%');
             $('.form-inline select').css('width', '300px');
             $('select').select2();
@@ -168,7 +185,6 @@ var oscar = (function(o, $) {
                             return function(e) {
                                 var imgDiv = $("#"+imgId);
                                 imgDiv.children('img').attr('src', e.target.result);
-                                imgDiv.children('button').remove();
                             };
                         })();
                         reader.readAsDataURL(evt.target.files[0]);

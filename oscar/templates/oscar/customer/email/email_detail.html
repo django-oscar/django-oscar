@@ -1,9 +1,12 @@
 {% extends "customer/baseaccountpage.html" %}
+
+{% load url from future %}
+
 {% load i18n %}
 
 {% block extra_breadcrumbs %}
 	<li>
-		<a href="{% url customer:email-list %}">{% trans 'Email history' %}</a>
+		<a href="{% url 'customer:email-list' %}">{% trans 'Email history' %}</a>
 		<span class="divider">/</span>
 	</li>
 {% endblock %}

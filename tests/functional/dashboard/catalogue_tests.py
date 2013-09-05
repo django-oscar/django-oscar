@@ -1,13 +1,12 @@
 from django.db.models import get_model
 from django.core.urlresolvers import reverse
 
-from oscar_testsupport.testcases import ClientTestCase
-from oscar_testsupport.factories import create_product
+from oscar.test.testcases import ClientTestCase
+from oscar.test.factories import create_product
 
 from django_dynamic_fixture import G
-from oscar_testsupport.testcases import WebTestCase
+from oscar.test.testcases import WebTestCase
 
-User = get_model('auth', 'User')
 Product = get_model('catalogue', 'Product')
 ProductClass = get_model('catalogue', 'ProductClass')
 ProductCategory = get_model('catalogue', 'ProductCategory')
@@ -73,6 +72,7 @@ class TestAStaffUser(WebTestCase):
                                            kwargs={'pk': product.id}))
 
     def test_can_update_a_product_without_stockrecord(self):
+        new_title = u'foobar'
         category = G(Category)
         product = G(Product, ignore_fields=['stockrecord'], parent=None)
 
@@ -83,6 +83,8 @@ class TestAStaffUser(WebTestCase):
         form = page.forms[0]
         form['productcategory_set-0-category'] = category.id
         assert form['partner'].value == u''
+        assert form['title'].value != new_title
+        form['title'] = new_title
 
         form.submit()
 
@@ -91,6 +93,7 @@ class TestAStaffUser(WebTestCase):
         except Product.DoesNotExist:
             pass
         else:
+            self.assertTrue(product.title == new_title)
             if product.has_stockrecord:
                 self.fail('product has stock record but should not')
 

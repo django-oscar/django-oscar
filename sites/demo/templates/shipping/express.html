@@ -1,0 +1,9 @@
+{% load currency_filters %}
+{% load i18n %}
+{% blocktrans with cost=1.50%}
+This is express shipping.  Should reach you within 48 hours.
+
+<p>
+    It costs {{ cost|currency }} per item.
+</p>
+{% endblocktrans %}

@@ -1,4 +1,7 @@
 {% extends "customer/baseaccountpage.html" %}
+
+{% load url from future %}
+
 {% load i18n %}
 
 {% block tabheader %}
@@ -31,8 +34,8 @@
         </tbody>
     </table>
 
-    <a href="{% url customer:change-password %}" class="btn btn-primary">{% trans 'Change password' %}</a>
-    <a href="{% url customer:profile-update %}" class="btn btn-primary">{% trans 'Edit profile' %}</a>
+    <a href="{% url 'customer:change-password' %}" class="btn btn-primary">{% trans 'Change password' %}</a>
+    <a href="{% url 'customer:profile-update' %}" class="btn btn-primary">{% trans 'Edit profile' %}</a>
 
 {% endblock %}
 

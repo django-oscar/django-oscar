@@ -1,24 +1,3 @@
-{% load i18n %}
+{% extends 'promotions/baseproductlist.html' %}
 
-<section class="well well-blank">
-    <div class="sub-header">
-        <h2>{{ promotion.name }}</h2>
-    </div>
-    <p>{{ promotion.description }}</p>
-
-    <div class="es-carousel-wrapper">
-        <div class="es-carousel">
-            <ul class="products">
-                {% for product in products %}
-                <li>{% include "promotions/partials/product_carousel.html" %}</li>
-                {% endfor %}
-            </ul>
-        </div>
-    </div>
-
-    {% if promotion.link_url %}
-	<a href="{{ promotion.link_url }}">{{ promotion.link_text }}</a>
-    {% endif %}
-</section>
-
-
+{# just exists to allow overriding #}

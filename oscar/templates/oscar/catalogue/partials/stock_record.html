@@ -8,9 +8,15 @@
 {% endif %}
 
 {% if product.is_available_to_buy %}
-    <p class="{{ product.stockrecord.availability_code }} availability ">
-        <i class="icon-ok"></i> {{ product.stockrecord.availability|truncatewords:2 }}
-    </p>
+    {% if product.is_group %}
+        <p class="instock availability ">
+            <i class="icon-ok"></i> {% trans "Available" %}
+        </p>
+    {% else %}
+        <p class="{{ product.stockrecord.availability_code }} availability ">
+            <i class="icon-ok"></i> {{ product.stockrecord.availability|truncatewords:2 }}
+        </p>
+    {% endif %}
 {% else %}
     <p class="availability outofstock">
         <i class="icon-remove"></i> {% trans "Not available" %}

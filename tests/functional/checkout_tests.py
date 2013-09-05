@@ -6,9 +6,9 @@ from django.conf import settings
 from django.utils.importlib import import_module
 from django.test.utils import override_settings
 
-from oscar_testsupport.factories import (
+from oscar.test.factories import (
     create_product, create_voucher, create_offer)
-from oscar_testsupport.testcases import ClientTestCase
+from oscar.test.testcases import ClientTestCase
 from oscar.apps.basket.models import Basket
 from oscar.apps.order.models import Order
 from oscar.apps.address.models import Country
@@ -42,7 +42,9 @@ class CheckoutMixin(object):
         )
         response = self.client.post(reverse('checkout:shipping-address'),
                                      {'last_name': 'Doe',
+                                      'first_name': 'John',
                                       'line1': '1 Egg Street',
+                                      'line4': 'City',
                                       'postcode': 'N1 9RT',
                                       'country': 'GB',
                                      })
@@ -64,8 +66,7 @@ class DisabledAnonymousCheckoutViewsTests(ClientTestCase):
         self.assertIsRedirect(response)
 
     def test_user_address_views_require_a_login(self):
-        urls = [reverse('checkout:user-address-create'),
-                reverse('checkout:user-address-update', kwargs={'pk': 1}),
+        urls = [reverse('checkout:user-address-update', kwargs={'pk': 1}),
                 reverse('checkout:user-address-delete', kwargs={'pk': 1}),]
         for url in urls:
             response = self.client.get(url)
@@ -128,7 +129,9 @@ class TestShippingAddressView(ClientTestCase, CheckoutMixin):
     def test_create_shipping_address_adds_address_to_session(self):
         response = self.client.post(reverse('checkout:shipping-address'),
                                             {'last_name': 'Doe',
+                                             'first_name': 'John',
                                              'line1': '1 Egg Street',
+                                             'line4': 'City',
                                              'postcode': 'N1 9RT',
                                              'country': 'GB',
                                             })
@@ -137,6 +140,16 @@ class TestShippingAddressView(ClientTestCase, CheckoutMixin):
         self.assertEqual('Doe', session_address['last_name'])
         self.assertEqual('1 Egg Street', session_address['line1'])
         self.assertEqual('N1 9RT', session_address['postcode'])
+
+    def test_invalid_shipping_address_fails(self):
+        response = self.client.post(reverse('checkout:shipping-address'),
+                                    {'last_name': 'Doe',
+                                     'first_name': 'John',
+                                     'postcode': 'N1 9RT',
+                                     'country': 'GB',
+                                     })
+        self.assertIsOk(response)  # no redirect
+
 
     def test_user_must_have_a_nonempty_basket(self):
         response = self.client.get(reverse('checkout:shipping-address'))

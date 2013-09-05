@@ -7,6 +7,7 @@ has the following methods for messaging:
 
 .. autoclass:: oscar.apps.partner.abstract_models.AbstractStockRecord
     :members: availability, availability_code
+    :noindex:
 
 Both these methods delegate to a "partner wrapper" instance.  These are defined
 in the ``OSCAR_PARTNER_WRAPPERS`` setting which is a dict mapping from partner
@@ -22,6 +23,7 @@ which provides methods of the same name.
 
 .. autoclass:: oscar.apps.partner.wrappers.DefaultWrapper
     :members: availability, availability_code
+    :noindex:
 
 Custom wrappers should subclass this class and override the appropriate methods.
 Here's an example wrapper that provides custom availability messaging::

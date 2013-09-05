@@ -46,8 +46,7 @@ class SavedLineForm(forms.ModelForm):
 
     class Meta:
         model = Line
-        exclude = ('basket', 'product', 'line_reference', 'quantity',
-                   'price_excl_tax', 'price_incl_tax')
+        fields = ('id', 'move_to_basket')
 
     def __init__(self, user, basket, *args, **kwargs):
         self.user = user
@@ -56,6 +55,9 @@ class SavedLineForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super(SavedLineForm, self).clean()
+        if not cleaned_data['move_to_basket']:
+            # skip further validation (see issue #666)
+            return cleaned_data
         try:
             line = self.basket.lines.get(product=self.instance.product)
         except Line.DoesNotExist:
@@ -116,16 +118,19 @@ class AddToBasketForm(forms.Form):
                                     min_value=1, label=_("Product ID"))
     quantity = forms.IntegerField(initial=1, min_value=1, label=_('Quantity'))
 
-    def __init__(self, basket, user, instance, *args, **kwargs):
+    def __init__(self, request, instance, *args, **kwargs):
         super(AddToBasketForm, self).__init__(*args, **kwargs)
-        self.basket = basket
-        self.user = user
+        self.request = request
+        self.basket = request.basket
         self.instance = instance
         if instance:
             if instance.is_group:
                 self._create_group_product_fields(instance)
             else:
                 self._create_product_fields(instance)
+
+    def is_purchase_permitted(self, user, product, desired_qty):
+        return product.is_purchase_permitted(user=user, quantity=desired_qty)
 
     def cleaned_options(self):
         """
@@ -148,14 +153,15 @@ class AddToBasketForm(forms.Form):
             raise forms.ValidationError(
                 _("Please select a valid product"))
 
-        current_qty = self.basket.line_quantity(product,
-                                                self.cleaned_options())
+        # Check user has permission to this the desired quantity to their
+        # basket.
+        current_qty = self.basket.product_quantity(product)
         desired_qty = current_qty + self.cleaned_data.get('quantity', 1)
-
-        is_available, reason = product.is_purchase_permitted(
-            user=self.user, quantity=desired_qty)
-        if not is_available:
+        is_permitted, reason = self.is_purchase_permitted(
+            self.request.user, product, desired_qty)
+        if not is_permitted:
             raise forms.ValidationError(reason)
+
         return self.cleaned_data
 
     def clean_quantity(self):

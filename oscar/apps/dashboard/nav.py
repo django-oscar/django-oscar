@@ -37,7 +37,7 @@ class Node(object):
             return None
         node = Node(self.label, self.url_name, self.access_fn)
         for child in self.children:
-            if child.is_visible(node):
+            if child.is_visible(user):
                 node.add_child(child)
         return node
 
@@ -72,13 +72,15 @@ def create_menu(menu_items, parent=None):
 
         children = menu_dict.get('children', [])
         if children:
-            node = Node(label=label, icon=menu_dict.get('icon', None))
+            node = Node(label=label, icon=menu_dict.get('icon', None),
+            			access_fn=menu_dict.get('access_fn', None))
             create_menu(children, parent=node)
         else:
             node = Node(label=label, icon=menu_dict.get('icon', None),
                         url_name=menu_dict.get('url_name', None),
                         url_kwargs=menu_dict.get('url_kwargs', None),
-                        url_args=menu_dict.get('url_args', None))
+		                url_args=menu_dict.get('url_args', None),
+		                access_fn=menu_dict.get('access_fn', None))
         if parent is None:
             nodes.append(node)
         else:

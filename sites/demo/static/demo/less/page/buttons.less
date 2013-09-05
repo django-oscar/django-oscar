@@ -1,0 +1,115 @@
+// Core styles
+.btn {
+  display: inline-block;
+  margin-bottom: 0; // For input.btn
+  font-weight: 700;
+  text-transform: uppercase;
+  text-align: center;
+  color:@white;
+  vertical-align: middle;
+  cursor: pointer;
+  border: 0;
+  .box-shadow(none);
+  .border-radius(50px);
+  white-space: nowrap;
+  text-shadow: none;
+
+  &:focus {
+    .tab-focus();
+  }
+
+  &:hover,
+  &:focus {
+    color: #fff;
+    text-decoration: none;
+  }
+
+  &:active,
+  &.active {
+    outline: 0;
+    background-image: none;
+    .box-shadow(inset 0 3px 5px rgba(0,0,0,.15));
+  }
+
+  &.disabled,
+  &[disabled],
+  fieldset[disabled] & {
+    cursor: default;
+    pointer-events: none; // Future-proof disabling of clicks
+    .opacity(65);
+    .box-shadow(none);
+  }
+
+}
+
+.btn-block {
+  display: block;
+  width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+// Vertically space out multiple block buttons
+.btn-block + .btn-block {
+  margin-top: 5px;
+}
+
+// Specificity overrides
+input[type="submit"],
+input[type="reset"],
+input[type="button"] {
+  &.btn-block {
+    width: 100%;
+  }
+}
+
+
+
+// Alternate buttons
+// --------------------------------------------------
+
+.btn {
+  background: @blue;
+  &:hover, &:focus, &.disabled, &[disabled] {
+    background-color: #3C92E4;
+    color:@white;
+  }
+  &:active, &.active {
+    background: @blue;
+  }
+}
+.btn-primary {
+    background: @green;
+    &:hover, &:focus, &.disabled, &[disabled] {
+        background-color: #5CCB5B;
+    }
+    &:active, &.active {
+        background: @green;
+    }
+}
+.btn-info {
+    background: @gray;
+    &:hover, &:focus, &:active, &.active, &.disabled, &[disabled] {
+        background-color: #B0B0B0;
+    }
+    &:active, &.active {
+        background: @gray;
+    }
+}
+// // Warning appears as orange
+// .btn-warning {
+//   .btn-pseudo-states(@btn-bg-warning, @btn-warning-border);
+// }
+// // Danger and error appear as red
+// .btn-danger {
+//   .btn-pseudo-states(@btn-bg-danger, @btn-danger-border);
+// }
+// // Success appears as green
+// .btn-success {
+//   .btn-pseudo-states(@btn-bg-success, @btn-success-border);
+// }
+// // Info appears as blue-green
+// .btn-info {
+//   .btn-pseudo-states(@btn-bg-info, @btn-info-border);
+// }
+

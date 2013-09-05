@@ -9,6 +9,7 @@ from PIL import Image
 from django.core.files import File
 from django.core.exceptions import FieldError
 from django.db.models import get_model
+from django.db.transaction import commit_on_success
 from django.utils.translation import ugettext_lazy as _
 
 from oscar.apps.catalogue.exceptions import (
@@ -27,6 +28,7 @@ class Importer(object):
         self.logger = logger
         self._field = field
 
+    @commit_on_success
     def handle(self, dirname):
         stats = {
             'num_processed': 0,
@@ -112,7 +114,7 @@ class Importer(object):
         kwargs = {self._field: lookup_value}
         item = Product._default_manager.get(**kwargs)
 
-        new_data = open(file_path).read()
+        new_data = open(file_path, 'rb').read()
         next_index = 0
         for existing in item.images.all():
             next_index = existing.display_order + 1
@@ -123,7 +125,7 @@ class Importer(object):
                 # File probably doesn't exist
                 existing.delete()
 
-        new_file = File(open(file_path))
+        new_file = File(open(file_path, 'rb'))
         im = ProductImage(product=item, display_order=next_index)
         im.original.save(filename, new_file, save=False)
         im.save()

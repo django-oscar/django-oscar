@@ -1,0 +1,169 @@
+=======================
+Oscar 0.6 release notes
+=======================
+
+Welcome to Oscar 0.6!
+
+These release notes cover the `new features`_ as well as `upgrading advice`_.
+
+.. _`new features`: `What's new in Oscar 0.6?`_
+.. _`upgrading advice`: `Upgrading`_
+
+Overview
+========
+
+...
+
+What's new in Oscar 0.6?
+========================
+
+The payment models have been split into abstract- and concrete versions.  This
+brings them inline with other Oscar apps and allows them to be customised.
+
+Multiple-stockrecords, pricing, tax, availability
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Search
+~~~~~~
+
+Multi-partner dashboard
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Partners can now have addresses.  These are useful for US sales tax where tax
+calculations need to know the origin of a product being shipped.
+
+Demo site
+~~~~~~~~~
+
+Oscar now ships with a demo site along side the sandbox site.  While the sandbox
+is a minimal Django project that uses Oscar with all its defaults, the demo site
+is a more realistic example of an Oscar project.  It has a custom skin and makes
+many alterations to the default Oscar behaviour.  
+
+It's features include:
+
+* A range of different product types: books, downloads, clothing
+* PayPal Express integration using django-oscar-paypal_
+* Datacash integration using django-oscar-datacash_
+
+.. _django-oscar-paypal: https://github.com/tangentlabs/django-oscar-paypal
+.. _django-oscar-datacash: https://github.com/tangentlabs/django-oscar-datacash
+
+Further reading:
+
+* :doc:`The demo site </internals/sandbox>`.
+
+Django 1.5 and custom user model support
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Oscar now supports `custom user models`_, the headline new feature in Django 1.5.  These can be used standalone 
+or with a one-to-one profile model: Oscar's account forms inspect the model
+fields to dynamically pick up the fields for editing and display.
+
+There are some restrictions on what fields a custom user model must have.  For
+instance, Oscar's default auth backend requires the user model to have an email
+and password field.  New Oscar projects are encouraged to use the provided
+abstract user model as the base for their users.
+
+Further reading:
+
+* :doc:`How to use a custom user model </howto/use_a_custom_user_model>`.
+
+.. _`custom user models`: https://docs.djangoproject.com/en/dev/topics/auth/customizing/#specifying-a-custom-user-model
+.. _`documentation on user models`: https://docs.djangoproject.com/en/dev/topics/auth/customizing/#specifying-a-custom-user-model
+
+Accounts 
+~~~~~~~~
+
+The views and templates of the accounts section have been reworked to be clearer
+and easier to extend.
+
+Better bankcard handling
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The bankcard model in the payment app has been greatly improved.
+
+Order processing changes
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+There are changes to order processing methods
+
+Minor changes
+~~~~~~~~~~~~~
+
+* detox_ is a new dependency, which allows running `tox` tests in parallel.
+
+.. _detox: https://pypi.python.org/pypi/detox
+
+Upgrading 
+=========
+
+Templatetags:
+
+* The ``basket_form`` templatetag has been altered to take the ``request`` as the
+  first argument, not ``request.basket``.
+
+Templates:
+
+* The template ``customer/email/email.html`` has been renamed to
+  ``customer/email/email_detail.html``.
+
+* The template ``customer/orders/order.html`` has been renamed to
+  ``customer/orders/order_detail.html``.
+
+* The template ``dashboard/orders/order_detail.html`` has been reorganised.  The
+  ``tab_transactions`` block has been renamed to ``payment_transactions``.
+
+* Alternative product class templates now use ``slug` field instead of
+  ``name.lower()`` to determine their filename.  If you have templates for
+  specific product classes, please update your filenames accordingly
+
+Address app:
+
+* The ``UserAddress.salutation`` and ``UserAddress.name`` methods are now
+  properties.
+
+* ``Country`` model's `is_highlighted` column is now integer field to allow
+  fine-grained country selection. 0 = no highlighting
+
+Checkout app:
+
+* Checkout has a new option "Register and continue". Option value `new` in
+  `GatewayForm` has changed to `guest` as `new` option is used for this feature.
+
+* Payment details - create_billing_address accepts kwargs so data can be passed
+  to it from the final page of checkout.
+
+Payment app:
+
+* The `balance` method on the source object is not a property not a method.
+
+URLs
+~~~~
+
+The named search URL ``search_default`` is renamed to ``search-default`` for
+consistency with the rest of Oscar.
+
+Migrations
+~~~~~~~~~~
+
+There are new migrations in the following apps to be aware of.
+
+* Catalogue:
+
+    - ``0011``: Higher ``max_length`` on FileFields and ImageFields
+
+* Promotions:
+
+    - ``0003``: Higher ``max_length`` on FileFields and ImageFields
+
+* Address:
+
+    - ``0003``: ``Country``'s ``is_highlighted`` is now an integer to allow
+      finer control.
+
+* Order app:
+
+    - The `date` field of the ``order.AbstractCommunicationEvent``, ``order.AbstractPaymentEvent`` and
+      ``order.AbstractShippingEvent`` models have been renamed to ``date_created`` for
+      consistency with the rest of Oscar.

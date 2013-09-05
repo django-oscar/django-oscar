@@ -4,6 +4,7 @@ import datetime
 from django.core import exceptions
 from django.db import models
 from django.utils.translation import ugettext as _
+from oscar.core.compat import AUTH_USER_MODEL
 
 
 class AbstractVoucher(models.Model):
@@ -137,10 +138,10 @@ class AbstractVoucherApplication(models.Model):
 
     # It is possible for an anonymous user to apply a voucher so we need to
     # allow the user to be nullable
-    user = models.ForeignKey('auth.User', blank=True, null=True,
+    user = models.ForeignKey(AUTH_USER_MODEL, blank=True, null=True,
                              verbose_name=_("User"))
     order = models.ForeignKey('order.Order', verbose_name=_("Order"))
-    date_created = models.DateField(_("Date Creted"), auto_now_add=True)
+    date_created = models.DateField(_("Date Created"), auto_now_add=True)
 
     class Meta:
         abstract = True

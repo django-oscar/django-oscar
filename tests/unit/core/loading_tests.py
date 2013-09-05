@@ -1,14 +1,13 @@
+from os.path import dirname
 from django.test import TestCase
-from django.core.exceptions import ValidationError
 from django.conf import settings
-from django.contrib.flatpages.models import FlatPage
 from django.test.utils import override_settings
 
 import oscar
-from oscar.core.loading import import_module, AppNotFoundError, \
-        get_classes, get_class, ClassNotFoundError
-from oscar.core.validators import ExtendedURLValidator
-from oscar.core.validators import URLDoesNotExistValidator
+from tests import temporary_python_path
+from oscar.core.loading import (
+    import_module, AppNotFoundError,
+    get_classes, get_class, ClassNotFoundError)
 
 
 class TestImportModule(TestCase):
@@ -78,60 +77,15 @@ class ClassLoadingWithLocalOverrideTests(TestCase):
             self.assertEqual('tests._site.shipping.methods', Free.__module__)
             self.assertEqual('oscar.apps.shipping.methods', FixedPrice.__module__)
 
-
-class TestExtendedURLValidator(TestCase):
-    """
-    ExtendedURLValidator
-    """
-
-    def test_validates_local_url(self):
-        v = ExtendedURLValidator(verify_exists=True)
-
-        try:
-            v('/')
-        except ValidationError:
-            self.fail('ExtendedURLValidator raised ValidationError'
-                      'unexpectedly!')
-
-        try:
-            v('/?q=test')  # Query strings shouldn't affect validation
-        except ValidationError:
-            self.fail('ExtendedURLValidator raised ValidationError'
-                      'unexpectedly!')
-
-        with self.assertRaises(ValidationError):
-            v('/invalid/')
-
-        with self.assertRaises(ValidationError):
-            v('/invalid/?q=test')  # Query strings shouldn't affect validation
-
-        try:
-            v('catalogue/')
-        except ValidationError:
-            self.fail('ExtendedURLValidator raised ValidationError'
-                      'unexpectedly!')
-
-        with self.assertRaises(ValidationError):
-            v('/catalogue')  # Missing the / is bad
-
-        FlatPage(title='test page', url='/test/page/').save()
-        try:
-            v('/test/page/')
-        except ValidationError:
-            self.fail('ExtendedURLValidator raises ValidationError'
-                      'unexpectedly!')
-
-    def test_raises_exception_for_missing_url(self):
-        validator = URLDoesNotExistValidator()
-        self.assertRaises(ValidationError, validator, '/')
-        try:
-            validator('/invalid/')
-        except ValidationError:
-            self.fail('URLDoesNotExistValidator raised ValidationError'
-                      'unexpectedly!')
-
-        FlatPage(title='test page', url='/test/page/').save()
-        self.assertRaises(ValidationError, validator, '/test/page/')
+    def test_loading_classes_with_root_app(self):
+        import tests._site.shipping
+        path = dirname(dirname(tests._site.shipping.__file__))
+        with temporary_python_path([path]):
+            self.installed_apps[
+                self.installed_apps.index('tests._site.shipping')] = 'shipping'
+            with override_settings(INSTALLED_APPS=self.installed_apps):
+                (Free,) = get_classes('shipping.methods', ('Free',))
+                self.assertEqual('shipping.methods', Free.__module__)
 
 
 class ClassLoadingWithLocalOverrideWithMultipleSegmentsTests(TestCase):

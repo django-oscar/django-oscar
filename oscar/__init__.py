@@ -3,7 +3,7 @@ import os
 # Use 'final' as the 4th element to indicate
 # a full release
 
-VERSION = (0, 5, 0, 'beta', 1)
+VERSION = (0, 6, 0, 'alpha', 0)
 
 
 def get_short_version():
@@ -54,6 +54,7 @@ OSCAR_CORE_APPS = [
     'oscar.apps.dashboard.promotions',
     'oscar.apps.dashboard.catalogue',
     'oscar.apps.dashboard.offers',
+    'oscar.apps.dashboard.partners',
     'oscar.apps.dashboard.ranges',
     'oscar.apps.dashboard.vouchers',
     'oscar.apps.dashboard.communications',

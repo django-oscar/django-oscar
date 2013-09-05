@@ -1,5 +1,5 @@
 from django.core.urlresolvers import reverse
-from oscar_testsupport import testcases, factories
+from oscar.test import testcases, factories
 
 from oscar.apps.offer import models
 

@@ -1,0 +1,10 @@
+# Osar extensions
+django-oscar-stores>=0.4,<0.5
+django-oscar-paypal>=0.4,<0.5
+django-oscar-datacash>=0.4.2,<0.5
+
+# We need PostGIS as the stores extension uses GeoDjango.
+psycopg2==2.5
+
+git+git://github.com/tinio/pysqlite.git@extension-enabled#egg=pysqlite
+pysolr>=2.0.13,<2.1

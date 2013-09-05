@@ -8,6 +8,7 @@ from oscar.apps.dashboard.users.app import application as users_app
 from oscar.apps.dashboard.promotions.app import application as promotions_app
 from oscar.apps.dashboard.catalogue.app import application as catalogue_app
 from oscar.apps.dashboard.pages.app import application as pages_app
+from oscar.apps.dashboard.partners.app import application as partners_app
 from oscar.apps.dashboard.offers.app import application as offers_app
 from oscar.apps.dashboard.ranges.app import application as ranges_app
 from oscar.apps.dashboard.reviews.app import application as reviews_app
@@ -26,6 +27,7 @@ class DashboardApplication(Application):
     catalogue_app = catalogue_app
     promotions_app = promotions_app
     pages_app = pages_app
+    partners_app = partners_app
     offers_app = offers_app
     ranges_app = ranges_app
     reviews_app = reviews_app
@@ -41,6 +43,7 @@ class DashboardApplication(Application):
             url(r'^users/', include(self.users_app.urls)),
             url(r'^content-blocks/', include(self.promotions_app.urls)),
             url(r'^pages/', include(self.pages_app.urls)),
+            url(r'^partners/', include(self.partners_app.urls)),
             url(r'^offers/', include(self.offers_app.urls)),
             url(r'^ranges/', include(self.ranges_app.urls)),
             url(r'^reviews/', include(self.reviews_app.urls)),

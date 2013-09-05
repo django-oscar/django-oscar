@@ -1,99 +1,100 @@
 {% extends 'dashboard/layout.html' %}
+{% load url from future %}
 {% load dashboard_tags %}
 {% load i18n %}
 
 {% block body_class %}pages{% endblock %}
 
 {% block title %}
-{% trans "Pages" %} | {{ block.super }}
+    {% trans "Pages" %} | {{ block.super }}
 {% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">   	
-    <li>       	
-        <a href="{% url dashboard:index %}">{% trans "Dashboard" %}</a>       	
-        <span class="divider">/</span>       	
-    </li>       	
-    <li class="active">{% trans "Pages" %}</li>       	
-</ul>
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
+            <span class="divider">/</span>
+        </li>
+        <li class="active">{% trans "Pages" %}</li>
+    </ul>
 {% endblock %}
 
 {% block header %}
-<div class="page-header">
-    <h1>{% trans "Page Management" %}</h1>
-</div>
+    <div class="page-header">
+        <h1>{% trans "Page Management" %}</h1>
+    </div>
 {% endblock header %}
 
 {% block dashboard_content %}
-<div class="table-header">
-    <h3><i class="icon-search icon-large"></i>Search</h3>
-</div>
-<div class="well">
-    <form action="." method="get" class="form-inline">
-        {% include "partials/form_fields_inline.html" with form=form %}
-        <input type="submit" value="{% trans "Search" %}" class="btn btn-primary"/>
-    </form>
-</div>
+    <div class="table-header">
+        <h3><i class="icon-search icon-large"></i>{% trans "Search" %}</h3>
+    </div>
+    <div class="well">
+        <form action="." method="get" class="form-inline">
+            {% include "partials/form_fields_inline.html" with form=form %}
+            <input type="submit" value="{% trans "Search" %}" class="btn btn-primary"/>
+        </form>
+    </div>
 
-<div class="table-header">
-    <h3><i class="icon-file icon-large"></i>Create new page</h3>
-</div>
-<div class="well">
-    <form action="{% url dashboard:page-create %}" method="get" class="form-inline">
-        <button type="submit" class="btn btn-primary"><i class="icon-plus"></i> {% trans "Create page" %}</button>
-    </form>
-</div>
+    <div class="table-header">
+        <h3><i class="icon-file icon-large"></i>{% trans "Create new page" %}</h3>
+    </div>
+    <div class="well">
+        <form action="{% url 'dashboard:page-create' %}" method="get" class="form-inline">
+            <button type="submit" class="btn btn-primary"><i class="icon-plus"></i> {% trans "Create page" %}</button>
+        </form>
+    </div>
 
-<div class="table-header">
-    <h2><i class="icon-file icon-large"></i>{{ queryset_description }}</h2>
-</div>
+    <div class="table-header">
+        <h2><i class="icon-file icon-large"></i>{{ queryset_description }}</h2>
+    </div>
 
 
-{% if flatpage_list.count %}
-    <form action="." method="post">
-        {% csrf_token %}
+    {% if flatpage_list.count %}
+        <form action="." method="post">
+            {% csrf_token %}
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>{% trans "Title" %}</th>
+                        <th>{% trans "URL" %}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for page in flatpage_list %}
+                        <tr>
+                            <td>{{ page.title}}</td>
+                            <td>{{ page.url}}</td>
+                            <td>
+                                <div class="btn-toolbar">
+                                    <div class="btn-group">
+                                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                                            {% trans "Actions" %}
+                                            <span class="caret"></span>
+                                        </a>
+                                        <ul class="dropdown-menu pull-right">
+                                            <li><a href="{{ page.get_absolute_url }}">{% trans "View" %}</a></li>
+                                            <li><a href="{% url 'dashboard:page-update' page.id %}">{% trans "Edit" %}</a></li>
+                                            <li><a href="{% url 'dashboard:page-delete' page.id %}">{% trans "Delete" %}</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% include "partials/pagination.html" %}
+        </form>
+    {% else %}
         <table class="table table-striped table-bordered table-hover">
-            <thead>
-                <tr>
-                    <th>{% trans "Title" %}</th>
-                    <th>{% trans "URL" %}</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for page in flatpage_list %}
-            <tr>
-                <td>{{ page.title}}</td>
-                <td>{{ page.url}}</td>
-                <td>
-                    <div class="btn-toolbar">
-                        <div class="btn-group">
-                          <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                            Actions
-                            <span class="caret"></span>
-                          </a>
-                          <ul class="dropdown-menu pull-right">
-                              <li><a href="{{ page.get_absolute_url }}">{% trans "View" %}</a></li>
-                              <li><a href="{% url dashboard:page-update page.id %}">{% trans "Edit" %}</a></li>
-                              <li><a href="{% url dashboard:page-delete page.id %}">{% trans "Delete" %}</a></li>
-                          </ul>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-            {% endfor %}
-            </tbody>
+            <tr><td>{% trans "No pages found." %}</td></tr>
         </table>
-        {% include "partials/pagination.html" %}
-    </form>
-{% else %}
-    <table class="table table-striped table-bordered table-hover">
-        <tr><td>{% trans "No pages found." %}</td></tr>
-    </table>
-{% endif %}
+    {% endif %}
 
 {% endblock dashboard_content %}
 
 {% block onbodyload %}
-oscar.dashboard.search.init();
+    oscar.dashboard.search.init();
 {% endblock onbodyload %}

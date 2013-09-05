@@ -1,9 +1,12 @@
 {% extends "customer/baseaccountpage.html" %}
+
+{% load url from future %}
+
 {% load i18n %}
 
 {% block extra_breadcrumbs %}
 	<li>
-		<a href="{% url customer:address-list %}">{% trans 'Address book' %}</a>
+		<a href="{% url 'customer:address-list' %}">{% trans 'Address book' %}</a>
 		<span class="divider">/</span>
 	</li>
 {% endblock %}
@@ -16,7 +19,7 @@
     <p><strong>{{ object.summary }}</strong></p>
 
     <div class="form-actions">
-        <button type="submit" value="Delete address" class="btn btn-danger btn-large">{% trans 'Delete' %}</button> {% trans 'or' %} <a href="{% url customer:address-list %}">{% trans 'cancel' %}</a>
+        <button type="submit" value="Delete address" class="btn btn-danger btn-large">{% trans 'Delete' %}</button> {% trans 'or' %} <a href="{% url 'customer:address-list' %}">{% trans 'cancel' %}</a>
     </div>
 </form>
 {% endblock tabcontent %}
