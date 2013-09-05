@@ -81,3 +81,16 @@ Simple really - follow these steps:
 2. Override the default ``shipping.repository.Repository`` class and implement your domain logic
    for determining which shipping methods are returned based on the user, basket and shipping address
    passed in.
+
+
+Models
+---------------
+
+.. automodule:: oscar.apps.shipping.models
+    :members:
+
+Views
+-----
+
+None.
+
