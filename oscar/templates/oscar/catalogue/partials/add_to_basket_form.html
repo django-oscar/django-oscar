@@ -10,6 +10,7 @@
             {% include "partials/form_fields.html" with form=basket_form %}
             <div class="form-actions">
                 <button type="submit" class="btn btn-large btn-primary btn-full" value="{% trans "Add to basket" %}">{% trans "Add to basket" %}</button>
+                {% include "catalogue/partials/add_to_wishlist.html" %}
             </div>
         </form>
     {% else %}
@@ -24,6 +25,7 @@
             <p>{% trans "You can get an email alert when this product is back in stock." %}</p>
             {% include "partials/form_fields.html" with form=alert_form %}
             <button type="submit" class="btn btn-large btn-info btn-full">{% trans "Notify me" %}</button>
+            {% include "catalogue/partials/add_to_wishlist.html" %}
         </form>
     {% endif %}
 {% endif %}
