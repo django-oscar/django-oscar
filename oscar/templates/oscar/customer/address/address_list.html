@@ -31,12 +31,25 @@
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <a href="{% url 'customer:address-delete' address.id %}">{% trans 'Delete' %}</a>
+                                    <li>
+                                        <a href="{% url 'customer:address-delete' address.id %}">
+                                            {% trans 'Delete' %}
+                                        </a>
+                                    </li>
+
                                     {% if not address.is_default_for_shipping %}
-                                        <a href="{% url 'customer:address-change-status' address.id 'default_for_shipping' %}">{% trans 'Set as default shipping address' %}</a>
+                                        <li>
+                                            <a href="{% url 'customer:address-change-status' address.id 'default_for_shipping' %}">
+                                                {% trans 'Set as default shipping address' %}
+                                            </a>
+                                        </li>
                                     {% endif %}
                                     {% if not address.is_default_for_billing %}
-                                        <a href="{% url 'customer:address-change-status' address.id 'default_for_billing' %}">{% trans 'Set as default billing address' %}</a>
+                                        <li>
+                                            <a href="{% url 'customer:address-change-status' address.id 'default_for_billing' %}">
+                                                {% trans 'Set as default billing address' %}
+                                            </a>
+                                        </li>
                                     {% endif %}
                                 </ul>
                             </div>
