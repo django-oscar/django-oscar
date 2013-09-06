@@ -204,7 +204,7 @@ class EventHandler(object):
 
     def create_shipping_event(self, order, event_type, lines, line_quantities,
                               **kwargs):
-        reference = kwargs.get('reference', None)
+        reference = kwargs.get('reference', '')
         event = order.shipping_events.create(
             event_type=event_type, notes=reference)
         try:

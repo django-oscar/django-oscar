@@ -224,7 +224,7 @@ class OrderCreator(object):
         """
         order_discount = OrderDiscount(
             order=order,
-            message=discount['message'],
+            message=discount['message'] or '',
             offer_id=discount['offer'].id,
             frequency=discount['freq'],
             amount=discount['discount'])
