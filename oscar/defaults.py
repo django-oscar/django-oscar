@@ -1,7 +1,7 @@
 from django.utils.translation import ugettext_lazy as _
 
 OSCAR_SHOP_NAME = 'Oscar'
-OSCAR_SHOP_TAGLINE = 'Domain-driven e-Commerce for Django'
+OSCAR_SHOP_TAGLINE = ''
 
 # Basket settings
 OSCAR_BASKET_COOKIE_LIFETIME = 7 * 24 * 60 * 60

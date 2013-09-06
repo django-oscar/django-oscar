@@ -353,8 +353,7 @@ from oscar.defaults import *
 # Meta
 # ====
 
-OSCAR_SHOP_NAME = 'Oscar Sandbox'
-OSCAR_SHOP_TAGLINE = 'e-Commerce for Django'
+OSCAR_SHOP_TAGLINE = 'Sandbox'
 
 # Enter Google Analytics ID for the tracking to be included in the templates
 #GOOGLE_ANALYTICS_ID = 'UA-XXXXX-Y'
